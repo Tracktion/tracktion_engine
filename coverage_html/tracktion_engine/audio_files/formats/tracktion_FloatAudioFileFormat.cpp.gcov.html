@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">3</td>
@@ -122,7 +122,7 @@
 <a name="60"><span class="lineNum">      60 </span><span class="lineNoCov">          0 :             if (bytesRead &lt; numThisTime * bytesPerFrame)</span></a>
 <a name="61"><span class="lineNum">      61 </span>            :             {</a>
 <a name="62"><span class="lineNum">      62 </span>            :                 jassert (bytesRead &gt;= 0);</a>
-<a name="63"><span class="lineNum">      63 </span><span class="lineNoCov">          0 :                 juce::zeromem (tempBuffer + bytesRead, (size_t) (numThisTime * bytesPerFrame - bytesRead));</span></a>
+<a name="63"><span class="lineNum">      63 </span><span class="lineNoCov">          0 :                 std::memset (tempBuffer + bytesRead, 0, (size_t) (numThisTime * bytesPerFrame - bytesRead));</span></a>
 <a name="64"><span class="lineNum">      64 </span>            :             }</a>
 <a name="65"><span class="lineNum">      65 </span>            : </a>
 <a name="66"><span class="lineNum">      66 </span><span class="lineNoCov">          0 :             if (bigEndian)</span></a>
@@ -253,7 +253,7 @@
 <a name="191"><span class="lineNum">     191 </span>            :         {</a>
 <a name="192"><span class="lineNum">     192 </span>            :             jassertfalse; // you must make sure that the window contains all the samples you're going to attempt to read.</a>
 <a name="193"><span class="lineNum">     193 </span>            : </a>
-<a name="194"><span class="lineNum">     194 </span><span class="lineNoCov">          0 :             juce::zeromem (result, sizeof (float) * numChannels);</span></a>
+<a name="194"><span class="lineNum">     194 </span><span class="lineNoCov">          0 :             std::memset (result, 0, sizeof (float) * numChannels);</span></a>
 <a name="195"><span class="lineNum">     195 </span><span class="lineNoCov">          0 :             return;</span></a>
 <a name="196"><span class="lineNum">     196 </span>            :         }</a>
 <a name="197"><span class="lineNum">     197 </span>            : </a>
@@ -268,112 +268,114 @@
 <a name="206"><span class="lineNum">     206 </span>            :     }</a>
 <a name="207"><span class="lineNum">     207 </span>            : </a>
 <a name="208"><span class="lineNum">     208 </span>            :     using juce::MemoryMappedAudioFormatReader::readMaxLevels;</a>
-<a name="209"><span class="lineNum">     209 </span><span class="lineNoCov">          0 :     void readMaxLevels (juce::int64 startSampleInFile, juce::int64 numSamples, juce::Range&lt;float&gt;* results, int numChannelsToRead) override</span></a>
-<a name="210"><span class="lineNum">     210 </span>            :     {</a>
-<a name="211"><span class="lineNum">     211 </span><span class="lineNoCov">          0 :         if (numSamples &lt;= 0)</span></a>
-<a name="212"><span class="lineNum">     212 </span>            :         {</a>
-<a name="213"><span class="lineNum">     213 </span><span class="lineNoCov">          0 :             for (int i = 0; i &lt; numChannelsToRead; ++i)</span></a>
-<a name="214"><span class="lineNum">     214 </span><span class="lineNoCov">          0 :                 results[i] = {};</span></a>
-<a name="215"><span class="lineNum">     215 </span>            : </a>
-<a name="216"><span class="lineNum">     216 </span>            :             return;</a>
-<a name="217"><span class="lineNum">     217 </span>            :         }</a>
-<a name="218"><span class="lineNum">     218 </span>            : </a>
-<a name="219"><span class="lineNum">     219 </span><span class="lineNoCov">          0 :         if (map == nullptr || ! mappedSection.contains ({ startSampleInFile, startSampleInFile + numSamples }))</span></a>
-<a name="220"><span class="lineNum">     220 </span>            :         {</a>
-<a name="221"><span class="lineNum">     221 </span>            :             jassertfalse; // you must make sure that the window contains all the samples you're going to attempt to read.</a>
-<a name="222"><span class="lineNum">     222 </span>            : </a>
-<a name="223"><span class="lineNum">     223 </span><span class="lineNoCov">          0 :             for (int i = 0; i &lt; numChannelsToRead; ++i)</span></a>
-<a name="224"><span class="lineNum">     224 </span><span class="lineNoCov">          0 :                 results[i] = {};</span></a>
-<a name="225"><span class="lineNum">     225 </span>            : </a>
-<a name="226"><span class="lineNum">     226 </span>            :             return;</a>
-<a name="227"><span class="lineNum">     227 </span>            :         }</a>
-<a name="228"><span class="lineNum">     228 </span>            : </a>
-<a name="229"><span class="lineNum">     229 </span><span class="lineNoCov">          0 :         switch (bitsPerSample)</span></a>
-<a name="230"><span class="lineNum">     230 </span>            :         {</a>
-<a name="231"><span class="lineNum">     231 </span><span class="lineNoCov">          0 :             case 8:     scanMinAndMax&lt;juce::AudioData::UInt8&gt; (startSampleInFile, numSamples, results, numChannelsToRead); break;</span></a>
-<a name="232"><span class="lineNum">     232 </span><span class="lineNoCov">          0 :             case 16:    scanMinAndMax&lt;juce::AudioData::Int16&gt; (startSampleInFile, numSamples, results, numChannelsToRead); break;</span></a>
-<a name="233"><span class="lineNum">     233 </span><span class="lineNoCov">          0 :             case 24:    scanMinAndMax&lt;juce::AudioData::Int24&gt; (startSampleInFile, numSamples, results, numChannelsToRead); break;</span></a>
-<a name="234"><span class="lineNum">     234 </span><span class="lineNoCov">          0 :             case 32:</span></a>
-<a name="235"><span class="lineNum">     235 </span>            :             {</a>
-<a name="236"><span class="lineNum">     236 </span><span class="lineNoCov">          0 :                 if (usesFloatingPointData) scanMinAndMax&lt;juce::AudioData::Float32&gt; (startSampleInFile, numSamples, results, numChannelsToRead);</span></a>
-<a name="237"><span class="lineNum">     237 </span><span class="lineNoCov">          0 :                 else                       scanMinAndMax&lt;juce::AudioData::Int32&gt;   (startSampleInFile, numSamples, results, numChannelsToRead);</span></a>
-<a name="238"><span class="lineNum">     238 </span>            :                 break;</a>
-<a name="239"><span class="lineNum">     239 </span>            :             }</a>
-<a name="240"><span class="lineNum">     240 </span>            :             default:    jassertfalse; break;</a>
-<a name="241"><span class="lineNum">     241 </span>            :         }</a>
-<a name="242"><span class="lineNum">     242 </span>            :     }</a>
-<a name="243"><span class="lineNum">     243 </span>            : </a>
-<a name="244"><span class="lineNum">     244 </span>            : private:</a>
-<a name="245"><span class="lineNum">     245 </span>            :     const bool bigEndian;</a>
-<a name="246"><span class="lineNum">     246 </span>            : </a>
-<a name="247"><span class="lineNum">     247 </span>            :     template &lt;typename SampleType&gt;</a>
-<a name="248"><span class="lineNum">     248 </span><span class="lineNoCov">          0 :     void scanMinAndMax (juce::int64 startSampleInFile, juce::int64 numSamples, juce::Range&lt;float&gt;* results, int numChannelsToRead) const</span></a>
-<a name="249"><span class="lineNum">     249 </span>            :     {</a>
-<a name="250"><span class="lineNum">     250 </span>            :         typedef juce::AudioData::Pointer&lt;SampleType, juce::AudioData::LittleEndian, juce::AudioData::Interleaved, juce::AudioData::Const&gt; SourceType;</a>
-<a name="251"><span class="lineNum">     251 </span>            : </a>
-<a name="252"><span class="lineNum">     252 </span><span class="lineNoCov">          0 :         for (int i = 0; i &lt; numChannelsToRead; ++i)</span></a>
-<a name="253"><span class="lineNum">     253 </span><span class="lineNoCov">          0 :             results[i] = SourceType (sampleToPointer (startSampleInFile), (int) numChannels).findMinAndMax ((size_t) numSamples);</span></a>
-<a name="254"><span class="lineNum">     254 </span><span class="lineNoCov">          0 :     }</span></a>
-<a name="255"><span class="lineNum">     255 </span>            : </a>
-<a name="256"><span class="lineNum">     256 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MemoryMappedFloatReader)</a>
-<a name="257"><span class="lineNum">     257 </span>            : };</a>
-<a name="258"><span class="lineNum">     258 </span>            : </a>
-<a name="259"><span class="lineNum">     259 </span>            : //==============================================================================</a>
-<a name="260"><span class="lineNum">     260 </span><span class="lineCov">          4 : FloatAudioFormat::FloatAudioFormat()  : AudioFormat (&quot;Tracktion audio file&quot;, &quot;.trkaudio&quot;) {}</span></a>
-<a name="261"><span class="lineNum">     261 </span><span class="lineCov">          4 : FloatAudioFormat::~FloatAudioFormat() {}</span></a>
-<a name="262"><span class="lineNum">     262 </span>            : </a>
-<a name="263"><span class="lineNum">     263 </span><span class="lineNoCov">          0 : juce::Array&lt;int&gt; FloatAudioFormat::getPossibleSampleRates()     { return { 22050, 32000, 44100, 48000, 88200, 96000, 176400, 192000 }; }</span></a>
-<a name="264"><span class="lineNum">     264 </span><span class="lineNoCov">          0 : juce::Array&lt;int&gt; FloatAudioFormat::getPossibleBitDepths()       { return { 32 }; }</span></a>
-<a name="265"><span class="lineNum">     265 </span>            : </a>
-<a name="266"><span class="lineNum">     266 </span><span class="lineNoCov">          0 : bool FloatAudioFormat::canDoStereo()    { return true; }</span></a>
-<a name="267"><span class="lineNum">     267 </span><span class="lineNoCov">          0 : bool FloatAudioFormat::canDoMono()      { return true; }</span></a>
-<a name="268"><span class="lineNum">     268 </span>            : </a>
-<a name="269"><span class="lineNum">     269 </span><span class="lineCov">          8 : bool FloatAudioFormat::canHandleFile (const juce::File&amp; f)</span></a>
-<a name="270"><span class="lineNum">     270 </span>            : {</a>
-<a name="271"><span class="lineNum">     271 </span><span class="lineCov">          8 :     return f.hasFileExtension (&quot;.trkaudio&quot;)</span></a>
-<a name="272"><span class="lineNum">     272 </span>            :        #if JUCE_WINDOWS</a>
-<a name="273"><span class="lineNum">     273 </span>            :         || f.hasFileExtension ({})</a>
-<a name="274"><span class="lineNum">     274 </span>            :        #endif</a>
-<a name="275"><span class="lineNum">     275 </span><span class="lineCov">          8 :         || f.hasFileExtension (&quot;.freeze&quot;);</span></a>
-<a name="276"><span class="lineNum">     276 </span>            : }</a>
-<a name="277"><span class="lineNum">     277 </span>            : </a>
-<a name="278"><span class="lineNum">     278 </span><span class="lineNoCov">          0 : juce::AudioFormatReader* FloatAudioFormat::createReaderFor (juce::InputStream* in, bool deleteStreamIfOpeningFails)</span></a>
-<a name="279"><span class="lineNum">     279 </span>            : {</a>
-<a name="280"><span class="lineNum">     280 </span><span class="lineNoCov">          0 :     std::unique_ptr&lt;FloatAudioFormatReader&gt; r (new FloatAudioFormatReader (in));</span></a>
-<a name="281"><span class="lineNum">     281 </span>            : </a>
-<a name="282"><span class="lineNum">     282 </span><span class="lineNoCov">          0 :     if (r-&gt;sampleRate &gt; 0)</span></a>
-<a name="283"><span class="lineNum">     283 </span>            :         return r.release();</a>
-<a name="284"><span class="lineNum">     284 </span>            : </a>
-<a name="285"><span class="lineNum">     285 </span><span class="lineNoCov">          0 :     if (! deleteStreamIfOpeningFails)</span></a>
-<a name="286"><span class="lineNum">     286 </span><span class="lineNoCov">          0 :         r-&gt;input = nullptr;</span></a>
-<a name="287"><span class="lineNum">     287 </span>            : </a>
-<a name="288"><span class="lineNum">     288 </span>            :     return {};</a>
-<a name="289"><span class="lineNum">     289 </span>            : }</a>
-<a name="290"><span class="lineNum">     290 </span>            : </a>
-<a name="291"><span class="lineNum">     291 </span><span class="lineNoCov">          0 : juce::MemoryMappedAudioFormatReader* FloatAudioFormat::createMemoryMappedReader (const juce::File&amp; file)</span></a>
-<a name="292"><span class="lineNum">     292 </span>            : {</a>
-<a name="293"><span class="lineNum">     293 </span><span class="lineNoCov">          0 :     if (auto fin = file.createInputStream())</span></a>
-<a name="294"><span class="lineNum">     294 </span>            :     {</a>
-<a name="295"><span class="lineNum">     295 </span><span class="lineNoCov">          0 :         FloatAudioFormatReader reader (fin.release());</span></a>
-<a name="296"><span class="lineNum">     296 </span>            : </a>
-<a name="297"><span class="lineNum">     297 </span><span class="lineNoCov">          0 :         if (reader.lengthInSamples &gt; 0)</span></a>
-<a name="298"><span class="lineNum">     298 </span><span class="lineNoCov">          0 :             return new MemoryMappedFloatReader (file, reader);</span></a>
-<a name="299"><span class="lineNum">     299 </span>            :     }</a>
-<a name="300"><span class="lineNum">     300 </span>            : </a>
-<a name="301"><span class="lineNum">     301 </span><span class="lineNoCov">          0 :     return {};</span></a>
-<a name="302"><span class="lineNum">     302 </span>            : }</a>
-<a name="303"><span class="lineNum">     303 </span>            : </a>
-<a name="304"><span class="lineNum">     304 </span><span class="lineNoCov">          0 : juce::AudioFormatWriter* FloatAudioFormat::createWriterFor (juce::OutputStream* out,</span></a>
-<a name="305"><span class="lineNum">     305 </span>            :                                                             double sampleRate,</a>
-<a name="306"><span class="lineNum">     306 </span>            :                                                             unsigned int numChannels,</a>
-<a name="307"><span class="lineNum">     307 </span>            :                                                             int /*bitsPerSample*/,</a>
-<a name="308"><span class="lineNum">     308 </span>            :                                                             const juce::StringPairArray&amp; /*metadataValues*/,</a>
-<a name="309"><span class="lineNum">     309 </span>            :                                                             int /*qualityOptionIndex*/)</a>
-<a name="310"><span class="lineNum">     310 </span>            : {</a>
-<a name="311"><span class="lineNum">     311 </span><span class="lineNoCov">          0 :     return new FloatAudioFormatWriter (out, sampleRate, numChannels);</span></a>
-<a name="312"><span class="lineNum">     312 </span>            : }</a>
-<a name="313"><span class="lineNum">     313 </span>            : </a>
+<a name="209"><span class="lineNum">     209 </span>            : </a>
+<a name="210"><span class="lineNum">     210 </span><span class="lineNoCov">          0 :     void readMaxLevels (juce::int64 startSampleInFile, juce::int64 numSamples,</span></a>
+<a name="211"><span class="lineNum">     211 </span>            :                         juce::Range&lt;float&gt;* results, int numChannelsToRead) override</a>
+<a name="212"><span class="lineNum">     212 </span>            :     {</a>
+<a name="213"><span class="lineNum">     213 </span><span class="lineNoCov">          0 :         if (numSamples &lt;= 0)</span></a>
+<a name="214"><span class="lineNum">     214 </span>            :         {</a>
+<a name="215"><span class="lineNum">     215 </span><span class="lineNoCov">          0 :             for (int i = 0; i &lt; numChannelsToRead; ++i)</span></a>
+<a name="216"><span class="lineNum">     216 </span><span class="lineNoCov">          0 :                 results[i] = {};</span></a>
+<a name="217"><span class="lineNum">     217 </span>            : </a>
+<a name="218"><span class="lineNum">     218 </span>            :             return;</a>
+<a name="219"><span class="lineNum">     219 </span>            :         }</a>
+<a name="220"><span class="lineNum">     220 </span>            : </a>
+<a name="221"><span class="lineNum">     221 </span><span class="lineNoCov">          0 :         if (map == nullptr || ! mappedSection.contains ({ startSampleInFile, startSampleInFile + numSamples }))</span></a>
+<a name="222"><span class="lineNum">     222 </span>            :         {</a>
+<a name="223"><span class="lineNum">     223 </span>            :             jassertfalse; // you must make sure that the window contains all the samples you're going to attempt to read.</a>
+<a name="224"><span class="lineNum">     224 </span>            : </a>
+<a name="225"><span class="lineNum">     225 </span><span class="lineNoCov">          0 :             for (int i = 0; i &lt; numChannelsToRead; ++i)</span></a>
+<a name="226"><span class="lineNum">     226 </span><span class="lineNoCov">          0 :                 results[i] = {};</span></a>
+<a name="227"><span class="lineNum">     227 </span>            : </a>
+<a name="228"><span class="lineNum">     228 </span>            :             return;</a>
+<a name="229"><span class="lineNum">     229 </span>            :         }</a>
+<a name="230"><span class="lineNum">     230 </span>            : </a>
+<a name="231"><span class="lineNum">     231 </span><span class="lineNoCov">          0 :         switch (bitsPerSample)</span></a>
+<a name="232"><span class="lineNum">     232 </span>            :         {</a>
+<a name="233"><span class="lineNum">     233 </span><span class="lineNoCov">          0 :             case 8:     scanMinAndMax&lt;juce::AudioData::UInt8&gt; (startSampleInFile, numSamples, results, numChannelsToRead); break;</span></a>
+<a name="234"><span class="lineNum">     234 </span><span class="lineNoCov">          0 :             case 16:    scanMinAndMax&lt;juce::AudioData::Int16&gt; (startSampleInFile, numSamples, results, numChannelsToRead); break;</span></a>
+<a name="235"><span class="lineNum">     235 </span><span class="lineNoCov">          0 :             case 24:    scanMinAndMax&lt;juce::AudioData::Int24&gt; (startSampleInFile, numSamples, results, numChannelsToRead); break;</span></a>
+<a name="236"><span class="lineNum">     236 </span><span class="lineNoCov">          0 :             case 32:</span></a>
+<a name="237"><span class="lineNum">     237 </span>            :             {</a>
+<a name="238"><span class="lineNum">     238 </span><span class="lineNoCov">          0 :                 if (usesFloatingPointData) scanMinAndMax&lt;juce::AudioData::Float32&gt; (startSampleInFile, numSamples, results, numChannelsToRead);</span></a>
+<a name="239"><span class="lineNum">     239 </span><span class="lineNoCov">          0 :                 else                       scanMinAndMax&lt;juce::AudioData::Int32&gt;   (startSampleInFile, numSamples, results, numChannelsToRead);</span></a>
+<a name="240"><span class="lineNum">     240 </span>            :                 break;</a>
+<a name="241"><span class="lineNum">     241 </span>            :             }</a>
+<a name="242"><span class="lineNum">     242 </span>            :             default:    jassertfalse; break;</a>
+<a name="243"><span class="lineNum">     243 </span>            :         }</a>
+<a name="244"><span class="lineNum">     244 </span>            :     }</a>
+<a name="245"><span class="lineNum">     245 </span>            : </a>
+<a name="246"><span class="lineNum">     246 </span>            : private:</a>
+<a name="247"><span class="lineNum">     247 </span>            :     const bool bigEndian;</a>
+<a name="248"><span class="lineNum">     248 </span>            : </a>
+<a name="249"><span class="lineNum">     249 </span>            :     template &lt;typename SampleType&gt;</a>
+<a name="250"><span class="lineNum">     250 </span><span class="lineNoCov">          0 :     void scanMinAndMax (int64_t startSampleInFile, int64_t numSamples, juce::Range&lt;float&gt;* results, int numChannelsToRead) const</span></a>
+<a name="251"><span class="lineNum">     251 </span>            :     {</a>
+<a name="252"><span class="lineNum">     252 </span>            :         typedef juce::AudioData::Pointer&lt;SampleType, juce::AudioData::LittleEndian, juce::AudioData::Interleaved, juce::AudioData::Const&gt; SourceType;</a>
+<a name="253"><span class="lineNum">     253 </span>            : </a>
+<a name="254"><span class="lineNum">     254 </span><span class="lineNoCov">          0 :         for (int i = 0; i &lt; numChannelsToRead; ++i)</span></a>
+<a name="255"><span class="lineNum">     255 </span><span class="lineNoCov">          0 :             results[i] = SourceType (sampleToPointer (startSampleInFile), (int) numChannels).findMinAndMax ((size_t) numSamples);</span></a>
+<a name="256"><span class="lineNum">     256 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="257"><span class="lineNum">     257 </span>            : </a>
+<a name="258"><span class="lineNum">     258 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MemoryMappedFloatReader)</a>
+<a name="259"><span class="lineNum">     259 </span>            : };</a>
+<a name="260"><span class="lineNum">     260 </span>            : </a>
+<a name="261"><span class="lineNum">     261 </span>            : //==============================================================================</a>
+<a name="262"><span class="lineNum">     262 </span><span class="lineCov">          4 : FloatAudioFormat::FloatAudioFormat()  : AudioFormat (&quot;Tracktion audio file&quot;, &quot;.trkaudio&quot;) {}</span></a>
+<a name="263"><span class="lineNum">     263 </span><span class="lineCov">          4 : FloatAudioFormat::~FloatAudioFormat() {}</span></a>
+<a name="264"><span class="lineNum">     264 </span>            : </a>
+<a name="265"><span class="lineNum">     265 </span><span class="lineNoCov">          0 : juce::Array&lt;int&gt; FloatAudioFormat::getPossibleSampleRates()     { return { 22050, 32000, 44100, 48000, 88200, 96000, 176400, 192000 }; }</span></a>
+<a name="266"><span class="lineNum">     266 </span><span class="lineNoCov">          0 : juce::Array&lt;int&gt; FloatAudioFormat::getPossibleBitDepths()       { return { 32 }; }</span></a>
+<a name="267"><span class="lineNum">     267 </span>            : </a>
+<a name="268"><span class="lineNum">     268 </span><span class="lineNoCov">          0 : bool FloatAudioFormat::canDoStereo()    { return true; }</span></a>
+<a name="269"><span class="lineNum">     269 </span><span class="lineNoCov">          0 : bool FloatAudioFormat::canDoMono()      { return true; }</span></a>
+<a name="270"><span class="lineNum">     270 </span>            : </a>
+<a name="271"><span class="lineNum">     271 </span><span class="lineCov">          8 : bool FloatAudioFormat::canHandleFile (const juce::File&amp; f)</span></a>
+<a name="272"><span class="lineNum">     272 </span>            : {</a>
+<a name="273"><span class="lineNum">     273 </span><span class="lineCov">          8 :     return f.hasFileExtension (&quot;.trkaudio&quot;)</span></a>
+<a name="274"><span class="lineNum">     274 </span>            :        #if JUCE_WINDOWS</a>
+<a name="275"><span class="lineNum">     275 </span>            :         || f.hasFileExtension ({})</a>
+<a name="276"><span class="lineNum">     276 </span>            :        #endif</a>
+<a name="277"><span class="lineNum">     277 </span><span class="lineCov">          8 :         || f.hasFileExtension (&quot;.freeze&quot;);</span></a>
+<a name="278"><span class="lineNum">     278 </span>            : }</a>
+<a name="279"><span class="lineNum">     279 </span>            : </a>
+<a name="280"><span class="lineNum">     280 </span><span class="lineNoCov">          0 : juce::AudioFormatReader* FloatAudioFormat::createReaderFor (juce::InputStream* in, bool deleteStreamIfOpeningFails)</span></a>
+<a name="281"><span class="lineNum">     281 </span>            : {</a>
+<a name="282"><span class="lineNum">     282 </span><span class="lineNoCov">          0 :     std::unique_ptr&lt;FloatAudioFormatReader&gt; r (new FloatAudioFormatReader (in));</span></a>
+<a name="283"><span class="lineNum">     283 </span>            : </a>
+<a name="284"><span class="lineNum">     284 </span><span class="lineNoCov">          0 :     if (r-&gt;sampleRate &gt; 0)</span></a>
+<a name="285"><span class="lineNum">     285 </span>            :         return r.release();</a>
+<a name="286"><span class="lineNum">     286 </span>            : </a>
+<a name="287"><span class="lineNum">     287 </span><span class="lineNoCov">          0 :     if (! deleteStreamIfOpeningFails)</span></a>
+<a name="288"><span class="lineNum">     288 </span><span class="lineNoCov">          0 :         r-&gt;input = nullptr;</span></a>
+<a name="289"><span class="lineNum">     289 </span>            : </a>
+<a name="290"><span class="lineNum">     290 </span>            :     return {};</a>
+<a name="291"><span class="lineNum">     291 </span>            : }</a>
+<a name="292"><span class="lineNum">     292 </span>            : </a>
+<a name="293"><span class="lineNum">     293 </span><span class="lineNoCov">          0 : juce::MemoryMappedAudioFormatReader* FloatAudioFormat::createMemoryMappedReader (const juce::File&amp; file)</span></a>
+<a name="294"><span class="lineNum">     294 </span>            : {</a>
+<a name="295"><span class="lineNum">     295 </span><span class="lineNoCov">          0 :     if (auto fin = file.createInputStream())</span></a>
+<a name="296"><span class="lineNum">     296 </span>            :     {</a>
+<a name="297"><span class="lineNum">     297 </span><span class="lineNoCov">          0 :         FloatAudioFormatReader reader (fin.release());</span></a>
+<a name="298"><span class="lineNum">     298 </span>            : </a>
+<a name="299"><span class="lineNum">     299 </span><span class="lineNoCov">          0 :         if (reader.lengthInSamples &gt; 0)</span></a>
+<a name="300"><span class="lineNum">     300 </span><span class="lineNoCov">          0 :             return new MemoryMappedFloatReader (file, reader);</span></a>
+<a name="301"><span class="lineNum">     301 </span>            :     }</a>
+<a name="302"><span class="lineNum">     302 </span>            : </a>
+<a name="303"><span class="lineNum">     303 </span><span class="lineNoCov">          0 :     return {};</span></a>
+<a name="304"><span class="lineNum">     304 </span>            : }</a>
+<a name="305"><span class="lineNum">     305 </span>            : </a>
+<a name="306"><span class="lineNum">     306 </span><span class="lineNoCov">          0 : juce::AudioFormatWriter* FloatAudioFormat::createWriterFor (juce::OutputStream* out,</span></a>
+<a name="307"><span class="lineNum">     307 </span>            :                                                             double sampleRate,</a>
+<a name="308"><span class="lineNum">     308 </span>            :                                                             unsigned int numChannels,</a>
+<a name="309"><span class="lineNum">     309 </span>            :                                                             int /*bitsPerSample*/,</a>
+<a name="310"><span class="lineNum">     310 </span>            :                                                             const juce::StringPairArray&amp; /*metadataValues*/,</a>
+<a name="311"><span class="lineNum">     311 </span>            :                                                             int /*qualityOptionIndex*/)</a>
+<a name="312"><span class="lineNum">     312 </span>            : {</a>
+<a name="313"><span class="lineNum">     313 </span><span class="lineNoCov">          0 :     return new FloatAudioFormatWriter (out, sampleRate, numChannels);</span></a>
 <a name="314"><span class="lineNum">     314 </span>            : }</a>
+<a name="315"><span class="lineNum">     315 </span>            : </a>
+<a name="316"><span class="lineNum">     316 </span>            : }</a>
 </pre>
       </td>
     </tr>

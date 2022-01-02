@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -125,7 +125,7 @@
 <a name="63"><span class="lineNum">      63 </span>            :     int indexOfTempo (const TempoSetting*) const;</a>
 <a name="64"><span class="lineNum">      64 </span>            : </a>
 <a name="65"><span class="lineNum">      65 </span>            :     int countTemposInRegion (EditTimeRange range) const;</a>
-<a name="66"><span class="lineNum">      66 </span>            :     juce::int64 createHashForTemposInRange (EditTimeRange) const;</a>
+<a name="66"><span class="lineNum">      66 </span>            :     HashCode createHashForTemposInRange (EditTimeRange) const;</a>
 <a name="67"><span class="lineNum">      67 </span>            : </a>
 <a name="68"><span class="lineNum">      68 </span>            :     /** inserts a tempo break that can be edited later. */</a>
 <a name="69"><span class="lineNum">      69 </span>            :     TempoSetting::Ptr insertTempo (double time);</a>
@@ -190,10 +190,10 @@
 <a name="128"><span class="lineNum">     128 </span>            :         void swapWith (juce::Array&lt;SectionDetails&gt;&amp; newTempos);</a>
 <a name="129"><span class="lineNum">     129 </span>            : </a>
 <a name="130"><span class="lineNum">     130 </span>            :         /** Compare to cheaply determine if any changes have been made. */</a>
-<a name="131"><span class="lineNum">     131 </span>            :         juce::uint32 getChangeCount() const;</a>
+<a name="131"><span class="lineNum">     131 </span>            :         uint32_t getChangeCount() const;</a>
 <a name="132"><span class="lineNum">     132 </span>            : </a>
 <a name="133"><span class="lineNum">     133 </span>            :     private:</a>
-<a name="134"><span class="lineNum">     134 </span>            :         juce::uint32 changeCounter = 0;</a>
+<a name="134"><span class="lineNum">     134 </span>            :         uint32_t changeCounter = 0;</a>
 <a name="135"><span class="lineNum">     135 </span>            :         juce::Array&lt;SectionDetails&gt; tempos;</a>
 <a name="136"><span class="lineNum">     136 </span>            :     };</a>
 <a name="137"><span class="lineNum">     137 </span>            : </a>

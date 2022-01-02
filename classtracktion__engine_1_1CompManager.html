@@ -97,8 +97,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a8e2c84747ba43a94d519cbf4d65de6f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a70046a36dfbc5e706c51f14ce79a911b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1CompManager.html#a70046a36dfbc5e706c51f14ce79a911b">initialise</a> ()</td></tr>
 <tr class="separator:a70046a36dfbc5e706c51f14ce79a911b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6163e33ac39bd2a4d3130d6ff52f5751"><td class="memItemLeft" align="right" valign="top">virtual juce::int64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1CompManager.html#a6163e33ac39bd2a4d3130d6ff52f5751">getBaseTakeHash</a> (int takeIndex) const =0</td></tr>
-<tr class="separator:a6163e33ac39bd2a4d3130d6ff52f5751"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac458dc0bc84f43e99adaa51e88c94fb7"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacetracktion__engine.html#adb3c6f33fbcba4c6e5d7cfd390aecbec">HashCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1CompManager.html#ac458dc0bc84f43e99adaa51e88c94fb7">getBaseTakeHash</a> (int takeIndex) const =0</td></tr>
+<tr class="separator:ac458dc0bc84f43e99adaa51e88c94fb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aee1f3e5b253b6f0cdf9c09652f2e169d"><td class="memItemLeft" align="right" valign="top">virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1CompManager.html#aee1f3e5b253b6f0cdf9c09652f2e169d">getTakeLength</a> (int takeIndex) const =0</td></tr>
 <tr class="separator:aee1f3e5b253b6f0cdf9c09652f2e169d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e85173cbdc12382ba78dbcb02cbeb3a"><td class="memItemLeft" align="right" valign="top">virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1CompManager.html#a1e85173cbdc12382ba78dbcb02cbeb3a">getOffset</a> () const =0</td></tr>
@@ -191,9 +191,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a99cb8a780969a7752a1d26fc3bf5bc55"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1CompManager.html#a99cb8a780969a7752a1d26fc3bf5bc55">getSourceTimeMultiplier</a> () const</td></tr>
 <tr class="memdesc:a99cb8a780969a7752a1d26fc3bf5bc55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current time multiplier in use by the source, either the speed ratio or auto tempo ratio.  <a href="classtracktion__engine_1_1CompManager.html#a99cb8a780969a7752a1d26fc3bf5bc55">More...</a><br /></td></tr>
 <tr class="separator:a99cb8a780969a7752a1d26fc3bf5bc55"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a400b6de5f42fc29fa8dea5d1db281d8d"><td class="memItemLeft" align="right" valign="top">juce::int64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1CompManager.html#a400b6de5f42fc29fa8dea5d1db281d8d">getTakeHash</a> (int takeIndex) const</td></tr>
-<tr class="memdesc:a400b6de5f42fc29fa8dea5d1db281d8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a hash code representing a take.  <a href="classtracktion__engine_1_1CompManager.html#a400b6de5f42fc29fa8dea5d1db281d8d">More...</a><br /></td></tr>
-<tr class="separator:a400b6de5f42fc29fa8dea5d1db281d8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf612b0d767e06456d66ae8792f8611f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetracktion__engine.html#adb3c6f33fbcba4c6e5d7cfd390aecbec">HashCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1CompManager.html#abf612b0d767e06456d66ae8792f8611f">getTakeHash</a> (int takeIndex) const</td></tr>
+<tr class="memdesc:abf612b0d767e06456d66ae8792f8611f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a hash code representing a take.  <a href="classtracktion__engine_1_1CompManager.html#abf612b0d767e06456d66ae8792f8611f">More...</a><br /></td></tr>
+<tr class="separator:abf612b0d767e06456d66ae8792f8611f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae18ed736340800b2cd7c7c24cef93020"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1CompManager.html#ae18ed736340800b2cd7c7c24cef93020">changeSectionIndexAtTime</a> (double time, int takeIndex)</td></tr>
 <tr class="memdesc:ae18ed736340800b2cd7c7c24cef93020"><td class="mdescLeft">&#160;</td><td class="mdescRight">Changes the index of the active comp's section at a given time.  <a href="classtracktion__engine_1_1CompManager.html#ae18ed736340800b2cd7c7c24cef93020">More...</a><br /></td></tr>
 <tr class="separator:ae18ed736340800b2cd7c7c24cef93020"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -237,8 +237,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:af7c60ec8869cd13cc596134891c7fb34"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aca486dfefcb2eb2bd4c2c28f6c279951"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1CompManager.html#aca486dfefcb2eb2bd4c2c28f6c279951">lastRenderedTake</a> = -1</td></tr>
 <tr class="separator:aca486dfefcb2eb2bd4c2c28f6c279951"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5e97664bdd38b32f3b4b53533ea61acd"><td class="memItemLeft" align="right" valign="top">juce::int64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1CompManager.html#a5e97664bdd38b32f3b4b53533ea61acd">lastHash</a> = 0</td></tr>
-<tr class="separator:a5e97664bdd38b32f3b4b53533ea61acd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a360f2513a23073ad305c595656cbdc44"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetracktion__engine.html#adb3c6f33fbcba4c6e5d7cfd390aecbec">HashCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1CompManager.html#a360f2513a23073ad305c595656cbdc44">lastHash</a> = 0</td></tr>
+<tr class="separator:a360f2513a23073ad305c595656cbdc44"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abd723676f69472f1d1aaa9da9ac8fb73"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1CompManager.html#abd723676f69472f1d1aaa9da9ac8fb73">maxCompLength</a></td></tr>
 <tr class="separator:abd723676f69472f1d1aaa9da9ac8fb73"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6a24dc622ca08ff56acc847e17f3e305"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1CompManager.html#a6a24dc622ca08ff56acc847e17f3e305">effectiveTimeMultiplier</a></td></tr>
@@ -349,8 +349,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a6163e33ac39bd2a4d3130d6ff52f5751"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6163e33ac39bd2a4d3130d6ff52f5751">&#9670;&nbsp;</a></span>getBaseTakeHash()</h2>
+<a id="ac458dc0bc84f43e99adaa51e88c94fb7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac458dc0bc84f43e99adaa51e88c94fb7">&#9670;&nbsp;</a></span>getBaseTakeHash()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -359,7 +359,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual juce::int64 tracktion_engine::CompManager::getBaseTakeHash </td>
+          <td class="memname">virtual <a class="el" href="namespacetracktion__engine.html#adb3c6f33fbcba4c6e5d7cfd390aecbec">HashCode</a> tracktion_engine::CompManager::getBaseTakeHash </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>takeIndex</em></td><td>)</td>
@@ -373,7 +373,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classtracktion__engine_1_1MidiCompManager.html#ad8c96194170cf893a7a6c3d7d87aa1f5">tracktion_engine::MidiCompManager</a>, and <a class="el" href="classtracktion__engine_1_1WaveCompManager.html#af5e09e92a6d0bbefe7b9e80a2ff088ae">tracktion_engine::WaveCompManager</a>.</p>
+<p>Implemented in <a class="el" href="classtracktion__engine_1_1MidiCompManager.html#aa17d36eff3a0f30d812e11dede1dc43a">tracktion_engine::MidiCompManager</a>, and <a class="el" href="classtracktion__engine_1_1WaveCompManager.html#a6bbdca739d72a2c3060d32e697448c0e">tracktion_engine::WaveCompManager</a>.</p>
 
 </div>
 </div>
@@ -1230,14 +1230,14 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a400b6de5f42fc29fa8dea5d1db281d8d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a400b6de5f42fc29fa8dea5d1db281d8d">&#9670;&nbsp;</a></span>getTakeHash()</h2>
+<a id="abf612b0d767e06456d66ae8792f8611f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abf612b0d767e06456d66ae8792f8611f">&#9670;&nbsp;</a></span>getTakeHash()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">juce::int64 tracktion_engine::CompManager::getTakeHash </td>
+          <td class="memname"><a class="el" href="namespacetracktion__engine.html#adb3c6f33fbcba4c6e5d7cfd390aecbec">HashCode</a> tracktion_engine::CompManager::getTakeHash </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>takeIndex</em></td><td>)</td>
@@ -1628,8 +1628,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a5e97664bdd38b32f3b4b53533ea61acd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5e97664bdd38b32f3b4b53533ea61acd">&#9670;&nbsp;</a></span>lastHash</h2>
+<a id="a360f2513a23073ad305c595656cbdc44"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a360f2513a23073ad305c595656cbdc44">&#9670;&nbsp;</a></span>lastHash</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1638,7 +1638,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">juce::int64 tracktion_engine::CompManager::lastHash = 0</td>
+          <td class="memname"><a class="el" href="namespacetracktion__engine.html#adb3c6f33fbcba4c6e5d7cfd390aecbec">HashCode</a> tracktion_engine::CompManager::lastHash = 0</td>
         </tr>
       </table>
   </td>
@@ -1748,7 +1748,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Dec 29 2021 12:12:17 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Jan 2 2022 19:42:32 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

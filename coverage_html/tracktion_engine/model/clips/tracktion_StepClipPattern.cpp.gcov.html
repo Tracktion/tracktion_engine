@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -224,8 +224,8 @@
 <a name="162"><span class="lineNum">     162 </span><span class="lineNoCov">          0 : void StepClip::Pattern::setNote (int channel, int index, bool value)</span></a>
 <a name="163"><span class="lineNum">     163 </span>            : {</a>
 <a name="164"><span class="lineNum">     164 </span><span class="lineNoCov">          0 :     if (getNote (channel, index) != value</span></a>
-<a name="165"><span class="lineNum">     165 </span><span class="lineNoCov">          0 :           &amp;&amp; isPositiveAndBelow (index, getNumNotes())</span></a>
-<a name="166"><span class="lineNum">     166 </span><span class="lineNoCov">          0 :           &amp;&amp; isPositiveAndBelow (channel, (int) maxNumChannels))</span></a>
+<a name="165"><span class="lineNum">     165 </span><span class="lineNoCov">          0 :           &amp;&amp; juce::isPositiveAndBelow (index, getNumNotes())</span></a>
+<a name="166"><span class="lineNum">     166 </span><span class="lineNoCov">          0 :           &amp;&amp; juce::isPositiveAndBelow (channel, (int) maxNumChannels))</span></a>
 <a name="167"><span class="lineNum">     167 </span>            :     {</a>
 <a name="168"><span class="lineNum">     168 </span><span class="lineNoCov">          0 :         juce::BigInteger b (getChannel (channel));</span></a>
 <a name="169"><span class="lineNum">     169 </span><span class="lineNoCov">          0 :         b.setBit (index, value);</span></a>
@@ -249,7 +249,7 @@
 <a name="187"><span class="lineNum">     187 </span>            : </a>
 <a name="188"><span class="lineNum">     188 </span><span class="lineNoCov">          0 :     auto velocities = getVelocities (channel);</span></a>
 <a name="189"><span class="lineNum">     189 </span>            : </a>
-<a name="190"><span class="lineNum">     190 </span><span class="lineNoCov">          0 :     if (isPositiveAndBelow (index, velocities.size()))</span></a>
+<a name="190"><span class="lineNum">     190 </span><span class="lineNoCov">          0 :     if (juce::isPositiveAndBelow (index, velocities.size()))</span></a>
 <a name="191"><span class="lineNum">     191 </span><span class="lineNoCov">          0 :         return velocities[index];</span></a>
 <a name="192"><span class="lineNum">     192 </span>            : </a>
 <a name="193"><span class="lineNum">     193 </span><span class="lineNoCov">          0 :     if (clip.getChannels()[channel] != nullptr)</span></a>
@@ -260,7 +260,7 @@
 <a name="198"><span class="lineNum">     198 </span>            : </a>
 <a name="199"><span class="lineNum">     199 </span><span class="lineNoCov">          0 : void StepClip::Pattern::setVelocity (int channel, int index, int value)</span></a>
 <a name="200"><span class="lineNum">     200 </span>            : {</a>
-<a name="201"><span class="lineNum">     201 </span><span class="lineNoCov">          0 :     if (! isPositiveAndBelow (channel, (int) maxNumChannels))</span></a>
+<a name="201"><span class="lineNum">     201 </span><span class="lineNoCov">          0 :     if (! juce::isPositiveAndBelow (channel, (int) maxNumChannels))</span></a>
 <a name="202"><span class="lineNum">     202 </span><span class="lineNoCov">          0 :         return;</span></a>
 <a name="203"><span class="lineNum">     203 </span>            : </a>
 <a name="204"><span class="lineNum">     204 </span><span class="lineNoCov">          0 :     setNote (channel, index, true);</span></a>
@@ -268,7 +268,7 @@
 <a name="206"><span class="lineNum">     206 </span><span class="lineNoCov">          0 :     auto velocities = getVelocities (channel);</span></a>
 <a name="207"><span class="lineNum">     207 </span>            :     const int size = velocities.size();</a>
 <a name="208"><span class="lineNum">     208 </span>            : </a>
-<a name="209"><span class="lineNum">     209 </span><span class="lineNoCov">          0 :     if (! isPositiveAndNotGreaterThan (index, size))</span></a>
+<a name="209"><span class="lineNum">     209 </span><span class="lineNoCov">          0 :     if (! juce::isPositiveAndNotGreaterThan (index, size))</span></a>
 <a name="210"><span class="lineNum">     210 </span><span class="lineNoCov">          0 :         velocities.insertMultiple (size, 127, index - size);</span></a>
 <a name="211"><span class="lineNum">     211 </span>            : </a>
 <a name="212"><span class="lineNum">     212 </span><span class="lineNoCov">          0 :     velocities.set (index, value);</span></a>
@@ -282,7 +282,7 @@
 <a name="220"><span class="lineNum">     220 </span>            : </a>
 <a name="221"><span class="lineNum">     221 </span><span class="lineNoCov">          0 :     auto gates = getGates (channel);</span></a>
 <a name="222"><span class="lineNum">     222 </span>            : </a>
-<a name="223"><span class="lineNum">     223 </span><span class="lineNoCov">          0 :     if (isPositiveAndBelow (index, gates.size()))</span></a>
+<a name="223"><span class="lineNum">     223 </span><span class="lineNoCov">          0 :     if (juce::isPositiveAndBelow (index, gates.size()))</span></a>
 <a name="224"><span class="lineNum">     224 </span><span class="lineNoCov">          0 :         return gates[index];</span></a>
 <a name="225"><span class="lineNum">     225 </span>            : </a>
 <a name="226"><span class="lineNum">     226 </span>            :     return 1.0;</a>
@@ -295,7 +295,7 @@
 <a name="233"><span class="lineNum">     233 </span>            : </a>
 <a name="234"><span class="lineNum">     234 </span><span class="lineNoCov">          0 :     auto p = getProbabilities (channel);</span></a>
 <a name="235"><span class="lineNum">     235 </span>            : </a>
-<a name="236"><span class="lineNum">     236 </span><span class="lineNoCov">          0 :     if (isPositiveAndBelow (index, p.size()))</span></a>
+<a name="236"><span class="lineNum">     236 </span><span class="lineNoCov">          0 :     if (juce::isPositiveAndBelow (index, p.size()))</span></a>
 <a name="237"><span class="lineNum">     237 </span><span class="lineNoCov">          0 :         return p[index];</span></a>
 <a name="238"><span class="lineNum">     238 </span>            : </a>
 <a name="239"><span class="lineNum">     239 </span>            :     return 1.0;</a>
@@ -303,7 +303,7 @@
 <a name="241"><span class="lineNum">     241 </span>            : </a>
 <a name="242"><span class="lineNum">     242 </span><span class="lineNoCov">          0 : void StepClip::Pattern::setGate (int channel, int index, double value)</span></a>
 <a name="243"><span class="lineNum">     243 </span>            : {</a>
-<a name="244"><span class="lineNum">     244 </span><span class="lineNoCov">          0 :     if (! isPositiveAndBelow (channel, (int) maxNumChannels))</span></a>
+<a name="244"><span class="lineNum">     244 </span><span class="lineNoCov">          0 :     if (! juce::isPositiveAndBelow (channel, (int) maxNumChannels))</span></a>
 <a name="245"><span class="lineNum">     245 </span><span class="lineNoCov">          0 :         return;</span></a>
 <a name="246"><span class="lineNum">     246 </span>            : </a>
 <a name="247"><span class="lineNum">     247 </span><span class="lineNoCov">          0 :     setNote (channel, index, value != 0.0);</span></a>
@@ -311,7 +311,7 @@
 <a name="249"><span class="lineNum">     249 </span><span class="lineNoCov">          0 :     auto gates = getGates (channel);</span></a>
 <a name="250"><span class="lineNum">     250 </span>            :     const int size = gates.size();</a>
 <a name="251"><span class="lineNum">     251 </span>            : </a>
-<a name="252"><span class="lineNum">     252 </span><span class="lineNoCov">          0 :     if (! isPositiveAndNotGreaterThan (index, size))</span></a>
+<a name="252"><span class="lineNum">     252 </span><span class="lineNoCov">          0 :     if (! juce::isPositiveAndNotGreaterThan (index, size))</span></a>
 <a name="253"><span class="lineNum">     253 </span><span class="lineNoCov">          0 :         gates.insertMultiple (size, 1.0, index - size);</span></a>
 <a name="254"><span class="lineNum">     254 </span>            : </a>
 <a name="255"><span class="lineNum">     255 </span><span class="lineNoCov">          0 :     gates.set (index, value);</span></a>
@@ -320,7 +320,7 @@
 <a name="258"><span class="lineNum">     258 </span>            : </a>
 <a name="259"><span class="lineNum">     259 </span><span class="lineNoCov">          0 : void StepClip::Pattern::setProbability (int channel, int index, float value)</span></a>
 <a name="260"><span class="lineNum">     260 </span>            : {</a>
-<a name="261"><span class="lineNum">     261 </span><span class="lineNoCov">          0 :     if (! isPositiveAndBelow (channel, (int) maxNumChannels))</span></a>
+<a name="261"><span class="lineNum">     261 </span><span class="lineNoCov">          0 :     if (! juce::isPositiveAndBelow (channel, (int) maxNumChannels))</span></a>
 <a name="262"><span class="lineNum">     262 </span><span class="lineNoCov">          0 :         return;</span></a>
 <a name="263"><span class="lineNum">     263 </span>            : </a>
 <a name="264"><span class="lineNum">     264 </span><span class="lineNoCov">          0 :     setNote (channel, index, value != 0.0);</span></a>
@@ -328,7 +328,7 @@
 <a name="266"><span class="lineNum">     266 </span><span class="lineNoCov">          0 :     auto p = getProbabilities (channel);</span></a>
 <a name="267"><span class="lineNum">     267 </span>            :     const int size = p.size();</a>
 <a name="268"><span class="lineNum">     268 </span>            : </a>
-<a name="269"><span class="lineNum">     269 </span><span class="lineNoCov">          0 :     if (! isPositiveAndNotGreaterThan (index, size))</span></a>
+<a name="269"><span class="lineNum">     269 </span><span class="lineNoCov">          0 :     if (! juce::isPositiveAndNotGreaterThan (index, size))</span></a>
 <a name="270"><span class="lineNum">     270 </span><span class="lineNoCov">          0 :         p.insertMultiple (size, 1.0f, index - size);</span></a>
 <a name="271"><span class="lineNum">     271 </span>            : </a>
 <a name="272"><span class="lineNum">     272 </span><span class="lineNoCov">          0 :     p.set (index, value);</span></a>
@@ -347,7 +347,7 @@
 <a name="285"><span class="lineNum">     285 </span>            : </a>
 <a name="286"><span class="lineNum">     286 </span><span class="lineNoCov">          0 : void StepClip::Pattern::insertChannel (int channel)</span></a>
 <a name="287"><span class="lineNum">     287 </span>            : {</a>
-<a name="288"><span class="lineNum">     288 </span><span class="lineNoCov">          0 :     state.addChild (ValueTree (IDs::CHANNEL), channel, clip.getUndoManager());</span></a>
+<a name="288"><span class="lineNum">     288 </span><span class="lineNoCov">          0 :     state.addChild (juce::ValueTree (IDs::CHANNEL), channel, clip.getUndoManager());</span></a>
 <a name="289"><span class="lineNum">     289 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="290"><span class="lineNum">     290 </span>            : </a>
 <a name="291"><span class="lineNum">     291 </span><span class="lineNoCov">          0 : void StepClip::Pattern::removeChannel (int channel)</span></a>
@@ -359,18 +359,18 @@
 <a name="297"><span class="lineNum">     297 </span>            : {</a>
 <a name="298"><span class="lineNum">     298 </span><span class="lineNoCov">          0 :     clearChannel (channel);</span></a>
 <a name="299"><span class="lineNum">     299 </span>            : </a>
-<a name="300"><span class="lineNum">     300 </span><span class="lineNoCov">          0 :     Random r;</span></a>
+<a name="300"><span class="lineNum">     300 </span><span class="lineNoCov">          0 :     juce::Random r;</span></a>
 <a name="301"><span class="lineNum">     301 </span><span class="lineNoCov">          0 :     for (int i = 0; i &lt; getNumNotes(); ++i)</span></a>
 <a name="302"><span class="lineNum">     302 </span><span class="lineNoCov">          0 :         setNote (channel, i, r.nextBool());</span></a>
 <a name="303"><span class="lineNum">     303 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="304"><span class="lineNum">     304 </span>            : </a>
 <a name="305"><span class="lineNum">     305 </span><span class="lineNoCov">          0 : void StepClip::Pattern::randomiseSteps()</span></a>
 <a name="306"><span class="lineNum">     306 </span>            : {</a>
-<a name="307"><span class="lineNum">     307 </span><span class="lineNoCov">          0 :     Random r;</span></a>
+<a name="307"><span class="lineNum">     307 </span><span class="lineNoCov">          0 :     juce::Random r;</span></a>
 <a name="308"><span class="lineNum">     308 </span><span class="lineNoCov">          0 :     const int numChannels = clip.getChannels().size();</span></a>
 <a name="309"><span class="lineNum">     309 </span>            :     const int numSteps = getNumNotes();</a>
 <a name="310"><span class="lineNum">     310 </span>            : </a>
-<a name="311"><span class="lineNum">     311 </span><span class="lineNoCov">          0 :     juce::Array&lt;BigInteger&gt; chans;</span></a>
+<a name="311"><span class="lineNum">     311 </span><span class="lineNoCov">          0 :     juce::Array&lt;juce::BigInteger&gt; chans;</span></a>
 <a name="312"><span class="lineNum">     312 </span><span class="lineNoCov">          0 :     chans.insertMultiple (0, juce::BigInteger(), numChannels);</span></a>
 <a name="313"><span class="lineNum">     313 </span>            : </a>
 <a name="314"><span class="lineNum">     314 </span><span class="lineNoCov">          0 :     for (int i = 0; i &lt; numSteps; ++i)</span></a>
@@ -421,7 +421,7 @@
 <a name="359"><span class="lineNum">     359 </span><span class="lineNoCov">          0 :     if (! getNote (index))</span></a>
 <a name="360"><span class="lineNum">     360 </span>            :         return -1;</a>
 <a name="361"><span class="lineNum">     361 </span>            : </a>
-<a name="362"><span class="lineNum">     362 </span><span class="lineNoCov">          0 :     if (isPositiveAndBelow (index, velocities.size()))</span></a>
+<a name="362"><span class="lineNum">     362 </span><span class="lineNoCov">          0 :     if (juce::isPositiveAndBelow (index, velocities.size()))</span></a>
 <a name="363"><span class="lineNum">     363 </span><span class="lineNoCov">          0 :         return velocities[index];</span></a>
 <a name="364"><span class="lineNum">     364 </span>            : </a>
 <a name="365"><span class="lineNum">     365 </span>            :     return 127;</a>
@@ -432,7 +432,7 @@
 <a name="370"><span class="lineNum">     370 </span><span class="lineNoCov">          0 :     if (! getNote (index))</span></a>
 <a name="371"><span class="lineNum">     371 </span>            :         return 0.0;</a>
 <a name="372"><span class="lineNum">     372 </span>            : </a>
-<a name="373"><span class="lineNum">     373 </span><span class="lineNoCov">          0 :     if (isPositiveAndBelow (index, gates.size()))</span></a>
+<a name="373"><span class="lineNum">     373 </span><span class="lineNoCov">          0 :     if (juce::isPositiveAndBelow (index, gates.size()))</span></a>
 <a name="374"><span class="lineNum">     374 </span><span class="lineNoCov">          0 :         return gates[index];</span></a>
 <a name="375"><span class="lineNum">     375 </span>            : </a>
 <a name="376"><span class="lineNum">     376 </span>            :     return 1.0;</a>
@@ -443,7 +443,7 @@
 <a name="381"><span class="lineNum">     381 </span><span class="lineNoCov">          0 :     if (! getNote (index))</span></a>
 <a name="382"><span class="lineNum">     382 </span>            :         return 0.0;</a>
 <a name="383"><span class="lineNum">     383 </span>            : </a>
-<a name="384"><span class="lineNum">     384 </span><span class="lineNoCov">          0 :     if (isPositiveAndBelow (index, probabilities.size()))</span></a>
+<a name="384"><span class="lineNum">     384 </span><span class="lineNoCov">          0 :     if (juce::isPositiveAndBelow (index, probabilities.size()))</span></a>
 <a name="385"><span class="lineNum">     385 </span><span class="lineNoCov">          0 :         return probabilities[index];</span></a>
 <a name="386"><span class="lineNum">     386 </span>            : </a>
 <a name="387"><span class="lineNum">     387 </span>            :     return 1.0;</a>
@@ -463,8 +463,8 @@
 <a name="401"><span class="lineNum">     401 </span><span class="lineNoCov">          0 : juce::String StepClip::PatternInstance::getSelectableDescription()</span></a>
 <a name="402"><span class="lineNum">     402 </span>            : {</a>
 <a name="403"><span class="lineNum">     403 </span><span class="lineNoCov">          0 :     return clip.getName() + &quot;  -  &quot;</span></a>
-<a name="404"><span class="lineNum">     404 </span><span class="lineNoCov">          0 :          + TRANS(&quot;Variation 123&quot;).replace (&quot;123&quot;, String (getSequenceIndex() + 1)) + &quot; (&quot;</span></a>
-<a name="405"><span class="lineNum">     405 </span><span class="lineNoCov">          0 :          + TRANS(&quot;Variation 123&quot;).replace (&quot;123&quot;, String (patternIndex + 1)) + &quot;)&quot;;</span></a>
+<a name="404"><span class="lineNum">     404 </span><span class="lineNoCov">          0 :          + TRANS(&quot;Variation 123&quot;).replace (&quot;123&quot;, juce::String (getSequenceIndex() + 1)) + &quot; (&quot;</span></a>
+<a name="405"><span class="lineNum">     405 </span><span class="lineNoCov">          0 :          + TRANS(&quot;Variation 123&quot;).replace (&quot;123&quot;, juce::String (patternIndex + 1)) + &quot;)&quot;;</span></a>
 <a name="406"><span class="lineNum">     406 </span>            : }</a>
 <a name="407"><span class="lineNum">     407 </span>            : </a>
 <a name="408"><span class="lineNum">     408 </span>            : }</a>

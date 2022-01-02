@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['weakref_12516',['WeakRef',['../classtracktion__engine_1_1Selectable.html#a03901c25cc0479dcdb3fa3ce8b8b28ae',1,'tracktion_engine::Selectable::WeakRef()'],['../classtracktion__engine_1_1Engine.html#a437a2a51d647b379f64a4ed42244d7b0',1,'tracktion_engine::Engine::WeakRef()']]]
+  ['visitorfn_12520',['VisitorFn',['../classtracktion__engine_1_1AudioNode.html#ad1dfdddbf6c74511a9881786dd4ad7e6',1,'tracktion_engine::AudioNode']]]
 ];

@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">6</td>
-            <td class="headerCovTableEntry">90</td>
-            <td class="headerCovTableEntryLo">6.7 %</td>
+            <td class="headerCovTableEntry">92</td>
+            <td class="headerCovTableEntryLo">6.5 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -93,14 +93,14 @@
 <a name="31"><span class="lineNum">      31 </span>            : //==============================================================================</a>
 <a name="32"><span class="lineNum">      32 </span><span class="lineNoCov">          0 : void UIBehaviour::showWarningAlert (const juce::String&amp; title, const juce::String&amp; message)</span></a>
 <a name="33"><span class="lineNum">      33 </span>            : {</a>
-<a name="34"><span class="lineNum">      34 </span><span class="lineNoCov">          0 :     AlertWindow::showMessageBoxAsync (AlertWindow::WarningIcon, title, message);</span></a>
+<a name="34"><span class="lineNum">      34 </span><span class="lineNoCov">          0 :     juce::AlertWindow::showMessageBoxAsync (juce::AlertWindow::WarningIcon, title, message);</span></a>
 <a name="35"><span class="lineNum">      35 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="36"><span class="lineNum">      36 </span>            : </a>
 <a name="37"><span class="lineNum">      37 </span><span class="lineNoCov">          0 : bool UIBehaviour::showOkCancelAlertBox (const juce::String&amp; title, const juce::String&amp; message,</span></a>
 <a name="38"><span class="lineNum">      38 </span>            :                                         const juce::String&amp; ok, const juce::String&amp; cancel)</a>
 <a name="39"><span class="lineNum">      39 </span>            : {</a>
 <a name="40"><span class="lineNum">      40 </span>            :    #if JUCE_MODAL_LOOPS_PERMITTED</a>
-<a name="41"><span class="lineNum">      41 </span><span class="lineNoCov">          0 :     return AlertWindow::showOkCancelBox (AlertWindow::QuestionIcon, title, message, ok, cancel);</span></a>
+<a name="41"><span class="lineNum">      41 </span><span class="lineNoCov">          0 :     return juce::AlertWindow::showOkCancelBox (juce::AlertWindow::QuestionIcon, title, message, ok, cancel);</span></a>
 <a name="42"><span class="lineNum">      42 </span>            :    #else</a>
 <a name="43"><span class="lineNum">      43 </span>            :     jassertfalse; // These methods are currently unsupported in non-modal mode and calls to them from within the Engine will be replaced</a>
 <a name="44"><span class="lineNum">      44 </span>            :     return true;</a>
@@ -111,7 +111,7 @@
 <a name="49"><span class="lineNum">      49 </span>            :                                           const juce::String&amp; yes, const juce::String&amp; no, const juce::String&amp; cancel)</a>
 <a name="50"><span class="lineNum">      50 </span>            : {</a>
 <a name="51"><span class="lineNum">      51 </span>            :    #if JUCE_MODAL_LOOPS_PERMITTED</a>
-<a name="52"><span class="lineNum">      52 </span><span class="lineNoCov">          0 :     return AlertWindow::showYesNoCancelBox (AlertWindow::QuestionIcon, title, message, yes, no, cancel);</span></a>
+<a name="52"><span class="lineNum">      52 </span><span class="lineNoCov">          0 :     return juce::AlertWindow::showYesNoCancelBox (juce::AlertWindow::QuestionIcon, title, message, yes, no, cancel);</span></a>
 <a name="53"><span class="lineNum">      53 </span>            :    #else</a>
 <a name="54"><span class="lineNum">      54 </span>            :     jassertfalse; // These methods are currently unsupported in non-modal mode and calls to them from within the Engine will be replaced</a>
 <a name="55"><span class="lineNum">      55 </span>            :     return 1;</a>
@@ -120,11 +120,11 @@
 <a name="58"><span class="lineNum">      58 </span>            : </a>
 <a name="59"><span class="lineNum">      59 </span><span class="lineCov">          8 : void UIBehaviour::showInfoMessage (const juce::String&amp; message)</span></a>
 <a name="60"><span class="lineNum">      60 </span>            : {</a>
-<a name="61"><span class="lineNum">      61 </span><span class="lineCov">          8 :     if (auto c = Desktop::getInstance().getMainMouseSource().getComponentUnderMouse())</span></a>
+<a name="61"><span class="lineNum">      61 </span><span class="lineCov">          8 :     if (auto c = juce::Desktop::getInstance().getMainMouseSource().getComponentUnderMouse())</span></a>
 <a name="62"><span class="lineNum">      62 </span>            :     {</a>
-<a name="63"><span class="lineNum">      63 </span><span class="lineNoCov">          0 :         auto bmc = new BubbleMessageComponent();</span></a>
+<a name="63"><span class="lineNum">      63 </span><span class="lineNoCov">          0 :         auto bmc = new juce::BubbleMessageComponent();</span></a>
 <a name="64"><span class="lineNum">      64 </span><span class="lineNoCov">          0 :         bmc-&gt;addToDesktop (0);</span></a>
-<a name="65"><span class="lineNum">      65 </span><span class="lineNoCov">          0 :         bmc-&gt;showAt (c, AttributedString (message), 2000, true, true);</span></a>
+<a name="65"><span class="lineNum">      65 </span><span class="lineNoCov">          0 :         bmc-&gt;showAt (c, juce::AttributedString (message), 2000, true, true);</span></a>
 <a name="66"><span class="lineNum">      66 </span>            :     }</a>
 <a name="67"><span class="lineNum">      67 </span><span class="lineCov">          8 : }</span></a>
 <a name="68"><span class="lineNum">      68 </span>            : </a>
@@ -135,7 +135,7 @@
 <a name="73"><span class="lineNum">      73 </span>            : </a>
 <a name="74"><span class="lineNum">      74 </span>            : //==============================================================================</a>
 <a name="75"><span class="lineNum">      75 </span><span class="lineNoCov">          0 : void UIBehaviour::nudgeSelectedClips (TimecodeSnapType snapType, const juce::String&amp; commandDesc,</span></a>
-<a name="76"><span class="lineNum">      76 </span>            :                                       SelectionManager&amp; sm, const Array&lt;Clip*&gt;&amp; clips, bool automationLocked)</a>
+<a name="76"><span class="lineNum">      76 </span>            :                                       SelectionManager&amp; sm, const juce::Array&lt;Clip*&gt;&amp; clips, bool automationLocked)</a>
 <a name="77"><span class="lineNum">      77 </span>            : {</a>
 <a name="78"><span class="lineNum">      78 </span>            :     jassert (clips.size() &gt; 0);</a>
 <a name="79"><span class="lineNum">      79 </span><span class="lineNoCov">          0 :     auto&amp; ed = clips.getFirst()-&gt;edit;</span></a>
@@ -151,14 +151,14 @@
 <a name="89"><span class="lineNum">      89 </span>            : </a>
 <a name="90"><span class="lineNum">      90 </span>            :     if (trackDelta != 0)</a>
 <a name="91"><span class="lineNum">      91 </span>            :     {</a>
-<a name="92"><span class="lineNum">      92 </span>            :         int minTrack = 0xffff;</a>
-<a name="93"><span class="lineNum">      93 </span>            :         int maxTrack = 0;</a>
+<a name="92"><span class="lineNum">      92 </span><span class="lineNoCov">          0 :         int minTrack = 0xffff;</span></a>
+<a name="93"><span class="lineNum">      93 </span><span class="lineNoCov">          0 :         int maxTrack = 0;</span></a>
 <a name="94"><span class="lineNum">      94 </span><span class="lineNoCov">          0 :         auto allTracks = getAllTracks (ed);</span></a>
 <a name="95"><span class="lineNum">      95 </span>            : </a>
 <a name="96"><span class="lineNum">      96 </span><span class="lineNoCov">          0 :         for (int i = clips.size(); --i &gt;= 0;)</span></a>
 <a name="97"><span class="lineNum">      97 </span>            :         {</a>
-<a name="98"><span class="lineNum">      98 </span><span class="lineNoCov">          0 :             minTrack = jmin (minTrack, allTracks.indexOf (clips.getUnchecked (i)-&gt;getTrack()));</span></a>
-<a name="99"><span class="lineNum">      99 </span><span class="lineNoCov">          0 :             maxTrack = jmax (maxTrack, allTracks.indexOf (clips.getUnchecked (i)-&gt;getTrack()));</span></a>
+<a name="98"><span class="lineNum">      98 </span><span class="lineNoCov">          0 :             minTrack = std::min (minTrack, allTracks.indexOf (clips.getUnchecked (i)-&gt;getTrack()));</span></a>
+<a name="99"><span class="lineNum">      99 </span><span class="lineNoCov">          0 :             maxTrack = std::max (maxTrack, allTracks.indexOf (clips.getUnchecked (i)-&gt;getTrack()));</span></a>
 <a name="100"><span class="lineNum">     100 </span>            :         }</a>
 <a name="101"><span class="lineNum">     101 </span>            : </a>
 <a name="102"><span class="lineNum">     102 </span><span class="lineNoCov">          0 :         if (trackDelta &lt; 0)</span></a>
@@ -174,7 +174,7 @@
 <a name="112"><span class="lineNum">     112 </span>            : </a>
 <a name="113"><span class="lineNum">     113 </span><span class="lineNoCov">          0 :         if (trackDelta != 0)</span></a>
 <a name="114"><span class="lineNum">     114 </span>            :         {</a>
-<a name="115"><span class="lineNum">     115 </span><span class="lineNoCov">          0 :             Array&lt;TrackAutomationSection&gt; sections;</span></a>
+<a name="115"><span class="lineNum">     115 </span><span class="lineNoCov">          0 :             juce::Array&lt;TrackAutomationSection&gt; sections;</span></a>
 <a name="116"><span class="lineNum">     116 </span>            : </a>
 <a name="117"><span class="lineNum">     117 </span><span class="lineNoCov">          0 :             if (automationLocked)</span></a>
 <a name="118"><span class="lineNum">     118 </span>            :             {</a>
@@ -199,7 +199,7 @@
 <a name="137"><span class="lineNum">     137 </span>            :     }</a>
 <a name="138"><span class="lineNum">     138 </span><span class="lineNoCov">          0 :     else if (delta != 0)</span></a>
 <a name="139"><span class="lineNum">     139 </span>            :     {</a>
-<a name="140"><span class="lineNum">     140 </span><span class="lineNoCov">          0 :         Array&lt;TrackAutomationSection&gt; sections;</span></a>
+<a name="140"><span class="lineNum">     140 </span><span class="lineNoCov">          0 :         juce::Array&lt;TrackAutomationSection&gt; sections;</span></a>
 <a name="141"><span class="lineNum">     141 </span>            : </a>
 <a name="142"><span class="lineNum">     142 </span><span class="lineNoCov">          0 :         if (automationLocked)</span></a>
 <a name="143"><span class="lineNum">     143 </span><span class="lineNoCov">          0 :             for (auto&amp;&amp; clip : clips)</span></a>

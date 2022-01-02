@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -446,9 +446,9 @@
 <a name="384"><span class="lineNum">     384 </span>            :     void setupTextFunctions();</a>
 <a name="385"><span class="lineNum">     385 </span>            :     AutomatableParameter* addParam (const juce::String&amp; paramID, const juce::String&amp; name, juce::NormalisableRange&lt;float&gt; valueRange, juce::String label = {});</a>
 <a name="386"><span class="lineNum">     386 </span>            : </a>
-<a name="387"><span class="lineNum">     387 </span>            :     void applyToBuffer (juce::AudioSampleBuffer&amp; buffer, juce::MidiBuffer&amp; midi);</a>
-<a name="388"><span class="lineNum">     388 </span>            :     void updateParams (juce::AudioSampleBuffer&amp; buffer);</a>
-<a name="389"><span class="lineNum">     389 </span>            :     void applyEffects (juce::AudioSampleBuffer&amp; buffer);</a>
+<a name="387"><span class="lineNum">     387 </span>            :     void applyToBuffer (juce::AudioBuffer&lt;float&gt;&amp; buffer, juce::MidiBuffer&amp; midi);</a>
+<a name="388"><span class="lineNum">     388 </span>            :     void updateParams (juce::AudioBuffer&lt;float&gt;&amp; buffer);</a>
+<a name="389"><span class="lineNum">     389 </span>            :     void applyEffects (juce::AudioBuffer&lt;float&gt;&amp; buffer);</a>
 <a name="390"><span class="lineNum">     390 </span>            :     float paramValue (AutomatableParameter::Ptr param);</a>
 <a name="391"><span class="lineNum">     391 </span>            : </a>
 <a name="392"><span class="lineNum">     392 </span>            :     TempoSequencePosition currentPos {edit.tempoSequence};</a>

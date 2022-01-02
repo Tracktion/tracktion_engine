@@ -302,7 +302,7 @@ var searchData=
   ['movingallpoints_3464',['movingAllPoints',['../classtracktion__engine_1_1CurveEditor.html#a04ec1718c9f0ba8fc2ea63e0313d4a6c',1,'tracktion_engine::CurveEditor']]],
   ['mp3_3465',['mp3',['../classtracktion__engine_1_1RenderOptions.html#a24077cbf9c84024660e08a2e84278fd4aeb2de812aecb10c2524f9723c89271f9',1,'tracktion_engine::RenderOptions']]],
   ['mpepressure_3466',['mpePressure',['../classtracktion__engine_1_1FourOscPlugin.html#abd9fd2c168fd8b282fff0fdffaa2de9dac39f09a664f73c505a60bf0a363f51be',1,'tracktion_engine::FourOscPlugin']]],
-  ['mpesourceid_3467',['mpeSourceID',['../structtracktion__engine_1_1MidiMessageArray_1_1MidiMessageWithSource.html#a832873a7364769fc223fb282da941f57',1,'tracktion_engine::MidiMessageArray::MidiMessageWithSource::mpeSourceID()'],['../structtracktion__engine_1_1MidiMessageArray.html#a36e4be4a072539ee901334469a9d40ca',1,'tracktion_engine::MidiMessageArray::MPESourceID()']]],
+  ['mpesourceid_3467',['mpeSourceID',['../structtracktion__engine_1_1MidiMessageArray_1_1MidiMessageWithSource.html#a832873a7364769fc223fb282da941f57',1,'tracktion_engine::MidiMessageArray::MidiMessageWithSource::mpeSourceID()'],['../structtracktion__engine_1_1MidiMessageArray.html#ac9cbb3e80daa08e67ddd980ccc8b6a85',1,'tracktion_engine::MidiMessageArray::MPESourceID()']]],
   ['mpestarttrimmer_3468',['MPEStartTrimmer',['../structtracktion__engine_1_1MPEStartTrimmer.html',1,'tracktion_engine']]],
   ['mpetimbre_3469',['mpeTimbre',['../classtracktion__engine_1_1FourOscPlugin.html#abd9fd2c168fd8b282fff0fdffaa2de9da23c4bcd04f5a0673c38fdfcf81d01459',1,'tracktion_engine::FourOscPlugin']]],
   ['multiplyby_3470',['multiplyBy',['../namespacetracktion__graph.html#a1eea41247582004c7fe8968402572d97',1,'tracktion_graph']]],

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">7</td>
@@ -150,7 +150,7 @@
 <a name="88"><span class="lineNum">      88 </span>            :     return {};</a>
 <a name="89"><span class="lineNum">      89 </span>            : }</a>
 <a name="90"><span class="lineNum">      90 </span>            : </a>
-<a name="91"><span class="lineNum">      91 </span><span class="lineNoCov">          0 : juce::Range&lt;juce::int64&gt; AudioFileUtils::scanForNonZeroSamples (Engine&amp; engine, const juce::File&amp; file, float maxZeroLevelDb)</span></a>
+<a name="91"><span class="lineNum">      91 </span><span class="lineNoCov">          0 : SampleRange AudioFileUtils::scanForNonZeroSamples (Engine&amp; engine, const juce::File&amp; file, float maxZeroLevelDb)</span></a>
 <a name="92"><span class="lineNum">      92 </span>            : {</a>
 <a name="93"><span class="lineNum">      93 </span>            :     std::unique_ptr&lt;juce::AudioFormatReader&gt; reader (createReaderFor (engine, file));</a>
 <a name="94"><span class="lineNum">      94 </span>            : </a>
@@ -174,13 +174,13 @@
 <a name="112"><span class="lineNum">     112 </span><span class="lineNoCov">          0 :     for (int i = 0; i &lt; numChans; ++i)</span></a>
 <a name="113"><span class="lineNum">     113 </span><span class="lineNoCov">          0 :         chans[i] = buffer + i * sampsPerBlock;</span></a>
 <a name="114"><span class="lineNum">     114 </span>            : </a>
-<a name="115"><span class="lineNum">     115 </span><span class="lineNoCov">          0 :     juce::int64 firstNonZero = 0, lastNonZero = 0, n = 0;</span></a>
+<a name="115"><span class="lineNum">     115 </span><span class="lineNoCov">          0 :     SampleCount firstNonZero = 0, lastNonZero = 0, n = 0;</span></a>
 <a name="116"><span class="lineNum">     116 </span>            :     bool needFirst = true;</a>
 <a name="117"><span class="lineNum">     117 </span>            : </a>
 <a name="118"><span class="lineNum">     118 </span><span class="lineNoCov">          0 :     while (n &lt; reader-&gt;lengthInSamples)</span></a>
 <a name="119"><span class="lineNum">     119 </span>            :     {</a>
 <a name="120"><span class="lineNum">     120 </span><span class="lineNoCov">          0 :         for (int j = numChans; --j &gt;= 0;)</span></a>
-<a name="121"><span class="lineNum">     121 </span><span class="lineNoCov">          0 :             juce::zeromem (chans[j], sizeof (int) * sampsPerBlock);</span></a>
+<a name="121"><span class="lineNum">     121 </span><span class="lineNoCov">          0 :             std::memset (chans[j], 0, sizeof (int) * sampsPerBlock);</span></a>
 <a name="122"><span class="lineNum">     122 </span>            : </a>
 <a name="123"><span class="lineNum">     123 </span><span class="lineNoCov">          0 :         reader-&gt;read (chans, numChans, n, sampsPerBlock, false);</span></a>
 <a name="124"><span class="lineNum">     124 </span>            : </a>
@@ -230,9 +230,9 @@
 <a name="168"><span class="lineNum">     168 </span><span class="lineNoCov">          0 :     return { firstNonZero, lastNonZero };</span></a>
 <a name="169"><span class="lineNum">     169 </span>            : }</a>
 <a name="170"><span class="lineNum">     170 </span>            : </a>
-<a name="171"><span class="lineNum">     171 </span><span class="lineNoCov">          0 : static juce::int64 copySection (Engine&amp; e, std::unique_ptr&lt;juce::AudioFormatReader&gt;&amp; reader,</span></a>
+<a name="171"><span class="lineNum">     171 </span><span class="lineNoCov">          0 : static SampleCount copySection (Engine&amp; e, std::unique_ptr&lt;juce::AudioFormatReader&gt;&amp; reader,</span></a>
 <a name="172"><span class="lineNum">     172 </span>            :                                 const juce::File&amp; sourceFile, const juce::File&amp; destFile,</a>
-<a name="173"><span class="lineNum">     173 </span>            :                                 juce::Range&lt;juce::int64&gt; range)</a>
+<a name="173"><span class="lineNum">     173 </span>            :                                 SampleRange range)</a>
 <a name="174"><span class="lineNum">     174 </span>            : {</a>
 <a name="175"><span class="lineNum">     175 </span><span class="lineNoCov">          0 :     if (range.contains ({ 0, reader-&gt;lengthInSamples })</span></a>
 <a name="176"><span class="lineNum">     176 </span><span class="lineNoCov">          0 :          &amp;&amp; sourceFile.getFileExtension() == destFile.getFileExtension())</span></a>
@@ -258,8 +258,8 @@
 <a name="196"><span class="lineNum">     196 </span>            :     return -1;</a>
 <a name="197"><span class="lineNum">     197 </span>            : }</a>
 <a name="198"><span class="lineNum">     198 </span>            : </a>
-<a name="199"><span class="lineNum">     199 </span><span class="lineNoCov">          0 : juce::int64 AudioFileUtils::copySectionToNewFile (Engine&amp; e, const juce::File&amp; sourceFile, const juce::File&amp; destFile,</span></a>
-<a name="200"><span class="lineNum">     200 </span>            :                                                   const juce::Range&lt;juce::int64&gt;&amp; range)</a>
+<a name="199"><span class="lineNum">     199 </span><span class="lineNoCov">          0 : SampleCount AudioFileUtils::copySectionToNewFile (Engine&amp; e, const juce::File&amp; sourceFile,</span></a>
+<a name="200"><span class="lineNum">     200 </span>            :                                                   const juce::File&amp; destFile, SampleRange range)</a>
 <a name="201"><span class="lineNum">     201 </span>            : {</a>
 <a name="202"><span class="lineNum">     202 </span><span class="lineNoCov">          0 :     if (range.isEmpty())</span></a>
 <a name="203"><span class="lineNum">     203 </span>            :         return -1;</a>
@@ -272,7 +272,7 @@
 <a name="210"><span class="lineNum">     210 </span>            :     return -1;</a>
 <a name="211"><span class="lineNum">     211 </span>            : }</a>
 <a name="212"><span class="lineNum">     212 </span>            : </a>
-<a name="213"><span class="lineNum">     213 </span><span class="lineNoCov">          0 : juce::int64 AudioFileUtils::copySectionToNewFile (Engine&amp; e,</span></a>
+<a name="213"><span class="lineNum">     213 </span><span class="lineNoCov">          0 : SampleCount AudioFileUtils::copySectionToNewFile (Engine&amp; e,</span></a>
 <a name="214"><span class="lineNum">     214 </span>            :                                                   const juce::File&amp; sourceFile,</a>
 <a name="215"><span class="lineNum">     215 </span>            :                                                   const juce::File&amp; destFile,</a>
 <a name="216"><span class="lineNum">     216 </span>            :                                                   EditTimeRange range)</a>
@@ -284,16 +284,16 @@
 <a name="222"><span class="lineNum">     222 </span>            : </a>
 <a name="223"><span class="lineNum">     223 </span><span class="lineNoCov">          0 :     if (reader != nullptr)</span></a>
 <a name="224"><span class="lineNum">     224 </span><span class="lineNoCov">          0 :         return copySection (e, reader, sourceFile, destFile,</span></a>
-<a name="225"><span class="lineNum">     225 </span><span class="lineNoCov">          0 :                             { (juce::int64) (range.getStart() * reader-&gt;sampleRate),</span></a>
-<a name="226"><span class="lineNum">     226 </span><span class="lineNoCov">          0 :                               (juce::int64) (range.getEnd()   * reader-&gt;sampleRate) });</span></a>
+<a name="225"><span class="lineNum">     225 </span><span class="lineNoCov">          0 :                             { (SampleCount) (range.getStart() * reader-&gt;sampleRate),</span></a>
+<a name="226"><span class="lineNum">     226 </span><span class="lineNoCov">          0 :                               (SampleCount) (range.getEnd()   * reader-&gt;sampleRate) });</span></a>
 <a name="227"><span class="lineNum">     227 </span>            : </a>
 <a name="228"><span class="lineNum">     228 </span>            :     return -1;</a>
 <a name="229"><span class="lineNum">     229 </span>            : }</a>
 <a name="230"><span class="lineNum">     230 </span>            : </a>
-<a name="231"><span class="lineNum">     231 </span><span class="lineNoCov">          0 : juce::Range&lt;juce::int64&gt; AudioFileUtils::copyNonSilentSectionToNewFile (Engine&amp; e,</span></a>
-<a name="232"><span class="lineNum">     232 </span>            :                                                                         const juce::File&amp; sourceFile,</a>
-<a name="233"><span class="lineNum">     233 </span>            :                                                                         const juce::File&amp; destFile,</a>
-<a name="234"><span class="lineNum">     234 </span>            :                                                                         float maxZeroLevelDb)</a>
+<a name="231"><span class="lineNum">     231 </span><span class="lineNoCov">          0 : SampleRange AudioFileUtils::copyNonSilentSectionToNewFile (Engine&amp; e,</span></a>
+<a name="232"><span class="lineNum">     232 </span>            :                                                            const juce::File&amp; sourceFile,</a>
+<a name="233"><span class="lineNum">     233 </span>            :                                                            const juce::File&amp; destFile,</a>
+<a name="234"><span class="lineNum">     234 </span>            :                                                            float maxZeroLevelDb)</a>
 <a name="235"><span class="lineNum">     235 </span>            : {</a>
 <a name="236"><span class="lineNum">     236 </span><span class="lineNoCov">          0 :     auto range = scanForNonZeroSamples (e, sourceFile, maxZeroLevelDb);</span></a>
 <a name="237"><span class="lineNum">     237 </span>            : </a>
@@ -303,7 +303,7 @@
 <a name="241"><span class="lineNum">     241 </span><span class="lineNoCov">          0 :     return {};</span></a>
 <a name="242"><span class="lineNum">     242 </span>            : }</a>
 <a name="243"><span class="lineNum">     243 </span>            : </a>
-<a name="244"><span class="lineNum">     244 </span><span class="lineNoCov">          0 : juce::Range&lt;juce::int64&gt; AudioFileUtils::trimSilence (Engine&amp; e, const juce::File&amp; file, float maxZeroLevelDb)</span></a>
+<a name="244"><span class="lineNum">     244 </span><span class="lineNoCov">          0 : SampleRange AudioFileUtils::trimSilence (Engine&amp; e, const juce::File&amp; file, float maxZeroLevelDb)</span></a>
 <a name="245"><span class="lineNum">     245 </span>            : {</a>
 <a name="246"><span class="lineNum">     246 </span><span class="lineNoCov">          0 :     if (file.hasWriteAccess())</span></a>
 <a name="247"><span class="lineNum">     247 </span>            :     {</a>
@@ -364,8 +364,8 @@
 <a name="302"><span class="lineNum">     302 </span><span class="lineNoCov">          0 :     if (! writer.isOpen())</span></a>
 <a name="303"><span class="lineNum">     303 </span>            :         return false;</a>
 <a name="304"><span class="lineNum">     304 </span>            : </a>
-<a name="305"><span class="lineNum">     305 </span>            :     juce::int64 sourceSample = 0;</a>
-<a name="306"><span class="lineNum">     306 </span><span class="lineNoCov">          0 :     juce::int64 samplesToDo = reader-&gt;lengthInSamples;</span></a>
+<a name="305"><span class="lineNum">     305 </span>            :     SampleCount sourceSample = 0;</a>
+<a name="306"><span class="lineNum">     306 </span><span class="lineNoCov">          0 :     SampleCount samplesToDo = reader-&gt;lengthInSamples;</span></a>
 <a name="307"><span class="lineNum">     307 </span>            :     const int bufferSize = 65536;</a>
 <a name="308"><span class="lineNum">     308 </span>            :     auto sampleNum = samplesToDo;</a>
 <a name="309"><span class="lineNum">     309 </span>            : </a>
@@ -376,7 +376,7 @@
 <a name="314"><span class="lineNum">     314 </span>            : </a>
 <a name="315"><span class="lineNum">     315 </span><span class="lineNoCov">          0 :     while (! shouldExit)</span></a>
 <a name="316"><span class="lineNum">     316 </span>            :     {</a>
-<a name="317"><span class="lineNum">     317 </span><span class="lineNoCov">          0 :         auto numThisTime = (int) std::min (samplesToDo, (juce::int64) bufferSize);</span></a>
+<a name="317"><span class="lineNum">     317 </span><span class="lineNoCov">          0 :         auto numThisTime = (int) std::min (samplesToDo, (SampleCount) bufferSize);</span></a>
 <a name="318"><span class="lineNum">     318 </span>            : </a>
 <a name="319"><span class="lineNum">     319 </span><span class="lineNoCov">          0 :         if (numThisTime &lt;= 0)</span></a>
 <a name="320"><span class="lineNum">     320 </span>            :             return true;</a>
@@ -417,14 +417,14 @@
 <a name="355"><span class="lineNum">     355 </span>            :     return false;</a>
 <a name="356"><span class="lineNum">     356 </span>            : }</a>
 <a name="357"><span class="lineNum">     357 </span>            : </a>
-<a name="358"><span class="lineNum">     358 </span><span class="lineCov">        130 : void AudioFileUtils::addBWAVStartToMetadata (juce::StringPairArray&amp; metadata, juce::int64 time)</span></a>
+<a name="358"><span class="lineNum">     358 </span><span class="lineCov">        130 : void AudioFileUtils::addBWAVStartToMetadata (juce::StringPairArray&amp; metadata, SampleCount time)</span></a>
 <a name="359"><span class="lineNum">     359 </span>            : {</a>
 <a name="360"><span class="lineNum">     360 </span><span class="lineCov">        130 :     metadata.addArray (juce::WavAudioFormat::createBWAVMetadata ({}, &quot;tracktion&quot;,</span></a>
 <a name="361"><span class="lineNum">     361 </span>            :                                                                  {}, juce::Time::getCurrentTime(),</a>
 <a name="362"><span class="lineNum">     362 </span>            :                                                                  time, {}));</a>
 <a name="363"><span class="lineNum">     363 </span><span class="lineCov">        130 : }</span></a>
 <a name="364"><span class="lineNum">     364 </span>            : </a>
-<a name="365"><span class="lineNum">     365 </span><span class="lineNoCov">          0 : juce::int64 AudioFileUtils::getFileLengthSamples (Engine&amp; e, const juce::File&amp; file)</span></a>
+<a name="365"><span class="lineNum">     365 </span><span class="lineNoCov">          0 : SampleCount AudioFileUtils::getFileLengthSamples (Engine&amp; e, const juce::File&amp; file)</span></a>
 <a name="366"><span class="lineNum">     366 </span>            : {</a>
 <a name="367"><span class="lineNum">     367 </span>            :     std::unique_ptr&lt;juce::AudioFormatReader&gt; reader (createReaderFor (e, file));</a>
 <a name="368"><span class="lineNum">     368 </span>            : </a>
@@ -444,7 +444,7 @@
 <a name="382"><span class="lineNum">     382 </span><span class="lineCov">         64 :     return reader != nullptr;</span></a>
 <a name="383"><span class="lineNum">     383 </span>            : }</a>
 <a name="384"><span class="lineNum">     384 </span>            : </a>
-<a name="385"><span class="lineNum">     385 </span><span class="lineCov">         64 : void AudioFileUtils::applyBWAVStartTime (const juce::File&amp; file, juce::int64 time)</span></a>
+<a name="385"><span class="lineNum">     385 </span><span class="lineCov">         64 : void AudioFileUtils::applyBWAVStartTime (const juce::File&amp; file, SampleCount time)</span></a>
 <a name="386"><span class="lineNum">     386 </span>            : {</a>
 <a name="387"><span class="lineNum">     387 </span><span class="lineCov">         64 :     if (isWavFile (file))</span></a>
 <a name="388"><span class="lineNum">     388 </span>            :     {</a>
@@ -480,8 +480,8 @@
 <a name="418"><span class="lineNum">     418 </span>            :             {</a>
 <a name="419"><span class="lineNum">     419 </span><span class="lineCov">         64 :                 fo.setPosition (pos);</span></a>
 <a name="420"><span class="lineNum">     420 </span>            : </a>
-<a name="421"><span class="lineNum">     421 </span><span class="lineCov">         64 :                 fo.writeInt ((int) (juce::uint32) (time &amp; 0xffffffff));</span></a>
-<a name="422"><span class="lineNum">     422 </span><span class="lineCov">         64 :                 fo.writeInt ((int) (juce::uint32) (time &gt;&gt; 32));</span></a>
+<a name="421"><span class="lineNum">     421 </span><span class="lineCov">         64 :                 fo.writeInt ((int) (uint32_t) (time &amp; 0xffffffff));</span></a>
+<a name="422"><span class="lineNum">     422 </span><span class="lineCov">         64 :                 fo.writeInt ((int) (uint32_t) (time &gt;&gt; 32));</span></a>
 <a name="423"><span class="lineNum">     423 </span>            :             }</a>
 <a name="424"><span class="lineNum">     424 </span>            :         }</a>
 <a name="425"><span class="lineNum">     425 </span>            :     }</a>

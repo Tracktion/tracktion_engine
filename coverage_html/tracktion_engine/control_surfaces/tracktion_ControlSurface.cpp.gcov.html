@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -125,10 +125,10 @@
 <a name="63"><span class="lineNum">      63 </span>            : </a>
 <a name="64"><span class="lineNum">      64 </span><span class="lineNoCov">          0 : void ControlSurface::sendMidiCommandToController (const void* midiData, int numBytes)</span></a>
 <a name="65"><span class="lineNum">      65 </span>            : {</a>
-<a name="66"><span class="lineNum">      66 </span><span class="lineNoCov">          0 :     sendMidiCommandToController (MidiMessage (midiData, numBytes));</span></a>
+<a name="66"><span class="lineNum">      66 </span><span class="lineNoCov">          0 :     sendMidiCommandToController (juce::MidiMessage (midiData, numBytes));</span></a>
 <a name="67"><span class="lineNum">      67 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="68"><span class="lineNum">      68 </span>            : </a>
-<a name="69"><span class="lineNum">      69 </span><span class="lineNoCov">          0 : void ControlSurface::sendMidiCommandToController (const MidiMessage&amp; m)</span></a>
+<a name="69"><span class="lineNum">      69 </span><span class="lineNoCov">          0 : void ControlSurface::sendMidiCommandToController (const juce::MidiMessage&amp; m)</span></a>
 <a name="70"><span class="lineNum">      70 </span>            : {</a>
 <a name="71"><span class="lineNum">      71 </span><span class="lineNoCov">          0 :     if (auto dev = owner-&gt;outputDevice)</span></a>
 <a name="72"><span class="lineNum">      72 </span><span class="lineNoCov">          0 :         dev-&gt;fireMessage (m);</span></a>
@@ -253,7 +253,7 @@
 <a name="191"><span class="lineNum">     191 </span>            : </a>
 <a name="192"><span class="lineNum">     192 </span><span class="lineNoCov">          0 :         if (externalControllerManager.getChannelTrack (channelNum) != nullptr)</span></a>
 <a name="193"><span class="lineNum">     193 </span>            :         {</a>
-<a name="194"><span class="lineNum">     194 </span><span class="lineNoCov">          0 :             Array&lt;InputDeviceInstance*&gt; activeDev, inactiveDev;</span></a>
+<a name="194"><span class="lineNum">     194 </span><span class="lineNoCov">          0 :             juce::Array&lt;InputDeviceInstance*&gt; activeDev, inactiveDev;</span></a>
 <a name="195"><span class="lineNum">     195 </span>            : </a>
 <a name="196"><span class="lineNum">     196 </span><span class="lineNoCov">          0 :             for (auto in : ed-&gt;getAllInputDevices())</span></a>
 <a name="197"><span class="lineNum">     197 </span>            :             {</a>

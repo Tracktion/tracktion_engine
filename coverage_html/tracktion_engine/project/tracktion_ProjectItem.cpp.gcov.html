@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">375</td>
+            <td class="headerCovTableEntry">376</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -215,7 +215,7 @@
 <a name="153"><span class="lineNum">     153 </span>            :         for (;;)</a>
 <a name="154"><span class="lineNum">     154 </span>            :         {</a>
 <a name="155"><span class="lineNum">     155 </span>            :             int len = 0;</a>
-<a name="156"><span class="lineNum">     156 </span>            :             juce_wchar c = 0;</a>
+<a name="156"><span class="lineNum">     156 </span>            :             juce::juce_wchar c = 0;</a>
 <a name="157"><span class="lineNum">     157 </span>            : </a>
 <a name="158"><span class="lineNum">     158 </span>            :             for (;;)</a>
 <a name="159"><span class="lineNum">     159 </span>            :             {</a>
@@ -287,9 +287,9 @@
 <a name="225"><span class="lineNum">     225 </span><span class="lineNoCov">          0 :     setCategory (category_);</span></a>
 <a name="226"><span class="lineNum">     226 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="227"><span class="lineNum">     227 </span>            : </a>
-<a name="228"><span class="lineNum">     228 </span><span class="lineNoCov">          0 : static juce::String readStringAutoDetectingUTF (InputStream&amp; in)</span></a>
+<a name="228"><span class="lineNum">     228 </span><span class="lineNoCov">          0 : static juce::String readStringAutoDetectingUTF (juce::InputStream&amp; in)</span></a>
 <a name="229"><span class="lineNum">     229 </span>            : {</a>
-<a name="230"><span class="lineNum">     230 </span><span class="lineNoCov">          0 :     MemoryOutputStream mo;</span></a>
+<a name="230"><span class="lineNum">     230 </span><span class="lineNoCov">          0 :     juce::MemoryOutputStream mo;</span></a>
 <a name="231"><span class="lineNum">     231 </span>            : </a>
 <a name="232"><span class="lineNum">     232 </span><span class="lineNoCov">          0 :     while (char byte = in.readByte())</span></a>
 <a name="233"><span class="lineNum">     233 </span><span class="lineNoCov">          0 :         mo &lt;&lt; byte;</span></a>
@@ -297,7 +297,7 @@
 <a name="235"><span class="lineNum">     235 </span><span class="lineNoCov">          0 :     return mo.toString();</span></a>
 <a name="236"><span class="lineNum">     236 </span>            : }</a>
 <a name="237"><span class="lineNum">     237 </span>            : </a>
-<a name="238"><span class="lineNum">     238 </span><span class="lineNoCov">          0 : ProjectItem::ProjectItem (Engine&amp; e, ProjectItemID id, InputStream* in)</span></a>
+<a name="238"><span class="lineNum">     238 </span><span class="lineNoCov">          0 : ProjectItem::ProjectItem (Engine&amp; e, ProjectItemID id, juce::InputStream* in)</span></a>
 <a name="239"><span class="lineNum">     239 </span><span class="lineNoCov">          0 :    : engine (e), itemID (id)</span></a>
 <a name="240"><span class="lineNum">     240 </span>            : {</a>
 <a name="241"><span class="lineNum">     241 </span><span class="lineNoCov">          0 :     objectName  = readStringAutoDetectingUTF (*in);</span></a>
@@ -312,7 +312,7 @@
 <a name="250"><span class="lineNum">     250 </span><span class="lineNoCov">          0 :     notifyListenersOfDeletion();</span></a>
 <a name="251"><span class="lineNum">     251 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="252"><span class="lineNum">     252 </span>            : </a>
-<a name="253"><span class="lineNum">     253 </span><span class="lineNoCov">          0 : void ProjectItem::writeToStream (OutputStream&amp; out) const</span></a>
+<a name="253"><span class="lineNum">     253 </span><span class="lineNoCov">          0 : void ProjectItem::writeToStream (juce::OutputStream&amp; out) const</span></a>
 <a name="254"><span class="lineNum">     254 </span>            : {</a>
 <a name="255"><span class="lineNum">     255 </span><span class="lineNoCov">          0 :     out.writeString (objectName);</span></a>
 <a name="256"><span class="lineNum">     256 </span><span class="lineNoCov">          0 :     out.writeString (type);</span></a>
@@ -374,7 +374,7 @@
 <a name="312"><span class="lineNum">     312 </span>            : </a>
 <a name="313"><span class="lineNum">     313 </span><span class="lineNoCov">          0 : juce::File ProjectItem::getSourceFile()</span></a>
 <a name="314"><span class="lineNum">     314 </span>            : {</a>
-<a name="315"><span class="lineNum">     315 </span><span class="lineNoCov">          0 :     if (sourceFile == File())</span></a>
+<a name="315"><span class="lineNum">     315 </span><span class="lineNoCov">          0 :     if (sourceFile == juce::File())</span></a>
 <a name="316"><span class="lineNum">     316 </span>            :     {</a>
 <a name="317"><span class="lineNum">     317 </span><span class="lineNoCov">          0 :         auto f = getRelativeFile (file);</span></a>
 <a name="318"><span class="lineNum">     318 </span>            : </a>
@@ -398,15 +398,15 @@
 <a name="336"><span class="lineNum">     336 </span><span class="lineNoCov">          0 :     return sourceFile;</span></a>
 <a name="337"><span class="lineNum">     337 </span>            : }</a>
 <a name="338"><span class="lineNum">     338 </span>            : </a>
-<a name="339"><span class="lineNum">     339 </span><span class="lineNoCov">          0 : bool ProjectItem::isForFile (const File&amp; f)</span></a>
+<a name="339"><span class="lineNum">     339 </span><span class="lineNoCov">          0 : bool ProjectItem::isForFile (const juce::File&amp; f)</span></a>
 <a name="340"><span class="lineNum">     340 </span>            : {</a>
-<a name="341"><span class="lineNum">     341 </span><span class="lineNoCov">          0 :     if (sourceFile != File())</span></a>
+<a name="341"><span class="lineNum">     341 </span><span class="lineNoCov">          0 :     if (sourceFile != juce::File())</span></a>
 <a name="342"><span class="lineNum">     342 </span><span class="lineNoCov">          0 :         return f == sourceFile;</span></a>
 <a name="343"><span class="lineNum">     343 </span>            : </a>
 <a name="344"><span class="lineNum">     344 </span><span class="lineNoCov">          0 :     return file.endsWithIgnoreCase (f.getFileName()) &amp;&amp; getSourceFile() == f;</span></a>
 <a name="345"><span class="lineNum">     345 </span>            : }</a>
 <a name="346"><span class="lineNum">     346 </span>            : </a>
-<a name="347"><span class="lineNum">     347 </span><span class="lineNoCov">          0 : void ProjectItem::setSourceFile (const File&amp; f)</span></a>
+<a name="347"><span class="lineNum">     347 </span><span class="lineNoCov">          0 : void ProjectItem::setSourceFile (const juce::File&amp; f)</span></a>
 <a name="348"><span class="lineNum">     348 </span>            : {</a>
 <a name="349"><span class="lineNum">     349 </span><span class="lineNoCov">          0 :     if (auto pp = getProject())</span></a>
 <a name="350"><span class="lineNum">     350 </span>            :     {</a>
@@ -417,7 +417,7 @@
 <a name="355"><span class="lineNum">     355 </span>            :         else</a>
 <a name="356"><span class="lineNum">     356 </span><span class="lineNoCov">          0 :             file = f.getFullPathName();</span></a>
 <a name="357"><span class="lineNum">     357 </span>            : </a>
-<a name="358"><span class="lineNum">     358 </span><span class="lineNoCov">          0 :         sourceFile = File();</span></a>
+<a name="358"><span class="lineNum">     358 </span><span class="lineNoCov">          0 :         sourceFile = juce::File();</span></a>
 <a name="359"><span class="lineNum">     359 </span>            : </a>
 <a name="360"><span class="lineNum">     360 </span><span class="lineNoCov">          0 :         changed();</span></a>
 <a name="361"><span class="lineNum">     361 </span><span class="lineNoCov">          0 :         pp-&gt;changed();</span></a>
@@ -516,7 +516,7 @@
 <a name="454"><span class="lineNum">     454 </span>            : </a>
 <a name="455"><span class="lineNum">     455 </span><span class="lineNoCov">          0 :             if (shouldRename)</span></a>
 <a name="456"><span class="lineNum">     456 </span>            :             {</a>
-<a name="457"><span class="lineNum">     457 </span><span class="lineNoCov">          0 :                 newDstFile = src.getParentDirectory().getChildFile (File::createLegalFileName (n))</span></a>
+<a name="457"><span class="lineNum">     457 </span><span class="lineNoCov">          0 :                 newDstFile = src.getParentDirectory().getChildFile (juce::File::createLegalFileName (n))</span></a>
 <a name="458"><span class="lineNum">     458 </span><span class="lineNoCov">          0 :                                                      .withFileExtension (src.getFileExtension());</span></a>
 <a name="459"><span class="lineNum">     459 </span>            : </a>
 <a name="460"><span class="lineNum">     460 </span><span class="lineNoCov">          0 :                 startTimer (1);</span></a>
@@ -635,7 +635,7 @@
 <a name="573"><span class="lineNum">     573 </span>            :     }</a>
 <a name="574"><span class="lineNum">     574 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="575"><span class="lineNum">     575 </span>            : </a>
-<a name="576"><span class="lineNum">     576 </span><span class="lineNoCov">          0 : Array&lt;double&gt; ProjectItem::getMarkedPoints() const</span></a>
+<a name="576"><span class="lineNum">     576 </span><span class="lineNoCov">          0 : juce::Array&lt;double&gt; ProjectItem::getMarkedPoints() const</span></a>
 <a name="577"><span class="lineNum">     577 </span>            : {</a>
 <a name="578"><span class="lineNum">     578 </span><span class="lineNoCov">          0 :     juce::Array&lt;double&gt; marks;</span></a>
 <a name="579"><span class="lineNum">     579 </span><span class="lineNoCov">          0 :     auto m = getNamedProperty (&quot;marks&quot;);</span></a>
@@ -683,7 +683,7 @@
 <a name="621"><span class="lineNum">     621 </span><span class="lineNoCov">          0 :     if (newFile.existsAsFile())</span></a>
 <a name="622"><span class="lineNum">     622 </span>            :     {</a>
 <a name="623"><span class="lineNum">     623 </span><span class="lineNoCov">          0 :         juce::String m (TRANS(&quot;There appears to already be a converted Edit in the project folder.&quot;));</span></a>
-<a name="624"><span class="lineNum">     624 </span><span class="lineNoCov">          0 :         m &lt;&lt; newLine &lt;&lt; TRANS(&quot;Do you want to use this, or create a new conversion?&quot;);</span></a>
+<a name="624"><span class="lineNum">     624 </span><span class="lineNoCov">          0 :         m &lt;&lt; juce::newLine &lt;&lt; TRANS(&quot;Do you want to use this, or create a new conversion?&quot;);</span></a>
 <a name="625"><span class="lineNum">     625 </span>            : </a>
 <a name="626"><span class="lineNum">     626 </span><span class="lineNoCov">          0 :         if (engine.getUIBehaviour().showOkCancelAlertBox (TRANS(&quot;Converted Edit Already Exists&quot;), m,</span></a>
 <a name="627"><span class="lineNum">     627 </span><span class="lineNoCov">          0 :                                                           TRANS(&quot;Use Existing&quot;),</span></a>
@@ -702,7 +702,7 @@
 <a name="640"><span class="lineNum">     640 </span>            :         {</a>
 <a name="641"><span class="lineNum">     641 </span><span class="lineNoCov">          0 :             engine.getUIBehaviour().showWarningAlert (TRANS(&quot;Unable to Open Edit&quot;),</span></a>
 <a name="642"><span class="lineNum">     642 </span><span class="lineNoCov">          0 :                                                       TRANS(&quot;The selected Edit file could not be converted to the current project format.&quot;)</span></a>
-<a name="643"><span class="lineNum">     643 </span><span class="lineNoCov">          0 :                                                         + newLine + newLine</span></a>
+<a name="643"><span class="lineNum">     643 </span><span class="lineNoCov">          0 :                                                         + juce::newLine + juce::newLine</span></a>
 <a name="644"><span class="lineNum">     644 </span><span class="lineNoCov">          0 :                                                         + TRANS(&quot;Please ensure you can write to the Edit directory and try again.&quot;));</span></a>
 <a name="645"><span class="lineNum">     645 </span><span class="lineNoCov">          0 :             return false;</span></a>
 <a name="646"><span class="lineNum">     646 </span>            :         }</a>
@@ -746,11 +746,11 @@
 <a name="684"><span class="lineNum">     684 </span>            :     }</a>
 <a name="685"><span class="lineNum">     685 </span><span class="lineNoCov">          0 :     else if (isMidi())</span></a>
 <a name="686"><span class="lineNum">     686 </span>            :     {</a>
-<a name="687"><span class="lineNum">     687 </span><span class="lineNoCov">          0 :         FileInputStream in (getSourceFile());</span></a>
+<a name="687"><span class="lineNum">     687 </span><span class="lineNoCov">          0 :         juce::FileInputStream in (getSourceFile());</span></a>
 <a name="688"><span class="lineNum">     688 </span>            : </a>
 <a name="689"><span class="lineNum">     689 </span><span class="lineNoCov">          0 :         if (in.openedOk())</span></a>
 <a name="690"><span class="lineNum">     690 </span>            :         {</a>
-<a name="691"><span class="lineNum">     691 </span><span class="lineNoCov">          0 :             MidiFile mf;</span></a>
+<a name="691"><span class="lineNum">     691 </span><span class="lineNoCov">          0 :             juce::MidiFile mf;</span></a>
 <a name="692"><span class="lineNum">     692 </span><span class="lineNoCov">          0 :             mf.readFrom (in);</span></a>
 <a name="693"><span class="lineNum">     693 </span><span class="lineNoCov">          0 :             mf.convertTimestampTicksToSeconds();</span></a>
 <a name="694"><span class="lineNum">     694 </span>            : </a>
@@ -769,8 +769,8 @@
 <a name="707"><span class="lineNum">     707 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="708"><span class="lineNum">     708 </span>            : </a>
 <a name="709"><span class="lineNum">     709 </span>            : //==============================================================================</a>
-<a name="710"><span class="lineNum">     710 </span><span class="lineNoCov">          0 : bool ProjectItem::copySectionToNewFile (const File&amp; destFile,</span></a>
-<a name="711"><span class="lineNum">     711 </span>            :                                         File&amp; actualFileCreated,</a>
+<a name="710"><span class="lineNum">     710 </span><span class="lineNoCov">          0 : bool ProjectItem::copySectionToNewFile (const juce::File&amp; destFile,</span></a>
+<a name="711"><span class="lineNum">     711 </span>            :                                         juce::File&amp; actualFileCreated,</a>
 <a name="712"><span class="lineNum">     712 </span>            :                                         double startTime, double lengthToCopy)</a>
 <a name="713"><span class="lineNum">     713 </span>            : {</a>
 <a name="714"><span class="lineNum">     714 </span><span class="lineNoCov">          0 :     actualFileCreated = destFile;</span></a>
@@ -810,159 +810,160 @@
 <a name="748"><span class="lineNum">     748 </span><span class="lineNoCov">          0 :             if (ok)</span></a>
 <a name="749"><span class="lineNum">     749 </span>            :                 break;</a>
 <a name="750"><span class="lineNum">     750 </span>            : </a>
-<a name="751"><span class="lineNum">     751 </span><span class="lineNoCov">          0 :             Thread::sleep (800);</span></a>
+<a name="751"><span class="lineNum">     751 </span><span class="lineNoCov">          0 :             juce::Thread::sleep (800);</span></a>
 <a name="752"><span class="lineNum">     752 </span>            :         }</a>
 <a name="753"><span class="lineNum">     753 </span>            : </a>
 <a name="754"><span class="lineNum">     754 </span><span class="lineNoCov">          0 :         afm.checkFileForChangesAsync (af);</span></a>
 <a name="755"><span class="lineNum">     755 </span>            : </a>
 <a name="756"><span class="lineNum">     756 </span><span class="lineNoCov">          0 :         if (! ok)</span></a>
 <a name="757"><span class="lineNum">     757 </span>            :         {</a>
-<a name="758"><span class="lineNum">     758 </span><span class="lineNoCov">          0 :             auto info = f.getFullPathName() + &quot;  &quot; + File::descriptionOfSizeInBytes (f.getSize());</span></a>
-<a name="759"><span class="lineNum">     759 </span>            : </a>
-<a name="760"><span class="lineNum">     760 </span><span class="lineNoCov">          0 :             if (! f.hasWriteAccess())</span></a>
-<a name="761"><span class="lineNum">     761 </span><span class="lineNoCov">          0 :                 info &lt;&lt; &quot;  (read only)&quot;;</span></a>
-<a name="762"><span class="lineNum">     762 </span>            : </a>
-<a name="763"><span class="lineNum">     763 </span><span class="lineNoCov">          0 :             if (f.isDirectory())</span></a>
-<a name="764"><span class="lineNum">     764 </span><span class="lineNoCov">          0 :                 info &lt;&lt; &quot;  (directory)&quot;;</span></a>
-<a name="765"><span class="lineNum">     765 </span>            : </a>
-<a name="766"><span class="lineNum">     766 </span><span class="lineNoCov">          0 :             info &lt;&lt; &quot;  modified: &quot; &lt;&lt; f.getLastModificationTime().toString (true, true);</span></a>
-<a name="767"><span class="lineNum">     767 </span>            : </a>
-<a name="768"><span class="lineNum">     768 </span><span class="lineNoCov">          0 :             TRACKTION_LOG_ERROR (info);</span></a>
-<a name="769"><span class="lineNum">     769 </span>            :         }</a>
-<a name="770"><span class="lineNum">     770 </span>            :     }</a>
-<a name="771"><span class="lineNum">     771 </span>            : </a>
-<a name="772"><span class="lineNum">     772 </span><span class="lineNoCov">          0 :     return ok;</span></a>
-<a name="773"><span class="lineNum">     773 </span>            : }</a>
-<a name="774"><span class="lineNum">     774 </span>            : </a>
-<a name="775"><span class="lineNum">     775 </span>            : //==============================================================================</a>
-<a name="776"><span class="lineNum">     776 </span><span class="lineNoCov">          0 : void ProjectItem::changeProjectId (int oldID, int newID)</span></a>
-<a name="777"><span class="lineNum">     777 </span>            : {</a>
-<a name="778"><span class="lineNum">     778 </span><span class="lineNoCov">          0 :     if (getID().getProjectID() == oldID)</span></a>
-<a name="779"><span class="lineNum">     779 </span><span class="lineNoCov">          0 :         itemID = ProjectItemID (getID().getItemID(), newID);</span></a>
-<a name="780"><span class="lineNum">     780 </span>            : </a>
-<a name="781"><span class="lineNum">     781 </span><span class="lineNoCov">          0 :     if (isEdit())</span></a>
-<a name="782"><span class="lineNum">     782 </span>            :     {</a>
-<a name="783"><span class="lineNum">     783 </span><span class="lineNoCov">          0 :         auto&amp; pm = engine.getProjectManager();</span></a>
-<a name="784"><span class="lineNum">     784 </span>            : </a>
-<a name="785"><span class="lineNum">     785 </span>            :         Edit ed (engine,</a>
-<a name="786"><span class="lineNum">     786 </span><span class="lineNoCov">          0 :                  loadEditFromProjectManager (pm, getID()),</span></a>
-<a name="787"><span class="lineNum">     787 </span><span class="lineNoCov">          0 :                  Edit::forExamining, nullptr, 1);</span></a>
-<a name="788"><span class="lineNum">     788 </span>            : </a>
-<a name="789"><span class="lineNum">     789 </span><span class="lineNoCov">          0 :         for (auto exp : Exportable::addAllExportables (ed))</span></a>
-<a name="790"><span class="lineNum">     790 </span>            :         {</a>
-<a name="791"><span class="lineNum">     791 </span>            :             int i = 0;</a>
-<a name="792"><span class="lineNum">     792 </span>            : </a>
-<a name="793"><span class="lineNum">     793 </span><span class="lineNoCov">          0 :             for (auto&amp; item : exp-&gt;getReferencedItems())</span></a>
-<a name="794"><span class="lineNum">     794 </span>            :             {</a>
-<a name="795"><span class="lineNum">     795 </span><span class="lineNoCov">          0 :                  if (item.itemID.getProjectID() == oldID)</span></a>
-<a name="796"><span class="lineNum">     796 </span><span class="lineNoCov">          0 :                      exp-&gt;reassignReferencedItem (item, item.itemID.withNewProjectID (newID), 0.0);</span></a>
-<a name="797"><span class="lineNum">     797 </span>            : </a>
-<a name="798"><span class="lineNum">     798 </span>            :                 ++i;</a>
-<a name="799"><span class="lineNum">     799 </span>            :             }</a>
-<a name="800"><span class="lineNum">     800 </span>            :         }</a>
-<a name="801"><span class="lineNum">     801 </span>            : </a>
-<a name="802"><span class="lineNum">     802 </span><span class="lineNoCov">          0 :         EditFileOperations (ed).save (false, true, false);</span></a>
-<a name="803"><span class="lineNum">     803 </span>            :     }</a>
-<a name="804"><span class="lineNum">     804 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="805"><span class="lineNum">     805 </span>            : </a>
+<a name="758"><span class="lineNum">     758 </span><span class="lineNoCov">          0 :             auto info = f.getFullPathName() + &quot;  &quot;</span></a>
+<a name="759"><span class="lineNum">     759 </span><span class="lineNoCov">          0 :                          + juce::File::descriptionOfSizeInBytes (f.getSize());</span></a>
+<a name="760"><span class="lineNum">     760 </span>            : </a>
+<a name="761"><span class="lineNum">     761 </span><span class="lineNoCov">          0 :             if (! f.hasWriteAccess())</span></a>
+<a name="762"><span class="lineNum">     762 </span><span class="lineNoCov">          0 :                 info &lt;&lt; &quot;  (read only)&quot;;</span></a>
+<a name="763"><span class="lineNum">     763 </span>            : </a>
+<a name="764"><span class="lineNum">     764 </span><span class="lineNoCov">          0 :             if (f.isDirectory())</span></a>
+<a name="765"><span class="lineNum">     765 </span><span class="lineNoCov">          0 :                 info &lt;&lt; &quot;  (directory)&quot;;</span></a>
+<a name="766"><span class="lineNum">     766 </span>            : </a>
+<a name="767"><span class="lineNum">     767 </span><span class="lineNoCov">          0 :             info &lt;&lt; &quot;  modified: &quot; &lt;&lt; f.getLastModificationTime().toString (true, true);</span></a>
+<a name="768"><span class="lineNum">     768 </span>            : </a>
+<a name="769"><span class="lineNum">     769 </span><span class="lineNoCov">          0 :             TRACKTION_LOG_ERROR (info);</span></a>
+<a name="770"><span class="lineNum">     770 </span>            :         }</a>
+<a name="771"><span class="lineNum">     771 </span>            :     }</a>
+<a name="772"><span class="lineNum">     772 </span>            : </a>
+<a name="773"><span class="lineNum">     773 </span><span class="lineNoCov">          0 :     return ok;</span></a>
+<a name="774"><span class="lineNum">     774 </span>            : }</a>
+<a name="775"><span class="lineNum">     775 </span>            : </a>
+<a name="776"><span class="lineNum">     776 </span>            : //==============================================================================</a>
+<a name="777"><span class="lineNum">     777 </span><span class="lineNoCov">          0 : void ProjectItem::changeProjectId (int oldID, int newID)</span></a>
+<a name="778"><span class="lineNum">     778 </span>            : {</a>
+<a name="779"><span class="lineNum">     779 </span><span class="lineNoCov">          0 :     if (getID().getProjectID() == oldID)</span></a>
+<a name="780"><span class="lineNum">     780 </span><span class="lineNoCov">          0 :         itemID = ProjectItemID (getID().getItemID(), newID);</span></a>
+<a name="781"><span class="lineNum">     781 </span>            : </a>
+<a name="782"><span class="lineNum">     782 </span><span class="lineNoCov">          0 :     if (isEdit())</span></a>
+<a name="783"><span class="lineNum">     783 </span>            :     {</a>
+<a name="784"><span class="lineNum">     784 </span><span class="lineNoCov">          0 :         auto&amp; pm = engine.getProjectManager();</span></a>
+<a name="785"><span class="lineNum">     785 </span>            : </a>
+<a name="786"><span class="lineNum">     786 </span>            :         Edit ed (engine,</a>
+<a name="787"><span class="lineNum">     787 </span><span class="lineNoCov">          0 :                  loadEditFromProjectManager (pm, getID()),</span></a>
+<a name="788"><span class="lineNum">     788 </span><span class="lineNoCov">          0 :                  Edit::forExamining, nullptr, 1);</span></a>
+<a name="789"><span class="lineNum">     789 </span>            : </a>
+<a name="790"><span class="lineNum">     790 </span><span class="lineNoCov">          0 :         for (auto exp : Exportable::addAllExportables (ed))</span></a>
+<a name="791"><span class="lineNum">     791 </span>            :         {</a>
+<a name="792"><span class="lineNum">     792 </span>            :             int i = 0;</a>
+<a name="793"><span class="lineNum">     793 </span>            : </a>
+<a name="794"><span class="lineNum">     794 </span><span class="lineNoCov">          0 :             for (auto&amp; item : exp-&gt;getReferencedItems())</span></a>
+<a name="795"><span class="lineNum">     795 </span>            :             {</a>
+<a name="796"><span class="lineNum">     796 </span><span class="lineNoCov">          0 :                  if (item.itemID.getProjectID() == oldID)</span></a>
+<a name="797"><span class="lineNum">     797 </span><span class="lineNoCov">          0 :                      exp-&gt;reassignReferencedItem (item, item.itemID.withNewProjectID (newID), 0.0);</span></a>
+<a name="798"><span class="lineNum">     798 </span>            : </a>
+<a name="799"><span class="lineNum">     799 </span>            :                 ++i;</a>
+<a name="800"><span class="lineNum">     800 </span>            :             }</a>
+<a name="801"><span class="lineNum">     801 </span>            :         }</a>
+<a name="802"><span class="lineNum">     802 </span>            : </a>
+<a name="803"><span class="lineNum">     803 </span><span class="lineNoCov">          0 :         EditFileOperations (ed).save (false, true, false);</span></a>
+<a name="804"><span class="lineNum">     804 </span>            :     }</a>
+<a name="805"><span class="lineNum">     805 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="806"><span class="lineNum">     806 </span>            : </a>
-<a name="807"><span class="lineNum">     807 </span>            : //==============================================================================</a>
-<a name="808"><span class="lineNum">     808 </span><span class="lineNoCov">          0 : ProjectItem::Ptr ProjectItem::createCopy()</span></a>
-<a name="809"><span class="lineNum">     809 </span>            : {</a>
-<a name="810"><span class="lineNum">     810 </span><span class="lineNoCov">          0 :     if (auto pp = getProject())</span></a>
-<a name="811"><span class="lineNum">     811 </span>            :     {</a>
-<a name="812"><span class="lineNum">     812 </span>            :         // create a new unique name</a>
-<a name="813"><span class="lineNum">     813 </span><span class="lineNoCov">          0 :         auto newName = getName().trim();</span></a>
-<a name="814"><span class="lineNum">     814 </span>            : </a>
-<a name="815"><span class="lineNum">     815 </span><span class="lineNoCov">          0 :         if (newName.fromLastOccurrenceOf (&quot;(&quot;, false, false).containsOnly (&quot;0123456789()&quot;)</span></a>
-<a name="816"><span class="lineNum">     816 </span><span class="lineNoCov">          0 :              &amp;&amp; newName.retainCharacters (&quot;0123456789()&quot;).length() &gt; 0)</span></a>
-<a name="817"><span class="lineNum">     817 </span>            :         {</a>
-<a name="818"><span class="lineNum">     818 </span><span class="lineNoCov">          0 :             while (newName.length() &gt; 1</span></a>
-<a name="819"><span class="lineNum">     819 </span><span class="lineNoCov">          0 :                     &amp;&amp; juce::String (&quot;0123456789()&quot;).containsChar (newName.getLastCharacter()))</span></a>
-<a name="820"><span class="lineNum">     820 </span><span class="lineNoCov">          0 :                 newName = newName.dropLastCharacters (1);</span></a>
-<a name="821"><span class="lineNum">     821 </span>            :         }</a>
-<a name="822"><span class="lineNum">     822 </span>            : </a>
-<a name="823"><span class="lineNum">     823 </span><span class="lineNoCov">          0 :         if (! newName.endsWithIgnoreCase (TRANS(&quot;Copy&quot;)))</span></a>
-<a name="824"><span class="lineNum">     824 </span><span class="lineNoCov">          0 :             newName = newName + &quot; - &quot; + TRANS(&quot;Copy&quot;);</span></a>
-<a name="825"><span class="lineNum">     825 </span>            : </a>
-<a name="826"><span class="lineNum">     826 </span><span class="lineNoCov">          0 :         auto nameStem = newName;</span></a>
-<a name="827"><span class="lineNum">     827 </span>            :         int index = 2;</a>
-<a name="828"><span class="lineNum">     828 </span>            : </a>
-<a name="829"><span class="lineNum">     829 </span>            :         for (;;)</a>
-<a name="830"><span class="lineNum">     830 </span>            :         {</a>
-<a name="831"><span class="lineNum">     831 </span>            :             bool alreadyThere = false;</a>
-<a name="832"><span class="lineNum">     832 </span>            : </a>
-<a name="833"><span class="lineNum">     833 </span><span class="lineNoCov">          0 :             for (int i = pp-&gt;getNumProjectItems(); --i &gt;= 0;)</span></a>
-<a name="834"><span class="lineNum">     834 </span>            :             {</a>
-<a name="835"><span class="lineNum">     835 </span><span class="lineNoCov">          0 :                 if (pp-&gt;getProjectItemAt (i)-&gt;getName().equalsIgnoreCase (newName))</span></a>
-<a name="836"><span class="lineNum">     836 </span>            :                 {</a>
-<a name="837"><span class="lineNum">     837 </span>            :                     alreadyThere = true;</a>
-<a name="838"><span class="lineNum">     838 </span>            :                     break;</a>
-<a name="839"><span class="lineNum">     839 </span>            :                 }</a>
-<a name="840"><span class="lineNum">     840 </span>            :             }</a>
-<a name="841"><span class="lineNum">     841 </span>            : </a>
-<a name="842"><span class="lineNum">     842 </span><span class="lineNoCov">          0 :             if (alreadyThere)</span></a>
-<a name="843"><span class="lineNum">     843 </span><span class="lineNoCov">          0 :                 newName = nameStem + &quot;(&quot; + juce::String (index++) + &quot;)&quot;;</span></a>
-<a name="844"><span class="lineNum">     844 </span>            :             else</a>
-<a name="845"><span class="lineNum">     845 </span>            :                 break;</a>
-<a name="846"><span class="lineNum">     846 </span><span class="lineNoCov">          0 :         }</span></a>
-<a name="847"><span class="lineNum">     847 </span>            : </a>
-<a name="848"><span class="lineNum">     848 </span><span class="lineNoCov">          0 :         auto source = getSourceFile();</span></a>
-<a name="849"><span class="lineNum">     849 </span><span class="lineNoCov">          0 :         auto fileExtension = source.getFileExtension();</span></a>
-<a name="850"><span class="lineNum">     850 </span>            : </a>
-<a name="851"><span class="lineNum">     851 </span><span class="lineNoCov">          0 :         if (fileExtension.isEmpty())</span></a>
-<a name="852"><span class="lineNum">     852 </span><span class="lineNoCov">          0 :             if (auto af = engine.getAudioFileFormatManager().getFormatFromFileName (source))</span></a>
-<a name="853"><span class="lineNum">     853 </span><span class="lineNoCov">          0 :                 fileExtension = af-&gt;getFileExtensions()[0];</span></a>
-<a name="854"><span class="lineNum">     854 </span>            : </a>
-<a name="855"><span class="lineNum">     855 </span><span class="lineNoCov">          0 :         auto newFile = source.getParentDirectory()</span></a>
-<a name="856"><span class="lineNum">     856 </span><span class="lineNoCov">          0 :                              .getNonexistentChildFile (source.getFileNameWithoutExtension(),</span></a>
-<a name="857"><span class="lineNum">     857 </span><span class="lineNoCov">          0 :                                                        fileExtension, true);</span></a>
-<a name="858"><span class="lineNum">     858 </span>            : </a>
-<a name="859"><span class="lineNum">     859 </span><span class="lineNoCov">          0 :         if (pp-&gt;isReadOnly())</span></a>
-<a name="860"><span class="lineNum">     860 </span>            :         {</a>
-<a name="861"><span class="lineNum">     861 </span><span class="lineNoCov">          0 :             engine.getUIBehaviour().showWarningMessage (TRANS(&quot;Can't create a new item because this project is read-only&quot;));</span></a>
-<a name="862"><span class="lineNum">     862 </span>            :         }</a>
-<a name="863"><span class="lineNum">     863 </span><span class="lineNoCov">          0 :         else if (source.copyFileTo (newFile))</span></a>
-<a name="864"><span class="lineNum">     864 </span>            :         {</a>
-<a name="865"><span class="lineNum">     865 </span><span class="lineNoCov">          0 :             return pp-&gt;createNewItem (newFile, getType(), newName, description, getCategory(), true);</span></a>
-<a name="866"><span class="lineNum">     866 </span>            :         }</a>
-<a name="867"><span class="lineNum">     867 </span>            :     }</a>
-<a name="868"><span class="lineNum">     868 </span>            : </a>
-<a name="869"><span class="lineNum">     869 </span><span class="lineNoCov">          0 :     return {};</span></a>
-<a name="870"><span class="lineNum">     870 </span>            : }</a>
-<a name="871"><span class="lineNum">     871 </span>            : </a>
-<a name="872"><span class="lineNum">     872 </span>            : //==============================================================================</a>
-<a name="873"><span class="lineNum">     873 </span><span class="lineNoCov">          0 : static void tokenise (const juce::String&amp; s, juce::StringArray&amp; toks)</span></a>
-<a name="874"><span class="lineNum">     874 </span>            : {</a>
-<a name="875"><span class="lineNum">     875 </span>            :     auto t = s.getCharPointer();</a>
-<a name="876"><span class="lineNum">     876 </span>            :     auto start = t;</a>
-<a name="877"><span class="lineNum">     877 </span>            : </a>
-<a name="878"><span class="lineNum">     878 </span><span class="lineNoCov">          0 :     while (! t.isEmpty())</span></a>
-<a name="879"><span class="lineNum">     879 </span>            :     {</a>
-<a name="880"><span class="lineNum">     880 </span><span class="lineNoCov">          0 :         if (! (t.isLetterOrDigit()))</span></a>
-<a name="881"><span class="lineNum">     881 </span>            :         {</a>
-<a name="882"><span class="lineNum">     882 </span><span class="lineNoCov">          0 :             if (t &gt; start + 1)</span></a>
-<a name="883"><span class="lineNum">     883 </span><span class="lineNoCov">          0 :                 toks.add (juce::String (start, t));</span></a>
-<a name="884"><span class="lineNum">     884 </span>            : </a>
-<a name="885"><span class="lineNum">     885 </span>            :             start = t;</a>
-<a name="886"><span class="lineNum">     886 </span>            :         }</a>
-<a name="887"><span class="lineNum">     887 </span>            : </a>
-<a name="888"><span class="lineNum">     888 </span>            :         ++t;</a>
-<a name="889"><span class="lineNum">     889 </span>            :     }</a>
-<a name="890"><span class="lineNum">     890 </span>            : </a>
-<a name="891"><span class="lineNum">     891 </span><span class="lineNoCov">          0 :     if (t.getAddress() &gt; start.getAddress() + 1)</span></a>
-<a name="892"><span class="lineNum">     892 </span><span class="lineNoCov">          0 :         toks.add (juce::String (start, t));</span></a>
-<a name="893"><span class="lineNum">     893 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="894"><span class="lineNum">     894 </span>            : </a>
-<a name="895"><span class="lineNum">     895 </span><span class="lineNoCov">          0 : juce::StringArray ProjectItem::getSearchTokens() const</span></a>
-<a name="896"><span class="lineNum">     896 </span>            : {</a>
-<a name="897"><span class="lineNum">     897 </span><span class="lineNoCov">          0 :     juce::StringArray toks;</span></a>
-<a name="898"><span class="lineNum">     898 </span><span class="lineNoCov">          0 :     tokenise (objectName, toks);</span></a>
-<a name="899"><span class="lineNum">     899 </span><span class="lineNoCov">          0 :     tokenise (getDescription(), toks);</span></a>
-<a name="900"><span class="lineNum">     900 </span><span class="lineNoCov">          0 :     return toks;</span></a>
-<a name="901"><span class="lineNum">     901 </span>            : }</a>
-<a name="902"><span class="lineNum">     902 </span>            : </a>
-<a name="903"><span class="lineNum">     903 </span>            : }</a>
+<a name="807"><span class="lineNum">     807 </span>            : </a>
+<a name="808"><span class="lineNum">     808 </span>            : //==============================================================================</a>
+<a name="809"><span class="lineNum">     809 </span><span class="lineNoCov">          0 : ProjectItem::Ptr ProjectItem::createCopy()</span></a>
+<a name="810"><span class="lineNum">     810 </span>            : {</a>
+<a name="811"><span class="lineNum">     811 </span><span class="lineNoCov">          0 :     if (auto pp = getProject())</span></a>
+<a name="812"><span class="lineNum">     812 </span>            :     {</a>
+<a name="813"><span class="lineNum">     813 </span>            :         // create a new unique name</a>
+<a name="814"><span class="lineNum">     814 </span><span class="lineNoCov">          0 :         auto newName = getName().trim();</span></a>
+<a name="815"><span class="lineNum">     815 </span>            : </a>
+<a name="816"><span class="lineNum">     816 </span><span class="lineNoCov">          0 :         if (newName.fromLastOccurrenceOf (&quot;(&quot;, false, false).containsOnly (&quot;0123456789()&quot;)</span></a>
+<a name="817"><span class="lineNum">     817 </span><span class="lineNoCov">          0 :              &amp;&amp; newName.retainCharacters (&quot;0123456789()&quot;).length() &gt; 0)</span></a>
+<a name="818"><span class="lineNum">     818 </span>            :         {</a>
+<a name="819"><span class="lineNum">     819 </span><span class="lineNoCov">          0 :             while (newName.length() &gt; 1</span></a>
+<a name="820"><span class="lineNum">     820 </span><span class="lineNoCov">          0 :                     &amp;&amp; juce::String (&quot;0123456789()&quot;).containsChar (newName.getLastCharacter()))</span></a>
+<a name="821"><span class="lineNum">     821 </span><span class="lineNoCov">          0 :                 newName = newName.dropLastCharacters (1);</span></a>
+<a name="822"><span class="lineNum">     822 </span>            :         }</a>
+<a name="823"><span class="lineNum">     823 </span>            : </a>
+<a name="824"><span class="lineNum">     824 </span><span class="lineNoCov">          0 :         if (! newName.endsWithIgnoreCase (TRANS(&quot;Copy&quot;)))</span></a>
+<a name="825"><span class="lineNum">     825 </span><span class="lineNoCov">          0 :             newName = newName + &quot; - &quot; + TRANS(&quot;Copy&quot;);</span></a>
+<a name="826"><span class="lineNum">     826 </span>            : </a>
+<a name="827"><span class="lineNum">     827 </span><span class="lineNoCov">          0 :         auto nameStem = newName;</span></a>
+<a name="828"><span class="lineNum">     828 </span>            :         int index = 2;</a>
+<a name="829"><span class="lineNum">     829 </span>            : </a>
+<a name="830"><span class="lineNum">     830 </span>            :         for (;;)</a>
+<a name="831"><span class="lineNum">     831 </span>            :         {</a>
+<a name="832"><span class="lineNum">     832 </span>            :             bool alreadyThere = false;</a>
+<a name="833"><span class="lineNum">     833 </span>            : </a>
+<a name="834"><span class="lineNum">     834 </span><span class="lineNoCov">          0 :             for (int i = pp-&gt;getNumProjectItems(); --i &gt;= 0;)</span></a>
+<a name="835"><span class="lineNum">     835 </span>            :             {</a>
+<a name="836"><span class="lineNum">     836 </span><span class="lineNoCov">          0 :                 if (pp-&gt;getProjectItemAt (i)-&gt;getName().equalsIgnoreCase (newName))</span></a>
+<a name="837"><span class="lineNum">     837 </span>            :                 {</a>
+<a name="838"><span class="lineNum">     838 </span>            :                     alreadyThere = true;</a>
+<a name="839"><span class="lineNum">     839 </span>            :                     break;</a>
+<a name="840"><span class="lineNum">     840 </span>            :                 }</a>
+<a name="841"><span class="lineNum">     841 </span>            :             }</a>
+<a name="842"><span class="lineNum">     842 </span>            : </a>
+<a name="843"><span class="lineNum">     843 </span><span class="lineNoCov">          0 :             if (alreadyThere)</span></a>
+<a name="844"><span class="lineNum">     844 </span><span class="lineNoCov">          0 :                 newName = nameStem + &quot;(&quot; + juce::String (index++) + &quot;)&quot;;</span></a>
+<a name="845"><span class="lineNum">     845 </span>            :             else</a>
+<a name="846"><span class="lineNum">     846 </span>            :                 break;</a>
+<a name="847"><span class="lineNum">     847 </span><span class="lineNoCov">          0 :         }</span></a>
+<a name="848"><span class="lineNum">     848 </span>            : </a>
+<a name="849"><span class="lineNum">     849 </span><span class="lineNoCov">          0 :         auto source = getSourceFile();</span></a>
+<a name="850"><span class="lineNum">     850 </span><span class="lineNoCov">          0 :         auto fileExtension = source.getFileExtension();</span></a>
+<a name="851"><span class="lineNum">     851 </span>            : </a>
+<a name="852"><span class="lineNum">     852 </span><span class="lineNoCov">          0 :         if (fileExtension.isEmpty())</span></a>
+<a name="853"><span class="lineNum">     853 </span><span class="lineNoCov">          0 :             if (auto af = engine.getAudioFileFormatManager().getFormatFromFileName (source))</span></a>
+<a name="854"><span class="lineNum">     854 </span><span class="lineNoCov">          0 :                 fileExtension = af-&gt;getFileExtensions()[0];</span></a>
+<a name="855"><span class="lineNum">     855 </span>            : </a>
+<a name="856"><span class="lineNum">     856 </span><span class="lineNoCov">          0 :         auto newFile = source.getParentDirectory()</span></a>
+<a name="857"><span class="lineNum">     857 </span><span class="lineNoCov">          0 :                              .getNonexistentChildFile (source.getFileNameWithoutExtension(),</span></a>
+<a name="858"><span class="lineNum">     858 </span><span class="lineNoCov">          0 :                                                        fileExtension, true);</span></a>
+<a name="859"><span class="lineNum">     859 </span>            : </a>
+<a name="860"><span class="lineNum">     860 </span><span class="lineNoCov">          0 :         if (pp-&gt;isReadOnly())</span></a>
+<a name="861"><span class="lineNum">     861 </span>            :         {</a>
+<a name="862"><span class="lineNum">     862 </span><span class="lineNoCov">          0 :             engine.getUIBehaviour().showWarningMessage (TRANS(&quot;Can't create a new item because this project is read-only&quot;));</span></a>
+<a name="863"><span class="lineNum">     863 </span>            :         }</a>
+<a name="864"><span class="lineNum">     864 </span><span class="lineNoCov">          0 :         else if (source.copyFileTo (newFile))</span></a>
+<a name="865"><span class="lineNum">     865 </span>            :         {</a>
+<a name="866"><span class="lineNum">     866 </span><span class="lineNoCov">          0 :             return pp-&gt;createNewItem (newFile, getType(), newName, description, getCategory(), true);</span></a>
+<a name="867"><span class="lineNum">     867 </span>            :         }</a>
+<a name="868"><span class="lineNum">     868 </span>            :     }</a>
+<a name="869"><span class="lineNum">     869 </span>            : </a>
+<a name="870"><span class="lineNum">     870 </span><span class="lineNoCov">          0 :     return {};</span></a>
+<a name="871"><span class="lineNum">     871 </span>            : }</a>
+<a name="872"><span class="lineNum">     872 </span>            : </a>
+<a name="873"><span class="lineNum">     873 </span>            : //==============================================================================</a>
+<a name="874"><span class="lineNum">     874 </span><span class="lineNoCov">          0 : static void tokenise (const juce::String&amp; s, juce::StringArray&amp; toks)</span></a>
+<a name="875"><span class="lineNum">     875 </span>            : {</a>
+<a name="876"><span class="lineNum">     876 </span>            :     auto t = s.getCharPointer();</a>
+<a name="877"><span class="lineNum">     877 </span>            :     auto start = t;</a>
+<a name="878"><span class="lineNum">     878 </span>            : </a>
+<a name="879"><span class="lineNum">     879 </span><span class="lineNoCov">          0 :     while (! t.isEmpty())</span></a>
+<a name="880"><span class="lineNum">     880 </span>            :     {</a>
+<a name="881"><span class="lineNum">     881 </span><span class="lineNoCov">          0 :         if (! (t.isLetterOrDigit()))</span></a>
+<a name="882"><span class="lineNum">     882 </span>            :         {</a>
+<a name="883"><span class="lineNum">     883 </span><span class="lineNoCov">          0 :             if (t &gt; start + 1)</span></a>
+<a name="884"><span class="lineNum">     884 </span><span class="lineNoCov">          0 :                 toks.add (juce::String (start, t));</span></a>
+<a name="885"><span class="lineNum">     885 </span>            : </a>
+<a name="886"><span class="lineNum">     886 </span>            :             start = t;</a>
+<a name="887"><span class="lineNum">     887 </span>            :         }</a>
+<a name="888"><span class="lineNum">     888 </span>            : </a>
+<a name="889"><span class="lineNum">     889 </span>            :         ++t;</a>
+<a name="890"><span class="lineNum">     890 </span>            :     }</a>
+<a name="891"><span class="lineNum">     891 </span>            : </a>
+<a name="892"><span class="lineNum">     892 </span><span class="lineNoCov">          0 :     if (t.getAddress() &gt; start.getAddress() + 1)</span></a>
+<a name="893"><span class="lineNum">     893 </span><span class="lineNoCov">          0 :         toks.add (juce::String (start, t));</span></a>
+<a name="894"><span class="lineNum">     894 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="895"><span class="lineNum">     895 </span>            : </a>
+<a name="896"><span class="lineNum">     896 </span><span class="lineNoCov">          0 : juce::StringArray ProjectItem::getSearchTokens() const</span></a>
+<a name="897"><span class="lineNum">     897 </span>            : {</a>
+<a name="898"><span class="lineNum">     898 </span><span class="lineNoCov">          0 :     juce::StringArray toks;</span></a>
+<a name="899"><span class="lineNum">     899 </span><span class="lineNoCov">          0 :     tokenise (objectName, toks);</span></a>
+<a name="900"><span class="lineNum">     900 </span><span class="lineNoCov">          0 :     tokenise (getDescription(), toks);</span></a>
+<a name="901"><span class="lineNum">     901 </span><span class="lineNoCov">          0 :     return toks;</span></a>
+<a name="902"><span class="lineNum">     902 </span>            : }</a>
+<a name="903"><span class="lineNum">     903 </span>            : </a>
+<a name="904"><span class="lineNum">     904 </span>            : }</a>
 </pre>
       </td>
     </tr>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -211,7 +211,7 @@
 <a name="149"><span class="lineNum">     149 </span>            :         then start a new job using getOrCreateRenderJob.</a>
 <a name="150"><span class="lineNum">     150 </span>            :         You should always check this first, never start a new job unnecessarily.</a>
 <a name="151"><span class="lineNum">     151 </span>            :     */</a>
-<a name="152"><span class="lineNum">     152 </span>            :     static AudioFile getAudioFileForHash (Engine&amp;, const juce::File&amp; directory, juce::int64 hash);</a>
+<a name="152"><span class="lineNum">     152 </span>            :     static AudioFile getAudioFileForHash (Engine&amp;, const juce::File&amp; directory, HashCode hash);</a>
 <a name="153"><span class="lineNum">     153 </span>            : </a>
 <a name="154"><span class="lineNum">     154 </span>            :     /** This will return a Ptr to an existing render job for an audio file or nullptr if no job is in progress. */</a>
 <a name="155"><span class="lineNum">     155 </span><span class="lineNoCov">          0 :     Job::Ptr getRenderJobWithoutCreating (const AudioFile&amp; audioFile)       { return findJob (audioFile); }</span></a>

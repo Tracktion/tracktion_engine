@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">2</td>
-            <td class="headerCovTableEntry">305</td>
-            <td class="headerCovTableEntryLo">0.7 %</td>
+            <td class="headerCovTableEntry">308</td>
+            <td class="headerCovTableEntryLo">0.6 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -180,7 +180,7 @@
 <a name="118"><span class="lineNum">     118 </span>            : static TimeAndName getMinSecDivisions (int level) noexcept</a>
 <a name="119"><span class="lineNum">     119 </span>            : {</a>
 <a name="120"><span class="lineNum">     120 </span>            :     jassert (level &gt;= 0);</a>
-<a name="121"><span class="lineNum">     121 </span><span class="lineNoCov">          0 :     return minSecDivisions [jmin (13, level)];</span></a>
+<a name="121"><span class="lineNum">     121 </span><span class="lineNoCov">          0 :     return minSecDivisions [std::min (13, level)];</span></a>
 <a name="122"><span class="lineNum">     122 </span>            : }</a>
 <a name="123"><span class="lineNum">     123 </span>            : </a>
 <a name="124"><span class="lineNum">     124 </span><span class="lineNoCov">          0 : juce::String TimecodeSnapType::getDescription (const TempoSetting&amp; tempo, bool isTripletOverride) const</span></a>
@@ -197,7 +197,7 @@
 <a name="135"><span class="lineNum">     135 </span><span class="lineNoCov">          0 :         if (level == 9)   return TRANS(&quot;Beat&quot;);</span></a>
 <a name="136"><span class="lineNum">     136 </span><span class="lineNoCov">          0 :         if (level == 10)  return TRANS(&quot;Bar&quot;);</span></a>
 <a name="137"><span class="lineNum">     137 </span>            : </a>
-<a name="138"><span class="lineNum">     138 </span><span class="lineNoCov">          0 :         return TRANS(&quot;33 bars&quot;).replace (&quot;33&quot;, String (barMultiples [jmin (level, 19) - 10]));</span></a>
+<a name="138"><span class="lineNum">     138 </span><span class="lineNoCov">          0 :         return TRANS(&quot;33 bars&quot;).replace (&quot;33&quot;, juce::String (barMultiples[std::min (level, 19) - 10]));</span></a>
 <a name="139"><span class="lineNum">     139 </span>            :     }</a>
 <a name="140"><span class="lineNum">     140 </span>            : </a>
 <a name="141"><span class="lineNum">     141 </span><span class="lineNoCov">          0 :     if (type == TimecodeType::millisecs)</span></a>
@@ -236,7 +236,7 @@
 <a name="174"><span class="lineNum">     174 </span><span class="lineNoCov">          0 :         return barLength * barMultiples [level - 10];</span></a>
 <a name="175"><span class="lineNum">     175 </span>            :     }</a>
 <a name="176"><span class="lineNum">     176 </span>            : </a>
-<a name="177"><span class="lineNum">     177 </span>            :     return getIntervalNonBarsBeats();</a>
+<a name="177"><span class="lineNum">     177 </span><span class="lineNoCov">          0 :     return getIntervalNonBarsBeats();</span></a>
 <a name="178"><span class="lineNum">     178 </span>            : }</a>
 <a name="179"><span class="lineNum">     179 </span>            : </a>
 <a name="180"><span class="lineNum">     180 </span><span class="lineNoCov">          0 : double TimecodeSnapType::getIntervalNonBarsBeats() const</span></a>
@@ -268,10 +268,10 @@
 <a name="206"><span class="lineNum">     206 </span><span class="lineNoCov">          0 :         auto bars = barsBeats.bars + 1;</span></a>
 <a name="207"><span class="lineNum">     207 </span><span class="lineNoCov">          0 :         auto beats = barsBeats.getWholeBeats() + 1;</span></a>
 <a name="208"><span class="lineNum">     208 </span>            : </a>
-<a name="209"><span class="lineNum">     209 </span><span class="lineNoCov">          0 :         if (level &lt; 9)  return String::formatted (&quot;%d|%d|%03d&quot;, bars, beats, (int) (barsBeats.getFractionalBeats() * Edit::ticksPerQuarterNote));</span></a>
-<a name="210"><span class="lineNum">     210 </span><span class="lineNoCov">          0 :         if (level == 9) return String::formatted (&quot;%d|%d&quot;, bars, beats);</span></a>
+<a name="209"><span class="lineNum">     209 </span><span class="lineNoCov">          0 :         if (level &lt; 9)  return juce::String::formatted (&quot;%d|%d|%03d&quot;, bars, beats, (int) (barsBeats.getFractionalBeats() * Edit::ticksPerQuarterNote));</span></a>
+<a name="210"><span class="lineNum">     210 </span><span class="lineNoCov">          0 :         if (level == 9) return juce::String::formatted (&quot;%d|%d&quot;, bars, beats);</span></a>
 <a name="211"><span class="lineNum">     211 </span>            : </a>
-<a name="212"><span class="lineNum">     212 </span><span class="lineNoCov">          0 :         return TRANS(&quot;Bar&quot;) + &quot; &quot; + String (bars);</span></a>
+<a name="212"><span class="lineNum">     212 </span><span class="lineNoCov">          0 :         return TRANS(&quot;Bar&quot;) + &quot; &quot; + juce::String (bars);</span></a>
 <a name="213"><span class="lineNum">     213 </span>            :     }</a>
 <a name="214"><span class="lineNum">     214 </span>            : </a>
 <a name="215"><span class="lineNum">     215 </span><span class="lineNoCov">          0 :     if (type == TimecodeType::millisecs)</span></a>
@@ -280,7 +280,7 @@
 <a name="218"><span class="lineNum">     218 </span><span class="lineNoCov">          0 :             return &quot;0&quot;;</span></a>
 <a name="219"><span class="lineNum">     219 </span>            : </a>
 <a name="220"><span class="lineNum">     220 </span><span class="lineNoCov">          0 :         if (level &gt;= 9)</span></a>
-<a name="221"><span class="lineNum">     221 </span><span class="lineNoCov">          0 :             return RelativeTime (time).getDescription();</span></a>
+<a name="221"><span class="lineNum">     221 </span><span class="lineNoCov">          0 :             return juce::RelativeTime (time).getDescription();</span></a>
 <a name="222"><span class="lineNum">     222 </span>            : </a>
 <a name="223"><span class="lineNum">     223 </span><span class="lineNoCov">          0 :         if (level &gt;= 4)</span></a>
 <a name="224"><span class="lineNum">     224 </span><span class="lineNoCov">          0 :             return TimecodeDisplayFormat::toFullTimecode (time, 0, false);</span></a>
@@ -292,7 +292,7 @@
 <a name="230"><span class="lineNum">     230 </span><span class="lineNoCov">          0 :         return &quot;0&quot;;</span></a>
 <a name="231"><span class="lineNum">     231 </span>            : </a>
 <a name="232"><span class="lineNum">     232 </span><span class="lineNoCov">          0 :     if (level &gt;= 7)</span></a>
-<a name="233"><span class="lineNum">     233 </span><span class="lineNoCov">          0 :         return RelativeTime (time).getDescription();</span></a>
+<a name="233"><span class="lineNum">     233 </span><span class="lineNoCov">          0 :         return juce::RelativeTime (time).getDescription();</span></a>
 <a name="234"><span class="lineNum">     234 </span>            : </a>
 <a name="235"><span class="lineNum">     235 </span><span class="lineNoCov">          0 :     if (level &gt;= 2)</span></a>
 <a name="236"><span class="lineNum">     236 </span><span class="lineNoCov">          0 :         return TimecodeDisplayFormat::toFullTimecode (time, 0, false);</span></a>
@@ -370,7 +370,7 @@
 <a name="308"><span class="lineNum">     308 </span><span class="lineNoCov">          0 :         return sequence.barsBeatsToTime (barsBeats);</span></a>
 <a name="309"><span class="lineNum">     309 </span>            :     }</a>
 <a name="310"><span class="lineNum">     310 </span>            : </a>
-<a name="311"><span class="lineNum">     311 </span>            :     auto q = getIntervalNonBarsBeats();</a>
+<a name="311"><span class="lineNum">     311 </span><span class="lineNoCov">          0 :     auto q = getIntervalNonBarsBeats();</span></a>
 <a name="312"><span class="lineNum">     312 </span><span class="lineNoCov">          0 :     return q * std::floor ((t / q) + adjustment);</span></a>
 <a name="313"><span class="lineNum">     313 </span>            : }</a>
 <a name="314"><span class="lineNum">     314 </span>            : </a>
@@ -474,7 +474,7 @@
 <a name="412"><span class="lineNum">     412 </span>            :             fraction = barsBeats.getFractionalBeats();</a>
 <a name="413"><span class="lineNum">     413 </span>            :         }</a>
 <a name="414"><span class="lineNum">     414 </span>            : </a>
-<a name="415"><span class="lineNum">     415 </span><span class="lineNoCov">          0 :         auto s = String::formatted (&quot;%d|%d|%03d&quot;, bars, beats, (int) (fraction * Edit::ticksPerQuarterNote));</span></a>
+<a name="415"><span class="lineNum">     415 </span><span class="lineNoCov">          0 :         auto s = juce::String::formatted (&quot;%d|%d|%03d&quot;, bars, beats, (int) (fraction * Edit::ticksPerQuarterNote));</span></a>
 <a name="416"><span class="lineNum">     416 </span><span class="lineNoCov">          0 :         return time &lt; 0 ? (&quot;-&quot; + s) : s;</span></a>
 <a name="417"><span class="lineNum">     417 </span>            :     }</a>
 <a name="418"><span class="lineNum">     418 </span>            : </a>
@@ -538,267 +538,272 @@
 <a name="476"><span class="lineNum">     476 </span><span class="lineNoCov">          0 :     return (type == TimecodeType::barsBeats &amp;&amp; part &gt; 0 &amp;&amp; ! isRelative) ? 1 : 0;</span></a>
 <a name="477"><span class="lineNum">     477 </span>            : }</a>
 <a name="478"><span class="lineNum">     478 </span>            : </a>
-<a name="479"><span class="lineNum">     479 </span><span class="lineNoCov">          0 : static String twoCharString (juce_wchar n)</span></a>
+<a name="479"><span class="lineNum">     479 </span><span class="lineNoCov">          0 : static juce::String twoCharString (int n)</span></a>
 <a name="480"><span class="lineNum">     480 </span>            : {</a>
 <a name="481"><span class="lineNum">     481 </span><span class="lineNoCov">          0 :     if (n &lt; 10)</span></a>
-<a name="482"><span class="lineNum">     482 </span><span class="lineNoCov">          0 :         return String::charToString ('0') + (juce_wchar) (n + '0');</span></a>
+<a name="482"><span class="lineNum">     482 </span><span class="lineNoCov">          0 :         return juce::String::charToString ('0') + (juce::juce_wchar) (n + '0');</span></a>
 <a name="483"><span class="lineNum">     483 </span>            : </a>
-<a name="484"><span class="lineNum">     484 </span><span class="lineNoCov">          0 :     return String (n);</span></a>
+<a name="484"><span class="lineNum">     484 </span><span class="lineNoCov">          0 :     return juce::String (n);</span></a>
 <a name="485"><span class="lineNum">     485 </span>            : }</a>
 <a name="486"><span class="lineNum">     486 </span>            : </a>
-<a name="487"><span class="lineNum">     487 </span><span class="lineNoCov">          0 : void TimecodeDisplayFormat::getPartStrings (TimecodeDuration duration, const TempoSequence&amp; tempo, bool isRelative, String results[4]) const</span></a>
-<a name="488"><span class="lineNum">     488 </span>            : {</a>
-<a name="489"><span class="lineNum">     489 </span><span class="lineNoCov">          0 :     if (type == TimecodeType::barsBeats)</span></a>
-<a name="490"><span class="lineNum">     490 </span>            :     {</a>
-<a name="491"><span class="lineNum">     491 </span>            :         TempoSequence::BarsAndBeats barsBeats;</a>
-<a name="492"><span class="lineNum">     492 </span>            : </a>
-<a name="493"><span class="lineNum">     493 </span><span class="lineNoCov">          0 :         if (duration.beats.has_value())</span></a>
-<a name="494"><span class="lineNum">     494 </span>            :         {</a>
-<a name="495"><span class="lineNum">     495 </span><span class="lineNoCov">          0 :             auto t = *duration.beats + nudge;</span></a>
-<a name="496"><span class="lineNum">     496 </span>            : </a>
-<a name="497"><span class="lineNum">     497 </span><span class="lineNoCov">          0 :             barsBeats.bars  = int (t / duration.beatsPerBar);</span></a>
-<a name="498"><span class="lineNum">     498 </span><span class="lineNoCov">          0 :             barsBeats.beats = t - (barsBeats.bars * duration.beatsPerBar);</span></a>
-<a name="499"><span class="lineNum">     499 </span>            :         }</a>
-<a name="500"><span class="lineNum">     500 </span><span class="lineNoCov">          0 :         else if (duration.seconds.has_value())</span></a>
-<a name="501"><span class="lineNum">     501 </span>            :         {</a>
-<a name="502"><span class="lineNum">     502 </span><span class="lineNoCov">          0 :             auto time = *duration.seconds;</span></a>
-<a name="503"><span class="lineNum">     503 </span><span class="lineNoCov">          0 :             if (time &lt; 0)</span></a>
-<a name="504"><span class="lineNum">     504 </span>            :             {</a>
-<a name="505"><span class="lineNum">     505 </span><span class="lineNoCov">          0 :                 time = -time;</span></a>
-<a name="506"><span class="lineNum">     506 </span><span class="lineNoCov">          0 :                 results[2] = &quot;-&quot;;</span></a>
-<a name="507"><span class="lineNum">     507 </span>            :             }</a>
-<a name="508"><span class="lineNum">     508 </span>            : </a>
-<a name="509"><span class="lineNum">     509 </span><span class="lineNoCov">          0 :             barsBeats = tempo.timeToBarsBeats (time + nudge);</span></a>
-<a name="510"><span class="lineNum">     510 </span>            :         }</a>
+<a name="487"><span class="lineNum">     487 </span><span class="lineNoCov">          0 : void TimecodeDisplayFormat::getPartStrings (TimecodeDuration duration,</span></a>
+<a name="488"><span class="lineNum">     488 </span>            :                                             const TempoSequence&amp; tempo,</a>
+<a name="489"><span class="lineNum">     489 </span>            :                                             bool isRelative,</a>
+<a name="490"><span class="lineNum">     490 </span>            :                                             juce::String results[4]) const</a>
+<a name="491"><span class="lineNum">     491 </span>            : {</a>
+<a name="492"><span class="lineNum">     492 </span><span class="lineNoCov">          0 :     if (type == TimecodeType::barsBeats)</span></a>
+<a name="493"><span class="lineNum">     493 </span>            :     {</a>
+<a name="494"><span class="lineNum">     494 </span>            :         TempoSequence::BarsAndBeats barsBeats;</a>
+<a name="495"><span class="lineNum">     495 </span>            : </a>
+<a name="496"><span class="lineNum">     496 </span><span class="lineNoCov">          0 :         if (duration.beats.has_value())</span></a>
+<a name="497"><span class="lineNum">     497 </span>            :         {</a>
+<a name="498"><span class="lineNum">     498 </span><span class="lineNoCov">          0 :             auto t = *duration.beats + nudge;</span></a>
+<a name="499"><span class="lineNum">     499 </span>            : </a>
+<a name="500"><span class="lineNum">     500 </span><span class="lineNoCov">          0 :             barsBeats.bars  = int (t / duration.beatsPerBar);</span></a>
+<a name="501"><span class="lineNum">     501 </span><span class="lineNoCov">          0 :             barsBeats.beats = t - (barsBeats.bars * duration.beatsPerBar);</span></a>
+<a name="502"><span class="lineNum">     502 </span>            :         }</a>
+<a name="503"><span class="lineNum">     503 </span><span class="lineNoCov">          0 :         else if (duration.seconds.has_value())</span></a>
+<a name="504"><span class="lineNum">     504 </span>            :         {</a>
+<a name="505"><span class="lineNum">     505 </span><span class="lineNoCov">          0 :             auto time = *duration.seconds;</span></a>
+<a name="506"><span class="lineNum">     506 </span><span class="lineNoCov">          0 :             if (time &lt; 0)</span></a>
+<a name="507"><span class="lineNum">     507 </span>            :             {</a>
+<a name="508"><span class="lineNum">     508 </span><span class="lineNoCov">          0 :                 time = -time;</span></a>
+<a name="509"><span class="lineNum">     509 </span><span class="lineNoCov">          0 :                 results[2] = &quot;-&quot;;</span></a>
+<a name="510"><span class="lineNum">     510 </span>            :             }</a>
 <a name="511"><span class="lineNum">     511 </span>            : </a>
-<a name="512"><span class="lineNum">     512 </span>            :         {</a>
-<a name="513"><span class="lineNum">     513 </span><span class="lineNoCov">          0 :             auto val = (int) (barsBeats.getFractionalBeats() * Edit::ticksPerQuarterNote);</span></a>
+<a name="512"><span class="lineNum">     512 </span><span class="lineNoCov">          0 :             barsBeats = tempo.timeToBarsBeats (time + nudge);</span></a>
+<a name="513"><span class="lineNum">     513 </span>            :         }</a>
 <a name="514"><span class="lineNum">     514 </span>            : </a>
-<a name="515"><span class="lineNum">     515 </span>            :             char text[4];</a>
-<a name="516"><span class="lineNum">     516 </span><span class="lineNoCov">          0 :             text[0] = (char) ('0' + (val / 100) % 10);</span></a>
-<a name="517"><span class="lineNum">     517 </span><span class="lineNoCov">          0 :             text[1] = (char) ('0' + (val / 10) % 10);</span></a>
-<a name="518"><span class="lineNum">     518 </span><span class="lineNoCov">          0 :             text[2] = (char) ('0' + val % 10);</span></a>
-<a name="519"><span class="lineNum">     519 </span><span class="lineNoCov">          0 :             text[3] = 0;</span></a>
-<a name="520"><span class="lineNum">     520 </span><span class="lineNoCov">          0 :             results[0] = text;</span></a>
-<a name="521"><span class="lineNum">     521 </span>            :         }</a>
-<a name="522"><span class="lineNum">     522 </span>            : </a>
-<a name="523"><span class="lineNum">     523 </span><span class="lineNoCov">          0 :         for (int part = 1; part &lt; 3; ++part)</span></a>
-<a name="524"><span class="lineNum">     524 </span>            :         {</a>
-<a name="525"><span class="lineNum">     525 </span><span class="lineNoCov">          0 :             int val = (part == 1) ? barsBeats.getWholeBeats() : barsBeats.bars;</span></a>
-<a name="526"><span class="lineNum">     526 </span>            : </a>
-<a name="527"><span class="lineNum">     527 </span><span class="lineNoCov">          0 :             if (! isRelative)</span></a>
-<a name="528"><span class="lineNum">     528 </span><span class="lineNoCov">          0 :                 ++val;</span></a>
+<a name="515"><span class="lineNum">     515 </span>            :         {</a>
+<a name="516"><span class="lineNum">     516 </span><span class="lineNoCov">          0 :             auto val = (int) (barsBeats.getFractionalBeats() * Edit::ticksPerQuarterNote);</span></a>
+<a name="517"><span class="lineNum">     517 </span>            : </a>
+<a name="518"><span class="lineNum">     518 </span>            :             char text[4];</a>
+<a name="519"><span class="lineNum">     519 </span><span class="lineNoCov">          0 :             text[0] = (char) ('0' + (val / 100) % 10);</span></a>
+<a name="520"><span class="lineNum">     520 </span><span class="lineNoCov">          0 :             text[1] = (char) ('0' + (val / 10) % 10);</span></a>
+<a name="521"><span class="lineNum">     521 </span><span class="lineNoCov">          0 :             text[2] = (char) ('0' + val % 10);</span></a>
+<a name="522"><span class="lineNum">     522 </span><span class="lineNoCov">          0 :             text[3] = 0;</span></a>
+<a name="523"><span class="lineNum">     523 </span><span class="lineNoCov">          0 :             results[0] = text;</span></a>
+<a name="524"><span class="lineNum">     524 </span>            :         }</a>
+<a name="525"><span class="lineNum">     525 </span>            : </a>
+<a name="526"><span class="lineNum">     526 </span><span class="lineNoCov">          0 :         for (int part = 1; part &lt; 3; ++part)</span></a>
+<a name="527"><span class="lineNum">     527 </span>            :         {</a>
+<a name="528"><span class="lineNum">     528 </span><span class="lineNoCov">          0 :             int val = (part == 1) ? barsBeats.getWholeBeats() : barsBeats.bars;</span></a>
 <a name="529"><span class="lineNum">     529 </span>            : </a>
-<a name="530"><span class="lineNum">     530 </span><span class="lineNoCov">          0 :             results[part] &lt;&lt; val;</span></a>
-<a name="531"><span class="lineNum">     531 </span>            :         }</a>
-<a name="532"><span class="lineNum">     532 </span>            :     }</a>
-<a name="533"><span class="lineNum">     533 </span><span class="lineNoCov">          0 :     else if (duration.seconds.has_value())</span></a>
-<a name="534"><span class="lineNum">     534 </span>            :     {</a>
-<a name="535"><span class="lineNum">     535 </span><span class="lineNoCov">          0 :         auto t = std::abs (*duration.seconds) + nudge;</span></a>
-<a name="536"><span class="lineNum">     536 </span>            : </a>
-<a name="537"><span class="lineNum">     537 </span><span class="lineNoCov">          0 :         if (type == TimecodeType::millisecs)</span></a>
-<a name="538"><span class="lineNum">     538 </span>            :         {</a>
-<a name="539"><span class="lineNum">     539 </span><span class="lineNoCov">          0 :             auto val =  ((int) (t * 1000.0)) % 1000;</span></a>
-<a name="540"><span class="lineNum">     540 </span>            : </a>
-<a name="541"><span class="lineNum">     541 </span>            :             char text[4];</a>
-<a name="542"><span class="lineNum">     542 </span><span class="lineNoCov">          0 :             text[0] = (char) ('0' + (val / 100) % 10);</span></a>
-<a name="543"><span class="lineNum">     543 </span><span class="lineNoCov">          0 :             text[1] = (char) ('0' + (val / 10) % 10);</span></a>
-<a name="544"><span class="lineNum">     544 </span><span class="lineNoCov">          0 :             text[2] = (char) ('0' + val % 10);</span></a>
-<a name="545"><span class="lineNum">     545 </span><span class="lineNoCov">          0 :             text[3] = 0;</span></a>
-<a name="546"><span class="lineNum">     546 </span><span class="lineNoCov">          0 :             results[0] = text;</span></a>
-<a name="547"><span class="lineNum">     547 </span>            :         }</a>
-<a name="548"><span class="lineNum">     548 </span><span class="lineNoCov">          0 :         else if (type == TimecodeType::fps24)</span></a>
-<a name="549"><span class="lineNum">     549 </span>            :         {</a>
-<a name="550"><span class="lineNum">     550 </span><span class="lineNoCov">          0 :             results[0] = twoCharString (((int) (t * 24)) % 24);</span></a>
-<a name="551"><span class="lineNum">     551 </span>            :         }</a>
-<a name="552"><span class="lineNum">     552 </span><span class="lineNoCov">          0 :         else if (type == TimecodeType::fps25)</span></a>
-<a name="553"><span class="lineNum">     553 </span>            :         {</a>
-<a name="554"><span class="lineNum">     554 </span><span class="lineNoCov">          0 :             results[0] = twoCharString (((int) (t * 25)) % 25);</span></a>
-<a name="555"><span class="lineNum">     555 </span>            :         }</a>
-<a name="556"><span class="lineNum">     556 </span>            :         else</a>
-<a name="557"><span class="lineNum">     557 </span>            :         {</a>
-<a name="558"><span class="lineNum">     558 </span>            :             jassert (type == TimecodeType::fps30);</a>
-<a name="559"><span class="lineNum">     559 </span><span class="lineNoCov">          0 :             results[0] = twoCharString (((int) (t * 30)) % 30);</span></a>
-<a name="560"><span class="lineNum">     560 </span>            :         }</a>
-<a name="561"><span class="lineNum">     561 </span>            : </a>
-<a name="562"><span class="lineNum">     562 </span><span class="lineNoCov">          0 :         if (*duration.seconds &lt; 0)</span></a>
-<a name="563"><span class="lineNum">     563 </span><span class="lineNoCov">          0 :             results[3] = &quot;-&quot;;</span></a>
+<a name="530"><span class="lineNum">     530 </span><span class="lineNoCov">          0 :             if (! isRelative)</span></a>
+<a name="531"><span class="lineNum">     531 </span><span class="lineNoCov">          0 :                 ++val;</span></a>
+<a name="532"><span class="lineNum">     532 </span>            : </a>
+<a name="533"><span class="lineNum">     533 </span><span class="lineNoCov">          0 :             results[part] &lt;&lt; val;</span></a>
+<a name="534"><span class="lineNum">     534 </span>            :         }</a>
+<a name="535"><span class="lineNum">     535 </span>            :     }</a>
+<a name="536"><span class="lineNum">     536 </span><span class="lineNoCov">          0 :     else if (duration.seconds.has_value())</span></a>
+<a name="537"><span class="lineNum">     537 </span>            :     {</a>
+<a name="538"><span class="lineNum">     538 </span><span class="lineNoCov">          0 :         auto t = std::abs (*duration.seconds) + nudge;</span></a>
+<a name="539"><span class="lineNum">     539 </span>            : </a>
+<a name="540"><span class="lineNum">     540 </span><span class="lineNoCov">          0 :         if (type == TimecodeType::millisecs)</span></a>
+<a name="541"><span class="lineNum">     541 </span>            :         {</a>
+<a name="542"><span class="lineNum">     542 </span><span class="lineNoCov">          0 :             auto val =  ((int) (t * 1000.0)) % 1000;</span></a>
+<a name="543"><span class="lineNum">     543 </span>            : </a>
+<a name="544"><span class="lineNum">     544 </span>            :             char text[4];</a>
+<a name="545"><span class="lineNum">     545 </span><span class="lineNoCov">          0 :             text[0] = (char) ('0' + (val / 100) % 10);</span></a>
+<a name="546"><span class="lineNum">     546 </span><span class="lineNoCov">          0 :             text[1] = (char) ('0' + (val / 10) % 10);</span></a>
+<a name="547"><span class="lineNum">     547 </span><span class="lineNoCov">          0 :             text[2] = (char) ('0' + val % 10);</span></a>
+<a name="548"><span class="lineNum">     548 </span><span class="lineNoCov">          0 :             text[3] = 0;</span></a>
+<a name="549"><span class="lineNum">     549 </span><span class="lineNoCov">          0 :             results[0] = text;</span></a>
+<a name="550"><span class="lineNum">     550 </span>            :         }</a>
+<a name="551"><span class="lineNum">     551 </span><span class="lineNoCov">          0 :         else if (type == TimecodeType::fps24)</span></a>
+<a name="552"><span class="lineNum">     552 </span>            :         {</a>
+<a name="553"><span class="lineNum">     553 </span><span class="lineNoCov">          0 :             results[0] = twoCharString (((int) (t * 24)) % 24);</span></a>
+<a name="554"><span class="lineNum">     554 </span>            :         }</a>
+<a name="555"><span class="lineNum">     555 </span><span class="lineNoCov">          0 :         else if (type == TimecodeType::fps25)</span></a>
+<a name="556"><span class="lineNum">     556 </span>            :         {</a>
+<a name="557"><span class="lineNum">     557 </span><span class="lineNoCov">          0 :             results[0] = twoCharString (((int) (t * 25)) % 25);</span></a>
+<a name="558"><span class="lineNum">     558 </span>            :         }</a>
+<a name="559"><span class="lineNum">     559 </span>            :         else</a>
+<a name="560"><span class="lineNum">     560 </span>            :         {</a>
+<a name="561"><span class="lineNum">     561 </span>            :             jassert (type == TimecodeType::fps30);</a>
+<a name="562"><span class="lineNum">     562 </span><span class="lineNoCov">          0 :             results[0] = twoCharString (((int) (t * 30)) % 30);</span></a>
+<a name="563"><span class="lineNum">     563 </span>            :         }</a>
 <a name="564"><span class="lineNum">     564 </span>            : </a>
-<a name="565"><span class="lineNum">     565 </span><span class="lineNoCov">          0 :         auto hours = (int) (t * (1.0 / 3600.0));</span></a>
-<a name="566"><span class="lineNum">     566 </span><span class="lineNoCov">          0 :         results[3] &lt;&lt; twoCharString (hours);</span></a>
+<a name="565"><span class="lineNum">     565 </span><span class="lineNoCov">          0 :         if (*duration.seconds &lt; 0)</span></a>
+<a name="566"><span class="lineNum">     566 </span><span class="lineNoCov">          0 :             results[3] = &quot;-&quot;;</span></a>
 <a name="567"><span class="lineNum">     567 </span>            : </a>
-<a name="568"><span class="lineNum">     568 </span><span class="lineNoCov">          0 :         auto mins = (((int) t) / 60) % 60;</span></a>
-<a name="569"><span class="lineNum">     569 </span><span class="lineNoCov">          0 :         results[2] = twoCharString (mins);</span></a>
+<a name="568"><span class="lineNum">     568 </span><span class="lineNoCov">          0 :         auto hours = (int) (t * (1.0 / 3600.0));</span></a>
+<a name="569"><span class="lineNum">     569 </span><span class="lineNoCov">          0 :         results[3] &lt;&lt; twoCharString (hours);</span></a>
 <a name="570"><span class="lineNum">     570 </span>            : </a>
-<a name="571"><span class="lineNum">     571 </span><span class="lineNoCov">          0 :         auto secs = (((int) t) % 60);</span></a>
-<a name="572"><span class="lineNum">     572 </span><span class="lineNoCov">          0 :         results[1] = twoCharString (secs);</span></a>
-<a name="573"><span class="lineNum">     573 </span>            :     }</a>
-<a name="574"><span class="lineNum">     574 </span>            :     else</a>
-<a name="575"><span class="lineNum">     575 </span>            :     {</a>
-<a name="576"><span class="lineNum">     576 </span>            :         jassertfalse;</a>
-<a name="577"><span class="lineNum">     577 </span>            :     }</a>
-<a name="578"><span class="lineNum">     578 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="579"><span class="lineNum">     579 </span>            : </a>
-<a name="580"><span class="lineNum">     580 </span><span class="lineNoCov">          0 : TimecodeDuration TimecodeDisplayFormat::getNewTimeWithPartValue (TimecodeDuration time, const TempoSequence&amp; tempo,</span></a>
-<a name="581"><span class="lineNum">     581 </span>            :                                                          int part, int newValue, bool isRelative) const</a>
-<a name="582"><span class="lineNum">     582 </span>            : {</a>
-<a name="583"><span class="lineNum">     583 </span><span class="lineNoCov">          0 :     if (type == TimecodeType::barsBeats)</span></a>
-<a name="584"><span class="lineNum">     584 </span>            :     {</a>
-<a name="585"><span class="lineNum">     585 </span><span class="lineNoCov">          0 :         if (time.beats.has_value())</span></a>
-<a name="586"><span class="lineNum">     586 </span>            :         {</a>
-<a name="587"><span class="lineNum">     587 </span><span class="lineNoCov">          0 :             auto t = *time.beats;</span></a>
-<a name="588"><span class="lineNum">     588 </span>            : </a>
-<a name="589"><span class="lineNum">     589 </span><span class="lineNoCov">          0 :             auto bars  = int (t / time.beatsPerBar);</span></a>
-<a name="590"><span class="lineNum">     590 </span><span class="lineNoCov">          0 :             auto beats = t - (bars * time.beatsPerBar);</span></a>
-<a name="591"><span class="lineNum">     591 </span><span class="lineNoCov">          0 :             auto ticks = std::fmod (beats, 1.0);</span></a>
-<a name="592"><span class="lineNum">     592 </span><span class="lineNoCov">          0 :             beats = int (beats);</span></a>
-<a name="593"><span class="lineNum">     593 </span>            : </a>
-<a name="594"><span class="lineNum">     594 </span><span class="lineNoCov">          0 :             if (part == 2)      bars  = newValue;</span></a>
-<a name="595"><span class="lineNum">     595 </span><span class="lineNoCov">          0 :             else if (part == 1) beats = newValue;</span></a>
-<a name="596"><span class="lineNum">     596 </span><span class="lineNoCov">          0 :             else if (part == 0) ticks = newValue / double (Edit::ticksPerQuarterNote);</span></a>
-<a name="597"><span class="lineNum">     597 </span>            : </a>
-<a name="598"><span class="lineNum">     598 </span><span class="lineNoCov">          0 :             return TimecodeDuration::fromBeatsOnly (bars * time.beatsPerBar + beats + ticks, time.beatsPerBar);</span></a>
-<a name="599"><span class="lineNum">     599 </span>            :         }</a>
-<a name="600"><span class="lineNum">     600 </span>            :         else</a>
-<a name="601"><span class="lineNum">     601 </span>            :         {</a>
-<a name="602"><span class="lineNum">     602 </span><span class="lineNoCov">          0 :             auto t = std::abs (*time.seconds);</span></a>
-<a name="603"><span class="lineNum">     603 </span>            : </a>
-<a name="604"><span class="lineNum">     604 </span>            :             TempoSequencePosition pos (tempo);</a>
-<a name="605"><span class="lineNum">     605 </span><span class="lineNoCov">          0 :             pos.setTime (t);</span></a>
+<a name="571"><span class="lineNum">     571 </span><span class="lineNoCov">          0 :         auto mins = (((int) t) / 60) % 60;</span></a>
+<a name="572"><span class="lineNum">     572 </span><span class="lineNoCov">          0 :         results[2] = twoCharString (mins);</span></a>
+<a name="573"><span class="lineNum">     573 </span>            : </a>
+<a name="574"><span class="lineNum">     574 </span><span class="lineNoCov">          0 :         auto secs = (((int) t) % 60);</span></a>
+<a name="575"><span class="lineNum">     575 </span><span class="lineNoCov">          0 :         results[1] = twoCharString (secs);</span></a>
+<a name="576"><span class="lineNum">     576 </span>            :     }</a>
+<a name="577"><span class="lineNum">     577 </span>            :     else</a>
+<a name="578"><span class="lineNum">     578 </span>            :     {</a>
+<a name="579"><span class="lineNum">     579 </span>            :         jassertfalse;</a>
+<a name="580"><span class="lineNum">     580 </span>            :     }</a>
+<a name="581"><span class="lineNum">     581 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="582"><span class="lineNum">     582 </span>            : </a>
+<a name="583"><span class="lineNum">     583 </span><span class="lineNoCov">          0 : TimecodeDuration TimecodeDisplayFormat::getNewTimeWithPartValue (TimecodeDuration time, const TempoSequence&amp; tempo,</span></a>
+<a name="584"><span class="lineNum">     584 </span>            :                                                                  int part, int newValue, bool isRelative) const</a>
+<a name="585"><span class="lineNum">     585 </span>            : {</a>
+<a name="586"><span class="lineNum">     586 </span><span class="lineNoCov">          0 :     if (type == TimecodeType::barsBeats)</span></a>
+<a name="587"><span class="lineNum">     587 </span>            :     {</a>
+<a name="588"><span class="lineNum">     588 </span><span class="lineNoCov">          0 :         if (time.beats.has_value())</span></a>
+<a name="589"><span class="lineNum">     589 </span>            :         {</a>
+<a name="590"><span class="lineNum">     590 </span><span class="lineNoCov">          0 :             auto t = *time.beats;</span></a>
+<a name="591"><span class="lineNum">     591 </span>            : </a>
+<a name="592"><span class="lineNum">     592 </span><span class="lineNoCov">          0 :             auto bars  = int (t / time.beatsPerBar);</span></a>
+<a name="593"><span class="lineNum">     593 </span><span class="lineNoCov">          0 :             auto beats = t - (bars * time.beatsPerBar);</span></a>
+<a name="594"><span class="lineNum">     594 </span><span class="lineNoCov">          0 :             auto ticks = std::fmod (beats, 1.0);</span></a>
+<a name="595"><span class="lineNum">     595 </span><span class="lineNoCov">          0 :             beats = int (beats);</span></a>
+<a name="596"><span class="lineNum">     596 </span>            : </a>
+<a name="597"><span class="lineNum">     597 </span><span class="lineNoCov">          0 :             if (part == 2)      bars  = newValue;</span></a>
+<a name="598"><span class="lineNum">     598 </span><span class="lineNoCov">          0 :             else if (part == 1) beats = newValue;</span></a>
+<a name="599"><span class="lineNum">     599 </span><span class="lineNoCov">          0 :             else if (part == 0) ticks = newValue / double (Edit::ticksPerQuarterNote);</span></a>
+<a name="600"><span class="lineNum">     600 </span>            : </a>
+<a name="601"><span class="lineNum">     601 </span><span class="lineNoCov">          0 :             return TimecodeDuration::fromBeatsOnly (bars * time.beatsPerBar + beats + ticks, time.beatsPerBar);</span></a>
+<a name="602"><span class="lineNum">     602 </span>            :         }</a>
+<a name="603"><span class="lineNum">     603 </span>            :         else</a>
+<a name="604"><span class="lineNum">     604 </span>            :         {</a>
+<a name="605"><span class="lineNum">     605 </span><span class="lineNoCov">          0 :             auto t = std::abs (*time.seconds);</span></a>
 <a name="606"><span class="lineNum">     606 </span>            : </a>
-<a name="607"><span class="lineNum">     607 </span><span class="lineNoCov">          0 :             auto barsBeats = tempo.timeToBarsBeats (t);</span></a>
-<a name="608"><span class="lineNum">     608 </span>            : </a>
-<a name="609"><span class="lineNum">     609 </span><span class="lineNoCov">          0 :             if (part == 0)       pos.addBeats ((newValue / (double) Edit::ticksPerQuarterNote) - barsBeats.getFractionalBeats());</span></a>
-<a name="610"><span class="lineNum">     610 </span><span class="lineNoCov">          0 :             else if (part == 1)  pos.addBeats ((isRelative ? newValue : (newValue - 1)) - barsBeats.getWholeBeats());</span></a>
-<a name="611"><span class="lineNum">     611 </span><span class="lineNoCov">          0 :             else if (part == 2)  pos.addBars  ((isRelative ? newValue : (newValue - 1)) - barsBeats.bars);</span></a>
-<a name="612"><span class="lineNum">     612 </span>            : </a>
-<a name="613"><span class="lineNum">     613 </span><span class="lineNoCov">          0 :             return TimecodeDuration::fromSecondsOnly (*time.seconds &lt; 0 ? -pos.getTime() : pos.getTime());</span></a>
-<a name="614"><span class="lineNum">     614 </span>            :         }</a>
-<a name="615"><span class="lineNum">     615 </span>            :     }</a>
-<a name="616"><span class="lineNum">     616 </span>            : </a>
-<a name="617"><span class="lineNum">     617 </span><span class="lineNoCov">          0 :     auto t = std::abs (*time.seconds);</span></a>
-<a name="618"><span class="lineNum">     618 </span><span class="lineNoCov">          0 :     auto intT = (int) t;</span></a>
-<a name="619"><span class="lineNum">     619 </span><span class="lineNoCov">          0 :     auto hours = (int) (t / 3600.0);</span></a>
-<a name="620"><span class="lineNum">     620 </span><span class="lineNoCov">          0 :     auto mins  = (intT / 60) % 60;</span></a>
-<a name="621"><span class="lineNum">     621 </span><span class="lineNoCov">          0 :     auto secs  = (intT % 60);</span></a>
-<a name="622"><span class="lineNum">     622 </span><span class="lineNoCov">          0 :     auto frac  = t - intT;</span></a>
-<a name="623"><span class="lineNum">     623 </span>            : </a>
-<a name="624"><span class="lineNum">     624 </span><span class="lineNoCov">          0 :     if (part == 0)</span></a>
-<a name="625"><span class="lineNum">     625 </span>            :     {</a>
-<a name="626"><span class="lineNum">     626 </span>            :         auto subSecDivs = getSubSecondDivisions();</a>
-<a name="627"><span class="lineNum">     627 </span><span class="lineNoCov">          0 :         frac = ((newValue + subSecDivs * 1000) % subSecDivs) / (double) subSecDivs;</span></a>
-<a name="628"><span class="lineNum">     628 </span>            :     }</a>
-<a name="629"><span class="lineNum">     629 </span><span class="lineNoCov">          0 :     else if (part == 1)</span></a>
-<a name="630"><span class="lineNum">     630 </span>            :     {</a>
-<a name="631"><span class="lineNum">     631 </span><span class="lineNoCov">          0 :         secs = (newValue + 3600) % 60;</span></a>
-<a name="632"><span class="lineNum">     632 </span>            :     }</a>
-<a name="633"><span class="lineNum">     633 </span><span class="lineNoCov">          0 :     else if (part == 2)</span></a>
-<a name="634"><span class="lineNum">     634 </span>            :     {</a>
-<a name="635"><span class="lineNum">     635 </span><span class="lineNoCov">          0 :         mins = (newValue + 3600) % 60;</span></a>
-<a name="636"><span class="lineNum">     636 </span>            :     }</a>
-<a name="637"><span class="lineNum">     637 </span><span class="lineNoCov">          0 :     else if (part == 3)</span></a>
-<a name="638"><span class="lineNum">     638 </span>            :     {</a>
-<a name="639"><span class="lineNum">     639 </span>            :         hours = jmax (0, newValue);</a>
-<a name="640"><span class="lineNum">     640 </span>            :     }</a>
-<a name="641"><span class="lineNum">     641 </span>            : </a>
-<a name="642"><span class="lineNum">     642 </span><span class="lineNoCov">          0 :     t = hours * 3600.0 + mins * 60.0 + secs + frac;</span></a>
-<a name="643"><span class="lineNum">     643 </span>            : </a>
-<a name="644"><span class="lineNum">     644 </span><span class="lineNoCov">          0 :     return TimecodeDuration::fromSecondsOnly (*time.seconds &lt; 0 ? -t : t);</span></a>
-<a name="645"><span class="lineNum">     645 </span>            : }</a>
+<a name="607"><span class="lineNum">     607 </span>            :             TempoSequencePosition pos (tempo);</a>
+<a name="608"><span class="lineNum">     608 </span><span class="lineNoCov">          0 :             pos.setTime (t);</span></a>
+<a name="609"><span class="lineNum">     609 </span>            : </a>
+<a name="610"><span class="lineNum">     610 </span><span class="lineNoCov">          0 :             auto barsBeats = tempo.timeToBarsBeats (t);</span></a>
+<a name="611"><span class="lineNum">     611 </span>            : </a>
+<a name="612"><span class="lineNum">     612 </span><span class="lineNoCov">          0 :             if (part == 0)       pos.addBeats ((newValue / (double) Edit::ticksPerQuarterNote) - barsBeats.getFractionalBeats());</span></a>
+<a name="613"><span class="lineNum">     613 </span><span class="lineNoCov">          0 :             else if (part == 1)  pos.addBeats ((isRelative ? newValue : (newValue - 1)) - barsBeats.getWholeBeats());</span></a>
+<a name="614"><span class="lineNum">     614 </span><span class="lineNoCov">          0 :             else if (part == 2)  pos.addBars  ((isRelative ? newValue : (newValue - 1)) - barsBeats.bars);</span></a>
+<a name="615"><span class="lineNum">     615 </span>            : </a>
+<a name="616"><span class="lineNum">     616 </span><span class="lineNoCov">          0 :             return TimecodeDuration::fromSecondsOnly (*time.seconds &lt; 0 ? -pos.getTime() : pos.getTime());</span></a>
+<a name="617"><span class="lineNum">     617 </span>            :         }</a>
+<a name="618"><span class="lineNum">     618 </span>            :     }</a>
+<a name="619"><span class="lineNum">     619 </span>            : </a>
+<a name="620"><span class="lineNum">     620 </span><span class="lineNoCov">          0 :     auto t = std::abs (*time.seconds);</span></a>
+<a name="621"><span class="lineNum">     621 </span><span class="lineNoCov">          0 :     auto intT = (int) t;</span></a>
+<a name="622"><span class="lineNum">     622 </span><span class="lineNoCov">          0 :     auto hours = (int) (t / 3600.0);</span></a>
+<a name="623"><span class="lineNum">     623 </span><span class="lineNoCov">          0 :     auto mins  = (intT / 60) % 60;</span></a>
+<a name="624"><span class="lineNum">     624 </span><span class="lineNoCov">          0 :     auto secs  = (intT % 60);</span></a>
+<a name="625"><span class="lineNum">     625 </span><span class="lineNoCov">          0 :     auto frac  = t - intT;</span></a>
+<a name="626"><span class="lineNum">     626 </span>            : </a>
+<a name="627"><span class="lineNum">     627 </span><span class="lineNoCov">          0 :     if (part == 0)</span></a>
+<a name="628"><span class="lineNum">     628 </span>            :     {</a>
+<a name="629"><span class="lineNum">     629 </span>            :         auto subSecDivs = getSubSecondDivisions();</a>
+<a name="630"><span class="lineNum">     630 </span><span class="lineNoCov">          0 :         frac = ((newValue + subSecDivs * 1000) % subSecDivs) / (double) subSecDivs;</span></a>
+<a name="631"><span class="lineNum">     631 </span>            :     }</a>
+<a name="632"><span class="lineNum">     632 </span><span class="lineNoCov">          0 :     else if (part == 1)</span></a>
+<a name="633"><span class="lineNum">     633 </span>            :     {</a>
+<a name="634"><span class="lineNum">     634 </span><span class="lineNoCov">          0 :         secs = (newValue + 3600) % 60;</span></a>
+<a name="635"><span class="lineNum">     635 </span>            :     }</a>
+<a name="636"><span class="lineNum">     636 </span><span class="lineNoCov">          0 :     else if (part == 2)</span></a>
+<a name="637"><span class="lineNum">     637 </span>            :     {</a>
+<a name="638"><span class="lineNum">     638 </span><span class="lineNoCov">          0 :         mins = (newValue + 3600) % 60;</span></a>
+<a name="639"><span class="lineNum">     639 </span>            :     }</a>
+<a name="640"><span class="lineNum">     640 </span><span class="lineNoCov">          0 :     else if (part == 3)</span></a>
+<a name="641"><span class="lineNum">     641 </span>            :     {</a>
+<a name="642"><span class="lineNum">     642 </span><span class="lineNoCov">          0 :         hours = std::max (0, newValue);</span></a>
+<a name="643"><span class="lineNum">     643 </span>            :     }</a>
+<a name="644"><span class="lineNum">     644 </span>            : </a>
+<a name="645"><span class="lineNum">     645 </span><span class="lineNoCov">          0 :     t = hours * 3600.0 + mins * 60.0 + secs + frac;</span></a>
 <a name="646"><span class="lineNum">     646 </span>            : </a>
-<a name="647"><span class="lineNum">     647 </span>            : //==============================================================================</a>
-<a name="648"><span class="lineNum">     648 </span><span class="lineNoCov">          0 : juce::String TimecodeDisplayFormat::toFullTimecode (double seconds, int subSecondDivisions, bool showHours)</span></a>
-<a name="649"><span class="lineNum">     649 </span>            : {</a>
-<a name="650"><span class="lineNum">     650 </span>            :     auto absSecs = std::abs (seconds);</a>
-<a name="651"><span class="lineNum">     651 </span><span class="lineNoCov">          0 :     String sign = (seconds &lt; 0) ? &quot;-&quot; : &quot;&quot;;</span></a>
-<a name="652"><span class="lineNum">     652 </span><span class="lineNoCov">          0 :     String result;</span></a>
-<a name="653"><span class="lineNum">     653 </span>            : </a>
-<a name="654"><span class="lineNum">     654 </span><span class="lineNoCov">          0 :     if (showHours || (absSecs &gt;= 60.0 * 60.0))</span></a>
-<a name="655"><span class="lineNum">     655 </span><span class="lineNoCov">          0 :         result = sign + String::formatted (&quot;%02d:%02d:%02d&quot;,</span></a>
-<a name="656"><span class="lineNum">     656 </span><span class="lineNoCov">          0 :                                            (int) (absSecs / (60.0 * 60.0)),</span></a>
-<a name="657"><span class="lineNum">     657 </span><span class="lineNoCov">          0 :                                            ((int) (absSecs / 60.0)) % 60,</span></a>
-<a name="658"><span class="lineNum">     658 </span><span class="lineNoCov">          0 :                                            ((int) absSecs) % 60);</span></a>
-<a name="659"><span class="lineNum">     659 </span>            :     else</a>
-<a name="660"><span class="lineNum">     660 </span><span class="lineNoCov">          0 :         result = sign + String::formatted (&quot;%d:%02d&quot;,</span></a>
-<a name="661"><span class="lineNum">     661 </span><span class="lineNoCov">          0 :                                            ((int) (absSecs / 60.0)) % 60,</span></a>
-<a name="662"><span class="lineNum">     662 </span><span class="lineNoCov">          0 :                                            ((int) absSecs) % 60);</span></a>
-<a name="663"><span class="lineNum">     663 </span>            : </a>
-<a name="664"><span class="lineNum">     664 </span><span class="lineNoCov">          0 :     if (subSecondDivisions &gt; 0)</span></a>
-<a name="665"><span class="lineNum">     665 </span><span class="lineNoCov">          0 :         result += String::formatted (&quot;:%0*d&quot;,</span></a>
-<a name="666"><span class="lineNum">     666 </span><span class="lineNoCov">          0 :                                      String (subSecondDivisions - 1).length(),</span></a>
-<a name="667"><span class="lineNum">     667 </span><span class="lineNoCov">          0 :                                      roundToInt (absSecs * subSecondDivisions) % subSecondDivisions);</span></a>
-<a name="668"><span class="lineNum">     668 </span>            : </a>
-<a name="669"><span class="lineNum">     669 </span><span class="lineNoCov">          0 :     return result;</span></a>
-<a name="670"><span class="lineNum">     670 </span>            : }</a>
-<a name="671"><span class="lineNum">     671 </span>            : </a>
-<a name="672"><span class="lineNum">     672 </span>            : //==============================================================================</a>
-<a name="673"><span class="lineNum">     673 </span><span class="lineNoCov">          0 : TimecodeSnapType TimecodeDisplayFormat::getBestSnapType (const TempoSetting&amp; tempo, double onScreenTimePerPixel, bool isTripletOverride) const</span></a>
-<a name="674"><span class="lineNum">     674 </span>            : {</a>
-<a name="675"><span class="lineNum">     675 </span><span class="lineNoCov">          0 :     if (type &gt;= TimecodeType::fps24 &amp;&amp; (1.0 / getSubSecondDivisions()) / onScreenTimePerPixel &gt; 2)</span></a>
-<a name="676"><span class="lineNum">     676 </span><span class="lineNoCov">          0 :         return TimecodeSnapType (type, 1);</span></a>
-<a name="677"><span class="lineNum">     677 </span>            : </a>
-<a name="678"><span class="lineNum">     678 </span>            :     auto numSnapTypes = getNumSnapTypes();</a>
-<a name="679"><span class="lineNum">     679 </span>            : </a>
-<a name="680"><span class="lineNum">     680 </span><span class="lineNoCov">          0 :     for (int i = 0; i &lt; numSnapTypes; ++i)</span></a>
-<a name="681"><span class="lineNum">     681 </span>            :     {</a>
-<a name="682"><span class="lineNum">     682 </span>            :         TimecodeSnapType snap (type, i);</a>
-<a name="683"><span class="lineNum">     683 </span><span class="lineNoCov">          0 :         auto res = snap.getApproxIntervalTime (tempo, isTripletOverride);</span></a>
-<a name="684"><span class="lineNum">     684 </span><span class="lineNoCov">          0 :         auto t = res / onScreenTimePerPixel;</span></a>
-<a name="685"><span class="lineNum">     685 </span>            : </a>
-<a name="686"><span class="lineNum">     686 </span><span class="lineNoCov">          0 :         if (t &gt; 12)</span></a>
-<a name="687"><span class="lineNum">     687 </span><span class="lineNoCov">          0 :             return snap;</span></a>
-<a name="688"><span class="lineNum">     688 </span>            :     }</a>
+<a name="647"><span class="lineNum">     647 </span><span class="lineNoCov">          0 :     return TimecodeDuration::fromSecondsOnly (*time.seconds &lt; 0 ? -t : t);</span></a>
+<a name="648"><span class="lineNum">     648 </span>            : }</a>
+<a name="649"><span class="lineNum">     649 </span>            : </a>
+<a name="650"><span class="lineNum">     650 </span>            : //==============================================================================</a>
+<a name="651"><span class="lineNum">     651 </span><span class="lineNoCov">          0 : juce::String TimecodeDisplayFormat::toFullTimecode (double seconds, int subSecondDivisions, bool showHours)</span></a>
+<a name="652"><span class="lineNum">     652 </span>            : {</a>
+<a name="653"><span class="lineNum">     653 </span><span class="lineNoCov">          0 :     juce::String result = (seconds &lt; 0) ? &quot;-&quot; : &quot;&quot;;</span></a>
+<a name="654"><span class="lineNum">     654 </span>            :     auto absSecs = std::abs (seconds);</a>
+<a name="655"><span class="lineNum">     655 </span>            : </a>
+<a name="656"><span class="lineNum">     656 </span><span class="lineNoCov">          0 :     if (showHours || (absSecs &gt;= 60.0 * 60.0))</span></a>
+<a name="657"><span class="lineNum">     657 </span><span class="lineNoCov">          0 :         result += juce::String::formatted (&quot;%02d:%02d:%02d&quot;,</span></a>
+<a name="658"><span class="lineNum">     658 </span><span class="lineNoCov">          0 :                                            (int) (absSecs / (60.0 * 60.0)),</span></a>
+<a name="659"><span class="lineNum">     659 </span><span class="lineNoCov">          0 :                                            ((int) (absSecs / 60.0)) % 60,</span></a>
+<a name="660"><span class="lineNum">     660 </span><span class="lineNoCov">          0 :                                            ((int) absSecs) % 60);</span></a>
+<a name="661"><span class="lineNum">     661 </span>            :     else</a>
+<a name="662"><span class="lineNum">     662 </span><span class="lineNoCov">          0 :         result += juce::String::formatted (&quot;%d:%02d&quot;,</span></a>
+<a name="663"><span class="lineNum">     663 </span><span class="lineNoCov">          0 :                                            ((int) (absSecs / 60.0)) % 60,</span></a>
+<a name="664"><span class="lineNum">     664 </span><span class="lineNoCov">          0 :                                            ((int) absSecs) % 60);</span></a>
+<a name="665"><span class="lineNum">     665 </span>            : </a>
+<a name="666"><span class="lineNum">     666 </span><span class="lineNoCov">          0 :     if (subSecondDivisions &gt; 0)</span></a>
+<a name="667"><span class="lineNum">     667 </span><span class="lineNoCov">          0 :         result += juce::String::formatted (&quot;:%0*d&quot;,</span></a>
+<a name="668"><span class="lineNum">     668 </span><span class="lineNoCov">          0 :                                            juce::String (subSecondDivisions - 1).length(),</span></a>
+<a name="669"><span class="lineNum">     669 </span><span class="lineNoCov">          0 :                                            juce::roundToInt (absSecs * subSecondDivisions) % subSecondDivisions);</span></a>
+<a name="670"><span class="lineNum">     670 </span>            : </a>
+<a name="671"><span class="lineNum">     671 </span><span class="lineNoCov">          0 :     return result;</span></a>
+<a name="672"><span class="lineNum">     672 </span>            : }</a>
+<a name="673"><span class="lineNum">     673 </span>            : </a>
+<a name="674"><span class="lineNum">     674 </span>            : //==============================================================================</a>
+<a name="675"><span class="lineNum">     675 </span><span class="lineNoCov">          0 : TimecodeSnapType TimecodeDisplayFormat::getBestSnapType (const TempoSetting&amp; tempo,</span></a>
+<a name="676"><span class="lineNum">     676 </span>            :                                                          double onScreenTimePerPixel,</a>
+<a name="677"><span class="lineNum">     677 </span>            :                                                          bool isTripletOverride) const</a>
+<a name="678"><span class="lineNum">     678 </span>            : {</a>
+<a name="679"><span class="lineNum">     679 </span><span class="lineNoCov">          0 :     if (type &gt;= TimecodeType::fps24 &amp;&amp; (1.0 / getSubSecondDivisions()) / onScreenTimePerPixel &gt; 2)</span></a>
+<a name="680"><span class="lineNum">     680 </span><span class="lineNoCov">          0 :         return TimecodeSnapType (type, 1);</span></a>
+<a name="681"><span class="lineNum">     681 </span>            : </a>
+<a name="682"><span class="lineNum">     682 </span>            :     auto numSnapTypes = getNumSnapTypes();</a>
+<a name="683"><span class="lineNum">     683 </span>            : </a>
+<a name="684"><span class="lineNum">     684 </span><span class="lineNoCov">          0 :     for (int i = 0; i &lt; numSnapTypes; ++i)</span></a>
+<a name="685"><span class="lineNum">     685 </span>            :     {</a>
+<a name="686"><span class="lineNum">     686 </span>            :         TimecodeSnapType snap (type, i);</a>
+<a name="687"><span class="lineNum">     687 </span><span class="lineNoCov">          0 :         auto res = snap.getApproxIntervalTime (tempo, isTripletOverride);</span></a>
+<a name="688"><span class="lineNum">     688 </span><span class="lineNoCov">          0 :         auto t = res / onScreenTimePerPixel;</span></a>
 <a name="689"><span class="lineNum">     689 </span>            : </a>
-<a name="690"><span class="lineNum">     690 </span>            :     return getSnapType (numSnapTypes);</a>
-<a name="691"><span class="lineNum">     691 </span>            : }</a>
-<a name="692"><span class="lineNum">     692 </span>            : </a>
-<a name="693"><span class="lineNum">     693 </span><span class="lineNoCov">          0 : int TimecodeDisplayFormat::getNumSnapTypes() const</span></a>
-<a name="694"><span class="lineNum">     694 </span>            : {</a>
-<a name="695"><span class="lineNum">     695 </span><span class="lineNoCov">          0 :     return type == TimecodeType::millisecs ? 13</span></a>
-<a name="696"><span class="lineNum">     696 </span><span class="lineNoCov">          0 :                                            : (type == TimecodeType::barsBeats ? 19 : 15);</span></a>
-<a name="697"><span class="lineNum">     697 </span>            : }</a>
-<a name="698"><span class="lineNum">     698 </span>            : </a>
-<a name="699"><span class="lineNum">     699 </span><span class="lineNoCov">          0 : TimecodeSnapType TimecodeDisplayFormat::getSnapType (int index) const</span></a>
-<a name="700"><span class="lineNum">     700 </span>            : {</a>
-<a name="701"><span class="lineNum">     701 </span><span class="lineNoCov">          0 :     return TimecodeSnapType (type, jlimit (0, getNumSnapTypes() - 1, index));</span></a>
-<a name="702"><span class="lineNum">     702 </span>            : }</a>
-<a name="703"><span class="lineNum">     703 </span>            : </a>
-<a name="704"><span class="lineNum">     704 </span>            : //==============================================================================</a>
-<a name="705"><span class="lineNum">     705 </span><span class="lineNoCov">          0 : TimecodeDisplayIterator::TimecodeDisplayIterator (const Edit&amp; edit, double startTime, TimecodeSnapType minSnapTypeToUse, bool to)</span></a>
-<a name="706"><span class="lineNum">     706 </span><span class="lineNoCov">          0 :     : sequence (edit.tempoSequence),</span></a>
-<a name="707"><span class="lineNum">     707 </span>            :       minSnapType (minSnapTypeToUse),</a>
-<a name="708"><span class="lineNum">     708 </span><span class="lineNoCov">          0 :       time (minSnapType.roundTimeDown (startTime, sequence)),</span></a>
-<a name="709"><span class="lineNum">     709 </span><span class="lineNoCov">          0 :       isTripletOverride (to)</span></a>
-<a name="710"><span class="lineNum">     710 </span>            : {</a>
-<a name="711"><span class="lineNum">     711 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="712"><span class="lineNum">     712 </span>            : </a>
-<a name="713"><span class="lineNum">     713 </span><span class="lineNoCov">          0 : double TimecodeDisplayIterator::next()</span></a>
-<a name="714"><span class="lineNum">     714 </span>            : {</a>
-<a name="715"><span class="lineNum">     715 </span><span class="lineNoCov">          0 :     const bool triplets = isTripletOverride || sequence.isTripletsAtTime (time);</span></a>
-<a name="716"><span class="lineNum">     716 </span><span class="lineNoCov">          0 :     double nextTime = jmax (0.0, minSnapType.roundTimeUp (time + 1.0e-5, sequence, triplets));</span></a>
+<a name="690"><span class="lineNum">     690 </span><span class="lineNoCov">          0 :         if (t &gt; 12)</span></a>
+<a name="691"><span class="lineNum">     691 </span><span class="lineNoCov">          0 :             return snap;</span></a>
+<a name="692"><span class="lineNum">     692 </span>            :     }</a>
+<a name="693"><span class="lineNum">     693 </span>            : </a>
+<a name="694"><span class="lineNum">     694 </span>            :     return getSnapType (numSnapTypes);</a>
+<a name="695"><span class="lineNum">     695 </span>            : }</a>
+<a name="696"><span class="lineNum">     696 </span>            : </a>
+<a name="697"><span class="lineNum">     697 </span><span class="lineNoCov">          0 : int TimecodeDisplayFormat::getNumSnapTypes() const</span></a>
+<a name="698"><span class="lineNum">     698 </span>            : {</a>
+<a name="699"><span class="lineNum">     699 </span><span class="lineNoCov">          0 :     return type == TimecodeType::millisecs ? 13</span></a>
+<a name="700"><span class="lineNum">     700 </span><span class="lineNoCov">          0 :                                            : (type == TimecodeType::barsBeats ? 19 : 15);</span></a>
+<a name="701"><span class="lineNum">     701 </span>            : }</a>
+<a name="702"><span class="lineNum">     702 </span>            : </a>
+<a name="703"><span class="lineNum">     703 </span><span class="lineNoCov">          0 : TimecodeSnapType TimecodeDisplayFormat::getSnapType (int index) const</span></a>
+<a name="704"><span class="lineNum">     704 </span>            : {</a>
+<a name="705"><span class="lineNum">     705 </span><span class="lineNoCov">          0 :     return TimecodeSnapType (type, juce::jlimit (0, getNumSnapTypes() - 1, index));</span></a>
+<a name="706"><span class="lineNum">     706 </span>            : }</a>
+<a name="707"><span class="lineNum">     707 </span>            : </a>
+<a name="708"><span class="lineNum">     708 </span>            : //==============================================================================</a>
+<a name="709"><span class="lineNum">     709 </span><span class="lineNoCov">          0 : TimecodeDisplayIterator::TimecodeDisplayIterator (const Edit&amp; edit, double startTime,</span></a>
+<a name="710"><span class="lineNum">     710 </span><span class="lineNoCov">          0 :                                                   TimecodeSnapType minSnapTypeToUse, bool to)</span></a>
+<a name="711"><span class="lineNum">     711 </span><span class="lineNoCov">          0 :     : sequence (edit.tempoSequence),</span></a>
+<a name="712"><span class="lineNum">     712 </span>            :       minSnapType (minSnapTypeToUse),</a>
+<a name="713"><span class="lineNum">     713 </span><span class="lineNoCov">          0 :       time (minSnapType.roundTimeDown (startTime, sequence)),</span></a>
+<a name="714"><span class="lineNum">     714 </span><span class="lineNoCov">          0 :       isTripletOverride (to)</span></a>
+<a name="715"><span class="lineNum">     715 </span>            : {</a>
+<a name="716"><span class="lineNum">     716 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="717"><span class="lineNum">     717 </span>            : </a>
-<a name="718"><span class="lineNum">     718 </span><span class="lineNoCov">          0 :     if (nextTime &lt;= time)</span></a>
-<a name="719"><span class="lineNum">     719 </span>            :     {</a>
-<a name="720"><span class="lineNum">     720 </span>            :         jassertfalse;</a>
-<a name="721"><span class="lineNum">     721 </span><span class="lineNoCov">          0 :         nextTime = time + minSnapType.getApproxIntervalTime (*sequence.getTempo (0), triplets);</span></a>
-<a name="722"><span class="lineNum">     722 </span>            :     }</a>
-<a name="723"><span class="lineNum">     723 </span>            : </a>
-<a name="724"><span class="lineNum">     724 </span><span class="lineNoCov">          0 :     time = nextTime;</span></a>
-<a name="725"><span class="lineNum">     725 </span><span class="lineNoCov">          0 :     currentSnapType = minSnapType.getSnapTypeForMaximumSnapLevelOf (time, sequence, triplets);</span></a>
-<a name="726"><span class="lineNum">     726 </span><span class="lineNoCov">          0 :     return time;</span></a>
-<a name="727"><span class="lineNum">     727 </span>            : }</a>
+<a name="718"><span class="lineNum">     718 </span><span class="lineNoCov">          0 : double TimecodeDisplayIterator::next()</span></a>
+<a name="719"><span class="lineNum">     719 </span>            : {</a>
+<a name="720"><span class="lineNum">     720 </span><span class="lineNoCov">          0 :     bool triplets = isTripletOverride || sequence.isTripletsAtTime (time);</span></a>
+<a name="721"><span class="lineNum">     721 </span><span class="lineNoCov">          0 :     auto nextTime = std::max (0.0, minSnapType.roundTimeUp (time + 1.0e-5, sequence, triplets));</span></a>
+<a name="722"><span class="lineNum">     722 </span>            : </a>
+<a name="723"><span class="lineNum">     723 </span><span class="lineNoCov">          0 :     if (nextTime &lt;= time)</span></a>
+<a name="724"><span class="lineNum">     724 </span>            :     {</a>
+<a name="725"><span class="lineNum">     725 </span>            :         jassertfalse;</a>
+<a name="726"><span class="lineNum">     726 </span><span class="lineNoCov">          0 :         nextTime = time + minSnapType.getApproxIntervalTime (*sequence.getTempo (0), triplets);</span></a>
+<a name="727"><span class="lineNum">     727 </span>            :     }</a>
 <a name="728"><span class="lineNum">     728 </span>            : </a>
-<a name="729"><span class="lineNum">     729 </span><span class="lineNoCov">          0 : juce::String TimecodeDisplayIterator::getTimecodeAsString() const</span></a>
-<a name="730"><span class="lineNum">     730 </span>            : {</a>
-<a name="731"><span class="lineNum">     731 </span><span class="lineNoCov">          0 :     return currentSnapType.getTimecodeString (time, sequence, true);</span></a>
+<a name="729"><span class="lineNum">     729 </span><span class="lineNoCov">          0 :     time = nextTime;</span></a>
+<a name="730"><span class="lineNum">     730 </span><span class="lineNoCov">          0 :     currentSnapType = minSnapType.getSnapTypeForMaximumSnapLevelOf (time, sequence, triplets);</span></a>
+<a name="731"><span class="lineNum">     731 </span><span class="lineNoCov">          0 :     return time;</span></a>
 <a name="732"><span class="lineNum">     732 </span>            : }</a>
 <a name="733"><span class="lineNum">     733 </span>            : </a>
-<a name="734"><span class="lineNum">     734 </span><span class="lineNoCov">          0 : bool TimecodeDisplayIterator::isOneBarOrGreater() const noexcept</span></a>
+<a name="734"><span class="lineNum">     734 </span><span class="lineNoCov">          0 : juce::String TimecodeDisplayIterator::getTimecodeAsString() const</span></a>
 <a name="735"><span class="lineNum">     735 </span>            : {</a>
-<a name="736"><span class="lineNum">     736 </span><span class="lineNoCov">          0 :     return currentSnapType.getLevel() &gt;= currentSnapType.getOneBarLevel();</span></a>
+<a name="736"><span class="lineNum">     736 </span><span class="lineNoCov">          0 :     return currentSnapType.getTimecodeString (time, sequence, true);</span></a>
 <a name="737"><span class="lineNum">     737 </span>            : }</a>
 <a name="738"><span class="lineNum">     738 </span>            : </a>
-<a name="739"><span class="lineNum">     739 </span>            : }</a>
+<a name="739"><span class="lineNum">     739 </span><span class="lineNoCov">          0 : bool TimecodeDisplayIterator::isOneBarOrGreater() const noexcept</span></a>
+<a name="740"><span class="lineNum">     740 </span>            : {</a>
+<a name="741"><span class="lineNum">     741 </span><span class="lineNoCov">          0 :     return currentSnapType.getLevel() &gt;= currentSnapType.getOneBarLevel();</span></a>
+<a name="742"><span class="lineNum">     742 </span>            : }</a>
+<a name="743"><span class="lineNum">     743 </span>            : </a>
+<a name="744"><span class="lineNum">     744 </span>            : }</a>
 </pre>
       </td>
     </tr>

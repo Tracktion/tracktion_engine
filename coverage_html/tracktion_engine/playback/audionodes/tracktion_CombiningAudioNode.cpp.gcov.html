@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">106</td>
+            <td class="headerCovTableEntry">105</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -102,17 +102,17 @@
 <a name="40"><span class="lineNum">      40 </span>            :         {</a>
 <a name="41"><span class="lineNum">      41 </span><span class="lineNoCov">          0 :             auto newLength = time.end - editTime.getStart();</span></a>
 <a name="42"><span class="lineNum">      42 </span><span class="lineNoCov">          0 :             context.streamTime.end = context.streamTime.start + newLength;</span></a>
-<a name="43"><span class="lineNum">      43 </span><span class="lineNoCov">          0 :             context.bufferNumSamples = jmax (0, (int) (context.bufferNumSamples * newLength</span></a>
-<a name="44"><span class="lineNum">      44 </span><span class="lineNoCov">          0 :                                                         / rc.streamTime.getLength()));</span></a>
+<a name="43"><span class="lineNum">      43 </span><span class="lineNoCov">          0 :             context.bufferNumSamples = std::max (0, (int) (context.bufferNumSamples * newLength</span></a>
+<a name="44"><span class="lineNum">      44 </span><span class="lineNoCov">          0 :                                                             / rc.streamTime.getLength()));</span></a>
 <a name="45"><span class="lineNum">      45 </span>            :         }</a>
 <a name="46"><span class="lineNum">      46 </span>            : </a>
 <a name="47"><span class="lineNum">      47 </span><span class="lineNoCov">          0 :         auto amountToSkip = time.start - editTime.getStart();</span></a>
 <a name="48"><span class="lineNum">      48 </span>            : </a>
 <a name="49"><span class="lineNum">      49 </span><span class="lineNoCov">          0 :         if (amountToSkip &gt; 0)</span></a>
 <a name="50"><span class="lineNum">      50 </span>            :         {</a>
-<a name="51"><span class="lineNum">      51 </span><span class="lineNoCov">          0 :             auto samplesToSkip = jmin (context.bufferNumSamples,</span></a>
-<a name="52"><span class="lineNum">      52 </span><span class="lineNoCov">          0 :                                        (int) (context.bufferNumSamples * amountToSkip</span></a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineNoCov">          0 :                                                 / context.streamTime.getLength()));</span></a>
+<a name="51"><span class="lineNum">      51 </span>            :             auto samplesToSkip = std::min (context.bufferNumSamples,</a>
+<a name="52"><span class="lineNum">      52 </span><span class="lineNoCov">          0 :                                            (int) (context.bufferNumSamples * amountToSkip</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineNoCov">          0 :                                                     / context.streamTime.getLength()));</span></a>
 <a name="54"><span class="lineNum">      54 </span>            : </a>
 <a name="55"><span class="lineNum">      55 </span><span class="lineNoCov">          0 :             context.bufferStartSample += samplesToSkip;</span></a>
 <a name="56"><span class="lineNum">      56 </span><span class="lineNoCov">          0 :             context.bufferNumSamples -= samplesToSkip;</span></a>
@@ -154,7 +154,7 @@
 <a name="92"><span class="lineNum">      92 </span><span class="lineNoCov">          0 :     hasAudio |= info.hasAudio;</span></a>
 <a name="93"><span class="lineNum">      93 </span><span class="lineNoCov">          0 :     hasMidi |= info.hasMidi;</span></a>
 <a name="94"><span class="lineNum">      94 </span>            : </a>
-<a name="95"><span class="lineNum">      95 </span><span class="lineNoCov">          0 :     maxNumberOfChannels = jmax (maxNumberOfChannels, info.numberOfChannels);</span></a>
+<a name="95"><span class="lineNum">      95 </span><span class="lineNoCov">          0 :     maxNumberOfChannels = std::max (maxNumberOfChannels, info.numberOfChannels);</span></a>
 <a name="96"><span class="lineNum">      96 </span>            : </a>
 <a name="97"><span class="lineNum">      97 </span>            :     int i;</a>
 <a name="98"><span class="lineNum">      98 </span><span class="lineNoCov">          0 :     for (i = 0; i &lt; inputs.size(); ++i)</span></a>
@@ -166,11 +166,11 @@
 <a name="104"><span class="lineNum">     104 </span>            :     jassert (time.end &lt;= Edit::maximumLength);</a>
 <a name="105"><span class="lineNum">     105 </span>            : </a>
 <a name="106"><span class="lineNum">     106 </span>            :     // add the node to any groups it's near to.</a>
-<a name="107"><span class="lineNum">     107 </span><span class="lineNoCov">          0 :     auto start = jmax (0, timeToGroupIndex (time.start - (secondsPerGroup / 2 + 2)));</span></a>
-<a name="108"><span class="lineNum">     108 </span><span class="lineNoCov">          0 :     auto end   = jmax (0, timeToGroupIndex (time.end   + (secondsPerGroup / 2 + 2)));</span></a>
+<a name="107"><span class="lineNum">     107 </span><span class="lineNoCov">          0 :     auto start = std::max (0, timeToGroupIndex (time.start - (secondsPerGroup / 2 + 2)));</span></a>
+<a name="108"><span class="lineNum">     108 </span><span class="lineNoCov">          0 :     auto end   = std::max (0, timeToGroupIndex (time.end   + (secondsPerGroup / 2 + 2)));</span></a>
 <a name="109"><span class="lineNum">     109 </span>            : </a>
 <a name="110"><span class="lineNum">     110 </span><span class="lineNoCov">          0 :     while (groups.size() &lt;= end)</span></a>
-<a name="111"><span class="lineNum">     111 </span><span class="lineNoCov">          0 :         groups.add (new Array&lt;TimedAudioNode*&gt;());</span></a>
+<a name="111"><span class="lineNum">     111 </span><span class="lineNoCov">          0 :         groups.add (new juce::Array&lt;TimedAudioNode*&gt;());</span></a>
 <a name="112"><span class="lineNum">     112 </span>            : </a>
 <a name="113"><span class="lineNum">     113 </span><span class="lineNoCov">          0 :     for (i = start; i &lt;= end; ++i)</span></a>
 <a name="114"><span class="lineNum">     114 </span>            :     {</a>

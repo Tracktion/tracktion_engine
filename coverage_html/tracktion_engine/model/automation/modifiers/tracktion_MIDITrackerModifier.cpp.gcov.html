@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -87,7 +87,7 @@
 <a name="25"><span class="lineNum">      25 </span><span class="lineNoCov">          0 :     relativeSpread.referTo (state, IDs::spread, um, 12);</span></a>
 <a name="26"><span class="lineNum">      26 </span>            : </a>
 <a name="27"><span class="lineNum">      27 </span><span class="lineNoCov">          0 :     auto addDiscreteParam = [this] (const juce::String&amp; paramID, const juce::String&amp; name,</span></a>
-<a name="28"><span class="lineNum">      28 </span>            :                                     juce::Range&lt;float&gt; valueRange, CachedValue&lt;float&gt;&amp; val,</a>
+<a name="28"><span class="lineNum">      28 </span>            :                                     juce::Range&lt;float&gt; valueRange, juce::CachedValue&lt;float&gt;&amp; val,</a>
 <a name="29"><span class="lineNum">      29 </span><span class="lineNoCov">          0 :                                     const juce::StringArray&amp; labels) -&gt; AutomatableParameter*</span></a>
 <a name="30"><span class="lineNum">      30 </span>            :     {</a>
 <a name="31"><span class="lineNum">      31 </span><span class="lineNoCov">          0 :         auto* p = new DiscreteLabelledParameter (paramID, name, *this, valueRange, labels.size(), labels);</span></a>
@@ -98,8 +98,8 @@
 <a name="36"><span class="lineNum">      36 </span><span class="lineNoCov">          0 :     };</span></a>
 <a name="37"><span class="lineNum">      37 </span>            : </a>
 <a name="38"><span class="lineNum">      38 </span><span class="lineNoCov">          0 :     auto addParam = [this] (const juce::String&amp; paramID, const juce::String&amp; name,</span></a>
-<a name="39"><span class="lineNum">      39 </span>            :                             NormalisableRange&lt;float&gt; valueRange, float centreVal,</a>
-<a name="40"><span class="lineNum">      40 </span><span class="lineNoCov">          0 :                             CachedValue&lt;float&gt;&amp; val, const juce::String&amp; suffix) -&gt; AutomatableParameter*</span></a>
+<a name="39"><span class="lineNum">      39 </span>            :                             juce::NormalisableRange&lt;float&gt; valueRange, float centreVal,</a>
+<a name="40"><span class="lineNum">      40 </span><span class="lineNoCov">          0 :                             juce::CachedValue&lt;float&gt;&amp; val, const juce::String&amp; suffix) -&gt; AutomatableParameter*</span></a>
 <a name="41"><span class="lineNum">      41 </span>            :     {</a>
 <a name="42"><span class="lineNum">      42 </span>            :         valueRange.setSkewForCentre (centreVal);</a>
 <a name="43"><span class="lineNum">      43 </span><span class="lineNoCov">          0 :         auto* p = new SuffixedParameter (paramID, name, *this, valueRange, suffix);</span></a>
@@ -236,8 +236,8 @@
 <a name="174"><span class="lineNum">     174 </span>            :         if (! v.isValid())</a>
 <a name="175"><span class="lineNum">     175 </span>            :         {</a>
 <a name="176"><span class="lineNum">     176 </span><span class="lineNoCov">          0 :             v = juce::ValueTree (IDs::NODE);</span></a>
-<a name="177"><span class="lineNum">     177 </span><span class="lineNoCov">          0 :             v.setProperty (IDs::midi, jmap (i, 0, 4, 0, 127), nullptr);</span></a>
-<a name="178"><span class="lineNum">     178 </span><span class="lineNoCov">          0 :             v.setProperty (IDs::value, jmap ((float) i, 0.0f, 4.0f, -1.0f, 1.0f), nullptr);</span></a>
+<a name="177"><span class="lineNum">     177 </span><span class="lineNoCov">          0 :             v.setProperty (IDs::midi, juce::jmap (i, 0, 4, 0, 127), nullptr);</span></a>
+<a name="178"><span class="lineNum">     178 </span><span class="lineNoCov">          0 :             v.setProperty (IDs::value, juce::jmap ((float) i, 0.0f, 4.0f, -1.0f, 1.0f), nullptr);</span></a>
 <a name="179"><span class="lineNum">     179 </span><span class="lineNoCov">          0 :             nodeState.addChild (v, -1, nullptr);</span></a>
 <a name="180"><span class="lineNum">     180 </span>            :         }</a>
 <a name="181"><span class="lineNum">     181 </span>            : </a>
@@ -245,7 +245,7 @@
 <a name="183"><span class="lineNum">     183 </span>            :     }</a>
 <a name="184"><span class="lineNum">     184 </span>            : </a>
 <a name="185"><span class="lineNum">     185 </span>            :     {</a>
-<a name="186"><span class="lineNum">     186 </span><span class="lineNoCov">          0 :         const SpinLock::ScopedLockType sl (mapLock);</span></a>
+<a name="186"><span class="lineNum">     186 </span><span class="lineNoCov">          0 :         const juce::SpinLock::ScopedLockType sl (mapLock);</span></a>
 <a name="187"><span class="lineNum">     187 </span>            :         currentMap = newMap;</a>
 <a name="188"><span class="lineNum">     188 </span>            :     }</a>
 <a name="189"><span class="lineNum">     189 </span>            : </a>
@@ -254,7 +254,7 @@
 <a name="192"><span class="lineNum">     192 </span>            : </a>
 <a name="193"><span class="lineNum">     193 </span><span class="lineNoCov">          0 : void MIDITrackerModifier::updateValueFromMap (int midiVal)</span></a>
 <a name="194"><span class="lineNum">     194 </span>            : {</a>
-<a name="195"><span class="lineNum">     195 </span>            :     jassert (isPositiveAndBelow (midiVal, 128));</a>
+<a name="195"><span class="lineNum">     195 </span>            :     jassert (juce::isPositiveAndBelow (midiVal, 128));</a>
 <a name="196"><span class="lineNum">     196 </span>            :     auto linearInterpolate = [] (float x1, float y1, float x2, float y2, float x)</a>
 <a name="197"><span class="lineNum">     197 </span>            :     {</a>
 <a name="198"><span class="lineNum">     198 </span><span class="lineNoCov">          0 :         return (y1 * (x2 - x) + y2 * (x - x1)) / (x2 - x1);</span></a>
@@ -275,7 +275,7 @@
 <a name="213"><span class="lineNum">     213 </span><span class="lineNoCov">          0 :         Map map;</span></a>
 <a name="214"><span class="lineNum">     214 </span>            : </a>
 <a name="215"><span class="lineNum">     215 </span>            :         {</a>
-<a name="216"><span class="lineNum">     216 </span><span class="lineNoCov">          0 :             const SpinLock::ScopedLockType sl (mapLock);</span></a>
+<a name="216"><span class="lineNum">     216 </span><span class="lineNoCov">          0 :             const juce::SpinLock::ScopedLockType sl (mapLock);</span></a>
 <a name="217"><span class="lineNum">     217 </span>            :             map = currentMap;</a>
 <a name="218"><span class="lineNum">     218 </span>            :         }</a>
 <a name="219"><span class="lineNum">     219 </span>            : </a>
@@ -304,7 +304,7 @@
 <a name="242"><span class="lineNum">     242 </span>            :     jassertfalse;</a>
 <a name="243"><span class="lineNum">     243 </span>            : }</a>
 <a name="244"><span class="lineNum">     244 </span>            : </a>
-<a name="245"><span class="lineNum">     245 </span><span class="lineNoCov">          0 : void MIDITrackerModifier::midiEvent (const MidiMessage&amp; m)</span></a>
+<a name="245"><span class="lineNum">     245 </span><span class="lineNoCov">          0 : void MIDITrackerModifier::midiEvent (const juce::MidiMessage&amp; m)</span></a>
 <a name="246"><span class="lineNum">     246 </span>            : {</a>
 <a name="247"><span class="lineNum">     247 </span><span class="lineNoCov">          0 :     if (! m.isNoteOn())</span></a>
 <a name="248"><span class="lineNum">     248 </span>            :         return;</a>

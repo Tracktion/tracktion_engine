@@ -85,8 +85,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a588bdbfe82f2c60c51bec181c63fc4db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aebca067b4d36ae34e1e464baf693599e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#aebca067b4d36ae34e1e464baf693599e">endEditing</a> (bool dontCheckMusicalContext)</td></tr>
 <tr class="separator:aebca067b4d36ae34e1e464baf693599e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0aef1341e2c017eaf328fb2a594bb111"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#a0aef1341e2c017eaf328fb2a594bb111">flushStateToValueTree</a> (ValueTree &amp;v)</td></tr>
-<tr class="separator:a0aef1341e2c017eaf328fb2a594bb111"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ce6147bfbfa445cef44c9e340e990de"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#a2ce6147bfbfa445cef44c9e340e990de">flushStateToValueTree</a> (juce::ValueTree &amp;v)</td></tr>
+<tr class="separator:a2ce6147bfbfa445cef44c9e340e990de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8335741ce06f35a63db6180ff888b877"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#a8335741ce06f35a63db6180ff888b877">beginRestoringState</a> (const juce::ValueTree &amp;state)</td></tr>
 <tr class="separator:a8335741ce06f35a63db6180ff888b877"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a71649f72ecfbd09f1062001c1007a922"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#a71649f72ecfbd09f1062001c1007a922">endRestoringState</a> ()</td></tr>
@@ -110,8 +110,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:aa880cbc473f88dd4640a7d31a6d9a366"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9018a63f8df80e957a6a0709c9e3dd5c"><td class="memItemLeft" align="right" valign="top">std::map&lt; Track *, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#a9018a63f8df80e957a6a0709c9e3dd5c">regionSequencePlaybackRegionCount</a></td></tr>
 <tr class="separator:a9018a63f8df80e957a6a0709c9e3dd5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a85e4875b1db1065e38e4df65d2d867d9"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; MemoryBlock &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#a85e4875b1db1065e38e4df65d2d867d9">lastArchiveState</a></td></tr>
-<tr class="separator:a85e4875b1db1065e38e4df65d2d867d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a737e49adc3f68f12f06b75d918b7d7b5"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; juce::MemoryBlock &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#a737e49adc3f68f12f06b75d918b7d7b5">lastArchiveState</a></td></tr>
+<tr class="separator:a737e49adc3f68f12f06b75d918b7d7b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>As specified by the Celmony: </p>
@@ -246,8 +246,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a0aef1341e2c017eaf328fb2a594bb111"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0aef1341e2c017eaf328fb2a594bb111">&#9670;&nbsp;</a></span>flushStateToValueTree()</h2>
+<a id="a2ce6147bfbfa445cef44c9e340e990de"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2ce6147bfbfa445cef44c9e340e990de">&#9670;&nbsp;</a></span>flushStateToValueTree()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -255,7 +255,7 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">void ARADocument::flushStateToValueTree </td>
           <td>(</td>
-          <td class="paramtype">ValueTree &amp;&#160;</td>
+          <td class="paramtype">juce::ValueTree &amp;&#160;</td>
           <td class="paramname"><em>v</em></td><td>)</td>
           <td></td>
         </tr>
@@ -359,7 +359,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classAudioModificationWrapper.html#ab8e025764ef18f2e0e5bc04a544cb821">AudioModificationWrapper::AudioModificationWrapper()</a>, <a class="el" href="classMusicalContextWrapper.html#a396f7e72c675c984a00c3ffb9ae99777">MusicalContextWrapper::MusicalContextWrapper()</a>, <a class="el" href="classPlaybackRegionWrapper.html#abd175d8f5b7d81bc04b87ee8f4a89a1c">PlaybackRegionWrapper::PlaybackRegionWrapper()</a>, and <a class="el" href="classRegionSequenceWrapper.html#a79a0124a39ae01a0ddf4c42d0d7e565d">RegionSequenceWrapper::RegionSequenceWrapper()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classAudioModificationWrapper.html#ab8e025764ef18f2e0e5bc04a544cb821">AudioModificationWrapper::AudioModificationWrapper()</a>, <a class="el" href="classMusicalContextWrapper.html#a396f7e72c675c984a00c3ffb9ae99777">MusicalContextWrapper::MusicalContextWrapper()</a>, <a class="el" href="classPlaybackRegionWrapper.html#abd175d8f5b7d81bc04b87ee8f4a89a1c">PlaybackRegionWrapper::PlaybackRegionWrapper()</a>, and <a class="el" href="classRegionSequenceWrapper.html#ab82b337ae0559639ce842d7fc6f9a9c9">RegionSequenceWrapper::RegionSequenceWrapper()</a>.</p>
 
 </div>
 </div>
@@ -375,7 +375,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classAudioModificationWrapper.html#ab8e025764ef18f2e0e5bc04a544cb821">AudioModificationWrapper::AudioModificationWrapper()</a>, <a class="el" href="classAudioSourceWrapper.html#ad27c0d85cc3ac293c4e309c33de97c11">AudioSourceWrapper::AudioSourceWrapper()</a>, <a class="el" href="classAudioSourceWrapper.html#ae1c92beb12adfa6090b8d5b5f55d1861">AudioSourceWrapper::enableAccess()</a>, <a class="el" href="classMusicalContextWrapper.html#a396f7e72c675c984a00c3ffb9ae99777">MusicalContextWrapper::MusicalContextWrapper()</a>, <a class="el" href="classPlaybackRegionWrapper.html#abd175d8f5b7d81bc04b87ee8f4a89a1c">PlaybackRegionWrapper::PlaybackRegionWrapper()</a>, <a class="el" href="classRegionSequenceWrapper.html#a79a0124a39ae01a0ddf4c42d0d7e565d">RegionSequenceWrapper::RegionSequenceWrapper()</a>, <a class="el" href="classMusicalContextWrapper.html#a792cc50768768e07d17797e84b55f292">MusicalContextWrapper::update()</a>, <a class="el" href="classPlaybackRegionWrapper.html#a04f32a855b991d7d6050a1499eeee519">PlaybackRegionWrapper::updateRange()</a>, <a class="el" href="classAudioModificationWrapper.html#a9ea64893c5fda34f4d68bb4fe316bac1">AudioModificationWrapper::~AudioModificationWrapper()</a>, <a class="el" href="classAudioSourceWrapper.html#a7ab47be6377ff39c7cf731004e0712d3">AudioSourceWrapper::~AudioSourceWrapper()</a>, <a class="el" href="classMusicalContextWrapper.html#a04245d561f63665cc2d94e895ffe8e6c">MusicalContextWrapper::~MusicalContextWrapper()</a>, <a class="el" href="classPlaybackRegionWrapper.html#ac2f7bc3df1440be3ef9d718a120e0735">PlaybackRegionWrapper::~PlaybackRegionWrapper()</a>, and <a class="el" href="classRegionSequenceWrapper.html#a4a62eeb79b8690c543c258630c7f2603">RegionSequenceWrapper::~RegionSequenceWrapper()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classAudioModificationWrapper.html#ab8e025764ef18f2e0e5bc04a544cb821">AudioModificationWrapper::AudioModificationWrapper()</a>, <a class="el" href="classAudioSourceWrapper.html#ad27c0d85cc3ac293c4e309c33de97c11">AudioSourceWrapper::AudioSourceWrapper()</a>, <a class="el" href="classAudioSourceWrapper.html#ae1c92beb12adfa6090b8d5b5f55d1861">AudioSourceWrapper::enableAccess()</a>, <a class="el" href="classMusicalContextWrapper.html#a396f7e72c675c984a00c3ffb9ae99777">MusicalContextWrapper::MusicalContextWrapper()</a>, <a class="el" href="classPlaybackRegionWrapper.html#abd175d8f5b7d81bc04b87ee8f4a89a1c">PlaybackRegionWrapper::PlaybackRegionWrapper()</a>, <a class="el" href="classRegionSequenceWrapper.html#ab82b337ae0559639ce842d7fc6f9a9c9">RegionSequenceWrapper::RegionSequenceWrapper()</a>, <a class="el" href="classMusicalContextWrapper.html#a792cc50768768e07d17797e84b55f292">MusicalContextWrapper::update()</a>, <a class="el" href="classPlaybackRegionWrapper.html#a04f32a855b991d7d6050a1499eeee519">PlaybackRegionWrapper::updateRange()</a>, <a class="el" href="classAudioModificationWrapper.html#a9ea64893c5fda34f4d68bb4fe316bac1">AudioModificationWrapper::~AudioModificationWrapper()</a>, <a class="el" href="classAudioSourceWrapper.html#a7ab47be6377ff39c7cf731004e0712d3">AudioSourceWrapper::~AudioSourceWrapper()</a>, <a class="el" href="classMusicalContextWrapper.html#a04245d561f63665cc2d94e895ffe8e6c">MusicalContextWrapper::~MusicalContextWrapper()</a>, <a class="el" href="classPlaybackRegionWrapper.html#ac2f7bc3df1440be3ef9d718a120e0735">PlaybackRegionWrapper::~PlaybackRegionWrapper()</a>, and <a class="el" href="classRegionSequenceWrapper.html#a4a62eeb79b8690c543c258630c7f2603">RegionSequenceWrapper::~RegionSequenceWrapper()</a>.</p>
 
 </div>
 </div>
@@ -391,7 +391,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classAudioModificationWrapper.html#ab8e025764ef18f2e0e5bc04a544cb821">AudioModificationWrapper::AudioModificationWrapper()</a>, <a class="el" href="classAudioSourceWrapper.html#ad27c0d85cc3ac293c4e309c33de97c11">AudioSourceWrapper::AudioSourceWrapper()</a>, <a class="el" href="classAudioSourceWrapper.html#ae1c92beb12adfa6090b8d5b5f55d1861">AudioSourceWrapper::enableAccess()</a>, <a class="el" href="classMusicalContextWrapper.html#a396f7e72c675c984a00c3ffb9ae99777">MusicalContextWrapper::MusicalContextWrapper()</a>, <a class="el" href="classPlaybackRegionWrapper.html#abd175d8f5b7d81bc04b87ee8f4a89a1c">PlaybackRegionWrapper::PlaybackRegionWrapper()</a>, <a class="el" href="classRegionSequenceWrapper.html#a79a0124a39ae01a0ddf4c42d0d7e565d">RegionSequenceWrapper::RegionSequenceWrapper()</a>, <a class="el" href="classMusicalContextWrapper.html#a792cc50768768e07d17797e84b55f292">MusicalContextWrapper::update()</a>, <a class="el" href="classPlaybackRegionWrapper.html#a04f32a855b991d7d6050a1499eeee519">PlaybackRegionWrapper::updateRange()</a>, <a class="el" href="classAudioModificationWrapper.html#a9ea64893c5fda34f4d68bb4fe316bac1">AudioModificationWrapper::~AudioModificationWrapper()</a>, <a class="el" href="classAudioSourceWrapper.html#a7ab47be6377ff39c7cf731004e0712d3">AudioSourceWrapper::~AudioSourceWrapper()</a>, <a class="el" href="classMusicalContextWrapper.html#a04245d561f63665cc2d94e895ffe8e6c">MusicalContextWrapper::~MusicalContextWrapper()</a>, <a class="el" href="classPlaybackRegionWrapper.html#ac2f7bc3df1440be3ef9d718a120e0735">PlaybackRegionWrapper::~PlaybackRegionWrapper()</a>, and <a class="el" href="classRegionSequenceWrapper.html#a4a62eeb79b8690c543c258630c7f2603">RegionSequenceWrapper::~RegionSequenceWrapper()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classAudioModificationWrapper.html#ab8e025764ef18f2e0e5bc04a544cb821">AudioModificationWrapper::AudioModificationWrapper()</a>, <a class="el" href="classAudioSourceWrapper.html#ad27c0d85cc3ac293c4e309c33de97c11">AudioSourceWrapper::AudioSourceWrapper()</a>, <a class="el" href="classAudioSourceWrapper.html#ae1c92beb12adfa6090b8d5b5f55d1861">AudioSourceWrapper::enableAccess()</a>, <a class="el" href="classMusicalContextWrapper.html#a396f7e72c675c984a00c3ffb9ae99777">MusicalContextWrapper::MusicalContextWrapper()</a>, <a class="el" href="classPlaybackRegionWrapper.html#abd175d8f5b7d81bc04b87ee8f4a89a1c">PlaybackRegionWrapper::PlaybackRegionWrapper()</a>, <a class="el" href="classRegionSequenceWrapper.html#ab82b337ae0559639ce842d7fc6f9a9c9">RegionSequenceWrapper::RegionSequenceWrapper()</a>, <a class="el" href="classMusicalContextWrapper.html#a792cc50768768e07d17797e84b55f292">MusicalContextWrapper::update()</a>, <a class="el" href="classPlaybackRegionWrapper.html#a04f32a855b991d7d6050a1499eeee519">PlaybackRegionWrapper::updateRange()</a>, <a class="el" href="classAudioModificationWrapper.html#a9ea64893c5fda34f4d68bb4fe316bac1">AudioModificationWrapper::~AudioModificationWrapper()</a>, <a class="el" href="classAudioSourceWrapper.html#a7ab47be6377ff39c7cf731004e0712d3">AudioSourceWrapper::~AudioSourceWrapper()</a>, <a class="el" href="classMusicalContextWrapper.html#a04245d561f63665cc2d94e895ffe8e6c">MusicalContextWrapper::~MusicalContextWrapper()</a>, <a class="el" href="classPlaybackRegionWrapper.html#ac2f7bc3df1440be3ef9d718a120e0735">PlaybackRegionWrapper::~PlaybackRegionWrapper()</a>, and <a class="el" href="classRegionSequenceWrapper.html#a4a62eeb79b8690c543c258630c7f2603">RegionSequenceWrapper::~RegionSequenceWrapper()</a>.</p>
 
 </div>
 </div>
@@ -441,14 +441,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a85e4875b1db1065e38e4df65d2d867d9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a85e4875b1db1065e38e4df65d2d867d9">&#9670;&nbsp;</a></span>lastArchiveState</h2>
+<a id="a737e49adc3f68f12f06b75d918b7d7b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a737e49adc3f68f12f06b75d918b7d7b5">&#9670;&nbsp;</a></span>lastArchiveState</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::unique_ptr&lt;MemoryBlock&gt; ARADocument::lastArchiveState</td>
+          <td class="memname">std::unique_ptr&lt;juce::MemoryBlock&gt; ARADocument::lastArchiveState</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -461,7 +461,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Dec 29 2021 12:12:16 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Jan 2 2022 19:42:31 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

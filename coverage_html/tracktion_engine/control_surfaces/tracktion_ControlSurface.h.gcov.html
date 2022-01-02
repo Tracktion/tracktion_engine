@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -259,7 +259,7 @@
 <a name="197"><span class="lineNum">     197 </span>            :     void sendMidiCommandToController (const juce::MidiMessage&amp;);</a>
 <a name="198"><span class="lineNum">     198 </span>            : </a>
 <a name="199"><span class="lineNum">     199 </span>            :     template &lt;size_t size&gt;</a>
-<a name="200"><span class="lineNum">     200 </span>            :     void sendMidiArray (const juce::uint8 (&amp;rawData)[size])   { sendMidiCommandToController (rawData, (int) size); }</a>
+<a name="200"><span class="lineNum">     200 </span>            :     void sendMidiArray (const uint8_t (&amp;rawData)[size])   { sendMidiCommandToController (rawData, (int) size); }</a>
 <a name="201"><span class="lineNum">     201 </span>            : </a>
 <a name="202"><span class="lineNum">     202 </span>            :     // tells tracktion that the user has moved a fader.</a>
 <a name="203"><span class="lineNum">     203 </span>            :     // the channel number is the physical channel on the device, regardless of bank selection</a>

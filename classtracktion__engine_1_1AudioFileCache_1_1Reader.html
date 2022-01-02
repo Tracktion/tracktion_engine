@@ -85,18 +85,18 @@ Public Types</h2></td></tr>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ab0fa1eae2b6d9f4ab4588996d30bc19b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AudioFileCache_1_1Reader.html#ab0fa1eae2b6d9f4ab4588996d30bc19b">~Reader</a> ()</td></tr>
 <tr class="separator:ab0fa1eae2b6d9f4ab4588996d30bc19b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a21ef7eb1540f3616e99ca6e622f89b30"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AudioFileCache_1_1Reader.html#a21ef7eb1540f3616e99ca6e622f89b30">setReadPosition</a> (juce::int64 pos) noexcept</td></tr>
-<tr class="separator:a21ef7eb1540f3616e99ca6e622f89b30"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac86e51784b4d259259c8393aacd7397a"><td class="memItemLeft" align="right" valign="top">juce::int64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AudioFileCache_1_1Reader.html#ac86e51784b4d259259c8393aacd7397a">getReadPosition</a> () const noexcept</td></tr>
-<tr class="separator:ac86e51784b4d259259c8393aacd7397a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b6c34943a5d9f7c3b6175e08e117af9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AudioFileCache_1_1Reader.html#a0b6c34943a5d9f7c3b6175e08e117af9">setReadPosition</a> (<a class="el" href="namespacetracktion__engine.html#af6e78e734757e52f0c102915ff0e31af">SampleCount</a>) noexcept</td></tr>
+<tr class="separator:a0b6c34943a5d9f7c3b6175e08e117af9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08f6806e425df7ed450c4c75cd07e005"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetracktion__engine.html#af6e78e734757e52f0c102915ff0e31af">SampleCount</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AudioFileCache_1_1Reader.html#a08f6806e425df7ed450c4c75cd07e005">getReadPosition</a> () const noexcept</td></tr>
+<tr class="separator:a08f6806e425df7ed450c4c75cd07e005"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a21c2e603209c38dfa1108f65c8bf5d7e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AudioFileCache_1_1Reader.html#a21c2e603209c38dfa1108f65c8bf5d7e">readSamples</a> (int numSamples, juce::AudioBuffer&lt; float &gt; &amp;destBuffer, const juce::AudioChannelSet &amp;destBufferChannels, int startOffsetInDestBuffer, const juce::AudioChannelSet &amp;sourceBufferChannels, int timeoutMs)</td></tr>
 <tr class="separator:a21c2e603209c38dfa1108f65c8bf5d7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8901c80e23dfa7e34311cfb175ae2dee"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AudioFileCache_1_1Reader.html#a8901c80e23dfa7e34311cfb175ae2dee">readSamples</a> (int **destSamples, int numDestChannels, int startOffsetInDestBuffer, int numSamples, int timeoutMs)</td></tr>
 <tr class="separator:a8901c80e23dfa7e34311cfb175ae2dee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2cf03b34efe132cd6037e6786b194614"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AudioFileCache_1_1Reader.html#a2cf03b34efe132cd6037e6786b194614">getRange</a> (int numSamples, float &amp;lmax, float &amp;lmin, float &amp;rmax, float &amp;rmin, int timeoutMs)</td></tr>
 <tr class="separator:a2cf03b34efe132cd6037e6786b194614"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a152810f90b264e6d9932e7f23382f21b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AudioFileCache_1_1Reader.html#a152810f90b264e6d9932e7f23382f21b">setLoopRange</a> (juce::Range&lt; juce::int64 &gt; newRange)</td></tr>
-<tr class="separator:a152810f90b264e6d9932e7f23382f21b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04dae9e92988f990cea6994edc7a06c4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AudioFileCache_1_1Reader.html#a04dae9e92988f990cea6994edc7a06c4">setLoopRange</a> (<a class="el" href="namespacetracktion__engine.html#a7ea280cde41080ecb2a991c485b516a0">SampleRange</a> newRange)</td></tr>
+<tr class="separator:a04dae9e92988f990cea6994edc7a06c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87ea65b414e9069c6ec9aaeef357a44e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AudioFileCache_1_1Reader.html#a87ea65b414e9069c6ec9aaeef357a44e">getNumChannels</a> () const noexcept</td></tr>
 <tr class="separator:a87ea65b414e9069c6ec9aaeef357a44e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd79a083df0b6e26b9ecac2a627afded"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AudioFileCache_1_1Reader.html#afd79a083df0b6e26b9ecac2a627afded">getSampleRate</a> () const noexcept</td></tr>
@@ -136,8 +136,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a21ef7eb1540f3616e99ca6e622f89b30"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a21ef7eb1540f3616e99ca6e622f89b30">&#9670;&nbsp;</a></span>setReadPosition()</h2>
+<a id="a0b6c34943a5d9f7c3b6175e08e117af9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b6c34943a5d9f7c3b6175e08e117af9">&#9670;&nbsp;</a></span>setReadPosition()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -148,8 +148,8 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void tracktion_engine::AudioFileCache::Reader::setReadPosition </td>
           <td>(</td>
-          <td class="paramtype">juce::int64&#160;</td>
-          <td class="paramname"><em>pos</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespacetracktion__engine.html#af6e78e734757e52f0c102915ff0e31af">SampleCount</a>&#160;</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -162,8 +162,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ac86e51784b4d259259c8393aacd7397a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac86e51784b4d259259c8393aacd7397a">&#9670;&nbsp;</a></span>getReadPosition()</h2>
+<a id="a08f6806e425df7ed450c4c75cd07e005"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a08f6806e425df7ed450c4c75cd07e005">&#9670;&nbsp;</a></span>getReadPosition()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -172,7 +172,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">juce::int64 tracktion_engine::AudioFileCache::Reader::getReadPosition </td>
+          <td class="memname"><a class="el" href="namespacetracktion__engine.html#af6e78e734757e52f0c102915ff0e31af">SampleCount</a> tracktion_engine::AudioFileCache::Reader::getReadPosition </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -337,8 +337,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a152810f90b264e6d9932e7f23382f21b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a152810f90b264e6d9932e7f23382f21b">&#9670;&nbsp;</a></span>setLoopRange()</h2>
+<a id="a04dae9e92988f990cea6994edc7a06c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a04dae9e92988f990cea6994edc7a06c4">&#9670;&nbsp;</a></span>setLoopRange()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -346,7 +346,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void tracktion_engine::AudioFileCache::Reader::setLoopRange </td>
           <td>(</td>
-          <td class="paramtype">juce::Range&lt; juce::int64 &gt;&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacetracktion__engine.html#a7ea280cde41080ecb2a991c485b516a0">SampleRange</a>&#160;</td>
           <td class="paramname"><em>newRange</em></td><td>)</td>
           <td></td>
         </tr>
@@ -411,7 +411,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Dec 29 2021 12:12:16 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Jan 2 2022 19:42:31 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

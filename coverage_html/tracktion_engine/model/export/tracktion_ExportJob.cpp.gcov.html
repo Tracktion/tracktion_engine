@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">120</td>
+            <td class="headerCovTableEntry">121</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -74,14 +74,14 @@
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span><span class="lineNoCov">          0 : ExportJob::ExportJob (Edit* edit_,</span></a>
-<a name="15"><span class="lineNum">      15 </span>            :                       const File&amp; destDir_,</a>
+<a name="15"><span class="lineNum">      15 </span>            :                       const juce::File&amp; destDir_,</a>
 <a name="16"><span class="lineNum">      16 </span>            :                       const Project::Ptr&amp; newProject_,</a>
 <a name="17"><span class="lineNum">      17 </span>            :                       const Project::Ptr&amp; srcProject_,</a>
 <a name="18"><span class="lineNum">      18 </span>            :                       TracktionArchiveFile* archive_,</a>
 <a name="19"><span class="lineNum">      19 </span>            :                       double handleSize_,</a>
 <a name="20"><span class="lineNum">      20 </span>            :                       bool keepEntireFiles_,</a>
 <a name="21"><span class="lineNum">      21 </span>            :                       TracktionArchiveFile::CompressionType compressionType_,</a>
-<a name="22"><span class="lineNum">      22 </span>            :                       Array&lt;File&gt;&amp; filesForDeletion_,</a>
+<a name="22"><span class="lineNum">      22 </span>            :                       juce::Array&lt;juce::File&gt;&amp; filesForDeletion_,</a>
 <a name="23"><span class="lineNum">      23 </span>            :                       juce::StringArray&amp; failedFiles_,</a>
 <a name="24"><span class="lineNum">      24 </span>            :                       bool includeLibraryFiles_,</a>
 <a name="25"><span class="lineNum">      25 </span><span class="lineNoCov">          0 :                       bool includeClips_)</span></a>
@@ -108,11 +108,11 @@
 <a name="46"><span class="lineNum">      46 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="47"><span class="lineNum">      47 </span>            : </a>
 <a name="48"><span class="lineNum">      48 </span>            : //==============================================================================</a>
-<a name="49"><span class="lineNum">      49 </span><span class="lineNoCov">          0 : ThreadPoolJob::JobStatus ExportJob::runJob()</span></a>
+<a name="49"><span class="lineNum">      49 </span><span class="lineNoCov">          0 : juce::ThreadPoolJob::JobStatus ExportJob::runJob()</span></a>
 <a name="50"><span class="lineNum">      50 </span>            : {</a>
 <a name="51"><span class="lineNum">      51 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
 <a name="52"><span class="lineNum">      52 </span>            : </a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineNoCov">          0 :     FloatVectorOperations::disableDenormalisedNumberSupport();</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineNoCov">          0 :     juce::FloatVectorOperations::disableDenormalisedNumberSupport();</span></a>
 <a name="54"><span class="lineNum">      54 </span>            : </a>
 <a name="55"><span class="lineNum">      55 </span><span class="lineNoCov">          0 :     if (edit != nullptr)</span></a>
 <a name="56"><span class="lineNum">      56 </span><span class="lineNoCov">          0 :         copyEditFilesToTempDir();</span></a>
@@ -132,7 +132,7 @@
 <a name="70"><span class="lineNum">      70 </span>            :         }</a>
 <a name="71"><span class="lineNum">      71 </span>            :         else</a>
 <a name="72"><span class="lineNum">      72 </span>            :         {</a>
-<a name="73"><span class="lineNum">      73 </span><span class="lineNoCov">          0 :             destDir.findChildFiles (filesForDeletion, File::findFiles, true);</span></a>
+<a name="73"><span class="lineNum">      73 </span><span class="lineNoCov">          0 :             destDir.findChildFiles (filesForDeletion, juce::File::findFiles, true);</span></a>
 <a name="74"><span class="lineNum">      74 </span>            :         }</a>
 <a name="75"><span class="lineNum">      75 </span>            : </a>
 <a name="76"><span class="lineNum">      76 </span><span class="lineNoCov">          0 :         failedFiles.clear();</span></a>
@@ -174,8 +174,8 @@
 <a name="112"><span class="lineNum">     112 </span><span class="lineNoCov">          0 :                                    .getNonexistentSibling (true);</span></a>
 <a name="113"><span class="lineNum">     113 </span>            : </a>
 <a name="114"><span class="lineNum">     114 </span><span class="lineNoCov">          0 :                 auto bytesFree = dest.getBytesFreeOnVolume();</span></a>
-<a name="115"><span class="lineNum">     115 </span><span class="lineNoCov">          0 :                 auto bytesNeeded = jmax (2 * srcObject-&gt;getSourceFile().getSize(),</span></a>
-<a name="116"><span class="lineNum">     116 </span>            :                                          (int64) (1024 * 1024 * 50));</a>
+<a name="115"><span class="lineNum">     115 </span><span class="lineNoCov">          0 :                 auto bytesNeeded = std::max (2 * srcObject-&gt;getSourceFile().getSize(),</span></a>
+<a name="116"><span class="lineNum">     116 </span><span class="lineNoCov">          0 :                                              (juce::int64) (1024 * 1024 * 50));</span></a>
 <a name="117"><span class="lineNum">     117 </span>            : </a>
 <a name="118"><span class="lineNum">     118 </span><span class="lineNoCov">          0 :                 if (bytesFree &gt; 0</span></a>
 <a name="119"><span class="lineNum">     119 </span><span class="lineNoCov">          0 :                      &amp;&amp; bytesFree &lt; bytesNeeded</span></a>
@@ -279,7 +279,7 @@
 <a name="217"><span class="lineNum">     217 </span>            : </a>
 <a name="218"><span class="lineNum">     218 </span><span class="lineNoCov">          0 :                     if (! newFile.exists())</span></a>
 <a name="219"><span class="lineNum">     219 </span>            :                     {</a>
-<a name="220"><span class="lineNum">     220 </span>            :                         File actualNewFile;</a>
+<a name="220"><span class="lineNum">     220 </span>            :                         juce::File actualNewFile;</a>
 <a name="221"><span class="lineNum">     221 </span>            : </a>
 <a name="222"><span class="lineNum">     222 </span><span class="lineNoCov">          0 :                         if (! oldSourceMedia-&gt;copySectionToNewFile (newFile, actualNewFile, start, length))</span></a>
 <a name="223"><span class="lineNum">     223 </span>            :                         {</a>
@@ -338,7 +338,7 @@
 <a name="276"><span class="lineNum">     276 </span><span class="lineNoCov">          0 :             newProject-&gt;unlockFile();</span></a>
 <a name="277"><span class="lineNum">     277 </span>            :         }</a>
 <a name="278"><span class="lineNum">     278 </span>            : </a>
-<a name="279"><span class="lineNum">     279 </span><span class="lineNoCov">          0 :         destDir.findChildFiles (filesForDeletion, File::findFiles, true);</span></a>
+<a name="279"><span class="lineNum">     279 </span><span class="lineNoCov">          0 :         destDir.findChildFiles (filesForDeletion, juce::File::findFiles, true);</span></a>
 <a name="280"><span class="lineNum">     280 </span>            : </a>
 <a name="281"><span class="lineNum">     281 </span><span class="lineNoCov">          0 :         for (int i = 0; i &lt; filesForDeletion.size(); ++i)</span></a>
 <a name="282"><span class="lineNum">     282 </span>            :         {</a>
@@ -348,7 +348,7 @@
 <a name="286"><span class="lineNum">     286 </span>            :                 break;</a>
 <a name="287"><span class="lineNum">     287 </span>            : </a>
 <a name="288"><span class="lineNum">     288 </span>            :             auto compression = TracktionArchiveFile::CompressionType::zip;</a>
-<a name="289"><span class="lineNum">     289 </span><span class="lineNoCov">          0 :             const File f (filesForDeletion[i]);</span></a>
+<a name="289"><span class="lineNum">     289 </span><span class="lineNoCov">          0 :             auto f = filesForDeletion[i];</span></a>
 <a name="290"><span class="lineNum">     290 </span>            : </a>
 <a name="291"><span class="lineNum">     291 </span><span class="lineNoCov">          0 :             if (AudioFile (srcProject-&gt;engine, f).isValid())</span></a>
 <a name="292"><span class="lineNum">     292 </span><span class="lineNoCov">          0 :                 compression = compressionType;</span></a>

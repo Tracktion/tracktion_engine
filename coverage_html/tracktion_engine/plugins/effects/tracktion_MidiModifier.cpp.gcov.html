@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -79,9 +79,9 @@
 <a name="17"><span class="lineNum">      17 </span>            :                           { -getMaximumSemitones(), getMaximumSemitones() },</a>
 <a name="18"><span class="lineNum">      18 </span><span class="lineNoCov">          0 :                           [] (float value)            { return std::abs (value) &lt; 0.01f ? &quot;(&quot; + TRANS(&quot;Original pitch&quot;) + &quot;)&quot;</span></a>
 <a name="19"><span class="lineNum">      19 </span><span class="lineNoCov">          0 :                                                                                         : getSemitonesAsString (value); },</span></a>
-<a name="20"><span class="lineNum">      20 </span><span class="lineNoCov">          0 :                           [] (const juce::String&amp; s)  { return jlimit (-MidiModifierPlugin::getMaximumSemitones(),</span></a>
-<a name="21"><span class="lineNum">      21 </span>            :                                                                  MidiModifierPlugin::getMaximumSemitones(),</a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineNoCov">          0 :                                                                  s.getFloatValue()); });</span></a>
+<a name="20"><span class="lineNum">      20 </span><span class="lineNoCov">          0 :                           [] (const juce::String&amp; s)  { return juce::jlimit (-MidiModifierPlugin::getMaximumSemitones(),</span></a>
+<a name="21"><span class="lineNum">      21 </span>            :                                                                              MidiModifierPlugin::getMaximumSemitones(),</a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineNoCov">          0 :                                                                              s.getFloatValue()); });</span></a>
 <a name="23"><span class="lineNum">      23 </span>            : </a>
 <a name="24"><span class="lineNum">      24 </span><span class="lineNoCov">          0 :     semitonesValue.referTo (state, IDs::semitonesUp, getUndoManager());</span></a>
 <a name="25"><span class="lineNum">      25 </span><span class="lineNoCov">          0 :     semitones-&gt;attachToCurrentValue (semitonesValue);</span></a>
@@ -111,7 +111,7 @@
 <a name="49"><span class="lineNum">      49 </span><span class="lineNoCov">          0 : void MidiModifierPlugin::applyToBuffer (const PluginRenderContext&amp; fc)</span></a>
 <a name="50"><span class="lineNum">      50 </span>            : {</a>
 <a name="51"><span class="lineNum">      51 </span><span class="lineNoCov">          0 :     if (fc.bufferForMidiMessages != nullptr)</span></a>
-<a name="52"><span class="lineNum">      52 </span><span class="lineNoCov">          0 :         fc.bufferForMidiMessages-&gt;addToNoteNumbers (roundToInt (semitones-&gt;getCurrentValue()));</span></a>
+<a name="52"><span class="lineNum">      52 </span><span class="lineNoCov">          0 :         fc.bufferForMidiMessages-&gt;addToNoteNumbers (juce::roundToInt (semitones-&gt;getCurrentValue()));</span></a>
 <a name="53"><span class="lineNum">      53 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="54"><span class="lineNum">      54 </span>            : </a>
 <a name="55"><span class="lineNum">      55 </span><span class="lineNoCov">          0 : juce::String MidiModifierPlugin::getSelectableDescription()</span></a>
@@ -119,17 +119,16 @@
 <a name="57"><span class="lineNum">      57 </span><span class="lineNoCov">          0 :     return TRANS(&quot;MIDI Modifier Plugin&quot;);</span></a>
 <a name="58"><span class="lineNum">      58 </span>            : }</a>
 <a name="59"><span class="lineNum">      59 </span>            : </a>
-<a name="60"><span class="lineNum">      60 </span>            : </a>
-<a name="61"><span class="lineNum">      61 </span><span class="lineNoCov">          0 : void MidiModifierPlugin::restorePluginStateFromValueTree (const juce::ValueTree&amp; v)</span></a>
-<a name="62"><span class="lineNum">      62 </span>            : {</a>
-<a name="63"><span class="lineNum">      63 </span><span class="lineNoCov">          0 :     CachedValue&lt;float&gt;* cvsFloat[]  = { &amp;semitonesValue, nullptr };</span></a>
-<a name="64"><span class="lineNum">      64 </span><span class="lineNoCov">          0 :     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);</span></a>
-<a name="65"><span class="lineNum">      65 </span>            : </a>
-<a name="66"><span class="lineNum">      66 </span><span class="lineNoCov">          0 :     for (auto p : getAutomatableParameters())</span></a>
-<a name="67"><span class="lineNum">      67 </span><span class="lineNoCov">          0 :         p-&gt;updateFromAttachedValue();</span></a>
-<a name="68"><span class="lineNum">      68 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="69"><span class="lineNum">      69 </span>            : </a>
-<a name="70"><span class="lineNum">      70 </span>            : }</a>
+<a name="60"><span class="lineNum">      60 </span><span class="lineNoCov">          0 : void MidiModifierPlugin::restorePluginStateFromValueTree (const juce::ValueTree&amp; v)</span></a>
+<a name="61"><span class="lineNum">      61 </span>            : {</a>
+<a name="62"><span class="lineNum">      62 </span><span class="lineNoCov">          0 :     juce::CachedValue&lt;float&gt;* cvsFloat[]  = { &amp;semitonesValue, nullptr };</span></a>
+<a name="63"><span class="lineNum">      63 </span><span class="lineNoCov">          0 :     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);</span></a>
+<a name="64"><span class="lineNum">      64 </span>            : </a>
+<a name="65"><span class="lineNum">      65 </span><span class="lineNoCov">          0 :     for (auto p : getAutomatableParameters())</span></a>
+<a name="66"><span class="lineNum">      66 </span><span class="lineNoCov">          0 :         p-&gt;updateFromAttachedValue();</span></a>
+<a name="67"><span class="lineNum">      67 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="68"><span class="lineNum">      68 </span>            : </a>
+<a name="69"><span class="lineNum">      69 </span>            : }</a>
 </pre>
       </td>
     </tr>

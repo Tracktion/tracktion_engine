@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">77</td>
-            <td class="headerCovTableEntry">183</td>
-            <td class="headerCovTableEntryLo">42.1 %</td>
+            <td class="headerCovTableEntry">184</td>
+            <td class="headerCovTableEntryLo">41.8 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">8</td>
@@ -77,7 +77,7 @@
 <a name="15"><span class="lineNum">      15 </span>            : {</a>
 <a name="16"><span class="lineNum">      16 </span>            : public:</a>
 <a name="17"><span class="lineNum">      17 </span><span class="lineCov">         12 :     EQAutomatableParameter (EqualiserPlugin&amp; p, const juce::String&amp; xmlTag, const juce::String&amp; name,</span></a>
-<a name="18"><span class="lineNum">      18 </span>            :                             Plugin&amp; owner, Range&lt;float&gt; valueRangeToUse, int paramNumberToUse,</a>
+<a name="18"><span class="lineNum">      18 </span>            :                             Plugin&amp; owner, juce::Range&lt;float&gt; valueRangeToUse, int paramNumberToUse,</a>
 <a name="19"><span class="lineNum">      19 </span>            :                             bool isGain_, bool isFreq_, bool isQ_)</a>
 <a name="20"><span class="lineNum">      20 </span><span class="lineCov">         12 :         : AutomatableParameter (xmlTag, name, owner, valueRangeToUse),</span></a>
 <a name="21"><span class="lineNum">      21 </span>            :           equaliser (p), paramNumber (paramNumberToUse),</a>
@@ -93,10 +93,10 @@
 <a name="31"><span class="lineNum">      31 </span><span class="lineNoCov">          0 :     juce::String valueToString (float value) override</span></a>
 <a name="32"><span class="lineNum">      32 </span>            :     {</a>
 <a name="33"><span class="lineNum">      33 </span><span class="lineNoCov">          0 :         if (isFreq)</span></a>
-<a name="34"><span class="lineNum">      34 </span><span class="lineNoCov">          0 :             return juce::String (roundToInt (value)) + &quot; Hz&quot;;</span></a>
+<a name="34"><span class="lineNum">      34 </span><span class="lineNoCov">          0 :             return juce::String (juce::roundToInt (value)) + &quot; Hz&quot;;</span></a>
 <a name="35"><span class="lineNum">      35 </span>            : </a>
 <a name="36"><span class="lineNum">      36 </span><span class="lineNoCov">          0 :         if (isGain)</span></a>
-<a name="37"><span class="lineNum">      37 </span><span class="lineNoCov">          0 :             return Decibels::toString (value);</span></a>
+<a name="37"><span class="lineNum">      37 </span><span class="lineNoCov">          0 :             return juce::Decibels::toString (value);</span></a>
 <a name="38"><span class="lineNum">      38 </span>            : </a>
 <a name="39"><span class="lineNum">      39 </span><span class="lineNoCov">          0 :         return juce::String (value, 3);</span></a>
 <a name="40"><span class="lineNum">      40 </span>            :     }</a>
@@ -211,32 +211,32 @@
 <a name="149"><span class="lineNum">     149 </span>            : </a>
 <a name="150"><span class="lineNum">     150 </span><span class="lineNoCov">          0 : void EqualiserPlugin::resetToDefault()</span></a>
 <a name="151"><span class="lineNum">     151 </span>            : {</a>
-<a name="152"><span class="lineNum">     152 </span><span class="lineNoCov">          0 :     loGain-&gt;setParameter (0.0f, dontSendNotification);</span></a>
-<a name="153"><span class="lineNum">     153 </span><span class="lineNoCov">          0 :     loFreq-&gt;setParameter (80.0f, dontSendNotification);</span></a>
-<a name="154"><span class="lineNum">     154 </span><span class="lineNoCov">          0 :     loQ   -&gt;setParameter (0.5f, dontSendNotification);</span></a>
+<a name="152"><span class="lineNum">     152 </span><span class="lineNoCov">          0 :     loGain-&gt;setParameter (0.0f, juce::dontSendNotification);</span></a>
+<a name="153"><span class="lineNum">     153 </span><span class="lineNoCov">          0 :     loFreq-&gt;setParameter (80.0f, juce::dontSendNotification);</span></a>
+<a name="154"><span class="lineNum">     154 </span><span class="lineNoCov">          0 :     loQ   -&gt;setParameter (0.5f, juce::dontSendNotification);</span></a>
 <a name="155"><span class="lineNum">     155 </span>            : </a>
-<a name="156"><span class="lineNum">     156 </span><span class="lineNoCov">          0 :     hiGain-&gt;setParameter (0.0f, dontSendNotification);</span></a>
-<a name="157"><span class="lineNum">     157 </span><span class="lineNoCov">          0 :     hiFreq-&gt;setParameter (17000.0f, dontSendNotification);</span></a>
-<a name="158"><span class="lineNum">     158 </span><span class="lineNoCov">          0 :     hiQ   -&gt;setParameter (0.5f, dontSendNotification);</span></a>
+<a name="156"><span class="lineNum">     156 </span><span class="lineNoCov">          0 :     hiGain-&gt;setParameter (0.0f, juce::dontSendNotification);</span></a>
+<a name="157"><span class="lineNum">     157 </span><span class="lineNoCov">          0 :     hiFreq-&gt;setParameter (17000.0f, juce::dontSendNotification);</span></a>
+<a name="158"><span class="lineNum">     158 </span><span class="lineNoCov">          0 :     hiQ   -&gt;setParameter (0.5f, juce::dontSendNotification);</span></a>
 <a name="159"><span class="lineNum">     159 </span>            : </a>
-<a name="160"><span class="lineNum">     160 </span><span class="lineNoCov">          0 :     midGain1-&gt;setParameter (0.0f, dontSendNotification);</span></a>
-<a name="161"><span class="lineNum">     161 </span><span class="lineNoCov">          0 :     midFreq1-&gt;setParameter (3000.0f, dontSendNotification);</span></a>
-<a name="162"><span class="lineNum">     162 </span><span class="lineNoCov">          0 :     midQ1   -&gt;setParameter (0.5f, dontSendNotification);</span></a>
+<a name="160"><span class="lineNum">     160 </span><span class="lineNoCov">          0 :     midGain1-&gt;setParameter (0.0f, juce::dontSendNotification);</span></a>
+<a name="161"><span class="lineNum">     161 </span><span class="lineNoCov">          0 :     midFreq1-&gt;setParameter (3000.0f, juce::dontSendNotification);</span></a>
+<a name="162"><span class="lineNum">     162 </span><span class="lineNoCov">          0 :     midQ1   -&gt;setParameter (0.5f, juce::dontSendNotification);</span></a>
 <a name="163"><span class="lineNum">     163 </span>            : </a>
-<a name="164"><span class="lineNum">     164 </span><span class="lineNoCov">          0 :     midGain2-&gt;setParameter (0.0f, dontSendNotification);</span></a>
-<a name="165"><span class="lineNum">     165 </span><span class="lineNoCov">          0 :     midFreq2-&gt;setParameter (5000.0f, dontSendNotification);</span></a>
-<a name="166"><span class="lineNum">     166 </span><span class="lineNoCov">          0 :     midQ2   -&gt;setParameter (0.5f, dontSendNotification);</span></a>
+<a name="164"><span class="lineNum">     164 </span><span class="lineNoCov">          0 :     midGain2-&gt;setParameter (0.0f, juce::dontSendNotification);</span></a>
+<a name="165"><span class="lineNum">     165 </span><span class="lineNoCov">          0 :     midFreq2-&gt;setParameter (5000.0f, juce::dontSendNotification);</span></a>
+<a name="166"><span class="lineNum">     166 </span><span class="lineNoCov">          0 :     midQ2   -&gt;setParameter (0.5f, juce::dontSendNotification);</span></a>
 <a name="167"><span class="lineNum">     167 </span>            : </a>
 <a name="168"><span class="lineNum">     168 </span><span class="lineNoCov">          0 :     curveNeedsUpdating = true;</span></a>
 <a name="169"><span class="lineNum">     169 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="170"><span class="lineNum">     170 </span>            : </a>
 <a name="171"><span class="lineNum">     171 </span><span class="lineCov">          1 : void EqualiserPlugin::restorePluginStateFromValueTree (const juce::ValueTree&amp; v)</span></a>
 <a name="172"><span class="lineNum">     172 </span>            : {</a>
-<a name="173"><span class="lineNum">     173 </span><span class="lineCov">          1 :     CachedValue&lt;float&gt;* cvsFloat[]  = { &amp;loFreqValue, &amp;loGainValue, &amp;loQValue,</span></a>
-<a name="174"><span class="lineNum">     174 </span><span class="lineCov">          1 :                                         &amp;hiFreqValue, &amp;hiGainValue, &amp;hiQValue,</span></a>
-<a name="175"><span class="lineNum">     175 </span><span class="lineCov">          1 :                                         &amp;midFreqValue1, &amp;midGainValue1, &amp;midQValue1,</span></a>
-<a name="176"><span class="lineNum">     176 </span><span class="lineCov">          1 :                                         &amp;midFreqValue2, &amp;midGainValue2, &amp;midQValue2, nullptr };</span></a>
-<a name="177"><span class="lineNum">     177 </span><span class="lineCov">          1 :     CachedValue&lt;bool&gt;* cvsBool[]    = { &amp;phaseInvert, nullptr };</span></a>
+<a name="173"><span class="lineNum">     173 </span><span class="lineCov">          1 :     juce::CachedValue&lt;float&gt;* cvsFloat[]  = { &amp;loFreqValue, &amp;loGainValue, &amp;loQValue,</span></a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineCov">          1 :                                               &amp;hiFreqValue, &amp;hiGainValue, &amp;hiQValue,</span></a>
+<a name="175"><span class="lineNum">     175 </span><span class="lineCov">          1 :                                               &amp;midFreqValue1, &amp;midGainValue1, &amp;midQValue1,</span></a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineCov">          1 :                                               &amp;midFreqValue2, &amp;midGainValue2, &amp;midQValue2, nullptr };</span></a>
+<a name="177"><span class="lineNum">     177 </span><span class="lineCov">          1 :     juce::CachedValue&lt;bool&gt;* cvsBool[]    = { &amp;phaseInvert, nullptr };</span></a>
 <a name="178"><span class="lineNum">     178 </span><span class="lineCov">          1 :     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);</span></a>
 <a name="179"><span class="lineNum">     179 </span><span class="lineCov">          1 :     copyPropertiesToNullTerminatedCachedValues (v, cvsBool);</span></a>
 <a name="180"><span class="lineNum">     180 </span>            : </a>
@@ -244,7 +244,7 @@
 <a name="182"><span class="lineNum">     182 </span><span class="lineCov">         12 :         p-&gt;updateFromAttachedValue();</span></a>
 <a name="183"><span class="lineNum">     183 </span><span class="lineCov">          1 : }</span></a>
 <a name="184"><span class="lineNum">     184 </span>            : </a>
-<a name="185"><span class="lineNum">     185 </span><span class="lineCov">         12 : void EqualiserPlugin::valueTreePropertyChanged (ValueTree&amp; parent, const juce::Identifier&amp; prop)</span></a>
+<a name="185"><span class="lineNum">     185 </span><span class="lineCov">         12 : void EqualiserPlugin::valueTreePropertyChanged (juce::ValueTree&amp; parent, const juce::Identifier&amp; prop)</span></a>
 <a name="186"><span class="lineNum">     186 </span>            : {</a>
 <a name="187"><span class="lineNum">     187 </span><span class="lineCov">         12 :     curveNeedsUpdating = true;</span></a>
 <a name="188"><span class="lineNum">     188 </span><span class="lineCov">         12 :     Plugin::valueTreePropertyChanged (parent, prop);</span></a>
@@ -257,14 +257,14 @@
 <a name="195"><span class="lineNum">     195 </span>            : </a>
 <a name="196"><span class="lineNum">     196 </span><span class="lineNoCov">          0 : void EqualiserPlugin::updateIIRFilters()</span></a>
 <a name="197"><span class="lineNum">     197 </span>            : {</a>
-<a name="198"><span class="lineNum">     198 </span><span class="lineNoCov">          0 :     const ScopedLock sl (filterLock);</span></a>
+<a name="198"><span class="lineNum">     198 </span><span class="lineNoCov">          0 :     const juce::ScopedLock sl (filterLock);</span></a>
 <a name="199"><span class="lineNum">     199 </span>            : </a>
 <a name="200"><span class="lineNum">     200 </span><span class="lineNoCov">          0 :     if (needToUpdateFilters[0])</span></a>
 <a name="201"><span class="lineNum">     201 </span>            :     {</a>
 <a name="202"><span class="lineNum">     202 </span>            :         needToUpdateFilters[0] = false;</a>
 <a name="203"><span class="lineNum">     203 </span>            : </a>
-<a name="204"><span class="lineNum">     204 </span><span class="lineNoCov">          0 :         IIRCoefficients c = IIRCoefficients::makeLowShelf (lastSampleRate, loFreq-&gt;getCurrentValue(), loQ-&gt;getCurrentValue(),</span></a>
-<a name="205"><span class="lineNum">     205 </span><span class="lineNoCov">          0 :                                                            convertEQLevelToGain (loGain-&gt;getCurrentValue()));</span></a>
+<a name="204"><span class="lineNum">     204 </span><span class="lineNoCov">          0 :         auto c = juce::IIRCoefficients::makeLowShelf (lastSampleRate, loFreq-&gt;getCurrentValue(), loQ-&gt;getCurrentValue(),</span></a>
+<a name="205"><span class="lineNum">     205 </span><span class="lineNoCov">          0 :                                                       convertEQLevelToGain (loGain-&gt;getCurrentValue()));</span></a>
 <a name="206"><span class="lineNum">     206 </span>            : </a>
 <a name="207"><span class="lineNum">     207 </span><span class="lineNoCov">          0 :         for (int i = EQ_CHANS; --i &gt;= 0;)</span></a>
 <a name="208"><span class="lineNum">     208 </span><span class="lineNoCov">          0 :             low[i].setCoefficients (c);</span></a>
@@ -274,8 +274,8 @@
 <a name="212"><span class="lineNum">     212 </span>            :     {</a>
 <a name="213"><span class="lineNum">     213 </span>            :         needToUpdateFilters[1] = false;</a>
 <a name="214"><span class="lineNum">     214 </span>            : </a>
-<a name="215"><span class="lineNum">     215 </span><span class="lineNoCov">          0 :         IIRCoefficients c = IIRCoefficients::makePeakFilter (lastSampleRate, midFreq1-&gt;getCurrentValue(), midQ1-&gt;getCurrentValue(),</span></a>
-<a name="216"><span class="lineNum">     216 </span><span class="lineNoCov">          0 :                                                              convertEQLevelToGain (midGain1-&gt;getCurrentValue()));</span></a>
+<a name="215"><span class="lineNum">     215 </span><span class="lineNoCov">          0 :         auto c = juce::IIRCoefficients::makePeakFilter (lastSampleRate, midFreq1-&gt;getCurrentValue(), midQ1-&gt;getCurrentValue(),</span></a>
+<a name="216"><span class="lineNum">     216 </span><span class="lineNoCov">          0 :                                                         convertEQLevelToGain (midGain1-&gt;getCurrentValue()));</span></a>
 <a name="217"><span class="lineNum">     217 </span>            : </a>
 <a name="218"><span class="lineNum">     218 </span><span class="lineNoCov">          0 :         for (int i = EQ_CHANS; --i &gt;= 0;)</span></a>
 <a name="219"><span class="lineNum">     219 </span><span class="lineNoCov">          0 :             mid1[i].setCoefficients (c);</span></a>
@@ -285,8 +285,8 @@
 <a name="223"><span class="lineNum">     223 </span>            :     {</a>
 <a name="224"><span class="lineNum">     224 </span>            :         needToUpdateFilters[2] = false;</a>
 <a name="225"><span class="lineNum">     225 </span>            : </a>
-<a name="226"><span class="lineNum">     226 </span><span class="lineNoCov">          0 :         IIRCoefficients c = IIRCoefficients::makePeakFilter (lastSampleRate, midFreq2-&gt;getCurrentValue(), midQ2-&gt;getCurrentValue(),</span></a>
-<a name="227"><span class="lineNum">     227 </span><span class="lineNoCov">          0 :                                                              convertEQLevelToGain (midGain2-&gt;getCurrentValue()));</span></a>
+<a name="226"><span class="lineNum">     226 </span><span class="lineNoCov">          0 :         auto c = juce::IIRCoefficients::makePeakFilter (lastSampleRate, midFreq2-&gt;getCurrentValue(), midQ2-&gt;getCurrentValue(),</span></a>
+<a name="227"><span class="lineNum">     227 </span><span class="lineNoCov">          0 :                                                         convertEQLevelToGain (midGain2-&gt;getCurrentValue()));</span></a>
 <a name="228"><span class="lineNum">     228 </span>            : </a>
 <a name="229"><span class="lineNum">     229 </span><span class="lineNoCov">          0 :         for (int i = EQ_CHANS; --i &gt;= 0;)</span></a>
 <a name="230"><span class="lineNum">     230 </span><span class="lineNoCov">          0 :             mid2[i].setCoefficients (c);</span></a>
@@ -296,8 +296,8 @@
 <a name="234"><span class="lineNum">     234 </span>            :     {</a>
 <a name="235"><span class="lineNum">     235 </span>            :         needToUpdateFilters[3] = false;</a>
 <a name="236"><span class="lineNum">     236 </span>            : </a>
-<a name="237"><span class="lineNum">     237 </span><span class="lineNoCov">          0 :         IIRCoefficients c = IIRCoefficients::makeHighShelf (lastSampleRate, hiFreq-&gt;getCurrentValue(), hiQ-&gt;getCurrentValue(),</span></a>
-<a name="238"><span class="lineNum">     238 </span><span class="lineNoCov">          0 :                                                             convertEQLevelToGain (hiGain-&gt;getCurrentValue()));</span></a>
+<a name="237"><span class="lineNum">     237 </span><span class="lineNoCov">          0 :         auto c = juce::IIRCoefficients::makeHighShelf (lastSampleRate, hiFreq-&gt;getCurrentValue(), hiQ-&gt;getCurrentValue(),</span></a>
+<a name="238"><span class="lineNum">     238 </span><span class="lineNoCov">          0 :                                                        convertEQLevelToGain (hiGain-&gt;getCurrentValue()));</span></a>
 <a name="239"><span class="lineNum">     239 </span>            : </a>
 <a name="240"><span class="lineNum">     240 </span><span class="lineNoCov">          0 :         for (int i = EQ_CHANS; --i &gt;= 0;)</span></a>
 <a name="241"><span class="lineNum">     241 </span><span class="lineNoCov">          0 :             high[i].setCoefficients (c);</span></a>
@@ -335,7 +335,7 @@
 <a name="273"><span class="lineNum">     273 </span>            :     {</a>
 <a name="274"><span class="lineNum">     274 </span>            :         SCOPED_REALTIME_CHECK</a>
 <a name="275"><span class="lineNum">     275 </span>            : </a>
-<a name="276"><span class="lineNum">     276 </span><span class="lineNoCov">          0 :         const ScopedLock sl (filterLock);</span></a>
+<a name="276"><span class="lineNum">     276 </span><span class="lineNoCov">          0 :         const juce::ScopedLock sl (filterLock);</span></a>
 <a name="277"><span class="lineNum">     277 </span>            : </a>
 <a name="278"><span class="lineNum">     278 </span><span class="lineNoCov">          0 :         updateIIRFilters();</span></a>
 <a name="279"><span class="lineNum">     279 </span>            : </a>
@@ -345,9 +345,9 @@
 <a name="283"><span class="lineNum">     283 </span>            : </a>
 <a name="284"><span class="lineNum">     284 </span><span class="lineNoCov">          0 :         addAntiDenormalisationNoise (*fc.destBuffer, fc.bufferStartSample, fc.bufferNumSamples);</span></a>
 <a name="285"><span class="lineNum">     285 </span>            : </a>
-<a name="286"><span class="lineNum">     286 </span><span class="lineNoCov">          0 :         for (int i = jmin ((int) EQ_CHANS, fc.destBuffer-&gt;getNumChannels()); --i &gt;= 0;)</span></a>
+<a name="286"><span class="lineNum">     286 </span><span class="lineNoCov">          0 :         for (int i = std::min ((int) EQ_CHANS, fc.destBuffer-&gt;getNumChannels()); --i &gt;= 0;)</span></a>
 <a name="287"><span class="lineNum">     287 </span>            :         {</a>
-<a name="288"><span class="lineNum">     288 </span><span class="lineNoCov">          0 :             float* const data = fc.destBuffer-&gt;getWritePointer (i, fc.bufferStartSample);</span></a>
+<a name="288"><span class="lineNum">     288 </span><span class="lineNoCov">          0 :             auto data = fc.destBuffer-&gt;getWritePointer (i, fc.bufferStartSample);</span></a>
 <a name="289"><span class="lineNum">     289 </span>            : </a>
 <a name="290"><span class="lineNum">     290 </span><span class="lineNoCov">          0 :             if (loGain-&gt;getCurrentValue() != 0)       low[i] .processSamples (data, fc.bufferNumSamples);</span></a>
 <a name="291"><span class="lineNum">     291 </span><span class="lineNoCov">          0 :             if (midGain1-&gt;getCurrentValue() != 0)     mid1[i].processSamples (data, fc.bufferNumSamples);</span></a>
@@ -374,38 +374,37 @@
 <a name="312"><span class="lineNum">     312 </span>            : </a>
 <a name="313"><span class="lineNum">     313 </span>            :         const int sampSize = (1 &lt;&lt; fftOrder);</a>
 <a name="314"><span class="lineNum">     314 </span>            : </a>
-<a name="315"><span class="lineNum">     315 </span>            :         float samps[sampSize * 2 + 8];</a>
-<a name="316"><span class="lineNum">     316 </span>            :         zeromem (samps, sizeof (samps));</a>
-<a name="317"><span class="lineNum">     317 </span><span class="lineNoCov">          0 :         samps[0] = 1.0f;</span></a>
-<a name="318"><span class="lineNum">     318 </span>            : </a>
-<a name="319"><span class="lineNum">     319 </span><span class="lineNoCov">          0 :         if (loGain-&gt;getCurrentValue() != 0)     IIRFilter (low[0]) .processSamples (samps, sampSize);</span></a>
-<a name="320"><span class="lineNum">     320 </span><span class="lineNoCov">          0 :         if (midGain1-&gt;getCurrentValue() != 0)   IIRFilter (mid1[0]).processSamples (samps, sampSize);</span></a>
-<a name="321"><span class="lineNum">     321 </span><span class="lineNoCov">          0 :         if (midGain2-&gt;getCurrentValue() != 0)   IIRFilter (mid2[0]).processSamples (samps, sampSize);</span></a>
-<a name="322"><span class="lineNum">     322 </span><span class="lineNoCov">          0 :         if (hiGain-&gt;getCurrentValue() != 0)     IIRFilter (high[0]).processSamples (samps, sampSize);</span></a>
-<a name="323"><span class="lineNum">     323 </span>            : </a>
-<a name="324"><span class="lineNum">     324 </span><span class="lineNoCov">          0 :         fft.performRealOnlyForwardTransform (samps);</span></a>
-<a name="325"><span class="lineNum">     325 </span>            : </a>
-<a name="326"><span class="lineNum">     326 </span><span class="lineNoCov">          0 :         for (int i = 0; i &lt; sampSize / 2;)</span></a>
-<a name="327"><span class="lineNum">     327 </span>            :         {</a>
-<a name="328"><span class="lineNum">     328 </span><span class="lineNoCov">          0 :             curve.addPoint (i / (float)(sampSize / 2),</span></a>
-<a name="329"><span class="lineNum">     329 </span><span class="lineNoCov">          0 :                             gainToDb (jlimit (0.01f, 10.0f, samps[i * 2])));</span></a>
-<a name="330"><span class="lineNum">     330 </span>            : </a>
-<a name="331"><span class="lineNum">     331 </span><span class="lineNoCov">          0 :             if (i &lt; sampSize / 8)</span></a>
-<a name="332"><span class="lineNum">     332 </span><span class="lineNoCov">          0 :                 ++i;</span></a>
-<a name="333"><span class="lineNum">     333 </span><span class="lineNoCov">          0 :             else if (i &lt; sampSize / 4)</span></a>
-<a name="334"><span class="lineNum">     334 </span><span class="lineNoCov">          0 :                 i += 3;</span></a>
-<a name="335"><span class="lineNum">     335 </span>            :             else</a>
-<a name="336"><span class="lineNum">     336 </span><span class="lineNoCov">          0 :                 i += 6;</span></a>
-<a name="337"><span class="lineNum">     337 </span>            :         }</a>
-<a name="338"><span class="lineNum">     338 </span>            : </a>
-<a name="339"><span class="lineNum">     339 </span><span class="lineNoCov">          0 :         curveNeedsUpdating = false;</span></a>
-<a name="340"><span class="lineNum">     340 </span>            :         yieldGUIThread();</a>
-<a name="341"><span class="lineNum">     341 </span>            :     }</a>
-<a name="342"><span class="lineNum">     342 </span>            : </a>
-<a name="343"><span class="lineNum">     343 </span><span class="lineNoCov">          0 :     return curve.getY (f / (lastSampleRate / 2));</span></a>
-<a name="344"><span class="lineNum">     344 </span>            : }</a>
-<a name="345"><span class="lineNum">     345 </span>            : </a>
-<a name="346"><span class="lineNum">     346 </span>            : }</a>
+<a name="315"><span class="lineNum">     315 </span><span class="lineNoCov">          0 :         float samps[sampSize * 2 + 8] = {};</span></a>
+<a name="316"><span class="lineNum">     316 </span><span class="lineNoCov">          0 :         samps[0] = 1.0f;</span></a>
+<a name="317"><span class="lineNum">     317 </span>            : </a>
+<a name="318"><span class="lineNum">     318 </span><span class="lineNoCov">          0 :         if (loGain-&gt;getCurrentValue() != 0)     juce::IIRFilter (low[0]) .processSamples (samps, sampSize);</span></a>
+<a name="319"><span class="lineNum">     319 </span><span class="lineNoCov">          0 :         if (midGain1-&gt;getCurrentValue() != 0)   juce::IIRFilter (mid1[0]).processSamples (samps, sampSize);</span></a>
+<a name="320"><span class="lineNum">     320 </span><span class="lineNoCov">          0 :         if (midGain2-&gt;getCurrentValue() != 0)   juce::IIRFilter (mid2[0]).processSamples (samps, sampSize);</span></a>
+<a name="321"><span class="lineNum">     321 </span><span class="lineNoCov">          0 :         if (hiGain-&gt;getCurrentValue() != 0)     juce::IIRFilter (high[0]).processSamples (samps, sampSize);</span></a>
+<a name="322"><span class="lineNum">     322 </span>            : </a>
+<a name="323"><span class="lineNum">     323 </span><span class="lineNoCov">          0 :         fft.performRealOnlyForwardTransform (samps);</span></a>
+<a name="324"><span class="lineNum">     324 </span>            : </a>
+<a name="325"><span class="lineNum">     325 </span><span class="lineNoCov">          0 :         for (int i = 0; i &lt; sampSize / 2;)</span></a>
+<a name="326"><span class="lineNum">     326 </span>            :         {</a>
+<a name="327"><span class="lineNum">     327 </span><span class="lineNoCov">          0 :             curve.addPoint (i / (float)(sampSize / 2),</span></a>
+<a name="328"><span class="lineNum">     328 </span><span class="lineNoCov">          0 :                             gainToDb (juce::jlimit (0.01f, 10.0f, samps[i * 2])));</span></a>
+<a name="329"><span class="lineNum">     329 </span>            : </a>
+<a name="330"><span class="lineNum">     330 </span><span class="lineNoCov">          0 :             if (i &lt; sampSize / 8)</span></a>
+<a name="331"><span class="lineNum">     331 </span><span class="lineNoCov">          0 :                 ++i;</span></a>
+<a name="332"><span class="lineNum">     332 </span><span class="lineNoCov">          0 :             else if (i &lt; sampSize / 4)</span></a>
+<a name="333"><span class="lineNum">     333 </span><span class="lineNoCov">          0 :                 i += 3;</span></a>
+<a name="334"><span class="lineNum">     334 </span>            :             else</a>
+<a name="335"><span class="lineNum">     335 </span><span class="lineNoCov">          0 :                 i += 6;</span></a>
+<a name="336"><span class="lineNum">     336 </span>            :         }</a>
+<a name="337"><span class="lineNum">     337 </span>            : </a>
+<a name="338"><span class="lineNum">     338 </span><span class="lineNoCov">          0 :         curveNeedsUpdating = false;</span></a>
+<a name="339"><span class="lineNum">     339 </span>            :         yieldGUIThread();</a>
+<a name="340"><span class="lineNum">     340 </span>            :     }</a>
+<a name="341"><span class="lineNum">     341 </span>            : </a>
+<a name="342"><span class="lineNum">     342 </span><span class="lineNoCov">          0 :     return curve.getY (f / (lastSampleRate / 2));</span></a>
+<a name="343"><span class="lineNum">     343 </span>            : }</a>
+<a name="344"><span class="lineNum">     344 </span>            : </a>
+<a name="345"><span class="lineNum">     345 </span>            : }</a>
 </pre>
       </td>
     </tr>

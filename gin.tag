@@ -2064,6 +2064,20 @@
     <class kind="class">tracktion_engine::AudioMidiFifo</class>
     <class kind="class">tracktion_engine::AudioBufferSnapshot</class>
     <namespace>tracktion_engine</namespace>
+    <member kind="typedef">
+      <type>int64_t</type>
+      <name>SampleCount</name>
+      <anchorfile>namespacetracktion__engine.html</anchorfile>
+      <anchor>af6e78e734757e52f0c102915ff0e31af</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>juce::Range&lt; SampleCount &gt;</type>
+      <name>SampleRange</name>
+      <anchorfile>namespacetracktion__engine.html</anchorfile>
+      <anchor>a7ea280cde41080ecb2a991c485b516a0</anchor>
+      <arglist></arglist>
+    </member>
     <member kind="enumeration">
       <type></type>
       <name>PanLaw</name>
@@ -2307,8 +2321,8 @@
       <type>void</type>
       <name>clearChannels</name>
       <anchorfile>namespacetracktion__engine.html</anchorfile>
-      <anchor>a6b15a31e942884075fbc90f57a3514b4</anchor>
-      <arglist>(juce::AudioSampleBuffer &amp;buffer, int startChannel, int endChannel=-1, int startSample=0, int endSample=-1)</arglist>
+      <anchor>ac45ec036579fdbc82aca62e64195200d</anchor>
+      <arglist>(juce::AudioBuffer&lt; float &gt; &amp;buffer, int startChannel, int endChannel=-1, int startSample=0, int endSample=-1)</arglist>
     </member>
   </compound>
   <compound kind="file">
@@ -3250,8 +3264,8 @@
       <type>juce::Array&lt; Track * &gt;</type>
       <name>findTracksForIDs</name>
       <anchorfile>namespacetracktion__engine.html</anchorfile>
-      <anchor>af5731f1c5d9f5597ba6f94e88f4dfd2b</anchor>
-      <arglist>(const Edit &amp;, juce::Array&lt; EditItemID &gt;)</arglist>
+      <anchor>a0f93e4e56a96b4f3a9eb78c3ce8ae34d</anchor>
+      <arglist>(const Edit &amp;, const juce::Array&lt; EditItemID &gt; &amp;)</arglist>
     </member>
     <member kind="function">
       <type>Track *</type>
@@ -4745,6 +4759,13 @@
     <filename>tracktion__MiscUtilities_8h.html</filename>
     <class kind="class">tracktion_engine::ScopedWaitCursor</class>
     <namespace>tracktion_engine</namespace>
+    <member kind="typedef">
+      <type>int64_t</type>
+      <name>HashCode</name>
+      <anchorfile>namespacetracktion__engine.html</anchorfile>
+      <anchor>adb3c6f33fbcba4c6e5d7cfd390aecbec</anchor>
+      <arglist></arglist>
+    </member>
     <member kind="function">
       <type>void</type>
       <name>addSortedListToMenu</name>
@@ -5938,8 +5959,8 @@
       <type>AudioNode *</type>
       <name>createTrackCompAudioNode</name>
       <anchorfile>namespacetracktion__engine.html</anchorfile>
-      <anchor>aadfda7261d92c9f3034e7db97e3f7e09</anchor>
-      <arglist>(AudioNode *input, const Array&lt; EditTimeRange &gt; &amp;muteTimes, const Array&lt; EditTimeRange &gt; &amp;nonMuteTimes, double crossfadeTime)</arglist>
+      <anchor>ae43e0fba3266cff6627babe771df8dc9</anchor>
+      <arglist>(AudioNode *input, const juce::Array&lt; EditTimeRange &gt; &amp;muteTimes, const juce::Array&lt; EditTimeRange &gt; &amp;nonMuteTimes, double crossfadeTime)</arglist>
     </member>
     <member kind="function">
       <type>AudioNode *</type>
@@ -7351,8 +7372,8 @@
       <type>void</type>
       <name>flushStateToValueTree</name>
       <anchorfile>classARADocument.html</anchorfile>
-      <anchor>a0aef1341e2c017eaf328fb2a594bb111</anchor>
-      <arglist>(ValueTree &amp;v)</arglist>
+      <anchor>a2ce6147bfbfa445cef44c9e340e990de</anchor>
+      <arglist>(juce::ValueTree &amp;v)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -7425,10 +7446,10 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>std::unique_ptr&lt; MemoryBlock &gt;</type>
+      <type>std::unique_ptr&lt; juce::MemoryBlock &gt;</type>
       <name>lastArchiveState</name>
       <anchorfile>classARADocument.html</anchorfile>
-      <anchor>a85e4875b1db1065e38e4df65d2d867d9</anchor>
+      <anchor>a737e49adc3f68f12f06b75d918b7d7b5</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -8118,8 +8139,8 @@
       <type></type>
       <name>AudioBufferSnapshot</name>
       <anchorfile>classtracktion__engine_1_1AudioBufferSnapshot.html</anchorfile>
-      <anchor>a22ec1df8ea877e6dc8a4160781a1e59c</anchor>
-      <arglist>(juce::AudioSampleBuffer &amp;b)</arglist>
+      <anchor>a55ac34a86cc176f6ad80a5f8bcda035c</anchor>
+      <arglist>(juce::AudioBuffer&lt; float &gt; &amp;b)</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -8322,10 +8343,10 @@
       <arglist>() const =0</arglist>
     </member>
     <member kind="function" virtualness="pure">
-      <type>virtual juce::int64</type>
+      <type>virtual HashCode</type>
       <name>getHash</name>
       <anchorfile>classtracktion__engine_1_1AudioClipBase.html</anchorfile>
-      <anchor>a3b6828e582ecc963545d4c46ce373637</anchor>
+      <anchor>a8ab498d1273420080e9d6a2dcce55b47</anchor>
       <arglist>() const =0</arglist>
     </member>
     <member kind="function" virtualness="virtual">
@@ -9029,10 +9050,10 @@
       <arglist>()</arglist>
     </member>
     <member kind="function">
-      <type>juce::int64</type>
+      <type>HashCode</type>
       <name>getProxyHash</name>
       <anchorfile>classtracktion__engine_1_1AudioClipBase.html</anchorfile>
-      <anchor>a3eecfd5acb0ec1c3d42a892d3d418602</anchor>
+      <anchor>a22631e95ae1a24852cc28624a4b762d1</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function">
@@ -9966,10 +9987,10 @@
       <arglist>() const noexcept</arglist>
     </member>
     <member kind="function">
-      <type>juce::int64</type>
+      <type>HashCode</type>
       <name>getHash</name>
       <anchorfile>classtracktion__engine_1_1AudioFile.html</anchorfile>
-      <anchor>a46d552093d346906a26970020ad0f88d</anchor>
+      <anchor>a0bbb8a8167ddc18edd0cc3521d93d034</anchor>
       <arglist>() const noexcept</arglist>
     </member>
     <member kind="function">
@@ -10022,10 +10043,10 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
-      <type>juce::int64</type>
+      <type>int64_t</type>
       <name>getLengthInSamples</name>
       <anchorfile>classtracktion__engine_1_1AudioFile.html</anchorfile>
-      <anchor>a12af9e88182b4a0b4dd0c07d8d62b74a</anchor>
+      <anchor>a5623bba504c83ef50e08a76337375878</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
@@ -10163,21 +10184,21 @@
       <type>void</type>
       <name>setCacheSizeSamples</name>
       <anchorfile>classtracktion__engine_1_1AudioFileCache.html</anchorfile>
-      <anchor>a84edc22aff5d5cc43b4c7478f0aa6b0b</anchor>
-      <arglist>(juce::int64 samplesPerFile)</arglist>
+      <anchor>a2362d3f2104cc7d532b9602fe4086f91</anchor>
+      <arglist>(SampleCount samplesPerFile)</arglist>
     </member>
     <member kind="function">
-      <type>juce::int64</type>
+      <type>SampleCount</type>
       <name>getCacheSizeSamples</name>
       <anchorfile>classtracktion__engine_1_1AudioFileCache.html</anchorfile>
-      <anchor>a1e33120a792024b63a65cc00339cfe45</anchor>
+      <anchor>abf706f30650c5fd52e8fe4991edd93f7</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
-      <type>juce::int64</type>
+      <type>SampleCount</type>
       <name>getBytesInUse</name>
       <anchorfile>classtracktion__engine_1_1AudioFileCache.html</anchorfile>
-      <anchor>a9152a81048321954f6dce250714b479e</anchor>
+      <anchor>a80491963c3d4a8d7e176c268fc961c5b</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
@@ -10399,10 +10420,10 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>juce::int64</type>
+      <type>HashCode</type>
       <name>hashCode</name>
       <anchorfile>structtracktion__engine_1_1AudioFileInfo.html</anchorfile>
-      <anchor>a5a8b5b3e1a391f5cf052e6fe2b5ce2f2</anchor>
+      <anchor>a471ed939e11853dc51220380a6b8a666</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -10420,10 +10441,10 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>juce::int64</type>
+      <type>SampleCount</type>
       <name>lengthInSamples</name>
       <anchorfile>structtracktion__engine_1_1AudioFileInfo.html</anchorfile>
-      <anchor>acdfdc694538d01c28218122d06639d6b</anchor>
+      <anchor>ab8230c3e40fbf00c5df12155a371b4c3</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -10632,25 +10653,25 @@
       <arglist>(juce::AudioFormat *, const juce::File &amp;, double sampleRate, unsigned int numChannels, int bitsPerSample, const juce::StringPairArray &amp;metadata, int quality)</arglist>
     </member>
     <member kind="function" static="yes">
-      <type>static juce::Range&lt; juce::int64 &gt;</type>
+      <type>static SampleRange</type>
       <name>scanForNonZeroSamples</name>
       <anchorfile>structtracktion__engine_1_1AudioFileUtils.html</anchorfile>
-      <anchor>ac162243557d86487f3fdc1fda0429644</anchor>
+      <anchor>aa9906678fb8236fa3dbd7b87c49a838f</anchor>
       <arglist>(Engine &amp;, const juce::File &amp;, float maxZeroLevelDb)</arglist>
     </member>
     <member kind="function" static="yes">
-      <type>static juce::Range&lt; juce::int64 &gt;</type>
+      <type>static SampleRange</type>
       <name>copyNonSilentSectionToNewFile</name>
       <anchorfile>structtracktion__engine_1_1AudioFileUtils.html</anchorfile>
-      <anchor>abd0f6a330c66214c31ee4d24503ae9d3</anchor>
-      <arglist>(Engine &amp;e, const juce::File &amp;sourceFile, const juce::File &amp;destFile, float maxZeroLevelDb)</arglist>
+      <anchor>a8c23db27367e9a3779fe3765840228a4</anchor>
+      <arglist>(Engine &amp;, const juce::File &amp;sourceFile, const juce::File &amp;destFile, float maxZeroLevelDb)</arglist>
     </member>
     <member kind="function" static="yes">
-      <type>static juce::Range&lt; juce::int64 &gt;</type>
+      <type>static SampleRange</type>
       <name>trimSilence</name>
       <anchorfile>structtracktion__engine_1_1AudioFileUtils.html</anchorfile>
-      <anchor>a0f5439f36afc1f37e370123e332d3575</anchor>
-      <arglist>(Engine &amp;e, const juce::File &amp;, float maxZeroLevelDb)</arglist>
+      <anchor>a10d57359b2dfe5ba62f79c258996a3d4</anchor>
+      <arglist>(Engine &amp;, const juce::File &amp;, float maxZeroLevelDb)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static bool</type>
@@ -10660,38 +10681,38 @@
       <arglist>(Engine &amp;, const juce::File &amp;source, const juce::File &amp;destination, std::atomic&lt; float &gt; &amp;progress, juce::ThreadPoolJob *job=nullptr, bool canCreateWavIntermediate=true)</arglist>
     </member>
     <member kind="function" static="yes">
-      <type>static juce::int64</type>
+      <type>static SampleCount</type>
       <name>copySectionToNewFile</name>
       <anchorfile>structtracktion__engine_1_1AudioFileUtils.html</anchorfile>
-      <anchor>ac9c96676f7faae3733dab964debd1b0f</anchor>
-      <arglist>(Engine &amp;e, const juce::File &amp;sourceFile, const juce::File &amp;destFile, const juce::Range&lt; juce::int64 &gt; &amp;range)</arglist>
+      <anchor>ad0a9e8141729b0d41c7e59cd72ba024c</anchor>
+      <arglist>(Engine &amp;e, const juce::File &amp;sourceFile, const juce::File &amp;destFile, SampleRange range)</arglist>
     </member>
     <member kind="function" static="yes">
-      <type>static juce::int64</type>
+      <type>static SampleCount</type>
       <name>copySectionToNewFile</name>
       <anchorfile>structtracktion__engine_1_1AudioFileUtils.html</anchorfile>
-      <anchor>a437e8355fee35293dfd1859de082add4</anchor>
+      <anchor>a454f23e2c1ab0534d6465e2f62fb164c</anchor>
       <arglist>(Engine &amp;e, const juce::File &amp;sourceFile, const juce::File &amp;destFile, EditTimeRange range)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static void</type>
       <name>addBWAVStartToMetadata</name>
       <anchorfile>structtracktion__engine_1_1AudioFileUtils.html</anchorfile>
-      <anchor>a9c8be81b80c6fdaa433b91750e17521d</anchor>
-      <arglist>(juce::StringPairArray &amp;metadata, juce::int64 time)</arglist>
+      <anchor>a07d7c856c03abc67893d6bc420eb0284</anchor>
+      <arglist>(juce::StringPairArray &amp;metadata, SampleCount start)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static void</type>
       <name>applyBWAVStartTime</name>
       <anchorfile>structtracktion__engine_1_1AudioFileUtils.html</anchorfile>
-      <anchor>a5287e89480c756d68cee457c30cf0e6e</anchor>
-      <arglist>(const juce::File &amp;, juce::int64 time)</arglist>
+      <anchor>af8c0c732637c76af1bb2e04849db8afe</anchor>
+      <arglist>(const juce::File &amp;, SampleCount start)</arglist>
     </member>
     <member kind="function" static="yes">
-      <type>static juce::int64</type>
+      <type>static SampleCount</type>
       <name>getFileLengthSamples</name>
       <anchorfile>structtracktion__engine_1_1AudioFileUtils.html</anchorfile>
-      <anchor>aaa2466f4734689f66c44829ddf1efcd4</anchor>
+      <anchor>a5992c313788facc019552a08cfdaf521</anchor>
       <arglist>(Engine &amp;e, const juce::File &amp;)</arglist>
     </member>
     <member kind="function" static="yes">
@@ -10772,8 +10793,8 @@
       <type>bool</type>
       <name>writeFromAudioReader</name>
       <anchorfile>classtracktion__engine_1_1AudioFileWriter.html</anchorfile>
-      <anchor>a400ad8facb1bf885c94ef9353b80f835</anchor>
-      <arglist>(juce::AudioFormatReader &amp;, juce::int64 startSample, juce::int64 numSamples)</arglist>
+      <anchor>aa48f12cc5c2bae4900411b1d295649b1</anchor>
+      <arglist>(juce::AudioFormatReader &amp;, SampleCount startSample, SampleCount numSamples)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -10839,15 +10860,15 @@
       <type>void</type>
       <name>writeAudioAndMidi</name>
       <anchorfile>classtracktion__engine_1_1AudioMidiFifo.html</anchorfile>
-      <anchor>ab9f8a3bad931ddf983ed77882db33df8</anchor>
-      <arglist>(const juce::AudioSampleBuffer &amp;audioSrc, const juce::MidiBuffer &amp;midiSrc)</arglist>
+      <anchor>a382b0f91fd0312118206d434d77376f6</anchor>
+      <arglist>(const juce::AudioBuffer&lt; float &gt; &amp;audioSrc, const juce::MidiBuffer &amp;midiSrc)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>readAudioAndMidi</name>
       <anchorfile>classtracktion__engine_1_1AudioMidiFifo.html</anchorfile>
-      <anchor>a3f118e5046e4fdaf7ad1de497b73c419</anchor>
-      <arglist>(juce::AudioSampleBuffer &amp;audioDst, juce::MidiBuffer &amp;midiDst)</arglist>
+      <anchor>af2d207ea1402214605ff0e1513c9a1a9</anchor>
+      <arglist>(juce::AudioBuffer&lt; float &gt; &amp;audioDst, juce::MidiBuffer &amp;midiDst)</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -14429,29 +14450,22 @@
       <type>void</type>
       <name>audioProcess</name>
       <anchorfile>structtracktion__engine_1_1BeatDetect.html</anchorfile>
-      <anchor>aa1bc95bb2c221ab22e957304bc3ba270</anchor>
-      <arglist>(const float **inputs, int numChans)</arglist>
+      <anchor>ac5c7787f0d09a29ffe660140b27c9cca</anchor>
+      <arglist>(const Buffer &amp;buffer)</arglist>
     </member>
     <member kind="function">
-      <type>int</type>
+      <type>SampleCount</type>
       <name>getBlockSize</name>
       <anchorfile>structtracktion__engine_1_1BeatDetect.html</anchorfile>
-      <anchor>a67b286e07fcadc98bd8e4b68279aa7f8</anchor>
-      <arglist>()</arglist>
+      <anchor>a0bc4c1f07b89b5361f0eb6be8ed9120a</anchor>
+      <arglist>() const</arglist>
     </member>
     <member kind="function">
-      <type>int</type>
-      <name>getNumBeats</name>
+      <type>const juce::Array&lt; SampleCount &gt; &amp;</type>
+      <name>getBeats</name>
       <anchorfile>structtracktion__engine_1_1BeatDetect.html</anchorfile>
-      <anchor>acbdf3e75f08f1c5ff4acede41b74daff</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>juce::int64</type>
-      <name>getBeat</name>
-      <anchorfile>structtracktion__engine_1_1BeatDetect.html</anchorfile>
-      <anchor>a0699ba492e11f55baebf3693308de4c0</anchor>
-      <arglist>(int idx) const</arglist>
+      <anchor>ae6b9746b536686e6dc57e632ea3e72f8</anchor>
+      <arglist>() const</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -17450,10 +17464,10 @@
       <arglist>()</arglist>
     </member>
     <member kind="function">
-      <type>juce::int64</type>
+      <type>HashCode</type>
       <name>getHash</name>
       <anchorfile>classtracktion__engine_1_1ClipEffect.html</anchorfile>
-      <anchor>adb33a7b8579fbae5387671c5a6821eb0</anchor>
+      <anchor>a7b6bb1fb973c5aecd47fee5676a43a63</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
@@ -17555,10 +17569,10 @@
       <arglist></arglist>
     </member>
     <member kind="function" protection="protected" virtualness="virtual">
-      <type>virtual juce::int64</type>
+      <type>virtual HashCode</type>
       <name>getIndividualHash</name>
       <anchorfile>classtracktion__engine_1_1ClipEffect.html</anchorfile>
-      <anchor>af620b6b18cf33d12cd70ebc49188d2f3</anchor>
+      <anchor>a12d952bd24296e773e894da8a839e790</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function" protection="protected">
@@ -17611,10 +17625,10 @@
       <arglist>(const juce::ValueTree &amp;v)</arglist>
     </member>
     <member kind="function">
-      <type>juce::int64</type>
+      <type>HashCode</type>
       <name>getHash</name>
       <anchorfile>classtracktion__engine_1_1ClipEffects.html</anchorfile>
-      <anchor>a73902a9b554e6ba13b05ba3be5e81b87</anchor>
+      <anchor>a426e32c4279d0fe0f73da7758d0d9234</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
@@ -18788,10 +18802,10 @@
       <arglist>()</arglist>
     </member>
     <member kind="function" virtualness="pure">
-      <type>virtual juce::int64</type>
+      <type>virtual HashCode</type>
       <name>getBaseTakeHash</name>
       <anchorfile>classtracktion__engine_1_1CompManager.html</anchorfile>
-      <anchor>a6163e33ac39bd2a4d3130d6ff52f5751</anchor>
+      <anchor>ac458dc0bc84f43e99adaa51e88c94fb7</anchor>
       <arglist>(int takeIndex) const =0</arglist>
     </member>
     <member kind="function" virtualness="pure">
@@ -19033,10 +19047,10 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
-      <type>juce::int64</type>
+      <type>HashCode</type>
       <name>getTakeHash</name>
       <anchorfile>classtracktion__engine_1_1CompManager.html</anchorfile>
-      <anchor>a400b6de5f42fc29fa8dea5d1db281d8d</anchor>
+      <anchor>abf612b0d767e06456d66ae8792f8611f</anchor>
       <arglist>(int takeIndex) const</arglist>
     </member>
     <member kind="function">
@@ -19138,10 +19152,10 @@
       <arglist></arglist>
     </member>
     <member kind="variable" protection="protected">
-      <type>juce::int64</type>
+      <type>HashCode</type>
       <name>lastHash</name>
       <anchorfile>classtracktion__engine_1_1CompManager.html</anchorfile>
-      <anchor>a5e97664bdd38b32f3b4b53533ea61acd</anchor>
+      <anchor>a360f2513a23073ad305c595656cbdc44</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable" protection="protected">
@@ -20440,8 +20454,8 @@
       <type>void</type>
       <name>sendMidiArray</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a36c347ea0986efe788089c9fa027dbdc</anchor>
-      <arglist>(const juce::uint8(&amp;rawData)[size])</arglist>
+      <anchor>aed5e55228a79558671d34fc238fac5c2</anchor>
+      <arglist>(const uint8_t(&amp;rawData)[size])</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -24261,10 +24275,10 @@
     <name>tracktion_engine::DbTimePair</name>
     <filename>structtracktion__engine_1_1DbTimePair.html</filename>
     <member kind="variable">
-      <type>juce::uint32</type>
+      <type>uint32_t</type>
       <name>time</name>
       <anchorfile>structtracktion__engine_1_1DbTimePair.html</anchorfile>
-      <anchor>a0d6da09d0a0052ef4ad32f586e838769</anchor>
+      <anchor>ad9cffac595a504f2b31ff19a37cb3d96</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -26634,10 +26648,10 @@
       <arglist>() const override</arglist>
     </member>
     <member kind="function">
-      <type>juce::int64</type>
+      <type>HashCode</type>
       <name>getHash</name>
       <anchorfile>classtracktion__engine_1_1EditClip.html</anchorfile>
-      <anchor>a0bd473de1ef4fe31f6e1c1445660af5b</anchor>
+      <anchor>a5c419f32ddcfc3c29f14bade2629068b</anchor>
       <arglist>() const override</arglist>
     </member>
     <member kind="function">
@@ -26739,10 +26753,10 @@
       <arglist>()</arglist>
     </member>
     <member kind="function">
-      <type>juce::int64</type>
+      <type>HashCode</type>
       <name>generateHash</name>
       <anchorfile>classtracktion__engine_1_1EditClip.html</anchorfile>
-      <anchor>a00b8a81e29869a13b669623e91d96e63</anchor>
+      <anchor>a793cf50995d46abffe038d0c00670b13</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="variable">
@@ -27329,10 +27343,10 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
-      <type>juce::uint64</type>
+      <type>uint64_t</type>
       <name>getRawID</name>
       <anchorfile>structtracktion__engine_1_1EditItemID.html</anchorfile>
-      <anchor>ac98bd7975f11de1bb7901a3a5fa592fd</anchor>
+      <anchor>a28713bec4ab3541647d949df33462912</anchor>
       <arglist>() const noexcept</arglist>
     </member>
     <member kind="function">
@@ -27409,15 +27423,15 @@
       <type>static EditItemID</type>
       <name>findFirstIDNotIn</name>
       <anchorfile>structtracktion__engine_1_1EditItemID.html</anchorfile>
-      <anchor>af8f3be634f2e31982b650305c5e1e95c</anchor>
-      <arglist>(const std::vector&lt; EditItemID &gt; &amp;existingIDsSorted, juce::uint64 startFrom=1001)</arglist>
+      <anchor>a95f24124a801dfb332fb3e98174be2da</anchor>
+      <arglist>(const std::vector&lt; EditItemID &gt; &amp;existingIDsSorted, uint64_t startFrom=1001)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static EditItemID</type>
       <name>fromRawID</name>
       <anchorfile>structtracktion__engine_1_1EditItemID.html</anchorfile>
-      <anchor>aaa72566ba63df3999d347af4a834bbb8</anchor>
-      <arglist>(juce::uint64)</arglist>
+      <anchor>a673fea955c15c57d1bd6901e761266ad</anchor>
+      <arglist>(uint64_t)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static juce::Array&lt; EditItemID &gt;</type>
@@ -28314,10 +28328,10 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
-      <type>juce::int64</type>
+      <type>HashCode</type>
       <name>getHash</name>
       <anchorfile>classtracktion__engine_1_1EditSnapshot.html</anchorfile>
-      <anchor>a60678f2646662cac9c93a2eace761f30</anchor>
+      <anchor>a400c1741b860f3da7518b0f0b6b4483e</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
@@ -32112,10 +32126,10 @@
       <arglist></arglist>
     </member>
     <member kind="function" protection="protected">
-      <type>juce::int64</type>
+      <type>HashCode</type>
       <name>getIndividualHash</name>
       <anchorfile>structtracktion__engine_1_1FadeInOutEffect.html</anchorfile>
-      <anchor>a4c6aab99c9dae08c139a9cd3e3ef70be</anchor>
+      <anchor>ac7b783f83608be9c353f340036e83d15</anchor>
       <arglist>() const override</arglist>
     </member>
   </compound>
@@ -34522,17 +34536,17 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>juce::int64</type>
+      <type>int64_t</type>
       <name>offset</name>
       <anchorfile>structtracktion__engine_1_1TracktionArchiveFile_1_1IndexEntry.html</anchorfile>
-      <anchor>aeae23919d737a3f07832f5afad79e233</anchor>
+      <anchor>ad3d9fc0366b1408097af25fa7a68f17d</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>juce::int64</type>
+      <type>int64_t</type>
       <name>length</name>
       <anchorfile>structtracktion__engine_1_1TracktionArchiveFile_1_1IndexEntry.html</anchorfile>
-      <anchor>a7a34aec067a66b16461140d6ea7c5f02</anchor>
+      <anchor>a780116bfb77063a57cde6e0a5181d528</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -38389,32 +38403,32 @@
       <arglist>(int note)</arglist>
     </member>
     <member kind="function">
-      <type>juce::int64</type>
+      <type>SampleCount</type>
       <name>getInMarker</name>
       <anchorfile>classtracktion__engine_1_1LoopInfo.html</anchorfile>
-      <anchor>ae66d7a46eaa988502ead47d037e762dc</anchor>
+      <anchor>a39c7b3a20f70036609a3389063e58fd6</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
-      <type>juce::int64</type>
+      <type>SampleCount</type>
       <name>getOutMarker</name>
       <anchorfile>classtracktion__engine_1_1LoopInfo.html</anchorfile>
-      <anchor>ad55437bbafffc09f938c3aca3f5a12f3</anchor>
+      <anchor>a4f7261515c2179cba66c72cf503c5442</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>setInMarker</name>
       <anchorfile>classtracktion__engine_1_1LoopInfo.html</anchorfile>
-      <anchor>a68d83361b6e281385340df367bc6290c</anchor>
-      <arglist>(juce::int64 newPos)</arglist>
+      <anchor>acf3ea02c3d2b2571424a6053eec163bd</anchor>
+      <arglist>(SampleCount newPos)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>setOutMarker</name>
       <anchorfile>classtracktion__engine_1_1LoopInfo.html</anchorfile>
-      <anchor>ae33b65983e316f1d9cff2deff37bc069</anchor>
-      <arglist>(juce::int64 newPos)</arglist>
+      <anchor>a0245091df761a1dd988964de77b1debe</anchor>
+      <arglist>(SampleCount newPos)</arglist>
     </member>
     <member kind="function">
       <type>int</type>
@@ -38434,15 +38448,15 @@
       <type>void</type>
       <name>addLoopPoint</name>
       <anchorfile>classtracktion__engine_1_1LoopInfo.html</anchorfile>
-      <anchor>a3967a74abc580d97c023faad91564c56</anchor>
-      <arglist>(juce::int64 pos, LoopPointType type)</arglist>
+      <anchor>aa3261a60f1a10dc2c4d0d96c9c65526b</anchor>
+      <arglist>(SampleCount pos, LoopPointType type)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>changeLoopPoint</name>
       <anchorfile>classtracktion__engine_1_1LoopInfo.html</anchorfile>
-      <anchor>a1ef451e1f57bdfbfe9b1f53c6711d996</anchor>
-      <arglist>(int index, juce::int64 pos, LoopPointType type)</arglist>
+      <anchor>a84567d3865df3677a2ccd8b65d2ea4e1</anchor>
+      <arglist>(int index, SampleCount pos, LoopPointType type)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -38526,10 +38540,10 @@
       <arglist>() const</arglist>
     </member>
     <member kind="variable">
-      <type>juce::int64</type>
+      <type>SampleCount</type>
       <name>pos</name>
       <anchorfile>structtracktion__engine_1_1LoopInfo_1_1LoopPoint.html</anchorfile>
-      <anchor>a7f1f41e95c9473c7d88f9380be8e87ef</anchor>
+      <anchor>a285a083670fc8e50eecd9a25288e3fae</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -39429,8 +39443,8 @@
       <type>void</type>
       <name>sendMidiCommandToController</name>
       <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
-      <anchor>a49f77bb1a943d2fdff143e97cd47932f</anchor>
-      <arglist>(int devIdx, juce::uint8 byte1, juce::uint8 byte2, juce::uint8 byte3)</arglist>
+      <anchor>a4f22653f0e73be942872838171766025</anchor>
+      <arglist>(int devIdx, uint8_t byte1, uint8_t byte2, uint8_t byte3)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -41543,10 +41557,10 @@
       <arglist>(int index)</arglist>
     </member>
     <member kind="function">
-      <type>juce::int64</type>
+      <type>HashCode</type>
       <name>getBaseTakeHash</name>
       <anchorfile>classtracktion__engine_1_1MidiCompManager.html</anchorfile>
-      <anchor>ad8c96194170cf893a7a6c3d7d87aa1f5</anchor>
+      <anchor>aa17d36eff3a0f30d812e11dede1dc43a</anchor>
       <arglist>(int takeIndex) const override</arglist>
     </member>
     <member kind="function">
@@ -42475,10 +42489,10 @@
       <arglist>[128]</arglist>
     </member>
     <member kind="variable" protection="protected">
-      <type>juce::uint8</type>
+      <type>uint8_t</type>
       <name>keyDownVelocities</name>
       <anchorfile>classtracktion__engine_1_1MidiInputDevice.html</anchorfile>
-      <anchor>a42c88ce60d99de65da4983f3346db16d</anchor>
+      <anchor>a175b39cdf0ee9701aea5add53b436555</anchor>
       <arglist>[128]</arglist>
     </member>
     <member kind="variable" protection="protected">
@@ -43141,10 +43155,10 @@
     <filename>structtracktion__engine_1_1MidiMessageArray.html</filename>
     <class kind="struct">tracktion_engine::MidiMessageArray::MidiMessageWithSource</class>
     <member kind="typedef">
-      <type>juce::uint32</type>
+      <type>uint32_t</type>
       <name>MPESourceID</name>
       <anchorfile>structtracktion__engine_1_1MidiMessageArray.html</anchorfile>
-      <anchor>a36e4be4a072539ee901334469a9d40ca</anchor>
+      <anchor>ac9cbb3e80daa08e67ddd980ccc8b6a85</anchor>
       <arglist></arglist>
     </member>
     <member kind="function">
@@ -46337,8 +46351,8 @@
       <type>void</type>
       <name>process</name>
       <anchorfile>classtracktion__engine_1_1MultiVoiceOscillator.html</anchorfile>
-      <anchor>a0fcc5c1e09e13ee090940bdfa462020f</anchor>
-      <arglist>(juce::AudioSampleBuffer &amp;buffer, int startSample, int numSamples)</arglist>
+      <anchor>a2b50c96ac879a31b9cca6818caca06a5</anchor>
+      <arglist>(juce::AudioBuffer&lt; float &gt; &amp;buffer, int startSample, int numSamples)</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -47462,8 +47476,8 @@
       <type>void</type>
       <name>process</name>
       <anchorfile>classtracktion__engine_1_1Oscillator.html</anchorfile>
-      <anchor>a2b0f778b27ea5582c20d367f984809ea</anchor>
-      <arglist>(juce::AudioSampleBuffer &amp;buffer, int startSample, int numSamples)</arglist>
+      <anchor>a532090e051b8c24e17c70ee915d681cf</anchor>
+      <arglist>(juce::AudioBuffer&lt; float &gt; &amp;buffer, int startSample, int numSamples)</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -50318,10 +50332,10 @@
       <arglist>(SelectionManager &amp;) override</arglist>
     </member>
     <member kind="function">
-      <type>juce::int64</type>
+      <type>HashCode</type>
       <name>getIndividualHash</name>
       <anchorfile>structtracktion__engine_1_1PitchShiftEffect.html</anchorfile>
-      <anchor>a613729fbdf16f030bfbe8eb76bc12b1f</anchor>
+      <anchor>a4f9d89c0f169de9b2058b6ebf02b7caa</anchor>
       <arglist>() const override</arglist>
     </member>
     <member kind="function">
@@ -52390,10 +52404,10 @@
       <arglist>(SelectionManager &amp;) override</arglist>
     </member>
     <member kind="function">
-      <type>juce::int64</type>
+      <type>HashCode</type>
       <name>getIndividualHash</name>
       <anchorfile>structtracktion__engine_1_1PluginEffect.html</anchorfile>
-      <anchor>aedb2a0f3a50d91aee8ab3197cbe887aa</anchor>
+      <anchor>a4f34aa06f6199d71f763df8329f7000c</anchor>
       <arglist>() const override</arglist>
     </member>
     <member kind="function">
@@ -54429,10 +54443,10 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
-      <type>juce::int64</type>
+      <type>int64_t</type>
       <name>getRawID</name>
       <anchorfile>classtracktion__engine_1_1ProjectItemID.html</anchorfile>
-      <anchor>a6367d092cbdb44d6f30f1c438a3c92bf</anchor>
+      <anchor>a442b718c22e4d3cb0d6e5017cf6eea62</anchor>
       <arglist>() const noexcept</arglist>
     </member>
     <member kind="function">
@@ -56745,14 +56759,14 @@
       <type>void</type>
       <name>setReadPosition</name>
       <anchorfile>classtracktion__engine_1_1AudioFileCache_1_1Reader.html</anchorfile>
-      <anchor>a21ef7eb1540f3616e99ca6e622f89b30</anchor>
-      <arglist>(juce::int64 pos) noexcept</arglist>
+      <anchor>a0b6c34943a5d9f7c3b6175e08e117af9</anchor>
+      <arglist>(SampleCount) noexcept</arglist>
     </member>
     <member kind="function">
-      <type>juce::int64</type>
+      <type>SampleCount</type>
       <name>getReadPosition</name>
       <anchorfile>classtracktion__engine_1_1AudioFileCache_1_1Reader.html</anchorfile>
-      <anchor>ac86e51784b4d259259c8393aacd7397a</anchor>
+      <anchor>a08f6806e425df7ed450c4c75cd07e005</anchor>
       <arglist>() const noexcept</arglist>
     </member>
     <member kind="function">
@@ -56780,8 +56794,8 @@
       <type>void</type>
       <name>setLoopRange</name>
       <anchorfile>classtracktion__engine_1_1AudioFileCache_1_1Reader.html</anchorfile>
-      <anchor>a152810f90b264e6d9932e7f23382f21b</anchor>
-      <arglist>(juce::Range&lt; juce::int64 &gt; newRange)</arglist>
+      <anchor>a04dae9e92988f990cea6994edc7a06c4</anchor>
+      <arglist>(SampleRange newRange)</arglist>
     </member>
     <member kind="function">
       <type>int</type>
@@ -57052,8 +57066,8 @@
       <type></type>
       <name>RegionSequenceWrapper</name>
       <anchorfile>classRegionSequenceWrapper.html</anchorfile>
-      <anchor>a79a0124a39ae01a0ddf4c42d0d7e565d</anchor>
-      <arglist>(ARADocument &amp;d, Track *track_)</arglist>
+      <anchor>ab82b337ae0559639ce842d7fc6f9a9c9</anchor>
+      <arglist>(ARADocument &amp;d, Track *t)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -57543,8 +57557,8 @@
       <type>static AudioFile</type>
       <name>getAudioFileForHash</name>
       <anchorfile>classtracktion__engine_1_1RenderManager.html</anchorfile>
-      <anchor>af159ed2721327f22e424823a6c687cb7</anchor>
-      <arglist>(Engine &amp;, const juce::File &amp;directory, juce::int64 hash)</arglist>
+      <anchor>a1638233bbdb996070f6fce3c4aedd55e</anchor>
+      <arglist>(Engine &amp;, const juce::File &amp;directory, HashCode hash)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static juce::StringRef</type>
@@ -57838,10 +57852,10 @@
       <arglist>(Edit &amp;, SelectionManager *, EditTimeRange timeRangeToRender)</arglist>
     </member>
     <member kind="function">
-      <type>juce::int64</type>
+      <type>HashCode</type>
       <name>getHash</name>
       <anchorfile>classtracktion__engine_1_1RenderOptions.html</anchorfile>
-      <anchor>afbf3113f9fb71fe6911c533b8fc70299</anchor>
+      <anchor>aaccc44aaa9c2794ad8bea536e5061de5</anchor>
       <arglist>() const noexcept</arglist>
     </member>
     <member kind="function">
@@ -57978,10 +57992,10 @@
       <arglist>(const juce::Array&lt; EditItemID &gt; &amp;)</arglist>
     </member>
     <member kind="function">
-      <type>juce::int64</type>
+      <type>HashCode</type>
       <name>getTracksHash</name>
       <anchorfile>classtracktion__engine_1_1RenderOptions.html</anchorfile>
-      <anchor>a21e45ba12a53221a70c2b4e72358a6ec</anchor>
+      <anchor>a8875cea72936ab9060e681153eaafb06</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
@@ -60337,8 +60351,8 @@
       <type></type>
       <name>Segment</name>
       <anchorfile>structtracktion__engine_1_1AudioSegmentList_1_1Segment.html</anchorfile>
-      <anchor>af3e5ca50982e54e82080cef104ccbef1</anchor>
-      <arglist>()</arglist>
+      <anchor>a48349d322e494dedc3baf0a30d096bd4</anchor>
+      <arglist>()=default</arglist>
     </member>
     <member kind="function">
       <type>EditTimeRange</type>
@@ -60348,10 +60362,10 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
-      <type>juce::Range&lt; juce::int64 &gt;</type>
+      <type>SampleRange</type>
       <name>getSampleRange</name>
       <anchorfile>structtracktion__engine_1_1AudioSegmentList_1_1Segment.html</anchorfile>
-      <anchor>a7370311d9ca12a4b4e7f6dff46d7fbd8</anchor>
+      <anchor>a30f2fc973fde9cab368b11df15cf1e5c</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
@@ -60390,10 +60404,10 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
-      <type>juce::int64</type>
+      <type>HashCode</type>
       <name>getHashCode</name>
       <anchorfile>structtracktion__engine_1_1AudioSegmentList_1_1Segment.html</anchorfile>
-      <anchor>adeb2ccb2abb02e001740b7457c364a27</anchor>
+      <anchor>ab0bffd451d996c3f9230d05a673736b8</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
@@ -60425,17 +60439,17 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>juce::int64</type>
+      <type>SampleCount</type>
       <name>startSample</name>
       <anchorfile>structtracktion__engine_1_1AudioSegmentList_1_1Segment.html</anchorfile>
-      <anchor>acb2147a49499797aefbef70670454671</anchor>
+      <anchor>a36292e491c91ad7f86b82fe158ab8d85</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>juce::int64</type>
+      <type>SampleCount</type>
       <name>lengthSample</name>
       <anchorfile>structtracktion__engine_1_1AudioSegmentList_1_1Segment.html</anchorfile>
-      <anchor>a72ce14b38c940fffbbfed78e0b0445bd</anchor>
+      <anchor>ac6c2054f630fadfc3b2684a83d2180ef</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -60471,13 +60485,6 @@
       <name>followedBySilence</name>
       <anchorfile>structtracktion__engine_1_1AudioSegmentList_1_1Segment.html</anchorfile>
       <anchor>ad9cc9bf39adc67097f7b9946cb8a9e96</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="friend">
-      <type>friend class</type>
-      <name>AudioSegmentList</name>
-      <anchorfile>structtracktion__engine_1_1AudioSegmentList_1_1Segment.html</anchorfile>
-      <anchor>adb9aaa735311a467a6ac184271a445aa</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -61294,8 +61301,8 @@
       <type>void</type>
       <name>changeColour</name>
       <anchorfile>classtracktion__engine_1_1SelectedMidiEvents.html</anchorfile>
-      <anchor>a592ce8574557c6335cf23e81901c7f72</anchor>
-      <arglist>(juce::uint8 newColour)</arglist>
+      <anchor>aa1f9014927e4dd97495be9aa487f3026</anchor>
+      <arglist>(uint8_t newColour)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -62797,6 +62804,31 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>tracktion_engine::Renderer::Statistics</name>
+    <filename>structtracktion__engine_1_1Renderer_1_1Statistics.html</filename>
+    <member kind="variable">
+      <type>float</type>
+      <name>peak</name>
+      <anchorfile>structtracktion__engine_1_1Renderer_1_1Statistics.html</anchorfile>
+      <anchor>af6c079832079c87af78a02ee8ad9e70c</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>average</name>
+      <anchorfile>structtracktion__engine_1_1Renderer_1_1Statistics.html</anchorfile>
+      <anchor>a79f4eb0f0cb08257914938bae454f26c</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>audioDuration</name>
+      <anchorfile>structtracktion__engine_1_1Renderer_1_1Statistics.html</anchorfile>
+      <anchor>a339f649e3c9496c5a28bc95d41433981</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>tracktion_graph::PerformanceMeasurement::Statistics</name>
     <filename>structtracktion__graph_1_1PerformanceMeasurement_1_1Statistics.html</filename>
     <member kind="function">
@@ -62881,31 +62913,6 @@
       <name>numRuns</name>
       <anchorfile>structtracktion__graph_1_1PerformanceMeasurement_1_1Statistics.html</anchorfile>
       <anchor>af739074eccffada098e3683667734961</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
-    <name>tracktion_engine::Renderer::Statistics</name>
-    <filename>structtracktion__engine_1_1Renderer_1_1Statistics.html</filename>
-    <member kind="variable">
-      <type>float</type>
-      <name>peak</name>
-      <anchorfile>structtracktion__engine_1_1Renderer_1_1Statistics.html</anchorfile>
-      <anchor>af6c079832079c87af78a02ee8ad9e70c</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>float</type>
-      <name>average</name>
-      <anchorfile>structtracktion__engine_1_1Renderer_1_1Statistics.html</anchorfile>
-      <anchor>a79f4eb0f0cb08257914938bae454f26c</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>float</type>
-      <name>audioDuration</name>
-      <anchorfile>structtracktion__engine_1_1Renderer_1_1Statistics.html</anchorfile>
-      <anchor>a339f649e3c9496c5a28bc95d41433981</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -63660,10 +63667,10 @@
       <arglist></arglist>
     </member>
     <member kind="function" protection="protected">
-      <type>juce::int64</type>
+      <type>HashCode</type>
       <name>getIndividualHash</name>
       <anchorfile>structtracktion__engine_1_1StepVolumeEffect.html</anchorfile>
-      <anchor>a3aaa5408ea2c96524dc6e10e19da759b</anchor>
+      <anchor>a84eaef64d3c2cbfe7db3de585ee08199</anchor>
       <arglist>() const override</arglist>
     </member>
   </compound>
@@ -64147,10 +64154,10 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
-      <type>juce::int64</type>
+      <type>int64_t</type>
       <name>getMaxSpaceAllowedForTempFiles</name>
       <anchorfile>classtracktion__engine_1_1TemporaryFileManager.html</anchorfile>
-      <anchor>a1c7108d50f781203d31ef14ef2725c00</anchor>
+      <anchor>ae801cc4062bb81e441399bf835ab3470</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
@@ -64220,22 +64227,22 @@
       <type>static AudioFile</type>
       <name>getFileForCachedClipRender</name>
       <anchorfile>classtracktion__engine_1_1TemporaryFileManager.html</anchorfile>
-      <anchor>a0a759f0570c3b3a5b5fd0e97139f64a6</anchor>
-      <arglist>(const AudioClipBase &amp;, juce::int64 hash)</arglist>
+      <anchor>a93a6bf3e05e54709fcfdf2160f19320a</anchor>
+      <arglist>(const AudioClipBase &amp;, HashCode)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static AudioFile</type>
       <name>getFileForCachedCompRender</name>
       <anchorfile>classtracktion__engine_1_1TemporaryFileManager.html</anchorfile>
-      <anchor>ab487c4c3a15317da8d94acea82466a13</anchor>
-      <arglist>(const AudioClipBase &amp;clip, juce::int64 takeHash)</arglist>
+      <anchor>a29ecd992f0c5b6838b86b11474aaf4fe</anchor>
+      <arglist>(const AudioClipBase &amp;, HashCode)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static AudioFile</type>
       <name>getFileForCachedFileRender</name>
       <anchorfile>classtracktion__engine_1_1TemporaryFileManager.html</anchorfile>
-      <anchor>a252660ab6fc6a6bc49bd2c649a4eaff1</anchor>
-      <arglist>(Edit &amp;, juce::int64 hash)</arglist>
+      <anchor>ab5f00dbad7a3d505326b435a4f9d79b8</anchor>
+      <arglist>(Edit &amp;, HashCode hash)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static juce::File</type>
@@ -64312,10 +64319,10 @@
       <arglist>(juce::Array&lt; SectionDetails &gt; &amp;newTempos)</arglist>
     </member>
     <member kind="function">
-      <type>juce::uint32</type>
+      <type>uint32_t</type>
       <name>getChangeCount</name>
       <anchorfile>structtracktion__engine_1_1TempoSequence_1_1TempoSections.html</anchorfile>
-      <anchor>a955cbcb4a9bb1fc6df8670830abb6110</anchor>
+      <anchor>a9c25fbf39c508f899a15ebb9752346e2</anchor>
       <arglist>() const</arglist>
     </member>
   </compound>
@@ -64523,10 +64530,10 @@
       <arglist>(EditTimeRange range) const</arglist>
     </member>
     <member kind="function">
-      <type>juce::int64</type>
+      <type>HashCode</type>
       <name>createHashForTemposInRange</name>
       <anchorfile>classtracktion__engine_1_1TempoSequence.html</anchorfile>
-      <anchor>a1668ce2ceac428ef6295e991500bfa97</anchor>
+      <anchor>aa3d567194ba47d4327d557d28736b59e</anchor>
       <arglist>(EditTimeRange) const</arglist>
     </member>
     <member kind="function">
@@ -64931,10 +64938,10 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
-      <type>juce::int64</type>
+      <type>HashCode</type>
       <name>getHash</name>
       <anchorfile>classtracktion__engine_1_1TempoSetting.html</anchorfile>
-      <anchor>a053973c7355f814f557fa5c062583a1e</anchor>
+      <anchor>a2f08655269eae96f3850ec182ed81e5b</anchor>
       <arglist>() const noexcept</arglist>
     </member>
     <member kind="function" static="yes">
@@ -65579,10 +65586,10 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>const juce::int64</type>
+      <type>const HashCode</type>
       <name>hash</name>
       <anchorfile>structtracktion__engine_1_1RecordingThumbnailManager_1_1Thumbnail.html</anchorfile>
-      <anchor>a3b7e5775b5dd2a06618cacd20102a061</anchor>
+      <anchor>ab6b59a0fa89c79c4e2c79545c27e6610</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -69247,8 +69254,8 @@
       <type>void</type>
       <name>setReader</name>
       <anchorfile>classtracktion__engine_1_1TracktionThumbnail.html</anchorfile>
-      <anchor>a50fb43ee48f1f563294af022fc95f58e</anchor>
-      <arglist>(juce::AudioFormatReader *, juce::int64 hash) override</arglist>
+      <anchor>a4e002349acd082fb736f7b4bdbdb5f15</anchor>
+      <arglist>(juce::AudioFormatReader *, juce::int64) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -70737,10 +70744,10 @@
     <templarg></templarg>
     <templarg></templarg>
     <member kind="typedef">
-      <type>CriticalSectionType::ScopedLockType</type>
+      <type>typename CriticalSectionType::ScopedLockType</type>
       <name>ScopedLockType</name>
       <anchorfile>classtracktion__engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a57b55a3888932e45c1d38cc5775c1b89</anchor>
+      <anchor>aa67ed8c378970e4b769e37c01c399b7d</anchor>
       <arglist></arglist>
     </member>
     <member kind="function">
@@ -70972,10 +70979,10 @@
     <name>ValueTreeObjectList&lt; ClipEffect &gt;</name>
     <filename>classtracktion__engine_1_1ValueTreeObjectList.html</filename>
     <member kind="typedef">
-      <type>juce::DummyCriticalSection ::ScopedLockType</type>
+      <type>typename juce::DummyCriticalSection ::ScopedLockType</type>
       <name>ScopedLockType</name>
       <anchorfile>classtracktion__engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a57b55a3888932e45c1d38cc5775c1b89</anchor>
+      <anchor>aa67ed8c378970e4b769e37c01c399b7d</anchor>
       <arglist></arglist>
     </member>
     <member kind="function">
@@ -71207,10 +71214,10 @@
     <name>ValueTreeObjectList&lt; CompSection &gt;</name>
     <filename>classtracktion__engine_1_1ValueTreeObjectList.html</filename>
     <member kind="typedef">
-      <type>juce::DummyCriticalSection ::ScopedLockType</type>
+      <type>typename juce::DummyCriticalSection ::ScopedLockType</type>
       <name>ScopedLockType</name>
       <anchorfile>classtracktion__engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a57b55a3888932e45c1d38cc5775c1b89</anchor>
+      <anchor>aa67ed8c378970e4b769e37c01c399b7d</anchor>
       <arglist></arglist>
     </member>
     <member kind="function">
@@ -71442,10 +71449,10 @@
     <name>ValueTreeObjectList&lt; EventType &gt;</name>
     <filename>classtracktion__engine_1_1ValueTreeObjectList.html</filename>
     <member kind="typedef">
-      <type>juce::DummyCriticalSection ::ScopedLockType</type>
+      <type>typename juce::DummyCriticalSection ::ScopedLockType</type>
       <name>ScopedLockType</name>
       <anchorfile>classtracktion__engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a57b55a3888932e45c1d38cc5775c1b89</anchor>
+      <anchor>aa67ed8c378970e4b769e37c01c399b7d</anchor>
       <arglist></arglist>
     </member>
     <member kind="function">
@@ -71677,10 +71684,10 @@
     <name>ValueTreeObjectList&lt; InputDeviceDestination &gt;</name>
     <filename>classtracktion__engine_1_1ValueTreeObjectList.html</filename>
     <member kind="typedef">
-      <type>juce::DummyCriticalSection ::ScopedLockType</type>
+      <type>typename juce::DummyCriticalSection ::ScopedLockType</type>
       <name>ScopedLockType</name>
       <anchorfile>classtracktion__engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a57b55a3888932e45c1d38cc5775c1b89</anchor>
+      <anchor>aa67ed8c378970e4b769e37c01c399b7d</anchor>
       <arglist></arglist>
     </member>
     <member kind="function">
@@ -71912,10 +71919,10 @@
     <name>ValueTreeObjectList&lt; Modifier &gt;</name>
     <filename>classtracktion__engine_1_1ValueTreeObjectList.html</filename>
     <member kind="typedef">
-      <type>juce::DummyCriticalSection ::ScopedLockType</type>
+      <type>typename juce::DummyCriticalSection ::ScopedLockType</type>
       <name>ScopedLockType</name>
       <anchorfile>classtracktion__engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a57b55a3888932e45c1d38cc5775c1b89</anchor>
+      <anchor>aa67ed8c378970e4b769e37c01c399b7d</anchor>
       <arglist></arglist>
     </member>
     <member kind="function">
@@ -72147,10 +72154,10 @@
     <name>ValueTreeObjectList&lt; ObjectType &gt;</name>
     <filename>classtracktion__engine_1_1ValueTreeObjectList.html</filename>
     <member kind="typedef">
-      <type>juce::DummyCriticalSection ::ScopedLockType</type>
+      <type>typename juce::DummyCriticalSection ::ScopedLockType</type>
       <name>ScopedLockType</name>
       <anchorfile>classtracktion__engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a57b55a3888932e45c1d38cc5775c1b89</anchor>
+      <anchor>aa67ed8c378970e4b769e37c01c399b7d</anchor>
       <arglist></arglist>
     </member>
     <member kind="function">
@@ -72382,10 +72389,10 @@
     <name>ValueTreeObjectList&lt; Track &gt;</name>
     <filename>classtracktion__engine_1_1ValueTreeObjectList.html</filename>
     <member kind="typedef">
-      <type>juce::DummyCriticalSection ::ScopedLockType</type>
+      <type>typename juce::DummyCriticalSection ::ScopedLockType</type>
       <name>ScopedLockType</name>
       <anchorfile>classtracktion__engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a57b55a3888932e45c1d38cc5775c1b89</anchor>
+      <anchor>aa67ed8c378970e4b769e37c01c399b7d</anchor>
       <arglist></arglist>
     </member>
     <member kind="function">
@@ -72617,10 +72624,10 @@
     <name>ValueTreeObjectList&lt; tracktion_engine::MidiControllerEvent &gt;</name>
     <filename>classtracktion__engine_1_1ValueTreeObjectList.html</filename>
     <member kind="typedef">
-      <type>juce::DummyCriticalSection ::ScopedLockType</type>
+      <type>typename juce::DummyCriticalSection ::ScopedLockType</type>
       <name>ScopedLockType</name>
       <anchorfile>classtracktion__engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a57b55a3888932e45c1d38cc5775c1b89</anchor>
+      <anchor>aa67ed8c378970e4b769e37c01c399b7d</anchor>
       <arglist></arglist>
     </member>
     <member kind="function">
@@ -72852,10 +72859,10 @@
     <name>ValueTreeObjectList&lt; tracktion_engine::MidiNote &gt;</name>
     <filename>classtracktion__engine_1_1ValueTreeObjectList.html</filename>
     <member kind="typedef">
-      <type>juce::DummyCriticalSection ::ScopedLockType</type>
+      <type>typename juce::DummyCriticalSection ::ScopedLockType</type>
       <name>ScopedLockType</name>
       <anchorfile>classtracktion__engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a57b55a3888932e45c1d38cc5775c1b89</anchor>
+      <anchor>aa67ed8c378970e4b769e37c01c399b7d</anchor>
       <arglist></arglist>
     </member>
     <member kind="function">
@@ -73087,10 +73094,10 @@
     <name>ValueTreeObjectList&lt; tracktion_engine::MidiSysexEvent &gt;</name>
     <filename>classtracktion__engine_1_1ValueTreeObjectList.html</filename>
     <member kind="typedef">
-      <type>juce::DummyCriticalSection ::ScopedLockType</type>
+      <type>typename juce::DummyCriticalSection ::ScopedLockType</type>
       <name>ScopedLockType</name>
       <anchorfile>classtracktion__engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a57b55a3888932e45c1d38cc5775c1b89</anchor>
+      <anchor>aa67ed8c378970e4b769e37c01c399b7d</anchor>
       <arglist></arglist>
     </member>
     <member kind="function">
@@ -73322,10 +73329,10 @@
     <name>ValueTreeObjectList&lt; WarpMarker &gt;</name>
     <filename>classtracktion__engine_1_1ValueTreeObjectList.html</filename>
     <member kind="typedef">
-      <type>juce::DummyCriticalSection ::ScopedLockType</type>
+      <type>typename juce::DummyCriticalSection ::ScopedLockType</type>
       <name>ScopedLockType</name>
       <anchorfile>classtracktion__engine_1_1ValueTreeObjectList.html</anchorfile>
-      <anchor>a57b55a3888932e45c1d38cc5775c1b89</anchor>
+      <anchor>aa67ed8c378970e4b769e37c01c399b7d</anchor>
       <arglist></arglist>
     </member>
     <member kind="function">
@@ -73693,14 +73700,14 @@
       <type>static tracktion_engine::EditItemID</type>
       <name>fromVar</name>
       <anchorfile>structjuce_1_1VariantConverter_3_01tracktion__engine_1_1EditItemID_01_4.html</anchorfile>
-      <anchor>a4260707061f9209b30675ef431906f1d</anchor>
-      <arglist>(const var &amp;v)</arglist>
+      <anchor>ae69088ac9a75ca3ed9b2d6288bcd6dfb</anchor>
+      <arglist>(const juce::var &amp;v)</arglist>
     </member>
     <member kind="function" static="yes">
-      <type>static var</type>
+      <type>static juce::var</type>
       <name>toVar</name>
       <anchorfile>structjuce_1_1VariantConverter_3_01tracktion__engine_1_1EditItemID_01_4.html</anchorfile>
-      <anchor>a726a04ce6407cf24402ce3cea931e628</anchor>
+      <anchor>ace44b1de811ae5a2aab6470bfe4a7c7a</anchor>
       <arglist>(const tracktion_engine::EditItemID &amp;v)</arglist>
     </member>
   </compound>
@@ -74551,10 +74558,10 @@
       <arglist>(SelectionManager &amp;) override</arglist>
     </member>
     <member kind="function">
-      <type>juce::int64</type>
+      <type>HashCode</type>
       <name>getIndividualHash</name>
       <anchorfile>structtracktion__engine_1_1VolumeEffect.html</anchorfile>
-      <anchor>a57dd651dcb46bb88cf7c8f0afe226b3a</anchor>
+      <anchor>a68a89628a7fffebd933c0bf01b7bd437</anchor>
       <arglist>() const override</arglist>
     </member>
     <member kind="function">
@@ -74678,10 +74685,10 @@
       <arglist>(const juce::ValueTree &amp;v, const juce::Identifier &amp;i)</arglist>
     </member>
     <member kind="function">
-      <type>juce::int64</type>
+      <type>HashCode</type>
       <name>getHash</name>
       <anchorfile>structtracktion__engine_1_1WarpMarker.html</anchorfile>
-      <anchor>a08624ce79a7c572ed0eab2f795be60d6</anchor>
+      <anchor>a54833cda2d7f8d7630b55d4d70fd4d1c</anchor>
       <arglist>() const noexcept</arglist>
     </member>
     <member kind="variable">
@@ -74725,10 +74732,10 @@
       <arglist>(const AudioFile &amp;, double sourceLength) override</arglist>
     </member>
     <member kind="function">
-      <type>juce::int64</type>
+      <type>HashCode</type>
       <name>getIndividualHash</name>
       <anchorfile>structtracktion__engine_1_1WarpTimeEffect.html</anchorfile>
-      <anchor>af66b22134e053e8c8134281eba3bb676</anchor>
+      <anchor>a432711eaa661d3b21565108955e7cf2d</anchor>
       <arglist>() const override</arglist>
     </member>
     <member kind="function">
@@ -74951,10 +74958,10 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
-      <type>juce::int64</type>
+      <type>HashCode</type>
       <name>getHash</name>
       <anchorfile>classtracktion__engine_1_1WarpTimeManager.html</anchorfile>
-      <anchor>aa2afaeb51e5291e68f957136ace40250</anchor>
+      <anchor>adee40422af9d352af41e08262ab7f281</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
@@ -75189,10 +75196,10 @@
       <arglist>() const override</arglist>
     </member>
     <member kind="function">
-      <type>juce::int64</type>
+      <type>HashCode</type>
       <name>getHash</name>
       <anchorfile>classtracktion__engine_1_1WaveAudioClip.html</anchorfile>
-      <anchor>a08ad65bd8cf7679846c76f16e15b234f</anchor>
+      <anchor>ab831dd172b5f883d7ecdcaa5011757f9</anchor>
       <arglist>() const override</arglist>
     </member>
     <member kind="function">
@@ -75402,10 +75409,10 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
-      <type>juce::int64</type>
+      <type>HashCode</type>
       <name>getBaseTakeHash</name>
       <anchorfile>classtracktion__engine_1_1WaveCompManager.html</anchorfile>
-      <anchor>af5e09e92a6d0bbefe7b9e80a2ff088ae</anchor>
+      <anchor>a6bbdca739d72a2c3060d32e697448c0e</anchor>
       <arglist>(int takeIndex) const override</arglist>
     </member>
     <member kind="function">
@@ -76280,38 +76287,6 @@
     </member>
   </compound>
   <compound kind="struct">
-    <name>tracktion_engine::Plugin::Wire</name>
-    <filename>structtracktion__engine_1_1Plugin_1_1Wire.html</filename>
-    <member kind="function">
-      <type></type>
-      <name>Wire</name>
-      <anchorfile>structtracktion__engine_1_1Plugin_1_1Wire.html</anchorfile>
-      <anchor>a5b4229b171a927ec1d746c1c30c3637f</anchor>
-      <arglist>(const juce::ValueTree &amp;, juce::UndoManager *)</arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::ValueTree</type>
-      <name>state</name>
-      <anchorfile>structtracktion__engine_1_1Plugin_1_1Wire.html</anchorfile>
-      <anchor>a14734b9a38f37621bd3c15c60c8593f8</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::CachedValue&lt; int &gt;</type>
-      <name>sourceChannelIndex</name>
-      <anchorfile>structtracktion__engine_1_1Plugin_1_1Wire.html</anchorfile>
-      <anchor>a56be586eeab530d1a9baa7750460c837</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::CachedValue&lt; int &gt;</type>
-      <name>destChannelIndex</name>
-      <anchorfile>structtracktion__engine_1_1Plugin_1_1Wire.html</anchorfile>
-      <anchor>a940044f0fb34b8e4cfac5ec49a51f83a</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
     <name>tracktion_engine::PatchBayPlugin::Wire</name>
     <filename>structtracktion__engine_1_1PatchBayPlugin_1_1Wire.html</filename>
     <member kind="function">
@@ -76347,6 +76322,38 @@
       <name>gainDb</name>
       <anchorfile>structtracktion__engine_1_1PatchBayPlugin_1_1Wire.html</anchorfile>
       <anchor>aa09e1fd32f830dbdc87dfdb28217bef3</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion_engine::Plugin::Wire</name>
+    <filename>structtracktion__engine_1_1Plugin_1_1Wire.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>Wire</name>
+      <anchorfile>structtracktion__engine_1_1Plugin_1_1Wire.html</anchorfile>
+      <anchor>a5b4229b171a927ec1d746c1c30c3637f</anchor>
+      <arglist>(const juce::ValueTree &amp;, juce::UndoManager *)</arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::ValueTree</type>
+      <name>state</name>
+      <anchorfile>structtracktion__engine_1_1Plugin_1_1Wire.html</anchorfile>
+      <anchor>a14734b9a38f37621bd3c15c60c8593f8</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::CachedValue&lt; int &gt;</type>
+      <name>sourceChannelIndex</name>
+      <anchorfile>structtracktion__engine_1_1Plugin_1_1Wire.html</anchorfile>
+      <anchor>a56be586eeab530d1a9baa7750460c837</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::CachedValue&lt; int &gt;</type>
+      <name>destChannelIndex</name>
+      <anchorfile>structtracktion__engine_1_1Plugin_1_1Wire.html</anchorfile>
+      <anchor>a940044f0fb34b8e4cfac5ec49a51f83a</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -76750,6 +76757,27 @@
     <class kind="class">tracktion_engine::WaveNode</class>
     <class kind="class">tracktion_engine::WaveOutputDevice</class>
     <class kind="class">tracktion_engine::WaveOutputDeviceInstance</class>
+    <member kind="typedef">
+      <type>int64_t</type>
+      <name>SampleCount</name>
+      <anchorfile>namespacetracktion__engine.html</anchorfile>
+      <anchor>af6e78e734757e52f0c102915ff0e31af</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>juce::Range&lt; SampleCount &gt;</type>
+      <name>SampleRange</name>
+      <anchorfile>namespacetracktion__engine.html</anchorfile>
+      <anchor>a7ea280cde41080ecb2a991c485b516a0</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>int64_t</type>
+      <name>HashCode</name>
+      <anchorfile>namespacetracktion__engine.html</anchorfile>
+      <anchor>adb3c6f33fbcba4c6e5d7cfd390aecbec</anchor>
+      <arglist></arglist>
+    </member>
     <member kind="enumeration">
       <type></type>
       <name>CloseGap</name>
@@ -77187,8 +77215,8 @@
       <type>juce::Array&lt; Track * &gt;</type>
       <name>findTracksForIDs</name>
       <anchorfile>namespacetracktion__engine.html</anchorfile>
-      <anchor>af5731f1c5d9f5597ba6f94e88f4dfd2b</anchor>
-      <arglist>(const Edit &amp;, juce::Array&lt; EditItemID &gt;)</arglist>
+      <anchor>a0f93e4e56a96b4f3a9eb78c3ce8ae34d</anchor>
+      <arglist>(const Edit &amp;, const juce::Array&lt; EditItemID &gt; &amp;)</arglist>
     </member>
     <member kind="function">
       <type>Track *</type>
@@ -77495,8 +77523,8 @@
       <type>AudioNode *</type>
       <name>createTrackCompAudioNode</name>
       <anchorfile>namespacetracktion__engine.html</anchorfile>
-      <anchor>aadfda7261d92c9f3034e7db97e3f7e09</anchor>
-      <arglist>(AudioNode *input, const Array&lt; EditTimeRange &gt; &amp;muteTimes, const Array&lt; EditTimeRange &gt; &amp;nonMuteTimes, double crossfadeTime)</arglist>
+      <anchor>ae43e0fba3266cff6627babe771df8dc9</anchor>
+      <arglist>(AudioNode *input, const juce::Array&lt; EditTimeRange &gt; &amp;muteTimes, const juce::Array&lt; EditTimeRange &gt; &amp;nonMuteTimes, double crossfadeTime)</arglist>
     </member>
     <member kind="function">
       <type>AudioNode *</type>
@@ -79126,8 +79154,8 @@
       <type>void</type>
       <name>clearChannels</name>
       <anchorfile>namespacetracktion__engine.html</anchorfile>
-      <anchor>a6b15a31e942884075fbc90f57a3514b4</anchor>
-      <arglist>(juce::AudioSampleBuffer &amp;buffer, int startChannel, int endChannel=-1, int startSample=0, int endSample=-1)</arglist>
+      <anchor>ac45ec036579fdbc82aca62e64195200d</anchor>
+      <arglist>(juce::AudioBuffer&lt; float &gt; &amp;buffer, int startChannel, int endChannel=-1, int startSample=0, int endSample=-1)</arglist>
     </member>
     <member kind="function">
       <type>BenchmarkDescription</type>

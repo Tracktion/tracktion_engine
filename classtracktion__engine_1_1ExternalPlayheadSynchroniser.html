@@ -93,7 +93,7 @@ Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>An <a class="el" href="classtracktion__engine_1_1ExternalPlayheadSynchroniser.html" title="An ExternalPlayheadSynchroniser is used to synchronise the internal Edit&#39;s playhead with an AudioProc...">ExternalPlayheadSynchroniser</a> is used to synchronise the internal <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>'s playhead with an AudioProcessor, for use in plugins. </p>
-<p>Just create one when you create your <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> and repeatedly call the synchronise method in your process block like this: </p><div class="fragment"><div class="line"><span class="keywordtype">void</span> processBlock (AudioBuffer&lt;float&gt;&amp; buffer, MidiBuffer&amp; midi)<span class="keyword"> override</span></div>
+<p>Just create one when you create your <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> and repeatedly call the synchronise method in your process block like this: </p><div class="fragment"><div class="line"><span class="keywordtype">void</span> processBlock (juce::AudioBuffer&lt;float&gt;&amp; buffer, juce::MidiBuffer&amp; midi)<span class="keyword"> override</span></div>
 <div class="line"><span class="keyword"></span>{</div>
 <div class="line">    <span class="comment">// Update position info first</span></div>
 <div class="line">    externalPlayheadSynchroniser.synchronise (*<span class="keyword">this</span>);</div>
@@ -187,7 +187,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Dec 29 2021 12:12:17 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Jan 2 2022 19:42:32 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

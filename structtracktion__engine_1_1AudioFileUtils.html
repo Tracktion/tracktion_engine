@@ -91,25 +91,25 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:a2ff5ffa70a526b26e6984f7f35df6768"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87451be69a66120bef012c66345e61f0"><td class="memItemLeft" align="right" valign="top">static juce::AudioFormatWriter *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1AudioFileUtils.html#a87451be69a66120bef012c66345e61f0">createWriterFor</a> (juce::AudioFormat *, const juce::File &amp;, double sampleRate, unsigned int numChannels, int bitsPerSample, const juce::StringPairArray &amp;metadata, int quality)</td></tr>
 <tr class="separator:a87451be69a66120bef012c66345e61f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac162243557d86487f3fdc1fda0429644"><td class="memItemLeft" align="right" valign="top">static juce::Range&lt; juce::int64 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1AudioFileUtils.html#ac162243557d86487f3fdc1fda0429644">scanForNonZeroSamples</a> (<a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;, const juce::File &amp;, float maxZeroLevelDb)</td></tr>
-<tr class="separator:ac162243557d86487f3fdc1fda0429644"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abd0f6a330c66214c31ee4d24503ae9d3"><td class="memItemLeft" align="right" valign="top">static juce::Range&lt; juce::int64 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1AudioFileUtils.html#abd0f6a330c66214c31ee4d24503ae9d3">copyNonSilentSectionToNewFile</a> (<a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;e, const juce::File &amp;sourceFile, const juce::File &amp;destFile, float maxZeroLevelDb)</td></tr>
-<tr class="separator:abd0f6a330c66214c31ee4d24503ae9d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f5439f36afc1f37e370123e332d3575"><td class="memItemLeft" align="right" valign="top">static juce::Range&lt; juce::int64 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1AudioFileUtils.html#a0f5439f36afc1f37e370123e332d3575">trimSilence</a> (<a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;e, const juce::File &amp;, float maxZeroLevelDb)</td></tr>
-<tr class="separator:a0f5439f36afc1f37e370123e332d3575"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9906678fb8236fa3dbd7b87c49a838f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespacetracktion__engine.html#a7ea280cde41080ecb2a991c485b516a0">SampleRange</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1AudioFileUtils.html#aa9906678fb8236fa3dbd7b87c49a838f">scanForNonZeroSamples</a> (<a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;, const juce::File &amp;, float maxZeroLevelDb)</td></tr>
+<tr class="separator:aa9906678fb8236fa3dbd7b87c49a838f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c23db27367e9a3779fe3765840228a4"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespacetracktion__engine.html#a7ea280cde41080ecb2a991c485b516a0">SampleRange</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1AudioFileUtils.html#a8c23db27367e9a3779fe3765840228a4">copyNonSilentSectionToNewFile</a> (<a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;, const juce::File &amp;sourceFile, const juce::File &amp;destFile, float maxZeroLevelDb)</td></tr>
+<tr class="separator:a8c23db27367e9a3779fe3765840228a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10d57359b2dfe5ba62f79c258996a3d4"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespacetracktion__engine.html#a7ea280cde41080ecb2a991c485b516a0">SampleRange</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1AudioFileUtils.html#a10d57359b2dfe5ba62f79c258996a3d4">trimSilence</a> (<a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;, const juce::File &amp;, float maxZeroLevelDb)</td></tr>
+<tr class="separator:a10d57359b2dfe5ba62f79c258996a3d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8fdfd2aaf008b95b601b99b59ec0bd42"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1AudioFileUtils.html#a8fdfd2aaf008b95b601b99b59ec0bd42">reverse</a> (<a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;, const juce::File &amp;source, const juce::File &amp;destination, std::atomic&lt; float &gt; &amp;progress, juce::ThreadPoolJob *job=nullptr, bool canCreateWavIntermediate=true)</td></tr>
 <tr class="memdesc:a8fdfd2aaf008b95b601b99b59ec0bd42"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reverses a file updating a progress value and checking the exit status of a given job.  <a href="structtracktion__engine_1_1AudioFileUtils.html#a8fdfd2aaf008b95b601b99b59ec0bd42">More...</a><br /></td></tr>
 <tr class="separator:a8fdfd2aaf008b95b601b99b59ec0bd42"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac9c96676f7faae3733dab964debd1b0f"><td class="memItemLeft" align="right" valign="top">static juce::int64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1AudioFileUtils.html#ac9c96676f7faae3733dab964debd1b0f">copySectionToNewFile</a> (<a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;e, const juce::File &amp;sourceFile, const juce::File &amp;destFile, const juce::Range&lt; juce::int64 &gt; &amp;range)</td></tr>
-<tr class="separator:ac9c96676f7faae3733dab964debd1b0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a437e8355fee35293dfd1859de082add4"><td class="memItemLeft" align="right" valign="top">static juce::int64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1AudioFileUtils.html#a437e8355fee35293dfd1859de082add4">copySectionToNewFile</a> (<a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;e, const juce::File &amp;sourceFile, const juce::File &amp;destFile, <a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a> range)</td></tr>
-<tr class="separator:a437e8355fee35293dfd1859de082add4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c8be81b80c6fdaa433b91750e17521d"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1AudioFileUtils.html#a9c8be81b80c6fdaa433b91750e17521d">addBWAVStartToMetadata</a> (juce::StringPairArray &amp;metadata, juce::int64 time)</td></tr>
-<tr class="separator:a9c8be81b80c6fdaa433b91750e17521d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5287e89480c756d68cee457c30cf0e6e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1AudioFileUtils.html#a5287e89480c756d68cee457c30cf0e6e">applyBWAVStartTime</a> (const juce::File &amp;, juce::int64 time)</td></tr>
-<tr class="separator:a5287e89480c756d68cee457c30cf0e6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa2466f4734689f66c44829ddf1efcd4"><td class="memItemLeft" align="right" valign="top">static juce::int64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1AudioFileUtils.html#aaa2466f4734689f66c44829ddf1efcd4">getFileLengthSamples</a> (<a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;e, const juce::File &amp;)</td></tr>
-<tr class="separator:aaa2466f4734689f66c44829ddf1efcd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad0a9e8141729b0d41c7e59cd72ba024c"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespacetracktion__engine.html#af6e78e734757e52f0c102915ff0e31af">SampleCount</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1AudioFileUtils.html#ad0a9e8141729b0d41c7e59cd72ba024c">copySectionToNewFile</a> (<a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;e, const juce::File &amp;sourceFile, const juce::File &amp;destFile, <a class="el" href="namespacetracktion__engine.html#a7ea280cde41080ecb2a991c485b516a0">SampleRange</a> range)</td></tr>
+<tr class="separator:ad0a9e8141729b0d41c7e59cd72ba024c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a454f23e2c1ab0534d6465e2f62fb164c"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespacetracktion__engine.html#af6e78e734757e52f0c102915ff0e31af">SampleCount</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1AudioFileUtils.html#a454f23e2c1ab0534d6465e2f62fb164c">copySectionToNewFile</a> (<a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;e, const juce::File &amp;sourceFile, const juce::File &amp;destFile, <a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a> range)</td></tr>
+<tr class="separator:a454f23e2c1ab0534d6465e2f62fb164c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07d7c856c03abc67893d6bc420eb0284"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1AudioFileUtils.html#a07d7c856c03abc67893d6bc420eb0284">addBWAVStartToMetadata</a> (juce::StringPairArray &amp;metadata, <a class="el" href="namespacetracktion__engine.html#af6e78e734757e52f0c102915ff0e31af">SampleCount</a> start)</td></tr>
+<tr class="separator:a07d7c856c03abc67893d6bc420eb0284"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8c0c732637c76af1bb2e04849db8afe"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1AudioFileUtils.html#af8c0c732637c76af1bb2e04849db8afe">applyBWAVStartTime</a> (const juce::File &amp;, <a class="el" href="namespacetracktion__engine.html#af6e78e734757e52f0c102915ff0e31af">SampleCount</a> start)</td></tr>
+<tr class="separator:af8c0c732637c76af1bb2e04849db8afe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5992c313788facc019552a08cfdaf521"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespacetracktion__engine.html#af6e78e734757e52f0c102915ff0e31af">SampleCount</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1AudioFileUtils.html#a5992c313788facc019552a08cfdaf521">getFileLengthSamples</a> (<a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;e, const juce::File &amp;)</td></tr>
+<tr class="separator:a5992c313788facc019552a08cfdaf521"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac7545174a04d02e2a50a733d1b7ae20d"><td class="memTemplParams" colspan="2">template&lt;class TargetFormat &gt; </td></tr>
 <tr class="memitem:ac7545174a04d02e2a50a733d1b7ae20d"><td class="memTemplItemLeft" align="right" valign="top">static bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1AudioFileUtils.html#ac7545174a04d02e2a50a733d1b7ae20d">convertToFormat</a> (<a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;e, const juce::File &amp;sourceFile, juce::OutputStream &amp;destStream, int quality, const juce::StringPairArray &amp;metadata)</td></tr>
 <tr class="separator:ac7545174a04d02e2a50a733d1b7ae20d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -375,8 +375,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ac162243557d86487f3fdc1fda0429644"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac162243557d86487f3fdc1fda0429644">&#9670;&nbsp;</a></span>scanForNonZeroSamples()</h2>
+<a id="aa9906678fb8236fa3dbd7b87c49a838f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa9906678fb8236fa3dbd7b87c49a838f">&#9670;&nbsp;</a></span>scanForNonZeroSamples()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -385,7 +385,7 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static juce::Range&lt;juce::int64&gt; tracktion_engine::AudioFileUtils::scanForNonZeroSamples </td>
+          <td class="memname">static <a class="el" href="namespacetracktion__engine.html#a7ea280cde41080ecb2a991c485b516a0">SampleRange</a> tracktion_engine::AudioFileUtils::scanForNonZeroSamples </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;&#160;</td>
           <td class="paramname">, </td>
@@ -417,8 +417,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="abd0f6a330c66214c31ee4d24503ae9d3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abd0f6a330c66214c31ee4d24503ae9d3">&#9670;&nbsp;</a></span>copyNonSilentSectionToNewFile()</h2>
+<a id="a8c23db27367e9a3779fe3765840228a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8c23db27367e9a3779fe3765840228a4">&#9670;&nbsp;</a></span>copyNonSilentSectionToNewFile()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -427,10 +427,10 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static juce::Range&lt;juce::int64&gt; tracktion_engine::AudioFileUtils::copyNonSilentSectionToNewFile </td>
+          <td class="memname">static <a class="el" href="namespacetracktion__engine.html#a7ea280cde41080ecb2a991c485b516a0">SampleRange</a> tracktion_engine::AudioFileUtils::copyNonSilentSectionToNewFile </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;&#160;</td>
-          <td class="paramname"><em>e</em>, </td>
+          <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -465,8 +465,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a0f5439f36afc1f37e370123e332d3575"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0f5439f36afc1f37e370123e332d3575">&#9670;&nbsp;</a></span>trimSilence()</h2>
+<a id="a10d57359b2dfe5ba62f79c258996a3d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10d57359b2dfe5ba62f79c258996a3d4">&#9670;&nbsp;</a></span>trimSilence()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -475,10 +475,10 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static juce::Range&lt;juce::int64&gt; tracktion_engine::AudioFileUtils::trimSilence </td>
+          <td class="memname">static <a class="el" href="namespacetracktion__engine.html#a7ea280cde41080ecb2a991c485b516a0">SampleRange</a> tracktion_engine::AudioFileUtils::trimSilence </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;&#160;</td>
-          <td class="paramname"><em>e</em>, </td>
+          <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -571,8 +571,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ac9c96676f7faae3733dab964debd1b0f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac9c96676f7faae3733dab964debd1b0f">&#9670;&nbsp;</a></span>copySectionToNewFile() <span class="overload">[1/2]</span></h2>
+<a id="ad0a9e8141729b0d41c7e59cd72ba024c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad0a9e8141729b0d41c7e59cd72ba024c">&#9670;&nbsp;</a></span>copySectionToNewFile() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -581,7 +581,7 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static juce::int64 tracktion_engine::AudioFileUtils::copySectionToNewFile </td>
+          <td class="memname">static <a class="el" href="namespacetracktion__engine.html#af6e78e734757e52f0c102915ff0e31af">SampleCount</a> tracktion_engine::AudioFileUtils::copySectionToNewFile </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;&#160;</td>
           <td class="paramname"><em>e</em>, </td>
@@ -601,7 +601,7 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const juce::Range&lt; juce::int64 &gt; &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacetracktion__engine.html#a7ea280cde41080ecb2a991c485b516a0">SampleRange</a>&#160;</td>
           <td class="paramname"><em>range</em>&#160;</td>
         </tr>
         <tr>
@@ -619,8 +619,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a437e8355fee35293dfd1859de082add4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a437e8355fee35293dfd1859de082add4">&#9670;&nbsp;</a></span>copySectionToNewFile() <span class="overload">[2/2]</span></h2>
+<a id="a454f23e2c1ab0534d6465e2f62fb164c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a454f23e2c1ab0534d6465e2f62fb164c">&#9670;&nbsp;</a></span>copySectionToNewFile() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -629,7 +629,7 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static juce::int64 tracktion_engine::AudioFileUtils::copySectionToNewFile </td>
+          <td class="memname">static <a class="el" href="namespacetracktion__engine.html#af6e78e734757e52f0c102915ff0e31af">SampleCount</a> tracktion_engine::AudioFileUtils::copySectionToNewFile </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;&#160;</td>
           <td class="paramname"><em>e</em>, </td>
@@ -667,8 +667,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a9c8be81b80c6fdaa433b91750e17521d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9c8be81b80c6fdaa433b91750e17521d">&#9670;&nbsp;</a></span>addBWAVStartToMetadata()</h2>
+<a id="a07d7c856c03abc67893d6bc420eb0284"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a07d7c856c03abc67893d6bc420eb0284">&#9670;&nbsp;</a></span>addBWAVStartToMetadata()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -685,8 +685,8 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">juce::int64&#160;</td>
-          <td class="paramname"><em>time</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacetracktion__engine.html#af6e78e734757e52f0c102915ff0e31af">SampleCount</a>&#160;</td>
+          <td class="paramname"><em>start</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -703,8 +703,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a5287e89480c756d68cee457c30cf0e6e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5287e89480c756d68cee457c30cf0e6e">&#9670;&nbsp;</a></span>applyBWAVStartTime()</h2>
+<a id="af8c0c732637c76af1bb2e04849db8afe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8c0c732637c76af1bb2e04849db8afe">&#9670;&nbsp;</a></span>applyBWAVStartTime()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -721,8 +721,8 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">juce::int64&#160;</td>
-          <td class="paramname"><em>time</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacetracktion__engine.html#af6e78e734757e52f0c102915ff0e31af">SampleCount</a>&#160;</td>
+          <td class="paramname"><em>start</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -739,8 +739,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aaa2466f4734689f66c44829ddf1efcd4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaa2466f4734689f66c44829ddf1efcd4">&#9670;&nbsp;</a></span>getFileLengthSamples()</h2>
+<a id="a5992c313788facc019552a08cfdaf521"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5992c313788facc019552a08cfdaf521">&#9670;&nbsp;</a></span>getFileLengthSamples()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -749,7 +749,7 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static juce::int64 tracktion_engine::AudioFileUtils::getFileLengthSamples </td>
+          <td class="memname">static <a class="el" href="namespacetracktion__engine.html#af6e78e734757e52f0c102915ff0e31af">SampleCount</a> tracktion_engine::AudioFileUtils::getFileLengthSamples </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classtracktion__engine_1_1Engine.html">Engine</a> &amp;&#160;</td>
           <td class="paramname"><em>e</em>, </td>
@@ -927,7 +927,7 @@ template&lt;typename SourceFormat &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classtracktion__engine_1_1Engine.html#aedb67b839116bfbb994a12744939aef0">tracktion_engine::Engine::getAudioFileFormatManager()</a>, <a class="el" href="classtracktion__engine_1_1AudioFileWriter.html#af6614c480d5c308e6d708173010dac35">tracktion_engine::AudioFileWriter::isOpen()</a>, <a class="el" href="classtracktion__engine_1_1AudioFileFormatManager.html#a2bbf40c91b78fab0fefd0d409a434634">tracktion_engine::AudioFileFormatManager::writeFormatManager</a>, and <a class="el" href="classtracktion__engine_1_1AudioFileWriter.html#a400ad8facb1bf885c94ef9353b80f835">tracktion_engine::AudioFileWriter::writeFromAudioReader()</a>.</p>
+<p class="reference">References <a class="el" href="classtracktion__engine_1_1Engine.html#aedb67b839116bfbb994a12744939aef0">tracktion_engine::Engine::getAudioFileFormatManager()</a>, <a class="el" href="classtracktion__engine_1_1AudioFileWriter.html#af6614c480d5c308e6d708173010dac35">tracktion_engine::AudioFileWriter::isOpen()</a>, <a class="el" href="classtracktion__engine_1_1AudioFileFormatManager.html#a2bbf40c91b78fab0fefd0d409a434634">tracktion_engine::AudioFileFormatManager::writeFormatManager</a>, and <a class="el" href="classtracktion__engine_1_1AudioFileWriter.html#aa48f12cc5c2bae4900411b1d295649b1">tracktion_engine::AudioFileWriter::writeFromAudioReader()</a>.</p>
 
 </div>
 </div>
@@ -937,7 +937,7 @@ template&lt;typename SourceFormat &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Dec 29 2021 12:12:16 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Jan 2 2022 19:42:31 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

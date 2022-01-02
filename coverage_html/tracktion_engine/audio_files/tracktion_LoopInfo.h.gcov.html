@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">6</td>
@@ -108,11 +108,11 @@
 <a name="46"><span class="lineNum">      46 </span>            :     void setRootNote (int note);</a>
 <a name="47"><span class="lineNum">      47 </span>            : </a>
 <a name="48"><span class="lineNum">      48 </span>            :     //==============================================================================</a>
-<a name="49"><span class="lineNum">      49 </span>            :     juce::int64 getInMarker() const;</a>
-<a name="50"><span class="lineNum">      50 </span>            :     juce::int64 getOutMarker() const;</a>
+<a name="49"><span class="lineNum">      49 </span>            :     SampleCount getInMarker() const;</a>
+<a name="50"><span class="lineNum">      50 </span>            :     SampleCount getOutMarker() const;</a>
 <a name="51"><span class="lineNum">      51 </span>            : </a>
-<a name="52"><span class="lineNum">      52 </span>            :     void setInMarker (juce::int64 newPos);</a>
-<a name="53"><span class="lineNum">      53 </span>            :     void setOutMarker (juce::int64 newPos);</a>
+<a name="52"><span class="lineNum">      52 </span>            :     void setInMarker (SampleCount newPos);</a>
+<a name="53"><span class="lineNum">      53 </span>            :     void setOutMarker (SampleCount newPos);</a>
 <a name="54"><span class="lineNum">      54 </span>            : </a>
 <a name="55"><span class="lineNum">      55 </span>            :     //==============================================================================</a>
 <a name="56"><span class="lineNum">      56 </span>            :     enum class LoopPointType</a>
@@ -123,7 +123,7 @@
 <a name="61"><span class="lineNum">      61 </span>            : </a>
 <a name="62"><span class="lineNum">      62 </span>            :     struct LoopPoint</a>
 <a name="63"><span class="lineNum">      63 </span>            :     {</a>
-<a name="64"><span class="lineNum">      64 </span>            :         juce::int64 pos = 0;</a>
+<a name="64"><span class="lineNum">      64 </span>            :         SampleCount pos = 0;</a>
 <a name="65"><span class="lineNum">      65 </span>            :         LoopPointType type = LoopPointType::manual;</a>
 <a name="66"><span class="lineNum">      66 </span>            : </a>
 <a name="67"><span class="lineNum">      67 </span>            :         bool isAutomatic() const        { return type == LoopPointType::automatic; }</a>
@@ -131,8 +131,8 @@
 <a name="69"><span class="lineNum">      69 </span>            : </a>
 <a name="70"><span class="lineNum">      70 </span>            :     int getNumLoopPoints() const;</a>
 <a name="71"><span class="lineNum">      71 </span>            :     LoopPoint getLoopPoint (int index) const;</a>
-<a name="72"><span class="lineNum">      72 </span>            :     void addLoopPoint (juce::int64 pos, LoopPointType type);</a>
-<a name="73"><span class="lineNum">      73 </span>            :     void changeLoopPoint (int index, juce::int64 pos, LoopPointType type);</a>
+<a name="72"><span class="lineNum">      72 </span>            :     void addLoopPoint (SampleCount pos, LoopPointType type);</a>
+<a name="73"><span class="lineNum">      73 </span>            :     void changeLoopPoint (int index, SampleCount pos, LoopPointType type);</a>
 <a name="74"><span class="lineNum">      74 </span>            :     void deleteLoopPoint (int index);</a>
 <a name="75"><span class="lineNum">      75 </span>            :     void clearLoopPoints();</a>
 <a name="76"><span class="lineNum">      76 </span>            :     void clearLoopPoints (LoopPointType);</a>

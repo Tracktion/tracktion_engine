@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">28</td>
@@ -86,7 +86,7 @@
 <a name="24"><span class="lineNum">      24 </span><span class="lineCov">       1250 :     auto um = &amp;edit.getUndoManager();</span></a>
 <a name="25"><span class="lineNum">      25 </span>            : </a>
 <a name="26"><span class="lineNum">      26 </span><span class="lineCov">       2500 :     trackName.referTo (state, IDs::name, um, {});</span></a>
-<a name="27"><span class="lineNum">      27 </span><span class="lineCov">       1250 :     colour.referTo (state, IDs::colour, um, Colour());</span></a>
+<a name="27"><span class="lineNum">      27 </span><span class="lineCov">       1250 :     colour.referTo (state, IDs::colour, um, juce::Colour());</span></a>
 <a name="28"><span class="lineNum">      28 </span><span class="lineCov">       1250 :     tags.referTo (state, IDs::tags, um);</span></a>
 <a name="29"><span class="lineNum">      29 </span>            :     hidden.referTo (state, IDs::hidden, um);</a>
 <a name="30"><span class="lineNum">      30 </span><span class="lineCov">       1250 :     processing.referTo (state, IDs::process, um, true);</span></a>
@@ -377,7 +377,7 @@
 <a name="315"><span class="lineNum">     315 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="316"><span class="lineNum">     316 </span>            : </a>
 <a name="317"><span class="lineNum">     317 </span>            : //==============================================================================</a>
-<a name="318"><span class="lineNum">     318 </span><span class="lineCov">       1940 : Array&lt;AutomatableParameter*&gt; Track::getAllAutomatableParams() const</span></a>
+<a name="318"><span class="lineNum">     318 </span><span class="lineCov">       1940 : juce::Array&lt;AutomatableParameter*&gt; Track::getAllAutomatableParams() const</span></a>
 <a name="319"><span class="lineNum">     319 </span>            : {</a>
 <a name="320"><span class="lineNum">     320 </span><span class="lineCov">       1940 :     juce::Array&lt;AutomatableParameter*&gt; params;</span></a>
 <a name="321"><span class="lineNum">     321 </span>            : </a>
@@ -456,8 +456,8 @@
 <a name="394"><span class="lineNum">     394 </span>            : </a>
 <a name="395"><span class="lineNum">     395 </span><span class="lineNoCov">          0 : void Track::setCurrentlyShownAutoParam (const AutomatableParameter::Ptr&amp; param)</span></a>
 <a name="396"><span class="lineNum">     396 </span>            : {</a>
-<a name="397"><span class="lineNum">     397 </span><span class="lineNoCov">          0 :     currentAutoParamPlugin  = param == nullptr ? EditItemID() : param-&gt;getOwnerID();</span></a>
-<a name="398"><span class="lineNum">     398 </span><span class="lineNoCov">          0 :     currentAutoParamID      = param == nullptr ? String()     : param-&gt;paramID;</span></a>
+<a name="397"><span class="lineNum">     397 </span><span class="lineNoCov">          0 :     currentAutoParamPlugin  = param == nullptr ? EditItemID()   : param-&gt;getOwnerID();</span></a>
+<a name="398"><span class="lineNum">     398 </span><span class="lineNoCov">          0 :     currentAutoParamID      = param == nullptr ? juce::String() : param-&gt;paramID;</span></a>
 <a name="399"><span class="lineNum">     399 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="400"><span class="lineNum">     400 </span>            : </a>
 <a name="401"><span class="lineNum">     401 </span><span class="lineNoCov">          0 : void Track::hideAutomatableParametersForSource (EditItemID pluginOrParameterID)</span></a>
@@ -509,10 +509,10 @@
 <a name="447"><span class="lineNum">     447 </span><span class="lineNoCov">          0 :                                          curve.getPointTime (k) + amountOfSpace,</span></a>
 <a name="448"><span class="lineNum">     448 </span>            :                                          curve.getPointValue (k), false);</a>
 <a name="449"><span class="lineNum">     449 </span>            : </a>
-<a name="450"><span class="lineNum">     450 </span><span class="lineCov">          8 :                 if (! approximatelyEqual (valueAtInsertionTime, curve.getValueAt (time)))</span></a>
+<a name="450"><span class="lineNum">     450 </span><span class="lineCov">          8 :                 if (! juce::approximatelyEqual (valueAtInsertionTime, curve.getValueAt (time)))</span></a>
 <a name="451"><span class="lineNum">     451 </span><span class="lineNoCov">          0 :                     curve.addPoint (time, valueAtInsertionTime, 0.0f);</span></a>
 <a name="452"><span class="lineNum">     452 </span>            : </a>
-<a name="453"><span class="lineNum">     453 </span><span class="lineCov">          8 :                 if (! approximatelyEqual (valueAtInsertionTime, curve.getValueAt (time + amountOfSpace)))</span></a>
+<a name="453"><span class="lineNum">     453 </span><span class="lineCov">          8 :                 if (! juce::approximatelyEqual (valueAtInsertionTime, curve.getValueAt (time + amountOfSpace)))</span></a>
 <a name="454"><span class="lineNum">     454 </span><span class="lineNoCov">          0 :                     curve.addPoint (time + amountOfSpace, valueAtInsertionTime, 0.0f);</span></a>
 <a name="455"><span class="lineNum">     455 </span>            :             }</a>
 <a name="456"><span class="lineNum">     456 </span>            :         }</a>
@@ -581,7 +581,7 @@
 <a name="519"><span class="lineNum">     519 </span>            : </a>
 <a name="520"><span class="lineNum">     520 </span><span class="lineNoCov">          0 : bool Track::imageHasChanged()</span></a>
 <a name="521"><span class="lineNum">     521 </span>            : {</a>
-<a name="522"><span class="lineNum">     522 </span><span class="lineNoCov">          0 :     const ScopedValueSetter&lt;bool&gt; svs (imageChanged, imageChanged, false);</span></a>
+<a name="522"><span class="lineNum">     522 </span><span class="lineNoCov">          0 :     const juce::ScopedValueSetter&lt;bool&gt; svs (imageChanged, imageChanged, false);</span></a>
 <a name="523"><span class="lineNum">     523 </span><span class="lineNoCov">          0 :     return imageChanged;</span></a>
 <a name="524"><span class="lineNum">     524 </span>            : }</a>
 <a name="525"><span class="lineNum">     525 </span>            : </a>
@@ -590,7 +590,7 @@
 <a name="528"><span class="lineNum">     528 </span><span class="lineNoCov">          0 :     tags = s.joinIntoString (&quot;|&quot;).replace (&quot; &quot;, &quot;_&quot;);</span></a>
 <a name="529"><span class="lineNum">     529 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="530"><span class="lineNum">     530 </span>            : </a>
-<a name="531"><span class="lineNum">     531 </span><span class="lineCov">       2236 : void Track::valueTreePropertyChanged (ValueTree&amp; v, const juce::Identifier&amp; i)</span></a>
+<a name="531"><span class="lineNum">     531 </span><span class="lineCov">       2236 : void Track::valueTreePropertyChanged (juce::ValueTree&amp; v, const juce::Identifier&amp; i)</span></a>
 <a name="532"><span class="lineNum">     532 </span>            : {</a>
 <a name="533"><span class="lineNum">     533 </span><span class="lineCov">       2236 :     if (v == state)</span></a>
 <a name="534"><span class="lineNum">     534 </span>            :     {</a>
@@ -605,11 +605,11 @@
 <a name="543"><span class="lineNum">     543 </span><span class="lineCov">        194 :             changed();</span></a>
 <a name="544"><span class="lineNum">     544 </span>            :             </a>
 <a name="545"><span class="lineNum">     545 </span><span class="lineCov">        194 :             if (! edit.isLoading())</span></a>
-<a name="546"><span class="lineNum">     546 </span><span class="lineNoCov">          0 :                 MessageManager::callAsync ([trackRef = getWeakRef()]</span></a>
-<a name="547"><span class="lineNum">     547 </span>            :                                            {</a>
-<a name="548"><span class="lineNum">     548 </span><span class="lineNoCov">          0 :                                                 if (trackRef != nullptr)</span></a>
-<a name="549"><span class="lineNum">     549 </span><span class="lineNoCov">          0 :                                                     SelectionManager::refreshAllPropertyPanelsShowing (*trackRef);</span></a>
-<a name="550"><span class="lineNum">     550 </span>            :                                            });</a>
+<a name="546"><span class="lineNum">     546 </span><span class="lineNoCov">          0 :                 juce::MessageManager::callAsync ([trackRef = getWeakRef()]</span></a>
+<a name="547"><span class="lineNum">     547 </span>            :                                                  {</a>
+<a name="548"><span class="lineNum">     548 </span><span class="lineNoCov">          0 :                                                      if (trackRef != nullptr)</span></a>
+<a name="549"><span class="lineNum">     549 </span><span class="lineNoCov">          0 :                                                          SelectionManager::refreshAllPropertyPanelsShowing (*trackRef);</span></a>
+<a name="550"><span class="lineNum">     550 </span>            :                                                  });</a>
 <a name="551"><span class="lineNum">     551 </span>            :         }</a>
 <a name="552"><span class="lineNum">     552 </span><span class="lineCov">        694 :         else if (i == IDs::colour)</span></a>
 <a name="553"><span class="lineNum">     553 </span>            :         {</a>
@@ -641,21 +641,21 @@
 <a name="579"><span class="lineNum">     579 </span>            :     }</a>
 <a name="580"><span class="lineNum">     580 </span><span class="lineCov">       2236 : }</span></a>
 <a name="581"><span class="lineNum">     581 </span>            : </a>
-<a name="582"><span class="lineNum">     582 </span><span class="lineCov">       1670 : void Track::valueTreeChildAdded (ValueTree&amp; p, juce::ValueTree&amp; c)</span></a>
+<a name="582"><span class="lineNum">     582 </span><span class="lineCov">       1670 : void Track::valueTreeChildAdded (juce::ValueTree&amp; p, juce::ValueTree&amp; c)</span></a>
 <a name="583"><span class="lineNum">     583 </span>            : {</a>
 <a name="584"><span class="lineNum">     584 </span><span class="lineCov">       1670 :     if (p == state)</span></a>
 <a name="585"><span class="lineNum">     585 </span><span class="lineCov">       1043 :         if (TrackList::isTrack (c))</span></a>
 <a name="586"><span class="lineNum">     586 </span><span class="lineCov">          8 :             updateTrackList();</span></a>
 <a name="587"><span class="lineNum">     587 </span><span class="lineCov">       1670 : }</span></a>
 <a name="588"><span class="lineNum">     588 </span>            : </a>
-<a name="589"><span class="lineNum">     589 </span><span class="lineCov">        393 : void Track::valueTreeChildRemoved (ValueTree&amp; p, juce::ValueTree&amp; c, int)</span></a>
+<a name="589"><span class="lineNum">     589 </span><span class="lineCov">        393 : void Track::valueTreeChildRemoved (juce::ValueTree&amp; p, juce::ValueTree&amp; c, int)</span></a>
 <a name="590"><span class="lineNum">     590 </span>            : {</a>
 <a name="591"><span class="lineNum">     591 </span><span class="lineCov">        393 :     if (p == state)</span></a>
 <a name="592"><span class="lineNum">     592 </span><span class="lineCov">        114 :         if (TrackList::isTrack (c))</span></a>
 <a name="593"><span class="lineNum">     593 </span><span class="lineNoCov">          0 :             updateTrackList();</span></a>
 <a name="594"><span class="lineNum">     594 </span><span class="lineCov">        393 : }</span></a>
 <a name="595"><span class="lineNum">     595 </span>            : </a>
-<a name="596"><span class="lineNum">     596 </span><span class="lineCov">       1056 : void Track::valueTreeParentChanged (ValueTree&amp; v)</span></a>
+<a name="596"><span class="lineNum">     596 </span><span class="lineCov">       1056 : void Track::valueTreeParentChanged (juce::ValueTree&amp; v)</span></a>
 <a name="597"><span class="lineNum">     597 </span>            : {</a>
 <a name="598"><span class="lineNum">     598 </span><span class="lineCov">       1056 :     if (v == state)</span></a>
 <a name="599"><span class="lineNum">     599 </span><span class="lineCov">       1056 :         updateCachedParent();</span></a>

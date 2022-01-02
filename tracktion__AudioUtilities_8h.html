@@ -68,6 +68,7 @@ $(function() {
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
@@ -86,6 +87,13 @@ Classes</h2></td></tr>
 Namespaces</h2></td></tr>
 <tr class="memitem:namespacetracktion__engine"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html">tracktion_engine</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:af6e78e734757e52f0c102915ff0e31af"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#af6e78e734757e52f0c102915ff0e31af">tracktion_engine::SampleCount</a> = int64_t</td></tr>
+<tr class="separator:af6e78e734757e52f0c102915ff0e31af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ea280cde41080ecb2a991c485b516a0"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#a7ea280cde41080ecb2a991c485b516a0">tracktion_engine::SampleRange</a> = juce::Range&lt; SampleCount &gt;</td></tr>
+<tr class="separator:a7ea280cde41080ecb2a991c485b516a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -164,13 +172,13 @@ Functions</h2></td></tr>
 <tr class="separator:a3d22fb5177e06244d6ab9ef59d6fed38"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a70006fc24f494e9a22ce619a4099b02a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#a70006fc24f494e9a22ce619a4099b02a">tracktion_engine::getGainsFromVolumeFaderPositionAndPan</a> (float volSliderPos, float pan, PanLaw lawToUse, float &amp;leftGain, float &amp;rightGain) noexcept</td></tr>
 <tr class="separator:a70006fc24f494e9a22ce619a4099b02a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6b15a31e942884075fbc90f57a3514b4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#a6b15a31e942884075fbc90f57a3514b4">tracktion_engine::clearChannels</a> (juce::AudioSampleBuffer &amp;buffer, int startChannel, int endChannel=-1, int startSample=0, int endSample=-1)</td></tr>
-<tr class="separator:a6b15a31e942884075fbc90f57a3514b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac45ec036579fdbc82aca62e64195200d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#ac45ec036579fdbc82aca62e64195200d">tracktion_engine::clearChannels</a> (juce::AudioBuffer&lt; float &gt; &amp;buffer, int startChannel, int endChannel=-1, int startSample=0, int endSample=-1)</td></tr>
+<tr class="separator:ac45ec036579fdbc82aca62e64195200d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Dec 29 2021 12:12:16 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Jan 2 2022 19:42:31 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

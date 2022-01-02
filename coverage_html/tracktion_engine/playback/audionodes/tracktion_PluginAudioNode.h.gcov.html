@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -108,7 +108,7 @@
 <a name="46"><span class="lineNum">      46 </span><span class="lineNoCov">          0 :             info.numberOfChannels = 0;</span></a>
 <a name="47"><span class="lineNum">      47 </span>            :         }</a>
 <a name="48"><span class="lineNum">      48 </span>            : </a>
-<a name="49"><span class="lineNum">      49 </span><span class="lineNoCov">          0 :         info.numberOfChannels = jmax (info.numberOfChannels, plugin-&gt;getNumOutputChannelsGivenInputs (info.numberOfChannels));</span></a>
+<a name="49"><span class="lineNum">      49 </span><span class="lineNoCov">          0 :         info.numberOfChannels = std::max (info.numberOfChannels, plugin-&gt;getNumOutputChannelsGivenInputs (info.numberOfChannels));</span></a>
 <a name="50"><span class="lineNum">      50 </span><span class="lineNoCov">          0 :         info.hasAudio = info.hasAudio || plugin-&gt;producesAudioWhenNoAudioInput();</span></a>
 <a name="51"><span class="lineNum">      51 </span><span class="lineNoCov">          0 :         info.hasMidi  = info.hasMidi  || plugin-&gt;takesMidiInput();</span></a>
 <a name="52"><span class="lineNum">      52 </span><span class="lineNoCov">          0 :         hasAudioInput = info.hasAudio;</span></a>

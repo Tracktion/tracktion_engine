@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -2152,20 +2152,20 @@
 <a name="2090"><span class="lineNum">    2090 </span><span class="lineNoCov">          0 :     patternHash = 0;</span></a>
 <a name="2091"><span class="lineNum">    2091 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="2092"><span class="lineNum">    2092 </span>            : </a>
-<a name="2093"><span class="lineNum">    2093 </span><span class="lineNoCov">          0 : juce::int64 PatternGenerator::hashNotes (MidiList&amp; sequence, int version)</span></a>
+<a name="2093"><span class="lineNum">    2093 </span><span class="lineNoCov">          0 : HashCode PatternGenerator::hashNotes (MidiList&amp; sequence, int version)</span></a>
 <a name="2094"><span class="lineNum">    2094 </span>            : {</a>
 <a name="2095"><span class="lineNum">    2095 </span>            :     // Version 1 of this hash had a bug where just changing mute would</a>
 <a name="2096"><span class="lineNum">    2096 </span>            :     // generate hash collisions</a>
-<a name="2097"><span class="lineNum">    2097 </span><span class="lineNoCov">          0 :     juce::int64 hash = sequence.getNumNotes() + 1;</span></a>
+<a name="2097"><span class="lineNum">    2097 </span><span class="lineNoCov">          0 :     HashCode hash = sequence.getNumNotes() + 1;</span></a>
 <a name="2098"><span class="lineNum">    2098 </span>            : </a>
 <a name="2099"><span class="lineNum">    2099 </span><span class="lineNoCov">          0 :     for (auto note : sequence.getNotes())</span></a>
 <a name="2100"><span class="lineNum">    2100 </span>            :     {</a>
-<a name="2101"><span class="lineNum">    2101 </span><span class="lineNoCov">          0 :         hash ^= juce::int64 (note-&gt;getNoteNumber() * 31)</span></a>
-<a name="2102"><span class="lineNum">    2102 </span><span class="lineNoCov">          0 :               ^ juce::int64 (note-&gt;getStartBeat()  * 73)</span></a>
-<a name="2103"><span class="lineNum">    2103 </span><span class="lineNoCov">          0 :               ^ juce::int64 (note-&gt;getLengthBeats() * 233)</span></a>
-<a name="2104"><span class="lineNum">    2104 </span><span class="lineNoCov">          0 :               ^ juce::int64 (note-&gt;getColour() * 467)</span></a>
-<a name="2105"><span class="lineNum">    2105 </span><span class="lineNoCov">          0 :               ^ juce::int64 (note-&gt;isMute() ? 877 : 947)</span></a>
-<a name="2106"><span class="lineNum">    2106 </span><span class="lineNoCov">          0 :               ^ juce::int64 (note-&gt;getVelocity() * 3083);</span></a>
+<a name="2101"><span class="lineNum">    2101 </span><span class="lineNoCov">          0 :         hash ^= static_cast&lt;HashCode&gt; (note-&gt;getNoteNumber() * 31)</span></a>
+<a name="2102"><span class="lineNum">    2102 </span><span class="lineNoCov">          0 :               ^ static_cast&lt;HashCode&gt; (note-&gt;getStartBeat()  * 73)</span></a>
+<a name="2103"><span class="lineNum">    2103 </span><span class="lineNoCov">          0 :               ^ static_cast&lt;HashCode&gt; (note-&gt;getLengthBeats() * 233)</span></a>
+<a name="2104"><span class="lineNum">    2104 </span><span class="lineNoCov">          0 :               ^ static_cast&lt;HashCode&gt; (note-&gt;getColour() * 467)</span></a>
+<a name="2105"><span class="lineNum">    2105 </span><span class="lineNoCov">          0 :               ^ static_cast&lt;HashCode&gt; (note-&gt;isMute() ? 877 : 947)</span></a>
+<a name="2106"><span class="lineNum">    2106 </span><span class="lineNoCov">          0 :               ^ static_cast&lt;HashCode&gt; (note-&gt;getVelocity() * 3083);</span></a>
 <a name="2107"><span class="lineNum">    2107 </span>            : </a>
 <a name="2108"><span class="lineNum">    2108 </span><span class="lineNoCov">          0 :         if (version &gt; 1)</span></a>
 <a name="2109"><span class="lineNum">    2109 </span><span class="lineNoCov">          0 :             hash *= 7;</span></a>

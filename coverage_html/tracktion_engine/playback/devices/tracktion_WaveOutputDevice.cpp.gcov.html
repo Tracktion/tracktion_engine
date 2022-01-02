@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">9</td>
@@ -177,7 +177,7 @@
 <a name="115"><span class="lineNum">     115 </span>            : {</a>
 <a name="116"><span class="lineNum">     116 </span><span class="lineCov">          8 :     outputBuffer.setSize (2, blockSize);</span></a>
 <a name="117"><span class="lineNum">     117 </span>            : </a>
-<a name="118"><span class="lineNum">     118 </span><span class="lineCov">          8 :     int ditherDepth = jlimit (16, 32, edit.engine.getDeviceManager().getBitDepth());</span></a>
+<a name="118"><span class="lineNum">     118 </span><span class="lineCov">          8 :     int ditherDepth = juce::jlimit (16, 32, edit.engine.getDeviceManager().getBitDepth());</span></a>
 <a name="119"><span class="lineNum">     119 </span>            : </a>
 <a name="120"><span class="lineNum">     120 </span>            :     ditherers[0].reset (ditherDepth);</a>
 <a name="121"><span class="lineNum">     121 </span>            :     ditherers[1].reset (ditherDepth);</a>
@@ -203,7 +203,7 @@
 <a name="141"><span class="lineNum">     141 </span><span class="lineNoCov">          0 :     auto&amp; dm = engine.getDeviceManager();</span></a>
 <a name="142"><span class="lineNum">     142 </span>            :     </a>
 <a name="143"><span class="lineNum">     143 </span><span class="lineNoCov">          0 :     if (deviceChannels.size() == 2)</span></a>
-<a name="144"><span class="lineNum">     144 </span><span class="lineNoCov">          0 :         dm.setDeviceOutChannelStereo (jmax (getLeftChannel(), getRightChannel()), stereo);</span></a>
+<a name="144"><span class="lineNum">     144 </span><span class="lineNoCov">          0 :         dm.setDeviceOutChannelStereo (std::max (getLeftChannel(), getRightChannel()), stereo);</span></a>
 <a name="145"><span class="lineNum">     145 </span><span class="lineNoCov">          0 :     else if (deviceChannels.size() == 1)</span></a>
 <a name="146"><span class="lineNum">     146 </span><span class="lineNoCov">          0 :         dm.setDeviceOutChannelStereo (getLeftChannel(), stereo);</span></a>
 <a name="147"><span class="lineNum">     147 </span><span class="lineNoCov">          0 : }</span></a>

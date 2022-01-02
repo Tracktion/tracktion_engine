@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -194,7 +194,7 @@
 <a name="132"><span class="lineNum">     132 </span><span class="lineNoCov">          0 :     void valueChangedByPlugin()</span></a>
 <a name="133"><span class="lineNum">     133 </span>            :     {</a>
 <a name="134"><span class="lineNum">     134 </span><span class="lineNoCov">          0 :         if (auto p = getParam())</span></a>
-<a name="135"><span class="lineNum">     135 </span><span class="lineNoCov">          0 :             setParameter (p-&gt;getValue(), sendNotification);</span></a>
+<a name="135"><span class="lineNum">     135 </span><span class="lineNoCov">          0 :             setParameter (p-&gt;getValue(), juce::sendNotification);</span></a>
 <a name="136"><span class="lineNum">     136 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="137"><span class="lineNum">     137 </span>            : </a>
 <a name="138"><span class="lineNum">     138 </span><span class="lineNoCov">          0 :     juce::String getParameterName() const override</span></a>
@@ -341,7 +341,7 @@
 <a name="279"><span class="lineNum">     279 </span>            :     const VSTXML::Param* param = nullptr;</a>
 <a name="280"><span class="lineNum">     280 </span>            :     const VSTXML::ValueType* valueType = nullptr;</a>
 <a name="281"><span class="lineNum">     281 </span>            : </a>
-<a name="282"><span class="lineNum">     282 </span>            :     AudioPluginInstance* getPlugin() const noexcept</a>
+<a name="282"><span class="lineNum">     282 </span>            :     juce::AudioPluginInstance* getPlugin() const noexcept</a>
 <a name="283"><span class="lineNum">     283 </span>            :     {</a>
 <a name="284"><span class="lineNum">     284 </span>            :         jassert (plugin != nullptr);</a>
 <a name="285"><span class="lineNum">     285 </span>            :         return static_cast&lt;ExternalPlugin&amp;&gt; (*plugin).getAudioPluginInstance();</a>

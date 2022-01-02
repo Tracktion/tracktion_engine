@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">23</td>
@@ -556,7 +556,7 @@
 <a name="494"><span class="lineNum">     494 </span><span class="lineCov">         24 :     volumePlugin = pluginList.findFirstPluginOfType&lt;VolumeAndPanPlugin&gt;();</span></a>
 <a name="495"><span class="lineNum">     495 </span><span class="lineCov">         24 : }</span></a>
 <a name="496"><span class="lineNum">     496 </span>            : </a>
-<a name="497"><span class="lineNum">     497 </span><span class="lineCov">        124 : void FolderTrack::valueTreeChildAdded (ValueTree&amp; p, juce::ValueTree&amp; c)</span></a>
+<a name="497"><span class="lineNum">     497 </span><span class="lineCov">        124 : void FolderTrack::valueTreeChildAdded (juce::ValueTree&amp; p, juce::ValueTree&amp; c)</span></a>
 <a name="498"><span class="lineNum">     498 </span>            : {</a>
 <a name="499"><span class="lineNum">     499 </span><span class="lineCov">        124 :     if (c.hasType (IDs::PLUGIN))</span></a>
 <a name="500"><span class="lineNum">     500 </span><span class="lineCov">         40 :         pluginUpdater.triggerAsyncUpdate();</span></a>
@@ -564,7 +564,7 @@
 <a name="502"><span class="lineNum">     502 </span><span class="lineCov">        124 :     Track::valueTreeChildAdded (p, c);</span></a>
 <a name="503"><span class="lineNum">     503 </span><span class="lineCov">        124 : }</span></a>
 <a name="504"><span class="lineNum">     504 </span>            : </a>
-<a name="505"><span class="lineNum">     505 </span><span class="lineCov">         24 : void FolderTrack::valueTreeChildRemoved (ValueTree&amp; p, juce::ValueTree&amp; c, int index)</span></a>
+<a name="505"><span class="lineNum">     505 </span><span class="lineCov">         24 : void FolderTrack::valueTreeChildRemoved (juce::ValueTree&amp; p, juce::ValueTree&amp; c, int index)</span></a>
 <a name="506"><span class="lineNum">     506 </span>            : {</a>
 <a name="507"><span class="lineNum">     507 </span><span class="lineCov">         24 :     if (c.hasType (IDs::PLUGIN))</span></a>
 <a name="508"><span class="lineNum">     508 </span><span class="lineNoCov">          0 :         pluginUpdater.triggerAsyncUpdate();</span></a>
@@ -572,7 +572,7 @@
 <a name="510"><span class="lineNum">     510 </span><span class="lineCov">         24 :     Track::valueTreeChildRemoved (p, c, index);</span></a>
 <a name="511"><span class="lineNum">     511 </span><span class="lineCov">         24 : }</span></a>
 <a name="512"><span class="lineNum">     512 </span>            : </a>
-<a name="513"><span class="lineNum">     513 </span><span class="lineCov">         24 : void FolderTrack::valueTreeChildOrderChanged (ValueTree&amp; p, int oldIndex, int newIndex)</span></a>
+<a name="513"><span class="lineNum">     513 </span><span class="lineCov">         24 : void FolderTrack::valueTreeChildOrderChanged (juce::ValueTree&amp; p, int oldIndex, int newIndex)</span></a>
 <a name="514"><span class="lineNum">     514 </span>            : {</a>
 <a name="515"><span class="lineNum">     515 </span><span class="lineCov">         24 :     if (p.getChild (oldIndex).hasType (IDs::PLUGIN) || p.getChild (newIndex).hasType (IDs::PLUGIN))</span></a>
 <a name="516"><span class="lineNum">     516 </span><span class="lineCov">         24 :         pluginUpdater.triggerAsyncUpdate();</span></a>

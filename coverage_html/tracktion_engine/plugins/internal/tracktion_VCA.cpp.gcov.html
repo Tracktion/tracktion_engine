@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -77,7 +77,7 @@
 <a name="15"><span class="lineNum">      15 </span>            : {</a>
 <a name="16"><span class="lineNum">      16 </span>            : public:</a>
 <a name="17"><span class="lineNum">      17 </span><span class="lineNoCov">          0 :     VcaAutomatableParameter (const juce::String&amp; xmlTag, const juce::String&amp; name,</span></a>
-<a name="18"><span class="lineNum">      18 </span>            :                              Plugin&amp; owner, Range&lt;float&gt; valueRangeToUse)</a>
+<a name="18"><span class="lineNum">      18 </span>            :                              Plugin&amp; owner, juce::Range&lt;float&gt; valueRangeToUse)</a>
 <a name="19"><span class="lineNum">      19 </span><span class="lineNoCov">          0 :         : AutomatableParameter (xmlTag, name, owner, valueRangeToUse)</span></a>
 <a name="20"><span class="lineNum">      20 </span>            :     {</a>
 <a name="21"><span class="lineNum">      21 </span><span class="lineNoCov">          0 :     }</span></a>
@@ -89,7 +89,7 @@
 <a name="27"><span class="lineNum">      27 </span>            : </a>
 <a name="28"><span class="lineNum">      28 </span><span class="lineNoCov">          0 :     juce::String valueToString (float value) override</span></a>
 <a name="29"><span class="lineNum">      29 </span>            :     {</a>
-<a name="30"><span class="lineNum">      30 </span><span class="lineNoCov">          0 :         return Decibels::toString (volumeFaderPositionToDB (value) + 0.001);</span></a>
+<a name="30"><span class="lineNum">      30 </span><span class="lineNoCov">          0 :         return juce::Decibels::toString (volumeFaderPositionToDB (value) + 0.001);</span></a>
 <a name="31"><span class="lineNum">      31 </span>            :     }</a>
 <a name="32"><span class="lineNum">      32 </span>            : </a>
 <a name="33"><span class="lineNum">      33 </span><span class="lineNoCov">          0 :     float stringToValue (const juce::String&amp; str) override</span></a>
@@ -144,7 +144,7 @@
 <a name="82"><span class="lineNum">      82 </span>            : </a>
 <a name="83"><span class="lineNum">      83 </span><span class="lineNoCov">          0 : void VCAPlugin::setSliderPos (float newV)</span></a>
 <a name="84"><span class="lineNum">      84 </span>            : {</a>
-<a name="85"><span class="lineNum">      85 </span><span class="lineNoCov">          0 :     volParam-&gt;setParameter (jlimit (0.0f, 1.0f, newV), sendNotification);</span></a>
+<a name="85"><span class="lineNum">      85 </span><span class="lineNoCov">          0 :     volParam-&gt;setParameter (juce::jlimit (0.0f, 1.0f, newV), juce::sendNotification);</span></a>
 <a name="86"><span class="lineNum">      86 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="87"><span class="lineNum">      87 </span>            : </a>
 <a name="88"><span class="lineNum">      88 </span><span class="lineNoCov">          0 : void VCAPlugin::muteOrUnmute()</span></a>
@@ -186,7 +186,7 @@
 <a name="124"><span class="lineNum">     124 </span>            : </a>
 <a name="125"><span class="lineNum">     125 </span><span class="lineNoCov">          0 : void VCAPlugin::restorePluginStateFromValueTree (const juce::ValueTree&amp; v)</span></a>
 <a name="126"><span class="lineNum">     126 </span>            : {</a>
-<a name="127"><span class="lineNum">     127 </span><span class="lineNoCov">          0 :     CachedValue&lt;float&gt;* cvsFloat[]  = { &amp;volumeValue, nullptr };</span></a>
+<a name="127"><span class="lineNum">     127 </span><span class="lineNoCov">          0 :     juce::CachedValue&lt;float&gt;* cvsFloat[]  = { &amp;volumeValue, nullptr };</span></a>
 <a name="128"><span class="lineNum">     128 </span><span class="lineNoCov">          0 :     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);</span></a>
 <a name="129"><span class="lineNum">     129 </span>            : </a>
 <a name="130"><span class="lineNum">     130 </span><span class="lineNoCov">          0 :     for (auto p : getAutomatableParameters())</span></a>

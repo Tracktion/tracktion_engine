@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">225</td>
+            <td class="headerCovTableEntry">224</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -73,15 +73,15 @@
 <a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
-<a name="14"><span class="lineNum">      14 </span>            : struct MidiTimecodeReader  : private MessageListener,</a>
-<a name="15"><span class="lineNum">      15 </span>            :                              private Timer</a>
+<a name="14"><span class="lineNum">      14 </span>            : struct MidiTimecodeReader  : private juce::MessageListener,</a>
+<a name="15"><span class="lineNum">      15 </span>            :                              private juce::Timer</a>
 <a name="16"><span class="lineNum">      16 </span>            : {</a>
 <a name="17"><span class="lineNum">      17 </span><span class="lineNoCov">          0 :     MidiTimecodeReader (MidiInputDeviceInstanceBase&amp; m)</span></a>
 <a name="18"><span class="lineNum">      18 </span><span class="lineNoCov">          0 :         : owner (m), transport (m.edit.getTransport())</span></a>
 <a name="19"><span class="lineNum">      19 </span>            :     {</a>
 <a name="20"><span class="lineNum">      20 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="21"><span class="lineNum">      21 </span>            : </a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineNoCov">          0 :     bool processMessage (const MidiMessage&amp; m)</span></a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineNoCov">          0 :     bool processMessage (const juce::MidiMessage&amp; m)</span></a>
 <a name="23"><span class="lineNum">      23 </span>            :     {</a>
 <a name="24"><span class="lineNum">      24 </span><span class="lineNoCov">          0 :         if (m.isFullFrame())</span></a>
 <a name="25"><span class="lineNum">      25 </span>            :         {</a>
@@ -120,7 +120,7 @@
 <a name="58"><span class="lineNum">      58 </span><span class="lineNoCov">          0 :                 case 7:</span></a>
 <a name="59"><span class="lineNum">      59 </span>            :                 {</a>
 <a name="60"><span class="lineNum">      60 </span><span class="lineNoCov">          0 :                     hours = (hours &amp; 0x0f) | ((value &lt;&lt; 4) &amp; 0x10);</span></a>
-<a name="61"><span class="lineNum">      61 </span><span class="lineNoCov">          0 :                     midiTCType = (MidiMessage::SmpteTimecodeType) (value &gt;&gt; 1);</span></a>
+<a name="61"><span class="lineNum">      61 </span><span class="lineNoCov">          0 :                     midiTCType = (juce::MidiMessage::SmpteTimecodeType) (value &gt;&gt; 1);</span></a>
 <a name="62"><span class="lineNum">      62 </span>            : </a>
 <a name="63"><span class="lineNum">      63 </span><span class="lineNoCov">          0 :                     lastTime = getTime() + 2.0 / getFPS();</span></a>
 <a name="64"><span class="lineNum">      64 </span>            : </a>
@@ -164,7 +164,7 @@
 <a name="102"><span class="lineNum">     102 </span>            :         return false;</a>
 <a name="103"><span class="lineNum">     103 </span>            :     }</a>
 <a name="104"><span class="lineNum">     104 </span>            : </a>
-<a name="105"><span class="lineNum">     105 </span><span class="lineNoCov">          0 :     void handleMMCMessage (MidiMessage::MidiMachineControlCommand type)</span></a>
+<a name="105"><span class="lineNum">     105 </span><span class="lineNoCov">          0 :     void handleMMCMessage (juce::MidiMessage::MidiMachineControlCommand type)</span></a>
 <a name="106"><span class="lineNum">     106 </span>            :     {</a>
 <a name="107"><span class="lineNum">     107 </span><span class="lineNoCov">          0 :         auto m = new TCMessage (10);</span></a>
 <a name="108"><span class="lineNum">     108 </span><span class="lineNoCov">          0 :         m-&gt;command = type;</span></a>
@@ -186,7 +186,7 @@
 <a name="124"><span class="lineNum">     124 </span>            :     TransportControl&amp; transport;</a>
 <a name="125"><span class="lineNum">     125 </span>            : </a>
 <a name="126"><span class="lineNum">     126 </span>            :     int hours = 0, minutes = 0, seconds = 0, frames = 0;</a>
-<a name="127"><span class="lineNum">     127 </span>            :     MidiMessage::SmpteTimecodeType midiTCType;</a>
+<a name="127"><span class="lineNum">     127 </span>            :     juce::MidiMessage::SmpteTimecodeType midiTCType;</a>
 <a name="128"><span class="lineNum">     128 </span>            :     double lastTime = 0, correctedTime = 0, averageDrift = 0;</a>
 <a name="129"><span class="lineNum">     129 </span>            :     int averageDriftNumSamples = 0;</a>
 <a name="130"><span class="lineNum">     130 </span>            :     bool jumpPending = false;</a>
@@ -204,16 +204,16 @@
 <a name="142"><span class="lineNum">     142 </span>            :         }</a>
 <a name="143"><span class="lineNum">     143 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="144"><span class="lineNum">     144 </span>            : </a>
-<a name="145"><span class="lineNum">     145 </span>            :     struct TCMessage  : public Message</a>
+<a name="145"><span class="lineNum">     145 </span>            :     struct TCMessage  : public juce::Message</a>
 <a name="146"><span class="lineNum">     146 </span>            :     {</a>
 <a name="147"><span class="lineNum">     147 </span><span class="lineNoCov">          0 :         TCMessage (int tp) : type (tp) {}</span></a>
 <a name="148"><span class="lineNum">     148 </span>            : </a>
 <a name="149"><span class="lineNum">     149 </span>            :         int type = 0;</a>
-<a name="150"><span class="lineNum">     150 </span>            :         MidiMessage::MidiMachineControlCommand command;</a>
+<a name="150"><span class="lineNum">     150 </span>            :         juce::MidiMessage::MidiMachineControlCommand command;</a>
 <a name="151"><span class="lineNum">     151 </span>            :         int data[4];</a>
 <a name="152"><span class="lineNum">     152 </span>            :     };</a>
 <a name="153"><span class="lineNum">     153 </span>            : </a>
-<a name="154"><span class="lineNum">     154 </span><span class="lineNoCov">          0 :     void handleMessage (const Message&amp; message) override</span></a>
+<a name="154"><span class="lineNum">     154 </span><span class="lineNoCov">          0 :     void handleMessage (const juce::Message&amp; message) override</span></a>
 <a name="155"><span class="lineNum">     155 </span>            :     {</a>
 <a name="156"><span class="lineNum">     156 </span><span class="lineNoCov">          0 :         if (auto m = dynamic_cast&lt;const TCMessage*&gt; (&amp;message))</span></a>
 <a name="157"><span class="lineNum">     157 </span>            :         {</a>
@@ -258,19 +258,19 @@
 <a name="196"><span class="lineNum">     196 </span>            :         }</a>
 <a name="197"><span class="lineNum">     197 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="198"><span class="lineNum">     198 </span>            : </a>
-<a name="199"><span class="lineNum">     199 </span><span class="lineNoCov">          0 :     void handleMMC (MidiMessage::MidiMachineControlCommand type)</span></a>
+<a name="199"><span class="lineNum">     199 </span><span class="lineNoCov">          0 :     void handleMMC (juce::MidiMessage::MidiMachineControlCommand type)</span></a>
 <a name="200"><span class="lineNum">     200 </span>            :     {</a>
 <a name="201"><span class="lineNum">     201 </span><span class="lineNoCov">          0 :         switch (type)</span></a>
 <a name="202"><span class="lineNum">     202 </span>            :         {</a>
-<a name="203"><span class="lineNum">     203 </span><span class="lineNoCov">          0 :             case MidiMessage::mmc_stop:            transport.stop (false, false, false); break;</span></a>
-<a name="204"><span class="lineNum">     204 </span><span class="lineNoCov">          0 :             case MidiMessage::mmc_play:            transport.play (false);   break;</span></a>
-<a name="205"><span class="lineNum">     205 </span><span class="lineNoCov">          0 :             case MidiMessage::mmc_deferredplay:    transport.play (false);   break;</span></a>
-<a name="206"><span class="lineNum">     206 </span><span class="lineNoCov">          0 :             case MidiMessage::mmc_fastforward:     transport.nudgeRight();   break;</span></a>
-<a name="207"><span class="lineNum">     207 </span><span class="lineNoCov">          0 :             case MidiMessage::mmc_rewind:          transport.nudgeLeft();    break;</span></a>
-<a name="208"><span class="lineNum">     208 </span><span class="lineNoCov">          0 :             case MidiMessage::mmc_recordStart:     transport.record (false); break;</span></a>
-<a name="209"><span class="lineNum">     209 </span><span class="lineNoCov">          0 :             case MidiMessage::mmc_recordStop:      transport.stop (false, false, false); break;</span></a>
+<a name="203"><span class="lineNum">     203 </span><span class="lineNoCov">          0 :             case juce::MidiMessage::mmc_stop:            transport.stop (false, false, false); break;</span></a>
+<a name="204"><span class="lineNum">     204 </span><span class="lineNoCov">          0 :             case juce::MidiMessage::mmc_play:            transport.play (false);   break;</span></a>
+<a name="205"><span class="lineNum">     205 </span><span class="lineNoCov">          0 :             case juce::MidiMessage::mmc_deferredplay:    transport.play (false);   break;</span></a>
+<a name="206"><span class="lineNum">     206 </span><span class="lineNoCov">          0 :             case juce::MidiMessage::mmc_fastforward:     transport.nudgeRight();   break;</span></a>
+<a name="207"><span class="lineNum">     207 </span><span class="lineNoCov">          0 :             case juce::MidiMessage::mmc_rewind:          transport.nudgeLeft();    break;</span></a>
+<a name="208"><span class="lineNum">     208 </span><span class="lineNoCov">          0 :             case juce::MidiMessage::mmc_recordStart:     transport.record (false); break;</span></a>
+<a name="209"><span class="lineNum">     209 </span><span class="lineNoCov">          0 :             case juce::MidiMessage::mmc_recordStop:      transport.stop (false, false, false); break;</span></a>
 <a name="210"><span class="lineNum">     210 </span>            : </a>
-<a name="211"><span class="lineNum">     211 </span><span class="lineNoCov">          0 :             case MidiMessage::mmc_pause:</span></a>
+<a name="211"><span class="lineNum">     211 </span><span class="lineNoCov">          0 :             case juce::MidiMessage::mmc_pause:</span></a>
 <a name="212"><span class="lineNum">     212 </span><span class="lineNoCov">          0 :                 if (transport.isPlaying())</span></a>
 <a name="213"><span class="lineNum">     213 </span>            :                     transport.stop (false, false, false);</a>
 <a name="214"><span class="lineNum">     214 </span>            :                 else</a>
@@ -288,8 +288,8 @@
 <a name="226"><span class="lineNum">     226 </span>            : </a>
 <a name="227"><span class="lineNum">     227 </span>            :     double getFPS() const noexcept</a>
 <a name="228"><span class="lineNum">     228 </span>            :     {</a>
-<a name="229"><span class="lineNum">     229 </span><span class="lineNoCov">          0 :         if (midiTCType == MidiMessage::fps25) return 25.0;</span></a>
-<a name="230"><span class="lineNum">     230 </span><span class="lineNoCov">          0 :         if (midiTCType == MidiMessage::fps24) return 24.0;</span></a>
+<a name="229"><span class="lineNum">     229 </span><span class="lineNoCov">          0 :         if (midiTCType == juce::MidiMessage::fps25) return 25.0;</span></a>
+<a name="230"><span class="lineNum">     230 </span><span class="lineNoCov">          0 :         if (midiTCType == juce::MidiMessage::fps24) return 24.0;</span></a>
 <a name="231"><span class="lineNum">     231 </span>            :         return 30.0;</a>
 <a name="232"><span class="lineNum">     232 </span>            :     }</a>
 <a name="233"><span class="lineNum">     233 </span>            : </a>
@@ -315,10 +315,10 @@
 <a name="253"><span class="lineNum">     253 </span><span class="lineNoCov">          0 :     PhysicalMidiInputDeviceInstance (PhysicalMidiInputDevice&amp; d, EditPlaybackContext&amp; c)</span></a>
 <a name="254"><span class="lineNum">     254 </span><span class="lineNoCov">          0 :         : MidiInputDeviceInstanceBase (d, c)</span></a>
 <a name="255"><span class="lineNum">     255 </span>            :     {</a>
-<a name="256"><span class="lineNum">     256 </span><span class="lineNoCov">          0 :         timecodeReader.reset (new MidiTimecodeReader (*this));</span></a>
+<a name="256"><span class="lineNum">     256 </span>            :         timecodeReader = std::make_unique&lt;MidiTimecodeReader&gt; (*this);</a>
 <a name="257"><span class="lineNum">     257 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="258"><span class="lineNum">     258 </span>            : </a>
-<a name="259"><span class="lineNum">     259 </span><span class="lineNoCov">          0 :     void handleMMCMessage (const MidiMessage&amp; message) override</span></a>
+<a name="259"><span class="lineNum">     259 </span><span class="lineNoCov">          0 :     void handleMMCMessage (const juce::MidiMessage&amp; message) override</span></a>
 <a name="260"><span class="lineNum">     260 </span>            :     {</a>
 <a name="261"><span class="lineNum">     261 </span>            :         int hours, minutes, seconds, frames;</a>
 <a name="262"><span class="lineNum">     262 </span>            : </a>
@@ -328,231 +328,232 @@
 <a name="266"><span class="lineNum">     266 </span><span class="lineNoCov">          0 :             timecodeReader-&gt;handleMMCMessage (message.getMidiMachineControlCommand());</span></a>
 <a name="267"><span class="lineNum">     267 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="268"><span class="lineNum">     268 </span>            : </a>
-<a name="269"><span class="lineNum">     269 </span><span class="lineNoCov">          0 :     bool handleTimecodeMessage (const MidiMessage&amp; message) override</span></a>
+<a name="269"><span class="lineNum">     269 </span><span class="lineNoCov">          0 :     bool handleTimecodeMessage (const juce::MidiMessage&amp; message) override</span></a>
 <a name="270"><span class="lineNum">     270 </span>            :     {</a>
 <a name="271"><span class="lineNum">     271 </span><span class="lineNoCov">          0 :         return timecodeReader-&gt;processMessage (message);</span></a>
 <a name="272"><span class="lineNum">     272 </span>            :     }</a>
 <a name="273"><span class="lineNum">     273 </span>            : </a>
-<a name="274"><span class="lineNum">     274 </span><span class="lineNoCov">          0 :     String prepareToRecord (double start, double punchIn, double sampleRate, int blockSizeSamples, bool isLivePunch) override</span></a>
-<a name="275"><span class="lineNum">     275 </span>            :     {</a>
-<a name="276"><span class="lineNum">     276 </span><span class="lineNoCov">          0 :         MidiInputDeviceInstanceBase::prepareToRecord (start, punchIn, sampleRate, blockSizeSamples, isLivePunch);</span></a>
-<a name="277"><span class="lineNum">     277 </span>            : </a>
-<a name="278"><span class="lineNum">     278 </span><span class="lineNoCov">          0 :         if (getPhysicalMidiInput().inputDevice != nullptr)</span></a>
-<a name="279"><span class="lineNum">     279 </span><span class="lineNoCov">          0 :             return {};</span></a>
-<a name="280"><span class="lineNum">     280 </span>            : </a>
-<a name="281"><span class="lineNum">     281 </span><span class="lineNoCov">          0 :         return TRANS(&quot;Couldn't open the MIDI port&quot;);</span></a>
-<a name="282"><span class="lineNum">     282 </span>            :     }</a>
-<a name="283"><span class="lineNum">     283 </span>            : </a>
-<a name="284"><span class="lineNum">     284 </span><span class="lineNoCov">          0 :     bool startRecording() override</span></a>
-<a name="285"><span class="lineNum">     285 </span>            :     {</a>
-<a name="286"><span class="lineNum">     286 </span>            :         // We need to keep a list of tracks the are being recorded to</a>
-<a name="287"><span class="lineNum">     287 </span>            :         // here, since user may un-arm track to stop recording</a>
-<a name="288"><span class="lineNum">     288 </span>            :         activeTracks.clear();</a>
-<a name="289"><span class="lineNum">     289 </span>            : </a>
-<a name="290"><span class="lineNum">     290 </span><span class="lineNoCov">          0 :         for (auto destTrack : getTargetTracks())</span></a>
-<a name="291"><span class="lineNum">     291 </span><span class="lineNoCov">          0 :             if (isRecordingActive (*destTrack))</span></a>
-<a name="292"><span class="lineNum">     292 </span>            :                 activeTracks.add (destTrack);</a>
-<a name="293"><span class="lineNum">     293 </span>            :         </a>
-<a name="294"><span class="lineNum">     294 </span><span class="lineNoCov">          0 :         if (getPhysicalMidiInput().inputDevice != nullptr)</span></a>
-<a name="295"><span class="lineNum">     295 </span>            :         {</a>
-<a name="296"><span class="lineNum">     296 </span><span class="lineNoCov">          0 :             getPhysicalMidiInput().masterTimeUpdate (startTime);</span></a>
-<a name="297"><span class="lineNum">     297 </span>            :             recording = true;</a>
-<a name="298"><span class="lineNum">     298 </span>            :         }</a>
-<a name="299"><span class="lineNum">     299 </span>            : </a>
-<a name="300"><span class="lineNum">     300 </span><span class="lineNoCov">          0 :         return recording;</span></a>
-<a name="301"><span class="lineNum">     301 </span>            :     }</a>
-<a name="302"><span class="lineNum">     302 </span>            : </a>
-<a name="303"><span class="lineNum">     303 </span>            :     PhysicalMidiInputDevice&amp; getPhysicalMidiInput() const   { return static_cast&lt;PhysicalMidiInputDevice&amp;&gt; (owner); }</a>
-<a name="304"><span class="lineNum">     304 </span>            : </a>
-<a name="305"><span class="lineNum">     305 </span>            :     std::unique_ptr&lt;MidiTimecodeReader&gt; timecodeReader;</a>
-<a name="306"><span class="lineNum">     306 </span>            : </a>
-<a name="307"><span class="lineNum">     307 </span>            : private:</a>
-<a name="308"><span class="lineNum">     308 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PhysicalMidiInputDeviceInstance)</a>
-<a name="309"><span class="lineNum">     309 </span>            : };</a>
-<a name="310"><span class="lineNum">     310 </span>            : </a>
-<a name="311"><span class="lineNum">     311 </span>            : //==============================================================================</a>
-<a name="312"><span class="lineNum">     312 </span><span class="lineNoCov">          0 : PhysicalMidiInputDevice::PhysicalMidiInputDevice (Engine&amp; e, const juce::String&amp; deviceName, int deviceIndexToUse)</span></a>
-<a name="313"><span class="lineNum">     313 </span><span class="lineNoCov">          0 :    : MidiInputDevice (e, TRANS(&quot;MIDI Input&quot;), deviceName),</span></a>
-<a name="314"><span class="lineNum">     314 </span><span class="lineNoCov">          0 :      deviceIndex (deviceIndexToUse)</span></a>
-<a name="315"><span class="lineNum">     315 </span>            : {</a>
-<a name="316"><span class="lineNum">     316 </span><span class="lineNoCov">          0 :     controllerParser.reset (new MidiControllerParser (e));</span></a>
-<a name="317"><span class="lineNum">     317 </span><span class="lineNoCov">          0 :     loadProps();</span></a>
-<a name="318"><span class="lineNum">     318 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="319"><span class="lineNum">     319 </span>            : </a>
-<a name="320"><span class="lineNum">     320 </span><span class="lineNoCov">          0 : PhysicalMidiInputDevice::~PhysicalMidiInputDevice()</span></a>
-<a name="321"><span class="lineNum">     321 </span>            : {</a>
-<a name="322"><span class="lineNum">     322 </span><span class="lineNoCov">          0 :     closeDevice();</span></a>
-<a name="323"><span class="lineNum">     323 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="324"><span class="lineNum">     324 </span>            : </a>
-<a name="325"><span class="lineNum">     325 </span><span class="lineNoCov">          0 : InputDeviceInstance* PhysicalMidiInputDevice::createInstance (EditPlaybackContext&amp; c)</span></a>
-<a name="326"><span class="lineNum">     326 </span>            : {</a>
-<a name="327"><span class="lineNum">     327 </span><span class="lineNoCov">          0 :     if (! isTrackDevice() &amp;&amp; retrospectiveBuffer == nullptr)</span></a>
-<a name="328"><span class="lineNum">     328 </span><span class="lineNoCov">          0 :         retrospectiveBuffer.reset (new RetrospectiveMidiBuffer (c.edit.engine));</span></a>
-<a name="329"><span class="lineNum">     329 </span>            : </a>
-<a name="330"><span class="lineNum">     330 </span><span class="lineNoCov">          0 :     return new PhysicalMidiInputDeviceInstance (*this, c);</span></a>
-<a name="331"><span class="lineNum">     331 </span>            : }</a>
-<a name="332"><span class="lineNum">     332 </span>            : </a>
-<a name="333"><span class="lineNum">     333 </span><span class="lineNoCov">          0 : juce::String PhysicalMidiInputDevice::openDevice()</span></a>
-<a name="334"><span class="lineNum">     334 </span>            : {</a>
-<a name="335"><span class="lineNum">     335 </span><span class="lineNoCov">          0 :     zeromem (keysDown, sizeof (keysDown));</span></a>
-<a name="336"><span class="lineNum">     336 </span><span class="lineNoCov">          0 :     zeromem (keyDownVelocities, sizeof (keyDownVelocities));</span></a>
-<a name="337"><span class="lineNum">     337 </span>            : </a>
-<a name="338"><span class="lineNum">     338 </span><span class="lineNoCov">          0 :     if (inputDevice == nullptr)</span></a>
-<a name="339"><span class="lineNum">     339 </span>            :     {</a>
-<a name="340"><span class="lineNum">     340 </span><span class="lineNoCov">          0 :         CRASH_TRACER</span></a>
-<a name="341"><span class="lineNum">     341 </span><span class="lineNoCov">          0 :         inputDevice = MidiInput::openDevice (MidiInput::getAvailableDevices()[deviceIndex].identifier, this);</span></a>
-<a name="342"><span class="lineNum">     342 </span>            : </a>
-<a name="343"><span class="lineNum">     343 </span><span class="lineNoCov">          0 :         if (inputDevice != nullptr)</span></a>
-<a name="344"><span class="lineNum">     344 </span>            :         {</a>
-<a name="345"><span class="lineNum">     345 </span><span class="lineNoCov">          0 :             TRACKTION_LOG (&quot;opening MIDI in device: &quot; + getName());</span></a>
-<a name="346"><span class="lineNum">     346 </span><span class="lineNoCov">          0 :             inputDevice-&gt;start();</span></a>
-<a name="347"><span class="lineNum">     347 </span>            :         }</a>
-<a name="348"><span class="lineNum">     348 </span>            :     }</a>
-<a name="349"><span class="lineNum">     349 </span>            : </a>
-<a name="350"><span class="lineNum">     350 </span><span class="lineNoCov">          0 :     if (inputDevice != nullptr)</span></a>
-<a name="351"><span class="lineNum">     351 </span><span class="lineNoCov">          0 :         return {};</span></a>
-<a name="352"><span class="lineNum">     352 </span>            : </a>
-<a name="353"><span class="lineNum">     353 </span><span class="lineNoCov">          0 :     return TRANS(&quot;Couldn't open the MIDI port&quot;);</span></a>
-<a name="354"><span class="lineNum">     354 </span>            : }</a>
-<a name="355"><span class="lineNum">     355 </span>            : </a>
-<a name="356"><span class="lineNum">     356 </span><span class="lineNoCov">          0 : void PhysicalMidiInputDevice::closeDevice()</span></a>
-<a name="357"><span class="lineNum">     357 </span>            : {</a>
-<a name="358"><span class="lineNum">     358 </span>            :     jassert (instances.isEmpty());</a>
-<a name="359"><span class="lineNum">     359 </span>            :     instances.clear();</a>
-<a name="360"><span class="lineNum">     360 </span>            : </a>
-<a name="361"><span class="lineNum">     361 </span><span class="lineNoCov">          0 :     if (inputDevice != nullptr)</span></a>
-<a name="362"><span class="lineNum">     362 </span>            :     {</a>
-<a name="363"><span class="lineNum">     363 </span><span class="lineNoCov">          0 :         CRASH_TRACER</span></a>
-<a name="364"><span class="lineNum">     364 </span><span class="lineNoCov">          0 :         TRACKTION_LOG (&quot;Closing MIDI in device: &quot; + getName());</span></a>
-<a name="365"><span class="lineNum">     365 </span>            :         inputDevice = nullptr;</a>
-<a name="366"><span class="lineNum">     366 </span>            :     }</a>
-<a name="367"><span class="lineNum">     367 </span>            : </a>
-<a name="368"><span class="lineNum">     368 </span><span class="lineNoCov">          0 :     saveProps();</span></a>
-<a name="369"><span class="lineNum">     369 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="370"><span class="lineNum">     370 </span>            : </a>
-<a name="371"><span class="lineNum">     371 </span><span class="lineNoCov">          0 : void PhysicalMidiInputDevice::setExternalController (ExternalController* ec)</span></a>
-<a name="372"><span class="lineNum">     372 </span>            : {</a>
-<a name="373"><span class="lineNum">     373 </span><span class="lineNoCov">          0 :     TRACKTION_LOG (&quot;MIDI External controller assigned: &quot; + getName());</span></a>
-<a name="374"><span class="lineNum">     374 </span><span class="lineNoCov">          0 :     externalController = ec;</span></a>
-<a name="375"><span class="lineNum">     375 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="376"><span class="lineNum">     376 </span>            : </a>
-<a name="377"><span class="lineNum">     377 </span><span class="lineNoCov">          0 : void PhysicalMidiInputDevice::removeExternalController (ExternalController* ec)</span></a>
-<a name="378"><span class="lineNum">     378 </span>            : {</a>
-<a name="379"><span class="lineNum">     379 </span><span class="lineNoCov">          0 :     if (externalController == ec)</span></a>
-<a name="380"><span class="lineNum">     380 </span><span class="lineNoCov">          0 :         externalController = nullptr;</span></a>
-<a name="381"><span class="lineNum">     381 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="382"><span class="lineNum">     382 </span>            : </a>
-<a name="383"><span class="lineNum">     383 </span><span class="lineNoCov">          0 : bool PhysicalMidiInputDevice::isAvailableToEdit() const</span></a>
-<a name="384"><span class="lineNum">     384 </span>            : {</a>
-<a name="385"><span class="lineNum">     385 </span><span class="lineNoCov">          0 :     return isEnabled() &amp;&amp; (externalController == nullptr</span></a>
-<a name="386"><span class="lineNum">     386 </span><span class="lineNoCov">          0 :                              || ! externalController-&gt;eatsAllMessages());</span></a>
-<a name="387"><span class="lineNum">     387 </span>            : }</a>
-<a name="388"><span class="lineNum">     388 </span>            : </a>
-<a name="389"><span class="lineNum">     389 </span><span class="lineNoCov">          0 : bool PhysicalMidiInputDevice::tryToSendTimecode (const MidiMessage&amp; message)</span></a>
-<a name="390"><span class="lineNum">     390 </span>            : {</a>
-<a name="391"><span class="lineNum">     391 </span><span class="lineNoCov">          0 :     if (isAcceptingMMC &amp;&amp; message.isMidiMachineControlMessage())</span></a>
-<a name="392"><span class="lineNum">     392 </span>            :     {</a>
-<a name="393"><span class="lineNum">     393 </span><span class="lineNoCov">          0 :         const ScopedLock sl (instanceLock);</span></a>
-<a name="394"><span class="lineNum">     394 </span>            : </a>
-<a name="395"><span class="lineNum">     395 </span><span class="lineNoCov">          0 :         for (auto p : instances)</span></a>
-<a name="396"><span class="lineNum">     396 </span><span class="lineNoCov">          0 :             p-&gt;handleMMCMessage (message);</span></a>
-<a name="397"><span class="lineNum">     397 </span>            : </a>
-<a name="398"><span class="lineNum">     398 </span>            :         return true;</a>
-<a name="399"><span class="lineNum">     399 </span>            :     }</a>
-<a name="400"><span class="lineNum">     400 </span>            : </a>
-<a name="401"><span class="lineNum">     401 </span><span class="lineNoCov">          0 :     if (isReadingMidiTimecode)</span></a>
-<a name="402"><span class="lineNum">     402 </span>            :     {</a>
-<a name="403"><span class="lineNum">     403 </span><span class="lineNoCov">          0 :         const ScopedLock sl (instanceLock);</span></a>
-<a name="404"><span class="lineNum">     404 </span>            : </a>
-<a name="405"><span class="lineNum">     405 </span><span class="lineNoCov">          0 :         for (auto p : instances)</span></a>
-<a name="406"><span class="lineNum">     406 </span><span class="lineNoCov">          0 :             if (p-&gt;handleTimecodeMessage (message))</span></a>
-<a name="407"><span class="lineNum">     407 </span>            :                 return true;</a>
-<a name="408"><span class="lineNum">     408 </span>            :     }</a>
-<a name="409"><span class="lineNum">     409 </span>            : </a>
-<a name="410"><span class="lineNum">     410 </span>            :     return false;</a>
-<a name="411"><span class="lineNum">     411 </span>            : }</a>
-<a name="412"><span class="lineNum">     412 </span>            : </a>
-<a name="413"><span class="lineNum">     413 </span><span class="lineNoCov">          0 : void PhysicalMidiInputDevice::handleIncomingMidiMessage (const MidiMessage&amp; m)</span></a>
-<a name="414"><span class="lineNum">     414 </span>            : {</a>
-<a name="415"><span class="lineNum">     415 </span><span class="lineNoCov">          0 :     if (externalController != nullptr &amp;&amp; externalController-&gt;wantsMessage (m))</span></a>
-<a name="416"><span class="lineNum">     416 </span>            :     {</a>
-<a name="417"><span class="lineNum">     417 </span><span class="lineNoCov">          0 :         externalController-&gt;acceptMidiMessage (m);</span></a>
-<a name="418"><span class="lineNum">     418 </span>            :     }</a>
-<a name="419"><span class="lineNum">     419 </span>            :     else</a>
-<a name="420"><span class="lineNum">     420 </span>            :     {</a>
-<a name="421"><span class="lineNum">     421 </span><span class="lineNoCov">          0 :         if (! (m.isActiveSense() || disallowedChannels[m.getChannel() - 1]))</span></a>
-<a name="422"><span class="lineNum">     422 </span>            :         {</a>
-<a name="423"><span class="lineNum">     423 </span><span class="lineNoCov">          0 :             MidiMessage message (m);</span></a>
-<a name="424"><span class="lineNum">     424 </span>            : </a>
-<a name="425"><span class="lineNum">     425 </span><span class="lineNoCov">          0 :             if (m.getTimeStamp() == 0 || (! engine.getEngineBehaviour().isMidiDriverUsedForIncommingMessageTiming()))</span></a>
-<a name="426"><span class="lineNum">     426 </span><span class="lineNoCov">          0 :                 message.setTimeStamp (Time::getMillisecondCounterHiRes() * 0.001);</span></a>
-<a name="427"><span class="lineNum">     427 </span>            : </a>
-<a name="428"><span class="lineNum">     428 </span>            :             message.addToTimeStamp (adjustSecs);</a>
-<a name="429"><span class="lineNum">     429 </span>            : </a>
-<a name="430"><span class="lineNum">     430 </span><span class="lineNoCov">          0 :             sendNoteOnToMidiKeyListeners (message);</span></a>
-<a name="431"><span class="lineNum">     431 </span>            : </a>
-<a name="432"><span class="lineNum">     432 </span><span class="lineNoCov">          0 :             if (! retrospectiveRecordLock &amp;&amp; retrospectiveBuffer != nullptr)</span></a>
-<a name="433"><span class="lineNum">     433 </span><span class="lineNoCov">          0 :                 retrospectiveBuffer-&gt;addMessage (message, adjustSecs);</span></a>
-<a name="434"><span class="lineNum">     434 </span>            : </a>
-<a name="435"><span class="lineNum">     435 </span><span class="lineNoCov">          0 :             if (! tryToSendTimecode (message))</span></a>
-<a name="436"><span class="lineNum">     436 </span>            :             {</a>
-<a name="437"><span class="lineNum">     437 </span><span class="lineNoCov">          0 :                 if (isTakingControllerMessages)</span></a>
-<a name="438"><span class="lineNum">     438 </span><span class="lineNoCov">          0 :                     controllerParser-&gt;processMessage (message);</span></a>
-<a name="439"><span class="lineNum">     439 </span>            : </a>
-<a name="440"><span class="lineNum">     440 </span><span class="lineNoCov">          0 :                 sendMessageToInstances (message);</span></a>
-<a name="441"><span class="lineNum">     441 </span>            :             }</a>
-<a name="442"><span class="lineNum">     442 </span>            :         }</a>
-<a name="443"><span class="lineNum">     443 </span>            : </a>
-<a name="444"><span class="lineNum">     444 </span><span class="lineNoCov">          0 :         VirtualMidiInputDevice::broadcastMessageToAllVirtualDevices (this, m);</span></a>
-<a name="445"><span class="lineNum">     445 </span>            :     }</a>
-<a name="446"><span class="lineNum">     446 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="447"><span class="lineNum">     447 </span>            : </a>
-<a name="448"><span class="lineNum">     448 </span><span class="lineNoCov">          0 : void PhysicalMidiInputDevice::loadProps()</span></a>
-<a name="449"><span class="lineNum">     449 </span>            : {</a>
-<a name="450"><span class="lineNum">     450 </span><span class="lineNoCov">          0 :     isTakingControllerMessages = true;</span></a>
-<a name="451"><span class="lineNum">     451 </span>            : </a>
-<a name="452"><span class="lineNum">     452 </span><span class="lineNoCov">          0 :     auto n = engine.getPropertyStorage().getXmlPropertyItem (SettingID::midiin, getName());</span></a>
-<a name="453"><span class="lineNum">     453 </span>            : </a>
-<a name="454"><span class="lineNum">     454 </span><span class="lineNoCov">          0 :     if (n != nullptr)</span></a>
-<a name="455"><span class="lineNum">     455 </span><span class="lineNoCov">          0 :         isTakingControllerMessages = n-&gt;getBoolAttribute (&quot;controllerMessages&quot;, isTakingControllerMessages);</span></a>
-<a name="456"><span class="lineNum">     456 </span>            : </a>
-<a name="457"><span class="lineNum">     457 </span><span class="lineNoCov">          0 :     MidiInputDevice::loadProps (n.get());</span></a>
-<a name="458"><span class="lineNum">     458 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="459"><span class="lineNum">     459 </span>            : </a>
-<a name="460"><span class="lineNum">     460 </span><span class="lineNoCov">          0 : void PhysicalMidiInputDevice::saveProps()</span></a>
-<a name="461"><span class="lineNum">     461 </span>            : {</a>
-<a name="462"><span class="lineNum">     462 </span><span class="lineNoCov">          0 :     if (isTrackDevice())</span></a>
-<a name="463"><span class="lineNum">     463 </span><span class="lineNoCov">          0 :         return;</span></a>
-<a name="464"><span class="lineNum">     464 </span>            : </a>
-<a name="465"><span class="lineNum">     465 </span><span class="lineNoCov">          0 :     juce::XmlElement n (&quot;SETTINGS&quot;);</span></a>
-<a name="466"><span class="lineNum">     466 </span><span class="lineNoCov">          0 :     n.setAttribute (&quot;controllerMessages&quot;, isTakingControllerMessages);</span></a>
-<a name="467"><span class="lineNum">     467 </span>            : </a>
-<a name="468"><span class="lineNum">     468 </span><span class="lineNoCov">          0 :     MidiInputDevice::saveProps (n);</span></a>
-<a name="469"><span class="lineNum">     469 </span>            : </a>
-<a name="470"><span class="lineNum">     470 </span><span class="lineNoCov">          0 :     engine.getPropertyStorage().setXmlPropertyItem (SettingID::midiin, getName(), n);</span></a>
-<a name="471"><span class="lineNum">     471 </span>            : }</a>
-<a name="472"><span class="lineNum">     472 </span>            : </a>
-<a name="473"><span class="lineNum">     473 </span><span class="lineNoCov">          0 : void PhysicalMidiInputDevice::setReadingMidiTimecode (bool b)</span></a>
-<a name="474"><span class="lineNum">     474 </span>            : {</a>
-<a name="475"><span class="lineNum">     475 </span><span class="lineNoCov">          0 :     isReadingMidiTimecode = b;</span></a>
-<a name="476"><span class="lineNum">     476 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="477"><span class="lineNum">     477 </span>            : </a>
-<a name="478"><span class="lineNum">     478 </span><span class="lineNoCov">          0 : void PhysicalMidiInputDevice::setIgnoresHours (bool b)</span></a>
-<a name="479"><span class="lineNum">     479 </span>            : {</a>
-<a name="480"><span class="lineNum">     480 </span><span class="lineNoCov">          0 :     ignoreHours = b;</span></a>
-<a name="481"><span class="lineNum">     481 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="482"><span class="lineNum">     482 </span>            : </a>
-<a name="483"><span class="lineNum">     483 </span><span class="lineNoCov">          0 : void PhysicalMidiInputDevice::setAcceptingMMC (bool b)</span></a>
-<a name="484"><span class="lineNum">     484 </span>            : {</a>
-<a name="485"><span class="lineNum">     485 </span><span class="lineNoCov">          0 :     isAcceptingMMC = b;</span></a>
-<a name="486"><span class="lineNum">     486 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="487"><span class="lineNum">     487 </span>            : </a>
-<a name="488"><span class="lineNum">     488 </span><span class="lineNoCov">          0 : void PhysicalMidiInputDevice::setReadingControllerMessages (bool b)</span></a>
-<a name="489"><span class="lineNum">     489 </span>            : {</a>
-<a name="490"><span class="lineNum">     490 </span><span class="lineNoCov">          0 :     isTakingControllerMessages = b;</span></a>
-<a name="491"><span class="lineNum">     491 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="492"><span class="lineNum">     492 </span>            : </a>
-<a name="493"><span class="lineNum">     493 </span>            : }</a>
+<a name="274"><span class="lineNum">     274 </span><span class="lineNoCov">          0 :     juce::String prepareToRecord (double start, double punchIn, double sampleRate,</span></a>
+<a name="275"><span class="lineNum">     275 </span>            :                                   int blockSizeSamples, bool isLivePunch) override</a>
+<a name="276"><span class="lineNum">     276 </span>            :     {</a>
+<a name="277"><span class="lineNum">     277 </span><span class="lineNoCov">          0 :         MidiInputDeviceInstanceBase::prepareToRecord (start, punchIn, sampleRate, blockSizeSamples, isLivePunch);</span></a>
+<a name="278"><span class="lineNum">     278 </span>            : </a>
+<a name="279"><span class="lineNum">     279 </span><span class="lineNoCov">          0 :         if (getPhysicalMidiInput().inputDevice != nullptr)</span></a>
+<a name="280"><span class="lineNum">     280 </span><span class="lineNoCov">          0 :             return {};</span></a>
+<a name="281"><span class="lineNum">     281 </span>            : </a>
+<a name="282"><span class="lineNum">     282 </span><span class="lineNoCov">          0 :         return TRANS(&quot;Couldn't open the MIDI port&quot;);</span></a>
+<a name="283"><span class="lineNum">     283 </span>            :     }</a>
+<a name="284"><span class="lineNum">     284 </span>            : </a>
+<a name="285"><span class="lineNum">     285 </span><span class="lineNoCov">          0 :     bool startRecording() override</span></a>
+<a name="286"><span class="lineNum">     286 </span>            :     {</a>
+<a name="287"><span class="lineNum">     287 </span>            :         // We need to keep a list of tracks the are being recorded to</a>
+<a name="288"><span class="lineNum">     288 </span>            :         // here, since user may un-arm track to stop recording</a>
+<a name="289"><span class="lineNum">     289 </span>            :         activeTracks.clear();</a>
+<a name="290"><span class="lineNum">     290 </span>            : </a>
+<a name="291"><span class="lineNum">     291 </span><span class="lineNoCov">          0 :         for (auto destTrack : getTargetTracks())</span></a>
+<a name="292"><span class="lineNum">     292 </span><span class="lineNoCov">          0 :             if (isRecordingActive (*destTrack))</span></a>
+<a name="293"><span class="lineNum">     293 </span>            :                 activeTracks.add (destTrack);</a>
+<a name="294"><span class="lineNum">     294 </span>            :         </a>
+<a name="295"><span class="lineNum">     295 </span><span class="lineNoCov">          0 :         if (getPhysicalMidiInput().inputDevice != nullptr)</span></a>
+<a name="296"><span class="lineNum">     296 </span>            :         {</a>
+<a name="297"><span class="lineNum">     297 </span><span class="lineNoCov">          0 :             getPhysicalMidiInput().masterTimeUpdate (startTime);</span></a>
+<a name="298"><span class="lineNum">     298 </span>            :             recording = true;</a>
+<a name="299"><span class="lineNum">     299 </span>            :         }</a>
+<a name="300"><span class="lineNum">     300 </span>            : </a>
+<a name="301"><span class="lineNum">     301 </span><span class="lineNoCov">          0 :         return recording;</span></a>
+<a name="302"><span class="lineNum">     302 </span>            :     }</a>
+<a name="303"><span class="lineNum">     303 </span>            : </a>
+<a name="304"><span class="lineNum">     304 </span>            :     PhysicalMidiInputDevice&amp; getPhysicalMidiInput() const   { return static_cast&lt;PhysicalMidiInputDevice&amp;&gt; (owner); }</a>
+<a name="305"><span class="lineNum">     305 </span>            : </a>
+<a name="306"><span class="lineNum">     306 </span>            :     std::unique_ptr&lt;MidiTimecodeReader&gt; timecodeReader;</a>
+<a name="307"><span class="lineNum">     307 </span>            : </a>
+<a name="308"><span class="lineNum">     308 </span>            : private:</a>
+<a name="309"><span class="lineNum">     309 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PhysicalMidiInputDeviceInstance)</a>
+<a name="310"><span class="lineNum">     310 </span>            : };</a>
+<a name="311"><span class="lineNum">     311 </span>            : </a>
+<a name="312"><span class="lineNum">     312 </span>            : //==============================================================================</a>
+<a name="313"><span class="lineNum">     313 </span><span class="lineNoCov">          0 : PhysicalMidiInputDevice::PhysicalMidiInputDevice (Engine&amp; e, const juce::String&amp; deviceName, int deviceIndexToUse)</span></a>
+<a name="314"><span class="lineNum">     314 </span><span class="lineNoCov">          0 :    : MidiInputDevice (e, TRANS(&quot;MIDI Input&quot;), deviceName),</span></a>
+<a name="315"><span class="lineNum">     315 </span><span class="lineNoCov">          0 :      deviceIndex (deviceIndexToUse)</span></a>
+<a name="316"><span class="lineNum">     316 </span>            : {</a>
+<a name="317"><span class="lineNum">     317 </span><span class="lineNoCov">          0 :     controllerParser.reset (new MidiControllerParser (e));</span></a>
+<a name="318"><span class="lineNum">     318 </span><span class="lineNoCov">          0 :     loadProps();</span></a>
+<a name="319"><span class="lineNum">     319 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="320"><span class="lineNum">     320 </span>            : </a>
+<a name="321"><span class="lineNum">     321 </span><span class="lineNoCov">          0 : PhysicalMidiInputDevice::~PhysicalMidiInputDevice()</span></a>
+<a name="322"><span class="lineNum">     322 </span>            : {</a>
+<a name="323"><span class="lineNum">     323 </span><span class="lineNoCov">          0 :     closeDevice();</span></a>
+<a name="324"><span class="lineNum">     324 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="325"><span class="lineNum">     325 </span>            : </a>
+<a name="326"><span class="lineNum">     326 </span><span class="lineNoCov">          0 : InputDeviceInstance* PhysicalMidiInputDevice::createInstance (EditPlaybackContext&amp; c)</span></a>
+<a name="327"><span class="lineNum">     327 </span>            : {</a>
+<a name="328"><span class="lineNum">     328 </span><span class="lineNoCov">          0 :     if (! isTrackDevice() &amp;&amp; retrospectiveBuffer == nullptr)</span></a>
+<a name="329"><span class="lineNum">     329 </span><span class="lineNoCov">          0 :         retrospectiveBuffer.reset (new RetrospectiveMidiBuffer (c.edit.engine));</span></a>
+<a name="330"><span class="lineNum">     330 </span>            : </a>
+<a name="331"><span class="lineNum">     331 </span><span class="lineNoCov">          0 :     return new PhysicalMidiInputDeviceInstance (*this, c);</span></a>
+<a name="332"><span class="lineNum">     332 </span>            : }</a>
+<a name="333"><span class="lineNum">     333 </span>            : </a>
+<a name="334"><span class="lineNum">     334 </span><span class="lineNoCov">          0 : juce::String PhysicalMidiInputDevice::openDevice()</span></a>
+<a name="335"><span class="lineNum">     335 </span>            : {</a>
+<a name="336"><span class="lineNum">     336 </span><span class="lineNoCov">          0 :     std::memset (keysDown, 0, sizeof (keysDown));</span></a>
+<a name="337"><span class="lineNum">     337 </span><span class="lineNoCov">          0 :     std::memset (keyDownVelocities, 0, sizeof (keyDownVelocities));</span></a>
+<a name="338"><span class="lineNum">     338 </span>            : </a>
+<a name="339"><span class="lineNum">     339 </span><span class="lineNoCov">          0 :     if (inputDevice == nullptr)</span></a>
+<a name="340"><span class="lineNum">     340 </span>            :     {</a>
+<a name="341"><span class="lineNum">     341 </span><span class="lineNoCov">          0 :         CRASH_TRACER</span></a>
+<a name="342"><span class="lineNum">     342 </span><span class="lineNoCov">          0 :         inputDevice = juce::MidiInput::openDevice (juce::MidiInput::getAvailableDevices()[deviceIndex].identifier, this);</span></a>
+<a name="343"><span class="lineNum">     343 </span>            : </a>
+<a name="344"><span class="lineNum">     344 </span><span class="lineNoCov">          0 :         if (inputDevice != nullptr)</span></a>
+<a name="345"><span class="lineNum">     345 </span>            :         {</a>
+<a name="346"><span class="lineNum">     346 </span><span class="lineNoCov">          0 :             TRACKTION_LOG (&quot;opening MIDI in device: &quot; + getName());</span></a>
+<a name="347"><span class="lineNum">     347 </span><span class="lineNoCov">          0 :             inputDevice-&gt;start();</span></a>
+<a name="348"><span class="lineNum">     348 </span>            :         }</a>
+<a name="349"><span class="lineNum">     349 </span>            :     }</a>
+<a name="350"><span class="lineNum">     350 </span>            : </a>
+<a name="351"><span class="lineNum">     351 </span><span class="lineNoCov">          0 :     if (inputDevice != nullptr)</span></a>
+<a name="352"><span class="lineNum">     352 </span><span class="lineNoCov">          0 :         return {};</span></a>
+<a name="353"><span class="lineNum">     353 </span>            : </a>
+<a name="354"><span class="lineNum">     354 </span><span class="lineNoCov">          0 :     return TRANS(&quot;Couldn't open the MIDI port&quot;);</span></a>
+<a name="355"><span class="lineNum">     355 </span>            : }</a>
+<a name="356"><span class="lineNum">     356 </span>            : </a>
+<a name="357"><span class="lineNum">     357 </span><span class="lineNoCov">          0 : void PhysicalMidiInputDevice::closeDevice()</span></a>
+<a name="358"><span class="lineNum">     358 </span>            : {</a>
+<a name="359"><span class="lineNum">     359 </span>            :     jassert (instances.isEmpty());</a>
+<a name="360"><span class="lineNum">     360 </span>            :     instances.clear();</a>
+<a name="361"><span class="lineNum">     361 </span>            : </a>
+<a name="362"><span class="lineNum">     362 </span><span class="lineNoCov">          0 :     if (inputDevice != nullptr)</span></a>
+<a name="363"><span class="lineNum">     363 </span>            :     {</a>
+<a name="364"><span class="lineNum">     364 </span><span class="lineNoCov">          0 :         CRASH_TRACER</span></a>
+<a name="365"><span class="lineNum">     365 </span><span class="lineNoCov">          0 :         TRACKTION_LOG (&quot;Closing MIDI in device: &quot; + getName());</span></a>
+<a name="366"><span class="lineNum">     366 </span>            :         inputDevice = nullptr;</a>
+<a name="367"><span class="lineNum">     367 </span>            :     }</a>
+<a name="368"><span class="lineNum">     368 </span>            : </a>
+<a name="369"><span class="lineNum">     369 </span><span class="lineNoCov">          0 :     saveProps();</span></a>
+<a name="370"><span class="lineNum">     370 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="371"><span class="lineNum">     371 </span>            : </a>
+<a name="372"><span class="lineNum">     372 </span><span class="lineNoCov">          0 : void PhysicalMidiInputDevice::setExternalController (ExternalController* ec)</span></a>
+<a name="373"><span class="lineNum">     373 </span>            : {</a>
+<a name="374"><span class="lineNum">     374 </span><span class="lineNoCov">          0 :     TRACKTION_LOG (&quot;MIDI External controller assigned: &quot; + getName());</span></a>
+<a name="375"><span class="lineNum">     375 </span><span class="lineNoCov">          0 :     externalController = ec;</span></a>
+<a name="376"><span class="lineNum">     376 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="377"><span class="lineNum">     377 </span>            : </a>
+<a name="378"><span class="lineNum">     378 </span><span class="lineNoCov">          0 : void PhysicalMidiInputDevice::removeExternalController (ExternalController* ec)</span></a>
+<a name="379"><span class="lineNum">     379 </span>            : {</a>
+<a name="380"><span class="lineNum">     380 </span><span class="lineNoCov">          0 :     if (externalController == ec)</span></a>
+<a name="381"><span class="lineNum">     381 </span><span class="lineNoCov">          0 :         externalController = nullptr;</span></a>
+<a name="382"><span class="lineNum">     382 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="383"><span class="lineNum">     383 </span>            : </a>
+<a name="384"><span class="lineNum">     384 </span><span class="lineNoCov">          0 : bool PhysicalMidiInputDevice::isAvailableToEdit() const</span></a>
+<a name="385"><span class="lineNum">     385 </span>            : {</a>
+<a name="386"><span class="lineNum">     386 </span><span class="lineNoCov">          0 :     return isEnabled() &amp;&amp; (externalController == nullptr</span></a>
+<a name="387"><span class="lineNum">     387 </span><span class="lineNoCov">          0 :                              || ! externalController-&gt;eatsAllMessages());</span></a>
+<a name="388"><span class="lineNum">     388 </span>            : }</a>
+<a name="389"><span class="lineNum">     389 </span>            : </a>
+<a name="390"><span class="lineNum">     390 </span><span class="lineNoCov">          0 : bool PhysicalMidiInputDevice::tryToSendTimecode (const juce::MidiMessage&amp; message)</span></a>
+<a name="391"><span class="lineNum">     391 </span>            : {</a>
+<a name="392"><span class="lineNum">     392 </span><span class="lineNoCov">          0 :     if (isAcceptingMMC &amp;&amp; message.isMidiMachineControlMessage())</span></a>
+<a name="393"><span class="lineNum">     393 </span>            :     {</a>
+<a name="394"><span class="lineNum">     394 </span><span class="lineNoCov">          0 :         const juce::ScopedLock sl (instanceLock);</span></a>
+<a name="395"><span class="lineNum">     395 </span>            : </a>
+<a name="396"><span class="lineNum">     396 </span><span class="lineNoCov">          0 :         for (auto p : instances)</span></a>
+<a name="397"><span class="lineNum">     397 </span><span class="lineNoCov">          0 :             p-&gt;handleMMCMessage (message);</span></a>
+<a name="398"><span class="lineNum">     398 </span>            : </a>
+<a name="399"><span class="lineNum">     399 </span>            :         return true;</a>
+<a name="400"><span class="lineNum">     400 </span>            :     }</a>
+<a name="401"><span class="lineNum">     401 </span>            : </a>
+<a name="402"><span class="lineNum">     402 </span><span class="lineNoCov">          0 :     if (isReadingMidiTimecode)</span></a>
+<a name="403"><span class="lineNum">     403 </span>            :     {</a>
+<a name="404"><span class="lineNum">     404 </span><span class="lineNoCov">          0 :         const juce::ScopedLock sl (instanceLock);</span></a>
+<a name="405"><span class="lineNum">     405 </span>            : </a>
+<a name="406"><span class="lineNum">     406 </span><span class="lineNoCov">          0 :         for (auto p : instances)</span></a>
+<a name="407"><span class="lineNum">     407 </span><span class="lineNoCov">          0 :             if (p-&gt;handleTimecodeMessage (message))</span></a>
+<a name="408"><span class="lineNum">     408 </span>            :                 return true;</a>
+<a name="409"><span class="lineNum">     409 </span>            :     }</a>
+<a name="410"><span class="lineNum">     410 </span>            : </a>
+<a name="411"><span class="lineNum">     411 </span>            :     return false;</a>
+<a name="412"><span class="lineNum">     412 </span>            : }</a>
+<a name="413"><span class="lineNum">     413 </span>            : </a>
+<a name="414"><span class="lineNum">     414 </span><span class="lineNoCov">          0 : void PhysicalMidiInputDevice::handleIncomingMidiMessage (const juce::MidiMessage&amp; m)</span></a>
+<a name="415"><span class="lineNum">     415 </span>            : {</a>
+<a name="416"><span class="lineNum">     416 </span><span class="lineNoCov">          0 :     if (externalController != nullptr &amp;&amp; externalController-&gt;wantsMessage (m))</span></a>
+<a name="417"><span class="lineNum">     417 </span>            :     {</a>
+<a name="418"><span class="lineNum">     418 </span><span class="lineNoCov">          0 :         externalController-&gt;acceptMidiMessage (m);</span></a>
+<a name="419"><span class="lineNum">     419 </span>            :     }</a>
+<a name="420"><span class="lineNum">     420 </span>            :     else</a>
+<a name="421"><span class="lineNum">     421 </span>            :     {</a>
+<a name="422"><span class="lineNum">     422 </span><span class="lineNoCov">          0 :         if (! (m.isActiveSense() || disallowedChannels[m.getChannel() - 1]))</span></a>
+<a name="423"><span class="lineNum">     423 </span>            :         {</a>
+<a name="424"><span class="lineNum">     424 </span><span class="lineNoCov">          0 :             auto message = m;</span></a>
+<a name="425"><span class="lineNum">     425 </span>            : </a>
+<a name="426"><span class="lineNum">     426 </span><span class="lineNoCov">          0 :             if (m.getTimeStamp() == 0 || (! engine.getEngineBehaviour().isMidiDriverUsedForIncommingMessageTiming()))</span></a>
+<a name="427"><span class="lineNum">     427 </span><span class="lineNoCov">          0 :                 message.setTimeStamp (juce::Time::getMillisecondCounterHiRes() * 0.001);</span></a>
+<a name="428"><span class="lineNum">     428 </span>            : </a>
+<a name="429"><span class="lineNum">     429 </span>            :             message.addToTimeStamp (adjustSecs);</a>
+<a name="430"><span class="lineNum">     430 </span>            : </a>
+<a name="431"><span class="lineNum">     431 </span><span class="lineNoCov">          0 :             sendNoteOnToMidiKeyListeners (message);</span></a>
+<a name="432"><span class="lineNum">     432 </span>            : </a>
+<a name="433"><span class="lineNum">     433 </span><span class="lineNoCov">          0 :             if (! retrospectiveRecordLock &amp;&amp; retrospectiveBuffer != nullptr)</span></a>
+<a name="434"><span class="lineNum">     434 </span><span class="lineNoCov">          0 :                 retrospectiveBuffer-&gt;addMessage (message, adjustSecs);</span></a>
+<a name="435"><span class="lineNum">     435 </span>            : </a>
+<a name="436"><span class="lineNum">     436 </span><span class="lineNoCov">          0 :             if (! tryToSendTimecode (message))</span></a>
+<a name="437"><span class="lineNum">     437 </span>            :             {</a>
+<a name="438"><span class="lineNum">     438 </span><span class="lineNoCov">          0 :                 if (isTakingControllerMessages)</span></a>
+<a name="439"><span class="lineNum">     439 </span><span class="lineNoCov">          0 :                     controllerParser-&gt;processMessage (message);</span></a>
+<a name="440"><span class="lineNum">     440 </span>            : </a>
+<a name="441"><span class="lineNum">     441 </span><span class="lineNoCov">          0 :                 sendMessageToInstances (message);</span></a>
+<a name="442"><span class="lineNum">     442 </span>            :             }</a>
+<a name="443"><span class="lineNum">     443 </span>            :         }</a>
+<a name="444"><span class="lineNum">     444 </span>            : </a>
+<a name="445"><span class="lineNum">     445 </span><span class="lineNoCov">          0 :         VirtualMidiInputDevice::broadcastMessageToAllVirtualDevices (this, m);</span></a>
+<a name="446"><span class="lineNum">     446 </span>            :     }</a>
+<a name="447"><span class="lineNum">     447 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="448"><span class="lineNum">     448 </span>            : </a>
+<a name="449"><span class="lineNum">     449 </span><span class="lineNoCov">          0 : void PhysicalMidiInputDevice::loadProps()</span></a>
+<a name="450"><span class="lineNum">     450 </span>            : {</a>
+<a name="451"><span class="lineNum">     451 </span><span class="lineNoCov">          0 :     isTakingControllerMessages = true;</span></a>
+<a name="452"><span class="lineNum">     452 </span>            : </a>
+<a name="453"><span class="lineNum">     453 </span><span class="lineNoCov">          0 :     auto n = engine.getPropertyStorage().getXmlPropertyItem (SettingID::midiin, getName());</span></a>
+<a name="454"><span class="lineNum">     454 </span>            : </a>
+<a name="455"><span class="lineNum">     455 </span><span class="lineNoCov">          0 :     if (n != nullptr)</span></a>
+<a name="456"><span class="lineNum">     456 </span><span class="lineNoCov">          0 :         isTakingControllerMessages = n-&gt;getBoolAttribute (&quot;controllerMessages&quot;, isTakingControllerMessages);</span></a>
+<a name="457"><span class="lineNum">     457 </span>            : </a>
+<a name="458"><span class="lineNum">     458 </span><span class="lineNoCov">          0 :     MidiInputDevice::loadProps (n.get());</span></a>
+<a name="459"><span class="lineNum">     459 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="460"><span class="lineNum">     460 </span>            : </a>
+<a name="461"><span class="lineNum">     461 </span><span class="lineNoCov">          0 : void PhysicalMidiInputDevice::saveProps()</span></a>
+<a name="462"><span class="lineNum">     462 </span>            : {</a>
+<a name="463"><span class="lineNum">     463 </span><span class="lineNoCov">          0 :     if (isTrackDevice())</span></a>
+<a name="464"><span class="lineNum">     464 </span><span class="lineNoCov">          0 :         return;</span></a>
+<a name="465"><span class="lineNum">     465 </span>            : </a>
+<a name="466"><span class="lineNum">     466 </span><span class="lineNoCov">          0 :     juce::XmlElement n (&quot;SETTINGS&quot;);</span></a>
+<a name="467"><span class="lineNum">     467 </span><span class="lineNoCov">          0 :     n.setAttribute (&quot;controllerMessages&quot;, isTakingControllerMessages);</span></a>
+<a name="468"><span class="lineNum">     468 </span>            : </a>
+<a name="469"><span class="lineNum">     469 </span><span class="lineNoCov">          0 :     MidiInputDevice::saveProps (n);</span></a>
+<a name="470"><span class="lineNum">     470 </span>            : </a>
+<a name="471"><span class="lineNum">     471 </span><span class="lineNoCov">          0 :     engine.getPropertyStorage().setXmlPropertyItem (SettingID::midiin, getName(), n);</span></a>
+<a name="472"><span class="lineNum">     472 </span>            : }</a>
+<a name="473"><span class="lineNum">     473 </span>            : </a>
+<a name="474"><span class="lineNum">     474 </span><span class="lineNoCov">          0 : void PhysicalMidiInputDevice::setReadingMidiTimecode (bool b)</span></a>
+<a name="475"><span class="lineNum">     475 </span>            : {</a>
+<a name="476"><span class="lineNum">     476 </span><span class="lineNoCov">          0 :     isReadingMidiTimecode = b;</span></a>
+<a name="477"><span class="lineNum">     477 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="478"><span class="lineNum">     478 </span>            : </a>
+<a name="479"><span class="lineNum">     479 </span><span class="lineNoCov">          0 : void PhysicalMidiInputDevice::setIgnoresHours (bool b)</span></a>
+<a name="480"><span class="lineNum">     480 </span>            : {</a>
+<a name="481"><span class="lineNum">     481 </span><span class="lineNoCov">          0 :     ignoreHours = b;</span></a>
+<a name="482"><span class="lineNum">     482 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="483"><span class="lineNum">     483 </span>            : </a>
+<a name="484"><span class="lineNum">     484 </span><span class="lineNoCov">          0 : void PhysicalMidiInputDevice::setAcceptingMMC (bool b)</span></a>
+<a name="485"><span class="lineNum">     485 </span>            : {</a>
+<a name="486"><span class="lineNum">     486 </span><span class="lineNoCov">          0 :     isAcceptingMMC = b;</span></a>
+<a name="487"><span class="lineNum">     487 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="488"><span class="lineNum">     488 </span>            : </a>
+<a name="489"><span class="lineNum">     489 </span><span class="lineNoCov">          0 : void PhysicalMidiInputDevice::setReadingControllerMessages (bool b)</span></a>
+<a name="490"><span class="lineNum">     490 </span>            : {</a>
+<a name="491"><span class="lineNum">     491 </span><span class="lineNoCov">          0 :     isTakingControllerMessages = b;</span></a>
+<a name="492"><span class="lineNum">     492 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="493"><span class="lineNum">     493 </span>            : </a>
+<a name="494"><span class="lineNum">     494 </span>            : }</a>
 </pre>
       </td>
     </tr>

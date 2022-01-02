@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">84</td>
+            <td class="headerCovTableEntry">85</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -73,18 +73,18 @@
 <a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
-<a name="14"><span class="lineNum">      14 </span><span class="lineNoCov">          0 : PatchBayPlugin::Wire::Wire (const juce::ValueTree&amp; v, UndoManager* um)  : state (v)</span></a>
+<a name="14"><span class="lineNum">      14 </span><span class="lineNoCov">          0 : PatchBayPlugin::Wire::Wire (const juce::ValueTree&amp; v, juce::UndoManager* um)  : state (v)</span></a>
 <a name="15"><span class="lineNum">      15 </span>            : {</a>
 <a name="16"><span class="lineNum">      16 </span>            :     sourceChannelIndex.referTo (state, IDs::srcChan, um);</a>
 <a name="17"><span class="lineNum">      17 </span>            :     destChannelIndex.referTo (state, IDs::dstChan, um);</a>
 <a name="18"><span class="lineNum">      18 </span>            :     gainDb.referTo (state, IDs::gainDb, um);</a>
 <a name="19"><span class="lineNum">      19 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="20"><span class="lineNum">      20 </span>            : </a>
-<a name="21"><span class="lineNum">      21 </span>            : struct PatchBayPlugin::WireList  : public ValueTreeObjectList&lt;PatchBayPlugin::Wire, CriticalSection&gt;,</a>
-<a name="22"><span class="lineNum">      22 </span>            :                                    private AsyncUpdater</a>
+<a name="21"><span class="lineNum">      21 </span>            : struct PatchBayPlugin::WireList  : public ValueTreeObjectList&lt;PatchBayPlugin::Wire, juce::CriticalSection&gt;,</a>
+<a name="22"><span class="lineNum">      22 </span>            :                                    private juce::AsyncUpdater</a>
 <a name="23"><span class="lineNum">      23 </span>            : {</a>
 <a name="24"><span class="lineNum">      24 </span><span class="lineNoCov">          0 :     WireList (PatchBayPlugin&amp; pb, const juce::ValueTree&amp; parentTree)</span></a>
-<a name="25"><span class="lineNum">      25 </span><span class="lineNoCov">          0 :         : ValueTreeObjectList&lt;Wire, CriticalSection&gt; (parentTree), patchbay (pb)</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineNoCov">          0 :         : ValueTreeObjectList&lt;Wire, juce::CriticalSection&gt; (parentTree), patchbay (pb)</span></a>
 <a name="26"><span class="lineNum">      26 </span>            :     {</a>
 <a name="27"><span class="lineNum">      27 </span><span class="lineNoCov">          0 :         rebuildObjects();</span></a>
 <a name="28"><span class="lineNum">      28 </span><span class="lineNoCov">          0 :     }</span></a>
@@ -101,7 +101,7 @@
 <a name="39"><span class="lineNum">      39 </span><span class="lineNoCov">          0 :     void newObjectAdded (Wire*) override                    { triggerAsyncUpdate(); }</span></a>
 <a name="40"><span class="lineNum">      40 </span><span class="lineNoCov">          0 :     void objectRemoved (Wire*) override                     { triggerAsyncUpdate(); }</span></a>
 <a name="41"><span class="lineNum">      41 </span><span class="lineNoCov">          0 :     void objectOrderChanged() override                      {}</span></a>
-<a name="42"><span class="lineNum">      42 </span><span class="lineNoCov">          0 :     void valueTreePropertyChanged (ValueTree&amp;, const juce::Identifier&amp;) override  { triggerAsyncUpdate(); }</span></a>
+<a name="42"><span class="lineNum">      42 </span><span class="lineNoCov">          0 :     void valueTreePropertyChanged (juce::ValueTree&amp;, const juce::Identifier&amp;) override  { triggerAsyncUpdate(); }</span></a>
 <a name="43"><span class="lineNum">      43 </span>            : </a>
 <a name="44"><span class="lineNum">      44 </span><span class="lineNoCov">          0 :     void handleAsyncUpdate() override</span></a>
 <a name="45"><span class="lineNum">      45 </span>            :     {</a>
@@ -185,17 +185,17 @@
 <a name="123"><span class="lineNum">     123 </span>            :     {</a>
 <a name="124"><span class="lineNum">     124 </span>            :         SCOPED_REALTIME_CHECK</a>
 <a name="125"><span class="lineNum">     125 </span>            : </a>
-<a name="126"><span class="lineNum">     126 </span>            :         int maxOutputChan = 1;</a>
+<a name="126"><span class="lineNum">     126 </span><span class="lineNoCov">          0 :         int maxOutputChan = 1;</span></a>
 <a name="127"><span class="lineNum">     127 </span><span class="lineNoCov">          0 :         AudioScratchBuffer scratch (2, fc.bufferNumSamples);</span></a>
 <a name="128"><span class="lineNum">     128 </span><span class="lineNoCov">          0 :         auto&amp; outputBuffer = scratch.buffer;</span></a>
 <a name="129"><span class="lineNum">     129 </span><span class="lineNoCov">          0 :         outputBuffer.clear();</span></a>
 <a name="130"><span class="lineNum">     130 </span>            : </a>
 <a name="131"><span class="lineNum">     131 </span>            :         {</a>
-<a name="132"><span class="lineNum">     132 </span><span class="lineNoCov">          0 :             const ScopedLock sl (list-&gt;arrayLock);</span></a>
+<a name="132"><span class="lineNum">     132 </span><span class="lineNoCov">          0 :             const juce::ScopedLock sl (list-&gt;arrayLock);</span></a>
 <a name="133"><span class="lineNum">     133 </span>            : </a>
 <a name="134"><span class="lineNum">     134 </span><span class="lineNoCov">          0 :             for (auto w : list-&gt;objects)</span></a>
 <a name="135"><span class="lineNum">     135 </span>            :             {</a>
-<a name="136"><span class="lineNum">     136 </span><span class="lineNoCov">          0 :                 maxOutputChan = jmax (w-&gt;destChannelIndex.get(), maxOutputChan);</span></a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineNoCov">          0 :                 maxOutputChan = std::max (w-&gt;destChannelIndex.get(), maxOutputChan);</span></a>
 <a name="137"><span class="lineNum">     137 </span>            : </a>
 <a name="138"><span class="lineNum">     138 </span><span class="lineNoCov">          0 :                 if (w-&gt;destChannelIndex &lt; 2 &amp;&amp; w-&gt;sourceChannelIndex &lt; fc.destBuffer-&gt;getNumChannels())</span></a>
 <a name="139"><span class="lineNum">     139 </span><span class="lineNoCov">          0 :                     outputBuffer.addFrom (w-&gt;destChannelIndex, 0,</span></a>
@@ -205,7 +205,7 @@
 <a name="143"><span class="lineNum">     143 </span>            :             }</a>
 <a name="144"><span class="lineNum">     144 </span>            :         }</a>
 <a name="145"><span class="lineNum">     145 </span>            : </a>
-<a name="146"><span class="lineNum">     146 </span><span class="lineNoCov">          0 :         maxOutputChan = jmin (2, maxOutputChan + 1);</span></a>
+<a name="146"><span class="lineNum">     146 </span><span class="lineNoCov">          0 :         maxOutputChan = std::min (2, maxOutputChan + 1);</span></a>
 <a name="147"><span class="lineNum">     147 </span><span class="lineNoCov">          0 :         fc.destBuffer-&gt;setSize (maxOutputChan, fc.destBuffer-&gt;getNumSamples(), false);</span></a>
 <a name="148"><span class="lineNum">     148 </span>            : </a>
 <a name="149"><span class="lineNum">     149 </span><span class="lineNoCov">          0 :         for (int i = maxOutputChan; --i &gt;= 0;)</span></a>
@@ -213,33 +213,34 @@
 <a name="151"><span class="lineNum">     151 </span>            :     }</a>
 <a name="152"><span class="lineNum">     152 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="153"><span class="lineNum">     153 </span>            : </a>
-<a name="154"><span class="lineNum">     154 </span><span class="lineNoCov">          0 : void PatchBayPlugin::makeConnection (int inputChannel, int outputChannel, float gainDb, UndoManager* um)</span></a>
-<a name="155"><span class="lineNum">     155 </span>            : {</a>
-<a name="156"><span class="lineNum">     156 </span><span class="lineNoCov">          0 :     for (auto w : list-&gt;objects)</span></a>
-<a name="157"><span class="lineNum">     157 </span><span class="lineNoCov">          0 :         if (w-&gt;sourceChannelIndex == inputChannel &amp;&amp; w-&gt;destChannelIndex == outputChannel)</span></a>
-<a name="158"><span class="lineNum">     158 </span><span class="lineNoCov">          0 :             return;</span></a>
-<a name="159"><span class="lineNum">     159 </span>            : </a>
-<a name="160"><span class="lineNum">     160 </span>            :     auto w = createValueTree (IDs::CONNECTION,</a>
-<a name="161"><span class="lineNum">     161 </span>            :                               IDs::srcChan, inputChannel,</a>
-<a name="162"><span class="lineNum">     162 </span>            :                               IDs::dstChan, outputChannel,</a>
-<a name="163"><span class="lineNum">     163 </span><span class="lineNoCov">          0 :                               IDs::gainDb, gainDb);</span></a>
-<a name="164"><span class="lineNum">     164 </span>            : </a>
-<a name="165"><span class="lineNum">     165 </span><span class="lineNoCov">          0 :     state.addChild (w, -1, um);</span></a>
-<a name="166"><span class="lineNum">     166 </span>            : }</a>
-<a name="167"><span class="lineNum">     167 </span>            : </a>
-<a name="168"><span class="lineNum">     168 </span><span class="lineNoCov">          0 : void PatchBayPlugin::breakConnection (int inputChannel, int outputChannel)</span></a>
-<a name="169"><span class="lineNum">     169 </span>            : {</a>
-<a name="170"><span class="lineNum">     170 </span><span class="lineNoCov">          0 :     for (auto w : list-&gt;objects)</span></a>
-<a name="171"><span class="lineNum">     171 </span>            :     {</a>
-<a name="172"><span class="lineNum">     172 </span><span class="lineNoCov">          0 :         if (w-&gt;sourceChannelIndex == inputChannel &amp;&amp; w-&gt;destChannelIndex == outputChannel)</span></a>
-<a name="173"><span class="lineNum">     173 </span>            :         {</a>
-<a name="174"><span class="lineNum">     174 </span><span class="lineNoCov">          0 :             state.removeChild (w-&gt;state, getUndoManager());</span></a>
-<a name="175"><span class="lineNum">     175 </span><span class="lineNoCov">          0 :             break;</span></a>
-<a name="176"><span class="lineNum">     176 </span>            :         }</a>
-<a name="177"><span class="lineNum">     177 </span>            :     }</a>
-<a name="178"><span class="lineNum">     178 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="179"><span class="lineNum">     179 </span>            : </a>
-<a name="180"><span class="lineNum">     180 </span>            : }</a>
+<a name="154"><span class="lineNum">     154 </span><span class="lineNoCov">          0 : void PatchBayPlugin::makeConnection (int inputChannel, int outputChannel,</span></a>
+<a name="155"><span class="lineNum">     155 </span>            :                                      float gainDb, juce::UndoManager* um)</a>
+<a name="156"><span class="lineNum">     156 </span>            : {</a>
+<a name="157"><span class="lineNum">     157 </span><span class="lineNoCov">          0 :     for (auto w : list-&gt;objects)</span></a>
+<a name="158"><span class="lineNum">     158 </span><span class="lineNoCov">          0 :         if (w-&gt;sourceChannelIndex == inputChannel &amp;&amp; w-&gt;destChannelIndex == outputChannel)</span></a>
+<a name="159"><span class="lineNum">     159 </span><span class="lineNoCov">          0 :             return;</span></a>
+<a name="160"><span class="lineNum">     160 </span>            : </a>
+<a name="161"><span class="lineNum">     161 </span>            :     auto w = createValueTree (IDs::CONNECTION,</a>
+<a name="162"><span class="lineNum">     162 </span>            :                               IDs::srcChan, inputChannel,</a>
+<a name="163"><span class="lineNum">     163 </span>            :                               IDs::dstChan, outputChannel,</a>
+<a name="164"><span class="lineNum">     164 </span><span class="lineNoCov">          0 :                               IDs::gainDb, gainDb);</span></a>
+<a name="165"><span class="lineNum">     165 </span>            : </a>
+<a name="166"><span class="lineNum">     166 </span><span class="lineNoCov">          0 :     state.addChild (w, -1, um);</span></a>
+<a name="167"><span class="lineNum">     167 </span>            : }</a>
+<a name="168"><span class="lineNum">     168 </span>            : </a>
+<a name="169"><span class="lineNum">     169 </span><span class="lineNoCov">          0 : void PatchBayPlugin::breakConnection (int inputChannel, int outputChannel)</span></a>
+<a name="170"><span class="lineNum">     170 </span>            : {</a>
+<a name="171"><span class="lineNum">     171 </span><span class="lineNoCov">          0 :     for (auto w : list-&gt;objects)</span></a>
+<a name="172"><span class="lineNum">     172 </span>            :     {</a>
+<a name="173"><span class="lineNum">     173 </span><span class="lineNoCov">          0 :         if (w-&gt;sourceChannelIndex == inputChannel &amp;&amp; w-&gt;destChannelIndex == outputChannel)</span></a>
+<a name="174"><span class="lineNum">     174 </span>            :         {</a>
+<a name="175"><span class="lineNum">     175 </span><span class="lineNoCov">          0 :             state.removeChild (w-&gt;state, getUndoManager());</span></a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineNoCov">          0 :             break;</span></a>
+<a name="177"><span class="lineNum">     177 </span>            :         }</a>
+<a name="178"><span class="lineNum">     178 </span>            :     }</a>
+<a name="179"><span class="lineNum">     179 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="180"><span class="lineNum">     180 </span>            : </a>
+<a name="181"><span class="lineNum">     181 </span>            : }</a>
 </pre>
       </td>
     </tr>

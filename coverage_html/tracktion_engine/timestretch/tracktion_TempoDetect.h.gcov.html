@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -128,18 +128,18 @@
 <a name="66"><span class="lineNum">      66 </span>            :     {</a>
 <a name="67"><span class="lineNum">      67 </span>            :         jassert ((int) reader.numChannels == numChannels);</a>
 <a name="68"><span class="lineNum">      68 </span>            : </a>
-<a name="69"><span class="lineNum">      69 </span>            :         const int blockSize = 65536;</a>
+<a name="69"><span class="lineNum">      69 </span>            :         const SampleCount blockSize = 65536;</a>
 <a name="70"><span class="lineNum">      70 </span>            :         const bool useRightChan = numChannels &gt; 1;</a>
 <a name="71"><span class="lineNum">      71 </span>            : </a>
 <a name="72"><span class="lineNum">      72 </span>            :         // can't use an AudioScratchBuffer yet</a>
 <a name="73"><span class="lineNum">      73 </span>            :         juce::AudioBuffer&lt;float&gt; buffer (numChannels, blockSize);</a>
 <a name="74"><span class="lineNum">      74 </span>            : </a>
-<a name="75"><span class="lineNum">      75 </span>            :         juce::int64 numLeft = reader.lengthInSamples;</a>
+<a name="75"><span class="lineNum">      75 </span>            :         SampleCount numLeft = reader.lengthInSamples;</a>
 <a name="76"><span class="lineNum">      76 </span>            :         int startSample = 0;</a>
 <a name="77"><span class="lineNum">      77 </span>            : </a>
 <a name="78"><span class="lineNum">      78 </span>            :         while (numLeft &gt; 0)</a>
 <a name="79"><span class="lineNum">      79 </span>            :         {</a>
-<a name="80"><span class="lineNum">      80 </span>            :             const int numThisTime = (int) juce::jmin (numLeft, (juce::int64) blockSize);</a>
+<a name="80"><span class="lineNum">      80 </span>            :             auto numThisTime = (int) std::min (numLeft, blockSize);</a>
 <a name="81"><span class="lineNum">      81 </span>            :             reader.read (&amp;buffer, 0, numThisTime, startSample, true, useRightChan);</a>
 <a name="82"><span class="lineNum">      82 </span>            :             processSection (buffer, numThisTime);</a>
 <a name="83"><span class="lineNum">      83 </span>            : </a>
@@ -184,7 +184,7 @@
 <a name="122"><span class="lineNum">     122 </span><span class="lineNoCov">          0 :         AudioScratchBuffer scratch (1, numChannels * numSamples);</span></a>
 <a name="123"><span class="lineNum">     123 </span><span class="lineNoCov">          0 :         float* interleaved = scratch.buffer.getWritePointer (0);</span></a>
 <a name="124"><span class="lineNum">     124 </span>            : </a>
-<a name="125"><span class="lineNum">     125 </span>            :         using Format = juce::AudioData::Format&lt;AudioData::Float32, AudioData::NativeEndian&gt;;</a>
+<a name="125"><span class="lineNum">     125 </span>            :         using Format = juce::AudioData::Format&lt;juce::AudioData::Float32, juce::AudioData::NativeEndian&gt;;</a>
 <a name="126"><span class="lineNum">     126 </span><span class="lineNoCov">          0 :         juce::AudioData::interleaveSamples (juce::AudioData::NonInterleavedSource&lt;Format&gt; { inputSamples,   numChannels },</span></a>
 <a name="127"><span class="lineNum">     127 </span><span class="lineNoCov">          0 :                                             juce::AudioData::InterleavedDest&lt;Format&gt;      { interleaved,    numChannels },</span></a>
 <a name="128"><span class="lineNum">     128 </span>            :                                             numSamples);</a>

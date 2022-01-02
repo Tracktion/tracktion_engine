@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -344,7 +344,7 @@
 <a name="282"><span class="lineNum">     282 </span>            :     int readOutput (float* const* outChannels, int offset, int numNeeded)</a>
 <a name="283"><span class="lineNum">     283 </span>            :     {</a>
 <a name="284"><span class="lineNum">     284 </span>            :         float* interleaved = ptrBegin();</a>
-<a name="285"><span class="lineNum">     285 </span>            :         const int num = jmin (numNeeded, (int) numSamples());</a>
+<a name="285"><span class="lineNum">     285 </span>            :         auto num = std::min (numNeeded, (int) numSamples());</a>
 <a name="286"><span class="lineNum">     286 </span>            : </a>
 <a name="287"><span class="lineNum">     287 </span>            :         for (int chan = 0; chan &lt; numChannels; ++chan)</a>
 <a name="288"><span class="lineNum">     288 </span>            :         {</a>
@@ -535,7 +535,7 @@
 <a name="473"><span class="lineNum">     473 </span>            :         </a>
 <a name="474"><span class="lineNum">     474 </span>            :         if (numSamplesToDrop &gt; 0)</a>
 <a name="475"><span class="lineNum">     475 </span>            :         {</a>
-<a name="476"><span class="lineNum">     476 </span>            :             const int numToDropThisTime = juce::jmin (numSamplesToDrop, numAvailable, samplesPerOutputBuffer);</a>
+<a name="476"><span class="lineNum">     476 </span>            :             auto numToDropThisTime = std::min (numSamplesToDrop, std::min (numAvailable, samplesPerOutputBuffer));</a>
 <a name="477"><span class="lineNum">     477 </span>            :             rubberBandStretcher.retrieve (outChannels, (size_t) numToDropThisTime);</a>
 <a name="478"><span class="lineNum">     478 </span>            :             numSamplesToDrop -= numToDropThisTime;</a>
 <a name="479"><span class="lineNum">     479 </span>            :             jassert (numSamplesToDrop &gt;= 0);</a>

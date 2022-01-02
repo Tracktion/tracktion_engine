@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -108,7 +108,7 @@
 <a name="46"><span class="lineNum">      46 </span>            :     int getItemID() const;</a>
 <a name="47"><span class="lineNum">      47 </span>            : </a>
 <a name="48"><span class="lineNum">      48 </span>            :     /** Returns a combined ID as an integer, useful for creating hashes */</a>
-<a name="49"><span class="lineNum">      49 </span>            :     juce::int64 getRawID() const noexcept               { return combinedID; }</a>
+<a name="49"><span class="lineNum">      49 </span>            :     int64_t getRawID() const noexcept                   { return combinedID; }</a>
 <a name="50"><span class="lineNum">      50 </span>            : </a>
 <a name="51"><span class="lineNum">      51 </span>            :     //==============================================================================</a>
 <a name="52"><span class="lineNum">      52 </span><span class="lineNoCov">          0 :     bool isValid() const noexcept                       { return combinedID != 0; }</span></a>
@@ -124,7 +124,7 @@
 <a name="62"><span class="lineNum">      62 </span><span class="lineNoCov">          0 :     bool operator&lt;  (ProjectItemID other) const         { return combinedID &lt;  other.combinedID; }</span></a>
 <a name="63"><span class="lineNum">      63 </span>            : </a>
 <a name="64"><span class="lineNum">      64 </span>            : private:</a>
-<a name="65"><span class="lineNum">      65 </span>            :     juce::int64 combinedID = 0;</a>
+<a name="65"><span class="lineNum">      65 </span>            :     int64_t combinedID = 0;</a>
 <a name="66"><span class="lineNum">      66 </span>            : </a>
 <a name="67"><span class="lineNum">      67 </span>            :     // (NB: this is disallowed because it's ambiguous whether a string or int64 format is intended)</a>
 <a name="68"><span class="lineNum">      68 </span>            :     ProjectItemID (const juce::var&amp;) = delete;</a>

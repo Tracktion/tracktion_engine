@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">20</td>
@@ -159,9 +159,9 @@
 <a name="97"><span class="lineNum">      97 </span><span class="lineCov">      10952 :     return findTrackForPredicate (edit, [id] (Track&amp; t) { return t.itemID == id; });</span></a>
 <a name="98"><span class="lineNum">      98 </span>            : }</a>
 <a name="99"><span class="lineNum">      99 </span>            : </a>
-<a name="100"><span class="lineNum">     100 </span><span class="lineNoCov">          0 : Array&lt;Track*&gt; findTracksForIDs (const Edit&amp; edit, Array&lt;EditItemID&gt; ids)</span></a>
+<a name="100"><span class="lineNum">     100 </span><span class="lineNoCov">          0 : juce::Array&lt;Track*&gt; findTracksForIDs (const Edit&amp; edit, const juce::Array&lt;EditItemID&gt;&amp; ids)</span></a>
 <a name="101"><span class="lineNum">     101 </span>            : {</a>
-<a name="102"><span class="lineNum">     102 </span><span class="lineNoCov">          0 :     Array&lt;Track*&gt; tracks;</span></a>
+<a name="102"><span class="lineNum">     102 </span><span class="lineNoCov">          0 :     juce::Array&lt;Track*&gt; tracks;</span></a>
 <a name="103"><span class="lineNum">     103 </span>            : </a>
 <a name="104"><span class="lineNum">     104 </span><span class="lineNoCov">          0 :     edit.visitAllTracksRecursive ([&amp;] (Track&amp; t)</span></a>
 <a name="105"><span class="lineNum">     105 </span>            :                                   {</a>
@@ -200,7 +200,7 @@
 <a name="138"><span class="lineNum">     138 </span>            :     return {};</a>
 <a name="139"><span class="lineNum">     139 </span>            : }</a>
 <a name="140"><span class="lineNum">     140 </span>            : </a>
-<a name="141"><span class="lineNum">     141 </span><span class="lineNoCov">          0 : juce::BigInteger toBitSet (const Array&lt;Track*&gt;&amp; tracks)</span></a>
+<a name="141"><span class="lineNum">     141 </span><span class="lineNoCov">          0 : juce::BigInteger toBitSet (const juce::Array&lt;Track*&gt;&amp; tracks)</span></a>
 <a name="142"><span class="lineNum">     142 </span>            : {</a>
 <a name="143"><span class="lineNum">     143 </span><span class="lineNoCov">          0 :     juce::BigInteger bitset;</span></a>
 <a name="144"><span class="lineNum">     144 </span>            :     </a>
@@ -218,7 +218,7 @@
 <a name="156"><span class="lineNum">     156 </span>            : </a>
 <a name="157"><span class="lineNum">     157 </span><span class="lineCov">         70 : juce::Array&lt;Track*&gt; toTrackArray (Edit&amp; edit, const juce::BigInteger&amp; tracksToAdd)</span></a>
 <a name="158"><span class="lineNum">     158 </span>            : {</a>
-<a name="159"><span class="lineNum">     159 </span><span class="lineCov">         70 :     Array&lt;Track*&gt; tracks;</span></a>
+<a name="159"><span class="lineNum">     159 </span><span class="lineCov">         70 :     juce::Array&lt;Track*&gt; tracks;</span></a>
 <a name="160"><span class="lineNum">     160 </span>            : </a>
 <a name="161"><span class="lineNum">     161 </span><span class="lineCov">         70 :     auto allTracks = getAllTracks (edit);</span></a>
 <a name="162"><span class="lineNum">     162 </span>            : </a>
@@ -473,7 +473,7 @@
 <a name="411"><span class="lineNum">     411 </span><span class="lineNoCov">          0 :             t-&gt;deleteRegion (rangeToDelete, selectionManager);</span></a>
 <a name="412"><span class="lineNum">     412 </span>            : </a>
 <a name="413"><span class="lineNum">     413 </span>            :             // Remove any tiny clips that might be left over</a>
-<a name="414"><span class="lineNum">     414 </span><span class="lineNoCov">          0 :             Array&lt;Clip*&gt; clipsToRemove;</span></a>
+<a name="414"><span class="lineNum">     414 </span><span class="lineNoCov">          0 :             juce::Array&lt;Clip*&gt; clipsToRemove;</span></a>
 <a name="415"><span class="lineNum">     415 </span>            : </a>
 <a name="416"><span class="lineNum">     416 </span><span class="lineNoCov">          0 :             for (auto&amp; c : t-&gt;getClips())</span></a>
 <a name="417"><span class="lineNum">     417 </span><span class="lineNoCov">          0 :                 if (c-&gt;getPosition().getLength() &lt; 0.0001)</span></a>
@@ -830,8 +830,8 @@
 <a name="768"><span class="lineNum">     768 </span><span class="lineNoCov">          0 :         list.addIfNotAlreadyThere (p);</span></a>
 <a name="769"><span class="lineNum">     769 </span>            : </a>
 <a name="770"><span class="lineNum">     770 </span><span class="lineCov">       7862 :     for (auto r : edit.getRackList().getTypes())</span></a>
-<a name="771"><span class="lineNum">     771 </span><span class="lineCov">       7262 :         for (auto p : r-&gt;getPlugins())</span></a>
-<a name="772"><span class="lineNum">     772 </span><span class="lineCov">       2218 :             list.add (p);</span></a>
+<a name="771"><span class="lineNum">     771 </span><span class="lineCov">       7273 :         for (auto p : r-&gt;getPlugins())</span></a>
+<a name="772"><span class="lineNum">     772 </span><span class="lineCov">       2229 :             list.add (p);</span></a>
 <a name="773"><span class="lineNum">     773 </span>            : </a>
 <a name="774"><span class="lineNum">     774 </span><span class="lineCov">       2670 :     if (includeMasterVolume)</span></a>
 <a name="775"><span class="lineNum">     775 </span><span class="lineCov">        148 :         list.add (edit.getMasterVolumePlugin().get());</span></a>
@@ -864,7 +864,7 @@
 <a name="802"><span class="lineNum">     802 </span>            : </a>
 <a name="803"><span class="lineNum">     803 </span><span class="lineNoCov">          0 : juce::Array&lt;RackInstance*&gt; getRackInstancesInEditForType (const RackType&amp; rt)</span></a>
 <a name="804"><span class="lineNum">     804 </span>            : {</a>
-<a name="805"><span class="lineNum">     805 </span><span class="lineNoCov">          0 :     Array&lt;RackInstance*&gt; instances;</span></a>
+<a name="805"><span class="lineNum">     805 </span><span class="lineNoCov">          0 :     juce::Array&lt;RackInstance*&gt; instances;</span></a>
 <a name="806"><span class="lineNum">     806 </span>            : </a>
 <a name="807"><span class="lineNum">     807 </span><span class="lineNoCov">          0 :     for (auto p : getAllPlugins (rt.edit, false))</span></a>
 <a name="808"><span class="lineNum">     808 </span><span class="lineNoCov">          0 :         if (auto ri = dynamic_cast&lt;RackInstance*&gt; (p))</span></a>

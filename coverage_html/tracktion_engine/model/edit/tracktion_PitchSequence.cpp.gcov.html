@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">15</td>
@@ -74,7 +74,7 @@
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : struct PitchSequence::PitchList  : public ValueTreeObjectList&lt;PitchSetting&gt;,</a>
-<a name="15"><span class="lineNum">      15 </span>            :                                    private AsyncUpdater</a>
+<a name="15"><span class="lineNum">      15 </span>            :                                    private juce::AsyncUpdater</a>
 <a name="16"><span class="lineNum">      16 </span>            : {</a>
 <a name="17"><span class="lineNum">      17 </span><span class="lineCov">        194 :     PitchList (PitchSequence&amp; s, const juce::ValueTree&amp; parentTree)</span></a>
 <a name="18"><span class="lineNum">      18 </span><span class="lineCov">        194 :         : ValueTreeObjectList&lt;PitchSetting&gt; (parentTree), pitchSequence (s)</span></a>
@@ -108,7 +108,7 @@
 <a name="46"><span class="lineNum">      46 </span><span class="lineCov">        194 :     void newObjectAdded (PitchSetting*) override    { sendChange(); }</span></a>
 <a name="47"><span class="lineNum">      47 </span><span class="lineNoCov">          0 :     void objectRemoved (PitchSetting*) override     { sendChange(); }</span></a>
 <a name="48"><span class="lineNum">      48 </span><span class="lineNoCov">          0 :     void objectOrderChanged() override              { sendChange(); }</span></a>
-<a name="49"><span class="lineNum">      49 </span><span class="lineNoCov">          0 :     void valueTreePropertyChanged (ValueTree&amp;, const juce::Identifier&amp;) override  { sendChange(); }</span></a>
+<a name="49"><span class="lineNum">      49 </span><span class="lineNoCov">          0 :     void valueTreePropertyChanged (juce::ValueTree&amp;, const juce::Identifier&amp;) override  { sendChange(); }</span></a>
 <a name="50"><span class="lineNum">      50 </span>            : </a>
 <a name="51"><span class="lineNum">      51 </span><span class="lineCov">        194 :     void sendChange()</span></a>
 <a name="52"><span class="lineNum">      52 </span>            :     {</a>
@@ -134,7 +134,7 @@
 <a name="72"><span class="lineNum">      72 </span><span class="lineCov">        582 :     return *edit;</span></a>
 <a name="73"><span class="lineNum">      73 </span>            : }</a>
 <a name="74"><span class="lineNum">      74 </span>            : </a>
-<a name="75"><span class="lineNum">      75 </span><span class="lineNoCov">          0 : UndoManager* PitchSequence::getUndoManager() const</span></a>
+<a name="75"><span class="lineNum">      75 </span><span class="lineNoCov">          0 : juce::UndoManager* PitchSequence::getUndoManager() const</span></a>
 <a name="76"><span class="lineNum">      76 </span>            : {</a>
 <a name="77"><span class="lineNum">      77 </span><span class="lineNoCov">          0 :     return &amp;getEdit().getUndoManager();</span></a>
 <a name="78"><span class="lineNum">      78 </span>            : }</a>
@@ -271,40 +271,41 @@
 <a name="209"><span class="lineNum">     209 </span>            :         {</a>
 <a name="210"><span class="lineNum">     210 </span><span class="lineNoCov">          0 :             t-&gt;startBeat.forceUpdateOfCachedValue();</span></a>
 <a name="211"><span class="lineNum">     211 </span><span class="lineNoCov">          0 :             auto newBeat = t-&gt;getStartBeat() + deltaBeats;</span></a>
-<a name="212"><span class="lineNum">     212 </span><span class="lineNoCov">          0 :             t-&gt;setStartBeat (jlimit (0.0, 1e10, snapToBeat ? roundToInt (newBeat) : newBeat));</span></a>
-<a name="213"><span class="lineNum">     213 </span>            :         }</a>
-<a name="214"><span class="lineNum">     214 </span>            :     }</a>
-<a name="215"><span class="lineNum">     215 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="216"><span class="lineNum">     216 </span>            : </a>
-<a name="217"><span class="lineNum">     217 </span><span class="lineCov">          2 : void PitchSequence::insertSpaceIntoSequence (double time, double amountOfSpaceInSeconds, bool snapToBeat)</span></a>
-<a name="218"><span class="lineNum">     218 </span>            : {</a>
-<a name="219"><span class="lineNum">     219 </span>            :     // there may be a temp change at this time so we need to find the tempo to the left of it hence the nudge</a>
-<a name="220"><span class="lineNum">     220 </span><span class="lineCov">          2 :     time = time - 0.00001;</span></a>
-<a name="221"><span class="lineNum">     221 </span><span class="lineCov">          2 :     auto beatsToInsert = getEdit().tempoSequence.getBeatsPerSecondAt (time) * amountOfSpaceInSeconds;</span></a>
-<a name="222"><span class="lineNum">     222 </span><span class="lineCov">          2 :     auto endIndex = indexOfNextPitchAt (time);</span></a>
-<a name="223"><span class="lineNum">     223 </span>            : </a>
-<a name="224"><span class="lineNum">     224 </span><span class="lineCov">          2 :     for (int i = getNumPitches(); --i &gt;= endIndex;)</span></a>
-<a name="225"><span class="lineNum">     225 </span><span class="lineNoCov">          0 :         movePitchStart (*getPitch (i), beatsToInsert, snapToBeat);</span></a>
-<a name="226"><span class="lineNum">     226 </span><span class="lineCov">          2 : }</span></a>
-<a name="227"><span class="lineNum">     227 </span>            : </a>
-<a name="228"><span class="lineNum">     228 </span><span class="lineNoCov">          0 : void PitchSequence::sortEvents()</span></a>
-<a name="229"><span class="lineNum">     229 </span>            : {</a>
-<a name="230"><span class="lineNum">     230 </span>            :     struct PitchSorter</a>
-<a name="231"><span class="lineNum">     231 </span>            :     {</a>
-<a name="232"><span class="lineNum">     232 </span><span class="lineNoCov">          0 :         static int compareElements (const juce::ValueTree&amp; p1, const juce::ValueTree&amp; p2) noexcept</span></a>
-<a name="233"><span class="lineNum">     233 </span>            :         {</a>
-<a name="234"><span class="lineNum">     234 </span><span class="lineNoCov">          0 :             const double beat1 = p1[IDs::startBeat];</span></a>
-<a name="235"><span class="lineNum">     235 </span><span class="lineNoCov">          0 :             const double beat2 = p2[IDs::startBeat];</span></a>
-<a name="236"><span class="lineNum">     236 </span>            : </a>
-<a name="237"><span class="lineNum">     237 </span><span class="lineNoCov">          0 :             return beat1 &lt; beat2 ? -1 : (beat1 &gt; beat2 ? 1 : 0);</span></a>
-<a name="238"><span class="lineNum">     238 </span>            :         }</a>
-<a name="239"><span class="lineNum">     239 </span>            :     };</a>
-<a name="240"><span class="lineNum">     240 </span>            : </a>
-<a name="241"><span class="lineNum">     241 </span>            :     PitchSorter sorter;</a>
-<a name="242"><span class="lineNum">     242 </span><span class="lineCov">        194 :     state.sort (sorter, getUndoManager(), true);</span></a>
-<a name="243"><span class="lineNum">     243 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="244"><span class="lineNum">     244 </span>            : </a>
-<a name="245"><span class="lineNum">     245 </span>            : }</a>
+<a name="212"><span class="lineNum">     212 </span><span class="lineNoCov">          0 :             t-&gt;setStartBeat (juce::jlimit (0.0, 1e10, snapToBeat ? juce::roundToInt (newBeat)</span></a>
+<a name="213"><span class="lineNum">     213 </span>            :                                                                  : newBeat));</a>
+<a name="214"><span class="lineNum">     214 </span>            :         }</a>
+<a name="215"><span class="lineNum">     215 </span>            :     }</a>
+<a name="216"><span class="lineNum">     216 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="217"><span class="lineNum">     217 </span>            : </a>
+<a name="218"><span class="lineNum">     218 </span><span class="lineCov">          2 : void PitchSequence::insertSpaceIntoSequence (double time, double amountOfSpaceInSeconds, bool snapToBeat)</span></a>
+<a name="219"><span class="lineNum">     219 </span>            : {</a>
+<a name="220"><span class="lineNum">     220 </span>            :     // there may be a temp change at this time so we need to find the tempo to the left of it hence the nudge</a>
+<a name="221"><span class="lineNum">     221 </span><span class="lineCov">          2 :     time = time - 0.00001;</span></a>
+<a name="222"><span class="lineNum">     222 </span><span class="lineCov">          2 :     auto beatsToInsert = getEdit().tempoSequence.getBeatsPerSecondAt (time) * amountOfSpaceInSeconds;</span></a>
+<a name="223"><span class="lineNum">     223 </span><span class="lineCov">          2 :     auto endIndex = indexOfNextPitchAt (time);</span></a>
+<a name="224"><span class="lineNum">     224 </span>            : </a>
+<a name="225"><span class="lineNum">     225 </span><span class="lineCov">          2 :     for (int i = getNumPitches(); --i &gt;= endIndex;)</span></a>
+<a name="226"><span class="lineNum">     226 </span><span class="lineNoCov">          0 :         movePitchStart (*getPitch (i), beatsToInsert, snapToBeat);</span></a>
+<a name="227"><span class="lineNum">     227 </span><span class="lineCov">          2 : }</span></a>
+<a name="228"><span class="lineNum">     228 </span>            : </a>
+<a name="229"><span class="lineNum">     229 </span><span class="lineNoCov">          0 : void PitchSequence::sortEvents()</span></a>
+<a name="230"><span class="lineNum">     230 </span>            : {</a>
+<a name="231"><span class="lineNum">     231 </span>            :     struct PitchSorter</a>
+<a name="232"><span class="lineNum">     232 </span>            :     {</a>
+<a name="233"><span class="lineNum">     233 </span><span class="lineNoCov">          0 :         static int compareElements (const juce::ValueTree&amp; p1, const juce::ValueTree&amp; p2) noexcept</span></a>
+<a name="234"><span class="lineNum">     234 </span>            :         {</a>
+<a name="235"><span class="lineNum">     235 </span><span class="lineNoCov">          0 :             const double beat1 = p1[IDs::startBeat];</span></a>
+<a name="236"><span class="lineNum">     236 </span><span class="lineNoCov">          0 :             const double beat2 = p2[IDs::startBeat];</span></a>
+<a name="237"><span class="lineNum">     237 </span>            : </a>
+<a name="238"><span class="lineNum">     238 </span><span class="lineNoCov">          0 :             return beat1 &lt; beat2 ? -1 : (beat1 &gt; beat2 ? 1 : 0);</span></a>
+<a name="239"><span class="lineNum">     239 </span>            :         }</a>
+<a name="240"><span class="lineNum">     240 </span>            :     };</a>
+<a name="241"><span class="lineNum">     241 </span>            : </a>
+<a name="242"><span class="lineNum">     242 </span>            :     PitchSorter sorter;</a>
+<a name="243"><span class="lineNum">     243 </span><span class="lineCov">        194 :     state.sort (sorter, getUndoManager(), true);</span></a>
+<a name="244"><span class="lineNum">     244 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="245"><span class="lineNum">     245 </span>            : </a>
+<a name="246"><span class="lineNum">     246 </span>            : }</a>
 </pre>
       </td>
     </tr>

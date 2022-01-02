@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -81,7 +81,7 @@
 <a name="19"><span class="lineNum">      19 </span>            : //==============================================================================</a>
 <a name="20"><span class="lineNum">      20 </span>            : static float sine (float phase)</a>
 <a name="21"><span class="lineNum">      21 </span>            : {</a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineNoCov">          0 :     return std::sin (phase * 2 * MathConstants&lt;float&gt;::pi);</span></a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineNoCov">          0 :     return std::sin (phase * 2 * juce::MathConstants&lt;float&gt;::pi);</span></a>
 <a name="23"><span class="lineNum">      23 </span>            : }</a>
 <a name="24"><span class="lineNum">      24 </span>            : </a>
 <a name="25"><span class="lineNum">      25 </span><span class="lineNoCov">          0 : static float triangle (float phase, float freq, double sampleRate)</span></a>
@@ -90,7 +90,7 @@
 <a name="28"><span class="lineNum">      28 </span>            :     int k = 1;</a>
 <a name="29"><span class="lineNum">      29 </span><span class="lineNoCov">          0 :     while (freq * k &lt; sampleRate / 2)</span></a>
 <a name="30"><span class="lineNum">      30 </span>            :     {</a>
-<a name="31"><span class="lineNum">      31 </span><span class="lineNoCov">          0 :         sum += std::pow (-1.0f, (k - 1.0f) / 2.0f) / (k * k) * std::sin (k * (phase * 2 * MathConstants&lt;float&gt;::pi));</span></a>
+<a name="31"><span class="lineNum">      31 </span><span class="lineNoCov">          0 :         sum += std::pow (-1.0f, (k - 1.0f) / 2.0f) / (k * k) * std::sin (k * (phase * 2 * juce::MathConstants&lt;float&gt;::pi));</span></a>
 <a name="32"><span class="lineNum">      32 </span><span class="lineNoCov">          0 :         k += 2;</span></a>
 <a name="33"><span class="lineNum">      33 </span>            :     }</a>
 <a name="34"><span class="lineNum">      34 </span><span class="lineNoCov">          0 :     return float (8.0f / (juce::MathConstants&lt;float&gt;::pi * juce::MathConstants&lt;float&gt;::pi) * sum);</span></a>
@@ -102,7 +102,7 @@
 <a name="40"><span class="lineNum">      40 </span>            :     int k = 1;</a>
 <a name="41"><span class="lineNum">      41 </span><span class="lineNoCov">          0 :     while (freq * k &lt; sampleRate / 2)</span></a>
 <a name="42"><span class="lineNum">      42 </span>            :     {</a>
-<a name="43"><span class="lineNum">      43 </span><span class="lineNoCov">          0 :         sum += oddEven (k) * std::sin (k * (phase * 2 * MathConstants&lt;float&gt;::pi)) / k;</span></a>
+<a name="43"><span class="lineNum">      43 </span><span class="lineNoCov">          0 :         sum += oddEven (k) * std::sin (k * (phase * 2 * juce::MathConstants&lt;float&gt;::pi)) / k;</span></a>
 <a name="44"><span class="lineNum">      44 </span><span class="lineNoCov">          0 :         k++;</span></a>
 <a name="45"><span class="lineNum">      45 </span>            :     }</a>
 <a name="46"><span class="lineNum">      46 </span><span class="lineNoCov">          0 :     return float (-2.0f / juce::MathConstants&lt;float&gt;::pi * sum);</span></a>
@@ -114,7 +114,7 @@
 <a name="52"><span class="lineNum">      52 </span>            :     int k = 1;</a>
 <a name="53"><span class="lineNum">      53 </span><span class="lineNoCov">          0 :     while (freq * k &lt; sampleRate / 2)</span></a>
 <a name="54"><span class="lineNum">      54 </span>            :     {</a>
-<a name="55"><span class="lineNum">      55 </span><span class="lineNoCov">          0 :         sum += oddEven (k) * std::sin (k * (phase * 2 * MathConstants&lt;float&gt;::pi)) / k;</span></a>
+<a name="55"><span class="lineNum">      55 </span><span class="lineNoCov">          0 :         sum += oddEven (k) * std::sin (k * (phase * 2 * juce::MathConstants&lt;float&gt;::pi)) / k;</span></a>
 <a name="56"><span class="lineNum">      56 </span><span class="lineNoCov">          0 :         k++;</span></a>
 <a name="57"><span class="lineNum">      57 </span>            :     }</a>
 <a name="58"><span class="lineNum">      58 </span><span class="lineNoCov">          0 :     return float (2.0f / juce::MathConstants&lt;float&gt;::pi * sum);</span></a>
@@ -123,7 +123,7 @@
 <a name="61"><span class="lineNum">      61 </span>            : //==============================================================================</a>
 <a name="62"><span class="lineNum">      62 </span><span class="lineNoCov">          0 : void Oscillator::start()</span></a>
 <a name="63"><span class="lineNum">      63 </span>            : {</a>
-<a name="64"><span class="lineNum">      64 </span><span class="lineNoCov">          0 :     static Random r;</span></a>
+<a name="64"><span class="lineNum">      64 </span><span class="lineNoCov">          0 :     static juce::Random r;</span></a>
 <a name="65"><span class="lineNum">      65 </span><span class="lineNoCov">          0 :     phase = r.nextFloat();</span></a>
 <a name="66"><span class="lineNum">      66 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="67"><span class="lineNum">      67 </span>            : </a>
@@ -135,7 +135,7 @@
 <a name="73"><span class="lineNum">      73 </span><span class="lineNoCov">          0 :         lookupTables = BandlimitedWaveLookupTables::getLookupTables (sampleRate);</span></a>
 <a name="74"><span class="lineNum">      74 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="75"><span class="lineNum">      75 </span>            : </a>
-<a name="76"><span class="lineNum">      76 </span><span class="lineNoCov">          0 : void Oscillator::process (AudioSampleBuffer&amp; buffer, int startSample, int numSamples)</span></a>
+<a name="76"><span class="lineNum">      76 </span><span class="lineNoCov">          0 : void Oscillator::process (juce::AudioBuffer&lt;float&gt;&amp; buffer, int startSample, int numSamples)</span></a>
 <a name="77"><span class="lineNum">      77 </span>            : {</a>
 <a name="78"><span class="lineNum">      78 </span><span class="lineNoCov">          0 :     if (lookupTables != nullptr)</span></a>
 <a name="79"><span class="lineNum">      79 </span>            :     {</a>
@@ -151,9 +151,9 @@
 <a name="89"><span class="lineNum">      89 </span>            :     }</a>
 <a name="90"><span class="lineNum">      90 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="91"><span class="lineNum">      91 </span>            : </a>
-<a name="92"><span class="lineNum">      92 </span><span class="lineNoCov">          0 : void Oscillator::processSine (AudioSampleBuffer&amp; buffer, int startSample, int numSamples)</span></a>
+<a name="92"><span class="lineNum">      92 </span><span class="lineNoCov">          0 : void Oscillator::processSine (juce::AudioBuffer&lt;float&gt;&amp; buffer, int startSample, int numSamples)</span></a>
 <a name="93"><span class="lineNum">      93 </span>            : {</a>
-<a name="94"><span class="lineNum">      94 </span><span class="lineNoCov">          0 :     const float frequency = jmin (float (sampleRate) / 2.0f, 440.0f * std::pow (2.0f, (note - 69.0f) / 12.0f));</span></a>
+<a name="94"><span class="lineNum">      94 </span><span class="lineNoCov">          0 :     const float frequency = std::min (float (sampleRate) / 2.0f, 440.0f * std::pow (2.0f, (note - 69.0f) / 12.0f));</span></a>
 <a name="95"><span class="lineNum">      95 </span><span class="lineNoCov">          0 :     const float period = 1.0f / float (frequency);</span></a>
 <a name="96"><span class="lineNum">      96 </span><span class="lineNoCov">          0 :     const float periodInSamples = float (period * sampleRate);</span></a>
 <a name="97"><span class="lineNum">      97 </span><span class="lineNoCov">          0 :     const float delta = 1.0f / periodInSamples;</span></a>
@@ -173,7 +173,7 @@
 <a name="111"><span class="lineNum">     111 </span>            :     }</a>
 <a name="112"><span class="lineNum">     112 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="113"><span class="lineNum">     113 </span>            : </a>
-<a name="114"><span class="lineNum">     114 </span><span class="lineNoCov">          0 : void Oscillator::processNoise (AudioSampleBuffer&amp; buffer, int startSample, int numSamples)</span></a>
+<a name="114"><span class="lineNum">     114 </span><span class="lineNoCov">          0 : void Oscillator::processNoise (juce::AudioBuffer&lt;float&gt;&amp; buffer, int startSample, int numSamples)</span></a>
 <a name="115"><span class="lineNum">     115 </span>            : {</a>
 <a name="116"><span class="lineNum">     116 </span><span class="lineNoCov">          0 :     auto* channels = buffer.getArrayOfWritePointers();</span></a>
 <a name="117"><span class="lineNum">     117 </span><span class="lineNoCov">          0 :     const int numChannels = buffer.getNumChannels();</span></a>
@@ -186,10 +186,10 @@
 <a name="124"><span class="lineNum">     124 </span>            :     }</a>
 <a name="125"><span class="lineNum">     125 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="126"><span class="lineNum">     126 </span>            : </a>
-<a name="127"><span class="lineNum">     127 </span><span class="lineNoCov">          0 : void Oscillator::processLookup (juce::AudioSampleBuffer&amp; buffer, int startSample, int numSamples,</span></a>
+<a name="127"><span class="lineNum">     127 </span><span class="lineNoCov">          0 : void Oscillator::processLookup (juce::AudioBuffer&lt;float&gt;&amp; buffer, int startSample, int numSamples,</span></a>
 <a name="128"><span class="lineNum">     128 </span>            :                                 const juce::OwnedArray&lt;juce::dsp::LookupTableTransform&lt;float&gt;&gt;&amp; tableSet)</a>
 <a name="129"><span class="lineNum">     129 </span>            : {</a>
-<a name="130"><span class="lineNum">     130 </span><span class="lineNoCov">          0 :     const float frequency = jmin (float (sampleRate) / 2.0f, 440.0f * std::pow (2.0f, (note - 69.0f) / 12.0f));</span></a>
+<a name="130"><span class="lineNum">     130 </span><span class="lineNoCov">          0 :     const float frequency = std::min (float (sampleRate) / 2.0f, 440.0f * std::pow (2.0f, (note - 69.0f) / 12.0f));</span></a>
 <a name="131"><span class="lineNum">     131 </span><span class="lineNoCov">          0 :     const float period = 1.0f / float (frequency);</span></a>
 <a name="132"><span class="lineNum">     132 </span><span class="lineNoCov">          0 :     const float periodInSamples = float (period * sampleRate);</span></a>
 <a name="133"><span class="lineNum">     133 </span><span class="lineNoCov">          0 :     const float delta = 1.0f / periodInSamples;</span></a>
@@ -197,7 +197,7 @@
 <a name="135"><span class="lineNum">     135 </span><span class="lineNoCov">          0 :     auto* channels = buffer.getArrayOfWritePointers();</span></a>
 <a name="136"><span class="lineNum">     136 </span><span class="lineNoCov">          0 :     const int numChannels = buffer.getNumChannels();</span></a>
 <a name="137"><span class="lineNum">     137 </span>            : </a>
-<a name="138"><span class="lineNum">     138 </span><span class="lineNoCov">          0 :     int tableIndex = jlimit (0, tableSet.size() - 1, int ((note - 0.5) / lookupTables-&gt;tablePerNumNotes));</span></a>
+<a name="138"><span class="lineNum">     138 </span><span class="lineNoCov">          0 :     int tableIndex = juce::jlimit (0, tableSet.size() - 1, int ((note - 0.5) / lookupTables-&gt;tablePerNumNotes));</span></a>
 <a name="139"><span class="lineNum">     139 </span>            : </a>
 <a name="140"><span class="lineNum">     140 </span>            :     auto table = tableSet[tableIndex];</a>
 <a name="141"><span class="lineNum">     141 </span>            :     jassert (table != nullptr);</a>
@@ -217,9 +217,9 @@
 <a name="155"><span class="lineNum">     155 </span>            :     }</a>
 <a name="156"><span class="lineNum">     156 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="157"><span class="lineNum">     157 </span>            : </a>
-<a name="158"><span class="lineNum">     158 </span><span class="lineNoCov">          0 : void Oscillator::processSquare (juce::AudioSampleBuffer&amp; buffer, int startSample, int numSamples)</span></a>
+<a name="158"><span class="lineNum">     158 </span><span class="lineNoCov">          0 : void Oscillator::processSquare (juce::AudioBuffer&lt;float&gt;&amp; buffer, int startSample, int numSamples)</span></a>
 <a name="159"><span class="lineNum">     159 </span>            : {</a>
-<a name="160"><span class="lineNum">     160 </span><span class="lineNoCov">          0 :     const float frequency = jmin (float (sampleRate) / 2.0f, 440.0f * std::pow (2.0f, (note - 69.0f) / 12.0f));</span></a>
+<a name="160"><span class="lineNum">     160 </span><span class="lineNoCov">          0 :     const float frequency = std::min (float (sampleRate) / 2.0f, 440.0f * std::pow (2.0f, (note - 69.0f) / 12.0f));</span></a>
 <a name="161"><span class="lineNum">     161 </span><span class="lineNoCov">          0 :     const float period = 1.0f / float (frequency);</span></a>
 <a name="162"><span class="lineNum">     162 </span><span class="lineNoCov">          0 :     const float periodInSamples = float (period * sampleRate);</span></a>
 <a name="163"><span class="lineNum">     163 </span><span class="lineNoCov">          0 :     const float delta = 1.0f / periodInSamples;</span></a>
@@ -227,7 +227,7 @@
 <a name="165"><span class="lineNum">     165 </span><span class="lineNoCov">          0 :     auto* channels = buffer.getArrayOfWritePointers();</span></a>
 <a name="166"><span class="lineNum">     166 </span><span class="lineNoCov">          0 :     const int numChannels = buffer.getNumChannels();</span></a>
 <a name="167"><span class="lineNum">     167 </span>            : </a>
-<a name="168"><span class="lineNum">     168 </span><span class="lineNoCov">          0 :     int tableIndex = jlimit (0, lookupTables-&gt;sawUpFunctions.size() - 1, int ((note - 0.5) / lookupTables-&gt;tablePerNumNotes));</span></a>
+<a name="168"><span class="lineNum">     168 </span><span class="lineNoCov">          0 :     int tableIndex = juce::jlimit (0, lookupTables-&gt;sawUpFunctions.size() - 1, int ((note - 0.5) / lookupTables-&gt;tablePerNumNotes));</span></a>
 <a name="169"><span class="lineNum">     169 </span>            : </a>
 <a name="170"><span class="lineNum">     170 </span>            :     auto saw1 = lookupTables-&gt;sawUpFunctions[tableIndex];</a>
 <a name="171"><span class="lineNum">     171 </span>            :     auto saw2 = lookupTables-&gt;sawDownFunctions[tableIndex];</a>
@@ -266,7 +266,7 @@
 <a name="204"><span class="lineNum">     204 </span>            : </a>
 <a name="205"><span class="lineNum">     205 </span><span class="lineNoCov">          0 : void MultiVoiceOscillator::start()</span></a>
 <a name="206"><span class="lineNum">     206 </span>            : {</a>
-<a name="207"><span class="lineNum">     207 </span><span class="lineNoCov">          0 :     static Random r;</span></a>
+<a name="207"><span class="lineNum">     207 </span><span class="lineNoCov">          0 :     static juce::Random r;</span></a>
 <a name="208"><span class="lineNum">     208 </span>            : </a>
 <a name="209"><span class="lineNum">     209 </span><span class="lineNoCov">          0 :     for (int i = 0; i &lt; oscillators.size(); i += 2)</span></a>
 <a name="210"><span class="lineNum">     210 </span>            :     {</a>
@@ -324,7 +324,7 @@
 <a name="262"><span class="lineNum">     262 </span><span class="lineNoCov">          0 :     spread = s;</span></a>
 <a name="263"><span class="lineNum">     263 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="264"><span class="lineNum">     264 </span>            : </a>
-<a name="265"><span class="lineNum">     265 </span><span class="lineNoCov">          0 : void MultiVoiceOscillator::process (juce::AudioSampleBuffer&amp; buffer, int startSample, int numSamples)</span></a>
+<a name="265"><span class="lineNum">     265 </span><span class="lineNoCov">          0 : void MultiVoiceOscillator::process (juce::AudioBuffer&lt;float&gt;&amp; buffer, int startSample, int numSamples)</span></a>
 <a name="266"><span class="lineNum">     266 </span>            : {</a>
 <a name="267"><span class="lineNum">     267 </span><span class="lineNoCov">          0 :     if (voices == 1)</span></a>
 <a name="268"><span class="lineNum">     268 </span>            :     {</a>
@@ -339,7 +339,7 @@
 <a name="277"><span class="lineNum">     277 </span><span class="lineNoCov">          0 :             float* data = buffer.getWritePointer (left ? 0 : 1, startSample);</span></a>
 <a name="278"><span class="lineNum">     278 </span><span class="lineNoCov">          0 :             float* dataPointers[] = {data};</span></a>
 <a name="279"><span class="lineNum">     279 </span>            : </a>
-<a name="280"><span class="lineNum">     280 </span><span class="lineNoCov">          0 :             juce::AudioSampleBuffer channelBuffer (dataPointers, 1, numSamples);</span></a>
+<a name="280"><span class="lineNum">     280 </span><span class="lineNoCov">          0 :             juce::AudioBuffer&lt;float&gt; channelBuffer (dataPointers, 1, numSamples);</span></a>
 <a name="281"><span class="lineNum">     281 </span>            : </a>
 <a name="282"><span class="lineNum">     282 </span><span class="lineNoCov">          0 :             oscillators[i]-&gt;setGain (gain * panGain / voices);</span></a>
 <a name="283"><span class="lineNum">     283 </span><span class="lineNoCov">          0 :             oscillators[i]-&gt;setNote (note);</span></a>
@@ -351,7 +351,7 @@
 <a name="289"><span class="lineNum">     289 </span><span class="lineNoCov">          0 :         for (int i = 0; i &lt; voices * 2; i++)</span></a>
 <a name="290"><span class="lineNum">     290 </span>            :         {</a>
 <a name="291"><span class="lineNum">     291 </span><span class="lineNoCov">          0 :             int voiceIndex = (i / 2);</span></a>
-<a name="292"><span class="lineNum">     292 </span><span class="lineNoCov">          0 :             float localPan = jlimit (-1.0f, 1.0f, ((voiceIndex % 2 == 0) ? 1 : -1) * spread);</span></a>
+<a name="292"><span class="lineNum">     292 </span><span class="lineNoCov">          0 :             float localPan = juce::jlimit (-1.0f, 1.0f, ((voiceIndex % 2 == 0) ? 1 : -1) * spread);</span></a>
 <a name="293"><span class="lineNum">     293 </span>            : </a>
 <a name="294"><span class="lineNum">     294 </span><span class="lineNoCov">          0 :             float leftGain  = 1.0f - localPan;</span></a>
 <a name="295"><span class="lineNum">     295 </span><span class="lineNoCov">          0 :             float rightGain = 1.0f + localPan;</span></a>
@@ -364,7 +364,7 @@
 <a name="302"><span class="lineNum">     302 </span><span class="lineNoCov">          0 :             float* data = buffer.getWritePointer (left ? 0 : 1, startSample);</span></a>
 <a name="303"><span class="lineNum">     303 </span><span class="lineNoCov">          0 :             float* dataPointers[] = {data};</span></a>
 <a name="304"><span class="lineNum">     304 </span>            : </a>
-<a name="305"><span class="lineNum">     305 </span><span class="lineNoCov">          0 :             juce::AudioSampleBuffer channelBuffer (dataPointers, 1, numSamples);</span></a>
+<a name="305"><span class="lineNum">     305 </span><span class="lineNoCov">          0 :             juce::AudioBuffer&lt;float&gt; channelBuffer (dataPointers, 1, numSamples);</span></a>
 <a name="306"><span class="lineNum">     306 </span>            : </a>
 <a name="307"><span class="lineNum">     307 </span><span class="lineNoCov">          0 :             oscillators[i]-&gt;setGain (gain * panGain / voices);</span></a>
 <a name="308"><span class="lineNum">     308 </span><span class="lineNoCov">          0 :             oscillators[i]-&gt;setNote (base + delta * (i / 2));</span></a>
@@ -374,7 +374,7 @@
 <a name="312"><span class="lineNum">     312 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="313"><span class="lineNum">     313 </span>            : </a>
 <a name="314"><span class="lineNum">     314 </span>            : //==============================================================================</a>
-<a name="315"><span class="lineNum">     315 </span>            : static Array&lt;BandlimitedWaveLookupTables*&gt; tableCache;</a>
+<a name="315"><span class="lineNum">     315 </span>            : static juce::Array&lt;BandlimitedWaveLookupTables*&gt; tableCache;</a>
 <a name="316"><span class="lineNum">     316 </span>            : </a>
 <a name="317"><span class="lineNum">     317 </span><span class="lineNoCov">          0 : BandlimitedWaveLookupTables::Ptr BandlimitedWaveLookupTables::getLookupTables (double sampleRate)</span></a>
 <a name="318"><span class="lineNum">     318 </span>            : {</a>
@@ -395,7 +395,7 @@
 <a name="333"><span class="lineNum">     333 </span><span class="lineNoCov">          0 :         return 440.0f * std::pow (2.0f, (noteNumber - 69) / 12.0f);</span></a>
 <a name="334"><span class="lineNum">     334 </span>            :     };</a>
 <a name="335"><span class="lineNum">     335 </span>            : </a>
-<a name="336"><span class="lineNum">     336 </span><span class="lineNoCov">          0 :     Time start (Time::getCurrentTime());</span></a>
+<a name="336"><span class="lineNum">     336 </span><span class="lineNoCov">          0 :     auto start = juce::Time::getCurrentTime();</span></a>
 <a name="337"><span class="lineNum">     337 </span>            : </a>
 <a name="338"><span class="lineNum">     338 </span><span class="lineNoCov">          0 :     for (float note = tablePerNumNotes + 0.5f; note &lt; 127; note += tablePerNumNotes)</span></a>
 <a name="339"><span class="lineNum">     339 </span>            :     {</a>
@@ -411,7 +411,7 @@
 <a name="349"><span class="lineNum">     349 </span><span class="lineNoCov">          0 :                               { return sawDown (value, freq, sr); }, 0.0f, 1.0f, (size_t) tableSize));</span></a>
 <a name="350"><span class="lineNum">     350 </span>            :     }</a>
 <a name="351"><span class="lineNum">     351 </span>            : </a>
-<a name="352"><span class="lineNum">     352 </span><span class="lineNoCov">          0 :     RelativeTime elapsed (Time::getCurrentTime() - start);</span></a>
+<a name="352"><span class="lineNum">     352 </span><span class="lineNoCov">          0 :     auto elapsed = (juce::Time::getCurrentTime() - start);</span></a>
 <a name="353"><span class="lineNum">     353 </span>            :     DBG (&quot;Generating waves: &quot; + juce::String (elapsed.inMilliseconds()) + &quot;ms&quot;);</a>
 <a name="354"><span class="lineNum">     354 </span>            : </a>
 <a name="355"><span class="lineNum">     355 </span><span class="lineNoCov">          0 :     tableCache.add (this);</span></a>

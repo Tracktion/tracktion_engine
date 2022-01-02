@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -125,7 +125,7 @@
 <a name="63"><span class="lineNum">      63 </span>            : </a>
 <a name="64"><span class="lineNum">      64 </span>            :     //==============================================================================</a>
 <a name="65"><span class="lineNum">      65 </span>            :     /** Returns a hash representing the current set of render options. */</a>
-<a name="66"><span class="lineNum">      66 </span>            :     juce::int64 getHash() const noexcept                        { return hash; }</a>
+<a name="66"><span class="lineNum">      66 </span>            :     HashCode getHash() const noexcept                        { return hash; }</a>
 <a name="67"><span class="lineNum">      67 </span>            : </a>
 <a name="68"><span class="lineNum">      68 </span>            :     /** Returns a set of renderer parameters which can be used to describe a render operation. */</a>
 <a name="69"><span class="lineNum">      69 </span>            :     Renderer::Parameters getRenderParameters (Edit&amp;, SelectionManager*, EditTimeRange markedRegion);</a>
@@ -178,7 +178,7 @@
 <a name="116"><span class="lineNum">     116 </span>            : </a>
 <a name="117"><span class="lineNum">     117 </span>            :     juce::Array&lt;EditItemID&gt; getTrackIDs() const                 { return tracks; }</a>
 <a name="118"><span class="lineNum">     118 </span>            :     void setTrackIDs (const juce::Array&lt;EditItemID&gt;&amp;);</a>
-<a name="119"><span class="lineNum">     119 </span>            :     juce::int64 getTracksHash() const;</a>
+<a name="119"><span class="lineNum">     119 </span>            :     HashCode getTracksHash() const;</a>
 <a name="120"><span class="lineNum">     120 </span>            : </a>
 <a name="121"><span class="lineNum">     121 </span>            :     void setSampleRate (int);</a>
 <a name="122"><span class="lineNum">     122 </span>            :     void setBitDepth (int depth)                                { bitDepth = depth; }</a>
@@ -257,7 +257,7 @@
 <a name="195"><span class="lineNum">     195 </span>            :     juce::File destFile;</a>
 <a name="196"><span class="lineNum">     196 </span>            :     juce::Array&lt;Clip*&gt; allowedClips;</a>
 <a name="197"><span class="lineNum">     197 </span>            :     double endAllowance = 0;</a>
-<a name="198"><span class="lineNum">     198 </span>            :     juce::int64 hash = 0;</a>
+<a name="198"><span class="lineNum">     198 </span>            :     HashCode hash = 0;</a>
 <a name="199"><span class="lineNum">     199 </span>            :     bool uiNeedsRefresh = true;</a>
 <a name="200"><span class="lineNum">     200 </span>            : </a>
 <a name="201"><span class="lineNum">     201 </span>            :     static void updateLastUsedRenderPath (RenderOptions&amp;, const juce::String&amp; itemID);</a>

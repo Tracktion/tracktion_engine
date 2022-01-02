@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">8</td>
@@ -77,17 +77,17 @@
 <a name="15"><span class="lineNum">      15 </span>            : </a>
 <a name="16"><span class="lineNum">      16 </span>            : //==============================================================================</a>
 <a name="17"><span class="lineNum">      17 </span>            : //==============================================================================</a>
-<a name="18"><span class="lineNum">      18 </span>            : class PDCTests  : public UnitTest</a>
+<a name="18"><span class="lineNum">      18 </span>            : class PDCTests  : public juce::UnitTest</a>
 <a name="19"><span class="lineNum">      19 </span>            : {</a>
 <a name="20"><span class="lineNum">      20 </span>            : public:</a>
 <a name="21"><span class="lineNum">      21 </span><span class="lineCov">          1 :     PDCTests()</span></a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineCov">          1 :         : UnitTest (&quot;PDC&quot;, &quot;Tracktion:Longer&quot;)</span></a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineCov">          1 :         : juce::UnitTest (&quot;PDC&quot;, &quot;Tracktion:Longer&quot;)</span></a>
 <a name="23"><span class="lineNum">      23 </span>            :     {</a>
 <a name="24"><span class="lineNum">      24 </span><span class="lineCov">          1 :     }</span></a>
 <a name="25"><span class="lineNum">      25 </span>            : </a>
 <a name="26"><span class="lineNum">      26 </span><span class="lineCov">          1 :     void runTest() override</span></a>
 <a name="27"><span class="lineNum">      27 </span>            :     {</a>
-<a name="28"><span class="lineNum">      28 </span><span class="lineCov">          1 :         auto sinFile = getSinFile&lt;WavAudioFormat&gt; (44100.0);</span></a>
+<a name="28"><span class="lineNum">      28 </span><span class="lineCov">          1 :         auto sinFile = getSinFile&lt;juce::WavAudioFormat&gt; (44100.0);</span></a>
 <a name="29"><span class="lineNum">      29 </span>            : </a>
 <a name="30"><span class="lineNum">      30 </span><span class="lineCov">          1 :         auto&amp; engine = *Engine::getEngines()[0];</span></a>
 <a name="31"><span class="lineNum">      31 </span><span class="lineCov">          1 :         engine.getPluginManager().createBuiltInType&lt;LatencyPlugin&gt;();</span></a>
@@ -127,7 +127,7 @@
 <a name="65"><span class="lineNum">      65 </span>            :         </a>
 <a name="66"><span class="lineNum">      66 </span><span class="lineCov">          1 :         beginTest (&quot;Source file with different sample rate&quot;);</span></a>
 <a name="67"><span class="lineNum">      67 </span>            :         {</a>
-<a name="68"><span class="lineNum">      68 </span><span class="lineCov">          1 :             auto sinFile96Ogg = getSinFile&lt;OggVorbisAudioFormat&gt; (96000.0);</span></a>
+<a name="68"><span class="lineNum">      68 </span><span class="lineCov">          1 :             auto sinFile96Ogg = getSinFile&lt;juce::OggVorbisAudioFormat&gt; (96000.0);</span></a>
 <a name="69"><span class="lineNum">      69 </span><span class="lineCov">          1 :             expectEquals (sinFile96Ogg-&gt;getFile().getFileExtension(), juce::String (&quot;.ogg&quot;));</span></a>
 <a name="70"><span class="lineNum">      70 </span><span class="lineCov">          1 :             auto edit = createTestEdit (engine);</span></a>
 <a name="71"><span class="lineNum">      71 </span><span class="lineCov">          2 :             auto track1 = getAudioTracks (*edit)[0];</span></a>
@@ -153,7 +153,7 @@
 <a name="91"><span class="lineNum">      91 </span>            :         }</a>
 <a name="92"><span class="lineNum">      92 </span><span class="lineCov">          1 :     }</span></a>
 <a name="93"><span class="lineNum">      93 </span>            : </a>
-<a name="94"><span class="lineNum">      94 </span><span class="lineCov">          4 :     void expectPeak (Edit&amp; edit, EditTimeRange tr, Array&lt;Track*&gt; tracks, float expectedPeak)</span></a>
+<a name="94"><span class="lineNum">      94 </span><span class="lineCov">          4 :     void expectPeak (Edit&amp; edit, EditTimeRange tr, juce::Array&lt;Track*&gt; tracks, float expectedPeak)</span></a>
 <a name="95"><span class="lineNum">      95 </span>            :     {</a>
 <a name="96"><span class="lineNum">      96 </span><span class="lineCov">          4 :         auto blockSize = edit.engine.getDeviceManager().getBlockSize();</span></a>
 <a name="97"><span class="lineNum">      97 </span><span class="lineCov">          4 :         auto stats = logStats (Renderer::measureStatistics (&quot;PDC Tests&quot;, edit, tr, getTracksMask (tracks), blockSize));</span></a>
@@ -167,7 +167,7 @@
 <a name="105"><span class="lineNum">     105 </span><span class="lineCov">          4 :         return stats;</span></a>
 <a name="106"><span class="lineNum">     106 </span>            :     }</a>
 <a name="107"><span class="lineNum">     107 </span>            : </a>
-<a name="108"><span class="lineNum">     108 </span><span class="lineCov">          4 :     static juce::BigInteger getTracksMask (const Array&lt;Track*&gt;&amp; tracks)</span></a>
+<a name="108"><span class="lineNum">     108 </span><span class="lineCov">          4 :     static juce::BigInteger getTracksMask (const juce::Array&lt;Track*&gt;&amp; tracks)</span></a>
 <a name="109"><span class="lineNum">     109 </span>            :     {</a>
 <a name="110"><span class="lineNum">     110 </span><span class="lineCov">          4 :         juce::BigInteger tracksMask;</span></a>
 <a name="111"><span class="lineNum">     111 </span>            : </a>
@@ -193,13 +193,13 @@
 <a name="131"><span class="lineNum">     131 </span>            :     }</a>
 <a name="132"><span class="lineNum">     132 </span>            : </a>
 <a name="133"><span class="lineNum">     133 </span>            :     template&lt;typename AudioFormatType&gt;</a>
-<a name="134"><span class="lineNum">     134 </span><span class="lineCov">          2 :     std::unique_ptr&lt;TemporaryFile&gt; getSinFile (double sampleRate)</span></a>
+<a name="134"><span class="lineNum">     134 </span><span class="lineCov">          2 :     std::unique_ptr&lt;juce::TemporaryFile&gt; getSinFile (double sampleRate)</span></a>
 <a name="135"><span class="lineNum">     135 </span>            :     {</a>
 <a name="136"><span class="lineNum">     136 </span>            :         // Create a 1s sin buffer</a>
-<a name="137"><span class="lineNum">     137 </span><span class="lineCov">          2 :         AudioBuffer&lt;float&gt; buffer (1, (int) sampleRate);</span></a>
+<a name="137"><span class="lineNum">     137 </span><span class="lineCov">          2 :         juce::AudioBuffer&lt;float&gt; buffer (1, (int) sampleRate);</span></a>
 <a name="138"><span class="lineNum">     138 </span><span class="lineCov">          6 :         juce::dsp::Oscillator&lt;float&gt; osc ([] (float in) { return std::sin (in); });</span></a>
 <a name="139"><span class="lineNum">     139 </span>            :         osc.setFrequency (220.0);</a>
-<a name="140"><span class="lineNum">     140 </span><span class="lineCov">          2 :         osc.prepare ({ double (sampleRate), uint32 (sampleRate), 1 });</span></a>
+<a name="140"><span class="lineNum">     140 </span><span class="lineCov">          2 :         osc.prepare ({ double (sampleRate), uint32_t (sampleRate), 1 });</span></a>
 <a name="141"><span class="lineNum">     141 </span>            : </a>
 <a name="142"><span class="lineNum">     142 </span><span class="lineCov">          2 :         float* samples = buffer.getWritePointer (0);</span></a>
 <a name="143"><span class="lineNum">     143 </span><span class="lineCov">          2 :         int numSamples = buffer.getNumSamples();</span></a>
@@ -209,7 +209,7 @@
 <a name="147"><span class="lineNum">     147 </span>            : </a>
 <a name="148"><span class="lineNum">     148 </span>            :         // Then write it to a temp file</a>
 <a name="149"><span class="lineNum">     149 </span><span class="lineCov">          4 :         AudioFormatType format;</span></a>
-<a name="150"><span class="lineNum">     150 </span><span class="lineCov">          4 :         auto f = std::make_unique&lt;TemporaryFile&gt; (format.getFileExtensions()[0]);</span></a>
+<a name="150"><span class="lineNum">     150 </span><span class="lineCov">          4 :         auto f = std::make_unique&lt;juce::TemporaryFile&gt; (format.getFileExtensions()[0]);</span></a>
 <a name="151"><span class="lineNum">     151 </span>            :         </a>
 <a name="152"><span class="lineNum">     152 </span><span class="lineCov">          2 :         if (auto fileStream = f-&gt;getFile().createOutputStream())</span></a>
 <a name="153"><span class="lineNum">     153 </span>            :         {</a>
@@ -217,22 +217,24 @@
 <a name="155"><span class="lineNum">     155 </span><span class="lineCov">          2 :             const int qualityOptionIndex = numQualityOptions == 0 ? 0 : (numQualityOptions / 2);</span></a>
 <a name="156"><span class="lineNum">     156 </span><span class="lineCov">          4 :             const int bitDepth = format.getPossibleBitDepths().contains (16) ? 16 : 32;</span></a>
 <a name="157"><span class="lineNum">     157 </span>            :             </a>
-<a name="158"><span class="lineNum">     158 </span><span class="lineCov">          4 :             if (auto writer = std::unique_ptr&lt;AudioFormatWriter&gt; (AudioFormatType().createWriterFor (fileStream.get(), sampleRate, 1, bitDepth, {}, qualityOptionIndex)))</span></a>
-<a name="159"><span class="lineNum">     159 </span>            :             {</a>
-<a name="160"><span class="lineNum">     160 </span>            :                 fileStream.release();</a>
-<a name="161"><span class="lineNum">     161 </span><span class="lineCov">          2 :                 writer-&gt;writeFromAudioSampleBuffer (buffer, 0, buffer.getNumSamples());</span></a>
-<a name="162"><span class="lineNum">     162 </span>            :             }</a>
-<a name="163"><span class="lineNum">     163 </span>            :         }</a>
-<a name="164"><span class="lineNum">     164 </span>            : </a>
-<a name="165"><span class="lineNum">     165 </span><span class="lineCov">          2 :         return f;</span></a>
-<a name="166"><span class="lineNum">     166 </span>            :     }</a>
-<a name="167"><span class="lineNum">     167 </span>            : };</a>
-<a name="168"><span class="lineNum">     168 </span>            : </a>
-<a name="169"><span class="lineNum">     169 </span>            : static PDCTests pdcTests;</a>
+<a name="158"><span class="lineNum">     158 </span><span class="lineCov">          4 :             if (auto writer = std::unique_ptr&lt;juce::AudioFormatWriter&gt; (AudioFormatType().createWriterFor (fileStream.get(),</span></a>
+<a name="159"><span class="lineNum">     159 </span>            :                                                                                                            sampleRate, 1, bitDepth,</a>
+<a name="160"><span class="lineNum">     160 </span>            :                                                                                                            {}, qualityOptionIndex)))</a>
+<a name="161"><span class="lineNum">     161 </span>            :             {</a>
+<a name="162"><span class="lineNum">     162 </span>            :                 fileStream.release();</a>
+<a name="163"><span class="lineNum">     163 </span><span class="lineCov">          2 :                 writer-&gt;writeFromAudioSampleBuffer (buffer, 0, buffer.getNumSamples());</span></a>
+<a name="164"><span class="lineNum">     164 </span>            :             }</a>
+<a name="165"><span class="lineNum">     165 </span>            :         }</a>
+<a name="166"><span class="lineNum">     166 </span>            : </a>
+<a name="167"><span class="lineNum">     167 </span><span class="lineCov">          2 :         return f;</span></a>
+<a name="168"><span class="lineNum">     168 </span>            :     }</a>
+<a name="169"><span class="lineNum">     169 </span>            : };</a>
 <a name="170"><span class="lineNum">     170 </span>            : </a>
-<a name="171"><span class="lineNum">     171 </span>            : #endif</a>
+<a name="171"><span class="lineNum">     171 </span>            : static PDCTests pdcTests;</a>
 <a name="172"><span class="lineNum">     172 </span>            : </a>
-<a name="173"><span class="lineNum">     173 </span>            : } // namespace tracktion_engine</a>
+<a name="173"><span class="lineNum">     173 </span>            : #endif</a>
+<a name="174"><span class="lineNum">     174 </span>            : </a>
+<a name="175"><span class="lineNum">     175 </span>            : } // namespace tracktion_engine</a>
 </pre>
       </td>
     </tr>

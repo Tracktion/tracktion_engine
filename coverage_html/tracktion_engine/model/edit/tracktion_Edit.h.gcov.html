@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">3</td>
@@ -907,7 +907,7 @@
 <a name="845"><span class="lineNum">     845 </span>            :     bool isPreviewEdit = false;</a>
 <a name="846"><span class="lineNum">     846 </span>            :     std::atomic&lt;double&gt; clickMark1Time { 0.0 }, clickMark2Time { 0.0 };</a>
 <a name="847"><span class="lineNum">     847 </span>            :     std::atomic&lt;bool&gt; isFullyConstructed { false };</a>
-<a name="848"><span class="lineNum">     848 </span>            :     mutable std::atomic&lt;juce::uint64&gt; nextID { 0 }; // 0 is used as flag to initialise the next ID count</a>
+<a name="848"><span class="lineNum">     848 </span>            :     mutable std::atomic&lt;uint64_t&gt; nextID { 0 }; // 0 is used as flag to initialise the next ID count</a>
 <a name="849"><span class="lineNum">     849 </span>            :     </a>
 <a name="850"><span class="lineNum">     850 </span>            :    #if JUCE_DEBUG</a>
 <a name="851"><span class="lineNum">     851 </span>            :     mutable std::unordered_set&lt;EditItemID&gt; usedIDs;</a>

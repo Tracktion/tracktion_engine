@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">12</td>
@@ -153,9 +153,9 @@
 <a name="91"><span class="lineNum">      91 </span><span class="lineNoCov">          0 :     return {};</span></a>
 <a name="92"><span class="lineNum">      92 </span>            : }</a>
 <a name="93"><span class="lineNum">      93 </span>            : </a>
-<a name="94"><span class="lineNum">      94 </span><span class="lineNoCov">          0 : Array&lt;InputDeviceInstance*&gt; EditInputDevices::getDevicesForTargetTrack (const AudioTrack&amp; at) const</span></a>
+<a name="94"><span class="lineNum">      94 </span><span class="lineNoCov">          0 : juce::Array&lt;InputDeviceInstance*&gt; EditInputDevices::getDevicesForTargetTrack (const AudioTrack&amp; at) const</span></a>
 <a name="95"><span class="lineNum">      95 </span>            : {</a>
-<a name="96"><span class="lineNum">      96 </span><span class="lineNoCov">          0 :     Array&lt;InputDeviceInstance*&gt; devices;</span></a>
+<a name="96"><span class="lineNum">      96 </span><span class="lineNoCov">          0 :     juce::Array&lt;InputDeviceInstance*&gt; devices;</span></a>
 <a name="97"><span class="lineNum">      97 </span>            : </a>
 <a name="98"><span class="lineNum">      98 </span><span class="lineNoCov">          0 :     for (auto* idi : edit.getAllInputDevices())</span></a>
 <a name="99"><span class="lineNum">      99 </span><span class="lineNoCov">          0 :         if (idi-&gt;isOnTargetTrack (at))</span></a>
@@ -195,7 +195,7 @@
 <a name="133"><span class="lineNum">     133 </span><span class="lineCov">        195 : void EditInputDevices::removeNonExistantInputDeviceStates()</span></a>
 <a name="134"><span class="lineNum">     134 </span>            : {</a>
 <a name="135"><span class="lineNum">     135 </span><span class="lineCov">        195 :     auto&amp; dm = edit.engine.getDeviceManager();</span></a>
-<a name="136"><span class="lineNum">     136 </span><span class="lineCov">        195 :     Array&lt;InputDevice*&gt; devices;</span></a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineCov">        195 :     juce::Array&lt;InputDevice*&gt; devices;</span></a>
 <a name="137"><span class="lineNum">     137 </span><span class="lineCov">        195 :     devices.addArray (dm.midiInputs);</span></a>
 <a name="138"><span class="lineNum">     138 </span><span class="lineCov">        195 :     devices.addArray (dm.waveInputs);</span></a>
 <a name="139"><span class="lineNum">     139 </span>            : </a>
@@ -266,7 +266,7 @@
 <a name="204"><span class="lineNum">     204 </span>            :     return {};</a>
 <a name="205"><span class="lineNum">     205 </span>            : }</a>
 <a name="206"><span class="lineNum">     206 </span>            : </a>
-<a name="207"><span class="lineNum">     207 </span><span class="lineCov">          1 : void EditInputDevices::changeListenerCallback (ChangeBroadcaster*)</span></a>
+<a name="207"><span class="lineNum">     207 </span><span class="lineCov">          1 : void EditInputDevices::changeListenerCallback (juce::ChangeBroadcaster*)</span></a>
 <a name="208"><span class="lineNum">     208 </span>            : {</a>
 <a name="209"><span class="lineNum">     209 </span><span class="lineCov">          1 :     removeNonExistantInputDeviceStates();</span></a>
 <a name="210"><span class="lineNum">     210 </span><span class="lineCov">          1 : }</span></a>

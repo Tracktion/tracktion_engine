@@ -172,9 +172,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a98a942c4418fbd0a7ec0cd6b558b2e85"><td class="memItemLeft" align="right" valign="top">virtual juce::File&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a98a942c4418fbd0a7ec0cd6b558b2e85">getOriginalFile</a> () const =0</td></tr>
 <tr class="memdesc:a98a942c4418fbd0a7ec0cd6b558b2e85"><td class="mdescLeft">&#160;</td><td class="mdescRight">Must return the file that the source <a class="el" href="classtracktion__engine_1_1ProjectItemID.html" title="An ID representing one of the items in a Project.">ProjectItemID</a> refers to.  <a href="classtracktion__engine_1_1AudioClipBase.html#a98a942c4418fbd0a7ec0cd6b558b2e85">More...</a><br /></td></tr>
 <tr class="separator:a98a942c4418fbd0a7ec0cd6b558b2e85"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3b6828e582ecc963545d4c46ce373637"><td class="memItemLeft" align="right" valign="top">virtual juce::int64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a3b6828e582ecc963545d4c46ce373637">getHash</a> () const =0</td></tr>
-<tr class="memdesc:a3b6828e582ecc963545d4c46ce373637"><td class="mdescLeft">&#160;</td><td class="mdescRight">Must return a unique hash for this clip's source.  <a href="classtracktion__engine_1_1AudioClipBase.html#a3b6828e582ecc963545d4c46ce373637">More...</a><br /></td></tr>
-<tr class="separator:a3b6828e582ecc963545d4c46ce373637"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ab498d1273420080e9d6a2dcce55b47"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacetracktion__engine.html#adb3c6f33fbcba4c6e5d7cfd390aecbec">HashCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a8ab498d1273420080e9d6a2dcce55b47">getHash</a> () const =0</td></tr>
+<tr class="memdesc:a8ab498d1273420080e9d6a2dcce55b47"><td class="mdescLeft">&#160;</td><td class="mdescRight">Must return a unique hash for this clip's source.  <a href="classtracktion__engine_1_1AudioClipBase.html#a8ab498d1273420080e9d6a2dcce55b47">More...</a><br /></td></tr>
+<tr class="separator:a8ab498d1273420080e9d6a2dcce55b47"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab8875b4bdb3255e8fd9b18a67ef6ed7f"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structtracktion__engine_1_1AudioFileInfo.html">AudioFileInfo</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AudioClipBase.html#ab8875b4bdb3255e8fd9b18a67ef6ed7f">getWaveInfo</a> ()</td></tr>
 <tr class="memdesc:ab8875b4bdb3255e8fd9b18a67ef6ed7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the WaveInfo for a clip.  <a href="classtracktion__engine_1_1AudioClipBase.html#ab8875b4bdb3255e8fd9b18a67ef6ed7f">More...</a><br /></td></tr>
 <tr class="separator:ab8875b4bdb3255e8fd9b18a67ef6ed7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -460,9 +460,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af314fc6bac7ad1c09d991062f344c9be"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="structtracktion__engine_1_1AudioClipBase_1_1ProxyRenderingInfo.html">ProxyRenderingInfo</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AudioClipBase.html#af314fc6bac7ad1c09d991062f344c9be">createProxyRenderingInfo</a> ()</td></tr>
 <tr class="memdesc:af314fc6bac7ad1c09d991062f344c9be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="structtracktion__engine_1_1AudioClipBase_1_1ProxyRenderingInfo.html" title="Holds information about how to render a proxy for this clip.">ProxyRenderingInfo</a> object to decribe the stretch segements of this clip.  <a href="classtracktion__engine_1_1AudioClipBase.html#af314fc6bac7ad1c09d991062f344c9be">More...</a><br /></td></tr>
 <tr class="separator:af314fc6bac7ad1c09d991062f344c9be"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3eecfd5acb0ec1c3d42a892d3d418602"><td class="memItemLeft" align="right" valign="top">juce::int64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a3eecfd5acb0ec1c3d42a892d3d418602">getProxyHash</a> ()</td></tr>
-<tr class="memdesc:a3eecfd5acb0ec1c3d42a892d3d418602"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a hash identifying the proxy settings.  <a href="classtracktion__engine_1_1AudioClipBase.html#a3eecfd5acb0ec1c3d42a892d3d418602">More...</a><br /></td></tr>
-<tr class="separator:a3eecfd5acb0ec1c3d42a892d3d418602"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22631e95ae1a24852cc28624a4b762d1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetracktion__engine.html#adb3c6f33fbcba4c6e5d7cfd390aecbec">HashCode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AudioClipBase.html#a22631e95ae1a24852cc28624a4b762d1">getProxyHash</a> ()</td></tr>
+<tr class="memdesc:a22631e95ae1a24852cc28624a4b762d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a hash identifying the proxy settings.  <a href="classtracktion__engine_1_1AudioClipBase.html#a22631e95ae1a24852cc28624a4b762d1">More...</a><br /></td></tr>
+<tr class="separator:a22631e95ae1a24852cc28624a4b762d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa05072aad530526e425fe88aa61e5a53"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AudioClipBase.html#aa05072aad530526e425fe88aa61e5a53">beginRenderingNewProxyIfNeeded</a> ()</td></tr>
 <tr class="memdesc:aa05072aad530526e425fe88aa61e5a53"><td class="mdescLeft">&#160;</td><td class="mdescRight">Triggers creation of a new proxy file if one is required.  <a href="classtracktion__engine_1_1AudioClipBase.html#aa05072aad530526e425fe88aa61e5a53">More...</a><br /></td></tr>
 <tr class="separator:aa05072aad530526e425fe88aa61e5a53"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1302,8 +1302,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a3b6828e582ecc963545d4c46ce373637"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3b6828e582ecc963545d4c46ce373637">&#9670;&nbsp;</a></span>getHash()</h2>
+<a id="a8ab498d1273420080e9d6a2dcce55b47"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8ab498d1273420080e9d6a2dcce55b47">&#9670;&nbsp;</a></span>getHash()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1312,7 +1312,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual juce::int64 tracktion_engine::AudioClipBase::getHash </td>
+          <td class="memname">virtual <a class="el" href="namespacetracktion__engine.html#adb3c6f33fbcba4c6e5d7cfd390aecbec">HashCode</a> tracktion_engine::AudioClipBase::getHash </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -1328,7 +1328,7 @@ Protected Attributes</h2></td></tr>
 <p>Must return a unique hash for this clip's source. </p>
 <p>This should be the same until the clip changes as it is used to determine if the proxy needs regenerating. </p>
 
-<p>Implemented in <a class="el" href="classtracktion__engine_1_1WaveAudioClip.html#a08ad65bd8cf7679846c76f16e15b234f">tracktion_engine::WaveAudioClip</a>, and <a class="el" href="classtracktion__engine_1_1EditClip.html#a0bd473de1ef4fe31f6e1c1445660af5b">tracktion_engine::EditClip</a>.</p>
+<p>Implemented in <a class="el" href="classtracktion__engine_1_1WaveAudioClip.html#ab831dd172b5f883d7ecdcaa5011757f9">tracktion_engine::WaveAudioClip</a>, and <a class="el" href="classtracktion__engine_1_1EditClip.html#a5c419f32ddcfc3c29f14bade2629068b">tracktion_engine::EditClip</a>.</p>
 
 </div>
 </div>
@@ -3793,14 +3793,14 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a3eecfd5acb0ec1c3d42a892d3d418602"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3eecfd5acb0ec1c3d42a892d3d418602">&#9670;&nbsp;</a></span>getProxyHash()</h2>
+<a id="a22631e95ae1a24852cc28624a4b762d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a22631e95ae1a24852cc28624a4b762d1">&#9670;&nbsp;</a></span>getProxyHash()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">juce::int64 tracktion_engine::AudioClipBase::getProxyHash </td>
+          <td class="memname"><a class="el" href="namespacetracktion__engine.html#adb3c6f33fbcba4c6e5d7cfd390aecbec">HashCode</a> tracktion_engine::AudioClipBase::getProxyHash </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -5757,7 +5757,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Dec 29 2021 12:12:16 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Jan 2 2022 19:42:31 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

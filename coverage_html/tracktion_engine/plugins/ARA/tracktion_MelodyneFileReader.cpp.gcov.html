@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">3</td>
@@ -238,7 +238,7 @@
 <a name="176"><span class="lineNum">     176 </span>            :         CRASH_TRACER</a>
 <a name="177"><span class="lineNum">     177 </span>            :         TRACKTION_ASSERT_MESSAGE_THREAD</a>
 <a name="178"><span class="lineNum">     178 </span>            : </a>
-<a name="179"><span class="lineNum">     179 </span>            :         if (MessageManager::getInstance()-&gt;isThisTheMessageThread()</a>
+<a name="179"><span class="lineNum">     179 </span>            :         if (juce::MessageManager::getInstance()-&gt;isThisTheMessageThread()</a>
 <a name="180"><span class="lineNum">     180 </span>            :             &amp;&amp; getEdit().getTransport().isAllowedToReallocate())</a>
 <a name="181"><span class="lineNum">     181 </span>            :         {</a>
 <a name="182"><span class="lineNum">     182 </span>            :             contentUpdater = nullptr;</a>
@@ -259,12 +259,12 @@
 <a name="197"><span class="lineNum">     197 </span>            :     }</a>
 <a name="198"><span class="lineNum">     198 </span>            : </a>
 <a name="199"><span class="lineNum">     199 </span>            :     //==============================================================================</a>
-<a name="200"><span class="lineNum">     200 </span>            :     MidiMessageSequence getAnalysedMIDISequence()</a>
+<a name="200"><span class="lineNum">     200 </span>            :     juce::MidiMessageSequence getAnalysedMIDISequence()</a>
 <a name="201"><span class="lineNum">     201 </span>            :     {</a>
 <a name="202"><span class="lineNum">     202 </span>            :         CRASH_TRACER</a>
 <a name="203"><span class="lineNum">     203 </span>            : </a>
 <a name="204"><span class="lineNum">     204 </span>            :         const int midiChannel = 1;</a>
-<a name="205"><span class="lineNum">     205 </span>            :         MidiMessageSequence result;</a>
+<a name="205"><span class="lineNum">     205 </span>            :         juce::MidiMessageSequence result;</a>
 <a name="206"><span class="lineNum">     206 </span>            : </a>
 <a name="207"><span class="lineNum">     207 </span>            :         if (auto doc = getDocument())</a>
 <a name="208"><span class="lineNum">     208 </span>            :         {</a>
@@ -283,10 +283,10 @@
 <a name="221"><span class="lineNum">     221 </span>            :                     {</a>
 <a name="222"><span class="lineNum">     222 </span>            :                         if (note-&gt;pitchNumber != kARAInvalidPitchNumber)</a>
 <a name="223"><span class="lineNum">     223 </span>            :                         {</a>
-<a name="224"><span class="lineNum">     224 </span>            :                             result.addEvent (MidiMessage::noteOn  (midiChannel, note-&gt;pitchNumber, static_cast&lt;float&gt; (note-&gt;volume)),</a>
+<a name="224"><span class="lineNum">     224 </span>            :                             result.addEvent (juce::MidiMessage::noteOn  (midiChannel, note-&gt;pitchNumber, static_cast&lt;float&gt; (note-&gt;volume)),</a>
 <a name="225"><span class="lineNum">     225 </span>            :                                              note-&gt;startPosition);</a>
 <a name="226"><span class="lineNum">     226 </span>            : </a>
-<a name="227"><span class="lineNum">     227 </span>            :                             result.addEvent (MidiMessage::noteOff (midiChannel, note-&gt;pitchNumber),</a>
+<a name="227"><span class="lineNum">     227 </span>            :                             result.addEvent (juce::MidiMessage::noteOff (midiChannel, note-&gt;pitchNumber),</a>
 <a name="228"><span class="lineNum">     228 </span>            :                                              note-&gt;startPosition + note-&gt;noteDuration);</a>
 <a name="229"><span class="lineNum">     229 </span>            :                         }</a>
 <a name="230"><span class="lineNum">     230 </span>            :                     }</a>
@@ -413,7 +413,7 @@
 <a name="351"><span class="lineNum">     351 </span>            : </a>
 <a name="352"><span class="lineNum">     352 </span>            :     std::unique_ptr&lt;MelodyneInstance&gt; melodyneInstance;</a>
 <a name="353"><span class="lineNum">     353 </span>            :     std::unique_ptr&lt;PlaybackRegionAndSource&gt; playbackRegionAndSource;</a>
-<a name="354"><span class="lineNum">     354 </span>            :     int64 currentHashCode = 0;</a>
+<a name="354"><span class="lineNum">     354 </span>            :     HashCode currentHashCode = 0;</a>
 <a name="355"><span class="lineNum">     355 </span>            : </a>
 <a name="356"><span class="lineNum">     356 </span>            :     //==============================================================================</a>
 <a name="357"><span class="lineNum">     357 </span>            :     struct ScopedDocumentEditor</a>
@@ -485,9 +485,9 @@
 <a name="423"><span class="lineNum">     423 </span>            :             contentAnalyserChecker = nullptr;</a>
 <a name="424"><span class="lineNum">     424 </span>            :             modelUpdater = nullptr; // Can't be editing the document in any way while restoring</a>
 <a name="425"><span class="lineNum">     425 </span>            : </a>
-<a name="426"><span class="lineNum">     426 </span>            :             juce::int64 newHashCode = file.getHash()</a>
-<a name="427"><span class="lineNum">     427 </span>            :                                        ^ file.getFile().getLastModificationTime().toMilliseconds()</a>
-<a name="428"><span class="lineNum">     428 </span>            :                                        ^ (juce::int64) clip.itemID.getRawID();</a>
+<a name="426"><span class="lineNum">     426 </span>            :             HashCode newHashCode = file.getHash()</a>
+<a name="427"><span class="lineNum">     427 </span>            :                                     ^ file.getFile().getLastModificationTime().toMilliseconds()</a>
+<a name="428"><span class="lineNum">     428 </span>            :                                     ^ static_cast&lt;HashCode&gt; (clip.itemID.getRawID());</a>
 <a name="429"><span class="lineNum">     429 </span>            : </a>
 <a name="430"><span class="lineNum">     430 </span>            :             if (currentHashCode != newHashCode)</a>
 <a name="431"><span class="lineNum">     431 </span>            :             {</a>
@@ -514,7 +514,7 @@
 <a name="452"><span class="lineNum">     452 </span>            :     }</a>
 <a name="453"><span class="lineNum">     453 </span>            : </a>
 <a name="454"><span class="lineNum">     454 </span>            :     //==============================================================================</a>
-<a name="455"><span class="lineNum">     455 </span>            :     struct ContentUpdater : public Timer</a>
+<a name="455"><span class="lineNum">     455 </span>            :     struct ContentUpdater  : public juce::Timer</a>
 <a name="456"><span class="lineNum">     456 </span>            :     {</a>
 <a name="457"><span class="lineNum">     457 </span>            :         ContentUpdater (ARAClipPlayer&amp; p) : owner (p) { startTimer (100); }</a>
 <a name="458"><span class="lineNum">     458 </span>            : </a>
@@ -537,7 +537,7 @@
 <a name="475"><span class="lineNum">     475 </span>            :     std::unique_ptr&lt;ContentUpdater&gt; contentUpdater;</a>
 <a name="476"><span class="lineNum">     476 </span>            : </a>
 <a name="477"><span class="lineNum">     477 </span>            :     //==============================================================================</a>
-<a name="478"><span class="lineNum">     478 </span>            :     struct ModelUpdater : private Timer</a>
+<a name="478"><span class="lineNum">     478 </span>            :     struct ModelUpdater  : private juce::Timer</a>
 <a name="479"><span class="lineNum">     479 </span>            :     {</a>
 <a name="480"><span class="lineNum">     480 </span>            :         ModelUpdater (ARADocument&amp; d) : document (d) { startTimer (3000); }</a>
 <a name="481"><span class="lineNum">     481 </span>            : </a>
@@ -638,7 +638,7 @@
 <a name="576"><span class="lineNum">     576 </span>            : }</a>
 <a name="577"><span class="lineNum">     577 </span>            : </a>
 <a name="578"><span class="lineNum">     578 </span>            : //==============================================================================</a>
-<a name="579"><span class="lineNum">     579 </span>            : MidiMessageSequence MelodyneFileReader::getAnalysedMIDISequence()</a>
+<a name="579"><span class="lineNum">     579 </span>            : juce::MidiMessageSequence MelodyneFileReader::getAnalysedMIDISequence()</a>
 <a name="580"><span class="lineNum">     580 </span>            : {</a>
 <a name="581"><span class="lineNum">     581 </span>            :     if (player != nullptr)</a>
 <a name="582"><span class="lineNum">     582 </span>            :         return player-&gt;getAnalysedMIDISequence();</a>
@@ -745,7 +745,7 @@
 <a name="683"><span class="lineNum">     683 </span><span class="lineNoCov">          0 : void MelodyneFileReader::showPluginWindow()                         {}</span></a>
 <a name="684"><span class="lineNum">     684 </span><span class="lineNoCov">          0 : void MelodyneFileReader::hidePluginWindow()                         {}</span></a>
 <a name="685"><span class="lineNum">     685 </span><span class="lineNoCov">          0 : bool MelodyneFileReader::isAnalysingContent()                       { return false; }</span></a>
-<a name="686"><span class="lineNum">     686 </span><span class="lineNoCov">          0 : MidiMessageSequence MelodyneFileReader::getAnalysedMIDISequence()   { return {}; }</span></a>
+<a name="686"><span class="lineNum">     686 </span><span class="lineNoCov">          0 : juce::MidiMessageSequence MelodyneFileReader::getAnalysedMIDISequence()   { return {}; }</span></a>
 <a name="687"><span class="lineNum">     687 </span><span class="lineNoCov">          0 : void MelodyneFileReader::sourceClipChanged()                        {}</span></a>
 <a name="688"><span class="lineNum">     688 </span>            : </a>
 <a name="689"><span class="lineNum">     689 </span><span class="lineCov">        194 : ARADocumentHolder::ARADocumentHolder (Edit&amp; e, const juce::ValueTree&amp;) : edit (e) { juce::ignoreUnused (edit); }</span></a>

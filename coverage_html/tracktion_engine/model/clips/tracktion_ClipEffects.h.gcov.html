@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -131,7 +131,7 @@
 <a name="69"><span class="lineNum">      69 </span>            :         N.B. as effects are serial their hash will change if any preceeding effects change.</a>
 <a name="70"><span class="lineNum">      70 </span>            :        @see getIndividualHash</a>
 <a name="71"><span class="lineNum">      71 </span>            :     */</a>
-<a name="72"><span class="lineNum">      72 </span>            :     juce::int64 getHash() const;</a>
+<a name="72"><span class="lineNum">      72 </span>            :     HashCode getHash() const;</a>
 <a name="73"><span class="lineNum">      73 </span>            : </a>
 <a name="74"><span class="lineNum">      74 </span>            :     AudioFile getSourceFile() const;</a>
 <a name="75"><span class="lineNum">      75 </span>            :     AudioFile getDestinationFile() const;</a>
@@ -148,7 +148,7 @@
 <a name="86"><span class="lineNum">      86 </span>            :     ClipEffects&amp; clipEffects;</a>
 <a name="87"><span class="lineNum">      87 </span>            : </a>
 <a name="88"><span class="lineNum">      88 </span>            : protected:</a>
-<a name="89"><span class="lineNum">      89 </span>            :     virtual juce::int64 getIndividualHash() const;</a>
+<a name="89"><span class="lineNum">      89 </span>            :     virtual HashCode getIndividualHash() const;</a>
 <a name="90"><span class="lineNum">      90 </span>            :     void valueTreeChanged() override;</a>
 <a name="91"><span class="lineNum">      91 </span>            : </a>
 <a name="92"><span class="lineNum">      92 </span>            : private:</a>
@@ -192,7 +192,7 @@
 <a name="130"><span class="lineNum">     130 </span>            :     }</a>
 <a name="131"><span class="lineNum">     131 </span>            : </a>
 <a name="132"><span class="lineNum">     132 </span>            :     /** Returns the hash for this set of effects. */</a>
-<a name="133"><span class="lineNum">     133 </span><span class="lineNoCov">          0 :     juce::int64 getHash() const</span></a>
+<a name="133"><span class="lineNum">     133 </span><span class="lineNoCov">          0 :     HashCode getHash() const</span></a>
 <a name="134"><span class="lineNum">     134 </span>            :     {</a>
 <a name="135"><span class="lineNum">     135 </span><span class="lineNoCov">          0 :         if (cachedHash == hashNeedsRecaching)</span></a>
 <a name="136"><span class="lineNum">     136 </span><span class="lineNoCov">          0 :             if (auto ce = objects.getLast())</span></a>
@@ -347,7 +347,7 @@
 <a name="285"><span class="lineNum">     285 </span>            :     juce::ListenerList&lt;Listener&gt; listeners;</a>
 <a name="286"><span class="lineNum">     286 </span>            :     std::unique_ptr&lt;ClipPropertyWatcher&gt; clipPropertyWatcher;</a>
 <a name="287"><span class="lineNum">     287 </span>            :     mutable std::unique_ptr&lt;CachedClipProperties&gt; cachedClipProperties;</a>
-<a name="288"><span class="lineNum">     288 </span>            :     mutable juce::int64 cachedHash = hashNeedsRecaching;</a>
+<a name="288"><span class="lineNum">     288 </span>            :     mutable HashCode cachedHash = hashNeedsRecaching;</a>
 <a name="289"><span class="lineNum">     289 </span>            : </a>
 <a name="290"><span class="lineNum">     290 </span>            :     int renderInhibitors = 0;</a>
 <a name="291"><span class="lineNum">     291 </span>            : </a>
@@ -417,7 +417,7 @@
 <a name="355"><span class="lineNum">     355 </span>            : </a>
 <a name="356"><span class="lineNum">     356 </span>            :     bool hasProperties() override;</a>
 <a name="357"><span class="lineNum">     357 </span>            :     void propertiesButtonPressed (SelectionManager&amp;) override;</a>
-<a name="358"><span class="lineNum">     358 </span>            :     juce::int64 getIndividualHash() const override;</a>
+<a name="358"><span class="lineNum">     358 </span>            :     HashCode getIndividualHash() const override;</a>
 <a name="359"><span class="lineNum">     359 </span>            : </a>
 <a name="360"><span class="lineNum">     360 </span>            :     void valueTreePropertyChanged (juce::ValueTree&amp;, const juce::Identifier&amp;) override;</a>
 <a name="361"><span class="lineNum">     361 </span>            :     void valueTreeChanged() override;</a>
@@ -445,7 +445,7 @@
 <a name="383"><span class="lineNum">     383 </span>            :     juce::CachedValue&lt;AudioFadeCurve::Type&gt; fadeInType, fadeOutType;</a>
 <a name="384"><span class="lineNum">     384 </span>            : </a>
 <a name="385"><span class="lineNum">     385 </span>            : protected:</a>
-<a name="386"><span class="lineNum">     386 </span>            :     juce::int64 getIndividualHash() const override;</a>
+<a name="386"><span class="lineNum">     386 </span>            :     HashCode getIndividualHash() const override;</a>
 <a name="387"><span class="lineNum">     387 </span>            : </a>
 <a name="388"><span class="lineNum">     388 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FadeInOutEffect)</a>
 <a name="389"><span class="lineNum">     389 </span>            : };</a>
@@ -499,7 +499,7 @@
 <a name="437"><span class="lineNum">     437 </span>            :     juce::CachedValue&lt;juce::String&gt; pattern;</a>
 <a name="438"><span class="lineNum">     438 </span>            : </a>
 <a name="439"><span class="lineNum">     439 </span>            : protected:</a>
-<a name="440"><span class="lineNum">     440 </span>            :     juce::int64 getIndividualHash() const override;</a>
+<a name="440"><span class="lineNum">     440 </span>            :     HashCode getIndividualHash() const override;</a>
 <a name="441"><span class="lineNum">     441 </span>            : </a>
 <a name="442"><span class="lineNum">     442 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (StepVolumeEffect)</a>
 <a name="443"><span class="lineNum">     443 </span>            : };</a>
@@ -518,7 +518,7 @@
 <a name="456"><span class="lineNum">     456 </span>            : </a>
 <a name="457"><span class="lineNum">     457 </span>            :     bool hasProperties() override;</a>
 <a name="458"><span class="lineNum">     458 </span>            :     void propertiesButtonPressed (SelectionManager&amp;) override;</a>
-<a name="459"><span class="lineNum">     459 </span>            :     juce::int64 getIndividualHash() const override;</a>
+<a name="459"><span class="lineNum">     459 </span>            :     HashCode getIndividualHash() const override;</a>
 <a name="460"><span class="lineNum">     460 </span>            : </a>
 <a name="461"><span class="lineNum">     461 </span>            :     void valueTreePropertyChanged (juce::ValueTree&amp;, const juce::Identifier&amp;) override;</a>
 <a name="462"><span class="lineNum">     462 </span>            :     void valueTreeChanged() override;</a>
@@ -539,7 +539,7 @@
 <a name="477"><span class="lineNum">     477 </span>            : </a>
 <a name="478"><span class="lineNum">     478 </span>            :     juce::ReferenceCountedObjectPtr&lt;ClipEffectRenderJob&gt; createRenderJob (const AudioFile&amp;, double sourceLength) override;</a>
 <a name="479"><span class="lineNum">     479 </span>            : </a>
-<a name="480"><span class="lineNum">     480 </span>            :     juce::int64 getIndividualHash() const override;</a>
+<a name="480"><span class="lineNum">     480 </span>            :     HashCode getIndividualHash() const override;</a>
 <a name="481"><span class="lineNum">     481 </span>            :     void sourceChanged() override;</a>
 <a name="482"><span class="lineNum">     482 </span>            : </a>
 <a name="483"><span class="lineNum">     483 </span>            :     WarpTimeManager::Ptr warpTimeManager;</a>
@@ -571,7 +571,7 @@
 <a name="509"><span class="lineNum">     509 </span>            :     void flushStateToValueTree() override;</a>
 <a name="510"><span class="lineNum">     510 </span>            :     bool hasProperties() override;</a>
 <a name="511"><span class="lineNum">     511 </span>            :     void propertiesButtonPressed (SelectionManager&amp;) override;</a>
-<a name="512"><span class="lineNum">     512 </span>            :     juce::int64 getIndividualHash() const override;</a>
+<a name="512"><span class="lineNum">     512 </span>            :     HashCode getIndividualHash() const override;</a>
 <a name="513"><span class="lineNum">     513 </span>            : </a>
 <a name="514"><span class="lineNum">     514 </span>            :     void valueTreePropertyChanged (juce::ValueTree&amp;, const juce::Identifier&amp;) override;</a>
 <a name="515"><span class="lineNum">     515 </span>            :     void valueTreeChanged() override;</a>

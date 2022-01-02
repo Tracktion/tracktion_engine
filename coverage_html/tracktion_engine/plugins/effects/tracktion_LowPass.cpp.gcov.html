@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -81,7 +81,7 @@
 <a name="19"><span class="lineNum">      19 </span><span class="lineNoCov">          0 :     mode.referTo (state, IDs::mode, um, &quot;lowpass&quot;);</span></a>
 <a name="20"><span class="lineNum">      20 </span>            : </a>
 <a name="21"><span class="lineNum">      21 </span><span class="lineNoCov">          0 :     frequency = addParam (&quot;frequency&quot;, TRANS(&quot;Frequency&quot;), { 10.0f, 22000.0f },</span></a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineNoCov">          0 :                           [] (float value)              { return juce::String (roundToInt (value)) + &quot; Hz&quot;; },</span></a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineNoCov">          0 :                           [] (float value)              { return juce::String (juce::roundToInt (value)) + &quot; Hz&quot;; },</span></a>
 <a name="23"><span class="lineNum">      23 </span><span class="lineNoCov">          0 :                           [] (const juce::String&amp; s)    { return s.getFloatValue(); });</span></a>
 <a name="24"><span class="lineNum">      24 </span>            : </a>
 <a name="25"><span class="lineNum">      25 </span><span class="lineNoCov">          0 :     frequency-&gt;attachToCurrentValue (frequencyValue);</span></a>
@@ -106,8 +106,8 @@
 <a name="44"><span class="lineNum">      44 </span><span class="lineNoCov">          0 :         currentFilterFreq = newFreq;</span></a>
 <a name="45"><span class="lineNum">      45 </span><span class="lineNoCov">          0 :         isCurrentlyLowPass = nowLowPass;</span></a>
 <a name="46"><span class="lineNum">      46 </span>            : </a>
-<a name="47"><span class="lineNum">      47 </span>            :         IIRCoefficients c = nowLowPass ? IIRCoefficients::makeLowPass  (sampleRate, newFreq)</a>
-<a name="48"><span class="lineNum">      48 </span><span class="lineNoCov">          0 :                                        : IIRCoefficients::makeHighPass (sampleRate, newFreq);</span></a>
+<a name="47"><span class="lineNum">      47 </span>            :         auto c = nowLowPass ? juce::IIRCoefficients::makeLowPass  (sampleRate, newFreq)</a>
+<a name="48"><span class="lineNum">      48 </span><span class="lineNoCov">          0 :                             : juce::IIRCoefficients::makeHighPass (sampleRate, newFreq);</span></a>
 <a name="49"><span class="lineNum">      49 </span>            : </a>
 <a name="50"><span class="lineNum">      50 </span><span class="lineNoCov">          0 :         filter[0].setCoefficients (c);</span></a>
 <a name="51"><span class="lineNum">      51 </span><span class="lineNoCov">          0 :         filter[1].setCoefficients (c);</span></a>
@@ -139,7 +139,7 @@
 <a name="77"><span class="lineNum">      77 </span>            : </a>
 <a name="78"><span class="lineNum">      78 </span><span class="lineNoCov">          0 :         clearChannels (*fc.destBuffer, 2, -1, fc.bufferStartSample, fc.bufferNumSamples);</span></a>
 <a name="79"><span class="lineNum">      79 </span>            : </a>
-<a name="80"><span class="lineNum">      80 </span><span class="lineNoCov">          0 :         for (int i = jmin (2, fc.destBuffer-&gt;getNumChannels()); --i &gt;= 0;)</span></a>
+<a name="80"><span class="lineNum">      80 </span><span class="lineNoCov">          0 :         for (int i = std::min (2, fc.destBuffer-&gt;getNumChannels()); --i &gt;= 0;)</span></a>
 <a name="81"><span class="lineNum">      81 </span><span class="lineNoCov">          0 :             filter[i].processSamples (fc.destBuffer-&gt;getWritePointer (i, fc.bufferStartSample), fc.bufferNumSamples);</span></a>
 <a name="82"><span class="lineNum">      82 </span>            : </a>
 <a name="83"><span class="lineNum">      83 </span><span class="lineNoCov">          0 :         sanitiseValues (*fc.destBuffer, fc.bufferStartSample, fc.bufferNumSamples, 3.0f);</span></a>

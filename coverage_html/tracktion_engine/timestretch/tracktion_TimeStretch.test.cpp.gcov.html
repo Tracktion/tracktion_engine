@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -77,12 +77,12 @@
 <a name="15"><span class="lineNum">      15 </span>            : </a>
 <a name="16"><span class="lineNum">      16 </span>            : //==============================================================================</a>
 <a name="17"><span class="lineNum">      17 </span>            : //==============================================================================</a>
-<a name="18"><span class="lineNum">      18 </span>            : class TimeStretcherTests  : public UnitTest</a>
+<a name="18"><span class="lineNum">      18 </span>            : class TimeStretcherTests  : public juce::UnitTest</a>
 <a name="19"><span class="lineNum">      19 </span>            : {</a>
 <a name="20"><span class="lineNum">      20 </span>            : public:</a>
 <a name="21"><span class="lineNum">      21 </span>            :     //==============================================================================</a>
 <a name="22"><span class="lineNum">      22 </span><span class="lineCov">          1 :     TimeStretcherTests()</span></a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineCov">          1 :         : UnitTest (&quot;TimeStretcherTests&quot;, &quot;Tracktion&quot;)</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">          1 :         : juce::UnitTest (&quot;TimeStretcherTests&quot;, &quot;Tracktion&quot;)</span></a>
 <a name="24"><span class="lineNum">      24 </span>            :     {</a>
 <a name="25"><span class="lineNum">      25 </span><span class="lineCov">          1 :     }</span></a>
 <a name="26"><span class="lineNum">      26 </span>            : </a>
@@ -190,7 +190,7 @@
 <a name="128"><span class="lineNum">     128 </span>            :     //==============================================================================</a>
 <a name="129"><span class="lineNum">     129 </span>            :     static juce::AudioBuffer&lt;float&gt; createSinBuffer (double sampleRate, int numChannels, float pitch)</a>
 <a name="130"><span class="lineNum">     130 </span>            :     {</a>
-<a name="131"><span class="lineNum">     131 </span>            :         AudioBuffer&lt;float&gt; sinBuffer (numChannels, (int) sampleRate);</a>
+<a name="131"><span class="lineNum">     131 </span>            :         juce::AudioBuffer&lt;float&gt; sinBuffer (numChannels, (int) sampleRate);</a>
 <a name="132"><span class="lineNum">     132 </span>            : </a>
 <a name="133"><span class="lineNum">     133 </span>            :         double currentAngle = 0.0, angleDelta = 0.0;</a>
 <a name="134"><span class="lineNum">     134 </span>            :         float originalPitch = pitch; //A4</a>
@@ -285,7 +285,7 @@
 <a name="223"><span class="lineNum">     223 </span>            :         return pitchInHertz;</a>
 <a name="224"><span class="lineNum">     224 </span>            :     }</a>
 <a name="225"><span class="lineNum">     225 </span>            : </a>
-<a name="226"><span class="lineNum">     226 </span>            :     static int getNumZeroCrossings (const AudioBuffer&lt;float&gt;&amp; buffer, int numSamplesToUse)</a>
+<a name="226"><span class="lineNum">     226 </span>            :     static int getNumZeroCrossings (const juce::AudioBuffer&lt;float&gt;&amp; buffer, int numSamplesToUse)</a>
 <a name="227"><span class="lineNum">     227 </span>            :     {</a>
 <a name="228"><span class="lineNum">     228 </span>            :         jassert (numSamplesToUse &lt;= buffer.getNumSamples());</a>
 <a name="229"><span class="lineNum">     229 </span>            :         auto dest = buffer.getReadPointer (0);</a>

@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">202</td>
+            <td class="headerCovTableEntry">204</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -139,13 +139,13 @@
 <a name="77"><span class="lineNum">      77 </span>            : </a>
 <a name="78"><span class="lineNum">      78 </span><span class="lineNoCov">          0 : juce::String EditRenderJob::getLastError() const</span></a>
 <a name="79"><span class="lineNum">      79 </span>            : {</a>
-<a name="80"><span class="lineNum">      80 </span><span class="lineNoCov">          0 :     const ScopedLock sl (errorLock);</span></a>
+<a name="80"><span class="lineNum">      80 </span><span class="lineNoCov">          0 :     const juce::ScopedLock sl (errorLock);</span></a>
 <a name="81"><span class="lineNum">      81 </span><span class="lineNoCov">          0 :     return lastError;</span></a>
 <a name="82"><span class="lineNum">      82 </span>            : }</a>
 <a name="83"><span class="lineNum">      83 </span>            : </a>
 <a name="84"><span class="lineNum">      84 </span><span class="lineNoCov">          0 : void EditRenderJob::setLastError (const juce::String&amp; e)</span></a>
 <a name="85"><span class="lineNum">      85 </span>            : {</a>
-<a name="86"><span class="lineNum">      86 </span><span class="lineNoCov">          0 :     const ScopedLock sl (errorLock);</span></a>
+<a name="86"><span class="lineNum">      86 </span><span class="lineNoCov">          0 :     const juce::ScopedLock sl (errorLock);</span></a>
 <a name="87"><span class="lineNum">      87 </span><span class="lineNoCov">          0 :     lastError = e;</span></a>
 <a name="88"><span class="lineNum">      88 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="89"><span class="lineNum">      89 </span>            : </a>
@@ -166,10 +166,10 @@
 <a name="104"><span class="lineNum">     104 </span><span class="lineNoCov">          0 :                                                   if (context.shouldExit)</span></a>
 <a name="105"><span class="lineNum">     105 </span>            :                                                       break;</a>
 <a name="106"><span class="lineNum">     106 </span>            : </a>
-<a name="107"><span class="lineNum">     107 </span><span class="lineNoCov">          0 :                                                   Thread::sleep (100);</span></a>
+<a name="107"><span class="lineNum">     107 </span><span class="lineNoCov">          0 :                                                   juce::Thread::sleep (100);</span></a>
 <a name="108"><span class="lineNum">     108 </span>            :                                               }</a>
 <a name="109"><span class="lineNum">     109 </span><span class="lineNoCov">          0 :                                           });</span></a>
-<a name="110"><span class="lineNum">     110 </span>            :         ignoreUnused (contextUpdater);</a>
+<a name="110"><span class="lineNum">     110 </span>            :         juce::ignoreUnused (contextUpdater);</a>
 <a name="111"><span class="lineNum">     111 </span><span class="lineNoCov">          0 :         auto edit = new Edit (*params.engine,</span></a>
 <a name="112"><span class="lineNum">     112 </span><span class="lineNoCov">          0 :                               loadEditFromProjectManager (params.engine-&gt;getProjectManager(), itemID),</span></a>
 <a name="113"><span class="lineNum">     113 </span><span class="lineNoCov">          0 :                               Edit::forRendering, &amp;context, 1); // always use saved version!</span></a>
@@ -222,7 +222,7 @@
 <a name="160"><span class="lineNum">     160 </span>            : </a>
 <a name="161"><span class="lineNum">     161 </span>            :     if (result.items.size() &gt; 0</a>
 <a name="162"><span class="lineNum">     162 </span><span class="lineNoCov">          0 :          || (params.category == ProjectItem::Category::none &amp;&amp; proxy.getFile().existsAsFile()))</span></a>
-<a name="163"><span class="lineNum">     163 </span><span class="lineNoCov">          0 :         result.result = Result::ok();</span></a>
+<a name="163"><span class="lineNum">     163 </span><span class="lineNoCov">          0 :         result.result = juce::Result::ok();</span></a>
 <a name="164"><span class="lineNum">     164 </span>            : </a>
 <a name="165"><span class="lineNum">     165 </span><span class="lineNoCov">          0 :     return result.result.wasOk();</span></a>
 <a name="166"><span class="lineNum">     166 </span>            : }</a>
@@ -232,7 +232,7 @@
 <a name="170"><span class="lineNum">     170 </span>            :                                        Renderer::Parameters&amp; renderParams,</a>
 <a name="171"><span class="lineNum">     171 </span><span class="lineNoCov">          0 :                                        const juce::String&amp; description)</span></a>
 <a name="172"><span class="lineNum">     172 </span><span class="lineNoCov">          0 :     : owner (j), r (renderParams), desc (description), originalCategory (r.category),</span></a>
-<a name="173"><span class="lineNum">     173 </span><span class="lineNoCov">          0 :       tempFile (r.destFile, TemporaryFile::useHiddenFile)</span></a>
+<a name="173"><span class="lineNum">     173 </span><span class="lineNoCov">          0 :       tempFile (r.destFile, juce::TemporaryFile::useHiddenFile)</span></a>
 <a name="174"><span class="lineNum">     174 </span>            : {</a>
 <a name="175"><span class="lineNum">     175 </span><span class="lineNoCov">          0 :     r.category = ProjectItem::Category::none;</span></a>
 <a name="176"><span class="lineNum">     176 </span><span class="lineNoCov">          0 :     r.destFile = tempFile.getFile();</span></a>
@@ -240,7 +240,7 @@
 <a name="178"><span class="lineNum">     178 </span>            : </a>
 <a name="179"><span class="lineNum">     179 </span><span class="lineNoCov">          0 : EditRenderJob::RenderPass::~RenderPass()</span></a>
 <a name="180"><span class="lineNum">     180 </span>            : {</a>
-<a name="181"><span class="lineNum">     181 </span><span class="lineNoCov">          0 :     auto errorMessage (task != nullptr ? task-&gt;errorMessage : String());</span></a>
+<a name="181"><span class="lineNum">     181 </span><span class="lineNoCov">          0 :     auto errorMessage (task != nullptr ? task-&gt;errorMessage : juce::String());</span></a>
 <a name="182"><span class="lineNum">     182 </span><span class="lineNoCov">          0 :     owner.setLastError (errorMessage);</span></a>
 <a name="183"><span class="lineNum">     183 </span><span class="lineNoCov">          0 :     const bool completedOk = task != nullptr ? task-&gt;getCurrentTaskProgress() == 1.0f : false;</span></a>
 <a name="184"><span class="lineNum">     184 </span>            :     task = nullptr;</a>
@@ -264,7 +264,7 @@
 <a name="202"><span class="lineNum">     202 </span>            :     // reverse if needed</a>
 <a name="203"><span class="lineNum">     203 </span><span class="lineNoCov">          0 :     if (owner.reverse)</span></a>
 <a name="204"><span class="lineNum">     204 </span>            :     {</a>
-<a name="205"><span class="lineNum">     205 </span><span class="lineNoCov">          0 :         TemporaryFile tempReverseFile (r.destFile);</span></a>
+<a name="205"><span class="lineNum">     205 </span><span class="lineNoCov">          0 :         juce::TemporaryFile tempReverseFile (r.destFile);</span></a>
 <a name="206"><span class="lineNum">     206 </span>            : </a>
 <a name="207"><span class="lineNum">     207 </span><span class="lineNoCov">          0 :         if (r.destFile.existsAsFile())</span></a>
 <a name="208"><span class="lineNum">     208 </span><span class="lineNoCov">          0 :             if (AudioFileUtils::reverse (owner.engine, r.destFile, tempReverseFile.getFile(), owner.progress, nullptr))</span></a>
@@ -303,9 +303,9 @@
 <a name="241"><span class="lineNum">     241 </span>            : </a>
 <a name="242"><span class="lineNum">     242 </span>            :             if (ok)</a>
 <a name="243"><span class="lineNum">     243 </span>            :             {</a>
-<a name="244"><span class="lineNum">     244 </span><span class="lineNoCov">          0 :                 String newItemDesc;</span></a>
+<a name="244"><span class="lineNum">     244 </span><span class="lineNoCov">          0 :                 juce::String newItemDesc;</span></a>
 <a name="245"><span class="lineNum">     245 </span><span class="lineNoCov">          0 :                 newItemDesc &lt;&lt; TRANS(&quot;Rendered from edit&quot;) &lt;&lt; r.edit-&gt;getName().quoted() &lt;&lt; &quot; &quot; &lt;&lt; TRANS(&quot;On&quot;) &lt;&lt; &quot; &quot;</span></a>
-<a name="246"><span class="lineNum">     246 </span><span class="lineNoCov">          0 :                             &lt;&lt; Time::getCurrentTime().toString (true, true);</span></a>
+<a name="246"><span class="lineNum">     246 </span><span class="lineNoCov">          0 :                             &lt;&lt; juce::Time::getCurrentTime().toString (true, true);</span></a>
 <a name="247"><span class="lineNum">     247 </span>            : </a>
 <a name="248"><span class="lineNum">     248 </span><span class="lineNoCov">          0 :                 if (auto item = proj-&gt;createNewItem (r.destFile,</span></a>
 <a name="249"><span class="lineNum">     249 </span><span class="lineNoCov">          0 :                                                      r.createMidiFile ? ProjectItem::midiItemType()</span></a>
@@ -390,7 +390,7 @@
 <a name="328"><span class="lineNum">     328 </span>            : </a>
 <a name="329"><span class="lineNum">     329 </span>            :     jassert (params.separateTracks);</a>
 <a name="330"><span class="lineNum">     330 </span><span class="lineNoCov">          0 :     auto originalTracksToDo = params.tracksToDo;</span></a>
-<a name="331"><span class="lineNum">     331 </span><span class="lineNoCov">          0 :     Array&lt;File&gt; createdFiles;</span></a>
+<a name="331"><span class="lineNum">     331 </span><span class="lineNoCov">          0 :     juce::Array&lt;juce::File&gt; createdFiles;</span></a>
 <a name="332"><span class="lineNum">     332 </span>            : </a>
 <a name="333"><span class="lineNum">     333 </span><span class="lineNoCov">          0 :     for (int i = 0; i &lt;= originalTracksToDo.getHighestBit(); ++i)</span></a>
 <a name="334"><span class="lineNum">     334 </span>            :     {</a>
@@ -426,8 +426,8 @@
 <a name="364"><span class="lineNum">     364 </span>            : </a>
 <a name="365"><span class="lineNum">     365 </span><span class="lineNoCov">          0 :                 auto getDescription = [at, ft]</span></a>
 <a name="366"><span class="lineNum">     366 </span>            :                 {</a>
-<a name="367"><span class="lineNum">     367 </span><span class="lineNoCov">          0 :                     return ft != nullptr ? TRANS(&quot;Rendering Submix Track&quot;) + &quot; &quot; + String (ft-&gt;getFolderTrackNumber()) + &quot;...&quot;</span></a>
-<a name="368"><span class="lineNum">     368 </span><span class="lineNoCov">          0 :                                          : TRANS(&quot;Rendering Track&quot;) + &quot; &quot; + String (at-&gt;getAudioTrackNumber()) + &quot;...&quot;;</span></a>
+<a name="367"><span class="lineNum">     367 </span><span class="lineNoCov">          0 :                     return ft != nullptr ? TRANS(&quot;Rendering Submix Track&quot;) + &quot; &quot; + juce::String (ft-&gt;getFolderTrackNumber()) + &quot;...&quot;</span></a>
+<a name="368"><span class="lineNum">     368 </span><span class="lineNoCov">          0 :                                          : TRANS(&quot;Rendering Track&quot;) + &quot; &quot; + juce::String (at-&gt;getAudioTrackNumber()) + &quot;...&quot;;</span></a>
 <a name="369"><span class="lineNum">     369 </span>            :                 };</a>
 <a name="370"><span class="lineNum">     370 </span>            : </a>
 <a name="371"><span class="lineNum">     371 </span><span class="lineNoCov">          0 :                 auto file = proxy.getFile();</span></a>
@@ -436,70 +436,71 @@
 <a name="374"><span class="lineNum">     374 </span><span class="lineNoCov">          0 :                                                        + &quot; &quot; + TRANS(&quot;Render&quot;) + &quot; 0&quot;</span></a>
 <a name="375"><span class="lineNum">     375 </span><span class="lineNoCov">          0 :                                                        + file.getFileExtension());</span></a>
 <a name="376"><span class="lineNum">     376 </span>            : </a>
-<a name="377"><span class="lineNum">     377 </span><span class="lineNoCov">          0 :                 params.destFile = File (File::createLegalPathName (getNonExistentSiblingWithIncrementedNumberSuffix (trackFile, false).getFullPathName()));</span></a>
-<a name="378"><span class="lineNum">     378 </span><span class="lineNoCov">          0 :                 params.tracksToDo = tracksToDo;</span></a>
-<a name="379"><span class="lineNum">     379 </span>            : </a>
-<a name="380"><span class="lineNum">     380 </span><span class="lineNoCov">          0 :                 if (Renderer::checkTargetFile (track-&gt;edit.engine, params.destFile))</span></a>
-<a name="381"><span class="lineNum">     381 </span><span class="lineNoCov">          0 :                     renderPasses.add (new RenderPass (*this, params, getDescription()));</span></a>
-<a name="382"><span class="lineNum">     382 </span>            : </a>
-<a name="383"><span class="lineNum">     383 </span>            :                 // Temporarily create the output file so that it affects the next call to</a>
-<a name="384"><span class="lineNum">     384 </span>            :                 // getNonExistentSiblingWithIncrementedNumberSuffix</a>
-<a name="385"><span class="lineNum">     385 </span>            :                 createdFiles.add (params.destFile);</a>
-<a name="386"><span class="lineNum">     386 </span><span class="lineNoCov">          0 :                 params.destFile.replaceWithText (&quot;&quot;);</span></a>
-<a name="387"><span class="lineNum">     387 </span>            :             }</a>
-<a name="388"><span class="lineNum">     388 </span>            :         }</a>
-<a name="389"><span class="lineNum">     389 </span>            :     }</a>
-<a name="390"><span class="lineNum">     390 </span>            : </a>
-<a name="391"><span class="lineNum">     391 </span><span class="lineNoCov">          0 :     for (auto f : createdFiles)</span></a>
-<a name="392"><span class="lineNum">     392 </span><span class="lineNoCov">          0 :         f.deleteFile();</span></a>
-<a name="393"><span class="lineNum">     393 </span>            : </a>
-<a name="394"><span class="lineNum">     394 </span><span class="lineNoCov">          0 :     params.tracksToDo = originalTracksToDo;</span></a>
-<a name="395"><span class="lineNum">     395 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="396"><span class="lineNum">     396 </span>            : </a>
-<a name="397"><span class="lineNum">     397 </span><span class="lineNoCov">          0 : bool EditRenderJob::generateSilence (const File&amp; fileToWriteTo)</span></a>
-<a name="398"><span class="lineNum">     398 </span>            : {</a>
-<a name="399"><span class="lineNum">     399 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
-<a name="400"><span class="lineNum">     400 </span>            : </a>
-<a name="401"><span class="lineNum">     401 </span><span class="lineNoCov">          0 :     std::unique_ptr&lt;FileOutputStream&gt; os (fileToWriteTo.createOutputStream());</span></a>
-<a name="402"><span class="lineNum">     402 </span>            : </a>
-<a name="403"><span class="lineNum">     403 </span><span class="lineNoCov">          0 :     if (os == nullptr || params.audioFormat == nullptr)</span></a>
-<a name="404"><span class="lineNum">     404 </span>            :         return false;</a>
-<a name="405"><span class="lineNum">     405 </span>            : </a>
-<a name="406"><span class="lineNum">     406 </span><span class="lineNoCov">          0 :     const int numChans = params.mustRenderInMono ? 1 : 2;</span></a>
-<a name="407"><span class="lineNum">     407 </span>            :     std::unique_ptr&lt;AudioFormatWriter&gt; writer (params.audioFormat-&gt;createWriterFor (os.get(), params.sampleRateForAudio,</a>
-<a name="408"><span class="lineNum">     408 </span>            :                                                                                     (unsigned int) numChans,</a>
-<a name="409"><span class="lineNum">     409 </span><span class="lineNoCov">          0 :                                                                                     params.bitDepth, {}, 0));</span></a>
-<a name="410"><span class="lineNum">     410 </span>            : </a>
-<a name="411"><span class="lineNum">     411 </span><span class="lineNoCov">          0 :     if (writer == nullptr)</span></a>
-<a name="412"><span class="lineNum">     412 </span>            :         return false;</a>
-<a name="413"><span class="lineNum">     413 </span>            : </a>
-<a name="414"><span class="lineNum">     414 </span>            :     os.release();</a>
-<a name="415"><span class="lineNum">     415 </span><span class="lineNoCov">          0 :     auto numToDo = (int64) (params.time.getLength() * params.sampleRateForAudio);</span></a>
-<a name="416"><span class="lineNum">     416 </span><span class="lineNoCov">          0 :     auto blockSize = jmin (32758, (int) numToDo);</span></a>
-<a name="417"><span class="lineNum">     417 </span>            :     int64 numDone = 0;</a>
-<a name="418"><span class="lineNum">     418 </span>            : </a>
-<a name="419"><span class="lineNum">     419 </span>            :     // should probably use an AudioScratchBuffer here</a>
-<a name="420"><span class="lineNum">     420 </span><span class="lineNoCov">          0 :     juce::AudioBuffer&lt;float&gt; buffer (numChans, blockSize);</span></a>
-<a name="421"><span class="lineNum">     421 </span><span class="lineNoCov">          0 :     buffer.clear();</span></a>
-<a name="422"><span class="lineNum">     422 </span>            : </a>
-<a name="423"><span class="lineNum">     423 </span><span class="lineNoCov">          0 :     while (numDone &lt; numToDo)</span></a>
-<a name="424"><span class="lineNum">     424 </span>            :     {</a>
-<a name="425"><span class="lineNum">     425 </span><span class="lineNoCov">          0 :         if (shouldExit())</span></a>
-<a name="426"><span class="lineNum">     426 </span>            :             return false;</a>
-<a name="427"><span class="lineNum">     427 </span>            : </a>
-<a name="428"><span class="lineNum">     428 </span>            :         auto numThisTime = jmin ((int) numToDo, blockSize);</a>
-<a name="429"><span class="lineNum">     429 </span><span class="lineNoCov">          0 :         writer-&gt;writeFromAudioSampleBuffer (buffer, 0, numThisTime);</span></a>
-<a name="430"><span class="lineNum">     430 </span>            : </a>
-<a name="431"><span class="lineNum">     431 </span><span class="lineNoCov">          0 :         progress = (float) (numDone / (float) numToDo);</span></a>
-<a name="432"><span class="lineNum">     432 </span><span class="lineNoCov">          0 :         thumbnailToUpdate.addBlock (numDone, buffer, 0, numThisTime);</span></a>
-<a name="433"><span class="lineNum">     433 </span>            : </a>
-<a name="434"><span class="lineNum">     434 </span><span class="lineNoCov">          0 :         numDone += numThisTime;</span></a>
-<a name="435"><span class="lineNum">     435 </span>            :     }</a>
-<a name="436"><span class="lineNum">     436 </span>            : </a>
-<a name="437"><span class="lineNum">     437 </span>            :     return true;</a>
-<a name="438"><span class="lineNum">     438 </span>            : }</a>
-<a name="439"><span class="lineNum">     439 </span>            : </a>
-<a name="440"><span class="lineNum">     440 </span>            : }</a>
+<a name="377"><span class="lineNum">     377 </span><span class="lineNoCov">          0 :                 params.destFile = juce::File (juce::File::createLegalPathName (getNonExistentSiblingWithIncrementedNumberSuffix (trackFile, false)</span></a>
+<a name="378"><span class="lineNum">     378 </span><span class="lineNoCov">          0 :                                                                                 .getFullPathName()));</span></a>
+<a name="379"><span class="lineNum">     379 </span><span class="lineNoCov">          0 :                 params.tracksToDo = tracksToDo;</span></a>
+<a name="380"><span class="lineNum">     380 </span>            : </a>
+<a name="381"><span class="lineNum">     381 </span><span class="lineNoCov">          0 :                 if (Renderer::checkTargetFile (track-&gt;edit.engine, params.destFile))</span></a>
+<a name="382"><span class="lineNum">     382 </span><span class="lineNoCov">          0 :                     renderPasses.add (new RenderPass (*this, params, getDescription()));</span></a>
+<a name="383"><span class="lineNum">     383 </span>            : </a>
+<a name="384"><span class="lineNum">     384 </span>            :                 // Temporarily create the output file so that it affects the next call to</a>
+<a name="385"><span class="lineNum">     385 </span>            :                 // getNonExistentSiblingWithIncrementedNumberSuffix</a>
+<a name="386"><span class="lineNum">     386 </span>            :                 createdFiles.add (params.destFile);</a>
+<a name="387"><span class="lineNum">     387 </span><span class="lineNoCov">          0 :                 params.destFile.replaceWithText (&quot;&quot;);</span></a>
+<a name="388"><span class="lineNum">     388 </span>            :             }</a>
+<a name="389"><span class="lineNum">     389 </span>            :         }</a>
+<a name="390"><span class="lineNum">     390 </span>            :     }</a>
+<a name="391"><span class="lineNum">     391 </span>            : </a>
+<a name="392"><span class="lineNum">     392 </span><span class="lineNoCov">          0 :     for (auto f : createdFiles)</span></a>
+<a name="393"><span class="lineNum">     393 </span><span class="lineNoCov">          0 :         f.deleteFile();</span></a>
+<a name="394"><span class="lineNum">     394 </span>            : </a>
+<a name="395"><span class="lineNum">     395 </span><span class="lineNoCov">          0 :     params.tracksToDo = originalTracksToDo;</span></a>
+<a name="396"><span class="lineNum">     396 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="397"><span class="lineNum">     397 </span>            : </a>
+<a name="398"><span class="lineNum">     398 </span><span class="lineNoCov">          0 : bool EditRenderJob::generateSilence (const juce::File&amp; fileToWriteTo)</span></a>
+<a name="399"><span class="lineNum">     399 </span>            : {</a>
+<a name="400"><span class="lineNum">     400 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
+<a name="401"><span class="lineNum">     401 </span>            : </a>
+<a name="402"><span class="lineNum">     402 </span><span class="lineNoCov">          0 :     std::unique_ptr&lt;juce::FileOutputStream&gt; os (fileToWriteTo.createOutputStream());</span></a>
+<a name="403"><span class="lineNum">     403 </span>            : </a>
+<a name="404"><span class="lineNum">     404 </span><span class="lineNoCov">          0 :     if (os == nullptr || params.audioFormat == nullptr)</span></a>
+<a name="405"><span class="lineNum">     405 </span>            :         return false;</a>
+<a name="406"><span class="lineNum">     406 </span>            : </a>
+<a name="407"><span class="lineNum">     407 </span><span class="lineNoCov">          0 :     const int numChans = params.mustRenderInMono ? 1 : 2;</span></a>
+<a name="408"><span class="lineNum">     408 </span>            :     std::unique_ptr&lt;juce::AudioFormatWriter&gt; writer (params.audioFormat-&gt;createWriterFor (os.get(), params.sampleRateForAudio,</a>
+<a name="409"><span class="lineNum">     409 </span>            :                                                                                           (unsigned int) numChans,</a>
+<a name="410"><span class="lineNum">     410 </span><span class="lineNoCov">          0 :                                                                                           params.bitDepth, {}, 0));</span></a>
+<a name="411"><span class="lineNum">     411 </span>            : </a>
+<a name="412"><span class="lineNum">     412 </span><span class="lineNoCov">          0 :     if (writer == nullptr)</span></a>
+<a name="413"><span class="lineNum">     413 </span>            :         return false;</a>
+<a name="414"><span class="lineNum">     414 </span>            : </a>
+<a name="415"><span class="lineNum">     415 </span>            :     os.release();</a>
+<a name="416"><span class="lineNum">     416 </span><span class="lineNoCov">          0 :     auto numToDo = (SampleCount) (params.time.getLength() * params.sampleRateForAudio);</span></a>
+<a name="417"><span class="lineNum">     417 </span><span class="lineNoCov">          0 :     auto blockSize = std::min (4096, (int) numToDo);</span></a>
+<a name="418"><span class="lineNum">     418 </span>            :     SampleCount numDone = 0;</a>
+<a name="419"><span class="lineNum">     419 </span>            : </a>
+<a name="420"><span class="lineNum">     420 </span>            :     // should probably use an AudioScratchBuffer here</a>
+<a name="421"><span class="lineNum">     421 </span><span class="lineNoCov">          0 :     juce::AudioBuffer&lt;float&gt; buffer (numChans, blockSize);</span></a>
+<a name="422"><span class="lineNum">     422 </span><span class="lineNoCov">          0 :     buffer.clear();</span></a>
+<a name="423"><span class="lineNum">     423 </span>            : </a>
+<a name="424"><span class="lineNum">     424 </span><span class="lineNoCov">          0 :     while (numDone &lt; numToDo)</span></a>
+<a name="425"><span class="lineNum">     425 </span>            :     {</a>
+<a name="426"><span class="lineNum">     426 </span><span class="lineNoCov">          0 :         if (shouldExit())</span></a>
+<a name="427"><span class="lineNum">     427 </span>            :             return false;</a>
+<a name="428"><span class="lineNum">     428 </span>            : </a>
+<a name="429"><span class="lineNum">     429 </span><span class="lineNoCov">          0 :         auto numThisTime = std::min ((int) numToDo, blockSize);</span></a>
+<a name="430"><span class="lineNum">     430 </span><span class="lineNoCov">          0 :         writer-&gt;writeFromAudioSampleBuffer (buffer, 0, numThisTime);</span></a>
+<a name="431"><span class="lineNum">     431 </span>            : </a>
+<a name="432"><span class="lineNum">     432 </span><span class="lineNoCov">          0 :         progress = (float) (numDone / (float) numToDo);</span></a>
+<a name="433"><span class="lineNum">     433 </span><span class="lineNoCov">          0 :         thumbnailToUpdate.addBlock (numDone, buffer, 0, numThisTime);</span></a>
+<a name="434"><span class="lineNum">     434 </span>            : </a>
+<a name="435"><span class="lineNum">     435 </span><span class="lineNoCov">          0 :         numDone += numThisTime;</span></a>
+<a name="436"><span class="lineNum">     436 </span>            :     }</a>
+<a name="437"><span class="lineNum">     437 </span>            : </a>
+<a name="438"><span class="lineNum">     438 </span>            :     return true;</a>
+<a name="439"><span class="lineNum">     439 </span>            : }</a>
+<a name="440"><span class="lineNum">     440 </span>            : </a>
+<a name="441"><span class="lineNum">     441 </span>            : }</a>
 </pre>
       </td>
     </tr>

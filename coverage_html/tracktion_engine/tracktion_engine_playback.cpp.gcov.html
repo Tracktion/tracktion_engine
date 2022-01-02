@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -225,86 +225,84 @@
 <a name="163"><span class="lineNum">     163 </span>            : #include &quot;playback/graph/tracktion_MidiNode.test.cpp&quot;</a>
 <a name="164"><span class="lineNum">     164 </span>            : #include &quot;playback/graph/tracktion_RackBenchmarks.test.cpp&quot;</a>
 <a name="165"><span class="lineNum">     165 </span>            : </a>
-<a name="166"><span class="lineNum">     166 </span>            : using namespace juce;</a>
-<a name="167"><span class="lineNum">     167 </span>            : </a>
-<a name="168"><span class="lineNum">     168 </span>            : #include &quot;playback/tracktion_DeviceManager.cpp&quot;</a>
-<a name="169"><span class="lineNum">     169 </span>            : #include &quot;playback/tracktion_EditPlaybackContext.cpp&quot;</a>
-<a name="170"><span class="lineNum">     170 </span>            : #include &quot;playback/tracktion_EditInputDevices.cpp&quot;</a>
-<a name="171"><span class="lineNum">     171 </span>            : #include &quot;playback/tracktion_LevelMeasurer.cpp&quot;</a>
-<a name="172"><span class="lineNum">     172 </span>            : #include &quot;playback/tracktion_MidiNoteDispatcher.cpp&quot;</a>
-<a name="173"><span class="lineNum">     173 </span>            : #include &quot;playback/tracktion_TransportControl.test.cpp&quot;</a>
-<a name="174"><span class="lineNum">     174 </span>            : #include &quot;playback/tracktion_TransportControl.cpp&quot;</a>
-<a name="175"><span class="lineNum">     175 </span>            : #include &quot;playback/tracktion_AbletonLink.cpp&quot;</a>
-<a name="176"><span class="lineNum">     176 </span>            : </a>
-<a name="177"><span class="lineNum">     177 </span>            : #include &quot;playback/audionodes/tracktion_AudioNode.h&quot;</a>
-<a name="178"><span class="lineNum">     178 </span>            : #include &quot;playback/audionodes/tracktion_CombiningAudioNode.h&quot;</a>
-<a name="179"><span class="lineNum">     179 </span>            : #include &quot;playback/audionodes/tracktion_WaveAudioNode.h&quot;</a>
-<a name="180"><span class="lineNum">     180 </span>            : #include &quot;playback/audionodes/tracktion_TrackCompAudioNode.h&quot;</a>
-<a name="181"><span class="lineNum">     181 </span>            : #include &quot;playback/audionodes/tracktion_SpeedRampAudioNode.h&quot;</a>
-<a name="182"><span class="lineNum">     182 </span>            : #include &quot;playback/audionodes/tracktion_PluginAudioNode.h&quot;</a>
-<a name="183"><span class="lineNum">     183 </span>            : #include &quot;playback/audionodes/tracktion_FadeInOutAudioNode.h&quot;</a>
-<a name="184"><span class="lineNum">     184 </span>            : </a>
-<a name="185"><span class="lineNum">     185 </span>            : #include &quot;playback/audionodes/tracktion_AudioNode.cpp&quot;</a>
-<a name="186"><span class="lineNum">     186 </span>            : #include &quot;playback/audionodes/tracktion_FadeInOutAudioNode.cpp&quot;</a>
-<a name="187"><span class="lineNum">     187 </span>            : #include &quot;playback/audionodes/tracktion_WaveAudioNode.cpp&quot;</a>
-<a name="188"><span class="lineNum">     188 </span>            : #include &quot;playback/audionodes/tracktion_CombiningAudioNode.cpp&quot;</a>
-<a name="189"><span class="lineNum">     189 </span>            : </a>
-<a name="190"><span class="lineNum">     190 </span>            : #include &quot;playback/devices/tracktion_InputDevice.cpp&quot;</a>
-<a name="191"><span class="lineNum">     191 </span>            : #include &quot;playback/devices/tracktion_MidiInputDevice.cpp&quot;</a>
-<a name="192"><span class="lineNum">     192 </span>            : #include &quot;playback/devices/tracktion_PhysicalMidiInputDevice.cpp&quot;</a>
-<a name="193"><span class="lineNum">     193 </span>            : #include &quot;playback/devices/tracktion_VirtualMidiInputDevice.cpp&quot;</a>
-<a name="194"><span class="lineNum">     194 </span>            : #include &quot;playback/devices/tracktion_MidiOutputDevice.cpp&quot;</a>
-<a name="195"><span class="lineNum">     195 </span>            : #include &quot;playback/devices/tracktion_OutputDevice.cpp&quot;</a>
-<a name="196"><span class="lineNum">     196 </span>            : #include &quot;playback/devices/tracktion_WaveDeviceDescription.cpp&quot;</a>
-<a name="197"><span class="lineNum">     197 </span>            : #include &quot;playback/devices/tracktion_WaveInputDevice.cpp&quot;</a>
-<a name="198"><span class="lineNum">     198 </span>            : #include &quot;playback/devices/tracktion_WaveOutputDevice.cpp&quot;</a>
+<a name="166"><span class="lineNum">     166 </span>            : #include &quot;playback/tracktion_DeviceManager.cpp&quot;</a>
+<a name="167"><span class="lineNum">     167 </span>            : #include &quot;playback/tracktion_EditPlaybackContext.cpp&quot;</a>
+<a name="168"><span class="lineNum">     168 </span>            : #include &quot;playback/tracktion_EditInputDevices.cpp&quot;</a>
+<a name="169"><span class="lineNum">     169 </span>            : #include &quot;playback/tracktion_LevelMeasurer.cpp&quot;</a>
+<a name="170"><span class="lineNum">     170 </span>            : #include &quot;playback/tracktion_MidiNoteDispatcher.cpp&quot;</a>
+<a name="171"><span class="lineNum">     171 </span>            : #include &quot;playback/tracktion_TransportControl.test.cpp&quot;</a>
+<a name="172"><span class="lineNum">     172 </span>            : #include &quot;playback/tracktion_TransportControl.cpp&quot;</a>
+<a name="173"><span class="lineNum">     173 </span>            : #include &quot;playback/tracktion_AbletonLink.cpp&quot;</a>
+<a name="174"><span class="lineNum">     174 </span>            : </a>
+<a name="175"><span class="lineNum">     175 </span>            : #include &quot;playback/audionodes/tracktion_AudioNode.h&quot;</a>
+<a name="176"><span class="lineNum">     176 </span>            : #include &quot;playback/audionodes/tracktion_CombiningAudioNode.h&quot;</a>
+<a name="177"><span class="lineNum">     177 </span>            : #include &quot;playback/audionodes/tracktion_WaveAudioNode.h&quot;</a>
+<a name="178"><span class="lineNum">     178 </span>            : #include &quot;playback/audionodes/tracktion_TrackCompAudioNode.h&quot;</a>
+<a name="179"><span class="lineNum">     179 </span>            : #include &quot;playback/audionodes/tracktion_SpeedRampAudioNode.h&quot;</a>
+<a name="180"><span class="lineNum">     180 </span>            : #include &quot;playback/audionodes/tracktion_PluginAudioNode.h&quot;</a>
+<a name="181"><span class="lineNum">     181 </span>            : #include &quot;playback/audionodes/tracktion_FadeInOutAudioNode.h&quot;</a>
+<a name="182"><span class="lineNum">     182 </span>            : </a>
+<a name="183"><span class="lineNum">     183 </span>            : #include &quot;playback/audionodes/tracktion_AudioNode.cpp&quot;</a>
+<a name="184"><span class="lineNum">     184 </span>            : #include &quot;playback/audionodes/tracktion_FadeInOutAudioNode.cpp&quot;</a>
+<a name="185"><span class="lineNum">     185 </span>            : #include &quot;playback/audionodes/tracktion_WaveAudioNode.cpp&quot;</a>
+<a name="186"><span class="lineNum">     186 </span>            : #include &quot;playback/audionodes/tracktion_CombiningAudioNode.cpp&quot;</a>
+<a name="187"><span class="lineNum">     187 </span>            : </a>
+<a name="188"><span class="lineNum">     188 </span>            : #include &quot;playback/devices/tracktion_InputDevice.cpp&quot;</a>
+<a name="189"><span class="lineNum">     189 </span>            : #include &quot;playback/devices/tracktion_MidiInputDevice.cpp&quot;</a>
+<a name="190"><span class="lineNum">     190 </span>            : #include &quot;playback/devices/tracktion_PhysicalMidiInputDevice.cpp&quot;</a>
+<a name="191"><span class="lineNum">     191 </span>            : #include &quot;playback/devices/tracktion_VirtualMidiInputDevice.cpp&quot;</a>
+<a name="192"><span class="lineNum">     192 </span>            : #include &quot;playback/devices/tracktion_MidiOutputDevice.cpp&quot;</a>
+<a name="193"><span class="lineNum">     193 </span>            : #include &quot;playback/devices/tracktion_OutputDevice.cpp&quot;</a>
+<a name="194"><span class="lineNum">     194 </span>            : #include &quot;playback/devices/tracktion_WaveDeviceDescription.cpp&quot;</a>
+<a name="195"><span class="lineNum">     195 </span>            : #include &quot;playback/devices/tracktion_WaveInputDevice.cpp&quot;</a>
+<a name="196"><span class="lineNum">     196 </span>            : #include &quot;playback/devices/tracktion_WaveOutputDevice.cpp&quot;</a>
+<a name="197"><span class="lineNum">     197 </span>            : </a>
+<a name="198"><span class="lineNum">     198 </span>            : #include &quot;playback/tracktion_HostedAudioDevice.cpp&quot;</a>
 <a name="199"><span class="lineNum">     199 </span>            : </a>
-<a name="200"><span class="lineNum">     200 </span>            : #include &quot;playback/tracktion_HostedAudioDevice.cpp&quot;</a>
-<a name="201"><span class="lineNum">     201 </span>            : </a>
-<a name="202"><span class="lineNum">     202 </span>            : #ifdef JUCE_MSVC</a>
-<a name="203"><span class="lineNum">     203 </span>            :  #pragma warning (disable: 4996)</a>
-<a name="204"><span class="lineNum">     204 </span>            : #endif</a>
-<a name="205"><span class="lineNum">     205 </span>            : </a>
-<a name="206"><span class="lineNum">     206 </span><span class="lineNoCov">          0 : static inline void sprintf (char* dest, size_t maxLength, const char* format, ...) noexcept</span></a>
-<a name="207"><span class="lineNum">     207 </span>            : {</a>
-<a name="208"><span class="lineNum">     208 </span>            :     va_list list;</a>
-<a name="209"><span class="lineNum">     209 </span><span class="lineNoCov">          0 :     va_start (list, format);</span></a>
-<a name="210"><span class="lineNum">     210 </span>            : </a>
-<a name="211"><span class="lineNum">     211 </span>            :    #if JUCE_WINDOWS</a>
-<a name="212"><span class="lineNum">     212 </span>            :     _vsnprintf (dest, maxLength, format, list);</a>
-<a name="213"><span class="lineNum">     213 </span>            :    #else</a>
-<a name="214"><span class="lineNum">     214 </span>            :     vsnprintf (dest, maxLength, format, list);</a>
-<a name="215"><span class="lineNum">     215 </span>            :    #endif</a>
-<a name="216"><span class="lineNum">     216 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="217"><span class="lineNum">     217 </span>            : </a>
-<a name="218"><span class="lineNum">     218 </span>            : #include &quot;control_surfaces/tracktion_ControlSurface.cpp&quot;</a>
-<a name="219"><span class="lineNum">     219 </span>            : #include &quot;control_surfaces/tracktion_ExternalControllerManager.cpp&quot;</a>
-<a name="220"><span class="lineNum">     220 </span>            : #include &quot;control_surfaces/tracktion_ExternalController.cpp&quot;</a>
-<a name="221"><span class="lineNum">     221 </span>            : #include &quot;control_surfaces/tracktion_CustomControlSurface.cpp&quot;</a>
-<a name="222"><span class="lineNum">     222 </span>            : </a>
-<a name="223"><span class="lineNum">     223 </span>            : #if TRACKTION_ENABLE_CONTROL_SURFACES</a>
-<a name="224"><span class="lineNum">     224 </span>            :  #if TRACKTION_ENABLE_CONTROL_SURFACE_MACKIEC4</a>
-<a name="225"><span class="lineNum">     225 </span>            :   namespace tracktion_engine</a>
-<a name="226"><span class="lineNum">     226 </span>            :   {</a>
-<a name="227"><span class="lineNum">     227 </span>            :     #include &quot;Mackie/C4Translator.h&quot;</a>
-<a name="228"><span class="lineNum">     228 </span>            :     #include &quot;Mackie/C4Translator.cpp&quot;</a>
-<a name="229"><span class="lineNum">     229 </span>            :   }</a>
-<a name="230"><span class="lineNum">     230 </span>            :  #endif</a>
-<a name="231"><span class="lineNum">     231 </span>            : </a>
-<a name="232"><span class="lineNum">     232 </span>            :  #include &quot;control_surfaces/types/tracktion_AlphaTrack.cpp&quot;</a>
-<a name="233"><span class="lineNum">     233 </span>            :  #include &quot;control_surfaces/types/tracktion_MackieC4.cpp&quot;</a>
-<a name="234"><span class="lineNum">     234 </span>            :  #include &quot;control_surfaces/types/tracktion_MackieMCU.cpp&quot;</a>
-<a name="235"><span class="lineNum">     235 </span>            :  #include &quot;control_surfaces/types/tracktion_MackieXT.cpp&quot;</a>
-<a name="236"><span class="lineNum">     236 </span>            :  #include &quot;control_surfaces/types/tracktion_NovationRemoteSl.cpp&quot;</a>
-<a name="237"><span class="lineNum">     237 </span>            :  #include &quot;control_surfaces/types/tracktion_RemoteSLCompact.cpp&quot;</a>
-<a name="238"><span class="lineNum">     238 </span>            :  #include &quot;control_surfaces/types/tracktion_Tranzport.cpp&quot;</a>
-<a name="239"><span class="lineNum">     239 </span>            : #endif</a>
-<a name="240"><span class="lineNum">     240 </span>            : </a>
-<a name="241"><span class="lineNum">     241 </span>            : #if TRACKTION_ENABLE_CONTROL_SURFACES</a>
-<a name="242"><span class="lineNum">     242 </span>            :  #include &quot;control_surfaces/types/tracktion_NovationAutomap.cpp&quot;</a>
+<a name="200"><span class="lineNum">     200 </span>            : #ifdef JUCE_MSVC</a>
+<a name="201"><span class="lineNum">     201 </span>            :  #pragma warning (disable: 4996)</a>
+<a name="202"><span class="lineNum">     202 </span>            : #endif</a>
+<a name="203"><span class="lineNum">     203 </span>            : </a>
+<a name="204"><span class="lineNum">     204 </span><span class="lineNoCov">          0 : static inline void sprintf (char* dest, size_t maxLength, const char* format, ...) noexcept</span></a>
+<a name="205"><span class="lineNum">     205 </span>            : {</a>
+<a name="206"><span class="lineNum">     206 </span>            :     va_list list;</a>
+<a name="207"><span class="lineNum">     207 </span><span class="lineNoCov">          0 :     va_start (list, format);</span></a>
+<a name="208"><span class="lineNum">     208 </span>            : </a>
+<a name="209"><span class="lineNum">     209 </span>            :    #if JUCE_WINDOWS</a>
+<a name="210"><span class="lineNum">     210 </span>            :     _vsnprintf (dest, maxLength, format, list);</a>
+<a name="211"><span class="lineNum">     211 </span>            :    #else</a>
+<a name="212"><span class="lineNum">     212 </span>            :     vsnprintf (dest, maxLength, format, list);</a>
+<a name="213"><span class="lineNum">     213 </span>            :    #endif</a>
+<a name="214"><span class="lineNum">     214 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="215"><span class="lineNum">     215 </span>            : </a>
+<a name="216"><span class="lineNum">     216 </span>            : #include &quot;control_surfaces/tracktion_ControlSurface.cpp&quot;</a>
+<a name="217"><span class="lineNum">     217 </span>            : #include &quot;control_surfaces/tracktion_ExternalControllerManager.cpp&quot;</a>
+<a name="218"><span class="lineNum">     218 </span>            : #include &quot;control_surfaces/tracktion_ExternalController.cpp&quot;</a>
+<a name="219"><span class="lineNum">     219 </span>            : #include &quot;control_surfaces/tracktion_CustomControlSurface.cpp&quot;</a>
+<a name="220"><span class="lineNum">     220 </span>            : </a>
+<a name="221"><span class="lineNum">     221 </span>            : #if TRACKTION_ENABLE_CONTROL_SURFACES</a>
+<a name="222"><span class="lineNum">     222 </span>            :  #if TRACKTION_ENABLE_CONTROL_SURFACE_MACKIEC4</a>
+<a name="223"><span class="lineNum">     223 </span>            :   namespace tracktion_engine</a>
+<a name="224"><span class="lineNum">     224 </span>            :   {</a>
+<a name="225"><span class="lineNum">     225 </span>            :     #include &quot;Mackie/C4Translator.h&quot;</a>
+<a name="226"><span class="lineNum">     226 </span>            :     #include &quot;Mackie/C4Translator.cpp&quot;</a>
+<a name="227"><span class="lineNum">     227 </span>            :   }</a>
+<a name="228"><span class="lineNum">     228 </span>            :  #endif</a>
+<a name="229"><span class="lineNum">     229 </span>            : </a>
+<a name="230"><span class="lineNum">     230 </span>            :  #include &quot;control_surfaces/types/tracktion_AlphaTrack.cpp&quot;</a>
+<a name="231"><span class="lineNum">     231 </span>            :  #include &quot;control_surfaces/types/tracktion_MackieC4.cpp&quot;</a>
+<a name="232"><span class="lineNum">     232 </span>            :  #include &quot;control_surfaces/types/tracktion_MackieMCU.cpp&quot;</a>
+<a name="233"><span class="lineNum">     233 </span>            :  #include &quot;control_surfaces/types/tracktion_MackieXT.cpp&quot;</a>
+<a name="234"><span class="lineNum">     234 </span>            :  #include &quot;control_surfaces/types/tracktion_NovationRemoteSl.cpp&quot;</a>
+<a name="235"><span class="lineNum">     235 </span>            :  #include &quot;control_surfaces/types/tracktion_RemoteSLCompact.cpp&quot;</a>
+<a name="236"><span class="lineNum">     236 </span>            :  #include &quot;control_surfaces/types/tracktion_Tranzport.cpp&quot;</a>
+<a name="237"><span class="lineNum">     237 </span>            : #endif</a>
+<a name="238"><span class="lineNum">     238 </span>            : </a>
+<a name="239"><span class="lineNum">     239 </span>            : #if TRACKTION_ENABLE_CONTROL_SURFACES</a>
+<a name="240"><span class="lineNum">     240 </span>            :  #include &quot;control_surfaces/types/tracktion_NovationAutomap.cpp&quot;</a>
+<a name="241"><span class="lineNum">     241 </span>            : #endif</a>
+<a name="242"><span class="lineNum">     242 </span>            : </a>
 <a name="243"><span class="lineNum">     243 </span>            : #endif</a>
-<a name="244"><span class="lineNum">     244 </span>            : </a>
-<a name="245"><span class="lineNum">     245 </span>            : #endif</a>
 </pre>
       </td>
     </tr>

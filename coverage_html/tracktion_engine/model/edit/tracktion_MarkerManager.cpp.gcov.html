@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">6</td>
@@ -84,10 +84,10 @@
 <a name="22"><span class="lineNum">      22 </span><span class="lineCov">        194 :     state.removeListener (this);</span></a>
 <a name="23"><span class="lineNum">      23 </span><span class="lineCov">        388 : }</span></a>
 <a name="24"><span class="lineNum">      24 </span>            : </a>
-<a name="25"><span class="lineNum">      25 </span><span class="lineNoCov">          0 : ReferenceCountedArray&lt;MarkerClip&gt; MarkerManager::getMarkers() const</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineNoCov">          0 : juce::ReferenceCountedArray&lt;MarkerClip&gt; MarkerManager::getMarkers() const</span></a>
 <a name="26"><span class="lineNum">      26 </span>            : {</a>
 <a name="27"><span class="lineNum">      27 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
-<a name="28"><span class="lineNum">      28 </span><span class="lineNoCov">          0 :     ReferenceCountedArray&lt;MarkerClip&gt; results;</span></a>
+<a name="28"><span class="lineNum">      28 </span><span class="lineNoCov">          0 :     juce::ReferenceCountedArray&lt;MarkerClip&gt; results;</span></a>
 <a name="29"><span class="lineNum">      29 </span>            : </a>
 <a name="30"><span class="lineNum">      30 </span><span class="lineNoCov">          0 :     if (auto mt = edit.getMarkerTrack())</span></a>
 <a name="31"><span class="lineNum">      31 </span><span class="lineNoCov">          0 :         for (auto clip : mt-&gt;getClips())</span></a>
@@ -100,7 +100,7 @@
 <a name="38"><span class="lineNum">      38 </span>            : </a>
 <a name="39"><span class="lineNum">      39 </span><span class="lineNoCov">          0 : int MarkerManager::getNextUniqueID (int start)</span></a>
 <a name="40"><span class="lineNum">      40 </span>            : {</a>
-<a name="41"><span class="lineNum">      41 </span><span class="lineNoCov">          0 :     SortedSet&lt;int&gt; uniqueIDs;</span></a>
+<a name="41"><span class="lineNum">      41 </span><span class="lineNoCov">          0 :     juce::SortedSet&lt;int&gt; uniqueIDs;</span></a>
 <a name="42"><span class="lineNum">      42 </span>            : </a>
 <a name="43"><span class="lineNum">      43 </span><span class="lineNoCov">          0 :     for (auto m : getMarkers())</span></a>
 <a name="44"><span class="lineNum">      44 </span><span class="lineNoCov">          0 :         uniqueIDs.add (m-&gt;getMarkerID());</span></a>

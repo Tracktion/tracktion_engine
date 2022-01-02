@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -113,7 +113,7 @@
 <a name="51"><span class="lineNum">      51 </span>            : </a>
 <a name="52"><span class="lineNum">      52 </span><span class="lineNoCov">          0 : juce::Colour ChordClip::getDefaultColour() const</span></a>
 <a name="53"><span class="lineNum">      53 </span>            : {</a>
-<a name="54"><span class="lineNum">      54 </span><span class="lineNoCov">          0 :     return Colours::red.withHue (1.0f / 9.0f);</span></a>
+<a name="54"><span class="lineNum">      54 </span><span class="lineNoCov">          0 :     return juce::Colours::red.withHue (1.0f / 9.0f);</span></a>
 <a name="55"><span class="lineNum">      55 </span>            : }</a>
 <a name="56"><span class="lineNum">      56 </span>            : </a>
 <a name="57"><span class="lineNum">      57 </span><span class="lineNoCov">          0 : void ChordClip::setTrack (ClipTrack* ct)</span></a>
@@ -127,7 +127,7 @@
 <a name="65"><span class="lineNum">      65 </span><span class="lineNoCov">          0 :     return t.isChordTrack();</span></a>
 <a name="66"><span class="lineNum">      66 </span>            : }</a>
 <a name="67"><span class="lineNum">      67 </span>            : </a>
-<a name="68"><span class="lineNum">      68 </span><span class="lineNoCov">          0 : void ChordClip::valueTreeChildAdded (ValueTree&amp;, juce::ValueTree&amp; c)</span></a>
+<a name="68"><span class="lineNum">      68 </span><span class="lineNoCov">          0 : void ChordClip::valueTreeChildAdded (juce::ValueTree&amp;, juce::ValueTree&amp; c)</span></a>
 <a name="69"><span class="lineNum">      69 </span>            : {</a>
 <a name="70"><span class="lineNum">      70 </span><span class="lineNoCov">          0 :     if (c.hasType (IDs::PATTERNGENERATOR))</span></a>
 <a name="71"><span class="lineNum">      71 </span>            :     {</a>
@@ -141,7 +141,7 @@
 <a name="79"><span class="lineNum">      79 </span><span class="lineNoCov">          0 :     triggerAsyncUpdate();</span></a>
 <a name="80"><span class="lineNum">      80 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="81"><span class="lineNum">      81 </span>            : </a>
-<a name="82"><span class="lineNum">      82 </span><span class="lineNoCov">          0 : void ChordClip::valueTreeChildRemoved (ValueTree&amp; p, juce::ValueTree&amp; c, int)</span></a>
+<a name="82"><span class="lineNum">      82 </span><span class="lineNoCov">          0 : void ChordClip::valueTreeChildRemoved (juce::ValueTree&amp; p, juce::ValueTree&amp; c, int)</span></a>
 <a name="83"><span class="lineNum">      83 </span>            : {</a>
 <a name="84"><span class="lineNum">      84 </span><span class="lineNoCov">          0 :     if (p == state &amp;&amp; c.hasType (IDs::PATTERNGENERATOR))</span></a>
 <a name="85"><span class="lineNum">      85 </span>            :     {</a>
@@ -151,7 +151,7 @@
 <a name="89"><span class="lineNum">      89 </span><span class="lineNoCov">          0 :     triggerAsyncUpdate();</span></a>
 <a name="90"><span class="lineNum">      90 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="91"><span class="lineNum">      91 </span>            : </a>
-<a name="92"><span class="lineNum">      92 </span><span class="lineNoCov">          0 : void ChordClip::valueTreePropertyChanged (ValueTree&amp; v, const juce::Identifier&amp; i)</span></a>
+<a name="92"><span class="lineNum">      92 </span><span class="lineNoCov">          0 : void ChordClip::valueTreePropertyChanged (juce::ValueTree&amp; v, const juce::Identifier&amp; i)</span></a>
 <a name="93"><span class="lineNum">      93 </span>            : {</a>
 <a name="94"><span class="lineNum">      94 </span><span class="lineNoCov">          0 :     changed();</span></a>
 <a name="95"><span class="lineNum">      95 </span><span class="lineNoCov">          0 :     triggerAsyncUpdate();</span></a>
@@ -170,7 +170,7 @@
 <a name="108"><span class="lineNum">     108 </span><span class="lineNoCov">          0 : PatternGenerator* ChordClip::getPatternGenerator()</span></a>
 <a name="109"><span class="lineNum">     109 </span>            : {</a>
 <a name="110"><span class="lineNum">     110 </span><span class="lineNoCov">          0 :     if (! state.getChildWithName (IDs::PATTERNGENERATOR).isValid())</span></a>
-<a name="111"><span class="lineNum">     111 </span><span class="lineNoCov">          0 :         state.addChild (ValueTree (IDs::PATTERNGENERATOR), -1, &amp;edit.getUndoManager());</span></a>
+<a name="111"><span class="lineNum">     111 </span><span class="lineNoCov">          0 :         state.addChild (juce::ValueTree (IDs::PATTERNGENERATOR), -1, &amp;edit.getUndoManager());</span></a>
 <a name="112"><span class="lineNum">     112 </span>            : </a>
 <a name="113"><span class="lineNum">     113 </span>            :     jassert (patternGenerator != nullptr);</a>
 <a name="114"><span class="lineNum">     114 </span><span class="lineNoCov">          0 :     return patternGenerator.get();</span></a>
@@ -184,7 +184,7 @@
 <a name="122"><span class="lineNum">     122 </span><span class="lineNoCov">          0 :     changed();</span></a>
 <a name="123"><span class="lineNum">     123 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="124"><span class="lineNum">     124 </span>            : </a>
-<a name="125"><span class="lineNum">     125 </span><span class="lineNoCov">          0 : Colour ChordClip::getColour() const</span></a>
+<a name="125"><span class="lineNum">     125 </span><span class="lineNoCov">          0 : juce::Colour ChordClip::getColour() const</span></a>
 <a name="126"><span class="lineNum">     126 </span>            : {</a>
 <a name="127"><span class="lineNum">     127 </span><span class="lineNoCov">          0 :     return Clip::getColour();</span></a>
 <a name="128"><span class="lineNum">     128 </span>            : }</a>

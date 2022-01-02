@@ -81,14 +81,13 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0e2163e86c037512ef450f04aba98f3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a533ff9155492568174688525e8a742f0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1BeatDetect.html#a533ff9155492568174688525e8a742f0">setSensitivity</a> (double newSensitivity)</td></tr>
 <tr class="separator:a533ff9155492568174688525e8a742f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa1bc95bb2c221ab22e957304bc3ba270"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1BeatDetect.html#aa1bc95bb2c221ab22e957304bc3ba270">audioProcess</a> (const float **inputs, int numChans)</td></tr>
-<tr class="separator:aa1bc95bb2c221ab22e957304bc3ba270"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a67b286e07fcadc98bd8e4b68279aa7f8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1BeatDetect.html#a67b286e07fcadc98bd8e4b68279aa7f8">getBlockSize</a> ()</td></tr>
-<tr class="separator:a67b286e07fcadc98bd8e4b68279aa7f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acbdf3e75f08f1c5ff4acede41b74daff"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1BeatDetect.html#acbdf3e75f08f1c5ff4acede41b74daff">getNumBeats</a> ()</td></tr>
-<tr class="separator:acbdf3e75f08f1c5ff4acede41b74daff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0699ba492e11f55baebf3693308de4c0"><td class="memItemLeft" align="right" valign="top">juce::int64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1BeatDetect.html#a0699ba492e11f55baebf3693308de4c0">getBeat</a> (int idx) const</td></tr>
-<tr class="separator:a0699ba492e11f55baebf3693308de4c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5c7787f0d09a29ffe660140b27c9cca"><td class="memTemplParams" colspan="2">template&lt;typename Buffer &gt; </td></tr>
+<tr class="memitem:ac5c7787f0d09a29ffe660140b27c9cca"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1BeatDetect.html#ac5c7787f0d09a29ffe660140b27c9cca">audioProcess</a> (const Buffer &amp;buffer)</td></tr>
+<tr class="separator:ac5c7787f0d09a29ffe660140b27c9cca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0bc4c1f07b89b5361f0eb6be8ed9120a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetracktion__engine.html#af6e78e734757e52f0c102915ff0e31af">SampleCount</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1BeatDetect.html#a0bc4c1f07b89b5361f0eb6be8ed9120a">getBlockSize</a> () const</td></tr>
+<tr class="separator:a0bc4c1f07b89b5361f0eb6be8ed9120a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6b9746b536686e6dc57e632ea3e72f8"><td class="memItemLeft" align="right" valign="top">const juce::Array&lt; <a class="el" href="namespacetracktion__engine.html#af6e78e734757e52f0c102915ff0e31af">SampleCount</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1BeatDetect.html#ae6b9746b536686e6dc57e632ea3e72f8">getBeats</a> () const</td></tr>
+<tr class="separator:ae6b9746b536686e6dc57e632ea3e72f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="abdb8683c5cc11ef2c2892943c271275d"></a>
@@ -153,79 +152,53 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aa1bc95bb2c221ab22e957304bc3ba270"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa1bc95bb2c221ab22e957304bc3ba270">&#9670;&nbsp;</a></span>audioProcess()</h2>
+<a id="ac5c7787f0d09a29ffe660140b27c9cca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5c7787f0d09a29ffe660140b27c9cca">&#9670;&nbsp;</a></span>audioProcess()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename Buffer &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">void tracktion_engine::BeatDetect::audioProcess </td>
           <td>(</td>
-          <td class="paramtype">const float **&#160;</td>
-          <td class="paramname"><em>inputs</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">const Buffer &amp;&#160;</td>
+          <td class="paramname"><em>buffer</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>numChans</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a67b286e07fcadc98bd8e4b68279aa7f8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a67b286e07fcadc98bd8e4b68279aa7f8">&#9670;&nbsp;</a></span>getBlockSize()</h2>
+<a id="a0bc4c1f07b89b5361f0eb6be8ed9120a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0bc4c1f07b89b5361f0eb6be8ed9120a">&#9670;&nbsp;</a></span>getBlockSize()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int tracktion_engine::BeatDetect::getBlockSize </td>
+          <td class="memname"><a class="el" href="namespacetracktion__engine.html#af6e78e734757e52f0c102915ff0e31af">SampleCount</a> tracktion_engine::BeatDetect::getBlockSize </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="acbdf3e75f08f1c5ff4acede41b74daff"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acbdf3e75f08f1c5ff4acede41b74daff">&#9670;&nbsp;</a></span>getNumBeats()</h2>
+<a id="ae6b9746b536686e6dc57e632ea3e72f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6b9746b536686e6dc57e632ea3e72f8">&#9670;&nbsp;</a></span>getBeats()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int tracktion_engine::BeatDetect::getNumBeats </td>
+          <td class="memname">const juce::Array&lt;<a class="el" href="namespacetracktion__engine.html#af6e78e734757e52f0c102915ff0e31af">SampleCount</a>&gt;&amp; tracktion_engine::BeatDetect::getBeats </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a0699ba492e11f55baebf3693308de4c0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0699ba492e11f55baebf3693308de4c0">&#9670;&nbsp;</a></span>getBeat()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">juce::int64 tracktion_engine::BeatDetect::getBeat </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>idx</em></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -239,7 +212,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Dec 29 2021 12:12:16 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Jan 2 2022 19:42:31 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

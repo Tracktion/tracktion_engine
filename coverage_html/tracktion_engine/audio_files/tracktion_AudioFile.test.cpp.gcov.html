@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">3</td>
@@ -115,7 +115,7 @@
 <a name="53"><span class="lineNum">      53 </span>            :         {</a>
 <a name="54"><span class="lineNum">      54 </span><span class="lineCov">          1 :             auto info = audioFile.getInfo();</span></a>
 <a name="55"><span class="lineNum">      55 </span><span class="lineCov">          1 :             expectEquals (info.sampleRate, 0.0);</span></a>
-<a name="56"><span class="lineNum">      56 </span><span class="lineCov">          1 :             expectEquals&lt;juce::int64&gt; (info.lengthInSamples, 0);</span></a>
+<a name="56"><span class="lineNum">      56 </span><span class="lineCov">          1 :             expectEquals&lt;SampleCount&gt; (info.lengthInSamples, 0);</span></a>
 <a name="57"><span class="lineNum">      57 </span><span class="lineCov">          1 :             expectEquals (info.getLengthInSeconds(), 0.0);</span></a>
 <a name="58"><span class="lineNum">      58 </span>            :         }</a>
 <a name="59"><span class="lineNum">      59 </span>            : </a>
@@ -138,7 +138,7 @@
 <a name="76"><span class="lineNum">      76 </span>            :         {</a>
 <a name="77"><span class="lineNum">      77 </span><span class="lineCov">          1 :             auto info = audioFile.getInfo();</span></a>
 <a name="78"><span class="lineNum">      78 </span><span class="lineCov">          1 :             expectEquals (info.sampleRate, sampleRate);</span></a>
-<a name="79"><span class="lineNum">      79 </span><span class="lineCov">          1 :             expectEquals (info.lengthInSamples, static_cast&lt;juce::int64&gt; (sampleRate));</span></a>
+<a name="79"><span class="lineNum">      79 </span><span class="lineCov">          1 :             expectEquals (info.lengthInSamples, static_cast&lt;SampleCount&gt; (sampleRate));</span></a>
 <a name="80"><span class="lineNum">      80 </span><span class="lineCov">          2 :             expectEquals (info.getLengthInSeconds(), 1.0);</span></a>
 <a name="81"><span class="lineNum">      81 </span>            :         }</a>
 <a name="82"><span class="lineNum">      82 </span><span class="lineCov">          1 :     }</span></a>

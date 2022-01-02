@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">22</td>
@@ -125,7 +125,7 @@
 <a name="63"><span class="lineNum">      63 </span><span class="lineCov">        678 :     void newObjectAdded (Plugin*) override {}</span></a>
 <a name="64"><span class="lineNum">      64 </span><span class="lineCov">        114 :     void objectRemoved (Plugin*) override {}</span></a>
 <a name="65"><span class="lineNum">      65 </span><span class="lineCov">         39 :     void objectOrderChanged() override {}</span></a>
-<a name="66"><span class="lineNum">      66 </span><span class="lineCov">       1898 :     void valueTreePropertyChanged (ValueTree&amp;, const juce::Identifier&amp;) override  {}</span></a>
+<a name="66"><span class="lineNum">      66 </span><span class="lineCov">       1898 :     void valueTreePropertyChanged (juce::ValueTree&amp;, const juce::Identifier&amp;) override  {}</span></a>
 <a name="67"><span class="lineNum">      67 </span>            : </a>
 <a name="68"><span class="lineNum">      68 </span>            :     PluginList&amp; list;</a>
 <a name="69"><span class="lineNum">      69 </span>            : </a>
@@ -162,7 +162,7 @@
 <a name="100"><span class="lineNum">     100 </span>            :     list.reset();</a>
 <a name="101"><span class="lineNum">     101 </span><span class="lineCov">       1444 : }</span></a>
 <a name="102"><span class="lineNum">     102 </span>            : </a>
-<a name="103"><span class="lineNum">     103 </span><span class="lineNoCov">          0 : UndoManager* PluginList::getUndoManager() const</span></a>
+<a name="103"><span class="lineNum">     103 </span><span class="lineNoCov">          0 : juce::UndoManager* PluginList::getUndoManager() const</span></a>
 <a name="104"><span class="lineNum">     104 </span>            : {</a>
 <a name="105"><span class="lineNum">     105 </span><span class="lineNoCov">          0 :     return &amp;edit.getUndoManager();</span></a>
 <a name="106"><span class="lineNum">     106 </span>            : }</a>

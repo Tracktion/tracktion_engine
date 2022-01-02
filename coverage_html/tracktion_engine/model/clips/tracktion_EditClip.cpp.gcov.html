@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -139,7 +139,7 @@
 <a name="77"><span class="lineNum">      77 </span><span class="lineNoCov">          0 : juce::File EditClip::getOriginalFile() const</span></a>
 <a name="78"><span class="lineNum">      78 </span>            : {</a>
 <a name="79"><span class="lineNum">      79 </span>            :     jassert (editSnapshot == nullptr || editSnapshot-&gt;getFile() == sourceFileReference.getFile());</a>
-<a name="80"><span class="lineNum">      80 </span><span class="lineNoCov">          0 :     return editSnapshot != nullptr ? editSnapshot-&gt;getFile() : File();</span></a>
+<a name="80"><span class="lineNum">      80 </span><span class="lineNoCov">          0 :     return editSnapshot != nullptr ? editSnapshot-&gt;getFile() : juce::File();</span></a>
 <a name="81"><span class="lineNum">      81 </span>            : }</a>
 <a name="82"><span class="lineNum">      82 </span>            : </a>
 <a name="83"><span class="lineNum">      83 </span><span class="lineNoCov">          0 : void EditClip::setLoopDefaults()</span></a>
@@ -193,10 +193,10 @@
 <a name="131"><span class="lineNum">     131 </span><span class="lineNoCov">          0 :         return {};</span></a>
 <a name="132"><span class="lineNum">     132 </span>            : </a>
 <a name="133"><span class="lineNum">     133 </span><span class="lineNoCov">          0 :     auto numRenderingJobs = edit.engine.getRenderManager().getNumJobs();</span></a>
-<a name="134"><span class="lineNum">     134 </span><span class="lineNoCov">          0 :     String remainderMessage;</span></a>
+<a name="134"><span class="lineNum">     134 </span><span class="lineNoCov">          0 :     juce::String remainderMessage;</span></a>
 <a name="135"><span class="lineNum">     135 </span>            : </a>
 <a name="136"><span class="lineNum">     136 </span><span class="lineNoCov">          0 :     if (numRenderingJobs &gt; 0)</span></a>
-<a name="137"><span class="lineNum">     137 </span><span class="lineNoCov">          0 :         remainderMessage &lt;&lt; &quot; (&quot; &lt;&lt; String (numRenderingJobs) &lt;&lt; &quot; &quot; &lt;&lt; TRANS(&quot;remaining&quot;) &lt;&lt; &quot;)&quot;;</span></a>
+<a name="137"><span class="lineNum">     137 </span><span class="lineNoCov">          0 :         remainderMessage &lt;&lt; &quot; (&quot; &lt;&lt; juce::String (numRenderingJobs) &lt;&lt; &quot; &quot; &lt;&lt; TRANS(&quot;remaining&quot;) &lt;&lt; &quot;)&quot;;</span></a>
 <a name="138"><span class="lineNum">     138 </span>            : </a>
 <a name="139"><span class="lineNum">     139 </span><span class="lineNoCov">          0 :     if (renderJob == nullptr)</span></a>
 <a name="140"><span class="lineNum">     140 </span><span class="lineNoCov">          0 :         return TRANS(&quot;Rendering referenced Edits&quot;) + &quot;...&quot; + remainderMessage;</span></a>
@@ -206,7 +206,7 @@
 <a name="144"><span class="lineNum">     144 </span><span class="lineNoCov">          0 :     if (progress &lt;= 0.0f)</span></a>
 <a name="145"><span class="lineNum">     145 </span><span class="lineNoCov">          0 :         return TRANS(&quot;Rendering referenced Edits&quot;) + &quot;...&quot; + remainderMessage;</span></a>
 <a name="146"><span class="lineNum">     146 </span>            : </a>
-<a name="147"><span class="lineNum">     147 </span><span class="lineNoCov">          0 :     return TRANS(&quot;Rendering Edit: &quot;) + String (roundToInt (progress * 100.0f)) + &quot;%&quot;;</span></a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineNoCov">          0 :     return TRANS(&quot;Rendering Edit: &quot;) + juce::String (juce::roundToInt (progress * 100.0f)) + &quot;%&quot;;</span></a>
 <a name="148"><span class="lineNum">     148 </span>            : }</a>
 <a name="149"><span class="lineNum">     149 </span>            : </a>
 <a name="150"><span class="lineNum">     150 </span><span class="lineNoCov">          0 : juce::String EditClip::getClipMessage()</span></a>
@@ -229,7 +229,7 @@
 <a name="167"><span class="lineNum">     167 </span><span class="lineNoCov">          0 :     if (sourceMediaReEntrancyCheck)</span></a>
 <a name="168"><span class="lineNum">     168 </span><span class="lineNoCov">          0 :         return;</span></a>
 <a name="169"><span class="lineNum">     169 </span>            : </a>
-<a name="170"><span class="lineNum">     170 </span><span class="lineNoCov">          0 :     const ScopedValueSetter&lt;bool&gt; svs (sourceMediaReEntrancyCheck, true);</span></a>
+<a name="170"><span class="lineNum">     170 </span><span class="lineNoCov">          0 :     const juce::ScopedValueSetter&lt;bool&gt; svs (sourceMediaReEntrancyCheck, true);</span></a>
 <a name="171"><span class="lineNum">     171 </span>            : </a>
 <a name="172"><span class="lineNum">     172 </span><span class="lineNoCov">          0 :     auto newID = sourceFileReference.getSourceProjectItemID();</span></a>
 <a name="173"><span class="lineNum">     173 </span>            : </a>
@@ -294,7 +294,7 @@
 <a name="232"><span class="lineNum">     232 </span>            :     return false;</a>
 <a name="233"><span class="lineNum">     233 </span>            : }</a>
 <a name="234"><span class="lineNum">     234 </span>            : </a>
-<a name="235"><span class="lineNum">     235 </span><span class="lineNoCov">          0 : void EditClip::valueTreePropertyChanged (ValueTree&amp; v, const juce::Identifier&amp; i)</span></a>
+<a name="235"><span class="lineNum">     235 </span><span class="lineNoCov">          0 : void EditClip::valueTreePropertyChanged (juce::ValueTree&amp; v, const juce::Identifier&amp; i)</span></a>
 <a name="236"><span class="lineNum">     236 </span>            : {</a>
 <a name="237"><span class="lineNum">     237 </span><span class="lineNoCov">          0 :     if (v == state &amp;&amp; i == IDs::renderEnabled)</span></a>
 <a name="238"><span class="lineNum">     238 </span>            :     {</a>
@@ -333,26 +333,26 @@
 <a name="271"><span class="lineNum">     271 </span><span class="lineNoCov">          0 :     waveInfo.bitsPerSample      = renderOptions-&gt;getBitDepth();</span></a>
 <a name="272"><span class="lineNum">     272 </span><span class="lineNoCov">          0 :     waveInfo.sampleRate         = renderOptions-&gt;getSampleRate();</span></a>
 <a name="273"><span class="lineNum">     273 </span><span class="lineNoCov">          0 :     waveInfo.numChannels        = renderOptions-&gt;getStereo() ? 2 : 1;</span></a>
-<a name="274"><span class="lineNum">     274 </span><span class="lineNoCov">          0 :     waveInfo.lengthInSamples    = int64 (sourceLength * waveInfo.sampleRate);</span></a>
+<a name="274"><span class="lineNum">     274 </span><span class="lineNoCov">          0 :     waveInfo.lengthInSamples    = static_cast&lt;SampleCount&gt; (sourceLength * waveInfo.sampleRate);</span></a>
 <a name="275"><span class="lineNum">     275 </span>            : </a>
 <a name="276"><span class="lineNum">     276 </span><span class="lineNoCov">          0 :     updateLoopInfoBasedOnSource (false);</span></a>
 <a name="277"><span class="lineNum">     277 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="278"><span class="lineNum">     278 </span>            : </a>
-<a name="279"><span class="lineNum">     279 </span><span class="lineNoCov">          0 : int64 EditClip::generateHash()</span></a>
+<a name="279"><span class="lineNum">     279 </span><span class="lineNoCov">          0 : HashCode EditClip::generateHash()</span></a>
 <a name="280"><span class="lineNum">     280 </span>            : {</a>
 <a name="281"><span class="lineNum">     281 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
 <a name="282"><span class="lineNum">     282 </span>            : </a>
 <a name="283"><span class="lineNum">     283 </span>            :     // Because edit clips can contain edit clips recursively we can't just rely</a>
 <a name="284"><span class="lineNum">     284 </span>            :     // on the source edit time as a hash, we need to drill down retrieving any</a>
 <a name="285"><span class="lineNum">     285 </span>            :     // nested EditClips and xor their source hash's.</a>
-<a name="286"><span class="lineNum">     286 </span>            :     juce::int64 editClipHash = 0;</a>
+<a name="286"><span class="lineNum">     286 </span>            :     HashCode editClipHash = 0;</a>
 <a name="287"><span class="lineNum">     287 </span>            : </a>
 <a name="288"><span class="lineNum">     288 </span><span class="lineNoCov">          0 :     for (auto snapshot : referencedEdits)</span></a>
 <a name="289"><span class="lineNum">     289 </span><span class="lineNoCov">          0 :         editClipHash ^= snapshot-&gt;getHash();</span></a>
 <a name="290"><span class="lineNum">     290 </span>            : </a>
-<a name="291"><span class="lineNum">     291 </span>            :     const juce::int64 newHash = editClipHash</a>
-<a name="292"><span class="lineNum">     292 </span><span class="lineNoCov">          0 :                                   ^ renderOptions-&gt;getHash()</span></a>
-<a name="293"><span class="lineNum">     293 </span><span class="lineNoCov">          0 :                                   ^ (int64) (getIsReversed() * 768);</span></a>
+<a name="291"><span class="lineNum">     291 </span>            :     HashCode newHash = editClipHash</a>
+<a name="292"><span class="lineNum">     292 </span><span class="lineNoCov">          0 :                          ^ renderOptions-&gt;getHash()</span></a>
+<a name="293"><span class="lineNum">     293 </span><span class="lineNoCov">          0 :                          ^ static_cast&lt;HashCode&gt; (getIsReversed() * 768);</span></a>
 <a name="294"><span class="lineNum">     294 </span>            : </a>
 <a name="295"><span class="lineNum">     295 </span><span class="lineNoCov">          0 :     if (hash != newHash)</span></a>
 <a name="296"><span class="lineNum">     296 </span>            :     {</a>
@@ -376,7 +376,7 @@
 <a name="314"><span class="lineNum">     314 </span>            : {</a>
 <a name="315"><span class="lineNum">     315 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
 <a name="316"><span class="lineNum">     316 </span>            : </a>
-<a name="317"><span class="lineNum">     317 </span><span class="lineNoCov">          0 :     ReferenceCountedArray&lt;EditSnapshot&gt; current, added, removed;</span></a>
+<a name="317"><span class="lineNum">     317 </span><span class="lineNoCov">          0 :     juce::ReferenceCountedArray&lt;EditSnapshot&gt; current, added, removed;</span></a>
 <a name="318"><span class="lineNum">     318 </span>            : </a>
 <a name="319"><span class="lineNum">     319 </span><span class="lineNoCov">          0 :     if (editSnapshot != nullptr)</span></a>
 <a name="320"><span class="lineNum">     320 </span><span class="lineNoCov">          0 :         current = editSnapshot-&gt;getNestedEditObjects();</span></a>

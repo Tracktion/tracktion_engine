@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -93,8 +93,8 @@
 <a name="31"><span class="lineNum">      31 </span><span class="lineNoCov">          0 : void ChorusPlugin::initialise (const PluginInitialisationInfo&amp; info)</span></a>
 <a name="32"><span class="lineNum">      32 </span>            : {</a>
 <a name="33"><span class="lineNum">      33 </span>            :     const float delayMs = 20.0f;</a>
-<a name="34"><span class="lineNum">      34 </span><span class="lineNoCov">          0 :     const int maxLengthMs = 1 + roundToInt (delayMs + depthMs);</span></a>
-<a name="35"><span class="lineNum">      35 </span><span class="lineNoCov">          0 :     int bufferSizeSamples = roundToInt ((maxLengthMs * info.sampleRate) / 1000.0);</span></a>
+<a name="34"><span class="lineNum">      34 </span><span class="lineNoCov">          0 :     auto maxLengthMs = 1 + juce::roundToInt (delayMs + depthMs);</span></a>
+<a name="35"><span class="lineNum">      35 </span><span class="lineNoCov">          0 :     auto bufferSizeSamples = juce::roundToInt ((maxLengthMs * info.sampleRate) / 1000.0);</span></a>
 <a name="36"><span class="lineNum">      36 </span><span class="lineNoCov">          0 :     delayBuffer.ensureMaxBufferSize (bufferSizeSamples);</span></a>
 <a name="37"><span class="lineNum">      37 </span>            :     delayBuffer.clearBuffer();</a>
 <a name="38"><span class="lineNum">      38 </span><span class="lineNoCov">          0 :     phase = 0.0f;</span></a>
@@ -119,8 +119,8 @@
 <a name="57"><span class="lineNum">      57 </span><span class="lineNoCov">          0 :     const float minSweepSamples = (float) ((delayMs * sampleRate) / 1000.0);</span></a>
 <a name="58"><span class="lineNum">      58 </span><span class="lineNoCov">          0 :     const float maxSweepSamples = (float) (((delayMs + depthMs) * sampleRate) / 1000.0);</span></a>
 <a name="59"><span class="lineNum">      59 </span><span class="lineNoCov">          0 :     const float speed = (float)((juce::MathConstants&lt;double&gt;::pi * 2.0) / (sampleRate / speedHz));</span></a>
-<a name="60"><span class="lineNum">      60 </span><span class="lineNoCov">          0 :     const int maxLengthMs = 1 + roundToInt (delayMs + depthMs);</span></a>
-<a name="61"><span class="lineNum">      61 </span><span class="lineNoCov">          0 :     const int lengthInSamples = roundToInt ((maxLengthMs * sampleRate) / 1000.0);</span></a>
+<a name="60"><span class="lineNum">      60 </span><span class="lineNoCov">          0 :     const int maxLengthMs = 1 + juce::roundToInt (delayMs + depthMs);</span></a>
+<a name="61"><span class="lineNum">      61 </span><span class="lineNoCov">          0 :     const int lengthInSamples = juce::roundToInt ((maxLengthMs * sampleRate) / 1000.0);</span></a>
 <a name="62"><span class="lineNum">      62 </span>            : </a>
 <a name="63"><span class="lineNum">      63 </span><span class="lineNoCov">          0 :     delayBuffer.ensureMaxBufferSize (lengthInSamples);</span></a>
 <a name="64"><span class="lineNum">      64 </span>            : </a>
@@ -132,7 +132,7 @@
 <a name="70"><span class="lineNum">      70 </span>            : </a>
 <a name="71"><span class="lineNum">      71 </span><span class="lineNoCov">          0 :     clearChannels (*fc.destBuffer, 2, -1, fc.bufferStartSample, fc.bufferNumSamples);</span></a>
 <a name="72"><span class="lineNum">      72 </span>            : </a>
-<a name="73"><span class="lineNum">      73 </span><span class="lineNoCov">          0 :     for (int chan = jmin (2, fc.destBuffer-&gt;getNumChannels()); --chan &gt;= 0;)</span></a>
+<a name="73"><span class="lineNum">      73 </span><span class="lineNoCov">          0 :     for (int chan = std::min (2, fc.destBuffer-&gt;getNumChannels()); --chan &gt;= 0;)</span></a>
 <a name="74"><span class="lineNum">      74 </span>            :     {</a>
 <a name="75"><span class="lineNum">      75 </span><span class="lineNoCov">          0 :         float* const d = fc.destBuffer-&gt;getWritePointer (chan, fc.bufferStartSample);</span></a>
 <a name="76"><span class="lineNum">      76 </span><span class="lineNoCov">          0 :         float* const buf = (float*) delayBuffer.buffers[chan].getData();</span></a>
@@ -150,7 +150,7 @@
 <a name="88"><span class="lineNum">      88 </span><span class="lineNoCov">          0 :             const float sweep = lfoOffset + lfoFactor * sinf (ph);</span></a>
 <a name="89"><span class="lineNum">      89 </span><span class="lineNoCov">          0 :             ph += speed;</span></a>
 <a name="90"><span class="lineNum">      90 </span>            : </a>
-<a name="91"><span class="lineNum">      91 </span>            :             int intSweepPos = roundToInt (sweep);</a>
+<a name="91"><span class="lineNum">      91 </span>            :             int intSweepPos = juce::roundToInt (sweep);</a>
 <a name="92"><span class="lineNum">      92 </span><span class="lineNoCov">          0 :             const float interp = sweep - intSweepPos;</span></a>
 <a name="93"><span class="lineNum">      93 </span><span class="lineNoCov">          0 :             intSweepPos = bufPos + lengthInSamples - intSweepPos;</span></a>
 <a name="94"><span class="lineNum">      94 </span>            : </a>
@@ -173,15 +173,15 @@
 <a name="111"><span class="lineNum">     111 </span><span class="lineNoCov">          0 :     zeroDenormalisedValuesIfNeeded (*fc.destBuffer);</span></a>
 <a name="112"><span class="lineNum">     112 </span>            : </a>
 <a name="113"><span class="lineNum">     113 </span><span class="lineNoCov">          0 :     phase = ph;</span></a>
-<a name="114"><span class="lineNum">     114 </span><span class="lineNoCov">          0 :     if (phase &gt;= MathConstants&lt;float&gt;::pi * 2)</span></a>
-<a name="115"><span class="lineNum">     115 </span><span class="lineNoCov">          0 :         phase -= MathConstants&lt;float&gt;::pi * 2;</span></a>
+<a name="114"><span class="lineNum">     114 </span><span class="lineNoCov">          0 :     if (phase &gt;= juce::MathConstants&lt;float&gt;::pi * 2)</span></a>
+<a name="115"><span class="lineNum">     115 </span><span class="lineNoCov">          0 :         phase -= juce::MathConstants&lt;float&gt;::pi * 2;</span></a>
 <a name="116"><span class="lineNum">     116 </span>            : </a>
 <a name="117"><span class="lineNum">     117 </span><span class="lineNoCov">          0 :     delayBuffer.bufferPos = bufPos;</span></a>
 <a name="118"><span class="lineNum">     118 </span>            : }</a>
 <a name="119"><span class="lineNum">     119 </span>            : </a>
 <a name="120"><span class="lineNum">     120 </span><span class="lineNoCov">          0 : void ChorusPlugin::restorePluginStateFromValueTree (const juce::ValueTree&amp; v)</span></a>
 <a name="121"><span class="lineNum">     121 </span>            : {</a>
-<a name="122"><span class="lineNum">     122 </span><span class="lineNoCov">          0 :     CachedValue&lt;float&gt;* cvsFloat[] = { &amp;depthMs, &amp;width, &amp;mixProportion, &amp;speedHz, nullptr };</span></a>
+<a name="122"><span class="lineNum">     122 </span><span class="lineNoCov">          0 :     juce::CachedValue&lt;float&gt;* cvsFloat[] = { &amp;depthMs, &amp;width, &amp;mixProportion, &amp;speedHz, nullptr };</span></a>
 <a name="123"><span class="lineNum">     123 </span><span class="lineNoCov">          0 :     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);</span></a>
 <a name="124"><span class="lineNum">     124 </span>            : </a>
 <a name="125"><span class="lineNum">     125 </span><span class="lineNoCov">          0 :     for (auto p : getAutomatableParameters())</span></a>

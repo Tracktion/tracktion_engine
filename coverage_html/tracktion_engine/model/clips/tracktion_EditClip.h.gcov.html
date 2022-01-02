@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -112,7 +112,7 @@
 <a name="50"><span class="lineNum">      50 </span>            :     juce::String getSelectableDescription() override;</a>
 <a name="51"><span class="lineNum">      51 </span>            : </a>
 <a name="52"><span class="lineNum">      52 </span>            :     juce::File getOriginalFile() const override;</a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineNoCov">          0 :     juce::int64 getHash() const override                { return hash; }</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineNoCov">          0 :     HashCode getHash() const override                   { return hash; }</span></a>
 <a name="54"><span class="lineNum">      54 </span>            : </a>
 <a name="55"><span class="lineNum">      55 </span>            :     void setLoopDefaults() override;</a>
 <a name="56"><span class="lineNum">      56 </span>            : </a>
@@ -136,7 +136,7 @@
 <a name="74"><span class="lineNum">      74 </span>            :     RenderOptions&amp; getRenderOptions() const noexcept    { jassert (renderOptions != nullptr); return *renderOptions; }</a>
 <a name="75"><span class="lineNum">      75 </span>            : </a>
 <a name="76"><span class="lineNum">      76 </span>            :     ProjectItem::Ptr createUniqueCopy();</a>
-<a name="77"><span class="lineNum">      77 </span>            :     juce::int64 generateHash();</a>
+<a name="77"><span class="lineNum">      77 </span>            :     HashCode generateHash();</a>
 <a name="78"><span class="lineNum">      78 </span>            : </a>
 <a name="79"><span class="lineNum">      79 </span>            :     juce::CachedValue&lt;bool&gt; copyColourFromMarker, trimToMarker, renderEnabled;</a>
 <a name="80"><span class="lineNum">      80 </span>            : </a>
@@ -153,7 +153,7 @@
 <a name="91"><span class="lineNum">      91 </span>            :     juce::ReferenceCountedArray&lt;EditSnapshot&gt; referencedEdits;</a>
 <a name="92"><span class="lineNum">      92 </span>            : </a>
 <a name="93"><span class="lineNum">      93 </span>            :     AudioFileInfo waveInfo;</a>
-<a name="94"><span class="lineNum">      94 </span>            :     juce::int64 hash = 0;</a>
+<a name="94"><span class="lineNum">      94 </span>            :     HashCode hash = 0;</a>
 <a name="95"><span class="lineNum">      95 </span>            :     std::unique_ptr&lt;RenderOptions&gt; renderOptions;</a>
 <a name="96"><span class="lineNum">      96 </span>            :     bool sourceMediaReEntrancyCheck = false;</a>
 <a name="97"><span class="lineNum">      97 </span>            : </a>

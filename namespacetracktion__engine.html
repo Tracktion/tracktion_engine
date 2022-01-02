@@ -64,6 +64,7 @@ $(function() {
   <div class="summary">
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
@@ -980,6 +981,15 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1WaveOutputDeviceInstance.html">WaveOutputDeviceInstance</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:af6e78e734757e52f0c102915ff0e31af"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#af6e78e734757e52f0c102915ff0e31af">SampleCount</a> = int64_t</td></tr>
+<tr class="separator:af6e78e734757e52f0c102915ff0e31af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ea280cde41080ecb2a991c485b516a0"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#a7ea280cde41080ecb2a991c485b516a0">SampleRange</a> = juce::Range&lt; <a class="el" href="namespacetracktion__engine.html#af6e78e734757e52f0c102915ff0e31af">SampleCount</a> &gt;</td></tr>
+<tr class="separator:a7ea280cde41080ecb2a991c485b516a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb3c6f33fbcba4c6e5d7cfd390aecbec"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#adb3c6f33fbcba4c6e5d7cfd390aecbec">HashCode</a> = int64_t</td></tr>
+<tr class="separator:adb3c6f33fbcba4c6e5d7cfd390aecbec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
 <tr class="memitem:a16c1e3b7c9024479b819754ccca67617"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#a16c1e3b7c9024479b819754ccca67617">CloseGap</a> { <a class="el" href="namespacetracktion__engine.html#a16c1e3b7c9024479b819754ccca67617a7fa3b767c460b54a2be4d49030b349c7">CloseGap::no</a>, 
@@ -1272,9 +1282,9 @@ Functions</h2></td></tr>
 <tr class="memitem:af69e9acaf974750bf4dbc190bc1fb12d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1Track.html">Track</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#af69e9acaf974750bf4dbc190bc1fb12d">findTrackForID</a> (const <a class="el" href="classtracktion__engine_1_1Edit.html">Edit</a> &amp;, <a class="el" href="structtracktion__engine_1_1EditItemID.html">EditItemID</a>)</td></tr>
 <tr class="memdesc:af69e9acaf974750bf4dbc190bc1fb12d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a> with a given ID if contained in the <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>.  <a href="namespacetracktion__engine.html#af69e9acaf974750bf4dbc190bc1fb12d">More...</a><br /></td></tr>
 <tr class="separator:af69e9acaf974750bf4dbc190bc1fb12d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af5731f1c5d9f5597ba6f94e88f4dfd2b"><td class="memItemLeft" align="right" valign="top">juce::Array&lt; <a class="el" href="classtracktion__engine_1_1Track.html">Track</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#af5731f1c5d9f5597ba6f94e88f4dfd2b">findTracksForIDs</a> (const <a class="el" href="classtracktion__engine_1_1Edit.html">Edit</a> &amp;, juce::Array&lt; <a class="el" href="structtracktion__engine_1_1EditItemID.html">EditItemID</a> &gt;)</td></tr>
-<tr class="memdesc:af5731f1c5d9f5597ba6f94e88f4dfd2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the Tracks for the given <a class="el" href="namespacetracktion__engine_1_1IDs.html">IDs</a> in the <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>.  <a href="namespacetracktion__engine.html#af5731f1c5d9f5597ba6f94e88f4dfd2b">More...</a><br /></td></tr>
-<tr class="separator:af5731f1c5d9f5597ba6f94e88f4dfd2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f93e4e56a96b4f3a9eb78c3ce8ae34d"><td class="memItemLeft" align="right" valign="top">juce::Array&lt; <a class="el" href="classtracktion__engine_1_1Track.html">Track</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#a0f93e4e56a96b4f3a9eb78c3ce8ae34d">findTracksForIDs</a> (const <a class="el" href="classtracktion__engine_1_1Edit.html">Edit</a> &amp;, const juce::Array&lt; <a class="el" href="structtracktion__engine_1_1EditItemID.html">EditItemID</a> &gt; &amp;)</td></tr>
+<tr class="memdesc:a0f93e4e56a96b4f3a9eb78c3ce8ae34d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the Tracks for the given <a class="el" href="namespacetracktion__engine_1_1IDs.html">IDs</a> in the <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>.  <a href="namespacetracktion__engine.html#a0f93e4e56a96b4f3a9eb78c3ce8ae34d">More...</a><br /></td></tr>
+<tr class="separator:a0f93e4e56a96b4f3a9eb78c3ce8ae34d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a702ee37377fa4873a23c34a799e7d22f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1Track.html">Track</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#a702ee37377fa4873a23c34a799e7d22f">findTrackForState</a> (const <a class="el" href="classtracktion__engine_1_1Edit.html">Edit</a> &amp;, const juce::ValueTree &amp;)</td></tr>
 <tr class="memdesc:a702ee37377fa4873a23c34a799e7d22f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="classtracktion__engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a> with a given state if contained in the <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>.  <a href="namespacetracktion__engine.html#a702ee37377fa4873a23c34a799e7d22f">More...</a><br /></td></tr>
 <tr class="separator:a702ee37377fa4873a23c34a799e7d22f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1406,8 +1416,8 @@ Functions</h2></td></tr>
 <tr class="memitem:aa18dbb33ea905a1cae8f222f8cf1045c"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#aa18dbb33ea905a1cae8f222f8cf1045c">findUnionOfEditTimeRanges</a> (const ArrayType &amp;items)</td></tr>
 <tr class="memdesc:aa18dbb33ea905a1cae8f222f8cf1045c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the the time range that covers all the given TrackItems.  <a href="namespacetracktion__engine.html#aa18dbb33ea905a1cae8f222f8cf1045c">More...</a><br /></td></tr>
 <tr class="separator:aa18dbb33ea905a1cae8f222f8cf1045c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aadfda7261d92c9f3034e7db97e3f7e09"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#aadfda7261d92c9f3034e7db97e3f7e09">createTrackCompAudioNode</a> (<a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a> *input, const Array&lt; <a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a> &gt; &amp;muteTimes, const Array&lt; <a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a> &gt; &amp;nonMuteTimes, double crossfadeTime)</td></tr>
-<tr class="separator:aadfda7261d92c9f3034e7db97e3f7e09"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae43e0fba3266cff6627babe771df8dc9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#ae43e0fba3266cff6627babe771df8dc9">createTrackCompAudioNode</a> (<a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a> *input, const juce::Array&lt; <a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a> &gt; &amp;muteTimes, const juce::Array&lt; <a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a> &gt; &amp;nonMuteTimes, double crossfadeTime)</td></tr>
+<tr class="separator:ae43e0fba3266cff6627babe771df8dc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a51d1259877ffef33280720695eea7517"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#a51d1259877ffef33280720695eea7517">createAudioNode</a> (<a class="el" href="structtracktion__engine_1_1TrackCompManager_1_1TrackComp.html">TrackCompManager::TrackComp</a> &amp;trackComp, <a class="el" href="classtracktion__engine_1_1Track.html">Track</a> &amp;t, <a class="el" href="classtracktion__engine_1_1AudioNode.html">AudioNode</a> *input)</td></tr>
 <tr class="separator:a51d1259877ffef33280720695eea7517"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa7ab31ffc0d6806ae6b966e1f28d25da"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#aa7ab31ffc0d6806ae6b966e1f28d25da">createDescriptionOfChannels</a> (const std::vector&lt; <a class="el" href="structtracktion__engine_1_1ChannelIndex.html">ChannelIndex</a> &gt; &amp;)</td></tr>
@@ -1891,8 +1901,8 @@ Functions</h2></td></tr>
 <tr class="separator:a3d22fb5177e06244d6ab9ef59d6fed38"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a70006fc24f494e9a22ce619a4099b02a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#a70006fc24f494e9a22ce619a4099b02a">getGainsFromVolumeFaderPositionAndPan</a> (float volSliderPos, float pan, <a class="el" href="namespacetracktion__engine.html#aa66979ba0d42f3a7acd9b009ad4726ca">PanLaw</a> lawToUse, float &amp;leftGain, float &amp;rightGain) noexcept</td></tr>
 <tr class="separator:a70006fc24f494e9a22ce619a4099b02a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6b15a31e942884075fbc90f57a3514b4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#a6b15a31e942884075fbc90f57a3514b4">clearChannels</a> (juce::AudioSampleBuffer &amp;buffer, int startChannel, int endChannel=-1, int startSample=0, int endSample=-1)</td></tr>
-<tr class="separator:a6b15a31e942884075fbc90f57a3514b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac45ec036579fdbc82aca62e64195200d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#ac45ec036579fdbc82aca62e64195200d">clearChannels</a> (juce::AudioBuffer&lt; float &gt; &amp;buffer, int startChannel, int endChannel=-1, int startSample=0, int endSample=-1)</td></tr>
+<tr class="separator:ac45ec036579fdbc82aca62e64195200d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af5016b50a11a4abfddbc7af1e38e6b96"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion__engine_1_1BenchmarkDescription.html">BenchmarkDescription</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#af5016b50a11a4abfddbc7af1e38e6b96">createBenchmarkDescription</a> (std::string category, std::string name, std::string description)</td></tr>
 <tr class="memdesc:af5016b50a11a4abfddbc7af1e38e6b96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a description by hashing the name and description fields.  <a href="namespacetracktion__engine.html#af5016b50a11a4abfddbc7af1e38e6b96">More...</a><br /></td></tr>
 <tr class="separator:af5016b50a11a4abfddbc7af1e38e6b96"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -2000,6 +2010,49 @@ Variables</h2></td></tr>
 <tr class="memitem:a34e51d83e1d049e828d1f2595e297b76"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion__engine.html#a34e51d83e1d049e828d1f2595e297b76">grooveTemplateWildCard</a> = &quot;*.trkgroove&quot;</td></tr>
 <tr class="separator:a34e51d83e1d049e828d1f2595e297b76"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Typedef Documentation</h2>
+<a id="af6e78e734757e52f0c102915ff0e31af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af6e78e734757e52f0c102915ff0e31af">&#9670;&nbsp;</a></span>SampleCount</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespacetracktion__engine.html#af6e78e734757e52f0c102915ff0e31af">tracktion_engine::SampleCount</a> = typedef int64_t</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7ea280cde41080ecb2a991c485b516a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7ea280cde41080ecb2a991c485b516a0">&#9670;&nbsp;</a></span>SampleRange</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespacetracktion__engine.html#a7ea280cde41080ecb2a991c485b516a0">tracktion_engine::SampleRange</a> = typedef juce::Range&lt;<a class="el" href="namespacetracktion__engine.html#af6e78e734757e52f0c102915ff0e31af">SampleCount</a>&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adb3c6f33fbcba4c6e5d7cfd390aecbec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb3c6f33fbcba4c6e5d7cfd390aecbec">&#9670;&nbsp;</a></span>HashCode</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespacetracktion__engine.html#adb3c6f33fbcba4c6e5d7cfd390aecbec">tracktion_engine::HashCode</a> = typedef int64_t</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
 <a id="a16c1e3b7c9024479b819754ccca67617"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a16c1e3b7c9024479b819754ccca67617">&#9670;&nbsp;</a></span>CloseGap</h2>
@@ -3124,8 +3177,8 @@ template&lt;typename TrackType &gt; </div>
 
 </div>
 </div>
-<a id="af5731f1c5d9f5597ba6f94e88f4dfd2b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af5731f1c5d9f5597ba6f94e88f4dfd2b">&#9670;&nbsp;</a></span>findTracksForIDs()</h2>
+<a id="a0f93e4e56a96b4f3a9eb78c3ce8ae34d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0f93e4e56a96b4f3a9eb78c3ce8ae34d">&#9670;&nbsp;</a></span>findTracksForIDs()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3139,7 +3192,7 @@ template&lt;typename TrackType &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">juce::Array&lt; <a class="el" href="structtracktion__engine_1_1EditItemID.html">EditItemID</a> &gt;&#160;</td>
+          <td class="paramtype">const juce::Array&lt; <a class="el" href="structtracktion__engine_1_1EditItemID.html">EditItemID</a> &gt; &amp;&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>
@@ -4315,8 +4368,8 @@ template&lt;typename ArrayType &gt; </div>
 
 </div>
 </div>
-<a id="aadfda7261d92c9f3034e7db97e3f7e09"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aadfda7261d92c9f3034e7db97e3f7e09">&#9670;&nbsp;</a></span>createTrackCompAudioNode()</h2>
+<a id="ae43e0fba3266cff6627babe771df8dc9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae43e0fba3266cff6627babe771df8dc9">&#9670;&nbsp;</a></span>createTrackCompAudioNode()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -4330,13 +4383,13 @@ template&lt;typename ArrayType &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Array&lt; <a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a> &gt; &amp;&#160;</td>
+          <td class="paramtype">const juce::Array&lt; <a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>muteTimes</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Array&lt; <a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a> &gt; &amp;&#160;</td>
+          <td class="paramtype">const juce::Array&lt; <a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>nonMuteTimes</em>, </td>
         </tr>
         <tr>
@@ -4391,7 +4444,7 @@ template&lt;typename ArrayType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="namespacetracktion__engine.html#a621c43a54efb4eb950c0b1cad5e97eacaa8360068305889e0630dbea1c25fd008">compCrossfadeMs</a>, <a class="el" href="namespacetracktion__engine.html#aadfda7261d92c9f3034e7db97e3f7e09">createTrackCompAudioNode()</a>, <a class="el" href="structtracktion__engine_1_1TrackCompManager_1_1TrackComp.html#a992383238bceb54e893ba170c80e943e">tracktion_engine::TrackCompManager::TrackComp::edit</a>, <a class="el" href="classtracktion__engine_1_1Edit.html#a6c49136df25c3ab97ac75a9411a8ab2c">tracktion_engine::Edit::engine</a>, <a class="el" href="structtracktion__engine_1_1TrackCompManager_1_1TrackComp.html#abe8e110ee3a134c71e31b57dd0ea02d7">tracktion_engine::TrackCompManager::TrackComp::getMuteTimes()</a>, <a class="el" href="structtracktion__engine_1_1TrackCompManager_1_1TrackComp.html#a538b3f5253b55235f5b36711fbf6f625">tracktion_engine::TrackCompManager::TrackComp::getNonMuteTimes()</a>, <a class="el" href="classtracktion__engine_1_1PropertyStorage.html#a0b0fb40bdc964c257d964b34e4ee8dfb">tracktion_engine::PropertyStorage::getProperty()</a>, and <a class="el" href="classtracktion__engine_1_1Engine.html#af6b6f0807f5cbe1e21a060adda9b8ab2">tracktion_engine::Engine::getPropertyStorage()</a>.</p>
+<p class="reference">References <a class="el" href="namespacetracktion__engine.html#a621c43a54efb4eb950c0b1cad5e97eacaa8360068305889e0630dbea1c25fd008">compCrossfadeMs</a>, <a class="el" href="namespacetracktion__engine.html#ae43e0fba3266cff6627babe771df8dc9">createTrackCompAudioNode()</a>, <a class="el" href="structtracktion__engine_1_1TrackCompManager_1_1TrackComp.html#a992383238bceb54e893ba170c80e943e">tracktion_engine::TrackCompManager::TrackComp::edit</a>, <a class="el" href="classtracktion__engine_1_1Edit.html#a6c49136df25c3ab97ac75a9411a8ab2c">tracktion_engine::Edit::engine</a>, <a class="el" href="structtracktion__engine_1_1TrackCompManager_1_1TrackComp.html#abe8e110ee3a134c71e31b57dd0ea02d7">tracktion_engine::TrackCompManager::TrackComp::getMuteTimes()</a>, <a class="el" href="structtracktion__engine_1_1TrackCompManager_1_1TrackComp.html#a538b3f5253b55235f5b36711fbf6f625">tracktion_engine::TrackCompManager::TrackComp::getNonMuteTimes()</a>, <a class="el" href="classtracktion__engine_1_1PropertyStorage.html#a0b0fb40bdc964c257d964b34e4ee8dfb">tracktion_engine::PropertyStorage::getProperty()</a>, and <a class="el" href="classtracktion__engine_1_1Engine.html#af6b6f0807f5cbe1e21a060adda9b8ab2">tracktion_engine::Engine::getPropertyStorage()</a>.</p>
 
 </div>
 </div>
@@ -10738,8 +10791,8 @@ template&lt;typename SampleType &gt; </div>
 
 </div>
 </div>
-<a id="a6b15a31e942884075fbc90f57a3514b4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6b15a31e942884075fbc90f57a3514b4">&#9670;&nbsp;</a></span>clearChannels()</h2>
+<a id="ac45ec036579fdbc82aca62e64195200d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac45ec036579fdbc82aca62e64195200d">&#9670;&nbsp;</a></span>clearChannels()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -10747,7 +10800,7 @@ template&lt;typename SampleType &gt; </div>
         <tr>
           <td class="memname">void tracktion_engine::clearChannels </td>
           <td>(</td>
-          <td class="paramtype">juce::AudioSampleBuffer &amp;&#160;</td>
+          <td class="paramtype">juce::AudioBuffer&lt; float &gt; &amp;&#160;</td>
           <td class="paramname"><em>buffer</em>, </td>
         </tr>
         <tr>
@@ -11780,7 +11833,7 @@ template&lt;typename... Properties&gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Dec 29 2021 12:12:16 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Jan 2 2022 19:42:31 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

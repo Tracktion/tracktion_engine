@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">3</td>
@@ -81,7 +81,7 @@
 <a name="19"><span class="lineNum">      19 </span><span class="lineCov">          4 :     lastVolumeBeforeMute.referTo (state, IDs::lastVolumeBeforeMuteDb, um, 0.0f);</span></a>
 <a name="20"><span class="lineNum">      20 </span>            : </a>
 <a name="21"><span class="lineNum">      21 </span><span class="lineCov">          2 :     gain = addParam (&quot;send level&quot;, TRANS(&quot;Send level&quot;), { 0.0f, 1.0f },</span></a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineNoCov">          0 :                      [] (float value)             { return Decibels::toString (volumeFaderPositionToDB (value)); },</span></a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineNoCov">          0 :                      [] (float value)             { return juce::Decibels::toString (volumeFaderPositionToDB (value)); },</span></a>
 <a name="23"><span class="lineNum">      23 </span><span class="lineCov">          4 :                      [] (const juce::String&amp; s)   { return decibelsToVolumeFaderPosition (dbStringToDb (s)); });</span></a>
 <a name="24"><span class="lineNum">      24 </span>            : </a>
 <a name="25"><span class="lineNum">      25 </span><span class="lineCov">          2 :     gain-&gt;attachToCurrentValue (gainLevel);</span></a>
@@ -168,7 +168,7 @@
 <a name="106"><span class="lineNum">     106 </span>            : </a>
 <a name="107"><span class="lineNum">     107 </span><span class="lineNoCov">          0 :     if (gain-&gt;getCurrentValue() != newPos)</span></a>
 <a name="108"><span class="lineNum">     108 </span>            :     {</a>
-<a name="109"><span class="lineNum">     109 </span><span class="lineNoCov">          0 :         gain-&gt;setParameter (newPos, sendNotification);</span></a>
+<a name="109"><span class="lineNum">     109 </span><span class="lineNoCov">          0 :         gain-&gt;setParameter (newPos, juce::sendNotification);</span></a>
 <a name="110"><span class="lineNum">     110 </span><span class="lineNoCov">          0 :         changed();</span></a>
 <a name="111"><span class="lineNum">     111 </span>            :     }</a>
 <a name="112"><span class="lineNum">     112 </span><span class="lineNoCov">          0 : }</span></a>
@@ -220,8 +220,8 @@
 <a name="158"><span class="lineNum">     158 </span>            : </a>
 <a name="159"><span class="lineNum">     159 </span><span class="lineNoCov">          0 : void AuxSendPlugin::restorePluginStateFromValueTree (const juce::ValueTree&amp; v)</span></a>
 <a name="160"><span class="lineNum">     160 </span>            : {</a>
-<a name="161"><span class="lineNum">     161 </span><span class="lineNoCov">          0 :     CachedValue&lt;float&gt;* cvsFloat[]  = { &amp;gainLevel, nullptr };</span></a>
-<a name="162"><span class="lineNum">     162 </span><span class="lineNoCov">          0 :     CachedValue&lt;int&gt;* cvsInt[]      = { &amp;busNumber, nullptr };</span></a>
+<a name="161"><span class="lineNum">     161 </span><span class="lineNoCov">          0 :     juce::CachedValue&lt;float&gt;* cvsFloat[]  = { &amp;gainLevel, nullptr };</span></a>
+<a name="162"><span class="lineNum">     162 </span><span class="lineNoCov">          0 :     juce::CachedValue&lt;int&gt;* cvsInt[]      = { &amp;busNumber, nullptr };</span></a>
 <a name="163"><span class="lineNum">     163 </span><span class="lineNoCov">          0 :     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);</span></a>
 <a name="164"><span class="lineNum">     164 </span><span class="lineNoCov">          0 :     copyPropertiesToNullTerminatedCachedValues (v, cvsInt);</span></a>
 <a name="165"><span class="lineNum">     165 </span>            : </a>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -93,9 +93,9 @@
 <a name="31"><span class="lineNum">      31 </span><span class="lineNoCov">          0 :     return TRANS(&quot;Arranger Clip&quot;) + &quot; - \&quot;&quot; + getName() + &quot;\&quot;&quot;;</span></a>
 <a name="32"><span class="lineNum">      32 </span>            : }</a>
 <a name="33"><span class="lineNum">      33 </span>            : </a>
-<a name="34"><span class="lineNum">      34 </span><span class="lineNoCov">          0 : Colour ArrangerClip::getDefaultColour() const</span></a>
+<a name="34"><span class="lineNum">      34 </span><span class="lineNoCov">          0 : juce::Colour ArrangerClip::getDefaultColour() const</span></a>
 <a name="35"><span class="lineNum">      35 </span>            : {</a>
-<a name="36"><span class="lineNum">      36 </span><span class="lineNoCov">          0 :     return Colours::red.withHue (7.0f / 9.0f);</span></a>
+<a name="36"><span class="lineNum">      36 </span><span class="lineNoCov">          0 :     return juce::Colours::red.withHue (7.0f / 9.0f);</span></a>
 <a name="37"><span class="lineNum">      37 </span>            : }</a>
 <a name="38"><span class="lineNum">      38 </span>            : </a>
 <a name="39"><span class="lineNum">      39 </span>            : //==============================================================================</a>
@@ -104,7 +104,7 @@
 <a name="42"><span class="lineNum">      42 </span><span class="lineNoCov">          0 :     return t.isArrangerTrack();</span></a>
 <a name="43"><span class="lineNum">      43 </span>            : }</a>
 <a name="44"><span class="lineNum">      44 </span>            : </a>
-<a name="45"><span class="lineNum">      45 </span><span class="lineNoCov">          0 : void ArrangerClip::valueTreePropertyChanged (ValueTree&amp; v, const juce::Identifier&amp; i)</span></a>
+<a name="45"><span class="lineNum">      45 </span><span class="lineNoCov">          0 : void ArrangerClip::valueTreePropertyChanged (juce::ValueTree&amp; v, const juce::Identifier&amp; i)</span></a>
 <a name="46"><span class="lineNum">      46 </span>            : {</a>
 <a name="47"><span class="lineNum">      47 </span><span class="lineNoCov">          0 :     if (v == state)</span></a>
 <a name="48"><span class="lineNum">      48 </span>            :     {</a>

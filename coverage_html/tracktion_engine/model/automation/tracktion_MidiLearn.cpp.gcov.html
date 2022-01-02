@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -119,7 +119,7 @@
 <a name="57"><span class="lineNum">      57 </span>            :     assignemnts.add (newAssignment);</a>
 <a name="58"><span class="lineNum">      58 </span>            : }</a>
 <a name="59"><span class="lineNum">      59 </span>            : </a>
-<a name="60"><span class="lineNum">      60 </span><span class="lineNoCov">          0 : void MidiAssignable::buildMenu (PopupMenu&amp; m)</span></a>
+<a name="60"><span class="lineNum">      60 </span><span class="lineNoCov">          0 : void MidiAssignable::buildMenu (juce::PopupMenu&amp; m)</span></a>
 <a name="61"><span class="lineNum">      61 </span>            : {</a>
 <a name="62"><span class="lineNum">      62 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
 <a name="63"><span class="lineNum">      63 </span>            : </a>
@@ -133,7 +133,7 @@
 <a name="71"><span class="lineNum">      71 </span>            :             {</a>
 <a name="72"><span class="lineNum">      72 </span><span class="lineNoCov">          0 :                 if (auto ec = engine.getExternalControllerManager().getActiveCustomController())</span></a>
 <a name="73"><span class="lineNum">      73 </span>            :                 {</a>
-<a name="74"><span class="lineNum">      74 </span><span class="lineNoCov">          0 :                     PopupMenu paramsMenu;</span></a>
+<a name="74"><span class="lineNum">      74 </span><span class="lineNoCov">          0 :                     juce::PopupMenu paramsMenu;</span></a>
 <a name="75"><span class="lineNum">      75 </span><span class="lineNoCov">          0 :                     auto numParams = ec-&gt;getNumParameterControls();</span></a>
 <a name="76"><span class="lineNum">      76 </span>            : </a>
 <a name="77"><span class="lineNum">      77 </span><span class="lineNoCov">          0 :                     auto baseName = ass.id == CustomControlSurface::paramTrackId ? TRANS(&quot;Parameter&quot;)</span></a>
@@ -141,7 +141,7 @@
 <a name="79"><span class="lineNum">      79 </span>            : </a>
 <a name="80"><span class="lineNum">      80 </span><span class="lineNoCov">          0 :                     for (int i = 0; i &lt; numParams; ++i)</span></a>
 <a name="81"><span class="lineNum">      81 </span><span class="lineNoCov">          0 :                         paramsMenu.addItem (CustomControlSurface::paramTrackId + i,</span></a>
-<a name="82"><span class="lineNum">      82 </span><span class="lineNoCov">          0 :                                             baseName + &quot; #&quot; + String (i + 1));</span></a>
+<a name="82"><span class="lineNum">      82 </span><span class="lineNoCov">          0 :                                             baseName + &quot; #&quot; + juce::String (i + 1));</span></a>
 <a name="83"><span class="lineNum">      83 </span>            : </a>
 <a name="84"><span class="lineNum">      84 </span><span class="lineNoCov">          0 :                     m.addSubMenu (ass.name, paramsMenu);</span></a>
 <a name="85"><span class="lineNum">      85 </span>            :                 }</a>

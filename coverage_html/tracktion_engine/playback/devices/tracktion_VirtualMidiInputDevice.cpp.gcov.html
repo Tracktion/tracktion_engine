@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2021-12-29 12:24:45</td>
+            <td class="headerValue">2022-01-02 19:54:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">5</td>
@@ -104,7 +104,7 @@
 <a name="42"><span class="lineNum">      42 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VirtualMidiInputDeviceInstance)</a>
 <a name="43"><span class="lineNum">      43 </span>            : };</a>
 <a name="44"><span class="lineNum">      44 </span>            : </a>
-<a name="45"><span class="lineNum">      45 </span>            : Array&lt;VirtualMidiInputDevice*, CriticalSection&gt; virtualMidiDevices;</a>
+<a name="45"><span class="lineNum">      45 </span>            : juce::Array&lt;VirtualMidiInputDevice*, juce::CriticalSection&gt; virtualMidiDevices;</a>
 <a name="46"><span class="lineNum">      46 </span>            : </a>
 <a name="47"><span class="lineNum">      47 </span>            : //==============================================================================</a>
 <a name="48"><span class="lineNum">      48 </span><span class="lineCov">        272 : VirtualMidiInputDevice::VirtualMidiInputDevice (Engine&amp; e, const juce::String&amp; deviceName, DeviceType devType)</span></a>
@@ -177,14 +177,14 @@
 <a name="115"><span class="lineNum">     115 </span><span class="lineNoCov">          0 :     engine.getPropertyStorage().setXmlPropertyItem (SettingID::virtualmidiin, propName, n);</span></a>
 <a name="116"><span class="lineNum">     116 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="117"><span class="lineNum">     117 </span>            : </a>
-<a name="118"><span class="lineNum">     118 </span><span class="lineNoCov">          0 : void VirtualMidiInputDevice::handleIncomingMidiMessage (const MidiMessage&amp; m)</span></a>
+<a name="118"><span class="lineNum">     118 </span><span class="lineNoCov">          0 : void VirtualMidiInputDevice::handleIncomingMidiMessage (const juce::MidiMessage&amp; m)</span></a>
 <a name="119"><span class="lineNum">     119 </span>            : {</a>
 <a name="120"><span class="lineNum">     120 </span><span class="lineNoCov">          0 :     if (! (m.isActiveSense() || disallowedChannels [m.getChannel() - 1]))</span></a>
 <a name="121"><span class="lineNum">     121 </span>            :     {</a>
-<a name="122"><span class="lineNum">     122 </span><span class="lineNoCov">          0 :         MidiMessage message (m);</span></a>
+<a name="122"><span class="lineNum">     122 </span><span class="lineNoCov">          0 :         juce::MidiMessage message (m);</span></a>
 <a name="123"><span class="lineNum">     123 </span>            : </a>
 <a name="124"><span class="lineNum">     124 </span><span class="lineNoCov">          0 :         if (m.getTimeStamp() == 0 || ! engine.getEngineBehaviour().isMidiDriverUsedForIncommingMessageTiming())</span></a>
-<a name="125"><span class="lineNum">     125 </span><span class="lineNoCov">          0 :             message.setTimeStamp (Time::getMillisecondCounterHiRes() * 0.001);</span></a>
+<a name="125"><span class="lineNum">     125 </span><span class="lineNoCov">          0 :             message.setTimeStamp (juce::Time::getMillisecondCounterHiRes() * 0.001);</span></a>
 <a name="126"><span class="lineNum">     126 </span>            : </a>
 <a name="127"><span class="lineNum">     127 </span>            :         message.addToTimeStamp (adjustSecs);</a>
 <a name="128"><span class="lineNum">     128 </span>            : </a>
@@ -197,7 +197,7 @@
 <a name="135"><span class="lineNum">     135 </span>            :     }</a>
 <a name="136"><span class="lineNum">     136 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="137"><span class="lineNum">     137 </span>            : </a>
-<a name="138"><span class="lineNum">     138 </span><span class="lineNoCov">          0 : void VirtualMidiInputDevice::handleMessageFromPhysicalDevice (MidiInputDevice* dev, const MidiMessage&amp; m)</span></a>
+<a name="138"><span class="lineNum">     138 </span><span class="lineNoCov">          0 : void VirtualMidiInputDevice::handleMessageFromPhysicalDevice (MidiInputDevice* dev, const juce::MidiMessage&amp; m)</span></a>
 <a name="139"><span class="lineNum">     139 </span>            : {</a>
 <a name="140"><span class="lineNum">     140 </span><span class="lineNoCov">          0 :     if (inputDevices.contains (dev-&gt;getName()))</span></a>
 <a name="141"><span class="lineNum">     141 </span><span class="lineNoCov">          0 :         handleIncomingMidiMessage (m);</span></a>
