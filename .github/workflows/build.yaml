@@ -18,10 +18,10 @@ jobs:
             os: macos-latest
             platform: mac
           - name: Windows
-            os: windows-2016
+            os: windows-latest
             platform: windows
-          - name: Windows_2022
-            os: windows-2022
+          - name: Windows_2016
+            os: windows-2016
             platform: windows
         # cfg:
         # - { name: Linux, os: ubuntu-16.04, platform: linux }
