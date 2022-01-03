@@ -73,7 +73,7 @@ function buildExample()
         APP_FILE=$APP_DIR/$BINARY_NAME
         APP_BINARY="$APP_FILE"
 
-        CMAKE_GENERATOR="-G Unix Makefiles"
+        CMAKE_GENERATOR="-G \"Unix Makefiles\""
         CMAKE_PLATFORM_ARGS="-DCMAKE_BUILD_TYPE=Release"
     elif [[ "$PLATFORM" == "mac" ]]; then
         BINARY_NAME="$PROJECT_NAME"
@@ -99,7 +99,7 @@ function buildExample()
             MSBUILD_EXE="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\MSBuild.exe"
         fi
 
-        if [ ! -f "$MSBUILD_EXE" ]; then
+        if [ ! -f "$MSBUILD_EXE" ] && [ -z $GITHUB_ACTIONS ] ; then
             echo MSBuild.exe not found at "${MSBUILD_EXE}" export this env var to the MSBuild.exe location on your system before running this script
             exit 1
         fi
