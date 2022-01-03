@@ -18,6 +18,9 @@ jobs:
             os: macos-latest
             platform: mac
           - name: Windows
+            os: windows-latest
+            platform: windows
+          - name: Windows_2016
             os: windows-2016
             platform: windows
         # cfg:
