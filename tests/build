@@ -97,10 +97,10 @@ function buildExample()
 
         if [ -z "$MSBUILD_EXE" ]; then
             echo MSBuild not found at "${MSBUILD_EXE}", using default
-            MSBUILD_EXE="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\MSBuild.exe"
+            MSBUILD_EXE=$("/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere" -latest -requires Microsoft.Component.MSBuild -find "MSBuild\**\Bin\MSBuild.exe")
         fi
 
-        if [ ! -f "$MSBUILD_EXE" ] && [ -z $GITHUB_ACTIONS ] ; then
+        if [ ! -f "$MSBUILD_EXE" ]; then
             echo MSBuild.exe not found at "${MSBUILD_EXE}" export this env var to the MSBuild.exe location on your system before running this script
             exit 1
         fi
