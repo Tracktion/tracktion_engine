@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-03 18:33:54</td>
+            <td class="headerValue">2022-01-03 18:34:40</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">16</td>
@@ -86,10 +86,10 @@
 <a name="24"><span class="lineNum">      24 </span>            : struct SplitTimelineRange</a>
 <a name="25"><span class="lineNum">      25 </span>            : {</a>
 <a name="26"><span class="lineNum">      26 </span>            :     SplitTimelineRange (juce::Range&lt;int64_t&gt; range1)</a>
-<a name="27"><span class="lineNum">      27 </span><span class="lineCov">    2424754 :         : timelineRange1 (range1), isSplit (false) {}</span></a>
+<a name="27"><span class="lineNum">      27 </span><span class="lineCov">    2426324 :         : timelineRange1 (range1), isSplit (false) {}</span></a>
 <a name="28"><span class="lineNum">      28 </span>            : </a>
 <a name="29"><span class="lineNum">      29 </span>            :     SplitTimelineRange (juce::Range&lt;int64_t&gt; range1, juce::Range&lt;int64_t&gt; range2)</a>
-<a name="30"><span class="lineNum">      30 </span><span class="lineCov">        911 :         : timelineRange1 (range1), timelineRange2 (range2), isSplit (true) {}</span></a>
+<a name="30"><span class="lineNum">      30 </span><span class="lineCov">        919 :         : timelineRange1 (range1), timelineRange2 (range2), isSplit (true) {}</span></a>
 <a name="31"><span class="lineNum">      31 </span>            : </a>
 <a name="32"><span class="lineNum">      32 </span>            :     const juce::Range&lt;int64_t&gt; timelineRange1, timelineRange2;</a>
 <a name="33"><span class="lineNum">      33 </span>            :     const bool isSplit;</a>
@@ -254,13 +254,13 @@
 <a name="192"><span class="lineNum">     192 </span>            : }</a>
 <a name="193"><span class="lineNum">     193 </span>            : </a>
 <a name="194"><span class="lineNum">     194 </span>            : //==============================================================================</a>
-<a name="195"><span class="lineNum">     195 </span><span class="lineCov">      98187 : inline void PlayHead::setPosition (int64_t newPosition)</span></a>
+<a name="195"><span class="lineNum">     195 </span><span class="lineCov">     101113 : inline void PlayHead::setPosition (int64_t newPosition)</span></a>
 <a name="196"><span class="lineNum">     196 </span>            : {</a>
-<a name="197"><span class="lineNum">     197 </span><span class="lineCov">      98187 :     if (newPosition != getPosition())</span></a>
+<a name="197"><span class="lineNum">     197 </span><span class="lineCov">     101113 :     if (newPosition != getPosition())</span></a>
 <a name="198"><span class="lineNum">     198 </span><span class="lineCov">      45758 :         userInteraction();</span></a>
 <a name="199"><span class="lineNum">     199 </span>            : </a>
-<a name="200"><span class="lineNum">     200 </span><span class="lineCov">      98187 :     overridePosition (newPosition);</span></a>
-<a name="201"><span class="lineNum">     201 </span><span class="lineCov">      98187 : }</span></a>
+<a name="200"><span class="lineNum">     200 </span><span class="lineCov">     101113 :     overridePosition (newPosition);</span></a>
+<a name="201"><span class="lineNum">     201 </span><span class="lineCov">     101113 : }</span></a>
 <a name="202"><span class="lineNum">     202 </span>            : </a>
 <a name="203"><span class="lineNum">     203 </span><span class="lineCov">        200 : inline void PlayHead::play (juce::Range&lt;int64_t&gt; rangeToPlay, bool looped)</span></a>
 <a name="204"><span class="lineNum">     204 </span>            : {</a>
@@ -289,31 +289,31 @@
 <a name="227"><span class="lineNum">     227 </span><span class="lineCov">        219 :     setPosition (t);</span></a>
 <a name="228"><span class="lineNum">     228 </span><span class="lineCov">        219 : }</span></a>
 <a name="229"><span class="lineNum">     229 </span>            : </a>
-<a name="230"><span class="lineNum">     230 </span><span class="lineCov">     102399 : inline int64_t PlayHead::getPosition() const</span></a>
+<a name="230"><span class="lineNum">     230 </span><span class="lineCov">     105311 : inline int64_t PlayHead::getPosition() const</span></a>
 <a name="231"><span class="lineNum">     231 </span>            : {</a>
-<a name="232"><span class="lineNum">     232 </span><span class="lineCov">     102399 :     return referenceSamplePositionToTimelinePosition (referenceSampleRange.load().getStart());</span></a>
+<a name="232"><span class="lineNum">     232 </span><span class="lineCov">     105311 :     return referenceSamplePositionToTimelinePosition (referenceSampleRange.load().getStart());</span></a>
 <a name="233"><span class="lineNum">     233 </span>            : }</a>
 <a name="234"><span class="lineNum">     234 </span>            : </a>
-<a name="235"><span class="lineNum">     235 </span><span class="lineCov">       7116 : inline int64_t PlayHead::getUnloopedPosition() const</span></a>
+<a name="235"><span class="lineNum">     235 </span><span class="lineCov">       7253 : inline int64_t PlayHead::getUnloopedPosition() const</span></a>
 <a name="236"><span class="lineNum">     236 </span>            : {</a>
-<a name="237"><span class="lineNum">     237 </span><span class="lineCov">       7116 :     return referenceSamplePositionToTimelinePositionUnlooped (referenceSampleRange.load().getStart());</span></a>
+<a name="237"><span class="lineNum">     237 </span><span class="lineCov">       7253 :     return referenceSamplePositionToTimelinePositionUnlooped (referenceSampleRange.load().getStart());</span></a>
 <a name="238"><span class="lineNum">     238 </span>            : }</a>
 <a name="239"><span class="lineNum">     239 </span>            : </a>
-<a name="240"><span class="lineNum">     240 </span><span class="lineCov">      98187 : inline void PlayHead::overridePosition (int64_t newPosition)</span></a>
+<a name="240"><span class="lineNum">     240 </span><span class="lineCov">     101113 : inline void PlayHead::overridePosition (int64_t newPosition)</span></a>
 <a name="241"><span class="lineNum">     241 </span>            : {</a>
-<a name="242"><span class="lineNum">     242 </span><span class="lineCov">      98187 :     if (looping &amp;&amp; rollInToLoop)</span></a>
+<a name="242"><span class="lineNum">     242 </span><span class="lineCov">     101113 :     if (looping &amp;&amp; rollInToLoop)</span></a>
 <a name="243"><span class="lineNum">     243 </span><span class="lineNoCov">          0 :         newPosition = std::min (newPosition, timelinePlayRange.load().getEnd());</span></a>
-<a name="244"><span class="lineNum">     244 </span><span class="lineCov">      98187 :     else if (looping)</span></a>
+<a name="244"><span class="lineNum">     244 </span><span class="lineCov">     101113 :     else if (looping)</span></a>
 <a name="245"><span class="lineNum">     245 </span><span class="lineCov">         42 :         newPosition = timelinePlayRange.load().clipValue (newPosition);</span></a>
 <a name="246"><span class="lineNum">     246 </span>            : </a>
 <a name="247"><span class="lineNum">     247 </span>            :     SyncPositions newSyncPositions;</a>
 <a name="248"><span class="lineNum">     248 </span>            :     newSyncPositions.referenceSyncPosition = referenceSampleRange.load().getStart();</a>
-<a name="249"><span class="lineNum">     249 </span><span class="lineCov">      98187 :     newSyncPositions.playoutSyncPosition = newPosition;</span></a>
+<a name="249"><span class="lineNum">     249 </span><span class="lineCov">     101113 :     newSyncPositions.playoutSyncPosition = newPosition;</span></a>
 <a name="250"><span class="lineNum">     250 </span>            :     setSyncPositions (newSyncPositions);</a>
-<a name="251"><span class="lineNum">     251 </span><span class="lineCov">      98187 : }</span></a>
+<a name="251"><span class="lineNum">     251 </span><span class="lineCov">     101113 : }</span></a>
 <a name="252"><span class="lineNum">     252 </span>            : </a>
 <a name="253"><span class="lineNum">     253 </span>            : //==============================================================================</a>
-<a name="254"><span class="lineNum">     254 </span><span class="lineCov">    2180201 : inline bool PlayHead::isPlaying() const noexcept                    { return speed.load (std::memory_order_relaxed) != 0; }</span></a>
+<a name="254"><span class="lineNum">     254 </span><span class="lineCov">    2180761 : inline bool PlayHead::isPlaying() const noexcept                    { return speed.load (std::memory_order_relaxed) != 0; }</span></a>
 <a name="255"><span class="lineNum">     255 </span>            : </a>
 <a name="256"><span class="lineNum">     256 </span>            : inline bool PlayHead::isStopped() const noexcept                    { return speed.load (std::memory_order_relaxed) == 0; }</a>
 <a name="257"><span class="lineNum">     257 </span>            : </a>
@@ -373,46 +373,46 @@
 <a name="311"><span class="lineNum">     311 </span>            : }</a>
 <a name="312"><span class="lineNum">     312 </span>            : </a>
 <a name="313"><span class="lineNum">     313 </span>            : //==============================================================================</a>
-<a name="314"><span class="lineNum">     314 </span><span class="lineCov">    3675930 : inline int64_t PlayHead::referenceSamplePositionToTimelinePosition (int64_t referenceSamplePosition) const</span></a>
+<a name="314"><span class="lineNum">     314 </span><span class="lineCov">    3678780 : inline int64_t PlayHead::referenceSamplePositionToTimelinePosition (int64_t referenceSamplePosition) const</span></a>
 <a name="315"><span class="lineNum">     315 </span>            : {</a>
 <a name="316"><span class="lineNum">     316 </span>            :     const auto syncPos = getSyncPositions();</a>
 <a name="317"><span class="lineNum">     317 </span>            :     </a>
-<a name="318"><span class="lineNum">     318 </span><span class="lineCov">    3675930 :     if (userDragging)</span></a>
+<a name="318"><span class="lineNum">     318 </span><span class="lineCov">    3678780 :     if (userDragging)</span></a>
 <a name="319"><span class="lineNum">     319 </span><span class="lineNoCov">          0 :         return syncPos.playoutSyncPosition + ((referenceSamplePosition - syncPos.referenceSyncPosition) % getScrubbingBlockLength());</span></a>
 <a name="320"><span class="lineNum">     320 </span>            : </a>
-<a name="321"><span class="lineNum">     321 </span><span class="lineCov">    3675930 :     if (looping &amp;&amp; ! rollInToLoop)</span></a>
-<a name="322"><span class="lineNum">     322 </span><span class="lineCov">     147918 :         return linearPositionToLoopPosition (referenceSamplePositionToTimelinePositionUnlooped (referenceSamplePosition), timelinePlayRange);</span></a>
+<a name="321"><span class="lineNum">     321 </span><span class="lineCov">    3678780 :     if (looping &amp;&amp; ! rollInToLoop)</span></a>
+<a name="322"><span class="lineNum">     322 </span><span class="lineCov">     147898 :         return linearPositionToLoopPosition (referenceSamplePositionToTimelinePositionUnlooped (referenceSamplePosition), timelinePlayRange);</span></a>
 <a name="323"><span class="lineNum">     323 </span>            : </a>
-<a name="324"><span class="lineNum">     324 </span><span class="lineCov">    3528010 :     return referenceSamplePositionToTimelinePositionUnlooped (referenceSamplePosition);</span></a>
+<a name="324"><span class="lineNum">     324 </span><span class="lineCov">    3530880 :     return referenceSamplePositionToTimelinePositionUnlooped (referenceSamplePosition);</span></a>
 <a name="325"><span class="lineNum">     325 </span>            : }</a>
 <a name="326"><span class="lineNum">     326 </span>            : </a>
-<a name="327"><span class="lineNum">     327 </span><span class="lineCov">    3744020 : inline int64_t PlayHead::referenceSamplePositionToTimelinePositionUnlooped (int64_t referenceSamplePosition) const</span></a>
+<a name="327"><span class="lineNum">     327 </span><span class="lineCov">    3746910 : inline int64_t PlayHead::referenceSamplePositionToTimelinePositionUnlooped (int64_t referenceSamplePosition) const</span></a>
 <a name="328"><span class="lineNum">     328 </span>            : {</a>
 <a name="329"><span class="lineNum">     329 </span>            :     const auto syncPos = getSyncPositions();</a>
-<a name="330"><span class="lineNum">     330 </span><span class="lineCov">    3744020 :     return syncPos.playoutSyncPosition + (referenceSamplePosition - syncPos.referenceSyncPosition) * speed;</span></a>
+<a name="330"><span class="lineNum">     330 </span><span class="lineCov">    3746910 :     return syncPos.playoutSyncPosition + (referenceSamplePosition - syncPos.referenceSyncPosition) * speed;</span></a>
 <a name="331"><span class="lineNum">     331 </span>            : }</a>
 <a name="332"><span class="lineNum">     332 </span>            : </a>
-<a name="333"><span class="lineNum">     333 </span><span class="lineCov">    2425667 : inline juce::Range&lt;int64_t&gt; PlayHead::referenceSampleRangeToSourceRangeUnlooped (juce::Range&lt;int64_t&gt; sourceReferenceSampleRange) const</span></a>
+<a name="333"><span class="lineNum">     333 </span><span class="lineCov">    2427247 : inline juce::Range&lt;int64_t&gt; PlayHead::referenceSampleRangeToSourceRangeUnlooped (juce::Range&lt;int64_t&gt; sourceReferenceSampleRange) const</span></a>
 <a name="334"><span class="lineNum">     334 </span>            : {</a>
 <a name="335"><span class="lineNum">     335 </span>            :     const auto syncPos = getSyncPositions();</a>
-<a name="336"><span class="lineNum">     336 </span><span class="lineCov">    2425667 :     return { syncPos.playoutSyncPosition + (sourceReferenceSampleRange.getStart() - syncPos.referenceSyncPosition) * speed,</span></a>
-<a name="337"><span class="lineNum">     337 </span><span class="lineCov">    2425667 :              syncPos.playoutSyncPosition + (sourceReferenceSampleRange.getEnd() - syncPos.referenceSyncPosition) * speed };</span></a>
+<a name="336"><span class="lineNum">     336 </span><span class="lineCov">    2427247 :     return { syncPos.playoutSyncPosition + (sourceReferenceSampleRange.getStart() - syncPos.referenceSyncPosition) * speed,</span></a>
+<a name="337"><span class="lineNum">     337 </span><span class="lineCov">    2427247 :              syncPos.playoutSyncPosition + (sourceReferenceSampleRange.getEnd() - syncPos.referenceSyncPosition) * speed };</span></a>
 <a name="338"><span class="lineNum">     338 </span>            : }</a>
 <a name="339"><span class="lineNum">     339 </span>            : </a>
 <a name="340"><span class="lineNum">     340 </span>            : inline int64_t PlayHead::linearPositionToLoopPosition (int64_t position, juce::Range&lt;int64_t&gt; loopRange)</a>
 <a name="341"><span class="lineNum">     341 </span>            : {</a>
 <a name="342"><span class="lineNum">     342 </span>            :     const auto loopStart = loopRange.getStart();</a>
-<a name="343"><span class="lineNum">     343 </span><span class="lineCov">     295748 :     return loopStart + ((position - loopStart) % loopRange.getLength());</span></a>
+<a name="343"><span class="lineNum">     343 </span><span class="lineCov">     295708 :     return loopStart + ((position - loopStart) % loopRange.getLength());</span></a>
 <a name="344"><span class="lineNum">     344 </span>            : }</a>
 <a name="345"><span class="lineNum">     345 </span>            : </a>
 <a name="346"><span class="lineNum">     346 </span>            : //==============================================================================</a>
-<a name="347"><span class="lineNum">     347 </span><span class="lineCov">    2592440 : inline void PlayHead::setReferenceSampleRange (juce::Range&lt;int64_t&gt; sampleRange)</span></a>
+<a name="347"><span class="lineNum">     347 </span><span class="lineCov">    2594163 : inline void PlayHead::setReferenceSampleRange (juce::Range&lt;int64_t&gt; sampleRange)</span></a>
 <a name="348"><span class="lineNum">     348 </span>            : {</a>
 <a name="349"><span class="lineNum">     349 </span>            :     referenceSampleRange = sampleRange;</a>
 <a name="350"><span class="lineNum">     350 </span>            : </a>
-<a name="351"><span class="lineNum">     351 </span><span class="lineCov">    2592440 :     if (rollInToLoop &amp;&amp; getPosition() &gt;= timelinePlayRange.load().getStart())</span></a>
+<a name="351"><span class="lineNum">     351 </span><span class="lineCov">    2594163 :     if (rollInToLoop &amp;&amp; getPosition() &gt;= timelinePlayRange.load().getStart())</span></a>
 <a name="352"><span class="lineNum">     352 </span>            :         rollInToLoop = false;</a>
-<a name="353"><span class="lineNum">     353 </span><span class="lineCov">    2592440 : }</span></a>
+<a name="353"><span class="lineNum">     353 </span><span class="lineCov">    2594163 : }</span></a>
 <a name="354"><span class="lineNum">     354 </span>            : </a>
 <a name="355"><span class="lineNum">     355 </span>            : inline juce::Range&lt;int64_t&gt; PlayHead::getReferenceSampleRange() const</a>
 <a name="356"><span class="lineNum">     356 </span>            : {</a>
@@ -426,22 +426,22 @@
 <a name="364"><span class="lineNum">     364 </span>            : </a>
 <a name="365"><span class="lineNum">     365 </span>            : //==============================================================================</a>
 <a name="366"><span class="lineNum">     366 </span>            : //==============================================================================</a>
-<a name="367"><span class="lineNum">     367 </span><span class="lineCov">    2425667 : inline SplitTimelineRange referenceSampleRangeToSplitTimelineRange (const PlayHead&amp; playHead, juce::Range&lt;int64_t&gt; referenceSampleRange)</span></a>
+<a name="367"><span class="lineNum">     367 </span><span class="lineCov">    2427247 : inline SplitTimelineRange referenceSampleRangeToSplitTimelineRange (const PlayHead&amp; playHead, juce::Range&lt;int64_t&gt; referenceSampleRange)</span></a>
 <a name="368"><span class="lineNum">     368 </span>            : {</a>
-<a name="369"><span class="lineNum">     369 </span><span class="lineCov">    2425667 :     const auto unloopedRange = playHead.referenceSampleRangeToSourceRangeUnlooped (referenceSampleRange);</span></a>
-<a name="370"><span class="lineNum">     370 </span><span class="lineCov">    2425667 :     auto s = unloopedRange.getStart();</span></a>
-<a name="371"><span class="lineNum">     371 </span><span class="lineCov">    2425667 :     auto e = unloopedRange.getEnd();</span></a>
+<a name="369"><span class="lineNum">     369 </span><span class="lineCov">    2427247 :     const auto unloopedRange = playHead.referenceSampleRangeToSourceRangeUnlooped (referenceSampleRange);</span></a>
+<a name="370"><span class="lineNum">     370 </span><span class="lineCov">    2427247 :     auto s = unloopedRange.getStart();</span></a>
+<a name="371"><span class="lineNum">     371 </span><span class="lineCov">    2427247 :     auto e = unloopedRange.getEnd();</span></a>
 <a name="372"><span class="lineNum">     372 </span>            : </a>
-<a name="373"><span class="lineNum">     373 </span><span class="lineCov">    2425667 :     if (playHead.isUserDragging())</span></a>
+<a name="373"><span class="lineNum">     373 </span><span class="lineCov">    2427247 :     if (playHead.isUserDragging())</span></a>
 <a name="374"><span class="lineNum">     374 </span>            :     {</a>
 <a name="375"><span class="lineNum">     375 </span>            :         auto loopStart = playHead.getPlayoutSyncPosition();</a>
 <a name="376"><span class="lineNum">     376 </span>            :         auto loopLen = playHead.getScrubbingBlockLength();</a>
-<a name="377"><span class="lineNum">     377 </span><span class="lineCov">     177924 :         auto loopEnd = loopStart + loopLen;</span></a>
+<a name="377"><span class="lineNum">     377 </span><span class="lineCov">     178260 :         auto loopEnd = loopStart + loopLen;</span></a>
 <a name="378"><span class="lineNum">     378 </span>            : </a>
 <a name="379"><span class="lineNum">     379 </span>            :         s = PlayHead::linearPositionToLoopPosition (s, { loopStart, loopStart + loopLen });</a>
 <a name="380"><span class="lineNum">     380 </span>            :         e = PlayHead::linearPositionToLoopPosition (e, { loopStart, loopStart + loopLen });</a>
 <a name="381"><span class="lineNum">     381 </span>            : </a>
-<a name="382"><span class="lineNum">     382 </span><span class="lineCov">     177924 :         if (s &gt; e)</span></a>
+<a name="382"><span class="lineNum">     382 </span><span class="lineCov">     178260 :         if (s &gt; e)</span></a>
 <a name="383"><span class="lineNum">     383 </span>            :         {</a>
 <a name="384"><span class="lineNum">     384 </span><span class="lineCov">       2400 :             if (s &gt;= loopEnd)</span></a>
 <a name="385"><span class="lineNum">     385 </span>            :                 return { { loopStart, e } };</a>
@@ -453,13 +453,13 @@
 <a name="391"><span class="lineNum">     391 </span>            :         }</a>
 <a name="392"><span class="lineNum">     392 </span>            :     }</a>
 <a name="393"><span class="lineNum">     393 </span>            : </a>
-<a name="394"><span class="lineNum">     394 </span><span class="lineCov">    2423267 :     if (playHead.isLooping() &amp;&amp; ! playHead.isRollingIntoLoop())</span></a>
+<a name="394"><span class="lineNum">     394 </span><span class="lineCov">    2424847 :     if (playHead.isLooping() &amp;&amp; ! playHead.isRollingIntoLoop())</span></a>
 <a name="395"><span class="lineNum">     395 </span>            :     {</a>
 <a name="396"><span class="lineNum">     396 </span>            :         const auto pr = playHead.getLoopRange();</a>
 <a name="397"><span class="lineNum">     397 </span>            :         s = PlayHead::linearPositionToLoopPosition (s, pr);</a>
 <a name="398"><span class="lineNum">     398 </span>            :         e = PlayHead::linearPositionToLoopPosition (e, pr);</a>
 <a name="399"><span class="lineNum">     399 </span>            : </a>
-<a name="400"><span class="lineNum">     400 </span><span class="lineCov">     147830 :         if (s &gt; e)</span></a>
+<a name="400"><span class="lineNum">     400 </span><span class="lineCov">     147810 :         if (s &gt; e)</span></a>
 <a name="401"><span class="lineNum">     401 </span>            :         {</a>
 <a name="402"><span class="lineNum">     402 </span><span class="lineCov">        163 :             if (s &gt;= pr.getEnd())   return { { pr.getStart(), e } };</span></a>
 <a name="403"><span class="lineNum">     403 </span><span class="lineCov">        163 :             if (e &lt;= pr.getStart()) return { { s, pr.getEnd() } };</span></a>

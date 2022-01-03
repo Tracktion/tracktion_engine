@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-03 18:33:54</td>
+            <td class="headerValue">2022-01-03 18:34:40</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">19</td>
@@ -975,18 +975,18 @@
 <a name="913"><span class="lineNum">     913 </span>            :     return p;</a>
 <a name="914"><span class="lineNum">     914 </span>            : }</a>
 <a name="915"><span class="lineNum">     915 </span>            : </a>
-<a name="916"><span class="lineNum">     916 </span><span class="lineCov">         29 : void PluginCache::timerCallback()</span></a>
+<a name="916"><span class="lineNum">     916 </span><span class="lineCov">         24 : void PluginCache::timerCallback()</span></a>
 <a name="917"><span class="lineNum">     917 </span>            : {</a>
-<a name="918"><span class="lineNum">     918 </span><span class="lineCov">         29 :     Plugin::Array toDelete;</span></a>
+<a name="918"><span class="lineNum">     918 </span><span class="lineCov">         24 :     Plugin::Array toDelete;</span></a>
 <a name="919"><span class="lineNum">     919 </span>            : </a>
 <a name="920"><span class="lineNum">     920 </span>            :     {</a>
-<a name="921"><span class="lineNum">     921 </span><span class="lineCov">         29 :         const juce::ScopedLock sl (lock);</span></a>
+<a name="921"><span class="lineNum">     921 </span><span class="lineCov">         24 :         const juce::ScopedLock sl (lock);</span></a>
 <a name="922"><span class="lineNum">     922 </span>            : </a>
-<a name="923"><span class="lineNum">     923 </span><span class="lineCov">        193 :         for (int i = activePlugins.size(); --i &gt;= 0;)</span></a>
+<a name="923"><span class="lineNum">     923 </span><span class="lineCov">        152 :         for (int i = activePlugins.size(); --i &gt;= 0;)</span></a>
 <a name="924"><span class="lineNum">     924 </span>            :         {</a>
-<a name="925"><span class="lineNum">     925 </span><span class="lineCov">        164 :             if (auto f = activePlugins.getObjectPointer (i))</span></a>
+<a name="925"><span class="lineNum">     925 </span><span class="lineCov">        128 :             if (auto f = activePlugins.getObjectPointer (i))</span></a>
 <a name="926"><span class="lineNum">     926 </span>            :             {</a>
-<a name="927"><span class="lineNum">     927 </span><span class="lineCov">        164 :                 if (f-&gt;getReferenceCount() == 1)</span></a>
+<a name="927"><span class="lineNum">     927 </span><span class="lineCov">        128 :                 if (f-&gt;getReferenceCount() == 1)</span></a>
 <a name="928"><span class="lineNum">     928 </span>            :                 {</a>
 <a name="929"><span class="lineNum">     929 </span><span class="lineNoCov">          0 :                     toDelete.add (f);</span></a>
 <a name="930"><span class="lineNum">     930 </span><span class="lineNoCov">          0 :                     activePlugins.remove (i);</span></a>
@@ -994,7 +994,7 @@
 <a name="932"><span class="lineNum">     932 </span>            :             }</a>
 <a name="933"><span class="lineNum">     933 </span>            :         }</a>
 <a name="934"><span class="lineNum">     934 </span>            :     }</a>
-<a name="935"><span class="lineNum">     935 </span><span class="lineCov">         29 : }</span></a>
+<a name="935"><span class="lineNum">     935 </span><span class="lineCov">         24 : }</span></a>
 <a name="936"><span class="lineNum">     936 </span>            : </a>
 <a name="937"><span class="lineNum">     937 </span>            : }</a>
 </pre>
