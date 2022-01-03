@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-03 16:54:40</td>
+            <td class="headerValue">2022-01-03 18:33:54</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">9</td>
@@ -105,12 +105,12 @@
 <a name="43"><span class="lineNum">      43 </span>            : </a>
 <a name="44"><span class="lineNum">      44 </span><span class="lineNoCov">          0 : bool TrackMuteState::shouldTrackBeAudible() const</span></a>
 <a name="45"><span class="lineNum">      45 </span>            : {</a>
-<a name="46"><span class="lineNum">      46 </span><span class="lineCov">    2184140 :     return wasBeingPlayedFlag || wasJustMuted();</span></a>
+<a name="46"><span class="lineNum">      46 </span><span class="lineCov">    2184150 :     return wasBeingPlayedFlag || wasJustMuted();</span></a>
 <a name="47"><span class="lineNum">      47 </span>            : }</a>
 <a name="48"><span class="lineNum">      48 </span>            : </a>
 <a name="49"><span class="lineNum">      49 </span><span class="lineNoCov">          0 : bool TrackMuteState::shouldTrackContentsBeProcessed() const</span></a>
 <a name="50"><span class="lineNum">      50 </span>            : {</a>
-<a name="51"><span class="lineNum">      51 </span><span class="lineCov">    1852950 :     return callInputWhileMuted || wasBeingPlayedFlag;</span></a>
+<a name="51"><span class="lineNum">      51 </span><span class="lineCov">    1852930 :     return callInputWhileMuted || wasBeingPlayedFlag;</span></a>
 <a name="52"><span class="lineNum">      52 </span>            : }</a>
 <a name="53"><span class="lineNum">      53 </span>            : </a>
 <a name="54"><span class="lineNum">      54 </span><span class="lineNoCov">          0 : bool TrackMuteState::shouldTrackMidiBeProcessed() const</span></a>
@@ -162,9 +162,9 @@
 <a name="100"><span class="lineNum">     100 </span><span class="lineCov">       7292 :     return props;</span></a>
 <a name="101"><span class="lineNum">     101 </span>            : }</a>
 <a name="102"><span class="lineNum">     102 </span>            : </a>
-<a name="103"><span class="lineNum">     103 </span><span class="lineCov">    3795370 : std::vector&lt;tracktion_graph::Node*&gt; TrackMutingNode::getDirectInputNodes()</span></a>
+<a name="103"><span class="lineNum">     103 </span><span class="lineCov">    3790320 : std::vector&lt;tracktion_graph::Node*&gt; TrackMutingNode::getDirectInputNodes()</span></a>
 <a name="104"><span class="lineNum">     104 </span>            : {</a>
-<a name="105"><span class="lineNum">     105 </span><span class="lineCov">    3795370 :     return { input.get() };</span></a>
+<a name="105"><span class="lineNum">     105 </span><span class="lineCov">    3790320 :     return { input.get() };</span></a>
 <a name="106"><span class="lineNum">     106 </span>            : }</a>
 <a name="107"><span class="lineNum">     107 </span>            : </a>
 <a name="108"><span class="lineNum">     108 </span><span class="lineCov">       1142 : bool TrackMutingNode::isReadyToProcess()</span></a>
@@ -193,10 +193,10 @@
 <a name="131"><span class="lineNum">     131 </span>            :         </a>
 <a name="132"><span class="lineNum">     132 </span>            :         // If we've just been muted/unmuted we need to copy the data to</a>
 <a name="133"><span class="lineNum">     133 </span>            :         // apply a fade to, otherwise we can just pass on the view</a>
-<a name="134"><span class="lineNum">     134 </span><span class="lineCov">    1311580 :         if (wasJustMuted || wasJustUnMuted)</span></a>
+<a name="134"><span class="lineNum">     134 </span><span class="lineCov">    1311590 :         if (wasJustMuted || wasJustUnMuted)</span></a>
 <a name="135"><span class="lineNum">     135 </span><span class="lineNoCov">          0 :             copy (destAudioView, sourceBuffers.audio);</span></a>
 <a name="136"><span class="lineNum">     136 </span>            :         else</a>
-<a name="137"><span class="lineNum">     137 </span><span class="lineCov">    1311580 :             setAudioOutput (input.get(), sourceBuffers.audio);</span></a>
+<a name="137"><span class="lineNum">     137 </span><span class="lineCov">    1311590 :             setAudioOutput (input.get(), sourceBuffers.audio);</span></a>
 <a name="138"><span class="lineNum">     138 </span>            :     }</a>
 <a name="139"><span class="lineNum">     139 </span>            :     else</a>
 <a name="140"><span class="lineNum">     140 </span>            :     {</a>
@@ -204,11 +204,11 @@
 <a name="142"><span class="lineNum">     142 </span><span class="lineCov">     542412 :         pc.buffers.midi.clear();</span></a>
 <a name="143"><span class="lineNum">     143 </span>            :     }</a>
 <a name="144"><span class="lineNum">     144 </span>            : </a>
-<a name="145"><span class="lineNum">     145 </span><span class="lineCov">    1854000 :     if (wasJustMuted)</span></a>
+<a name="145"><span class="lineNum">     145 </span><span class="lineCov">    1853970 :     if (wasJustMuted)</span></a>
 <a name="146"><span class="lineNum">     146 </span><span class="lineNoCov">          0 :         rampBlock (destAudioView, 1.0f, 0.0f);</span></a>
-<a name="147"><span class="lineNum">     147 </span><span class="lineCov">    1854000 :     else if (wasJustUnMuted)</span></a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineCov">    1853970 :     else if (wasJustUnMuted)</span></a>
 <a name="148"><span class="lineNum">     148 </span><span class="lineNoCov">          0 :         rampBlock (destAudioView, 0.0f, 1.0f);</span></a>
-<a name="149"><span class="lineNum">     149 </span><span class="lineCov">    1854000 : }</span></a>
+<a name="149"><span class="lineNum">     149 </span><span class="lineCov">    1853970 : }</span></a>
 <a name="150"><span class="lineNum">     150 </span>            : </a>
 <a name="151"><span class="lineNum">     151 </span>            : //==============================================================================</a>
 <a name="152"><span class="lineNum">     152 </span><span class="lineNoCov">          0 : void TrackMutingNode::rampBlock (choc::buffer::ChannelArrayView&lt;float&gt; view, float start, float end)</span></a>

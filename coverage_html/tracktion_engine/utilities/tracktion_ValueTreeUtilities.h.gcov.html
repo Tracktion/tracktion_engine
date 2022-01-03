@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-03 16:54:40</td>
+            <td class="headerValue">2022-01-03 18:33:54</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">132</td>
@@ -88,7 +88,7 @@
 <a name="26"><span class="lineNum">      26 </span>            : template &lt;typename T&gt;</a>
 <a name="27"><span class="lineNum">      27 </span>            : static bool setIfDifferent (T&amp; val, T newVal) noexcept</a>
 <a name="28"><span class="lineNum">      28 </span>            : {</a>
-<a name="29"><span class="lineNum">      29 </span><span class="lineCov">      74548 :     if (val == newVal)</span></a>
+<a name="29"><span class="lineNum">      29 </span><span class="lineCov">      74442 :     if (val == newVal)</span></a>
 <a name="30"><span class="lineNum">      30 </span>            :         return false;</a>
 <a name="31"><span class="lineNum">      31 </span>            : </a>
 <a name="32"><span class="lineNum">      32 </span><span class="lineCov">         88 :     val = newVal;</span></a>
@@ -543,19 +543,19 @@
 <a name="481"><span class="lineNum">     481 </span>            :     return false;</a>
 <a name="482"><span class="lineNum">     482 </span>            : }</a>
 <a name="483"><span class="lineNum">     483 </span>            : </a>
-<a name="484"><span class="lineNum">     484 </span><span class="lineCov">       2400 : static inline void setPropertyIfMissing (juce::ValueTree&amp; v, const juce::Identifier&amp; id,</span></a>
+<a name="484"><span class="lineNum">     484 </span><span class="lineCov">       2408 : static inline void setPropertyIfMissing (juce::ValueTree&amp; v, const juce::Identifier&amp; id,</span></a>
 <a name="485"><span class="lineNum">     485 </span>            :                                          const juce::var&amp; value, juce::UndoManager* um)</a>
 <a name="486"><span class="lineNum">     486 </span>            : {</a>
-<a name="487"><span class="lineNum">     487 </span><span class="lineCov">       2400 :     if (! v.hasProperty (id))</span></a>
-<a name="488"><span class="lineNum">     488 </span><span class="lineCov">        436 :         v.setProperty (id, value, um);</span></a>
-<a name="489"><span class="lineNum">     489 </span><span class="lineCov">       2400 : }</span></a>
+<a name="487"><span class="lineNum">     487 </span><span class="lineCov">       2408 :     if (! v.hasProperty (id))</span></a>
+<a name="488"><span class="lineNum">     488 </span><span class="lineCov">        438 :         v.setProperty (id, value, um);</span></a>
+<a name="489"><span class="lineNum">     489 </span><span class="lineCov">       2408 : }</span></a>
 <a name="490"><span class="lineNum">     490 </span>            : </a>
 <a name="491"><span class="lineNum">     491 </span>            : /** Creates a deep copy of another ValueTree in an undoable way, maintaining the destination's parent. */</a>
-<a name="492"><span class="lineNum">     492 </span><span class="lineCov">        827 : static inline juce::ValueTree copyValueTree (juce::ValueTree&amp; dest, const juce::ValueTree&amp; src, juce::UndoManager* um)</span></a>
+<a name="492"><span class="lineNum">     492 </span><span class="lineCov">        828 : static inline juce::ValueTree copyValueTree (juce::ValueTree&amp; dest, const juce::ValueTree&amp; src, juce::UndoManager* um)</span></a>
 <a name="493"><span class="lineNum">     493 </span>            : {</a>
-<a name="494"><span class="lineNum">     494 </span><span class="lineCov">        827 :     if (! dest.getParent().isValid())</span></a>
+<a name="494"><span class="lineNum">     494 </span><span class="lineCov">        828 :     if (! dest.getParent().isValid())</span></a>
 <a name="495"><span class="lineNum">     495 </span>            :     {</a>
-<a name="496"><span class="lineNum">     496 </span><span class="lineCov">        827 :         dest = src.createCopy();</span></a>
+<a name="496"><span class="lineNum">     496 </span><span class="lineCov">        828 :         dest = src.createCopy();</span></a>
 <a name="497"><span class="lineNum">     497 </span>            :     }</a>
 <a name="498"><span class="lineNum">     498 </span>            :     else</a>
 <a name="499"><span class="lineNum">     499 </span>            :     {</a>
@@ -566,7 +566,7 @@
 <a name="504"><span class="lineNum">     504 </span><span class="lineNoCov">          0 :             dest.addChild (src.getChild (i).createCopy(), i, um);</span></a>
 <a name="505"><span class="lineNum">     505 </span>            :     }</a>
 <a name="506"><span class="lineNum">     506 </span>            : </a>
-<a name="507"><span class="lineNum">     507 </span><span class="lineCov">        827 :     return dest;</span></a>
+<a name="507"><span class="lineNum">     507 </span><span class="lineCov">        828 :     return dest;</span></a>
 <a name="508"><span class="lineNum">     508 </span>            : }</a>
 <a name="509"><span class="lineNum">     509 </span>            : </a>
 <a name="510"><span class="lineNum">     510 </span>            : template &lt;typename Predicate&gt;</a>
