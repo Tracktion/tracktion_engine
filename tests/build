@@ -73,7 +73,8 @@ function buildExample()
         APP_FILE=$APP_DIR/$BINARY_NAME
         APP_BINARY="$APP_FILE"
 
-        CMAKE_GENERATOR="Unix Makefiles"
+        # Use the default Unix Makefiles cmake generator
+        CMAKE_GENERATOR=""
         CMAKE_PLATFORM_ARGS="-DCMAKE_BUILD_TYPE=Release"
     elif [[ "$PLATFORM" == "mac" ]]; then
         BINARY_NAME="$PROJECT_NAME"
@@ -82,7 +83,7 @@ function buildExample()
         APP_FILE=$APP_DIR/$APP_NAME
         APP_BINARY="$APP_FILE/Contents/MacOS/${PROJECT_NAME}"
 
-        CMAKE_GENERATOR="Xcode"
+        CMAKE_GENERATOR="-G Xcode"
     elif [[ "$PLATFORM" == "windows" ]]; then
         BINARY_NAME="$PROJECT_NAME".exe
         APP_NAME="$BINARY_NAME"
@@ -90,16 +91,17 @@ function buildExample()
         APP_FILE="$APP_DIR/$BINARY_NAME"
         APP_BINARY="$APP_FILE"
 
-        CMAKE_GENERATOR="Visual Studio 15 2017"
+        # Use the default VS cmake generator
+        CMAKE_GENERATOR=""
         CMAKE_PLATFORM_ARGS="-A x64"
 
         if [ -z "$MSBUILD_EXE" ]; then
             echo MSBuild not found at "${MSBUILD_EXE}", using default
-            MSBUILD_EXE="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\MSBuild.exe"
+            MSBUILD_EXE=$("/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere" -latest -requires Microsoft.Component.MSBuild -find "MSBuild\**\Bin\MSBuild.exe")
         fi
 
         if [ ! -f "$MSBUILD_EXE" ]; then
-            echo MSBuild.exe not found at "${MSBUILD_EXE}"
+            echo MSBuild.exe not found at "${MSBUILD_EXE}" export this env var to the MSBuild.exe location on your system before running this script
             exit 1
         fi
     fi
@@ -127,7 +129,7 @@ function buildExample()
     pwd
 
     # Generate build files
-    cmake -B "$CMAKE_BUILD_DIR" -G "$CMAKE_GENERATOR" $CMAKE_PLATFORM_ARGS
+    cmake -B "$CMAKE_BUILD_DIR" $CMAKE_GENERATOR $CMAKE_PLATFORM_ARGS
 
     if [ "$DISABLE_BUILD" == "1" ]; then
         echo INFO: Not building example: ${APP_FILE}

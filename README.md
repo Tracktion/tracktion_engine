@@ -28,6 +28,7 @@ $ git clone --recurse-submodules https://github.com/Tracktion/tracktion_engine.g
 ## Examples
 Example projects are located in `/examples`. These are provided as JUCE PIPs, and CMakeLists.txt files to build them using CMake. You will need CMake installed to generate the examples.
 To generate all the examples for the running platform use the script in `/tests`.
+These are bash scripts so if you're on Windows you can use the `Git Bash` shell that comes with Git to run the following.
 ```
 $ cd tests
 $ ./generate_examples
