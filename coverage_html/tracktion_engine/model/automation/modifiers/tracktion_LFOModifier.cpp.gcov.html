@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-02 19:54:23</td>
+            <td class="headerValue">2022-01-03 16:54:40</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">16</td>
@@ -291,7 +291,7 @@
 <a name="229"><span class="lineNum">     229 </span><span class="lineCov">         16 : }</span></a>
 <a name="230"><span class="lineNum">     230 </span>            : </a>
 <a name="231"><span class="lineNum">     231 </span>            : //==============================================================================</a>
-<a name="232"><span class="lineNum">     232 </span><span class="lineCov">     148360 : float LFOModifier::getCurrentValue()         { return currentValue.load (std::memory_order_acquire); }</span></a>
+<a name="232"><span class="lineNum">     232 </span><span class="lineCov">     148016 : float LFOModifier::getCurrentValue()         { return currentValue.load (std::memory_order_acquire); }</span></a>
 <a name="233"><span class="lineNum">     233 </span><span class="lineNoCov">          0 : float LFOModifier::getCurrentPhase() const   { return currentPhase.load (std::memory_order_acquire); }</span></a>
 <a name="234"><span class="lineNum">     234 </span>            : </a>
 <a name="235"><span class="lineNum">     235 </span><span class="lineCov">         16 : AutomatableParameter::ModifierAssignment* LFOModifier::createAssignment (const juce::ValueTree&amp; v)</span></a>
@@ -299,12 +299,12 @@
 <a name="237"><span class="lineNum">     237 </span><span class="lineCov">         16 :     return new Assignment (v, *this);</span></a>
 <a name="238"><span class="lineNum">     238 </span>            : }</a>
 <a name="239"><span class="lineNum">     239 </span>            : </a>
-<a name="240"><span class="lineNum">     240 </span><span class="lineCov">      74164 : void LFOModifier::applyToBuffer (const PluginRenderContext&amp; prc)</span></a>
+<a name="240"><span class="lineNum">     240 </span><span class="lineCov">      73992 : void LFOModifier::applyToBuffer (const PluginRenderContext&amp; prc)</span></a>
 <a name="241"><span class="lineNum">     241 </span>            : {</a>
-<a name="242"><span class="lineNum">     242 </span><span class="lineCov">      74164 :     if (prc.bufferForMidiMessages == nullptr)</span></a>
+<a name="242"><span class="lineNum">     242 </span><span class="lineCov">      73992 :     if (prc.bufferForMidiMessages == nullptr)</span></a>
 <a name="243"><span class="lineNum">     243 </span>            :         return;</a>
 <a name="244"><span class="lineNum">     244 </span>            :     </a>
-<a name="245"><span class="lineNum">     245 </span><span class="lineCov">      74164 :     for (auto&amp; m : *prc.bufferForMidiMessages)</span></a>
+<a name="245"><span class="lineNum">     245 </span><span class="lineCov">      73992 :     for (auto&amp; m : *prc.bufferForMidiMessages)</span></a>
 <a name="246"><span class="lineNum">     246 </span><span class="lineNoCov">          0 :         if (m.isNoteOn())</span></a>
 <a name="247"><span class="lineNum">     247 </span><span class="lineNoCov">          0 :             modifierTimer-&gt;resync (prc.bufferNumSamples / getSampleRate());</span></a>
 <a name="248"><span class="lineNum">     248 </span>            : }</a>
