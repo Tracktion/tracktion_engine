@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-04 14:57:55</td>
+            <td class="headerValue">2022-01-04 16:49:15</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -98,7 +98,7 @@
 <a name="36"><span class="lineNum">      36 </span>            : </a>
 <a name="37"><span class="lineNum">      37 </span>            :     double getStart() const                 { return start; }</a>
 <a name="38"><span class="lineNum">      38 </span>            :     double getEnd() const                   { return end; }</a>
-<a name="39"><span class="lineNum">      39 </span><span class="lineCov">     613015 :     double getLength() const                { return end - start; }</span></a>
+<a name="39"><span class="lineNum">      39 </span><span class="lineCov">     613007 :     double getLength() const                { return end - start; }</span></a>
 <a name="40"><span class="lineNum">      40 </span><span class="lineNoCov">          0 :     double getCentre() const                { return (start + end) * 0.5; }</span></a>
 <a name="41"><span class="lineNum">      41 </span>            :     double clipValue (double value) const   { return juce::jlimit (start, end, value); }</a>
 <a name="42"><span class="lineNum">      42 </span>            : </a>
@@ -107,7 +107,7 @@
 <a name="45"><span class="lineNum">      45 </span><span class="lineNoCov">          0 :     bool operator== (const EditTimeRange&amp; other) const  { return start == other.start &amp;&amp; end == other.end; }</span></a>
 <a name="46"><span class="lineNum">      46 </span>            :     bool operator!= (const EditTimeRange&amp; other) const  { return ! operator== (other); }</a>
 <a name="47"><span class="lineNum">      47 </span>            : </a>
-<a name="48"><span class="lineNum">      48 </span><span class="lineCov">     121700 :     bool overlaps (const EditTimeRange&amp; other) const    { return other.start &lt; end &amp;&amp; start &lt; other.end; }</span></a>
+<a name="48"><span class="lineNum">      48 </span><span class="lineCov">     121564 :     bool overlaps (const EditTimeRange&amp; other) const    { return other.start &lt; end &amp;&amp; start &lt; other.end; }</span></a>
 <a name="49"><span class="lineNum">      49 </span><span class="lineNoCov">          0 :     bool contains (const EditTimeRange&amp; other) const    { return other.start &gt;= start &amp;&amp; other.end &lt;= end; }</span></a>
 <a name="50"><span class="lineNum">      50 </span><span class="lineCov">       3760 :     bool contains (double time) const                   { return time &gt;= start &amp;&amp; time &lt; end; }</span></a>
 <a name="51"><span class="lineNum">      51 </span><span class="lineCov">          6 :     bool containsInclusive (double time) const          { return time &gt;= start &amp;&amp; time &lt;= end; }</span></a>
@@ -125,7 +125,7 @@
 <a name="63"><span class="lineNum">      63 </span>            :     EditTimeRange withLength (double newLength) const;</a>
 <a name="64"><span class="lineNum">      64 </span>            : </a>
 <a name="65"><span class="lineNum">      65 </span>            :     EditTimeRange operator+ (double amount) const;</a>
-<a name="66"><span class="lineNum">      66 </span><span class="lineCov">     162516 :     EditTimeRange operator- (double amount) const       { return operator+ (-amount); }</span></a>
+<a name="66"><span class="lineNum">      66 </span><span class="lineCov">     162226 :     EditTimeRange operator- (double amount) const       { return operator+ (-amount); }</span></a>
 <a name="67"><span class="lineNum">      67 </span>            : };</a>
 <a name="68"><span class="lineNum">      68 </span>            : </a>
 <a name="69"><span class="lineNum">      69 </span>            : //==============================================================================</a>
