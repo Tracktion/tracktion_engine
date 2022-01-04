@@ -11,7 +11,7 @@
 #if TRACKTION_UNIT_TESTS
 
 // Enable this to dump the output of the current test file to the desktop
-#define TIMESTRETCHER_WRITE_WRITE_TEST_FILES 1
+#define TIMESTRETCHER_WRITE_WRITE_TEST_FILES 0
 
 //==============================================================================
 //==============================================================================
