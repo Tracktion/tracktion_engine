@@ -46,6 +46,10 @@ Once you're ready to dive in to the code, open the IDE files and have a read thr
 ## Documentation
 We are still in the process of fleshing out Doxygen formatted comments but the Doxygen generated documentation can be found here: https://tracktion.github.io/tracktion_engine/modules.html
 
+## Benchmarks
+We're in the process of creating a portal to view and examine our benchmarks. This is really for our own internal use but might be of interest to some people:
+https://tracktion.github.io/tracktion_benchmarks
+
 ## Contributing
 Tracktion Engine is provided in JUCE module format, for bug reports and features requests, please visit the [JUCE Forum and post using the Tracktion Engine category](https://forum.juce.com/c/tracktion-engine) -
 the Tracktion Engine developers are active there and will read every post and respond accordingly.
