@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-04 14:24:41</td>
+            <td class="headerValue">2022-01-04 14:57:55</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
@@ -96,25 +96,25 @@
 <a name="34"><span class="lineNum">      34 </span>            :         : levels (std::move (l)) {}</a>
 <a name="35"><span class="lineNum">      35 </span>            : </a>
 <a name="36"><span class="lineNum">      36 </span>            :     /** Returns the clip's absolute gain. */</a>
-<a name="37"><span class="lineNum">      37 </span><span class="lineCov">    1006100 :     float getGain() const noexcept              { return levels ? dbToGain (levels-&gt;dbGain) : 1.0f; }</span></a>
+<a name="37"><span class="lineNum">      37 </span><span class="lineCov">    1006610 :     float getGain() const noexcept              { return levels ? dbToGain (levels-&gt;dbGain) : 1.0f; }</span></a>
 <a name="38"><span class="lineNum">      38 </span>            : </a>
 <a name="39"><span class="lineNum">      39 </span>            :     /** Returns the clip's pan from -1.0 to 1.0. */</a>
-<a name="40"><span class="lineNum">      40 </span><span class="lineCov">     533080 :     float getPan() const noexcept               { return levels ? levels-&gt;pan.get() : 0.0f; }</span></a>
+<a name="40"><span class="lineNum">      40 </span><span class="lineCov">     533079 :     float getPan() const noexcept               { return levels ? levels-&gt;pan.get() : 0.0f; }</span></a>
 <a name="41"><span class="lineNum">      41 </span>            : </a>
 <a name="42"><span class="lineNum">      42 </span>            :     /** Returns true if the clip is muted. */</a>
-<a name="43"><span class="lineNum">      43 </span><span class="lineCov">     680688 :     bool isMute() const noexcept                { return levels &amp;&amp; levels-&gt;mute.get(); }</span></a>
+<a name="43"><span class="lineNum">      43 </span><span class="lineCov">     680843 :     bool isMute() const noexcept                { return levels &amp;&amp; levels-&gt;mute.get(); }</span></a>
 <a name="44"><span class="lineNum">      44 </span>            : </a>
 <a name="45"><span class="lineNum">      45 </span>            :     /** Returns the clip's gain if the clip is not muted. */</a>
-<a name="46"><span class="lineNum">      46 </span><span class="lineCov">     858522 :     float getGainIncludingMute() const noexcept { return isMute() ? 0.0f : getGain(); }</span></a>
+<a name="46"><span class="lineNum">      46 </span><span class="lineCov">     858875 :     float getGainIncludingMute() const noexcept { return isMute() ? 0.0f : getGain(); }</span></a>
 <a name="47"><span class="lineNum">      47 </span>            : </a>
 <a name="48"><span class="lineNum">      48 </span>            :     /** Reutrns the left and right gains taking in to account mute and pan values. */</a>
 <a name="49"><span class="lineNum">      49 </span>            :     void getLeftAndRightGains (float&amp; left, float&amp; right) const noexcept</a>
 <a name="50"><span class="lineNum">      50 </span>            :     {</a>
-<a name="51"><span class="lineNum">      51 </span><span class="lineCov">     533080 :         const float g = getGainIncludingMute();</span></a>
-<a name="52"><span class="lineNum">      52 </span><span class="lineCov">     533080 :         const float pv = getPan() * g;</span></a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineCov">     533080 :         left  = g - pv;</span></a>
-<a name="54"><span class="lineNum">      54 </span><span class="lineCov">     533080 :         right = g + pv;</span></a>
-<a name="55"><span class="lineNum">      55 </span><span class="lineCov">     533080 :     }</span></a>
+<a name="51"><span class="lineNum">      51 </span><span class="lineCov">     533079 :         const float g = getGainIncludingMute();</span></a>
+<a name="52"><span class="lineNum">      52 </span><span class="lineCov">     533079 :         const float pv = getPan() * g;</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">     533079 :         left  = g - pv;</span></a>
+<a name="54"><span class="lineNum">      54 </span><span class="lineCov">     533079 :         right = g + pv;</span></a>
+<a name="55"><span class="lineNum">      55 </span><span class="lineCov">     533079 :     }</span></a>
 <a name="56"><span class="lineNum">      56 </span>            : </a>
 <a name="57"><span class="lineNum">      57 </span>            : private:</a>
 <a name="58"><span class="lineNum">      58 </span>            :     std::shared_ptr&lt;ClipLevel&gt; levels;</a>
@@ -319,7 +319,7 @@
 <a name="257"><span class="lineNum">     257 </span>            : </a>
 <a name="258"><span class="lineNum">     258 </span>            :     //==============================================================================</a>
 <a name="259"><span class="lineNum">     259 </span>            :     /** Returns true if the clip is part of a group. */</a>
-<a name="260"><span class="lineNum">     260 </span><span class="lineCov">        116 :     bool isGrouped() const override                 { return groupID.get().isValid(); }</span></a>
+<a name="260"><span class="lineNum">     260 </span><span class="lineCov">        115 :     bool isGrouped() const override                 { return groupID.get().isValid(); }</span></a>
 <a name="261"><span class="lineNum">     261 </span>            :     /** Returns the parent TrackItem if part of a group. */</a>
 <a name="262"><span class="lineNum">     262 </span>            :     TrackItem* getGroupParent() const override;</a>
 <a name="263"><span class="lineNum">     263 </span>            :     /** Sets the clip to be part of a group. */</a>
