@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-04 16:49:15</td>
+            <td class="headerValue">2022-01-04 17:08:32</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
@@ -296,10 +296,10 @@
 <a name="234"><span class="lineNum">     234 </span>            : {</a>
 <a name="235"><span class="lineNum">     235 </span>            :     ExtraVSTCallbacks (Edit&amp; ed) : edit (ed) {}</a>
 <a name="236"><span class="lineNum">     236 </span>            : </a>
-<a name="237"><span class="lineNum">     237 </span>            :     int64_t getTempoAt (SampleCount samplePos) override</a>
+<a name="237"><span class="lineNum">     237 </span>            :     juce::int64 getTempoAt (juce::int64 samplePos) override</a>
 <a name="238"><span class="lineNum">     238 </span>            :     {</a>
 <a name="239"><span class="lineNum">     239 </span>            :         auto sampleRate = edit.engine.getDeviceManager().getSampleRate();</a>
-<a name="240"><span class="lineNum">     240 </span>            :         return (int64_t) (10000.0 * edit.tempoSequence.getTempoAt (samplePos / sampleRate).getBpm());</a>
+<a name="240"><span class="lineNum">     240 </span>            :         return (juce::int64) (10000.0 * edit.tempoSequence.getTempoAt (samplePos / sampleRate).getBpm());</a>
 <a name="241"><span class="lineNum">     241 </span>            :     }</a>
 <a name="242"><span class="lineNum">     242 </span>            : </a>
 <a name="243"><span class="lineNum">     243 </span>            :     // returns 0: not supported, 1: off, 2:read, 3:write, 4:read/write</a>

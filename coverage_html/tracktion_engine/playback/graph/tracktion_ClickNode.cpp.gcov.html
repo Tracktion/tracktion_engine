@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-04 16:49:15</td>
+            <td class="headerValue">2022-01-04 17:08:32</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">12</td>
@@ -301,12 +301,12 @@
 <a name="239"><span class="lineNum">     239 </span><span class="lineCov">         12 :     return true;</span></a>
 <a name="240"><span class="lineNum">     240 </span>            : }</a>
 <a name="241"><span class="lineNum">     241 </span>            : </a>
-<a name="242"><span class="lineNum">     242 </span><span class="lineCov">       3864 : void ClickNode::process (ProcessContext&amp; pc)</span></a>
+<a name="242"><span class="lineNum">     242 </span><span class="lineCov">       3897 : void ClickNode::process (ProcessContext&amp; pc)</span></a>
 <a name="243"><span class="lineNum">     243 </span>            : {</a>
 <a name="244"><span class="lineNum">     244 </span>            :     SCOPED_REALTIME_CHECK</a>
 <a name="245"><span class="lineNum">     245 </span>            : </a>
-<a name="246"><span class="lineNum">     246 </span><span class="lineCov">       3864 :     if (playHead.isUserDragging() || ! playHead.isPlaying())</span></a>
-<a name="247"><span class="lineNum">     247 </span><span class="lineCov">        108 :         return;</span></a>
+<a name="246"><span class="lineNum">     246 </span><span class="lineCov">       3897 :     if (playHead.isUserDragging() || ! playHead.isPlaying())</span></a>
+<a name="247"><span class="lineNum">     247 </span><span class="lineCov">        141 :         return;</span></a>
 <a name="248"><span class="lineNum">     248 </span>            : </a>
 <a name="249"><span class="lineNum">     249 </span><span class="lineCov">       3756 :     const auto splitTimelinePosition = referenceSampleRangeToSplitTimelineRange (playHead, pc.referenceSampleRange);</span></a>
 <a name="250"><span class="lineNum">     250 </span><span class="lineCov">       3756 :     const EditTimeRange editTime (tracktion_graph::sampleToTime (splitTimelinePosition.timelineRange1, sampleRate));</span></a>
