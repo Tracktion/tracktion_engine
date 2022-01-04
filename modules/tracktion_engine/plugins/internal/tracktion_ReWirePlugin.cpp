@@ -1014,7 +1014,7 @@ bool ReWireSystem::tryToCloseAllOpenDevices()
         for (int j = 20; --j >= 0;)
         {
             RWMIdle();
-            Thread::sleep (10);
+            juce::Thread::sleep (10);
         }
     }
    #endif
