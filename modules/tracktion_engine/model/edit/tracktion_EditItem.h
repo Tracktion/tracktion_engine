@@ -159,7 +159,7 @@ namespace juce
     };
 }
 
-#if ! DOXYGEN
+#ifndef DOXYGEN
 namespace std
 {
     template<>

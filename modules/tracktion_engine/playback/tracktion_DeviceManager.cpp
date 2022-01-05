@@ -829,7 +829,7 @@ int DeviceManager::getBlockSize() const
     if (auto device = deviceManager.getCurrentAudioDevice())
         return device->getCurrentBufferSizeSamples();
 
-    return 16;
+    return 256;
 }
 
 double DeviceManager::getBlockSizeMs() const

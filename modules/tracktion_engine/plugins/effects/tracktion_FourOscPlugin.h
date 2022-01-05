@@ -194,6 +194,7 @@ public:
     bool takesAudioInput() override                     { return false; }
     bool isSynth() override                             { return true; }
     bool producesAudioWhenNoAudioInput() override       { return true; }
+    double getTailLength() const override               { return ampRelease->getCurrentValue(); }
 
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
 

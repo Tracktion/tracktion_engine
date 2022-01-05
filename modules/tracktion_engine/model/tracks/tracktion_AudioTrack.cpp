@@ -887,6 +887,17 @@ void AudioTrack::freezeTrack()
     auto freezeFile = getFreezeFile();
     freezeFile.deleteFile();
 
+    juce::Array<EditItemID> trackIDs { itemID };
+    juce::Array<Clip*> clips (getClips());
+
+    for (auto inputTrack : getInputTracks())
+    {
+        trackIDs.addIfNotAlreadyThere (inputTrack->itemID);
+
+        if (auto ct = dynamic_cast<ClipTrack*> (inputTrack))
+            clips.addArray (ct->getClips());
+    }
+
     Renderer::Parameters r (edit);
     r.tracksToDo = trackNum;
     r.destFile = freezeFile;
@@ -894,6 +905,7 @@ void AudioTrack::freezeTrack()
     r.blockSizeForAudio = dm.getBlockSize();
     r.sampleRateForAudio = dm.getSampleRate();
     r.time = { 0.0, getLengthIncludingInputTracks() };
+    r.endAllowance = RenderOptions::findEndAllowance (edit, &trackIDs, nullptr);
     r.canRenderInMono = true;
     r.mustRenderInMono = false;
     r.usePlugins = true;
