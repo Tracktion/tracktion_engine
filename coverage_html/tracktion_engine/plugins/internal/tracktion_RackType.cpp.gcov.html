@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-06 13:55:28</td>
+            <td class="headerValue">2022-01-06 18:09:04</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">69</td>
@@ -531,9 +531,9 @@
 <a name="469"><span class="lineNum">     469 </span>            : {</a>
 <a name="470"><span class="lineNum">     470 </span><span class="lineCov">       3518 :     juce::Array&lt;Plugin*&gt; list;</span></a>
 <a name="471"><span class="lineNum">     471 </span>            : </a>
-<a name="472"><span class="lineNum">     472 </span><span class="lineCov">       6992 :     for (auto i : pluginList-&gt;objects)</span></a>
-<a name="473"><span class="lineNum">     473 </span><span class="lineCov">       3474 :         if (i-&gt;plugin != nullptr)</span></a>
-<a name="474"><span class="lineNum">     474 </span><span class="lineCov">       3474 :             list.add (i-&gt;plugin.get());</span></a>
+<a name="472"><span class="lineNum">     472 </span><span class="lineCov">       6954 :     for (auto i : pluginList-&gt;objects)</span></a>
+<a name="473"><span class="lineNum">     473 </span><span class="lineCov">       3436 :         if (i-&gt;plugin != nullptr)</span></a>
+<a name="474"><span class="lineNum">     474 </span><span class="lineCov">       3436 :             list.add (i-&gt;plugin.get());</span></a>
 <a name="475"><span class="lineNum">     475 </span>            : </a>
 <a name="476"><span class="lineNum">     476 </span><span class="lineCov">       3518 :     return list;</span></a>
 <a name="477"><span class="lineNum">     477 </span>            : }</a>
@@ -1091,8 +1091,8 @@
 <a name="1029"><span class="lineNum">    1029 </span>            : </a>
 <a name="1030"><span class="lineNum">    1030 </span><span class="lineCov">       2424 :     numberOfInstancesInEdit = 0;</span></a>
 <a name="1031"><span class="lineNum">    1031 </span>            : </a>
-<a name="1032"><span class="lineNum">    1032 </span><span class="lineCov">      12426 :     for (auto p : getAllPlugins (edit, false))</span></a>
-<a name="1033"><span class="lineNum">    1033 </span><span class="lineCov">       7578 :         if (auto rf = dynamic_cast&lt;RackInstance*&gt; (p))</span></a>
+<a name="1032"><span class="lineNum">    1032 </span><span class="lineCov">      12388 :     for (auto p : getAllPlugins (edit, false))</span></a>
+<a name="1033"><span class="lineNum">    1033 </span><span class="lineCov">       7540 :         if (auto rf = dynamic_cast&lt;RackInstance*&gt; (p))</span></a>
 <a name="1034"><span class="lineNum">    1034 </span><span class="lineNoCov">          0 :             if (rf-&gt;type.get() == this)</span></a>
 <a name="1035"><span class="lineNum">    1035 </span><span class="lineNoCov">          0 :                 ++numberOfInstancesInEdit;</span></a>
 <a name="1036"><span class="lineNum">    1036 </span><span class="lineCov">       2424 : }</span></a>
