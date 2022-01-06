@@ -128,7 +128,8 @@ void ClickGenerator::prepareToPlay (double newSampleRate, double startTime)
 void ClickGenerator::processBlock (choc::buffer::ChannelArrayView<float>* destBuffer,
                                    MidiMessageArray* bufferForMidiMessages, EditTimeRange editTime)
 {
-    if (isMutedAtTime (editTime.getStart()))
+    // Use the end time here to avoid the end of blocks playing the start of a beat
+    if (isMutedAtTime (editTime.getEnd()))
         return;
 
     auto gain = edit.getClickTrackVolume();
