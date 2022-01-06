@@ -600,7 +600,7 @@ TransportControl::TransportControl (Edit& ed, const juce::ValueTree& v)
     fileFlushTimer = std::make_unique<FileFlushTimer> (*this);
 
     activeTransportControls.add (this);
-    startTimerHz (25);
+    startTimerHz (50);
 }
 
 TransportControl::~TransportControl()
