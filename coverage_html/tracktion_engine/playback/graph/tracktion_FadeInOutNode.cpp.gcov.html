@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">57</td>
+            <td class="headerCovTableEntry">61</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-06 08:16:15</td>
+            <td class="headerValue">2022-01-06 10:55:47</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -186,57 +186,65 @@
 <a name="124"><span class="lineNum">     124 </span>            :                                                    (float) alpha2);</a>
 <a name="125"><span class="lineNum">     125 </span>            :         }</a>
 <a name="126"><span class="lineNum">     126 </span>            :     }</a>
-<a name="127"><span class="lineNum">     127 </span>            :     </a>
-<a name="128"><span class="lineNum">     128 </span><span class="lineNoCov">          0 :     if (timelineRange.intersects (fadeOutSampleRange) &amp;&amp; fadeOutSampleRange.getLength() &gt; 0)</span></a>
-<a name="129"><span class="lineNum">     129 </span>            :     {</a>
-<a name="130"><span class="lineNum">     130 </span>            :         double alpha1 = 0;</a>
-<a name="131"><span class="lineNum">     131 </span><span class="lineNoCov">          0 :         auto startSamp = int (fadeOutSampleRange.getStart() - timelineRange.getStart());</span></a>
-<a name="132"><span class="lineNum">     132 </span>            : </a>
-<a name="133"><span class="lineNum">     133 </span><span class="lineNoCov">          0 :         if (startSamp &lt;= 0)</span></a>
-<a name="134"><span class="lineNum">     134 </span>            :         {</a>
-<a name="135"><span class="lineNum">     135 </span>            :             startSamp = 0;</a>
-<a name="136"><span class="lineNum">     136 </span><span class="lineNoCov">          0 :             alpha1 = (timelineRange.getStart() - fadeOutSampleRange.getStart()) / (double) fadeOutSampleRange.getLength();</span></a>
-<a name="137"><span class="lineNum">     137 </span>            :         }</a>
+<a name="127"><span class="lineNum">     127 </span>            : </a>
+<a name="128"><span class="lineNum">     128 </span><span class="lineNoCov">          0 :     const bool pastFadeOutTime = timelineRange.getEnd() &gt;= fadeOutSampleRange.getEnd();</span></a>
+<a name="129"><span class="lineNum">     129 </span>            : </a>
+<a name="130"><span class="lineNum">     130 </span><span class="lineNoCov">          0 :     if (clearExtraSamples &amp;&amp; pastFadeOutTime)</span></a>
+<a name="131"><span class="lineNum">     131 </span>            :     {</a>
+<a name="132"><span class="lineNum">     132 </span>            :         destAudioBlock.clear();</a>
+<a name="133"><span class="lineNum">     133 </span>            :     }</a>
+<a name="134"><span class="lineNum">     134 </span><span class="lineNoCov">          0 :     else if (timelineRange.intersects (fadeOutSampleRange) &amp;&amp; fadeOutSampleRange.getLength() &gt; 0)</span></a>
+<a name="135"><span class="lineNum">     135 </span>            :     {</a>
+<a name="136"><span class="lineNum">     136 </span>            :         double alpha1 = 0;</a>
+<a name="137"><span class="lineNum">     137 </span><span class="lineNoCov">          0 :         auto startSamp = int (fadeOutSampleRange.getStart() - timelineRange.getStart());</span></a>
 <a name="138"><span class="lineNum">     138 </span>            : </a>
-<a name="139"><span class="lineNum">     139 </span>            :         uint32_t endSamp;</a>
-<a name="140"><span class="lineNum">     140 </span>            :         double alpha2;</a>
-<a name="141"><span class="lineNum">     141 </span>            : </a>
-<a name="142"><span class="lineNum">     142 </span><span class="lineNoCov">          0 :         if (timelineRange.getEnd() &gt;= fadeOutSampleRange.getEnd())</span></a>
-<a name="143"><span class="lineNum">     143 </span>            :         {</a>
-<a name="144"><span class="lineNum">     144 </span><span class="lineNoCov">          0 :             endSamp = (uint32_t) (timelineRange.getEnd() - fadeOutSampleRange.getEnd());</span></a>
-<a name="145"><span class="lineNum">     145 </span>            :             alpha2 = 1.0;</a>
-<a name="146"><span class="lineNum">     146 </span>            : </a>
-<a name="147"><span class="lineNum">     147 </span><span class="lineNoCov">          0 :             if (clearExtraSamples &amp;&amp; endSamp &lt; numSamples)</span></a>
-<a name="148"><span class="lineNum">     148 </span>            :                 destAudioBlock.fromFrame (endSamp).clear();</a>
-<a name="149"><span class="lineNum">     149 </span>            :         }</a>
-<a name="150"><span class="lineNum">     150 </span>            :         else</a>
-<a name="151"><span class="lineNum">     151 </span>            :         {</a>
-<a name="152"><span class="lineNum">     152 </span>            :             endSamp = numSamples;</a>
-<a name="153"><span class="lineNum">     153 </span><span class="lineNoCov">          0 :             alpha2 = (timelineRange.getEnd() - fadeOutSampleRange.getStart()) / (double) fadeOutSampleRange.getLength();</span></a>
-<a name="154"><span class="lineNum">     154 </span>            :         }</a>
-<a name="155"><span class="lineNum">     155 </span>            : </a>
-<a name="156"><span class="lineNum">     156 </span><span class="lineNoCov">          0 :         if (endSamp &gt; (uint32_t) startSamp)</span></a>
+<a name="139"><span class="lineNum">     139 </span><span class="lineNoCov">          0 :         if (startSamp &lt;= 0)</span></a>
+<a name="140"><span class="lineNum">     140 </span>            :         {</a>
+<a name="141"><span class="lineNum">     141 </span>            :             startSamp = 0;</a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineNoCov">          0 :             alpha1 = (timelineRange.getStart() - fadeOutSampleRange.getStart()) / (double) fadeOutSampleRange.getLength();</span></a>
+<a name="143"><span class="lineNum">     143 </span>            :         }</a>
+<a name="144"><span class="lineNum">     144 </span>            : </a>
+<a name="145"><span class="lineNum">     145 </span>            :         uint32_t endSamp;</a>
+<a name="146"><span class="lineNum">     146 </span>            :         double alpha2;</a>
+<a name="147"><span class="lineNum">     147 </span>            : </a>
+<a name="148"><span class="lineNum">     148 </span><span class="lineNoCov">          0 :         if (pastFadeOutTime)</span></a>
+<a name="149"><span class="lineNum">     149 </span>            :         {</a>
+<a name="150"><span class="lineNum">     150 </span><span class="lineNoCov">          0 :             endSamp = (uint32_t) (timelineRange.getEnd() - fadeOutSampleRange.getEnd());</span></a>
+<a name="151"><span class="lineNum">     151 </span>            :             alpha2 = 1.0;</a>
+<a name="152"><span class="lineNum">     152 </span>            : </a>
+<a name="153"><span class="lineNum">     153 </span><span class="lineNoCov">          0 :             if (clearExtraSamples &amp;&amp; endSamp &lt; numSamples)</span></a>
+<a name="154"><span class="lineNum">     154 </span>            :                 destAudioBlock.fromFrame (endSamp).clear();</a>
+<a name="155"><span class="lineNum">     155 </span>            :         }</a>
+<a name="156"><span class="lineNum">     156 </span>            :         else</a>
 <a name="157"><span class="lineNum">     157 </span>            :         {</a>
-<a name="158"><span class="lineNum">     158 </span><span class="lineNoCov">          0 :             auto buffer = tracktion_graph::toAudioBuffer (destAudioBlock);</span></a>
-<a name="159"><span class="lineNum">     159 </span><span class="lineNoCov">          0 :             AudioFadeCurve::applyCrossfadeSection (buffer,</span></a>
-<a name="160"><span class="lineNum">     160 </span><span class="lineNoCov">          0 :                                                    startSamp, (int) endSamp - startSamp,</span></a>
-<a name="161"><span class="lineNum">     161 </span>            :                                                    fadeOutType,</a>
-<a name="162"><span class="lineNum">     162 </span><span class="lineNoCov">          0 :                                                    juce::jlimit (0.0f, 1.0f, (float) (1.0 - alpha1)),</span></a>
-<a name="163"><span class="lineNum">     163 </span><span class="lineNoCov">          0 :                                                    juce::jlimit (0.0f, 1.0f, (float) (1.0 - alpha2)));</span></a>
-<a name="164"><span class="lineNum">     164 </span>            :         }</a>
-<a name="165"><span class="lineNum">     165 </span>            :     }</a>
-<a name="166"><span class="lineNum">     166 </span>            : }</a>
-<a name="167"><span class="lineNum">     167 </span>            : </a>
-<a name="168"><span class="lineNum">     168 </span><span class="lineNoCov">          0 : bool FadeInOutNode::renderingNeeded (const juce::Range&lt;int64_t&gt;&amp; timelineSampleRange) const</span></a>
-<a name="169"><span class="lineNum">     169 </span>            : {</a>
-<a name="170"><span class="lineNum">     170 </span><span class="lineNoCov">          0 :     if (! playHeadState.playHead.isPlaying())</span></a>
-<a name="171"><span class="lineNum">     171 </span>            :         return false;</a>
-<a name="172"><span class="lineNum">     172 </span>            : </a>
-<a name="173"><span class="lineNum">     173 </span><span class="lineNoCov">          0 :     return fadeInSampleRange.intersects (timelineSampleRange)</span></a>
-<a name="174"><span class="lineNum">     174 </span><span class="lineNoCov">          0 :         || fadeOutSampleRange.intersects (timelineSampleRange);</span></a>
-<a name="175"><span class="lineNum">     175 </span>            : }</a>
-<a name="176"><span class="lineNum">     176 </span>            : </a>
-<a name="177"><span class="lineNum">     177 </span>            : } // namespace tracktion_engine</a>
+<a name="158"><span class="lineNum">     158 </span>            :             endSamp = numSamples;</a>
+<a name="159"><span class="lineNum">     159 </span><span class="lineNoCov">          0 :             alpha2 = (timelineRange.getEnd() - fadeOutSampleRange.getStart()) / (double) fadeOutSampleRange.getLength();</span></a>
+<a name="160"><span class="lineNum">     160 </span>            :         }</a>
+<a name="161"><span class="lineNum">     161 </span>            : </a>
+<a name="162"><span class="lineNum">     162 </span><span class="lineNoCov">          0 :         if (endSamp &gt; (uint32_t) startSamp)</span></a>
+<a name="163"><span class="lineNum">     163 </span>            :         {</a>
+<a name="164"><span class="lineNum">     164 </span><span class="lineNoCov">          0 :             auto buffer = tracktion_graph::toAudioBuffer (destAudioBlock);</span></a>
+<a name="165"><span class="lineNum">     165 </span><span class="lineNoCov">          0 :             AudioFadeCurve::applyCrossfadeSection (buffer,</span></a>
+<a name="166"><span class="lineNum">     166 </span><span class="lineNoCov">          0 :                                                    startSamp, (int) endSamp - startSamp,</span></a>
+<a name="167"><span class="lineNum">     167 </span>            :                                                    fadeOutType,</a>
+<a name="168"><span class="lineNum">     168 </span><span class="lineNoCov">          0 :                                                    juce::jlimit (0.0f, 1.0f, (float) (1.0 - alpha1)),</span></a>
+<a name="169"><span class="lineNum">     169 </span><span class="lineNoCov">          0 :                                                    juce::jlimit (0.0f, 1.0f, (float) (1.0 - alpha2)));</span></a>
+<a name="170"><span class="lineNum">     170 </span>            :         }</a>
+<a name="171"><span class="lineNum">     171 </span>            :     }</a>
+<a name="172"><span class="lineNum">     172 </span>            : }</a>
+<a name="173"><span class="lineNum">     173 </span>            : </a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineNoCov">          0 : bool FadeInOutNode::renderingNeeded (const juce::Range&lt;int64_t&gt;&amp; timelineSampleRange) const</span></a>
+<a name="175"><span class="lineNum">     175 </span>            : {</a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineNoCov">          0 :     if (! playHeadState.playHead.isPlaying())</span></a>
+<a name="177"><span class="lineNum">     177 </span>            :         return false;</a>
+<a name="178"><span class="lineNum">     178 </span>            : </a>
+<a name="179"><span class="lineNum">     179 </span><span class="lineNoCov">          0 :     return fadeInSampleRange.intersects (timelineSampleRange)</span></a>
+<a name="180"><span class="lineNum">     180 </span><span class="lineNoCov">          0 :         || fadeOutSampleRange.intersects (timelineSampleRange)</span></a>
+<a name="181"><span class="lineNum">     181 </span><span class="lineNoCov">          0 :         || (clearExtraSamples &amp;&amp; (timelineSampleRange.getStart() &lt;= fadeInSampleRange.getStart()</span></a>
+<a name="182"><span class="lineNum">     182 </span><span class="lineNoCov">          0 :                                   || timelineSampleRange.getEnd() &gt;= fadeOutSampleRange.getEnd()));</span></a>
+<a name="183"><span class="lineNum">     183 </span>            : }</a>
+<a name="184"><span class="lineNum">     184 </span>            : </a>
+<a name="185"><span class="lineNum">     185 </span>            : } // namespace tracktion_engine</a>
 </pre>
       </td>
     </tr>
