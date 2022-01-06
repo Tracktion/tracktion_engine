@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">16</td>
+            <td class="headerCovTableEntry">19</td>
             <td class="headerCovTableEntry">58</td>
-            <td class="headerCovTableEntryLo">27.6 %</td>
+            <td class="headerCovTableEntryLo">32.8 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-04 17:08:32</td>
+            <td class="headerValue">2022-01-06 08:16:15</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">4</td>
+            <td class="headerCovTableEntry">7</td>
             <td class="headerCovTableEntry">41</td>
-            <td class="headerCovTableEntryLo">9.8 %</td>
+            <td class="headerCovTableEntryLo">17.1 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -96,25 +96,25 @@
 <a name="34"><span class="lineNum">      34 </span>            :         : levels (std::move (l)) {}</a>
 <a name="35"><span class="lineNum">      35 </span>            : </a>
 <a name="36"><span class="lineNum">      36 </span>            :     /** Returns the clip's absolute gain. */</a>
-<a name="37"><span class="lineNum">      37 </span><span class="lineCov">    1006940 :     float getGain() const noexcept              { return levels ? dbToGain (levels-&gt;dbGain) : 1.0f; }</span></a>
+<a name="37"><span class="lineNum">      37 </span><span class="lineCov">     513298 :     float getGain() const noexcept              { return levels ? dbToGain (levels-&gt;dbGain) : 1.0f; }</span></a>
 <a name="38"><span class="lineNum">      38 </span>            : </a>
 <a name="39"><span class="lineNum">      39 </span>            :     /** Returns the clip's pan from -1.0 to 1.0. */</a>
-<a name="40"><span class="lineNum">      40 </span><span class="lineCov">     533073 :     float getPan() const noexcept               { return levels ? levels-&gt;pan.get() : 0.0f; }</span></a>
+<a name="40"><span class="lineNum">      40 </span><span class="lineCov">      38244 :     float getPan() const noexcept               { return levels ? levels-&gt;pan.get() : 0.0f; }</span></a>
 <a name="41"><span class="lineNum">      41 </span>            : </a>
 <a name="42"><span class="lineNum">      42 </span>            :     /** Returns true if the clip is muted. */</a>
-<a name="43"><span class="lineNum">      43 </span><span class="lineCov">     680816 :     bool isMute() const noexcept                { return levels &amp;&amp; levels-&gt;mute.get(); }</span></a>
+<a name="43"><span class="lineNum">      43 </span><span class="lineCov">     186764 :     bool isMute() const noexcept                { return levels &amp;&amp; levels-&gt;mute.get(); }</span></a>
 <a name="44"><span class="lineNum">      44 </span>            : </a>
 <a name="45"><span class="lineNum">      45 </span>            :     /** Returns the clip's gain if the clip is not muted. */</a>
-<a name="46"><span class="lineNum">      46 </span><span class="lineCov">     859238 :     float getGainIncludingMute() const noexcept { return isMute() ? 0.0f : getGain(); }</span></a>
+<a name="46"><span class="lineNum">      46 </span><span class="lineCov">     364812 :     float getGainIncludingMute() const noexcept { return isMute() ? 0.0f : getGain(); }</span></a>
 <a name="47"><span class="lineNum">      47 </span>            : </a>
 <a name="48"><span class="lineNum">      48 </span>            :     /** Reutrns the left and right gains taking in to account mute and pan values. */</a>
 <a name="49"><span class="lineNum">      49 </span>            :     void getLeftAndRightGains (float&amp; left, float&amp; right) const noexcept</a>
 <a name="50"><span class="lineNum">      50 </span>            :     {</a>
-<a name="51"><span class="lineNum">      51 </span><span class="lineCov">     533079 :         const float g = getGainIncludingMute();</span></a>
-<a name="52"><span class="lineNum">      52 </span><span class="lineCov">     533073 :         const float pv = getPan() * g;</span></a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineCov">     533073 :         left  = g - pv;</span></a>
-<a name="54"><span class="lineNum">      54 </span><span class="lineCov">     533073 :         right = g + pv;</span></a>
-<a name="55"><span class="lineNum">      55 </span><span class="lineCov">     533073 :     }</span></a>
+<a name="51"><span class="lineNum">      51 </span><span class="lineCov">      38244 :         const float g = getGainIncludingMute();</span></a>
+<a name="52"><span class="lineNum">      52 </span><span class="lineCov">      38244 :         const float pv = getPan() * g;</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">      38244 :         left  = g - pv;</span></a>
+<a name="54"><span class="lineNum">      54 </span><span class="lineCov">      38244 :         right = g + pv;</span></a>
+<a name="55"><span class="lineNum">      55 </span><span class="lineCov">      38244 :     }</span></a>
 <a name="56"><span class="lineNum">      56 </span>            : </a>
 <a name="57"><span class="lineNum">      57 </span>            : private:</a>
 <a name="58"><span class="lineNum">      58 </span>            :     std::shared_ptr&lt;ClipLevel&gt; levels;</a>
@@ -193,7 +193,7 @@
 <a name="131"><span class="lineNum">     131 </span>            :     /** Returns the current source file, this is different to the SourceFileReference</a>
 <a name="132"><span class="lineNum">     132 </span>            :         as it could be a temporary comp file, clipFX, reverse render etc.</a>
 <a name="133"><span class="lineNum">     133 </span>            :     */</a>
-<a name="134"><span class="lineNum">     134 </span><span class="lineCov">        445 :     juce::File getCurrentSourceFile() const             { return currentSourceFile; }</span></a>
+<a name="134"><span class="lineNum">     134 </span><span class="lineCov">        455 :     juce::File getCurrentSourceFile() const             { return currentSourceFile; }</span></a>
 <a name="135"><span class="lineNum">     135 </span>            : </a>
 <a name="136"><span class="lineNum">     136 </span>            :     //==============================================================================</a>
 <a name="137"><span class="lineNum">     137 </span>            :     /** Returns an array of any ReferencedItem[s] e.g. audio files. */</a>
@@ -306,7 +306,7 @@
 <a name="244"><span class="lineNum">     244 </span>            : </a>
 <a name="245"><span class="lineNum">     245 </span>            :     //==============================================================================</a>
 <a name="246"><span class="lineNum">     246 </span>            :     /** Returns the speed ratio i.e. how quickly the clip plays back. */</a>
-<a name="247"><span class="lineNum">     247 </span><span class="lineCov">        438 :     double getSpeedRatio() const noexcept           { return speedRatio; }</span></a>
+<a name="247"><span class="lineNum">     247 </span><span class="lineCov">        448 :     double getSpeedRatio() const noexcept           { return speedRatio; }</span></a>
 <a name="248"><span class="lineNum">     248 </span>            :     </a>
 <a name="249"><span class="lineNum">     249 </span>            :     /** Sets a speed ratio i.e. how quickly the clip plays back. */</a>
 <a name="250"><span class="lineNum">     250 </span>            :     virtual void setSpeedRatio (double);</a>
@@ -319,7 +319,7 @@
 <a name="257"><span class="lineNum">     257 </span>            : </a>
 <a name="258"><span class="lineNum">     258 </span>            :     //==============================================================================</a>
 <a name="259"><span class="lineNum">     259 </span>            :     /** Returns true if the clip is part of a group. */</a>
-<a name="260"><span class="lineNum">     260 </span><span class="lineCov">        114 :     bool isGrouped() const override                 { return groupID.get().isValid(); }</span></a>
+<a name="260"><span class="lineNum">     260 </span><span class="lineCov">        110 :     bool isGrouped() const override                 { return groupID.get().isValid(); }</span></a>
 <a name="261"><span class="lineNum">     261 </span>            :     /** Returns the parent TrackItem if part of a group. */</a>
 <a name="262"><span class="lineNum">     262 </span>            :     TrackItem* getGroupParent() const override;</a>
 <a name="263"><span class="lineNum">     263 </span>            :     /** Sets the clip to be part of a group. */</a>
@@ -331,7 +331,7 @@
 <a name="269"><span class="lineNum">     269 </span>            : </a>
 <a name="270"><span class="lineNum">     270 </span>            :     //==============================================================================</a>
 <a name="271"><span class="lineNum">     271 </span>            :     /** Returns true if this clip is linked with any others. */</a>
-<a name="272"><span class="lineNum">     272 </span><span class="lineCov">        655 :     bool isLinked() const                           { return linkID.get().isNotEmpty(); }</span></a>
+<a name="272"><span class="lineNum">     272 </span><span class="lineCov">        662 :     bool isLinked() const                           { return linkID.get().isNotEmpty(); }</span></a>
 <a name="273"><span class="lineNum">     273 </span>            :     /** Sets the link ID to link this clip with others. */</a>
 <a name="274"><span class="lineNum">     274 </span>            :     void setLinkGroupID (juce::String newLinkID)    { linkID = newLinkID; }</a>
 <a name="275"><span class="lineNum">     275 </span>            :     /** Returns the link ID of this clip. */</a>
@@ -347,7 +347,7 @@
 <a name="285"><span class="lineNum">     285 </span>            :     /** Returns the colour property of this clip. */</a>
 <a name="286"><span class="lineNum">     286 </span>            :     virtual juce::Colour getColour() const;</a>
 <a name="287"><span class="lineNum">     287 </span>            :     /** Sets the colour property of this clip. */</a>
-<a name="288"><span class="lineNum">     288 </span><span class="lineCov">         85 :     void setColour (juce::Colour col)               { colour = col; }</span></a>
+<a name="288"><span class="lineNum">     288 </span><span class="lineCov">         86 :     void setColour (juce::Colour col)               { colour = col; }</span></a>
 <a name="289"><span class="lineNum">     289 </span>            : </a>
 <a name="290"><span class="lineNum">     290 </span>            :     //==============================================================================</a>
 <a name="291"><span class="lineNum">     291 </span>            :     /** Removes the given plugin from the clip if the clip supports plugins. */</a>
@@ -359,12 +359,12 @@
 <a name="297"><span class="lineNum">     297 </span><span class="lineNoCov">          0 :     virtual bool addClipPlugin (const Plugin::Ptr&amp;, SelectionManager&amp;)   { return false; }</span></a>
 <a name="298"><span class="lineNum">     298 </span>            : </a>
 <a name="299"><span class="lineNum">     299 </span>            :     /** Returns all the plugins on the clip. */</a>
-<a name="300"><span class="lineNum">     300 </span><span class="lineNoCov">          0 :     virtual Plugin::Array getAllPlugins()                      { return {}; }</span></a>
+<a name="300"><span class="lineNum">     300 </span><span class="lineCov">          4 :     virtual Plugin::Array getAllPlugins()                      { return {}; }</span></a>
 <a name="301"><span class="lineNum">     301 </span>            :     /** Sends an update to all plugins mirroing the one passed in. */</a>
-<a name="302"><span class="lineNum">     302 </span><span class="lineNoCov">          0 :     virtual void sendMirrorUpdateToAllPlugins (Plugin&amp;) const  {}</span></a>
+<a name="302"><span class="lineNum">     302 </span><span class="lineCov">          6 :     virtual void sendMirrorUpdateToAllPlugins (Plugin&amp;) const  {}</span></a>
 <a name="303"><span class="lineNum">     303 </span>            : </a>
 <a name="304"><span class="lineNum">     304 </span>            :     /** Returns the PluginList for this clip if it has one. */</a>
-<a name="305"><span class="lineNum">     305 </span><span class="lineNoCov">          0 :     virtual PluginList* getPluginList()                        { return {}; }</span></a>
+<a name="305"><span class="lineNum">     305 </span><span class="lineCov">          3 :     virtual PluginList* getPluginList()                        { return {}; }</span></a>
 <a name="306"><span class="lineNum">     306 </span>            : </a>
 <a name="307"><span class="lineNum">     307 </span>            :     //==============================================================================</a>
 <a name="308"><span class="lineNum">     308 </span>            :     /** Returns the default colour for this clip. */</a>
@@ -509,7 +509,7 @@
 <a name="447"><span class="lineNum">     447 </span>            :     template &lt;&gt;</a>
 <a name="448"><span class="lineNum">     448 </span>            :     struct VariantConverter&lt;tracktion_engine::Clip::SyncType&gt;</a>
 <a name="449"><span class="lineNum">     449 </span>            :     {</a>
-<a name="450"><span class="lineNum">     450 </span><span class="lineCov">         85 :         static tracktion_engine::Clip::SyncType fromVar (const var&amp; v)   { return (tracktion_engine::Clip::SyncType) static_cast&lt;int&gt; (v); }</span></a>
+<a name="450"><span class="lineNum">     450 </span><span class="lineCov">         86 :         static tracktion_engine::Clip::SyncType fromVar (const var&amp; v)   { return (tracktion_engine::Clip::SyncType) static_cast&lt;int&gt; (v); }</span></a>
 <a name="451"><span class="lineNum">     451 </span><span class="lineNoCov">          0 :         static var toVar (tracktion_engine::Clip::SyncType v)            { return static_cast&lt;int&gt; (v); }</span></a>
 <a name="452"><span class="lineNum">     452 </span>            :     };</a>
 <a name="453"><span class="lineNum">     453 </span>            : }</a>

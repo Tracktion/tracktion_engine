@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">4</td>
+            <td class="headerCovTableEntry">7</td>
             <td class="headerCovTableEntry">32</td>
-            <td class="headerCovTableEntryLo">12.5 %</td>
+            <td class="headerCovTableEntryLo">21.9 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-04 17:08:32</td>
+            <td class="headerValue">2022-01-06 08:16:15</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
@@ -334,19 +334,19 @@
 <a name="272"><span class="lineNum">     272 </span>            :     Returns the the time range that covers all the given TrackItems.</a>
 <a name="273"><span class="lineNum">     273 </span>            : */</a>
 <a name="274"><span class="lineNum">     274 </span>            : template &lt;typename ArrayType&gt;</a>
-<a name="275"><span class="lineNum">     275 </span><span class="lineCov">        792 : EditTimeRange findUnionOfEditTimeRanges (const ArrayType&amp; items)</span></a>
+<a name="275"><span class="lineNum">     275 </span><span class="lineCov">        804 : EditTimeRange findUnionOfEditTimeRanges (const ArrayType&amp; items)</span></a>
 <a name="276"><span class="lineNum">     276 </span>            : {</a>
-<a name="277"><span class="lineNum">     277 </span><span class="lineCov">        792 :     EditTimeRange total;</span></a>
+<a name="277"><span class="lineNum">     277 </span><span class="lineCov">        804 :     EditTimeRange total;</span></a>
 <a name="278"><span class="lineNum">     278 </span>            :     bool first = true;</a>
 <a name="279"><span class="lineNum">     279 </span>            : </a>
-<a name="280"><span class="lineNum">     280 </span><span class="lineCov">        792 :     for (auto&amp; item : items)</span></a>
+<a name="280"><span class="lineNum">     280 </span><span class="lineCov">        807 :     for (auto&amp; item : items)</span></a>
 <a name="281"><span class="lineNum">     281 </span>            :     {</a>
-<a name="282"><span class="lineNum">     282 </span><span class="lineNoCov">          0 :         auto time = item-&gt;getEditTimeRange();</span></a>
+<a name="282"><span class="lineNum">     282 </span><span class="lineCov">          3 :         auto time = item-&gt;getEditTimeRange();</span></a>
 <a name="283"><span class="lineNum">     283 </span>            : </a>
-<a name="284"><span class="lineNum">     284 </span><span class="lineNoCov">          0 :         if (first)</span></a>
+<a name="284"><span class="lineNum">     284 </span><span class="lineCov">          3 :         if (first)</span></a>
 <a name="285"><span class="lineNum">     285 </span>            :         {</a>
 <a name="286"><span class="lineNum">     286 </span>            :             first = false;</a>
-<a name="287"><span class="lineNum">     287 </span><span class="lineNoCov">          0 :             total = time;</span></a>
+<a name="287"><span class="lineNum">     287 </span><span class="lineCov">          3 :             total = time;</span></a>
 <a name="288"><span class="lineNum">     288 </span>            :         }</a>
 <a name="289"><span class="lineNum">     289 </span>            :         else</a>
 <a name="290"><span class="lineNum">     290 </span>            :         {</a>
@@ -354,7 +354,7 @@
 <a name="292"><span class="lineNum">     292 </span>            :         }</a>
 <a name="293"><span class="lineNum">     293 </span>            :     }</a>
 <a name="294"><span class="lineNum">     294 </span>            : </a>
-<a name="295"><span class="lineNum">     295 </span><span class="lineCov">        792 :     return total;</span></a>
+<a name="295"><span class="lineNum">     295 </span><span class="lineCov">        804 :     return total;</span></a>
 <a name="296"><span class="lineNum">     296 </span>            : }</a>
 <a name="297"><span class="lineNum">     297 </span>            : </a>
 <a name="298"><span class="lineNum">     298 </span>            : } // namespace tracktion_engine</a>

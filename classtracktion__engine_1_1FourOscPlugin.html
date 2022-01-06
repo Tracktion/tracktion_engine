@@ -176,6 +176,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a83489964d0e3eb390abe4c059bede483"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a838bc91e79f34ed9f360b0dee8ee0de4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1FourOscPlugin.html#a838bc91e79f34ed9f360b0dee8ee0de4">producesAudioWhenNoAudioInput</a> () override</td></tr>
 <tr class="separator:a838bc91e79f34ed9f360b0dee8ee0de4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb29a73dcbf515c8a70cc6f8345aaf88"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1FourOscPlugin.html#aeb29a73dcbf515c8a70cc6f8345aaf88">getTailLength</a> () const override</td></tr>
+<tr class="separator:aeb29a73dcbf515c8a70cc6f8345aaf88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aadff98f8a7302d6aea1bb1546a27fa54"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1FourOscPlugin.html#aadff98f8a7302d6aea1bb1546a27fa54">restorePluginStateFromValueTree</a> (const juce::ValueTree &amp;) override</td></tr>
 <tr class="separator:aadff98f8a7302d6aea1bb1546a27fa54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab4fe2dace14ab2ce022c3820e4dbc273"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1FourOscPlugin.html#ab4fe2dace14ab2ce022c3820e4dbc273">getCurrentTempo</a> ()</td></tr>
@@ -253,8 +255,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a6d1741e49102e7118e27ab109fb43fb9 inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afbce44fd6f67ca2af4b3c4bfc6a40233 inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#afbce44fd6f67ca2af4b3c4bfc6a40233">getLatencySeconds</a> ()</td></tr>
 <tr class="separator:afbce44fd6f67ca2af4b3c4bfc6a40233 inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9bf4119d5a51e064bef7f7b82326e75e inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#a9bf4119d5a51e064bef7f7b82326e75e">getTailLength</a> () const</td></tr>
-<tr class="separator:a9bf4119d5a51e064bef7f7b82326e75e inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1fa15dcc524ce17df7e13fda1083c8fc inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#a1fa15dcc524ce17df7e13fda1083c8fc">canSidechain</a> ()</td></tr>
 <tr class="separator:a1fa15dcc524ce17df7e13fda1083c8fc inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb6f522296753aa2edf7c72ce6b052ca inherit pub_methods_classtracktion__engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">juce::StringArray&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#acb6f522296753aa2edf7c72ce6b052ca">getInputChannelNames</a> ()</td></tr>
@@ -1282,6 +1282,35 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="aeb29a73dcbf515c8a70cc6f8345aaf88"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb29a73dcbf515c8a70cc6f8345aaf88">&#9670;&nbsp;</a></span>getTailLength()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double tracktion_engine::FourOscPlugin::getTailLength </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classtracktion__engine_1_1Plugin.html#a9bf4119d5a51e064bef7f7b82326e75e">tracktion_engine::Plugin</a>.</p>
+
+<p class="reference">References <a class="el" href="classtracktion__engine_1_1FourOscPlugin.html#af29d12d2c25fa3fa6c45c56b97eb9452">ampRelease</a>.</p>
+
+</div>
+</div>
 <a id="aadff98f8a7302d6aea1bb1546a27fa54"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aadff98f8a7302d6aea1bb1546a27fa54">&#9670;&nbsp;</a></span>restorePluginStateFromValueTree()</h2>
 
@@ -1901,6 +1930,8 @@ Additional Inherited Members</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1FourOscPlugin.html#aeb29a73dcbf515c8a70cc6f8345aaf88">getTailLength()</a>.</p>
 
 </div>
 </div>
@@ -2570,7 +2601,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jan 4 2022 16:57:26 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 6 2022 08:03:33 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

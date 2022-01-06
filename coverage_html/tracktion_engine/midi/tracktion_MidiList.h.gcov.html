@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">24</td>
             <td class="headerCovTableEntry">36</td>
-            <td class="headerCovTableEntryLo">0.0 %</td>
+            <td class="headerCovTableEntryLo">66.7 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-04 17:08:32</td>
+            <td class="headerValue">2022-01-06 08:16:15</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">19</td>
             <td class="headerCovTableEntry">36</td>
-            <td class="headerCovTableEntryLo">0.0 %</td>
+            <td class="headerCovTableEntryLo">52.8 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -220,7 +220,7 @@
 <a name="158"><span class="lineNum">     158 </span>            :     {</a>
 <a name="159"><span class="lineNum">     159 </span>            :         std::sort (notes.begin(), notes.end(),</a>
 <a name="160"><span class="lineNum">     160 </span><span class="lineNoCov">          0 :                    [] (const Type&amp; a, const Type&amp; b) { return a-&gt;getBeatPosition() &lt; b-&gt;getBeatPosition(); });</span></a>
-<a name="161"><span class="lineNum">     161 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="161"><span class="lineNum">     161 </span><span class="lineCov">          3 :     }</span></a>
 <a name="162"><span class="lineNum">     162 </span>            : </a>
 <a name="163"><span class="lineNum">     163 </span>            :     template &lt;typename Type&gt;</a>
 <a name="164"><span class="lineNum">     164 </span>            :     static void sortMidiEventsByNoteNumber (juce::Array&lt;Type&gt;&amp; notes)</a>
@@ -253,30 +253,30 @@
 <a name="191"><span class="lineNum">     191 </span>            :     template&lt;typename EventType&gt;</a>
 <a name="192"><span class="lineNum">     192 </span>            :     struct EventList : public ValueTreeObjectList&lt;EventType&gt;</a>
 <a name="193"><span class="lineNum">     193 </span>            :     {</a>
-<a name="194"><span class="lineNum">     194 </span><span class="lineNoCov">          0 :         EventList (const juce::ValueTree&amp; v)</span></a>
-<a name="195"><span class="lineNum">     195 </span><span class="lineNoCov">          0 :             : ValueTreeObjectList&lt;EventType&gt; (v)</span></a>
+<a name="194"><span class="lineNum">     194 </span><span class="lineCov">          3 :         EventList (const juce::ValueTree&amp; v)</span></a>
+<a name="195"><span class="lineNum">     195 </span><span class="lineCov">          3 :             : ValueTreeObjectList&lt;EventType&gt; (v)</span></a>
 <a name="196"><span class="lineNum">     196 </span>            :         {</a>
-<a name="197"><span class="lineNum">     197 </span><span class="lineNoCov">          0 :             ValueTreeObjectList&lt;EventType&gt;::rebuildObjects();</span></a>
-<a name="198"><span class="lineNum">     198 </span><span class="lineNoCov">          0 :         }</span></a>
+<a name="197"><span class="lineNum">     197 </span><span class="lineCov">          3 :             ValueTreeObjectList&lt;EventType&gt;::rebuildObjects();</span></a>
+<a name="198"><span class="lineNum">     198 </span><span class="lineCov">          3 :         }</span></a>
 <a name="199"><span class="lineNum">     199 </span>            : </a>
-<a name="200"><span class="lineNum">     200 </span><span class="lineNoCov">          0 :         ~EventList() override</span></a>
+<a name="200"><span class="lineNum">     200 </span><span class="lineCov">          6 :         ~EventList() override</span></a>
 <a name="201"><span class="lineNum">     201 </span>            :         {</a>
-<a name="202"><span class="lineNum">     202 </span><span class="lineNoCov">          0 :             ValueTreeObjectList&lt;EventType&gt;::freeObjects();</span></a>
-<a name="203"><span class="lineNum">     203 </span><span class="lineNoCov">          0 :         }</span></a>
+<a name="202"><span class="lineNum">     202 </span><span class="lineCov">          3 :             ValueTreeObjectList&lt;EventType&gt;::freeObjects();</span></a>
+<a name="203"><span class="lineNum">     203 </span><span class="lineCov">          9 :         }</span></a>
 <a name="204"><span class="lineNum">     204 </span>            : </a>
-<a name="205"><span class="lineNum">     205 </span><span class="lineNoCov">          0 :         EventType* getEventFor (const juce::ValueTree&amp; v)</span></a>
+<a name="205"><span class="lineNum">     205 </span><span class="lineCov">          1 :         EventType* getEventFor (const juce::ValueTree&amp; v)</span></a>
 <a name="206"><span class="lineNum">     206 </span>            :         {</a>
-<a name="207"><span class="lineNum">     207 </span><span class="lineNoCov">          0 :             for (auto m : ValueTreeObjectList&lt;EventType&gt;::objects)</span></a>
-<a name="208"><span class="lineNum">     208 </span><span class="lineNoCov">          0 :                 if (m-&gt;state == v)</span></a>
-<a name="209"><span class="lineNum">     209 </span><span class="lineNoCov">          0 :                     return m;</span></a>
+<a name="207"><span class="lineNum">     207 </span><span class="lineCov">          1 :             for (auto m : ValueTreeObjectList&lt;EventType&gt;::objects)</span></a>
+<a name="208"><span class="lineNum">     208 </span><span class="lineCov">          1 :                 if (m-&gt;state == v)</span></a>
+<a name="209"><span class="lineNum">     209 </span><span class="lineCov">          1 :                     return m;</span></a>
 <a name="210"><span class="lineNum">     210 </span>            : </a>
 <a name="211"><span class="lineNum">     211 </span>            :             return {};</a>
 <a name="212"><span class="lineNum">     212 </span>            :         }</a>
 <a name="213"><span class="lineNum">     213 </span>            : </a>
-<a name="214"><span class="lineNum">     214 </span><span class="lineNoCov">          0 :         bool isSuitableType (const juce::ValueTree&amp; v) const override   { return EventDelegate&lt;EventType&gt;::isSuitableType (v); }</span></a>
-<a name="215"><span class="lineNum">     215 </span><span class="lineNoCov">          0 :         EventType* createNewObject (const juce::ValueTree&amp; v) override  { return new EventType (v); }</span></a>
-<a name="216"><span class="lineNum">     216 </span><span class="lineNoCov">          0 :         void deleteObject (EventType* m) override                       { delete m; }</span></a>
-<a name="217"><span class="lineNum">     217 </span><span class="lineNoCov">          0 :         void newObjectAdded (EventType*) override                       { triggerSort(); }</span></a>
+<a name="214"><span class="lineNum">     214 </span><span class="lineCov">          3 :         bool isSuitableType (const juce::ValueTree&amp; v) const override   { return EventDelegate&lt;EventType&gt;::isSuitableType (v); }</span></a>
+<a name="215"><span class="lineNum">     215 </span><span class="lineCov">          1 :         EventType* createNewObject (const juce::ValueTree&amp; v) override  { return new EventType (v); }</span></a>
+<a name="216"><span class="lineNum">     216 </span><span class="lineCov">          2 :         void deleteObject (EventType* m) override                       { delete m; }</span></a>
+<a name="217"><span class="lineNum">     217 </span><span class="lineCov">          2 :         void newObjectAdded (EventType*) override                       { triggerSort(); }</span></a>
 <a name="218"><span class="lineNum">     218 </span><span class="lineNoCov">          0 :         void objectRemoved (EventType* m) override                      { EventDelegate&lt;EventType&gt;::removeFromSelection (m); triggerSort(); }</span></a>
 <a name="219"><span class="lineNum">     219 </span><span class="lineNoCov">          0 :         void objectOrderChanged() override                              { triggerSort(); }</span></a>
 <a name="220"><span class="lineNum">     220 </span>            : </a>
@@ -289,24 +289,24 @@
 <a name="227"><span class="lineNum">     227 </span>            : </a>
 <a name="228"><span class="lineNum">     228 </span>            :         void triggerSort()</a>
 <a name="229"><span class="lineNum">     229 </span>            :         {</a>
-<a name="230"><span class="lineNum">     230 </span><span class="lineNoCov">          0 :             const juce::ScopedLock sl (lock);</span></a>
-<a name="231"><span class="lineNum">     231 </span><span class="lineNoCov">          0 :             needsSorting = true;</span></a>
+<a name="230"><span class="lineNum">     230 </span><span class="lineCov">          1 :             const juce::ScopedLock sl (lock);</span></a>
+<a name="231"><span class="lineNum">     231 </span><span class="lineCov">          1 :             needsSorting = true;</span></a>
 <a name="232"><span class="lineNum">     232 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="233"><span class="lineNum">     233 </span>            : </a>
-<a name="234"><span class="lineNum">     234 </span><span class="lineNoCov">          0 :         const juce::Array&lt;EventType*&gt;&amp; getSortedList()</span></a>
+<a name="234"><span class="lineNum">     234 </span><span class="lineCov">          6 :         const juce::Array&lt;EventType*&gt;&amp; getSortedList()</span></a>
 <a name="235"><span class="lineNum">     235 </span>            :         {</a>
 <a name="236"><span class="lineNum">     236 </span>            :             TRACKTION_ASSERT_MESSAGE_THREAD</a>
 <a name="237"><span class="lineNum">     237 </span>            : </a>
-<a name="238"><span class="lineNum">     238 </span><span class="lineNoCov">          0 :             const juce::ScopedLock sl (lock);</span></a>
+<a name="238"><span class="lineNum">     238 </span><span class="lineCov">          6 :             const juce::ScopedLock sl (lock);</span></a>
 <a name="239"><span class="lineNum">     239 </span>            : </a>
-<a name="240"><span class="lineNum">     240 </span><span class="lineNoCov">          0 :             if (needsSorting)</span></a>
+<a name="240"><span class="lineNum">     240 </span><span class="lineCov">          6 :             if (needsSorting)</span></a>
 <a name="241"><span class="lineNum">     241 </span>            :             {</a>
-<a name="242"><span class="lineNum">     242 </span><span class="lineNoCov">          0 :                 needsSorting = false;</span></a>
-<a name="243"><span class="lineNum">     243 </span><span class="lineNoCov">          0 :                 sortedEvents = ValueTreeObjectList&lt;EventType&gt;::objects;</span></a>
+<a name="242"><span class="lineNum">     242 </span><span class="lineCov">          3 :                 needsSorting = false;</span></a>
+<a name="243"><span class="lineNum">     243 </span><span class="lineCov">          3 :                 sortedEvents = ValueTreeObjectList&lt;EventType&gt;::objects;</span></a>
 <a name="244"><span class="lineNum">     244 </span>            :                 sortMidiEventsByTime (sortedEvents);</a>
 <a name="245"><span class="lineNum">     245 </span>            :             }</a>
 <a name="246"><span class="lineNum">     246 </span>            : </a>
-<a name="247"><span class="lineNum">     247 </span><span class="lineNoCov">          0 :             return sortedEvents;</span></a>
+<a name="247"><span class="lineNum">     247 </span><span class="lineCov">          6 :             return sortedEvents;</span></a>
 <a name="248"><span class="lineNum">     248 </span>            :         }</a>
 <a name="249"><span class="lineNum">     249 </span>            : </a>
 <a name="250"><span class="lineNum">     250 </span>            :         bool needsSorting = true;</a>

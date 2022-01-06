@@ -1,16 +1,16 @@
 var searchData=
 [
-  ['half_12786',['Half',['../classtracktion__engine_1_1Scale.html#a4f98c3b3c9338b3421f5c20ab18cdd0ba7e35caf7e1314c3c604d29f300bb246d',1,'tracktion_engine::Scale::Half()'],['../namespacetracktion__engine_1_1ModifierCommon.html#a5c2031bd5c73a8a84414be138b141813a9eb3cc23e9fec87ec91b316bb0e95a70',1,'tracktion_engine::ModifierCommon::half()']]],
-  ['halfd_12787',['halfD',['../namespacetracktion__engine_1_1ModifierCommon.html#a5c2031bd5c73a8a84414be138b141813a4f3001df62e2ce487cd3153831d8c1f9',1,'tracktion_engine::ModifierCommon']]],
-  ['halfdiminishedminorninthchord_12788',['halfDiminishedMinorNinthChord',['../classtracktion__engine_1_1Chord.html#a9dd1512764b1ac1b961ebf74d1b65a4ca8dcadb7dfea2e273eec8edd7c28a9f1d',1,'tracktion_engine::Chord']]],
-  ['halfdiminishedninthchord_12789',['halfDiminishedNinthChord',['../classtracktion__engine_1_1Chord.html#a9dd1512764b1ac1b961ebf74d1b65a4ca5149dcf6b7ea99cb93b5ee59e2b462eb',1,'tracktion_engine::Chord']]],
-  ['halfdiminishedseventhchord_12790',['halfDiminishedSeventhChord',['../classtracktion__engine_1_1Chord.html#a9dd1512764b1ac1b961ebf74d1b65a4caf16952bbff3c08674b3b1e4bec407708',1,'tracktion_engine::Chord']]],
-  ['halft_12791',['halfT',['../namespacetracktion__engine_1_1ModifierCommon.html#a5c2031bd5c73a8a84414be138b141813a4d9ba3fef19fdbac70d0eae576422078',1,'tracktion_engine::ModifierCommon']]],
-  ['harmonicminor_12792',['harmonicMinor',['../classtracktion__engine_1_1Scale.html#a3a7c774dd731ec6eb04c59487db984dfa211d4874806055c2a456378d662d9c72',1,'tracktion_engine::Scale']]],
-  ['hasenabledmididefaultdevs_12793',['hasEnabledMidiDefaultDevs',['../namespacetracktion__engine.html#a621c43a54efb4eb950c0b1cad5e97eaca1ef2784670057be89a5320f13bfcbca4',1,'tracktion_engine']]],
-  ['hertz_12794',['hertz',['../namespacetracktion__engine_1_1ModifierCommon.html#a5c2031bd5c73a8a84414be138b141813a618bfd594a87f2fa1109a53c8b7886cf',1,'tracktion_engine::ModifierCommon']]],
-  ['highquality_12795',['highQuality',['../classtracktion__engine_1_1ExportJob.html#a97726a9aa945ec15f88aae82c44add63afe42c92aac580ced7226bc271b3fcdb9',1,'tracktion_engine::ExportJob']]],
-  ['homeid_12796',['homeId',['../classtracktion__engine_1_1CustomControlSurface.html#afd5a2df81c9aa2cc64e85994facd04eda3c67297c29d8e2cbe70d16ea635597e9',1,'tracktion_engine::CustomControlSurface']]],
-  ['horizontal_12797',['horizontal',['../structtracktion__engine_1_1FileDragList.html#ab75aa51166149f86fc6b8ddf588ae857a6276258b51ea7efec4ebc3ef52386794',1,'tracktion_engine::FileDragList']]],
-  ['hybrid_12798',['hybrid',['../namespacetracktion__graph.html#a10337f019803d1cc6738fe931011dfefaf7befc67e4b1ddf3a03d496537760671',1,'tracktion_graph']]]
+  ['half_12788',['Half',['../classtracktion__engine_1_1Scale.html#a4f98c3b3c9338b3421f5c20ab18cdd0ba7e35caf7e1314c3c604d29f300bb246d',1,'tracktion_engine::Scale::Half()'],['../namespacetracktion__engine_1_1ModifierCommon.html#a5c2031bd5c73a8a84414be138b141813a9eb3cc23e9fec87ec91b316bb0e95a70',1,'tracktion_engine::ModifierCommon::half()']]],
+  ['halfd_12789',['halfD',['../namespacetracktion__engine_1_1ModifierCommon.html#a5c2031bd5c73a8a84414be138b141813a4f3001df62e2ce487cd3153831d8c1f9',1,'tracktion_engine::ModifierCommon']]],
+  ['halfdiminishedminorninthchord_12790',['halfDiminishedMinorNinthChord',['../classtracktion__engine_1_1Chord.html#a9dd1512764b1ac1b961ebf74d1b65a4ca8dcadb7dfea2e273eec8edd7c28a9f1d',1,'tracktion_engine::Chord']]],
+  ['halfdiminishedninthchord_12791',['halfDiminishedNinthChord',['../classtracktion__engine_1_1Chord.html#a9dd1512764b1ac1b961ebf74d1b65a4ca5149dcf6b7ea99cb93b5ee59e2b462eb',1,'tracktion_engine::Chord']]],
+  ['halfdiminishedseventhchord_12792',['halfDiminishedSeventhChord',['../classtracktion__engine_1_1Chord.html#a9dd1512764b1ac1b961ebf74d1b65a4caf16952bbff3c08674b3b1e4bec407708',1,'tracktion_engine::Chord']]],
+  ['halft_12793',['halfT',['../namespacetracktion__engine_1_1ModifierCommon.html#a5c2031bd5c73a8a84414be138b141813a4d9ba3fef19fdbac70d0eae576422078',1,'tracktion_engine::ModifierCommon']]],
+  ['harmonicminor_12794',['harmonicMinor',['../classtracktion__engine_1_1Scale.html#a3a7c774dd731ec6eb04c59487db984dfa211d4874806055c2a456378d662d9c72',1,'tracktion_engine::Scale']]],
+  ['hasenabledmididefaultdevs_12795',['hasEnabledMidiDefaultDevs',['../namespacetracktion__engine.html#a621c43a54efb4eb950c0b1cad5e97eaca1ef2784670057be89a5320f13bfcbca4',1,'tracktion_engine']]],
+  ['hertz_12796',['hertz',['../namespacetracktion__engine_1_1ModifierCommon.html#a5c2031bd5c73a8a84414be138b141813a618bfd594a87f2fa1109a53c8b7886cf',1,'tracktion_engine::ModifierCommon']]],
+  ['highquality_12797',['highQuality',['../classtracktion__engine_1_1ExportJob.html#a97726a9aa945ec15f88aae82c44add63afe42c92aac580ced7226bc271b3fcdb9',1,'tracktion_engine::ExportJob']]],
+  ['homeid_12798',['homeId',['../classtracktion__engine_1_1CustomControlSurface.html#afd5a2df81c9aa2cc64e85994facd04eda3c67297c29d8e2cbe70d16ea635597e9',1,'tracktion_engine::CustomControlSurface']]],
+  ['horizontal_12799',['horizontal',['../structtracktion__engine_1_1FileDragList.html#ab75aa51166149f86fc6b8ddf588ae857a6276258b51ea7efec4ebc3ef52386794',1,'tracktion_engine::FileDragList']]],
+  ['hybrid_12800',['hybrid',['../namespacetracktion__graph.html#a10337f019803d1cc6738fe931011dfefaf7befc67e4b1ddf3a03d496537760671',1,'tracktion_graph']]]
 ];

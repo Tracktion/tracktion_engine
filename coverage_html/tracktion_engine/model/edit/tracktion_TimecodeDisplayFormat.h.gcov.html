@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-04 17:08:32</td>
+            <td class="headerValue">2022-01-06 08:16:15</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -95,7 +95,7 @@
 <a name="33"><span class="lineNum">      33 </span>            : {</a>
 <a name="34"><span class="lineNum">      34 </span>            :     //==============================================================================</a>
 <a name="35"><span class="lineNum">      35 </span>            :     // default to minutes/secs, snap to 1ms</a>
-<a name="36"><span class="lineNum">      36 </span><span class="lineCov">        194 :     TimecodeSnapType() noexcept = default;</span></a>
+<a name="36"><span class="lineNum">      36 </span><span class="lineCov">        195 :     TimecodeSnapType() noexcept = default;</span></a>
 <a name="37"><span class="lineNum">      37 </span><span class="lineNoCov">          0 :     TimecodeSnapType (TimecodeType t, int lev) noexcept : type (t), level (lev) {}</span></a>
 <a name="38"><span class="lineNum">      38 </span>            : </a>
 <a name="39"><span class="lineNum">      39 </span>            :     //==============================================================================</a>
@@ -168,7 +168,7 @@
 <a name="106"><span class="lineNum">     106 </span>            : </a>
 <a name="107"><span class="lineNum">     107 </span>            :     //==============================================================================</a>
 <a name="108"><span class="lineNum">     108 </span>            :     // (defaults to barsBeats, 24fps</a>
-<a name="109"><span class="lineNum">     109 </span><span class="lineCov">        194 :     TimecodeDisplayFormat() noexcept    : type (TimecodeType::barsBeats) {}</span></a>
+<a name="109"><span class="lineNum">     109 </span><span class="lineCov">        195 :     TimecodeDisplayFormat() noexcept    : type (TimecodeType::barsBeats) {}</span></a>
 <a name="110"><span class="lineNum">     110 </span><span class="lineNoCov">          0 :     TimecodeDisplayFormat (TimecodeType t) noexcept  : type (t) {}</span></a>
 <a name="111"><span class="lineNum">     111 </span>            : </a>
 <a name="112"><span class="lineNum">     112 </span>            :     bool operator== (const TimecodeDisplayFormat&amp; other) const      { return type == other.type; }</a>

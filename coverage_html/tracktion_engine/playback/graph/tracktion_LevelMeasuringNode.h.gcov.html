@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-04 17:08:32</td>
+            <td class="headerValue">2022-01-06 08:16:15</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">3</td>
@@ -81,9 +81,9 @@
 <a name="19"><span class="lineNum">      19 </span>            : public:</a>
 <a name="20"><span class="lineNum">      20 </span>            :     LevelMeasuringNode (std::unique_ptr&lt;tracktion_graph::Node&gt; inputNode, LevelMeasurer&amp;);</a>
 <a name="21"><span class="lineNum">      21 </span>            :     </a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineCov">        296 :     tracktion_graph::NodeProperties getNodeProperties() override        { return input-&gt;getNodeProperties(); }</span></a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineCov">        444 :     std::vector&lt;tracktion_graph::Node*&gt; getDirectInputNodes() override  { return { input.get() }; }</span></a>
-<a name="24"><span class="lineNum">      24 </span><span class="lineCov">        148 :     bool isReadyToProcess() override                                    { return input-&gt;hasProcessed(); }</span></a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineCov">        308 :     tracktion_graph::NodeProperties getNodeProperties() override        { return input-&gt;getNodeProperties(); }</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">        462 :     std::vector&lt;tracktion_graph::Node*&gt; getDirectInputNodes() override  { return { input.get() }; }</span></a>
+<a name="24"><span class="lineNum">      24 </span><span class="lineCov">        154 :     bool isReadyToProcess() override                                    { return input-&gt;hasProcessed(); }</span></a>
 <a name="25"><span class="lineNum">      25 </span>            :     void process (tracktion_graph::Node::ProcessContext&amp;) override;</a>
 <a name="26"><span class="lineNum">      26 </span>            :     </a>
 <a name="27"><span class="lineNum">      27 </span>            : private:</a>

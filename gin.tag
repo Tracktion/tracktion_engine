@@ -5844,6 +5844,12 @@
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
+    <name>tracktion_TestUtilities.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
+    <filename>tracktion__TestUtilities_8h.html</filename>
+    <namespace>tracktion_engine</namespace>
+  </compound>
+  <compound kind="file">
     <name>tracktion_TextPlugin.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/plugins/internal/</path>
     <filename>tracktion__TextPlugin_8h.html</filename>
@@ -32941,6 +32947,13 @@
       <anchorfile>classtracktion__engine_1_1FourOscPlugin.html</anchorfile>
       <anchor>a838bc91e79f34ed9f360b0dee8ee0de4</anchor>
       <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>double</type>
+      <name>getTailLength</name>
+      <anchorfile>classtracktion__engine_1_1FourOscPlugin.html</anchorfile>
+      <anchor>aeb29a73dcbf515c8a70cc6f8345aaf88</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>void</type>

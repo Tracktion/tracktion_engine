@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">1</td>
             <td class="headerCovTableEntry">4</td>
-            <td class="headerCovTableEntryLo">25.0 %</td>
+            <td class="headerCovTableEntry">4</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-04 17:08:32</td>
+            <td class="headerValue">2022-01-06 08:16:15</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -73,7 +73,7 @@
 <a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
-<a name="14"><span class="lineNum">      14 </span><span class="lineNoCov">          0 : struct DbTimePair</span></a>
+<a name="14"><span class="lineNum">      14 </span><span class="lineCov">          1 : struct DbTimePair</span></a>
 <a name="15"><span class="lineNum">      15 </span>            : {</a>
 <a name="16"><span class="lineNum">      16 </span>            :     uint32_t time = 0;</a>
 <a name="17"><span class="lineNum">      17 </span>            :     float dB = -100.0f;</a>
@@ -116,9 +116,9 @@
 <a name="54"><span class="lineNum">      54 </span>            :     int getNumActiveChannels() const noexcept           { return numActiveChannels; }</a>
 <a name="55"><span class="lineNum">      55 </span>            : </a>
 <a name="56"><span class="lineNum">      56 </span>            :     //==============================================================================</a>
-<a name="57"><span class="lineNum">      57 </span><span class="lineNoCov">          0 :     struct Client</span></a>
+<a name="57"><span class="lineNum">      57 </span><span class="lineCov">          1 :     struct Client</span></a>
 <a name="58"><span class="lineNum">      58 </span>            :     {</a>
-<a name="59"><span class="lineNum">      59 </span><span class="lineNoCov">          0 :         Client() = default;</span></a>
+<a name="59"><span class="lineNum">      59 </span><span class="lineCov">          8 :         Client() = default;</span></a>
 <a name="60"><span class="lineNum">      60 </span>            : </a>
 <a name="61"><span class="lineNum">      61 </span>            :         void reset() noexcept;</a>
 <a name="62"><span class="lineNum">      62 </span>            :         bool getAndClearOverload() noexcept;</a>
@@ -164,7 +164,7 @@
 <a name="102"><span class="lineNum">     102 </span>            :     juce::Array&lt;Client*&gt; clients;</a>
 <a name="103"><span class="lineNum">     103 </span>            :     juce::CriticalSection clientsMutex;</a>
 <a name="104"><span class="lineNum">     104 </span>            : </a>
-<a name="105"><span class="lineNum">     105 </span><span class="lineCov">       2214 :     JUCE_DECLARE_WEAK_REFERENCEABLE(LevelMeasurer)</span></a>
+<a name="105"><span class="lineNum">     105 </span><span class="lineCov">       2223 :     JUCE_DECLARE_WEAK_REFERENCEABLE(LevelMeasurer)</span></a>
 <a name="106"><span class="lineNum">     106 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LevelMeasurer)</a>
 <a name="107"><span class="lineNum">     107 </span>            : };</a>
 <a name="108"><span class="lineNum">     108 </span>            : </a>
