@@ -538,6 +538,10 @@ Clip::Ptr RenderOptions::applyRenderToEdit (Edit& edit,
         if (trackToUse == nullptr)
             return {};
 
+        if (addMode == replaceTrack)
+            if (auto t = tracksArray.getFirst())
+                trackToUse->setColour (t->getColour());
+
         for (auto t : tracksArray)
         {
             if (auto at = dynamic_cast<AudioTrack*> (t))
