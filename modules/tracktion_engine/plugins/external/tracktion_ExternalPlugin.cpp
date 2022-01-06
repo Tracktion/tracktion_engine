@@ -403,9 +403,9 @@ namespace
         }
     }
 
-juce::AudioProcessor::BusesLayout readBusesLayout (const juce::var& layout, juce::AudioProcessor& plugin)
+    juce::AudioProcessor::BusesLayout readBusesLayout (const juce::var& layout, juce::AudioProcessor& plugin)
     {
-    juce::AudioProcessor::BusesLayout busesLayout;
+        juce::AudioProcessor::BusesLayout busesLayout;
 
         if (auto* mb = layout.getBinaryData())
         {
