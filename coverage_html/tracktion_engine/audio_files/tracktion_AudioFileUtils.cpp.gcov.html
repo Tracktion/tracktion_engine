@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-07 16:53:09</td>
+            <td class="headerValue">2022-01-07 17:25:02</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">7</td>
@@ -100,18 +100,18 @@
 <a name="38"><span class="lineNum">      38 </span>            :     return {};</a>
 <a name="39"><span class="lineNum">      39 </span>            : }</a>
 <a name="40"><span class="lineNum">      40 </span>            : </a>
-<a name="41"><span class="lineNum">      41 </span><span class="lineCov">         47 : juce::MemoryMappedAudioFormatReader* AudioFileUtils::createMemoryMappedReader (Engine&amp; engine, const juce::File&amp; file, juce::AudioFormat*&amp; format)</span></a>
+<a name="41"><span class="lineNum">      41 </span><span class="lineCov">         46 : juce::MemoryMappedAudioFormatReader* AudioFileUtils::createMemoryMappedReader (Engine&amp; engine, const juce::File&amp; file, juce::AudioFormat*&amp; format)</span></a>
 <a name="42"><span class="lineNum">      42 </span>            : {</a>
-<a name="43"><span class="lineNum">      43 </span><span class="lineCov">         47 :     auto&amp; manager = engine.getAudioFileFormatManager().readFormatManager;</span></a>
+<a name="43"><span class="lineNum">      43 </span><span class="lineCov">         46 :     auto&amp; manager = engine.getAudioFileFormatManager().readFormatManager;</span></a>
 <a name="44"><span class="lineNum">      44 </span>            : </a>
-<a name="45"><span class="lineNum">      45 </span><span class="lineCov">         62 :     for (auto af : manager)</span></a>
+<a name="45"><span class="lineNum">      45 </span><span class="lineCov">         61 :     for (auto af : manager)</span></a>
 <a name="46"><span class="lineNum">      46 </span>            :     {</a>
-<a name="47"><span class="lineNum">      47 </span><span class="lineCov">         59 :         if (af-&gt;canHandleFile (file))</span></a>
+<a name="47"><span class="lineNum">      47 </span><span class="lineCov">         58 :         if (af-&gt;canHandleFile (file))</span></a>
 <a name="48"><span class="lineNum">      48 </span>            :         {</a>
-<a name="49"><span class="lineNum">      49 </span><span class="lineCov">         47 :             if (auto r = af-&gt;createMemoryMappedReader (file))</span></a>
+<a name="49"><span class="lineNum">      49 </span><span class="lineCov">         46 :             if (auto r = af-&gt;createMemoryMappedReader (file))</span></a>
 <a name="50"><span class="lineNum">      50 </span>            :             {</a>
-<a name="51"><span class="lineNum">      51 </span><span class="lineCov">         44 :                 format = af;</span></a>
-<a name="52"><span class="lineNum">      52 </span><span class="lineCov">         44 :                 return r;</span></a>
+<a name="51"><span class="lineNum">      51 </span><span class="lineCov">         43 :                 format = af;</span></a>
+<a name="52"><span class="lineNum">      52 </span><span class="lineCov">         43 :                 return r;</span></a>
 <a name="53"><span class="lineNum">      53 </span>            :             }</a>
 <a name="54"><span class="lineNum">      54 </span>            :         }</a>
 <a name="55"><span class="lineNum">      55 </span>            :     }</a>
