@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-07 13:25:13</td>
+            <td class="headerValue">2022-01-07 16:53:09</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">20</td>
@@ -196,23 +196,23 @@
 <a name="134"><span class="lineNum">     134 </span>            : </a>
 <a name="135"><span class="lineNum">     135 </span><span class="lineCov">        787 :     if (auto t = dynamic_cast&lt;FolderTrack*&gt; (&amp;track))</span></a>
 <a name="136"><span class="lineNum">     136 </span><span class="lineCov">        102 :         return t-&gt;getOutput();</span></a>
-<a name="137"><span class="lineNum">     137 </span>            :     </a>
+<a name="137"><span class="lineNum">     137 </span>            : </a>
 <a name="138"><span class="lineNum">     138 </span>            :     return {};</a>
 <a name="139"><span class="lineNum">     139 </span>            : }</a>
 <a name="140"><span class="lineNum">     140 </span>            : </a>
 <a name="141"><span class="lineNum">     141 </span><span class="lineNoCov">          0 : juce::BigInteger toBitSet (const juce::Array&lt;Track*&gt;&amp; tracks)</span></a>
 <a name="142"><span class="lineNum">     142 </span>            : {</a>
 <a name="143"><span class="lineNum">     143 </span><span class="lineNoCov">          0 :     juce::BigInteger bitset;</span></a>
-<a name="144"><span class="lineNum">     144 </span>            :     </a>
+<a name="144"><span class="lineNum">     144 </span>            : </a>
 <a name="145"><span class="lineNum">     145 </span><span class="lineNoCov">          0 :     if (auto first = tracks[0])</span></a>
 <a name="146"><span class="lineNum">     146 </span>            :     {</a>
 <a name="147"><span class="lineNum">     147 </span><span class="lineNoCov">          0 :         auto allTracks = getAllTracks (first-&gt;edit);</span></a>
-<a name="148"><span class="lineNum">     148 </span>            :         </a>
+<a name="148"><span class="lineNum">     148 </span>            : </a>
 <a name="149"><span class="lineNum">     149 </span><span class="lineNoCov">          0 :         for (auto t : allTracks)</span></a>
 <a name="150"><span class="lineNum">     150 </span><span class="lineNoCov">          0 :             if (int index = allTracks.indexOf (t); index &gt;= 0)</span></a>
 <a name="151"><span class="lineNum">     151 </span><span class="lineNoCov">          0 :                 bitset.setBit (index);</span></a>
 <a name="152"><span class="lineNum">     152 </span>            :     }</a>
-<a name="153"><span class="lineNum">     153 </span>            :     </a>
+<a name="153"><span class="lineNum">     153 </span>            : </a>
 <a name="154"><span class="lineNum">     154 </span><span class="lineNoCov">          0 :     return bitset;</span></a>
 <a name="155"><span class="lineNum">     155 </span>            : }</a>
 <a name="156"><span class="lineNum">     156 </span>            : </a>
@@ -224,7 +224,7 @@
 <a name="162"><span class="lineNum">     162 </span>            : </a>
 <a name="163"><span class="lineNum">     163 </span><span class="lineCov">        497 :     for (auto bit = tracksToAdd.findNextSetBit (0); bit != -1; bit = tracksToAdd.findNextSetBit (bit + 1))</span></a>
 <a name="164"><span class="lineNum">     164 </span><span class="lineCov">        425 :         tracks.add (allTracks[bit]);</span></a>
-<a name="165"><span class="lineNum">     165 </span>            :     </a>
+<a name="165"><span class="lineNum">     165 </span>            : </a>
 <a name="166"><span class="lineNum">     166 </span><span class="lineCov">         72 :     return tracks;</span></a>
 <a name="167"><span class="lineNum">     167 </span>            : }</a>
 <a name="168"><span class="lineNum">     168 </span>            : </a>
@@ -414,14 +414,14 @@
 <a name="352"><span class="lineNum">     352 </span>            :         jassert (selectionManager != nullptr);</a>
 <a name="353"><span class="lineNum">     353 </span>            : </a>
 <a name="354"><span class="lineNum">     354 </span><span class="lineNoCov">          0 :         if (selectionManager != nullptr)</span></a>
-<a name="355"><span class="lineNum">     355 </span>            :                 {</a>
+<a name="355"><span class="lineNum">     355 </span>            :         {</a>
 <a name="356"><span class="lineNum">     356 </span><span class="lineNoCov">          0 :             for (auto track : selectionManager-&gt;getItemsOfType&lt;Track&gt;())</span></a>
-<a name="357"><span class="lineNum">     357 </span>            :                         {</a>
-<a name="358"><span class="lineNum">     358 </span><span class="lineNoCov">          0 :                                 tracks.addIfNotAlreadyThere (track);</span></a>
+<a name="357"><span class="lineNum">     357 </span>            :             {</a>
+<a name="358"><span class="lineNum">     358 </span><span class="lineNoCov">          0 :                 tracks.addIfNotAlreadyThere (track);</span></a>
 <a name="359"><span class="lineNum">     359 </span><span class="lineNoCov">          0 :                 for (auto t : track-&gt;getAllSubTracks (true))</span></a>
 <a name="360"><span class="lineNum">     360 </span><span class="lineNoCov">          0 :                     tracks.addIfNotAlreadyThere (t);</span></a>
-<a name="361"><span class="lineNum">     361 </span>            :                         }</a>
-<a name="362"><span class="lineNum">     362 </span>            :                 }</a>
+<a name="361"><span class="lineNum">     361 </span>            :             }</a>
+<a name="362"><span class="lineNum">     362 </span>            :         }</a>
 <a name="363"><span class="lineNum">     363 </span>            :     }</a>
 <a name="364"><span class="lineNum">     364 </span>            :     else</a>
 <a name="365"><span class="lineNum">     365 </span>            :     {</a>
@@ -803,7 +803,7 @@
 <a name="741"><span class="lineNum">     741 </span><span class="lineCov">       2674 :     edit.visitAllTracksRecursive ([&amp;] (Track&amp; t)</span></a>
 <a name="742"><span class="lineNum">     742 </span>            :                                   {</a>
 <a name="743"><span class="lineNum">     743 </span><span class="lineCov">      16418 :                                       list.addArray (t.getAllPlugins());</span></a>
-<a name="744"><span class="lineNum">     744 </span>            :         </a>
+<a name="744"><span class="lineNum">     744 </span>            : </a>
 <a name="745"><span class="lineNum">     745 </span><span class="lineCov">      16418 :                                       if (auto at = dynamic_cast&lt;AudioTrack*&gt; (&amp;t))</span></a>
 <a name="746"><span class="lineNum">     746 </span>            :                                       {</a>
 <a name="747"><span class="lineNum">     747 </span><span class="lineCov">       6056 :                                           for (auto clip : at-&gt;getClips())</span></a>
@@ -821,7 +821,7 @@
 <a name="759"><span class="lineNum">     759 </span>            :                                               }</a>
 <a name="760"><span class="lineNum">     760 </span>            :                                           }</a>
 <a name="761"><span class="lineNum">     761 </span>            :                                       }</a>
-<a name="762"><span class="lineNum">     762 </span>            :         </a>
+<a name="762"><span class="lineNum">     762 </span>            : </a>
 <a name="763"><span class="lineNum">     763 </span><span class="lineCov">      16418 :                                       return true;</span></a>
 <a name="764"><span class="lineNum">     764 </span>            :                                   });</a>
 <a name="765"><span class="lineNum">     765 </span>            : </a>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-07 13:25:13</td>
+            <td class="headerValue">2022-01-07 16:53:09</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -148,13 +148,13 @@
 <a name="86"><span class="lineNum">      86 </span>            : template&lt;typename IntType&gt;</a>
 <a name="87"><span class="lineNum">      87 </span>            : constexpr double sampleToTime (IntType samplePosition, double sampleRate)</a>
 <a name="88"><span class="lineNum">      88 </span>            : {</a>
-<a name="89"><span class="lineNum">      89 </span><span class="lineCov">    4549760 :     return samplePosition / sampleRate;</span></a>
+<a name="89"><span class="lineNum">      89 </span><span class="lineCov">    4549594 :     return samplePosition / sampleRate;</span></a>
 <a name="90"><span class="lineNum">      90 </span>            : }</a>
 <a name="91"><span class="lineNum">      91 </span>            : </a>
 <a name="92"><span class="lineNum">      92 </span>            : /** Converts a time in seconds to a sample number. */</a>
 <a name="93"><span class="lineNum">      93 </span>            : constexpr int64_t timeToSample (double timeInSeconds, double sampleRate)</a>
 <a name="94"><span class="lineNum">      94 </span>            : {</a>
-<a name="95"><span class="lineNum">      95 </span><span class="lineCov">     449116 :     return static_cast&lt;int64_t&gt; ((timeInSeconds * sampleRate) + 0.5);</span></a>
+<a name="95"><span class="lineNum">      95 </span><span class="lineCov">     441340 :     return static_cast&lt;int64_t&gt; ((timeInSeconds * sampleRate) + 0.5);</span></a>
 <a name="96"><span class="lineNum">      96 </span>            : }</a>
 <a name="97"><span class="lineNum">      97 </span>            : </a>
 <a name="98"><span class="lineNum">      98 </span>            : /** Converts an integer sample range to a time range in seconds. */</a>
