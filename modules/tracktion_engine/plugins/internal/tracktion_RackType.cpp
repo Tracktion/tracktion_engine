@@ -481,7 +481,7 @@ bool RackType::isPluginAllowed (const Plugin::Ptr& p)
     return p != nullptr && p->canBeAddedToRack();
 }
 
-void RackType::addPlugin (const Plugin::Ptr& p, juce::Point<float> pos, bool canAutoConnect)
+bool RackType::addPlugin (const Plugin::Ptr& p, juce::Point<float> pos, bool canAutoConnect)
 {
     if (isPluginAllowed (p))
     {
@@ -516,8 +516,10 @@ void RackType::addPlugin (const Plugin::Ptr& p, juce::Point<float> pos, bool can
                 addConnection ({}, 0, p->itemID, 0);
                 addConnection (p->itemID, 0, {}, 0);
             }
+            return true;
         }
     }
+    return false;
 }
 
 juce::Point<float> RackType::getPluginPosition (const Plugin::Ptr& p) const
