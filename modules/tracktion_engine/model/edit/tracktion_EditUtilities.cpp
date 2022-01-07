@@ -134,23 +134,23 @@ TrackOutput* getTrackOutput (Track& track)
 
     if (auto t = dynamic_cast<FolderTrack*> (&track))
         return t->getOutput();
-    
+
     return {};
 }
 
 juce::BigInteger toBitSet (const juce::Array<Track*>& tracks)
 {
     juce::BigInteger bitset;
-    
+
     if (auto first = tracks[0])
     {
         auto allTracks = getAllTracks (first->edit);
-        
+
         for (auto t : allTracks)
             if (int index = allTracks.indexOf (t); index >= 0)
                 bitset.setBit (index);
     }
-    
+
     return bitset;
 }
 
@@ -162,7 +162,7 @@ juce::Array<Track*> toTrackArray (Edit& edit, const juce::BigInteger& tracksToAd
 
     for (auto bit = tracksToAdd.findNextSetBit (0); bit != -1; bit = tracksToAdd.findNextSetBit (bit + 1))
         tracks.add (allTracks[bit]);
-    
+
     return tracks;
 }
 
@@ -352,14 +352,14 @@ void deleteRegionOfTracks (Edit& edit, EditTimeRange rangeToDelete, bool onlySel
         jassert (selectionManager != nullptr);
 
         if (selectionManager != nullptr)
-		{
+        {
             for (auto track : selectionManager->getItemsOfType<Track>())
-			{
-				tracks.addIfNotAlreadyThere (track);
+            {
+                tracks.addIfNotAlreadyThere (track);
                 for (auto t : track->getAllSubTracks (true))
                     tracks.addIfNotAlreadyThere (t);
-			}
-		}
+            }
+        }
     }
     else
     {
@@ -741,7 +741,7 @@ Plugin::Array getAllPlugins (const Edit& edit, bool includeMasterVolume)
     edit.visitAllTracksRecursive ([&] (Track& t)
                                   {
                                       list.addArray (t.getAllPlugins());
-        
+
                                       if (auto at = dynamic_cast<AudioTrack*> (&t))
                                       {
                                           for (auto clip : at->getClips())
@@ -759,7 +759,7 @@ Plugin::Array getAllPlugins (const Edit& edit, bool includeMasterVolume)
                                               }
                                           }
                                       }
-        
+
                                       return true;
                                   });
 

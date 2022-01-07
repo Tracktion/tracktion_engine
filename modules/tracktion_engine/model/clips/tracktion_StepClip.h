@@ -124,7 +124,7 @@ public:
             juce::BigInteger notes;
             juce::Array<int> velocities;
             juce::Array<double> gates;
-			juce::Array<float> probabilities;
+            juce::Array<float> probabilities;
             JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CachedPattern)
         };
 

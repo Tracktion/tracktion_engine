@@ -16,14 +16,14 @@ RackInstanceNode::RackInstanceNode (std::unique_ptr<Node> inputNode, ChannelMap 
     : input (std::move (inputNode)), channelMap (std::move (channelMapToUse))
 {
     assert (input);
-    
+
     for (auto& chan : channelMap)
     {
-		assert (std::get<2> (chan) != nullptr);
+        assert (std::get<2> (chan) != nullptr);
         maxNumChannels = std::max (maxNumChannels,
                                    std::get<1> (chan) + 1);
     }
-    
+
     for (size_t chan = 0; chan < 2; ++chan)
         lastGain[chan] = dbToGain (std::get<2> (channelMap[chan])->getCurrentValue());
 
@@ -40,7 +40,7 @@ tracktion_graph::NodeProperties RackInstanceNode::getNodeProperties()
     props.numberOfChannels = (int) maxNumChannels;
     props.hasMidi = true;
     props.hasAudio = true;
-    
+
     return props;
 }
 
@@ -57,18 +57,18 @@ void RackInstanceNode::process (ProcessContext& pc)
 {
     assert ((int) pc.buffers.audio.getNumChannels() == maxNumChannels);
     auto inputBuffers = input->getProcessedOutput();
-    
+
     // Always copy MIDI
     pc.buffers.midi.copyFrom (inputBuffers.midi);
-    
+
     // Copy audio applying gain
     int channel = 0;
-    
+
     for (auto& chan : channelMap)
     {
         auto srcChan = std::get<0> (chan);
         auto destChan = std::get<1> (chan);
-        
+
         if (srcChan < 0)
             continue;
 
@@ -81,7 +81,7 @@ void RackInstanceNode::process (ProcessContext& pc)
         auto src = inputBuffers.audio.getChannel ((choc::buffer::ChannelCount) srcChan);
         auto dest = pc.buffers.audio.getChannel ((choc::buffer::ChannelCount) destChan);
         auto gain = dbToGain (std::get<2> (chan)->getCurrentValue());
-        
+
         copy (dest, src);
 
         if (gain == lastGain[channel])
@@ -98,7 +98,7 @@ void RackInstanceNode::process (ProcessContext& pc)
 
             lastGain[channel] = gain;
         }
-        
+
         ++channel;
     }
 }

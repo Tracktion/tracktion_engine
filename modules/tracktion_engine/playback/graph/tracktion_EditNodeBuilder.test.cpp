@@ -24,13 +24,13 @@ public:
         : juce::UnitTest ("Edit Node Builder", "tracktion_graph")
     {
     }
-    
+
     void runTest() override
     {
         tracktion_graph::test_utilities::TestSetup ts;
         ts.sampleRate = 44100.0;
         ts.blockSize = 256;
-        
+
         runTrackDestinationRendering (ts, 3.0, 2, false);
         runTrackDestinationRendering (ts, 3.0, 2, true);
 
@@ -60,7 +60,7 @@ private:
         auto& engine = *tracktion_engine::Engine::getEngines()[0];
         const auto description = test_utilities::getDescription (ts)
                                     + juce::String (isMultiThreaded ? ", MT" : ", ST");
-        
+
         tracktion_graph::PlayHead playHead;
         tracktion_graph::PlayHeadState playHeadState { playHead };
         ProcessState processState { playHeadState };
@@ -73,7 +73,7 @@ private:
             auto track = getAudioTracks (*edit)[0];
 
             track->insertWaveClip ({}, sinFile->getFile(), ClipPosition { { 0.0, durationInSeconds } }, false);
-            
+
             Plugin::Array plugins;
             plugins.add (track->getVolumePlugin());
             auto rack = RackType::createTypeToWrapPlugins (plugins, *edit);
@@ -85,15 +85,15 @@ private:
                 TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize,
                                                                                                      getPoolCreatorFunction (ThreadPoolStrategy::realTime)),
                                                               ts, numChannels, durationInSeconds, false);
-                
+
                 if (! isMultiThreaded)
                     testContext.getNodePlayer().setNumThreads (0);
-                
+
                 testContext.setPlayHead (&playHeadState.playHead);
                 playHeadState.playHead.playSyncedToRange ({});
                 testContext.processAll();
             }
-            
+
             rackInstance->leftInputGoesTo = -1;
             rackInstance->rightOutputComesFrom = -1;
 
@@ -103,10 +103,10 @@ private:
                 TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize,
                                                                                                      getPoolCreatorFunction (ThreadPoolStrategy::realTime)),
                                                               ts, numChannels, durationInSeconds, false);
-                
+
                 if (! isMultiThreaded)
                     testContext.getNodePlayer().setNumThreads (0);
-                
+
                 testContext.setPlayHead (&playHeadState.playHead);
                 playHeadState.playHead.playSyncedToRange ({});
                 testContext.processAll();
@@ -128,7 +128,7 @@ private:
         auto& engine = *tracktion_engine::Engine::getEngines()[0];
         const auto description = test_utilities::getDescription (ts)
                                     + juce::String (isMultiThreaded ? ", MT" : ", ST");
-        
+
         tracktion_graph::PlayHead playHead;
         tracktion_graph::PlayHeadState playHeadState { playHead };
         ProcessState processState { playHeadState };
@@ -139,7 +139,7 @@ private:
             auto edit = Edit::createSingleTrackEdit (engine);
             edit->ensureNumberOfAudioTracks (2);
             edit->getMasterVolumePlugin()->setVolumeDb (0.0f);
-            
+
             {
                 auto auxSourceTrack = getAudioTracks (*edit)[0];
                 auxSourceTrack->insertWaveClip ({}, sinFile->getFile(), ClipPosition { { 0.0, durationInSeconds } }, false);
@@ -158,14 +158,14 @@ private:
                 TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize,
                                                                                                      getPoolCreatorFunction (ThreadPoolStrategy::hybrid)),
                                                               ts, numChannels, durationInSeconds, true);
-                
+
                 if (! isMultiThreaded)
                     testContext.getNodePlayer().setNumThreads (0);
-                
+
                 testContext.setPlayHead (&playHeadState.playHead);
                 playHeadState.playHead.playSyncedToRange ({});
                 auto result = testContext.processAll();
-                
+
                 expectAudioBuffer (*this, result->buffer, 0, 0.0f, 0.0f);
                 expectAudioBuffer (*this, result->buffer, 1, 0.0f, 0.0f);
             }
@@ -185,7 +185,7 @@ private:
         auto& engine = *tracktion_engine::Engine::getEngines()[0];
         const auto description = test_utilities::getDescription (ts)
                                     + juce::String (isMultiThreaded ? ", MT" : ", ST");
-        
+
         tracktion_graph::PlayHead playHead;
         tracktion_graph::PlayHeadState playHeadState { playHead };
         ProcessState processState { playHeadState };
@@ -197,7 +197,7 @@ private:
             edit->ensureNumberOfAudioTracks (3);
             edit->getMasterVolumePlugin()->setVolumeDb (0.0f);
             auto destTrack = getAudioTracks (*edit)[2];
-            
+
             for (int trackIndex : { 0, 1 })
             {
                 auto track = getAudioTracks (*edit)[trackIndex];
@@ -205,21 +205,21 @@ private:
                 track->getVolumePlugin()->setVolumeDb (gainToDb (0.5f));
                 track->getOutput().setOutputToTrack (destTrack);
             }
-            
+
             beginTest ("Track Destination Rendering: " + description);
             {
                 auto node = createNode (*edit, processState, ts.sampleRate, ts.blockSize);
                 TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize,
                                                                                                      getPoolCreatorFunction (ThreadPoolStrategy::hybrid)),
                                                               ts, numChannels, durationInSeconds, true);
-                
+
                 if (! isMultiThreaded)
                     testContext.getNodePlayer().setNumThreads (0);
-                
+
                 testContext.setPlayHead (&playHeadState.playHead);
                 playHeadState.playHead.playSyncedToRange ({});
                 auto result = testContext.processAll();
-                
+
                 expectAudioBuffer (*this, result->buffer, 0, 1.0f, 0.707f);
                 expectAudioBuffer (*this, result->buffer, 1, 1.0f, 0.707f);
             }
@@ -233,13 +233,13 @@ private:
                     audio_1
 
         Expects:
-        submix_1, submix_2, audio_1	= 0dB
-        submix_2, audio_1			= -6dB
-        audio_1						= -12dB
-        submix_1, audio_1			= 0dB/NA
-        submix_1, submix_2			= 0dB/NA
+        submix_1, submix_2, audio_1 = 0dB
+        submix_2, audio_1           = -6dB
+        audio_1                     = -12dB
+        submix_1, audio_1           = 0dB/NA
+        submix_1, submix_2          = 0dB/NA
         submix_1                    = 0dB/NA
-        submix_2					= -6dB/NA
+        submix_2                    = -6dB/NA
     */
     void runSubmix (test_utilities::TestSetup ts,
                     double durationInSeconds,
@@ -257,17 +257,17 @@ private:
 
             auto edit = Edit::createSingleTrackEdit (engine);
             edit->getMasterVolumePlugin()->setVolumeDb (0.0f);
-            
+
             auto submixTrack1 = edit->insertNewFolderTrack ({ nullptr, nullptr }, nullptr, true).get();
             submixTrack1->getVolumePlugin()->setVolumeDb (6.0f);
-            
+
             auto submixTrack2 = edit->insertNewFolderTrack ({ submixTrack1, nullptr }, nullptr, true).get();
             submixTrack2->getVolumePlugin()->setVolumeDb (6.0f);
 
             auto audioTrack = edit->insertNewAudioTrack ({ submixTrack2, nullptr }, nullptr).get();
             audioTrack->insertWaveClip ({}, sinFile->getFile(), ClipPosition { { 0.0, durationInSeconds } }, false);
             audioTrack->getVolumePlugin()->setVolumeDb (-12.0f);
-            
+
             beginTest ("Submix Rendering: " + description);
             {
                 expectPeak (*this, *edit, { 0, durationInSeconds }, getAllTracks (*edit), 1.0f);
@@ -479,7 +479,7 @@ private:
     static void expectPeakAndResetMuteSolo (juce::UnitTest& ut, Edit& edit, EditTimeRange tr, juce::Array<Track*> tracks, float expectedPeak)
     {
         expectPeak (ut, edit, tr, tracks, expectedPeak);
-        
+
         for (auto t : tracks)
         {
             t->setMute (false);

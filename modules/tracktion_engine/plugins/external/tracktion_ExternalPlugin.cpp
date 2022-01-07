@@ -36,7 +36,7 @@ struct ExternalPlugin::ProcessorChangedManager  : public juce::AudioProcessorLis
     ~ProcessorChangedManager() override
     {
         cancelPendingUpdate();
-        
+
         if (auto pi = plugin.getAudioPluginInstance())
             pi->removeListener (this);
         else
@@ -65,13 +65,13 @@ struct ExternalPlugin::ProcessorChangedManager  : public juce::AudioProcessorLis
 
 private:
     JUCE_DECLARE_NON_COPYABLE (ProcessorChangedManager)
-    
+
     static bool hasAnyModifiers (AutomatableEditItem& item)
     {
         for (auto param : item.getAutomatableParameters())
             if (! getModifiersOfType<Modifier> (*param).isEmpty())
                 return true;
-            
+
         return false;
     }
 
@@ -79,13 +79,13 @@ private:
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
         bool wasLatencyChange = false;
-        
+
         if (auto pi = plugin.getAudioPluginInstance())
         {
             if (plugin.latencySamples != pi->getLatencySamples())
             {
                 wasLatencyChange = true;
-                
+
                 if (plugin.isInstancePrepared)
                 {
                     plugin.latencySamples = pi->getLatencySamples();
@@ -93,12 +93,12 @@ private:
                 }
 
                 plugin.edit.restartPlayback(); // Restart playback to rebuild audio graph for the new latency to take effect
-                
+
                 plugin.edit.getTransport().triggerClearDevicesOnStop(); // This will fully re-initialise plugins
             }
 
             pi->refreshParameterList();
-            
+
             // refreshParameterList can delete the AudioProcessorParameter that our ExternalAutomatableParameters
             // are listening too so re-attach any possibly deleted listeners here
             for (auto p : plugin.autoParamForParamNumbers)
@@ -120,11 +120,11 @@ private:
         // modifier values
         if (! wasLatencyChange && ! hasAnyModifiers (plugin))
             plugin.refreshParameterValues();
-        
+
         plugin.changed();
         plugin.edit.pluginChanged (plugin);
     }
-    
+
     void handleAsyncUpdate() override
     {
         if (paramChanged)
@@ -685,7 +685,7 @@ std::unique_ptr<juce::PluginDescription> ExternalPlugin::findDescForUID (int uid
         for (auto d : engine.getPluginManager().knownPluginList.getTypes())
             if (d.uniqueId == uid)
                 return std::make_unique<juce::PluginDescription> (d);
-    
+
     if (deprecatedUid != 0)
         for (auto d : engine.getPluginManager().knownPluginList.getTypes())
             if (d.deprecatedUid == deprecatedUid)
@@ -898,8 +898,8 @@ void ExternalPlugin::flushPluginStateToValueTree()
 
     if (pluginInstance != nullptr)
     {
-		if (pluginInstance->getNumPrograms() > 0)
-			state.setProperty (IDs::programNum,  pluginInstance->getCurrentProgram(), um);
+        if (pluginInstance->getNumPrograms() > 0)
+            state.setProperty (IDs::programNum,  pluginInstance->getCurrentProgram(), um);
 
         TRACKTION_ASSERT_MESSAGE_THREAD
         juce::MemoryBlock chunk;
@@ -1114,17 +1114,17 @@ void ExternalPlugin::initialise (const PluginInitialisationInfo& info)
         // input buses and then there is no way to get them back, which
         // breaks all synths.
         if (! isInstancePrepared)
-		{
-			pluginInstance->prepareToPlay (info.sampleRate, info.blockSizeSamples);
-			isInstancePrepared = true;
-		}
-		else if (info.sampleRate != lastSampleRate || info.blockSizeSamples != lastBlockSizeSamples)
-		{
-			pluginInstance->prepareToPlay (info.sampleRate, info.blockSizeSamples);
-		}
+        {
+            pluginInstance->prepareToPlay (info.sampleRate, info.blockSizeSamples);
+            isInstancePrepared = true;
+        }
+        else if (info.sampleRate != lastSampleRate || info.blockSizeSamples != lastBlockSizeSamples)
+        {
+            pluginInstance->prepareToPlay (info.sampleRate, info.blockSizeSamples);
+        }
 
-		lastSampleRate = info.sampleRate;
-		lastBlockSizeSamples = info.blockSizeSamples;
+        lastSampleRate = info.sampleRate;
+        lastBlockSizeSamples = info.blockSizeSamples;
 
         latencySamples = pluginInstance->getLatencySamples();
         latencySeconds = latencySamples / info.sampleRate;
@@ -1248,7 +1248,7 @@ void ExternalPlugin::prepareIncomingMidiMessages (MidiMessageArray& incoming, in
         {
             if (activeNotes.isNoteActive (m.getChannel(), m.getNoteNumber()))
                 continue;
-            
+
             activeNotes.startNote (m.getChannel(), m.getNoteNumber());
         }
         else if (m.isNoteOff())
@@ -1279,7 +1279,7 @@ void ExternalPlugin::prepareIncomingMidiMessages (MidiMessageArray& incoming, in
 void ExternalPlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     const bool processedBypass = fc.allowBypassedProcessing && ! isEnabled();
-    
+
     if (pluginInstance != nullptr && (processedBypass || isEnabled()))
     {
         CRASH_TRACER_PLUGIN (getDebugName());
@@ -1355,7 +1355,7 @@ void ExternalPlugin::applyToBuffer (const PluginRenderContext& fc)
         {
             AudioScratchBuffer asb (std::max (pluginInstance->getTotalNumInputChannels(),
                                               pluginInstance->getTotalNumOutputChannels()), fc.bufferNumSamples);
-            
+
             if (processedBypass)
                 pluginInstance->processBlockBypassed (asb.buffer, midiBuffer);
             else
