@@ -1374,7 +1374,8 @@ juce::Array<MidiControllerEvent*> Clipboard::MIDIEvents::pasteControllersIntoCli
         double endOfSelection = 0;
 
         for (auto e : selectedEvents)
-            endOfSelection = std::max (endOfSelection, e->getBeatPosition());
+            if (controllerTypes.contains (e->getType()))
+                endOfSelection = std::max (endOfSelection, e->getBeatPosition());
 
         insertPos = endOfSelection + 1.0f;
     }
