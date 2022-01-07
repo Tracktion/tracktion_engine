@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-06 19:07:42</td>
+            <td class="headerValue">2022-01-07 10:52:05</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">12</td>
@@ -187,11 +187,11 @@
 <a name="125"><span class="lineNum">     125 </span>            :             break;</a>
 <a name="126"><span class="lineNum">     126 </span><span class="lineCov">          4 : }</span></a>
 <a name="127"><span class="lineNum">     127 </span>            : </a>
-<a name="128"><span class="lineNum">     128 </span><span class="lineCov">       3756 : void ClickGenerator::processBlock (choc::buffer::ChannelArrayView&lt;float&gt;* destBuffer,</span></a>
+<a name="128"><span class="lineNum">     128 </span><span class="lineCov">       3755 : void ClickGenerator::processBlock (choc::buffer::ChannelArrayView&lt;float&gt;* destBuffer,</span></a>
 <a name="129"><span class="lineNum">     129 </span>            :                                    MidiMessageArray* bufferForMidiMessages, EditTimeRange editTime)</a>
 <a name="130"><span class="lineNum">     130 </span>            : {</a>
 <a name="131"><span class="lineNum">     131 </span>            :     // Use the end time here to avoid the end of blocks playing the start of a beat</a>
-<a name="132"><span class="lineNum">     132 </span><span class="lineCov">       3756 :     if (isMutedAtTime (editTime.getEnd()))</span></a>
+<a name="132"><span class="lineNum">     132 </span><span class="lineCov">       3755 :     if (isMutedAtTime (editTime.getEnd()))</span></a>
 <a name="133"><span class="lineNum">     133 </span>            :         return;</a>
 <a name="134"><span class="lineNum">     134 </span>            : </a>
 <a name="135"><span class="lineNum">     135 </span><span class="lineNoCov">          0 :     auto gain = edit.getClickTrackVolume();</span></a>
@@ -251,15 +251,15 @@
 <a name="189"><span class="lineNum">     189 </span>            :     }</a>
 <a name="190"><span class="lineNum">     190 </span>            : }</a>
 <a name="191"><span class="lineNum">     191 </span>            : </a>
-<a name="192"><span class="lineNum">     192 </span><span class="lineCov">       3756 : bool ClickGenerator::isMutedAtTime (double time) const</span></a>
+<a name="192"><span class="lineNum">     192 </span><span class="lineCov">       3755 : bool ClickGenerator::isMutedAtTime (double time) const</span></a>
 <a name="193"><span class="lineNum">     193 </span>            : {</a>
-<a name="194"><span class="lineNum">     194 </span><span class="lineCov">       3756 :     const bool clickEnabled = edit.clickTrackEnabled.get();</span></a>
+<a name="194"><span class="lineNum">     194 </span><span class="lineCov">       3755 :     const bool clickEnabled = edit.clickTrackEnabled.get();</span></a>
 <a name="195"><span class="lineNum">     195 </span>            : </a>
-<a name="196"><span class="lineNum">     196 </span><span class="lineCov">       3756 :     if (clickEnabled &amp;&amp; edit.clickTrackRecordingOnly)</span></a>
+<a name="196"><span class="lineNum">     196 </span><span class="lineCov">       3755 :     if (clickEnabled &amp;&amp; edit.clickTrackRecordingOnly)</span></a>
 <a name="197"><span class="lineNum">     197 </span><span class="lineNoCov">          0 :         return ! edit.getTransport().isRecording();</span></a>
 <a name="198"><span class="lineNum">     198 </span>            : </a>
-<a name="199"><span class="lineNum">     199 </span><span class="lineCov">       3756 :     if (! clickEnabled)</span></a>
-<a name="200"><span class="lineNum">     200 </span><span class="lineCov">       7512 :         return ! edit.getClickTrackRange().contains (time);</span></a>
+<a name="199"><span class="lineNum">     199 </span><span class="lineCov">       3755 :     if (! clickEnabled)</span></a>
+<a name="200"><span class="lineNum">     200 </span><span class="lineCov">       7510 :         return ! edit.getClickTrackRange().contains (time);</span></a>
 <a name="201"><span class="lineNum">     201 </span>            : </a>
 <a name="202"><span class="lineNum">     202 </span>            :     return ! clickEnabled;</a>
 <a name="203"><span class="lineNum">     203 </span>            : }</a>
@@ -302,16 +302,16 @@
 <a name="240"><span class="lineNum">     240 </span><span class="lineCov">         12 :     return true;</span></a>
 <a name="241"><span class="lineNum">     241 </span>            : }</a>
 <a name="242"><span class="lineNum">     242 </span>            : </a>
-<a name="243"><span class="lineNum">     243 </span><span class="lineCov">       3876 : void ClickNode::process (ProcessContext&amp; pc)</span></a>
+<a name="243"><span class="lineNum">     243 </span><span class="lineCov">       3932 : void ClickNode::process (ProcessContext&amp; pc)</span></a>
 <a name="244"><span class="lineNum">     244 </span>            : {</a>
 <a name="245"><span class="lineNum">     245 </span>            :     SCOPED_REALTIME_CHECK</a>
 <a name="246"><span class="lineNum">     246 </span>            : </a>
-<a name="247"><span class="lineNum">     247 </span><span class="lineCov">       3876 :     if (playHead.isUserDragging() || ! playHead.isPlaying())</span></a>
-<a name="248"><span class="lineNum">     248 </span><span class="lineCov">        120 :         return;</span></a>
+<a name="247"><span class="lineNum">     247 </span><span class="lineCov">       3932 :     if (playHead.isUserDragging() || ! playHead.isPlaying())</span></a>
+<a name="248"><span class="lineNum">     248 </span><span class="lineCov">        177 :         return;</span></a>
 <a name="249"><span class="lineNum">     249 </span>            : </a>
-<a name="250"><span class="lineNum">     250 </span><span class="lineCov">       3756 :     const auto splitTimelinePosition = referenceSampleRangeToSplitTimelineRange (playHead, pc.referenceSampleRange);</span></a>
-<a name="251"><span class="lineNum">     251 </span><span class="lineCov">       3756 :     const EditTimeRange editTime (tracktion_graph::sampleToTime (splitTimelinePosition.timelineRange1, sampleRate));</span></a>
-<a name="252"><span class="lineNum">     252 </span><span class="lineCov">       3756 :     clickGenerator.processBlock (&amp;pc.buffers.audio, &amp;pc.buffers.midi, editTime);</span></a>
+<a name="250"><span class="lineNum">     250 </span><span class="lineCov">       3755 :     const auto splitTimelinePosition = referenceSampleRangeToSplitTimelineRange (playHead, pc.referenceSampleRange);</span></a>
+<a name="251"><span class="lineNum">     251 </span><span class="lineCov">       3755 :     const EditTimeRange editTime (tracktion_graph::sampleToTime (splitTimelinePosition.timelineRange1, sampleRate));</span></a>
+<a name="252"><span class="lineNum">     252 </span><span class="lineCov">       3755 :     clickGenerator.processBlock (&amp;pc.buffers.audio, &amp;pc.buffers.midi, editTime);</span></a>
 <a name="253"><span class="lineNum">     253 </span>            : }</a>
 <a name="254"><span class="lineNum">     254 </span>            : </a>
 <a name="255"><span class="lineNum">     255 </span>            : </a>
