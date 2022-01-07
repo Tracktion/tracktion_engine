@@ -1341,8 +1341,13 @@ juce::Array<MidiControllerEvent*> Clipboard::MIDIEvents::pasteControllersIntoCli
         destController = -1;
 
     if (destController != -1)
+    {
         for (auto& e : midiEvents)
             e.setType (destController, nullptr);
+
+        controllerTypes.clear();
+        controllerTypes.add (destController);
+    }
 
     auto beatRange = juce::Range<double>::withStartAndLength (midiEvents.getReference(0).getBeatPosition(), 0.0);
 
