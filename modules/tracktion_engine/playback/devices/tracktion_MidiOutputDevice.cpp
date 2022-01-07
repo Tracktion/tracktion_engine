@@ -312,8 +312,6 @@ void MidiOutputDevice::setEnabled (bool b)
         engine.getDeviceManager().checkDefaultDevicesAreValid();
 
         engine.getExternalControllerManager().midiInOutDevicesChanged();
-
-        juce::MouseCursor::hideWaitCursor();
     }
 }
 
