@@ -13,7 +13,7 @@ namespace tracktion_engine
 
 static juce::String getDeprecatedPluginDescSuffix (const juce::PluginDescription& d)
 {
-    return "-" + juce::String (d.fileOrIdentifier.hashCode())
+    return "-" + juce::String::toHexString (d.fileOrIdentifier.hashCode())
          + "-" + juce::String::toHexString (d.deprecatedUid);
 }
 
