@@ -22,10 +22,10 @@ MarkerManager::~MarkerManager()
     state.removeListener (this);
 }
 
-ReferenceCountedArray<MarkerClip> MarkerManager::getMarkers() const
+juce::ReferenceCountedArray<MarkerClip> MarkerManager::getMarkers() const
 {
     CRASH_TRACER
-    ReferenceCountedArray<MarkerClip> results;
+    juce::ReferenceCountedArray<MarkerClip> results;
 
     if (auto mt = edit.getMarkerTrack())
         for (auto clip : mt->getClips())
@@ -38,7 +38,7 @@ ReferenceCountedArray<MarkerClip> MarkerManager::getMarkers() const
 
 int MarkerManager::getNextUniqueID (int start)
 {
-    SortedSet<int> uniqueIDs;
+    juce::SortedSet<int> uniqueIDs;
 
     for (auto m : getMarkers())
         uniqueIDs.add (m->getMarkerID());
@@ -150,15 +150,15 @@ MarkerClip::Ptr MarkerManager::createMarker (int number, double pos, double leng
     return createMarker (number, pos, length, getNewMarkerMode(), sm);
 }
 
-void MarkerManager::valueTreeChanged (const ValueTree& v)
+void MarkerManager::valueTreeChanged (const juce::ValueTree& v)
 {
     if (v.hasType (IDs::MARKERTRACK) || v.getParent().hasType (IDs::MARKERTRACK))
         sendChangeMessage();
 }
 
-void MarkerManager::valueTreePropertyChanged (ValueTree& v, const juce::Identifier&)  { valueTreeChanged (v); }
-void MarkerManager::valueTreeChildAdded (ValueTree& p, ValueTree&)                    { valueTreeChanged (p); }
-void MarkerManager::valueTreeChildRemoved (ValueTree& p, ValueTree&, int)             { valueTreeChanged (p); }
-void MarkerManager::valueTreeParentChanged (ValueTree& v)                             { valueTreeChanged (v); }
+void MarkerManager::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier&)  { valueTreeChanged (v); }
+void MarkerManager::valueTreeChildAdded (juce::ValueTree& p, juce::ValueTree&)              { valueTreeChanged (p); }
+void MarkerManager::valueTreeChildRemoved (juce::ValueTree& p, juce::ValueTree&, int)       { valueTreeChanged (p); }
+void MarkerManager::valueTreeParentChanged (juce::ValueTree& v)                             { valueTreeChanged (v); }
 
 }

@@ -12,9 +12,9 @@ namespace tracktion_engine
 {
 
 static void getPossibleInputDeviceNames (Engine& e,
-                                         StringArray& s, StringArray& a,
-                                         BigInteger& hasAudio,
-                                         BigInteger& hasMidi)
+                                         juce::StringArray& s, juce::StringArray& a,
+                                         juce::BigInteger& hasAudio,
+                                         juce::BigInteger& hasMidi)
 {
     auto& dm = e.getDeviceManager();
 
@@ -37,9 +37,9 @@ static void getPossibleInputDeviceNames (Engine& e,
 }
 
 static void getPossibleOutputDeviceNames (Engine& e,
-                                          StringArray& s, StringArray& a,
-                                          BigInteger& hasAudio,
-                                          BigInteger& hasMidi)
+                                          juce::StringArray& s, juce::StringArray& a,
+                                          juce::BigInteger& hasAudio,
+                                          juce::BigInteger& hasMidi)
 {
     auto& dm = e.getDeviceManager();
 
@@ -89,11 +89,11 @@ InsertPlugin::~InsertPlugin()
 //==============================================================================
 const char* InsertPlugin::xmlTypeName ("insert");
 
-String InsertPlugin::getName()                                               { return name.get().isNotEmpty() ? name : TRANS("Insert Plugin"); }
-String InsertPlugin::getPluginType()                                         { return xmlTypeName; }
-String InsertPlugin::getShortName (int)                                      { return TRANS("Insert"); }
+juce::String InsertPlugin::getName()                                         { return name.get().isNotEmpty() ? name : TRANS("Insert Plugin"); }
+juce::String InsertPlugin::getPluginType()                                   { return xmlTypeName; }
+juce::String InsertPlugin::getShortName (int)                                { return TRANS("Insert"); }
 double InsertPlugin::getLatencySeconds()                                     { return latencySeconds; }
-void InsertPlugin::getChannelNames (StringArray*, StringArray*)              {}
+void InsertPlugin::getChannelNames (juce::StringArray*, juce::StringArray*)  {}
 bool InsertPlugin::takesAudioInput()                                         { return true; }
 bool InsertPlugin::takesMidiInput()                                          { return true; }
 bool InsertPlugin::canBeAddedToClip()                                        { return false; }
@@ -102,7 +102,7 @@ bool InsertPlugin::needsConstantBufferSize()                                 { r
 void InsertPlugin::initialise (const PluginInitialisationInfo& info)
 {
     {
-        const ScopedLock sl (bufferLock);
+        const juce::ScopedLock sl (bufferLock);
         sendBuffer.resize ({ 2u, (choc::buffer::FrameCount) info.blockSizeSamples });
         sendBuffer.clear();
 
@@ -121,7 +121,7 @@ void InsertPlugin::initialiseWithoutStopping (const PluginInitialisationInfo& in
 
 void InsertPlugin::deinitialise()
 {
-    const ScopedLock sl (bufferLock);
+    const juce::ScopedLock sl (bufferLock);
 
     sendBuffer = {};
     returnBuffer = {};
@@ -133,7 +133,7 @@ void InsertPlugin::deinitialise()
 void InsertPlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     CRASH_TRACER
-    const ScopedLock sl (bufferLock);
+    const juce::ScopedLock sl (bufferLock);
 
     // Fill send buffer with data
     if (sendDeviceType == audioDevice && fc.destBuffer != nullptr)
@@ -170,7 +170,7 @@ void InsertPlugin::applyToBuffer (const PluginRenderContext& fc)
     }
 }
 
-String InsertPlugin::getSelectableDescription()
+juce::String InsertPlugin::getSelectableDescription()
 {
     return TRANS("Insert Plugin");
 }
@@ -195,10 +195,10 @@ void InsertPlugin::updateDeviceTypes()
     CRASH_TRACER
     TRACKTION_ASSERT_MESSAGE_THREAD
 
-    StringArray devices, aliases;
-    BigInteger hasAudio, hasMidi;
+    juce::StringArray devices, aliases;
+    juce::BigInteger hasAudio, hasMidi;
 
-    auto setDeviceType = [] (DeviceType& deviceType, BigInteger& audio, BigInteger& midi, int index)
+    auto setDeviceType = [] (DeviceType& deviceType, juce::BigInteger& audio, juce::BigInteger& midi, int index)
     {
         if (audio[index])       deviceType = audioDevice;
         else if (midi[index])   deviceType = midiDevice;
@@ -216,9 +216,9 @@ void InsertPlugin::updateDeviceTypes()
 }
 
 void InsertPlugin::getPossibleDeviceNames (Engine& e,
-                                           StringArray& s, StringArray& a,
-                                           BigInteger& hasAudio,
-                                           BigInteger& hasMidi,
+                                           juce::StringArray& s, juce::StringArray& a,
+                                           juce::BigInteger& hasAudio,
+                                           juce::BigInteger& hasMidi,
                                            bool forInput)
 {
     if (forInput)
@@ -233,7 +233,7 @@ bool InsertPlugin::hasMidi() const        { return sendDeviceType == midiDevice 
 void InsertPlugin::fillSendBuffer (choc::buffer::ChannelArrayView<float>* destAudio, MidiMessageArray* destMidi)
 {
     CRASH_TRACER
-    const ScopedLock sl (bufferLock);
+    const juce::ScopedLock sl (bufferLock);
     
     if (sendDeviceType == audioDevice)
     {
@@ -250,7 +250,7 @@ void InsertPlugin::fillSendBuffer (choc::buffer::ChannelArrayView<float>* destAu
 void InsertPlugin::fillReturnBuffer (choc::buffer::ChannelArrayView<float>* srcAudio, MidiMessageArray* srcMidi)
 {
     CRASH_TRACER
-    const ScopedLock sl (bufferLock);
+    const juce::ScopedLock sl (bufferLock);
     
     if (returnDeviceType == audioDevice)
     {
@@ -264,11 +264,11 @@ void InsertPlugin::fillReturnBuffer (choc::buffer::ChannelArrayView<float>* srcA
     }
 }
 
-void InsertPlugin::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i)
+void InsertPlugin::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i)
 {
     if (v == state)
     {
-        auto update = [&i] (CachedValue<String>& deviceName) -> bool
+        auto update = [&i] (juce::CachedValue<juce::String>& deviceName) -> bool
         {
             if (i != deviceName.getPropertyID())
                 return false;

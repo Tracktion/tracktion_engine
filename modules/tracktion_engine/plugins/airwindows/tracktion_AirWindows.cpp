@@ -29,12 +29,12 @@ public:
         : AutomatableParameter (getParamId (p, idx), getParamName (p, idx), p, {0, 1}),
         plugin (p), index (idx)
     {
-        valueToStringFunction = [] (float v)  { return String (v); };
-        stringToValueFunction = [] (String v) { return v.getFloatValue(); };
+        valueToStringFunction = [] (float v)         { return juce::String (v); };
+        stringToValueFunction = [] (juce::String v)  { return v.getFloatValue(); };
 
         defaultValue = plugin.impl->getParameter (idx);
 
-        setParameter (defaultValue, sendNotification);
+        setParameter (defaultValue, juce::sendNotification);
 
         autodetectRange();
     }
@@ -46,7 +46,7 @@ public:
 
     void resetToDefault()
     {
-        setParameter (defaultValue, sendNotificationSync);
+        setParameter (defaultValue, juce::sendNotificationSync);
     }
 
     void autodetectRange()
@@ -75,7 +75,7 @@ public:
     {
         conversionRange = range;
 
-        stringToValueFunction = [this] (String v) { return conversionRange.convertTo0to1 (v.getFloatValue()); };
+        stringToValueFunction = [this] (juce::String v) { return conversionRange.convertTo0to1 (v.getFloatValue()); };
     }
 
     void parameterChanged (float newValue, bool byAutomation) override
@@ -89,15 +89,15 @@ public:
         }
     }
 
-    String getCurrentValueAsString() override
+    juce::String getCurrentValueAsString() override
     {
         char paramText[kVstMaxParamStrLen];
         plugin.impl->getParameterDisplay (index, paramText);
-        auto t1 = String (paramText);
+        auto t1 = juce::String (paramText);
 
         char labelText[kVstMaxParamStrLen];
         plugin.impl->getParameterLabel (index, labelText);
-        auto t2 = String (labelText);
+        auto t2 = juce::String (labelText);
 
         if (t2.isNotEmpty())
             return t1 + " " + t2;
@@ -109,16 +109,16 @@ public:
         getEdit().pluginChanged (plugin);
     }
 
-    static String getParamId (AirWindowsPlugin& p, int idx)
+    static juce::String getParamId (AirWindowsPlugin& p, int idx)
     {
         return getParamName (p, idx).toLowerCase().retainCharacters ("abcdefghijklmnopqrstuvwxyz");
     }
 
-    static String getParamName (AirWindowsPlugin& p, int idx)
+    static juce::String getParamName (AirWindowsPlugin& p, int idx)
     {
         char paramName[kVstMaxParamStrLen];
         p.impl->getParameterName (idx, paramName);
-        return String (paramName);
+        return juce::String (paramName);
     }
 
     AirWindowsPlugin& plugin;
@@ -176,8 +176,8 @@ void AirWindowsPlugin::resetToDefault()
         if (auto awp = dynamic_cast<AirWindowsAutomatableParameter*> (p))
             awp->resetToDefault();
 
-    dryGain->setParameter (0.0f, sendNotificationSync);
-    wetGain->setParameter (1.0f, sendNotificationSync);
+    dryGain->setParameter (0.0f, juce::sendNotificationSync);
+    wetGain->setParameter (1.0f, juce::sendNotificationSync);
 }
 
 int AirWindowsPlugin::getNumOutputChannelsGivenInputs (int)
@@ -245,9 +245,9 @@ void AirWindowsPlugin::applyToBuffer (const PluginRenderContext& fc)
 
 void AirWindowsPlugin::processBlock (juce::AudioBuffer<float>& buffer)
 {
-    const int numChans    = buffer.getNumChannels();
-    const int samps       = buffer.getNumSamples();
-    const int pluginChans = jmax (impl->getNumOutputs(), impl->getNumInputs());
+    auto numChans    = buffer.getNumChannels();
+    auto samps       = buffer.getNumSamples();
+    auto pluginChans = std::max (impl->getNumOutputs(), impl->getNumInputs());
 
     if (pluginChans > numChans)
     {
@@ -285,17 +285,17 @@ void AirWindowsPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v
 
     if (v.hasProperty (IDs::state))
     {
-        MemoryBlock data;
+        juce::MemoryBlock data;
 
         {
-            MemoryOutputStream os (data, false);
-            Base64::convertFromBase64 (os, v[IDs::state].toString());
+            juce::MemoryOutputStream os (data, false);
+            juce::Base64::convertFromBase64 (os, v[IDs::state].toString());
         }
 
         impl->setChunk (data.getData(), int (data.getSize()), false);
     }
 
-    CachedValue<float>* cvsFloat[]  = { &wetValue, &dryValue, nullptr };
+    juce::CachedValue<float>* cvsFloat[]  = { &wetValue, &dryValue, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
 
     for (auto p : parameters)
@@ -314,7 +314,7 @@ void AirWindowsPlugin::flushPluginStateToValueTree()
 
     if (data != nullptr)
     {
-        state.setProperty (IDs::state, Base64::toBase64 (data, size_t (size)), um);
+        state.setProperty (IDs::state, juce::Base64::toBase64 (data, size_t (size)), um);
 
         free (data);
     }

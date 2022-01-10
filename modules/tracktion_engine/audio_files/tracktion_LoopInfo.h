@@ -46,11 +46,11 @@ public:
     void setRootNote (int note);
 
     //==============================================================================
-    juce::int64 getInMarker() const;
-    juce::int64 getOutMarker() const;
+    SampleCount getInMarker() const;
+    SampleCount getOutMarker() const;
 
-    void setInMarker (juce::int64 newPos);
-    void setOutMarker (juce::int64 newPos);
+    void setInMarker (SampleCount newPos);
+    void setOutMarker (SampleCount newPos);
 
     //==============================================================================
     enum class LoopPointType
@@ -61,7 +61,7 @@ public:
 
     struct LoopPoint
     {
-        juce::int64 pos = 0;
+        SampleCount pos = 0;
         LoopPointType type = LoopPointType::manual;
 
         bool isAutomatic() const        { return type == LoopPointType::automatic; }
@@ -69,8 +69,8 @@ public:
 
     int getNumLoopPoints() const;
     LoopPoint getLoopPoint (int index) const;
-    void addLoopPoint (juce::int64 pos, LoopPointType type);
-    void changeLoopPoint (int index, juce::int64 pos, LoopPointType type);
+    void addLoopPoint (SampleCount pos, LoopPointType type);
+    void changeLoopPoint (int index, SampleCount pos, LoopPointType type);
     void deleteLoopPoint (int index);
     void clearLoopPoints();
     void clearLoopPoints (LoopPointType);

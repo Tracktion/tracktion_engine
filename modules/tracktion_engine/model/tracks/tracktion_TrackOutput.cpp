@@ -79,7 +79,7 @@ void TrackOutput::updateOutput()
 }
 
 //==============================================================================
-bool TrackOutput::outputsToDevice (const String& deviceName, bool compareDefaultDevices) const
+bool TrackOutput::outputsToDevice (const juce::String& deviceName, bool compareDefaultDevices) const
 {
     if (auto destTrack = getDestinationTrack())
         return deviceName.startsWithIgnoreCase (TRANS("Track") + " ")
@@ -160,7 +160,7 @@ OutputDevice* TrackOutput::getOutputDevice (bool traceThroughDestTracks) const
 juce::String TrackOutput::getOutputName() const
 {
     if (auto t = getDestinationTrack())
-        return TRANS("Track") + " " + String (t->getAudioTrackNumber());
+        return TRANS("Track") + " " + juce::String (t->getAudioTrackNumber());
 
     return outputDevice;
 }
@@ -171,11 +171,11 @@ juce::String TrackOutput::getDescriptiveOutputName() const
     {
         if (! t->getName().startsWithIgnoreCase (TRANS("Track") + " "))
             return TRANS("Feeds into track 123 (XZZX)")
-                     .replace ("123", String (t->getAudioTrackNumber()))
+                     .replace ("123", juce::String (t->getAudioTrackNumber()))
                      .replace ("XZZX", "(" + t->getName() + ")");
 
         return TRANS("Feeds into track 123")
-                 .replace ("123", String (t->getAudioTrackNumber()));
+                 .replace ("123", juce::String (t->getAudioTrackNumber()));
     }
 
     if (auto dev = owner.edit.engine.getDeviceManager().findOutputDeviceWithName (outputDevice))
@@ -184,10 +184,10 @@ juce::String TrackOutput::getDescriptiveOutputName() const
     return outputDevice;
 }
 
-void TrackOutput::setOutputByName (const String& name)
+void TrackOutput::setOutputByName (const juce::String& name)
 {
     if (name.startsWith (TRANS("Track") + " "))
-        outputDevice = String ("track ") + String (name.upToFirstOccurrenceOf ("(", false, false).trim().getTrailingIntValue());
+        outputDevice = juce::String ("track ") + juce::String (name.upToFirstOccurrenceOf ("(", false, false).trim().getTrailingIntValue());
     else
         outputDevice = name;
 }
@@ -218,8 +218,8 @@ bool TrackOutput::canPlayMidi() const
 
 void TrackOutput::setOutputToTrack (AudioTrack* track)
 {
-    outputDevice = track != nullptr ? String ("track") + " " + String (track->getAudioTrackNumber())
-                                    : String();
+    outputDevice = track != nullptr ? juce::String ("track") + " " + juce::String (track->getAudioTrackNumber())
+                                    : juce::String();
 }
 
 void TrackOutput::setOutputToDefaultDevice (bool isMidi)
@@ -228,7 +228,7 @@ void TrackOutput::setOutputToDefaultDevice (bool isMidi)
                           : DeviceManager::getDefaultAudioOutDeviceName (false);
 }
 
-static bool feedsIntoAnyOf (AudioTrack* t, const Array<AudioTrack*>& tracks)
+static bool feedsIntoAnyOf (AudioTrack* t, const juce::Array<AudioTrack*>& tracks)
 {
     if (tracks.contains (t))
         return true;
@@ -242,10 +242,10 @@ static bool feedsIntoAnyOf (AudioTrack* t, const Array<AudioTrack*>& tracks)
     return false;
 }
 
-void TrackOutput::getPossibleOutputDeviceNames (const Array<AudioTrack*>& tracks,
-                                                StringArray& s, StringArray& a,
-                                                BigInteger& hasAudio,
-                                                BigInteger& hasMidi)
+void TrackOutput::getPossibleOutputDeviceNames (const juce::Array<AudioTrack*>& tracks,
+                                                juce::StringArray& s, juce::StringArray& a,
+                                                juce::BigInteger& hasAudio,
+                                                juce::BigInteger& hasMidi)
 {
     if (tracks.isEmpty())
         return;
@@ -285,10 +285,10 @@ void TrackOutput::getPossibleOutputDeviceNames (const Array<AudioTrack*>& tracks
     }
 }
 
-void TrackOutput::getPossibleOutputNames (const Array<AudioTrack*>& tracks,
-                                          StringArray& s, StringArray& a,
-                                          BigInteger& hasAudio,
-                                          BigInteger& hasMidi)
+void TrackOutput::getPossibleOutputNames (const juce::Array<AudioTrack*>& tracks,
+                                          juce::StringArray& s, juce::StringArray& a,
+                                          juce::BigInteger& hasAudio,
+                                          juce::BigInteger& hasMidi)
 {
     if (tracks.isEmpty())
         return;
@@ -301,8 +301,7 @@ void TrackOutput::getPossibleOutputNames (const Array<AudioTrack*>& tracks,
     {
         if (t->createsOutput() && ! feedsIntoAnyOf (t, tracks))
         {
-            String trackName;
-            const String trackNum (t->getAudioTrackNumber());
+            juce::String trackName, trackNum (t->getAudioTrackNumber());
 
             if (! t->getName().startsWithIgnoreCase (TRANS("Track") + " "))
                 trackName = (TRANS("Track") + " " + trackNum + " (" + t->getName() + ")");
@@ -323,7 +322,7 @@ bool TrackOutput::feedsInto (const Track* dest) const
     return false;
 }
 
-bool TrackOutput::injectLiveMidiMessage (const MidiMessage& message)
+bool TrackOutput::injectLiveMidiMessage (const juce::MidiMessage& message)
 {
     auto dev = owner.edit.engine.getDeviceManager().findOutputDeviceWithName (outputDevice);
 
@@ -347,7 +346,7 @@ bool TrackOutput::injectLiveMidiMessage (const MidiMessage& message)
     return false;
 }
 
-void TrackOutput::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& ident)
+void TrackOutput::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& ident)
 {
     if (v.hasType (IDs::DEVICE) && ident == IDs::name)
     {

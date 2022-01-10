@@ -12,7 +12,7 @@ namespace tracktion_engine
 {
 
 //==============================================================================
-MIDITrackerModifier::MIDITrackerModifier (Edit& e, const ValueTree& v)
+MIDITrackerModifier::MIDITrackerModifier (Edit& e, const juce::ValueTree& v)
     : Modifier (e, v)
 {
     auto um = &edit.getUndoManager();
@@ -24,8 +24,9 @@ MIDITrackerModifier::MIDITrackerModifier (Edit& e, const ValueTree& v)
     relativeRoot.referTo (state, IDs::root, um, 60);
     relativeSpread.referTo (state, IDs::spread, um, 12);
 
-    auto addDiscreteParam = [this] (const String& paramID, const String& name, Range<float> valueRange, CachedValue<float>& val,
-                                    const StringArray& labels) -> AutomatableParameter*
+    auto addDiscreteParam = [this] (const juce::String& paramID, const juce::String& name,
+                                    juce::Range<float> valueRange, juce::CachedValue<float>& val,
+                                    const juce::StringArray& labels) -> AutomatableParameter*
     {
         auto* p = new DiscreteLabelledParameter (paramID, name, *this, valueRange, labels.size(), labels);
         addAutomatableParameter (p);
@@ -34,7 +35,9 @@ MIDITrackerModifier::MIDITrackerModifier (Edit& e, const ValueTree& v)
         return p;
     };
 
-    auto addParam = [this] (const String& paramID, const String& name, NormalisableRange<float> valueRange, float centreVal, CachedValue<float>& val, const String& suffix) -> AutomatableParameter*
+    auto addParam = [this] (const juce::String& paramID, const juce::String& name,
+                            juce::NormalisableRange<float> valueRange, float centreVal,
+                            juce::CachedValue<float>& val, const juce::String& suffix) -> AutomatableParameter*
     {
         valueRange.setSkewForCentre (centreVal);
         auto* p = new SuffixedParameter (paramID, name, *this, valueRange, suffix);
@@ -87,12 +90,12 @@ int MIDITrackerModifier::getCurrentMIDIValue() const noexcept
     return currentMIDIValue.load (std::memory_order_acquire);
 }
 
-AutomatableParameter::ModifierAssignment* MIDITrackerModifier::createAssignment (const ValueTree& v)
+AutomatableParameter::ModifierAssignment* MIDITrackerModifier::createAssignment (const juce::ValueTree& v)
 {
     return new Assignment (v, *this);
 }
 
-StringArray MIDITrackerModifier::getMidiInputNames()
+juce::StringArray MIDITrackerModifier::getMidiInputNames()
 {
     return { TRANS("MIDI input") };
 }
@@ -131,13 +134,13 @@ MIDITrackerModifier::Ptr MIDITrackerModifier::Assignment::getMIDITrackerModifier
 }
 
 //==============================================================================
-StringArray MIDITrackerModifier::getTypeNames()
+juce::StringArray MIDITrackerModifier::getTypeNames()
 {
     return { NEEDS_TRANS("Pitch"),
              NEEDS_TRANS("Velocity") };
 }
 
-StringArray MIDITrackerModifier::getModeNames()
+juce::StringArray MIDITrackerModifier::getModeNames()
 {
     return { NEEDS_TRANS("Absolute"),
              NEEDS_TRANS("Relative") };
@@ -170,9 +173,9 @@ void MIDITrackerModifier::updateMapFromTree()
 
         if (! v.isValid())
         {
-            v = ValueTree (IDs::NODE);
-            v.setProperty (IDs::midi, jmap (i, 0, 4, 0, 127), nullptr);
-            v.setProperty (IDs::value, jmap ((float) i, 0.0f, 4.0f, -1.0f, 1.0f), nullptr);
+            v = juce::ValueTree (IDs::NODE);
+            v.setProperty (IDs::midi, juce::jmap (i, 0, 4, 0, 127), nullptr);
+            v.setProperty (IDs::value, juce::jmap ((float) i, 0.0f, 4.0f, -1.0f, 1.0f), nullptr);
             nodeState.addChild (v, -1, nullptr);
         }
 
@@ -180,7 +183,7 @@ void MIDITrackerModifier::updateMapFromTree()
     }
 
     {
-        const SpinLock::ScopedLockType sl (mapLock);
+        const juce::SpinLock::ScopedLockType sl (mapLock);
         currentMap = newMap;
     }
 
@@ -189,7 +192,7 @@ void MIDITrackerModifier::updateMapFromTree()
 
 void MIDITrackerModifier::updateValueFromMap (int midiVal)
 {
-    jassert (isPositiveAndBelow (midiVal, 128));
+    jassert (juce::isPositiveAndBelow (midiVal, 128));
     auto linearInterpolate = [] (float x1, float y1, float x2, float y2, float x)
     {
         return (y1 * (x2 - x) + y2 * (x - x1)) / (x2 - x1);
@@ -210,7 +213,7 @@ void MIDITrackerModifier::updateValueFromMap (int midiVal)
         Map map;
 
         {
-            const SpinLock::ScopedLockType sl (mapLock);
+            const juce::SpinLock::ScopedLockType sl (mapLock);
             map = currentMap;
         }
 
@@ -239,7 +242,7 @@ void MIDITrackerModifier::updateValueFromMap (int midiVal)
     jassertfalse;
 }
 
-void MIDITrackerModifier::midiEvent (const MidiMessage& m)
+void MIDITrackerModifier::midiEvent (const juce::MidiMessage& m)
 {
     if (! m.isNoteOn())
         return;

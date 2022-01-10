@@ -50,7 +50,7 @@ public:
     juce::String getSelectableDescription() override;
 
     juce::File getOriginalFile() const override;
-    juce::int64 getHash() const override                { return hash; }
+    HashCode getHash() const override                   { return hash; }
 
     void setLoopDefaults() override;
 
@@ -74,7 +74,7 @@ public:
     RenderOptions& getRenderOptions() const noexcept    { jassert (renderOptions != nullptr); return *renderOptions; }
 
     ProjectItem::Ptr createUniqueCopy();
-    juce::int64 generateHash();
+    HashCode generateHash();
 
     juce::CachedValue<bool> copyColourFromMarker, trimToMarker, renderEnabled;
 
@@ -91,7 +91,7 @@ private:
     juce::ReferenceCountedArray<EditSnapshot> referencedEdits;
 
     AudioFileInfo waveInfo;
-    juce::int64 hash = 0;
+    HashCode hash = 0;
     std::unique_ptr<RenderOptions> renderOptions;
     bool sourceMediaReEntrancyCheck = false;
 

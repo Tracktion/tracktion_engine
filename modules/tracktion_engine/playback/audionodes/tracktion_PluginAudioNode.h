@@ -46,7 +46,7 @@ public:
             info.numberOfChannels = 0;
         }
 
-        info.numberOfChannels = jmax (info.numberOfChannels, plugin->getNumOutputChannelsGivenInputs (info.numberOfChannels));
+        info.numberOfChannels = std::max (info.numberOfChannels, plugin->getNumOutputChannelsGivenInputs (info.numberOfChannels));
         info.hasAudio = info.hasAudio || plugin->producesAudioWhenNoAudioInput();
         info.hasMidi  = info.hasMidi  || plugin->takesMidiInput();
         hasAudioInput = info.hasAudio;

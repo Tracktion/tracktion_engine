@@ -13,7 +13,8 @@ namespace tracktion_engine
 
 struct RackInputAutomatableParameter   : public AutomatableParameter
 {
-    RackInputAutomatableParameter (const String& xmlTag, const String& name, Plugin& owner, Range<float> valueRangeToUse)
+    RackInputAutomatableParameter (const juce::String& xmlTag, const juce::String& name,
+                                   Plugin& owner, juce::Range<float> valueRangeToUse)
         : AutomatableParameter (xmlTag, name, owner, valueRangeToUse)
     {
     }
@@ -34,7 +35,8 @@ struct RackInputAutomatableParameter   : public AutomatableParameter
 
 struct RackOutputAutomatableParameter   : public AutomatableParameter
 {
-    RackOutputAutomatableParameter (const String& xmlTag, const String& name, Plugin& owner, Range<float> valueRangeToUse)
+    RackOutputAutomatableParameter (const juce::String& xmlTag, const juce::String& name,
+                                    Plugin& owner, juce::Range<float> valueRangeToUse)
         : AutomatableParameter (xmlTag, name, owner, valueRangeToUse)
     {
     }
@@ -55,7 +57,8 @@ struct RackOutputAutomatableParameter   : public AutomatableParameter
 
 struct RackWetDryAutomatableParam  : public AutomatableParameter
 {
-    RackWetDryAutomatableParam (const String& xmlTag, const String& name, RackInstance& owner, Range<float> valueRangeToUse)
+    RackWetDryAutomatableParam (const juce::String& xmlTag, const juce::String& name,
+                                RackInstance& owner, juce::Range<float> valueRangeToUse)
         : AutomatableParameter (xmlTag, name, owner, valueRangeToUse)
     {
     }
@@ -65,8 +68,8 @@ struct RackWetDryAutomatableParam  : public AutomatableParameter
         notifyListenersOfDeletion();
     }
 
-    String valueToString (float value) override         { return Decibels::toString (Decibels::gainToDecibels (value), 1); }
-    float stringToValue (const String& s) override      { return dbStringToDb (s); }
+    juce::String valueToString (float value) override        { return juce::Decibels::toString (juce::Decibels::gainToDecibels (value), 1); }
+    float stringToValue (const juce::String& s) override     { return dbStringToDb (s); }
 };
 
 //==============================================================================
@@ -118,12 +121,11 @@ RackInstance::~RackInstance()
     rightOutDb->detachFromCurrentValue();
 }
 
-ValueTree RackInstance::create (RackType& type)
+juce::ValueTree RackInstance::create (RackType& type)
 {
-    ValueTree v (IDs::PLUGIN);
-    v.setProperty (IDs::type, RackInstance::xmlTypeName, nullptr);
-    type.rackID.setProperty (v, IDs::rackType, nullptr);
-    return v;
+    return createValueTree (IDs::PLUGIN,
+                            IDs::type, RackInstance::xmlTypeName,
+                            IDs::rackType, type.rackID);
 }
 
 juce::String RackInstance::getTooltip()
@@ -202,9 +204,9 @@ void RackInstance::replaceRackWithPluginSequence (SelectionManager* sm)
     }
 }
 
-StringArray RackInstance::getInputChoices (bool includeNumberPrefix)
+juce::StringArray RackInstance::getInputChoices (bool includeNumberPrefix)
 {
-    StringArray inputChoices;
+    juce::StringArray inputChoices;
 
     if (type != nullptr)
     {
@@ -214,7 +216,7 @@ StringArray RackInstance::getInputChoices (bool includeNumberPrefix)
         for (int i = 1; i < inputs.size(); ++i)
         {
             if (includeNumberPrefix)
-                inputChoices.add (String (i) + ". " + inputs[i]);
+                inputChoices.add (juce::String (i) + ". " + inputs[i]);
             else
                 inputChoices.add (inputs[i]);
         }
@@ -223,9 +225,9 @@ StringArray RackInstance::getInputChoices (bool includeNumberPrefix)
     return inputChoices;
 }
 
-StringArray RackInstance::getOutputChoices (bool includeNumberPrefix)
+juce::StringArray RackInstance::getOutputChoices (bool includeNumberPrefix)
 {
-    StringArray outputChoices;
+    juce::StringArray outputChoices;
 
     if (type != nullptr)
     {
@@ -235,7 +237,7 @@ StringArray RackInstance::getOutputChoices (bool includeNumberPrefix)
         for (int i = 1; i < outputs.size(); ++i)
         {
             if (includeNumberPrefix)
-                outputChoices.add (String (i) + ". " + outputs[i]);
+                outputChoices.add (juce::String (i) + ". " + outputs[i]);
             else
                 outputChoices.add (outputs[i]);
         }
@@ -249,7 +251,7 @@ juce::String RackInstance::getNoPinName()
     return TRANS("<none>");
 }
 
-void RackInstance::setInputName (Channel c, const String& inputName)
+void RackInstance::setInputName (Channel c, const juce::String& inputName)
 {
     auto index = getInputChoices (false).indexOf (inputName);
 
@@ -267,7 +269,7 @@ void RackInstance::setInputName (Channel c, const String& inputName)
     }
 }
 
-void RackInstance::setOutputName (Channel c, const String& outputName)
+void RackInstance::setOutputName (Channel c, const juce::String& outputName)
 {
     auto index = getOutputChoices (false).indexOf (outputName);
 
@@ -338,12 +340,12 @@ void RackInstance::setInputLevel (Channel c, float v)
 {
     const auto& param = c == left ? leftInDb : rightInDb;
 
-    param->setParameter (v, sendNotification);
+    param->setParameter (v, juce::sendNotification);
 
     if (linkInputs)
     {
         const auto& linkedParam = c == left ? rightInDb : leftInDb;
-        linkedParam->setParameter (v, sendNotification);
+        linkedParam->setParameter (v, juce::sendNotification);
     }
 }
 
@@ -351,12 +353,12 @@ void RackInstance::setOutputLevel (Channel c, float v)
 {
     const auto& param = c == left ? leftOutDb : rightOutDb;
 
-    param->setParameter (v, sendNotification);
+    param->setParameter (v, juce::sendNotification);
 
     if (linkOutputs)
     {
         const auto& linkedParam = c == left ? rightOutDb : leftOutDb;
-        linkedParam->setParameter (v, sendNotification);
+        linkedParam->setParameter (v, juce::sendNotification);
     }
 }
 
@@ -367,7 +369,7 @@ juce::String RackInstance::getInputName (Channel c)
     if (type == nullptr || input < 0 || type->getInputNames()[input].isEmpty())
         return getNoPinName();
 
-    return String (input) + ". " + type->getInputNames()[input];
+    return juce::String (input) + ". " + type->getInputNames()[input];
 }
 
 juce::String RackInstance::getOutputName (Channel c)
@@ -377,7 +379,7 @@ juce::String RackInstance::getOutputName (Channel c)
     if (type == nullptr || ouput < 0 || type->getOutputNames()[ouput].isEmpty())
         return getNoPinName();
 
-    return String (ouput) + ". " + type->getOutputNames()[ouput];
+    return juce::String (ouput) + ". " + type->getOutputNames()[ouput];
 }
 
 }

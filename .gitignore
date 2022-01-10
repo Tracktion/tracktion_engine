@@ -74,3 +74,5 @@ examples/projects
 bin
 doxygen/doc
 **/3rd_party/rubberband
+**/cmake-build**
+**/.idea/**

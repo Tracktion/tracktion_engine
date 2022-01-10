@@ -34,7 +34,7 @@ juce::String createDescriptionOfChannels (const std::vector<ChannelIndex>& chann
         else
             isFirst = false;
 
-        desc << ci.indexInDevice << " (" << AudioChannelSet::getAbbreviatedChannelTypeName (ci.channel) << ")";
+        desc << ci.indexInDevice << " (" << juce::AudioChannelSet::getAbbreviatedChannelTypeName (ci.channel) << ")";
     }
 
     return desc.toString();
@@ -56,17 +56,17 @@ juce::AudioChannelSet::ChannelType channelTypeFromAbbreviatedName (const juce::S
     {
         NamedChannelTypeCache()
         {
-            for (int i = 0; i < AudioChannelSet::discreteChannel0; ++i)
+            for (int i = 0; i < juce::AudioChannelSet::discreteChannel0; ++i)
             {
-                const auto channelType = static_cast<AudioChannelSet::ChannelType> (i);
-                auto name = AudioChannelSet::getAbbreviatedChannelTypeName (channelType);
+                const auto channelType = static_cast<juce::AudioChannelSet::ChannelType> (i);
+                auto name = juce::AudioChannelSet::getAbbreviatedChannelTypeName (channelType);
 
                 if (name.isNotEmpty())
                     map[name] = channelType;
             }
         }
 
-        std::map<String, AudioChannelSet::ChannelType> map;
+        std::map<juce::String, juce::AudioChannelSet::ChannelType> map;
     };
 
     static NamedChannelTypeCache cache;
@@ -80,13 +80,13 @@ juce::AudioChannelSet::ChannelType channelTypeFromAbbreviatedName (const juce::S
 
 juce::AudioChannelSet channelSetFromSpeakerArrangmentString (const juce::String& arrangement)
 {
-    AudioChannelSet cs;
+    juce::AudioChannelSet cs;
 
-    for (auto& channel : StringArray::fromTokens (arrangement, false))
+    for (auto& channel : juce::StringArray::fromTokens (arrangement, false))
     {
         const auto ct = channelTypeFromAbbreviatedName (channel);
 
-        if (ct != AudioChannelSet::unknown)
+        if (ct != juce::AudioChannelSet::unknown)
             cs.addChannel (ct);
     }
 

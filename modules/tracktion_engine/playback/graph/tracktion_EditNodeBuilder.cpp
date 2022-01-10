@@ -1182,8 +1182,13 @@ std::unique_ptr<tracktion_graph::Node> createGroupFreezeNodeForDevice (Edit& edi
 
             auto node = tracktion_graph::makeNode<WaveNode> (af, EditTimeRange (0.0, length),
                                                              0.0, EditTimeRange(), LiveClipLevel(),
-                                                             1.0, juce::AudioChannelSet::stereo(), juce::AudioChannelSet::stereo(),
-                                                             processState, EditItemID::fromRawID ((uint64_t) device.getName().hash()), false);
+                                                             1.0,
+                                                             juce::AudioChannelSet::stereo(),
+                                                             juce::AudioChannelSet::stereo(),
+                                                             processState,
+                                                             EditItemID::fromRawID ((uint64_t) device.getName().hash()),
+                                                             false);
+
             return makeNode<TrackMutingNode> (std::make_unique<TrackMuteState> (edit), std::move (node), false);
         }
     }

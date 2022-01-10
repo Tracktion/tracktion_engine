@@ -11,36 +11,36 @@
 namespace tracktion_engine
 {
 
-static String controllerIDToString (int id, int channelid)
+static juce::String controllerIDToString (int id, int channelid)
 {
-    const String channel (" [" + String (channelid) + "]");
+    auto channel = " [" + juce::String (channelid) + "]";
 
     if (id >= 0x40000) return TRANS("Channel Pressure Controller") + "# " + channel;
-    if (id >= 0x30000) return "RPN #"  + String (id & 0x7fff) + channel;
-    if (id >= 0x20000) return "NRPN #" + String (id & 0x7fff) + channel;
+    if (id >= 0x30000) return "RPN #"  + juce::String (id & 0x7fff) + channel;
+    if (id >= 0x20000) return "NRPN #" + juce::String (id & 0x7fff) + channel;
 
     if (id >= 0x10000)
     {
-        String name (TRANS(MidiMessage::getControllerName (id & 0x7f)));
+        auto name = TRANS(juce::MidiMessage::getControllerName (id & 0x7f));
 
         if (name.isNotEmpty())
             name = " (" + name + ")";
 
-        return TRANS("Controller") + " #" + String (id & 0x7f) + name + channel;
+        return TRANS("Controller") + " #" + juce::String (id & 0x7f) + name + channel;
     }
 
     return {};
 }
 
-static void removeAddAllCommandIfTooManyItems (PopupMenu& menu)
+static void removeAddAllCommandIfTooManyItems (juce::PopupMenu& menu)
 {
     // if there are more than 200 parameters, strip off the initial two items ("add all" and separator)
     if (menu.getNumItems() > 201)
     {
-        PopupMenu m2;
+        juce::PopupMenu m2;
         int n = 0;
 
-        for (PopupMenu::MenuItemIterator i (menu); i.next();)
+        for (juce::PopupMenu::MenuItemIterator i (menu); i.next();)
             if (++n >= 2)
                 m2.addItem (i.getItem());
 
@@ -52,7 +52,7 @@ static void removeAddAllCommandIfTooManyItems (PopupMenu& menu)
 ParameterControlMappings::ParameterControlMappings (Edit& ed)
     : edit (ed)
 {
-    loadFrom (ValueTree());
+    loadFrom (juce::ValueTree());
 }
 
 ParameterControlMappings::~ParameterControlMappings()
@@ -70,7 +70,7 @@ ParameterControlMappings* ParameterControlMappings::getCurrentlyFocusedMappings 
 //==============================================================================
 int ParameterControlMappings::addMapping (int controllerID, int channel, const AutomatableParameter::Ptr& param)
 {
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
 
     for (int i = controllerIDs.size(); --i >= 0;)
     {
@@ -92,7 +92,7 @@ int ParameterControlMappings::addMapping (int controllerID, int channel, const A
 
 void ParameterControlMappings::removeMapping (int index)
 {
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
 
     controllerIDs.remove (index);
     channelIDs.remove (index);
@@ -102,7 +102,7 @@ void ParameterControlMappings::removeMapping (int index)
     tellEditAboutChange();
 }
 
-void ParameterControlMappings::showMappingsEditor (DialogWindow::LaunchOptions& o)
+void ParameterControlMappings::showMappingsEditor (juce::DialogWindow::LaunchOptions& o)
 {
     listenToRow (-1);
     checkForDeletedParams();
@@ -131,7 +131,7 @@ void ParameterControlMappings::handleAsyncUpdate()
         setLearntParam (false);
         tellEditAboutChange();
     }
-    else if (isPositiveAndBelow (listeningOnRow, controllerIDs.size() + 1))
+    else if (juce::isPositiveAndBelow (listeningOnRow, controllerIDs.size() + 1))
     {
         setLearntParam (true);
     }
@@ -139,7 +139,7 @@ void ParameterControlMappings::handleAsyncUpdate()
 
 void ParameterControlMappings::sendChange (int controllerID, float newValue, int channel)
 {
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
 
     lastControllerID = controllerID;
     lastControllerChannel = channel;
@@ -201,7 +201,7 @@ void ParameterControlMappings::tellEditAboutChange()
 
 void ParameterControlMappings::checkForDeletedParams()
 {
-    Array<AutomatableParameter*> allParams;
+    juce::Array<AutomatableParameter*> allParams;
 
     for (int j = parameters.size(); --j >= 0;)
     {
@@ -233,9 +233,9 @@ void ParameterControlMappings::checkForDeletedParams()
 }
 
 //==============================================================================
-void ParameterControlMappings::loadFrom (const ValueTree& state)
+void ParameterControlMappings::loadFrom (const juce::ValueTree& state)
 {
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
 
     controllerIDs.clear();
     channelIDs.clear();
@@ -285,9 +285,9 @@ void ParameterControlMappings::loadFrom (const ValueTree& state)
     }
 }
 
-void ParameterControlMappings::saveTo (ValueTree& state)
+void ParameterControlMappings::saveTo (juce::ValueTree& state)
 {
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
 
     checkForDeletedParams();
 
@@ -301,26 +301,26 @@ void ParameterControlMappings::saveTo (ValueTree& state)
     {
         if (parameters[i] != nullptr && controllerIDs[i] != 0)
         {
-            ValueTree e (IDs::MAP);
-            e.setProperty (IDs::id, controllerIDs[i], nullptr);
-            e.setProperty (IDs::channel, channelIDs[i], nullptr);
-            e.setProperty (IDs::param, parameters[i]->getFullName(), nullptr);
-            parameters[i]->getOwnerID().setProperty (e, IDs::pluginID, nullptr);
+            auto e = createValueTree (IDs::MAP,
+                                      IDs::id, controllerIDs[i],
+                                      IDs::channel, channelIDs[i],
+                                      IDs::param, parameters[i]->getFullName(),
+                                      IDs::pluginID, parameters[i]->getOwnerID());
 
             state.addChild (e, -1, nullptr);
         }
     }
 }
 
-void ParameterControlMappings::addPluginToMenu (Plugin::Ptr plugin, PopupMenu& menu,
-                                                Array<ParameterAndIndex>& allParams, int& index, int addAllItemIndex)
+void ParameterControlMappings::addPluginToMenu (Plugin::Ptr plugin, juce::PopupMenu& menu,
+                                                juce::Array<ParameterAndIndex>& allParams, int& index, int addAllItemIndex)
 {
     AutomatableParameterTree::TreeNode* node = plugin->getParameterTree().rootNode.get();
     addPluginToMenu (node, menu, allParams, index, addAllItemIndex);
 }
 
-void ParameterControlMappings::addPluginToMenu (AutomatableParameterTree::TreeNode* node, PopupMenu& menu,
-                                                Array<ParameterAndIndex>& allParams, int& index, int addAllItemIndex)
+void ParameterControlMappings::addPluginToMenu (AutomatableParameterTree::TreeNode* node, juce::PopupMenu& menu,
+                                                juce::Array<ParameterAndIndex>& allParams, int& index, int addAllItemIndex)
 {
     for (auto subNode : node->subNodes)
     {
@@ -344,7 +344,7 @@ void ParameterControlMappings::addPluginToMenu (AutomatableParameterTree::TreeNo
 
         if (subNode->type == AutomatableParameterTree::Group)
         {
-            PopupMenu subMenu;
+            juce::PopupMenu subMenu;
 
             int itemID = ++index;
             subMenu.addItem (itemID, TRANS("Add all parameters"));
@@ -361,28 +361,28 @@ void ParameterControlMappings::addPluginToMenu (AutomatableParameterTree::TreeNo
     }
 }
 
-PopupMenu ParameterControlMappings::buildMenu (Array<ParameterAndIndex>& allParams)
+juce::PopupMenu ParameterControlMappings::buildMenu (juce::Array<ParameterAndIndex>& allParams)
 {
     CRASH_TRACER
 
-    StringArray presets (getPresets());
+    juce::StringArray presets (getPresets());
 
-    PopupMenu loadPresets, deletePresets;
+    juce::PopupMenu loadPresets, deletePresets;
     addSortedListToMenu (loadPresets, presets, 60000);
     addSortedListToMenu (deletePresets, presets, 70000);
 
-    PopupMenu m;
+    juce::PopupMenu m;
     m.addSubMenu (TRANS("Load presets"), loadPresets, loadPresets.getNumItems() > 0);
 
     // save preset
-    Array<Plugin*> plugins;
+    juce::Array<Plugin*> plugins;
 
     for (auto param : parameters)
         if (param != nullptr)
             if (auto p = param->getPlugin())
                 plugins.addIfNotAlreadyThere (p);
 
-    StringArray pluginNames;
+    juce::StringArray pluginNames;
 
     for (auto f : plugins)
     {
@@ -394,7 +394,7 @@ PopupMenu ParameterControlMappings::buildMenu (Array<ParameterAndIndex>& allPara
 
     pluginNames.sort (true);
 
-    PopupMenu savePresets;
+    juce::PopupMenu savePresets;
     addSortedListToMenu (savePresets, pluginNames, 50000);
 
     m.addSubMenu (TRANS("Save preset"), savePresets, savePresets.getNumItems() > 0);
@@ -403,7 +403,7 @@ PopupMenu ParameterControlMappings::buildMenu (Array<ParameterAndIndex>& allPara
     m.addSeparator();
 
     // Build the menu for the main parameters
-    PopupMenu masterPluginsSubMenu;
+    juce::PopupMenu masterPluginsSubMenu;
 
     int index = 0;
 
@@ -412,7 +412,7 @@ PopupMenu ParameterControlMappings::buildMenu (Array<ParameterAndIndex>& allPara
 
     for (auto plugin : edit.getMasterPluginList())
     {
-        PopupMenu pluginSubMenu;
+        juce::PopupMenu pluginSubMenu;
 
         int addAllItemIndex = ++index;
         pluginSubMenu.addItem (addAllItemIndex, TRANS("Add all parameters"));
@@ -434,16 +434,16 @@ PopupMenu ParameterControlMappings::buildMenu (Array<ParameterAndIndex>& allPara
 
     if (rackTypes.size() > 0)
     {
-        PopupMenu racksSubMenu;
+        juce::PopupMenu racksSubMenu;
 
         for (int i = 0; i < rackTypes.size(); ++i)
         {
-            PopupMenu rackSubMenu;
+            juce::PopupMenu rackSubMenu;
             auto rackType = rackTypes.getRackType(i);
 
             for (auto plugin : rackType->getPlugins())
             {
-                PopupMenu pluginSubMenu;
+                juce::PopupMenu pluginSubMenu;
 
                 int addAllItemIndex = ++index;
                 pluginSubMenu.addItem (addAllItemIndex, TRANS("Add all parameters"));
@@ -468,12 +468,12 @@ PopupMenu ParameterControlMappings::buildMenu (Array<ParameterAndIndex>& allPara
     // Build the menu for each track
     for (auto track : getAllTracks (edit))
     {
-        PopupMenu tracksSubMenu;
+        juce::PopupMenu tracksSubMenu;
 
         // Build a menu for each plugin in the plugin panel
         for (auto plugin : track->pluginList)
         {
-            PopupMenu pluginSubMenu;
+            juce::PopupMenu pluginSubMenu;
 
             int addAllItemIndex = ++index;
             pluginSubMenu.addItem (addAllItemIndex, TRANS("Add all parameters"));
@@ -496,7 +496,7 @@ PopupMenu ParameterControlMappings::buildMenu (Array<ParameterAndIndex>& allPara
                 {
                     for (auto plugin : *pluginList)
                     {
-                        PopupMenu pluginSubMenu;
+                        juce::PopupMenu pluginSubMenu;
 
                         int addAllItemIndex = ++index;
                         pluginSubMenu.addItem (addAllItemIndex, TRANS("Add all parameters"));
@@ -524,7 +524,7 @@ PopupMenu ParameterControlMappings::buildMenu (Array<ParameterAndIndex>& allPara
 void ParameterControlMappings::showMappingsListForRow (int row)
 {
     CRASH_TRACER
-    Array<ParameterAndIndex> allParams;
+    juce::Array<ParameterAndIndex> allParams;
     auto m = buildMenu (allParams);
 
    #if JUCE_MODAL_LOOPS_PERMITTED
@@ -585,15 +585,15 @@ int ParameterControlMappings::getRowBeingListenedTo() const
     return listeningOnRow;
 }
 
-std::pair<String, String> ParameterControlMappings::getTextForRow (int rowNumber) const
+std::pair<juce::String, juce::String> ParameterControlMappings::getTextForRow (int rowNumber) const
 {
-    auto getLeftText = [&] () -> String
+    auto getLeftText = [&] () -> juce::String
     {
         if (rowNumber == listeningOnRow)
         {
             if (lastControllerID > 0)
                 return controllerIDToString (lastControllerID, lastControllerChannel)
-                         + ": " + String (roundToInt (lastControllerValue * 100.0f)) + "%";
+                         + ": " + juce::String (juce::roundToInt (lastControllerValue * 100.0f)) + "%";
 
             return "(" + TRANS("Move a MIDI controller") + ")";
         }
@@ -604,7 +604,7 @@ std::pair<String, String> ParameterControlMappings::getTextForRow (int rowNumber
         return TRANS("Click here to choose a controller");
     };
 
-    auto getRightText = [&] () -> String
+    auto getRightText = [&] () -> juce::String
     {
         if (auto p = parameters[rowNumber])
             return p->getFullName();
@@ -655,20 +655,20 @@ void ParameterControlMappings::setLearntParam (bool keepListening)
 
 void ParameterControlMappings::savePreset (int index)
 {
-    Array<Plugin*> plugins;
+    juce::Array<Plugin*> plugins;
 
     for (auto param : parameters)
         if (param != nullptr)
             if (auto p = param->getPlugin())
                 plugins.addIfNotAlreadyThere (p);
 
-    StringArray pluginNames;
+    juce::StringArray pluginNames;
 
     for (int i = 0; i < plugins.size(); ++i)
     {
         if (auto* f = plugins.getUnchecked(i))
         {
-            auto name = f->getName() + "|" + String (i);
+            auto name = f->getName() + "|" + juce::String (i);
 
             if (auto t = f->getOwnerTrack())
                 name = t->getName() + " >> " + name;
@@ -682,17 +682,17 @@ void ParameterControlMappings::savePreset (int index)
    #if JUCE_MODAL_LOOPS_PERMITTED
     auto plugin = plugins[pluginNames[index].getTrailingIntValue()];
 
-    const std::unique_ptr<AlertWindow> w (LookAndFeel::getDefaultLookAndFeel()
-                                            .createAlertWindow (TRANS("Plugin mapping preset"),
-                                                                TRANS("Create a new plugin mapping preset"),
-                                                                {}, {}, {}, AlertWindow::QuestionIcon, 0, nullptr));
+    const std::unique_ptr<juce::AlertWindow> w (juce::LookAndFeel::getDefaultLookAndFeel()
+                                                  .createAlertWindow (TRANS("Plugin mapping preset"),
+                                                                      TRANS("Create a new plugin mapping preset"),
+                                                                      {}, {}, {}, juce::AlertWindow::QuestionIcon, 0, nullptr));
 
     w->addTextEditor ("setName", plugin->getName(), TRANS("Name:"));
-    w->addButton (TRANS("OK"), 1, KeyPress (KeyPress::returnKey));
-    w->addButton (TRANS("Cancel"), 0, KeyPress (KeyPress::escapeKey));
+    w->addButton (TRANS("OK"), 1, juce::KeyPress (juce::KeyPress::returnKey));
+    w->addButton (TRANS("Cancel"), 0, juce::KeyPress (juce::KeyPress::escapeKey));
 
     int res = w->runModalLoop();
-    String name = w->getTextEditorContents ("setName");
+    auto name = w->getTextEditorContents ("setName");
 
     if (res == 0 || name.trim().isEmpty())
         return;
@@ -761,7 +761,7 @@ void ParameterControlMappings::loadPreset (int index)
                 if (matchingPlugins.size() > 1)
                 {
                    #if JUCE_MODAL_LOOPS_PERMITTED
-                    ComboBox cb;
+                    juce::ComboBox cb;
                     cb.setSize (200,20);
 
                     for (int i = 0; i < matchingPlugins.size(); ++i)
@@ -772,14 +772,15 @@ void ParameterControlMappings::loadPreset (int index)
 
                     cb.setSelectedId(1);
 
-                    const std::unique_ptr<AlertWindow> w (LookAndFeel::getDefaultLookAndFeel()
-                                                            .createAlertWindow (TRANS("Select plugin"),
-                                                                                TRANS("Select plugin to apply preset to:"),
-                                                                                {}, {}, {}, AlertWindow::QuestionIcon, 0, nullptr));
+                    const std::unique_ptr<juce::AlertWindow> w (juce::LookAndFeel::getDefaultLookAndFeel()
+                                                                    .createAlertWindow (TRANS("Select plugin"),
+                                                                                        TRANS("Select plugin to apply preset to:"),
+                                                                                        {}, {}, {},
+                                                                                        juce::AlertWindow::QuestionIcon, 0, nullptr));
 
                     w->addCustomComponent (&cb);
-                    w->addButton (TRANS("OK"), 1, KeyPress (KeyPress::returnKey));
-                    w->addButton (TRANS("Cancel"), 0, KeyPress (KeyPress::escapeKey));
+                    w->addButton (TRANS("OK"), 1, juce::KeyPress (juce::KeyPress::returnKey));
+                    w->addButton (TRANS("Cancel"), 0, juce::KeyPress (juce::KeyPress::escapeKey));
 
                     int res = w->runModalLoop();
 
@@ -809,9 +810,9 @@ void ParameterControlMappings::loadPreset (int index)
     }
 }
 
-StringArray ParameterControlMappings::getPresets() const
+juce::StringArray ParameterControlMappings::getPresets() const
 {
-    StringArray result;
+    juce::StringArray result;
 
     if (auto xml = edit.engine.getPropertyStorage().getXmlProperty (SettingID::filterControlMappingPresets))
         for (auto e : xml->getChildIterator())

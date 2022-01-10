@@ -62,7 +62,7 @@ namespace AppFunctions
         return false;
     }
 
-    void nudgeSelected (const String& commandDesc)
+    void nudgeSelected (const juce::String& commandDesc)
     {
         getCurrentUIBehaviour().nudgeSelected (commandDesc);
     }
@@ -119,7 +119,7 @@ namespace AppFunctions
 
     void deleteSelected()
     {
-        if (! Component::isMouseButtonDownAnywhere())
+        if (! juce::Component::isMouseButtonDownAnywhere())
             if (auto sm = getCurrentUIBehaviour().getCurrentlyFocusedSelectionManager())
                 sm->deleteSelected();
     }
@@ -190,7 +190,7 @@ namespace AppFunctions
     void stop()
     {
         if (auto transport = getActiveTransport())
-            transport->stop (false, false, true, ModifierKeys::getCurrentModifiersRealtime().isCtrlDown());
+            transport->stop (false, false, true, juce::ModifierKeys::getCurrentModifiersRealtime().isCtrlDown());
     }
 
     void startStopPlay()

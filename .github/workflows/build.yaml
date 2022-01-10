@@ -18,6 +18,9 @@ jobs:
             os: macos-latest
             platform: mac
           - name: Windows
+            os: windows-latest
+            platform: windows
+          - name: Windows_2016
             os: windows-2016
             platform: windows
         # cfg:
@@ -41,6 +44,8 @@ jobs:
       # Build products
       - name: "Build products"
         shell: bash
+        env:
+          BM_API_KEY: ${{ secrets.BM_API_KEY }}
         run: |
           if [[ "$OSTYPE" == "linux-gnu" ]]; then
             export DISABLE_VALGRIND=1
@@ -48,8 +53,6 @@ jobs:
             export CXX=/usr/bin/g++-7
             gcc -v
             g++ -v
-          elif [[ "$OSTYPE" == "msys" ]]; then
-            export MSBUILD_EXE="C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\MSBuild.exe"
           fi
 
           if [[ ${{ github.event_name }} == 'schedule' ]]; then

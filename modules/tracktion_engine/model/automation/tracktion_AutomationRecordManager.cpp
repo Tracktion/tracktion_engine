@@ -20,10 +20,10 @@ AutomationRecordManager::AutomationRecordManager (Edit& ed)
 
         if (auto job = juce::ThreadPoolJob::getCurrentThreadPoolJob())
             mml = std::make_unique<juce::MessageManagerLock> (job);
-        else if (auto t = Thread::getCurrentThread())
+        else if (auto t = juce::Thread::getCurrentThread())
             mml = std::make_unique<juce::MessageManagerLock> (t);
         else
-            jassert (MessageManager::getInstance()->isThisTheMessageThread());
+            jassert (juce::MessageManager::getInstance()->isThisTheMessageThread());
 
         if (mml == nullptr || mml->lockWasGained())
             edit.getTransport().addChangeListener (this);
@@ -89,7 +89,7 @@ void AutomationRecordManager::changeListenerCallback (ChangeBroadcaster* source)
                 punchOut (false);
 
             jassert (recordedParams.isEmpty());
-            const ScopedLock sl (lock);
+            const juce::ScopedLock sl (lock);
             recordedParams.clear();
         }
     }
@@ -97,13 +97,13 @@ void AutomationRecordManager::changeListenerCallback (ChangeBroadcaster* source)
 
 bool AutomationRecordManager::isRecordingAutomation() const
 {
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
     return recordedParams.size() > 0;
 }
 
 bool AutomationRecordManager::isParameterRecording (AutomatableParameter* param) const
 {
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
 
     for (auto p : recordedParams)
         if (&p->parameter == param)
@@ -114,7 +114,7 @@ bool AutomationRecordManager::isParameterRecording (AutomatableParameter* param)
 
 void AutomationRecordManager::punchOut (bool toEnd)
 {
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
 
     if (recordedParams.size() > 0)
     {
@@ -124,14 +124,15 @@ void AutomationRecordManager::punchOut (bool toEnd)
         // sure the playhead position is used as the end time
         if (auto epc = edit.getTransport().getCurrentPlaybackContext())
         {
-            endTime = epc->isLooping() ? jmax (epc->getUnloopedPosition(), epc->getLoopTimes().getEnd())
+            endTime = epc->isLooping() ? std::max (epc->getUnloopedPosition(),
+                                                   epc->getLoopTimes().getEnd())
                                        : epc->getPosition();
         }
 
         for (auto param : recordedParams)
         {
             if (toEnd)
-                endTime = jmax (endTime, param->parameter.getCurve().getLength() + 1.0);
+                endTime = std::max (endTime, param->parameter.getCurve().getLength() + 1.0);
 
             applyChangesToParameter (param, endTime, toEnd);
             param->parameter.resetRecordingStatus();
@@ -145,7 +146,7 @@ void AutomationRecordManager::punchOut (bool toEnd)
 void AutomationRecordManager::applyChangesToParameter (AutomationParamData* parameter, double end, bool toEnd)
 {
     CRASH_TRACER
-    OwnedArray<AutomationCurve> newCurves;
+    juce::OwnedArray<AutomationCurve> newCurves;
 
     {
         std::unique_ptr<AutomationCurve> curve (new AutomationCurve());
@@ -212,7 +213,7 @@ void AutomationRecordManager::applyChangesToParameter (AutomationParamData* para
             // if the curve is empty, set the parameter so that the bits outside the new curve
             // are set to the levels they were at when we started recording..
             if (parameter->parameter.getCurve().getNumPoints() == 0)
-                parameter->parameter.setParameter (parameter->originalValue, sendNotification);
+                parameter->parameter.setParameter (parameter->originalValue, juce::sendNotification);
 
             auto& c = parameter->parameter.getCurve();
             EditTimeRange curveRange (juce::Range<double> (startTime, endTime + glideLength));
@@ -240,14 +241,14 @@ void AutomationRecordManager::postFirstAutomationChange (AutomatableParameter& p
     // recording status has changed, so inform our listeners
     sendChangeMessage();
 
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
     recordedParams.add (entry.release());
 }
 
 void AutomationRecordManager::postAutomationChange (AutomatableParameter& param, double time, float value)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
 
     for (auto p : recordedParams)
     {
@@ -261,7 +262,7 @@ void AutomationRecordManager::postAutomationChange (AutomatableParameter& param,
 
 void AutomationRecordManager::parameterBeingDeleted (AutomatableParameter& param)
 {
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
 
     for (int i = recordedParams.size(); --i >= 0;)
         if (&recordedParams.getUnchecked (i)->parameter == &param)

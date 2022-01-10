@@ -18,7 +18,7 @@
 namespace tracktion_engine
 {
 
-static inline juce::int64 hashValueTree (juce::int64 startHash, const ValueTree& v)
+static inline HashCode hashValueTree (HashCode startHash, const juce::ValueTree& v)
 {
     startHash ^= v.getType().toString().hashCode64() * (v.getParent().indexOf (v) + 1);
 
@@ -31,10 +31,10 @@ static inline juce::int64 hashValueTree (juce::int64 startHash, const ValueTree&
     return startHash;
 }
 
-static inline juce::int64 hashPlugin (const ValueTree& effectState, Plugin& plugin)
+static inline HashCode hashPlugin (const juce::ValueTree& effectState, Plugin& plugin)
 {
     CRASH_TRACER
-    juce::int64 h = String (effectState.getParent().indexOf (effectState) + 1).hashCode64();
+    HashCode h = juce::String (effectState.getParent().indexOf (effectState) + 1).hashCode64();
 
     for (int param = plugin.getNumAutomatableParameters(); --param >= 0;)
     {
@@ -44,15 +44,15 @@ static inline juce::int64 hashPlugin (const ValueTree& effectState, Plugin& plug
 
             if (ac.getNumPoints() == 0)
             {
-                h = (String (h) + String (ap->getCurrentValue())).hashCode64();
+                h = (juce::String (h) + juce::String (ap->getCurrentValue())).hashCode64();
             }
             else
             {
                 for (int i = 0; i < ac.getNumPoints(); ++i)
                 {
                     const auto p = ac.getPoint (i);
-                    auto pointH = String (p.time) + String (p.value) + String (p.curve);
-                    h = (String (h) + pointH).hashCode64();
+                    auto pointH = juce::String (p.time) + juce::String (p.value) + juce::String (p.curve);
+                    h = (juce::String (h) + pointH).hashCode64();
                 }
             }
         }
@@ -62,8 +62,8 @@ static inline juce::int64 hashPlugin (const ValueTree& effectState, Plugin& plug
 }
 
 //==============================================================================
-struct ClipEffects::ClipPropertyWatcher  : private ValueTree::Listener,
-                                           private AsyncUpdater
+struct ClipEffects::ClipPropertyWatcher  : private juce::ValueTree::Listener,
+                                           private juce::AsyncUpdater
 {
     ClipPropertyWatcher (ClipEffects& o) : clipEffects (o), clipState (o.clip.state)
     {
@@ -72,7 +72,7 @@ struct ClipEffects::ClipPropertyWatcher  : private ValueTree::Listener,
 
 private:
     ClipEffects& clipEffects;
-    ValueTree clipState;
+    juce::ValueTree clipState;
 
     void invalidateCache()
     {
@@ -80,7 +80,7 @@ private:
         clipEffects.cachedHash = ClipEffects::hashNeedsRecaching;
     }
 
-    void valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i) override
+    void valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i) override
     {
         if (v == clipState)
         {
@@ -98,10 +98,10 @@ private:
         }
     }
 
-    void valueTreeChildAdded (ValueTree&, ValueTree&) override              {}
-    void valueTreeChildRemoved (ValueTree&, ValueTree&, int) override       {}
-    void valueTreeChildOrderChanged (ValueTree&, int, int) override         {}
-    void valueTreeParentChanged (ValueTree&) override                       {}
+    void valueTreeChildAdded (juce::ValueTree&, juce::ValueTree&) override        {}
+    void valueTreeChildRemoved (juce::ValueTree&, juce::ValueTree&, int) override {}
+    void valueTreeChildOrderChanged (juce::ValueTree&, int, int) override         {}
+    void valueTreeParentChanged (juce::ValueTree&) override                       {}
 
     void handleAsyncUpdate() override
     {
@@ -111,7 +111,7 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ClipPropertyWatcher)
 };
 
-ClipEffects::ClipEffects (const ValueTree& v, AudioClipBase& c)
+ClipEffects::ClipEffects (const juce::ValueTree& v, AudioClipBase& c)
     : ValueTreeObjectList<ClipEffect> (v), clip (c), state (v)
 {
     rebuildObjects();
@@ -177,12 +177,17 @@ struct VariantConverter<tracktion_engine::ClipEffect::EffectType>
 } namespace tracktion_engine {
 
 //==============================================================================
-struct ClipEffect::ClipEffectRenderJob  : public ReferenceCountedObject
+struct ClipEffect::ClipEffectRenderJob  : public juce::ReferenceCountedObject
 {
-    using Ptr = ReferenceCountedObjectPtr<ClipEffectRenderJob>;
+    using Ptr = juce::ReferenceCountedObjectPtr<ClipEffectRenderJob>;
 
-    ClipEffectRenderJob (Engine& e, const AudioFile& dest, const AudioFile& src)
-        : engine (e), destination (dest), source (src)
+    static constexpr SampleCount defaultBlockSize = 1024;
+
+    ClipEffectRenderJob (Engine& e,
+                         const AudioFile& dest, const AudioFile& src,
+                         SampleCount blockSizeToUse)
+        : engine (e), destination (dest),
+          source (src), blockSize (blockSizeToUse)
     {
     }
 
@@ -207,27 +212,26 @@ struct ClipEffect::ClipEffectRenderJob  : public ReferenceCountedObject
 
     Engine& engine;
     const AudioFile destination, source;
+    const SampleCount blockSize;
     std::atomic<float> progress { 0.0f };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ClipEffectRenderJob)
 };
 
 //==============================================================================
-ClipEffect::ClipEffect (const ValueTree& v, ClipEffects& o)
+ClipEffect::ClipEffect (const juce::ValueTree& v, ClipEffects& o)
     : edit (o.clip.edit), state (v), clipEffects (o), destinationFile (edit.engine)
 {
     state.addListener (this);
 }
 
-ValueTree ClipEffect::create (EffectType t)
+juce::ValueTree ClipEffect::create (EffectType t)
 {
-    ValueTree v (IDs::EFFECT);
-    v.setProperty (IDs::type, VariantConverter<ClipEffect::EffectType>::toVar (t), nullptr);
-
-    return v;
+    return createValueTree (IDs::EFFECT,
+                            IDs::type, juce::VariantConverter<ClipEffect::EffectType>::toVar (t));
 }
 
-void ClipEffect::createEffectAndAddToValueTree (Edit& edit, ValueTree parent, ClipEffect::EffectType effectType, int index)
+void ClipEffect::createEffectAndAddToValueTree (Edit& edit, juce::ValueTree parent, ClipEffect::EffectType effectType, int index)
 {
     auto& undoManager = edit.getUndoManager();
 
@@ -239,8 +243,9 @@ void ClipEffect::createEffectAndAddToValueTree (Edit& edit, ValueTree parent, Cl
             af->setProcessingEnabled (false);
             af->flushPluginStateToValueTree();
 
-            ValueTree v (IDs::EFFECT);
-            v.setProperty (IDs::type, VariantConverter<ClipEffect::EffectType>::toVar (EffectType::filter), nullptr);
+            auto v = createValueTree (IDs::EFFECT,
+                                      IDs::type, juce::VariantConverter<ClipEffect::EffectType>::toVar (EffectType::filter));
+
             v.addChild (af->state, -1, nullptr);
 
             if (parent.isValid())
@@ -264,7 +269,7 @@ void ClipEffect::createEffectAndAddToValueTree (Edit& edit, ValueTree parent, Cl
     }
 }
 
-String ClipEffect::getTypeDisplayName (EffectType t)
+juce::String ClipEffect::getTypeDisplayName (EffectType t)
 {
     switch (t)
     {
@@ -284,9 +289,9 @@ String ClipEffect::getTypeDisplayName (EffectType t)
     }
 }
 
-void ClipEffect::addEffectsToMenu (PopupMenu& m)
+void ClipEffect::addEffectsToMenu (juce::PopupMenu& m)
 {
-    auto addItems = [&m] (StringRef heading, Array<EffectType> t)
+    auto addItems = [&m] (juce::StringRef heading, juce::Array<EffectType> t)
     {
         m.addSectionHeader (heading);
 
@@ -302,19 +307,19 @@ void ClipEffect::addEffectsToMenu (PopupMenu& m)
 
 ClipEffect::EffectType ClipEffect::getType() const
 {
-    return VariantConverter<ClipEffect::EffectType>::fromVar (state[IDs::type]);
+    return juce::VariantConverter<ClipEffect::EffectType>::fromVar (state[IDs::type]);
 }
 
-juce::int64 ClipEffect::getIndividualHash() const
+HashCode ClipEffect::getIndividualHash() const
 {
     return hashValueTree (0, state);
 }
 
-juce::int64 ClipEffect::getHash() const
+HashCode ClipEffect::getHash() const
 {
     auto parent = state.getParent();
     auto index = parent.indexOf (state);
-    juce::int64 hash = index ^ (juce::int64) clipEffects.clip.itemID.getRawID();
+    HashCode hash = index ^ static_cast<HashCode> (clipEffects.clip.itemID.getRawID());
 
     for (int i = 0; i <= index; ++i)
         if (auto ce = clipEffects.getClipEffect (parent.getChild (i)))
@@ -345,7 +350,7 @@ AudioClipBase& ClipEffect::getClip()
     return clipEffects.clip;
 }
 
-UndoManager& ClipEffect::getUndoManager()
+juce::UndoManager& ClipEffect::getUndoManager()
 {
     return clipEffects.clip.edit.getUndoManager();
 }
@@ -372,9 +377,10 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
 {
     AudioNodeRenderJob (Engine& e, AudioNode* n,
                         const AudioFile& dest, const AudioFile& src,
-                        int blockSizeToUse = 32768, double prerollTimeSeconds = 0)
-        : ClipEffectRenderJob (e, dest, src), node (n),
-          blockSize (blockSizeToUse), prerollTime (prerollTimeSeconds)
+                        SampleCount blockSizeToUse = defaultBlockSize,
+                        double prerollTimeSeconds = 0)
+        : ClipEffectRenderJob (e, dest, src, blockSizeToUse),
+          node (n), prerollTime (prerollTimeSeconds)
     {
         jassert (node != nullptr);
     }
@@ -389,8 +395,7 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
     bool renderNextBlock() override
     {
         CRASH_TRACER
-
-        return renderContext->render (*node, progress) == ThreadPoolJob::jobHasFinished;
+        return renderContext->render (*node, progress) == juce::ThreadPoolJob::jobHasFinished;
     }
 
     bool completeRender() override
@@ -414,7 +419,7 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
     struct RenderContext
     {
         RenderContext (const AudioFile& destination, const AudioFile& source,
-                       int blockSizeToUse = 32768, double prerollTimeS = 0)
+                       SampleCount blockSizeToUse, double prerollTimeS)
             : blockSize (blockSizeToUse)
         {
             CRASH_TRACER
@@ -425,7 +430,8 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
             auto sourceInfo = source.getInfo();
             jassert (sourceInfo.numChannels > 0 && sourceInfo.sampleRate > 0.0 && sourceInfo.bitsPerSample > 0);
 
-            AudioFile tempFile (*destination.engine, destination.getFile().getSiblingFile ("temp_effect_" + String::toHexString (Random::getSystemRandom().nextInt64()))
+            AudioFile tempFile (*destination.engine,
+                                destination.getFile().getSiblingFile ("temp_effect_" + juce::String::toHexString (juce::Random::getSystemRandom().nextInt64()))
                                 .withFileExtension (destination.getFile().getFileExtension()));
 
             // need to strip AIFF metadata to write to wav files
@@ -434,16 +440,16 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
 
             writer.reset (new AudioFileWriter (tempFile, destination.engine->getAudioFileFormatManager().getWavFormat(),
                                                sourceInfo.numChannels, sourceInfo.sampleRate,
-                                               jmax (16, sourceInfo.bitsPerSample),
+                                               std::max (16, sourceInfo.bitsPerSample),
                                                sourceInfo.metadata, 0));
 
-            renderingBuffer.reset (new juce::AudioBuffer<float> (writer->getNumChannels(), blockSize + 256));
-            auto renderingBufferChannels = AudioChannelSet::canonicalChannelSet (renderingBuffer->getNumChannels());
+            renderingBuffer = std::make_unique<juce::AudioBuffer<float>> (writer->getNumChannels(), (int) blockSize + 256);
+            auto renderingBufferChannels = juce::AudioChannelSet::canonicalChannelSet (renderingBuffer->getNumChannels());
 
             // now prepare the render context
             rc.reset (new AudioRenderContext (localPlayhead, streamRange,
                                               renderingBuffer.get(),
-                                              renderingBufferChannels, 0, blockSize,
+                                              renderingBufferChannels, 0, (int) blockSize,
                                               nullptr, 0.0,
                                               AudioRenderContext::playheadJumped, true));
 
@@ -460,12 +466,12 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
             localPlayhead.playLockedToEngine ({ prerollStart, streamRange.getEnd() });
         }
 
-        ThreadPoolJob::JobStatus render (AudioNode& audioNode, std::atomic<float>& progressToUpdate)
+        juce::ThreadPoolJob::JobStatus render (AudioNode& audioNode, std::atomic<float>& progressToUpdate)
         {
             CRASH_TRACER
             auto blockLength = blockSize / writer->getSampleRate();
-            juce::int64 samplesToWrite = roundToInt ((streamRange.getEnd() - streamTime) * writer->getSampleRate());
-            auto blockEnd = jmin (streamTime + blockLength, streamRange.getEnd());
+            SampleCount samplesToWrite = juce::roundToInt ((streamRange.getEnd() - streamTime) * writer->getSampleRate());
+            auto blockEnd = std::min (streamTime + blockLength, streamRange.getEnd());
             rc->streamTime = { streamTime, blockEnd };
 
             // run blocks through the engine and discard
@@ -477,10 +483,10 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
                 rc->continuity = AudioRenderContext::contiguous;
                 streamTime = blockEnd;
 
-                return ThreadPoolJob::jobNeedsRunningAgain;
+                return juce::ThreadPoolJob::jobNeedsRunningAgain;
             }
 
-            const int numSamplesDone = (int) jmin (samplesToWrite, (juce::int64) blockSize);
+            auto numSamplesDone = (int) std::min (samplesToWrite, blockSize);
             rc->bufferNumSamples = numSamplesDone;
 
             if (numSamplesDone > 0)
@@ -493,7 +499,7 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
             streamTime = blockEnd;
 
             const float prog = (float) ((streamTime - streamRange.getStart()) / streamRange.getLength()) * 0.9f;
-            progressToUpdate = jlimit (0.0f, 0.9f, prog);
+            progressToUpdate = juce::jlimit (0.0f, 0.9f, prog);
 
             // NB buffer gets trashed by this call
             if (numSamplesDone <= 0 || ! writer->isOpen()
@@ -506,13 +512,13 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
                 if (numSamplesDone <= 0)
                     progressToUpdate = 1.0f;
 
-                return ThreadPoolJob::jobHasFinished;
+                return juce::ThreadPoolJob::jobHasFinished;
             }
 
-            return ThreadPoolJob::jobNeedsRunningAgain;
+            return juce::ThreadPoolJob::jobNeedsRunningAgain;
         }
 
-        const int blockSize;
+        const SampleCount blockSize;
         int numPreBlocks = 0;
         std::unique_ptr<AudioFileWriter> writer;
         PlayHead localPlayhead;
@@ -525,9 +531,7 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
 
     std::unique_ptr<AudioNode> node;
     std::unique_ptr<RenderContext> renderContext;
-    const int blockSize = 32768;
     const double prerollTime = 0;
-
 
     void createAndPrepareRenderContext()
     {
@@ -539,14 +543,14 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
         }
 
         {
-            Array<AudioNode*> allNodes;
+            juce::Array<AudioNode*> allNodes;
             allNodes.add (node.get());
 
             PlaybackInitialisationInfo info =
             {
                 0.0,
                 renderContext->writer->getSampleRate(),
-                renderContext->blockSize,
+                (int) renderContext->blockSize,
                 &allNodes,
                 renderContext->rc->playhead
             };
@@ -562,7 +566,8 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
 struct BlockBasedRenderJob : public ClipEffect::ClipEffectRenderJob
 {
     BlockBasedRenderJob (Engine& e, const AudioFile& dest, const AudioFile& src, double sourceLength)
-        : ClipEffect::ClipEffectRenderJob (e, dest, src), sourceLengthSeconds (sourceLength)
+        : ClipEffect::ClipEffectRenderJob (e, dest, src, defaultBlockSize),
+          sourceLengthSeconds (sourceLength)
     {
     }
 
@@ -581,11 +586,11 @@ struct BlockBasedRenderJob : public ClipEffect::ClipEffectRenderJob
         if (reader == nullptr || reader->lengthInSamples == 0)
             return false;
 
-        sourceLengthSamples = (juce::int64) (sourceLengthSeconds * reader->sampleRate);
+        sourceLengthSamples = static_cast<SampleCount> (sourceLengthSeconds * reader->sampleRate);
 
         writer.reset (new AudioFileWriter (destination, engine.getAudioFileFormatManager().getWavFormat(),
                                            sourceInfo.numChannels, sourceInfo.sampleRate,
-                                           jmax (16, sourceInfo.bitsPerSample),
+                                           std::max (16, sourceInfo.bitsPerSample),
                                            sourceInfo.metadata, 0));
 
         return writer->isOpen();
@@ -601,12 +606,16 @@ struct BlockBasedRenderJob : public ClipEffect::ClipEffectRenderJob
     }
 
 protected:
-    std::unique_ptr<AudioFormatReader> reader;
+    std::unique_ptr<juce::AudioFormatReader> reader;
     std::unique_ptr<AudioFileWriter> writer;
 
     double sourceLengthSeconds = 0;
-    juce::int64 position = 0;
-    juce::int64 sourceLengthSamples = 0;
+    SampleCount position = 0, sourceLengthSamples = 0;
+
+    SampleCount getNumSamplesForCurrentBlock() const
+    {
+        return std::min (blockSize, sourceLengthSamples - position);
+    }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BlockBasedRenderJob)
 };
@@ -658,7 +667,7 @@ private:
 };
 
 //==============================================================================
-VolumeEffect::VolumeEffect (const ValueTree& v, ClipEffects& o)
+VolumeEffect::VolumeEffect (const juce::ValueTree& v, ClipEffects& o)
     : ClipEffect (v, o)
 {
     auto volState = state.getChildWithName (IDs::PLUGIN);
@@ -673,13 +682,15 @@ VolumeEffect::VolumeEffect (const ValueTree& v, ClipEffects& o)
     plugin = new VolumeAndPanPlugin (edit, volState, false);
 }
 
-ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> VolumeEffect::createRenderJob (const AudioFile& sourceFile, double sourceLength)
+juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> VolumeEffect::createRenderJob (const AudioFile& sourceFile,
+                                                                                                double sourceLength)
 {
     CRASH_TRACER
     EditTimeRange timeRange (0.0, sourceLength);
     jassert (! timeRange.isEmpty());
 
-    auto n = new WaveAudioNode (sourceFile, timeRange, 0.0, {}, {}, 1.0, AudioChannelSet::stereo());
+    auto n = new WaveAudioNode (sourceFile, timeRange, 0.0, {}, {},
+                                1.0, juce::AudioChannelSet::stereo());
 
     return new AudioNodeRenderJob (edit.engine, new PluginAudioNode (plugin, n, false),
                                    getDestinationFile(), sourceFile, 128);
@@ -696,12 +707,12 @@ void VolumeEffect::propertiesButtonPressed (SelectionManager& sm)
         sm.selectOnly (*plugin);
 }
 
-juce::int64 VolumeEffect::getIndividualHash() const
+HashCode VolumeEffect::getIndividualHash() const
 {
     return plugin != nullptr ? hashPlugin (state, *plugin) : 0;
 }
 
-void VolumeEffect::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i)
+void VolumeEffect::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i)
 {
     // This is the automation writing back the AttachedValue so we need to ignore it
     if (plugin == nullptr || (plugin->isAutomationNeeded()
@@ -722,7 +733,7 @@ void VolumeEffect::valueTreeChanged()
 
 void VolumeEffect::timerCallback()
 {
-    if (Component::isMouseButtonDownAnywhere())
+    if (juce::Component::isMouseButtonDownAnywhere())
         return;
 
     inhibitor = nullptr;
@@ -730,7 +741,7 @@ void VolumeEffect::timerCallback()
 }
 
 //==============================================================================
-FadeInOutEffect::FadeInOutEffect (const ValueTree& v, ClipEffects& o)
+FadeInOutEffect::FadeInOutEffect (const juce::ValueTree& v, ClipEffects& o)
     : ClipEffect (v, o)
 {
     auto um = &getUndoManager();
@@ -744,7 +755,7 @@ FadeInOutEffect::FadeInOutEffect (const ValueTree& v, ClipEffects& o)
 void FadeInOutEffect::setFadeIn (double in)
 {
     const double l = clipEffects.getEffectsLength() * clipEffects.getSpeedRatioEstimate();
-    in = jlimit (0.0, l, in);
+    in = juce::jlimit (0.0, l, in);
 
     if (in + fadeOut > l)
     {
@@ -761,7 +772,7 @@ void FadeInOutEffect::setFadeIn (double in)
 void FadeInOutEffect::setFadeOut (double out)
 {
     const double l = clipEffects.getEffectsLength() * clipEffects.getSpeedRatioEstimate();
-    out = jlimit (0.0, l, out);
+    out = juce::jlimit (0.0, l, out);
 
     if (fadeIn + out > l)
     {
@@ -775,15 +786,17 @@ void FadeInOutEffect::setFadeOut (double out)
     }
 }
 
-ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> FadeInOutEffect::createRenderJob (const AudioFile& sourceFile, double sourceLength)
+juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> FadeInOutEffect::createRenderJob (const AudioFile& sourceFile,
+                                                                                                   double sourceLength)
 {
     CRASH_TRACER
     AudioFile destFile (getDestinationFile());
     EditTimeRange timeRange (0.0, sourceLength);
     jassert (! timeRange.isEmpty());
 
-    AudioNode* n = new WaveAudioNode (sourceFile, timeRange, 0.0, {}, {}, 1.0, AudioChannelSet::stereo());
-    int blockSize = 32768;
+    AudioNode* n = new WaveAudioNode (sourceFile, timeRange, 0.0, {}, {},
+                                      1.0, juce::AudioChannelSet::stereo());
+    auto blockSize = AudioNodeRenderJob::defaultBlockSize;
 
     auto speedRatio = clipEffects.getSpeedRatioEstimate();
     auto effectRange = clipEffects.getEffectsRange();
@@ -831,18 +844,18 @@ ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> FadeInOutEffect::crea
     return new AudioNodeRenderJob (edit.engine, n, destFile, sourceFile, blockSize);
 }
 
-juce::int64 FadeInOutEffect::getIndividualHash() const
+HashCode FadeInOutEffect::getIndividualHash() const
 {
     auto effectRange = clipEffects.getEffectsRange();
 
     return ClipEffect::getIndividualHash()
-        ^ (juce::int64) (clipEffects.getSpeedRatioEstimate() * 6345.2)
-        ^ (juce::int64) (effectRange.getStart() * 3526.9)
-        ^ (juce::int64) (effectRange.getEnd() * 53625.3);
+             ^ static_cast<HashCode> (clipEffects.getSpeedRatioEstimate() * 6345.2)
+             ^ static_cast<HashCode> (effectRange.getStart() * 3526.9)
+             ^ static_cast<HashCode> (effectRange.getEnd() * 53625.3);
 }
 
 //==============================================================================
-StepVolumeEffect::StepVolumeEffect (const ValueTree& v, ClipEffects& o)
+StepVolumeEffect::StepVolumeEffect (const juce::ValueTree& v, ClipEffects& o)
     : ClipEffect (v, o)
 {
     CRASH_TRACER
@@ -880,7 +893,8 @@ int StepVolumeEffect::getMaxNumNotes()
     return (int) std::ceil ((endBeat - startBeat) / noteLength);
 }
 
-ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> StepVolumeEffect::createRenderJob (const AudioFile& sourceFile, double sourceLength)
+juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> StepVolumeEffect::createRenderJob (const AudioFile& sourceFile,
+                                                                                                    double sourceLength)
 {
     CRASH_TRACER
     jassert (sourceLength > 0);
@@ -893,7 +907,7 @@ ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> StepVolumeEffect::cre
 
     auto fade = crossfade.get();
     auto halfCrossfade = fade / 2.0;
-    Array<EditTimeRange> nonMuteTimes;
+    juce::Array<EditTimeRange> nonMuteTimes;
 
     // Calculate non-mute times
     {
@@ -908,7 +922,7 @@ ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> StepVolumeEffect::cre
 
         auto startBeat = ts.timeToBeats (pos.getStart() + effectRange.getStart());
         auto endBeat = ts.timeToBeats (pos.getEnd());
-        auto numNotes = jmin (p.getNumNotes(), (int) std::ceil ((endBeat - startBeat) / length));
+        auto numNotes = std::min (p.getNumNotes(), (int) std::ceil ((endBeat - startBeat) / length));
 
         auto beat = startBeat;
 
@@ -949,8 +963,11 @@ ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> StepVolumeEffect::cre
             t = t.rescaled (0.0, speedRatio);
     }
 
-    auto waveNode = new WaveAudioNode (sourceFile, timeRange, 0.0, {}, {}, 1.0, AudioChannelSet::stereo());
-    auto compNode = createTrackCompAudioNode (waveNode, TrackCompManager::TrackComp::getMuteTimes (nonMuteTimes), nonMuteTimes, fade);
+    auto waveNode = new WaveAudioNode (sourceFile, timeRange, 0.0, {}, {},
+                                       1.0, juce::AudioChannelSet::stereo());
+    auto compNode = createTrackCompAudioNode (waveNode,
+                                              TrackCompManager::TrackComp::getMuteTimes (nonMuteTimes),
+                                              nonMuteTimes, fade);
 
     return new AudioNodeRenderJob (edit.engine, compNode, destFile, sourceFile);
 }
@@ -966,19 +983,19 @@ void StepVolumeEffect::propertiesButtonPressed (SelectionManager& sm)
 }
 
 //==============================================================================
-String StepVolumeEffect::getSelectableDescription()
+juce::String StepVolumeEffect::getSelectableDescription()
 {
     return TRANS("Step Volume Effect Editor");
 }
 
-juce::int64 StepVolumeEffect::getIndividualHash() const
+HashCode StepVolumeEffect::getIndividualHash() const
 {
     auto effectRange = clipEffects.getEffectsRange();
 
     return ClipEffect::getIndividualHash()
-        ^ (juce::int64) (clipEffects.getSpeedRatioEstimate() * 6345.2)
-        ^ (juce::int64) (effectRange.getStart() * 3526.9)
-        ^ (juce::int64) (effectRange.getEnd() * 53625.3);
+            ^ static_cast<HashCode> (clipEffects.getSpeedRatioEstimate() * 6345.2)
+            ^ static_cast<HashCode> (effectRange.getStart() * 3526.9)
+            ^ static_cast<HashCode> (effectRange.getEnd() * 53625.3);
 }
 
 //==============================================================================
@@ -1006,21 +1023,21 @@ void StepVolumeEffect::Pattern::setNote (int index, bool value)
     }
 }
 
-BigInteger StepVolumeEffect::Pattern::getPattern() const noexcept
+juce::BigInteger StepVolumeEffect::Pattern::getPattern() const noexcept
 {
-    BigInteger b;
+    juce::BigInteger b;
     b.parseString (state[IDs::pattern].toString(), 2);
     return b;
 }
 
-void StepVolumeEffect::Pattern::setPattern (const BigInteger& b) noexcept
+void StepVolumeEffect::Pattern::setPattern (const juce::BigInteger& b) noexcept
 {
     state.setProperty (IDs::pattern, b.toString (2), &effect.getUndoManager());
 }
 
 void StepVolumeEffect::Pattern::clear()
 {
-    setPattern (BigInteger());
+    setPattern ({});
 }
 
 int StepVolumeEffect::Pattern::getNumNotes() const
@@ -1030,7 +1047,7 @@ int StepVolumeEffect::Pattern::getNumNotes() const
 
 void StepVolumeEffect::Pattern::shiftChannel (bool toTheRight)
 {
-    BigInteger c (getPattern());
+    auto c = getPattern();
 
     // NB: Notes are added in reverse order
     if (toTheRight)
@@ -1043,7 +1060,7 @@ void StepVolumeEffect::Pattern::shiftChannel (bool toTheRight)
 
 void StepVolumeEffect::Pattern::toggleAtInterval (int interval)
 {
-    BigInteger c (getPattern());
+    auto c = getPattern();
 
     for (int i = effect.getMaxNumNotes(); --i >= 0;)
         c.setBit (i, (i % interval) == 0);
@@ -1054,15 +1071,14 @@ void StepVolumeEffect::Pattern::toggleAtInterval (int interval)
 void StepVolumeEffect::Pattern::randomiseChannel()
 {
     clear();
-
-    Random r;
+    juce::Random r;
 
     for (int i = 0; i < effect.getMaxNumNotes(); ++i)
         setNote (i, r.nextBool());
 }
 
 //==============================================================================
-PitchShiftEffect::PitchShiftEffect (const ValueTree& v, ClipEffects& o)
+PitchShiftEffect::PitchShiftEffect (const juce::ValueTree& v, ClipEffects& o)
     : ClipEffect (v, o)
 {
     CRASH_TRACER
@@ -1084,13 +1100,14 @@ void PitchShiftEffect::initialise()
             ap->updateStream();
 }
 
-ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> PitchShiftEffect::createRenderJob (const AudioFile& sourceFile, double sourceLength)
+juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> PitchShiftEffect::createRenderJob (const AudioFile& sourceFile, double sourceLength)
 {
     CRASH_TRACER
     const EditTimeRange timeRange (0.0, sourceLength);
     jassert (! timeRange.isEmpty());
 
-    auto n = new WaveAudioNode (sourceFile, timeRange, 0.0, {}, {}, 1.0, AudioChannelSet::stereo());
+    auto n = new WaveAudioNode (sourceFile, timeRange, 0.0, {}, {},
+                                1.0, juce::AudioChannelSet::stereo());
 
     // Use 1.0 second of preroll to be safe. We can't ask the plugin since it
     // may not be initialized yet
@@ -1109,12 +1126,12 @@ void PitchShiftEffect::propertiesButtonPressed (SelectionManager& sm)
         sm.selectOnly (*plugin);
 }
 
-juce::int64 PitchShiftEffect::getIndividualHash() const
+HashCode PitchShiftEffect::getIndividualHash() const
 {
     return hashPlugin (state, *plugin);
 }
 
-void PitchShiftEffect::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i)
+void PitchShiftEffect::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i)
 {
     // This is the automation writing back the AttachedValue so we need to ignore it
     if (plugin != nullptr
@@ -1136,7 +1153,7 @@ void PitchShiftEffect::valueTreeChanged()
 
 void PitchShiftEffect::timerCallback()
 {
-    if (Component::isMouseButtonDownAnywhere())
+    if (juce::Component::isMouseButtonDownAnywhere())
         return;
 
     inhibitor = nullptr;
@@ -1144,7 +1161,7 @@ void PitchShiftEffect::timerCallback()
 }
 
 //==============================================================================
-WarpTimeEffect::WarpTimeEffect (const ValueTree& v, ClipEffects& o)
+WarpTimeEffect::WarpTimeEffect (const juce::ValueTree& v, ClipEffects& o)
     : ClipEffect (v, o)
 {
     CRASH_TRACER
@@ -1152,14 +1169,15 @@ WarpTimeEffect::WarpTimeEffect (const ValueTree& v, ClipEffects& o)
     editLoadedCallback = std::make_unique<Edit::LoadFinishedCallback<WarpTimeEffect>> (*this, edit);
 }
 
-ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> WarpTimeEffect::createRenderJob (const AudioFile& sourceFile, double sourceLength)
+juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> WarpTimeEffect::createRenderJob (const AudioFile& sourceFile,
+                                                                                                  double sourceLength)
 {
     CRASH_TRACER
     return new WarpTimeEffectRenderJob (edit.engine, getDestinationFile(), sourceFile,
                                         sourceLength, *warpTimeManager, getClip());
 }
 
-juce::int64 WarpTimeEffect::getIndividualHash() const
+HashCode WarpTimeEffect::getIndividualHash() const
 {
     return warpTimeManager->getHash();
 }
@@ -1176,7 +1194,7 @@ void WarpTimeEffect::editFinishedLoading()
 }
 
 //==============================================================================
-struct PluginUnloadInhibitor    : private Timer
+struct PluginUnloadInhibitor    : private juce::Timer
 {
     PluginUnloadInhibitor (Plugin::Ptr p, std::function<void (void)> cb)
         : plugin (p), callback (std::move (cb))
@@ -1197,7 +1215,7 @@ struct PluginUnloadInhibitor    : private Timer
             load();
     }
 
-    void increaseForJob (int ms, ReferenceCountedObjectPtr<AudioNodeRenderJob> job)
+    void increaseForJob (int ms, juce::ReferenceCountedObjectPtr<AudioNodeRenderJob> job)
     {
         if (! isTimerRunning())
             increase();
@@ -1238,7 +1256,7 @@ struct PluginUnloadInhibitor    : private Timer
 
     int count = 0;
     Plugin::Ptr plugin;
-    ReferenceCountedArray<AudioNodeRenderJob> jobs;
+    juce::ReferenceCountedArray<AudioNodeRenderJob> jobs;
     std::function<void(void)> callback;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginUnloadInhibitor)
@@ -1249,7 +1267,7 @@ ScopedPluginUnloadInhibitor::ScopedPluginUnloadInhibitor (PluginUnloadInhibitor&
 ScopedPluginUnloadInhibitor::~ScopedPluginUnloadInhibitor()                                      { owner.decrease(); }
 
 //==============================================================================
-PluginEffect::PluginEffect (const ValueTree& v, ClipEffects& o)
+PluginEffect::PluginEffect (const juce::ValueTree& v, ClipEffects& o)
     : ClipEffect (v, o)
 {
     CRASH_TRACER
@@ -1289,8 +1307,8 @@ PluginEffect::PluginEffect (const ValueTree& v, ClipEffects& o)
     }
 }
 
-ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> PluginEffect::createRenderJob (const AudioFile& sourceFile,
-                                                                                          double sourceLength)
+juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> PluginEffect::createRenderJob (const AudioFile& sourceFile,
+                                                                                                double sourceLength)
 {
     CRASH_TRACER
 
@@ -1299,7 +1317,8 @@ ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> PluginEffect::createR
     const EditTimeRange timeRange (0.0, sourceLength);
     jassert (! timeRange.isEmpty());
 
-    AudioNode* n = new WaveAudioNode (sourceFile, timeRange, 0.0, {}, {}, 1.0, AudioChannelSet::stereo());
+    AudioNode* n = new WaveAudioNode (sourceFile, timeRange, 0.0, {}, {},
+                                      1.0, juce::AudioChannelSet::stereo());
 
     if (plugin != nullptr)
     {
@@ -1338,7 +1357,7 @@ void PluginEffect::propertiesButtonPressed (SelectionManager& sm)
     }
 }
 
-juce::int64 PluginEffect::getIndividualHash() const
+HashCode PluginEffect::getIndividualHash() const
 {
     jassert (plugin != nullptr);
 
@@ -1347,13 +1366,13 @@ juce::int64 PluginEffect::getIndividualHash() const
     if (plugin != nullptr && (plugin->isProcessingEnabled() || lastHash == 0))
     {
         const ScopedPluginUnloadInhibitor lock (*pluginUnloadInhibitor);
-        lastHash = hashPlugin (state, *plugin);
+        lastHash = (juce::int64) hashPlugin (state, *plugin);
     }
 
     return lastHash;
 }
 
-void PluginEffect::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i)
+void PluginEffect::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i)
 {
     // This is the automation writing back the AttachedValue so we need to ignore it
     if (plugin != nullptr
@@ -1374,7 +1393,7 @@ void PluginEffect::valueTreeChanged()
 
 void PluginEffect::timerCallback()
 {
-    if (Component::isMouseButtonDownAnywhere())
+    if (juce::Component::isMouseButtonDownAnywhere())
         return;
 
     inhibitor = nullptr;
@@ -1408,11 +1427,11 @@ struct NormaliseEffect::NormaliseRenderJob : public BlockBasedRenderJob
             float lmin, lmax, rmin, rmax;
             reader->readMaxLevels (0, sourceLengthSamples, lmin, lmax, rmin, rmax);
 
-            auto maxLevel = jmax (-lmin, lmax, -rmin, rmax);
+            auto maxLevel = juce::jmax (-lmin, lmax, -rmin, rmax);
             gainFactor = dbToGain (float (maxGain)) / maxLevel;
         }
 
-        auto todo = (int) jmin (32768ll, sourceLengthSamples - position);
+        auto todo = (int) getNumSamplesForCurrentBlock();
 
         AudioScratchBuffer scratch ((int) reader->numChannels, todo);
 
@@ -1434,7 +1453,7 @@ struct NormaliseEffect::NormaliseRenderJob : public BlockBasedRenderJob
     float gainFactor = 0.0f;
 };
 
-NormaliseEffect::NormaliseEffect (const ValueTree& v, ClipEffects& o)
+NormaliseEffect::NormaliseEffect (const juce::ValueTree& v, ClipEffects& o)
     : ClipEffect (v, o)
 {
     auto um = &getUndoManager();
@@ -1446,7 +1465,7 @@ NormaliseEffect::~NormaliseEffect()
     notifyListenersOfDeletion();
 }
 
-ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> NormaliseEffect::createRenderJob (const AudioFile& sourceFile, double sourceLength)
+juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> NormaliseEffect::createRenderJob (const AudioFile& sourceFile, double sourceLength)
 {
     CRASH_TRACER
 
@@ -1464,7 +1483,7 @@ void NormaliseEffect::propertiesButtonPressed (SelectionManager& sm)
     sm.selectOnly (this);
 }
 
-String NormaliseEffect::getSelectableDescription()
+juce::String NormaliseEffect::getSelectableDescription()
 {
     return TRANS("Normalise Effect Editor");
 }
@@ -1490,11 +1509,11 @@ struct MakeMonoEffect::MakeMonoRenderJob : public BlockBasedRenderJob
         if (reader == nullptr || reader->lengthInSamples == 0)
             return false;
 
-        sourceLengthSamples = (juce::int64) (sourceLengthSeconds * reader->sampleRate);
+        sourceLengthSamples = static_cast<SampleCount> (sourceLengthSeconds * reader->sampleRate);
 
         writer.reset (new AudioFileWriter (destination, engine.getAudioFileFormatManager().getWavFormat(),
                                            1, sourceInfo.sampleRate,
-                                           jmax (16, sourceInfo.bitsPerSample),
+                                           std::max (16, sourceInfo.bitsPerSample),
                                            sourceInfo.metadata, 0));
 
         return writer->isOpen();
@@ -1503,7 +1522,7 @@ struct MakeMonoEffect::MakeMonoRenderJob : public BlockBasedRenderJob
     bool renderNextBlock() override
     {
         CRASH_TRACER
-        auto todo = (int) jmin (32768ll, sourceLengthSamples - position);
+        auto todo = (int) getNumSamplesForCurrentBlock();
 
         AudioScratchBuffer input ((int) reader->numChannels, todo);
         reader->read (&input.buffer, 0, todo, position, true, true);
@@ -1546,7 +1565,7 @@ struct MakeMonoEffect::MakeMonoRenderJob : public BlockBasedRenderJob
     const SrcChannels srcChannels;
 };
 
-MakeMonoEffect::MakeMonoEffect (const ValueTree& v, ClipEffects& o)
+MakeMonoEffect::MakeMonoEffect (const juce::ValueTree& v, ClipEffects& o)
     : ClipEffect (v, o)
 {
     auto um = &getUndoManager();
@@ -1558,7 +1577,7 @@ MakeMonoEffect::~MakeMonoEffect()
     notifyListenersOfDeletion();
 }
 
-ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> MakeMonoEffect::createRenderJob (const AudioFile& sourceFile, double sourceLength)
+juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> MakeMonoEffect::createRenderJob (const AudioFile& sourceFile, double sourceLength)
 {
     CRASH_TRACER
     return new MakeMonoRenderJob (edit.engine, getDestinationFile(), sourceFile,
@@ -1575,7 +1594,7 @@ void MakeMonoEffect::propertiesButtonPressed (SelectionManager& sm)
     sm.selectOnly (this);
 }
 
-String MakeMonoEffect::getSelectableDescription()
+juce::String MakeMonoEffect::getSelectableDescription()
 {
     return TRANS("Make Mono Editor");
 }
@@ -1589,7 +1608,7 @@ struct ReverseEffect::ReverseRenderJob  : public BlockBasedRenderJob
     bool renderNextBlock() override
     {
         CRASH_TRACER
-        auto todo = (int) jmin (32768ll, sourceLengthSamples - position);
+        auto todo = (int) getNumSamplesForCurrentBlock();
 
         AudioScratchBuffer scratch ((int) reader->numChannels, todo);
 
@@ -1606,15 +1625,15 @@ struct ReverseEffect::ReverseRenderJob  : public BlockBasedRenderJob
     }
 };
 
-ReverseEffect::ReverseEffect (const ValueTree& v, ClipEffects& o)
+ReverseEffect::ReverseEffect (const juce::ValueTree& v, ClipEffects& o)
     : ClipEffect (v, o)
 {
 }
 
-ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> ReverseEffect::createRenderJob (const AudioFile& sourceFile, double sourceLength)
+juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> ReverseEffect::createRenderJob (const AudioFile& sourceFile,
+                                                                                                 double sourceLength)
 {
     CRASH_TRACER
-
     return new ReverseRenderJob (edit.engine, getDestinationFile(), sourceFile, sourceLength);
 }
 
@@ -1627,7 +1646,7 @@ struct InvertEffect::InvertRenderJob : public BlockBasedRenderJob
     bool renderNextBlock() override
     {
         CRASH_TRACER
-        auto todo = (int) jmin (32768ll, sourceLengthSamples - position);
+        auto todo = (int) getNumSamplesForCurrentBlock();
 
         AudioScratchBuffer scratch ((int) reader->numChannels, todo);
 
@@ -1644,21 +1663,22 @@ struct InvertEffect::InvertRenderJob : public BlockBasedRenderJob
     }
 };
 
-InvertEffect::InvertEffect (const ValueTree& v, ClipEffects& o)
+InvertEffect::InvertEffect (const juce::ValueTree& v, ClipEffects& o)
     : ClipEffect (v, o)
 {
 }
 
-ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> InvertEffect::createRenderJob (const AudioFile& sourceFile, double sourceLength)
+juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> InvertEffect::createRenderJob (const AudioFile& sourceFile,
+                                                                                                double sourceLength)
 {
     CRASH_TRACER
     return new InvertRenderJob (edit.engine, getDestinationFile(), sourceFile, sourceLength);
 }
 
 //==============================================================================
-ClipEffect* ClipEffect::create (const ValueTree& v, ClipEffects& ce)
+ClipEffect* ClipEffect::create (const juce::ValueTree& v, ClipEffects& ce)
 {
-    switch (VariantConverter<ClipEffect::EffectType>::fromVar (v[IDs::type]))
+    switch (juce::VariantConverter<ClipEffect::EffectType>::fromVar (v[IDs::type]))
     {
         case EffectType::none:              jassertfalse; return {};
         case EffectType::volume:            return new VolumeEffect (v, ce);
@@ -1680,7 +1700,7 @@ ClipEffect* ClipEffect::create (const ValueTree& v, ClipEffects& ce)
 struct AggregateJob  : public RenderManager::Job
 {
     AggregateJob (Engine& e, const AudioFile& destFile, const AudioFile& source,
-                  ReferenceCountedArray<ClipEffect::ClipEffectRenderJob> j)
+                  juce::ReferenceCountedArray<ClipEffect::ClipEffectRenderJob> j)
         : Job (e, destFile),
           sourceFile (source), lastFile (source.getFile()),
           jobs (std::move (j)), originalNumTasks (jobs.size())
@@ -1697,7 +1717,7 @@ struct AggregateJob  : public RenderManager::Job
         CRASH_TRACER
         if (! sourceFile.isValid())
         {
-            Thread::sleep (100);
+            juce::Thread::sleep (100);
             return false;
         }
 
@@ -1732,7 +1752,7 @@ struct AggregateJob  : public RenderManager::Job
             }
         }
 
-        const float jobShare = 1.0f / jmax (1, originalNumTasks);
+        const float jobShare = 1.0f / std::max (1, originalNumTasks);
         progress = (numJobsCompleted * jobShare) + (jobShare * (currentJob != nullptr ? currentJob->progress.load() : 0.0f));
 
         return currentJob == nullptr && jobs.isEmpty();
@@ -1744,8 +1764,8 @@ struct AggregateJob  : public RenderManager::Job
     }
 
     const AudioFile sourceFile;
-    File lastFile;
-    ReferenceCountedArray<ClipEffect::ClipEffectRenderJob> jobs;
+    juce::File lastFile;
+    juce::ReferenceCountedArray<ClipEffect::ClipEffectRenderJob> jobs;
     ClipEffect::ClipEffectRenderJob::Ptr currentJob;
     const int originalNumTasks;
     int numJobsCompleted = 0;
@@ -1761,7 +1781,7 @@ RenderManager::Job::Ptr ClipEffects::createRenderJob (const AudioFile& destFile,
 
     const double length = sourceFile.getLength();
     AudioFile inputFile (sourceFile);
-    ReferenceCountedArray<ClipEffect::ClipEffectRenderJob> jobs;
+    juce::ReferenceCountedArray<ClipEffect::ClipEffectRenderJob> jobs;
 
     for (auto ce : objects)
     {

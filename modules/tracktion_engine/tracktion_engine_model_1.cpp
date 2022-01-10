@@ -14,14 +14,14 @@
 #include "../../modules/tracktion_graph/tracktion_graph.h"
 #include "tracktion_engine.h"
 
-using namespace juce;
-
 #include "timestretch/tracktion_TempoDetect.h"
 #include "model/automation/modifiers/tracktion_ModifierInternal.h"
+#include "utilities/tracktion_Benchmark.h"
 
 #include "model/edit/tracktion_OldEditConversion.h"
 #include "model/edit/tracktion_EditItem.cpp"
 #include "model/edit/tracktion_Edit.cpp"
+#include "model/edit/tracktion_Edit.test.cpp"
 #include "model/edit/tracktion_EditUtilities.cpp"
 #include "model/edit/tracktion_SourceFileReference.cpp"
 #include "model/clips/tracktion_Clip.cpp"

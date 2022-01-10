@@ -40,17 +40,17 @@ struct CombiningAudioNode::TimedAudioNode
         {
             auto newLength = time.end - editTime.getStart();
             context.streamTime.end = context.streamTime.start + newLength;
-            context.bufferNumSamples = jmax (0, (int) (context.bufferNumSamples * newLength
-                                                        / rc.streamTime.getLength()));
+            context.bufferNumSamples = std::max (0, (int) (context.bufferNumSamples * newLength
+                                                            / rc.streamTime.getLength()));
         }
 
         auto amountToSkip = time.start - editTime.getStart();
 
         if (amountToSkip > 0)
         {
-            auto samplesToSkip = jmin (context.bufferNumSamples,
-                                       (int) (context.bufferNumSamples * amountToSkip
-                                                / context.streamTime.getLength()));
+            auto samplesToSkip = std::min (context.bufferNumSamples,
+                                           (int) (context.bufferNumSamples * amountToSkip
+                                                    / context.streamTime.getLength()));
 
             context.bufferStartSample += samplesToSkip;
             context.bufferNumSamples -= samplesToSkip;
@@ -92,7 +92,7 @@ void CombiningAudioNode::addInput (EditTimeRange time, AudioNode* inputNode)
     hasAudio |= info.hasAudio;
     hasMidi |= info.hasMidi;
 
-    maxNumberOfChannels = jmax (maxNumberOfChannels, info.numberOfChannels);
+    maxNumberOfChannels = std::max (maxNumberOfChannels, info.numberOfChannels);
 
     int i;
     for (i = 0; i < inputs.size(); ++i)
@@ -104,11 +104,11 @@ void CombiningAudioNode::addInput (EditTimeRange time, AudioNode* inputNode)
     jassert (time.end <= Edit::maximumLength);
 
     // add the node to any groups it's near to.
-    auto start = jmax (0, timeToGroupIndex (time.start - (secondsPerGroup / 2 + 2)));
-    auto end   = jmax (0, timeToGroupIndex (time.end   + (secondsPerGroup / 2 + 2)));
+    auto start = std::max (0, timeToGroupIndex (time.start - (secondsPerGroup / 2 + 2)));
+    auto end   = std::max (0, timeToGroupIndex (time.end   + (secondsPerGroup / 2 + 2)));
 
     while (groups.size() <= end)
-        groups.add (new Array<TimedAudioNode*>());
+        groups.add (new juce::Array<TimedAudioNode*>());
 
     for (i = start; i <= end; ++i)
     {

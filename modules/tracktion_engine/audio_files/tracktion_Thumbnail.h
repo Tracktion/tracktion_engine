@@ -32,7 +32,7 @@ public:
 
     //==============================================================================
     bool setSource (juce::InputSource*) override;
-    void setReader (juce::AudioFormatReader*, juce::int64 hash) override;
+    void setReader (juce::AudioFormatReader*, juce::int64) override;
 
     void releaseResources();
 
@@ -71,9 +71,9 @@ private:
     std::unique_ptr<CachedWindow> window;
     juce::OwnedArray<ThumbData> channels;
 
-    juce::int32 samplesPerThumbSample = 0;
-    juce::int64 totalSamples = 0, numSamplesFinished = 0;
-    juce::int32 numChannels = 0;
+    SampleCount totalSamples = 0, numSamplesFinished = 0;
+    int samplesPerThumbSample = 0;
+    int numChannels = 0;
     double sampleRate = 0;
     juce::CriticalSection lock, sourceLock;
 

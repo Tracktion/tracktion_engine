@@ -44,14 +44,14 @@ void ChordClip::initialise()
     speedRatio = 1.0; // not used
 }
 
-String ChordClip::getSelectableDescription()
+juce::String ChordClip::getSelectableDescription()
 {
     return TRANS("Chord Clip");
 }
 
-Colour ChordClip::getDefaultColour() const
+juce::Colour ChordClip::getDefaultColour() const
 {
-    return Colours::red.withHue (1.0f / 9.0f);
+    return juce::Colours::red.withHue (1.0f / 9.0f);
 }
 
 void ChordClip::setTrack (ClipTrack* ct)
@@ -65,7 +65,7 @@ bool ChordClip::canGoOnTrack (Track& t)
     return t.isChordTrack();
 }
 
-void ChordClip::valueTreeChildAdded (ValueTree&, juce::ValueTree& c)
+void ChordClip::valueTreeChildAdded (juce::ValueTree&, juce::ValueTree& c)
 {
     if (c.hasType (IDs::PATTERNGENERATOR))
     {
@@ -79,7 +79,7 @@ void ChordClip::valueTreeChildAdded (ValueTree&, juce::ValueTree& c)
     triggerAsyncUpdate();
 }
 
-void ChordClip::valueTreeChildRemoved (ValueTree& p, juce::ValueTree& c, int)
+void ChordClip::valueTreeChildRemoved (juce::ValueTree& p, juce::ValueTree& c, int)
 {
     if (p == state && c.hasType (IDs::PATTERNGENERATOR))
     {
@@ -89,7 +89,7 @@ void ChordClip::valueTreeChildRemoved (ValueTree& p, juce::ValueTree& c, int)
     triggerAsyncUpdate();
 }
 
-void ChordClip::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i)
+void ChordClip::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i)
 {
     changed();
     triggerAsyncUpdate();
@@ -108,7 +108,7 @@ void ChordClip::valueTreeParentChanged (juce::ValueTree& v)
 PatternGenerator* ChordClip::getPatternGenerator()
 {
     if (! state.getChildWithName (IDs::PATTERNGENERATOR).isValid())
-        state.addChild (ValueTree (IDs::PATTERNGENERATOR), -1, &edit.getUndoManager());
+        state.addChild (juce::ValueTree (IDs::PATTERNGENERATOR), -1, &edit.getUndoManager());
 
     jassert (patternGenerator != nullptr);
     return patternGenerator.get();
@@ -122,7 +122,7 @@ void ChordClip::pitchTempoTrackChanged()
     changed();
 }
 
-Colour ChordClip::getColour() const
+juce::Colour ChordClip::getColour() const
 {
     return Clip::getColour();
 }

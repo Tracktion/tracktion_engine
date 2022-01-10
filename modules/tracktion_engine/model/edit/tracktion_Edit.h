@@ -845,8 +845,12 @@ private:
     bool isPreviewEdit = false;
     std::atomic<double> clickMark1Time { 0.0 }, clickMark2Time { 0.0 };
     std::atomic<bool> isFullyConstructed { false };
+    mutable std::atomic<uint64_t> nextID { 0 }; // 0 is used as flag to initialise the next ID count
+    
+   #if JUCE_DEBUG
     mutable std::unordered_set<EditItemID> usedIDs;
-
+   #endif
+    
     const EditRole editRole;
 
     struct TreeWatcher;

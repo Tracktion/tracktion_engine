@@ -88,7 +88,7 @@ juce::AudioFormatWriter* AudioFileUtils::createWriterFor (Engine& engine,
     return {};
 }
 
-juce::Range<juce::int64> AudioFileUtils::scanForNonZeroSamples (Engine& engine, const juce::File& file, float maxZeroLevelDb)
+SampleRange AudioFileUtils::scanForNonZeroSamples (Engine& engine, const juce::File& file, float maxZeroLevelDb)
 {
     std::unique_ptr<juce::AudioFormatReader> reader (createReaderFor (engine, file));
 
@@ -112,13 +112,13 @@ juce::Range<juce::int64> AudioFileUtils::scanForNonZeroSamples (Engine& engine, 
     for (int i = 0; i < numChans; ++i)
         chans[i] = buffer + i * sampsPerBlock;
 
-    juce::int64 firstNonZero = 0, lastNonZero = 0, n = 0;
+    SampleCount firstNonZero = 0, lastNonZero = 0, n = 0;
     bool needFirst = true;
 
     while (n < reader->lengthInSamples)
     {
         for (int j = numChans; --j >= 0;)
-            juce::zeromem (chans[j], sizeof (int) * sampsPerBlock);
+            std::memset (chans[j], 0, sizeof (int) * sampsPerBlock);
 
         reader->read (chans, numChans, n, sampsPerBlock, false);
 
@@ -168,9 +168,9 @@ juce::Range<juce::int64> AudioFileUtils::scanForNonZeroSamples (Engine& engine, 
     return { firstNonZero, lastNonZero };
 }
 
-static juce::int64 copySection (Engine& e, std::unique_ptr<juce::AudioFormatReader>& reader,
+static SampleCount copySection (Engine& e, std::unique_ptr<juce::AudioFormatReader>& reader,
                                 const juce::File& sourceFile, const juce::File& destFile,
-                                juce::Range<juce::int64> range)
+                                SampleRange range)
 {
     if (range.contains ({ 0, reader->lengthInSamples })
          && sourceFile.getFileExtension() == destFile.getFileExtension())
@@ -196,8 +196,8 @@ static juce::int64 copySection (Engine& e, std::unique_ptr<juce::AudioFormatRead
     return -1;
 }
 
-juce::int64 AudioFileUtils::copySectionToNewFile (Engine& e, const juce::File& sourceFile, const juce::File& destFile,
-                                                  const juce::Range<juce::int64>& range)
+SampleCount AudioFileUtils::copySectionToNewFile (Engine& e, const juce::File& sourceFile,
+                                                  const juce::File& destFile, SampleRange range)
 {
     if (range.isEmpty())
         return -1;
@@ -210,7 +210,7 @@ juce::int64 AudioFileUtils::copySectionToNewFile (Engine& e, const juce::File& s
     return -1;
 }
 
-juce::int64 AudioFileUtils::copySectionToNewFile (Engine& e,
+SampleCount AudioFileUtils::copySectionToNewFile (Engine& e,
                                                   const juce::File& sourceFile,
                                                   const juce::File& destFile,
                                                   EditTimeRange range)
@@ -222,16 +222,16 @@ juce::int64 AudioFileUtils::copySectionToNewFile (Engine& e,
 
     if (reader != nullptr)
         return copySection (e, reader, sourceFile, destFile,
-                            { (juce::int64) (range.getStart() * reader->sampleRate),
-                              (juce::int64) (range.getEnd()   * reader->sampleRate) });
+                            { (SampleCount) (range.getStart() * reader->sampleRate),
+                              (SampleCount) (range.getEnd()   * reader->sampleRate) });
 
     return -1;
 }
 
-juce::Range<juce::int64> AudioFileUtils::copyNonSilentSectionToNewFile (Engine& e,
-                                                                        const juce::File& sourceFile,
-                                                                        const juce::File& destFile,
-                                                                        float maxZeroLevelDb)
+SampleRange AudioFileUtils::copyNonSilentSectionToNewFile (Engine& e,
+                                                           const juce::File& sourceFile,
+                                                           const juce::File& destFile,
+                                                           float maxZeroLevelDb)
 {
     auto range = scanForNonZeroSamples (e, sourceFile, maxZeroLevelDb);
 
@@ -241,7 +241,7 @@ juce::Range<juce::int64> AudioFileUtils::copyNonSilentSectionToNewFile (Engine& 
     return {};
 }
 
-juce::Range<juce::int64> AudioFileUtils::trimSilence (Engine& e, const juce::File& file, float maxZeroLevelDb)
+SampleRange AudioFileUtils::trimSilence (Engine& e, const juce::File& file, float maxZeroLevelDb)
 {
     if (file.hasWriteAccess())
     {
@@ -302,8 +302,8 @@ bool AudioFileUtils::reverse (Engine& engine,
     if (! writer.isOpen())
         return false;
 
-    juce::int64 sourceSample = 0;
-    juce::int64 samplesToDo = reader->lengthInSamples;
+    SampleCount sourceSample = 0;
+    SampleCount samplesToDo = reader->lengthInSamples;
     const int bufferSize = 65536;
     auto sampleNum = samplesToDo;
 
@@ -314,7 +314,7 @@ bool AudioFileUtils::reverse (Engine& engine,
 
     while (! shouldExit)
     {
-        auto numThisTime = (int) std::min (samplesToDo, (juce::int64) bufferSize);
+        auto numThisTime = (int) std::min (samplesToDo, (SampleCount) bufferSize);
 
         if (numThisTime <= 0)
             return true;
@@ -355,14 +355,14 @@ bool AudioFileUtils::reverse (Engine& engine,
     return false;
 }
 
-void AudioFileUtils::addBWAVStartToMetadata (juce::StringPairArray& metadata, juce::int64 time)
+void AudioFileUtils::addBWAVStartToMetadata (juce::StringPairArray& metadata, SampleCount time)
 {
     metadata.addArray (juce::WavAudioFormat::createBWAVMetadata ({}, "tracktion",
                                                                  {}, juce::Time::getCurrentTime(),
                                                                  time, {}));
 }
 
-juce::int64 AudioFileUtils::getFileLengthSamples (Engine& e, const juce::File& file)
+SampleCount AudioFileUtils::getFileLengthSamples (Engine& e, const juce::File& file)
 {
     std::unique_ptr<juce::AudioFormatReader> reader (createReaderFor (e, file));
 
@@ -382,7 +382,7 @@ static bool isWavFile (const juce::File& file)
     return reader != nullptr;
 }
 
-void AudioFileUtils::applyBWAVStartTime (const juce::File& file, juce::int64 time)
+void AudioFileUtils::applyBWAVStartTime (const juce::File& file, SampleCount time)
 {
     if (isWavFile (file))
     {
@@ -418,8 +418,8 @@ void AudioFileUtils::applyBWAVStartTime (const juce::File& file, juce::int64 tim
             {
                 fo.setPosition (pos);
 
-                fo.writeInt ((int) (juce::uint32) (time & 0xffffffff));
-                fo.writeInt ((int) (juce::uint32) (time >> 32));
+                fo.writeInt ((int) (uint32_t) (time & 0xffffffff));
+                fo.writeInt ((int) (uint32_t) (time >> 32));
             }
         }
     }

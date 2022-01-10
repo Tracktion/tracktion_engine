@@ -12,7 +12,7 @@ namespace tracktion_engine
 {
 
 //==============================================================================
-struct AudioTrack::TrackMuter : private AsyncUpdater
+struct AudioTrack::TrackMuter  : private juce::AsyncUpdater
 {
     TrackMuter (AudioTrack& at) : owner (at)        { triggerAsyncUpdate(); }
     ~TrackMuter() override                          { cancelPendingUpdate(); }
@@ -20,7 +20,8 @@ struct AudioTrack::TrackMuter : private AsyncUpdater
     void handleAsyncUpdate() override
     {
         for (int i = 1; i <= 16; ++i)
-            owner.injectLiveMidiMessage (MidiMessage::allNotesOff (i), MidiMessageArray::notMPE);
+            owner.injectLiveMidiMessage (juce::MidiMessage::allNotesOff (i),
+                                         MidiMessageArray::notMPE);
 
         owner.trackMuter = nullptr;
     }
@@ -31,7 +32,7 @@ struct AudioTrack::TrackMuter : private AsyncUpdater
 
 //==============================================================================
 struct AudioTrack::FreezeUpdater : private ValueTreeAllEventListener,
-                                   private AsyncUpdater
+                                   private juce::AsyncUpdater
 {
     FreezeUpdater (AudioTrack& at)
         : owner (at), state (owner.state), triggerFreeze (false), updateFreeze (false)
@@ -51,7 +52,7 @@ struct AudioTrack::FreezeUpdater : private ValueTreeAllEventListener,
     }
 
     AudioTrack& owner;
-    ValueTree state;
+    juce::ValueTree state;
 
 private:
     bool triggerFreeze, updateFreeze;
@@ -91,7 +92,7 @@ private:
 };
 
 //==============================================================================
-AudioTrack::AudioTrack (Edit& ed, const ValueTree& v)
+AudioTrack::AudioTrack (Edit& ed, const juce::ValueTree& v)
     : ClipTrack (ed, v, 50, 13, 2000)
 {
     soloed.referTo (state, IDs::solo, nullptr);
@@ -175,7 +176,7 @@ void AudioTrack::initialise()
 
 void AudioTrack::sanityCheckName()
 {
-    const String n = ClipTrack::getName();
+    auto n = ClipTrack::getName();
 
     if ((n.startsWithIgnoreCase ("Track ")
           || n.startsWithIgnoreCase (TRANS("Track") + " "))
@@ -188,14 +189,15 @@ void AudioTrack::sanityCheckName()
 
     // We need to update the alias here as it's the first time the name will be returned correctly upon track creation
     // We also won't get a property change if the track order etc. changes as it will just be empty
-    const String devName (getName());
+    auto devName = getName();
+
     if (waveInputDevice != nullptr) waveInputDevice->setAlias (devName);
     if (midiInputDevice != nullptr) midiInputDevice->setAlias (devName);
 }
 
-String AudioTrack::getName()
+juce::String AudioTrack::getName()
 {
-    String n = ClipTrack::getName();
+    auto n = ClipTrack::getName();
 
     if (n.isEmpty())
         n << TRANS("Track") << ' ' << getAudioTrackNumber();
@@ -223,21 +225,21 @@ AuxSendPlugin* AudioTrack::getAuxSendPlugin (int bus) const
 }
 
 //==============================================================================
-String AudioTrack::getNameForMidiNoteNumber (int note, int midiChannel, bool preferSharp) const
+juce::String AudioTrack::getNameForMidiNoteNumber (int note, int midiChannel, bool preferSharp) const
 {
     jassert (midiChannel > 0);
-    String s;
 
     if (midiNoteMapCache.size() > 0)
     {
         auto itr = midiNoteMapCache.find (note);
+
         if (itr != midiNoteMapCache.end())
-        {
             return itr->second;
-        }
 
         return {};
     }
+
+    juce::String s;
 
     for (auto af : pluginList)
         if (af->hasNameForMidiNoteNumber (note, midiChannel, s))
@@ -254,9 +256,9 @@ String AudioTrack::getNameForMidiNoteNumber (int note, int midiChannel, bool pre
     if (auto mo = dynamic_cast<MidiOutputDevice*> (getOutput().getOutputDevice (true)))
         return mo->getNameForMidiNoteNumber (note, midiChannel, preferSharp);
 
-    return midiChannel == 10 ? TRANS(MidiMessage::getRhythmInstrumentName (note))
-                             : MidiMessage::getMidiNoteName (note, preferSharp, true,
-                                                             edit.engine.getEngineBehaviour().getMiddleCOctave());
+    return midiChannel == 10 ? TRANS(juce::MidiMessage::getRhythmInstrumentName (note))
+                             : juce::MidiMessage::getMidiNoteName (note, preferSharp, true,
+                                                                   edit.engine.getEngineBehaviour().getMiddleCOctave());
 }
 
 void AudioTrack::updateMidiNoteMapCache()
@@ -265,7 +267,7 @@ void AudioTrack::updateMidiNoteMapCache()
 
     auto m = midiNoteMap.get();
 
-    auto lines = StringArray::fromLines (m);
+    auto lines = juce::StringArray::fromLines (m);
     for (auto l : lines)
     {
         if (l.startsWith ("//"))
@@ -276,7 +278,7 @@ void AudioTrack::updateMidiNoteMapCache()
         {
             auto c = l[i];
             
-            if (CharacterFunctions::isDigit (c))
+            if (juce::CharacterFunctions::isDigit (c))
                 digits++;
             else
                 break;
@@ -289,8 +291,6 @@ void AudioTrack::updateMidiNoteMapCache()
 
 bool AudioTrack::areMidiPatchesZeroBased() const
 {
-    String s;
-
     // do something for plugins here
     if (auto dest = output->getDestinationTrack())
         return dest->areMidiPatchesZeroBased();
@@ -302,9 +302,9 @@ bool AudioTrack::areMidiPatchesZeroBased() const
     return false;
 }
 
-String AudioTrack::getNameForBank (int bank) const
+juce::String AudioTrack::getNameForBank (int bank) const
 {
-    String s;
+    juce::String s;
 
     for (auto p : pluginList)
         if (p->hasNameForMidiBank (bank, s))
@@ -335,9 +335,9 @@ int AudioTrack::getIdForBank (int bank) const
     return bank;
 }
 
-String AudioTrack::getNameForProgramNumber (int programNumber, int bank) const
+juce::String AudioTrack::getNameForProgramNumber (int programNumber, int bank) const
 {
-    String s;
+    juce::String s;
 
     for (auto p : pluginList)
         if (p->hasNameForMidiProgram (programNumber, bank, s))
@@ -354,7 +354,7 @@ String AudioTrack::getNameForProgramNumber (int programNumber, int bank) const
     if (auto midiDevice = dynamic_cast<MidiOutputDevice*> (output->getOutputDevice (false)))
         return midiDevice->getProgramName (programNumber, bank);
 
-    return TRANS(MidiMessage::getGMInstrumentName (programNumber));
+    return TRANS(juce::MidiMessage::getGMInstrumentName (programNumber));
 }
 
 //==============================================================================
@@ -437,7 +437,7 @@ bool AudioTrack::isTrackAudible (bool areAnyTracksSolo) const
 }
 
 //==============================================================================
-String AudioTrack::getTrackPlayabilityWarning() const
+juce::String AudioTrack::getTrackPlayabilityWarning() const
 {
     bool hasMidi = false, hasWave = false;
 
@@ -503,14 +503,15 @@ bool AudioTrack::canPlayMidi() const
 
 void AudioTrack::setMidiVerticalPos (double visibleProp, double offset)
 {
-    visibleProp = jlimit (0.0, 1.0, visibleProp);
-    midiVerticalOffset = jlimit (0.0, 1.0 - visibleProp, offset);
-    midiVisibleProportion = jlimit (0.1, 1.0 - midiVerticalOffset, visibleProp);
+    visibleProp             = juce::jlimit (0.0, 1.0, visibleProp);
+    midiVerticalOffset      = juce::jlimit (0.0, 1.0 - visibleProp, offset);
+    midiVisibleProportion   = juce::jlimit (0.1, 1.0 - midiVerticalOffset, visibleProp);
 }
 
 void AudioTrack::setVerticalScaleToDefault()
 {
-    const int midiNotes = jlimit (1, 128, 12 * static_cast<int> (edit.engine.getPropertyStorage().getProperty (SettingID::midiEditorOctaves, 3)));
+    auto midiNotes = juce::jlimit (1, 128, 12 * static_cast<int> (edit.engine.getPropertyStorage()
+                                                                   .getProperty (SettingID::midiEditorOctaves, 3)));
     midiVisibleProportion = midiNotes / 128.0;
     midiVerticalOffset = (1.0 - midiVisibleProportion) * 0.5;
 }
@@ -555,12 +556,13 @@ void AudioTrack::playGuideNote (int note, MidiChannel midiChannel, int velocity,
 
     if (note >= 0 && (forceNote || edit.engine.getEngineBehaviour().shouldPlayMidiGuideNotes()))
     {
-        const int pitch = jlimit (0, 127, note);
+        const int pitch = juce::jlimit (0, 127, note);
 
         if (! currentlyPlayingGuideNotes.contains (pitch))
         {
             currentlyPlayingGuideNotes.add (pitch);
-            injectLiveMidiMessage (MidiMessage::noteOn (midiChannel.getChannelNumber(), pitch, (uint8) velocity),
+            injectLiveMidiMessage (juce::MidiMessage::noteOn (midiChannel.getChannelNumber(),
+                                                              pitch, (uint8_t) velocity),
                                    MidiMessageArray::notMPE);
         }
 
@@ -581,12 +583,13 @@ void AudioTrack::playGuideNotes (const juce::Array<int>& notes, MidiChannel midi
     {
         for (int i = 0; i < notes.size(); ++i)
         {
-            const int pitch = jlimit (0, 127, notes.getUnchecked (i));
+            const int pitch = juce::jlimit (0, 127, notes.getUnchecked (i));
 
             if (! currentlyPlayingGuideNotes.contains (pitch))
             {
                 currentlyPlayingGuideNotes.add (pitch);
-                injectLiveMidiMessage (MidiMessage::noteOn (midiChannel.getChannelNumber(), pitch, (uint8) vels.getUnchecked (i)),
+                injectLiveMidiMessage (juce::MidiMessage::noteOn (midiChannel.getChannelNumber(),
+                                                                  pitch, (uint8_t) vels.getUnchecked (i)),
                                        MidiMessageArray::notMPE);
             }
         }
@@ -607,7 +610,8 @@ void AudioTrack::turnOffGuideNotes (MidiChannel midiChannel)
     auto channel = midiChannel.getChannelNumber();
 
     for (auto note : currentlyPlayingGuideNotes)
-        injectLiveMidiMessage (MidiMessage::noteOff (channel, note), MidiMessageArray::notMPE);
+        injectLiveMidiMessage (juce::MidiMessage::noteOff (channel, note),
+                               MidiMessageArray::notMPE);
 
     currentlyPlayingGuideNotes.clear();
 }
@@ -628,7 +632,7 @@ void AudioTrack::removeListener (Listener* l)
 }
 
 //==============================================================================
-void AudioTrack::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i)
+void AudioTrack::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i)
 {
     if (v == state)
     {
@@ -664,7 +668,8 @@ void AudioTrack::valueTreePropertyChanged (ValueTree& v, const juce::Identifier&
         }
         else if (i == IDs::name)
         {
-            const String devName (getName());
+            auto devName = getName();
+            
             waveInputDevice->setAlias (devName);
             midiInputDevice->setAlias (devName);
         }
@@ -725,7 +730,7 @@ void AudioTrack::injectLiveMidiMessage (const juce::MidiMessage& m, MidiMessageA
     injectLiveMidiMessage ({ m, source });
 }
 
-bool AudioTrack::mergeInMidiSequence (const MidiMessageSequence& original, double startTime,
+bool AudioTrack::mergeInMidiSequence (const juce::MidiMessageSequence& original, double startTime,
                                       MidiClip* mc, MidiList::NoteAutomationType automationType)
 {
     auto ms = original;
@@ -753,7 +758,7 @@ bool AudioTrack::mergeInMidiSequence (const MidiMessageSequence& original, doubl
         auto pos = mc->getPosition();
 
         if (pos.getStart() > start)
-            mc->extendStart (jmax (0.0, start - 0.1));
+            mc->extendStart (std::max (0.0, start - 0.1));
 
         if (pos.getEnd() < end)
             mc->setEnd (end + 0.1, true);
@@ -868,8 +873,8 @@ AudioTrack::FreezePointRemovalInhibitor::~FreezePointRemovalInhibitor()         
 void AudioTrack::freezeTrack()
 {
     insertFreezePointIfRequired();
-    const FreezePointPlugin::ScopedPluginDisabler spd (*this, Range<int> (getIndexOfFreezePoint(),
-                                                                          pluginList.size()));
+    const FreezePointPlugin::ScopedPluginDisabler spd (*this, juce::Range<int> (getIndexOfFreezePoint(),
+                                                                                pluginList.size()));
 
     auto& dm = edit.engine.getDeviceManager();
 
@@ -877,10 +882,21 @@ void AudioTrack::freezeTrack()
     setMute (false);
     const FreezePointPlugin::ScopedTrackUnsoloer stu (edit);
 
-    BigInteger trackNum;
+    juce::BigInteger trackNum;
     trackNum.setBit (getIndexInEditTrackList());
     auto freezeFile = getFreezeFile();
     freezeFile.deleteFile();
+
+    juce::Array<EditItemID> trackIDs { itemID };
+    juce::Array<Clip*> clips (getClips());
+
+    for (auto inputTrack : getInputTracks())
+    {
+        trackIDs.addIfNotAlreadyThere (inputTrack->itemID);
+
+        if (auto ct = dynamic_cast<ClipTrack*> (inputTrack))
+            clips.addArray (ct->getClips());
+    }
 
     Renderer::Parameters r (edit);
     r.tracksToDo = trackNum;
@@ -889,6 +905,7 @@ void AudioTrack::freezeTrack()
     r.blockSizeForAudio = dm.getBlockSize();
     r.sampleRateForAudio = dm.getSampleRate();
     r.time = { 0.0, getLengthIncludingInputTracks() };
+    r.endAllowance = RenderOptions::findEndAllowance (edit, &trackIDs, nullptr);
     r.canRenderInMono = true;
     r.mustRenderInMono = false;
     r.usePlugins = true;
@@ -905,7 +922,7 @@ void AudioTrack::freezeTrack()
     else
         Renderer::renderToFile (desc, r);
 
-    freezePlugins (Range<int> (0, getIndexOfFreezePoint()));
+    freezePlugins (juce::Range<int> (0, getIndexOfFreezePoint()));
     setMute (shouldBeMuted);
 
     if (! r.destFile.existsAsFile())
@@ -999,7 +1016,7 @@ int AudioTrack::getIndexOfDefaultFreezePoint()
     return -1;
 }
 
-void AudioTrack::freezePlugins (Range<int> pluginsToFreeze)
+void AudioTrack::freezePlugins (juce::Range<int> pluginsToFreeze)
 {
     int i = 0;
 
@@ -1010,10 +1027,10 @@ void AudioTrack::freezePlugins (Range<int> pluginsToFreeze)
 void AudioTrack::unFreezeTrack()
 {
     // Remove the freeze point if it's in the default location as it will be put back there anyway
-    const int defaultPosition = edit.engine.getPropertyStorage().getProperty (SettingID::freezePoint, 0);
-    const int defaultIndex = getIndexOfDefaultFreezePoint();
-    const int freezePosition = defaultPosition == FreezePointPlugin::postFader ? defaultIndex
-                                                                               : jmax (0, defaultIndex - 1);
+    int defaultPosition = edit.engine.getPropertyStorage().getProperty (SettingID::freezePoint, 0);
+    auto defaultIndex = getIndexOfDefaultFreezePoint();
+    auto freezePosition = (defaultPosition == FreezePointPlugin::postFader) ? defaultIndex
+                                                                            : std::max (0, defaultIndex - 1);
 
     if (getIndexOfFreezePoint() == freezePosition)
         if (freezePointRemovalInhibitor == 0)
@@ -1026,7 +1043,7 @@ void AudioTrack::unFreezeTrack()
     changed();
 }
 
-File AudioTrack::getFreezeFile() const noexcept
+juce::File AudioTrack::getFreezeFile() const
 {
     return TemporaryFileManager::getFreezeFileForTrack (*this);
 }

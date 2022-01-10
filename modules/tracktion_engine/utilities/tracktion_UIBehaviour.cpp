@@ -29,50 +29,51 @@ bool UIBehaviour::paste (const Clipboard& clipboard)
 }
 
 //==============================================================================
-void UIBehaviour::showWarningAlert (const String& title, const String& message)
+void UIBehaviour::showWarningAlert (const juce::String& title, const juce::String& message)
 {
-    AlertWindow::showMessageBoxAsync (AlertWindow::WarningIcon, title, message);
+    juce::AlertWindow::showMessageBoxAsync (juce::AlertWindow::WarningIcon, title, message);
 }
 
-bool UIBehaviour::showOkCancelAlertBox (const String& title, const String& message, const String& ok, const String& cancel)
+bool UIBehaviour::showOkCancelAlertBox (const juce::String& title, const juce::String& message,
+                                        const juce::String& ok, const juce::String& cancel)
 {
    #if JUCE_MODAL_LOOPS_PERMITTED
-    return AlertWindow::showOkCancelBox (AlertWindow::QuestionIcon, title, message, ok, cancel);
+    return juce::AlertWindow::showOkCancelBox (juce::AlertWindow::QuestionIcon, title, message, ok, cancel);
    #else
     jassertfalse; // These methods are currently unsupported in non-modal mode and calls to them from within the Engine will be replaced
     return true;
    #endif
 }
 
-int UIBehaviour::showYesNoCancelAlertBox (const String& title, const String& message,
-                                          const String& yes, const String& no, const String& cancel)
+int UIBehaviour::showYesNoCancelAlertBox (const juce::String& title, const juce::String& message,
+                                          const juce::String& yes, const juce::String& no, const juce::String& cancel)
 {
    #if JUCE_MODAL_LOOPS_PERMITTED
-    return AlertWindow::showYesNoCancelBox (AlertWindow::QuestionIcon, title, message, yes, no, cancel);
+    return juce::AlertWindow::showYesNoCancelBox (juce::AlertWindow::QuestionIcon, title, message, yes, no, cancel);
    #else
     jassertfalse; // These methods are currently unsupported in non-modal mode and calls to them from within the Engine will be replaced
     return 1;
    #endif
 }
 
-void UIBehaviour::showInfoMessage (const String& message)
+void UIBehaviour::showInfoMessage (const juce::String& message)
 {
-    if (auto c = Desktop::getInstance().getMainMouseSource().getComponentUnderMouse())
+    if (auto c = juce::Desktop::getInstance().getMainMouseSource().getComponentUnderMouse())
     {
-        auto bmc = new BubbleMessageComponent();
+        auto bmc = new juce::BubbleMessageComponent();
         bmc->addToDesktop (0);
-        bmc->showAt (c, AttributedString (message), 2000, true, true);
+        bmc->showAt (c, juce::AttributedString (message), 2000, true, true);
     }
 }
 
-void UIBehaviour::showWarningMessage (const String& message)
+void UIBehaviour::showWarningMessage (const juce::String& message)
 {
     showInfoMessage (message);
 }
 
 //==============================================================================
-void UIBehaviour::nudgeSelectedClips (TimecodeSnapType snapType, const String& commandDesc,
-                                      SelectionManager& sm, const Array<Clip*>& clips, bool automationLocked)
+void UIBehaviour::nudgeSelectedClips (TimecodeSnapType snapType, const juce::String& commandDesc,
+                                      SelectionManager& sm, const juce::Array<Clip*>& clips, bool automationLocked)
 {
     jassert (clips.size() > 0);
     auto& ed = clips.getFirst()->edit;
@@ -94,8 +95,8 @@ void UIBehaviour::nudgeSelectedClips (TimecodeSnapType snapType, const String& c
 
         for (int i = clips.size(); --i >= 0;)
         {
-            minTrack = jmin (minTrack, allTracks.indexOf (clips.getUnchecked (i)->getTrack()));
-            maxTrack = jmax (maxTrack, allTracks.indexOf (clips.getUnchecked (i)->getTrack()));
+            minTrack = std::min (minTrack, allTracks.indexOf (clips.getUnchecked (i)->getTrack()));
+            maxTrack = std::max (maxTrack, allTracks.indexOf (clips.getUnchecked (i)->getTrack()));
         }
 
         if (trackDelta < 0)
@@ -111,7 +112,7 @@ void UIBehaviour::nudgeSelectedClips (TimecodeSnapType snapType, const String& c
 
         if (trackDelta != 0)
         {
-            Array<TrackAutomationSection> sections;
+            juce::Array<TrackAutomationSection> sections;
 
             if (automationLocked)
             {
@@ -136,7 +137,7 @@ void UIBehaviour::nudgeSelectedClips (TimecodeSnapType snapType, const String& c
     }
     else if (delta != 0)
     {
-        Array<TrackAutomationSection> sections;
+        juce::Array<TrackAutomationSection> sections;
 
         if (automationLocked)
             for (auto&& clip : clips)
@@ -172,7 +173,7 @@ void UIBehaviour::nudgeSelectedClips (TimecodeSnapType snapType, const String& c
     }
 }
 
-void UIBehaviour::nudgeSelected (TimecodeSnapType snapType, const String& commandDesc, bool automationLocked)
+void UIBehaviour::nudgeSelected (TimecodeSnapType snapType, const juce::String& commandDesc, bool automationLocked)
 {
     if (auto sm = getCurrentlyFocusedSelectionManager())
     {
@@ -204,7 +205,7 @@ void UIBehaviour::nudgeSelected (TimecodeSnapType snapType, const String& comman
     }
 }
 
-void UIBehaviour::nudgeSelected (const String& commandDesc)
+void UIBehaviour::nudgeSelected (const juce::String& commandDesc)
 {
     if (auto edit = getCurrentlyFocusedEdit())
         nudgeSelected (edit->getTransport().getSnapType(), commandDesc, false);

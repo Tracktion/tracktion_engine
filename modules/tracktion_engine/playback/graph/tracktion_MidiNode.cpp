@@ -33,7 +33,7 @@ MidiNode::MidiNode (juce::MidiMessageSequence sequence,
 
     for (auto& s : ms)
         s.updateMatchedPairs();
-    
+
     controllerMessagesScratchBuffer.ensureStorageAllocated (32);
 }
 
@@ -75,12 +75,12 @@ void MidiNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&
 {
     sampleRate = info.sampleRate;
     timeForOneSample = tracktion_graph::sampleToTime (1, info.sampleRate);
-    
+
     if (info.rootNodeToReplace != nullptr)
     {
         bool foundNodeToReplace = false;
         const auto nodeIDToLookFor = getNodeProperties().nodeID;
-        
+
         visitNodes (info.rootNode, [&] (Node& n)
                     {
                         if (auto midiNode = dynamic_cast<MidiNode*> (&n))
@@ -92,7 +92,7 @@ void MidiNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&
                             }
                         }
                     }, true);
-        
+
         shouldCreateMessagesForTime = ! foundNodeToReplace;
     }
 }
@@ -112,7 +112,7 @@ void MidiNode::processSection (ProcessContext& pc, juce::Range<int64_t> timeline
 {
     if (timelineRange.isEmpty())
         return;
-    
+
     if (shouldBeMutedDelegate && shouldBeMutedDelegate())
         return;
 
@@ -123,7 +123,7 @@ void MidiNode::processSection (ProcessContext& pc, juce::Range<int64_t> timeline
             currentSequence = 0;
     }
     lastStart = timelineRange.getStart();
-    
+
     const auto sectionEditTime = getEditTimeRange();
     const auto localTime = sectionEditTime - editSection.getStart();
 
@@ -179,7 +179,7 @@ void MidiNode::processSection (ProcessContext& pc, juce::Range<int64_t> timeline
 
             // This correction here is to avoid rounding errors converting to and from sample position and times
             const auto timeCorrection = lastBlockOfLoop ? (meh->message.isNoteOff() ? 0.0 : timeForOneSample) : 0.0;
-            
+
             if (eventTime >= (localTime.getEnd() - timeCorrection))
                 break;
 
@@ -292,10 +292,10 @@ void MidiNode::createNoteOffs (MidiMessageArray& destination, const juce::MidiMe
             destination.addMidiMessage (juce::MidiMessage::controllerEvent (i, 66 /* sustain pedal off */, 0), midiTimeOffset, midiSourceID);
             destination.addMidiMessage (juce::MidiMessage::controllerEvent (i, 64 /* hold pedal off */, 0), midiTimeOffset, midiSourceID);
 
-			// NB: Some buggy plugins seem to fail to respond to note-ons if they are preceded
+            // NB: Some buggy plugins seem to fail to respond to note-ons if they are preceded
             // by an all-notes-off, so avoid this while playing.
-			if (! isPlaying)
-	            destination.addMidiMessage (juce::MidiMessage::allNotesOff (i), midiTimeOffset, midiSourceID);
+            if (! isPlaying)
+                destination.addMidiMessage (juce::MidiMessage::allNotesOff (i), midiTimeOffset, midiSourceID);
         }
     }
 }

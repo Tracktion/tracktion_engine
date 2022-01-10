@@ -30,7 +30,7 @@ const juce::File& TemporaryFileManager::getTempDirectory() const
     return tempDir;
 }
 
-bool TemporaryFileManager::setTempDirectory (const File& newFile)
+bool TemporaryFileManager::setTempDirectory (const juce::File& newFile)
 {
     auto defaultDir = getDefaultTempFolder (engine);
 
@@ -91,10 +91,10 @@ bool TemporaryFileManager::isDiskSpaceDangerouslyLow() const
     return freeMb < 80;
 }
 
-juce::int64 TemporaryFileManager::getMaxSpaceAllowedForTempFiles() const
+int64_t TemporaryFileManager::getMaxSpaceAllowedForTempFiles() const
 {
-    juce::int64 minAbsoluteSize = 1024 * 1024 * 750;
-    juce::int64 minProportionOfDisk = tempDir.getBytesFreeOnVolume() / 4;
+    int64_t minAbsoluteSize = 1024 * 1024 * 750;
+    int64_t minProportionOfDisk = tempDir.getBytesFreeOnVolume() / 4;
 
     return std::min (minProportionOfDisk, minAbsoluteSize);
 }
@@ -104,7 +104,7 @@ int TemporaryFileManager::getMaxNumTempFiles() const
     return 1000;
 }
 
-static bool shouldDeleteTempFile (const File& f, bool spaceIsShort)
+static bool shouldDeleteTempFile (const juce::File& f, bool spaceIsShort)
 {
     auto fileName = f.getFileName();
 
@@ -114,7 +114,7 @@ static bool shouldDeleteTempFile (const File& f, bool spaceIsShort)
     if (fileName.startsWith ("temp_"))
         return true;
 
-    auto daysOld = (Time::getCurrentTime() - f.getLastAccessTime()).inDays();
+    auto daysOld = (juce::Time::getCurrentTime() - f.getLastAccessTime()).inDays();
 
     return daysOld > 60.0 || (spaceIsShort && daysOld > 1.0);
 }
@@ -147,12 +147,11 @@ void TemporaryFileManager::cleanUp()
     CRASH_TRACER
     TRACKTION_LOG ("Cleaning up temp files..");
 
-    juce::Array<juce::File> tempFiles;
-    tempDir.findChildFiles (tempFiles, File::findFiles, true);
+    auto tempFiles = tempDir.findChildFiles (juce::File::findFiles, true);
 
     deleteEditPreviewsNotInUse (engine, tempFiles);
 
-    juce::int64 totalBytes = 0;
+    int64_t totalBytes = 0;
 
     for (auto& f : tempFiles)
         totalBytes += f.getSize();
@@ -189,7 +188,7 @@ juce::File TemporaryFileManager::getTempFile (const juce::String& filename) cons
 
 juce::File TemporaryFileManager::getUniqueTempFile (const juce::String& prefix, const juce::String& ext) const
 {
-    return tempDir.getChildFile (prefix + juce::String::toHexString (Random::getSystemRandom().nextInt64()))
+    return tempDir.getChildFile (prefix + juce::String::toHexString (juce::Random::getSystemRandom().nextInt64()))
                   .withFileExtension (ext)
                   .getNonexistentSibling();
 }
@@ -206,27 +205,27 @@ static juce::String getDeviceFreezePrefix (Edit& edit)  { return "freeze_" + edi
 static juce::String getTrackFreezePrefix()              { return "trackFreeze_"; }
 static juce::String getCompPrefix()                     { return "comp_"; }
 
-static AudioFile getCachedEditFile (Edit& edit, const juce::String& prefix, juce::int64 hash)
+static AudioFile getCachedEditFile (Edit& edit, const juce::String& prefix, HashCode hash)
 {
-    return AudioFile (edit.engine, edit.getTempDirectory (true).getChildFile (prefix + String::toHexString (hash) + ".wav"));
+    return AudioFile (edit.engine, edit.getTempDirectory (true).getChildFile (prefix + juce::String::toHexString (hash) + ".wav"));
 }
 
-static AudioFile getCachedClipFileWithPrefix (const AudioClipBase& clip, const juce::String& prefix, juce::int64 hash)
+static AudioFile getCachedClipFileWithPrefix (const AudioClipBase& clip, const juce::String& prefix, HashCode hash)
 {
     return getCachedEditFile (clip.edit, prefix + "0_" + clip.itemID.toString() + "_", hash);
 }
 
-AudioFile TemporaryFileManager::getFileForCachedClipRender (const AudioClipBase& clip, juce::int64 hash)
+AudioFile TemporaryFileManager::getFileForCachedClipRender (const AudioClipBase& clip, HashCode hash)
 {
     return getCachedClipFileWithPrefix (clip, getClipProxyPrefix(), hash);
 }
 
-AudioFile TemporaryFileManager::getFileForCachedCompRender (const AudioClipBase& clip, juce::int64 takeHash)
+AudioFile TemporaryFileManager::getFileForCachedCompRender (const AudioClipBase& clip, HashCode takeHash)
 {
     return getCachedClipFileWithPrefix (clip, getCompPrefix(), takeHash);
 }
 
-AudioFile TemporaryFileManager::getFileForCachedFileRender (Edit& edit, juce::int64 hash)
+AudioFile TemporaryFileManager::getFileForCachedFileRender (Edit& edit, HashCode hash)
 {
     return getCachedEditFile (edit, getFileProxyPrefix(), hash);
 }
@@ -234,10 +233,10 @@ AudioFile TemporaryFileManager::getFileForCachedFileRender (Edit& edit, juce::in
 juce::File TemporaryFileManager::getFreezeFileForDevice (Edit& edit, OutputDevice& device)
 {
     return edit.getTempDirectory (true)
-             .getChildFile (getDeviceFreezePrefix (edit) + String (device.getDeviceID()) + ".freeze");
+             .getChildFile (getDeviceFreezePrefix (edit) + juce::String (device.getDeviceID()) + ".freeze");
 }
 
-juce::String TemporaryFileManager::getDeviceIDFromFreezeFile (Edit& edit, const File& deviceFreezeFile)
+juce::String TemporaryFileManager::getDeviceIDFromFreezeFile (Edit& edit, const juce::File& deviceFreezeFile)
 {
     const auto fileName = deviceFreezeFile.getFileName();
     jassert (fileName.startsWith (getDeviceFreezePrefix (edit)));
@@ -256,7 +255,7 @@ juce::File TemporaryFileManager::getFreezeFileForTrack (const AudioTrack& track)
 juce::Array<juce::File> TemporaryFileManager::getFrozenTrackFiles (Edit& edit)
 {
     return edit.getTempDirectory (false)
-             .findChildFiles (File::findFiles, false, getDeviceFreezePrefix (edit) + "*");
+             .findChildFiles (juce::File::findFiles, false, getDeviceFreezePrefix (edit) + "*");
 }
 
 static ProjectItemID getProjectItemIDFromFilename (const juce::String& name)

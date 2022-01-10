@@ -28,10 +28,11 @@ public:
     */
     struct Segment
     {
-        Segment();
+        Segment() = default;
 
         EditTimeRange getRange() const;
-        juce::Range<juce::int64> getSampleRange() const;
+        SampleRange getSampleRange() const;
+
         float getStretchRatio() const;
         float getTranspose() const;
 
@@ -39,22 +40,19 @@ public:
         bool hasFadeOut() const;
 
         bool isFollowedBySilence() const;
-        juce::int64 getHashCode() const;
+        HashCode getHashCode() const;
 
         bool operator== (const Segment&) const;
         bool operator!= (const Segment&) const;
 
-    //private:
-        friend class AudioSegmentList;
-
         double start = 0, length = 0;
-        juce::int64 startSample = 0, lengthSample = 0;
+        SampleCount startSample = 0, lengthSample = 0;
         float stretchRatio = 1.0f, transpose = 0;
         bool fadeIn = false, fadeOut = false;
         bool followedBySilence = false;
     };
 
-    const juce::Array<Segment>& getSegments() const     { return segments; }
+    const juce::Array<Segment>& getSegments() const         { return segments; }
 
     double getStart() const;
     double getEnd() const;

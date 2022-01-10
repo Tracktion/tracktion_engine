@@ -60,7 +60,7 @@ public:
             if (bytesRead < numThisTime * bytesPerFrame)
             {
                 jassert (bytesRead >= 0);
-                juce::zeromem (tempBuffer + bytesRead, (size_t) (numThisTime * bytesPerFrame - bytesRead));
+                std::memset (tempBuffer + bytesRead, 0, (size_t) (numThisTime * bytesPerFrame - bytesRead));
             }
 
             if (bigEndian)
@@ -191,7 +191,7 @@ public:
         {
             jassertfalse; // you must make sure that the window contains all the samples you're going to attempt to read.
 
-            juce::zeromem (result, sizeof (float) * numChannels);
+            std::memset (result, 0, sizeof (float) * numChannels);
             return;
         }
 
@@ -206,7 +206,9 @@ public:
     }
 
     using juce::MemoryMappedAudioFormatReader::readMaxLevels;
-    void readMaxLevels (juce::int64 startSampleInFile, juce::int64 numSamples, juce::Range<float>* results, int numChannelsToRead) override
+
+    void readMaxLevels (juce::int64 startSampleInFile, juce::int64 numSamples,
+                        juce::Range<float>* results, int numChannelsToRead) override
     {
         if (numSamples <= 0)
         {
@@ -245,7 +247,7 @@ private:
     const bool bigEndian;
 
     template <typename SampleType>
-    void scanMinAndMax (juce::int64 startSampleInFile, juce::int64 numSamples, juce::Range<float>* results, int numChannelsToRead) const
+    void scanMinAndMax (int64_t startSampleInFile, int64_t numSamples, juce::Range<float>* results, int numChannelsToRead) const
     {
         typedef juce::AudioData::Pointer<SampleType, juce::AudioData::LittleEndian, juce::AudioData::Interleaved, juce::AudioData::Const> SourceType;
 

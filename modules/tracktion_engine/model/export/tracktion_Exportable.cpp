@@ -11,9 +11,9 @@
 namespace tracktion_engine
 {
 
-Array<Exportable*> Exportable::addAllExportables (Edit& edit)
+juce::Array<Exportable*> Exportable::addAllExportables (Edit& edit)
 {
-    Array<Exportable*> list;
+    juce::Array<Exportable*> list;
 
     for (auto t : getAudioTracks (edit))
     {

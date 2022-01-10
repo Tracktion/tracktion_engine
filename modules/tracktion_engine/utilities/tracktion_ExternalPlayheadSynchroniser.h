@@ -27,7 +27,7 @@ void synchroniseEditPosition (Edit&, const juce::AudioPlayHead::CurrentPositionI
     Just create one when you create your Edit and repeatedly call the synchronise method
     in your process block like this:
     @code
-    void processBlock (AudioBuffer<float>& buffer, MidiBuffer& midi) override
+    void processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midi) override
     {
         // Update position info first
         externalPlayheadSynchroniser.synchronise (*this);

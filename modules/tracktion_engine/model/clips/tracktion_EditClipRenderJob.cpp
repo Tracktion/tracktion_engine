@@ -75,15 +75,15 @@ EditRenderJob::~EditRenderJob()
             editDeleter->getTransport().editHasChanged();
 }
 
-String EditRenderJob::getLastError() const
+juce::String EditRenderJob::getLastError() const
 {
-    const ScopedLock sl (errorLock);
+    const juce::ScopedLock sl (errorLock);
     return lastError;
 }
 
-void EditRenderJob::setLastError (const String& e)
+void EditRenderJob::setLastError (const juce::String& e)
 {
-    const ScopedLock sl (errorLock);
+    const juce::ScopedLock sl (errorLock);
     lastError = e;
 }
 
@@ -104,10 +104,10 @@ bool EditRenderJob::setUpRender()
                                                   if (context.shouldExit)
                                                       break;
 
-                                                  Thread::sleep (100);
+                                                  juce::Thread::sleep (100);
                                               }
                                           });
-        ignoreUnused (contextUpdater);
+        juce::ignoreUnused (contextUpdater);
         auto edit = new Edit (*params.engine,
                               loadEditFromProjectManager (params.engine->getProjectManager(), itemID),
                               Edit::forRendering, &context, 1); // always use saved version!
@@ -160,15 +160,17 @@ bool EditRenderJob::completeRender()
 
     if (result.items.size() > 0
          || (params.category == ProjectItem::Category::none && proxy.getFile().existsAsFile()))
-        result.result = Result::ok();
+        result.result = juce::Result::ok();
 
     return result.result.wasOk();
 }
 
 //==============================================================================
-EditRenderJob::RenderPass::RenderPass (EditRenderJob& j, Renderer::Parameters& renderParams, const String& description)
+EditRenderJob::RenderPass::RenderPass (EditRenderJob& j,
+                                       Renderer::Parameters& renderParams,
+                                       const juce::String& description)
     : owner (j), r (renderParams), desc (description), originalCategory (r.category),
-      tempFile (r.destFile, TemporaryFile::useHiddenFile)
+      tempFile (r.destFile, juce::TemporaryFile::useHiddenFile)
 {
     r.category = ProjectItem::Category::none;
     r.destFile = tempFile.getFile();
@@ -176,7 +178,7 @@ EditRenderJob::RenderPass::RenderPass (EditRenderJob& j, Renderer::Parameters& r
 
 EditRenderJob::RenderPass::~RenderPass()
 {
-    const String errorMessage (task != nullptr ? task->errorMessage : String());
+    auto errorMessage (task != nullptr ? task->errorMessage : juce::String());
     owner.setLastError (errorMessage);
     const bool completedOk = task != nullptr ? task->getCurrentTaskProgress() == 1.0f : false;
     task = nullptr;
@@ -200,7 +202,7 @@ EditRenderJob::RenderPass::~RenderPass()
     // reverse if needed
     if (owner.reverse)
     {
-        TemporaryFile tempReverseFile (r.destFile);
+        juce::TemporaryFile tempReverseFile (r.destFile);
 
         if (r.destFile.existsAsFile())
             if (AudioFileUtils::reverse (owner.engine, r.destFile, tempReverseFile.getFile(), owner.progress, nullptr))
@@ -239,9 +241,9 @@ EditRenderJob::RenderPass::~RenderPass()
 
             if (ok)
             {
-                String newItemDesc;
+                juce::String newItemDesc;
                 newItemDesc << TRANS("Rendered from edit") << r.edit->getName().quoted() << " " << TRANS("On") << " "
-                            << Time::getCurrentTime().toString (true, true);
+                            << juce::Time::getCurrentTime().toString (true, true);
 
                 if (auto item = proj->createNewItem (r.destFile,
                                                      r.createMidiFile ? ProjectItem::midiItemType()
@@ -326,7 +328,7 @@ void EditRenderJob::renderSeparateTracks()
 
     jassert (params.separateTracks);
     auto originalTracksToDo = params.tracksToDo;
-    Array<File> createdFiles;
+    juce::Array<juce::File> createdFiles;
 
     for (int i = 0; i <= originalTracksToDo.getHighestBit(); ++i)
     {
@@ -362,8 +364,8 @@ void EditRenderJob::renderSeparateTracks()
 
                 auto getDescription = [at, ft]
                 {
-                    return ft != nullptr ? TRANS("Rendering Submix Track") + " " + String (ft->getFolderTrackNumber()) + "..."
-                                         : TRANS("Rendering Track") + " " + String (at->getAudioTrackNumber()) + "...";
+                    return ft != nullptr ? TRANS("Rendering Submix Track") + " " + juce::String (ft->getFolderTrackNumber()) + "..."
+                                         : TRANS("Rendering Track") + " " + juce::String (at->getAudioTrackNumber()) + "...";
                 };
 
                 auto file = proxy.getFile();
@@ -372,7 +374,8 @@ void EditRenderJob::renderSeparateTracks()
                                                        + " " + TRANS("Render") + " 0"
                                                        + file.getFileExtension());
 
-                params.destFile = File (File::createLegalPathName (getNonExistentSiblingWithIncrementedNumberSuffix (trackFile, false).getFullPathName()));
+                params.destFile = juce::File (juce::File::createLegalPathName (getNonExistentSiblingWithIncrementedNumberSuffix (trackFile, false)
+                                                                                .getFullPathName()));
                 params.tracksToDo = tracksToDo;
 
                 if (Renderer::checkTargetFile (track->edit.engine, params.destFile))
@@ -392,27 +395,27 @@ void EditRenderJob::renderSeparateTracks()
     params.tracksToDo = originalTracksToDo;
 }
 
-bool EditRenderJob::generateSilence (const File& fileToWriteTo)
+bool EditRenderJob::generateSilence (const juce::File& fileToWriteTo)
 {
     CRASH_TRACER
 
-    std::unique_ptr<FileOutputStream> os (fileToWriteTo.createOutputStream());
+    std::unique_ptr<juce::FileOutputStream> os (fileToWriteTo.createOutputStream());
 
     if (os == nullptr || params.audioFormat == nullptr)
         return false;
 
     const int numChans = params.mustRenderInMono ? 1 : 2;
-    std::unique_ptr<AudioFormatWriter> writer (params.audioFormat->createWriterFor (os.get(), params.sampleRateForAudio,
-                                                                                    (unsigned int) numChans,
-                                                                                    params.bitDepth, {}, 0));
+    std::unique_ptr<juce::AudioFormatWriter> writer (params.audioFormat->createWriterFor (os.get(), params.sampleRateForAudio,
+                                                                                          (unsigned int) numChans,
+                                                                                          params.bitDepth, {}, 0));
 
     if (writer == nullptr)
         return false;
 
     os.release();
-    auto numToDo = (int64) (params.time.getLength() * params.sampleRateForAudio);
-    auto blockSize = jmin (32758, (int) numToDo);
-    int64 numDone = 0;
+    auto numToDo = (SampleCount) (params.time.getLength() * params.sampleRateForAudio);
+    auto blockSize = std::min (4096, (int) numToDo);
+    SampleCount numDone = 0;
 
     // should probably use an AudioScratchBuffer here
     juce::AudioBuffer<float> buffer (numChans, blockSize);
@@ -423,7 +426,7 @@ bool EditRenderJob::generateSilence (const File& fileToWriteTo)
         if (shouldExit())
             return false;
 
-        auto numThisTime = jmin ((int) numToDo, blockSize);
+        auto numThisTime = std::min ((int) numToDo, blockSize);
         writer->writeFromAudioSampleBuffer (buffer, 0, numThisTime);
 
         progress = (float) (numDone / (float) numToDo);

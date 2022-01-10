@@ -24,7 +24,7 @@ struct LFOModifier::LFOModifierTimer    : public ModifierTimer
         modifier.setEditTime (editTime);
         modifier.updateParameterStreams (editTime);
 
-        const auto syncTypeThisBlock = roundToInt (modifier.syncTypeParam->getCurrentValue());
+        const auto syncTypeThisBlock = juce::roundToInt (modifier.syncTypeParam->getCurrentValue());
         const auto rateTypeThisBlock = getTypedParamValue<ModifierCommon::RateType> (*modifier.rateTypeParam);
 
         const float rateThisBlock = modifier.rateParam->getCurrentValue();
@@ -89,7 +89,7 @@ struct LFOModifier::LFOModifierTimer    : public ModifierTimer
             randomDifference = currentRandom - previousRandom;
         }
 
-        jassert (isPositiveAndBelow (newPhase, 1.0f));
+        jassert (juce::isPositiveAndBelow (newPhase, 1.0f));
         modifier.currentPhase.store (newPhase, std::memory_order_release);
 
         auto getValue = [this, newPhase]
@@ -125,7 +125,7 @@ struct LFOModifier::LFOModifierTimer    : public ModifierTimer
 
     void resync (double duration)
     {
-        const auto type = roundToInt (modifier.syncTypeParam->getCurrentValue());
+        const auto type = juce::roundToInt (modifier.syncTypeParam->getCurrentValue());
 
         if (type == ModifierCommon::note)
         {
@@ -141,14 +141,14 @@ struct LFOModifier::LFOModifierTimer    : public ModifierTimer
     Ramp ramp;
     TempoSequencePosition tempoSequence;
 
-    Random rand;
+    juce::Random rand;
     float previousRandom = 0.0f, currentRandom = 0.0f, randomDifference = 0.0f;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LFOModifierTimer)
 };
 
 //==============================================================================
-LFOModifier::LFOModifier (Edit& e, const ValueTree& v)
+LFOModifier::LFOModifier (Edit& e, const juce::ValueTree& v)
     : Modifier (e, v)
 {
     auto um = &edit.getUndoManager();
@@ -162,8 +162,9 @@ LFOModifier::LFOModifier (Edit& e, const ValueTree& v)
     phase.referTo (state, IDs::phase, um);
     offset.referTo (state, IDs::offset, um);
 
-    auto addDiscreteParam = [this] (const String& paramID, const String& name, Range<float> valueRange, CachedValue<float>& val,
-                                    const StringArray& labels) -> AutomatableParameter*
+    auto addDiscreteParam = [this] (const juce::String& paramID, const juce::String& name,
+                                    juce::Range<float> valueRange, juce::CachedValue<float>& val,
+                                    const juce::StringArray& labels) -> AutomatableParameter*
     {
         auto* p = new DiscreteLabelledParameter (paramID, name, *this, valueRange, labels.size(), labels);
         addAutomatableParameter (p);
@@ -172,7 +173,11 @@ LFOModifier::LFOModifier (Edit& e, const ValueTree& v)
         return p;
     };
 
-    auto addParam = [this] (const String& paramID, const String& name, NormalisableRange<float> valueRange, float centreVal, CachedValue<float>& val, const String& suffix) -> AutomatableParameter*
+    auto addParam = [this] (const juce::String& paramID,
+                            const juce::String& name,
+                            juce::NormalisableRange<float> valueRange,
+                            float centreVal, juce::CachedValue<float>& val,
+                            const juce::String& suffix) -> AutomatableParameter*
     {
         valueRange.setSkewForCentre (centreVal);
         auto* p = new SuffixedParameter (paramID, name, *this, valueRange, suffix);
@@ -227,7 +232,7 @@ void LFOModifier::initialise()
 float LFOModifier::getCurrentValue()         { return currentValue.load (std::memory_order_acquire); }
 float LFOModifier::getCurrentPhase() const   { return currentPhase.load (std::memory_order_acquire); }
 
-AutomatableParameter::ModifierAssignment* LFOModifier::createAssignment (const ValueTree& v)
+AutomatableParameter::ModifierAssignment* LFOModifier::createAssignment (const juce::ValueTree& v)
 {
     return new Assignment (v, *this);
 }
@@ -266,7 +271,7 @@ LFOModifier::Ptr LFOModifier::Assignment::getLFOModifier() const
 }
 
 //==============================================================================
-StringArray LFOModifier::getWaveNames()
+juce::StringArray LFOModifier::getWaveNames()
 {
     return
     {

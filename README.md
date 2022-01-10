@@ -3,6 +3,7 @@
 master: [![Build](https://github.com/Tracktion/tracktion_engine/actions/workflows/build.yaml/badge.svg?branch=master)](https://github.com/Tracktion/tracktion_engine/actions/workflows/build.yaml)
 
 develop: [![Build](https://github.com/Tracktion/tracktion_engine/actions/workflows/build.yaml/badge.svg?branch=develop)](https://github.com/Tracktion/tracktion_engine/actions/workflows/build.yaml)
+[![codecov](https://codecov.io/gh/Tracktion/tracktion_engine/branch/develop/graph/badge.svg?token=jirhU03pQO)](https://codecov.io/gh/Tracktion/tracktion_engine)
 
 # tracktion_engine
 ##### Welcome to the Tracktion Engine repository!
@@ -27,6 +28,7 @@ $ git clone --recurse-submodules https://github.com/Tracktion/tracktion_engine.g
 ## Examples
 Example projects are located in `/examples`. These are provided as JUCE PIPs, and CMakeLists.txt files to build them using CMake. You will need CMake installed to generate the examples.
 To generate all the examples for the running platform use the script in `/tests`.
+These are bash scripts so if you're on Windows you can use the `Git Bash` shell that comes with Git to run the following.
 ```
 $ cd tests
 $ ./generate_examples
@@ -36,13 +38,17 @@ $ ./generate_examples
 Once the example projects have been generated or built you can find them in `examples/example_name/build`.
 Start with the `PitchAndTimeDemo` or `StepSequencerDemo` to see some basic apps in action.
 
-*If you want to build the Projucer app from JUCE you can load each of the PIP examples directly to generate the IDE files.*
+*If you want to build the Projucer app from JUCE you can load each of the PIP examples directly to generate the IDE files. You'll have to manually specify C++17 as the C++ standard however as this isn't currently possible via the PIP format.*
 
 ## Tutorials
 Once you're ready to dive in to the code, open the IDE files and have a read through the tutorials in `/tutorials`. You can view these on GitHub [here](/tutorials) to see the rendered Markdown.
 
 ## Documentation
 We are still in the process of fleshing out Doxygen formatted comments but the Doxygen generated documentation can be found here: https://tracktion.github.io/tracktion_engine/modules.html
+
+## Benchmarks
+We're in the process of creating a portal to view and examine our benchmarks. This is really for our own internal use but might be of interest to some people:
+https://tracktion.github.io/tracktion_benchmarks
 
 ## Contributing
 Tracktion Engine is provided in JUCE module format, for bug reports and features requests, please visit the [JUCE Forum and post using the Tracktion Engine category](https://forum.juce.com/c/tracktion-engine) -
@@ -55,6 +61,8 @@ Tracktion Engine is covered by a [GPL](https://www.gnu.org/licenses/gpl-3.0.en.h
 
 There are multiple commercial licensing tiers for Tracktion Engine, with different terms for each.
 For prices, see the [Tracktion Developers Page](https://www.tracktion.com/develop/tracktion-engine).
+
+**N.B.** *Although Tracktion Engine utilises JUCE, it is not part of JUCE nor owned by the same company. As such it is licensed separately and you must make sure you have an appropriate JUCE licence from [juce.com](juce.com) when distributing Tracktion Engine based products. Similarly, Tracktion Engine is not included in a JUCE licence and you must get the above mentioned Tracktion Engine licence to distribute products.*
 
 ___
 The Tracktion Graph module (also used by Tracktion Engine) includes the MIT licensed [farbot library](/modules/tracktion_graph/3rd_party/farbot) which requires the following notice to be included as part of the software:

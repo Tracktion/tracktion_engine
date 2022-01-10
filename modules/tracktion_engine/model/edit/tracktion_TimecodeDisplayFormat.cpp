@@ -118,10 +118,10 @@ static const double nudge = 0.05 / 96000.0;
 static TimeAndName getMinSecDivisions (int level) noexcept
 {
     jassert (level >= 0);
-    return minSecDivisions [jmin (13, level)];
+    return minSecDivisions [std::min (13, level)];
 }
 
-String TimecodeSnapType::getDescription (const TempoSetting& tempo, bool isTripletOverride) const
+juce::String TimecodeSnapType::getDescription (const TempoSetting& tempo, bool isTripletOverride) const
 {
     if (type == TimecodeType::barsBeats)
     {
@@ -135,7 +135,7 @@ String TimecodeSnapType::getDescription (const TempoSetting& tempo, bool isTripl
         if (level == 9)   return TRANS("Beat");
         if (level == 10)  return TRANS("Bar");
 
-        return TRANS("33 bars").replace ("33", String (barMultiples [jmin (level, 19) - 10]));
+        return TRANS("33 bars").replace ("33", juce::String (barMultiples[std::min (level, 19) - 10]));
     }
 
     if (type == TimecodeType::millisecs)
@@ -195,7 +195,7 @@ double TimecodeSnapType::getIntervalNonBarsBeats() const
     return getMinSecDivisions (level + 2).time;
 }
 
-String TimecodeSnapType::getTimecodeString (double time, const TempoSequence& sequence, bool useStartLabelIfZero) const
+juce::String TimecodeSnapType::getTimecodeString (double time, const TempoSequence& sequence, bool useStartLabelIfZero) const
 {
     if (type == TimecodeType::barsBeats)
     {
@@ -206,10 +206,10 @@ String TimecodeSnapType::getTimecodeString (double time, const TempoSequence& se
         auto bars = barsBeats.bars + 1;
         auto beats = barsBeats.getWholeBeats() + 1;
 
-        if (level < 9)  return String::formatted ("%d|%d|%03d", bars, beats, (int) (barsBeats.getFractionalBeats() * Edit::ticksPerQuarterNote));
-        if (level == 9) return String::formatted ("%d|%d", bars, beats);
+        if (level < 9)  return juce::String::formatted ("%d|%d|%03d", bars, beats, (int) (barsBeats.getFractionalBeats() * Edit::ticksPerQuarterNote));
+        if (level == 9) return juce::String::formatted ("%d|%d", bars, beats);
 
-        return TRANS("Bar") + " " + String (bars);
+        return TRANS("Bar") + " " + juce::String (bars);
     }
 
     if (type == TimecodeType::millisecs)
@@ -218,7 +218,7 @@ String TimecodeSnapType::getTimecodeString (double time, const TempoSequence& se
             return "0";
 
         if (level >= 9)
-            return RelativeTime (time).getDescription();
+            return juce::RelativeTime (time).getDescription();
 
         if (level >= 4)
             return TimecodeDisplayFormat::toFullTimecode (time, 0, false);
@@ -230,7 +230,7 @@ String TimecodeSnapType::getTimecodeString (double time, const TempoSequence& se
         return "0";
 
     if (level >= 7)
-        return RelativeTime (time).getDescription();
+        return juce::RelativeTime (time).getDescription();
 
     if (level >= 2)
         return TimecodeDisplayFormat::toFullTimecode (time, 0, false);
@@ -362,7 +362,7 @@ int TimecodeDisplayFormat::getFPS() const
     }
 }
 
-String TimecodeDisplayFormat::getRoundingDescription() const
+juce::String TimecodeDisplayFormat::getRoundingDescription() const
 {
     switch (type)
     {
@@ -382,7 +382,7 @@ int TimecodeDisplayFormat::getSubSecondDivisions() const
     return subSecDivisionsForType[static_cast<int> (type)];
 }
 
-String TimecodeDisplayFormat::getString (const TempoSequence& tempo, const double time, bool isRelative) const
+juce::String TimecodeDisplayFormat::getString (const TempoSequence& tempo, const double time, bool isRelative) const
 {
     if (type == TimecodeType::barsBeats)
     {
@@ -412,7 +412,7 @@ String TimecodeDisplayFormat::getString (const TempoSequence& tempo, const doubl
             fraction = barsBeats.getFractionalBeats();
         }
 
-        auto s = String::formatted ("%d|%d|%03d", bars, beats, (int) (fraction * Edit::ticksPerQuarterNote));
+        auto s = juce::String::formatted ("%d|%d|%03d", bars, beats, (int) (fraction * Edit::ticksPerQuarterNote));
         return time < 0 ? ("-" + s) : s;
     }
 
@@ -424,7 +424,7 @@ int TimecodeDisplayFormat::getNumParts() const
     return type == TimecodeType::barsBeats ? 3 : 4;
 }
 
-String TimecodeDisplayFormat::getSeparator (int part) const
+juce::String TimecodeDisplayFormat::getSeparator (int part) const
 {
     return (type == TimecodeType::barsBeats) ? ","
                                              : ((part == 0 && type == TimecodeType::millisecs) ? "." : ":");
@@ -476,15 +476,18 @@ int TimecodeDisplayFormat::getMinValueOfPart (int part, bool isRelative) const
     return (type == TimecodeType::barsBeats && part > 0 && ! isRelative) ? 1 : 0;
 }
 
-static String twoCharString (juce_wchar n)
+static juce::String twoCharString (int n)
 {
     if (n < 10)
-        return String::charToString ('0') + (juce_wchar) (n + '0');
+        return juce::String::charToString ('0') + (juce::juce_wchar) (n + '0');
 
-    return String (n);
+    return juce::String (n);
 }
 
-void TimecodeDisplayFormat::getPartStrings (TimecodeDuration duration, const TempoSequence& tempo, bool isRelative, String results[4]) const
+void TimecodeDisplayFormat::getPartStrings (TimecodeDuration duration,
+                                            const TempoSequence& tempo,
+                                            bool isRelative,
+                                            juce::String results[4]) const
 {
     if (type == TimecodeType::barsBeats)
     {
@@ -578,7 +581,7 @@ void TimecodeDisplayFormat::getPartStrings (TimecodeDuration duration, const Tem
 }
 
 TimecodeDuration TimecodeDisplayFormat::getNewTimeWithPartValue (TimecodeDuration time, const TempoSequence& tempo,
-                                                         int part, int newValue, bool isRelative) const
+                                                                 int part, int newValue, bool isRelative) const
 {
     if (type == TimecodeType::barsBeats)
     {
@@ -636,7 +639,7 @@ TimecodeDuration TimecodeDisplayFormat::getNewTimeWithPartValue (TimecodeDuratio
     }
     else if (part == 3)
     {
-        hours = jmax (0, newValue);
+        hours = std::max (0, newValue);
     }
 
     t = hours * 3600.0 + mins * 60.0 + secs + frac;
@@ -645,32 +648,33 @@ TimecodeDuration TimecodeDisplayFormat::getNewTimeWithPartValue (TimecodeDuratio
 }
 
 //==============================================================================
-String TimecodeDisplayFormat::toFullTimecode (double seconds, int subSecondDivisions, bool showHours)
+juce::String TimecodeDisplayFormat::toFullTimecode (double seconds, int subSecondDivisions, bool showHours)
 {
+    juce::String result = (seconds < 0) ? "-" : "";
     auto absSecs = std::abs (seconds);
-    String sign = (seconds < 0) ? "-" : "";
-    String result;
 
     if (showHours || (absSecs >= 60.0 * 60.0))
-        result = sign + String::formatted ("%02d:%02d:%02d",
+        result += juce::String::formatted ("%02d:%02d:%02d",
                                            (int) (absSecs / (60.0 * 60.0)),
                                            ((int) (absSecs / 60.0)) % 60,
                                            ((int) absSecs) % 60);
     else
-        result = sign + String::formatted ("%d:%02d",
+        result += juce::String::formatted ("%d:%02d",
                                            ((int) (absSecs / 60.0)) % 60,
                                            ((int) absSecs) % 60);
 
     if (subSecondDivisions > 0)
-        result += String::formatted (":%0*d",
-                                     String (subSecondDivisions - 1).length(),
-                                     roundToInt (absSecs * subSecondDivisions) % subSecondDivisions);
+        result += juce::String::formatted (":%0*d",
+                                           juce::String (subSecondDivisions - 1).length(),
+                                           juce::roundToInt (absSecs * subSecondDivisions) % subSecondDivisions);
 
     return result;
 }
 
 //==============================================================================
-TimecodeSnapType TimecodeDisplayFormat::getBestSnapType (const TempoSetting& tempo, double onScreenTimePerPixel, bool isTripletOverride) const
+TimecodeSnapType TimecodeDisplayFormat::getBestSnapType (const TempoSetting& tempo,
+                                                         double onScreenTimePerPixel,
+                                                         bool isTripletOverride) const
 {
     if (type >= TimecodeType::fps24 && (1.0 / getSubSecondDivisions()) / onScreenTimePerPixel > 2)
         return TimecodeSnapType (type, 1);
@@ -698,11 +702,12 @@ int TimecodeDisplayFormat::getNumSnapTypes() const
 
 TimecodeSnapType TimecodeDisplayFormat::getSnapType (int index) const
 {
-    return TimecodeSnapType (type, jlimit (0, getNumSnapTypes() - 1, index));
+    return TimecodeSnapType (type, juce::jlimit (0, getNumSnapTypes() - 1, index));
 }
 
 //==============================================================================
-TimecodeDisplayIterator::TimecodeDisplayIterator (const Edit& edit, double startTime, TimecodeSnapType minSnapTypeToUse, bool to)
+TimecodeDisplayIterator::TimecodeDisplayIterator (const Edit& edit, double startTime,
+                                                  TimecodeSnapType minSnapTypeToUse, bool to)
     : sequence (edit.tempoSequence),
       minSnapType (minSnapTypeToUse),
       time (minSnapType.roundTimeDown (startTime, sequence)),
@@ -712,8 +717,8 @@ TimecodeDisplayIterator::TimecodeDisplayIterator (const Edit& edit, double start
 
 double TimecodeDisplayIterator::next()
 {
-    const bool triplets = isTripletOverride || sequence.isTripletsAtTime (time);
-    double nextTime = jmax (0.0, minSnapType.roundTimeUp (time + 1.0e-5, sequence, triplets));
+    bool triplets = isTripletOverride || sequence.isTripletsAtTime (time);
+    auto nextTime = std::max (0.0, minSnapType.roundTimeUp (time + 1.0e-5, sequence, triplets));
 
     if (nextTime <= time)
     {
@@ -726,7 +731,7 @@ double TimecodeDisplayIterator::next()
     return time;
 }
 
-String TimecodeDisplayIterator::getTimecodeAsString() const
+juce::String TimecodeDisplayIterator::getTimecodeAsString() const
 {
     return currentSnapType.getTimecodeString (time, sequence, true);
 }

@@ -58,7 +58,10 @@ public:
     // themselves aren't allowed.
     static bool isPluginAllowed (const Plugin::Ptr&);
 
-    void addPlugin (const Plugin::Ptr&, juce::Point<float> pos, bool canAutoConnect);
+    /** Adds a plugin to the Rack optionally connecting it to the input and outputs.
+        @returns    true if the plugin was added, false otherwise
+    */
+    bool addPlugin (const Plugin::Ptr&, juce::Point<float> pos, bool canAutoConnect);
 
     Plugin* getPluginForID (EditItemID);
 

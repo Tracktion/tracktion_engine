@@ -155,7 +155,7 @@ private:
 
     NovationAutomap* automap = nullptr;
 
-    juce::uint32 lastUpdate = 0;
+    uint32_t lastUpdate = 0;
     Edit* currentEdit = nullptr;
     SelectionManager* currentSelectionManager = nullptr;
 

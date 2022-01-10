@@ -40,8 +40,8 @@ public:
         const float volumeSliderPos = decibelsToVolumeFaderPosition (gainDb - (20.0f * (1.0f - velocity)));
         getGainsFromVolumeFaderPositionAndPan (volumeSliderPos, pan, getDefaultPanLaw(), gains[0], gains[1]);
 
-        const double hz = MidiMessage::getMidiNoteInHertz (midiNote);
-        playbackRatio = hz / MidiMessage::getMidiNoteInHertz (keyNote);
+        const double hz = juce::MidiMessage::getMidiNoteInHertz (midiNote);
+        playbackRatio = hz / juce::MidiMessage::getMidiNoteInHertz (keyNote);
         playbackRatio *= file.getSampleRate() / sampleRate;
         samplesLeftToPlay = playbackRatio > 0 ? (1 + (int) (lengthInSamples / playbackRatio)) : 0;
     }
@@ -52,23 +52,23 @@ public:
 
         if (offset < 0)
         {
-            const int num = jmin (-offset, numSamples);
+            const int num = std::min (-offset, numSamples);
             startSamp += num;
             numSamples -= num;
             offset += num;
         }
 
-        int numSamps = jmin (numSamples, samplesLeftToPlay);
+        auto numSamps = std::min (numSamples, samplesLeftToPlay);
 
         if (numSamps > 0)
         {
             int numUsed = 0;
 
-            for (int i = jmin (2, outBuffer.getNumChannels()); --i >= 0;)
+            for (int i = std::min (2, outBuffer.getNumChannels()); --i >= 0;)
             {
                 numUsed = resampler[i]
                             .processAdding (playbackRatio,
-                                            audioData.getReadPointer (jmin (i, audioData.getNumChannels() - 1), offset),
+                                            audioData.getReadPointer (std::min (i, audioData.getNumChannels() - 1), offset),
                                             outBuffer.getWritePointer (i, startSamp),
                                             numSamps,
                                             gains[i]);
@@ -93,10 +93,10 @@ public:
             }
             else
             {
-                endFade = jmax (0.0f, startFade - numSamps * 0.01f);
+                endFade = std::max (0.0f, startFade - numSamps * 0.01f);
             }
 
-            const int numSampsNeeded = 2 + roundToInt ((numSamps + 2) * playbackRatio);
+            const int numSampsNeeded = 2 + juce::roundToInt ((numSamps + 2) * playbackRatio);
             AudioScratchBuffer scratch (audioData.getNumChannels(), numSampsNeeded + 8);
 
             if (offset + numSampsNeeded < audioData.getNumSamples())
@@ -117,9 +117,9 @@ public:
 
             int numUsed = 0;
 
-            for (int i = jmin (2, outBuffer.getNumChannels()); --i >= 0;)
+            for (int i = std::min (2, outBuffer.getNumChannels()); --i >= 0;)
                 numUsed = resampler[i].processAdding (playbackRatio,
-                                                      scratch.buffer.getReadPointer (jmin (i, scratch.buffer.getNumChannels() - 1)),
+                                                      scratch.buffer.getReadPointer (std::min (i, scratch.buffer.getNumChannels() - 1)),
                                                       outBuffer.getWritePointer (i, startSamp),
                                                       numSamps, gains[i]);
 
@@ -130,7 +130,7 @@ public:
         }
     }
 
-    LagrangeInterpolator resampler[2];
+    juce::LagrangeInterpolator resampler[2];
     int note;
     int offset, samplesLeftToPlay = 0;
     float gains[2];
@@ -165,7 +165,7 @@ void SamplerPlugin::valueTreeChanged()
 
 void SamplerPlugin::handleAsyncUpdate()
 {
-    OwnedArray<SamplerSound> newSounds;
+    juce::OwnedArray<SamplerSound> newSounds;
 
     auto numSounds = state.getNumChildren();
 
@@ -182,10 +182,10 @@ void SamplerPlugin::handleAsyncUpdate()
                                        v[IDs::length],
                                        v[IDs::gainDb]);
 
-            s->keyNote      = jlimit (0, 127, static_cast<int> (v[IDs::keyNote]));
-            s->minNote      = jlimit (0, 127, static_cast<int> (v[IDs::minNote]));
-            s->maxNote      = jlimit (0, 127, static_cast<int> (v[IDs::maxNote]));
-            s->pan          = jlimit (-1.0f, 1.0f, static_cast<float> (v[IDs::pan]));
+            s->keyNote      = juce::jlimit (0, 127, static_cast<int> (v[IDs::keyNote]));
+            s->minNote      = juce::jlimit (0, 127, static_cast<int> (v[IDs::minNote]));
+            s->maxNote      = juce::jlimit (0, 127, static_cast<int> (v[IDs::maxNote]));
+            s->pan          = juce::jlimit (-1.0f, 1.0f, static_cast<float> (v[IDs::pan]));
             s->openEnded    = v[IDs::openEnded];
 
             newSounds.add (s);
@@ -209,7 +209,7 @@ void SamplerPlugin::handleAsyncUpdate()
     }
 
     {
-        const ScopedLock sl (lock);
+        const juce::ScopedLock sl (lock);
         allNotesOff();
         soundList.swapWith (newSounds);
 
@@ -222,7 +222,7 @@ void SamplerPlugin::handleAsyncUpdate()
 
 void SamplerPlugin::initialise (const PluginInitialisationInfo&)
 {
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
     allNotesOff();
 }
 
@@ -232,9 +232,9 @@ void SamplerPlugin::deinitialise()
 }
 
 //==============================================================================
-void SamplerPlugin::playNotes (const BigInteger& keysDown)
+void SamplerPlugin::playNotes (const juce::BigInteger& keysDown)
 {
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
 
     if (highlightedNotes != keysDown)
     {
@@ -278,7 +278,7 @@ void SamplerPlugin::playNotes (const BigInteger& keysDown)
 
 void SamplerPlugin::allNotesOff()
 {
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
     playingNotes.clear();
     highlightedNotes.clear();
 }
@@ -289,7 +289,7 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
     {
         SCOPED_REALTIME_CHECK
 
-        const ScopedLock sl (lock);
+        const juce::ScopedLock sl (lock);
 
         clearChannels (*fc.destBuffer, 2, -1, fc.bufferStartSample, fc.bufferNumSamples);
 
@@ -306,14 +306,15 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
                 if (m.isNoteOn())
                 {
                     const int note = m.getNoteNumber();
-                    const int noteTimeSample = roundToInt (m.getTimeStamp() * sampleRate);
+                    const int noteTimeSample = juce::roundToInt (m.getTimeStamp() * sampleRate);
 
                     for (auto playingNote : playingNotes)
                     {
                         if (playingNote->note == note && ! playingNote->openEnded)
                         {
-                            playingNote->samplesLeftToPlay = jmin (playingNote->samplesLeftToPlay,
-                                                                   jmax (minimumSamplesToPlayWhenStopping, noteTimeSample));
+                            playingNote->samplesLeftToPlay = std::min (playingNote->samplesLeftToPlay,
+                                                                       std::max (minimumSamplesToPlayWhenStopping,
+                                                                                 noteTimeSample));
                             highlightedNotes.clearBit (note);
                         }
                     }
@@ -344,14 +345,15 @@ void SamplerPlugin::applyToBuffer (const PluginRenderContext& fc)
                 else if (m.isNoteOff())
                 {
                     const int note = m.getNoteNumber();
-                    const int noteTimeSample = roundToInt (m.getTimeStamp() * sampleRate);
+                    const int noteTimeSample = juce::roundToInt (m.getTimeStamp() * sampleRate);
 
                     for (auto playingNote : playingNotes)
                     {
                         if (playingNote->note == note && ! playingNote->openEnded)
                         {
-                            playingNote->samplesLeftToPlay = jmin (playingNote->samplesLeftToPlay,
-                                                                   jmax (minimumSamplesToPlayWhenStopping, noteTimeSample));
+                            playingNote->samplesLeftToPlay = std::min (playingNote->samplesLeftToPlay,
+                                                                       std::max (minimumSamplesToPlayWhenStopping,
+                                                                                 noteTimeSample));
 
                             highlightedNotes.clearBit (note);
                         }
@@ -384,22 +386,22 @@ int SamplerPlugin::getNumSounds() const
                             [] (int total, auto v) { return total + (v.hasType (IDs::SOUND) ? 1 : 0); });
 }
 
-String SamplerPlugin::getSoundName (int index) const
+juce::String SamplerPlugin::getSoundName (int index) const
 {
     return getSound (index)[IDs::name];
 }
 
-void SamplerPlugin::setSoundName (int index, const String& n)
+void SamplerPlugin::setSoundName (int index, const juce::String& n)
 {
     getSound (index).setProperty (IDs::name, n, getUndoManager());
 }
 
-bool SamplerPlugin::hasNameForMidiNoteNumber (int note, int, String& noteName)
+bool SamplerPlugin::hasNameForMidiNoteNumber (int note, int, juce::String& noteName)
 {
-    String s;
+    juce::String s;
 
     {
-        const ScopedLock sl (lock);
+        const juce::ScopedLock sl (lock);
 
         for (auto ss : soundList)
         {
@@ -419,7 +421,7 @@ bool SamplerPlugin::hasNameForMidiNoteNumber (int note, int, String& noteName)
 
 AudioFile SamplerPlugin::getSoundFile (int index) const
 {
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
 
     if (auto s = soundList[index])
         return s->audioFile;
@@ -429,7 +431,7 @@ AudioFile SamplerPlugin::getSoundFile (int index) const
 
 juce::String SamplerPlugin::getSoundMedia (int index) const
 {
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
 
     if (auto s = soundList[index])
         return s->source;
@@ -451,7 +453,7 @@ double SamplerPlugin::getSoundLength (int index) const
 
     if (l == 0.0)
     {
-        const ScopedLock sl (lock);
+        const juce::ScopedLock sl (lock);
 
         if (auto s = soundList[index])
             return s->length;
@@ -460,23 +462,24 @@ double SamplerPlugin::getSoundLength (int index) const
     return l;
 }
 
-String SamplerPlugin::addSound (const juce::String& source, const String& name, double startTime, double length, float gainDb)
+juce::String SamplerPlugin::addSound (const juce::String& source, const juce::String& name,
+                                      double startTime, double length, float gainDb)
 {
     const int maxNumSamples = 64;
 
     if (getNumSounds() >= maxNumSamples)
         return TRANS("Can't load any more samples");
 
-    ValueTree v (IDs::SOUND);
-    v.setProperty (IDs::source, source, nullptr);
-    v.setProperty (IDs::name, name, nullptr);
-    v.setProperty (IDs::startTime, startTime, nullptr);
-    v.setProperty (IDs::length, length, nullptr);
-    v.setProperty (IDs::keyNote, 72, nullptr);
-    v.setProperty (IDs::minNote, 72 - 24, nullptr);
-    v.setProperty (IDs::maxNote, 72 + 24, nullptr);
-    v.setProperty (IDs::gainDb, gainDb, nullptr);
-    v.setProperty (IDs::pan, (double) 0, nullptr);
+    auto v = createValueTree (IDs::SOUND,
+                              IDs::source, source,
+                              IDs::name, name,
+                              IDs::startTime, startTime,
+                              IDs::length, length,
+                              IDs::keyNote, 72,
+                              IDs::minNote, 72 - 24,
+                              IDs::maxNote, 72 + 24,
+                              IDs::gainDb, gainDb,
+                              IDs::pan, (double) 0);
 
     state.addChild (v, -1, getUndoManager());
     return {};
@@ -486,7 +489,7 @@ void SamplerPlugin::removeSound (int index)
 {
     state.removeChild (index, getUndoManager());
 
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
     playingNotes.clear();
     highlightedNotes.clear();
 }
@@ -496,9 +499,9 @@ void SamplerPlugin::setSoundParams (int index, int keyNote, int minNote, int max
     auto um = getUndoManager();
 
     auto v = getSound (index);
-    v.setProperty (IDs::keyNote, jlimit (0, 127, keyNote), um);
-    v.setProperty (IDs::minNote, jlimit (0, 127, jmin (minNote, maxNote)), um);
-    v.setProperty (IDs::maxNote, jlimit (0, 127, jmax (minNote, maxNote)), um);
+    v.setProperty (IDs::keyNote, juce::jlimit (0, 127, keyNote), um);
+    v.setProperty (IDs::minNote, juce::jlimit (0, 127, std::min (minNote, maxNote)), um);
+    v.setProperty (IDs::maxNote, juce::jlimit (0, 127, std::max (minNote, maxNote)), um);
 }
 
 void SamplerPlugin::setSoundGains (int index, float gainDb, float pan)
@@ -506,8 +509,8 @@ void SamplerPlugin::setSoundGains (int index, float gainDb, float pan)
     auto um = getUndoManager();
 
     auto v = getSound (index);
-    v.setProperty (IDs::gainDb, jlimit (-48.0f, 48.0f, gainDb), um);
-    v.setProperty (IDs::pan, jlimit (-1.0f, 1.0f, pan), um);
+    v.setProperty (IDs::gainDb, juce::jlimit (-48.0f, 48.0f, gainDb), um);
+    v.setProperty (IDs::pan,    juce::jlimit (-1.0f,  1.0f,  pan), um);
 }
 
 void SamplerPlugin::setSoundExcerpt (int index, double start, double length)
@@ -527,14 +530,14 @@ void SamplerPlugin::setSoundOpenEnded (int index, bool b)
     v.setProperty (IDs::openEnded, b, um);
 }
 
-void SamplerPlugin::setSoundMedia (int index, const String& source)
+void SamplerPlugin::setSoundMedia (int index, const juce::String& source)
 {
     auto v = getSound (index);
     v.setProperty (IDs::source, source, getUndoManager());
     triggerAsyncUpdate();
 }
 
-ValueTree SamplerPlugin::getSound (int soundIndex) const
+juce::ValueTree SamplerPlugin::getSound (int soundIndex) const
 {
     int index = 0;
 
@@ -586,7 +589,7 @@ void SamplerPlugin::reassignReferencedItem (const ReferencedItem& item, ProjectI
 
 void SamplerPlugin::sourceMediaChanged()
 {
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
 
     for (auto s : soundList)
         s->refreshFile();
@@ -599,15 +602,15 @@ void SamplerPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 
 //==============================================================================
 SamplerPlugin::SamplerSound::SamplerSound (SamplerPlugin& sf,
-                                           const String& source_,
-                                           const String& name_,
+                                           const juce::String& source_,
+                                           const juce::String& name_,
                                            const double startTime_,
                                            const double length_,
                                            const float gainDb_)
     : owner (sf),
       source (source_),
       name (name_),
-      gainDb (jlimit (-48.0f, 48.0f, gainDb_)),
+      gainDb (juce::jlimit (-48.0f, 48.0f, gainDb_)),
       startTime (startTime_),
       length (length_),
       audioFile (owner.edit.engine, SourceFileReference::findFileFromString (owner.edit, source))
@@ -641,30 +644,30 @@ void SamplerPlugin::SamplerSound::setExcerpt (double startTime_, double length_)
     {
         const double minLength = 32.0 / audioFile.getSampleRate();
 
-        startTime = jlimit (0.0, audioFile.getLength() - minLength, startTime_);
+        startTime = juce::jlimit (0.0, audioFile.getLength() - minLength, startTime_);
 
         if (length_ > 0)
-            length = jlimit (minLength, audioFile.getLength() - startTime, length_);
+            length = juce::jlimit (minLength, audioFile.getLength() - startTime, length_);
         else
             length = audioFile.getLength();
 
-        fileStartSample = roundToInt (startTime * audioFile.getSampleRate());
-        fileLengthSamples = roundToInt (length * audioFile.getSampleRate());
+        fileStartSample   = juce::roundToInt (startTime * audioFile.getSampleRate());
+        fileLengthSamples = juce::roundToInt (length * audioFile.getSampleRate());
 
         if (auto reader = owner.engine.getAudioFileManager().cache.createReader (audioFile))
         {
             audioData.setSize (audioFile.getNumChannels(), fileLengthSamples + 32);
             audioData.clear();
 
-            auto audioDataChannelSet = AudioChannelSet::canonicalChannelSet (audioFile.getNumChannels());
-            auto channelsToUse = AudioChannelSet::stereo();
+            auto audioDataChannelSet = juce::AudioChannelSet::canonicalChannelSet (audioFile.getNumChannels());
+            auto channelsToUse = juce::AudioChannelSet::stereo();
 
             int total = fileLengthSamples;
             int offset = 0;
 
             while (total > 0)
             {
-                const int numThisTime = jmin (8192, total);
+                const int numThisTime = std::min (8192, total);
                 reader->setReadPosition (fileStartSample + offset);
 
                 if (! reader->readSamples (numThisTime, audioData, audioDataChannelSet, offset, channelsToUse, 2000))

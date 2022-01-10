@@ -15,10 +15,10 @@ namespace tracktion_engine
 
 //==============================================================================
 //==============================================================================
-class InternalPluginTests : public UnitTest
+class InternalPluginTests : public juce::UnitTest
 {
 public:
-    InternalPluginTests() : UnitTest ("Internal Plugins", "Tracktion") {}
+    InternalPluginTests() : juce::UnitTest ("Internal Plugins", "Tracktion") {}
 
     //==============================================================================
     void runTest() override
@@ -86,10 +86,10 @@ private:
     {
         const char* paramID;
         float desiredValue;
-        const Identifier valueProperty;
+        const juce::Identifier valueProperty;
     };
 
-    void testPreset (const String& pluginName, std::initializer_list<ParamTest> params)
+    void testPreset (const juce::String& pluginName, std::initializer_list<ParamTest> params)
     {
         beginTest ("Testing plugin parameters: " + pluginName);
 
@@ -100,7 +100,7 @@ private:
         expect (pluginPtr != nullptr);
 
         // Create a state for restoration
-        ValueTree preset (IDs::PLUGIN);
+        juce::ValueTree preset (IDs::PLUGIN);
         preset.setProperty (IDs::type, pluginName, nullptr);
 
         for (auto param : params)

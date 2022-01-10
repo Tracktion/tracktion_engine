@@ -14,7 +14,7 @@ namespace tracktion_engine
 MackieXT::MackieXT (ExternalControllerManager& ecm, MackieMCU& m, int id)
     : ControlSurface (ecm), mcu (m)
 {
-    deviceDescription = "Mackie Control Universal XT #" + String (id + 1);
+    deviceDescription = "Mackie Control Universal XT #" + juce::String (id + 1);
 
     needsMidiChannel = true;
     needsMidiBackChannel = true;
@@ -51,11 +51,11 @@ void MackieXT::initialiseDevice (bool)
 void MackieXT::shutDownDevice()
 {
     // send a reset message:
-    uint8 d[8] = { 0xf0, 0x00, 0x00, 0x66, 0x15, 0x08, 0x00, 0xf7 };
+    uint8_t d[8] = { 0xf0, 0x00, 0x00, 0x66, 0x15, 0x08, 0x00, 0xf7 };
     sendMidiArray (d);
 }
 
-void MackieXT::acceptMidiMessage (const MidiMessage& m)
+void MackieXT::acceptMidiMessage (const juce::MidiMessage& m)
 {
     mcu.acceptMidiMessage (deviceIdx, m);
 }
@@ -71,7 +71,7 @@ void MackieXT::playStateChanged (bool) {}
 void MackieXT::recordStateChanged (bool) {}
 void MackieXT::automationReadModeChanged (bool) {}
 void MackieXT::automationWriteModeChanged (bool) {}
-void MackieXT::faderBankChanged (int, const StringArray&) {}
+void MackieXT::faderBankChanged (int, const juce::StringArray&) {}
 void MackieXT::channelLevelChanged (int, float) {}
 void MackieXT::trackSelectionChanged (int, bool) {}
 void MackieXT::trackRecordEnabled (int, bool) {}

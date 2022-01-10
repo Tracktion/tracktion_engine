@@ -23,10 +23,10 @@ struct AudioFileInfo
 
     Engine* engine = nullptr;
     bool wasParsedOk = false;
-    juce::int64 hashCode = 0;
+    HashCode hashCode = 0;
     juce::AudioFormat* format = nullptr;
     double sampleRate = 0;
-    juce::int64 lengthInSamples = 0;
+    SampleCount lengthInSamples = 0;
     int numChannels = 0;
     int bitsPerSample = 0;
     bool isFloatingPoint = false;
@@ -60,7 +60,7 @@ public:
     ~AudioFile();
 
     const juce::File& getFile() const noexcept  { return file; }
-    juce::int64 getHash() const noexcept        { return hash; }
+    HashCode getHash() const noexcept           { return hash; }
     juce::String getHashString() const          { return juce::String::toHexString (hash); }
 
     inline bool operator== (const AudioFile& other) const noexcept      { return hash == other.hash; }
@@ -75,7 +75,7 @@ public:
 
     AudioFileInfo getInfo() const;
 
-    juce::int64 getLengthInSamples() const;
+    int64_t getLengthInSamples() const;
     double getLength() const;
     int getNumChannels() const;
     double getSampleRate() const;
@@ -96,7 +96,7 @@ public:
 
 private:
     juce::File file;
-    juce::int64 hash = 0;
+    HashCode hash = 0;
 };
 
 } // namespace tracktion_engine

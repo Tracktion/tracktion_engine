@@ -33,13 +33,13 @@ void float2string (float f, char* text, int len)
     else
         decimals = 3;
 
-    String str (f, decimals);
+    juce::String str (f, decimals);
     str.copyToUTF8 (text, (size_t)len);
 }
 
 void int2string (float i, char* text, int len)
 {
-    String str (i);
+    juce::String str (i);
     str.copyToUTF8 (text, (size_t)len);
 }
 
@@ -56,8 +56,8 @@ class AirWindowsBase
 {
 public:
     //==============================================================================
-    AirWindowsBase (AirWindowsCallback* callback_, int prog, int param)
-        : numPrograms (prog), numParams (param), callback (callback_)
+    AirWindowsBase (AirWindowsCallback* c, int prog, int param)
+        : numPrograms (prog), numParams (param), callback (c)
     {
     }
 
@@ -77,13 +77,13 @@ public:
     virtual void processDoubleReplacing (double** inputs, double** outputs, VstInt32 sampleFrames) = 0;
     virtual void getProgramName(char *name)                       = 0;
     virtual void setProgramName(char *name)                       = 0;
-    virtual VstInt32 getChunk (void** data, bool isPreset)                          { ignoreUnused (data, isPreset); return 0; };
-    virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset)        { ignoreUnused (data, byteSize, isPreset); return 0; };
-    virtual float getParameter(VstInt32 index)                                      { ignoreUnused (index); return 0; }
-    virtual void setParameter(VstInt32 index, float value)                          { ignoreUnused (index, value); }
-    virtual void getParameterLabel(VstInt32 index, char *text)                      { ignoreUnused (index, text); }
-    virtual void getParameterName(VstInt32 index, char *text)                       { ignoreUnused (index, text); }
-    virtual void getParameterDisplay(VstInt32 index, char *text)                    { ignoreUnused (index, text); }
+    virtual VstInt32 getChunk (void** data, bool isPreset)                          { juce::ignoreUnused (data, isPreset); return 0; };
+    virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset)        { juce::ignoreUnused (data, byteSize, isPreset); return 0; };
+    virtual float getParameter(VstInt32 index)                                      { juce::ignoreUnused (index); return 0; }
+    virtual void setParameter(VstInt32 index, float value)                          { juce::ignoreUnused (index, value); }
+    virtual void getParameterLabel(VstInt32 index, char *text)                      { juce::ignoreUnused (index, text); }
+    virtual void getParameterName(VstInt32 index, char *text)                       { juce::ignoreUnused (index, text); }
+    virtual void getParameterDisplay(VstInt32 index, char *text)                    { juce::ignoreUnused (index, text); }
     virtual VstInt32 canDo(char *text)                            = 0;
 
 protected:

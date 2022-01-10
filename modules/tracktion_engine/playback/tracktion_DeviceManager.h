@@ -204,6 +204,8 @@ private:
     juce::CriticalSection contextLock;
     juce::Array<EditPlaybackContext*> activeContexts;
     std::unique_ptr<juce::AudioProcessor> globalOutputAudioProcessor;
+    juce::HeapBlock<const float*> inputChannelsScratch;
+    juce::HeapBlock<float*> outputChannelsScratch;
 
    #if JUCE_ANDROID
     ScopedSteadyLoad::Context steadyLoadContext;
@@ -225,7 +227,12 @@ private:
     void audioDeviceAboutToStart (juce::AudioIODevice*) override;
     void audioDeviceStopped() override;
 
+    void audioDeviceIOCallbackInternal (const float** inputChannelData, int numInputChannels,
+                                        float** outputChannelData, int totalNumOutputChannels,
+                                        int numSamples);
+
     //==============================================================================
+    int maxBlockSize = 0;
     int cpuReportingInterval = 1;
     int cpuAvgCounter = 0;
     int glitchCntr = 0;

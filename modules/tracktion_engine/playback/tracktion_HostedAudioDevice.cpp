@@ -12,7 +12,7 @@ namespace tracktion_engine
 {
 
 //==============================================================================
-class HostedAudioDevice : public AudioIODevice
+class HostedAudioDevice : public juce::AudioIODevice
 {
 public:
     HostedAudioDevice (HostedAudioDeviceInterface& aif, std::function<void (HostedAudioDevice*)> onDestroy_)
@@ -25,20 +25,22 @@ public:
             onDestroy (this);
     }
 
-    StringArray getOutputChannelNames() override            { return audioIf.getOutputChannelNames();   }
-    StringArray getInputChannelNames() override             { return audioIf.getInputChannelNames();    }
-    Array<double> getAvailableSampleRates() override        { return { audioIf.parameters.sampleRate }; }
-    Array<int> getAvailableBufferSizes() override           { return { audioIf.parameters.blockSize };  }
+    juce::StringArray getOutputChannelNames() override      { return audioIf.getOutputChannelNames();   }
+    juce::StringArray getInputChannelNames() override       { return audioIf.getInputChannelNames();    }
+    juce::Array<double> getAvailableSampleRates() override  { return { audioIf.parameters.sampleRate }; }
+    juce::Array<int> getAvailableBufferSizes() override     { return { audioIf.parameters.blockSize };  }
     int getDefaultBufferSize() override                     { return audioIf.parameters.blockSize;      }
 
-    String open (const BigInteger& inputChannels, const BigInteger& outputChannels, double sampleRate, int bufferSizeSamples) override
+    juce::String open (const juce::BigInteger& inputChannels,
+                       const juce::BigInteger& outputChannels,
+                       double sampleRate, int bufferSizeSamples) override
     {
         ignoreUnused (inputChannels, outputChannels, sampleRate, bufferSizeSamples);
         return {};
     }
 
     void close() override                                   {}
-    void start (AudioIODeviceCallback* callback_) override
+    void start (juce::AudioIODeviceCallback* callback_) override
     {
         callback = callback_;
         callback->audioDeviceAboutToStart (this);
@@ -52,7 +54,7 @@ public:
 
     bool isOpen() override                                  { return true;  }
     bool isPlaying() override                               { return true;  }
-    String getLastError() override                          { return {};    }
+    juce::String getLastError() override                    { return {};    }
     int getCurrentBitDepth() override                       { return 16;    }
     int getOutputLatencyInSamples() override                { return 0;     }
     int getInputLatencyInSamples() override                 { return 0;     }
@@ -64,25 +66,25 @@ public:
 
     juce::BigInteger getActiveOutputChannels() const override
     {
-        BigInteger res;
+        juce::BigInteger res;
         res.setRange (0, audioIf.parameters.outputChannels, true);
         return res;
     }
 
     juce::BigInteger getActiveInputChannels() const override
     {
-        BigInteger res;
+        juce::BigInteger res;
         res.setRange (0, audioIf.parameters.inputChannels, true);
         return res;
     }
 
-    void processBlock (AudioBuffer<float>& buffer)
+    void processBlock (juce::AudioBuffer<float>& buffer)
     {
         if (callback != nullptr)
             callback->audioDeviceIOCallback (buffer.getArrayOfReadPointers(),
-                                             jmin (buffer.getNumChannels(), audioIf.parameters.inputChannels),
+                                             std::min (buffer.getNumChannels(), audioIf.parameters.inputChannels),
                                              buffer.getArrayOfWritePointers(),
-                                             jmin (buffer.getNumChannels(), audioIf.parameters.inputChannels),
+                                             std::min (buffer.getNumChannels(), audioIf.parameters.inputChannels),
                                              buffer.getNumSamples());
     }
 
@@ -95,11 +97,11 @@ public:
 private:
     HostedAudioDeviceInterface& audioIf;
     std::function<void (HostedAudioDevice*)> onDestroy;
-    AudioIODeviceCallback* callback = nullptr;
+    juce::AudioIODeviceCallback* callback = nullptr;
 };
 
 //==============================================================================
-class HostedAudioDeviceType : public AudioIODeviceType
+class HostedAudioDeviceType  : public juce::AudioIODeviceType
 {
 public:
     HostedAudioDeviceType (HostedAudioDeviceInterface& aif)
@@ -112,14 +114,15 @@ public:
             audioIf.deviceType = nullptr;
     }
 
-    void scanForDevices() override                                          {                                           }
-    StringArray getDeviceNames (bool = false) const override                { return { "Hosted Device" };               }
-    int getDefaultDeviceIndex (bool) const override                         { return 0;                                 }
-    int getIndexOfDevice (AudioIODevice*, bool) const override              { return 0;                                 }
-    bool hasSeparateInputsAndOutputs() const override                       { return false;                             }
-    AudioIODevice* createDevice (const String&, const String&) override
+    void scanForDevices() override                                          {}
+    juce::StringArray getDeviceNames (bool = false) const override          { return { "Hosted Device" }; }
+    int getDefaultDeviceIndex (bool) const override                         { return 0; }
+    int getIndexOfDevice (juce::AudioIODevice*, bool) const override        { return 0; }
+    bool hasSeparateInputsAndOutputs() const override                       { return false; }
+
+    juce::AudioIODevice* createDevice (const juce::String&, const juce::String&) override
     {
-        auto device = new HostedAudioDevice (audioIf, [ptr = WeakReference<HostedAudioDeviceType> (this)] (HostedAudioDevice* d)
+        auto device = new HostedAudioDevice (audioIf, [ptr = juce::WeakReference<HostedAudioDeviceType> (this)] (HostedAudioDevice* d)
                                                       {
                                                           if (ptr != nullptr)
                                                               ptr->devices.removeFirstMatchingValue (d);
@@ -128,7 +131,7 @@ public:
         return device;
     }
 
-    void processBlock (AudioBuffer<float>& buffer)
+    void processBlock (juce::AudioBuffer<float>& buffer)
     {
         for (auto device : devices)
             device->processBlock (buffer);
@@ -186,7 +189,7 @@ public:
         engine.getPropertyStorage().setXmlPropertyItem (SettingID::midiin, getName(), n);
     }
 
-    void processBlock (MidiBuffer& midi)
+    void processBlock (juce::MidiBuffer& midi)
     {
         for (auto instance : instances)
             if (auto* hostedInstance = dynamic_cast<HostedMidiInputDeviceInstance*> (instance))
@@ -210,12 +213,12 @@ private:
 
         bool startRecording() override              { return false; }
 
-        void processBlock (MidiBuffer& midi)
+        void processBlock (juce::MidiBuffer& midi)
         {
             // N.B. This assumes that the number of samples processed per block is constant.
             // I.e. that there is no speed compensation set (which shouldn't be the case when
             // running as a plugin)
-            for (const MidiMessageMetadata mmm : midi)
+            for (auto mmm : midi)
             {
                 const auto referenceTime = tracktion_graph::sampleToTime (mmm.samplePosition, sampleRate);
 
@@ -252,7 +255,7 @@ public:
         return new HostedMidiOutputDeviceInstance (*this, epc);
     }
 
-    void processBlock (MidiBuffer& midi)
+    void processBlock (juce::MidiBuffer& midi)
     {
         for (auto m : toSend)
         {
@@ -263,7 +266,7 @@ public:
         toSend.clear();
     }
 
-    void sendMessageNow (const MidiMessage& message) override
+    void sendMessageNow (const juce::MidiMessage& message) override
     {
         toSend.addMidiMessage (message, 0, MidiMessageArray::notMPE);
         toSend.sortByTimestamp();
@@ -344,7 +347,8 @@ void HostedAudioDeviceInterface::initialise (const Parameters& p)
 
 void HostedAudioDeviceInterface::prepareToPlay (double sampleRate, int blockSize)
 {
-    int newMaxChannels = jmax (parameters.inputChannels, parameters.outputChannels);
+    auto newMaxChannels = std::max (parameters.inputChannels,
+                                    parameters.outputChannels);
 
     if (parameters.sampleRate != sampleRate ||
         parameters.blockSize != blockSize   ||
@@ -367,7 +371,7 @@ void HostedAudioDeviceInterface::prepareToPlay (double sampleRate, int blockSize
     }
 }
 
-void HostedAudioDeviceInterface::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midi)
+void HostedAudioDeviceInterface::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midi)
 {
     if (parameters.fixedBlockSize)
     {
@@ -393,7 +397,7 @@ void HostedAudioDeviceInterface::processBlock (AudioBuffer<float>& buffer, MidiB
 
         while (inputFifo.getNumSamplesAvailable() >= parameters.blockSize)
         {
-            MidiBuffer scratchMidi;
+            juce::MidiBuffer scratchMidi;
             AudioScratchBuffer scratch (buffer.getNumChannels(), parameters.blockSize);
 
             inputFifo.readAudioAndMidi (scratch.buffer, scratchMidi);
@@ -426,6 +430,7 @@ bool HostedAudioDeviceInterface::isHostedMidiInputDevice (const MidiInputDevice&
 juce::StringArray HostedAudioDeviceInterface::getInputChannelNames()
 {
     juce::StringArray res;
+
     for (int i = 0; i < parameters.inputChannels; i++)
     {
         if (i < parameters.inputNames.size())
@@ -433,12 +438,14 @@ juce::StringArray HostedAudioDeviceInterface::getInputChannelNames()
         else
             res.add (juce::String (i + 1));
     }
+
     return res;
 }
 
 juce::StringArray HostedAudioDeviceInterface::getOutputChannelNames()
 {
     juce::StringArray res;
+
     for (int i = 0; i < parameters.outputChannels; i++)
     {
         if (i < parameters.outputNames.size())
@@ -446,6 +453,7 @@ juce::StringArray HostedAudioDeviceInterface::getOutputChannelNames()
         else
             res.add (juce::String (i + 1));
     }
+
     return res;
 }
 

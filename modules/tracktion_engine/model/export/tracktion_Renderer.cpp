@@ -86,24 +86,24 @@ static void addAcidInfo (Edit& edit, Renderer::Parameters& r)
         auto& tempo = edit.tempoSequence.getTempoAt (r.time.start);
         auto& timeSig = edit.tempoSequence.getTimeSigAt (r.time.start);
 
-        r.metadata.set (WavAudioFormat::acidOneShot, "0");
-        r.metadata.set (WavAudioFormat::acidRootSet, "1");
-        r.metadata.set (WavAudioFormat::acidDiskBased, "1");
-        r.metadata.set (WavAudioFormat::acidizerFlag, "1");
-        r.metadata.set (WavAudioFormat::acidRootNote, String (pitch.getPitch()));
+        r.metadata.set (juce::WavAudioFormat::acidOneShot, "0");
+        r.metadata.set (juce::WavAudioFormat::acidRootSet, "1");
+        r.metadata.set (juce::WavAudioFormat::acidDiskBased, "1");
+        r.metadata.set (juce::WavAudioFormat::acidizerFlag, "1");
+        r.metadata.set (juce::WavAudioFormat::acidRootNote, juce::String (pitch.getPitch()));
 
         auto beats = tempo.getBpm() * (r.time.getLength() / 60);
         if (std::abs (beats - int (beats)) < 0.001)
         {
-            r.metadata.set (WavAudioFormat::acidStretch, "1");
-            r.metadata.set (WavAudioFormat::acidBeats, String (roundToInt (beats)));
-            r.metadata.set (WavAudioFormat::acidDenominator, String (timeSig.denominator.get()));
-            r.metadata.set (WavAudioFormat::acidNumerator, String (timeSig.numerator.get()));
-            r.metadata.set (WavAudioFormat::acidTempo, String (tempo.getBpm()));
+            r.metadata.set (juce::WavAudioFormat::acidStretch, "1");
+            r.metadata.set (juce::WavAudioFormat::acidBeats, juce::String (juce::roundToInt (beats)));
+            r.metadata.set (juce::WavAudioFormat::acidDenominator, juce::String (timeSig.denominator.get()));
+            r.metadata.set (juce::WavAudioFormat::acidNumerator, juce::String (timeSig.numerator.get()));
+            r.metadata.set (juce::WavAudioFormat::acidTempo, juce::String (tempo.getBpm()));
         }
         else
         {
-            r.metadata.set (WavAudioFormat::acidStretch, "0");
+            r.metadata.set (juce::WavAudioFormat::acidStretch, "0");
         }
     }
 }
@@ -159,10 +159,10 @@ Renderer::RenderTask::~RenderTask()
 {
 }
 
-ThreadPoolJob::JobStatus Renderer::RenderTask::runJob()
+juce::ThreadPoolJob::JobStatus Renderer::RenderTask::runJob()
 {
     CRASH_TRACER
-    FloatVectorOperations::disableDenormalisedNumberSupport();
+    juce::FloatVectorOperations::disableDenormalisedNumberSupport();
 
     if (params.createMidiFile)
         renderMidi (params);
@@ -192,14 +192,15 @@ bool Renderer::RenderTask::performNormalisingAndTrimming (const Renderer::Parame
         }
 
         AudioFileUtils::applyBWAVStartTime (intermediate.destFile,
-                                            (int64) (intermediate.time.getStart() * intermediate.sampleRateForAudio)
+                                            (SampleCount) (intermediate.time.getStart() * intermediate.sampleRateForAudio)
                                                + doneRange.getStart());
     }
 
     if (target.shouldNormalise || target.shouldNormaliseByRMS)
         setJobName (TRANS("Normalising") + "...");
 
-    std::unique_ptr<AudioFormatReader> reader (AudioFileUtils::createReaderFor (params.edit->engine, intermediate.destFile));
+    std::unique_ptr<juce::AudioFormatReader> reader (AudioFileUtils::createReaderFor (params.edit->engine,
+                                                                                      intermediate.destFile));
 
     if (reader == nullptr)
     {
@@ -221,19 +222,19 @@ bool Renderer::RenderTask::performNormalisingAndTrimming (const Renderer::Parame
     float gain = 1.0f;
 
     if (target.shouldNormaliseByRMS)
-        gain = jlimit (0.0f, 100.0f, dbToGain (target.normaliseToLevelDb) / (intermediate.resultRMS + 2.0f / 32768.0f));
+        gain = juce::jlimit (0.0f, 100.0f, dbToGain (target.normaliseToLevelDb) / (intermediate.resultRMS + 2.0f / 32768.0f));
     else if (target.shouldNormalise)
-        gain = jlimit (0.0f, 100.0f, dbToGain (target.normaliseToLevelDb) * (1.0f / (intermediate.resultMagnitude * 1.005f + 2.0f / 32768.0f)));
+        gain = juce::jlimit (0.0f, 100.0f, dbToGain (target.normaliseToLevelDb) * (1.0f / (intermediate.resultMagnitude * 1.005f + 2.0f / 32768.0f)));
 
     Ditherers ditherers ((int) reader->numChannels, target.bitDepth);
 
     const int blockSize = 16384;
     juce::AudioBuffer<float> tempBuffer ((int) reader->numChannels, blockSize + 256);
 
-    for (int64 pos = 0; pos < reader->lengthInSamples;)
+    for (SampleCount pos = 0; pos < reader->lengthInSamples;)
     {
         auto numLeft = static_cast<int> (reader->lengthInSamples - pos);
-        auto samps = jmin (tempBuffer.getNumSamples(), blockSize, numLeft);
+        auto samps = std::min (tempBuffer.getNumSamples(), std::min (blockSize, numLeft));
 
         reader->read (&tempBuffer, 0, samps, pos, true, reader->numChannels > 1);
 
@@ -301,9 +302,9 @@ void Renderer::RenderTask::flushAllPlugins (const Plugin::Array& plugins,
 
                 for (int j = 0; j < blocks; j++)
                 {
-                    buffer.setSize (jmax (ep->getNumInputs(), ep->getNumOutputs()), samplesPerBlock);
+                    buffer.setSize (std::max (ep->getNumInputs(), ep->getNumOutputs()), samplesPerBlock);
                     buffer.clear();
-                    const AudioChannelSet channels = AudioChannelSet::canonicalChannelSet (buffer.getNumChannels());
+                    auto channels = juce::AudioChannelSet::canonicalChannelSet (buffer.getNumChannels());
 
                     ep->applyToBuffer (PluginRenderContext (&buffer, channels, 0, samplesPerBlock,
                                                             nullptr, 0.0,
@@ -347,11 +348,11 @@ bool Renderer::RenderTask::addMidiMetaDataAndWriteToFile (juce::File destFile, j
     if (outputSequence.getNumEvents() == 0)
         return false;
 
-    FileOutputStream out (destFile);
+    juce::FileOutputStream out (destFile);
 
     if (out.openedOk())
     {
-        MidiMessageSequence midiTempoSequence;
+        juce::MidiMessageSequence midiTempoSequence;
         TempoSequencePosition currentTempoPosition (tempoSequence);
 
         for (int i = 0; i < tempoSequence.getNumTempos(); ++i)
@@ -365,17 +366,24 @@ bool Renderer::RenderTask::addMidiMetaDataAndWriteToFile (juce::File destFile, j
             const double beatLengthMicrosecs = 60000000.0 / ts->getBpm();
             const double microsecondsPerQuarterNote = beatLengthMicrosecs * matchingTimeSig.denominator / 4.0;
 
-            MidiMessage m (MidiMessage::timeSignatureMetaEvent (matchingTimeSig.numerator,
-                                                                matchingTimeSig.denominator));
+            auto m = juce::MidiMessage::timeSignatureMetaEvent (matchingTimeSig.numerator,
+                                                                matchingTimeSig.denominator);
             m.setTimeStamp (time);
             midiTempoSequence.addEvent (m);
 
-            m = MidiMessage::tempoMetaEvent (roundToInt (microsecondsPerQuarterNote));
+            m = juce::MidiMessage::tempoMetaEvent (juce::roundToInt (microsecondsPerQuarterNote));
             m.setTimeStamp (time);
             midiTempoSequence.addEvent (m);
         }
 
-        MidiFile mf;
+        auto name = destFile.getFileNameWithoutExtension();
+        if (name.startsWith ("."))
+            name = name.fromFirstOccurrenceOf (".", false, false).upToLastOccurrenceOf ("_temp", false, false);
+
+        midiTempoSequence.addEvent (juce::MidiMessage::textMetaEvent (3, name));
+        outputSequence.addEvent (juce::MidiMessage::textMetaEvent (3, name));
+
+        juce::MidiFile mf;
         mf.addTrack (midiTempoSequence);
         mf.addTrack (outputSequence);
 
@@ -390,13 +398,13 @@ bool Renderer::RenderTask::addMidiMetaDataAndWriteToFile (juce::File destFile, j
 
 
 //==============================================================================
-bool Renderer::renderToFile (const String& taskDescription,
+bool Renderer::renderToFile (const juce::String& taskDescription,
                              const juce::File& outputFile,
                              Edit& edit,
                              EditTimeRange range,
-                             const BigInteger& tracksToDo,
+                             const juce::BigInteger& tracksToDo,
                              bool usePlugins,
-                             Array<Clip*> clips,
+                             juce::Array<Clip*> clips,
                              bool useThread)
 {
     CRASH_TRACER
@@ -437,7 +445,7 @@ bool Renderer::renderToFile (const String& taskDescription,
             }
             else
             {
-                while (task->runJob() == ThreadPoolJob::jobNeedsRunningAgain)
+                while (task->runJob() == juce::ThreadPoolJob::jobNeedsRunningAgain)
                 {}
             }
         }
@@ -448,7 +456,7 @@ bool Renderer::renderToFile (const String& taskDescription,
     return outputFile.existsAsFile();
 }
 
-juce::File Renderer::renderToFile (const String& taskDescription, const Parameters& r)
+juce::File Renderer::renderToFile (const juce::String& taskDescription, const Parameters& r)
 {
     CRASH_TRACER
 
@@ -495,7 +503,7 @@ juce::File Renderer::renderToFile (const String& taskDescription, const Paramete
     return {};
 }
 
-ProjectItem::Ptr Renderer::renderToProjectItem (const String& taskDescription, const Parameters& r)
+ProjectItem::Ptr Renderer::renderToProjectItem (const juce::String& taskDescription, const Parameters& r)
 {
     CRASH_TRACER
 
@@ -529,9 +537,9 @@ ProjectItem::Ptr Renderer::renderToProjectItem (const String& taskDescription, c
 
     if (renderedFile.existsAsFile())
     {
-        String desc;
+        juce::String desc;
         desc << TRANS("Rendered from edit") << r.edit->getName().quoted() << " "
-             << TRANS("On") << " " << Time::getCurrentTime().toString (true, true);
+             << TRANS("On") << " " << juce::Time::getCurrentTime().toString (true, true);
 
         return proj->createNewItem (renderedFile,
                                     r.createMidiFile ? ProjectItem::midiItemType()
@@ -546,8 +554,8 @@ ProjectItem::Ptr Renderer::renderToProjectItem (const String& taskDescription, c
 }
 
 //==============================================================================
-Renderer::Statistics Renderer::measureStatistics (const String& taskDescription, Edit& edit,
-                                                  EditTimeRange range, const BigInteger& tracksToDo,
+Renderer::Statistics Renderer::measureStatistics (const juce::String& taskDescription, Edit& edit,
+                                                  EditTimeRange range, const juce::BigInteger& tracksToDo,
                                                   int blockSizeForAudio)
 {
     CRASH_TRACER
@@ -582,7 +590,7 @@ Renderer::Statistics Renderer::measureStatistics (const String& taskDescription,
     return result;
 }
 
-bool Renderer::checkTargetFile (Engine& e, const File& file)
+bool Renderer::checkTargetFile (Engine& e, const juce::File& file)
 {
     auto& ui = e.getUIBehaviour();
 

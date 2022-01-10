@@ -163,8 +163,6 @@ extern "C"
 #include "playback/graph/tracktion_MidiNode.test.cpp"
 #include "playback/graph/tracktion_RackBenchmarks.test.cpp"
 
-using namespace juce;
-
 #include "playback/tracktion_DeviceManager.cpp"
 #include "playback/tracktion_EditPlaybackContext.cpp"
 #include "playback/tracktion_EditInputDevices.cpp"

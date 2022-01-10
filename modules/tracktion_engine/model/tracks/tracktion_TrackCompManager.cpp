@@ -11,7 +11,7 @@
 namespace tracktion_engine
 {
 
-TrackCompManager::CompSection::CompSection (const ValueTree& v) : state (v)
+TrackCompManager::CompSection::CompSection (const juce::ValueTree& v) : state (v)
 {
     updateTrack();
     updateEnd();
@@ -21,14 +21,14 @@ TrackCompManager::CompSection::~CompSection()
 {
 }
 
-TrackCompManager::CompSection* TrackCompManager::CompSection::createAndIncRefCount (const ValueTree& v)
+TrackCompManager::CompSection* TrackCompManager::CompSection::createAndIncRefCount (const juce::ValueTree& v)
 {
     auto cs = new CompSection (v);
     cs->incReferenceCount();
     return cs;
 }
 
-void TrackCompManager::CompSection::updateFrom (ValueTree& v, const juce::Identifier& i)
+void TrackCompManager::CompSection::updateFrom (juce::ValueTree& v, const juce::Identifier& i)
 {
     if (v == state)
     {
@@ -45,21 +45,21 @@ void TrackCompManager::CompSection::updateTrack()      { track = EditItemID::fro
 void TrackCompManager::CompSection::updateEnd()        { end = static_cast<double> (state[IDs::end]); }
 
 //==============================================================================
-TrackCompManager::TrackComp* TrackCompManager::TrackComp::createAndIncRefCount (Edit& edit, const ValueTree& v)
+TrackCompManager::TrackComp* TrackCompManager::TrackComp::createAndIncRefCount (Edit& edit, const juce::ValueTree& v)
 {
     auto tc = new TrackComp (edit, v);
     tc->incReferenceCount();
     return tc;
 }
 
-TrackCompManager::TrackComp::TrackComp (Edit& e, const ValueTree& v)
+TrackCompManager::TrackComp::TrackComp (Edit& e, const juce::ValueTree& v)
    : ValueTreeObjectList<CompSection> (v), state (v), edit (e)
 {
     auto um = &edit.getUndoManager();
     name.referTo (state, IDs::name, um);
     timeFormat.referTo (state, IDs::timecodeFormat, um);
-    includedColour.referTo (state, IDs::includedColour, um, Colours::green);
-    excludedColour.referTo (state, IDs::excludedColour, um, Colours::red);
+    includedColour.referTo (state, IDs::includedColour, um, juce::Colours::green);
+    excludedColour.referTo (state, IDs::excludedColour, um, juce::Colours::red);
 
     rebuildObjects();
 }
@@ -71,7 +71,7 @@ TrackCompManager::TrackComp::~TrackComp()
 }
 
 
-String TrackCompManager::TrackComp::getSelectableDescription()   { return TRANS("Track Comp Group"); }
+juce::String TrackCompManager::TrackComp::getSelectableDescription()   { return TRANS("Track Comp Group"); }
 
 void TrackCompManager::TrackComp::setTimeFormat (TimeFormat t)
 {
@@ -85,16 +85,16 @@ void TrackCompManager::TrackComp::setTimeFormat (TimeFormat t)
 }
 
 
-Array<EditTimeRange> TrackCompManager::TrackComp::getMuteTimes (const Array<EditTimeRange>& nonMuteTimes)
+juce::Array<EditTimeRange> TrackCompManager::TrackComp::getMuteTimes (const juce::Array<EditTimeRange>& nonMuteTimes)
 {
-    Array<EditTimeRange> muteTimes;
+    juce::Array<EditTimeRange> muteTimes;
     muteTimes.ensureStorageAllocated (nonMuteTimes.size() + 1);
 
     double lastTime = 0.0;
 
     if (! nonMuteTimes.isEmpty())
     {
-        lastTime = jmin (lastTime, nonMuteTimes.getFirst().getStart());
+        lastTime = std::min (lastTime, nonMuteTimes.getFirst().getStart());
 
         for (auto r : nonMuteTimes)
         {
@@ -111,7 +111,7 @@ Array<EditTimeRange> TrackCompManager::TrackComp::getMuteTimes (const Array<Edit
 juce::Array<EditTimeRange> TrackCompManager::TrackComp::getNonMuteTimes (Track& t, double crossfadeTime) const
 {
     auto halfCrossfade = crossfadeTime / 2.0;
-    Array<EditTimeRange> nonMuteTimes;
+    juce::Array<EditTimeRange> nonMuteTimes;
 
     auto& ts = edit.tempoSequence;
     const bool convertFromBeats = timeFormat == beats;
@@ -181,19 +181,19 @@ EditTimeRange TrackCompManager::TrackComp::getTimeRange() const
     return time;
 }
 
-void TrackCompManager::TrackComp::setName (const String& n)
+void TrackCompManager::TrackComp::setName (const juce::String& n)
 {
     name = n;
 }
 
-EditItemID TrackCompManager::TrackComp::getSourceTrackID (const ValueTree& v)
+EditItemID TrackCompManager::TrackComp::getSourceTrackID (const juce::ValueTree& v)
 {
     return EditItemID::fromProperty (v, IDs::track);
 }
 
-void TrackCompManager::TrackComp::setSourceTrackID (ValueTree& v, EditItemID newID, UndoManager* um)
+void TrackCompManager::TrackComp::setSourceTrackID (juce::ValueTree& v, EditItemID newID, juce::UndoManager* um)
 {
-    newID.setProperty (v, IDs::track, um);
+    v.setProperty (IDs::track, newID, um);
 }
 
 void TrackCompManager::TrackComp::setSectionTrack (CompSection& cs, const Track::Ptr& t)
@@ -256,7 +256,7 @@ TrackCompManager::CompSection* TrackCompManager::TrackComp::moveSection (CompSec
 
     // move section
     auto um = &edit.getUndoManager();
-    WeakReference<CompSection> prevCs = objects[sectionIndex - 1];
+    juce::WeakReference<CompSection> prevCs = objects[sectionIndex - 1];
     EditTimeRange oldSectionTimes (prevCs == nullptr ? 0.0 : prevCs->getEnd(), cs->getEnd());
     auto newSectionTimes = oldSectionTimes + timeDelta;
 
@@ -284,7 +284,7 @@ TrackCompManager::CompSection* TrackCompManager::TrackComp::moveSectionEndTime (
 {
     const double minSectionLength = 0.01;
 
-    WeakReference<CompSection> prevCs = objects[objects.indexOf (cs) - 1];
+    juce::WeakReference<CompSection> prevCs = objects[objects.indexOf (cs) - 1];
     EditTimeRange oldSectionTimes (prevCs == nullptr ? 0.0 : prevCs->getEnd(), cs->getEnd());
     auto newSectionTimes = oldSectionTimes.withEnd (newTime);
     auto um = &edit.getUndoManager();
@@ -339,17 +339,18 @@ int TrackCompManager::TrackComp::removeSectionsWithinRange (EditTimeRange timeRa
 
 struct SectionSorter
 {
-    static int compareElements (const ValueTree& f, const ValueTree& s) noexcept
+    static int compareElements (const juce::ValueTree& f, const juce::ValueTree& s) noexcept
     {
         return double (f[IDs::end]) < double (s[IDs::end]) ? -1 : 1;
     }
 };
 
-ValueTree TrackCompManager::TrackComp::addSection (EditItemID trackID, double endTime, UndoManager* um)
+juce::ValueTree TrackCompManager::TrackComp::addSection (EditItemID trackID, double endTime,
+                                                         juce::UndoManager* um)
 {
-    ValueTree newSection (IDs::COMPSECTION);
-    trackID.setProperty (newSection, IDs::track, um);
-    newSection.setProperty (IDs::end, endTime, um);
+    auto newSection = createValueTree (IDs::COMPSECTION,
+                                       IDs::track, trackID,
+                                       IDs::end, endTime);
 
     int insertIndex = 0;
     const int numSections = state.getNumChildren();
@@ -390,9 +391,9 @@ TrackCompManager::CompSection* TrackCompManager::TrackComp::splitSectionAtTime (
     return getCompSectionFor (addSection (trackID, time, &edit.getUndoManager()));
 }
 
-Array<TrackCompManager::TrackComp::Section> TrackCompManager::TrackComp::getSectionsForTrack (const Track::Ptr& track) const
+juce::Array<TrackCompManager::TrackComp::Section> TrackCompManager::TrackComp::getSectionsForTrack (const Track::Ptr& track) const
 {
-    Array<Section> sections;
+    juce::Array<Section> sections;
     double lastTime = 0.0;
     auto trackId = track == nullptr ? EditItemID() : track->itemID;
 
@@ -447,25 +448,25 @@ TrackCompManager::CompSection* TrackCompManager::TrackComp::findSectionAtTime (c
     return {};
 }
 
-TrackCompManager::CompSection* TrackCompManager::TrackComp::createNewObject (const ValueTree& v)
+TrackCompManager::CompSection* TrackCompManager::TrackComp::createNewObject (const juce::ValueTree& v)
 {
     return CompSection::createAndIncRefCount (v);
 }
 
-bool TrackCompManager::TrackComp::isSuitableType (const ValueTree& v) const     { return v.hasType (IDs::COMPSECTION); }
-void TrackCompManager::TrackComp::deleteObject (CompSection* cs)                { cs->decReferenceCount(); }
-void TrackCompManager::TrackComp::newObjectAdded (CompSection*)                 {}
-void TrackCompManager::TrackComp::objectRemoved (CompSection*)                  {}
-void TrackCompManager::TrackComp::objectOrderChanged()                          {}
+bool TrackCompManager::TrackComp::isSuitableType (const juce::ValueTree& v) const   { return v.hasType (IDs::COMPSECTION); }
+void TrackCompManager::TrackComp::deleteObject (CompSection* cs)                    { cs->decReferenceCount(); }
+void TrackCompManager::TrackComp::newObjectAdded (CompSection*)                     {}
+void TrackCompManager::TrackComp::objectRemoved (CompSection*)                      {}
+void TrackCompManager::TrackComp::objectOrderChanged()                              {}
 
-void TrackCompManager::TrackComp::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i)
+void TrackCompManager::TrackComp::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i)
 {
     if (v.hasType (IDs::COMPSECTION))
         if (CompSection* cs = getCompSectionFor (v))
             cs->updateFrom (v, i);
 }
 
-TrackCompManager::CompSection* TrackCompManager::TrackComp::getCompSectionFor (const ValueTree& v)
+TrackCompManager::CompSection* TrackCompManager::TrackComp::getCompSectionFor (const juce::ValueTree& v)
 {
     jassert (v.hasType (IDs::COMPSECTION));
 
@@ -521,7 +522,7 @@ void TrackCompManager::TrackComp::convertTimes (TimeFormat o, TimeFormat n)
 //==============================================================================
 struct TrackCompManager::TrackCompList   : public ValueTreeObjectList<TrackComp>
 {
-    TrackCompList (Edit& e, const ValueTree& v) : ValueTreeObjectList<TrackComp> (v), edit (e)
+    TrackCompList (Edit& e, const juce::ValueTree& v) : ValueTreeObjectList<TrackComp> (v), edit (e)
     {
         rebuildObjects();
     }
@@ -531,12 +532,12 @@ struct TrackCompManager::TrackCompList   : public ValueTreeObjectList<TrackComp>
         freeObjects();
     }
 
-    bool isSuitableType (const ValueTree& v) const override     { return v.hasType (IDs::TRACKCOMP); }
-    TrackComp* createNewObject (const ValueTree& v) override    { return TrackComp::createAndIncRefCount (edit, v); }
-    void deleteObject (TrackComp* tc) override                  { tc->decReferenceCount(); }
-    void newObjectAdded (TrackComp*) override                   {}
-    void objectRemoved (TrackComp*) override                    {}
-    void objectOrderChanged() override                          {}
+    bool isSuitableType (const juce::ValueTree& v) const override     { return v.hasType (IDs::TRACKCOMP); }
+    TrackComp* createNewObject (const juce::ValueTree& v) override    { return TrackComp::createAndIncRefCount (edit, v); }
+    void deleteObject (TrackComp* tc) override                        { tc->decReferenceCount(); }
+    void newObjectAdded (TrackComp*) override                         {}
+    void objectRemoved (TrackComp*) override                          {}
+    void objectOrderChanged() override                                {}
 
 private:
     Edit& edit;
@@ -548,7 +549,7 @@ private:
 TrackCompManager::TrackCompManager (Edit& e) : edit (e) {}
 TrackCompManager::~TrackCompManager() {}
 
-void TrackCompManager::initialise (const ValueTree& v)
+void TrackCompManager::initialise (const juce::ValueTree& v)
 {
     jassert (v.hasType (IDs::TRACKCOMPS));
     state = v;
@@ -560,9 +561,9 @@ int TrackCompManager::getNumGroups() const
     return state.getNumChildren();
 }
 
-StringArray TrackCompManager::getCompNames() const
+juce::StringArray TrackCompManager::getCompNames() const
 {
-    StringArray names;
+    juce::StringArray names;
     auto numComps = state.getNumChildren();
 
     for (int i = 0; i < numComps; ++i)
@@ -573,7 +574,7 @@ StringArray TrackCompManager::getCompNames() const
         auto name = v.getProperty (IDs::name).toString();
 
         if (name.isEmpty())
-            name = String (TRANS("Comp Group")) + " " + String (i);
+            name = juce::String (TRANS("Comp Group")) + " " + juce::String (i);
 
         names.add (name);
     }
@@ -581,7 +582,7 @@ StringArray TrackCompManager::getCompNames() const
     return names;
 }
 
-String TrackCompManager::getCompName (int index)
+juce::String TrackCompManager::getCompName (int index)
 {
     if (index == -1)
         return "<" + TRANS("None") + ">";
@@ -591,13 +592,13 @@ String TrackCompManager::getCompName (int index)
     if (name.isNotEmpty())
         return name;
 
-    jassert (isPositiveAndBelow (index, getNumGroups()));
-    return TRANS("Comp Group") + " " + String (index);
+    jassert (juce::isPositiveAndBelow (index, getNumGroups()));
+    return TRANS("Comp Group") + " " + juce::String (index);
 }
 
-void TrackCompManager::setCompName (int index, const String& name)
+void TrackCompManager::setCompName (int index, const juce::String& name)
 {
-    jassert (isPositiveAndBelow (index, getNumGroups()));
+    jassert (juce::isPositiveAndBelow (index, getNumGroups()));
 
     auto v = state.getChild (index);
 
@@ -605,10 +606,11 @@ void TrackCompManager::setCompName (int index, const String& name)
         v.setProperty (IDs::name, name, &edit.getUndoManager());
 }
 
-int TrackCompManager::addGroup (const String& name)
+int TrackCompManager::addGroup (const juce::String& name)
 {
-    ValueTree v (IDs::TRACKCOMP);
-    v.setProperty (IDs::name, name, nullptr);
+    auto v = createValueTree (IDs::TRACKCOMP,
+                              IDs::name, name);
+
     state.addChild (v, -1, &edit.getUndoManager());
 
     return getNumGroups() - 1;
@@ -623,9 +625,9 @@ void TrackCompManager::removeGroup (int index)
     state.removeChild (index, &edit.getUndoManager());
 }
 
-Array<Track*> TrackCompManager::getTracksInComp (int index)
+juce::Array<Track*> TrackCompManager::getTracksInComp (int index)
 {
-    Array<Track*> tracks;
+    juce::Array<Track*> tracks;
 
     for (auto at : getAudioTracks (edit))
         if (at->getCompGroup() == index)

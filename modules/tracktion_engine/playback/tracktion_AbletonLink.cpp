@@ -11,7 +11,7 @@
 namespace tracktion_engine
 {
 
-struct AbletonLink::ImplBase  : public Timer
+struct AbletonLink::ImplBase  : public juce::Timer
 {
     ImplBase (TransportControl& t) : transport (t)
     {
@@ -65,7 +65,7 @@ struct AbletonLink::ImplBase  : public Timer
         }
         else
         {
-            const double speedComp = jlimit (-10.0, 10.0, offset * 10.0);
+            const double speedComp = juce::jlimit (-10.0, 10.0, offset * 10.0);
             setSpeedCompensation (speedComp);
         }
     }
@@ -75,7 +75,7 @@ struct AbletonLink::ImplBase  : public Timer
         Edit::WeakRef bailOut (&transport.edit);
         bpm = getTempoInRange (bpm);
 
-        MessageManager::callAsync ([this, bailOut, bpm]
+        juce::MessageManager::callAsync ([this, bailOut, bpm]
         {
             if (bailOut != nullptr)
             {
@@ -89,7 +89,7 @@ struct AbletonLink::ImplBase  : public Timer
     {
         Edit::WeakRef bailOut (&transport.edit);
 
-        MessageManager::callAsync ([this, bailOut]
+        juce::MessageManager::callAsync ([this, bailOut]
         {
             if (bailOut != nullptr)
                 listeners.call (&AbletonLink::Listener::linkConnectionChanged);
@@ -165,10 +165,10 @@ struct AbletonLink::ImplBase  : public Timer
     }
 
     TransportControl& transport;
-    ListenerList<Listener> listeners;
+    juce::ListenerList<Listener> listeners;
     bool isConnected = false;
     int customOffsetMs = 0;
-    juce::uint32 inhibitTimer = 0;
+    uint32_t inhibitTimer = 0;
 
     juce::Range<double> allowedTempos { 0.0, 999.0 };
 };

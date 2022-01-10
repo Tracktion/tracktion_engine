@@ -11,74 +11,74 @@
 namespace tracktion_engine
 {
 
-static const uint8 cmdInitNativeMode[] = { 0xf0, 0x00, 0x01, 0x40, 0x10, 0x01, 0x00, 0xf7 };
-static const uint8 cmdInquiry[]        = { 0xf0, 0x7e, 0x00, 0x06, 0x01, 0xf7 };
+static const uint8_t cmdInitNativeMode[] = { 0xf0, 0x00, 0x01, 0x40, 0x10, 0x01, 0x00, 0xf7 };
+static const uint8_t cmdInquiry[]        = { 0xf0, 0x7e, 0x00, 0x06, 0x01, 0xf7 };
 
-static const uint8 cmdLEDRecordOn[]    = { 0x90, 0x5f, 0x7f };
-static const uint8 cmdLEDRecordOff[]   = { 0x90, 0x5f, 0x00 };
-static const uint8 cmdLEDArmRecOn[]    = { 0x90, 0x00, 0x7f };
-static const uint8 cmdLEDArmRecOff[]   = { 0x90, 0x00, 0x00 };
-static const uint8 cmdLEDMuteOn[]      = { 0x90, 0x10, 0x7f };
-static const uint8 cmdLEDMuteOff[]     = { 0x90, 0x10, 0x00 };
-static const uint8 cmdLEDSoloOn[]      = { 0x90, 0x08, 0x7f };
-static const uint8 cmdLEDSoloOff[]     = { 0x90, 0x08, 0x00 };
-static const uint8 cmdLEDAnySoloOn[]   = { 0x90, 0x73, 0x7f };
-static const uint8 cmdLEDAnySoloOff[]  = { 0x90, 0x73, 0x00 };
-static const uint8 cmdLEDPunchOn[]     = { 0x90, 0x78, 0x7f };
-static const uint8 cmdLEDPunchOff[]    = { 0x90, 0x78, 0x00 };
-static const uint8 cmdLEDLoopOn[]      = { 0x90, 0x56, 0x7f };
-static const uint8 cmdLEDLoopOff[]     = { 0x90, 0x56, 0x00 };
-static const uint8 cmdWrite[]          = { 0xf0, 0x00, 0x01, 0x40, 0x10, 0x00 };
+static const uint8_t cmdLEDRecordOn[]    = { 0x90, 0x5f, 0x7f };
+static const uint8_t cmdLEDRecordOff[]   = { 0x90, 0x5f, 0x00 };
+static const uint8_t cmdLEDArmRecOn[]    = { 0x90, 0x00, 0x7f };
+static const uint8_t cmdLEDArmRecOff[]   = { 0x90, 0x00, 0x00 };
+static const uint8_t cmdLEDMuteOn[]      = { 0x90, 0x10, 0x7f };
+static const uint8_t cmdLEDMuteOff[]     = { 0x90, 0x10, 0x00 };
+static const uint8_t cmdLEDSoloOn[]      = { 0x90, 0x08, 0x7f };
+static const uint8_t cmdLEDSoloOff[]     = { 0x90, 0x08, 0x00 };
+static const uint8_t cmdLEDAnySoloOn[]   = { 0x90, 0x73, 0x7f };
+static const uint8_t cmdLEDAnySoloOff[]  = { 0x90, 0x73, 0x00 };
+static const uint8_t cmdLEDPunchOn[]     = { 0x90, 0x78, 0x7f };
+static const uint8_t cmdLEDPunchOff[]    = { 0x90, 0x78, 0x00 };
+static const uint8_t cmdLEDLoopOn[]      = { 0x90, 0x56, 0x7f };
+static const uint8_t cmdLEDLoopOff[]     = { 0x90, 0x56, 0x00 };
+static const uint8_t cmdWrite[]          = { 0xf0, 0x00, 0x01, 0x40, 0x10, 0x00 };
 
-static const uint8 rspInitAck[]           = { 0xf0, 0x7e, 0x00, 0x06, 0x02, 0x00, 0x01, 0x40, 0x00, 0x00, 0x01, 0x00 };
+static const uint8_t rspInitAck[]           = { 0xf0, 0x7e, 0x00, 0x06, 0x02, 0x00, 0x01, 0x40, 0x00, 0x00, 0x01, 0x00 };
 
-static const uint8 rspButtonRewDown[]     = { 0x90, 0x5b, 0x7f };
-static const uint8 rspButtonRewUp[]       = { 0x90, 0x5b, 0x00 };
-static const uint8 rspButtonFfwdDown[]    = { 0x90, 0x5c, 0x7f };
-static const uint8 rspButtonFfwdUp[]      = { 0x90, 0x5c, 0x00 };
-static const uint8 rspButtonStopDown[]    = { 0x90, 0x5d, 0x7f };
-//static const uint8 rspButtonStopUp[]      = { 0x90, 0x5d, 0x00 };
-static const uint8 rspButtonPlayDown[]    = { 0x90, 0x5e, 0x7f };
-//static const uint8 rspButtonPlayUp[]      = { 0x90, 0x5e, 0x00 };
-static const uint8 rspButtonRecordDown[]  = { 0x90, 0x5f, 0x7f };
-//static const uint8 rspButtonRecordUp[]    = { 0x90, 0x5f, 0x00 };
+static const uint8_t rspButtonRewDown[]     = { 0x90, 0x5b, 0x7f };
+static const uint8_t rspButtonRewUp[]       = { 0x90, 0x5b, 0x00 };
+static const uint8_t rspButtonFfwdDown[]    = { 0x90, 0x5c, 0x7f };
+static const uint8_t rspButtonFfwdUp[]      = { 0x90, 0x5c, 0x00 };
+static const uint8_t rspButtonStopDown[]    = { 0x90, 0x5d, 0x7f };
+//static const uint8_t rspButtonStopUp[]      = { 0x90, 0x5d, 0x00 };
+static const uint8_t rspButtonPlayDown[]    = { 0x90, 0x5e, 0x7f };
+//static const uint8_t rspButtonPlayUp[]      = { 0x90, 0x5e, 0x00 };
+static const uint8_t rspButtonRecordDown[]  = { 0x90, 0x5f, 0x7f };
+//static const uint8_t rspButtonRecordUp[]    = { 0x90, 0x5f, 0x00 };
 
-static const uint8 rspButtonPTrackDown[]  = { 0x90, 0x30, 0x7f };
-//static const uint8 rspButtonPTrackUp[]    = { 0x90, 0x30, 0x00 };
-static const uint8 rspButtonNTrackDown[]  = { 0x90, 0x31, 0x7f };
-//static const uint8 rspButtonNTrackUp[]    = { 0x90, 0x31, 0x00 };
-static const uint8 rspButtonRecDown[]     = { 0x90, 0x00, 0x7f };
-//static const uint8 rspButtonRecUp[]       = { 0x90, 0x00, 0x00 };
-static const uint8 rspButtonMuteDown[]    = { 0x90, 0x10, 0x7f };
-//static const uint8 rspButtonMuteUp[]      = { 0x90, 0x10, 0x00 };
-static const uint8 rspButtonSoloDown[]    = { 0x90, 0x08, 0x7f };
-//static const uint8 rspButtonSoloUp[]      = { 0x90, 0x08, 0x00 };
+static const uint8_t rspButtonPTrackDown[]  = { 0x90, 0x30, 0x7f };
+//static const uint8_t rspButtonPTrackUp[]    = { 0x90, 0x30, 0x00 };
+static const uint8_t rspButtonNTrackDown[]  = { 0x90, 0x31, 0x7f };
+//static const uint8_t rspButtonNTrackUp[]    = { 0x90, 0x31, 0x00 };
+static const uint8_t rspButtonRecDown[]     = { 0x90, 0x00, 0x7f };
+//static const uint8_t rspButtonRecUp[]       = { 0x90, 0x00, 0x00 };
+static const uint8_t rspButtonMuteDown[]    = { 0x90, 0x10, 0x7f };
+//static const uint8_t rspButtonMuteUp[]      = { 0x90, 0x10, 0x00 };
+static const uint8_t rspButtonSoloDown[]    = { 0x90, 0x08, 0x7f };
+//static const uint8_t rspButtonSoloUp[]      = { 0x90, 0x08, 0x00 };
 
-static const uint8 rspButtonInDown[]      = { 0x90, 0x57, 0x7f };
-//static const uint8 rspButtonInUp[]        = { 0x90, 0x57, 0x00 };
-static const uint8 rspButtonOutDown[]     = { 0x90, 0x58, 0x7f };
-//static const uint8 rspButtonOutUp[]       = { 0x90, 0x58, 0x00 };
-static const uint8 rspButtonPunchDown[]   = { 0x90, 0x78, 0x7f };
-//static const uint8 rspButtonPunchUp[]     = { 0x90, 0x78, 0x00 };
-static const uint8 rspButtonLoopDown[]    = { 0x90, 0x56, 0x7f };
-//static const uint8 rspButtonLoopUp[]      = { 0x90, 0x56, 0x00 };
+static const uint8_t rspButtonInDown[]      = { 0x90, 0x57, 0x7f };
+//static const uint8_t rspButtonInUp[]        = { 0x90, 0x57, 0x00 };
+static const uint8_t rspButtonOutDown[]     = { 0x90, 0x58, 0x7f };
+//static const uint8_t rspButtonOutUp[]       = { 0x90, 0x58, 0x00 };
+static const uint8_t rspButtonPunchDown[]   = { 0x90, 0x78, 0x7f };
+//static const uint8_t rspButtonPunchUp[]     = { 0x90, 0x78, 0x00 };
+static const uint8_t rspButtonLoopDown[]    = { 0x90, 0x56, 0x7f };
+//static const uint8_t rspButtonLoopUp[]      = { 0x90, 0x56, 0x00 };
 
-static const uint8 rspButtonPrevDown[]    = { 0x90, 0x54, 0x7f };
-//static const uint8 rspButtonPrevUp[]      = { 0x90, 0x54, 0x00 };
-static const uint8 rspButtonAddDown[]     = { 0x90, 0x52, 0x7f };
-//static const uint8 rspButtonAddUp[]       = { 0x90, 0x52, 0x00 };
-static const uint8 rspButtonNextDown[]    = { 0x90, 0x55, 0x7f };
-//static const uint8 rspButtonNextUp[]      = { 0x90, 0x55, 0x00 };
+static const uint8_t rspButtonPrevDown[]    = { 0x90, 0x54, 0x7f };
+//static const uint8_t rspButtonPrevUp[]      = { 0x90, 0x54, 0x00 };
+static const uint8_t rspButtonAddDown[]     = { 0x90, 0x52, 0x7f };
+//static const uint8_t rspButtonAddUp[]       = { 0x90, 0x52, 0x00 };
+static const uint8_t rspButtonNextDown[]    = { 0x90, 0x55, 0x7f };
+//static const uint8_t rspButtonNextUp[]      = { 0x90, 0x55, 0x00 };
 
-static const uint8 rspButtonUndoDown[]    = { 0x90, 0x4c, 0x7f };
-//static const uint8 rspButtonUndoUp[]      = { 0x90, 0x4c, 0x00 };
-static const uint8 rspButtonShiftDown[]   = { 0x90, 0x79, 0x7f };
-static const uint8 rspButtonShiftUp[]     = { 0x90, 0x79, 0x00 };
-static const uint8 rspButtonFootDown[]    = { 0x90, 0x67, 0x7f };
-//static const uint8 rspButtonFootUp[]      = { 0x90, 0x67, 0x00 };
+static const uint8_t rspButtonUndoDown[]    = { 0x90, 0x4c, 0x7f };
+//static const uint8_t rspButtonUndoUp[]      = { 0x90, 0x4c, 0x00 };
+static const uint8_t rspButtonShiftDown[]   = { 0x90, 0x79, 0x7f };
+static const uint8_t rspButtonShiftUp[]     = { 0x90, 0x79, 0x00 };
+static const uint8_t rspButtonFootDown[]    = { 0x90, 0x67, 0x7f };
+//static const uint8_t rspButtonFootUp[]      = { 0x90, 0x67, 0x00 };
 
 template <int size>
-static inline bool matchesMessage (const MidiMessage& m, const juce::uint8 (&data)[size])
+static inline bool matchesMessage (const juce::MidiMessage& m, const uint8_t (&data)[size])
 {
     return size == m.getRawDataSize() && memcmp (m.getRawData(), data, (size_t) size) == 0;
 }
@@ -139,7 +139,7 @@ void TranzportControlSurface::updateMiscFeatures()
 {
 }
 
-void TranzportControlSurface::acceptMidiMessage (const MidiMessage& m)
+void TranzportControlSurface::acceptMidiMessage (const juce::MidiMessage& m)
 {
     CRASH_TRACER
 
@@ -421,7 +421,7 @@ void TranzportControlSurface::automationWriteModeChanged (bool)
 {
 }
 
-void TranzportControlSurface::faderBankChanged (int newStartChannelNumber, const StringArray& trackNames)
+void TranzportControlSurface::faderBankChanged (int newStartChannelNumber, const juce::StringArray& trackNames)
 {
     if (init && currentTrack != newStartChannelNumber)
     {
@@ -429,7 +429,7 @@ void TranzportControlSurface::faderBankChanged (int newStartChannelNumber, const
         trackName = trackNames[0];
 
         if ((newStartChannelNumber + 1) == trackName.getIntValue() && trackName.containsOnly ("0123456789"))
-            trackName = TRANS("Track") + " " + String (newStartChannelNumber + 1);
+            trackName = TRANS("Track") + " " + juce::String (newStartChannelNumber + 1);
 
         trackName = trackName.retainCharacters ("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 ()! \"#$%&\'*+,-./:;<=>?@^_`{|}");
 
@@ -615,10 +615,10 @@ void TranzportControlSurface::updateTCDisplay (const char* text)
 
 void TranzportControlSurface::displayPrint (int pos, const char* text)
 {
-    const size_t len = strlen (text);
-    HeapBlock<uint8> buffer (len + 8);
+    auto len = strlen (text);
+    juce::HeapBlock<uint8_t> buffer (len + 8);
     memcpy (buffer, cmdWrite, sizeof (cmdWrite));
-    buffer[sizeof(cmdWrite)] = (uint8) pos;
+    buffer[sizeof(cmdWrite)] = (uint8_t) pos;
     memcpy (buffer + sizeof (cmdWrite) + 1, text, len);
     buffer [len + 8 - 1] = 0xf7;
     sendMidiCommandToController (buffer, (int) len + 8);

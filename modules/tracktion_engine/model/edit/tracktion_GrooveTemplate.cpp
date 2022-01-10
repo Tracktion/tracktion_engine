@@ -64,12 +64,12 @@ const GrooveTemplate& GrooveTemplate::operator= (const GrooveTemplate& other)
     return *this;
 }
 
-void GrooveTemplate::setName (const String& n)
+void GrooveTemplate::setName (const juce::String& n)
 {
     name = n;
 }
 
-XmlElement* GrooveTemplate::createXml() const
+juce::XmlElement* GrooveTemplate::createXml() const
 {
     auto node = new juce::XmlElement (grooveXmlTag);
     node->setAttribute ("name", name);
@@ -85,7 +85,7 @@ XmlElement* GrooveTemplate::createXml() const
     for (int i = 0; i <= lastNonZeroNote; ++i)
     {
         auto n = new juce::XmlElement ("SHIFT");
-        n->setAttribute ("delta", 0.001 * roundToInt (1000.0 * latenesses[i]));
+        n->setAttribute ("delta", 0.001 * juce::roundToInt (1000.0 * latenesses[i]));
         node->addChildElement (n);
     }
 
@@ -94,12 +94,12 @@ XmlElement* GrooveTemplate::createXml() const
 
 void GrooveTemplate::setNumberOfNotes (int notes)
 {
-    numNotes = jlimit (2, 1024, notes);
+    numNotes = juce::jlimit (2, 1024, notes);
 }
 
 void GrooveTemplate::setNotesPerBeat (int notes)
 {
-    notesPerBeat = jlimit (1, 8, notes);
+    notesPerBeat = juce::jlimit (1, 8, notes);
 }
 
 float GrooveTemplate::getLatenessProportion (int noteNumber, float strength) const
@@ -116,9 +116,9 @@ void GrooveTemplate::setLatenessProportion (int noteNumber, float p, float stren
         latenesses.add (0.0f);
 
     if (parameterized)
-        latenesses.set (noteNumber, jlimit (-1.0f, 1.0f, p / strength));
+        latenesses.set (noteNumber, juce::jlimit (-1.0f, 1.0f, p / strength));
     else
-        latenesses.set (noteNumber, jlimit (-1.0f, 1.0f, p));
+        latenesses.set (noteNumber, juce::jlimit (-1.0f, 1.0f, p));
 }
 
 void GrooveTemplate::clearLatenesses()
@@ -132,7 +132,7 @@ double GrooveTemplate::beatsTimeToGroovyTime (double beatsTime, float strength) 
 
     const double beatNum    = std::floor (beatsTime * notesPerBeat);
     const double offset     = notesPerBeat * (beatsTime - (beatNum / notesPerBeat));
-    const int latenessIndex = roundToInt (beatNum) % numNotes;
+    const int latenessIndex = juce::roundToInt (beatNum) % numNotes;
 
     const double lateness   = latenesses[latenessIndex] * activeStrength;
     const double t1         = (beatNum + 0.5f * lateness);
@@ -170,10 +170,9 @@ GrooveTemplateManager::GrooveTemplateManager (Engine& e)
     if (knownGrooves.isEmpty())
     {
         // load the defaults..
-        std::unique_ptr<XmlElement> defSettings (XmlDocument::parse (TracktionBinaryData::groove_templates_xml));
-
-        if (defSettings && defSettings->getTagName() == "GROOVETEMPLATES")
-            reload (defSettings.get());
+        if (auto defSettings = juce::parseXML (TracktionBinaryData::groove_templates_xml))
+            if (defSettings->getTagName() == "GROOVETEMPLATES")
+                reload (defSettings.get());
     }
 
     bool anyParameterized = false;
@@ -184,11 +183,10 @@ GrooveTemplateManager::GrooveTemplateManager (Engine& e)
     // load the new defaults..
     if (! anyParameterized)
     {
-        std::unique_ptr<XmlElement> defSettings (XmlDocument::parse (TracktionBinaryData::groove_templates_2_xml));
-
-        if (defSettings != nullptr && defSettings->hasTagName ("GROOVETEMPLATES"))
-            for (auto n : defSettings->getChildWithTagNameIterator (GrooveTemplate::grooveXmlTag))
-                knownGrooves.add (new GrooveTemplate (n));
+        if (auto defSettings = juce::parseXML (TracktionBinaryData::groove_templates_2_xml))
+            if (defSettings->hasTagName ("GROOVETEMPLATES"))
+                for (auto n : defSettings->getChildWithTagNameIterator (GrooveTemplate::grooveXmlTag))
+                    knownGrooves.add (new GrooveTemplate (n));
     }
 
     // Load even newer presets
@@ -201,10 +199,11 @@ GrooveTemplateManager::GrooveTemplateManager (Engine& e)
         return false;
     };
 
-    auto addGrooveIfNotExists = [this, &hasGroove] (String xmlString)
+    auto addGrooveIfNotExists = [this, &hasGroove] (juce::String xmlString)
     {
-        auto xml = XmlDocument::parse (xmlString);
+        auto xml = juce::parseXML (xmlString);
         auto gt = std::make_unique<GrooveTemplate> (xml.get());
+
         if (! hasGroove (*gt))
             knownGrooves.add (gt.release());
     };
@@ -266,7 +265,7 @@ int GrooveTemplateManager::getNumTemplates() const
     return activeGrooves.size();
 }
 
-String GrooveTemplateManager::getTemplateName (int index) const
+juce::String GrooveTemplateManager::getTemplateName (int index) const
 {
     if (auto gt = activeGrooves[index])
         return gt->getName();
@@ -279,7 +278,7 @@ const GrooveTemplate* GrooveTemplateManager::getTemplate (int index)
     return activeGrooves[index];
 }
 
-const GrooveTemplate* GrooveTemplateManager::getTemplateByName (const String& name)
+const GrooveTemplate* GrooveTemplateManager::getTemplateByName (const juce::String& name)
 {
     for (auto gt : activeGrooves)
         if (gt->getName() == name)
@@ -288,9 +287,9 @@ const GrooveTemplate* GrooveTemplateManager::getTemplateByName (const String& na
     return {};
 }
 
-StringArray GrooveTemplateManager::getTemplateNames() const
+juce::StringArray GrooveTemplateManager::getTemplateNames() const
 {
-    StringArray names;
+    juce::StringArray names;
 
     for (auto gt : activeGrooves)
         names.add (gt->getName());
@@ -303,14 +302,14 @@ void GrooveTemplateManager::updateTemplate (int index, const GrooveTemplate& gt)
     index = knownGrooves.indexOf (activeGrooves[index]);
 
     // check the name doesn't clash..
-    String n (gt.getName().trim());
+    auto n = gt.getName().trim();
 
     if (n.isEmpty())
         n = TRANS("Unnamed");
     else
         n = n.substring (0, 32);
 
-    String originalName (n);
+    auto originalName = n;
 
     if (originalName.trim().endsWithChar (')'))
     {
@@ -331,7 +330,7 @@ void GrooveTemplateManager::updateTemplate (int index, const GrooveTemplate& gt)
 
     int suff = 2;
     while (getTemplateByName (n) != nullptr)
-        n = originalName + " (" + String (suff++) + ")";
+        n = originalName + " (" + juce::String (suff++) + ")";
 
     auto newGroove = knownGrooves.insert (index, new GrooveTemplate (gt));
     newGroove->setName (n);

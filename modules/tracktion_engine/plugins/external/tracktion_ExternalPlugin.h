@@ -135,8 +135,8 @@ private:
     double latencySeconds = 0;
     bool isInstancePrepared = false;
 
-	double lastSampleRate = 0.0;
-	int lastBlockSizeSamples = 0;
+    double lastSampleRate = 0.0;
+    int lastBlockSizeSamples = 0;
 
     juce::MidiBuffer midiBuffer;
     MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();

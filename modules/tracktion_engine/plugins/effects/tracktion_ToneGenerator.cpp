@@ -12,7 +12,7 @@ namespace tracktion_engine
 {
 
 //==============================================================================
-StringArray ToneGeneratorPlugin::getOscTypeNames()
+juce::StringArray ToneGeneratorPlugin::getOscTypeNames()
 {
     return { "Sin", "Triangle", "Saw Up", "Saw Down", "Square", "Noise" };
 }
@@ -51,14 +51,14 @@ const char* ToneGeneratorPlugin::xmlTypeName = "toneGenerator";
 void ToneGeneratorPlugin::initialise (const PluginInitialisationInfo& info)
 {
     scratch.setSize (1, info.blockSizeSamples);
-    auto samplesPerBlock = uint32 (info.blockSizeSamples);
+    auto samplesPerBlock = static_cast<uint32_t> (info.blockSizeSamples);
 
-    sine.prepare        ({ sampleRate, uint32 (samplesPerBlock), 1 });
-    triangle.prepare    ({ sampleRate, uint32 (samplesPerBlock), 1 });
-    sawUp.prepare       ({ sampleRate, uint32 (samplesPerBlock), 1 });
-    sawDown.prepare     ({ sampleRate, uint32 (samplesPerBlock), 1 });
-    square.prepare      ({ sampleRate, uint32 (samplesPerBlock), 1 });
-    noise.prepare       ({ sampleRate, uint32 (samplesPerBlock), 1 });
+    sine.prepare        ({ sampleRate, static_cast<uint32_t> (samplesPerBlock), 1 });
+    triangle.prepare    ({ sampleRate, static_cast<uint32_t> (samplesPerBlock), 1 });
+    sawUp.prepare       ({ sampleRate, static_cast<uint32_t> (samplesPerBlock), 1 });
+    sawDown.prepare     ({ sampleRate, static_cast<uint32_t> (samplesPerBlock), 1 });
+    square.prepare      ({ sampleRate, static_cast<uint32_t> (samplesPerBlock), 1 });
+    noise.prepare       ({ sampleRate, static_cast<uint32_t> (samplesPerBlock), 1 });
 }
 
 void ToneGeneratorPlugin::deinitialise()
@@ -112,7 +112,7 @@ void ToneGeneratorPlugin::applyToBuffer (const PluginRenderContext& fc)
 
 void ToneGeneratorPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    CachedValue<float>* cvsFloat[] = { &oscType, &bandLimit, &frequency, &level, nullptr };
+    juce::CachedValue<float>* cvsFloat[] = { &oscType, &bandLimit, &frequency, &level, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
 
     for (auto p : getAutomatableParameters())

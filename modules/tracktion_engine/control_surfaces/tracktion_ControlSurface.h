@@ -197,7 +197,7 @@ public:
     void sendMidiCommandToController (const juce::MidiMessage&);
 
     template <size_t size>
-    void sendMidiArray (const juce::uint8 (&rawData)[size])   { sendMidiCommandToController (rawData, (int) size); }
+    void sendMidiArray (const uint8_t (&rawData)[size])   { sendMidiCommandToController (rawData, (int) size); }
 
     // tells tracktion that the user has moved a fader.
     // the channel number is the physical channel on the device, regardless of bank selection

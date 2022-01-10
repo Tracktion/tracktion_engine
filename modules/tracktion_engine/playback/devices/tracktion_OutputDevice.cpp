@@ -11,7 +11,7 @@
 namespace tracktion_engine
 {
 
-OutputDevice::OutputDevice (Engine& e, const String& t, const String& n)
+OutputDevice::OutputDevice (Engine& e, const juce::String& t, const juce::String& n)
    : engine (e), type (t), name (n)
 {
     alias = engine.getPropertyStorage().getPropertyItem (SettingID::invalid, getAliasPropName());
@@ -22,7 +22,7 @@ OutputDevice::~OutputDevice()
 {
 }
 
-String OutputDevice::getAliasPropName() const
+juce::String OutputDevice::getAliasPropName() const
 {
     return type + "out_" + name + "_alias";
 }
@@ -40,12 +40,12 @@ void OutputDevice::initialiseDefaultAlias()
     defaultAlias = findDefaultAliasNameNotClashingWithInputDevices (engine, isMidi(), getName(), defaultAlias);
 }
 
-String OutputDevice::getName() const
+juce::String OutputDevice::getName() const
 {
     return name;
 }
 
-String OutputDevice::getAlias() const
+juce::String OutputDevice::getAlias() const
 {
     if (alias.isNotEmpty())
         return alias;
@@ -53,7 +53,7 @@ String OutputDevice::getAlias() const
     return defaultAlias;
 }
 
-void OutputDevice::setAlias (const String& a)
+void OutputDevice::setAlias (const juce::String& a)
 {
     if (alias != a)
     {
@@ -72,12 +72,12 @@ void OutputDevice::setAlias (const String& a)
     }
 }
 
-String OutputDevice::getSelectableDescription()
+juce::String OutputDevice::getSelectableDescription()
 {
     return name + " (" + type + ")";
 }
 
-String OutputDevice::getDeviceID() const
+juce::String OutputDevice::getDeviceID() const
 {
     auto n = getName();
 
@@ -86,7 +86,7 @@ String OutputDevice::getDeviceID() const
     else
         n += engine.getDeviceManager().deviceManager.getCurrentAudioDeviceType();
 
-    return String::toHexString (n.hashCode());
+    return juce::String::toHexString (n.hashCode());
 }
 
 bool OutputDevice::isEnabled() const

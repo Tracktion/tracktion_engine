@@ -32,12 +32,12 @@ struct ProgramSet
     juce::OwnedArray<BankSet> banks;
 };
 
-juce::XmlElement* exportPogramSet (ProgramSet& set)
+std::unique_ptr<juce::XmlElement> exportProgramSet (ProgramSet& set)
 {
     if (set.banks.isEmpty())
         return {};
 
-    auto rootXml = new juce::XmlElement ("ProgramSet");
+    auto rootXml = std::make_unique<juce::XmlElement> ("ProgramSet");
     rootXml->setAttribute ("name", set.name);
 
     for (auto bankSet : set.banks)
@@ -67,12 +67,12 @@ BankSet* getBankSet (ProgramSet& set, const juce::String& name)
     return set.banks.add (new BankSet (name));
 }
 
-juce::XmlElement* convertMidnamToXml (const juce::File& src)
+std::unique_ptr<juce::XmlElement> convertMidnamToXml (const juce::File& src)
 {
     juce::String manufacturer;
     juce::StringArray models;
 
-    std::unique_ptr<juce::XmlElement> rootXml (juce::XmlDocument::parse (src));
+    auto rootXml = juce::parseXML (src);
 
     if (rootXml == nullptr)
     {
@@ -80,7 +80,7 @@ juce::XmlElement* convertMidnamToXml (const juce::File& src)
         juce::MemoryBlock mb;
         src.loadFileAsData (mb);
 
-        for (juce::uint32 i = 0; i < mb.getSize(); ++i)
+        for (size_t i = 0; i < mb.getSize(); ++i)
             if (mb[i] == 0)
                 mb[i] = 32;
 
@@ -92,7 +92,7 @@ juce::XmlElement* convertMidnamToXml (const juce::File& src)
         if (firstidx != -1 && lastidx != -1)
             str = str.substring(firstidx, lastidx);
 
-        rootXml = juce::XmlDocument::parse (str);
+        rootXml = juce::parseXML (str);
 
         if (rootXml == nullptr)
             return {};
@@ -187,7 +187,7 @@ juce::XmlElement* convertMidnamToXml (const juce::File& src)
             if (b->patches.isEmpty())
                 programSet.banks.remove (i);
 
-    return exportPogramSet (programSet);
+    return exportProgramSet (programSet);
 }
 
 //==============================================================================
@@ -468,14 +468,8 @@ bool MidiProgramManager::importSet (int set, const juce::File& file)
 {
     bool ok = false;
 
-    std::unique_ptr<juce::XmlElement> xml;
-
-    if (file.hasFileExtension("midnam"))
-        xml.reset (convertMidnamToXml (file));
-    else
-        xml = juce::XmlDocument::parse (file);
-
-    if (xml != nullptr)
+    if (auto xml = file.hasFileExtension("midnam") ? convertMidnamToXml (file)
+                                                   : juce::parseXML (file))
     {
         if (auto s = programSets[set - 1])
         {

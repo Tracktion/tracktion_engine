@@ -415,7 +415,7 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
     }
 
     bool linkedClipsMapDirty = true;
-    std::map<String, juce::Array<Clip*>> linkedClipsMap;
+    std::map<juce::String, juce::Array<Clip*>> linkedClipsMap;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TreeWatcher)
 };
@@ -999,9 +999,10 @@ void Edit::flushState()
 
     jassert (state.getProperty (IDs::appVersion).toString().isNotEmpty());
 
-    state.setProperty (IDs::appVersion, engine.getPropertyStorage().getApplicationVersion(), nullptr);
-    state.setProperty (IDs::modifiedBy, engine.getPropertyStorage().getUserName(), nullptr);
-    state.setProperty (IDs::projectID, editProjectItemID.load().toString(), nullptr);
+    addValueTreeProperties (state,
+                            IDs::appVersion, engine.getPropertyStorage().getApplicationVersion(),
+                            IDs::modifiedBy, engine.getPropertyStorage().getUserName(),
+                            IDs::projectID, editProjectItemID.load().toString());
 
     for (auto p : getAllPlugins (*this, true))
         p->flushPluginStateToValueTree();
@@ -1118,20 +1119,29 @@ Edit::UndoTransactionInhibitor::~UndoTransactionInhibitor()                     
 //==============================================================================
 EditItemID Edit::createNewItemID (const std::vector<EditItemID>& idsToAvoid) const
 {
-    // TODO: This *may* be slow under heavy load - keep an eye open for this
-    // in case a smarter caching system is needed
-    auto existingIDs = EditItemID::findAllIDs (state);
+    if (nextID == 0)
+    {
+        auto existingIDs = EditItemID::findAllIDs (state);
 
-    existingIDs.insert (existingIDs.end(), idsToAvoid.begin(), idsToAvoid.end());
-    existingIDs.insert (existingIDs.end(), usedIDs.begin(), usedIDs.end());
+        existingIDs.insert (existingIDs.end(), idsToAvoid.begin(), idsToAvoid.end());
 
-    trackCache.visitItems ([&] (auto i)  { existingIDs.push_back (i->itemID); });
-    clipCache.visitItems ([&] (auto i)   { existingIDs.push_back (i->itemID); });
+        trackCache.visitItems ([&] (auto i)  { existingIDs.push_back (i->itemID); });
+        clipCache.visitItems ([&] (auto i)   { existingIDs.push_back (i->itemID); });
 
-    std::sort (existingIDs.begin(), existingIDs.end());
-    auto newID = EditItemID::findFirstIDNotIn (existingIDs);
+        std::sort (existingIDs.begin(), existingIDs.end());
+        nextID = existingIDs.empty() ? 1001 : (existingIDs.back().getRawID() + 1);
+
+       #if JUCE_DEBUG
+        usedIDs.insert (existingIDs.begin(), existingIDs.end());
+       #endif
+    }
+
+    auto newID = EditItemID::fromRawID (nextID++);
+
+   #if JUCE_DEBUG
     jassert (usedIDs.find (newID) == usedIDs.end());
     usedIDs.insert (newID);
+   #endif
 
     return newID;
 }
@@ -1564,9 +1574,9 @@ void Edit::setAuxBusName (int bus, const juce::String& nm)
         {
             if (! b.isValid())
             {
-                b = juce::ValueTree (IDs::NAME);
+                b = createValueTree (IDs::NAME,
+                                     IDs::bus, bus);
                 auxBusses.addChild (b, -1, nullptr);
-                b.setProperty (IDs::bus, bus, nullptr);
             }
 
             b.setProperty (IDs::name, name, nullptr);
@@ -1649,7 +1659,7 @@ Track::Ptr Edit::insertTrack (TrackInsertPoint insertPoint, juce::ValueTree v, S
         if (auto t = findTrackForID (*this, insertPoint.parentTrackID))
             parent = t->state;
 
-    auto preceeding = parent.getChildWithProperty (IDs::id, insertPoint.precedingTrackID.toVar());
+    auto preceeding = parent.getChildWithProperty (IDs::id, insertPoint.precedingTrackID);
 
     return insertTrack (v, parent, preceeding, sm);
 }
@@ -1872,8 +1882,9 @@ void Edit::ensureArrangerTrack()
 {
     if (getArrangerTrack() == nullptr)
     {
-        juce::ValueTree v (IDs::ARRANGERTRACK);
-        v.setProperty (IDs::name, TRANS("Arranger"), nullptr);
+        auto v = createValueTree (IDs::ARRANGERTRACK,
+                                  IDs::name, TRANS("Arranger"));
+
         state.addChild (v, 0, &getUndoManager());
     }
 }
@@ -1882,8 +1893,9 @@ void Edit::ensureTempoTrack()
 {
     if (getTempoTrack() == nullptr)
     {
-        juce::ValueTree v (IDs::TEMPOTRACK);
-        v.setProperty (IDs::name, TRANS("Global"), nullptr);
+        auto v = createValueTree (IDs::TEMPOTRACK,
+                                  IDs::name, TRANS("Global"));
+
         state.addChild (v, 0, &getUndoManager());
     }
 }
@@ -1896,8 +1908,9 @@ void Edit::ensureMarkerTrack()
     }
     else
     {
-        juce::ValueTree v (IDs::MARKERTRACK);
-        v.setProperty (IDs::name, TRANS("Marker"), nullptr);
+        auto v = createValueTree (IDs::MARKERTRACK,
+                                  IDs::name, TRANS("Marker"));
+
         state.addChild (v, 0, &getUndoManager());
     }
 }
@@ -1910,8 +1923,9 @@ void Edit::ensureChordTrack()
     }
     else
     {
-        juce::ValueTree v (IDs::CHORDTRACK);
-        v.setProperty (IDs::name, TRANS("Chord"), nullptr);
+        auto v = createValueTree (IDs::CHORDTRACK,
+                                  IDs::name, TRANS("Chord"));
+
         state.addChild (v, 0, &getUndoManager());
     }
 }
@@ -1924,8 +1938,9 @@ void Edit::ensureMasterTrack()
     }
     else
     {
-        juce::ValueTree v (IDs::MASTERTRACK);
-        v.setProperty (IDs::name, TRANS("Master"), nullptr);
+        auto v = createValueTree (IDs::MASTERTRACK,
+                                  IDs::name, TRANS("Master"));
+
         state.addChild (v, 0, &getUndoManager());
     }
 }
@@ -2522,13 +2537,14 @@ void Edit::setEditMetadata (Metadata metadata)
 {
     auto meta = state.getChildWithName (IDs::ID3VORBISMETADATA);
 
-    meta.setProperty (IDs::album, metadata.album, nullptr);
-    meta.setProperty (IDs::artist, metadata.artist, nullptr);
-    meta.setProperty (IDs::comment, metadata.comment, nullptr);
-    meta.setProperty (IDs::date, metadata.date, nullptr);
-    meta.setProperty (IDs::genre, metadata.genre, nullptr);
-    meta.setProperty (IDs::title, metadata.title, nullptr);
-    meta.setProperty (IDs::trackNumber, metadata.trackNumber, nullptr);
+    addValueTreeProperties (meta,
+                            IDs::album, metadata.album,
+                            IDs::artist, metadata.artist,
+                            IDs::comment, metadata.comment,
+                            IDs::date, metadata.date,
+                            IDs::genre, metadata.genre,
+                            IDs::title, metadata.title,
+                            IDs::trackNumber, metadata.trackNumber);
 }
 
 //==============================================================================
@@ -2538,6 +2554,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingPreset (Engine& engine, juce:
 {
     CRASH_TRACER
     std::unique_ptr<Edit> edit;
+
     if (editToUpdate != nullptr)
         edit.reset (editToUpdate);
     else
@@ -2564,6 +2581,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingPreset (Engine& engine, juce:
     }
 
     auto& master = edit->getMasterPluginList();
+
     while (master.size() > 0)
         master[0]->removeFromParent();
 
@@ -2605,6 +2623,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingPreset (Engine& engine, juce:
     }
 
     auto track = midiTrack;
+
     if (isDrums)
     {
         track = drumTrack;
@@ -2765,7 +2784,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
 
     if (isMidi)
     {
-        if (auto fin = std::unique_ptr<juce::FileInputStream> (file.createInputStream()))
+        if (auto fin = file.createInputStream())
         {
             juce::MidiFile mf;
             mf.readFrom (*fin);
@@ -2779,12 +2798,15 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
             sequence.updateMatchedPairs();
 
             int ch10Count = 0, allCount = 0;
+
             for (auto m : sequence)
             {
                 auto msg = m->message;
+
                 if (msg.isNoteOn())
                 {
                     allCount++;
+
                     if (msg.getChannel() == 10)
                         ch10Count++;
                 }

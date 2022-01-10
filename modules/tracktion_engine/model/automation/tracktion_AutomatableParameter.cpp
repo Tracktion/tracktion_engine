@@ -505,8 +505,8 @@ struct AutomatableParameter::AttachedValue  : public juce::AsyncUpdater
     virtual void setValue (float v) = 0;
     virtual float getValue() = 0;
     virtual float getDefault() = 0;
-    virtual void detach (ValueTree::Listener* l) = 0;
-    virtual bool updateIfMatches (ValueTree& v, const Identifier& i) = 0;
+    virtual void detach (juce::ValueTree::Listener*) = 0;
+    virtual bool updateIfMatches (juce::ValueTree&, const juce::Identifier&) = 0;
     virtual void updateParameterFromValue() = 0;
 
     AutomatableParameter& parameter;
@@ -524,9 +524,9 @@ struct AutomatableParameter::AttachedFloatValue : public AutomatableParameter::A
     float getValue() override                       { return value; }
     void setValue (float v) override                { value = v; }
     float getDefault() override                     { return value.getDefault(); }
-    void detach (ValueTree::Listener* l) override   { value.getValueTree().removeListener (l); }
+    void detach (juce::ValueTree::Listener* l) override   { value.getValueTree().removeListener (l); }
 
-    bool updateIfMatches (ValueTree& v, const Identifier& i) override
+    bool updateIfMatches (juce::ValueTree& v, const juce::Identifier& i) override
     {
         if (i == value.getPropertyID() && v == value.getValueTree())
         {
@@ -541,7 +541,7 @@ struct AutomatableParameter::AttachedFloatValue : public AutomatableParameter::A
         parameter.setParameter (value, juce::dontSendNotification);
     }
 
-    CachedValue<float>& value;
+    juce::CachedValue<float>& value;
 };
 
 struct AutomatableParameter::AttachedIntValue : public AutomatableParameter::AttachedValue
@@ -552,13 +552,13 @@ struct AutomatableParameter::AttachedIntValue : public AutomatableParameter::Att
         parameter.setParameter ((float) value.get(), juce::dontSendNotification);
     }
 
-    void handleAsyncUpdate() override               { value.setValue (roundToInt (parameter.getCurrentValue()), nullptr); }
+    void handleAsyncUpdate() override               { value.setValue (juce::roundToInt (parameter.getCurrentValue()), nullptr); }
     float getValue() override                       { return (float) value.get(); }
-    void setValue (float v) override                { value = roundToInt (v); }
+    void setValue (float v) override                { value = juce::roundToInt (v); }
     float getDefault() override                     { return (float) value.getDefault(); }
-    void detach (ValueTree::Listener* l) override   { value.getValueTree().removeListener (l); }
+    void detach (juce::ValueTree::Listener* l) override   { value.getValueTree().removeListener (l); }
 
-    bool updateIfMatches (ValueTree& v, const Identifier& i) override
+    bool updateIfMatches (juce::ValueTree& v, const juce::Identifier& i) override
     {
         if (i == value.getPropertyID() && v == value.getValueTree())
         {
@@ -573,7 +573,7 @@ struct AutomatableParameter::AttachedIntValue : public AutomatableParameter::Att
         parameter.setParameter ((float) value.get(), juce::dontSendNotification);
     }
 
-    CachedValue<int>& value;
+    juce::CachedValue<int>& value;
 };
 
 struct AutomatableParameter::AttachedBoolValue : public AutomatableParameter::AttachedValue
@@ -584,13 +584,13 @@ struct AutomatableParameter::AttachedBoolValue : public AutomatableParameter::At
         parameter.setParameter (value.get() ? 1.0f : 0.0f, juce::dontSendNotification);
     }
 
-    void handleAsyncUpdate() override               { value.setValue (parameter.currentValue != 0.0f, nullptr); }
-    float getValue() override                       { return value; }
-    void setValue (float v) override                { value = v != 0 ? true : false; }
-    float getDefault() override                     { return value.getDefault() ? 1.0f : 0.0f; }
-    void detach (ValueTree::Listener* l) override   { value.getValueTree().removeListener (l); }
+    void handleAsyncUpdate() override                     { value.setValue (parameter.currentValue != 0.0f, nullptr); }
+    float getValue() override                             { return value; }
+    void setValue (float v) override                      { value = v != 0 ? true : false; }
+    float getDefault() override                           { return value.getDefault() ? 1.0f : 0.0f; }
+    void detach (juce::ValueTree::Listener* l) override   { value.getValueTree().removeListener (l); }
 
-    bool updateIfMatches (ValueTree& v, const Identifier& i) override
+    bool updateIfMatches (juce::ValueTree& v, const juce::Identifier& i) override
     {
         if (i == value.getPropertyID() && v == value.getValueTree())
         {
@@ -605,7 +605,7 @@ struct AutomatableParameter::AttachedBoolValue : public AutomatableParameter::At
         parameter.setParameter (value.get() ? 1.0f : 0.0f, juce::dontSendNotification);
     }
 
-    CachedValue<bool>& value;
+    juce::CachedValue<bool>& value;
 };
 
 
@@ -680,13 +680,13 @@ AutomatableParameter::ModifierAssignment::Ptr AutomatableParameter::addModifier 
 
     if (auto mod = dynamic_cast<Modifier*> (&source))
     {
-        v = juce::ValueTree (mod->state.getType());
-        mod->itemID.setProperty (v, IDs::source, nullptr);
+        v = createValueTree (mod->state.getType(),
+                             IDs::source, mod->itemID);
     }
     else if (auto macro = dynamic_cast<MacroParameter*> (&source))
     {
-        v = juce::ValueTree (IDs::MACRO);
-        v.setProperty (IDs::source, macro->paramID, nullptr);
+        v = createValueTree (IDs::MACRO,
+                             IDs::source, macro->paramID);
     }
     else
     {
@@ -1073,7 +1073,7 @@ void AutomatableParameter::setParameter (float value, juce::NotificationType nt)
 
 void AutomatableParameter::setNormalisedParameter (float value, juce::NotificationType nt)
 {
-    setParameter (valueRange.convertFrom0to1 (jlimit (0.0f, 1.0f, value)), nt);
+    setParameter (valueRange.convertFrom0to1 (juce::jlimit (0.0f, 1.0f, value)), nt);
 }
 
 juce::String AutomatableParameter::getCurrentValueAsStringWithLabel()

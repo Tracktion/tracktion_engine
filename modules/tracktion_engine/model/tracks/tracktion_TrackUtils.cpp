@@ -25,7 +25,7 @@ TrackInsertPoint::TrackInsertPoint (EditItemID parent, EditItemID preceding)
 
 TrackInsertPoint::TrackInsertPoint (Track& t, bool insertBefore)
 {
-    Array<Track*> siblingTracks;
+    juce::Array<Track*> siblingTracks;
 
     if (auto parent = t.getParentTrack())
     {
@@ -48,7 +48,7 @@ TrackInsertPoint::TrackInsertPoint (Track& t, bool insertBefore)
         precedingTrackID = siblingTracks.getUnchecked (index - (insertBefore ? 1 : 0))->itemID;
 }
 
-TrackInsertPoint::TrackInsertPoint (const ValueTree& v)
+TrackInsertPoint::TrackInsertPoint (const juce::ValueTree& v)
 {
     {
         auto p = v.getParent();
@@ -223,7 +223,7 @@ void TrackList::objectOrderChanged()
     edit.updateTrackStatusesAsync();
 }
 
-void TrackList::sortTracksByType (ValueTree& editState, UndoManager* um)
+void TrackList::sortTracksByType (juce::ValueTree& editState, juce::UndoManager* um)
 {
     struct TrackTypeSorter
     {
@@ -308,7 +308,8 @@ static AutomationCurve* getDestCurve (Track& t, const AutomatableParameter::Ptr&
     return {};
 }
 
-static bool mergeInto (const TrackAutomationSection& s, Array<TrackAutomationSection>& dst)
+static bool mergeInto (const TrackAutomationSection& s,
+                       juce::Array<TrackAutomationSection>& dst)
 {
     for (auto& dstSeg : dst)
     {
@@ -322,19 +323,20 @@ static bool mergeInto (const TrackAutomationSection& s, Array<TrackAutomationSec
     return false;
 }
 
-static void mergeSections (const Array<TrackAutomationSection>& src, Array<TrackAutomationSection>& dst)
+static void mergeSections (const juce::Array<TrackAutomationSection>& src,
+                           juce::Array<TrackAutomationSection>& dst)
 {
     for (const auto& srcSeg : src)
         if (! mergeInto (srcSeg, dst))
             dst.add (srcSeg);
 }
 
-void moveAutomation (const Array<TrackAutomationSection>& origSections, double offset, bool copy)
+void moveAutomation (const juce::Array<TrackAutomationSection>& origSections, double offset, bool copy)
 {
     if (origSections.isEmpty())
         return;
 
-    Array<TrackAutomationSection> sections;
+    juce::Array<TrackAutomationSection> sections;
     mergeSections (origSections, sections);
 
     // find all the original curves
@@ -438,7 +440,7 @@ void moveAutomation (const Array<TrackAutomationSection>& origSections, double o
                 EditTimeRange startWithMargin        (newStart - errorMargin, newStart + errorMargin);
                 EditTimeRange endWithMargin          (newEnd   - errorMargin, newEnd   + errorMargin);
 
-                Array<AutomationCurve::AutomationPoint> origPoints;
+                juce::Array<AutomationCurve::AutomationPoint> origPoints;
 
                 for (int i = 0; i < srcCurve.getNumPoints(); ++i)
                 {
@@ -477,7 +479,7 @@ void moveAutomation (const Array<TrackAutomationSection>& origSections, double o
     }
 
     // activate the automation curves on the new tracks
-    Array<Track*> src, dst;
+    juce::Array<Track*> src, dst;
 
     for (auto& section : sections)
     {

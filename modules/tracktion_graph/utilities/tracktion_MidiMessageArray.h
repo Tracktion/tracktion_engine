@@ -15,7 +15,7 @@ namespace tracktion_engine
 
 struct MidiMessageArray
 {
-    using MPESourceID = juce::uint32;
+    using MPESourceID = uint32_t;
 
     static MPESourceID createUniqueMPESourceID() noexcept
     {

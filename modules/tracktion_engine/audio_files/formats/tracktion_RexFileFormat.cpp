@@ -215,7 +215,7 @@ private:
         const double beats = info.fPPQLength / 15360.0;
         const double bps   = info.fTempo / (1000.0 * 60.0);
 
-        lengthInSamples         = (juce::int64) ((beats / bps) * info.fSampleRate);
+        lengthInSamples         = (SampleCount) ((beats / bps) * info.fSampleRate);
         sampleRate              = info.fSampleRate;
         bitsPerSample           = (unsigned int) info.fBitDepth;
         numChannels             = (unsigned int) info.fChannels;
@@ -237,8 +237,8 @@ private:
             if (! checkRexError (REX::REXRenderSlice (handle.handle, j, slcInfo.fSampleLength, sliceData.getArrayOfWritePointers())))
                 return false;
 
-            auto offset = (juce::int64) ((slcInfo.fPPQPos / 15360.0) / (info.fTempo / (1000.0 * 60.0)) * info.fSampleRate);
-            auto numSamples = (int) std::min (lengthInSamples - offset, (juce::int64) slcInfo.fSampleLength);
+            auto offset = (SampleCount) ((slcInfo.fPPQPos / 15360.0) / (info.fTempo / (1000.0 * 60.0)) * info.fSampleRate);
+            auto numSamples = (int) std::min (lengthInSamples - offset, (SampleCount) slcInfo.fSampleLength);
 
             if (numSamples > 0)
                 for (int i = 0; i < sliceData.getNumChannels(); ++i)

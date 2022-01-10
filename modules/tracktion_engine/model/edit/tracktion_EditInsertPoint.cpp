@@ -19,7 +19,7 @@ void EditInsertPoint::setNextInsertPoint (double time)
 {
     if (lockInsertPointCount == 0)
     {
-        nextInsertPointTime = jmax (0.0, time);
+        nextInsertPointTime = std::max (0.0, time);
         nextInsertIsAfterSelected = false;
     }
 }

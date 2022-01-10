@@ -11,7 +11,7 @@
 namespace tracktion_engine
 {
 
-AutomationTrack::AutomationTrack (Edit& e, const ValueTree& v)
+AutomationTrack::AutomationTrack (Edit& e, const juce::ValueTree& v)
     : Track (e, v, 50, 13, 2000)
 {
 }
@@ -22,13 +22,13 @@ AutomationTrack::~AutomationTrack()
 }
 
 //==============================================================================
-String AutomationTrack::getSelectableDescription()
+juce::String AutomationTrack::getSelectableDescription()
 {
     auto n = getName();
-    return TRANS("Automation") + (n.isEmpty() ? String() : " - \"" + getName() + "\"");
+    return TRANS("Automation") + (n.isEmpty() ? juce::String() : " - \"" + getName() + "\"");
 }
 
-String AutomationTrack::getName()
+juce::String AutomationTrack::getName()
 {
     if (auto ap = getCurrentlyShownAutoParam())
         return ap->getFullName();

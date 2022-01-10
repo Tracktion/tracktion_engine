@@ -23,9 +23,9 @@ LevelMeterPlugin::~LevelMeterPlugin()
     notifyListenersOfDeletion();
 }
 
-ValueTree LevelMeterPlugin::create()
+juce::ValueTree LevelMeterPlugin::create()
 {
-    ValueTree v (IDs::PLUGIN);
+    juce::ValueTree v (IDs::PLUGIN);
     v.setProperty (IDs::type, xmlTypeName, nullptr);
     return v;
 }
@@ -84,7 +84,7 @@ void LevelMeterPlugin::timerCallback()
 
 void LevelMeterPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    CachedValue<bool>* cvsBool[] = { &showMidiActivity, nullptr };
+    juce::CachedValue<bool>* cvsBool[] = { &showMidiActivity, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsBool);
 
     for (auto p : getAutomatableParameters())

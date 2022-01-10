@@ -11,7 +11,7 @@
 namespace tracktion_engine
 {
 
-PitchSetting::PitchSetting (Edit& ed, const ValueTree& v)
+PitchSetting::PitchSetting (Edit& ed, const juce::ValueTree& v)
     : TrackItem (ed, {}, Type::pitch), state (v)
 {
     auto um = &ed.getUndoManager();
@@ -31,12 +31,13 @@ PitchSetting::~PitchSetting()
     notifyListenersOfDeletion();
 }
 
-String PitchSetting::getName()
+juce::String PitchSetting::getName()
 {
-    return MidiMessage::getMidiNoteName (pitch, accidentalsSharp, false, edit.engine.getEngineBehaviour().getMiddleCOctave());
+    return juce::MidiMessage::getMidiNoteName (pitch, accidentalsSharp, false,
+                                               edit.engine.getEngineBehaviour().getMiddleCOctave());
 }
 
-String PitchSetting::getSelectableDescription()
+juce::String PitchSetting::getSelectableDescription()
 {
     return TRANS("Key");
 }
@@ -66,7 +67,7 @@ void PitchSetting::setStartBeat (double beat)
 
 void PitchSetting::setPitch (int p)
 {
-    pitch = jlimit (0, 127, p);
+    pitch = juce::jlimit (0, 127, p);
 }
 
 void PitchSetting::setScaleID (Scale::ScaleType st)

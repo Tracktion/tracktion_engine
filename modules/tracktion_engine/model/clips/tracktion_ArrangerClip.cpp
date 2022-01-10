@@ -26,14 +26,14 @@ void ArrangerClip::initialise()
     Clip::initialise();
 }
 
-String ArrangerClip::getSelectableDescription()
+juce::String ArrangerClip::getSelectableDescription()
 {
     return TRANS("Arranger Clip") + " - \"" + getName() + "\"";
 }
 
-Colour ArrangerClip::getDefaultColour() const
+juce::Colour ArrangerClip::getDefaultColour() const
 {
-    return Colours::red.withHue (7.0f / 9.0f);
+    return juce::Colours::red.withHue (7.0f / 9.0f);
 }
 
 //==============================================================================
@@ -42,7 +42,7 @@ bool ArrangerClip::canGoOnTrack (Track& t)
     return t.isArrangerTrack();
 }
 
-void ArrangerClip::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i)
+void ArrangerClip::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i)
 {
     if (v == state)
     {

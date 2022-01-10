@@ -12,15 +12,15 @@ namespace tracktion_engine
 {
 
 ExportJob::ExportJob (Edit* edit_,
-                      const File& destDir_,
+                      const juce::File& destDir_,
                       const Project::Ptr& newProject_,
                       const Project::Ptr& srcProject_,
                       TracktionArchiveFile* archive_,
                       double handleSize_,
                       bool keepEntireFiles_,
                       TracktionArchiveFile::CompressionType compressionType_,
-                      Array<File>& filesForDeletion_,
-                      StringArray& failedFiles_,
+                      juce::Array<juce::File>& filesForDeletion_,
+                      juce::StringArray& failedFiles_,
                       bool includeLibraryFiles_,
                       bool includeClips_)
     : ThreadPoolJobWithProgress (TRANS("Exporting") + "..."),
@@ -46,11 +46,11 @@ ExportJob::~ExportJob()
 }
 
 //==============================================================================
-ThreadPoolJob::JobStatus ExportJob::runJob()
+juce::ThreadPoolJob::JobStatus ExportJob::runJob()
 {
     CRASH_TRACER
 
-    FloatVectorOperations::disableDenormalisedNumberSupport();
+    juce::FloatVectorOperations::disableDenormalisedNumberSupport();
 
     if (edit != nullptr)
         copyEditFilesToTempDir();
@@ -70,7 +70,7 @@ ThreadPoolJob::JobStatus ExportJob::runJob()
         }
         else
         {
-            destDir.findChildFiles (filesForDeletion, File::findFiles, true);
+            destDir.findChildFiles (filesForDeletion, juce::File::findFiles, true);
         }
 
         failedFiles.clear();
@@ -112,8 +112,8 @@ void ExportJob::copyProjectFilesToTempDir()
                                    .getNonexistentSibling (true);
 
                 auto bytesFree = dest.getBytesFreeOnVolume();
-                auto bytesNeeded = jmax (2 * srcObject->getSourceFile().getSize(),
-                                         (int64) (1024 * 1024 * 50));
+                auto bytesNeeded = std::max (2 * srcObject->getSourceFile().getSize(),
+                                             (juce::int64) (1024 * 1024 * 50));
 
                 if (bytesFree > 0
                      && bytesFree < bytesNeeded
@@ -217,7 +217,7 @@ void ExportJob::copyEditFilesToTempDir()
 
                     if (! newFile.exists())
                     {
-                        File actualNewFile;
+                        juce::File actualNewFile;
 
                         if (! oldSourceMedia->copySectionToNewFile (newFile, actualNewFile, start, length))
                         {
@@ -276,7 +276,7 @@ void ExportJob::createArchiveFromTempFiles()
             newProject->unlockFile();
         }
 
-        destDir.findChildFiles (filesForDeletion, File::findFiles, true);
+        destDir.findChildFiles (filesForDeletion, juce::File::findFiles, true);
 
         for (int i = 0; i < filesForDeletion.size(); ++i)
         {
@@ -286,7 +286,7 @@ void ExportJob::createArchiveFromTempFiles()
                 break;
 
             auto compression = TracktionArchiveFile::CompressionType::zip;
-            const File f (filesForDeletion[i]);
+            auto f = filesForDeletion[i];
 
             if (AudioFile (srcProject->engine, f).isValid())
                 compression = compressionType;

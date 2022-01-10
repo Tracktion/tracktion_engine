@@ -63,10 +63,10 @@ Edit* ControlSurface::getEditIfOnEditScreen() const
 
 void ControlSurface::sendMidiCommandToController (const void* midiData, int numBytes)
 {
-    sendMidiCommandToController (MidiMessage (midiData, numBytes));
+    sendMidiCommandToController (juce::MidiMessage (midiData, numBytes));
 }
 
-void ControlSurface::sendMidiCommandToController (const MidiMessage& m)
+void ControlSurface::sendMidiCommandToController (const juce::MidiMessage& m)
 {
     if (auto dev = owner->outputDevice)
         dev->fireMessage (m);
@@ -191,7 +191,7 @@ void ControlSurface::userPressedRecEnable (int channelNum, bool enableEtoE)
 
         if (externalControllerManager.getChannelTrack (channelNum) != nullptr)
         {
-            Array<InputDeviceInstance*> activeDev, inactiveDev;
+            juce::Array<InputDeviceInstance*> activeDev, inactiveDev;
 
             for (auto in : ed->getAllInputDevices())
             {

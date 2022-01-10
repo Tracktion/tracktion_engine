@@ -31,28 +31,28 @@ ImpulseResponsePlugin::ImpulseResponsePlugin (PluginCreationInfo info)
     normalise.referTo (state, IDs::normalise, um, true);
     trimSilence.referTo (state, IDs::trimSilence, um, false);
 
-    NormalisableRange volumeRange { -12.0f, 6.0f };
+    juce::NormalisableRange volumeRange { -12.0f, 6.0f };
     volumeRange.setSkewForCentre (0.0f);
 
     // Initialises parameter and attaches to value
     gainParam = addParam (IDs::gain.toString(), TRANS ("Gain"), volumeRange,
-                          [] (float value)       { return juce::Decibels::toString (value); },
-                          [] (const String& s)   { return s.getFloatValue(); });
+                          [] (float value)             { return juce::Decibels::toString (value); },
+                          [] (const juce::String& s)   { return s.getFloatValue(); });
     gainParam->attachToCurrentValue (gainValue);
 
     highPassCutoffParam = addParam (IDs::highPassMidiNoteNumber.toString(), TRANS ("Low Cut"), frequencyRange,
-                                    [] (float value)       { return String (midiNoteToFrequency (value), 1) + " Hz"; },
-                                    [] (const String& s)   { return frequencyToMidiNote (s.getFloatValue()); });
+                                    [] (float value)             { return juce::String (midiNoteToFrequency (value), 1) + " Hz"; },
+                                    [] (const juce::String& s)   { return frequencyToMidiNote (s.getFloatValue()); });
     highPassCutoffParam->attachToCurrentValue (highPassCutoffValue);
 
     lowPassCutoffParam =  addParam (IDs::lowPassMidiNoteNumber.toString(), TRANS ("High Cut"), frequencyRange,
-                                    [] (float value)       { return String (midiNoteToFrequency (value), 1) + " Hz"; },
-                                    [] (const String& s)   { return frequencyToMidiNote (s.getFloatValue()); });
+                                    [] (float value)             { return juce::String (midiNoteToFrequency (value), 1) + " Hz"; },
+                                    [] (const juce::String& s)   { return frequencyToMidiNote (s.getFloatValue()); });
     lowPassCutoffParam->attachToCurrentValue (lowPassCutoffValue);
 
     mixParam = addParam (IDs::mix.toString(), TRANS("Mix"), { 0.0f, 1.0f, 0.0f },
-                         [] (float value)       { return String (roundToInt (value * 100.0f)) + "%"; },
-                         [] (const String& s)   { return s.getFloatValue() / 100.0f; });
+                         [] (float value)             { return juce::String (juce::roundToInt (value * 100.0f)) + "%"; },
+                         [] (const juce::String& s)   { return s.getFloatValue() / 100.0f; });
     mixParam->attachToCurrentValue (mixValue);
 
     filterQParam = addParam (IDs::filterQ.toString(), TRANS("Filter Q"), { 0.1f, 14.0f, 0.0f },
@@ -78,10 +78,10 @@ const char* ImpulseResponsePlugin::getPluginName() { return NEEDS_TRANS ("Impuls
 //==============================================================================
 bool ImpulseResponsePlugin::loadImpulseResponse (const void* sourceData, size_t sourceDataSize)
 {
-    auto is = std::make_unique<MemoryInputStream> (sourceData, sourceDataSize, false);
+    auto is = std::make_unique<juce::MemoryInputStream> (sourceData, sourceDataSize, false);
     auto& formatManager = engine.getAudioFileFormatManager().readFormatManager;
     
-    if (auto reader = std::unique_ptr<AudioFormatReader> (formatManager.createReaderFor (std::move (is))))
+    if (auto reader = std::unique_ptr<juce::AudioFormatReader> (formatManager.createReaderFor (std::move (is))))
     {
         juce::AudioBuffer<float> buffer ((int) reader->numChannels, (int) reader->lengthInSamples);
         reader->read (&buffer, 0, buffer.getNumSamples(), 0, true, true);
@@ -92,9 +92,9 @@ bool ImpulseResponsePlugin::loadImpulseResponse (const void* sourceData, size_t 
     return false;
 }
 
-bool ImpulseResponsePlugin::loadImpulseResponse (const File& fileImpulseResponse)
+bool ImpulseResponsePlugin::loadImpulseResponse (const juce::File& fileImpulseResponse)
 {
-    MemoryBlock fileDataMemoryBlock;
+    juce::MemoryBlock fileDataMemoryBlock;
     
     if (fileImpulseResponse.loadFileAsData (fileDataMemoryBlock))
         return loadImpulseResponse (fileDataMemoryBlock.getData(), fileDataMemoryBlock.getSize());
@@ -102,18 +102,19 @@ bool ImpulseResponsePlugin::loadImpulseResponse (const File& fileImpulseResponse
     return false;
 }
 
-bool ImpulseResponsePlugin::loadImpulseResponse (AudioBuffer<float>&& bufferImpulseResponse,
+bool ImpulseResponsePlugin::loadImpulseResponse (juce::AudioBuffer<float>&& bufferImpulseResponse,
                                                  double sampleRateToStore,
                                                  int bitDepthToStore)
 {
     juce::MemoryBlock fileDataMemoryBlock;
 
-    if (auto writer = std::unique_ptr<AudioFormatWriter> (FlacAudioFormat().createWriterFor (new MemoryOutputStream (fileDataMemoryBlock, false),
-                                                                                             sampleRateToStore,
-                                                                                             (unsigned int) bufferImpulseResponse.getNumChannels(),
-                                                                                             std::min (24, bitDepthToStore),
-                                                                                             {},
-                                                                                             0)))
+    if (auto writer = std::unique_ptr<juce::AudioFormatWriter> (juce::FlacAudioFormat()
+                                                                    .createWriterFor (new juce::MemoryOutputStream (fileDataMemoryBlock, false),
+                                                                                      sampleRateToStore,
+                                                                                      (unsigned int) bufferImpulseResponse.getNumChannels(),
+                                                                                      std::min (24, bitDepthToStore),
+                                                                                      {},
+                                                                                      0)))
     {
         if (writer->writeFromAudioSampleBuffer (bufferImpulseResponse, 0, bufferImpulseResponse.getNumSamples()))
         {
@@ -141,7 +142,7 @@ double ImpulseResponsePlugin::getLatencySeconds()
 
 void ImpulseResponsePlugin::initialise (const PluginInitialisationInfo& info)
 {
-    dsp::ProcessSpec processSpec;
+    juce::dsp::ProcessSpec processSpec;
     processSpec.sampleRate = info.sampleRate;
     processSpec.maximumBlockSize = (uint32_t) info.blockSizeSamples;
     processSpec.numChannels = 2;
@@ -204,9 +205,9 @@ void ImpulseResponsePlugin::applyToBuffer (const PluginRenderContext& fc)
             const int numThisTime = std::min (blockSize, numSamplesLeft);
 
             // Process sub-block
-            auto inOutBlock = dsp::AudioBlock<float> (*fc.destBuffer).getSubBlock (size_t (numSamplesDone + fc.bufferStartSample),
-                                                                                   size_t (numThisTime));
-            dsp::ProcessContextReplacing <float> context (inOutBlock);
+            auto inOutBlock = juce::dsp::AudioBlock<float> (*fc.destBuffer).getSubBlock (size_t (numSamplesDone + fc.bufferStartSample),
+                                                                                         size_t (numThisTime));
+            juce::dsp::ProcessContextReplacing <float> context (inOutBlock);
             processorChain.process (context);
 
             // Update params
@@ -230,8 +231,8 @@ void ImpulseResponsePlugin::applyToBuffer (const PluginRenderContext& fc)
         *lpf = dsp::IIR::ArrayCoefficients<float>::makeLowPass (sampleRate, lowFreqSmoother.getCurrentValue(), qFactor);
         gain.setGainLinear (juce::Decibels::decibelsToGain (gainSmoother.getCurrentValue()));
 
-        dsp::AudioBlock<float> inOutBlock (*fc.destBuffer);
-        dsp::ProcessContextReplacing <float> context (inOutBlock);
+        juce::dsp::AudioBlock<float> inOutBlock (*fc.destBuffer);
+        juce::dsp::ProcessContextReplacing <float> context (inOutBlock);
         processorChain.process (context);
     }
     
@@ -269,24 +270,28 @@ void ImpulseResponsePlugin::loadImpulseResponseFromState()
 {
     if (auto irFileData = state.getProperty (IDs::irFileData).getBinaryData())
     {
-        auto is = std::make_unique<MemoryInputStream> (*irFileData, false);
+        auto is = std::make_unique<juce::MemoryInputStream> (*irFileData, false);
 
-        if (auto reader = std::unique_ptr<AudioFormatReader> (FlacAudioFormat().createReaderFor (is.release(), true)))
+        if (auto reader = std::unique_ptr<juce::AudioFormatReader> (juce::FlacAudioFormat()
+                                                                        .createReaderFor (is.release(), true)))
         {
-            juce::AudioSampleBuffer loadIRBuffer ((int) reader->numChannels, (int) reader->lengthInSamples);
+            juce::AudioBuffer<float> loadIRBuffer ((int) reader->numChannels, (int) reader->lengthInSamples);
             reader->read (&loadIRBuffer, 0, (int) reader->lengthInSamples, 0, true, true);
 
             jassert (reader->numChannels > 0);
             processorChain.get<convolutionIndex>().loadImpulseResponse (std::move (loadIRBuffer),
                                                                         reader->sampleRate,
-                                                                        reader->numChannels > 1 ? dsp::Convolution::Stereo::yes : dsp::Convolution::Stereo::no,
-                                                                        trimSilence.get() ? dsp::Convolution::Trim::yes : dsp::Convolution::Trim::no,
-                                                                        normalise.get() ? dsp::Convolution::Normalise::yes : dsp::Convolution::Normalise::no);
+                                                                        reader->numChannels > 1 ? juce::dsp::Convolution::Stereo::yes
+                                                                                                : juce::dsp::Convolution::Stereo::no,
+                                                                        trimSilence.get() ? juce::dsp::Convolution::Trim::yes
+                                                                                          : juce::dsp::Convolution::Trim::no,
+                                                                        normalise.get() ? juce::dsp::Convolution::Normalise::yes
+                                                                                        : juce::dsp::Convolution::Normalise::no);
         }
     }
 }
 
-void ImpulseResponsePlugin::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& id)
+void ImpulseResponsePlugin::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& id)
 {
     if (v == state)
     {

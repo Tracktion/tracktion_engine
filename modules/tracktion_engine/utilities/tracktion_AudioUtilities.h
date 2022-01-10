@@ -11,6 +11,9 @@
 namespace tracktion_engine
 {
 
+using SampleCount = int64_t;
+using SampleRange = juce::Range<SampleCount>;
+
 float dbToGain (float db) noexcept;
 float gainToDb (float gain) noexcept;
 
@@ -138,7 +141,7 @@ public:
         fifo.finishedWrite (size1 + size2);
     }
 
-    void writeAudioAndMidi (const juce::AudioSampleBuffer& audioSrc, const juce::MidiBuffer& midiSrc)
+    void writeAudioAndMidi (const juce::AudioBuffer<float>& audioSrc, const juce::MidiBuffer& midiSrc)
     {
         jassert (getNumSamplesFree() >= audioSrc.getNumSamples());
         jassert (audioSrc.getNumChannels() == audioBuffer.getNumChannels());
@@ -160,7 +163,7 @@ public:
         fifo.finishedWrite (size1 + size2);
     }
 
-    void readAudioAndMidi (juce::AudioSampleBuffer& audioDst, juce::MidiBuffer& midiDst)
+    void readAudioAndMidi (juce::AudioBuffer<float>& audioDst, juce::MidiBuffer& midiDst)
     {
         jassert (getNumSamplesAvailable() >= audioDst.getNumSamples());
         jassert (audioDst.getNumChannels() == audioBuffer.getNumChannels());
@@ -189,7 +192,7 @@ public:
 
  private:
     juce::AbstractFifo fifo {1};
-    juce::AudioSampleBuffer audioBuffer;
+    juce::AudioBuffer<float> audioBuffer;
     juce::MidiBuffer midiBuffer;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioMidiFifo)
@@ -201,7 +204,7 @@ public:
 class AudioBufferSnapshot
 {
 public:
-    AudioBufferSnapshot (juce::AudioSampleBuffer& b)
+    AudioBufferSnapshot (juce::AudioBuffer<float>& b)
         : buffer (b)
     {
         numChannels = buffer.getNumChannels();
@@ -227,12 +230,12 @@ public:
     }
 
 private:
-    juce::AudioSampleBuffer& buffer;
+    juce::AudioBuffer<float>& buffer;
     int numChannels = 0, numSamples = 0;
     const float* channels[10] = { nullptr }; // assume buffers have no more than 10 channels
 };
 
-inline void clearChannels (juce::AudioSampleBuffer& buffer, int startChannel, int endChannel = -1, int startSample = 0, int endSample = -1)
+inline void clearChannels (juce::AudioBuffer<float>& buffer, int startChannel, int endChannel = -1, int startSample = 0, int endSample = -1)
 {
     if (endChannel == -1)
         endChannel = buffer.getNumChannels();

@@ -11,10 +11,10 @@
 namespace tracktion_engine
 {
 
-struct SelectableUpdateTimer  : public AsyncUpdater,
-                                private DeletedAtShutdown
+struct SelectableUpdateTimer  : public juce::AsyncUpdater,
+                                private juce::DeletedAtShutdown
 {
-    SelectableUpdateTimer (std::function<void ()> onDelete_)
+    SelectableUpdateTimer (std::function<void()> onDelete_)
         : onDelete (onDelete_) {}
 
     ~SelectableUpdateTimer() override
@@ -24,33 +24,33 @@ struct SelectableUpdateTimer  : public AsyncUpdater,
     }
     void add (Selectable* s)
     {
-        const ScopedLock sl (lock);
+        const juce::ScopedLock sl (lock);
         selectables.add (s);
     }
 
     void remove (Selectable* s)
     {
-        const ScopedLock sl (lock);
+        const juce::ScopedLock sl (lock);
         selectables.removeValue (s);
     }
 
     bool isValid (const Selectable* s) const
     {
-        const ScopedLock sl (lock);
+        const juce::ScopedLock sl (lock);
         return selectables.contains (const_cast<Selectable*> (s));
     }
 
     void handleAsyncUpdate() override
     {
         CRASH_TRACER
-        Array<Selectable*> needingUpdate;
+        std::vector<Selectable*> needingUpdate;
 
         {
-            const ScopedLock sl (lock);
+            const juce::ScopedLock sl (lock);
 
             for (auto s : selectables)
                 if (s->needsAnUpdate)
-                    needingUpdate.add (s);
+                    needingUpdate.push_back (s);
         }
 
         for (auto s : needingUpdate)
@@ -58,12 +58,12 @@ struct SelectableUpdateTimer  : public AsyncUpdater,
                 s->sendChangeCallbackToListenersIfNeeded();
     }
 
-    CriticalSection listenerLock;
+    juce::CriticalSection listenerLock;
 
 private:
-    SortedSet<Selectable*> selectables;
-    CriticalSection lock;
-    std::function<void ()> onDelete;
+    juce::SortedSet<Selectable*> selectables;
+    juce::CriticalSection lock;
+    std::function<void()> onDelete;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SelectableUpdateTimer)
 };
@@ -140,7 +140,7 @@ void Selectable::sendChangeCallbackToListenersIfNeeded()
     TRACKTION_ASSERT_MESSAGE_THREAD
     needsAnUpdate = false;
 
-    const ScopedValueSetter<bool> svs (isCallingListeners, true);
+    const juce::ScopedValueSetter<bool> svs (isCallingListeners, true);
 
     WeakRef self (this);
 
@@ -219,9 +219,9 @@ void Selectable::deselect()
 SelectableClass::SelectableClass() {}
 SelectableClass::~SelectableClass() {}
 
-static Array<SelectableClass::ClassInstanceBase*>& getAllSelectableClasses()
+static juce::Array<SelectableClass::ClassInstanceBase*>& getAllSelectableClasses()
 {
-    static Array<SelectableClass::ClassInstanceBase*> classes;
+    static juce::Array<SelectableClass::ClassInstanceBase*> classes;
     return classes;
 }
 
@@ -261,25 +261,25 @@ SelectableClass* SelectableClass::findClassFor (const Selectable* s)
 }
 
 //==============================================================================
-String SelectableClass::getDescriptionOfSelectedGroup (const SelectableList& selectedObjects)
+juce::String SelectableClass::getDescriptionOfSelectedGroup (const SelectableList& selectedObjects)
 {
     if (selectedObjects.size() == 1)
         if (auto s = selectedObjects.getFirst())
             return s->getSelectableDescription();
 
-    StringArray names;
+    juce::StringArray names;
 
     for (auto o : selectedObjects)
         if (o != nullptr)
             names.addIfNotAlreadyThere (o->getSelectableDescription());
 
     if (names.size() == 1)
-        return String (TRANS("123 Objects of Type: XYYZ"))
-               .replace ("123", String (selectedObjects.size()))
+        return juce::String (TRANS("123 Objects of Type: XYYZ"))
+               .replace ("123", juce::String (selectedObjects.size()))
                .replace ("XYYZ", names[0]);
 
-    return String (TRANS("123 Objects"))
-            .replace ("123", String (selectedObjects.size()));
+    return juce::String (TRANS("123 Objects"))
+            .replace ("123", juce::String (selectedObjects.size()));
 }
 
 void SelectableClass::deleteSelected (const SelectableList&, bool) {}
@@ -332,7 +332,7 @@ bool SelectableClass::areAllObjectsOfUniformType (const SelectableList& list)
 }
 
 //==============================================================================
-static Array<SelectionManager*> allManagers;
+static juce::Array<SelectionManager*> allManagers;
 
 SelectionManager::SelectionManager (Engine& e) : ChangeBroadcaster(), engine (e)
 {
@@ -369,7 +369,7 @@ SelectionManager::Iterator::Iterator() {}
 
 bool SelectionManager::Iterator::next()
 {
-    return isPositiveAndBelow (++index, allManagers.size());
+    return juce::isPositiveAndBelow (++index, allManagers.size());
 }
 
 SelectionManager* SelectionManager::Iterator::get() const
@@ -384,7 +384,7 @@ int SelectionManager::getNumObjectsSelected() const
 
 Selectable* SelectionManager::getSelectedObject (int index) const
 {
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
     return selected[index];
 }
 
@@ -405,7 +405,7 @@ bool SelectionManager::isSelected (const Selectable& object) const
 
 void SelectionManager::deselectAll()
 {
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
 
     if (selected.size() > 0)
     {
@@ -448,7 +448,7 @@ void SelectionManager::select (Selectable* s, bool addToCurrentSelection)
 
 void SelectionManager::select (Selectable& s, bool addToCurrentSelection)
 {
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
 
     if (! Selectable::isSelectableValid (&s))
     {
@@ -490,7 +490,7 @@ void SelectionManager::select (const SelectableList& list)
 
 void SelectionManager::deselect (Selectable* s)
 {
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
     auto index = selected.indexOf (s);
 
     if (index >= 0)
@@ -508,7 +508,7 @@ void SelectionManager::selectableObjectChanged (Selectable*)
 
 void SelectionManager::selectableObjectAboutToBeDeleted (Selectable* s)
 {
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
     auto index = selected.indexOf (s);
 
     if (index >= 0)
@@ -559,7 +559,7 @@ SelectionManager* SelectionManager::findSelectionManagerContaining (const Select
 //==============================================================================
 bool SelectionManager::copySelected()
 {
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
 
     // only allow groups of the same type to be selected at once.
     if (auto cls = getFirstSelectableClass())
@@ -586,7 +586,7 @@ bool SelectionManager::copySelected()
 
 void SelectionManager::deleteSelected()
 {
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
 
     if (auto cls = getFirstSelectableClass())
         // use a local copy of the list, as it will change as things get deleted + deselected
@@ -595,7 +595,7 @@ void SelectionManager::deleteSelected()
 
 bool SelectionManager::cutSelected()
 {
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
 
     if (auto cls = getFirstSelectableClass())
     {
@@ -612,7 +612,7 @@ bool SelectionManager::cutSelected()
 
 bool SelectionManager::pasteSelected()
 {
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
 
     if (auto cls = getFirstSelectableClass())
         // use a local copy of the list, as it will change as things get added + selected
@@ -623,7 +623,7 @@ bool SelectionManager::pasteSelected()
 
 void SelectionManager::selectOtherObjects (SelectableClass::Relationship relationship, bool keepOldItemsSelected)
 {
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
 
     if (auto cls = getFirstSelectableClass())
     {
@@ -642,7 +642,7 @@ void SelectionManager::selectOtherObjects (SelectableClass::Relationship relatio
 
 void SelectionManager::keepSelectedObjectsOnScreen()
 {
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
 
     if (auto cls = getFirstSelectableClass())
         cls->keepSelectedObjectOnScreen (selected);
@@ -653,7 +653,7 @@ Edit* SelectionManager::getEdit() const
     return dynamic_cast<Edit*> (edit.get());
 }
 
-SelectionManager* SelectionManager::findSelectionManager (const Component* c)
+SelectionManager* SelectionManager::findSelectionManager (const juce::Component* c)
 {
     if (auto smc = c->findParentComponentOfClass<ComponentWithSelectionManager>())
         return smc->getSelectionManager();

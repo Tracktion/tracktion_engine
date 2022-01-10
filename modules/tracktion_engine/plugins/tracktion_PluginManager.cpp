@@ -16,14 +16,14 @@ extern void cleanUpDanglingPlugins();
 
 static const char* commandLineUID = "PluginScan";
 
-MemoryBlock createScanMessage (const juce::XmlElement& xml)
+juce::MemoryBlock createScanMessage (const juce::XmlElement& xml)
 {
-    MemoryOutputStream mo;
+    juce::MemoryOutputStream mo;
     xml.writeTo (mo, juce::XmlElement::TextFormat().withoutHeader().singleLine());
     return mo.getMemoryBlock();
 }
 
-struct PluginScanMasterProcess  : private ChildProcessCoordinator
+struct PluginScanMasterProcess  : private juce::ChildProcessCoordinator
 {
     PluginScanMasterProcess (Engine& e) : engine (e) {}
 
@@ -34,7 +34,8 @@ struct PluginScanMasterProcess  : private ChildProcessCoordinator
 
         crashed = false;
         // don't get stdout or strerr from the child process. We don't do anything with it and it fills up the pipe and hangs
-        launched = launchWorkerProcess (File::getSpecialLocation (File::currentExecutableFile), commandLineUID, 0, 0);
+        launched = launchWorkerProcess (juce::File::getSpecialLocation (juce::File::currentExecutableFile),
+                                        commandLineUID, 0, 0);
 
         if (launched)
         {
@@ -49,7 +50,8 @@ struct PluginScanMasterProcess  : private ChildProcessCoordinator
         return launched;
     }
 
-    bool sendScanRequest (AudioPluginFormat& format, const String& fileOrIdentifier, int requestID)
+    bool sendScanRequest (juce::AudioPluginFormat& format,
+                          const juce::String& fileOrIdentifier, int requestID)
     {
         juce::XmlElement m ("SCAN");
         m.setAttribute ("id", requestID);
@@ -59,20 +61,21 @@ struct PluginScanMasterProcess  : private ChildProcessCoordinator
         return sendMessageToWorker (createScanMessage (m));
     }
 
-    bool waitForReply (int requestID, const String& fileOrIdentifier,
-                       OwnedArray<PluginDescription>& result, KnownPluginList::CustomScanner& scanner)
+    bool waitForReply (int requestID, const juce::String& fileOrIdentifier,
+                       juce::OwnedArray<juce::PluginDescription>& result,
+                       juce::KnownPluginList::CustomScanner& scanner)
     {
       #if ! TRACKTION_LOG_ENABLED
         juce::ignoreUnused (fileOrIdentifier);
       #endif
 
-        Time start (Time::getCurrentTime());
+        auto start = juce::Time::getCurrentTime();
 
         for (;;)
         {
             auto reply = findReply (requestID);
 
-            RelativeTime elapsed (Time::getCurrentTime() - start);
+            auto elapsed = juce::Time::getCurrentTime() - start;
 
             if (reply == nullptr || ! reply->hasTagName ("FOUND"))
             {
@@ -88,7 +91,7 @@ struct PluginScanMasterProcess  : private ChildProcessCoordinator
                     return false;
                 }
 
-                Thread::sleep (10);
+                juce::Thread::sleep (10);
                 continue;
             }
 
@@ -97,12 +100,12 @@ struct PluginScanMasterProcess  : private ChildProcessCoordinator
 
             for (auto e : reply->getChildIterator())
             {
-                PluginDescription desc;
+                juce::PluginDescription desc;
 
                 if (desc.loadFromXml (*e))
                 {
-                    auto newDesc = new PluginDescription (desc);
-                    newDesc->lastInfoUpdateTime = Time::getCurrentTime();
+                    auto newDesc = new juce::PluginDescription (desc);
+                    newDesc->lastInfoUpdateTime = juce::Time::getCurrentTime();
                     result.add (newDesc);
 
                     TRACKTION_LOG ("Added " + desc.pluginFormatName + ": " + desc.name + "  [" + elapsed.getDescription() + "]");
@@ -121,7 +124,7 @@ struct PluginScanMasterProcess  : private ChildProcessCoordinator
     {
         if (xml.hasTagName ("FOUND"))
         {
-            const ScopedLock sl (replyLock);
+            const juce::ScopedLock sl (replyLock);
             replies.add (new juce::XmlElement (xml));
         }
     }
@@ -135,8 +138,8 @@ struct PluginScanMasterProcess  : private ChildProcessCoordinator
 
 private:
     Engine& engine;
-    OwnedArray<XmlElement> replies;
-    CriticalSection replyLock;
+    juce::OwnedArray<juce::XmlElement> replies;
+    juce::CriticalSection replyLock;
     bool hasShownVirusCheckerWarning = false;
 
     void showVirusCheckerWarning()
@@ -148,23 +151,23 @@ private:
             engine
                 .getUIBehaviour().showWarningAlert ("Plugin Scanning...",
                                                     TRANS("There are some problems in launching a child-process to scan for plugins.")
-                                                       + newLine + newLine
+                                                       + juce::newLine + juce::newLine
                                                        + TRANS("If you have a virus-checker or firewall running, you may need to temporarily disable it for the scan to work correctly."));
         }
     }
 
-    std::unique_ptr<XmlElement> findReply (int requestID)
+    std::unique_ptr<juce::XmlElement> findReply (int requestID)
     {
         for (int i = replies.size(); --i >= 0;)
             if (replies.getUnchecked(i)->getIntAttribute ("id") == requestID)
-                return std::unique_ptr<XmlElement> (replies.removeAndReturn (i));
+                return std::unique_ptr<juce::XmlElement> (replies.removeAndReturn (i));
 
         return {};
     }
 
-    void handleMessageFromWorker (const MemoryBlock& mb) override
+    void handleMessageFromWorker (const juce::MemoryBlock& mb) override
     {
-        if (auto xml = std::unique_ptr<XmlElement> (XmlDocument::parse (mb.toString())))
+        if (auto xml = juce::parseXML (mb.toString()))
             handleMessage (*xml);
     }
 
@@ -172,8 +175,8 @@ private:
 };
 
 //==============================================================================
-struct PluginScanSlaveProcess  : public ChildProcessWorker,
-                                 private AsyncUpdater
+struct PluginScanSlaveProcess  : public juce::ChildProcessWorker,
+                                 private juce::AsyncUpdater
 {
     PluginScanSlaveProcess()
     {
@@ -187,7 +190,7 @@ struct PluginScanSlaveProcess  : public ChildProcessWorker,
         std::exit (0);
     }
 
-    void handleScanMessage (int requestID, const String& formatName, const String& fileOrIdentifier)
+    void handleScanMessage (int requestID, const juce::String& formatName, const juce::String& fileOrIdentifier)
     {
         juce::XmlElement result ("FOUND");
         result.setAttribute ("id", requestID);
@@ -198,7 +201,7 @@ struct PluginScanSlaveProcess  : public ChildProcessWorker,
 
             if (format->getName() == formatName)
             {
-                OwnedArray<PluginDescription> found;
+                juce::OwnedArray<juce::PluginDescription> found;
                 format->findAllTypesForFile (found, fileOrIdentifier);
 
                 for (auto pd : found)
@@ -220,17 +223,18 @@ struct PluginScanSlaveProcess  : public ChildProcessWorker,
     }
 
 private:
-    AudioPluginFormatManager pluginFormatManager;
-    OwnedArray<XmlElement, CriticalSection> pendingMessages;
+    juce::AudioPluginFormatManager pluginFormatManager;
+    juce::OwnedArray<juce::XmlElement, juce::CriticalSection> pendingMessages;
 
-    void handleMessageFromCoordinator (const MemoryBlock& mb) override
+    void handleMessageFromCoordinator (const juce::MemoryBlock& mb) override
     {
-        if (auto xml = std::unique_ptr<XmlElement> (XmlDocument::parse (mb.toString())))
+        if (auto xml = juce::parseXML (mb.toString()))
         {
             pendingMessages.add (xml.release());
             triggerAsyncUpdate();
         }
     }
+
     void handleMessageSafely (const juce::XmlElement& m)
     {
        #if JUCE_WINDOWS
@@ -244,7 +248,7 @@ private:
         }
         __except (1)
         {
-            Process::terminate();
+            juce::Process::terminate();
         }
        #endif
     }
@@ -271,15 +275,15 @@ static void setupSignalHandling()
 {
     const int signals[] = { SIGFPE, SIGILL, SIGSEGV, SIGBUS, SIGABRT };
 
-    for (int i = 0; i < numElementsInArray (signals); ++i)
+    for (int sig : signals)
     {
-        ::signal (signals[i], killWithoutMercy);
-        ::siginterrupt (signals[i], 1);
+        ::signal (sig, killWithoutMercy);
+        ::siginterrupt (sig, 1);
     }
 }
 #endif
 
-bool PluginManager::startChildProcessPluginScan (const String& commandLine)
+bool PluginManager::startChildProcessPluginScan (const juce::String& commandLine)
 {
     auto slave = std::make_unique<PluginScanSlaveProcess>();
 
@@ -297,13 +301,13 @@ bool PluginManager::startChildProcessPluginScan (const String& commandLine)
 }
 
 //==============================================================================
-struct CustomScanner  : public KnownPluginList::CustomScanner
+struct CustomScanner  : public juce::KnownPluginList::CustomScanner
 {
     CustomScanner (Engine& e) : engine (e) {}
 
-    bool findPluginTypesFor (AudioPluginFormat& format,
-                             OwnedArray<PluginDescription>& result,
-                             const String& fileOrIdentifier) override
+    bool findPluginTypesFor (juce::AudioPluginFormat& format,
+                             juce::OwnedArray<juce::PluginDescription>& result,
+                             const juce::String& fileOrIdentifier) override
     {
         CRASH_TRACER
 
@@ -318,7 +322,7 @@ struct CustomScanner  : public KnownPluginList::CustomScanner
 
             if (masterProcess->ensureSlaveIsLaunched())
             {
-                auto requestID = Random().nextInt();
+                auto requestID = juce::Random().nextInt();
 
                 if (! shouldExit()
                      && masterProcess->sendScanRequest (format, fileOrIdentifier, requestID)
@@ -354,7 +358,7 @@ struct CustomScanner  : public KnownPluginList::CustomScanner
         return true;
     }
 
-    static bool shouldUseSeparateProcessToScan (AudioPluginFormat& format)
+    static bool shouldUseSeparateProcessToScan (juce::AudioPluginFormat& format)
     {
         auto name = format.getName();
 
@@ -394,10 +398,11 @@ PluginManager::BuiltInType::~BuiltInType() {}
 PluginManager::PluginManager (Engine& e)
     : engine (e)
 {
-    createPluginInstance = [this] (const PluginDescription& description, double rate, int blockSize, String& errorMessage)
-                           {
-                               return std::unique_ptr<AudioPluginInstance> (pluginFormatManager.createPluginInstance (description, rate, blockSize, errorMessage));
-                           };
+    createPluginInstance = [this] (const juce::PluginDescription& description, double rate, int blockSize, juce::String& errorMessage)
+    {
+        return std::unique_ptr<juce::AudioPluginInstance> (pluginFormatManager.createPluginInstance (description, rate,
+                                                                                                     blockSize, errorMessage));
+    };
 }
 
 void PluginManager::initialise()
@@ -638,9 +643,9 @@ void PluginManager::initialiseAirWindows()
 }
 #endif
 
-void PluginManager::changeListenerCallback (ChangeBroadcaster*)
+void PluginManager::changeListenerCallback (juce::ChangeBroadcaster*)
 {
-    std::unique_ptr<XmlElement> xml (knownPluginList.createXml());
+    std::unique_ptr<juce::XmlElement> xml (knownPluginList.createXml());
     engine.getPropertyStorage().setXmlProperty (getPluginListPropertyName(), *xml);
 }
 
@@ -654,7 +659,7 @@ Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const juce::ValueTree& v)
     return createPlugin (ed, v, true);
 }
 
-Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const String& type, const juce::PluginDescription& desc)
+Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const juce::String& type, const juce::PluginDescription& desc)
 {
     jassert (initialised); // must call PluginManager::initialise() before this!
     jassert ((type == ExternalPlugin::xmlTypeName) == type.equalsIgnoreCase (ExternalPlugin::xmlTypeName));
@@ -690,8 +695,8 @@ Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const String& type, const 
     {
         if (builtIn->type == type)
         {
-            ValueTree v (IDs::PLUGIN);
-            v.setProperty (IDs::type, type, nullptr);
+            auto v = createValueTree (IDs::PLUGIN,
+                                      IDs::type, type);
 
             if (ed.engine.getPluginManager().areGUIsLockedByDefault())
                 v.setProperty (IDs::windowLocked, true, nullptr);
@@ -704,11 +709,11 @@ Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const String& type, const 
     return {};
 }
 
-Array<PluginDescription> PluginManager::getARACompatiblePlugDescriptions()
+juce::Array<juce::PluginDescription> PluginManager::getARACompatiblePlugDescriptions()
 {
     jassert (initialised); // must call PluginManager::initialise() before this!
 
-    Array<PluginDescription> descs;
+    juce::Array<juce::PluginDescription> descs;
 
     for (const auto& p : knownPluginList.getTypes())
     {
@@ -746,13 +751,14 @@ void PluginManager::setDoubleClickToOpenWindows (bool b)
 
 int PluginManager::getNumberOfThreadsForScanning()
 {
-    return jlimit (1, SystemStats::getNumCpus(),
-                   static_cast<int> (engine.getPropertyStorage().getProperty (SettingID::numThreadsForPluginScanning, 1)));
+    return juce::jlimit (1, juce::SystemStats::getNumCpus(),
+                         static_cast<int> (engine.getPropertyStorage().getProperty (SettingID::numThreadsForPluginScanning, 1)));
 }
 
 void PluginManager::setNumberOfThreadsForScanning (int numThreads)
 {
-    engine.getPropertyStorage().setProperty (SettingID::numThreadsForPluginScanning, jlimit (1, SystemStats::getNumCpus(), numThreads));
+    engine.getPropertyStorage().setProperty (SettingID::numThreadsForPluginScanning,
+                                             juce::jlimit (1, juce::SystemStats::getNumCpus(), numThreads));
 }
 
 bool PluginManager::usesSeparateProcessForScanning()
@@ -808,7 +814,7 @@ Plugin::Ptr PluginCache::getPluginFor (EditItemID pluginID) const
     if (! pluginID.isValid())
         return {};
 
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
 
     for (auto p : activePlugins)
         if (EditItemID::fromProperty (p->state, IDs::id) == pluginID)
@@ -819,22 +825,18 @@ Plugin::Ptr PluginCache::getPluginFor (EditItemID pluginID) const
 
 Plugin::Ptr PluginCache::getPluginFor (const juce::ValueTree& v) const
 {
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
 
     for (auto p : activePlugins)
-    {
         if (p->state == v)
             return *p;
-
-        //jassert (v[IDs::id].toString() != p->itemID.toString());
-    }
 
     return {};
 }
 
 Plugin::Ptr PluginCache::getPluginFor (juce::AudioProcessor& ap) const
 {
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
 
     for (auto p : activePlugins)
         if (p->getWrappedAudioProcessor() == &ap)
@@ -845,14 +847,14 @@ Plugin::Ptr PluginCache::getPluginFor (juce::AudioProcessor& ap) const
 
 Plugin::Ptr PluginCache::getOrCreatePluginFor (const juce::ValueTree& v)
 {
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
 
     if (auto f = getPluginFor (v))
         return f;
 
     if (auto f = edit.engine.getPluginManager().createExistingPlugin (edit, v))
     {
-        jassert (MessageManager::getInstance()->currentThreadHasLockedMessageManager()
+        jassert (juce::MessageManager::getInstance()->currentThreadHasLockedMessageManager()
                   || dynamic_cast<ExternalPlugin*> (f.get()) == nullptr);
 
         return addPluginToCache (f);
@@ -863,7 +865,7 @@ Plugin::Ptr PluginCache::getOrCreatePluginFor (const juce::ValueTree& v)
 
 Plugin::Ptr PluginCache::createNewPlugin (const juce::ValueTree& v)
 {
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
     auto p = addPluginToCache (edit.engine.getPluginManager().createNewPlugin (edit, v));
 
     if (p != nullptr && newPluginAddedCallback != nullptr)
@@ -876,7 +878,7 @@ Plugin::Ptr PluginCache::createNewPlugin (const juce::String& type, const juce::
 {
     jassert (type.isNotEmpty());
 
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
     auto p = addPluginToCache (edit.engine.getPluginManager().createNewPlugin (edit, type, desc));
 
     if (p != nullptr && newPluginAddedCallback != nullptr)
@@ -887,7 +889,7 @@ Plugin::Ptr PluginCache::createNewPlugin (const juce::String& type, const juce::
 
 Plugin::Array PluginCache::getPlugins() const
 {
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
     return activePlugins;
 }
 
@@ -915,16 +917,18 @@ void PluginCache::timerCallback()
 {
     Plugin::Array toDelete;
 
-    const ScopedLock sl (lock);
-
-    for (int i = activePlugins.size(); --i >= 0;)
     {
-        if (auto f = activePlugins.getObjectPointer (i))
+        const juce::ScopedLock sl (lock);
+
+        for (int i = activePlugins.size(); --i >= 0;)
         {
-            if (f->getReferenceCount() == 1)
+            if (auto f = activePlugins.getObjectPointer (i))
             {
-                toDelete.add (f);
-                activePlugins.remove (i);
+                if (f->getReferenceCount() == 1)
+                {
+                    toDelete.add (f);
+                    activePlugins.remove (i);
+                }
             }
         }
     }

@@ -95,7 +95,7 @@ public:
 
             expect (tempDir.tempDir.exists() && tempDir.tempDir.isDirectory(), "Output dir not created");
             expect (tempDir.tempDir.hasWriteAccess(), "Output dir is read only");
-            expectEquals (tempDir.tempDir.getFullPathName(), File::getCurrentWorkingDirectory().getFullPathName(), "Current directory has changed");
+            expectEquals (tempDir.tempDir.getFullPathName(), juce::File::getCurrentWorkingDirectory().getFullPathName(), "Current directory has changed");
             expectEquals (audioFiles.size(), deviceManager.getNumWaveInDevices(), "Audio files not created");
 
             for (const auto& f : audioFiles)
@@ -112,13 +112,13 @@ public:
             
             for (auto index : sampleIndicies)
             {
-                expectGreaterOrEqual<int64> (index, 0, juce::String ("File doesn't have an impulse in: FILE").replace ("FILE", audioFiles[fileIndex].getFullPathName()));
+                expectGreaterOrEqual<int64_t> (index, 0, juce::String ("File doesn't have an impulse in: FILE").replace ("FILE", audioFiles[fileIndex].getFullPathName()));
                 
                 if (index != sampleIndicies[0])
-                    expect (false, String ("Mismatch of impulse indicies (FIRST & SECOND samples, difference of DIFF)")
-                            .replace ("FIRST", String (index))
-                            .replace ("SECOND", String (sampleIndicies[0]))
-                            .replace ("DIFF", String (index - sampleIndicies[0])));
+                    expect (false, juce::String ("Mismatch of impulse indicies (FIRST & SECOND samples, difference of DIFF)")
+                                    .replace ("FIRST", juce::String (index))
+                                    .replace ("SECOND", juce::String (sampleIndicies[0]))
+                                    .replace ("DIFF", juce::String (index - sampleIndicies[0])));
                 
                 ++fileIndex;
             }
@@ -184,7 +184,7 @@ public:
         {
             silenceBuffer.setSize (params.inputChannels, params.blockSize);
             silenceBuffer.clear();
-            const int msPerBlock = roundToInt ((params.blockSize / params.sampleRate) * 1000.0);
+            auto msPerBlock = juce::roundToInt ((params.blockSize / params.sampleRate) * 1000.0);
 
             processThread = std::thread ([&, msPerBlock]
                                          {
@@ -233,8 +233,8 @@ public:
         HostedAudioDeviceInterface& audioIO;
         HostedAudioDeviceInterface::Parameters parameters;
 
-        AudioBuffer<float> silenceBuffer;
-        MidiBuffer emptyMidiBuffer;
+        juce::AudioBuffer<float> silenceBuffer;
+        juce::MidiBuffer emptyMidiBuffer;
 
         std::thread processThread;
         std::atomic<bool> hasStarted { false }, shouldStop { false }, insertImpulse { false };
@@ -255,15 +255,15 @@ public:
             originalCwd.setAsCurrentWorkingDirectory();
         }
 
-        const File originalCwd = File::getCurrentWorkingDirectory();
-        const File tempDir = File::createTempFile ({});
+        juce::File originalCwd = juce::File::getCurrentWorkingDirectory();
+        juce::File tempDir = juce::File::createTempFile ({});
     };
 
     //==============================================================================
     template<typename ClipType>
-    Array<ClipType*> getAllClipsFromTracks (Edit& edit)
+    juce::Array<ClipType*> getAllClipsFromTracks (Edit& edit)
     {
-        Array<ClipType*> clips;
+        juce::Array<ClipType*> clips;
 
         for (auto audioTrack : getAudioTracks (edit))
             for (auto clip : audioTrack->getClips())
@@ -274,9 +274,9 @@ public:
     }
 
     template<typename ClipType>
-    Array<File> getSourceFilesFromClips (const Array<ClipType*>& clips)
+    juce::Array<juce::File> getSourceFilesFromClips (const juce::Array<ClipType*>& clips)
     {
-        Array<File> files;
+        juce::Array<juce::File> files;
 
         for (auto clip : clips)
             files.add (clip->getCurrentSourceFile());
@@ -284,9 +284,9 @@ public:
         return files;
     }
 
-    int64_t findImpulseSampleIndex (Engine& engine, File& file)
+    int64_t findImpulseSampleIndex (Engine& engine, juce::File& file)
     {
-        if (auto reader = std::unique_ptr<AudioFormatReader> (tracktion_engine::AudioFileUtils::createReaderFor (engine, file)))
+        if (auto reader = std::unique_ptr<juce::AudioFormatReader> (tracktion_engine::AudioFileUtils::createReaderFor (engine, file)))
             return reader->searchForLevel (0, reader->lengthInSamples,
                                            0.9f, 1.1f,
                                            0);
@@ -294,7 +294,7 @@ public:
         return -1;
     }
 
-    std::vector<int64_t> getSampleIndiciesOfImpulse (Engine& engine, const Array<File>& files)
+    std::vector<int64_t> getSampleIndiciesOfImpulse (Engine& engine, const juce::Array<juce::File>& files)
     {
         std::vector<int64_t> sampleIndicies;
 
@@ -304,9 +304,9 @@ public:
         return sampleIndicies;
     }
     
-    double getFileLength (Engine& engine, const File& file)
+    double getFileLength (Engine& engine, const juce::File& file)
     {
-        if (auto reader = std::unique_ptr<AudioFormatReader> (tracktion_engine::AudioFileUtils::createReaderFor (engine, file)))
+        if (auto reader = std::unique_ptr<juce::AudioFormatReader> (tracktion_engine::AudioFileUtils::createReaderFor (engine, file)))
             if (reader->sampleRate > 0.0)
                 return reader->lengthInSamples / reader->sampleRate;
 

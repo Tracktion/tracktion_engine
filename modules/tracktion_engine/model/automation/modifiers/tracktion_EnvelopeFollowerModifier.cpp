@@ -32,7 +32,7 @@ public:
     /** Returns the current RMS for a new input sample. */
     inline float processSingleSample (float in) noexcept
     {
-        state += (square (in) - state) * coefficient;
+        state += (juce::square (in) - state) * coefficient;
         return std::sqrt (state);
     }
 
@@ -156,7 +156,7 @@ public:
             }
             case msMode:
             {
-                input = square (std::abs (input));
+                input = juce::square (std::abs (input));
                 break;
             }
             case rmsMode:
@@ -182,7 +182,7 @@ public:
 
         jassert (! std::isnan (envelope));
         jassert (envelope == 0.0f || std::isnormal (envelope));
-        envelope = jlimit (0.0f, 1.0f, envelope);
+        envelope = juce::jlimit (0.0f, 1.0f, envelope);
 
         return envelope;
     }
@@ -216,7 +216,7 @@ protected:
 
 
 //==============================================================================
-EnvelopeFollowerModifier::EnvelopeFollowerModifier (Edit& e, const ValueTree& v)
+EnvelopeFollowerModifier::EnvelopeFollowerModifier (Edit& e, const juce::ValueTree& v)
     : Modifier (e, v)
 {
     auto um = &edit.getUndoManager();
@@ -232,8 +232,9 @@ EnvelopeFollowerModifier::EnvelopeFollowerModifier (Edit& e, const ValueTree& v)
     lowPassFrequency.referTo (state, IDs::lowPassFrequency, um, 2000.0f);
     highPassFrequency.referTo (state, IDs::highPassFrequency, um, 500.0f);
 
-    auto addDiscreteParam = [this] (const String& paramID, const String& name,
-                                    Range<float> valueRange, CachedValue<float>& val, const StringArray& labels) -> AutomatableParameter*
+    auto addDiscreteParam = [this] (const juce::String& paramID, const juce::String& name,
+                                    juce::Range<float> valueRange, juce::CachedValue<float>& val,
+                                    const juce::StringArray& labels) -> AutomatableParameter*
     {
         auto* p = new DiscreteLabelledParameter (paramID, name, *this, valueRange, labels.size(), labels);
         addAutomatableParameter (p);
@@ -242,7 +243,9 @@ EnvelopeFollowerModifier::EnvelopeFollowerModifier (Edit& e, const ValueTree& v)
         return p;
     };
 
-    auto addParam = [this] (const String& paramID, const String& name, NormalisableRange<float> valueRange, float centreVal, CachedValue<float>& val, const String& suffix) -> AutomatableParameter*
+    auto addParam = [this] (const juce::String& paramID, const juce::String& name,
+                            juce::NormalisableRange<float> valueRange, float centreVal,
+                            juce::CachedValue<float>& val, const juce::String& suffix) -> AutomatableParameter*
     {
         valueRange.setSkewForCentre (centreVal);
         auto* p = new SuffixedParameter (paramID, name, *this, valueRange, suffix);
@@ -252,7 +255,8 @@ EnvelopeFollowerModifier::EnvelopeFollowerModifier (Edit& e, const ValueTree& v)
         return p;
     };
 
-    const NormalisableRange<float> freqRange (20.0f, 20000.0f);
+    const juce::NormalisableRange<float> freqRange (20.0f, 20000.0f);
+
     gainDbParam             = addParam          ("gainDb",              TRANS("Gain"),                  { -20.0f, 20.0f, 0.001f }, 0.0f,    gainDb,             "dB");
     attackParam             = addParam          ("attack",              TRANS("Attack"),                { 1.0f, 5000.0f }, 50.0f,           attack,             "ms");
     holdParam               = addParam          ("hold",                TRANS("Hold"),                  { 0.0f, 5000.0f }, 50.0f,           hold,               "ms");
@@ -292,14 +296,15 @@ float EnvelopeFollowerModifier::getCurrentValue()
     return (getEnvelopeValue() * depthParam->getCurrentValue()) + offsetParam->getCurrentValue();
 }
 
-AutomatableParameter::ModifierAssignment* EnvelopeFollowerModifier::createAssignment (const ValueTree& v)
+AutomatableParameter::ModifierAssignment* EnvelopeFollowerModifier::createAssignment (const juce::ValueTree& v)
 {
     return new Assignment (v, *this);
 }
 
-StringArray EnvelopeFollowerModifier::getAudioInputNames()
+juce::StringArray EnvelopeFollowerModifier::getAudioInputNames()
 {
-    return { TRANS("Audio input left"), TRANS("Audio input right") };
+    return { TRANS("Audio input left"),
+             TRANS("Audio input right") };
 }
 
 void EnvelopeFollowerModifier::initialise (double newSampleRate, int)
@@ -321,7 +326,7 @@ void EnvelopeFollowerModifier::applyToBuffer (const PluginRenderContext& pc)
 
     updateParameterStreams (pc.editTime);
 
-    AudioBuffer<float> ab (pc.destBuffer->getArrayOfWritePointers(),
+    juce::AudioBuffer<float> ab (pc.destBuffer->getArrayOfWritePointers(),
                            pc.destBuffer->getNumChannels(),
                            pc.bufferStartSample,
                            pc.bufferNumSamples);
@@ -362,7 +367,7 @@ void EnvelopeFollowerModifier::processBlock (const juce::AudioBuffer<float>& ab)
     envelopeFollower->setAttackTime (attackParam->getCurrentValue());
     envelopeFollower->setHoldTime (holdParam->getCurrentValue());
     envelopeFollower->setReleaseTime (releaseParam->getCurrentValue());
-    const float gainVal = Decibels::decibelsToGain (gainDbParam->getCurrentValue());
+    auto gainVal = juce::Decibels::decibelsToGain (gainDbParam->getCurrentValue());
     const bool lowPass = getBoolParamValue (*lowPassEnabledParam);
     const bool highPass = getBoolParamValue (*highPassEnabledParam);
 
@@ -380,17 +385,17 @@ void EnvelopeFollowerModifier::processBlock (const juce::AudioBuffer<float>& ab)
         float sample = 0.0f;
 
         for (int c = 0; c < numChannels; ++c)
-            sample = jmax (sample, std::abs (samples[c][i]));
+            sample = std::max (sample, std::abs (samples[c][i]));
 
         scratchData[i] = sample * gainVal;
     }
 
     // Filter if required
     if (setIfDifferent (currentLowPassFrequency, lowPassFrequencyParam->getCurrentValue()))
-        lowPassFilter.setCoefficients (IIRCoefficients::makeLowPass (getSampleRate(), currentLowPassFrequency));
+        lowPassFilter.setCoefficients (juce::IIRCoefficients::makeLowPass (getSampleRate(), currentLowPassFrequency));
 
     if (setIfDifferent (currentHighPassFrequency, highPassFrequencyParam->getCurrentValue()))
-        highPassFilter.setCoefficients (IIRCoefficients::makeHighPass (getSampleRate(), currentHighPassFrequency));
+        highPassFilter.setCoefficients (juce::IIRCoefficients::makeHighPass (getSampleRate(), currentHighPassFrequency));
 
     if (lowPass)
         lowPassFilter.processSamples (scratchData, numSamples);
@@ -411,7 +416,6 @@ void EnvelopeFollowerModifier::reset()
     envelopeFollower->reset();
 }
 
-//==============================================================================
 void EnvelopeFollowerModifier::valueTreeChanged()
 {
     if (! changedTimer.isTimerRunning())

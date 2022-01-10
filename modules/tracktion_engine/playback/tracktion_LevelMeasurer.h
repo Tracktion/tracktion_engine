@@ -13,7 +13,7 @@ namespace tracktion_engine
 
 struct DbTimePair
 {
-    juce::uint32 time = 0;
+    uint32_t time = 0;
     float dB = -100.0f;
 };
 

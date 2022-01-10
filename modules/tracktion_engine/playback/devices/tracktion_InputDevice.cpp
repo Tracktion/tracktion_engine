@@ -11,7 +11,7 @@
 namespace tracktion_engine
 {
 
-InputDevice::InputDevice (Engine& e, const String& t, const String& n)
+InputDevice::InputDevice (Engine& e, const juce::String& t, const juce::String& n)
    : engine (e), type (t), name (n)
 {
     alias = e.getPropertyStorage().getPropertyItem (SettingID::invalid, getGlobalPropertyName());
@@ -22,7 +22,7 @@ InputDevice::~InputDevice()
 {
 }
 
-String InputDevice::getGlobalPropertyName() const
+juce::String InputDevice::getGlobalPropertyName() const
 {
     return type + "in_" + name + "_alias";
 }
@@ -33,21 +33,23 @@ bool InputDevice::isTrackDevice() const
             || getDeviceType() == trackMidiDevice;
 }
 
-static String findDefaultAliasNameNotClashingWithInputDevices (Engine& engine, bool isMIDI, const String& originalName, String defaultAlias)
+static juce::String findDefaultAliasNameNotClashingWithInputDevices (Engine& engine, bool isMIDI,
+                                                                     const juce::String& originalName,
+                                                                     juce::String defaultAlias)
 {
     int maxLength = 20;
 
     if (defaultAlias.length() <= maxLength)
         return defaultAlias;
 
-    String bracketed;
+    juce::String bracketed;
 
     if (defaultAlias.containsChar ('(') && defaultAlias.trim().endsWithChar (')'))
         bracketed = defaultAlias.fromLastOccurrenceOf ("(", false, false)
                                 .upToFirstOccurrenceOf (")", false, false)
                                 .trim();
 
-    defaultAlias = defaultAlias.substring (0, jmax (10, maxLength - bracketed.length())).trim();
+    defaultAlias = defaultAlias.substring (0, std::max (10, maxLength - bracketed.length())).trim();
     defaultAlias = defaultAlias.upToLastOccurrenceOf (" ", false, false).trim();
 
     if (bracketed.isNotEmpty())
@@ -90,7 +92,7 @@ void InputDevice::initialiseDefaultAlias()
     defaultAlias = findDefaultAliasNameNotClashingWithInputDevices (engine, isMidi(), getName(), defaultAlias);
 }
 
-String InputDevice::getAlias() const
+juce::String InputDevice::getAlias() const
 {
     if (alias.trim().isNotEmpty())
         return alias;
@@ -98,7 +100,7 @@ String InputDevice::getAlias() const
     return defaultAlias;
 }
 
-void InputDevice::setAlias (const String& a)
+void InputDevice::setAlias (const juce::String& a)
 {
     if (alias != a)
     {
@@ -114,14 +116,14 @@ bool InputDevice::isEnabled() const
     return enabled;
 }
 
-String InputDevice::getSelectableDescription()
+juce::String InputDevice::getSelectableDescription()
 {
     return name + " (" + type + ")";
 }
 
-void InputDevice::setRetrospectiveLock (Engine& e, const Array<InputDeviceInstance*>& devices, bool lock)
+void InputDevice::setRetrospectiveLock (Engine& e, const juce::Array<InputDeviceInstance*>& devices, bool lock)
 {
-    const ScopedLock sl (e.getDeviceManager().deviceManager.getAudioCallbackLock());
+    const juce::ScopedLock sl (e.getDeviceManager().deviceManager.getAudioCallbackLock());
 
     for (auto* idi : devices)
         idi->getInputDevice().retrospectiveRecordLock = lock;
@@ -154,7 +156,7 @@ InputDeviceInstance::~InputDeviceInstance()
 
 juce::Array<AudioTrack*> InputDeviceInstance::getTargetTracks() const
 {
-    WeakReference<InputDeviceInstance> ref (const_cast<InputDeviceInstance*> (this));
+    juce::WeakReference<InputDeviceInstance> ref (const_cast<InputDeviceInstance*> (this));
     trackDeviceEnabler.handleUpdateNowIfNeeded();
 
     if (ref.wasObjectDeleted())
@@ -172,13 +174,13 @@ juce::Array<AudioTrack*> InputDeviceInstance::getTargetTracks() const
 
 juce::Array<int> InputDeviceInstance::getTargetIndexes() const
 {
-    WeakReference<InputDeviceInstance> ref (const_cast<InputDeviceInstance*> (this));
+    juce::WeakReference<InputDeviceInstance> ref (const_cast<InputDeviceInstance*> (this));
     trackDeviceEnabler.handleUpdateNowIfNeeded();
 
     if (ref.wasObjectDeleted())
         return {};
     
-    Array<int> indexes;
+    juce::Array<int> indexes;
     
     if (owner.isEnabled())
         for (auto dest : destTracks)
@@ -205,7 +207,7 @@ void InputDeviceInstance::setTargetTrack (AudioTrack& track, int index, bool mov
         removeTargetTrack (track);
     }
 
-    auto v = ValueTree (IDs::INPUTDEVICEDESTINATION);
+    auto v = juce::ValueTree (IDs::INPUTDEVICEDESTINATION);
     state.addChild (v, -1, &edit.getUndoManager());
     
     auto& dest = *destTracks[destTracks.size() - 1];
@@ -368,7 +370,7 @@ void InputDeviceInstance::prepareAndPunchRecord()
         const double sampleRate = dm.getSampleRate();
         const int blockSize = dm.getBlockSize();
 
-        const String error (prepareToRecord (start, start, sampleRate, blockSize, true));
+        auto error = prepareToRecord (start, start, sampleRate, blockSize, true);
 
         if (error.isNotEmpty())
             edit.engine.getUIBehaviour().showWarningMessage (error);

@@ -97,9 +97,9 @@ Track* findTrackForID (const Edit& edit, EditItemID id)
     return findTrackForPredicate (edit, [id] (Track& t) { return t.itemID == id; });
 }
 
-Array<Track*> findTracksForIDs (const Edit& edit, Array<EditItemID> ids)
+juce::Array<Track*> findTracksForIDs (const Edit& edit, const juce::Array<EditItemID>& ids)
 {
-    Array<Track*> tracks;
+    juce::Array<Track*> tracks;
 
     edit.visitAllTracksRecursive ([&] (Track& t)
                                   {
@@ -134,35 +134,35 @@ TrackOutput* getTrackOutput (Track& track)
 
     if (auto t = dynamic_cast<FolderTrack*> (&track))
         return t->getOutput();
-    
+
     return {};
 }
 
-juce::BigInteger toBitSet (const Array<Track*>& tracks)
+juce::BigInteger toBitSet (const juce::Array<Track*>& tracks)
 {
     juce::BigInteger bitset;
-    
+
     if (auto first = tracks[0])
     {
         auto allTracks = getAllTracks (first->edit);
-        
+
         for (auto t : allTracks)
             if (int index = allTracks.indexOf (t); index >= 0)
                 bitset.setBit (index);
     }
-    
+
     return bitset;
 }
 
 juce::Array<Track*> toTrackArray (Edit& edit, const juce::BigInteger& tracksToAdd)
 {
-    Array<Track*> tracks;
+    juce::Array<Track*> tracks;
 
     auto allTracks = getAllTracks (edit);
 
     for (auto bit = tracksToAdd.findNextSetBit (0); bit != -1; bit = tracksToAdd.findNextSetBit (bit + 1))
         tracks.add (allTracks[bit]);
-    
+
     return tracks;
 }
 
@@ -219,7 +219,7 @@ Clip::Ptr duplicateClip (const Clip& c)
 
     if (auto t = c.getClipTrack())
     {
-        jassert (! t->state.getChildWithProperty (IDs::id, newClipID.toVar()).isValid());
+        jassert (! t->state.getChildWithProperty (IDs::id, newClipID).isValid());
         t->state.appendChild (n, c.getUndoManager());
 
         if (auto newClip = t->findClipForID (newClipID))
@@ -352,14 +352,14 @@ void deleteRegionOfTracks (Edit& edit, EditTimeRange rangeToDelete, bool onlySel
         jassert (selectionManager != nullptr);
 
         if (selectionManager != nullptr)
-		{
+        {
             for (auto track : selectionManager->getItemsOfType<Track>())
-			{
-				tracks.addIfNotAlreadyThere (track);
+            {
+                tracks.addIfNotAlreadyThere (track);
                 for (auto t : track->getAllSubTracks (true))
                     tracks.addIfNotAlreadyThere (t);
-			}
-		}
+            }
+        }
     }
     else
     {
@@ -411,7 +411,7 @@ void deleteRegionOfTracks (Edit& edit, EditTimeRange rangeToDelete, bool onlySel
             t->deleteRegion (rangeToDelete, selectionManager);
 
             // Remove any tiny clips that might be left over
-            Array<Clip*> clipsToRemove;
+            juce::Array<Clip*> clipsToRemove;
 
             for (auto& c : t->getClips())
                 if (c->getPosition().getLength() < 0.0001)
@@ -741,7 +741,7 @@ Plugin::Array getAllPlugins (const Edit& edit, bool includeMasterVolume)
     edit.visitAllTracksRecursive ([&] (Track& t)
                                   {
                                       list.addArray (t.getAllPlugins());
-        
+
                                       if (auto at = dynamic_cast<AudioTrack*> (&t))
                                       {
                                           for (auto clip : at->getClips())
@@ -759,7 +759,7 @@ Plugin::Array getAllPlugins (const Edit& edit, bool includeMasterVolume)
                                               }
                                           }
                                       }
-        
+
                                       return true;
                                   });
 
@@ -802,7 +802,7 @@ bool areAnyPluginsMissing (const Edit& edit)
 
 juce::Array<RackInstance*> getRackInstancesInEditForType (const RackType& rt)
 {
-    Array<RackInstance*> instances;
+    juce::Array<RackInstance*> instances;
 
     for (auto p : getAllPlugins (rt.edit, false))
         if (auto ri = dynamic_cast<RackInstance*> (p))

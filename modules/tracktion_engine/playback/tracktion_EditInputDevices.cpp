@@ -91,9 +91,9 @@ InputDeviceInstance* EditInputDevices::getInputInstance (const AudioTrack& at, i
     return {};
 }
 
-Array<InputDeviceInstance*> EditInputDevices::getDevicesForTargetTrack (const AudioTrack& at) const
+juce::Array<InputDeviceInstance*> EditInputDevices::getDevicesForTargetTrack (const AudioTrack& at) const
 {
-    Array<InputDeviceInstance*> devices;
+    juce::Array<InputDeviceInstance*> devices;
 
     for (auto* idi : edit.getAllInputDevices())
         if (idi->isOnTargetTrack (at))
@@ -108,16 +108,16 @@ juce::ValueTree EditInputDevices::getInstanceStateForInputDevice (const InputDev
         if (isForDevice (v, d))
             return v;
 
-    ValueTree v (IDs::INPUTDEVICE);
+    juce::ValueTree v (IDs::INPUTDEVICE);
 
     if (d.getDeviceType() == InputDevice::DeviceType::trackWaveDevice)
     {
-        EditItemID::fromString (d.getName()).setProperty (v, IDs::sourceTrack, nullptr);
+        v.setProperty (IDs::sourceTrack, EditItemID::fromString (d.getName()), nullptr);
         v.setProperty (IDs::type, "audio", nullptr);
     }
     else if (d.getDeviceType() == InputDevice::DeviceType::trackMidiDevice)
     {
-        EditItemID::fromString (d.getName()).setProperty (v, IDs::sourceTrack, nullptr);
+        v.setProperty (IDs::sourceTrack, EditItemID::fromString (d.getName()), nullptr);
         v.setProperty (IDs::type, "MIDI", nullptr);
     }
     else
@@ -133,7 +133,7 @@ juce::ValueTree EditInputDevices::getInstanceStateForInputDevice (const InputDev
 void EditInputDevices::removeNonExistantInputDeviceStates()
 {
     auto& dm = edit.engine.getDeviceManager();
-    Array<InputDevice*> devices;
+    juce::Array<InputDevice*> devices;
     devices.addArray (dm.midiInputs);
     devices.addArray (dm.waveInputs);
 
@@ -204,7 +204,7 @@ InputDevice* EditInputDevices::getTrackDeviceForState (const juce::ValueTree& v)
     return {};
 }
 
-void EditInputDevices::changeListenerCallback (ChangeBroadcaster*)
+void EditInputDevices::changeListenerCallback (juce::ChangeBroadcaster*)
 {
     removeNonExistantInputDeviceStates();
 }

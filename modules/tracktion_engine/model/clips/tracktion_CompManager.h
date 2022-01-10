@@ -29,7 +29,7 @@ public:
     virtual void initialise();
 
     //==============================================================================
-    virtual juce::int64 getBaseTakeHash (int takeIndex) const = 0;
+    virtual HashCode getBaseTakeHash (int takeIndex) const = 0;
     virtual double getTakeLength (int takeIndex) const = 0;
     virtual double getOffset() const = 0;
     virtual double getLoopLength() const = 0;
@@ -133,7 +133,7 @@ public:
     /** Returns a hash code representing a take. This can be used to check if a comp has changed
         since it was last generated.
     */
-    juce::int64 getTakeHash (int takeIndex) const;
+    HashCode getTakeHash (int takeIndex) const;
 
     //==============================================================================
     /** Changes the index of the active comp's section at a given time.
@@ -183,7 +183,7 @@ public:
 protected:
     juce::ValueTree takesTree;
     int lastRenderedTake = -1;
-    juce::int64 lastHash = 0;
+    HashCode lastHash = 0;
     double maxCompLength, effectiveTimeMultiplier;
     double lastOffset = 1.0, lastTimeRatio = 1.0;
 
@@ -257,7 +257,7 @@ public:
     juce::File getCurrentCompFile() const;
 
     //==============================================================================
-    juce::int64 getBaseTakeHash (int takeIndex) const override    { return getProjectItemIDForTake (takeIndex).getItemID(); }
+    HashCode getBaseTakeHash (int takeIndex) const override    { return getProjectItemIDForTake (takeIndex).getItemID(); }
     double getTakeLength (int takeIndex) const override;
     double getOffset() const override;
     double getLoopLength() const override;
@@ -325,7 +325,7 @@ public:
     MidiList* getSequenceLooped (int index);
 
     //==============================================================================
-    juce::int64 getBaseTakeHash (int takeIndex) const override;
+    HashCode getBaseTakeHash (int takeIndex) const override;
     double getTakeLength (int takeIndex) const override;
     double getOffset() const override                       { return 0.0; }
     double getLoopLength() const override                   { return getTakeLength (0); }

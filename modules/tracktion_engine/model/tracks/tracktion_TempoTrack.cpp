@@ -11,7 +11,7 @@
 namespace tracktion_engine
 {
 
-TempoTrack::TempoTrack (Edit& e, const ValueTree& v)
+TempoTrack::TempoTrack (Edit& e, const juce::ValueTree& v)
     : Track (e, v, 40, 13, 200)
 {
 }
@@ -21,10 +21,10 @@ TempoTrack::~TempoTrack()
     notifyListenersOfDeletion();
 }
 
-bool TempoTrack::isTempoTrack() const               { return true; }
-juce::String TempoTrack::getName()                  { return TRANS ("Tempo"); }
-String TempoTrack::getSelectableDescription()       { return TRANS("Global Track"); }
-bool TempoTrack::canContainPlugin (Plugin*) const   { return false; }
+bool TempoTrack::isTempoTrack() const                  { return true; }
+juce::String TempoTrack::getName()                     { return TRANS ("Tempo"); }
+juce::String TempoTrack::getSelectableDescription()    { return TRANS("Global Track"); }
+bool TempoTrack::canContainPlugin (Plugin*) const      { return false; }
 
 int TempoTrack::getNumTrackItems() const
 {

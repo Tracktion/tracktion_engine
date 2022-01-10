@@ -134,6 +134,15 @@
  #define TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE 0
 #endif
 
+/** Config: TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE_IPP
+    Elastique can use IPP for increased performance on Windows.
+    Enable this to automatically include the libraries. Disable if you aren't using the IPP
+    version or you manually include IPP yourself.
+*/
+#ifndef TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE_IPP
+ #define TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE_IPP TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE
+#endif
+
 /** Config: TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND
     Enables time-stretching with the RubberBand library.
     You must have RubberBand in your search path if you enable this.
@@ -184,6 +193,14 @@
 */
 #ifndef TRACKTION_UNIT_TESTS
  #define TRACKTION_UNIT_TESTS 0
+#endif
+
+/** Config: TRACKTION_BENCHMARKS
+    Enables Tracktion benchmarks.
+    If enabled, these will be added the UnitTestRunners under the "tracktion_benchmarks" category.
+*/
+#ifndef TRACKTION_BENCHMARKS
+ #define TRACKTION_BENCHMARKS 0
 #endif
 
 /** Config: TRACKTION_CHECK_FOR_SLOW_RENDERING
