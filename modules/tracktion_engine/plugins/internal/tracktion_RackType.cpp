@@ -481,43 +481,47 @@ bool RackType::isPluginAllowed (const Plugin::Ptr& p)
     return p != nullptr && p->canBeAddedToRack();
 }
 
-void RackType::addPlugin (const Plugin::Ptr& p, juce::Point<float> pos, bool canAutoConnect)
+bool RackType::addPlugin (const Plugin::Ptr& p, juce::Point<float> pos, bool canAutoConnect)
 {
-    if (isPluginAllowed (p))
+    if (! isPluginAllowed (p))
+        return false;
+
+    if (! getPlugins().contains (p.get()))
     {
-        if (! getPlugins().contains (p.get()))
+        edit.getTransport().stopIfRecording();
+
+        bool autoConnect = canAutoConnect && pluginList->objects.isEmpty();
+
+        p->removeFromParent();
+
+        auto v = createValueTree (IDs::PLUGININSTANCE,
+                                  IDs::x, juce::jlimit (0.0f, 1.0f, pos.x),
+                                  IDs::y, juce::jlimit (0.0f, 1.0f, pos.y));
+        v.addChild (p->state, -1, getUndoManager());
+
+        state.addChild (v, -1, getUndoManager());
+
+        if (autoConnect)
         {
-            edit.getTransport().stopIfRecording();
+            juce::StringArray ins, outs;
+            p->getChannelNames (&ins, &outs);
 
-            bool autoConnect = canAutoConnect && pluginList->objects.isEmpty();
+            while (outs.size() > getOutputNames().size() - 1)
+                if (addOutput (getOutputNames().size(), TRANS("Output") + " " + juce::String (getOutputNames().size())) == -1)
+                    break;
 
-            p->removeFromParent();
+            for (int i = 0; i < ins.size(); ++i)   addConnection ({}, i + 1, p->itemID, i + 1);
+            for (int i = 0; i < outs.size(); ++i)  addConnection (p->itemID, i + 1, {}, i + 1);
 
-            auto v = createValueTree (IDs::PLUGININSTANCE,
-                                      IDs::x, juce::jlimit (0.0f, 1.0f, pos.x),
-                                      IDs::y, juce::jlimit (0.0f, 1.0f, pos.y));
-            v.addChild (p->state, -1, getUndoManager());
-
-            state.addChild (v, -1, getUndoManager());
-
-            if (autoConnect)
-            {
-                juce::StringArray ins, outs;
-                p->getChannelNames (&ins, &outs);
-
-                while (outs.size() > getOutputNames().size() - 1)
-                    if (addOutput (getOutputNames().size(), TRANS("Output") + " " + juce::String (getOutputNames().size())) == -1)
-                        break;
-
-                for (int i = 0; i < ins.size(); ++i)   addConnection ({}, i + 1, p->itemID, i + 1);
-                for (int i = 0; i < outs.size(); ++i)  addConnection (p->itemID, i + 1, {}, i + 1);
-
-                // midi connections
-                addConnection ({}, 0, p->itemID, 0);
-                addConnection (p->itemID, 0, {}, 0);
-            }
+            // midi connections
+            addConnection ({}, 0, p->itemID, 0);
+            addConnection (p->itemID, 0, {}, 0);
         }
+
+        return true;
     }
+
+    return false;
 }
 
 juce::Point<float> RackType::getPluginPosition (const Plugin::Ptr& p) const
