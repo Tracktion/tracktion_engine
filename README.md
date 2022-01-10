@@ -38,7 +38,7 @@ $ ./generate_examples
 Once the example projects have been generated or built you can find them in `examples/example_name/build`.
 Start with the `PitchAndTimeDemo` or `StepSequencerDemo` to see some basic apps in action.
 
-*If you want to build the Projucer app from JUCE you can load each of the PIP examples directly to generate the IDE files.*
+*If you want to build the Projucer app from JUCE you can load each of the PIP examples directly to generate the IDE files. You'll have to manually specify C++17 as the C++ standard however as this isn't currently possible via the PIP format.*
 
 ## Tutorials
 Once you're ready to dive in to the code, open the IDE files and have a read through the tutorials in `/tutorials`. You can view these on GitHub [here](/tutorials) to see the rendered Markdown.
