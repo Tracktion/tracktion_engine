@@ -118,8 +118,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac75b3ff51289452c04f276806a7d78ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a66245c6f0469186eacc952913d2acdd4"><td class="memItemLeft" align="right" valign="top">juce::Array&lt; <a class="el" href="classtracktion__engine_1_1Plugin.html">Plugin</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1RackType.html#a66245c6f0469186eacc952913d2acdd4">getPlugins</a> () const</td></tr>
 <tr class="separator:a66245c6f0469186eacc952913d2acdd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab27f838180cb9a8dc3e7e9ffe8ea99f9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1RackType.html#ab27f838180cb9a8dc3e7e9ffe8ea99f9">addPlugin</a> (const <a class="el" href="classtracktion__engine_1_1Plugin.html#a97f7d1afcf0045b5f21a027d58b0c072">Plugin::Ptr</a> &amp;, juce::Point&lt; float &gt; pos, bool canAutoConnect)</td></tr>
-<tr class="separator:ab27f838180cb9a8dc3e7e9ffe8ea99f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e00c340ec37c1e49ff2b4efd53b5ee9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1RackType.html#a4e00c340ec37c1e49ff2b4efd53b5ee9">addPlugin</a> (const <a class="el" href="classtracktion__engine_1_1Plugin.html#a97f7d1afcf0045b5f21a027d58b0c072">Plugin::Ptr</a> &amp;, juce::Point&lt; float &gt; pos, bool canAutoConnect)</td></tr>
+<tr class="memdesc:a4e00c340ec37c1e49ff2b4efd53b5ee9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a plugin to the Rack optionally connecting it to the input and outputs.  <a href="classtracktion__engine_1_1RackType.html#a4e00c340ec37c1e49ff2b4efd53b5ee9">More...</a><br /></td></tr>
+<tr class="separator:a4e00c340ec37c1e49ff2b4efd53b5ee9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad760093af1d4b120d85e9a2d770f2208"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1Plugin.html">Plugin</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1RackType.html#ad760093af1d4b120d85e9a2d770f2208">getPluginForID</a> (<a class="el" href="structtracktion__engine_1_1EditItemID.html">EditItemID</a>)</td></tr>
 <tr class="separator:ad760093af1d4b120d85e9a2d770f2208"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6abb11c131c2c2c8fe1281e617d4f641"><td class="memItemLeft" align="right" valign="top">juce::Point&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1RackType.html#a6abb11c131c2c2c8fe1281e617d4f641">getPluginPosition</a> (const <a class="el" href="classtracktion__engine_1_1Plugin.html#a97f7d1afcf0045b5f21a027d58b0c072">Plugin::Ptr</a> &amp;) const</td></tr>
@@ -550,14 +551,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ab27f838180cb9a8dc3e7e9ffe8ea99f9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab27f838180cb9a8dc3e7e9ffe8ea99f9">&#9670;&nbsp;</a></span>addPlugin()</h2>
+<a id="a4e00c340ec37c1e49ff2b4efd53b5ee9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4e00c340ec37c1e49ff2b4efd53b5ee9">&#9670;&nbsp;</a></span>addPlugin()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void tracktion_engine::RackType::addPlugin </td>
+          <td class="memname">bool tracktion_engine::RackType::addPlugin </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classtracktion__engine_1_1Plugin.html#a97f7d1afcf0045b5f21a027d58b0c072">Plugin::Ptr</a> &amp;&#160;</td>
           <td class="paramname">, </td>
@@ -581,6 +582,9 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Adds a plugin to the Rack optionally connecting it to the input and outputs. </p>
+<dl class="section return"><dt>Returns</dt><dd>true if the plugin was added, false otherwise </dd></dl>
 
 </div>
 </div>
@@ -1408,7 +1412,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jan 10 2022 13:24:25 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jan 10 2022 13:36:29 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

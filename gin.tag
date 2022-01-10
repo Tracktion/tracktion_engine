@@ -56015,10 +56015,10 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
-      <type>void</type>
+      <type>bool</type>
       <name>addPlugin</name>
       <anchorfile>classtracktion__engine_1_1RackType.html</anchorfile>
-      <anchor>ab27f838180cb9a8dc3e7e9ffe8ea99f9</anchor>
+      <anchor>a4e00c340ec37c1e49ff2b4efd53b5ee9</anchor>
       <arglist>(const Plugin::Ptr &amp;, juce::Point&lt; float &gt; pos, bool canAutoConnect)</arglist>
     </member>
     <member kind="function">
