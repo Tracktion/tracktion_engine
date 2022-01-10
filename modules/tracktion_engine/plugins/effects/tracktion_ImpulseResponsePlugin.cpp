@@ -20,13 +20,13 @@ ImpulseResponsePlugin::ImpulseResponsePlugin (PluginCreationInfo info)
 
     name.referTo (state, IDs::name, um);
     
-    const juce::NormalisableRange frequencyRange { frequencyToMidiNote (2.0f),
-                                                   frequencyToMidiNote (20'000.0f) };
+    const NormalisableRange frequencyRange { frequencyToMidiNote (10.0f), frequencyToMidiNote (20'000.0f) };
 
     highPassCutoffValue.referTo (state, IDs::highPassFrequency, um, frequencyRange.start);
     lowPassCutoffValue.referTo (state, IDs::lowPassFrequency, um, frequencyRange.end);
     gainValue.referTo (state, IDs::gain, um, 0.0f);
     mixValue.referTo (state, IDs::mix, um, 1.0f);
+    qValue.referTo (state, IDs::filterSlope, um, 1.0f / juce::MathConstants<float>::sqrt2);
 
     normalise.referTo (state, IDs::normalise, um, true);
     trimSilence.referTo (state, IDs::trimSilence, um, false);
@@ -55,6 +55,11 @@ ImpulseResponsePlugin::ImpulseResponsePlugin (PluginCreationInfo info)
                          [] (const juce::String& s)   { return s.getFloatValue() / 100.0f; });
     mixParam->attachToCurrentValue (mixValue);
 
+    filterQParam = addParam (IDs::filterQ.toString(), TRANS("Filter Q"), { 0.1f, 14.0f, 0.0f },
+                             [] (float value)       { return String (value); },
+                             [] (const String& s)   { return s.getFloatValue(); });
+    filterQParam->attachToCurrentValue (qValue);
+
     loadImpulseResponseFromState();
 }
 
@@ -65,6 +70,7 @@ ImpulseResponsePlugin::~ImpulseResponsePlugin()
     highPassCutoffParam->detachFromCurrentValue();
     lowPassCutoffParam->detachFromCurrentValue();
     mixParam->detachFromCurrentValue();
+    filterQParam->detachFromCurrentValue();
 }
 
 const char* ImpulseResponsePlugin::getPluginName() { return NEEDS_TRANS ("Impulse Response"); }
@@ -146,6 +152,7 @@ void ImpulseResponsePlugin::initialise (const PluginInitialisationInfo& info)
     lowFreqSmoother.setTargetValue (midiNoteToFrequency (lowPassCutoffParam->getCurrentValue()));
     highFreqSmoother.setTargetValue (midiNoteToFrequency (highPassCutoffParam->getCurrentValue()));
     gainSmoother.setTargetValue (gainParam->getCurrentValue());
+    qSmoother.setTargetValue (filterQParam->getCurrentValue());
 
     const auto wetDry = getWetDryLevels (mixParam->getCurrentValue());
     wetGainSmoother.setTargetValue (wetDry.wet);
@@ -155,6 +162,7 @@ void ImpulseResponsePlugin::initialise (const PluginInitialisationInfo& info)
     lowFreqSmoother.reset (info.sampleRate, smoothTime);
     highFreqSmoother.reset (info.sampleRate, smoothTime);
     gainSmoother.reset (info.sampleRate, smoothTime);
+    qSmoother.reset (info.sampleRate, smoothTime);
     wetGainSmoother.reset (info.sampleRate, smoothTime);
     dryGainSmoother.reset (info.sampleRate, smoothTime);
 }
@@ -173,6 +181,7 @@ void ImpulseResponsePlugin::applyToBuffer (const PluginRenderContext& fc)
     lowFreqSmoother.setTargetValue (midiNoteToFrequency (lowPassCutoffParam->getCurrentValue()));
     highFreqSmoother.setTargetValue (midiNoteToFrequency (highPassCutoffParam->getCurrentValue()));
     gainSmoother.setTargetValue (gainParam->getCurrentValue());
+    qSmoother.setTargetValue (filterQParam->getCurrentValue());
 
     const auto wetDryGain = getWetDryLevels (mixParam->getCurrentValue());
     wetGainSmoother.setTargetValue (wetDryGain.wet);
@@ -185,7 +194,7 @@ void ImpulseResponsePlugin::applyToBuffer (const PluginRenderContext& fc)
     
     AudioScratchBuffer dryBuffer (*fc.destBuffer);
     
-    if (gainSmoother.isSmoothing() || lowFreqSmoother.isSmoothing() || highFreqSmoother.isSmoothing())
+    if (gainSmoother.isSmoothing() || lowFreqSmoother.isSmoothing() || highFreqSmoother.isSmoothing() || qSmoother.isSmoothing())
     {
         const int blockSize = 32;
         int numSamplesLeft = fc.bufferNumSamples;
@@ -202,8 +211,9 @@ void ImpulseResponsePlugin::applyToBuffer (const PluginRenderContext& fc)
             processorChain.process (context);
 
             // Update params
-            *hpf = juce::dsp::IIR::ArrayCoefficients<float>::makeHighPass (sampleRate, highFreqSmoother.skip (numThisTime));
-            *lpf = juce::dsp::IIR::ArrayCoefficients<float>::makeLowPass (sampleRate, lowFreqSmoother.skip (numThisTime));
+            const auto qFactor = qSmoother.skip (numThisTime);
+            *hpf = dsp::IIR::ArrayCoefficients<float>::makeHighPass (sampleRate, highFreqSmoother.skip (numThisTime), qFactor);
+            *lpf = dsp::IIR::ArrayCoefficients<float>::makeLowPass (sampleRate, lowFreqSmoother.skip (numThisTime), qFactor);
             gain.setGainLinear (juce::Decibels::decibelsToGain (gainSmoother.skip (numThisTime)));
 
             numSamplesDone += numThisTime;
@@ -216,8 +226,9 @@ void ImpulseResponsePlugin::applyToBuffer (const PluginRenderContext& fc)
     else
     {
         // Update params
-        *hpf = juce::dsp::IIR::ArrayCoefficients<float>::makeHighPass (sampleRate, highFreqSmoother.getCurrentValue());
-        *lpf = juce::dsp::IIR::ArrayCoefficients<float>::makeLowPass (sampleRate, lowFreqSmoother.getCurrentValue());
+        const auto qFactor = qSmoother.getCurrentValue();
+        *hpf = dsp::IIR::ArrayCoefficients<float>::makeHighPass (sampleRate, highFreqSmoother.getCurrentValue(), qFactor);
+        *lpf = dsp::IIR::ArrayCoefficients<float>::makeLowPass (sampleRate, lowFreqSmoother.getCurrentValue(), qFactor);
         gain.setGainLinear (juce::Decibels::decibelsToGain (gainSmoother.getCurrentValue()));
 
         juce::dsp::AudioBlock<float> inOutBlock (*fc.destBuffer);
@@ -242,7 +253,7 @@ void ImpulseResponsePlugin::applyToBuffer (const PluginRenderContext& fc)
 
 void ImpulseResponsePlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    juce::CachedValue<float>* cvsFloat[] = { &gainValue, &highPassCutoffValue, &lowPassCutoffValue, &mixValue, nullptr };
+    CachedValue<float>* cvsFloat[] = { &gainValue, &highPassCutoffValue, &lowPassCutoffValue, &mixValue, &qValue, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
 
     state.setProperty (IDs::name, v[IDs::name], getUndoManager());

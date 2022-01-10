@@ -59,6 +59,7 @@ public:
     AutomatableParameter::Ptr lowPassCutoffParam;   /**< Cutoff frequency for the low pass filter to applied after the IR */
     AutomatableParameter::Ptr gainParam;            /**< Parameter for the gain to apply */
     AutomatableParameter::Ptr mixParam;             /**< Parameter for the mix control, 0.0 = dry, 1.0 = wet */
+    AutomatableParameter::Ptr filterQParam;         /**< Parameter for the Q factor of the high pass and low pass filters */
 
     //==============================================================================
     /** @internal */
@@ -92,17 +93,18 @@ private:
         convolutionIndex,
         HPFIndex,
         LPFIndex,
-        gainIndex
+        gainIndex,
     };
 
     juce::CachedValue<float> gainValue, mixValue;
     juce::CachedValue<float> highPassCutoffValue, lowPassCutoffValue;
+    juce::CachedValue<float> qValue;
 
     juce::dsp::ProcessorChain<juce::dsp::Convolution,
                               juce::dsp::ProcessorDuplicator<juce::dsp::IIR::Filter<float>, juce::dsp::IIR::Coefficients<float>>,
                               juce::dsp::ProcessorDuplicator<juce::dsp::IIR::Filter<float>, juce::dsp::IIR::Coefficients<float>>,
                               juce::dsp::Gain<float>> processorChain;
-    juce::SmoothedValue<float> highFreqSmoother, lowFreqSmoother, gainSmoother, wetGainSmoother, dryGainSmoother;
+    juce::SmoothedValue<float> highFreqSmoother, lowFreqSmoother, gainSmoother, wetGainSmoother, dryGainSmoother, qSmoother;
 
     struct WetDryGain { float wet, dry; };    
     static WetDryGain getWetDryLevels (float mix)

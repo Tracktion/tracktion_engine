@@ -588,6 +588,7 @@ namespace IDs
     DECLARE_ID (filterVelocity)
     DECLARE_ID (filterType)
     DECLARE_ID (filterSlope)
+    DECLARE_ID (filterQ)
     DECLARE_ID (waveShape)
     DECLARE_ID (tune)
     DECLARE_ID (fineTune)
