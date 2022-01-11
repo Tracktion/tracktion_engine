@@ -8,6 +8,10 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#ifndef TRACKTION_FORCE_HEADLESS
+  #define TRACKTION_FORCE_HEADLESS 0
+#endif
+
 namespace tracktion_engine
 {
 
@@ -1407,7 +1411,9 @@ bool TransportControl::performRecord()
                     edit.setClickTrackRange ({});
                 
                 transportState->playing = true; // N.B. set these after the devices have been rebuilt and the playingFlag has been set
+#if !TRACKTION_FORCE_HEADLESS
                 screenSaverDefeater = std::make_unique<ScreenSaverDefeater>();
+#endif
             }
         }
         else
