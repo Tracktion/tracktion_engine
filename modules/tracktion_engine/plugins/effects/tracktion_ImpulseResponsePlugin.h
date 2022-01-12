@@ -86,6 +86,10 @@ public:
     /** @internal */
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
 
+    juce::CachedValue<float> gainValue, mixValue;
+    juce::CachedValue<float> highPassCutoffValue, lowPassCutoffValue;
+    juce::CachedValue<float> qValue;
+
 private:
     //==============================================================================
     enum
@@ -95,10 +99,6 @@ private:
         LPFIndex,
         gainIndex,
     };
-
-    juce::CachedValue<float> gainValue, mixValue;
-    juce::CachedValue<float> highPassCutoffValue, lowPassCutoffValue;
-    juce::CachedValue<float> qValue;
 
     juce::dsp::ProcessorChain<juce::dsp::Convolution,
                               juce::dsp::ProcessorDuplicator<juce::dsp::IIR::Filter<float>, juce::dsp::IIR::Coefficients<float>>,

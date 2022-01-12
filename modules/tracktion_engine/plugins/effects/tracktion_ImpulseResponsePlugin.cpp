@@ -20,7 +20,7 @@ ImpulseResponsePlugin::ImpulseResponsePlugin (PluginCreationInfo info)
 
     name.referTo (state, IDs::name, um);
     
-    const NormalisableRange frequencyRange { frequencyToMidiNote (10.0f), frequencyToMidiNote (20'000.0f) };
+    const juce::NormalisableRange frequencyRange { frequencyToMidiNote (10.0f), frequencyToMidiNote (20'000.0f) };
 
     highPassCutoffValue.referTo (state, IDs::highPassFrequency, um, frequencyRange.start);
     lowPassCutoffValue.referTo (state, IDs::lowPassFrequency, um, frequencyRange.end);
@@ -56,8 +56,8 @@ ImpulseResponsePlugin::ImpulseResponsePlugin (PluginCreationInfo info)
     mixParam->attachToCurrentValue (mixValue);
 
     filterQParam = addParam (IDs::filterQ.toString(), TRANS("Filter Q"), { 0.1f, 14.0f, 0.0f },
-                             [] (float value)       { return String (value); },
-                             [] (const String& s)   { return s.getFloatValue(); });
+                             [] (float value)       { return juce::String (value); },
+                             [] (const juce::String& s)   { return s.getFloatValue(); });
     filterQParam->attachToCurrentValue (qValue);
 
     loadImpulseResponseFromState();
@@ -212,8 +212,8 @@ void ImpulseResponsePlugin::applyToBuffer (const PluginRenderContext& fc)
 
             // Update params
             const auto qFactor = qSmoother.skip (numThisTime);
-            *hpf = dsp::IIR::ArrayCoefficients<float>::makeHighPass (sampleRate, highFreqSmoother.skip (numThisTime), qFactor);
-            *lpf = dsp::IIR::ArrayCoefficients<float>::makeLowPass (sampleRate, lowFreqSmoother.skip (numThisTime), qFactor);
+            *hpf = juce::dsp::IIR::ArrayCoefficients<float>::makeHighPass (sampleRate, highFreqSmoother.skip (numThisTime), qFactor);
+            *lpf = juce::dsp::IIR::ArrayCoefficients<float>::makeLowPass (sampleRate, lowFreqSmoother.skip (numThisTime), qFactor);
             gain.setGainLinear (juce::Decibels::decibelsToGain (gainSmoother.skip (numThisTime)));
 
             numSamplesDone += numThisTime;
@@ -227,8 +227,8 @@ void ImpulseResponsePlugin::applyToBuffer (const PluginRenderContext& fc)
     {
         // Update params
         const auto qFactor = qSmoother.getCurrentValue();
-        *hpf = dsp::IIR::ArrayCoefficients<float>::makeHighPass (sampleRate, highFreqSmoother.getCurrentValue(), qFactor);
-        *lpf = dsp::IIR::ArrayCoefficients<float>::makeLowPass (sampleRate, lowFreqSmoother.getCurrentValue(), qFactor);
+        *hpf = juce::dsp::IIR::ArrayCoefficients<float>::makeHighPass (sampleRate, highFreqSmoother.getCurrentValue(), qFactor);
+        *lpf = juce::dsp::IIR::ArrayCoefficients<float>::makeLowPass (sampleRate, lowFreqSmoother.getCurrentValue(), qFactor);
         gain.setGainLinear (juce::Decibels::decibelsToGain (gainSmoother.getCurrentValue()));
 
         juce::dsp::AudioBlock<float> inOutBlock (*fc.destBuffer);
@@ -253,7 +253,7 @@ void ImpulseResponsePlugin::applyToBuffer (const PluginRenderContext& fc)
 
 void ImpulseResponsePlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    CachedValue<float>* cvsFloat[] = { &gainValue, &highPassCutoffValue, &lowPassCutoffValue, &mixValue, &qValue, nullptr };
+    juce::CachedValue<float>* cvsFloat[] = { &gainValue, &highPassCutoffValue, &lowPassCutoffValue, &mixValue, &qValue, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
 
     state.setProperty (IDs::name, v[IDs::name], getUndoManager());
