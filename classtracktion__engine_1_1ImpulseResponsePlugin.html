@@ -432,6 +432,19 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:aee6a1b53d206b35a1dabc2434c999ed1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1AutomatableParameter.html#af267e7c7e64bcb7412778976ab54a65e">AutomatableParameter::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ImpulseResponsePlugin.html#aee6a1b53d206b35a1dabc2434c999ed1">mixParam</a></td></tr>
 <tr class="memdesc:aee6a1b53d206b35a1dabc2434c999ed1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameter for the mix control, 0.0 = dry, 1.0 = wet.  <a href="classtracktion__engine_1_1ImpulseResponsePlugin.html#aee6a1b53d206b35a1dabc2434c999ed1">More...</a><br /></td></tr>
 <tr class="separator:aee6a1b53d206b35a1dabc2434c999ed1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94755018922148cbb62ffbe1143106bc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1AutomatableParameter.html#af267e7c7e64bcb7412778976ab54a65e">AutomatableParameter::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ImpulseResponsePlugin.html#a94755018922148cbb62ffbe1143106bc">filterQParam</a></td></tr>
+<tr class="memdesc:a94755018922148cbb62ffbe1143106bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameter for the Q factor of the high pass and low pass filters.  <a href="classtracktion__engine_1_1ImpulseResponsePlugin.html#a94755018922148cbb62ffbe1143106bc">More...</a><br /></td></tr>
+<tr class="separator:a94755018922148cbb62ffbe1143106bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0c99fb2f51add4106ff7cdba703d577"><td class="memItemLeft" align="right" valign="top">juce::CachedValue&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ImpulseResponsePlugin.html#ab0c99fb2f51add4106ff7cdba703d577">gainValue</a></td></tr>
+<tr class="separator:ab0c99fb2f51add4106ff7cdba703d577"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab94cd15406fb15f4a0359f04a3bfaa26"><td class="memItemLeft" align="right" valign="top">juce::CachedValue&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ImpulseResponsePlugin.html#ab94cd15406fb15f4a0359f04a3bfaa26">mixValue</a></td></tr>
+<tr class="separator:ab94cd15406fb15f4a0359f04a3bfaa26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a11781a66dc4c7fb2f0aa80a0ae5f2eb6"><td class="memItemLeft" align="right" valign="top">juce::CachedValue&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ImpulseResponsePlugin.html#a11781a66dc4c7fb2f0aa80a0ae5f2eb6">highPassCutoffValue</a></td></tr>
+<tr class="separator:a11781a66dc4c7fb2f0aa80a0ae5f2eb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a170cbd63b8af51ed23f8a96338fa6704"><td class="memItemLeft" align="right" valign="top">juce::CachedValue&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ImpulseResponsePlugin.html#a170cbd63b8af51ed23f8a96338fa6704">lowPassCutoffValue</a></td></tr>
+<tr class="separator:a170cbd63b8af51ed23f8a96338fa6704"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a21c78cc5a2fd81ee4c5e1899297f7938"><td class="memItemLeft" align="right" valign="top">juce::CachedValue&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ImpulseResponsePlugin.html#a21c78cc5a2fd81ee4c5e1899297f7938">qValue</a></td></tr>
+<tr class="separator:a21c78cc5a2fd81ee4c5e1899297f7938"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_classtracktion__engine_1_1Plugin"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classtracktion__engine_1_1Plugin')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classtracktion__engine_1_1Plugin.html">tracktion_engine::Plugin</a></td></tr>
 <tr class="memitem:aead28aeeb44c200b4b153ed589cfd86e inherit pub_attribs_classtracktion__engine_1_1Plugin"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="structtracktion__engine_1_1Plugin_1_1WindowState.html">WindowState</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Plugin.html#aead28aeeb44c200b4b153ed589cfd86e">windowState</a></td></tr>
 <tr class="separator:aead28aeeb44c200b4b153ed589cfd86e inherit pub_attribs_classtracktion__engine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1153,13 +1166,99 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a94755018922148cbb62ffbe1143106bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a94755018922148cbb62ffbe1143106bc">&#9670;&nbsp;</a></span>filterQParam</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtracktion__engine_1_1AutomatableParameter.html#af267e7c7e64bcb7412778976ab54a65e">AutomatableParameter::Ptr</a> tracktion_engine::ImpulseResponsePlugin::filterQParam</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Parameter for the Q factor of the high pass and low pass filters. </p>
+
+</div>
+</div>
+<a id="ab0c99fb2f51add4106ff7cdba703d577"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab0c99fb2f51add4106ff7cdba703d577">&#9670;&nbsp;</a></span>gainValue</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::CachedValue&lt;float&gt; tracktion_engine::ImpulseResponsePlugin::gainValue</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab94cd15406fb15f4a0359f04a3bfaa26"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab94cd15406fb15f4a0359f04a3bfaa26">&#9670;&nbsp;</a></span>mixValue</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::CachedValue&lt;float&gt; tracktion_engine::ImpulseResponsePlugin::mixValue</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a11781a66dc4c7fb2f0aa80a0ae5f2eb6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a11781a66dc4c7fb2f0aa80a0ae5f2eb6">&#9670;&nbsp;</a></span>highPassCutoffValue</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::CachedValue&lt;float&gt; tracktion_engine::ImpulseResponsePlugin::highPassCutoffValue</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a170cbd63b8af51ed23f8a96338fa6704"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a170cbd63b8af51ed23f8a96338fa6704">&#9670;&nbsp;</a></span>lowPassCutoffValue</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::CachedValue&lt;float&gt; tracktion_engine::ImpulseResponsePlugin::lowPassCutoffValue</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a21c78cc5a2fd81ee4c5e1899297f7938"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a21c78cc5a2fd81ee4c5e1899297f7938">&#9670;&nbsp;</a></span>qValue</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::CachedValue&lt;float&gt; tracktion_engine::ImpulseResponsePlugin::qValue</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="tracktion__ImpulseResponsePlugin_8h.html">tracktion_ImpulseResponsePlugin.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jan 10 2022 13:36:29 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jan 12 2022 21:44:57 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

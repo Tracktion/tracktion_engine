@@ -34495,6 +34495,48 @@
       <anchor>aee6a1b53d206b35a1dabc2434c999ed1</anchor>
       <arglist></arglist>
     </member>
+    <member kind="variable">
+      <type>AutomatableParameter::Ptr</type>
+      <name>filterQParam</name>
+      <anchorfile>classtracktion__engine_1_1ImpulseResponsePlugin.html</anchorfile>
+      <anchor>a94755018922148cbb62ffbe1143106bc</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::CachedValue&lt; float &gt;</type>
+      <name>gainValue</name>
+      <anchorfile>classtracktion__engine_1_1ImpulseResponsePlugin.html</anchorfile>
+      <anchor>ab0c99fb2f51add4106ff7cdba703d577</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::CachedValue&lt; float &gt;</type>
+      <name>mixValue</name>
+      <anchorfile>classtracktion__engine_1_1ImpulseResponsePlugin.html</anchorfile>
+      <anchor>ab94cd15406fb15f4a0359f04a3bfaa26</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::CachedValue&lt; float &gt;</type>
+      <name>highPassCutoffValue</name>
+      <anchorfile>classtracktion__engine_1_1ImpulseResponsePlugin.html</anchorfile>
+      <anchor>a11781a66dc4c7fb2f0aa80a0ae5f2eb6</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::CachedValue&lt; float &gt;</type>
+      <name>lowPassCutoffValue</name>
+      <anchorfile>classtracktion__engine_1_1ImpulseResponsePlugin.html</anchorfile>
+      <anchor>a170cbd63b8af51ed23f8a96338fa6704</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::CachedValue&lt; float &gt;</type>
+      <name>qValue</name>
+      <anchorfile>classtracktion__engine_1_1ImpulseResponsePlugin.html</anchorfile>
+      <anchor>a21c78cc5a2fd81ee4c5e1899297f7938</anchor>
+      <arglist></arglist>
+    </member>
     <member kind="variable" static="yes">
       <type>static const char *</type>
       <name>xmlTypeName</name>
@@ -80813,11 +80855,6 @@
     <subgroup>tracktion_engine-utilities</subgroup>
   </compound>
   <compound kind="group">
-    <name>tracktion_graph-tracktion_graph</name>
-    <title>tracktion_graph</title>
-    <filename>group__tracktion__graph-tracktion__graph.html</filename>
-  </compound>
-  <compound kind="group">
     <name>tracktion_graph</name>
     <title>tracktion_graph</title>
     <filename>group__tracktion__graph.html</filename>
@@ -80918,13 +80955,18 @@
     </member>
   </compound>
   <compound kind="group">
-    <name>tracktion_engine-utilities</name>
-    <title>utilities</title>
-    <filename>group__tracktion__engine-utilities.html</filename>
+    <name>tracktion_graph-tracktion_graph</name>
+    <title>tracktion_graph</title>
+    <filename>group__tracktion__graph-tracktion__graph.html</filename>
   </compound>
   <compound kind="group">
     <name>tracktion_graph-utilities</name>
     <title>utilities</title>
     <filename>group__tracktion__graph-utilities.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>tracktion_engine-utilities</name>
+    <title>utilities</title>
+    <filename>group__tracktion__engine-utilities.html</filename>
   </compound>
 </tagfile>

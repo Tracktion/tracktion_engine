@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-10 13:50:57</td>
+            <td class="headerValue">2022-01-12 21:57:16</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
@@ -114,7 +114,7 @@
 <a name="52"><span class="lineNum">      52 </span>            : </a>
 <a name="53"><span class="lineNum">      53 </span>            :     tracktion_graph::Node* getNode()</a>
 <a name="54"><span class="lineNum">      54 </span>            :     {</a>
-<a name="55"><span class="lineNum">      55 </span><span class="lineCov">      89438 :         return nodePlayer.getNode();</span></a>
+<a name="55"><span class="lineNum">      55 </span><span class="lineCov">      90538 :         return nodePlayer.getNode();</span></a>
 <a name="56"><span class="lineNum">      56 </span>            :     }</a>
 <a name="57"><span class="lineNum">      57 </span>            : </a>
 <a name="58"><span class="lineNum">      58 </span>            :     void setNode (std::unique_ptr&lt;tracktion_graph::Node&gt; newNode)</a>
@@ -135,15 +135,15 @@
 <a name="73"><span class="lineNum">      73 </span>            :     /** Processes a block of audio and MIDI data.</a>
 <a name="74"><span class="lineNum">      74 </span>            :         Returns the number of times a node was checked but unable to be processed.</a>
 <a name="75"><span class="lineNum">      75 </span>            :     */</a>
-<a name="76"><span class="lineNum">      76 </span><span class="lineCov">     633743 :     int process (const tracktion_graph::Node::ProcessContext&amp; pc)</span></a>
+<a name="76"><span class="lineNum">      76 </span><span class="lineCov">     640049 :     int process (const tracktion_graph::Node::ProcessContext&amp; pc)</span></a>
 <a name="77"><span class="lineNum">      77 </span>            :     {</a>
 <a name="78"><span class="lineNum">      78 </span>            :         int numMisses = 0;</a>
-<a name="79"><span class="lineNum">      79 </span><span class="lineCov">     633743 :         playHeadState.playHead.setReferenceSampleRange (pc.referenceSampleRange);</span></a>
+<a name="79"><span class="lineNum">      79 </span><span class="lineCov">     640049 :         playHeadState.playHead.setReferenceSampleRange (pc.referenceSampleRange);</span></a>
 <a name="80"><span class="lineNum">      80 </span>            :         </a>
 <a name="81"><span class="lineNum">      81 </span>            :         // Check to see if the timeline needs to be processed in two halves due to looping</a>
-<a name="82"><span class="lineNum">      82 </span><span class="lineCov">     633743 :         const auto splitTimelineRange = referenceSampleRangeToSplitTimelineRange (playHeadState.playHead, pc.referenceSampleRange);</span></a>
+<a name="82"><span class="lineNum">      82 </span><span class="lineCov">     640049 :         const auto splitTimelineRange = referenceSampleRangeToSplitTimelineRange (playHeadState.playHead, pc.referenceSampleRange);</span></a>
 <a name="83"><span class="lineNum">      83 </span>            :         </a>
-<a name="84"><span class="lineNum">      84 </span><span class="lineCov">     633743 :         if (splitTimelineRange.isSplit)</span></a>
+<a name="84"><span class="lineNum">      84 </span><span class="lineCov">     640049 :         if (splitTimelineRange.isSplit)</span></a>
 <a name="85"><span class="lineNum">      85 </span>            :         {</a>
 <a name="86"><span class="lineNum">      86 </span><span class="lineCov">        910 :             const auto firstNumSamples = (choc::buffer::FrameCount) splitTimelineRange.timelineRange1.getLength();</span></a>
 <a name="87"><span class="lineNum">      87 </span><span class="lineCov">        910 :             const auto firstRange = pc.referenceSampleRange.withLength (firstNumSamples);</span></a>
@@ -175,11 +175,11 @@
 <a name="113"><span class="lineNum">     113 </span>            :         }</a>
 <a name="114"><span class="lineNum">     114 </span>            :         else</a>
 <a name="115"><span class="lineNum">     115 </span>            :         {</a>
-<a name="116"><span class="lineNum">     116 </span><span class="lineCov">     632833 :             processState.update (nodePlayer.getSampleRate(), pc.referenceSampleRange);</span></a>
-<a name="117"><span class="lineNum">     117 </span><span class="lineCov">     632833 :             numMisses += nodePlayer.process (pc);</span></a>
+<a name="116"><span class="lineNum">     116 </span><span class="lineCov">     639139 :             processState.update (nodePlayer.getSampleRate(), pc.referenceSampleRange);</span></a>
+<a name="117"><span class="lineNum">     117 </span><span class="lineCov">     639139 :             numMisses += nodePlayer.process (pc);</span></a>
 <a name="118"><span class="lineNum">     118 </span>            :         }</a>
 <a name="119"><span class="lineNum">     119 </span>            :         </a>
-<a name="120"><span class="lineNum">     120 </span><span class="lineCov">     633743 :         return numMisses;</span></a>
+<a name="120"><span class="lineNum">     120 </span><span class="lineCov">     640049 :         return numMisses;</span></a>
 <a name="121"><span class="lineNum">     121 </span>            :     }</a>
 <a name="122"><span class="lineNum">     122 </span>            :     </a>
 <a name="123"><span class="lineNum">     123 </span>            :     /** Clears the Node currently playing. */</a>
