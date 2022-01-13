@@ -66,8 +66,11 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classtracktion__engine_1_1MackieMCU-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">tracktion_engine::MackieMCU Class Reference</div>  </div>
@@ -76,10 +79,17 @@ $(function() {
 <div class="dynheader">
 Inheritance diagram for tracktion_engine::MackieMCU:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classtracktion__engine_1_1MackieMCU__inherit__graph.svg" width="228" height="202"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classtracktion__engine_1_1MackieMCU__inherit__graph.svg" width="228" height="276"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1MackieMCU_1_1AuxTimer.html">AuxTimer</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1MackieMCU_1_1CpuMeterTimer.html">CpuMeterTimer</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:a6327c439125be810ec833bb6d72a4b12"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a6327c439125be810ec833bb6d72a4b12">AssignmentMode</a> { <a class="el" href="classtracktion__engine_1_1MackieMCU.html#a6327c439125be810ec833bb6d72a4b12a3c104c9811d282bd3095a3c24752a455">PanMode</a> = 0, 
@@ -119,8 +129,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:adb3f97c7e964fefec81cf3cbb1ed8681"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7ebe7747d823332ef044ac9b33998d68"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a7ebe7747d823332ef044ac9b33998d68">acceptMidiMessage</a> (const juce::MidiMessage &amp;) override</td></tr>
 <tr class="separator:a7ebe7747d823332ef044ac9b33998d68"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab49d1f8c2f95db321a3c34f97a7c8e59"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#ab49d1f8c2f95db321a3c34f97a7c8e59">acceptMidiMessage</a> (int deviceIdx, const juce::MidiMessage &amp;)</td></tr>
-<tr class="separator:ab49d1f8c2f95db321a3c34f97a7c8e59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a717e38ddfd479254dbd369159bc51357"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a717e38ddfd479254dbd369159bc51357">acceptMidiMessage</a> (int <a class="el" href="classtracktion__engine_1_1MackieMCU.html#ade726c5d2d33bd67b3b2913fc14296f4">deviceIdx</a>, const juce::MidiMessage &amp;)</td></tr>
+<tr class="separator:a717e38ddfd479254dbd369159bc51357"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abfd5325a74ec0a78acd2a5729943e3e3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#abfd5325a74ec0a78acd2a5729943e3e3">flip</a> ()</td></tr>
 <tr class="separator:abfd5325a74ec0a78acd2a5729943e3e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aab8356a07e2c1ac3701e590742f43dd8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#aab8356a07e2c1ac3701e590742f43dd8">setAssignmentText</a> (const juce::String &amp;)</td></tr>
@@ -133,8 +143,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ad492af8b9f7ec819fefc2f32a33f80d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae1dd51221df8e09a96038aff80e43bd2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#ae1dd51221df8e09a96038aff80e43bd2">setSignalMetersEnabled</a> (int dev, bool)</td></tr>
 <tr class="separator:ae1dd51221df8e09a96038aff80e43bd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aac7588829d23ce894ae394e9674a6157"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#aac7588829d23ce894ae394e9674a6157">setAssignmentMode</a> (<a class="el" href="classtracktion__engine_1_1MackieMCU.html#a6327c439125be810ec833bb6d72a4b12">AssignmentMode</a>)</td></tr>
-<tr class="separator:aac7588829d23ce894ae394e9674a6157"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a512ab5092cabd11e486f0bf92459efd4"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a512ab5092cabd11e486f0bf92459efd4">setAssignmentMode</a> (<a class="el" href="classtracktion__engine_1_1MackieMCU.html#a6327c439125be810ec833bb6d72a4b12">AssignmentMode</a>)</td></tr>
+<tr class="separator:a512ab5092cabd11e486f0bf92459efd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e76387434c0fef88ac2df65e8a14940"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a8e76387434c0fef88ac2df65e8a14940">moveFaderInt</a> (int dev, int channelNum, float newSliderPos)</td></tr>
 <tr class="separator:a8e76387434c0fef88ac2df65e8a14940"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8f8f81e34da926baf24362c315a4a5f9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a8f8f81e34da926baf24362c315a4a5f9">moveFader</a> (int channelNum, float newSliderPos) override</td></tr>
@@ -356,6 +366,18 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:abca6197142f9d65e004e9e6911147ed3 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8553f0df247cdf766d0c301555a074c8 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a8553f0df247cdf766d0c301555a074c8">userToggledVideoWindow</a> ()</td></tr>
 <tr class="separator:a8553f0df247cdf766d0c301555a074c8 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abcd8741fde18ac5017dd741b6fb93d2c inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#abcd8741fde18ac5017dd741b6fb93d2c">userToggledMixerWindow</a> (bool fullscreen)</td></tr>
+<tr class="separator:abcd8741fde18ac5017dd741b6fb93d2c inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace88cdc59893229a8721e9a725e89a43 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#ace88cdc59893229a8721e9a725e89a43">userToggledMidiEditorWindow</a> (bool fullscreen)</td></tr>
+<tr class="separator:ace88cdc59893229a8721e9a725e89a43 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a428329e41edb961cad253d81eda3303d inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a428329e41edb961cad253d81eda3303d">userToggledTrackEditorWindow</a> ()</td></tr>
+<tr class="separator:a428329e41edb961cad253d81eda3303d inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a525af4badb94ae808c5ae88bcf693c28 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a525af4badb94ae808c5ae88bcf693c28">userToggledBrowserWindow</a> ()</td></tr>
+<tr class="separator:a525af4badb94ae808c5ae88bcf693c28 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a228c5b374fb5fe5dd7742c5515e1d544 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a228c5b374fb5fe5dd7742c5515e1d544">userToggledActionsWindow</a> ()</td></tr>
+<tr class="separator:a228c5b374fb5fe5dd7742c5515e1d544 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68d61cc86a9b8a517ce6de43aaf35d43 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a68d61cc86a9b8a517ce6de43aaf35d43">userPressedUserAction</a> (int)</td></tr>
+<tr class="separator:a68d61cc86a9b8a517ce6de43aaf35d43 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02f5f1c55e3c3b65f615c0ce09c7c986 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a02f5f1c55e3c3b65f615c0ce09c7c986">userPressedFreeze</a> ()</td></tr>
 <tr class="separator:a02f5f1c55e3c3b65f615c0ce09c7c986 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5f3347cea731ecad12e2cab3e7335afa inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a5f3347cea731ecad12e2cab3e7335afa">userPressedClearAllSolo</a> ()</td></tr>
@@ -461,6 +483,86 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a2e40fc4d2b5e358b99355c4318d88934 inherit pub_methods_classtracktion__engine_1_1Selectable"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a501f2e66eb9b5a343cce4474021a68c1 inherit pub_methods_classtracktion__engine_1_1Selectable"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1Selectable.html#a03901c25cc0479dcdb3fa3ce8b8b28ae">WeakRef</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1Selectable.html#a501f2e66eb9b5a343cce4474021a68c1">getWeakRef</a> ()</td></tr>
 <tr class="separator:a501f2e66eb9b5a343cce4474021a68c1 inherit pub_methods_classtracktion__engine_1_1Selectable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:a9470debcced6ebb7b85d3f65d00147b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a9470debcced6ebb7b85d3f65d00147b5">clearAllDisplays</a> ()</td></tr>
+<tr class="separator:a9470debcced6ebb7b85d3f65d00147b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9dfac15d42c89830efbf3cabf2aed43b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a9dfac15d42c89830efbf3cabf2aed43b">setDisplay</a> (int devIdx, const juce::String &amp;text, int pos)</td></tr>
+<tr class="separator:a9dfac15d42c89830efbf3cabf2aed43b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e9e5f1b243f01b9ccb731f6de60f8d0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a1e9e5f1b243f01b9ccb731f6de60f8d0">clearDisplaySegment</a> (int devIdx, int column, int row)</td></tr>
+<tr class="separator:a1e9e5f1b243f01b9ccb731f6de60f8d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acad4bedbace6115a264bf1c07863067e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#acad4bedbace6115a264bf1c07863067e">setDisplaySegment</a> (int devIdx, int column, int row, const juce::String &amp;text)</td></tr>
+<tr class="separator:acad4bedbace6115a264bf1c07863067e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a181e6d56c578fdfcd1534dbd56e1c109"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a181e6d56c578fdfcd1534dbd56e1c109">centreDisplaySegment</a> (int devIdx, int column, int row, const juce::String &amp;text)</td></tr>
+<tr class="separator:a181e6d56c578fdfcd1534dbd56e1c109"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6becae8e9ca578fccfeb7b47550cdfd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#ac6becae8e9ca578fccfeb7b47550cdfd">handleAsyncUpdate</a> () override</td></tr>
+<tr class="separator:ac6becae8e9ca578fccfeb7b47550cdfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd2c070ed97b8accfeabd919afa048dd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#acd2c070ed97b8accfeabd919afa048dd">timerCallback</a> () override</td></tr>
+<tr class="separator:acd2c070ed97b8accfeabd919afa048dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1451429c41f4076700dccf2f660ee407"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a1451429c41f4076700dccf2f660ee407">auxString</a> (int chan) const</td></tr>
+<tr class="separator:a1451429c41f4076700dccf2f660ee407"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8859df93957a6dcfc0e945945434e39"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#aa8859df93957a6dcfc0e945945434e39">isEditValidAndNotSafeRecording</a> () const</td></tr>
+<tr class="separator:aa8859df93957a6dcfc0e945945434e39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:a6fd9611cdd4ed6ca29e3afa12b03f334"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a6327c439125be810ec833bb6d72a4b12">AssignmentMode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a6fd9611cdd4ed6ca29e3afa12b03f334">assignmentMode</a> = <a class="el" href="classtracktion__engine_1_1MackieMCU.html#a6327c439125be810ec833bb6d72a4b12a3c104c9811d282bd3095a3c24752a455">PanMode</a></td></tr>
+<tr class="separator:a6fd9611cdd4ed6ca29e3afa12b03f334"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32b2f3a2d9b80465ca2394b00e059662"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a32b2f3a2d9b80465ca2394b00e059662">panPos</a> [<a class="el" href="classtracktion__engine_1_1MackieMCU.html#aac85c7f1541c67fca5c9ad41585542caa6e6a872c9618be953052e31e26152cfe">maxNumChannels</a>]</td></tr>
+<tr class="separator:a32b2f3a2d9b80465ca2394b00e059662"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abef624ed8c0f234e7d918e1fade4bd37"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#abef624ed8c0f234e7d918e1fade4bd37">timecodeDigits</a> [9]</td></tr>
+<tr class="separator:abef624ed8c0f234e7d918e1fade4bd37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c57d613b244767c22c9e06d7971315b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a4c57d613b244767c22c9e06d7971315b">lastSmpteBeatsSetting</a> = false</td></tr>
+<tr class="separator:a4c57d613b244767c22c9e06d7971315b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19ec6561245adc4ff86af5a29c33609b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a19ec6561245adc4ff86af5a29c33609b">isZooming</a> = false</td></tr>
+<tr class="separator:a19ec6561245adc4ff86af5a29c33609b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96a1c3d1b895d1d1b0e6c6ba777ac77b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a96a1c3d1b895d1d1b0e6c6ba777ac77b">marker</a> = false</td></tr>
+<tr class="separator:a96a1c3d1b895d1d1b0e6c6ba777ac77b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e1bec652b77e52f655949985a97ac63"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a4e1bec652b77e52f655949985a97ac63">nudge</a> = false</td></tr>
+<tr class="separator:a4e1bec652b77e52f655949985a97ac63"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b199c621a56e68cdd3394ece622e64c"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a7b199c621a56e68cdd3394ece622e64c">lastChannelLevels</a> [<a class="el" href="classtracktion__engine_1_1MackieMCU.html#aac85c7f1541c67fca5c9ad41585542caa6e6a872c9618be953052e31e26152cfe">maxNumChannels</a>]</td></tr>
+<tr class="separator:a7b199c621a56e68cdd3394ece622e64c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73483b03b6aff3eb935a5174bfd0b9db"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a73483b03b6aff3eb935a5174bfd0b9db">recLight</a> [<a class="el" href="classtracktion__engine_1_1MackieMCU.html#aac85c7f1541c67fca5c9ad41585542caa6e6a872c9618be953052e31e26152cfe">maxNumChannels</a>]</td></tr>
+<tr class="separator:a73483b03b6aff3eb935a5174bfd0b9db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75b86e0d53b2c2ac43200425c3d18ef4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a75b86e0d53b2c2ac43200425c3d18ef4">isRecButtonDown</a> = false</td></tr>
+<tr class="separator:a75b86e0d53b2c2ac43200425c3d18ef4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1646c02ea3461c0954f6ee1f6e39d17c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a1646c02ea3461c0954f6ee1f6e39d17c">flipped</a> = false</td></tr>
+<tr class="separator:a1646c02ea3461c0954f6ee1f6e39d17c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43b37fd43a23b3be1d26f5802796a0ff"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a43b37fd43a23b3be1d26f5802796a0ff">editFlip</a> = false</td></tr>
+<tr class="separator:a43b37fd43a23b3be1d26f5802796a0ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad382b2720c672dd97df9dd8cc8ef0351"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#ad382b2720c672dd97df9dd8cc8ef0351">cpuVisible</a> = false</td></tr>
+<tr class="separator:ad382b2720c672dd97df9dd8cc8ef0351"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83ff6200787e4d735eb3ee70d97fd1cd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a83ff6200787e4d735eb3ee70d97fd1cd">oneTouchRecord</a> = false</td></tr>
+<tr class="separator:a83ff6200787e4d735eb3ee70d97fd1cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2afad52699abbd0bc6d53989b33cc731"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a2afad52699abbd0bc6d53989b33cc731">shiftKeysDown</a> = 0</td></tr>
+<tr class="separator:a2afad52699abbd0bc6d53989b33cc731"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ca7feba60cd30eda3bb474fe43c31d7"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a5ca7feba60cd30eda3bb474fe43c31d7">currentDisplayChars</a> [<a class="el" href="classtracktion__engine_1_1MackieMCU.html#aac85c7f1541c67fca5c9ad41585542caaa047e0e9cffdb5475bcafc7d37fb7957">maxNumSurfaces</a>][<a class="el" href="classtracktion__engine_1_1MackieMCU.html#aac85c7f1541c67fca5c9ad41585542caa7d16e4fb78ff1fecaf8791663ca53c85">maxCharsOnDisplay</a>]</td></tr>
+<tr class="separator:a5ca7feba60cd30eda3bb474fe43c31d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9438046325830c9e959bd968019ea19"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#af9438046325830c9e959bd968019ea19">newDisplayChars</a> [<a class="el" href="classtracktion__engine_1_1MackieMCU.html#aac85c7f1541c67fca5c9ad41585542caaa047e0e9cffdb5475bcafc7d37fb7957">maxNumSurfaces</a>][<a class="el" href="classtracktion__engine_1_1MackieMCU.html#aac85c7f1541c67fca5c9ad41585542caa7d16e4fb78ff1fecaf8791663ca53c85">maxCharsOnDisplay</a>]</td></tr>
+<tr class="separator:af9438046325830c9e959bd968019ea19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f31379b377e69332c68dcdae4f6c338"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a4f31379b377e69332c68dcdae4f6c338">lastRewindPress</a> = 0</td></tr>
+<tr class="separator:a4f31379b377e69332c68dcdae4f6c338"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73e22665bd3cb41fe5b9b1b9221b059c"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a73e22665bd3cb41fe5b9b1b9221b059c">lastFaderPos</a> [<a class="el" href="classtracktion__engine_1_1MackieMCU.html#aac85c7f1541c67fca5c9ad41585542caaa047e0e9cffdb5475bcafc7d37fb7957">maxNumSurfaces</a>][9]</td></tr>
+<tr class="separator:a73e22665bd3cb41fe5b9b1b9221b059c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ae1dd232593916fb59cf3c87bb9c97a"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a0ae1dd232593916fb59cf3c87bb9c97a">auxLevels</a> [<a class="el" href="classtracktion__engine_1_1MackieMCU.html#aac85c7f1541c67fca5c9ad41585542caa6e6a872c9618be953052e31e26152cfe">maxNumChannels</a>]</td></tr>
+<tr class="separator:a0ae1dd232593916fb59cf3c87bb9c97a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39351a54b1ac1bb067a53e7b7364ce05"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a39351a54b1ac1bb067a53e7b7364ce05">auxBusNames</a> [<a class="el" href="classtracktion__engine_1_1MackieMCU.html#aac85c7f1541c67fca5c9ad41585542caa6e6a872c9618be953052e31e26152cfe">maxNumChannels</a>][7]</td></tr>
+<tr class="separator:a39351a54b1ac1bb067a53e7b7364ce05"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee7b66346e7f03a65dacc11b6626d053"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#aee7b66346e7f03a65dacc11b6626d053">lastStartChan</a> = 0</td></tr>
+<tr class="separator:aee7b66346e7f03a65dacc11b6626d053"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade726c5d2d33bd67b3b2913fc14296f4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#ade726c5d2d33bd67b3b2913fc14296f4">deviceIdx</a> = 0</td></tr>
+<tr class="separator:ade726c5d2d33bd67b3b2913fc14296f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e946c7890fce307ffb87568bbad38ea"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a7e946c7890fce307ffb87568bbad38ea">auxBank</a> = 0</td></tr>
+<tr class="separator:a7e946c7890fce307ffb87568bbad38ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3786059246180a1817112af90197a60"><td class="memItemLeft" align="right" valign="top">juce::Array&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#ac3786059246180a1817112af90197a60">userMovedAuxes</a></td></tr>
+<tr class="separator:ac3786059246180a1817112af90197a60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb2ae583a875eac40449eddad0086101"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="structtracktion__engine_1_1MackieMCU_1_1CpuMeterTimer.html">CpuMeterTimer</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#abb2ae583a875eac40449eddad0086101">cpuMeterTimer</a></td></tr>
+<tr class="separator:abb2ae583a875eac40449eddad0086101"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5e6b6f8c48395aa2aecb5d8089c83a7"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="structtracktion__engine_1_1MackieMCU_1_1AuxTimer.html">AuxTimer</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#af5e6b6f8c48395aa2aecb5d8089c83a7">auxTimer</a></td></tr>
+<tr class="separator:af5e6b6f8c48395aa2aecb5d8089c83a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0eb5ba4dbeba34eff25b52e6d88f65aa"><td class="memItemLeft" align="right" valign="top">juce::Array&lt; <a class="el" href="classtracktion__engine_1_1MackieXT.html">MackieXT</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a0eb5ba4dbeba34eff25b52e6d88f65aa">extenders</a></td></tr>
+<tr class="separator:a0eb5ba4dbeba34eff25b52e6d88f65aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -708,6 +810,8 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p class="reference">Referenced by <a class="el" href="structtracktion__engine_1_1MackieMCU_1_1CpuMeterTimer.html#ac4b8a40b8c98e6784173a1964047a68c">tracktion_engine::MackieMCU::CpuMeterTimer::timerCallback()</a>.</p>
+
 </div>
 </div>
 <a id="adb3f97c7e964fefec81cf3cbb1ed8681"></a>
@@ -724,6 +828,8 @@ Additional Inherited Members</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="structtracktion__engine_1_1MackieMCU_1_1AuxTimer.html#a4f8d88d02a3872dae7207dd746f83ac6">tracktion_engine::MackieMCU::AuxTimer::timerCallback()</a>.</p>
 
 </div>
 </div>
@@ -755,14 +861,17 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="ab49d1f8c2f95db321a3c34f97a7c8e59"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab49d1f8c2f95db321a3c34f97a7c8e59">&#9670;&nbsp;</a></span>acceptMidiMessage() <span class="overload">[2/2]</span></h2>
+<a id="a717e38ddfd479254dbd369159bc51357"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a717e38ddfd479254dbd369159bc51357">&#9670;&nbsp;</a></span>acceptMidiMessage() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void tracktion_engine::MackieMCU::acceptMidiMessage </td>
+          <td class="memname">virtual void tracktion_engine::MackieMCU::acceptMidiMessage </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>deviceIdx</em>, </td>
@@ -779,7 +888,14 @@ Additional Inherited Members</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1IconProG2.html#af732a53b58f919aeeb0115a2a439b4ca">tracktion_engine::IconProG2</a>.</p>
 
 </div>
 </div>
@@ -819,7 +935,7 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <a id="a1153e024be151e0db03a917756e19a68"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1153e024be151e0db03a917756e19a68">&#9670;&nbsp;</a></span>setDisplay()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a1153e024be151e0db03a917756e19a68">&#9670;&nbsp;</a></span>setDisplay() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -915,21 +1031,31 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="aac7588829d23ce894ae394e9674a6157"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aac7588829d23ce894ae394e9674a6157">&#9670;&nbsp;</a></span>setAssignmentMode()</h2>
+<a id="a512ab5092cabd11e486f0bf92459efd4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a512ab5092cabd11e486f0bf92459efd4">&#9670;&nbsp;</a></span>setAssignmentMode()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void tracktion_engine::MackieMCU::setAssignmentMode </td>
+          <td class="memname">virtual void tracktion_engine::MackieMCU::setAssignmentMode </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a6327c439125be810ec833bb6d72a4b12">AssignmentMode</a>&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1IconProG2.html#a168fcca426ef0bb1b34546c1458d444f">tracktion_engine::IconProG2</a>.</p>
 
 </div>
 </div>
@@ -2220,6 +2346,8 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p class="reference">References <a class="el" href="classtracktion__engine_1_1MackieMCU.html#ade726c5d2d33bd67b3b2913fc14296f4">deviceIdx</a>.</p>
+
 </div>
 </div>
 <a id="a791218b908e22545c8c21d05e32d6c8b"></a>
@@ -2236,6 +2364,8 @@ Additional Inherited Members</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classtracktion__engine_1_1MackieMCU.html#a83ff6200787e4d735eb3ee70d97fd1cd">oneTouchRecord</a>.</p>
 
 </div>
 </div>
@@ -2255,6 +2385,935 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p class="reference">References <a class="el" href="classtracktion__engine_1_1MackieMCU.html#a83ff6200787e4d735eb3ee70d97fd1cd">oneTouchRecord</a>.</p>
+
+</div>
+</div>
+<a id="a9470debcced6ebb7b85d3f65d00147b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9470debcced6ebb7b85d3f65d00147b5">&#9670;&nbsp;</a></span>clearAllDisplays()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion_engine::MackieMCU::clearAllDisplays </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9dfac15d42c89830efbf3cabf2aed43b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9dfac15d42c89830efbf3cabf2aed43b">&#9670;&nbsp;</a></span>setDisplay() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion_engine::MackieMCU::setDisplay </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>devIdx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>text</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>pos</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1e9e5f1b243f01b9ccb731f6de60f8d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e9e5f1b243f01b9ccb731f6de60f8d0">&#9670;&nbsp;</a></span>clearDisplaySegment()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion_engine::MackieMCU::clearDisplaySegment </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>devIdx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>column</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>row</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acad4bedbace6115a264bf1c07863067e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acad4bedbace6115a264bf1c07863067e">&#9670;&nbsp;</a></span>setDisplaySegment()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion_engine::MackieMCU::setDisplaySegment </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>devIdx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>column</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>row</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>text</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a181e6d56c578fdfcd1534dbd56e1c109"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a181e6d56c578fdfcd1534dbd56e1c109">&#9670;&nbsp;</a></span>centreDisplaySegment()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion_engine::MackieMCU::centreDisplaySegment </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>devIdx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>column</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>row</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>text</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac6becae8e9ca578fccfeb7b47550cdfd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac6becae8e9ca578fccfeb7b47550cdfd">&#9670;&nbsp;</a></span>handleAsyncUpdate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion_engine::MackieMCU::handleAsyncUpdate </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acd2c070ed97b8accfeabd919afa048dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acd2c070ed97b8accfeabd919afa048dd">&#9670;&nbsp;</a></span>timerCallback()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion_engine::MackieMCU::timerCallback </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1451429c41f4076700dccf2f660ee407"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1451429c41f4076700dccf2f660ee407">&#9670;&nbsp;</a></span>auxString()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::String tracktion_engine::MackieMCU::auxString </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>chan</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa8859df93957a6dcfc0e945945434e39"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa8859df93957a6dcfc0e945945434e39">&#9670;&nbsp;</a></span>isEditValidAndNotSafeRecording()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion_engine::MackieMCU::isEditValidAndNotSafeRecording </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a6fd9611cdd4ed6ca29e3afa12b03f334"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6fd9611cdd4ed6ca29e3afa12b03f334">&#9670;&nbsp;</a></span>assignmentMode</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a6327c439125be810ec833bb6d72a4b12">AssignmentMode</a> tracktion_engine::MackieMCU::assignmentMode = <a class="el" href="classtracktion__engine_1_1MackieMCU.html#a6327c439125be810ec833bb6d72a4b12a3c104c9811d282bd3095a3c24752a455">PanMode</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a32b2f3a2d9b80465ca2394b00e059662"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a32b2f3a2d9b80465ca2394b00e059662">&#9670;&nbsp;</a></span>panPos</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float tracktion_engine::MackieMCU::panPos[<a class="el" href="classtracktion__engine_1_1MackieMCU.html#aac85c7f1541c67fca5c9ad41585542caa6e6a872c9618be953052e31e26152cfe">maxNumChannels</a>]</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abef624ed8c0f234e7d918e1fade4bd37"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abef624ed8c0f234e7d918e1fade4bd37">&#9670;&nbsp;</a></span>timecodeDigits</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">char tracktion_engine::MackieMCU::timecodeDigits[9]</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4c57d613b244767c22c9e06d7971315b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c57d613b244767c22c9e06d7971315b">&#9670;&nbsp;</a></span>lastSmpteBeatsSetting</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion_engine::MackieMCU::lastSmpteBeatsSetting = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a19ec6561245adc4ff86af5a29c33609b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a19ec6561245adc4ff86af5a29c33609b">&#9670;&nbsp;</a></span>isZooming</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion_engine::MackieMCU::isZooming = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a96a1c3d1b895d1d1b0e6c6ba777ac77b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96a1c3d1b895d1d1b0e6c6ba777ac77b">&#9670;&nbsp;</a></span>marker</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion_engine::MackieMCU::marker = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4e1bec652b77e52f655949985a97ac63"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4e1bec652b77e52f655949985a97ac63">&#9670;&nbsp;</a></span>nudge</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion_engine::MackieMCU::nudge = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7b199c621a56e68cdd3394ece622e64c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b199c621a56e68cdd3394ece622e64c">&#9670;&nbsp;</a></span>lastChannelLevels</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t tracktion_engine::MackieMCU::lastChannelLevels[<a class="el" href="classtracktion__engine_1_1MackieMCU.html#aac85c7f1541c67fca5c9ad41585542caa6e6a872c9618be953052e31e26152cfe">maxNumChannels</a>]</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a73483b03b6aff3eb935a5174bfd0b9db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73483b03b6aff3eb935a5174bfd0b9db">&#9670;&nbsp;</a></span>recLight</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion_engine::MackieMCU::recLight[<a class="el" href="classtracktion__engine_1_1MackieMCU.html#aac85c7f1541c67fca5c9ad41585542caa6e6a872c9618be953052e31e26152cfe">maxNumChannels</a>]</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a75b86e0d53b2c2ac43200425c3d18ef4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a75b86e0d53b2c2ac43200425c3d18ef4">&#9670;&nbsp;</a></span>isRecButtonDown</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion_engine::MackieMCU::isRecButtonDown = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1646c02ea3461c0954f6ee1f6e39d17c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1646c02ea3461c0954f6ee1f6e39d17c">&#9670;&nbsp;</a></span>flipped</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion_engine::MackieMCU::flipped = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a43b37fd43a23b3be1d26f5802796a0ff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a43b37fd43a23b3be1d26f5802796a0ff">&#9670;&nbsp;</a></span>editFlip</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion_engine::MackieMCU::editFlip = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad382b2720c672dd97df9dd8cc8ef0351"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad382b2720c672dd97df9dd8cc8ef0351">&#9670;&nbsp;</a></span>cpuVisible</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion_engine::MackieMCU::cpuVisible = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a83ff6200787e4d735eb3ee70d97fd1cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a83ff6200787e4d735eb3ee70d97fd1cd">&#9670;&nbsp;</a></span>oneTouchRecord</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion_engine::MackieMCU::oneTouchRecord = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1MackieMCU.html#a791218b908e22545c8c21d05e32d6c8b">isOneTouchRecord()</a>, and <a class="el" href="classtracktion__engine_1_1MackieMCU.html#a8c51bbc8aea7d2e885946c1d1856b803">setOneTouchRecord()</a>.</p>
+
+</div>
+</div>
+<a id="a2afad52699abbd0bc6d53989b33cc731"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2afad52699abbd0bc6d53989b33cc731">&#9670;&nbsp;</a></span>shiftKeysDown</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int tracktion_engine::MackieMCU::shiftKeysDown = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5ca7feba60cd30eda3bb474fe43c31d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ca7feba60cd30eda3bb474fe43c31d7">&#9670;&nbsp;</a></span>currentDisplayChars</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">char tracktion_engine::MackieMCU::currentDisplayChars[<a class="el" href="classtracktion__engine_1_1MackieMCU.html#aac85c7f1541c67fca5c9ad41585542caaa047e0e9cffdb5475bcafc7d37fb7957">maxNumSurfaces</a>][<a class="el" href="classtracktion__engine_1_1MackieMCU.html#aac85c7f1541c67fca5c9ad41585542caa7d16e4fb78ff1fecaf8791663ca53c85">maxCharsOnDisplay</a>]</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af9438046325830c9e959bd968019ea19"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af9438046325830c9e959bd968019ea19">&#9670;&nbsp;</a></span>newDisplayChars</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">char tracktion_engine::MackieMCU::newDisplayChars[<a class="el" href="classtracktion__engine_1_1MackieMCU.html#aac85c7f1541c67fca5c9ad41585542caaa047e0e9cffdb5475bcafc7d37fb7957">maxNumSurfaces</a>][<a class="el" href="classtracktion__engine_1_1MackieMCU.html#aac85c7f1541c67fca5c9ad41585542caa7d16e4fb78ff1fecaf8791663ca53c85">maxCharsOnDisplay</a>]</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4f31379b377e69332c68dcdae4f6c338"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4f31379b377e69332c68dcdae4f6c338">&#9670;&nbsp;</a></span>lastRewindPress</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t tracktion_engine::MackieMCU::lastRewindPress = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a73e22665bd3cb41fe5b9b1b9221b059c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73e22665bd3cb41fe5b9b1b9221b059c">&#9670;&nbsp;</a></span>lastFaderPos</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t tracktion_engine::MackieMCU::lastFaderPos[<a class="el" href="classtracktion__engine_1_1MackieMCU.html#aac85c7f1541c67fca5c9ad41585542caaa047e0e9cffdb5475bcafc7d37fb7957">maxNumSurfaces</a>][9]</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0ae1dd232593916fb59cf3c87bb9c97a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ae1dd232593916fb59cf3c87bb9c97a">&#9670;&nbsp;</a></span>auxLevels</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float tracktion_engine::MackieMCU::auxLevels[<a class="el" href="classtracktion__engine_1_1MackieMCU.html#aac85c7f1541c67fca5c9ad41585542caa6e6a872c9618be953052e31e26152cfe">maxNumChannels</a>]</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a39351a54b1ac1bb067a53e7b7364ce05"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a39351a54b1ac1bb067a53e7b7364ce05">&#9670;&nbsp;</a></span>auxBusNames</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">char tracktion_engine::MackieMCU::auxBusNames[<a class="el" href="classtracktion__engine_1_1MackieMCU.html#aac85c7f1541c67fca5c9ad41585542caa6e6a872c9618be953052e31e26152cfe">maxNumChannels</a>][7]</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aee7b66346e7f03a65dacc11b6626d053"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee7b66346e7f03a65dacc11b6626d053">&#9670;&nbsp;</a></span>lastStartChan</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int tracktion_engine::MackieMCU::lastStartChan = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ade726c5d2d33bd67b3b2913fc14296f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ade726c5d2d33bd67b3b2913fc14296f4">&#9670;&nbsp;</a></span>deviceIdx</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int tracktion_engine::MackieMCU::deviceIdx = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="classtracktion__engine_1_1MackieMCU.html#afc034c319bf6aa3da88ec383682224c6">setDeviceIndex()</a>.</p>
+
+</div>
+</div>
+<a id="a7e946c7890fce307ffb87568bbad38ea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7e946c7890fce307ffb87568bbad38ea">&#9670;&nbsp;</a></span>auxBank</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int tracktion_engine::MackieMCU::auxBank = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac3786059246180a1817112af90197a60"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3786059246180a1817112af90197a60">&#9670;&nbsp;</a></span>userMovedAuxes</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::Array&lt;int&gt; tracktion_engine::MackieMCU::userMovedAuxes</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abb2ae583a875eac40449eddad0086101"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb2ae583a875eac40449eddad0086101">&#9670;&nbsp;</a></span>cpuMeterTimer</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt;<a class="el" href="structtracktion__engine_1_1MackieMCU_1_1CpuMeterTimer.html">CpuMeterTimer</a>&gt; tracktion_engine::MackieMCU::cpuMeterTimer</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af5e6b6f8c48395aa2aecb5d8089c83a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af5e6b6f8c48395aa2aecb5d8089c83a7">&#9670;&nbsp;</a></span>auxTimer</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt;<a class="el" href="structtracktion__engine_1_1MackieMCU_1_1AuxTimer.html">AuxTimer</a>&gt; tracktion_engine::MackieMCU::auxTimer</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0eb5ba4dbeba34eff25b52e6d88f65aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0eb5ba4dbeba34eff25b52e6d88f65aa">&#9670;&nbsp;</a></span>extenders</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::Array&lt;<a class="el" href="classtracktion__engine_1_1MackieXT.html">MackieXT</a>*&gt; tracktion_engine::MackieMCU::extenders</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
@@ -2263,7 +3322,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jan 12 2022 21:44:57 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 13 2022 01:02:31 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

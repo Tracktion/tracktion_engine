@@ -1426,15 +1426,15 @@
       <type>void</type>
       <name>markIn</name>
       <anchorfile>namespacetracktion__engine_1_1AppFunctions.html</anchorfile>
-      <anchor>a81402927f2ebc9dc487fb2811df165d5</anchor>
-      <arglist>()</arglist>
+      <anchor>ae21cb759b384ba7d540ae5c4e3a974dc</anchor>
+      <arglist>(bool forceAtCursor)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>markOut</name>
       <anchorfile>namespacetracktion__engine_1_1AppFunctions.html</anchorfile>
-      <anchor>a5da898b52d9d3726f0ddc9496fff8993</anchor>
-      <arglist>()</arglist>
+      <anchor>a9f23a08dbc698125c665beb8392b4788</anchor>
+      <arglist>(bool forceAtCursor)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -1757,6 +1757,48 @@
       <anchorfile>namespacetracktion__engine_1_1AppFunctions.html</anchorfile>
       <anchor>a84f565b649f8f5b47019b819a2eb236d</anchor>
       <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>showHideMixer</name>
+      <anchorfile>namespacetracktion__engine_1_1AppFunctions.html</anchorfile>
+      <anchor>ad2ac9582916a04d79d5b53407686b464</anchor>
+      <arglist>(bool fs)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>showHideMidiEditor</name>
+      <anchorfile>namespacetracktion__engine_1_1AppFunctions.html</anchorfile>
+      <anchor>a287af2650b0442b677735e4c2b5f363d</anchor>
+      <arglist>(bool fs)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>showHideTrackEditor</name>
+      <anchorfile>namespacetracktion__engine_1_1AppFunctions.html</anchorfile>
+      <anchor>aa2f9af6cd6699c07268abf55d70a0ec2</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>showHideBrowser</name>
+      <anchorfile>namespacetracktion__engine_1_1AppFunctions.html</anchorfile>
+      <anchor>a69a3319bc6754b9fb978cc8af2a33771</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>showHideActions</name>
+      <anchorfile>namespacetracktion__engine_1_1AppFunctions.html</anchorfile>
+      <anchor>af2dd5a9f56049c862f6ce28832e19586</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>performUserAction</name>
+      <anchorfile>namespacetracktion__engine_1_1AppFunctions.html</anchorfile>
+      <anchor>a011a171565e7cbf194b61bc41cd4079a</anchor>
+      <arglist>(int)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -4371,6 +4413,13 @@
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
+    <name>tracktion_IconProG2.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/control_surfaces/types/</path>
+    <filename>tracktion__IconProG2_8h.html</filename>
+    <class kind="class">tracktion_engine::IconProG2</class>
+    <namespace>tracktion_engine</namespace>
+  </compound>
+  <compound kind="file">
     <name>tracktion_Identifiers.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
     <filename>tracktion__Identifiers_8h.html</filename>
@@ -4521,6 +4570,8 @@
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/control_surfaces/types/</path>
     <filename>tracktion__MackieMCU_8h.html</filename>
     <class kind="class">tracktion_engine::MackieMCU</class>
+    <class kind="struct">tracktion_engine::MackieMCU::CpuMeterTimer</class>
+    <class kind="struct">tracktion_engine::MackieMCU::AuxTimer</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
@@ -7699,6 +7750,39 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>tracktion_engine::BreakpointOscillatorModifier::Assignment</name>
+    <filename>structtracktion__engine_1_1BreakpointOscillatorModifier_1_1Assignment.html</filename>
+    <base>tracktion_engine::AutomatableParameter::ModifierAssignment</base>
+    <member kind="function">
+      <type></type>
+      <name>Assignment</name>
+      <anchorfile>structtracktion__engine_1_1BreakpointOscillatorModifier_1_1Assignment.html</anchorfile>
+      <anchor>a7e8e7b5e358f134176391dd62a6482c1</anchor>
+      <arglist>(const juce::ValueTree &amp;, const BreakpointOscillatorModifier &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isForModifierSource</name>
+      <anchorfile>structtracktion__engine_1_1BreakpointOscillatorModifier_1_1Assignment.html</anchorfile>
+      <anchor>ab2a9478a32392858b043139692282438</anchor>
+      <arglist>(const ModifierSource &amp;) const override</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::ReferenceCountedObjectPtr&lt; BreakpointOscillatorModifier &gt;</type>
+      <name>getModifier</name>
+      <anchorfile>structtracktion__engine_1_1BreakpointOscillatorModifier_1_1Assignment.html</anchorfile>
+      <anchor>a4fb8f5ca5cf1a6d70ed634fa811f2034</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="variable">
+      <type>const EditItemID</type>
+      <name>breakpointOscillatorModifierID</name>
+      <anchorfile>structtracktion__engine_1_1BreakpointOscillatorModifier_1_1Assignment.html</anchorfile>
+      <anchor>a050349bbe82190b5a47c21f9375e2fe2</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>tracktion_engine::LFOModifier::Assignment</name>
     <filename>structtracktion__engine_1_1LFOModifier_1_1Assignment.html</filename>
     <base>tracktion_engine::AutomatableParameter::ModifierAssignment</base>
@@ -7860,39 +7944,6 @@
       <name>stepModifierID</name>
       <anchorfile>structtracktion__engine_1_1StepModifier_1_1Assignment.html</anchorfile>
       <anchor>a69b677d069b782b94bda9f5fbc3b46f4</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
-    <name>tracktion_engine::BreakpointOscillatorModifier::Assignment</name>
-    <filename>structtracktion__engine_1_1BreakpointOscillatorModifier_1_1Assignment.html</filename>
-    <base>tracktion_engine::AutomatableParameter::ModifierAssignment</base>
-    <member kind="function">
-      <type></type>
-      <name>Assignment</name>
-      <anchorfile>structtracktion__engine_1_1BreakpointOscillatorModifier_1_1Assignment.html</anchorfile>
-      <anchor>a7e8e7b5e358f134176391dd62a6482c1</anchor>
-      <arglist>(const juce::ValueTree &amp;, const BreakpointOscillatorModifier &amp;)</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>isForModifierSource</name>
-      <anchorfile>structtracktion__engine_1_1BreakpointOscillatorModifier_1_1Assignment.html</anchorfile>
-      <anchor>ab2a9478a32392858b043139692282438</anchor>
-      <arglist>(const ModifierSource &amp;) const override</arglist>
-    </member>
-    <member kind="function">
-      <type>juce::ReferenceCountedObjectPtr&lt; BreakpointOscillatorModifier &gt;</type>
-      <name>getModifier</name>
-      <anchorfile>structtracktion__engine_1_1BreakpointOscillatorModifier_1_1Assignment.html</anchorfile>
-      <anchor>a4fb8f5ca5cf1a6d70ed634fa811f2034</anchor>
-      <arglist>() const</arglist>
-    </member>
-    <member kind="variable">
-      <type>const EditItemID</type>
-      <name>breakpointOscillatorModifierID</name>
-      <anchorfile>structtracktion__engine_1_1BreakpointOscillatorModifier_1_1Assignment.html</anchorfile>
-      <anchor>a050349bbe82190b5a47c21f9375e2fe2</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -9744,94 +9795,6 @@
     </member>
   </compound>
   <compound kind="class">
-    <name>tracktion_graph::AudioFifo</name>
-    <filename>classtracktion__graph_1_1AudioFifo.html</filename>
-    <member kind="function">
-      <type></type>
-      <name>AudioFifo</name>
-      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
-      <anchor>a0ac8067579acf4594fe8f1ff880e6a47</anchor>
-      <arglist>(choc::buffer::ChannelCount numChannels, choc::buffer::FrameCount numFrames)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>setSize</name>
-      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
-      <anchor>ac8cb51227f0088991762df7201af9043</anchor>
-      <arglist>(choc::buffer::ChannelCount numChannels, choc::buffer::FrameCount numFrames)</arglist>
-    </member>
-    <member kind="function">
-      <type>int</type>
-      <name>getFreeSpace</name>
-      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
-      <anchor>a7aa7c4eb64ad54d847fb4234e88d6993</anchor>
-      <arglist>() const noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>int</type>
-      <name>getNumReady</name>
-      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
-      <anchor>a0aea03dc987c68ecc313a8ba386404e9</anchor>
-      <arglist>() const noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>choc::buffer::ChannelCount</type>
-      <name>getNumChannels</name>
-      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
-      <anchor>a081275aaca600c9cb55274ce5fd0e329</anchor>
-      <arglist>() const noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>reset</name>
-      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
-      <anchor>a93a753f2d5524d66a25394d4177115c0</anchor>
-      <arglist>() noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>ensureFreeSpace</name>
-      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
-      <anchor>a3948016c1ea0c3a827d20e53c0657c6d</anchor>
-      <arglist>(int numFrames)</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>write</name>
-      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
-      <anchor>a6e70bf3c563702fc92db4f6bb3f27173</anchor>
-      <arglist>(choc::buffer::ChannelArrayView&lt; float &gt; block)</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>writeSilence</name>
-      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
-      <anchor>a855ba9959ca37d48fedb2c6dffec5881</anchor>
-      <arglist>(choc::buffer::FrameCount numFrames)</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>readAdding</name>
-      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
-      <anchor>a2b1a6241a2738598d411ba4a120a4b3f</anchor>
-      <arglist>(choc::buffer::ChannelArrayView&lt; float &gt; dest)</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>readOverwriting</name>
-      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
-      <anchor>a5657648c0b741caf7d5932697e139187</anchor>
-      <arglist>(choc::buffer::ChannelArrayView&lt; float &gt; dest)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>removeSamples</name>
-      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
-      <anchor>a76be18bb53b26279f141553416930686</anchor>
-      <arglist>(int numSamples)</arglist>
-    </member>
-  </compound>
-  <compound kind="class">
     <name>tracktion_engine::AudioFifo</name>
     <filename>classtracktion__engine_1_1AudioFifo.html</filename>
     <member kind="function">
@@ -9938,6 +9901,94 @@
       <anchorfile>classtracktion__engine_1_1AudioFifo.html</anchorfile>
       <anchor>a65029b42ec2b55e82f1aaa3618ef223c</anchor>
       <arglist>(juce::AudioBuffer&lt; float &gt; &amp;dest, int startSampleInDestBuffer, int numSamples)</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>tracktion_graph::AudioFifo</name>
+    <filename>classtracktion__graph_1_1AudioFifo.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>AudioFifo</name>
+      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
+      <anchor>a0ac8067579acf4594fe8f1ff880e6a47</anchor>
+      <arglist>(choc::buffer::ChannelCount numChannels, choc::buffer::FrameCount numFrames)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setSize</name>
+      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
+      <anchor>ac8cb51227f0088991762df7201af9043</anchor>
+      <arglist>(choc::buffer::ChannelCount numChannels, choc::buffer::FrameCount numFrames)</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>getFreeSpace</name>
+      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
+      <anchor>a7aa7c4eb64ad54d847fb4234e88d6993</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>getNumReady</name>
+      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
+      <anchor>a0aea03dc987c68ecc313a8ba386404e9</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>choc::buffer::ChannelCount</type>
+      <name>getNumChannels</name>
+      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
+      <anchor>a081275aaca600c9cb55274ce5fd0e329</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>reset</name>
+      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
+      <anchor>a93a753f2d5524d66a25394d4177115c0</anchor>
+      <arglist>() noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>ensureFreeSpace</name>
+      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
+      <anchor>a3948016c1ea0c3a827d20e53c0657c6d</anchor>
+      <arglist>(int numFrames)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>write</name>
+      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
+      <anchor>a6e70bf3c563702fc92db4f6bb3f27173</anchor>
+      <arglist>(choc::buffer::ChannelArrayView&lt; float &gt; block)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>writeSilence</name>
+      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
+      <anchor>a855ba9959ca37d48fedb2c6dffec5881</anchor>
+      <arglist>(choc::buffer::FrameCount numFrames)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>readAdding</name>
+      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
+      <anchor>a2b1a6241a2738598d411ba4a120a4b3f</anchor>
+      <arglist>(choc::buffer::ChannelArrayView&lt; float &gt; dest)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>readOverwriting</name>
+      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
+      <anchor>a5657648c0b741caf7d5932697e139187</anchor>
+      <arglist>(choc::buffer::ChannelArrayView&lt; float &gt; dest)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>removeSamples</name>
+      <anchorfile>classtracktion__graph_1_1AudioFifo.html</anchorfile>
+      <anchor>a76be18bb53b26279f141553416930686</anchor>
+      <arglist>(int numSamples)</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -14164,6 +14215,31 @@
       <name>xmlTypeName</name>
       <anchorfile>classtracktion__engine_1_1AuxSendPlugin.html</anchorfile>
       <anchor>a6a2283004c41f2f9bbe1e6c6df2aabeb</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion_engine::MackieMCU::AuxTimer</name>
+    <filename>structtracktion__engine_1_1MackieMCU_1_1AuxTimer.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>AuxTimer</name>
+      <anchorfile>structtracktion__engine_1_1MackieMCU_1_1AuxTimer.html</anchorfile>
+      <anchor>a690b97ca2ac3750750820a9f75343eca</anchor>
+      <arglist>(MackieMCU &amp;mcu)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>timerCallback</name>
+      <anchorfile>structtracktion__engine_1_1MackieMCU_1_1AuxTimer.html</anchorfile>
+      <anchor>a4f8d88d02a3872dae7207dd746f83ac6</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="variable">
+      <type>MackieMCU &amp;</type>
+      <name>owner</name>
+      <anchorfile>structtracktion__engine_1_1MackieMCU_1_1AuxTimer.html</anchorfile>
+      <anchor>a0b1c3834c0f702c609a14e57a4be3455</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -20801,6 +20877,48 @@
     </member>
     <member kind="function">
       <type>void</type>
+      <name>userToggledMixerWindow</name>
+      <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
+      <anchor>abcd8741fde18ac5017dd741b6fb93d2c</anchor>
+      <arglist>(bool fullscreen)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userToggledMidiEditorWindow</name>
+      <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
+      <anchor>ace88cdc59893229a8721e9a725e89a43</anchor>
+      <arglist>(bool fullscreen)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userToggledTrackEditorWindow</name>
+      <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
+      <anchor>a428329e41edb961cad253d81eda3303d</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userToggledBrowserWindow</name>
+      <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
+      <anchor>a525af4badb94ae808c5ae88bcf693c28</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userToggledActionsWindow</name>
+      <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
+      <anchor>a228c5b374fb5fe5dd7742c5515e1d544</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userPressedUserAction</name>
+      <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
+      <anchor>a68d61cc86a9b8a517ce6de43aaf35d43</anchor>
+      <arglist>(int)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
       <name>userPressedFreeze</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
       <anchor>a02f5f1c55e3c3b65f615c0ce09c7c986</anchor>
@@ -21222,6 +21340,31 @@
       <anchorfile>structtracktion__engine_1_1AudioFadeCurve_1_1Convex.html</anchorfile>
       <anchor>a09dd05124c606fcd03244bd0045e585b</anchor>
       <arglist>(float alpha) noexcept</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion_engine::MackieMCU::CpuMeterTimer</name>
+    <filename>structtracktion__engine_1_1MackieMCU_1_1CpuMeterTimer.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>CpuMeterTimer</name>
+      <anchorfile>structtracktion__engine_1_1MackieMCU_1_1CpuMeterTimer.html</anchorfile>
+      <anchor>af3f2f5c489336be58beccc59f7eba331</anchor>
+      <arglist>(MackieMCU &amp;mcu)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>timerCallback</name>
+      <anchorfile>structtracktion__engine_1_1MackieMCU_1_1CpuMeterTimer.html</anchorfile>
+      <anchor>ac4b8a40b8c98e6784173a1964047a68c</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="variable">
+      <type>MackieMCU &amp;</type>
+      <name>owner</name>
+      <anchorfile>structtracktion__engine_1_1MackieMCU_1_1CpuMeterTimer.html</anchorfile>
+      <anchor>ab4187144ce3f9780df9af142b5a5dfe4</anchor>
+      <arglist></arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -34324,6 +34467,95 @@
     </member>
   </compound>
   <compound kind="class">
+    <name>tracktion_engine::IconProG2</name>
+    <filename>classtracktion__engine_1_1IconProG2.html</filename>
+    <base>tracktion_engine::MackieMCU</base>
+    <member kind="function">
+      <type></type>
+      <name>IconProG2</name>
+      <anchorfile>classtracktion__engine_1_1IconProG2.html</anchorfile>
+      <anchor>a05d342b2f26c01edbcd347021789d5e1</anchor>
+      <arglist>(ExternalControllerManager &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~IconProG2</name>
+      <anchorfile>classtracktion__engine_1_1IconProG2.html</anchorfile>
+      <anchor>ae73997e2437b6952a6ab30e5b3cecb24</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>acceptMidiMessage</name>
+      <anchorfile>classtracktion__engine_1_1IconProG2.html</anchorfile>
+      <anchor>af732a53b58f919aeeb0115a2a439b4ca</anchor>
+      <arglist>(int deviceIdx, const juce::MidiMessage &amp;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>loopOnOffChanged</name>
+      <anchorfile>classtracktion__engine_1_1IconProG2.html</anchorfile>
+      <anchor>a4c6dd6ead34752e09b52b51dd61df94c</anchor>
+      <arglist>(bool isLoopOn) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>punchOnOffChanged</name>
+      <anchorfile>classtracktion__engine_1_1IconProG2.html</anchorfile>
+      <anchor>a376d92d4385d94c7e2362b5ad8bba539</anchor>
+      <arglist>(bool isPunching) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>clickOnOffChanged</name>
+      <anchorfile>classtracktion__engine_1_1IconProG2.html</anchorfile>
+      <anchor>ad672c31147801e055e9f5efb44aad258</anchor>
+      <arglist>(bool isClickOn) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>snapOnOffChanged</name>
+      <anchorfile>classtracktion__engine_1_1IconProG2.html</anchorfile>
+      <anchor>acb3f63c86ca106ff09c438be053c5b65</anchor>
+      <arglist>(bool isSnapOn) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>slaveOnOffChanged</name>
+      <anchorfile>classtracktion__engine_1_1IconProG2.html</anchorfile>
+      <anchor>a212c3c3789b08f3721fae895f6ad1696</anchor>
+      <arglist>(bool isSlaving) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>undoStatusChanged</name>
+      <anchorfile>classtracktion__engine_1_1IconProG2.html</anchorfile>
+      <anchor>abaa4b19ddb32ebb478298dc7177d0010</anchor>
+      <arglist>(bool undo, bool redo) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>automationReadModeChanged</name>
+      <anchorfile>classtracktion__engine_1_1IconProG2.html</anchorfile>
+      <anchor>a9cdc59c638028feb1368b7a02e919861</anchor>
+      <arglist>(bool isReading) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>automationWriteModeChanged</name>
+      <anchorfile>classtracktion__engine_1_1IconProG2.html</anchorfile>
+      <anchor>aa251d1941f937efcff877fa90db7e506</anchor>
+      <arglist>(bool isWriting) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setAssignmentMode</name>
+      <anchorfile>classtracktion__engine_1_1IconProG2.html</anchorfile>
+      <anchor>a168fcca426ef0bb1b34546c1458d444f</anchor>
+      <arglist>(AssignmentMode newMode) override</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
     <name>tracktion_engine::ImpulseResponsePlugin</name>
     <filename>classtracktion__engine_1_1ImpulseResponsePlugin.html</filename>
     <base>tracktion_engine::Plugin</base>
@@ -39008,6 +39240,8 @@
     <name>tracktion_engine::MackieMCU</name>
     <filename>classtracktion__engine_1_1MackieMCU.html</filename>
     <base>tracktion_engine::ControlSurface</base>
+    <class kind="struct">tracktion_engine::MackieMCU::AuxTimer</class>
+    <class kind="struct">tracktion_engine::MackieMCU::CpuMeterTimer</class>
     <member kind="enumeration">
       <type></type>
       <name>AssignmentMode</name>
@@ -39179,11 +39413,11 @@
       <anchor>a7ebe7747d823332ef044ac9b33998d68</anchor>
       <arglist>(const juce::MidiMessage &amp;) override</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>acceptMidiMessage</name>
       <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
-      <anchor>ab49d1f8c2f95db321a3c34f97a7c8e59</anchor>
+      <anchor>a717e38ddfd479254dbd369159bc51357</anchor>
       <arglist>(int deviceIdx, const juce::MidiMessage &amp;)</arglist>
     </member>
     <member kind="function">
@@ -39228,11 +39462,11 @@
       <anchor>ae1dd51221df8e09a96038aff80e43bd2</anchor>
       <arglist>(int dev, bool)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>setAssignmentMode</name>
       <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
-      <anchor>aac7588829d23ce894ae394e9674a6157</anchor>
+      <anchor>a512ab5092cabd11e486f0bf92459efd4</anchor>
       <arglist>(AssignmentMode)</arglist>
     </member>
     <member kind="function">
@@ -39528,6 +39762,265 @@
       <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
       <anchor>a8c51bbc8aea7d2e885946c1d1856b803</anchor>
       <arglist>(bool b)</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>clearAllDisplays</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>a9470debcced6ebb7b85d3f65d00147b5</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>setDisplay</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>a9dfac15d42c89830efbf3cabf2aed43b</anchor>
+      <arglist>(int devIdx, const juce::String &amp;text, int pos)</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>clearDisplaySegment</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>a1e9e5f1b243f01b9ccb731f6de60f8d0</anchor>
+      <arglist>(int devIdx, int column, int row)</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>setDisplaySegment</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>acad4bedbace6115a264bf1c07863067e</anchor>
+      <arglist>(int devIdx, int column, int row, const juce::String &amp;text)</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>centreDisplaySegment</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>a181e6d56c578fdfcd1534dbd56e1c109</anchor>
+      <arglist>(int devIdx, int column, int row, const juce::String &amp;text)</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>handleAsyncUpdate</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>ac6becae8e9ca578fccfeb7b47550cdfd</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>timerCallback</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>acd2c070ed97b8accfeabd919afa048dd</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>juce::String</type>
+      <name>auxString</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>a1451429c41f4076700dccf2f660ee407</anchor>
+      <arglist>(int chan) const</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>bool</type>
+      <name>isEditValidAndNotSafeRecording</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>aa8859df93957a6dcfc0e945945434e39</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>AssignmentMode</type>
+      <name>assignmentMode</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>a6fd9611cdd4ed6ca29e3afa12b03f334</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>float</type>
+      <name>panPos</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>a32b2f3a2d9b80465ca2394b00e059662</anchor>
+      <arglist>[maxNumChannels]</arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>char</type>
+      <name>timecodeDigits</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>abef624ed8c0f234e7d918e1fade4bd37</anchor>
+      <arglist>[9]</arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>bool</type>
+      <name>lastSmpteBeatsSetting</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>a4c57d613b244767c22c9e06d7971315b</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>bool</type>
+      <name>isZooming</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>a19ec6561245adc4ff86af5a29c33609b</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>bool</type>
+      <name>marker</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>a96a1c3d1b895d1d1b0e6c6ba777ac77b</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>bool</type>
+      <name>nudge</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>a4e1bec652b77e52f655949985a97ac63</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>uint8_t</type>
+      <name>lastChannelLevels</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>a7b199c621a56e68cdd3394ece622e64c</anchor>
+      <arglist>[maxNumChannels]</arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>bool</type>
+      <name>recLight</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>a73483b03b6aff3eb935a5174bfd0b9db</anchor>
+      <arglist>[maxNumChannels]</arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>bool</type>
+      <name>isRecButtonDown</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>a75b86e0d53b2c2ac43200425c3d18ef4</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>bool</type>
+      <name>flipped</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>a1646c02ea3461c0954f6ee1f6e39d17c</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>bool</type>
+      <name>editFlip</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>a43b37fd43a23b3be1d26f5802796a0ff</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>bool</type>
+      <name>cpuVisible</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>ad382b2720c672dd97df9dd8cc8ef0351</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>bool</type>
+      <name>oneTouchRecord</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>a83ff6200787e4d735eb3ee70d97fd1cd</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>int</type>
+      <name>shiftKeysDown</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>a2afad52699abbd0bc6d53989b33cc731</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>char</type>
+      <name>currentDisplayChars</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>a5ca7feba60cd30eda3bb474fe43c31d7</anchor>
+      <arglist>[maxNumSurfaces][maxCharsOnDisplay]</arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>char</type>
+      <name>newDisplayChars</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>af9438046325830c9e959bd968019ea19</anchor>
+      <arglist>[maxNumSurfaces][maxCharsOnDisplay]</arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>uint32_t</type>
+      <name>lastRewindPress</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>a4f31379b377e69332c68dcdae4f6c338</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>uint32_t</type>
+      <name>lastFaderPos</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>a73e22665bd3cb41fe5b9b1b9221b059c</anchor>
+      <arglist>[maxNumSurfaces][9]</arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>float</type>
+      <name>auxLevels</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>a0ae1dd232593916fb59cf3c87bb9c97a</anchor>
+      <arglist>[maxNumChannels]</arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>char</type>
+      <name>auxBusNames</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>a39351a54b1ac1bb067a53e7b7364ce05</anchor>
+      <arglist>[maxNumChannels][7]</arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>int</type>
+      <name>lastStartChan</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>aee7b66346e7f03a65dacc11b6626d053</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>int</type>
+      <name>deviceIdx</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>ade726c5d2d33bd67b3b2913fc14296f4</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>int</type>
+      <name>auxBank</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>a7e946c7890fce307ffb87568bbad38ea</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>juce::Array&lt; int &gt;</type>
+      <name>userMovedAuxes</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>ac3786059246180a1817112af90197a60</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>std::unique_ptr&lt; CpuMeterTimer &gt;</type>
+      <name>cpuMeterTimer</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>abb2ae583a875eac40449eddad0086101</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>std::unique_ptr&lt; AuxTimer &gt;</type>
+      <name>auxTimer</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>af5e6b6f8c48395aa2aecb5d8089c83a7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>juce::Array&lt; MackieXT * &gt;</type>
+      <name>extenders</name>
+      <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
+      <anchor>a0eb5ba4dbeba34eff25b52e6d88f65aa</anchor>
+      <arglist></arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -48146,6 +48639,66 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>tracktion_engine::HostedAudioDeviceInterface::Parameters</name>
+    <filename>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</filename>
+    <member kind="variable">
+      <type>double</type>
+      <name>sampleRate</name>
+      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>a05687012e71d8ecd455cc940a957de4a</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>blockSize</name>
+      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>a22f02d68dff12d51f3ea1f81655dbaea</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>useMidiDevices</name>
+      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>a3f2505c158909ee30ca58455bb254fd7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>inputChannels</name>
+      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>a0b4fbeafa74f726691ae8f681d0b4e7f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>outputChannels</name>
+      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>ae0fc6112d00d084a824f5d567dd94996</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>fixedBlockSize</name>
+      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>aed3b302ceedbd1099eacb7984d88e04e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::StringArray</type>
+      <name>inputNames</name>
+      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>a3fb5da1d11b102ba7b1f9451c53bbf0f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::StringArray</type>
+      <name>outputNames</name>
+      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>a06c8157286b8b57614604a1f0f41b42b</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>tracktion_engine::SimpleLFO::Parameters</name>
     <filename>structtracktion__engine_1_1SimpleLFO_1_1Parameters.html</filename>
     <member kind="function">
@@ -48529,66 +49082,6 @@
       <name>resultAudioDuration</name>
       <anchorfile>structtracktion__engine_1_1Renderer_1_1Parameters.html</anchorfile>
       <anchor>a15d56f3ffe40efa03d2813fcbfe9f65a</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
-    <name>tracktion_engine::HostedAudioDeviceInterface::Parameters</name>
-    <filename>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</filename>
-    <member kind="variable">
-      <type>double</type>
-      <name>sampleRate</name>
-      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>a05687012e71d8ecd455cc940a957de4a</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>int</type>
-      <name>blockSize</name>
-      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>a22f02d68dff12d51f3ea1f81655dbaea</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>bool</type>
-      <name>useMidiDevices</name>
-      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>a3f2505c158909ee30ca58455bb254fd7</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>int</type>
-      <name>inputChannels</name>
-      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>a0b4fbeafa74f726691ae8f681d0b4e7f</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>int</type>
-      <name>outputChannels</name>
-      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>ae0fc6112d00d084a824f5d567dd94996</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>bool</type>
-      <name>fixedBlockSize</name>
-      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>aed3b302ceedbd1099eacb7984d88e04e</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::StringArray</type>
-      <name>inputNames</name>
-      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>a3fb5da1d11b102ba7b1f9451c53bbf0f</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::StringArray</type>
-      <name>outputNames</name>
-      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>a06c8157286b8b57614604a1f0f41b42b</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -62859,31 +63352,6 @@
     </member>
   </compound>
   <compound kind="struct">
-    <name>tracktion_engine::Renderer::Statistics</name>
-    <filename>structtracktion__engine_1_1Renderer_1_1Statistics.html</filename>
-    <member kind="variable">
-      <type>float</type>
-      <name>peak</name>
-      <anchorfile>structtracktion__engine_1_1Renderer_1_1Statistics.html</anchorfile>
-      <anchor>af6c079832079c87af78a02ee8ad9e70c</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>float</type>
-      <name>average</name>
-      <anchorfile>structtracktion__engine_1_1Renderer_1_1Statistics.html</anchorfile>
-      <anchor>a79f4eb0f0cb08257914938bae454f26c</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>float</type>
-      <name>audioDuration</name>
-      <anchorfile>structtracktion__engine_1_1Renderer_1_1Statistics.html</anchorfile>
-      <anchor>a339f649e3c9496c5a28bc95d41433981</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
     <name>tracktion_graph::PerformanceMeasurement::Statistics</name>
     <filename>structtracktion__graph_1_1PerformanceMeasurement_1_1Statistics.html</filename>
     <member kind="function">
@@ -62968,6 +63436,31 @@
       <name>numRuns</name>
       <anchorfile>structtracktion__graph_1_1PerformanceMeasurement_1_1Statistics.html</anchorfile>
       <anchor>af739074eccffada098e3683667734961</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion_engine::Renderer::Statistics</name>
+    <filename>structtracktion__engine_1_1Renderer_1_1Statistics.html</filename>
+    <member kind="variable">
+      <type>float</type>
+      <name>peak</name>
+      <anchorfile>structtracktion__engine_1_1Renderer_1_1Statistics.html</anchorfile>
+      <anchor>af6c079832079c87af78a02ee8ad9e70c</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>average</name>
+      <anchorfile>structtracktion__engine_1_1Renderer_1_1Statistics.html</anchorfile>
+      <anchor>a79f4eb0f0cb08257914938bae454f26c</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>audioDuration</name>
+      <anchorfile>structtracktion__engine_1_1Renderer_1_1Statistics.html</anchorfile>
+      <anchor>a339f649e3c9496c5a28bc95d41433981</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -70436,6 +70929,41 @@
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
+      <name>showHideMixer</name>
+      <anchorfile>classtracktion__engine_1_1UIBehaviour.html</anchorfile>
+      <anchor>a3362502cfa6e8da7f3a424e16080490f</anchor>
+      <arglist>([[maybe_unused]] bool fullscreen)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>showHideMidiEditor</name>
+      <anchorfile>classtracktion__engine_1_1UIBehaviour.html</anchorfile>
+      <anchor>abee935689656dcf5493d83bbfe405dc3</anchor>
+      <arglist>([[maybe_unused]] bool fullscreen)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>showHideTrackEditor</name>
+      <anchorfile>classtracktion__engine_1_1UIBehaviour.html</anchorfile>
+      <anchor>a85392c1237fa8568d223a22490918d91</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>showHideBrowser</name>
+      <anchorfile>classtracktion__engine_1_1UIBehaviour.html</anchorfile>
+      <anchor>a43fb443dcdaa8bed4269931bab45e766</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>showHideActions</name>
+      <anchorfile>classtracktion__engine_1_1UIBehaviour.html</anchorfile>
+      <anchor>a11bc9522a90abce8710f1240b0612481</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>showHideAllPanes</name>
       <anchorfile>classtracktion__engine_1_1UIBehaviour.html</anchorfile>
       <anchor>a6574bbf17de600ce22ffabb4127f48d5</anchor>
@@ -70447,6 +70975,13 @@
       <anchorfile>classtracktion__engine_1_1UIBehaviour.html</anchorfile>
       <anchor>a5515d232ca9cda9583000bc25688a6d3</anchor>
       <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>performUserAction</name>
+      <anchorfile>classtracktion__engine_1_1UIBehaviour.html</anchorfile>
+      <anchor>a54d1b3c246a1ff68d4f392e64c75b3fc</anchor>
+      <arglist>(int)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
@@ -76582,6 +77117,7 @@
     <class kind="class">tracktion_engine::GrooveTemplateManager</class>
     <class kind="class">tracktion_engine::HostedAudioDeviceInterface</class>
     <class kind="class">tracktion_engine::HostedMidiInputDeviceNode</class>
+    <class kind="class">tracktion_engine::IconProG2</class>
     <class kind="class">tracktion_engine::ImpulseResponsePlugin</class>
     <class kind="class">tracktion_engine::InputDevice</class>
     <class kind="class">tracktion_engine::InputDeviceInstance</class>
@@ -79598,15 +80134,15 @@
       <type>void</type>
       <name>markIn</name>
       <anchorfile>namespacetracktion__engine_1_1AppFunctions.html</anchorfile>
-      <anchor>a81402927f2ebc9dc487fb2811df165d5</anchor>
-      <arglist>()</arglist>
+      <anchor>ae21cb759b384ba7d540ae5c4e3a974dc</anchor>
+      <arglist>(bool forceAtCursor)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>markOut</name>
       <anchorfile>namespacetracktion__engine_1_1AppFunctions.html</anchorfile>
-      <anchor>a5da898b52d9d3726f0ddc9496fff8993</anchor>
-      <arglist>()</arglist>
+      <anchor>a9f23a08dbc698125c665beb8392b4788</anchor>
+      <arglist>(bool forceAtCursor)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -79929,6 +80465,48 @@
       <anchorfile>namespacetracktion__engine_1_1AppFunctions.html</anchorfile>
       <anchor>a84f565b649f8f5b47019b819a2eb236d</anchor>
       <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>showHideMixer</name>
+      <anchorfile>namespacetracktion__engine_1_1AppFunctions.html</anchorfile>
+      <anchor>ad2ac9582916a04d79d5b53407686b464</anchor>
+      <arglist>(bool fs)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>showHideMidiEditor</name>
+      <anchorfile>namespacetracktion__engine_1_1AppFunctions.html</anchorfile>
+      <anchor>a287af2650b0442b677735e4c2b5f363d</anchor>
+      <arglist>(bool fs)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>showHideTrackEditor</name>
+      <anchorfile>namespacetracktion__engine_1_1AppFunctions.html</anchorfile>
+      <anchor>aa2f9af6cd6699c07268abf55d70a0ec2</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>showHideBrowser</name>
+      <anchorfile>namespacetracktion__engine_1_1AppFunctions.html</anchorfile>
+      <anchor>a69a3319bc6754b9fb978cc8af2a33771</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>showHideActions</name>
+      <anchorfile>namespacetracktion__engine_1_1AppFunctions.html</anchorfile>
+      <anchor>af2dd5a9f56049c862f6ce28832e19586</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>performUserAction</name>
+      <anchorfile>namespacetracktion__engine_1_1AppFunctions.html</anchorfile>
+      <anchor>a011a171565e7cbf194b61bc41cd4079a</anchor>
+      <arglist>(int)</arglist>
     </member>
     <member kind="function">
       <type>void</type>

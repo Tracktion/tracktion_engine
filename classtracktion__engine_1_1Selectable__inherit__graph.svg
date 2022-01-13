@@ -49,9 +49,9 @@
 <path fill="none" stroke="midnightblue" d="M81.67,-485.66C92.42,-550.26 130.26,-761.37 191,-927 214.72,-991.68 255.1,-1063.42 273,-1093.94"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="85.1,-484.95 80.03,-475.65 78.19,-486.08 85.1,-484.95"/>
 </g>
-<!-- Node17 -->
+<!-- Node18 -->
 <g id="node17" class="node">
-<title>Node17</title>
+<title>Node18</title>
 <g id="a_node17"><a xlink:href="classtracktion__engine_1_1CurveEditorPoint.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="202.5,-887 202.5,-917 363.5,-917 363.5,-887 202.5,-887"/>
 <text text-anchor="start" x="210.5" y="-905" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::CurveEditor</text>
@@ -59,45 +59,45 @@
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node17 -->
+<!-- Node1&#45;&gt;Node18 -->
 <g id="edge16" class="edge">
-<title>Node1&#45;&gt;Node17</title>
+<title>Node1&#45;&gt;Node18</title>
 <path fill="none" stroke="midnightblue" d="M78.93,-486.04C81.28,-548.07 96.24,-739.67 191,-855 202.63,-869.15 219.63,-879.52 235.8,-886.87"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="82.42,-485.61 78.62,-475.72 75.42,-485.82 82.42,-485.61"/>
 </g>
-<!-- Node19 -->
+<!-- Node20 -->
 <g id="node19" class="node">
-<title>Node19</title>
+<title>Node20</title>
 <g id="a_node19"><a xlink:href="classtracktion__engine_1_1Edit.html" target="_top" xlink:title="The Tracktion Edit class!">
 <polygon fill="none" stroke="black" points="221.5,-826.5 221.5,-845.5 344.5,-845.5 344.5,-826.5 221.5,-826.5"/>
 <text text-anchor="middle" x="283" y="-833.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::Edit</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node19 -->
+<!-- Node1&#45;&gt;Node20 -->
 <g id="edge18" class="edge">
-<title>Node1&#45;&gt;Node19</title>
+<title>Node1&#45;&gt;Node20</title>
 <path fill="none" stroke="midnightblue" d="M78.4,-486C79.26,-546.09 90.48,-726.46 191,-817 199.51,-824.67 210.31,-829.55 221.46,-832.59"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="81.9,-485.63 78.34,-475.65 74.9,-485.67 81.9,-485.63"/>
 </g>
-<!-- Node20 -->
+<!-- Node21 -->
 <g id="node20" class="node">
-<title>Node20</title>
+<title>Node21</title>
 <g id="a_node20"><a xlink:href="classtracktion__engine_1_1InputDevice.html" target="_top" xlink:title="Represents an input device.">
 <polygon fill="none" stroke="black" points="201.5,-788.5 201.5,-807.5 364.5,-807.5 364.5,-788.5 201.5,-788.5"/>
 <text text-anchor="middle" x="283" y="-795.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::InputDevice</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node20 -->
+<!-- Node1&#45;&gt;Node21 -->
 <g id="edge19" class="edge">
-<title>Node1&#45;&gt;Node20</title>
+<title>Node1&#45;&gt;Node21</title>
 <path fill="none" stroke="midnightblue" d="M81.77,-485.58C90.87,-534.75 120.59,-665.21 191,-746 208.33,-765.89 235.23,-779.93 255.29,-788.37"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="85.2,-484.87 80.01,-475.64 78.31,-486.09 85.2,-484.87"/>
 </g>
-<!-- Node25 -->
+<!-- Node26 -->
 <g id="node23" class="node">
-<title>Node25</title>
+<title>Node26</title>
 <g id="a_node23"><a xlink:href="structtracktion__engine_1_1InputDeviceInstance_1_1InputDeviceDestination.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="193.5,-706 193.5,-736 372.5,-736 372.5,-706 193.5,-706"/>
 <text text-anchor="start" x="201.5" y="-724" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::InputDevice</text>
@@ -105,15 +105,15 @@
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node25 -->
+<!-- Node1&#45;&gt;Node26 -->
 <g id="edge22" class="edge">
-<title>Node1&#45;&gt;Node25</title>
+<title>Node1&#45;&gt;Node26</title>
 <path fill="none" stroke="midnightblue" d="M82.87,-485.63C93.54,-529.08 125.04,-633.99 191,-691 198.05,-697.09 206.37,-701.95 215.06,-705.83"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="86.24,-484.69 80.55,-475.76 79.43,-486.3 86.24,-484.69"/>
 </g>
-<!-- Node29 -->
+<!-- Node30 -->
 <g id="node27" class="node">
-<title>Node29</title>
+<title>Node30</title>
 <g id="a_node27"><a xlink:href="structtracktion__engine_1_1MakeMonoEffect.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="204,-651 204,-681 362,-681 362,-651 204,-651"/>
 <text text-anchor="start" x="212" y="-669" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::MakeMono</text>
@@ -121,30 +121,30 @@
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node29 -->
+<!-- Node1&#45;&gt;Node30 -->
 <g id="edge26" class="edge">
-<title>Node1&#45;&gt;Node29</title>
+<title>Node1&#45;&gt;Node30</title>
 <path fill="none" stroke="midnightblue" d="M85.39,-485.1C99.43,-521.25 134.84,-599.73 191,-641 196.28,-644.88 202.13,-648.16 208.25,-650.93"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="88.66,-483.84 81.86,-475.71 82.1,-486.31 88.66,-483.84"/>
 </g>
-<!-- Node30 -->
+<!-- Node31 -->
 <g id="node28" class="node">
-<title>Node30</title>
+<title>Node31</title>
 <g id="a_node28"><a xlink:href="structtracktion__engine_1_1Modifier.html" target="_top" xlink:title="Bass class for parameter Modifiers.">
 <polygon fill="none" stroke="black" points="211,-612.5 211,-631.5 355,-631.5 355,-612.5 211,-612.5"/>
 <text text-anchor="middle" x="283" y="-619.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::Modifier</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node30 -->
+<!-- Node1&#45;&gt;Node31 -->
 <g id="edge27" class="edge">
-<title>Node1&#45;&gt;Node30</title>
+<title>Node1&#45;&gt;Node31</title>
 <path fill="none" stroke="midnightblue" d="M88.16,-484.49C104.84,-514.48 142.04,-573.35 191,-603 197.35,-606.85 204.36,-609.92 211.58,-612.38"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="91.14,-482.64 83.3,-475.51 84.98,-485.97 91.14,-482.64"/>
 </g>
-<!-- Node37 -->
+<!-- Node38 -->
 <g id="node35" class="node">
-<title>Node37</title>
+<title>Node38</title>
 <g id="a_node35"><a xlink:href="structtracktion__engine_1_1NormaliseEffect.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="205.5,-563 205.5,-593 360.5,-593 360.5,-563 205.5,-563"/>
 <text text-anchor="start" x="213.5" y="-581" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::Normalise</text>
@@ -152,15 +152,15 @@
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node37 -->
+<!-- Node1&#45;&gt;Node38 -->
 <g id="edge34" class="edge">
-<title>Node1&#45;&gt;Node37</title>
+<title>Node1&#45;&gt;Node38</title>
 <path fill="none" stroke="midnightblue" d="M95.46,-482.95C116.24,-502.79 153.35,-535.31 191,-554 197.88,-557.41 205.3,-560.38 212.83,-562.96"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="97.69,-480.24 88.08,-475.78 92.81,-485.26 97.69,-480.24"/>
 </g>
-<!-- Node38 -->
+<!-- Node39 -->
 <g id="node36" class="node">
-<title>Node38</title>
+<title>Node39</title>
 <g id="a_node36"><a xlink:href="classtracktion__engine_1_1OutputDevice.html" target="_top" xlink:title="Base class for audio or midi output devices, to which a track&#39;s output can be sent.">
 <polygon fill="none" stroke="red" points="214.5,-514 214.5,-544 351.5,-544 351.5,-514 214.5,-514"/>
 <text text-anchor="start" x="222.5" y="-532" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::Output</text>
@@ -168,75 +168,75 @@
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node38 -->
+<!-- Node1&#45;&gt;Node39 -->
 <g id="edge35" class="edge">
-<title>Node1&#45;&gt;Node38</title>
+<title>Node1&#45;&gt;Node39</title>
 <path fill="none" stroke="midnightblue" d="M115.21,-479C137.11,-486.6 165.53,-496.21 191,-504 201.97,-507.36 213.74,-510.75 225.06,-513.9"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="116.23,-475.65 105.64,-475.66 113.93,-482.26 116.23,-475.65"/>
 </g>
-<!-- Node42 -->
+<!-- Node43 -->
 <g id="node38" class="node">
-<title>Node42</title>
+<title>Node43</title>
 <g id="a_node38"><a xlink:href="classtracktion__engine_1_1Plugin.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="red" points="216,-475.5 216,-494.5 350,-494.5 350,-475.5 216,-475.5"/>
 <text text-anchor="middle" x="283" y="-482.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::Plugin</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node42 -->
+<!-- Node1&#45;&gt;Node43 -->
 <g id="edge37" class="edge">
-<title>Node1&#45;&gt;Node42</title>
+<title>Node1&#45;&gt;Node43</title>
 <path fill="none" stroke="midnightblue" d="M165.53,-474.13C182.36,-475.7 199.73,-477.32 215.76,-478.82"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="165.43,-470.6 155.14,-473.16 164.78,-477.57 165.43,-470.6"/>
 </g>
-<!-- Node70 -->
+<!-- Node71 -->
 <g id="node39" class="node">
-<title>Node70</title>
+<title>Node71</title>
 <g id="a_node39"><a xlink:href="classtracktion__engine_1_1Project.html" target="_top" xlink:title="A tracktion project.">
 <polygon fill="none" stroke="black" points="214,-437.5 214,-456.5 352,-456.5 352,-437.5 214,-437.5"/>
 <text text-anchor="middle" x="283" y="-444.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::Project</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node70 -->
+<!-- Node1&#45;&gt;Node71 -->
 <g id="edge38" class="edge">
-<title>Node1&#45;&gt;Node70</title>
+<title>Node1&#45;&gt;Node71</title>
 <path fill="none" stroke="midnightblue" d="M165.18,-457.91C181.42,-456.39 198.19,-454.82 213.78,-453.37"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="164.78,-454.43 155.14,-458.84 165.43,-461.4 164.78,-454.43"/>
 </g>
-<!-- Node71 -->
+<!-- Node72 -->
 <g id="node40" class="node">
-<title>Node71</title>
+<title>Node72</title>
 <g id="a_node40"><a xlink:href="classtracktion__engine_1_1ProjectItem.html" target="_top" xlink:title="Represents a file&#45;based resource that is used in a project.">
 <polygon fill="none" stroke="black" points="202.5,-399.5 202.5,-418.5 363.5,-418.5 363.5,-399.5 202.5,-399.5"/>
 <text text-anchor="middle" x="283" y="-406.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::ProjectItem</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node71 -->
+<!-- Node1&#45;&gt;Node72 -->
 <g id="edge39" class="edge">
-<title>Node1&#45;&gt;Node71</title>
+<title>Node1&#45;&gt;Node72</title>
 <path fill="none" stroke="midnightblue" d="M113.73,-452.89C135.74,-445 164.78,-435.14 191,-428 203.77,-424.52 217.7,-421.33 230.73,-418.58"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="112.36,-449.66 104.15,-456.36 114.74,-456.24 112.36,-449.66"/>
 </g>
-<!-- Node72 -->
+<!-- Node73 -->
 <g id="node41" class="node">
-<title>Node72</title>
+<title>Node73</title>
 <g id="a_node41"><a xlink:href="classtracktion__engine_1_1RackType.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="207.5,-361.5 207.5,-380.5 358.5,-380.5 358.5,-361.5 207.5,-361.5"/>
 <text text-anchor="middle" x="283" y="-368.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::RackType</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node72 -->
+<!-- Node1&#45;&gt;Node73 -->
 <g id="edge40" class="edge">
-<title>Node1&#45;&gt;Node72</title>
+<title>Node1&#45;&gt;Node73</title>
 <path fill="none" stroke="midnightblue" d="M97.37,-449.83C118.7,-432.42 155.13,-405.17 191,-390 200.07,-386.17 209.98,-383.08 219.82,-380.6"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="94.91,-447.33 89.46,-456.41 99.38,-452.71 94.91,-447.33"/>
 </g>
-<!-- Node73 -->
+<!-- Node74 -->
 <g id="node42" class="node">
-<title>Node73</title>
+<title>Node74</title>
 <g id="a_node42"><a xlink:href="classtracktion__engine_1_1SelectedMidiEvents.html" target="_top" xlink:title="Represents a set of selected MIDI notes.">
 <polygon fill="none" stroke="black" points="210,-312 210,-342 356,-342 356,-312 210,-312"/>
 <text text-anchor="start" x="218" y="-330" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::Selected</text>
@@ -244,15 +244,15 @@
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node73 -->
+<!-- Node1&#45;&gt;Node74 -->
 <g id="edge41" class="edge">
-<title>Node1&#45;&gt;Node73</title>
+<title>Node1&#45;&gt;Node74</title>
 <path fill="none" stroke="midnightblue" d="M91.25,-448.1C110.16,-422.88 148.05,-377.17 191,-352 197.5,-348.19 204.61,-344.94 211.89,-342.18"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="88.26,-446.25 85.17,-456.39 93.91,-450.4 88.26,-446.25"/>
 </g>
-<!-- Node74 -->
+<!-- Node75 -->
 <g id="node43" class="node">
-<title>Node74</title>
+<title>Node75</title>
 <g id="a_node43"><a xlink:href="structtracktion__engine_1_1StepClip_1_1Channel.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="210.5,-263 210.5,-293 355.5,-293 355.5,-263 210.5,-263"/>
 <text text-anchor="start" x="218.5" y="-281" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::StepClip</text>
@@ -260,15 +260,15 @@
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node74 -->
+<!-- Node1&#45;&gt;Node75 -->
 <g id="edge42" class="edge">
-<title>Node1&#45;&gt;Node74</title>
+<title>Node1&#45;&gt;Node75</title>
 <path fill="none" stroke="midnightblue" d="M86.1,-447.11C100.92,-412.74 137.03,-340.02 191,-302 196.88,-297.86 203.42,-294.43 210.23,-291.6"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="82.81,-445.89 82.19,-456.47 89.27,-448.59 82.81,-445.89"/>
 </g>
-<!-- Node75 -->
+<!-- Node76 -->
 <g id="node44" class="node">
-<title>Node75</title>
+<title>Node76</title>
 <g id="a_node44"><a xlink:href="structtracktion__engine_1_1StepClip_1_1PatternInstance.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="210.5,-214 210.5,-244 355.5,-244 355.5,-214 210.5,-214"/>
 <text text-anchor="start" x="218.5" y="-232" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::StepClip</text>
@@ -276,15 +276,15 @@
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node75 -->
+<!-- Node1&#45;&gt;Node76 -->
 <g id="edge43" class="edge">
-<title>Node1&#45;&gt;Node75</title>
+<title>Node1&#45;&gt;Node76</title>
 <path fill="none" stroke="midnightblue" d="M83.18,-446.27C94.23,-404.04 126.07,-304.58 191,-253 196.76,-248.43 203.3,-244.72 210.18,-241.71"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="79.74,-445.59 80.7,-456.14 86.53,-447.29 79.74,-445.59"/>
 </g>
-<!-- Node76 -->
+<!-- Node77 -->
 <g id="node45" class="node">
-<title>Node76</title>
+<title>Node77</title>
 <g id="a_node45"><a xlink:href="structtracktion__engine_1_1StepVolumeEffect.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="201.5,-165 201.5,-195 364.5,-195 364.5,-165 201.5,-165"/>
 <text text-anchor="start" x="209.5" y="-183" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::StepVolume</text>
@@ -292,45 +292,45 @@
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node76 -->
+<!-- Node1&#45;&gt;Node77 -->
 <g id="edge44" class="edge">
-<title>Node1&#45;&gt;Node76</title>
+<title>Node1&#45;&gt;Node77</title>
 <path fill="none" stroke="midnightblue" d="M81.06,-446.22C88.46,-397.33 114.47,-269.99 191,-204 194.96,-200.59 199.35,-197.65 204.01,-195.13"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="77.55,-446 79.62,-456.39 84.49,-446.98 77.55,-446"/>
 </g>
-<!-- Node77 -->
+<!-- Node78 -->
 <g id="node46" class="node">
-<title>Node77</title>
+<title>Node78</title>
 <g id="a_node46"><a xlink:href="classtracktion__engine_1_1TempoSequence.html" target="_top" xlink:title="Holds a list of TempoSetting objects, to form a sequence of tempo changes.">
 <polygon fill="none" stroke="black" points="191,-126.5 191,-145.5 375,-145.5 375,-126.5 191,-126.5"/>
 <text text-anchor="middle" x="283" y="-133.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::TempoSequence</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node77 -->
+<!-- Node1&#45;&gt;Node78 -->
 <g id="edge45" class="edge">
-<title>Node1&#45;&gt;Node77</title>
+<title>Node1&#45;&gt;Node78</title>
 <path fill="none" stroke="midnightblue" d="M79.34,-446.08C82.8,-390.65 100.52,-233.53 191,-155 195.39,-151.19 200.34,-148.08 205.61,-145.54"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="75.83,-446.13 78.79,-456.3 82.82,-446.5 75.83,-446.13"/>
 </g>
-<!-- Node78 -->
+<!-- Node79 -->
 <g id="node47" class="node">
-<title>Node78</title>
+<title>Node79</title>
 <g id="a_node47"><a xlink:href="classtracktion__engine_1_1Track.html" target="_top" xlink:title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">
 <polygon fill="none" stroke="red" points="218,-88.5 218,-107.5 348,-107.5 348,-88.5 218,-88.5"/>
 <text text-anchor="middle" x="283" y="-95.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::Track</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node78 -->
+<!-- Node1&#45;&gt;Node79 -->
 <g id="edge46" class="edge">
-<title>Node1&#45;&gt;Node78</title>
+<title>Node1&#45;&gt;Node79</title>
 <path fill="none" stroke="midnightblue" d="M78.44,-446.11C79.42,-386.35 90.93,-206.99 191,-117 198.56,-110.2 207.91,-105.6 217.71,-102.52"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="74.94,-446.38 78.36,-456.41 81.94,-446.43 74.94,-446.38"/>
 </g>
-<!-- Node88 -->
+<!-- Node89 -->
 <g id="node48" class="node">
-<title>Node88</title>
+<title>Node89</title>
 <g id="a_node48"><a xlink:href="structtracktion__engine_1_1TrackCompManager_1_1TrackComp.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="204,-39 204,-69 362,-69 362,-39 204,-39"/>
 <text text-anchor="start" x="212" y="-57" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::TrackComp</text>
@@ -338,24 +338,24 @@
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node88 -->
+<!-- Node1&#45;&gt;Node89 -->
 <g id="edge47" class="edge">
-<title>Node1&#45;&gt;Node88</title>
+<title>Node1&#45;&gt;Node89</title>
 <path fill="none" stroke="midnightblue" d="M77.97,-445.97C77.44,-382.48 84.73,-183.71 191,-79 194.85,-75.21 199.22,-71.97 203.91,-69.22"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="74.48,-446.26 78.14,-456.2 81.48,-446.14 74.48,-446.26"/>
 </g>
-<!-- Node89 -->
+<!-- Node90 -->
 <g id="node49" class="node">
-<title>Node89</title>
+<title>Node90</title>
 <g id="a_node49"><a xlink:href="classtracktion__engine_1_1TrackItem.html" target="_top" xlink:title="Base class for EditItems that live in a Track, e.g.">
 <polygon fill="none" stroke="red" points="207,-0.5 207,-19.5 359,-19.5 359,-0.5 207,-0.5"/>
 <text text-anchor="middle" x="283" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::TrackItem</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node89 -->
+<!-- Node1&#45;&gt;Node90 -->
 <g id="edge48" class="edge">
-<title>Node1&#45;&gt;Node89</title>
+<title>Node1&#45;&gt;Node90</title>
 <path fill="none" stroke="midnightblue" d="M80.83,-446.24C90.32,-368.97 128.62,-88.57 191,-29 195.67,-24.54 201.1,-21.01 206.94,-18.23"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="77.31,-446.13 79.59,-456.48 84.26,-446.97 77.31,-446.13"/>
 </g>
@@ -489,7 +489,7 @@
 <g id="node12" class="node">
 <title>Node12</title>
 <g id="a_node12"><a xlink:href="classtracktion__engine_1_1MackieMCU.html" target="_top" xlink:title=" ">
-<polygon fill="none" stroke="black" points="432.5,-1137.5 432.5,-1156.5 595.5,-1156.5 595.5,-1137.5 432.5,-1137.5"/>
+<polygon fill="none" stroke="red" points="432.5,-1137.5 432.5,-1156.5 595.5,-1156.5 595.5,-1137.5 432.5,-1137.5"/>
 <text text-anchor="middle" x="514" y="-1144.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::MackieMCU</text>
 </a>
 </g>
@@ -500,24 +500,24 @@
 <path fill="none" stroke="midnightblue" d="M363.18,-1122.14C393.6,-1127.19 427.71,-1132.85 455.69,-1137.49"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="363.46,-1118.64 353.02,-1120.45 362.31,-1125.54 363.46,-1118.64"/>
 </g>
-<!-- Node13 -->
+<!-- Node14 -->
 <g id="node13" class="node">
-<title>Node13</title>
+<title>Node14</title>
 <g id="a_node13"><a xlink:href="classtracktion__engine_1_1MackieXT.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="438,-1099.5 438,-1118.5 590,-1118.5 590,-1099.5 438,-1099.5"/>
 <text text-anchor="middle" x="514" y="-1106.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::MackieXT</text>
 </a>
 </g>
 </g>
-<!-- Node8&#45;&gt;Node13 -->
+<!-- Node8&#45;&gt;Node14 -->
 <g id="edge12" class="edge">
-<title>Node8&#45;&gt;Node13</title>
+<title>Node8&#45;&gt;Node14</title>
 <path fill="none" stroke="midnightblue" d="M363.21,-1109C387.37,-1109 413.85,-1109 437.73,-1109"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="363.02,-1105.5 353.02,-1109 363.02,-1112.5 363.02,-1105.5"/>
 </g>
-<!-- Node14 -->
+<!-- Node15 -->
 <g id="node14" class="node">
-<title>Node14</title>
+<title>Node15</title>
 <g id="a_node14"><a xlink:href="classtracktion__engine_1_1NovationRemoteSl.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="439.5,-1050 439.5,-1080 588.5,-1080 588.5,-1050 439.5,-1050"/>
 <text text-anchor="start" x="447.5" y="-1068" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::Novation</text>
@@ -525,15 +525,15 @@
 </a>
 </g>
 </g>
-<!-- Node8&#45;&gt;Node14 -->
+<!-- Node8&#45;&gt;Node15 -->
 <g id="edge13" class="edge">
-<title>Node8&#45;&gt;Node14</title>
+<title>Node8&#45;&gt;Node15</title>
 <path fill="none" stroke="midnightblue" d="M363.09,-1093.8C387.82,-1089.05 415,-1083.83 439.34,-1079.15"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="362.18,-1090.41 353.02,-1095.74 363.5,-1097.29 362.18,-1090.41"/>
 </g>
-<!-- Node15 -->
+<!-- Node16 -->
 <g id="node15" class="node">
-<title>Node15</title>
+<title>Node16</title>
 <g id="a_node15"><a xlink:href="classtracktion__engine_1_1RemoteSLCompact.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="442.5,-1001 442.5,-1031 585.5,-1031 585.5,-1001 442.5,-1001"/>
 <text text-anchor="start" x="450.5" y="-1019" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::Remote</text>
@@ -541,15 +541,15 @@
 </a>
 </g>
 </g>
-<!-- Node8&#45;&gt;Node15 -->
+<!-- Node8&#45;&gt;Node16 -->
 <g id="edge14" class="edge">
-<title>Node8&#45;&gt;Node15</title>
+<title>Node8&#45;&gt;Node16</title>
 <path fill="none" stroke="midnightblue" d="M316.66,-1088.55C341.69,-1073.62 377.51,-1053.83 411,-1041 420.96,-1037.18 431.69,-1033.81 442.33,-1030.86"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="314.71,-1085.65 307.95,-1093.81 318.32,-1091.64 314.71,-1085.65"/>
 </g>
-<!-- Node16 -->
+<!-- Node17 -->
 <g id="node16" class="node">
-<title>Node16</title>
+<title>Node17</title>
 <g id="a_node16"><a xlink:href="classtracktion__engine_1_1TranzportControlSurface.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="439.5,-952 439.5,-982 588.5,-982 588.5,-952 439.5,-952"/>
 <text text-anchor="start" x="447.5" y="-970" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::Tranzport</text>
@@ -557,30 +557,30 @@
 </a>
 </g>
 </g>
-<!-- Node8&#45;&gt;Node16 -->
+<!-- Node8&#45;&gt;Node17 -->
 <g id="edge15" class="edge">
-<title>Node8&#45;&gt;Node16</title>
+<title>Node8&#45;&gt;Node17</title>
 <path fill="none" stroke="midnightblue" d="M302.38,-1086.17C325.08,-1059.51 366.23,-1016.02 411,-992 419.84,-987.26 429.58,-983.4 439.44,-980.27"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="299.67,-1083.94 295.94,-1093.86 305.04,-1088.44 299.67,-1083.94"/>
 </g>
-<!-- Node18 -->
+<!-- Node19 -->
 <g id="node18" class="node">
-<title>Node18</title>
+<title>Node19</title>
 <g id="a_node18"><a xlink:href="classtracktion__engine_1_1TempoSetting.html" target="_top" xlink:title="A tempo value, as used in a TempoSequence.">
 <polygon fill="none" stroke="black" points="428.5,-913.5 428.5,-932.5 599.5,-932.5 599.5,-913.5 428.5,-913.5"/>
 <text text-anchor="middle" x="514" y="-920.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::TempoSetting</text>
 </a>
 </g>
 </g>
-<!-- Node17&#45;&gt;Node18 -->
+<!-- Node18&#45;&gt;Node19 -->
 <g id="edge17" class="edge">
-<title>Node17&#45;&gt;Node18</title>
+<title>Node18&#45;&gt;Node19</title>
 <path fill="none" stroke="midnightblue" d="M373.94,-910.25C391.89,-911.89 410.69,-913.62 428.45,-915.25"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="374.05,-906.74 363.77,-909.32 373.41,-913.71 374.05,-906.74"/>
 </g>
-<!-- Node21 -->
+<!-- Node22 -->
 <g id="node21" class="node">
-<title>Node21</title>
+<title>Node22</title>
 <g id="a_node21"><a xlink:href="classtracktion__engine_1_1MidiInputDevice.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="red" points="439,-864 439,-894 589,-894 589,-864 439,-864"/>
 <text text-anchor="start" x="447" y="-882" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::MidiInput</text>
@@ -588,15 +588,15 @@
 </a>
 </g>
 </g>
-<!-- Node20&#45;&gt;Node21 -->
+<!-- Node21&#45;&gt;Node22 -->
 <g id="edge20" class="edge">
-<title>Node20&#45;&gt;Node21</title>
+<title>Node21&#45;&gt;Node22</title>
 <path fill="none" stroke="midnightblue" d="M362.43,-811.07C366.79,-812.8 371.01,-814.77 375,-817 395.31,-828.34 390.83,-843.4 411,-855 419.6,-859.94 429.15,-863.87 438.88,-866.98"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="363.32,-807.67 352.73,-807.62 360.98,-814.26 363.32,-807.67"/>
 </g>
-<!-- Node24 -->
+<!-- Node25 -->
 <g id="node22" class="node">
-<title>Node24</title>
+<title>Node25</title>
 <g id="a_node22"><a xlink:href="classtracktion__engine_1_1WaveInputDevice.html" target="_top" xlink:title="A (virtual) audio input device.">
 <polygon fill="none" stroke="black" points="436,-815 436,-845 592,-845 592,-815 436,-815"/>
 <text text-anchor="start" x="444" y="-833" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::WaveInput</text>
@@ -604,15 +604,15 @@
 </a>
 </g>
 </g>
-<!-- Node20&#45;&gt;Node24 -->
+<!-- Node21&#45;&gt;Node25 -->
 <g id="edge21" class="edge">
-<title>Node20&#45;&gt;Node24</title>
+<title>Node21&#45;&gt;Node25</title>
 <path fill="none" stroke="midnightblue" d="M362.15,-808.92C385.99,-812.25 412.17,-815.91 435.94,-819.23"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="362.48,-805.43 352.09,-807.51 361.51,-812.36 362.48,-805.43"/>
 </g>
-<!-- Node26 -->
+<!-- Node27 -->
 <g id="node24" class="node">
-<title>Node26</title>
+<title>Node27</title>
 <g id="a_node24"><a xlink:href="structtracktion__engine_1_1InputDeviceInstance_1_1MidiInputDeviceDestination.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="414,-766 414,-796 614,-796 614,-766 414,-766"/>
 <text text-anchor="start" x="422" y="-784" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::InputDevice</text>
@@ -620,15 +620,15 @@
 </a>
 </g>
 </g>
-<!-- Node25&#45;&gt;Node26 -->
+<!-- Node26&#45;&gt;Node27 -->
 <g id="edge23" class="edge">
-<title>Node25&#45;&gt;Node26</title>
+<title>Node26&#45;&gt;Node27</title>
 <path fill="none" stroke="midnightblue" d="M347.15,-738.78C367.5,-744.41 390.17,-750.58 411,-756 423.7,-759.31 437.33,-762.73 450.36,-765.95"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="347.93,-735.37 337.36,-736.07 346.06,-742.12 347.93,-735.37"/>
 </g>
-<!-- Node27 -->
+<!-- Node28 -->
 <g id="node25" class="node">
-<title>Node27</title>
+<title>Node28</title>
 <g id="a_node25"><a xlink:href="structtracktion__engine_1_1InputDeviceInstance_1_1VirtualMidiInputDeviceDestination.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="426,-705.5 426,-746.5 602,-746.5 602,-705.5 426,-705.5"/>
 <text text-anchor="start" x="434" y="-734.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::InputDevice</text>
@@ -637,15 +637,15 @@
 </a>
 </g>
 </g>
-<!-- Node25&#45;&gt;Node27 -->
+<!-- Node26&#45;&gt;Node28 -->
 <g id="edge24" class="edge">
-<title>Node25&#45;&gt;Node27</title>
+<title>Node26&#45;&gt;Node28</title>
 <path fill="none" stroke="midnightblue" d="M382.87,-723.16C397.16,-723.47 411.79,-723.79 425.83,-724.1"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="382.61,-719.65 372.54,-722.93 382.46,-726.65 382.61,-719.65"/>
 </g>
-<!-- Node28 -->
+<!-- Node29 -->
 <g id="node26" class="node">
-<title>Node28</title>
+<title>Node29</title>
 <g id="a_node26"><a xlink:href="structtracktion__engine_1_1InputDeviceInstance_1_1WaveInputDeviceDestination.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="411,-656 411,-686 617,-686 617,-656 411,-656"/>
 <text text-anchor="start" x="419" y="-674" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::InputDevice</text>
@@ -653,15 +653,15 @@
 </a>
 </g>
 </g>
-<!-- Node25&#45;&gt;Node28 -->
+<!-- Node26&#45;&gt;Node29 -->
 <g id="edge25" class="edge">
-<title>Node25&#45;&gt;Node28</title>
+<title>Node26&#45;&gt;Node29</title>
 <path fill="none" stroke="midnightblue" d="M362.68,-703.82C389.09,-698.05 418.33,-691.67 443.95,-686.08"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="361.73,-700.45 352.71,-706 363.22,-707.28 361.73,-700.45"/>
 </g>
-<!-- Node31 -->
+<!-- Node32 -->
 <g id="node29" class="node">
-<title>Node31</title>
+<title>Node32</title>
 <g id="a_node29"><a xlink:href="classtracktion__engine_1_1BreakpointOscillatorModifier.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="435,-607 435,-637 593,-637 593,-607 435,-607"/>
 <text text-anchor="start" x="443" y="-625" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::Breakpoint</text>
@@ -669,15 +669,15 @@
 </a>
 </g>
 </g>
-<!-- Node30&#45;&gt;Node31 -->
+<!-- Node31&#45;&gt;Node32 -->
 <g id="edge28" class="edge">
-<title>Node30&#45;&gt;Node31</title>
+<title>Node31&#45;&gt;Node32</title>
 <path fill="none" stroke="midnightblue" d="M365.41,-622C387.93,-622 412.33,-622 434.67,-622"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="365.2,-618.5 355.2,-622 365.2,-625.5 365.2,-618.5"/>
 </g>
-<!-- Node32 -->
+<!-- Node33 -->
 <g id="node30" class="node">
-<title>Node32</title>
+<title>Node33</title>
 <g id="a_node30"><a xlink:href="classtracktion__engine_1_1EnvelopeFollowerModifier.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="439.5,-558 439.5,-588 588.5,-588 588.5,-558 439.5,-558"/>
 <text text-anchor="start" x="447.5" y="-576" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::Envelope</text>
@@ -685,30 +685,30 @@
 </a>
 </g>
 </g>
-<!-- Node30&#45;&gt;Node32 -->
+<!-- Node31&#45;&gt;Node33 -->
 <g id="edge29" class="edge">
-<title>Node30&#45;&gt;Node32</title>
+<title>Node31&#45;&gt;Node33</title>
 <path fill="none" stroke="midnightblue" d="M340.25,-610.33C351.75,-607.92 363.77,-605.39 375,-603 397.54,-598.2 422.13,-592.88 444.23,-588.07"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="339.38,-606.94 330.31,-612.41 340.81,-613.79 339.38,-606.94"/>
 </g>
-<!-- Node33 -->
+<!-- Node34 -->
 <g id="node31" class="node">
-<title>Node33</title>
+<title>Node34</title>
 <g id="a_node31"><a xlink:href="classtracktion__engine_1_1LFOModifier.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="432.5,-519.5 432.5,-538.5 595.5,-538.5 595.5,-519.5 432.5,-519.5"/>
 <text text-anchor="middle" x="514" y="-526.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::LFOModifier</text>
 </a>
 </g>
 </g>
-<!-- Node30&#45;&gt;Node33 -->
+<!-- Node31&#45;&gt;Node34 -->
 <g id="edge30" class="edge">
-<title>Node30&#45;&gt;Node33</title>
+<title>Node31&#45;&gt;Node34</title>
 <path fill="none" stroke="midnightblue" d="M364.57,-608.94C368.21,-607.2 371.71,-605.22 375,-603 398.9,-586.85 387,-565 411,-549 417.53,-544.64 424.79,-541.19 432.33,-538.46"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="363.15,-605.74 355.29,-612.84 365.86,-612.2 363.15,-605.74"/>
 </g>
-<!-- Node34 -->
+<!-- Node35 -->
 <g id="node32" class="node">
-<title>Node34</title>
+<title>Node35</title>
 <g id="a_node32"><a xlink:href="classtracktion__engine_1_1MIDITrackerModifier.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="433.5,-470 433.5,-500 594.5,-500 594.5,-470 433.5,-470"/>
 <text text-anchor="start" x="441.5" y="-488" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::MIDITracker</text>
@@ -716,15 +716,15 @@
 </a>
 </g>
 </g>
-<!-- Node30&#45;&gt;Node34 -->
+<!-- Node31&#45;&gt;Node35 -->
 <g id="edge31" class="edge">
-<title>Node30&#45;&gt;Node34</title>
+<title>Node31&#45;&gt;Node35</title>
 <path fill="none" stroke="midnightblue" d="M364.44,-610.23C368.19,-608.15 371.75,-605.76 375,-603 408.79,-574.32 377.71,-539.26 411,-510 417.57,-504.22 425.27,-499.73 433.43,-496.25"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="362.92,-607.07 355.36,-614.5 365.9,-613.41 362.92,-607.07"/>
 </g>
-<!-- Node35 -->
+<!-- Node36 -->
 <g id="node33" class="node">
-<title>Node35</title>
+<title>Node36</title>
 <g id="a_node33"><a xlink:href="classtracktion__engine_1_1RandomModifier.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="441.5,-421 441.5,-451 586.5,-451 586.5,-421 441.5,-421"/>
 <text text-anchor="start" x="449.5" y="-439" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::Random</text>
@@ -732,30 +732,30 @@
 </a>
 </g>
 </g>
-<!-- Node30&#45;&gt;Node35 -->
+<!-- Node31&#45;&gt;Node36 -->
 <g id="edge32" class="edge">
-<title>Node30&#45;&gt;Node35</title>
+<title>Node31&#45;&gt;Node36</title>
 <path fill="none" stroke="midnightblue" d="M364.07,-611.15C368.01,-608.86 371.7,-606.16 375,-603 422,-557.95 364.78,-506.86 411,-461 419.41,-452.65 430.13,-446.93 441.44,-443.04"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="362.52,-608.02 355.08,-615.56 365.6,-614.3 362.52,-608.02"/>
 </g>
-<!-- Node36 -->
+<!-- Node37 -->
 <g id="node34" class="node">
-<title>Node36</title>
+<title>Node37</title>
 <g id="a_node34"><a xlink:href="classtracktion__engine_1_1StepModifier.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="black" points="431,-382.5 431,-401.5 597,-401.5 597,-382.5 431,-382.5"/>
 <text text-anchor="middle" x="514" y="-389.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::StepModifier</text>
 </a>
 </g>
 </g>
-<!-- Node30&#45;&gt;Node36 -->
+<!-- Node31&#45;&gt;Node37 -->
 <g id="edge33" class="edge">
-<title>Node30&#45;&gt;Node36</title>
+<title>Node31&#45;&gt;Node37</title>
 <path fill="none" stroke="midnightblue" d="M364.62,-611.2C368.39,-608.89 371.89,-606.18 375,-603 435.48,-541.32 350.14,-473.31 411,-412 416.59,-406.37 423.28,-402.08 430.51,-398.84"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="362.73,-608.24 355.41,-615.9 365.91,-614.47 362.73,-608.24"/>
 </g>
-<!-- Node39 -->
+<!-- Node40 -->
 <g id="node37" class="node">
-<title>Node39</title>
+<title>Node40</title>
 <g id="a_node37"><a xlink:href="classtracktion__engine_1_1MidiOutputDevice.html" target="_top" xlink:title=" ">
 <polygon fill="none" stroke="red" points="435,-333 435,-363 593,-363 593,-333 435,-333"/>
 <text text-anchor="start" x="443" y="-351" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion_engine::MidiOutput</text>
@@ -763,9 +763,9 @@
 </a>
 </g>
 </g>
-<!-- Node38&#45;&gt;Node39 -->
+<!-- Node39&#45;&gt;Node40 -->
 <g id="edge36" class="edge">
-<title>Node38&#45;&gt;Node39</title>
+<title>Node39&#45;&gt;Node40</title>
 <path fill="none" stroke="midnightblue" d="M360.64,-514.71C365.89,-511.76 370.77,-508.23 375,-504 417.7,-461.31 367.71,-415.1 411,-373 417.8,-366.39 426.04,-361.43 434.86,-357.73"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="358.98,-511.63 351.5,-519.14 362.03,-517.93 358.98,-511.63"/>
 </g>

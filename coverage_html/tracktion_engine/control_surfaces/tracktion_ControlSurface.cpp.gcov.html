@@ -32,16 +32,16 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">195</td>
+            <td class="headerCovTableEntry">206</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-12 21:57:16</td>
+            <td class="headerValue">2022-01-13 01:14:21</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">98</td>
+            <td class="headerCovTableEntry">104</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
@@ -301,198 +301,223 @@
 <a name="239"><span class="lineNum">     239 </span>            : </a>
 <a name="240"><span class="lineNum">     240 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedHome()         { performIfNotSafeRecording (&amp;AppFunctions::goToStart); }</span></a>
 <a name="241"><span class="lineNum">     241 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedEnd()          { performIfNotSafeRecording (&amp;AppFunctions::goToEnd); }</span></a>
-<a name="242"><span class="lineNum">     242 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedMarkIn()       { performIfNotSafeRecording (&amp;AppFunctions::markIn); }</span></a>
-<a name="243"><span class="lineNum">     243 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedMarkOut()      { performIfNotSafeRecording (&amp;AppFunctions::markOut); }</span></a>
-<a name="244"><span class="lineNum">     244 </span>            : </a>
-<a name="245"><span class="lineNum">     245 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedPlay()         { performIfNotSafeRecording (&amp;AppFunctions::startStopPlay); }</span></a>
-<a name="246"><span class="lineNum">     246 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedRecord()       { performIfNotSafeRecording (&amp;AppFunctions::record); }</span></a>
-<a name="247"><span class="lineNum">     247 </span>            : </a>
-<a name="248"><span class="lineNum">     248 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedStop()</span></a>
-<a name="249"><span class="lineNum">     249 </span>            : {</a>
-<a name="250"><span class="lineNum">     250 </span>            :     RETURN_IF_SAFE_RECORDING</a>
-<a name="251"><span class="lineNum">     251 </span>            : </a>
-<a name="252"><span class="lineNum">     252 </span><span class="lineNoCov">          0 :     if (auto tc = getTransport())</span></a>
-<a name="253"><span class="lineNum">     253 </span>            :     {</a>
-<a name="254"><span class="lineNum">     254 </span><span class="lineNoCov">          0 :         if (tc-&gt;isPlaying() || tc-&gt;isRecording())</span></a>
-<a name="255"><span class="lineNum">     255 </span>            :             tc-&gt;stop (false, false);</a>
-<a name="256"><span class="lineNum">     256 </span>            :         else</a>
-<a name="257"><span class="lineNum">     257 </span><span class="lineNoCov">          0 :             tc-&gt;setCurrentPosition (0.0);</span></a>
-<a name="258"><span class="lineNum">     258 </span>            :     }</a>
-<a name="259"><span class="lineNum">     259 </span>            : }</a>
-<a name="260"><span class="lineNum">     260 </span>            : </a>
-<a name="261"><span class="lineNum">     261 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedAutomationReading()</span></a>
-<a name="262"><span class="lineNum">     262 </span>            : {</a>
-<a name="263"><span class="lineNum">     263 </span>            :     RETURN_IF_SAFE_RECORDING</a>
-<a name="264"><span class="lineNum">     264 </span>            : </a>
-<a name="265"><span class="lineNum">     265 </span><span class="lineNoCov">          0 :     if (auto e = getEdit())</span></a>
-<a name="266"><span class="lineNum">     266 </span><span class="lineNoCov">          0 :         e-&gt;getAutomationRecordManager().setReadingAutomation (! e-&gt;getAutomationRecordManager().isReadingAutomation());</span></a>
-<a name="267"><span class="lineNum">     267 </span>            : }</a>
-<a name="268"><span class="lineNum">     268 </span>            : </a>
-<a name="269"><span class="lineNum">     269 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedAutomationWriting()</span></a>
-<a name="270"><span class="lineNum">     270 </span>            : {</a>
-<a name="271"><span class="lineNum">     271 </span>            :     RETURN_IF_SAFE_RECORDING</a>
-<a name="272"><span class="lineNum">     272 </span>            : </a>
-<a name="273"><span class="lineNum">     273 </span><span class="lineNoCov">          0 :     if (auto e = getEdit())</span></a>
-<a name="274"><span class="lineNum">     274 </span><span class="lineNoCov">          0 :         e-&gt;getAutomationRecordManager().toggleWriteAutomationMode();</span></a>
-<a name="275"><span class="lineNum">     275 </span>            : }</a>
-<a name="276"><span class="lineNum">     276 </span>            : </a>
-<a name="277"><span class="lineNum">     277 </span><span class="lineNoCov">          0 : void ControlSurface::userToggledBeatsSecondsMode()</span></a>
-<a name="278"><span class="lineNum">     278 </span>            : {</a>
-<a name="279"><span class="lineNum">     279 </span><span class="lineNoCov">          0 :     performIfNotSafeRecording (&amp;AppFunctions::toggleTimecode);</span></a>
-<a name="280"><span class="lineNum">     280 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="281"><span class="lineNum">     281 </span>            : </a>
-<a name="282"><span class="lineNum">     282 </span><span class="lineNoCov">          0 : void ControlSurface::userChangedFaderBanks (int channelNumDelta)</span></a>
-<a name="283"><span class="lineNum">     283 </span>            : {</a>
-<a name="284"><span class="lineNum">     284 </span>            :     RETURN_IF_SAFE_RECORDING</a>
-<a name="285"><span class="lineNum">     285 </span><span class="lineNoCov">          0 :     owner-&gt;changeFaderBank (channelNumDelta, followsTrackSelection);</span></a>
-<a name="286"><span class="lineNum">     286 </span>            : }</a>
-<a name="287"><span class="lineNum">     287 </span>            : </a>
-<a name="288"><span class="lineNum">     288 </span><span class="lineNoCov">          0 : void ControlSurface::userChangedAuxBank (int delta)</span></a>
-<a name="289"><span class="lineNum">     289 </span>            : {</a>
-<a name="290"><span class="lineNum">     290 </span>            :     RETURN_IF_SAFE_RECORDING</a>
-<a name="291"><span class="lineNum">     291 </span><span class="lineNoCov">          0 :     owner-&gt;changeAuxBank (delta);</span></a>
-<a name="292"><span class="lineNum">     292 </span>            : }</a>
-<a name="293"><span class="lineNum">     293 </span>            : </a>
-<a name="294"><span class="lineNum">     294 </span><span class="lineNoCov">          0 : void ControlSurface::userToggledLoopOnOff()            { performIfNotSafeRecording (&amp;AppFunctions::toggleLoop); }</span></a>
-<a name="295"><span class="lineNum">     295 </span><span class="lineNoCov">          0 : void ControlSurface::userToggledPunchOnOff()           { performIfNotSafeRecording (&amp;AppFunctions::togglePunch); }</span></a>
-<a name="296"><span class="lineNum">     296 </span><span class="lineNoCov">          0 : void ControlSurface::userToggledSnapOnOff()            { performIfNotSafeRecording (&amp;AppFunctions::toggleSnap); }</span></a>
-<a name="297"><span class="lineNum">     297 </span><span class="lineNoCov">          0 : void ControlSurface::userToggledClickOnOff()           { performIfNotSafeRecording (&amp;AppFunctions::toggleClick); }</span></a>
-<a name="298"><span class="lineNum">     298 </span><span class="lineNoCov">          0 : void ControlSurface::userToggledSlaveOnOff()           { performIfNotSafeRecording (&amp;AppFunctions::toggleMidiChase); }</span></a>
-<a name="299"><span class="lineNum">     299 </span><span class="lineNoCov">          0 : void ControlSurface::userSkippedToNextMarkerLeft()     { performIfNotSafeRecording (&amp;AppFunctions::tabBack); }</span></a>
-<a name="300"><span class="lineNum">     300 </span><span class="lineNoCov">          0 : void ControlSurface::userSkippedToNextMarkerRight()    { performIfNotSafeRecording (&amp;AppFunctions::tabForward); }</span></a>
-<a name="301"><span class="lineNum">     301 </span><span class="lineNoCov">          0 : void ControlSurface::userNudgedLeft()                  { performIfNotSafeRecording (&amp;AppFunctions::nudgeLeft); }</span></a>
-<a name="302"><span class="lineNum">     302 </span><span class="lineNoCov">          0 : void ControlSurface::userNudgedRight()                 { performIfNotSafeRecording (&amp;AppFunctions::nudgeRight); }</span></a>
-<a name="303"><span class="lineNum">     303 </span><span class="lineNoCov">          0 : void ControlSurface::userZoomedIn()                    { performIfNotSafeRecording (&amp;AppFunctions::zoomIn); }</span></a>
-<a name="304"><span class="lineNum">     304 </span><span class="lineNoCov">          0 : void ControlSurface::userZoomedOut()                   { performIfNotSafeRecording (&amp;AppFunctions::zoomOut); }</span></a>
-<a name="305"><span class="lineNum">     305 </span><span class="lineNoCov">          0 : void ControlSurface::userScrolledTracksUp()            { performIfNotSafeRecording (&amp;AppFunctions::scrollTracksUp); }</span></a>
-<a name="306"><span class="lineNum">     306 </span><span class="lineNoCov">          0 : void ControlSurface::userScrolledTracksDown()          { performIfNotSafeRecording (&amp;AppFunctions::scrollTracksDown); }</span></a>
-<a name="307"><span class="lineNum">     307 </span><span class="lineNoCov">          0 : void ControlSurface::userScrolledTracksLeft()          { performIfNotSafeRecording (&amp;AppFunctions::scrollTracksLeft); }</span></a>
-<a name="308"><span class="lineNum">     308 </span><span class="lineNoCov">          0 : void ControlSurface::userScrolledTracksRight()         { performIfNotSafeRecording (&amp;AppFunctions::scrollTracksRight); }</span></a>
-<a name="309"><span class="lineNum">     309 </span><span class="lineNoCov">          0 : void ControlSurface::userZoomedTracksIn()              { performIfNotSafeRecording (&amp;AppFunctions::zoomTracksIn); }</span></a>
-<a name="310"><span class="lineNum">     310 </span><span class="lineNoCov">          0 : void ControlSurface::userZoomedTracksOut()             { performIfNotSafeRecording (&amp;AppFunctions::zoomTracksOut); }</span></a>
-<a name="311"><span class="lineNum">     311 </span>            : </a>
-<a name="312"><span class="lineNum">     312 </span><span class="lineNoCov">          0 : void ControlSurface::userChangedRewindButton (bool isButtonDown)</span></a>
-<a name="313"><span class="lineNum">     313 </span>            : {</a>
-<a name="314"><span class="lineNum">     314 </span>            :     RETURN_IF_SAFE_RECORDING</a>
-<a name="315"><span class="lineNum">     315 </span>            : </a>
-<a name="316"><span class="lineNum">     316 </span><span class="lineNoCov">          0 :     if (auto tc = getTransport())</span></a>
-<a name="317"><span class="lineNum">     317 </span><span class="lineNoCov">          0 :         tc-&gt;setRewindButtonDown (isButtonDown);</span></a>
-<a name="318"><span class="lineNum">     318 </span>            : }</a>
-<a name="319"><span class="lineNum">     319 </span>            : </a>
-<a name="320"><span class="lineNum">     320 </span><span class="lineNoCov">          0 : void ControlSurface::userChangedFastForwardButton (bool isButtonDown)</span></a>
-<a name="321"><span class="lineNum">     321 </span>            : {</a>
-<a name="322"><span class="lineNum">     322 </span>            :     RETURN_IF_SAFE_RECORDING</a>
-<a name="323"><span class="lineNum">     323 </span>            : </a>
-<a name="324"><span class="lineNum">     324 </span><span class="lineNoCov">          0 :     if (auto tc = getTransport())</span></a>
-<a name="325"><span class="lineNum">     325 </span><span class="lineNoCov">          0 :         tc-&gt;setFastForwardButtonDown (isButtonDown);</span></a>
-<a name="326"><span class="lineNum">     326 </span>            : }</a>
-<a name="327"><span class="lineNum">     327 </span>            : </a>
-<a name="328"><span class="lineNum">     328 </span><span class="lineNoCov">          0 : void ControlSurface::userMovedJogWheel (float amount)</span></a>
-<a name="329"><span class="lineNum">     329 </span>            : {</a>
-<a name="330"><span class="lineNum">     330 </span>            :     RETURN_IF_SAFE_RECORDING</a>
-<a name="331"><span class="lineNum">     331 </span>            : </a>
-<a name="332"><span class="lineNum">     332 </span><span class="lineNoCov">          0 :     if (auto tc = getTransport())</span></a>
-<a name="333"><span class="lineNum">     333 </span><span class="lineNoCov">          0 :         scrub (*tc, amount);</span></a>
-<a name="334"><span class="lineNum">     334 </span>            : }</a>
-<a name="335"><span class="lineNum">     335 </span>            : </a>
-<a name="336"><span class="lineNum">     336 </span><span class="lineNoCov">          0 : void ControlSurface::userMovedParameterControl (int parameter, float newValue)</span></a>
-<a name="337"><span class="lineNum">     337 </span>            : {</a>
-<a name="338"><span class="lineNum">     338 </span>            :     RETURN_IF_SAFE_RECORDING</a>
-<a name="339"><span class="lineNum">     339 </span><span class="lineNoCov">          0 :     owner-&gt;userMovedParameterControl (parameter, newValue);</span></a>
-<a name="340"><span class="lineNum">     340 </span>            : }</a>
-<a name="341"><span class="lineNum">     341 </span>            : </a>
-<a name="342"><span class="lineNum">     342 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedParameterControl (int paramNumber)</span></a>
-<a name="343"><span class="lineNum">     343 </span>            : {</a>
-<a name="344"><span class="lineNum">     344 </span>            :     RETURN_IF_SAFE_RECORDING</a>
-<a name="345"><span class="lineNum">     345 </span><span class="lineNoCov">          0 :     owner-&gt;userPressedParameterControl (paramNumber);</span></a>
-<a name="346"><span class="lineNum">     346 </span>            : }</a>
-<a name="347"><span class="lineNum">     347 </span>            : </a>
-<a name="348"><span class="lineNum">     348 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedGoToMarker(int marker)</span></a>
-<a name="349"><span class="lineNum">     349 </span>            : {</a>
-<a name="350"><span class="lineNum">     350 </span>            :     RETURN_IF_SAFE_RECORDING</a>
-<a name="351"><span class="lineNum">     351 </span><span class="lineNoCov">          0 :     owner-&gt;userPressedGoToMarker (marker);</span></a>
-<a name="352"><span class="lineNum">     352 </span>            : }</a>
-<a name="353"><span class="lineNum">     353 </span>            : </a>
-<a name="354"><span class="lineNum">     354 </span><span class="lineNoCov">          0 : void ControlSurface::selectOtherObject (SelectableClass::Relationship relationship, bool moveFromCurrentPlugin)</span></a>
-<a name="355"><span class="lineNum">     355 </span>            : {</a>
-<a name="356"><span class="lineNum">     356 </span><span class="lineNoCov">          0 :     owner-&gt;selectOtherObject (relationship, moveFromCurrentPlugin);</span></a>
-<a name="357"><span class="lineNum">     357 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="358"><span class="lineNum">     358 </span>            : </a>
-<a name="359"><span class="lineNum">     359 </span><span class="lineNoCov">          0 : void ControlSurface::muteOrUnmutePluginsInTrack()</span></a>
-<a name="360"><span class="lineNum">     360 </span>            : {</a>
-<a name="361"><span class="lineNum">     361 </span><span class="lineNoCov">          0 :     owner-&gt;muteOrUnmutePluginsInTrack();</span></a>
-<a name="362"><span class="lineNum">     362 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="363"><span class="lineNum">     363 </span>            : </a>
-<a name="364"><span class="lineNum">     364 </span><span class="lineNoCov">          0 : void ControlSurface::userChangedParameterBank (int deltaParams)</span></a>
-<a name="365"><span class="lineNum">     365 </span>            : {</a>
-<a name="366"><span class="lineNum">     366 </span>            :     RETURN_IF_SAFE_RECORDING</a>
-<a name="367"><span class="lineNum">     367 </span><span class="lineNoCov">          0 :     owner-&gt;changeParamBank (deltaParams);</span></a>
-<a name="368"><span class="lineNum">     368 </span>            : }</a>
-<a name="369"><span class="lineNum">     369 </span>            : </a>
-<a name="370"><span class="lineNum">     370 </span><span class="lineNoCov">          0 : void ControlSurface::userChangedMarkerBank (int deltaMarkers)</span></a>
-<a name="371"><span class="lineNum">     371 </span>            : {</a>
-<a name="372"><span class="lineNum">     372 </span>            :     RETURN_IF_SAFE_RECORDING</a>
-<a name="373"><span class="lineNum">     373 </span><span class="lineNoCov">          0 :     owner-&gt;changeMarkerBank (deltaMarkers);</span></a>
-<a name="374"><span class="lineNum">     374 </span>            : }</a>
-<a name="375"><span class="lineNum">     375 </span>            : </a>
-<a name="376"><span class="lineNum">     376 </span><span class="lineNoCov">          0 : void ControlSurface::updateDeviceState()</span></a>
-<a name="377"><span class="lineNum">     377 </span>            : {</a>
-<a name="378"><span class="lineNum">     378 </span><span class="lineNoCov">          0 :     owner-&gt;updateDeviceState();</span></a>
-<a name="379"><span class="lineNum">     379 </span><span class="lineNoCov">          0 :     owner-&gt;changeParamBank (0);</span></a>
-<a name="380"><span class="lineNum">     380 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="381"><span class="lineNum">     381 </span>            : </a>
-<a name="382"><span class="lineNum">     382 </span><span class="lineNoCov">          0 : void ControlSurface::userToggledEtoE()             { performIfNotSafeRecording (&amp;AppFunctions::toggleEndToEnd); }</span></a>
-<a name="383"><span class="lineNum">     383 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedSave()             { performIfNotSafeRecording (&amp;AppFunctions::saveEdit); }</span></a>
-<a name="384"><span class="lineNum">     384 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedSaveAs()           { performIfNotSafeRecording (&amp;AppFunctions::saveEditAs); }</span></a>
-<a name="385"><span class="lineNum">     385 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedArmAll()           { performIfNotSafeRecording (&amp;AppFunctions::armOrDisarmAllInputs); }</span></a>
-<a name="386"><span class="lineNum">     386 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedJumpToMarkIn()     { performIfNotSafeRecording (&amp;AppFunctions::goToMarkIn); }</span></a>
-<a name="387"><span class="lineNum">     387 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedJumpToMarkOut()    { performIfNotSafeRecording (&amp;AppFunctions::goToMarkOut); }</span></a>
-<a name="388"><span class="lineNum">     388 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedZoomIn()           { performIfNotSafeRecording (&amp;AppFunctions::zoomIn); }</span></a>
-<a name="389"><span class="lineNum">     389 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedZoomOut()          { performIfNotSafeRecording (&amp;AppFunctions::zoomOut); }</span></a>
-<a name="390"><span class="lineNum">     390 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedZoomToFit()        { performIfNotSafeRecording (&amp;AppFunctions::zoomToFitHorizontally); }</span></a>
-<a name="391"><span class="lineNum">     391 </span>            : </a>
-<a name="392"><span class="lineNum">     392 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedCreateMarker()</span></a>
-<a name="393"><span class="lineNum">     393 </span>            : {</a>
-<a name="394"><span class="lineNum">     394 </span>            :     RETURN_IF_SAFE_RECORDING</a>
-<a name="395"><span class="lineNum">     395 </span>            : </a>
-<a name="396"><span class="lineNum">     396 </span><span class="lineNoCov">          0 :     if (auto ed = getEditIfOnEditScreen())</span></a>
-<a name="397"><span class="lineNum">     397 </span><span class="lineNoCov">          0 :         ed-&gt;getMarkerManager().createMarker (-1, ed-&gt;getTransport().position, 0.0, externalControllerManager.getSelectionManager());</span></a>
-<a name="398"><span class="lineNum">     398 </span>            : }</a>
-<a name="399"><span class="lineNum">     399 </span>            : </a>
-<a name="400"><span class="lineNum">     400 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedNextMarker()       { performIfNotSafeRecording (&amp;AppFunctions::moveToNextMarker); }</span></a>
-<a name="401"><span class="lineNum">     401 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedPreviousMarker()   { performIfNotSafeRecording (&amp;AppFunctions::moveToPrevMarker); }</span></a>
-<a name="402"><span class="lineNum">     402 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedRedo()             { performIfNotSafeRecording (&amp;AppFunctions::redo); }</span></a>
-<a name="403"><span class="lineNum">     403 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedUndo()             { performIfNotSafeRecording (&amp;AppFunctions::undo); }</span></a>
-<a name="404"><span class="lineNum">     404 </span><span class="lineNoCov">          0 : void ControlSurface::userToggledScroll()           { performIfNotSafeRecording (&amp;AppFunctions::toggleScroll); }</span></a>
-<a name="405"><span class="lineNum">     405 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedAbort()            { performIfNotSafeRecording (&amp;AppFunctions::stopRecordingAndDiscard); }</span></a>
-<a name="406"><span class="lineNum">     406 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedAbortRestart()     { performIfNotSafeRecording (&amp;AppFunctions::stopRecordingAndRestart); }</span></a>
-<a name="407"><span class="lineNum">     407 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedCut()              { performIfNotSafeRecording (&amp;AppFunctions::cut); }</span></a>
-<a name="408"><span class="lineNum">     408 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedCopy()             { performIfNotSafeRecording (&amp;AppFunctions::copy); }</span></a>
-<a name="409"><span class="lineNum">     409 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedFreeze()           { performIfNotSafeRecording (&amp;AppFunctions::toggleTrackFreeze); }</span></a>
-<a name="410"><span class="lineNum">     410 </span>            : </a>
-<a name="411"><span class="lineNum">     411 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedPaste (bool insert)</span></a>
-<a name="412"><span class="lineNum">     412 </span>            : {</a>
-<a name="413"><span class="lineNum">     413 </span><span class="lineNoCov">          0 :     performIfNotSafeRecording (insert ? &amp;AppFunctions::insertPaste</span></a>
-<a name="414"><span class="lineNum">     414 </span>            :                                       : &amp;AppFunctions::paste);</a>
-<a name="415"><span class="lineNum">     415 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="416"><span class="lineNum">     416 </span>            : </a>
-<a name="417"><span class="lineNum">     417 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedDelete (bool marked)</span></a>
-<a name="418"><span class="lineNum">     418 </span>            : {</a>
-<a name="419"><span class="lineNum">     419 </span><span class="lineNoCov">          0 :     performIfNotSafeRecording (marked ? &amp;AppFunctions::deleteRegion</span></a>
-<a name="420"><span class="lineNum">     420 </span>            :                                       : &amp;AppFunctions::deleteSelected);</a>
-<a name="421"><span class="lineNum">     421 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="422"><span class="lineNum">     422 </span>            : </a>
-<a name="423"><span class="lineNum">     423 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedZoomFitToTracks()      { performIfNotSafeRecording (&amp;AppFunctions::zoomToFitVertically); }</span></a>
-<a name="424"><span class="lineNum">     424 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedInsertTempoChange()    { performIfNotSafeRecording (&amp;AppFunctions::insertTempoChange); }</span></a>
-<a name="425"><span class="lineNum">     425 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedInsertPitchChange()    { performIfNotSafeRecording (&amp;AppFunctions::insertPitchChange); }</span></a>
-<a name="426"><span class="lineNum">     426 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedInsertTimeSigChange()  { performIfNotSafeRecording (&amp;AppFunctions::insertTimeSigChange); }</span></a>
-<a name="427"><span class="lineNum">     427 </span>            : </a>
-<a name="428"><span class="lineNum">     428 </span><span class="lineNoCov">          0 : void ControlSurface::userToggledVideoWindow()          { performIfNotSafeRecording (&amp;AppFunctions::showHideVideo); }</span></a>
+<a name="242"><span class="lineNum">     242 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedMarkIn()</span></a>
+<a name="243"><span class="lineNum">     243 </span>            : {</a>
+<a name="244"><span class="lineNum">     244 </span>            :     RETURN_IF_SAFE_RECORDING</a>
+<a name="245"><span class="lineNum">     245 </span><span class="lineNoCov">          0 :     AppFunctions::markIn (true);</span></a>
+<a name="246"><span class="lineNum">     246 </span>            : }</a>
+<a name="247"><span class="lineNum">     247 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedMarkOut()</span></a>
+<a name="248"><span class="lineNum">     248 </span>            : {</a>
+<a name="249"><span class="lineNum">     249 </span>            :     RETURN_IF_SAFE_RECORDING</a>
+<a name="250"><span class="lineNum">     250 </span><span class="lineNoCov">          0 :     AppFunctions::markOut (true);</span></a>
+<a name="251"><span class="lineNum">     251 </span>            : }</a>
+<a name="252"><span class="lineNum">     252 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedPlay()         { performIfNotSafeRecording (&amp;AppFunctions::startStopPlay); }</span></a>
+<a name="253"><span class="lineNum">     253 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedRecord()       { performIfNotSafeRecording (&amp;AppFunctions::record); }</span></a>
+<a name="254"><span class="lineNum">     254 </span>            : </a>
+<a name="255"><span class="lineNum">     255 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedStop()</span></a>
+<a name="256"><span class="lineNum">     256 </span>            : {</a>
+<a name="257"><span class="lineNum">     257 </span>            :     RETURN_IF_SAFE_RECORDING</a>
+<a name="258"><span class="lineNum">     258 </span>            : </a>
+<a name="259"><span class="lineNum">     259 </span><span class="lineNoCov">          0 :     if (auto tc = getTransport())</span></a>
+<a name="260"><span class="lineNum">     260 </span>            :     {</a>
+<a name="261"><span class="lineNum">     261 </span><span class="lineNoCov">          0 :         if (tc-&gt;isPlaying() || tc-&gt;isRecording())</span></a>
+<a name="262"><span class="lineNum">     262 </span>            :             tc-&gt;stop (false, false);</a>
+<a name="263"><span class="lineNum">     263 </span>            :         else</a>
+<a name="264"><span class="lineNum">     264 </span><span class="lineNoCov">          0 :             tc-&gt;setCurrentPosition (0.0);</span></a>
+<a name="265"><span class="lineNum">     265 </span>            :     }</a>
+<a name="266"><span class="lineNum">     266 </span>            : }</a>
+<a name="267"><span class="lineNum">     267 </span>            : </a>
+<a name="268"><span class="lineNum">     268 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedAutomationReading()</span></a>
+<a name="269"><span class="lineNum">     269 </span>            : {</a>
+<a name="270"><span class="lineNum">     270 </span>            :     RETURN_IF_SAFE_RECORDING</a>
+<a name="271"><span class="lineNum">     271 </span>            : </a>
+<a name="272"><span class="lineNum">     272 </span><span class="lineNoCov">          0 :     if (auto e = getEdit())</span></a>
+<a name="273"><span class="lineNum">     273 </span><span class="lineNoCov">          0 :         e-&gt;getAutomationRecordManager().setReadingAutomation (! e-&gt;getAutomationRecordManager().isReadingAutomation());</span></a>
+<a name="274"><span class="lineNum">     274 </span>            : }</a>
+<a name="275"><span class="lineNum">     275 </span>            : </a>
+<a name="276"><span class="lineNum">     276 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedAutomationWriting()</span></a>
+<a name="277"><span class="lineNum">     277 </span>            : {</a>
+<a name="278"><span class="lineNum">     278 </span>            :     RETURN_IF_SAFE_RECORDING</a>
+<a name="279"><span class="lineNum">     279 </span>            : </a>
+<a name="280"><span class="lineNum">     280 </span><span class="lineNoCov">          0 :     if (auto e = getEdit())</span></a>
+<a name="281"><span class="lineNum">     281 </span><span class="lineNoCov">          0 :         e-&gt;getAutomationRecordManager().toggleWriteAutomationMode();</span></a>
+<a name="282"><span class="lineNum">     282 </span>            : }</a>
+<a name="283"><span class="lineNum">     283 </span>            : </a>
+<a name="284"><span class="lineNum">     284 </span><span class="lineNoCov">          0 : void ControlSurface::userToggledBeatsSecondsMode()</span></a>
+<a name="285"><span class="lineNum">     285 </span>            : {</a>
+<a name="286"><span class="lineNum">     286 </span><span class="lineNoCov">          0 :     performIfNotSafeRecording (&amp;AppFunctions::toggleTimecode);</span></a>
+<a name="287"><span class="lineNum">     287 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="288"><span class="lineNum">     288 </span>            : </a>
+<a name="289"><span class="lineNum">     289 </span><span class="lineNoCov">          0 : void ControlSurface::userChangedFaderBanks (int channelNumDelta)</span></a>
+<a name="290"><span class="lineNum">     290 </span>            : {</a>
+<a name="291"><span class="lineNum">     291 </span>            :     RETURN_IF_SAFE_RECORDING</a>
+<a name="292"><span class="lineNum">     292 </span><span class="lineNoCov">          0 :     owner-&gt;changeFaderBank (channelNumDelta, followsTrackSelection);</span></a>
+<a name="293"><span class="lineNum">     293 </span>            : }</a>
+<a name="294"><span class="lineNum">     294 </span>            : </a>
+<a name="295"><span class="lineNum">     295 </span><span class="lineNoCov">          0 : void ControlSurface::userChangedAuxBank (int delta)</span></a>
+<a name="296"><span class="lineNum">     296 </span>            : {</a>
+<a name="297"><span class="lineNum">     297 </span>            :     RETURN_IF_SAFE_RECORDING</a>
+<a name="298"><span class="lineNum">     298 </span><span class="lineNoCov">          0 :     owner-&gt;changeAuxBank (delta);</span></a>
+<a name="299"><span class="lineNum">     299 </span>            : }</a>
+<a name="300"><span class="lineNum">     300 </span>            : </a>
+<a name="301"><span class="lineNum">     301 </span><span class="lineNoCov">          0 : void ControlSurface::userToggledLoopOnOff()            { performIfNotSafeRecording (&amp;AppFunctions::toggleLoop); }</span></a>
+<a name="302"><span class="lineNum">     302 </span><span class="lineNoCov">          0 : void ControlSurface::userToggledPunchOnOff()           { performIfNotSafeRecording (&amp;AppFunctions::togglePunch); }</span></a>
+<a name="303"><span class="lineNum">     303 </span><span class="lineNoCov">          0 : void ControlSurface::userToggledSnapOnOff()            { performIfNotSafeRecording (&amp;AppFunctions::toggleSnap); }</span></a>
+<a name="304"><span class="lineNum">     304 </span><span class="lineNoCov">          0 : void ControlSurface::userToggledClickOnOff()           { performIfNotSafeRecording (&amp;AppFunctions::toggleClick); }</span></a>
+<a name="305"><span class="lineNum">     305 </span><span class="lineNoCov">          0 : void ControlSurface::userToggledSlaveOnOff()           { performIfNotSafeRecording (&amp;AppFunctions::toggleMidiChase); }</span></a>
+<a name="306"><span class="lineNum">     306 </span><span class="lineNoCov">          0 : void ControlSurface::userSkippedToNextMarkerLeft()     { performIfNotSafeRecording (&amp;AppFunctions::tabBack); }</span></a>
+<a name="307"><span class="lineNum">     307 </span><span class="lineNoCov">          0 : void ControlSurface::userSkippedToNextMarkerRight()    { performIfNotSafeRecording (&amp;AppFunctions::tabForward); }</span></a>
+<a name="308"><span class="lineNum">     308 </span><span class="lineNoCov">          0 : void ControlSurface::userNudgedLeft()                  { performIfNotSafeRecording (&amp;AppFunctions::nudgeLeft); }</span></a>
+<a name="309"><span class="lineNum">     309 </span><span class="lineNoCov">          0 : void ControlSurface::userNudgedRight()                 { performIfNotSafeRecording (&amp;AppFunctions::nudgeRight); }</span></a>
+<a name="310"><span class="lineNum">     310 </span><span class="lineNoCov">          0 : void ControlSurface::userZoomedIn()                    { performIfNotSafeRecording (&amp;AppFunctions::zoomIn); }</span></a>
+<a name="311"><span class="lineNum">     311 </span><span class="lineNoCov">          0 : void ControlSurface::userZoomedOut()                   { performIfNotSafeRecording (&amp;AppFunctions::zoomOut); }</span></a>
+<a name="312"><span class="lineNum">     312 </span><span class="lineNoCov">          0 : void ControlSurface::userScrolledTracksUp()            { performIfNotSafeRecording (&amp;AppFunctions::scrollTracksUp); }</span></a>
+<a name="313"><span class="lineNum">     313 </span><span class="lineNoCov">          0 : void ControlSurface::userScrolledTracksDown()          { performIfNotSafeRecording (&amp;AppFunctions::scrollTracksDown); }</span></a>
+<a name="314"><span class="lineNum">     314 </span><span class="lineNoCov">          0 : void ControlSurface::userScrolledTracksLeft()          { performIfNotSafeRecording (&amp;AppFunctions::scrollTracksLeft); }</span></a>
+<a name="315"><span class="lineNum">     315 </span><span class="lineNoCov">          0 : void ControlSurface::userScrolledTracksRight()         { performIfNotSafeRecording (&amp;AppFunctions::scrollTracksRight); }</span></a>
+<a name="316"><span class="lineNum">     316 </span><span class="lineNoCov">          0 : void ControlSurface::userZoomedTracksIn()              { performIfNotSafeRecording (&amp;AppFunctions::zoomTracksIn); }</span></a>
+<a name="317"><span class="lineNum">     317 </span><span class="lineNoCov">          0 : void ControlSurface::userZoomedTracksOut()             { performIfNotSafeRecording (&amp;AppFunctions::zoomTracksOut); }</span></a>
+<a name="318"><span class="lineNum">     318 </span>            : </a>
+<a name="319"><span class="lineNum">     319 </span><span class="lineNoCov">          0 : void ControlSurface::userChangedRewindButton (bool isButtonDown)</span></a>
+<a name="320"><span class="lineNum">     320 </span>            : {</a>
+<a name="321"><span class="lineNum">     321 </span>            :     RETURN_IF_SAFE_RECORDING</a>
+<a name="322"><span class="lineNum">     322 </span>            : </a>
+<a name="323"><span class="lineNum">     323 </span><span class="lineNoCov">          0 :     if (auto tc = getTransport())</span></a>
+<a name="324"><span class="lineNum">     324 </span><span class="lineNoCov">          0 :         tc-&gt;setRewindButtonDown (isButtonDown);</span></a>
+<a name="325"><span class="lineNum">     325 </span>            : }</a>
+<a name="326"><span class="lineNum">     326 </span>            : </a>
+<a name="327"><span class="lineNum">     327 </span><span class="lineNoCov">          0 : void ControlSurface::userChangedFastForwardButton (bool isButtonDown)</span></a>
+<a name="328"><span class="lineNum">     328 </span>            : {</a>
+<a name="329"><span class="lineNum">     329 </span>            :     RETURN_IF_SAFE_RECORDING</a>
+<a name="330"><span class="lineNum">     330 </span>            : </a>
+<a name="331"><span class="lineNum">     331 </span><span class="lineNoCov">          0 :     if (auto tc = getTransport())</span></a>
+<a name="332"><span class="lineNum">     332 </span><span class="lineNoCov">          0 :         tc-&gt;setFastForwardButtonDown (isButtonDown);</span></a>
+<a name="333"><span class="lineNum">     333 </span>            : }</a>
+<a name="334"><span class="lineNum">     334 </span>            : </a>
+<a name="335"><span class="lineNum">     335 </span><span class="lineNoCov">          0 : void ControlSurface::userMovedJogWheel (float amount)</span></a>
+<a name="336"><span class="lineNum">     336 </span>            : {</a>
+<a name="337"><span class="lineNum">     337 </span>            :     RETURN_IF_SAFE_RECORDING</a>
+<a name="338"><span class="lineNum">     338 </span>            : </a>
+<a name="339"><span class="lineNum">     339 </span><span class="lineNoCov">          0 :     if (auto tc = getTransport())</span></a>
+<a name="340"><span class="lineNum">     340 </span><span class="lineNoCov">          0 :         scrub (*tc, amount);</span></a>
+<a name="341"><span class="lineNum">     341 </span>            : }</a>
+<a name="342"><span class="lineNum">     342 </span>            : </a>
+<a name="343"><span class="lineNum">     343 </span><span class="lineNoCov">          0 : void ControlSurface::userMovedParameterControl (int parameter, float newValue)</span></a>
+<a name="344"><span class="lineNum">     344 </span>            : {</a>
+<a name="345"><span class="lineNum">     345 </span>            :     RETURN_IF_SAFE_RECORDING</a>
+<a name="346"><span class="lineNum">     346 </span><span class="lineNoCov">          0 :     owner-&gt;userMovedParameterControl (parameter, newValue);</span></a>
+<a name="347"><span class="lineNum">     347 </span>            : }</a>
+<a name="348"><span class="lineNum">     348 </span>            : </a>
+<a name="349"><span class="lineNum">     349 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedParameterControl (int paramNumber)</span></a>
+<a name="350"><span class="lineNum">     350 </span>            : {</a>
+<a name="351"><span class="lineNum">     351 </span>            :     RETURN_IF_SAFE_RECORDING</a>
+<a name="352"><span class="lineNum">     352 </span><span class="lineNoCov">          0 :     owner-&gt;userPressedParameterControl (paramNumber);</span></a>
+<a name="353"><span class="lineNum">     353 </span>            : }</a>
+<a name="354"><span class="lineNum">     354 </span>            : </a>
+<a name="355"><span class="lineNum">     355 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedGoToMarker(int marker)</span></a>
+<a name="356"><span class="lineNum">     356 </span>            : {</a>
+<a name="357"><span class="lineNum">     357 </span>            :     RETURN_IF_SAFE_RECORDING</a>
+<a name="358"><span class="lineNum">     358 </span><span class="lineNoCov">          0 :     owner-&gt;userPressedGoToMarker (marker);</span></a>
+<a name="359"><span class="lineNum">     359 </span>            : }</a>
+<a name="360"><span class="lineNum">     360 </span>            : </a>
+<a name="361"><span class="lineNum">     361 </span><span class="lineNoCov">          0 : void ControlSurface::selectOtherObject (SelectableClass::Relationship relationship, bool moveFromCurrentPlugin)</span></a>
+<a name="362"><span class="lineNum">     362 </span>            : {</a>
+<a name="363"><span class="lineNum">     363 </span><span class="lineNoCov">          0 :     owner-&gt;selectOtherObject (relationship, moveFromCurrentPlugin);</span></a>
+<a name="364"><span class="lineNum">     364 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="365"><span class="lineNum">     365 </span>            : </a>
+<a name="366"><span class="lineNum">     366 </span><span class="lineNoCov">          0 : void ControlSurface::muteOrUnmutePluginsInTrack()</span></a>
+<a name="367"><span class="lineNum">     367 </span>            : {</a>
+<a name="368"><span class="lineNum">     368 </span><span class="lineNoCov">          0 :     owner-&gt;muteOrUnmutePluginsInTrack();</span></a>
+<a name="369"><span class="lineNum">     369 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="370"><span class="lineNum">     370 </span>            : </a>
+<a name="371"><span class="lineNum">     371 </span><span class="lineNoCov">          0 : void ControlSurface::userChangedParameterBank (int deltaParams)</span></a>
+<a name="372"><span class="lineNum">     372 </span>            : {</a>
+<a name="373"><span class="lineNum">     373 </span>            :     RETURN_IF_SAFE_RECORDING</a>
+<a name="374"><span class="lineNum">     374 </span><span class="lineNoCov">          0 :     owner-&gt;changeParamBank (deltaParams);</span></a>
+<a name="375"><span class="lineNum">     375 </span>            : }</a>
+<a name="376"><span class="lineNum">     376 </span>            : </a>
+<a name="377"><span class="lineNum">     377 </span><span class="lineNoCov">          0 : void ControlSurface::userChangedMarkerBank (int deltaMarkers)</span></a>
+<a name="378"><span class="lineNum">     378 </span>            : {</a>
+<a name="379"><span class="lineNum">     379 </span>            :     RETURN_IF_SAFE_RECORDING</a>
+<a name="380"><span class="lineNum">     380 </span><span class="lineNoCov">          0 :     owner-&gt;changeMarkerBank (deltaMarkers);</span></a>
+<a name="381"><span class="lineNum">     381 </span>            : }</a>
+<a name="382"><span class="lineNum">     382 </span>            : </a>
+<a name="383"><span class="lineNum">     383 </span><span class="lineNoCov">          0 : void ControlSurface::updateDeviceState()</span></a>
+<a name="384"><span class="lineNum">     384 </span>            : {</a>
+<a name="385"><span class="lineNum">     385 </span><span class="lineNoCov">          0 :     owner-&gt;updateDeviceState();</span></a>
+<a name="386"><span class="lineNum">     386 </span><span class="lineNoCov">          0 :     owner-&gt;changeParamBank (0);</span></a>
+<a name="387"><span class="lineNum">     387 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="388"><span class="lineNum">     388 </span>            : </a>
+<a name="389"><span class="lineNum">     389 </span><span class="lineNoCov">          0 : void ControlSurface::userToggledEtoE()             { performIfNotSafeRecording (&amp;AppFunctions::toggleEndToEnd); }</span></a>
+<a name="390"><span class="lineNum">     390 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedSave()             { performIfNotSafeRecording (&amp;AppFunctions::saveEdit); }</span></a>
+<a name="391"><span class="lineNum">     391 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedSaveAs()           { performIfNotSafeRecording (&amp;AppFunctions::saveEditAs); }</span></a>
+<a name="392"><span class="lineNum">     392 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedArmAll()           { performIfNotSafeRecording (&amp;AppFunctions::armOrDisarmAllInputs); }</span></a>
+<a name="393"><span class="lineNum">     393 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedJumpToMarkIn()     { performIfNotSafeRecording (&amp;AppFunctions::goToMarkIn); }</span></a>
+<a name="394"><span class="lineNum">     394 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedJumpToMarkOut()    { performIfNotSafeRecording (&amp;AppFunctions::goToMarkOut); }</span></a>
+<a name="395"><span class="lineNum">     395 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedZoomIn()           { performIfNotSafeRecording (&amp;AppFunctions::zoomIn); }</span></a>
+<a name="396"><span class="lineNum">     396 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedZoomOut()          { performIfNotSafeRecording (&amp;AppFunctions::zoomOut); }</span></a>
+<a name="397"><span class="lineNum">     397 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedZoomToFit()        { performIfNotSafeRecording (&amp;AppFunctions::zoomToFitHorizontally); }</span></a>
+<a name="398"><span class="lineNum">     398 </span>            : </a>
+<a name="399"><span class="lineNum">     399 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedCreateMarker()</span></a>
+<a name="400"><span class="lineNum">     400 </span>            : {</a>
+<a name="401"><span class="lineNum">     401 </span>            :     RETURN_IF_SAFE_RECORDING</a>
+<a name="402"><span class="lineNum">     402 </span>            : </a>
+<a name="403"><span class="lineNum">     403 </span><span class="lineNoCov">          0 :     if (auto ed = getEditIfOnEditScreen())</span></a>
+<a name="404"><span class="lineNum">     404 </span><span class="lineNoCov">          0 :         ed-&gt;getMarkerManager().createMarker (-1, ed-&gt;getTransport().position, 0.0, externalControllerManager.getSelectionManager());</span></a>
+<a name="405"><span class="lineNum">     405 </span>            : }</a>
+<a name="406"><span class="lineNum">     406 </span>            : </a>
+<a name="407"><span class="lineNum">     407 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedNextMarker()       { performIfNotSafeRecording (&amp;AppFunctions::moveToNextMarker); }</span></a>
+<a name="408"><span class="lineNum">     408 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedPreviousMarker()   { performIfNotSafeRecording (&amp;AppFunctions::moveToPrevMarker); }</span></a>
+<a name="409"><span class="lineNum">     409 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedRedo()             { performIfNotSafeRecording (&amp;AppFunctions::redo); }</span></a>
+<a name="410"><span class="lineNum">     410 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedUndo()             { performIfNotSafeRecording (&amp;AppFunctions::undo); }</span></a>
+<a name="411"><span class="lineNum">     411 </span><span class="lineNoCov">          0 : void ControlSurface::userToggledScroll()           { performIfNotSafeRecording (&amp;AppFunctions::toggleScroll); }</span></a>
+<a name="412"><span class="lineNum">     412 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedAbort()            { performIfNotSafeRecording (&amp;AppFunctions::stopRecordingAndDiscard); }</span></a>
+<a name="413"><span class="lineNum">     413 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedAbortRestart()     { performIfNotSafeRecording (&amp;AppFunctions::stopRecordingAndRestart); }</span></a>
+<a name="414"><span class="lineNum">     414 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedCut()              { performIfNotSafeRecording (&amp;AppFunctions::cut); }</span></a>
+<a name="415"><span class="lineNum">     415 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedCopy()             { performIfNotSafeRecording (&amp;AppFunctions::copy); }</span></a>
+<a name="416"><span class="lineNum">     416 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedFreeze()           { performIfNotSafeRecording (&amp;AppFunctions::toggleTrackFreeze); }</span></a>
+<a name="417"><span class="lineNum">     417 </span>            : </a>
+<a name="418"><span class="lineNum">     418 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedPaste (bool insert)</span></a>
+<a name="419"><span class="lineNum">     419 </span>            : {</a>
+<a name="420"><span class="lineNum">     420 </span><span class="lineNoCov">          0 :     performIfNotSafeRecording (insert ? &amp;AppFunctions::insertPaste</span></a>
+<a name="421"><span class="lineNum">     421 </span>            :                                       : &amp;AppFunctions::paste);</a>
+<a name="422"><span class="lineNum">     422 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="423"><span class="lineNum">     423 </span>            : </a>
+<a name="424"><span class="lineNum">     424 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedDelete (bool marked)</span></a>
+<a name="425"><span class="lineNum">     425 </span>            : {</a>
+<a name="426"><span class="lineNum">     426 </span><span class="lineNoCov">          0 :     performIfNotSafeRecording (marked ? &amp;AppFunctions::deleteRegion</span></a>
+<a name="427"><span class="lineNum">     427 </span>            :                                       : &amp;AppFunctions::deleteSelected);</a>
+<a name="428"><span class="lineNum">     428 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="429"><span class="lineNum">     429 </span>            : </a>
-<a name="430"><span class="lineNum">     430 </span><span class="lineNoCov">          0 : void ControlSurface::redrawSelectedPlugin()            { owner-&gt;repaintParamSource(); }</span></a>
-<a name="431"><span class="lineNum">     431 </span><span class="lineNoCov">          0 : void ControlSurface::redrawSelectedTracks()            { owner-&gt;redrawTracks(); }</span></a>
-<a name="432"><span class="lineNum">     432 </span>            : </a>
-<a name="433"><span class="lineNum">     433 </span>            : }</a>
+<a name="430"><span class="lineNum">     430 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedZoomFitToTracks()       { performIfNotSafeRecording (&amp;AppFunctions::zoomToFitVertically); }</span></a>
+<a name="431"><span class="lineNum">     431 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedInsertTempoChange()     { performIfNotSafeRecording (&amp;AppFunctions::insertTempoChange); }</span></a>
+<a name="432"><span class="lineNum">     432 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedInsertPitchChange()     { performIfNotSafeRecording (&amp;AppFunctions::insertPitchChange); }</span></a>
+<a name="433"><span class="lineNum">     433 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedInsertTimeSigChange()   { performIfNotSafeRecording (&amp;AppFunctions::insertTimeSigChange); }</span></a>
+<a name="434"><span class="lineNum">     434 </span>            : </a>
+<a name="435"><span class="lineNum">     435 </span><span class="lineNoCov">          0 : void ControlSurface::userToggledVideoWindow()           { performIfNotSafeRecording (&amp;AppFunctions::showHideVideo); }</span></a>
+<a name="436"><span class="lineNum">     436 </span><span class="lineNoCov">          0 : void ControlSurface::userToggledMixerWindow (bool fs)</span></a>
+<a name="437"><span class="lineNum">     437 </span>            : {</a>
+<a name="438"><span class="lineNum">     438 </span>            :     RETURN_IF_SAFE_RECORDING</a>
+<a name="439"><span class="lineNum">     439 </span><span class="lineNoCov">          0 :     AppFunctions::showHideMixer (fs);</span></a>
+<a name="440"><span class="lineNum">     440 </span>            : }</a>
+<a name="441"><span class="lineNum">     441 </span><span class="lineNoCov">          0 : void ControlSurface::userToggledMidiEditorWindow (bool fs)</span></a>
+<a name="442"><span class="lineNum">     442 </span>            : {</a>
+<a name="443"><span class="lineNum">     443 </span>            :     RETURN_IF_SAFE_RECORDING</a>
+<a name="444"><span class="lineNum">     444 </span><span class="lineNoCov">          0 :     AppFunctions::showHideMidiEditor (fs);</span></a>
+<a name="445"><span class="lineNum">     445 </span>            : }</a>
+<a name="446"><span class="lineNum">     446 </span><span class="lineNoCov">          0 : void ControlSurface::userToggledTrackEditorWindow()     { performIfNotSafeRecording (&amp;AppFunctions::showHideTrackEditor); }</span></a>
+<a name="447"><span class="lineNum">     447 </span><span class="lineNoCov">          0 : void ControlSurface::userToggledBrowserWindow()         { performIfNotSafeRecording (&amp;AppFunctions::showHideBrowser); }</span></a>
+<a name="448"><span class="lineNum">     448 </span><span class="lineNoCov">          0 : void ControlSurface::userToggledActionsWindow()         { performIfNotSafeRecording (&amp;AppFunctions::showHideActions); }</span></a>
+<a name="449"><span class="lineNum">     449 </span><span class="lineNoCov">          0 : void ControlSurface::userPressedUserAction (int action)</span></a>
+<a name="450"><span class="lineNum">     450 </span>            : {</a>
+<a name="451"><span class="lineNum">     451 </span>            :     RETURN_IF_SAFE_RECORDING</a>
+<a name="452"><span class="lineNum">     452 </span><span class="lineNoCov">          0 :     AppFunctions::performUserAction (action);</span></a>
+<a name="453"><span class="lineNum">     453 </span>            : }</a>
+<a name="454"><span class="lineNum">     454 </span>            : </a>
+<a name="455"><span class="lineNum">     455 </span><span class="lineNoCov">          0 : void ControlSurface::redrawSelectedPlugin()             { owner-&gt;repaintParamSource(); }</span></a>
+<a name="456"><span class="lineNum">     456 </span><span class="lineNoCov">          0 : void ControlSurface::redrawSelectedTracks()             { owner-&gt;redrawTracks(); }</span></a>
+<a name="457"><span class="lineNum">     457 </span>            : </a>
+<a name="458"><span class="lineNum">     458 </span>            : }</a>
 </pre>
       </td>
     </tr>
