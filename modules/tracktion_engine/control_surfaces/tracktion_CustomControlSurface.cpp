@@ -583,6 +583,26 @@ bool CustomControlSurface::isTextAction (ActionID id)
         case paramBankRight8Id:
         case paramBankRight16Id:
         case paramBankRight24Id:
+        case userAction1Id:
+        case userAction2Id:
+        case userAction3Id:
+        case userAction4Id:
+        case userAction5Id:
+        case userAction6Id:
+        case userAction7Id:
+        case userAction8Id:
+        case userAction9Id:
+        case userAction10Id:
+        case userAction11Id:
+        case userAction12Id:
+        case userAction13Id:
+        case userAction14Id:
+        case userAction15Id:
+        case userAction16Id:
+        case userAction17Id:
+        case userAction18Id:
+        case userAction19Id:
+        case userAction20Id:
         case none:
         default:
             return false;
@@ -1175,8 +1195,34 @@ void CustomControlSurface::loadFunctions()
     contextMenu.clear();
     actionFunctionList.clear();
 
-    juce::PopupMenu transportSubMenu;
 
+    juce::PopupMenu userFunctionSubMenu;
+    auto userFunctionSubMenuSet = new juce::SortedSet<int>();
+    addAllCommandItem (userFunctionSubMenu);
+    addFunction (userFunctionSubMenu, *userFunctionSubMenuSet, TRANS("User Function"), TRANS("User Function 1"), userAction1Id, &CustomControlSurface::userFunction1);
+    addFunction (userFunctionSubMenu, *userFunctionSubMenuSet, TRANS("User Function"), TRANS("User Function 2"), userAction2Id, &CustomControlSurface::userFunction2);
+    addFunction (userFunctionSubMenu, *userFunctionSubMenuSet, TRANS("User Function"), TRANS("User Function 3"), userAction3Id, &CustomControlSurface::userFunction3);
+    addFunction (userFunctionSubMenu, *userFunctionSubMenuSet, TRANS("User Function"), TRANS("User Function 4"), userAction4Id, &CustomControlSurface::userFunction4);
+    addFunction (userFunctionSubMenu, *userFunctionSubMenuSet, TRANS("User Function"), TRANS("User Function 5"), userAction5Id, &CustomControlSurface::userFunction5);
+    addFunction (userFunctionSubMenu, *userFunctionSubMenuSet, TRANS("User Function"), TRANS("User Function 6"), userAction6Id, &CustomControlSurface::userFunction6);
+    addFunction (userFunctionSubMenu, *userFunctionSubMenuSet, TRANS("User Function"), TRANS("User Function 7"), userAction7Id, &CustomControlSurface::userFunction7);
+    addFunction (userFunctionSubMenu, *userFunctionSubMenuSet, TRANS("User Function"), TRANS("User Function 8"), userAction8Id, &CustomControlSurface::userFunction8);
+    addFunction (userFunctionSubMenu, *userFunctionSubMenuSet, TRANS("User Function"), TRANS("User Function 9"), userAction9Id, &CustomControlSurface::userFunction9);
+    addFunction (userFunctionSubMenu, *userFunctionSubMenuSet, TRANS("User Function"), TRANS("User Function 10"), userAction10Id, &CustomControlSurface::userFunction10);
+    addFunction (userFunctionSubMenu, *userFunctionSubMenuSet, TRANS("User Function"), TRANS("User Function 11"), userAction11Id, &CustomControlSurface::userFunction11);
+    addFunction (userFunctionSubMenu, *userFunctionSubMenuSet, TRANS("User Function"), TRANS("User Function 12"), userAction12Id, &CustomControlSurface::userFunction12);
+    addFunction (userFunctionSubMenu, *userFunctionSubMenuSet, TRANS("User Function"), TRANS("User Function 13"), userAction13Id, &CustomControlSurface::userFunction13);
+    addFunction (userFunctionSubMenu, *userFunctionSubMenuSet, TRANS("User Function"), TRANS("User Function 14"), userAction14Id, &CustomControlSurface::userFunction14);
+    addFunction (userFunctionSubMenu, *userFunctionSubMenuSet, TRANS("User Function"), TRANS("User Function 15"), userAction15Id, &CustomControlSurface::userFunction15);
+    addFunction (userFunctionSubMenu, *userFunctionSubMenuSet, TRANS("User Function"), TRANS("User Function 16"), userAction16Id, &CustomControlSurface::userFunction16);
+    addFunction (userFunctionSubMenu, *userFunctionSubMenuSet, TRANS("User Function"), TRANS("User Function 17"), userAction17Id, &CustomControlSurface::userFunction17);
+    addFunction (userFunctionSubMenu, *userFunctionSubMenuSet, TRANS("User Function"), TRANS("User Function 18"), userAction18Id, &CustomControlSurface::userFunction18);
+    addFunction (userFunctionSubMenu, *userFunctionSubMenuSet, TRANS("User Function"), TRANS("User Function 19"), userAction19Id, &CustomControlSurface::userFunction19);
+    addFunction (userFunctionSubMenu, *userFunctionSubMenuSet, TRANS("User Function"), TRANS("User Function 20"), userAction20Id, &CustomControlSurface::userFunction20);
+
+    commandGroups [nextCmdGroupIndex++] = userFunctionSubMenuSet;
+
+    juce::PopupMenu transportSubMenu;
     auto transportSubMenuSet = new juce::SortedSet<int>();
     addAllCommandItem (transportSubMenu);
     addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Play"), playId, &CustomControlSurface::play);
@@ -1299,11 +1345,12 @@ void CustomControlSurface::loadFunctions()
     addFunction (paramBankSubMenu, *paramBankSubMenuSet, TRANS("Switch param bank"), TRANS("Right") + " 24", paramBankRight24Id, &CustomControlSurface::paramBankRight24);
     commandGroups [nextCmdGroupIndex++] = paramBankSubMenuSet;
 
-    contextMenu.addSubMenu (TRANS("Transport"),  transportSubMenu);
-    contextMenu.addSubMenu (TRANS("Options"),    optionsSubMenu);
-    contextMenu.addSubMenu (TRANS("Plugin"),     pluginSubMenu);
-    contextMenu.addSubMenu (TRANS("Track"),      trackSubMenu);
-    contextMenu.addSubMenu (TRANS("Navigation"), navigationSubMenu);
+    contextMenu.addSubMenu (TRANS("User Functions"),    userFunctionSubMenu);
+    contextMenu.addSubMenu (TRANS("Transport"),         transportSubMenu);
+    contextMenu.addSubMenu (TRANS("Options"),           optionsSubMenu);
+    contextMenu.addSubMenu (TRANS("Plugin"),            pluginSubMenu);
+    contextMenu.addSubMenu (TRANS("Track"),             trackSubMenu);
+    contextMenu.addSubMenu (TRANS("Navigation"),        navigationSubMenu);
     contextMenu.addSubMenu (TRANS("Switch fader bank"), bankSubMenu);
     contextMenu.addSubMenu (TRANS("Switch param bank"), paramBankSubMenu);
 
@@ -1528,6 +1575,27 @@ void CustomControlSurface::paramBankRight4  (float val, int)  { if (shouldActOnV
 void CustomControlSurface::paramBankRight8  (float val, int)  { if (shouldActOnValue (val)) userChangedParameterBank (8); }
 void CustomControlSurface::paramBankRight16 (float val, int)  { if (shouldActOnValue (val)) userChangedParameterBank (16); }
 void CustomControlSurface::paramBankRight24 (float val, int)  { if (shouldActOnValue (val)) userChangedParameterBank (24); }
+
+void CustomControlSurface::userFunction1    (float val, int)  { if (shouldActOnValue (val)) userPressedUserAction (0);  }
+void CustomControlSurface::userFunction2    (float val, int)  { if (shouldActOnValue (val)) userPressedUserAction (1);  }
+void CustomControlSurface::userFunction3    (float val, int)  { if (shouldActOnValue (val)) userPressedUserAction (2);  }
+void CustomControlSurface::userFunction4    (float val, int)  { if (shouldActOnValue (val)) userPressedUserAction (3);  }
+void CustomControlSurface::userFunction5    (float val, int)  { if (shouldActOnValue (val)) userPressedUserAction (4);  }
+void CustomControlSurface::userFunction6    (float val, int)  { if (shouldActOnValue (val)) userPressedUserAction (5);  }
+void CustomControlSurface::userFunction7    (float val, int)  { if (shouldActOnValue (val)) userPressedUserAction (6);  }
+void CustomControlSurface::userFunction8    (float val, int)  { if (shouldActOnValue (val)) userPressedUserAction (7);  }
+void CustomControlSurface::userFunction9    (float val, int)  { if (shouldActOnValue (val)) userPressedUserAction (8);  }
+void CustomControlSurface::userFunction10   (float val, int)  { if (shouldActOnValue (val)) userPressedUserAction (9);  }
+void CustomControlSurface::userFunction11   (float val, int)  { if (shouldActOnValue (val)) userPressedUserAction (10); }
+void CustomControlSurface::userFunction12   (float val, int)  { if (shouldActOnValue (val)) userPressedUserAction (11); }
+void CustomControlSurface::userFunction13   (float val, int)  { if (shouldActOnValue (val)) userPressedUserAction (12); }
+void CustomControlSurface::userFunction14   (float val, int)  { if (shouldActOnValue (val)) userPressedUserAction (13); }
+void CustomControlSurface::userFunction15   (float val, int)  { if (shouldActOnValue (val)) userPressedUserAction (14); }
+void CustomControlSurface::userFunction16   (float val, int)  { if (shouldActOnValue (val)) userPressedUserAction (15); }
+void CustomControlSurface::userFunction17   (float val, int)  { if (shouldActOnValue (val)) userPressedUserAction (16); }
+void CustomControlSurface::userFunction18   (float val, int)  { if (shouldActOnValue (val)) userPressedUserAction (17); }
+void CustomControlSurface::userFunction19   (float val, int)  { if (shouldActOnValue (val)) userPressedUserAction (18); }
+void CustomControlSurface::userFunction20   (float val, int)  { if (shouldActOnValue (val)) userPressedUserAction (19); }
 
 void CustomControlSurface::addMarker (float val, int)
 {

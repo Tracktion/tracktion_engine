@@ -118,6 +118,27 @@ public:
         paramBankRight16Id          = 230,
         paramBankRight24Id          = 231,
 
+        userAction1Id               = 300,
+        userAction2Id               = 301,
+        userAction3Id               = 302,
+        userAction4Id               = 303,
+        userAction5Id               = 304,
+        userAction6Id               = 305,
+        userAction7Id               = 306,
+        userAction8Id               = 307,
+        userAction9Id               = 308,
+        userAction10Id              = 309,
+        userAction11Id              = 310,
+        userAction12Id              = 311,
+        userAction13Id              = 312,
+        userAction14Id              = 313,
+        userAction15Id              = 314,
+        userAction16Id              = 315,
+        userAction17Id              = 316,
+        userAction18Id              = 317,
+        userAction19Id              = 318,
+        userAction20Id              = 319,
+
         emptyTextId                 = 9998,
         none                        = 9999
     };
@@ -312,6 +333,27 @@ public:
     void paramBankRight16 (float val, int param);
     void paramBankRight24 (float val, int param);
 
+    // User functions
+    void userFunction1    (float val, int param);
+    void userFunction2    (float val, int param);
+    void userFunction3    (float val, int param);
+    void userFunction4    (float val, int param);
+    void userFunction5    (float val, int param);
+    void userFunction6    (float val, int param);
+    void userFunction7    (float val, int param);
+    void userFunction8    (float val, int param);
+    void userFunction9    (float val, int param);
+    void userFunction10   (float val, int param);
+    void userFunction11   (float val, int param);
+    void userFunction12   (float val, int param);
+    void userFunction13   (float val, int param);
+    void userFunction14   (float val, int param);
+    void userFunction15   (float val, int param);
+    void userFunction16   (float val, int param);
+    void userFunction17   (float val, int param);
+    void userFunction18   (float val, int param);
+    void userFunction19   (float val, int param);
+    void userFunction20   (float val, int param);
 
     void null (float, int) {} // null action for outgoing only actions
 

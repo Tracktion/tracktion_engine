@@ -173,6 +173,26 @@ void MidiAssignable::buildMenu (juce::PopupMenu& m)
             case CustomControlSurface::paramBankRight8Id:
             case CustomControlSurface::paramBankRight16Id:
             case CustomControlSurface::paramBankRight24Id:
+            case CustomControlSurface::userAction1Id:
+            case CustomControlSurface::userAction2Id:
+            case CustomControlSurface::userAction3Id:
+            case CustomControlSurface::userAction4Id:
+            case CustomControlSurface::userAction5Id:
+            case CustomControlSurface::userAction6Id:
+            case CustomControlSurface::userAction7Id:
+            case CustomControlSurface::userAction8Id:
+            case CustomControlSurface::userAction9Id:
+            case CustomControlSurface::userAction10Id:
+            case CustomControlSurface::userAction11Id:
+            case CustomControlSurface::userAction12Id:
+            case CustomControlSurface::userAction13Id:
+            case CustomControlSurface::userAction14Id:
+            case CustomControlSurface::userAction15Id:
+            case CustomControlSurface::userAction16Id:
+            case CustomControlSurface::userAction17Id:
+            case CustomControlSurface::userAction18Id:
+            case CustomControlSurface::userAction19Id:
+            case CustomControlSurface::userAction20Id:
             case CustomControlSurface::emptyTextId:
             case CustomControlSurface::none:
             default:
