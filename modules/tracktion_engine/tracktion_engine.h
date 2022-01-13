@@ -619,6 +619,7 @@ namespace tracktion_engine
  #include "control_surfaces/types/tracktion_MackieC4.h"
  #include "control_surfaces/types/tracktion_MackieMCU.h"
  #include "control_surfaces/types/tracktion_MackieXT.h"
+ #include "control_surfaces/types/tracktion_IconProG2.h"
  #include "control_surfaces/types/tracktion_NovationRemoteSl.h"
  #include "control_surfaces/types/tracktion_RemoteSLCompact.h"
  #include "control_surfaces/types/tracktion_Tranzport.h"

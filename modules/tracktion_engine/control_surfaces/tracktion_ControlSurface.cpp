@@ -239,9 +239,16 @@ void ControlSurface::userPressedRecEnable (int channelNum, bool enableEtoE)
 
 void ControlSurface::userPressedHome()         { performIfNotSafeRecording (&AppFunctions::goToStart); }
 void ControlSurface::userPressedEnd()          { performIfNotSafeRecording (&AppFunctions::goToEnd); }
-void ControlSurface::userPressedMarkIn()       { performIfNotSafeRecording (&AppFunctions::markIn); }
-void ControlSurface::userPressedMarkOut()      { performIfNotSafeRecording (&AppFunctions::markOut); }
-
+void ControlSurface::userPressedMarkIn()
+{
+    RETURN_IF_SAFE_RECORDING
+    AppFunctions::markIn (true);
+}
+void ControlSurface::userPressedMarkOut()
+{
+    RETURN_IF_SAFE_RECORDING
+    AppFunctions::markOut (true);
+}
 void ControlSurface::userPressedPlay()         { performIfNotSafeRecording (&AppFunctions::startStopPlay); }
 void ControlSurface::userPressedRecord()       { performIfNotSafeRecording (&AppFunctions::record); }
 
@@ -420,14 +427,32 @@ void ControlSurface::userPressedDelete (bool marked)
                                       : &AppFunctions::deleteSelected);
 }
 
-void ControlSurface::userPressedZoomFitToTracks()      { performIfNotSafeRecording (&AppFunctions::zoomToFitVertically); }
-void ControlSurface::userPressedInsertTempoChange()    { performIfNotSafeRecording (&AppFunctions::insertTempoChange); }
-void ControlSurface::userPressedInsertPitchChange()    { performIfNotSafeRecording (&AppFunctions::insertPitchChange); }
-void ControlSurface::userPressedInsertTimeSigChange()  { performIfNotSafeRecording (&AppFunctions::insertTimeSigChange); }
+void ControlSurface::userPressedZoomFitToTracks()       { performIfNotSafeRecording (&AppFunctions::zoomToFitVertically); }
+void ControlSurface::userPressedInsertTempoChange()     { performIfNotSafeRecording (&AppFunctions::insertTempoChange); }
+void ControlSurface::userPressedInsertPitchChange()     { performIfNotSafeRecording (&AppFunctions::insertPitchChange); }
+void ControlSurface::userPressedInsertTimeSigChange()   { performIfNotSafeRecording (&AppFunctions::insertTimeSigChange); }
 
-void ControlSurface::userToggledVideoWindow()          { performIfNotSafeRecording (&AppFunctions::showHideVideo); }
+void ControlSurface::userToggledVideoWindow()           { performIfNotSafeRecording (&AppFunctions::showHideVideo); }
+void ControlSurface::userToggledMixerWindow (bool fs)
+{
+    RETURN_IF_SAFE_RECORDING
+    AppFunctions::showHideMixer (fs);
+}
+void ControlSurface::userToggledMidiEditorWindow (bool fs)
+{
+    RETURN_IF_SAFE_RECORDING
+    AppFunctions::showHideMidiEditor (fs);
+}
+void ControlSurface::userToggledTrackEditorWindow()     { performIfNotSafeRecording (&AppFunctions::showHideTrackEditor); }
+void ControlSurface::userToggledBrowserWindow()         { performIfNotSafeRecording (&AppFunctions::showHideBrowser); }
+void ControlSurface::userToggledActionsWindow()         { performIfNotSafeRecording (&AppFunctions::showHideActions); }
+void ControlSurface::userPressedUserAction (int action)
+{
+    RETURN_IF_SAFE_RECORDING
+    AppFunctions::performUserAction (action);
+}
 
-void ControlSurface::redrawSelectedPlugin()            { owner->repaintParamSource(); }
-void ControlSurface::redrawSelectedTracks()            { owner->redrawTracks(); }
+void ControlSurface::redrawSelectedPlugin()             { owner->repaintParamSource(); }
+void ControlSurface::redrawSelectedTracks()             { owner->redrawTracks(); }
 
 }

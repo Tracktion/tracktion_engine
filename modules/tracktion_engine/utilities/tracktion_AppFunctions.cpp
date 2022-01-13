@@ -15,13 +15,18 @@ namespace AppFunctions
 {
     UIBehaviour& getCurrentUIBehaviour()
     {
-        // TODO: RMR
-        return Engine::getEngines()[0]->getUIBehaviour();
+        auto e = Engine::getEngines()[0];
+        jassert (e != nullptr);
+        return e->getUIBehaviour();
     }
 
     Edit* getCurrentlyFocusedEdit()
     {
-        return getCurrentUIBehaviour().getCurrentlyFocusedEdit();
+        if (auto e = getCurrentUIBehaviour().getCurrentlyFocusedEdit())
+            return e;
+        
+        jassertfalse;
+        return nullptr;
     }
 
     TransportControl* getActiveTransport()
@@ -169,16 +174,16 @@ namespace AppFunctions
             toEnd (*transport, getSelectedItems());
     }
 
-    void markIn()
+    void markIn (bool forceAtCursor)
     {
         if (auto transport = getActiveTransport())
-            transport->setLoopIn  (getCurrentUIBehaviour().getEditingPosition (transport->edit));
+            transport->setLoopIn  (forceAtCursor ? transport->position : getCurrentUIBehaviour().getEditingPosition (transport->edit));
     }
 
-    void markOut()
+    void markOut (bool forceAtCursor)
     {
         if (auto transport = getActiveTransport())
-            transport->setLoopOut  (getCurrentUIBehaviour().getEditingPosition (transport->edit));
+            transport->setLoopOut  (forceAtCursor ? transport->position : getCurrentUIBehaviour().getEditingPosition (transport->edit));
     }
 
     void start()
@@ -515,9 +520,39 @@ namespace AppFunctions
         getCurrentUIBehaviour().showHideVideo();
     }
 
+    void showHideMixer (bool fs)
+    {
+        getCurrentUIBehaviour().showHideMixer (fs);
+    }
+
+    void showHideMidiEditor (bool fs)
+    {
+        getCurrentUIBehaviour().showHideMidiEditor (fs);
+    }
+
+    void showHideTrackEditor()
+    {
+        getCurrentUIBehaviour().showHideTrackEditor();
+    }
+
+    void showHideBrowser()
+    {
+        getCurrentUIBehaviour().showHideBrowser();
+    }
+
+    void showHideActions()
+    {
+        getCurrentUIBehaviour().showHideActions();
+    }
+
     void showHideAllPanes()
     {
         getCurrentUIBehaviour().showHideAllPanes();
+    }
+
+    void performUserAction (int a)
+    {
+        getCurrentUIBehaviour().performUserAction (a);
     }
 
     void split()

@@ -12,8 +12,8 @@ namespace tracktion_engine
 {
 
 class MackieMCU  : public ControlSurface,
-                   private juce::Timer,
-                   private juce::AsyncUpdater
+                   protected juce::Timer,
+                   protected juce::AsyncUpdater
 {
 public:
     MackieMCU (ExternalControllerManager&);
@@ -25,7 +25,7 @@ public:
     void cpuTimerCallback();
     void auxTimerCallback();
     void acceptMidiMessage (const juce::MidiMessage&) override;
-    void acceptMidiMessage (int deviceIdx, const juce::MidiMessage&);
+    virtual void acceptMidiMessage (int deviceIdx, const juce::MidiMessage&);
     void flip();
     void setAssignmentText (const juce::String&);
     void setDisplay (int devIdx, const char* topLine, const char* bottomLine);
@@ -47,7 +47,7 @@ public:
     void indicesChanged();
     void setSignalMetersEnabled (bool);
     void setSignalMetersEnabled (int dev, bool);
-    void setAssignmentMode (AssignmentMode);
+    virtual void setAssignmentMode (AssignmentMode);
     void moveFaderInt (int dev, int channelNum, float newSliderPos);
     void moveFader (int channelNum, float newSliderPos) override;
     void moveMasterLevelFader (float newLeftSliderPos, float newRightSliderPos) override;
@@ -103,7 +103,7 @@ public:
         maxCharsOnDisplay = 128
     };
 
-private:
+protected:
     AssignmentMode assignmentMode = PanMode;
     float panPos[maxNumChannels];
     char timecodeDigits[9];

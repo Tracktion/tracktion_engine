@@ -77,8 +77,8 @@ namespace
         else if (f == "Copy")           AppFunctions::copy();
         else if (f == "Paste")          AppFunctions::paste();
         else if (f == "Delete")         AppFunctions::deleteSelected();
-        else if (f == "Mark-In")        AppFunctions::markIn();
-        else if (f == "Mark-Out")       AppFunctions::markOut();
+        else if (f == "Mark-In")        AppFunctions::markIn (true);
+        else if (f == "Mark-Out")       AppFunctions::markOut (true);
         else if (f == "Undo")           AppFunctions::undo();
         else if (f == "Redo")           AppFunctions::redo();
         else if (f == "Rtz")            AppFunctions::goToStart();

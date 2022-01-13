@@ -26,8 +26,8 @@ namespace AppFunctions
 
     void goToStart();
     void goToEnd();
-    void markIn();
-    void markOut();
+    void markIn (bool forceAtCursor);
+    void markOut (bool forceAtCursor);
 
     void start();
     void stop();
@@ -84,6 +84,12 @@ namespace AppFunctions
     void insertChord();
 
     void showHideVideo();
+    void showHideMixer (bool fs);
+    void showHideMidiEditor (bool fs);
+    void showHideTrackEditor();
+    void showHideBrowser();
+    void showHideActions();
+    void performUserAction (int);
 
     void showHideAllPanes();
     void split();

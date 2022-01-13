@@ -110,8 +110,10 @@ void ExternalControllerManager::initialise()
         addNewController (new MackieXT (*this, *mcu, i));
 
     refreshXTOrder();
-
+    
     addNewController (new MackieC4 (*this));
+    
+    addNewController (new IconProG2 (*this));
     addNewController (new TranzportControlSurface (*this));
     addNewController (new AlphaTrackControlSurface (*this));
     addNewController (new NovationRemoteSl (*this));

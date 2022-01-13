@@ -259,6 +259,12 @@ public:
     void userPressedInsertPitchChange();
     void userPressedInsertTimeSigChange();
     void userToggledVideoWindow();
+    void userToggledMixerWindow (bool fullscreen);
+    void userToggledMidiEditorWindow (bool fullscreen);
+    void userToggledTrackEditorWindow();
+    void userToggledBrowserWindow();
+    void userToggledActionsWindow();
+    void userPressedUserAction (int);
     void userPressedFreeze();
 
     void userPressedClearAllSolo();
