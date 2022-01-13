@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-13 11:29:51</td>
+            <td class="headerValue">2022-01-13 19:27:22</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -235,50 +235,70 @@
 <a name="173"><span class="lineNum">     173 </span>            :             case CustomControlSurface::paramBankRight8Id:</a>
 <a name="174"><span class="lineNum">     174 </span>            :             case CustomControlSurface::paramBankRight16Id:</a>
 <a name="175"><span class="lineNum">     175 </span>            :             case CustomControlSurface::paramBankRight24Id:</a>
-<a name="176"><span class="lineNum">     176 </span>            :             case CustomControlSurface::emptyTextId:</a>
-<a name="177"><span class="lineNum">     177 </span>            :             case CustomControlSurface::none:</a>
-<a name="178"><span class="lineNum">     178 </span>            :             default:</a>
-<a name="179"><span class="lineNum">     179 </span>            :             {</a>
-<a name="180"><span class="lineNum">     180 </span>            :                 int faderIndex = 0;</a>
-<a name="181"><span class="lineNum">     181 </span>            : </a>
-<a name="182"><span class="lineNum">     182 </span><span class="lineNoCov">          0 :                 if (getControlledTrack() != nullptr)</span></a>
-<a name="183"><span class="lineNum">     183 </span><span class="lineNoCov">          0 :                     faderIndex = getFaderIndex();</span></a>
-<a name="184"><span class="lineNum">     184 </span>            : </a>
-<a name="185"><span class="lineNum">     185 </span><span class="lineNoCov">          0 :                 m.addItem (ass.id + faderIndex, ass.name);</span></a>
-<a name="186"><span class="lineNum">     186 </span><span class="lineNoCov">          0 :                 break;</span></a>
-<a name="187"><span class="lineNum">     187 </span>            :             }</a>
-<a name="188"><span class="lineNum">     188 </span>            :         }</a>
-<a name="189"><span class="lineNum">     189 </span>            :     }</a>
-<a name="190"><span class="lineNum">     190 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="191"><span class="lineNum">     191 </span>            : </a>
-<a name="192"><span class="lineNum">     192 </span><span class="lineNoCov">          0 : void MidiAssignable::handleMenuResult (int menuResult)</span></a>
-<a name="193"><span class="lineNum">     193 </span>            : {</a>
-<a name="194"><span class="lineNum">     194 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
-<a name="195"><span class="lineNum">     195 </span>            : </a>
-<a name="196"><span class="lineNum">     196 </span><span class="lineNoCov">          0 :     if (! engine.getMidiLearnState().isActive())</span></a>
-<a name="197"><span class="lineNum">     197 </span><span class="lineNoCov">          0 :         return;</span></a>
-<a name="198"><span class="lineNum">     198 </span>            : </a>
-<a name="199"><span class="lineNum">     199 </span><span class="lineNoCov">          0 :     if (auto edit = engine.getUIBehaviour().getCurrentlyFocusedEdit())</span></a>
-<a name="200"><span class="lineNum">     200 </span><span class="lineNoCov">          0 :         if (menuResult &gt; 0)</span></a>
-<a name="201"><span class="lineNum">     201 </span><span class="lineNoCov">          0 :             edit-&gt;getParameterChangeHandler().actionFunctionTriggered (menuResult);</span></a>
-<a name="202"><span class="lineNum">     202 </span>            : }</a>
-<a name="203"><span class="lineNum">     203 </span>            : </a>
-<a name="204"><span class="lineNum">     204 </span><span class="lineNoCov">          0 : int MidiAssignable::getFaderIndex()</span></a>
-<a name="205"><span class="lineNum">     205 </span>            : {</a>
-<a name="206"><span class="lineNum">     206 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
-<a name="207"><span class="lineNum">     207 </span>            : </a>
-<a name="208"><span class="lineNum">     208 </span><span class="lineNoCov">          0 :     if (auto t = getControlledTrack())</span></a>
-<a name="209"><span class="lineNum">     209 </span>            :     {</a>
-<a name="210"><span class="lineNum">     210 </span><span class="lineNoCov">          0 :         auto&amp; ecm = engine.getExternalControllerManager();</span></a>
+<a name="176"><span class="lineNum">     176 </span>            :             case CustomControlSurface::userAction1Id:</a>
+<a name="177"><span class="lineNum">     177 </span>            :             case CustomControlSurface::userAction2Id:</a>
+<a name="178"><span class="lineNum">     178 </span>            :             case CustomControlSurface::userAction3Id:</a>
+<a name="179"><span class="lineNum">     179 </span>            :             case CustomControlSurface::userAction4Id:</a>
+<a name="180"><span class="lineNum">     180 </span>            :             case CustomControlSurface::userAction5Id:</a>
+<a name="181"><span class="lineNum">     181 </span>            :             case CustomControlSurface::userAction6Id:</a>
+<a name="182"><span class="lineNum">     182 </span>            :             case CustomControlSurface::userAction7Id:</a>
+<a name="183"><span class="lineNum">     183 </span>            :             case CustomControlSurface::userAction8Id:</a>
+<a name="184"><span class="lineNum">     184 </span>            :             case CustomControlSurface::userAction9Id:</a>
+<a name="185"><span class="lineNum">     185 </span>            :             case CustomControlSurface::userAction10Id:</a>
+<a name="186"><span class="lineNum">     186 </span>            :             case CustomControlSurface::userAction11Id:</a>
+<a name="187"><span class="lineNum">     187 </span>            :             case CustomControlSurface::userAction12Id:</a>
+<a name="188"><span class="lineNum">     188 </span>            :             case CustomControlSurface::userAction13Id:</a>
+<a name="189"><span class="lineNum">     189 </span>            :             case CustomControlSurface::userAction14Id:</a>
+<a name="190"><span class="lineNum">     190 </span>            :             case CustomControlSurface::userAction15Id:</a>
+<a name="191"><span class="lineNum">     191 </span>            :             case CustomControlSurface::userAction16Id:</a>
+<a name="192"><span class="lineNum">     192 </span>            :             case CustomControlSurface::userAction17Id:</a>
+<a name="193"><span class="lineNum">     193 </span>            :             case CustomControlSurface::userAction18Id:</a>
+<a name="194"><span class="lineNum">     194 </span>            :             case CustomControlSurface::userAction19Id:</a>
+<a name="195"><span class="lineNum">     195 </span>            :             case CustomControlSurface::userAction20Id:</a>
+<a name="196"><span class="lineNum">     196 </span>            :             case CustomControlSurface::emptyTextId:</a>
+<a name="197"><span class="lineNum">     197 </span>            :             case CustomControlSurface::none:</a>
+<a name="198"><span class="lineNum">     198 </span>            :             default:</a>
+<a name="199"><span class="lineNum">     199 </span>            :             {</a>
+<a name="200"><span class="lineNum">     200 </span>            :                 int faderIndex = 0;</a>
+<a name="201"><span class="lineNum">     201 </span>            : </a>
+<a name="202"><span class="lineNum">     202 </span><span class="lineNoCov">          0 :                 if (getControlledTrack() != nullptr)</span></a>
+<a name="203"><span class="lineNum">     203 </span><span class="lineNoCov">          0 :                     faderIndex = getFaderIndex();</span></a>
+<a name="204"><span class="lineNum">     204 </span>            : </a>
+<a name="205"><span class="lineNum">     205 </span><span class="lineNoCov">          0 :                 m.addItem (ass.id + faderIndex, ass.name);</span></a>
+<a name="206"><span class="lineNum">     206 </span><span class="lineNoCov">          0 :                 break;</span></a>
+<a name="207"><span class="lineNum">     207 </span>            :             }</a>
+<a name="208"><span class="lineNum">     208 </span>            :         }</a>
+<a name="209"><span class="lineNum">     209 </span>            :     }</a>
+<a name="210"><span class="lineNum">     210 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="211"><span class="lineNum">     211 </span>            : </a>
-<a name="212"><span class="lineNum">     212 </span><span class="lineNoCov">          0 :         if (auto ec = ecm.getActiveCustomController())</span></a>
-<a name="213"><span class="lineNum">     213 </span><span class="lineNoCov">          0 :             return ec-&gt;getFaderIndexInActiveRegion (ecm.mapTrackNumToChannelNum (t-&gt;getIndexInEditTrackList()));</span></a>
-<a name="214"><span class="lineNum">     214 </span>            :     }</a>
+<a name="212"><span class="lineNum">     212 </span><span class="lineNoCov">          0 : void MidiAssignable::handleMenuResult (int menuResult)</span></a>
+<a name="213"><span class="lineNum">     213 </span>            : {</a>
+<a name="214"><span class="lineNum">     214 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
 <a name="215"><span class="lineNum">     215 </span>            : </a>
-<a name="216"><span class="lineNum">     216 </span><span class="lineNoCov">          0 :     return -1;</span></a>
-<a name="217"><span class="lineNum">     217 </span>            : }</a>
+<a name="216"><span class="lineNum">     216 </span><span class="lineNoCov">          0 :     if (! engine.getMidiLearnState().isActive())</span></a>
+<a name="217"><span class="lineNum">     217 </span><span class="lineNoCov">          0 :         return;</span></a>
 <a name="218"><span class="lineNum">     218 </span>            : </a>
-<a name="219"><span class="lineNum">     219 </span>            : }</a>
+<a name="219"><span class="lineNum">     219 </span><span class="lineNoCov">          0 :     if (auto edit = engine.getUIBehaviour().getCurrentlyFocusedEdit())</span></a>
+<a name="220"><span class="lineNum">     220 </span><span class="lineNoCov">          0 :         if (menuResult &gt; 0)</span></a>
+<a name="221"><span class="lineNum">     221 </span><span class="lineNoCov">          0 :             edit-&gt;getParameterChangeHandler().actionFunctionTriggered (menuResult);</span></a>
+<a name="222"><span class="lineNum">     222 </span>            : }</a>
+<a name="223"><span class="lineNum">     223 </span>            : </a>
+<a name="224"><span class="lineNum">     224 </span><span class="lineNoCov">          0 : int MidiAssignable::getFaderIndex()</span></a>
+<a name="225"><span class="lineNum">     225 </span>            : {</a>
+<a name="226"><span class="lineNum">     226 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
+<a name="227"><span class="lineNum">     227 </span>            : </a>
+<a name="228"><span class="lineNum">     228 </span><span class="lineNoCov">          0 :     if (auto t = getControlledTrack())</span></a>
+<a name="229"><span class="lineNum">     229 </span>            :     {</a>
+<a name="230"><span class="lineNum">     230 </span><span class="lineNoCov">          0 :         auto&amp; ecm = engine.getExternalControllerManager();</span></a>
+<a name="231"><span class="lineNum">     231 </span>            : </a>
+<a name="232"><span class="lineNum">     232 </span><span class="lineNoCov">          0 :         if (auto ec = ecm.getActiveCustomController())</span></a>
+<a name="233"><span class="lineNum">     233 </span><span class="lineNoCov">          0 :             return ec-&gt;getFaderIndexInActiveRegion (ecm.mapTrackNumToChannelNum (t-&gt;getIndexInEditTrackList()));</span></a>
+<a name="234"><span class="lineNum">     234 </span>            :     }</a>
+<a name="235"><span class="lineNum">     235 </span>            : </a>
+<a name="236"><span class="lineNum">     236 </span><span class="lineNoCov">          0 :     return -1;</span></a>
+<a name="237"><span class="lineNum">     237 </span>            : }</a>
+<a name="238"><span class="lineNum">     238 </span>            : </a>
+<a name="239"><span class="lineNum">     239 </span>            : }</a>
 </pre>
       </td>
     </tr>

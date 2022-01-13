@@ -175,6 +175,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a4921a44372e19a5f2254d37f6d261371"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a204817c83e8ac4c1c788e27398de93bf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ExternalControllerManager.html#a204817c83e8ac4c1c788e27398de93bf">updatePunchLights</a> ()</td></tr>
 <tr class="separator:a204817c83e8ac4c1c788e27398de93bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ea96043f53b4501ce30f80caf5e01d1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ExternalControllerManager.html#a1ea96043f53b4501ce30f80caf5e01d1">updateScrollLights</a> ()</td></tr>
+<tr class="separator:a1ea96043f53b4501ce30f80caf5e01d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a525c4ed71354731722cfbdc0413b9d8b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ExternalControllerManager.html#a525c4ed71354731722cfbdc0413b9d8b">updateUndoLights</a> ()</td></tr>
 <tr class="separator:a525c4ed71354731722cfbdc0413b9d8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aed401cf8cb3c62465e57e1a8db160d0b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ExternalControllerManager.html#aed401cf8cb3c62465e57e1a8db160d0b">getNumChannelTracks</a> () const</td></tr>
@@ -183,10 +185,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a699141745783b76ce2713fc0eb52d8d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad1d34033751d6df460aeff2cce906a7a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ExternalControllerManager.html#ad1d34033751d6df460aeff2cce906a7a">mapTrackNumToChannelNum</a> (int channelNum) const</td></tr>
 <tr class="separator:ad1d34033751d6df460aeff2cce906a7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abeb5f32a5fb93562cd5e11f55f465a0d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ExternalControllerManager.html#abeb5f32a5fb93562cd5e11f55f465a0d">getXTCount</a> ()</td></tr>
-<tr class="separator:abeb5f32a5fb93562cd5e11f55f465a0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad1e9833ce1a62de25ded9e77a95bcab8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ExternalControllerManager.html#ad1e9833ce1a62de25ded9e77a95bcab8">setXTCount</a> (int)</td></tr>
-<tr class="separator:ad1e9833ce1a62de25ded9e77a95bcab8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adab033cd7c4e8f96f4d3dc4958f06107"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ExternalControllerManager.html#adab033cd7c4e8f96f4d3dc4958f06107">getXTCount</a> (const juce::String &amp;controller)</td></tr>
+<tr class="separator:adab033cd7c4e8f96f4d3dc4958f06107"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8383fa94d0b3534710e20d77e121cf60"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ExternalControllerManager.html#a8383fa94d0b3534710e20d77e121cf60">setXTCount</a> (const juce::String &amp;controller, int)</td></tr>
+<tr class="separator:a8383fa94d0b3534710e20d77e121cf60"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13d8aead75287b8cc97cad62da0e8c12"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ExternalControllerManager.html#a13d8aead75287b8cc97cad62da0e8c12">refreshXTOrder</a> ()</td></tr>
 <tr class="separator:a13d8aead75287b8cc97cad62da0e8c12"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a18c67e7a8386015b857bce4d7cd05c42"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ExternalControllerManager.html#a18c67e7a8386015b857bce4d7cd05c42">userMovedFader</a> (int channelNum, float newSliderPos)</td></tr>
@@ -1197,6 +1199,23 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a1ea96043f53b4501ce30f80caf5e01d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ea96043f53b4501ce30f80caf5e01d1">&#9670;&nbsp;</a></span>updateScrollLights()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion_engine::ExternalControllerManager::updateScrollLights </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a525c4ed71354731722cfbdc0413b9d8b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a525c4ed71354731722cfbdc0413b9d8b">&#9670;&nbsp;</a></span>updateUndoLights()</h2>
 
@@ -1267,8 +1286,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="abeb5f32a5fb93562cd5e11f55f465a0d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abeb5f32a5fb93562cd5e11f55f465a0d">&#9670;&nbsp;</a></span>getXTCount()</h2>
+<a id="adab033cd7c4e8f96f4d3dc4958f06107"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adab033cd7c4e8f96f4d3dc4958f06107">&#9670;&nbsp;</a></span>getXTCount()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1276,7 +1295,8 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">int tracktion_engine::ExternalControllerManager::getXTCount </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>controller</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1284,8 +1304,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ad1e9833ce1a62de25ded9e77a95bcab8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad1e9833ce1a62de25ded9e77a95bcab8">&#9670;&nbsp;</a></span>setXTCount()</h2>
+<a id="a8383fa94d0b3534710e20d77e121cf60"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8383fa94d0b3534710e20d77e121cf60">&#9670;&nbsp;</a></span>setXTCount()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1293,9 +1313,19 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">void tracktion_engine::ExternalControllerManager::setXTCount </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>controller</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1783,7 +1813,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jan 13 2022 11:16:12 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 13 2022 19:15:23 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

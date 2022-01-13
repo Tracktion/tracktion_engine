@@ -1710,6 +1710,13 @@
       <arglist>()</arglist>
     </member>
     <member kind="function">
+      <type>bool</type>
+      <name>isScrolling</name>
+      <anchorfile>namespacetracktion__engine_1_1AppFunctions.html</anchorfile>
+      <anchor>a35fa0e799a499684532f926aa0a4e1cc</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
       <type>void</type>
       <name>stopRecordingAndDiscard</name>
       <anchorfile>namespacetracktion__engine_1_1AppFunctions.html</anchorfile>
@@ -20350,19 +20357,26 @@
       <anchor>a7d29d34cf30d236df5337564609d3439</anchor>
       <arglist>(bool isLoopOn)=0</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>slaveOnOffChanged</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a876f265e6866e40b0ec54e1edf0ee788</anchor>
-      <arglist>(bool isSlaving)=0</arglist>
+      <anchor>ae6095af5f5693af9fc86e9db42c521fb</anchor>
+      <arglist>([[maybe_unused]] bool isSlaving)</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>punchOnOffChanged</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a688e9ca460aea023a44f9e1463cdeb30</anchor>
-      <arglist>(bool isPunching)=0</arglist>
+      <anchor>aa18da21e482487999111037890203e08</anchor>
+      <arglist>([[maybe_unused]] bool isPunching)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>scrollOnOffChanged</name>
+      <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
+      <anchor>a2d808d89f0ab5afd8b7a38efe339df67</anchor>
+      <arglist>([[maybe_unused]] bool isScroll)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
@@ -22861,6 +22875,126 @@
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
+      <name>userAction1Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04eda9a0a7d1cfe2c3d78669d3fbe95b67fb0</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction2Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04edad5809a931d2fd2359e621809eb5f3c17</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction3Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04edaaf103df6c311b611044e75bac296db9a</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction4Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04edadd6e7a5cc4b7953deeddfdae77d2f830</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction5Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04edae2cd2977aced4614c1d12a6cd491a40d</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction6Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04edac8df05867510d60d508f5a41aa9d337e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction7Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04eda999730ad97ed9dbb1d616db12e2344aa</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction8Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04eda6a77422ace9c5d494f7258d0b053b23d</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction9Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04eda4fe3a546676ae77f5543580e42a9fd6d</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction10Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04eda3f768f20fe426593f8f41693122b9e43</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction11Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04edad769f07e307c0fa972f9b5fbec306d2a</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction12Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04eda529593050ffd63abda2d70175c91eea2</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction13Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04eda584e23d65fdeedb5f6eaca77e52199a9</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction14Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04edad751a6d7f60bc3bb75e2264e0bfd1139</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction15Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04edabf86dfbf846348ae09ef140a4afd5fb3</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction16Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04eda9120b3f9b5e5fa70ed400c9692919b40</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction17Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04eda1ffc8a876c52ea80c86070bde3704280</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction18Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04eda7bd89dc57fc18b8fc7920a228a6bcdfc</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction19Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04eda8b25d1fd885a60b571854994fae16d85</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction20Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04eda7063d5420d768f228e8cb4bc966669ff</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
       <name>emptyTextId</name>
       <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
       <anchor>afd5a2df81c9aa2cc64e85994facd04edab887c0a64e8e25400ae06a128066b7b3</anchor>
@@ -23407,6 +23541,126 @@
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
+      <name>userAction1Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04eda9a0a7d1cfe2c3d78669d3fbe95b67fb0</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction2Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04edad5809a931d2fd2359e621809eb5f3c17</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction3Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04edaaf103df6c311b611044e75bac296db9a</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction4Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04edadd6e7a5cc4b7953deeddfdae77d2f830</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction5Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04edae2cd2977aced4614c1d12a6cd491a40d</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction6Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04edac8df05867510d60d508f5a41aa9d337e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction7Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04eda999730ad97ed9dbb1d616db12e2344aa</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction8Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04eda6a77422ace9c5d494f7258d0b053b23d</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction9Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04eda4fe3a546676ae77f5543580e42a9fd6d</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction10Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04eda3f768f20fe426593f8f41693122b9e43</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction11Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04edad769f07e307c0fa972f9b5fbec306d2a</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction12Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04eda529593050ffd63abda2d70175c91eea2</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction13Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04eda584e23d65fdeedb5f6eaca77e52199a9</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction14Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04edad751a6d7f60bc3bb75e2264e0bfd1139</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction15Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04edabf86dfbf846348ae09ef140a4afd5fb3</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction16Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04eda9120b3f9b5e5fa70ed400c9692919b40</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction17Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04eda1ffc8a876c52ea80c86070bde3704280</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction18Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04eda7bd89dc57fc18b8fc7920a228a6bcdfc</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction19Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04eda8b25d1fd885a60b571854994fae16d85</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>userAction20Id</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>afd5a2df81c9aa2cc64e85994facd04eda7063d5420d768f228e8cb4bc966669ff</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
       <name>emptyTextId</name>
       <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
       <anchor>afd5a2df81c9aa2cc64e85994facd04edab887c0a64e8e25400ae06a128066b7b3</anchor>
@@ -23647,6 +23901,13 @@
       <name>punchOnOffChanged</name>
       <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
       <anchor>a78deb89b6a7c55a3ef2590fb8084b0ad</anchor>
+      <arglist>(bool isPunching) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>scrollOnOffChanged</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a2f310cf9d6b3f11b4b31ca71ad7d5fe8</anchor>
       <arglist>(bool isPunching) override</arglist>
     </member>
     <member kind="function">
@@ -24326,6 +24587,146 @@
       <name>paramBankRight24</name>
       <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
       <anchor>a18af3d90ca25a3a3d0288776d68a4c4a</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userFunction1</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a7bb74c47d6aab795c2e39b24e48dc14a</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userFunction2</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a16f55b91aa009ddccb6abc10cc812a14</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userFunction3</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>ad4d69b02b6cb053baf63df59282fa584</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userFunction4</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a2be2b647cd6e0acec94e138fd7152da9</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userFunction5</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a27443caa129bdb496fe1ddf1533b2914</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userFunction6</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a3175d8d707eff1447498df42ccbfb997</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userFunction7</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a892b9cd785ebd8bff00870b26e81c993</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userFunction8</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a4b8e18e54633dc19a7e67abcf1795ab9</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userFunction9</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a01c9b157751327e3c5807910657ee749</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userFunction10</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a6b0e7d03b94a69dcfba6fe8dff167986</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userFunction11</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a0a7b8772cd9550e9fcd5d10a2aea3198</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userFunction12</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a0b00b507076cc19ebbdcac716bf66954</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userFunction13</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>ac9ecf62b76e79b6728299b6375c3aff5</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userFunction14</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>af931ed22eb3c84f078d521adc9a0119e</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userFunction15</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a6abc129608d81901220de7e0a90916f2</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userFunction16</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a559c640ea16a100dcedffc8ed6443e8d</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userFunction17</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>addcb0951e7d7663b66ca0c20af76c823</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userFunction18</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>af277ad9813b662ff124165dc96d0b567</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userFunction19</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>a89986db2eb290ed5cab3852b50166cc0</anchor>
+      <arglist>(float val, int param)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userFunction20</name>
+      <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
+      <anchor>ae7100abd9be56d38295b5c3c7f542e3e</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
     <member kind="function">
@@ -30829,6 +31230,13 @@
     </member>
     <member kind="function">
       <type>void</type>
+      <name>updateScrollLights</name>
+      <anchorfile>classtracktion__engine_1_1ExternalController.html</anchorfile>
+      <anchor>a5ed77ace70ceb74795df996f4bc27f5f</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
       <name>updateUndoLights</name>
       <anchorfile>classtracktion__engine_1_1ExternalController.html</anchorfile>
       <anchor>a8784164a607dbe30d3efa8e4acb3e2d5</anchor>
@@ -31445,6 +31853,13 @@
     </member>
     <member kind="function">
       <type>void</type>
+      <name>updateScrollLights</name>
+      <anchorfile>classtracktion__engine_1_1ExternalControllerManager.html</anchorfile>
+      <anchor>a1ea96043f53b4501ce30f80caf5e01d1</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
       <name>updateUndoLights</name>
       <anchorfile>classtracktion__engine_1_1ExternalControllerManager.html</anchorfile>
       <anchor>a525c4ed71354731722cfbdc0413b9d8b</anchor>
@@ -31475,15 +31890,15 @@
       <type>int</type>
       <name>getXTCount</name>
       <anchorfile>classtracktion__engine_1_1ExternalControllerManager.html</anchorfile>
-      <anchor>abeb5f32a5fb93562cd5e11f55f465a0d</anchor>
-      <arglist>()</arglist>
+      <anchor>adab033cd7c4e8f96f4d3dc4958f06107</anchor>
+      <arglist>(const juce::String &amp;controller)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>setXTCount</name>
       <anchorfile>classtracktion__engine_1_1ExternalControllerManager.html</anchorfile>
-      <anchor>ad1e9833ce1a62de25ded9e77a95bcab8</anchor>
-      <arglist>(int)</arglist>
+      <anchor>a8383fa94d0b3534710e20d77e121cf60</anchor>
+      <arglist>(const juce::String &amp;controller, int)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -34525,6 +34940,13 @@
       <anchorfile>classtracktion__engine_1_1IconProG2.html</anchorfile>
       <anchor>a212c3c3789b08f3721fae895f6ad1696</anchor>
       <arglist>(bool isSlaving) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>scrollOnOffChanged</name>
+      <anchorfile>classtracktion__engine_1_1IconProG2.html</anchorfile>
+      <anchor>aca686627d5c470b2f1a8d4b3c8e235fd</anchor>
+      <arglist>(bool isScroll) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -70942,6 +71364,13 @@
       <arglist>()</arglist>
     </member>
     <member kind="function" virtualness="virtual">
+      <type>virtual bool</type>
+      <name>isScrolling</name>
+      <anchorfile>classtracktion__engine_1_1UIBehaviour.html</anchorfile>
+      <anchor>a678eeccf0ab2d50f26c86db063c78b8f</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>performUserAction</name>
       <anchorfile>classtracktion__engine_1_1UIBehaviour.html</anchorfile>
@@ -80380,6 +80809,13 @@
       <name>toggleScroll</name>
       <anchorfile>namespacetracktion__engine_1_1AppFunctions.html</anchorfile>
       <anchor>a5299bc81ba6a7ab32b03b6f7f50fd390</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isScrolling</name>
+      <anchorfile>namespacetracktion__engine_1_1AppFunctions.html</anchorfile>
+      <anchor>a35fa0e799a499684532f926aa0a4e1cc</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function">

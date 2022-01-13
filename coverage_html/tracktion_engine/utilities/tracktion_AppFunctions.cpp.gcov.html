@@ -32,16 +32,16 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">358</td>
+            <td class="headerCovTableEntry">360</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-13 11:29:51</td>
+            <td class="headerValue">2022-01-13 19:27:22</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">86</td>
+            <td class="headerCovTableEntry">87</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
@@ -485,227 +485,232 @@
 <a name="423"><span class="lineNum">     423 </span><span class="lineNoCov">          0 :         getCurrentUIBehaviour().toggleScroll();</span></a>
 <a name="424"><span class="lineNum">     424 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="425"><span class="lineNum">     425 </span>            : </a>
-<a name="426"><span class="lineNum">     426 </span><span class="lineNoCov">          0 :     void stopRecordingAndDiscard()</span></a>
+<a name="426"><span class="lineNum">     426 </span><span class="lineNoCov">          0 :     bool isScrolling()</span></a>
 <a name="427"><span class="lineNum">     427 </span>            :     {</a>
-<a name="428"><span class="lineNum">     428 </span><span class="lineNoCov">          0 :         if (auto transport = getActiveTransport())</span></a>
-<a name="429"><span class="lineNum">     429 </span><span class="lineNoCov">          0 :             transport-&gt;stop (true, false);</span></a>
-<a name="430"><span class="lineNum">     430 </span><span class="lineNoCov">          0 :     }</span></a>
-<a name="431"><span class="lineNum">     431 </span>            : </a>
-<a name="432"><span class="lineNum">     432 </span><span class="lineNoCov">          0 :     void stopRecordingAndRestart()</span></a>
-<a name="433"><span class="lineNum">     433 </span>            :     {</a>
-<a name="434"><span class="lineNum">     434 </span><span class="lineNoCov">          0 :         if (auto transport = getActiveTransport())</span></a>
-<a name="435"><span class="lineNum">     435 </span>            :         {</a>
-<a name="436"><span class="lineNum">     436 </span><span class="lineNoCov">          0 :             if (transport-&gt;isRecording())</span></a>
-<a name="437"><span class="lineNum">     437 </span>            :             {</a>
-<a name="438"><span class="lineNum">     438 </span><span class="lineNoCov">          0 :                 transport-&gt;stop (true, true);</span></a>
-<a name="439"><span class="lineNum">     439 </span><span class="lineNoCov">          0 :                 transport-&gt;record (true);</span></a>
-<a name="440"><span class="lineNum">     440 </span>            :             }</a>
-<a name="441"><span class="lineNum">     441 </span>            :         }</a>
-<a name="442"><span class="lineNum">     442 </span><span class="lineNoCov">          0 :     }</span></a>
-<a name="443"><span class="lineNum">     443 </span>            : </a>
-<a name="444"><span class="lineNum">     444 </span><span class="lineNoCov">          0 :     void insertTempoChange()</span></a>
-<a name="445"><span class="lineNum">     445 </span>            :     {</a>
-<a name="446"><span class="lineNum">     446 </span><span class="lineNoCov">          0 :         if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())</span></a>
-<a name="447"><span class="lineNum">     447 </span>            :         {</a>
-<a name="448"><span class="lineNum">     448 </span><span class="lineNoCov">          0 :             auto&amp; edit = *sm-&gt;getEdit();</span></a>
-<a name="449"><span class="lineNum">     449 </span><span class="lineNoCov">          0 :             auto&amp; tempoSequence = edit.tempoSequence;</span></a>
-<a name="450"><span class="lineNum">     450 </span>            : </a>
-<a name="451"><span class="lineNum">     451 </span><span class="lineNoCov">          0 :             if (tempoSequence.getNumTempos() &gt;= 128)</span></a>
-<a name="452"><span class="lineNum">     452 </span>            :             {</a>
-<a name="453"><span class="lineNum">     453 </span><span class="lineNoCov">          0 :                 edit.engine.getUIBehaviour().showWarningAlert (TRANS(&quot;Can't insert tempo&quot;),</span></a>
-<a name="454"><span class="lineNum">     454 </span><span class="lineNoCov">          0 :                                                                TRANS(&quot;There are already too many tempos in this edit!&quot;));</span></a>
-<a name="455"><span class="lineNum">     455 </span>            :             }</a>
-<a name="456"><span class="lineNum">     456 </span>            :             else</a>
+<a name="428"><span class="lineNum">     428 </span><span class="lineNoCov">          0 :         return getCurrentUIBehaviour().isScrolling();</span></a>
+<a name="429"><span class="lineNum">     429 </span>            :     }</a>
+<a name="430"><span class="lineNum">     430 </span>            : </a>
+<a name="431"><span class="lineNum">     431 </span><span class="lineNoCov">          0 :     void stopRecordingAndDiscard()</span></a>
+<a name="432"><span class="lineNum">     432 </span>            :     {</a>
+<a name="433"><span class="lineNum">     433 </span><span class="lineNoCov">          0 :         if (auto transport = getActiveTransport())</span></a>
+<a name="434"><span class="lineNum">     434 </span><span class="lineNoCov">          0 :             transport-&gt;stop (true, false);</span></a>
+<a name="435"><span class="lineNum">     435 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="436"><span class="lineNum">     436 </span>            : </a>
+<a name="437"><span class="lineNum">     437 </span><span class="lineNoCov">          0 :     void stopRecordingAndRestart()</span></a>
+<a name="438"><span class="lineNum">     438 </span>            :     {</a>
+<a name="439"><span class="lineNum">     439 </span><span class="lineNoCov">          0 :         if (auto transport = getActiveTransport())</span></a>
+<a name="440"><span class="lineNum">     440 </span>            :         {</a>
+<a name="441"><span class="lineNum">     441 </span><span class="lineNoCov">          0 :             if (transport-&gt;isRecording())</span></a>
+<a name="442"><span class="lineNum">     442 </span>            :             {</a>
+<a name="443"><span class="lineNum">     443 </span><span class="lineNoCov">          0 :                 transport-&gt;stop (true, true);</span></a>
+<a name="444"><span class="lineNum">     444 </span><span class="lineNoCov">          0 :                 transport-&gt;record (true);</span></a>
+<a name="445"><span class="lineNum">     445 </span>            :             }</a>
+<a name="446"><span class="lineNum">     446 </span>            :         }</a>
+<a name="447"><span class="lineNum">     447 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="448"><span class="lineNum">     448 </span>            : </a>
+<a name="449"><span class="lineNum">     449 </span><span class="lineNoCov">          0 :     void insertTempoChange()</span></a>
+<a name="450"><span class="lineNum">     450 </span>            :     {</a>
+<a name="451"><span class="lineNum">     451 </span><span class="lineNoCov">          0 :         if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())</span></a>
+<a name="452"><span class="lineNum">     452 </span>            :         {</a>
+<a name="453"><span class="lineNum">     453 </span><span class="lineNoCov">          0 :             auto&amp; edit = *sm-&gt;getEdit();</span></a>
+<a name="454"><span class="lineNum">     454 </span><span class="lineNoCov">          0 :             auto&amp; tempoSequence = edit.tempoSequence;</span></a>
+<a name="455"><span class="lineNum">     455 </span>            : </a>
+<a name="456"><span class="lineNum">     456 </span><span class="lineNoCov">          0 :             if (tempoSequence.getNumTempos() &gt;= 128)</span></a>
 <a name="457"><span class="lineNum">     457 </span>            :             {</a>
-<a name="458"><span class="lineNum">     458 </span><span class="lineNoCov">          0 :                 auto nearestBeat = TimecodeSnapType::get1BeatSnapType()</span></a>
-<a name="459"><span class="lineNum">     459 </span><span class="lineNoCov">          0 :                                      .roundTimeNearest (getCurrentUIBehaviour().getEditingPosition (edit), tempoSequence);</span></a>
-<a name="460"><span class="lineNum">     460 </span>            : </a>
-<a name="461"><span class="lineNum">     461 </span><span class="lineNoCov">          0 :                 if (auto newTempo = tempoSequence.insertTempo (nearestBeat))</span></a>
-<a name="462"><span class="lineNum">     462 </span><span class="lineNoCov">          0 :                     sm-&gt;selectOnly (*newTempo);</span></a>
-<a name="463"><span class="lineNum">     463 </span>            :                 else</a>
-<a name="464"><span class="lineNum">     464 </span><span class="lineNoCov">          0 :                     edit.engine.getUIBehaviour().showWarningMessage (TRANS(&quot;Tempo changes must be further than 1 beat apart&quot;) + &quot;...&quot;);</span></a>
-<a name="465"><span class="lineNum">     465 </span>            :             }</a>
-<a name="466"><span class="lineNum">     466 </span>            :         }</a>
-<a name="467"><span class="lineNum">     467 </span><span class="lineNoCov">          0 :     }</span></a>
-<a name="468"><span class="lineNum">     468 </span>            : </a>
-<a name="469"><span class="lineNum">     469 </span><span class="lineNoCov">          0 :     void insertPitchChange()</span></a>
-<a name="470"><span class="lineNum">     470 </span>            :     {</a>
-<a name="471"><span class="lineNum">     471 </span><span class="lineNoCov">          0 :         if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())</span></a>
-<a name="472"><span class="lineNum">     472 </span><span class="lineNoCov">          0 :             if (auto newPitch = sm-&gt;getEdit()-&gt;pitchSequence.insertPitch (getCurrentUIBehaviour().getEditingPosition (*sm-&gt;getEdit())))</span></a>
-<a name="473"><span class="lineNum">     473 </span><span class="lineNoCov">          0 :                 sm-&gt;selectOnly (*newPitch);</span></a>
-<a name="474"><span class="lineNum">     474 </span><span class="lineNoCov">          0 :     }</span></a>
-<a name="475"><span class="lineNum">     475 </span>            : </a>
-<a name="476"><span class="lineNum">     476 </span><span class="lineNoCov">          0 :     void insertTimeSigChange()</span></a>
-<a name="477"><span class="lineNum">     477 </span>            :     {</a>
-<a name="478"><span class="lineNum">     478 </span><span class="lineNoCov">          0 :         if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())</span></a>
-<a name="479"><span class="lineNum">     479 </span>            :         {</a>
-<a name="480"><span class="lineNum">     480 </span><span class="lineNoCov">          0 :             auto&amp; edit = *sm-&gt;getEdit();</span></a>
-<a name="481"><span class="lineNum">     481 </span><span class="lineNoCov">          0 :             auto&amp; tempoSequence = edit.tempoSequence;</span></a>
-<a name="482"><span class="lineNum">     482 </span>            : </a>
-<a name="483"><span class="lineNum">     483 </span><span class="lineNoCov">          0 :             if (tempoSequence.getNumTimeSigs() &gt;= 128)</span></a>
-<a name="484"><span class="lineNum">     484 </span>            :             {</a>
-<a name="485"><span class="lineNum">     485 </span><span class="lineNoCov">          0 :                 edit.engine.getUIBehaviour().showWarningAlert (TRANS(&quot;Can't insert time signature&quot;),</span></a>
-<a name="486"><span class="lineNum">     486 </span><span class="lineNoCov">          0 :                                                                TRANS(&quot;There are already too many time signatures in this edit!&quot;));</span></a>
-<a name="487"><span class="lineNum">     487 </span>            :             }</a>
-<a name="488"><span class="lineNum">     488 </span>            :             else</a>
+<a name="458"><span class="lineNum">     458 </span><span class="lineNoCov">          0 :                 edit.engine.getUIBehaviour().showWarningAlert (TRANS(&quot;Can't insert tempo&quot;),</span></a>
+<a name="459"><span class="lineNum">     459 </span><span class="lineNoCov">          0 :                                                                TRANS(&quot;There are already too many tempos in this edit!&quot;));</span></a>
+<a name="460"><span class="lineNum">     460 </span>            :             }</a>
+<a name="461"><span class="lineNum">     461 </span>            :             else</a>
+<a name="462"><span class="lineNum">     462 </span>            :             {</a>
+<a name="463"><span class="lineNum">     463 </span><span class="lineNoCov">          0 :                 auto nearestBeat = TimecodeSnapType::get1BeatSnapType()</span></a>
+<a name="464"><span class="lineNum">     464 </span><span class="lineNoCov">          0 :                                      .roundTimeNearest (getCurrentUIBehaviour().getEditingPosition (edit), tempoSequence);</span></a>
+<a name="465"><span class="lineNum">     465 </span>            : </a>
+<a name="466"><span class="lineNum">     466 </span><span class="lineNoCov">          0 :                 if (auto newTempo = tempoSequence.insertTempo (nearestBeat))</span></a>
+<a name="467"><span class="lineNum">     467 </span><span class="lineNoCov">          0 :                     sm-&gt;selectOnly (*newTempo);</span></a>
+<a name="468"><span class="lineNum">     468 </span>            :                 else</a>
+<a name="469"><span class="lineNum">     469 </span><span class="lineNoCov">          0 :                     edit.engine.getUIBehaviour().showWarningMessage (TRANS(&quot;Tempo changes must be further than 1 beat apart&quot;) + &quot;...&quot;);</span></a>
+<a name="470"><span class="lineNum">     470 </span>            :             }</a>
+<a name="471"><span class="lineNum">     471 </span>            :         }</a>
+<a name="472"><span class="lineNum">     472 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="473"><span class="lineNum">     473 </span>            : </a>
+<a name="474"><span class="lineNum">     474 </span><span class="lineNoCov">          0 :     void insertPitchChange()</span></a>
+<a name="475"><span class="lineNum">     475 </span>            :     {</a>
+<a name="476"><span class="lineNum">     476 </span><span class="lineNoCov">          0 :         if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())</span></a>
+<a name="477"><span class="lineNum">     477 </span><span class="lineNoCov">          0 :             if (auto newPitch = sm-&gt;getEdit()-&gt;pitchSequence.insertPitch (getCurrentUIBehaviour().getEditingPosition (*sm-&gt;getEdit())))</span></a>
+<a name="478"><span class="lineNum">     478 </span><span class="lineNoCov">          0 :                 sm-&gt;selectOnly (*newPitch);</span></a>
+<a name="479"><span class="lineNum">     479 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="480"><span class="lineNum">     480 </span>            : </a>
+<a name="481"><span class="lineNum">     481 </span><span class="lineNoCov">          0 :     void insertTimeSigChange()</span></a>
+<a name="482"><span class="lineNum">     482 </span>            :     {</a>
+<a name="483"><span class="lineNum">     483 </span><span class="lineNoCov">          0 :         if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())</span></a>
+<a name="484"><span class="lineNum">     484 </span>            :         {</a>
+<a name="485"><span class="lineNum">     485 </span><span class="lineNoCov">          0 :             auto&amp; edit = *sm-&gt;getEdit();</span></a>
+<a name="486"><span class="lineNum">     486 </span><span class="lineNoCov">          0 :             auto&amp; tempoSequence = edit.tempoSequence;</span></a>
+<a name="487"><span class="lineNum">     487 </span>            : </a>
+<a name="488"><span class="lineNum">     488 </span><span class="lineNoCov">          0 :             if (tempoSequence.getNumTimeSigs() &gt;= 128)</span></a>
 <a name="489"><span class="lineNum">     489 </span>            :             {</a>
-<a name="490"><span class="lineNum">     490 </span><span class="lineNoCov">          0 :                 auto nearestBeat = TimecodeSnapType::get1BeatSnapType()</span></a>
-<a name="491"><span class="lineNum">     491 </span><span class="lineNoCov">          0 :                                      .roundTimeNearest (getCurrentUIBehaviour().getEditingPosition (edit), tempoSequence);</span></a>
-<a name="492"><span class="lineNum">     492 </span>            : </a>
-<a name="493"><span class="lineNum">     493 </span><span class="lineNoCov">          0 :                 if (auto newTempo = tempoSequence.insertTimeSig (nearestBeat))</span></a>
-<a name="494"><span class="lineNum">     494 </span><span class="lineNoCov">          0 :                     sm-&gt;selectOnly (*newTempo);</span></a>
-<a name="495"><span class="lineNum">     495 </span>            :                 else</a>
-<a name="496"><span class="lineNum">     496 </span><span class="lineNoCov">          0 :                     edit.engine.getUIBehaviour().showWarningMessage (TRANS(&quot;Time signature changes must be further than 1 beat apart&quot;)+ &quot;...&quot;);</span></a>
-<a name="497"><span class="lineNum">     497 </span>            :             }</a>
-<a name="498"><span class="lineNum">     498 </span>            :         }</a>
-<a name="499"><span class="lineNum">     499 </span><span class="lineNoCov">          0 :     }</span></a>
-<a name="500"><span class="lineNum">     500 </span>            : </a>
-<a name="501"><span class="lineNum">     501 </span><span class="lineNoCov">          0 :     void insertChord()</span></a>
-<a name="502"><span class="lineNum">     502 </span>            :     {</a>
-<a name="503"><span class="lineNum">     503 </span><span class="lineNoCov">          0 :         if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())</span></a>
-<a name="504"><span class="lineNum">     504 </span>            :         {</a>
-<a name="505"><span class="lineNum">     505 </span><span class="lineNoCov">          0 :             auto&amp; edit = *sm-&gt;getEdit();</span></a>
-<a name="506"><span class="lineNum">     506 </span>            : </a>
-<a name="507"><span class="lineNum">     507 </span><span class="lineNoCov">          0 :             if (auto ct = edit.getChordTrack())</span></a>
-<a name="508"><span class="lineNum">     508 </span>            :             {</a>
-<a name="509"><span class="lineNum">     509 </span><span class="lineNoCov">          0 :                 auto start = edit.getTransport().position.get();</span></a>
-<a name="510"><span class="lineNum">     510 </span><span class="lineNoCov">          0 :                 auto&amp; tempo = edit.tempoSequence.getTempoAt (start);</span></a>
-<a name="511"><span class="lineNum">     511 </span><span class="lineNoCov">          0 :                 auto approxOneBarLength = tempo.getMatchingTimeSig().numerator * tempo.getApproxBeatLength();</span></a>
-<a name="512"><span class="lineNum">     512 </span>            : </a>
-<a name="513"><span class="lineNum">     513 </span><span class="lineNoCov">          0 :                 ct-&gt;insertNewClip (TrackItem::Type::chord, { start, start + approxOneBarLength }, sm);</span></a>
-<a name="514"><span class="lineNum">     514 </span>            :             }</a>
-<a name="515"><span class="lineNum">     515 </span>            :         }</a>
-<a name="516"><span class="lineNum">     516 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="490"><span class="lineNum">     490 </span><span class="lineNoCov">          0 :                 edit.engine.getUIBehaviour().showWarningAlert (TRANS(&quot;Can't insert time signature&quot;),</span></a>
+<a name="491"><span class="lineNum">     491 </span><span class="lineNoCov">          0 :                                                                TRANS(&quot;There are already too many time signatures in this edit!&quot;));</span></a>
+<a name="492"><span class="lineNum">     492 </span>            :             }</a>
+<a name="493"><span class="lineNum">     493 </span>            :             else</a>
+<a name="494"><span class="lineNum">     494 </span>            :             {</a>
+<a name="495"><span class="lineNum">     495 </span><span class="lineNoCov">          0 :                 auto nearestBeat = TimecodeSnapType::get1BeatSnapType()</span></a>
+<a name="496"><span class="lineNum">     496 </span><span class="lineNoCov">          0 :                                      .roundTimeNearest (getCurrentUIBehaviour().getEditingPosition (edit), tempoSequence);</span></a>
+<a name="497"><span class="lineNum">     497 </span>            : </a>
+<a name="498"><span class="lineNum">     498 </span><span class="lineNoCov">          0 :                 if (auto newTempo = tempoSequence.insertTimeSig (nearestBeat))</span></a>
+<a name="499"><span class="lineNum">     499 </span><span class="lineNoCov">          0 :                     sm-&gt;selectOnly (*newTempo);</span></a>
+<a name="500"><span class="lineNum">     500 </span>            :                 else</a>
+<a name="501"><span class="lineNum">     501 </span><span class="lineNoCov">          0 :                     edit.engine.getUIBehaviour().showWarningMessage (TRANS(&quot;Time signature changes must be further than 1 beat apart&quot;)+ &quot;...&quot;);</span></a>
+<a name="502"><span class="lineNum">     502 </span>            :             }</a>
+<a name="503"><span class="lineNum">     503 </span>            :         }</a>
+<a name="504"><span class="lineNum">     504 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="505"><span class="lineNum">     505 </span>            : </a>
+<a name="506"><span class="lineNum">     506 </span><span class="lineNoCov">          0 :     void insertChord()</span></a>
+<a name="507"><span class="lineNum">     507 </span>            :     {</a>
+<a name="508"><span class="lineNum">     508 </span><span class="lineNoCov">          0 :         if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())</span></a>
+<a name="509"><span class="lineNum">     509 </span>            :         {</a>
+<a name="510"><span class="lineNum">     510 </span><span class="lineNoCov">          0 :             auto&amp; edit = *sm-&gt;getEdit();</span></a>
+<a name="511"><span class="lineNum">     511 </span>            : </a>
+<a name="512"><span class="lineNum">     512 </span><span class="lineNoCov">          0 :             if (auto ct = edit.getChordTrack())</span></a>
+<a name="513"><span class="lineNum">     513 </span>            :             {</a>
+<a name="514"><span class="lineNum">     514 </span><span class="lineNoCov">          0 :                 auto start = edit.getTransport().position.get();</span></a>
+<a name="515"><span class="lineNum">     515 </span><span class="lineNoCov">          0 :                 auto&amp; tempo = edit.tempoSequence.getTempoAt (start);</span></a>
+<a name="516"><span class="lineNum">     516 </span><span class="lineNoCov">          0 :                 auto approxOneBarLength = tempo.getMatchingTimeSig().numerator * tempo.getApproxBeatLength();</span></a>
 <a name="517"><span class="lineNum">     517 </span>            : </a>
-<a name="518"><span class="lineNum">     518 </span><span class="lineNoCov">          0 :     void showHideVideo()</span></a>
-<a name="519"><span class="lineNum">     519 </span>            :     {</a>
-<a name="520"><span class="lineNum">     520 </span><span class="lineNoCov">          0 :         getCurrentUIBehaviour().showHideVideo();</span></a>
+<a name="518"><span class="lineNum">     518 </span><span class="lineNoCov">          0 :                 ct-&gt;insertNewClip (TrackItem::Type::chord, { start, start + approxOneBarLength }, sm);</span></a>
+<a name="519"><span class="lineNum">     519 </span>            :             }</a>
+<a name="520"><span class="lineNum">     520 </span>            :         }</a>
 <a name="521"><span class="lineNum">     521 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="522"><span class="lineNum">     522 </span>            : </a>
-<a name="523"><span class="lineNum">     523 </span><span class="lineNoCov">          0 :     void showHideMixer (bool fs)</span></a>
+<a name="523"><span class="lineNum">     523 </span><span class="lineNoCov">          0 :     void showHideVideo()</span></a>
 <a name="524"><span class="lineNum">     524 </span>            :     {</a>
-<a name="525"><span class="lineNum">     525 </span><span class="lineNoCov">          0 :         getCurrentUIBehaviour().showHideMixer (fs);</span></a>
+<a name="525"><span class="lineNum">     525 </span><span class="lineNoCov">          0 :         getCurrentUIBehaviour().showHideVideo();</span></a>
 <a name="526"><span class="lineNum">     526 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="527"><span class="lineNum">     527 </span>            : </a>
-<a name="528"><span class="lineNum">     528 </span><span class="lineNoCov">          0 :     void showHideMidiEditor (bool fs)</span></a>
+<a name="528"><span class="lineNum">     528 </span><span class="lineNoCov">          0 :     void showHideMixer (bool fs)</span></a>
 <a name="529"><span class="lineNum">     529 </span>            :     {</a>
-<a name="530"><span class="lineNum">     530 </span><span class="lineNoCov">          0 :         getCurrentUIBehaviour().showHideMidiEditor (fs);</span></a>
+<a name="530"><span class="lineNum">     530 </span><span class="lineNoCov">          0 :         getCurrentUIBehaviour().showHideMixer (fs);</span></a>
 <a name="531"><span class="lineNum">     531 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="532"><span class="lineNum">     532 </span>            : </a>
-<a name="533"><span class="lineNum">     533 </span><span class="lineNoCov">          0 :     void showHideTrackEditor()</span></a>
+<a name="533"><span class="lineNum">     533 </span><span class="lineNoCov">          0 :     void showHideMidiEditor (bool fs)</span></a>
 <a name="534"><span class="lineNum">     534 </span>            :     {</a>
-<a name="535"><span class="lineNum">     535 </span><span class="lineNoCov">          0 :         getCurrentUIBehaviour().showHideTrackEditor();</span></a>
+<a name="535"><span class="lineNum">     535 </span><span class="lineNoCov">          0 :         getCurrentUIBehaviour().showHideMidiEditor (fs);</span></a>
 <a name="536"><span class="lineNum">     536 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="537"><span class="lineNum">     537 </span>            : </a>
-<a name="538"><span class="lineNum">     538 </span><span class="lineNoCov">          0 :     void showHideBrowser()</span></a>
+<a name="538"><span class="lineNum">     538 </span><span class="lineNoCov">          0 :     void showHideTrackEditor()</span></a>
 <a name="539"><span class="lineNum">     539 </span>            :     {</a>
-<a name="540"><span class="lineNum">     540 </span><span class="lineNoCov">          0 :         getCurrentUIBehaviour().showHideBrowser();</span></a>
+<a name="540"><span class="lineNum">     540 </span><span class="lineNoCov">          0 :         getCurrentUIBehaviour().showHideTrackEditor();</span></a>
 <a name="541"><span class="lineNum">     541 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="542"><span class="lineNum">     542 </span>            : </a>
-<a name="543"><span class="lineNum">     543 </span><span class="lineNoCov">          0 :     void showHideActions()</span></a>
+<a name="543"><span class="lineNum">     543 </span><span class="lineNoCov">          0 :     void showHideBrowser()</span></a>
 <a name="544"><span class="lineNum">     544 </span>            :     {</a>
-<a name="545"><span class="lineNum">     545 </span><span class="lineNoCov">          0 :         getCurrentUIBehaviour().showHideActions();</span></a>
+<a name="545"><span class="lineNum">     545 </span><span class="lineNoCov">          0 :         getCurrentUIBehaviour().showHideBrowser();</span></a>
 <a name="546"><span class="lineNum">     546 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="547"><span class="lineNum">     547 </span>            : </a>
-<a name="548"><span class="lineNum">     548 </span><span class="lineNoCov">          0 :     void showHideAllPanes()</span></a>
+<a name="548"><span class="lineNum">     548 </span><span class="lineNoCov">          0 :     void showHideActions()</span></a>
 <a name="549"><span class="lineNum">     549 </span>            :     {</a>
-<a name="550"><span class="lineNum">     550 </span><span class="lineNoCov">          0 :         getCurrentUIBehaviour().showHideAllPanes();</span></a>
+<a name="550"><span class="lineNum">     550 </span><span class="lineNoCov">          0 :         getCurrentUIBehaviour().showHideActions();</span></a>
 <a name="551"><span class="lineNum">     551 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="552"><span class="lineNum">     552 </span>            : </a>
-<a name="553"><span class="lineNum">     553 </span><span class="lineNoCov">          0 :     void performUserAction (int a)</span></a>
+<a name="553"><span class="lineNum">     553 </span><span class="lineNoCov">          0 :     void showHideAllPanes()</span></a>
 <a name="554"><span class="lineNum">     554 </span>            :     {</a>
-<a name="555"><span class="lineNum">     555 </span><span class="lineNoCov">          0 :         getCurrentUIBehaviour().performUserAction (a);</span></a>
+<a name="555"><span class="lineNum">     555 </span><span class="lineNoCov">          0 :         getCurrentUIBehaviour().showHideAllPanes();</span></a>
 <a name="556"><span class="lineNum">     556 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="557"><span class="lineNum">     557 </span>            : </a>
-<a name="558"><span class="lineNum">     558 </span><span class="lineNoCov">          0 :     void split()</span></a>
+<a name="558"><span class="lineNum">     558 </span><span class="lineNoCov">          0 :     void performUserAction (int a)</span></a>
 <a name="559"><span class="lineNum">     559 </span>            :     {</a>
-<a name="560"><span class="lineNum">     560 </span><span class="lineNoCov">          0 :         if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())</span></a>
-<a name="561"><span class="lineNum">     561 </span>            :         {</a>
-<a name="562"><span class="lineNum">     562 </span><span class="lineNoCov">          0 :             auto selected = sm-&gt;getSelectedObjects();</span></a>
-<a name="563"><span class="lineNum">     563 </span><span class="lineNoCov">          0 :             selected.mergeArray (splitClips (getCurrentUIBehaviour().getAssociatedClipsToEdit (selected),</span></a>
-<a name="564"><span class="lineNum">     564 </span><span class="lineNoCov">          0 :                                              getCurrentUIBehaviour().getEditingPosition (*sm-&gt;getEdit())));</span></a>
-<a name="565"><span class="lineNum">     565 </span><span class="lineNoCov">          0 :             sm-&gt;select (selected);</span></a>
-<a name="566"><span class="lineNum">     566 </span>            :         }</a>
-<a name="567"><span class="lineNum">     567 </span><span class="lineNoCov">          0 :     }</span></a>
-<a name="568"><span class="lineNum">     568 </span>            : </a>
-<a name="569"><span class="lineNum">     569 </span><span class="lineNoCov">          0 :     void toggleAutomationReadMode()</span></a>
-<a name="570"><span class="lineNum">     570 </span>            :     {</a>
-<a name="571"><span class="lineNum">     571 </span><span class="lineNoCov">          0 :         if (auto ed = getCurrentlyFocusedEdit())</span></a>
-<a name="572"><span class="lineNum">     572 </span>            :         {</a>
-<a name="573"><span class="lineNum">     573 </span>            :             auto&amp; arm = ed-&gt;getAutomationRecordManager();</a>
-<a name="574"><span class="lineNum">     574 </span><span class="lineNoCov">          0 :             arm.setReadingAutomation (! arm.isReadingAutomation());</span></a>
-<a name="575"><span class="lineNum">     575 </span>            :         }</a>
-<a name="576"><span class="lineNum">     576 </span><span class="lineNoCov">          0 :     }</span></a>
-<a name="577"><span class="lineNum">     577 </span>            : </a>
-<a name="578"><span class="lineNum">     578 </span><span class="lineNoCov">          0 :     void toggleAutomationWriteMode()</span></a>
-<a name="579"><span class="lineNum">     579 </span>            :     {</a>
-<a name="580"><span class="lineNum">     580 </span><span class="lineNoCov">          0 :         if (auto ed = getCurrentlyFocusedEdit())</span></a>
-<a name="581"><span class="lineNum">     581 </span><span class="lineNoCov">          0 :             ed-&gt;getAutomationRecordManager().toggleWriteAutomationMode();</span></a>
-<a name="582"><span class="lineNum">     582 </span><span class="lineNoCov">          0 :     }</span></a>
-<a name="583"><span class="lineNum">     583 </span>            : </a>
-<a name="584"><span class="lineNum">     584 </span><span class="lineNoCov">          0 :     void showHideBigMeters()</span></a>
-<a name="585"><span class="lineNum">     585 </span>            :     {</a>
-<a name="586"><span class="lineNum">     586 </span><span class="lineNoCov">          0 :         auto&amp; ui = getCurrentUIBehaviour();</span></a>
-<a name="587"><span class="lineNum">     587 </span><span class="lineNoCov">          0 :         ui.setBigInputMetersMode (! ui.getBigInputMetersMode());</span></a>
-<a name="588"><span class="lineNum">     588 </span><span class="lineNoCov">          0 :     }</span></a>
-<a name="589"><span class="lineNum">     589 </span>            : </a>
-<a name="590"><span class="lineNum">     590 </span><span class="lineNoCov">          0 :     void showHideInputs()</span></a>
-<a name="591"><span class="lineNum">     591 </span>            :     {</a>
-<a name="592"><span class="lineNum">     592 </span><span class="lineNoCov">          0 :         getCurrentUIBehaviour().showHideInputs();</span></a>
+<a name="560"><span class="lineNum">     560 </span><span class="lineNoCov">          0 :         getCurrentUIBehaviour().performUserAction (a);</span></a>
+<a name="561"><span class="lineNum">     561 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="562"><span class="lineNum">     562 </span>            : </a>
+<a name="563"><span class="lineNum">     563 </span><span class="lineNoCov">          0 :     void split()</span></a>
+<a name="564"><span class="lineNum">     564 </span>            :     {</a>
+<a name="565"><span class="lineNum">     565 </span><span class="lineNoCov">          0 :         if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())</span></a>
+<a name="566"><span class="lineNum">     566 </span>            :         {</a>
+<a name="567"><span class="lineNum">     567 </span><span class="lineNoCov">          0 :             auto selected = sm-&gt;getSelectedObjects();</span></a>
+<a name="568"><span class="lineNum">     568 </span><span class="lineNoCov">          0 :             selected.mergeArray (splitClips (getCurrentUIBehaviour().getAssociatedClipsToEdit (selected),</span></a>
+<a name="569"><span class="lineNum">     569 </span><span class="lineNoCov">          0 :                                              getCurrentUIBehaviour().getEditingPosition (*sm-&gt;getEdit())));</span></a>
+<a name="570"><span class="lineNum">     570 </span><span class="lineNoCov">          0 :             sm-&gt;select (selected);</span></a>
+<a name="571"><span class="lineNum">     571 </span>            :         }</a>
+<a name="572"><span class="lineNum">     572 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="573"><span class="lineNum">     573 </span>            : </a>
+<a name="574"><span class="lineNum">     574 </span><span class="lineNoCov">          0 :     void toggleAutomationReadMode()</span></a>
+<a name="575"><span class="lineNum">     575 </span>            :     {</a>
+<a name="576"><span class="lineNum">     576 </span><span class="lineNoCov">          0 :         if (auto ed = getCurrentlyFocusedEdit())</span></a>
+<a name="577"><span class="lineNum">     577 </span>            :         {</a>
+<a name="578"><span class="lineNum">     578 </span>            :             auto&amp; arm = ed-&gt;getAutomationRecordManager();</a>
+<a name="579"><span class="lineNum">     579 </span><span class="lineNoCov">          0 :             arm.setReadingAutomation (! arm.isReadingAutomation());</span></a>
+<a name="580"><span class="lineNum">     580 </span>            :         }</a>
+<a name="581"><span class="lineNum">     581 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="582"><span class="lineNum">     582 </span>            : </a>
+<a name="583"><span class="lineNum">     583 </span><span class="lineNoCov">          0 :     void toggleAutomationWriteMode()</span></a>
+<a name="584"><span class="lineNum">     584 </span>            :     {</a>
+<a name="585"><span class="lineNum">     585 </span><span class="lineNoCov">          0 :         if (auto ed = getCurrentlyFocusedEdit())</span></a>
+<a name="586"><span class="lineNum">     586 </span><span class="lineNoCov">          0 :             ed-&gt;getAutomationRecordManager().toggleWriteAutomationMode();</span></a>
+<a name="587"><span class="lineNum">     587 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="588"><span class="lineNum">     588 </span>            : </a>
+<a name="589"><span class="lineNum">     589 </span><span class="lineNoCov">          0 :     void showHideBigMeters()</span></a>
+<a name="590"><span class="lineNum">     590 </span>            :     {</a>
+<a name="591"><span class="lineNum">     591 </span><span class="lineNoCov">          0 :         auto&amp; ui = getCurrentUIBehaviour();</span></a>
+<a name="592"><span class="lineNum">     592 </span><span class="lineNoCov">          0 :         ui.setBigInputMetersMode (! ui.getBigInputMetersMode());</span></a>
 <a name="593"><span class="lineNum">     593 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="594"><span class="lineNum">     594 </span>            : </a>
-<a name="595"><span class="lineNum">     595 </span><span class="lineNoCov">          0 :     void showHideOutputs()</span></a>
+<a name="595"><span class="lineNum">     595 </span><span class="lineNoCov">          0 :     void showHideInputs()</span></a>
 <a name="596"><span class="lineNum">     596 </span>            :     {</a>
-<a name="597"><span class="lineNum">     597 </span><span class="lineNoCov">          0 :         getCurrentUIBehaviour().showHideOutputs();</span></a>
+<a name="597"><span class="lineNum">     597 </span><span class="lineNoCov">          0 :         getCurrentUIBehaviour().showHideInputs();</span></a>
 <a name="598"><span class="lineNum">     598 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="599"><span class="lineNum">     599 </span>            : </a>
-<a name="600"><span class="lineNum">     600 </span><span class="lineNoCov">          0 :     void showProjectScreen()    { getCurrentUIBehaviour().showProjectScreen(); }</span></a>
-<a name="601"><span class="lineNum">     601 </span><span class="lineNoCov">          0 :     void showSettingsScreen()   { getCurrentUIBehaviour().showSettingsScreen(); }</span></a>
-<a name="602"><span class="lineNum">     602 </span><span class="lineNoCov">          0 :     void showEditScreen()       { getCurrentUIBehaviour().showEditScreen(); }</span></a>
-<a name="603"><span class="lineNum">     603 </span>            : </a>
-<a name="604"><span class="lineNum">     604 </span><span class="lineNoCov">          0 :     void resetOverloads()</span></a>
-<a name="605"><span class="lineNum">     605 </span>            :     {</a>
-<a name="606"><span class="lineNum">     606 </span><span class="lineNoCov">          0 :         getCurrentUIBehaviour().resetOverloads();</span></a>
-<a name="607"><span class="lineNum">     607 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="600"><span class="lineNum">     600 </span><span class="lineNoCov">          0 :     void showHideOutputs()</span></a>
+<a name="601"><span class="lineNum">     601 </span>            :     {</a>
+<a name="602"><span class="lineNum">     602 </span><span class="lineNoCov">          0 :         getCurrentUIBehaviour().showHideOutputs();</span></a>
+<a name="603"><span class="lineNum">     603 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="604"><span class="lineNum">     604 </span>            : </a>
+<a name="605"><span class="lineNum">     605 </span><span class="lineNoCov">          0 :     void showProjectScreen()    { getCurrentUIBehaviour().showProjectScreen(); }</span></a>
+<a name="606"><span class="lineNum">     606 </span><span class="lineNoCov">          0 :     void showSettingsScreen()   { getCurrentUIBehaviour().showSettingsScreen(); }</span></a>
+<a name="607"><span class="lineNum">     607 </span><span class="lineNoCov">          0 :     void showEditScreen()       { getCurrentUIBehaviour().showEditScreen(); }</span></a>
 <a name="608"><span class="lineNum">     608 </span>            : </a>
-<a name="609"><span class="lineNum">     609 </span><span class="lineNoCov">          0 :     void resetPeaks()</span></a>
+<a name="609"><span class="lineNum">     609 </span><span class="lineNoCov">          0 :     void resetOverloads()</span></a>
 <a name="610"><span class="lineNum">     610 </span>            :     {</a>
-<a name="611"><span class="lineNum">     611 </span><span class="lineNoCov">          0 :         getCurrentUIBehaviour().resetPeaks();</span></a>
+<a name="611"><span class="lineNum">     611 </span><span class="lineNoCov">          0 :         getCurrentUIBehaviour().resetOverloads();</span></a>
 <a name="612"><span class="lineNum">     612 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="613"><span class="lineNum">     613 </span>            : </a>
-<a name="614"><span class="lineNum">     614 </span><span class="lineNoCov">          0 :     void toggleTrackFreeze()</span></a>
+<a name="614"><span class="lineNum">     614 </span><span class="lineNoCov">          0 :     void resetPeaks()</span></a>
 <a name="615"><span class="lineNum">     615 </span>            :     {</a>
-<a name="616"><span class="lineNum">     616 </span><span class="lineNoCov">          0 :         if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())</span></a>
-<a name="617"><span class="lineNum">     617 </span>            :         {</a>
-<a name="618"><span class="lineNum">     618 </span><span class="lineNoCov">          0 :             auto tracks = sm-&gt;getItemsOfType&lt;AudioTrack&gt;();</span></a>
-<a name="619"><span class="lineNum">     619 </span>            : </a>
-<a name="620"><span class="lineNum">     620 </span>            :             int freezeCount = 0;</a>
-<a name="621"><span class="lineNum">     621 </span>            : </a>
-<a name="622"><span class="lineNum">     622 </span><span class="lineNoCov">          0 :             for (auto t : tracks)</span></a>
-<a name="623"><span class="lineNum">     623 </span><span class="lineNoCov">          0 :                 if (t-&gt;isFrozen (Track::anyFreeze))</span></a>
-<a name="624"><span class="lineNum">     624 </span><span class="lineNoCov">          0 :                     freezeCount++;</span></a>
-<a name="625"><span class="lineNum">     625 </span>            : </a>
-<a name="626"><span class="lineNum">     626 </span><span class="lineNoCov">          0 :             if (freezeCount == 0)</span></a>
-<a name="627"><span class="lineNum">     627 </span>            :             {</a>
-<a name="628"><span class="lineNum">     628 </span><span class="lineNoCov">          0 :                 for (auto t : tracks)</span></a>
-<a name="629"><span class="lineNum">     629 </span><span class="lineNoCov">          0 :                     if (! t-&gt;isFrozen (Track::anyFreeze))</span></a>
-<a name="630"><span class="lineNum">     630 </span><span class="lineNoCov">          0 :                         t-&gt;setFrozen (true, Track::individualFreeze);</span></a>
-<a name="631"><span class="lineNum">     631 </span>            :             }</a>
-<a name="632"><span class="lineNum">     632 </span>            :             else</a>
-<a name="633"><span class="lineNum">     633 </span>            :             {</a>
-<a name="634"><span class="lineNum">     634 </span><span class="lineNoCov">          0 :                 for (auto t : tracks)</span></a>
-<a name="635"><span class="lineNum">     635 </span>            :                 {</a>
-<a name="636"><span class="lineNum">     636 </span><span class="lineNoCov">          0 :                     if (t-&gt;isFrozen (Track::groupFreeze))</span></a>
-<a name="637"><span class="lineNum">     637 </span><span class="lineNoCov">          0 :                         t-&gt;setFrozen (false, Track::groupFreeze);</span></a>
-<a name="638"><span class="lineNum">     638 </span><span class="lineNoCov">          0 :                     else if (t-&gt;isFrozen (Track::individualFreeze))</span></a>
-<a name="639"><span class="lineNum">     639 </span><span class="lineNoCov">          0 :                         t-&gt;setFrozen (false, Track::individualFreeze);</span></a>
-<a name="640"><span class="lineNum">     640 </span>            :                 }</a>
-<a name="641"><span class="lineNum">     641 </span>            :             }</a>
-<a name="642"><span class="lineNum">     642 </span>            :         }</a>
-<a name="643"><span class="lineNum">     643 </span><span class="lineNoCov">          0 :     }</span></a>
-<a name="644"><span class="lineNum">     644 </span>            : }</a>
-<a name="645"><span class="lineNum">     645 </span>            : </a>
-<a name="646"><span class="lineNum">     646 </span>            : }</a>
+<a name="616"><span class="lineNum">     616 </span><span class="lineNoCov">          0 :         getCurrentUIBehaviour().resetPeaks();</span></a>
+<a name="617"><span class="lineNum">     617 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="618"><span class="lineNum">     618 </span>            : </a>
+<a name="619"><span class="lineNum">     619 </span><span class="lineNoCov">          0 :     void toggleTrackFreeze()</span></a>
+<a name="620"><span class="lineNum">     620 </span>            :     {</a>
+<a name="621"><span class="lineNum">     621 </span><span class="lineNoCov">          0 :         if (auto sm = getCurrentlyFocusedSelectionManagerWithValidEdit())</span></a>
+<a name="622"><span class="lineNum">     622 </span>            :         {</a>
+<a name="623"><span class="lineNum">     623 </span><span class="lineNoCov">          0 :             auto tracks = sm-&gt;getItemsOfType&lt;AudioTrack&gt;();</span></a>
+<a name="624"><span class="lineNum">     624 </span>            : </a>
+<a name="625"><span class="lineNum">     625 </span>            :             int freezeCount = 0;</a>
+<a name="626"><span class="lineNum">     626 </span>            : </a>
+<a name="627"><span class="lineNum">     627 </span><span class="lineNoCov">          0 :             for (auto t : tracks)</span></a>
+<a name="628"><span class="lineNum">     628 </span><span class="lineNoCov">          0 :                 if (t-&gt;isFrozen (Track::anyFreeze))</span></a>
+<a name="629"><span class="lineNum">     629 </span><span class="lineNoCov">          0 :                     freezeCount++;</span></a>
+<a name="630"><span class="lineNum">     630 </span>            : </a>
+<a name="631"><span class="lineNum">     631 </span><span class="lineNoCov">          0 :             if (freezeCount == 0)</span></a>
+<a name="632"><span class="lineNum">     632 </span>            :             {</a>
+<a name="633"><span class="lineNum">     633 </span><span class="lineNoCov">          0 :                 for (auto t : tracks)</span></a>
+<a name="634"><span class="lineNum">     634 </span><span class="lineNoCov">          0 :                     if (! t-&gt;isFrozen (Track::anyFreeze))</span></a>
+<a name="635"><span class="lineNum">     635 </span><span class="lineNoCov">          0 :                         t-&gt;setFrozen (true, Track::individualFreeze);</span></a>
+<a name="636"><span class="lineNum">     636 </span>            :             }</a>
+<a name="637"><span class="lineNum">     637 </span>            :             else</a>
+<a name="638"><span class="lineNum">     638 </span>            :             {</a>
+<a name="639"><span class="lineNum">     639 </span><span class="lineNoCov">          0 :                 for (auto t : tracks)</span></a>
+<a name="640"><span class="lineNum">     640 </span>            :                 {</a>
+<a name="641"><span class="lineNum">     641 </span><span class="lineNoCov">          0 :                     if (t-&gt;isFrozen (Track::groupFreeze))</span></a>
+<a name="642"><span class="lineNum">     642 </span><span class="lineNoCov">          0 :                         t-&gt;setFrozen (false, Track::groupFreeze);</span></a>
+<a name="643"><span class="lineNum">     643 </span><span class="lineNoCov">          0 :                     else if (t-&gt;isFrozen (Track::individualFreeze))</span></a>
+<a name="644"><span class="lineNum">     644 </span><span class="lineNoCov">          0 :                         t-&gt;setFrozen (false, Track::individualFreeze);</span></a>
+<a name="645"><span class="lineNum">     645 </span>            :                 }</a>
+<a name="646"><span class="lineNum">     646 </span>            :             }</a>
+<a name="647"><span class="lineNum">     647 </span>            :         }</a>
+<a name="648"><span class="lineNum">     648 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="649"><span class="lineNum">     649 </span>            : }</a>
+<a name="650"><span class="lineNum">     650 </span>            : </a>
+<a name="651"><span class="lineNum">     651 </span>            : }</a>
 </pre>
       </td>
     </tr>

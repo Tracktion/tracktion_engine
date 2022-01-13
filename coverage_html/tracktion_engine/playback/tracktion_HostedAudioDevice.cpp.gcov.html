@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-13 11:29:51</td>
+            <td class="headerValue">2022-01-13 19:27:22</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">51</td>
@@ -123,8 +123,8 @@
 <a name="61"><span class="lineNum">      61 </span><span class="lineNoCov">          0 :     bool hasControlPanel() const override                   { return false; }</span></a>
 <a name="62"><span class="lineNum">      62 </span><span class="lineNoCov">          0 :     bool showControlPanel() override                        { return false; }</span></a>
 <a name="63"><span class="lineNum">      63 </span><span class="lineNoCov">          0 :     bool setAudioPreprocessingEnabled (bool) override       { return false; }</span></a>
-<a name="64"><span class="lineNum">      64 </span><span class="lineCov">        312 :     int getCurrentBufferSizeSamples() override              { return audioIf.parameters.blockSize;      }</span></a>
-<a name="65"><span class="lineNum">      65 </span><span class="lineCov">      62499 :     double getCurrentSampleRate() override                  { return audioIf.parameters.sampleRate;     }</span></a>
+<a name="64"><span class="lineNum">      64 </span><span class="lineCov">        310 :     int getCurrentBufferSizeSamples() override              { return audioIf.parameters.blockSize;      }</span></a>
+<a name="65"><span class="lineNum">      65 </span><span class="lineCov">      62257 :     double getCurrentSampleRate() override                  { return audioIf.parameters.sampleRate;     }</span></a>
 <a name="66"><span class="lineNum">      66 </span>            : </a>
 <a name="67"><span class="lineNum">      67 </span><span class="lineCov">         12 :     juce::BigInteger getActiveOutputChannels() const override</span></a>
 <a name="68"><span class="lineNum">      68 </span>            :     {</a>
@@ -140,15 +140,15 @@
 <a name="78"><span class="lineNum">      78 </span><span class="lineCov">         12 :         return res;</span></a>
 <a name="79"><span class="lineNum">      79 </span>            :     }</a>
 <a name="80"><span class="lineNum">      80 </span>            : </a>
-<a name="81"><span class="lineNum">      81 </span><span class="lineCov">       3888 :     void processBlock (juce::AudioBuffer&lt;float&gt;&amp; buffer)</span></a>
+<a name="81"><span class="lineNum">      81 </span><span class="lineCov">       3873 :     void processBlock (juce::AudioBuffer&lt;float&gt;&amp; buffer)</span></a>
 <a name="82"><span class="lineNum">      82 </span>            :     {</a>
-<a name="83"><span class="lineNum">      83 </span><span class="lineCov">       3888 :         if (callback != nullptr)</span></a>
-<a name="84"><span class="lineNum">      84 </span><span class="lineCov">       3888 :             callback-&gt;audioDeviceIOCallback (buffer.getArrayOfReadPointers(),</span></a>
-<a name="85"><span class="lineNum">      85 </span><span class="lineCov">       3888 :                                              std::min (buffer.getNumChannels(), audioIf.parameters.inputChannels),</span></a>
+<a name="83"><span class="lineNum">      83 </span><span class="lineCov">       3873 :         if (callback != nullptr)</span></a>
+<a name="84"><span class="lineNum">      84 </span><span class="lineCov">       3873 :             callback-&gt;audioDeviceIOCallback (buffer.getArrayOfReadPointers(),</span></a>
+<a name="85"><span class="lineNum">      85 </span><span class="lineCov">       3873 :                                              std::min (buffer.getNumChannels(), audioIf.parameters.inputChannels),</span></a>
 <a name="86"><span class="lineNum">      86 </span>            :                                              buffer.getArrayOfWritePointers(),</a>
-<a name="87"><span class="lineNum">      87 </span><span class="lineCov">       3888 :                                              std::min (buffer.getNumChannels(), audioIf.parameters.inputChannels),</span></a>
-<a name="88"><span class="lineNum">      88 </span><span class="lineCov">       3888 :                                              buffer.getNumSamples());</span></a>
-<a name="89"><span class="lineNum">      89 </span><span class="lineCov">       3888 :     }</span></a>
+<a name="87"><span class="lineNum">      87 </span><span class="lineCov">       3873 :                                              std::min (buffer.getNumChannels(), audioIf.parameters.inputChannels),</span></a>
+<a name="88"><span class="lineNum">      88 </span><span class="lineCov">       3873 :                                              buffer.getNumSamples());</span></a>
+<a name="89"><span class="lineNum">      89 </span><span class="lineCov">       3873 :     }</span></a>
 <a name="90"><span class="lineNum">      90 </span>            : </a>
 <a name="91"><span class="lineNum">      91 </span>            :     void settingsChanged()</a>
 <a name="92"><span class="lineNum">      92 </span>            :     {</a>
@@ -195,8 +195,8 @@
 <a name="133"><span class="lineNum">     133 </span>            : </a>
 <a name="134"><span class="lineNum">     134 </span>            :     void processBlock (juce::AudioBuffer&lt;float&gt;&amp; buffer)</a>
 <a name="135"><span class="lineNum">     135 </span>            :     {</a>
-<a name="136"><span class="lineNum">     136 </span><span class="lineCov">       7776 :         for (auto device : devices)</span></a>
-<a name="137"><span class="lineNum">     137 </span><span class="lineCov">       3888 :             device-&gt;processBlock (buffer);</span></a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineCov">       7746 :         for (auto device : devices)</span></a>
+<a name="137"><span class="lineNum">     137 </span><span class="lineCov">       3873 :             device-&gt;processBlock (buffer);</span></a>
 <a name="138"><span class="lineNum">     138 </span>            :     }</a>
 <a name="139"><span class="lineNum">     139 </span>            : </a>
 <a name="140"><span class="lineNum">     140 </span><span class="lineCov">          2 :     void settingsChanged()</span></a>
@@ -251,12 +251,12 @@
 <a name="189"><span class="lineNum">     189 </span><span class="lineCov">          6 :         engine.getPropertyStorage().setXmlPropertyItem (SettingID::midiin, getName(), n);</span></a>
 <a name="190"><span class="lineNum">     190 </span><span class="lineCov">          6 :     }</span></a>
 <a name="191"><span class="lineNum">     191 </span>            : </a>
-<a name="192"><span class="lineNum">     192 </span><span class="lineCov">       3888 :     void processBlock (juce::MidiBuffer&amp; midi)</span></a>
+<a name="192"><span class="lineNum">     192 </span><span class="lineCov">       3873 :     void processBlock (juce::MidiBuffer&amp; midi)</span></a>
 <a name="193"><span class="lineNum">     193 </span>            :     {</a>
-<a name="194"><span class="lineNum">     194 </span><span class="lineCov">       4279 :         for (auto instance : instances)</span></a>
-<a name="195"><span class="lineNum">     195 </span><span class="lineCov">        391 :             if (auto* hostedInstance = dynamic_cast&lt;HostedMidiInputDeviceInstance*&gt; (instance))</span></a>
-<a name="196"><span class="lineNum">     196 </span><span class="lineCov">        391 :                 hostedInstance-&gt;processBlock (midi);</span></a>
-<a name="197"><span class="lineNum">     197 </span><span class="lineCov">       3888 :     }</span></a>
+<a name="194"><span class="lineNum">     194 </span><span class="lineCov">       4261 :         for (auto instance : instances)</span></a>
+<a name="195"><span class="lineNum">     195 </span><span class="lineCov">        388 :             if (auto* hostedInstance = dynamic_cast&lt;HostedMidiInputDeviceInstance*&gt; (instance))</span></a>
+<a name="196"><span class="lineNum">     196 </span><span class="lineCov">        388 :                 hostedInstance-&gt;processBlock (midi);</span></a>
+<a name="197"><span class="lineNum">     197 </span><span class="lineCov">       3873 :     }</span></a>
 <a name="198"><span class="lineNum">     198 </span>            : </a>
 <a name="199"><span class="lineNum">     199 </span>            :     using MidiInputDevice::handleIncomingMidiMessage;</a>
 <a name="200"><span class="lineNum">     200 </span><span class="lineNoCov">          0 :     void handleIncomingMidiMessage (const juce::MidiMessage&amp;) override {}</span></a>
@@ -275,12 +275,12 @@
 <a name="213"><span class="lineNum">     213 </span>            : </a>
 <a name="214"><span class="lineNum">     214 </span><span class="lineNoCov">          0 :         bool startRecording() override              { return false; }</span></a>
 <a name="215"><span class="lineNum">     215 </span>            : </a>
-<a name="216"><span class="lineNum">     216 </span><span class="lineCov">        391 :         void processBlock (juce::MidiBuffer&amp; midi)</span></a>
+<a name="216"><span class="lineNum">     216 </span><span class="lineCov">        388 :         void processBlock (juce::MidiBuffer&amp; midi)</span></a>
 <a name="217"><span class="lineNum">     217 </span>            :         {</a>
 <a name="218"><span class="lineNum">     218 </span>            :             // N.B. This assumes that the number of samples processed per block is constant.</a>
 <a name="219"><span class="lineNum">     219 </span>            :             // I.e. that there is no speed compensation set (which shouldn't be the case when</a>
 <a name="220"><span class="lineNum">     220 </span>            :             // running as a plugin)</a>
-<a name="221"><span class="lineNum">     221 </span><span class="lineCov">        391 :             for (auto mmm : midi)</span></a>
+<a name="221"><span class="lineNum">     221 </span><span class="lineCov">        388 :             for (auto mmm : midi)</span></a>
 <a name="222"><span class="lineNum">     222 </span>            :             {</a>
 <a name="223"><span class="lineNum">     223 </span><span class="lineNoCov">          0 :                 const auto referenceTime = tracktion_graph::sampleToTime (mmm.samplePosition, sampleRate);</span></a>
 <a name="224"><span class="lineNum">     224 </span>            : </a>
@@ -288,7 +288,7 @@
 <a name="226"><span class="lineNum">     226 </span>            :                 msg.setTimeStamp (referenceTime);</a>
 <a name="227"><span class="lineNum">     227 </span><span class="lineNoCov">          0 :                 handleIncomingMidiMessage (std::move (msg));</span></a>
 <a name="228"><span class="lineNum">     228 </span>            :             }</a>
-<a name="229"><span class="lineNum">     229 </span><span class="lineCov">        391 :         }</span></a>
+<a name="229"><span class="lineNum">     229 </span><span class="lineCov">        388 :         }</span></a>
 <a name="230"><span class="lineNum">     230 </span>            :         </a>
 <a name="231"><span class="lineNum">     231 </span>            :     private:</a>
 <a name="232"><span class="lineNum">     232 </span>            :         const double sampleRate = context.getSampleRate();</a>
@@ -317,16 +317,16 @@
 <a name="255"><span class="lineNum">     255 </span><span class="lineCov">          4 :         return new HostedMidiOutputDeviceInstance (*this, epc);</span></a>
 <a name="256"><span class="lineNum">     256 </span>            :     }</a>
 <a name="257"><span class="lineNum">     257 </span>            : </a>
-<a name="258"><span class="lineNum">     258 </span><span class="lineCov">       3888 :     void processBlock (juce::MidiBuffer&amp; midi)</span></a>
+<a name="258"><span class="lineNum">     258 </span><span class="lineCov">       3873 :     void processBlock (juce::MidiBuffer&amp; midi)</span></a>
 <a name="259"><span class="lineNum">     259 </span>            :     {</a>
-<a name="260"><span class="lineNum">     260 </span><span class="lineCov">       3888 :         for (auto m : toSend)</span></a>
+<a name="260"><span class="lineNum">     260 </span><span class="lineCov">       3873 :         for (auto m : toSend)</span></a>
 <a name="261"><span class="lineNum">     261 </span>            :         {</a>
 <a name="262"><span class="lineNum">     262 </span><span class="lineNoCov">          0 :             auto t = m.getTimeStamp() * audioIf.parameters.sampleRate;</span></a>
 <a name="263"><span class="lineNum">     263 </span><span class="lineNoCov">          0 :             midi.addEvent (m, int (t));</span></a>
 <a name="264"><span class="lineNum">     264 </span>            :         }</a>
 <a name="265"><span class="lineNum">     265 </span>            :         </a>
 <a name="266"><span class="lineNum">     266 </span>            :         toSend.clear();</a>
-<a name="267"><span class="lineNum">     267 </span><span class="lineCov">       3888 :     }</span></a>
+<a name="267"><span class="lineNum">     267 </span><span class="lineCov">       3873 :     }</span></a>
 <a name="268"><span class="lineNum">     268 </span>            : </a>
 <a name="269"><span class="lineNum">     269 </span><span class="lineNoCov">          0 :     void sendMessageNow (const juce::MidiMessage&amp; message) override</span></a>
 <a name="270"><span class="lineNum">     270 </span>            :     {</a>
@@ -343,13 +343,13 @@
 <a name="281"><span class="lineNum">     281 </span>            :         {</a>
 <a name="282"><span class="lineNum">     282 </span>            :         }</a>
 <a name="283"><span class="lineNum">     283 </span>            : </a>
-<a name="284"><span class="lineNum">     284 </span><span class="lineCov">       3888 :         bool sendMessages (MidiMessageArray&amp; mma, double editTime) override</span></a>
+<a name="284"><span class="lineNum">     284 </span><span class="lineCov">       3873 :         bool sendMessages (MidiMessageArray&amp; mma, double editTime) override</span></a>
 <a name="285"><span class="lineNum">     285 </span>            :         {</a>
 <a name="286"><span class="lineNum">     286 </span>            :             // Adjust these messages to be relative to time 0.0 which will be the next call to processBlock</a>
 <a name="287"><span class="lineNum">     287 </span>            :             // The device delay is also subtracted as this will have been added when rendering</a>
-<a name="288"><span class="lineNum">     288 </span><span class="lineCov">       3888 :             const auto deltaTime = -editTime - outputDevice.getDeviceDelay();</span></a>
-<a name="289"><span class="lineNum">     289 </span><span class="lineCov">       3888 :             outputDevice.toSend.mergeFromAndClearWithOffset (mma, deltaTime);</span></a>
-<a name="290"><span class="lineNum">     290 </span><span class="lineCov">       3888 :             return true;</span></a>
+<a name="288"><span class="lineNum">     288 </span><span class="lineCov">       3873 :             const auto deltaTime = -editTime - outputDevice.getDeviceDelay();</span></a>
+<a name="289"><span class="lineNum">     289 </span><span class="lineCov">       3873 :             outputDevice.toSend.mergeFromAndClearWithOffset (mma, deltaTime);</span></a>
+<a name="290"><span class="lineNum">     290 </span><span class="lineCov">       3873 :             return true;</span></a>
 <a name="291"><span class="lineNum">     291 </span>            :         }</a>
 <a name="292"><span class="lineNum">     292 </span>            : </a>
 <a name="293"><span class="lineNum">     293 </span>            :         HostedMidiOutputDevice&amp; outputDevice;</a>
@@ -433,24 +433,24 @@
 <a name="371"><span class="lineNum">     371 </span>            :     }</a>
 <a name="372"><span class="lineNum">     372 </span><span class="lineCov">          4 : }</span></a>
 <a name="373"><span class="lineNum">     373 </span>            : </a>
-<a name="374"><span class="lineNum">     374 </span><span class="lineCov">       3888 : void HostedAudioDeviceInterface::processBlock (juce::AudioBuffer&lt;float&gt;&amp; buffer, juce::MidiBuffer&amp; midi)</span></a>
+<a name="374"><span class="lineNum">     374 </span><span class="lineCov">       3873 : void HostedAudioDeviceInterface::processBlock (juce::AudioBuffer&lt;float&gt;&amp; buffer, juce::MidiBuffer&amp; midi)</span></a>
 <a name="375"><span class="lineNum">     375 </span>            : {</a>
-<a name="376"><span class="lineNum">     376 </span><span class="lineCov">       3888 :     if (parameters.fixedBlockSize)</span></a>
+<a name="376"><span class="lineNum">     376 </span><span class="lineCov">       3873 :     if (parameters.fixedBlockSize)</span></a>
 <a name="377"><span class="lineNum">     377 </span>            :     {</a>
 <a name="378"><span class="lineNum">     378 </span>            :         jassert (buffer.getNumSamples() == parameters.blockSize);</a>
 <a name="379"><span class="lineNum">     379 </span>            : </a>
-<a name="380"><span class="lineNum">     380 </span><span class="lineCov">       7776 :         for (auto input : midiInputs)</span></a>
-<a name="381"><span class="lineNum">     381 </span><span class="lineCov">       3888 :             if (auto hostedInput = dynamic_cast&lt;HostedMidiInputDevice*&gt; (input))</span></a>
-<a name="382"><span class="lineNum">     382 </span><span class="lineCov">       3888 :                 hostedInput-&gt;processBlock (midi);</span></a>
+<a name="380"><span class="lineNum">     380 </span><span class="lineCov">       7746 :         for (auto input : midiInputs)</span></a>
+<a name="381"><span class="lineNum">     381 </span><span class="lineCov">       3873 :             if (auto hostedInput = dynamic_cast&lt;HostedMidiInputDevice*&gt; (input))</span></a>
+<a name="382"><span class="lineNum">     382 </span><span class="lineCov">       3873 :                 hostedInput-&gt;processBlock (midi);</span></a>
 <a name="383"><span class="lineNum">     383 </span>            : </a>
-<a name="384"><span class="lineNum">     384 </span><span class="lineCov">       3888 :         midi.clear();</span></a>
+<a name="384"><span class="lineNum">     384 </span><span class="lineCov">       3873 :         midi.clear();</span></a>
 <a name="385"><span class="lineNum">     385 </span>            : </a>
-<a name="386"><span class="lineNum">     386 </span><span class="lineCov">       3888 :         if (deviceType != nullptr)</span></a>
+<a name="386"><span class="lineNum">     386 </span><span class="lineCov">       3873 :         if (deviceType != nullptr)</span></a>
 <a name="387"><span class="lineNum">     387 </span>            :             deviceType-&gt;processBlock (buffer);</a>
 <a name="388"><span class="lineNum">     388 </span>            : </a>
-<a name="389"><span class="lineNum">     389 </span><span class="lineCov">       7776 :         for (auto output : midiOutputs)</span></a>
-<a name="390"><span class="lineNum">     390 </span><span class="lineCov">       3888 :             if (auto hostedOutput = dynamic_cast&lt;HostedMidiOutputDevice*&gt; (output))</span></a>
-<a name="391"><span class="lineNum">     391 </span><span class="lineCov">       3888 :                 hostedOutput-&gt;processBlock (midi);</span></a>
+<a name="389"><span class="lineNum">     389 </span><span class="lineCov">       7746 :         for (auto output : midiOutputs)</span></a>
+<a name="390"><span class="lineNum">     390 </span><span class="lineCov">       3873 :             if (auto hostedOutput = dynamic_cast&lt;HostedMidiOutputDevice*&gt; (output))</span></a>
+<a name="391"><span class="lineNum">     391 </span><span class="lineCov">       3873 :                 hostedOutput-&gt;processBlock (midi);</span></a>
 <a name="392"><span class="lineNum">     392 </span>            :     }</a>
 <a name="393"><span class="lineNum">     393 </span>            :     else</a>
 <a name="394"><span class="lineNum">     394 </span>            :     {</a>
@@ -482,7 +482,7 @@
 <a name="420"><span class="lineNum">     420 </span>            : </a>
 <a name="421"><span class="lineNum">     421 </span><span class="lineNoCov">          0 :         outputFifo.readAudioAndMidi (buffer, midi);</span></a>
 <a name="422"><span class="lineNum">     422 </span>            :     }</a>
-<a name="423"><span class="lineNum">     423 </span><span class="lineCov">       3888 : }</span></a>
+<a name="423"><span class="lineNum">     423 </span><span class="lineCov">       3873 : }</span></a>
 <a name="424"><span class="lineNum">     424 </span>            : </a>
 <a name="425"><span class="lineNum">     425 </span><span class="lineNoCov">          0 : bool HostedAudioDeviceInterface::isHostedMidiInputDevice (const MidiInputDevice&amp; d)</span></a>
 <a name="426"><span class="lineNum">     426 </span>            : {</a>

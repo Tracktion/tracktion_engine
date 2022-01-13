@@ -139,10 +139,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a4f78517f1e90b4e20a25b216023d7f5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7d29d34cf30d236df5337564609d3439"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a7d29d34cf30d236df5337564609d3439">loopOnOffChanged</a> (bool isLoopOn)=0</td></tr>
 <tr class="separator:a7d29d34cf30d236df5337564609d3439"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a876f265e6866e40b0ec54e1edf0ee788"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a876f265e6866e40b0ec54e1edf0ee788">slaveOnOffChanged</a> (bool isSlaving)=0</td></tr>
-<tr class="separator:a876f265e6866e40b0ec54e1edf0ee788"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a688e9ca460aea023a44f9e1463cdeb30"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a688e9ca460aea023a44f9e1463cdeb30">punchOnOffChanged</a> (bool isPunching)=0</td></tr>
-<tr class="separator:a688e9ca460aea023a44f9e1463cdeb30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6095af5f5693af9fc86e9db42c521fb"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#ae6095af5f5693af9fc86e9db42c521fb">slaveOnOffChanged</a> ([[maybe_unused]] bool isSlaving)</td></tr>
+<tr class="separator:ae6095af5f5693af9fc86e9db42c521fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa18da21e482487999111037890203e08"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#aa18da21e482487999111037890203e08">punchOnOffChanged</a> ([[maybe_unused]] bool isPunching)</td></tr>
+<tr class="separator:aa18da21e482487999111037890203e08"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d808d89f0ab5afd8b7a38efe339df67"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a2d808d89f0ab5afd8b7a38efe339df67">scrollOnOffChanged</a> ([[maybe_unused]] bool isScroll)</td></tr>
+<tr class="separator:a2d808d89f0ab5afd8b7a38efe339df67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a079e2455cc4fba663ebc73074d32ee66"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a079e2455cc4fba663ebc73074d32ee66">undoStatusChanged</a> (bool, bool)</td></tr>
 <tr class="separator:a079e2455cc4fba663ebc73074d32ee66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aabfe137b2b58071e1ac1de99eb1f7dee"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#aabfe137b2b58071e1ac1de99eb1f7dee">parameterChanged</a> (int parameterNumber, const <a class="el" href="structtracktion__engine_1_1ParameterSetting.html">ParameterSetting</a> &amp;newValue)=0</td></tr>
@@ -1375,8 +1377,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a876f265e6866e40b0ec54e1edf0ee788"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a876f265e6866e40b0ec54e1edf0ee788">&#9670;&nbsp;</a></span>slaveOnOffChanged()</h2>
+<a id="ae6095af5f5693af9fc86e9db42c521fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6095af5f5693af9fc86e9db42c521fb">&#9670;&nbsp;</a></span>slaveOnOffChanged()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1387,24 +1389,22 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">virtual void tracktion_engine::ControlSurface::slaveOnOffChanged </td>
           <td>(</td>
-          <td class="paramtype">bool&#160;</td>
+          <td class="paramtype">[[maybe_unused] ] bool&#160;</td>
           <td class="paramname"><em>isSlaving</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classtracktion__engine_1_1CustomControlSurface.html#a80c5eef4c67ca911be5ca1a40717a2fd">tracktion_engine::CustomControlSurface</a>, <a class="el" href="classtracktion__engine_1_1MackieMCU.html#a963ffaba0dbb4f088023b2ec3eed2e63">tracktion_engine::MackieMCU</a>, <a class="el" href="classtracktion__engine_1_1AlphaTrackControlSurface.html#a3587a6fdf976d8a5a78ecc5c5e36a3b7">tracktion_engine::AlphaTrackControlSurface</a>, <a class="el" href="classtracktion__engine_1_1MackieC4.html#a83fe407b5fc4044af4cdefc4dc8771d1">tracktion_engine::MackieC4</a>, <a class="el" href="classtracktion__engine_1_1NovationRemoteSl.html#a8f07249bfc389dbffc161d672be91c68">tracktion_engine::NovationRemoteSl</a>, <a class="el" href="classtracktion__engine_1_1RemoteSLCompact.html#a37a68dff18300ab4f061e3df75f60762">tracktion_engine::RemoteSLCompact</a>, <a class="el" href="classtracktion__engine_1_1TranzportControlSurface.html#ae11907891c6bb3d9bb542f2d79a6ee45">tracktion_engine::TranzportControlSurface</a>, <a class="el" href="classtracktion__engine_1_1MackieXT.html#a0d0da820a428be611b623f2291478a95">tracktion_engine::MackieXT</a>, and <a class="el" href="classtracktion__engine_1_1IconProG2.html#a212c3c3789b08f3721fae895f6ad1696">tracktion_engine::IconProG2</a>.</p>
-
 </div>
 </div>
-<a id="a688e9ca460aea023a44f9e1463cdeb30"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a688e9ca460aea023a44f9e1463cdeb30">&#9670;&nbsp;</a></span>punchOnOffChanged()</h2>
+<a id="aa18da21e482487999111037890203e08"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa18da21e482487999111037890203e08">&#9670;&nbsp;</a></span>punchOnOffChanged()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1415,19 +1415,43 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">virtual void tracktion_engine::ControlSurface::punchOnOffChanged </td>
           <td>(</td>
-          <td class="paramtype">bool&#160;</td>
+          <td class="paramtype">[[maybe_unused] ] bool&#160;</td>
           <td class="paramname"><em>isPunching</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classtracktion__engine_1_1CustomControlSurface.html#a78deb89b6a7c55a3ef2590fb8084b0ad">tracktion_engine::CustomControlSurface</a>, <a class="el" href="classtracktion__engine_1_1MackieMCU.html#ab6a5e5af2e2b2369c0ef4e15c043aa56">tracktion_engine::MackieMCU</a>, <a class="el" href="classtracktion__engine_1_1AlphaTrackControlSurface.html#ab0bd64e484b61b4f30a7ee4ce54a9527">tracktion_engine::AlphaTrackControlSurface</a>, <a class="el" href="classtracktion__engine_1_1MackieC4.html#a22dde85c3e42441c8c749bba622c4bf2">tracktion_engine::MackieC4</a>, <a class="el" href="classtracktion__engine_1_1NovationRemoteSl.html#ae01c5f51859fbc3535c5a563da8b8f15">tracktion_engine::NovationRemoteSl</a>, <a class="el" href="classtracktion__engine_1_1RemoteSLCompact.html#af557639ff19127b81370136c4481e98f">tracktion_engine::RemoteSLCompact</a>, <a class="el" href="classtracktion__engine_1_1TranzportControlSurface.html#a64c67c6cd072b33aa39214bfb2a3e941">tracktion_engine::TranzportControlSurface</a>, <a class="el" href="classtracktion__engine_1_1MackieXT.html#aa97cf9b83505ba1d40ae0d226abcc7a5">tracktion_engine::MackieXT</a>, and <a class="el" href="classtracktion__engine_1_1IconProG2.html#a376d92d4385d94c7e2362b5ad8bba539">tracktion_engine::IconProG2</a>.</p>
+</div>
+</div>
+<a id="a2d808d89f0ab5afd8b7a38efe339df67"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2d808d89f0ab5afd8b7a38efe339df67">&#9670;&nbsp;</a></span>scrollOnOffChanged()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void tracktion_engine::ControlSurface::scrollOnOffChanged </td>
+          <td>(</td>
+          <td class="paramtype">[[maybe_unused] ] bool&#160;</td>
+          <td class="paramname"><em>isScroll</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -4094,7 +4118,7 @@ template&lt;size_t size&gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jan 13 2022 11:16:12 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 13 2022 19:15:23 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

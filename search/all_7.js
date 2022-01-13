@@ -1171,7 +1171,7 @@ var searchData=
   ['getwriteformats_2519',['getWriteFormats',['../classtracktion__engine_1_1AudioFileFormatManager.html#a6d0910f9832c8b6cc40b3aa81506c68f',1,'tracktion_engine::AudioFileFormatManager']]],
   ['getxmlproperty_2520',['getXmlProperty',['../classtracktion__engine_1_1PropertyStorage.html#aed4c7013ef4f4542676b1704be443b6e',1,'tracktion_engine::PropertyStorage']]],
   ['getxmlpropertyitem_2521',['getXmlPropertyItem',['../classtracktion__engine_1_1PropertyStorage.html#a3a2fbd385cb3421a4687b69645c0fbbf',1,'tracktion_engine::PropertyStorage']]],
-  ['getxtcount_2522',['getXTCount',['../classtracktion__engine_1_1ExternalControllerManager.html#abeb5f32a5fb93562cd5e11f55f465a0d',1,'tracktion_engine::ExternalControllerManager']]],
+  ['getxtcount_2522',['getXTCount',['../classtracktion__engine_1_1ExternalControllerManager.html#adab033cd7c4e8f96f4d3dc4958f06107',1,'tracktion_engine::ExternalControllerManager']]],
   ['gety_2523',['getY',['../structtracktion__engine_1_1Spline.html#a84c8e64f03e8eeaf25b04c579260e040',1,'tracktion_engine::Spline']]],
   ['glidelength_2524',['glideLength',['../namespacetracktion__engine.html#a621c43a54efb4eb950c0b1cad5e97eaca13cdced4c5e7c68ee57a6667491a2fa4',1,'tracktion_engine']]],
   ['globalmacros_2525',['GlobalMacros',['../structtracktion__engine_1_1Edit_1_1GlobalMacros.html',1,'tracktion_engine::Edit::GlobalMacros'],['../structtracktion__engine_1_1Edit_1_1GlobalMacros.html#a000a27c3bd998b0546a39a2c930cbf1f',1,'tracktion_engine::Edit::GlobalMacros::GlobalMacros()']]],

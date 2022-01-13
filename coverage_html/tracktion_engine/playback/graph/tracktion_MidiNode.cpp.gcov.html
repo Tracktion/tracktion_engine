@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-13 11:29:51</td>
+            <td class="headerValue">2022-01-13 19:27:22</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">7</td>
@@ -164,33 +164,33 @@
 <a name="102"><span class="lineNum">     102 </span><span class="lineCov">        658 :     return true;</span></a>
 <a name="103"><span class="lineNum">     103 </span>            : }</a>
 <a name="104"><span class="lineNum">     104 </span>            : </a>
-<a name="105"><span class="lineNum">     105 </span><span class="lineCov">     162848 : void MidiNode::process (ProcessContext&amp; pc)</span></a>
+<a name="105"><span class="lineNum">     105 </span><span class="lineCov">     163346 : void MidiNode::process (ProcessContext&amp; pc)</span></a>
 <a name="106"><span class="lineNum">     106 </span>            : {</a>
 <a name="107"><span class="lineNum">     107 </span>            :     SCOPED_REALTIME_CHECK</a>
-<a name="108"><span class="lineNum">     108 </span><span class="lineCov">     162848 :     processSection (pc, getTimelineSampleRange());</span></a>
-<a name="109"><span class="lineNum">     109 </span><span class="lineCov">     162848 : }</span></a>
+<a name="108"><span class="lineNum">     108 </span><span class="lineCov">     163346 :     processSection (pc, getTimelineSampleRange());</span></a>
+<a name="109"><span class="lineNum">     109 </span><span class="lineCov">     163346 : }</span></a>
 <a name="110"><span class="lineNum">     110 </span>            : </a>
-<a name="111"><span class="lineNum">     111 </span><span class="lineCov">     162848 : void MidiNode::processSection (ProcessContext&amp; pc, juce::Range&lt;int64_t&gt; timelineRange)</span></a>
+<a name="111"><span class="lineNum">     111 </span><span class="lineCov">     163346 : void MidiNode::processSection (ProcessContext&amp; pc, juce::Range&lt;int64_t&gt; timelineRange)</span></a>
 <a name="112"><span class="lineNum">     112 </span>            : {</a>
-<a name="113"><span class="lineNum">     113 </span><span class="lineCov">     162848 :     if (timelineRange.isEmpty())</span></a>
-<a name="114"><span class="lineNum">     114 </span><span class="lineCov">      15056 :         return;</span></a>
+<a name="113"><span class="lineNum">     113 </span><span class="lineCov">     163346 :     if (timelineRange.isEmpty())</span></a>
+<a name="114"><span class="lineNum">     114 </span><span class="lineCov">      15122 :         return;</span></a>
 <a name="115"><span class="lineNum">     115 </span>            : </a>
-<a name="116"><span class="lineNum">     116 </span><span class="lineCov">     163330 :     if (shouldBeMutedDelegate &amp;&amp; shouldBeMutedDelegate())</span></a>
+<a name="116"><span class="lineNum">     116 </span><span class="lineCov">     163828 :     if (shouldBeMutedDelegate &amp;&amp; shouldBeMutedDelegate())</span></a>
 <a name="117"><span class="lineNum">     117 </span>            :         return;</a>
 <a name="118"><span class="lineNum">     118 </span>            : </a>
-<a name="119"><span class="lineNum">     119 </span><span class="lineCov">     162760 :     if (ms.size() &gt; 0 &amp;&amp; timelineRange.getStart() &lt; lastStart )</span></a>
+<a name="119"><span class="lineNum">     119 </span><span class="lineCov">     163258 :     if (ms.size() &gt; 0 &amp;&amp; timelineRange.getStart() &lt; lastStart )</span></a>
 <a name="120"><span class="lineNum">     120 </span>            :     {</a>
 <a name="121"><span class="lineNum">     121 </span><span class="lineCov">          2 :         currentSequence++;</span></a>
 <a name="122"><span class="lineNum">     122 </span><span class="lineCov">          2 :         if (currentSequence &gt;= ms.size())</span></a>
 <a name="123"><span class="lineNum">     123 </span><span class="lineCov">          2 :             currentSequence = 0;</span></a>
 <a name="124"><span class="lineNum">     124 </span>            :     }</a>
-<a name="125"><span class="lineNum">     125 </span><span class="lineCov">     162760 :     lastStart = timelineRange.getStart();</span></a>
+<a name="125"><span class="lineNum">     125 </span><span class="lineCov">     163258 :     lastStart = timelineRange.getStart();</span></a>
 <a name="126"><span class="lineNum">     126 </span>            : </a>
-<a name="127"><span class="lineNum">     127 </span><span class="lineCov">     162760 :     const auto sectionEditTime = getEditTimeRange();</span></a>
-<a name="128"><span class="lineNum">     128 </span><span class="lineCov">     162760 :     const auto localTime = sectionEditTime - editSection.getStart();</span></a>
+<a name="127"><span class="lineNum">     127 </span><span class="lineCov">     163258 :     const auto sectionEditTime = getEditTimeRange();</span></a>
+<a name="128"><span class="lineNum">     128 </span><span class="lineCov">     163258 :     const auto localTime = sectionEditTime - editSection.getStart();</span></a>
 <a name="129"><span class="lineNum">     129 </span>            : </a>
-<a name="130"><span class="lineNum">     130 </span><span class="lineCov">     162760 :     if (sectionEditTime.getEnd() &lt;= editSection.getStart()</span></a>
-<a name="131"><span class="lineNum">     131 </span><span class="lineCov">     162760 :         || sectionEditTime.getStart() &gt;= editSection.getEnd())</span></a>
+<a name="130"><span class="lineNum">     130 </span><span class="lineCov">     163258 :     if (sectionEditTime.getEnd() &lt;= editSection.getStart()</span></a>
+<a name="131"><span class="lineNum">     131 </span><span class="lineCov">     163258 :         || sectionEditTime.getStart() &gt;= editSection.getEnd())</span></a>
 <a name="132"><span class="lineNum">     132 </span>            :        return;</a>
 <a name="133"><span class="lineNum">     133 </span>            : </a>
 <a name="134"><span class="lineNum">     134 </span>            :     const bool mute = clipLevel.isMute();</a>
@@ -206,52 +206,52 @@
 <a name="144"><span class="lineNum">     144 </span><span class="lineNoCov">          0 :         return;</span></a>
 <a name="145"><span class="lineNum">     145 </span>            :     }</a>
 <a name="146"><span class="lineNum">     146 </span>            : </a>
-<a name="147"><span class="lineNum">     147 </span><span class="lineCov">     295568 :     if (! getPlayHeadState().isContiguousWithPreviousBlock() || localTime.getStart() &lt;= 0.00001 || shouldCreateMessagesForTime)</span></a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineCov">     296432 :     if (! getPlayHeadState().isContiguousWithPreviousBlock() || localTime.getStart() &lt;= 0.00001 || shouldCreateMessagesForTime)</span></a>
 <a name="148"><span class="lineNum">     148 </span>            :     {</a>
 <a name="149"><span class="lineNum">     149 </span><span class="lineCov">         36 :         createMessagesForTime (localTime.getStart(), pc.buffers.midi);</span></a>
 <a name="150"><span class="lineNum">     150 </span><span class="lineCov">         36 :         shouldCreateMessagesForTime = false;</span></a>
 <a name="151"><span class="lineNum">     151 </span>            :     }</a>
 <a name="152"><span class="lineNum">     152 </span>            : </a>
-<a name="153"><span class="lineNum">     153 </span><span class="lineCov">     147792 :     auto numEvents = ms[currentSequence].getNumEvents();</span></a>
+<a name="153"><span class="lineNum">     153 </span><span class="lineCov">     148224 :     auto numEvents = ms[currentSequence].getNumEvents();</span></a>
 <a name="154"><span class="lineNum">     154 </span>            : </a>
-<a name="155"><span class="lineNum">     155 </span><span class="lineCov">     147792 :     if (numEvents != 0)</span></a>
+<a name="155"><span class="lineNum">     155 </span><span class="lineCov">     148224 :     if (numEvents != 0)</span></a>
 <a name="156"><span class="lineNum">     156 </span>            :     {</a>
-<a name="157"><span class="lineNum">     157 </span><span class="lineCov">     147792 :         currentIndex = juce::jlimit (0, numEvents - 1, currentIndex);</span></a>
+<a name="157"><span class="lineNum">     157 </span><span class="lineCov">     148224 :         currentIndex = juce::jlimit (0, numEvents - 1, currentIndex);</span></a>
 <a name="158"><span class="lineNum">     158 </span>            : </a>
-<a name="159"><span class="lineNum">     159 </span><span class="lineCov">     147792 :         if (ms[currentSequence].getEventTime (currentIndex) &gt;= localTime.getStart())</span></a>
+<a name="159"><span class="lineNum">     159 </span><span class="lineCov">     148224 :         if (ms[currentSequence].getEventTime (currentIndex) &gt;= localTime.getStart())</span></a>
 <a name="160"><span class="lineNum">     160 </span>            :         {</a>
-<a name="161"><span class="lineNum">     161 </span><span class="lineCov">     229114 :             while (currentIndex &gt; 0 &amp;&amp; ms[currentSequence].getEventTime (currentIndex - 1) &gt;= localTime.getStart())</span></a>
-<a name="162"><span class="lineNum">     162 </span><span class="lineCov">     108742 :                 --currentIndex;</span></a>
+<a name="161"><span class="lineNum">     161 </span><span class="lineCov">     235040 :             while (currentIndex &gt; 0 &amp;&amp; ms[currentSequence].getEventTime (currentIndex - 1) &gt;= localTime.getStart())</span></a>
+<a name="162"><span class="lineNum">     162 </span><span class="lineCov">     111746 :                 --currentIndex;</span></a>
 <a name="163"><span class="lineNum">     163 </span>            :         }</a>
 <a name="164"><span class="lineNum">     164 </span>            :         else</a>
 <a name="165"><span class="lineNum">     165 </span>            :         {</a>
-<a name="166"><span class="lineNum">     166 </span><span class="lineCov">      54840 :             while (currentIndex &lt; numEvents &amp;&amp; ms[currentSequence].getEventTime (currentIndex) &lt; localTime.getStart())</span></a>
-<a name="167"><span class="lineNum">     167 </span><span class="lineCov">      27420 :                 ++currentIndex;</span></a>
+<a name="166"><span class="lineNum">     166 </span><span class="lineCov">      49860 :             while (currentIndex &lt; numEvents &amp;&amp; ms[currentSequence].getEventTime (currentIndex) &lt; localTime.getStart())</span></a>
+<a name="167"><span class="lineNum">     167 </span><span class="lineCov">      24930 :                 ++currentIndex;</span></a>
 <a name="168"><span class="lineNum">     168 </span>            :         }</a>
 <a name="169"><span class="lineNum">     169 </span>            :     }</a>
 <a name="170"><span class="lineNum">     170 </span>            : </a>
 <a name="171"><span class="lineNum">     171 </span>            :     auto volScale = clipLevel.getGain();</a>
-<a name="172"><span class="lineNum">     172 </span><span class="lineCov">     147792 :     const auto lastBlockOfLoop = getPlayHeadState().isLastBlockOfLoop();</span></a>
+<a name="172"><span class="lineNum">     172 </span><span class="lineCov">     148224 :     const auto lastBlockOfLoop = getPlayHeadState().isLastBlockOfLoop();</span></a>
 <a name="173"><span class="lineNum">     173 </span>            : </a>
 <a name="174"><span class="lineNum">     174 </span>            :     for (;;)</a>
 <a name="175"><span class="lineNum">     175 </span>            :     {</a>
-<a name="176"><span class="lineNum">     176 </span><span class="lineCov">     148182 :         if (auto meh = ms[currentSequence].getEventPointer (currentIndex++))</span></a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineCov">     148582 :         if (auto meh = ms[currentSequence].getEventPointer (currentIndex++))</span></a>
 <a name="177"><span class="lineNum">     177 </span>            :         {</a>
-<a name="178"><span class="lineNum">     178 </span><span class="lineCov">     120728 :             auto eventTime = meh-&gt;message.getTimeStamp();</span></a>
+<a name="178"><span class="lineNum">     178 </span><span class="lineCov">     123618 :             auto eventTime = meh-&gt;message.getTimeStamp();</span></a>
 <a name="179"><span class="lineNum">     179 </span>            : </a>
 <a name="180"><span class="lineNum">     180 </span>            :             // This correction here is to avoid rounding errors converting to and from sample position and times</a>
-<a name="181"><span class="lineNum">     181 </span><span class="lineCov">     120728 :             const auto timeCorrection = lastBlockOfLoop ? (meh-&gt;message.isNoteOff() ? 0.0 : timeForOneSample) : 0.0;</span></a>
+<a name="181"><span class="lineNum">     181 </span><span class="lineCov">     123618 :             const auto timeCorrection = lastBlockOfLoop ? (meh-&gt;message.isNoteOff() ? 0.0 : timeForOneSample) : 0.0;</span></a>
 <a name="182"><span class="lineNum">     182 </span>            : </a>
-<a name="183"><span class="lineNum">     183 </span><span class="lineCov">     120728 :             if (eventTime &gt;= (localTime.getEnd() - timeCorrection))</span></a>
+<a name="183"><span class="lineNum">     183 </span><span class="lineCov">     123618 :             if (eventTime &gt;= (localTime.getEnd() - timeCorrection))</span></a>
 <a name="184"><span class="lineNum">     184 </span>            :                 break;</a>
 <a name="185"><span class="lineNum">     185 </span>            : </a>
-<a name="186"><span class="lineNum">     186 </span><span class="lineCov">        390 :             eventTime -= localTime.getStart();</span></a>
+<a name="186"><span class="lineNum">     186 </span><span class="lineCov">        358 :             eventTime -= localTime.getStart();</span></a>
 <a name="187"><span class="lineNum">     187 </span>            : </a>
-<a name="188"><span class="lineNum">     188 </span><span class="lineCov">        390 :             if (eventTime &gt;= 0.0)</span></a>
+<a name="188"><span class="lineNum">     188 </span><span class="lineCov">        358 :             if (eventTime &gt;= 0.0)</span></a>
 <a name="189"><span class="lineNum">     189 </span>            :             {</a>
-<a name="190"><span class="lineNum">     190 </span><span class="lineCov">        780 :                 juce::MidiMessage m (meh-&gt;message);</span></a>
-<a name="191"><span class="lineNum">     191 </span><span class="lineCov">        390 :                 m.multiplyVelocity (volScale);</span></a>
-<a name="192"><span class="lineNum">     192 </span><span class="lineCov">        390 :                 pc.buffers.midi.addMidiMessage (m, eventTime, midiSourceID);</span></a>
+<a name="190"><span class="lineNum">     190 </span><span class="lineCov">        716 :                 juce::MidiMessage m (meh-&gt;message);</span></a>
+<a name="191"><span class="lineNum">     191 </span><span class="lineCov">        358 :                 m.multiplyVelocity (volScale);</span></a>
+<a name="192"><span class="lineNum">     192 </span><span class="lineCov">        358 :                 pc.buffers.midi.addMidiMessage (m, eventTime, midiSourceID);</span></a>
 <a name="193"><span class="lineNum">     193 </span>            :             }</a>
 <a name="194"><span class="lineNum">     194 </span>            :         }</a>
 <a name="195"><span class="lineNum">     195 </span>            :         else</a>
@@ -262,7 +262,7 @@
 <a name="200"><span class="lineNum">     200 </span>            : </a>
 <a name="201"><span class="lineNum">     201 </span>            :     // N.B. if the note-off is added on the last time it may not be sent to the plugin which can break the active note-state.</a>
 <a name="202"><span class="lineNum">     202 </span>            :     // To avoid this, make sure any added messages are nudged back by 0.00001s</a>
-<a name="203"><span class="lineNum">     203 </span><span class="lineCov">     147792 :     if (getPlayHeadState().isLastBlockOfLoop())</span></a>
+<a name="203"><span class="lineNum">     203 </span><span class="lineCov">     148224 :     if (getPlayHeadState().isLastBlockOfLoop())</span></a>
 <a name="204"><span class="lineNum">     204 </span><span class="lineNoCov">          0 :         createNoteOffs (pc.buffers.midi, ms[currentSequence], localTime.getEnd(), localTime.getLength() - 0.00001, getPlayHead().isPlaying());</span></a>
 <a name="205"><span class="lineNum">     205 </span>            : }</a>
 <a name="206"><span class="lineNum">     206 </span>            : </a>
