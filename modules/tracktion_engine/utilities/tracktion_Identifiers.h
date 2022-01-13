@@ -639,9 +639,6 @@ namespace IDs
     DECLARE_ID (postGain)
     DECLARE_ID (highPassMidiNoteNumber)
     DECLARE_ID (lowPassMidiNoteNumber)
-    DECLARE_ID (balance)
-    DECLARE_ID (IMPULSEA)
-    DECLARE_ID (IMPULSEB)
 
     #undef DECLARE_ID
 }
