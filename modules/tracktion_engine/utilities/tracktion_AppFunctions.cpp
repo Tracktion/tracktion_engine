@@ -423,6 +423,11 @@ namespace AppFunctions
         getCurrentUIBehaviour().toggleScroll();
     }
 
+    bool isScrolling()
+    {
+        return getCurrentUIBehaviour().isScrolling();
+    }
+
     void stopRecordingAndDiscard()
     {
         if (auto transport = getActiveTransport())

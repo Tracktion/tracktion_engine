@@ -107,6 +107,7 @@ public:
     void updateMarkers();
     void updateTrackRecordLights();
     void updatePunchLights();
+    void updateScrollLights();
     void updateUndoLights();
 
     int getNumChannelTracks() const;
@@ -114,8 +115,8 @@ public:
     int mapTrackNumToChannelNum (int channelNum) const;
 
     //==============================================================================
-    int getXTCount();
-    void setXTCount (int);
+    int getXTCount (const juce::String& controller);
+    void setXTCount (const juce::String& controller, int);
     void refreshXTOrder();
 
     //==============================================================================

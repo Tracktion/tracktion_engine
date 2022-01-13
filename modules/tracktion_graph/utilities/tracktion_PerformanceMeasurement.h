@@ -31,7 +31,10 @@ struct ScopedSignpost
     {
         (void) index;
        #ifdef __APPLE__
+        #pragma clang diagnostic push
+        #pragma clang diagnostic ignored "-Wdeprecated"
         kdebug_signpost_start (index, 0, 0, 0, 0);
+        #pragma clang diagnostic pop
        #endif
     }
     
@@ -39,7 +42,10 @@ struct ScopedSignpost
     ~ScopedSignpost()
     {
        #ifdef __APPLE__
+        #pragma clang diagnostic push
+        #pragma clang diagnostic ignored "-Wdeprecated"
         kdebug_signpost_end (index, 0, 0, 0, 0);
+        #pragma clang diagnostic pop
        #endif
     }
     

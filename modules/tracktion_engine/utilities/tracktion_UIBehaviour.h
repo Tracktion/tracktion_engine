@@ -116,6 +116,7 @@ public:
     virtual void showHideActions()                                                  {}
     virtual void showHideAllPanes()                                                 {}
     virtual void toggleScroll()                                                     {}
+    virtual bool isScrolling()                                                      { return false; }
     
     virtual void performUserAction (int)                                            {}
 

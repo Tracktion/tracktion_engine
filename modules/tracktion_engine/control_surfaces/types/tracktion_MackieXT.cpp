@@ -14,7 +14,7 @@ namespace tracktion_engine
 MackieXT::MackieXT (ExternalControllerManager& ecm, MackieMCU& m, int id)
     : ControlSurface (ecm), mcu (m)
 {
-    deviceDescription = "Mackie Control Universal XT #" + juce::String (id + 1);
+    deviceDescription = m.deviceDescription + " XT #" + juce::String (id + 1);
 
     needsMidiChannel = true;
     needsMidiBackChannel = true;

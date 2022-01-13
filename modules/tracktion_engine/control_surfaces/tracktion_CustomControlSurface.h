@@ -182,6 +182,7 @@ public:
     void loopOnOffChanged (bool isLoopOn) override;
     void slaveOnOffChanged (bool isSlaving) override;
     void punchOnOffChanged (bool isPunching) override;
+    void scrollOnOffChanged (bool isPunching) override;
     void parameterChanged (int parameterNumber, const ParameterSetting& newValue) override;
     void clearParameter (int parameterNumber) override;
     bool canChangeSelectedPlugin() override;

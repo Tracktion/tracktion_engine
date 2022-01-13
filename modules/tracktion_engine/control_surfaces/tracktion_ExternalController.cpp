@@ -814,6 +814,13 @@ void ExternalController::updatePunchLights()
             cs->punchOnOffChanged (ed->recordingPunchInOut);
 }
 
+void ExternalController::updateScrollLights()
+{
+    if (auto ed = getEdit())
+        if (auto cs = controlSurface.get())
+            cs->scrollOnOffChanged (AppFunctions::isScrolling());
+}
+
 void ExternalController::updateUndoLights()
 {
     if (auto ed = getEdit())
@@ -925,6 +932,7 @@ void ExternalController::updateDeviceState()
                 snapChanged (tc->snapToTimecode);
                 loopChanged (tc->looping);
                 clickChanged (edit->clickTrackEnabled);
+                cs.scrollOnOffChanged (AppFunctions::isScrolling());
                 cs.punchOnOffChanged (edit->recordingPunchInOut);
                 cs.slaveOnOffChanged (edit->isTimecodeSyncEnabled());
 

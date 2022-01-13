@@ -91,6 +91,7 @@ public:
     void updateTrackSelectLights();
     void updateTrackRecordLights();
     void updatePunchLights();
+    void updateScrollLights();
     void updateUndoLights();
 
     int getNumFaderChannels() const noexcept;

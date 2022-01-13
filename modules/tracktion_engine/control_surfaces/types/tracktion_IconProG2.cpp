@@ -239,9 +239,13 @@ void IconProG2::acceptMidiMessage (int deviceIndex, const juce::MidiMessage& m)
             {
                 userToggledMidiEditorWindow (false);
             }
-            else if (d1 >= 0x36 && d1 <= 0x3d)
+            else if (d1 >= 0x36 && d1 <= 0x044)
             {
                 userPressedUserAction (d1 - 0x36);
+            }
+            else if (d1 == 0x44)
+            {
+                userPressedUserAction (15);
             }
             else if (d1 == 0x46)
             {
@@ -450,6 +454,11 @@ void IconProG2::snapOnOffChanged (bool isSnapOn)
 
 void IconProG2::slaveOnOffChanged (bool)
 {
+}
+
+void IconProG2::scrollOnOffChanged (bool isScroll)
+{
+    lightUpButton (deviceIdx, 0x4f, isScroll);
 }
 
 void IconProG2::automationReadModeChanged (bool isReading)

@@ -106,14 +106,18 @@ void ExternalControllerManager::initialise()
     auto mcu = new MackieMCU (*this);
     addNewController (mcu);
 
-    for (int i = 0; i < getXTCount(); ++i)
+    for (int i = 0; i < getXTCount (mcu->deviceDescription); ++i)
         addNewController (new MackieXT (*this, *mcu, i));
 
     refreshXTOrder();
     
     addNewController (new MackieC4 (*this));
     
-    addNewController (new IconProG2 (*this));
+    auto icon = new IconProG2 (*this);
+    addNewController (icon);
+    for (int i = 0; i < getXTCount (icon->deviceDescription); ++i)
+        addNewController (new MackieXT (*this, *icon, i));
+
     addNewController (new TranzportControlSurface (*this));
     addNewController (new AlphaTrackControlSurface (*this));
     addNewController (new NovationRemoteSl (*this));
@@ -287,6 +291,7 @@ void ExternalControllerManager::updateParameters()          { FOR_EACH_DEVICE (u
 void ExternalControllerManager::updateMarkers()             { FOR_EACH_DEVICE (updateMarkers()); }
 void ExternalControllerManager::updateTrackRecordLights()   { FOR_EACH_DEVICE (updateTrackRecordLights()); }
 void ExternalControllerManager::updatePunchLights()         { FOR_EACH_DEVICE (updatePunchLights()); }
+void ExternalControllerManager::updateScrollLights()        { FOR_EACH_DEVICE (updateScrollLights()); }
 void ExternalControllerManager::updateUndoLights()          { FOR_EACH_DEVICE (updateUndoLights()); }
 
 void ExternalControllerManager::changeListenerCallback (ChangeBroadcaster* source)
@@ -842,39 +847,46 @@ void ExternalControllerManager::repaintPlugin (Plugin& plugin)
         c->updateColour();
 }
 
-int ExternalControllerManager::getXTCount()
+int ExternalControllerManager::getXTCount (const juce::String& desc)
 {
-    return engine.getPropertyStorage().getProperty (SettingID::xtCount);
+    if (desc == "Mackie Control Universal")
+        return engine.getPropertyStorage().getProperty (SettingID::xtCount);
+    
+    return engine.getPropertyStorage().getPropertyItem (SettingID::xtCount, desc);
 }
 
-void ExternalControllerManager::setXTCount (int after)
+void ExternalControllerManager::setXTCount (const juce::String& desc, int after)
 {
     CRASH_TRACER
     juce::ignoreUnused (after);
 
    #if TRACKTION_ENABLE_CONTROL_SURFACES
-    if (auto first = devices.getFirst())
+    for (int devIdx = 0; devIdx < devices.size(); devIdx++)
     {
-        if (auto mcu = first->getControlSurfaceIfType<MackieMCU>())
+        auto device = devices[devIdx];
+        if (auto mcu = device->getControlSurfaceIfType<MackieMCU>(); mcu != nullptr && mcu->deviceDescription == desc)
         {
-            int before = getXTCount();
+            int before = getXTCount (desc);
             int diff = after - before;
 
             if (diff > 0)
             {
                 for (int i = 0; i < diff; ++i)
-                    devices.insert (before + i + 1, new ExternalController (engine, new MackieXT (*this, *mcu, before + i)));
+                    devices.insert (devIdx + before + i + 1, new ExternalController (engine, new MackieXT (*this, *mcu, before + i)));
             }
             else if (diff < 0)
             {
                 for (int i = 0; i < std::abs (diff); ++i)
-                    devices.remove (before - i);
+                    devices.remove (devIdx + before - i);
             }
 
-            engine.getPropertyStorage().setProperty (SettingID::xtCount, after);
-            refreshXTOrder();
-            sendChangeMessage();
+            if (desc == "Mackie Control Universal")
+                engine.getPropertyStorage().setProperty (SettingID::xtCount, after);
+            else
+                engine.getPropertyStorage().setPropertyItem (SettingID::xtCount, desc, after);
         }
+        refreshXTOrder();
+        sendChangeMessage();
     }
    #endif
 }
@@ -884,32 +896,32 @@ void ExternalControllerManager::refreshXTOrder()
     CRASH_TRACER
 
    #if TRACKTION_ENABLE_CONTROL_SURFACES
-    if (auto first = devices.getFirst())
+    for (auto device : devices)
     {
-        if (auto mcu = first->getControlSurfaceIfType<MackieMCU>())
+        if (auto mcu = device->getControlSurfaceIfType<MackieMCU>())
         {
-            MackieXT* xt[MackieMCU::maxNumSurfaces + 1] = {};
+            MackieXT* xt[MackieMCU::maxNumSurfaces - 1] = {};
 
-            for (int i = 1; i < MackieMCU::maxNumSurfaces; ++i)
-                xt[i - 1] = devices[i] ? devices[i]->getControlSurfaceIfType<MackieXT>() : nullptr;
+            int offset = devices.indexOf (device);
+            for (int i = 0; i < getXTCount (mcu->deviceDescription); ++i)
+                xt[i] = devices[offset + 1 + i] ? devices[offset + 1 + i]->getControlSurfaceIfType<MackieXT>() : nullptr;
 
             juce::StringArray indices;
-            indices.addTokens (engine.getPropertyStorage().getProperty (SettingID::xtIndices, "0 1 2 3").toString(), false);
+            if (mcu->deviceDescription == "Mackie Control Universal")
+                indices.addTokens (engine.getPropertyStorage().getProperty (SettingID::xtIndices, "0 1 2 3").toString(), false);
+            else
+                indices.addTokens (engine.getPropertyStorage().getPropertyItem (SettingID::xtIndices, mcu->deviceDescription, "0 1 2 3").toString(), false);
 
             for (int i = indices.size(); --i >= 0;)
-                if (indices[i].getIntValue() > getXTCount())
+                if (indices[i].getIntValue() > getXTCount (mcu->deviceDescription))
                     indices.remove(i);
 
             mcu->setDeviceIndex (indices.indexOf ("0"));
 
-            if (xt[0]) xt[0]->setDeviceIndex (indices.indexOf ("1"));
-            if (xt[1]) xt[1]->setDeviceIndex (indices.indexOf ("2"));
-            if (xt[2]) xt[2]->setDeviceIndex (indices.indexOf ("3"));
+            if (xt[0] != nullptr) xt[0]->setDeviceIndex (indices.indexOf ("1"));
+            if (xt[1] != nullptr) xt[1]->setDeviceIndex (indices.indexOf ("2"));
+            if (xt[2] != nullptr) xt[2]->setDeviceIndex (indices.indexOf ("3"));
         }
-    }
-    else
-    {
-        jassertfalse;
     }
    #endif
 }

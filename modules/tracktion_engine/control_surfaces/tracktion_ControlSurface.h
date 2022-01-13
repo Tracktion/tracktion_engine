@@ -148,9 +148,10 @@ public:
     // tells the device that looping has been turned on or off.
     virtual void loopOnOffChanged (bool isLoopOn) = 0;
 
-    virtual void slaveOnOffChanged (bool isSlaving) = 0;
-    virtual void punchOnOffChanged (bool isPunching) = 0;
-    virtual void undoStatusChanged (bool, bool)         {}
+    virtual void slaveOnOffChanged ([[maybe_unused]] bool isSlaving)        {}
+    virtual void punchOnOffChanged ([[maybe_unused]] bool isPunching)       {}
+    virtual void scrollOnOffChanged ([[maybe_unused]] bool isScroll)        {}
+    virtual void undoStatusChanged (bool, bool)                             {}
 
     // tells the device that one of the parameters has been changed.
     //

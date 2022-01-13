@@ -24,6 +24,7 @@ public:
     void clickOnOffChanged (bool isClickOn) override;
     void snapOnOffChanged (bool isSnapOn) override;
     void slaveOnOffChanged (bool isSlaving) override;
+    void scrollOnOffChanged (bool isScroll) override;
     void undoStatusChanged (bool undo, bool redo) override;
     void automationReadModeChanged (bool isReading) override;
     void automationWriteModeChanged (bool isWriting) override;

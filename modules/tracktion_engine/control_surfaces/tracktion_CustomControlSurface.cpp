@@ -789,6 +789,11 @@ void CustomControlSurface::punchOnOffChanged (bool enabled)
     sendCommandToControllerForActionID (togglePunchId, enabled);
 }
 
+void CustomControlSurface::scrollOnOffChanged (bool enabled)
+{
+    sendCommandToControllerForActionID (toggleScrollId, enabled);
+}
+
 void CustomControlSurface::parameterChanged (int paramIndex, const ParameterSetting& setting)
 {
     if (paramIndex >= 0)

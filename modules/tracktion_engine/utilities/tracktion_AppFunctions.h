@@ -75,6 +75,7 @@ namespace AppFunctions
     void redo();
     void undo();
     void toggleScroll();
+    bool isScrolling();
     void stopRecordingAndDiscard();
     void stopRecordingAndRestart();
 
