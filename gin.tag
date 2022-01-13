@@ -34734,41 +34734,6 @@
       <anchor>a94755018922148cbb62ffbe1143106bc</anchor>
       <arglist></arglist>
     </member>
-    <member kind="variable">
-      <type>juce::CachedValue&lt; float &gt;</type>
-      <name>gainValue</name>
-      <anchorfile>classtracktion__engine_1_1ImpulseResponsePlugin.html</anchorfile>
-      <anchor>ab0c99fb2f51add4106ff7cdba703d577</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::CachedValue&lt; float &gt;</type>
-      <name>mixValue</name>
-      <anchorfile>classtracktion__engine_1_1ImpulseResponsePlugin.html</anchorfile>
-      <anchor>ab94cd15406fb15f4a0359f04a3bfaa26</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::CachedValue&lt; float &gt;</type>
-      <name>highPassCutoffValue</name>
-      <anchorfile>classtracktion__engine_1_1ImpulseResponsePlugin.html</anchorfile>
-      <anchor>a11781a66dc4c7fb2f0aa80a0ae5f2eb6</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::CachedValue&lt; float &gt;</type>
-      <name>lowPassCutoffValue</name>
-      <anchorfile>classtracktion__engine_1_1ImpulseResponsePlugin.html</anchorfile>
-      <anchor>a170cbd63b8af51ed23f8a96338fa6704</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::CachedValue&lt; float &gt;</type>
-      <name>qValue</name>
-      <anchorfile>classtracktion__engine_1_1ImpulseResponsePlugin.html</anchorfile>
-      <anchor>a21c78cc5a2fd81ee4c5e1899297f7938</anchor>
-      <arglist></arglist>
-    </member>
     <member kind="variable" static="yes">
       <type>static const char *</type>
       <name>xmlTypeName</name>

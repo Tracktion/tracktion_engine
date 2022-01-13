@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-13 01:14:21</td>
+            <td class="headerValue">2022-01-13 11:29:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">7</td>
@@ -78,15 +78,15 @@
 <a name="16"><span class="lineNum">      16 </span><span class="lineCov">        129 :     return engine.getAudioFileFormatManager().readFormatManager.createReaderFor (file);</span></a>
 <a name="17"><span class="lineNum">      17 </span>            : }</a>
 <a name="18"><span class="lineNum">      18 </span>            : </a>
-<a name="19"><span class="lineNum">      19 </span><span class="lineCov">        178 : juce::AudioFormatReader* AudioFileUtils::createReaderFindingFormat (Engine&amp; engine, const juce::File&amp; file, juce::AudioFormat*&amp; format)</span></a>
+<a name="19"><span class="lineNum">      19 </span><span class="lineCov">        177 : juce::AudioFormatReader* AudioFileUtils::createReaderFindingFormat (Engine&amp; engine, const juce::File&amp; file, juce::AudioFormat*&amp; format)</span></a>
 <a name="20"><span class="lineNum">      20 </span>            : {</a>
-<a name="21"><span class="lineNum">      21 </span><span class="lineCov">        178 :     auto&amp; manager = engine.getAudioFileFormatManager().readFormatManager;</span></a>
+<a name="21"><span class="lineNum">      21 </span><span class="lineCov">        177 :     auto&amp; manager = engine.getAudioFileFormatManager().readFormatManager;</span></a>
 <a name="22"><span class="lineNum">      22 </span>            : </a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineCov">        205 :     for (auto af : manager)</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">        199 :     for (auto af : manager)</span></a>
 <a name="24"><span class="lineNum">      24 </span>            :     {</a>
-<a name="25"><span class="lineNum">      25 </span><span class="lineCov">        201 :         if (af-&gt;canHandleFile (file))</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineCov">        196 :         if (af-&gt;canHandleFile (file))</span></a>
 <a name="26"><span class="lineNum">      26 </span>            :         {</a>
-<a name="27"><span class="lineNum">      27 </span><span class="lineCov">        178 :             if (auto in = file.createInputStream())</span></a>
+<a name="27"><span class="lineNum">      27 </span><span class="lineCov">        177 :             if (auto in = file.createInputStream())</span></a>
 <a name="28"><span class="lineNum">      28 </span>            :             {</a>
 <a name="29"><span class="lineNum">      29 </span><span class="lineCov">        174 :                 if (auto r = af-&gt;createReaderFor (in.release(), true))</span></a>
 <a name="30"><span class="lineNum">      30 </span>            :                 {</a>
