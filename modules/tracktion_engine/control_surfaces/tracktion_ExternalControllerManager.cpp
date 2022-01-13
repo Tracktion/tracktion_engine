@@ -858,7 +858,7 @@ int ExternalControllerManager::getXTCount (const juce::String& desc)
 void ExternalControllerManager::setXTCount (const juce::String& desc, int after)
 {
     CRASH_TRACER
-    juce::ignoreUnused (after);
+    juce::ignoreUnused (desc, after);
 
    #if TRACKTION_ENABLE_CONTROL_SURFACES
     for (int devIdx = 0; devIdx < devices.size(); devIdx++)
