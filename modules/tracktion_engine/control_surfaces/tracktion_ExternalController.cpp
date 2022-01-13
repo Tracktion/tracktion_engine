@@ -816,9 +816,8 @@ void ExternalController::updatePunchLights()
 
 void ExternalController::updateScrollLights()
 {
-    if (auto ed = getEdit())
-        if (auto cs = controlSurface.get())
-            cs->scrollOnOffChanged (AppFunctions::isScrolling());
+    if (auto cs = controlSurface.get())
+        cs->scrollOnOffChanged (AppFunctions::isScrolling());
 }
 
 void ExternalController::updateUndoLights()
