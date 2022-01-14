@@ -99,9 +99,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a23a0a9a05256d9d75200b5e174702743"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TransportControl_1_1Listener.html#a23a0a9a05256d9d75200b5e174702743">stopVideo</a> ()=0</td></tr>
 <tr class="memdesc:a23a0a9a05256d9d75200b5e174702743"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should stop video playback.  <a href="structtracktion__engine_1_1TransportControl_1_1Listener.html#a23a0a9a05256d9d75200b5e174702743">More...</a><br /></td></tr>
 <tr class="separator:a23a0a9a05256d9d75200b5e174702743"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa98aebac2b2fc49ae389e38ffd8927d6"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TransportControl_1_1Listener.html#aa98aebac2b2fc49ae389e38ffd8927d6">recordingFinished</a> (<a class="el" href="classtracktion__engine_1_1InputDeviceInstance.html">InputDeviceInstance</a> &amp;, juce::ReferenceCountedArray&lt; <a class="el" href="classtracktion__engine_1_1Clip.html">Clip</a> &gt;, <a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a>)</td></tr>
-<tr class="memdesc:aa98aebac2b2fc49ae389e38ffd8927d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when recording stops for a specific input instance.  <a href="structtracktion__engine_1_1TransportControl_1_1Listener.html#aa98aebac2b2fc49ae389e38ffd8927d6">More...</a><br /></td></tr>
-<tr class="separator:aa98aebac2b2fc49ae389e38ffd8927d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4be095c8fe344e89eaa293e5afc3c1ca"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1TransportControl_1_1Listener.html#a4be095c8fe344e89eaa293e5afc3c1ca">recordingFinished</a> (<a class="el" href="classtracktion__engine_1_1InputDeviceInstance.html">InputDeviceInstance</a> &amp;, juce::ReferenceCountedArray&lt; <a class="el" href="classtracktion__engine_1_1Clip.html">Clip</a> &gt;)</td></tr>
+<tr class="memdesc:a4be095c8fe344e89eaa293e5afc3c1ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when recording stops for a specific input instance.  <a href="structtracktion__engine_1_1TransportControl_1_1Listener.html#a4be095c8fe344e89eaa293e5afc3c1ca">More...</a><br /></td></tr>
+<tr class="separator:a4be095c8fe344e89eaa293e5afc3c1ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="structtracktion__engine_1_1TransportControl_1_1Listener.html" title="Listener interface to be notified of changes to the transport.">Listener</a> interface to be notified of changes to the transport. </p>
@@ -308,8 +308,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aa98aebac2b2fc49ae389e38ffd8927d6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa98aebac2b2fc49ae389e38ffd8927d6">&#9670;&nbsp;</a></span>recordingFinished()</h2>
+<a id="a4be095c8fe344e89eaa293e5afc3c1ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4be095c8fe344e89eaa293e5afc3c1ca">&#9670;&nbsp;</a></span>recordingFinished()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -327,12 +327,6 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">juce::ReferenceCountedArray&lt; <a class="el" href="classtracktion__engine_1_1Clip.html">Clip</a> &gt;&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structtracktion__engine_1_1EditTimeRange.html">EditTimeRange</a>&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>
@@ -353,7 +347,6 @@ Public Member Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramname"><a class="el" href="classtracktion__engine_1_1InputDeviceInstance.html">InputDeviceInstance</a></td><td>The device instance that just stopped. </td></tr>
     <tr><td class="paramname">recordedClips</td><td>The clips resulting from the recording. </td></tr>
-    <tr><td class="paramname">recordedRange</td><td>The time range of the recording. N.B. if the recording was looped, this will be the unlooped end time. </td></tr>
   </table>
   </dd>
 </dl>
@@ -366,7 +359,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jan 14 2022 17:47:31 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jan 14 2022 18:18:21 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

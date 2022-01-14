@@ -3,7 +3,7 @@ var searchData=
   ['cachedpattern_7514',['CachedPattern',['../structtracktion__engine_1_1StepClip_1_1Pattern_1_1CachedPattern.html#aa6e06665df603a6d169474ecd388970d',1,'tracktion_engine::StepClip::Pattern::CachedPattern']]],
   ['calculaterates_7515',['calculateRates',['../classtracktion__engine_1_1LinEnvelope.html#ad87d796d62f4358c420694b783ba3c34',1,'tracktion_engine::LinEnvelope']]],
   ['callblocking_7516',['callBlocking',['../namespacetracktion__engine.html#a36fa404fa7ceb671453f5e6b45f2703e',1,'tracktion_engine']]],
-  ['callrecordingfinishedlisteners_7517',['callRecordingFinishedListeners',['../classtracktion__engine_1_1TransportControl.html#a71c8be5da4d35074705a6efbb2b95c61',1,'tracktion_engine::TransportControl']]],
+  ['callrecordingfinishedlisteners_7517',['callRecordingFinishedListeners',['../classtracktion__engine_1_1TransportControl.html#a77d604b70a0b166c8ebd54d69a96693c',1,'tracktion_engine::TransportControl']]],
   ['callrenderadding_7518',['callRenderAdding',['../classtracktion__engine_1_1AudioNode.html#a0abdfdae09cf5b4109f4517ca26ecb4d',1,'tracktion_engine::AudioNode']]],
   ['callrenderover_7519',['callRenderOver',['../classtracktion__engine_1_1AudioNode.html#a423797af4714bf1f942b5610930c1bdf',1,'tracktion_engine::AudioNode']]],
   ['canaddclipplugin_7520',['canAddClipPlugin',['../classtracktion__engine_1_1AudioClipBase.html#a2c854f726c1e986a4892db4e54bb42c6',1,'tracktion_engine::AudioClipBase']]],

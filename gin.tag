@@ -38293,8 +38293,8 @@
       <type>virtual void</type>
       <name>recordingFinished</name>
       <anchorfile>structtracktion__engine_1_1TransportControl_1_1Listener.html</anchorfile>
-      <anchor>aa98aebac2b2fc49ae389e38ffd8927d6</anchor>
-      <arglist>(InputDeviceInstance &amp;, juce::ReferenceCountedArray&lt; Clip &gt;, EditTimeRange)</arglist>
+      <anchor>a4be095c8fe344e89eaa293e5afc3c1ca</anchor>
+      <arglist>(InputDeviceInstance &amp;, juce::ReferenceCountedArray&lt; Clip &gt;)</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -70633,8 +70633,8 @@
       <type>void</type>
       <name>callRecordingFinishedListeners</name>
       <anchorfile>classtracktion__engine_1_1TransportControl.html</anchorfile>
-      <anchor>a71c8be5da4d35074705a6efbb2b95c61</anchor>
-      <arglist>(InputDeviceInstance &amp;, juce::ReferenceCountedArray&lt; Clip &gt; recordedClips, EditTimeRange recordedRange)</arglist>
+      <anchor>a77d604b70a0b166c8ebd54d69a96693c</anchor>
+      <arglist>(InputDeviceInstance &amp;, juce::ReferenceCountedArray&lt; Clip &gt; recordedClips)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static juce::Array&lt; TransportControl * &gt;</type>

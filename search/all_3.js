@@ -6,7 +6,7 @@ var searchData=
   ['calculaterates_423',['calculateRates',['../classtracktion__engine_1_1LinEnvelope.html#ad87d796d62f4358c420694b783ba3c34',1,'tracktion_engine::LinEnvelope']]],
   ['callback_424',['callback',['../classtracktion__engine_1_1AirWindowsPlugin.html#aeecde9bd3ec082621cfe7266c88220d7',1,'tracktion_engine::AirWindowsPlugin']]],
   ['callblocking_425',['callBlocking',['../namespacetracktion__engine.html#a36fa404fa7ceb671453f5e6b45f2703e',1,'tracktion_engine']]],
-  ['callrecordingfinishedlisteners_426',['callRecordingFinishedListeners',['../classtracktion__engine_1_1TransportControl.html#a71c8be5da4d35074705a6efbb2b95c61',1,'tracktion_engine::TransportControl']]],
+  ['callrecordingfinishedlisteners_426',['callRecordingFinishedListeners',['../classtracktion__engine_1_1TransportControl.html#a77d604b70a0b166c8ebd54d69a96693c',1,'tracktion_engine::TransportControl']]],
   ['callrenderadding_427',['callRenderAdding',['../classtracktion__engine_1_1AudioNode.html#a0abdfdae09cf5b4109f4517ca26ecb4d',1,'tracktion_engine::AudioNode']]],
   ['callrenderover_428',['callRenderOver',['../classtracktion__engine_1_1AudioNode.html#a423797af4714bf1f942b5610930c1bdf',1,'tracktion_engine::AudioNode']]],
   ['canaddclipplugin_429',['canAddClipPlugin',['../classtracktion__engine_1_1AudioClipBase.html#a2c854f726c1e986a4892db4e54bb42c6',1,'tracktion_engine::AudioClipBase']]],
