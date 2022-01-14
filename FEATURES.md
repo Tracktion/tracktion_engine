@@ -3,7 +3,7 @@
 We often get asked what Tracktion Engine can do (and what it can't do) so this document aims to provide a rough summary of the features available. If you want more details, check out the source code or [documentation](https://tracktion.github.io/tracktion_engine/modules.html).
 
 ## Overview
-As a very high level overview, Tracktion Engine provides a framework to create timelime based DAW-like apps. For the best example, take a look at Waveform Free, which is built on top of Tracktion Engine. Most of the features are present in Tracktion Engine.
+As a very high level overview, Tracktion Engine provides a framework to create timelime based DAW-like apps. For the best example, take a look at [Tracktion Waveform Free](https://www.tracktion.com/products/waveform-free), which is built on top of Tracktion Engine. Most of the features are present in Tracktion Engine.
 
 What Tracktion Engine doesn't provide is any kind of UI. You'll have to write code to display arrangements, tracks, clips, mixers, audio thumbnails, piano rolls etc. yourself. This may sound limiting but it's actually very useful as user-interfaces are what set apps apart and you want yours to be unique to your product and user base. For a starting point, take a look at some of the [examples](examples)
 
@@ -12,6 +12,7 @@ What Tracktion Engine doesn't provide is any kind of UI. You'll have to write co
     - High performance multi-CPU utilising audio engine
     - Minimal latency with full plugin bypass
     - Different threading algorithms for different platforms/use cases
+    - Perfect plugin delay compensation
     - Full transport control including scrubbing
 - Audio
     - WAV, AIFF, Flac, OGG, MP3, CAF and Rex file formats
@@ -51,6 +52,7 @@ What Tracktion Engine doesn't provide is any kind of UI. You'll have to write co
     - Rack patching environment for multi-track plugin buses
     - External plugin formats supported by JUCE
     - An API to register your own plugins to be used as entry points to the audio graph
+    - The ability to wrap the engine inside a plugin and sync playback to the host
 - Automation
     - Automation curves for plugin parameters using bezier curves
     - Automation recording (including simplification) and playback
@@ -69,11 +71,21 @@ What Tracktion Engine doesn't provide is any kind of UI. You'll have to write co
     - MIDI file exporting
 - Utilities
     - Selection
+    - Undo/redo
     - Clipboard
     - Basic app shortcut functions
     - Crash tracing
     - Engine settings/behaviour
     - Spline interpolator
     - Temporary file management
+    - Save/load compatibility with Tracktion Waveform projects
 
 *\* Requires external licence and libraries from relevant companies*
+
+## Supported Platforms
+- macOS
+- Windows
+- Linux
+- Raspberry PI
+- iOS
+- Android
