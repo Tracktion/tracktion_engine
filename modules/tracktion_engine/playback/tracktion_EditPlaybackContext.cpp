@@ -622,7 +622,7 @@ Clip::Array EditPlaybackContext::stopRecording (InputDeviceInstance& in, EditTim
                                               transport.looping, loopRange,
                                               discardRecordings,
                                               findAppropriateSelectionManager (edit));
-    transport.callRecordingFinishedListeners (in, clips, recordedRange);
+    transport.callRecordingFinishedListeners (in, clips);
     
     return clips;
 }
