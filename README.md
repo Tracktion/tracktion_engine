@@ -9,6 +9,8 @@ develop: [![Build](https://github.com/Tracktion/tracktion_engine/actions/workflo
 ##### Welcome to the Tracktion Engine repository!
 The aim of Tracktion Engine is to provide a high level data model and set of classes for building sequence based audio applications. You can build anything from a simple file-player or sequencer to a full blown DAW.
 
+Take a look at the [features document](FEATURES.md) for the full range of features.
+
 ##### Supported Platforms
 - macOS
 - Windows
