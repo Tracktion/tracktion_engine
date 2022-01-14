@@ -239,7 +239,7 @@ void IconProG2::acceptMidiMessage (int deviceIndex, const juce::MidiMessage& m)
             {
                 userToggledMidiEditorWindow (false);
             }
-            else if (d1 >= 0x36 && d1 <= 0x044)
+            else if (d1 >= 0x36 && d1 <= 0x44)
             {
                 userPressedUserAction (d1 - 0x36);
             }
