@@ -609,7 +609,7 @@ void ExternalControllerManager::auxSendLevelsChanged()
 }
 
 //==============================================================================
-void ExternalControllerManager::userMovedFader (int channelNum, float newSliderPos)
+void ExternalControllerManager::userMovedFader (int channelNum, float newSliderPos, bool delta)
 {
     CRASH_TRACER
     auto track = getChannelTrack (channelNum);
@@ -617,7 +617,7 @@ void ExternalControllerManager::userMovedFader (int channelNum, float newSliderP
     if (auto at = dynamic_cast<AudioTrack*> (track))
     {
         if (auto vp = at->getVolumePlugin())
-            vp->setSliderPos (newSliderPos);
+            vp->setSliderPos (delta ? vp->getSliderPos() + newSliderPos : newSliderPos);
         else
             moveFader (mapTrackNumToChannelNum (channelNum), decibelsToVolumeFaderPosition (0.0f));
     }
@@ -625,18 +625,23 @@ void ExternalControllerManager::userMovedFader (int channelNum, float newSliderP
     if (auto ft = dynamic_cast<FolderTrack*> (track))
     {
         if (auto vca = ft->getVCAPlugin())
-            vca->setSliderPos (newSliderPos);
+            vca->setSliderPos (delta ? vca->getSliderPos() + delta : newSliderPos);
         else if (auto vp = ft->getVolumePlugin())
-            vp->setSliderPos (newSliderPos);
+            vp->setSliderPos (delta ? vp->getSliderPos() + delta : newSliderPos);
         else
             moveFader (mapTrackNumToChannelNum (channelNum), decibelsToVolumeFaderPosition (0.0f));
     }
 }
 
-void ExternalControllerManager::userMovedMasterFader (Edit* ed, float newLevel)
+void ExternalControllerManager::userMovedMasterFader (Edit* ed, float newLevel, bool delta)
 {
     if (ed != nullptr)
-        ed->setMasterVolumeSliderPos (newLevel);
+    {
+        if (delta)
+            ed->setMasterVolumeSliderPos (ed->getMasterSliderPosParameter()->getCurrentValue() + newLevel);
+        else
+            ed->setMasterVolumeSliderPos (newLevel);
+    }
 }
 
 void ExternalControllerManager::userMovedMasterPanPot (Edit* ed, float newLevel)
@@ -645,19 +650,19 @@ void ExternalControllerManager::userMovedMasterPanPot (Edit* ed, float newLevel)
         ed->setMasterPanPos (newLevel);
 }
 
-void ExternalControllerManager::userMovedPanPot (int channelNum, float newPan)
+void ExternalControllerManager::userMovedPanPot (int channelNum, float newPan, bool delta)
 {
     auto track = getChannelTrack (channelNum);
     
     if (auto t = dynamic_cast<AudioTrack*> (track))
     {
         if (auto vp = t->getVolumePlugin())
-            vp->setPan (newPan);
+            vp->setPan (delta ? vp->getPan() + newPan : newPan);
     }
     else if (auto ft = dynamic_cast<FolderTrack*> (track))
     {
         if (auto vp = ft->getVolumePlugin())
-            vp->setPan (newPan);
+            vp->setPan (delta ? vp->getPan() + newPan : newPan);
     }
 }
 

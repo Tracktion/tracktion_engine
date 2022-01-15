@@ -29,8 +29,8 @@ ExternalController::ExternalController (Engine& e, ControlSurface* c)  : engine 
     auxBank = cs.wantsAuxBanks ? 0 : -1;
     allowBankingOffEnd = cs.allowBankingOffEnd;
 
-    inputDeviceName  = storage.getPropertyItem (SettingID::externControlIn, getName());
-    outputDeviceName = storage.getPropertyItem (SettingID::externControlOut, getName());
+    inputDeviceName  = storage.getPropertyItem (SettingID::externControlIn, c->midiChannelName.isNotEmpty() ? c->midiChannelName : getName());
+    outputDeviceName = storage.getPropertyItem (SettingID::externControlOut, c->midiBackChannelName.isNotEmpty() ? c->midiBackChannelName : getName());
 
     oscInputPort     = storage.getPropertyItem (SettingID::externOscInputPort, getName());
     oscOutputPort    = storage.getPropertyItem (SettingID::externOscOutputPort, getName());

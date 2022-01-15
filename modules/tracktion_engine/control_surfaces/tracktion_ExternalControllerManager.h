@@ -122,10 +122,10 @@ public:
 
     //==============================================================================
     // these are called back by the controller to make the app respond
-    void userMovedFader (int channelNum, float newSliderPos);
-    void userMovedMasterFader (Edit*, float newLevel);
+    void userMovedFader (int channelNum, float newSliderPos, bool delta);
+    void userMovedMasterFader (Edit*, float newLevel, bool delta);
     void userMovedMasterPanPot (Edit*, float newLevel);
-    void userMovedPanPot (int channelNum, float newPan);
+    void userMovedPanPot (int channelNum, float newPan, bool delta);
     void userPressedSolo (int channelNum);
     void userPressedSoloIsolate (int channelNum);
     void userPressedMute (int channelNum, bool muteVolumeControl);

@@ -85,16 +85,16 @@ void ControlSurface::performIfNotSafeRecording (const std::function<void()>& f)
     f();
 }
 
-void ControlSurface::userMovedFader (int channelNum, float newSliderPos)
+void ControlSurface::userMovedFader (int channelNum, float newSliderPos, bool delta)
 {
     RETURN_IF_SAFE_RECORDING
-    externalControllerManager.userMovedFader (owner->channelStart + channelNum, newSliderPos);
+    externalControllerManager.userMovedFader (owner->channelStart + channelNum, newSliderPos, delta);
 }
 
-void ControlSurface::userMovedMasterLevelFader (float newLevel)
+void ControlSurface::userMovedMasterLevelFader (float newLevel, bool delta)
 {
     RETURN_IF_SAFE_RECORDING
-    externalControllerManager.userMovedMasterFader (getEdit(), newLevel);
+    externalControllerManager.userMovedMasterFader (getEdit(), newLevel, delta);
 }
 
 void ControlSurface::userMovedMasterPanPot (float newLevel)
@@ -109,10 +109,10 @@ void ControlSurface::userMovedQuickParam (float newLevel)
     externalControllerManager.userMovedQuickParam(newLevel);
 }
 
-void ControlSurface::userMovedPanPot (int channelNum, float newPan)
+void ControlSurface::userMovedPanPot (int channelNum, float newPan, bool delta)
 {
     RETURN_IF_SAFE_RECORDING
-    externalControllerManager.userMovedPanPot (owner->channelStart + channelNum, newPan);
+    externalControllerManager.userMovedPanPot (owner->channelStart + channelNum, newPan, delta);
 }
 
 void ControlSurface::userMovedAux (int channelNum, float newPosition)

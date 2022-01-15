@@ -193,6 +193,10 @@ public:
         to tracktion..
     */
 
+    // Don't send commands when safe recording. All callbacks check this,
+    // but your custom app code may not
+    bool isSafeRecording() const;
+
     // sends a MIDI message to the device's back-channel
     void sendMidiCommandToController (const void* midiData, int numBytes);
     void sendMidiCommandToController (const juce::MidiMessage&);
@@ -202,16 +206,18 @@ public:
 
     // tells tracktion that the user has moved a fader.
     // the channel number is the physical channel on the device, regardless of bank selection
-    // range 0 to 1.0
-    void userMovedFader (int channelNum, float newFaderPosition);
+    // range 0 to 1.0 or -1.0 to 1.0
+    // delta false means absolute position, otherwise adjust by delta
+    void userMovedFader (int channelNum, float newFaderPosition, bool delta = false);
 
     // tells tracktion that the user has moved a pan pot
     // the channel number is the physical channel on the device, regardless of bank selection
     // range -1.0 to 1.0
-    void userMovedPanPot (int channelNum, float newPanPosition);
+    // delta false means absolute position, otherwise adjust by delta
+    void userMovedPanPot (int channelNum, float newPanPosition, bool delta = false);
 
     // tells tracktion that the master fader has moved.
-    void userMovedMasterLevelFader (float newLevel);
+    void userMovedMasterLevelFader (float newLevel, bool delta = false);
     void userMovedMasterPanPot (float newLevel);
 
     void userMovedAux (int channelNum, float newPosition);
@@ -333,9 +339,15 @@ public:
     // does this driver need to be able to send MIDI messages
     bool needsMidiChannel = true;
 
+    // If the midi device always has the same name, set it and device will auto configure
+    juce::String midiChannelName;
+
     // does this driver need to be able to send MIDI messages back to the
     // controller as well as receive them?
     bool needsMidiBackChannel = false;
+
+    // If the midi device always has the same name, set it and device will auto configure
+    juce::String midiBackChannelName;
 
     // does this driver need to be able to communicate via OSC
     bool needsOSCSocket = false;
@@ -373,7 +385,6 @@ public:
 private:
     Edit* edit = nullptr;
 
-    bool isSafeRecording() const;
     void performIfNotSafeRecording (const std::function<void()>&);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ControlSurface)
