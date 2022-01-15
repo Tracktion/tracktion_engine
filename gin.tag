@@ -20533,6 +20533,13 @@
       <arglist>() const noexcept</arglist>
     </member>
     <member kind="function">
+      <type>bool</type>
+      <name>isSafeRecording</name>
+      <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
+      <anchor>a66cdb38993206784b68190d44160c806</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
       <type>void</type>
       <name>sendMidiCommandToController</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
@@ -20557,22 +20564,22 @@
       <type>void</type>
       <name>userMovedFader</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a8fd63d7b7f020b550d47d1b610461a5c</anchor>
-      <arglist>(int channelNum, float newFaderPosition)</arglist>
+      <anchor>ac959ce0e8af4868905807b936081480f</anchor>
+      <arglist>(int channelNum, float newFaderPosition, bool delta=false)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>userMovedPanPot</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a1dab6ebf58445d793bf86114a833bcd6</anchor>
-      <arglist>(int channelNum, float newPanPosition)</arglist>
+      <anchor>a8fe54cf4ba01d094700a587b4efdf46a</anchor>
+      <arglist>(int channelNum, float newPanPosition, bool delta=false)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>userMovedMasterLevelFader</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a18ae159b78838f3060eede299afe7b8f</anchor>
-      <arglist>(float newLevel)</arglist>
+      <anchor>a12114db057354a64e0f1dc8a16ed4da3</anchor>
+      <arglist>(float newLevel, bool delta=false)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -21212,10 +21219,24 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
+      <type>juce::String</type>
+      <name>midiChannelName</name>
+      <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
+      <anchor>a7f2749aa30c3cbef5bca8b61838f29be</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
       <type>bool</type>
       <name>needsMidiBackChannel</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
       <anchor>a091383f8dbeb87b2e34192671085dc87</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::String</type>
+      <name>midiBackChannelName</name>
+      <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
+      <anchor>a47f051c5cd94b2b738e3cd1576589bc0</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -31918,15 +31939,15 @@
       <type>void</type>
       <name>userMovedFader</name>
       <anchorfile>classtracktion__engine_1_1ExternalControllerManager.html</anchorfile>
-      <anchor>a18c67e7a8386015b857bce4d7cd05c42</anchor>
-      <arglist>(int channelNum, float newSliderPos)</arglist>
+      <anchor>a2dfd9d0bef97168d2c5abcaf954a0728</anchor>
+      <arglist>(int channelNum, float newSliderPos, bool delta)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>userMovedMasterFader</name>
       <anchorfile>classtracktion__engine_1_1ExternalControllerManager.html</anchorfile>
-      <anchor>aeba00021087cae16a813b6e5403d5f5f</anchor>
-      <arglist>(Edit *, float newLevel)</arglist>
+      <anchor>a38ed773338d4b90724162f32e46f2dc4</anchor>
+      <arglist>(Edit *, float newLevel, bool delta)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -31939,8 +31960,8 @@
       <type>void</type>
       <name>userMovedPanPot</name>
       <anchorfile>classtracktion__engine_1_1ExternalControllerManager.html</anchorfile>
-      <anchor>a67c6f150fc8243ca58d9578c71b21fb0</anchor>
-      <arglist>(int channelNum, float newPan)</arglist>
+      <anchor>a5bf18aec19fdcecc45f2a2a2c57ae83a</anchor>
+      <arglist>(int channelNum, float newPan, bool delta)</arglist>
     </member>
     <member kind="function">
       <type>void</type>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-15 01:49:39</td>
+            <td class="headerValue">2022-01-15 15:21:12</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">45</td>
@@ -872,8 +872,8 @@
 <a name="810"><span class="lineNum">     810 </span>            : </a>
 <a name="811"><span class="lineNum">     811 </span><span class="lineCov">          2 : double DeviceManager::getSampleRate() const</span></a>
 <a name="812"><span class="lineNum">     812 </span>            : {</a>
-<a name="813"><span class="lineNum">     813 </span><span class="lineCov">      62167 :     if (auto device = deviceManager.getCurrentAudioDevice())</span></a>
-<a name="814"><span class="lineNum">     814 </span><span class="lineCov">      62019 :         return device-&gt;getCurrentSampleRate();</span></a>
+<a name="813"><span class="lineNum">     813 </span><span class="lineCov">      63057 :     if (auto device = deviceManager.getCurrentAudioDevice())</span></a>
+<a name="814"><span class="lineNum">     814 </span><span class="lineCov">      62909 :         return device-&gt;getCurrentSampleRate();</span></a>
 <a name="815"><span class="lineNum">     815 </span>            : </a>
 <a name="816"><span class="lineNum">     816 </span>            :     return 44100;</a>
 <a name="817"><span class="lineNum">     817 </span>            : }</a>
@@ -888,15 +888,15 @@
 <a name="826"><span class="lineNum">     826 </span>            : </a>
 <a name="827"><span class="lineNum">     827 </span><span class="lineCov">          6 : int DeviceManager::getBlockSize() const</span></a>
 <a name="828"><span class="lineNum">     828 </span>            : {</a>
-<a name="829"><span class="lineNum">     829 </span><span class="lineCov">        322 :     if (auto device = deviceManager.getCurrentAudioDevice())</span></a>
-<a name="830"><span class="lineNum">     830 </span><span class="lineCov">         32 :         return device-&gt;getCurrentBufferSizeSamples();</span></a>
+<a name="829"><span class="lineNum">     829 </span><span class="lineCov">        323 :     if (auto device = deviceManager.getCurrentAudioDevice())</span></a>
+<a name="830"><span class="lineNum">     830 </span><span class="lineCov">         33 :         return device-&gt;getCurrentBufferSizeSamples();</span></a>
 <a name="831"><span class="lineNum">     831 </span>            : </a>
 <a name="832"><span class="lineNum">     832 </span>            :     return 256;</a>
 <a name="833"><span class="lineNum">     833 </span>            : }</a>
 <a name="834"><span class="lineNum">     834 </span>            : </a>
-<a name="835"><span class="lineNum">     835 </span><span class="lineCov">          8 : double DeviceManager::getBlockSizeMs() const</span></a>
+<a name="835"><span class="lineNum">     835 </span><span class="lineCov">          9 : double DeviceManager::getBlockSizeMs() const</span></a>
 <a name="836"><span class="lineNum">     836 </span>            : {</a>
-<a name="837"><span class="lineNum">     837 </span><span class="lineCov">          8 :     return getBlockSize() * 1000.0 / getSampleRate();</span></a>
+<a name="837"><span class="lineNum">     837 </span><span class="lineCov">          9 :     return getBlockSize() * 1000.0 / getSampleRate();</span></a>
 <a name="838"><span class="lineNum">     838 </span>            : }</a>
 <a name="839"><span class="lineNum">     839 </span>            : </a>
 <a name="840"><span class="lineNum">     840 </span><span class="lineNoCov">          0 : void DeviceManager::setDefaultWaveOutDevice (int index)</span></a>
@@ -1040,14 +1040,14 @@
 <a name="978"><span class="lineNum">     978 </span><span class="lineCov">        540 :     return midiInputs[index];</span></a>
 <a name="979"><span class="lineNum">     979 </span>            : }</a>
 <a name="980"><span class="lineNum">     980 </span>            : </a>
-<a name="981"><span class="lineNum">     981 </span><span class="lineCov">       3875 : void DeviceManager::broadcastStreamTimeToMidiDevices (double timeToBroadcast)</span></a>
+<a name="981"><span class="lineNum">     981 </span><span class="lineCov">       3930 : void DeviceManager::broadcastStreamTimeToMidiDevices (double timeToBroadcast)</span></a>
 <a name="982"><span class="lineNum">     982 </span>            : {</a>
 <a name="983"><span class="lineNum">     983 </span>            :     const juce::ScopedLock sl (midiInputs.getLock());</a>
 <a name="984"><span class="lineNum">     984 </span>            : </a>
-<a name="985"><span class="lineNum">     985 </span><span class="lineCov">       7750 :     for (auto mi : midiInputs)</span></a>
-<a name="986"><span class="lineNum">     986 </span><span class="lineCov">       3875 :         if (mi-&gt;isEnabled())</span></a>
-<a name="987"><span class="lineNum">     987 </span><span class="lineCov">        388 :             mi-&gt;masterTimeUpdate (timeToBroadcast);</span></a>
-<a name="988"><span class="lineNum">     988 </span><span class="lineCov">       3875 : }</span></a>
+<a name="985"><span class="lineNum">     985 </span><span class="lineCov">       7860 :     for (auto mi : midiInputs)</span></a>
+<a name="986"><span class="lineNum">     986 </span><span class="lineCov">       3930 :         if (mi-&gt;isEnabled())</span></a>
+<a name="987"><span class="lineNum">     987 </span><span class="lineCov">        389 :             mi-&gt;masterTimeUpdate (timeToBroadcast);</span></a>
+<a name="988"><span class="lineNum">     988 </span><span class="lineCov">       3930 : }</span></a>
 <a name="989"><span class="lineNum">     989 </span>            : </a>
 <a name="990"><span class="lineNum">     990 </span><span class="lineNoCov">          0 : int DeviceManager::getNumInputDevices() const</span></a>
 <a name="991"><span class="lineNum">     991 </span>            : {</a>
@@ -1125,18 +1125,18 @@
 <a name="1063"><span class="lineNum">    1063 </span><span class="lineNoCov">          0 :     return outputLatencyTime;</span></a>
 <a name="1064"><span class="lineNum">    1064 </span>            : }</a>
 <a name="1065"><span class="lineNum">    1065 </span>            : </a>
-<a name="1066"><span class="lineNum">    1066 </span><span class="lineCov">       3875 : void DeviceManager::audioDeviceIOCallback (const float** inputChannelData, int numInputChannels,</span></a>
+<a name="1066"><span class="lineNum">    1066 </span><span class="lineCov">       3930 : void DeviceManager::audioDeviceIOCallback (const float** inputChannelData, int numInputChannels,</span></a>
 <a name="1067"><span class="lineNum">    1067 </span>            :                                            float** outputChannelData, int totalNumOutputChannels,</a>
 <a name="1068"><span class="lineNum">    1068 </span>            :                                            int numSamples)</a>
 <a name="1069"><span class="lineNum">    1069 </span>            : {</a>
 <a name="1070"><span class="lineNum">    1070 </span>            :     // Some interfaces ask for blocks larger than the current buffer size so in</a>
 <a name="1071"><span class="lineNum">    1071 </span>            :     // these cases we need to render the buffer in chunks</a>
-<a name="1072"><span class="lineNum">    1072 </span><span class="lineCov">       3875 :     if (numSamples &lt;= maxBlockSize)</span></a>
+<a name="1072"><span class="lineNum">    1072 </span><span class="lineCov">       3930 :     if (numSamples &lt;= maxBlockSize)</span></a>
 <a name="1073"><span class="lineNum">    1073 </span>            :     {</a>
-<a name="1074"><span class="lineNum">    1074 </span><span class="lineCov">       3875 :         audioDeviceIOCallbackInternal (inputChannelData, numInputChannels,</span></a>
+<a name="1074"><span class="lineNum">    1074 </span><span class="lineCov">       3930 :         audioDeviceIOCallbackInternal (inputChannelData, numInputChannels,</span></a>
 <a name="1075"><span class="lineNum">    1075 </span>            :                                        outputChannelData, totalNumOutputChannels,</a>
 <a name="1076"><span class="lineNum">    1076 </span>            :                                        numSamples);</a>
-<a name="1077"><span class="lineNum">    1077 </span><span class="lineCov">       3875 :         return;</span></a>
+<a name="1077"><span class="lineNum">    1077 </span><span class="lineCov">       3930 :         return;</span></a>
 <a name="1078"><span class="lineNum">    1078 </span>            :     }</a>
 <a name="1079"><span class="lineNum">    1079 </span>            : </a>
 <a name="1080"><span class="lineNum">    1080 </span>            :     for (int sampleStartIndex = 0;;)</a>
@@ -1161,23 +1161,23 @@
 <a name="1099"><span class="lineNum">    1099 </span>            :     }</a>
 <a name="1100"><span class="lineNum">    1100 </span>            : }</a>
 <a name="1101"><span class="lineNum">    1101 </span>            : </a>
-<a name="1102"><span class="lineNum">    1102 </span><span class="lineCov">       3875 : void DeviceManager::audioDeviceIOCallbackInternal (const float** inputChannelData, int numInputChannels,</span></a>
+<a name="1102"><span class="lineNum">    1102 </span><span class="lineCov">       3930 : void DeviceManager::audioDeviceIOCallbackInternal (const float** inputChannelData, int numInputChannels,</span></a>
 <a name="1103"><span class="lineNum">    1103 </span>            :                                                    float** outputChannelData, int totalNumOutputChannels,</a>
 <a name="1104"><span class="lineNum">    1104 </span>            :                                                    int numSamples)</a>
 <a name="1105"><span class="lineNum">    1105 </span>            : {</a>
 <a name="1106"><span class="lineNum">    1106 </span>            :     jassert (numSamples &lt;= maxBlockSize);</a>
 <a name="1107"><span class="lineNum">    1107 </span>            : </a>
-<a name="1108"><span class="lineNum">    1108 </span><span class="lineCov">       7750 :     CRASH_TRACER</span></a>
-<a name="1109"><span class="lineNum">    1109 </span><span class="lineCov">       3875 :     juce::FloatVectorOperations::disableDenormalisedNumberSupport();</span></a>
+<a name="1108"><span class="lineNum">    1108 </span><span class="lineCov">       7860 :     CRASH_TRACER</span></a>
+<a name="1109"><span class="lineNum">    1109 </span><span class="lineCov">       3930 :     juce::FloatVectorOperations::disableDenormalisedNumberSupport();</span></a>
 <a name="1110"><span class="lineNum">    1110 </span>            : </a>
 <a name="1111"><span class="lineNum">    1111 </span>            :     {</a>
 <a name="1112"><span class="lineNum">    1112 </span>            :        #if JUCE_ANDROID</a>
 <a name="1113"><span class="lineNum">    1113 </span>            :         const ScopedSteadyLoad load (steadyLoadContext, numSamples);</a>
 <a name="1114"><span class="lineNum">    1114 </span>            :        #endif</a>
 <a name="1115"><span class="lineNum">    1115 </span>            : </a>
-<a name="1116"><span class="lineNum">    1116 </span><span class="lineCov">       3875 :         const auto startTimeTicks = juce::Time::getHighResolutionTicks();</span></a>
+<a name="1116"><span class="lineNum">    1116 </span><span class="lineCov">       3930 :         const auto startTimeTicks = juce::Time::getHighResolutionTicks();</span></a>
 <a name="1117"><span class="lineNum">    1117 </span>            : </a>
-<a name="1118"><span class="lineNum">    1118 </span><span class="lineCov">       3875 :         if (currentCpuUsage &gt; cpuLimitBeforeMuting)</span></a>
+<a name="1118"><span class="lineNum">    1118 </span><span class="lineCov">       3930 :         if (currentCpuUsage &gt; cpuLimitBeforeMuting)</span></a>
 <a name="1119"><span class="lineNum">    1119 </span>            :         {</a>
 <a name="1120"><span class="lineNum">    1120 </span><span class="lineNoCov">          0 :             for (int i = 0; i &lt; totalNumOutputChannels; ++i)</span></a>
 <a name="1121"><span class="lineNum">    1121 </span><span class="lineNoCov">          0 :                 if (auto dest = outputChannelData[i])</span></a>
@@ -1187,40 +1187,40 @@
 <a name="1125"><span class="lineNum">    1125 </span>            :         }</a>
 <a name="1126"><span class="lineNum">    1126 </span>            :         else</a>
 <a name="1127"><span class="lineNum">    1127 </span>            :         {</a>
-<a name="1128"><span class="lineNum">    1128 </span><span class="lineCov">       3875 :             broadcastStreamTimeToMidiDevices (streamTime + outputLatencyTime);</span></a>
+<a name="1128"><span class="lineNum">    1128 </span><span class="lineCov">       3930 :             broadcastStreamTimeToMidiDevices (streamTime + outputLatencyTime);</span></a>
 <a name="1129"><span class="lineNum">    1129 </span>            :             EditTimeRange blockStreamTime;</a>
 <a name="1130"><span class="lineNum">    1130 </span>            : </a>
 <a name="1131"><span class="lineNum">    1131 </span>            :             {</a>
 <a name="1132"><span class="lineNum">    1132 </span>            :                 SCOPED_REALTIME_CHECK</a>
-<a name="1133"><span class="lineNum">    1133 </span><span class="lineCov">       3875 :                 const juce::ScopedLock sl (contextLock);</span></a>
+<a name="1133"><span class="lineNum">    1133 </span><span class="lineCov">       3930 :                 const juce::ScopedLock sl (contextLock);</span></a>
 <a name="1134"><span class="lineNum">    1134 </span>            : </a>
-<a name="1135"><span class="lineNum">    1135 </span><span class="lineCov">      65875 :                 for (auto wi : waveInputs)</span></a>
-<a name="1136"><span class="lineNum">    1136 </span><span class="lineCov">      62000 :                     wi-&gt;consumeNextAudioBlock (inputChannelData, numInputChannels, numSamples, streamTime);</span></a>
+<a name="1135"><span class="lineNum">    1135 </span><span class="lineCov">      66810 :                 for (auto wi : waveInputs)</span></a>
+<a name="1136"><span class="lineNum">    1136 </span><span class="lineCov">      62880 :                     wi-&gt;consumeNextAudioBlock (inputChannelData, numInputChannels, numSamples, streamTime);</span></a>
 <a name="1137"><span class="lineNum">    1137 </span>            : </a>
-<a name="1138"><span class="lineNum">    1138 </span><span class="lineCov">      65875 :                 for (int i = totalNumOutputChannels; --i &gt;= 0;)</span></a>
-<a name="1139"><span class="lineNum">    1139 </span><span class="lineCov">      62000 :                     if (auto dest = outputChannelData[i])</span></a>
-<a name="1140"><span class="lineNum">    1140 </span><span class="lineCov">      62000 :                         juce::FloatVectorOperations::clear (dest, numSamples);</span></a>
+<a name="1138"><span class="lineNum">    1138 </span><span class="lineCov">      66810 :                 for (int i = totalNumOutputChannels; --i &gt;= 0;)</span></a>
+<a name="1139"><span class="lineNum">    1139 </span><span class="lineCov">      62880 :                     if (auto dest = outputChannelData[i])</span></a>
+<a name="1140"><span class="lineNum">    1140 </span><span class="lineCov">      62880 :                         juce::FloatVectorOperations::clear (dest, numSamples);</span></a>
 <a name="1141"><span class="lineNum">    1141 </span>            : </a>
-<a name="1142"><span class="lineNum">    1142 </span><span class="lineCov">       3875 :                 double blockLength = numSamples / currentSampleRate;</span></a>
+<a name="1142"><span class="lineNum">    1142 </span><span class="lineCov">       3930 :                 double blockLength = numSamples / currentSampleRate;</span></a>
 <a name="1143"><span class="lineNum">    1143 </span>            : </a>
-<a name="1144"><span class="lineNum">    1144 </span><span class="lineCov">       3875 :                 blockStreamTime = { streamTime, streamTime + blockLength };</span></a>
+<a name="1144"><span class="lineNum">    1144 </span><span class="lineCov">       3930 :                 blockStreamTime = { streamTime, streamTime + blockLength };</span></a>
 <a name="1145"><span class="lineNum">    1145 </span>            : </a>
-<a name="1146"><span class="lineNum">    1146 </span><span class="lineCov">       7750 :                 for (auto c : activeContexts)</span></a>
-<a name="1147"><span class="lineNum">    1147 </span><span class="lineCov">       3875 :                     c-&gt;fillNextNodeBlock (outputChannelData, totalNumOutputChannels, numSamples);</span></a>
+<a name="1146"><span class="lineNum">    1146 </span><span class="lineCov">       7860 :                 for (auto c : activeContexts)</span></a>
+<a name="1147"><span class="lineNum">    1147 </span><span class="lineCov">       3930 :                     c-&gt;fillNextNodeBlock (outputChannelData, totalNumOutputChannels, numSamples);</span></a>
 <a name="1148"><span class="lineNum">    1148 </span>            :             }</a>
 <a name="1149"><span class="lineNum">    1149 </span>            : </a>
-<a name="1150"><span class="lineNum">    1150 </span><span class="lineCov">      65875 :             for (int i = totalNumOutputChannels; --i &gt;= 0;)</span></a>
-<a name="1151"><span class="lineNum">    1151 </span><span class="lineCov">      62000 :                 if (auto* dest = outputChannelData[i])</span></a>
-<a name="1152"><span class="lineNum">    1152 </span><span class="lineCov">      62000 :                     if (activeOutChannels[i])</span></a>
-<a name="1153"><span class="lineNum">    1153 </span><span class="lineCov">     842694 :                         for (int j = 0; j &lt; numSamples; ++j)</span></a>
-<a name="1154"><span class="lineNum">    1154 </span><span class="lineCov">     834944 :                             if (! std::isnormal (dest[j]))</span></a>
-<a name="1155"><span class="lineNum">    1155 </span><span class="lineCov">     834944 :                                 dest[j] = 0;</span></a>
+<a name="1150"><span class="lineNum">    1150 </span><span class="lineCov">      66810 :             for (int i = totalNumOutputChannels; --i &gt;= 0;)</span></a>
+<a name="1151"><span class="lineNum">    1151 </span><span class="lineCov">      62880 :                 if (auto* dest = outputChannelData[i])</span></a>
+<a name="1152"><span class="lineNum">    1152 </span><span class="lineCov">      62880 :                     if (activeOutChannels[i])</span></a>
+<a name="1153"><span class="lineNum">    1153 </span><span class="lineCov">     851124 :                         for (int j = 0; j &lt; numSamples; ++j)</span></a>
+<a name="1154"><span class="lineNum">    1154 </span><span class="lineCov">     843264 :                             if (! std::isnormal (dest[j]))</span></a>
+<a name="1155"><span class="lineNum">    1155 </span><span class="lineCov">     843264 :                                 dest[j] = 0;</span></a>
 <a name="1156"><span class="lineNum">    1156 </span>            : </a>
 <a name="1157"><span class="lineNum">    1157 </span>            :             streamTime = blockStreamTime.getEnd();</a>
-<a name="1158"><span class="lineNum">    1158 </span><span class="lineCov">       3875 :             currentCpuUsage = deviceManager.getCpuUsage();</span></a>
+<a name="1158"><span class="lineNum">    1158 </span><span class="lineCov">       3930 :             currentCpuUsage = deviceManager.getCpuUsage();</span></a>
 <a name="1159"><span class="lineNum">    1159 </span>            :         }</a>
 <a name="1160"><span class="lineNum">    1160 </span>            : </a>
-<a name="1161"><span class="lineNum">    1161 </span><span class="lineCov">       3875 :         if (globalOutputAudioProcessor != nullptr)</span></a>
+<a name="1161"><span class="lineNum">    1161 </span><span class="lineCov">       3930 :         if (globalOutputAudioProcessor != nullptr)</span></a>
 <a name="1162"><span class="lineNum">    1162 </span>            :         {</a>
 <a name="1163"><span class="lineNum">    1163 </span><span class="lineNoCov">          0 :             juce::AudioBuffer&lt;float&gt; ab (outputChannelData, totalNumOutputChannels, numSamples);</span></a>
 <a name="1164"><span class="lineNum">    1164 </span><span class="lineNoCov">          0 :             juce::MidiBuffer mb;</span></a>
@@ -1228,19 +1228,19 @@
 <a name="1166"><span class="lineNum">    1166 </span>            :         }</a>
 <a name="1167"><span class="lineNum">    1167 </span>            : </a>
 <a name="1168"><span class="lineNum">    1168 </span>            :         {</a>
-<a name="1169"><span class="lineNum">    1169 </span><span class="lineCov">       3875 :             const auto timeWindowSec = numSamples / static_cast&lt;float&gt; (currentSampleRate);</span></a>
+<a name="1169"><span class="lineNum">    1169 </span><span class="lineCov">       3930 :             const auto timeWindowSec = numSamples / static_cast&lt;float&gt; (currentSampleRate);</span></a>
 <a name="1170"><span class="lineNum">    1170 </span>            : </a>
-<a name="1171"><span class="lineNum">    1171 </span><span class="lineCov">       3875 :             const auto currentCpuUtilisation = float (juce::Time::getHighResolutionTicks() - startTimeTicks)</span></a>
-<a name="1172"><span class="lineNum">    1172 </span><span class="lineCov">       3875 :                                                 / juce::Time::getHighResolutionTicksPerSecond() / timeWindowSec;</span></a>
+<a name="1171"><span class="lineNum">    1171 </span><span class="lineCov">       3930 :             const auto currentCpuUtilisation = float (juce::Time::getHighResolutionTicks() - startTimeTicks)</span></a>
+<a name="1172"><span class="lineNum">    1172 </span><span class="lineCov">       3930 :                                                 / juce::Time::getHighResolutionTicksPerSecond() / timeWindowSec;</span></a>
 <a name="1173"><span class="lineNum">    1173 </span>            : </a>
-<a name="1174"><span class="lineNum">    1174 </span><span class="lineCov">       3875 :             cpuAvg += currentCpuUtilisation;</span></a>
-<a name="1175"><span class="lineNum">    1175 </span><span class="lineCov">       3875 :             cpuMin = std::min (cpuMin, currentCpuUtilisation);</span></a>
-<a name="1176"><span class="lineNum">    1176 </span><span class="lineCov">       3875 :             cpuMax = std::max (cpuMax, currentCpuUtilisation);</span></a>
+<a name="1174"><span class="lineNum">    1174 </span><span class="lineCov">       3930 :             cpuAvg += currentCpuUtilisation;</span></a>
+<a name="1175"><span class="lineNum">    1175 </span><span class="lineCov">       3930 :             cpuMin = std::min (cpuMin, currentCpuUtilisation);</span></a>
+<a name="1176"><span class="lineNum">    1176 </span><span class="lineCov">       3930 :             cpuMax = std::max (cpuMax, currentCpuUtilisation);</span></a>
 <a name="1177"><span class="lineNum">    1177 </span>            : </a>
-<a name="1178"><span class="lineNum">    1178 </span><span class="lineCov">       3875 :             if (currentCpuUtilisation &gt; 1)</span></a>
-<a name="1179"><span class="lineNum">    1179 </span><span class="lineCov">          3 :                 ++glitchCntr;</span></a>
+<a name="1178"><span class="lineNum">    1178 </span><span class="lineCov">       3930 :             if (currentCpuUtilisation &gt; 1)</span></a>
+<a name="1179"><span class="lineNum">    1179 </span><span class="lineCov">          2 :                 ++glitchCntr;</span></a>
 <a name="1180"><span class="lineNum">    1180 </span>            : </a>
-<a name="1181"><span class="lineNum">    1181 </span><span class="lineCov">       3875 :             if (--cpuAvgCounter == 0)</span></a>
+<a name="1181"><span class="lineNum">    1181 </span><span class="lineCov">       3930 :             if (--cpuAvgCounter == 0)</span></a>
 <a name="1182"><span class="lineNum">    1182 </span>            :             {</a>
 <a name="1183"><span class="lineNum">    1183 </span><span class="lineCov">          8 :                 cpuAvg /= static_cast&lt;float&gt; (cpuReportingInterval);</span></a>
 <a name="1184"><span class="lineNum">    1184 </span>            : </a>
@@ -1254,7 +1254,7 @@
 <a name="1192"><span class="lineNum">    1192 </span>            :             }</a>
 <a name="1193"><span class="lineNum">    1193 </span>            :         }</a>
 <a name="1194"><span class="lineNum">    1194 </span>            :     }</a>
-<a name="1195"><span class="lineNum">    1195 </span><span class="lineCov">       3875 : }</span></a>
+<a name="1195"><span class="lineNum">    1195 </span><span class="lineCov">       3930 : }</span></a>
 <a name="1196"><span class="lineNum">    1196 </span>            : </a>
 <a name="1197"><span class="lineNum">    1197 </span><span class="lineCov">         86 : void DeviceManager::audioDeviceAboutToStart (juce::AudioIODevice* device)</span></a>
 <a name="1198"><span class="lineNum">    1198 </span>            : {</a>

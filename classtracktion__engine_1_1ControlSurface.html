@@ -190,6 +190,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a1134fd34d5a26aa30678bc35236280f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a562477759c3e2240ad24f74a891da4c0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion__engine_1_1TransportControl.html">TransportControl</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a562477759c3e2240ad24f74a891da4c0">getTransport</a> () const noexcept</td></tr>
 <tr class="separator:a562477759c3e2240ad24f74a891da4c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66cdb38993206784b68190d44160c806"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a66cdb38993206784b68190d44160c806">isSafeRecording</a> () const</td></tr>
+<tr class="separator:a66cdb38993206784b68190d44160c806"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab68b87982cd5b9e4643e355167932679"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#ab68b87982cd5b9e4643e355167932679">sendMidiCommandToController</a> (const void *midiData, int numBytes)</td></tr>
 <tr class="separator:ab68b87982cd5b9e4643e355167932679"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7aeca90986b3f890ad11a3d4de0d77e3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a7aeca90986b3f890ad11a3d4de0d77e3">sendMidiCommandToController</a> (const juce::MidiMessage &amp;)</td></tr>
@@ -197,12 +199,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aed5e55228a79558671d34fc238fac5c2"><td class="memTemplParams" colspan="2">template&lt;size_t size&gt; </td></tr>
 <tr class="memitem:aed5e55228a79558671d34fc238fac5c2"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#aed5e55228a79558671d34fc238fac5c2">sendMidiArray</a> (const uint8_t(&amp;rawData)[size])</td></tr>
 <tr class="separator:aed5e55228a79558671d34fc238fac5c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8fd63d7b7f020b550d47d1b610461a5c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a8fd63d7b7f020b550d47d1b610461a5c">userMovedFader</a> (int channelNum, float newFaderPosition)</td></tr>
-<tr class="separator:a8fd63d7b7f020b550d47d1b610461a5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1dab6ebf58445d793bf86114a833bcd6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a1dab6ebf58445d793bf86114a833bcd6">userMovedPanPot</a> (int channelNum, float newPanPosition)</td></tr>
-<tr class="separator:a1dab6ebf58445d793bf86114a833bcd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a18ae159b78838f3060eede299afe7b8f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a18ae159b78838f3060eede299afe7b8f">userMovedMasterLevelFader</a> (float newLevel)</td></tr>
-<tr class="separator:a18ae159b78838f3060eede299afe7b8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac959ce0e8af4868905807b936081480f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#ac959ce0e8af4868905807b936081480f">userMovedFader</a> (int channelNum, float newFaderPosition, bool delta=false)</td></tr>
+<tr class="separator:ac959ce0e8af4868905807b936081480f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8fe54cf4ba01d094700a587b4efdf46a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a8fe54cf4ba01d094700a587b4efdf46a">userMovedPanPot</a> (int channelNum, float newPanPosition, bool delta=false)</td></tr>
+<tr class="separator:a8fe54cf4ba01d094700a587b4efdf46a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12114db057354a64e0f1dc8a16ed4da3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a12114db057354a64e0f1dc8a16ed4da3">userMovedMasterLevelFader</a> (float newLevel, bool delta=false)</td></tr>
+<tr class="separator:a12114db057354a64e0f1dc8a16ed4da3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a76950c9b2a641d7e53e42a625b686f96"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a76950c9b2a641d7e53e42a625b686f96">userMovedMasterPanPot</a> (float newLevel)</td></tr>
 <tr class="separator:a76950c9b2a641d7e53e42a625b686f96"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae161e8a9df7738c616612d03d4c5b183"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#ae161e8a9df7738c616612d03d4c5b183">userMovedAux</a> (int channelNum, float newPosition)</td></tr>
@@ -418,8 +420,12 @@ Public Attributes</h2></td></tr>
 <tr class="separator:ae26c3cf2d983524f2842787e08add5e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8abce7e5372f17f9e163aa881aa15271"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a8abce7e5372f17f9e163aa881aa15271">needsMidiChannel</a> = true</td></tr>
 <tr class="separator:a8abce7e5372f17f9e163aa881aa15271"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f2749aa30c3cbef5bca8b61838f29be"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a7f2749aa30c3cbef5bca8b61838f29be">midiChannelName</a></td></tr>
+<tr class="separator:a7f2749aa30c3cbef5bca8b61838f29be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a091383f8dbeb87b2e34192671085dc87"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a091383f8dbeb87b2e34192671085dc87">needsMidiBackChannel</a> = false</td></tr>
 <tr class="separator:a091383f8dbeb87b2e34192671085dc87"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47f051c5cd94b2b738e3cd1576589bc0"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a47f051c5cd94b2b738e3cd1576589bc0">midiBackChannelName</a></td></tr>
+<tr class="separator:a47f051c5cd94b2b738e3cd1576589bc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aae7a67ad4b7d9e6ff4f35c3d0941515c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#aae7a67ad4b7d9e6ff4f35c3d0941515c">needsOSCSocket</a> = false</td></tr>
 <tr class="separator:aae7a67ad4b7d9e6ff4f35c3d0941515c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad8549e5253f75cef583a255e97f52d28"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#ad8549e5253f75cef583a255e97f52d28">wantsClock</a> = false</td></tr>
@@ -2093,6 +2099,23 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a66cdb38993206784b68190d44160c806"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a66cdb38993206784b68190d44160c806">&#9670;&nbsp;</a></span>isSafeRecording()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion_engine::ControlSurface::isSafeRecording </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ab68b87982cd5b9e4643e355167932679"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab68b87982cd5b9e4643e355167932679">&#9670;&nbsp;</a></span>sendMidiCommandToController() <span class="overload">[1/2]</span></h2>
 
@@ -2163,8 +2186,8 @@ template&lt;size_t size&gt; </div>
 
 </div>
 </div>
-<a id="a8fd63d7b7f020b550d47d1b610461a5c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8fd63d7b7f020b550d47d1b610461a5c">&#9670;&nbsp;</a></span>userMovedFader()</h2>
+<a id="ac959ce0e8af4868905807b936081480f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac959ce0e8af4868905807b936081480f">&#9670;&nbsp;</a></span>userMovedFader()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2179,7 +2202,13 @@ template&lt;size_t size&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>newFaderPosition</em>&#160;</td>
+          <td class="paramname"><em>newFaderPosition</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>delta</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2191,8 +2220,8 @@ template&lt;size_t size&gt; </div>
 
 </div>
 </div>
-<a id="a1dab6ebf58445d793bf86114a833bcd6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1dab6ebf58445d793bf86114a833bcd6">&#9670;&nbsp;</a></span>userMovedPanPot()</h2>
+<a id="a8fe54cf4ba01d094700a587b4efdf46a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8fe54cf4ba01d094700a587b4efdf46a">&#9670;&nbsp;</a></span>userMovedPanPot()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2207,7 +2236,13 @@ template&lt;size_t size&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>newPanPosition</em>&#160;</td>
+          <td class="paramname"><em>newPanPosition</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>delta</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2219,8 +2254,8 @@ template&lt;size_t size&gt; </div>
 
 </div>
 </div>
-<a id="a18ae159b78838f3060eede299afe7b8f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a18ae159b78838f3060eede299afe7b8f">&#9670;&nbsp;</a></span>userMovedMasterLevelFader()</h2>
+<a id="a12114db057354a64e0f1dc8a16ed4da3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a12114db057354a64e0f1dc8a16ed4da3">&#9670;&nbsp;</a></span>userMovedMasterLevelFader()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2229,8 +2264,18 @@ template&lt;size_t size&gt; </div>
           <td class="memname">void tracktion_engine::ControlSurface::userMovedMasterLevelFader </td>
           <td>(</td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>newLevel</em></td><td>)</td>
+          <td class="paramname"><em>newLevel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>delta</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -3858,6 +3903,20 @@ template&lt;size_t size&gt; </div>
 
 </div>
 </div>
+<a id="a7f2749aa30c3cbef5bca8b61838f29be"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7f2749aa30c3cbef5bca8b61838f29be">&#9670;&nbsp;</a></span>midiChannelName</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::String tracktion_engine::ControlSurface::midiChannelName</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a091383f8dbeb87b2e34192671085dc87"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a091383f8dbeb87b2e34192671085dc87">&#9670;&nbsp;</a></span>needsMidiBackChannel</h2>
 
@@ -3866,6 +3925,20 @@ template&lt;size_t size&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">bool tracktion_engine::ControlSurface::needsMidiBackChannel = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a47f051c5cd94b2b738e3cd1576589bc0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a47f051c5cd94b2b738e3cd1576589bc0">&#9670;&nbsp;</a></span>midiBackChannelName</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::String tracktion_engine::ControlSurface::midiBackChannelName</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -4118,7 +4191,7 @@ template&lt;size_t size&gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Jan 15 2022 01:37:36 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Jan 15 2022 15:07:40 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>
