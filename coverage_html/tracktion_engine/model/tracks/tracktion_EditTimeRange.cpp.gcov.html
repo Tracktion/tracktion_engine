@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-14 18:30:14</td>
+            <td class="headerValue">2022-01-15 01:49:39</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">5</td>
@@ -76,17 +76,17 @@
 <a name="14"><span class="lineNum">      14 </span><span class="lineCov">          3 : EditTimeRange::EditTimeRange (double s, double e) : start (s), end (e)</span></a>
 <a name="15"><span class="lineNum">      15 </span>            : {</a>
 <a name="16"><span class="lineNum">      16 </span>            :     jassert (s &lt;= e);</a>
-<a name="17"><span class="lineNum">      17 </span><span class="lineCov">       3893 : }</span></a>
+<a name="17"><span class="lineNum">      17 </span><span class="lineCov">       3894 : }</span></a>
 <a name="18"><span class="lineNum">      18 </span>            : </a>
-<a name="19"><span class="lineNum">      19 </span><span class="lineCov">     643137 : EditTimeRange::EditTimeRange (juce::Range&lt;double&gt; timeRange)</span></a>
-<a name="20"><span class="lineNum">      20 </span><span class="lineCov">     643137 :     : EditTimeRange (timeRange.getStart(), timeRange.getEnd())</span></a>
+<a name="19"><span class="lineNum">      19 </span><span class="lineCov">     639931 : EditTimeRange::EditTimeRange (juce::Range&lt;double&gt; timeRange)</span></a>
+<a name="20"><span class="lineNum">      20 </span><span class="lineCov">     639931 :     : EditTimeRange (timeRange.getStart(), timeRange.getEnd())</span></a>
 <a name="21"><span class="lineNum">      21 </span>            : {</a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineCov">     643137 : }</span></a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineCov">     639931 : }</span></a>
 <a name="23"><span class="lineNum">      23 </span>            : </a>
-<a name="24"><span class="lineNum">      24 </span><span class="lineCov">       3893 : EditTimeRange EditTimeRange::between (double time1, double time2)</span></a>
+<a name="24"><span class="lineNum">      24 </span><span class="lineCov">       3894 : EditTimeRange EditTimeRange::between (double time1, double time2)</span></a>
 <a name="25"><span class="lineNum">      25 </span>            : {</a>
 <a name="26"><span class="lineNum">      26 </span>            :     return time1 &lt;= time2 ? EditTimeRange (time1, time2)</a>
-<a name="27"><span class="lineNum">      27 </span><span class="lineCov">       3893 :                           : EditTimeRange (time2, time1);</span></a>
+<a name="27"><span class="lineNum">      27 </span><span class="lineCov">       3894 :                           : EditTimeRange (time2, time1);</span></a>
 <a name="28"><span class="lineNum">      28 </span>            : }</a>
 <a name="29"><span class="lineNum">      29 </span>            : </a>
 <a name="30"><span class="lineNum">      30 </span><span class="lineCov">         19 : EditTimeRange EditTimeRange::withStartAndLength (double startValue, double length)</span></a>
@@ -170,7 +170,7 @@
 <a name="108"><span class="lineNum">     108 </span><span class="lineNoCov">          0 :     return { start, start + std::max (0.0, newLength) };</span></a>
 <a name="109"><span class="lineNum">     109 </span>            : }</a>
 <a name="110"><span class="lineNum">     110 </span>            : </a>
-<a name="111"><span class="lineNum">     111 </span><span class="lineCov">     163206 : EditTimeRange EditTimeRange::operator+ (double amount) const</span></a>
+<a name="111"><span class="lineNum">     111 </span><span class="lineCov">     162342 : EditTimeRange EditTimeRange::operator+ (double amount) const</span></a>
 <a name="112"><span class="lineNum">     112 </span>            : {</a>
 <a name="113"><span class="lineNum">     113 </span><span class="lineNoCov">          0 :     return { start + amount, end + amount };</span></a>
 <a name="114"><span class="lineNum">     114 </span>            : }</a>

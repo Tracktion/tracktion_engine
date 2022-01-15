@@ -31649,6 +31649,13 @@
       <arglist>(const juce::String &amp;name, Protocol)</arglist>
     </member>
     <member kind="function">
+      <type>ExternalController *</type>
+      <name>addController</name>
+      <anchorfile>classtracktion__engine_1_1ExternalControllerManager.html</anchorfile>
+      <anchor>ab378da0ac6ec85484a4d8e18ff17b55f</anchor>
+      <arglist>(ControlSurface *)</arglist>
+    </member>
+    <member kind="function">
       <type>void</type>
       <name>deleteController</name>
       <anchorfile>classtracktion__engine_1_1ExternalControllerManager.html</anchorfile>
