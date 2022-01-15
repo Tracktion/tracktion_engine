@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-15 15:21:12</td>
+            <td class="headerValue">2022-01-15 16:18:18</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -114,15 +114,15 @@
 <a name="52"><span class="lineNum">      52 </span>            : </a>
 <a name="53"><span class="lineNum">      53 </span>            :     /** Returns the sample rate of the current process block. */</a>
 <a name="54"><span class="lineNum">      54 </span>            :     //[[expects: processState]]</a>
-<a name="55"><span class="lineNum">      55 </span><span class="lineCov">       3926 :     double getSampleRate() const                            { return processState.sampleRate; }</span></a>
+<a name="55"><span class="lineNum">      55 </span><span class="lineCov">       3874 :     double getSampleRate() const                            { return processState.sampleRate; }</span></a>
 <a name="56"><span class="lineNum">      56 </span>            : </a>
 <a name="57"><span class="lineNum">      57 </span>            :     /** Returns the timeline sample range of the current process block. */</a>
 <a name="58"><span class="lineNum">      58 </span>            :     //[[expects: processState]]</a>
-<a name="59"><span class="lineNum">      59 </span><span class="lineCov">     636192 :     juce::Range&lt;int64_t&gt; getTimelineSampleRange() const     { return processState.timelineSampleRange; }</span></a>
+<a name="59"><span class="lineNum">      59 </span><span class="lineCov">     637996 :     juce::Range&lt;int64_t&gt; getTimelineSampleRange() const     { return processState.timelineSampleRange; }</span></a>
 <a name="60"><span class="lineNum">      60 </span>            : </a>
 <a name="61"><span class="lineNum">      61 </span>            :     /** Returns the edit time range (in seconds) of the current process block. */</a>
 <a name="62"><span class="lineNum">      62 </span>            :     //[[expects: processState]]</a>
-<a name="63"><span class="lineNum">      63 </span><span class="lineCov">     162896 :     EditTimeRange getEditTimeRange() const                  { return processState.editTimeRange; }</span></a>
+<a name="63"><span class="lineNum">      63 </span><span class="lineCov">     163488 :     EditTimeRange getEditTimeRange() const                  { return processState.editTimeRange; }</span></a>
 <a name="64"><span class="lineNum">      64 </span>            : </a>
 <a name="65"><span class="lineNum">      65 </span>            :     /** Returns the reference sample range (from the DeviceManager) of the current process block. */</a>
 <a name="66"><span class="lineNum">      66 </span>            :     //[[expects: processState]]</a>
@@ -130,10 +130,10 @@
 <a name="68"><span class="lineNum">      68 </span>            : </a>
 <a name="69"><span class="lineNum">      69 </span>            :     //==============================================================================</a>
 <a name="70"><span class="lineNum">      70 </span>            :     /** Returns the PlayHeadState in use. */</a>
-<a name="71"><span class="lineNum">      71 </span><span class="lineCov">     811274 :     tracktion_graph::PlayHeadState&amp; getPlayHeadState()      { return processState.playHeadState; }</span></a>
+<a name="71"><span class="lineNum">      71 </span><span class="lineCov">     813572 :     tracktion_graph::PlayHeadState&amp; getPlayHeadState()      { return processState.playHeadState; }</span></a>
 <a name="72"><span class="lineNum">      72 </span>            : </a>
 <a name="73"><span class="lineNum">      73 </span>            :     /** Returns the PlayHead in use. */</a>
-<a name="74"><span class="lineNum">      74 </span><span class="lineCov">     371510 :     tracktion_graph::PlayHead&amp; getPlayHead()                { return getPlayHeadState().playHead; }</span></a>
+<a name="74"><span class="lineNum">      74 </span><span class="lineCov">     372651 :     tracktion_graph::PlayHead&amp; getPlayHead()                { return getPlayHeadState().playHead; }</span></a>
 <a name="75"><span class="lineNum">      75 </span>            : </a>
 <a name="76"><span class="lineNum">      76 </span>            : protected:</a>
 <a name="77"><span class="lineNum">      77 </span>            :     //==============================================================================</a>
