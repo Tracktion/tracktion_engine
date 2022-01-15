@@ -66,6 +66,7 @@ public:
     };
 
     bool createCustomController (const juce::String& name, Protocol);
+    ExternalController* addController (ControlSurface*);
     void deleteController (ExternalController*);
 
     //==============================================================================

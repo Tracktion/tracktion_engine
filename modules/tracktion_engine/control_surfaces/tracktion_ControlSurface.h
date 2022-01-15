@@ -363,7 +363,7 @@ public:
 
     int numAuxes = 0;
     int numCharactersForAuxLabels = 0;
-    bool wantsAuxBanks = 0;
+    bool wantsAuxBanks = false;
     bool followsTrackSelection = false;
 
     Engine& engine;

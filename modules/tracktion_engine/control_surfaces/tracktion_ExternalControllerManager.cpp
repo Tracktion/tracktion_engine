@@ -249,6 +249,37 @@ bool ExternalControllerManager::createCustomController (const juce::String& name
     return true;
 }
 
+ExternalController* ExternalControllerManager::addController (ControlSurface* c)
+{
+    CRASH_TRACER
+
+    int outPort = 9000, inPort = 8000;
+    // Find free UDP ports for OSC input and output
+    if (c->needsOSCSocket)
+    {
+        for (auto device : devices)
+        {
+            if (device->needsOSCSocket())
+            {
+                outPort = std::max (outPort, device->getOSCOutputPort() + 1);
+                inPort  = std::max (inPort,  device->getOSCInputPort() + 1);
+            }
+        }
+    }
+
+    if (auto ec = addNewController (c))
+    {
+        if (c->needsOSCSocket)
+        {
+            ec->setOSCOutputPort (outPort);
+            ec->setOSCInputPort (inPort);
+        }
+        sendChangeMessage();
+        return ec;
+    }
+    return nullptr;
+}
+
 void ExternalControllerManager::deleteController (ExternalController* c)
 {
     CRASH_TRACER
