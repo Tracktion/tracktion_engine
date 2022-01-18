@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-15 16:18:18</td>
+            <td class="headerValue">2022-01-18 00:58:04</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -244,22 +244,27 @@
 <a name="182"><span class="lineNum">     182 </span>            :     juce::Array&lt;juce::MidiMessage&gt; pendingMidiMessages;</a>
 <a name="183"><span class="lineNum">     183 </span>            :     juce::CriticalSection incomingMidiLock;</a>
 <a name="184"><span class="lineNum">     184 </span>            : </a>
-<a name="185"><span class="lineNum">     185 </span>            :     void changeFaderBank (int delta, bool moveSelection);</a>
-<a name="186"><span class="lineNum">     186 </span>            :     void changeParamBank (int delta);</a>
-<a name="187"><span class="lineNum">     187 </span>            :     void updateParamList();</a>
-<a name="188"><span class="lineNum">     188 </span>            :     void changeMarkerBank (int delta);</a>
-<a name="189"><span class="lineNum">     189 </span>            :     void changeAuxBank (int delta);</a>
-<a name="190"><span class="lineNum">     190 </span>            : </a>
-<a name="191"><span class="lineNum">     191 </span>            :     void userMovedParameterControl (int paramNumber, float newValue);</a>
-<a name="192"><span class="lineNum">     192 </span>            :     void userPressedParameterControl (int paramNumber);</a>
-<a name="193"><span class="lineNum">     193 </span>            :     void userPressedGoToMarker (int marker);</a>
-<a name="194"><span class="lineNum">     194 </span>            : </a>
-<a name="195"><span class="lineNum">     195 </span>            :     Plugin* getCurrentPlugin() const;</a>
-<a name="196"><span class="lineNum">     196 </span>            : </a>
-<a name="197"><span class="lineNum">     197 </span>            :     bool wantsClock;</a>
-<a name="198"><span class="lineNum">     198 </span>            : };</a>
+<a name="185"><span class="lineNum">     185 </span>            :     int getMarkerBankOffset() const   { return startMarkerNumber; }</a>
+<a name="186"><span class="lineNum">     186 </span>            :     int getFaderBankOffset() const    { return channelStart;      }</a>
+<a name="187"><span class="lineNum">     187 </span>            :     int getAuxBankOffset() const      { return auxBank;           }</a>
+<a name="188"><span class="lineNum">     188 </span>            :     int getParamBankOffset() const    { return startParamNumber;  }</a>
+<a name="189"><span class="lineNum">     189 </span>            : </a>
+<a name="190"><span class="lineNum">     190 </span>            :     void changeFaderBank (int delta, bool moveSelection);</a>
+<a name="191"><span class="lineNum">     191 </span>            :     void changeParamBank (int delta);</a>
+<a name="192"><span class="lineNum">     192 </span>            :     void updateParamList();</a>
+<a name="193"><span class="lineNum">     193 </span>            :     void changeMarkerBank (int delta);</a>
+<a name="194"><span class="lineNum">     194 </span>            :     void changeAuxBank (int delta);</a>
+<a name="195"><span class="lineNum">     195 </span>            : </a>
+<a name="196"><span class="lineNum">     196 </span>            :     void userMovedParameterControl (int paramNumber, float newValue);</a>
+<a name="197"><span class="lineNum">     197 </span>            :     void userPressedParameterControl (int paramNumber);</a>
+<a name="198"><span class="lineNum">     198 </span>            :     void userPressedGoToMarker (int marker);</a>
 <a name="199"><span class="lineNum">     199 </span>            : </a>
-<a name="200"><span class="lineNum">     200 </span>            : } // namespace tracktion_engine</a>
+<a name="200"><span class="lineNum">     200 </span>            :     Plugin* getCurrentPlugin() const;</a>
+<a name="201"><span class="lineNum">     201 </span>            : </a>
+<a name="202"><span class="lineNum">     202 </span>            :     bool wantsClock;</a>
+<a name="203"><span class="lineNum">     203 </span>            : };</a>
+<a name="204"><span class="lineNum">     204 </span>            : </a>
+<a name="205"><span class="lineNum">     205 </span>            : } // namespace tracktion_engine</a>
 </pre>
       </td>
     </tr>

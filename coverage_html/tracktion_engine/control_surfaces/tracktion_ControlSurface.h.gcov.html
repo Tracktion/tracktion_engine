@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-15 16:18:18</td>
+            <td class="headerValue">2022-01-18 00:58:04</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -259,200 +259,208 @@
 <a name="197"><span class="lineNum">     197 </span>            :     // but your custom app code may not</a>
 <a name="198"><span class="lineNum">     198 </span>            :     bool isSafeRecording() const;</a>
 <a name="199"><span class="lineNum">     199 </span>            : </a>
-<a name="200"><span class="lineNum">     200 </span>            :     // sends a MIDI message to the device's back-channel</a>
-<a name="201"><span class="lineNum">     201 </span>            :     void sendMidiCommandToController (const void* midiData, int numBytes);</a>
-<a name="202"><span class="lineNum">     202 </span>            :     void sendMidiCommandToController (const juce::MidiMessage&amp;);</a>
-<a name="203"><span class="lineNum">     203 </span>            : </a>
-<a name="204"><span class="lineNum">     204 </span>            :     template &lt;size_t size&gt;</a>
-<a name="205"><span class="lineNum">     205 </span>            :     void sendMidiArray (const uint8_t (&amp;rawData)[size])   { sendMidiCommandToController (rawData, (int) size); }</a>
-<a name="206"><span class="lineNum">     206 </span>            : </a>
-<a name="207"><span class="lineNum">     207 </span>            :     // tells tracktion that the user has moved a fader.</a>
-<a name="208"><span class="lineNum">     208 </span>            :     // the channel number is the physical channel on the device, regardless of bank selection</a>
-<a name="209"><span class="lineNum">     209 </span>            :     // range 0 to 1.0 or -1.0 to 1.0</a>
-<a name="210"><span class="lineNum">     210 </span>            :     // delta false means absolute position, otherwise adjust by delta</a>
-<a name="211"><span class="lineNum">     211 </span>            :     void userMovedFader (int channelNum, float newFaderPosition, bool delta = false);</a>
-<a name="212"><span class="lineNum">     212 </span>            : </a>
-<a name="213"><span class="lineNum">     213 </span>            :     // tells tracktion that the user has moved a pan pot</a>
-<a name="214"><span class="lineNum">     214 </span>            :     // the channel number is the physical channel on the device, regardless of bank selection</a>
-<a name="215"><span class="lineNum">     215 </span>            :     // range -1.0 to 1.0</a>
-<a name="216"><span class="lineNum">     216 </span>            :     // delta false means absolute position, otherwise adjust by delta</a>
-<a name="217"><span class="lineNum">     217 </span>            :     void userMovedPanPot (int channelNum, float newPanPosition, bool delta = false);</a>
-<a name="218"><span class="lineNum">     218 </span>            : </a>
-<a name="219"><span class="lineNum">     219 </span>            :     // tells tracktion that the master fader has moved.</a>
-<a name="220"><span class="lineNum">     220 </span>            :     void userMovedMasterLevelFader (float newLevel, bool delta = false);</a>
-<a name="221"><span class="lineNum">     221 </span>            :     void userMovedMasterPanPot (float newLevel);</a>
-<a name="222"><span class="lineNum">     222 </span>            : </a>
-<a name="223"><span class="lineNum">     223 </span>            :     void userMovedAux (int channelNum, float newPosition);</a>
-<a name="224"><span class="lineNum">     224 </span>            :     void userPressedAux (int channelNum);</a>
-<a name="225"><span class="lineNum">     225 </span>            :     void userMovedQuickParam (float newLevel);</a>
+<a name="200"><span class="lineNum">     200 </span>            :     // Get the current bank offset. You shouldn't need to know this,</a>
+<a name="201"><span class="lineNum">     201 </span>            :     // just work with physical channel numbers. But it may come in useful</a>
+<a name="202"><span class="lineNum">     202 </span>            :     // rarely if you need to interact with the edit directly</a>
+<a name="203"><span class="lineNum">     203 </span>            :     int getMarkerBankOffset() const;</a>
+<a name="204"><span class="lineNum">     204 </span>            :     int getFaderBankOffset() const;</a>
+<a name="205"><span class="lineNum">     205 </span>            :     int getAuxBankOffset() const;</a>
+<a name="206"><span class="lineNum">     206 </span>            :     int getParamBankOffset() const;</a>
+<a name="207"><span class="lineNum">     207 </span>            : </a>
+<a name="208"><span class="lineNum">     208 </span>            :     // sends a MIDI message to the device's back-channel</a>
+<a name="209"><span class="lineNum">     209 </span>            :     void sendMidiCommandToController (const void* midiData, int numBytes);</a>
+<a name="210"><span class="lineNum">     210 </span>            :     void sendMidiCommandToController (const juce::MidiMessage&amp;);</a>
+<a name="211"><span class="lineNum">     211 </span>            : </a>
+<a name="212"><span class="lineNum">     212 </span>            :     template &lt;size_t size&gt;</a>
+<a name="213"><span class="lineNum">     213 </span>            :     void sendMidiArray (const uint8_t (&amp;rawData)[size])   { sendMidiCommandToController (rawData, (int) size); }</a>
+<a name="214"><span class="lineNum">     214 </span>            : </a>
+<a name="215"><span class="lineNum">     215 </span>            :     // tells tracktion that the user has moved a fader.</a>
+<a name="216"><span class="lineNum">     216 </span>            :     // the channel number is the physical channel on the device, regardless of bank selection</a>
+<a name="217"><span class="lineNum">     217 </span>            :     // range 0 to 1.0 or -1.0 to 1.0</a>
+<a name="218"><span class="lineNum">     218 </span>            :     // delta false means absolute position, otherwise adjust by delta</a>
+<a name="219"><span class="lineNum">     219 </span>            :     void userMovedFader (int channelNum, float newFaderPosition, bool delta = false);</a>
+<a name="220"><span class="lineNum">     220 </span>            : </a>
+<a name="221"><span class="lineNum">     221 </span>            :     // tells tracktion that the user has moved a pan pot</a>
+<a name="222"><span class="lineNum">     222 </span>            :     // the channel number is the physical channel on the device, regardless of bank selection</a>
+<a name="223"><span class="lineNum">     223 </span>            :     // range -1.0 to 1.0</a>
+<a name="224"><span class="lineNum">     224 </span>            :     // delta false means absolute position, otherwise adjust by delta</a>
+<a name="225"><span class="lineNum">     225 </span>            :     void userMovedPanPot (int channelNum, float newPanPosition, bool delta = false);</a>
 <a name="226"><span class="lineNum">     226 </span>            : </a>
-<a name="227"><span class="lineNum">     227 </span>            :     // these tell tracktion about buttons being pressed</a>
-<a name="228"><span class="lineNum">     228 </span>            :     void userPressedSolo (int channelNum);</a>
-<a name="229"><span class="lineNum">     229 </span>            :     void userPressedSoloIsolate (int channelNum);</a>
-<a name="230"><span class="lineNum">     230 </span>            :     void userPressedMute (int channelNum, bool muteVolumeControl);</a>
-<a name="231"><span class="lineNum">     231 </span>            :     void userSelectedTrack (int channelNum);</a>
-<a name="232"><span class="lineNum">     232 </span>            :     void userSelectedClipInTrack (int channelNum);</a>
-<a name="233"><span class="lineNum">     233 </span>            :     void userSelectedPluginInTrack (int channelNum);</a>
-<a name="234"><span class="lineNum">     234 </span>            :     void userPressedRecEnable (int channelNum, bool enableEtoE);</a>
-<a name="235"><span class="lineNum">     235 </span>            :     void userPressedPlay();</a>
-<a name="236"><span class="lineNum">     236 </span>            :     void userPressedRecord();</a>
-<a name="237"><span class="lineNum">     237 </span>            :     void userPressedStop();</a>
-<a name="238"><span class="lineNum">     238 </span>            :     void userPressedHome(); // return to zero</a>
-<a name="239"><span class="lineNum">     239 </span>            :     void userPressedEnd();</a>
-<a name="240"><span class="lineNum">     240 </span>            :     void userPressedMarkIn();</a>
-<a name="241"><span class="lineNum">     241 </span>            :     void userPressedMarkOut();</a>
-<a name="242"><span class="lineNum">     242 </span>            :     void userPressedAutomationReading();</a>
-<a name="243"><span class="lineNum">     243 </span>            :     void userPressedAutomationWriting();</a>
-<a name="244"><span class="lineNum">     244 </span>            :     void userToggledBeatsSecondsMode();</a>
-<a name="245"><span class="lineNum">     245 </span>            :     void userPressedSave();</a>
-<a name="246"><span class="lineNum">     246 </span>            :     void userPressedSaveAs();</a>
-<a name="247"><span class="lineNum">     247 </span>            :     void userPressedArmAll();</a>
-<a name="248"><span class="lineNum">     248 </span>            :     void userPressedJumpToMarkIn();</a>
-<a name="249"><span class="lineNum">     249 </span>            :     void userPressedJumpToMarkOut();</a>
-<a name="250"><span class="lineNum">     250 </span>            :     void userPressedZoomIn();</a>
-<a name="251"><span class="lineNum">     251 </span>            :     void userPressedZoomOut();</a>
-<a name="252"><span class="lineNum">     252 </span>            :     void userPressedZoomToFit();</a>
-<a name="253"><span class="lineNum">     253 </span>            :     void userPressedCreateMarker();</a>
-<a name="254"><span class="lineNum">     254 </span>            :     void userPressedNextMarker();</a>
-<a name="255"><span class="lineNum">     255 </span>            :     void userPressedPreviousMarker();</a>
-<a name="256"><span class="lineNum">     256 </span>            :     void userPressedRedo();</a>
-<a name="257"><span class="lineNum">     257 </span>            :     void userPressedUndo();</a>
-<a name="258"><span class="lineNum">     258 </span>            :     void userPressedAbort();</a>
-<a name="259"><span class="lineNum">     259 </span>            :     void userPressedAbortRestart();</a>
-<a name="260"><span class="lineNum">     260 </span>            :     void userPressedCut();</a>
-<a name="261"><span class="lineNum">     261 </span>            :     void userPressedCopy();</a>
-<a name="262"><span class="lineNum">     262 </span>            :     void userPressedPaste (bool insert);</a>
-<a name="263"><span class="lineNum">     263 </span>            :     void userPressedDelete (bool marked);</a>
-<a name="264"><span class="lineNum">     264 </span>            :     void userPressedZoomFitToTracks();</a>
-<a name="265"><span class="lineNum">     265 </span>            :     void userPressedInsertTempoChange();</a>
-<a name="266"><span class="lineNum">     266 </span>            :     void userPressedInsertPitchChange();</a>
-<a name="267"><span class="lineNum">     267 </span>            :     void userPressedInsertTimeSigChange();</a>
-<a name="268"><span class="lineNum">     268 </span>            :     void userToggledVideoWindow();</a>
-<a name="269"><span class="lineNum">     269 </span>            :     void userToggledMixerWindow (bool fullscreen);</a>
-<a name="270"><span class="lineNum">     270 </span>            :     void userToggledMidiEditorWindow (bool fullscreen);</a>
-<a name="271"><span class="lineNum">     271 </span>            :     void userToggledTrackEditorWindow();</a>
-<a name="272"><span class="lineNum">     272 </span>            :     void userToggledBrowserWindow();</a>
-<a name="273"><span class="lineNum">     273 </span>            :     void userToggledActionsWindow();</a>
-<a name="274"><span class="lineNum">     274 </span>            :     void userPressedUserAction (int);</a>
-<a name="275"><span class="lineNum">     275 </span>            :     void userPressedFreeze();</a>
-<a name="276"><span class="lineNum">     276 </span>            : </a>
-<a name="277"><span class="lineNum">     277 </span>            :     void userPressedClearAllSolo();</a>
-<a name="278"><span class="lineNum">     278 </span>            :     void userPressedClearAllMute();</a>
-<a name="279"><span class="lineNum">     279 </span>            : </a>
-<a name="280"><span class="lineNum">     280 </span>            :     void userToggledLoopOnOff();</a>
-<a name="281"><span class="lineNum">     281 </span>            :     void userToggledPunchOnOff();</a>
-<a name="282"><span class="lineNum">     282 </span>            :     void userToggledClickOnOff();</a>
-<a name="283"><span class="lineNum">     283 </span>            :     void userToggledSnapOnOff();</a>
-<a name="284"><span class="lineNum">     284 </span>            :     void userToggledSlaveOnOff();</a>
-<a name="285"><span class="lineNum">     285 </span>            :     void userToggledEtoE();</a>
-<a name="286"><span class="lineNum">     286 </span>            :     void userToggledScroll();</a>
+<a name="227"><span class="lineNum">     227 </span>            :     // tells tracktion that the master fader has moved.</a>
+<a name="228"><span class="lineNum">     228 </span>            :     void userMovedMasterLevelFader (float newLevel, bool delta = false);</a>
+<a name="229"><span class="lineNum">     229 </span>            :     void userMovedMasterPanPot (float newLevel);</a>
+<a name="230"><span class="lineNum">     230 </span>            : </a>
+<a name="231"><span class="lineNum">     231 </span>            :     void userMovedAux (int channelNum, float newPosition);</a>
+<a name="232"><span class="lineNum">     232 </span>            :     void userPressedAux (int channelNum);</a>
+<a name="233"><span class="lineNum">     233 </span>            :     void userMovedQuickParam (float newLevel);</a>
+<a name="234"><span class="lineNum">     234 </span>            : </a>
+<a name="235"><span class="lineNum">     235 </span>            :     // these tell tracktion about buttons being pressed</a>
+<a name="236"><span class="lineNum">     236 </span>            :     void userPressedSolo (int channelNum);</a>
+<a name="237"><span class="lineNum">     237 </span>            :     void userPressedSoloIsolate (int channelNum);</a>
+<a name="238"><span class="lineNum">     238 </span>            :     void userPressedMute (int channelNum, bool muteVolumeControl);</a>
+<a name="239"><span class="lineNum">     239 </span>            :     void userSelectedTrack (int channelNum);</a>
+<a name="240"><span class="lineNum">     240 </span>            :     void userSelectedClipInTrack (int channelNum);</a>
+<a name="241"><span class="lineNum">     241 </span>            :     void userSelectedPluginInTrack (int channelNum);</a>
+<a name="242"><span class="lineNum">     242 </span>            :     void userPressedRecEnable (int channelNum, bool enableEtoE);</a>
+<a name="243"><span class="lineNum">     243 </span>            :     void userPressedPlay();</a>
+<a name="244"><span class="lineNum">     244 </span>            :     void userPressedRecord();</a>
+<a name="245"><span class="lineNum">     245 </span>            :     void userPressedStop();</a>
+<a name="246"><span class="lineNum">     246 </span>            :     void userPressedHome(); // return to zero</a>
+<a name="247"><span class="lineNum">     247 </span>            :     void userPressedEnd();</a>
+<a name="248"><span class="lineNum">     248 </span>            :     void userPressedMarkIn();</a>
+<a name="249"><span class="lineNum">     249 </span>            :     void userPressedMarkOut();</a>
+<a name="250"><span class="lineNum">     250 </span>            :     void userPressedAutomationReading();</a>
+<a name="251"><span class="lineNum">     251 </span>            :     void userPressedAutomationWriting();</a>
+<a name="252"><span class="lineNum">     252 </span>            :     void userToggledBeatsSecondsMode();</a>
+<a name="253"><span class="lineNum">     253 </span>            :     void userPressedSave();</a>
+<a name="254"><span class="lineNum">     254 </span>            :     void userPressedSaveAs();</a>
+<a name="255"><span class="lineNum">     255 </span>            :     void userPressedArmAll();</a>
+<a name="256"><span class="lineNum">     256 </span>            :     void userPressedJumpToMarkIn();</a>
+<a name="257"><span class="lineNum">     257 </span>            :     void userPressedJumpToMarkOut();</a>
+<a name="258"><span class="lineNum">     258 </span>            :     void userPressedZoomIn();</a>
+<a name="259"><span class="lineNum">     259 </span>            :     void userPressedZoomOut();</a>
+<a name="260"><span class="lineNum">     260 </span>            :     void userPressedZoomToFit();</a>
+<a name="261"><span class="lineNum">     261 </span>            :     void userPressedCreateMarker();</a>
+<a name="262"><span class="lineNum">     262 </span>            :     void userPressedNextMarker();</a>
+<a name="263"><span class="lineNum">     263 </span>            :     void userPressedPreviousMarker();</a>
+<a name="264"><span class="lineNum">     264 </span>            :     void userPressedRedo();</a>
+<a name="265"><span class="lineNum">     265 </span>            :     void userPressedUndo();</a>
+<a name="266"><span class="lineNum">     266 </span>            :     void userPressedAbort();</a>
+<a name="267"><span class="lineNum">     267 </span>            :     void userPressedAbortRestart();</a>
+<a name="268"><span class="lineNum">     268 </span>            :     void userPressedCut();</a>
+<a name="269"><span class="lineNum">     269 </span>            :     void userPressedCopy();</a>
+<a name="270"><span class="lineNum">     270 </span>            :     void userPressedPaste (bool insert);</a>
+<a name="271"><span class="lineNum">     271 </span>            :     void userPressedDelete (bool marked);</a>
+<a name="272"><span class="lineNum">     272 </span>            :     void userPressedZoomFitToTracks();</a>
+<a name="273"><span class="lineNum">     273 </span>            :     void userPressedInsertTempoChange();</a>
+<a name="274"><span class="lineNum">     274 </span>            :     void userPressedInsertPitchChange();</a>
+<a name="275"><span class="lineNum">     275 </span>            :     void userPressedInsertTimeSigChange();</a>
+<a name="276"><span class="lineNum">     276 </span>            :     void userToggledVideoWindow();</a>
+<a name="277"><span class="lineNum">     277 </span>            :     void userToggledMixerWindow (bool fullscreen);</a>
+<a name="278"><span class="lineNum">     278 </span>            :     void userToggledMidiEditorWindow (bool fullscreen);</a>
+<a name="279"><span class="lineNum">     279 </span>            :     void userToggledTrackEditorWindow();</a>
+<a name="280"><span class="lineNum">     280 </span>            :     void userToggledBrowserWindow();</a>
+<a name="281"><span class="lineNum">     281 </span>            :     void userToggledActionsWindow();</a>
+<a name="282"><span class="lineNum">     282 </span>            :     void userPressedUserAction (int);</a>
+<a name="283"><span class="lineNum">     283 </span>            :     void userPressedFreeze();</a>
+<a name="284"><span class="lineNum">     284 </span>            : </a>
+<a name="285"><span class="lineNum">     285 </span>            :     void userPressedClearAllSolo();</a>
+<a name="286"><span class="lineNum">     286 </span>            :     void userPressedClearAllMute();</a>
 <a name="287"><span class="lineNum">     287 </span>            : </a>
-<a name="288"><span class="lineNum">     288 </span>            :     void userSkippedToNextMarkerLeft();</a>
-<a name="289"><span class="lineNum">     289 </span>            :     void userSkippedToNextMarkerRight();</a>
-<a name="290"><span class="lineNum">     290 </span>            :     void userNudgedLeft();</a>
-<a name="291"><span class="lineNum">     291 </span>            :     void userNudgedRight();</a>
-<a name="292"><span class="lineNum">     292 </span>            :     void userZoomedIn();</a>
-<a name="293"><span class="lineNum">     293 </span>            :     void userZoomedOut();</a>
-<a name="294"><span class="lineNum">     294 </span>            :     void userScrolledTracksUp();</a>
-<a name="295"><span class="lineNum">     295 </span>            :     void userScrolledTracksDown();</a>
-<a name="296"><span class="lineNum">     296 </span>            :     void userScrolledTracksLeft();</a>
-<a name="297"><span class="lineNum">     297 </span>            :     void userScrolledTracksRight();</a>
-<a name="298"><span class="lineNum">     298 </span>            :     void userZoomedTracksIn();</a>
-<a name="299"><span class="lineNum">     299 </span>            :     void userZoomedTracksOut();</a>
-<a name="300"><span class="lineNum">     300 </span>            :     void selectOtherObject (SelectableClass::Relationship, bool moveFromCurrentPlugin);</a>
-<a name="301"><span class="lineNum">     301 </span>            :     void muteOrUnmutePluginsInTrack();</a>
-<a name="302"><span class="lineNum">     302 </span>            : </a>
-<a name="303"><span class="lineNum">     303 </span>            :     // tells tracktion to move the fader bank up or down by the specified number of channels.</a>
-<a name="304"><span class="lineNum">     304 </span>            :     // After calling this, tracktion will call back the faderBankChanged() method to tell the</a>
-<a name="305"><span class="lineNum">     305 </span>            :     // device what its new state is.</a>
-<a name="306"><span class="lineNum">     306 </span>            :     void userChangedFaderBanks (int channelNumDelta);</a>
-<a name="307"><span class="lineNum">     307 </span>            : </a>
-<a name="308"><span class="lineNum">     308 </span>            :     // tells tracktion to move the cursor.</a>
-<a name="309"><span class="lineNum">     309 </span>            :     //</a>
-<a name="310"><span class="lineNum">     310 </span>            :     // amount &lt; 0 means moving backwards, amount &gt; 0 forwards</a>
-<a name="311"><span class="lineNum">     311 </span>            :     // magnitude of about 1.0 is a 'normal' speed</a>
-<a name="312"><span class="lineNum">     312 </span>            :     void userMovedJogWheel (float amount);</a>
-<a name="313"><span class="lineNum">     313 </span>            : </a>
-<a name="314"><span class="lineNum">     314 </span>            :     // to allow it to auto-repeat, these tell tracktion when the left/right buttons are pressed and</a>
-<a name="315"><span class="lineNum">     315 </span>            :     // released.</a>
-<a name="316"><span class="lineNum">     316 </span>            :     // (try not to make sure the buttons aren't left stuck down!)</a>
-<a name="317"><span class="lineNum">     317 </span>            :     void userChangedRewindButton (bool isButtonDown);</a>
-<a name="318"><span class="lineNum">     318 </span>            :     void userChangedFastForwardButton (bool isButtonDown);</a>
-<a name="319"><span class="lineNum">     319 </span>            : </a>
-<a name="320"><span class="lineNum">     320 </span>            :     void userMovedParameterControl (int parameter, float newValue);</a>
-<a name="321"><span class="lineNum">     321 </span>            :     void userPressedParameterControl (int paramNumber);</a>
-<a name="322"><span class="lineNum">     322 </span>            : </a>
-<a name="323"><span class="lineNum">     323 </span>            :     void userChangedParameterBank (int deltaParams);</a>
-<a name="324"><span class="lineNum">     324 </span>            :     void userChangedMarkerBank (int deltaMarkers);</a>
-<a name="325"><span class="lineNum">     325 </span>            :     void userPressedGoToMarker (int marker);</a>
-<a name="326"><span class="lineNum">     326 </span>            : </a>
-<a name="327"><span class="lineNum">     327 </span>            :     void userChangedAuxBank (int delta);</a>
-<a name="328"><span class="lineNum">     328 </span>            :     void updateDeviceState();</a>
-<a name="329"><span class="lineNum">     329 </span>            : </a>
-<a name="330"><span class="lineNum">     330 </span>            :     void redrawSelectedPlugin();</a>
-<a name="331"><span class="lineNum">     331 </span>            :     void redrawSelectedTracks();</a>
-<a name="332"><span class="lineNum">     332 </span>            : </a>
-<a name="333"><span class="lineNum">     333 </span>            :     Edit* getEditIfOnEditScreen() const;</a>
+<a name="288"><span class="lineNum">     288 </span>            :     void userToggledLoopOnOff();</a>
+<a name="289"><span class="lineNum">     289 </span>            :     void userToggledPunchOnOff();</a>
+<a name="290"><span class="lineNum">     290 </span>            :     void userToggledClickOnOff();</a>
+<a name="291"><span class="lineNum">     291 </span>            :     void userToggledSnapOnOff();</a>
+<a name="292"><span class="lineNum">     292 </span>            :     void userToggledSlaveOnOff();</a>
+<a name="293"><span class="lineNum">     293 </span>            :     void userToggledEtoE();</a>
+<a name="294"><span class="lineNum">     294 </span>            :     void userToggledScroll();</a>
+<a name="295"><span class="lineNum">     295 </span>            : </a>
+<a name="296"><span class="lineNum">     296 </span>            :     void userSkippedToNextMarkerLeft();</a>
+<a name="297"><span class="lineNum">     297 </span>            :     void userSkippedToNextMarkerRight();</a>
+<a name="298"><span class="lineNum">     298 </span>            :     void userNudgedLeft();</a>
+<a name="299"><span class="lineNum">     299 </span>            :     void userNudgedRight();</a>
+<a name="300"><span class="lineNum">     300 </span>            :     void userZoomedIn();</a>
+<a name="301"><span class="lineNum">     301 </span>            :     void userZoomedOut();</a>
+<a name="302"><span class="lineNum">     302 </span>            :     void userScrolledTracksUp();</a>
+<a name="303"><span class="lineNum">     303 </span>            :     void userScrolledTracksDown();</a>
+<a name="304"><span class="lineNum">     304 </span>            :     void userScrolledTracksLeft();</a>
+<a name="305"><span class="lineNum">     305 </span>            :     void userScrolledTracksRight();</a>
+<a name="306"><span class="lineNum">     306 </span>            :     void userZoomedTracksIn();</a>
+<a name="307"><span class="lineNum">     307 </span>            :     void userZoomedTracksOut();</a>
+<a name="308"><span class="lineNum">     308 </span>            :     void selectOtherObject (SelectableClass::Relationship, bool moveFromCurrentPlugin);</a>
+<a name="309"><span class="lineNum">     309 </span>            :     void muteOrUnmutePluginsInTrack();</a>
+<a name="310"><span class="lineNum">     310 </span>            : </a>
+<a name="311"><span class="lineNum">     311 </span>            :     // tells tracktion to move the fader bank up or down by the specified number of channels.</a>
+<a name="312"><span class="lineNum">     312 </span>            :     // After calling this, tracktion will call back the faderBankChanged() method to tell the</a>
+<a name="313"><span class="lineNum">     313 </span>            :     // device what its new state is.</a>
+<a name="314"><span class="lineNum">     314 </span>            :     void userChangedFaderBanks (int channelNumDelta);</a>
+<a name="315"><span class="lineNum">     315 </span>            : </a>
+<a name="316"><span class="lineNum">     316 </span>            :     // tells tracktion to move the cursor.</a>
+<a name="317"><span class="lineNum">     317 </span>            :     //</a>
+<a name="318"><span class="lineNum">     318 </span>            :     // amount &lt; 0 means moving backwards, amount &gt; 0 forwards</a>
+<a name="319"><span class="lineNum">     319 </span>            :     // magnitude of about 1.0 is a 'normal' speed</a>
+<a name="320"><span class="lineNum">     320 </span>            :     void userMovedJogWheel (float amount);</a>
+<a name="321"><span class="lineNum">     321 </span>            : </a>
+<a name="322"><span class="lineNum">     322 </span>            :     // to allow it to auto-repeat, these tell tracktion when the left/right buttons are pressed and</a>
+<a name="323"><span class="lineNum">     323 </span>            :     // released.</a>
+<a name="324"><span class="lineNum">     324 </span>            :     // (try not to make sure the buttons aren't left stuck down!)</a>
+<a name="325"><span class="lineNum">     325 </span>            :     void userChangedRewindButton (bool isButtonDown);</a>
+<a name="326"><span class="lineNum">     326 </span>            :     void userChangedFastForwardButton (bool isButtonDown);</a>
+<a name="327"><span class="lineNum">     327 </span>            : </a>
+<a name="328"><span class="lineNum">     328 </span>            :     void userMovedParameterControl (int parameter, float newValue);</a>
+<a name="329"><span class="lineNum">     329 </span>            :     void userPressedParameterControl (int paramNumber);</a>
+<a name="330"><span class="lineNum">     330 </span>            : </a>
+<a name="331"><span class="lineNum">     331 </span>            :     void userChangedParameterBank (int deltaParams);</a>
+<a name="332"><span class="lineNum">     332 </span>            :     void userChangedMarkerBank (int deltaMarkers);</a>
+<a name="333"><span class="lineNum">     333 </span>            :     void userPressedGoToMarker (int marker);</a>
 <a name="334"><span class="lineNum">     334 </span>            : </a>
-<a name="335"><span class="lineNum">     335 </span>            :     //==============================================================================</a>
-<a name="336"><span class="lineNum">     336 </span>            :     /** These values need to be set by the subclass.. */</a>
-<a name="337"><span class="lineNum">     337 </span>            :     juce::String deviceDescription;</a>
-<a name="338"><span class="lineNum">     338 </span>            : </a>
-<a name="339"><span class="lineNum">     339 </span>            :     // does this driver need to be able to send MIDI messages</a>
-<a name="340"><span class="lineNum">     340 </span>            :     bool needsMidiChannel = true;</a>
-<a name="341"><span class="lineNum">     341 </span>            : </a>
-<a name="342"><span class="lineNum">     342 </span>            :     // If the midi device always has the same name, set it and device will auto configure</a>
-<a name="343"><span class="lineNum">     343 </span>            :     juce::String midiChannelName;</a>
-<a name="344"><span class="lineNum">     344 </span>            : </a>
-<a name="345"><span class="lineNum">     345 </span>            :     // does this driver need to be able to send MIDI messages back to the</a>
-<a name="346"><span class="lineNum">     346 </span>            :     // controller as well as receive them?</a>
-<a name="347"><span class="lineNum">     347 </span>            :     bool needsMidiBackChannel = false;</a>
-<a name="348"><span class="lineNum">     348 </span>            : </a>
-<a name="349"><span class="lineNum">     349 </span>            :     // If the midi device always has the same name, set it and device will auto configure</a>
-<a name="350"><span class="lineNum">     350 </span>            :     juce::String midiBackChannelName;</a>
-<a name="351"><span class="lineNum">     351 </span>            : </a>
-<a name="352"><span class="lineNum">     352 </span>            :     // does this driver need to be able to communicate via OSC</a>
-<a name="353"><span class="lineNum">     353 </span>            :     bool needsOSCSocket = false;</a>
-<a name="354"><span class="lineNum">     354 </span>            : </a>
-<a name="355"><span class="lineNum">     355 </span>            :     // device wants MIDI clock</a>
-<a name="356"><span class="lineNum">     356 </span>            :     bool wantsClock = false;</a>
-<a name="357"><span class="lineNum">     357 </span>            : </a>
-<a name="358"><span class="lineNum">     358 </span>            :     // can be deleted</a>
-<a name="359"><span class="lineNum">     359 </span>            :     bool deletable = false;</a>
-<a name="360"><span class="lineNum">     360 </span>            : </a>
-<a name="361"><span class="lineNum">     361 </span>            :     // number of physical faders</a>
-<a name="362"><span class="lineNum">     362 </span>            :     int numberOfFaderChannels = 0;</a>
-<a name="363"><span class="lineNum">     363 </span>            :     int numCharactersForTrackNames = 0;</a>
-<a name="364"><span class="lineNum">     364 </span>            : </a>
-<a name="365"><span class="lineNum">     365 </span>            :     // is banking to the right allowed to show empty tracks</a>
-<a name="366"><span class="lineNum">     366 </span>            :     bool allowBankingOffEnd = false;</a>
-<a name="367"><span class="lineNum">     367 </span>            : </a>
-<a name="368"><span class="lineNum">     368 </span>            :     // number of labelled rotary dials that can control things like plugin parameters</a>
-<a name="369"><span class="lineNum">     369 </span>            :     int numParameterControls = 0;</a>
-<a name="370"><span class="lineNum">     370 </span>            :     int numCharactersForParameterLabels = 0;</a>
-<a name="371"><span class="lineNum">     371 </span>            : </a>
-<a name="372"><span class="lineNum">     372 </span>            :     // number of markers that can be displayed</a>
-<a name="373"><span class="lineNum">     373 </span>            :     int numMarkers = 0;</a>
-<a name="374"><span class="lineNum">     374 </span>            :     int numCharactersForMarkerLabels = 0;</a>
+<a name="335"><span class="lineNum">     335 </span>            :     void userChangedAuxBank (int delta);</a>
+<a name="336"><span class="lineNum">     336 </span>            :     void updateDeviceState();</a>
+<a name="337"><span class="lineNum">     337 </span>            : </a>
+<a name="338"><span class="lineNum">     338 </span>            :     void redrawSelectedPlugin();</a>
+<a name="339"><span class="lineNum">     339 </span>            :     void redrawSelectedTracks();</a>
+<a name="340"><span class="lineNum">     340 </span>            : </a>
+<a name="341"><span class="lineNum">     341 </span>            :     Edit* getEditIfOnEditScreen() const;</a>
+<a name="342"><span class="lineNum">     342 </span>            : </a>
+<a name="343"><span class="lineNum">     343 </span>            :     //==============================================================================</a>
+<a name="344"><span class="lineNum">     344 </span>            :     /** These values need to be set by the subclass.. */</a>
+<a name="345"><span class="lineNum">     345 </span>            :     juce::String deviceDescription;</a>
+<a name="346"><span class="lineNum">     346 </span>            : </a>
+<a name="347"><span class="lineNum">     347 </span>            :     // does this driver need to be able to send MIDI messages</a>
+<a name="348"><span class="lineNum">     348 </span>            :     bool needsMidiChannel = true;</a>
+<a name="349"><span class="lineNum">     349 </span>            : </a>
+<a name="350"><span class="lineNum">     350 </span>            :     // If the midi device always has the same name, set it and device will auto configure</a>
+<a name="351"><span class="lineNum">     351 </span>            :     juce::String midiChannelName;</a>
+<a name="352"><span class="lineNum">     352 </span>            : </a>
+<a name="353"><span class="lineNum">     353 </span>            :     // does this driver need to be able to send MIDI messages back to the</a>
+<a name="354"><span class="lineNum">     354 </span>            :     // controller as well as receive them?</a>
+<a name="355"><span class="lineNum">     355 </span>            :     bool needsMidiBackChannel = false;</a>
+<a name="356"><span class="lineNum">     356 </span>            : </a>
+<a name="357"><span class="lineNum">     357 </span>            :     // If the midi device always has the same name, set it and device will auto configure</a>
+<a name="358"><span class="lineNum">     358 </span>            :     juce::String midiBackChannelName;</a>
+<a name="359"><span class="lineNum">     359 </span>            : </a>
+<a name="360"><span class="lineNum">     360 </span>            :     // does this driver need to be able to communicate via OSC</a>
+<a name="361"><span class="lineNum">     361 </span>            :     bool needsOSCSocket = false;</a>
+<a name="362"><span class="lineNum">     362 </span>            : </a>
+<a name="363"><span class="lineNum">     363 </span>            :     // device wants MIDI clock</a>
+<a name="364"><span class="lineNum">     364 </span>            :     bool wantsClock = false;</a>
+<a name="365"><span class="lineNum">     365 </span>            : </a>
+<a name="366"><span class="lineNum">     366 </span>            :     // can be deleted</a>
+<a name="367"><span class="lineNum">     367 </span>            :     bool deletable = false;</a>
+<a name="368"><span class="lineNum">     368 </span>            : </a>
+<a name="369"><span class="lineNum">     369 </span>            :     // number of physical faders</a>
+<a name="370"><span class="lineNum">     370 </span>            :     int numberOfFaderChannels = 0;</a>
+<a name="371"><span class="lineNum">     371 </span>            :     int numCharactersForTrackNames = 0;</a>
+<a name="372"><span class="lineNum">     372 </span>            : </a>
+<a name="373"><span class="lineNum">     373 </span>            :     // is banking to the right allowed to show empty tracks</a>
+<a name="374"><span class="lineNum">     374 </span>            :     bool allowBankingOffEnd = false;</a>
 <a name="375"><span class="lineNum">     375 </span>            : </a>
-<a name="376"><span class="lineNum">     376 </span>            :     int numAuxes = 0;</a>
-<a name="377"><span class="lineNum">     377 </span>            :     int numCharactersForAuxLabels = 0;</a>
-<a name="378"><span class="lineNum">     378 </span>            :     bool wantsAuxBanks = false;</a>
-<a name="379"><span class="lineNum">     379 </span>            :     bool followsTrackSelection = false;</a>
-<a name="380"><span class="lineNum">     380 </span>            : </a>
-<a name="381"><span class="lineNum">     381 </span>            :     Engine&amp; engine;</a>
-<a name="382"><span class="lineNum">     382 </span>            :     ExternalControllerManager&amp; externalControllerManager;</a>
-<a name="383"><span class="lineNum">     383 </span>            :     ExternalController* owner = nullptr;</a>
-<a name="384"><span class="lineNum">     384 </span>            : </a>
-<a name="385"><span class="lineNum">     385 </span>            : private:</a>
-<a name="386"><span class="lineNum">     386 </span>            :     Edit* edit = nullptr;</a>
-<a name="387"><span class="lineNum">     387 </span>            : </a>
-<a name="388"><span class="lineNum">     388 </span>            :     void performIfNotSafeRecording (const std::function&lt;void()&gt;&amp;);</a>
-<a name="389"><span class="lineNum">     389 </span>            : </a>
-<a name="390"><span class="lineNum">     390 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ControlSurface)</a>
-<a name="391"><span class="lineNum">     391 </span>            : };</a>
+<a name="376"><span class="lineNum">     376 </span>            :     // number of labelled rotary dials that can control things like plugin parameters</a>
+<a name="377"><span class="lineNum">     377 </span>            :     int numParameterControls = 0;</a>
+<a name="378"><span class="lineNum">     378 </span>            :     int numCharactersForParameterLabels = 0;</a>
+<a name="379"><span class="lineNum">     379 </span>            : </a>
+<a name="380"><span class="lineNum">     380 </span>            :     // number of markers that can be displayed</a>
+<a name="381"><span class="lineNum">     381 </span>            :     int numMarkers = 0;</a>
+<a name="382"><span class="lineNum">     382 </span>            :     int numCharactersForMarkerLabels = 0;</a>
+<a name="383"><span class="lineNum">     383 </span>            : </a>
+<a name="384"><span class="lineNum">     384 </span>            :     int numAuxes = 0;</a>
+<a name="385"><span class="lineNum">     385 </span>            :     int numCharactersForAuxLabels = 0;</a>
+<a name="386"><span class="lineNum">     386 </span>            :     bool wantsAuxBanks = false;</a>
+<a name="387"><span class="lineNum">     387 </span>            :     bool followsTrackSelection = false;</a>
+<a name="388"><span class="lineNum">     388 </span>            : </a>
+<a name="389"><span class="lineNum">     389 </span>            :     Engine&amp; engine;</a>
+<a name="390"><span class="lineNum">     390 </span>            :     ExternalControllerManager&amp; externalControllerManager;</a>
+<a name="391"><span class="lineNum">     391 </span>            :     ExternalController* owner = nullptr;</a>
 <a name="392"><span class="lineNum">     392 </span>            : </a>
-<a name="393"><span class="lineNum">     393 </span>            : } // namespace tracktion_engine</a>
+<a name="393"><span class="lineNum">     393 </span>            : private:</a>
+<a name="394"><span class="lineNum">     394 </span>            :     Edit* edit = nullptr;</a>
+<a name="395"><span class="lineNum">     395 </span>            : </a>
+<a name="396"><span class="lineNum">     396 </span>            :     void performIfNotSafeRecording (const std::function&lt;void()&gt;&amp;);</a>
+<a name="397"><span class="lineNum">     397 </span>            : </a>
+<a name="398"><span class="lineNum">     398 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ControlSurface)</a>
+<a name="399"><span class="lineNum">     399 </span>            : };</a>
+<a name="400"><span class="lineNum">     400 </span>            : </a>
+<a name="401"><span class="lineNum">     401 </span>            : } // namespace tracktion_engine</a>
 </pre>
       </td>
     </tr>

@@ -20540,6 +20540,34 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
+      <type>int</type>
+      <name>getMarkerBankOffset</name>
+      <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
+      <anchor>a1824e3d951fe517dbdf9afb2f3e73a20</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>getFaderBankOffset</name>
+      <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
+      <anchor>afbc3abda0d522976ed3850d40e6d529d</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>getAuxBankOffset</name>
+      <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
+      <anchor>aecb722a8633b9b600d3c9e8d17376ef8</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>getParamBankOffset</name>
+      <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
+      <anchor>a5898c5df38d824be45a26084594edbcb</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
       <type>void</type>
       <name>sendMidiCommandToController</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
