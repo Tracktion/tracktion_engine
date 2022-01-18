@@ -77,6 +77,11 @@ bool ControlSurface::isSafeRecording() const
     return edit != nullptr && edit->getTransport().isSafeRecording();
 }
 
+int ControlSurface::getMarkerBankOffset() const { return owner->getMarkerBankOffset();  }
+int ControlSurface::getFaderBankOffset() const  { return owner->getFaderBankOffset();   }
+int ControlSurface::getAuxBankOffset() const    { return owner->getAuxBankOffset();     }
+int ControlSurface::getParamBankOffset() const  { return owner->getParamBankOffset();   }
+
 #define RETURN_IF_SAFE_RECORDING  if (isSafeRecording()) return;
 
 void ControlSurface::performIfNotSafeRecording (const std::function<void()>& f)

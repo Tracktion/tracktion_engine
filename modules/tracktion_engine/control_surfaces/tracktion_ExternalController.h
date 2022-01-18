@@ -182,6 +182,11 @@ private:
     juce::Array<juce::MidiMessage> pendingMidiMessages;
     juce::CriticalSection incomingMidiLock;
 
+    int getMarkerBankOffset() const   { return startMarkerNumber; }
+    int getFaderBankOffset() const    { return channelStart;      }
+    int getAuxBankOffset() const      { return auxBank;           }
+    int getParamBankOffset() const    { return startParamNumber;  }
+
     void changeFaderBank (int delta, bool moveSelection);
     void changeParamBank (int delta);
     void updateParamList();

@@ -197,6 +197,14 @@ public:
     // but your custom app code may not
     bool isSafeRecording() const;
 
+    // Get the current bank offset. You shouldn't need to know this,
+    // just work with physical channel numbers. But it may come in useful
+    // rarely if you need to interact with the edit directly
+    int getMarkerBankOffset() const;
+    int getFaderBankOffset() const;
+    int getAuxBankOffset() const;
+    int getParamBankOffset() const;
+
     // sends a MIDI message to the device's back-channel
     void sendMidiCommandToController (const void* midiData, int numBytes);
     void sendMidiCommandToController (const juce::MidiMessage&);
