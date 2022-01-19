@@ -486,42 +486,40 @@ bool RackType::addPlugin (const Plugin::Ptr& p, juce::Point<float> pos, bool can
     if (! isPluginAllowed (p))
         return false;
 
-    if (! getPlugins().contains (p.get()))
+    if ( getPlugins().contains (p.get()))
+        return false;
+
+    edit.getTransport().stopIfRecording();
+
+    bool autoConnect = canAutoConnect && pluginList->objects.isEmpty();
+
+    p->removeFromParent();
+
+    auto v = createValueTree (IDs::PLUGININSTANCE,
+                              IDs::x, juce::jlimit (0.0f, 1.0f, pos.x),
+                              IDs::y, juce::jlimit (0.0f, 1.0f, pos.y));
+    v.addChild (p->state, -1, getUndoManager());
+
+    state.addChild (v, -1, getUndoManager());
+
+    if (autoConnect)
     {
-        edit.getTransport().stopIfRecording();
+        juce::StringArray ins, outs;
+        p->getChannelNames (&ins, &outs);
 
-        bool autoConnect = canAutoConnect && pluginList->objects.isEmpty();
+        while (outs.size() > getOutputNames().size() - 1)
+            if (addOutput (getOutputNames().size(), TRANS("Output") + " " + juce::String (getOutputNames().size())) == -1)
+                break;
 
-        p->removeFromParent();
+        for (int i = 0; i < ins.size(); ++i)   addConnection ({}, i + 1, p->itemID, i + 1);
+        for (int i = 0; i < outs.size(); ++i)  addConnection (p->itemID, i + 1, {}, i + 1);
 
-        auto v = createValueTree (IDs::PLUGININSTANCE,
-                                  IDs::x, juce::jlimit (0.0f, 1.0f, pos.x),
-                                  IDs::y, juce::jlimit (0.0f, 1.0f, pos.y));
-        v.addChild (p->state, -1, getUndoManager());
-
-        state.addChild (v, -1, getUndoManager());
-
-        if (autoConnect)
-        {
-            juce::StringArray ins, outs;
-            p->getChannelNames (&ins, &outs);
-
-            while (outs.size() > getOutputNames().size() - 1)
-                if (addOutput (getOutputNames().size(), TRANS("Output") + " " + juce::String (getOutputNames().size())) == -1)
-                    break;
-
-            for (int i = 0; i < ins.size(); ++i)   addConnection ({}, i + 1, p->itemID, i + 1);
-            for (int i = 0; i < outs.size(); ++i)  addConnection (p->itemID, i + 1, {}, i + 1);
-
-            // midi connections
-            addConnection ({}, 0, p->itemID, 0);
-            addConnection (p->itemID, 0, {}, 0);
-        }
-
-        return true;
+        // midi connections
+        addConnection ({}, 0, p->itemID, 0);
+        addConnection (p->itemID, 0, {}, 0);
     }
 
-    return false;
+    return true;
 }
 
 juce::Point<float> RackType::getPluginPosition (const Plugin::Ptr& p) const
@@ -629,27 +627,28 @@ bool RackType::isConnectionLegal (EditItemID source, int sourcePin,
     return ! arePluginsConnectedIndirectly (dest, source);
 }
 
-void RackType::addConnection (EditItemID srcId, int sourcePin,
+bool RackType::addConnection (EditItemID srcId, int sourcePin,
                               EditItemID dstId, int destPin)
 {
-    if (isConnectionLegal (srcId, sourcePin, dstId, destPin))
-    {
-        for (auto rc : connectionList->objects)
-            if (rc->destID == dstId && rc->destPin == destPin
-                  && rc->sourceID == srcId && rc->sourcePin == sourcePin)
-                return;
+    if (! isConnectionLegal (srcId, sourcePin, dstId, destPin))
+        return false;
 
-        auto v = createValueTree (IDs::CONNECTION,
-                                  IDs::src, srcId,
-                                  IDs::dst, dstId,
-                                  IDs::srcPin, sourcePin,
-                                  IDs::dstPin, destPin);
+    for (auto rc : connectionList->objects)
+        if (rc->destID == dstId && rc->destPin == destPin
+                && rc->sourceID == srcId && rc->sourcePin == sourcePin)
+            return false;
 
-        state.addChild (v, -1, getUndoManager());
-    }
+    auto v = createValueTree (IDs::CONNECTION,
+                              IDs::src, srcId,
+                              IDs::dst, dstId,
+                              IDs::srcPin, sourcePin,
+                              IDs::dstPin, destPin);
+
+    state.addChild (v, -1, getUndoManager());
+    return true;
 }
 
-void RackType::removeConnection (EditItemID srcId, int sourcePin,
+bool RackType::removeConnection (EditItemID srcId, int sourcePin,
                                  EditItemID dstId, int destPin)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
@@ -662,10 +661,12 @@ void RackType::removeConnection (EditItemID srcId, int sourcePin,
                  && rc->destPin == destPin && rc->sourcePin == sourcePin)
             {
                 state.removeChild (rc->state, getUndoManager());
-                break;
+                return true;
             }
         }
     }
+
+    return false;
 }
 
 void RackType::checkConnections()
