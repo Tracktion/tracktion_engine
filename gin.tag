@@ -7276,52 +7276,10 @@
     </member>
     <member kind="function">
       <type>void</type>
-      <name>channelLevelChanged</name>
-      <anchorfile>classtracktion__engine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>a2e9813de3467420cb6a4f63b2f24ef9b</anchor>
-      <arglist>(int channel, float l, float r) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>trackSelectionChanged</name>
-      <anchorfile>classtracktion__engine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>aa824c35d485807dce8622249d8d4ad2a</anchor>
-      <arglist>(int channel, bool isSelected) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
       <name>trackRecordEnabled</name>
       <anchorfile>classtracktion__engine_1_1AlphaTrackControlSurface.html</anchorfile>
       <anchor>a08dd68da8353e2ce60c03d7a28d7a229</anchor>
       <arglist>(int channel, bool isEnabled) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>masterLevelsChanged</name>
-      <anchorfile>classtracktion__engine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>a79f27eaa30dc6366242db65fc0534159</anchor>
-      <arglist>(float leftLevel, float rightLevel) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>timecodeChanged</name>
-      <anchorfile>classtracktion__engine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>a4c6725056303158915f7994672e89736</anchor>
-      <arglist>(int barsOrHours, int beatsOrMinutes, int ticksOrSeconds, int millisecs, bool isBarsBeats, bool isFrames) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>clickOnOffChanged</name>
-      <anchorfile>classtracktion__engine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>ab086a1b4add6105c3d91a3aa32930a32</anchor>
-      <arglist>(bool isClickOn) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>snapOnOffChanged</name>
-      <anchorfile>classtracktion__engine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>a61a3a117910df79c6a3c279fa901a948</anchor>
-      <arglist>(bool isSnapOn) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -7332,52 +7290,10 @@
     </member>
     <member kind="function">
       <type>void</type>
-      <name>slaveOnOffChanged</name>
-      <anchorfile>classtracktion__engine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>a3587a6fdf976d8a5a78ecc5c5e36a3b7</anchor>
-      <arglist>(bool isSlaving) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
       <name>punchOnOffChanged</name>
       <anchorfile>classtracktion__engine_1_1AlphaTrackControlSurface.html</anchorfile>
       <anchor>ab0bd64e484b61b4f30a7ee4ce54a9527</anchor>
       <arglist>(bool isPunching) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>parameterChanged</name>
-      <anchorfile>classtracktion__engine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>a75731cd6e71fd08e6f22d9071606fec6</anchor>
-      <arglist>(int parameterNumber, const ParameterSetting &amp;newValue) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>clearParameter</name>
-      <anchorfile>classtracktion__engine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>a45ea8bb9d199186f9590b4d676418872</anchor>
-      <arglist>(int parameterNumber) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>markerChanged</name>
-      <anchorfile>classtracktion__engine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>ad944299fac39b3d45be4021ae1a97047</anchor>
-      <arglist>(int parameterNumber, const MarkerSetting &amp;newValue) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>clearMarker</name>
-      <anchorfile>classtracktion__engine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>a20f325b8d78c97f707a168b883512b37</anchor>
-      <arglist>(int parameterNumber) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>currentSelectionChanged</name>
-      <anchorfile>classtracktion__engine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>af61532db404c51863b8f17a8f7789955</anchor>
-      <arglist>(juce::String) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -20182,19 +20098,19 @@
       <anchor>a4b9a19bd34e9b0440fa283a46806e614</anchor>
       <arglist>() override</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>initialiseDevice</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a69dd6a47c88f86245499dcd46d23f7cc</anchor>
-      <arglist>(bool connect)=0</arglist>
+      <anchor>a04bcaa9b95c9a186b5e46eeba1d4bd5e</anchor>
+      <arglist>([[maybe_unused]] bool connect)</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>shutDownDevice</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a334b500925da95971dab626763784273</anchor>
-      <arglist>()=0</arglist>
+      <anchor>a31d5d778c15606ad631ea0902fa1e316</anchor>
+      <arglist>()</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
@@ -20203,47 +20119,47 @@
       <anchor>a7e9281a583adb820cc23702f720f2708</anchor>
       <arglist>(int, int, juce::String)</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>updateMiscFeatures</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a869e10c8b43f1da3f783fe05babce4ac</anchor>
-      <arglist>()=0</arglist>
+      <anchor>a5e55137f5323954b8161d61ee93837e4</anchor>
+      <arglist>()</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>acceptMidiMessage</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a4ab12666f2fa29fd86c4d6f911358629</anchor>
-      <arglist>(const juce::MidiMessage &amp;)=0</arglist>
+      <anchor>a063480d66cd035c195fd839ded7b49cd</anchor>
+      <arglist>(const juce::MidiMessage &amp;)</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>moveFader</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>abb5c434cbba0935164f070f180320227</anchor>
-      <arglist>(int channelNum, float newSliderPos)=0</arglist>
+      <anchor>a44a7061910a9b9172a9b9e7cf604aaac</anchor>
+      <arglist>([[maybe_unused]] int channelNum, [[maybe_unused]] float newSliderPos)</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>moveMasterLevelFader</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a064e5ca0800ddbf3a8a9b4a9b7007e96</anchor>
-      <arglist>(float newLeftSliderPos, float newRightSliderPos)=0</arglist>
+      <anchor>a23b9cc8e5e3c2b960be3d1568da3e3ed</anchor>
+      <arglist>([[maybe_unused]] float newLeftSliderPos, [[maybe_unused]] float newRightSliderPos)</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>movePanPot</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a4f5efb1a56c505f3af99f0eaa648f7c2</anchor>
-      <arglist>(int channelNum, float newPan)=0</arglist>
+      <anchor>aa26d000adc66b45316b224c5130769cb</anchor>
+      <arglist>([[maybe_unused]] int channelNum, [[maybe_unused]] float newPan)</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>moveAux</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a4ccc1b8fc0db1a1b50d72963c0583c0f</anchor>
-      <arglist>(int channel, const char *bus, float newPos)=0</arglist>
+      <anchor>a65ba7cd49fd7721295ec7c3e8c9ef5ca</anchor>
+      <arglist>([[maybe_unused]] int channel, [[maybe_unused]] const char *bus, [[maybe_unused]] float newPos)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
@@ -20252,110 +20168,110 @@
       <anchor>abe05ddc8b33b226348a5805e3bb04025</anchor>
       <arglist>(int)</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>updateSoloAndMute</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a7bf9427ce6c35aeb22a294474fddf500</anchor>
-      <arglist>(int channelNum, Track::MuteAndSoloLightState, bool isBright)=0</arglist>
+      <anchor>a6a6ec80d213103db3448b1b72eba1cdb</anchor>
+      <arglist>([[maybe_unused]] int channelNum, Track::MuteAndSoloLightState, [[maybe_unused]] bool isBright)</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>soloCountChanged</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a8919143ffb0acd9fb250b496626ee63c</anchor>
-      <arglist>(bool anySoloTracks)=0</arglist>
+      <anchor>a8716a6ad82e35d69255ad1744ed65d45</anchor>
+      <arglist>([[maybe_unused]] bool anySoloTracks)</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>playStateChanged</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a79aca7342557b1e08cc5a6abd6206f26</anchor>
-      <arglist>(bool isPlaying)=0</arglist>
+      <anchor>a6c1fe5932cb6c83258351da13b18ce0d</anchor>
+      <arglist>([[maybe_unused]] bool isPlaying)</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>recordStateChanged</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>ae43cff8df4f82b646881bcd60de68682</anchor>
-      <arglist>(bool isRecording)=0</arglist>
+      <anchor>a5d7854fac7c530225ce37418f5f03147</anchor>
+      <arglist>([[maybe_unused]] bool isRecording)</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>automationReadModeChanged</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a21c3cf7d1b076475ca755581f4952e7d</anchor>
-      <arglist>(bool isReading)=0</arglist>
+      <anchor>aab9fa0bf354fdebd609ff287f0921783</anchor>
+      <arglist>([[maybe_unused]] bool isReading)</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>automationWriteModeChanged</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>aaa5468120d910b2cfacaffe26eddb17c</anchor>
-      <arglist>(bool isWriting)=0</arglist>
+      <anchor>a39e27792985076ac04c6c1d52d92f11c</anchor>
+      <arglist>([[maybe_unused]] bool isWriting)</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>faderBankChanged</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>ac14b1c1493c75d8f26ed614e141bef8d</anchor>
-      <arglist>(int newStartChannelNumber, const juce::StringArray &amp;trackNames)=0</arglist>
+      <anchor>ac7b5031c6b20578e4428ba63ebb6b5dd</anchor>
+      <arglist>([[maybe_unused]] int newStartChannelNumber, [[maybe_unused]] const juce::StringArray &amp;trackNames)</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>channelLevelChanged</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a63748dfb8bff308dcc3b4d979b380263</anchor>
-      <arglist>(int channel, float l, float r)=0</arglist>
+      <anchor>a35028c0449120c2b5afe42db66c66b0f</anchor>
+      <arglist>([[maybe_unused]] int channel, [[maybe_unused]] float l, [[maybe_unused]] float r)</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>trackSelectionChanged</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a17a3f9aa7a45b5285e56b3c7de1cd26b</anchor>
-      <arglist>(int channel, bool isSelected)=0</arglist>
+      <anchor>acdf78af1d991e7677422ae3a7caefeb7</anchor>
+      <arglist>([[maybe_unused]] int channel, [[maybe_unused]] bool isSelected)</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>trackRecordEnabled</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a8d8652332901073d47c79c08362175f5</anchor>
-      <arglist>(int channel, bool isEnabled)=0</arglist>
+      <anchor>a7e02ee918eff7c578570e27a6fe38236</anchor>
+      <arglist>([[maybe_unused]] int channel, [[maybe_unused]] bool isEnabled)</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>masterLevelsChanged</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a03538f84b0285b3fba10938114feb342</anchor>
-      <arglist>(float leftLevel, float rightLevel)=0</arglist>
+      <anchor>a683ebefe3ab7992b857f587bf923153f</anchor>
+      <arglist>([[maybe_unused]] float leftLevel, [[maybe_unused]] float rightLevel)</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>timecodeChanged</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a803ca5a6ffd202eb6a0c0201822d0827</anchor>
-      <arglist>(int barsOrHours, int beatsOrMinutes, int ticksOrSeconds, int millisecs, bool isBarsBeats, bool isFrames)=0</arglist>
+      <anchor>a30cffad9456ff3ccb10f4da1b3aef264</anchor>
+      <arglist>([[maybe_unused]] int barsOrHours, [[maybe_unused]] int beatsOrMinutes, [[maybe_unused]] int ticksOrSeconds, [[maybe_unused]] int millisecs, [[maybe_unused]] bool isBarsBeats, [[maybe_unused]] bool isFrames)</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>clickOnOffChanged</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a921f4e4f8e748429182545d11e100a81</anchor>
-      <arglist>(bool isClickOn)=0</arglist>
+      <anchor>ac4a0d1d61c3338cb4545c5e2da6713d3</anchor>
+      <arglist>([[maybe_unused]] bool isClickOn)</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>snapOnOffChanged</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a4f78517f1e90b4e20a25b216023d7f5d</anchor>
-      <arglist>(bool isSnapOn)=0</arglist>
+      <anchor>ac85b8fa766553ae8bebc8e3fdf1ccf01</anchor>
+      <arglist>([[maybe_unused]] bool isSnapOn)</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>loopOnOffChanged</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a7d29d34cf30d236df5337564609d3439</anchor>
-      <arglist>(bool isLoopOn)=0</arglist>
+      <anchor>a391e6af89a3b265625484f93e5577366</anchor>
+      <arglist>([[maybe_unused]] bool isLoopOn)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
@@ -20382,36 +20298,36 @@
       <type>virtual void</type>
       <name>undoStatusChanged</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a079e2455cc4fba663ebc73074d32ee66</anchor>
-      <arglist>(bool, bool)</arglist>
+      <anchor>a97047d910aaba24c58b4711e6eea7ff8</anchor>
+      <arglist>([[maybe_unused]] bool canUundo, [[maybe_unused]] bool canReo)</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>parameterChanged</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>aabfe137b2b58071e1ac1de99eb1f7dee</anchor>
-      <arglist>(int parameterNumber, const ParameterSetting &amp;newValue)=0</arglist>
+      <anchor>acdf781d3fe184a12c7ff1eed00488d5f</anchor>
+      <arglist>([[maybe_unused]] int parameterNumber, [[maybe_unused]] const ParameterSetting &amp;newValue)</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>clearParameter</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a6acdaa5c1c4ee430197cf7d7d1116f65</anchor>
-      <arglist>(int parameterNumber)=0</arglist>
+      <anchor>afb45d931bc0bd5574d382f342728c402</anchor>
+      <arglist>([[maybe_unused]] int parameterNumber)</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>markerChanged</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>abb08da1eb5e7ff4b5d0854a134ffa90c</anchor>
-      <arglist>(int parameterNumber, const MarkerSetting &amp;newValue)=0</arglist>
+      <anchor>a3d25bc4b61327a27c74649beb31349ff</anchor>
+      <arglist>([[maybe_unused]] int parameterNumber, [[maybe_unused]] const MarkerSetting &amp;newValue)</arglist>
     </member>
-    <member kind="function" virtualness="pure">
+    <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>clearMarker</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>aac2438ca0e9a46aa3ce8819c59b52009</anchor>
-      <arglist>(int parameterNumber)=0</arglist>
+      <anchor>a098c8b437d11a10fecb99c9d72d76bb1</anchor>
+      <arglist>([[maybe_unused]] int parameterNumber)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
@@ -40500,192 +40416,10 @@
     </member>
     <member kind="function">
       <type>void</type>
-      <name>updateMiscFeatures</name>
-      <anchorfile>classtracktion__engine_1_1MackieXT.html</anchorfile>
-      <anchor>ac3985b49100675ce9e5c1a9b345db4e3</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
       <name>acceptMidiMessage</name>
       <anchorfile>classtracktion__engine_1_1MackieXT.html</anchorfile>
       <anchor>a027dd686bccc42a02eb80f7aadeca12f</anchor>
       <arglist>(const juce::MidiMessage &amp;m) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>moveFader</name>
-      <anchorfile>classtracktion__engine_1_1MackieXT.html</anchorfile>
-      <anchor>ad6bfd7ed44dd9a836f2e97f8a5783718</anchor>
-      <arglist>(int channelNum, float newSliderPos) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>moveMasterLevelFader</name>
-      <anchorfile>classtracktion__engine_1_1MackieXT.html</anchorfile>
-      <anchor>ab07ffe224efe168b1648308b7cab3443</anchor>
-      <arglist>(float newLeftSliderPos, float newRightSliderPos) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>movePanPot</name>
-      <anchorfile>classtracktion__engine_1_1MackieXT.html</anchorfile>
-      <anchor>a446db963067ad83d31190f8c72ea943c</anchor>
-      <arglist>(int channelNum, float newPan) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>moveAux</name>
-      <anchorfile>classtracktion__engine_1_1MackieXT.html</anchorfile>
-      <anchor>ad28721c342961a5b51f101d448944526</anchor>
-      <arglist>(int channel, const char *bus, float newPos) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>updateSoloAndMute</name>
-      <anchorfile>classtracktion__engine_1_1MackieXT.html</anchorfile>
-      <anchor>a8e8155a90d8863b08c2a50d4973e0e9f</anchor>
-      <arglist>(int channelNum, Track::MuteAndSoloLightState, bool isBright) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>soloCountChanged</name>
-      <anchorfile>classtracktion__engine_1_1MackieXT.html</anchorfile>
-      <anchor>accf499c17c628448001716c8732794ab</anchor>
-      <arglist>(bool) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>playStateChanged</name>
-      <anchorfile>classtracktion__engine_1_1MackieXT.html</anchorfile>
-      <anchor>ac61f81c2593e31fa82113b2ece7e3cd2</anchor>
-      <arglist>(bool isPlaying) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>recordStateChanged</name>
-      <anchorfile>classtracktion__engine_1_1MackieXT.html</anchorfile>
-      <anchor>a7c70fae653c42c2052d67a3743355766</anchor>
-      <arglist>(bool isRecording) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>automationReadModeChanged</name>
-      <anchorfile>classtracktion__engine_1_1MackieXT.html</anchorfile>
-      <anchor>add3d2e1860b2782ca07e81da7f12aabb</anchor>
-      <arglist>(bool isReading) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>automationWriteModeChanged</name>
-      <anchorfile>classtracktion__engine_1_1MackieXT.html</anchorfile>
-      <anchor>afcb4b0f21a22c925ea7ee28f08a8e12f</anchor>
-      <arglist>(bool isWriting) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>faderBankChanged</name>
-      <anchorfile>classtracktion__engine_1_1MackieXT.html</anchorfile>
-      <anchor>af9bf99a49ae924df506b617c8692fe43</anchor>
-      <arglist>(int newStartChannelNumber, const juce::StringArray &amp;trackNames) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>channelLevelChanged</name>
-      <anchorfile>classtracktion__engine_1_1MackieXT.html</anchorfile>
-      <anchor>a4c27cd117ee65e819c27cd2c0ea66ad7</anchor>
-      <arglist>(int channel, float l, float r) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>trackSelectionChanged</name>
-      <anchorfile>classtracktion__engine_1_1MackieXT.html</anchorfile>
-      <anchor>afc493f120fbfcac5604e7ef122901712</anchor>
-      <arglist>(int channel, bool isSelected) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>trackRecordEnabled</name>
-      <anchorfile>classtracktion__engine_1_1MackieXT.html</anchorfile>
-      <anchor>a432aca08148f98139c613a7382576c49</anchor>
-      <arglist>(int channel, bool isEnabled) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>masterLevelsChanged</name>
-      <anchorfile>classtracktion__engine_1_1MackieXT.html</anchorfile>
-      <anchor>ae2afa8114f6725049574424a2deb41e7</anchor>
-      <arglist>(float leftLevel, float rightLevel) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>timecodeChanged</name>
-      <anchorfile>classtracktion__engine_1_1MackieXT.html</anchorfile>
-      <anchor>a80b3c5b95115cf78b3cab59a0aa40066</anchor>
-      <arglist>(int barsOrHours, int beatsOrMinutes, int ticksOrSeconds, int millisecs, bool isBarsBeats, bool isFrames) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>clickOnOffChanged</name>
-      <anchorfile>classtracktion__engine_1_1MackieXT.html</anchorfile>
-      <anchor>a260ec2bfedbc11a218851f9daceea04d</anchor>
-      <arglist>(bool isClickOn) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>snapOnOffChanged</name>
-      <anchorfile>classtracktion__engine_1_1MackieXT.html</anchorfile>
-      <anchor>ab98aafa5b07762a015eb5d6cb99c70ba</anchor>
-      <arglist>(bool isSnapOn) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>loopOnOffChanged</name>
-      <anchorfile>classtracktion__engine_1_1MackieXT.html</anchorfile>
-      <anchor>a98a441da3ece13adbe4edc5661282be0</anchor>
-      <arglist>(bool isLoopOn) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>slaveOnOffChanged</name>
-      <anchorfile>classtracktion__engine_1_1MackieXT.html</anchorfile>
-      <anchor>a0d0da820a428be611b623f2291478a95</anchor>
-      <arglist>(bool isSlaving) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>punchOnOffChanged</name>
-      <anchorfile>classtracktion__engine_1_1MackieXT.html</anchorfile>
-      <anchor>aa97cf9b83505ba1d40ae0d226abcc7a5</anchor>
-      <arglist>(bool isPunching) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>parameterChanged</name>
-      <anchorfile>classtracktion__engine_1_1MackieXT.html</anchorfile>
-      <anchor>a072b904d294c4786e3823212717eaf85</anchor>
-      <arglist>(int parameterNumber, const ParameterSetting &amp;newValue) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>clearParameter</name>
-      <anchorfile>classtracktion__engine_1_1MackieXT.html</anchorfile>
-      <anchor>ad83df00316d94530790a0d4b88e3e896</anchor>
-      <arglist>(int parameterNumber) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>markerChanged</name>
-      <anchorfile>classtracktion__engine_1_1MackieXT.html</anchorfile>
-      <anchor>af5d7ee1093c9bdbfe6f3d2f0e4184622</anchor>
-      <arglist>(int parameterNumber, const MarkerSetting &amp;newValue) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>clearMarker</name>
-      <anchorfile>classtracktion__engine_1_1MackieXT.html</anchorfile>
-      <anchor>af3d7c6bb8197c5e18d1b8039f1da6422</anchor>
-      <arglist>(int parameterNumber) override</arglist>
     </member>
     <member kind="function">
       <type>int</type>
@@ -48108,76 +47842,6 @@
     </member>
     <member kind="function">
       <type>void</type>
-      <name>channelLevelChanged</name>
-      <anchorfile>classtracktion__engine_1_1NovationRemoteSl.html</anchorfile>
-      <anchor>a902bb400d3810e68abd313e07099c4b6</anchor>
-      <arglist>(int channel, float l, float r) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>trackSelectionChanged</name>
-      <anchorfile>classtracktion__engine_1_1NovationRemoteSl.html</anchorfile>
-      <anchor>a3371752e09564c3a1304b1dc949ddc32</anchor>
-      <arglist>(int channel, bool isSelected) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>trackRecordEnabled</name>
-      <anchorfile>classtracktion__engine_1_1NovationRemoteSl.html</anchorfile>
-      <anchor>a0e58cabf6013230acb42d6cbc2790bbf</anchor>
-      <arglist>(int channel, bool isEnabled) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>masterLevelsChanged</name>
-      <anchorfile>classtracktion__engine_1_1NovationRemoteSl.html</anchorfile>
-      <anchor>a268c4024559019076cc339012a82025d</anchor>
-      <arglist>(float leftLevel, float rightLevel) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>timecodeChanged</name>
-      <anchorfile>classtracktion__engine_1_1NovationRemoteSl.html</anchorfile>
-      <anchor>acee4687a23277fd6c0246bb42ae01367</anchor>
-      <arglist>(int barsOrHours, int beatsOrMinutes, int ticksOrSeconds, int millisecs, bool isBarsBeats, bool isFrames) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>clickOnOffChanged</name>
-      <anchorfile>classtracktion__engine_1_1NovationRemoteSl.html</anchorfile>
-      <anchor>a7c245acd7272698aed2df854b3d5668c</anchor>
-      <arglist>(bool isClickOn) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>snapOnOffChanged</name>
-      <anchorfile>classtracktion__engine_1_1NovationRemoteSl.html</anchorfile>
-      <anchor>aff4c3b1e65a42652798fac33a56bb97b</anchor>
-      <arglist>(bool isSnapOn) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>loopOnOffChanged</name>
-      <anchorfile>classtracktion__engine_1_1NovationRemoteSl.html</anchorfile>
-      <anchor>acec6cc557cf4909350596e5288fa9f07</anchor>
-      <arglist>(bool isLoopOn) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>slaveOnOffChanged</name>
-      <anchorfile>classtracktion__engine_1_1NovationRemoteSl.html</anchorfile>
-      <anchor>a8f07249bfc389dbffc161d672be91c68</anchor>
-      <arglist>(bool isSlaving) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>punchOnOffChanged</name>
-      <anchorfile>classtracktion__engine_1_1NovationRemoteSl.html</anchorfile>
-      <anchor>ae01c5f51859fbc3535c5a563da8b8f15</anchor>
-      <arglist>(bool isPunching) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
       <name>parameterChanged</name>
       <anchorfile>classtracktion__engine_1_1NovationRemoteSl.html</anchorfile>
       <anchor>ab0a2106ad6cc27b2f522411f17a209bb</anchor>
@@ -48231,20 +47895,6 @@
       <anchorfile>classtracktion__engine_1_1NovationRemoteSl.html</anchorfile>
       <anchor>a51c617a8296a7d970e1725654a6a3b49</anchor>
       <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>markerChanged</name>
-      <anchorfile>classtracktion__engine_1_1NovationRemoteSl.html</anchorfile>
-      <anchor>aa281e40bd6fee2d9e5ee41b2a62f205e</anchor>
-      <arglist>(int parameterNumber, const MarkerSetting &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>clearMarker</name>
-      <anchorfile>classtracktion__engine_1_1NovationRemoteSl.html</anchorfile>
-      <anchor>a97585c25a2be642ae729c7c26eccde3f</anchor>
-      <arglist>(int parameterNumber) override</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -58099,7 +57749,7 @@
   <compound kind="class">
     <name>tracktion_engine::RemoteSLCompact</name>
     <filename>classtracktion__engine_1_1RemoteSLCompact.html</filename>
-    <base>tracktion_engine::ControlSurface</base>
+    <base>tracktion_engine::NovationRemoteSl</base>
     <member kind="function">
       <type></type>
       <name>RemoteSLCompact</name>
@@ -58113,230 +57763,6 @@
       <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
       <anchor>abce233480bef7926adbfb71757d77c7c</anchor>
       <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>initialiseDevice</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>a80650b26bdb761e931adfbcd31197ee3</anchor>
-      <arglist>(bool connect) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>shutDownDevice</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>aee55599dfac8c2083fe9c2177ef7b70a</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>updateMiscFeatures</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>af257e6f3540abc45304210a085ba1117</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>acceptMidiMessage</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>acd4deeca161d450c22e45829ad4778b2</anchor>
-      <arglist>(const juce::MidiMessage &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>moveFader</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>ac2eaa9f88660caa1fe938a59cd4805cf</anchor>
-      <arglist>(int channelNum, float newSliderPos) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>moveMasterLevelFader</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>a28b371d9872752d5e1776b94e2656422</anchor>
-      <arglist>(float newLeftSliderPos, float newRightSliderPos) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>movePanPot</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>abf682fc188d1b98d80c670dac849f55c</anchor>
-      <arglist>(int channelNum, float newPan) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>moveAux</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>a3c832bb2465d93f6ae1e697c77984a4b</anchor>
-      <arglist>(int channel, const char *bus, float newPos) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>clearAux</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>a8e00526d6c35e17fc8bb0a05532d2dc6</anchor>
-      <arglist>(int channel) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>updateSoloAndMute</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>ad7eab2ffe3124da32b50e2ecd3362046</anchor>
-      <arglist>(int channelNum, Track::MuteAndSoloLightState, bool isBright) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>soloCountChanged</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>a4ee703d9e51b50265fb86952fc11b856</anchor>
-      <arglist>(bool) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>playStateChanged</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>ac9e51ddf15a27949b8c72256d2719a30</anchor>
-      <arglist>(bool isPlaying) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>recordStateChanged</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>aaff7eb6ffdf84c37bc92fdf12d7da34d</anchor>
-      <arglist>(bool isRecording) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>automationReadModeChanged</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>a18af1e73f55d9324aff2651047ed0c50</anchor>
-      <arglist>(bool isReading) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>automationWriteModeChanged</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>a1f49502b895538233a99e1bb1453134c</anchor>
-      <arglist>(bool isWriting) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>faderBankChanged</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>a34e716724f010bc91f20be4ebad090da</anchor>
-      <arglist>(int newStartChannelNumber, const juce::StringArray &amp;trackNames) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>channelLevelChanged</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>a42b59b1e77814cf62240f86a725cc40e</anchor>
-      <arglist>(int channel, float l, float r) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>trackSelectionChanged</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>a6c0e81d6510b4571ff473b2e918dbda9</anchor>
-      <arglist>(int channel, bool isSelected) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>trackRecordEnabled</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>a5fb2a2a86688634c3be2b1e6c384969a</anchor>
-      <arglist>(int channel, bool isEnabled) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>masterLevelsChanged</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>a06547b577cb953b736c65886153f7a83</anchor>
-      <arglist>(float leftLevel, float rightLevel) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>timecodeChanged</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>a8ce64ef3e71112a46a997a8fcb7e88ae</anchor>
-      <arglist>(int barsOrHours, int beatsOrMinutes, int ticksOrSeconds, int millisecs, bool isBarsBeats, bool isFrames) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>clickOnOffChanged</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>ae37e4993fd20ee51bb85e74efdafb5c3</anchor>
-      <arglist>(bool isClickOn) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>snapOnOffChanged</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>aeebd59f384cdeffb3abaffeb159a3427</anchor>
-      <arglist>(bool isSnapOn) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>loopOnOffChanged</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>a7f4ae55b5b5c8ac664c11dfffe966baf</anchor>
-      <arglist>(bool isLoopOn) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>slaveOnOffChanged</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>a37a68dff18300ab4f061e3df75f60762</anchor>
-      <arglist>(bool isSlaving) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>punchOnOffChanged</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>af557639ff19127b81370136c4481e98f</anchor>
-      <arglist>(bool isPunching) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>undoStatusChanged</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>a331d4061f5ca3660fbb719a793ca180d</anchor>
-      <arglist>(bool undo, bool redo) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>parameterChanged</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>ac968e0c2811b130b028c00946e49c8f9</anchor>
-      <arglist>(int parameterNumber, const ParameterSetting &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>clearParameter</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>a59a7d3116db4ca25f6053617c49a78eb</anchor>
-      <arglist>(int parameterNumber) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>markerChanged</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>a3e3a9686a268e50e2233d36676efd823</anchor>
-      <arglist>(int parameterNumber, const MarkerSetting &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>clearMarker</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>a06f011e072e8fd55fdab37d400ee17ad</anchor>
-      <arglist>(int parameterNumber) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>auxBankChanged</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>a0742e34c1fa095b4916690b4076ce1ec</anchor>
-      <arglist>(int bank) override</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -58360,25 +57786,11 @@
       <arglist>() override</arglist>
     </member>
     <member kind="function">
-      <type>void</type>
-      <name>setEatsAllMessages</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>a095e6414d9c921f44bdaf64fcc623af1</anchor>
-      <arglist>(bool eatAll) override</arglist>
-    </member>
-    <member kind="function">
       <type>bool</type>
       <name>canChangeSelectedPlugin</name>
       <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
       <anchor>ac183d6b0e232f9ac5fbf728f0b0ca897</anchor>
       <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>currentSelectionChanged</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>a968c827155fc3c39d064e6545762483a</anchor>
-      <arglist>(juce::String) override</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -58400,13 +57812,6 @@
       <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
       <anchor>a98c383dc12c5679793189dfca13bac21</anchor>
       <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>pluginBypass</name>
-      <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>aed7afe309a2d2ace3925ae139e54d129</anchor>
-      <arglist>(bool) override</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -70818,13 +70223,6 @@
     </member>
     <member kind="function">
       <type>void</type>
-      <name>updateMiscFeatures</name>
-      <anchorfile>classtracktion__engine_1_1TranzportControlSurface.html</anchorfile>
-      <anchor>ad800d9825924ee1150c0dc24cfc6c6f2</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
       <name>acceptMidiMessage</name>
       <anchorfile>classtracktion__engine_1_1TranzportControlSurface.html</anchorfile>
       <anchor>a30f48d4e9ee6b6fbd78118aa9ca176d4</anchor>
@@ -70839,24 +70237,10 @@
     </member>
     <member kind="function">
       <type>void</type>
-      <name>moveMasterLevelFader</name>
-      <anchorfile>classtracktion__engine_1_1TranzportControlSurface.html</anchorfile>
-      <anchor>aa048f771c067fae217759ed96ff3b333</anchor>
-      <arglist>(float newLeftSliderPos, float newRightSliderPos) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
       <name>movePanPot</name>
       <anchorfile>classtracktion__engine_1_1TranzportControlSurface.html</anchorfile>
       <anchor>acdbd97cafb1d45642cf622d74d1e037d</anchor>
       <arglist>(int channelNum, float newPan) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>moveAux</name>
-      <anchorfile>classtracktion__engine_1_1TranzportControlSurface.html</anchorfile>
-      <anchor>af943ebfb902d3809496b95aec0364c2a</anchor>
-      <arglist>(int channel, const char *bus, float newPos) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -70874,31 +70258,10 @@
     </member>
     <member kind="function">
       <type>void</type>
-      <name>playStateChanged</name>
-      <anchorfile>classtracktion__engine_1_1TranzportControlSurface.html</anchorfile>
-      <anchor>a902917f22d873cbea3a7830db6fda7b0</anchor>
-      <arglist>(bool isPlaying) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
       <name>recordStateChanged</name>
       <anchorfile>classtracktion__engine_1_1TranzportControlSurface.html</anchorfile>
       <anchor>aafe8391699650d68e9270313dfb4c4f0</anchor>
       <arglist>(bool isRecording) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>automationReadModeChanged</name>
-      <anchorfile>classtracktion__engine_1_1TranzportControlSurface.html</anchorfile>
-      <anchor>aa106391b3ef02f368daf3d6678916821</anchor>
-      <arglist>(bool isReading) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>automationWriteModeChanged</name>
-      <anchorfile>classtracktion__engine_1_1TranzportControlSurface.html</anchorfile>
-      <anchor>afe4a225d50453078a94da0e3a64a0546</anchor>
-      <arglist>(bool isWriting) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -70909,20 +70272,6 @@
     </member>
     <member kind="function">
       <type>void</type>
-      <name>channelLevelChanged</name>
-      <anchorfile>classtracktion__engine_1_1TranzportControlSurface.html</anchorfile>
-      <anchor>a11e145c33d38d4c65a71d0c87dfa6190</anchor>
-      <arglist>(int channel, float l, float r) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>trackSelectionChanged</name>
-      <anchorfile>classtracktion__engine_1_1TranzportControlSurface.html</anchorfile>
-      <anchor>a30a43ffc5b668155b52453c5cb59dac0</anchor>
-      <arglist>(int channel, bool isSelected) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
       <name>trackRecordEnabled</name>
       <anchorfile>classtracktion__engine_1_1TranzportControlSurface.html</anchorfile>
       <anchor>a696e9b41aeba6f810b773b75501b063b</anchor>
@@ -70930,24 +70279,10 @@
     </member>
     <member kind="function">
       <type>void</type>
-      <name>masterLevelsChanged</name>
-      <anchorfile>classtracktion__engine_1_1TranzportControlSurface.html</anchorfile>
-      <anchor>ac1ff81f1c2413ed9b4f50a20b8831d2f</anchor>
-      <arglist>(float leftLevel, float rightLevel) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
       <name>timecodeChanged</name>
       <anchorfile>classtracktion__engine_1_1TranzportControlSurface.html</anchorfile>
       <anchor>a1c75947975bb9704a86835872a9084bf</anchor>
       <arglist>(int barsOrHours, int beatsOrMinutes, int ticksOrSeconds, int millisecs, bool isBarsBeats, bool isFrames) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>clickOnOffChanged</name>
-      <anchorfile>classtracktion__engine_1_1TranzportControlSurface.html</anchorfile>
-      <anchor>aca3b4a41e362692bad4dd89145eb3dd9</anchor>
-      <arglist>(bool isClickOn) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -70965,31 +70300,10 @@
     </member>
     <member kind="function">
       <type>void</type>
-      <name>slaveOnOffChanged</name>
-      <anchorfile>classtracktion__engine_1_1TranzportControlSurface.html</anchorfile>
-      <anchor>ae11907891c6bb3d9bb542f2d79a6ee45</anchor>
-      <arglist>(bool isSlaving) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
       <name>punchOnOffChanged</name>
       <anchorfile>classtracktion__engine_1_1TranzportControlSurface.html</anchorfile>
       <anchor>a64c67c6cd072b33aa39214bfb2a3e941</anchor>
       <arglist>(bool isPunching) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>parameterChanged</name>
-      <anchorfile>classtracktion__engine_1_1TranzportControlSurface.html</anchorfile>
-      <anchor>a456c991f602c9f52df7d732c91efff5a</anchor>
-      <arglist>(int parameterNumber, const ParameterSetting &amp;newValue) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>clearParameter</name>
-      <anchorfile>classtracktion__engine_1_1TranzportControlSurface.html</anchorfile>
-      <anchor>a28dce0a728fc1e4128f786b70e08f32a</anchor>
-      <arglist>(int parameterNumber) override</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -70997,27 +70311,6 @@
       <anchorfile>classtracktion__engine_1_1TranzportControlSurface.html</anchorfile>
       <anchor>a36a2a84292d4b6ce83f1083d6bf7377c</anchor>
       <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>currentSelectionChanged</name>
-      <anchorfile>classtracktion__engine_1_1TranzportControlSurface.html</anchorfile>
-      <anchor>a0a9eb703d2108dbbef4fb5fcdddb17f8</anchor>
-      <arglist>(juce::String) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>markerChanged</name>
-      <anchorfile>classtracktion__engine_1_1TranzportControlSurface.html</anchorfile>
-      <anchor>a2bca3fb3e4f2743bcd512a05ddfa236c</anchor>
-      <arglist>(int parameterNumber, const MarkerSetting &amp;newValue) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>clearMarker</name>
-      <anchorfile>classtracktion__engine_1_1TranzportControlSurface.html</anchorfile>
-      <anchor>a00e4bb8a578803eb1d4802392ce59e6f</anchor>
-      <arglist>(int parameterNumber) override</arglist>
     </member>
   </compound>
   <compound kind="struct">
