@@ -51,8 +51,8 @@ public:
         down to tell tracktion about what it needs to do in response.
     */
 
-    virtual void initialiseDevice ([[maybe_unused]] bool connect) {};
-    virtual void shutDownDevice() {};
+    virtual void initialiseDevice ([[maybe_unused]] bool connect) {}
+    virtual void shutDownDevice() {}
 
     // If the device communicates via OSC, then this tells the device the new settings
     virtual void updateOSCSettings (int /*oscInputPort*/, int /*oscOutputPort*/, juce::String /*oscOutputAddr*/) {}
