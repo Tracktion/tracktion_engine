@@ -48,21 +48,9 @@ public:
     void automationReadModeChanged (bool isReading) override;
     void automationWriteModeChanged (bool isWriting) override;
     void faderBankChanged (int newStartChannelNumber, const juce::StringArray& trackNames) override;
-    void channelLevelChanged (int channel, float l, float r) override;
-    void trackSelectionChanged (int channel, bool isSelected) override;
     void trackRecordEnabled (int channel, bool isEnabled) override;
-    void masterLevelsChanged (float leftLevel, float rightLevel) override;
-    void timecodeChanged (int barsOrHours, int beatsOrMinutes, int ticksOrSeconds, int millisecs, bool isBarsBeats, bool isFrames) override;
-    void clickOnOffChanged (bool isClickOn) override;
-    void snapOnOffChanged (bool isSnapOn) override;
     void loopOnOffChanged (bool isLoopOn) override;
-    void slaveOnOffChanged (bool isSlaving) override;
     void punchOnOffChanged (bool isPunching) override;
-    void parameterChanged (int parameterNumber, const ParameterSetting& newValue) override;
-    void clearParameter (int parameterNumber) override;
-    void markerChanged (int parameterNumber, const MarkerSetting& newValue) override;
-    void clearMarker (int parameterNumber) override;
-    void currentSelectionChanged (juce::String) override;
     void pluginBypass (bool b) override;
     bool isPluginSelected (Plugin*) override;
 

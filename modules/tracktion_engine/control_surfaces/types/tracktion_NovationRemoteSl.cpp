@@ -484,17 +484,6 @@ void NovationRemoteSl::faderBankChanged (int, const juce::StringArray& newNames)
         refreshLeft (true);
 }
 
-void NovationRemoteSl::channelLevelChanged (int, float, float) {}
-void NovationRemoteSl::trackSelectionChanged (int, bool) {}
-void NovationRemoteSl::trackRecordEnabled (int, bool) {}
-void NovationRemoteSl::masterLevelsChanged (float, float) {}
-void NovationRemoteSl::timecodeChanged (int, int, int, int, bool, bool) {}
-void NovationRemoteSl::clickOnOffChanged (bool) {}
-void NovationRemoteSl::snapOnOffChanged (bool) {}
-void NovationRemoteSl::loopOnOffChanged (bool) {}
-void NovationRemoteSl::slaveOnOffChanged (bool) {}
-void NovationRemoteSl::punchOnOffChanged (bool) {}
-
 void NovationRemoteSl::parameterChanged (int parameterNumber, const ParameterSetting& newValue)
 {
     param[parameterNumber] = newValue;
@@ -840,8 +829,5 @@ juce::String NovationRemoteSl::padAndLimit (const juce::String& s, int max)
 
     return {};
 }
-
-void NovationRemoteSl::markerChanged (int, const MarkerSetting&) {}
-void NovationRemoteSl::clearMarker (int) {}
 
 }

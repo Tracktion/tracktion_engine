@@ -1127,27 +1127,13 @@ void NovationAutomap::timecodeChanged (int, int, int, int, bool, bool)
         hostAutomap->timeChanged();
 }
 
-void NovationAutomap::clickOnOffChanged (bool)                  {}
-void NovationAutomap::snapOnOffChanged (bool)                   {}
-void NovationAutomap::loopOnOffChanged (bool)                   {}
-void NovationAutomap::slaveOnOffChanged (bool)                  {}
-void NovationAutomap::punchOnOffChanged (bool)                  {}
-void NovationAutomap::undoStatusChanged (bool, bool)            {}
-void NovationAutomap::parameterChanged (int, const ParameterSetting&)   {}
-void NovationAutomap::clearParameter (int)                      {}
-void NovationAutomap::markerChanged (int, const MarkerSetting&) {}
-void NovationAutomap::clearMarker (int)                         {}
-void NovationAutomap::auxBankChanged (int)                      {}
 bool NovationAutomap::wantsMessage (const juce::MidiMessage&)   { return false; }
 bool NovationAutomap::eatsAllMessages()                         { return false; }
 bool NovationAutomap::canSetEatsAllMessages()                   { return false; }
-void NovationAutomap::setEatsAllMessages (bool)                 {}
 bool NovationAutomap::canChangeSelectedPlugin()                 { return true; }
-void NovationAutomap::currentSelectionChanged (juce::String)    {}
 bool NovationAutomap::showingPluginParams()                     { return true; }
 bool NovationAutomap::showingMarkers()                          { return false; }
 bool NovationAutomap::showingTracks()                           { return true; }
-void NovationAutomap::pluginBypass (bool)                       {}
 bool NovationAutomap::isPluginSelected (Plugin*)                { return false; }
 
 }

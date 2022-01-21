@@ -585,33 +585,9 @@ void AlphaTrackControlSurface::faderBankChanged (int newStartChannelNumber, cons
     updateDisplay();
 }
 
-void AlphaTrackControlSurface::channelLevelChanged (int, float, float)
-{
-}
-
-void AlphaTrackControlSurface::trackSelectionChanged (int, bool)
-{
-}
-
 void AlphaTrackControlSurface::trackRecordEnabled (int, bool isEnabled)
 {
     setLed (0x00, isEnabled);
-}
-
-void AlphaTrackControlSurface::masterLevelsChanged (float, float)
-{
-}
-
-void AlphaTrackControlSurface::timecodeChanged (int, int, int, int, bool, bool)
-{
-}
-
-void AlphaTrackControlSurface::clickOnOffChanged (bool)
-{
-}
-
-void AlphaTrackControlSurface::snapOnOffChanged (bool)
-{
 }
 
 void AlphaTrackControlSurface::loopOnOffChanged (bool isLoopOn_)
@@ -622,36 +598,12 @@ void AlphaTrackControlSurface::loopOnOffChanged (bool isLoopOn_)
         setLed (0x56, isLoopOn);
 }
 
-void AlphaTrackControlSurface::slaveOnOffChanged (bool)
-{
-}
-
 void AlphaTrackControlSurface::punchOnOffChanged (bool isPunching_)
 {
     isPunching = isPunching_;
 
     if (shift)
         setLed (0x56, isPunching);
-}
-
-void AlphaTrackControlSurface::parameterChanged (int, const ParameterSetting&)
-{
-}
-
-void AlphaTrackControlSurface::clearParameter (int)
-{
-}
-
-void AlphaTrackControlSurface::markerChanged (int, const MarkerSetting&)
-{
-}
-
-void AlphaTrackControlSurface::clearMarker (int)
-{
-}
-
-void AlphaTrackControlSurface::currentSelectionChanged (juce::String)
-{
 }
 
 void AlphaTrackControlSurface::displayPrint (int line, int x, const char* const text)

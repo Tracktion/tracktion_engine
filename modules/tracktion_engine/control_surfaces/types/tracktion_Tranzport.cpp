@@ -83,7 +83,6 @@ static inline bool matchesMessage (const juce::MidiMessage& m, const uint8_t (&d
     return size == m.getRawDataSize() && memcmp (m.getRawData(), data, (size_t) size) == 0;
 }
 
-
 TranzportControlSurface::TranzportControlSurface (ExternalControllerManager& ecm)  : ControlSurface (ecm)
 {
     needsMidiChannel                = true;
@@ -133,10 +132,6 @@ void TranzportControlSurface::shutDownDevice()
     sendMidiArray (cmdLEDAnySoloOff);
     sendMidiArray (cmdLEDPunchOff);
     sendMidiArray (cmdLEDLoopOff);
-}
-
-void TranzportControlSurface::updateMiscFeatures()
-{
 }
 
 void TranzportControlSurface::acceptMidiMessage (const juce::MidiMessage& m)
@@ -354,10 +349,6 @@ void TranzportControlSurface::moveFader (int channelNum, float newSliderPos)
     updateDisplay();
 }
 
-void TranzportControlSurface::moveMasterLevelFader (float, float)
-{
-}
-
 void TranzportControlSurface::movePanPot (int channelNum, float newPan)
 {
     if (channelNum == 0)
@@ -365,10 +356,6 @@ void TranzportControlSurface::movePanPot (int channelNum, float newPan)
 
     if (init)
         updateDisplay();
-}
-
-void TranzportControlSurface::moveAux (int, const char*, float)
-{
 }
 
 void TranzportControlSurface::updateSoloAndMute (int channelNum, Track::MuteAndSoloLightState state, bool isBright)
@@ -398,10 +385,6 @@ void TranzportControlSurface::soloCountChanged (bool anySoloTracks)
     }
 }
 
-void TranzportControlSurface::playStateChanged (bool)
-{
-}
-
 void TranzportControlSurface::recordStateChanged (bool isRecording)
 {
     if (init)
@@ -411,14 +394,6 @@ void TranzportControlSurface::recordStateChanged (bool isRecording)
         else
             sendMidiArray (cmdLEDRecordOff);
     }
-}
-
-void TranzportControlSurface::automationReadModeChanged (bool)
-{
-}
-
-void TranzportControlSurface::automationWriteModeChanged (bool)
-{
 }
 
 void TranzportControlSurface::faderBankChanged (int newStartChannelNumber, const juce::StringArray& trackNames)
@@ -437,14 +412,6 @@ void TranzportControlSurface::faderBankChanged (int newStartChannelNumber, const
     }
 }
 
-void TranzportControlSurface::channelLevelChanged (int, float, float)
-{
-}
-
-void TranzportControlSurface::trackSelectionChanged (int, bool)
-{
-}
-
 void TranzportControlSurface::trackRecordEnabled (int, bool isEnabled)
 {
     if (init)
@@ -454,10 +421,6 @@ void TranzportControlSurface::trackRecordEnabled (int, bool isEnabled)
         else
             sendMidiArray (cmdLEDArmRecOff);
     }
-}
-
-void TranzportControlSurface::masterLevelsChanged (float, float)
-{
 }
 
 void TranzportControlSurface::timecodeChanged (int barsOrHours, int beatsOrMinutes, int ticksOrSeconds, int millisecs, bool isBarsBeats, bool isFrames)
@@ -477,10 +440,6 @@ void TranzportControlSurface::timecodeChanged (int barsOrHours, int beatsOrMinut
     }
 }
 
-void TranzportControlSurface::clickOnOffChanged (bool)
-{
-}
-
 void TranzportControlSurface::snapOnOffChanged (bool isSnapOn)
 {
     snap = isSnapOn;
@@ -497,10 +456,6 @@ void TranzportControlSurface::loopOnOffChanged (bool isLoopOn)
     }
 }
 
-void TranzportControlSurface::slaveOnOffChanged (bool)
-{
-}
-
 void TranzportControlSurface::punchOnOffChanged (bool isPunching)
 {
     if (init)
@@ -512,21 +467,9 @@ void TranzportControlSurface::punchOnOffChanged (bool isPunching)
     }
 }
 
-void TranzportControlSurface::parameterChanged (int, const ParameterSetting&)
-{
-}
-
-void TranzportControlSurface::clearParameter (int)
-{
-}
-
 bool TranzportControlSurface::canChangeSelectedPlugin()
 {
     return false;
-}
-
-void TranzportControlSurface::currentSelectionChanged (juce::String)
-{
 }
 
 void TranzportControlSurface::updateDisplay()
@@ -622,14 +565,6 @@ void TranzportControlSurface::displayPrint (int pos, const char* text)
     memcpy (buffer + sizeof (cmdWrite) + 1, text, len);
     buffer [len + 8 - 1] = 0xf7;
     sendMidiCommandToController (buffer, (int) len + 8);
-}
-
-void TranzportControlSurface::markerChanged (int, const MarkerSetting&)
-{
-}
-
-void TranzportControlSurface::clearMarker (int)
-{
 }
 
 }
