@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-18 10:17:54</td>
+            <td class="headerValue">2022-01-21 00:13:26</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">8</td>
@@ -133,27 +133,30 @@
 <a name="71"><span class="lineNum">      71 </span>            :     }</a>
 <a name="72"><span class="lineNum">      72 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="73"><span class="lineNum">      73 </span>            : </a>
-<a name="74"><span class="lineNum">      74 </span><span class="lineCov">       3091 : void LevelMeterPlugin::timerCallback()</span></a>
+<a name="74"><span class="lineNum">      74 </span><span class="lineCov">       3063 : void LevelMeterPlugin::timerCallback()</span></a>
 <a name="75"><span class="lineNum">      75 </span>            : {</a>
-<a name="76"><span class="lineNum">      76 </span><span class="lineCov">       3091 :     if (controllerTrack &gt;= 0)</span></a>
+<a name="76"><span class="lineNum">      76 </span><span class="lineCov">       3063 :     if (controllerTrack &gt;= 0)</span></a>
 <a name="77"><span class="lineNum">      77 </span>            :     {</a>
-<a name="78"><span class="lineNum">      78 </span><span class="lineCov">       3091 :         auto&amp; ecm = engine.getExternalControllerManager();</span></a>
+<a name="78"><span class="lineNum">      78 </span><span class="lineCov">       3063 :         auto&amp; ecm = engine.getExternalControllerManager();</span></a>
 <a name="79"><span class="lineNum">      79 </span>            : </a>
-<a name="80"><span class="lineNum">      80 </span><span class="lineCov">       3091 :         if (ecm.isAttachedToEdit (edit))</span></a>
-<a name="81"><span class="lineNum">      81 </span><span class="lineNoCov">          0 :             ecm.channelLevelChanged (controllerTrack, dbToGain (measurer.getLevelCache()));</span></a>
-<a name="82"><span class="lineNum">      82 </span>            :     }</a>
-<a name="83"><span class="lineNum">      83 </span><span class="lineCov">       3091 : }</span></a>
-<a name="84"><span class="lineNum">      84 </span>            : </a>
-<a name="85"><span class="lineNum">      85 </span><span class="lineNoCov">          0 : void LevelMeterPlugin::restorePluginStateFromValueTree (const juce::ValueTree&amp; v)</span></a>
-<a name="86"><span class="lineNum">      86 </span>            : {</a>
-<a name="87"><span class="lineNum">      87 </span><span class="lineNoCov">          0 :     juce::CachedValue&lt;bool&gt;* cvsBool[] = { &amp;showMidiActivity, nullptr };</span></a>
-<a name="88"><span class="lineNum">      88 </span><span class="lineNoCov">          0 :     copyPropertiesToNullTerminatedCachedValues (v, cvsBool);</span></a>
-<a name="89"><span class="lineNum">      89 </span>            : </a>
-<a name="90"><span class="lineNum">      90 </span><span class="lineNoCov">          0 :     for (auto p : getAutomatableParameters())</span></a>
-<a name="91"><span class="lineNum">      91 </span><span class="lineNoCov">          0 :         p-&gt;updateFromAttachedValue();</span></a>
-<a name="92"><span class="lineNum">      92 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="93"><span class="lineNum">      93 </span>            : </a>
-<a name="94"><span class="lineNum">      94 </span>            : }</a>
+<a name="80"><span class="lineNum">      80 </span><span class="lineCov">       3063 :         if (ecm.isAttachedToEdit (edit))</span></a>
+<a name="81"><span class="lineNum">      81 </span>            :         {</a>
+<a name="82"><span class="lineNum">      82 </span>            :             auto l = measurer.getLevelCache();</a>
+<a name="83"><span class="lineNum">      83 </span><span class="lineNoCov">          0 :             ecm.channelLevelChanged (controllerTrack, dbToGain (l.first), dbToGain (l.second));</span></a>
+<a name="84"><span class="lineNum">      84 </span>            :         }</a>
+<a name="85"><span class="lineNum">      85 </span>            :     }</a>
+<a name="86"><span class="lineNum">      86 </span><span class="lineCov">       3063 : }</span></a>
+<a name="87"><span class="lineNum">      87 </span>            : </a>
+<a name="88"><span class="lineNum">      88 </span><span class="lineNoCov">          0 : void LevelMeterPlugin::restorePluginStateFromValueTree (const juce::ValueTree&amp; v)</span></a>
+<a name="89"><span class="lineNum">      89 </span>            : {</a>
+<a name="90"><span class="lineNum">      90 </span><span class="lineNoCov">          0 :     juce::CachedValue&lt;bool&gt;* cvsBool[] = { &amp;showMidiActivity, nullptr };</span></a>
+<a name="91"><span class="lineNum">      91 </span><span class="lineNoCov">          0 :     copyPropertiesToNullTerminatedCachedValues (v, cvsBool);</span></a>
+<a name="92"><span class="lineNum">      92 </span>            : </a>
+<a name="93"><span class="lineNum">      93 </span><span class="lineNoCov">          0 :     for (auto p : getAutomatableParameters())</span></a>
+<a name="94"><span class="lineNum">      94 </span><span class="lineNoCov">          0 :         p-&gt;updateFromAttachedValue();</span></a>
+<a name="95"><span class="lineNum">      95 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="96"><span class="lineNum">      96 </span>            : </a>
+<a name="97"><span class="lineNum">      97 </span>            : }</a>
 </pre>
       </td>
     </tr>

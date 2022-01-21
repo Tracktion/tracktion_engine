@@ -7278,8 +7278,8 @@
       <type>void</type>
       <name>channelLevelChanged</name>
       <anchorfile>classtracktion__engine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>a7a056d06a8c328f262de694a672525e1</anchor>
-      <arglist>(int channel, float level) override</arglist>
+      <anchor>a2e9813de3467420cb6a4f63b2f24ef9b</anchor>
+      <arglist>(int channel, float l, float r) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -20305,8 +20305,8 @@
       <type>virtual void</type>
       <name>channelLevelChanged</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a53ac1509bfdfc4d44cf77f41691f95ee</anchor>
-      <arglist>(int channel, float level)=0</arglist>
+      <anchor>a63748dfb8bff308dcc3b4d979b380263</anchor>
+      <arglist>(int channel, float l, float r)=0</arglist>
     </member>
     <member kind="function" virtualness="pure">
       <type>virtual void</type>
@@ -23886,8 +23886,8 @@
       <type>void</type>
       <name>channelLevelChanged</name>
       <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a2d197b426d8484d189d2f5ee16dc26e8</anchor>
-      <arglist>(int channel, float level) override</arglist>
+      <anchor>ae70ef60cbfaa99bf2e42006320414e88</anchor>
+      <arglist>(int channel, float l, float r) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -31134,8 +31134,8 @@
       <type>void</type>
       <name>channelLevelChanged</name>
       <anchorfile>classtracktion__engine_1_1ExternalController.html</anchorfile>
-      <anchor>a99e42206a2eff1704c1c2cd884555f62</anchor>
-      <arglist>(int channel, float level)</arglist>
+      <anchor>af7a64e59cacbfa3577f11cf78a886676</anchor>
+      <arglist>(int channel, float l, float r)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -31757,8 +31757,8 @@
       <type>void</type>
       <name>channelLevelChanged</name>
       <anchorfile>classtracktion__engine_1_1ExternalControllerManager.html</anchorfile>
-      <anchor>aa070307605e8b56f03f795c9350a879f</anchor>
-      <arglist>(int channel, float level)</arglist>
+      <anchor>ace6318ec4e7c56b6ad7691c756aeafb6</anchor>
+      <arglist>(int channel, float l, float r)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -37335,14 +37335,14 @@
       <type>void</type>
       <name>setLevelCache</name>
       <anchorfile>classtracktion__engine_1_1LevelMeasurer.html</anchorfile>
-      <anchor>ad84df0292977cf61fa18600b7b4ed9a2</anchor>
-      <arglist>(float dB) noexcept</arglist>
+      <anchor>ad484c068b811667f897b43d98ea2b64c</anchor>
+      <arglist>(float dBL, float dBR) noexcept</arglist>
     </member>
     <member kind="function">
-      <type>float</type>
+      <type>std::pair&lt; float, float &gt;</type>
       <name>getLevelCache</name>
       <anchorfile>classtracktion__engine_1_1LevelMeasurer.html</anchorfile>
-      <anchor>a329d9407854e031ba5f7256a4992c1a0</anchor>
+      <anchor>a09d412068f9418c99a1a057b9a0d58e8</anchor>
       <arglist>() const noexcept</arglist>
     </member>
   </compound>
@@ -39521,8 +39521,8 @@
       <type>void</type>
       <name>channelLevelChanged</name>
       <anchorfile>classtracktion__engine_1_1MackieC4.html</anchorfile>
-      <anchor>aaecf35d6dd9261382e10ada09b0c63b2</anchor>
-      <arglist>(int channel, float level) override</arglist>
+      <anchor>a9d91b63e60937eaf83ba13da6bcd26cd</anchor>
+      <arglist>(int channel, float l, float r) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -40077,8 +40077,8 @@
       <type>void</type>
       <name>channelLevelChanged</name>
       <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
-      <anchor>acda5e8264bf7f83771e08b6251d52cbe</anchor>
-      <arglist>(int channel, float level) override</arglist>
+      <anchor>ae58fcc83948fdbc61804526eca1724c2</anchor>
+      <arglist>(int channel, float l, float r) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -40593,8 +40593,8 @@
       <type>void</type>
       <name>channelLevelChanged</name>
       <anchorfile>classtracktion__engine_1_1MackieXT.html</anchorfile>
-      <anchor>a55cd8d0437ccc14251f488f6d80b8a59</anchor>
-      <arglist>(int channel, float level) override</arglist>
+      <anchor>a4c27cd117ee65e819c27cd2c0ea66ad7</anchor>
+      <arglist>(int channel, float l, float r) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -48110,8 +48110,8 @@
       <type>void</type>
       <name>channelLevelChanged</name>
       <anchorfile>classtracktion__engine_1_1NovationRemoteSl.html</anchorfile>
-      <anchor>a918705bc385fd2042ff948df5652601b</anchor>
-      <arglist>(int channel, float level) override</arglist>
+      <anchor>a902bb400d3810e68abd313e07099c4b6</anchor>
+      <arglist>(int channel, float l, float r) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -58230,8 +58230,8 @@
       <type>void</type>
       <name>channelLevelChanged</name>
       <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>a8ec40b8f5544c84450810cf617d80f96</anchor>
-      <arglist>(int channel, float level) override</arglist>
+      <anchor>a42b59b1e77814cf62240f86a725cc40e</anchor>
+      <arglist>(int channel, float l, float r) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -70911,8 +70911,8 @@
       <type>void</type>
       <name>channelLevelChanged</name>
       <anchorfile>classtracktion__engine_1_1TranzportControlSurface.html</anchorfile>
-      <anchor>a578bd164545b735902101d95404bb68c</anchor>
-      <arglist>(int channel, float level) override</arglist>
+      <anchor>a11e145c33d38d4c65a71d0c87dfa6190</anchor>
+      <arglist>(int channel, float l, float r) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -81890,6 +81890,11 @@
     <subgroup>tracktion_engine-utilities</subgroup>
   </compound>
   <compound kind="group">
+    <name>tracktion_graph-tracktion_graph</name>
+    <title>tracktion_graph</title>
+    <filename>group__tracktion__graph-tracktion__graph.html</filename>
+  </compound>
+  <compound kind="group">
     <name>tracktion_graph</name>
     <title>tracktion_graph</title>
     <filename>group__tracktion__graph.html</filename>
@@ -81990,18 +81995,13 @@
     </member>
   </compound>
   <compound kind="group">
-    <name>tracktion_graph-tracktion_graph</name>
-    <title>tracktion_graph</title>
-    <filename>group__tracktion__graph-tracktion__graph.html</filename>
+    <name>tracktion_engine-utilities</name>
+    <title>utilities</title>
+    <filename>group__tracktion__engine-utilities.html</filename>
   </compound>
   <compound kind="group">
     <name>tracktion_graph-utilities</name>
     <title>utilities</title>
     <filename>group__tracktion__graph-utilities.html</filename>
-  </compound>
-  <compound kind="group">
-    <name>tracktion_engine-utilities</name>
-    <title>utilities</title>
-    <filename>group__tracktion__engine-utilities.html</filename>
   </compound>
 </tagfile>

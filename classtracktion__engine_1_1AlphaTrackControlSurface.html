@@ -139,8 +139,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a95befc9546f79f489e6da8cf3fc89c9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac3aac41d34652db43dd4663125850496"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AlphaTrackControlSurface.html#ac3aac41d34652db43dd4663125850496">faderBankChanged</a> (int newStartChannelNumber, const juce::StringArray &amp;trackNames) override</td></tr>
 <tr class="separator:ac3aac41d34652db43dd4663125850496"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7a056d06a8c328f262de694a672525e1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AlphaTrackControlSurface.html#a7a056d06a8c328f262de694a672525e1">channelLevelChanged</a> (int channel, float level) override</td></tr>
-<tr class="separator:a7a056d06a8c328f262de694a672525e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e9813de3467420cb6a4f63b2f24ef9b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AlphaTrackControlSurface.html#a2e9813de3467420cb6a4f63b2f24ef9b">channelLevelChanged</a> (int channel, float l, float r) override</td></tr>
+<tr class="separator:a2e9813de3467420cb6a4f63b2f24ef9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa824c35d485807dce8622249d8d4ad2a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AlphaTrackControlSurface.html#aa824c35d485807dce8622249d8d4ad2a">trackSelectionChanged</a> (int channel, bool isSelected) override</td></tr>
 <tr class="separator:aa824c35d485807dce8622249d8d4ad2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a08dd68da8353e2ce60c03d7a28d7a229"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1AlphaTrackControlSurface.html#a08dd68da8353e2ce60c03d7a28d7a229">trackRecordEnabled</a> (int channel, bool isEnabled) override</td></tr>
@@ -1087,8 +1087,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a7a056d06a8c328f262de694a672525e1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7a056d06a8c328f262de694a672525e1">&#9670;&nbsp;</a></span>channelLevelChanged()</h2>
+<a id="a2e9813de3467420cb6a4f63b2f24ef9b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e9813de3467420cb6a4f63b2f24ef9b">&#9670;&nbsp;</a></span>channelLevelChanged()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1106,7 +1106,13 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>level</em>&#160;</td>
+          <td class="paramname"><em>l</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>r</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1121,7 +1127,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classtracktion__engine_1_1ControlSurface.html#a53ac1509bfdfc4d44cf77f41691f95ee">tracktion_engine::ControlSurface</a>.</p>
+<p>Implements <a class="el" href="classtracktion__engine_1_1ControlSurface.html#a63748dfb8bff308dcc3b4d979b380263">tracktion_engine::ControlSurface</a>.</p>
 
 </div>
 </div>
@@ -1659,7 +1665,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jan 18 2022 10:04:15 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jan 21 2022 00:02:25 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

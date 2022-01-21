@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-18 10:17:54</td>
+            <td class="headerValue">2022-01-21 00:13:26</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -446,12 +446,12 @@
 <a name="384"><span class="lineNum">     384 </span><span class="lineNoCov">          0 :         getControlSurface().clickOnOffChanged (isOn);</span></a>
 <a name="385"><span class="lineNum">     385 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="386"><span class="lineNum">     386 </span>            : </a>
-<a name="387"><span class="lineNum">     387 </span><span class="lineNoCov">          0 : void ExternalController::channelLevelChanged (int channelNum, float level)</span></a>
+<a name="387"><span class="lineNum">     387 </span><span class="lineNoCov">          0 : void ExternalController::channelLevelChanged (int channelNum, float l, float r)</span></a>
 <a name="388"><span class="lineNum">     388 </span>            : {</a>
 <a name="389"><span class="lineNum">     389 </span>            :     int i = getFaderIndexInActiveRegion (channelNum);</a>
 <a name="390"><span class="lineNum">     390 </span>            : </a>
 <a name="391"><span class="lineNum">     391 </span><span class="lineNoCov">          0 :     if (i &gt;= 0)</span></a>
-<a name="392"><span class="lineNum">     392 </span><span class="lineNoCov">          0 :         getControlSurface().channelLevelChanged (i, level);</span></a>
+<a name="392"><span class="lineNum">     392 </span><span class="lineNoCov">          0 :         getControlSurface().channelLevelChanged (i, l, r);</span></a>
 <a name="393"><span class="lineNum">     393 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="394"><span class="lineNum">     394 </span>            : </a>
 <a name="395"><span class="lineNum">     395 </span><span class="lineNoCov">          0 : void ExternalController::masterLevelsChanged (float leftLevel, float rightLevel)</span></a>
@@ -928,7 +928,7 @@
 <a name="866"><span class="lineNum">     866 </span>            : </a>
 <a name="867"><span class="lineNum">     867 </span><span class="lineNoCov">          0 :                         updateSoloAndMute (chan, t-&gt;getMuteAndSoloLightState(), true);</span></a>
 <a name="868"><span class="lineNum">     868 </span>            : </a>
-<a name="869"><span class="lineNum">     869 </span>            :                         channelLevelChanged (chan, 0.0f);</a>
+<a name="869"><span class="lineNum">     869 </span>            :                         channelLevelChanged (chan, 0.0f, 0.0f);</a>
 <a name="870"><span class="lineNum">     870 </span>            : </a>
 <a name="871"><span class="lineNum">     871 </span><span class="lineNoCov">          0 :                         if (auto sm = ecm.getSelectionManager())</span></a>
 <a name="872"><span class="lineNum">     872 </span><span class="lineNoCov">          0 :                             trackSelected (chan, sm-&gt;isSelected (t));</span></a>
@@ -938,7 +938,7 @@
 <a name="876"><span class="lineNum">     876 </span><span class="lineNoCov">          0 :                         moveFader (chan, decibelsToVolumeFaderPosition (0.0f));</span></a>
 <a name="877"><span class="lineNum">     877 </span>            :                         movePanPot (chan, 0.0f);</a>
 <a name="878"><span class="lineNum">     878 </span>            :                         updateSoloAndMute (chan, {}, false);</a>
-<a name="879"><span class="lineNum">     879 </span>            :                         channelLevelChanged (chan, 0.0f);</a>
+<a name="879"><span class="lineNum">     879 </span>            :                         channelLevelChanged (chan, 0.0f, 0.0f);</a>
 <a name="880"><span class="lineNum">     880 </span>            :                         trackSelected (chan, false);</a>
 <a name="881"><span class="lineNum">     881 </span>            :                     }</a>
 <a name="882"><span class="lineNum">     882 </span>            :                 }</a>

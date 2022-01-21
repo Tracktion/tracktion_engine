@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-18 10:17:54</td>
+            <td class="headerValue">2022-01-21 00:13:26</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -152,42 +152,43 @@
 <a name="90"><span class="lineNum">      90 </span>            :     void addClient (Client&amp;);</a>
 <a name="91"><span class="lineNum">      91 </span>            :     void removeClient (Client&amp;);</a>
 <a name="92"><span class="lineNum">      92 </span>            : </a>
-<a name="93"><span class="lineNum">      93 </span>            :     void setLevelCache (float dB) noexcept              { levelCache = dB; }</a>
-<a name="94"><span class="lineNum">      94 </span>            :     float getLevelCache() const noexcept                { return levelCache; }</a>
+<a name="93"><span class="lineNum">      93 </span>            :     void setLevelCache (float dBL, float dBR) noexcept      { levelCacheL = dBL; levelCacheR = dBR; }</a>
+<a name="94"><span class="lineNum">      94 </span>            :     std::pair&lt;float, float&gt; getLevelCache() const noexcept  { return { levelCacheL, levelCacheR }; }</a>
 <a name="95"><span class="lineNum">      95 </span>            : </a>
 <a name="96"><span class="lineNum">      96 </span>            : private:</a>
 <a name="97"><span class="lineNum">      97 </span>            :     Mode mode = peakMode;</a>
 <a name="98"><span class="lineNum">      98 </span>            :     int numActiveChannels = 1;</a>
 <a name="99"><span class="lineNum">      99 </span>            :     bool showMidi = false;</a>
-<a name="100"><span class="lineNum">     100 </span>            :     float levelCache = -100.0f;</a>
-<a name="101"><span class="lineNum">     101 </span>            : </a>
-<a name="102"><span class="lineNum">     102 </span>            :     juce::Array&lt;Client*&gt; clients;</a>
-<a name="103"><span class="lineNum">     103 </span>            :     juce::CriticalSection clientsMutex;</a>
-<a name="104"><span class="lineNum">     104 </span>            : </a>
-<a name="105"><span class="lineNum">     105 </span><span class="lineCov">       2223 :     JUCE_DECLARE_WEAK_REFERENCEABLE(LevelMeasurer)</span></a>
-<a name="106"><span class="lineNum">     106 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LevelMeasurer)</a>
-<a name="107"><span class="lineNum">     107 </span>            : };</a>
-<a name="108"><span class="lineNum">     108 </span>            : </a>
-<a name="109"><span class="lineNum">     109 </span>            : //==============================================================================</a>
-<a name="110"><span class="lineNum">     110 </span>            : /** A shared level measurer that can be used by several threads to provide a</a>
-<a name="111"><span class="lineNum">     111 </span>            :     total output level</a>
-<a name="112"><span class="lineNum">     112 </span>            : */</a>
-<a name="113"><span class="lineNum">     113 </span>            : class SharedLevelMeasurer  : public LevelMeasurer,</a>
-<a name="114"><span class="lineNum">     114 </span>            :                              public juce::ReferenceCountedObject</a>
-<a name="115"><span class="lineNum">     115 </span>            : {</a>
-<a name="116"><span class="lineNum">     116 </span>            : public:</a>
-<a name="117"><span class="lineNum">     117 </span>            :     using Ptr = juce::ReferenceCountedObjectPtr&lt;SharedLevelMeasurer&gt;;</a>
-<a name="118"><span class="lineNum">     118 </span>            : </a>
-<a name="119"><span class="lineNum">     119 </span>            :     void startNextBlock (double streamTime);</a>
-<a name="120"><span class="lineNum">     120 </span>            :     void setSize (int channels, int numSamples);</a>
-<a name="121"><span class="lineNum">     121 </span>            :     void addBuffer (const juce::AudioBuffer&lt;float&gt;&amp; inBuffer, int startSample, int numSamples);</a>
-<a name="122"><span class="lineNum">     122 </span>            : </a>
-<a name="123"><span class="lineNum">     123 </span>            :     juce::SpinLock spinLock;</a>
-<a name="124"><span class="lineNum">     124 </span>            :     double lastStreamTime = 0;</a>
-<a name="125"><span class="lineNum">     125 </span>            :     juce::AudioBuffer&lt;float&gt; sumBuffer;</a>
-<a name="126"><span class="lineNum">     126 </span>            : };</a>
-<a name="127"><span class="lineNum">     127 </span>            : </a>
-<a name="128"><span class="lineNum">     128 </span>            : } // namespace tracktion_engine</a>
+<a name="100"><span class="lineNum">     100 </span>            :     float levelCacheL = -100.0f;</a>
+<a name="101"><span class="lineNum">     101 </span>            :     float levelCacheR = -100.0f;</a>
+<a name="102"><span class="lineNum">     102 </span>            : </a>
+<a name="103"><span class="lineNum">     103 </span>            :     juce::Array&lt;Client*&gt; clients;</a>
+<a name="104"><span class="lineNum">     104 </span>            :     juce::CriticalSection clientsMutex;</a>
+<a name="105"><span class="lineNum">     105 </span>            : </a>
+<a name="106"><span class="lineNum">     106 </span><span class="lineCov">       2223 :     JUCE_DECLARE_WEAK_REFERENCEABLE(LevelMeasurer)</span></a>
+<a name="107"><span class="lineNum">     107 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LevelMeasurer)</a>
+<a name="108"><span class="lineNum">     108 </span>            : };</a>
+<a name="109"><span class="lineNum">     109 </span>            : </a>
+<a name="110"><span class="lineNum">     110 </span>            : //==============================================================================</a>
+<a name="111"><span class="lineNum">     111 </span>            : /** A shared level measurer that can be used by several threads to provide a</a>
+<a name="112"><span class="lineNum">     112 </span>            :     total output level</a>
+<a name="113"><span class="lineNum">     113 </span>            : */</a>
+<a name="114"><span class="lineNum">     114 </span>            : class SharedLevelMeasurer  : public LevelMeasurer,</a>
+<a name="115"><span class="lineNum">     115 </span>            :                              public juce::ReferenceCountedObject</a>
+<a name="116"><span class="lineNum">     116 </span>            : {</a>
+<a name="117"><span class="lineNum">     117 </span>            : public:</a>
+<a name="118"><span class="lineNum">     118 </span>            :     using Ptr = juce::ReferenceCountedObjectPtr&lt;SharedLevelMeasurer&gt;;</a>
+<a name="119"><span class="lineNum">     119 </span>            : </a>
+<a name="120"><span class="lineNum">     120 </span>            :     void startNextBlock (double streamTime);</a>
+<a name="121"><span class="lineNum">     121 </span>            :     void setSize (int channels, int numSamples);</a>
+<a name="122"><span class="lineNum">     122 </span>            :     void addBuffer (const juce::AudioBuffer&lt;float&gt;&amp; inBuffer, int startSample, int numSamples);</a>
+<a name="123"><span class="lineNum">     123 </span>            : </a>
+<a name="124"><span class="lineNum">     124 </span>            :     juce::SpinLock spinLock;</a>
+<a name="125"><span class="lineNum">     125 </span>            :     double lastStreamTime = 0;</a>
+<a name="126"><span class="lineNum">     126 </span>            :     juce::AudioBuffer&lt;float&gt; sumBuffer;</a>
+<a name="127"><span class="lineNum">     127 </span>            : };</a>
+<a name="128"><span class="lineNum">     128 </span>            : </a>
+<a name="129"><span class="lineNum">     129 </span>            : } // namespace tracktion_engine</a>
 </pre>
       </td>
     </tr>

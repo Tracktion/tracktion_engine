@@ -154,8 +154,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af045286f88cf7cbbd9a812b32044e9d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a68822d71cd8395a0446fe195e3b55516"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ExternalController.html#a68822d71cd8395a0446fe195e3b55516">clickChanged</a> (bool isOn)</td></tr>
 <tr class="separator:a68822d71cd8395a0446fe195e3b55516"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a99e42206a2eff1704c1c2cd884555f62"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ExternalController.html#a99e42206a2eff1704c1c2cd884555f62">channelLevelChanged</a> (int channel, float level)</td></tr>
-<tr class="separator:a99e42206a2eff1704c1c2cd884555f62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af7a64e59cacbfa3577f11cf78a886676"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ExternalController.html#af7a64e59cacbfa3577f11cf78a886676">channelLevelChanged</a> (int channel, float l, float r)</td></tr>
+<tr class="separator:af7a64e59cacbfa3577f11cf78a886676"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aedb0c32bf0a7575a841e7302dde61c9d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ExternalController.html#aedb0c32bf0a7575a841e7302dde61c9d">masterLevelsChanged</a> (float leftLevel, float rightLevel)</td></tr>
 <tr class="separator:aedb0c32bf0a7575a841e7302dde61c9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa66d04625dea05f13845d7a891d109c4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ExternalController.html#aa66d04625dea05f13845d7a891d109c4">timecodeChanged</a> (int barsOrHours, int beatsOrMinutes, int ticksOrSeconds, int millisecs, bool isBarsBeats, bool isFrames)</td></tr>
@@ -964,8 +964,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a99e42206a2eff1704c1c2cd884555f62"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a99e42206a2eff1704c1c2cd884555f62">&#9670;&nbsp;</a></span>channelLevelChanged()</h2>
+<a id="af7a64e59cacbfa3577f11cf78a886676"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af7a64e59cacbfa3577f11cf78a886676">&#9670;&nbsp;</a></span>channelLevelChanged()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -980,7 +980,13 @@ Public Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>level</em>&#160;</td>
+          <td class="paramname"><em>l</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>r</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2238,7 +2244,7 @@ template&lt;typename Type &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jan 18 2022 10:04:16 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jan 21 2022 00:02:25 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>
