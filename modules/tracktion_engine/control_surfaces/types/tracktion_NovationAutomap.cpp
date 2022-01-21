@@ -1110,7 +1110,7 @@ void NovationAutomap::faderBankChanged (int, const juce::StringArray& trackNames
         hostAutomap->faderBankChanged (trackNames);
 }
 
-void NovationAutomap::channelLevelChanged (int, float)          {}
+void NovationAutomap::channelLevelChanged (int, float, float)   {}
 void NovationAutomap::trackSelectionChanged (int, bool)         {}
 
 void NovationAutomap::trackRecordEnabled (int channel, bool)

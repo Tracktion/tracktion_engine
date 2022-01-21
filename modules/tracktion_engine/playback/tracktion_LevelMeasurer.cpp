@@ -268,7 +268,8 @@ void LevelMeasurer::clear()
     for (auto c : clients)
         c->reset();
 
-    levelCache = -100.0f;
+    levelCacheL = -100.0f;
+    levelCacheR = -100.0f;
     numActiveChannels = 1;
 }
 

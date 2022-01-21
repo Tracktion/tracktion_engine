@@ -754,7 +754,7 @@ void CustomControlSurface::faderBankChanged (int newStartChannelNumber, const ju
     }
 }
 
-void CustomControlSurface::channelLevelChanged (int, float) {}
+void CustomControlSurface::channelLevelChanged (int, float, float) {}
 
 void CustomControlSurface::trackSelectionChanged (int faderIndex, bool isSelected)
 {

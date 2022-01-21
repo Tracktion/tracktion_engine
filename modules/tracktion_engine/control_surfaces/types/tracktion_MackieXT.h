@@ -32,7 +32,7 @@ public:
     void automationReadModeChanged (bool isReading) override;
     void automationWriteModeChanged (bool isWriting) override;
     void faderBankChanged (int newStartChannelNumber, const juce::StringArray& trackNames) override;
-    void channelLevelChanged (int channel, float level) override;
+    void channelLevelChanged (int channel, float l, float r) override;
     void trackSelectionChanged (int channel, bool isSelected) override;
     void trackRecordEnabled (int channel, bool isEnabled) override;
     void masterLevelsChanged (float leftLevel, float rightLevel) override;

@@ -484,7 +484,7 @@ void NovationRemoteSl::faderBankChanged (int, const juce::StringArray& newNames)
         refreshLeft (true);
 }
 
-void NovationRemoteSl::channelLevelChanged (int, float) {}
+void NovationRemoteSl::channelLevelChanged (int, float, float) {}
 void NovationRemoteSl::trackSelectionChanged (int, bool) {}
 void NovationRemoteSl::trackRecordEnabled (int, bool) {}
 void NovationRemoteSl::masterLevelsChanged (float, float) {}

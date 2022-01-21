@@ -384,12 +384,12 @@ void ExternalController::clickChanged (bool isOn)
         getControlSurface().clickOnOffChanged (isOn);
 }
 
-void ExternalController::channelLevelChanged (int channelNum, float level)
+void ExternalController::channelLevelChanged (int channelNum, float l, float r)
 {
     int i = getFaderIndexInActiveRegion (channelNum);
 
     if (i >= 0)
-        getControlSurface().channelLevelChanged (i, level);
+        getControlSurface().channelLevelChanged (i, l, r);
 }
 
 void ExternalController::masterLevelsChanged (float leftLevel, float rightLevel)
@@ -866,7 +866,7 @@ void ExternalController::updateDeviceState()
 
                         updateSoloAndMute (chan, t->getMuteAndSoloLightState(), true);
 
-                        channelLevelChanged (chan, 0.0f);
+                        channelLevelChanged (chan, 0.0f, 0.0f);
 
                         if (auto sm = ecm.getSelectionManager())
                             trackSelected (chan, sm->isSelected (t));
@@ -876,7 +876,7 @@ void ExternalController::updateDeviceState()
                         moveFader (chan, decibelsToVolumeFaderPosition (0.0f));
                         movePanPot (chan, 0.0f);
                         updateSoloAndMute (chan, {}, false);
-                        channelLevelChanged (chan, 0.0f);
+                        channelLevelChanged (chan, 0.0f, 0.0f);
                         trackSelected (chan, false);
                     }
                 }

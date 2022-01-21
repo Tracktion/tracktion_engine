@@ -80,7 +80,7 @@ public:
     void playStateChanged (bool isPlaying);
     void recordStateChanged (bool isRecording);
     void automationModeChanged (bool isReading, bool isWriting);
-    void channelLevelChanged (int channel, float level);
+    void channelLevelChanged (int channel, float l, float r);
     void masterLevelsChanged (float leftLevel, float rightLevel);
     void timecodeChanged (int barsOrHours, int beatsOrMinutes, int ticksOrSeconds,
                           int millisecs, bool isBarsBeats, bool isFrames);

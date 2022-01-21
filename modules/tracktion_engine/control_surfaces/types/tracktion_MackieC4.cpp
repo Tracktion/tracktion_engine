@@ -973,7 +973,7 @@ void MackieC4::clearAux (int channel)
     }
 }
 
-void MackieC4::channelLevelChanged (int channel, float level)
+void MackieC4::channelLevelChanged (int channel, float l, float r)
 {
     if (mode == MixerMode)
     {
@@ -983,7 +983,7 @@ void MackieC4::channelLevelChanged (int channel, float level)
         int midiLen = 0;
 
         if (c4->C4LCDSetMeterLevelTxString (midi, &midiLen, channel * 2 + 1,
-                                            juce::jlimit (0, 12, (juce::roundToInt (12.0f * level)))))
+                                            juce::jlimit (0, 12, (juce::roundToInt (12.0f * std::max (l, r))))))
             sendMidiCommandToController (midi, midiLen);
     }
 }

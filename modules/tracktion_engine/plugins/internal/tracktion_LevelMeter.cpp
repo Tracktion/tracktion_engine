@@ -78,7 +78,10 @@ void LevelMeterPlugin::timerCallback()
         auto& ecm = engine.getExternalControllerManager();
 
         if (ecm.isAttachedToEdit (edit))
-            ecm.channelLevelChanged (controllerTrack, dbToGain (measurer.getLevelCache()));
+        {
+            auto l = measurer.getLevelCache();
+            ecm.channelLevelChanged (controllerTrack, dbToGain (l.first), dbToGain (l.second));
+        }
     }
 }
 

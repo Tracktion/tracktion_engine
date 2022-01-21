@@ -532,11 +532,11 @@ void ExternalControllerManager::automationModeChanged (bool isReading, bool isWr
     FOR_EACH_DEVICE (automationModeChanged (isReading, isWriting));
 }
 
-void ExternalControllerManager::channelLevelChanged (int channel, float level)
+void ExternalControllerManager::channelLevelChanged (int channel, float l, float r)
 {
     CRASH_TRACER
     const int cn = mapTrackNumToChannelNum (channel);
-    FOR_EACH_DEVICE (channelLevelChanged (cn, level));
+    FOR_EACH_DEVICE (channelLevelChanged (cn, l, r));
 }
 
 void ExternalControllerManager::masterLevelsChanged (float leftLevel, float rightLevel)

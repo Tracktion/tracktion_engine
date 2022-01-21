@@ -1269,14 +1269,14 @@ void MackieMCU::faderBankChanged (int newStartChannelNumber, const juce::StringA
     }
 }
 
-void MackieMCU::channelLevelChanged (int channelNum_, float level)
+void MackieMCU::channelLevelChanged (int channelNum_, float l , float r)
 {
     int channel = channelNum_ % 8;
     int dev     = channelNum_ / 8;
 
     if (assignmentMode == PanMode)
     {
-        auto newValue = (uint8_t) juce::jlimit (0, 13, juce::roundToInt (13.0f * level));
+        auto newValue = (uint8_t) juce::jlimit (0, 13, juce::roundToInt (13.0f * std::max (l, r)));
 
         if (lastChannelLevels[channelNum_] != newValue)
         {

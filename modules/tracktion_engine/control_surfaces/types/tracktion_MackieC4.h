@@ -36,7 +36,7 @@ public:
     void faderBankChanged (int newStartChannelNumber, const juce::StringArray& trackNames) override;
     void moveAux (int channelNum, const char* bus, float newPos) override;
     void clearAux (int channel) override;
-    void channelLevelChanged (int channel, float level) override;
+    void channelLevelChanged (int channel, float l, float r) override;
     void updateSoloAndMute (int channelNum, Track::MuteAndSoloLightState, bool isBright) override;
     void soloCountChanged (bool) override;
     void trackSelectionChanged (int channel, bool isSelected) override;

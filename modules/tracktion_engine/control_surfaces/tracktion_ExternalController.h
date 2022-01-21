@@ -69,7 +69,7 @@ public:
     void snapChanged (bool isOn);
     void loopChanged (bool isOn);
     void clickChanged (bool isOn);
-    void channelLevelChanged (int channel, float level);
+    void channelLevelChanged (int channel, float l, float r);
     void masterLevelsChanged (float leftLevel, float rightLevel);
     void timecodeChanged (int barsOrHours, int beatsOrMinutes, int ticksOrSeconds, int millisecs, bool isBarsBeats, bool isFrames);
     void trackSelected (int channel, bool isSelected);

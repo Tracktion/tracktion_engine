@@ -113,8 +113,9 @@ public:
 
     // if the device has per-channel level meters, this should update one of them.
     // the channel number is the physical channel on the device, regardless of bank selection
+    // if the channel is mono then l == r
     // level is 0 to 1.0
-    virtual void channelLevelChanged (int channel, float level) = 0;
+    virtual void channelLevelChanged (int channel, float l, float r) = 0;
 
     // when a track is selected or deselected
     virtual void trackSelectionChanged (int channel, bool isSelected) = 0;

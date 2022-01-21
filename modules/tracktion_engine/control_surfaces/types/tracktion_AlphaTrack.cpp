@@ -585,7 +585,7 @@ void AlphaTrackControlSurface::faderBankChanged (int newStartChannelNumber, cons
     updateDisplay();
 }
 
-void AlphaTrackControlSurface::channelLevelChanged (int, float)
+void AlphaTrackControlSurface::channelLevelChanged (int, float, float)
 {
 }
 

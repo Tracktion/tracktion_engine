@@ -437,7 +437,7 @@ void TranzportControlSurface::faderBankChanged (int newStartChannelNumber, const
     }
 }
 
-void TranzportControlSurface::channelLevelChanged (int, float)
+void TranzportControlSurface::channelLevelChanged (int, float, float)
 {
 }
 

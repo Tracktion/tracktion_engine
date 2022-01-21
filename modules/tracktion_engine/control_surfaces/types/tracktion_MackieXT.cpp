@@ -72,7 +72,7 @@ void MackieXT::recordStateChanged (bool) {}
 void MackieXT::automationReadModeChanged (bool) {}
 void MackieXT::automationWriteModeChanged (bool) {}
 void MackieXT::faderBankChanged (int, const juce::StringArray&) {}
-void MackieXT::channelLevelChanged (int, float) {}
+void MackieXT::channelLevelChanged (int, float, float) {}
 void MackieXT::trackSelectionChanged (int, bool) {}
 void MackieXT::trackRecordEnabled (int, bool) {}
 void MackieXT::masterLevelsChanged (float, float) {}
