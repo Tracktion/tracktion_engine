@@ -177,8 +177,8 @@ public:
     static void saveAllSettings (Engine& engine);
 
     void updateMiscFeatures() override;
-    void acceptMidiMessage (const juce::MidiMessage&) override;
-    bool wantsMessage(const juce::MidiMessage&) override;
+    void acceptMidiMessage (int, const juce::MidiMessage&) override;
+    bool wantsMessage(int, const juce::MidiMessage&) override;
     bool eatsAllMessages() override;
     bool canSetEatsAllMessages() override;
     void setEatsAllMessages(bool eatAll) override;

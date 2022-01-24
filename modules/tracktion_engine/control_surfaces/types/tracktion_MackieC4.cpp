@@ -129,10 +129,10 @@ void MackieC4::initialiseDevice (bool)
     int midiLen = 0;
 
     if (c4->C4UniversalDeviceInquiryTxString (midi, &midiLen))
-        sendMidiCommandToController (midi, midiLen);
+        sendMidiCommandToController (0, midi, midiLen);
 
     if (c4->C4LEDAllOffTxString (midi, &midiLen))
-        sendMidiCommandToController (midi, midiLen);
+        sendMidiCommandToController (0, midi, midiLen);
 
     std::memset (currentText, 0, sizeof (currentText));
     std::memset (newText, 0, sizeof (newText));
@@ -162,7 +162,7 @@ void MackieC4::shutDownDevice()
     int midiLen = 0;
 
     if (c4->C4ResetTxString (midi, &midiLen))
-        sendMidiCommandToController (midi, midiLen);
+        sendMidiCommandToController (0, midi, midiLen);
 
     initialised = false;
 }
@@ -247,7 +247,7 @@ void MackieC4::handleAsyncUpdate()
                 newOne[lastDiff + 1] = 0;
 
                 if (c4->C4LCDMessageTxString (midi, &midiLen, display, row, firstDiff, newOne + firstDiff))
-                    sendMidiCommandToController (midi, midiLen);
+                    sendMidiCommandToController (0, midi, midiLen);
             }
         }
     }
@@ -265,7 +265,7 @@ void MackieC4::enableMeters (bool b)
         for (int i = 0; i < 16; ++i)
         {
             if (c4->C4LCDSetMeterControlTxString (midi, &midiLen, i * 2 + 1, b))
-                sendMidiCommandToController (midi, midiLen);
+                sendMidiCommandToController (0, midi, midiLen);
         }
 
         if (! b)
@@ -389,7 +389,7 @@ void MackieC4::lightUpButton (int buttonNum, bool on)
                            on ? C4SwitchSetOn
                               : C4SwitchSetOff))
     {
-        sendMidiCommandToController (midi, midiLen);
+        sendMidiCommandToController (0, midi, midiLen);
     }
 }
 
@@ -406,7 +406,7 @@ void MackieC4::setPotPosition (int potNumber, float value)
         currentPanPotPos[potNumber] = panPos;
 
         if (c4->C4VPotTxString (midi, &midiLen, potNumber, panPos, false))
-            sendMidiCommandToController (midi, midiLen);
+            sendMidiCommandToController (0, midi, midiLen);
     }
 }
 
@@ -426,7 +426,7 @@ void MackieC4::lightUpPotButton (int buttonNum, bool on)
                                 on ? 11 : 0,
                                 false, C4VPotModeWrap))
         {
-            sendMidiCommandToController (midi, midiLen);
+            sendMidiCommandToController (0, midi, midiLen);
         }
     }
 }
@@ -440,7 +440,7 @@ void MackieC4::timerCallback()
     }
 }
 
-void MackieC4::acceptMidiMessage (const juce::MidiMessage& m)
+void MackieC4::acceptMidiMessage (int, const juce::MidiMessage& m)
 {
     CRASH_TRACER
 
@@ -984,7 +984,7 @@ void MackieC4::channelLevelChanged (int channel, float l, float r)
 
         if (c4->C4LCDSetMeterLevelTxString (midi, &midiLen, channel * 2 + 1,
                                             juce::jlimit (0, 12, (juce::roundToInt (12.0f * std::max (l, r))))))
-            sendMidiCommandToController (midi, midiLen);
+            sendMidiCommandToController (0, midi, midiLen);
     }
 }
 

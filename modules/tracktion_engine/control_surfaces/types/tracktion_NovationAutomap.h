@@ -30,7 +30,7 @@ public:
     void initialiseDevice (bool connect) override;
     void shutDownDevice() override;
     void updateMiscFeatures() override;
-    void acceptMidiMessage (const juce::MidiMessage&) override;
+    void acceptMidiMessage (int, const juce::MidiMessage&) override;
     void moveFader (int channelNum, float newSliderPos) override;
     void moveMasterLevelFader (float newLeftSliderPos, float newRightSliderPos) override;
     void movePanPot (int channelNum, float newPan) override;
@@ -48,7 +48,7 @@ public:
     void trackRecordEnabled (int channel, bool isEnabled) override;
     void masterLevelsChanged(float leftLevel, float rightLevel) override;
     void timecodeChanged (int barsOrHours, int beatsOrMinutes, int ticksOrSeconds, int millisecs, bool isBarsBeats, bool isFrames) override;
-    bool wantsMessage (const juce::MidiMessage&) override;
+    bool wantsMessage (int, const juce::MidiMessage&) override;
     bool canSetEatsAllMessages() override;
     bool canChangeSelectedPlugin() override;
     bool showingPluginParams() override;

@@ -61,10 +61,13 @@ public:
     // a chance to do some extra stuff when it needs to refresh itself
     virtual void updateMiscFeatures() {}
 
+    // Called when the use changes the number of extenders
+    virtual void numExtendersChanged ([[maybe_unused]] int num) {}
+
     // called by tracktion when a midi message comes in from the controller. The
     // subclass must translate this and call methods in this class accordingly to
     // trigger whatever action the user is trying to do.
-    virtual void acceptMidiMessage (const juce::MidiMessage&) {}
+    virtual void acceptMidiMessage ([[maybe_unused]] int idx, const juce::MidiMessage&) {}
 
     // tells the device to move one of its faders.
     // the channel number is the physical channel on the device, regardless of bank selection
@@ -167,7 +170,7 @@ public:
 
     virtual void auxBankChanged (int)                   {}
 
-    virtual bool wantsMessage (const juce::MidiMessage&) { return true; }
+    virtual bool wantsMessage (int, const juce::MidiMessage&) { return true; }
     virtual bool eatsAllMessages()                      { return true; }
     virtual bool canSetEatsAllMessages()                { return false; }
     virtual void setEatsAllMessages(bool)               {}
@@ -208,11 +211,11 @@ public:
     int getParamBankOffset() const;
 
     // sends a MIDI message to the device's back-channel
-    void sendMidiCommandToController (const void* midiData, int numBytes);
-    void sendMidiCommandToController (const juce::MidiMessage&);
+    void sendMidiCommandToController (int idx, const void* midiData, int numBytes);
+    void sendMidiCommandToController (int idx, const juce::MidiMessage&);
 
     template <size_t size>
-    void sendMidiArray (const uint8_t (&rawData)[size])   { sendMidiCommandToController (rawData, (int) size); }
+    void sendMidiArray (int idx, const uint8_t (&rawData)[size])   { sendMidiCommandToController (idx, rawData, (int) size); }
 
     // tells tracktion that the user has moved a fader.
     // the channel number is the physical channel on the device, regardless of bank selection
@@ -345,6 +348,9 @@ public:
     //==============================================================================
     /** These values need to be set by the subclass.. */
     juce::String deviceDescription;
+
+    // The number of multiple similar devices can be connected to add additional tracks
+    int supportedExtenders = 0;
 
     // does this driver need to be able to send MIDI messages
     bool needsMidiChannel = true;

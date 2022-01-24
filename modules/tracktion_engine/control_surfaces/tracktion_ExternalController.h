@@ -30,12 +30,15 @@ public:
     bool needsMidiBackChannel() const           { return needsBackChannel; }
     bool needsOSCSocket() const                 { return needsOSC; }
 
-    juce::String getMidiInputDevice() const;
-    void setMidiInputDevice (const juce::String& nameOfMidiInput);
+    int getNumDevices() const;
+    void setNumDevices (int);
 
-    juce::String getBackChannelDevice() const;
-    void setBackChannelDevice (const juce::String& nameOfMidiOutput);
-    bool isUsingMidiOutputDevice (const MidiOutputDevice* d) const noexcept   { return d == outputDevice; }
+    juce::String getMidiInputDevice (int idx) const;
+    void setMidiInputDevice (int idx, const juce::String& nameOfMidiInput);
+
+    juce::String getBackChannelDevice (int idx) const;
+    void setBackChannelDevice (int idx, const juce::String& nameOfMidiOutput);
+    bool isUsingMidiOutputDevice (const MidiOutputDevice* d) const noexcept;
 
     int getOSCInputPort()                       { return oscInputPort; }
     void setOSCInputPort (int port);
@@ -106,8 +109,8 @@ public:
 
     //==============================================================================
     void handleAsyncUpdate() override;
-    void acceptMidiMessage (const juce::MidiMessage&);
-    bool wantsMessage (const juce::MidiMessage&);
+    void acceptMidiMessage (MidiInputDevice&, const juce::MidiMessage&);
+    bool wantsMessage (MidiInputDevice&, const juce::MidiMessage&);
     bool eatsAllMessages() const;
     bool canSetEatsAllMessages();
     void setEatsAllMessages (bool eatAll);
@@ -137,8 +140,8 @@ public:
 
     static juce::String shortenName (juce::String, int maxLen);
 
-    juce::String getInputDeviceName() const             { return inputDeviceName; }
-    juce::String getOutputDeviceName() const            { return outputDeviceName; }
+    juce::String getInputDeviceName (int idx) const     { return inputDeviceName[idx]; }
+    juce::String getOutputDeviceName (int idx) const    { return outputDeviceName[idx]; }
 
     juce::StringArray getMidiInputPorts() const;
     juce::StringArray getMidiOutputPorts() const;
@@ -148,12 +151,16 @@ public:
     Engine& engine;
 
 private:
+    static constexpr int maxDevices = 4;
     friend class ExternalControllerManager;
     friend class ControlSurface;
     friend class MackieC4;
     friend class MackieMCU;
 
-    juce::String inputDeviceName, outputDeviceName;
+    int numDevices = 1;
+    juce::String inputDeviceName[maxDevices];
+    juce::String outputDeviceName[maxDevices];
+
     std::unique_ptr<ControlSurface> controlSurface;
     int oscInputPort, oscOutputPort;
     juce::String oscOutputAddr;
@@ -177,9 +184,10 @@ private:
     bool followsTrackSelection;
     bool processMidi = false, updateParams = false;
 
-    MidiOutputDevice* outputDevice = nullptr;
+    MidiInputDevice* inputDevices[maxDevices] = { nullptr };
+    MidiOutputDevice* outputDevices[maxDevices] = { nullptr };
 
-    juce::Array<juce::MidiMessage> pendingMidiMessages;
+    juce::Array<std::pair<int, juce::MidiMessage>> pendingMidiMessages;
     juce::CriticalSection incomingMidiLock;
 
     int getMarkerBankOffset() const   { return startMarkerNumber; }

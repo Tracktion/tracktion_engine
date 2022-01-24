@@ -35,13 +35,13 @@ RemoteSLCompact::~RemoteSLCompact()
     notifyListenersOfDeletion();
 }
 
-bool RemoteSLCompact::eatsAllMessages()                             { return false; }
-bool RemoteSLCompact::canSetEatsAllMessages()                       { return false; }
-bool RemoteSLCompact::canChangeSelectedPlugin()                     { return true; }
-bool RemoteSLCompact::showingPluginParams()                         { return true; }
-bool RemoteSLCompact::showingMarkers()                              { return false; }
-bool RemoteSLCompact::showingTracks()                               { return false; }
-bool RemoteSLCompact::isPluginSelected (Plugin*)                    { return false; }
-bool RemoteSLCompact::wantsMessage (const juce::MidiMessage& m)     { return m.isController(); }
+bool RemoteSLCompact::eatsAllMessages()                                 { return false; }
+bool RemoteSLCompact::canSetEatsAllMessages()                           { return false; }
+bool RemoteSLCompact::canChangeSelectedPlugin()                         { return true; }
+bool RemoteSLCompact::showingPluginParams()                             { return true; }
+bool RemoteSLCompact::showingMarkers()                                  { return false; }
+bool RemoteSLCompact::showingTracks()                                   { return false; }
+bool RemoteSLCompact::isPluginSelected (Plugin*)                        { return false; }
+bool RemoteSLCompact::wantsMessage (int, const juce::MidiMessage& m)    { return m.isController(); }
 
 }

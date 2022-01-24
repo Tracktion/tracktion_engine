@@ -52,12 +52,12 @@ void MackieXT::shutDownDevice()
 {
     // send a reset message:
     uint8_t d[8] = { 0xf0, 0x00, 0x00, 0x66, 0x15, 0x08, 0x00, 0xf7 };
-    sendMidiArray (d);
+    sendMidiArray (0, d);
 }
 
-void MackieXT::acceptMidiMessage (const juce::MidiMessage& m)
+void MackieXT::acceptMidiMessage (int, const juce::MidiMessage& m)
 {
-    mcu.acceptMidiMessage (deviceIdx, m);
+    mcu.acceptMidiMessageInt (deviceIdx, m);
 }
 
 }

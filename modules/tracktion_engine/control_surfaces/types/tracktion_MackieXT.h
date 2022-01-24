@@ -19,7 +19,7 @@ public:
 
     void initialiseDevice (bool connect) override;
     void shutDownDevice() override;
-    void acceptMidiMessage (const juce::MidiMessage& m) override;
+    void acceptMidiMessage (int, const juce::MidiMessage& m) override;
 
     int getDeviceIndex() const noexcept         { return deviceIdx; }
     void setDeviceIndex (int idx)               { deviceIdx = idx; }

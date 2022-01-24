@@ -26,7 +26,7 @@ public:
     void initialiseDevice (bool connect) override;
     void shutDownDevice() override;
     void updateMiscFeatures() override;
-    void acceptMidiMessage (const juce::MidiMessage&) override;
+    void acceptMidiMessage (int, const juce::MidiMessage&) override;
     void currentSelectionChanged (juce::String) override;
     void parameterChanged (int parameterNumber, const ParameterSetting& newValue) override;
     void clearParameter (int parameterNumber) override;

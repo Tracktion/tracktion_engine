@@ -20,7 +20,7 @@ IconProG2::~IconProG2()
 {
 }
 
-void IconProG2::acceptMidiMessage (int deviceIndex, const juce::MidiMessage& m)
+void IconProG2::acceptMidiMessageInt (int deviceIndex, const juce::MidiMessage& m)
 {
     const unsigned char* const d = m.getRawData();
     const unsigned char d1 = d[1];

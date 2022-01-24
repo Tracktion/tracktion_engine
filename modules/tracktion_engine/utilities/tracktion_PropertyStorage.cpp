@@ -73,6 +73,7 @@ juce::String PropertyStorage::settingToString (SettingID setting)
         case SettingID::defaultWaveInDevice:           return "defaultWaveInDevice";
         case SettingID::externControlIn:               return "externControlIn";
         case SettingID::externControlOut:              return "externControlOut";
+        case SettingID::externControlNum:              return "externControlNum";
         case SettingID::externControlShowSelection:    return "externControlShowSelection";
         case SettingID::externControlSelectionColour:  return "externControlSelectionColour";
         case SettingID::externControlEnable:           return "externControlEnable";

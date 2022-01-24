@@ -20,7 +20,7 @@ public:
     void initialiseDevice (bool connect) override;
     void shutDownDevice() override;
 
-    void acceptMidiMessage (const juce::MidiMessage&) override;
+    void acceptMidiMessage (int, const juce::MidiMessage&) override;
     void moveFader (int channelNum, float newSliderPos) override;
     void movePanPot (int channelNum, float newPan) override;
     void updateSoloAndMute (int channelNum, Track::MuteAndSoloLightState, bool isBright) override;

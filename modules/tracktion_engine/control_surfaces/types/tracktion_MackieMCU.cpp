@@ -299,12 +299,12 @@ void MackieMCU::auxTimerCallback()
     }
 }
 
-void MackieMCU::acceptMidiMessage (const juce::MidiMessage& m)
+void MackieMCU::acceptMidiMessage (int, const juce::MidiMessage& m)
 {
-    acceptMidiMessage (deviceIdx, m);
+    acceptMidiMessageInt (deviceIdx, m);
 }
 
-void MackieMCU::acceptMidiMessage (int deviceIndex, const juce::MidiMessage& m)
+void MackieMCU::acceptMidiMessageInt (int deviceIndex, const juce::MidiMessage& m)
 {
     const unsigned char* const d = m.getRawData();
     const unsigned char d1 = d[1];
@@ -1385,7 +1385,7 @@ void MackieMCU::sendMidiCommandToController (int devIdx, const unsigned char* mi
 {
     if (devIdx == deviceIdx)
     {
-        ControlSurface::sendMidiCommandToController (midiData, numBytes);
+        ControlSurface::sendMidiCommandToController (0, midiData, numBytes);
     }
     else
     {
@@ -1393,7 +1393,7 @@ void MackieMCU::sendMidiCommandToController (int devIdx, const unsigned char* mi
         {
             if (extenders[i]->getDeviceIndex() == devIdx)
             {
-                extenders[i]->sendMidiCommandToController (midiData, numBytes);
+                extenders[i]->sendMidiCommandToController (0, midiData, numBytes);
                 break;
             }
         }

@@ -35,7 +35,7 @@ public:
     void initialiseDevice (bool connect) override;
     void shutDownDevice() override;
     void updateMiscFeatures() override;
-    void acceptMidiMessage (const juce::MidiMessage&) override;
+    void acceptMidiMessage (int, const juce::MidiMessage&) override;
     void moveFader (int channelNum, float newSliderPos) override;
     void moveMasterLevelFader (float newLeftSliderPos, float newRightSliderPos) override;
     void movePanPot (int channelNum, float newPan) override;

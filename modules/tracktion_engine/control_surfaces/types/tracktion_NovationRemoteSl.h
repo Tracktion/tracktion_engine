@@ -21,7 +21,7 @@ public:
     void initialiseDevice (bool connect) override;
     void shutDownDevice() override;
     void updateMiscFeatures() override;
-    void acceptMidiMessage (const juce::MidiMessage&) override;
+    void acceptMidiMessage (int, const juce::MidiMessage&) override;
     void moveFader (int channelNum, float newSliderPos) override;
     void moveMasterLevelFader (float newLeftSliderPos, float newRightSliderPos) override;
     void movePanPot (int channelNum, float newPan) override;
@@ -35,7 +35,7 @@ public:
     void faderBankChanged (int newStartChannelNumber, const juce::StringArray& trackNames) override;
     void parameterChanged (int parameterNumber, const ParameterSetting&) override;
     void clearParameter (int parameterNumber) override;
-    bool wantsMessage (const juce::MidiMessage&) override;
+    bool wantsMessage (int, const juce::MidiMessage&) override;
     bool eatsAllMessages() override;
     bool canChangeSelectedPlugin() override;
     void currentSelectionChanged (juce::String) override;

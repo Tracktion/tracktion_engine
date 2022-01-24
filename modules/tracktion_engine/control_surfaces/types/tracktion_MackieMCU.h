@@ -24,8 +24,8 @@ public:
     void updateMiscFeatures() override;
     void cpuTimerCallback();
     void auxTimerCallback();
-    void acceptMidiMessage (const juce::MidiMessage&) override;
-    virtual void acceptMidiMessage (int deviceIdx, const juce::MidiMessage&);
+    void acceptMidiMessage (int, const juce::MidiMessage&) override;
+    virtual void acceptMidiMessageInt (int deviceIdx, const juce::MidiMessage&);
     void flip();
     void setAssignmentText (const juce::String&);
     void setDisplay (int devIdx, const char* topLine, const char* bottomLine);

@@ -1073,15 +1073,15 @@ void NovationAutomap::load (Edit& edit)
         hostAutomap->getConnection()->LoadInstanceGUID (getGUID (edit));
 }
 
-void NovationAutomap::shutDownDevice()                             {}
-void NovationAutomap::updateMiscFeatures()                         {}
-void NovationAutomap::acceptMidiMessage (const juce::MidiMessage&) {}
-void NovationAutomap::moveFader (int, float)                       {}
-void NovationAutomap::moveMasterLevelFader (float, float)          {}
-void NovationAutomap::movePanPot (int, float)                      {}
-void NovationAutomap::moveAux (int, const char*, float)            {}
-void NovationAutomap::clearAux (int)                               {}
-void NovationAutomap::soloCountChanged (bool)                      {}
+void NovationAutomap::shutDownDevice()                                  {}
+void NovationAutomap::updateMiscFeatures()                              {}
+void NovationAutomap::acceptMidiMessage (int, const juce::MidiMessage&) {}
+void NovationAutomap::moveFader (int, float)                            {}
+void NovationAutomap::moveMasterLevelFader (float, float)               {}
+void NovationAutomap::movePanPot (int, float)                           {}
+void NovationAutomap::moveAux (int, const char*, float)                 {}
+void NovationAutomap::clearAux (int)                                    {}
+void NovationAutomap::soloCountChanged (bool)                           {}
 
 void NovationAutomap::updateSoloAndMute (int channelNum, Track::MuteAndSoloLightState state, bool isBright)
 {
@@ -1127,14 +1127,14 @@ void NovationAutomap::timecodeChanged (int, int, int, int, bool, bool)
         hostAutomap->timeChanged();
 }
 
-bool NovationAutomap::wantsMessage (const juce::MidiMessage&)   { return false; }
-bool NovationAutomap::eatsAllMessages()                         { return false; }
-bool NovationAutomap::canSetEatsAllMessages()                   { return false; }
-bool NovationAutomap::canChangeSelectedPlugin()                 { return true; }
-bool NovationAutomap::showingPluginParams()                     { return true; }
-bool NovationAutomap::showingMarkers()                          { return false; }
-bool NovationAutomap::showingTracks()                           { return true; }
-bool NovationAutomap::isPluginSelected (Plugin*)                { return false; }
+bool NovationAutomap::wantsMessage (int, const juce::MidiMessage&)  { return false; }
+bool NovationAutomap::eatsAllMessages()                             { return false; }
+bool NovationAutomap::canSetEatsAllMessages()                       { return false; }
+bool NovationAutomap::canChangeSelectedPlugin()                     { return true; }
+bool NovationAutomap::showingPluginParams()                         { return true; }
+bool NovationAutomap::showingMarkers()                              { return false; }
+bool NovationAutomap::showingTracks()                               { return true; }
+bool NovationAutomap::isPluginSelected (Plugin*)                    { return false; }
 
 }
 

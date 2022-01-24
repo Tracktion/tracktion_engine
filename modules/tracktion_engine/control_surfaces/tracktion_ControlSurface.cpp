@@ -61,14 +61,14 @@ Edit* ControlSurface::getEditIfOnEditScreen() const
     return {};
 }
 
-void ControlSurface::sendMidiCommandToController (const void* midiData, int numBytes)
+void ControlSurface::sendMidiCommandToController (int idx, const void* midiData, int numBytes)
 {
-    sendMidiCommandToController (juce::MidiMessage (midiData, numBytes));
+    sendMidiCommandToController (idx, juce::MidiMessage (midiData, numBytes));
 }
 
-void ControlSurface::sendMidiCommandToController (const juce::MidiMessage& m)
+void ControlSurface::sendMidiCommandToController (int idx, const juce::MidiMessage& m)
 {
-    if (auto dev = owner->outputDevice)
+    if (auto dev = owner->outputDevices[idx])
         dev->fireMessage (m);
 }
 

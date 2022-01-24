@@ -351,7 +351,7 @@ void CustomControlSurface::updateMiscFeatures()
 {
 }
 
-bool CustomControlSurface::wantsMessage (const juce::MidiMessage& m)
+bool CustomControlSurface::wantsMessage (int, const juce::MidiMessage& m)
 {
     // in T5 there will always be a current list box so we don't wan't to eat all the time
     if (eatsAllMidi || listeningOnRow != -1 || ((m.isNoteOn() || m.isController())
@@ -609,7 +609,7 @@ bool CustomControlSurface::isTextAction (ActionID id)
     }
 }
 
-void CustomControlSurface::acceptMidiMessage (const juce::MidiMessage& m)
+void CustomControlSurface::acceptMidiMessage (int, const juce::MidiMessage& m)
 {
     if (! m.isController() && ! m.isNoteOn())
         return;
@@ -897,12 +897,12 @@ void CustomControlSurface::sendCommandToControllerForActionID (int actionID, flo
             {
                 if (midiNote != -1)
                 {
-                    if (value <= 0.0f)  sendMidiCommandToController (juce::MidiMessage::noteOff (midiChannel, midiNote, value));
-                    else                sendMidiCommandToController (juce::MidiMessage::noteOn (midiChannel, midiNote, value));
+                    if (value <= 0.0f)  sendMidiCommandToController (0, juce::MidiMessage::noteOff (midiChannel, midiNote, value));
+                    else                sendMidiCommandToController (0, juce::MidiMessage::noteOn (midiChannel, midiNote, value));
                 }
 
                 if (midiController != -1)
-                    sendMidiCommandToController (juce::MidiMessage::controllerEvent (midiChannel, midiController,
+                    sendMidiCommandToController (0, juce::MidiMessage::controllerEvent (midiChannel, midiController,
                                                                                      juce::MidiMessage::floatValueToMidiByte (value)));
             }
         }
@@ -962,7 +962,7 @@ bool CustomControlSurface::removeMapping (ActionID id, int controllerID, int not
 void CustomControlSurface::showMappingsEditor (juce::DialogWindow::LaunchOptions& o)
 {
    #if JUCE_MODAL_LOOPS_PERMITTED
-    if (needsMidiChannel && owner->getMidiInputDevice().isEmpty())
+    if (needsMidiChannel && owner->getMidiInputDevice (0).isEmpty())
     {
         engine.getUIBehaviour().showWarningAlert (TRANS("Error"),
                                                   TRANS("You must set a MIDI input device!"));

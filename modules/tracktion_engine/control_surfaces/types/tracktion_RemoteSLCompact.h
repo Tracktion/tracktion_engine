@@ -17,7 +17,7 @@ public:
     RemoteSLCompact (ExternalControllerManager&);
     ~RemoteSLCompact();
 
-    bool wantsMessage (const juce::MidiMessage&) override;
+    bool wantsMessage (int, const juce::MidiMessage&) override;
     bool eatsAllMessages() override;
     bool canSetEatsAllMessages() override;
     bool canChangeSelectedPlugin() override;

@@ -42,6 +42,7 @@ enum class SettingID
     defaultWaveInDevice,
     externControlIn,
     externControlOut,
+    externControlNum,
     externControlShowSelection,
     externControlSelectionColour,
     externControlEnable,

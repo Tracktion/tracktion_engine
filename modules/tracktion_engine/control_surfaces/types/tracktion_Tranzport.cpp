@@ -107,34 +107,34 @@ TranzportControlSurface::~TranzportControlSurface()
 void TranzportControlSurface::initialiseDevice (bool)
 {
     CRASH_TRACER
-    sendMidiArray (cmdInitNativeMode);
-    sendMidiArray (cmdInquiry);
+    sendMidiArray (0, cmdInitNativeMode);
+    sendMidiArray (0, cmdInquiry);
 
     displayPrint (0, "                                        ");
 
-    sendMidiArray (cmdLEDRecordOff);
-    sendMidiArray (cmdLEDArmRecOff);
-    sendMidiArray (cmdLEDMuteOff);
-    sendMidiArray (cmdLEDSoloOff);
-    sendMidiArray (cmdLEDAnySoloOff);
-    sendMidiArray (cmdLEDPunchOff);
-    sendMidiArray (cmdLEDLoopOff);
+    sendMidiArray (0, cmdLEDRecordOff);
+    sendMidiArray (0, cmdLEDArmRecOff);
+    sendMidiArray (0, cmdLEDMuteOff);
+    sendMidiArray (0, cmdLEDSoloOff);
+    sendMidiArray (0, cmdLEDAnySoloOff);
+    sendMidiArray (0, cmdLEDPunchOff);
+    sendMidiArray (0, cmdLEDLoopOff);
 }
 
 void TranzportControlSurface::shutDownDevice()
 {
     displayPrint (0, "                                        ");
 
-    sendMidiArray (cmdLEDRecordOff);
-    sendMidiArray (cmdLEDArmRecOff);
-    sendMidiArray (cmdLEDMuteOff);
-    sendMidiArray (cmdLEDSoloOff);
-    sendMidiArray (cmdLEDAnySoloOff);
-    sendMidiArray (cmdLEDPunchOff);
-    sendMidiArray (cmdLEDLoopOff);
+    sendMidiArray (0, cmdLEDRecordOff);
+    sendMidiArray (0, cmdLEDArmRecOff);
+    sendMidiArray (0, cmdLEDMuteOff);
+    sendMidiArray (0, cmdLEDSoloOff);
+    sendMidiArray (0, cmdLEDAnySoloOff);
+    sendMidiArray (0, cmdLEDPunchOff);
+    sendMidiArray (0, cmdLEDLoopOff);
 }
 
-void TranzportControlSurface::acceptMidiMessage (const juce::MidiMessage& m)
+void TranzportControlSurface::acceptMidiMessage (int, const juce::MidiMessage& m)
 {
     CRASH_TRACER
 
@@ -363,14 +363,14 @@ void TranzportControlSurface::updateSoloAndMute (int channelNum, Track::MuteAndS
     if (init && channelNum == 0)
     {
         if ((state & Track::soloLit) != 0 || (isBright && (state & Track::soloFlashing) != 0))
-            sendMidiArray (cmdLEDSoloOn);
+            sendMidiArray (0, cmdLEDSoloOn);
         else
-            sendMidiArray (cmdLEDSoloOff);
+            sendMidiArray (0, cmdLEDSoloOff);
 
         if ((state & Track::muteLit) != 0 || (isBright && (state & Track::muteFlashing) != 0))
-            sendMidiArray (cmdLEDMuteOn);
+            sendMidiArray (0, cmdLEDMuteOn);
         else
-            sendMidiArray (cmdLEDMuteOff);
+            sendMidiArray (0, cmdLEDMuteOff);
     }
 }
 
@@ -379,9 +379,9 @@ void TranzportControlSurface::soloCountChanged (bool anySoloTracks)
     if (init)
     {
         if (anySoloTracks)
-            sendMidiArray (cmdLEDAnySoloOn);
+            sendMidiArray (0, cmdLEDAnySoloOn);
         else
-            sendMidiArray (cmdLEDAnySoloOff);
+            sendMidiArray (0, cmdLEDAnySoloOff);
     }
 }
 
@@ -390,9 +390,9 @@ void TranzportControlSurface::recordStateChanged (bool isRecording)
     if (init)
     {
         if (isRecording)
-            sendMidiArray (cmdLEDRecordOn);
+            sendMidiArray (0, cmdLEDRecordOn);
         else
-            sendMidiArray (cmdLEDRecordOff);
+            sendMidiArray (0, cmdLEDRecordOff);
     }
 }
 
@@ -417,9 +417,9 @@ void TranzportControlSurface::trackRecordEnabled (int, bool isEnabled)
     if (init)
     {
         if (isEnabled)
-            sendMidiArray (cmdLEDArmRecOn);
+            sendMidiArray (0, cmdLEDArmRecOn);
         else
-            sendMidiArray (cmdLEDArmRecOff);
+            sendMidiArray (0, cmdLEDArmRecOff);
     }
 }
 
@@ -450,9 +450,9 @@ void TranzportControlSurface::loopOnOffChanged (bool isLoopOn)
     if (init)
     {
         if (isLoopOn)
-            sendMidiArray (cmdLEDLoopOn);
+            sendMidiArray (0, cmdLEDLoopOn);
         else
-            sendMidiArray (cmdLEDLoopOff);
+            sendMidiArray (0, cmdLEDLoopOff);
     }
 }
 
@@ -461,9 +461,9 @@ void TranzportControlSurface::punchOnOffChanged (bool isPunching)
     if (init)
     {
         if (isPunching)
-            sendMidiArray (cmdLEDPunchOn);
+            sendMidiArray (0, cmdLEDPunchOn);
         else
-            sendMidiArray (cmdLEDPunchOff);
+            sendMidiArray (0, cmdLEDPunchOff);
     }
 }
 
@@ -564,7 +564,7 @@ void TranzportControlSurface::displayPrint (int pos, const char* text)
     buffer[sizeof(cmdWrite)] = (uint8_t) pos;
     memcpy (buffer + sizeof (cmdWrite) + 1, text, len);
     buffer [len + 8 - 1] = 0xf7;
-    sendMidiCommandToController (buffer, (int) len + 8);
+    sendMidiCommandToController (0, buffer, (int) len + 8);
 }
 
 }
