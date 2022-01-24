@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-24 20:11:34</td>
+            <td class="headerValue">2022-01-24 23:50:13</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -123,14 +123,14 @@
 <a name="61"><span class="lineNum">      61 </span>            :     return {};</a>
 <a name="62"><span class="lineNum">      62 </span>            : }</a>
 <a name="63"><span class="lineNum">      63 </span>            : </a>
-<a name="64"><span class="lineNum">      64 </span><span class="lineNoCov">          0 : void ControlSurface::sendMidiCommandToController (const void* midiData, int numBytes)</span></a>
+<a name="64"><span class="lineNum">      64 </span><span class="lineNoCov">          0 : void ControlSurface::sendMidiCommandToController (int idx, const void* midiData, int numBytes)</span></a>
 <a name="65"><span class="lineNum">      65 </span>            : {</a>
-<a name="66"><span class="lineNum">      66 </span><span class="lineNoCov">          0 :     sendMidiCommandToController (juce::MidiMessage (midiData, numBytes));</span></a>
+<a name="66"><span class="lineNum">      66 </span><span class="lineNoCov">          0 :     sendMidiCommandToController (idx, juce::MidiMessage (midiData, numBytes));</span></a>
 <a name="67"><span class="lineNum">      67 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="68"><span class="lineNum">      68 </span>            : </a>
-<a name="69"><span class="lineNum">      69 </span><span class="lineNoCov">          0 : void ControlSurface::sendMidiCommandToController (const juce::MidiMessage&amp; m)</span></a>
+<a name="69"><span class="lineNum">      69 </span><span class="lineNoCov">          0 : void ControlSurface::sendMidiCommandToController (int idx, const juce::MidiMessage&amp; m)</span></a>
 <a name="70"><span class="lineNum">      70 </span>            : {</a>
-<a name="71"><span class="lineNum">      71 </span><span class="lineNoCov">          0 :     if (auto dev = owner-&gt;outputDevice)</span></a>
+<a name="71"><span class="lineNum">      71 </span><span class="lineNoCov">          0 :     if (auto dev = owner-&gt;outputDevices[idx])</span></a>
 <a name="72"><span class="lineNum">      72 </span><span class="lineNoCov">          0 :         dev-&gt;fireMessage (m);</span></a>
 <a name="73"><span class="lineNum">      73 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="74"><span class="lineNum">      74 </span>            : </a>

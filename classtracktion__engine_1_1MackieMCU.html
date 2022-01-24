@@ -127,10 +127,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af7589f7541803cacf370db86eee12d67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb3f97c7e964fefec81cf3cbb1ed8681"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#adb3f97c7e964fefec81cf3cbb1ed8681">auxTimerCallback</a> ()</td></tr>
 <tr class="separator:adb3f97c7e964fefec81cf3cbb1ed8681"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7ebe7747d823332ef044ac9b33998d68"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a7ebe7747d823332ef044ac9b33998d68">acceptMidiMessage</a> (const juce::MidiMessage &amp;) override</td></tr>
-<tr class="separator:a7ebe7747d823332ef044ac9b33998d68"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a717e38ddfd479254dbd369159bc51357"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a717e38ddfd479254dbd369159bc51357">acceptMidiMessage</a> (int <a class="el" href="classtracktion__engine_1_1MackieMCU.html#ade726c5d2d33bd67b3b2913fc14296f4">deviceIdx</a>, const juce::MidiMessage &amp;)</td></tr>
-<tr class="separator:a717e38ddfd479254dbd369159bc51357"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1bdee137376c50b19090e75456257ab5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a1bdee137376c50b19090e75456257ab5">acceptMidiMessage</a> (int, const juce::MidiMessage &amp;) override</td></tr>
+<tr class="separator:a1bdee137376c50b19090e75456257ab5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a585ea18290877dcb06b9b7a5be9c6313"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#a585ea18290877dcb06b9b7a5be9c6313">acceptMidiMessageInt</a> (int <a class="el" href="classtracktion__engine_1_1MackieMCU.html#ade726c5d2d33bd67b3b2913fc14296f4">deviceIdx</a>, const juce::MidiMessage &amp;)</td></tr>
+<tr class="separator:a585ea18290877dcb06b9b7a5be9c6313"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abfd5325a74ec0a78acd2a5729943e3e3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#abfd5325a74ec0a78acd2a5729943e3e3">flip</a> ()</td></tr>
 <tr class="separator:abfd5325a74ec0a78acd2a5729943e3e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aab8356a07e2c1ac3701e590742f43dd8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1MackieMCU.html#aab8356a07e2c1ac3701e590742f43dd8">setAssignmentText</a> (const juce::String &amp;)</td></tr>
@@ -238,6 +238,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a04bcaa9b95c9a186b5e46eeba1d4bd5e inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7e9281a583adb820cc23702f720f2708 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a7e9281a583adb820cc23702f720f2708">updateOSCSettings</a> (int, int, juce::String)</td></tr>
 <tr class="separator:a7e9281a583adb820cc23702f720f2708 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8aa82b1337f44c6bda03101c11be3a0 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#af8aa82b1337f44c6bda03101c11be3a0">numExtendersChanged</a> ([[maybe_unused]] int num)</td></tr>
+<tr class="separator:af8aa82b1337f44c6bda03101c11be3a0 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14790ac6cd5851279c8c8413db5aac25 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a14790ac6cd5851279c8c8413db5aac25">acceptMidiMessage</a> ([[maybe_unused]] int idx, const juce::MidiMessage &amp;)</td></tr>
+<tr class="separator:a14790ac6cd5851279c8c8413db5aac25 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a44a7061910a9b9172a9b9e7cf604aaac inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a44a7061910a9b9172a9b9e7cf604aaac">moveFader</a> ([[maybe_unused]] int channelNum, [[maybe_unused]] float newSliderPos)</td></tr>
 <tr class="separator:a44a7061910a9b9172a9b9e7cf604aaac inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a23b9cc8e5e3c2b960be3d1568da3e3ed inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a23b9cc8e5e3c2b960be3d1568da3e3ed">moveMasterLevelFader</a> ([[maybe_unused]] float newLeftSliderPos, [[maybe_unused]] float newRightSliderPos)</td></tr>
@@ -292,8 +296,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a3d25bc4b61327a27c74649beb31349ff inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a098c8b437d11a10fecb99c9d72d76bb1 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a098c8b437d11a10fecb99c9d72d76bb1">clearMarker</a> ([[maybe_unused]] int parameterNumber)</td></tr>
 <tr class="separator:a098c8b437d11a10fecb99c9d72d76bb1 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ee18c95cbfe532ce4f5b78f05fb42c3 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a8ee18c95cbfe532ce4f5b78f05fb42c3">wantsMessage</a> (const juce::MidiMessage &amp;)</td></tr>
-<tr class="separator:a8ee18c95cbfe532ce4f5b78f05fb42c3 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a355b3c986c7694e28740bb65af7f27f9 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a355b3c986c7694e28740bb65af7f27f9">wantsMessage</a> (int, const juce::MidiMessage &amp;)</td></tr>
+<tr class="separator:a355b3c986c7694e28740bb65af7f27f9 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a19a7e115567188e9f90a6049c4e84f20 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a19a7e115567188e9f90a6049c4e84f20">eatsAllMessages</a> ()</td></tr>
 <tr class="separator:a19a7e115567188e9f90a6049c4e84f20 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a59f776d4aa636841f03d3ff3a0dd41 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a1a59f776d4aa636841f03d3ff3a0dd41">canSetEatsAllMessages</a> ()</td></tr>
@@ -329,13 +333,13 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aecb722a8633b9b600d3c9e8d17376ef8 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5898c5df38d824be45a26084594edbcb inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a5898c5df38d824be45a26084594edbcb">getParamBankOffset</a> () const</td></tr>
 <tr class="separator:a5898c5df38d824be45a26084594edbcb inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab68b87982cd5b9e4643e355167932679 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#ab68b87982cd5b9e4643e355167932679">sendMidiCommandToController</a> (const void *midiData, int numBytes)</td></tr>
-<tr class="separator:ab68b87982cd5b9e4643e355167932679 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7aeca90986b3f890ad11a3d4de0d77e3 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a7aeca90986b3f890ad11a3d4de0d77e3">sendMidiCommandToController</a> (const juce::MidiMessage &amp;)</td></tr>
-<tr class="separator:a7aeca90986b3f890ad11a3d4de0d77e3 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed5e55228a79558671d34fc238fac5c2 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memTemplParams" colspan="2">template&lt;size_t size&gt; </td></tr>
-<tr class="memitem:aed5e55228a79558671d34fc238fac5c2 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#aed5e55228a79558671d34fc238fac5c2">sendMidiArray</a> (const uint8_t(&amp;rawData)[size])</td></tr>
-<tr class="separator:aed5e55228a79558671d34fc238fac5c2 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7503907b7878b635f7b90e113073c2c7 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a7503907b7878b635f7b90e113073c2c7">sendMidiCommandToController</a> (int idx, const void *midiData, int numBytes)</td></tr>
+<tr class="separator:a7503907b7878b635f7b90e113073c2c7 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa176a8a2a1f63f8d61cd00f853a4f233 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#aa176a8a2a1f63f8d61cd00f853a4f233">sendMidiCommandToController</a> (int idx, const juce::MidiMessage &amp;)</td></tr>
+<tr class="separator:aa176a8a2a1f63f8d61cd00f853a4f233 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4b488ea64b4d781e94e6dbea641ee83 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memTemplParams" colspan="2">template&lt;size_t size&gt; </td></tr>
+<tr class="memitem:ae4b488ea64b4d781e94e6dbea641ee83 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#ae4b488ea64b4d781e94e6dbea641ee83">sendMidiArray</a> (int idx, const uint8_t(&amp;rawData)[size])</td></tr>
+<tr class="separator:ae4b488ea64b4d781e94e6dbea641ee83 inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac959ce0e8af4868905807b936081480f inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#ac959ce0e8af4868905807b936081480f">userMovedFader</a> (int channelNum, float newFaderPosition, bool delta=false)</td></tr>
 <tr class="separator:ac959ce0e8af4868905807b936081480f inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8fe54cf4ba01d094700a587b4efdf46a inherit pub_methods_classtracktion__engine_1_1ControlSurface"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a8fe54cf4ba01d094700a587b4efdf46a">userMovedPanPot</a> (int channelNum, float newPanPosition, bool delta=false)</td></tr>
@@ -642,6 +646,8 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:ae26c3cf2d983524f2842787e08add5e1 inherit pub_attribs_classtracktion__engine_1_1ControlSurface"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#ae26c3cf2d983524f2842787e08add5e1">deviceDescription</a></td></tr>
 <tr class="memdesc:ae26c3cf2d983524f2842787e08add5e1 inherit pub_attribs_classtracktion__engine_1_1ControlSurface"><td class="mdescLeft">&#160;</td><td class="mdescRight">These values need to be set by the subclass.  <a href="classtracktion__engine_1_1ControlSurface.html#ae26c3cf2d983524f2842787e08add5e1">More...</a><br /></td></tr>
 <tr class="separator:ae26c3cf2d983524f2842787e08add5e1 inherit pub_attribs_classtracktion__engine_1_1ControlSurface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a367a621d4b245d44a7d1aec9576ed262 inherit pub_attribs_classtracktion__engine_1_1ControlSurface"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a367a621d4b245d44a7d1aec9576ed262">supportedExtenders</a> = 0</td></tr>
+<tr class="separator:a367a621d4b245d44a7d1aec9576ed262 inherit pub_attribs_classtracktion__engine_1_1ControlSurface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8abce7e5372f17f9e163aa881aa15271 inherit pub_attribs_classtracktion__engine_1_1ControlSurface"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a8abce7e5372f17f9e163aa881aa15271">needsMidiChannel</a> = true</td></tr>
 <tr class="separator:a8abce7e5372f17f9e163aa881aa15271 inherit pub_attribs_classtracktion__engine_1_1ControlSurface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7f2749aa30c3cbef5bca8b61838f29be inherit pub_attribs_classtracktion__engine_1_1ControlSurface"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1ControlSurface.html#a7f2749aa30c3cbef5bca8b61838f29be">midiChannelName</a></td></tr>
@@ -901,8 +907,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a7ebe7747d823332ef044ac9b33998d68"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7ebe7747d823332ef044ac9b33998d68">&#9670;&nbsp;</a></span>acceptMidiMessage() <span class="overload">[1/2]</span></h2>
+<a id="a1bdee137376c50b19090e75456257ab5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1bdee137376c50b19090e75456257ab5">&#9670;&nbsp;</a></span>acceptMidiMessage()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -913,24 +919,32 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void tracktion_engine::MackieMCU::acceptMidiMessage </td>
           <td>(</td>
-          <td class="paramtype">const juce::MidiMessage &amp;&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const juce::MidiMessage &amp;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented from <a class="el" href="classtracktion__engine_1_1ControlSurface.html#a063480d66cd035c195fd839ded7b49cd">tracktion_engine::ControlSurface</a>.</p>
-
 </div>
 </div>
-<a id="a717e38ddfd479254dbd369159bc51357"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a717e38ddfd479254dbd369159bc51357">&#9670;&nbsp;</a></span>acceptMidiMessage() <span class="overload">[2/2]</span></h2>
+<a id="a585ea18290877dcb06b9b7a5be9c6313"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a585ea18290877dcb06b9b7a5be9c6313">&#9670;&nbsp;</a></span>acceptMidiMessageInt()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -939,7 +953,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void tracktion_engine::MackieMCU::acceptMidiMessage </td>
+          <td class="memname">virtual void tracktion_engine::MackieMCU::acceptMidiMessageInt </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>deviceIdx</em>, </td>
@@ -963,7 +977,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1IconProG2.html#af732a53b58f919aeeb0115a2a439b4ca">tracktion_engine::IconProG2</a>.</p>
+<p>Reimplemented in <a class="el" href="classtracktion__engine_1_1IconProG2.html#a57749a815d7d5ec51fd554c6da78fb7e">tracktion_engine::IconProG2</a>.</p>
 
 </div>
 </div>
@@ -3344,7 +3358,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jan 24 2022 19:57:39 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jan 24 2022 23:36:49 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

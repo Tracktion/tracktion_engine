@@ -32,16 +32,16 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">52</td>
+            <td class="headerCovTableEntry">53</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-24 20:11:34</td>
+            <td class="headerValue">2022-01-24 23:50:13</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">47</td>
+            <td class="headerCovTableEntry">48</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
@@ -123,346 +123,352 @@
 <a name="61"><span class="lineNum">      61 </span>            :     // a chance to do some extra stuff when it needs to refresh itself</a>
 <a name="62"><span class="lineNum">      62 </span><span class="lineNoCov">          0 :     virtual void updateMiscFeatures() {}</span></a>
 <a name="63"><span class="lineNum">      63 </span>            : </a>
-<a name="64"><span class="lineNum">      64 </span>            :     // called by tracktion when a midi message comes in from the controller. The</a>
-<a name="65"><span class="lineNum">      65 </span>            :     // subclass must translate this and call methods in this class accordingly to</a>
-<a name="66"><span class="lineNum">      66 </span>            :     // trigger whatever action the user is trying to do.</a>
-<a name="67"><span class="lineNum">      67 </span><span class="lineNoCov">          0 :     virtual void acceptMidiMessage (const juce::MidiMessage&amp;) {}</span></a>
-<a name="68"><span class="lineNum">      68 </span>            : </a>
-<a name="69"><span class="lineNum">      69 </span>            :     // tells the device to move one of its faders.</a>
-<a name="70"><span class="lineNum">      70 </span>            :     // the channel number is the physical channel on the device, regardless of bank selection</a>
-<a name="71"><span class="lineNum">      71 </span>            :     // slider pos is 0 to 1.0</a>
-<a name="72"><span class="lineNum">      72 </span><span class="lineNoCov">          0 :     virtual void moveFader ([[maybe_unused]] int channelNum, [[maybe_unused]] float newSliderPos) {}</span></a>
-<a name="73"><span class="lineNum">      73 </span>            : </a>
-<a name="74"><span class="lineNum">      74 </span>            :     // tells the device to move the master faders, if it has them. If it just has one master</a>
-<a name="75"><span class="lineNum">      75 </span>            :     // fader, it can use the average of these levels.</a>
-<a name="76"><span class="lineNum">      76 </span>            :     // slider pos is 0 to 1.0</a>
-<a name="77"><span class="lineNum">      77 </span><span class="lineNoCov">          0 :     virtual void moveMasterLevelFader ([[maybe_unused]] float newLeftSliderPos,</span></a>
-<a name="78"><span class="lineNum">      78 </span><span class="lineNoCov">          0 :                                        [[maybe_unused]] float newRightSliderPos) {}</span></a>
-<a name="79"><span class="lineNum">      79 </span>            : </a>
-<a name="80"><span class="lineNum">      80 </span>            :     // tells the device to move a pan pot.</a>
-<a name="81"><span class="lineNum">      81 </span>            :     // the channel number is the physical channel on the device, regardless of bank selection</a>
-<a name="82"><span class="lineNum">      82 </span>            :     // pan is -1.0 to 1.0</a>
-<a name="83"><span class="lineNum">      83 </span><span class="lineNoCov">          0 :     virtual void movePanPot ([[maybe_unused]] int channelNum, [[maybe_unused]] float newPan) {}</span></a>
-<a name="84"><span class="lineNum">      84 </span>            : </a>
-<a name="85"><span class="lineNum">      85 </span><span class="lineNoCov">          0 :     virtual void moveAux ([[maybe_unused]] int channel, [[maybe_unused]] const char* bus, [[maybe_unused]] float newPos) {}</span></a>
-<a name="86"><span class="lineNum">      86 </span>            : </a>
-<a name="87"><span class="lineNum">      87 </span><span class="lineNoCov">          0 :     virtual void clearAux (int) {}</span></a>
-<a name="88"><span class="lineNum">      88 </span>            : </a>
-<a name="89"><span class="lineNum">      89 </span>            :     // the channel number is the physical channel on the device, regardless of bank selection</a>
-<a name="90"><span class="lineNum">      90 </span><span class="lineNoCov">          0 :     virtual void updateSoloAndMute ([[maybe_unused]] int channelNum, Track::MuteAndSoloLightState, [[maybe_unused]] bool isBright) {}</span></a>
+<a name="64"><span class="lineNum">      64 </span>            :     // Called when the use changes the number of extenders</a>
+<a name="65"><span class="lineNum">      65 </span><span class="lineNoCov">          0 :     virtual void numExtendersChanged ([[maybe_unused]] int num) {}</span></a>
+<a name="66"><span class="lineNum">      66 </span>            : </a>
+<a name="67"><span class="lineNum">      67 </span>            :     // called by tracktion when a midi message comes in from the controller. The</a>
+<a name="68"><span class="lineNum">      68 </span>            :     // subclass must translate this and call methods in this class accordingly to</a>
+<a name="69"><span class="lineNum">      69 </span>            :     // trigger whatever action the user is trying to do.</a>
+<a name="70"><span class="lineNum">      70 </span><span class="lineNoCov">          0 :     virtual void acceptMidiMessage ([[maybe_unused]] int idx, const juce::MidiMessage&amp;) {}</span></a>
+<a name="71"><span class="lineNum">      71 </span>            : </a>
+<a name="72"><span class="lineNum">      72 </span>            :     // tells the device to move one of its faders.</a>
+<a name="73"><span class="lineNum">      73 </span>            :     // the channel number is the physical channel on the device, regardless of bank selection</a>
+<a name="74"><span class="lineNum">      74 </span>            :     // slider pos is 0 to 1.0</a>
+<a name="75"><span class="lineNum">      75 </span><span class="lineNoCov">          0 :     virtual void moveFader ([[maybe_unused]] int channelNum, [[maybe_unused]] float newSliderPos) {}</span></a>
+<a name="76"><span class="lineNum">      76 </span>            : </a>
+<a name="77"><span class="lineNum">      77 </span>            :     // tells the device to move the master faders, if it has them. If it just has one master</a>
+<a name="78"><span class="lineNum">      78 </span>            :     // fader, it can use the average of these levels.</a>
+<a name="79"><span class="lineNum">      79 </span>            :     // slider pos is 0 to 1.0</a>
+<a name="80"><span class="lineNum">      80 </span><span class="lineNoCov">          0 :     virtual void moveMasterLevelFader ([[maybe_unused]] float newLeftSliderPos,</span></a>
+<a name="81"><span class="lineNum">      81 </span><span class="lineNoCov">          0 :                                        [[maybe_unused]] float newRightSliderPos) {}</span></a>
+<a name="82"><span class="lineNum">      82 </span>            : </a>
+<a name="83"><span class="lineNum">      83 </span>            :     // tells the device to move a pan pot.</a>
+<a name="84"><span class="lineNum">      84 </span>            :     // the channel number is the physical channel on the device, regardless of bank selection</a>
+<a name="85"><span class="lineNum">      85 </span>            :     // pan is -1.0 to 1.0</a>
+<a name="86"><span class="lineNum">      86 </span><span class="lineNoCov">          0 :     virtual void movePanPot ([[maybe_unused]] int channelNum, [[maybe_unused]] float newPan) {}</span></a>
+<a name="87"><span class="lineNum">      87 </span>            : </a>
+<a name="88"><span class="lineNum">      88 </span><span class="lineNoCov">          0 :     virtual void moveAux ([[maybe_unused]] int channel, [[maybe_unused]] const char* bus, [[maybe_unused]] float newPos) {}</span></a>
+<a name="89"><span class="lineNum">      89 </span>            : </a>
+<a name="90"><span class="lineNum">      90 </span><span class="lineNoCov">          0 :     virtual void clearAux (int) {}</span></a>
 <a name="91"><span class="lineNum">      91 </span>            : </a>
-<a name="92"><span class="lineNum">      92 </span>            :     // count of number of tracks soloed</a>
-<a name="93"><span class="lineNum">      93 </span><span class="lineNoCov">          0 :     virtual void soloCountChanged ([[maybe_unused]] bool anySoloTracks) {}</span></a>
+<a name="92"><span class="lineNum">      92 </span>            :     // the channel number is the physical channel on the device, regardless of bank selection</a>
+<a name="93"><span class="lineNum">      93 </span><span class="lineNoCov">          0 :     virtual void updateSoloAndMute ([[maybe_unused]] int channelNum, Track::MuteAndSoloLightState, [[maybe_unused]] bool isBright) {}</span></a>
 <a name="94"><span class="lineNum">      94 </span>            : </a>
-<a name="95"><span class="lineNum">      95 </span>            :     // tells the device that playback has stopped or started, and it should turn its lights on</a>
-<a name="96"><span class="lineNum">      96 </span>            :     // accordingly.</a>
-<a name="97"><span class="lineNum">      97 </span><span class="lineNoCov">          0 :     virtual void playStateChanged ([[maybe_unused]] bool isPlaying) {}</span></a>
-<a name="98"><span class="lineNum">      98 </span><span class="lineNoCov">          0 :     virtual void recordStateChanged ([[maybe_unused]] bool isRecording) {}</span></a>
-<a name="99"><span class="lineNum">      99 </span>            : </a>
-<a name="100"><span class="lineNum">     100 </span>            :     // tells the device about automation read/write status changing.</a>
-<a name="101"><span class="lineNum">     101 </span><span class="lineNoCov">          0 :     virtual void automationReadModeChanged ([[maybe_unused]] bool isReading) {}</span></a>
-<a name="102"><span class="lineNum">     102 </span><span class="lineNoCov">          0 :     virtual void automationWriteModeChanged ([[maybe_unused]] bool isWriting) {}</span></a>
-<a name="103"><span class="lineNum">     103 </span>            : </a>
-<a name="104"><span class="lineNum">     104 </span>            :     // tells the device that the user has changed fader banks, so if the device has a bank number</a>
-<a name="105"><span class="lineNum">     105 </span>            :     // indicator, this tells it to update its contents.</a>
-<a name="106"><span class="lineNum">     106 </span>            :     //</a>
-<a name="107"><span class="lineNum">     107 </span>            :     // the newStartChannelNumber is the number of the first virtual channel now being mapped to the</a>
-<a name="108"><span class="lineNum">     108 </span>            :     // first physical fader channel on the device, starting from zero.</a>
+<a name="95"><span class="lineNum">      95 </span>            :     // count of number of tracks soloed</a>
+<a name="96"><span class="lineNum">      96 </span><span class="lineNoCov">          0 :     virtual void soloCountChanged ([[maybe_unused]] bool anySoloTracks) {}</span></a>
+<a name="97"><span class="lineNum">      97 </span>            : </a>
+<a name="98"><span class="lineNum">      98 </span>            :     // tells the device that playback has stopped or started, and it should turn its lights on</a>
+<a name="99"><span class="lineNum">      99 </span>            :     // accordingly.</a>
+<a name="100"><span class="lineNum">     100 </span><span class="lineNoCov">          0 :     virtual void playStateChanged ([[maybe_unused]] bool isPlaying) {}</span></a>
+<a name="101"><span class="lineNum">     101 </span><span class="lineNoCov">          0 :     virtual void recordStateChanged ([[maybe_unused]] bool isRecording) {}</span></a>
+<a name="102"><span class="lineNum">     102 </span>            : </a>
+<a name="103"><span class="lineNum">     103 </span>            :     // tells the device about automation read/write status changing.</a>
+<a name="104"><span class="lineNum">     104 </span><span class="lineNoCov">          0 :     virtual void automationReadModeChanged ([[maybe_unused]] bool isReading) {}</span></a>
+<a name="105"><span class="lineNum">     105 </span><span class="lineNoCov">          0 :     virtual void automationWriteModeChanged ([[maybe_unused]] bool isWriting) {}</span></a>
+<a name="106"><span class="lineNum">     106 </span>            : </a>
+<a name="107"><span class="lineNum">     107 </span>            :     // tells the device that the user has changed fader banks, so if the device has a bank number</a>
+<a name="108"><span class="lineNum">     108 </span>            :     // indicator, this tells it to update its contents.</a>
 <a name="109"><span class="lineNum">     109 </span>            :     //</a>
-<a name="110"><span class="lineNum">     110 </span>            :     // the trackname array is the set of names for the tracks that now map onto the device's physical</a>
-<a name="111"><span class="lineNum">     111 </span>            :     // fader channels, so if it has a display that can show track names, it should update this.</a>
-<a name="112"><span class="lineNum">     112 </span><span class="lineNoCov">          0 :     virtual void faderBankChanged ([[maybe_unused]] int newStartChannelNumber, [[maybe_unused]] const juce::StringArray&amp; trackNames) {}</span></a>
-<a name="113"><span class="lineNum">     113 </span>            : </a>
-<a name="114"><span class="lineNum">     114 </span>            :     // if the device has per-channel level meters, this should update one of them.</a>
-<a name="115"><span class="lineNum">     115 </span>            :     // the channel number is the physical channel on the device, regardless of bank selection</a>
-<a name="116"><span class="lineNum">     116 </span>            :     // if the channel is mono then l == r</a>
-<a name="117"><span class="lineNum">     117 </span>            :     // level is 0 to 1.0</a>
-<a name="118"><span class="lineNum">     118 </span><span class="lineNoCov">          0 :     virtual void channelLevelChanged ([[maybe_unused]] int channel, [[maybe_unused]] float l, [[maybe_unused]] float r) {}</span></a>
-<a name="119"><span class="lineNum">     119 </span>            : </a>
-<a name="120"><span class="lineNum">     120 </span>            :     // when a track is selected or deselected</a>
-<a name="121"><span class="lineNum">     121 </span><span class="lineNoCov">          0 :     virtual void trackSelectionChanged ([[maybe_unused]] int channel, [[maybe_unused]] bool isSelected) {}</span></a>
+<a name="110"><span class="lineNum">     110 </span>            :     // the newStartChannelNumber is the number of the first virtual channel now being mapped to the</a>
+<a name="111"><span class="lineNum">     111 </span>            :     // first physical fader channel on the device, starting from zero.</a>
+<a name="112"><span class="lineNum">     112 </span>            :     //</a>
+<a name="113"><span class="lineNum">     113 </span>            :     // the trackname array is the set of names for the tracks that now map onto the device's physical</a>
+<a name="114"><span class="lineNum">     114 </span>            :     // fader channels, so if it has a display that can show track names, it should update this.</a>
+<a name="115"><span class="lineNum">     115 </span><span class="lineNoCov">          0 :     virtual void faderBankChanged ([[maybe_unused]] int newStartChannelNumber, [[maybe_unused]] const juce::StringArray&amp; trackNames) {}</span></a>
+<a name="116"><span class="lineNum">     116 </span>            : </a>
+<a name="117"><span class="lineNum">     117 </span>            :     // if the device has per-channel level meters, this should update one of them.</a>
+<a name="118"><span class="lineNum">     118 </span>            :     // the channel number is the physical channel on the device, regardless of bank selection</a>
+<a name="119"><span class="lineNum">     119 </span>            :     // if the channel is mono then l == r</a>
+<a name="120"><span class="lineNum">     120 </span>            :     // level is 0 to 1.0</a>
+<a name="121"><span class="lineNum">     121 </span><span class="lineNoCov">          0 :     virtual void channelLevelChanged ([[maybe_unused]] int channel, [[maybe_unused]] float l, [[maybe_unused]] float r) {}</span></a>
 <a name="122"><span class="lineNum">     122 </span>            : </a>
-<a name="123"><span class="lineNum">     123 </span><span class="lineNoCov">          0 :     virtual void trackRecordEnabled ([[maybe_unused]] int channel, [[maybe_unused]] bool isEnabled) {}</span></a>
-<a name="124"><span class="lineNum">     124 </span>            : </a>
-<a name="125"><span class="lineNum">     125 </span>            :     // if the device has a master level readout, this should update it.</a>
-<a name="126"><span class="lineNum">     126 </span><span class="lineNoCov">          0 :     virtual void masterLevelsChanged ([[maybe_unused]] float leftLevel,</span></a>
-<a name="127"><span class="lineNum">     127 </span><span class="lineNoCov">          0 :                                       [[maybe_unused]] float rightLevel) {}</span></a>
-<a name="128"><span class="lineNum">     128 </span>            : </a>
-<a name="129"><span class="lineNum">     129 </span>            :     // tells the device that the playback position has changed, so if it has a timecode</a>
-<a name="130"><span class="lineNum">     130 </span>            :     // display, it should update it.</a>
-<a name="131"><span class="lineNum">     131 </span>            :     //</a>
-<a name="132"><span class="lineNum">     132 </span>            :     // If isBarsBeats is true, barsOrHours is the bar number (starting from 1), beatsOrMinutes is</a>
-<a name="133"><span class="lineNum">     133 </span>            :     // the beat number (also from 1), ticksOrSeconds is the number of ticks (0 to 959) and millisecs is</a>
-<a name="134"><span class="lineNum">     134 </span>            :     // unused.</a>
-<a name="135"><span class="lineNum">     135 </span>            :     //</a>
-<a name="136"><span class="lineNum">     136 </span>            :     // If isBarsBeats is false, barsOrHours = hours, beatsOrMinutes = minutes, ticksOrSeconds = seconds, and</a>
-<a name="137"><span class="lineNum">     137 </span>            :     // millisecs is (surprise surprise) the milliseconds.</a>
-<a name="138"><span class="lineNum">     138 </span><span class="lineNoCov">          0 :     virtual void timecodeChanged ([[maybe_unused]]  int barsOrHours,</span></a>
-<a name="139"><span class="lineNum">     139 </span>            :                                   [[maybe_unused]]  int beatsOrMinutes,</a>
-<a name="140"><span class="lineNum">     140 </span>            :                                   [[maybe_unused]]  int ticksOrSeconds,</a>
-<a name="141"><span class="lineNum">     141 </span>            :                                   [[maybe_unused]]  int millisecs,</a>
-<a name="142"><span class="lineNum">     142 </span>            :                                   [[maybe_unused]]  bool isBarsBeats,</a>
-<a name="143"><span class="lineNum">     143 </span><span class="lineNoCov">          0 :                                   [[maybe_unused]]  bool isFrames) {}</span></a>
-<a name="144"><span class="lineNum">     144 </span>            : </a>
-<a name="145"><span class="lineNum">     145 </span>            :     // tells the device that the click has been turned on or off.</a>
-<a name="146"><span class="lineNum">     146 </span><span class="lineNoCov">          0 :     virtual void clickOnOffChanged ([[maybe_unused]] bool isClickOn) {}</span></a>
-<a name="147"><span class="lineNum">     147 </span>            :     // tells the device that snapping has been turned on or off.</a>
-<a name="148"><span class="lineNum">     148 </span><span class="lineNoCov">          0 :     virtual void snapOnOffChanged ([[maybe_unused]] bool isSnapOn) {}</span></a>
-<a name="149"><span class="lineNum">     149 </span>            :     // tells the device that looping has been turned on or off.</a>
-<a name="150"><span class="lineNum">     150 </span><span class="lineNoCov">          0 :     virtual void loopOnOffChanged ([[maybe_unused]] bool isLoopOn) {}</span></a>
-<a name="151"><span class="lineNum">     151 </span>            : </a>
-<a name="152"><span class="lineNum">     152 </span><span class="lineNoCov">          0 :     virtual void slaveOnOffChanged ([[maybe_unused]] bool isSlaving)        {}</span></a>
-<a name="153"><span class="lineNum">     153 </span><span class="lineNoCov">          0 :     virtual void punchOnOffChanged ([[maybe_unused]] bool isPunching)       {}</span></a>
-<a name="154"><span class="lineNum">     154 </span><span class="lineNoCov">          0 :     virtual void scrollOnOffChanged ([[maybe_unused]] bool isScroll)        {}</span></a>
-<a name="155"><span class="lineNum">     155 </span><span class="lineNoCov">          0 :     virtual void undoStatusChanged ([[maybe_unused]] bool canUundo,</span></a>
-<a name="156"><span class="lineNum">     156 </span><span class="lineNoCov">          0 :                                     [[maybe_unused]] bool canReo)           {}</span></a>
-<a name="157"><span class="lineNum">     157 </span>            : </a>
-<a name="158"><span class="lineNum">     158 </span>            :     // tells the device that one of the parameters has been changed.</a>
-<a name="159"><span class="lineNum">     159 </span>            :     //</a>
-<a name="160"><span class="lineNum">     160 </span>            :     // parameterNumber is the physical parameter number on the device, not the</a>
-<a name="161"><span class="lineNum">     161 </span>            :     // virtual one.</a>
-<a name="162"><span class="lineNum">     162 </span><span class="lineNoCov">          0 :     virtual void parameterChanged ([[maybe_unused]] int parameterNumber, [[maybe_unused]] const ParameterSetting&amp; newValue) {}</span></a>
-<a name="163"><span class="lineNum">     163 </span><span class="lineNoCov">          0 :     virtual void clearParameter ([[maybe_unused]] int parameterNumber) {}</span></a>
-<a name="164"><span class="lineNum">     164 </span>            : </a>
-<a name="165"><span class="lineNum">     165 </span><span class="lineNoCov">          0 :     virtual void markerChanged ([[maybe_unused]] int parameterNumber, [[maybe_unused]] const MarkerSetting&amp; newValue) {}</span></a>
-<a name="166"><span class="lineNum">     166 </span><span class="lineNoCov">          0 :     virtual void clearMarker ([[maybe_unused]] int parameterNumber) {}</span></a>
+<a name="123"><span class="lineNum">     123 </span>            :     // when a track is selected or deselected</a>
+<a name="124"><span class="lineNum">     124 </span><span class="lineNoCov">          0 :     virtual void trackSelectionChanged ([[maybe_unused]] int channel, [[maybe_unused]] bool isSelected) {}</span></a>
+<a name="125"><span class="lineNum">     125 </span>            : </a>
+<a name="126"><span class="lineNum">     126 </span><span class="lineNoCov">          0 :     virtual void trackRecordEnabled ([[maybe_unused]] int channel, [[maybe_unused]] bool isEnabled) {}</span></a>
+<a name="127"><span class="lineNum">     127 </span>            : </a>
+<a name="128"><span class="lineNum">     128 </span>            :     // if the device has a master level readout, this should update it.</a>
+<a name="129"><span class="lineNum">     129 </span><span class="lineNoCov">          0 :     virtual void masterLevelsChanged ([[maybe_unused]] float leftLevel,</span></a>
+<a name="130"><span class="lineNum">     130 </span><span class="lineNoCov">          0 :                                       [[maybe_unused]] float rightLevel) {}</span></a>
+<a name="131"><span class="lineNum">     131 </span>            : </a>
+<a name="132"><span class="lineNum">     132 </span>            :     // tells the device that the playback position has changed, so if it has a timecode</a>
+<a name="133"><span class="lineNum">     133 </span>            :     // display, it should update it.</a>
+<a name="134"><span class="lineNum">     134 </span>            :     //</a>
+<a name="135"><span class="lineNum">     135 </span>            :     // If isBarsBeats is true, barsOrHours is the bar number (starting from 1), beatsOrMinutes is</a>
+<a name="136"><span class="lineNum">     136 </span>            :     // the beat number (also from 1), ticksOrSeconds is the number of ticks (0 to 959) and millisecs is</a>
+<a name="137"><span class="lineNum">     137 </span>            :     // unused.</a>
+<a name="138"><span class="lineNum">     138 </span>            :     //</a>
+<a name="139"><span class="lineNum">     139 </span>            :     // If isBarsBeats is false, barsOrHours = hours, beatsOrMinutes = minutes, ticksOrSeconds = seconds, and</a>
+<a name="140"><span class="lineNum">     140 </span>            :     // millisecs is (surprise surprise) the milliseconds.</a>
+<a name="141"><span class="lineNum">     141 </span><span class="lineNoCov">          0 :     virtual void timecodeChanged ([[maybe_unused]]  int barsOrHours,</span></a>
+<a name="142"><span class="lineNum">     142 </span>            :                                   [[maybe_unused]]  int beatsOrMinutes,</a>
+<a name="143"><span class="lineNum">     143 </span>            :                                   [[maybe_unused]]  int ticksOrSeconds,</a>
+<a name="144"><span class="lineNum">     144 </span>            :                                   [[maybe_unused]]  int millisecs,</a>
+<a name="145"><span class="lineNum">     145 </span>            :                                   [[maybe_unused]]  bool isBarsBeats,</a>
+<a name="146"><span class="lineNum">     146 </span><span class="lineNoCov">          0 :                                   [[maybe_unused]]  bool isFrames) {}</span></a>
+<a name="147"><span class="lineNum">     147 </span>            : </a>
+<a name="148"><span class="lineNum">     148 </span>            :     // tells the device that the click has been turned on or off.</a>
+<a name="149"><span class="lineNum">     149 </span><span class="lineNoCov">          0 :     virtual void clickOnOffChanged ([[maybe_unused]] bool isClickOn) {}</span></a>
+<a name="150"><span class="lineNum">     150 </span>            :     // tells the device that snapping has been turned on or off.</a>
+<a name="151"><span class="lineNum">     151 </span><span class="lineNoCov">          0 :     virtual void snapOnOffChanged ([[maybe_unused]] bool isSnapOn) {}</span></a>
+<a name="152"><span class="lineNum">     152 </span>            :     // tells the device that looping has been turned on or off.</a>
+<a name="153"><span class="lineNum">     153 </span><span class="lineNoCov">          0 :     virtual void loopOnOffChanged ([[maybe_unused]] bool isLoopOn) {}</span></a>
+<a name="154"><span class="lineNum">     154 </span>            : </a>
+<a name="155"><span class="lineNum">     155 </span><span class="lineNoCov">          0 :     virtual void slaveOnOffChanged ([[maybe_unused]] bool isSlaving)        {}</span></a>
+<a name="156"><span class="lineNum">     156 </span><span class="lineNoCov">          0 :     virtual void punchOnOffChanged ([[maybe_unused]] bool isPunching)       {}</span></a>
+<a name="157"><span class="lineNum">     157 </span><span class="lineNoCov">          0 :     virtual void scrollOnOffChanged ([[maybe_unused]] bool isScroll)        {}</span></a>
+<a name="158"><span class="lineNum">     158 </span><span class="lineNoCov">          0 :     virtual void undoStatusChanged ([[maybe_unused]] bool canUundo,</span></a>
+<a name="159"><span class="lineNum">     159 </span><span class="lineNoCov">          0 :                                     [[maybe_unused]] bool canReo)           {}</span></a>
+<a name="160"><span class="lineNum">     160 </span>            : </a>
+<a name="161"><span class="lineNum">     161 </span>            :     // tells the device that one of the parameters has been changed.</a>
+<a name="162"><span class="lineNum">     162 </span>            :     //</a>
+<a name="163"><span class="lineNum">     163 </span>            :     // parameterNumber is the physical parameter number on the device, not the</a>
+<a name="164"><span class="lineNum">     164 </span>            :     // virtual one.</a>
+<a name="165"><span class="lineNum">     165 </span><span class="lineNoCov">          0 :     virtual void parameterChanged ([[maybe_unused]] int parameterNumber, [[maybe_unused]] const ParameterSetting&amp; newValue) {}</span></a>
+<a name="166"><span class="lineNum">     166 </span><span class="lineNoCov">          0 :     virtual void clearParameter ([[maybe_unused]] int parameterNumber) {}</span></a>
 <a name="167"><span class="lineNum">     167 </span>            : </a>
-<a name="168"><span class="lineNum">     168 </span><span class="lineNoCov">          0 :     virtual void auxBankChanged (int)                   {}</span></a>
-<a name="169"><span class="lineNum">     169 </span>            : </a>
-<a name="170"><span class="lineNum">     170 </span><span class="lineNoCov">          0 :     virtual bool wantsMessage (const juce::MidiMessage&amp;) { return true; }</span></a>
-<a name="171"><span class="lineNum">     171 </span><span class="lineNoCov">          0 :     virtual bool eatsAllMessages()                      { return true; }</span></a>
-<a name="172"><span class="lineNum">     172 </span><span class="lineNoCov">          0 :     virtual bool canSetEatsAllMessages()                { return false; }</span></a>
-<a name="173"><span class="lineNum">     173 </span><span class="lineNoCov">          0 :     virtual void setEatsAllMessages(bool)               {}</span></a>
-<a name="174"><span class="lineNum">     174 </span><span class="lineNoCov">          0 :     virtual bool canChangeSelectedPlugin()              { return true; }</span></a>
-<a name="175"><span class="lineNum">     175 </span><span class="lineNoCov">          0 :     virtual void currentSelectionChanged (juce::String) {}</span></a>
-<a name="176"><span class="lineNum">     176 </span>            : </a>
-<a name="177"><span class="lineNum">     177 </span>            :     juce::String getSelectableDescription() override;</a>
-<a name="178"><span class="lineNum">     178 </span>            : </a>
-<a name="179"><span class="lineNum">     179 </span><span class="lineNoCov">          0 :     virtual bool showingPluginParams()                  { return false; }</span></a>
-<a name="180"><span class="lineNum">     180 </span><span class="lineNoCov">          0 :     virtual bool showingMarkers()                       { return false; }</span></a>
-<a name="181"><span class="lineNum">     181 </span><span class="lineNoCov">          0 :     virtual bool showingTracks()                        { return true;  }</span></a>
-<a name="182"><span class="lineNum">     182 </span>            : </a>
-<a name="183"><span class="lineNum">     183 </span><span class="lineNoCov">          0 :     virtual void deleteController()                     {}</span></a>
-<a name="184"><span class="lineNum">     184 </span><span class="lineNoCov">          0 :     virtual void pluginBypass (bool)                    {}</span></a>
-<a name="185"><span class="lineNum">     185 </span><span class="lineNoCov">          0 :     virtual bool isPluginSelected (Plugin*)             { return false; }</span></a>
-<a name="186"><span class="lineNum">     186 </span>            : </a>
-<a name="187"><span class="lineNum">     187 </span><span class="lineNoCov">          0 :     virtual void currentEditChanged (Edit* e)           { edit = e; }</span></a>
-<a name="188"><span class="lineNum">     188 </span>            : </a>
-<a name="189"><span class="lineNum">     189 </span>            :     Edit* getEdit() const noexcept                      { return edit; }</a>
-<a name="190"><span class="lineNum">     190 </span><span class="lineNoCov">          0 :     TransportControl* getTransport() const noexcept     { return edit != nullptr ? &amp;edit-&gt;getTransport() : nullptr; }</span></a>
+<a name="168"><span class="lineNum">     168 </span><span class="lineNoCov">          0 :     virtual void markerChanged ([[maybe_unused]] int parameterNumber, [[maybe_unused]] const MarkerSetting&amp; newValue) {}</span></a>
+<a name="169"><span class="lineNum">     169 </span><span class="lineNoCov">          0 :     virtual void clearMarker ([[maybe_unused]] int parameterNumber) {}</span></a>
+<a name="170"><span class="lineNum">     170 </span>            : </a>
+<a name="171"><span class="lineNum">     171 </span><span class="lineNoCov">          0 :     virtual void auxBankChanged (int)                   {}</span></a>
+<a name="172"><span class="lineNum">     172 </span>            : </a>
+<a name="173"><span class="lineNum">     173 </span><span class="lineNoCov">          0 :     virtual bool wantsMessage (int, const juce::MidiMessage&amp;) { return true; }</span></a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineNoCov">          0 :     virtual bool eatsAllMessages()                      { return true; }</span></a>
+<a name="175"><span class="lineNum">     175 </span><span class="lineNoCov">          0 :     virtual bool canSetEatsAllMessages()                { return false; }</span></a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineNoCov">          0 :     virtual void setEatsAllMessages(bool)               {}</span></a>
+<a name="177"><span class="lineNum">     177 </span><span class="lineNoCov">          0 :     virtual bool canChangeSelectedPlugin()              { return true; }</span></a>
+<a name="178"><span class="lineNum">     178 </span><span class="lineNoCov">          0 :     virtual void currentSelectionChanged (juce::String) {}</span></a>
+<a name="179"><span class="lineNum">     179 </span>            : </a>
+<a name="180"><span class="lineNum">     180 </span>            :     juce::String getSelectableDescription() override;</a>
+<a name="181"><span class="lineNum">     181 </span>            : </a>
+<a name="182"><span class="lineNum">     182 </span><span class="lineNoCov">          0 :     virtual bool showingPluginParams()                  { return false; }</span></a>
+<a name="183"><span class="lineNum">     183 </span><span class="lineNoCov">          0 :     virtual bool showingMarkers()                       { return false; }</span></a>
+<a name="184"><span class="lineNum">     184 </span><span class="lineNoCov">          0 :     virtual bool showingTracks()                        { return true;  }</span></a>
+<a name="185"><span class="lineNum">     185 </span>            : </a>
+<a name="186"><span class="lineNum">     186 </span><span class="lineNoCov">          0 :     virtual void deleteController()                     {}</span></a>
+<a name="187"><span class="lineNum">     187 </span><span class="lineNoCov">          0 :     virtual void pluginBypass (bool)                    {}</span></a>
+<a name="188"><span class="lineNum">     188 </span><span class="lineNoCov">          0 :     virtual bool isPluginSelected (Plugin*)             { return false; }</span></a>
+<a name="189"><span class="lineNum">     189 </span>            : </a>
+<a name="190"><span class="lineNum">     190 </span><span class="lineNoCov">          0 :     virtual void currentEditChanged (Edit* e)           { edit = e; }</span></a>
 <a name="191"><span class="lineNum">     191 </span>            : </a>
-<a name="192"><span class="lineNum">     192 </span>            :     //==============================================================================</a>
-<a name="193"><span class="lineNum">     193 </span>            :     /*</a>
-<a name="194"><span class="lineNum">     194 </span>            :         The following functions are called by the driver class to send commands</a>
-<a name="195"><span class="lineNum">     195 </span>            :         to tracktion..</a>
-<a name="196"><span class="lineNum">     196 </span>            :     */</a>
-<a name="197"><span class="lineNum">     197 </span>            : </a>
-<a name="198"><span class="lineNum">     198 </span>            :     // Don't send commands when safe recording. All callbacks check this,</a>
-<a name="199"><span class="lineNum">     199 </span>            :     // but your custom app code may not</a>
-<a name="200"><span class="lineNum">     200 </span>            :     bool isSafeRecording() const;</a>
-<a name="201"><span class="lineNum">     201 </span>            : </a>
-<a name="202"><span class="lineNum">     202 </span>            :     // Get the current bank offset. You shouldn't need to know this,</a>
-<a name="203"><span class="lineNum">     203 </span>            :     // just work with physical channel numbers. But it may come in useful</a>
-<a name="204"><span class="lineNum">     204 </span>            :     // rarely if you need to interact with the edit directly</a>
-<a name="205"><span class="lineNum">     205 </span>            :     int getMarkerBankOffset() const;</a>
-<a name="206"><span class="lineNum">     206 </span>            :     int getFaderBankOffset() const;</a>
-<a name="207"><span class="lineNum">     207 </span>            :     int getAuxBankOffset() const;</a>
-<a name="208"><span class="lineNum">     208 </span>            :     int getParamBankOffset() const;</a>
-<a name="209"><span class="lineNum">     209 </span>            : </a>
-<a name="210"><span class="lineNum">     210 </span>            :     // sends a MIDI message to the device's back-channel</a>
-<a name="211"><span class="lineNum">     211 </span>            :     void sendMidiCommandToController (const void* midiData, int numBytes);</a>
-<a name="212"><span class="lineNum">     212 </span>            :     void sendMidiCommandToController (const juce::MidiMessage&amp;);</a>
-<a name="213"><span class="lineNum">     213 </span>            : </a>
-<a name="214"><span class="lineNum">     214 </span>            :     template &lt;size_t size&gt;</a>
-<a name="215"><span class="lineNum">     215 </span>            :     void sendMidiArray (const uint8_t (&amp;rawData)[size])   { sendMidiCommandToController (rawData, (int) size); }</a>
+<a name="192"><span class="lineNum">     192 </span>            :     Edit* getEdit() const noexcept                      { return edit; }</a>
+<a name="193"><span class="lineNum">     193 </span><span class="lineNoCov">          0 :     TransportControl* getTransport() const noexcept     { return edit != nullptr ? &amp;edit-&gt;getTransport() : nullptr; }</span></a>
+<a name="194"><span class="lineNum">     194 </span>            : </a>
+<a name="195"><span class="lineNum">     195 </span>            :     //==============================================================================</a>
+<a name="196"><span class="lineNum">     196 </span>            :     /*</a>
+<a name="197"><span class="lineNum">     197 </span>            :         The following functions are called by the driver class to send commands</a>
+<a name="198"><span class="lineNum">     198 </span>            :         to tracktion..</a>
+<a name="199"><span class="lineNum">     199 </span>            :     */</a>
+<a name="200"><span class="lineNum">     200 </span>            : </a>
+<a name="201"><span class="lineNum">     201 </span>            :     // Don't send commands when safe recording. All callbacks check this,</a>
+<a name="202"><span class="lineNum">     202 </span>            :     // but your custom app code may not</a>
+<a name="203"><span class="lineNum">     203 </span>            :     bool isSafeRecording() const;</a>
+<a name="204"><span class="lineNum">     204 </span>            : </a>
+<a name="205"><span class="lineNum">     205 </span>            :     // Get the current bank offset. You shouldn't need to know this,</a>
+<a name="206"><span class="lineNum">     206 </span>            :     // just work with physical channel numbers. But it may come in useful</a>
+<a name="207"><span class="lineNum">     207 </span>            :     // rarely if you need to interact with the edit directly</a>
+<a name="208"><span class="lineNum">     208 </span>            :     int getMarkerBankOffset() const;</a>
+<a name="209"><span class="lineNum">     209 </span>            :     int getFaderBankOffset() const;</a>
+<a name="210"><span class="lineNum">     210 </span>            :     int getAuxBankOffset() const;</a>
+<a name="211"><span class="lineNum">     211 </span>            :     int getParamBankOffset() const;</a>
+<a name="212"><span class="lineNum">     212 </span>            : </a>
+<a name="213"><span class="lineNum">     213 </span>            :     // sends a MIDI message to the device's back-channel</a>
+<a name="214"><span class="lineNum">     214 </span>            :     void sendMidiCommandToController (int idx, const void* midiData, int numBytes);</a>
+<a name="215"><span class="lineNum">     215 </span>            :     void sendMidiCommandToController (int idx, const juce::MidiMessage&amp;);</a>
 <a name="216"><span class="lineNum">     216 </span>            : </a>
-<a name="217"><span class="lineNum">     217 </span>            :     // tells tracktion that the user has moved a fader.</a>
-<a name="218"><span class="lineNum">     218 </span>            :     // the channel number is the physical channel on the device, regardless of bank selection</a>
-<a name="219"><span class="lineNum">     219 </span>            :     // range 0 to 1.0 or -1.0 to 1.0</a>
-<a name="220"><span class="lineNum">     220 </span>            :     // delta false means absolute position, otherwise adjust by delta</a>
-<a name="221"><span class="lineNum">     221 </span>            :     void userMovedFader (int channelNum, float newFaderPosition, bool delta = false);</a>
-<a name="222"><span class="lineNum">     222 </span>            : </a>
-<a name="223"><span class="lineNum">     223 </span>            :     // tells tracktion that the user has moved a pan pot</a>
-<a name="224"><span class="lineNum">     224 </span>            :     // the channel number is the physical channel on the device, regardless of bank selection</a>
-<a name="225"><span class="lineNum">     225 </span>            :     // range -1.0 to 1.0</a>
-<a name="226"><span class="lineNum">     226 </span>            :     // delta false means absolute position, otherwise adjust by delta</a>
-<a name="227"><span class="lineNum">     227 </span>            :     void userMovedPanPot (int channelNum, float newPanPosition, bool delta = false);</a>
-<a name="228"><span class="lineNum">     228 </span>            : </a>
-<a name="229"><span class="lineNum">     229 </span>            :     // tells tracktion that the master fader has moved.</a>
-<a name="230"><span class="lineNum">     230 </span>            :     void userMovedMasterLevelFader (float newLevel, bool delta = false);</a>
-<a name="231"><span class="lineNum">     231 </span>            :     void userMovedMasterPanPot (float newLevel);</a>
-<a name="232"><span class="lineNum">     232 </span>            : </a>
-<a name="233"><span class="lineNum">     233 </span>            :     void userMovedAux (int channelNum, float newPosition);</a>
-<a name="234"><span class="lineNum">     234 </span>            :     void userPressedAux (int channelNum);</a>
-<a name="235"><span class="lineNum">     235 </span>            :     void userMovedQuickParam (float newLevel);</a>
-<a name="236"><span class="lineNum">     236 </span>            : </a>
-<a name="237"><span class="lineNum">     237 </span>            :     // these tell tracktion about buttons being pressed</a>
-<a name="238"><span class="lineNum">     238 </span>            :     void userPressedSolo (int channelNum);</a>
-<a name="239"><span class="lineNum">     239 </span>            :     void userPressedSoloIsolate (int channelNum);</a>
-<a name="240"><span class="lineNum">     240 </span>            :     void userPressedMute (int channelNum, bool muteVolumeControl);</a>
-<a name="241"><span class="lineNum">     241 </span>            :     void userSelectedTrack (int channelNum);</a>
-<a name="242"><span class="lineNum">     242 </span>            :     void userSelectedClipInTrack (int channelNum);</a>
-<a name="243"><span class="lineNum">     243 </span>            :     void userSelectedPluginInTrack (int channelNum);</a>
-<a name="244"><span class="lineNum">     244 </span>            :     void userPressedRecEnable (int channelNum, bool enableEtoE);</a>
-<a name="245"><span class="lineNum">     245 </span>            :     void userPressedPlay();</a>
-<a name="246"><span class="lineNum">     246 </span>            :     void userPressedRecord();</a>
-<a name="247"><span class="lineNum">     247 </span>            :     void userPressedStop();</a>
-<a name="248"><span class="lineNum">     248 </span>            :     void userPressedHome(); // return to zero</a>
-<a name="249"><span class="lineNum">     249 </span>            :     void userPressedEnd();</a>
-<a name="250"><span class="lineNum">     250 </span>            :     void userPressedMarkIn();</a>
-<a name="251"><span class="lineNum">     251 </span>            :     void userPressedMarkOut();</a>
-<a name="252"><span class="lineNum">     252 </span>            :     void userPressedAutomationReading();</a>
-<a name="253"><span class="lineNum">     253 </span>            :     void userPressedAutomationWriting();</a>
-<a name="254"><span class="lineNum">     254 </span>            :     void userToggledBeatsSecondsMode();</a>
-<a name="255"><span class="lineNum">     255 </span>            :     void userPressedSave();</a>
-<a name="256"><span class="lineNum">     256 </span>            :     void userPressedSaveAs();</a>
-<a name="257"><span class="lineNum">     257 </span>            :     void userPressedArmAll();</a>
-<a name="258"><span class="lineNum">     258 </span>            :     void userPressedJumpToMarkIn();</a>
-<a name="259"><span class="lineNum">     259 </span>            :     void userPressedJumpToMarkOut();</a>
-<a name="260"><span class="lineNum">     260 </span>            :     void userPressedZoomIn();</a>
-<a name="261"><span class="lineNum">     261 </span>            :     void userPressedZoomOut();</a>
-<a name="262"><span class="lineNum">     262 </span>            :     void userPressedZoomToFit();</a>
-<a name="263"><span class="lineNum">     263 </span>            :     void userPressedCreateMarker();</a>
-<a name="264"><span class="lineNum">     264 </span>            :     void userPressedNextMarker();</a>
-<a name="265"><span class="lineNum">     265 </span>            :     void userPressedPreviousMarker();</a>
-<a name="266"><span class="lineNum">     266 </span>            :     void userPressedRedo();</a>
-<a name="267"><span class="lineNum">     267 </span>            :     void userPressedUndo();</a>
-<a name="268"><span class="lineNum">     268 </span>            :     void userPressedAbort();</a>
-<a name="269"><span class="lineNum">     269 </span>            :     void userPressedAbortRestart();</a>
-<a name="270"><span class="lineNum">     270 </span>            :     void userPressedCut();</a>
-<a name="271"><span class="lineNum">     271 </span>            :     void userPressedCopy();</a>
-<a name="272"><span class="lineNum">     272 </span>            :     void userPressedPaste (bool insert);</a>
-<a name="273"><span class="lineNum">     273 </span>            :     void userPressedDelete (bool marked);</a>
-<a name="274"><span class="lineNum">     274 </span>            :     void userPressedZoomFitToTracks();</a>
-<a name="275"><span class="lineNum">     275 </span>            :     void userPressedInsertTempoChange();</a>
-<a name="276"><span class="lineNum">     276 </span>            :     void userPressedInsertPitchChange();</a>
-<a name="277"><span class="lineNum">     277 </span>            :     void userPressedInsertTimeSigChange();</a>
-<a name="278"><span class="lineNum">     278 </span>            :     void userToggledVideoWindow();</a>
-<a name="279"><span class="lineNum">     279 </span>            :     void userToggledMixerWindow (bool fullscreen);</a>
-<a name="280"><span class="lineNum">     280 </span>            :     void userToggledMidiEditorWindow (bool fullscreen);</a>
-<a name="281"><span class="lineNum">     281 </span>            :     void userToggledTrackEditorWindow();</a>
-<a name="282"><span class="lineNum">     282 </span>            :     void userToggledBrowserWindow();</a>
-<a name="283"><span class="lineNum">     283 </span>            :     void userToggledActionsWindow();</a>
-<a name="284"><span class="lineNum">     284 </span>            :     void userPressedUserAction (int);</a>
-<a name="285"><span class="lineNum">     285 </span>            :     void userPressedFreeze();</a>
-<a name="286"><span class="lineNum">     286 </span>            : </a>
-<a name="287"><span class="lineNum">     287 </span>            :     void userPressedClearAllSolo();</a>
-<a name="288"><span class="lineNum">     288 </span>            :     void userPressedClearAllMute();</a>
+<a name="217"><span class="lineNum">     217 </span>            :     template &lt;size_t size&gt;</a>
+<a name="218"><span class="lineNum">     218 </span>            :     void sendMidiArray (int idx, const uint8_t (&amp;rawData)[size])   { sendMidiCommandToController (idx, rawData, (int) size); }</a>
+<a name="219"><span class="lineNum">     219 </span>            : </a>
+<a name="220"><span class="lineNum">     220 </span>            :     // tells tracktion that the user has moved a fader.</a>
+<a name="221"><span class="lineNum">     221 </span>            :     // the channel number is the physical channel on the device, regardless of bank selection</a>
+<a name="222"><span class="lineNum">     222 </span>            :     // range 0 to 1.0 or -1.0 to 1.0</a>
+<a name="223"><span class="lineNum">     223 </span>            :     // delta false means absolute position, otherwise adjust by delta</a>
+<a name="224"><span class="lineNum">     224 </span>            :     void userMovedFader (int channelNum, float newFaderPosition, bool delta = false);</a>
+<a name="225"><span class="lineNum">     225 </span>            : </a>
+<a name="226"><span class="lineNum">     226 </span>            :     // tells tracktion that the user has moved a pan pot</a>
+<a name="227"><span class="lineNum">     227 </span>            :     // the channel number is the physical channel on the device, regardless of bank selection</a>
+<a name="228"><span class="lineNum">     228 </span>            :     // range -1.0 to 1.0</a>
+<a name="229"><span class="lineNum">     229 </span>            :     // delta false means absolute position, otherwise adjust by delta</a>
+<a name="230"><span class="lineNum">     230 </span>            :     void userMovedPanPot (int channelNum, float newPanPosition, bool delta = false);</a>
+<a name="231"><span class="lineNum">     231 </span>            : </a>
+<a name="232"><span class="lineNum">     232 </span>            :     // tells tracktion that the master fader has moved.</a>
+<a name="233"><span class="lineNum">     233 </span>            :     void userMovedMasterLevelFader (float newLevel, bool delta = false);</a>
+<a name="234"><span class="lineNum">     234 </span>            :     void userMovedMasterPanPot (float newLevel);</a>
+<a name="235"><span class="lineNum">     235 </span>            : </a>
+<a name="236"><span class="lineNum">     236 </span>            :     void userMovedAux (int channelNum, float newPosition);</a>
+<a name="237"><span class="lineNum">     237 </span>            :     void userPressedAux (int channelNum);</a>
+<a name="238"><span class="lineNum">     238 </span>            :     void userMovedQuickParam (float newLevel);</a>
+<a name="239"><span class="lineNum">     239 </span>            : </a>
+<a name="240"><span class="lineNum">     240 </span>            :     // these tell tracktion about buttons being pressed</a>
+<a name="241"><span class="lineNum">     241 </span>            :     void userPressedSolo (int channelNum);</a>
+<a name="242"><span class="lineNum">     242 </span>            :     void userPressedSoloIsolate (int channelNum);</a>
+<a name="243"><span class="lineNum">     243 </span>            :     void userPressedMute (int channelNum, bool muteVolumeControl);</a>
+<a name="244"><span class="lineNum">     244 </span>            :     void userSelectedTrack (int channelNum);</a>
+<a name="245"><span class="lineNum">     245 </span>            :     void userSelectedClipInTrack (int channelNum);</a>
+<a name="246"><span class="lineNum">     246 </span>            :     void userSelectedPluginInTrack (int channelNum);</a>
+<a name="247"><span class="lineNum">     247 </span>            :     void userPressedRecEnable (int channelNum, bool enableEtoE);</a>
+<a name="248"><span class="lineNum">     248 </span>            :     void userPressedPlay();</a>
+<a name="249"><span class="lineNum">     249 </span>            :     void userPressedRecord();</a>
+<a name="250"><span class="lineNum">     250 </span>            :     void userPressedStop();</a>
+<a name="251"><span class="lineNum">     251 </span>            :     void userPressedHome(); // return to zero</a>
+<a name="252"><span class="lineNum">     252 </span>            :     void userPressedEnd();</a>
+<a name="253"><span class="lineNum">     253 </span>            :     void userPressedMarkIn();</a>
+<a name="254"><span class="lineNum">     254 </span>            :     void userPressedMarkOut();</a>
+<a name="255"><span class="lineNum">     255 </span>            :     void userPressedAutomationReading();</a>
+<a name="256"><span class="lineNum">     256 </span>            :     void userPressedAutomationWriting();</a>
+<a name="257"><span class="lineNum">     257 </span>            :     void userToggledBeatsSecondsMode();</a>
+<a name="258"><span class="lineNum">     258 </span>            :     void userPressedSave();</a>
+<a name="259"><span class="lineNum">     259 </span>            :     void userPressedSaveAs();</a>
+<a name="260"><span class="lineNum">     260 </span>            :     void userPressedArmAll();</a>
+<a name="261"><span class="lineNum">     261 </span>            :     void userPressedJumpToMarkIn();</a>
+<a name="262"><span class="lineNum">     262 </span>            :     void userPressedJumpToMarkOut();</a>
+<a name="263"><span class="lineNum">     263 </span>            :     void userPressedZoomIn();</a>
+<a name="264"><span class="lineNum">     264 </span>            :     void userPressedZoomOut();</a>
+<a name="265"><span class="lineNum">     265 </span>            :     void userPressedZoomToFit();</a>
+<a name="266"><span class="lineNum">     266 </span>            :     void userPressedCreateMarker();</a>
+<a name="267"><span class="lineNum">     267 </span>            :     void userPressedNextMarker();</a>
+<a name="268"><span class="lineNum">     268 </span>            :     void userPressedPreviousMarker();</a>
+<a name="269"><span class="lineNum">     269 </span>            :     void userPressedRedo();</a>
+<a name="270"><span class="lineNum">     270 </span>            :     void userPressedUndo();</a>
+<a name="271"><span class="lineNum">     271 </span>            :     void userPressedAbort();</a>
+<a name="272"><span class="lineNum">     272 </span>            :     void userPressedAbortRestart();</a>
+<a name="273"><span class="lineNum">     273 </span>            :     void userPressedCut();</a>
+<a name="274"><span class="lineNum">     274 </span>            :     void userPressedCopy();</a>
+<a name="275"><span class="lineNum">     275 </span>            :     void userPressedPaste (bool insert);</a>
+<a name="276"><span class="lineNum">     276 </span>            :     void userPressedDelete (bool marked);</a>
+<a name="277"><span class="lineNum">     277 </span>            :     void userPressedZoomFitToTracks();</a>
+<a name="278"><span class="lineNum">     278 </span>            :     void userPressedInsertTempoChange();</a>
+<a name="279"><span class="lineNum">     279 </span>            :     void userPressedInsertPitchChange();</a>
+<a name="280"><span class="lineNum">     280 </span>            :     void userPressedInsertTimeSigChange();</a>
+<a name="281"><span class="lineNum">     281 </span>            :     void userToggledVideoWindow();</a>
+<a name="282"><span class="lineNum">     282 </span>            :     void userToggledMixerWindow (bool fullscreen);</a>
+<a name="283"><span class="lineNum">     283 </span>            :     void userToggledMidiEditorWindow (bool fullscreen);</a>
+<a name="284"><span class="lineNum">     284 </span>            :     void userToggledTrackEditorWindow();</a>
+<a name="285"><span class="lineNum">     285 </span>            :     void userToggledBrowserWindow();</a>
+<a name="286"><span class="lineNum">     286 </span>            :     void userToggledActionsWindow();</a>
+<a name="287"><span class="lineNum">     287 </span>            :     void userPressedUserAction (int);</a>
+<a name="288"><span class="lineNum">     288 </span>            :     void userPressedFreeze();</a>
 <a name="289"><span class="lineNum">     289 </span>            : </a>
-<a name="290"><span class="lineNum">     290 </span>            :     void userToggledLoopOnOff();</a>
-<a name="291"><span class="lineNum">     291 </span>            :     void userToggledPunchOnOff();</a>
-<a name="292"><span class="lineNum">     292 </span>            :     void userToggledClickOnOff();</a>
-<a name="293"><span class="lineNum">     293 </span>            :     void userToggledSnapOnOff();</a>
-<a name="294"><span class="lineNum">     294 </span>            :     void userToggledSlaveOnOff();</a>
-<a name="295"><span class="lineNum">     295 </span>            :     void userToggledEtoE();</a>
-<a name="296"><span class="lineNum">     296 </span>            :     void userToggledScroll();</a>
-<a name="297"><span class="lineNum">     297 </span>            : </a>
-<a name="298"><span class="lineNum">     298 </span>            :     void userSkippedToNextMarkerLeft();</a>
-<a name="299"><span class="lineNum">     299 </span>            :     void userSkippedToNextMarkerRight();</a>
-<a name="300"><span class="lineNum">     300 </span>            :     void userNudgedLeft();</a>
-<a name="301"><span class="lineNum">     301 </span>            :     void userNudgedRight();</a>
-<a name="302"><span class="lineNum">     302 </span>            :     void userZoomedIn();</a>
-<a name="303"><span class="lineNum">     303 </span>            :     void userZoomedOut();</a>
-<a name="304"><span class="lineNum">     304 </span>            :     void userScrolledTracksUp();</a>
-<a name="305"><span class="lineNum">     305 </span>            :     void userScrolledTracksDown();</a>
-<a name="306"><span class="lineNum">     306 </span>            :     void userScrolledTracksLeft();</a>
-<a name="307"><span class="lineNum">     307 </span>            :     void userScrolledTracksRight();</a>
-<a name="308"><span class="lineNum">     308 </span>            :     void userZoomedTracksIn();</a>
-<a name="309"><span class="lineNum">     309 </span>            :     void userZoomedTracksOut();</a>
-<a name="310"><span class="lineNum">     310 </span>            :     void selectOtherObject (SelectableClass::Relationship, bool moveFromCurrentPlugin);</a>
-<a name="311"><span class="lineNum">     311 </span>            :     void muteOrUnmutePluginsInTrack();</a>
-<a name="312"><span class="lineNum">     312 </span>            : </a>
-<a name="313"><span class="lineNum">     313 </span>            :     // tells tracktion to move the fader bank up or down by the specified number of channels.</a>
-<a name="314"><span class="lineNum">     314 </span>            :     // After calling this, tracktion will call back the faderBankChanged() method to tell the</a>
-<a name="315"><span class="lineNum">     315 </span>            :     // device what its new state is.</a>
-<a name="316"><span class="lineNum">     316 </span>            :     void userChangedFaderBanks (int channelNumDelta);</a>
-<a name="317"><span class="lineNum">     317 </span>            : </a>
-<a name="318"><span class="lineNum">     318 </span>            :     // tells tracktion to move the cursor.</a>
-<a name="319"><span class="lineNum">     319 </span>            :     //</a>
-<a name="320"><span class="lineNum">     320 </span>            :     // amount &lt; 0 means moving backwards, amount &gt; 0 forwards</a>
-<a name="321"><span class="lineNum">     321 </span>            :     // magnitude of about 1.0 is a 'normal' speed</a>
-<a name="322"><span class="lineNum">     322 </span>            :     void userMovedJogWheel (float amount);</a>
-<a name="323"><span class="lineNum">     323 </span>            : </a>
-<a name="324"><span class="lineNum">     324 </span>            :     // to allow it to auto-repeat, these tell tracktion when the left/right buttons are pressed and</a>
-<a name="325"><span class="lineNum">     325 </span>            :     // released.</a>
-<a name="326"><span class="lineNum">     326 </span>            :     // (try not to make sure the buttons aren't left stuck down!)</a>
-<a name="327"><span class="lineNum">     327 </span>            :     void userChangedRewindButton (bool isButtonDown);</a>
-<a name="328"><span class="lineNum">     328 </span>            :     void userChangedFastForwardButton (bool isButtonDown);</a>
-<a name="329"><span class="lineNum">     329 </span>            : </a>
-<a name="330"><span class="lineNum">     330 </span>            :     void userMovedParameterControl (int parameter, float newValue);</a>
-<a name="331"><span class="lineNum">     331 </span>            :     void userPressedParameterControl (int paramNumber);</a>
+<a name="290"><span class="lineNum">     290 </span>            :     void userPressedClearAllSolo();</a>
+<a name="291"><span class="lineNum">     291 </span>            :     void userPressedClearAllMute();</a>
+<a name="292"><span class="lineNum">     292 </span>            : </a>
+<a name="293"><span class="lineNum">     293 </span>            :     void userToggledLoopOnOff();</a>
+<a name="294"><span class="lineNum">     294 </span>            :     void userToggledPunchOnOff();</a>
+<a name="295"><span class="lineNum">     295 </span>            :     void userToggledClickOnOff();</a>
+<a name="296"><span class="lineNum">     296 </span>            :     void userToggledSnapOnOff();</a>
+<a name="297"><span class="lineNum">     297 </span>            :     void userToggledSlaveOnOff();</a>
+<a name="298"><span class="lineNum">     298 </span>            :     void userToggledEtoE();</a>
+<a name="299"><span class="lineNum">     299 </span>            :     void userToggledScroll();</a>
+<a name="300"><span class="lineNum">     300 </span>            : </a>
+<a name="301"><span class="lineNum">     301 </span>            :     void userSkippedToNextMarkerLeft();</a>
+<a name="302"><span class="lineNum">     302 </span>            :     void userSkippedToNextMarkerRight();</a>
+<a name="303"><span class="lineNum">     303 </span>            :     void userNudgedLeft();</a>
+<a name="304"><span class="lineNum">     304 </span>            :     void userNudgedRight();</a>
+<a name="305"><span class="lineNum">     305 </span>            :     void userZoomedIn();</a>
+<a name="306"><span class="lineNum">     306 </span>            :     void userZoomedOut();</a>
+<a name="307"><span class="lineNum">     307 </span>            :     void userScrolledTracksUp();</a>
+<a name="308"><span class="lineNum">     308 </span>            :     void userScrolledTracksDown();</a>
+<a name="309"><span class="lineNum">     309 </span>            :     void userScrolledTracksLeft();</a>
+<a name="310"><span class="lineNum">     310 </span>            :     void userScrolledTracksRight();</a>
+<a name="311"><span class="lineNum">     311 </span>            :     void userZoomedTracksIn();</a>
+<a name="312"><span class="lineNum">     312 </span>            :     void userZoomedTracksOut();</a>
+<a name="313"><span class="lineNum">     313 </span>            :     void selectOtherObject (SelectableClass::Relationship, bool moveFromCurrentPlugin);</a>
+<a name="314"><span class="lineNum">     314 </span>            :     void muteOrUnmutePluginsInTrack();</a>
+<a name="315"><span class="lineNum">     315 </span>            : </a>
+<a name="316"><span class="lineNum">     316 </span>            :     // tells tracktion to move the fader bank up or down by the specified number of channels.</a>
+<a name="317"><span class="lineNum">     317 </span>            :     // After calling this, tracktion will call back the faderBankChanged() method to tell the</a>
+<a name="318"><span class="lineNum">     318 </span>            :     // device what its new state is.</a>
+<a name="319"><span class="lineNum">     319 </span>            :     void userChangedFaderBanks (int channelNumDelta);</a>
+<a name="320"><span class="lineNum">     320 </span>            : </a>
+<a name="321"><span class="lineNum">     321 </span>            :     // tells tracktion to move the cursor.</a>
+<a name="322"><span class="lineNum">     322 </span>            :     //</a>
+<a name="323"><span class="lineNum">     323 </span>            :     // amount &lt; 0 means moving backwards, amount &gt; 0 forwards</a>
+<a name="324"><span class="lineNum">     324 </span>            :     // magnitude of about 1.0 is a 'normal' speed</a>
+<a name="325"><span class="lineNum">     325 </span>            :     void userMovedJogWheel (float amount);</a>
+<a name="326"><span class="lineNum">     326 </span>            : </a>
+<a name="327"><span class="lineNum">     327 </span>            :     // to allow it to auto-repeat, these tell tracktion when the left/right buttons are pressed and</a>
+<a name="328"><span class="lineNum">     328 </span>            :     // released.</a>
+<a name="329"><span class="lineNum">     329 </span>            :     // (try not to make sure the buttons aren't left stuck down!)</a>
+<a name="330"><span class="lineNum">     330 </span>            :     void userChangedRewindButton (bool isButtonDown);</a>
+<a name="331"><span class="lineNum">     331 </span>            :     void userChangedFastForwardButton (bool isButtonDown);</a>
 <a name="332"><span class="lineNum">     332 </span>            : </a>
-<a name="333"><span class="lineNum">     333 </span>            :     void userChangedParameterBank (int deltaParams);</a>
-<a name="334"><span class="lineNum">     334 </span>            :     void userChangedMarkerBank (int deltaMarkers);</a>
-<a name="335"><span class="lineNum">     335 </span>            :     void userPressedGoToMarker (int marker);</a>
-<a name="336"><span class="lineNum">     336 </span>            : </a>
-<a name="337"><span class="lineNum">     337 </span>            :     void userChangedAuxBank (int delta);</a>
-<a name="338"><span class="lineNum">     338 </span>            :     void updateDeviceState();</a>
+<a name="333"><span class="lineNum">     333 </span>            :     void userMovedParameterControl (int parameter, float newValue);</a>
+<a name="334"><span class="lineNum">     334 </span>            :     void userPressedParameterControl (int paramNumber);</a>
+<a name="335"><span class="lineNum">     335 </span>            : </a>
+<a name="336"><span class="lineNum">     336 </span>            :     void userChangedParameterBank (int deltaParams);</a>
+<a name="337"><span class="lineNum">     337 </span>            :     void userChangedMarkerBank (int deltaMarkers);</a>
+<a name="338"><span class="lineNum">     338 </span>            :     void userPressedGoToMarker (int marker);</a>
 <a name="339"><span class="lineNum">     339 </span>            : </a>
-<a name="340"><span class="lineNum">     340 </span>            :     void redrawSelectedPlugin();</a>
-<a name="341"><span class="lineNum">     341 </span>            :     void redrawSelectedTracks();</a>
+<a name="340"><span class="lineNum">     340 </span>            :     void userChangedAuxBank (int delta);</a>
+<a name="341"><span class="lineNum">     341 </span>            :     void updateDeviceState();</a>
 <a name="342"><span class="lineNum">     342 </span>            : </a>
-<a name="343"><span class="lineNum">     343 </span>            :     Edit* getEditIfOnEditScreen() const;</a>
-<a name="344"><span class="lineNum">     344 </span>            : </a>
-<a name="345"><span class="lineNum">     345 </span>            :     //==============================================================================</a>
-<a name="346"><span class="lineNum">     346 </span>            :     /** These values need to be set by the subclass.. */</a>
-<a name="347"><span class="lineNum">     347 </span>            :     juce::String deviceDescription;</a>
-<a name="348"><span class="lineNum">     348 </span>            : </a>
-<a name="349"><span class="lineNum">     349 </span>            :     // does this driver need to be able to send MIDI messages</a>
-<a name="350"><span class="lineNum">     350 </span>            :     bool needsMidiChannel = true;</a>
+<a name="343"><span class="lineNum">     343 </span>            :     void redrawSelectedPlugin();</a>
+<a name="344"><span class="lineNum">     344 </span>            :     void redrawSelectedTracks();</a>
+<a name="345"><span class="lineNum">     345 </span>            : </a>
+<a name="346"><span class="lineNum">     346 </span>            :     Edit* getEditIfOnEditScreen() const;</a>
+<a name="347"><span class="lineNum">     347 </span>            : </a>
+<a name="348"><span class="lineNum">     348 </span>            :     //==============================================================================</a>
+<a name="349"><span class="lineNum">     349 </span>            :     /** These values need to be set by the subclass.. */</a>
+<a name="350"><span class="lineNum">     350 </span>            :     juce::String deviceDescription;</a>
 <a name="351"><span class="lineNum">     351 </span>            : </a>
-<a name="352"><span class="lineNum">     352 </span>            :     // If the midi device always has the same name, set it and device will auto configure</a>
-<a name="353"><span class="lineNum">     353 </span>            :     juce::String midiChannelName;</a>
+<a name="352"><span class="lineNum">     352 </span>            :     // The number of multiple similar devices can be connected to add additional tracks</a>
+<a name="353"><span class="lineNum">     353 </span>            :     int supportedExtenders = 0;</a>
 <a name="354"><span class="lineNum">     354 </span>            : </a>
-<a name="355"><span class="lineNum">     355 </span>            :     // does this driver need to be able to send MIDI messages back to the</a>
-<a name="356"><span class="lineNum">     356 </span>            :     // controller as well as receive them?</a>
-<a name="357"><span class="lineNum">     357 </span>            :     bool needsMidiBackChannel = false;</a>
-<a name="358"><span class="lineNum">     358 </span>            : </a>
-<a name="359"><span class="lineNum">     359 </span>            :     // If the midi device always has the same name, set it and device will auto configure</a>
-<a name="360"><span class="lineNum">     360 </span>            :     juce::String midiBackChannelName;</a>
-<a name="361"><span class="lineNum">     361 </span>            : </a>
-<a name="362"><span class="lineNum">     362 </span>            :     // does this driver need to be able to communicate via OSC</a>
-<a name="363"><span class="lineNum">     363 </span>            :     bool needsOSCSocket = false;</a>
+<a name="355"><span class="lineNum">     355 </span>            :     // does this driver need to be able to send MIDI messages</a>
+<a name="356"><span class="lineNum">     356 </span>            :     bool needsMidiChannel = true;</a>
+<a name="357"><span class="lineNum">     357 </span>            : </a>
+<a name="358"><span class="lineNum">     358 </span>            :     // If the midi device always has the same name, set it and device will auto configure</a>
+<a name="359"><span class="lineNum">     359 </span>            :     juce::String midiChannelName;</a>
+<a name="360"><span class="lineNum">     360 </span>            : </a>
+<a name="361"><span class="lineNum">     361 </span>            :     // does this driver need to be able to send MIDI messages back to the</a>
+<a name="362"><span class="lineNum">     362 </span>            :     // controller as well as receive them?</a>
+<a name="363"><span class="lineNum">     363 </span>            :     bool needsMidiBackChannel = false;</a>
 <a name="364"><span class="lineNum">     364 </span>            : </a>
-<a name="365"><span class="lineNum">     365 </span>            :     // device wants MIDI clock</a>
-<a name="366"><span class="lineNum">     366 </span>            :     bool wantsClock = false;</a>
+<a name="365"><span class="lineNum">     365 </span>            :     // If the midi device always has the same name, set it and device will auto configure</a>
+<a name="366"><span class="lineNum">     366 </span>            :     juce::String midiBackChannelName;</a>
 <a name="367"><span class="lineNum">     367 </span>            : </a>
-<a name="368"><span class="lineNum">     368 </span>            :     // can be deleted</a>
-<a name="369"><span class="lineNum">     369 </span>            :     bool deletable = false;</a>
+<a name="368"><span class="lineNum">     368 </span>            :     // does this driver need to be able to communicate via OSC</a>
+<a name="369"><span class="lineNum">     369 </span>            :     bool needsOSCSocket = false;</a>
 <a name="370"><span class="lineNum">     370 </span>            : </a>
-<a name="371"><span class="lineNum">     371 </span>            :     // number of physical faders</a>
-<a name="372"><span class="lineNum">     372 </span>            :     int numberOfFaderChannels = 0;</a>
-<a name="373"><span class="lineNum">     373 </span>            :     int numCharactersForTrackNames = 0;</a>
-<a name="374"><span class="lineNum">     374 </span>            : </a>
-<a name="375"><span class="lineNum">     375 </span>            :     // is banking to the right allowed to show empty tracks</a>
-<a name="376"><span class="lineNum">     376 </span>            :     bool allowBankingOffEnd = false;</a>
-<a name="377"><span class="lineNum">     377 </span>            : </a>
-<a name="378"><span class="lineNum">     378 </span>            :     // number of labelled rotary dials that can control things like plugin parameters</a>
-<a name="379"><span class="lineNum">     379 </span>            :     int numParameterControls = 0;</a>
-<a name="380"><span class="lineNum">     380 </span>            :     int numCharactersForParameterLabels = 0;</a>
-<a name="381"><span class="lineNum">     381 </span>            : </a>
-<a name="382"><span class="lineNum">     382 </span>            :     // number of markers that can be displayed</a>
-<a name="383"><span class="lineNum">     383 </span>            :     int numMarkers = 0;</a>
-<a name="384"><span class="lineNum">     384 </span>            :     int numCharactersForMarkerLabels = 0;</a>
-<a name="385"><span class="lineNum">     385 </span>            : </a>
-<a name="386"><span class="lineNum">     386 </span>            :     int numAuxes = 0;</a>
-<a name="387"><span class="lineNum">     387 </span>            :     int numCharactersForAuxLabels = 0;</a>
-<a name="388"><span class="lineNum">     388 </span>            :     bool wantsAuxBanks = false;</a>
-<a name="389"><span class="lineNum">     389 </span>            :     bool followsTrackSelection = false;</a>
-<a name="390"><span class="lineNum">     390 </span>            : </a>
-<a name="391"><span class="lineNum">     391 </span>            :     Engine&amp; engine;</a>
-<a name="392"><span class="lineNum">     392 </span>            :     ExternalControllerManager&amp; externalControllerManager;</a>
-<a name="393"><span class="lineNum">     393 </span>            :     ExternalController* owner = nullptr;</a>
-<a name="394"><span class="lineNum">     394 </span>            : </a>
-<a name="395"><span class="lineNum">     395 </span>            : private:</a>
-<a name="396"><span class="lineNum">     396 </span>            :     Edit* edit = nullptr;</a>
-<a name="397"><span class="lineNum">     397 </span>            : </a>
-<a name="398"><span class="lineNum">     398 </span>            :     void performIfNotSafeRecording (const std::function&lt;void()&gt;&amp;);</a>
-<a name="399"><span class="lineNum">     399 </span>            : </a>
-<a name="400"><span class="lineNum">     400 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ControlSurface)</a>
-<a name="401"><span class="lineNum">     401 </span>            : };</a>
-<a name="402"><span class="lineNum">     402 </span>            : </a>
-<a name="403"><span class="lineNum">     403 </span>            : } // namespace tracktion_engine</a>
+<a name="371"><span class="lineNum">     371 </span>            :     // device wants MIDI clock</a>
+<a name="372"><span class="lineNum">     372 </span>            :     bool wantsClock = false;</a>
+<a name="373"><span class="lineNum">     373 </span>            : </a>
+<a name="374"><span class="lineNum">     374 </span>            :     // can be deleted</a>
+<a name="375"><span class="lineNum">     375 </span>            :     bool deletable = false;</a>
+<a name="376"><span class="lineNum">     376 </span>            : </a>
+<a name="377"><span class="lineNum">     377 </span>            :     // number of physical faders</a>
+<a name="378"><span class="lineNum">     378 </span>            :     int numberOfFaderChannels = 0;</a>
+<a name="379"><span class="lineNum">     379 </span>            :     int numCharactersForTrackNames = 0;</a>
+<a name="380"><span class="lineNum">     380 </span>            : </a>
+<a name="381"><span class="lineNum">     381 </span>            :     // is banking to the right allowed to show empty tracks</a>
+<a name="382"><span class="lineNum">     382 </span>            :     bool allowBankingOffEnd = false;</a>
+<a name="383"><span class="lineNum">     383 </span>            : </a>
+<a name="384"><span class="lineNum">     384 </span>            :     // number of labelled rotary dials that can control things like plugin parameters</a>
+<a name="385"><span class="lineNum">     385 </span>            :     int numParameterControls = 0;</a>
+<a name="386"><span class="lineNum">     386 </span>            :     int numCharactersForParameterLabels = 0;</a>
+<a name="387"><span class="lineNum">     387 </span>            : </a>
+<a name="388"><span class="lineNum">     388 </span>            :     // number of markers that can be displayed</a>
+<a name="389"><span class="lineNum">     389 </span>            :     int numMarkers = 0;</a>
+<a name="390"><span class="lineNum">     390 </span>            :     int numCharactersForMarkerLabels = 0;</a>
+<a name="391"><span class="lineNum">     391 </span>            : </a>
+<a name="392"><span class="lineNum">     392 </span>            :     int numAuxes = 0;</a>
+<a name="393"><span class="lineNum">     393 </span>            :     int numCharactersForAuxLabels = 0;</a>
+<a name="394"><span class="lineNum">     394 </span>            :     bool wantsAuxBanks = false;</a>
+<a name="395"><span class="lineNum">     395 </span>            :     bool followsTrackSelection = false;</a>
+<a name="396"><span class="lineNum">     396 </span>            : </a>
+<a name="397"><span class="lineNum">     397 </span>            :     Engine&amp; engine;</a>
+<a name="398"><span class="lineNum">     398 </span>            :     ExternalControllerManager&amp; externalControllerManager;</a>
+<a name="399"><span class="lineNum">     399 </span>            :     ExternalController* owner = nullptr;</a>
+<a name="400"><span class="lineNum">     400 </span>            : </a>
+<a name="401"><span class="lineNum">     401 </span>            : private:</a>
+<a name="402"><span class="lineNum">     402 </span>            :     Edit* edit = nullptr;</a>
+<a name="403"><span class="lineNum">     403 </span>            : </a>
+<a name="404"><span class="lineNum">     404 </span>            :     void performIfNotSafeRecording (const std::function&lt;void()&gt;&amp;);</a>
+<a name="405"><span class="lineNum">     405 </span>            : </a>
+<a name="406"><span class="lineNum">     406 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ControlSurface)</a>
+<a name="407"><span class="lineNum">     407 </span>            : };</a>
+<a name="408"><span class="lineNum">     408 </span>            : </a>
+<a name="409"><span class="lineNum">     409 </span>            : } // namespace tracktion_engine</a>
 </pre>
       </td>
     </tr>

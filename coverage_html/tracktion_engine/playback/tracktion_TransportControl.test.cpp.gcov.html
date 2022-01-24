@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-24 20:11:34</td>
+            <td class="headerValue">2022-01-24 23:50:13</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">15</td>
@@ -197,11 +197,11 @@
 <a name="135"><span class="lineNum">     135 </span>            : </a>
 <a name="136"><span class="lineNum">     136 </span>            :     //==============================================================================</a>
 <a name="137"><span class="lineNum">     137 </span>            :     template&lt;class Clock, class Duration&gt;</a>
-<a name="138"><span class="lineNum">     138 </span><span class="lineCov">       3888 :     static void yield_until (const std::chrono::time_point&lt;Clock, Duration&gt;&amp; sleep_time)</span></a>
+<a name="138"><span class="lineNum">     138 </span><span class="lineCov">       3897 :     static void yield_until (const std::chrono::time_point&lt;Clock, Duration&gt;&amp; sleep_time)</span></a>
 <a name="139"><span class="lineNum">     139 </span>            :     {</a>
-<a name="140"><span class="lineNum">     140 </span><span class="lineCov">   10923200 :         while (Clock::now() &lt; sleep_time)</span></a>
+<a name="140"><span class="lineNum">     140 </span><span class="lineCov">   10074800 :         while (Clock::now() &lt; sleep_time)</span></a>
 <a name="141"><span class="lineNum">     141 </span>            :             std::this_thread::yield();</a>
-<a name="142"><span class="lineNum">     142 </span><span class="lineCov">       3888 :     }</span></a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineCov">       3897 :     }</span></a>
 <a name="143"><span class="lineNum">     143 </span>            :     </a>
 <a name="144"><span class="lineNum">     144 </span>            :     void waitUntilPlayheadPosition (const EditPlaybackContext&amp; epc, double time)</a>
 <a name="145"><span class="lineNum">     145 </span>            :     {</a>
@@ -250,21 +250,21 @@
 <a name="188"><span class="lineNum">     188 </span>            : </a>
 <a name="189"><span class="lineNum">     189 </span><span class="lineCov">          4 :             processThread = std::thread ([&amp;, msPerBlock]</span></a>
 <a name="190"><span class="lineNum">     190 </span>            :                                          {</a>
-<a name="191"><span class="lineNum">     191 </span><span class="lineCov">       3892 :                                              hasStarted = true;</span></a>
+<a name="191"><span class="lineNum">     191 </span><span class="lineCov">       3901 :                                              hasStarted = true;</span></a>
 <a name="192"><span class="lineNum">     192 </span>            :                 </a>
-<a name="193"><span class="lineNum">     193 </span><span class="lineCov">       3892 :                                              while (! shouldStop.load())</span></a>
+<a name="193"><span class="lineNum">     193 </span><span class="lineCov">       3901 :                                              while (! shouldStop.load())</span></a>
 <a name="194"><span class="lineNum">     194 </span>            :                                              {</a>
-<a name="195"><span class="lineNum">     195 </span><span class="lineCov">       3888 :                                                  auto endTime = std::chrono::steady_clock::now() + std::chrono::milliseconds (msPerBlock);</span></a>
+<a name="195"><span class="lineNum">     195 </span><span class="lineCov">       3897 :                                                  auto endTime = std::chrono::steady_clock::now() + std::chrono::milliseconds (msPerBlock);</span></a>
 <a name="196"><span class="lineNum">     196 </span>            : </a>
-<a name="197"><span class="lineNum">     197 </span><span class="lineCov">       3888 :                                                  if (insertImpulse.exchange (false))</span></a>
+<a name="197"><span class="lineNum">     197 </span><span class="lineCov">       3897 :                                                  if (insertImpulse.exchange (false))</span></a>
 <a name="198"><span class="lineNum">     198 </span><span class="lineCov">         68 :                                                      for (int c = silenceBuffer.getNumChannels(); --c &gt;= 0;)</span></a>
 <a name="199"><span class="lineNum">     199 </span><span class="lineCov">         64 :                                                          silenceBuffer.setSample (c, 0, 1.0f);</span></a>
 <a name="200"><span class="lineNum">     200 </span>            : </a>
-<a name="201"><span class="lineNum">     201 </span><span class="lineCov">       3888 :                                                  audioIO.processBlock (silenceBuffer, emptyMidiBuffer);</span></a>
-<a name="202"><span class="lineNum">     202 </span><span class="lineCov">       3888 :                                                  silenceBuffer.clear();</span></a>
-<a name="203"><span class="lineNum">     203 </span><span class="lineCov">       3888 :                                                  emptyMidiBuffer.clear();</span></a>
+<a name="201"><span class="lineNum">     201 </span><span class="lineCov">       3897 :                                                  audioIO.processBlock (silenceBuffer, emptyMidiBuffer);</span></a>
+<a name="202"><span class="lineNum">     202 </span><span class="lineCov">       3897 :                                                  silenceBuffer.clear();</span></a>
+<a name="203"><span class="lineNum">     203 </span><span class="lineCov">       3897 :                                                  emptyMidiBuffer.clear();</span></a>
 <a name="204"><span class="lineNum">     204 </span>            : </a>
-<a name="205"><span class="lineNum">     205 </span><span class="lineCov">       3888 :                                                  yield_until (endTime);</span></a>
+<a name="205"><span class="lineNum">     205 </span><span class="lineCov">       3897 :                                                  yield_until (endTime);</span></a>
 <a name="206"><span class="lineNum">     206 </span>            :                                              }</a>
 <a name="207"><span class="lineNum">     207 </span><span class="lineCov">          4 :                                          });</span></a>
 <a name="208"><span class="lineNum">     208 </span><span class="lineCov">          4 :         }</span></a>

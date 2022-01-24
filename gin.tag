@@ -5712,6 +5712,7 @@
       <enumvalue file="namespacetracktion__engine.html" anchor="a621c43a54efb4eb950c0b1cad5e97eaca8873e2c579f6e0cdad6bf53c14440209">defaultWaveInDevice</enumvalue>
       <enumvalue file="namespacetracktion__engine.html" anchor="a621c43a54efb4eb950c0b1cad5e97eacaab5dbffa8d328b4ee3c038b03db636a9">externControlIn</enumvalue>
       <enumvalue file="namespacetracktion__engine.html" anchor="a621c43a54efb4eb950c0b1cad5e97eaca15b23b93b04ee1f66a8e853395711d8b">externControlOut</enumvalue>
+      <enumvalue file="namespacetracktion__engine.html" anchor="a621c43a54efb4eb950c0b1cad5e97eacad3b6c594a822b4858b52daef222f5921">externControlNum</enumvalue>
       <enumvalue file="namespacetracktion__engine.html" anchor="a621c43a54efb4eb950c0b1cad5e97eaca31b14445c2b17c9d967b7319d731a1a8">externControlShowSelection</enumvalue>
       <enumvalue file="namespacetracktion__engine.html" anchor="a621c43a54efb4eb950c0b1cad5e97eaca1918ff077a302b29d9bac97cc5eb70cc">externControlSelectionColour</enumvalue>
       <enumvalue file="namespacetracktion__engine.html" anchor="a621c43a54efb4eb950c0b1cad5e97eacaf37db2cd80d1ec81f8201a888987e99e">externControlEnable</enumvalue>
@@ -7188,8 +7189,8 @@
       <type>void</type>
       <name>acceptMidiMessage</name>
       <anchorfile>classtracktion__engine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>ac4a8b19f4fe309f1ff9e01fe3a1a8103</anchor>
-      <arglist>(const juce::MidiMessage &amp;) override</arglist>
+      <anchor>aaf9cc17f6d1f508877ecfc7204eb05da</anchor>
+      <arglist>(int, const juce::MidiMessage &amp;) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -20129,10 +20130,17 @@
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
+      <name>numExtendersChanged</name>
+      <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
+      <anchor>af8aa82b1337f44c6bda03101c11be3a0</anchor>
+      <arglist>([[maybe_unused]] int num)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>acceptMidiMessage</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a063480d66cd035c195fd839ded7b49cd</anchor>
-      <arglist>(const juce::MidiMessage &amp;)</arglist>
+      <anchor>a14790ac6cd5851279c8c8413db5aac25</anchor>
+      <arglist>([[maybe_unused]] int idx, const juce::MidiMessage &amp;)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
@@ -20341,8 +20349,8 @@
       <type>virtual bool</type>
       <name>wantsMessage</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a8ee18c95cbfe532ce4f5b78f05fb42c3</anchor>
-      <arglist>(const juce::MidiMessage &amp;)</arglist>
+      <anchor>a355b3c986c7694e28740bb65af7f27f9</anchor>
+      <arglist>(int, const juce::MidiMessage &amp;)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual bool</type>
@@ -20488,22 +20496,22 @@
       <type>void</type>
       <name>sendMidiCommandToController</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>ab68b87982cd5b9e4643e355167932679</anchor>
-      <arglist>(const void *midiData, int numBytes)</arglist>
+      <anchor>a7503907b7878b635f7b90e113073c2c7</anchor>
+      <arglist>(int idx, const void *midiData, int numBytes)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>sendMidiCommandToController</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a7aeca90986b3f890ad11a3d4de0d77e3</anchor>
-      <arglist>(const juce::MidiMessage &amp;)</arglist>
+      <anchor>aa176a8a2a1f63f8d61cd00f853a4f233</anchor>
+      <arglist>(int idx, const juce::MidiMessage &amp;)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>sendMidiArray</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>aed5e55228a79558671d34fc238fac5c2</anchor>
-      <arglist>(const uint8_t(&amp;rawData)[size])</arglist>
+      <anchor>ae4b488ea64b4d781e94e6dbea641ee83</anchor>
+      <arglist>(int idx, const uint8_t(&amp;rawData)[size])</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -21154,6 +21162,13 @@
       <name>deviceDescription</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
       <anchor>ae26c3cf2d983524f2842787e08add5e1</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>supportedExtenders</name>
+      <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
+      <anchor>a367a621d4b245d44a7d1aec9576ed262</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -23751,15 +23766,15 @@
       <type>void</type>
       <name>acceptMidiMessage</name>
       <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a967ae335ef8ee032587aee0597c63c61</anchor>
-      <arglist>(const juce::MidiMessage &amp;) override</arglist>
+      <anchor>ab4e993ee3f667364f13b3b248b3bd702</anchor>
+      <arglist>(int, const juce::MidiMessage &amp;) override</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
       <name>wantsMessage</name>
       <anchorfile>classtracktion__engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>adbdc55168e4607f1312546e892d1d1b2</anchor>
-      <arglist>(const juce::MidiMessage &amp;) override</arglist>
+      <anchor>a62d167cff95f709332f5bd705a102a87</anchor>
+      <arglist>(int, const juce::MidiMessage &amp;) override</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -30920,32 +30935,46 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
+      <type>int</type>
+      <name>getNumDevices</name>
+      <anchorfile>classtracktion__engine_1_1ExternalController.html</anchorfile>
+      <anchor>a46d4611ed5661b4359d4831b889a5e42</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setNumDevices</name>
+      <anchorfile>classtracktion__engine_1_1ExternalController.html</anchorfile>
+      <anchor>a6cab4b5f354466ed3321a3d7fecf552c</anchor>
+      <arglist>(int)</arglist>
+    </member>
+    <member kind="function">
       <type>juce::String</type>
       <name>getMidiInputDevice</name>
       <anchorfile>classtracktion__engine_1_1ExternalController.html</anchorfile>
-      <anchor>a50e3b8f626bfee3518d3022dca497be0</anchor>
-      <arglist>() const</arglist>
+      <anchor>a592d19cfb95e7f88d2f4afb1754d6a99</anchor>
+      <arglist>(int idx) const</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>setMidiInputDevice</name>
       <anchorfile>classtracktion__engine_1_1ExternalController.html</anchorfile>
-      <anchor>a18435aa2dcdea2c14d6587e5f2df87c2</anchor>
-      <arglist>(const juce::String &amp;nameOfMidiInput)</arglist>
+      <anchor>a2903c77c3c5e1d48f3e796708b7c061a</anchor>
+      <arglist>(int idx, const juce::String &amp;nameOfMidiInput)</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
       <name>getBackChannelDevice</name>
       <anchorfile>classtracktion__engine_1_1ExternalController.html</anchorfile>
-      <anchor>adbaf289ef3a4fe79b4c3c22604fbbbdd</anchor>
-      <arglist>() const</arglist>
+      <anchor>a6df3d1a7009eefaf66abc6a001609384</anchor>
+      <arglist>(int idx) const</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>setBackChannelDevice</name>
       <anchorfile>classtracktion__engine_1_1ExternalController.html</anchorfile>
-      <anchor>a95c5bb99158eff4378a841a7fba4044d</anchor>
-      <arglist>(const juce::String &amp;nameOfMidiOutput)</arglist>
+      <anchor>af83975dd85909fb0f3684edde4e2fb82</anchor>
+      <arglist>(int idx, const juce::String &amp;nameOfMidiOutput)</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -31336,15 +31365,15 @@
       <type>void</type>
       <name>acceptMidiMessage</name>
       <anchorfile>classtracktion__engine_1_1ExternalController.html</anchorfile>
-      <anchor>afea6bd9f5f45379831cf75b85ff68420</anchor>
-      <arglist>(const juce::MidiMessage &amp;)</arglist>
+      <anchor>a44a12f610e1a4af084ed85382bbda3ed</anchor>
+      <arglist>(MidiInputDevice &amp;, const juce::MidiMessage &amp;)</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
       <name>wantsMessage</name>
       <anchorfile>classtracktion__engine_1_1ExternalController.html</anchorfile>
-      <anchor>aa9a5bae7d0a8929e6a88450f75d92fa3</anchor>
-      <arglist>(const juce::MidiMessage &amp;)</arglist>
+      <anchor>a2c5e3941c0404970937e69893cce8f59</anchor>
+      <arglist>(MidiInputDevice &amp;, const juce::MidiMessage &amp;)</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -31476,15 +31505,15 @@
       <type>juce::String</type>
       <name>getInputDeviceName</name>
       <anchorfile>classtracktion__engine_1_1ExternalController.html</anchorfile>
-      <anchor>a4fadb3cacae6d0359541ab18cd2863f8</anchor>
-      <arglist>() const</arglist>
+      <anchor>a68e25150e1373f5ff901883919c66178</anchor>
+      <arglist>(int idx) const</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
       <name>getOutputDeviceName</name>
       <anchorfile>classtracktion__engine_1_1ExternalController.html</anchorfile>
-      <anchor>acdc544c578ea93f65ea9210e8bb370e7</anchor>
-      <arglist>() const</arglist>
+      <anchor>a3449e8d012c50b218b07c276c1c67ddd</anchor>
+      <arglist>(int idx) const</arglist>
     </member>
     <member kind="function">
       <type>juce::StringArray</type>
@@ -34942,9 +34971,9 @@
     </member>
     <member kind="function">
       <type>void</type>
-      <name>acceptMidiMessage</name>
+      <name>acceptMidiMessageInt</name>
       <anchorfile>classtracktion__engine_1_1IconProG2.html</anchorfile>
-      <anchor>af732a53b58f919aeeb0115a2a439b4ca</anchor>
+      <anchor>a57749a815d7d5ec51fd554c6da78fb7e</anchor>
       <arglist>(int deviceIdx, const juce::MidiMessage &amp;) override</arglist>
     </member>
     <member kind="function">
@@ -39436,8 +39465,8 @@
       <type>void</type>
       <name>acceptMidiMessage</name>
       <anchorfile>classtracktion__engine_1_1MackieC4.html</anchorfile>
-      <anchor>a62b1df3c5775e1ae5a38f8eb028b54d9</anchor>
-      <arglist>(const juce::MidiMessage &amp;) override</arglist>
+      <anchor>af3757f94b63ce13168d7a488dab1d79f</anchor>
+      <arglist>(int, const juce::MidiMessage &amp;) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -39838,14 +39867,14 @@
       <type>void</type>
       <name>acceptMidiMessage</name>
       <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
-      <anchor>a7ebe7747d823332ef044ac9b33998d68</anchor>
-      <arglist>(const juce::MidiMessage &amp;) override</arglist>
+      <anchor>a1bdee137376c50b19090e75456257ab5</anchor>
+      <arglist>(int, const juce::MidiMessage &amp;) override</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
-      <name>acceptMidiMessage</name>
+      <name>acceptMidiMessageInt</name>
       <anchorfile>classtracktion__engine_1_1MackieMCU.html</anchorfile>
-      <anchor>a717e38ddfd479254dbd369159bc51357</anchor>
+      <anchor>a585ea18290877dcb06b9b7a5be9c6313</anchor>
       <arglist>(int deviceIdx, const juce::MidiMessage &amp;)</arglist>
     </member>
     <member kind="function">
@@ -40487,8 +40516,8 @@
       <type>void</type>
       <name>acceptMidiMessage</name>
       <anchorfile>classtracktion__engine_1_1MackieXT.html</anchorfile>
-      <anchor>a027dd686bccc42a02eb80f7aadeca12f</anchor>
-      <arglist>(const juce::MidiMessage &amp;m) override</arglist>
+      <anchor>ac3bd4bf1b029b666dfbc190aff19c64b</anchor>
+      <arglist>(int, const juce::MidiMessage &amp;m) override</arglist>
     </member>
     <member kind="function">
       <type>int</type>
@@ -47829,8 +47858,8 @@
       <type>void</type>
       <name>acceptMidiMessage</name>
       <anchorfile>classtracktion__engine_1_1NovationRemoteSl.html</anchorfile>
-      <anchor>ab99daa92a4927e135f407a1663b284fe</anchor>
-      <arglist>(const juce::MidiMessage &amp;) override</arglist>
+      <anchor>aa88f8f571102287a97f034e2e4f04fbf</anchor>
+      <arglist>(int, const juce::MidiMessage &amp;) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -47927,8 +47956,8 @@
       <type>bool</type>
       <name>wantsMessage</name>
       <anchorfile>classtracktion__engine_1_1NovationRemoteSl.html</anchorfile>
-      <anchor>a349bd3050205d37f700c11e775c8b76e</anchor>
-      <arglist>(const juce::MidiMessage &amp;) override</arglist>
+      <anchor>a29c3a33281639d272dc54ccd8372e54c</anchor>
+      <arglist>(int, const juce::MidiMessage &amp;) override</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -57837,8 +57866,8 @@
       <type>bool</type>
       <name>wantsMessage</name>
       <anchorfile>classtracktion__engine_1_1RemoteSLCompact.html</anchorfile>
-      <anchor>afcf876bf2333610e51a2e87d9a44ad84</anchor>
-      <arglist>(const juce::MidiMessage &amp;) override</arglist>
+      <anchor>a85c3afb199eb19de5ba4dca21e7ec6d3</anchor>
+      <arglist>(int, const juce::MidiMessage &amp;) override</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -70294,8 +70323,8 @@
       <type>void</type>
       <name>acceptMidiMessage</name>
       <anchorfile>classtracktion__engine_1_1TranzportControlSurface.html</anchorfile>
-      <anchor>a30f48d4e9ee6b6fbd78118aa9ca176d4</anchor>
-      <arglist>(const juce::MidiMessage &amp;) override</arglist>
+      <anchor>a35469cfd2782778026b0744a356e9489</anchor>
+      <arglist>(int, const juce::MidiMessage &amp;) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -77290,6 +77319,7 @@
       <enumvalue file="namespacetracktion__engine.html" anchor="a621c43a54efb4eb950c0b1cad5e97eaca8873e2c579f6e0cdad6bf53c14440209">defaultWaveInDevice</enumvalue>
       <enumvalue file="namespacetracktion__engine.html" anchor="a621c43a54efb4eb950c0b1cad5e97eacaab5dbffa8d328b4ee3c038b03db636a9">externControlIn</enumvalue>
       <enumvalue file="namespacetracktion__engine.html" anchor="a621c43a54efb4eb950c0b1cad5e97eaca15b23b93b04ee1f66a8e853395711d8b">externControlOut</enumvalue>
+      <enumvalue file="namespacetracktion__engine.html" anchor="a621c43a54efb4eb950c0b1cad5e97eacad3b6c594a822b4858b52daef222f5921">externControlNum</enumvalue>
       <enumvalue file="namespacetracktion__engine.html" anchor="a621c43a54efb4eb950c0b1cad5e97eaca31b14445c2b17c9d967b7319d731a1a8">externControlShowSelection</enumvalue>
       <enumvalue file="namespacetracktion__engine.html" anchor="a621c43a54efb4eb950c0b1cad5e97eaca1918ff077a302b29d9bac97cc5eb70cc">externControlSelectionColour</enumvalue>
       <enumvalue file="namespacetracktion__engine.html" anchor="a621c43a54efb4eb950c0b1cad5e97eacaf37db2cd80d1ec81f8201a888987e99e">externControlEnable</enumvalue>

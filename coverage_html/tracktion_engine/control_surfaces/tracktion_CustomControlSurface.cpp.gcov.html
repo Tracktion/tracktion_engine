@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-24 20:11:34</td>
+            <td class="headerValue">2022-01-24 23:50:13</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -413,7 +413,7 @@
 <a name="351"><span class="lineNum">     351 </span>            : {</a>
 <a name="352"><span class="lineNum">     352 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="353"><span class="lineNum">     353 </span>            : </a>
-<a name="354"><span class="lineNum">     354 </span><span class="lineNoCov">          0 : bool CustomControlSurface::wantsMessage (const juce::MidiMessage&amp; m)</span></a>
+<a name="354"><span class="lineNum">     354 </span><span class="lineNoCov">          0 : bool CustomControlSurface::wantsMessage (int, const juce::MidiMessage&amp; m)</span></a>
 <a name="355"><span class="lineNum">     355 </span>            : {</a>
 <a name="356"><span class="lineNum">     356 </span>            :     // in T5 there will always be a current list box so we don't wan't to eat all the time</a>
 <a name="357"><span class="lineNum">     357 </span><span class="lineNoCov">          0 :     if (eatsAllMidi || listeningOnRow != -1 || ((m.isNoteOn() || m.isController())</span></a>
@@ -671,7 +671,7 @@
 <a name="609"><span class="lineNum">     609 </span>            :     }</a>
 <a name="610"><span class="lineNum">     610 </span>            : }</a>
 <a name="611"><span class="lineNum">     611 </span>            : </a>
-<a name="612"><span class="lineNum">     612 </span><span class="lineNoCov">          0 : void CustomControlSurface::acceptMidiMessage (const juce::MidiMessage&amp; m)</span></a>
+<a name="612"><span class="lineNum">     612 </span><span class="lineNoCov">          0 : void CustomControlSurface::acceptMidiMessage (int, const juce::MidiMessage&amp; m)</span></a>
 <a name="613"><span class="lineNum">     613 </span>            : {</a>
 <a name="614"><span class="lineNum">     614 </span><span class="lineNoCov">          0 :     if (! m.isController() &amp;&amp; ! m.isNoteOn())</span></a>
 <a name="615"><span class="lineNum">     615 </span>            :         return;</a>
@@ -959,12 +959,12 @@
 <a name="897"><span class="lineNum">     897 </span>            :             {</a>
 <a name="898"><span class="lineNum">     898 </span><span class="lineNoCov">          0 :                 if (midiNote != -1)</span></a>
 <a name="899"><span class="lineNum">     899 </span>            :                 {</a>
-<a name="900"><span class="lineNum">     900 </span><span class="lineNoCov">          0 :                     if (value &lt;= 0.0f)  sendMidiCommandToController (juce::MidiMessage::noteOff (midiChannel, midiNote, value));</span></a>
-<a name="901"><span class="lineNum">     901 </span><span class="lineNoCov">          0 :                     else                sendMidiCommandToController (juce::MidiMessage::noteOn (midiChannel, midiNote, value));</span></a>
+<a name="900"><span class="lineNum">     900 </span><span class="lineNoCov">          0 :                     if (value &lt;= 0.0f)  sendMidiCommandToController (0, juce::MidiMessage::noteOff (midiChannel, midiNote, value));</span></a>
+<a name="901"><span class="lineNum">     901 </span><span class="lineNoCov">          0 :                     else                sendMidiCommandToController (0, juce::MidiMessage::noteOn (midiChannel, midiNote, value));</span></a>
 <a name="902"><span class="lineNum">     902 </span>            :                 }</a>
 <a name="903"><span class="lineNum">     903 </span>            : </a>
 <a name="904"><span class="lineNum">     904 </span><span class="lineNoCov">          0 :                 if (midiController != -1)</span></a>
-<a name="905"><span class="lineNum">     905 </span><span class="lineNoCov">          0 :                     sendMidiCommandToController (juce::MidiMessage::controllerEvent (midiChannel, midiController,</span></a>
+<a name="905"><span class="lineNum">     905 </span><span class="lineNoCov">          0 :                     sendMidiCommandToController (0, juce::MidiMessage::controllerEvent (midiChannel, midiController,</span></a>
 <a name="906"><span class="lineNum">     906 </span><span class="lineNoCov">          0 :                                                                                      juce::MidiMessage::floatValueToMidiByte (value)));</span></a>
 <a name="907"><span class="lineNum">     907 </span>            :             }</a>
 <a name="908"><span class="lineNum">     908 </span>            :         }</a>
@@ -1024,7 +1024,7 @@
 <a name="962"><span class="lineNum">     962 </span><span class="lineNoCov">          0 : void CustomControlSurface::showMappingsEditor (juce::DialogWindow::LaunchOptions&amp; o)</span></a>
 <a name="963"><span class="lineNum">     963 </span>            : {</a>
 <a name="964"><span class="lineNum">     964 </span>            :    #if JUCE_MODAL_LOOPS_PERMITTED</a>
-<a name="965"><span class="lineNum">     965 </span><span class="lineNoCov">          0 :     if (needsMidiChannel &amp;&amp; owner-&gt;getMidiInputDevice().isEmpty())</span></a>
+<a name="965"><span class="lineNum">     965 </span><span class="lineNoCov">          0 :     if (needsMidiChannel &amp;&amp; owner-&gt;getMidiInputDevice (0).isEmpty())</span></a>
 <a name="966"><span class="lineNum">     966 </span>            :     {</a>
 <a name="967"><span class="lineNum">     967 </span><span class="lineNoCov">          0 :         engine.getUIBehaviour().showWarningAlert (TRANS(&quot;Error&quot;),</span></a>
 <a name="968"><span class="lineNum">     968 </span><span class="lineNoCov">          0 :                                                   TRANS(&quot;You must set a MIDI input device!&quot;));</span></a>
