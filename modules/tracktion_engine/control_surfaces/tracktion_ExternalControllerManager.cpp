@@ -101,34 +101,45 @@ void ExternalControllerManager::initialise()
 {
     CRASH_TRACER
     TRACKTION_LOG ("Creating Default Controllers...");
+    
+    auto controllers = engine.getEngineBehaviour().getDesiredControlSurfaces();
 
    #if TRACKTION_ENABLE_CONTROL_SURFACES
-    auto mcu = new MackieMCU (*this);
-    addNewController (mcu);
+    if (controllers.mackieMCU)
+    {
+        auto mcu = new MackieMCU (*this);
+        addNewController (mcu);
 
-    for (int i = 0; i < getXTCount (mcu->deviceDescription); ++i)
-        addNewController (new MackieXT (*this, *mcu, i));
+        for (int i = 0; i < getXTCount (mcu->deviceDescription); ++i)
+            addNewController (new MackieXT (*this, *mcu, i));
 
-    refreshXTOrder();
+        refreshXTOrder();
+    }
     
-    addNewController (new MackieC4 (*this));
-    
-    auto icon = new IconProG2 (*this);
-    addNewController (icon);
-    for (int i = 0; i < getXTCount (icon->deviceDescription); ++i)
-        addNewController (new MackieXT (*this, *icon, i));
+    if (controllers.iconProG2)
+    {
+        addNewController (new MackieC4 (*this));
+        
+        auto icon = new IconProG2 (*this);
+        addNewController (icon);
+        for (int i = 0; i < getXTCount (icon->deviceDescription); ++i)
+            addNewController (new MackieXT (*this, *icon, i));
+    }
 
-    addNewController (new TranzportControlSurface (*this));
-    addNewController (new AlphaTrackControlSurface (*this));
-    addNewController (new NovationRemoteSl (*this));
+    if (controllers.tranzport)  addNewController (new TranzportControlSurface (*this));
+    if (controllers.alphaTrack) addNewController (new AlphaTrackControlSurface (*this));
+    if (controllers.remoteSL)   addNewController (new NovationRemoteSl (*this));
 
    #if TRACKTION_ENABLE_AUTOMAP
-    automap = new NovationAutomap (*this);
-    addNewController (automap);
+    if (controllers.automap)
+    {
+        automap = new NovationAutomap (*this);
+        addNewController (automap);
+    }
    #endif
 
    #if JUCE_DEBUG
-    addNewController (new RemoteSLCompact (*this));
+    if (controllers.remoteSLCompact) addNewController (new RemoteSLCompact (*this));
    #endif
 
     // load the custom midi controllers
