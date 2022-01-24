@@ -101,10 +101,10 @@ void ExternalControllerManager::initialise()
 {
     CRASH_TRACER
     TRACKTION_LOG ("Creating Default Controllers...");
-    
-    auto controllers = engine.getEngineBehaviour().getDesiredControlSurfaces();
 
    #if TRACKTION_ENABLE_CONTROL_SURFACES
+    auto controllers = engine.getEngineBehaviour().getDesiredControlSurfaces();
+
     if (controllers.mackieMCU)
     {
         auto mcu = new MackieMCU (*this);
