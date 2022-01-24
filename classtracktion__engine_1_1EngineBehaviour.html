@@ -79,6 +79,8 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1EngineBehaviour_1_1ControlSurfaces.html">ControlSurfaces</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion__engine_1_1EngineBehaviour_1_1LevelMeterSettings.html">LevelMeterSettings</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -188,6 +190,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abfada92e19fc3f8885df20a599fa0539"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#abfada92e19fc3f8885df20a599fa0539">autoAddClipEdgeFades</a> ()</td></tr>
 <tr class="memdesc:abfada92e19fc3f8885df20a599fa0539"><td class="mdescLeft">&#160;</td><td class="mdescRight">If this returns true, it means that newly inserted clips will automatically have a fade-in and fade-out of 3ms applied.  <a href="classtracktion__engine_1_1EngineBehaviour.html#abfada92e19fc3f8885df20a599fa0539">More...</a><br /></td></tr>
 <tr class="separator:abfada92e19fc3f8885df20a599fa0539"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20496169f6d1d5e42b122e750b8e73ac"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structtracktion__engine_1_1EngineBehaviour_1_1ControlSurfaces.html">ControlSurfaces</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#a20496169f6d1d5e42b122e750b8e73ac">getDesiredControlSurfaces</a> ()</td></tr>
+<tr class="memdesc:a20496169f6d1d5e42b122e750b8e73ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the control surfaces you want enabled in the engine.  <a href="classtracktion__engine_1_1EngineBehaviour.html#a20496169f6d1d5e42b122e750b8e73ac">More...</a><br /></td></tr>
+<tr class="separator:a20496169f6d1d5e42b122e750b8e73ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Provides custom handlers to control various aspects of the engine's behaviour. </p>
@@ -1427,13 +1432,40 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a20496169f6d1d5e42b122e750b8e73ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a20496169f6d1d5e42b122e750b8e73ac">&#9670;&nbsp;</a></span>getDesiredControlSurfaces()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="structtracktion__engine_1_1EngineBehaviour_1_1ControlSurfaces.html">ControlSurfaces</a> tracktion_engine::EngineBehaviour::getDesiredControlSurfaces </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return the control surfaces you want enabled in the engine. </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="tracktion__EngineBehaviour_8h.html">tracktion_EngineBehaviour.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jan 21 2022 06:25:03 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jan 24 2022 19:57:38 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

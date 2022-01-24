@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-21 06:36:41</td>
+            <td class="headerValue">2022-01-24 20:11:34</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">33</td>
@@ -491,41 +491,41 @@
 <a name="429"><span class="lineNum">     429 </span>            :         {</a>
 <a name="430"><span class="lineNum">     430 </span>            :             for (;;)</a>
 <a name="431"><span class="lineNum">     431 </span>            :             {</a>
-<a name="432"><span class="lineNum">     432 </span><span class="lineCov">    2397482 :                 const ScopedPerformanceMeasurement spm (performanceMeasurement);</span></a>
+<a name="432"><span class="lineNum">     432 </span><span class="lineCov">    2391898 :                 const ScopedPerformanceMeasurement spm (performanceMeasurement);</span></a>
 <a name="433"><span class="lineNum">     433 </span>            :                 </a>
-<a name="434"><span class="lineNum">     434 </span><span class="lineCov">    3263854 :                 auto maxNumThisTime = testSetup.randomiseBlockSizes ? std::min (testSetup.random.nextInt ({ 1, testSetup.blockSize }), numSamplesToDo)</span></a>
+<a name="434"><span class="lineNum">     434 </span><span class="lineCov">    3258322 :                 auto maxNumThisTime = testSetup.randomiseBlockSizes ? std::min (testSetup.random.nextInt ({ 1, testSetup.blockSize }), numSamplesToDo)</span></a>
 <a name="435"><span class="lineNum">     435 </span><span class="lineCov">     866179 :                                                                     : std::min (testSetup.blockSize, numSamplesToDo);</span></a>
-<a name="436"><span class="lineNum">     436 </span><span class="lineCov">    2397482 :                 auto numThisTime = std::min (maxNumSamples, maxNumThisTime);</span></a>
-<a name="437"><span class="lineNum">     437 </span><span class="lineCov">    2397482 :                 midi.clear();</span></a>
+<a name="436"><span class="lineNum">     436 </span><span class="lineCov">    2391898 :                 auto numThisTime = std::min (maxNumSamples, maxNumThisTime);</span></a>
+<a name="437"><span class="lineNum">     437 </span><span class="lineCov">    2391898 :                 midi.clear();</span></a>
 <a name="438"><span class="lineNum">     438 </span>            : </a>
-<a name="439"><span class="lineNum">     439 </span><span class="lineCov">    2397482 :                 auto subSectionView = buffer.getStart ((choc::buffer::FrameCount) numThisTime);</span></a>
+<a name="439"><span class="lineNum">     439 </span><span class="lineCov">    2391898 :                 auto subSectionView = buffer.getStart ((choc::buffer::FrameCount) numThisTime);</span></a>
 <a name="440"><span class="lineNum">     440 </span>            :                 subSectionView.clear();</a>
 <a name="441"><span class="lineNum">     441 </span>            : </a>
-<a name="442"><span class="lineNum">     442 </span><span class="lineCov">    2397482 :                 const auto referenceSampleRange = juce::Range&lt;int64_t&gt;::withStartAndLength ((int64_t) numSamplesDone, (int64_t) numThisTime);</span></a>
+<a name="442"><span class="lineNum">     442 </span><span class="lineCov">    2391898 :                 const auto referenceSampleRange = juce::Range&lt;int64_t&gt;::withStartAndLength ((int64_t) numSamplesDone, (int64_t) numThisTime);</span></a>
 <a name="443"><span class="lineNum">     443 </span>            : </a>
-<a name="444"><span class="lineNum">     444 </span><span class="lineCov">    2397482 :                 if (playHead)</span></a>
-<a name="445"><span class="lineNum">     445 </span><span class="lineCov">     166996 :                     playHead-&gt;setReferenceSampleRange (referenceSampleRange);</span></a>
+<a name="444"><span class="lineNum">     444 </span><span class="lineCov">    2391898 :                 if (playHead)</span></a>
+<a name="445"><span class="lineNum">     445 </span><span class="lineCov">     166694 :                     playHead-&gt;setReferenceSampleRange (referenceSampleRange);</span></a>
 <a name="446"><span class="lineNum">     446 </span>            : </a>
-<a name="447"><span class="lineNum">     447 </span><span class="lineCov">    2397482 :                 numProcessMisses += player-&gt;process ({ referenceSampleRange, { subSectionView, midi } });</span></a>
+<a name="447"><span class="lineNum">     447 </span><span class="lineCov">    2391898 :                 numProcessMisses += player-&gt;process ({ referenceSampleRange, { subSectionView, midi } });</span></a>
 <a name="448"><span class="lineNum">     448 </span>            : </a>
-<a name="449"><span class="lineNum">     449 </span><span class="lineCov">    2397482 :                 if (writer)</span></a>
+<a name="449"><span class="lineNum">     449 </span><span class="lineCov">    2391898 :                 if (writer)</span></a>
 <a name="450"><span class="lineNum">     450 </span>            :                 {</a>
 <a name="451"><span class="lineNum">     451 </span>            :                     auto audioBuffer = tracktion_graph::toAudioBuffer (subSectionView);</a>
-<a name="452"><span class="lineNum">     452 </span><span class="lineCov">    2232554 :                     writer-&gt;writeFromAudioSampleBuffer (audioBuffer, 0, audioBuffer.getNumSamples());</span></a>
+<a name="452"><span class="lineNum">     452 </span><span class="lineCov">    2227272 :                     writer-&gt;writeFromAudioSampleBuffer (audioBuffer, 0, audioBuffer.getNumSamples());</span></a>
 <a name="453"><span class="lineNum">     453 </span>            :                 }</a>
 <a name="454"><span class="lineNum">     454 </span>            : </a>
 <a name="455"><span class="lineNum">     455 </span>            :                 // Copy MIDI to buffer</a>
-<a name="456"><span class="lineNum">     456 </span><span class="lineCov">    2398490 :                 for (const auto&amp; m : midi)</span></a>
+<a name="456"><span class="lineNum">     456 </span><span class="lineCov">    2392906 :                 for (const auto&amp; m : midi)</span></a>
 <a name="457"><span class="lineNum">     457 </span>            :                 {</a>
 <a name="458"><span class="lineNum">     458 </span><span class="lineCov">       1008 :                     const int sampleNumber = (int) std::floor (m.getTimeStamp() * testSetup.sampleRate);</span></a>
 <a name="459"><span class="lineNum">     459 </span><span class="lineCov">       1008 :                     context-&gt;midi.addEvent (m, numSamplesDone + sampleNumber);</span></a>
 <a name="460"><span class="lineNum">     460 </span>            :                 }</a>
 <a name="461"><span class="lineNum">     461 </span>            : </a>
-<a name="462"><span class="lineNum">     462 </span><span class="lineCov">    2397482 :                 numSamplesToDo -= numThisTime;</span></a>
-<a name="463"><span class="lineNum">     463 </span><span class="lineCov">    2397482 :                 numSamplesDone += numThisTime;</span></a>
-<a name="464"><span class="lineNum">     464 </span><span class="lineCov">    2397482 :                 maxNumSamples -=  numThisTime;</span></a>
+<a name="462"><span class="lineNum">     462 </span><span class="lineCov">    2391898 :                 numSamplesToDo -= numThisTime;</span></a>
+<a name="463"><span class="lineNum">     463 </span><span class="lineCov">    2391898 :                 numSamplesDone += numThisTime;</span></a>
+<a name="464"><span class="lineNum">     464 </span><span class="lineCov">    2391898 :                 maxNumSamples -=  numThisTime;</span></a>
 <a name="465"><span class="lineNum">     465 </span>            : </a>
-<a name="466"><span class="lineNum">     466 </span><span class="lineCov">    2397482 :                 if (maxNumSamples &lt;= 0)</span></a>
+<a name="466"><span class="lineNum">     466 </span><span class="lineCov">    2391898 :                 if (maxNumSamples &lt;= 0)</span></a>
 <a name="467"><span class="lineNum">     467 </span>            :                     break;</a>
 <a name="468"><span class="lineNum">     468 </span>            :             }</a>
 <a name="469"><span class="lineNum">     469 </span>            : </a>

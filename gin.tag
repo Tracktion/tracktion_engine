@@ -3611,6 +3611,7 @@
     <class kind="struct">tracktion_engine::EditLimits</class>
     <class kind="class">tracktion_engine::EngineBehaviour</class>
     <class kind="struct">tracktion_engine::EngineBehaviour::LevelMeterSettings</class>
+    <class kind="struct">tracktion_engine::EngineBehaviour::ControlSurfaces</class>
     <namespace>tracktion_engine</namespace>
   </compound>
   <compound kind="file">
@@ -21304,6 +21305,66 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>tracktion_engine::EngineBehaviour::ControlSurfaces</name>
+    <filename>structtracktion__engine_1_1EngineBehaviour_1_1ControlSurfaces.html</filename>
+    <member kind="variable">
+      <type>bool</type>
+      <name>mackieMCU</name>
+      <anchorfile>structtracktion__engine_1_1EngineBehaviour_1_1ControlSurfaces.html</anchorfile>
+      <anchor>a8445076136219ee0526d093ccbb2192b</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>mackieC4</name>
+      <anchorfile>structtracktion__engine_1_1EngineBehaviour_1_1ControlSurfaces.html</anchorfile>
+      <anchor>a5afbcc5cc818b567f9e654c5c2e66dd7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>iconProG2</name>
+      <anchorfile>structtracktion__engine_1_1EngineBehaviour_1_1ControlSurfaces.html</anchorfile>
+      <anchor>a67a254f0a7f80869a13e5849b77d1d90</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>tranzport</name>
+      <anchorfile>structtracktion__engine_1_1EngineBehaviour_1_1ControlSurfaces.html</anchorfile>
+      <anchor>a0497bf28c2f538cf43cc1adab21de42b</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>alphaTrack</name>
+      <anchorfile>structtracktion__engine_1_1EngineBehaviour_1_1ControlSurfaces.html</anchorfile>
+      <anchor>a57588a5c837100991afdc3e4ad588811</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>remoteSL</name>
+      <anchorfile>structtracktion__engine_1_1EngineBehaviour_1_1ControlSurfaces.html</anchorfile>
+      <anchor>a43349a00648d3e5b9a827c641fdfeedf</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>remoteSLCompact</name>
+      <anchorfile>structtracktion__engine_1_1EngineBehaviour_1_1ControlSurfaces.html</anchorfile>
+      <anchor>a64cc6c20848e2ab5671031bfc5373cce</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>automap</name>
+      <anchorfile>structtracktion__engine_1_1EngineBehaviour_1_1ControlSurfaces.html</anchorfile>
+      <anchor>a68e0758aa81042e6421654ec47d51d5c</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>tracktion_engine::AudioFadeCurve::Convex</name>
     <filename>structtracktion__engine_1_1AudioFadeCurve_1_1Convex.html</filename>
     <member kind="function" static="yes">
@@ -29454,6 +29515,7 @@
   <compound kind="class">
     <name>tracktion_engine::EngineBehaviour</name>
     <filename>classtracktion__engine_1_1EngineBehaviour.html</filename>
+    <class kind="struct">tracktion_engine::EngineBehaviour::ControlSurfaces</class>
     <class kind="struct">tracktion_engine::EngineBehaviour::LevelMeterSettings</class>
     <member kind="function">
       <type></type>
@@ -29747,6 +29809,13 @@
       <name>autoAddClipEdgeFades</name>
       <anchorfile>classtracktion__engine_1_1EngineBehaviour.html</anchorfile>
       <anchor>abfada92e19fc3f8885df20a599fa0539</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual ControlSurfaces</type>
+      <name>getDesiredControlSurfaces</name>
+      <anchorfile>classtracktion__engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>a20496169f6d1d5e42b122e750b8e73ac</anchor>
       <arglist>()</arglist>
     </member>
   </compound>
@@ -48732,66 +48801,6 @@
     </member>
   </compound>
   <compound kind="struct">
-    <name>tracktion_engine::HostedAudioDeviceInterface::Parameters</name>
-    <filename>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</filename>
-    <member kind="variable">
-      <type>double</type>
-      <name>sampleRate</name>
-      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>a05687012e71d8ecd455cc940a957de4a</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>int</type>
-      <name>blockSize</name>
-      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>a22f02d68dff12d51f3ea1f81655dbaea</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>bool</type>
-      <name>useMidiDevices</name>
-      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>a3f2505c158909ee30ca58455bb254fd7</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>int</type>
-      <name>inputChannels</name>
-      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>a0b4fbeafa74f726691ae8f681d0b4e7f</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>int</type>
-      <name>outputChannels</name>
-      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>ae0fc6112d00d084a824f5d567dd94996</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>bool</type>
-      <name>fixedBlockSize</name>
-      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>aed3b302ceedbd1099eacb7984d88e04e</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::StringArray</type>
-      <name>inputNames</name>
-      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>a3fb5da1d11b102ba7b1f9451c53bbf0f</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::StringArray</type>
-      <name>outputNames</name>
-      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>a06c8157286b8b57614604a1f0f41b42b</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
     <name>tracktion_engine::SimpleLFO::Parameters</name>
     <filename>structtracktion__engine_1_1SimpleLFO_1_1Parameters.html</filename>
     <member kind="function">
@@ -48912,6 +48921,66 @@
       <name>release</name>
       <anchorfile>structtracktion__engine_1_1LinEnvelope_1_1Parameters.html</anchorfile>
       <anchor>a2aca6a6f07a26d824311820a0bd1d637</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion_engine::HostedAudioDeviceInterface::Parameters</name>
+    <filename>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</filename>
+    <member kind="variable">
+      <type>double</type>
+      <name>sampleRate</name>
+      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>a05687012e71d8ecd455cc940a957de4a</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>blockSize</name>
+      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>a22f02d68dff12d51f3ea1f81655dbaea</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>useMidiDevices</name>
+      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>a3f2505c158909ee30ca58455bb254fd7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>inputChannels</name>
+      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>a0b4fbeafa74f726691ae8f681d0b4e7f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>outputChannels</name>
+      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>ae0fc6112d00d084a824f5d567dd94996</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>fixedBlockSize</name>
+      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>aed3b302ceedbd1099eacb7984d88e04e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::StringArray</type>
+      <name>inputNames</name>
+      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>a3fb5da1d11b102ba7b1f9451c53bbf0f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::StringArray</type>
+      <name>outputNames</name>
+      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>a06c8157286b8b57614604a1f0f41b42b</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -76620,6 +76689,38 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>tracktion_engine::Plugin::Wire</name>
+    <filename>structtracktion__engine_1_1Plugin_1_1Wire.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>Wire</name>
+      <anchorfile>structtracktion__engine_1_1Plugin_1_1Wire.html</anchorfile>
+      <anchor>a5b4229b171a927ec1d746c1c30c3637f</anchor>
+      <arglist>(const juce::ValueTree &amp;, juce::UndoManager *)</arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::ValueTree</type>
+      <name>state</name>
+      <anchorfile>structtracktion__engine_1_1Plugin_1_1Wire.html</anchorfile>
+      <anchor>a14734b9a38f37621bd3c15c60c8593f8</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::CachedValue&lt; int &gt;</type>
+      <name>sourceChannelIndex</name>
+      <anchorfile>structtracktion__engine_1_1Plugin_1_1Wire.html</anchorfile>
+      <anchor>a56be586eeab530d1a9baa7750460c837</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::CachedValue&lt; int &gt;</type>
+      <name>destChannelIndex</name>
+      <anchorfile>structtracktion__engine_1_1Plugin_1_1Wire.html</anchorfile>
+      <anchor>a940044f0fb34b8e4cfac5ec49a51f83a</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>tracktion_engine::PatchBayPlugin::Wire</name>
     <filename>structtracktion__engine_1_1PatchBayPlugin_1_1Wire.html</filename>
     <member kind="function">
@@ -76655,38 +76756,6 @@
       <name>gainDb</name>
       <anchorfile>structtracktion__engine_1_1PatchBayPlugin_1_1Wire.html</anchorfile>
       <anchor>aa09e1fd32f830dbdc87dfdb28217bef3</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
-    <name>tracktion_engine::Plugin::Wire</name>
-    <filename>structtracktion__engine_1_1Plugin_1_1Wire.html</filename>
-    <member kind="function">
-      <type></type>
-      <name>Wire</name>
-      <anchorfile>structtracktion__engine_1_1Plugin_1_1Wire.html</anchorfile>
-      <anchor>a5b4229b171a927ec1d746c1c30c3637f</anchor>
-      <arglist>(const juce::ValueTree &amp;, juce::UndoManager *)</arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::ValueTree</type>
-      <name>state</name>
-      <anchorfile>structtracktion__engine_1_1Plugin_1_1Wire.html</anchorfile>
-      <anchor>a14734b9a38f37621bd3c15c60c8593f8</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::CachedValue&lt; int &gt;</type>
-      <name>sourceChannelIndex</name>
-      <anchorfile>structtracktion__engine_1_1Plugin_1_1Wire.html</anchorfile>
-      <anchor>a56be586eeab530d1a9baa7750460c837</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::CachedValue&lt; int &gt;</type>
-      <name>destChannelIndex</name>
-      <anchorfile>structtracktion__engine_1_1Plugin_1_1Wire.html</anchorfile>
-      <anchor>a940044f0fb34b8e4cfac5ec49a51f83a</anchor>
       <arglist></arglist>
     </member>
   </compound>

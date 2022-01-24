@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['juce_6981',['juce',['../namespacejuce.html',1,'']]]
+  ['juce_6988',['juce',['../namespacejuce.html',1,'']]]
 ];

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['jogid_12996',['jogId',['../classtracktion__engine_1_1CustomControlSurface.html#afd5a2df81c9aa2cc64e85994facd04eda2a482451319fdbbeb8c9f1bc37d23b21',1,'tracktion_engine::CustomControlSurface']]],
-  ['jumptomarkinid_12997',['jumpToMarkInId',['../classtracktion__engine_1_1CustomControlSurface.html#afd5a2df81c9aa2cc64e85994facd04eda82a5131a5cc7f9cf318d83ca0c8070fe',1,'tracktion_engine::CustomControlSurface']]],
-  ['jumptomarkoutid_12998',['jumpToMarkOutId',['../classtracktion__engine_1_1CustomControlSurface.html#afd5a2df81c9aa2cc64e85994facd04eda370a33138bda60ba220ba210e478be26',1,'tracktion_engine::CustomControlSurface']]]
+  ['jogid_13012',['jogId',['../classtracktion__engine_1_1CustomControlSurface.html#afd5a2df81c9aa2cc64e85994facd04eda2a482451319fdbbeb8c9f1bc37d23b21',1,'tracktion_engine::CustomControlSurface']]],
+  ['jumptomarkinid_13013',['jumpToMarkInId',['../classtracktion__engine_1_1CustomControlSurface.html#afd5a2df81c9aa2cc64e85994facd04eda82a5131a5cc7f9cf318d83ca0c8070fe',1,'tracktion_engine::CustomControlSurface']]],
+  ['jumptomarkoutid_13014',['jumpToMarkOutId',['../classtracktion__engine_1_1CustomControlSurface.html#afd5a2df81c9aa2cc64e85994facd04eda370a33138bda60ba220ba210e478be26',1,'tracktion_engine::CustomControlSurface']]]
 ];
