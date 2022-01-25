@@ -55,7 +55,7 @@ ExternalController::ExternalController (Engine& e, ControlSurface* c)  : engine 
 
     cs.initialiseDevice (isEnabled());
     if (numDevices != 1)
-        cs.numExtendersChanged (numDevices - 1);
+        cs.numExtendersChanged (numDevices - 1, mainDevice);
 
     updateDeviceState();
     changeParamBank (0);
