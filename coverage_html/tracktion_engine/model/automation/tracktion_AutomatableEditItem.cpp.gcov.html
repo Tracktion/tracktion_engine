@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-24 23:50:13</td>
+            <td class="headerValue">2022-01-25 00:31:36</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">16</td>
@@ -196,13 +196,13 @@
 <a name="134"><span class="lineNum">     134 </span><span class="lineCov">         16 :             p-&gt;updateToFollowCurve (time);</span></a>
 <a name="135"><span class="lineNum">     135 </span><span class="lineCov">         58 : }</span></a>
 <a name="136"><span class="lineNum">     136 </span>            : </a>
-<a name="137"><span class="lineNum">     137 </span><span class="lineCov">     156691 : void AutomatableEditItem::updateParameterStreams (double time)</span></a>
+<a name="137"><span class="lineNum">     137 </span><span class="lineCov">     156642 : void AutomatableEditItem::updateParameterStreams (double time)</span></a>
 <a name="138"><span class="lineNum">     138 </span>            : {</a>
-<a name="139"><span class="lineNum">     139 </span><span class="lineCov">     156691 :     const juce::ScopedLock sl (activeParameterLock);</span></a>
+<a name="139"><span class="lineNum">     139 </span><span class="lineCov">     156642 :     const juce::ScopedLock sl (activeParameterLock);</span></a>
 <a name="140"><span class="lineNum">     140 </span>            : </a>
-<a name="141"><span class="lineNum">     141 </span><span class="lineCov">     239470 :     for (auto p : activeParameters)</span></a>
-<a name="142"><span class="lineNum">     142 </span><span class="lineCov">      82778 :         p-&gt;updateFromAutomationSources (time);</span></a>
-<a name="143"><span class="lineNum">     143 </span><span class="lineCov">     156692 : }</span></a>
+<a name="141"><span class="lineNum">     141 </span><span class="lineCov">     239387 :     for (auto p : activeParameters)</span></a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineCov">      82746 :         p-&gt;updateFromAutomationSources (time);</span></a>
+<a name="143"><span class="lineNum">     143 </span><span class="lineCov">     156642 : }</span></a>
 <a name="144"><span class="lineNum">     144 </span>            : </a>
 <a name="145"><span class="lineNum">     145 </span><span class="lineCov">       1562 : void AutomatableEditItem::resetRecordingStatus()</span></a>
 <a name="146"><span class="lineNum">     146 </span>            : {</a>
@@ -217,10 +217,10 @@
 <a name="155"><span class="lineNum">     155 </span><span class="lineNoCov">          0 :         parameterTree.rootNode-&gt;addSubNode (new AutomatableParameterTree::TreeNode (p));</span></a>
 <a name="156"><span class="lineNum">     156 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="157"><span class="lineNum">     157 </span>            : </a>
-<a name="158"><span class="lineNum">     158 </span><span class="lineCov">    1090620 : void AutomatableEditItem::updateLastPlaybackTime()</span></a>
+<a name="158"><span class="lineNum">     158 </span><span class="lineCov">    1090400 : void AutomatableEditItem::updateLastPlaybackTime()</span></a>
 <a name="159"><span class="lineNum">     159 </span>            : {</a>
-<a name="160"><span class="lineNum">     160 </span><span class="lineCov">    1090620 :     systemTimeOfLastPlayedBlock = juce::Time::getApproximateMillisecondCounter();</span></a>
-<a name="161"><span class="lineNum">     161 </span><span class="lineCov">    1090620 : }</span></a>
+<a name="160"><span class="lineNum">     160 </span><span class="lineCov">    1090400 :     systemTimeOfLastPlayedBlock = juce::Time::getApproximateMillisecondCounter();</span></a>
+<a name="161"><span class="lineNum">     161 </span><span class="lineCov">    1090400 : }</span></a>
 <a name="162"><span class="lineNum">     162 </span>            : </a>
 <a name="163"><span class="lineNum">     163 </span><span class="lineNoCov">          0 : void AutomatableEditItem::clearParameterList()</span></a>
 <a name="164"><span class="lineNum">     164 </span>            : {</a>
