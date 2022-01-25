@@ -53,6 +53,8 @@ ExternalController::ExternalController (Engine& e, ControlSurface* c)  : engine 
     oscSettingsChanged();
 
     cs.initialiseDevice (isEnabled());
+    if (numDevices != 1)
+        cs.numExtendersChanged (numDevices - 1);
 
     updateDeviceState();
     changeParamBank (0);
@@ -233,7 +235,7 @@ void ExternalController::midiInOutDevicesChanged()
             {
                 if (min->getName().equalsIgnoreCase (inputDeviceName[j]))
                 {
-                    inputDevices[i] = min;
+                    inputDevices[j] = min;
                     used = true;
                 }
             }
