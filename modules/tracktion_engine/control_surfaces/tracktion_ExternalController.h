@@ -33,6 +33,9 @@ public:
     int getNumDevices() const;
     void setNumDevices (int);
 
+    int getMainDevice() const;
+    void setMainDevice (int);
+
     juce::String getMidiInputDevice (int idx) const;
     void setMidiInputDevice (int idx, const juce::String& nameOfMidiInput);
 
@@ -158,6 +161,7 @@ private:
     friend class MackieMCU;
 
     int numDevices = 1;
+    int mainDevice = 0;
     juce::String inputDeviceName[maxDevices];
     juce::String outputDeviceName[maxDevices];
 

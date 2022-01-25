@@ -62,7 +62,7 @@ public:
     virtual void updateMiscFeatures() {}
 
     // Called when the use changes the number of extenders
-    virtual void numExtendersChanged ([[maybe_unused]] int num) {}
+    virtual void numExtendersChanged ([[maybe_unused]] int num, [[maybe_unused]] int main) {}
 
     // called by tracktion when a midi message comes in from the controller. The
     // subclass must translate this and call methods in this class accordingly to

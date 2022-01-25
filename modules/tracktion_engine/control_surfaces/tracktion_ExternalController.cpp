@@ -30,6 +30,7 @@ ExternalController::ExternalController (Engine& e, ControlSurface* c)  : engine 
     allowBankingOffEnd = cs.allowBankingOffEnd;
 
     numDevices = engine.getPropertyStorage().getPropertyItem (SettingID::externControlNum, getName(), 1);
+    mainDevice = engine.getPropertyStorage().getPropertyItem (SettingID::externControlMain, getName(), 0);
 
     inputDeviceName[0]  = storage.getPropertyItem (SettingID::externControlIn, getName(), c->midiChannelName);
     outputDeviceName[0] = storage.getPropertyItem (SettingID::externControlOut, getName(), c->midiBackChannelName);
@@ -138,9 +139,25 @@ int ExternalController::getNumDevices() const
 void ExternalController::setNumDevices (int num)
 {
     numDevices = juce::jlimit (1, maxDevices, num);
-    controlSurface->numExtendersChanged (num - 1);
+    mainDevice = juce::jlimit (0, numDevices - 1, num);
+
+    controlSurface->numExtendersChanged (num - 1, mainDevice);
 
     engine.getPropertyStorage().setPropertyItem (SettingID::externControlNum, getName(), num);
+}
+
+int ExternalController::getMainDevice() const
+{
+    return mainDevice;
+}
+
+void ExternalController::setMainDevice (int num)
+{
+    mainDevice = juce::jlimit (0, numDevices - 1, num);
+
+    controlSurface->numExtendersChanged (num - 1, mainDevice);
+
+    engine.getPropertyStorage().setPropertyItem (SettingID::externControlMain, getName(), mainDevice);
 }
 
 juce::String ExternalController::getMidiInputDevice (int idx) const

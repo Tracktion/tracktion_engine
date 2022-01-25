@@ -43,6 +43,7 @@ enum class SettingID
     externControlIn,
     externControlOut,
     externControlNum,
+    externControlMain,
     externControlShowSelection,
     externControlSelectionColour,
     externControlEnable,
