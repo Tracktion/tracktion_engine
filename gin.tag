@@ -5713,6 +5713,7 @@
       <enumvalue file="namespacetracktion__engine.html" anchor="a621c43a54efb4eb950c0b1cad5e97eacaab5dbffa8d328b4ee3c038b03db636a9">externControlIn</enumvalue>
       <enumvalue file="namespacetracktion__engine.html" anchor="a621c43a54efb4eb950c0b1cad5e97eaca15b23b93b04ee1f66a8e853395711d8b">externControlOut</enumvalue>
       <enumvalue file="namespacetracktion__engine.html" anchor="a621c43a54efb4eb950c0b1cad5e97eacad3b6c594a822b4858b52daef222f5921">externControlNum</enumvalue>
+      <enumvalue file="namespacetracktion__engine.html" anchor="a621c43a54efb4eb950c0b1cad5e97eacadb759e79468893b2baaf9556d47bf22d">externControlMain</enumvalue>
       <enumvalue file="namespacetracktion__engine.html" anchor="a621c43a54efb4eb950c0b1cad5e97eaca31b14445c2b17c9d967b7319d731a1a8">externControlShowSelection</enumvalue>
       <enumvalue file="namespacetracktion__engine.html" anchor="a621c43a54efb4eb950c0b1cad5e97eaca1918ff077a302b29d9bac97cc5eb70cc">externControlSelectionColour</enumvalue>
       <enumvalue file="namespacetracktion__engine.html" anchor="a621c43a54efb4eb950c0b1cad5e97eacaf37db2cd80d1ec81f8201a888987e99e">externControlEnable</enumvalue>
@@ -20132,8 +20133,8 @@
       <type>virtual void</type>
       <name>numExtendersChanged</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>af8aa82b1337f44c6bda03101c11be3a0</anchor>
-      <arglist>([[maybe_unused]] int num)</arglist>
+      <anchor>abe704c5cbd577204aeb586027a03d50f</anchor>
+      <arglist>([[maybe_unused]] int num, [[maybe_unused]] int main)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
@@ -30946,6 +30947,20 @@
       <name>setNumDevices</name>
       <anchorfile>classtracktion__engine_1_1ExternalController.html</anchorfile>
       <anchor>a6cab4b5f354466ed3321a3d7fecf552c</anchor>
+      <arglist>(int)</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>getMainDevice</name>
+      <anchorfile>classtracktion__engine_1_1ExternalController.html</anchorfile>
+      <anchor>ac53bffad3258edf7cd85aa5c69c161ea</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setMainDevice</name>
+      <anchorfile>classtracktion__engine_1_1ExternalController.html</anchorfile>
+      <anchor>a4157f0a7c7b5a63d69b0bf8b416e95dc</anchor>
       <arglist>(int)</arglist>
     </member>
     <member kind="function">
@@ -77320,6 +77335,7 @@
       <enumvalue file="namespacetracktion__engine.html" anchor="a621c43a54efb4eb950c0b1cad5e97eacaab5dbffa8d328b4ee3c038b03db636a9">externControlIn</enumvalue>
       <enumvalue file="namespacetracktion__engine.html" anchor="a621c43a54efb4eb950c0b1cad5e97eaca15b23b93b04ee1f66a8e853395711d8b">externControlOut</enumvalue>
       <enumvalue file="namespacetracktion__engine.html" anchor="a621c43a54efb4eb950c0b1cad5e97eacad3b6c594a822b4858b52daef222f5921">externControlNum</enumvalue>
+      <enumvalue file="namespacetracktion__engine.html" anchor="a621c43a54efb4eb950c0b1cad5e97eacadb759e79468893b2baaf9556d47bf22d">externControlMain</enumvalue>
       <enumvalue file="namespacetracktion__engine.html" anchor="a621c43a54efb4eb950c0b1cad5e97eaca31b14445c2b17c9d967b7319d731a1a8">externControlShowSelection</enumvalue>
       <enumvalue file="namespacetracktion__engine.html" anchor="a621c43a54efb4eb950c0b1cad5e97eaca1918ff077a302b29d9bac97cc5eb70cc">externControlSelectionColour</enumvalue>
       <enumvalue file="namespacetracktion__engine.html" anchor="a621c43a54efb4eb950c0b1cad5e97eacaf37db2cd80d1ec81f8201a888987e99e">externControlEnable</enumvalue>
