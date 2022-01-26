@@ -115,11 +115,13 @@ void ExternalControllerManager::initialise()
 
         refreshXTOrder();
     }
-    
+
+   #if TRACKTION_ENABLE_CONTROL_SURFACE_MACKIEC4
+    if (controllers.mackieC4)  addNewController (new MackieC4 (*this));
+   #endif
+
     if (controllers.iconProG2)
     {
-        addNewController (new MackieC4 (*this));
-        
         auto icon = new IconProG2 (*this);
         addNewController (icon);
         for (int i = 0; i < getXTCount (icon->deviceDescription); ++i)
