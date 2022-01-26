@@ -122,6 +122,62 @@ public:
             expect (std::chrono::duration_cast<std::chrono::milliseconds> (d3).count() == 1500);
             expect (std::chrono::duration_cast<std::chrono::milliseconds> (d3).count() == 1500.0);
         }
+
+        beginTest ("TimePosition");
+        {
+            // pods
+            expectEquals (TimePosition().inSeconds(), 0.0);
+            expectEquals (TimePosition::fromSeconds (0.5).inSeconds(), 0.5);
+            expectEquals (TimePosition::fromSeconds (0.5f).inSeconds(), 0.5);
+            expectEquals (TimePosition::fromSeconds (42).inSeconds(), 42.0);
+            expectEquals (TimePosition::fromSeconds (42u).inSeconds(), 42.0);
+
+            // Chrono
+            expectEquals (TimePosition (std::chrono::seconds (45)).inSeconds(), 45.0); // std::chrono::seconds is an integer rep
+            expectEquals (TimePosition (std::chrono::milliseconds (1000)).inSeconds(), 1.0);
+            expectEquals (TimePosition (std::chrono::duration<double> (3.5)).inSeconds(), 3.5);
+
+            // Chrono literals
+            expectEquals (TimePosition (1h).inSeconds(), 3600.0);
+            expectEquals (TimePosition (1min).inSeconds(), 60.0);
+            expectEquals (TimePosition (45s).inSeconds(), 45.0);
+            expectEquals (TimePosition (1234ms).inSeconds(), 1.234);
+        }
+
+        beginTest ("TimeDuration");
+        {
+            // pods
+            expectEquals (TimeDuration().inSeconds(), 0.0);
+            expectEquals (TimeDuration::fromSeconds (0.5).inSeconds(), 0.5);
+            expectEquals (TimeDuration::fromSeconds (0.5f).inSeconds(), 0.5);
+            expectEquals (TimeDuration::fromSeconds (42).inSeconds(), 42.0);
+            expectEquals (TimeDuration::fromSeconds (42u).inSeconds(), 42.0);
+            expectEquals (TimeDuration::fromSeconds (-0.5).inSeconds(), -0.5);
+            expectEquals (TimeDuration::fromSeconds (-0.5f).inSeconds(), -0.5);
+            expectEquals (TimeDuration::fromSeconds (-42).inSeconds(), -42.0);
+
+            // Chrono
+            expectEquals (TimeDuration (std::chrono::seconds (45)).inSeconds(), 45.0); // std::chrono::seconds is an integer rep
+            expectEquals (TimeDuration (std::chrono::milliseconds (1000)).inSeconds(), 1.0);
+            expectEquals (TimeDuration (std::chrono::duration<double> (3.5)).inSeconds(), 3.5);
+
+            // Chrono literals
+            expectEquals (TimeDuration (1h).inSeconds(), 3600.0);
+            expectEquals (TimeDuration (1min).inSeconds(), 60.0);
+            expectEquals (TimeDuration (45s).inSeconds(), 45.0);
+            expectEquals (TimeDuration (1234ms).inSeconds(), 1.234);
+        }
+
+        beginTest ("Time addition");
+        {
+            expectEquals ((TimeDuration (2s) + TimeDuration (2s)).inSeconds(), 4.0);
+            expectEquals ((TimeDuration (2s) - TimeDuration (2s)).inSeconds(), 0.0);
+            expectEquals ((TimeDuration (2s) - TimeDuration (4s)).inSeconds(), -2.0);
+
+            expectEquals ((TimePosition (2s) + TimeDuration (2s)).inSeconds(), 4.0);
+            expectEquals ((TimePosition (2s) - TimeDuration (2s)).inSeconds(), 0.0);
+            expectEquals ((TimePosition (2s) - TimeDuration (4s)).inSeconds(), -2.0);
+        }
     }
 
 private:
