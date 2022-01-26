@@ -22,6 +22,10 @@
  #pragma comment (lib, "ippvm_l.lib")
 #endif
 
+#if JUCE_WINDOWS
+ #define NOMINMAX
+#endif
+
 namespace tracktion_engine
 {
 
