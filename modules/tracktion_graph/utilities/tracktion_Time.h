@@ -15,26 +15,12 @@
 namespace tracktion_graph
 {
 
-struct TimelineClock
-{
-    typedef std::chrono::duration<double, std::chrono::seconds::period> duration;
-    typedef duration::rep                                               rep;
-    typedef duration::period                                            period;
-    typedef std::chrono::time_point<TimelineClock>                      time_point;
-    static const bool is_steady =                                       false;
-
-    static time_point now() noexcept
-    {
-        return {};
-    }
-};
-
-using TimelinePoint = std::chrono::time_point<TimelineClock>;
-using Duration = TimelinePoint::duration;
-
-
 //==============================================================================
 //==============================================================================
+/**
+    Represents a position in real-life time.
+    E.g. A position on a timeline.
+*/
 struct TimePosition
 {
     /** Creates a position at a time of 0. */
@@ -59,6 +45,10 @@ private:
 
 //==============================================================================
 //==============================================================================
+/**
+    Represents a duration in real-life time.
+    E.g. The time between two points on a timeline.
+*/
 struct TimeDuration
 {
     /** Creates a position at a time of 0. */
@@ -93,6 +83,72 @@ TimeDuration operator- (const TimeDuration&, const TimeDuration&);
 
 /** Subtracts a TimeDuration from a TimePosition. */
 TimePosition operator- (const TimePosition&, const TimeDuration&);
+
+
+//==============================================================================
+//==============================================================================
+/**
+    Represents a position in beats.
+    E.g. A beat position on a timeline.
+
+    The time duration of a beat depends on musical information such
+    as tempo and time signature.
+*/
+struct BeatPosition
+{
+    /** Creates a position at a beat of 0. */
+    BeatPosition() = default;
+
+    /** Create a BeatPosition from a number of beats. */
+    template<typename T>
+    static BeatPosition fromBeats (T positionInBeats);
+
+    /** Returns the position as a number of beats. */
+    double inBeats() const;
+
+private:
+    double numBeats = 0.0;
+};
+
+
+//==============================================================================
+//==============================================================================
+/**
+    Represents a duration in beats.
+    E.g. The time between two beat positions on a timeline.
+
+    The time duration of a beat depends on musical information such
+    as tempo and time signature.
+*/
+struct BeatDuration
+{
+    /** Creates a position at a beat of 0. */
+    BeatDuration() = default;
+
+    /** Create a BeatPosition from a number of beats. */
+    template<typename T>
+    static BeatDuration fromBeats (T durationInBeats);
+
+    /** Returns the position as a number of beats. */
+    double inBeats() const;
+
+private:
+    double numBeats = 0.0;
+};
+
+
+//==============================================================================
+/** Adds two BeatDurations together. */
+BeatDuration operator+ (const BeatDuration&, const BeatDuration&);
+
+/** Adds a BeatDuration to a BeatPosition. */
+BeatPosition operator+ (const BeatPosition&, const BeatDuration&);
+
+/** Subtracts a BeatDuration from another one. */
+BeatDuration operator- (const BeatDuration&, const BeatDuration&);
+
+/** Subtracts a BeatDuration from a BeatPosition. */
+BeatPosition operator- (const BeatPosition&, const BeatDuration&);
 
 
 //==============================================================================
@@ -164,6 +220,59 @@ inline TimeDuration operator- (const TimeDuration& t1, const TimeDuration& t2)
 inline TimePosition operator- (const TimePosition& t1, const TimeDuration& t2)
 {
     return TimePosition::fromSeconds (t1.inSeconds() - t2.inSeconds());
+}
+
+
+//==============================================================================
+template<typename T>
+inline BeatPosition BeatPosition::fromBeats (T positionInBeats)
+{
+    BeatPosition pos;
+    pos.numBeats = static_cast<double> (positionInBeats);
+    return pos;
+}
+
+inline double BeatPosition::inBeats() const
+{
+    return numBeats;
+}
+
+
+//==============================================================================
+//==============================================================================
+template<typename T>
+inline BeatDuration BeatDuration::fromBeats (T durationInBeats)
+{
+    BeatDuration pos;
+    pos.numBeats = static_cast<double> (durationInBeats);
+    return pos;
+}
+
+inline double BeatDuration::inBeats() const
+{
+    return numBeats;
+}
+
+
+//==============================================================================
+inline BeatDuration operator+ (const BeatDuration& t1, const BeatDuration& t2)
+{
+    return BeatDuration::fromBeats (t1.inBeats() + t2.inBeats());
+}
+
+inline BeatPosition operator+ (const BeatPosition& t1, const BeatDuration& t2)
+{
+    return BeatPosition::fromBeats (t1.inBeats() + t2.inBeats());
+}
+
+inline BeatDuration operator- (const BeatDuration& t1, const BeatDuration& t2)
+{
+    return BeatDuration::fromBeats (t1.inBeats() - t2.inBeats());
+}
+
+inline BeatPosition operator- (const BeatPosition& t1, const BeatDuration& t2)
+{
+    return BeatPosition::fromBeats (t1.inBeats() - t2.inBeats());
 }
 
 } // namespace tracktion_graph

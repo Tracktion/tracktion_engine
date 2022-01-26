@@ -15,6 +15,24 @@
 namespace tracktion_graph
 {
 
+struct TimelineClock
+{
+    typedef std::chrono::duration<double, std::chrono::seconds::period> duration;
+    typedef duration::rep                                               rep;
+    typedef duration::period                                            period;
+    typedef std::chrono::time_point<TimelineClock>                      time_point;
+    static const bool is_steady =                                       false;
+
+    static time_point now() noexcept
+    {
+        return {};
+    }
+};
+
+using TimelinePoint = std::chrono::time_point<TimelineClock>;
+using Duration = TimelinePoint::duration;
+
+
 //==============================================================================
 //==============================================================================
 class TimeTests : public juce::UnitTest
@@ -168,7 +186,7 @@ public:
             expectEquals (TimeDuration (1234ms).inSeconds(), 1.234);
         }
 
-        beginTest ("Time addition");
+        beginTest ("Time addition/subtraction");
         {
             expectEquals ((TimeDuration (2s) + TimeDuration (2s)).inSeconds(), 4.0);
             expectEquals ((TimeDuration (2s) - TimeDuration (2s)).inSeconds(), 0.0);
@@ -178,10 +196,39 @@ public:
             expectEquals ((TimePosition (2s) - TimeDuration (2s)).inSeconds(), 0.0);
             expectEquals ((TimePosition (2s) - TimeDuration (4s)).inSeconds(), -2.0);
         }
+
+        beginTest ("BeatPosition");
+        {
+            expectEquals (BeatPosition().inBeats(), 0.0);
+            expectEquals (BeatPosition::fromBeats (0.5).inBeats(), 0.5);
+            expectEquals (BeatPosition::fromBeats (0.5f).inBeats(), 0.5);
+            expectEquals (BeatPosition::fromBeats (42).inBeats(), 42.0);
+            expectEquals (BeatPosition::fromBeats (42u).inBeats(), 42.0);
+        }
+
+        beginTest ("BeatDuration");
+        {
+            expectEquals (BeatDuration().inBeats(), 0.0);
+            expectEquals (BeatDuration::fromBeats (0.5).inBeats(), 0.5);
+            expectEquals (BeatDuration::fromBeats (0.5f).inBeats(), 0.5);
+            expectEquals (BeatDuration::fromBeats (42).inBeats(), 42.0);
+            expectEquals (BeatDuration::fromBeats (42u).inBeats(), 42.0);
+            expectEquals (BeatDuration::fromBeats (-0.5).inBeats(), -0.5);
+            expectEquals (BeatDuration::fromBeats (-0.5f).inBeats(), -0.5);
+            expectEquals (BeatDuration::fromBeats (-42).inBeats(), -42.0);
+        }
+
+        beginTest ("Beat addition/subtraction");
+        {
+            expectEquals ((BeatDuration::fromBeats (2.0) + BeatDuration::fromBeats (2.0)).inBeats(), 4.0);
+            expectEquals ((BeatDuration::fromBeats (2.0) - BeatDuration::fromBeats (2.0)).inBeats(), 0.0);
+            expectEquals ((BeatDuration::fromBeats (2.0) - BeatDuration::fromBeats (4.0)).inBeats(), -2.0);
+
+            expectEquals ((BeatPosition::fromBeats (2.0) + BeatDuration::fromBeats (2.0)).inBeats(), 4.0);
+            expectEquals ((BeatPosition::fromBeats (2.0) - BeatDuration::fromBeats (2.0)).inBeats(), 0.0);
+            expectEquals ((BeatPosition::fromBeats (2.0) - BeatDuration::fromBeats (4.0)).inBeats(), -2.0);
+        }
     }
-
-private:
-
 };
 
 static TimeTests timeTests;
