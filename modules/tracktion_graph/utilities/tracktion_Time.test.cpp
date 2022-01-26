@@ -150,6 +150,10 @@ public:
             expectEquals (TimePosition::fromSeconds (42).inSeconds(), 42.0);
             expectEquals (TimePosition::fromSeconds (42u).inSeconds(), 42.0);
 
+            expectEquals (TimePosition::fromSeconds (-0.5).inSeconds(), -0.5);
+            expectEquals (TimePosition::fromSeconds (-0.5f).inSeconds(), -0.5);
+            expectEquals (TimePosition::fromSeconds (-42).inSeconds(), -42.0);
+
             // Chrono
             expectEquals (TimePosition (std::chrono::seconds (45)).inSeconds(), 45.0); // std::chrono::seconds is an integer rep
             expectEquals (TimePosition (std::chrono::milliseconds (1000)).inSeconds(), 1.0);
@@ -160,6 +164,19 @@ public:
             expectEquals (TimePosition (1min).inSeconds(), 60.0);
             expectEquals (TimePosition (45s).inSeconds(), 45.0);
             expectEquals (TimePosition (1234ms).inSeconds(), 1.234);
+
+            // Samples
+            {
+                expectEquals (TimePosition::fromSamples (44100, 44100.0).inSeconds(), 1.0);
+                expectEquals (TimePosition::fromSamples (22050, 44100.0).inSeconds(), 0.5);
+                expectEquals (TimePosition::fromSamples (-4'032'000, 96000.0).inSeconds(), -42.0);
+                expectEquals (TimePosition::fromSamples (-44100, 88200.0).inSeconds(), -0.5);
+
+                expectEquals (toSamples (TimePosition::fromSamples (44100, 44100.0), 44100.0), (int64_t) 44100);
+                expectEquals (toSamples (TimePosition::fromSamples (22050, 44100.0), 44100.0), (int64_t) 22050);
+                expectEquals (toSamples (TimePosition::fromSamples (-4'032'000, 96000.0), 96000.0), (int64_t) -4'032'000);
+                expectEquals (toSamples (TimePosition::fromSamples (-44100, 88200.0), 88200.0), (int64_t) -44100);
+            }
         }
 
         beginTest ("TimeDuration");
@@ -170,6 +187,7 @@ public:
             expectEquals (TimeDuration::fromSeconds (0.5f).inSeconds(), 0.5);
             expectEquals (TimeDuration::fromSeconds (42).inSeconds(), 42.0);
             expectEquals (TimeDuration::fromSeconds (42u).inSeconds(), 42.0);
+
             expectEquals (TimeDuration::fromSeconds (-0.5).inSeconds(), -0.5);
             expectEquals (TimeDuration::fromSeconds (-0.5f).inSeconds(), -0.5);
             expectEquals (TimeDuration::fromSeconds (-42).inSeconds(), -42.0);
@@ -184,6 +202,19 @@ public:
             expectEquals (TimeDuration (1min).inSeconds(), 60.0);
             expectEquals (TimeDuration (45s).inSeconds(), 45.0);
             expectEquals (TimeDuration (1234ms).inSeconds(), 1.234);
+
+            // Samples
+            {
+                expectEquals (TimeDuration::fromSamples (44100, 44100.0).inSeconds(), 1.0);
+                expectEquals (TimeDuration::fromSamples (22050, 44100.0).inSeconds(), 0.5);
+                expectEquals (TimeDuration::fromSamples (-4'032'000, 96000.0).inSeconds(), -42.0);
+                expectEquals (TimeDuration::fromSamples (-44100, 88200.0).inSeconds(), -0.5);
+
+                expectEquals (toSamples (TimeDuration::fromSamples (44100, 44100.0), 44100.0), (int64_t) 44100);
+                expectEquals (toSamples (TimeDuration::fromSamples (22050, 44100.0), 44100.0), (int64_t) 22050);
+                expectEquals (toSamples (TimeDuration::fromSamples (-4'032'000, 96000.0), 96000.0), (int64_t) -4'032'000);
+                expectEquals (toSamples (TimeDuration::fromSamples (-44100, 88200.0), 88200.0), (int64_t) -44100);
+            }
         }
 
         beginTest ("Time addition/subtraction");
@@ -216,6 +247,17 @@ public:
             expectEquals (BeatDuration::fromBeats (-0.5).inBeats(), -0.5);
             expectEquals (BeatDuration::fromBeats (-0.5f).inBeats(), -0.5);
             expectEquals (BeatDuration::fromBeats (-42).inBeats(), -42.0);
+        }
+
+        beginTest ("Beat addition/subtraction");
+        {
+            expectEquals ((BeatDuration::fromBeats (2.0) + BeatDuration::fromBeats (2.0)).inBeats(), 4.0);
+            expectEquals ((BeatDuration::fromBeats (2.0) - BeatDuration::fromBeats (2.0)).inBeats(), 0.0);
+            expectEquals ((BeatDuration::fromBeats (2.0) - BeatDuration::fromBeats (4.0)).inBeats(), -2.0);
+
+            expectEquals ((BeatPosition::fromBeats (2.0) + BeatDuration::fromBeats (2.0)).inBeats(), 4.0);
+            expectEquals ((BeatPosition::fromBeats (2.0) - BeatDuration::fromBeats (2.0)).inBeats(), 0.0);
+            expectEquals ((BeatPosition::fromBeats (2.0) - BeatDuration::fromBeats (4.0)).inBeats(), -2.0);
         }
 
         beginTest ("Beat addition/subtraction");

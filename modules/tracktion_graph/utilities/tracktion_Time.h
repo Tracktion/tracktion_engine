@@ -35,6 +35,10 @@ struct TimePosition
     template<typename T>
     static TimePosition fromSeconds (T positionInSeconds);
 
+    /** Create a TimePosition from a number of samples and a sample rate. */
+    template<typename IntType>
+    static TimePosition fromSamples (IntType numSamples, double sampleRate);
+
     /** Returns the TimePosition as a number of seconds. */
     double inSeconds() const;
 
@@ -42,6 +46,8 @@ private:
     double seconds = 0.0;
 };
 
+/** Converts a TimePosition to a number of samples. */
+int64_t toSamples (TimePosition, double sampleRate);
 
 //==============================================================================
 //==============================================================================
@@ -63,6 +69,10 @@ struct TimeDuration
     template<typename T>
     static TimeDuration fromSeconds (T positionInSeconds);
 
+    /** Create a TimeDuration from a number of samples and a sample rate. */
+    template<typename IntType>
+    static TimeDuration fromSamples (IntType numSamples, double sampleRate);
+
     /** Returns the TimeDuration as a number of seconds. */
     double inSeconds() const;
 
@@ -70,6 +80,8 @@ private:
     double seconds = 0.0;
 };
 
+/** Converts a TimeDuration to a number of samples. */
+int64_t toSamples (TimeDuration, double sampleRate);
 
 //==============================================================================
 /** Adds two TimeDurations together. */
@@ -175,11 +187,22 @@ inline TimePosition TimePosition::fromSeconds (T positionInSeconds)
     return pos;
 }
 
+template<typename IntType>
+inline TimePosition TimePosition::fromSamples (IntType samplePosition, double sampleRate)
+{
+    return TimePosition::fromSeconds (samplePosition / sampleRate);
+}
+
 inline double TimePosition::inSeconds() const
 {
     return seconds;
 }
 
+inline int64_t toSamples (TimePosition p, double sampleRate)
+{
+    return static_cast<int64_t> ((p.inSeconds() * sampleRate)
+                                 + (p.inSeconds() >= 0.0 ? 0.5 : -0.5));
+}
 
 //==============================================================================
 inline TimeDuration::TimeDuration (std::chrono::duration<double> duration)
@@ -195,9 +218,21 @@ inline TimeDuration TimeDuration::fromSeconds (T positionInSeconds)
     return pos;
 }
 
+template<typename IntType>
+inline TimeDuration TimeDuration::fromSamples (IntType samplePosition, double sampleRate)
+{
+    return TimeDuration::fromSeconds (samplePosition / sampleRate);
+}
+
 inline double TimeDuration::inSeconds() const
 {
     return seconds;
+}
+
+inline int64_t toSamples (TimeDuration p, double sampleRate)
+{
+    return static_cast<int64_t> ((p.inSeconds() * sampleRate)
+                                 + (p.inSeconds() >= 0.0 ? 0.5 : -0.5));
 }
 
 
