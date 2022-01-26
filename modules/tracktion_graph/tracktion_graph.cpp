@@ -47,6 +47,7 @@
 #include "utilities/tracktion_Semaphore.cpp"
 #include "utilities/tracktion_Semaphore.tests.cpp"
 #include "utilities/tracktion_Threads.cpp"
+#include "utilities/tracktion_Time.test.cpp"
 
 // Put this last to avoid macro leakage
 #include "utilities/tracktion_Allocation.test.cpp"
