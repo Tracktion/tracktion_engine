@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-26 15:16:39</td>
+            <td class="headerValue">2022-01-26 16:28:11</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">7</td>
@@ -136,18 +136,18 @@
 <a name="74"><span class="lineNum">      74 </span><span class="lineCov">        952 :             channelState.add (new PerChannelState());</span></a>
 <a name="75"><span class="lineNum">      75 </span><span class="lineCov">        318 : }</span></a>
 <a name="76"><span class="lineNum">      76 </span>            : </a>
-<a name="77"><span class="lineNum">      77 </span><span class="lineCov">      89396 : bool WaveNode::isReadyToProcess()</span></a>
+<a name="77"><span class="lineNum">      77 </span><span class="lineCov">      93496 : bool WaveNode::isReadyToProcess()</span></a>
 <a name="78"><span class="lineNum">      78 </span>            : {</a>
 <a name="79"><span class="lineNum">      79 </span>            :     // Only check this whilst rendering or it will block whilst the proxies are being created</a>
-<a name="80"><span class="lineNum">      80 </span><span class="lineCov">      89396 :     if (! isOfflineRender)</span></a>
+<a name="80"><span class="lineNum">      80 </span><span class="lineCov">      93496 :     if (! isOfflineRender)</span></a>
 <a name="81"><span class="lineNum">      81 </span>            :         return true;</a>
 <a name="82"><span class="lineNum">      82 </span>            :     </a>
 <a name="83"><span class="lineNum">      83 </span>            :     // If the hash is 0 it means an empty file path which means a missing file so</a>
 <a name="84"><span class="lineNum">      84 </span>            :     // this will never return a valid reader and we should just bail</a>
-<a name="85"><span class="lineNum">      85 </span><span class="lineCov">      89396 :     if (audioFile.isNull())</span></a>
+<a name="85"><span class="lineNum">      85 </span><span class="lineCov">      93496 :     if (audioFile.isNull())</span></a>
 <a name="86"><span class="lineNum">      86 </span>            :         return true;</a>
 <a name="87"><span class="lineNum">      87 </span>            : </a>
-<a name="88"><span class="lineNum">      88 </span><span class="lineCov">      89396 :     if (reader == nullptr)</span></a>
+<a name="88"><span class="lineNum">      88 </span><span class="lineCov">      93496 :     if (reader == nullptr)</span></a>
 <a name="89"><span class="lineNum">      89 </span>            :     {</a>
 <a name="90"><span class="lineNum">      90 </span><span class="lineNoCov">          0 :         reader = audioFile.engine-&gt;getAudioFileManager().cache.createReader (audioFile);</span></a>
 <a name="91"><span class="lineNum">      91 </span>            : </a>
@@ -155,20 +155,20 @@
 <a name="93"><span class="lineNum">      93 </span>            :             return false;</a>
 <a name="94"><span class="lineNum">      94 </span>            :     }</a>
 <a name="95"><span class="lineNum">      95 </span>            : </a>
-<a name="96"><span class="lineNum">      96 </span><span class="lineCov">      89396 :     if (audioFileSampleRate == 0.0 &amp;&amp; ! updateFileSampleRate())</span></a>
-<a name="97"><span class="lineNum">      97 </span><span class="lineCov">      50309 :         return false;</span></a>
+<a name="96"><span class="lineNum">      96 </span><span class="lineCov">      93496 :     if (audioFileSampleRate == 0.0 &amp;&amp; ! updateFileSampleRate())</span></a>
+<a name="97"><span class="lineNum">      97 </span><span class="lineCov">      54409 :         return false;</span></a>
 <a name="98"><span class="lineNum">      98 </span>            : </a>
 <a name="99"><span class="lineNum">      99 </span>            :     return true;</a>
 <a name="100"><span class="lineNum">     100 </span>            : }</a>
 <a name="101"><span class="lineNum">     101 </span>            : </a>
-<a name="102"><span class="lineNum">     102 </span><span class="lineCov">     471915 : void WaveNode::process (ProcessContext&amp; pc)</span></a>
+<a name="102"><span class="lineNum">     102 </span><span class="lineCov">     472183 : void WaveNode::process (ProcessContext&amp; pc)</span></a>
 <a name="103"><span class="lineNum">     103 </span>            : {</a>
 <a name="104"><span class="lineNum">     104 </span>            :     SCOPED_REALTIME_CHECK</a>
 <a name="105"><span class="lineNum">     105 </span>            :     assert (outputSampleRate == getSampleRate());</a>
 <a name="106"><span class="lineNum">     106 </span>            : </a>
 <a name="107"><span class="lineNum">     107 </span>            :     //TODO: Might get a performance boost by pre-setting the file position in prepareForNextBlock</a>
-<a name="108"><span class="lineNum">     108 </span><span class="lineCov">     471915 :     processSection (pc, getTimelineSampleRange());</span></a>
-<a name="109"><span class="lineNum">     109 </span><span class="lineCov">     471942 : }</span></a>
+<a name="108"><span class="lineNum">     108 </span><span class="lineCov">     472183 :     processSection (pc, getTimelineSampleRange());</span></a>
+<a name="109"><span class="lineNum">     109 </span><span class="lineCov">     472213 : }</span></a>
 <a name="110"><span class="lineNum">     110 </span>            : </a>
 <a name="111"><span class="lineNum">     111 </span>            : //==============================================================================</a>
 <a name="112"><span class="lineNum">     112 </span><span class="lineNoCov">          0 : int64_t WaveNode::editPositionToFileSample (int64_t timelinePosition) const noexcept</span></a>
@@ -179,20 +179,20 @@
 <a name="117"><span class="lineNum">     117 </span>            : </a>
 <a name="118"><span class="lineNum">     118 </span><span class="lineNoCov">          0 : int64_t WaveNode::editTimeToFileSample (double editTime) const noexcept</span></a>
 <a name="119"><span class="lineNum">     119 </span>            : {</a>
-<a name="120"><span class="lineNum">     120 </span><span class="lineCov">     362617 :     return (int64_t) ((editTime - (editPosition.getStart() - offset))</span></a>
-<a name="121"><span class="lineNum">     121 </span><span class="lineCov">     362617 :                        * originalSpeedRatio * audioFileSampleRate + 0.5);</span></a>
+<a name="120"><span class="lineNum">     120 </span><span class="lineCov">     363024 :     return (int64_t) ((editTime - (editPosition.getStart() - offset))</span></a>
+<a name="121"><span class="lineNum">     121 </span><span class="lineCov">     363024 :                        * originalSpeedRatio * audioFileSampleRate + 0.5);</span></a>
 <a name="122"><span class="lineNum">     122 </span>            : }</a>
 <a name="123"><span class="lineNum">     123 </span>            : </a>
-<a name="124"><span class="lineNum">     124 </span><span class="lineCov">      50628 : bool WaveNode::updateFileSampleRate()</span></a>
+<a name="124"><span class="lineNum">     124 </span><span class="lineCov">      54728 : bool WaveNode::updateFileSampleRate()</span></a>
 <a name="125"><span class="lineNum">     125 </span>            : {</a>
 <a name="126"><span class="lineNum">     126 </span>            :     using namespace tracktion_graph;</a>
 <a name="127"><span class="lineNum">     127 </span>            :     </a>
-<a name="128"><span class="lineNum">     128 </span><span class="lineCov">      50628 :     if (reader == nullptr)</span></a>
+<a name="128"><span class="lineNum">     128 </span><span class="lineCov">      54728 :     if (reader == nullptr)</span></a>
 <a name="129"><span class="lineNum">     129 </span>            :         return false;</a>
 <a name="130"><span class="lineNum">     130 </span>            : </a>
-<a name="131"><span class="lineNum">     131 </span><span class="lineCov">      50628 :     audioFileSampleRate = reader-&gt;getSampleRate();</span></a>
+<a name="131"><span class="lineNum">     131 </span><span class="lineCov">      54728 :     audioFileSampleRate = reader-&gt;getSampleRate();</span></a>
 <a name="132"><span class="lineNum">     132 </span>            : </a>
-<a name="133"><span class="lineNum">     133 </span><span class="lineCov">      50628 :     if (audioFileSampleRate &lt;= 0)</span></a>
+<a name="133"><span class="lineNum">     133 </span><span class="lineCov">      54728 :     if (audioFileSampleRate &lt;= 0)</span></a>
 <a name="134"><span class="lineNum">     134 </span>            :         return false;</a>
 <a name="135"><span class="lineNum">     135 </span>            :     </a>
 <a name="136"><span class="lineNum">     136 </span><span class="lineCov">        317 :     if (! loopSection.isEmpty())</span></a>
@@ -202,44 +202,44 @@
 <a name="140"><span class="lineNum">     140 </span>            :     return true;</a>
 <a name="141"><span class="lineNum">     141 </span>            : }</a>
 <a name="142"><span class="lineNum">     142 </span>            : </a>
-<a name="143"><span class="lineNum">     143 </span><span class="lineCov">     471916 : void WaveNode::processSection (ProcessContext&amp; pc, juce::Range&lt;int64_t&gt; timelineRange)</span></a>
+<a name="143"><span class="lineNum">     143 </span><span class="lineCov">     472182 : void WaveNode::processSection (ProcessContext&amp; pc, juce::Range&lt;int64_t&gt; timelineRange)</span></a>
 <a name="144"><span class="lineNum">     144 </span>            : {</a>
-<a name="145"><span class="lineNum">     145 </span><span class="lineCov">     471916 :     const auto sectionEditTime = tracktion_graph::sampleToTime (timelineRange, outputSampleRate);</span></a>
+<a name="145"><span class="lineNum">     145 </span><span class="lineCov">     472182 :     const auto sectionEditTime = tracktion_graph::sampleToTime (timelineRange, outputSampleRate);</span></a>
 <a name="146"><span class="lineNum">     146 </span>            :     </a>
-<a name="147"><span class="lineNum">     147 </span><span class="lineCov">     471916 :     if (reader == nullptr</span></a>
-<a name="148"><span class="lineNum">     148 </span><span class="lineCov">     471916 :          || sectionEditTime.getEnd() &lt;= editPosition.getStart()</span></a>
-<a name="149"><span class="lineNum">     149 </span><span class="lineCov">     908312 :          || sectionEditTime.getStart() &gt;= editPosition.getEnd())</span></a>
-<a name="150"><span class="lineNum">     150 </span><span class="lineCov">     109385 :         return;</span></a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineCov">     472182 :     if (reader == nullptr</span></a>
+<a name="148"><span class="lineNum">     148 </span><span class="lineCov">     472182 :          || sectionEditTime.getEnd() &lt;= editPosition.getStart()</span></a>
+<a name="149"><span class="lineNum">     149 </span><span class="lineCov">     909252 :          || sectionEditTime.getStart() &gt;= editPosition.getEnd())</span></a>
+<a name="150"><span class="lineNum">     150 </span><span class="lineCov">     109244 :         return;</span></a>
 <a name="151"><span class="lineNum">     151 </span>            : </a>
 <a name="152"><span class="lineNum">     152 </span>            :     SCOPED_REALTIME_CHECK</a>
 <a name="153"><span class="lineNum">     153 </span>            : </a>
-<a name="154"><span class="lineNum">     154 </span><span class="lineCov">     362617 :     if (audioFileSampleRate == 0.0 &amp;&amp; ! updateFileSampleRate())</span></a>
+<a name="154"><span class="lineNum">     154 </span><span class="lineCov">     363024 :     if (audioFileSampleRate == 0.0 &amp;&amp; ! updateFileSampleRate())</span></a>
 <a name="155"><span class="lineNum">     155 </span>            :         return;</a>
 <a name="156"><span class="lineNum">     156 </span>            : </a>
 <a name="157"><span class="lineNum">     157 </span>            :     const auto fileStart       = editTimeToFileSample (sectionEditTime.getStart());</a>
 <a name="158"><span class="lineNum">     158 </span>            :     const auto fileEnd         = editTimeToFileSample (sectionEditTime.getEnd());</a>
-<a name="159"><span class="lineNum">     159 </span><span class="lineCov">     362617 :     const auto numFileSamples  = (int) (fileEnd - fileStart);</span></a>
+<a name="159"><span class="lineNum">     159 </span><span class="lineCov">     363024 :     const auto numFileSamples  = (int) (fileEnd - fileStart);</span></a>
 <a name="160"><span class="lineNum">     160 </span>            : </a>
-<a name="161"><span class="lineNum">     161 </span><span class="lineCov">     362617 :     reader-&gt;setReadPosition (fileStart);</span></a>
+<a name="161"><span class="lineNum">     161 </span><span class="lineCov">     363024 :     reader-&gt;setReadPosition (fileStart);</span></a>
 <a name="162"><span class="lineNum">     162 </span>            : </a>
-<a name="163"><span class="lineNum">     163 </span><span class="lineCov">     362641 :     auto destBuffer = pc.buffers.audio;</span></a>
-<a name="164"><span class="lineNum">     164 </span><span class="lineCov">     362641 :     auto numFrames = destBuffer.getNumFrames();</span></a>
-<a name="165"><span class="lineNum">     165 </span><span class="lineCov">     362641 :     const auto destBufferChannels = juce::AudioChannelSet::canonicalChannelSet ((int) destBuffer.getNumChannels());</span></a>
-<a name="166"><span class="lineNum">     166 </span><span class="lineCov">     362635 :     auto numChannels = (choc::buffer::ChannelCount) destBufferChannels.size();</span></a>
+<a name="163"><span class="lineNum">     163 </span><span class="lineCov">     363049 :     auto destBuffer = pc.buffers.audio;</span></a>
+<a name="164"><span class="lineNum">     164 </span><span class="lineCov">     363049 :     auto numFrames = destBuffer.getNumFrames();</span></a>
+<a name="165"><span class="lineNum">     165 </span><span class="lineCov">     363049 :     const auto destBufferChannels = juce::AudioChannelSet::canonicalChannelSet ((int) destBuffer.getNumChannels());</span></a>
+<a name="166"><span class="lineNum">     166 </span><span class="lineCov">     363043 :     auto numChannels = (choc::buffer::ChannelCount) destBufferChannels.size();</span></a>
 <a name="167"><span class="lineNum">     167 </span>            :     assert (pc.buffers.audio.getNumChannels() == numChannels);</a>
 <a name="168"><span class="lineNum">     168 </span>            : </a>
-<a name="169"><span class="lineNum">     169 </span><span class="lineCov">     725169 :     AudioScratchBuffer fileData ((int) numChannels, numFileSamples + 2);</span></a>
+<a name="169"><span class="lineNum">     169 </span><span class="lineCov">     726007 :     AudioScratchBuffer fileData ((int) numChannels, numFileSamples + 2);</span></a>
 <a name="170"><span class="lineNum">     170 </span>            : </a>
 <a name="171"><span class="lineNum">     171 </span>            :     uint32_t lastSampleFadeLength = 0;</a>
 <a name="172"><span class="lineNum">     172 </span>            : </a>
 <a name="173"><span class="lineNum">     173 </span>            :     {</a>
 <a name="174"><span class="lineNum">     174 </span>            :         SCOPED_REALTIME_CHECK</a>
 <a name="175"><span class="lineNum">     175 </span>            : </a>
-<a name="176"><span class="lineNum">     176 </span><span class="lineCov">     362648 :         if (reader-&gt;readSamples (numFileSamples + 2, fileData.buffer, destBufferChannels, 0,</span></a>
-<a name="177"><span class="lineNum">     177 </span><span class="lineCov">     362648 :                                  channelsToUse,</span></a>
-<a name="178"><span class="lineNum">     178 </span><span class="lineCov">     362648 :                                  isOfflineRender ? 5000 : 3))</span></a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineCov">     363056 :         if (reader-&gt;readSamples (numFileSamples + 2, fileData.buffer, destBufferChannels, 0,</span></a>
+<a name="177"><span class="lineNum">     177 </span><span class="lineCov">     363056 :                                  channelsToUse,</span></a>
+<a name="178"><span class="lineNum">     178 </span><span class="lineCov">     363056 :                                  isOfflineRender ? 5000 : 3))</span></a>
 <a name="179"><span class="lineNum">     179 </span>            :         {</a>
-<a name="180"><span class="lineNum">     180 </span><span class="lineCov">     362720 :             if (! getPlayHeadState().isContiguousWithPreviousBlock() &amp;&amp; ! getPlayHeadState().isFirstBlockOfLoop())</span></a>
+<a name="180"><span class="lineNum">     180 </span><span class="lineCov">     363128 :             if (! getPlayHeadState().isContiguousWithPreviousBlock() &amp;&amp; ! getPlayHeadState().isFirstBlockOfLoop())</span></a>
 <a name="181"><span class="lineNum">     181 </span><span class="lineCov">        370 :                 lastSampleFadeLength = std::min (numFrames, getPlayHead().isUserDragging() ? 40u : 10u);</span></a>
 <a name="182"><span class="lineNum">     182 </span>            :         }</a>
 <a name="183"><span class="lineNum">     183 </span>            :         else</a>
@@ -252,44 +252,44 @@
 <a name="190"><span class="lineNum">     190 </span>            :     float gains[2];</a>
 <a name="191"><span class="lineNum">     191 </span>            : </a>
 <a name="192"><span class="lineNum">     192 </span>            :     // For stereo, use the pan, otherwise ignore it</a>
-<a name="193"><span class="lineNum">     193 </span><span class="lineCov">     362648 :     if (numChannels == 2)</span></a>
+<a name="193"><span class="lineNum">     193 </span><span class="lineCov">     363056 :     if (numChannels == 2)</span></a>
 <a name="194"><span class="lineNum">     194 </span><span class="lineCov">      38244 :         clipLevel.getLeftAndRightGains (gains[0], gains[1]);</span></a>
 <a name="195"><span class="lineNum">     195 </span>            :     else</a>
-<a name="196"><span class="lineNum">     196 </span><span class="lineCov">     324404 :         gains[0] = gains[1] = clipLevel.getGainIncludingMute();</span></a>
+<a name="196"><span class="lineNum">     196 </span><span class="lineCov">     324812 :         gains[0] = gains[1] = clipLevel.getGainIncludingMute();</span></a>
 <a name="197"><span class="lineNum">     197 </span>            : </a>
-<a name="198"><span class="lineNum">     198 </span><span class="lineCov">     362648 :     if (getPlayHead().isUserDragging())</span></a>
+<a name="198"><span class="lineNum">     198 </span><span class="lineCov">     363056 :     if (getPlayHead().isUserDragging())</span></a>
 <a name="199"><span class="lineNum">     199 </span>            :     {</a>
-<a name="200"><span class="lineNum">     200 </span><span class="lineCov">      89196 :         gains[0] *= 0.4f;</span></a>
-<a name="201"><span class="lineNum">     201 </span><span class="lineCov">      89196 :         gains[1] *= 0.4f;</span></a>
+<a name="200"><span class="lineNum">     200 </span><span class="lineCov">      89248 :         gains[0] *= 0.4f;</span></a>
+<a name="201"><span class="lineNum">     201 </span><span class="lineCov">      89248 :         gains[1] *= 0.4f;</span></a>
 <a name="202"><span class="lineNum">     202 </span>            :     }</a>
 <a name="203"><span class="lineNum">     203 </span>            : </a>
-<a name="204"><span class="lineNum">     204 </span><span class="lineCov">     362648 :     auto ratio = numFileSamples / (double) numFrames;</span></a>
+<a name="204"><span class="lineNum">     204 </span><span class="lineCov">     363056 :     auto ratio = numFileSamples / (double) numFrames;</span></a>
 <a name="205"><span class="lineNum">     205 </span>            : </a>
-<a name="206"><span class="lineNum">     206 </span><span class="lineCov">     362648 :     if (ratio &lt;= 0.0)</span></a>
+<a name="206"><span class="lineNum">     206 </span><span class="lineCov">     363056 :     if (ratio &lt;= 0.0)</span></a>
 <a name="207"><span class="lineNum">     207 </span><span class="lineCov">         86 :         return;</span></a>
 <a name="208"><span class="lineNum">     208 </span>            : </a>
 <a name="209"><span class="lineNum">     209 </span>            :     jassert (numChannels &lt;= (choc::buffer::ChannelCount) channelState.size()); // this should always have been made big enough</a>
 <a name="210"><span class="lineNum">     210 </span>            : </a>
-<a name="211"><span class="lineNum">     211 </span><span class="lineCov">     763252 :     for (choc::buffer::ChannelCount channel = 0; channel &lt; numChannels; ++channel)</span></a>
+<a name="211"><span class="lineNum">     211 </span><span class="lineCov">     764087 :     for (choc::buffer::ChannelCount channel = 0; channel &lt; numChannels; ++channel)</span></a>
 <a name="212"><span class="lineNum">     212 </span>            :     {</a>
-<a name="213"><span class="lineNum">     213 </span><span class="lineCov">     400715 :         if (channel &lt; (choc::buffer::ChannelCount) channelState.size())</span></a>
+<a name="213"><span class="lineNum">     213 </span><span class="lineCov">     401120 :         if (channel &lt; (choc::buffer::ChannelCount) channelState.size())</span></a>
 <a name="214"><span class="lineNum">     214 </span>            :         {</a>
-<a name="215"><span class="lineNum">     215 </span><span class="lineCov">     400715 :             const auto src = fileData.buffer.getReadPointer ((int) channel);</span></a>
+<a name="215"><span class="lineNum">     215 </span><span class="lineCov">     401120 :             const auto src = fileData.buffer.getReadPointer ((int) channel);</span></a>
 <a name="216"><span class="lineNum">     216 </span>            :             const auto dest = destBuffer.getIterator (channel).sample;</a>
 <a name="217"><span class="lineNum">     217 </span>            : </a>
 <a name="218"><span class="lineNum">     218 </span>            :             auto&amp; state = *channelState.getUnchecked ((int) channel);</a>
-<a name="219"><span class="lineNum">     219 </span><span class="lineCov">     400715 :             state.resampler.processAdding (ratio, src, dest, (int) numFrames, gains[channel &amp; 1]);</span></a>
+<a name="219"><span class="lineNum">     219 </span><span class="lineCov">     401120 :             state.resampler.processAdding (ratio, src, dest, (int) numFrames, gains[channel &amp; 1]);</span></a>
 <a name="220"><span class="lineNum">     220 </span>            : </a>
-<a name="221"><span class="lineNum">     221 </span><span class="lineCov">     400690 :             if (lastSampleFadeLength &gt; 0)</span></a>
+<a name="221"><span class="lineNum">     221 </span><span class="lineCov">     401117 :             if (lastSampleFadeLength &gt; 0)</span></a>
 <a name="222"><span class="lineNum">     222 </span>            :             {</a>
-<a name="223"><span class="lineNum">     223 </span><span class="lineCov">       1040 :                 for (uint32_t i = 0; i &lt; lastSampleFadeLength; ++i)</span></a>
+<a name="223"><span class="lineNum">     223 </span><span class="lineCov">       1052 :                 for (uint32_t i = 0; i &lt; lastSampleFadeLength; ++i)</span></a>
 <a name="224"><span class="lineNum">     224 </span>            :                 {</a>
-<a name="225"><span class="lineNum">     225 </span><span class="lineCov">        984 :                     auto alpha = i / (float) lastSampleFadeLength;</span></a>
-<a name="226"><span class="lineNum">     226 </span><span class="lineCov">        984 :                     dest[i] = alpha * dest[i] + state.lastSample * (1.0f - alpha);</span></a>
+<a name="225"><span class="lineNum">     225 </span><span class="lineCov">        996 :                     auto alpha = i / (float) lastSampleFadeLength;</span></a>
+<a name="226"><span class="lineNum">     226 </span><span class="lineCov">        996 :                     dest[i] = alpha * dest[i] + state.lastSample * (1.0f - alpha);</span></a>
 <a name="227"><span class="lineNum">     227 </span>            :                 }</a>
 <a name="228"><span class="lineNum">     228 </span>            :             }</a>
 <a name="229"><span class="lineNum">     229 </span>            : </a>
-<a name="230"><span class="lineNum">     230 </span><span class="lineCov">     400690 :             state.lastSample = dest[numFrames - 1];</span></a>
+<a name="230"><span class="lineNum">     230 </span><span class="lineCov">     401117 :             state.lastSample = dest[numFrames - 1];</span></a>
 <a name="231"><span class="lineNum">     231 </span>            :         }</a>
 <a name="232"><span class="lineNum">     232 </span>            :         else</a>
 <a name="233"><span class="lineNum">     233 </span>            :         {</a>
@@ -300,13 +300,13 @@
 <a name="238"><span class="lineNum">     238 </span>            :     // Silence any samples before or after our edit time range</a>
 <a name="239"><span class="lineNum">     239 </span>            :     // N.B. this shouldn't happen when using a clip combiner as the times should be clipped correctly</a>
 <a name="240"><span class="lineNum">     240 </span>            :     {</a>
-<a name="241"><span class="lineNum">     241 </span><span class="lineCov">     362537 :         auto numSamplesToClearAtStart = editPositionInSamples.getStart() - timelineRange.getStart();</span></a>
-<a name="242"><span class="lineNum">     242 </span><span class="lineCov">     362537 :         auto numSamplesToClearAtEnd = timelineRange.getEnd() - editPositionInSamples.getEnd();</span></a>
+<a name="241"><span class="lineNum">     241 </span><span class="lineCov">     362967 :         auto numSamplesToClearAtStart = editPositionInSamples.getStart() - timelineRange.getStart();</span></a>
+<a name="242"><span class="lineNum">     242 </span><span class="lineCov">     362967 :         auto numSamplesToClearAtEnd = timelineRange.getEnd() - editPositionInSamples.getEnd();</span></a>
 <a name="243"><span class="lineNum">     243 </span>            : </a>
-<a name="244"><span class="lineNum">     244 </span><span class="lineCov">     362537 :         if (numSamplesToClearAtStart &gt; 0)</span></a>
+<a name="244"><span class="lineNum">     244 </span><span class="lineCov">     362967 :         if (numSamplesToClearAtStart &gt; 0)</span></a>
 <a name="245"><span class="lineNum">     245 </span><span class="lineCov">         95 :             destBuffer.getStart ((choc::buffer::FrameCount) numSamplesToClearAtStart).clear();</span></a>
 <a name="246"><span class="lineNum">     246 </span>            : </a>
-<a name="247"><span class="lineNum">     247 </span><span class="lineCov">     362537 :         if (numSamplesToClearAtEnd &gt; 0)</span></a>
+<a name="247"><span class="lineNum">     247 </span><span class="lineCov">     362967 :         if (numSamplesToClearAtEnd &gt; 0)</span></a>
 <a name="248"><span class="lineNum">     248 </span><span class="lineCov">        105 :             destBuffer.getEnd ((choc::buffer::FrameCount) numSamplesToClearAtEnd).clear();</span></a>
 <a name="249"><span class="lineNum">     249 </span>            :     }</a>
 <a name="250"><span class="lineNum">     250 </span>            : }</a>

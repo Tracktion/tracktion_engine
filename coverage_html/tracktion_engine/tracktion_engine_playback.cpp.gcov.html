@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-26 15:16:39</td>
+            <td class="headerValue">2022-01-26 16:28:11</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -290,20 +290,22 @@
 <a name="228"><span class="lineNum">     228 </span>            :  #endif</a>
 <a name="229"><span class="lineNum">     229 </span>            : </a>
 <a name="230"><span class="lineNum">     230 </span>            :  #include &quot;control_surfaces/types/tracktion_AlphaTrack.cpp&quot;</a>
-<a name="231"><span class="lineNum">     231 </span>            :  #include &quot;control_surfaces/types/tracktion_MackieC4.cpp&quot;</a>
-<a name="232"><span class="lineNum">     232 </span>            :  #include &quot;control_surfaces/types/tracktion_MackieMCU.cpp&quot;</a>
-<a name="233"><span class="lineNum">     233 </span>            :  #include &quot;control_surfaces/types/tracktion_MackieXT.cpp&quot;</a>
-<a name="234"><span class="lineNum">     234 </span>            :  #include &quot;control_surfaces/types/tracktion_IconProG2.cpp&quot;</a>
-<a name="235"><span class="lineNum">     235 </span>            :  #include &quot;control_surfaces/types/tracktion_NovationRemoteSl.cpp&quot;</a>
-<a name="236"><span class="lineNum">     236 </span>            :  #include &quot;control_surfaces/types/tracktion_RemoteSLCompact.cpp&quot;</a>
-<a name="237"><span class="lineNum">     237 </span>            :  #include &quot;control_surfaces/types/tracktion_Tranzport.cpp&quot;</a>
-<a name="238"><span class="lineNum">     238 </span>            : #endif</a>
-<a name="239"><span class="lineNum">     239 </span>            : </a>
-<a name="240"><span class="lineNum">     240 </span>            : #if TRACKTION_ENABLE_CONTROL_SURFACES</a>
-<a name="241"><span class="lineNum">     241 </span>            :  #include &quot;control_surfaces/types/tracktion_NovationAutomap.cpp&quot;</a>
-<a name="242"><span class="lineNum">     242 </span>            : #endif</a>
-<a name="243"><span class="lineNum">     243 </span>            : </a>
+<a name="231"><span class="lineNum">     231 </span>            :  #if TRACKTION_ENABLE_CONTROL_SURFACE_MACKIEC4</a>
+<a name="232"><span class="lineNum">     232 </span>            :   #include &quot;control_surfaces/types/tracktion_MackieC4.cpp&quot;</a>
+<a name="233"><span class="lineNum">     233 </span>            :  #endif</a>
+<a name="234"><span class="lineNum">     234 </span>            :  #include &quot;control_surfaces/types/tracktion_MackieMCU.cpp&quot;</a>
+<a name="235"><span class="lineNum">     235 </span>            :  #include &quot;control_surfaces/types/tracktion_MackieXT.cpp&quot;</a>
+<a name="236"><span class="lineNum">     236 </span>            :  #include &quot;control_surfaces/types/tracktion_IconProG2.cpp&quot;</a>
+<a name="237"><span class="lineNum">     237 </span>            :  #include &quot;control_surfaces/types/tracktion_NovationRemoteSl.cpp&quot;</a>
+<a name="238"><span class="lineNum">     238 </span>            :  #include &quot;control_surfaces/types/tracktion_RemoteSLCompact.cpp&quot;</a>
+<a name="239"><span class="lineNum">     239 </span>            :  #include &quot;control_surfaces/types/tracktion_Tranzport.cpp&quot;</a>
+<a name="240"><span class="lineNum">     240 </span>            : #endif</a>
+<a name="241"><span class="lineNum">     241 </span>            : </a>
+<a name="242"><span class="lineNum">     242 </span>            : #if TRACKTION_ENABLE_CONTROL_SURFACES</a>
+<a name="243"><span class="lineNum">     243 </span>            :  #include &quot;control_surfaces/types/tracktion_NovationAutomap.cpp&quot;</a>
 <a name="244"><span class="lineNum">     244 </span>            : #endif</a>
+<a name="245"><span class="lineNum">     245 </span>            : </a>
+<a name="246"><span class="lineNum">     246 </span>            : #endif</a>
 </pre>
       </td>
     </tr>
