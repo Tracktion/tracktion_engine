@@ -30929,6 +30929,20 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
+      <type>juce::String</type>
+      <name>getDesiredMidiChannel</name>
+      <anchorfile>classtracktion__engine_1_1ExternalController.html</anchorfile>
+      <anchor>a5089ff7a42ff941c1dd963a0379a12ca</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::String</type>
+      <name>getDesiredMidiBackChannel</name>
+      <anchorfile>classtracktion__engine_1_1ExternalController.html</anchorfile>
+      <anchor>ab4eb52cc4d08a8640986deba4f64f169</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
       <type>bool</type>
       <name>needsOSCSocket</name>
       <anchorfile>classtracktion__engine_1_1ExternalController.html</anchorfile>
