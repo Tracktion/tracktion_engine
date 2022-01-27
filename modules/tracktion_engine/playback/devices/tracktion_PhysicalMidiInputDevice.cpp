@@ -314,6 +314,8 @@ PhysicalMidiInputDevice::PhysicalMidiInputDevice (Engine& e, const juce::String&
    : MidiInputDevice (e, TRANS("MIDI Input"), deviceName),
      deviceIndex (deviceIndexToUse)
 {
+    enabled = true;
+
     controllerParser.reset (new MidiControllerParser (e));
     loadProps();
 }

@@ -264,6 +264,8 @@ MidiOutputDevice::MidiOutputDevice (Engine& e, const juce::String& deviceName, i
     : OutputDevice (e, TRANS("MIDI Output"), deviceName),
       deviceIndex (index)
 {
+    enabled = true;
+	
     timecodeGenerator = std::make_unique<MidiTimecodeGenerator>();
     midiClockGenerator = std::make_unique<MidiClockGenerator>();
     programNameSet = getMidiProgramManager().getDefaultCustomName();
