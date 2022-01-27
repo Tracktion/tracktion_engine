@@ -24,30 +24,33 @@ namespace tracktion_graph
 struct TimePosition
 {
     /** Creates a position at a time of 0. */
-    TimePosition() = default;
+    constexpr TimePosition() = default;
+
+    /** Creates a copy of another TimePosition. */
+    constexpr TimePosition (const TimePosition&) = default;
 
     /** Creates a position from a std::chrono.
         This can be a std::chrono::literal.
     */
-    TimePosition (std::chrono::duration<double>);
+    constexpr TimePosition (std::chrono::duration<double>);
 
     /** Create a TimePosition from a number of seconds. */
     template<typename T>
-    static TimePosition fromSeconds (T positionInSeconds);
+    static constexpr TimePosition fromSeconds (T positionInSeconds);
 
     /** Create a TimePosition from a number of samples and a sample rate. */
     template<typename IntType>
-    static TimePosition fromSamples (IntType numSamples, double sampleRate);
+    static constexpr TimePosition fromSamples (IntType numSamples, double sampleRate);
 
     /** Returns the TimePosition as a number of seconds. */
-    double inSeconds() const;
+    constexpr  double inSeconds() const;
 
 private:
     double seconds = 0.0;
 };
 
 /** Converts a TimePosition to a number of samples. */
-int64_t toSamples (TimePosition, double sampleRate);
+constexpr int64_t toSamples (TimePosition, double sampleRate);
 
 //==============================================================================
 //==============================================================================
@@ -58,68 +61,71 @@ int64_t toSamples (TimePosition, double sampleRate);
 struct TimeDuration
 {
     /** Creates a position at a time of 0. */
-    TimeDuration() = default;
+    constexpr TimeDuration() = default;
+
+    /** Creates a copy of another TimeDuration. */
+    constexpr TimeDuration (const TimeDuration&) = default;
 
     /** Creates a position from a std::chrono.
         This can be a std::chrono::literal.
     */
-    TimeDuration (std::chrono::duration<double>);
+    constexpr TimeDuration (std::chrono::duration<double>);
 
     /** Create a TimeDuration from a number of seconds. */
     template<typename T>
-    static TimeDuration fromSeconds (T positionInSeconds);
+    static constexpr TimeDuration fromSeconds (T positionInSeconds);
 
     /** Create a TimeDuration from a number of samples and a sample rate. */
     template<typename IntType>
-    static TimeDuration fromSamples (IntType numSamples, double sampleRate);
+    static constexpr TimeDuration fromSamples (IntType numSamples, double sampleRate);
 
     /** Returns the TimeDuration as a number of seconds. */
-    double inSeconds() const;
+    constexpr double inSeconds() const;
 
 private:
     double seconds = 0.0;
 };
 
 /** Converts a TimeDuration to a number of samples. */
-int64_t toSamples (TimeDuration, double sampleRate);
+constexpr int64_t toSamples (TimeDuration, double sampleRate);
 
 //==============================================================================
 /** Adds two TimeDurations together. */
-TimeDuration operator+ (const TimeDuration&, const TimeDuration&);
+constexpr TimeDuration operator+ (const TimeDuration&, const TimeDuration&);
 
 /** Adds a time to a TimeDuration. */
-TimeDuration operator+ (const TimeDuration&, std::chrono::duration<double>);
+constexpr TimeDuration operator+ (const TimeDuration&, std::chrono::duration<double>);
 
 /** Adds a TimeDuration to a TimePosition. */
-TimePosition operator+ (const TimePosition&, const TimeDuration&);
+constexpr TimePosition operator+ (const TimePosition&, const TimeDuration&);
 
 /** Adds a time to a TimePosition. */
-TimePosition operator+ (const TimePosition&, std::chrono::duration<double>);
+constexpr TimePosition operator+ (const TimePosition&, std::chrono::duration<double>);
 
 /** Subtracts a TimeDuration from another one. */
-TimeDuration operator- (const TimeDuration&, const TimeDuration&);
+constexpr TimeDuration operator- (const TimeDuration&, const TimeDuration&);
 
 /** Subtracts a time from a TimeDuration. */
-TimeDuration operator- (const TimeDuration&, std::chrono::duration<double>);
+constexpr TimeDuration operator- (const TimeDuration&, std::chrono::duration<double>);
 
 /** Subtracts a TimeDuration from a TimePosition. */
-TimePosition operator- (const TimePosition&, const TimeDuration&);
+constexpr TimePosition operator- (const TimePosition&, const TimeDuration&);
 
 /** Subtracts a time from a TimePosition. */
-TimePosition operator- (const TimePosition&, std::chrono::duration<double>);
+constexpr TimePosition operator- (const TimePosition&, std::chrono::duration<double>);
 
 //==============================================================================
 /** Compares two TimePositions. */
-bool operator== (const TimePosition&, const TimePosition&);
+constexpr bool operator== (const TimePosition&, const TimePosition&);
 
 /** Compares two TimeDurations. */
-bool operator!= (const TimePosition&, const TimePosition&);
+constexpr bool operator!= (const TimePosition&, const TimePosition&);
 
 /** Compares two TimeDurations. */
-bool operator== (const TimeDuration&, const TimeDuration&);
+constexpr bool operator== (const TimeDuration&, const TimeDuration&);
 
 /** Compares two TimeDurations. */
-bool operator!= (const TimeDuration&, const TimeDuration&);
+constexpr bool operator!= (const TimeDuration&, const TimeDuration&);
 
 //==============================================================================
 //==============================================================================
@@ -133,14 +139,17 @@ bool operator!= (const TimeDuration&, const TimeDuration&);
 struct BeatPosition
 {
     /** Creates a position at a beat of 0. */
-    BeatPosition() = default;
+    constexpr BeatPosition() = default;
+
+    /** Creates a copy of another BeatPosition. */
+    constexpr BeatPosition (const BeatPosition&) = default;
 
     /** Create a BeatPosition from a number of beats. */
     template<typename T>
-    static BeatPosition fromBeats (T positionInBeats);
+    static constexpr BeatPosition fromBeats (T positionInBeats);
 
     /** Returns the position as a number of beats. */
-    double inBeats() const;
+    constexpr double inBeats() const;
 
 private:
     double numBeats = 0.0;
@@ -159,14 +168,17 @@ private:
 struct BeatDuration
 {
     /** Creates a position at a beat of 0. */
-    BeatDuration() = default;
+    constexpr BeatDuration() = default;
+
+    /** Creates a copy of another BeatDuration. */
+    constexpr BeatDuration (const BeatDuration&) = default;
 
     /** Create a BeatPosition from a number of beats. */
     template<typename T>
-    static BeatDuration fromBeats (T durationInBeats);
+    static constexpr BeatDuration fromBeats (T durationInBeats);
 
     /** Returns the position as a number of beats. */
-    double inBeats() const;
+    constexpr double inBeats() const;
 
 private:
     double numBeats = 0.0;
@@ -175,29 +187,29 @@ private:
 
 //==============================================================================
 /** Adds two BeatDurations together. */
-BeatDuration operator+ (const BeatDuration&, const BeatDuration&);
+constexpr BeatDuration operator+ (const BeatDuration&, const BeatDuration&);
 
 /** Adds a BeatDuration to a BeatPosition. */
-BeatPosition operator+ (const BeatPosition&, const BeatDuration&);
+constexpr BeatPosition operator+ (const BeatPosition&, const BeatDuration&);
 
 /** Subtracts a BeatDuration from another one. */
-BeatDuration operator- (const BeatDuration&, const BeatDuration&);
+constexpr BeatDuration operator- (const BeatDuration&, const BeatDuration&);
 
 /** Subtracts a BeatDuration from a BeatPosition. */
-BeatPosition operator- (const BeatPosition&, const BeatDuration&);
+constexpr BeatPosition operator- (const BeatPosition&, const BeatDuration&);
 
 //==============================================================================
 /** Compares two BeatPositions. */
-bool operator== (const BeatPosition&, const BeatPosition&);
+constexpr bool operator== (const BeatPosition&, const BeatPosition&);
 
 /** Compares two BeatPositions. */
-bool operator!= (const BeatPosition&, const BeatPosition&);
+constexpr bool operator!= (const BeatPosition&, const BeatPosition&);
 
 /** Compares two BeatDurations. */
-bool operator== (const BeatDuration&, const BeatDuration&);
+constexpr bool operator== (const BeatDuration&, const BeatDuration&);
 
 /** Compares two BeatDurations. */
-bool operator!= (const BeatDuration&, const BeatDuration&);
+constexpr bool operator!= (const BeatDuration&, const BeatDuration&);
 
 //==============================================================================
 //        _        _           _  _
@@ -210,13 +222,13 @@ bool operator!= (const BeatDuration&, const BeatDuration&);
 //
 //==============================================================================
 
-inline TimePosition::TimePosition (std::chrono::duration<double> duration)
+inline constexpr TimePosition::TimePosition (std::chrono::duration<double> duration)
     : seconds (duration.count())
 {
 }
 
 template<typename T>
-inline TimePosition TimePosition::fromSeconds (T positionInSeconds)
+inline constexpr TimePosition TimePosition::fromSeconds (T positionInSeconds)
 {
     TimePosition pos;
     pos.seconds = static_cast<double> (positionInSeconds);
@@ -224,30 +236,30 @@ inline TimePosition TimePosition::fromSeconds (T positionInSeconds)
 }
 
 template<typename IntType>
-inline TimePosition TimePosition::fromSamples (IntType samplePosition, double sampleRate)
+inline constexpr TimePosition TimePosition::fromSamples (IntType samplePosition, double sampleRate)
 {
     return TimePosition::fromSeconds (samplePosition / sampleRate);
 }
 
-inline double TimePosition::inSeconds() const
+inline constexpr double TimePosition::inSeconds() const
 {
     return seconds;
 }
 
-inline int64_t toSamples (TimePosition p, double sampleRate)
+inline constexpr int64_t toSamples (TimePosition p, double sampleRate)
 {
     return static_cast<int64_t> ((p.inSeconds() * sampleRate)
                                  + (p.inSeconds() >= 0.0 ? 0.5 : -0.5));
 }
 
 //==============================================================================
-inline TimeDuration::TimeDuration (std::chrono::duration<double> duration)
+inline constexpr TimeDuration::TimeDuration (std::chrono::duration<double> duration)
     : seconds (duration.count())
 {
 }
 
 template<typename T>
-inline TimeDuration TimeDuration::fromSeconds (T positionInSeconds)
+inline constexpr TimeDuration TimeDuration::fromSeconds (T positionInSeconds)
 {
     TimeDuration pos;
     pos.seconds = static_cast<double> (positionInSeconds);
@@ -255,17 +267,17 @@ inline TimeDuration TimeDuration::fromSeconds (T positionInSeconds)
 }
 
 template<typename IntType>
-inline TimeDuration TimeDuration::fromSamples (IntType samplePosition, double sampleRate)
+inline constexpr TimeDuration TimeDuration::fromSamples (IntType samplePosition, double sampleRate)
 {
     return TimeDuration::fromSeconds (samplePosition / sampleRate);
 }
 
-inline double TimeDuration::inSeconds() const
+inline constexpr double TimeDuration::inSeconds() const
 {
     return seconds;
 }
 
-inline int64_t toSamples (TimeDuration p, double sampleRate)
+inline constexpr int64_t toSamples (TimeDuration p, double sampleRate)
 {
     return static_cast<int64_t> ((p.inSeconds() * sampleRate)
                                  + (p.inSeconds() >= 0.0 ? 0.5 : -0.5));
@@ -273,76 +285,76 @@ inline int64_t toSamples (TimeDuration p, double sampleRate)
 
 
 //==============================================================================
-inline TimeDuration operator+ (const TimeDuration& t1, const TimeDuration& t2)
+inline constexpr TimeDuration operator+ (const TimeDuration& t1, const TimeDuration& t2)
 {
     return TimeDuration::fromSeconds (t1.inSeconds() + t2.inSeconds());
 }
 
-inline TimePosition operator+ (const TimePosition& t1, const TimeDuration& t2)
+inline constexpr TimePosition operator+ (const TimePosition& t1, const TimeDuration& t2)
 {
     return TimePosition::fromSeconds (t1.inSeconds() + t2.inSeconds());
 }
 
-inline TimeDuration operator- (const TimeDuration& t1, const TimeDuration& t2)
+inline constexpr TimeDuration operator- (const TimeDuration& t1, const TimeDuration& t2)
 {
     return TimeDuration::fromSeconds (t1.inSeconds() - t2.inSeconds());
 }
 
-inline TimePosition operator- (const TimePosition& t1, const TimeDuration& t2)
+inline constexpr TimePosition operator- (const TimePosition& t1, const TimeDuration& t2)
 {
     return TimePosition::fromSeconds (t1.inSeconds() - t2.inSeconds());
 }
 
-inline TimeDuration operator+ (const TimeDuration& t1, std::chrono::duration<double> t2)
+inline constexpr TimeDuration operator+ (const TimeDuration& t1, std::chrono::duration<double> t2)
 {
     return TimeDuration::fromSeconds (t1.inSeconds() + t2.count());
 }
 
-inline TimePosition operator+ (const TimePosition& t1, std::chrono::duration<double> t2)
+inline constexpr TimePosition operator+ (const TimePosition& t1, std::chrono::duration<double> t2)
 {
     return TimePosition::fromSeconds (t1.inSeconds() + t2.count());
 }
 
-inline TimeDuration operator- (const TimeDuration& t1, std::chrono::duration<double> t2)
+inline constexpr TimeDuration operator- (const TimeDuration& t1, std::chrono::duration<double> t2)
 {
     return TimeDuration::fromSeconds (t1.inSeconds() - t2.count());
 }
 
-inline TimePosition operator- (const TimePosition& t1, std::chrono::duration<double> t2)
+inline constexpr TimePosition operator- (const TimePosition& t1, std::chrono::duration<double> t2)
 {
     return TimePosition::fromSeconds (t1.inSeconds() - t2.count());
 }
 
-inline bool operator== (const TimePosition& t1, const TimePosition& t2)
+inline constexpr bool operator== (const TimePosition& t1, const TimePosition& t2)
 {
     return t1.inSeconds() == t2.inSeconds();
 }
 
-inline bool operator!= (const TimePosition& t1, const TimePosition& t2)
+inline constexpr bool operator!= (const TimePosition& t1, const TimePosition& t2)
 {
     return ! (t1 == t2);
 }
 
-inline bool operator== (const TimeDuration& t1, const TimeDuration& t2)
+inline constexpr bool operator== (const TimeDuration& t1, const TimeDuration& t2)
 {
     return t1.inSeconds() == t2.inSeconds();
 }
 
-inline bool operator!= (const TimeDuration& t1, const TimeDuration& t2)
+inline constexpr bool operator!= (const TimeDuration& t1, const TimeDuration& t2)
 {
     return ! (t1 == t2);
 }
 
 //==============================================================================
 template<typename T>
-inline BeatPosition BeatPosition::fromBeats (T positionInBeats)
+inline constexpr BeatPosition BeatPosition::fromBeats (T positionInBeats)
 {
     BeatPosition pos;
     pos.numBeats = static_cast<double> (positionInBeats);
     return pos;
 }
 
-inline double BeatPosition::inBeats() const
+inline constexpr double BeatPosition::inBeats() const
 {
     return numBeats;
 }
@@ -351,56 +363,56 @@ inline double BeatPosition::inBeats() const
 //==============================================================================
 //==============================================================================
 template<typename T>
-inline BeatDuration BeatDuration::fromBeats (T durationInBeats)
+inline constexpr BeatDuration BeatDuration::fromBeats (T durationInBeats)
 {
     BeatDuration pos;
     pos.numBeats = static_cast<double> (durationInBeats);
     return pos;
 }
 
-inline double BeatDuration::inBeats() const
+inline constexpr double BeatDuration::inBeats() const
 {
     return numBeats;
 }
 
 
 //==============================================================================
-inline BeatDuration operator+ (const BeatDuration& t1, const BeatDuration& t2)
+inline constexpr BeatDuration operator+ (const BeatDuration& t1, const BeatDuration& t2)
 {
     return BeatDuration::fromBeats (t1.inBeats() + t2.inBeats());
 }
 
-inline BeatPosition operator+ (const BeatPosition& t1, const BeatDuration& t2)
+inline constexpr BeatPosition operator+ (const BeatPosition& t1, const BeatDuration& t2)
 {
     return BeatPosition::fromBeats (t1.inBeats() + t2.inBeats());
 }
 
-inline BeatDuration operator- (const BeatDuration& t1, const BeatDuration& t2)
+inline constexpr BeatDuration operator- (const BeatDuration& t1, const BeatDuration& t2)
 {
     return BeatDuration::fromBeats (t1.inBeats() - t2.inBeats());
 }
 
-inline BeatPosition operator- (const BeatPosition& t1, const BeatDuration& t2)
+inline constexpr BeatPosition operator- (const BeatPosition& t1, const BeatDuration& t2)
 {
     return BeatPosition::fromBeats (t1.inBeats() - t2.inBeats());
 }
 
-inline bool operator== (const BeatPosition& t1, const BeatPosition& t2)
+inline constexpr bool operator== (const BeatPosition& t1, const BeatPosition& t2)
 {
     return t1.inBeats() == t2.inBeats();
 }
 
-inline bool operator!= (const BeatPosition& t1, const BeatPosition& t2)
+inline constexpr bool operator!= (const BeatPosition& t1, const BeatPosition& t2)
 {
     return ! (t1 == t2);
 }
 
-inline bool operator== (const BeatDuration& t1, const BeatDuration& t2)
+inline constexpr bool operator== (const BeatDuration& t1, const BeatDuration& t2)
 {
     return t1.inBeats() == t2.inBeats();
 }
 
-inline bool operator!= (const BeatDuration& t1, const BeatDuration& t2)
+inline constexpr bool operator!= (const BeatDuration& t1, const BeatDuration& t2)
 {
     return ! (t1 == t2);
 }
