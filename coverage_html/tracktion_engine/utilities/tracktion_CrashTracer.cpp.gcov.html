@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-27 18:07:46</td>
+            <td class="headerValue">2022-01-27 19:00:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">6</td>
@@ -82,7 +82,7 @@
 <a name="20"><span class="lineNum">      20 </span>            : </a>
 <a name="21"><span class="lineNum">      21 </span>            :     inline void push (CrashStackTracer* c)</a>
 <a name="22"><span class="lineNum">      22 </span>            :     {</a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineCov">     401044 :         entries.add (c);</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">     420907 :         entries.add (c);</span></a>
 <a name="24"><span class="lineNum">      24 </span>            :     }</a>
 <a name="25"><span class="lineNum">      25 </span>            : </a>
 <a name="26"><span class="lineNum">      26 </span>            :     inline void pop (CrashStackTracer* c)</a>
@@ -205,20 +205,20 @@
 <a name="143"><span class="lineNum">     143 </span>            : </a>
 <a name="144"><span class="lineNum">     144 </span>            : static CrashStackTracer::CrashTraceThreads crashStack;</a>
 <a name="145"><span class="lineNum">     145 </span>            : </a>
-<a name="146"><span class="lineNum">     146 </span><span class="lineCov">     401046 : CrashStackTracer::CrashStackTracer (const char* f, const char* fn, int l, const char* plugin)</span></a>
-<a name="147"><span class="lineNum">     147 </span><span class="lineCov">     401046 :     : file (f), function (fn), pluginName (plugin), line (l), threadID (juce::Thread::getCurrentThreadId())</span></a>
+<a name="146"><span class="lineNum">     146 </span><span class="lineCov">     420910 : CrashStackTracer::CrashStackTracer (const char* f, const char* fn, int l, const char* plugin)</span></a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineCov">     420910 :     : file (f), function (fn), pluginName (plugin), line (l), threadID (juce::Thread::getCurrentThreadId())</span></a>
 <a name="148"><span class="lineNum">     148 </span>            : {</a>
 <a name="149"><span class="lineNum">     149 </span><span class="lineCov">        196 :     crashStack.push (this);</span></a>
 <a name="150"><span class="lineNum">     150 </span>            : </a>
 <a name="151"><span class="lineNum">     151 </span>            :    #if ! TRACKTION_LOG_ENABLED</a>
 <a name="152"><span class="lineNum">     152 </span>            :     juce::ignoreUnused (file, function, pluginName, line);</a>
 <a name="153"><span class="lineNum">     153 </span>            :    #endif</a>
-<a name="154"><span class="lineNum">     154 </span><span class="lineCov">     400851 : }</span></a>
+<a name="154"><span class="lineNum">     154 </span><span class="lineCov">     420718 : }</span></a>
 <a name="155"><span class="lineNum">     155 </span>            : </a>
-<a name="156"><span class="lineNum">     156 </span><span class="lineCov">     400850 : CrashStackTracer::~CrashStackTracer()</span></a>
+<a name="156"><span class="lineNum">     156 </span><span class="lineCov">     420718 : CrashStackTracer::~CrashStackTracer()</span></a>
 <a name="157"><span class="lineNum">     157 </span>            : {</a>
 <a name="158"><span class="lineNum">     158 </span>            :     crashStack.pop (this);</a>
-<a name="159"><span class="lineNum">     159 </span><span class="lineCov">     400851 : }</span></a>
+<a name="159"><span class="lineNum">     159 </span><span class="lineCov">     420718 : }</span></a>
 <a name="160"><span class="lineNum">     160 </span>            : </a>
 <a name="161"><span class="lineNum">     161 </span><span class="lineNoCov">          0 : juce::StringArray CrashStackTracer::getCrashedPlugins()</span></a>
 <a name="162"><span class="lineNum">     162 </span>            : {</a>
@@ -255,18 +255,18 @@
 <a name="193"><span class="lineNum">     193 </span>            : }</a>
 <a name="194"><span class="lineNum">     194 </span>            : </a>
 <a name="195"><span class="lineNum">     195 </span>            : //==============================================================================</a>
-<a name="196"><span class="lineNum">     196 </span><span class="lineCov">          5 : DeadMansPedalMessage::DeadMansPedalMessage (PropertyStorage&amp; ps, const juce::String&amp; message)</span></a>
-<a name="197"><span class="lineNum">     197 </span><span class="lineCov">          5 :     : file (getDeadMansPedalFile (ps))</span></a>
+<a name="196"><span class="lineNum">     196 </span><span class="lineCov">          4 : DeadMansPedalMessage::DeadMansPedalMessage (PropertyStorage&amp; ps, const juce::String&amp; message)</span></a>
+<a name="197"><span class="lineNum">     197 </span><span class="lineCov">          4 :     : file (getDeadMansPedalFile (ps))</span></a>
 <a name="198"><span class="lineNum">     198 </span>            : {</a>
-<a name="199"><span class="lineNum">     199 </span><span class="lineCov">          5 :     file.replaceWithText (message);</span></a>
-<a name="200"><span class="lineNum">     200 </span><span class="lineCov">          5 : }</span></a>
+<a name="199"><span class="lineNum">     199 </span><span class="lineCov">          4 :     file.replaceWithText (message);</span></a>
+<a name="200"><span class="lineNum">     200 </span><span class="lineCov">          4 : }</span></a>
 <a name="201"><span class="lineNum">     201 </span>            : </a>
-<a name="202"><span class="lineNum">     202 </span><span class="lineCov">         10 : DeadMansPedalMessage::~DeadMansPedalMessage()</span></a>
+<a name="202"><span class="lineNum">     202 </span><span class="lineCov">          8 : DeadMansPedalMessage::~DeadMansPedalMessage()</span></a>
 <a name="203"><span class="lineNum">     203 </span>            : {</a>
-<a name="204"><span class="lineNum">     204 </span><span class="lineCov">          5 :     auto success = file.deleteFile();</span></a>
+<a name="204"><span class="lineNum">     204 </span><span class="lineCov">          4 :     auto success = file.deleteFile();</span></a>
 <a name="205"><span class="lineNum">     205 </span>            :     juce::ignoreUnused (success);</a>
 <a name="206"><span class="lineNum">     206 </span>            :     jassert (success);</a>
-<a name="207"><span class="lineNum">     207 </span><span class="lineCov">          5 : }</span></a>
+<a name="207"><span class="lineNum">     207 </span><span class="lineCov">          4 : }</span></a>
 <a name="208"><span class="lineNum">     208 </span>            : </a>
 <a name="209"><span class="lineNum">     209 </span><span class="lineNoCov">          0 : juce::String DeadMansPedalMessage::getAndClearLastMessage (PropertyStorage&amp; propertyStorage)</span></a>
 <a name="210"><span class="lineNum">     210 </span>            : {</a>
@@ -282,11 +282,11 @@
 <a name="220"><span class="lineNum">     220 </span><span class="lineNoCov">          0 :     return s;</span></a>
 <a name="221"><span class="lineNum">     221 </span>            : }</a>
 <a name="222"><span class="lineNum">     222 </span>            : </a>
-<a name="223"><span class="lineNum">     223 </span><span class="lineCov">          5 : juce::File DeadMansPedalMessage::getDeadMansPedalFile (PropertyStorage&amp; propertyStorage)</span></a>
+<a name="223"><span class="lineNum">     223 </span><span class="lineCov">          4 : juce::File DeadMansPedalMessage::getDeadMansPedalFile (PropertyStorage&amp; propertyStorage)</span></a>
 <a name="224"><span class="lineNum">     224 </span>            : {</a>
-<a name="225"><span class="lineNum">     225 </span><span class="lineCov">          5 :     auto folder = propertyStorage.getAppPrefsFolder();</span></a>
+<a name="225"><span class="lineNum">     225 </span><span class="lineCov">          4 :     auto folder = propertyStorage.getAppPrefsFolder();</span></a>
 <a name="226"><span class="lineNum">     226 </span>            :     jassert (folder.exists() &amp;&amp; folder.hasWriteAccess());</a>
-<a name="227"><span class="lineNum">     227 </span><span class="lineCov">          5 :     return folder.getChildFile (&quot;deadMansPedal&quot;);</span></a>
+<a name="227"><span class="lineNum">     227 </span><span class="lineCov">          4 :     return folder.getChildFile (&quot;deadMansPedal&quot;);</span></a>
 <a name="228"><span class="lineNum">     228 </span>            : }</a>
 <a name="229"><span class="lineNum">     229 </span>            : </a>
 <a name="230"><span class="lineNum">     230 </span>            : }</a>

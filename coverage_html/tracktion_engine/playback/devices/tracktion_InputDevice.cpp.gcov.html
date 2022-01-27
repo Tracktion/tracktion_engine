@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-27 18:07:46</td>
+            <td class="headerValue">2022-01-27 19:00:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">19</td>
@@ -91,8 +91,8 @@
 <a name="29"><span class="lineNum">      29 </span>            : </a>
 <a name="30"><span class="lineNum">      30 </span><span class="lineNoCov">          0 : bool InputDevice::isTrackDevice() const</span></a>
 <a name="31"><span class="lineNum">      31 </span>            : {</a>
-<a name="32"><span class="lineNum">      32 </span><span class="lineCov">       5606 :     return getDeviceType() == trackWaveDevice</span></a>
-<a name="33"><span class="lineNum">      33 </span><span class="lineCov">       5734 :             || getDeviceType() == trackMidiDevice;</span></a>
+<a name="32"><span class="lineNum">      32 </span><span class="lineCov">       5604 :     return getDeviceType() == trackWaveDevice</span></a>
+<a name="33"><span class="lineNum">      33 </span><span class="lineCov">       5732 :             || getDeviceType() == trackMidiDevice;</span></a>
 <a name="34"><span class="lineNum">      34 </span>            : }</a>
 <a name="35"><span class="lineNum">      35 </span>            : </a>
 <a name="36"><span class="lineNum">      36 </span><span class="lineCov">       1316 : static juce::String findDefaultAliasNameNotClashingWithInputDevices (Engine&amp; engine, bool isMIDI,</span></a>
@@ -192,10 +192,10 @@
 <a name="130"><span class="lineNum">     130 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="131"><span class="lineNum">     131 </span>            : </a>
 <a name="132"><span class="lineNum">     132 </span>            : //==============================================================================</a>
-<a name="133"><span class="lineNum">     133 </span><span class="lineCov">         65 : InputDeviceInstance::InputDeviceInstance (InputDevice&amp; d, EditPlaybackContext&amp; c)</span></a>
-<a name="134"><span class="lineNum">     134 </span><span class="lineCov">         65 :     : state (c.edit.getEditInputDevices().getInstanceStateForInputDevice (d)), owner (d), context (c), edit (c.edit)</span></a>
+<a name="133"><span class="lineNum">     133 </span><span class="lineCov">         64 : InputDeviceInstance::InputDeviceInstance (InputDevice&amp; d, EditPlaybackContext&amp; c)</span></a>
+<a name="134"><span class="lineNum">     134 </span><span class="lineCov">         64 :     : state (c.edit.getEditInputDevices().getInstanceStateForInputDevice (d)), owner (d), context (c), edit (c.edit)</span></a>
 <a name="135"><span class="lineNum">     135 </span>            : {</a>
-<a name="136"><span class="lineNum">     136 </span><span class="lineCov">        129 :     trackDeviceEnabler.setFunction ([this]</span></a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineCov">        128 :     trackDeviceEnabler.setFunction ([this]</span></a>
 <a name="137"><span class="lineNum">     137 </span>            :                                     {</a>
 <a name="138"><span class="lineNum">     138 </span>            :                                         // if we're a track device we also need to disable our owner as there will only</a>
 <a name="139"><span class="lineNum">     139 </span>            :                                         // be one instance and this stops the device getting added to the EditPlaybackContext</a>
@@ -208,13 +208,13 @@
 <a name="146"><span class="lineNum">     146 </span>            :                                         }</a>
 <a name="147"><span class="lineNum">     147 </span><span class="lineCov">         64 :                                     });</span></a>
 <a name="148"><span class="lineNum">     148 </span>            : </a>
-<a name="149"><span class="lineNum">     149 </span><span class="lineCov">         65 :     state.addListener (this);</span></a>
-<a name="150"><span class="lineNum">     150 </span><span class="lineCov">         65 : }</span></a>
+<a name="149"><span class="lineNum">     149 </span><span class="lineCov">         64 :     state.addListener (this);</span></a>
+<a name="150"><span class="lineNum">     150 </span><span class="lineCov">         64 : }</span></a>
 <a name="151"><span class="lineNum">     151 </span>            : </a>
-<a name="152"><span class="lineNum">     152 </span><span class="lineCov">        130 : InputDeviceInstance::~InputDeviceInstance()</span></a>
+<a name="152"><span class="lineNum">     152 </span><span class="lineCov">        128 : InputDeviceInstance::~InputDeviceInstance()</span></a>
 <a name="153"><span class="lineNum">     153 </span>            : {</a>
 <a name="154"><span class="lineNum">     154 </span>            :     jassert (Selectable::isSelectableValid (&amp;edit));</a>
-<a name="155"><span class="lineNum">     155 </span><span class="lineCov">         65 : }</span></a>
+<a name="155"><span class="lineNum">     155 </span><span class="lineCov">         64 : }</span></a>
 <a name="156"><span class="lineNum">     156 </span>            : </a>
 <a name="157"><span class="lineNum">     157 </span><span class="lineCov">        576 : juce::Array&lt;AudioTrack*&gt; InputDeviceInstance::getTargetTracks() const</span></a>
 <a name="158"><span class="lineNum">     158 </span>            : {</a>
@@ -365,9 +365,9 @@
 <a name="303"><span class="lineNum">     303 </span>            :     return {};</a>
 <a name="304"><span class="lineNum">     304 </span>            : }</a>
 <a name="305"><span class="lineNum">     305 </span>            : </a>
-<a name="306"><span class="lineNum">     306 </span><span class="lineCov">        134 : bool InputDeviceInstance::isRecordingActive() const</span></a>
+<a name="306"><span class="lineNum">     306 </span><span class="lineCov">        132 : bool InputDeviceInstance::isRecordingActive() const</span></a>
 <a name="307"><span class="lineNum">     307 </span>            : {</a>
-<a name="308"><span class="lineNum">     308 </span><span class="lineCov">        134 :     for (auto dest : destTracks)</span></a>
+<a name="308"><span class="lineNum">     308 </span><span class="lineCov">        132 :     for (auto dest : destTracks)</span></a>
 <a name="309"><span class="lineNum">     309 </span><span class="lineCov">        132 :         if (dest-&gt;recordEnabled)</span></a>
 <a name="310"><span class="lineNum">     310 </span><span class="lineCov">        132 :             if (auto at = dynamic_cast&lt;AudioTrack*&gt; (findTrackForID (edit, dest-&gt;targetTrack)))</span></a>
 <a name="311"><span class="lineNum">     311 </span><span class="lineCov">        132 :                 return at-&gt;acceptsInput();</span></a>
@@ -375,9 +375,9 @@
 <a name="313"><span class="lineNum">     313 </span>            :     return false;</a>
 <a name="314"><span class="lineNum">     314 </span>            : }</a>
 <a name="315"><span class="lineNum">     315 </span>            : </a>
-<a name="316"><span class="lineNum">     316 </span><span class="lineCov">        129 : bool InputDeviceInstance::isRecordingActive (const Track&amp; t) const</span></a>
+<a name="316"><span class="lineNum">     316 </span><span class="lineCov">        128 : bool InputDeviceInstance::isRecordingActive (const Track&amp; t) const</span></a>
 <a name="317"><span class="lineNum">     317 </span>            : {</a>
-<a name="318"><span class="lineNum">     318 </span><span class="lineCov">        129 :     for (auto dest : destTracks)</span></a>
+<a name="318"><span class="lineNum">     318 </span><span class="lineCov">        128 :     for (auto dest : destTracks)</span></a>
 <a name="319"><span class="lineNum">     319 </span><span class="lineCov">         64 :         if (t.itemID == dest-&gt;targetTrack)</span></a>
 <a name="320"><span class="lineNum">     320 </span><span class="lineCov">         64 :             if (dest-&gt;recordEnabled)</span></a>
 <a name="321"><span class="lineNum">     321 </span><span class="lineCov">         64 :                 return t.acceptsInput();</span></a>
@@ -410,7 +410,7 @@
 <a name="348"><span class="lineNum">     348 </span>            : </a>
 <a name="349"><span class="lineNum">     349 </span><span class="lineNoCov">          0 : bool InputDeviceInstance::isLivePlayEnabled (const Track&amp; t) const</span></a>
 <a name="350"><span class="lineNum">     350 </span>            : {</a>
-<a name="351"><span class="lineNum">     351 </span><span class="lineCov">         65 :     for (auto dest : destTracks)</span></a>
+<a name="351"><span class="lineNum">     351 </span><span class="lineCov">         64 :     for (auto dest : destTracks)</span></a>
 <a name="352"><span class="lineNum">     352 </span><span class="lineCov">         64 :         if (dest-&gt;targetTrack == t.itemID)</span></a>
 <a name="353"><span class="lineNum">     353 </span><span class="lineCov">         64 :             return t.acceptsInput();</span></a>
 <a name="354"><span class="lineNum">     354 </span>            : </a>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-27 18:07:46</td>
+            <td class="headerValue">2022-01-27 19:00:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">10</td>
@@ -170,11 +170,11 @@
 <a name="108"><span class="lineNum">     108 </span><span class="lineNoCov">          0 :         fractionOfBeat = 0.0;</span></a>
 <a name="109"><span class="lineNum">     109 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="110"><span class="lineNum">     110 </span>            : </a>
-<a name="111"><span class="lineNum">     111 </span><span class="lineCov">          6 : juce::String QuantisationType::getType (bool translated) const</span></a>
+<a name="111"><span class="lineNum">     111 </span><span class="lineCov">          4 : juce::String QuantisationType::getType (bool translated) const</span></a>
 <a name="112"><span class="lineNum">     112 </span>            : {</a>
-<a name="113"><span class="lineNum">     113 </span><span class="lineCov">          6 :     if (typeIndex &gt;= 0 &amp;&amp; typeIndex &lt; juce::numElementsInArray (quantisationTypes))</span></a>
+<a name="113"><span class="lineNum">     113 </span><span class="lineCov">          4 :     if (typeIndex &gt;= 0 &amp;&amp; typeIndex &lt; juce::numElementsInArray (quantisationTypes))</span></a>
 <a name="114"><span class="lineNum">     114 </span><span class="lineNoCov">          0 :         return translated ? TRANS(quantisationTypes[typeIndex].name)</span></a>
-<a name="115"><span class="lineNum">     115 </span><span class="lineCov">          6 :                           : quantisationTypes[typeIndex].name;</span></a>
+<a name="115"><span class="lineNum">     115 </span><span class="lineCov">          4 :                           : quantisationTypes[typeIndex].name;</span></a>
 <a name="116"><span class="lineNum">     116 </span>            : </a>
 <a name="117"><span class="lineNum">     117 </span>            :     jassertfalse;</a>
 <a name="118"><span class="lineNum">     118 </span><span class="lineNoCov">          0 :     return {};</span></a>

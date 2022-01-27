@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">97</td>
+            <td class="headerCovTableEntry">54</td>
             <td class="headerCovTableEntry">531</td>
-            <td class="headerCovTableEntryLo">18.3 %</td>
+            <td class="headerCovTableEntryLo">10.2 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-27 18:07:46</td>
+            <td class="headerValue">2022-01-27 19:00:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">16</td>
+            <td class="headerCovTableEntry">5</td>
             <td class="headerCovTableEntry">61</td>
-            <td class="headerCovTableEntryLo">26.2 %</td>
+            <td class="headerCovTableEntryLo">8.2 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -266,28 +266,28 @@
 <a name="204"><span class="lineNum">     204 </span><span class="lineCov">        278 :     notifyListenersOfDeletion();</span></a>
 <a name="205"><span class="lineNum">     205 </span><span class="lineCov">        278 : }</span></a>
 <a name="206"><span class="lineNum">     206 </span>            : </a>
-<a name="207"><span class="lineNum">     207 </span><span class="lineCov">        279 : void MidiInputDevice::setEnabled (bool b)</span></a>
+<a name="207"><span class="lineNum">     207 </span><span class="lineCov">        278 : void MidiInputDevice::setEnabled (bool b)</span></a>
 <a name="208"><span class="lineNum">     208 </span>            : {</a>
-<a name="209"><span class="lineNum">     209 </span><span class="lineCov">        283 :     if ((b != enabled) || (! isTrackDevice() &amp;&amp; firstSetEnabledCall))</span></a>
+<a name="209"><span class="lineNum">     209 </span><span class="lineCov">        282 :     if ((b != enabled) || (! isTrackDevice() &amp;&amp; firstSetEnabledCall))</span></a>
 <a name="210"><span class="lineNum">     210 </span>            :     {</a>
-<a name="211"><span class="lineNum">     211 </span><span class="lineCov">         10 :         CRASH_TRACER</span></a>
-<a name="212"><span class="lineNum">     212 </span><span class="lineCov">          5 :         enabled = b;</span></a>
+<a name="211"><span class="lineNum">     211 </span><span class="lineCov">          8 :         CRASH_TRACER</span></a>
+<a name="212"><span class="lineNum">     212 </span><span class="lineCov">          4 :         enabled = b;</span></a>
 <a name="213"><span class="lineNum">     213 </span>            :         ScopedWaitCursor waitCursor;</a>
 <a name="214"><span class="lineNum">     214 </span>            :         </a>
-<a name="215"><span class="lineNum">     215 </span><span class="lineCov">          5 :         if (b)</span></a>
+<a name="215"><span class="lineNum">     215 </span><span class="lineCov">          4 :         if (b)</span></a>
 <a name="216"><span class="lineNum">     216 </span>            :         {</a>
 <a name="217"><span class="lineNum">     217 </span>            :             enabled = false;</a>
-<a name="218"><span class="lineNum">     218 </span><span class="lineCov">          1 :             saveProps();</span></a>
+<a name="218"><span class="lineNum">     218 </span><span class="lineNoCov">          0 :             saveProps();</span></a>
 <a name="219"><span class="lineNum">     219 </span>            : </a>
-<a name="220"><span class="lineNum">     220 </span><span class="lineCov">          1 :             DeadMansPedalMessage dmp (engine.getPropertyStorage(),</span></a>
-<a name="221"><span class="lineNum">     221 </span><span class="lineCov">          2 :                                       TRANS(&quot;The last time the app was started, the MIDI input device \&quot;XZZX\&quot; failed to start &quot;</span></a>
-<a name="222"><span class="lineNum">     222 </span><span class="lineCov">          2 :                                             &quot;properly, and has been disabled.&quot;).replace (&quot;XZZX&quot;, getName())</span></a>
-<a name="223"><span class="lineNum">     223 </span><span class="lineCov">          4 :                                         + &quot;\n\n&quot; + TRANS(&quot;Use the settings panel to re-enable it.&quot;));</span></a>
+<a name="220"><span class="lineNum">     220 </span><span class="lineNoCov">          0 :             DeadMansPedalMessage dmp (engine.getPropertyStorage(),</span></a>
+<a name="221"><span class="lineNum">     221 </span><span class="lineNoCov">          0 :                                       TRANS(&quot;The last time the app was started, the MIDI input device \&quot;XZZX\&quot; failed to start &quot;</span></a>
+<a name="222"><span class="lineNum">     222 </span><span class="lineNoCov">          0 :                                             &quot;properly, and has been disabled.&quot;).replace (&quot;XZZX&quot;, getName())</span></a>
+<a name="223"><span class="lineNum">     223 </span><span class="lineNoCov">          0 :                                         + &quot;\n\n&quot; + TRANS(&quot;Use the settings panel to re-enable it.&quot;));</span></a>
 <a name="224"><span class="lineNum">     224 </span>            : </a>
-<a name="225"><span class="lineNum">     225 </span><span class="lineCov">          2 :             auto error = openDevice();</span></a>
-<a name="226"><span class="lineNum">     226 </span><span class="lineCov">          1 :             enabled = error.isEmpty();</span></a>
+<a name="225"><span class="lineNum">     225 </span><span class="lineNoCov">          0 :             auto error = openDevice();</span></a>
+<a name="226"><span class="lineNum">     226 </span><span class="lineNoCov">          0 :             enabled = error.isEmpty();</span></a>
 <a name="227"><span class="lineNum">     227 </span>            : </a>
-<a name="228"><span class="lineNum">     228 </span><span class="lineCov">          1 :             if (! enabled)</span></a>
+<a name="228"><span class="lineNum">     228 </span><span class="lineNoCov">          0 :             if (! enabled)</span></a>
 <a name="229"><span class="lineNum">     229 </span><span class="lineNoCov">          0 :                 engine.getUIBehaviour().showWarningMessage (error);</span></a>
 <a name="230"><span class="lineNum">     230 </span>            :         }</a>
 <a name="231"><span class="lineNum">     231 </span>            :         else</a>
@@ -295,16 +295,16 @@
 <a name="233"><span class="lineNum">     233 </span><span class="lineCov">          4 :             closeDevice();</span></a>
 <a name="234"><span class="lineNum">     234 </span>            :         }</a>
 <a name="235"><span class="lineNum">     235 </span>            : </a>
-<a name="236"><span class="lineNum">     236 </span><span class="lineCov">          5 :         firstSetEnabledCall = false;</span></a>
+<a name="236"><span class="lineNum">     236 </span><span class="lineCov">          4 :         firstSetEnabledCall = false;</span></a>
 <a name="237"><span class="lineNum">     237 </span>            : </a>
-<a name="238"><span class="lineNum">     238 </span><span class="lineCov">          5 :         saveProps();</span></a>
+<a name="238"><span class="lineNum">     238 </span><span class="lineCov">          4 :         saveProps();</span></a>
 <a name="239"><span class="lineNum">     239 </span>            : </a>
-<a name="240"><span class="lineNum">     240 </span><span class="lineCov">          5 :         engine.getDeviceManager().checkDefaultDevicesAreValid();</span></a>
+<a name="240"><span class="lineNum">     240 </span><span class="lineCov">          4 :         engine.getDeviceManager().checkDefaultDevicesAreValid();</span></a>
 <a name="241"><span class="lineNum">     241 </span>            : </a>
-<a name="242"><span class="lineNum">     242 </span><span class="lineCov">          5 :         if (! isTrackDevice())</span></a>
-<a name="243"><span class="lineNum">     243 </span><span class="lineCov">          5 :             engine.getExternalControllerManager().midiInOutDevicesChanged();</span></a>
+<a name="242"><span class="lineNum">     242 </span><span class="lineCov">          4 :         if (! isTrackDevice())</span></a>
+<a name="243"><span class="lineNum">     243 </span><span class="lineCov">          4 :             engine.getExternalControllerManager().midiInOutDevicesChanged();</span></a>
 <a name="244"><span class="lineNum">     244 </span>            :     }</a>
-<a name="245"><span class="lineNum">     245 </span><span class="lineCov">        279 : }</span></a>
+<a name="245"><span class="lineNum">     245 </span><span class="lineCov">        278 : }</span></a>
 <a name="246"><span class="lineNum">     246 </span>            : </a>
 <a name="247"><span class="lineNum">     247 </span><span class="lineCov">        274 : void MidiInputDevice::loadProps (const juce::XmlElement* n)</span></a>
 <a name="248"><span class="lineNum">     248 </span>            : {</a>
@@ -343,22 +343,22 @@
 <a name="281"><span class="lineNum">     281 </span>            :     }</a>
 <a name="282"><span class="lineNum">     282 </span><span class="lineCov">        274 : }</span></a>
 <a name="283"><span class="lineNum">     283 </span>            : </a>
-<a name="284"><span class="lineNum">     284 </span><span class="lineCov">          6 : void MidiInputDevice::saveProps (juce::XmlElement&amp; n)</span></a>
+<a name="284"><span class="lineNum">     284 </span><span class="lineCov">          4 : void MidiInputDevice::saveProps (juce::XmlElement&amp; n)</span></a>
 <a name="285"><span class="lineNum">     285 </span>            : {</a>
-<a name="286"><span class="lineNum">     286 </span><span class="lineCov">          6 :     n.setAttribute (&quot;enabled&quot;, enabled);</span></a>
-<a name="287"><span class="lineNum">     287 </span><span class="lineCov">          6 :     n.setAttribute (&quot;endToEnd&quot;, endToEndEnabled);</span></a>
-<a name="288"><span class="lineNum">     288 </span><span class="lineCov">          6 :     n.setAttribute (&quot;recEnabled&quot;, recordingEnabled);</span></a>
-<a name="289"><span class="lineNum">     289 </span><span class="lineCov">          6 :     n.setAttribute (&quot;mergeRecordings&quot;, mergeRecordings);</span></a>
-<a name="290"><span class="lineNum">     290 </span><span class="lineCov">          6 :     n.setAttribute (&quot;replaceExisting&quot;, replaceExistingClips);</span></a>
-<a name="291"><span class="lineNum">     291 </span><span class="lineCov">          6 :     n.setAttribute (&quot;recordToNoteAutomation&quot;, recordToNoteAutomation);</span></a>
-<a name="292"><span class="lineNum">     292 </span><span class="lineCov">          6 :     n.setAttribute (&quot;quantisation&quot;, quantisation.getType (false));</span></a>
-<a name="293"><span class="lineNum">     293 </span><span class="lineCov">          6 :     n.setAttribute (&quot;channel&quot;, channelToUse.getChannelNumber());</span></a>
-<a name="294"><span class="lineNum">     294 </span><span class="lineCov">          6 :     n.setAttribute (&quot;program&quot;, programToUse);</span></a>
-<a name="295"><span class="lineNum">     295 </span><span class="lineCov">          6 :     n.setAttribute (&quot;bank&quot;, bankToUse);</span></a>
-<a name="296"><span class="lineNum">     296 </span><span class="lineCov">          6 :     n.setAttribute (&quot;useFullVelocity&quot;, overrideNoteVels);</span></a>
-<a name="297"><span class="lineNum">     297 </span><span class="lineCov">          6 :     n.setAttribute (&quot;manualAdjustMs&quot;, manualAdjustMs);</span></a>
-<a name="298"><span class="lineNum">     298 </span><span class="lineCov">          6 :     n.setAttribute (&quot;disallowedChannels&quot;, disallowedChannels.toString (2));</span></a>
-<a name="299"><span class="lineNum">     299 </span><span class="lineCov">          6 : }</span></a>
+<a name="286"><span class="lineNum">     286 </span><span class="lineCov">          4 :     n.setAttribute (&quot;enabled&quot;, enabled);</span></a>
+<a name="287"><span class="lineNum">     287 </span><span class="lineCov">          4 :     n.setAttribute (&quot;endToEnd&quot;, endToEndEnabled);</span></a>
+<a name="288"><span class="lineNum">     288 </span><span class="lineCov">          4 :     n.setAttribute (&quot;recEnabled&quot;, recordingEnabled);</span></a>
+<a name="289"><span class="lineNum">     289 </span><span class="lineCov">          4 :     n.setAttribute (&quot;mergeRecordings&quot;, mergeRecordings);</span></a>
+<a name="290"><span class="lineNum">     290 </span><span class="lineCov">          4 :     n.setAttribute (&quot;replaceExisting&quot;, replaceExistingClips);</span></a>
+<a name="291"><span class="lineNum">     291 </span><span class="lineCov">          4 :     n.setAttribute (&quot;recordToNoteAutomation&quot;, recordToNoteAutomation);</span></a>
+<a name="292"><span class="lineNum">     292 </span><span class="lineCov">          4 :     n.setAttribute (&quot;quantisation&quot;, quantisation.getType (false));</span></a>
+<a name="293"><span class="lineNum">     293 </span><span class="lineCov">          4 :     n.setAttribute (&quot;channel&quot;, channelToUse.getChannelNumber());</span></a>
+<a name="294"><span class="lineNum">     294 </span><span class="lineCov">          4 :     n.setAttribute (&quot;program&quot;, programToUse);</span></a>
+<a name="295"><span class="lineNum">     295 </span><span class="lineCov">          4 :     n.setAttribute (&quot;bank&quot;, bankToUse);</span></a>
+<a name="296"><span class="lineNum">     296 </span><span class="lineCov">          4 :     n.setAttribute (&quot;useFullVelocity&quot;, overrideNoteVels);</span></a>
+<a name="297"><span class="lineNum">     297 </span><span class="lineCov">          4 :     n.setAttribute (&quot;manualAdjustMs&quot;, manualAdjustMs);</span></a>
+<a name="298"><span class="lineNum">     298 </span><span class="lineCov">          4 :     n.setAttribute (&quot;disallowedChannels&quot;, disallowedChannels.toString (2));</span></a>
+<a name="299"><span class="lineNum">     299 </span><span class="lineCov">          4 : }</span></a>
 <a name="300"><span class="lineNum">     300 </span>            : </a>
 <a name="301"><span class="lineNum">     301 </span><span class="lineNoCov">          0 : juce::Array&lt;AudioTrack*&gt; MidiInputDevice::getDestinationTracks()</span></a>
 <a name="302"><span class="lineNum">     302 </span>            : {</a>
@@ -466,8 +466,8 @@
 <a name="404"><span class="lineNum">     404 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="405"><span class="lineNum">     405 </span>            : </a>
 <a name="406"><span class="lineNum">     406 </span>            : //==============================================================================</a>
-<a name="407"><span class="lineNum">     407 </span><span class="lineCov">          1 : void MidiInputDevice::addInstance (MidiInputDeviceInstanceBase* i)    { const juce::ScopedLock sl (instanceLock); instances.addIfNotAlreadyThere (i); }</span></a>
-<a name="408"><span class="lineNum">     408 </span><span class="lineCov">          1 : void MidiInputDevice::removeInstance (MidiInputDeviceInstanceBase* i) { const juce::ScopedLock sl (instanceLock); instances.removeAllInstancesOf (i); }</span></a>
+<a name="407"><span class="lineNum">     407 </span><span class="lineNoCov">          0 : void MidiInputDevice::addInstance (MidiInputDeviceInstanceBase* i)    { const juce::ScopedLock sl (instanceLock); instances.addIfNotAlreadyThere (i); }</span></a>
+<a name="408"><span class="lineNum">     408 </span><span class="lineNoCov">          0 : void MidiInputDevice::removeInstance (MidiInputDeviceInstanceBase* i) { const juce::ScopedLock sl (instanceLock); instances.removeAllInstancesOf (i); }</span></a>
 <a name="409"><span class="lineNum">     409 </span>            : </a>
 <a name="410"><span class="lineNum">     410 </span><span class="lineNoCov">          0 : void MidiInputDevice::connectionStateChanged()</span></a>
 <a name="411"><span class="lineNum">     411 </span>            : {</a>
@@ -666,25 +666,25 @@
 <a name="604"><span class="lineNum">     604 </span>            : class MidiInputDeviceInstanceBase  : public InputDeviceInstance</a>
 <a name="605"><span class="lineNum">     605 </span>            : {</a>
 <a name="606"><span class="lineNum">     606 </span>            : public:</a>
-<a name="607"><span class="lineNum">     607 </span><span class="lineCov">          1 :     MidiInputDeviceInstanceBase (MidiInputDevice&amp; d, EditPlaybackContext&amp; c)</span></a>
-<a name="608"><span class="lineNum">     608 </span><span class="lineCov">          1 :         : InputDeviceInstance (d, c)</span></a>
+<a name="607"><span class="lineNum">     607 </span><span class="lineNoCov">          0 :     MidiInputDeviceInstanceBase (MidiInputDevice&amp; d, EditPlaybackContext&amp; c)</span></a>
+<a name="608"><span class="lineNum">     608 </span><span class="lineNoCov">          0 :         : InputDeviceInstance (d, c)</span></a>
 <a name="609"><span class="lineNum">     609 </span>            :     {</a>
-<a name="610"><span class="lineNum">     610 </span><span class="lineCov">          1 :         getMidiInput().addInstance (this);</span></a>
-<a name="611"><span class="lineNum">     611 </span><span class="lineCov">          1 :     }</span></a>
+<a name="610"><span class="lineNum">     610 </span><span class="lineNoCov">          0 :         getMidiInput().addInstance (this);</span></a>
+<a name="611"><span class="lineNum">     611 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="612"><span class="lineNum">     612 </span>            : </a>
-<a name="613"><span class="lineNum">     613 </span><span class="lineCov">          1 :     ~MidiInputDeviceInstanceBase() override</span></a>
-<a name="614"><span class="lineNum">     614 </span><span class="lineCov">          1 :     {</span></a>
-<a name="615"><span class="lineNum">     615 </span><span class="lineCov">          1 :         getMidiInput().removeInstance (this);</span></a>
-<a name="616"><span class="lineNum">     616 </span><span class="lineCov">          1 :     }</span></a>
+<a name="613"><span class="lineNum">     613 </span><span class="lineNoCov">          0 :     ~MidiInputDeviceInstanceBase() override</span></a>
+<a name="614"><span class="lineNum">     614 </span><span class="lineNoCov">          0 :     {</span></a>
+<a name="615"><span class="lineNum">     615 </span><span class="lineNoCov">          0 :         getMidiInput().removeInstance (this);</span></a>
+<a name="616"><span class="lineNum">     616 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="617"><span class="lineNum">     617 </span>            : </a>
-<a name="618"><span class="lineNum">     618 </span><span class="lineCov">          2 :     bool isRecordingActive() const override</span></a>
+<a name="618"><span class="lineNum">     618 </span><span class="lineNoCov">          0 :     bool isRecordingActive() const override</span></a>
 <a name="619"><span class="lineNum">     619 </span>            :     {</a>
-<a name="620"><span class="lineNum">     620 </span><span class="lineCov">          2 :         return getMidiInput().recordingEnabled &amp;&amp; InputDeviceInstance::isRecordingActive();</span></a>
+<a name="620"><span class="lineNum">     620 </span><span class="lineNoCov">          0 :         return getMidiInput().recordingEnabled &amp;&amp; InputDeviceInstance::isRecordingActive();</span></a>
 <a name="621"><span class="lineNum">     621 </span>            :     }</a>
 <a name="622"><span class="lineNum">     622 </span>            : </a>
-<a name="623"><span class="lineNum">     623 </span><span class="lineCov">          1 :     bool isRecordingActive (const Track&amp; t) const override</span></a>
+<a name="623"><span class="lineNum">     623 </span><span class="lineNoCov">          0 :     bool isRecordingActive (const Track&amp; t) const override</span></a>
 <a name="624"><span class="lineNum">     624 </span>            :     {</a>
-<a name="625"><span class="lineNum">     625 </span><span class="lineCov">          1 :         return getMidiInput().recordingEnabled &amp;&amp; InputDeviceInstance::isRecordingActive (t);</span></a>
+<a name="625"><span class="lineNum">     625 </span><span class="lineNoCov">          0 :         return getMidiInput().recordingEnabled &amp;&amp; InputDeviceInstance::isRecordingActive (t);</span></a>
 <a name="626"><span class="lineNum">     626 </span>            :     }</a>
 <a name="627"><span class="lineNum">     627 </span>            :     </a>
 <a name="628"><span class="lineNum">     628 </span><span class="lineNoCov">          0 :     bool shouldTrackContentsBeMuted() override      { return recording &amp;&amp; ! getMidiInput().mergeRecordings; }</span></a>
@@ -701,11 +701,11 @@
 <a name="639"><span class="lineNum">     639 </span><span class="lineNoCov">          0 :         return {};</span></a>
 <a name="640"><span class="lineNum">     640 </span>            :     }</a>
 <a name="641"><span class="lineNum">     641 </span>            : </a>
-<a name="642"><span class="lineNum">     642 </span><span class="lineCov">          3 :     void stop() override</span></a>
+<a name="642"><span class="lineNum">     642 </span><span class="lineNoCov">          0 :     void stop() override</span></a>
 <a name="643"><span class="lineNum">     643 </span>            :     {</a>
 <a name="644"><span class="lineNum">     644 </span>            :         recording = false;</a>
 <a name="645"><span class="lineNum">     645 </span>            :         livePlayOver = false;</a>
-<a name="646"><span class="lineNum">     646 </span><span class="lineCov">          3 :     }</span></a>
+<a name="646"><span class="lineNum">     646 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="647"><span class="lineNum">     647 </span>            : </a>
 <a name="648"><span class="lineNum">     648 </span><span class="lineNoCov">          0 :     void recordWasCancelled() override</span></a>
 <a name="649"><span class="lineNum">     649 </span>            :     {</a>
@@ -772,14 +772,14 @@
 <a name="710"><span class="lineNum">     710 </span><span class="lineNoCov">          0 :             sequence.addTimeToMessages (adjustmentMs * 0.001);</span></a>
 <a name="711"><span class="lineNum">     711 </span>            :     }</a>
 <a name="712"><span class="lineNum">     712 </span>            : </a>
-<a name="713"><span class="lineNum">     713 </span><span class="lineCov">          1 :     Clip::Array applyLastRecordingToEdit (EditTimeRange recordedRange,</span></a>
+<a name="713"><span class="lineNum">     713 </span><span class="lineNoCov">          0 :     Clip::Array applyLastRecordingToEdit (EditTimeRange recordedRange,</span></a>
 <a name="714"><span class="lineNum">     714 </span>            :                                           bool isLooping, EditTimeRange loopRange,</a>
 <a name="715"><span class="lineNum">     715 </span>            :                                           bool discardRecordings,</a>
 <a name="716"><span class="lineNum">     716 </span>            :                                           SelectionManager* selectionManager) override</a>
 <a name="717"><span class="lineNum">     717 </span>            :     {</a>
-<a name="718"><span class="lineNum">     718 </span><span class="lineCov">          2 :         CRASH_TRACER</span></a>
+<a name="718"><span class="lineNum">     718 </span><span class="lineNoCov">          0 :         CRASH_TRACER</span></a>
 <a name="719"><span class="lineNum">     719 </span>            : </a>
-<a name="720"><span class="lineNum">     720 </span><span class="lineCov">          1 :         if (discardRecordings)</span></a>
+<a name="720"><span class="lineNum">     720 </span><span class="lineNoCov">          0 :         if (discardRecordings)</span></a>
 <a name="721"><span class="lineNum">     721 </span>            :         { </a>
 <a name="722"><span class="lineNum">     722 </span><span class="lineNoCov">          0 :             for (auto c : consumers)</span></a>
 <a name="723"><span class="lineNum">     723 </span><span class="lineNoCov">          0 :                 c-&gt;discardRecordings();</span></a>
@@ -787,8 +787,8 @@
 <a name="725"><span class="lineNum">     725 </span><span class="lineNoCov">          0 :             recorded.clear();</span></a>
 <a name="726"><span class="lineNum">     726 </span>            :         }</a>
 <a name="727"><span class="lineNum">     727 </span>            : </a>
-<a name="728"><span class="lineNum">     728 </span><span class="lineCov">          1 :         if (recorded.getNumEvents() == 0)</span></a>
-<a name="729"><span class="lineNum">     729 </span><span class="lineCov">          1 :             return {};</span></a>
+<a name="728"><span class="lineNum">     728 </span><span class="lineNoCov">          0 :         if (recorded.getNumEvents() == 0)</span></a>
+<a name="729"><span class="lineNum">     729 </span><span class="lineNoCov">          0 :             return {};</span></a>
 <a name="730"><span class="lineNum">     730 </span>            : </a>
 <a name="731"><span class="lineNum">     731 </span><span class="lineNoCov">          0 :         Clip::Array createdClips;</span></a>
 <a name="732"><span class="lineNum">     732 </span><span class="lineNoCov">          0 :         auto&amp; mi = getMidiInput();</span></a>
@@ -1130,22 +1130,22 @@
 <a name="1068"><span class="lineNum">    1068 </span>            :         return clips;</a>
 <a name="1069"><span class="lineNum">    1069 </span>            :     }</a>
 <a name="1070"><span class="lineNum">    1070 </span>            : </a>
-<a name="1071"><span class="lineNum">    1071 </span><span class="lineCov">        386 :     void masterTimeUpdate (double time)</span></a>
+<a name="1071"><span class="lineNum">    1071 </span><span class="lineNoCov">          0 :     void masterTimeUpdate (double time)</span></a>
 <a name="1072"><span class="lineNum">    1072 </span>            :     {</a>
-<a name="1073"><span class="lineNum">    1073 </span><span class="lineCov">        386 :         if (context.isPlaying())</span></a>
+<a name="1073"><span class="lineNum">    1073 </span><span class="lineNoCov">          0 :         if (context.isPlaying())</span></a>
 <a name="1074"><span class="lineNum">    1074 </span>            :         {</a>
-<a name="1075"><span class="lineNum">    1075 </span><span class="lineCov">        378 :             pausedTime = 0;</span></a>
-<a name="1076"><span class="lineNum">    1076 </span><span class="lineCov">        378 :             lastEditTime = context.globalStreamTimeToEditTime (time);</span></a>
+<a name="1075"><span class="lineNum">    1075 </span><span class="lineNoCov">          0 :             pausedTime = 0;</span></a>
+<a name="1076"><span class="lineNum">    1076 </span><span class="lineNoCov">          0 :             lastEditTime = context.globalStreamTimeToEditTime (time);</span></a>
 <a name="1077"><span class="lineNum">    1077 </span>            :         }</a>
 <a name="1078"><span class="lineNum">    1078 </span>            :         else</a>
 <a name="1079"><span class="lineNum">    1079 </span>            :         {</a>
-<a name="1080"><span class="lineNum">    1080 </span><span class="lineCov">          8 :             pausedTime += edit.engine.getDeviceManager().getBlockSizeMs() / 1000.0;</span></a>
+<a name="1080"><span class="lineNum">    1080 </span><span class="lineNoCov">          0 :             pausedTime += edit.engine.getDeviceManager().getBlockSizeMs() / 1000.0;</span></a>
 <a name="1081"><span class="lineNum">    1081 </span>            :         }</a>
-<a name="1082"><span class="lineNum">    1082 </span><span class="lineCov">        386 :     }</span></a>
+<a name="1082"><span class="lineNum">    1082 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="1083"><span class="lineNum">    1083 </span>            : </a>
-<a name="1084"><span class="lineNum">    1084 </span><span class="lineCov">          1 :     bool isLivePlayEnabled (const Track&amp; t) const override</span></a>
+<a name="1084"><span class="lineNum">    1084 </span><span class="lineNoCov">          0 :     bool isLivePlayEnabled (const Track&amp; t) const override</span></a>
 <a name="1085"><span class="lineNum">    1085 </span>            :     {</a>
-<a name="1086"><span class="lineNum">    1086 </span><span class="lineCov">          2 :         return owner.isEndToEndEnabled() &amp;&amp; InputDeviceInstance::isLivePlayEnabled (t);</span></a>
+<a name="1086"><span class="lineNum">    1086 </span><span class="lineNoCov">          0 :         return owner.isEndToEndEnabled() &amp;&amp; InputDeviceInstance::isLivePlayEnabled (t);</span></a>
 <a name="1087"><span class="lineNum">    1087 </span>            :     }</a>
 <a name="1088"><span class="lineNum">    1088 </span>            : </a>
 <a name="1089"><span class="lineNum">    1089 </span>            :     MidiInputDevice&amp; getMidiInput() const   { return static_cast&lt;MidiInputDevice&amp;&gt; (owner); }</a>
@@ -1169,15 +1169,15 @@
 <a name="1107"><span class="lineNum">    1107 </span>            : </a>
 <a name="1108"><span class="lineNum">    1108 </span>            : </a>
 <a name="1109"><span class="lineNum">    1109 </span>            : //==============================================================================</a>
-<a name="1110"><span class="lineNum">    1110 </span><span class="lineCov">        386 : void MidiInputDevice::masterTimeUpdate (double time)</span></a>
+<a name="1110"><span class="lineNum">    1110 </span><span class="lineNoCov">          0 : void MidiInputDevice::masterTimeUpdate (double time)</span></a>
 <a name="1111"><span class="lineNum">    1111 </span>            : {</a>
-<a name="1112"><span class="lineNum">    1112 </span><span class="lineCov">        386 :     adjustSecs = time - juce::Time::getMillisecondCounterHiRes() * 0.001;</span></a>
+<a name="1112"><span class="lineNum">    1112 </span><span class="lineNoCov">          0 :     adjustSecs = time - juce::Time::getMillisecondCounterHiRes() * 0.001;</span></a>
 <a name="1113"><span class="lineNum">    1113 </span>            : </a>
-<a name="1114"><span class="lineNum">    1114 </span><span class="lineCov">        386 :     const juce::ScopedLock sl (instanceLock);</span></a>
+<a name="1114"><span class="lineNum">    1114 </span><span class="lineNoCov">          0 :     const juce::ScopedLock sl (instanceLock);</span></a>
 <a name="1115"><span class="lineNum">    1115 </span>            : </a>
-<a name="1116"><span class="lineNum">    1116 </span><span class="lineCov">        772 :     for (auto instance : instances)</span></a>
-<a name="1117"><span class="lineNum">    1117 </span><span class="lineCov">        386 :         instance-&gt;masterTimeUpdate (time);</span></a>
-<a name="1118"><span class="lineNum">    1118 </span><span class="lineCov">        386 : }</span></a>
+<a name="1116"><span class="lineNum">    1116 </span><span class="lineNoCov">          0 :     for (auto instance : instances)</span></a>
+<a name="1117"><span class="lineNum">    1117 </span><span class="lineNoCov">          0 :         instance-&gt;masterTimeUpdate (time);</span></a>
+<a name="1118"><span class="lineNum">    1118 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1119"><span class="lineNum">    1119 </span>            : </a>
 <a name="1120"><span class="lineNum">    1120 </span><span class="lineNoCov">          0 : void MidiInputDevice::sendMessageToInstances (const juce::MidiMessage&amp; message)</span></a>
 <a name="1121"><span class="lineNum">    1121 </span>            : {</a>

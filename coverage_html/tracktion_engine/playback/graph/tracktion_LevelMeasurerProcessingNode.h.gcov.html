@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-27 18:07:46</td>
+            <td class="headerValue">2022-01-27 19:00:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">8</td>
@@ -96,7 +96,7 @@
 <a name="34"><span class="lineNum">      34 </span><span class="lineCov">       3876 :         return input-&gt;getNodeProperties();</span></a>
 <a name="35"><span class="lineNum">      35 </span>            :     }</a>
 <a name="36"><span class="lineNum">      36 </span>            :     </a>
-<a name="37"><span class="lineNum">      37 </span><span class="lineCov">     205019 :     std::vector&lt;tracktion_graph::Node*&gt; getDirectInputNodes() override  { return { input.get() }; }</span></a>
+<a name="37"><span class="lineNum">      37 </span><span class="lineCov">     211619 :     std::vector&lt;tracktion_graph::Node*&gt; getDirectInputNodes() override  { return { input.get() }; }</span></a>
 <a name="38"><span class="lineNum">      38 </span><span class="lineCov">        622 :     bool isReadyToProcess() override                                    { return input-&gt;hasProcessed(); }</span></a>
 <a name="39"><span class="lineNum">      39 </span>            :         </a>
 <a name="40"><span class="lineNum">      40 </span><span class="lineCov">        296 :     void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&amp; info) override</span></a>
@@ -119,17 +119,17 @@
 <a name="57"><span class="lineNum">      57 </span><span class="lineNoCov">          0 :                                   (choc::buffer::FrameCount) info.blockSize });</span></a>
 <a name="58"><span class="lineNum">      58 </span>            :     }</a>
 <a name="59"><span class="lineNum">      59 </span>            :     </a>
-<a name="60"><span class="lineNum">      60 </span><span class="lineCov">      84714 :     void process (ProcessContext&amp; pc) override</span></a>
+<a name="60"><span class="lineNum">      60 </span><span class="lineCov">      84721 :     void process (ProcessContext&amp; pc) override</span></a>
 <a name="61"><span class="lineNum">      61 </span>            :     {</a>
 <a name="62"><span class="lineNum">      62 </span>            :         // Copy the input buffers to the outputs without applying latency</a>
 <a name="63"><span class="lineNum">      63 </span>            :         auto sourceBuffers = input-&gt;getProcessedOutput();</a>
 <a name="64"><span class="lineNum">      64 </span>            :         jassert (sourceBuffers.audio.getNumChannels() == pc.buffers.audio.getNumChannels());</a>
 <a name="65"><span class="lineNum">      65 </span>            : </a>
 <a name="66"><span class="lineNum">      66 </span>            :         // If the source only outputs to this node, we can steal its data</a>
-<a name="67"><span class="lineNum">      67 </span><span class="lineCov">      84714 :         if (numOutputNodes == 1)</span></a>
+<a name="67"><span class="lineNum">      67 </span><span class="lineCov">      84721 :         if (numOutputNodes == 1)</span></a>
 <a name="68"><span class="lineNum">      68 </span>            :         {</a>
-<a name="69"><span class="lineNum">      69 </span><span class="lineCov">      84714 :             pc.buffers.midi.swapWith (sourceBuffers.midi);</span></a>
-<a name="70"><span class="lineNum">      70 </span><span class="lineCov">      84714 :             setAudioOutput (input.get(), sourceBuffers.audio);</span></a>
+<a name="69"><span class="lineNum">      69 </span><span class="lineCov">      84721 :             pc.buffers.midi.swapWith (sourceBuffers.midi);</span></a>
+<a name="70"><span class="lineNum">      70 </span><span class="lineCov">      84721 :             setAudioOutput (input.get(), sourceBuffers.audio);</span></a>
 <a name="71"><span class="lineNum">      71 </span>            :         }</a>
 <a name="72"><span class="lineNum">      72 </span>            :         else</a>
 <a name="73"><span class="lineNum">      73 </span>            :         {</a>
@@ -138,10 +138,10 @@
 <a name="76"><span class="lineNum">      76 </span>            :         }</a>
 <a name="77"><span class="lineNum">      77 </span>            :             </a>
 <a name="78"><span class="lineNum">      78 </span>            :         // If we have no latency, simply process the meter</a>
-<a name="79"><span class="lineNum">      79 </span><span class="lineCov">      84721 :         if (! latencyProcessor)</span></a>
+<a name="79"><span class="lineNum">      79 </span><span class="lineCov">      84722 :         if (! latencyProcessor)</span></a>
 <a name="80"><span class="lineNum">      80 </span>            :         {</a>
-<a name="81"><span class="lineNum">      81 </span><span class="lineCov">      84721 :             processLevelMeasurer (meterPlugin.measurer, sourceBuffers.audio, pc.buffers.midi);</span></a>
-<a name="82"><span class="lineNum">      82 </span><span class="lineCov">      84711 :             return;</span></a>
+<a name="81"><span class="lineNum">      81 </span><span class="lineCov">      84722 :             processLevelMeasurer (meterPlugin.measurer, sourceBuffers.audio, pc.buffers.midi);</span></a>
+<a name="82"><span class="lineNum">      82 </span><span class="lineCov">      84719 :             return;</span></a>
 <a name="83"><span class="lineNum">      83 </span>            :         }</a>
 <a name="84"><span class="lineNum">      84 </span>            :         </a>
 <a name="85"><span class="lineNum">      85 </span>            :         // Otherwise, pass the buffers through the latency processor and process the meter</a>

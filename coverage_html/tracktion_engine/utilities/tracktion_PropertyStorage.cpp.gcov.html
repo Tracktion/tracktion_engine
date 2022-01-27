@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-27 18:07:46</td>
+            <td class="headerValue">2022-01-27 19:00:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">15</td>
@@ -93,7 +93,7 @@
 <a name="31"><span class="lineNum">      31 </span><span class="lineCov">          2 :     ApplicationSettings() : PropertiesFile (getApplicationSettingsFile(), getSettingsOptions()) {}</span></a>
 <a name="32"><span class="lineNum">      32 </span><span class="lineCov">          1 :     ~ApplicationSettings() { clearSingletonInstance(); }</span></a>
 <a name="33"><span class="lineNum">      33 </span>            : </a>
-<a name="34"><span class="lineNum">      34 </span><span class="lineCov">       8260 :     JUCE_DECLARE_SINGLETON (ApplicationSettings, false)</span></a>
+<a name="34"><span class="lineNum">      34 </span><span class="lineCov">       8256 :     JUCE_DECLARE_SINGLETON (ApplicationSettings, false)</span></a>
 <a name="35"><span class="lineNum">      35 </span>            : };</a>
 <a name="36"><span class="lineNum">      36 </span>            : </a>
 <a name="37"><span class="lineNum">      37 </span><span class="lineNoCov">          0 : juce::PropertiesFile* getApplicationSettings()</span></a>
@@ -104,9 +104,9 @@
 <a name="42"><span class="lineNum">      42 </span>            : JUCE_IMPLEMENT_SINGLETON (ApplicationSettings)</a>
 <a name="43"><span class="lineNum">      43 </span>            : </a>
 <a name="44"><span class="lineNum">      44 </span>            : //==============================================================================</a>
-<a name="45"><span class="lineNum">      45 </span><span class="lineCov">       8260 : juce::String PropertyStorage::settingToString (SettingID setting)</span></a>
+<a name="45"><span class="lineNum">      45 </span><span class="lineCov">       8256 : juce::String PropertyStorage::settingToString (SettingID setting)</span></a>
 <a name="46"><span class="lineNum">      46 </span>            : {</a>
-<a name="47"><span class="lineNum">      47 </span><span class="lineCov">       8260 :     switch (setting)</span></a>
+<a name="47"><span class="lineNum">      47 </span><span class="lineCov">       8256 :     switch (setting)</span></a>
 <a name="48"><span class="lineNum">      48 </span>            :     {</a>
 <a name="49"><span class="lineNum">      49 </span><span class="lineCov">         83 :         case SettingID::audio_device_setup:            return &quot;audio_device_setup&quot;;</span></a>
 <a name="50"><span class="lineNum">      50 </span><span class="lineCov">         86 :         case SettingID::audiosettings:                 return &quot;audiosettings&quot;;</span></a>
@@ -158,8 +158,8 @@
 <a name="96"><span class="lineNum">      96 </span><span class="lineNoCov">          0 :         case SettingID::glideLength:                   return &quot;glideLength&quot;;</span></a>
 <a name="97"><span class="lineNum">      97 </span><span class="lineCov">          1 :         case SettingID::grooveTemplates:               return &quot;GrooveTemplates&quot;;</span></a>
 <a name="98"><span class="lineNum">      98 </span><span class="lineNoCov">          0 :         case SettingID::MCUoneTouchRecord:             return &quot;MCUoneTouchRecord&quot;;</span></a>
-<a name="99"><span class="lineNum">      99 </span><span class="lineCov">          6 :         case SettingID::midiin:                        return &quot;midiin&quot;;</span></a>
-<a name="100"><span class="lineNum">     100 </span><span class="lineCov">         18 :         case SettingID::midiout:                       return &quot;midiout&quot;;</span></a>
+<a name="99"><span class="lineNum">      99 </span><span class="lineCov">          4 :         case SettingID::midiin:                        return &quot;midiin&quot;;</span></a>
+<a name="100"><span class="lineNum">     100 </span><span class="lineCov">         16 :         case SettingID::midiout:                       return &quot;midiout&quot;;</span></a>
 <a name="101"><span class="lineNum">     101 </span><span class="lineCov">        275 :         case SettingID::midiEditorOctaves:             return &quot;midiEditorOctaves&quot;;</span></a>
 <a name="102"><span class="lineNum">     102 </span><span class="lineCov">          2 :         case SettingID::midiProgramManager:            return &quot;MidiProgramManager&quot;;</span></a>
 <a name="103"><span class="lineNum">     103 </span><span class="lineNoCov">          0 :         case SettingID::maxLatency:                    return &quot;maxLatency&quot;;</span></a>
@@ -234,14 +234,14 @@
 <a name="172"><span class="lineNum">     172 </span><span class="lineCov">          2 :     return getAppPrefsFolder();</span></a>
 <a name="173"><span class="lineNum">     173 </span>            : }</a>
 <a name="174"><span class="lineNum">     174 </span>            : </a>
-<a name="175"><span class="lineNum">     175 </span><span class="lineCov">          8 : juce::File PropertyStorage::getAppPrefsFolder()</span></a>
+<a name="175"><span class="lineNum">     175 </span><span class="lineCov">          7 : juce::File PropertyStorage::getAppPrefsFolder()</span></a>
 <a name="176"><span class="lineNum">     176 </span>            : {</a>
-<a name="177"><span class="lineNum">     177 </span><span class="lineCov">          8 :     auto f = juce::File::getSpecialLocation (juce::File::userApplicationDataDirectory).getChildFile (getApplicationName());</span></a>
+<a name="177"><span class="lineNum">     177 </span><span class="lineCov">          7 :     auto f = juce::File::getSpecialLocation (juce::File::userApplicationDataDirectory).getChildFile (getApplicationName());</span></a>
 <a name="178"><span class="lineNum">     178 </span>            : </a>
-<a name="179"><span class="lineNum">     179 </span><span class="lineCov">          8 :     if (! f.isDirectory())</span></a>
+<a name="179"><span class="lineNum">     179 </span><span class="lineCov">          7 :     if (! f.isDirectory())</span></a>
 <a name="180"><span class="lineNum">     180 </span><span class="lineCov">          2 :         f.createDirectory();</span></a>
 <a name="181"><span class="lineNum">     181 </span>            : </a>
-<a name="182"><span class="lineNum">     182 </span><span class="lineCov">          8 :     return f;</span></a>
+<a name="182"><span class="lineNum">     182 </span><span class="lineCov">          7 :     return f;</span></a>
 <a name="183"><span class="lineNum">     183 </span>            : }</a>
 <a name="184"><span class="lineNum">     184 </span>            : </a>
 <a name="185"><span class="lineNum">     185 </span><span class="lineNoCov">          0 : juce::String PropertyStorage::getUserName()</span></a>
@@ -310,11 +310,11 @@
 <a name="248"><span class="lineNum">     248 </span><span class="lineCov">       1950 :     return std::unique_ptr&lt;juce::XmlElement&gt; (as.getXmlValue (PropertyStorage::settingToString (setting) + &quot;_&quot; + item));</span></a>
 <a name="249"><span class="lineNum">     249 </span>            : }</a>
 <a name="250"><span class="lineNum">     250 </span>            : </a>
-<a name="251"><span class="lineNum">     251 </span><span class="lineCov">       1786 : void PropertyStorage::setXmlPropertyItem (SettingID setting, juce::StringRef item, const juce::XmlElement&amp; xml)</span></a>
+<a name="251"><span class="lineNum">     251 </span><span class="lineCov">       1782 : void PropertyStorage::setXmlPropertyItem (SettingID setting, juce::StringRef item, const juce::XmlElement&amp; xml)</span></a>
 <a name="252"><span class="lineNum">     252 </span>            : {</a>
 <a name="253"><span class="lineNum">     253 </span>            :     auto&amp; as = *ApplicationSettings::getInstance();</a>
-<a name="254"><span class="lineNum">     254 </span><span class="lineCov">       1786 :     as.setValue (PropertyStorage::settingToString (setting) + &quot;_&quot; + item, &amp;xml);</span></a>
-<a name="255"><span class="lineNum">     255 </span><span class="lineCov">       1786 : }</span></a>
+<a name="254"><span class="lineNum">     254 </span><span class="lineCov">       1782 :     as.setValue (PropertyStorage::settingToString (setting) + &quot;_&quot; + item, &amp;xml);</span></a>
+<a name="255"><span class="lineNum">     255 </span><span class="lineCov">       1782 : }</span></a>
 <a name="256"><span class="lineNum">     256 </span>            : </a>
 <a name="257"><span class="lineNum">     257 </span>            : //==============================================================================</a>
 <a name="258"><span class="lineNum">     258 </span><span class="lineNoCov">          0 : juce::File PropertyStorage::getDefaultLoadSaveDirectory (juce::StringRef)</span></a>

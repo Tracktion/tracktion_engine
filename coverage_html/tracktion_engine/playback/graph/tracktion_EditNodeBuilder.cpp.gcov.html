@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-27 18:07:46</td>
+            <td class="headerValue">2022-01-27 19:00:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">30</td>
@@ -710,8 +710,8 @@
 <a name="648"><span class="lineNum">     648 </span>            : </a>
 <a name="649"><span class="lineNum">     649 </span><span class="lineCov">        142 :     if (! params.forRendering)</span></a>
 <a name="650"><span class="lineNum">     650 </span><span class="lineCov">          4 :         if (auto context = track.edit.getCurrentPlaybackContext())</span></a>
-<a name="651"><span class="lineNum">     651 </span><span class="lineCov">         69 :             for (auto in : context-&gt;getAllInputs())</span></a>
-<a name="652"><span class="lineNum">     652 </span><span class="lineCov">         65 :                 if ((in-&gt;isLivePlayEnabled (track) || in-&gt;getInputDevice().isTrackDevice()) &amp;&amp; in-&gt;isOnTargetTrack (track))</span></a>
+<a name="651"><span class="lineNum">     651 </span><span class="lineCov">         68 :             for (auto in : context-&gt;getAllInputs())</span></a>
+<a name="652"><span class="lineNum">     652 </span><span class="lineCov">         64 :                 if ((in-&gt;isLivePlayEnabled (track) || in-&gt;getInputDevice().isTrackDevice()) &amp;&amp; in-&gt;isOnTargetTrack (track))</span></a>
 <a name="653"><span class="lineNum">     653 </span><span class="lineNoCov">          0 :                     if (auto node = createLiveInputNodeForDevice (*in, playHeadState, params))</span></a>
 <a name="654"><span class="lineNum">     654 </span>            :                         nodes.push_back (std::move (node));</a>
 <a name="655"><span class="lineNum">     655 </span>            : </a>
