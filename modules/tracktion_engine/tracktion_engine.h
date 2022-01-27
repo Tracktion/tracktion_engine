@@ -49,6 +49,7 @@
 #include <atomic>
 #include <random>
 #include <optional>
+#include <variant>
 
 #include <juce_audio_basics/juce_audio_basics.h>
 #include <juce_audio_utils/juce_audio_utils.h>
@@ -250,6 +251,9 @@ namespace tracktion_graph
 }
 
 //==============================================================================
+#include "../tracktion_graph/utilities/tracktion_Time.h"
+
+//==============================================================================
 namespace tracktion_engine
 {
     class Engine;
@@ -386,6 +390,7 @@ namespace tracktion_engine
 #include "selection/tracktion_Selectable.h"
 #include "selection/tracktion_SelectableClass.h"
 #include "selection/tracktion_SelectionManager.h"
+#include "model/tracks/tracktion_EditTime.h"
 #include "model/tracks/tracktion_EditTimeRange.h"
 #include "utilities/tracktion_BackgroundJobs.h"
 #include "utilities/tracktion_MiscUtilities.h"

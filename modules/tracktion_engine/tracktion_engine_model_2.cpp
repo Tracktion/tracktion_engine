@@ -35,6 +35,8 @@
 #include "model/tracks/tracktion_MarkerTrack.cpp"
 #include "model/tracks/tracktion_MasterTrack.cpp"
 #include "model/tracks/tracktion_TempoTrack.cpp"
+#include "model/tracks/tracktion_EditTime.cpp"
+#include "model/tracks/tracktion_EditTime.test.cpp"
 #include "model/tracks/tracktion_EditTimeRange.cpp"
 #include "model/tracks/tracktion_TrackItem.cpp"
 #include "model/tracks/tracktion_TrackOutput.cpp"
