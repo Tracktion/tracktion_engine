@@ -127,6 +127,30 @@ constexpr bool operator== (const TimeDuration&, const TimeDuration&);
 /** Compares two TimeDurations. */
 constexpr bool operator!= (const TimeDuration&, const TimeDuration&);
 
+/** Compares two TimePositions. */
+constexpr bool operator< (const TimePosition&, const TimePosition&);
+
+/** Compares two TimePosition. */
+constexpr bool operator<= (const TimePosition&, const TimePosition&);
+
+/** Compares two TimePosition. */
+constexpr bool operator> (const TimePosition&, const TimePosition&);
+
+/** Compares two TimePosition. */
+constexpr bool operator>= (const TimePosition&, const TimePosition&);
+
+/** Compares two TimeDurations. */
+constexpr bool operator< (const TimeDuration&, const TimeDuration&);
+
+/** Compares two TimeDurations. */
+constexpr bool operator<= (const TimeDuration&, const TimeDuration&);
+
+/** Compares two TimeDurations. */
+constexpr bool operator> (const TimeDuration&, const TimeDuration&);
+
+/** Compares two TimeDurations. */
+constexpr bool operator>= (const TimeDuration&, const TimeDuration&);
+
 //==============================================================================
 //==============================================================================
 /**
@@ -210,6 +234,30 @@ constexpr bool operator== (const BeatDuration&, const BeatDuration&);
 
 /** Compares two BeatDurations. */
 constexpr bool operator!= (const BeatDuration&, const BeatDuration&);
+
+/** Compares two BeatDurations. */
+constexpr bool operator< (const BeatPosition&, const BeatPosition&);
+
+/** Compares two BeatDurations. */
+constexpr bool operator<= (const BeatPosition&, const BeatPosition&);
+
+/** Compares two BeatDurations. */
+constexpr bool operator> (const BeatPosition&, const BeatPosition&);
+
+/** Compares two BeatDurations. */
+constexpr bool operator>= (const BeatPosition&, const BeatPosition&);
+
+/** Compares two BeatDurations. */
+constexpr bool operator< (const BeatDuration&, const BeatDuration&);
+
+/** Compares two BeatDurations. */
+constexpr bool operator<= (const BeatDuration&, const BeatDuration&);
+
+/** Compares two BeatDurations. */
+constexpr bool operator> (const BeatDuration&, const BeatDuration&);
+
+/** Compares two BeatDurations. */
+constexpr bool operator>= (const BeatDuration&, const BeatDuration&);
 
 //==============================================================================
 //        _        _           _  _
@@ -325,25 +373,21 @@ inline constexpr TimePosition operator- (const TimePosition& t1, std::chrono::du
     return TimePosition::fromSeconds (t1.inSeconds() - t2.count());
 }
 
-inline constexpr bool operator== (const TimePosition& t1, const TimePosition& t2)
-{
-    return t1.inSeconds() == t2.inSeconds();
-}
+inline constexpr bool operator== (const TimePosition& t1, const TimePosition& t2)   { return t1.inSeconds() == t2.inSeconds(); }
+inline constexpr bool operator!= (const TimePosition& t1, const TimePosition& t2)   { return ! (t1 == t2); }
 
-inline constexpr bool operator!= (const TimePosition& t1, const TimePosition& t2)
-{
-    return ! (t1 == t2);
-}
+inline constexpr bool operator== (const TimeDuration& t1, const TimeDuration& t2)   { return t1.inSeconds() == t2.inSeconds(); }
+inline constexpr bool operator!= (const TimeDuration& t1, const TimeDuration& t2)   { return ! (t1 == t2); }
 
-inline constexpr bool operator== (const TimeDuration& t1, const TimeDuration& t2)
-{
-    return t1.inSeconds() == t2.inSeconds();
-}
+inline constexpr bool operator<     (const TimePosition& t1, const TimePosition& t2)    { return t1.inSeconds() < t2.inSeconds(); }
+inline constexpr bool operator<=    (const TimePosition& t1, const TimePosition& t2)    { return t1.inSeconds() <= t2.inSeconds(); }
+inline constexpr bool operator>     (const TimePosition& t1, const TimePosition& t2)    { return t1.inSeconds() > t2.inSeconds(); }
+inline constexpr bool operator>=    (const TimePosition& t1, const TimePosition& t2)    { return t1.inSeconds() >= t2.inSeconds(); }
 
-inline constexpr bool operator!= (const TimeDuration& t1, const TimeDuration& t2)
-{
-    return ! (t1 == t2);
-}
+inline constexpr bool operator<     (const TimeDuration& t1, const TimeDuration& t2)    { return t1.inSeconds() < t2.inSeconds(); }
+inline constexpr bool operator<=    (const TimeDuration& t1, const TimeDuration& t2)    { return t1.inSeconds() <= t2.inSeconds(); }
+inline constexpr bool operator>     (const TimeDuration& t1, const TimeDuration& t2)    { return t1.inSeconds() > t2.inSeconds(); }
+inline constexpr bool operator>=    (const TimeDuration& t1, const TimeDuration& t2)    { return t1.inSeconds() >= t2.inSeconds(); }
 
 //==============================================================================
 template<typename T>
@@ -397,25 +441,21 @@ inline constexpr BeatPosition operator- (const BeatPosition& t1, const BeatDurat
     return BeatPosition::fromBeats (t1.inBeats() - t2.inBeats());
 }
 
-inline constexpr bool operator== (const BeatPosition& t1, const BeatPosition& t2)
-{
-    return t1.inBeats() == t2.inBeats();
-}
+inline constexpr bool operator== (const BeatPosition& t1, const BeatPosition& t2)   { return t1.inBeats() == t2.inBeats(); }
+inline constexpr bool operator!= (const BeatPosition& t1, const BeatPosition& t2)   { return ! (t1 == t2); }
 
-inline constexpr bool operator!= (const BeatPosition& t1, const BeatPosition& t2)
-{
-    return ! (t1 == t2);
-}
+inline constexpr bool operator== (const BeatDuration& t1, const BeatDuration& t2)   { return t1.inBeats() == t2.inBeats(); }
+inline constexpr bool operator!= (const BeatDuration& t1, const BeatDuration& t2)   { return ! (t1 == t2); }
 
-inline constexpr bool operator== (const BeatDuration& t1, const BeatDuration& t2)
-{
-    return t1.inBeats() == t2.inBeats();
-}
+inline constexpr bool operator<     (const BeatPosition& t1, const BeatPosition& t2)    { return t1.inBeats() < t2.inBeats(); }
+inline constexpr bool operator<=    (const BeatPosition& t1, const BeatPosition& t2)    { return t1.inBeats() <= t2.inBeats(); }
+inline constexpr bool operator>     (const BeatPosition& t1, const BeatPosition& t2)    { return t1.inBeats() > t2.inBeats(); }
+inline constexpr bool operator>=    (const BeatPosition& t1, const BeatPosition& t2)    { return t1.inBeats() >= t2.inBeats(); }
 
-inline constexpr bool operator!= (const BeatDuration& t1, const BeatDuration& t2)
-{
-    return ! (t1 == t2);
-}
+inline constexpr bool operator<     (const BeatDuration& t1, const BeatDuration& t2)    { return t1.inBeats() < t2.inBeats(); }
+inline constexpr bool operator<=    (const BeatDuration& t1, const BeatDuration& t2)    { return t1.inBeats() <= t2.inBeats(); }
+inline constexpr bool operator>     (const BeatDuration& t1, const BeatDuration& t2)    { return t1.inBeats() > t2.inBeats(); }
+inline constexpr bool operator>=    (const BeatDuration& t1, const BeatDuration& t2)    { return t1.inBeats() >= t2.inBeats(); }
 
 
 } // namespace tracktion_graph

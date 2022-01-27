@@ -190,6 +190,19 @@ public:
                 expectEquals (toSamples (TimePosition::fromSamples (-4'032'000, 96000.0), 96000.0), (int64_t) -4'032'000);
                 expectEquals (toSamples (TimePosition::fromSamples (-44100, 88200.0), 88200.0), (int64_t) -44100);
             }
+
+            // Ordering
+            {
+                expect (TimePosition (1min) > TimePosition());
+                expect (TimePosition() >= TimePosition::fromSeconds (-42.0));
+                expect (TimePosition (-8s) > TimePosition (-42s));
+
+                std::vector<TimePosition> v { TimePosition (2min), TimePosition (5min), TimePosition (1min) };
+                std::sort (v.begin(), v.end());
+                expect (v[0] == TimePosition (1min));
+                expect (v[1] == TimePosition (2min));
+                expect (v[2] == TimePosition (5min));
+            }
         }
 
         beginTest ("TimeDuration");
@@ -241,6 +254,19 @@ public:
                 expectEquals (toSamples (TimeDuration::fromSamples (-4'032'000, 96000.0), 96000.0), (int64_t) -4'032'000);
                 expectEquals (toSamples (TimeDuration::fromSamples (-44100, 88200.0), 88200.0), (int64_t) -44100);
             }
+
+            // Ordering
+            {
+                expect (TimeDuration (1min) > TimeDuration());
+                expect (TimeDuration() >= TimeDuration::fromSeconds (-42.0));
+                expect (TimeDuration::fromSeconds (-8) > TimeDuration::fromSeconds (-42.0));
+
+                std::vector<TimeDuration> v { TimeDuration (-2min), TimeDuration (5min), TimeDuration (1min) };
+                std::sort (v.begin(), v.end());
+                expect (v[0] == TimeDuration (-2min));
+                expect (v[1] == TimeDuration (1min));
+                expect (v[2] == TimeDuration (5min));
+            }
         }
 
         beginTest ("Time addition/subtraction");
@@ -274,6 +300,19 @@ public:
             expectEquals (BeatPosition::fromBeats (0.5f).inBeats(), 0.5);
             expectEquals (BeatPosition::fromBeats (42).inBeats(), 42.0);
             expectEquals (BeatPosition::fromBeats (42u).inBeats(), 42.0);
+
+            // Ordering
+            {
+                expect (BeatPosition::fromBeats (1) > BeatPosition());
+                expect (BeatPosition() >= BeatPosition::fromBeats (-42.0));
+                expect (BeatPosition::fromBeats (-8) > BeatPosition::fromBeats (-42.0));
+
+                std::vector<BeatPosition> v { BeatPosition::fromBeats (-2), BeatPosition::fromBeats (5), BeatPosition::fromBeats (1) };
+                std::sort (v.begin(), v.end());
+                expect (v[0] == BeatPosition::fromBeats (-2));
+                expect (v[1] == BeatPosition::fromBeats (1));
+                expect (v[2] == BeatPosition::fromBeats (5));
+            }
         }
 
         beginTest ("BeatDuration");
@@ -299,6 +338,19 @@ public:
             expectEquals (BeatDuration::fromBeats (-0.5).inBeats(), -0.5);
             expectEquals (BeatDuration::fromBeats (-0.5f).inBeats(), -0.5);
             expectEquals (BeatDuration::fromBeats (-42).inBeats(), -42.0);
+
+            // Ordering
+            {
+                expect (BeatDuration::fromBeats (1) > BeatDuration());
+                expect (BeatDuration() >= BeatDuration::fromBeats (-42.0));
+                expect (BeatDuration::fromBeats (-8) > BeatDuration::fromBeats (-42.0));
+
+                std::vector<BeatDuration> v { BeatDuration::fromBeats (-2), BeatDuration::fromBeats (5), BeatDuration::fromBeats (1) };
+                std::sort (v.begin(), v.end());
+                expect (v[0] == BeatDuration::fromBeats (-2));
+                expect (v[1] == BeatDuration::fromBeats (1));
+                expect (v[2] == BeatDuration::fromBeats (5));
+            }
         }
 
         beginTest ("Beat addition/subtraction");
