@@ -22,59 +22,34 @@ tracktion_graph::TimePosition toTime (tracktion_graph::BeatPosition, const Tempo
 //==============================================================================
 //==============================================================================
 /**
-    Represents a time point in an Edit.
-    This differs from a beat/time position because it is tied to a TempoSequence which
-    belongs to an Edit. This means you can convert it directly to a time/beat position.
+    Represents a time point in an Edit stored as either time or beats.
+    This is basically a variant to simplify APIs.
 */
 struct EditTime
 {
     /** Creates an EditTime from a TimePosition. */
-    EditTime (tracktion_graph::TimePosition, const TempoSequence&);
+    EditTime (tracktion_graph::TimePosition);
 
     /** Creates an EditTime from a BeatPosition. */
-    EditTime (tracktion_graph::BeatPosition, const TempoSequence&);
-
-    /** Converts this to a TimePosition.
-        N.B. This may be a slow operation if this was created using a BeatPosition.
-    */
-    tracktion_graph::TimePosition toTime() const;
-
-    /** Converts this to a BeatPosition.
-        N.B. This may be a slow operation if this was created using a TimePosition.
-    */
-    tracktion_graph::BeatPosition toBeats() const;
+    EditTime (tracktion_graph::BeatPosition);
 
 private:
-    friend EditTime operator+ (const EditTime&, tracktion_graph::TimeDuration);
-    friend EditTime operator+ (const EditTime&, std::chrono::duration<double>);
-    friend EditTime operator+ (const EditTime&, tracktion_graph::BeatDuration);
-    friend EditTime operator- (const EditTime&, tracktion_graph::TimeDuration);
-    friend EditTime operator- (const EditTime&, std::chrono::duration<double>);
-    friend EditTime operator- (const EditTime&, tracktion_graph::BeatDuration);
+    friend tracktion_graph::TimePosition toTime (EditTime, const TempoSequence&);
+    friend tracktion_graph::BeatPosition toBeats (EditTime, const TempoSequence&);
 
     std::variant<tracktion_graph::TimePosition, tracktion_graph::BeatPosition> position;
-    const TempoSequence& tempoSequence;
 };
 
-
 //==============================================================================
-/** Adds a TimeDuration to an EditTime. */
-EditTime operator+ (const EditTime&, tracktion_graph::TimeDuration);
+/** Converts an EditTime to a TimePosition.
+    N.B. This may be a slow operation if this was created using a BeatPosition.
+*/
+tracktion_graph::TimePosition toTime (EditTime, const TempoSequence&);
 
-/** Adds a chrono time to an EditTime. */
-EditTime operator+ (const EditTime&, std::chrono::duration<double>);
-
-/** Adds a BeatDuration to an EditTime. */
-EditTime operator+ (const EditTime&, tracktion_graph::BeatDuration);
-
-/** Subtracts a TimeDuration to an EditTime. */
-EditTime operator- (const EditTime&, tracktion_graph::TimeDuration);
-
-/** Subtracts a chrono time to an EditTime. */
-EditTime operator- (const EditTime&, std::chrono::duration<double>);
-
-/** Subtracts a BeatDuration to an EditTime. */
-EditTime operator- (const EditTime&, tracktion_graph::BeatDuration);
+/** Converts an EditTime to a BeatPosition.
+    N.B. This may be a slow operation if this was created using a TimePosition.
+*/
+tracktion_graph::BeatPosition toBeats (EditTime, const TempoSequence&);
 
 
 //==============================================================================
@@ -88,62 +63,31 @@ EditTime operator- (const EditTime&, tracktion_graph::BeatDuration);
 //
 //==============================================================================
 
-inline EditTime::EditTime (tracktion_graph::TimePosition tp, const TempoSequence& ts)
-    : position (tp), tempoSequence (ts)
+inline EditTime::EditTime (tracktion_graph::TimePosition tp)
+    : position (tp)
 {
 }
 
-inline EditTime::EditTime (tracktion_graph::BeatPosition bp, const TempoSequence& ts)
-    : position (bp), tempoSequence (ts)
+inline EditTime::EditTime (tracktion_graph::BeatPosition bp)
+    : position (bp)
 {
 }
 
-inline tracktion_graph::TimePosition EditTime::toTime() const
+inline tracktion_graph::TimePosition toTime (EditTime et, const TempoSequence& ts)
 {
     // N.B. std::get unavailable prior to macOS 10.14
-    if (const auto tp = std::get_if<tracktion_graph::TimePosition> (&position))
+    if (const auto tp = std::get_if<tracktion_graph::TimePosition> (&et.position))
         return *tp;
 
-    return tracktion_engine::toTime (*std::get_if<tracktion_graph::BeatPosition> (&position), tempoSequence);
+    return tracktion_engine::toTime (*std::get_if<tracktion_graph::BeatPosition> (&et.position), ts);
 }
 
-inline tracktion_graph::BeatPosition EditTime::toBeats() const
+inline tracktion_graph::BeatPosition toBeats (EditTime et, const TempoSequence& ts)
 {
-    if (const auto bp = std::get_if<tracktion_graph::BeatPosition> (&position))
+    if (const auto bp = std::get_if<tracktion_graph::BeatPosition> (&et.position))
         return *bp;
 
-    return tracktion_engine::toBeats (*std::get_if<tracktion_graph::TimePosition> (&position), tempoSequence);
-}
-
-//==============================================================================
-inline EditTime operator+ (const EditTime& et, tracktion_graph::TimeDuration d)
-{
-    return EditTime (tracktion_graph::TimePosition::fromSeconds (et.toTime().inSeconds() + d.inSeconds()), et.tempoSequence);
-}
-
-inline EditTime operator+ (const EditTime& et, std::chrono::duration<double> t)
-{
-    return EditTime (tracktion_graph::TimePosition::fromSeconds (et.toTime().inSeconds() + t.count()), et.tempoSequence);
-}
-
-inline EditTime operator+ (const EditTime& et, tracktion_graph::BeatDuration d)
-{
-    return EditTime (tracktion_graph::BeatPosition::fromBeats (et.toBeats().inBeats() + d.inBeats()), et.tempoSequence);
-}
-
-inline EditTime operator- (const EditTime& et, tracktion_graph::TimeDuration d)
-{
-    return EditTime (tracktion_graph::TimePosition::fromSeconds (et.toTime().inSeconds() - d.inSeconds()), et.tempoSequence);
-}
-
-inline EditTime operator- (const EditTime& et, std::chrono::duration<double> t)
-{
-    return EditTime (tracktion_graph::TimePosition::fromSeconds (et.toTime().inSeconds() - t.count()), et.tempoSequence);
-}
-
-inline EditTime operator- (const EditTime& et, tracktion_graph::BeatDuration d)
-{
-    return EditTime (tracktion_graph::BeatPosition::fromBeats (et.toBeats().inBeats() - d.inBeats()), et.tempoSequence);
+    return tracktion_engine::toBeats (*std::get_if<tracktion_graph::TimePosition> (&et.position), ts);
 }
 
 

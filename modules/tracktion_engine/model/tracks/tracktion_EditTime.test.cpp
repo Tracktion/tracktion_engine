@@ -66,41 +66,34 @@ public:
             expectEquals (ts.getTempo (0)->getBpm(), 60.0);
 
             {
-                auto tp = TimePosition::fromSeconds (0.0);
-                auto et = EditTime (tp, ts);
-                expectEquals (et.toTime().inSeconds(), 0.0);
-                expectEquals (et.toBeats().inBeats(), 0.0);
+                auto et = EditTime (TimePosition::fromSeconds (0.0));
+                expectEquals (toTime (et, ts).inSeconds(), 0.0);
+                expectEquals (toBeats (et, ts).inBeats(), 0.0);
+                expectEquals ((toTime (et, ts) + 4s).inSeconds(), 4.0);
+                expectEquals (toBeats ((toTime (et, ts) + 4s), ts).inBeats(), 4.0);
 
-                expectEquals ((et + TimeDuration::fromSeconds (4.0)).toTime().inSeconds(), 4.0);
-                expectEquals ((et + 4s).toTime().inSeconds(), 4.0);
-                expectEquals ((et + 4s).toBeats().inBeats(), 4.0);
-
-                expectEquals ((et - TimeDuration::fromSeconds (4.0)).toTime().inSeconds(), -4.0);
-                expectEquals ((et - 4s).toTime().inSeconds(), -4.0);
-                expectEquals ((et - 4s).toBeats().inBeats(), -4.0);
+                expectEquals ((toTime (et, ts) - TimeDuration::fromSeconds (4.0)).inSeconds(), -4.0);
+                expectEquals ((toTime (et, ts) - 4s).inSeconds(), -4.0);
             }
 
             {
-                auto tp = TimePosition::fromSeconds (8.0);
-                auto et = EditTime (tp, ts);
-                expectEquals (et.toTime().inSeconds(), 8.0);
-                expectEquals (et.toBeats().inBeats(), 8.0);
+                auto et = EditTime (TimePosition::fromSeconds (8.0));
+                expectEquals (toTime (et, ts).inSeconds(), 8.0);
+                expectEquals (toBeats (et, ts).inBeats(), 8.0);
 
-                expectEquals ((et + 4s).toTime().inSeconds(), 12.0);
-                expectEquals ((et + 4s).toBeats().inBeats(), 12.0);
+                expectEquals ((toTime (et, ts) + 4s).inSeconds(), 12.0);
             }
 
             {
-                auto bp = BeatPosition::fromBeats (8.0);
-                auto et = EditTime (bp, ts);
-                expectEquals (et.toTime().inSeconds(), 8.0);
-                expectEquals (et.toBeats().inBeats(), 8.0);
+                auto et = EditTime (BeatPosition::fromBeats (8.0));
+                expectEquals (toTime (et, ts).inSeconds(), 8.0);
+                expectEquals (toBeats (et, ts).inBeats(), 8.0);
 
-                expectEquals ((et + 4s).toTime().inSeconds(), 12.0);
-                expectEquals ((et + 4s).toBeats().inBeats(), 12.0);
+                expectEquals ((toTime (et, ts) + 4s).inSeconds(), 12.0);
+                expectEquals (toBeats (toTime (et, ts) + 4s, ts).inBeats(), 12.0);
 
-                expectEquals ((et - 4s).toTime().inSeconds(), 4.0);
-                expectEquals ((et - 4s).toBeats().inBeats(), 4.0);
+                expectEquals ((toTime (et, ts) - 4s).inSeconds(), 4.0);
+                expectEquals (toBeats (toTime (et, ts) - 4s, ts).inBeats(), 4.0);
             }
 
             // Change tempo to 120
@@ -109,29 +102,27 @@ public:
             expectEquals (ts.getTempo (0)->getBpm(), 120.0);
 
             {
-                auto tp = TimePosition::fromSeconds (0.0);
-                auto et = EditTime (tp, ts);
-                expectEquals (et.toTime().inSeconds(), 0.0);
-                expectEquals (et.toBeats().inBeats(), 0.0);
+                auto et = EditTime (TimePosition::fromSeconds (0.0));
+                expectEquals (toTime (et, ts).inSeconds(), 0.0);
+                expectEquals (toBeats (et, ts).inBeats(), 0.0);
 
-                expectEquals ((et + 4s).toTime().inSeconds(), 4.0);
-                expectEquals ((et + 4s).toBeats().inBeats(), 8.0);
+                expectEquals ((toTime (et, ts) + 4s).inSeconds(), 4.0);
+                expectEquals (toBeats (toTime (et, ts) + 4s, ts).inBeats(), 8.0);
 
-                expectEquals ((et - 4s).toTime().inSeconds(), -4.0);
-                expectEquals ((et - 4s).toBeats().inBeats(), -8.0);
+                expectEquals ((toTime (et, ts) - 4s).inSeconds(), -4.0);
+                expectEquals (toBeats (toTime (et, ts) - 4s, ts).inBeats(), -8.0);
             }
 
             {
-                auto tp = TimePosition::fromSeconds (8.0);
-                auto et = EditTime (tp, ts);
-                expectEquals (et.toTime().inSeconds(), 8.0);
-                expectEquals (et.toBeats().inBeats(), 16.0);
+                auto et = EditTime (TimePosition::fromSeconds (8.0));
+                expectEquals (toTime (et, ts).inSeconds(), 8.0);
+                expectEquals (toBeats (et, ts).inBeats(), 16.0);
 
-                expectEquals ((et + 4s).toTime().inSeconds(), 12.0);
-                expectEquals ((et + 4s).toBeats().inBeats(), 24.0);
+                expectEquals ((toTime (et, ts) + 4s).inSeconds(), 12.0);
+                expectEquals (toBeats (toTime (et, ts) + 4s, ts).inBeats(), 24.0);
 
-                expectEquals ((et - 4s).toTime().inSeconds(), 4.0);
-                expectEquals ((et - 4s).toBeats().inBeats(), 8.0);
+                expectEquals ((toTime (et, ts) - 4s).inSeconds(), 4.0);
+                expectEquals (toBeats (toTime (et, ts) - 4s, ts).inBeats(), 8.0);
             }
         }
     }

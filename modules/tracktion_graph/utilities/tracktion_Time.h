@@ -87,15 +87,26 @@ int64_t toSamples (TimeDuration, double sampleRate);
 /** Adds two TimeDurations together. */
 TimeDuration operator+ (const TimeDuration&, const TimeDuration&);
 
+/** Adds a time to a TimeDuration. */
+TimeDuration operator+ (const TimeDuration&, std::chrono::duration<double>);
+
 /** Adds a TimeDuration to a TimePosition. */
 TimePosition operator+ (const TimePosition&, const TimeDuration&);
+
+/** Adds a time to a TimePosition. */
+TimePosition operator+ (const TimePosition&, std::chrono::duration<double>);
 
 /** Subtracts a TimeDuration from another one. */
 TimeDuration operator- (const TimeDuration&, const TimeDuration&);
 
+/** Subtracts a time from a TimeDuration. */
+TimeDuration operator- (const TimeDuration&, std::chrono::duration<double>);
+
 /** Subtracts a TimeDuration from a TimePosition. */
 TimePosition operator- (const TimePosition&, const TimeDuration&);
 
+/** Subtracts a time from a TimePosition. */
+TimePosition operator- (const TimePosition&, std::chrono::duration<double>);
 
 //==============================================================================
 //==============================================================================
@@ -257,6 +268,25 @@ inline TimePosition operator- (const TimePosition& t1, const TimeDuration& t2)
     return TimePosition::fromSeconds (t1.inSeconds() - t2.inSeconds());
 }
 
+inline TimeDuration operator+ (const TimeDuration& t1, std::chrono::duration<double> t2)
+{
+    return TimeDuration::fromSeconds (t1.inSeconds() + t2.count());
+}
+
+inline TimePosition operator+ (const TimePosition& t1, std::chrono::duration<double> t2)
+{
+    return TimePosition::fromSeconds (t1.inSeconds() + t2.count());
+}
+
+inline TimeDuration operator- (const TimeDuration& t1, std::chrono::duration<double> t2)
+{
+    return TimeDuration::fromSeconds (t1.inSeconds() - t2.count());
+}
+
+inline TimePosition operator- (const TimePosition& t1, std::chrono::duration<double> t2)
+{
+    return TimePosition::fromSeconds (t1.inSeconds() - t2.count());
+}
 
 //==============================================================================
 template<typename T>
