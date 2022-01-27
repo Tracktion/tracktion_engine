@@ -25,8 +25,6 @@ void IconProG2::acceptMidiMessageInt (int deviceIndex, const juce::MidiMessage& 
     const unsigned char* const d = m.getRawData();
     const unsigned char d1 = d[1];
     
-    DBG (juce::String::formatted ("d: %x %x %x", d[0], d[1], d[2]));
-
     if (d[0] == 0xb0)
     {
         if (d1 == 0x3c)
