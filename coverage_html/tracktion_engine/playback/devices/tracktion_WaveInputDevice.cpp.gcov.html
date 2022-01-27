@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-26 16:28:11</td>
+            <td class="headerValue">2022-01-27 18:07:46</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">66</td>
@@ -187,11 +187,11 @@
 <a name="125"><span class="lineNum">     125 </span><span class="lineCov">         64 :         lengthInSeconds = e.getPropertyStorage().getProperty (SettingID::retrospectiveRecord, 30);</span></a>
 <a name="126"><span class="lineNum">     126 </span><span class="lineCov">         64 :     }</span></a>
 <a name="127"><span class="lineNum">     127 </span>            : </a>
-<a name="128"><span class="lineNum">     128 </span><span class="lineCov">      61792 :     void updateSizeIfNeeded (int newNumChannels, double newSampleRate)</span></a>
+<a name="128"><span class="lineNum">     128 </span><span class="lineCov">      61856 :     void updateSizeIfNeeded (int newNumChannels, double newSampleRate)</span></a>
 <a name="129"><span class="lineNum">     129 </span>            :     {</a>
-<a name="130"><span class="lineNum">     130 </span><span class="lineCov">      61792 :         int newNumSamples = juce::roundToInt (lengthInSeconds * newSampleRate);</span></a>
+<a name="130"><span class="lineNum">     130 </span><span class="lineCov">      61856 :         int newNumSamples = juce::roundToInt (lengthInSeconds * newSampleRate);</span></a>
 <a name="131"><span class="lineNum">     131 </span>            : </a>
-<a name="132"><span class="lineNum">     132 </span><span class="lineCov">      61792 :         if (newNumChannels != numChannels || newNumSamples != numSamples || newSampleRate != sampleRate)</span></a>
+<a name="132"><span class="lineNum">     132 </span><span class="lineCov">      61856 :         if (newNumChannels != numChannels || newNumSamples != numSamples || newSampleRate != sampleRate)</span></a>
 <a name="133"><span class="lineNum">     133 </span>            :         {</a>
 <a name="134"><span class="lineNum">     134 </span><span class="lineCov">         64 :             numChannels = newNumChannels;</span></a>
 <a name="135"><span class="lineNum">     135 </span><span class="lineCov">         64 :             numSamples  = newNumSamples;</span></a>
@@ -200,34 +200,34 @@
 <a name="138"><span class="lineNum">     138 </span><span class="lineCov">        128 :             fifo.setSize (numChannels, std::max (1, numSamples));</span></a>
 <a name="139"><span class="lineNum">     139 </span>            :             fifo.reset();</a>
 <a name="140"><span class="lineNum">     140 </span>            :         }</a>
-<a name="141"><span class="lineNum">     141 </span><span class="lineCov">      61792 :     }</span></a>
+<a name="141"><span class="lineNum">     141 </span><span class="lineCov">      61856 :     }</span></a>
 <a name="142"><span class="lineNum">     142 </span>            : </a>
-<a name="143"><span class="lineNum">     143 </span><span class="lineCov">      61792 :     void processBuffer (double streamTime, const juce::AudioBuffer&lt;float&gt;&amp; inputBuffer, int numSamplesIn)</span></a>
+<a name="143"><span class="lineNum">     143 </span><span class="lineCov">      61856 :     void processBuffer (double streamTime, const juce::AudioBuffer&lt;float&gt;&amp; inputBuffer, int numSamplesIn)</span></a>
 <a name="144"><span class="lineNum">     144 </span>            :     {</a>
-<a name="145"><span class="lineNum">     145 </span><span class="lineCov">      61792 :         if (numSamplesIn &lt; numSamples)</span></a>
+<a name="145"><span class="lineNum">     145 </span><span class="lineCov">      61856 :         if (numSamplesIn &lt; numSamples)</span></a>
 <a name="146"><span class="lineNum">     146 </span>            :         {</a>
-<a name="147"><span class="lineNum">     147 </span><span class="lineCov">      61792 :             lastStreamTime = streamTime;</span></a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineCov">      61856 :             lastStreamTime = streamTime;</span></a>
 <a name="148"><span class="lineNum">     148 </span>            : </a>
-<a name="149"><span class="lineNum">     149 </span><span class="lineCov">      61792 :             fifo.ensureFreeSpace (numSamplesIn);</span></a>
+<a name="149"><span class="lineNum">     149 </span><span class="lineCov">      61856 :             fifo.ensureFreeSpace (numSamplesIn);</span></a>
 <a name="150"><span class="lineNum">     150 </span>            :             fifo.write (inputBuffer);</a>
 <a name="151"><span class="lineNum">     151 </span>            :         }</a>
-<a name="152"><span class="lineNum">     152 </span><span class="lineCov">      61792 :     }</span></a>
+<a name="152"><span class="lineNum">     152 </span><span class="lineCov">      61856 :     }</span></a>
 <a name="153"><span class="lineNum">     153 </span>            : </a>
-<a name="154"><span class="lineNum">     154 </span><span class="lineCov">      61792 :     void syncToEdit (Edit&amp; edit, EditPlaybackContext&amp; context, double streamTime, int numSamplesIn)</span></a>
+<a name="154"><span class="lineNum">     154 </span><span class="lineCov">      61856 :     void syncToEdit (Edit&amp; edit, EditPlaybackContext&amp; context, double streamTime, int numSamplesIn)</span></a>
 <a name="155"><span class="lineNum">     155 </span>            :     {</a>
-<a name="156"><span class="lineNum">     156 </span><span class="lineCov">      61792 :         const juce::SpinLock::ScopedLockType sl (editInfoLock);</span></a>
-<a name="157"><span class="lineNum">     157 </span><span class="lineCov">      61792 :         auto&amp; pei = editInfo[edit.getProjectItemID()];</span></a>
+<a name="156"><span class="lineNum">     156 </span><span class="lineCov">      61856 :         const juce::SpinLock::ScopedLockType sl (editInfoLock);</span></a>
+<a name="157"><span class="lineNum">     157 </span><span class="lineCov">      61856 :         auto&amp; pei = editInfo[edit.getProjectItemID()];</span></a>
 <a name="158"><span class="lineNum">     158 </span>            : </a>
-<a name="159"><span class="lineNum">     159 </span><span class="lineCov">      61792 :         if (context.isPlaying())</span></a>
+<a name="159"><span class="lineNum">     159 </span><span class="lineCov">      61856 :         if (context.isPlaying())</span></a>
 <a name="160"><span class="lineNum">     160 </span>            :         {</a>
 <a name="161"><span class="lineNum">     161 </span><span class="lineCov">      60080 :             pei.pausedTime = 0;</span></a>
 <a name="162"><span class="lineNum">     162 </span><span class="lineCov">      60080 :             pei.lastEditTime = context.globalStreamTimeToEditTime (streamTime);</span></a>
 <a name="163"><span class="lineNum">     163 </span>            :         }</a>
 <a name="164"><span class="lineNum">     164 </span>            :         else</a>
 <a name="165"><span class="lineNum">     165 </span>            :         {</a>
-<a name="166"><span class="lineNum">     166 </span><span class="lineCov">       1712 :             pei.pausedTime += numSamplesIn / sampleRate;</span></a>
+<a name="166"><span class="lineNum">     166 </span><span class="lineCov">       1776 :             pei.pausedTime += numSamplesIn / sampleRate;</span></a>
 <a name="167"><span class="lineNum">     167 </span>            :         }</a>
-<a name="168"><span class="lineNum">     168 </span><span class="lineCov">      61792 :     }</span></a>
+<a name="168"><span class="lineNum">     168 </span><span class="lineCov">      61856 :     }</span></a>
 <a name="169"><span class="lineNum">     169 </span>            : </a>
 <a name="170"><span class="lineNum">     170 </span><span class="lineNoCov">          0 :     bool wasRecentlyPlaying (Edit&amp; edit)</span></a>
 <a name="171"><span class="lineNum">     171 </span>            :     {</a>
@@ -571,12 +571,12 @@
 <a name="509"><span class="lineNum">     509 </span>            :         RecordingThumbnailManager::Thumbnail::Ptr thumbnail;</a>
 <a name="510"><span class="lineNum">     510 </span>            :         WaveInputRecordingThread::ScopedInitialiser threadInitialiser;</a>
 <a name="511"><span class="lineNum">     511 </span>            : </a>
-<a name="512"><span class="lineNum">     512 </span><span class="lineCov">      55454 :         void addBlockToRecord (const juce::AudioBuffer&lt;float&gt;&amp; buffer, int start, int numSamples)</span></a>
+<a name="512"><span class="lineNum">     512 </span><span class="lineCov">      55524 :         void addBlockToRecord (const juce::AudioBuffer&lt;float&gt;&amp; buffer, int start, int numSamples)</span></a>
 <a name="513"><span class="lineNum">     513 </span>            :         {</a>
-<a name="514"><span class="lineNum">     514 </span><span class="lineCov">      55454 :             if (fileWriter != nullptr)</span></a>
-<a name="515"><span class="lineNum">     515 </span><span class="lineCov">      55450 :                 engine.getWaveInputRecordingThread().addBlockToRecord (*fileWriter, buffer,</span></a>
-<a name="516"><span class="lineNum">     516 </span><span class="lineCov">      55450 :                                                                        start, numSamples, thumbnail);</span></a>
-<a name="517"><span class="lineNum">     517 </span><span class="lineCov">      55454 :         }</span></a>
+<a name="514"><span class="lineNum">     514 </span><span class="lineCov">      55524 :             if (fileWriter != nullptr)</span></a>
+<a name="515"><span class="lineNum">     515 </span><span class="lineCov">      55518 :                 engine.getWaveInputRecordingThread().addBlockToRecord (*fileWriter, buffer,</span></a>
+<a name="516"><span class="lineNum">     516 </span><span class="lineCov">      55518 :                                                                        start, numSamples, thumbnail);</span></a>
+<a name="517"><span class="lineNum">     517 </span><span class="lineCov">      55524 :         }</span></a>
 <a name="518"><span class="lineNum">     518 </span>            :     };</a>
 <a name="519"><span class="lineNum">     519 </span>            : </a>
 <a name="520"><span class="lineNum">     520 </span><span class="lineCov">         64 :     Clip::Array applyLastRecordingToEdit (EditTimeRange recordedRange,</span></a>
@@ -1062,22 +1062,22 @@
 <a name="1000"><span class="lineNum">    1000 </span><span class="lineCov">        256 :                 &amp;&amp; InputDeviceInstance::isLivePlayEnabled (t);</span></a>
 <a name="1001"><span class="lineNum">    1001 </span>            :     }</a>
 <a name="1002"><span class="lineNum">    1002 </span>            : </a>
-<a name="1003"><span class="lineNum">    1003 </span><span class="lineCov">      61792 :     void copyIncomingDataIntoBuffer (const float** allChannels, int numChannels, int numSamples)</span></a>
+<a name="1003"><span class="lineNum">    1003 </span><span class="lineCov">      61856 :     void copyIncomingDataIntoBuffer (const float** allChannels, int numChannels, int numSamples)</span></a>
 <a name="1004"><span class="lineNum">    1004 </span>            :     {</a>
-<a name="1005"><span class="lineNum">    1005 </span><span class="lineCov">      61792 :         if (numChannels == 0)</span></a>
+<a name="1005"><span class="lineNum">    1005 </span><span class="lineCov">      61856 :         if (numChannels == 0)</span></a>
 <a name="1006"><span class="lineNum">    1006 </span>            :             return;</a>
 <a name="1007"><span class="lineNum">    1007 </span>            : </a>
 <a name="1008"><span class="lineNum">    1008 </span>            :         auto&amp; wi = getWaveInput();</a>
 <a name="1009"><span class="lineNum">    1009 </span>            :         auto&amp; channelSet = wi.getChannelSet();</a>
-<a name="1010"><span class="lineNum">    1010 </span><span class="lineCov">      61792 :         inputBuffer.setSize (channelSet.size(), numSamples);</span></a>
+<a name="1010"><span class="lineNum">    1010 </span><span class="lineCov">      61856 :         inputBuffer.setSize (channelSet.size(), numSamples);</span></a>
 <a name="1011"><span class="lineNum">    1011 </span>            : </a>
-<a name="1012"><span class="lineNum">    1012 </span><span class="lineCov">     123584 :         for (const auto&amp; ci : wi.getChannels())</span></a>
+<a name="1012"><span class="lineNum">    1012 </span><span class="lineCov">     123712 :         for (const auto&amp; ci : wi.getChannels())</span></a>
 <a name="1013"><span class="lineNum">    1013 </span>            :         {</a>
-<a name="1014"><span class="lineNum">    1014 </span><span class="lineCov">      61792 :             if (juce::isPositiveAndBelow (ci.indexInDevice, numChannels))</span></a>
+<a name="1014"><span class="lineNum">    1014 </span><span class="lineCov">      61856 :             if (juce::isPositiveAndBelow (ci.indexInDevice, numChannels))</span></a>
 <a name="1015"><span class="lineNum">    1015 </span>            :             {</a>
-<a name="1016"><span class="lineNum">    1016 </span><span class="lineCov">      61792 :                 auto inputIndex = channelSet.getChannelIndexForType (ci.channel);</span></a>
-<a name="1017"><span class="lineNum">    1017 </span><span class="lineCov">      61792 :                 juce::FloatVectorOperations::copy (inputBuffer.getWritePointer (inputIndex),</span></a>
-<a name="1018"><span class="lineNum">    1018 </span><span class="lineCov">      61792 :                                                    allChannels[ci.indexInDevice], numSamples);</span></a>
+<a name="1016"><span class="lineNum">    1016 </span><span class="lineCov">      61856 :                 auto inputIndex = channelSet.getChannelIndexForType (ci.channel);</span></a>
+<a name="1017"><span class="lineNum">    1017 </span><span class="lineCov">      61856 :                 juce::FloatVectorOperations::copy (inputBuffer.getWritePointer (inputIndex),</span></a>
+<a name="1018"><span class="lineNum">    1018 </span><span class="lineCov">      61856 :                                                    allChannels[ci.indexInDevice], numSamples);</span></a>
 <a name="1019"><span class="lineNum">    1019 </span>            :             }</a>
 <a name="1020"><span class="lineNum">    1020 </span>            :             else</a>
 <a name="1021"><span class="lineNum">    1021 </span>            :             {</a>
@@ -1086,54 +1086,54 @@
 <a name="1024"><span class="lineNum">    1024 </span>            :         }</a>
 <a name="1025"><span class="lineNum">    1025 </span>            :     }</a>
 <a name="1026"><span class="lineNum">    1026 </span>            : </a>
-<a name="1027"><span class="lineNum">    1027 </span><span class="lineCov">      61792 :     void acceptInputBuffer (const float** allChannels, int numChannels, int numSamples,</span></a>
+<a name="1027"><span class="lineNum">    1027 </span><span class="lineCov">      61856 :     void acceptInputBuffer (const float** allChannels, int numChannels, int numSamples,</span></a>
 <a name="1028"><span class="lineNum">    1028 </span>            :                             double streamTime, LevelMeasurer* measurerToUpdate,</a>
 <a name="1029"><span class="lineNum">    1029 </span>            :                             RetrospectiveRecordBuffer* retrospectiveBuffer, bool addToRetrospective)</a>
 <a name="1030"><span class="lineNum">    1030 </span>            :     {</a>
-<a name="1031"><span class="lineNum">    1031 </span><span class="lineCov">     123584 :         CRASH_TRACER</span></a>
-<a name="1032"><span class="lineNum">    1032 </span><span class="lineCov">      61792 :         copyIncomingDataIntoBuffer (allChannels, numChannels, numSamples);</span></a>
+<a name="1031"><span class="lineNum">    1031 </span><span class="lineCov">     123712 :         CRASH_TRACER</span></a>
+<a name="1032"><span class="lineNum">    1032 </span><span class="lineCov">      61856 :         copyIncomingDataIntoBuffer (allChannels, numChannels, numSamples);</span></a>
 <a name="1033"><span class="lineNum">    1033 </span>            : </a>
-<a name="1034"><span class="lineNum">    1034 </span><span class="lineCov">      61792 :         auto inputGainDb = getWaveInput().inputGainDb;</span></a>
+<a name="1034"><span class="lineNum">    1034 </span><span class="lineCov">      61856 :         auto inputGainDb = getWaveInput().inputGainDb;</span></a>
 <a name="1035"><span class="lineNum">    1035 </span>            : </a>
-<a name="1036"><span class="lineNum">    1036 </span><span class="lineCov">      61792 :         if (inputGainDb &gt; 0.01f || inputGainDb &lt; -0.01f)</span></a>
+<a name="1036"><span class="lineNum">    1036 </span><span class="lineCov">      61856 :         if (inputGainDb &gt; 0.01f || inputGainDb &lt; -0.01f)</span></a>
 <a name="1037"><span class="lineNum">    1037 </span><span class="lineNoCov">          0 :             inputBuffer.applyGain (0, numSamples, dbToGain (inputGainDb));</span></a>
 <a name="1038"><span class="lineNum">    1038 </span>            : </a>
-<a name="1039"><span class="lineNum">    1039 </span><span class="lineCov">      61792 :         if (measurerToUpdate != nullptr)</span></a>
-<a name="1040"><span class="lineNum">    1040 </span><span class="lineCov">      61792 :             measurerToUpdate-&gt;processBuffer (inputBuffer, 0, numSamples);</span></a>
+<a name="1039"><span class="lineNum">    1039 </span><span class="lineCov">      61856 :         if (measurerToUpdate != nullptr)</span></a>
+<a name="1040"><span class="lineNum">    1040 </span><span class="lineCov">      61856 :             measurerToUpdate-&gt;processBuffer (inputBuffer, 0, numSamples);</span></a>
 <a name="1041"><span class="lineNum">    1041 </span>            : </a>
-<a name="1042"><span class="lineNum">    1042 </span><span class="lineCov">      61792 :         if (retrospectiveBuffer != nullptr)</span></a>
+<a name="1042"><span class="lineNum">    1042 </span><span class="lineCov">      61856 :         if (retrospectiveBuffer != nullptr)</span></a>
 <a name="1043"><span class="lineNum">    1043 </span>            :         {</a>
-<a name="1044"><span class="lineNum">    1044 </span><span class="lineCov">      61792 :             if (addToRetrospective)</span></a>
+<a name="1044"><span class="lineNum">    1044 </span><span class="lineCov">      61856 :             if (addToRetrospective)</span></a>
 <a name="1045"><span class="lineNum">    1045 </span>            :             {</a>
-<a name="1046"><span class="lineNum">    1046 </span><span class="lineCov">      61792 :                 retrospectiveBuffer-&gt;updateSizeIfNeeded (inputBuffer.getNumChannels(),</span></a>
-<a name="1047"><span class="lineNum">    1047 </span><span class="lineCov">      61792 :                                                          edit.engine.getDeviceManager().getSampleRate());</span></a>
-<a name="1048"><span class="lineNum">    1048 </span><span class="lineCov">      61792 :                 retrospectiveBuffer-&gt;processBuffer (streamTime, inputBuffer, numSamples);</span></a>
+<a name="1046"><span class="lineNum">    1046 </span><span class="lineCov">      61856 :                 retrospectiveBuffer-&gt;updateSizeIfNeeded (inputBuffer.getNumChannels(),</span></a>
+<a name="1047"><span class="lineNum">    1047 </span><span class="lineCov">      61856 :                                                          edit.engine.getDeviceManager().getSampleRate());</span></a>
+<a name="1048"><span class="lineNum">    1048 </span><span class="lineCov">      61856 :                 retrospectiveBuffer-&gt;processBuffer (streamTime, inputBuffer, numSamples);</span></a>
 <a name="1049"><span class="lineNum">    1049 </span>            :             }</a>
 <a name="1050"><span class="lineNum">    1050 </span>            : </a>
-<a name="1051"><span class="lineNum">    1051 </span><span class="lineCov">      61792 :             retrospectiveBuffer-&gt;syncToEdit (edit, context, streamTime, numSamples);</span></a>
+<a name="1051"><span class="lineNum">    1051 </span><span class="lineCov">      61856 :             retrospectiveBuffer-&gt;syncToEdit (edit, context, streamTime, numSamples);</span></a>
 <a name="1052"><span class="lineNum">    1052 </span>            :         }</a>
 <a name="1053"><span class="lineNum">    1053 </span>            : </a>
 <a name="1054"><span class="lineNum">    1054 </span>            :         {</a>
-<a name="1055"><span class="lineNum">    1055 </span><span class="lineCov">      61792 :             const juce::ScopedLock sl (consumerLock);</span></a>
+<a name="1055"><span class="lineNum">    1055 </span><span class="lineCov">      61856 :             const juce::ScopedLock sl (consumerLock);</span></a>
 <a name="1056"><span class="lineNum">    1056 </span>            : </a>
-<a name="1057"><span class="lineNum">    1057 </span><span class="lineCov">      61792 :             for (auto n : consumers)</span></a>
+<a name="1057"><span class="lineNum">    1057 </span><span class="lineCov">      61856 :             for (auto n : consumers)</span></a>
 <a name="1058"><span class="lineNum">    1058 </span><span class="lineNoCov">          0 :                 n-&gt;acceptInputBuffer (choc::buffer::createChannelArrayView (inputBuffer.getArrayOfWritePointers(),</span></a>
 <a name="1059"><span class="lineNum">    1059 </span><span class="lineNoCov">          0 :                                                                             (choc::buffer::ChannelCount) inputBuffer.getNumChannels(),</span></a>
 <a name="1060"><span class="lineNum">    1060 </span><span class="lineNoCov">          0 :                                                                             (choc::buffer::FrameCount) numSamples));</span></a>
 <a name="1061"><span class="lineNum">    1061 </span>            :         }</a>
 <a name="1062"><span class="lineNum">    1062 </span>            : </a>
-<a name="1063"><span class="lineNum">    1063 </span><span class="lineCov">      61792 :         const juce::ScopedLock sl (contextLock);</span></a>
+<a name="1063"><span class="lineNum">    1063 </span><span class="lineCov">      61856 :         const juce::ScopedLock sl (contextLock);</span></a>
 <a name="1064"><span class="lineNum">    1064 </span>            : </a>
-<a name="1065"><span class="lineNum">    1065 </span><span class="lineCov">      61792 :         if (recordingContext != nullptr)</span></a>
+<a name="1065"><span class="lineNum">    1065 </span><span class="lineCov">      61856 :         if (recordingContext != nullptr)</span></a>
 <a name="1066"><span class="lineNum">    1066 </span>            :         {</a>
-<a name="1067"><span class="lineNum">    1067 </span><span class="lineCov">      60804 :             auto blockStart = context.globalStreamTimeToEditTimeUnlooped (streamTime);</span></a>
-<a name="1068"><span class="lineNum">    1068 </span><span class="lineCov">      60804 :             const EditTimeRange blockRange (blockStart, blockStart + numSamples / recordingContext-&gt;sampleRate);</span></a>
+<a name="1067"><span class="lineNum">    1067 </span><span class="lineCov">      60854 :             auto blockStart = context.globalStreamTimeToEditTimeUnlooped (streamTime);</span></a>
+<a name="1068"><span class="lineNum">    1068 </span><span class="lineCov">      60854 :             const EditTimeRange blockRange (blockStart, blockStart + numSamples / recordingContext-&gt;sampleRate);</span></a>
 <a name="1069"><span class="lineNum">    1069 </span>            : </a>
-<a name="1070"><span class="lineNum">    1070 </span><span class="lineCov">      60804 :             muteTrackNow = recordingContext-&gt;muteTimes.overlaps (blockRange);</span></a>
+<a name="1070"><span class="lineNum">    1070 </span><span class="lineCov">      60854 :             muteTrackNow = recordingContext-&gt;muteTimes.overlaps (blockRange);</span></a>
 <a name="1071"><span class="lineNum">    1071 </span>            : </a>
-<a name="1072"><span class="lineNum">    1072 </span><span class="lineCov">      60804 :             if (recordingContext-&gt;punchTimes.overlaps (blockRange))</span></a>
+<a name="1072"><span class="lineNum">    1072 </span><span class="lineCov">      60854 :             if (recordingContext-&gt;punchTimes.overlaps (blockRange))</span></a>
 <a name="1073"><span class="lineNum">    1073 </span>            :             {</a>
-<a name="1074"><span class="lineNum">    1074 </span><span class="lineCov">      55454 :                 if (! recordingContext-&gt;hasHitThreshold)</span></a>
+<a name="1074"><span class="lineNum">    1074 </span><span class="lineCov">      55524 :                 if (! recordingContext-&gt;hasHitThreshold)</span></a>
 <a name="1075"><span class="lineNum">    1075 </span>            :                 {</a>
 <a name="1076"><span class="lineNum">    1076 </span><span class="lineNoCov">          0 :                     auto bufferLevelDb = gainToDb (inputBuffer.getMagnitude (0, numSamples));</span></a>
 <a name="1077"><span class="lineNum">    1077 </span><span class="lineNoCov">          0 :                     recordingContext-&gt;hasHitThreshold = bufferLevelDb &gt; getWaveInput().recordTriggerDb;</span></a>
@@ -1147,7 +1147,7 @@
 <a name="1085"><span class="lineNum">    1085 </span><span class="lineNoCov">          0 :                         recordingContext-&gt;thumbnail-&gt;punchInTime = blockRange.getStart();</span></a>
 <a name="1086"><span class="lineNum">    1086 </span>            :                 }</a>
 <a name="1087"><span class="lineNum">    1087 </span>            : </a>
-<a name="1088"><span class="lineNum">    1088 </span><span class="lineCov">      55454 :                 if (recordingContext-&gt;firstRecCallback)</span></a>
+<a name="1088"><span class="lineNum">    1088 </span><span class="lineCov">      55524 :                 if (recordingContext-&gt;firstRecCallback)</span></a>
 <a name="1089"><span class="lineNum">    1089 </span>            :                 {</a>
 <a name="1090"><span class="lineNum">    1090 </span><span class="lineCov">         64 :                     recordingContext-&gt;firstRecCallback = false;</span></a>
 <a name="1091"><span class="lineNum">    1091 </span>            : </a>
@@ -1155,9 +1155,9 @@
 <a name="1093"><span class="lineNum">    1093 </span><span class="lineCov">         64 :                     recordingContext-&gt;adjustSamples -= juce::roundToInt (timeDiff * recordingContext-&gt;sampleRate);</span></a>
 <a name="1094"><span class="lineNum">    1094 </span>            :                 }</a>
 <a name="1095"><span class="lineNum">    1095 </span>            : </a>
-<a name="1096"><span class="lineNum">    1096 </span><span class="lineCov">      55454 :                 const int adjustSamples = recordingContext-&gt;adjustSamples;</span></a>
+<a name="1096"><span class="lineNum">    1096 </span><span class="lineCov">      55524 :                 const int adjustSamples = recordingContext-&gt;adjustSamples;</span></a>
 <a name="1097"><span class="lineNum">    1097 </span>            : </a>
-<a name="1098"><span class="lineNum">    1098 </span><span class="lineCov">      55454 :                 if (adjustSamples &lt; 0)</span></a>
+<a name="1098"><span class="lineNum">    1098 </span><span class="lineCov">      55524 :                 if (adjustSamples &lt; 0)</span></a>
 <a name="1099"><span class="lineNum">    1099 </span>            :                 {</a>
 <a name="1100"><span class="lineNum">    1100 </span>            :                     // add silence</a>
 <a name="1101"><span class="lineNum">    1101 </span><span class="lineNoCov">          0 :                     AudioScratchBuffer silence (inputBuffer.getNumChannels(), -adjustSamples);</span></a>
@@ -1167,7 +1167,7 @@
 <a name="1105"><span class="lineNum">    1105 </span>            : </a>
 <a name="1106"><span class="lineNum">    1106 </span><span class="lineNoCov">          0 :                     recordingContext-&gt;adjustSamples = 0;</span></a>
 <a name="1107"><span class="lineNum">    1107 </span>            :                 }</a>
-<a name="1108"><span class="lineNum">    1108 </span><span class="lineCov">      55454 :                 else if (adjustSamples &gt; 0)</span></a>
+<a name="1108"><span class="lineNum">    1108 </span><span class="lineCov">      55524 :                 else if (adjustSamples &gt; 0)</span></a>
 <a name="1109"><span class="lineNum">    1109 </span>            :                 {</a>
 <a name="1110"><span class="lineNum">    1110 </span>            :                     // drop samples</a>
 <a name="1111"><span class="lineNum">    1111 </span><span class="lineCov">         64 :                     if (adjustSamples &gt;= numSamples)</span></a>
@@ -1182,7 +1182,7 @@
 <a name="1120"><span class="lineNum">    1120 </span>            :                 }</a>
 <a name="1121"><span class="lineNum">    1121 </span>            :                 else</a>
 <a name="1122"><span class="lineNum">    1122 </span>            :                 {</a>
-<a name="1123"><span class="lineNum">    1123 </span><span class="lineCov">      55390 :                     addBlockToRecord (inputBuffer, 0, numSamples);</span></a>
+<a name="1123"><span class="lineNum">    1123 </span><span class="lineCov">      55460 :                     addBlockToRecord (inputBuffer, 0, numSamples);</span></a>
 <a name="1124"><span class="lineNum">    1124 </span>            :                 }</a>
 <a name="1125"><span class="lineNum">    1125 </span>            :             }</a>
 <a name="1126"><span class="lineNum">    1126 </span>            :         }</a>
@@ -1195,11 +1195,11 @@
 <a name="1133"><span class="lineNum">    1133 </span>            :     volatile bool muteTrackNow = false;</a>
 <a name="1134"><span class="lineNum">    1134 </span>            :     juce::AudioBuffer&lt;float&gt; inputBuffer;</a>
 <a name="1135"><span class="lineNum">    1135 </span>            : </a>
-<a name="1136"><span class="lineNum">    1136 </span><span class="lineCov">      55454 :     void addBlockToRecord (const juce::AudioBuffer&lt;float&gt;&amp; buffer, int start, int numSamples)</span></a>
+<a name="1136"><span class="lineNum">    1136 </span><span class="lineCov">      55524 :     void addBlockToRecord (const juce::AudioBuffer&lt;float&gt;&amp; buffer, int start, int numSamples)</span></a>
 <a name="1137"><span class="lineNum">    1137 </span>            :     {</a>
-<a name="1138"><span class="lineNum">    1138 </span><span class="lineCov">      55454 :         const juce::ScopedLock sl (contextLock);</span></a>
-<a name="1139"><span class="lineNum">    1139 </span><span class="lineCov">      55454 :         recordingContext-&gt;addBlockToRecord (buffer, start, numSamples);</span></a>
-<a name="1140"><span class="lineNum">    1140 </span><span class="lineCov">      55454 :     }</span></a>
+<a name="1138"><span class="lineNum">    1138 </span><span class="lineCov">      55524 :         const juce::ScopedLock sl (contextLock);</span></a>
+<a name="1139"><span class="lineNum">    1139 </span><span class="lineCov">      55524 :         recordingContext-&gt;addBlockToRecord (buffer, start, numSamples);</span></a>
+<a name="1140"><span class="lineNum">    1140 </span><span class="lineCov">      55524 :     }</span></a>
 <a name="1141"><span class="lineNum">    1141 </span>            : </a>
 <a name="1142"><span class="lineNum">    1142 </span><span class="lineCov">        128 :     static void closeFileWriter (RecordingContext&amp; rc)</span></a>
 <a name="1143"><span class="lineNum">    1143 </span>            :     {</a>
@@ -1209,7 +1209,7 @@
 <a name="1147"><span class="lineNum">    1147 </span><span class="lineCov">         64 :             rc.engine.getWaveInputRecordingThread().waitForWriterToFinish (*localCopy);</span></a>
 <a name="1148"><span class="lineNum">    1148 </span><span class="lineCov">        128 :     }</span></a>
 <a name="1149"><span class="lineNum">    1149 </span>            : </a>
-<a name="1150"><span class="lineNum">    1150 </span><span class="lineCov">     124292 :     WaveInputDevice&amp; getWaveInput() const noexcept    { return static_cast&lt;WaveInputDevice&amp;&gt; (owner); }</span></a>
+<a name="1150"><span class="lineNum">    1150 </span><span class="lineCov">     124420 :     WaveInputDevice&amp; getWaveInput() const noexcept    { return static_cast&lt;WaveInputDevice&amp;&gt; (owner); }</span></a>
 <a name="1151"><span class="lineNum">    1151 </span>            : </a>
 <a name="1152"><span class="lineNum">    1152 </span>            :     //==============================================================================</a>
 <a name="1153"><span class="lineNum">    1153 </span>            :     juce::Array&lt;Consumer*&gt; consumers;</a>
@@ -1544,23 +1544,23 @@
 <a name="1482"><span class="lineNum">    1482 </span><span class="lineCov">         64 : }</span></a>
 <a name="1483"><span class="lineNum">    1483 </span>            : </a>
 <a name="1484"><span class="lineNum">    1484 </span>            : //==============================================================================</a>
-<a name="1485"><span class="lineNum">    1485 </span><span class="lineCov">      61792 : void WaveInputDevice::consumeNextAudioBlock (const float** allChannels, int numChannels, int numSamples, double streamTime)</span></a>
+<a name="1485"><span class="lineNum">    1485 </span><span class="lineCov">      61856 : void WaveInputDevice::consumeNextAudioBlock (const float** allChannels, int numChannels, int numSamples, double streamTime)</span></a>
 <a name="1486"><span class="lineNum">    1486 </span>            : {</a>
-<a name="1487"><span class="lineNum">    1487 </span><span class="lineCov">      61792 :     if (enabled)</span></a>
+<a name="1487"><span class="lineNum">    1487 </span><span class="lineCov">      61856 :     if (enabled)</span></a>
 <a name="1488"><span class="lineNum">    1488 </span>            :     {</a>
 <a name="1489"><span class="lineNum">    1489 </span>            :         bool isFirst = true;</a>
-<a name="1490"><span class="lineNum">    1490 </span><span class="lineCov">      61792 :         const juce::ScopedLock sl (instanceLock);</span></a>
+<a name="1490"><span class="lineNum">    1490 </span><span class="lineCov">      61856 :         const juce::ScopedLock sl (instanceLock);</span></a>
 <a name="1491"><span class="lineNum">    1491 </span>            : </a>
 <a name="1492"><span class="lineNum">    1492 </span>            :         // do this first, as writing to file trashes the buffer</a>
-<a name="1493"><span class="lineNum">    1493 </span><span class="lineCov">     123584 :         for (auto i : instances)</span></a>
+<a name="1493"><span class="lineNum">    1493 </span><span class="lineCov">     123712 :         for (auto i : instances)</span></a>
 <a name="1494"><span class="lineNum">    1494 </span>            :         {</a>
-<a name="1495"><span class="lineNum">    1495 </span><span class="lineCov">      61792 :             i-&gt;acceptInputBuffer (allChannels, numChannels, numSamples, streamTime,</span></a>
+<a name="1495"><span class="lineNum">    1495 </span><span class="lineCov">      61856 :             i-&gt;acceptInputBuffer (allChannels, numChannels, numSamples, streamTime,</span></a>
 <a name="1496"><span class="lineNum">    1496 </span>            :                                   isFirst ? &amp;levelMeasurer : nullptr,</a>
-<a name="1497"><span class="lineNum">    1497 </span><span class="lineCov">      61792 :                                   (! retrospectiveRecordLock) ? retrospectiveBuffer.get() : nullptr, isFirst);</span></a>
+<a name="1497"><span class="lineNum">    1497 </span><span class="lineCov">      61856 :                                   (! retrospectiveRecordLock) ? retrospectiveBuffer.get() : nullptr, isFirst);</span></a>
 <a name="1498"><span class="lineNum">    1498 </span>            :             isFirst = false;</a>
 <a name="1499"><span class="lineNum">    1499 </span>            :         }</a>
 <a name="1500"><span class="lineNum">    1500 </span>            :     }</a>
-<a name="1501"><span class="lineNum">    1501 </span><span class="lineCov">      61792 : }</span></a>
+<a name="1501"><span class="lineNum">    1501 </span><span class="lineCov">      61856 : }</span></a>
 <a name="1502"><span class="lineNum">    1502 </span>            : </a>
 <a name="1503"><span class="lineNum">    1503 </span>            : //==============================================================================</a>
 <a name="1504"><span class="lineNum">    1504 </span><span class="lineNoCov">          0 : void WaveInputDevice::updateRetrospectiveBufferLength (double length)</span></a>
@@ -1580,19 +1580,19 @@
 <a name="1518"><span class="lineNum">    1518 </span>            : </a>
 <a name="1519"><span class="lineNum">    1519 </span>            :     struct QueuedBlock</a>
 <a name="1520"><span class="lineNum">    1520 </span>            :     {</a>
-<a name="1521"><span class="lineNum">    1521 </span><span class="lineCov">        109 :         QueuedBlock() = default;</span></a>
+<a name="1521"><span class="lineNum">    1521 </span><span class="lineCov">         70 :         QueuedBlock() = default;</span></a>
 <a name="1522"><span class="lineNum">    1522 </span>            : </a>
-<a name="1523"><span class="lineNum">    1523 </span><span class="lineCov">      55450 :         void load (AudioFileWriter&amp; w, const juce::AudioBuffer&lt;float&gt;&amp; newBuffer,</span></a>
+<a name="1523"><span class="lineNum">    1523 </span><span class="lineCov">      55518 :         void load (AudioFileWriter&amp; w, const juce::AudioBuffer&lt;float&gt;&amp; newBuffer,</span></a>
 <a name="1524"><span class="lineNum">    1524 </span>            :                    int start, int numSamples, const RecordingThumbnailManager::Thumbnail::Ptr&amp; thumb)</a>
 <a name="1525"><span class="lineNum">    1525 </span>            :         {</a>
-<a name="1526"><span class="lineNum">    1526 </span><span class="lineCov">      55450 :             buffer.setSize (newBuffer.getNumChannels(), numSamples);</span></a>
+<a name="1526"><span class="lineNum">    1526 </span><span class="lineCov">      55518 :             buffer.setSize (newBuffer.getNumChannels(), numSamples);</span></a>
 <a name="1527"><span class="lineNum">    1527 </span>            : </a>
-<a name="1528"><span class="lineNum">    1528 </span><span class="lineCov">     110900 :             for (int i = buffer.getNumChannels(); --i &gt;= 0;)</span></a>
-<a name="1529"><span class="lineNum">    1529 </span><span class="lineCov">      55450 :                 buffer.copyFrom (i, 0, newBuffer, i, start, numSamples);</span></a>
+<a name="1528"><span class="lineNum">    1528 </span><span class="lineCov">     111036 :             for (int i = buffer.getNumChannels(); --i &gt;= 0;)</span></a>
+<a name="1529"><span class="lineNum">    1529 </span><span class="lineCov">      55518 :                 buffer.copyFrom (i, 0, newBuffer, i, start, numSamples);</span></a>
 <a name="1530"><span class="lineNum">    1530 </span>            : </a>
 <a name="1531"><span class="lineNum">    1531 </span>            :             writer = &amp;w;</a>
-<a name="1532"><span class="lineNum">    1532 </span><span class="lineCov">      55450 :             thumbnail = thumb;</span></a>
-<a name="1533"><span class="lineNum">    1533 </span><span class="lineCov">      55450 :         }</span></a>
+<a name="1532"><span class="lineNum">    1532 </span><span class="lineCov">      55518 :             thumbnail = thumb;</span></a>
+<a name="1533"><span class="lineNum">    1533 </span><span class="lineCov">      55518 :         }</span></a>
 <a name="1534"><span class="lineNum">    1534 </span>            : </a>
 <a name="1535"><span class="lineNum">    1535 </span>            :         std::atomic&lt;AudioFileWriter*&gt; writer { nullptr };</a>
 <a name="1536"><span class="lineNum">    1536 </span>            :         QueuedBlock* next = nullptr;</a>
@@ -1608,56 +1608,56 @@
 <a name="1546"><span class="lineNum">    1546 </span>            :     QueuedBlock* firstFree = nullptr;</a>
 <a name="1547"><span class="lineNum">    1547 </span>            :     std::atomic&lt;int&gt; numPending { 0 };</a>
 <a name="1548"><span class="lineNum">    1548 </span>            : </a>
-<a name="1549"><span class="lineNum">    1549 </span><span class="lineCov">      55450 :     QueuedBlock* findFreeBlock()</span></a>
+<a name="1549"><span class="lineNum">    1549 </span><span class="lineCov">      55518 :     QueuedBlock* findFreeBlock()</span></a>
 <a name="1550"><span class="lineNum">    1550 </span>            :     {</a>
-<a name="1551"><span class="lineNum">    1551 </span><span class="lineCov">      55450 :         const juce::ScopedLock sl (freeQueueLock);</span></a>
+<a name="1551"><span class="lineNum">    1551 </span><span class="lineCov">      55518 :         const juce::ScopedLock sl (freeQueueLock);</span></a>
 <a name="1552"><span class="lineNum">    1552 </span>            : </a>
-<a name="1553"><span class="lineNum">    1553 </span><span class="lineCov">      55450 :         if (firstFree == nullptr)</span></a>
-<a name="1554"><span class="lineNum">    1554 </span><span class="lineCov">         77 :             return new QueuedBlock();</span></a>
+<a name="1553"><span class="lineNum">    1553 </span><span class="lineCov">      55518 :         if (firstFree == nullptr)</span></a>
+<a name="1554"><span class="lineNum">    1554 </span><span class="lineCov">         38 :             return new QueuedBlock();</span></a>
 <a name="1555"><span class="lineNum">    1555 </span>            : </a>
 <a name="1556"><span class="lineNum">    1556 </span>            :         auto* b = firstFree;</a>
-<a name="1557"><span class="lineNum">    1557 </span><span class="lineCov">      55373 :         firstFree = b-&gt;next;</span></a>
-<a name="1558"><span class="lineNum">    1558 </span><span class="lineCov">      55373 :         b-&gt;next = nullptr;</span></a>
-<a name="1559"><span class="lineNum">    1559 </span><span class="lineCov">      55373 :         return b;</span></a>
+<a name="1557"><span class="lineNum">    1557 </span><span class="lineCov">      55480 :         firstFree = b-&gt;next;</span></a>
+<a name="1558"><span class="lineNum">    1558 </span><span class="lineCov">      55480 :         b-&gt;next = nullptr;</span></a>
+<a name="1559"><span class="lineNum">    1559 </span><span class="lineCov">      55480 :         return b;</span></a>
 <a name="1560"><span class="lineNum">    1560 </span>            :     }</a>
 <a name="1561"><span class="lineNum">    1561 </span>            : </a>
-<a name="1562"><span class="lineNum">    1562 </span><span class="lineCov">      55482 :     void addToFreeQueue (QueuedBlock* b) noexcept</span></a>
+<a name="1562"><span class="lineNum">    1562 </span><span class="lineCov">      55550 :     void addToFreeQueue (QueuedBlock* b) noexcept</span></a>
 <a name="1563"><span class="lineNum">    1563 </span>            :     {</a>
 <a name="1564"><span class="lineNum">    1564 </span>            :         jassert (b != nullptr);</a>
-<a name="1565"><span class="lineNum">    1565 </span><span class="lineCov">      55482 :         const juce::ScopedLock sl (freeQueueLock);</span></a>
+<a name="1565"><span class="lineNum">    1565 </span><span class="lineCov">      55550 :         const juce::ScopedLock sl (freeQueueLock);</span></a>
 <a name="1566"><span class="lineNum">    1566 </span>            :         b-&gt;writer = nullptr;</a>
-<a name="1567"><span class="lineNum">    1567 </span><span class="lineCov">      55482 :         b-&gt;next = firstFree;</span></a>
-<a name="1568"><span class="lineNum">    1568 </span><span class="lineCov">      55482 :         firstFree = b;</span></a>
-<a name="1569"><span class="lineNum">    1569 </span><span class="lineCov">      55482 :     }</span></a>
+<a name="1567"><span class="lineNum">    1567 </span><span class="lineCov">      55550 :         b-&gt;next = firstFree;</span></a>
+<a name="1568"><span class="lineNum">    1568 </span><span class="lineCov">      55550 :         firstFree = b;</span></a>
+<a name="1569"><span class="lineNum">    1569 </span><span class="lineCov">      55550 :     }</span></a>
 <a name="1570"><span class="lineNum">    1570 </span>            : </a>
-<a name="1571"><span class="lineNum">    1571 </span><span class="lineCov">      55450 :     void addToPendingQueue (QueuedBlock* b) noexcept</span></a>
+<a name="1571"><span class="lineNum">    1571 </span><span class="lineCov">      55518 :     void addToPendingQueue (QueuedBlock* b) noexcept</span></a>
 <a name="1572"><span class="lineNum">    1572 </span>            :     {</a>
 <a name="1573"><span class="lineNum">    1573 </span>            :         jassert (b != nullptr);</a>
-<a name="1574"><span class="lineNum">    1574 </span><span class="lineCov">      55450 :         b-&gt;next = nullptr;</span></a>
-<a name="1575"><span class="lineNum">    1575 </span><span class="lineCov">      55450 :         const juce::ScopedLock sl (pendingQueueLock);</span></a>
+<a name="1574"><span class="lineNum">    1574 </span><span class="lineCov">      55518 :         b-&gt;next = nullptr;</span></a>
+<a name="1575"><span class="lineNum">    1575 </span><span class="lineCov">      55518 :         const juce::ScopedLock sl (pendingQueueLock);</span></a>
 <a name="1576"><span class="lineNum">    1576 </span>            : </a>
-<a name="1577"><span class="lineNum">    1577 </span><span class="lineCov">      55450 :         if (lastPending != nullptr)</span></a>
-<a name="1578"><span class="lineNum">    1578 </span><span class="lineCov">      51464 :             lastPending-&gt;next = b;</span></a>
+<a name="1577"><span class="lineNum">    1577 </span><span class="lineCov">      55518 :         if (lastPending != nullptr)</span></a>
+<a name="1578"><span class="lineNum">    1578 </span><span class="lineCov">      51161 :             lastPending-&gt;next = b;</span></a>
 <a name="1579"><span class="lineNum">    1579 </span>            :         else</a>
-<a name="1580"><span class="lineNum">    1580 </span><span class="lineCov">       3986 :             firstPending = b;</span></a>
+<a name="1580"><span class="lineNum">    1580 </span><span class="lineCov">       4357 :             firstPending = b;</span></a>
 <a name="1581"><span class="lineNum">    1581 </span>            : </a>
-<a name="1582"><span class="lineNum">    1582 </span><span class="lineCov">      55450 :         lastPending = b;</span></a>
+<a name="1582"><span class="lineNum">    1582 </span><span class="lineCov">      55518 :         lastPending = b;</span></a>
 <a name="1583"><span class="lineNum">    1583 </span>            :         ++numPending;</a>
-<a name="1584"><span class="lineNum">    1584 </span><span class="lineCov">      55450 :     }</span></a>
+<a name="1584"><span class="lineNum">    1584 </span><span class="lineCov">      55518 :     }</span></a>
 <a name="1585"><span class="lineNum">    1585 </span>            : </a>
-<a name="1586"><span class="lineNum">    1586 </span><span class="lineCov">      62608 :     QueuedBlock* removeFirstPending() noexcept</span></a>
+<a name="1586"><span class="lineNum">    1586 </span><span class="lineCov">      63056 :     QueuedBlock* removeFirstPending() noexcept</span></a>
 <a name="1587"><span class="lineNum">    1587 </span>            :     {</a>
-<a name="1588"><span class="lineNum">    1588 </span><span class="lineCov">      62608 :         const juce::ScopedLock sl (pendingQueueLock);</span></a>
+<a name="1588"><span class="lineNum">    1588 </span><span class="lineCov">      63056 :         const juce::ScopedLock sl (pendingQueueLock);</span></a>
 <a name="1589"><span class="lineNum">    1589 </span>            : </a>
-<a name="1590"><span class="lineNum">    1590 </span><span class="lineCov">      62608 :         if (auto b = firstPending)</span></a>
+<a name="1590"><span class="lineNum">    1590 </span><span class="lineCov">      63056 :         if (auto b = firstPending)</span></a>
 <a name="1591"><span class="lineNum">    1591 </span>            :         {</a>
-<a name="1592"><span class="lineNum">    1592 </span><span class="lineCov">      55450 :             firstPending = b-&gt;next;</span></a>
+<a name="1592"><span class="lineNum">    1592 </span><span class="lineCov">      55518 :             firstPending = b-&gt;next;</span></a>
 <a name="1593"><span class="lineNum">    1593 </span>            : </a>
-<a name="1594"><span class="lineNum">    1594 </span><span class="lineCov">      55450 :             if (firstPending == nullptr)</span></a>
-<a name="1595"><span class="lineNum">    1595 </span><span class="lineCov">       3986 :                 lastPending = nullptr;</span></a>
+<a name="1594"><span class="lineNum">    1594 </span><span class="lineCov">      55518 :             if (firstPending == nullptr)</span></a>
+<a name="1595"><span class="lineNum">    1595 </span><span class="lineCov">       4357 :                 lastPending = nullptr;</span></a>
 <a name="1596"><span class="lineNum">    1596 </span>            : </a>
 <a name="1597"><span class="lineNum">    1597 </span>            :             --numPending;</a>
-<a name="1598"><span class="lineNum">    1598 </span><span class="lineCov">      55450 :             return b;</span></a>
+<a name="1598"><span class="lineNum">    1598 </span><span class="lineCov">      55518 :             return b;</span></a>
 <a name="1599"><span class="lineNum">    1599 </span>            :         }</a>
 <a name="1600"><span class="lineNum">    1600 </span>            : </a>
 <a name="1601"><span class="lineNum">    1601 </span>            :         return {};</a>
@@ -1672,12 +1672,12 @@
 <a name="1610"><span class="lineNum">    1610 </span>            :         numPending = 0;</a>
 <a name="1611"><span class="lineNum">    1611 </span><span class="lineCov">          9 :     }</span></a>
 <a name="1612"><span class="lineNum">    1612 </span>            : </a>
-<a name="1613"><span class="lineNum">    1613 </span><span class="lineCov">         67 :     bool isWriterInQueue (AudioFileWriter&amp; writer) const</span></a>
+<a name="1613"><span class="lineNum">    1613 </span><span class="lineCov">         69 :     bool isWriterInQueue (AudioFileWriter&amp; writer) const</span></a>
 <a name="1614"><span class="lineNum">    1614 </span>            :     {</a>
-<a name="1615"><span class="lineNum">    1615 </span><span class="lineCov">         67 :         const juce::ScopedLock sl (pendingQueueLock);</span></a>
+<a name="1615"><span class="lineNum">    1615 </span><span class="lineCov">         69 :         const juce::ScopedLock sl (pendingQueueLock);</span></a>
 <a name="1616"><span class="lineNum">    1616 </span>            : </a>
-<a name="1617"><span class="lineNum">    1617 </span><span class="lineCov">         67 :         for (auto b = firstPending; b != nullptr; b = b-&gt;next)</span></a>
-<a name="1618"><span class="lineNum">    1618 </span><span class="lineCov">          3 :             if (b-&gt;writer == &amp;writer)</span></a>
+<a name="1617"><span class="lineNum">    1617 </span><span class="lineCov">         81 :         for (auto b = firstPending; b != nullptr; b = b-&gt;next)</span></a>
+<a name="1618"><span class="lineNum">    1618 </span><span class="lineCov">         17 :             if (b-&gt;writer == &amp;writer)</span></a>
 <a name="1619"><span class="lineNum">    1619 </span>            :                 return true;</a>
 <a name="1620"><span class="lineNum">    1620 </span>            : </a>
 <a name="1621"><span class="lineNum">    1621 </span>            :         return false;</a>
@@ -1688,10 +1688,10 @@
 <a name="1626"><span class="lineNum">    1626 </span><span class="lineCov">          1 :         auto b = firstFree;</span></a>
 <a name="1627"><span class="lineNum">    1627 </span><span class="lineCov">          1 :         firstFree = nullptr;</span></a>
 <a name="1628"><span class="lineNum">    1628 </span>            : </a>
-<a name="1629"><span class="lineNum">    1629 </span><span class="lineCov">        110 :         while (b != nullptr)</span></a>
+<a name="1629"><span class="lineNum">    1629 </span><span class="lineCov">         71 :         while (b != nullptr)</span></a>
 <a name="1630"><span class="lineNum">    1630 </span>            :         {</a>
 <a name="1631"><span class="lineNum">    1631 </span>            :             std::unique_ptr&lt;QueuedBlock&gt; toDelete (b);</a>
-<a name="1632"><span class="lineNum">    1632 </span><span class="lineCov">        109 :             b = b-&gt;next;</span></a>
+<a name="1632"><span class="lineNum">    1632 </span><span class="lineCov">         70 :             b = b-&gt;next;</span></a>
 <a name="1633"><span class="lineNum">    1633 </span>            :         }</a>
 <a name="1634"><span class="lineNum">    1634 </span>            :     }</a>
 <a name="1635"><span class="lineNum">    1635 </span>            : };</a>
@@ -1724,22 +1724,22 @@
 <a name="1662"><span class="lineNum">    1662 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1663"><span class="lineNum">    1663 </span>            : </a>
 <a name="1664"><span class="lineNum">    1664 </span>            : //==============================================================================</a>
-<a name="1665"><span class="lineNum">    1665 </span><span class="lineCov">      55450 : void WaveInputRecordingThread::addBlockToRecord (AudioFileWriter&amp; writer, const juce::AudioBuffer&lt;float&gt;&amp; buffer,</span></a>
+<a name="1665"><span class="lineNum">    1665 </span><span class="lineCov">      55518 : void WaveInputRecordingThread::addBlockToRecord (AudioFileWriter&amp; writer, const juce::AudioBuffer&lt;float&gt;&amp; buffer,</span></a>
 <a name="1666"><span class="lineNum">    1666 </span>            :                                                  int start, int numSamples, const RecordingThumbnailManager::Thumbnail::Ptr&amp; thumbnail)</a>
 <a name="1667"><span class="lineNum">    1667 </span>            : {</a>
-<a name="1668"><span class="lineNum">    1668 </span><span class="lineCov">      55450 :     if (! threadShouldExit())</span></a>
+<a name="1668"><span class="lineNum">    1668 </span><span class="lineCov">      55518 :     if (! threadShouldExit())</span></a>
 <a name="1669"><span class="lineNum">    1669 </span>            :     {</a>
-<a name="1670"><span class="lineNum">    1670 </span><span class="lineCov">      55450 :         auto block = queue-&gt;findFreeBlock();</span></a>
-<a name="1671"><span class="lineNum">    1671 </span><span class="lineCov">      55450 :         block-&gt;load (writer, buffer, start, numSamples, thumbnail);</span></a>
-<a name="1672"><span class="lineNum">    1672 </span><span class="lineCov">      55450 :         queue-&gt;addToPendingQueue (block);</span></a>
-<a name="1673"><span class="lineNum">    1673 </span><span class="lineCov">      55450 :         notify();</span></a>
+<a name="1670"><span class="lineNum">    1670 </span><span class="lineCov">      55518 :         auto block = queue-&gt;findFreeBlock();</span></a>
+<a name="1671"><span class="lineNum">    1671 </span><span class="lineCov">      55518 :         block-&gt;load (writer, buffer, start, numSamples, thumbnail);</span></a>
+<a name="1672"><span class="lineNum">    1672 </span><span class="lineCov">      55518 :         queue-&gt;addToPendingQueue (block);</span></a>
+<a name="1673"><span class="lineNum">    1673 </span><span class="lineCov">      55518 :         notify();</span></a>
 <a name="1674"><span class="lineNum">    1674 </span>            :     }</a>
-<a name="1675"><span class="lineNum">    1675 </span><span class="lineCov">      55450 : }</span></a>
+<a name="1675"><span class="lineNum">    1675 </span><span class="lineCov">      55518 : }</span></a>
 <a name="1676"><span class="lineNum">    1676 </span>            : </a>
 <a name="1677"><span class="lineNum">    1677 </span><span class="lineCov">         64 : void WaveInputRecordingThread::waitForWriterToFinish (AudioFileWriter&amp; writer)</span></a>
 <a name="1678"><span class="lineNum">    1678 </span>            : {</a>
-<a name="1679"><span class="lineNum">    1679 </span><span class="lineCov">         67 :     while (queue-&gt;isWriterInQueue (writer) &amp;&amp; isThreadRunning())</span></a>
-<a name="1680"><span class="lineNum">    1680 </span><span class="lineCov">          3 :         Thread::sleep (2);</span></a>
+<a name="1679"><span class="lineNum">    1679 </span><span class="lineCov">         69 :     while (queue-&gt;isWriterInQueue (writer) &amp;&amp; isThreadRunning())</span></a>
+<a name="1680"><span class="lineNum">    1680 </span><span class="lineCov">          5 :         Thread::sleep (2);</span></a>
 <a name="1681"><span class="lineNum">    1681 </span><span class="lineCov">         64 : }</span></a>
 <a name="1682"><span class="lineNum">    1682 </span>            : </a>
 <a name="1683"><span class="lineNum">    1683 </span><span class="lineCov">          4 : void WaveInputRecordingThread::run()</span></a>
@@ -1749,15 +1749,15 @@
 <a name="1687"><span class="lineNum">    1687 </span>            : </a>
 <a name="1688"><span class="lineNum">    1688 </span>            :     for (;;)</a>
 <a name="1689"><span class="lineNum">    1689 </span>            :     {</a>
-<a name="1690"><span class="lineNum">    1690 </span><span class="lineCov">      62599 :         if (queue-&gt;numPending &gt; 500 &amp;&amp; ! hasWarned)</span></a>
+<a name="1690"><span class="lineNum">    1690 </span><span class="lineCov">      63047 :         if (queue-&gt;numPending &gt; 500 &amp;&amp; ! hasWarned)</span></a>
 <a name="1691"><span class="lineNum">    1691 </span>            :         {</a>
 <a name="1692"><span class="lineNum">    1692 </span><span class="lineNoCov">          0 :             hasWarned = true;</span></a>
 <a name="1693"><span class="lineNum">    1693 </span><span class="lineNoCov">          0 :             TRACKTION_LOG_ERROR (&quot;Audio recording can't keep up!&quot;);</span></a>
 <a name="1694"><span class="lineNum">    1694 </span>            :         }</a>
 <a name="1695"><span class="lineNum">    1695 </span>            : </a>
-<a name="1696"><span class="lineNum">    1696 </span><span class="lineCov">      62599 :         if (auto block = queue-&gt;removeFirstPending())</span></a>
+<a name="1696"><span class="lineNum">    1696 </span><span class="lineCov">      63047 :         if (auto block = queue-&gt;removeFirstPending())</span></a>
 <a name="1697"><span class="lineNum">    1697 </span>            :         {</a>
-<a name="1698"><span class="lineNum">    1698 </span><span class="lineCov">      55450 :             if (! block-&gt;writer.load()-&gt;appendBuffer (block-&gt;buffer, block-&gt;buffer.getNumSamples()))</span></a>
+<a name="1698"><span class="lineNum">    1698 </span><span class="lineCov">      55518 :             if (! block-&gt;writer.load()-&gt;appendBuffer (block-&gt;buffer, block-&gt;buffer.getNumSamples()))</span></a>
 <a name="1699"><span class="lineNum">    1699 </span>            :             {</a>
 <a name="1700"><span class="lineNum">    1700 </span><span class="lineNoCov">          0 :                 if (! hasSentStop)</span></a>
 <a name="1701"><span class="lineNum">    1701 </span>            :                 {</a>
@@ -1767,20 +1767,20 @@
 <a name="1705"><span class="lineNum">    1705 </span>            :                 }</a>
 <a name="1706"><span class="lineNum">    1706 </span>            :             }</a>
 <a name="1707"><span class="lineNum">    1707 </span>            : </a>
-<a name="1708"><span class="lineNum">    1708 </span><span class="lineCov">      55450 :             if (block-&gt;thumbnail != nullptr)</span></a>
+<a name="1708"><span class="lineNum">    1708 </span><span class="lineCov">      55518 :             if (block-&gt;thumbnail != nullptr)</span></a>
 <a name="1709"><span class="lineNum">    1709 </span>            :             {</a>
-<a name="1710"><span class="lineNum">    1710 </span><span class="lineCov">      55450 :                 block-&gt;thumbnail-&gt;addBlock (block-&gt;buffer, 0, block-&gt;buffer.getNumSamples());</span></a>
+<a name="1710"><span class="lineNum">    1710 </span><span class="lineCov">      55518 :                 block-&gt;thumbnail-&gt;addBlock (block-&gt;buffer, 0, block-&gt;buffer.getNumSamples());</span></a>
 <a name="1711"><span class="lineNum">    1711 </span>            :                 block-&gt;thumbnail = nullptr;</a>
 <a name="1712"><span class="lineNum">    1712 </span>            :             }</a>
 <a name="1713"><span class="lineNum">    1713 </span>            : </a>
-<a name="1714"><span class="lineNum">    1714 </span><span class="lineCov">      55450 :             queue-&gt;addToFreeQueue (block);</span></a>
+<a name="1714"><span class="lineNum">    1714 </span><span class="lineCov">      55518 :             queue-&gt;addToFreeQueue (block);</span></a>
 <a name="1715"><span class="lineNum">    1715 </span>            :         }</a>
 <a name="1716"><span class="lineNum">    1716 </span>            :         else</a>
 <a name="1717"><span class="lineNum">    1717 </span>            :         {</a>
-<a name="1718"><span class="lineNum">    1718 </span><span class="lineCov">       7149 :             if (threadShouldExit())</span></a>
+<a name="1718"><span class="lineNum">    1718 </span><span class="lineCov">       7529 :             if (threadShouldExit())</span></a>
 <a name="1719"><span class="lineNum">    1719 </span>            :                 break;</a>
 <a name="1720"><span class="lineNum">    1720 </span>            : </a>
-<a name="1721"><span class="lineNum">    1721 </span><span class="lineCov">       7145 :             wait (401);</span></a>
+<a name="1721"><span class="lineNum">    1721 </span><span class="lineCov">       7525 :             wait (401);</span></a>
 <a name="1722"><span class="lineNum">    1722 </span>            :         }</a>
 <a name="1723"><span class="lineNum">    1723 </span>            :     }</a>
 <a name="1724"><span class="lineNum">    1724 </span><span class="lineCov">          4 : }</span></a>
