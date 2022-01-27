@@ -32,8 +32,8 @@ ExternalController::ExternalController (Engine& e, ControlSurface* c)  : engine 
     numDevices = engine.getPropertyStorage().getPropertyItem (SettingID::externControlNum, getName(), 1);
     mainDevice = engine.getPropertyStorage().getPropertyItem (SettingID::externControlMain, getName(), 0);
 
-    inputDeviceName[0]  = storage.getPropertyItem (SettingID::externControlIn, getName(), c->midiChannelName);
-    outputDeviceName[0] = storage.getPropertyItem (SettingID::externControlOut, getName(), c->midiBackChannelName);
+    inputDeviceName[0]  = storage.getPropertyItem (SettingID::externControlIn, getName());
+    outputDeviceName[0] = storage.getPropertyItem (SettingID::externControlOut, getName());
 
     for (int i = 1; i < maxDevices; i++)
     {
@@ -90,6 +90,22 @@ juce::String ExternalController::getName() const
 {
     if (auto cs = controlSurface.get())
         return cs->deviceDescription;
+
+    return {};
+}
+
+juce::String ExternalController::getDesiredMidiChannel() const
+{
+    if (auto cs = controlSurface.get())
+        return cs->midiChannelName;
+
+    return {};
+}
+
+juce::String ExternalController::getDesiredMidiBackChannel() const
+{
+    if (auto cs = controlSurface.get())
+        return cs->midiBackChannelName;
 
     return {};
 }
