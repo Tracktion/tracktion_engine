@@ -45,9 +45,36 @@ struct EditTime
     tracktion_graph::BeatPosition toBeats() const;
 
 private:
+    friend EditTime operator+ (const EditTime&, tracktion_graph::TimeDuration);
+    friend EditTime operator+ (const EditTime&, std::chrono::duration<double>);
+    friend EditTime operator+ (const EditTime&, tracktion_graph::BeatDuration);
+    friend EditTime operator- (const EditTime&, tracktion_graph::TimeDuration);
+    friend EditTime operator- (const EditTime&, std::chrono::duration<double>);
+    friend EditTime operator- (const EditTime&, tracktion_graph::BeatDuration);
+
     std::variant<tracktion_graph::TimePosition, tracktion_graph::BeatPosition> position;
-    const TempoSequence& tempo;
+    const TempoSequence& tempoSequence;
 };
+
+
+//==============================================================================
+/** Adds a TimeDuration to an EditTime. */
+EditTime operator+ (const EditTime&, tracktion_graph::TimeDuration);
+
+/** Adds a chrono time to an EditTime. */
+EditTime operator+ (const EditTime&, std::chrono::duration<double>);
+
+/** Adds a BeatDuration to an EditTime. */
+EditTime operator+ (const EditTime&, tracktion_graph::BeatDuration);
+
+/** Subtracts a TimeDuration to an EditTime. */
+EditTime operator- (const EditTime&, tracktion_graph::TimeDuration);
+
+/** Subtracts a chrono time to an EditTime. */
+EditTime operator- (const EditTime&, std::chrono::duration<double>);
+
+/** Subtracts a BeatDuration to an EditTime. */
+EditTime operator- (const EditTime&, tracktion_graph::BeatDuration);
 
 
 //==============================================================================
@@ -62,12 +89,12 @@ private:
 //==============================================================================
 
 inline EditTime::EditTime (tracktion_graph::TimePosition tp, const TempoSequence& ts)
-    : position (tp), tempo (ts)
+    : position (tp), tempoSequence (ts)
 {
 }
 
 inline EditTime::EditTime (tracktion_graph::BeatPosition bp, const TempoSequence& ts)
-    : position (bp), tempo (ts)
+    : position (bp), tempoSequence (ts)
 {
 }
 
@@ -77,7 +104,7 @@ inline tracktion_graph::TimePosition EditTime::toTime() const
     if (const auto tp = std::get_if<tracktion_graph::TimePosition> (&position))
         return *tp;
 
-    return tracktion_engine::toTime (*std::get_if<tracktion_graph::BeatPosition> (&position), tempo);
+    return tracktion_engine::toTime (*std::get_if<tracktion_graph::BeatPosition> (&position), tempoSequence);
 }
 
 inline tracktion_graph::BeatPosition EditTime::toBeats() const
@@ -85,7 +112,38 @@ inline tracktion_graph::BeatPosition EditTime::toBeats() const
     if (const auto bp = std::get_if<tracktion_graph::BeatPosition> (&position))
         return *bp;
 
-    return tracktion_engine::toBeats (*std::get_if<tracktion_graph::TimePosition> (&position), tempo);
+    return tracktion_engine::toBeats (*std::get_if<tracktion_graph::TimePosition> (&position), tempoSequence);
+}
+
+//==============================================================================
+inline EditTime operator+ (const EditTime& et, tracktion_graph::TimeDuration d)
+{
+    return EditTime (tracktion_graph::TimePosition::fromSeconds (et.toTime().inSeconds() + d.inSeconds()), et.tempoSequence);
+}
+
+inline EditTime operator+ (const EditTime& et, std::chrono::duration<double> t)
+{
+    return EditTime (tracktion_graph::TimePosition::fromSeconds (et.toTime().inSeconds() + t.count()), et.tempoSequence);
+}
+
+inline EditTime operator+ (const EditTime& et, tracktion_graph::BeatDuration d)
+{
+    return EditTime (tracktion_graph::BeatPosition::fromBeats (et.toBeats().inBeats() + d.inBeats()), et.tempoSequence);
+}
+
+inline EditTime operator- (const EditTime& et, tracktion_graph::TimeDuration d)
+{
+    return EditTime (tracktion_graph::TimePosition::fromSeconds (et.toTime().inSeconds() - d.inSeconds()), et.tempoSequence);
+}
+
+inline EditTime operator- (const EditTime& et, std::chrono::duration<double> t)
+{
+    return EditTime (tracktion_graph::TimePosition::fromSeconds (et.toTime().inSeconds() - t.count()), et.tempoSequence);
+}
+
+inline EditTime operator- (const EditTime& et, tracktion_graph::BeatDuration d)
+{
+    return EditTime (tracktion_graph::BeatPosition::fromBeats (et.toBeats().inBeats() - d.inBeats()), et.tempoSequence);
 }
 
 
