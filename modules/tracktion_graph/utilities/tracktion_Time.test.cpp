@@ -143,6 +143,12 @@ public:
 
         beginTest ("TimePosition");
         {
+            expect (TimePosition() == TimePosition());
+            expect (TimePosition::fromSeconds (42.0) == TimePosition::fromSeconds (42.0));
+            expect (TimePosition::fromSeconds (-42.0) == TimePosition::fromSeconds (-42.0));
+            expect (TimePosition() != TimePosition::fromSeconds (42.0));
+            expect (TimePosition::fromSeconds (-42.0) != TimePosition::fromSeconds (42.0));
+
             // pods
             expectEquals (TimePosition().inSeconds(), 0.0);
             expectEquals (TimePosition::fromSeconds (0.5).inSeconds(), 0.5);
@@ -181,6 +187,12 @@ public:
 
         beginTest ("TimeDuration");
         {
+            expect (TimeDuration() == TimeDuration());
+            expect (TimeDuration::fromSeconds (42.0) == TimeDuration::fromSeconds (42.0));
+            expect (TimeDuration::fromSeconds (-42.0) == TimeDuration::fromSeconds (-42.0));
+            expect (TimeDuration() != TimeDuration::fromSeconds (42.0));
+            expect (TimeDuration::fromSeconds (-42.0) != TimeDuration::fromSeconds (42.0));
+
             // pods
             expectEquals (TimeDuration().inSeconds(), 0.0);
             expectEquals (TimeDuration::fromSeconds (0.5).inSeconds(), 0.5);
@@ -230,6 +242,12 @@ public:
 
         beginTest ("BeatPosition");
         {
+            expect (BeatPosition() == BeatPosition());
+            expect (BeatPosition::fromBeats (42.0) == BeatPosition::fromBeats (42.0));
+            expect (BeatPosition::fromBeats (-42.0) == BeatPosition::fromBeats (-42.0));
+            expect (BeatPosition() != BeatPosition::fromBeats (42.0));
+            expect (BeatPosition::fromBeats (-42.0) != BeatPosition::fromBeats (42.0));
+
             expectEquals (BeatPosition().inBeats(), 0.0);
             expectEquals (BeatPosition::fromBeats (0.5).inBeats(), 0.5);
             expectEquals (BeatPosition::fromBeats (0.5f).inBeats(), 0.5);
@@ -239,6 +257,12 @@ public:
 
         beginTest ("BeatDuration");
         {
+            expect (BeatDuration() == BeatDuration());
+            expect (BeatDuration::fromBeats (42.0) == BeatDuration::fromBeats (42.0));
+            expect (BeatDuration::fromBeats (-42.0) == BeatDuration::fromBeats (-42.0));
+            expect (BeatDuration() != BeatDuration::fromBeats (42.0));
+            expect (BeatDuration::fromBeats (-42.0) != BeatDuration::fromBeats (42.0));
+
             expectEquals (BeatDuration().inBeats(), 0.0);
             expectEquals (BeatDuration::fromBeats (0.5).inBeats(), 0.5);
             expectEquals (BeatDuration::fromBeats (0.5f).inBeats(), 0.5);

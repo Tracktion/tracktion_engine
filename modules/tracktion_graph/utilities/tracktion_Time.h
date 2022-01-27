@@ -109,6 +109,19 @@ TimePosition operator- (const TimePosition&, const TimeDuration&);
 TimePosition operator- (const TimePosition&, std::chrono::duration<double>);
 
 //==============================================================================
+/** Compares two TimePositions. */
+bool operator== (const TimePosition&, const TimePosition&);
+
+/** Compares two TimeDurations. */
+bool operator!= (const TimePosition&, const TimePosition&);
+
+/** Compares two TimeDurations. */
+bool operator== (const TimeDuration&, const TimeDuration&);
+
+/** Compares two TimeDurations. */
+bool operator!= (const TimeDuration&, const TimeDuration&);
+
+//==============================================================================
 //==============================================================================
 /**
     Represents a position in beats.
@@ -173,6 +186,18 @@ BeatDuration operator- (const BeatDuration&, const BeatDuration&);
 /** Subtracts a BeatDuration from a BeatPosition. */
 BeatPosition operator- (const BeatPosition&, const BeatDuration&);
 
+//==============================================================================
+/** Compares two BeatPositions. */
+bool operator== (const BeatPosition&, const BeatPosition&);
+
+/** Compares two BeatPositions. */
+bool operator!= (const BeatPosition&, const BeatPosition&);
+
+/** Compares two BeatDurations. */
+bool operator== (const BeatDuration&, const BeatDuration&);
+
+/** Compares two BeatDurations. */
+bool operator!= (const BeatDuration&, const BeatDuration&);
 
 //==============================================================================
 //        _        _           _  _
@@ -288,6 +313,26 @@ inline TimePosition operator- (const TimePosition& t1, std::chrono::duration<dou
     return TimePosition::fromSeconds (t1.inSeconds() - t2.count());
 }
 
+inline bool operator== (const TimePosition& t1, const TimePosition& t2)
+{
+    return t1.inSeconds() == t2.inSeconds();
+}
+
+inline bool operator!= (const TimePosition& t1, const TimePosition& t2)
+{
+    return ! (t1 == t2);
+}
+
+inline bool operator== (const TimeDuration& t1, const TimeDuration& t2)
+{
+    return t1.inSeconds() == t2.inSeconds();
+}
+
+inline bool operator!= (const TimeDuration& t1, const TimeDuration& t2)
+{
+    return ! (t1 == t2);
+}
+
 //==============================================================================
 template<typename T>
 inline BeatPosition BeatPosition::fromBeats (T positionInBeats)
@@ -339,5 +384,26 @@ inline BeatPosition operator- (const BeatPosition& t1, const BeatDuration& t2)
 {
     return BeatPosition::fromBeats (t1.inBeats() - t2.inBeats());
 }
+
+inline bool operator== (const BeatPosition& t1, const BeatPosition& t2)
+{
+    return t1.inBeats() == t2.inBeats();
+}
+
+inline bool operator!= (const BeatPosition& t1, const BeatPosition& t2)
+{
+    return ! (t1 == t2);
+}
+
+inline bool operator== (const BeatDuration& t1, const BeatDuration& t2)
+{
+    return t1.inBeats() == t2.inBeats();
+}
+
+inline bool operator!= (const BeatDuration& t1, const BeatDuration& t2)
+{
+    return ! (t1 == t2);
+}
+
 
 } // namespace tracktion_graph
