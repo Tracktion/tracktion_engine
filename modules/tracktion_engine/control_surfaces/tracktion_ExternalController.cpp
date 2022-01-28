@@ -1001,6 +1001,9 @@ void ExternalController::updateDeviceState()
                 }
 
                 cs.faderBankChanged (channelStart, trackNames);
+
+                if (cs.showingMarkers())
+                    ecm.updateMarkers();
             }
 
             if (auto tc = getTransport())

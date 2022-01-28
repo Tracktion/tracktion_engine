@@ -12,7 +12,8 @@ namespace tracktion_engine
 {
 
 struct ExternalControllerManager::EditTreeWatcher   : private juce::ValueTree::Listener,
-                                                      private Timer
+                                                      private juce::Timer,
+                                                      private juce::AsyncUpdater
 {
     EditTreeWatcher (ExternalControllerManager& o, Edit& e) : owner (o), edit (e)
     {
@@ -42,10 +43,24 @@ private:
             else if (i == IDs::auxSendSliderPos && v.getProperty (IDs::type) == AuxSendPlugin::xmlTypeName)
                 updateAux.set (1);
         }
+        else if (v.hasType (IDs::MARKERCLIP))
+        {
+            triggerAsyncUpdate();
+        }
     }
 
-    void valueTreeChildAdded (juce::ValueTree&, juce::ValueTree&) override        {}
-    void valueTreeChildRemoved (juce::ValueTree&, juce::ValueTree&, int) override {}
+    void valueTreeChildAdded (juce::ValueTree&, juce::ValueTree& c) override
+    {
+        if (c.hasType (IDs::MARKERCLIP))
+            triggerAsyncUpdate();
+    }
+
+    void valueTreeChildRemoved (juce::ValueTree&, juce::ValueTree& c, int) override
+    {
+        if (c.hasType (IDs::MARKERCLIP))
+            triggerAsyncUpdate();
+    }
+
     void valueTreeChildOrderChanged (juce::ValueTree&, int, int) override   {}
     void valueTreeParentChanged (juce::ValueTree&) override                 {}
 
@@ -80,6 +95,11 @@ private:
 
         if (updateAux.compareAndSetBool (0, 1))
             owner.auxSendLevelsChanged();
+    }
+
+    void handleAsyncUpdate() override
+    {
+        owner.updateMarkers();
     }
 };
 
