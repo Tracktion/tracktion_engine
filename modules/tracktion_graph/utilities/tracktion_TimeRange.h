@@ -250,7 +250,7 @@ inline TimeRange TimeRange::withLength (TimeDuration newLength) const
 
 inline void  TimeRange::checkInvariants() const
 {
-    jassert (end > start);
+    jassert (end >= start);
 }
 
 
