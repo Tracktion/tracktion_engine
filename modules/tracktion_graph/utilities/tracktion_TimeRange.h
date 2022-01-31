@@ -21,6 +21,9 @@ namespace tracktion_graph
 */
 struct TimeRange
 {
+    using PositionType = TimePosition;
+    using DurationType = PositionType::DurationType;
+
     //==============================================================================
     /** Creates an empty range. */
     TimeRange() = default;
@@ -141,6 +144,13 @@ TimeRange operator- (const TimeRange&, TimeDuration);
 //   Code beyond this point is implementation detail...
 //
 //==============================================================================
+template<typename PositionType>
+PositionType fromUnderlyingType (double);
+
+template<> inline TimePosition fromUnderlyingType<TimePosition> (double t) { return TimePosition::fromSeconds (t); }
+template<> inline TimeDuration fromUnderlyingType<TimeDuration> (double t) { return TimeDuration::fromSeconds (t); }
+
+
 inline TimeRange::TimeRange (TimePosition s, TimePosition e)
     : start (s), end (e)
 {
@@ -167,7 +177,7 @@ inline TimeRange TimeRange::emptyRange (TimePosition p)
 inline TimePosition TimeRange::getStart() const                                 { return start; }
 inline TimePosition TimeRange::getEnd() const                                   { return end; }
 inline TimeDuration TimeRange::getLength() const                                { return end - start; }
-inline TimePosition TimeRange::getCentre() const                                { return TimePosition::fromSeconds ((start.inSeconds() + end.inSeconds()) * 0.5); }
+inline TimePosition TimeRange::getCentre() const                                { return fromUnderlyingType<PositionType> ((start.inSeconds() + end.inSeconds()) * 0.5); }
 inline TimePosition TimeRange::clipPosition (TimePosition position) const       { return juce::jlimit (start, end, position); }
 
 inline bool TimeRange::isEmpty() const                                          { return end <= start; }
@@ -192,8 +202,8 @@ inline TimeRange TimeRange::getIntersectionWith (TimeRange o) const
 inline TimeRange TimeRange::rescaled (TimePosition anchorTime, double factor) const
 {
     jassert (factor > 0);
-    return { anchorTime + TimeDuration::fromSeconds ((start - anchorTime).inSeconds() * factor),
-             anchorTime + TimeDuration::fromSeconds ((end   - anchorTime).inSeconds() * factor) };
+    return { anchorTime + fromUnderlyingType<DurationType> ((start - anchorTime).inSeconds() * factor),
+             anchorTime + fromUnderlyingType<DurationType> ((end   - anchorTime).inSeconds() * factor) };
 }
 
 inline TimeRange TimeRange::constrainRange (TimeRange rangeToConstrain) const
@@ -215,7 +225,7 @@ inline TimeRange TimeRange::expanded (TimeDuration amount) const
 inline TimeRange TimeRange::reduced (TimeDuration amount) const
 {
     jassert (amount >= TimeDuration());
-    amount = std::min (amount, TimeDuration::fromSeconds (getLength().inSeconds() / 2.0));
+    amount = std::min (amount, fromUnderlyingType<DurationType> (getLength().inSeconds() / 2.0));
     return { start + amount, end - amount };
 }
 

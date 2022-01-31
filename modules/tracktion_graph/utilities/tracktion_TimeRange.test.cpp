@@ -86,9 +86,78 @@ public:
             }
         }
 
-        beginTest ("BeatRange");
-        {
+        runTests<TimeRange> ("TimeRange");
+    }
 
+    template<typename Type>
+    Type fromRaw (double t)
+    {
+        return fromUnderlyingType<Type> (t);
+    }
+
+
+    template<typename RangeType>
+    void runTests (juce::String testName)
+    {
+        using namespace tracktion_graph;
+        using namespace std::literals;
+
+        using PT = typename RangeType::PositionType;
+        using DT = typename RangeType::DurationType;
+
+        beginTest (testName);
+        {
+            {
+                const auto r = RangeType();
+                expectEquals (r.getStart(), PT());
+                expectEquals (r.getEnd(), PT());
+                expectEquals (r.getLength(), DT());
+                expectEquals (r.getCentre(), PT());
+                expectEquals (r.clipPosition (fromRaw<PT> (1.0)), PT());
+                expectEquals (r.clipPosition (fromRaw<PT> (-1.0)), PT());
+
+                expect (r.isEmpty());
+                expect (! r.overlaps ({ fromRaw<PT> (0.0), fromRaw<PT> (2.0) }));
+                expect (! r.overlaps ({ fromRaw<PT> (1.0), fromRaw<PT> (2.0) }));
+                expect (! r.contains ({ fromRaw<PT> (1.0), fromRaw<PT> (2.0) }));
+                expect (! r.contains ({ fromRaw<PT> (1.0), fromRaw<PT> (2.0) }));
+                expect (! r.containsInclusive (fromRaw<PT> (1.0)));
+                expect (r.containsInclusive (fromRaw<PT> (0.0)));
+
+                expect (r.getUnionWith ({ fromRaw<PT> (-1.0), fromRaw<PT> (1.0) })
+                        == RangeType (fromRaw<PT> (-1.0), fromRaw<PT> (1.0)));
+                expect (r.getIntersectionWith ({ fromRaw<PT> (-1.0), fromRaw<PT> (-1.0) })
+                        == RangeType());
+                expect (r.rescaled (PT(), 2.0) == RangeType());
+                expect (r.constrainRange ({ fromRaw<PT> (-1.0), fromRaw<PT> (-1.0) })
+                        == RangeType());
+                expect (r.expanded (fromRaw<DT> (1.0))
+                        == RangeType (fromRaw<PT> (-1.0), fromRaw<PT> (1.0)));
+                expect (r.reduced (fromRaw<DT> (1.0))
+                        == RangeType());
+
+                expect (r.movedToStartAt (fromRaw<PT> (1.0))
+                        == RangeType::emptyRange (fromRaw<PT> (1.0)));
+                expect (r.movedToEndAt (fromRaw<PT> (1.0))
+                        == RangeType::emptyRange (fromRaw<PT> (1.0)));
+                expect (r.withStart (fromRaw<PT> (-1.0))
+                        == RangeType (fromRaw<PT> (-1.0), PT()));
+                expect (r.withEnd (fromRaw<PT> (1.0))
+                        == RangeType (PT(), fromRaw<PT> (1.0)));
+            }
+
+            {
+                const auto r = RangeType ({ PT(), fromRaw<PT> (1.0) });
+                expect (RangeType (r) == r);
+                expect ((RangeType() = r) == r);
+
+                expect (RangeType (fromRaw<PT> (1.0), fromRaw<PT> (2.0))
+                        == RangeType (fromRaw<PT> (1.0), fromRaw<DT> (1.0)));
+                expect (RangeType::between (fromRaw<PT> (2.0), fromRaw<PT> (1.0))
+                        == RangeType (fromRaw<PT> (1.0), fromRaw<DT> (1.0)));
+                expect (RangeType::emptyRange (fromRaw<PT> (1.0))
+                        == RangeType (fromRaw<PT> (1.0), fromRaw<DT> (0.0)));
+            }
         }
     }
 };

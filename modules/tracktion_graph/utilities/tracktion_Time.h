@@ -15,6 +15,9 @@
 namespace tracktion_graph
 {
 
+struct TimeDuration;
+struct BeatDuration;
+
 //==============================================================================
 //==============================================================================
 /**
@@ -23,6 +26,9 @@ namespace tracktion_graph
 */
 struct TimePosition
 {
+    /** The duration type to match this position. */
+    using DurationType = TimeDuration;
+
     /** Creates a position at a time of 0. */
     constexpr TimePosition() = default;
 
@@ -165,6 +171,9 @@ constexpr bool operator>= (const TimeDuration&, const TimeDuration&);
 */
 struct BeatPosition
 {
+    /** The duration type to match this position. */
+    using DurationType = BeatDuration;
+
     /** Creates a position at a beat of 0. */
     constexpr BeatPosition() = default;
 
