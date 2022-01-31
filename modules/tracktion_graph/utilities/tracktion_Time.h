@@ -102,6 +102,9 @@ constexpr TimePosition operator+ (const TimePosition&, const TimeDuration&);
 /** Adds a time to a TimePosition. */
 constexpr TimePosition operator+ (const TimePosition&, std::chrono::duration<double>);
 
+/** Subtracts a TimePosition from another one, returning the duration bewteen them. */
+constexpr TimeDuration operator- (const TimePosition&, const TimePosition&);
+
 /** Subtracts a TimeDuration from another one. */
 constexpr TimeDuration operator- (const TimeDuration&, const TimeDuration&);
 
@@ -215,6 +218,9 @@ constexpr BeatDuration operator+ (const BeatDuration&, const BeatDuration&);
 
 /** Adds a BeatDuration to a BeatPosition. */
 constexpr BeatPosition operator+ (const BeatPosition&, const BeatDuration&);
+
+/** Subtracts a BeatPosition from another one, returning the duration between them. */
+constexpr BeatDuration operator- (const BeatPosition&, const BeatPosition&);
 
 /** Subtracts a BeatDuration from another one. */
 constexpr BeatDuration operator- (const BeatDuration&, const BeatDuration&);
@@ -343,6 +349,11 @@ inline constexpr TimePosition operator+ (const TimePosition& t1, const TimeDurat
     return TimePosition::fromSeconds (t1.inSeconds() + t2.inSeconds());
 }
 
+inline constexpr TimeDuration operator- (const TimePosition& t1, const TimePosition& t2)
+{
+    return TimeDuration::fromSeconds (t1.inSeconds() - t2.inSeconds());
+}
+
 inline constexpr TimeDuration operator- (const TimeDuration& t1, const TimeDuration& t2)
 {
     return TimeDuration::fromSeconds (t1.inSeconds() - t2.inSeconds());
@@ -429,6 +440,11 @@ inline constexpr BeatDuration operator+ (const BeatDuration& t1, const BeatDurat
 inline constexpr BeatPosition operator+ (const BeatPosition& t1, const BeatDuration& t2)
 {
     return BeatPosition::fromBeats (t1.inBeats() + t2.inBeats());
+}
+
+inline constexpr BeatDuration operator- (const BeatPosition& t1, const BeatPosition& t2)
+{
+    return BeatDuration::fromBeats (t1.inBeats() - t2.inBeats());
 }
 
 inline constexpr BeatDuration operator- (const BeatDuration& t1, const BeatDuration& t2)

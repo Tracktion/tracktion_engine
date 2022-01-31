@@ -252,6 +252,7 @@ namespace tracktion_graph
 
 //==============================================================================
 #include "../tracktion_graph/utilities/tracktion_Time.h"
+#include "../tracktion_graph/utilities/tracktion_TimeRange.h"
 
 //==============================================================================
 namespace tracktion_engine

@@ -271,6 +271,10 @@ public:
 
         beginTest ("Time addition/subtraction");
         {
+            expectEquals ((TimePosition (2s) - TimePosition (2s)).inSeconds(), 0.0);
+            expectEquals ((TimePosition (0s) - TimePosition (2s)).inSeconds(), -2.0);
+            expectEquals ((TimePosition (2s) - TimePosition (4s)).inSeconds(), -2.0);
+
             expectEquals ((TimeDuration (2s) + TimeDuration (2s)).inSeconds(), 4.0);
             expectEquals ((TimeDuration (2s) - TimeDuration (2s)).inSeconds(), 0.0);
             expectEquals ((TimeDuration (2s) - TimeDuration (4s)).inSeconds(), -2.0);
@@ -355,17 +359,10 @@ public:
 
         beginTest ("Beat addition/subtraction");
         {
-            expectEquals ((BeatDuration::fromBeats (2.0) + BeatDuration::fromBeats (2.0)).inBeats(), 4.0);
-            expectEquals ((BeatDuration::fromBeats (2.0) - BeatDuration::fromBeats (2.0)).inBeats(), 0.0);
-            expectEquals ((BeatDuration::fromBeats (2.0) - BeatDuration::fromBeats (4.0)).inBeats(), -2.0);
+            expectEquals ((BeatPosition::fromBeats (2.0) - BeatPosition::fromBeats (2.0)).inBeats(), 0.0);
+            expectEquals ((BeatPosition::fromBeats (0.0) - BeatPosition::fromBeats (2.0)).inBeats(), -2.0);
+            expectEquals ((BeatPosition::fromBeats (2.0) - BeatPosition::fromBeats (4.0)).inBeats(), -2.0);
 
-            expectEquals ((BeatPosition::fromBeats (2.0) + BeatDuration::fromBeats (2.0)).inBeats(), 4.0);
-            expectEquals ((BeatPosition::fromBeats (2.0) - BeatDuration::fromBeats (2.0)).inBeats(), 0.0);
-            expectEquals ((BeatPosition::fromBeats (2.0) - BeatDuration::fromBeats (4.0)).inBeats(), -2.0);
-        }
-
-        beginTest ("Beat addition/subtraction");
-        {
             expectEquals ((BeatDuration::fromBeats (2.0) + BeatDuration::fromBeats (2.0)).inBeats(), 4.0);
             expectEquals ((BeatDuration::fromBeats (2.0) - BeatDuration::fromBeats (2.0)).inBeats(), 0.0);
             expectEquals ((BeatDuration::fromBeats (2.0) - BeatDuration::fromBeats (4.0)).inBeats(), -2.0);
