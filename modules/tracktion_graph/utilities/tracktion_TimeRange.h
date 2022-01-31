@@ -15,123 +15,157 @@
 namespace tracktion_graph
 {
 
+template<typename PositionType>
+struct RangeType;
+
+//==============================================================================
+//==============================================================================
+/**
+    A RangeType based on real time (i.e. seconds).
+    This uses the TimePosition and TimeDuration objects to represent a range in time.
+*/
+using TimeRange = RangeType<TimePosition>;
+
+/**
+    A RangeType based on beats.
+    This uses the BeatPosition and BeatDuration objects to represent a range in beats.
+
+    The length in time will vary depending on the tempo and time signature applied
+    to the beats.
+*/
+using BeatRange = RangeType<BeatPosition>;
+
+
+//==============================================================================
+//==============================================================================
 /**
     Describes a range of two positions with a duration separating them.
     The end can never be before the start.
+
+    This is templated on the units the range should be in. However, you should
+    never have to instantiate a range using the PositionType explicitly. Instead,
+    use one of the explict template instantiations: TimeRange and BeatRange
+
+    @see TimeRange, BeatRange
 */
-struct TimeRange
+template<typename PositionType>
+struct RangeType
 {
-    using PositionType = TimePosition;
-    using DurationType = PositionType::DurationType;
+    using Position = PositionType;                      /**< The position type of the range. */
+    using Duration = typename Position::DurationType;   /**< The duration type of the range. */
 
     //==============================================================================
     /** Creates an empty range. */
-    TimeRange() = default;
+    RangeType() = default;
 
     /** Creates a copy of another range. */
-    TimeRange (const TimeRange&) = default;
+    RangeType (const RangeType&) = default;
 
     /** Creates a copy of another range. */
-    TimeRange& operator= (const TimeRange&) = default;
+    RangeType& operator= (const RangeType&) = default;
 
     /** Creates a Range from a start and and end position. */
-    TimeRange (TimePosition start, TimePosition end);
+    RangeType (Position start, Position end);
 
     /** Creates a Range from a start position and duration. */
-    TimeRange (TimePosition start, TimeDuration duration);
+    RangeType (Position start, Duration);
 
     /** Returns the range that lies between two positions (in either order). */
-    static TimeRange between (TimePosition, TimePosition);
+    static RangeType between (Position, Position);
 
     /** Returns a range with the specified start position and a length of zero. */
-    static TimeRange emptyRange (TimePosition);
+    static RangeType emptyRange (Position);
 
     //==============================================================================
     /** Returns the start of the range. */
-    TimePosition getStart() const;
+    Position getStart() const;
 
     /** Returns the end of the range. */
-    TimePosition getEnd() const;
+    Position getEnd() const;
 
     /** Returns the length of the range. */
-    TimeDuration getLength() const;
+    Duration getLength() const;
 
     /** Returns the centre position of the range. */
-    TimePosition getCentre() const;
+    Position getCentre() const;
 
     /** Clamps the given position to this range. */
-    TimePosition clipPosition (TimePosition) const;
+    Position clipPosition (Position) const;
 
     //==============================================================================
     /** Returns true if this range has a 0 length duration. */
     bool isEmpty() const;
 
     /** Returns true if this range overlaps the provided one. */
-    bool overlaps (const TimeRange&) const;
+    bool overlaps (const RangeType&) const;
 
     /** Returns true if this range contains the provided one. */
-    bool contains (const TimeRange&) const;
+    bool contains (const RangeType&) const;
 
     /** Returns true if this range overlaps the provided position. */
-    bool contains (TimePosition) const;
+    bool contains (Position) const;
 
     /** Returns true if this range contains the provided position even if it lies at the end position. */
-    bool containsInclusive (TimePosition) const;
+    bool containsInclusive (Position) const;
 
     //==============================================================================
     /** Returns the range that contains both of these ranges. */
-    TimeRange getUnionWith (TimeRange) const;
+    RangeType getUnionWith (RangeType) const;
 
     /** Returns the intersection of this range with the given one. */
-    TimeRange getIntersectionWith (TimeRange) const;
+    RangeType getIntersectionWith (RangeType) const;
 
     /** Returns a range that has been expanded or contracted around the given position. */
-    TimeRange rescaled (TimePosition anchorTime, double factor) const;
+    RangeType rescaled (Position anchorTime, double factor) const;
 
     /** Returns a given range, after moving it forwards or backwards to fit it
         within this range.
     */
-    TimeRange constrainRange (TimeRange) const;
+    RangeType constrainRange (RangeType) const;
 
     /** Expands the start and end of this range by the given ammount. */
-    TimeRange expanded (TimeDuration) const;
+    RangeType expanded (Duration) const;
 
     /** Reduces the start and end of this range by the given ammount. */
-    TimeRange reduced (TimeDuration) const;
+    RangeType reduced (Duration) const;
 
     /** Returns a range with the same duration as this one but a new start position. */
-    TimeRange movedToStartAt (TimePosition) const;
+    RangeType movedToStartAt (Position) const;
 
     /** Returns a range with the same duration as this one but a new end position. */
-    TimeRange movedToEndAt (TimePosition) const;
+    RangeType movedToEndAt (Position) const;
 
     /** Returns a range with the same end position as this one but a new start position. */
-    TimeRange withStart (TimePosition) const;
+    RangeType withStart (Position) const;
 
     /** Returns a range with the same start position as this one but a new end position. */
-    TimeRange withEnd (TimePosition) const;
+    RangeType withEnd (Position) const;
 
     /** Returns a range with the same start position as this one but a new duration length. */
-    TimeRange withLength (TimeDuration) const;
+    RangeType withLength (Duration) const;
 
 private:
-    TimePosition start, end;
+    Position start, end;
 
     void checkInvariants() const;
 };
 
 //==============================================================================
 /** Compares two ranges to check if they are equal. */
-bool operator== (const TimeRange&, const TimeRange&);
+template<typename PositionType>
+bool operator== (const RangeType<PositionType>&, const RangeType<PositionType>&);
 
 /** Compares two ranges to check if they are not equal. */
-bool operator!= (const TimeRange&, const TimeRange&);
+template<typename PositionType>
+bool operator!= (const RangeType<PositionType>&, const RangeType<PositionType>&);
 
 /** Adds a duration to a range, moving it forwards. */
-TimeRange operator+ (const TimeRange&, TimeDuration);
+template<typename PositionType>
+RangeType<PositionType> operator+ (const RangeType<PositionType>&, typename RangeType<PositionType>::Duration);
 
 /** Subtracts a duration to a range, moving it backwards. */
-TimeRange operator- (const TimeRange&, TimeDuration);
+template<typename PositionType>
+RangeType<PositionType> operator- (const RangeType<PositionType>&, typename RangeType<PositionType>::Duration);
 
 
 //==============================================================================
@@ -149,64 +183,77 @@ PositionType fromUnderlyingType (double);
 
 template<> inline TimePosition fromUnderlyingType<TimePosition> (double t) { return TimePosition::fromSeconds (t); }
 template<> inline TimeDuration fromUnderlyingType<TimeDuration> (double t) { return TimeDuration::fromSeconds (t); }
+inline double toUnderlyingType (TimePosition t) { return t.inSeconds(); }
+inline double toUnderlyingType (TimeDuration t) { return t.inSeconds(); }
 
+template<> inline BeatPosition fromUnderlyingType<BeatPosition> (double t) { return BeatPosition::fromBeats (t); }
+template<> inline BeatDuration fromUnderlyingType<BeatDuration> (double t) { return BeatDuration::fromBeats (t); }
+inline double toUnderlyingType (BeatPosition t) { return t.inBeats(); }
+inline double toUnderlyingType (BeatDuration t) { return t.inBeats(); }
 
-inline TimeRange::TimeRange (TimePosition s, TimePosition e)
+template<typename PositionType>
+inline RangeType<PositionType>::RangeType (Position s, Position e)
     : start (s), end (e)
 {
     checkInvariants();
 }
 
-inline TimeRange::TimeRange (TimePosition s, TimeDuration d)
+template<typename PositionType>
+inline RangeType<PositionType>::RangeType (Position s, Duration d)
     : start (s), end (s + d)
 {
     checkInvariants();
 }
 
-inline TimeRange TimeRange::between (TimePosition p1, TimePosition p2)
+template<typename PositionType>
+inline RangeType<PositionType> RangeType<PositionType>::between (Position p1, Position p2)
 {
-    return p1 < p2 ? TimeRange (p1, p2)
-                   : TimeRange (p2, p1);
+    return p1 < p2 ? RangeType (p1, p2)
+                   : RangeType (p2, p1);
 }
 
-inline TimeRange TimeRange::emptyRange (TimePosition p)
+template<typename PositionType>
+inline RangeType<PositionType> RangeType<PositionType>::emptyRange (Position p)
 {
     return { p, p };
 }
 
-inline TimePosition TimeRange::getStart() const                                 { return start; }
-inline TimePosition TimeRange::getEnd() const                                   { return end; }
-inline TimeDuration TimeRange::getLength() const                                { return end - start; }
-inline TimePosition TimeRange::getCentre() const                                { return fromUnderlyingType<PositionType> ((start.inSeconds() + end.inSeconds()) * 0.5); }
-inline TimePosition TimeRange::clipPosition (TimePosition position) const       { return juce::jlimit (start, end, position); }
+template<typename PositionType> inline typename RangeType<PositionType>::Position RangeType<PositionType>::getStart() const                          { return start; }
+template<typename PositionType> inline typename RangeType<PositionType>::Position RangeType<PositionType>::getEnd() const                            { return end; }
+template<typename PositionType> inline typename RangeType<PositionType>::Duration RangeType<PositionType>::getLength() const                         { return end - start; }
+template<typename PositionType> inline typename RangeType<PositionType>::Position RangeType<PositionType>::getCentre() const                         { return fromUnderlyingType<Position> ((toUnderlyingType (start) + toUnderlyingType (end)) * 0.5); }
+template<typename PositionType> inline typename RangeType<PositionType>::Position RangeType<PositionType>::clipPosition (Position position) const    { return juce::jlimit (start, end, position); }
 
-inline bool TimeRange::isEmpty() const                                          { return end <= start; }
+template<typename PositionType> inline bool RangeType<PositionType>::isEmpty() const                                          { return end <= start; }
+template<typename PositionType> inline bool RangeType<PositionType>::overlaps (const RangeType& other) const                  { return other.start < end && start < other.end; }
+template<typename PositionType> inline bool RangeType<PositionType>::contains (const RangeType& other) const                  { return other.start >= start && other.end <= end; }
+template<typename PositionType> inline bool RangeType<PositionType>::contains (Position time) const                           { return time >= start && time < end; }
+template<typename PositionType> inline bool RangeType<PositionType>::containsInclusive (Position time) const                  { return time >= start && time <= end; }
 
-inline bool TimeRange::overlaps (const TimeRange& other) const                  { return other.start < end && start < other.end; }
-inline bool TimeRange::contains (const TimeRange& other) const                  { return other.start >= start && other.end <= end; }
-inline bool TimeRange::contains (TimePosition time) const                       { return time >= start && time < end; }
-inline bool TimeRange::containsInclusive (TimePosition time) const              { return time >= start && time <= end; }
-
-inline TimeRange TimeRange::getUnionWith (TimeRange o) const
+template<typename PositionType>
+inline RangeType<PositionType> RangeType<PositionType>::getUnionWith (RangeType o) const
 {
     return { std::min (start, o.start),
              std::max (end, o.end) };
 }
 
-inline TimeRange TimeRange::getIntersectionWith (TimeRange o) const
+template<typename PositionType>
+inline RangeType<PositionType> RangeType<PositionType>::getIntersectionWith (RangeType o) const
 {
     auto newStart = std::max (start, o.start);
     return { newStart, std::max (newStart, std::min (end, o.end)) };
 }
 
-inline TimeRange TimeRange::rescaled (TimePosition anchorTime, double factor) const
+template<typename PositionType>
+inline RangeType<PositionType> RangeType<PositionType>::rescaled (Position anchorTime, double factor) const
 {
     jassert (factor > 0);
-    return { anchorTime + fromUnderlyingType<DurationType> ((start - anchorTime).inSeconds() * factor),
-             anchorTime + fromUnderlyingType<DurationType> ((end   - anchorTime).inSeconds() * factor) };
+    return { anchorTime + fromUnderlyingType<Duration> (toUnderlyingType (start - anchorTime) * factor),
+             anchorTime + fromUnderlyingType<Duration> (toUnderlyingType (end   - anchorTime) * factor) };
 }
 
-inline TimeRange TimeRange::constrainRange (TimeRange rangeToConstrain) const
+template<typename PositionType>
+inline RangeType<PositionType> RangeType<PositionType>::constrainRange (RangeType rangeToConstrain) const
 {
     auto otherLen = rangeToConstrain.getLength();
 
@@ -216,58 +263,69 @@ inline TimeRange TimeRange::constrainRange (TimeRange rangeToConstrain) const
                                                              rangeToConstrain.getStart()));
 }
 
-inline TimeRange TimeRange::expanded (TimeDuration amount) const
+template<typename PositionType>
+inline RangeType<PositionType> RangeType<PositionType>::expanded (Duration amount) const
 {
-    jassert (amount >= TimeDuration());
+    jassert (amount >= Duration());
     return { start - amount, end + amount };
 }
 
-inline TimeRange TimeRange::reduced (TimeDuration amount) const
+template<typename PositionType>
+inline RangeType<PositionType> RangeType<PositionType>::reduced (Duration amount) const
 {
-    jassert (amount >= TimeDuration());
-    amount = std::min (amount, fromUnderlyingType<DurationType> (getLength().inSeconds() / 2.0));
+    jassert (amount >= Duration());
+    amount = std::min (amount, fromUnderlyingType<Duration> (toUnderlyingType (getLength()) / 2.0));
     return { start + amount, end - amount };
 }
 
-inline TimeRange TimeRange::movedToStartAt (TimePosition newStart) const
+template<typename PositionType>
+inline RangeType<PositionType> RangeType<PositionType>::movedToStartAt (Position newStart) const
 {
     return { newStart, end + (newStart - start) };
 }
 
-inline TimeRange TimeRange::movedToEndAt (TimePosition newEnd) const
+template<typename PositionType>
+inline RangeType<PositionType> RangeType<PositionType>::movedToEndAt (Position newEnd) const
 {
     return { start + (newEnd - end), newEnd };
 }
 
-inline TimeRange TimeRange::withStart (TimePosition newStart) const
+template<typename PositionType>
+inline RangeType<PositionType> RangeType<PositionType>::withStart (Position newStart) const
 {
     jassert (newStart <= end);
     return { newStart, std::max (end, newStart) };
 }
 
-inline TimeRange TimeRange::withEnd (TimePosition newEnd) const
+template<typename PositionType>
+inline RangeType<PositionType> RangeType<PositionType>::withEnd (Position newEnd) const
 {
     jassert (newEnd >= start);
     return { std::min (start, newEnd), newEnd };
 }
 
-inline TimeRange TimeRange::withLength (TimeDuration newLength) const
+template<typename PositionType>
+inline RangeType<PositionType> RangeType<PositionType>::withLength (Duration newLength) const
 {
-    jassert (newLength >= TimeDuration());
-    return { start, start + std::max (TimeDuration(), newLength) };
+    jassert (newLength >= Duration());
+    return { start, start + std::max (Duration(), newLength) };
 }
 
 
-inline void  TimeRange::checkInvariants() const
+template<typename PositionType>
+inline void RangeType<PositionType>::checkInvariants() const
 {
     jassert (end >= start);
 }
 
+template<typename PositionType>
+inline bool operator== (const RangeType<PositionType>& r1, const RangeType<PositionType>& r2)  { return r1.getStart() == r2.getStart() && r1.getEnd() == r2.getEnd(); }
+template<typename PositionType>
+inline bool operator!= (const RangeType<PositionType>& r1, const RangeType<PositionType>& r2)  { return ! operator== (r1, r2); }
 
-inline bool operator== (const TimeRange& r1, const TimeRange& r2)  { return r1.getStart() == r2.getStart() && r1.getEnd() == r2.getEnd(); }
-inline bool operator!= (const TimeRange& r1, const TimeRange& r2)  { return ! operator== (r1, r2); }
-
-inline TimeRange operator+ (const TimeRange& r, TimeDuration d)    { return TimeRange (r.getStart() + d, r.getEnd() + d); }
-inline TimeRange operator- (const TimeRange& r, TimeDuration d)    { return TimeRange (r.getStart() - d, r.getEnd() - d); }
+template<typename PositionType>
+inline RangeType<PositionType> operator+ (const RangeType<PositionType>& r, typename RangeType<PositionType>::Duration d)    { return RangeType<PositionType> (r.getStart() + d, r.getEnd() + d); }
+template<typename PositionType>
+inline RangeType<PositionType> operator- (const RangeType<PositionType>& r, typename RangeType<PositionType>::Duration d)    { return RangeType<PositionType> (r.getStart() - d, r.getEnd() - d); }
 
 } // namespace tracktion_graph
