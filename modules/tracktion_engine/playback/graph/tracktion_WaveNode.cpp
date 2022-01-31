@@ -67,11 +67,17 @@ void WaveNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&
     editPositionInSamples = tracktion_graph::timeToSample ({ editPosition.start, editPosition.end }, outputSampleRate);
     updateFileSampleRate();
 
-    channelState.clear();
+    const int numChannelsToUse = std::max (channelsToUse.size(), reader->getNumChannels());
+    replaceChannelStateIfPossible (info.rootNodeToReplace, numChannelsToUse);
 
-    if (reader != nullptr)
-        for (int i = std::max (channelsToUse.size(), reader->getNumChannels()); --i >= 0;)
-            channelState.add (new PerChannelState());
+    if (! channelState)
+    {
+        channelState = std::make_shared<juce::OwnedArray<PerChannelState>>();
+
+        if (reader != nullptr)
+            for (int i = numChannelsToUse; --i >= 0;)
+                channelState->add (new PerChannelState());
+    }
 }
 
 bool WaveNode::isReadyToProcess()
@@ -140,6 +146,34 @@ bool WaveNode::updateFileSampleRate()
     return true;
 }
 
+void WaveNode::replaceChannelStateIfPossible (Node* rootNodeToReplace, int numChannelsToUse)
+{
+    if (rootNodeToReplace == nullptr)
+        return;
+
+    auto props = getNodeProperties();
+    auto nodeIDToLookFor = props.nodeID;
+
+    if (nodeIDToLookFor == 0)
+        return;
+
+    auto visitor = [this, nodeIDToLookFor, numChannelsToUse] (Node& node)
+    {
+        if (auto other = dynamic_cast<WaveNode*> (&node))
+        {
+            if (other->getNodeProperties().nodeID == nodeIDToLookFor)
+            {
+                if (! other->channelState)
+                    return;
+
+                if (other->channelState->size() == numChannelsToUse)
+                    channelState = other->channelState;
+            }
+        }
+    };
+    visitNodes (*rootNodeToReplace, visitor, true);
+}
+
 void WaveNode::processSection (ProcessContext& pc, juce::Range<int64_t> timelineRange)
 {
     const auto sectionEditTime = tracktion_graph::sampleToTime (timelineRange, outputSampleRate);
@@ -206,16 +240,16 @@ void WaveNode::processSection (ProcessContext& pc, juce::Range<int64_t> timeline
     if (ratio <= 0.0)
         return;
 
-    jassert (numChannels <= (choc::buffer::ChannelCount) channelState.size()); // this should always have been made big enough
+    jassert (numChannels <= (choc::buffer::ChannelCount) channelState->size()); // this should always have been made big enough
 
     for (choc::buffer::ChannelCount channel = 0; channel < numChannels; ++channel)
     {
-        if (channel < (choc::buffer::ChannelCount) channelState.size())
+        if (channel < (choc::buffer::ChannelCount) channelState->size())
         {
             const auto src = fileData.buffer.getReadPointer ((int) channel);
             const auto dest = destBuffer.getIterator (channel).sample;
 
-            auto& state = *channelState.getUnchecked ((int) channel);
+            auto& state = *channelState->getUnchecked ((int) channel);
             state.resampler.processAdding (ratio, src, dest, (int) numFrames, gains[channel & 1]);
 
             if (lastSampleFadeLength > 0)
