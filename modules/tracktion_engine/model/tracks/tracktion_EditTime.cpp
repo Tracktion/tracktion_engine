@@ -21,4 +21,14 @@ inline tracktion_graph::TimePosition toTime (tracktion_graph::BeatPosition bp, c
     return tracktion_graph::TimePosition::fromSeconds (ts.beatsToTime (bp.inBeats()));
 }
 
+inline tracktion_graph::BeatRange toBeats (tracktion_graph::TimeRange r, const TempoSequence& ts)
+{
+    return { toBeats (r.getStart(), ts), toBeats (r.getEnd(), ts) };
+}
+
+inline tracktion_graph::TimeRange toTime (tracktion_graph::BeatRange r, const TempoSequence& ts)
+{
+    return { toTime (r.getStart(), ts), toTime (r.getEnd(), ts) };
+}
+
 } // namespace tracktion_engine

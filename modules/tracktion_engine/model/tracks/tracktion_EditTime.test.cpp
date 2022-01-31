@@ -56,6 +56,33 @@ public:
             expectEquals (toTime (BeatPosition::fromBeats (16.0), ts).inSeconds(), 8.0);
         }
 
+        beginTest ("Beat/Time Range conversion");
+        {
+            auto edit = test_utilities::createTestEdit (engine);
+            auto& ts = edit->tempoSequence;
+
+            // Tempo starts at 60
+            expectEquals (ts.getNumTempos(), 1);
+            expectEquals (ts.getTempo (0)->getBpm(), 60.0);
+
+            const TimeRange originalTimeRange (TimePosition::fromSeconds (8.0), TimePosition::fromSeconds (16.0));
+            const auto beatRange = toBeats (originalTimeRange, ts);
+
+            expectEquals (beatRange.getStart().inBeats(), 8.0);
+            expectEquals (beatRange.getEnd().inBeats(), 16.0);
+            expectEquals (beatRange.getLength().inBeats(), 8.0);
+            expectEquals (beatRange.getCentre().inBeats(), 12.0);
+            expect (! beatRange.isEmpty());
+
+            const auto timeRange = toTime (beatRange, ts);
+            expectEquals (timeRange.getStart().inSeconds(), 8.0);
+            expectEquals (timeRange.getEnd().inSeconds(), 16.0);
+            expectEquals (timeRange.getLength().inSeconds(), 8.0);
+            expectEquals (timeRange.getCentre().inSeconds(), 12.0);
+            expect (! timeRange.isEmpty());
+            expect (timeRange == originalTimeRange);
+        }
+
         beginTest ("EditTime");
         {
             auto edit = test_utilities::createTestEdit (engine);
@@ -123,6 +150,31 @@ public:
 
                 expectEquals ((toTime (et, ts) - 4s).inSeconds(), 4.0);
                 expectEquals (toBeats (toTime (et, ts) - 4s, ts).inBeats(), 8.0);
+            }
+        }
+
+        beginTest ("EditTimeRange");
+        {
+            auto edit = test_utilities::createTestEdit (engine);
+            auto& ts = edit->tempoSequence;
+
+            // Tempo starts at 60
+            expectEquals (ts.getNumTempos(), 1);
+            expectEquals (ts.getTempo (0)->getBpm(), 60.0);
+
+            const auto originalTimeRange = TimeRange (TimePosition::fromSeconds (8.0), TimePosition::fromSeconds (16.0));
+            const auto originalBeatRange = toBeats (originalTimeRange, ts);
+
+            {
+                temp::EditTimeRange etr (originalTimeRange);
+                expect (toTime (etr, ts) == originalTimeRange);
+                expect (toBeats (etr, ts) == originalBeatRange);
+            }
+
+            {
+                temp::EditTimeRange etr (originalBeatRange);
+                expect (toTime (etr, ts) == originalTimeRange);
+                expect (toBeats (etr, ts) == originalBeatRange);
             }
         }
     }
