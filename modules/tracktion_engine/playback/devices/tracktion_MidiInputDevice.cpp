@@ -894,7 +894,7 @@ public:
 
                 const auto isOutsideClipAndNotNoteOff = [startPos, maxEndPos] (const juce::MidiMessage& m)
                 {
-                    return m.getTimeStamp() < startPos || (m.getTimeStamp() > maxEndPos && ! m.isNoteOff());
+                    return (m.getTimeStamp() < startPos || m.getTimeStamp() > maxEndPos) && ! m.isNoteOff();
                 };
 
                 if (mi.recordToNoteAutomation)
