@@ -25,7 +25,6 @@ public:
 
     void runTest() override
     {
-        using namespace tracktion_graph;
         using namespace std::literals;
         auto& engine = *Engine::getEngines()[0];
 

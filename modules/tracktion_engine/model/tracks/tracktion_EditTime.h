@@ -13,17 +13,17 @@ namespace tracktion_engine
 {
 
 /** Converts a TimePosition to a BeatPosition given a TempoSequence. */
-tracktion_graph::BeatPosition toBeats (tracktion_graph::TimePosition, const TempoSequence&);
+BeatPosition toBeats (TimePosition, const TempoSequence&);
 
 /** Converts a BeatPosition to a TimePosition given a TempoSequence. */
-tracktion_graph::TimePosition toTime (tracktion_graph::BeatPosition, const TempoSequence&);
+TimePosition toTime (BeatPosition, const TempoSequence&);
 
 //==============================================================================
 /** Converts a TimeRange to a BeatRange given a TempoSequence. */
-tracktion_graph::BeatRange toBeats (tracktion_graph::TimeRange, const TempoSequence&);
+BeatRange toBeats (TimeRange, const TempoSequence&);
 
 /** Converts a BeatRange to a TimeRange given a TempoSequence. */
-tracktion_graph::TimeRange toTime (tracktion_graph::BeatRange, const TempoSequence&);
+TimeRange toTime (BeatRange, const TempoSequence&);
 
 
 //==============================================================================
@@ -35,28 +35,28 @@ tracktion_graph::TimeRange toTime (tracktion_graph::BeatRange, const TempoSequen
 struct EditTime
 {
     /** Creates an EditTime from a TimePosition. */
-    EditTime (tracktion_graph::TimePosition);
+    EditTime (TimePosition);
 
     /** Creates an EditTime from a BeatPosition. */
-    EditTime (tracktion_graph::BeatPosition);
+    EditTime (BeatPosition);
 
 private:
-    friend tracktion_graph::TimePosition toTime (EditTime, const TempoSequence&);
-    friend tracktion_graph::BeatPosition toBeats (EditTime, const TempoSequence&);
+    friend TimePosition toTime (EditTime, const TempoSequence&);
+    friend BeatPosition toBeats (EditTime, const TempoSequence&);
 
-    std::variant<tracktion_graph::TimePosition, tracktion_graph::BeatPosition> position;
+    std::variant<TimePosition, BeatPosition> position;
 };
 
 //==============================================================================
 /** Converts an EditTime to a TimePosition.
     N.B. This may be a slow operation if this was created using a BeatPosition.
 */
-tracktion_graph::TimePosition toTime (EditTime, const TempoSequence&);
+TimePosition toTime (EditTime, const TempoSequence&);
 
 /** Converts an EditTime to a BeatPosition.
     N.B. This may be a slow operation if this was created using a TimePosition.
 */
-tracktion_graph::BeatPosition toBeats (EditTime, const TempoSequence&);
+BeatPosition toBeats (EditTime, const TempoSequence&);
 
 
 //==============================================================================
@@ -70,27 +70,27 @@ namespace temp
 struct EditTimeRange
 {
     /** Creates an EditTimeRange from a TimeRange. */
-    EditTimeRange (tracktion_graph::TimeRange);
+    EditTimeRange (TimeRange);
 
     /** Creates an EditTimeRange from a BeatRange. */
-    EditTimeRange (tracktion_graph::BeatRange);
+    EditTimeRange (BeatRange);
 
 private:
-    friend tracktion_graph::TimeRange toTime (EditTimeRange, const TempoSequence&);
-    friend tracktion_graph::BeatRange toBeats (EditTimeRange, const TempoSequence&);
+    friend TimeRange toTime (EditTimeRange, const TempoSequence&);
+    friend BeatRange toBeats (EditTimeRange, const TempoSequence&);
 
-    std::variant<tracktion_graph::TimeRange, tracktion_graph::BeatRange> range;
+    std::variant<TimeRange, BeatRange> range;
 };
 
 /** Converts an EditTimeRange to a TimeRange.
     N.B. This may be a slow operation if this was created using a BeatRange.
 */
-tracktion_graph::TimeRange toTime (EditTimeRange, const TempoSequence&);
+TimeRange toTime (EditTimeRange, const TempoSequence&);
 
 /** Converts an EditTimeRange to a BeatRange.
     N.B. This may be a slow operation if this was created using a TimeRange.
 */
-tracktion_graph::BeatRange toBeats (EditTimeRange, const TempoSequence&);
+BeatRange toBeats (EditTimeRange, const TempoSequence&);
 }
 
 //==============================================================================
@@ -104,60 +104,60 @@ tracktion_graph::BeatRange toBeats (EditTimeRange, const TempoSequence&);
 //
 //==============================================================================
 
-inline EditTime::EditTime (tracktion_graph::TimePosition tp)
+inline EditTime::EditTime (TimePosition tp)
     : position (tp)
 {
 }
 
-inline EditTime::EditTime (tracktion_graph::BeatPosition bp)
+inline EditTime::EditTime (BeatPosition bp)
     : position (bp)
 {
 }
 
-inline tracktion_graph::TimePosition toTime (EditTime et, const TempoSequence& ts)
+inline TimePosition toTime (EditTime et, const TempoSequence& ts)
 {
     // N.B. std::get unavailable prior to macOS 10.14
-    if (const auto tp = std::get_if<tracktion_graph::TimePosition> (&et.position))
+    if (const auto tp = std::get_if<TimePosition> (&et.position))
         return *tp;
 
-    return tracktion_engine::toTime (*std::get_if<tracktion_graph::BeatPosition> (&et.position), ts);
+    return tracktion_engine::toTime (*std::get_if<BeatPosition> (&et.position), ts);
 }
 
-inline tracktion_graph::BeatPosition toBeats (EditTime et, const TempoSequence& ts)
+inline BeatPosition toBeats (EditTime et, const TempoSequence& ts)
 {
-    if (const auto bp = std::get_if<tracktion_graph::BeatPosition> (&et.position))
+    if (const auto bp = std::get_if<BeatPosition> (&et.position))
         return *bp;
 
-    return tracktion_engine::toBeats (*std::get_if<tracktion_graph::TimePosition> (&et.position), ts);
+    return tracktion_engine::toBeats (*std::get_if<TimePosition> (&et.position), ts);
 }
 
 namespace temp
 {
-inline EditTimeRange::EditTimeRange (tracktion_graph::TimeRange r)
+inline EditTimeRange::EditTimeRange (TimeRange r)
     : range (r)
 {
 }
 
-inline EditTimeRange::EditTimeRange (tracktion_graph::BeatRange r)
+inline EditTimeRange::EditTimeRange (BeatRange r)
     : range (r)
 {
 }
 
-inline tracktion_graph::TimeRange toTime (EditTimeRange r, const TempoSequence& ts)
+inline TimeRange toTime (EditTimeRange r, const TempoSequence& ts)
 {
     // N.B. std::get unavailable prior to macOS 10.14
-    if (const auto tr = std::get_if<tracktion_graph::TimeRange> (&r.range))
+    if (const auto tr = std::get_if<TimeRange> (&r.range))
         return *tr;
 
-    return tracktion_engine::toTime (*std::get_if<tracktion_graph::BeatRange> (&r.range), ts);
+    return tracktion_engine::toTime (*std::get_if<BeatRange> (&r.range), ts);
 }
 
-inline tracktion_graph::BeatRange toBeats (EditTimeRange r, const TempoSequence& ts)
+inline BeatRange toBeats (EditTimeRange r, const TempoSequence& ts)
 {
-    if (const auto br = std::get_if<tracktion_graph::BeatRange> (&r.range))
+    if (const auto br = std::get_if<BeatRange> (&r.range))
         return *br;
 
-    return tracktion_engine::toBeats (*std::get_if<tracktion_graph::TimeRange> (&r.range), ts);
+    return tracktion_engine::toBeats (*std::get_if<TimeRange> (&r.range), ts);
 }
 }
 

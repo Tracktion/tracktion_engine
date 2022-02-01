@@ -257,6 +257,13 @@ namespace tracktion_graph
 //==============================================================================
 namespace tracktion_engine
 {
+    using TimePosition = tracktion_graph::TimePosition;
+    using TimeDuration = tracktion_graph::TimeDuration;
+    using BeatPosition = tracktion_graph::BeatPosition;
+    using BeatDuration = tracktion_graph::BeatDuration;
+    using TimeRange = tracktion_graph::TimeRange;
+    using BeatRange = tracktion_graph::BeatRange;
+
     class Engine;
     class DeviceManager;
     class MidiProgramManager;
