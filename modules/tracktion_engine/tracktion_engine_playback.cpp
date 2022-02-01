@@ -228,7 +228,9 @@ static inline void sprintf (char* dest, size_t maxLength, const char* format, ..
  #endif
 
  #include "control_surfaces/types/tracktion_AlphaTrack.cpp"
- #include "control_surfaces/types/tracktion_MackieC4.cpp"
+ #if TRACKTION_ENABLE_CONTROL_SURFACE_MACKIEC4
+  #include "control_surfaces/types/tracktion_MackieC4.cpp"
+ #endif
  #include "control_surfaces/types/tracktion_MackieMCU.cpp"
  #include "control_surfaces/types/tracktion_MackieXT.cpp"
  #include "control_surfaces/types/tracktion_IconProG2.cpp"

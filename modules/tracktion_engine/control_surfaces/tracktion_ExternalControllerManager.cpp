@@ -12,7 +12,8 @@ namespace tracktion_engine
 {
 
 struct ExternalControllerManager::EditTreeWatcher   : private juce::ValueTree::Listener,
-                                                      private Timer
+                                                      private juce::Timer,
+                                                      private juce::AsyncUpdater
 {
     EditTreeWatcher (ExternalControllerManager& o, Edit& e) : owner (o), edit (e)
     {
@@ -42,10 +43,24 @@ private:
             else if (i == IDs::auxSendSliderPos && v.getProperty (IDs::type) == AuxSendPlugin::xmlTypeName)
                 updateAux.set (1);
         }
+        else if (v.hasType (IDs::MARKERCLIP))
+        {
+            triggerAsyncUpdate();
+        }
     }
 
-    void valueTreeChildAdded (juce::ValueTree&, juce::ValueTree&) override        {}
-    void valueTreeChildRemoved (juce::ValueTree&, juce::ValueTree&, int) override {}
+    void valueTreeChildAdded (juce::ValueTree&, juce::ValueTree& c) override
+    {
+        if (c.hasType (IDs::MARKERCLIP))
+            triggerAsyncUpdate();
+    }
+
+    void valueTreeChildRemoved (juce::ValueTree&, juce::ValueTree& c, int) override
+    {
+        if (c.hasType (IDs::MARKERCLIP))
+            triggerAsyncUpdate();
+    }
+
     void valueTreeChildOrderChanged (juce::ValueTree&, int, int) override   {}
     void valueTreeParentChanged (juce::ValueTree&) override                 {}
 
@@ -81,6 +96,11 @@ private:
         if (updateAux.compareAndSetBool (0, 1))
             owner.auxSendLevelsChanged();
     }
+
+    void handleAsyncUpdate() override
+    {
+        owner.updateMarkers();
+    }
 };
 
 //==============================================================================
@@ -115,11 +135,13 @@ void ExternalControllerManager::initialise()
 
         refreshXTOrder();
     }
-    
+
+   #if TRACKTION_ENABLE_CONTROL_SURFACE_MACKIEC4
+    if (controllers.mackieC4)  addNewController (new MackieC4 (*this));
+   #endif
+
     if (controllers.iconProG2)
     {
-        addNewController (new MackieC4 (*this));
-        
         auto icon = new IconProG2 (*this);
         addNewController (icon);
         for (int i = 0; i < getXTCount (icon->deviceDescription); ++i)
@@ -168,7 +190,10 @@ ExternalController* ExternalControllerManager::addNewController (ControlSurface*
 }
 
 #define FOR_EACH_DEVICE(x) \
-    for (ExternalController* device : devices) { device->x; }
+    for (auto device : devices) { device->x; }
+
+#define FOR_EACH_ACTIVE_DEVICE(x) \
+    for (auto device : devices) { if (device->isEnabled()) device->x; }
 
 void ExternalControllerManager::setCurrentEdit (Edit* newEdit, SelectionManager* newSM)
 {
@@ -199,7 +224,7 @@ void ExternalControllerManager::setCurrentEdit (Edit* newEdit, SelectionManager*
             currentSelectionManager->addChangeListener (this);
     }
 
-    FOR_EACH_DEVICE (currentEditChanged (currentEdit));
+    FOR_EACH_ACTIVE_DEVICE (currentEditChanged (currentEdit));
 }
 
 bool ExternalControllerManager::isAttachedToEdit (const Edit* ed) const noexcept
@@ -328,13 +353,13 @@ ExternalController* ExternalControllerManager::getActiveCustomController()
 }
 
 void ExternalControllerManager::midiInOutDevicesChanged()   { FOR_EACH_DEVICE (midiInOutDevicesChanged()); }
-void ExternalControllerManager::updateDeviceState()         { FOR_EACH_DEVICE (updateDeviceState()); }
-void ExternalControllerManager::updateParameters()          { FOR_EACH_DEVICE (updateParameters()); }
-void ExternalControllerManager::updateMarkers()             { FOR_EACH_DEVICE (updateMarkers()); }
-void ExternalControllerManager::updateTrackRecordLights()   { FOR_EACH_DEVICE (updateTrackRecordLights()); }
-void ExternalControllerManager::updatePunchLights()         { FOR_EACH_DEVICE (updatePunchLights()); }
-void ExternalControllerManager::updateScrollLights()        { FOR_EACH_DEVICE (updateScrollLights()); }
-void ExternalControllerManager::updateUndoLights()          { FOR_EACH_DEVICE (updateUndoLights()); }
+void ExternalControllerManager::updateDeviceState()         { FOR_EACH_ACTIVE_DEVICE (updateDeviceState()); }
+void ExternalControllerManager::updateParameters()          { FOR_EACH_ACTIVE_DEVICE (updateParameters()); }
+void ExternalControllerManager::updateMarkers()             { FOR_EACH_ACTIVE_DEVICE (updateMarkers()); }
+void ExternalControllerManager::updateTrackRecordLights()   { FOR_EACH_ACTIVE_DEVICE (updateTrackRecordLights()); }
+void ExternalControllerManager::updatePunchLights()         { FOR_EACH_ACTIVE_DEVICE (updatePunchLights()); }
+void ExternalControllerManager::updateScrollLights()        { FOR_EACH_ACTIVE_DEVICE (updateScrollLights()); }
+void ExternalControllerManager::updateUndoLights()          { FOR_EACH_ACTIVE_DEVICE (updateUndoLights()); }
 
 void ExternalControllerManager::changeListenerCallback (ChangeBroadcaster* source)
 {
@@ -351,7 +376,7 @@ void ExternalControllerManager::changeListenerCallback (ChangeBroadcaster* sourc
 
         if (selectionManager.getNumObjectsSelected() == 1 && selectionManager.containsType<Plugin>())
         {
-            FOR_EACH_DEVICE (selectedPluginChanged());
+            FOR_EACH_ACTIVE_DEVICE (selectedPluginChanged());
         }
         else if (auto track = selectionManager.getFirstItemOfType<Track>())
         {
@@ -362,7 +387,7 @@ void ExternalControllerManager::changeListenerCallback (ChangeBroadcaster* sourc
                     if (num != -1 && num != device->channelStart)
                         device->changeFaderBank (num - device->channelStart, false);
         }
-        FOR_EACH_DEVICE (updateTrackSelectLights());
+        FOR_EACH_ACTIVE_DEVICE (updateTrackSelectLights());
     }
 }
 
@@ -438,7 +463,7 @@ void ExternalControllerManager::updateMuteSoloLights (bool onlyUpdateFlashingLig
                 if ((flags & (Track::soloFlashing | Track::muteFlashing)) != 0
                      || ! onlyUpdateFlashingLights)
                 {
-                    FOR_EACH_DEVICE (updateSoloAndMute (mappedChan, flags, isBright));
+                    FOR_EACH_ACTIVE_DEVICE (updateSoloAndMute (mappedChan, flags, isBright));
                 }
             }
 
@@ -446,7 +471,7 @@ void ExternalControllerManager::updateMuteSoloLights (bool onlyUpdateFlashingLig
             return true;
         });
 
-        FOR_EACH_DEVICE (soloCountChanged (blinkTimer->isBright && anySolo));
+        FOR_EACH_ACTIVE_DEVICE (soloCountChanged (blinkTimer->isBright && anySolo));
     }
 }
 
@@ -455,14 +480,14 @@ void ExternalControllerManager::moveFader (int channelNum, float newSliderPos)
 {
     auto chan = mapTrackNumToChannelNum (channelNum);
 
-    FOR_EACH_DEVICE (moveFader (chan, newSliderPos));
+    FOR_EACH_ACTIVE_DEVICE (moveFader (chan, newSliderPos));
 }
 
 void ExternalControllerManager::movePanPot (int channelNum, float newPan)
 {
     auto chan = mapTrackNumToChannelNum (channelNum);
 
-    FOR_EACH_DEVICE (movePanPot (chan, newPan));
+    FOR_EACH_ACTIVE_DEVICE (movePanPot (chan, newPan));
 }
 
 void ExternalControllerManager::updateVolumePlugin (VolumeAndPanPlugin& vp)
@@ -489,7 +514,7 @@ void ExternalControllerManager::updateVolumePlugin (VolumeAndPanPlugin& vp)
             left  = gainToVolumeFaderPosition (left);
             right = gainToVolumeFaderPosition (right);
 
-            FOR_EACH_DEVICE (moveMasterFaders (left, right));
+            FOR_EACH_ACTIVE_DEVICE (moveMasterFaders (left, right));
         }
     }
 }
@@ -516,69 +541,69 @@ void ExternalControllerManager::updateVCAPlugin (VCAPlugin& vca)
 void ExternalControllerManager::moveMasterFaders (float newLeftPos, float newRightPos)
 {
     CRASH_TRACER
-    FOR_EACH_DEVICE (moveMasterFaders (newLeftPos, newRightPos));
+    FOR_EACH_ACTIVE_DEVICE (moveMasterFaders (newLeftPos, newRightPos));
 }
 
 void ExternalControllerManager::soloCountChanged (bool anySoloTracks)
 {
     CRASH_TRACER
-    FOR_EACH_DEVICE (soloCountChanged (anySoloTracks));
+    FOR_EACH_ACTIVE_DEVICE (soloCountChanged (anySoloTracks));
 }
 
 void ExternalControllerManager::playStateChanged (bool isPlaying)
 {
     CRASH_TRACER
-    FOR_EACH_DEVICE (playStateChanged (isPlaying));
+    FOR_EACH_ACTIVE_DEVICE (playStateChanged (isPlaying));
 }
 
 void ExternalControllerManager::recordStateChanged (bool isRecording)
 {
     CRASH_TRACER
-    FOR_EACH_DEVICE (recordStateChanged (isRecording));
+    FOR_EACH_ACTIVE_DEVICE (recordStateChanged (isRecording));
 }
 
 void ExternalControllerManager::automationModeChanged (bool isReading, bool isWriting)
 {
     CRASH_TRACER
-    FOR_EACH_DEVICE (automationModeChanged (isReading, isWriting));
+    FOR_EACH_ACTIVE_DEVICE (automationModeChanged (isReading, isWriting));
 }
 
 void ExternalControllerManager::channelLevelChanged (int channel, float l, float r)
 {
     CRASH_TRACER
     const int cn = mapTrackNumToChannelNum (channel);
-    FOR_EACH_DEVICE (channelLevelChanged (cn, l, r));
+    FOR_EACH_ACTIVE_DEVICE (channelLevelChanged (cn, l, r));
 }
 
 void ExternalControllerManager::masterLevelsChanged (float leftLevel, float rightLevel)
 {
     CRASH_TRACER
-    FOR_EACH_DEVICE (masterLevelsChanged (leftLevel, rightLevel));
+    FOR_EACH_ACTIVE_DEVICE (masterLevelsChanged (leftLevel, rightLevel));
 }
 
 void ExternalControllerManager::timecodeChanged (int barsOrHours, int beatsOrMinutes, int ticksOrSeconds,
                                                  int millisecs, bool isBarsBeats, bool isFrames)
 {
     CRASH_TRACER
-    FOR_EACH_DEVICE (timecodeChanged (barsOrHours, beatsOrMinutes, ticksOrSeconds, millisecs, isBarsBeats, isFrames));
+    FOR_EACH_ACTIVE_DEVICE (timecodeChanged (barsOrHours, beatsOrMinutes, ticksOrSeconds, millisecs, isBarsBeats, isFrames));
 }
 
 void ExternalControllerManager::snapChanged (bool isOn)
 {
     CRASH_TRACER
-    FOR_EACH_DEVICE (snapChanged (isOn));
+    FOR_EACH_ACTIVE_DEVICE (snapChanged (isOn));
 }
 
 void ExternalControllerManager::loopChanged (bool isOn)
 {
     CRASH_TRACER
-    FOR_EACH_DEVICE (loopChanged (isOn));
+    FOR_EACH_ACTIVE_DEVICE (loopChanged (isOn));
 }
 
 void ExternalControllerManager::clickChanged (bool isOn)
 {
     CRASH_TRACER
-    FOR_EACH_DEVICE (clickChanged (isOn));
+    FOR_EACH_ACTIVE_DEVICE (clickChanged (isOn));
 }
 
 void ExternalControllerManager::editPositionChanged (Edit* ed, double newCursorPosition)
@@ -616,7 +641,7 @@ void ExternalControllerManager::editPositionChanged (Edit* ed, double newCursorP
 void ExternalControllerManager::auxSendLevelsChanged()
 {
     CRASH_TRACER
-    FOR_EACH_DEVICE (auxSendLevelsChanged());
+    FOR_EACH_ACTIVE_DEVICE (auxSendLevelsChanged());
 }
 
 //==============================================================================
@@ -860,7 +885,7 @@ juce::Colour ExternalControllerManager::getTrackColour (int channelNum)
     if (! devices.isEmpty())
     {
         auto cn = mapTrackNumToChannelNum (channelNum);
-        FOR_EACH_DEVICE (getTrackColour (cn, c));
+        FOR_EACH_ACTIVE_DEVICE (getTrackColour (cn, c));
     }
 
     return c;
@@ -884,7 +909,7 @@ bool ExternalControllerManager::shouldPluginBeColoured (Plugin* plugin)
 juce::Colour ExternalControllerManager::getPluginColour (Plugin* plugin)
 {
     juce::Colour c;
-    FOR_EACH_DEVICE (getPluginColour (plugin, c));
+    FOR_EACH_ACTIVE_DEVICE (getPluginColour (plugin, c));
     return c;
 }
 

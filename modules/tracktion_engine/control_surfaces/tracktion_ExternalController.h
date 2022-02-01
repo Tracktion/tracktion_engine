@@ -28,6 +28,10 @@ public:
 
     bool needsMidiChannel() const               { return needsChannel; }
     bool needsMidiBackChannel() const           { return needsBackChannel; }
+
+    juce::String getDesiredMidiChannel() const;
+    juce::String getDesiredMidiBackChannel() const;
+
     bool needsOSCSocket() const                 { return needsOSC; }
 
     int getNumDevices() const;

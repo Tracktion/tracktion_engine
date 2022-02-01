@@ -898,7 +898,7 @@ FourOscPlugin::FourOscPlugin (PluginCreationInfo info)  : Plugin (info)
 
     levelMeasurer.addClient (*this);
 
-    instrument->enableLegacyMode();
+    instrument.enableLegacyMode();
     setPitchbendTrackingMode (juce::MPEInstrument::allNotesOnChannel);
 
     setVoiceStealingEnabled (true);
@@ -1309,12 +1309,12 @@ void FourOscPlugin::valueTreePropertyChanged (juce::ValueTree& v, const juce::Id
             {
                 juce::MPEZoneLayout zones;
                 zones.setLowerZone (15);
-                instrument->setZoneLayout (zones);
+                instrument.setZoneLayout (zones);
                 setPitchbendTrackingMode (juce::MPEInstrument::lastNotePlayedOnChannel);
             }
             else
             {
-                instrument->enableLegacyMode();
+                instrument.enableLegacyMode();
                 setPitchbendTrackingMode (juce::MPEInstrument::allNotesOnChannel);
             }
         }
