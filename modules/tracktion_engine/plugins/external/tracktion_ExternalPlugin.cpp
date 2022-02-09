@@ -819,7 +819,7 @@ void ExternalPlugin::doFullInitialisation()
         identiferString = createIdentifierString (desc);
         updateDebugName();
 
-        if (processing && pluginInstance == nullptr && edit.shouldLoadPlugins())
+        if (processing && pluginInstance == nullptr && engine.getEngineBehaviour().shouldLoadPlugin (*this))
         {
             if (isDisabled())
                 return;
