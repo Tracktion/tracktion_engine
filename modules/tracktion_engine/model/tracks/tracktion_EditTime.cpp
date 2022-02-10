@@ -13,12 +13,12 @@ namespace tracktion_engine
 
 inline BeatPosition toBeats (TimePosition tp, const TempoSequence& ts)
 {
-    return BeatPosition::fromBeats (ts.timeToBeats (tp.inSeconds()));
+    return ts.timeToBeats (tp);
 }
 
 inline TimePosition toTime (BeatPosition bp, const TempoSequence& ts)
 {
-    return TimePosition::fromSeconds (ts.beatsToTime (bp.inBeats()));
+    return ts.beatsToTime (bp);
 }
 
 inline BeatRange toBeats (TimeRange r, const TempoSequence& ts)

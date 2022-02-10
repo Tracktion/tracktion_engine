@@ -34,6 +34,9 @@ TimeRange toTime (BeatRange, const TempoSequence&);
 */
 struct EditTime
 {
+    /** Creates an empty EditTime, starting at 0. */
+    EditTime();
+
     /** Creates an EditTime from a TimePosition. */
     EditTime (TimePosition);
 
@@ -93,6 +96,49 @@ TimeRange toTime (EditTimeRange, const TempoSequence&);
 BeatRange toBeats (EditTimeRange, const TempoSequence&);
 }
 
+
+//==============================================================================
+//==============================================================================
+} // namespace tracktion_engine
+
+namespace juce
+{
+    using TimePosition = tracktion_graph::TimePosition;
+    using TimeDuration = tracktion_graph::TimeDuration;
+    using BeatPosition = tracktion_graph::BeatPosition;
+    using BeatDuration = tracktion_graph::BeatDuration;
+
+    template<>
+    struct VariantConverter<TimePosition>
+    {
+        static TimePosition fromVar (const var& v)   { return TimePosition::fromSeconds (static_cast<double> (v)); }
+        static var toVar (TimePosition v)            { return v.inSeconds(); }
+    };
+
+    template<>
+    struct VariantConverter<TimeDuration>
+    {
+        static TimeDuration fromVar (const var& v)   { return TimeDuration::fromSeconds (static_cast<double> (v)); }
+        static var toVar (TimeDuration v)            { return v.inSeconds(); }
+    };
+
+    template<>
+    struct VariantConverter<BeatPosition>
+    {
+        static BeatPosition fromVar (const var& v)   { return BeatPosition::fromBeats (static_cast<double> (v)); }
+        static var toVar (BeatPosition v)            { return v.inBeats(); }
+    };
+
+    template<>
+    struct VariantConverter<BeatDuration>
+    {
+        static BeatDuration fromVar (const var& v)   { return BeatDuration::fromBeats (static_cast<double> (v)); }
+        static var toVar (BeatDuration v)            { return v.inBeats(); }
+    };
+}
+
+namespace tracktion_engine {
+
 //==============================================================================
 //        _        _           _  _
 //     __| |  ___ | |_   __ _ (_)| | ___
@@ -103,6 +149,11 @@ BeatRange toBeats (EditTimeRange, const TempoSequence&);
 //   Code beyond this point is implementation detail...
 //
 //==============================================================================
+
+inline EditTime::EditTime()
+    : EditTime (TimePosition())
+{
+}
 
 inline EditTime::EditTime (TimePosition tp)
     : position (tp)

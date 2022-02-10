@@ -15,11 +15,6 @@
 namespace tracktion_graph
 {
 
-juce::String& operator<< (juce::String& s, TimeDuration d)  { return s << juce::String (d.inSeconds()); }
-juce::String& operator<< (juce::String& s, TimePosition p)  { return s << juce::String (p.inSeconds()); }
-juce::String& operator<< (juce::String& s, BeatDuration d)  { return s << juce::String (d.inBeats()); }
-juce::String& operator<< (juce::String& s, BeatPosition p)  { return s << juce::String (p.inBeats()); }
-
 //==============================================================================
 //==============================================================================
 class TimeRangeTests    : public juce::UnitTest

@@ -38,7 +38,17 @@ struct TimePosition
     /** Creates a position from a std::chrono.
         This can be a std::chrono::literal.
     */
-    constexpr TimePosition (std::chrono::duration<double>);
+    template<typename Type>
+    constexpr TimePosition (std::chrono::duration<Type>);
+
+    /** Creates a position from a std::chrono.
+        This can be a std::chrono::literal.
+    */
+    template<typename T1, typename T2>
+    constexpr TimePosition (std::chrono::duration<T1, T2>);
+
+    /** Creates a copy of another TimePosition. */
+    constexpr TimePosition& operator= (const TimePosition&) = default;
 
     /** Create a TimePosition from a number of seconds. */
     template<typename T>
@@ -49,14 +59,23 @@ struct TimePosition
     static constexpr TimePosition fromSamples (IntType numSamples, double sampleRate);
 
     /** Returns the TimePosition as a number of seconds. */
-    constexpr  double inSeconds() const;
+    constexpr double inSeconds() const;
 
 private:
     double seconds = 0.0;
 };
 
+/** Negates a TimePosition. */
+[[ nodiscard ]] constexpr TimePosition operator- (TimePosition);
+
+/** Converts a TimePosition to a TimeDuration. */
+[[ nodiscard ]] constexpr TimeDuration toDuration (TimePosition);
+
 /** Converts a TimePosition to a number of samples. */
-constexpr int64_t toSamples (TimePosition, double sampleRate);
+[[ nodiscard ]] constexpr int64_t toSamples (TimePosition, double sampleRate);
+
+/** Returns the absolute of this TimePosition. */
+[[ nodiscard ]] TimePosition abs (TimePosition);
 
 //==============================================================================
 //==============================================================================
@@ -75,7 +94,17 @@ struct TimeDuration
     /** Creates a position from a std::chrono.
         This can be a std::chrono::literal.
     */
-    constexpr TimeDuration (std::chrono::duration<double>);
+    template<typename Type>
+    constexpr TimeDuration (std::chrono::duration<Type>);
+
+    /** Creates a position from a std::chrono.
+        This can be a std::chrono::literal.
+    */
+    template<typename T1, typename T2>
+    constexpr TimeDuration (std::chrono::duration<T1, T2>);
+
+    /** Creates a copy of another TimeDuration. */
+    constexpr TimeDuration& operator= (const TimeDuration&) = default;
 
     /** Create a TimeDuration from a number of seconds. */
     template<typename T>
@@ -92,73 +121,105 @@ private:
     double seconds = 0.0;
 };
 
+/** Negates a TimeDuration. */
+[[ nodiscard ]] constexpr TimeDuration operator- (TimeDuration);
+
+/** Converts a TimeDuration to a TimePosition. */
+[[ nodiscard ]] constexpr TimePosition toPosition (TimeDuration);
+
 /** Converts a TimeDuration to a number of samples. */
-constexpr int64_t toSamples (TimeDuration, double sampleRate);
+[[ nodiscard ]] constexpr int64_t toSamples (TimeDuration, double sampleRate);
+
+/** Returns the absolute of this TimeDuration. */
+[[ nodiscard ]] TimeDuration abs (TimeDuration);
 
 //==============================================================================
 /** Adds two TimeDurations together. */
-constexpr TimeDuration operator+ (const TimeDuration&, const TimeDuration&);
+[[ nodiscard ]] constexpr TimeDuration operator+ (const TimeDuration&, const TimeDuration&);
 
 /** Adds a time to a TimeDuration. */
-constexpr TimeDuration operator+ (const TimeDuration&, std::chrono::duration<double>);
+template<typename Type>
+[[ nodiscard ]] constexpr TimeDuration operator+ (const TimeDuration&, std::chrono::duration<Type>);
 
 /** Adds a TimeDuration to a TimePosition. */
-constexpr TimePosition operator+ (const TimePosition&, const TimeDuration&);
+[[ nodiscard ]] constexpr TimePosition operator+ (const TimePosition&, const TimeDuration&);
 
 /** Adds a time to a TimePosition. */
-constexpr TimePosition operator+ (const TimePosition&, std::chrono::duration<double>);
+template<typename Type>
+[[ nodiscard ]] constexpr TimePosition operator+ (const TimePosition&, std::chrono::duration<Type>);
 
 /** Subtracts a TimePosition from another one, returning the duration bewteen them. */
-constexpr TimeDuration operator- (const TimePosition&, const TimePosition&);
+[[ nodiscard ]] constexpr TimeDuration operator- (const TimePosition&, const TimePosition&);
 
 /** Subtracts a TimeDuration from another one. */
-constexpr TimeDuration operator- (const TimeDuration&, const TimeDuration&);
+[[ nodiscard ]] constexpr TimeDuration operator- (const TimeDuration&, const TimeDuration&);
 
 /** Subtracts a time from a TimeDuration. */
-constexpr TimeDuration operator- (const TimeDuration&, std::chrono::duration<double>);
+template<typename Type>
+[[ nodiscard ]] constexpr TimeDuration operator- (const TimeDuration&, std::chrono::duration<Type>);
 
 /** Subtracts a TimeDuration from a TimePosition. */
-constexpr TimePosition operator- (const TimePosition&, const TimeDuration&);
+[[ nodiscard ]] constexpr TimePosition operator- (const TimePosition&, const TimeDuration&);
 
 /** Subtracts a time from a TimePosition. */
-constexpr TimePosition operator- (const TimePosition&, std::chrono::duration<double>);
+template<typename Type>
+[[ nodiscard ]] constexpr TimePosition operator- (const TimePosition&, std::chrono::duration<Type>);
+
+/** Multiplies a TimePosition by an ammount. */
+[[ nodiscard ]] constexpr TimePosition operator* (const TimePosition&, double);
+
+/** Divides a TimePosition by an ammount. */
+[[ nodiscard ]] constexpr TimePosition operator/ (const TimePosition&, double);
+
+/** Multiplies a TimeDuration by an ammount. */
+[[ nodiscard ]] constexpr TimeDuration operator* (const TimeDuration&, double);
+
+/** Divides a TimeDuration by an ammount. */
+[[ nodiscard ]] constexpr TimeDuration operator/ (const TimeDuration&, double);
+
+/** Divides a TimePosition by a TimeDuration. */
+[[ nodiscard ]] constexpr double operator/ (const TimePosition&, const TimeDuration&);
+
+/** Divides a TimeDuration by another TimeDuration. */
+[[ nodiscard ]] constexpr double operator/ (const TimeDuration&, const TimeDuration&);
 
 //==============================================================================
 /** Compares two TimePositions. */
-constexpr bool operator== (const TimePosition&, const TimePosition&);
+[[ nodiscard ]] constexpr bool operator== (const TimePosition&, const TimePosition&);
 
 /** Compares two TimeDurations. */
-constexpr bool operator!= (const TimePosition&, const TimePosition&);
+[[ nodiscard ]] constexpr bool operator!= (const TimePosition&, const TimePosition&);
 
 /** Compares two TimeDurations. */
-constexpr bool operator== (const TimeDuration&, const TimeDuration&);
+[[ nodiscard ]] constexpr bool operator== (const TimeDuration&, const TimeDuration&);
 
 /** Compares two TimeDurations. */
-constexpr bool operator!= (const TimeDuration&, const TimeDuration&);
+[[ nodiscard ]] constexpr bool operator!= (const TimeDuration&, const TimeDuration&);
 
 /** Compares two TimePositions. */
-constexpr bool operator< (const TimePosition&, const TimePosition&);
+[[ nodiscard ]] constexpr bool operator< (const TimePosition&, const TimePosition&);
 
 /** Compares two TimePosition. */
-constexpr bool operator<= (const TimePosition&, const TimePosition&);
+[[ nodiscard ]] constexpr bool operator<= (const TimePosition&, const TimePosition&);
 
 /** Compares two TimePosition. */
-constexpr bool operator> (const TimePosition&, const TimePosition&);
+[[ nodiscard ]] constexpr bool operator> (const TimePosition&, const TimePosition&);
 
 /** Compares two TimePosition. */
-constexpr bool operator>= (const TimePosition&, const TimePosition&);
+[[ nodiscard ]] constexpr bool operator>= (const TimePosition&, const TimePosition&);
 
 /** Compares two TimeDurations. */
-constexpr bool operator< (const TimeDuration&, const TimeDuration&);
+[[ nodiscard ]] constexpr bool operator< (const TimeDuration&, const TimeDuration&);
 
 /** Compares two TimeDurations. */
-constexpr bool operator<= (const TimeDuration&, const TimeDuration&);
+[[ nodiscard ]] constexpr bool operator<= (const TimeDuration&, const TimeDuration&);
 
 /** Compares two TimeDurations. */
-constexpr bool operator> (const TimeDuration&, const TimeDuration&);
+[[ nodiscard ]] constexpr bool operator> (const TimeDuration&, const TimeDuration&);
 
 /** Compares two TimeDurations. */
-constexpr bool operator>= (const TimeDuration&, const TimeDuration&);
+[[ nodiscard ]] constexpr bool operator>= (const TimeDuration&, const TimeDuration&);
+
 
 //==============================================================================
 //==============================================================================
@@ -180,6 +241,9 @@ struct BeatPosition
     /** Creates a copy of another BeatPosition. */
     constexpr BeatPosition (const BeatPosition&) = default;
 
+    /** Creates a copy of another BeatPosition. */
+    constexpr BeatPosition& operator= (const BeatPosition&) = default;
+
     /** Create a BeatPosition from a number of beats. */
     template<typename T>
     static constexpr BeatPosition fromBeats (T positionInBeats);
@@ -191,6 +255,17 @@ private:
     double numBeats = 0.0;
 };
 
+/** Negates a BeatPosition. */
+[[ nodiscard ]] constexpr BeatPosition operator- (BeatPosition);
+
+/** Converts a BeatPosition to a BeatDuration. */
+[[ nodiscard ]] constexpr BeatDuration toDuration (BeatPosition);
+
+/** Rounds a BeatPosition to the nearest whole beat. */
+[[ nodiscard ]] BeatPosition roundToNearestBeat (BeatPosition);
+
+/** Returns the absolute of this BeatPosition. */
+[[ nodiscard ]] BeatPosition abs (BeatPosition);
 
 //==============================================================================
 //==============================================================================
@@ -209,6 +284,9 @@ struct BeatDuration
     /** Creates a copy of another BeatDuration. */
     constexpr BeatDuration (const BeatDuration&) = default;
 
+    /** Creates a copy of another BeatDuration. */
+    constexpr BeatDuration& operator= (const BeatDuration&) = default;
+
     /** Create a BeatPosition from a number of beats. */
     template<typename T>
     static constexpr BeatDuration fromBeats (T durationInBeats);
@@ -220,59 +298,89 @@ private:
     double numBeats = 0.0;
 };
 
+/** Negates a BeatDuration. */
+[[ nodiscard ]] constexpr BeatDuration operator- (BeatDuration);
+
+/** Converts a BeatDuration to a BeatPosition. */
+[[ nodiscard ]] constexpr BeatPosition toPosition (BeatDuration);
+
+/** Returns the absolute of this BeatDuration. */
+[[ nodiscard ]] BeatDuration abs (BeatDuration);
+
 
 //==============================================================================
 /** Adds two BeatDurations together. */
-constexpr BeatDuration operator+ (const BeatDuration&, const BeatDuration&);
+[[ nodiscard ]] constexpr BeatDuration operator+ (const BeatDuration&, const BeatDuration&);
 
 /** Adds a BeatDuration to a BeatPosition. */
-constexpr BeatPosition operator+ (const BeatPosition&, const BeatDuration&);
+[[ nodiscard ]] constexpr BeatPosition operator+ (const BeatPosition&, const BeatDuration&);
 
 /** Subtracts a BeatPosition from another one, returning the duration between them. */
-constexpr BeatDuration operator- (const BeatPosition&, const BeatPosition&);
+[[ nodiscard ]] constexpr BeatDuration operator- (const BeatPosition&, const BeatPosition&);
 
 /** Subtracts a BeatDuration from another one. */
-constexpr BeatDuration operator- (const BeatDuration&, const BeatDuration&);
+[[ nodiscard ]] constexpr BeatDuration operator- (const BeatDuration&, const BeatDuration&);
 
 /** Subtracts a BeatDuration from a BeatPosition. */
-constexpr BeatPosition operator- (const BeatPosition&, const BeatDuration&);
+[[ nodiscard ]] constexpr BeatPosition operator- (const BeatPosition&, const BeatDuration&);
+
+/** Multiplies a BeatPosition by an ammount. */
+template<typename Type>
+[[ nodiscard ]] constexpr BeatPosition operator* (const BeatPosition&, Type);
+
+/** Divides a BeatPosition by an ammount. */
+[[ nodiscard ]] constexpr BeatPosition operator/ (const BeatPosition&, double);
+
+/** Multiplies a BeatDuration by an ammount. */
+template<typename Type>
+[[ nodiscard ]] constexpr BeatDuration operator* (const BeatDuration&, Type);
+
+/** Divides a BeatDuration by an ammount. */
+[[ nodiscard ]] constexpr BeatDuration operator/ (const BeatDuration&, double);
+
+/** Divides a BeatPosition by a BeatDuration. */
+[[ nodiscard ]] constexpr double operator/ (const BeatPosition&, const BeatDuration&);
+
+/** Divides a BeatDuration by another BeatDuration. */
+[[ nodiscard ]] constexpr double operator/ (const BeatDuration&, const BeatDuration&);
 
 //==============================================================================
 /** Compares two BeatPositions. */
-constexpr bool operator== (const BeatPosition&, const BeatPosition&);
+[[ nodiscard ]] constexpr bool operator== (const BeatPosition&, const BeatPosition&);
 
 /** Compares two BeatPositions. */
-constexpr bool operator!= (const BeatPosition&, const BeatPosition&);
+[[ nodiscard ]] constexpr bool operator!= (const BeatPosition&, const BeatPosition&);
 
 /** Compares two BeatDurations. */
-constexpr bool operator== (const BeatDuration&, const BeatDuration&);
+[[ nodiscard ]] constexpr bool operator== (const BeatDuration&, const BeatDuration&);
 
 /** Compares two BeatDurations. */
-constexpr bool operator!= (const BeatDuration&, const BeatDuration&);
+[[ nodiscard ]] constexpr bool operator!= (const BeatDuration&, const BeatDuration&);
 
 /** Compares two BeatDurations. */
-constexpr bool operator< (const BeatPosition&, const BeatPosition&);
+[[ nodiscard ]] constexpr bool operator< (const BeatPosition&, const BeatPosition&);
 
 /** Compares two BeatDurations. */
-constexpr bool operator<= (const BeatPosition&, const BeatPosition&);
+[[ nodiscard ]] constexpr bool operator<= (const BeatPosition&, const BeatPosition&);
 
 /** Compares two BeatDurations. */
-constexpr bool operator> (const BeatPosition&, const BeatPosition&);
+[[ nodiscard ]] constexpr bool operator> (const BeatPosition&, const BeatPosition&);
 
 /** Compares two BeatDurations. */
-constexpr bool operator>= (const BeatPosition&, const BeatPosition&);
+[[ nodiscard ]] constexpr bool operator>= (const BeatPosition&, const BeatPosition&);
 
 /** Compares two BeatDurations. */
-constexpr bool operator< (const BeatDuration&, const BeatDuration&);
+[[ nodiscard ]] constexpr bool operator< (const BeatDuration&, const BeatDuration&);
 
 /** Compares two BeatDurations. */
-constexpr bool operator<= (const BeatDuration&, const BeatDuration&);
+[[ nodiscard ]] constexpr bool operator<= (const BeatDuration&, const BeatDuration&);
 
 /** Compares two BeatDurations. */
-constexpr bool operator> (const BeatDuration&, const BeatDuration&);
+[[ nodiscard ]] constexpr bool operator> (const BeatDuration&, const BeatDuration&);
 
 /** Compares two BeatDurations. */
-constexpr bool operator>= (const BeatDuration&, const BeatDuration&);
+[[ nodiscard ]] constexpr bool operator>= (const BeatDuration&, const BeatDuration&);
+
 
 //==============================================================================
 //        _        _           _  _
@@ -285,8 +393,15 @@ constexpr bool operator>= (const BeatDuration&, const BeatDuration&);
 //
 //==============================================================================
 
-inline constexpr TimePosition::TimePosition (std::chrono::duration<double> duration)
-    : seconds (duration.count())
+template<typename Type>
+inline constexpr TimePosition::TimePosition (std::chrono::duration<Type> duration)
+    : seconds (std::chrono::duration<double> (duration).count())
+{
+}
+
+template<typename T1, typename T2>
+inline constexpr TimePosition::TimePosition (std::chrono::duration<T1, T2> duration)
+    : seconds (std::chrono::duration<double> (duration).count())
 {
 }
 
@@ -309,15 +424,38 @@ inline constexpr double TimePosition::inSeconds() const
     return seconds;
 }
 
+inline constexpr TimePosition operator- (TimePosition t)
+{
+    return TimePosition::fromSeconds (-t.inSeconds());
+}
+
+inline constexpr TimeDuration toDuration (TimePosition t)
+{
+    return TimeDuration::fromSeconds (t.inSeconds());
+}
+
 inline constexpr int64_t toSamples (TimePosition p, double sampleRate)
 {
     return static_cast<int64_t> ((p.inSeconds() * sampleRate)
                                  + (p.inSeconds() >= 0.0 ? 0.5 : -0.5));
 }
 
+inline TimePosition abs (TimePosition t)
+{
+    return TimePosition::fromSeconds (std::abs (t.inSeconds()));
+}
+
+
 //==============================================================================
-inline constexpr TimeDuration::TimeDuration (std::chrono::duration<double> duration)
-    : seconds (duration.count())
+template<typename Type>
+inline constexpr TimeDuration::TimeDuration (std::chrono::duration<Type> duration)
+    : seconds (std::chrono::duration<double> (duration).count())
+{
+}
+
+template<typename T1, typename T2>
+inline constexpr TimeDuration::TimeDuration (std::chrono::duration<T1, T2> duration)
+    : seconds (std::chrono::duration<double> (duration).count())
 {
 }
 
@@ -340,10 +478,25 @@ inline constexpr double TimeDuration::inSeconds() const
     return seconds;
 }
 
+inline constexpr TimeDuration operator- (TimeDuration t)
+{
+    return TimeDuration::fromSeconds (-t.inSeconds());
+}
+
+inline constexpr TimePosition toPosition (TimeDuration t)
+{
+    return TimePosition::fromSeconds (t.inSeconds());
+}
+
 inline constexpr int64_t toSamples (TimeDuration p, double sampleRate)
 {
     return static_cast<int64_t> ((p.inSeconds() * sampleRate)
                                  + (p.inSeconds() >= 0.0 ? 0.5 : -0.5));
+}
+
+inline TimeDuration abs (TimeDuration t)
+{
+    return TimeDuration::fromSeconds (std::abs (t.inSeconds()));
 }
 
 
@@ -373,24 +526,58 @@ inline constexpr TimePosition operator- (const TimePosition& t1, const TimeDurat
     return TimePosition::fromSeconds (t1.inSeconds() - t2.inSeconds());
 }
 
-inline constexpr TimeDuration operator+ (const TimeDuration& t1, std::chrono::duration<double> t2)
+template<typename Type>
+inline constexpr TimeDuration operator+ (const TimeDuration& t1, std::chrono::duration<Type> t2)
 {
-    return TimeDuration::fromSeconds (t1.inSeconds() + t2.count());
+    return TimeDuration::fromSeconds (t1.inSeconds() + std::chrono::duration<double> (t2).count());
 }
 
-inline constexpr TimePosition operator+ (const TimePosition& t1, std::chrono::duration<double> t2)
+template<typename Type>
+inline constexpr TimePosition operator+ (const TimePosition& t1, std::chrono::duration<Type> t2)
 {
-    return TimePosition::fromSeconds (t1.inSeconds() + t2.count());
+    return TimePosition::fromSeconds (t1.inSeconds() + std::chrono::duration<double> (t2).count());
 }
 
-inline constexpr TimeDuration operator- (const TimeDuration& t1, std::chrono::duration<double> t2)
+template<typename Type>
+inline constexpr TimeDuration operator- (const TimeDuration& t1, std::chrono::duration<Type> t2)
 {
-    return TimeDuration::fromSeconds (t1.inSeconds() - t2.count());
+    return TimeDuration::fromSeconds (t1.inSeconds() - std::chrono::duration<double> (t2).count());
 }
 
-inline constexpr TimePosition operator- (const TimePosition& t1, std::chrono::duration<double> t2)
+template<typename Type>
+inline constexpr TimePosition operator- (const TimePosition& t1, std::chrono::duration<Type> t2)
 {
-    return TimePosition::fromSeconds (t1.inSeconds() - t2.count());
+    return TimePosition::fromSeconds (t1.inSeconds() - std::chrono::duration<double> (t2).count());
+}
+
+inline constexpr TimePosition operator* (const TimePosition& t, double ammount)
+{
+    return TimePosition::fromSeconds (t.inSeconds() * ammount);
+}
+
+inline constexpr TimePosition operator/ (const TimePosition& t, double ammount)
+{
+    return TimePosition::fromSeconds (t.inSeconds() / ammount);
+}
+
+inline constexpr TimeDuration operator* (const TimeDuration& t, double ammount)
+{
+    return TimeDuration::fromSeconds (t.inSeconds() * ammount);
+}
+
+inline constexpr TimeDuration operator/ (const TimeDuration& t, double ammount)
+{
+    return TimeDuration::fromSeconds (t.inSeconds() / ammount);
+}
+
+inline constexpr double operator/ (const TimePosition& t1, const TimeDuration& t2)
+{
+    return t1.inSeconds() / t2.inSeconds();
+}
+
+inline constexpr double operator/ (const TimeDuration& t1, const TimeDuration& t2)
+{
+    return t1.inSeconds() / t2.inSeconds();
 }
 
 inline constexpr bool operator== (const TimePosition& t1, const TimePosition& t2)   { return t1.inSeconds() == t2.inSeconds(); }
@@ -423,6 +610,11 @@ inline constexpr double BeatPosition::inBeats() const
     return numBeats;
 }
 
+inline BeatPosition abs (BeatPosition t)
+{
+    return BeatPosition::fromBeats (std::abs (t.inBeats()));
+}
+
 
 //==============================================================================
 //==============================================================================
@@ -439,6 +631,35 @@ inline constexpr double BeatDuration::inBeats() const
     return numBeats;
 }
 
+inline constexpr BeatDuration toDuration (BeatPosition t)
+{
+    return BeatDuration::fromBeats (t.inBeats());
+}
+
+inline BeatPosition roundToNearestBeat (BeatPosition t)
+{
+    return BeatPosition::fromBeats (juce::roundToInt (t.inBeats()));
+}
+
+inline BeatDuration abs (BeatDuration t)
+{
+    return BeatDuration::fromBeats (std::abs (t.inBeats()));
+}
+
+constexpr BeatPosition toPosition (BeatDuration t)
+{
+    return BeatPosition::fromBeats (t.inBeats());
+}
+
+constexpr BeatPosition operator- (BeatPosition t)
+{
+    return BeatPosition::fromBeats (-t.inBeats());
+}
+
+constexpr BeatDuration operator- (BeatDuration t)
+{
+    return BeatDuration::fromBeats (-t.inBeats());
+}
 
 //==============================================================================
 inline constexpr BeatDuration operator+ (const BeatDuration& t1, const BeatDuration& t2)
@@ -466,6 +687,38 @@ inline constexpr BeatPosition operator- (const BeatPosition& t1, const BeatDurat
     return BeatPosition::fromBeats (t1.inBeats() - t2.inBeats());
 }
 
+template<typename Type>
+inline constexpr BeatPosition operator* (const BeatPosition& t, Type ammount)
+{
+    return BeatPosition::fromBeats (t.inBeats() * static_cast<double> (ammount));
+}
+
+inline constexpr BeatPosition operator/ (const BeatPosition& t, double ammount)
+{
+    return BeatPosition::fromBeats (t.inBeats() * ammount);
+}
+
+template<typename Type>
+inline constexpr BeatDuration operator* (const BeatDuration& t, Type ammount)
+{
+    return BeatDuration::fromBeats (t.inBeats() * static_cast<double> (ammount));
+}
+
+inline constexpr BeatDuration operator/ (const BeatDuration& t, double ammount)
+{
+    return BeatDuration::fromBeats (t.inBeats() * ammount);
+}
+
+inline constexpr double operator/ (const BeatPosition& t1, const BeatDuration& t2)
+{
+    return t1.inBeats() / t2.inBeats();
+}
+
+inline constexpr double operator/ (const BeatDuration& t1, const BeatDuration& t2)
+{
+    return t1.inBeats() / t2.inBeats();
+}
+
 inline constexpr bool operator== (const BeatPosition& t1, const BeatPosition& t2)   { return t1.inBeats() == t2.inBeats(); }
 inline constexpr bool operator!= (const BeatPosition& t1, const BeatPosition& t2)   { return ! (t1 == t2); }
 
@@ -482,5 +735,9 @@ inline constexpr bool operator<=    (const BeatDuration& t1, const BeatDuration&
 inline constexpr bool operator>     (const BeatDuration& t1, const BeatDuration& t2)    { return t1.inBeats() > t2.inBeats(); }
 inline constexpr bool operator>=    (const BeatDuration& t1, const BeatDuration& t2)    { return t1.inBeats() >= t2.inBeats(); }
 
+inline juce::String& operator<< (juce::String& s, TimeDuration d)  { return s << juce::String (d.inSeconds()); }
+inline juce::String& operator<< (juce::String& s, TimePosition p)  { return s << juce::String (p.inSeconds()); }
+inline juce::String& operator<< (juce::String& s, BeatDuration d)  { return s << juce::String (d.inBeats()); }
+inline juce::String& operator<< (juce::String& s, BeatPosition p)  { return s << juce::String (p.inBeats()); }
 
 } // namespace tracktion_graph

@@ -37,6 +37,13 @@ using BeatRange = RangeType<BeatPosition>;
 
 
 //==============================================================================
+/** Converts a TimeRange to a range of samples. */
+[[ nodiscard ]] constexpr juce::Range<int64_t> toSamples (TimeRange, double sampleRate);
+
+/** Creates a TimeRange from a range of samples. */
+[[ nodiscard ]] TimeRange timeRangeFromSamples (juce::Range<int64_t> sampleRange, double sampleRate);
+
+//==============================================================================
 //==============================================================================
 /**
     Describes a range of two positions with a duration separating them.
@@ -110,39 +117,39 @@ struct RangeType
 
     //==============================================================================
     /** Returns the range that contains both of these ranges. */
-    RangeType getUnionWith (RangeType) const;
+    [[ nodiscard ]] RangeType getUnionWith (RangeType) const;
 
     /** Returns the intersection of this range with the given one. */
-    RangeType getIntersectionWith (RangeType) const;
+    [[ nodiscard ]] RangeType getIntersectionWith (RangeType) const;
 
     /** Returns a range that has been expanded or contracted around the given position. */
-    RangeType rescaled (Position anchorTime, double factor) const;
+    [[ nodiscard ]] RangeType rescaled (Position anchorTime, double factor) const;
 
     /** Returns a given range, after moving it forwards or backwards to fit it
         within this range.
     */
-    RangeType constrainRange (RangeType) const;
+    [[ nodiscard ]] RangeType constrainRange (RangeType) const;
 
     /** Expands the start and end of this range by the given ammount. */
-    RangeType expanded (Duration) const;
+    [[ nodiscard ]] RangeType expanded (Duration) const;
 
     /** Reduces the start and end of this range by the given ammount. */
-    RangeType reduced (Duration) const;
+    [[ nodiscard ]] RangeType reduced (Duration) const;
 
     /** Returns a range with the same duration as this one but a new start position. */
-    RangeType movedToStartAt (Position) const;
+    [[ nodiscard ]] RangeType movedToStartAt (Position) const;
 
     /** Returns a range with the same duration as this one but a new end position. */
-    RangeType movedToEndAt (Position) const;
+    [[ nodiscard ]] RangeType movedToEndAt (Position) const;
 
     /** Returns a range with the same end position as this one but a new start position. */
-    RangeType withStart (Position) const;
+    [[ nodiscard ]] RangeType withStart (Position) const;
 
     /** Returns a range with the same start position as this one but a new end position. */
-    RangeType withEnd (Position) const;
+    [[ nodiscard ]] RangeType withEnd (Position) const;
 
     /** Returns a range with the same start position as this one but a new duration length. */
-    RangeType withLength (Duration) const;
+    [[ nodiscard ]] RangeType withLength (Duration) const;
 
 private:
     Position start, end;
@@ -153,19 +160,19 @@ private:
 //==============================================================================
 /** Compares two ranges to check if they are equal. */
 template<typename PositionType>
-bool operator== (const RangeType<PositionType>&, const RangeType<PositionType>&);
+[[ nodiscard ]] bool operator== (const RangeType<PositionType>&, const RangeType<PositionType>&);
 
 /** Compares two ranges to check if they are not equal. */
 template<typename PositionType>
-bool operator!= (const RangeType<PositionType>&, const RangeType<PositionType>&);
+[[ nodiscard ]] bool operator!= (const RangeType<PositionType>&, const RangeType<PositionType>&);
 
 /** Adds a duration to a range, moving it forwards. */
 template<typename PositionType>
-RangeType<PositionType> operator+ (const RangeType<PositionType>&, typename RangeType<PositionType>::Duration);
+[[ nodiscard ]] RangeType<PositionType> operator+ (const RangeType<PositionType>&, typename RangeType<PositionType>::Duration);
 
 /** Subtracts a duration to a range, moving it backwards. */
 template<typename PositionType>
-RangeType<PositionType> operator- (const RangeType<PositionType>&, typename RangeType<PositionType>::Duration);
+[[ nodiscard ]] RangeType<PositionType> operator- (const RangeType<PositionType>&, typename RangeType<PositionType>::Duration);
 
 
 //==============================================================================
@@ -190,6 +197,18 @@ template<> inline BeatPosition fromUnderlyingType<BeatPosition> (double t) { ret
 template<> inline BeatDuration fromUnderlyingType<BeatDuration> (double t) { return BeatDuration::fromBeats (t); }
 inline double toUnderlyingType (BeatPosition t) { return t.inBeats(); }
 inline double toUnderlyingType (BeatDuration t) { return t.inBeats(); }
+
+inline constexpr juce::Range<int64_t> toSamples (TimeRange r, double sampleRate)
+{
+    return { toSamples (r.getStart(), sampleRate),
+             toSamples (r.getEnd(), sampleRate) };
+}
+
+inline TimeRange timeRangeFromSamples (juce::Range<int64_t> r, double sampleRate)
+{
+    return { TimePosition::fromSamples (r.getStart(), sampleRate),
+             TimePosition::fromSamples (r.getEnd(), sampleRate) };
+}
 
 template<typename PositionType>
 inline RangeType<PositionType>::RangeType (Position s, Position e)

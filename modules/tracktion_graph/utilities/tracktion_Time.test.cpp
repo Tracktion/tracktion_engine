@@ -177,6 +177,11 @@ public:
             expectEquals (TimePosition (1min).inSeconds(), 60.0);
             expectEquals (TimePosition (45s).inSeconds(), 45.0);
             expectEquals (TimePosition (1234ms).inSeconds(), 1.234);
+            expect (TimePosition (1s) == TimePosition (1.0s));
+            expect (TimePosition (1s) == TimePosition (1000ms));
+            expect (TimePosition (1s) + 1s == TimePosition (1000ms) + 1000ms);
+            expect (TimePosition (1s) + 1s == TimePosition (2000ms));
+            expect (TimePosition (1s) - 1.0s == TimePosition (0ms));
 
             // Samples
             {
