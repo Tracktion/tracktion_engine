@@ -52,7 +52,7 @@ public:
     EditTimeRange getTotalRange() const;
 
     //==============================================================================
-    void addClip (const Clip::Ptr& clip);
+    bool addClip (const Clip::Ptr& clip);
 
     Clip* insertClipWithState (juce::ValueTree);
 
