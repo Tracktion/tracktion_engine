@@ -11,22 +11,22 @@
 namespace tracktion_engine
 {
 
-inline BeatPosition toBeats (TimePosition tp, const TempoSequence& ts)
+BeatPosition toBeats (TimePosition tp, const TempoSequence& ts)
 {
     return ts.timeToBeats (tp);
 }
 
-inline TimePosition toTime (BeatPosition bp, const TempoSequence& ts)
+TimePosition toTime (BeatPosition bp, const TempoSequence& ts)
 {
     return ts.beatsToTime (bp);
 }
 
-inline BeatRange toBeats (TimeRange r, const TempoSequence& ts)
+BeatRange toBeats (TimeRange r, const TempoSequence& ts)
 {
     return { toBeats (r.getStart(), ts), toBeats (r.getEnd(), ts) };
 }
 
-inline TimeRange toTime (BeatRange r, const TempoSequence& ts)
+TimeRange toTime (BeatRange r, const TempoSequence& ts)
 {
     return { toTime (r.getStart(), ts), toTime (r.getEnd(), ts) };
 }

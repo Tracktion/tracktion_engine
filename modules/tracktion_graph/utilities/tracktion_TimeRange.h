@@ -85,16 +85,16 @@ struct RangeType
 
     //==============================================================================
     /** Returns the start of the range. */
-    Position getStart() const;
+    constexpr Position getStart() const;
 
     /** Returns the end of the range. */
-    Position getEnd() const;
+    constexpr Position getEnd() const;
 
     /** Returns the length of the range. */
-    Duration getLength() const;
+    constexpr Duration getLength() const;
 
     /** Returns the centre position of the range. */
-    Position getCentre() const;
+    constexpr Position getCentre() const;
 
     /** Clamps the given position to this range. */
     Position clipPosition (Position) const;
@@ -237,10 +237,10 @@ inline RangeType<PositionType> RangeType<PositionType>::emptyRange (Position p)
     return { p, p };
 }
 
-template<typename PositionType> inline typename RangeType<PositionType>::Position RangeType<PositionType>::getStart() const                          { return start; }
-template<typename PositionType> inline typename RangeType<PositionType>::Position RangeType<PositionType>::getEnd() const                            { return end; }
-template<typename PositionType> inline typename RangeType<PositionType>::Duration RangeType<PositionType>::getLength() const                         { return end - start; }
-template<typename PositionType> inline typename RangeType<PositionType>::Position RangeType<PositionType>::getCentre() const                         { return fromUnderlyingType<Position> ((toUnderlyingType (start) + toUnderlyingType (end)) * 0.5); }
+template<typename PositionType> inline constexpr typename RangeType<PositionType>::Position RangeType<PositionType>::getStart() const                          { return start; }
+template<typename PositionType> inline constexpr typename RangeType<PositionType>::Position RangeType<PositionType>::getEnd() const                            { return end; }
+template<typename PositionType> inline constexpr typename RangeType<PositionType>::Duration RangeType<PositionType>::getLength() const                         { return end - start; }
+template<typename PositionType> inline constexpr typename RangeType<PositionType>::Position RangeType<PositionType>::getCentre() const                         { return fromUnderlyingType<Position> ((toUnderlyingType (start) + toUnderlyingType (end)) * 0.5); }
 template<typename PositionType> inline typename RangeType<PositionType>::Position RangeType<PositionType>::clipPosition (Position position) const    { return juce::jlimit (start, end, position); }
 
 template<typename PositionType> inline bool RangeType<PositionType>::isEmpty() const                                          { return end <= start; }
