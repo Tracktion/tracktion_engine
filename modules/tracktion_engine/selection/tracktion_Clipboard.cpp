@@ -1069,14 +1069,12 @@ private:
         juce::UnitTest::expectEquals (t.inSeconds(), t2);
     }
 
-    template<>
-    void expectEquals<BeatPosition> (BeatPosition t, double t2)
+    void expectEquals (BeatPosition t, double t2)
     {
         juce::UnitTest::expectEquals (t.inBeats(), t2);
     }
 
-    template<>
-    void expectEquals<BeatDuration> (BeatDuration t, double t2)
+    void expectEquals (BeatDuration t, double t2)
     {
         juce::UnitTest::expectEquals (t.inBeats(), t2);
     }
