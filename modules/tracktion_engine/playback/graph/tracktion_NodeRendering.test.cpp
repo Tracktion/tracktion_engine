@@ -116,7 +116,7 @@ private:
 
         const auto totalNumFiles = size_t (numTracks * numFilesPerTrack);
         expect (useSingleFile || (context.files.size() == totalNumFiles));
-        expectWithinAbsoluteError (context.edit->getLength(), durationInSeconds, 0.01);
+        expectWithinAbsoluteError (context.edit->getLength().inSeconds(), durationInSeconds, 0.01);
 
         renderEdit (*this, opts);
     }
@@ -151,7 +151,7 @@ private:
                 }
 
                 auto& file = files.back();
-                const auto timeRange = EditTimeRange::withStartAndLength (i * durationOfFile, durationOfFile);
+                const auto timeRange = TimeRange (TimePosition::fromSeconds (durationOfFile) * i, TimeDuration::fromSeconds (durationOfFile));
                 auto waveClip = t->insertWaveClip (file->getFile().getFileName(), file->getFile(),
                                                    {{ timeRange }}, false);
                 waveClip->setGainDB (gainToDb (1.0f / numTracks));

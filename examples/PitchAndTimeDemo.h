@@ -239,7 +239,7 @@ private:
             {
                 const double ratio = tempoSlider.getValue() / baseTempo;
                 clip->setSpeedRatio (ratio);
-                clip->setLength (audioFileInfo.getLengthInSeconds() / clip->getSpeedRatio(), true);
+                clip->setLength (TimeDuration::fromSeconds (audioFileInfo.getLengthInSeconds()) / clip->getSpeedRatio(), true);
             }
 
             // Then update the pitch change based on the slider value

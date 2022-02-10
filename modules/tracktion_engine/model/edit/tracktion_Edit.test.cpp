@@ -38,7 +38,7 @@ public:
         beginTest ("Benchmark: Copy/paste");
 
         {
-            auto c = getAudioTracks (*edit)[0]->insertMIDIClip ({ 0.0, 1.0 }, nullptr);
+            auto c = getAudioTracks (*edit)[0]->insertMIDIClip ({ 0.0s, TimePosition (1.0s) }, nullptr);
             auto t1 = c->getTrack();
             
             ScopedBenchmark sb (getDescription ("Copy/paste clip 49 times"));

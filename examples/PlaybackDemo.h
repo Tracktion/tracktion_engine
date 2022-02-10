@@ -47,7 +47,7 @@ public:
         {
             edit = te::loadEditFromFile (engine, editFile);
             auto& transport = edit->getTransport();
-            transport.setLoopRange ({ 0.0, edit->getLength() });
+            transport.setLoopRange ({ 0.0s, edit->getLength() });
             transport.looping = true;
             transport.play (false);
             transport.addChangeListener (this);

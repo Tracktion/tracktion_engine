@@ -67,7 +67,7 @@ public:
         te::AudioFile audioFile (edit.engine, demoFile);
 
         auto clip = track->insertWaveClip (demoFile.getFileNameWithoutExtension(), demoFile,
-                                           { { 0.0, audioFile.getLength() }, 0.0 }, false);
+                                           { { {}, TimePosition::fromSeconds (audioFile.getLength()) }, {} }, false);
         jassert (clip != nullptr);
 
         // Creates new instance of IR Loader Plugin and inserts to track 1

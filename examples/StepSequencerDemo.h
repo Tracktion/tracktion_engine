@@ -296,8 +296,8 @@ struct StepEditor   : public Component,
             if (clipRange.isEmpty())
                 return 0.0f;
 
-            const double position = editor.transport.position;
-            const auto proportion = position / clipRange.getEnd();
+            const auto position = editor.transport.getPosition();
+            const auto proportion = position.inSeconds() / clipRange.getEnd().inSeconds();
             auto r = getLocalBounds().toFloat();
 
             return r.getWidth() * float (proportion);
@@ -512,7 +512,7 @@ private:
         if (auto track = EngineHelpers::getOrInsertAudioTrackAt (edit, 0))
         {
             // Find length of 1 bar
-            const te::EditTimeRange editTimeRange (0, edit.tempoSequence.barsBeatsToTime ({ 1, 0.0 }));
+            const TimeRange editTimeRange (0s, edit.tempoSequence.barsBeatsToTime ({ 1, 0.0 }));
             track->insertNewClip (te::TrackItem::Type::step, "Step Clip", editTimeRange, nullptr);
 
             if (auto stepClip = getClip())

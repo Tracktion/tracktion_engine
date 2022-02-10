@@ -9,6 +9,7 @@
 #pragma once
 
 namespace te = tracktion_engine;
+using namespace std::literals;
 
 static inline const char* getInternalPluginFormatName()     { return "TracktionInternal"; }
 
@@ -294,12 +295,12 @@ void AudioClipComponent::paint (Graphics& g)
 void AudioClipComponent::drawWaveform (Graphics& g, te::AudioClipBase& c, te::SmartThumbnail& thumb, Colour colour,
                                        int left, int right, int y, int h, int xOffset)
 {
-    auto getTimeRangeForDrawing = [this] (const int l, const int r) -> te::EditTimeRange
+    auto getTimeRangeForDrawing = [this] (const int l, const int r) -> TimeRange
     {
         if (auto p = getParentComponent())
         {
-            double t1 = editViewState.xToTime (l, p->getWidth());
-            double t2 = editViewState.xToTime (r, p->getWidth());
+            auto t1 = editViewState.xToTime (l, p->getWidth());
+            auto t2 = editViewState.xToTime (r, p->getWidth());
             
             return { t1, t2 };
         }
@@ -318,7 +319,7 @@ void AudioClipComponent::drawWaveform (Graphics& g, te::AudioClipBase& c, te::Sm
     const bool usesTimeStretchedProxy = c.usesTimeStretchedProxy();
     
     const auto clipPos = c.getPosition();
-    auto offset = clipPos.getOffset();
+    auto offset = toDuration (clipPos.getOffset());
     auto speedRatio = c.getSpeedRatio();
     
     g.setColour (colour);
@@ -330,12 +331,12 @@ void AudioClipComponent::drawWaveform (Graphics& g, te::AudioClipBase& c, te::Sm
         if (! thumb.isOutOfDate())
         {
             drawChannels (g, thumb, area, false,
-                          getTimeRangeForDrawing (left, right),
+                          te::toEditTimeRange (getTimeRangeForDrawing (left, right)),
                           c.isLeftChannelActive(), c.isRightChannelActive(),
                           gainL, gainR);
         }
     }
-    else if (c.getLoopLength() == 0)
+    else if (c.getLoopLength() == 0s)
     {
         auto region = getTimeRangeForDrawing (left, right);
         
@@ -344,7 +345,7 @@ void AudioClipComponent::drawWaveform (Graphics& g, te::AudioClipBase& c, te::Sm
         
         drawChannels (g, thumb,
                       { left + xOffset, y, right - left, h },
-                      false, { t1, t2 },
+                      false, te::toEditTimeRange ({ t1, t2 }),
                       c.isLeftChannelActive(), c.isRightChannelActive(),
                       gainL, gainR);
     }
@@ -409,8 +410,8 @@ void MidiClipComponent::paint (Graphics& g)
         auto& seq = mc->getSequence();
         for (auto n : seq.getNotes())
         {
-            double sBeat = mc->getStartBeat() + n->getStartBeat();
-            double eBeat = mc->getStartBeat() + n->getEndBeat();
+            auto sBeat = mc->getStartBeat() + toDuration (n->getStartBeat());
+            auto eBeat = mc->getStartBeat() + toDuration (n->getEndBeat());
             
             auto s = editViewState.beatToTime (sBeat);
             auto e = editViewState.beatToTime (eBeat);
@@ -441,7 +442,7 @@ void RecordingClipComponent::initialiseThumbnailAndPunchTime()
 {
     if (auto at = dynamic_cast<te::AudioTrack*> (track.get()))
     {
-        for (auto* idi : at->edit.getEditInputDevices().getDevicesForTargetTrack (*at))
+        for (auto idi : at->edit.getEditInputDevices().getDevicesForTargetTrack (*at))
         {
             punchInTime = idi->getPunchInTime();
             
@@ -467,23 +468,24 @@ void RecordingClipComponent::drawThumbnail (Graphics& g, Colour waveformColour) 
         return;
     
     Rectangle<int> bounds;
-    Range<double> times;
+    TimeRange times;
     getBoundsAndTime (bounds, times);
     auto w = bounds.getWidth();
     
     if (w > 0 && w < 10000)
     {
         g.setColour (waveformColour);
-        thumbnail->thumb.drawChannels (g, bounds, w, times, 1.0f);
+        thumbnail->thumb.drawChannels (g, bounds, w, te::toEditTimeRange (times), 1.0f);
     }
 }
 
-bool RecordingClipComponent::getBoundsAndTime (Rectangle<int>& bounds, Range<double>& times) const
+bool RecordingClipComponent::getBoundsAndTime (Rectangle<int>& bounds, TimeRange& times) const
 {
-    auto editTimeToX = [this] (double t)
+    auto editTimeToX = [this] (TimePosition t)
     {
         if (auto p = getParentComponent())
             return editViewState.timeToX (t, p->getWidth()) - getX();
+
         return 0;
     };
     
@@ -491,7 +493,8 @@ bool RecordingClipComponent::getBoundsAndTime (Rectangle<int>& bounds, Range<dou
     {
         if (auto p = getParentComponent())
             return editViewState.xToTime (x + getX(), p->getWidth());
-        return 0.0;
+
+        return TimePosition();
     };
     
     bool hasLooped = false;
@@ -502,16 +505,16 @@ bool RecordingClipComponent::getBoundsAndTime (Rectangle<int>& bounds, Range<dou
         auto localBounds = getLocalBounds();
         
         auto timeStarted = thumbnail->punchInTime;
-        auto unloopedPos = timeStarted + thumbnail->thumb.getTotalLength();
+        auto unloopedPos = timeStarted + TimeDuration::fromSeconds (thumbnail->thumb.getTotalLength());
         
         auto t1 = timeStarted;
         auto t2 = unloopedPos;
         
-        if (epc->isLooping() && t2 >= epc->getLoopTimes().end)
+        if (epc->isLooping() && t2 >= epc->getLoopTimes().getEnd())
         {
             hasLooped = true;
             
-            t1 = jmin (t1, epc->getLoopTimes().start);
+            t1 = jmin (t1, epc->getLoopTimes().getStart());
             t2 = epc->getPosition();
             
             t1 = jmax (editViewState.viewX1.get(), t1);
@@ -519,8 +522,8 @@ bool RecordingClipComponent::getBoundsAndTime (Rectangle<int>& bounds, Range<dou
         }
         else if (edit.recordingPunchInOut)
         {
-            const double in  = thumbnail->punchInTime;
-            const double out = edit.getTransport().getLoopRange().getEnd();
+            const auto in  = thumbnail->punchInTime;
+            const auto out = edit.getTransport().getLoopRange().getEnd();
             
             t1 = jlimit (in, out, t1);
             t2 = jlimit (in, out, t2);
@@ -530,13 +533,13 @@ bool RecordingClipComponent::getBoundsAndTime (Rectangle<int>& bounds, Range<dou
                  .withRight (jmin (localBounds.getRight(), editTimeToX (t2)));
         
         auto loopRange = epc->getLoopTimes();
-        const double recordedTime = unloopedPos - epc->getLoopTimes().start;
+        const auto recordedTime = unloopedPos - toDuration (epc->getLoopTimes().getStart());
         const int numLoops = (int) (recordedTime / loopRange.getLength());
         
-        const Range<double> editTimes (xToEditTime (bounds.getX()),
-                                       xToEditTime (bounds.getRight()));
+        const TimeRange editTimes (xToEditTime (bounds.getX()),
+                                   xToEditTime (bounds.getRight()));
         
-        times = (editTimes + (numLoops * loopRange.getLength())) - timeStarted;
+        times = (editTimes + (loopRange.getLength() * numLoops)) - toDuration (timeStarted);
     }
     
     return hasLooped;
@@ -553,17 +556,17 @@ void RecordingClipComponent::updatePosition()
     
     if (auto epc = edit.getTransport().getCurrentPlaybackContext())
     {
-        double t1 = punchInTime >= 0 ? punchInTime : edit.getTransport().getTimeWhenStarted();
-        double t2 = jmax (t1, epc->getUnloopedPosition());
+        auto t1 = punchInTime >= 0s ? punchInTime : edit.getTransport().getTimeWhenStarted();
+        auto t2 = jmax (t1, epc->getUnloopedPosition());
         
         if (epc->isLooping())
         {
             auto loopTimes = epc->getLoopTimes();
             
-            if (t2 >= loopTimes.end)
+            if (t2 >= loopTimes.getEnd())
             {
-                t1 = jmin (t1, loopTimes.start);
-                t2 = loopTimes.end;
+                t1 = jmin (t1, loopTimes.getStart());
+                t2 = loopTimes.getEnd();
             }
         }
         else if (edit.recordingPunchInOut)
@@ -1061,8 +1064,8 @@ void PlayheadComponent::mouseUp (const MouseEvent&)
 
 void PlayheadComponent::mouseDrag (const MouseEvent& e)
 {
-    double t = editViewState.xToTime (e.x, getWidth());
-    edit.getTransport().setCurrentPosition (t);
+    auto t = editViewState.xToTime (e.x, getWidth());
+    edit.getTransport().setPosition (t);
     timerCallback();
 }
 
@@ -1075,7 +1078,7 @@ void PlayheadComponent::timerCallback()
         setMouseCursor (MouseCursor::LeftRightResizeCursor);
     }
 
-    int newX = editViewState.timeToX (edit.getTransport().getCurrentPosition(), getWidth());
+    int newX = editViewState.timeToX (edit.getTransport().getPosition(), getWidth());
     if (newX != xPosition)
     {
         repaint (jmin (newX, xPosition) - 1, 0, jmax (newX, xPosition) - jmin (newX, xPosition) + 3, getHeight());

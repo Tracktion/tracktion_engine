@@ -194,9 +194,9 @@ public:
             expectGreaterOrEqual (audioTracks.size(), 8);
             
             for (int i = 0; i < 8; ++i)
-                audioTracks[i]->insertMIDIClip (EditTimeRange::withStartAndLength (0.0, fileLength), nullptr);
+                audioTracks[i]->insertMIDIClip (TimeRange (0.0s, TimeDuration::fromSeconds (fileLength)), nullptr);
 
-            expectEquals (edit->getLength(), fileLength);
+            expectEquals (edit->getLength().inSeconds(), fileLength);
         }
 
         // Render single threaded first

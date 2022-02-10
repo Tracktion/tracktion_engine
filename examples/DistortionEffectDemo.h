@@ -189,7 +189,7 @@ public:
         te::AudioFile audioFile (edit.engine, f);
 
         auto clip = track->insertWaveClip (f.getFileNameWithoutExtension(), f,
-                                           { { 0.0, audioFile.getLength() }, 0.0 }, false);
+                                           { { {}, TimePosition::fromSeconds (audioFile.getLength()) }, {} }, false);
         jassert (clip != nullptr);
 
         // Creates new instance of Distortion Plugin and inserts to track 1
