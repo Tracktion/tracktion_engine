@@ -1089,7 +1089,7 @@ public:
                     recordingContext->firstRecCallback = false;
 
                     auto timeDiff = blockRange.getStart() - recordingContext->punchTimes.getStart();
-                    recordingContext->adjustSamples -= tracktion_graph::toSamples (timeDiff, recordingContext->sampleRate);
+                    recordingContext->adjustSamples -= (int) tracktion_graph::toSamples (timeDiff, recordingContext->sampleRate);
                 }
 
                 const int adjustSamples = recordingContext->adjustSamples;

@@ -38,7 +38,7 @@ using BeatRange = RangeType<BeatPosition>;
 
 //==============================================================================
 /** Converts a TimeRange to a range of samples. */
-[[ nodiscard ]] constexpr juce::Range<int64_t> toSamples (TimeRange, double sampleRate);
+[[ nodiscard ]] juce::Range<int64_t> toSamples (TimeRange, double sampleRate);
 
 /** Creates a TimeRange from a range of samples. */
 [[ nodiscard ]] TimeRange timeRangeFromSamples (juce::Range<int64_t> sampleRange, double sampleRate);
@@ -198,7 +198,7 @@ template<> inline BeatDuration fromUnderlyingType<BeatDuration> (double t) { ret
 inline double toUnderlyingType (BeatPosition t) { return t.inBeats(); }
 inline double toUnderlyingType (BeatDuration t) { return t.inBeats(); }
 
-inline constexpr juce::Range<int64_t> toSamples (TimeRange r, double sampleRate)
+inline juce::Range<int64_t> toSamples (TimeRange r, double sampleRate)
 {
     return { toSamples (r.getStart(), sampleRate),
              toSamples (r.getEnd(), sampleRate) };
