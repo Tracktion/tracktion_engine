@@ -54,6 +54,11 @@ public:
     */
     virtual void setPluginDisabled (const juce::String& /*idString*/, bool /*shouldBeDisabled*/) {}
 
+    /** Should the plugin be loaded. Normally plugins aren't loaded when Edit is for exporting
+        or examining. Override this if you always need a plugin loaded
+    */
+    virtual bool shouldLoadPlugin (ExternalPlugin& p);
+
     /** Gives the host a chance to do any extra configuration after a plugin is loaded */
     virtual void doAdditionalInitialisation (ExternalPlugin&)                       {}
 
