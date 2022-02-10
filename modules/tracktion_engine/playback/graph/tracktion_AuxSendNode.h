@@ -39,7 +39,7 @@ private:
     AuxSendPlugin& sendPlugin;
     
     double sampleRate = 44100.0;
-    double automationAdjustmentTime = 0.0;
+    TimeDuration automationAdjustmentTime;
 };
 
 }

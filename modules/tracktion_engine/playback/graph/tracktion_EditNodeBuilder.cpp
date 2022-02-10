@@ -238,17 +238,17 @@ std::unique_ptr<tracktion_graph::Node> createFadeNodeForClip (AudioClipBase& cli
     auto fIn = clip.getFadeIn();
     auto fOut = clip.getFadeOut();
 
-    if (fIn > 0.0 || fOut > 0.0)
+    if (fIn > TimeDuration() || fOut > TimeDuration())
     {
-        const bool speedIn = clip.getFadeInBehaviour() == AudioClipBase::speedRamp && fIn > 0.0;
-        const bool speedOut = clip.getFadeOutBehaviour() == AudioClipBase::speedRamp && fOut > 0.0;
+        const bool speedIn = clip.getFadeInBehaviour() == AudioClipBase::speedRamp && fIn > TimeDuration();
+        const bool speedOut = clip.getFadeOutBehaviour() == AudioClipBase::speedRamp && fOut > TimeDuration();
 
         auto pos = clip.getPosition();
         node = makeNode<FadeInOutNode> (std::move (node), playHeadState,
-                                        speedIn ? EditTimeRange (pos.getStart(), pos.getStart() + juce::jmin (0.003, fIn))
-                                                : EditTimeRange (pos.getStart(), pos.getStart() + fIn),
-                                        speedOut ? EditTimeRange (pos.getEnd() - juce::jmin (0.003, fOut), pos.getEnd())
-                                                 : EditTimeRange (pos.getEnd() - fOut, pos.getEnd()),
+                                        speedIn ? TimeRange (pos.getStart(), pos.getStart() + juce::jmin (TimeDuration::fromSeconds (0.003), fIn))
+                                                : TimeRange (pos.getStart(), pos.getStart() + fIn),
+                                        speedOut ? TimeRange (pos.getEnd() - juce::jmin (TimeDuration::fromSeconds (0.003), fOut), pos.getEnd())
+                                                 : TimeRange (pos.getEnd() - fOut, pos.getEnd()),
                                         clip.getFadeInType(), clip.getFadeOutType(),
                                         true);
     }
@@ -281,8 +281,9 @@ std::unique_ptr<tracktion_graph::Node> createNodeForAudioClip (AudioClipBase& cl
     // Otherwise use audio file
     auto original = clip.getAudioFile();
 
-    double nodeOffset = 0.0, speed = 1.0;
-    EditTimeRange loopRange;
+    TimeDuration nodeOffset;
+    double speed = 1.0;
+    TimeRange loopRange;
     const bool usesTimestretchedProxy = clip.usesTimeStretchedProxy();
 
     // Trigger proxy render if it needs it
@@ -290,7 +291,7 @@ std::unique_ptr<tracktion_graph::Node> createNodeForAudioClip (AudioClipBase& cl
 
     if (! usesTimestretchedProxy)
     {
-        nodeOffset = clip.getPosition().getOffset();
+        nodeOffset = toDuration (clip.getPosition().getOffset());
         loopRange = clip.getLoopRange();
         speed = clip.getSpeedRatio();
     }
@@ -325,22 +326,22 @@ std::unique_ptr<tracktion_graph::Node> createNodeForAudioClip (AudioClipBase& cl
         
         if (clip.getFadeInBehaviour() == AudioClipBase::speedRamp)
         {
-            desc.inTimeRange = EditTimeRange::withStartAndLength (clipPos.getStart(), clip.getFadeIn());
+            desc.inTimeRange = TimeRange (clipPos.getStart(), clip.getFadeIn());
             desc.fadeInType = clip.getFadeInType();
         }
         else
         {
-            desc.inTimeRange = EditTimeRange::withStartAndLength (clipPos.getStart(), 0.0);
+            desc.inTimeRange = TimeRange (clipPos.getStart(), TimeDuration());
         }
         
         if (clip.getFadeOutBehaviour() == AudioClipBase::speedRamp)
         {
-            desc.outTimeRange = EditTimeRange::withStartAndLength (clipPos.getEnd() - clip.getFadeOut(), clip.getFadeOut());
+            desc.outTimeRange = TimeRange (clipPos.getEnd() - clip.getFadeOut(), clip.getFadeOut());
             desc.fadeOutType = clip.getFadeOutType();
         }
         else
         {
-            desc.outTimeRange = EditTimeRange::withStartAndLength (clipPos.getEnd(), 0.0);
+            desc.outTimeRange = TimeRange (clipPos.getEnd(), TimeDuration());
         }
 
         node = tracktion_graph::makeNode<SpeedRampWaveNode> (playFile,
@@ -549,8 +550,8 @@ std::unique_ptr<tracktion_graph::Node> createNodeForFrozenAudioTrack (AudioTrack
     const bool processMidiWhenMuted = track.state.getProperty (IDs::processMidiWhenMuted, false);
     auto trackMuteState = std::make_unique<TrackMuteState> (track, false, processMidiWhenMuted);
     auto node = tracktion_graph::makeNode<WaveNode> (AudioFile (track.edit.engine, TemporaryFileManager::getFreezeFileForTrack (track)),
-                                                     EditTimeRange (0.0, track.getLengthIncludingInputTracks()),
-                                                     0.0, EditTimeRange(), LiveClipLevel(),
+                                                     TimeRange (TimePosition(), track.getLengthIncludingInputTracks()),
+                                                     TimeDuration(), TimeRange(), LiveClipLevel(),
                                                      1.0, juce::AudioChannelSet::stereo(), juce::AudioChannelSet::stereo(),
                                                      params.processState,
                                                      track.itemID,
@@ -878,8 +879,8 @@ std::unique_ptr<tracktion_graph::Node> createTrackCompNode (AudioTrack& at, trac
 
         for (auto r : nonMuteTimes)
         {
-            auto fadeIn = r.withLength (crossfadeTime) - 0.0001;
-            auto fadeOut = fadeIn.movedToEndAt (r.getEnd() + 0.0001);
+            auto fadeIn = r.withLength (TimeDuration::fromSeconds (crossfadeTime)) - TimeDuration::fromSeconds (0.0001);
+            auto fadeOut = fadeIn.movedToEndAt (r.getEnd() + TimeDuration::fromSeconds (0.0001));
 
             if (! (fadeIn.isEmpty() && fadeOut.isEmpty()))
                 node = makeNode<FadeInOutNode> (std::move (node),
@@ -1175,13 +1176,13 @@ std::unique_ptr<tracktion_graph::Node> createGroupFreezeNodeForDevice (Edit& edi
         if (device.getDeviceID() == outId)
         {
             AudioFile af (edit.engine, freezeFile);
-            const double length = af.getLength();
+            const auto length = TimeDuration::fromSeconds (af.getLength());
 
-            if (length <= 0.0)
+            if (length <= 0.0s)
                 return {};
 
-            auto node = tracktion_graph::makeNode<WaveNode> (af, EditTimeRange (0.0, length),
-                                                             0.0, EditTimeRange(), LiveClipLevel(),
+            auto node = tracktion_graph::makeNode<WaveNode> (af, TimeRange (0.0s, length),
+                                                             0.0s, TimeRange(), LiveClipLevel(),
                                                              1.0,
                                                              juce::AudioChannelSet::stereo(),
                                                              juce::AudioChannelSet::stereo(),
@@ -1252,12 +1253,12 @@ std::unique_ptr<tracktion_graph::Node> createMasterFadeInOutNode (Edit& edit, tr
     if (! params.includeMasterPlugins)
         return node;
     
-    if (edit.masterFadeIn > 0 || edit.masterFadeOut > 0)
+    if (edit.masterFadeIn > TimeDuration() || edit.masterFadeOut > TimeDuration())
     {
         auto length = edit.getLength();
         return makeNode<FadeInOutNode> (std::move (node), playHeadState,
-                                        EditTimeRange { 0.0, edit.masterFadeIn },
-                                        EditTimeRange { length - edit.masterFadeOut, length },
+                                        TimeRange { TimePosition(), edit.masterFadeIn },
+                                        TimeRange { toPosition (length) - edit.masterFadeOut, length },
                                         edit.masterFadeInType.get(),
                                         edit.masterFadeOutType.get(),
                                         true);

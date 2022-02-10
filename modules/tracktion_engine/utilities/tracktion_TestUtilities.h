@@ -24,7 +24,7 @@ namespace test_utilities
         return stats;
     }
 
-    inline void expectPeak (juce::UnitTest& ut, Edit& edit, EditTimeRange tr, juce::Array<Track*> tracks, float expectedPeak)
+    inline void expectPeak (juce::UnitTest& ut, Edit& edit, TimeRange tr, juce::Array<Track*> tracks, float expectedPeak)
     {
         auto blockSize = edit.engine.getDeviceManager().getBlockSize();
         auto stats = logStats (ut, Renderer::measureStatistics ("Tests", edit, tr, toBitSet (tracks), blockSize));

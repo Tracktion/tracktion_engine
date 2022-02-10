@@ -15,16 +15,16 @@ EditInsertPoint::EditInsertPoint (Edit& e) : edit (e)
 {
 }
 
-void EditInsertPoint::setNextInsertPoint (double time)
+void EditInsertPoint::setNextInsertPoint (TimePosition time)
 {
     if (lockInsertPointCount == 0)
     {
-        nextInsertPointTime = std::max (0.0, time);
+        nextInsertPointTime = std::max (TimePosition(), time);
         nextInsertIsAfterSelected = false;
     }
 }
 
-void EditInsertPoint::setNextInsertPoint (double time, const Track::Ptr& track)
+void EditInsertPoint::setNextInsertPoint (TimePosition time, const Track::Ptr& track)
 {
     if (lockInsertPointCount == 0)
     {
@@ -47,12 +47,12 @@ void EditInsertPoint::setNextInsertPointAfterSelected()
 }
 
 void EditInsertPoint::chooseInsertPoint (juce::ReferenceCountedObjectPtr<Track>& track,
-                                         double& start, bool pasteAfterSelection, SelectionManager* sm)
+                                         TimePosition& start, bool pasteAfterSelection, SelectionManager* sm)
 {
     return chooseInsertPoint (track, start, pasteAfterSelection, sm, [] (auto& t) { return t.isAudioTrack() || t.isFolderTrack(); });
 }
 
-void EditInsertPoint::chooseInsertPoint (Track::Ptr& track, double& start, bool pasteAfterSelection, SelectionManager* sm,
+void EditInsertPoint::chooseInsertPoint (Track::Ptr& track, TimePosition& start, bool pasteAfterSelection, SelectionManager* sm,
                                          std::function<bool(Track&)> allowedTrackPredicate)
 {
     CRASH_TRACER

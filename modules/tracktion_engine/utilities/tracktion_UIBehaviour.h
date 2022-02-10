@@ -144,12 +144,12 @@ public:
     /** Should return the position which used be used for edit operations such as splitting.
         By default this returns the transport position.
     */
-    virtual double getEditingPosition (Edit&);
+    virtual TimePosition getEditingPosition (Edit&);
 
     /** Should return the range which used be used for edit operations such as coping or deleting.
         By default this returns the loop range.
     */
-    virtual EditTimeRange getEditingRange (Edit&);
+    virtual TimeRange getEditingRange (Edit&);
 
     /** Can return a range of tracks which used be used for edit operations such as coping or deleting.
     */

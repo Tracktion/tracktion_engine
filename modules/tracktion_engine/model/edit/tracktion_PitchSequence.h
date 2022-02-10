@@ -31,17 +31,17 @@ public:
     const juce::Array<PitchSetting*>& getPitches() const;
     int getNumPitches() const;
     PitchSetting* getPitch (int index) const;
-    PitchSetting& getPitchAt (double time) const;
-    PitchSetting& getPitchAtBeat (double beat) const;
+    PitchSetting& getPitchAt (TimePosition) const;
+    PitchSetting& getPitchAtBeat (BeatPosition) const;
     int indexOfPitch (const PitchSetting*) const;
 
-    PitchSetting::Ptr insertPitch (double time);
-    PitchSetting::Ptr insertPitch (double beatPos, int pitch);
+    PitchSetting::Ptr insertPitch (TimePosition);
+    PitchSetting::Ptr insertPitch (BeatPosition, int pitch);
 
-    void movePitchStart (PitchSetting&, double deltaBeats, bool snapToBeat);
+    void movePitchStart (PitchSetting&, BeatDuration deltaBeats, bool snapToBeat);
 
     /** Inserts space in to a sequence, shifting all PitchSettings. */
-    void insertSpaceIntoSequence (double time, double amountOfSpaceInSeconds, bool snapToBeat);
+    void insertSpaceIntoSequence (TimePosition, TimeDuration amountOfSpace, bool snapToBeat);
 
     void sortEvents();
 
@@ -52,8 +52,8 @@ private:
     std::unique_ptr<PitchList> list;
     Edit* edit = nullptr;
 
-    int indexOfPitchAt (double t) const;
-    int indexOfNextPitchAt (double t) const;
+    int indexOfPitchAt (TimePosition) const;
+    int indexOfNextPitchAt (TimePosition) const;
 
     juce::UndoManager* getUndoManager() const;
 

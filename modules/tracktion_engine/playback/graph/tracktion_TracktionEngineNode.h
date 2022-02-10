@@ -26,7 +26,7 @@ struct ProcessState
     double sampleRate = 44100.0;
     int numSamples = 0;
     juce::Range<int64_t> referenceSampleRange, timelineSampleRange;
-    EditTimeRange editTimeRange;
+    TimeRange editTimeRange;
 };
 
 
@@ -60,7 +60,7 @@ public:
 
     /** Returns the edit time range (in seconds) of the current process block. */
     //[[expects: processState]]
-    EditTimeRange getEditTimeRange() const                  { return processState.editTimeRange; }
+    TimeRange getEditTimeRange() const                      { return processState.editTimeRange; }
 
     /** Returns the reference sample range (from the DeviceManager) of the current process block. */
     //[[expects: processState]]

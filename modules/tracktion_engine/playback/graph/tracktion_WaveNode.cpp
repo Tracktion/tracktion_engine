@@ -25,9 +25,9 @@ struct WaveNode::PerChannelState
 
 //==============================================================================
 WaveNode::WaveNode (const AudioFile& af,
-                    EditTimeRange editTime,
-                    double off,
-                    EditTimeRange loop,
+                    TimeRange editTime,
+                    TimeDuration off,
+                    TimeRange loop,
                     LiveClipLevel level,
                     double speed,
                     const juce::AudioChannelSet& channelSetToUse,
@@ -37,7 +37,8 @@ WaveNode::WaveNode (const AudioFile& af,
                     bool isRendering)
    : TracktionEngineNode (ps),
      editPosition (editTime),
-     loopSection (loop.getStart() * speed, loop.getEnd() * speed),
+     loopSection (TimePosition::fromSeconds (loop.getStart().inSeconds() * speed),
+                  TimePosition::fromSeconds (loop.getEnd().inSeconds() * speed)),
      offset (off),
      originalSpeedRatio (speed),
      editItemID (itemIDToUse),
@@ -64,7 +65,7 @@ void WaveNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&
 {
     reader = audioFile.engine->getAudioFileManager().cache.createReader (audioFile);
     outputSampleRate = info.sampleRate;
-    editPositionInSamples = tracktion_graph::timeToSample ({ editPosition.start, editPosition.end }, outputSampleRate);
+    editPositionInSamples = tracktion_graph::toSamples ({ editPosition.getStart(), editPosition.getEnd() }, outputSampleRate);
     updateFileSampleRate();
 
     const int numChannelsToUse = std::max (channelsToUse.size(), reader->getNumChannels());
@@ -118,12 +119,12 @@ void WaveNode::process (ProcessContext& pc)
 int64_t WaveNode::editPositionToFileSample (int64_t timelinePosition) const noexcept
 {
     // Convert timelinePosition in samples to edit time
-    return editTimeToFileSample (tracktion_graph::sampleToTime (timelinePosition, outputSampleRate));
+    return editTimeToFileSample (TimePosition::fromSamples (timelinePosition, outputSampleRate));
 }
 
-int64_t WaveNode::editTimeToFileSample (double editTime) const noexcept
+int64_t WaveNode::editTimeToFileSample (TimePosition editTime) const noexcept
 {
-    return (int64_t) ((editTime - (editPosition.getStart() - offset))
+    return (int64_t) ((editTime - toDuration (editPosition.getStart() - offset)).inSeconds()
                        * originalSpeedRatio * audioFileSampleRate + 0.5);
 }
 
@@ -140,8 +141,8 @@ bool WaveNode::updateFileSampleRate()
         return false;
     
     if (! loopSection.isEmpty())
-        reader->setLoopRange ({ timeToSample (loopSection.getStart(), audioFileSampleRate),
-                                timeToSample (loopSection.getEnd(), audioFileSampleRate) });
+        reader->setLoopRange ({ tracktion_graph::toSamples (loopSection.getStart(), audioFileSampleRate),
+                                tracktion_graph::toSamples (loopSection.getEnd(), audioFileSampleRate) });
 
     return true;
 }
@@ -176,7 +177,7 @@ void WaveNode::replaceChannelStateIfPossible (Node* rootNodeToReplace, int numCh
 
 void WaveNode::processSection (ProcessContext& pc, juce::Range<int64_t> timelineRange)
 {
-    const auto sectionEditTime = tracktion_graph::sampleToTime (timelineRange, outputSampleRate);
+    const auto sectionEditTime = tracktion_graph::timeRangeFromSamples (timelineRange, outputSampleRate);
     
     if (reader == nullptr
          || sectionEditTime.getEnd() <= editPosition.getStart()

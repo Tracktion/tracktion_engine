@@ -18,7 +18,7 @@ struct RandomModifier::RandomModifierTimer    : public ModifierTimer
     {
     }
 
-    void updateStreamTime (double editTime, int numSamples) override
+    void updateStreamTime (TimePosition editTime, int numSamples) override
     {
         const double blockLength = numSamples / modifier.getSampleRate();
         modifier.setEditTime (editTime);
@@ -35,7 +35,7 @@ struct RandomModifier::RandomModifierTimer    : public ModifierTimer
             ramp.setDuration (durationPerPattern);
 
             if (syncTypeThisBlock == ModifierCommon::transport)
-                ramp.setPosition (std::fmod ((float) editTime, durationPerPattern));
+                ramp.setPosition (std::fmod ((float) editTime.inSeconds(), durationPerPattern));
 
             modifier.setPhase (ramp.getProportion());
 
@@ -50,7 +50,7 @@ struct RandomModifier::RandomModifierTimer    : public ModifierTimer
 
             if (syncTypeThisBlock == ModifierCommon::transport)
             {
-                const float editTimeInBeats = (float) (currentTempo.startBeatInEdit + (editTime - currentTempo.startTime) * currentTempo.beatsPerSecond);
+                const float editTimeInBeats = (float) (currentTempo.startBeatInEdit + (editTime.inSeconds() - currentTempo.startTime) * currentTempo.beatsPerSecond);
                 const double bars = (editTimeInBeats / currentTempo.numerator) * rateThisBlock;
 
                 if (rateTypeThisBlock >= ModifierCommon::fourBars && rateTypeThisBlock <= ModifierCommon::sixtyFourthD)

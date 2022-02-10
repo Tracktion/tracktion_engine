@@ -68,9 +68,9 @@ private:
         beginTest ("WaveNode at time 0s");
         {
             auto node = makeNode<WaveNode> (sinAudioFile,
-                                            EditTimeRange (0.0, fileLengthSeconds),
-                                            0.0,
-                                            EditTimeRange(),
+                                            TimeRange (0.0s, TimeDuration::fromSeconds (fileLengthSeconds)),
+                                            TimeDuration(),
+                                            TimeRange(),
                                             LiveClipLevel(),
                                             1.0,
                                             juce::AudioChannelSet::canonicalChannelSet (sinAudioFile.getNumChannels()),
@@ -90,9 +90,9 @@ private:
         {
             // If the user is dragging the playhead doesn't move so the whole buffer will be 0.08s of the start of the clip
             auto node = makeNode<WaveNode> (sinAudioFile,
-                                            EditTimeRange (0.0, fileLengthSeconds),
-                                            0.0,
-                                            EditTimeRange(),
+                                            TimeRange (0.0s, TimeDuration::fromSeconds (fileLengthSeconds)),
+                                            TimeDuration(),
+                                            TimeRange(),
                                             LiveClipLevel(),
                                             1.0,
                                             juce::AudioChannelSet::canonicalChannelSet (sinAudioFile.getNumChannels()),
@@ -114,9 +114,9 @@ private:
         beginTest ("WaveNode at time 1s - 4s");
         {
             auto node = makeNode<WaveNode> (sinAudioFile,
-                                            EditTimeRange (1.0, 4.0),
-                                            0.0,
-                                            EditTimeRange(),
+                                            TimeRange (1.0s, TimePosition (4.0s)),
+                                            TimeDuration(),
+                                            TimeRange(),
                                             LiveClipLevel(),
                                             1.0,
                                             juce::AudioChannelSet::canonicalChannelSet (sinAudioFile.getNumChannels()),
@@ -136,9 +136,9 @@ private:
         beginTest ("WaveNode at time 1s - 4s, loop every 1s");
         {
             auto node = makeNode<WaveNode> (sinAudioFile,
-                                            EditTimeRange (1.0, 4.0),
-                                            0.0,
-                                            EditTimeRange (0.0, 1.0),
+                                            TimeRange (1.0s, TimePosition (4.0s)),
+                                            TimeDuration(),
+                                            TimeRange (0.0s, TimePosition (1.0s)),
                                             LiveClipLevel(),
                                             1.0,
                                             juce::AudioChannelSet::canonicalChannelSet (sinAudioFile.getNumChannels()),
@@ -173,9 +173,9 @@ private:
         {
             // This test loops a 1s sin file so the output should be 5s of sin data
             auto node = makeNode<WaveNode> (sinAudioFile,
-                                            EditTimeRange (0.0, fileLengthSeconds),
-                                            0.0,
-                                            EditTimeRange(),
+                                            TimeRange (0.0s, TimeDuration::fromSeconds (fileLengthSeconds)),
+                                            TimeDuration(),
+                                            TimeRange(),
                                             LiveClipLevel(),
                                             1.0,
                                             juce::AudioChannelSet::canonicalChannelSet (sinAudioFile.getNumChannels()),
@@ -196,9 +196,9 @@ private:
         {
             // This test loops a 1s sin file so the output should be 5s of sin data
             auto node = makeNode<WaveNode> (sinAudioFile,
-                                            EditTimeRange (1.0, 1.0 + fileLengthSeconds),
-                                            0.0,
-                                            EditTimeRange(),
+                                            TimeRange (1.0s, TimeDuration::fromSeconds (fileLengthSeconds) + 1.0s),
+                                            TimeDuration(),
+                                            TimeRange(),
                                             LiveClipLevel(),
                                             1.0,
                                             juce::AudioChannelSet::canonicalChannelSet (sinAudioFile.getNumChannels()),

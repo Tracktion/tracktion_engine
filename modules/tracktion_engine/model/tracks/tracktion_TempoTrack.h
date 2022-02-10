@@ -40,14 +40,14 @@ public:
     /** @internal */
     int indexOfTrackItem (TrackItem*) const override;
     /** @internal */
-    int getIndexOfNextTrackItemAt (double time) override;
+    int getIndexOfNextTrackItemAt (TimePosition) override;
     /** @internal */
-    TrackItem* getNextTrackItemAt (double time) override;
+    TrackItem* getNextTrackItemAt (TimePosition) override;
     /** @internal */
     bool canContainPlugin (Plugin*) const override;
 
     /** @internal */
-    void insertSpaceIntoTrack (double time, double amountOfSpace) override;
+    void insertSpaceIntoTrack (TimePosition, TimeDuration) override;
 
 private:
     juce::Array<TrackItem*> buildTrackItemList() const;

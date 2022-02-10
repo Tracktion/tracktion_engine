@@ -107,8 +107,8 @@ public:
     void setDescription (const juce::String& newDesc);
 
     /** optional set of interesting time markers, for wave files */
-    juce::Array<double> getMarkedPoints() const;
-    void setMarkedPoints (const juce::Array<double>& points);
+    juce::Array<TimePosition> getMarkedPoints() const;
+    void setMarkedPoints (const juce::Array<TimePosition>& points);
 
     /** copies the full description, categories, properties, etc. */
     void copyAllPropertiesFrom (const ProjectItem& other);

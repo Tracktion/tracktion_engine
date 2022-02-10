@@ -606,13 +606,13 @@ void ExternalControllerManager::clickChanged (bool isOn)
     FOR_EACH_ACTIVE_DEVICE (clickChanged (isOn));
 }
 
-void ExternalControllerManager::editPositionChanged (Edit* ed, double newCursorPosition)
+void ExternalControllerManager::editPositionChanged (Edit* ed, TimePosition newCursorPosition)
 {
     if (ed != nullptr)
     {
         CRASH_TRACER
         juce::String parts[4];
-        ed->getTimecodeFormat().getPartStrings (TimecodeDuration::fromSecondsOnly (newCursorPosition),
+        ed->getTimecodeFormat().getPartStrings (TimecodeDuration::fromSecondsOnly (toDuration (newCursorPosition)),
                                                 ed->tempoSequence,
                                                 false, parts);
 

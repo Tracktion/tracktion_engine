@@ -406,7 +406,7 @@ void ControlSurface::userPressedCreateMarker()
     RETURN_IF_SAFE_RECORDING
 
     if (auto ed = getEditIfOnEditScreen())
-        ed->getMarkerManager().createMarker (-1, ed->getTransport().position, 0.0, externalControllerManager.getSelectionManager());
+        ed->getMarkerManager().createMarker (-1, ed->getTransport().getPosition(), {}, externalControllerManager.getSelectionManager());
 }
 
 void ControlSurface::userPressedNextMarker()       { performIfNotSafeRecording (&AppFunctions::moveToNextMarker); }

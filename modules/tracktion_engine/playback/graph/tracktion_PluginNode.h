@@ -80,7 +80,7 @@ private:
     tracktion_engine::MidiMessageArray midiMessageArray;
     int subBlockSizeToUse = -1;
     bool balanceLatency = true, canProcessBypassed = false;
-    double automationAdjustmentTime = 0.0;
+    TimeDuration automationAdjustmentTime;
     
     std::shared_ptr<tracktion_graph::LatencyProcessor> latencyProcessor;
 

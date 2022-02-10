@@ -15,7 +15,7 @@ PluginRenderContext::PluginRenderContext (juce::AudioBuffer<float>* buffer,
                                           const juce::AudioChannelSet& bufferChannels,
                                           int bufferStart, int bufferSize,
                                           MidiMessageArray* midiBuffer, double midiOffset,
-                                          double editStartTime, bool playing, bool scrubbing, bool rendering,
+                                          TimePosition editStartTime, bool playing, bool scrubbing, bool rendering,
                                           bool shouldAllowBypassedProcessing) noexcept
     : destBuffer (buffer), destBufferChannels (bufferChannels),
       bufferStartSample (bufferStart), bufferNumSamples (bufferSize),
@@ -670,7 +670,7 @@ void Plugin::applyToBufferWithAutomation (const PluginRenderContext& pc)
             SCOPED_REALTIME_CHECK
             auto& tc = edit.getTransport();
             updateParameterStreams (tc.isPlayContextActive() && ! pc.isRendering
-                                        ? tc.getCurrentPosition()
+                                        ? tc.getPosition()
                                         : pc.editTime);
             applyToBuffer (pc);
         }

@@ -69,6 +69,7 @@ public:
 
         beginTest ("Test injected impulses align");
         {
+            using namespace std::chrono_literals;
             // Start recording, add an impulse after 1s then wait another 1s and stop recording
             ProcessThread processThread (audioIO, params);
 
@@ -77,10 +78,10 @@ public:
             transport.record (false, false);
             auto& epc = *transport.getCurrentPlaybackContext();
             processThread.waitForThreadToStart();
-            waitUntilPlayheadPosition (epc, 1.0);
+            waitUntilPlayheadPosition (epc, 1.0s);
 
             processThread.insertImpulseIntoNextBlock();
-            waitUntilPlayheadPosition (epc, 2.0);
+            waitUntilPlayheadPosition (epc, 2.0s);
             expect (! processThread.needsToInsertImpulse(), "Impulse not inserted");
 
             transport.stop (false, true);
@@ -141,7 +142,7 @@ public:
             std::this_thread::yield();
     }
     
-    void waitUntilPlayheadPosition (const EditPlaybackContext& epc, double time)
+    void waitUntilPlayheadPosition (const EditPlaybackContext& epc, TimePosition time)
     {
         using namespace std::chrono_literals;
         

@@ -42,51 +42,51 @@ public:
     const juce::Array<TimeSigSetting*>& getTimeSigs() const;
     int getNumTimeSigs() const;
     TimeSigSetting* getTimeSig (int index) const;
-    TimeSigSetting& getTimeSigAt (double time) const;
-    TimeSigSetting& getTimeSigAtBeat (double beat) const;
+    TimeSigSetting& getTimeSigAt (TimePosition) const;
+    TimeSigSetting& getTimeSigAtBeat (BeatPosition) const;
 
-    int indexOfTimeSigAt (double time) const;
+    int indexOfTimeSigAt (TimePosition time) const;
     int indexOfTimeSig (const TimeSigSetting*) const;
 
     //==============================================================================
     const juce::Array<TempoSetting*>& getTempos() const;
     int getNumTempos() const;
     TempoSetting* getTempo (int index) const;
-    TempoSetting& getTempoAt (double time) const;
-    TempoSetting& getTempoAtBeat (double beat) const;
-    double getBpmAt (double time) const; // takes ramping into account
-    double getBeatsPerSecondAt (double time, bool lengthOfOneBeatDependsOnTimeSignature = false) const;
-    bool isTripletsAtTime (double time) const;
+    TempoSetting& getTempoAt (TimePosition) const;
+    TempoSetting& getTempoAtBeat (BeatPosition) const;
+    double getBpmAt (TimePosition) const; // takes ramping into account
+    double getBeatsPerSecondAt (TimePosition, bool lengthOfOneBeatDependsOnTimeSignature = false) const;
+    bool isTripletsAtTime (TimePosition) const;
 
-    int indexOfTempoAt (double t) const;
-    int indexOfNextTempoAt (double t) const;
+    int indexOfTempoAt (TimePosition) const;
+    int indexOfNextTempoAt (TimePosition) const;
     int indexOfTempo (const TempoSetting*) const;
 
-    int countTemposInRegion (EditTimeRange range) const;
-    HashCode createHashForTemposInRange (EditTimeRange) const;
+    int countTemposInRegion (TimeRange) const;
+    HashCode createHashForTemposInRange (TimeRange) const;
 
     /** inserts a tempo break that can be edited later. */
-    TempoSetting::Ptr insertTempo (double time);
-    TempoSetting::Ptr insertTempo (double beatNum, double bpm, float curve);
-    TimeSigSetting::Ptr insertTimeSig (double time);
+    TempoSetting::Ptr insertTempo (TimePosition);
+    TempoSetting::Ptr insertTempo (BeatPosition, double bpm, float curve);
+    TimeSigSetting::Ptr insertTimeSig (TimePosition);
 
     void removeTempo (int index, bool remapEdit);
-    void removeTemposBetween (EditTimeRange, bool remapEdit);
+    void removeTemposBetween (TimeRange, bool remapEdit);
     void removeTimeSig (int index);
-    void removeTimeSigsBetween (EditTimeRange);
+    void removeTimeSigsBetween (TimeRange);
 
-    void moveTempoStart (int index, double deltaBeats, bool snapToBeat);
-    void moveTimeSigStart (int index, double deltaBeats, bool snapToBeat);
+    void moveTempoStart (int index, BeatDuration deltaBeats, bool snapToBeat);
+    void moveTimeSigStart (int index, BeatDuration deltaBeats, bool snapToBeat);
 
     /** Inserts space in to a sequence, shifting TempoSettings and TimeSigs. */
-    void insertSpaceIntoSequence (double time, double amountOfSpaceInSeconds, bool snapToBeat);
+    void insertSpaceIntoSequence (TimePosition time, TimeDuration amountOfSpaceInSeconds, bool snapToBeat);
 
     /** Removes a region in a sequence, shifting TempoSettings and TimeSigs. */
-    void deleteRegion (EditTimeRange);
+    void deleteRegion (TimeRange);
 
     //==============================================================================
-    double timeToBeats (double time) const;
-    juce::Range<double> timeToBeats (EditTimeRange timeRange) const;
+    BeatPosition timeToBeats (TimePosition) const;
+    BeatRange timeToBeats (TimeRange) const;
 
     struct BarsAndBeats
     {
@@ -97,12 +97,12 @@ public:
         double getFractionalBeats() const;
     };
 
-    BarsAndBeats timeToBarsBeats (double time) const;
-    double barsBeatsToTime (BarsAndBeats) const;
-    double barsBeatsToBeats (BarsAndBeats) const;
+    BarsAndBeats timeToBarsBeats (TimePosition) const;
+    TimePosition barsBeatsToTime (BarsAndBeats) const;
+    BeatPosition barsBeatsToBeats (BarsAndBeats) const;
 
-    double beatsToTime (double beats) const;
-    EditTimeRange beatsToTime (juce::Range<double> beatsRange) const;
+    TimePosition beatsToTime (BeatPosition) const;
+    TimeRange beatsToTime (BeatRange) const;
 
     //==============================================================================
     struct SectionDetails
@@ -121,8 +121,8 @@ public:
         int size() const;
         const SectionDetails& getReference (int i) const;
 
-        double timeToBeats (double time) const;
-        double beatsToTime (double beats) const;
+        BeatPosition timeToBeats (TimePosition) const;
+        TimePosition beatsToTime (BeatPosition) const;
 
         /** The only modifying operation */
         void swapWith (juce::Array<SectionDetails>& newTempos);
@@ -165,9 +165,9 @@ private:
     void updateTempoDataIfNeeded() const;
     void handleAsyncUpdate() override;
 
-    TempoSetting::Ptr insertTempo (double beatNum, double bpm, float curve, juce::UndoManager*);
-    TempoSetting::Ptr insertTempo (double time, juce::UndoManager*);
-    TimeSigSetting::Ptr insertTimeSig (double time, juce::UndoManager*);
+    TempoSetting::Ptr insertTempo (BeatPosition, double bpm, float curve, juce::UndoManager*);
+    TempoSetting::Ptr insertTempo (TimePosition, juce::UndoManager*);
+    TimeSigSetting::Ptr insertTimeSig (TimePosition, juce::UndoManager*);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TempoSequence)
 };
@@ -188,7 +188,7 @@ public:
     ~TempoSequencePosition();
 
     //==============================================================================
-    double getTime() const                                      { return time; }
+    TimePosition getTime() const                                { return time; }
     TempoSequence::BarsAndBeats getBarsBeatsTime() const;
 
     const TempoSequence::SectionDetails& getCurrentTempo() const;
@@ -197,7 +197,7 @@ public:
     double getPPQTimeOfBarStart() const noexcept;
 
     //==============================================================================
-    void setTime (double time);
+    void setTime (TimePosition);
 
     void addBars (int bars);
     void addBeats (double beats);
@@ -209,7 +209,7 @@ public:
 private:
     //==============================================================================
     const TempoSequence& sequence;
-    double time = 0.0;
+    TimePosition time;
     int index = 0;
 
     TempoSequencePosition& operator= (const TempoSequencePosition&);
@@ -228,18 +228,19 @@ private:
     struct ClipPos
     {
         Selectable::WeakRef clip;
-        double startBeat = 0.0, endBeat = 0.0, contentStartBeat = 0.0;
+        BeatPosition startBeat, endBeat;
+        BeatDuration contentStartBeat;
     };
 
     struct AutomationPos
     {
         AutomationCurve& curve;
-        juce::Array<double> beats;
+        juce::Array<BeatPosition> beats;
     };
 
     juce::Array<ClipPos> clips;
     juce::Array<AutomationPos> automation;
-    juce::Range<double> loopPositionBeats;
+    BeatRange loopPositionBeats;
 };
 
 

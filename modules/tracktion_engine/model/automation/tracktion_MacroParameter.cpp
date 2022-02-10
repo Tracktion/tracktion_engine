@@ -57,7 +57,7 @@ void MacroParameter::parameterChanged (float, bool byAutomation)
         return;
 
     TRACKTION_ASSERT_MESSAGE_THREAD
-    auto cursorPos = edit.getTransport().getCurrentPosition();
+    auto cursorPos = edit.getTransport().getPosition();
 
     for (auto ap : getAllParametersBeingModifiedBy (edit, *this))
         if (! ap->automatableEditElement.isBeingActivelyPlayed())

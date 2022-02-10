@@ -50,8 +50,8 @@ public:
         int blockSizeForAudio = 44100;
         double sampleRateForAudio = 44100.0;
 
-        EditTimeRange time;
-        double endAllowance = 0;
+        TimeRange time;
+        TimeDuration endAllowance;
 
         bool createMidiFile = false;
         bool trimSilenceAtEnds = false;
@@ -152,7 +152,7 @@ public:
     static bool renderToFile (const juce::String& taskDescription,
                               const juce::File& outputFile,
                               Edit& edit,
-                              EditTimeRange range,
+                              TimeRange range,
                               const juce::BigInteger& tracksToDo,
                               bool usePlugins = true,
                               juce::Array<Clip*> clips = {},
@@ -170,7 +170,7 @@ public:
 
     /** Renders a section of an edit to measure various details about its audio content */
     static Statistics measureStatistics (const juce::String& taskDescription,
-                                         Edit& edit, EditTimeRange range,
+                                         Edit& edit, TimeRange range,
                                          const juce::BigInteger& tracksToDo,
                                          int blockSizeForAudio);
 

@@ -73,6 +73,7 @@ public:
     int getBitDepth() const;
     int getBlockSize() const;
     double getBlockSizeMs() const;
+    TimeDuration getBlockLength() const;
 
     int getNumWaveOutDevices() const                            { return waveOutputs.size(); }
     WaveOutputDevice* getWaveOutDevice (int index) const        { return waveOutputs[index]; }

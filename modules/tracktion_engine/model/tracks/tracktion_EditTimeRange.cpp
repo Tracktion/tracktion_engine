@@ -113,9 +113,9 @@ EditTimeRange EditTimeRange::operator+ (double amount) const
     return { start + amount, end + amount };
 }
 
-ClipPosition ClipPosition::rescaled (double anchorTime, double factor) const
+ClipPosition ClipPosition::rescaled (TimePosition anchorTime, double factor) const
 {
-    return { time.rescaled (anchorTime, factor), offset * factor };
+    return { time.rescaled (anchorTime, factor), TimePosition::fromSeconds (offset.inSeconds() * factor) };
 }
 
 }

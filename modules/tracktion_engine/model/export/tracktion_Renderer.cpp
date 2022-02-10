@@ -80,11 +80,11 @@ struct Ditherers
 //==============================================================================
 static void addAcidInfo (Edit& edit, Renderer::Parameters& r)
 {
-    if (r.destFile.hasFileExtension (".wav") && r.endAllowance == 0.0)
+    if (r.destFile.hasFileExtension (".wav") && r.endAllowance == 0s)
     {
-        auto& pitch = edit.pitchSequence.getPitchAt (r.time.start);
-        auto& tempo = edit.tempoSequence.getTempoAt (r.time.start);
-        auto& timeSig = edit.tempoSequence.getTimeSigAt (r.time.start);
+        auto& pitch = edit.pitchSequence.getPitchAt (r.time.getStart());
+        auto& tempo = edit.tempoSequence.getTempoAt (r.time.getStart());
+        auto& timeSig = edit.tempoSequence.getTimeSigAt (r.time.getStart());
 
         r.metadata.set (juce::WavAudioFormat::acidOneShot, "0");
         r.metadata.set (juce::WavAudioFormat::acidRootSet, "1");
@@ -92,7 +92,8 @@ static void addAcidInfo (Edit& edit, Renderer::Parameters& r)
         r.metadata.set (juce::WavAudioFormat::acidizerFlag, "1");
         r.metadata.set (juce::WavAudioFormat::acidRootNote, juce::String (pitch.getPitch()));
 
-        auto beats = tempo.getBpm() * (r.time.getLength() / 60);
+        auto beats = tempo.getBpm() * (r.time.getLength().inSeconds() / 60);
+
         if (std::abs (beats - int (beats)) < 0.001)
         {
             r.metadata.set (juce::WavAudioFormat::acidStretch, "1");
@@ -192,7 +193,7 @@ bool Renderer::RenderTask::performNormalisingAndTrimming (const Renderer::Parame
         }
 
         AudioFileUtils::applyBWAVStartTime (intermediate.destFile,
-                                            (SampleCount) (intermediate.time.getStart() * intermediate.sampleRateForAudio)
+                                            (SampleCount) tracktion_graph::toSamples (intermediate.time.getStart(), intermediate.sampleRateForAudio)
                                                + doneRange.getStart());
     }
 
@@ -308,7 +309,7 @@ void Renderer::RenderTask::flushAllPlugins (const Plugin::Array& plugins,
 
                     ep->applyToBuffer (PluginRenderContext (&buffer, channels, 0, samplesPerBlock,
                                                             nullptr, 0.0,
-                                                            0.0, false, false, true, true));
+                                                            TimePosition(), false, false, true, true));
 
                     if (isAudioDataAlmostSilent (buffer.getReadPointer (0), samplesPerBlock))
                         break;
@@ -401,7 +402,7 @@ bool Renderer::RenderTask::addMidiMetaDataAndWriteToFile (juce::File destFile, j
 bool Renderer::renderToFile (const juce::String& taskDescription,
                              const juce::File& outputFile,
                              Edit& edit,
-                             EditTimeRange range,
+                             TimeRange range,
                              const juce::BigInteger& tracksToDo,
                              bool usePlugins,
                              juce::Array<Clip*> clips,
@@ -555,7 +556,7 @@ ProjectItem::Ptr Renderer::renderToProjectItem (const juce::String& taskDescript
 
 //==============================================================================
 Renderer::Statistics Renderer::measureStatistics (const juce::String& taskDescription, Edit& edit,
-                                                  EditTimeRange range, const juce::BigInteger& tracksToDo,
+                                                  TimeRange range, const juce::BigInteger& tracksToDo,
                                                   int blockSizeForAudio)
 {
     CRASH_TRACER

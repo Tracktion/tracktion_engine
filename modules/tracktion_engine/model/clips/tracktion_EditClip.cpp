@@ -95,7 +95,7 @@ bool EditClip::needsRender() const
     if (! renderEnabled || editSnapshot == nullptr)
         return false;
 
-    return editSnapshot->getLength() > 0.0;
+    return editSnapshot->getLength() > 0.0s;
 }
 
 RenderManager::Job::Ptr EditClip::getRenderJob (const AudioFile& destFile)
@@ -388,7 +388,7 @@ void EditClip::updateLoopInfoBasedOnSource (bool updateLength)
     }
 
     if (loopInfo.getNumBeats() == 0)
-        loopInfo.setNumBeats (length * (ts.getTempoAt (clipPos.getStart()).getBpm() / 60.0));
+        loopInfo.setNumBeats (length.get().inSeconds() * (ts.getTempoAt (clipPos.getStart()).getBpm() / 60.0));
 
     // also need to adjust clip length
     if (updateLength)
@@ -406,7 +406,7 @@ void EditClip::updateLoopInfoBasedOnSource (bool updateLength)
             {
                 auto bpmRatio = tempo / editBpm;
                 jassert (bpmRatio > 0.1 && bpmRatio < 10.0); // sensible?
-                auto newLength = bpmRatio * getSourceLength();
+                auto newLength = TimeDuration::fromSeconds (getSourceLength()) * bpmRatio;
                 setLength (newLength, true);
             }
 

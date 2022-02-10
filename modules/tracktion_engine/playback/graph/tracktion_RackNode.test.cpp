@@ -521,8 +521,8 @@ private:
             
             tonePlugin->levelParam->addModifier (*modifier, -1.0f);
             
-            edit->updateModifierTimers (0.0, 0);
-            tonePlugin->levelParam->updateToFollowCurve (0.0); // Force an update of the param value for testing
+            edit->updateModifierTimers ({}, 0);
+            tonePlugin->levelParam->updateToFollowCurve ({}); // Force an update of the param value for testing
             expectWithinAbsoluteError (lfoModifier->getCurrentValue(), 0.5f, 0.001f);
             expectWithinAbsoluteError (tonePlugin->levelParam->getCurrentValue(), 0.5f, 0.001f);
 
@@ -579,9 +579,9 @@ private:
             // This value should modify the volume to -6dB
             volPlugin->volParam->addModifier (*modifier, -0.193f);
             
-            edit->updateModifierTimers (0.0, 0);
+            edit->updateModifierTimers ({}, 0);
             volPlugin->updateActiveParameters();
-            volPlugin->volParam->updateToFollowCurve (0.0); // Force an update of the param value for testing
+            volPlugin->volParam->updateToFollowCurve ({}); // Force an update of the param value for testing
 
             // Process Rack
             {

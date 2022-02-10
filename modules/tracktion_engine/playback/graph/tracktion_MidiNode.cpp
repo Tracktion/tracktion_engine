@@ -14,7 +14,7 @@ namespace tracktion_engine
 MidiNode::MidiNode (juce::MidiMessageSequence sequence,
                     juce::Range<int> midiChannelNumbers,
                     bool useMPE,
-                    EditTimeRange editTimeRange,
+                    TimeRange editTimeRange,
                     LiveClipLevel liveClipLevel,
                     ProcessState& processStateToUse,
                     EditItemID editItemIDToUse,
@@ -40,7 +40,7 @@ MidiNode::MidiNode (juce::MidiMessageSequence sequence,
 MidiNode::MidiNode (std::vector<juce::MidiMessageSequence> sequences,
                     juce::Range<int> midiChannelNumbers,
                     bool useMPE,
-                    EditTimeRange editTimeRange,
+                    TimeRange editTimeRange,
                     LiveClipLevel liveClipLevel,
                     ProcessState& processStateToUse,
                     EditItemID editItemIDToUse,
@@ -74,7 +74,7 @@ tracktion_graph::NodeProperties MidiNode::getNodeProperties()
 void MidiNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
 {
     sampleRate = info.sampleRate;
-    timeForOneSample = tracktion_graph::sampleToTime (1, info.sampleRate);
+    timeForOneSample = TimeDuration::fromSamples (1, info.sampleRate);
 
     if (info.rootNodeToReplace != nullptr)
     {
@@ -125,7 +125,7 @@ void MidiNode::processSection (ProcessContext& pc, juce::Range<int64_t> timeline
     lastStart = timelineRange.getStart();
 
     const auto sectionEditTime = getEditTimeRange();
-    const auto localTime = sectionEditTime - editSection.getStart();
+    const auto localTime = sectionEditTime - toDuration (editSection.getStart());
 
     if (sectionEditTime.getEnd() <= editSection.getStart()
         || sectionEditTime.getStart() >= editSection.getEnd())
@@ -138,13 +138,13 @@ void MidiNode::processSection (ProcessContext& pc, juce::Range<int64_t> timeline
         if (mute != wasMute)
         {
             wasMute = mute;
-            createNoteOffs (pc.buffers.midi, ms[currentSequence], localTime.getStart(), 0.0, getPlayHead().isPlaying());
+            createNoteOffs (pc.buffers.midi, ms[currentSequence], localTime.getStart(), TimeDuration(), getPlayHead().isPlaying());
         }
 
         return;
     }
 
-    if (! getPlayHeadState().isContiguousWithPreviousBlock() || localTime.getStart() <= 0.00001 || shouldCreateMessagesForTime)
+    if (! getPlayHeadState().isContiguousWithPreviousBlock() || localTime.getStart() <= TimePosition::fromSeconds (0.00001) || shouldCreateMessagesForTime)
     {
         createMessagesForTime (localTime.getStart(), pc.buffers.midi);
         shouldCreateMessagesForTime = false;
@@ -156,14 +156,14 @@ void MidiNode::processSection (ProcessContext& pc, juce::Range<int64_t> timeline
     {
         currentIndex = juce::jlimit (0, numEvents - 1, currentIndex);
 
-        if (ms[currentSequence].getEventTime (currentIndex) >= localTime.getStart())
+        if (ms[currentSequence].getEventTime (currentIndex) >= localTime.getStart().inSeconds())
         {
-            while (currentIndex > 0 && ms[currentSequence].getEventTime (currentIndex - 1) >= localTime.getStart())
+            while (currentIndex > 0 && ms[currentSequence].getEventTime (currentIndex - 1) >= localTime.getStart().inSeconds())
                 --currentIndex;
         }
         else
         {
-            while (currentIndex < numEvents && ms[currentSequence].getEventTime (currentIndex) < localTime.getStart())
+            while (currentIndex < numEvents && ms[currentSequence].getEventTime (currentIndex) < localTime.getStart().inSeconds())
                 ++currentIndex;
         }
     }
@@ -178,12 +178,12 @@ void MidiNode::processSection (ProcessContext& pc, juce::Range<int64_t> timeline
             auto eventTime = meh->message.getTimeStamp();
 
             // This correction here is to avoid rounding errors converting to and from sample position and times
-            const auto timeCorrection = lastBlockOfLoop ? (meh->message.isNoteOff() ? 0.0 : timeForOneSample) : 0.0;
+            const auto timeCorrection = lastBlockOfLoop ? (meh->message.isNoteOff() ? TimeDuration() : timeForOneSample) : TimeDuration();
 
-            if (eventTime >= (localTime.getEnd() - timeCorrection))
+            if (eventTime >= (localTime.getEnd() - timeCorrection).inSeconds())
                 break;
 
-            eventTime -= localTime.getStart();
+            eventTime -= localTime.getStart().inSeconds();
 
             if (eventTime >= 0.0)
             {
@@ -201,14 +201,14 @@ void MidiNode::processSection (ProcessContext& pc, juce::Range<int64_t> timeline
     // N.B. if the note-off is added on the last time it may not be sent to the plugin which can break the active note-state.
     // To avoid this, make sure any added messages are nudged back by 0.00001s
     if (getPlayHeadState().isLastBlockOfLoop())
-        createNoteOffs (pc.buffers.midi, ms[currentSequence], localTime.getEnd(), localTime.getLength() - 0.00001, getPlayHead().isPlaying());
+        createNoteOffs (pc.buffers.midi, ms[currentSequence], localTime.getEnd(), localTime.getLength() - TimeDuration::fromSeconds (0.00001), getPlayHead().isPlaying());
 }
 
-void MidiNode::createMessagesForTime (double time, MidiMessageArray& buffer)
+void MidiNode::createMessagesForTime (TimePosition time, MidiMessageArray& buffer)
 {
     if (useMPEChannelMode)
     {
-        const int indexOfTime = ms[currentSequence].getNextIndexAtTime (time);
+        const int indexOfTime = ms[currentSequence].getNextIndexAtTime (time.inSeconds());
 
         controllerMessagesScratchBuffer.clearQuick();
 
@@ -224,7 +224,7 @@ void MidiNode::createMessagesForTime (double time, MidiMessageArray& buffer)
             controllerMessagesScratchBuffer.clearQuick();
 
             for (int i = channelNumbers.getStart(); i <= channelNumbers.getEnd(); ++i)
-                ms[currentSequence].createControllerUpdatesForTime (i, time, controllerMessagesScratchBuffer);
+                ms[currentSequence].createControllerUpdatesForTime (i, time.inSeconds(), controllerMessagesScratchBuffer);
 
             for (auto& m : controllerMessagesScratchBuffer)
                 buffer.addMidiMessage (m, midiSourceID);
@@ -241,11 +241,11 @@ void MidiNode::createMessagesForTime (double time, MidiMessageArray& buffer)
                     if (meh->noteOffObject != nullptr
                         && meh->message.isNoteOn())
                     {
-                        if (meh->message.getTimeStamp() >= time)
+                        if (meh->message.getTimeStamp() >= time.inSeconds())
                             break;
 
                         // don't play very short notes or ones that have already finished
-                        if (meh->noteOffObject->message.getTimeStamp() > time + 0.0001)
+                        if (meh->noteOffObject->message.getTimeStamp() > time.inSeconds() + 0.0001)
                         {
                             juce::MidiMessage m (meh->message);
                             m.multiplyVelocity (volScale);
@@ -261,8 +261,10 @@ void MidiNode::createMessagesForTime (double time, MidiMessageArray& buffer)
 }
 
 void MidiNode::createNoteOffs (MidiMessageArray& destination, const juce::MidiMessageSequence& source,
-                               double time, double midiTimeOffset, bool isPlaying)
+                               TimePosition timePosition, TimeDuration midiTimeOffsetDuration, bool isPlaying)
 {
+    const double time = timePosition.inSeconds();
+    const double midiTimeOffset = midiTimeOffsetDuration.inSeconds();
     int activeChannels = 0;
 
     for (int i = 0; i < source.getNumEvents(); ++i)

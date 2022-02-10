@@ -26,8 +26,8 @@ public:
 
     juce::String getSelectableDescription() override;
 
-    double getStartBeatNumber() const       { return startBeat; }
-    void setStartBeat (double);
+    BeatPosition getStartBeatNumber() const       { return startBeat; }
+    void setStartBeat (BeatPosition);
 
     int getPitch() const                    { return pitch; }
     void setPitch (int);
@@ -42,7 +42,7 @@ public:
     ClipPosition getPosition() const override;
 
     juce::ValueTree state;
-    juce::CachedValue<double> startBeat;
+    juce::CachedValue<BeatPosition> startBeat;
     juce::CachedValue<int> pitch;
     juce::CachedValue<bool> accidentalsSharp;
     juce::CachedValue<Scale::ScaleType> scale;

@@ -64,7 +64,7 @@ public:
     juce::String getClipMessage() override;
 
     //==============================================================================
-    double getSourceLength() const override             { return editSnapshot == nullptr ? 0.0 : editSnapshot->getLength(); }
+    double getSourceLength() const override             { return editSnapshot == nullptr ? 0.0 : editSnapshot->getLength().inSeconds(); }
     bool usesSourceFile() override                      { return false; }
     void sourceMediaChanged() override;
     void changed() override;

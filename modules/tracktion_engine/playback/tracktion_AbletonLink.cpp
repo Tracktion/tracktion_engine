@@ -40,7 +40,7 @@ struct AbletonLink::ImplBase  : public juce::Timer
         const double bps = transport.edit.tempoSequence.getBeatsPerSecondAt (getCurrentPositionSeconds());
         const double linkBps = getTempoFromLink() / 60.0;
 
-        const double currentPosBeats = transport.edit.tempoSequence.timeToBeats (getCurrentPositionSeconds());
+        const double currentPosBeats = transport.edit.tempoSequence.timeToBeats (getCurrentPositionSeconds()).inBeats();
         const double outputLatencyBeats = deviceManager.getOutputLatencySeconds() * bps;
         const double customOffsetBeats = (customOffsetMs / 1000.0) * bps;
 
@@ -101,12 +101,12 @@ struct AbletonLink::ImplBase  : public juce::Timer
         return quantum - getBarPhase (quantum);
     }
 
-    double getCurrentPositionSeconds() const
+    TimePosition getCurrentPositionSeconds() const
     {
         if (auto epc = transport.getCurrentPlaybackContext())
             return epc->getPosition();
 
-        return transport.getCurrentPosition();
+        return transport.getPosition();
     }
 
     void setCustomOffset (int offsetMs)

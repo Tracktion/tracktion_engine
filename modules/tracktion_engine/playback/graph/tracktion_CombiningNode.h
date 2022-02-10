@@ -34,7 +34,7 @@ public:
 
         Any nodes passed-in will be deleted by this node when required.
     */
-    void addInput (std::unique_ptr<Node>, EditTimeRange);
+    void addInput (std::unique_ptr<Node>, TimeRange);
 
     //==============================================================================
     std::vector<Node*> getDirectInputNodes() override;
@@ -55,7 +55,7 @@ private:
 
     tracktion_graph::NodeProperties nodeProperties;
 
-    void prefetchGroup (juce::Range<int64_t>, EditTimeRange);
+    void prefetchGroup (juce::Range<int64_t>, TimeRange);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CombiningNode)
 };

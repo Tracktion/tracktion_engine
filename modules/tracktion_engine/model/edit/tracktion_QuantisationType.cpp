@@ -152,32 +152,32 @@ double QuantisationType::roundUp (double time, const Edit& edit) const
     return roundTo (time, 1.0 - 1.0e-10, edit);
 }
 
-double QuantisationType::roundToBeat (double beatNumber, double adjustment) const
+BeatPosition QuantisationType::roundToBeat (BeatPosition beatNumber, double adjustment) const
 {
     if (typeIndex == 0)
         return beatNumber;
 
-    const double beats = fractionOfBeat * floor (beatNumber / fractionOfBeat + adjustment);
+    const double beats = fractionOfBeat * floor (beatNumber.inBeats() / fractionOfBeat + adjustment);
 
-    return proportion == 1.0 ? beats
-                             : beatNumber + proportion * (beats - beatNumber);
+    return BeatPosition::fromBeats (proportion == 1.0 ? beats
+                                                      : beatNumber.inBeats() + proportion * (beats - beatNumber.inBeats()));
 }
 
-double QuantisationType::roundBeatToNearest (double beatNumber) const
+BeatPosition QuantisationType::roundBeatToNearest (BeatPosition beatNumber) const
 {
     return roundToBeat (beatNumber, 0.5);
 }
 
-double QuantisationType::roundBeatUp (double beatNumber) const
+BeatPosition QuantisationType::roundBeatUp (BeatPosition beatNumber) const
 {
     return roundToBeat (beatNumber, 1.0 - 1.0e-10);
 }
 
-double QuantisationType::roundBeatToNearestNonZero (double beatNumber) const
+BeatPosition QuantisationType::roundBeatToNearestNonZero (BeatPosition beatNumber) const
 {
     auto t = roundBeatToNearest (beatNumber);
 
-    return t == 0 ? fractionOfBeat : t;
+    return t == BeatPosition() ? BeatPosition::fromBeats (fractionOfBeat) : t;
 }
 
 double QuantisationType::roundTo (double time, double adjustment, const Edit& edit) const
@@ -186,12 +186,12 @@ double QuantisationType::roundTo (double time, double adjustment, const Edit& ed
         return time;
 
     auto& s = edit.tempoSequence;
-    double beats = s.timeToBeats (time);
+    auto beats = s.timeToBeats (TimePosition::fromSeconds (time));
 
-    beats = fractionOfBeat * floor (beats / fractionOfBeat + adjustment);
+    beats = BeatPosition::fromBeats (fractionOfBeat * std::floor (beats.inBeats() / fractionOfBeat + adjustment));
 
-    return proportion >= 1.0 ? s.beatsToTime (beats)
-                             : time + proportion * (s.beatsToTime (beats) - time);
+    return proportion >= 1.0 ? s.beatsToTime (beats).inSeconds()
+                             : time + proportion.get() * (s.beatsToTime (beats) - TimeDuration::fromSeconds (time)).inSeconds();
 }
 
 juce::StringArray QuantisationType::getAvailableQuantiseTypes (bool translated)
@@ -227,7 +227,7 @@ void QuantisationType::valueTreePropertyChanged (juce::ValueTree& vt, const juce
     }
 }
 
-void QuantisationType::applyQuantisationToSequence (juce::MidiMessageSequence& ms, Edit& ed, double start)
+void QuantisationType::applyQuantisationToSequence (juce::MidiMessageSequence& ms, Edit& ed, TimePosition start)
 {
     if (! isEnabled())
         return;
@@ -239,7 +239,7 @@ void QuantisationType::applyQuantisationToSequence (juce::MidiMessageSequence& m
 
         if (m.isNoteOn())
         {
-            const auto noteOnTime = roundToNearest (start + m.getTimeStamp(), ed) - start;
+            const auto noteOnTime = roundToNearest (start.inSeconds() + m.getTimeStamp(), ed) - start.inSeconds();
 
             if (auto noteOff = e->noteOffObject)
             {
@@ -247,7 +247,7 @@ void QuantisationType::applyQuantisationToSequence (juce::MidiMessageSequence& m
 
                 if (quantiseNoteOffs)
                 {
-                    auto noteOffTime = roundUp (start + mOff.getTimeStamp(), ed) - start;
+                    auto noteOffTime = roundUp (start.inSeconds() + mOff.getTimeStamp(), ed) - start.inSeconds();
 
                     static constexpr double beatsToBumpUpBy = 1.0 / 512.0;
 
@@ -266,7 +266,7 @@ void QuantisationType::applyQuantisationToSequence (juce::MidiMessageSequence& m
         }
         else if (m.isNoteOff() && quantiseNoteOffs)
         {
-            m.setTimeStamp (roundUp (start + m.getTimeStamp(), ed) - start);
+            m.setTimeStamp (roundUp (start.inSeconds() + m.getTimeStamp(), ed) - start.inSeconds());
         }
     }
 }

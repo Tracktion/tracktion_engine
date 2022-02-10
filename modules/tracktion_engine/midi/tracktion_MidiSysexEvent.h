@@ -14,12 +14,12 @@ namespace tracktion_engine
 class MidiSysexEvent
 {
 public:
-    static juce::ValueTree createSysexEvent (const MidiSysexEvent&, double time);
-    static juce::ValueTree createSysexEvent (const juce::MidiMessage&, double time);
+    static juce::ValueTree createSysexEvent (const MidiSysexEvent&, BeatPosition);
+    static juce::ValueTree createSysexEvent (const juce::MidiMessage&, BeatPosition);
 
     MidiSysexEvent (const juce::ValueTree&);
     MidiSysexEvent (const juce::MidiMessage&);
-    MidiSysexEvent (const juce::MidiMessage&, double beatNumber);
+    MidiSysexEvent (const juce::MidiMessage&, BeatPosition);
     ~MidiSysexEvent() noexcept {}
 
     //==============================================================================
@@ -27,11 +27,11 @@ public:
     void setMessage (const juce::MidiMessage&, juce::UndoManager*);
 
     //==============================================================================
-    double getBeatPosition() const noexcept                         { return message.getTimeStamp(); }
-    void setBeatPosition (double beatNumber, juce::UndoManager*);
+    BeatPosition getBeatPosition() const noexcept                         { return BeatPosition::fromBeats (message.getTimeStamp()); }
+    void setBeatPosition (BeatPosition, juce::UndoManager*);
 
     // takes into account quantising, groove templates, clip offset, etc
-    double getEditTime (const MidiClip&) const;
+    TimePosition getEditTime (const MidiClip&) const;
 
     juce::ValueTree state;
 

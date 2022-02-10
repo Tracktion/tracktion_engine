@@ -114,7 +114,7 @@ public:
         This should be used when processing ExternalPlugins or they will crash when getting the playhead info.
     */
     int process (const tracktion_graph::Node::ProcessContext& pc,
-                 double editTime, bool isPlaying, bool isScrubbing, bool isRendering)
+                 TimePosition editTime, bool isPlaying, bool isScrubbing, bool isRendering)
     {
         if (overrideInputs)
             inputProvider->setInputs (pc.buffers);

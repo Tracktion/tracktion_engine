@@ -25,9 +25,9 @@ struct SpeedRampWaveNode::PerChannelState
 
 //==============================================================================
 SpeedRampWaveNode::SpeedRampWaveNode (const AudioFile& af,
-                                      EditTimeRange editTime,
-                                      double off,
-                                      EditTimeRange loop,
+                                      TimeRange editTime,
+                                      TimeDuration off,
+                                      TimeRange loop,
                                       LiveClipLevel level,
                                       double speed,
                                       const juce::AudioChannelSet& channelSetToUse,
@@ -38,7 +38,8 @@ SpeedRampWaveNode::SpeedRampWaveNode (const AudioFile& af,
                                       SpeedFadeDescription speedFadeDescriptionToUse)
    : TracktionEngineNode (ps),
      editPosition (editTime),
-     loopSection (loop.getStart() * speed, loop.getEnd() * speed),
+     loopSection (TimePosition::fromSeconds (loop.getStart().inSeconds() * speed),
+                  TimePosition::fromSeconds (loop.getEnd().inSeconds() * speed)),
      offset (off),
      originalSpeedRatio (speed),
      editItemID (itemIDToUse),
@@ -69,7 +70,7 @@ void SpeedRampWaveNode::prepareToPlay (const tracktion_graph::PlaybackInitialisa
 {
     reader = audioFile.engine->getAudioFileManager().cache.createReader (audioFile);
     outputSampleRate = info.sampleRate;
-    editPositionInSamples = tracktion_graph::timeToSample ({ editPosition.start, editPosition.end }, outputSampleRate);
+    editPositionInSamples = tracktion_graph::toSamples ({ editPosition.getStart(), editPosition.getEnd() }, outputSampleRate);
     updateFileSampleRate();
 
     channelState.clear();
@@ -114,7 +115,7 @@ void SpeedRampWaveNode::process (ProcessContext& pc)
 }
 
 //==============================================================================
-int64_t SpeedRampWaveNode::editTimeToFileSample (double editTime) const noexcept
+int64_t SpeedRampWaveNode::editTimeToFileSample (TimePosition editTime) const noexcept
 {
     editTime = juce::jlimit (speedFadeDescription.inTimeRange.getStart(),
                              speedFadeDescription.outTimeRange.getEnd(),
@@ -123,29 +124,29 @@ int64_t SpeedRampWaveNode::editTimeToFileSample (double editTime) const noexcept
     if (! speedFadeDescription.inTimeRange.isEmpty()
         && speedFadeDescription.inTimeRange.containsInclusive (editTime))
     {
-        const double timeFromStart = editTime - speedFadeDescription.inTimeRange.getStart();
-        const double proportionOfFade = timeFromStart / speedFadeDescription.inTimeRange.getLength();
+        const auto timeFromStart = editTime - speedFadeDescription.inTimeRange.getStart();
+        const double proportionOfFade = timeFromStart.inSeconds() / speedFadeDescription.inTimeRange.getLength().inSeconds();
         const double rescaledProportion = rescale (speedFadeDescription.fadeInType, proportionOfFade, true);
 
         editTime = speedFadeDescription.inTimeRange.getStart()
-                    + (rescaledProportion * speedFadeDescription.inTimeRange.getLength());
+                    + TimeDuration::fromSeconds (rescaledProportion * speedFadeDescription.inTimeRange.getLength().inSeconds());
 
         jassert (speedFadeDescription.inTimeRange.containsInclusive (editTime));
     }
     else if (! speedFadeDescription.outTimeRange.isEmpty()
              && speedFadeDescription.outTimeRange.containsInclusive (editTime))
     {
-        const double timeFromStart = editTime - speedFadeDescription.outTimeRange.getStart();
-        const double proportionOfFade = timeFromStart / speedFadeDescription.outTimeRange.getLength();
+        const auto timeFromStart = editTime - speedFadeDescription.outTimeRange.getStart();
+        const double proportionOfFade = timeFromStart.inSeconds() / speedFadeDescription.outTimeRange.getLength().inSeconds();
         const double rescaledProportion = rescale (speedFadeDescription.fadeOutType, proportionOfFade, false);
 
         editTime = speedFadeDescription.outTimeRange.getStart()
-                    + (rescaledProportion * speedFadeDescription.outTimeRange.getLength());
+                    + TimeDuration::fromSeconds (rescaledProportion * speedFadeDescription.outTimeRange.getLength().inSeconds());
         
         jassert (speedFadeDescription.outTimeRange.containsInclusive (editTime));
     }
         
-    return (int64_t) ((editTime - (editPosition.getStart() - offset))
+    return (int64_t) ((editTime - (editPosition.getStart() - offset)).inSeconds()
                        * originalSpeedRatio * audioFileSampleRate + 0.5);
 }
 
@@ -162,15 +163,15 @@ bool SpeedRampWaveNode::updateFileSampleRate()
         return false;
     
     if (! loopSection.isEmpty())
-        reader->setLoopRange ({ timeToSample (loopSection.getStart(), audioFileSampleRate),
-                                timeToSample (loopSection.getEnd(), audioFileSampleRate) });
+        reader->setLoopRange ({ tracktion_graph::toSamples (loopSection.getStart(), audioFileSampleRate),
+                                tracktion_graph::toSamples (loopSection.getEnd(), audioFileSampleRate) });
 
     return true;
 }
 
 void SpeedRampWaveNode::processSection (ProcessContext& pc, juce::Range<int64_t> timelineRange)
 {
-    const auto sectionEditTime = tracktion_graph::sampleToTime (timelineRange, outputSampleRate);
+    const auto sectionEditTime = tracktion_graph::timeRangeFromSamples (timelineRange, outputSampleRate);
     
     if (reader == nullptr
          || sectionEditTime.getEnd() <= editPosition.getStart()

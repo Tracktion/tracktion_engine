@@ -47,7 +47,7 @@ public:
     void initialisePluginsIfNeeded (const PluginInitialisationInfo&) const;
     void deregisterInstance (RackInstance*);
 
-    void updateAutomatableParamPositions (double time);
+    void updateAutomatableParamPositions (TimePosition);
 
     double getLatencySeconds (double sampleRate, int blockSize);
 

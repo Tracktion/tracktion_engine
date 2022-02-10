@@ -70,7 +70,7 @@ public:
     enum class MergeMode { always, never, optional };
 
     Clip* addMidiToTrackAsTransaction (Clip* takeClip, AudioTrack&, juce::MidiMessageSequence&,
-                                       EditTimeRange position, MergeMode, MidiChannel, SelectionManager*);
+                                       TimeRange position, MergeMode, MidiChannel, SelectionManager*);
 
     juce::MidiKeyboardState keyboardState;
 

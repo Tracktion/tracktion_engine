@@ -84,7 +84,7 @@ public:
     void masterLevelsChanged (float leftLevel, float rightLevel);
     void timecodeChanged (int barsOrHours, int beatsOrMinutes, int ticksOrSeconds,
                           int millisecs, bool isBarsBeats, bool isFrames);
-    void editPositionChanged (Edit*, double newCursorPosition);
+    void editPositionChanged (Edit*, TimePosition newCursorPosition);
     void updateVolumePlugin (VolumeAndPanPlugin&);
     void updateVCAPlugin (VCAPlugin& vca);
     void snapChanged (bool isOn);

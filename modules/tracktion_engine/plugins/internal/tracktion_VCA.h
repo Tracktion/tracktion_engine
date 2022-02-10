@@ -30,7 +30,7 @@ public:
     void setSliderPos (float position);
     void muteOrUnmute();
 
-    float updateAutomationStreamAndGetVolumeDb (double time);
+    float updateAutomationStreamAndGetVolumeDb (TimePosition);
 
     //==============================================================================
     static const char* xmlTypeName;

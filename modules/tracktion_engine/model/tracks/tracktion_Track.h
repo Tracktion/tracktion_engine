@@ -206,17 +206,17 @@ public:
     virtual int indexOfTrackItem (TrackItem*) const             { return -1; }
 
     /** Should return the index of the TrackItem after this time. */
-    virtual int getIndexOfNextTrackItemAt (double /*time*/)     { return -1; }
+    virtual int getIndexOfNextTrackItemAt (TimePosition)        { return -1; }
 
     /** Should return the TrackItem after this time. */
-    virtual TrackItem* getNextTrackItemAt (double /*time*/)     { return {}; }
+    virtual TrackItem* getNextTrackItemAt (TimePosition)        { return {}; }
 
     //==============================================================================
     /** Should insert empty space in to the track, shuffling down any items after the time.
         @param time             The time point in seconds to insert at
         @param amountOfSpace    The duration of time to insert
     */
-    virtual void insertSpaceIntoTrack (double time, double amountOfSpace);
+    virtual void insertSpaceIntoTrack (TimePosition, TimeDuration);
 
     //==============================================================================
     /** Returns the state of the parent Track. */

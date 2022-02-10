@@ -11,6 +11,7 @@
 #if ! JUCE_PROJUCER_LIVE_BUILD
 
 #include <future>
+using namespace std::literals;
 
 #include "tracktion_engine.h"
 

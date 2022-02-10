@@ -1601,7 +1601,7 @@ void CustomControlSurface::addMarker (float val, int)
 {
     if (shouldActOnValue (val))
         if (auto e = getEdit())
-            e->getMarkerManager().createMarker (-1, e->getTransport().position, 0.0, externalControllerManager.getSelectionManager());
+            e->getMarkerManager().createMarker (-1, e->getTransport().getPosition(), {}, externalControllerManager.getSelectionManager());
 }
 
 void CustomControlSurface::prevMarker (float val, int)  { if (shouldActOnValue (val)) userPressedPreviousMarker(); }

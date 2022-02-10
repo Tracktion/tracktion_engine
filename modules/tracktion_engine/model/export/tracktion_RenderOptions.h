@@ -59,14 +59,14 @@ public:
 
     //==============================================================================
     /** Performs the render operation on a background thread. */
-    RenderManager::Job::Ptr performBackgroundRender (Edit&, SelectionManager*, EditTimeRange timeRangeToRender);
+    RenderManager::Job::Ptr performBackgroundRender (Edit&, SelectionManager*, TimeRange timeRangeToRender);
 
     //==============================================================================
     /** Returns a hash representing the current set of render options. */
     HashCode getHash() const noexcept                        { return hash; }
 
     /** Returns a set of renderer parameters which can be used to describe a render operation. */
-    Renderer::Parameters getRenderParameters (Edit&, SelectionManager*, EditTimeRange markedRegion);
+    Renderer::Parameters getRenderParameters (Edit&, SelectionManager*, TimeRange markedRegion);
     Renderer::Parameters getRenderParameters (Edit&);
     Renderer::Parameters getRenderParameters (EditClip&);
     Renderer::Parameters getRenderParameters (MidiClip&);
@@ -75,7 +75,7 @@ public:
     juce::AudioFormat* getAudioFormat();
 
     /** Adds the given ProjectItem to the Edit using the render properties for positioning info. */
-    Clip::Ptr applyRenderToEdit (Edit&, ProjectItem::Ptr, EditTimeRange time, SelectionManager*) const;
+    Clip::Ptr applyRenderToEdit (Edit&, ProjectItem::Ptr, TimeRange time, SelectionManager*) const;
 
     //==============================================================================
     /** Creates a default RenderOptions object for a general purpose exporter. */
@@ -143,7 +143,7 @@ public:
     void setMarkedRegion (bool onlyMarked)                      { markedRegion = onlyMarked; }
     void setIncludePlugins (bool includePlugins)                { usePlugins = includePlugins; }
     void setAddRenderOption (AddRenderOptions options)          { addRenderOptions = options; }
-    void setEndAllowance (double time)                          { endAllowance = time; }
+    void setEndAllowance (TimeDuration time)                    { endAllowance = time; }
     void setFilename (juce::String, bool canPromptToOverwriteExisting);
     void updateHash();
 
@@ -151,8 +151,8 @@ public:
     juce::StringArray getFormatTypes();
     juce::StringArray getAddRenderOptionText();
 
-    static double findEndAllowance (Edit&, juce::Array<EditItemID>* tracks, juce::Array<Clip*>*);
-    static bool isMarkedRegionBigEnough (EditTimeRange);
+    static TimeDuration findEndAllowance (Edit&, juce::Array<EditItemID>* tracks, juce::Array<Clip*>*);
+    static bool isMarkedRegionBigEnough (TimeRange);
 
     Engine& engine;
 
@@ -194,7 +194,7 @@ private:
     juce::Array<EditItemID> tracks;
     juce::File destFile;
     juce::Array<Clip*> allowedClips;
-    double endAllowance = 0;
+    TimeDuration endAllowance;
     HashCode hash = 0;
     bool uiNeedsRefresh = true;
 

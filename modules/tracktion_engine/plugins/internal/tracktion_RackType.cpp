@@ -1057,7 +1057,7 @@ void RackType::deregisterInstance (RackInstance* instance)
     countInstancesInEdit();
 }
 
-void RackType::updateAutomatableParamPositions (double time)
+void RackType::updateAutomatableParamPositions (TimePosition time)
 {
     for (auto f : getPlugins())
         f->updateAutomatableParamPosition (time);

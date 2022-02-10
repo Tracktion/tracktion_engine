@@ -47,7 +47,7 @@ CompManager::CompManager (Clip& c, const juce::ValueTree& v)
 
     renderTrigger = std::make_unique<RenderTrigger> (*this);
 
-    lastOffset = clip.getPosition().getOffset();
+    lastOffset = clip.getPosition().getOffset().inSeconds();
     lastTimeRatio = getSourceTimeMultiplier();
 }
 
@@ -505,13 +505,13 @@ void CompManager::refreshCachedTakeLengths()
     {
         // need to find the tempo changes between the source start and  how long the result will be
         const double sourceTempo = getSourceTempo();
-        const double sourceStart = clip.getPosition().getStart();
+        const double sourceStart = clip.getPosition().getStart().inSeconds();
         const double takeEnd = sourceStart + maxSourceLength - getOffset();
 
         auto& ts = clip.edit.tempoSequence;
-        auto& tempoSetting = ts.getTempoAt (sourceStart);
+        auto& tempoSetting = ts.getTempoAt (TimePosition::fromSeconds (sourceStart));
 
-        displayWarning = &tempoSetting != &ts.getTempoAt (takeEnd);
+        displayWarning = &tempoSetting != &ts.getTempoAt (TimePosition::fromSeconds (takeEnd));
         speedRatio = tempoSetting.getBpm() / sourceTempo;
     }
     else
@@ -778,8 +778,8 @@ double WaveCompManager::getTakeLength (int takeIndex) const
     return getSourceFileForTake (takeIndex).getInfo().getLengthInSeconds();
 }
 
-double WaveCompManager::getOffset() const       { return clip.getPosition().getOffset(); }
-double WaveCompManager::getLoopLength() const   { return clip.getLoopLength(); }
+double WaveCompManager::getOffset() const       { return clip.getPosition().getOffset().inSeconds(); }
+double WaveCompManager::getLoopLength() const   { return clip.getLoopLength().inSeconds(); }
 bool WaveCompManager::getAutoTempo()            { return clip.getAutoTempo(); }
 
 double WaveCompManager::getSourceTempo()
@@ -1347,17 +1347,17 @@ MidiList* MidiCompManager::getSequenceLooped (int index)
 HashCode MidiCompManager::getBaseTakeHash (int takeIndex) const
 {
     return takeIndex
-             ^ static_cast<HashCode> (clip.getLoopLengthBeats() * 153.0)
-             ^ static_cast<HashCode> (clip.getLoopStartBeats() * 264.0);
+             ^ static_cast<HashCode> (clip.getLoopLengthBeats().inBeats() * 153.0)
+             ^ static_cast<HashCode> (clip.getLoopStartBeats().inBeats() * 264.0);
 }
 
 double MidiCompManager::getTakeLength (int takeIndex) const
 {
     if (clip.isLooping())
-        return clip.getLoopLengthBeats();
+        return clip.getLoopLengthBeats().inBeats();
 
     if (auto ml = clip.getTakeSequence (takeIndex))
-        return ml->getLastBeatNumber();
+        return ml->getLastBeatNumber().inBeats();
 
     return 0.0;
 }
@@ -1450,20 +1450,20 @@ void MidiCompManager::createComp (const juce::ValueTree& takeTree)
 
         const auto numSegments = takeTree.getNumChildren();
         const auto numTakes = getNumTakes();
-        const auto loopStart = clip.getLoopStartBeats();
-        double startBeat = 0.0;
+        const auto loopStart = toDuration (clip.getLoopStartBeats());
+        BeatPosition startBeat;
 
         for (int i = 0; i < numSegments; ++i)
         {
             auto compSegment = takeTree.getChild (i);
             const auto takeIndex = static_cast<int> (compSegment.getProperty (IDs::takeIndex));
-            const auto endBeat = static_cast<double> (compSegment.getProperty (IDs::endTime));
+            const auto endBeat = BeatPosition::fromBeats (static_cast<double> (compSegment.getProperty (IDs::endTime)));
 
             if (juce::isPositiveAndBelow (takeIndex, numTakes))
             {
                 if (auto src = getSequenceLooped (takeIndex))
                 {
-                    const juce::Range<double> beats (startBeat, endBeat);
+                    const BeatRange beats (startBeat, endBeat);
 
                     for (auto n : src->getNotes())
                     {
@@ -1477,7 +1477,7 @@ void MidiCompManager::createComp (const juce::ValueTree& takeTree)
                         if (! newRange.isEmpty())
                         {
                             MidiNote newNote (n->state.createCopy());
-                            newRange += loopStart;
+                            newRange = newRange + loopStart;
                             newNote.setStartAndLength (newRange.getStart(), newRange.getLength(), nullptr);
                             dest->addNote (newNote, um);
                         }

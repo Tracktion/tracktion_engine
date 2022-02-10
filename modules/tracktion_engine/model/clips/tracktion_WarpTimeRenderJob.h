@@ -74,7 +74,7 @@ private:
         auto tm = clip.getTimeStretchMode();
         proxyInfo = std::make_unique<AudioClipBase::ProxyRenderingInfo>();
         proxyInfo->audioSegmentList  = AudioSegmentList::create (clip);
-        proxyInfo->clipTime          = { 0, clip.getWarpTimeManager().getWarpEndMarkerTime() };
+        proxyInfo->clipTime          = { {}, clip.getWarpTimeManager().getWarpEndMarkerTime() };
         proxyInfo->speedRatio        = 1.0;
         proxyInfo->mode              = (tm != TimeStretcher::disabled && tm != TimeStretcher::melodyne)
                                          ? tm : TimeStretcher::defaultMode;

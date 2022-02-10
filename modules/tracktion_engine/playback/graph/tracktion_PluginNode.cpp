@@ -94,7 +94,7 @@ void PluginNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInf
     auto props = getNodeProperties();
 
     if (props.latencyNumSamples > 0)
-        automationAdjustmentTime = -tracktion_graph::sampleToTime (props.latencyNumSamples, sampleRate);
+        automationAdjustmentTime = TimeDuration::fromSamples (-props.latencyNumSamples, sampleRate);
     
     if (shouldUseFineGrainAutomation (*plugin))
         subBlockSizeToUse = std::max (128, 128 * juce::roundToInt (info.sampleRate / 44100.0));
@@ -121,13 +121,13 @@ void PluginNode::prefetchBlock (juce::Range<int64_t> referenceSampleRange)
     if (playHeadState != nullptr)
     {
         auto& playHead = playHeadState->playHead;
-        const auto editTime = tracktion_graph::sampleToTime (playHead.referenceSamplePositionToTimelinePosition (referenceSampleRange.getStart()), sampleRate) + automationAdjustmentTime;
+        const auto editTime = TimePosition::fromSamples (playHead.referenceSamplePositionToTimelinePosition (referenceSampleRange.getStart()), sampleRate) + automationAdjustmentTime;
         plugin->prepareForNextBlock (editTime);
         
         return;
     }
     
-    plugin->prepareForNextBlock (tracktion_graph::sampleToTime (referenceSampleRange.getStart(), sampleRate));
+    plugin->prepareForNextBlock (TimePosition::fromSamples (referenceSampleRange.getStart(), sampleRate));
 }
 
 void PluginNode::process (ProcessContext& pc)
@@ -251,7 +251,7 @@ void PluginNode::process (ProcessContext& pc)
 //==============================================================================
 void PluginNode::initialisePlugin (double sampleRateToUse, int blockSizeToUse)
 {
-    plugin->baseClassInitialise ({ 0.0, sampleRateToUse, blockSizeToUse });
+    plugin->baseClassInitialise ({ TimePosition(), sampleRateToUse, blockSizeToUse });
     isInitialised = true;
 
     sampleRate = sampleRateToUse;
@@ -279,7 +279,7 @@ PluginRenderContext PluginNode::getPluginRenderContext (int64_t referenceSampleP
              juce::AudioChannelSet::canonicalChannelSet (destBuffer.getNumChannels()),
              0, destBuffer.getNumSamples(),
              &midiMessageArray, 0.0,
-             tracktion_graph::sampleToTime (playHead.referenceSamplePositionToTimelinePosition (referenceSamplePosition), sampleRate) + automationAdjustmentTime,
+             TimePosition::fromSamples (playHead.referenceSamplePositionToTimelinePosition (referenceSamplePosition), sampleRate) + automationAdjustmentTime,
              playHead.isPlaying(), playHead.isUserDragging(), isRendering, canProcessBypassed };
 }
 

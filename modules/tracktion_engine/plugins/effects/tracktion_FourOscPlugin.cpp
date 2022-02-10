@@ -1458,8 +1458,7 @@ void FourOscPlugin::applyToBuffer (const PluginRenderContext& fc)
         SCOPED_REALTIME_CHECK
 
         // find the tempo
-        double now = fc.editTime;
-        currentPos.setTime (now);
+        currentPos.setTime (fc.editTime);
         currentTempo = float (currentPos.getCurrentTempo().bpm);
 
         // Handle all notes off first

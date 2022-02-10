@@ -281,12 +281,12 @@ private:
         {
         }
 
-        bool sendMessages (MidiMessageArray& mma, double editTime) override
+        bool sendMessages (MidiMessageArray& mma, TimePosition editTime) override
         {
             // Adjust these messages to be relative to time 0.0 which will be the next call to processBlock
             // The device delay is also subtracted as this will have been added when rendering
             const auto deltaTime = -editTime - outputDevice.getDeviceDelay();
-            outputDevice.toSend.mergeFromAndClearWithOffset (mma, deltaTime);
+            outputDevice.toSend.mergeFromAndClearWithOffset (mma, deltaTime.inSeconds());
             return true;
         }
 

@@ -21,7 +21,7 @@ class FadeInOutNode final : public tracktion_graph::Node
 public:
     FadeInOutNode (std::unique_ptr<tracktion_graph::Node> input,
                    tracktion_graph::PlayHeadState&,
-                   EditTimeRange fadeIn, EditTimeRange fadeOut,
+                   TimeRange fadeIn, TimeRange fadeOut,
                    AudioFadeCurve::Type fadeInType, AudioFadeCurve::Type fadeOutType,
                    bool clearSamplesOutsideFade);
 
@@ -36,7 +36,7 @@ private:
     //==============================================================================
     std::unique_ptr<tracktion_graph::Node> input;
     tracktion_graph::PlayHeadState& playHeadState;
-    EditTimeRange fadeIn, fadeOut;
+    TimeRange fadeIn, fadeOut;
     AudioFadeCurve::Type fadeInType, fadeOutType;
     juce::Range<int64_t> fadeInSampleRange, fadeOutSampleRange;
     bool clearExtraSamples = true;

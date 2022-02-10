@@ -41,6 +41,26 @@ inline AudioNode* createTrackCompAudioNode (AudioNode* input,
     return input;
 }
 
+inline AudioNode* createTrackCompAudioNode (AudioNode* input,
+                                            const juce::Array<TimeRange>& muteTimes,
+                                            const juce::Array<TimeRange>& nonMuteTimes,
+                                            double crossfadeTime)
+{
+    juce::Array<EditTimeRange> muteEditTimes;
+    juce::Array<EditTimeRange> nonMuteEditTimes;
+
+    for (auto t : muteTimes)
+        muteEditTimes.add (toEditTimeRange (t));
+
+    for (auto t : nonMuteTimes)
+        nonMuteEditTimes.add (toEditTimeRange (t));
+
+    return createTrackCompAudioNode (input,
+                                     muteEditTimes,
+                                     nonMuteEditTimes,
+                                     crossfadeTime);
+}
+
 inline AudioNode* createAudioNode (TrackCompManager::TrackComp& trackComp, Track& t, AudioNode* input)
 {
     auto crossfadeTimeMs = trackComp.edit.engine.getPropertyStorage().getProperty (SettingID::compCrossfadeMs, 20.0);

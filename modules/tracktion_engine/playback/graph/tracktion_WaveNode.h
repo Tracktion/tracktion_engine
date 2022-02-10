@@ -26,9 +26,9 @@ public:
 
     */
     WaveNode (const AudioFile&,
-              EditTimeRange editTime,
-              double offset,
-              EditTimeRange loopSection,
+              TimeRange editTime,
+              TimeDuration offset,
+              TimeRange loopSection,
               LiveClipLevel,
               double speedRatio,
               const juce::AudioChannelSet& sourceChannelsToUse,
@@ -45,8 +45,8 @@ public:
 
 private:
     //==============================================================================
-    EditTimeRange editPosition, loopSection;
-    double offset = 0;
+    TimeRange editPosition, loopSection;
+    TimeDuration offset;
     double originalSpeedRatio = 0, outputSampleRate = 44100.0;
     const EditItemID editItemID;
     bool isOfflineRender = false;
@@ -62,7 +62,7 @@ private:
     std::shared_ptr<juce::OwnedArray<PerChannelState>> channelState;
 
     int64_t editPositionToFileSample (int64_t) const noexcept;
-    int64_t editTimeToFileSample (double) const noexcept;
+    int64_t editTimeToFileSample (TimePosition) const noexcept;
     bool updateFileSampleRate();
     void replaceChannelStateIfPossible (Node*, int numChannelsToUse);
     void processSection (ProcessContext&, juce::Range<int64_t> timelineRange);

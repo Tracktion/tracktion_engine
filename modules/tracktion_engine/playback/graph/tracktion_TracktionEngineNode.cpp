@@ -34,7 +34,7 @@ void ProcessState::update (double newSampleRate, juce::Range<int64_t> newReferen
     jassert (timelineSampleRange.getLength() == 0
              || timelineSampleRange.getLength() == newReferenceSampleRange.getLength());
 
-    editTimeRange = EditTimeRange (tracktion_graph::sampleToTime (timelineSampleRange, sampleRate));
+    editTimeRange = tracktion_graph::timeRangeFromSamples (timelineSampleRange, sampleRate);
 }
 
 

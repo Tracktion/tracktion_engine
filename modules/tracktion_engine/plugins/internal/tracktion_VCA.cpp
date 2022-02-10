@@ -103,7 +103,7 @@ void VCAPlugin::muteOrUnmute()
     }
 }
 
-float VCAPlugin::updateAutomationStreamAndGetVolumeDb (double time)
+float VCAPlugin::updateAutomationStreamAndGetVolumeDb (TimePosition time)
 {
     if (isAutomationNeeded())
     {

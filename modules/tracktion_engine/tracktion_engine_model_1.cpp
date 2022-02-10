@@ -11,6 +11,10 @@
 #if ! JUCE_PROJUCER_LIVE_BUILD
 
 #include <future>
+#include <chrono>
+
+using namespace std::literals;
+
 #include "../../modules/tracktion_graph/tracktion_graph.h"
 #include "tracktion_engine.h"
 

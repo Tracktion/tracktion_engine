@@ -44,7 +44,7 @@ public:
     bool isFrozen (FreezeType) const override;
 
     //==============================================================================
-    float getVcaDb (double tm);
+    float getVcaDb (TimePosition);
     VCAPlugin* getVCAPlugin();
     VolumeAndPanPlugin* getVolumePlugin();
 
@@ -53,16 +53,16 @@ public:
     CollectionClip* getCollectionClip (int index)  const noexcept;
     int getNumCollectionClips() const noexcept;
     int indexOfCollectionClip (CollectionClip*) const;
-    int getIndexOfNextCollectionClipAt (double time);
-    CollectionClip* getNextCollectionClipAt (double time);
+    int getIndexOfNextCollectionClipAt (TimePosition);
+    CollectionClip* getNextCollectionClipAt (TimePosition);
     bool contains (CollectionClip*) const;
 
     //==============================================================================
     int getNumTrackItems() const override;
     TrackItem* getTrackItem (int idx) const override;
     int indexOfTrackItem (TrackItem*) const override;
-    int getIndexOfNextTrackItemAt (double time) override;
-    TrackItem* getNextTrackItemAt (double time) override;
+    int getIndexOfNextTrackItemAt (TimePosition) override;
+    TrackItem* getNextTrackItemAt (TimePosition) override;
 
     //==============================================================================
     bool isMuted (bool includeMutingByDestination) const override;
@@ -91,7 +91,7 @@ private:
     AsyncCaller pluginUpdater;
 
     void updatePlugins();
-    EditTimeRange getClipExtendedBounds (Clip&);
+    TimeRange getClipExtendedBounds (Clip&);
 
     void valueTreeChildAdded (juce::ValueTree&, juce::ValueTree&) override;
     void valueTreeChildRemoved (juce::ValueTree&, juce::ValueTree&, int) override;

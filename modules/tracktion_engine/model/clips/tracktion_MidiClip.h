@@ -67,7 +67,7 @@ public:
     void addTake (juce::MidiMessageSequence&, MidiList::NoteAutomationType);
 
     /** This will extend the start time backwards, moving the notes along if this takes the offset below 0.0 */
-    void extendStart (double newStartTime);
+    void extendStart (TimePosition newStartTime);
 
     void trimBeyondEnds (bool beyondStart, bool beyondEnd, juce::UndoManager*);
 
@@ -77,7 +77,7 @@ public:
         @note notesToUse must be in ascending note start order.
     */
     void legatoNote (MidiNote& note, const juce::Array<MidiNote*>& notesToUse,
-                     double maxEndBeat, juce::UndoManager&);
+                     BeatPosition maxEndBeat, juce::UndoManager&);
 
     //==============================================================================
     float getVolumeDb() const                       { return level->dbGain; }
@@ -94,7 +94,7 @@ public:
     //==============================================================================
     void initialise() override;
     bool isMidi() const override                    { return true; }
-    void rescale (double pivotTimeInEdit, double factor) override;
+    void rescale (TimePosition pivotTimeInEdit, double factor) override;
     bool canGoOnTrack (Track&) override;
     juce::String getSelectableDescription() override;
     juce::Colour getDefaultColour() const override;
@@ -111,16 +111,16 @@ public:
     MidiList* getTakeSequence (int takeIndex) const { return channelSequence[takeIndex]; }
 
     bool canLoop() const override                   { return true; }
-    bool isLooping() const override                 { return loopLengthBeats > 0.0; }
+    bool isLooping() const override                 { return loopLengthBeats > BeatDuration(); }
     bool beatBasedLooping() const override          { return isLooping(); }
     void setNumberOfLoops (int) override;
     void disableLooping() override;
-    void setLoopRange (EditTimeRange) override;
-    void setLoopRangeBeats (juce::Range<double>) override;
-    double getLoopStartBeats() const override       { return loopStartBeats; }
-    double getLoopLengthBeats() const override      { return loopLengthBeats; }
-    double getLoopStart() const override;
-    double getLoopLength() const override;
+    void setLoopRange (TimeRange) override;
+    void setLoopRangeBeats (BeatRange) override;
+    BeatPosition getLoopStartBeats() const override       { return loopStartBeats; }
+    BeatDuration getLoopLengthBeats() const override      { return loopLengthBeats; }
+    TimePosition getLoopStart() const override;
+    TimeDuration getLoopLength() const override;
 
     enum class LoopedSequenceType : int
     {
@@ -163,7 +163,8 @@ private:
 
     juce::CachedValue<int> currentTake;
     juce::CachedValue<float> grooveStrength;
-    juce::CachedValue<double> loopStartBeats, loopLengthBeats, originalLength;
+    juce::CachedValue<BeatPosition> loopStartBeats;
+    juce::CachedValue<BeatDuration> loopLengthBeats, originalLength;
     std::unique_ptr<QuantisationType> quantisation;
     juce::CachedValue<bool> sendPatch, sendBankChange, mpeMode;
     juce::CachedValue<juce::String> grooveTemplate;

@@ -283,7 +283,7 @@ public:
         }
         else
         {
-            time        = 0.0;
+            time        = TimePosition();
             isPlaying   = false;
         }
     }
@@ -297,25 +297,25 @@ public:
             return false;
 
         auto& transport = plugin.edit.getTransport();
-        double localTime = time;
+        auto localTime = time.load();
 
         result.isPlaying        = isPlaying;
         result.isRecording      = transport.isRecording();
-        result.editOriginTime   = transport.getTimeWhenStarted();
+        result.editOriginTime   = transport.getTimeWhenStarted().inSeconds();
         result.isLooping        = transport.looping;
 
         if (result.isLooping)
         {
             const auto loopTimes = transport.getLoopRange();
-            loopStart->setTime (loopTimes.start);
+            loopStart->setTime (loopTimes.getStart());
             result.ppqLoopStart = loopStart->getPPQTime();
 
-            loopEnd->setTime (loopTimes.end);
+            loopEnd->setTime (loopTimes.getEnd());
             result.ppqLoopEnd = loopEnd->getPPQTime();
         }
 
-        result.timeInSamples    = (int64_t) (localTime * plugin.sampleRate);
-        result.timeInSeconds    = localTime;
+        result.timeInSamples    = (tracktion_graph::toSamples (localTime, plugin.sampleRate));
+        result.timeInSeconds    = localTime.inSeconds();
 
         currentPos->setTime (localTime);
         auto& tempo = currentPos->getCurrentTempo();
@@ -333,7 +333,7 @@ public:
 private:
     ExternalPlugin& plugin;
     std::unique_ptr<TempoSequencePosition> currentPos, loopStart, loopEnd;
-    std::atomic<double> time { 0 };
+    std::atomic<TimePosition> time { TimePosition() };
     std::atomic<bool> isPlaying { false };
 
     AudioPlayHead::FrameRateType getFrameRate() const

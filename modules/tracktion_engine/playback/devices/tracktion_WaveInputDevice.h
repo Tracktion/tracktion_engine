@@ -101,7 +101,7 @@ private:
     void addInstance (WaveInputDeviceInstance*);
     void removeInstance (WaveInputDeviceInstance*);
 
-    double getAdjustmentSeconds();
+    TimeDuration getAdjustmentSeconds();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveInputDevice)
 };

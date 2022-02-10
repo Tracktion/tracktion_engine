@@ -31,10 +31,10 @@ public:
 
     //==============================================================================
     /** Apply this groove to a time, in beats */
-    double beatsTimeToGroovyTime (double beatsTime, float strength) const;
+    BeatPosition beatsTimeToGroovyTime (BeatPosition beatsTime, float strength) const;
 
     /** Apply this groove to a time, in seconds */
-    double editTimeToGroovyTime (double editTime, float strength, Edit& edit) const;
+    TimePosition editTimeToGroovyTime (TimePosition editTime, float strength, Edit& edit) const;
 
     //==============================================================================
     const juce::String& getName() const                     { return name; }

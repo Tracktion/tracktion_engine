@@ -57,8 +57,8 @@ public:
     /** Set the 'glide' or crossfade length it'll use to patch the data back into
         the edit.
     */
-    static double getGlideSeconds (Engine&);
-    static void setGlideSeconds (Engine&, double secs);
+    static TimeDuration getGlideSeconds (Engine&);
+    static void setGlideSeconds (Engine&, TimeDuration);
 
     Engine& engine;
 
@@ -75,9 +75,10 @@ private:
 
         struct Change
         {
-            inline Change (double t, float v) noexcept : time (t), value (v) {}
+            inline Change (TimePosition t, float v) noexcept
+                : time (t), value (v) {}
 
-            double time;
+            TimePosition time;
             float value;
         };
 
@@ -95,10 +96,10 @@ private:
 
     friend class AutomatableParameter;
     void postFirstAutomationChange (AutomatableParameter&, float originalValue);
-    void postAutomationChange (AutomatableParameter&, double time, float value);
+    void postAutomationChange (AutomatableParameter&, TimePosition time, float value);
     void parameterBeingDeleted (AutomatableParameter&);
 
-    void applyChangesToParameter (AutomationParamData*, double endTime, bool toEnd);
+    void applyChangesToParameter (AutomationParamData*, TimePosition endTime, bool toEnd);
 
     void changeListenerCallback (juce::ChangeBroadcaster*);
 };

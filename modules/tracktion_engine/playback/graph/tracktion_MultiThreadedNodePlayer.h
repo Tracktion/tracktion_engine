@@ -93,7 +93,7 @@ public:
             }
             
             {
-                const double firstDuration = processState.editTimeRange.getLength();
+                const auto firstDuration = processState.editTimeRange.getLength();
                 const auto secondNumSamples = (choc::buffer::FrameCount) splitTimelineRange.timelineRange2.getLength();
                 const auto secondRange = juce::Range<int64_t>::withStartAndLength (firstRange.getEnd(), secondNumSamples);
                 
@@ -105,7 +105,7 @@ public:
                 numMisses += nodePlayer.process (pc2);
 
                 // Merge back MIDI from end of block
-                pc.buffers.midi.mergeFromWithOffset (scratchMidi, firstDuration);
+                pc.buffers.midi.mergeFromWithOffset (scratchMidi, firstDuration.inSeconds());
             }
         }
         else

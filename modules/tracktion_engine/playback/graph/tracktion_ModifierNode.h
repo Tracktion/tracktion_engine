@@ -69,7 +69,7 @@ private:
     bool isInitialised = false;
     double sampleRate = 44100.0;
     tracktion_engine::MidiMessageArray midiMessageArray;
-    double automationAdjustmentTime = 0.0;
+    TimeDuration automationAdjustmentTime;
 
     //==============================================================================
     void initialiseModifier (double sampleRateToUse, int blockSizeToUse);

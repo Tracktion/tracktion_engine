@@ -51,7 +51,7 @@ static inline HashCode hashPlugin (const juce::ValueTree& effectState, Plugin& p
                 for (int i = 0; i < ac.getNumPoints(); ++i)
                 {
                     const auto p = ac.getPoint (i);
-                    auto pointH = juce::String (p.time) + juce::String (p.value) + juce::String (p.curve);
+                    auto pointH = juce::String (p.time.inSeconds()) + juce::String (p.value) + juce::String (p.curve);
                     h = (juce::String (h) + pointH).hashCode64();
                 }
             }
@@ -633,7 +633,7 @@ public:
         CRASH_TRACER
         auto tm = clip.getTimeStretchMode();
         proxyInfo.reset (new AudioClipBase::ProxyRenderingInfo());
-        proxyInfo->clipTime     = { 0.0, wtm.getWarpEndMarkerTime() };
+        proxyInfo->clipTime     = { {}, wtm.getWarpEndMarkerTime() };
         proxyInfo->speedRatio   = 1.0;
         proxyInfo->mode         = (tm != TimeStretcher::disabled && tm != TimeStretcher::melodyne)
                                         ? tm : TimeStretcher::defaultMode;
@@ -752,10 +752,10 @@ FadeInOutEffect::FadeInOutEffect (const juce::ValueTree& v, ClipEffects& o)
     fadeOutType.referTo (state, IDs::fadeOutType, um, AudioFadeCurve::linear);
 }
 
-void FadeInOutEffect::setFadeIn (double in)
+void FadeInOutEffect::setFadeIn (TimeDuration in)
 {
-    const double l = clipEffects.getEffectsLength() * clipEffects.getSpeedRatioEstimate();
-    in = juce::jlimit (0.0, l, in);
+    const auto l = clipEffects.getEffectsLength() * clipEffects.getSpeedRatioEstimate();
+    in = juce::jlimit (TimeDuration(), l, in);
 
     if (in + fadeOut > l)
     {
@@ -769,10 +769,10 @@ void FadeInOutEffect::setFadeIn (double in)
     }
 }
 
-void FadeInOutEffect::setFadeOut (double out)
+void FadeInOutEffect::setFadeOut (TimeDuration out)
 {
-    const double l = clipEffects.getEffectsLength() * clipEffects.getSpeedRatioEstimate();
-    out = juce::jlimit (0.0, l, out);
+    const auto l = clipEffects.getEffectsLength() * clipEffects.getSpeedRatioEstimate();
+    out = juce::jlimit (TimeDuration(), l, out);
 
     if (fadeIn + out > l)
     {
@@ -803,21 +803,25 @@ juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> FadeInOutEffect
     effectRange = { effectRange.getStart() * speedRatio,
                     effectRange.getEnd() * speedRatio };
 
-    const EditTimeRange fadeInRange (effectRange.getStart(), effectRange.getStart() + fadeIn);
-    const EditTimeRange fadeOutRange (effectRange.getEnd() - fadeOut, effectRange.getEnd());
+    const TimeRange fadeInRange (effectRange.getStart(), effectRange.getStart() + fadeIn);
+    const TimeRange fadeOutRange (effectRange.getEnd() - fadeOut, effectRange.getEnd());
 
     switch (getType())
     {
         case EffectType::fadeInOut:
-            if (fadeIn > 0.0 || fadeOut > 0.0)
-                n = new FadeInOutAudioNode (n, fadeInRange, fadeOutRange, fadeInType, fadeOutType);
+            if (fadeIn.get() > TimeDuration() || fadeOut.get() > TimeDuration())
+                n = new FadeInOutAudioNode (n,
+                                            toEditTimeRange (fadeInRange), toEditTimeRange (fadeOutRange),
+                                            fadeInType, fadeOutType);
             
             break;
             
         case EffectType::tapeStartStop:
-            if (fadeIn > 0.0 || fadeOut > 0.0)
+            if (fadeIn.get() > TimeDuration() || fadeOut.get() > TimeDuration())
             {
-                n = new SpeedRampAudioNode (n, fadeInRange, fadeOutRange, fadeInType, fadeOutType);
+                n = new SpeedRampAudioNode (n,
+                                            toEditTimeRange (fadeInRange), toEditTimeRange (fadeOutRange),
+                                            fadeInType, fadeOutType);
                 blockSize = 128;
             }
             
@@ -838,8 +842,8 @@ juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> FadeInOutEffect
             break;
     }
 
-    n = new TimedMutingAudioNode (n, { EditTimeRange (0.0, effectRange.getStart()),
-                                       EditTimeRange (effectRange.getEnd(), sourceLength) });
+    n = new TimedMutingAudioNode (n, { EditTimeRange ({}, effectRange.getStart().inSeconds()),
+                                       EditTimeRange (effectRange.getEnd().inSeconds(), sourceLength) });
 
     return new AudioNodeRenderJob (edit.engine, n, destFile, sourceFile, blockSize);
 }
@@ -850,8 +854,8 @@ HashCode FadeInOutEffect::getIndividualHash() const
 
     return ClipEffect::getIndividualHash()
              ^ static_cast<HashCode> (clipEffects.getSpeedRatioEstimate() * 6345.2)
-             ^ static_cast<HashCode> (effectRange.getStart() * 3526.9)
-             ^ static_cast<HashCode> (effectRange.getEnd() * 53625.3);
+             ^ static_cast<HashCode> (effectRange.getStart().inSeconds() * 3526.9)
+             ^ static_cast<HashCode> (effectRange.getEnd().inSeconds() * 53625.3);
 }
 
 //==============================================================================
@@ -862,13 +866,13 @@ StepVolumeEffect::StepVolumeEffect (const juce::ValueTree& v, ClipEffects& o)
     const bool newEffect = ! (state.hasProperty (IDs::noteLength) && state.hasProperty (IDs::crossfadeLength));
 
     auto um = &getUndoManager();
-    noteLength.referTo (state, IDs::noteLength, um, 0.25);
+    noteLength.referTo (state, IDs::noteLength, um, BeatDuration::fromBeats (0.25));
     crossfade.referTo (state, IDs::crossfadeLength, um, 0.01);
     pattern.referTo (state, IDs::pattern, um);
 
     if (newEffect && ! edit.isLoading())
     {
-        state.setProperty (IDs::noteLength, noteLength.get(), um);
+        state.setProperty (IDs::noteLength, noteLength.get().inBeats(), um);
         state.setProperty (IDs::crossfadeLength, crossfade.get(), um);
 
         Pattern (*this).toggleAtInterval (2);
@@ -888,7 +892,7 @@ int StepVolumeEffect::getMaxNumNotes()
 
     auto startTime = pos.getStartOfSource();
     auto startBeat = ts.timeToBeats (startTime);
-    auto endBeat = ts.timeToBeats (startTime + (c.getSourceLength() / clipEffects.getSpeedRatioEstimate()));
+    auto endBeat = ts.timeToBeats (startTime + (TimeDuration::fromSeconds (c.getSourceLength()) / clipEffects.getSpeedRatioEstimate()));
 
     return (int) std::ceil ((endBeat - startBeat) / noteLength);
 }
@@ -906,8 +910,8 @@ juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> StepVolumeEffec
     auto effectRange = clipEffects.getEffectsRange();
 
     auto fade = crossfade.get();
-    auto halfCrossfade = fade / 2.0;
-    juce::Array<EditTimeRange> nonMuteTimes;
+    auto halfCrossfade = TimeDuration::fromSeconds (fade / 2.0);
+    juce::Array<TimeRange> nonMuteTimes;
 
     // Calculate non-mute times
     {
@@ -920,7 +924,7 @@ juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> StepVolumeEffec
         auto length = noteLength.get();
         auto startTime = pos.getStart();
 
-        auto startBeat = ts.timeToBeats (pos.getStart() + effectRange.getStart());
+        auto startBeat = ts.timeToBeats (pos.getStart() + toDuration (effectRange.getStart()));
         auto endBeat = ts.timeToBeats (pos.getEnd());
         auto numNotes = std::min (p.getNumNotes(), (int) std::ceil ((endBeat - startBeat) / length));
 
@@ -930,13 +934,13 @@ juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> StepVolumeEffec
         {
             if (! cache[i])
             {
-                beat += length;
+                beat = beat + length;
                 continue;
             }
 
-            auto s = ts.beatsToTime (beat) - startTime;
-            beat += length;
-            auto e = ts.beatsToTime (beat) - startTime;
+            auto s = ts.beatsToTime (beat) - toDuration (startTime);
+            beat = beat + length;
+            auto e = ts.beatsToTime (beat) - toDuration (startTime);
 
             nonMuteTimes.add ({ s - halfCrossfade,
                                 e + halfCrossfade });
@@ -951,7 +955,7 @@ juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> StepVolumeEffec
 
             if (thisTime.getEnd() >= lastTime.getStart())
             {
-                thisTime.end = lastTime.getEnd();
+                thisTime = thisTime.withEnd (lastTime.getEnd());
                 nonMuteTimes.remove (i + 1);
             }
 
@@ -960,7 +964,7 @@ juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> StepVolumeEffec
 
         // Scale everything by the speed ratio
         for (auto& t : nonMuteTimes)
-            t = t.rescaled (0.0, speedRatio);
+            t = t.rescaled (TimePosition(), speedRatio);
     }
 
     auto waveNode = new WaveAudioNode (sourceFile, timeRange, 0.0, {}, {},
@@ -994,8 +998,8 @@ HashCode StepVolumeEffect::getIndividualHash() const
 
     return ClipEffect::getIndividualHash()
             ^ static_cast<HashCode> (clipEffects.getSpeedRatioEstimate() * 6345.2)
-            ^ static_cast<HashCode> (effectRange.getStart() * 3526.9)
-            ^ static_cast<HashCode> (effectRange.getEnd() * 53625.3);
+            ^ static_cast<HashCode> (effectRange.getStart().inSeconds() * 3526.9)
+            ^ static_cast<HashCode> (effectRange.getEnd().inSeconds() * 53625.3);
 }
 
 //==============================================================================

@@ -14,7 +14,7 @@ namespace tracktion_engine
 //==============================================================================
 //==============================================================================
 TimedMutingNode::TimedMutingNode (std::unique_ptr<tracktion_graph::Node> inputNode,
-                                  juce::Array<EditTimeRange> muteTimes_,
+                                  juce::Array<TimeRange> muteTimes_,
                                   tracktion_graph::PlayHeadState& playHeadStateToUse)
     : input (std::move (inputNode)),
       playHeadState (playHeadStateToUse),
@@ -69,10 +69,10 @@ void TimedMutingNode::process (ProcessContext& pc)
     }
 
     copy (destAudioBlock, sourceBuffers.audio);
-    processSection (destAudioBlock, tracktion_graph::sampleToTime (timelineRange, sampleRate));
+    processSection (destAudioBlock, tracktion_graph::timeRangeFromSamples (timelineRange, sampleRate));
 }
 
-void TimedMutingNode::processSection (choc::buffer::ChannelArrayView<float> view, EditTimeRange editTime)
+void TimedMutingNode::processSection (choc::buffer::ChannelArrayView<float> view, TimeRange editTime)
 {
     for (auto r : muteTimes)
     {
@@ -88,18 +88,18 @@ void TimedMutingNode::processSection (choc::buffer::ChannelArrayView<float> view
                 }
                 else if (editTime.contains (mute))
                 {
-                    auto startSample = tracktion_graph::timeToSample (mute.getStart() - editTime.getStart(), sampleRate);
-                    auto numSamples  = tracktion_graph::timeToSample (mute.getLength(), sampleRate);
+                    auto startSample = tracktion_graph::toSamples (mute.getStart() - editTime.getStart(), sampleRate);
+                    auto numSamples  = tracktion_graph::toSamples (mute.getLength(), sampleRate);
                     muteSection (view, startSample, numSamples);
                 }
                 else if (mute.getEnd() <= editTime.getEnd())
                 {
-                    auto numSamples = tracktion_graph::timeToSample (editTime.getEnd() - mute.getEnd(), sampleRate);
+                    auto numSamples = tracktion_graph::toSamples (editTime.getEnd() - mute.getEnd(), sampleRate);
                     muteSection (view, 0, numSamples);
                 }
                 else if (mute.getStart() >= editTime.getStart())
                 {
-                    auto startSample = tracktion_graph::timeToSample (mute.getStart() - editTime.getStart(), sampleRate);
+                    auto startSample = tracktion_graph::toSamples (mute.getStart() - editTime.getStart(), sampleRate);
                     muteSection (view, startSample, choc::buffer::FrameCount (view.getNumFrames()) - startSample);
                 }
             }

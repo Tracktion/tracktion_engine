@@ -125,7 +125,7 @@ public:
 
         @returns False if there's no existing clips in the places it needs them.
     */
-    bool mergeInMidiSequence (const juce::MidiMessageSequence&, double startTime,
+    bool mergeInMidiSequence (const juce::MidiMessageSequence&, TimePosition startTime,
                               MidiClip*, MidiList::NoteAutomationType);
 
     void playGuideNote (int note, MidiChannel midiChannel, int velocity,

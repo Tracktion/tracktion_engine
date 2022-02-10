@@ -15,7 +15,7 @@ namespace tracktion_engine
 //==============================================================================
 FadeInOutNode::FadeInOutNode (std::unique_ptr<tracktion_graph::Node> inputNode,
                               tracktion_graph::PlayHeadState& playHeadStateToUse,
-                              EditTimeRange in, EditTimeRange out,
+                              TimeRange in, TimeRange out,
                               AudioFadeCurve::Type fadeInType_, AudioFadeCurve::Type fadeOutType_,
                               bool clearSamplesOutsideFade)
     : input (std::move (inputNode)),
@@ -48,8 +48,8 @@ std::vector<tracktion_graph::Node*> FadeInOutNode::getDirectInputNodes()
 
 void FadeInOutNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
 {
-    fadeInSampleRange = tracktion_graph::timeToSample (fadeIn, info.sampleRate);
-    fadeOutSampleRange = tracktion_graph::timeToSample (fadeOut, info.sampleRate);
+    fadeInSampleRange = tracktion_graph::toSamples (fadeIn, info.sampleRate);
+    fadeOutSampleRange = tracktion_graph::toSamples (fadeOut, info.sampleRate);
 }
 
 bool FadeInOutNode::isReadyToProcess()

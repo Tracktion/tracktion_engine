@@ -51,7 +51,7 @@ struct AudioFileUtils
     static SampleCount copySectionToNewFile (Engine& e,
                                              const juce::File& sourceFile,
                                              const juce::File& destFile,
-                                             EditTimeRange range);
+                                             TimeRange range);
 
     static void addBWAVStartToMetadata (juce::StringPairArray& metadata, SampleCount start);
 

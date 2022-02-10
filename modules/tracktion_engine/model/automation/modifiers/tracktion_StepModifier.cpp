@@ -18,7 +18,7 @@ struct StepModifier::StepModifierTimer : public ModifierTimer
     {
     }
 
-    void updateStreamTime (double editTime, int numSamples) override
+    void updateStreamTime (TimePosition editTime, int numSamples) override
     {
         const double blockLength = numSamples / modifier.getSampleRate();
         modifier.setEditTime (editTime);
@@ -36,7 +36,7 @@ struct StepModifier::StepModifierTimer : public ModifierTimer
             ramp.setDuration (durationPerPattern);
 
             if (syncTypeThisBlock == ModifierCommon::transport)
-                ramp.setPosition (std::fmod ((float) editTime, durationPerPattern));
+                ramp.setPosition (std::fmod ((float) editTime.inSeconds(), durationPerPattern));
 
             const int step = static_cast<int> (std::floor (numStepsThisBlock * ramp.getProportion()));
             modifier.currentStep.store (step, std::memory_order_release);
@@ -52,7 +52,7 @@ struct StepModifier::StepModifierTimer : public ModifierTimer
 
             if (syncTypeThisBlock == ModifierCommon::transport)
             {
-                const float editTimeInBeats = (float) (currentTempo.startBeatInEdit + (editTime - currentTempo.startTime) * currentTempo.beatsPerSecond);
+                const float editTimeInBeats = (float) (currentTempo.startBeatInEdit + (editTime.inSeconds() - currentTempo.startTime) * currentTempo.beatsPerSecond);
                 const double bars = (editTimeInBeats / currentTempo.numerator) * rateThisBlock;
 
                 if (rateTypeThisBlock >= ModifierCommon::fourBars && rateTypeThisBlock <= ModifierCommon::sixtyFourthD)

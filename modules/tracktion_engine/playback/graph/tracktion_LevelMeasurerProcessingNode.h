@@ -112,7 +112,7 @@ private:
     void initialisePlugin()
     {
         // N.B. This is deliberately zeroed as it (correctly) assumes the LevelMeterPlugin doesn't need the info during initialisation
-        meterPlugin.baseClassInitialise ({ 0.0, 0.0, 0 });
+        meterPlugin.baseClassInitialise ({ TimePosition(), 0.0, 0 });
         isInitialised = true;
     }
     

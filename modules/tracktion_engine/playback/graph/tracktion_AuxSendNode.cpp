@@ -39,7 +39,7 @@ void AuxSendNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationIn
     sampleRate = info.sampleRate;
     
     if (auto props = getNodeProperties(); props.latencyNumSamples > 0)
-        automationAdjustmentTime = -tracktion_graph::sampleToTime (props.latencyNumSamples, sampleRate);
+        automationAdjustmentTime = TimeDuration::fromSamples (-props.latencyNumSamples, sampleRate);
 }
 
 void AuxSendNode::process (ProcessContext& pc)
@@ -48,7 +48,7 @@ void AuxSendNode::process (ProcessContext& pc)
         && sendPlugin.edit.getAutomationRecordManager().isReadingAutomation())
     {
         const auto editSamplePos = playHeadState.playHead.referenceSamplePositionToTimelinePosition (pc.referenceSampleRange.getStart());
-        const auto editTime = tracktion_graph::sampleToTime (editSamplePos, sampleRate) + automationAdjustmentTime;
+        const auto editTime = TimePosition::fromSamples (editSamplePos, sampleRate) + automationAdjustmentTime;
         sendPlugin.updateParameterStreams (editTime);
     }
     

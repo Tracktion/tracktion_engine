@@ -177,7 +177,7 @@ public:
         wasPlaying = false;
         position = nullptr;
         needsToSendPosition = true;
-        lastBlockStart = -100000.0;
+        lastBlockStart = -100000.0s;
         lastBlockEndPPQ = 0;
 
         if (edit != nullptr)
@@ -185,7 +185,7 @@ public:
     }
 
     void addMessages (bool playHeadIsPlaying, TransportControl* tc, MidiMessageArray& buffer,
-                      double blockStartTime, double blockLength)
+                      TimePosition blockStartTime, TimeDuration blockLength)
     {
         CRASH_TRACER
         const bool isPlaying = playHeadIsPlaying && position != nullptr;
@@ -219,7 +219,7 @@ public:
 
             const double startNum = blockStartPPQ * 24.0;
             const double endNum = endPPQ * 24.0;
-            const double timePerNum = blockLength / (endNum - startNum);
+            const double timePerNum = blockLength.inSeconds() / (endNum - startNum);
             auto num = (int) std::floor (startNum + 0.999999);
 
             while (num < endNum)
@@ -254,7 +254,8 @@ private:
     bool needsToSendPosition = false;
     juce::CriticalSection positionLock;
     std::unique_ptr<TempoSequencePosition> position;
-    double lastBlockStart = 0, lastBlockEndPPQ = 0;
+    TimePosition lastBlockStart;
+    double lastBlockEndPPQ = 0;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiClockGenerator)
 };
@@ -317,7 +318,7 @@ void MidiOutputDevice::setEnabled (bool b)
     }
 }
 
-juce::String MidiOutputDevice::prepareToPlay (Edit* edit, double)
+juce::String MidiOutputDevice::prepareToPlay (Edit* edit, TimePosition)
 {
     if (outputDevice == nullptr)
         return TRANS("Couldn't open the MIDI port");
@@ -540,9 +541,9 @@ void MidiOutputDevice::fireMessage (const juce::MidiMessage& message)
     }
 }
 
-double MidiOutputDevice::getDeviceDelay() const noexcept
+TimeDuration MidiOutputDevice::getDeviceDelay() const noexcept
 {
-    return (preDelayMillisecs + audioAdjustmentDelay) * 0.001;
+    return TimeDuration::fromSeconds ((preDelayMillisecs + audioAdjustmentDelay) * 0.001);
 }
 
 void MidiOutputDevice::setPreDelayMs (int ms)
@@ -640,7 +641,7 @@ MidiOutputDeviceInstance::~MidiOutputDeviceInstance()
 {
 }
 
-juce::String MidiOutputDeviceInstance::prepareToPlay (double, bool shouldSendMidiTC)
+juce::String MidiOutputDeviceInstance::prepareToPlay (TimePosition, bool shouldSendMidiTC)
 {
     if (getMidiOutput().outputDevice == nullptr)
         return TRANS("Couldn't open the MIDI port");
@@ -678,13 +679,13 @@ void MidiOutputDeviceInstance::stop()
     }
 }
 
-void MidiOutputDeviceInstance::mergeInMidiMessages (const MidiMessageArray& source, double editTime)
+void MidiOutputDeviceInstance::mergeInMidiMessages (const MidiMessageArray& source, TimePosition editTime)
 {
-    midiMessages.mergeFromWithOffset (source, editTime + getMidiOutput().getDeviceDelay());
+    midiMessages.mergeFromWithOffset (source, (editTime + getMidiOutput().getDeviceDelay()).inSeconds());
     midiMessages.sortByTimestamp();
 }
 
-void MidiOutputDeviceInstance::addMidiClockMessagesToCurrentBlock (bool isPlaying, bool isDragging, EditTimeRange editTimeRange)
+void MidiOutputDeviceInstance::addMidiClockMessagesToCurrentBlock (bool isPlaying, bool isDragging, TimeRange editTimeRange)
 {
     auto& midiOut = getMidiOutput();
 
@@ -693,8 +694,8 @@ void MidiOutputDeviceInstance::addMidiClockMessagesToCurrentBlock (bool isPlayin
         if (midiOut.sendTimecode)
             timecodeGenerator->addMessages (isPlaying, isDragging,
                                             &edit.getTransport(), midiMessages,
-                                            editTimeRange.getStart(),
-                                            editTimeRange.getEnd());
+                                            editTimeRange.getStart().inSeconds(),
+                                            editTimeRange.getEnd().inSeconds());
 
         if (midiOut.sendMidiClock || midiOut.sendControllerMidiClock)
             midiClockGenerator->addMessages (isPlaying,

@@ -25,7 +25,7 @@ public:
     QuantisationType (const QuantisationType&);
     QuantisationType& operator= (const QuantisationType&);
 
-    void applyQuantisationToSequence (juce::MidiMessageSequence&, Edit&, double sequenceStartOffset);
+    void applyQuantisationToSequence (juce::MidiMessageSequence&, Edit&, TimePosition sequenceStartOffset);
 
     //==============================================================================
     /** this type may represent "no quantising" */
@@ -54,9 +54,9 @@ public:
     void setIsQuantisingNoteOffs (bool isQuantising)        { quantiseNoteOffs = isQuantising; }
 
     //==============================================================================
-    double roundBeatToNearest (double beatNumber) const;
-    double roundBeatUp (double beatNumber) const;
-    double roundBeatToNearestNonZero (double beatNumber) const;
+    BeatPosition roundBeatToNearest (BeatPosition beatNumber) const;
+    BeatPosition roundBeatUp (BeatPosition beatNumber) const;
+    BeatPosition roundBeatToNearestNonZero (BeatPosition beatNumber) const;
 
     double roundToNearest (double time, const Edit& edit) const;
     double roundUp (double time, const Edit& edit) const;
@@ -75,7 +75,7 @@ private:
     void updateType();
     void updateFraction();
     double roundTo (double time, double adjustment, const Edit&) const;
-    double roundToBeat (double beatNumber, double adjustment) const;
+    BeatPosition roundToBeat (BeatPosition beatNumber, double adjustment) const;
 
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
     void valueTreeChildAdded (juce::ValueTree&, juce::ValueTree&) override {}

@@ -18,16 +18,16 @@ namespace combining_node_utils
     static constexpr double decayTimeAllowance = 5.0;
     static constexpr int secondsPerGroup = 8;
 
-    static inline constexpr int timeToGroupIndex (double t) noexcept
+    static inline constexpr int timeToGroupIndex (TimePosition t) noexcept
     {
-        return ((int) t) / secondsPerGroup;
+        return static_cast<int> (t.inSeconds()) / secondsPerGroup;
     }
 }
 
 //==============================================================================
 struct CombiningNode::TimedNode
 {
-    TimedNode (std::unique_ptr<Node> sourceNode, EditTimeRange t)
+    TimedNode (std::unique_ptr<Node> sourceNode, TimeRange t)
         : time (t), node (std::move (sourceNode))
     {
         for (auto n = node.get();;)
@@ -109,7 +109,7 @@ struct CombiningNode::TimedNode
         return size;
     }
     
-    EditTimeRange time;
+    TimeRange time;
 
 private:
     const std::unique_ptr<Node> node;
@@ -127,7 +127,7 @@ CombiningNode::CombiningNode (ProcessState& ps)
 
 CombiningNode::~CombiningNode() {}
 
-void CombiningNode::addInput (std::unique_ptr<Node> input, EditTimeRange time)
+void CombiningNode::addInput (std::unique_ptr<Node> input, TimeRange time)
 {
     assert (input != nullptr);
 
@@ -144,16 +144,16 @@ void CombiningNode::addInput (std::unique_ptr<Node> input, EditTimeRange time)
 
     int i;
     for (i = 0; i < inputs.size(); ++i)
-        if (inputs.getUnchecked (i)->time.start >= time.getStart())
+        if (inputs.getUnchecked (i)->time.getStart() >= time.getStart())
             break;
 
     auto tan = inputs.insert (i, new TimedNode (std::move (input), time));
 
-    jassert (time.end <= Edit::maximumLength);
+    jassert (time.getEnd() <= Edit::getMaximumEditEnd());
 
     // add the node to any groups it's near to.
-    auto start = std::max (0, combining_node_utils::timeToGroupIndex (time.start - (combining_node_utils::secondsPerGroup / 2 + 2)));
-    auto end   = std::max (0, combining_node_utils::timeToGroupIndex (time.end   + (combining_node_utils::secondsPerGroup / 2 + 2)));
+    auto start = std::max (0, combining_node_utils::timeToGroupIndex (time.getStart() - TimeDuration::fromSeconds (combining_node_utils::secondsPerGroup / 2 + 2)));
+    auto end   = std::max (0, combining_node_utils::timeToGroupIndex (time.getEnd()   + TimeDuration::fromSeconds (combining_node_utils::secondsPerGroup / 2 + 2)));
 
     while (groups.size() <= end)
         groups.add (new juce::Array<TimedNode*>());
@@ -164,7 +164,7 @@ void CombiningNode::addInput (std::unique_ptr<Node> input, EditTimeRange time)
 
         int j;
         for (j = 0; j < g->size(); ++j)
-            if (g->getUnchecked (j)->time.start >= time.start)
+            if (g->getUnchecked (j)->time.getStart() >= time.getStart())
                 break;
 
         jassert (tan != nullptr);
@@ -235,9 +235,9 @@ void CombiningNode::process (ProcessContext& pc)
     {
         for (auto tan : *g)
         {
-            if (tan->time.end > editTime.getStart())
+            if (tan->time.getEnd() > editTime.getStart())
             {
-                if (tan->time.start >= editTime.getEnd())
+                if (tan->time.getStart() >= editTime.getEnd())
                     break;
 
                 // Clear the allocated storage
@@ -264,15 +264,15 @@ size_t CombiningNode::getAllocatedBytes() const
     return size;
 }
 
-void CombiningNode::prefetchGroup (juce::Range<int64_t> referenceSampleRange, EditTimeRange editTime)
+void CombiningNode::prefetchGroup (juce::Range<int64_t> referenceSampleRange, TimeRange editTime)
 {
     if (auto g = groups[combining_node_utils::timeToGroupIndex (editTime.getStart())])
     {
         for (auto tan : *g)
         {
-            if (tan->time.end > editTime.getStart())
+            if (tan->time.getEnd() > editTime.getStart())
             {
-                if (tan->time.start >= editTime.getEnd())
+                if (tan->time.getStart() >= editTime.getEnd())
                     break;
 
                 tan->prefetchBlock (referenceSampleRange);

@@ -1112,7 +1112,7 @@ void ReWirePlugin::deinitialise()
         device->deinitialise();
 }
 
-void ReWirePlugin::prepareForNextBlock (double editTime)
+void ReWirePlugin::prepareForNextBlock (TimePosition editTime)
 {
     if (currentTempoPosition != nullptr && device != nullptr)
     {

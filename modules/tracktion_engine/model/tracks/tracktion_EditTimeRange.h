@@ -71,19 +71,31 @@ struct EditTimeRange
 */
 struct ClipPosition
 {
-    EditTimeRange time;
-    double offset = 0;
+    TimeRange time;
+    TimePosition offset;
 
-    double getStart() const             { return time.start; }
-    double getEnd() const               { return time.end; }
-    double getLength() const            { return time.getLength(); }
-    double getOffset() const            { return offset; }
-    double getStartOfSource() const     { return time.start - offset; }
+    TimePosition getStart() const             { return time.getStart(); }
+    TimePosition getEnd() const               { return time.getEnd(); }
+    TimeDuration getLength() const            { return time.getLength(); }
+    TimePosition getOffset() const            { return offset; }
+    TimePosition getStartOfSource() const     { return time.getStart() - TimeDuration::fromSeconds (offset.inSeconds()); }
 
     bool operator== (const ClipPosition& other) const  { return offset == other.offset && time == other.time; }
     bool operator!= (const ClipPosition& other) const  { return ! operator== (other); }
 
-    ClipPosition rescaled (double anchorTime, double factor) const;
+    ClipPosition rescaled (TimePosition anchorTime, double factor) const;
 };
+
+/** @temporary */
+inline TimeRange toTimeRange (EditTimeRange r)
+{
+    return { TimePosition::fromSeconds (r.getStart()), TimePosition::fromSeconds (r.getEnd()) };
+}
+
+/** @temporary */
+inline EditTimeRange toEditTimeRange (TimeRange r)
+{
+    return { r.getStart().inSeconds(), r.getEnd().inSeconds() };
+}
 
 } // namespace tracktion_engine

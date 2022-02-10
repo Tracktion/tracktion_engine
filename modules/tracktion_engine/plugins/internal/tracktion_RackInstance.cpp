@@ -310,7 +310,7 @@ void RackInstance::deinitialise()
         type->deregisterInstance (this);
 }
 
-void RackInstance::updateAutomatableParamPosition (double time)
+void RackInstance::updateAutomatableParamPosition (TimePosition time)
 {
     Plugin::updateAutomatableParamPosition (time);
 
@@ -323,7 +323,7 @@ double RackInstance::getLatencySeconds()
     return 0.0;
 }
 
-void RackInstance::prepareForNextBlock (double)
+void RackInstance::prepareForNextBlock (TimePosition)
 {
 }
 

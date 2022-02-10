@@ -837,6 +837,11 @@ double DeviceManager::getBlockSizeMs() const
     return getBlockSize() * 1000.0 / getSampleRate();
 }
 
+TimeDuration DeviceManager::getBlockLength() const
+{
+    return TimeDuration::fromSamples (getBlockSize(), getSampleRate());
+}
+
 void DeviceManager::setDefaultWaveOutDevice (int index)
 {
     if (auto wod = getWaveOutDevice (index))

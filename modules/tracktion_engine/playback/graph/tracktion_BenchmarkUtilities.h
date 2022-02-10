@@ -136,9 +136,9 @@ namespace benchmark_utilities
         //===
         if (opts.isLockFree == LockFree::yes)
         {
-            tracktion_graph::test_utilities::TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, opts.testSetup.sampleRate,opts.testSetup.blockSize,
+            tracktion_graph::test_utilities::TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, opts.testSetup.sampleRate, opts.testSetup.blockSize,
                                                                                                                                   tracktion_graph::getPoolCreatorFunction (opts.poolType)),
-                                                                                           opts.testSetup, 2, opts.edit->getLength(), false);
+                                                                                           opts.testSetup, 2, opts.edit->getLength().inSeconds(), false);
             
             if (opts.poolMemoryAllocations == PoolMemoryAllocations::yes)
                 testContext.getNodePlayer().enablePooledMemoryAllocations (true);
@@ -148,7 +148,7 @@ namespace benchmark_utilities
         else
         {
             tracktion_graph::test_utilities::TestProcess<MultiThreadedNodePlayer> testContext (std::make_unique<MultiThreadedNodePlayer> (std::move (node), processState, opts.testSetup.sampleRate, opts.testSetup.blockSize),
-                                                                                               opts.testSetup, 2, opts.edit->getLength(), false);
+                                                                                               opts.testSetup, 2, opts.edit->getLength().inSeconds(), false);
             prepareRenderAndDestroy (ut, opts.editName, description, testContext, playHeadState, opts.isMultiThreaded);
         }
         

@@ -64,7 +64,7 @@ struct MidiTimecodeReader  : private juce::MessageListener,
 
                     correctedTime = lastTime - owner.edit.getTimecodeOffset();
 
-                    const double drift = correctedTime - owner.context.getPosition();
+                    const double drift = correctedTime - owner.context.getPosition().inSeconds();
 
                     averageDrift = averageDrift * 0.9 + drift * 0.1;
                     ++averageDriftNumSamples;
@@ -73,7 +73,7 @@ struct MidiTimecodeReader  : private juce::MessageListener,
                     {
                         if (std::abs (drift) > 2.0)
                         {
-                            owner.context.postPosition (correctedTime);
+                            owner.context.postPosition (TimePosition::fromSeconds (correctedTime));
                             averageDrift = 0.0;
                             averageDriftNumSamples = 0;
                         }
@@ -271,7 +271,7 @@ struct PhysicalMidiInputDeviceInstance  : public MidiInputDeviceInstanceBase
         return timecodeReader->processMessage (message);
     }
 
-    juce::String prepareToRecord (double start, double punchIn, double sampleRate,
+    juce::String prepareToRecord (TimePosition start, TimePosition punchIn, double sampleRate,
                                   int blockSizeSamples, bool isLivePunch) override
     {
         MidiInputDeviceInstanceBase::prepareToRecord (start, punchIn, sampleRate, blockSizeSamples, isLivePunch);
@@ -294,7 +294,7 @@ struct PhysicalMidiInputDeviceInstance  : public MidiInputDeviceInstanceBase
         
         if (getPhysicalMidiInput().inputDevice != nullptr)
         {
-            getPhysicalMidiInput().masterTimeUpdate (startTime);
+            getPhysicalMidiInput().masterTimeUpdate (startTime.inSeconds());
             recording = true;
         }
 

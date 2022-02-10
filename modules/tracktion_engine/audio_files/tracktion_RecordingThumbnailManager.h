@@ -22,7 +22,7 @@ public:
         TracktionThumbnail thumb;
         juce::File file;
         const HashCode hash;
-        double punchInTime = 0;
+        TimePosition punchInTime;
 
         ~Thumbnail()
         {

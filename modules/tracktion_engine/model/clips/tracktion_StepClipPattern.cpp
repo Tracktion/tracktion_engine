@@ -21,14 +21,14 @@ StepClip::Pattern::Pattern (const Pattern& other) noexcept
 {
 }
 
-juce::String StepClip::Pattern::getName() const               { return state[IDs::name]; }
-void StepClip::Pattern::setName (const juce::String& name)    { state.setProperty (IDs::name, name, clip.getUndoManager()); }
+juce::String StepClip::Pattern::getName() const                 { return state[IDs::name]; }
+void StepClip::Pattern::setName (const juce::String& name)      { state.setProperty (IDs::name, name, clip.getUndoManager()); }
 
-int StepClip::Pattern::getNumNotes() const              { return state[IDs::numNotes]; }
-void StepClip::Pattern::setNumNotes (int n)             { state.setProperty (IDs::numNotes, n, clip.getUndoManager()); }
+int StepClip::Pattern::getNumNotes() const                      { return state[IDs::numNotes]; }
+void StepClip::Pattern::setNumNotes (int n)                     { state.setProperty (IDs::numNotes, n, clip.getUndoManager()); }
 
-double StepClip::Pattern::getNoteLength() const         { return state[IDs::noteLength]; }
-void StepClip::Pattern::setNoteLength (double n)        { state.setProperty (IDs::noteLength, n, clip.getUndoManager()); }
+BeatDuration StepClip::Pattern::getNoteLength() const           { return BeatDuration::fromBeats (static_cast<double> (state[IDs::noteLength])); }
+void StepClip::Pattern::setNoteLength (BeatDuration n)          { state.setProperty (IDs::noteLength, n.inBeats(), clip.getUndoManager()); }
 
 juce::BigInteger StepClip::Pattern::getChannel (int channel) const
 {

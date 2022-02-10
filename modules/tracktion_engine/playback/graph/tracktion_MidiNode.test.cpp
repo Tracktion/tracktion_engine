@@ -78,7 +78,7 @@ private:
             auto node = std::make_unique<tracktion_engine::MidiNode> (sequence,
                                                                       juce::Range<int>::withStartAndLength (1, 1),
                                                                       false,
-                                                                      EditTimeRange (0.0, duration),
+                                                                      TimeRange (0.0s, TimeDuration::fromSeconds (duration)),
                                                                       LiveClipLevel(),
                                                                       processState,
                                                                       EditItemID());
@@ -91,7 +91,7 @@ private:
         
         beginTest ("Offset MIDI");
         {
-            const auto editTimeRange = EditTimeRange::withStartAndLength (1.0, duration);
+            const auto editTimeRange = TimeRange (1.0s, TimeDuration::fromSeconds (duration));
             auto node = std::make_unique<tracktion_engine::MidiNode> (masterSequence,
                                                                       juce::Range<int>::withStartAndLength (1, 1),
                                                                       false,
@@ -100,13 +100,13 @@ private:
                                                                       processState,
                                                                       EditItemID());
             
-            auto testContext = createTracktionTestContext (processState, std::move (node), ts, 0, editTimeRange.getEnd());
+            auto testContext = createTracktionTestContext (processState, std::move (node), ts, 0, editTimeRange.getEnd().inSeconds());
 
             juce::MidiMessageSequence expectedSequence;
             expectedSequence.addSequence (masterSequence,
                                           1.0,
-                                          editTimeRange.getStart(),
-                                          editTimeRange.getEnd());
+                                          editTimeRange.getStart().inSeconds(),
+                                          editTimeRange.getEnd().inSeconds());
 
             expectGreaterThan (expectedSequence.getNumEvents(), 0);
             expectEquals (expectedSequence.getNumEvents(), masterSequence.getNumEvents());

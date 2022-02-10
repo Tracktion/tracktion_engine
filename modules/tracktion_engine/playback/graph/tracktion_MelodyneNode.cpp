@@ -28,8 +28,8 @@ public:
     }
 
     /** Must be called before processing audio/MIDI */
-    void setCurrentInfo (double currentTimeSeconds, bool playing,
-                         bool looping, EditTimeRange loopTimes)
+    void setCurrentInfo (TimePosition currentTimeSeconds, bool playing,
+                         bool looping, TimeRange loopTimes)
     {
         time = currentTimeSeconds;
         isPlaying = playing;
@@ -47,19 +47,19 @@ public:
         result.isPlaying        = isPlaying;
         result.isLooping        = isLooping;
         result.isRecording      = transport.isRecording();
-        result.editOriginTime   = transport.getTimeWhenStarted();
+        result.editOriginTime   = transport.getTimeWhenStarted().inSeconds();
 
         if (result.isLooping)
         {
-            loopStart->setTime (loopTimeRange.start);
+            loopStart->setTime (loopTimeRange.getStart());
             result.ppqLoopStart = loopStart->getPPQTime();
 
-            loopEnd->setTime (loopTimeRange.end);
+            loopEnd->setTime (loopTimeRange.getEnd());
             result.ppqLoopEnd   = loopEnd->getPPQTime();
         }
 
-        result.timeInSeconds    = time;
-        result.timeInSamples    = (int64_t) (time * plugin.getAudioPluginInstance()->getSampleRate());
+        result.timeInSeconds    = time.inSeconds();
+        result.timeInSamples    = toSamples (time, plugin.getAudioPluginInstance()->getSampleRate());
 
         currentPos->setTime (time);
         const auto& tempo = currentPos->getCurrentTempo();
@@ -76,9 +76,9 @@ public:
 private:
     ExternalPlugin& plugin;
     std::unique_ptr<TempoSequencePosition> currentPos, loopStart, loopEnd;
-    double time = 0;
+    TimePosition time;
     bool isPlaying = false, isLooping = false;
-    EditTimeRange loopTimeRange;
+    TimeRange loopTimeRange;
 
     AudioPlayHead::FrameRateType getFrameRate() const
     {
@@ -159,7 +159,7 @@ void MelodyneNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationI
             if (p->getSampleRate() != info.sampleRate
                  || p->getBlockSize() != info.blockSize)
             {
-                plugin->initialise ({ 0.0, info.sampleRate, info.blockSize });
+                plugin->initialise ({ TimePosition(), info.sampleRate, info.blockSize });
             }
 
             p->setPlayHead (nullptr);
@@ -201,9 +201,9 @@ void MelodyneNode::process (ProcessContext& pc)
                 const auto timelinePosition = referenceSampleRangeToSplitTimelineRange (playHead, pc.referenceSampleRange).timelineRange1.getStart();
                 const auto loopPositions = playHead.getLoopRange();
                 const auto sampleRate = pluginInstance->getSampleRate();
-                playhead->setCurrentInfo (tracktion_graph::sampleToTime (timelinePosition, sampleRate),
+                playhead->setCurrentInfo (TimePosition::fromSamples (timelinePosition, sampleRate),
                                           playHead.isPlaying(), playHead.isLooping(),
-                                          tracktion_graph::sampleToTime (loopPositions, sampleRate));
+                                          tracktion_graph::timeRangeFromSamples (loopPositions, sampleRate));
             }
 
             auto asb = tracktion_graph::toAudioBuffer (dest);

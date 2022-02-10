@@ -168,7 +168,7 @@ void VolumeAndPanPlugin::deinitialise()
 }
 
 //==============================================================================
-static float getParentVcaDb (Track& track, double time)
+static float getParentVcaDb (Track& track, TimePosition time)
 {
     float posOffset = 0.0f;
 

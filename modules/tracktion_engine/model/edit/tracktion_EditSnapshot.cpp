@@ -84,14 +84,14 @@ EditSnapshot::~EditSnapshot()
     listHolder->list->removeSnapshot (*this);
 }
 
-void EditSnapshot::setState (juce::ValueTree newState, double editLength)
+void EditSnapshot::setState (juce::ValueTree newState, TimeDuration editLength)
 {
     if (state.getReferenceCount() == 1)
         state = std::move (newState);
     else
         state = newState.createCopy();
 
-    length = editLength;
+    length = editLength.inSeconds();
 }
 
 bool EditSnapshot::isValid() const
@@ -227,7 +227,7 @@ void EditSnapshot::refreshFromProjectItem (ProjectItem::Ptr pi)
         return;
 
     name = pi->getName();
-    setState (newState, pi->getLength());
+    setState (newState, TimeDuration::fromSeconds (pi->getLength()));
     refreshFromState();
 }
 

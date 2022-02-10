@@ -37,7 +37,7 @@ public:
     Edit& getEdit() const;
 
     /** Creates a tree to prepresent a TempoSetting. */
-    static juce::ValueTree create (double startBeat, double bpm, float curve);
+    static juce::ValueTree create (BeatPosition startBeat, double bpm, float curve);
 
     /** Minimum BPM a setting can have. */
     static constexpr double minBPM = 20.0;
@@ -51,7 +51,7 @@ public:
 
     //==============================================================================
     /** Returns the start beat of the setting. */
-    double getStartBeat() const     { return startBeatNumber; }
+    BeatPosition getStartBeat() const     { return startBeatNumber; }
 
     /** Returns the BPM of the setting. */
     double getBpm() const           { return bpm; }
@@ -60,14 +60,14 @@ public:
     float getCurve() const          { return curve; }
 
     /** Returns the start time in seconds of the tempo setting. */
-    double getStartTime() const;
+    TimePosition getStartTime() const;
 
     /** Sets the properties of this tempo setting.
         @param remapEditPositions   If true, this will adjust any Edit items start/end
                                     positions so they fall on the same beat as they
                                     currently do.
     */
-    void set (double startBeatNum, double newBpm, float newCurve, bool remapEditPositions);
+    void set (BeatPosition, double newBpm, float newCurve, bool remapEditPositions);
 
     /** Sets the BPM of this tempo setting. */
     void setBpm (double newBpm);
@@ -79,7 +79,7 @@ public:
     */
     void setCurve (float curve);
 
-    void setStartBeat (double newStartBeat);
+    void setStartBeat (BeatPosition);
 
     /** Removes the TempoSetting from the sequence. */
     void removeFromEdit();
@@ -88,7 +88,7 @@ public:
     /** Returns the approximate length of one beat based on the bpm and matching
         time sig denonimator.
     */
-    double getApproxBeatLength() const; // doesn't take into account ramping, etc
+    TimeDuration getApproxBeatLength() const; // doesn't take into account ramping, etc
 
     /** Returns the previous tempo setting in the sequence. */
     TempoSetting* getPreviousTempo() const;
@@ -101,12 +101,12 @@ public:
     TempoSequence& ownerSequence;
     juce::ValueTree state;
 
-    juce::CachedValue<double> startBeatNumber;
+    juce::CachedValue<BeatPosition> startBeatNumber;
     juce::CachedValue<double> bpm;
     juce::CachedValue<float> curve;
 
     /** @internal */
-    double startTime = 0; // (updated by TempoSequence)
+    TimePosition startTime; // (updated by TempoSequence)
 };
 
 } // namespace tracktion_engine

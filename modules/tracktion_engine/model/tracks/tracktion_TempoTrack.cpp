@@ -42,17 +42,17 @@ int TempoTrack::indexOfTrackItem (TrackItem* ti) const
     return buildTrackItemList().indexOf (ti);
 }
 
-int TempoTrack::getIndexOfNextTrackItemAt (double time)
+int TempoTrack::getIndexOfNextTrackItemAt (TimePosition time)
 {
     return findIndexOfNextItemAt (buildTrackItemList(), time);
 }
 
-TrackItem* TempoTrack::getNextTrackItemAt (double time)
+TrackItem* TempoTrack::getNextTrackItemAt (TimePosition time)
 {
     return getTrackItem (getIndexOfNextTrackItemAt (time));
 }
 
-void TempoTrack::insertSpaceIntoTrack (double time, double amountOfSpace)
+void TempoTrack::insertSpaceIntoTrack (TimePosition time, TimeDuration amountOfSpace)
 {
     Track::insertSpaceIntoTrack (time, amountOfSpace);
 

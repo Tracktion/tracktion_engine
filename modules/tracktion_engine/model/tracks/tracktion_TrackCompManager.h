@@ -46,11 +46,11 @@ public:
         juce::ValueTree state;
 
         EditItemID getTrack() const      { return track; }
-        double getEnd() const            { return end; }
+        TimePosition getEnd() const      { return end; }
 
     private:
         EditItemID track;
-        double end;
+        TimePosition end;
 
         void updateTrack();
         void updateEnd();
@@ -80,11 +80,11 @@ public:
 
         TimeFormat getTimeFormat() const noexcept       { return timeFormat; }
 
-        void setTimeFormat (TimeFormat t);
+        void setTimeFormat (TimeFormat);
 
-        static juce::Array<EditTimeRange> getMuteTimes (const juce::Array<EditTimeRange>& nonMuteTimes);
-        juce::Array<EditTimeRange> getNonMuteTimes (Track&, double crossfadeTime) const;
-        EditTimeRange getTimeRange() const;
+        static juce::Array<TimeRange> getMuteTimes (const juce::Array<TimeRange>& nonMuteTimes);
+        juce::Array<TimeRange> getNonMuteTimes (Track&, double crossfadeTime) const;
+        TimeRange getTimeRange() const;
 
         void setName (const juce::String&);
 
@@ -94,22 +94,22 @@ public:
         void setSectionTrack (CompSection&, const Track::Ptr&);
         void removeSection (CompSection&);
 
-        CompSection* moveSectionToEndAt (CompSection*, double newEndTime);
-        CompSection* moveSection (CompSection*, double timeDelta);
-        CompSection* moveSectionEndTime (CompSection*, double newTime);
+        CompSection* moveSectionToEndAt (CompSection*, TimePosition newEndTime);
+        CompSection* moveSection (CompSection*, TimeDuration timeDelta);
+        CompSection* moveSectionEndTime (CompSection*, TimePosition newTime);
 
-        int removeSectionsWithinRange (EditTimeRange timeRange, CompSection* sectionToKeep);
-        juce::ValueTree addSection (EditItemID trackID, double endTime, juce::UndoManager*);
-        CompSection* addSection (Track::Ptr, double endTime);
-        CompSection* splitSectionAtTime (double time);
+        int removeSectionsWithinRange (TimeRange, CompSection* sectionToKeep);
+        juce::ValueTree addSection (EditItemID trackID, TimePosition endTime, juce::UndoManager*);
+        CompSection* addSection (Track::Ptr, TimePosition endTime);
+        CompSection* splitSectionAtTime (TimePosition);
 
-        CompSection* findSectionWithEdgeTimeWithin (const Track::Ptr&, EditTimeRange timeRange, bool& startEdge) const;
-        CompSection* findSectionAtTime (const Track::Ptr&, double time) const;
+        CompSection* findSectionWithEdgeTimeWithin (const Track::Ptr&, TimeRange, bool& startEdge) const;
+        CompSection* findSectionAtTime (const Track::Ptr&, TimePosition) const;
 
         struct Section
         {
             CompSection* compSection;
-            EditTimeRange timeRange;
+            TimeRange timeRange;
         };
 
         juce::Array<Section> getSectionsForTrack (const Track::Ptr&) const;

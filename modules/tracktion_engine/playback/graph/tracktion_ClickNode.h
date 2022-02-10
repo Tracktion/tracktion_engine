@@ -29,20 +29,20 @@ class ClickGenerator
 public:
     //==============================================================================
     /** Creates a click generator for an Edit. */
-    ClickGenerator (Edit&, bool isMidi, double endTime);
+    ClickGenerator (Edit&, bool isMidi, TimePosition endTime);
 
     /** Prepares a ClickGenerator to be played.
         Must be called before processBlock
     */
-    void prepareToPlay (double sampleRate, double startTime);
+    void prepareToPlay (double sampleRate, TimePosition startTime);
 
     /** Adds clicks to a block of audio and MIDI for a given time range. */
-    void processBlock (choc::buffer::ChannelArrayView<float>*, MidiMessageArray*, EditTimeRange);
+    void processBlock (choc::buffer::ChannelArrayView<float>*, MidiMessageArray*, TimeRange);
 
 private:
     const Edit& edit;
     bool midi = false;
-    juce::Array<double> beatTimes;
+    juce::Array<TimePosition> beatTimes;
     juce::BigInteger loudBeats;
     int currentBeat = 0;
 
@@ -51,7 +51,7 @@ private:
     int bigClickMidiNote = 37, littleClickMidiNote = 76;
 
     //==============================================================================
-    bool isMutedAtTime (double time) const;
+    bool isMutedAtTime (TimePosition) const;
 };
 
 

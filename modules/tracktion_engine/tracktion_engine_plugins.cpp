@@ -21,6 +21,8 @@
 
 #include <atomic>
 #include <numeric>
+#include <chrono>
+using namespace std::literals;
 
 #if TRACKTION_UNIT_TESTS
  #include <tracktion_graph/tracktion_graph_TestConfig.h>

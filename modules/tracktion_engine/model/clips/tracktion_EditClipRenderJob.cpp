@@ -413,7 +413,7 @@ bool EditRenderJob::generateSilence (const juce::File& fileToWriteTo)
         return false;
 
     os.release();
-    auto numToDo = (SampleCount) (params.time.getLength() * params.sampleRateForAudio);
+    auto numToDo = (SampleCount) tracktion_graph::toSamples (params.time.getLength(), params.sampleRateForAudio);
     auto blockSize = std::min (4096, (int) numToDo);
     SampleCount numDone = 0;
 

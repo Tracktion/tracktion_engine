@@ -106,7 +106,7 @@ struct BreakpointOscillatorModifier::BreakpointOscillatorModifierTimer    : publ
     {
     }
 
-    void updateStreamTime (double editTime, int numSamples) override
+    void updateStreamTime (TimePosition editTime, int numSamples) override
     {
         using namespace ModifierCommon;
         const double blockLength = numSamples / modifier.getSampleRate();
@@ -123,7 +123,7 @@ struct BreakpointOscillatorModifier::BreakpointOscillatorModifierTimer    : publ
             ramp.setDuration (durationPerPattern);
 
             if (syncTypeThisBlock == transport)
-                ramp.setPosition (std::fmod ((float) editTime, durationPerPattern));
+                ramp.setPosition (std::fmod ((float) editTime.inSeconds(), durationPerPattern));
 
             modifier.setPhase (ramp.getProportion());
 
@@ -139,7 +139,7 @@ struct BreakpointOscillatorModifier::BreakpointOscillatorModifierTimer    : publ
             if (syncTypeThisBlock == transport)
             {
                 auto editTimeInBeats = (float) (currentTempo.startBeatInEdit
-                                                 + (editTime - currentTempo.startTime) * currentTempo.beatsPerSecond);
+                                                 + (editTime.inSeconds() - currentTempo.startTime) * currentTempo.beatsPerSecond);
                 auto bars = (editTimeInBeats / currentTempo.numerator) * rateThisBlock;
 
                 if (rateTypeThisBlock >= fourBars && rateTypeThisBlock <= sixtyFourthD)

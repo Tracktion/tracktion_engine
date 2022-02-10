@@ -27,44 +27,44 @@ static std::unique_ptr<MidiList> createLoopRangeDefinesAllRepetitionsSequence (M
 
     for (int i = 0; i < loopTimes; ++i)
     {
-        const double loopPos = loopLengthBeats * i;
-        const double nextLoopPos = loopLengthBeats * (i + 1);
+        const auto loopPos = loopLengthBeats * i;
+        const auto nextLoopPos = loopLengthBeats * (i + 1);
 
         // add the midi notes
         for (auto note : notes)
         {
-            double start  = (note->getStartBeat() - loopStartBeats) + loopPos;
-            double length = note->getLengthBeats();
+            auto start  = (note->getStartBeat() - loopStartBeats) + loopPos;
+            auto length = note->getLengthBeats();
 
             if (start < loopPos)
             {
-                length -= loopPos - start;
-                start  += loopPos - start;
+                length = length - loopPos - start;
+                start  = start + loopPos - start;
             }
 
             if (start + length > nextLoopPos)
-                length -= (start + length) - nextLoopPos;
+                length = length - (start + length) - nextLoopPos;
 
-            if (start >= loopPos && start < nextLoopPos && length > 0)
-                v.addChild (MidiNote::createNote (*note, start, length), -1, nullptr);
+            if (start >= loopPos && start < nextLoopPos && length > BeatDuration())
+                v.addChild (MidiNote::createNote (*note, toPosition (start), length), -1, nullptr);
         }
 
         // add the sysex
         for (auto oldEvent : sysex)
         {
-            const double start = (oldEvent->getBeatPosition() - loopStartBeats) + loopPos;
+            const auto start = (oldEvent->getBeatPosition() - loopStartBeats) + loopPos;
 
             if (start >= loopPos && start < nextLoopPos)
-                v.addChild (MidiSysexEvent::createSysexEvent (*oldEvent, start), -1, nullptr);
+                v.addChild (MidiSysexEvent::createSysexEvent (*oldEvent, toPosition (start)), -1, nullptr);
         }
 
         // add the controller
         for (auto oldEvent : controllers)
         {
-            const double start = (oldEvent->getBeatPosition() - loopStartBeats) + loopPos;
+            const auto start = (oldEvent->getBeatPosition() - loopStartBeats) + loopPos;
 
             if (start >= loopPos && start < nextLoopPos)
-                v.addChild (MidiControllerEvent::createControllerEvent (*oldEvent, start), -1, nullptr);
+                v.addChild (MidiControllerEvent::createControllerEvent (*oldEvent, toPosition (start)), -1, nullptr);
         }
     }
 
@@ -98,9 +98,9 @@ MidiClip::MidiClip (const juce::ValueTree& v, EditItemID id, ClipTrack& targetTr
     mpeMode.referTo (state, IDs::mpeMode, um, false);
     grooveStrength.referTo (state, IDs::grooveStrength, um, 0.1f);
 
-    loopStartBeats.referTo (state, IDs::loopStartBeats, um, 0.0);
-    loopLengthBeats.referTo (state, IDs::loopLengthBeats, um, 0.0);
-    originalLength.referTo (state, IDs::originalLength, um, 0.0);
+    loopStartBeats.referTo (state, IDs::loopStartBeats, um, BeatPosition());
+    loopLengthBeats.referTo (state, IDs::loopLengthBeats, um, BeatDuration());
+    originalLength.referTo (state, IDs::originalLength, um, BeatDuration());
 
     currentTake.referTo (state, IDs::currentTake, um);
 
@@ -181,7 +181,7 @@ void MidiClip::initialise()
     speedRatio = 1.0; // not used in MIDI clips
 }
 
-void MidiClip::rescale (double pivotTimeInEdit, double factor)
+void MidiClip::rescale (TimePosition pivotTimeInEdit, double factor)
 {
     getSequence().rescale (factor, getUndoManager());
     setLoopRangeBeats ({ loopStartBeats * factor, (loopStartBeats + loopLengthBeats) * factor });
@@ -297,14 +297,14 @@ MidiClip::ScopedEventsList::~ScopedEventsList()
 }
 
 //==============================================================================
-void MidiClip::extendStart (double newStartTime)
+void MidiClip::extendStart (TimePosition newStartTime)
 {
     auto offsetNeededInBeats = edit.tempoSequence.timeToBeats (getPosition().getStart())
                                  - edit.tempoSequence.timeToBeats (newStartTime);
 
     setStart (newStartTime, false, false);
 
-    if (offsetNeededInBeats > 0)
+    if (offsetNeededInBeats > BeatDuration())
         getSequence().moveAllBeatPositions (offsetNeededInBeats, getUndoManager());
 }
 
@@ -314,20 +314,20 @@ void MidiClip::trimBeyondEnds (bool beyondStart, bool beyondEnd, juce::UndoManag
     {
         auto& sequence = getSequence();
         auto startBeats = getContentBeatAtTime (getPosition().getStart());
-        sequence.trimOutside (startBeats, Edit::maximumLength, um);
-        sequence.moveAllBeatPositions (-getContentBeatAtTime (getPosition().getStart()), um);
-        setOffset (0.0);
+        sequence.trimOutside (startBeats, BeatPosition::fromBeats (Edit::maximumLength), um);
+        sequence.moveAllBeatPositions (-toDuration (getContentBeatAtTime (getPosition().getStart())), um);
+        setOffset ({});
     }
 
     if (beyondEnd)
     {
         auto endBeats = getContentBeatAtTime (getPosition().getEnd());
-        getSequence().trimOutside (0.0, endBeats, um);
+        getSequence().trimOutside ({}, endBeats, um);
     }
 }
 
 void MidiClip::legatoNote (MidiNote& note, const juce::Array<MidiNote*>& notesToUse,
-                           const double maxEndBeat, juce::UndoManager& um)
+                           const BeatPosition maxEndBeat, juce::UndoManager& um)
 {
     // this looks rather convoluted but must account for various edge cases in order to behave in a similar way to Live
     auto noteStartBeat = note.getQuantisedStartBeat (*this);
@@ -353,16 +353,16 @@ void MidiClip::legatoNote (MidiNote& note, const juce::Array<MidiNote*>& notesTo
         {
             if (*lastInSequence == note)
             {
-                const double separation = maxEndBeat - noteStartBeat;
+                const auto separation = maxEndBeat - noteStartBeat;
                 note.setStartAndLength (note.getStartBeat(), separation, &um);
                 return;
             }
         }
     }
 
-    const double diff = nextNoteStartBeat - noteStartBeat;
+    const auto diff = nextNoteStartBeat - noteStartBeat;
 
-    if (diff > 0.0)
+    if (diff > BeatDuration())
         note.setStartAndLength (note.getStartBeat(), diff, &um);
 }
 
@@ -669,12 +669,12 @@ void MidiClip::setNumberOfLoops (int num)
 
     auto& ts = edit.tempoSequence;
     auto pos = getPosition();
-    auto newStartBeat = ts.getBeatsPerSecondAt (pos.getStart()) * pos.getOffset();
-    setLoopRangeBeats ({ newStartBeat, newStartBeat + originalLength });
+    auto newStartBeat = BeatPosition::fromBeats (pos.getOffset().inSeconds() * ts.getBeatsPerSecondAt (pos.getStart()));
+    setLoopRangeBeats ({ newStartBeat, newStartBeat + originalLength.get() });
 
-    auto endTime = ts.beatsToTime (getStartBeat() + num * originalLength);
+    auto endTime = ts.beatsToTime (getStartBeat() + originalLength.get() * num);
     setLength (endTime - pos.getStart(), true);
-    setOffset (0.0);
+    setOffset ({});
 }
 
 void MidiClip::disableLooping()
@@ -683,23 +683,23 @@ void MidiClip::disableLooping()
     {
         auto pos = getPosition();
 
-        auto offsetB = getOffsetInBeats() + loopStartBeats;
+        auto offsetB = loopStartBeats.get() + toDuration (getOffsetInBeats());
         auto lengthB = getLoopLengthBeats();
 
-        pos.time.end = std::min (getTimeOfRelativeBeat (lengthB), pos.getEnd());
-        pos.offset = getTimeOfRelativeBeat (offsetB) - pos.getStart(); // TODO: is this correct? Needs testing..
+        pos.time = pos.time.withEnd (std::min (getTimeOfRelativeBeat (lengthB), pos.getEnd()));
+        pos.offset = toPosition (getTimeOfRelativeBeat (toDuration (offsetB)) - pos.getStart()); // TODO: is this correct? Needs testing..
 
         setLoopRange ({});
         setPosition (pos);
     }
 }
 
-void MidiClip::setLoopRangeBeats (juce::Range<double> newRangeBeats)
+void MidiClip::setLoopRangeBeats (BeatRange newRangeBeats)
 {
-    jassert (newRangeBeats.getStart() >= 0);
+    jassert (newRangeBeats.getStart() >= BeatPosition());
 
-    auto newStartBeat  = std::max (0.0, newRangeBeats.getStart());
-    auto newLengthBeat = std::max (0.0, newRangeBeats.getLength());
+    auto newStartBeat  = std::max (BeatPosition(), newRangeBeats.getStart());
+    auto newLengthBeat = std::max (BeatDuration(), newRangeBeats.getLength());
 
     if (loopStartBeats != newStartBeat || loopLengthBeats != newLengthBeat)
     {
@@ -713,26 +713,26 @@ void MidiClip::setLoopRangeBeats (juce::Range<double> newRangeBeats)
     }
 }
 
-void MidiClip::setLoopRange (EditTimeRange newRange)
+void MidiClip::setLoopRange (TimeRange newRange)
 {
-    jassert (newRange.getStart() >= 0.0);
+    jassert (newRange.getStart() >= TimePosition());
 
     auto& ts = edit.tempoSequence;
     auto pos = getPosition();
-    auto newStartBeat = newRange.getStart() * ts.getBeatsPerSecondAt (pos.getStart());
+    auto newStartBeat = BeatPosition::fromBeats (newRange.getStart().inSeconds() * ts.getBeatsPerSecondAt (pos.getStart()));
     auto newLengthBeats = ts.timeToBeats (pos.getStart() + newRange.getLength()) - ts.timeToBeats (pos.getStart());
 
     setLoopRangeBeats ({ newStartBeat, newStartBeat + newLengthBeats });
 }
 
-double MidiClip::getLoopStart() const
+TimePosition MidiClip::getLoopStart() const
 {
-    return loopStartBeats / edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart());
+    return TimePosition::fromSeconds (loopStartBeats.get().inBeats() / edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart()));
 }
 
-double MidiClip::getLoopLength() const
+TimeDuration MidiClip::getLoopLength() const
 {
-    return loopLengthBeats / edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart());
+    return TimeDuration::fromSeconds (loopLengthBeats.get().inBeats() / edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart()));
 }
 
 //==============================================================================

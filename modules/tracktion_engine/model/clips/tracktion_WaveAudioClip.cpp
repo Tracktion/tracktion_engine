@@ -127,8 +127,10 @@ void WaveAudioClip::setLoopDefaults()
 }
 
 void WaveAudioClip::reassignReferencedItem (const ReferencedItem& item,
-                                            ProjectItemID newItemID, double newStartTime)
+                                            ProjectItemID newItemID, double newStartTimeSeconds)
 {
+    const auto newStartTime = TimeDuration::fromSeconds (newStartTimeSeconds);
+
     if (hasAnyTakes())
     {
         auto indexInList = getReferencedItems().indexOf (item);
@@ -157,7 +159,7 @@ void WaveAudioClip::reassignReferencedItem (const ReferencedItem& item,
     }
     else
     {
-        AudioClipBase::reassignReferencedItem (item, newItemID, newStartTime);
+        AudioClipBase::reassignReferencedItem (item, newItemID, newStartTimeSeconds);
     }
 }
 

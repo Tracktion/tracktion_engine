@@ -21,7 +21,7 @@ public:
     MidiNode (juce::MidiMessageSequence sequence,
               juce::Range<int> midiChannelNumbers,
               bool useMPE,
-              EditTimeRange editSection,
+              TimeRange editSection,
               LiveClipLevel,
               ProcessState&,
               EditItemID,
@@ -30,7 +30,7 @@ public:
     MidiNode (std::vector<juce::MidiMessageSequence> sequences,
               juce::Range<int> midiChannelNumbers,
               bool useMPE,
-              EditTimeRange editSection,
+              TimeRange editSection,
               LiveClipLevel,
               ProcessState&,
               EditItemID,
@@ -48,12 +48,13 @@ private:
     size_t currentSequence = 0;
     juce::Range<int> channelNumbers;
     bool useMPEChannelMode;
-    EditTimeRange editSection;
+    TimeRange editSection;
     LiveClipLevel clipLevel;
     EditItemID editItemID;
     std::function<bool()> shouldBeMutedDelegate = nullptr;
     
-    double sampleRate = 44100.0, timeForOneSample = 0.0;
+    double sampleRate = 44100.0;
+    TimeDuration timeForOneSample;
     int currentIndex = 0;
     MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
     bool wasMute = false, shouldCreateMessagesForTime = false;
@@ -61,9 +62,9 @@ private:
     juce::Array<juce::MidiMessage> controllerMessagesScratchBuffer;
 
     //==============================================================================
-    void createMessagesForTime (double time, MidiMessageArray&);
+    void createMessagesForTime (TimePosition, MidiMessageArray&);
     void createNoteOffs (MidiMessageArray& destination, const juce::MidiMessageSequence& source,
-                         double time, double midiTimeOffset, bool isPlaying);
+                         TimePosition, TimeDuration midiTimeOffset, bool isPlaying);
     void processSection (ProcessContext&, juce::Range<int64_t> timelineRange);
 };
 

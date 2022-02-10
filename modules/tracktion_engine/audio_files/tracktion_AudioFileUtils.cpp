@@ -213,7 +213,7 @@ SampleCount AudioFileUtils::copySectionToNewFile (Engine& e, const juce::File& s
 SampleCount AudioFileUtils::copySectionToNewFile (Engine& e,
                                                   const juce::File& sourceFile,
                                                   const juce::File& destFile,
-                                                  EditTimeRange range)
+                                                  TimeRange range)
 {
     if (range.isEmpty())
         return -1;
@@ -222,8 +222,8 @@ SampleCount AudioFileUtils::copySectionToNewFile (Engine& e,
 
     if (reader != nullptr)
         return copySection (e, reader, sourceFile, destFile,
-                            { (SampleCount) (range.getStart() * reader->sampleRate),
-                              (SampleCount) (range.getEnd()   * reader->sampleRate) });
+                            { (SampleCount) tracktion_graph::toSamples (range.getStart(),   reader->sampleRate),
+                              (SampleCount) tracktion_graph::toSamples (range.getEnd(),     reader->sampleRate) });
 
     return -1;
 }

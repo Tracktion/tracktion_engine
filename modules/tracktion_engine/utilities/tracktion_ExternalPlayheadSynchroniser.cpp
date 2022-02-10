@@ -17,7 +17,7 @@ juce::AudioPlayHead::CurrentPositionInfo getCurrentPositionInfo (Edit& edit)
     auto& transport = edit.getTransport();
     auto& tempoSequence = edit.tempoSequence;
     
-    double currentTime = transport.getCurrentPosition();
+    auto currentTime = transport.getPosition();
     
     if (auto epc = transport.getCurrentPlaybackContext())
         currentTime = epc->getPosition();
@@ -29,7 +29,7 @@ juce::AudioPlayHead::CurrentPositionInfo getCurrentPositionInfo (Edit& edit)
     info.bpm = currentDetails.bpm;
     info.timeSigNumerator = currentDetails.numerator;
     info.timeSigDenominator = currentDetails.denominator;
-    info.timeInSeconds = position.getTime();
+    info.timeInSeconds = position.getTime().inSeconds();
     info.editOriginTime = 0.0;
     info.ppqPosition = position.getPPQTime();
     info.ppqPositionOfLastBarStart = position.getPPQTimeOfBarStart();
@@ -68,24 +68,24 @@ void synchroniseEditPosition (Edit& edit, const juce::AudioPlayHead::CurrentPosi
         // We could sync to a single bar by subtracting the ppqPositionOfLastBarStart from ppqPosition here
         const double beatsSinceStart = (info.ppqPosition * info.timeSigDenominator) / 4.0;
         const double secondsPerBeat = 240.0 / (info.bpm * info.timeSigDenominator);
-        const double timeOffset = beatsSinceStart * secondsPerBeat;
+        const TimeDuration timeOffset = TimeDuration::fromSeconds (beatsSinceStart * secondsPerBeat);
         
-        const double blockSizeInSeconds = edit.engine.getDeviceManager().getBlockSizeMs() / 1000.0;
-        const double currentPositionInSeconds = epc->getPosition() + blockSizeInSeconds;
+        const TimeDuration blockSizeInSeconds = TimeDuration::fromSeconds (edit.engine.getDeviceManager().getBlockSizeMs() / 1000.0);
+        const TimePosition currentPositionInSeconds = epc->getPosition() + blockSizeInSeconds;
         // N.B we add the blockSizeInSeconds here as the playhead position will be at the end of the last block.
         // This avoids us re-syncing every block
         
         if (info.isPlaying)
         {
-            if (std::abs (timeOffset - currentPositionInSeconds) > (blockSizeInSeconds / 2.0))
-                epc->postPosition (timeOffset);
+            if (TimeDuration::fromSeconds (std::abs ((currentPositionInSeconds - timeOffset).inSeconds())) > (blockSizeInSeconds / 2.0))
+                epc->postPosition (toPosition (timeOffset));
             
             if (! epc->isPlaying())
                 epc->play();
         }
         else
         {
-            transport.setCurrentPosition (timeOffset);
+            transport.setPosition (toPosition (timeOffset));
             
             if (epc->isPlaying())
                 epc->stop();
@@ -95,7 +95,7 @@ void synchroniseEditPosition (Edit& edit, const juce::AudioPlayHead::CurrentPosi
     // Then the tempo info
     {
         TempoSequencePosition position (edit.tempoSequence);
-        position.setTime (info.timeInSeconds);
+        position.setTime (TimePosition::fromSeconds (info.timeInSeconds));
         const auto currentDetails = position.getCurrentTempo();
         const auto newBpm = info.bpm;
         const auto newNumerator = info.timeSigNumerator;

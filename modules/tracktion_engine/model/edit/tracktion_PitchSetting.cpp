@@ -53,12 +53,12 @@ ClipPosition PitchSetting::getPosition() const
     auto s = edit.tempoSequence.beatsToTime (startBeat);
 
     if (auto nextPitch = ps.getPitch (ps.indexOfPitch (this) + 1))
-        return { { s, nextPitch->getPosition().getStart() }, 0 };
+        return { { s, nextPitch->getPosition().getStart() }, TimePosition() };
 
-    return { { s, s + 1.0 }, 0 };
+    return { { s, s + TimeDuration::fromSeconds (1.0) }, TimePosition() };
 }
 
-void PitchSetting::setStartBeat (double beat)
+void PitchSetting::setStartBeat (BeatPosition beat)
 {
     startBeat = beat;
     edit.pitchSequence.sortEvents();

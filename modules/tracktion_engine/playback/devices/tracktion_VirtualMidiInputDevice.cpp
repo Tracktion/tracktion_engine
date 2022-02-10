@@ -30,7 +30,7 @@ struct VirtualMidiInputDeviceInstance  : public MidiInputDeviceInstanceBase
 
         if (! recording)
         {
-            getVirtualMidiInput().masterTimeUpdate (startTime);
+            getVirtualMidiInput().masterTimeUpdate (startTime.inSeconds());
             recording = true;
         }
 

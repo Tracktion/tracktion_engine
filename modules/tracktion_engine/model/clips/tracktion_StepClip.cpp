@@ -210,9 +210,9 @@ juce::String StepClip::getSelectableDescription()
 }
 
 //==============================================================================
-juce::Array<double> StepClip::getBeatTimesOfPatternStarts() const
+juce::Array<BeatPosition> StepClip::getBeatTimesOfPatternStarts() const
 {
-    juce::Array<double> starts;
+    juce::Array<BeatPosition> starts;
 
     auto& tempoSequence = edit.tempoSequence;
     auto pos = getPosition();
@@ -226,15 +226,15 @@ juce::Array<double> StepClip::getBeatTimesOfPatternStarts() const
     {
         starts.add (patternStartBeats);
 
-        double numBeats = 4.0;
+        auto numBeats = BeatDuration::fromBeats (4.0);
 
         if (auto p = getPatternInstance (i, repeatSeq))
         {
             auto pattern = p->getPattern();
-            numBeats = pattern.getNumNotes() * (pattern.getNoteLength() * ratio);
+            numBeats = pattern.getNoteLength() * pattern.getNumNotes() * ratio;
         }
 
-        patternStartBeats += numBeats;
+        patternStartBeats = patternStartBeats + numBeats;
 
         if (patternStartBeats >= endBeat)
             break;
@@ -243,26 +243,26 @@ juce::Array<double> StepClip::getBeatTimesOfPatternStarts() const
     return starts;
 }
 
-double StepClip::getStartBeatOf (PatternInstance* instance)
+BeatPosition StepClip::getStartBeatOf (PatternInstance* instance)
 {
     if (instance == nullptr
         || (instance != nullptr && ! patternInstanceList.contains (instance)))
     {
         jassertfalse;
-        return 0.0;
+        return BeatPosition();
     }
 
     auto index = patternInstanceList.indexOf (instance);
     return getBeatTimesOfPatternStarts()[index];
 }
 
-double StepClip::getEndBeatOf (PatternInstance* instance)
+BeatPosition StepClip::getEndBeatOf (PatternInstance* instance)
 {
     if (instance == nullptr
         || (instance != nullptr && ! patternInstanceList.contains (instance)))
     {
         jassertfalse;
-        return 0.0;
+        return BeatPosition();
     }
 
     auto index = patternInstanceList.indexOf (instance) + 1;
@@ -273,22 +273,22 @@ void StepClip::resizeClipForPatternInstances()
 {
     if (patternInstanceList.getLast().get() != nullptr)
     {
-        double end = -getOffsetInBeats();
+        auto end = -getOffsetInBeats();
 
         auto ratio              = 1.0 / speedRatio;
 
         for (auto p : patternInstanceList)
         {
             auto pattern = p->getPattern();
-            end += pattern.getNumNotes() * (pattern.getNoteLength() * ratio);
+            end = end + pattern.getNoteLength() * pattern.getNumNotes() * ratio;
         }
 
-        if (end > getLengthInBeats())
+        if (end > toPosition (getLengthInBeats()))
         {
             auto& ts = edit.tempoSequence;
             auto pos = getPosition();
             auto startBeat = ts.timeToBeats (pos.getStart());
-            auto endBeat = startBeat + end;
+            auto endBeat = startBeat + toDuration (end);
 
             setEnd (ts.beatsToTime (endBeat), false);
         }
@@ -302,13 +302,12 @@ int StepClip::getBeatsPerBar()
 
 void StepClip::generateMidiSequenceForChannels (juce::MidiMessageSequence& result,
                                                 bool convertToSeconds, const Pattern& pattern,
-                                                double startBeat, double clipStartBeat,
-                                                double clipEndBeat, const TempoSequence& tempoSequence)
+                                                BeatPosition startBeat, BeatPosition clipStartBeat,
+                                                BeatPosition clipEndBeat, const TempoSequence& tempoSequence)
 {
     CRASH_TRACER
 
     auto pos = getPosition();
-    auto clipStartTime = convertToSeconds ? pos.getStart() : clipStartBeat;
     auto ratio = 1.0 / speedRatio;
 
     auto& gtm = edit.engine.getGrooveTemplateManager();
@@ -353,29 +352,32 @@ void StepClip::generateMidiSequenceForChannels (juce::MidiMessageSequence& resul
                     jassert (gate > 0.0);
 
                     auto start  = std::max (clipStartBeat, startBeat);
-                    auto end    = std::min (clipEndBeat - 0.0001, beatEnd);
+                    auto end    = std::min (clipEndBeat - BeatDuration::fromBeats (0.0001), beatEnd);
 
-                    if (end > (start + 0.0001))
+                    double eventStart = start.inBeats();
+                    double eventEnd = end.inBeats();
+
+                    if (end > (start + BeatDuration::fromBeats (0.0001)))
                     {
                         auto& c = *getChannels().getUnchecked (f);
 
                         if (convertToSeconds)
                         {
-                            start = tempoSequence.beatsToTime (start) - clipStartTime;
-                            end = tempoSequence.beatsToTime (end) - clipStartTime;
+                            const auto startTime = tempoSequence.beatsToTime (start) - toDuration (pos.getStart());
+                            const auto endTime = tempoSequence.beatsToTime (end) - toDuration (pos.getStart());
 
                             if (auto gt = gtm.getTemplateByName (c.grooveTemplate))
                             {
-                                start = gt->editTimeToGroovyTime (start, c.grooveStrength, edit);
-                                end = gt->editTimeToGroovyTime (end, c.grooveStrength, edit);
+                                eventStart = gt->editTimeToGroovyTime (startTime, c.grooveStrength, edit).inSeconds();
+                                eventEnd = gt->editTimeToGroovyTime (endTime, c.grooveStrength, edit).inSeconds();
                             }
                         }
                         else
                         {
                             if (auto gt = gtm.getTemplateByName (c.grooveTemplate))
                             {
-                                start = gt->beatsTimeToGroovyTime (start, c.grooveStrength);
-                                end = gt->beatsTimeToGroovyTime (end, c.grooveStrength);
+                                eventStart = gt->beatsTimeToGroovyTime (start, c.grooveStrength).inBeats();
+                                eventEnd = gt->beatsTimeToGroovyTime (end, c.grooveStrength).inBeats();
                             }
                         }
 
@@ -383,8 +385,8 @@ void StepClip::generateMidiSequenceForChannels (juce::MidiMessageSequence& resul
                         const float vel = cache->getVelocity (i) / 127.0f;
                         jassert (c.channel.get().isValid());
                         auto chan = c.channel.get().getChannelNumber();
-                        result.addEvent (juce::MidiMessage::noteOn  (chan, c.noteNumber, vel * channelVelScale), start);
-                        result.addEvent (juce::MidiMessage::noteOff (chan, c.noteNumber, (uint8_t) juce::jlimit (0, 127, c.noteValue.get())), end);
+                        result.addEvent (juce::MidiMessage::noteOn  (chan, c.noteNumber, vel * channelVelScale), eventStart);
+                        result.addEvent (juce::MidiMessage::noteOff (chan, c.noteNumber, (uint8_t) juce::jlimit (0, 127, c.noteValue.get())), eventEnd);
                     }
                 }
             }
@@ -426,7 +428,7 @@ void StepClip::generateMidiSequence (juce::MidiMessageSequence& result,
 
             if (instance != nullptr)
             {
-                result.addTimeToMessages (-tempoSequence.beatsToTime (clipStartBeat + startBeat));
+                result.addTimeToMessages (-tempoSequence.beatsToTime (clipStartBeat + toDuration (startBeat)).inSeconds());
                 break;
             }
         }

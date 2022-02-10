@@ -281,7 +281,7 @@ bool EditFileOperations::save (bool warnOfFailure,
     tempFile.deleteFile();
 
     if (auto item = edit.engine.getProjectManager().getProjectItem (edit))
-        item->setLength (edit.getLength());
+        item->setLength (edit.getLength().inSeconds());
 
     edit.resetChangedStatus();
     return true;

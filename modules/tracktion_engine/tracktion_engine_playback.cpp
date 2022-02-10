@@ -56,6 +56,7 @@ extern "C"
 #endif
 
 #include <thread>
+using namespace std::literals;
 
 #include "playback/tracktion_MPEStartTrimmer.h"
 

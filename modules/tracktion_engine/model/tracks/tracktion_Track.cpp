@@ -429,7 +429,7 @@ bool Track::isAChildOf (const Track& t) const
     return false;
 }
 
-void Track::insertSpaceIntoTrack (double time, double amountOfSpace)
+void Track::insertSpaceIntoTrack (TimePosition time, TimeDuration amountOfSpace)
 {
     // shift up any automation curves too..
     for (auto p : pluginList)

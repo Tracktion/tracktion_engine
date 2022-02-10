@@ -29,7 +29,7 @@ public:
 
     juce::String getName() override;
 
-    ClipPosition getPosition() const override           { return { range, 0 }; }
+    ClipPosition getPosition() const override           { return { range, TimePosition() }; }
     Track* getTrack() const override                    { return track; }
 
     bool moveToTrack (Track&);
@@ -51,7 +51,7 @@ public:
 
     bool isGroupCollection() const                      { return getFolderTrack() == nullptr; }
 
-    EditTimeRange range;
+    TimeRange range;
 
 private:
     Track* track;
