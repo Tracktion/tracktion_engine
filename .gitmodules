@@ -1,4 +1,4 @@
 [submodule "modules/juce"]
 	path = modules/juce
-url=https://github.com/mayk-it/JUCE.git
+url=https://github.com/WeAreROLI/JUCE.git
 	branch = develop
