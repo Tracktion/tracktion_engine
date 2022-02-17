@@ -172,7 +172,6 @@ function buildExample()
 
 # First build and test these examples
 buildExample "TestRunner" RUN_EXAMPLE=1
-buildExample "tracktion_graph_TestRunner" RUN_EXAMPLE=1
 buildExample "Benchmarks" RUN_EXAMPLE=1 DISABLE_TOOLS=1
 
 # Then just build these examples (don't build with tooling as they won't be run)
