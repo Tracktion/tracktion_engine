@@ -28,7 +28,7 @@ namespace IDs
     #undef DECLARE_ID
 }
 
-namespace te = tracktion_engine;
+namespace te = tracktion;
 
 //==============================================================================
 class EditViewState
