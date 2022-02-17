@@ -191,8 +191,6 @@ private:
 //==============================================================================
 namespace RackNodeBuilder
 {
-    namespace te = tracktion_engine;
-
     inline tracktion::graph::ConnectedNode& getConnectedNode (tracktion::graph::Node& pluginOrModifierNode)
     {
         tracktion::graph::Node* node = dynamic_cast<PluginNode*> (&pluginOrModifierNode);
@@ -238,16 +236,16 @@ namespace RackNodeBuilder
         return *dynamic_cast<tracktion::graph::SummingNode*> (summingNode);
     }
 
-    struct RackConnection
+    struct RackConnectionData
     {
-        te::EditItemID sourceID, destID;
+        EditItemID sourceID, destID;
         int sourcePin = -1, destPin = -1;
     };
 
     /** Represents all the pin connections between a single source and destination. */
     struct RackPinConnections
     {
-        te::EditItemID sourceID, destID;
+        EditItemID sourceID, destID;
         std::vector<std::pair<int /*source pin*/, int /*dest pin*/>> pins;
     };
 
@@ -273,7 +271,7 @@ namespace RackNodeBuilder
         audio channels start from pin 0.
         Plugin nodes always have a MIDI input pin so audio always starts from pin 1.
     */
-    static inline int getNumMidiInputPins (const std::vector<std::unique_ptr<tracktion::graph::Node>>& itemNodes, te::EditItemID itemID)
+    static inline int getNumMidiInputPins (const std::vector<std::unique_ptr<tracktion::graph::Node>>& itemNodes, EditItemID itemID)
     {
         for (auto& node : itemNodes)
             if (auto modifierNode = dynamic_cast<ModifierNode*> (node.get()))
@@ -283,7 +281,7 @@ namespace RackNodeBuilder
         return 1;
     }
 
-    static inline std::vector<std::pair<int, int>> createPinConnections (std::vector<RackConnection> connections)
+    static inline std::vector<std::pair<int, int>> createPinConnections (std::vector<RackConnectionData> connections)
     {
         // Check all the connections are from a single source/dest pair
        #if JUCE_DEBUG
@@ -318,7 +316,7 @@ namespace RackNodeBuilder
         return channelMap;
     }
 
-    static inline std::unique_ptr<tracktion::graph::Node> createChannelRemappingNode (te::EditItemID sourceID,
+    static inline std::unique_ptr<tracktion::graph::Node> createChannelRemappingNode (EditItemID sourceID,
                                                                                      ChannelMap channelMap,
                                                                                      std::shared_ptr<InputProvider> inputProvider,
                                                                                      const std::vector<std::unique_ptr<tracktion::graph::Node>>& pluginNodes)
@@ -364,10 +362,10 @@ namespace RackNodeBuilder
                                                                                  channelMap.channels, channelMap.passMidi);
     }
 
-    static inline std::vector<RackConnection> getConnectionsBetween (juce::Array<const te::RackConnection*> allConnections,
-                                                                     te::EditItemID sourceID, te::EditItemID destID)
+    static inline std::vector<RackConnectionData> getConnectionsBetween (juce::Array<const RackConnection*> allConnections,
+                                                                         EditItemID sourceID, EditItemID destID)
     {
-        std::vector<RackConnection> connections;
+        std::vector<RackConnectionData> connections;
         
         for (auto c : allConnections)
             if (c->sourceID == sourceID && c->destID == destID)
@@ -376,11 +374,11 @@ namespace RackNodeBuilder
         return connections;
     }
 
-    static inline std::vector<std::vector<RackConnection>> getConnectionsToOrFrom (te::RackType& rack, te::EditItemID itemID, bool itemIsSource)
+    static inline std::vector<std::vector<RackConnectionData>> getConnectionsToOrFrom (RackType& rack, EditItemID itemID, bool itemIsSource)
     {
-        std::vector<std::vector<RackConnection>> connections;
+        std::vector<std::vector<RackConnectionData>> connections;
         auto allConnections = rack.getConnections();
-        std::vector<std::pair<te::EditItemID, te::EditItemID>> sourcesDestsDone;
+        std::vector<std::pair<EditItemID, EditItemID>> sourcesDestsDone;
         
         for (auto c : allConnections)
         {
@@ -410,18 +408,18 @@ namespace RackNodeBuilder
         return connections;
     }
 
-    static inline std::vector<std::vector<RackConnection>> getConnectionsTo (te::RackType& rack, te::EditItemID destID)
+    static inline std::vector<std::vector<RackConnectionData>> getConnectionsTo (RackType& rack, EditItemID destID)
     {
         return getConnectionsToOrFrom (rack, destID, false);
     }
 
-    static inline std::vector<std::vector<RackConnection>> getConnectionsFrom (te::RackType& rack, te::EditItemID sourceID)
+    static inline std::vector<std::vector<RackConnectionData>> getConnectionsFrom (RackType& rack, EditItemID sourceID)
     {
         return getConnectionsToOrFrom (rack, sourceID, true);
     }
 
     //==============================================================================
-    std::unique_ptr<tracktion::graph::Node> createRackNodeChannelRemappingNode (te::RackType& rack,
+    std::unique_ptr<tracktion::graph::Node> createRackNodeChannelRemappingNode (RackType& rack,
                                                                                double sampleRate, int blockSize,
                                                                                std::shared_ptr<InputProvider> inputProvider,
                                                                                tracktion::graph::PlayHeadState* playHeadState,
@@ -455,7 +453,7 @@ namespace RackNodeBuilder
         // Iterate all the plugin/modifiers and find all the inputs to them grouped by input
         for (auto& node : itemNodes)
         {
-            te::EditItemID itemID;
+            EditItemID itemID;
 
             if (auto pluginNode = dynamic_cast<PluginNode*> (node.get()))
                 itemID = pluginNode->getPlugin().itemID;
@@ -505,7 +503,7 @@ namespace RackNodeBuilder
         return outputNode;
     }
 
-    std::unique_ptr<tracktion::graph::Node> createRackNodeConnectedNode (te::RackType& rack,
+    std::unique_ptr<tracktion::graph::Node> createRackNodeConnectedNode (RackType& rack,
                                                                         double sampleRate, int blockSize,
                                                                         std::unique_ptr<tracktion::graph::Node> inputNodeToUse,
                                                                         std::shared_ptr<InputProvider> inputProvider,
@@ -648,7 +646,7 @@ namespace RackNodeBuilder
 
     //==============================================================================
     std::unique_ptr<tracktion::graph::Node> createRackNode (Algorithm algorithm,
-                                                           te::RackType& rack,
+                                                           RackType& rack,
                                                            double sampleRate, int blockSize,
                                                            std::shared_ptr<InputProvider> inputProvider,
                                                            tracktion::graph::PlayHeadState* playHeadState,
