@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 class MidiSysexEvent
@@ -49,4 +49,4 @@ private:
     JUCE_LEAK_DETECTOR (MidiSysexEvent)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 AutomatableEditItem::AutomatableEditItem (Edit& ed, const juce::ValueTree& v)
@@ -277,4 +277,4 @@ void AutomatableEditItem::removeParameterListChangeListener (ParameterListChange
         parameterChangeListeners->listeners.remove (l);
 }
 
-}
+}} // namespace tracktion { inline namespace engine

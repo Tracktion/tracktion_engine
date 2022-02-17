@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 
@@ -339,4 +339,4 @@ double SpeedRampWaveNode::rescale (AudioFadeCurve::Type t, double proportion, bo
     }
 }
 
-}
+}} // namespace tracktion { inline namespace engine

@@ -13,7 +13,7 @@
 #include "tracktion_AudioNode.h"
 
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 class TimedMutingAudioNode  : public SingleInputAudioNode
@@ -107,4 +107,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TimedMutingAudioNode)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

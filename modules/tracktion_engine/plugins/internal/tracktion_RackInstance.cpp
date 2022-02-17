@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 struct RackInputAutomatableParameter   : public AutomatableParameter
@@ -382,4 +382,4 @@ juce::String RackInstance::getOutputName (Channel c)
     return juce::String (ouput) + ". " + type->getOutputNames()[ouput];
 }
 
-}
+}} // namespace tracktion { inline namespace engine

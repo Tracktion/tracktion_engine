@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 TrackMuteState::TrackMuteState (Track& t, bool muteForInputsWhenRecording, bool processMidiWhenMuted_)
@@ -158,4 +158,4 @@ void TrackMutingNode::rampBlock (choc::buffer::ChannelArrayView<float> view, flo
     buffer.applyGainRamp (0, buffer.getNumSamples(), start, end);
 }
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

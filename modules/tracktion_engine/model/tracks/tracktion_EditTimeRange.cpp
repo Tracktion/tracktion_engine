@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 EditTimeRange::EditTimeRange (double s, double e) : start (s), end (e)
@@ -118,4 +118,4 @@ ClipPosition ClipPosition::rescaled (TimePosition anchorTime, double factor) con
     return { time.rescaled (anchorTime, factor), TimePosition::fromSeconds (offset.inSeconds() * factor) };
 }
 
-}
+}} // namespace tracktion { inline namespace engine

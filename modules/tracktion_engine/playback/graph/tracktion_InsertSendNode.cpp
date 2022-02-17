@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -132,4 +132,4 @@ void InsertSendNode::process (ProcessContext& pc)
     owner.fillSendBuffer (&pc.buffers.audio, &pc.buffers.midi);
 }
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

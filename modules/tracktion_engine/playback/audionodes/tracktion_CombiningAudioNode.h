@@ -13,7 +13,7 @@
 #include "tracktion_AudioNode.h"
 
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 /** An AudioNode that mixes a sequence of clips of other nodes.
@@ -71,4 +71,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CombiningAudioNode)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 juce::File getEditFileFromProjectManager (Edit& edit)
@@ -972,4 +972,4 @@ juce::Array<MacroParameterElement*> getAllMacroParameterElements (const Edit& ed
     return elements;
 }
 
-}
+}} // namespace tracktion { inline namespace engine

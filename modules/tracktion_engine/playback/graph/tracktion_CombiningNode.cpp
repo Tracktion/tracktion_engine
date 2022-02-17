@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 namespace combining_node_utils
@@ -281,4 +281,4 @@ void CombiningNode::prefetchGroup (juce::Range<int64_t> referenceSampleRange, Ti
     }
 }
 
-}
+}} // namespace tracktion { inline namespace engine

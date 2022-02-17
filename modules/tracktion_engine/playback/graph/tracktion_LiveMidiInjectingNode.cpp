@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -109,4 +109,4 @@ void LiveMidiInjectingNode::injectLiveMidiMessage (AudioTrack& at, const MidiMes
     wasUsed = true;
 }
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

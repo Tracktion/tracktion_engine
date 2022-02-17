@@ -10,7 +10,7 @@
 
 #if TRACKTION_BENCHMARKS
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -144,6 +144,6 @@ private:
 
 static EditItemIDBenchmarks editItemIDBenchmarks;
 
-}
+}} // namespace tracktion { inline namespace engine
 
 #endif //TRACKTION_BENCHMARKS

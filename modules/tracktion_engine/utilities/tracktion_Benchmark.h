@@ -10,7 +10,7 @@
 
 #include "../../tracktion_graph/utilities/tracktion_PerformanceMeasurement.h"
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -176,4 +176,4 @@ private:
 };
 
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

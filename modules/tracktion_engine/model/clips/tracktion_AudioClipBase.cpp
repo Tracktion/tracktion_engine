@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -2467,4 +2467,4 @@ void AudioClipBase::updateClipEffectsState()
     markAsDirty();
 }
 
-}
+}} // namespace tracktion { inline namespace engine

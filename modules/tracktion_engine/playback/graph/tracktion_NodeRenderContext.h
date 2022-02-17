@@ -10,7 +10,7 @@
 
 #pragma once
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -126,4 +126,4 @@ private:
     WriteResult writeAudioBlock (choc::buffer::ChannelArrayView<float>);
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

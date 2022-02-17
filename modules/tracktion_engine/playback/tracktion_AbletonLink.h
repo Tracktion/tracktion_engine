@@ -12,7 +12,7 @@
  struct ABLLink;
 #endif
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 class AbletonLink
@@ -79,4 +79,4 @@ private:
     std::unique_ptr<ImplBase> implementation;
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

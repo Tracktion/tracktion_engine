@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 // Defined in ExternalPlugin.cpp to clean up plugins waiting to be deleted
@@ -934,4 +934,4 @@ void PluginCache::timerCallback()
     }
 }
 
-}
+}} // namespace tracktion { inline namespace engine

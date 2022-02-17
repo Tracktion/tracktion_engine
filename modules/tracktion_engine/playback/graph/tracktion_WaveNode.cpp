@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 
@@ -284,4 +284,4 @@ void WaveNode::processSection (ProcessContext& pc, juce::Range<int64_t> timeline
     }
 }
 
-}
+}} // namespace tracktion { inline namespace engine

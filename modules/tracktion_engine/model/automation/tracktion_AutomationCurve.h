@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 class AutomationCurve
@@ -124,4 +124,4 @@ private:
 /** Removes points from the curve to simplfy it and returns the number of points removed. */
 int simplify (AutomationCurve&, int strength, TimeRange);
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

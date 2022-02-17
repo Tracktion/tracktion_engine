@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 RenderManager::Job::Ptr EditRenderJob::getOrCreateRenderJob (Engine& e, Renderer::Parameters& params,
@@ -438,4 +438,4 @@ bool EditRenderJob::generateSilence (const juce::File& fileToWriteTo)
     return true;
 }
 
-}
+}} // namespace tracktion { inline namespace engine

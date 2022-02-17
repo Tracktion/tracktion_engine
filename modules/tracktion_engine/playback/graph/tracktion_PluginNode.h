@@ -10,7 +10,7 @@
 
 #pragma once
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 struct InputProvider;
@@ -90,4 +90,4 @@ private:
     void replaceLatencyProcessorIfPossible (Node*);
 };
 
-}
+}} // namespace tracktion { inline namespace engine

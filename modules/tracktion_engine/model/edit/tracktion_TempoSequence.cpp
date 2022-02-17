@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 template<typename ObjectType>
@@ -1369,4 +1369,4 @@ private:
 
 static TempoSequenceTests tempoSequenceTests;
 
-}
+}} // namespace tracktion { inline namespace engine

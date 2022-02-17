@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 /**
@@ -98,4 +98,4 @@ inline EditTimeRange toEditTimeRange (TimeRange r)
     return { r.getStart().inSeconds(), r.getEnd().inSeconds() };
 }
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

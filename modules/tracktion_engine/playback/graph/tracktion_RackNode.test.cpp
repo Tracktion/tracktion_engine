@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 #if GRAPH_UNIT_TESTS_RACKNODE
@@ -27,7 +27,6 @@ public:
     
     void runTest() override
     {
-        using namespace tracktion_engine;
         auto& engine = *tracktion_engine::Engine::getEngines()[0];
         engine.getPluginManager().createBuiltInType<ToneGeneratorPlugin>();
         engine.getPluginManager().createBuiltInType<LatencyPlugin>();
@@ -345,7 +344,6 @@ private:
     template<typename NodePlayerType>
     void runRackAudioInputTests (test_utilities::TestSetup testSetup)
     {
-        using namespace tracktion_engine;
         auto& engine = *Engine::getEngines()[0];
         
         // These tests won't work with random block sizes as the test inputs are just static
@@ -493,7 +491,6 @@ private:
     template<typename NodePlayerType>
     void runRackModifiertests (test_utilities::TestSetup ts)
     {
-        using namespace tracktion_engine;
         auto& engine = *Engine::getEngines()[0];
         
         beginTest ("LFO Modifier Rack");
@@ -625,4 +622,4 @@ static RackNodeTests rackNodeTests;
 
 #endif //TRACKTION_UNIT_TESTS
 
-}
+}} // namespace tracktion { inline namespace engine

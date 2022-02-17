@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 WaveOutputDevice::WaveOutputDevice (Engine& e, const juce::String& deviceName, const std::vector<ChannelIndex>& channels)
@@ -146,4 +146,4 @@ void WaveOutputDevice::setStereoPair (bool stereo)
         dm.setDeviceOutChannelStereo (getLeftChannel(), stereo);
 }
     
-}
+}} // namespace tracktion { inline namespace engine

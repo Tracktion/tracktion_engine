@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 TrackInsertPoint::TrackInsertPoint (Track* parent, Track* preceding)
@@ -510,4 +510,4 @@ void moveAutomation (const juce::Array<TrackAutomationSection>& origSections, Ti
     }
 }
 
-}
+}} // namespace tracktion { inline namespace engine

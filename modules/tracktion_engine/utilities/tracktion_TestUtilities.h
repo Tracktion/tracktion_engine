@@ -10,7 +10,7 @@
 
 #pragma once
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 #ifndef DOXYGEN
@@ -44,4 +44,4 @@ namespace test_utilities
 }
 #endif
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

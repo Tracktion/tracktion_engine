@@ -10,7 +10,7 @@
 
 #pragma once
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 class TrackMuteState;
@@ -42,4 +42,4 @@ private:
     TimeDuration automationAdjustmentTime;
 };
 
-}
+}} // namespace tracktion { inline namespace engine

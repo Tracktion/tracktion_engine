@@ -13,7 +13,7 @@
 #include "tracktion_EditNodeBuilder.h"
 #include "../../utilities/tracktion_Benchmark.h"
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 namespace benchmark_utilities
@@ -236,4 +236,4 @@ namespace benchmark_utilities
     }
 }
 
-}
+}} // namespace tracktion { inline namespace engine

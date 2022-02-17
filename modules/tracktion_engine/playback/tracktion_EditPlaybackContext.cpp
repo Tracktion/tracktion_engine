@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -977,4 +977,4 @@ EditPlaybackContext::ProcessPriorityBooster::~ProcessPriorityBooster()          
 EditPlaybackContext::RealtimePriorityDisabler::RealtimePriorityDisabler (Engine& e) : engine (e)    { ++numRealtimeDefeaters; updateProcessPriority (engine); }
 EditPlaybackContext::RealtimePriorityDisabler::~RealtimePriorityDisabler()                          { --numRealtimeDefeaters; updateProcessPriority (engine); }
 
-}
+}} // namespace tracktion { inline namespace engine

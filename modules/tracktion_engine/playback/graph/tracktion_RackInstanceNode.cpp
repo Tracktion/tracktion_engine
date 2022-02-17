@@ -9,7 +9,7 @@
 */
 
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 RackInstanceNode::RackInstanceNode (std::unique_ptr<Node> inputNode, ChannelMap channelMapToUse)
@@ -103,4 +103,4 @@ void RackInstanceNode::process (ProcessContext& pc)
     }
 }
 
-}
+}} // namespace tracktion { inline namespace engine

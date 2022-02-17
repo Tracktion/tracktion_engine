@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 struct AbletonLink::ImplBase  : public juce::Timer
@@ -199,7 +199,7 @@ struct AbletonLink::ImplBase  : public juce::Timer
     // from here: https://github.com/libpd/abl_link/tree/master/external/android-ifaddrs
     // Add the folder they are in to your header search paths also.
 
-    } // namespace tracktion_engine
+    }} // namespace tracktion { inline namespace engine
 
     #if JUCE_CLANG // TODO: Ignore conversion errors on Windows too
      #pragma clang diagnostic push
@@ -221,7 +221,7 @@ struct AbletonLink::ImplBase  : public juce::Timer
      #pragma clang diagnostic pop
     #endif
 
-    namespace tracktion_engine
+    namespace tracktion { inline namespace engine
     {
 
     //==========================================================================
@@ -484,4 +484,4 @@ void AbletonLink::removeListener (Listener* l)
         implementation->removeListener (l);
 }
 
-}
+}} // namespace tracktion { inline namespace engine

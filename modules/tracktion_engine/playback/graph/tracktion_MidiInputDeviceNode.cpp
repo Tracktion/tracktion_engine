@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 MidiInputDeviceNode::MidiInputDeviceNode (InputDeviceInstance& idi, MidiInputDevice& owner, MidiMessageArray::MPESourceID msi,
@@ -208,4 +208,4 @@ void MidiInputDeviceNode::discardRecordings()
     liveRecordedMessages.clear();
 }
 
-}
+}} // namespace tracktion { inline namespace engine

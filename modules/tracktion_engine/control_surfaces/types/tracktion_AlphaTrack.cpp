@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 namespace AlphaTrack
@@ -1119,4 +1119,4 @@ void AlphaTrackControlSurface::timerCallback (int timerId)
     }
 }
 
-}
+}} // namespace tracktion { inline namespace engine

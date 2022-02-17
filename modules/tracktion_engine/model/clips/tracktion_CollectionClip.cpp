@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 CollectionClip::CollectionClip (Track& t)
@@ -98,4 +98,4 @@ juce::String CollectionClip::getName()
     return TRANS("Collection Clip");
 }
 
-}
+}} // namespace tracktion { inline namespace engine

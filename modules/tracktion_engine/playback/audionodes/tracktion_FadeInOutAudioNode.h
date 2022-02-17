@@ -10,7 +10,7 @@
 
 #pragma once
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 /** An AudioNode that fades its input node in/out at given times. */
@@ -45,4 +45,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FadeInOutAudioNode)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

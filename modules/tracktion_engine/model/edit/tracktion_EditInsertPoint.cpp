@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 EditInsertPoint::EditInsertPoint (Edit& e) : edit (e)
@@ -102,4 +102,4 @@ void EditInsertPoint::chooseInsertPoint (Track::Ptr& track, TimePosition& start,
     jassert (track != nullptr);
 }
 
-}
+}} // namespace tracktion { inline namespace engine

@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 AutomationRecordManager::AutomationRecordManager (Edit& ed)
@@ -269,4 +269,4 @@ void AutomationRecordManager::parameterBeingDeleted (AutomatableParameter& param
             recordedParams.remove (i);
 }
 
-}
+}} // namespace tracktion { inline namespace engine

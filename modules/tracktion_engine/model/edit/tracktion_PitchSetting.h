@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -58,4 +58,4 @@ inline bool operator< (const PitchSetting& p1, const PitchSetting& p2) noexcept
     return p1.startBeat.get() < p2.startBeat.get();
 }
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

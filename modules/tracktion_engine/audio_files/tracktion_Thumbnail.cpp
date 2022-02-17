@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 struct TracktionThumbnail::MinMaxValue
@@ -869,4 +869,4 @@ void TracktionThumbnail::drawChannels (juce::Graphics& g, juce::Rectangle<int> a
     }
 }
 
-}
+}} // namespace tracktion { inline namespace engine

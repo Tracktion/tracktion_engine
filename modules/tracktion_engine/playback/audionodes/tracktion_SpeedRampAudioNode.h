@@ -10,7 +10,7 @@
 
 #pragma once
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 class SubSampleWaveAudioNode    : public AudioNode
@@ -465,4 +465,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SpeedRampAudioNode)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

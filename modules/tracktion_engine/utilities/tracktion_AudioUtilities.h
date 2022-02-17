@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 using SampleCount = int64_t;
@@ -246,4 +246,4 @@ inline void clearChannels (juce::AudioBuffer<float>& buffer, int startChannel, i
         buffer.clear (ch, startSample, endSample);
 }
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

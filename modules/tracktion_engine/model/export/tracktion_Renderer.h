@@ -15,7 +15,7 @@ namespace tracktion { inline namespace graph
     class PlayHeadState;
 }}
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 class NodeRenderContext;
@@ -200,4 +200,4 @@ public:
     };
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

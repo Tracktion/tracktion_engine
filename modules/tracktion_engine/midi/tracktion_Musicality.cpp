@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 static const juce::String flat = "b";
@@ -2221,4 +2221,4 @@ juce::Array<KeyResult> determineKeyOfNotes (const juce::Array<MidiNote*>& notes)
     return results;
 }
 
-}
+}} // namespace tracktion { inline namespace engine

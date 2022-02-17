@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -66,4 +66,4 @@ void MidiOutputDeviceInstanceInjectingNode::process (ProcessContext& pc)
     deviceInstance.mergeInMidiMessages (sourceBuffers.midi, editTimeRange.getStart());
 }
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 PluginWindowState::PluginWindowState (Edit& e)
@@ -154,4 +154,4 @@ void PluginWindowState::timerCallback()
     }
 }
 
-}
+}} // namespace tracktion { inline namespace engine

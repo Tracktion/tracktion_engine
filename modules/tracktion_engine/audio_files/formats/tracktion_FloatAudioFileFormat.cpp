@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 static int getFloatFileHeaderInt()  { return (int) juce::ByteOrder::littleEndianInt ("TRKF"); }
@@ -313,4 +313,4 @@ juce::AudioFormatWriter* FloatAudioFormat::createWriterFor (juce::OutputStream* 
     return new FloatAudioFormatWriter (out, sampleRate, numChannels);
 }
 
-}
+}} // namespace tracktion { inline namespace engine

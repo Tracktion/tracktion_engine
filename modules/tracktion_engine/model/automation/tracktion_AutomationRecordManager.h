@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 /** Stores automation data as it's being read in, and writes it back to the
@@ -104,4 +104,4 @@ private:
     void changeListenerCallback (juce::ChangeBroadcaster*);
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

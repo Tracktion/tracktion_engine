@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -333,4 +333,4 @@ Modifier::Ptr findModifierForID (ModifierList& ml, EditItemID modifierID)
     return {};
 }
 
-}
+}} // namespace tracktion { inline namespace engine

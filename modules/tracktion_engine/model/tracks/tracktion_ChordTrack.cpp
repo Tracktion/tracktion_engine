@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 ChordTrack::ChordTrack (Edit& ed, const juce::ValueTree& v)  : ClipTrack (ed, v, 20, 13, 60)
@@ -36,4 +36,4 @@ juce::String ChordTrack::getTrackWarning() const
     return {};
 }
 
-}
+}} // namespace tracktion { inline namespace engine

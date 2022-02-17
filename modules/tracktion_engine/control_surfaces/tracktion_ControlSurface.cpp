@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 ParameterSetting::ParameterSetting() noexcept
@@ -460,4 +460,4 @@ void ControlSurface::userPressedUserAction (int action)
 void ControlSurface::redrawSelectedPlugin()             { owner->repaintParamSource(); }
 void ControlSurface::redrawSelectedTracks()             { owner->redrawTracks(); }
 
-}
+}} // namespace tracktion { inline namespace engine

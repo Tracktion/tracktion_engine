@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 /** If you need to play back MPE data from a point *after* the data starts, it's
@@ -125,4 +125,4 @@ private:
     static bool wasFound (int v) { return v != notFound; }
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

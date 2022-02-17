@@ -9,7 +9,7 @@
 */
 
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 WaveInputDeviceNode::WaveInputDeviceNode (InputDeviceInstance& idi, WaveInputDevice& owner,
@@ -89,4 +89,4 @@ void WaveInputDeviceNode::acceptInputBuffer (choc::buffer::ChannelArrayView<floa
     audioFifo.write (newBlock);
 }
 
-}
+}} // namespace tracktion { inline namespace engine

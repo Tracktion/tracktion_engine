@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -1448,4 +1448,4 @@ std::unique_ptr<tracktion::graph::Node> createNodeForEdit (Edit& edit, const Cre
 std::function<std::unique_ptr<tracktion::graph::Node> (std::unique_ptr<tracktion::graph::Node>)> EditNodeBuilder::insertOptionalLastStageNode
     = [] (std::unique_ptr<tracktion::graph::Node> input) { return input; };
 
-}
+}} // namespace tracktion { inline namespace engine

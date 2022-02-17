@@ -78,13 +78,15 @@
 #include <juce_audio_basics/juce_audio_basics.h>
 
 //==============================================================================
+#include "utilities/tracktion_MidiMessageArray.h"
+namespace tracktion_engine = tracktion::engine;
+
 #include "tracktion_graph/tracktion_graph_Utility.h"
 
 #include "utilities/tracktion_AudioBufferPool.h"
 #include "utilities/tracktion_AudioBufferStack.h"
 #include "utilities/tracktion_GlueCode.h"
 #include "utilities/tracktion_AudioFifo.h"
-#include "utilities/tracktion_MidiMessageArray.h"
 #include "utilities/tracktion_PerformanceMeasurement.h"
 #include "utilities/tracktion_RealTimeSpinLock.h"
 #include "utilities/tracktion_Semaphore.h"

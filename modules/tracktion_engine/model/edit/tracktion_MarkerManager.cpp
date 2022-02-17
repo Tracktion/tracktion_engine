@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 MarkerManager::MarkerManager (Edit& e, const juce::ValueTree& v)
@@ -161,4 +161,4 @@ void MarkerManager::valueTreeChildAdded (juce::ValueTree& p, juce::ValueTree&)  
 void MarkerManager::valueTreeChildRemoved (juce::ValueTree& p, juce::ValueTree&, int)       { valueTreeChanged (p); }
 void MarkerManager::valueTreeParentChanged (juce::ValueTree& v)                             { valueTreeChanged (v); }
 
-}
+}} // namespace tracktion { inline namespace engine

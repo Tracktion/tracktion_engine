@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 struct ThreadedEditFileWriter   : private juce::Thread
@@ -514,4 +514,4 @@ juce::ValueTree createEmptyEdit (Engine& e)
     return loadEditFromFile (e, {}, ProjectItemID::createNewID (0));
 }
 
-}
+}} // namespace tracktion { inline namespace engine

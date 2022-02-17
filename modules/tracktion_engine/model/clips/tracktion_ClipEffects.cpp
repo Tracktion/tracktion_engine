@@ -15,7 +15,7 @@
 #include "../../playback/audionodes/tracktion_PluginAudioNode.h"
 #include "../../playback/audionodes/tracktion_FadeInOutAudioNode.h"
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 static inline HashCode hashValueTree (HashCode startHash, const juce::ValueTree& v)
@@ -124,14 +124,16 @@ ClipEffects::~ClipEffects()
 }
 
 //==============================================================================
-} namespace juce {
+}} // namespace tracktion { inline namespace engine
+
+namespace juce {
 
 template <>
 struct VariantConverter<tracktion_engine::ClipEffect::EffectType>
 {
     static tracktion_engine::ClipEffect::EffectType fromVar (const var& v)
     {
-        using namespace tracktion_engine;
+        using namespace tracktion::engine;
 
         auto s = v.toString();
 
@@ -152,7 +154,7 @@ struct VariantConverter<tracktion_engine::ClipEffect::EffectType>
 
     static var toVar (const tracktion_engine::ClipEffect::EffectType& t)
     {
-        using namespace tracktion_engine;
+        using namespace tracktion::engine;
 
         switch (t)
         {
@@ -174,7 +176,7 @@ struct VariantConverter<tracktion_engine::ClipEffect::EffectType>
     }
 };
 
-} namespace tracktion_engine {
+} namespace tracktion { inline namespace engine {
 
 //==============================================================================
 struct ClipEffect::ClipEffectRenderJob  : public juce::ReferenceCountedObject
@@ -1807,4 +1809,4 @@ RenderManager::Job::Ptr ClipEffects::createRenderJob (const AudioFile& destFile,
     return new AggregateJob (clip.edit.engine, destFile, firstFile, std::move (jobs));
 }
 
-}
+}} // namespace tracktion { inline namespace engine

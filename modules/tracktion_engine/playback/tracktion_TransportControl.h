@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 /** Moves the transport to the start of the selected objects. */
@@ -422,4 +422,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TransportControl)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

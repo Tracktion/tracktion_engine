@@ -11,7 +11,7 @@
 #pragma once
 
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -145,4 +145,4 @@ private:
     tracktion::graph::LockFreeMultiThreadedNodePlayer nodePlayer;
 };
 
-}
+}} // namespace tracktion { inline namespace engine

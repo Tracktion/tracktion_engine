@@ -221,11 +221,11 @@ static inline void sprintf (char* dest, size_t maxLength, const char* format, ..
 
 #if TRACKTION_ENABLE_CONTROL_SURFACES
  #if TRACKTION_ENABLE_CONTROL_SURFACE_MACKIEC4
-  namespace tracktion_engine
+  namespace tracktion { inline namespace engine
   {
     #include "Mackie/C4Translator.h"
     #include "Mackie/C4Translator.cpp"
-  }
+  }} // namespace tracktion { inline namespace engine
  #endif
 
  #include "control_surfaces/types/tracktion_AlphaTrack.cpp"

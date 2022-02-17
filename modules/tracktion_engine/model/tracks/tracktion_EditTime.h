@@ -9,7 +9,7 @@
 */
 
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 /** Converts a TimePosition to a BeatPosition given a TempoSequence. */
@@ -99,7 +99,7 @@ BeatRange toBeats (EditTimeRange, const TempoSequence&);
 
 //==============================================================================
 //==============================================================================
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine
 
 namespace juce
 {
@@ -137,7 +137,7 @@ namespace juce
     };
 }
 
-namespace tracktion_engine {
+namespace tracktion { inline namespace engine {
 
 //==============================================================================
 //        _        _           _  _
@@ -212,4 +212,4 @@ inline BeatRange toBeats (EditTimeRange r, const TempoSequence& ts)
 }
 }
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

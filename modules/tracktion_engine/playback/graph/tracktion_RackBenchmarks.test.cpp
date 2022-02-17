@@ -15,7 +15,7 @@
 #include "tracktion_BenchmarkUtilities.h"
 
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 using namespace tracktion::graph;
@@ -239,6 +239,6 @@ public:
 
 static RackBenchmarks rackBenchmarks;
 
-}
+}} // namespace tracktion { inline namespace engine
 
 #endif

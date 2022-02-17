@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 // how much extra time to give a track before it gets cut off - to allow for plugins
@@ -238,4 +238,4 @@ void CombiningAudioNode::prefetchGroup (const AudioRenderContext& rc, const doub
             tan->node->prepareForNextBlock (rc);
 }
 
-}
+}} // namespace tracktion { inline namespace engine

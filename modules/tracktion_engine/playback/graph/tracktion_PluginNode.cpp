@@ -10,7 +10,7 @@
 
 #pragma once
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 namespace
@@ -319,4 +319,4 @@ void PluginNode::replaceLatencyProcessorIfPossible (Node* rootNodeToReplace)
     visitNodes (*rootNodeToReplace, visitor, true);
 }
 
-}
+}} // namespace tracktion { inline namespace engine

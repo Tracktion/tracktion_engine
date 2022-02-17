@@ -55,7 +55,7 @@
 #include "timestretch/tracktion_TimeStretch.cpp"
 #include "timestretch/tracktion_TimeStretch.test.cpp"
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
     #include "3rd_party/soundtouch/source/SoundTouch/BPMDetect.cpp"
     #undef max
@@ -77,7 +77,7 @@ namespace tracktion_engine
     #include "3rd_party/soundtouch/source/SoundTouch/sse_optimized.cpp"
     #include "3rd_party/soundtouch/source/SoundTouch/TDStretch.cpp"
    #endif
-}
+}} // namespace tracktion { inline namespace engine
 
 #ifdef JUCE_MSVC
  #pragma warning (pop)

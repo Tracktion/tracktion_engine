@@ -14,7 +14,7 @@
 #include "tracktion_FadeInOutAudioNode.h"
 
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 inline AudioNode* createTrackCompAudioNode (AudioNode* input,
@@ -72,4 +72,4 @@ inline AudioNode* createAudioNode (TrackCompManager::TrackComp& trackComp, Track
 }
 
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

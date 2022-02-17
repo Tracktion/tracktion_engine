@@ -13,7 +13,7 @@
 #include "tracktion_PlayHead.h"
 
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 class AudioNode;
@@ -309,4 +309,4 @@ struct MuteAudioNode  : public SingleInputAudioNode
     }
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

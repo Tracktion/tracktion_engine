@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 static std::unique_ptr<MidiList> createLoopRangeDefinesAllRepetitionsSequence (MidiClip& clip, MidiList& sourceSequence)
@@ -861,4 +861,4 @@ void MidiClip::pitchTempoTrackChanged()
     state.sendPropertyChangeMessage (IDs::mute);
 }
 
-}
+}} // namespace tracktion { inline namespace engine

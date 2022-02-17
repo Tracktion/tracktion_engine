@@ -254,11 +254,9 @@ namespace tracktion { inline namespace graph
 #include "../tracktion_core/utilities/tracktion_Time.h"
 #include "../tracktion_core/utilities/tracktion_TimeRange.h"
 
-//ddd This should no longer be required
-using namespace tracktion::core;
 
 //==============================================================================
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
     class Engine;
     class DeviceManager;
@@ -374,7 +372,10 @@ namespace tracktion_engine
     class Clipboard;
     class PropertyStorage;
     class TrackOutput;
-}
+}} // namespace tracktion { inline namespace engine
+
+//ddd remove this
+namespace tracktion_engine = tracktion::engine;
 
 //==============================================================================
 #include "utilities/tracktion_AppFunctions.h"

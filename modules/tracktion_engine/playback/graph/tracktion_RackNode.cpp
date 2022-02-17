@@ -10,7 +10,7 @@
 
 #pragma once
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -696,4 +696,4 @@ namespace RackNodeBuilder
     }
 }
 
-}
+}} // namespace tracktion { inline namespace engine

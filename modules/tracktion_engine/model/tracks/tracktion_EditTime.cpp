@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 BeatPosition toBeats (TimePosition tp, const TempoSequence& ts)
@@ -31,4 +31,4 @@ TimeRange toTime (BeatRange r, const TempoSequence& ts)
     return { toTime (r.getStart(), ts), toTime (r.getEnd(), ts) };
 }
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

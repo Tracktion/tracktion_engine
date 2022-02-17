@@ -38,7 +38,7 @@
  #pragma warning (pop)
 #endif
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //=============================================================================

@@ -51,7 +51,7 @@
  #pragma warning (disable : 4244 4100 4305 4065 4701 4706 4723)
 #endif
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 namespace airwindows
 {
@@ -987,7 +987,8 @@ namespace ulawencode
 }
 
 }
-}
+}} // namespace tracktion { inline namespace engine
+
 
 #if JUCE_CLANG
  #pragma clang diagnostic pop

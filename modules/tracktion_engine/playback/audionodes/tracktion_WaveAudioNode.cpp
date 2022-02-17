@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 WaveAudioNode::WaveAudioNode (const AudioFile& af,
@@ -237,4 +237,4 @@ void WaveAudioNode::prepareForNextBlock (const AudioRenderContext& rc)
         localReader->setReadPosition (editTimeToFileSample (rc.getEditTime().editRange1.getStart()));
 }
 
-}
+}} // namespace tracktion { inline namespace engine

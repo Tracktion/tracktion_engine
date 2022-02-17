@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 SelectedMidiEvents::SelectedMidiEvents (MidiClip& m)  : clips ({ &m })
@@ -594,4 +594,4 @@ void SelectedMidiEvents::moveControllerData (const juce::Array<MidiClip*>& clips
     }
 }
 
-}
+}} // namespace tracktion { inline namespace engine

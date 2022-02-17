@@ -9,7 +9,7 @@
 */
 
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 namespace
@@ -310,4 +310,4 @@ namespace Click
     }
 }
 
-}
+}} // namespace tracktion { inline namespace engine

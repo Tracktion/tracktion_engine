@@ -10,7 +10,7 @@
 
 juce::AudioDeviceManager* gDeviceManager = nullptr; // TODO
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 #if TRACKTION_LOG_DEVICES
@@ -1311,4 +1311,4 @@ void DeviceManager::setGlobalOutputAudioProcessor (juce::AudioProcessor* newProc
             globalOutputAudioProcessor->prepareToPlay (currentSampleRate, audioIODevice->getCurrentBufferSizeSamples());
 }
 
-}
+}} // namespace tracktion { inline namespace engine

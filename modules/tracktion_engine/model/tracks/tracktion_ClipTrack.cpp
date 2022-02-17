@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 struct ClipTrack::ClipList  : public ValueTreeObjectList<Clip>,
@@ -1041,4 +1041,4 @@ bool ClipTrack::areAnyClipsUsingFile (const AudioFile& af)
     return false;
 }
 
-}
+}} // namespace tracktion { inline namespace engine

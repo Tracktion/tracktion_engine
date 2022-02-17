@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 /** Some plugins fail with certain calls to their parameters so we'll just avoid adding those to the list. */
@@ -29,4 +29,4 @@ static inline bool isParameterBlacklisted (ExternalPlugin& plugin, juce::AudioPl
     return false;
 }
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

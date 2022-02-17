@@ -9,7 +9,7 @@
 */
 
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 SharedLevelMeasuringNode::SharedLevelMeasuringNode (SharedLevelMeasurer::Ptr source, std::unique_ptr<Node> inputNode)
@@ -62,4 +62,4 @@ void SharedLevelMeasuringNode::process (ProcessContext& pc)
     levelMeasurer->addBuffer (buffer, 0, buffer.getNumSamples());
 }
 
-}
+}} // namespace tracktion { inline namespace engine

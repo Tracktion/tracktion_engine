@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 AutomationCurve::AutomationCurve()  : state (IDs::AUTOMATIONCURVE)
@@ -868,4 +868,4 @@ int simplify (AutomationCurve& curve, int strength, TimeRange time)
     return numPointsBefore - numPointsAfter;
 }
 
-}
+}} // namespace tracktion { inline namespace engine

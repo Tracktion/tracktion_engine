@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 TrackCompManager::CompSection::CompSection (const juce::ValueTree& v) : state (v)
@@ -641,4 +641,4 @@ TrackCompManager::TrackComp::Ptr TrackCompManager::getTrackComp (AudioTrack* at)
     return at == nullptr ? nullptr : trackCompList->objects[at->getCompGroup()];
 }
 
-}
+}} // namespace tracktion { inline namespace engine

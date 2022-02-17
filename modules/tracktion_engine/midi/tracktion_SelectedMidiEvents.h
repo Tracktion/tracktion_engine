@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 /** Represents a set of selected MIDI notes.
@@ -95,4 +95,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SelectedMidiEvents)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

@@ -14,7 +14,7 @@
 #include "../../playback/audionodes/tracktion_CombiningAudioNode.h"
 
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 struct CompManager::RenderTrigger   : public ValueTreeAllEventListener,
@@ -1518,4 +1518,4 @@ void MidiCompManager::createComp (const juce::ValueTree& takeTree)
     }
 }
 
-}
+}} // namespace tracktion { inline namespace engine

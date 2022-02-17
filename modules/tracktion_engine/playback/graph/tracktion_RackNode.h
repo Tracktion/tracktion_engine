@@ -10,7 +10,7 @@
 
 #pragma once
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -168,4 +168,4 @@ namespace RackNodeBuilder
                                                            tracktion::graph::PlayHeadState&, bool isRendering);
 }
 
-}
+}} // namespace tracktion { inline namespace engine

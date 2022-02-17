@@ -10,7 +10,7 @@
 
 #if TRACKTION_UNIT_TESTS
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -181,6 +181,6 @@ public:
 
 static EditTimeTests editTimeTests;
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine
 
 #endif // TRACKTION_UNIT_TESTS
