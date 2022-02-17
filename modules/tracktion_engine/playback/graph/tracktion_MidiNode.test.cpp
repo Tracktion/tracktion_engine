@@ -75,7 +75,7 @@ private:
         beginTest ("Basic MIDI");
         {
             auto sequence = masterSequence;
-            auto node = std::make_unique<tracktion_engine::MidiNode> (sequence,
+            auto node = std::make_unique<tracktion::engine::MidiNode> (sequence,
                                                                       juce::Range<int>::withStartAndLength (1, 1),
                                                                       false,
                                                                       TimeRange (0.0s, TimeDuration::fromSeconds (duration)),
@@ -92,7 +92,7 @@ private:
         beginTest ("Offset MIDI");
         {
             const auto editTimeRange = TimeRange (1.0s, TimeDuration::fromSeconds (duration));
-            auto node = std::make_unique<tracktion_engine::MidiNode> (masterSequence,
+            auto node = std::make_unique<tracktion::engine::MidiNode> (masterSequence,
                                                                       juce::Range<int>::withStartAndLength (1, 1),
                                                                       false,
                                                                       editTimeRange,

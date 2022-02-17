@@ -152,10 +152,10 @@ private:
 namespace juce
 {
     template <>
-    struct VariantConverter<tracktion_engine::EditItemID>
+    struct VariantConverter<tracktion::engine::EditItemID>
     {
-        static tracktion_engine::EditItemID fromVar (const juce::var& v)   { return tracktion_engine::EditItemID::fromVar (v); }
-        static juce::var toVar (const tracktion_engine::EditItemID& v)     { return juce::var ((juce::int64) v.getRawID()); }
+        static tracktion::engine::EditItemID fromVar (const juce::var& v)   { return tracktion::engine::EditItemID::fromVar (v); }
+        static juce::var toVar (const tracktion::engine::EditItemID& v)     { return juce::var ((juce::int64) v.getRawID()); }
     };
 }
 
@@ -163,9 +163,9 @@ namespace juce
 namespace std
 {
     template<>
-    struct hash<tracktion_engine::EditItemID>
+    struct hash<tracktion::engine::EditItemID>
     {
-        size_t operator() (const tracktion_engine::EditItemID& e) const noexcept   { return (size_t) e.getRawID(); }
+        size_t operator() (const tracktion::engine::EditItemID& e) const noexcept   { return (size_t) e.getRawID(); }
     };
 }
 #endif

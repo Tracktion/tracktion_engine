@@ -155,9 +155,9 @@ private:
 namespace juce
 {
     template <>
-    struct VariantConverter<tracktion_engine::TrackCompManager::TrackComp::TimeFormat>
+    struct VariantConverter<tracktion::engine::TrackCompManager::TrackComp::TimeFormat>
     {
-        static tracktion_engine::TrackCompManager::TrackComp::TimeFormat fromVar (const var& v)   { return (tracktion_engine::TrackCompManager::TrackComp::TimeFormat) static_cast<int> (v); }
-        static var toVar (tracktion_engine::TrackCompManager::TrackComp::TimeFormat v)            { return static_cast<int> (v); }
+        static tracktion::engine::TrackCompManager::TrackComp::TimeFormat fromVar (const var& v)   { return (tracktion::engine::TrackCompManager::TrackComp::TimeFormat) static_cast<int> (v); }
+        static var toVar (tracktion::engine::TrackCompManager::TrackComp::TimeFormat v)            { return static_cast<int> (v); }
     };
 }

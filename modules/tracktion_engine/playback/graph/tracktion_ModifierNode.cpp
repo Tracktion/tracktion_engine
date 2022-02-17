@@ -15,7 +15,7 @@ namespace tracktion { inline namespace engine
 {
 
 ModifierNode::ModifierNode (std::unique_ptr<Node> inputNode,
-                            tracktion_engine::Modifier::Ptr modifierToProcess,
+                            tracktion::engine::Modifier::Ptr modifierToProcess,
                             double sampleRateToUse, int blockSizeToUse,
                             const TrackMuteState* trackMuteStateToUse,
                             tracktion::graph::PlayHeadState& playHeadStateToUse, bool rendering)
@@ -31,7 +31,7 @@ ModifierNode::ModifierNode (std::unique_ptr<Node> inputNode,
 }
 
 ModifierNode::ModifierNode (std::unique_ptr<Node> inputNode,
-                            tracktion_engine::Modifier::Ptr modifierToProcess,
+                            tracktion::engine::Modifier::Ptr modifierToProcess,
                             double sampleRateToUse, int blockSizeToUse,
                             std::shared_ptr<InputProvider> contextProvider)
     : input (std::move (inputNode)),
@@ -132,7 +132,7 @@ PluginRenderContext ModifierNode::getPluginRenderContext (int64_t referenceSampl
 {
     if (audioRenderContextProvider != nullptr)
     {
-        tracktion_engine::PluginRenderContext rc (audioRenderContextProvider->getContext());
+        tracktion::engine::PluginRenderContext rc (audioRenderContextProvider->getContext());
         rc.destBuffer = &destBuffer;
         rc.bufferStartSample = 0;
         rc.bufferNumSamples = destBuffer.getNumSamples();

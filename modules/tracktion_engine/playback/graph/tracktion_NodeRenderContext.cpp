@@ -410,7 +410,7 @@ juce::String NodeRenderContext::renderMidi (Renderer::RenderTask& owner,
     TempoSequencePosition currentTempoPosition (r.edit->tempoSequence);
     
     juce::AudioBuffer<float> renderingBuffer (2, samplesPerBlock + 256);
-    tracktion_engine::MidiMessageArray blockMidiBuffer;
+    tracktion::engine::MidiMessageArray blockMidiBuffer;
     juce::MidiMessageSequence outputSequence;
 
     for (;;)

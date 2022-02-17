@@ -191,9 +191,9 @@ private:
 namespace juce
 {
     template <>
-    struct VariantConverter<tracktion_engine::MidiClip::LoopedSequenceType>
+    struct VariantConverter<tracktion::engine::MidiClip::LoopedSequenceType>
     {
-        static tracktion_engine::MidiClip::LoopedSequenceType fromVar (const var& v)   { return (tracktion_engine::MidiClip::LoopedSequenceType) static_cast<int> (v); }
-        static var toVar (tracktion_engine::MidiClip::LoopedSequenceType v)            { return static_cast<int> (v); }
+        static tracktion::engine::MidiClip::LoopedSequenceType fromVar (const var& v)   { return (tracktion::engine::MidiClip::LoopedSequenceType) static_cast<int> (v); }
+        static var toVar (tracktion::engine::MidiClip::LoopedSequenceType v)            { return static_cast<int> (v); }
     };
 }

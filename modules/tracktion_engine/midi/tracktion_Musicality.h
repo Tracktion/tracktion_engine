@@ -330,24 +330,24 @@ juce::Array<KeyResult> determineKeyOfNotes (const juce::Array<MidiNote*>& notes)
 namespace juce
 {
     template <>
-    struct VariantConverter<tracktion_engine::Chord::ChordType>
+    struct VariantConverter<tracktion::engine::Chord::ChordType>
     {
-        static tracktion_engine::Chord::ChordType fromVar (const var& v)   { return (tracktion_engine::Chord::ChordType) static_cast<int> (v); }
-        static var toVar (tracktion_engine::Chord::ChordType v)            { return static_cast<int> (v); }
+        static tracktion::engine::Chord::ChordType fromVar (const var& v)   { return (tracktion::engine::Chord::ChordType) static_cast<int> (v); }
+        static var toVar (tracktion::engine::Chord::ChordType v)            { return static_cast<int> (v); }
     };
 
 
     template <>
-    struct VariantConverter<tracktion_engine::Scale::ScaleType>
+    struct VariantConverter<tracktion::engine::Scale::ScaleType>
     {
-        static tracktion_engine::Scale::ScaleType fromVar (const var& v)   { return (tracktion_engine::Scale::ScaleType) static_cast<int> (v); }
-        static var toVar (tracktion_engine::Scale::ScaleType v)            { return static_cast<int> (v); }
+        static tracktion::engine::Scale::ScaleType fromVar (const var& v)   { return (tracktion::engine::Scale::ScaleType) static_cast<int> (v); }
+        static var toVar (tracktion::engine::Scale::ScaleType v)            { return static_cast<int> (v); }
     };
 
     template <>
-    struct VariantConverter<tracktion_engine::PatternGenerator::Mode>
+    struct VariantConverter<tracktion::engine::PatternGenerator::Mode>
     {
-        static tracktion_engine::PatternGenerator::Mode fromVar (const var& v)   { return (tracktion_engine::PatternGenerator::Mode) static_cast<int> (v); }
-        static var toVar (tracktion_engine::PatternGenerator::Mode v)            { return static_cast<int> (v); }
+        static tracktion::engine::PatternGenerator::Mode fromVar (const var& v)   { return (tracktion::engine::PatternGenerator::Mode) static_cast<int> (v); }
+        static var toVar (tracktion::engine::PatternGenerator::Mode v)            { return static_cast<int> (v); }
     };
 }

@@ -374,8 +374,6 @@ namespace tracktion { inline namespace engine
     class TrackOutput;
 }} // namespace tracktion { inline namespace engine
 
-//ddd remove this
-namespace tracktion_engine = tracktion::engine;
 
 //==============================================================================
 #include "utilities/tracktion_AppFunctions.h"

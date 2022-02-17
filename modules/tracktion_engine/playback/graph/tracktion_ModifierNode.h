@@ -29,7 +29,7 @@ public:
      
     */
     ModifierNode (std::unique_ptr<Node> input,
-                  tracktion_engine::Modifier::Ptr,
+                  tracktion::engine::Modifier::Ptr,
                   double sampleRateToUse, int blockSizeToUse,
                   const TrackMuteState*,
                   tracktion::graph::PlayHeadState&, bool rendering);
@@ -39,7 +39,7 @@ public:
      
     */
     ModifierNode (std::unique_ptr<Node> input,
-                  tracktion_engine::Modifier::Ptr,
+                  tracktion::engine::Modifier::Ptr,
                   double sampleRateToUse, int blockSizeToUse,
                   std::shared_ptr<InputProvider>);
 
@@ -59,7 +59,7 @@ public:
 private:
     //==============================================================================
     std::unique_ptr<Node> input;
-    tracktion_engine::Modifier::Ptr modifier;
+    tracktion::engine::Modifier::Ptr modifier;
     std::shared_ptr<InputProvider> audioRenderContextProvider;
     
     const TrackMuteState* trackMuteState = nullptr;
@@ -68,7 +68,7 @@ private:
     
     bool isInitialised = false;
     double sampleRate = 44100.0;
-    tracktion_engine::MidiMessageArray midiMessageArray;
+    tracktion::engine::MidiMessageArray midiMessageArray;
     TimeDuration automationAdjustmentTime;
 
     //==============================================================================

@@ -164,9 +164,9 @@ struct AudioFadeCurve
 namespace juce
 {
     template <>
-    struct VariantConverter<tracktion_engine::AudioFadeCurve::Type>
+    struct VariantConverter<tracktion::engine::AudioFadeCurve::Type>
     {
-        static tracktion_engine::AudioFadeCurve::Type fromVar (const var& v)   { return (tracktion_engine::AudioFadeCurve::Type) static_cast<int> (v); }
-        static var toVar (tracktion_engine::AudioFadeCurve::Type v)            { return static_cast<int> (v); }
+        static tracktion::engine::AudioFadeCurve::Type fromVar (const var& v)   { return (tracktion::engine::AudioFadeCurve::Type) static_cast<int> (v); }
+        static var toVar (tracktion::engine::AudioFadeCurve::Type v)            { return static_cast<int> (v); }
     };
 }

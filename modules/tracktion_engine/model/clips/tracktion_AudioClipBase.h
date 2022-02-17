@@ -686,16 +686,16 @@ private:
 namespace juce
 {
     template <>
-    struct VariantConverter<tracktion_engine::AudioClipBase::FadeBehaviour>
+    struct VariantConverter<tracktion::engine::AudioClipBase::FadeBehaviour>
     {
-        static tracktion_engine::AudioClipBase::FadeBehaviour fromVar (const var& v)   { return (tracktion_engine::AudioClipBase::FadeBehaviour) static_cast<int> (v); }
-        static var toVar (tracktion_engine::AudioClipBase::FadeBehaviour v)            { return static_cast<int> (v); }
+        static tracktion::engine::AudioClipBase::FadeBehaviour fromVar (const var& v)   { return (tracktion::engine::AudioClipBase::FadeBehaviour) static_cast<int> (v); }
+        static var toVar (tracktion::engine::AudioClipBase::FadeBehaviour v)            { return static_cast<int> (v); }
     };
 
     template <>
-    struct VariantConverter<tracktion_engine::AudioClipBase::AutoPitchMode>
+    struct VariantConverter<tracktion::engine::AudioClipBase::AutoPitchMode>
     {
-        static tracktion_engine::AudioClipBase::AutoPitchMode fromVar (const var& v)   { return (tracktion_engine::AudioClipBase::AutoPitchMode) static_cast<int> (v); }
-        static var toVar (tracktion_engine::AudioClipBase::AutoPitchMode v)            { return static_cast<int> (v); }
+        static tracktion::engine::AudioClipBase::AutoPitchMode fromVar (const var& v)   { return (tracktion::engine::AudioClipBase::AutoPitchMode) static_cast<int> (v); }
+        static var toVar (tracktion::engine::AudioClipBase::AutoPitchMode v)            { return static_cast<int> (v); }
     };
 }

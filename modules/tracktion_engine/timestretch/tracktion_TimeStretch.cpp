@@ -421,7 +421,7 @@ struct RubberBandStretcher  : public TimeStretcher::Stretcher
 
     bool setSpeedAndPitch (float speedRatio, float semitonesUp) override
     {
-        const float pitch = juce::jlimit (0.25f, 4.0f, tracktion_engine::Pitch::semitonesToRatio (semitonesUp));
+        const float pitch = juce::jlimit (0.25f, 4.0f, tracktion::engine::Pitch::semitonesToRatio (semitonesUp));
 
         rubberBandStretcher.setPitchScale (pitch);
         rubberBandStretcher.setTimeRatio (speedRatio);
@@ -724,7 +724,7 @@ void TimeStretcher::initialise (double sourceSampleRate, int samplesPerBlock,
         case rubberbandMelodic:
         case rubberbandPercussive:
             juce::ignoreUnused (options, realtime);
-            stretcher.reset (new tracktion_engine::RubberBandStretcher (sourceSampleRate, samplesPerBlock, numChannels,
+            stretcher.reset (new tracktion::engine::RubberBandStretcher (sourceSampleRate, samplesPerBlock, numChannels,
                                                                         mode == rubberbandPercussive));
             break;
        #else

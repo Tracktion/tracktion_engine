@@ -49,7 +49,7 @@ private:
     void runBasicTests (test_utilities::TestSetup ts, bool playSyncedToRange)
     {
         using namespace tracktion::graph;
-        auto& engine = *tracktion_engine::Engine::getEngines()[0];
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
 
         const double fileLengthSeconds = 5.0;
         auto sinFile = test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, fileLengthSeconds);
@@ -159,7 +159,7 @@ private:
     void runLoopedTimelineTests (test_utilities::TestSetup ts)
     {
         using namespace tracktion::graph;
-        auto& engine = *tracktion_engine::Engine::getEngines()[0];
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
 
         const double fileLengthSeconds = 1.0;
         auto sinFile = test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, fileLengthSeconds);

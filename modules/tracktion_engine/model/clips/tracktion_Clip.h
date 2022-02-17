@@ -447,9 +447,9 @@ namespace ClipConstants
 namespace juce
 {
     template <>
-    struct VariantConverter<tracktion_engine::Clip::SyncType>
+    struct VariantConverter<tracktion::engine::Clip::SyncType>
     {
-        static tracktion_engine::Clip::SyncType fromVar (const var& v)   { return (tracktion_engine::Clip::SyncType) static_cast<int> (v); }
-        static var toVar (tracktion_engine::Clip::SyncType v)            { return static_cast<int> (v); }
+        static tracktion::engine::Clip::SyncType fromVar (const var& v)   { return (tracktion::engine::Clip::SyncType) static_cast<int> (v); }
+        static var toVar (tracktion::engine::Clip::SyncType v)            { return static_cast<int> (v); }
     };
 }

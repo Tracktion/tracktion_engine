@@ -38,7 +38,7 @@ public:
         ts.sampleRate = 96000.0;
         ts.blockSize = 128;
 
-        auto& engine = *tracktion_engine::Engine::getEngines()[0];
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
 
         runRackMixBusTest (engine, ts);
     }

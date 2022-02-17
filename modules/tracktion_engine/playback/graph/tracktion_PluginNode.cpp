@@ -28,7 +28,7 @@ namespace
 }
 
 PluginNode::PluginNode (std::unique_ptr<Node> inputNode,
-                        tracktion_engine::Plugin::Ptr pluginToProcess,
+                        tracktion::engine::Plugin::Ptr pluginToProcess,
                         double sampleRateToUse, int blockSizeToUse,
                         std::shared_ptr<InputProvider> contextProvider)
     : input (std::move (inputNode)),
@@ -41,7 +41,7 @@ PluginNode::PluginNode (std::unique_ptr<Node> inputNode,
 }
 
 PluginNode::PluginNode (std::unique_ptr<Node> inputNode,
-                        tracktion_engine::Plugin::Ptr pluginToProcess,
+                        tracktion::engine::Plugin::Ptr pluginToProcess,
                         double sampleRateToUse, int blockSizeToUse,
                         const TrackMuteState* trackMuteStateToUse,
                         tracktion::graph::PlayHeadState& playHeadStateToUse,
@@ -262,7 +262,7 @@ PluginRenderContext PluginNode::getPluginRenderContext (int64_t referenceSampleP
 {
     if (audioRenderContextProvider != nullptr)
     {
-        tracktion_engine::PluginRenderContext rc (audioRenderContextProvider->getContext());
+        tracktion::engine::PluginRenderContext rc (audioRenderContextProvider->getContext());
         rc.destBuffer = &destBuffer;
         rc.bufferStartSample = 0;
         rc.bufferNumSamples = destBuffer.getNumSamples();

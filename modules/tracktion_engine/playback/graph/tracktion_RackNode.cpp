@@ -667,7 +667,7 @@ namespace RackNodeBuilder
     }
 
     std::unique_ptr<tracktion::graph::Node> createRackNode (Algorithm algorithm,
-                                                           tracktion_engine::RackType& rackType,
+                                                           tracktion::engine::RackType& rackType,
                                                            double sampleRate, int blockSize,
                                                            std::unique_ptr<tracktion::graph::Node> node,
                                                            tracktion::graph::PlayHeadState& playHeadState, bool isRendering)

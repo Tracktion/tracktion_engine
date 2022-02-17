@@ -171,7 +171,7 @@ inline TimePosition toTime (EditTime et, const TempoSequence& ts)
     if (const auto tp = std::get_if<TimePosition> (&et.position))
         return *tp;
 
-    return tracktion_engine::toTime (*std::get_if<BeatPosition> (&et.position), ts);
+    return tracktion::engine::toTime (*std::get_if<BeatPosition> (&et.position), ts);
 }
 
 inline BeatPosition toBeats (EditTime et, const TempoSequence& ts)
@@ -179,7 +179,7 @@ inline BeatPosition toBeats (EditTime et, const TempoSequence& ts)
     if (const auto bp = std::get_if<BeatPosition> (&et.position))
         return *bp;
 
-    return tracktion_engine::toBeats (*std::get_if<TimePosition> (&et.position), ts);
+    return tracktion::engine::toBeats (*std::get_if<TimePosition> (&et.position), ts);
 }
 
 namespace temp
@@ -200,7 +200,7 @@ inline TimeRange toTime (EditTimeRange r, const TempoSequence& ts)
     if (const auto tr = std::get_if<TimeRange> (&r.range))
         return *tr;
 
-    return tracktion_engine::toTime (*std::get_if<BeatRange> (&r.range), ts);
+    return tracktion::engine::toTime (*std::get_if<BeatRange> (&r.range), ts);
 }
 
 inline BeatRange toBeats (EditTimeRange r, const TempoSequence& ts)
@@ -208,7 +208,7 @@ inline BeatRange toBeats (EditTimeRange r, const TempoSequence& ts)
     if (const auto br = std::get_if<BeatRange> (&r.range))
         return *br;
 
-    return tracktion_engine::toBeats (*std::get_if<TimeRange> (&r.range), ts);
+    return tracktion::engine::toBeats (*std::get_if<TimeRange> (&r.range), ts);
 }
 }
 

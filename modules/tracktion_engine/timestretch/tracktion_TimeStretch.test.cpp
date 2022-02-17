@@ -28,7 +28,7 @@ public:
     {
        #if TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH
         {
-            const auto mode = tracktion_engine::TimeStretcher::soundtouchBetter;
+            const auto mode = tracktion::engine::TimeStretcher::soundtouchBetter;
             runPitchShiftTest (mode);
             runTimestretchTest (mode);
         }
@@ -36,7 +36,7 @@ public:
 
        #if TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND
         {
-            const auto mode = tracktion_engine::TimeStretcher::rubberbandMelodic;
+            const auto mode = tracktion::engine::TimeStretcher::rubberbandMelodic;
             runPitchShiftTest (mode);
             runTimestretchTest (mode);
         }
@@ -44,7 +44,7 @@ public:
         
        #if TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE
         {
-            const auto mode = tracktion_engine::TimeStretcher::elastiquePro;
+            const auto mode = tracktion::engine::TimeStretcher::elastiquePro;
             runPitchShiftTest (mode);
             runTimestretchTest (mode);
         }
@@ -68,9 +68,9 @@ private:
    #endif
 
     //==============================================================================
-    void runPitchShiftTest (tracktion_engine::TimeStretcher::Mode mode)
+    void runPitchShiftTest (tracktion::engine::TimeStretcher::Mode mode)
     {
-        beginTest ("Pitch shift: " + tracktion_engine::TimeStretcher::getNameOfMode (mode));
+        beginTest ("Pitch shift: " + tracktion::engine::TimeStretcher::getNameOfMode (mode));
         
         testStretcher (mode, 1.0f, 0.0f);
         testStretcher (mode, 1.0f, 1.0f);
@@ -80,9 +80,9 @@ private:
         testStretcher (mode, 1.0f, 24.0f);
     }
     
-    void runTimestretchTest (tracktion_engine::TimeStretcher::Mode mode)
+    void runTimestretchTest (tracktion::engine::TimeStretcher::Mode mode)
     {
-        beginTest ("Time-stretch: " + tracktion_engine::TimeStretcher::getNameOfMode (mode));
+        beginTest ("Time-stretch: " + tracktion::engine::TimeStretcher::getNameOfMode (mode));
 
         testStretcher (mode, 0.5f, 0.0f);
         testStretcher (mode, 1.0f, 0.0f);
@@ -90,28 +90,28 @@ private:
     }
 
     //==============================================================================
-    void testStretcher (tracktion_engine::TimeStretcher::Mode mode, float stretchRatio, float semitonesUp)
+    void testStretcher (tracktion::engine::TimeStretcher::Mode mode, float stretchRatio, float semitonesUp)
     {
         const double sampleRate = 44100.0;
         const int numChannels = 2;
         const int blockSize = 512;
         const float sourcePitch = 440.0f;
 
-        tracktion_engine::TimeStretcher stretcher;
+        tracktion::engine::TimeStretcher stretcher;
         stretcher.initialise (sampleRate, blockSize, numChannels, mode,
                               {}, true);
         stretcher.setSpeedAndPitch (stretchRatio, semitonesUp);
 
         const auto sourceBuffer = createSinBuffer (sampleRate, numChannels, 440.0f);
         const auto resultBuffer = processBuffer (stretcher, sourceBuffer, blockSize, stretchRatio,
-                                                 mode == tracktion_engine::TimeStretcher::elastiquePro);
+                                                 mode == tracktion::engine::TimeStretcher::elastiquePro);
 
        #if TIMESTRETCHER_WRITE_WRITE_TEST_FILES
         writeToFile (juce::File::getSpecialLocation (juce::File::userDesktopDirectory).getChildFile ("original.wav"), sourceBuffer, sampleRate);
         writeToFile (juce::File::getSpecialLocation (juce::File::userDesktopDirectory).getChildFile ("pitched.wav"), resultBuffer, sampleRate);
        #endif
 
-        const float expectedPitchValue = sourcePitch * tracktion_engine::Pitch::semitonesToRatio (semitonesUp);
+        const float expectedPitchValue = sourcePitch * tracktion::engine::Pitch::semitonesToRatio (semitonesUp);
         const int expectedSize = (int) std::ceil (sourceBuffer.getNumSamples() * stretchRatio);
 
         // Check number of zero crossings and estimate pitch
@@ -154,7 +154,7 @@ private:
         return sinBuffer;
     }
     
-    static juce::AudioBuffer<float> processBuffer (tracktion_engine::TimeStretcher& stretcher,
+    static juce::AudioBuffer<float> processBuffer (tracktion::engine::TimeStretcher& stretcher,
                                                    const juce::AudioBuffer<float>& sourceBuffer,
                                                    const int blockSize, float stretchRatio,
                                                    bool stretcherRequiresFramesNeeded)

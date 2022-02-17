@@ -287,7 +287,7 @@ public:
 
     int64_t findImpulseSampleIndex (Engine& engine, juce::File& file)
     {
-        if (auto reader = std::unique_ptr<juce::AudioFormatReader> (tracktion_engine::AudioFileUtils::createReaderFor (engine, file)))
+        if (auto reader = std::unique_ptr<juce::AudioFormatReader> (tracktion::engine::AudioFileUtils::createReaderFor (engine, file)))
             return reader->searchForLevel (0, reader->lengthInSamples,
                                            0.9f, 1.1f,
                                            0);
@@ -307,7 +307,7 @@ public:
     
     double getFileLength (Engine& engine, const juce::File& file)
     {
-        if (auto reader = std::unique_ptr<juce::AudioFormatReader> (tracktion_engine::AudioFileUtils::createReaderFor (engine, file)))
+        if (auto reader = std::unique_ptr<juce::AudioFormatReader> (tracktion::engine::AudioFileUtils::createReaderFor (engine, file)))
             if (reader->sampleRate > 0.0)
                 return reader->lengthInSamples / reader->sampleRate;
 

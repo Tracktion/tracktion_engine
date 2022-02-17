@@ -28,7 +28,7 @@ public:
      
     */
     PluginNode (std::unique_ptr<Node> input,
-                tracktion_engine::Plugin::Ptr,
+                tracktion::engine::Plugin::Ptr,
                 double sampleRateToUse, int blockSizeToUse,
                 std::shared_ptr<InputProvider>);
 
@@ -44,7 +44,7 @@ public:
 
     */
     PluginNode (std::unique_ptr<Node> input,
-                tracktion_engine::Plugin::Ptr,
+                tracktion::engine::Plugin::Ptr,
                 double sampleRateToUse, int blockSizeToUse,
                 const TrackMuteState*,
                 tracktion::graph::PlayHeadState&,
@@ -67,7 +67,7 @@ public:
 private:
     //==============================================================================
     std::unique_ptr<Node> input;
-    tracktion_engine::Plugin::Ptr plugin;
+    tracktion::engine::Plugin::Ptr plugin;
     std::shared_ptr<InputProvider> audioRenderContextProvider;
 
     const TrackMuteState* trackMuteState = nullptr;
@@ -77,7 +77,7 @@ private:
     bool isInitialised = false;
     double sampleRate = 44100.0;
     int latencyNumSamples = 0, maxNumChannels = -1;
-    tracktion_engine::MidiMessageArray midiMessageArray;
+    tracktion::engine::MidiMessageArray midiMessageArray;
     int subBlockSizeToUse = -1;
     bool balanceLatency = true, canProcessBypassed = false;
     TimeDuration automationAdjustmentTime;

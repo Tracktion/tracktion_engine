@@ -212,23 +212,23 @@ private:
 namespace juce
 {
     template <>
-    struct VariantConverter<tracktion_engine::RenderOptions::RenderType>
+    struct VariantConverter<tracktion::engine::RenderOptions::RenderType>
     {
-        static tracktion_engine::RenderOptions::RenderType fromVar (const var& v)   { return (tracktion_engine::RenderOptions::RenderType) static_cast<int> (v); }
-        static var toVar (tracktion_engine::RenderOptions::RenderType v)            { return static_cast<int> (v); }
+        static tracktion::engine::RenderOptions::RenderType fromVar (const var& v)   { return (tracktion::engine::RenderOptions::RenderType) static_cast<int> (v); }
+        static var toVar (tracktion::engine::RenderOptions::RenderType v)            { return static_cast<int> (v); }
     };
 
     template <>
-    struct VariantConverter<tracktion_engine::RenderOptions::TargetFileFormat>
+    struct VariantConverter<tracktion::engine::RenderOptions::TargetFileFormat>
     {
-        static tracktion_engine::RenderOptions::TargetFileFormat fromVar (const var& v)   { return (tracktion_engine::RenderOptions::TargetFileFormat) static_cast<int> (v); }
-        static var toVar (tracktion_engine::RenderOptions::TargetFileFormat v)            { return static_cast<int> (v); }
+        static tracktion::engine::RenderOptions::TargetFileFormat fromVar (const var& v)   { return (tracktion::engine::RenderOptions::TargetFileFormat) static_cast<int> (v); }
+        static var toVar (tracktion::engine::RenderOptions::TargetFileFormat v)            { return static_cast<int> (v); }
     };
 
     template <>
-    struct VariantConverter<tracktion_engine::RenderOptions::AddRenderOptions>
+    struct VariantConverter<tracktion::engine::RenderOptions::AddRenderOptions>
     {
-        static tracktion_engine::RenderOptions::AddRenderOptions fromVar (const var& v)   { return (tracktion_engine::RenderOptions::AddRenderOptions) static_cast<int> (v); }
-        static var toVar (tracktion_engine::RenderOptions::AddRenderOptions v)            { return static_cast<int> (v); }
+        static tracktion::engine::RenderOptions::AddRenderOptions fromVar (const var& v)   { return (tracktion::engine::RenderOptions::AddRenderOptions) static_cast<int> (v); }
+        static var toVar (tracktion::engine::RenderOptions::AddRenderOptions v)            { return static_cast<int> (v); }
     };
 }

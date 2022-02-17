@@ -74,7 +74,7 @@ void AudioRenderContext::clearAudioBuffer() const noexcept
 void AudioRenderContext::addAntiDenormalisationNoise() const noexcept
 {
     if (destBuffer != nullptr)
-        tracktion_engine::addAntiDenormalisationNoise (*destBuffer, bufferStartSample, bufferNumSamples);
+        tracktion::engine::addAntiDenormalisationNoise (*destBuffer, bufferStartSample, bufferNumSamples);
 }
 
 void AudioRenderContext::clearMidiBuffer() const noexcept

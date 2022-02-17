@@ -180,16 +180,16 @@ private:
 namespace juce
 {
     template <>
-    struct VariantConverter<tracktion_engine::TimeStretcher::Mode>
+    struct VariantConverter<tracktion::engine::TimeStretcher::Mode>
     {
-        static tracktion_engine::TimeStretcher::Mode fromVar (const var& v)   { return (tracktion_engine::TimeStretcher::Mode) static_cast<int> (v); }
-        static var toVar (tracktion_engine::TimeStretcher::Mode v)            { return static_cast<int> (v); }
+        static tracktion::engine::TimeStretcher::Mode fromVar (const var& v)   { return (tracktion::engine::TimeStretcher::Mode) static_cast<int> (v); }
+        static var toVar (tracktion::engine::TimeStretcher::Mode v)            { return static_cast<int> (v); }
     };
 
     template <>
-    struct VariantConverter<tracktion_engine::TimeStretcher::ElastiqueProOptions>
+    struct VariantConverter<tracktion::engine::TimeStretcher::ElastiqueProOptions>
     {
-        static tracktion_engine::TimeStretcher::ElastiqueProOptions fromVar (const var& v) { return tracktion_engine::TimeStretcher::ElastiqueProOptions (v.toString()); }
-        static var toVar (const tracktion_engine::TimeStretcher::ElastiqueProOptions& v)   { return v.toString(); }
+        static tracktion::engine::TimeStretcher::ElastiqueProOptions fromVar (const var& v) { return tracktion::engine::TimeStretcher::ElastiqueProOptions (v.toString()); }
+        static var toVar (const tracktion::engine::TimeStretcher::ElastiqueProOptions& v)   { return v.toString(); }
     };
 }

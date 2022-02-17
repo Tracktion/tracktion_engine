@@ -27,7 +27,7 @@ public:
     
     void runTest() override
     {
-        auto& engine = *tracktion_engine::Engine::getEngines()[0];
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
         engine.getPluginManager().createBuiltInType<ToneGeneratorPlugin>();
         engine.getPluginManager().createBuiltInType<LatencyPlugin>();
                 
@@ -63,7 +63,7 @@ private:
     template<typename NodePlayerType>
     void runRackTests (test_utilities::TestSetup testSetup)
     {
-        auto& engine = *tracktion_engine::Engine::getEngines()[0];
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
         
         beginTest ("Unconnected Rack");
         {
@@ -375,7 +375,7 @@ private:
                 // Fill inputs with sin data
                 {
                     test_utilities::fillBufferWithSinData (inputBuffer);
-                    tracktion_engine::MidiMessageArray midi;
+                    tracktion::engine::MidiMessageArray midi;
                     inputProvider->setInputs ({ inputBuffer, midi });
                 }
 
@@ -423,7 +423,7 @@ private:
                     // Set the num audio inputs to be 1 channel and the Rack shouldn't crash
                     {
                         inputProvider->numChannels = 1;
-                        tracktion_engine::MidiMessageArray midi;
+                        tracktion::engine::MidiMessageArray midi;
                         inputProvider->setInputs ({ inputBuffer, midi });
 
                         auto rackNode = RackNodeBuilder::createRackNode (RackNodeBuilder::Algorithm::connectedNode, *rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
@@ -466,7 +466,7 @@ private:
                 // Fill inputs with sin data
                 {
                     test_utilities::fillBufferWithSinData (inputBuffer);
-                    tracktion_engine::MidiMessageArray midi;
+                    tracktion::engine::MidiMessageArray midi;
                     inputProvider->setInputs ({ inputBuffer, midi });
                 }
 
@@ -589,7 +589,7 @@ private:
                 // Fill inputs with sin data
                 {
                     test_utilities::fillBufferWithSinData (inputBuffer);
-                    tracktion_engine::MidiMessageArray midi;
+                    tracktion::engine::MidiMessageArray midi;
                     inputProvider->setInputs ({ inputBuffer, midi });
                 }
 

@@ -57,7 +57,7 @@ private:
     {
         using namespace tracktion::graph;
         using namespace test_utilities;
-        auto& engine = *tracktion_engine::Engine::getEngines()[0];
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
         const auto description = test_utilities::getDescription (ts)
                                     + juce::String (isMultiThreaded ? ", MT" : ", ST");
 
@@ -125,7 +125,7 @@ private:
     {
         using namespace tracktion::graph;
         using namespace test_utilities;
-        auto& engine = *tracktion_engine::Engine::getEngines()[0];
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
         const auto description = test_utilities::getDescription (ts)
                                     + juce::String (isMultiThreaded ? ", MT" : ", ST");
 
@@ -182,7 +182,7 @@ private:
     {
         using namespace tracktion::graph;
         using namespace test_utilities;
-        auto& engine = *tracktion_engine::Engine::getEngines()[0];
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
         const auto description = test_utilities::getDescription (ts)
                                     + juce::String (isMultiThreaded ? ", MT" : ", ST");
 
@@ -248,7 +248,7 @@ private:
     {
         using namespace tracktion::graph;
         using namespace test_utilities;
-        auto& engine = *tracktion_engine::Engine::getEngines()[0];
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
         const auto description = test_utilities::getDescription (ts)
                                     + juce::String (isMultiThreaded ? ", MT" : ", ST");
 
@@ -290,7 +290,7 @@ private:
     {
         using namespace tracktion::graph;
         using namespace test_utilities;
-        auto& engine = *tracktion_engine::Engine::getEngines()[0];
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
         const auto description = test_utilities::getDescription (ts)
                                     + juce::String (isMultiThreaded ? ", MT" : ", ST");
 

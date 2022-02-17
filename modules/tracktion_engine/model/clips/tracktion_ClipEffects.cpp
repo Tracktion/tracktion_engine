@@ -129,9 +129,9 @@ ClipEffects::~ClipEffects()
 namespace juce {
 
 template <>
-struct VariantConverter<tracktion_engine::ClipEffect::EffectType>
+struct VariantConverter<tracktion::engine::ClipEffect::EffectType>
 {
-    static tracktion_engine::ClipEffect::EffectType fromVar (const var& v)
+    static tracktion::engine::ClipEffect::EffectType fromVar (const var& v)
     {
         using namespace tracktion::engine;
 
@@ -152,7 +152,7 @@ struct VariantConverter<tracktion_engine::ClipEffect::EffectType>
         return ClipEffect::EffectType::none;
     }
 
-    static var toVar (const tracktion_engine::ClipEffect::EffectType& t)
+    static var toVar (const tracktion::engine::ClipEffect::EffectType& t)
     {
         using namespace tracktion::engine;
 

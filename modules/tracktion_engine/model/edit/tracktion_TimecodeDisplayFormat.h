@@ -196,24 +196,24 @@ namespace juce
 {
 
 template<>
-struct VariantConverter<tracktion_engine::TimecodeDisplayFormat>
+struct VariantConverter<tracktion::engine::TimecodeDisplayFormat>
 {
-    static tracktion_engine::TimecodeDisplayFormat fromVar (const var& v)
+    static tracktion::engine::TimecodeDisplayFormat fromVar (const var& v)
     {
-        if (v == "beats") return tracktion_engine::TimecodeType::barsBeats;
-        if (v == "fps24") return tracktion_engine::TimecodeType::fps24;
-        if (v == "fps25") return tracktion_engine::TimecodeType::fps25;
-        if (v == "fps30") return tracktion_engine::TimecodeType::fps30;
+        if (v == "beats") return tracktion::engine::TimecodeType::barsBeats;
+        if (v == "fps24") return tracktion::engine::TimecodeType::fps24;
+        if (v == "fps25") return tracktion::engine::TimecodeType::fps25;
+        if (v == "fps30") return tracktion::engine::TimecodeType::fps30;
 
-        return tracktion_engine::TimecodeType::millisecs;
+        return tracktion::engine::TimecodeType::millisecs;
     }
 
-    static var toVar (tracktion_engine::TimecodeDisplayFormat t)
+    static var toVar (tracktion::engine::TimecodeDisplayFormat t)
     {
-        if (t.type == tracktion_engine::TimecodeType::barsBeats)  return "beats";
-        if (t.type == tracktion_engine::TimecodeType::fps24)  return "fps24";
-        if (t.type == tracktion_engine::TimecodeType::fps25)  return "fps25";
-        if (t.type == tracktion_engine::TimecodeType::fps30)  return "fps30";
+        if (t.type == tracktion::engine::TimecodeType::barsBeats)  return "beats";
+        if (t.type == tracktion::engine::TimecodeType::fps24)  return "fps24";
+        if (t.type == tracktion::engine::TimecodeType::fps25)  return "fps25";
+        if (t.type == tracktion::engine::TimecodeType::fps30)  return "fps30";
 
         return "seconds";
     }
