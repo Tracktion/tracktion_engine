@@ -99,7 +99,7 @@ private:
 
 //==============================================================================
 //==============================================================================
-MelodyneNode::MelodyneNode (AudioClipBase& c, tracktion_graph::PlayHead& ph, bool isRendering)
+MelodyneNode::MelodyneNode (AudioClipBase& c, tracktion::graph::PlayHead& ph, bool isRendering)
     : clip (c), playHead (ph),
       clipLevel (clip.getLiveClipLevel()), clipPtr (&c),
       melodyneProxy (c.melodyneProxy),
@@ -129,9 +129,9 @@ MelodyneNode::~MelodyneNode()
 }
 
 //==============================================================================
-tracktion_graph::NodeProperties MelodyneNode::getNodeProperties()
+tracktion::graph::NodeProperties MelodyneNode::getNodeProperties()
 {
-    tracktion_graph::NodeProperties props;
+    tracktion::graph::NodeProperties props;
     props.hasAudio = true;
     props.numberOfChannels = fileInfo.numChannels;
     
@@ -142,12 +142,12 @@ tracktion_graph::NodeProperties MelodyneNode::getNodeProperties()
     return props;
 }
 
-std::vector<tracktion_graph::Node*> MelodyneNode::getDirectInputNodes()
+std::vector<tracktion::graph::Node*> MelodyneNode::getDirectInputNodes()
 {
     return {};
 }
 
-void MelodyneNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
+void MelodyneNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
     CRASH_TRACER
     if (auto plugin = melodyneProxy->getPlugin())
@@ -206,7 +206,7 @@ void MelodyneNode::process (ProcessContext& pc)
                                           tracktion::timeRangeFromSamples (loopPositions, sampleRate));
             }
 
-            auto asb = tracktion_graph::toAudioBuffer (dest);
+            auto asb = tracktion::graph::toAudioBuffer (dest);
             pluginInstance->processBlock (asb, midiMessages);
 
             float gains[2];

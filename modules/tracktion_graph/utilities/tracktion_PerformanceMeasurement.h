@@ -15,7 +15,7 @@
  #include <sys/kdebug_signpost.h>
 #endif
 
-namespace tracktion_graph
+namespace tracktion { inline namespace graph
 {
 
 //==============================================================================
@@ -285,4 +285,4 @@ inline PerformanceMeasurement::Statistics PerformanceMeasurement::getStatisticsA
     return s;
 }
 
-}
+}}

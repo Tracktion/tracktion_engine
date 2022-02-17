@@ -11,7 +11,7 @@
 #pragma once
 
 
-namespace tracktion_graph
+namespace tracktion { inline namespace graph
 {
 
 #if GRAPH_UNIT_TESTS_PLAYHEAD
@@ -210,4 +210,4 @@ static PlayHeadTests playHeadTests;
 
 #endif
 
-}
+}}

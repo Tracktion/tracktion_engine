@@ -13,21 +13,21 @@ namespace tracktion_engine
 
 //==============================================================================
 //==============================================================================
-TimedMutingNode::TimedMutingNode (std::unique_ptr<tracktion_graph::Node> inputNode,
+TimedMutingNode::TimedMutingNode (std::unique_ptr<tracktion::graph::Node> inputNode,
                                   juce::Array<TimeRange> muteTimes_,
-                                  tracktion_graph::PlayHeadState& playHeadStateToUse)
+                                  tracktion::graph::PlayHeadState& playHeadStateToUse)
     : input (std::move (inputNode)),
       playHeadState (playHeadStateToUse),
       muteTimes (std::move (muteTimes_))
 {
     jassert (! muteTimes.isEmpty());
 
-    setOptimisations ({ tracktion_graph::ClearBuffers::no,
-                        tracktion_graph::AllocateAudioBuffer::yes });
+    setOptimisations ({ tracktion::graph::ClearBuffers::no,
+                        tracktion::graph::AllocateAudioBuffer::yes });
 }
 
 //==============================================================================
-tracktion_graph::NodeProperties TimedMutingNode::getNodeProperties()
+tracktion::graph::NodeProperties TimedMutingNode::getNodeProperties()
 {
     auto props = input->getNodeProperties();
     props.nodeID = 0;
@@ -35,12 +35,12 @@ tracktion_graph::NodeProperties TimedMutingNode::getNodeProperties()
     return props;
 }
 
-std::vector<tracktion_graph::Node*> TimedMutingNode::getDirectInputNodes()
+std::vector<tracktion::graph::Node*> TimedMutingNode::getDirectInputNodes()
 {
     return { input.get() };
 }
 
-void TimedMutingNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
+void TimedMutingNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
     sampleRate = info.sampleRate;
 }

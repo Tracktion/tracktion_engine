@@ -14,7 +14,7 @@
 #include <cxxabi.h>
 #endif
 
-namespace tracktion_graph::test_utilities
+namespace tracktion { inline namespace graph { namespace test_utilities
 {
     std::string demangle (std::string name)
     {
@@ -77,4 +77,4 @@ namespace tracktion_graph::test_utilities
         
         return output;
     }
-}
+}}}

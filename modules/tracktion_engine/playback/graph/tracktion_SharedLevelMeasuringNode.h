@@ -14,14 +14,14 @@ namespace tracktion_engine
 /**
     Applies a SharedLevelMeter to the audio passing through this node.
 */
-class SharedLevelMeasuringNode final    : public tracktion_graph::Node
+class SharedLevelMeasuringNode final    : public tracktion::graph::Node
 {
 public:
     SharedLevelMeasuringNode (SharedLevelMeasurer::Ptr, std::unique_ptr<Node>);
 
     std::vector<Node*> getDirectInputNodes() override;
-    tracktion_graph::NodeProperties getNodeProperties() override;
-    void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override;
+    tracktion::graph::NodeProperties getNodeProperties() override;
+    void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
     void prefetchBlock (juce::Range<int64_t> /*referenceSampleRange*/) override;
     void process (ProcessContext&) override;

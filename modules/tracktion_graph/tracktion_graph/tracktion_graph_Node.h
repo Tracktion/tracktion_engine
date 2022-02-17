@@ -70,7 +70,7 @@
 */
 
 
-namespace tracktion_graph
+namespace tracktion { inline namespace graph
 {
 
 class Node;
@@ -81,7 +81,7 @@ class Node;
 template<typename NodeType, typename... Args>
 std::unique_ptr<Node> makeNode (Args&&... args)
 {
-    return std::unique_ptr<tracktion_graph::Node> (std::move (std::make_unique<NodeType> (std::forward<Args> (args)...)));
+    return std::unique_ptr<tracktion::graph::Node> (std::move (std::make_unique<NodeType> (std::forward<Args> (args)...)));
 }
 
 
@@ -602,4 +602,4 @@ inline std::vector<Node*> getNodes (Node& node, VertexOrdering vertexOrdering)
     return visitedNodes;
 }
 
-}
+}}

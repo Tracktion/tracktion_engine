@@ -22,9 +22,9 @@ class NodeRenderContext
 public:
     /** Creates a context to render a Node. */
     NodeRenderContext (Renderer::RenderTask&, Renderer::Parameters&,
-                       std::unique_ptr<tracktion_graph::Node>,
-                       std::unique_ptr<tracktion_graph::PlayHead>,
-                       std::unique_ptr<tracktion_graph::PlayHeadState>,
+                       std::unique_ptr<tracktion::graph::Node>,
+                       std::unique_ptr<tracktion::graph::PlayHead>,
+                       std::unique_ptr<tracktion::graph::PlayHeadState>,
                        std::unique_ptr<ProcessState>,
                        juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* sourceToUpdate);
     
@@ -43,9 +43,9 @@ public:
     //==============================================================================
     /** Renders the MIDI of an Edit to a sequence. */
     static juce::String renderMidi (Renderer::RenderTask&, Renderer::Parameters&,
-                                    std::unique_ptr<tracktion_graph::Node>,
-                                    std::unique_ptr<tracktion_graph::PlayHead>,
-                                    std::unique_ptr<tracktion_graph::PlayHeadState>,
+                                    std::unique_ptr<tracktion::graph::Node>,
+                                    std::unique_ptr<tracktion::graph::PlayHead>,
+                                    std::unique_ptr<tracktion::graph::PlayHeadState>,
                                     std::unique_ptr<ProcessState>,
                                     std::atomic<float>& progressToUpdate);
 
@@ -78,8 +78,8 @@ private:
     Renderer::Parameters r, originalParams;
     bool needsToNormaliseAndTrim = false;
     
-    std::unique_ptr<tracktion_graph::PlayHead> playHead;
-    std::unique_ptr<tracktion_graph::PlayHeadState> playHeadState;
+    std::unique_ptr<tracktion::graph::PlayHead> playHead;
+    std::unique_ptr<tracktion::graph::PlayHeadState> playHeadState;
     std::unique_ptr<ProcessState> processState;
     std::unique_ptr<TracktionNodePlayer> nodePlayer;
     

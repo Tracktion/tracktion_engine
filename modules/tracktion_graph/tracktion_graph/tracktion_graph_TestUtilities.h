@@ -13,7 +13,7 @@
 #include <numeric>
 #include <juce_audio_formats/juce_audio_formats.h>
 
-namespace tracktion_graph
+namespace tracktion { inline namespace graph
 {
 
 //==============================================================================
@@ -141,7 +141,7 @@ namespace test_utilities
     /** Returns the ammount of internal memory allocated for buffers. */
     static inline size_t getMemoryUsage (Node& node)
     {
-        return getMemoryUsage (tracktion_graph::getNodes (node, tracktion_graph::VertexOrdering::postordering));
+        return getMemoryUsage (tracktion::graph::getNodes (node, tracktion::graph::VertexOrdering::postordering));
     }
 
     /** Returns the ammount of internal memory allocated for buffers. */
@@ -417,7 +417,7 @@ namespace test_utilities
             player->prepareToPlay (testSetup.sampleRate, testSetup.blockSize);
         }
 
-        void setPlayHead (tracktion_graph::PlayHead* newPlayHead)
+        void setPlayHead (tracktion::graph::PlayHead* newPlayHead)
         {
             playHead = newPlayHead;
         }
@@ -448,7 +448,7 @@ namespace test_utilities
 
                 if (writer)
                 {
-                    auto audioBuffer = tracktion_graph::toAudioBuffer (subSectionView);
+                    auto audioBuffer = tracktion::graph::toAudioBuffer (subSectionView);
                     writer->writeFromAudioSampleBuffer (audioBuffer, 0, audioBuffer.getNumSamples());
                 }
 
@@ -502,7 +502,7 @@ namespace test_utilities
         TestSetup testSetup;
         const int numChannels;
         const double durationInSeconds;
-        tracktion_graph::PlayHead* playHead = nullptr;
+        tracktion::graph::PlayHead* playHead = nullptr;
 
         std::shared_ptr<TestContext> context;
         juce::MemoryBlock audioOutputBlock;
@@ -539,4 +539,4 @@ namespace test_utilities
     }
 }
 
-}
+}}

@@ -44,11 +44,11 @@ struct CombiningNode::TimedNode
         }
     }
 
-    void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info,
+    void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info,
                         choc::buffer::ChannelArrayView<float> view)
     {
         auto info2 = info;
-        info2.allocateAudioBuffer = [view] (choc::buffer::Size size) -> tracktion_graph::NodeBuffer
+        info2.allocateAudioBuffer = [view] (choc::buffer::Size size) -> tracktion::graph::NodeBuffer
                                     {
                                         jassert (size.numFrames == view.getNumFrames());
                                         jassert (size.numChannels <= view.getNumChannels());
@@ -140,7 +140,7 @@ void CombiningNode::addInput (std::unique_ptr<Node> input, TimeRange time)
     nodeProperties.hasMidi |= props.hasMidi;
     nodeProperties.numberOfChannels = std::max (nodeProperties.numberOfChannels, props.numberOfChannels);
     nodeProperties.latencyNumSamples = std::max (nodeProperties.latencyNumSamples, props.latencyNumSamples);
-    tracktion_graph::hash_combine (nodeProperties.nodeID, props.nodeID);
+    tracktion::graph::hash_combine (nodeProperties.nodeID, props.nodeID);
 
     int i;
     for (i = 0; i < inputs.size(); ++i)
@@ -172,17 +172,17 @@ void CombiningNode::addInput (std::unique_ptr<Node> input, TimeRange time)
     }
 }
 
-std::vector<tracktion_graph::Node*> CombiningNode::getDirectInputNodes()
+std::vector<tracktion::graph::Node*> CombiningNode::getDirectInputNodes()
 {
     return {};
 }
 
-tracktion_graph::NodeProperties CombiningNode::getNodeProperties()
+tracktion::graph::NodeProperties CombiningNode::getNodeProperties()
 {
     return nodeProperties;
 }
 
-void CombiningNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
+void CombiningNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
     isReadyToProcessBlock.store (true, std::memory_order_release);
     tempAudioBuffer.resize (choc::buffer::Size::create ((choc::buffer::ChannelCount) nodeProperties.numberOfChannels,

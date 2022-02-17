@@ -10,7 +10,7 @@
 
 #pragma once
 
-namespace tracktion_graph
+namespace tracktion { inline namespace graph
 {
 
 //==============================================================================
@@ -743,30 +743,30 @@ private:
 //==============================================================================
 //==============================================================================
 /** Takes a non-owning input node and simply forwards its outputs on. */
-class ForwardingNode final  : public tracktion_graph::Node
+class ForwardingNode final  : public tracktion::graph::Node
 {
 public:
-    ForwardingNode (tracktion_graph::Node* inputNode)
+    ForwardingNode (tracktion::graph::Node* inputNode)
         : input (inputNode)
     {
         jassert (input);
     }
 
-    ForwardingNode (std::shared_ptr<tracktion_graph::Node> inputNode)
+    ForwardingNode (std::shared_ptr<tracktion::graph::Node> inputNode)
         : ForwardingNode (inputNode.get())
     {
         nodePtr = std::move (inputNode);
     }
 
-    tracktion_graph::NodeProperties getNodeProperties() override
+    tracktion::graph::NodeProperties getNodeProperties() override
     {
         auto props = input->getNodeProperties();
-        tracktion_graph::hash_combine (props.nodeID, nodeID);
+        tracktion::graph::hash_combine (props.nodeID, nodeID);
         
         return props;
     }
     
-    std::vector<tracktion_graph::Node*> getDirectInputNodes() override
+    std::vector<tracktion::graph::Node*> getDirectInputNodes() override
     {
         return { input };
     }
@@ -784,9 +784,9 @@ public:
     }
 
 private:
-    tracktion_graph::Node* input;
-    std::shared_ptr<tracktion_graph::Node> nodePtr;
+    tracktion::graph::Node* input;
+    std::shared_ptr<tracktion::graph::Node> nodePtr;
     const size_t nodeID { (size_t) juce::Random::getSystemRandom().nextInt() };
 };
 
-}
+}}

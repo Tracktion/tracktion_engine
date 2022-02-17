@@ -17,12 +17,12 @@ namespace tracktion_engine
 struct ProcessState
 {
     /** Creates a ProcessState. */
-    ProcessState (tracktion_graph::PlayHeadState&);
+    ProcessState (tracktion::graph::PlayHeadState&);
 
     /** Updates the internal state based on a reference sample range and PlayHeadState. */
     void update (double sampleRate, juce::Range<int64_t> referenceSampleRange);
     
-    tracktion_graph::PlayHeadState& playHeadState;
+    tracktion::graph::PlayHeadState& playHeadState;
     double sampleRate = 44100.0;
     int numSamples = 0;
     juce::Range<int64_t> referenceSampleRange, timelineSampleRange;
@@ -68,10 +68,10 @@ public:
 
     //==============================================================================
     /** Returns the PlayHeadState in use. */
-    tracktion_graph::PlayHeadState& getPlayHeadState()      { return processState.playHeadState; }
+    tracktion::graph::PlayHeadState& getPlayHeadState()      { return processState.playHeadState; }
 
     /** Returns the PlayHead in use. */
-    tracktion_graph::PlayHead& getPlayHead()                { return getPlayHeadState().playHead; }
+    tracktion::graph::PlayHead& getPlayHead()                { return getPlayHeadState().playHead; }
 
 protected:
     //==============================================================================

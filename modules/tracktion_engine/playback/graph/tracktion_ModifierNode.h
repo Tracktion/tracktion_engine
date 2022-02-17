@@ -18,7 +18,7 @@ class TrackMuteState;
 /**
     Node for processing a Modifier.
 */
-class ModifierNode final    : public tracktion_graph::Node
+class ModifierNode final    : public tracktion::graph::Node
 {
 public:
     //==============================================================================
@@ -32,7 +32,7 @@ public:
                   tracktion_engine::Modifier::Ptr,
                   double sampleRateToUse, int blockSizeToUse,
                   const TrackMuteState*,
-                  tracktion_graph::PlayHeadState&, bool rendering);
+                  tracktion::graph::PlayHeadState&, bool rendering);
 
     /** Creates a ModifierNode to process a plugin on in a Rack with an InputProvider.
         @param InputProvider            The InputProvider to provide inputs and a PluginRenderContext
@@ -50,10 +50,10 @@ public:
     Modifier& getModifier()                             { return *modifier; }
 
     //==============================================================================
-    tracktion_graph::NodeProperties getNodeProperties() override;
+    tracktion::graph::NodeProperties getNodeProperties() override;
     std::vector<Node*> getDirectInputNodes() override   { return { input.get() }; }
     bool isReadyToProcess() override                    { return input->hasProcessed(); }
-    void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override;
+    void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     void process (ProcessContext&) override;
     
 private:
@@ -63,7 +63,7 @@ private:
     std::shared_ptr<InputProvider> audioRenderContextProvider;
     
     const TrackMuteState* trackMuteState = nullptr;
-    tracktion_graph::PlayHeadState* playHeadState = nullptr;
+    tracktion::graph::PlayHeadState* playHeadState = nullptr;
     bool isRendering = false;
     
     bool isInitialised = false;

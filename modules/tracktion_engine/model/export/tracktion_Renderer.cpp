@@ -27,8 +27,8 @@ namespace render_utils
         auto tracksToDo = toTrackArray (*r.edit, r.tracksToDo);
         
         // Initialise playhead and continuity
-        auto playHead = std::make_unique<tracktion_graph::PlayHead>();
-        auto playHeadState = std::make_unique<tracktion_graph::PlayHeadState> (*playHead);
+        auto playHead = std::make_unique<tracktion::graph::PlayHead>();
+        auto playHeadState = std::make_unique<tracktion::graph::PlayHeadState> (*playHead);
         auto processState = std::make_unique<ProcessState> (*playHeadState);
 
         CreateNodeParams cnp { *processState };
@@ -42,7 +42,7 @@ namespace render_utils
         cnp.addAntiDenormalisationNoise = r.addAntiDenormalisationNoise;
         cnp.includeBypassedPlugins = false;
 
-        std::unique_ptr<tracktion_graph::Node> node;
+        std::unique_ptr<tracktion::graph::Node> node;
         callBlocking ([&r, &node, &cnp] { node = createNodeForEdit (*r.edit, cnp); });
 
         if (! node)
@@ -122,8 +122,8 @@ Renderer::RenderTask::RenderTask (const juce::String& taskDescription,
     auto tracksToDo = toTrackArray (*r.edit, r.tracksToDo);
     
     // Initialise playhead and continuity
-    playHead = std::make_unique<tracktion_graph::PlayHead>();
-    playHeadState = std::make_unique<tracktion_graph::PlayHeadState> (*playHead);
+    playHead = std::make_unique<tracktion::graph::PlayHead>();
+    playHeadState = std::make_unique<tracktion::graph::PlayHeadState> (*playHead);
     processState = std::make_unique<ProcessState> (*playHeadState);
 
     CreateNodeParams cnp { *processState };
@@ -142,9 +142,9 @@ Renderer::RenderTask::RenderTask (const juce::String& taskDescription,
 
 Renderer::RenderTask::RenderTask (const juce::String& taskDescription,
                                   const Renderer::Parameters& rp,
-                                  std::unique_ptr<tracktion_graph::Node> n,
-                                  std::unique_ptr<tracktion_graph::PlayHead> playHead_,
-                                  std::unique_ptr<tracktion_graph::PlayHeadState> playHeadState_,
+                                  std::unique_ptr<tracktion::graph::Node> n,
+                                  std::unique_ptr<tracktion::graph::PlayHead> playHead_,
+                                  std::unique_ptr<tracktion::graph::PlayHeadState> playHeadState_,
                                   std::unique_ptr<ProcessState> processState_,
                                   std::atomic<float>* progressToUpdate,
                                   juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* source)

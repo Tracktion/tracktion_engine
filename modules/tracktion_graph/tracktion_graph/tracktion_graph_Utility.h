@@ -43,7 +43,7 @@
 */
 //==============================================================================
 
-namespace tracktion_graph
+namespace tracktion { inline namespace graph
 {
 
 //==============================================================================
@@ -118,4 +118,4 @@ constexpr juce::Range<int64_t> timeToSample (RangeType timeInSeconds, double sam
              timeToSample (timeInSeconds.getEnd(), sampleRate) };
 }
 
-}
+}}

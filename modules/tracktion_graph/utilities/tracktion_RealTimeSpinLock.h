@@ -14,7 +14,7 @@
  #include <emmintrin.h>
 #endif
 
-namespace tracktion_graph
+namespace tracktion { inline namespace graph
 {
 
 /** A basic spin lock that uses an atomic_flag to store the locked state so should never result in a system call.
@@ -62,4 +62,4 @@ private:
     std::atomic_flag flag = ATOMIC_FLAG_INIT;
 };
 
-}
+}}

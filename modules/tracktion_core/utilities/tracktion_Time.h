@@ -11,6 +11,8 @@
 #pragma once
 
 #include <chrono>
+#include <cstdlib>
+#include <juce_core/juce_core.h>
 
 namespace tracktion { inline namespace core
 {

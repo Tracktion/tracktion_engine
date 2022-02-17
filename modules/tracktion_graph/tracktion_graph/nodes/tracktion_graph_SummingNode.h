@@ -10,7 +10,7 @@
 
 #pragma once
 
-namespace tracktion_graph
+namespace tracktion { inline namespace graph
 {
 
 //==============================================================================
@@ -320,4 +320,4 @@ static inline std::unique_ptr<SummingNode> makeSummingNode (std::initializer_lis
     return std::make_unique<SummingNode> (std::move (nodeVector));
 }
 
-}
+}}

@@ -55,9 +55,9 @@ SpeedRampWaveNode::SpeedRampWaveNode (const AudioFile& af,
             || (! speedFadeDescription.outTimeRange.isEmpty()));
 }
 
-tracktion_graph::NodeProperties SpeedRampWaveNode::getNodeProperties()
+tracktion::graph::NodeProperties SpeedRampWaveNode::getNodeProperties()
 {
-    tracktion_graph::NodeProperties props;
+    tracktion::graph::NodeProperties props;
     props.hasAudio = true;
     props.hasMidi = false;
     props.numberOfChannels = destChannels.size();
@@ -66,7 +66,7 @@ tracktion_graph::NodeProperties SpeedRampWaveNode::getNodeProperties()
     return props;
 }
 
-void SpeedRampWaveNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
+void SpeedRampWaveNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
     reader = audioFile.engine->getAudioFileManager().cache.createReader (audioFile);
     outputSampleRate = info.sampleRate;
@@ -152,7 +152,7 @@ int64_t SpeedRampWaveNode::editTimeToFileSample (TimePosition editTime) const no
 
 bool SpeedRampWaveNode::updateFileSampleRate()
 {
-    using namespace tracktion_graph;
+    using namespace tracktion::graph;
     
     if (reader == nullptr)
         return false;
@@ -280,7 +280,7 @@ void SpeedRampWaveNode::processSection (ProcessContext& pc, juce::Range<int64_t>
             return;
         }
 
-        auto bufferRef = tracktion_graph::toAudioBuffer (destBuffer);
+        auto bufferRef = tracktion::graph::toAudioBuffer (destBuffer);
         bufferRef.applyGainRamp (0, bufferRef.getNumSamples(),
                                  1.0f, 0.0f);
         
@@ -291,7 +291,7 @@ void SpeedRampWaveNode::processSection (ProcessContext& pc, juce::Range<int64_t>
     {
         if (! playedLastBlock)
         {
-            auto bufferRef = tracktion_graph::toAudioBuffer (destBuffer);
+            auto bufferRef = tracktion::graph::toAudioBuffer (destBuffer);
             bufferRef.applyGainRamp (0, bufferRef.getNumSamples(),
                                      0.0f, 1.0f);
         }

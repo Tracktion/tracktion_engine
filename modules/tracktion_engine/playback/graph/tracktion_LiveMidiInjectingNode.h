@@ -17,24 +17,24 @@ namespace tracktion_engine
     A Node that injects MIDI message in to the stream, for keyboard key entry,
     note previews and MIDI step entry etc.
 */
-class LiveMidiInjectingNode final   : public tracktion_graph::Node,
+class LiveMidiInjectingNode final   : public tracktion::graph::Node,
                                       private AudioTrack::Listener
 {
 public:
-    LiveMidiInjectingNode (AudioTrack&, std::unique_ptr<tracktion_graph::Node>);
+    LiveMidiInjectingNode (AudioTrack&, std::unique_ptr<tracktion::graph::Node>);
     ~LiveMidiInjectingNode() override;
 
     //==============================================================================
-    tracktion_graph::NodeProperties getNodeProperties() override;
+    tracktion::graph::NodeProperties getNodeProperties() override;
     std::vector<Node*> getDirectInputNodes() override;
-    void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override;
+    void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
     void process (ProcessContext&) override;
 
 private:
     //==============================================================================
     AudioTrack::Ptr track;
-    std::unique_ptr<tracktion_graph::Node> input;
+    std::unique_ptr<tracktion::graph::Node> input;
 
     juce::CriticalSection liveMidiLock;
     MidiMessageArray liveMidiMessages;

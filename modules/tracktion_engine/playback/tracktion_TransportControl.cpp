@@ -467,7 +467,7 @@ struct TransportControl::PlayHeadWrapper
         : transport (t)
     {}
     
-    tracktion_graph::PlayHead* getNodePlayHead() const
+    tracktion::graph::PlayHead* getNodePlayHead() const
     {
         return transport.playbackContext ? transport.playbackContext->getNodePlayHead()
                                          : nullptr;

@@ -18,21 +18,21 @@ TrackWaveInputDeviceNode::TrackWaveInputDeviceNode (WaveInputDevice& owner, std:
     jassert (waveInputDevice.isTrackDevice());
 
     if (copyInputsToOutputs)
-        setOptimisations ({ tracktion_graph::ClearBuffers::no,
-                            tracktion_graph::AllocateAudioBuffer::no });
+        setOptimisations ({ tracktion::graph::ClearBuffers::no,
+                            tracktion::graph::AllocateAudioBuffer::no });
 }
 
-std::vector<tracktion_graph::Node*> TrackWaveInputDeviceNode::getDirectInputNodes()
+std::vector<tracktion::graph::Node*> TrackWaveInputDeviceNode::getDirectInputNodes()
 {
     return { input.get() };
 }
 
-tracktion_graph::NodeProperties TrackWaveInputDeviceNode::getNodeProperties()
+tracktion::graph::NodeProperties TrackWaveInputDeviceNode::getNodeProperties()
 {
     return input->getNodeProperties();
 }
 
-void TrackWaveInputDeviceNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
+void TrackWaveInputDeviceNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
     sampleRate = info.sampleRate;
     offsetSamples = waveInputDevice.engine.getDeviceManager().getBlockSize();
@@ -65,7 +65,7 @@ void TrackWaveInputDeviceNode::process (ProcessContext& pc)
                                   nullptr };
 
         const double streamTime = waveInputDevice.engine.getDeviceManager().getCurrentStreamTime()
-                                    + tracktion_graph::sampleToTime (offsetSamples, sampleRate);
+                                    + tracktion::graph::sampleToTime (offsetSamples, sampleRate);
 
         waveInputDevice.consumeNextAudioBlock (chans, (int) numChans, (int) sourceBuffers.audio.getNumFrames(), streamTime);
     }

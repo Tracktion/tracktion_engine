@@ -15,7 +15,7 @@ namespace tracktion_engine
 
 namespace
 {
-    static Plugin::Array findAllPlugins (tracktion_graph::Node& node)
+    static Plugin::Array findAllPlugins (tracktion::graph::Node& node)
     {
         Plugin::Array plugins, insideRacks;
 
@@ -38,8 +38,8 @@ namespace
 //==============================================================================
 NodeRenderContext::NodeRenderContext (Renderer::RenderTask& owner_, Renderer::Parameters& p,
                                       std::unique_ptr<Node> n,
-                                      std::unique_ptr<tracktion_graph::PlayHead> playHead_,
-                                      std::unique_ptr<tracktion_graph::PlayHeadState> playHeadState_,
+                                      std::unique_ptr<tracktion::graph::PlayHead> playHead_,
+                                      std::unique_ptr<tracktion::graph::PlayHeadState> playHeadState_,
                                       std::unique_ptr<ProcessState> processState_,
                                       juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* sourceToUpdate_)
     : owner (owner_),
@@ -58,7 +58,7 @@ NodeRenderContext::NodeRenderContext (Renderer::RenderTask& owner_, Renderer::Pa
     jassert (r.time.getLength() > 0.0s);
 
     nodePlayer = std::make_unique<TracktionNodePlayer> (std::move (n), *processState, r.sampleRateForAudio, r.blockSizeForAudio,
-                                                        getPoolCreatorFunction (static_cast<tracktion_graph::ThreadPoolStrategy> (EditPlaybackContext::getThreadPoolStrategy())));
+                                                        getPoolCreatorFunction (static_cast<tracktion::graph::ThreadPoolStrategy> (EditPlaybackContext::getThreadPoolStrategy())));
     nodePlayer->setNumThreads ((size_t) p.engine->getEngineBehaviour().getNumberOfCPUsToUseForAudio() - 1);
     
     numLatencySamplesToDrop = nodePlayer->getNode()->getNodeProperties().latencyNumSamples;
@@ -207,7 +207,7 @@ bool NodeRenderContext::renderNextBlock (std::atomic<float>& progressToUpdate)
         blockEnd = streamTime + blockLength;
         
         playHead->playSyncedToRange (timeToSample (EditTimeRange (streamTime, Edit::maximumLength), r.sampleRateForAudio));
-        playHeadState->update (tracktion_graph::timeToSample (EditTimeRange (streamTime, blockEnd), r.sampleRateForAudio));
+        playHeadState->update (tracktion::graph::timeToSample (EditTimeRange (streamTime, blockEnd), r.sampleRateForAudio));
     }
 
     if (r.realTimeRender)
@@ -225,7 +225,7 @@ bool NodeRenderContext::renderNextBlock (std::atomic<float>& progressToUpdate)
     resetFP();
 
     const EditTimeRange streamTimeRange (streamTime, blockEnd);
-    const auto referenceSampleRange = juce::Range<int64_t>::withStartAndLength (tracktion_graph::timeToSample (streamTimeRange.start, originalParams.sampleRateForAudio), r.blockSizeForAudio);
+    const auto referenceSampleRange = juce::Range<int64_t>::withStartAndLength (tracktion::graph::timeToSample (streamTimeRange.start, originalParams.sampleRateForAudio), r.blockSizeForAudio);
 
     // Update modifier timers
     r.edit->updateModifierTimers (TimePosition::fromSeconds (streamTime), r.blockSizeForAudio);
@@ -364,29 +364,29 @@ NodeRenderContext::WriteResult NodeRenderContext::writeAudioBlock (choc::buffer:
 //==============================================================================
 juce::String NodeRenderContext::renderMidi (Renderer::RenderTask& owner,
                                             Renderer::Parameters& r,
-                                            std::unique_ptr<tracktion_graph::Node> n,
-                                            std::unique_ptr<tracktion_graph::PlayHead> playHead,
-                                            std::unique_ptr<tracktion_graph::PlayHeadState> playHeadState,
+                                            std::unique_ptr<tracktion::graph::Node> n,
+                                            std::unique_ptr<tracktion::graph::PlayHead> playHead,
+                                            std::unique_ptr<tracktion::graph::PlayHeadState> playHeadState,
                                             std::unique_ptr<ProcessState> processState,
                                             std::atomic<float>& progress)
 {
     const int samplesPerBlock = r.blockSizeForAudio;
     const double sampleRate = r.sampleRateForAudio;
-    const double blockLength = tracktion_graph::sampleToTime (samplesPerBlock, sampleRate);
+    const double blockLength = tracktion::graph::sampleToTime (samplesPerBlock, sampleRate);
     double streamTime = r.time.getStart().inSeconds();
 
     auto nodePlayer = std::make_unique<TracktionNodePlayer> (std::move (n), *processState,
                                                              sampleRate, samplesPerBlock,
-                                                             getPoolCreatorFunction (static_cast<tracktion_graph::ThreadPoolStrategy> (EditPlaybackContext::getThreadPoolStrategy())));
+                                                             getPoolCreatorFunction (static_cast<tracktion::graph::ThreadPoolStrategy> (EditPlaybackContext::getThreadPoolStrategy())));
     nodePlayer->setNumThreads ((size_t) r.engine->getEngineBehaviour().getNumberOfCPUsToUseForAudio() - 1);
     
     //TODO: Should really purge any non-MIDI nodes here then return if no MIDI has been found
     
     playHead->stop();
-    playHead->setPosition (tracktion_graph::timeToSample (streamTime, sampleRate));
-    playHead->playSyncedToRange (tracktion_graph::timeToSample ({ streamTime, Edit::maximumLength }, sampleRate));
+    playHead->setPosition (tracktion::graph::timeToSample (streamTime, sampleRate));
+    playHead->playSyncedToRange (tracktion::graph::timeToSample ({ streamTime, Edit::maximumLength }, sampleRate));
 
-    playHeadState->update (tracktion_graph::timeToSample ({ streamTime, streamTime + blockLength }, sampleRate));
+    playHeadState->update (tracktion::graph::timeToSample ({ streamTime, streamTime + blockLength }, sampleRate));
 
     // Wait for any nodes to render their sources or proxies
     auto leafNodesReady = [nodes = getNodes (*nodePlayer->getNode(), VertexOrdering::postordering)]
@@ -432,7 +432,7 @@ juce::String NodeRenderContext::renderMidi (Renderer::RenderTask& owner,
 
         renderingBuffer.clear();
         blockMidiBuffer.clear();
-        const auto referenceSampleRange = tracktion_graph::timeToSample (streamTimeRange, sampleRate);
+        const auto referenceSampleRange = tracktion::graph::timeToSample (streamTimeRange, sampleRate);
         auto destView = choc::buffer::createChannelArrayView (renderingBuffer.getArrayOfWritePointers(),
                                                               (choc::buffer::ChannelCount) renderingBuffer.getNumChannels(), (choc::buffer::FrameCount) referenceSampleRange.getLength());
 

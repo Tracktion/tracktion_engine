@@ -25,7 +25,7 @@ public:
     
     void runTest() override
     {
-        for (auto ts : tracktion_graph::test_utilities::getTestSetups (*this))
+        for (auto ts : tracktion::graph::test_utilities::getTestSetups (*this))
         {
             runBasicTests (ts, true);
             runBasicTests (ts, false);
@@ -48,16 +48,16 @@ private:
     //==============================================================================
     void runBasicTests (test_utilities::TestSetup ts, bool playSyncedToRange)
     {
-        using namespace tracktion_graph;
+        using namespace tracktion::graph;
         auto& engine = *tracktion_engine::Engine::getEngines()[0];
 
         const double fileLengthSeconds = 5.0;
         auto sinFile = test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, fileLengthSeconds);
         AudioFile sinAudioFile (engine, sinFile->getFile());
         
-        tracktion_graph::PlayHead playHead;
+        tracktion::graph::PlayHead playHead;
         playHead.setScrubbingBlockLength (timeToSample (0.08, ts.sampleRate));
-        tracktion_graph::PlayHeadState playHeadState (playHead);
+        tracktion::graph::PlayHeadState playHeadState (playHead);
         ProcessState processState (playHeadState);
 
         if (playSyncedToRange)
@@ -158,15 +158,15 @@ private:
 
     void runLoopedTimelineTests (test_utilities::TestSetup ts)
     {
-        using namespace tracktion_graph;
+        using namespace tracktion::graph;
         auto& engine = *tracktion_engine::Engine::getEngines()[0];
 
         const double fileLengthSeconds = 1.0;
         auto sinFile = test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, fileLengthSeconds);
         AudioFile sinAudioFile (engine, sinFile->getFile());
         
-        tracktion_graph::PlayHead playHead;
-        tracktion_graph::PlayHeadState playHeadState (playHead);
+        tracktion::graph::PlayHead playHead;
+        tracktion::graph::PlayHeadState playHeadState (playHead);
         ProcessState processState (playHeadState);
 
         beginTest ("Loop 0s-1s");

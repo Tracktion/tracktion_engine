@@ -13,8 +13,8 @@ namespace tracktion_engine
 
 //==============================================================================
 //==============================================================================
-FadeInOutNode::FadeInOutNode (std::unique_ptr<tracktion_graph::Node> inputNode,
-                              tracktion_graph::PlayHeadState& playHeadStateToUse,
+FadeInOutNode::FadeInOutNode (std::unique_ptr<tracktion::graph::Node> inputNode,
+                              tracktion::graph::PlayHeadState& playHeadStateToUse,
                               TimeRange in, TimeRange out,
                               AudioFadeCurve::Type fadeInType_, AudioFadeCurve::Type fadeOutType_,
                               bool clearSamplesOutsideFade)
@@ -28,12 +28,12 @@ FadeInOutNode::FadeInOutNode (std::unique_ptr<tracktion_graph::Node> inputNode,
 {
     jassert (! (fadeIn.isEmpty() && fadeOut.isEmpty()));
 
-    setOptimisations ({ tracktion_graph::ClearBuffers::no,
-                        tracktion_graph::AllocateAudioBuffer::yes });
+    setOptimisations ({ tracktion::graph::ClearBuffers::no,
+                        tracktion::graph::AllocateAudioBuffer::yes });
 }
 
 //==============================================================================
-tracktion_graph::NodeProperties FadeInOutNode::getNodeProperties()
+tracktion::graph::NodeProperties FadeInOutNode::getNodeProperties()
 {
     auto props = input->getNodeProperties();
     props.nodeID = 0;
@@ -41,12 +41,12 @@ tracktion_graph::NodeProperties FadeInOutNode::getNodeProperties()
     return props;
 }
 
-std::vector<tracktion_graph::Node*> FadeInOutNode::getDirectInputNodes()
+std::vector<tracktion::graph::Node*> FadeInOutNode::getDirectInputNodes()
 {
     return { input.get() };
 }
 
-void FadeInOutNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
+void FadeInOutNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
     fadeInSampleRange = tracktion::toSamples (fadeIn, info.sampleRate);
     fadeOutSampleRange = tracktion::toSamples (fadeOut, info.sampleRate);
@@ -77,7 +77,7 @@ void FadeInOutNode::process (ProcessContext& pc)
     }
 
     // Otherwise copy the source in to the dest ready for fading
-    tracktion_graph::copyIfNotAliased (destAudioBlock, sourceBuffers.audio);
+    tracktion::graph::copyIfNotAliased (destAudioBlock, sourceBuffers.audio);
 
     auto numSamples = destAudioBlock.getNumFrames();
     jassert (numSamples == timelineRange.getLength());
@@ -116,7 +116,7 @@ void FadeInOutNode::process (ProcessContext& pc)
         {
             const int numFadeInSamples = endSamp - startSamp;
             jassert (numFadeInSamples <= (int) fadeInSampleRange.getLength());
-            auto buffer = tracktion_graph::toAudioBuffer (destAudioBlock);
+            auto buffer = tracktion::graph::toAudioBuffer (destAudioBlock);
             AudioFadeCurve::applyCrossfadeSection (buffer,
                                                    startSamp, numFadeInSamples,
                                                    fadeInType,
@@ -161,7 +161,7 @@ void FadeInOutNode::process (ProcessContext& pc)
 
         if (endSamp > (uint32_t) startSamp)
         {
-            auto buffer = tracktion_graph::toAudioBuffer (destAudioBlock);
+            auto buffer = tracktion::graph::toAudioBuffer (destAudioBlock);
             AudioFadeCurve::applyCrossfadeSection (buffer,
                                                    startSamp, (int) endSamp - startSamp,
                                                    fadeOutType,

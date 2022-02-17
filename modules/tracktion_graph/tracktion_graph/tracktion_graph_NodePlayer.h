@@ -11,7 +11,7 @@
 #pragma once
 
 
-namespace tracktion_graph
+namespace tracktion { inline namespace graph
 {
 
 /**
@@ -140,7 +140,7 @@ protected:
                 auto& inputMidi = pc.buffers.midi;
                 
                 phs.update (firstRange);
-                tracktion_graph::Node::ProcessContext pc1 { firstRange, { inputAudio , inputMidi } };
+                tracktion::graph::Node::ProcessContext pc1 { firstRange, { inputAudio , inputMidi } };
                 numMisses += processPostorderedNodes (rootNodeToProcess, nodes, pc1);
             }
             
@@ -148,11 +148,11 @@ protected:
                 const auto secondNumSamples = splitTimelineRange.timelineRange2.getLength();
                 const auto secondRange = juce::Range<int64_t>::withStartAndLength (firstRange.getEnd(), secondNumSamples);
                 
-                auto inputAudio = pc.buffers.audio.getFrameRange (tracktion_graph::frameRangeWithStartAndLength ((choc::buffer::FrameCount) firstNumSamples, (choc::buffer::FrameCount) secondNumSamples));
+                auto inputAudio = pc.buffers.audio.getFrameRange (tracktion::graph::frameRangeWithStartAndLength ((choc::buffer::FrameCount) firstNumSamples, (choc::buffer::FrameCount) secondNumSamples));
                 auto& inputMidi = pc.buffers.midi;
                 
                 //TODO: Use a scratch MidiMessageArray and then merge it back with the offset time
-                tracktion_graph::Node::ProcessContext pc2 { secondRange, { inputAudio , inputMidi } };
+                tracktion::graph::Node::ProcessContext pc2 { secondRange, { inputAudio , inputMidi } };
                 phs.update (secondRange);
                 numMisses += processPostorderedNodes (rootNodeToProcess, nodes, pc2);
             }
@@ -212,4 +212,4 @@ protected:
     }
 };
 
-}
+}}

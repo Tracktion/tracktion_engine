@@ -17,7 +17,7 @@ namespace EditPlaybackContextInternal
 {
     int& getThreadPoolStrategyType()
     {
-        static int type = static_cast<int> (tracktion_graph::ThreadPoolStrategy::lightweightSemHybrid);
+        static int type = static_cast<int> (tracktion::graph::ThreadPoolStrategy::lightweightSemHybrid);
         return type;
     }
 
@@ -51,7 +51,7 @@ struct EditPlaybackContext::ContextSyncroniser
     };
     
     //==============================================================================
-    SyncAndPosition getSyncAction (tracktion_graph::PlayHead& sourcePlayHead, tracktion_graph::PlayHead& destPlayHead,
+    SyncAndPosition getSyncAction (tracktion::graph::PlayHead& sourcePlayHead, tracktion::graph::PlayHead& destPlayHead,
                                    double sampleRate)
     {
         if (! isValid)
@@ -139,7 +139,7 @@ private:
  struct EditPlaybackContext::NodePlaybackContext
  {
      NodePlaybackContext (size_t numThreads, size_t maxNumThreadsToUse)
-        : player (processState, getPoolCreatorFunction (static_cast<tracktion_graph::ThreadPoolStrategy> (getThreadPoolStrategy()))),
+        : player (processState, getPoolCreatorFunction (static_cast<tracktion::graph::ThreadPoolStrategy> (getThreadPoolStrategy()))),
           maxNumThreads (maxNumThreadsToUse)
      {
          setNumThreads (numThreads);
@@ -204,10 +204,10 @@ private:
      void resyncToReferenceSampleRange (juce::Range<int64_t> newReferenceSampleRange)
      {
          const double sampleRate = getSampleRate();
-         const auto currentPos = tracktion_graph::sampleToTime (playHead.getPosition(), sampleRate);
+         const auto currentPos = tracktion::graph::sampleToTime (playHead.getPosition(), sampleRate);
          referenceSampleRange = newReferenceSampleRange;
          playHead.setReferenceSampleRange (referenceSampleRange);
-         playHead.setPosition (tracktion_graph::timeToSample (currentPos, sampleRate));
+         playHead.setPosition (tracktion::graph::timeToSample (currentPos, sampleRate));
      }
      
      void process (float** allChannels, int numChannels, int destNumSamples)
@@ -235,7 +235,7 @@ private:
              scratchAudioBuffer.setSize (numChannels, (int) numSamples, false, false, true);
              scratchAudioBuffer.clear();
              
-             tracktion_graph::Node::ProcessContext pc { referenceSampleRange, { tracktion_graph::toBufferView (scratchAudioBuffer), scratchMidiBuffer } };
+             tracktion::graph::Node::ProcessContext pc { referenceSampleRange, { tracktion::graph::toBufferView (scratchAudioBuffer), scratchMidiBuffer } };
              player.process (pc);
              
              // Then resample them to the dest num samples
@@ -254,7 +254,7 @@ private:
              auto audioView = choc::buffer::createChannelArrayView (allChannels,
                                                                     (choc::buffer::ChannelCount) numChannels,
                                                                     (choc::buffer::FrameCount) numSamples);
-             tracktion_graph::Node::ProcessContext pc { referenceSampleRange, { audioView, scratchMidiBuffer } };
+             tracktion::graph::Node::ProcessContext pc { referenceSampleRange, { audioView, scratchMidiBuffer } };
              player.process (pc);
          }
      }
@@ -264,8 +264,8 @@ private:
          return player.getSampleRate();
      }
      
-     tracktion_graph::PlayHead playHead;
-     tracktion_graph::PlayHeadState playHeadState { playHead };
+     tracktion::graph::PlayHead playHead;
+     tracktion::graph::PlayHeadState playHeadState { playHead };
      ProcessState processState { playHeadState };
      
  private:
@@ -813,7 +813,7 @@ void EditPlaybackContext::setAddAntiDenormalisationNoise (Engine& e, bool b)
 }
 
 //==============================================================================
-tracktion_graph::PlayHead* EditPlaybackContext::getNodePlayHead() const
+tracktion::graph::PlayHead* EditPlaybackContext::getNodePlayHead() const
 {
     //TODO  can this be removed?
     return nodePlaybackContext ? &nodePlaybackContext->playHead
@@ -908,7 +908,7 @@ TimePosition EditPlaybackContext::globalStreamTimeToEditTime (double globalStrea
         return TimePosition();
     
     const auto sampleRate = getSampleRate();
-    const auto globalSamplePos = tracktion_graph::timeToSample (globalStreamTime, sampleRate);
+    const auto globalSamplePos = tracktion::graph::timeToSample (globalStreamTime, sampleRate);
     const auto timelinePosition = nodePlaybackContext->playHead.referenceSamplePositionToTimelinePosition (globalSamplePos);
     
     return TimePosition::fromSamples (timelinePosition, sampleRate);
@@ -920,7 +920,7 @@ TimePosition EditPlaybackContext::globalStreamTimeToEditTimeUnlooped (double glo
         return TimePosition();
     
     const auto sampleRate = getSampleRate();
-    const auto globalSamplePos = tracktion_graph::timeToSample (globalStreamTime, sampleRate);
+    const auto globalSamplePos = tracktion::graph::timeToSample (globalStreamTime, sampleRate);
     const auto timelinePosition = nodePlaybackContext->playHead.referenceSamplePositionToTimelinePositionUnlooped (globalSamplePos);
     
     return TimePosition::fromSamples (timelinePosition, sampleRate);
@@ -932,14 +932,14 @@ void EditPlaybackContext::resyncToGlobalStreamTime (juce::Range<double> globalSt
         return;
     
     const double sampleRate = getSampleRate();
-    const auto globalSampleRange = tracktion_graph::timeToSample (globalStreamTime, sampleRate);
+    const auto globalSampleRange = tracktion::graph::timeToSample (globalStreamTime, sampleRate);
     nodePlaybackContext->resyncToReferenceSampleRange (globalSampleRange);
 }
 
 void EditPlaybackContext::setThreadPoolStrategy (int type)
 {
-    type = juce::jlimit (static_cast<int> (tracktion_graph::ThreadPoolStrategy::conditionVariable),
-                         static_cast<int> (tracktion_graph::ThreadPoolStrategy::lightweightSemHybrid),
+    type = juce::jlimit (static_cast<int> (tracktion::graph::ThreadPoolStrategy::conditionVariable),
+                         static_cast<int> (tracktion::graph::ThreadPoolStrategy::lightweightSemHybrid),
                          type);
 
     EditPlaybackContextInternal::getThreadPoolStrategyType() = type;
@@ -947,8 +947,8 @@ void EditPlaybackContext::setThreadPoolStrategy (int type)
 
 int EditPlaybackContext::getThreadPoolStrategy()
 {
-    const int type = juce::jlimit (static_cast<int> (tracktion_graph::ThreadPoolStrategy::conditionVariable),
-                                   static_cast<int> (tracktion_graph::ThreadPoolStrategy::lightweightSemHybrid),
+    const int type = juce::jlimit (static_cast<int> (tracktion::graph::ThreadPoolStrategy::conditionVariable),
+                                   static_cast<int> (tracktion::graph::ThreadPoolStrategy::lightweightSemHybrid),
                                    EditPlaybackContextInternal::getThreadPoolStrategyType());
     
     return type;

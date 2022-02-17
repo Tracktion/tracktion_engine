@@ -10,7 +10,7 @@
 
 #pragma once
 
-namespace tracktion_graph
+namespace tracktion { inline namespace graph
 {
 
 /** Changes the thread's priority.
@@ -22,4 +22,4 @@ namespace tracktion_graph
 */
 bool setThreadPriority (std::thread&, int priority);
 
-} // namespace tracktion_engine
+}} // namespace tracktion_engine

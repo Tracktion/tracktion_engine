@@ -287,8 +287,8 @@ bool EditRenderJob::RenderPass::initialise()
         auto tracksToDo = toTrackArray (*r.edit, r.tracksToDo);
 
         // Initialise playhead and continuity
-        auto playHead = std::make_unique<tracktion_graph::PlayHead>();
-        auto playHeadState = std::make_unique<tracktion_graph::PlayHeadState> (*playHead);
+        auto playHead = std::make_unique<tracktion::graph::PlayHead>();
+        auto playHeadState = std::make_unique<tracktion::graph::PlayHeadState> (*playHead);
         auto processState = std::make_unique<ProcessState> (*playHeadState);
 
         CreateNodeParams cnp { *processState };
@@ -302,7 +302,7 @@ bool EditRenderJob::RenderPass::initialise()
         cnp.addAntiDenormalisationNoise = r.addAntiDenormalisationNoise;
         cnp.includeBypassedPlugins = false;
 
-        std::unique_ptr<tracktion_graph::Node> node;
+        std::unique_ptr<tracktion::graph::Node> node;
         callBlocking ([this, &node, &cnp] { node = createNodeForEdit (*r.edit, cnp); });
 
         if (node)

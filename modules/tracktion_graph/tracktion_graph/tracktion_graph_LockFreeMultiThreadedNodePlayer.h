@@ -15,16 +15,16 @@
  #pragma warning (disable: 4127)
 #endif
 
-namespace tracktion_graph
+namespace tracktion { inline namespace graph
 {
 #include "../3rd_party/farbot/include/farbot/fifo.hpp"
-}
+}}
 
 #ifdef _MSC_VER
  #pragma warning (pop)
 #endif
 
-namespace tracktion_graph
+namespace tracktion { inline namespace graph
 {
 
 /**
@@ -275,4 +275,4 @@ private:
     bool processNextFreeNode();
 };
 
-}
+}}

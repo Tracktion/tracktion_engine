@@ -15,7 +15,7 @@
  #include <emmintrin.h>
 #endif
 
-namespace tracktion_graph
+namespace tracktion { inline namespace graph
 {
 
 //==============================================================================
@@ -507,4 +507,4 @@ void MultiThreadedNodePlayer::processNode (Node& node)
     }
 }
 
-}
+}}

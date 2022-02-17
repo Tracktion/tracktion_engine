@@ -11,7 +11,7 @@
 #pragma once
 
 
-namespace tracktion_graph
+namespace tracktion { inline namespace graph
 {
 
 class PlayHead;
@@ -409,4 +409,4 @@ inline SplitTimelineRange referenceSampleRangeToSplitTimelineRange (const PlayHe
     return { { s, e } };
 }
 
-}
+}}

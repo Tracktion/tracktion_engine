@@ -11,7 +11,7 @@
 namespace tracktion_engine
 {
 
-ProcessState::ProcessState (tracktion_graph::PlayHeadState& phs)
+ProcessState::ProcessState (tracktion::graph::PlayHeadState& phs)
     : playHeadState (phs)
 {
 }
@@ -19,7 +19,7 @@ ProcessState::ProcessState (tracktion_graph::PlayHeadState& phs)
 void ProcessState::update (double newSampleRate, juce::Range<int64_t> newReferenceSampleRange)
 {
     if (sampleRate != newSampleRate)
-        playHeadState.playHead.setScrubbingBlockLength (tracktion_graph::timeToSample (0.08, newSampleRate));
+        playHeadState.playHead.setScrubbingBlockLength (tracktion::graph::timeToSample (0.08, newSampleRate));
     
     playHeadState.playHead.setReferenceSampleRange (newReferenceSampleRange);
     playHeadState.update (newReferenceSampleRange);

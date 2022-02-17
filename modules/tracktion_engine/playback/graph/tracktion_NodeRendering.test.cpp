@@ -13,7 +13,7 @@ namespace tracktion_engine
 
 #if TRACKTION_BENCHMARKS
 
-using namespace tracktion_graph;
+using namespace tracktion::graph;
 
 //==============================================================================
 //==============================================================================
@@ -27,7 +27,7 @@ public:
     
     void runTest() override
     {
-        using namespace tracktion_graph;
+        using namespace tracktion::graph;
         test_utilities::TestSetup ts;
         ts.sampleRate = 96000.0;
         ts.blockSize = 128;
@@ -97,14 +97,14 @@ private:
         // Create Edit with 20 tracks
         // Create 12 5s files per track
         // Render the whole thing
-        using namespace tracktion_graph;
+        using namespace tracktion::graph;
         using namespace test_utilities;
         auto& engine = *tracktion_engine::Engine::getEngines()[0];
         const auto description = benchmark_utilities::getDescription (opts)
                                     + juce::String (useSingleFile ? ", single file" : ", multiple files");
         
-        tracktion_graph::PlayHead playHead;
-        tracktion_graph::PlayHeadState playHeadState { playHead };
+        tracktion::graph::PlayHead playHead;
+        tracktion::graph::PlayHeadState playHeadState { playHead };
         ProcessState processState { playHeadState };
 
         //===
@@ -137,7 +137,7 @@ private:
         edit->ensureNumberOfAudioTracks (numTracks);
         
         if (useSingleFile)
-            files.push_back (tracktion_graph::test_utilities::getSinFile<juce::WavAudioFormat> (sampleRate, durationOfFile, 2, 220.0f));
+            files.push_back (tracktion::graph::test_utilities::getSinFile<juce::WavAudioFormat> (sampleRate, durationOfFile, 2, 220.0f));
 
         for (auto t : getAudioTracks (*edit))
         {
@@ -146,7 +146,7 @@ private:
                 if (! useSingleFile)
                 {
                     const float frequency = (float) r.nextInt ({ 110, 880 });
-                    auto file = tracktion_graph::test_utilities::getSinFile<juce::WavAudioFormat> (sampleRate, durationOfFile, 2, frequency);
+                    auto file = tracktion::graph::test_utilities::getSinFile<juce::WavAudioFormat> (sampleRate, durationOfFile, 2, frequency);
                     files.push_back (std::move (file));
                 }
 

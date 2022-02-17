@@ -220,7 +220,7 @@ private:
             // running as a plugin)
             for (auto mmm : midi)
             {
-                const auto referenceTime = tracktion_graph::sampleToTime (mmm.samplePosition, sampleRate);
+                const auto referenceTime = tracktion::graph::sampleToTime (mmm.samplePosition, sampleRate);
 
                 auto msg = mmm.getMessage();
                 msg.setTimeStamp (referenceTime);

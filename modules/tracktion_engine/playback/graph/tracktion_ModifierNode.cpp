@@ -18,7 +18,7 @@ ModifierNode::ModifierNode (std::unique_ptr<Node> inputNode,
                             tracktion_engine::Modifier::Ptr modifierToProcess,
                             double sampleRateToUse, int blockSizeToUse,
                             const TrackMuteState* trackMuteStateToUse,
-                            tracktion_graph::PlayHeadState& playHeadStateToUse, bool rendering)
+                            tracktion::graph::PlayHeadState& playHeadStateToUse, bool rendering)
     : input (std::move (inputNode)),
       modifier (std::move (modifierToProcess)),
       trackMuteState (trackMuteStateToUse),
@@ -50,7 +50,7 @@ ModifierNode::~ModifierNode()
 }
 
 //==============================================================================
-tracktion_graph::NodeProperties ModifierNode::getNodeProperties()
+tracktion::graph::NodeProperties ModifierNode::getNodeProperties()
 {
     auto props = input->getNodeProperties();
 
@@ -62,7 +62,7 @@ tracktion_graph::NodeProperties ModifierNode::getNodeProperties()
     return props;
 }
 
-void ModifierNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
+void ModifierNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
     juce::ignoreUnused (info);
     jassert (sampleRate == info.sampleRate);
@@ -92,7 +92,7 @@ void ModifierNode::process (ProcessContext& pc)
     }
 
     // Setup audio buffers
-    auto outputAudioBuffer = tracktion_graph::toAudioBuffer (outputAudioBlock);
+    auto outputAudioBuffer = tracktion::graph::toAudioBuffer (outputAudioBlock);
 
     // Then MIDI buffers
     midiMessageArray.copyFrom (inputBuffers.midi);

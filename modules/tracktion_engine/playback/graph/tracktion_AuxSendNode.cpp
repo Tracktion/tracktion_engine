@@ -14,7 +14,7 @@ namespace tracktion_engine
 {
 
 AuxSendNode::AuxSendNode (std::unique_ptr<Node> inputNode, int busIDToUse,
-                          AuxSendPlugin& sourceSendPlugin, tracktion_graph::PlayHeadState& phs,
+                          AuxSendPlugin& sourceSendPlugin, tracktion::graph::PlayHeadState& phs,
                           const TrackMuteState* trackMuteState)
     : SendNode (std::move (inputNode), busIDToUse,
                 [&sourceSendPlugin, trackMuteState]
@@ -34,7 +34,7 @@ AuxSendNode::AuxSendNode (std::unique_ptr<Node> inputNode, int busIDToUse,
 }
 
 //==============================================================================
-void AuxSendNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
+void AuxSendNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
     sampleRate = info.sampleRate;
     

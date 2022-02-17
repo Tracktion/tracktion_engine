@@ -737,7 +737,7 @@ public:
         auto timeAdjustMs = mi.getManualAdjustmentMs();
         
         if (context.getNodePlayHead() != nullptr)
-            timeAdjustMs -= 1000.0 * tracktion_graph::sampleToTime (context.getLatencySamples(), edit.engine.getDeviceManager().getSampleRate());
+            timeAdjustMs -= 1000.0 * tracktion::graph::sampleToTime (context.getLatencySamples(), edit.engine.getDeviceManager().getSampleRate());
         
         applyTimeAdjustment (recorded, timeAdjustMs);
 
@@ -1006,7 +1006,7 @@ public:
             auto timeAdjustMs = mi.getManualAdjustmentMs();
             
             if (context.getNodePlayHead() != nullptr)
-                timeAdjustMs -= 1000.0 * tracktion_graph::sampleToTime (context.getLatencySamples(), edit.engine.getDeviceManager().getSampleRate());
+                timeAdjustMs -= 1000.0 * tracktion::graph::sampleToTime (context.getLatencySamples(), edit.engine.getDeviceManager().getSampleRate());
             
             applyTimeAdjustment (sequence, timeAdjustMs);
 

@@ -105,11 +105,11 @@ public:
     void resyncToGlobalStreamTime (juce::Range<double>);
 
     /** @internal. Will be removed in a future release. */
-    tracktion_graph::PlayHead* getNodePlayHead() const;
+    tracktion::graph::PlayHead* getNodePlayHead() const;
 
-    /** @see tracktion_graph::ThreadPoolStrategy */
+    /** @see tracktion::graph::ThreadPoolStrategy */
     static void setThreadPoolStrategy (int);
-    /** @see tracktion_graph::ThreadPoolStrategy */
+    /** @see tracktion::graph::ThreadPoolStrategy */
     static int getThreadPoolStrategy();
     
     /** Enables reusing of audio buffers during graph processing

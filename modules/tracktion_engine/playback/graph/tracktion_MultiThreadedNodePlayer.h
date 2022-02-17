@@ -30,7 +30,7 @@ public:
     }
 
     /** Creates an NodePlayer to process a Node. */
-    MultiThreadedNodePlayer (std::unique_ptr<tracktion_graph::Node> node,
+    MultiThreadedNodePlayer (std::unique_ptr<tracktion::graph::Node> node,
                          ProcessState& processStateToUse,
                          double sampleRate, int blockSize)
         : MultiThreadedNodePlayer (processStateToUse)
@@ -47,17 +47,17 @@ public:
         nodePlayer.setNumThreads (numThreads);
     }
 
-    tracktion_graph::Node* getNode()
+    tracktion::graph::Node* getNode()
     {
         return nodePlayer.getNode();
     }
 
-    void setNode (std::unique_ptr<tracktion_graph::Node> newNode)
+    void setNode (std::unique_ptr<tracktion::graph::Node> newNode)
     {
         nodePlayer.setNode (std::move (newNode));
     }
 
-    void setNode (std::unique_ptr<tracktion_graph::Node> newNode, double sampleRateToUse, int blockSizeToUse)
+    void setNode (std::unique_ptr<tracktion::graph::Node> newNode, double sampleRateToUse, int blockSizeToUse)
     {
         nodePlayer.setNode (std::move (newNode), sampleRateToUse, blockSizeToUse);
     }
@@ -70,7 +70,7 @@ public:
     /** Processes a block of audio and MIDI data.
         Returns the number of times a node was checked but unable to be processed.
     */
-    int process (const tracktion_graph::Node::ProcessContext& pc)
+    int process (const tracktion::graph::Node::ProcessContext& pc)
     {
         int numMisses = 0;
         playHeadState.playHead.setReferenceSampleRange (pc.referenceSampleRange);
@@ -88,7 +88,7 @@ public:
                 auto& destMidi = pc.buffers.midi;
                 
                 processState.update (nodePlayer.getSampleRate(), firstRange);
-                tracktion_graph::Node::ProcessContext pc1 { firstRange, { destAudio , destMidi } };
+                tracktion::graph::Node::ProcessContext pc1 { firstRange, { destAudio , destMidi } };
                 numMisses += nodePlayer.process (pc1);
             }
             
@@ -100,7 +100,7 @@ public:
                 auto destAudio = pc.buffers.audio.getFrameRange ({ firstNumSamples, firstNumSamples + secondNumSamples });
                 scratchMidi.clear();
                 
-                tracktion_graph::Node::ProcessContext pc2 { secondRange, { destAudio, scratchMidi } };
+                tracktion::graph::Node::ProcessContext pc2 { secondRange, { destAudio, scratchMidi } };
                 processState.update (nodePlayer.getSampleRate(), secondRange);
                 numMisses += nodePlayer.process (pc2);
 
@@ -130,10 +130,10 @@ public:
     }
     
 private:
-    tracktion_graph::PlayHeadState& playHeadState;
+    tracktion::graph::PlayHeadState& playHeadState;
     ProcessState& processState;
     MidiMessageArray scratchMidi;
-    tracktion_graph::MultiThreadedNodePlayer nodePlayer;
+    tracktion::graph::MultiThreadedNodePlayer nodePlayer;
 };
 
 }

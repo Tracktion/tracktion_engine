@@ -13,7 +13,7 @@ namespace tracktion_engine
 
 #if GRAPH_UNIT_TESTS_EDITNODE
 
-using namespace tracktion_graph;
+using namespace tracktion::graph;
 
 //==============================================================================
 //==============================================================================
@@ -27,7 +27,7 @@ public:
 
     void runTest() override
     {
-        tracktion_graph::test_utilities::TestSetup ts;
+        tracktion::graph::test_utilities::TestSetup ts;
         ts.sampleRate = 44100.0;
         ts.blockSize = 256;
 
@@ -55,18 +55,18 @@ private:
                            int numChannels,
                            bool isMultiThreaded)
     {
-        using namespace tracktion_graph;
+        using namespace tracktion::graph;
         using namespace test_utilities;
         auto& engine = *tracktion_engine::Engine::getEngines()[0];
         const auto description = test_utilities::getDescription (ts)
                                     + juce::String (isMultiThreaded ? ", MT" : ", ST");
 
-        tracktion_graph::PlayHead playHead;
-        tracktion_graph::PlayHeadState playHeadState { playHead };
+        tracktion::graph::PlayHead playHead;
+        tracktion::graph::PlayHeadState playHeadState { playHead };
         ProcessState processState { playHeadState };
 
         {
-            auto sinFile = tracktion_graph::test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, durationInSeconds.inSeconds(), 2, 220.0f);
+            auto sinFile = tracktion::graph::test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, durationInSeconds.inSeconds(), 2, 220.0f);
 
             auto edit = Edit::createSingleTrackEdit (engine);
             edit->ensureNumberOfAudioTracks (1);
@@ -123,18 +123,18 @@ private:
                      int numChannels,
                      bool isMultiThreaded)
     {
-        using namespace tracktion_graph;
+        using namespace tracktion::graph;
         using namespace test_utilities;
         auto& engine = *tracktion_engine::Engine::getEngines()[0];
         const auto description = test_utilities::getDescription (ts)
                                     + juce::String (isMultiThreaded ? ", MT" : ", ST");
 
-        tracktion_graph::PlayHead playHead;
-        tracktion_graph::PlayHeadState playHeadState { playHead };
+        tracktion::graph::PlayHead playHead;
+        tracktion::graph::PlayHeadState playHeadState { playHead };
         ProcessState processState { playHeadState };
 
         {
-            auto sinFile = tracktion_graph::test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, durationInSeconds.inSeconds(), 2, 220.0f);
+            auto sinFile = tracktion::graph::test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, durationInSeconds.inSeconds(), 2, 220.0f);
 
             auto edit = Edit::createSingleTrackEdit (engine);
             edit->ensureNumberOfAudioTracks (2);
@@ -180,18 +180,18 @@ private:
                                        int numChannels,
                                        bool isMultiThreaded)
     {
-        using namespace tracktion_graph;
+        using namespace tracktion::graph;
         using namespace test_utilities;
         auto& engine = *tracktion_engine::Engine::getEngines()[0];
         const auto description = test_utilities::getDescription (ts)
                                     + juce::String (isMultiThreaded ? ", MT" : ", ST");
 
-        tracktion_graph::PlayHead playHead;
-        tracktion_graph::PlayHeadState playHeadState { playHead };
+        tracktion::graph::PlayHead playHead;
+        tracktion::graph::PlayHeadState playHeadState { playHead };
         ProcessState processState { playHeadState };
 
         {
-            auto sinFile = tracktion_graph::test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, durationInSeconds.inSeconds(), 2, 220.0f);
+            auto sinFile = tracktion::graph::test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, durationInSeconds.inSeconds(), 2, 220.0f);
 
             auto edit = Edit::createSingleTrackEdit (engine);
             edit->ensureNumberOfAudioTracks (3);
@@ -246,7 +246,7 @@ private:
                     int numChannels,
                     bool isMultiThreaded)
     {
-        using namespace tracktion_graph;
+        using namespace tracktion::graph;
         using namespace test_utilities;
         auto& engine = *tracktion_engine::Engine::getEngines()[0];
         const auto description = test_utilities::getDescription (ts)
@@ -288,7 +288,7 @@ private:
                       int numChannels,
                       bool isMultiThreaded)
     {
-        using namespace tracktion_graph;
+        using namespace tracktion::graph;
         using namespace test_utilities;
         auto& engine = *tracktion_engine::Engine::getEngines()[0];
         const auto description = test_utilities::getDescription (ts)
@@ -458,7 +458,7 @@ private:
 
     //==============================================================================
     //==============================================================================
-    static std::unique_ptr<tracktion_graph::Node> createNode (Edit& edit, ProcessState& processState,
+    static std::unique_ptr<tracktion::graph::Node> createNode (Edit& edit, ProcessState& processState,
                                                               double sampleRate, int blockSize)
     {
         CreateNodeParams params { processState };

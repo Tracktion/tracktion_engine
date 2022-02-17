@@ -13,11 +13,11 @@ namespace tracktion_engine
 
 //==============================================================================
 //==============================================================================
-LiveMidiInjectingNode::LiveMidiInjectingNode (AudioTrack& at, std::unique_ptr<tracktion_graph::Node> inputNode)
+LiveMidiInjectingNode::LiveMidiInjectingNode (AudioTrack& at, std::unique_ptr<tracktion::graph::Node> inputNode)
     : track (at), input (std::move (inputNode))
 {
-    setOptimisations ({ tracktion_graph::ClearBuffers::no,
-                        tracktion_graph::AllocateAudioBuffer::no });
+    setOptimisations ({ tracktion::graph::ClearBuffers::no,
+                        tracktion::graph::AllocateAudioBuffer::no });
 
     track->addListener (this);
 }
@@ -28,21 +28,21 @@ LiveMidiInjectingNode::~LiveMidiInjectingNode()
 }
 
 //==============================================================================
-tracktion_graph::NodeProperties LiveMidiInjectingNode::getNodeProperties()
+tracktion::graph::NodeProperties LiveMidiInjectingNode::getNodeProperties()
 {
     auto props = input->getNodeProperties();
     props.hasMidi = true;
-    tracktion_graph::hash_combine (props.nodeID, track->itemID.getRawID());
+    tracktion::graph::hash_combine (props.nodeID, track->itemID.getRawID());
     
     return props;
 }
 
-std::vector<tracktion_graph::Node*> LiveMidiInjectingNode::getDirectInputNodes()
+std::vector<tracktion::graph::Node*> LiveMidiInjectingNode::getDirectInputNodes()
 {
     return { input.get() };
 }
 
-void LiveMidiInjectingNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
+void LiveMidiInjectingNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
     if (info.rootNodeToReplace == nullptr)
         return;

@@ -10,7 +10,7 @@
 
 #if GRAPH_UNIT_TESTS_SAMPLECONVERSION
 
-namespace tracktion_graph
+namespace tracktion { inline namespace graph
 {
 
 class SampleConversionTests : public juce::UnitTest
@@ -61,6 +61,6 @@ public:
 
 static SampleConversionTests sampleConversionTests;
 
-}
+}}
 
 #endif //GRAPH_UNIT_TESTS_SAMPLECONVERSION

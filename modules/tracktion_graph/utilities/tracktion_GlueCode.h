@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_graph
+namespace tracktion { inline namespace graph
 {
 
 //==============================================================================
@@ -150,4 +150,4 @@ static void copyIfNotAliased (DestBuffer&& dest, const SourceBuffer& source)
 
 }
 
-} // namespace tracktion_graph
+}} // namespace tracktion

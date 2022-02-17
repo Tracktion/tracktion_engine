@@ -245,22 +245,17 @@
     jassert (juce::MessageManager::getInstance()->currentThreadHasLockedMessageManager());
 
 //==============================================================================
-namespace tracktion_graph
+namespace tracktion { inline namespace graph
 {
     class PlayHead;
-}
+}}
 
 //==============================================================================
 #include "../tracktion_core/utilities/tracktion_Time.h"
 #include "../tracktion_core/utilities/tracktion_TimeRange.h"
 
 //ddd This should no longer be required
-using TimePosition = tracktion::core::TimePosition;
-using TimeDuration = tracktion::core::TimeDuration;
-using BeatPosition = tracktion::core::BeatPosition;
-using BeatDuration = tracktion::core::BeatDuration;
-using TimeRange = tracktion::core::TimeRange;
-using BeatRange = tracktion::core::BeatRange;
+using namespace tracktion::core;
 
 //==============================================================================
 namespace tracktion_engine

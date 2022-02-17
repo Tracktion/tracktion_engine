@@ -10,7 +10,7 @@
 
 #include <stack>
 
-namespace tracktion_graph
+namespace tracktion { inline namespace graph
 {
 
 //==============================================================================
@@ -163,4 +163,4 @@ inline size_t AudioBufferStack::getAllocatedSize()
     return b.getView().data.getBytesNeeded (b.getSize());
 }
 
-} // namespace tracktion_graph
+}} // namespace tracktion

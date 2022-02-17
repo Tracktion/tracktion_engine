@@ -205,21 +205,21 @@ bool ClickGenerator::isMutedAtTime (TimePosition time) const
 
 //==============================================================================
 //==============================================================================
-ClickNode::ClickNode (Edit& e, int numAudioChannels, bool isMidi, tracktion_graph::PlayHead& playHeadToUse)
+ClickNode::ClickNode (Edit& e, int numAudioChannels, bool isMidi, tracktion::graph::PlayHead& playHeadToUse)
     : edit (e), playHead (playHeadToUse),
       clickGenerator (edit, isMidi, Edit::getMaximumEditEnd()),
       numChannels (numAudioChannels), generateMidi (isMidi)
 {
 }
 
-std::vector<tracktion_graph::Node*> ClickNode::getDirectInputNodes()
+std::vector<tracktion::graph::Node*> ClickNode::getDirectInputNodes()
 {
     return {};
 }
 
-tracktion_graph::NodeProperties ClickNode::getNodeProperties()
+tracktion::graph::NodeProperties ClickNode::getNodeProperties()
 {
-    tracktion_graph::NodeProperties props;
+    tracktion::graph::NodeProperties props;
     props.hasAudio = ! generateMidi;
     props.hasMidi = generateMidi;
     props.numberOfChannels = numChannels;
@@ -228,7 +228,7 @@ tracktion_graph::NodeProperties ClickNode::getNodeProperties()
     return props;
 }
 
-void ClickNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
+void ClickNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
     sampleRate = info.sampleRate;
     clickGenerator.prepareToPlay (sampleRate,

@@ -14,17 +14,17 @@ namespace tracktion_engine
 /**
     A Node that intercepts incoming live MIDI and inserts it in to the playback graph.
 */
-class MidiInputDeviceNode final : public tracktion_graph::Node,
+class MidiInputDeviceNode final : public tracktion::graph::Node,
                                   public InputDeviceInstance::Consumer
 {
 public:
     MidiInputDeviceNode (InputDeviceInstance&,
                          MidiInputDevice&, MidiMessageArray::MPESourceID,
-                         tracktion_graph::PlayHeadState&);
+                         tracktion::graph::PlayHeadState&);
     ~MidiInputDeviceNode() override;
     
-    tracktion_graph::NodeProperties getNodeProperties() override;
-    void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override;
+    tracktion::graph::NodeProperties getNodeProperties() override;
+    void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
     void process (ProcessContext&) override;
 
@@ -36,7 +36,7 @@ private:
     InputDeviceInstance& instance;
     MidiInputDevice& midiInputDevice;
     const  MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::notMPE;
-    tracktion_graph::PlayHeadState& playHeadState;
+    tracktion::graph::PlayHeadState& playHeadState;
 
     juce::CriticalSection bufferLock;
     juce::OwnedArray<juce::MidiMessage> incomingMessages;

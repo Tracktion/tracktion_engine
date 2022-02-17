@@ -14,7 +14,7 @@ namespace tracktion_engine
 /** A Node that plays MIDI data from a MidiMessageSequence,
     at a specific MIDI channel.
 */
-class MidiNode final    : public tracktion_graph::Node,
+class MidiNode final    : public tracktion::graph::Node,
                           public TracktionEngineNode
 {
 public:
@@ -36,8 +36,8 @@ public:
               EditItemID,
               std::function<bool()> shouldBeMutedDelegate = nullptr);
     
-    tracktion_graph::NodeProperties getNodeProperties() override;
-    void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override;
+    tracktion::graph::NodeProperties getNodeProperties() override;
+    void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
     void process (ProcessContext&) override;
 

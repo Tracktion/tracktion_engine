@@ -25,7 +25,7 @@ public:
     
     void runTest() override
     {
-        for (auto setup : tracktion_graph::test_utilities::getTestSetups (*this))
+        for (auto setup : tracktion::graph::test_utilities::getTestSetups (*this))
         {
             logMessage (juce::String ("Test setup: sample rate SR, block size BS, random blocks RND")
                         .replace ("SR", juce::String (setup.sampleRate))
@@ -52,9 +52,9 @@ private:
 
     //==============================================================================
     //==============================================================================
-    void runMidiTests (tracktion_graph::test_utilities::TestSetup ts, bool playSyncedToRange)
+    void runMidiTests (tracktion::graph::test_utilities::TestSetup ts, bool playSyncedToRange)
     {
-        using namespace tracktion_graph;
+        using namespace tracktion::graph;
         
         const double sampleRate = 44100.0;
         const double duration = 5.0;
@@ -62,9 +62,9 @@ private:
         // Avoid creating events at the end of the duration as they'll get lost after latency is applied
         const auto masterSequence = test_utilities::createRandomMidiMessageSequence (duration - 0.5, ts.random);
         
-        tracktion_graph::PlayHead playHead;
+        tracktion::graph::PlayHead playHead;
         playHead.setScrubbingBlockLength (timeToSample (0.08, ts.sampleRate));
-        tracktion_graph::PlayHeadState playHeadState (playHead);
+        tracktion::graph::PlayHeadState playHeadState (playHead);
         ProcessState processState (playHeadState);
 
         if (playSyncedToRange)

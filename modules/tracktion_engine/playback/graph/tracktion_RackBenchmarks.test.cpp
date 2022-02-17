@@ -18,7 +18,7 @@
 namespace tracktion_engine
 {
 
-using namespace tracktion_graph;
+using namespace tracktion::graph;
 
 //==============================================================================
 //==============================================================================
@@ -33,7 +33,7 @@ public:
     void runTest() override
     {
         using namespace benchmark_utilities;
-        using namespace tracktion_graph;
+        using namespace tracktion::graph;
         test_utilities::TestSetup ts;
         ts.sampleRate = 96000.0;
         ts.blockSize = 128;
@@ -46,7 +46,7 @@ public:
     void runRackMixBusTest (Engine& engine, test_utilities::TestSetup ts)
     {
         using namespace benchmark_utilities;
-        using namespace tracktion_graph;
+        using namespace tracktion::graph;
         
         static constexpr unsigned char RackMixBus_zip[] =
         { 120,156,237,157,207,115,220,70,118,199,135,146,70,178,189,187,149,181,55,169,178,47,217,57,165,188,135,213,162,127,162,145,67,74,20,73,123,89,22,127,132,164,180,155,75,92,35,114,36,77,76,114,88,195,161,108,237,41,247,61,228,156,115,170,146,75,170,82,

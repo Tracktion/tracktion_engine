@@ -14,15 +14,15 @@ namespace tracktion_engine
 /**
     A Node that takes MIDI from the output of a track and sends it to its corresponding InputDevice.
 */
-class TrackMidiInputDeviceNode final    : public tracktion_graph::Node,
+class TrackMidiInputDeviceNode final    : public tracktion::graph::Node,
                                           private TracktionEngineNode
 {
 public:
     TrackMidiInputDeviceNode (MidiInputDevice&, std::unique_ptr<Node>, ProcessState&);
 
     std::vector<Node*> getDirectInputNodes() override;
-    tracktion_graph::NodeProperties getNodeProperties() override;
-    void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override;
+    tracktion::graph::NodeProperties getNodeProperties() override;
+    void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
     void process (ProcessContext&) override;
 

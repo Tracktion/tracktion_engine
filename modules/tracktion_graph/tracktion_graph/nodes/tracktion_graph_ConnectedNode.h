@@ -13,7 +13,7 @@
 #include "tracktion_graph_LatencyNode.h"
 
 
-namespace tracktion_graph
+namespace tracktion { inline namespace graph
 {
 
 //==============================================================================
@@ -172,7 +172,7 @@ inline NodeProperties ConnectedNode::getNodeProperties()
     constexpr size_t connectedNodeMagicHash = 0x636f6e6e656374;
     
     if (props.nodeID != 0)
-        tracktion_graph::hash_combine (props.nodeID, connectedNodeMagicHash);
+        tracktion::graph::hash_combine (props.nodeID, connectedNodeMagicHash);
 
     for (const auto& connection : connections)
     {
@@ -289,4 +289,4 @@ inline bool ConnectedNode::createLatencyNodes()
     return topologyChanged;
 }
 
-}
+}}

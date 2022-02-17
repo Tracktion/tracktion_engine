@@ -50,9 +50,9 @@ WaveNode::WaveNode (const AudioFile& af,
 {
 }
 
-tracktion_graph::NodeProperties WaveNode::getNodeProperties()
+tracktion::graph::NodeProperties WaveNode::getNodeProperties()
 {
-    tracktion_graph::NodeProperties props;
+    tracktion::graph::NodeProperties props;
     props.hasAudio = true;
     props.hasMidi = false;
     props.numberOfChannels = destChannels.size();
@@ -61,7 +61,7 @@ tracktion_graph::NodeProperties WaveNode::getNodeProperties()
     return props;
 }
 
-void WaveNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
+void WaveNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
     reader = audioFile.engine->getAudioFileManager().cache.createReader (audioFile);
     outputSampleRate = info.sampleRate;
@@ -130,7 +130,7 @@ int64_t WaveNode::editTimeToFileSample (TimePosition editTime) const noexcept
 
 bool WaveNode::updateFileSampleRate()
 {
-    using namespace tracktion_graph;
+    using namespace tracktion::graph;
     
     if (reader == nullptr)
         return false;

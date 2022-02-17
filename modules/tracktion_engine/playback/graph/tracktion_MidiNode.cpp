@@ -63,15 +63,15 @@ MidiNode::MidiNode (std::vector<juce::MidiMessageSequence> sequences,
     controllerMessagesScratchBuffer.ensureStorageAllocated (32);
 }
 
-tracktion_graph::NodeProperties MidiNode::getNodeProperties()
+tracktion::graph::NodeProperties MidiNode::getNodeProperties()
 {
-    tracktion_graph::NodeProperties props;
+    tracktion::graph::NodeProperties props;
     props.hasMidi = true;
     props.nodeID = (size_t) editItemID.getRawID();
     return props;
 }
 
-void MidiNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
+void MidiNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
     sampleRate = info.sampleRate;
     timeForOneSample = TimeDuration::fromSamples (1, info.sampleRate);

@@ -9,7 +9,7 @@
 */
 
 
-namespace tracktion_graph
+namespace tracktion { inline namespace graph
 {
 
 #if GRAPH_UNIT_TESTS_NODEVISITING
@@ -179,4 +179,4 @@ static NodeVistingTests nodeVistingTests;
 
 #endif
 
-}
+}}

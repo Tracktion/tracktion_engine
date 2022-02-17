@@ -19,7 +19,7 @@ class TrackMuteState;
 /**
     Node for processing a plugin.
 */
-class PluginNode final  : public tracktion_graph::Node
+class PluginNode final  : public tracktion::graph::Node
 {
 public:
     //==============================================================================
@@ -47,7 +47,7 @@ public:
                 tracktion_engine::Plugin::Ptr,
                 double sampleRateToUse, int blockSizeToUse,
                 const TrackMuteState*,
-                tracktion_graph::PlayHeadState&,
+                tracktion::graph::PlayHeadState&,
                 bool rendering, bool balanceLatency,
                 int maxNumChannelsToUse);
 
@@ -57,10 +57,10 @@ public:
     //==============================================================================
     Plugin& getPlugin()                                 { return *plugin; }
     
-    tracktion_graph::NodeProperties getNodeProperties() override;
+    tracktion::graph::NodeProperties getNodeProperties() override;
     std::vector<Node*> getDirectInputNodes() override   { return { input.get() }; }
     bool isReadyToProcess() override                    { return input->hasProcessed(); }
-    void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override;
+    void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     void prefetchBlock (juce::Range<int64_t>) override;
     void process (ProcessContext&) override;
     
@@ -71,7 +71,7 @@ private:
     std::shared_ptr<InputProvider> audioRenderContextProvider;
 
     const TrackMuteState* trackMuteState = nullptr;
-    tracktion_graph::PlayHeadState* playHeadState = nullptr;
+    tracktion::graph::PlayHeadState* playHeadState = nullptr;
     bool isRendering = false;
     
     bool isInitialised = false;
@@ -82,7 +82,7 @@ private:
     bool balanceLatency = true, canProcessBypassed = false;
     TimeDuration automationAdjustmentTime;
     
-    std::shared_ptr<tracktion_graph::LatencyProcessor> latencyProcessor;
+    std::shared_ptr<tracktion::graph::LatencyProcessor> latencyProcessor;
 
     //==============================================================================
     void initialisePlugin (double sampleRateToUse, int blockSizeToUse);

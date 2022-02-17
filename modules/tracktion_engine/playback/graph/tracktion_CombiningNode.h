@@ -19,7 +19,7 @@ namespace tracktion_engine
     It initialises and releases its inputs as required according to its current
     play position.
 */
-class CombiningNode final : public tracktion_graph::Node,
+class CombiningNode final : public tracktion::graph::Node,
                             public TracktionEngineNode
 {
 public:
@@ -38,8 +38,8 @@ public:
 
     //==============================================================================
     std::vector<Node*> getDirectInputNodes() override;
-    tracktion_graph::NodeProperties getNodeProperties() override;
-    void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override;
+    tracktion::graph::NodeProperties getNodeProperties() override;
+    void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
     void prefetchBlock (juce::Range<int64_t> /*referenceSampleRange*/) override;
     void process (ProcessContext&) override;
@@ -53,7 +53,7 @@ private:
     std::atomic<bool> isReadyToProcessBlock { false };
     choc::buffer::ChannelArrayBuffer<float> tempAudioBuffer;
 
-    tracktion_graph::NodeProperties nodeProperties;
+    tracktion::graph::NodeProperties nodeProperties;
 
     void prefetchGroup (juce::Range<int64_t>, TimeRange);
 

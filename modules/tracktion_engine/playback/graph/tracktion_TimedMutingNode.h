@@ -16,24 +16,24 @@ namespace tracktion_engine
 /**
     A Node that mutes its input at specific time ranges.
 */
-class TimedMutingNode final : public tracktion_graph::Node
+class TimedMutingNode final : public tracktion::graph::Node
 {
 public:
-    TimedMutingNode (std::unique_ptr<tracktion_graph::Node>,
+    TimedMutingNode (std::unique_ptr<tracktion::graph::Node>,
                      juce::Array<TimeRange> muteTimes,
-                     tracktion_graph::PlayHeadState&);
+                     tracktion::graph::PlayHeadState&);
 
     //==============================================================================
-    tracktion_graph::NodeProperties getNodeProperties() override;
+    tracktion::graph::NodeProperties getNodeProperties() override;
     std::vector<Node*> getDirectInputNodes() override;
-    void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override;
+    void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
     void process (ProcessContext&) override;
 
 private:
     //==============================================================================
-    std::unique_ptr<tracktion_graph::Node> input;
-    tracktion_graph::PlayHeadState& playHeadState;
+    std::unique_ptr<tracktion::graph::Node> input;
+    tracktion::graph::PlayHeadState& playHeadState;
     juce::Array<TimeRange> muteTimes;
     double sampleRate = 44100.0;
 

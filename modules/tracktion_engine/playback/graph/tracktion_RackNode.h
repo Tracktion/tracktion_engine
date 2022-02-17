@@ -22,17 +22,17 @@ struct InputProvider
         : numChannels (numChannelsToUse)
     {}
 
-    void setInputs (tracktion_graph::Node::AudioAndMidiBuffer newBuffers)
+    void setInputs (tracktion::graph::Node::AudioAndMidiBuffer newBuffers)
     {
         audio = numChannels > 0 ? newBuffers.audio.getFirstChannels (numChannels)
                                 : newBuffers.audio;
-        tracktion_graph::sanityCheckView (audio);
+        tracktion::graph::sanityCheckView (audio);
         midi.copyFrom (newBuffers.midi);
     }
     
-    tracktion_graph::Node::AudioAndMidiBuffer getInputs()
+    tracktion::graph::Node::AudioAndMidiBuffer getInputs()
     {
-        tracktion_graph::sanityCheckView (audio);
+        tracktion::graph::sanityCheckView (audio);
         return { audio, midi };
     }
     
@@ -69,7 +69,7 @@ class RackNodePlayer
 {
 public:
     /** Creates an RackNodePlayer to process an Node with input. */
-    RackNodePlayer (std::unique_ptr<tracktion_graph::Node> nodeToProcess,
+    RackNodePlayer (std::unique_ptr<tracktion::graph::Node> nodeToProcess,
                     std::shared_ptr<InputProvider> inputProviderToUse,
                     bool overrideInputProvider)
         : inputProvider (std::move (inputProviderToUse)),
@@ -79,7 +79,7 @@ public:
     }
 
     /** Creates an RackNodePlayer to process an Node with input, sample rate and block size. */
-    RackNodePlayer (std::unique_ptr<tracktion_graph::Node> nodeToProcess,
+    RackNodePlayer (std::unique_ptr<tracktion::graph::Node> nodeToProcess,
                     std::shared_ptr<InputProvider> inputProviderToUse,
                     bool overrideInputProvider,
                     double sampleRateToUse, int blockSizeToUse)
@@ -105,7 +105,7 @@ public:
     /** Processes a block of audio and MIDI data.
         Returns the number of times a node was checked but unable to be processed.
     */
-    int process (const tracktion_graph::Node::ProcessContext& pc)
+    int process (const tracktion::graph::Node::ProcessContext& pc)
     {
         return process (pc, {}, true, false, false);
     }
@@ -113,7 +113,7 @@ public:
     /** Processes a block of audio and MIDI data with a given PlayHead and EditTimeRange.
         This should be used when processing ExternalPlugins or they will crash when getting the playhead info.
     */
-    int process (const tracktion_graph::Node::ProcessContext& pc,
+    int process (const tracktion::graph::Node::ProcessContext& pc,
                  TimePosition editTime, bool isPlaying, bool isScrubbing, bool isRendering)
     {
         if (overrideInputs)
@@ -152,20 +152,20 @@ namespace RackNodeBuilder
     /** Creates a Node for processing a Rack.
         The InputProvider must be used for providing audio and MIDI input to the Rack.
     */
-    std::unique_ptr<tracktion_graph::Node> createRackNode (Algorithm,
+    std::unique_ptr<tracktion::graph::Node> createRackNode (Algorithm,
                                                            tracktion_engine::RackType&,
                                                            double sampleRate, int blockSize,
                                                            std::shared_ptr<InputProvider>,
-                                                           tracktion_graph::PlayHeadState* playHeadState = nullptr,
+                                                           tracktion::graph::PlayHeadState* playHeadState = nullptr,
                                                            bool isRendering = true);
 
     //==============================================================================
     /** Creates a Node for processing a Rack where the input comes from a Node. */
-    std::unique_ptr<tracktion_graph::Node> createRackNode (Algorithm,
+    std::unique_ptr<tracktion::graph::Node> createRackNode (Algorithm,
                                                            tracktion_engine::RackType&,
                                                            double sampleRate, int blockSize,
-                                                           std::unique_ptr<tracktion_graph::Node>,
-                                                           tracktion_graph::PlayHeadState&, bool isRendering);
+                                                           std::unique_ptr<tracktion::graph::Node>,
+                                                           tracktion::graph::PlayHeadState&, bool isRendering);
 }
 
 }

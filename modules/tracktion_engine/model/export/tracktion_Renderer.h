@@ -8,12 +8,12 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_graph
+namespace tracktion { inline namespace graph
 {
     class Node;
     class PlayHead;
     class PlayHeadState;
-}
+}}
 
 namespace tracktion_engine
 {
@@ -91,9 +91,9 @@ public:
         
         RenderTask (const juce::String& taskDescription,
                     const Renderer::Parameters&,
-                    std::unique_ptr<tracktion_graph::Node>,
-                    std::unique_ptr<tracktion_graph::PlayHead>,
-                    std::unique_ptr<tracktion_graph::PlayHeadState>,
+                    std::unique_ptr<tracktion::graph::Node>,
+                    std::unique_ptr<tracktion::graph::PlayHead>,
+                    std::unique_ptr<tracktion::graph::PlayHeadState>,
                     std::unique_ptr<ProcessState>,
                     std::atomic<float>* progressToUpdate,
                     juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver*);
@@ -115,9 +115,9 @@ public:
 
     private:
         //==============================================================================
-        std::unique_ptr<tracktion_graph::Node> graphNode;
-        std::unique_ptr<tracktion_graph::PlayHead> playHead;
-        std::unique_ptr<tracktion_graph::PlayHeadState> playHeadState;
+        std::unique_ptr<tracktion::graph::Node> graphNode;
+        std::unique_ptr<tracktion::graph::PlayHead> playHead;
+        std::unique_ptr<tracktion::graph::PlayHeadState> playHeadState;
         std::unique_ptr<ProcessState> processState;
         std::unique_ptr<NodeRenderContext> nodeRenderContext;
 

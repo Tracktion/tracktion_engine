@@ -10,7 +10,7 @@
 
 #pragma once
 
-namespace tracktion_graph
+namespace tracktion { inline namespace graph
 {
 
 //==============================================================================
@@ -23,8 +23,8 @@ public:
     {
         ownedInput = std::move (inputNode);
 
-        setOptimisations ({ tracktion_graph::ClearBuffers::no,
-                            tracktion_graph::AllocateAudioBuffer::yes });
+        setOptimisations ({ tracktion::graph::ClearBuffers::no,
+                            tracktion::graph::AllocateAudioBuffer::yes });
     }
 
     LatencyNode (std::shared_ptr<Node> inputNode, int numSamplesToDelay)
@@ -32,8 +32,8 @@ public:
     {
         sharedInput = std::move (inputNode);
 
-        setOptimisations ({ tracktion_graph::ClearBuffers::no,
-                            tracktion_graph::AllocateAudioBuffer::yes });
+        setOptimisations ({ tracktion::graph::ClearBuffers::no,
+                            tracktion::graph::AllocateAudioBuffer::yes });
     }
 
     LatencyNode (Node* inputNode, int numSamplesToDelay)
@@ -41,8 +41,8 @@ public:
     {
         latencyProcessor->setLatencyNumSamples (numSamplesToDelay);
         
-        setOptimisations ({ tracktion_graph::ClearBuffers::no,
-                            tracktion_graph::AllocateAudioBuffer::yes });
+        setOptimisations ({ tracktion::graph::ClearBuffers::no,
+                            tracktion::graph::AllocateAudioBuffer::yes });
     }
 
     NodeProperties getNodeProperties() override
@@ -120,4 +120,4 @@ private:
     }
 };
 
-}
+}}

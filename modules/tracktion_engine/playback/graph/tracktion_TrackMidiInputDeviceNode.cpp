@@ -18,24 +18,24 @@ TrackMidiInputDeviceNode::TrackMidiInputDeviceNode (MidiInputDevice& owner, std:
 {
     jassert (midiInputDevice.isTrackDevice());
 
-    setOptimisations ({ tracktion_graph::ClearBuffers::yes,
-                        copyInputsToOutputs ? tracktion_graph::AllocateAudioBuffer::no
-                                            : tracktion_graph::AllocateAudioBuffer::yes });
+    setOptimisations ({ tracktion::graph::ClearBuffers::yes,
+                        copyInputsToOutputs ? tracktion::graph::AllocateAudioBuffer::no
+                                            : tracktion::graph::AllocateAudioBuffer::yes });
 }
 
-std::vector<tracktion_graph::Node*> TrackMidiInputDeviceNode::getDirectInputNodes()
+std::vector<tracktion::graph::Node*> TrackMidiInputDeviceNode::getDirectInputNodes()
 {
     return { input.get() };
 }
 
-tracktion_graph::NodeProperties TrackMidiInputDeviceNode::getNodeProperties()
+tracktion::graph::NodeProperties TrackMidiInputDeviceNode::getNodeProperties()
 {
     return input->getNodeProperties();
 }
 
-void TrackMidiInputDeviceNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
+void TrackMidiInputDeviceNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
-    offsetSeconds = tracktion_graph::sampleToTime (info.blockSize, info.sampleRate);
+    offsetSeconds = tracktion::graph::sampleToTime (info.blockSize, info.sampleRate);
 }
 
 bool TrackMidiInputDeviceNode::isReadyToProcess()
@@ -56,7 +56,7 @@ void TrackMidiInputDeviceNode::process (ProcessContext& pc)
         pc.buffers.midi.copyFrom (sourceBuffers.midi);
     }
     
-    const double midiStreamTime = tracktion_graph::sampleToTime (getReferenceSampleRange().getStart(), getSampleRate())
+    const double midiStreamTime = tracktion::graph::sampleToTime (getReferenceSampleRange().getStart(), getSampleRate())
                                    - midiInputDevice.getAdjustSecs();
 
     // And pass MIDI to device

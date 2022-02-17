@@ -13,7 +13,7 @@ namespace tracktion_engine
 
 #if GRAPH_UNIT_TESTS_RACKNODE
 
-using namespace tracktion_graph;
+using namespace tracktion::graph;
 
 //==============================================================================
 //==============================================================================
@@ -32,8 +32,8 @@ public:
         engine.getPluginManager().createBuiltInType<ToneGeneratorPlugin>();
         engine.getPluginManager().createBuiltInType<LatencyPlugin>();
                 
-        runAllTests<tracktion_graph::NodePlayer>();
-        runAllTests<tracktion_graph::LockFreeMultiThreadedNodePlayer>();
+        runAllTests<tracktion::graph::NodePlayer>();
+        runAllTests<tracktion::graph::LockFreeMultiThreadedNodePlayer>();
     }
     
     template<typename NodePlayerType>

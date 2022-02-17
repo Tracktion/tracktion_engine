@@ -11,7 +11,7 @@
 #pragma once
 
 
-namespace tracktion_graph
+namespace tracktion { inline namespace graph
 {
 
 namespace node_player_utils
@@ -50,7 +50,7 @@ namespace node_player_utils
         visitNodes (*node, [&] (Node& n) { n.initialise (info); }, false);
         
         // Then find all the nodes as it might have changed after initialisation
-        return tracktion_graph::getNodes (*node, tracktion_graph::VertexOrdering::postordering);
+        return tracktion::graph::getNodes (*node, tracktion::graph::VertexOrdering::postordering);
     }
 
     inline void reserveAudioBufferPool (Node* rootNode, const std::vector<Node*>& allNodes,
@@ -86,4 +86,4 @@ namespace node_player_utils
     }
 }
 
-}
+}}

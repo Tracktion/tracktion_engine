@@ -59,21 +59,21 @@ private:
 /**
     Adds audio and MIDI clicks to the input buffers.
 */
-class ClickNode final   : public tracktion_graph::Node
+class ClickNode final   : public tracktion::graph::Node
 {
 public:
-    ClickNode (Edit&, int numAudioChannels, bool generateMidi, tracktion_graph::PlayHead&);
+    ClickNode (Edit&, int numAudioChannels, bool generateMidi, tracktion::graph::PlayHead&);
 
     std::vector<Node*> getDirectInputNodes() override;
-    tracktion_graph::NodeProperties getNodeProperties() override;
-    void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override;
+    tracktion::graph::NodeProperties getNodeProperties() override;
+    void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
     void process (ProcessContext&) override;
 
 private:
     //==============================================================================
     Edit& edit;
-    tracktion_graph::PlayHead& playHead;
+    tracktion::graph::PlayHead& playHead;
     ClickGenerator clickGenerator;
     const int numChannels;
     const bool generateMidi;

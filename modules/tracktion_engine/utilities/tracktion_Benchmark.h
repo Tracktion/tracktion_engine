@@ -46,7 +46,7 @@ struct BenchmarkResult
 
 /** Creates a BenchmarkResult from a set of Statistics. */
 inline BenchmarkResult createBenchmarkResult (BenchmarkDescription description,
-                                              const tracktion_graph::PerformanceMeasurement::Statistics& stats)
+                                              const tracktion::graph::PerformanceMeasurement::Statistics& stats)
 {
     return { description,
              stats.totalSeconds, stats.meanSeconds, stats.minimumSeconds, stats.maximumSeconds,
@@ -91,7 +91,7 @@ public:
     
 private:
     BenchmarkDescription description;
-    tracktion_graph::PerformanceMeasurement measurement { {}, -1, false };
+    tracktion::graph::PerformanceMeasurement measurement { {}, -1, false };
     const int64_t ticksPerSecond { (int64_t) juce::Time::getHighResolutionTicksPerSecond() };
 };
 

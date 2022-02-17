@@ -23,7 +23,7 @@ struct SpeedFadeDescription
 //==============================================================================
 //==============================================================================
 /** An Node that plays back a wave file. */
-class SpeedRampWaveNode final   : public tracktion_graph::Node,
+class SpeedRampWaveNode final   : public tracktion::graph::Node,
                                   public TracktionEngineNode
 {
 public:
@@ -49,8 +49,8 @@ public:
                        SpeedFadeDescription);
 
     //==============================================================================
-    tracktion_graph::NodeProperties getNodeProperties() override;
-    void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override;
+    tracktion::graph::NodeProperties getNodeProperties() override;
+    void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
     void process (ProcessContext&) override;
 

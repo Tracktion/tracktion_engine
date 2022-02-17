@@ -11,7 +11,7 @@
 #pragma once
 
 
-namespace tracktion_graph
+namespace tracktion { inline namespace graph
 {
 
 //==============================================================================
@@ -64,4 +64,4 @@ private:
     std::vector<Node*> orderedNodes;
 };
 
-}
+}}

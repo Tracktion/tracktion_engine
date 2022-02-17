@@ -9,7 +9,7 @@
 */
 
 // Defined in tracktion_core
-#define TRACKTION_UNIT_TESTS_TIME              1
+#define TRACKTION_UNIT_TESTS_TIME          1
 
 // Defined in tracktion_engine
 #define GRAPH_UNIT_TESTS_WAVENODE          1

@@ -94,9 +94,9 @@ namespace details
         ScopedRPMallocInitialiser scopedRPMallocInitialiser;
     
     private:
-        static tracktion_graph::RealTimeSpinLock& getFinaliseMutex()
+        static tracktion::graph::RealTimeSpinLock& getFinaliseMutex()
         {
-            static tracktion_graph::RealTimeSpinLock m;
+            static tracktion::graph::RealTimeSpinLock m;
             return m;
         }
     };

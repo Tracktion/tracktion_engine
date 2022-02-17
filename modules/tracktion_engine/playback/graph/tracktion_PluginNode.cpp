@@ -44,7 +44,7 @@ PluginNode::PluginNode (std::unique_ptr<Node> inputNode,
                         tracktion_engine::Plugin::Ptr pluginToProcess,
                         double sampleRateToUse, int blockSizeToUse,
                         const TrackMuteState* trackMuteStateToUse,
-                        tracktion_graph::PlayHeadState& playHeadStateToUse,
+                        tracktion::graph::PlayHeadState& playHeadStateToUse,
                         bool rendering, bool canBalanceLatency,
                         int maxNumChannelsToUse)
     : input (std::move (inputNode)),
@@ -67,7 +67,7 @@ PluginNode::~PluginNode()
 }
 
 //==============================================================================
-tracktion_graph::NodeProperties PluginNode::getNodeProperties()
+tracktion::graph::NodeProperties PluginNode::getNodeProperties()
 {
     auto props = input->getNodeProperties();
 
@@ -86,7 +86,7 @@ tracktion_graph::NodeProperties PluginNode::getNodeProperties()
     return props;
 }
 
-void PluginNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
+void PluginNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
     juce::ignoreUnused (info);
     jassert (sampleRate == info.sampleRate);
@@ -109,7 +109,7 @@ void PluginNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInf
         
         if (! latencyProcessor)
         {
-            latencyProcessor = std::make_shared<tracktion_graph::LatencyProcessor>();
+            latencyProcessor = std::make_shared<tracktion::graph::LatencyProcessor>();
             latencyProcessor->setLatencyNumSamples (latencyNumSamples);
             latencyProcessor->prepareToPlay (info.sampleRate, info.blockSize, props.numberOfChannels);
         }
@@ -153,7 +153,7 @@ void PluginNode::process (ProcessContext& pc)
     // Copy the inputs to the outputs, then process using the
     // output buffers as that will be the correct size
     if (numInputChannelsToCopy > 0)
-        tracktion_graph::copyIfNotAliased (outputAudioView.getFirstChannels (numInputChannelsToCopy),
+        tracktion::graph::copyIfNotAliased (outputAudioView.getFirstChannels (numInputChannelsToCopy),
                                            inputAudioBlock.getFirstChannels (numInputChannelsToCopy));
     
     // Init block
@@ -187,9 +187,9 @@ void PluginNode::process (ProcessContext& pc)
     {
         auto numSamplesThisBlock = std::min (subBlockSize, numSamplesLeft);
 
-        auto outputAudioBuffer = tracktion_graph::toAudioBuffer (outputAudioView.getFrameRange (tracktion_graph::frameRangeWithStartAndLength (numSamplesDone, numSamplesThisBlock)));
+        auto outputAudioBuffer = tracktion::graph::toAudioBuffer (outputAudioView.getFrameRange (tracktion::graph::frameRangeWithStartAndLength (numSamplesDone, numSamplesThisBlock)));
         
-        const auto subBlockTimeRange = tracktion_graph::sampleToTime (juce::Range<size_t>::withStartAndLength (numSamplesDone, numSamplesThisBlock), sampleRate);
+        const auto subBlockTimeRange = tracktion::graph::sampleToTime (juce::Range<size_t>::withStartAndLength (numSamplesDone, numSamplesThisBlock), sampleRate);
         
         midiMessageArray.clear();
         midiMessageArray.isAllNotesOff = isAllNotesOff;

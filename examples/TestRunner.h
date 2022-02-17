@@ -174,6 +174,7 @@ namespace TestRunner
 
         Array<UnitTest*> tests;
         tests.addArray (UnitTest::getTestsInCategory ("tracktion_core"));
+        tests.addArray (UnitTest::getTestsInCategory ("tracktion_graph"));
         tests.addArray (UnitTest::getTestsInCategory ("Tracktion"));
         tests.addArray (UnitTest::getTestsInCategory ("Tracktion:Longer"));
         

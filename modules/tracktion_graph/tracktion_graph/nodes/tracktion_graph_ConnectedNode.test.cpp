@@ -14,7 +14,7 @@
 
 #include "tracktion_graph_ConnectedNode.h"
 
-namespace tracktion_graph
+namespace tracktion { inline namespace graph
 {
 
 //==============================================================================
@@ -29,7 +29,7 @@ public:
     
     void runTest() override
     {
-        for (auto ts : tracktion_graph::test_utilities::getTestSetups (*this))
+        for (auto ts : tracktion::graph::test_utilities::getTestSetups (*this))
         {
             runBasicTests (ts);
         }
@@ -40,8 +40,6 @@ private:
     //==============================================================================
     void runBasicTests (test_utilities::TestSetup ts)
     {
-        using namespace tracktion_graph;
-
         beginTest ("Two sin waves");
         {
             auto sinNode1 = std::make_shared<SinNode> (220.0f);
@@ -101,6 +99,6 @@ private:
 
 static ConnectedNodeTests connectedNodeTests;
 
-}
+}}
 
 #endif

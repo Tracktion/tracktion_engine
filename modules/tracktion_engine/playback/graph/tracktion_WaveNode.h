@@ -13,7 +13,7 @@ namespace tracktion_engine
 
 //==============================================================================
 /** An Node that plays back a wave file. */
-class WaveNode final    : public tracktion_graph::Node,
+class WaveNode final    : public tracktion::graph::Node,
                           public TracktionEngineNode
 {
 public:
@@ -38,8 +38,8 @@ public:
               bool isOfflineRender);
 
     //==============================================================================
-    tracktion_graph::NodeProperties getNodeProperties() override;
-    void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override;
+    tracktion::graph::NodeProperties getNodeProperties() override;
+    void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
     void process (ProcessContext&) override;
 

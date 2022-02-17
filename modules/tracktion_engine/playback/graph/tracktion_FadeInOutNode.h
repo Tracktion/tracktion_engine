@@ -16,26 +16,26 @@ namespace tracktion_engine
 /**
     A Node that fades in and out given time regions.
 */
-class FadeInOutNode final : public tracktion_graph::Node
+class FadeInOutNode final : public tracktion::graph::Node
 {
 public:
-    FadeInOutNode (std::unique_ptr<tracktion_graph::Node> input,
-                   tracktion_graph::PlayHeadState&,
+    FadeInOutNode (std::unique_ptr<tracktion::graph::Node> input,
+                   tracktion::graph::PlayHeadState&,
                    TimeRange fadeIn, TimeRange fadeOut,
                    AudioFadeCurve::Type fadeInType, AudioFadeCurve::Type fadeOutType,
                    bool clearSamplesOutsideFade);
 
     //==============================================================================
-    tracktion_graph::NodeProperties getNodeProperties() override;
+    tracktion::graph::NodeProperties getNodeProperties() override;
     std::vector<Node*> getDirectInputNodes() override;
-    void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override;
+    void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
     void process (ProcessContext&) override;
 
 private:
     //==============================================================================
-    std::unique_ptr<tracktion_graph::Node> input;
-    tracktion_graph::PlayHeadState& playHeadState;
+    std::unique_ptr<tracktion::graph::Node> input;
+    tracktion::graph::PlayHeadState& playHeadState;
     TimeRange fadeIn, fadeOut;
     AudioFadeCurve::Type fadeInType, fadeOutType;
     juce::Range<int64_t> fadeInSampleRange, fadeOutSampleRange;
