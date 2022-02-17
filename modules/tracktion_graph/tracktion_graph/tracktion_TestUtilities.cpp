@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#include "tracktion_graph_TestUtilities.h"
+#include "tracktion_TestUtilities.h"
 
 #if __has_include (<cxxabi.h>)
 #include <cxxabi.h>

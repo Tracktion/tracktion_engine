@@ -30,8 +30,8 @@ using namespace std::literals;
 
 #include <tracktion_graph/tracktion_graph.h>
 
-#include <tracktion_graph/tracktion_graph/tracktion_graph_TestUtilities.h>
-#include <tracktion_graph/tracktion_graph/tracktion_graph_TestNodes.h>
+#include <tracktion_graph/tracktion_graph/tracktion_TestUtilities.h>
+#include <tracktion_graph/tracktion_graph/tracktion_TestNodes.h>
 
 #include "tracktion_engine.h"
 

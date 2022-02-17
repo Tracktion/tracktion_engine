@@ -12,7 +12,7 @@
 
 #if GRAPH_UNIT_TESTS_CONNECTEDNODE
 
-#include "tracktion_graph_ConnectedNode.h"
+#include "tracktion_ConnectedNode.h"
 
 namespace tracktion { inline namespace graph
 {
