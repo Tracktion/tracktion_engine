@@ -194,21 +194,18 @@ void ControlSurface::userPressedRecEnable (int channelNum, bool enableEtoE)
     {
         channelNum += owner->channelStart;
 
-        if (externalControllerManager.getChannelTrack (channelNum) != nullptr)
+        if (auto track = externalControllerManager.getChannelTrack (channelNum))
         {
             juce::Array<InputDeviceInstance*> activeDev, inactiveDev;
 
             for (auto in : ed->getAllInputDevices())
             {
-                for (auto t : in->getTargetTracks())
+                if (in->isOnTargetTrack (*track))
                 {
-                    if (externalControllerManager.mapTrackNumToChannelNum (t->getIndexInEditTrackList()) == channelNum)
-                    {
-                        if (in->isRecordingActive (*t))
-                            activeDev.add (in);
-                        else
-                            inactiveDev.add (in);
-                    }
+                    if (in->isRecordingActive (*track))
+                        activeDev.add (in);
+                    else
+                        inactiveDev.add (in);
                 }
             }
 
@@ -225,14 +222,12 @@ void ControlSurface::userPressedRecEnable (int channelNum, bool enableEtoE)
                 if (activeDev.size() > 0)
                 {
                     for (auto dev : activeDev)
-                        for (auto t : dev->getTargetTracks())
-                            dev->setRecordingEnabled (*t, false);
+                        dev->setRecordingEnabled (*track, false);
                 }
                 else
                 {
                     for (auto dev : inactiveDev)
-                        for (auto t : dev->getTargetTracks())
-                            dev->setRecordingEnabled (*t, true);
+                        dev->setRecordingEnabled (*track, true);
                 }
 
                 if (activeDev.size() > 0 || inactiveDev.size() > 0)
