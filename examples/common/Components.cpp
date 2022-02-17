@@ -8,7 +8,7 @@
 
 #pragma once
 
-namespace te = tracktion_engine;
+namespace te = tracktion;
 using namespace std::literals;
 
 static inline const char* getInternalPluginFormatName()     { return "TracktionInternal"; }
