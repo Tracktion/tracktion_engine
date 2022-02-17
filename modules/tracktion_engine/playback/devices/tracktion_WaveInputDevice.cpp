@@ -334,7 +334,7 @@ public:
             rc->sampleRate = sr;
 
             juce::StringPairArray metadata;
-            AudioFileUtils::addBWAVStartToMetadata (metadata, (SampleCount) tracktion_graph::toSamples (playStart, sr));
+            AudioFileUtils::addBWAVStartToMetadata (metadata, (SampleCount) tracktion::toSamples (playStart, sr));
             auto& wi = getWaveInput();
 
             rc->fileWriter.reset (new AudioFileWriter (AudioFile (edit.engine, recordedFile), format,
@@ -351,7 +351,7 @@ public:
                 muteTrackNow = false;
 
                 const auto adjustSeconds = wi.getAdjustmentSeconds();
-                rc->adjustSamples = (int) tracktion_graph::toSamples (adjustSeconds, sr);
+                rc->adjustSamples = (int) tracktion::toSamples (adjustSeconds, sr);
                 rc->adjustSamples += context.getLatencySamples();
 
                 if (! isLivePunch)
@@ -745,7 +745,7 @@ public:
 
         for (auto& f : filesCreated)
         {
-            AudioFileUtils::applyBWAVStartTime (f, (SampleCount) tracktion_graph::toSamples (newClip->getPosition().getStartOfSource(), rc.sampleRate));
+            AudioFileUtils::applyBWAVStartTime (f, (SampleCount) tracktion::toSamples (newClip->getPosition().getStartOfSource(), rc.sampleRate));
             afm.forceFileUpdate (AudioFile (edit.engine, f));
         }
 
@@ -976,7 +976,7 @@ public:
 
             CRASH_TRACER
 
-            AudioFileUtils::applyBWAVStartTime (recordedFile, (SampleCount) tracktion_graph::toSamples (newClip->getPosition().getStartOfSource(), recordBuffer->sampleRate));
+            AudioFileUtils::applyBWAVStartTime (recordedFile, (SampleCount) tracktion::toSamples (newClip->getPosition().getStartOfSource(), recordBuffer->sampleRate));
 
             edit.engine.getAudioFileManager().forceFileUpdate (AudioFile (dstTrack->edit.engine, recordedFile));
 
@@ -1089,7 +1089,7 @@ public:
                     recordingContext->firstRecCallback = false;
 
                     auto timeDiff = blockRange.getStart() - recordingContext->punchTimes.getStart();
-                    recordingContext->adjustSamples -= (int) tracktion_graph::toSamples (timeDiff, recordingContext->sampleRate);
+                    recordingContext->adjustSamples -= (int) tracktion::toSamples (timeDiff, recordingContext->sampleRate);
                 }
 
                 const int adjustSamples = recordingContext->adjustSamples;

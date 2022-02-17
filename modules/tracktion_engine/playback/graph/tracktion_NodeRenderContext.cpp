@@ -144,7 +144,7 @@ NodeRenderContext::NodeRenderContext (Renderer::RenderTask& owner_, Renderer::Pa
     playHead->stop();
     playHead->setPosition (toSamples (r.time.getStart(), r.sampleRateForAudio));
 
-    samplesToWrite = tracktion_graph::toSamples ((r.time.getLength() + r.endAllowance), r.sampleRateForAudio);
+    samplesToWrite = tracktion::toSamples ((r.time.getLength() + r.endAllowance), r.sampleRateForAudio);
 
     if (sourceToUpdate != nullptr)
         sourceToUpdate->reset (numOutputChans, r.sampleRateForAudio, samplesToWrite);

@@ -249,7 +249,7 @@ TempoSetting::Ptr TempoSequence::insertTempo (TimePosition time, juce::UndoManag
     float defaultCurve = 1.0f;
 
     if (getNumTempos() > 0)
-        return insertTempo (tracktion_graph::roundToNearestBeat (timeToBeats (time)), bpm, defaultCurve, um);
+        return insertTempo (tracktion::roundToNearestBeat (timeToBeats (time)), bpm, defaultCurve, um);
 
     return insertTempo ({}, bpm, defaultCurve, um);
 }
@@ -282,7 +282,7 @@ TimeSigSetting::Ptr TempoSequence::insertTimeSig (TimePosition time, juce::UndoM
 
     if (getNumTimeSigs() > 0)
     {
-        beatNum = tracktion_graph::roundToNearestBeat (timeToBeats (time));
+        beatNum = tracktion::roundToNearestBeat (timeToBeats (time));
         auto& prev = getTimeSigAtBeat (beatNum);
 
         index = state.indexOf (prev.state) + 1;
@@ -372,7 +372,7 @@ void TempoSequence::moveTempoStart (int index, BeatDuration deltaBeats, bool sna
             const auto nextBeat = next != nullptr ? next->startBeatNumber : BeatPosition::fromBeats (0x7ffffff);
 
             const auto newStart = juce::jlimit (prevBeat, nextBeat, t->startBeatNumber.get() + deltaBeats);
-            t->set (snapToBeat ? tracktion_graph::roundToNearestBeat (newStart) : newStart,
+            t->set (snapToBeat ? tracktion::roundToNearestBeat (newStart) : newStart,
                     t->bpm, t->curve, false);
         }
     }
@@ -396,7 +396,7 @@ void TempoSequence::moveTimeSigStart (int index, BeatDuration deltaBeats, bool s
             t->startBeatNumber.forceUpdateOfCachedValue();
             const auto newBeat = t->startBeatNumber.get() + deltaBeats;
             t->startBeatNumber = juce::jlimit (prevBeat + BeatDuration::fromBeats (1), nextBeat - BeatDuration::fromBeats (1),
-                                               snapToBeat ? tracktion_graph::roundToNearestBeat (newBeat) : newBeat);
+                                               snapToBeat ? tracktion::roundToNearestBeat (newBeat) : newBeat);
         }
     }
 }

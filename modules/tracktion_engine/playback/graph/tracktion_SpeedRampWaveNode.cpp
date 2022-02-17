@@ -70,7 +70,7 @@ void SpeedRampWaveNode::prepareToPlay (const tracktion_graph::PlaybackInitialisa
 {
     reader = audioFile.engine->getAudioFileManager().cache.createReader (audioFile);
     outputSampleRate = info.sampleRate;
-    editPositionInSamples = tracktion_graph::toSamples ({ editPosition.getStart(), editPosition.getEnd() }, outputSampleRate);
+    editPositionInSamples = tracktion::toSamples ({ editPosition.getStart(), editPosition.getEnd() }, outputSampleRate);
     updateFileSampleRate();
 
     channelState.clear();
@@ -163,15 +163,15 @@ bool SpeedRampWaveNode::updateFileSampleRate()
         return false;
     
     if (! loopSection.isEmpty())
-        reader->setLoopRange ({ tracktion_graph::toSamples (loopSection.getStart(), audioFileSampleRate),
-                                tracktion_graph::toSamples (loopSection.getEnd(), audioFileSampleRate) });
+        reader->setLoopRange ({ tracktion::toSamples (loopSection.getStart(), audioFileSampleRate),
+                                tracktion::toSamples (loopSection.getEnd(), audioFileSampleRate) });
 
     return true;
 }
 
 void SpeedRampWaveNode::processSection (ProcessContext& pc, juce::Range<int64_t> timelineRange)
 {
-    const auto sectionEditTime = tracktion_graph::timeRangeFromSamples (timelineRange, outputSampleRate);
+    const auto sectionEditTime = tracktion::timeRangeFromSamples (timelineRange, outputSampleRate);
     
     if (reader == nullptr
          || sectionEditTime.getEnd() <= editPosition.getStart()

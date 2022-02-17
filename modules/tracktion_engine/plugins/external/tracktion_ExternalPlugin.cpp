@@ -314,7 +314,7 @@ public:
             result.ppqLoopEnd = loopEnd->getPPQTime();
         }
 
-        result.timeInSamples    = (tracktion_graph::toSamples (localTime, plugin.sampleRate));
+        result.timeInSamples    = (tracktion::toSamples (localTime, plugin.sampleRate));
         result.timeInSeconds    = localTime.inSeconds();
 
         currentPos->setTime (localTime);

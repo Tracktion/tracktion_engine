@@ -203,7 +203,7 @@ void MelodyneNode::process (ProcessContext& pc)
                 const auto sampleRate = pluginInstance->getSampleRate();
                 playhead->setCurrentInfo (TimePosition::fromSamples (timelinePosition, sampleRate),
                                           playHead.isPlaying(), playHead.isLooping(),
-                                          tracktion_graph::timeRangeFromSamples (loopPositions, sampleRate));
+                                          tracktion::timeRangeFromSamples (loopPositions, sampleRate));
             }
 
             auto asb = tracktion_graph::toAudioBuffer (dest);

@@ -12,7 +12,7 @@
 
 #include <chrono>
 
-namespace tracktion_graph
+namespace tracktion { inline namespace core
 {
 
 struct TimeDuration;
@@ -740,4 +740,4 @@ inline juce::String& operator<< (juce::String& s, TimePosition p)  { return s <<
 inline juce::String& operator<< (juce::String& s, BeatDuration d)  { return s << juce::String (d.inBeats()); }
 inline juce::String& operator<< (juce::String& s, BeatPosition p)  { return s << juce::String (p.inBeats()); }
 
-} // namespace tracktion_graph
+}} // namespace tracktion

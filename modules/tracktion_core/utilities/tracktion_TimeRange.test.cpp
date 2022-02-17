@@ -8,11 +8,11 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#if GRAPH_UNIT_TESTS_TIME
+#if TRACKTION_UNIT_TESTS_TIME
 
 #include "tracktion_TimeRange.h"
 
-namespace tracktion_graph
+namespace tracktion { inline namespace core
 {
 
 //==============================================================================
@@ -21,13 +21,12 @@ class TimeRangeTests    : public juce::UnitTest
 {
 public:
     TimeRangeTests()
-        : juce::UnitTest ("TimeRange", "tracktion_graph")
+        : juce::UnitTest ("TimeRange", "tracktion_core")
     {
     }
     
     void runTest() override
     {
-        using namespace tracktion_graph;
         using namespace std::literals;
         
         runTests<TimeRange> ("TimeRange");
@@ -43,7 +42,6 @@ public:
     template<typename RangeType>
     void runTests (juce::StringRef testName)
     {
-        using namespace tracktion_graph;
         using namespace std::literals;
 
         using PT = typename RangeType::Position;
@@ -108,6 +106,6 @@ public:
 
 static TimeRangeTests timeRangeTests;
 
-} // namespace tracktion_graph
+}} // namespace tracktion
 
-#endif //GRAPH_UNIT_TESTS_TIME
+#endif //TRACKTION_UNIT_TESTS_TIME

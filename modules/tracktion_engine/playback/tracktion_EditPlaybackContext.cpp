@@ -850,7 +850,7 @@ TimePosition EditPlaybackContext::getUnloopedPosition() const
 
 TimeRange EditPlaybackContext::getLoopTimes() const
 {
-    return tracktion_graph::timeRangeFromSamples (nodePlaybackContext->playHead.getLoopRange(),
+    return tracktion::timeRangeFromSamples (nodePlaybackContext->playHead.getLoopRange(),
                                                   nodePlaybackContext->getSampleRate());
 }
 

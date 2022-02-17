@@ -8,11 +8,11 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#if GRAPH_UNIT_TESTS_TIME
+#if TRACKTION_UNIT_TESTS_TIME
 
 #include "tracktion_Time.h"
 
-namespace tracktion_graph
+namespace tracktion { inline namespace core
 {
 
 struct TimelineClock
@@ -39,13 +39,12 @@ class TimeTests : public juce::UnitTest
 {
 public:
     TimeTests()
-        : juce::UnitTest ("Time", "tracktion_graph")
+        : juce::UnitTest ("Time", "tracktion_core")
     {
     }
     
     void runTest() override
     {
-        using namespace tracktion_graph;
         using namespace std::literals;
         
         beginTest ("Timeline Point");
@@ -381,6 +380,6 @@ public:
 
 static TimeTests timeTests;
 
-} // namespace tracktion_graph
+}} // namespace tracktion
 
-#endif //GRAPH_UNIT_TESTS_TIME
+#endif //TRACKTION_UNIT_TESTS_TIME

@@ -536,7 +536,7 @@ void TimecodeDisplayFormat::getPartStrings (TimecodeDuration duration,
     }
     else if (duration.seconds.has_value())
     {
-        auto t = (tracktion_graph::abs (*duration.seconds) + nudge).inSeconds();
+        auto t = (tracktion::abs (*duration.seconds) + nudge).inSeconds();
 
         if (type == TimecodeType::millisecs)
         {
@@ -603,7 +603,7 @@ TimecodeDuration TimecodeDisplayFormat::getNewTimeWithPartValue (TimecodeDuratio
         }
         else
         {
-            auto t = toPosition (tracktion_graph::abs (*time.seconds));
+            auto t = toPosition (tracktion::abs (*time.seconds));
 
             TempoSequencePosition pos (tempo);
             pos.setTime (t);
@@ -618,7 +618,7 @@ TimecodeDuration TimecodeDisplayFormat::getNewTimeWithPartValue (TimecodeDuratio
         }
     }
 
-    auto t = tracktion_graph::abs (*time.seconds).inSeconds();
+    auto t = tracktion::abs (*time.seconds).inSeconds();
     auto intT = (int) t;
     auto hours = (int) (t / 3600.0);
     auto mins  = (intT / 60) % 60;
@@ -652,7 +652,7 @@ TimecodeDuration TimecodeDisplayFormat::getNewTimeWithPartValue (TimecodeDuratio
 juce::String TimecodeDisplayFormat::toFullTimecode (TimePosition seconds, int subSecondDivisions, bool showHours)
 {
     juce::String result = (seconds < 0s) ? "-" : "";
-    auto absSecs = tracktion_graph::abs (seconds).inSeconds();
+    auto absSecs = tracktion::abs (seconds).inSeconds();
 
     if (showHours || (absSecs >= 60.0 * 60.0))
         result += juce::String::formatted ("%02d:%02d:%02d",

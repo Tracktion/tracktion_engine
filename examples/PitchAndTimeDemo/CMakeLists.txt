@@ -68,6 +68,7 @@ target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
     TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH=1)
 
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
+    tracktion::tracktion_core
     tracktion::tracktion_engine
     tracktion::tracktion_graph
     juce::juce_audio_devices

@@ -222,8 +222,8 @@ SampleCount AudioFileUtils::copySectionToNewFile (Engine& e,
 
     if (reader != nullptr)
         return copySection (e, reader, sourceFile, destFile,
-                            { (SampleCount) tracktion_graph::toSamples (range.getStart(),   reader->sampleRate),
-                              (SampleCount) tracktion_graph::toSamples (range.getEnd(),     reader->sampleRate) });
+                            { (SampleCount) tracktion::toSamples (range.getStart(),   reader->sampleRate),
+                              (SampleCount) tracktion::toSamples (range.getEnd(),     reader->sampleRate) });
 
     return -1;
 }

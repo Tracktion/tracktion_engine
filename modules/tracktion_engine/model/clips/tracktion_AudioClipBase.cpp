@@ -1845,7 +1845,7 @@ struct StretchSegment
                     double sampleRate, const AudioSegmentList::Segment& s)
         : segment (s),
           fileInfo (file.getInfo()),
-          crossfadeSamples ((int) tracktion_graph::toSamples (info.audioSegmentList->getCrossfadeLength(), sampleRate)),
+          crossfadeSamples ((int) tracktion::toSamples (info.audioSegmentList->getCrossfadeLength(), sampleRate)),
           numChannelsToUse (juce::jlimit (1, maxNumChannels, fileInfo.numChannels))
     {
         CRASH_TRACER

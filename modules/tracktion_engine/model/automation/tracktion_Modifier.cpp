@@ -20,7 +20,7 @@ public:
     {
         jassert (sampleRate > 0.0);
         
-        const auto numSamplesToStore = (size_t) tracktion_graph::toSamples (maxNumSecondsToStore, newSampleRate);
+        const auto numSamplesToStore = (size_t) tracktion::toSamples (maxNumSecondsToStore, newSampleRate);
         values = std::vector<float> (numSamplesToStore, 0.0f);
     }
     
@@ -45,7 +45,7 @@ public:
     
     [[nodiscard]] float getValueAt (TimeDuration numSeconds) const
     {
-        const size_t sampleDelta = (size_t) tracktion_graph::toSamples (numSeconds, sampleRate);
+        const size_t sampleDelta = (size_t) tracktion::toSamples (numSeconds, sampleRate);
         
         if (sampleDelta > values.size())
             return {};
@@ -61,7 +61,7 @@ public:
         std::vector<float> v;
         
         const auto numValues = std::min (values.size(),
-                                         (size_t) tracktion_graph::toSamples (numSecondsBeforeNow, sampleRate));
+                                         (size_t) tracktion::toSamples (numSecondsBeforeNow, sampleRate));
         v.reserve (numValues);
 
         int index = (int) headIndex;
@@ -143,7 +143,7 @@ void Modifier::baseClassInitialise (double newSampleRate, int blockSizeSamples)
         valueFifo = std::make_unique<ValueFifo> (sampleRate, numSecondsToStore);
         messageThreadValueFifo = std::make_unique<ValueFifo> (sampleRate, numSecondsToStore);
         
-        const int numSamples = (int) tracktion_graph::toSamples (numSecondsToStore, sampleRate);
+        const int numSamples = (int) tracktion::toSamples (numSecondsToStore, sampleRate);
         const int numBlocks = (numSamples / blockSizeSamples) * 2;
         valueFifoQueue.reset ((size_t) numBlocks);
     }

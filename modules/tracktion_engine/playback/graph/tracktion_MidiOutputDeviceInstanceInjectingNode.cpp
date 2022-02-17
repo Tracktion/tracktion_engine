@@ -54,7 +54,7 @@ void MidiOutputDeviceInstanceInjectingNode::process (ProcessContext& pc)
     
     const auto timelineSampleRange = referenceSampleRangeToSplitTimelineRange (playHead, pc.referenceSampleRange);
     assert (! timelineSampleRange.isSplit);
-    const auto editTimeRange = tracktion_graph::timeRangeFromSamples (timelineSampleRange.timelineRange1, sampleRate);
+    const auto editTimeRange = tracktion::timeRangeFromSamples (timelineSampleRange.timelineRange1, sampleRate);
 
     // Add MIDI clock for the current time to the device to be dispatched
     deviceInstance.addMidiClockMessagesToCurrentBlock (playHead.isPlaying(), playHead.isUserDragging(), editTimeRange);

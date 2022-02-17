@@ -48,8 +48,8 @@ std::vector<tracktion_graph::Node*> FadeInOutNode::getDirectInputNodes()
 
 void FadeInOutNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
 {
-    fadeInSampleRange = tracktion_graph::toSamples (fadeIn, info.sampleRate);
-    fadeOutSampleRange = tracktion_graph::toSamples (fadeOut, info.sampleRate);
+    fadeInSampleRange = tracktion::toSamples (fadeIn, info.sampleRate);
+    fadeOutSampleRange = tracktion::toSamples (fadeOut, info.sampleRate);
 }
 
 bool FadeInOutNode::isReadyToProcess()

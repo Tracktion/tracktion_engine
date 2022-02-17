@@ -193,7 +193,7 @@ bool Renderer::RenderTask::performNormalisingAndTrimming (const Renderer::Parame
         }
 
         AudioFileUtils::applyBWAVStartTime (intermediate.destFile,
-                                            (SampleCount) tracktion_graph::toSamples (intermediate.time.getStart(), intermediate.sampleRateForAudio)
+                                            (SampleCount) tracktion::toSamples (intermediate.time.getStart(), intermediate.sampleRateForAudio)
                                                + doneRange.getStart());
     }
 

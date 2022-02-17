@@ -103,10 +103,10 @@ BeatRange toBeats (EditTimeRange, const TempoSequence&);
 
 namespace juce
 {
-    using TimePosition = tracktion_graph::TimePosition;
-    using TimeDuration = tracktion_graph::TimeDuration;
-    using BeatPosition = tracktion_graph::BeatPosition;
-    using BeatDuration = tracktion_graph::BeatDuration;
+    using TimePosition = tracktion::core::TimePosition;
+    using TimeDuration = tracktion::core::TimeDuration;
+    using BeatPosition = tracktion::core::BeatPosition;
+    using BeatDuration = tracktion::core::BeatDuration;
 
     template<>
     struct VariantConverter<TimePosition>

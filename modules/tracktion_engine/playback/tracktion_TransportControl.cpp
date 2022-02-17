@@ -488,13 +488,13 @@ struct TransportControl::PlayHeadWrapper
     void play (TimeRange timeRange, bool looped)
     {
         if (auto ph = getNodePlayHead())
-            ph->play (tracktion_graph::toSamples (timeRange, getSampleRate()), looped);
+            ph->play (tracktion::toSamples (timeRange, getSampleRate()), looped);
     }
     
     void setRollInToLoop (TimePosition prerollStartTime)
     {
         if (auto ph = getNodePlayHead())
-            ph->setRollInToLoop (tracktion_graph::toSamples (prerollStartTime, getSampleRate()));
+            ph->setRollInToLoop (tracktion::toSamples (prerollStartTime, getSampleRate()));
     }
     
     void stop()
@@ -553,7 +553,7 @@ struct TransportControl::PlayHeadWrapper
     TimeRange getLoopTimes() const
     {
         if (auto ph = getNodePlayHead())
-            return tracktion_graph::timeRangeFromSamples (ph->getLoopRange(), getSampleRate());
+            return tracktion::timeRangeFromSamples (ph->getLoopRange(), getSampleRate());
         
         return {};
     }
@@ -561,7 +561,7 @@ struct TransportControl::PlayHeadWrapper
     void setLoopTimes (bool loop, TimeRange newRange)
     {
         if (auto ph = getNodePlayHead())
-            ph->setLoopRange (loop, tracktion_graph::toSamples (newRange, getSampleRate()));
+            ph->setLoopRange (loop, tracktion::toSamples (newRange, getSampleRate()));
     }
     
     void setUserIsDragging (bool isDragging)

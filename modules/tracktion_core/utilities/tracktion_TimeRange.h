@@ -12,7 +12,7 @@
 
 #include "tracktion_Time.h"
 
-namespace tracktion_graph
+namespace tracktion { inline namespace core
 {
 
 template<typename PositionType>
@@ -347,4 +347,4 @@ inline RangeType<PositionType> operator+ (const RangeType<PositionType>& r, type
 template<typename PositionType>
 inline RangeType<PositionType> operator- (const RangeType<PositionType>& r, typename RangeType<PositionType>::Duration d)    { return RangeType<PositionType> (r.getStart() - d, r.getEnd() - d); }
 
-} // namespace tracktion_graph
+}} // namespace tracktion

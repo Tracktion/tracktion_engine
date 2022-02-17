@@ -251,15 +251,16 @@ namespace tracktion_graph
 }
 
 //==============================================================================
-#include "../tracktion_graph/utilities/tracktion_Time.h"
-#include "../tracktion_graph/utilities/tracktion_TimeRange.h"
+#include "../tracktion_core/utilities/tracktion_Time.h"
+#include "../tracktion_core/utilities/tracktion_TimeRange.h"
 
-using TimePosition = tracktion_graph::TimePosition;
-using TimeDuration = tracktion_graph::TimeDuration;
-using BeatPosition = tracktion_graph::BeatPosition;
-using BeatDuration = tracktion_graph::BeatDuration;
-using TimeRange = tracktion_graph::TimeRange;
-using BeatRange = tracktion_graph::BeatRange;
+//ddd This should no longer be required
+using TimePosition = tracktion::core::TimePosition;
+using TimeDuration = tracktion::core::TimeDuration;
+using BeatPosition = tracktion::core::BeatPosition;
+using BeatDuration = tracktion::core::BeatDuration;
+using TimeRange = tracktion::core::TimeRange;
+using BeatRange = tracktion::core::BeatRange;
 
 //==============================================================================
 namespace tracktion_engine

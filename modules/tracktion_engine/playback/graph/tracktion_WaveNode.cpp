@@ -65,7 +65,7 @@ void WaveNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&
 {
     reader = audioFile.engine->getAudioFileManager().cache.createReader (audioFile);
     outputSampleRate = info.sampleRate;
-    editPositionInSamples = tracktion_graph::toSamples ({ editPosition.getStart(), editPosition.getEnd() }, outputSampleRate);
+    editPositionInSamples = tracktion::toSamples ({ editPosition.getStart(), editPosition.getEnd() }, outputSampleRate);
     updateFileSampleRate();
 
     const int numChannelsToUse = std::max (channelsToUse.size(), reader->getNumChannels());
@@ -141,8 +141,8 @@ bool WaveNode::updateFileSampleRate()
         return false;
     
     if (! loopSection.isEmpty())
-        reader->setLoopRange ({ tracktion_graph::toSamples (loopSection.getStart(), audioFileSampleRate),
-                                tracktion_graph::toSamples (loopSection.getEnd(), audioFileSampleRate) });
+        reader->setLoopRange ({ tracktion::toSamples (loopSection.getStart(), audioFileSampleRate),
+                                tracktion::toSamples (loopSection.getEnd(), audioFileSampleRate) });
 
     return true;
 }
@@ -177,7 +177,7 @@ void WaveNode::replaceChannelStateIfPossible (Node* rootNodeToReplace, int numCh
 
 void WaveNode::processSection (ProcessContext& pc, juce::Range<int64_t> timelineRange)
 {
-    const auto sectionEditTime = tracktion_graph::timeRangeFromSamples (timelineRange, outputSampleRate);
+    const auto sectionEditTime = tracktion::timeRangeFromSamples (timelineRange, outputSampleRate);
     
     if (reader == nullptr
          || sectionEditTime.getEnd() <= editPosition.getStart()
