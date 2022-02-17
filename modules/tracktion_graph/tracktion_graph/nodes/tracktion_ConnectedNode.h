@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "tracktion_graph_LatencyNode.h"
+#include "tracktion_LatencyNode.h"
 
 
 namespace tracktion { inline namespace graph
