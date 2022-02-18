@@ -11,6 +11,7 @@
 #if TRACKTION_UNIT_TESTS_TIME
 
 #include "tracktion_Tempo.h"
+#include "../../3rd_party/choc/text/choc_StringUtilities.h"
 
 namespace tracktion { inline namespace core
 {
@@ -130,3 +131,110 @@ static TempoTests tempoTests;
 }} // namespace tracktion
 
 #endif //TRACKTION_UNIT_TESTS_TIME
+
+
+//==============================================================================
+//==============================================================================
+#if TRACKTION_BENCHMARKS
+
+namespace tracktion { inline namespace engine
+{
+
+//==============================================================================
+//==============================================================================
+class TempoBenchmarks   : public juce::UnitTest
+{
+public:
+    TempoBenchmarks()
+        : juce::UnitTest ("Tempo", "tracktion_core")
+    {}
+
+    void runTest() override
+    {
+        beginTest ("Benchmark: Tempo conversion");
+        {
+            benchmarkTempos (0.0f);
+            benchmarkTempos (-1.0f);
+            benchmarkTempos (1.0f);
+            benchmarkTempos (-0.5f);
+            benchmarkTempos (0.5f);
+        }
+    }
+
+    void benchmarkTempos (float curve)
+    {
+        // Create a sequence of T tempos and time sigs over N beats
+        // Convert from beats to time:
+        //  - At the first minute
+        //  - The last minute
+        //  - Randomly throughout
+
+        constexpr int numIterations = 100;
+        constexpr int numBeats = 100;
+        constexpr int numConversions = 10'000;
+        juce::Random r (4200);
+
+        using choc::text::replace;
+        Benchmark bm1 (createBenchmarkDescription ("Tempo", replace ("Create sequence 4/4, curve = CCC", "CCC", std::to_string (curve)), "100 tempos, every beat"));
+        Benchmark bm2 (createBenchmarkDescription ("Tempo", "Convert 10'000", replace ("100'000, first quarter beats (4/4, curve = CCC)", "CCC", std::to_string (curve))));
+        Benchmark bm3 (createBenchmarkDescription ("Tempo", "Convert 10'000", replace ("100'000, last quarter beats (4/4, curve = CCC)", "CCC", std::to_string (curve))));
+        Benchmark bm4 (createBenchmarkDescription ("Tempo", "Convert 10'000", replace ("100'000, random beats (4/4, curve = CCC)", "CCC", std::to_string (curve))));
+
+        // Create the tempos first as we don't want to profile that
+        std::vector<Tempo::Setting> tempos;
+
+        for (int b = 0; b < numBeats; ++b)
+            tempos.push_back ({ BeatPosition::fromBeats (b), (double) r.nextInt ({ 60, 180 }), 0.0f });
+
+        for (int i = 0; i < numIterations; ++i)
+        {
+            // Create a copy outside of the profile loop
+            auto tempTempos = tempos;
+            std::vector<TimeSig::Setting> timeSigs {{ BeatPosition(), 4, 4, false }};
+
+            // Create the sequence
+            bm1.start();
+            Tempo::Sequence seq (std::move (tempTempos), timeSigs);
+            bm1.stop();
+
+            // Profile the first 25 beats
+            for (int c = 0; c < numConversions; ++c)
+            {
+                const auto b = BeatPosition::fromBeats (r.nextInt (numBeats / 4));
+
+                bm2.start();
+                [[ maybe_unused ]] const volatile auto beats = seq.toTime (b);
+                bm2.stop();
+            }
+
+            // Profile the last 25 beats
+            for (int c = 0; c < numConversions; ++c)
+            {
+                const auto b = BeatPosition::fromBeats (r.nextInt ({ (numBeats / 4) * 3, numBeats }));
+
+                bm3.start();
+                [[ maybe_unused ]] const volatile auto beats = seq.toTime (b);
+                bm3.stop();
+            }
+
+            // Profile the whole range
+            for (int c = 0; c < numConversions; ++c)
+            {
+                const auto b = BeatPosition::fromBeats (r.nextInt (numBeats));
+
+                bm4.start();
+                [[ maybe_unused ]] const volatile auto beats = seq.toTime (b);
+                bm4.stop();
+            }
+        }
+
+        for (auto bm : { &bm1, &bm2, &bm3, &bm4 })
+            BenchmarkList::getInstance().addResult (bm->getResult());
+    }
+};
+
+static TempoBenchmarks tempoBenchmarks;
+
+}} // namespace tracktion { inline namespace engine
+
+#endif //TRACKTION_BENCHMARKS
