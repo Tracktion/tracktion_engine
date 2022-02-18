@@ -44,6 +44,7 @@
 //==============================================================================
 
 #include <cstddef>
+#include <functional>
 
 namespace tracktion { inline namespace core
 {
