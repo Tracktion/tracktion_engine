@@ -20,7 +20,6 @@ using namespace std::literals;
 
 #include "timestretch/tracktion_TempoDetect.h"
 #include "model/automation/modifiers/tracktion_ModifierInternal.h"
-#include "utilities/tracktion_Benchmark.h"
 
 #include "model/edit/tracktion_OldEditConversion.h"
 #include "model/edit/tracktion_EditItem.cpp"

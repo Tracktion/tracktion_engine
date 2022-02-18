@@ -25,6 +25,7 @@ using namespace std::literals;
 
 //==============================================================================
 #include "tracktion_TestConfig.h"
+#include "utilities/tracktion_Benchmark.h"
 
 //==============================================================================
 #include "tracktion_core.h"

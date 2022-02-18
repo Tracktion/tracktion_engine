@@ -11,7 +11,7 @@
 #pragma once
 
 #include "tracktion_EditNodeBuilder.h"
-#include "../../utilities/tracktion_Benchmark.h"
+#include "../../../tracktion_core/utilities/tracktion_Benchmark.h"
 
 namespace tracktion { inline namespace engine
 {
