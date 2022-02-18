@@ -147,7 +147,7 @@ private:
     void updatePosition();
     void initialiseThumbnailAndPunchTime();
     void drawThumbnail (Graphics& g, Colour waveformColour) const;
-    bool getBoundsAndTime (Rectangle<int>& bounds, TimeRange& times) const;
+    bool getBoundsAndTime (juce::Rectangle<int>& bounds, tracktion::TimeRange& times) const;
     
     te::Track::Ptr track;
     EditViewState& editViewState;

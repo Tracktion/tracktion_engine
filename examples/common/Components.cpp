@@ -295,7 +295,7 @@ void AudioClipComponent::paint (Graphics& g)
 void AudioClipComponent::drawWaveform (Graphics& g, te::AudioClipBase& c, te::SmartThumbnail& thumb, Colour colour,
                                        int left, int right, int y, int h, int xOffset)
 {
-    auto getTimeRangeForDrawing = [this] (const int l, const int r) -> TimeRange
+    auto getTimeRangeForDrawing = [this] (const int l, const int r) -> tracktion::TimeRange
     {
         if (auto p = getParentComponent())
         {
@@ -468,7 +468,7 @@ void RecordingClipComponent::drawThumbnail (Graphics& g, Colour waveformColour) 
         return;
     
     Rectangle<int> bounds;
-    TimeRange times;
+    tracktion::TimeRange times;
     getBoundsAndTime (bounds, times);
     auto w = bounds.getWidth();
     
@@ -479,7 +479,7 @@ void RecordingClipComponent::drawThumbnail (Graphics& g, Colour waveformColour) 
     }
 }
 
-bool RecordingClipComponent::getBoundsAndTime (Rectangle<int>& bounds, TimeRange& times) const
+bool RecordingClipComponent::getBoundsAndTime (Rectangle<int>& bounds, tracktion::TimeRange& times) const
 {
     auto editTimeToX = [this] (TimePosition t)
     {
@@ -536,8 +536,8 @@ bool RecordingClipComponent::getBoundsAndTime (Rectangle<int>& bounds, TimeRange
         const auto recordedTime = unloopedPos - toDuration (epc->getLoopTimes().getStart());
         const int numLoops = (int) (recordedTime / loopRange.getLength());
         
-        const TimeRange editTimes (xToEditTime (bounds.getX()),
-                                   xToEditTime (bounds.getRight()));
+        const tracktion::TimeRange editTimes (xToEditTime (bounds.getX()),
+                                              xToEditTime (bounds.getRight()));
         
         times = (editTimes + (loopRange.getLength() * numLoops)) - toDuration (timeStarted);
     }

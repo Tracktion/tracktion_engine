@@ -33,71 +33,68 @@ END_JUCE_PIP_METADATA
 
 using namespace tracktion_engine;
 
-namespace tracktion_engine
+//==============================================================================
+class DistortionPlugin  : public Plugin
 {
-    //==============================================================================
-    class DistortionPlugin  : public Plugin
+public:
+    static const char* getPluginName() { return NEEDS_TRANS ("DistortionEffectDemo"); }
+    static const char* xmlTypeName;
+
+    DistortionPlugin (PluginCreationInfo info) : Plugin (info)
     {
-    public:
-        static const char* getPluginName() { return NEEDS_TRANS ("DistortionEffectDemo"); }
-        static const char* xmlTypeName;
+        auto um = getUndoManager();
+        gainValue.referTo (state, tracktion::IDs::gain, um, 1.0f);
 
-        DistortionPlugin (PluginCreationInfo info) : Plugin (info)
+        // Initializes gain parameter and attaches to gain value
+        gainParam = addParam ("gain", TRANS("Gain"), { 0.1f, 20.0f });
+        gainParam->attachToCurrentValue (gainValue);
+    }
+
+    ~DistortionPlugin() override
+    {
+        notifyListenersOfDeletion();
+        gainParam->detachFromCurrentValue();
+    }
+
+    juce::String getName() override                                     { return getPluginName(); }
+    juce::String getPluginType() override                               { return xmlTypeName; }
+    bool needsConstantBufferSize() override                             { return false; }
+    juce::String getSelectableDescription() override                    { return getName(); }
+
+    void initialise(const PluginInitialisationInfo&) override           {}
+    void deinitialise() override                                        {}
+
+    void applyToBuffer (const PluginRenderContext& fc) override
+    {
+        // Apply a tanh distortion with a gain of 3.0f
+        if (! isEnabled())
+            return;
+
+        for (int channel = 0; channel < fc.destBuffer->getNumChannels(); ++channel)
         {
-            auto um = getUndoManager();
-            gainValue.referTo (state, IDs::gain, um, 1.0f);
+            auto dest = fc.destBuffer->getWritePointer (channel);
 
-            // Initializes gain parameter and attaches to gain value
-            gainParam = addParam ("gain", TRANS("Gain"), { 0.1f, 20.0f });
-            gainParam->attachToCurrentValue (gainValue);
+            for (int i = 0; i < fc.bufferNumSamples; ++i)
+                dest[i] = std::tanh (gainValue * dest[i]);
         }
+    }
 
-        ~DistortionPlugin() override
-        {
-            notifyListenersOfDeletion();
-            gainParam->detachFromCurrentValue();
-        }
+    void restorePluginStateFromValueTree (const juce::ValueTree& v) override
+    {
+        CachedValue<float>* cvsFloat[] = { &gainValue, nullptr };
+        copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
 
-        juce::String getName() override                                     { return getPluginName(); }
-        juce::String getPluginType() override                               { return xmlTypeName; }
-        bool needsConstantBufferSize() override                             { return false; }
-        juce::String getSelectableDescription() override                    { return getName(); }
+        for (auto p : getAutomatableParameters())
+            p->updateFromAttachedValue();
+    }
 
-        void initialise(const PluginInitialisationInfo&) override           {}
-        void deinitialise() override                                        {}
-        
-        void applyToBuffer (const PluginRenderContext& fc) override
-        {
-            // Apply a tanh distortion with a gain of 3.0f
-            if (! isEnabled())
-                return;
-            
-            for (int channel = 0; channel < fc.destBuffer->getNumChannels(); ++channel)
-            {
-                auto dest = fc.destBuffer->getWritePointer (channel);
-                
-                for (int i = 0; i < fc.bufferNumSamples; ++i)
-                    dest[i] = std::tanh (gainValue * dest[i]);
-            }
-        }
+    juce::CachedValue<float> gainValue;
+    AutomatableParameter::Ptr gainParam;
 
-        void restorePluginStateFromValueTree (const juce::ValueTree& v) override
-        {
-            CachedValue<float>* cvsFloat[] = { &gainValue, nullptr };
-            copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DistortionPlugin)
+};
 
-            for (auto p : getAutomatableParameters())
-                p->updateFromAttachedValue();
-        }
-
-        juce::CachedValue<float> gainValue;
-        AutomatableParameter::Ptr gainParam;
-
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DistortionPlugin)
-    };
-
-    const char* DistortionPlugin::xmlTypeName = "Distortion";
-}
+const char* DistortionPlugin::xmlTypeName = "Distortion";
 
 
 //==============================================================================
