@@ -167,7 +167,7 @@ private:
             expect (barsBeats.getFractionalBeats() == BeatDuration());
         }
 
-        beginTest ("Setting");
+        beginTest ("Simple sequence");
         {
             tempo::Sequence seq ({{ BeatPosition(), 120.0, 0.0f }},
                                  {{ BeatPosition(), 4, 4, false }});
@@ -196,6 +196,18 @@ private:
             expect (pos.getBeats() == BeatPosition::fromBeats (14));
             expect (pos.getBarsBeats().bars == 3);
             expect (pos.getBarsBeats().beats == BeatDuration::fromBeats (2));
+
+            pos.addBars (1);
+            expect (pos.getTime() == TimePosition (9s));
+            expect (pos.getBeats() == BeatPosition::fromBeats (18));
+            expect (pos.getBarsBeats().bars == 4);
+            expect (pos.getBarsBeats().beats == BeatDuration::fromBeats (2));
+
+            pos.set (tempo::BarsAndBeats ({ 5, BeatDuration::fromBeats (1) }));
+            expect (pos.getTime() == TimePosition (10.5s));
+            expect (pos.getBeats() == BeatPosition::fromBeats (21));
+            expect (pos.getBarsBeats().bars == 5);
+            expect (pos.getBarsBeats().beats == BeatDuration::fromBeats (1));
         }
 
         beginTest ("Positive sequences");
@@ -259,6 +271,39 @@ private:
             pos.add (BeatDuration::fromBeats (1.0));
             expectBarsAndBeats (pos, 1, 0);
             pos.add (BeatDuration::fromBeats (1.0));
+        }
+
+        beginTest ("Multple change sequence");
+        {
+            {
+                tempo::Sequence seq ({{ BeatPosition(), 120.0, 0.0f },
+                                      { BeatPosition::fromBeats (4), 60.0, 0.0f } },
+                                     {{ BeatPosition(), 4, 4, false }});
+                tempo::Sequence::Position pos (seq);
+
+                pos.set (0.525s);
+                expectWithinAbsoluteError (pos.getBeats().inBeats(), BeatPosition::fromBeats (1).inBeats(), 0.001);
+                pos.add (2.186s);
+                expectWithinAbsoluteError (pos.getBeats().inBeats(), BeatPosition::fromBeats (4).inBeats(), 0.001);
+                pos.add (BeatDuration::fromBeats (4));
+                expectWithinAbsoluteError (pos.getTime().inSeconds(), 6.711, 0.001);
+            }
+
+            {
+                tempo::Sequence seq ({{ BeatPosition(), 120.0, -1.0f },
+                                      { BeatPosition::fromBeats (4), 60.0, 0.0f } },
+                                     {{ BeatPosition(), 4, 4, false }});
+                tempo::Sequence::Position pos (seq);
+
+                pos.set (1s);
+                expect (pos.getBeats() == BeatPosition::fromBeats (1));
+                pos.add (3s);
+                expect (pos.getBeats() == BeatPosition::fromBeats (4));
+                pos.add (BeatDuration::fromBeats (56));
+                expect (pos.getTime() == 1min);
+                pos.add (1min);
+                expect (pos.getTime() == 2min);
+            }
         }
     }
 };
