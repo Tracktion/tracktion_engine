@@ -43,12 +43,12 @@ tracktion::graph::NodeProperties RackReturnNode::getNodeProperties()
     props.hasAudio = true;
     props.numberOfChannels = std::max (wetProps.numberOfChannels, dryProps.numberOfChannels);
     props.latencyNumSamples = std::max (wetProps.latencyNumSamples, dryProps.latencyNumSamples);
-    tracktion::graph::hash_combine (props.nodeID, dryProps.nodeID);
+    hash_combine (props.nodeID, dryProps.nodeID);
 
     constexpr size_t rackReturnNodeMagicHash = 0x726b52657475726e;
     
     if (props.nodeID != 0)
-        tracktion::graph::hash_combine (props.nodeID, rackReturnNodeMagicHash);
+        hash_combine (props.nodeID, rackReturnNodeMagicHash);
 
     return props;
 }

@@ -33,7 +33,7 @@ public:
         constexpr size_t playHeadPositionNodeMagicHash = 0x706c617948656164;
         
         if (props.nodeID != 0)
-            tracktion::graph::hash_combine (props.nodeID, playHeadPositionNodeMagicHash);
+            hash_combine (props.nodeID, playHeadPositionNodeMagicHash);
 
         return props;
     }

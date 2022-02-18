@@ -36,31 +36,31 @@ namespace
     int getSidechainBusID (EditItemID sidechainSourceID)
     {
         constexpr size_t sidechainMagicNum = 0xb2275e7216a2;
-        return static_cast<int> (tracktion::graph::hash (sidechainMagicNum, sidechainSourceID.getRawID()));
+        return static_cast<int> (hash (sidechainMagicNum, sidechainSourceID.getRawID()));
     }
 
     int getRackInputBusID (EditItemID rackID)
     {
         constexpr size_t rackInputMagicNum = 0x7261636b496e;
-        return static_cast<int> (tracktion::graph::hash (rackInputMagicNum, rackID.getRawID()));
+        return static_cast<int> (hash (rackInputMagicNum, rackID.getRawID()));
     }
 
     int getRackOutputBusID (EditItemID rackID)
     {
         constexpr size_t rackOutputMagicNum = 0x7261636b4f7574;
-        return static_cast<int> (tracktion::graph::hash (rackOutputMagicNum, rackID.getRawID()));
+        return static_cast<int> (hash (rackOutputMagicNum, rackID.getRawID()));
     }
 
     int getWaveInputDeviceBusID (EditItemID trackItemID)
     {
         constexpr size_t waveMagicNum = 0xc1abde;
-        return static_cast<int> (tracktion::graph::hash (waveMagicNum, trackItemID.getRawID()));
+        return static_cast<int> (hash (waveMagicNum, trackItemID.getRawID()));
     }
 
     int getMidiInputDeviceBusID (EditItemID trackItemID)
     {
         constexpr size_t midiMagicNum = 0x9a2762;
-        return static_cast<int> (tracktion::graph::hash (midiMagicNum, trackItemID.getRawID()));
+        return static_cast<int> (hash (midiMagicNum, trackItemID.getRawID()));
     }
 
     bool isSidechainSource (Track& t)

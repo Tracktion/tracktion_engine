@@ -198,12 +198,6 @@ template<> inline BeatDuration fromUnderlyingType<BeatDuration> (double t) { ret
 inline double toUnderlyingType (BeatPosition t) { return t.inBeats(); }
 inline double toUnderlyingType (BeatDuration t) { return t.inBeats(); }
 
-inline juce::Range<int64_t> toSamples (TimeRange r, double sampleRate)
-{
-    return { toSamples (r.getStart(), sampleRate),
-             toSamples (r.getEnd(), sampleRate) };
-}
-
 inline TimeRange timeRangeFromSamples (juce::Range<int64_t> r, double sampleRate)
 {
     return { TimePosition::fromSamples (r.getStart(), sampleRate),
@@ -335,6 +329,12 @@ template<typename PositionType>
 inline void RangeType<PositionType>::checkInvariants() const
 {
     jassert (end >= start);
+}
+
+inline juce::Range<int64_t> toSamples (TimeRange r, double sampleRate)
+{
+    return { toSamples (r.getStart(), sampleRate),
+             toSamples (r.getEnd(), sampleRate) };
 }
 
 template<typename PositionType>

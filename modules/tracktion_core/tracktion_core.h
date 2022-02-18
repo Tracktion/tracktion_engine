@@ -39,5 +39,7 @@
 //==============================================================================
 
 //==============================================================================
+#include "utilities/tracktion_Hash.h"
+#include "utilities/tracktion_Tempo.h"
 #include "utilities/tracktion_Time.h"
 #include "utilities/tracktion_TimeRange.h"

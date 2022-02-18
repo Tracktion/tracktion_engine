@@ -76,6 +76,7 @@
 
 //==============================================================================
 #include <juce_audio_basics/juce_audio_basics.h>
+#include "../tracktion_core/tracktion_core.h"
 
 //==============================================================================
 #include "utilities/tracktion_MidiMessageArray.h"

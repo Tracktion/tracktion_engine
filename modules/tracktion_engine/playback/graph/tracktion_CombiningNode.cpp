@@ -140,7 +140,7 @@ void CombiningNode::addInput (std::unique_ptr<Node> input, TimeRange time)
     nodeProperties.hasMidi |= props.hasMidi;
     nodeProperties.numberOfChannels = std::max (nodeProperties.numberOfChannels, props.numberOfChannels);
     nodeProperties.latencyNumSamples = std::max (nodeProperties.latencyNumSamples, props.latencyNumSamples);
-    tracktion::graph::hash_combine (nodeProperties.nodeID, props.nodeID);
+    hash_combine (nodeProperties.nodeID, props.nodeID);
 
     int i;
     for (i = 0; i < inputs.size(); ++i)

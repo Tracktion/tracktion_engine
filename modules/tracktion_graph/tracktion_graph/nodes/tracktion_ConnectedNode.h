@@ -172,7 +172,7 @@ inline NodeProperties ConnectedNode::getNodeProperties()
     constexpr size_t connectedNodeMagicHash = 0x636f6e6e656374;
     
     if (props.nodeID != 0)
-        tracktion::graph::hash_combine (props.nodeID, connectedNodeMagicHash);
+        hash_combine (props.nodeID, connectedNodeMagicHash);
 
     for (const auto& connection : connections)
     {

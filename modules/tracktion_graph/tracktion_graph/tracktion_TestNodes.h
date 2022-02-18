@@ -761,7 +761,7 @@ public:
     tracktion::graph::NodeProperties getNodeProperties() override
     {
         auto props = input->getNodeProperties();
-        tracktion::graph::hash_combine (props.nodeID, nodeID);
+        hash_combine (props.nodeID, nodeID);
         
         return props;
     }
