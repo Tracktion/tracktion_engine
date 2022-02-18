@@ -17,8 +17,11 @@
  #error "Incorrect use of JUCE cpp file"
 #endif
 
+
 //==============================================================================
 #include <juce_audio_formats/juce_audio_formats.h>
+
+using namespace std::literals;
 
 //==============================================================================
 #include "tracktion_TestConfig.h"
