@@ -128,6 +128,143 @@ public:
 
 static TempoTests tempoTests;
 
+//==============================================================================
+//==============================================================================
+class SequenceTests : public juce::UnitTest
+{
+public:
+    SequenceTests() : juce::UnitTest ("tempo::Sequence", "Tracktion") {}
+
+    //==============================================================================
+    void runTest() override
+    {
+        runPositionTests();
+    }
+
+private:
+    void expectBarsAndBeats (tempo::Sequence::Position& pos, int bars, int beats)
+    {
+        auto barsBeats = pos.getBarsBeats();
+        expectEquals (barsBeats.bars, bars);
+        expectEquals (barsBeats.getWholeBeats(), beats);
+    }
+
+    void runPositionTests()
+    {
+        beginTest ("Defaults");
+        {
+            tempo::Sequence seq ({{ BeatPosition(), 120.0, 0.0f }},
+                                 {{ BeatPosition(), 4, 4, false }});
+            tempo::Sequence::Position pos (seq);
+
+            expect (pos.getTime() == TimePosition());
+            expect (pos.getBeats() == BeatPosition());
+
+            const auto barsBeats = pos.getBarsBeats();
+            expect (barsBeats.bars == 0);
+            expect (barsBeats.beats == BeatDuration());
+            expect (barsBeats.getWholeBeats() == 0);
+            expect (barsBeats.getFractionalBeats() == BeatDuration());
+        }
+
+        beginTest ("Setting");
+        {
+            tempo::Sequence seq ({{ BeatPosition(), 120.0, 0.0f }},
+                                 {{ BeatPosition(), 4, 4, false }});
+            tempo::Sequence::Position pos (seq);
+
+            pos.set (2s);
+            expect (pos.getTime() == TimePosition (2s));
+            expect (pos.getBeats() == BeatPosition::fromBeats (4));
+            expect (pos.getBarsBeats().bars == 1);
+            expect (pos.getBarsBeats().beats == BeatDuration::fromBeats (0));
+
+            pos.add (2s);
+            expect (pos.getTime() == TimePosition (4s));
+            expect (pos.getBeats() == BeatPosition::fromBeats (8));
+            expect (pos.getBarsBeats().bars == 2);
+            expect (pos.getBarsBeats().beats == BeatDuration::fromBeats (0));
+
+            pos.set (BeatPosition::fromBeats (12));
+            expect (pos.getTime() == TimePosition (6s));
+            expect (pos.getBeats() == BeatPosition::fromBeats (12));
+            expect (pos.getBarsBeats().bars == 3);
+            expect (pos.getBarsBeats().beats == BeatDuration::fromBeats (0));
+
+            pos.add (BeatDuration::fromBeats (2));
+            expect (pos.getTime() == TimePosition (7s));
+            expect (pos.getBeats() == BeatPosition::fromBeats (14));
+            expect (pos.getBarsBeats().bars == 3);
+            expect (pos.getBarsBeats().beats == BeatDuration::fromBeats (2));
+        }
+
+        beginTest ("Positive sequences");
+        {
+            tempo::Sequence seq ({{ BeatPosition(), 120.0, 0.0f }},
+                                 {{ BeatPosition(), 4, 4, false }});
+            tempo::Sequence::Position pos (seq);
+            pos.set (TimePosition());
+
+            expectBarsAndBeats (pos, 0, 0);
+            pos.add (BeatDuration::fromBeats (1.0));
+            expectBarsAndBeats (pos, 0, 1);
+            pos.add (BeatDuration::fromBeats (1.0));
+            expectBarsAndBeats (pos, 0, 2);
+            pos.add (BeatDuration::fromBeats (1.0));
+            expectBarsAndBeats (pos, 0, 3);
+            pos.add (BeatDuration::fromBeats (1.0));
+            expectBarsAndBeats (pos, 1, 0);
+
+            pos.addBars (1);
+            expectBarsAndBeats (pos, 2, 0);
+            pos.add (BeatDuration::fromBeats (1.0));
+            expectBarsAndBeats (pos, 2, 1);
+            pos.add (BeatDuration::fromBeats (1.0));
+            expectBarsAndBeats (pos, 2, 2);
+            pos.add (BeatDuration::fromBeats (1.0));
+            expectBarsAndBeats (pos, 2, 3);
+        }
+
+        beginTest ("Negative sequences");
+        {
+            tempo::Sequence seq ({{ BeatPosition(), 120.0, 0.0f }},
+                                 {{ BeatPosition(), 4, 4, false }});
+            tempo::Sequence::Position pos (seq);
+            pos.set (TimePosition());
+            pos.addBars (-2);
+
+            expectBarsAndBeats (pos, -2, 0);
+            pos.add (BeatDuration::fromBeats (1.0));
+            expectBarsAndBeats (pos, -2, 1);
+            pos.add (BeatDuration::fromBeats (1.0));
+            expectBarsAndBeats (pos, -2, 2);
+            pos.add (BeatDuration::fromBeats (1.0));
+            expectBarsAndBeats (pos, -2, 3);
+            pos.add (BeatDuration::fromBeats (1.0));
+            expectBarsAndBeats (pos, -1, 0);
+            pos.add (BeatDuration::fromBeats (1.0));
+            expectBarsAndBeats (pos, -1, 1);
+            pos.add (BeatDuration::fromBeats (1.0));
+            expectBarsAndBeats (pos, -1, 2);
+            pos.add (BeatDuration::fromBeats (1.0));
+            expectBarsAndBeats (pos, -1, 3);
+            pos.add (BeatDuration::fromBeats (1.0));
+            expectBarsAndBeats (pos, 0, 0);
+            pos.add (BeatDuration::fromBeats (1.0));
+            expectBarsAndBeats (pos, 0, 1);
+            pos.add (BeatDuration::fromBeats (1.0));
+            expectBarsAndBeats (pos, 0, 2);
+            pos.add (BeatDuration::fromBeats (1.0));
+            expectBarsAndBeats (pos, 0, 3);
+            pos.add (BeatDuration::fromBeats (1.0));
+            expectBarsAndBeats (pos, 1, 0);
+            pos.add (BeatDuration::fromBeats (1.0));
+        }
+    }
+};
+
+static SequenceTests sequenceTests;
+
 }} // namespace tracktion
 
 #endif //TRACKTION_UNIT_TESTS_TIME
@@ -181,7 +318,7 @@ public:
         Benchmark bm4 (createBenchmarkDescription ("Tempo", "Convert 10'000", replace ("100'000, random beats (4/4, curve = CCC)", "CCC", std::to_string (curve))));
 
         // Create the tempos first as we don't want to profile that
-        std::vector<Tempo::Setting> tempos;
+        std::vector<tempo::TempoChange> tempos;
 
         for (int b = 0; b < numBeats; ++b)
             tempos.push_back ({ BeatPosition::fromBeats (b), (double) r.nextInt ({ 60, 180 }), 0.0f });
@@ -190,11 +327,11 @@ public:
         {
             // Create a copy outside of the profile loop
             auto tempTempos = tempos;
-            std::vector<TimeSig::Setting> timeSigs {{ BeatPosition(), 4, 4, false }};
+            std::vector<tempo::TimeSigChange> timeSigs {{ BeatPosition(), 4, 4, false }};
 
             // Create the sequence
             bm1.start();
-            Tempo::Sequence seq (std::move (tempTempos), timeSigs);
+            tempo::Sequence seq (std::move (tempTempos), timeSigs);
             bm1.stop();
 
             // Profile the first 25 beats
