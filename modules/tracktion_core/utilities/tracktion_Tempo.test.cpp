@@ -28,7 +28,7 @@ public:
     
     void runTest() override
     {
-        using namespace Tempo;
+        using namespace tempo;
 
         beginTest ("60bpm 4/4");
         {
@@ -106,7 +106,7 @@ public:
         }
     }
 
-    void expect (const Tempo::Sequence& seq, BeatPosition b, TimePosition t)
+    void expect (const tempo::Sequence& seq, BeatPosition b, TimePosition t)
     {
         {
             const auto beats = seq.toBeats (t);

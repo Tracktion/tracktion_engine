@@ -22,22 +22,10 @@ namespace tracktion { inline namespace core
 
 //==============================================================================
 //==============================================================================
-namespace TimeSig
-{
-    struct Setting
-    {
-        BeatPosition startBeat;
-        int numerator, denominator;
-        bool triplets;
-    };
-}
-
-//==============================================================================
-//==============================================================================
-namespace Tempo
+namespace tempo
 {
     //==============================================================================
-    struct Setting
+    struct TempoChange
     {
         BeatPosition startBeat;
         double bpm;
@@ -45,11 +33,29 @@ namespace Tempo
     };
 
     //==============================================================================
+    struct TimeSigChange
+    {
+        BeatPosition startBeat;
+        int numerator, denominator;
+        bool triplets;
+    };
+
+    //==============================================================================
     struct Sequence
     {
-        Sequence (std::vector<Setting>, std::vector<TimeSig::Setting>);
+        /** Creates a Sequence for at least one TempoChange and at least one TimeSigChange. */
+        Sequence (std::vector<TempoChange>, std::vector<TimeSigChange>);
 
+        /** Copies another Sequence. */
+        Sequence (const Sequence&);
+
+        /** Move constructor. */
+        Sequence (Sequence&&);
+
+        /** Converts a time to a number of beats. */
         BeatPosition toBeats (TimePosition) const;
+
+        /** Converts a number of beats a time. */
         TimePosition toTime (BeatPosition) const;
 
         /** Returns a unique hash of this sequence. */
@@ -58,9 +64,9 @@ namespace Tempo
     private:
         struct Section;
         std::vector<Section> sections;
-        size_t hash_code = 0;
+        size_t hashCode = 0;
 
-        static double calcCurveBpm (double beat, const Setting, const Setting);
+        static double calcCurveBpm (double beat, const TempoChange, const TempoChange);
     };
 }
 
@@ -76,7 +82,7 @@ namespace Tempo
 //
 //==============================================================================
 
-namespace Tempo
+namespace tempo
 {
 
 //==============================================================================
@@ -92,7 +98,7 @@ struct Sequence::Section
     bool triplets;
 };
 
-inline double Sequence::calcCurveBpm (double beat, const Setting t1, const Setting t2)
+inline double Sequence::calcCurveBpm (double beat, const TempoChange t1, const TempoChange t2)
 {
     const auto b1 = t1.startBeat.inBeats();
     const auto b2 = t2.startBeat.inBeats();
@@ -125,7 +131,7 @@ inline double Sequence::calcCurveBpm (double beat, const Setting t1, const Setti
 
 //==============================================================================
 //==============================================================================
-inline Sequence::Sequence (std::vector<Setting> tempos, std::vector<TimeSig::Setting> timeSigs)
+inline Sequence::Sequence (std::vector<TempoChange> tempos, std::vector<TimeSigChange> timeSigs)
 {
     assert (tempos.size() > 0 && timeSigs.size() > 0);
     assert (tempos[0].startBeat == BeatPosition());
@@ -139,19 +145,19 @@ inline Sequence::Sequence (std::vector<Setting> tempos, std::vector<TimeSig::Set
     {
         beatsWithChanges.push_back (tempo.startBeat);
 
-        hash_combine (hash_code, tempo.startBeat.inBeats());
-        hash_combine (hash_code, tempo.bpm);
-        hash_combine (hash_code, tempo.curve);
+        hash_combine (hashCode, tempo.startBeat.inBeats());
+        hash_combine (hashCode, tempo.bpm);
+        hash_combine (hashCode, tempo.curve);
     }
 
     for (const auto& timeSig : timeSigs)
     {
         beatsWithChanges.push_back (timeSig.startBeat);
 
-        hash_combine (hash_code, timeSig.startBeat.inBeats());
-        hash_combine (hash_code, timeSig.numerator);
-        hash_combine (hash_code, timeSig.denominator);
-        hash_combine (hash_code, timeSig.triplets);
+        hash_combine (hashCode, timeSig.startBeat.inBeats());
+        hash_combine (hashCode, timeSig.numerator);
+        hash_combine (hashCode, timeSig.denominator);
+        hash_combine (hashCode, timeSig.triplets);
     }
 
     std::sort (beatsWithChanges.begin(), beatsWithChanges.end());
@@ -257,9 +263,19 @@ inline Sequence::Sequence (std::vector<Setting> tempos, std::vector<TimeSig::Set
     }
 }
 
+inline Sequence::Sequence (const Sequence& o)
+    : sections (o.sections), hashCode (o.hashCode)
+{
+}
+
+inline Sequence::Sequence (Sequence&& o)
+    : sections (std::move (o.sections)), hashCode (o.hashCode)
+{
+}
+
 inline size_t Sequence::hash() const
 {
-    return hash_code;
+    return hashCode;
 }
 
 inline BeatPosition Sequence::toBeats (TimePosition time) const
