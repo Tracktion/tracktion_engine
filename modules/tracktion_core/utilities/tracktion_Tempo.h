@@ -25,32 +25,43 @@ namespace tracktion { inline namespace core
 namespace tempo
 {
     //==============================================================================
+    /** Represents a number of bars and then beats in that bar. */
     struct BarsAndBeats
     {
-        int bars = 0;
-        BeatDuration beats;
+        int bars = 0;       /**< The number of bars. */
+        BeatDuration beats; /**< The number of beats in the current bar. */
 
+        /** Returns the number of whole beats. */
         int getWholeBeats() const;
+
+        /** Returns the number of fractional beats. */
         BeatDuration getFractionalBeats() const;
     };
 
     //==============================================================================
+    /** Represents a change in tempo at a specific beat. */
     struct TempoChange
     {
-        BeatPosition startBeat;
-        double bpm;
-        float curve;
+        BeatPosition startBeat; /**< The position of the change. */
+        double bpm;             /**< The tempo of the change in beats per minute. */
+        float curve;            /**< The curve of the change. 0 is a straight line +- < 0.5 are bezier curves. */
     };
 
     //==============================================================================
+    /** Represents a change in time signature at a specific beat. */
     struct TimeSigChange
     {
-        BeatPosition startBeat;
-        int numerator, denominator;
-        bool triplets;
+        BeatPosition startBeat;      /**< The position of the change. */
+        int numerator;               /**< The numerator of the time signature. */
+        int denominator;             /**< The denominator of the time signature. */
+        bool triplets;               /**< Whether the time signature represents triplets. */
     };
 
     //==============================================================================
+    /**
+        Represents a tempo map with at least one TempoChange and TimeSigChange.
+        Once constructed, this can be used to convert between time and beats.
+    */
     struct Sequence
     {
         struct Section;
@@ -78,6 +89,10 @@ namespace tempo
         /** A Sequence::Position is an iterator through a Sequence.
             You can set the position in time or beats and then use it to convert between
             times and beats much faster than a plain Sequence.
+
+            N.B. This is optomised for setting a time adding time and then converting that
+            to beats. The other set/add operations are provided for convenience but will
+            be slower to execute.
         */
         struct Position
         {
@@ -90,22 +105,42 @@ namespace tempo
             Position (const Sequence&);
 
             //==============================================================================
+            /** Returns the current time of the Position. */
             TimePosition getTime() const                                { return time; }
+
+            /** Returns the current beats of the Position. */
             BeatPosition getBeats() const;
+
+            /** Returns the current bars and beats of the Position. @see BarsAndBeats */
             BarsAndBeats getBarsBeats() const;
 
             //==============================================================================
+            /** Sets the Position to a new time. */
             void set (TimePosition);
+
+            /** Sets the Position to a new number of beats. */
             void set (BeatPosition);
+
+            /** Sets the Position to a new number of bars and beats. */
             void set (BarsAndBeats);
 
-            void addBars (int bars);
-            void add (BeatDuration);
+            /** Increments the position by a time duration. */
             void add (TimeDuration);
 
+            /** Increments the position by a number of beats. */
+            void add (BeatDuration);
+
+            /** Increments the position by a number of bars. */
+            void addBars (int bars);
+
             //==============================================================================
+            /** Sets the position to a PPQ. */
             void setPPQTime (double ppq);
+
+            /** Returns the position as a PPQ time. */
             double getPPQTime() const noexcept;
+
+            /** Returns the PPQ start time of the bar the position is in. */
             double getPPQTimeOfBarStart() const noexcept;
 
         private:

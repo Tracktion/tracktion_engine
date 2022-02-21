@@ -285,8 +285,15 @@ private:
                 expectWithinAbsoluteError (pos.getBeats().inBeats(), BeatPosition::fromBeats (1).inBeats(), 0.001);
                 pos.add (2.186s);
                 expectWithinAbsoluteError (pos.getBeats().inBeats(), BeatPosition::fromBeats (4).inBeats(), 0.001);
-                pos.add (BeatDuration::fromBeats (4));
+                pos.addBars (1);
                 expectWithinAbsoluteError (pos.getTime().inSeconds(), 6.711, 0.001);
+
+                pos.set (BeatPosition::fromBeats (1));
+                expectWithinAbsoluteError (pos.getTime().inSeconds(), TimePosition (0.525s).inSeconds(), 0.001);
+                pos.add (BeatPosition::fromBeats (4) - pos.getBeats());
+                expectWithinAbsoluteError (pos.getTime().inSeconds(), TimePosition (2.711s).inSeconds(), 0.001);
+                pos.add (TimeDuration (4s));
+                expectWithinAbsoluteError (pos.getBeats().inBeats(), BeatPosition::fromBeats (8).inBeats(), 0.001);
             }
 
             {
@@ -335,15 +342,15 @@ public:
     {
         beginTest ("Benchmark: Tempo conversion");
         {
-            benchmarkTempos (0.0f);
-            benchmarkTempos (-1.0f);
-            benchmarkTempos (1.0f);
-            benchmarkTempos (-0.5f);
-            benchmarkTempos (0.5f);
+            benchmarkSequence (0.0f);
+            benchmarkSequence (-1.0f);
+            benchmarkSequence (1.0f);
+            benchmarkSequence (-0.5f);
+            benchmarkSequence (0.5f);
         }
     }
 
-    void benchmarkTempos (float curve)
+    void benchmarkSequence (float curve)
     {
         // Create a sequence of T tempos and time sigs over N beats
         // Convert from beats to time:
@@ -357,10 +364,10 @@ public:
         juce::Random r (4200);
 
         using choc::text::replace;
-        Benchmark bm1 (createBenchmarkDescription ("Tempo", replace ("Create sequence 4/4, curve = CCC", "CCC", std::to_string (curve)), "100 tempos, every beat"));
-        Benchmark bm2 (createBenchmarkDescription ("Tempo", "Convert 10'000", replace ("100'000, first quarter beats (4/4, curve = CCC)", "CCC", std::to_string (curve))));
-        Benchmark bm3 (createBenchmarkDescription ("Tempo", "Convert 10'000", replace ("100'000, last quarter beats (4/4, curve = CCC)", "CCC", std::to_string (curve))));
-        Benchmark bm4 (createBenchmarkDescription ("Tempo", "Convert 10'000", replace ("100'000, random beats (4/4, curve = CCC)", "CCC", std::to_string (curve))));
+        Benchmark bm1 (createBenchmarkDescription ("Tempo Sequence", replace ("Create sequence 4/4, curve = CCC", "CCC", std::to_string (curve)), "100 tempos, every beat"));
+        Benchmark bm2 (createBenchmarkDescription ("Tempo Sequence", "Convert 10'000", replace ("100'000, first quarter beats (4/4, curve = CCC)", "CCC", std::to_string (curve))));
+        Benchmark bm3 (createBenchmarkDescription ("Tempo Sequence", "Convert 10'000", replace ("100'000, last quarter beats (4/4, curve = CCC)", "CCC", std::to_string (curve))));
+        Benchmark bm4 (createBenchmarkDescription ("Tempo Sequence", "Convert 10'000", replace ("100'000, random beats (4/4, curve = CCC)", "CCC", std::to_string (curve))));
 
         // Create the tempos first as we don't want to profile that
         std::vector<tempo::TempoChange> tempos;
@@ -385,7 +392,7 @@ public:
                 const auto b = BeatPosition::fromBeats (r.nextInt (numBeats / 4));
 
                 bm2.start();
-                [[ maybe_unused ]] const volatile auto beats = seq.toTime (b);
+                [[ maybe_unused ]] const volatile auto time = seq.toTime (b);
                 bm2.stop();
             }
 
@@ -395,7 +402,7 @@ public:
                 const auto b = BeatPosition::fromBeats (r.nextInt ({ (numBeats / 4) * 3, numBeats }));
 
                 bm3.start();
-                [[ maybe_unused ]] const volatile auto beats = seq.toTime (b);
+                [[ maybe_unused ]] const volatile auto time = seq.toTime (b);
                 bm3.stop();
             }
 
@@ -405,7 +412,79 @@ public:
                 const auto b = BeatPosition::fromBeats (r.nextInt (numBeats));
 
                 bm4.start();
-                [[ maybe_unused ]] const volatile auto beats = seq.toTime (b);
+                [[ maybe_unused ]] const volatile auto time = seq.toTime (b);
+                bm4.stop();
+            }
+        }
+
+        for (auto bm : { &bm1, &bm2, &bm3, &bm4 })
+            BenchmarkList::getInstance().addResult (bm->getResult());
+    }
+
+    void benchmarkPosition (float curve)
+    {
+        // Create a sequence of T tempos and time sigs over N beats
+        // Convert from beats to time:
+        //  - At the first minute
+        //  - The last minute
+        //  - Randomly throughout
+
+        constexpr int numIterations = 100;
+        constexpr int numBeats = 100;
+        constexpr int numConversions = 10'000;
+        juce::Random r (4200);
+
+        using choc::text::replace;
+        Benchmark bm1 (createBenchmarkDescription ("Tempo Position", replace ("Create sequence 4/4, curve = CCC", "CCC", std::to_string (curve)), "100 tempos, every beat"));
+        Benchmark bm2 (createBenchmarkDescription ("Tempo Position", "Convert 10'000", replace ("100'000, first quarter beats (4/4, curve = CCC)", "CCC", std::to_string (curve))));
+        Benchmark bm3 (createBenchmarkDescription ("Tempo Position", "Convert 10'000", replace ("100'000, last quarter beats (4/4, curve = CCC)", "CCC", std::to_string (curve))));
+        Benchmark bm4 (createBenchmarkDescription ("Tempo Position", "Convert 10'000", replace ("100'000, random beats (4/4, curve = CCC)", "CCC", std::to_string (curve))));
+
+        // Create the tempos first as we don't want to profile that
+        std::vector<tempo::TempoChange> tempos;
+
+        for (int b = 0; b < numBeats; ++b)
+            tempos.push_back ({ BeatPosition::fromBeats (b), (double) r.nextInt ({ 60, 180 }), 0.0f });
+
+        const tempo::Sequence seq (std::move (tempos), {{ BeatPosition(), 4, 4, false }});
+
+        for (int i = 0; i < numIterations; ++i)
+        {
+            // Create the Position
+            bm1.start();
+            tempo::Sequence::Position pos (seq);
+            bm1.stop();
+
+            // Profile the first 25 beats
+            for (int c = 0; c < numConversions; ++c)
+            {
+                const auto b = BeatPosition::fromBeats (r.nextInt (numBeats / 4));
+
+                bm2.start();
+                pos.set (b);
+                [[ maybe_unused ]] const volatile auto time = pos.getTime();
+                bm2.stop();
+            }
+
+            // Profile the last 25 beats
+            for (int c = 0; c < numConversions; ++c)
+            {
+                const auto b = BeatPosition::fromBeats (r.nextInt ({ (numBeats / 4) * 3, numBeats }));
+
+                bm3.start();
+                pos.set (b);
+                [[ maybe_unused ]] const volatile auto time = pos.getTime();
+                bm3.stop();
+            }
+
+            // Profile the whole range
+            for (int c = 0; c < numConversions; ++c)
+            {
+                const auto b = BeatPosition::fromBeats (r.nextInt (numBeats));
+
+                bm4.start();
+                pos.set (b);
+                [[ maybe_unused ]] const volatile auto time = pos.getTime();
                 bm4.stop();
             }
         }
