@@ -263,7 +263,7 @@ private:
         if (auto track = EngineHelpers::getOrInsertAudioTrackAt (edit, 0))
         {
             // Find length of 8 bars
-            const tracktion::TimeRange editTimeRange (0s, edit.tempoSequence.barsBeatsToTime ({ 8, 0.0 }));
+            const tracktion::TimeRange editTimeRange (0s, edit.tempoSequence.barsBeatsToTime ({ 8, {} }));
             track->insertNewClip (te::TrackItem::Type::midi, "MIDI Clip", editTimeRange, nullptr);
             
             if (auto midiClip = getClip())
