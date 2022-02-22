@@ -24,11 +24,11 @@ juce::AudioPlayHead::CurrentPositionInfo getCurrentPositionInfo (Edit& edit)
     
     TempoSequencePosition position (tempoSequence);
     position.setTime (currentTime);
-    auto currentDetails = position.getCurrentTempo();
+    const auto timeSig = position.getTimeSignature();
 
-    info.bpm = currentDetails.bpm;
-    info.timeSigNumerator = currentDetails.numerator;
-    info.timeSigDenominator = currentDetails.denominator;
+    info.bpm = position.getTempo();
+    info.timeSigNumerator = timeSig.numerator;
+    info.timeSigDenominator = timeSig.denominator;
     info.timeInSeconds = position.getTime().inSeconds();
     info.editOriginTime = 0.0;
     info.ppqPosition = position.getPPQTime();
@@ -96,14 +96,16 @@ void synchroniseEditPosition (Edit& edit, const juce::AudioPlayHead::CurrentPosi
     {
         TempoSequencePosition position (edit.tempoSequence);
         position.setTime (TimePosition::fromSeconds (info.timeInSeconds));
-        const auto currentDetails = position.getCurrentTempo();
+        const auto tempo = position.getTempo();
+        const auto timeSig = position.getTimeSignature();
+
         const auto newBpm = info.bpm;
         const auto newNumerator = info.timeSigNumerator;
         const auto newDenominator = info.timeSigDenominator;
 
-        if (currentDetails.bpm != newBpm
-            || currentDetails.numerator != newNumerator
-            || currentDetails.denominator != newDenominator)
+        if (tempo != newBpm
+            || timeSig.numerator != newNumerator
+            || timeSig.denominator != newDenominator)
         {
             juce::MessageManager::callAsync ([&edit, editRef = Edit::WeakRef (&edit),
                                               newBpm, newNumerator, newDenominator]

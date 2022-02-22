@@ -251,8 +251,7 @@ namespace tracktion { inline namespace graph
 }}
 
 //==============================================================================
-#include "../tracktion_core/utilities/tracktion_Time.h"
-#include "../tracktion_core/utilities/tracktion_TimeRange.h"
+#include "../tracktion_core/tracktion_core.h"
 
 
 //==============================================================================

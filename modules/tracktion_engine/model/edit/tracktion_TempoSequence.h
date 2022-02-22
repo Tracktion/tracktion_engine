@@ -88,54 +88,17 @@ public:
     BeatPosition timeToBeats (TimePosition) const;
     BeatRange timeToBeats (TimeRange) const;
 
-    struct BarsAndBeats
-    {
-        int bars;
-        double beats;
-
-        int getWholeBeats() const;
-        double getFractionalBeats() const;
-    };
-
-    BarsAndBeats timeToBarsBeats (TimePosition) const;
-    TimePosition barsBeatsToTime (BarsAndBeats) const;
-    BeatPosition barsBeatsToBeats (BarsAndBeats) const;
+    tempo::BarsAndBeats timeToBarsBeats (TimePosition) const;
+    TimePosition barsBeatsToTime (tempo::BarsAndBeats) const;
+    BeatPosition barsBeatsToBeats (tempo::BarsAndBeats) const;
 
     TimePosition beatsToTime (BeatPosition) const;
     TimeRange beatsToTime (BeatRange) const;
 
-    //==============================================================================
-    struct SectionDetails
-    {
-        double bpm;
-        double startTime;
-        double startBeatInEdit;
-        double secondsPerBeat, beatsPerSecond, ppqAtStart;
-        double timeOfFirstBar, beatsUntilFirstBar;
-        int barNumberOfFirstBar, numerator, prevNumerator, denominator;
-        bool triplets;
-    };
-
-    struct TempoSections
-    {
-        int size() const;
-        const SectionDetails& getReference (int i) const;
-
-        BeatPosition timeToBeats (TimePosition) const;
-        TimePosition beatsToTime (BeatPosition) const;
-
-        /** The only modifying operation */
-        void swapWith (juce::Array<SectionDetails>& newTempos);
-
-        /** Compare to cheaply determine if any changes have been made. */
-        uint32_t getChangeCount() const;
-
-    private:
-        uint32_t changeCounter = 0;
-        juce::Array<SectionDetails> tempos;
-    };
-
-    const TempoSections& getTempoSections() { return internalTempos; }
+    /** N.B. It is only safe to call this from the message thread or during audio callbacks.
+        Access at any other time could incur data races.
+    */
+    const tempo::Sequence& getInternalSequence() const;
 
     //==============================================================================
     juce::String getSelectableDescription() override;
@@ -159,7 +122,9 @@ private:
     std::unique_ptr<TimeSigList> timeSigs;
 
     friend class TempoSequencePosition;
-    TempoSections internalTempos;
+    tempo::Sequence internalSequence { {{ BeatPosition(), 120.0, 0.0f }},
+                                       {{ BeatPosition(), 4, 4, false }},
+                                       tempo::LengthOfOneBeat::dependsOnTimeSignature };
 
     //==============================================================================
     void updateTempoDataIfNeeded() const;
@@ -185,32 +150,33 @@ public:
     //==============================================================================
     TempoSequencePosition (const TempoSequence&);
     TempoSequencePosition (const TempoSequencePosition&);
-    ~TempoSequencePosition();
 
     //==============================================================================
-    TimePosition getTime() const                                { return time; }
-    TempoSequence::BarsAndBeats getBarsBeatsTime() const;
+    TimePosition getTime() const                                { return pos.getTime(); }
+    BeatPosition getBeats() const                               { return pos.getBeats(); }
+    tempo::BarsAndBeats getBarsBeatsTime() const                { return pos.getBarsBeats(); }
 
-    const TempoSequence::SectionDetails& getCurrentTempo() const;
-
-    double getPPQTime() const noexcept;
-    double getPPQTimeOfBarStart() const noexcept;
+    /** Returns the current tempo of the Position. */
+    double getPPQTime() const noexcept                          { return pos.getPPQTime(); }
+    double getPPQTimeOfBarStart() const noexcept                { return pos.getPPQTimeOfBarStart(); }
 
     //==============================================================================
-    void setTime (TimePosition);
+    double getTempo() const                                     { return pos.getTempo(); }
+    tempo::TimeSignature getTimeSignature() const               { return pos.getTimeSignature(); }
 
-    void addBars (int bars);
-    void addBeats (double beats);
-    void addSeconds (double seconds);
-    void setBarsBeats (TempoSequence::BarsAndBeats);
+    //==============================================================================
+    void setTime (TimePosition t)                               { pos.set (t); }
 
-    void setPPQTime (double ppq);
+    void addBars (int bars)                                     { pos.addBars (bars); }
+    void addBeats (double beats)                                { pos.add (BeatDuration::fromBeats (beats)); }
+    void addSeconds (double seconds)                            { pos.add (TimeDuration::fromSeconds (seconds)); }
+    void setBarsBeats (tempo::BarsAndBeats t)                   { pos.set (t); }
+
+    void setPPQTime (double ppq)                                { pos.setPPQTime (ppq); }
 
 private:
     //==============================================================================
-    const TempoSequence& sequence;
-    TimePosition time;
-    int index = 0;
+    tempo::Sequence::Position pos;
 
     TempoSequencePosition& operator= (const TempoSequencePosition&);
 };

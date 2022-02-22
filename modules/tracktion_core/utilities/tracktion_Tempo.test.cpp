@@ -33,7 +33,8 @@ public:
         beginTest ("60bpm 4/4");
         {
             Sequence seq ({{ BeatPosition(), 60.0, 0.0f }},
-                          {{ BeatPosition(), 4, 4, false }});
+                          {{ BeatPosition(), 4, 4, false }},
+                          tempo::LengthOfOneBeat::dependsOnTimeSignature);
 
             expect (seq, {}, {});
             expect (seq, BeatPosition::fromBeats (1), 1s);
@@ -45,7 +46,8 @@ public:
         beginTest ("60bpm 4/8");
         {
             Sequence seq ({{ BeatPosition(), 60.0, 0.0f }},
-                          {{ BeatPosition(), 4, 8, false }});
+                          {{ BeatPosition(), 4, 8, false }},
+                          tempo::LengthOfOneBeat::dependsOnTimeSignature);
 
             expect (seq, {}, {});
             expect (seq, BeatPosition::fromBeats (1), 0.5s);
@@ -54,10 +56,24 @@ public:
             expect (seq, BeatPosition::fromBeats (240), 2min);
         }
 
+        beginTest ("60bpm 4/8 isAlwaysACrotchet");
+        {
+            Sequence seq ({{ BeatPosition(), 60.0, 0.0f }},
+                          {{ BeatPosition(), 4, 8, false }},
+                          tempo::LengthOfOneBeat::isAlwaysACrotchet);
+
+            expect (seq, {}, {});
+            expect (seq, BeatPosition::fromBeats (1), 1s);
+            expect (seq, BeatPosition::fromBeats (4), 4s);
+            expect (seq, BeatPosition::fromBeats (60), 1min);
+            expect (seq, BeatPosition::fromBeats (120), 2min);
+        }
+
         beginTest ("120bpm 4/4");
         {
             Sequence seq ({{ BeatPosition(), 120.0, 0.0f }},
-                          {{ BeatPosition(), 4, 4, false }});
+                          {{ BeatPosition(), 4, 4, false }},
+                          tempo::LengthOfOneBeat::dependsOnTimeSignature);
 
             expect (seq, {}, {});
             expect (seq, BeatPosition::fromBeats (1), 0.5s);
@@ -70,7 +86,8 @@ public:
         beginTest ("120bpm 8/8");
         {
             Sequence seq ({{ BeatPosition(), 120.0, 0.0f }},
-                          {{ BeatPosition(), 8, 8, false }});
+                          {{ BeatPosition(), 8, 8, false }},
+                          tempo::LengthOfOneBeat::dependsOnTimeSignature);
 
             expect (seq, {}, {});
             expect (seq, BeatPosition::fromBeats (1), 0.25s);
@@ -84,7 +101,8 @@ public:
         {
             Sequence seq ({{ BeatPosition(), 120.0, 0.0f },
                            { BeatPosition::fromBeats (4), 60.0, 0.0f } },
-                          {{ BeatPosition(), 4, 4, false }});
+                          {{ BeatPosition(), 4, 4, false }},
+                          tempo::LengthOfOneBeat::dependsOnTimeSignature);
 
             expect (seq, {}, {});
             expect (seq, BeatPosition::fromBeats (1), 0.525s);
@@ -96,7 +114,8 @@ public:
         {
             Sequence seq ({{ BeatPosition(), 120.0, -1.0f },
                            { BeatPosition::fromBeats (4), 60.0, 0.0f } },
-                          {{ BeatPosition(), 4, 4, false }});
+                          {{ BeatPosition(), 4, 4, false }},
+                          tempo::LengthOfOneBeat::dependsOnTimeSignature);
 
             expect (seq, {}, {});
             expect (seq, BeatPosition::fromBeats (1), 1s);
@@ -154,7 +173,8 @@ private:
         beginTest ("Defaults");
         {
             tempo::Sequence seq ({{ BeatPosition(), 120.0, 0.0f }},
-                                 {{ BeatPosition(), 4, 4, false }});
+                                 {{ BeatPosition(), 4, 4, false }},
+                                 tempo::LengthOfOneBeat::dependsOnTimeSignature);
             tempo::Sequence::Position pos (seq);
 
             expect (pos.getTime() == TimePosition());
@@ -170,7 +190,8 @@ private:
         beginTest ("Simple sequence");
         {
             tempo::Sequence seq ({{ BeatPosition(), 120.0, 0.0f }},
-                                 {{ BeatPosition(), 4, 4, false }});
+                                 {{ BeatPosition(), 4, 4, false }},
+                                 tempo::LengthOfOneBeat::dependsOnTimeSignature);
             tempo::Sequence::Position pos (seq);
 
             pos.set (2s);
@@ -213,7 +234,8 @@ private:
         beginTest ("Positive sequences");
         {
             tempo::Sequence seq ({{ BeatPosition(), 120.0, 0.0f }},
-                                 {{ BeatPosition(), 4, 4, false }});
+                                 {{ BeatPosition(), 4, 4, false }},
+                                 tempo::LengthOfOneBeat::dependsOnTimeSignature);
             tempo::Sequence::Position pos (seq);
             pos.set (TimePosition());
 
@@ -240,7 +262,8 @@ private:
         beginTest ("Negative sequences");
         {
             tempo::Sequence seq ({{ BeatPosition(), 120.0, 0.0f }},
-                                 {{ BeatPosition(), 4, 4, false }});
+                                 {{ BeatPosition(), 4, 4, false }},
+                                 tempo::LengthOfOneBeat::dependsOnTimeSignature);
             tempo::Sequence::Position pos (seq);
             pos.set (TimePosition());
             pos.addBars (-2);
@@ -278,7 +301,8 @@ private:
             {
                 tempo::Sequence seq ({{ BeatPosition(), 120.0, 0.0f },
                                       { BeatPosition::fromBeats (4), 60.0, 0.0f } },
-                                     {{ BeatPosition(), 4, 4, false }});
+                                     {{ BeatPosition(), 4, 4, false }},
+                                     tempo::LengthOfOneBeat::dependsOnTimeSignature);
                 tempo::Sequence::Position pos (seq);
 
                 pos.set (0.525s);
@@ -299,7 +323,8 @@ private:
             {
                 tempo::Sequence seq ({{ BeatPosition(), 120.0, -1.0f },
                                       { BeatPosition::fromBeats (4), 60.0, 0.0f } },
-                                     {{ BeatPosition(), 4, 4, false }});
+                                     {{ BeatPosition(), 4, 4, false }},
+                                     tempo::LengthOfOneBeat::dependsOnTimeSignature);
                 tempo::Sequence::Position pos (seq);
 
                 pos.set (1s);
@@ -383,7 +408,8 @@ public:
 
             // Create the sequence
             bm1.start();
-            tempo::Sequence seq (std::move (tempTempos), timeSigs);
+            tempo::Sequence seq (std::move (tempTempos), timeSigs,
+                                 tempo::LengthOfOneBeat::dependsOnTimeSignature);
             bm1.stop();
 
             // Profile the first 25 beats
@@ -446,7 +472,8 @@ public:
         for (int b = 0; b < numBeats; ++b)
             tempos.push_back ({ BeatPosition::fromBeats (b), (double) r.nextInt ({ 60, 180 }), 0.0f });
 
-        const tempo::Sequence seq (std::move (tempos), {{ BeatPosition(), 4, 4, false }});
+        const tempo::Sequence seq (std::move (tempos), {{ BeatPosition(), 4, 4, false }},
+                                   tempo::LengthOfOneBeat::dependsOnTimeSignature);
 
         for (int i = 0; i < numIterations; ++i)
         {

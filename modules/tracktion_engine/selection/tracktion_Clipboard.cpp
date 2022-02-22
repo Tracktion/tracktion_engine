@@ -1095,20 +1095,20 @@ private:
             ts.getTempo (0)->setBpm (120.0);
             
             // N.B. bars start at 0!
-            expectEquals (ts.barsBeatsToBeats ({ 0, 0.0 }), 0.0);
-            expectEquals (ts.barsBeatsToTime ({ 0, 0.0 }), 0.0);
-            expectEquals (ts.barsBeatsToBeats ({ 8, 0.0 }), 32.0);
-            expectEquals (ts.barsBeatsToTime ({ 8, 0.0 }), 16.0);
+            expectEquals (ts.barsBeatsToBeats ({ 0, {} }), 0.0);
+            expectEquals (ts.barsBeatsToTime ({ 0, {} }), 0.0);
+            expectEquals (ts.barsBeatsToBeats ({ 8, {} }), 32.0);
+            expectEquals (ts.barsBeatsToTime ({ 8, {} }), 16.0);
 
-            ts.insertTempo (ts.barsBeatsToBeats ({ 5, 0.0 }), 60.0, 1.0f);
-            ts.insertTempo (ts.barsBeatsToBeats ({ 9, 0.0 }), 120.0, 1.0f);
+            ts.insertTempo (ts.barsBeatsToBeats ({ 5, {} }), 60.0, 1.0f);
+            ts.insertTempo (ts.barsBeatsToBeats ({ 9, {} }), 120.0, 1.0f);
 
-            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 4, 0.0 })), 120.0, 1.0f);
-            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 6, 0.0 })), 60.0, 1.0f);
-            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 8, 0.0 })), 60.0, 1.0f);
-            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 10, 0.0 })), 120.0, 1.0f);
+            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 4, {} })), 120.0, 1.0f);
+            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 6, {} })), 60.0, 1.0f);
+            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 8, {} })), 60.0, 1.0f);
+            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 10, {} })), 120.0, 1.0f);
             
-            const BeatRange beatRangeToCopy (ts.barsBeatsToBeats ({ 6, 0.0 }), ts.barsBeatsToBeats ({ 8, 0.0 }));
+            const BeatRange beatRangeToCopy (ts.barsBeatsToBeats ({ 6, {} }), ts.barsBeatsToBeats ({ 8, {} }));
             const auto timeRangeToCopy = ts.beatsToTime (beatRangeToCopy);
             const BeatDuration numBeatsToInsert = beatRangeToCopy.getLength();
 
@@ -1116,7 +1116,7 @@ private:
             Clipboard::TempoChanges tempoChanges (ts, timeRangeToCopy);
             
             // Insert empty space
-            const auto timeToInsertAt = ts.barsBeatsToTime ({ 2, 0.0 });
+            const auto timeToInsertAt = ts.barsBeatsToTime ({ 2, {} });
             auto& tempoAtInsertionPoint = ts.getTempoAt (timeToInsertAt);
 
             const auto beatRangeToInsert = BeatRange (ts.timeToBeats (timeToInsertAt), numBeatsToInsert);
@@ -1129,20 +1129,20 @@ private:
             expect (numBarsInserted == 2);
 
             // Ensure tempos are correct at original region
-            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 4 + numBarsInserted, 0.0 })), 120.0, 1.0f);
-            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 6 + numBarsInserted, 0.0 })), 60.0, 1.0f);
-            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 8 + numBarsInserted, 0.0 })), 60.0, 1.0f);
-            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 10 + numBarsInserted, 0.0 })), 120.0, 1.0f);
+            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 4 + numBarsInserted, {} })), 120.0, 1.0f);
+            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 6 + numBarsInserted, {} })), 60.0, 1.0f);
+            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 8 + numBarsInserted, {} })), 60.0, 1.0f);
+            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 10 + numBarsInserted, {} })), 120.0, 1.0f);
             
             // Paste tempo changes
             tempoChanges.pasteTempoSequence (ts, TimeRange (timeToInsertAt, lengthInTimeToInsert));
 
             // Ensure tempos are correct at inserted region
-            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 0, 0.0 })), 120.0, 1.0f);
-            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 1, 3.0 })), 120.0, 1.0f);
-            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 2, 0.0 })), 60.0, 1.0f);
-            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 3, 3.0 })), 60.0, 1.0f);
-            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 4, 0.0 })), 120.0, 1.0f);
+            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 0, {} })), 120.0, 1.0f);
+            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 1, BeatDuration::fromBeats (3) })), 120.0, 1.0f);
+            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 2, {} })), 60.0, 1.0f);
+            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 3, BeatDuration::fromBeats (3) })), 60.0, 1.0f);
+            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 4, {} })), 120.0, 1.0f);
         }
     }
     
@@ -1156,27 +1156,27 @@ private:
             ts.getTempo (0)->setBpm (120.0);
             
             // N.B. bars start at 0!
-            expectEquals (ts.barsBeatsToBeats ({ 0, 0.0 }), 0.0);
-            expectEquals (ts.barsBeatsToTime ({ 0, 0.0 }), 0.0);
-            expectEquals (ts.barsBeatsToBeats ({ 8, 0.0 }), 32.0);
-            expectEquals (ts.barsBeatsToTime ({ 8, 0.0 }), 16.0);
+            expectEquals (ts.barsBeatsToBeats ({ 0, {} }), 0.0);
+            expectEquals (ts.barsBeatsToTime ({ 0, {} }), 0.0);
+            expectEquals (ts.barsBeatsToBeats ({ 8, {} }), 32.0);
+            expectEquals (ts.barsBeatsToTime ({ 8, {} }), 16.0);
 
-            ts.insertTempo (ts.barsBeatsToBeats ({ 5, 0.0 }), 60.0, 1.0f);
-            ts.insertTempo (ts.barsBeatsToBeats ({ 9, 0.0 }), 120.0, 1.0f);
+            ts.insertTempo (ts.barsBeatsToBeats ({ 5, {} }), 60.0, 1.0f);
+            ts.insertTempo (ts.barsBeatsToBeats ({ 9, {} }), 120.0, 1.0f);
 
-            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 4, 0.0 })), 120.0, 1.0f);
-            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 6, 0.0 })), 60.0, 1.0f);
-            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 8, 0.0 })), 60.0, 1.0f);
-            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 10, 0.0 })), 120.0, 1.0f);
+            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 4, {} })), 120.0, 1.0f);
+            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 6, {} })), 60.0, 1.0f);
+            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 8, {} })), 60.0, 1.0f);
+            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 10, {} })), 120.0, 1.0f);
             
-            const BeatRange beatRangeToCopy (ts.barsBeatsToBeats ({ 6, 0.0 }), ts.barsBeatsToBeats ({ 8, 0.0 }));
+            const BeatRange beatRangeToCopy (ts.barsBeatsToBeats ({ 6, {} }), ts.barsBeatsToBeats ({ 8, {} }));
             const auto timeRangeToCopy = ts.beatsToTime (beatRangeToCopy);
 
             // Copy tempo changes
             Clipboard::TempoChanges tempoChanges (ts, timeRangeToCopy);
             
             // Insert empty space
-            const auto timeToInsertAt = ts.barsBeatsToTime ({ 2, 0.0 });
+            const auto timeToInsertAt = ts.barsBeatsToTime ({ 2, {} });
             auto& tempoAtInsertionPoint = ts.getTempoAt (timeToInsertAt);
             const auto beatRangeToInsert = beatRangeToCopy.movedToStartAt (ts.timeToBeats (timeToInsertAt));
             insertSpaceIntoEditFromBeatRange (*edit, beatRangeToInsert);
@@ -1187,20 +1187,20 @@ private:
             expect (numBarsInserted == 2);
 
             // Ensure tempos are correct at original region
-            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 4 + numBarsInserted, 0.0 })), 120.0, 1.0f);
-            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 6 + numBarsInserted, 0.0 })), 60.0, 1.0f);
-            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 8 + numBarsInserted, 0.0 })), 60.0, 1.0f);
-            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 10 + numBarsInserted, 0.0 })), 120.0, 1.0f);
+            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 4 + numBarsInserted, {} })), 120.0, 1.0f);
+            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 6 + numBarsInserted, {} })), 60.0, 1.0f);
+            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 8 + numBarsInserted, {} })), 60.0, 1.0f);
+            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 10 + numBarsInserted, {} })), 120.0, 1.0f);
             
             // Paste tempo changes
             tempoChanges.pasteTempoSequence (ts, TimeRange (timeToInsertAt, ts.beatsToTime (beatRangeToInsert.getEnd())));
 
             // Ensure tempos are correct at inserted region
-            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 0, 0.0 })), 120.0, 1.0f);
-            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 1, 3.0 })), 120.0, 1.0f);
-            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 2, 0.0 })), 60.0, 1.0f);
-            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 3, 3.0 })), 60.0, 1.0f);
-            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 4, 0.0 })), 120.0, 1.0f);
+            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 0, {} })), 120.0, 1.0f);
+            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 1, BeatDuration::fromBeats (3) })), 120.0, 1.0f);
+            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 2, {} })), 60.0, 1.0f);
+            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 3, BeatDuration::fromBeats (3) })), 60.0, 1.0f);
+            expectTempoSetting (ts.getTempoAtBeat (ts.barsBeatsToBeats ({ 4, {} })), 120.0, 1.0f);
         }
     }
 };

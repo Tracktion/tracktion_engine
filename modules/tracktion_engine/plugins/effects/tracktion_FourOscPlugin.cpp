@@ -1459,7 +1459,7 @@ void FourOscPlugin::applyToBuffer (const PluginRenderContext& fc)
 
         // find the tempo
         currentPos.setTime (fc.editTime);
-        currentTempo = float (currentPos.getCurrentTempo().bpm);
+        currentTempo = float (currentPos.getTempo());
 
         // Handle all notes off first
         if (fc.bufferForMidiMessages != nullptr)

@@ -62,10 +62,10 @@ public:
         result.timeInSamples    = toSamples (time, plugin.getAudioPluginInstance()->getSampleRate());
 
         currentPos->setTime (time);
-        const auto& tempo = currentPos->getCurrentTempo();
-        result.bpm                  = tempo.bpm;
-        result.timeSigNumerator     = tempo.numerator;
-        result.timeSigDenominator   = tempo.denominator;
+        const auto timeSig = currentPos->getTimeSignature();
+        result.bpm                  = currentPos->getTempo();
+        result.timeSigNumerator     = timeSig.numerator;
+        result.timeSigDenominator   = timeSig.denominator;
 
         result.ppqPositionOfLastBarStart = currentPos->getPPQTimeOfBarStart();
         result.ppqPosition = std::max (result.ppqPositionOfLastBarStart, currentPos->getPPQTime());

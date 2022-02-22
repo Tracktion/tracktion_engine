@@ -903,7 +903,7 @@ void TransportControl::syncToEdit (Edit* editToSyncTo, bool isPreview)
                                                               ? targetContext->getLoopTimes().getStart()
                                                               : position);
 
-            auto previousBarTime = tempoSequence.barsBeatsToTime ({ barsBeats.bars, 0.0 });
+            auto previousBarTime = tempoSequence.barsBeatsToTime ({ barsBeats.bars, {} });
 
             auto syncInterval = isPreview ? targetContext->getLoopTimes().getLength()
                                           : TimeDuration::fromSeconds ((60.0 / tempo.getBpm() * timeSig.numerator));

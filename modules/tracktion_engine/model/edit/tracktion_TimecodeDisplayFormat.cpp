@@ -206,7 +206,7 @@ juce::String TimecodeSnapType::getTimecodeString (TimePosition time, const Tempo
         auto bars = barsBeats.bars + 1;
         auto beats = barsBeats.getWholeBeats() + 1;
 
-        if (level < 9)  return juce::String::formatted ("%d|%d|%03d", bars, beats, (int) (barsBeats.getFractionalBeats() * Edit::ticksPerQuarterNote));
+        if (level < 9)  return juce::String::formatted ("%d|%d|%03d", bars, beats, (int) (barsBeats.getFractionalBeats().inBeats() * Edit::ticksPerQuarterNote));
         if (level == 9) return juce::String::formatted ("%d|%d", bars, beats);
 
         return TRANS("Bar") + " " + juce::String (bars);
@@ -290,19 +290,19 @@ TimePosition TimecodeSnapType::roundTime (TimePosition t, const TempoSequence& s
             auto q = tripletsOverride ? subBeatFractionsTriplets[level].time
                                       : subBeatFractions[level].time;
 
-            barsBeats.beats = q * std::floor (barsBeats.beats / q + adjustment);
+            barsBeats.beats = BeatDuration::fromBeats (q * std::floor (barsBeats.beats.inBeats() / q + adjustment));
         }
         else if (level == 9)
         {
-            barsBeats.beats = std::floor (barsBeats.beats + adjustment);
+            barsBeats.beats = BeatDuration::fromBeats (std::floor (barsBeats.beats.inBeats() + adjustment));
         }
         else
         {
-            auto barsPlusBeats = barsBeats.bars + barsBeats.beats / tempo.getMatchingTimeSig().numerator;
+            auto barsPlusBeats = barsBeats.bars + barsBeats.beats.inBeats() / tempo.getMatchingTimeSig().numerator;
             auto q = barMultiples[level - 10];
 
             barsBeats.bars = q * (int) std::floor (barsPlusBeats / q + adjustment);
-            barsBeats.beats = 0;
+            barsBeats.beats = {};
         }
 
         return sequence.barsBeatsToTime (barsBeats);
@@ -386,9 +386,9 @@ juce::String TimecodeDisplayFormat::getString (const TempoSequence& tempo, const
 {
     if (type == TimecodeType::barsBeats)
     {
-        TempoSequence::BarsAndBeats barsBeats;
+        tempo::BarsAndBeats barsBeats;
         int bars, beats;
-        double fraction;
+        BeatDuration fraction;
 
         if (! isRelative)
         {
@@ -402,7 +402,7 @@ juce::String TimecodeDisplayFormat::getString (const TempoSequence& tempo, const
             barsBeats = tempo.timeToBarsBeats (time - nudge);
             bars = -barsBeats.bars - 1;
             beats = (tempo.getTimeSig(0)->numerator - 1) - barsBeats.getWholeBeats();
-            fraction = 1.0 - barsBeats.getFractionalBeats();
+            fraction = BeatDuration::fromBeats (1.0) - barsBeats.getFractionalBeats();
         }
         else
         {
@@ -412,7 +412,7 @@ juce::String TimecodeDisplayFormat::getString (const TempoSequence& tempo, const
             fraction = barsBeats.getFractionalBeats();
         }
 
-        auto s = juce::String::formatted ("%d|%d|%03d", bars, beats, (int) (fraction * Edit::ticksPerQuarterNote));
+        auto s = juce::String::formatted ("%d|%d|%03d", bars, beats, (int) (fraction.inBeats() * Edit::ticksPerQuarterNote));
         return time < 0s ? ("-" + s) : s;
     }
 
@@ -491,14 +491,14 @@ void TimecodeDisplayFormat::getPartStrings (TimecodeDuration duration,
 {
     if (type == TimecodeType::barsBeats)
     {
-        TempoSequence::BarsAndBeats barsBeats;
+        tempo::BarsAndBeats barsBeats;
 
         if (duration.beats.has_value())
         {
             auto t = (*duration.beats).inBeats() + nudge.inSeconds();
 
             barsBeats.bars  = int (t / duration.beatsPerBar);
-            barsBeats.beats = t - (barsBeats.bars * duration.beatsPerBar);
+            barsBeats.beats = BeatDuration::fromBeats (t - (barsBeats.bars * duration.beatsPerBar));
         }
         else if (duration.seconds.has_value())
         {
@@ -514,7 +514,7 @@ void TimecodeDisplayFormat::getPartStrings (TimecodeDuration duration,
         }
 
         {
-            auto val = (int) (barsBeats.getFractionalBeats() * Edit::ticksPerQuarterNote);
+            auto val = (int) (barsBeats.getFractionalBeats().inBeats() * Edit::ticksPerQuarterNote);
 
             char text[4];
             text[0] = (char) ('0' + (val / 100) % 10);
@@ -610,7 +610,7 @@ TimecodeDuration TimecodeDisplayFormat::getNewTimeWithPartValue (TimecodeDuratio
 
             auto barsBeats = tempo.timeToBarsBeats (t);
 
-            if (part == 0)       pos.addBeats ((newValue / (double) Edit::ticksPerQuarterNote) - barsBeats.getFractionalBeats());
+            if (part == 0)       pos.addBeats ((newValue / (double) Edit::ticksPerQuarterNote) - barsBeats.getFractionalBeats().inBeats());
             else if (part == 1)  pos.addBeats ((isRelative ? newValue : (newValue - 1)) - barsBeats.getWholeBeats());
             else if (part == 2)  pos.addBars  ((isRelative ? newValue : (newValue - 1)) - barsBeats.bars);
 

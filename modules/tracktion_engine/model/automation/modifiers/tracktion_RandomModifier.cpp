@@ -45,13 +45,14 @@ struct RandomModifier::RandomModifierTimer    : public ModifierTimer
         else
         {
             tempoSequence.setTime (editTime);
-            const auto currentTempo = tempoSequence.getCurrentTempo();
-            const double proportionOfBar = ModifierCommon::getBarFraction (rateTypeThisBlock);
+            const auto currentTempo = tempoSequence.getTempo();
+            const auto currentTimeSig = tempoSequence.getTimeSignature();
+            const auto proportionOfBar = ModifierCommon::getBarFraction (rateTypeThisBlock);
 
             if (syncTypeThisBlock == ModifierCommon::transport)
             {
-                const float editTimeInBeats = (float) (currentTempo.startBeatInEdit + (editTime.inSeconds() - currentTempo.startTime) * currentTempo.beatsPerSecond);
-                const double bars = (editTimeInBeats / currentTempo.numerator) * rateThisBlock;
+                const auto editTimeInBeats = tempoSequence.getBeats().inBeats();
+                const auto bars = (editTimeInBeats / currentTimeSig.numerator) * rateThisBlock;
 
                 if (rateTypeThisBlock >= ModifierCommon::fourBars && rateTypeThisBlock <= ModifierCommon::sixtyFourthD)
                 {
@@ -61,9 +62,9 @@ struct RandomModifier::RandomModifierTimer    : public ModifierTimer
             }
             else
             {
-                const double bpm = (currentTempo.bpm * rateThisBlock) / proportionOfBar;
+                const double bpm = (currentTempo * rateThisBlock) / proportionOfBar;
                 const double secondsPerBeat = 60.0 / bpm;
-                const float secondsPerStep = static_cast<float> (secondsPerBeat * currentTempo.numerator);
+                const float secondsPerStep = static_cast<float> (secondsPerBeat * currentTimeSig.numerator);
                 const float secondsPerPattern = secondsPerStep;
                 ramp.setDuration (secondsPerPattern);
 

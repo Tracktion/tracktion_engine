@@ -133,14 +133,14 @@ struct BreakpointOscillatorModifier::BreakpointOscillatorModifierTimer    : publ
         else
         {
             tempoSequence.setTime (editTime);
-            auto currentTempo = tempoSequence.getCurrentTempo();
-            auto proportionOfBar = ModifierCommon::getBarFraction (rateTypeThisBlock);
+            const auto currentTempo = tempoSequence.getTempo();
+            const auto currentTimeSig = tempoSequence.getTimeSignature();
+            const auto proportionOfBar = ModifierCommon::getBarFraction (rateTypeThisBlock);
 
             if (syncTypeThisBlock == transport)
             {
-                auto editTimeInBeats = (float) (currentTempo.startBeatInEdit
-                                                 + (editTime.inSeconds() - currentTempo.startTime) * currentTempo.beatsPerSecond);
-                auto bars = (editTimeInBeats / currentTempo.numerator) * rateThisBlock;
+                const auto editTimeInBeats = tempoSequence.getBeats().inBeats();
+                const auto bars = (editTimeInBeats / currentTimeSig.numerator) * rateThisBlock;
 
                 if (rateTypeThisBlock >= fourBars && rateTypeThisBlock <= sixtyFourthD)
                 {
@@ -150,9 +150,9 @@ struct BreakpointOscillatorModifier::BreakpointOscillatorModifierTimer    : publ
             }
             else
             {
-                auto bpm = (currentTempo.bpm * rateThisBlock) / proportionOfBar;
+                auto bpm = (currentTempo * rateThisBlock) / proportionOfBar;
                 auto secondsPerBeat = 60.0 / bpm;
-                auto secondsPerStep = static_cast<float> (secondsPerBeat * currentTempo.numerator);
+                auto secondsPerStep = static_cast<float> (secondsPerBeat * currentTimeSig.numerator);
                 auto secondsPerPattern = secondsPerStep;
                 ramp.setDuration (secondsPerPattern);
 

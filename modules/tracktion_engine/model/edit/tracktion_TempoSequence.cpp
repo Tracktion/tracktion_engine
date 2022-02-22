@@ -105,55 +105,6 @@ struct TempoSequence::TimeSigList  : public TempoAndTimeSigListBase<TimeSigSetti
     }
 };
 
-//==============================================================================
-int TempoSequence::TempoSections::size() const
-{
-    return tempos.size();
-}
-
-const TempoSequence::SectionDetails& TempoSequence::TempoSections::getReference (int i) const
-{
-    return tempos.getReference (i);
-}
-
-void TempoSequence::TempoSections::swapWith (juce::Array<SectionDetails>& newTempos)
-{
-    ++changeCounter;
-    tempos.swapWith (newTempos);
-}
-
-uint32_t TempoSequence::TempoSections::getChangeCount() const
-{
-    return changeCounter;
-}
-
-BeatPosition TempoSequence::TempoSections::timeToBeats (TimePosition time) const
-{
-    for (int i = tempos.size(); --i > 0;)
-    {
-        auto& it = tempos.getReference (i);
-
-        if (TimePosition::fromSeconds (it.startTime) <= time)
-            return BeatPosition::fromBeats (it.startBeatInEdit + (time.inSeconds() - it.startTime) * it.beatsPerSecond);
-    }
-
-    auto& it = tempos.getReference (0);
-    return BeatPosition::fromBeats (it.startBeatInEdit + (time.inSeconds() - it.startTime) * it.beatsPerSecond);
-}
-
-TimePosition TempoSequence::TempoSections::beatsToTime (BeatPosition beats) const
-{
-    for (int i = tempos.size(); --i > 0;)
-    {
-        auto& it = tempos.getReference (i);
-
-        if (beats.inBeats() - it.startBeatInEdit >= 0)
-            return TimePosition::fromSeconds (it.startTime + it.secondsPerBeat * (beats.inBeats() - it.startBeatInEdit));
-    }
-
-    auto& it = tempos.getReference (0);
-    return TimePosition::fromSeconds (it.startTime + it.secondsPerBeat * (beats.inBeats() - it.startBeatInEdit));
-}
 
 //==============================================================================
 TempoSequence::TempoSequence (Edit& e) : edit (e)
@@ -526,15 +477,7 @@ int TempoSequence::indexOfTempo (const TempoSetting* const t) const
 double TempoSequence::getBpmAt (TimePosition time) const
 {
     updateTempoDataIfNeeded();
-    for (int i = internalTempos.size(); --i >= 0;)
-    {
-        auto& it = internalTempos.getReference (i);
-
-        if (it.startTime <= time.inSeconds() || i == 0)
-            return it.bpm;
-    }
-
-    return 120.0;
+    return internalSequence.getBpmAt (time);
 }
 
 double TempoSequence::getBeatsPerSecondAt (TimePosition time, bool lengthOfOneBeatDependsOnTimeSignature) const
@@ -542,13 +485,7 @@ double TempoSequence::getBeatsPerSecondAt (TimePosition time, bool lengthOfOneBe
     if (lengthOfOneBeatDependsOnTimeSignature)
     {
         updateTempoDataIfNeeded();
-        for (int i = internalTempos.size(); --i >= 0;)
-        {
-            auto& it = internalTempos.getReference (i);
-
-            if (it.startTime <= time.inSeconds() || i == 0)
-                return it.beatsPerSecond;
-        }
+        return internalSequence.getBeatsPerSecondAt (time);
     }
 
     return getBpmAt (time) / 60.0;
@@ -560,57 +497,19 @@ bool TempoSequence::isTripletsAtTime (TimePosition time) const
 }
 
 //==============================================================================
-int TempoSequence::BarsAndBeats::getWholeBeats() const          { return (int) std::floor (beats); }
-double TempoSequence::BarsAndBeats::getFractionalBeats() const  { return beats - std::floor (beats); }
-
-TempoSequence::BarsAndBeats TempoSequence::timeToBarsBeats (TimePosition t) const
+tempo::BarsAndBeats TempoSequence::timeToBarsBeats (TimePosition t) const
 {
     updateTempoDataIfNeeded();
-    for (int i = internalTempos.size(); --i >= 0;)
-    {
-        auto& it = internalTempos.getReference (i);
-
-        if (it.startTime <= t.inSeconds() || i == 0)
-        {
-            auto beatsSinceFirstBar = (t.inSeconds() - it.timeOfFirstBar) * it.beatsPerSecond;
-
-            if (beatsSinceFirstBar < 0)
-            {
-                if (t < TimePosition())
-                    return { (int) std::floor (beatsSinceFirstBar / it.numerator),
-                             it.numerator - std::fmod (-beatsSinceFirstBar, it.numerator) };
-
-                return { it.barNumberOfFirstBar - 1,
-                         it.prevNumerator + beatsSinceFirstBar };
-            }
-
-            return { it.barNumberOfFirstBar + (int) std::floor (beatsSinceFirstBar / it.numerator),
-                      std::fmod (beatsSinceFirstBar, it.numerator) };
-        }
-    }
-
-    return { 0, 0.0 };
+    return internalSequence.toBarsAndBeats (t);
 }
 
-TimePosition TempoSequence::barsBeatsToTime (BarsAndBeats barsBeats) const
+TimePosition TempoSequence::barsBeatsToTime (tempo::BarsAndBeats barsBeats) const
 {
     updateTempoDataIfNeeded();
-    for (int i = internalTempos.size(); --i >= 0;)
-    {
-        auto& it = internalTempos.getReference(i);
-
-        if (it.barNumberOfFirstBar == barsBeats.bars + 1
-              && barsBeats.beats >= it.prevNumerator - it.beatsUntilFirstBar)
-            return TimePosition::fromSeconds (it.timeOfFirstBar - it.secondsPerBeat * (it.prevNumerator - barsBeats.beats));
-
-        if (it.barNumberOfFirstBar <= barsBeats.bars || i == 0)
-            return TimePosition::fromSeconds (it.timeOfFirstBar + it.secondsPerBeat * (((barsBeats.bars - it.barNumberOfFirstBar) * it.numerator) + barsBeats.beats));
-    }
-
-    return {};
+    return internalSequence.toTime (barsBeats);
 }
 
-BeatPosition TempoSequence::barsBeatsToBeats (BarsAndBeats barsBeats) const
+BeatPosition TempoSequence::barsBeatsToBeats (tempo::BarsAndBeats barsBeats) const
 {
     return timeToBeats (barsBeatsToTime (barsBeats));
 }
@@ -618,7 +517,7 @@ BeatPosition TempoSequence::barsBeatsToBeats (BarsAndBeats barsBeats) const
 BeatPosition TempoSequence::timeToBeats (TimePosition time) const
 {
     updateTempoDataIfNeeded();
-    return internalTempos.timeToBeats (time);
+    return internalSequence.toBeats (time);
 }
 
 BeatRange TempoSequence::timeToBeats (TimeRange range) const
@@ -630,7 +529,7 @@ BeatRange TempoSequence::timeToBeats (TimeRange range) const
 TimePosition TempoSequence::beatsToTime (BeatPosition beats) const
 {
     updateTempoDataIfNeeded();
-    return internalTempos.beatsToTime (beats);
+    return internalSequence.toTime (beats);
 }
 
 TimeRange TempoSequence::beatsToTime (BeatRange range) const
@@ -639,139 +538,9 @@ TimeRange TempoSequence::beatsToTime (BeatRange range) const
              beatsToTime (range.getEnd()) };
 }
 
-static CurvePoint getBezierPoint (const TempoSetting& t1, const TempoSetting& t2) noexcept
+const tempo::Sequence& TempoSequence::getInternalSequence() const
 {
-    auto x1 = t1.startBeatNumber.get();
-    auto y1 = t1.getBpm();
-    auto x2 = t2.startBeatNumber.get();
-    auto y2 = t2.getBpm();
-    auto c  = t1.getCurve();
-
-    if (y2 > y1)
-    {
-        auto run  = x2 - x1;
-        auto rise = y2 - y1;
-
-        auto xc = x1 + run / 2;
-        auto yc = y1 + rise / 2;
-
-        auto x = xc - run  / 2 * -c;
-        auto y = yc + rise / 2 * -c;
-
-        return { x, (float) y };
-    }
-
-    auto run  = x2 - x1;
-    auto rise = y1 - y2;
-
-    auto xc = x1 + run / 2;
-    auto yc = y2 + rise / 2;
-
-    auto x = xc - run  / 2 * -c;
-    auto y = yc - rise / 2 * -c;
-
-    return { x, (float) y };
-}
-
-static void getBezierEnds (const TempoSetting& t1, const TempoSetting& t2,
-                           double& x1out, float& y1out, double& x2out, float& y2out) noexcept
-{
-    auto x1 = t1.startBeatNumber.get().inBeats();
-    auto y1 = t1.getBpm();
-    auto x2 = t2.startBeatNumber.get().inBeats();
-    auto y2 = t2.getBpm();
-    auto c  = t1.getCurve();
-
-    auto minic = (std::abs (c) - 0.5f) * 2.0f;
-    auto run   = minic * (x2 - x1);
-    auto rise  = minic * ((y2 > y1) ? (y2 - y1) : (y1 - y2));
-
-    if (c > 0)
-    {
-        x1out = x1 + run;
-        y1out = (float) y1;
-
-        x2out = x2;
-        y2out = (float) (y1 < y2 ? (y2 - rise) : (y2 + rise));
-    }
-    else
-    {
-        x1out = x1;
-        y1out = (float) (y1 < y2 ? (y1 + rise) : (y1 - rise));
-
-        x2out = x2 - run;
-        y2out = (float) y2;
-    }
-}
-
-static float getBezierYFromX (double x, double x1, double y1, double xb, double yb, double x2, double y2) noexcept
-{
-    // test for straight lines and bail out
-    if (x1 == x2 || y1 == y2)
-        return (float) y1;
-
-    // test for endpoints
-    if (x <= x1)  return (float) y1;
-    if (x >= x2)  return (float) y2;
-
-    // ok, we have a bezier curve with one control point,
-    // we know x, we need to find y
-
-    // flip the bezier equation around so its an quadratic equation
-    auto a = x1 - 2 * xb + x2;
-    auto b = -2 * x1 + 2 * xb;
-    auto c = x1 - x;
-
-    // solve for t, [0..1]
-    double t;
-
-    if (a == 0)
-    {
-        t = -c / b;
-    }
-    else
-    {
-        t = (-b + std::sqrt (b * b - 4 * a * c)) / (2 * a);
-
-        if (t < 0.0f || t > 1.0f)
-            t = (-b - std::sqrt (b * b - 4 * a * c)) / (2 * a);
-    }
-
-    jassert (t >= 0.0f && t <= 1.0f);
-
-    // find y using the t we just found
-    auto y = (pow (1 - t, 2) * y1) + 2 * t * (1 - t) * yb + pow (t, 2) * y2;
-    return (float) y;
-}
-
-static double calcCurveBpm (double beat, const TempoSetting& t1, const TempoSetting* t2)
-{
-    if (t2 == nullptr)
-        return t1.bpm;
-
-    auto bp = getBezierPoint (t1, *t2);
-    auto c = t1.getCurve();
-
-    if (c >= -0.5 && c <= 0.5)
-        return getBezierYFromX (beat,
-                                t1.startBeatNumber.get().inBeats(), t1.bpm,
-                                toBeats (bp.time, t1.ownerSequence).inBeats(), bp.value,
-                                t2->startBeatNumber.get().inBeats(), t2->bpm);
-
-    double x1end = 0;
-    double x2end = 0;
-    float y1end = 0;
-    float y2end = 0;
-
-    getBezierEnds (t1, *t2, x1end, y1end, x2end, y2end);
-
-    if (beat >= t1.startBeatNumber.get().inBeats() && beat <= x1end)
-        return y1end;
-
-    if (beat >= x2end && beat <= t2->startBeatNumber.get().inBeats())
-        return y2end;
-
-    return getBezierYFromX (beat, x1end, y1end, toBeats (bp.time, t1.ownerSequence).inBeats(), bp.value, x2end, y2end);
+    return internalSequence;
 }
 
 void TempoSequence::updateTempoData()
@@ -779,133 +548,40 @@ void TempoSequence::updateTempoData()
     tempos->cancelPendingUpdate();
     jassert (getNumTempos() > 0 && getNumTimeSigs() > 0);
 
-    juce::SortedSet<BeatPosition> beatsWithObjects;
+    // Build the new sequence
+    std::vector<tempo::TempoChange> tempoChanges;
+    std::vector<tempo::TimeSigChange> timeSigChanges;
 
-    for (auto tempo : tempos->objects)
-        beatsWithObjects.add (tempo->startBeatNumber);
+    // Copy change events
+    {
+        for (auto ts : getTempos())
+            tempoChanges.push_back ({ ts->startBeatNumber.get(), ts->bpm.get(), ts->curve.get() });
 
-    for (auto sig : timeSigs->objects)
-        beatsWithObjects.add (sig->startBeatNumber);
-
-    TimePosition time;
-    BeatPosition beatNum;
-    double ppq     = 0.0;
-    int timeSigIdx = 0;
-    int tempoIdx   = 0;
-
-    auto currTempo   = getTempo (tempoIdx++);
-    auto currTimeSig = getTimeSig (timeSigIdx++);
-
-    jassert (currTempo != nullptr);
-    jassert (currTempo->startBeatNumber == BeatPosition());
-    jassert (currTimeSig->startBeatNumber == BeatPosition());
-    currTempo->startTime = TimePosition();
-    currTimeSig->startTime = TimePosition();
+        for (auto ts : getTimeSigs())
+            timeSigChanges.push_back ({ ts->startBeatNumber.get(), ts->numerator.get(), ts->denominator.get(), ts->triplets.get() });
+    }
 
     const bool useDenominator = edit.engine.getEngineBehaviour().lengthOfOneBeatDependsOnTimeSignature();
+    tempo::Sequence newSeq (std::move (tempoChanges), std::move (timeSigChanges),
+                            useDenominator ? tempo::LengthOfOneBeat::dependsOnTimeSignature
+                                           : tempo::LengthOfOneBeat::isAlwaysACrotchet);
 
-    juce::Array<SectionDetails> newSections;
-
-    for (int i = 0; i < beatsWithObjects.size(); ++i)
+    // Update startTime properties of the model objects
     {
-        auto currentBeat = beatsWithObjects.getUnchecked (i);
+        for (auto ts : getTempos())
+            ts->startTime = newSeq.toTime (ts->startBeatNumber.get());
 
-        jassert (std::abs ((currentBeat - beatNum).inBeats()) < 0.001);
-
-        while (i >= 0 && tempoIdx < getNumTempos() && getTempo (tempoIdx)->startBeatNumber == currentBeat)
-        {
-            currTempo = getTempo (tempoIdx++);
-            jassert (currTempo != nullptr);
-            currTempo->startTime = time;
-        }
-
-        if (i >= 0 && timeSigIdx < getNumTimeSigs() && getTimeSig (timeSigIdx)->startBeatNumber == currentBeat)
-        {
-            currTimeSig = getTimeSig (timeSigIdx++);
-            jassert (currTimeSig != nullptr);
-            currTimeSig->startTime = time;
-        }
-
-        auto nextTempo = getTempo (tempoIdx);
-        double bpm = nextTempo != nullptr ? calcCurveBpm (currTempo->startBeatNumber.get().inBeats(), *currTempo, nextTempo)
-                                          : currTempo->bpm;
-
-        int numSubdivisions = 1;
-
-        if (nextTempo != nullptr && (currTempo->getCurve() != -1.0f && currTempo->getCurve() != 1.0f))
-            numSubdivisions = static_cast<int> (juce::jlimit (1.0, 100.0, 4.0 * (nextTempo->startBeatNumber.get() - currentBeat).inBeats()));
-
-        const auto numBeats = (i < beatsWithObjects.size() - 1)
-                                    ? ((beatsWithObjects[i + 1] - currentBeat).inBeats() / (double) numSubdivisions)
-                                    : 1.0e6;
-
-        for (int k = 0; k < numSubdivisions; ++k)
-        {
-            SectionDetails it;
-
-            it.bpm              = bpm;
-            it.numerator        = currTimeSig->numerator;
-            it.prevNumerator    = it.numerator;
-            it.denominator      = currTimeSig->denominator;
-            it.triplets         = currTimeSig->triplets;
-            it.startTime        = time.inSeconds();
-            it.startBeatInEdit  = beatNum.inBeats();
-
-            it.secondsPerBeat   = useDenominator ? (240.0 / (bpm * it.denominator))
-                                                 : (60.0 / bpm);
-            it.beatsPerSecond   = 1.0 / it.secondsPerBeat;
-
-            it.ppqAtStart = ppq;
-            ppq += 4 * numBeats / it.denominator;
-
-            if (newSections.isEmpty())
-            {
-                it.barNumberOfFirstBar = 0;
-                it.beatsUntilFirstBar = 0;
-                it.timeOfFirstBar = 0.0;
-            }
-            else
-            {
-                auto& prevSection = newSections.getReference (newSections.size() - 1);
-
-                auto beatsSincePreviousBarUntilStart = (time.inSeconds() - prevSection.timeOfFirstBar) * prevSection.beatsPerSecond;
-                auto barsSincePrevBar = (int) ceil (beatsSincePreviousBarUntilStart / prevSection.numerator - 1.0e-5);
-
-                it.barNumberOfFirstBar = prevSection.barNumberOfFirstBar + barsSincePrevBar;
-
-                auto beatNumInEditOfNextBar = juce::roundToInt (prevSection.startBeatInEdit + prevSection.beatsUntilFirstBar)
-                                                 + (barsSincePrevBar * prevSection.numerator);
-
-                it.beatsUntilFirstBar = beatNumInEditOfNextBar - it.startBeatInEdit;
-                it.timeOfFirstBar = time.inSeconds() + it.beatsUntilFirstBar * it.secondsPerBeat;
-
-                for (int j = newSections.size(); --j >= 0;)
-                {
-                    auto& tempo = newSections.getReference(j);
-
-                    if (tempo.barNumberOfFirstBar < it.barNumberOfFirstBar)
-                    {
-                        it.prevNumerator = tempo.numerator;
-                        break;
-                    }
-                }
-            }
-
-            newSections.add (it);
-
-            time = time + TimeDuration::fromSeconds (numBeats * it.secondsPerBeat);
-            beatNum = beatNum + BeatDuration::fromBeats (numBeats);
-
-            bpm = calcCurveBpm (beatNum.inBeats(), *currTempo, nextTempo);
-        }
+        for (auto ts : getTimeSigs())
+            ts->startTime = newSeq.toTime (ts->startBeatNumber.get());
     }
 
     jassert (getNumTempos() > 0 && getNumTimeSigs() > 0);
     triggerAsyncUpdate();
 
     {
+        //TODO: This lock should be removed when all playback classes are using the new tempo::Sequence class
         juce::ScopedLock sl (edit.engine.getDeviceManager().deviceManager.getAudioCallbackLock());
-        internalTempos.swapWith (newSections);
+        internalSequence = std::move (newSeq);
     }
 }
 
@@ -953,175 +629,15 @@ HashCode TempoSequence::createHashForTemposInRange (TimeRange range) const
 
 //==============================================================================
 TempoSequencePosition::TempoSequencePosition (const TempoSequence& s)
-   : sequence (s)
+   : pos (s.internalSequence)
 {
 }
 
-TempoSequencePosition::TempoSequencePosition (const TempoSequencePosition& other)
-   : sequence (other.sequence),
-     time (other.time),
-     index (other.index)
+TempoSequencePosition::TempoSequencePosition (const TempoSequencePosition& o)
+   : pos (o.pos)
 {
 }
 
-TempoSequencePosition::~TempoSequencePosition()
-{
-}
-
-TempoSequence::BarsAndBeats TempoSequencePosition::getBarsBeatsTime() const
-{
-    auto& it = sequence.internalTempos.getReference (index);
-    auto beatsSinceFirstBar = (time.inSeconds() - it.timeOfFirstBar) * it.beatsPerSecond;
-
-    if (beatsSinceFirstBar < 0)
-        return { it.barNumberOfFirstBar + (int) std::floor (beatsSinceFirstBar / it.numerator),
-                 std::fmod (std::fmod (beatsSinceFirstBar, it.numerator) + it.numerator, it.numerator) };
-
-    return { it.barNumberOfFirstBar + (int) std::floor (beatsSinceFirstBar / it.numerator),
-             std::fmod (beatsSinceFirstBar, it.numerator) };
-}
-
-void TempoSequencePosition::setTime (TimePosition t)
-{
-    const int maxIndex = sequence.internalTempos.size() - 1;
-
-    if (maxIndex >= 0)
-    {
-        if (index > maxIndex)
-        {
-            index = maxIndex;
-            time = TimePosition::fromSeconds (sequence.internalTempos.getReference (index).startTime);
-        }
-
-        if (t >= time)
-        {
-            while (index < maxIndex && sequence.internalTempos.getReference (index + 1).startTime <= t.inSeconds())
-                ++index;
-        }
-        else
-        {
-            while (index > 0 && sequence.internalTempos.getReference (index).startTime > t.inSeconds())
-                --index;
-        }
-
-        time = t;
-    }
-}
-
-void TempoSequencePosition::addBars (int bars)
-{
-    if (bars > 0)
-    {
-        while (--bars >= 0)
-            addBeats (sequence.internalTempos.getReference (index).numerator);
-    }
-    else
-    {
-        while (++bars <= 0)
-            addBeats (-sequence.internalTempos.getReference (index).numerator);
-    }
-}
-
-void TempoSequencePosition::addBeats (double beats)
-{
-    if (beats > 0)
-    {
-        for (;;)
-        {
-            auto maxIndex = sequence.internalTempos.size() - 1;
-            auto& it = sequence.internalTempos.getReference (index);
-            auto beatTime = TimeDuration::fromSeconds (it.secondsPerBeat * beats);
-
-            if (index >= maxIndex
-                 || sequence.internalTempos.getReference (index + 1).startTime > (time + beatTime).inSeconds())
-            {
-                time = time + beatTime;
-                break;
-            }
-
-            ++index;
-            auto nextStart = TimePosition::fromSeconds (sequence.internalTempos.getReference (index).startTime);
-            beats -= (nextStart - time).inSeconds() * it.beatsPerSecond;
-            time = nextStart;
-        }
-    }
-    else
-    {
-        for (;;)
-        {
-            auto& it = sequence.internalTempos.getReference (index);
-            auto beatTime = TimeDuration::fromSeconds (it.secondsPerBeat * beats);
-
-            if (index <= 0
-                 || sequence.internalTempos.getReference (index).startTime <= (time + beatTime).inSeconds())
-            {
-                time = time + beatTime;
-                break;
-            }
-
-            beats += (time.inSeconds() - it.startTime) * it.beatsPerSecond;
-            time = TimePosition::fromSeconds (sequence.internalTempos.getReference (index).startTime);
-            --index;
-        }
-    }
-}
-
-void TempoSequencePosition::setBarsBeats (TempoSequence::BarsAndBeats newTime)
-{
-    setTime (sequence.barsBeatsToTime (newTime));
-}
-
-void TempoSequencePosition::addSeconds (double seconds)
-{
-    setTime (time + TimeDuration::fromSeconds (seconds));
-}
-
-const TempoSequence::SectionDetails& TempoSequencePosition::getCurrentTempo() const
-{
-    // this index might go off the end when tempos are deleted..
-    return sequence.internalTempos.getReference (juce::jlimit (0, sequence.internalTempos.size() - 1, index));
-}
-
-double TempoSequencePosition::getPPQTime() const noexcept
-{
-    auto& it = sequence.internalTempos.getReference (index);
-    auto beatsSinceStart = (time.inSeconds() - it.startTime) * it.beatsPerSecond;
-
-    return it.ppqAtStart + 4.0 * beatsSinceStart / it.denominator;
-}
-
-void TempoSequencePosition::setPPQTime (double ppq)
-{
-    for (int i = sequence.internalTempos.size(); --i >= 0;)
-    {
-        index = i;
-
-        if (sequence.internalTempos.getReference (i).ppqAtStart <= ppq)
-            break;
-    }
-
-    auto& it = sequence.internalTempos.getReference (index);
-    auto beatsSinceStart = ((ppq - it.ppqAtStart) * it.denominator) / 4.0;
-    time = TimePosition::fromSeconds ((beatsSinceStart * it.secondsPerBeat) + it.startTime);
-}
-
-double TempoSequencePosition::getPPQTimeOfBarStart() const noexcept
-{
-    for (int i = index + 1; --i >= 0;)
-    {
-        auto& it = sequence.internalTempos.getReference (i);
-        const double beatsSinceFirstBar = (time.inSeconds() - it.timeOfFirstBar) * it.beatsPerSecond;
-
-        if (beatsSinceFirstBar >= -it.beatsUntilFirstBar || i == 0)
-        {
-            const double beatNumberOfLastBarSinceFirstBar = it.numerator * std::floor (beatsSinceFirstBar / it.numerator);
-
-            return it.ppqAtStart + 4.0 * (it.beatsUntilFirstBar + beatNumberOfLastBarSinceFirstBar) / it.denominator;
-        }
-    }
-
-    return 0.0;
-}
 
 //==============================================================================
 void EditTimecodeRemapperSnapshot::savePreChangeState (Edit& ed)
@@ -1263,21 +779,12 @@ private:
         beginTest ("Defaults");
         {
             TempoSequencePosition pos (edit->tempoSequence);
-            auto& section = pos.getCurrentTempo();
 
-            expectEquals (section.bpm, 120.0);
-            expectEquals (section.startTime, 0.0);
-            expectEquals (section.startBeatInEdit, 0.0);
-            expectEquals (section.secondsPerBeat, 0.5);
-            expectEquals (section.beatsPerSecond, 2.0);
-            expectEquals (section.ppqAtStart, 0.0);
-            expectEquals (section.timeOfFirstBar, 0.0);
-            expectEquals (section.beatsUntilFirstBar, 0.0);
-            expectEquals (section.barNumberOfFirstBar, 0);
-            expectEquals (section.numerator, 4);
-            expectEquals (section.prevNumerator, 4);
-            expectEquals (section.denominator, 4);
-            expect (! section.triplets);
+            expectEquals (pos.getTempo(), 120.0);
+            expectEquals (pos.getTimeSignature().numerator, 4);
+            expectEquals (pos.getTimeSignature().denominator, 4);
+            expectEquals (pos.getPPQTimeOfBarStart(), 0.0);
+            expectEquals (pos.getBarsBeatsTime().numerator, 4);
         }
 
         beginTest ("Positive sequences");

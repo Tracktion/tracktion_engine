@@ -475,25 +475,25 @@ void EditPlaybackContext::createNode()
     cnp.includeBypassedPlugins = ! edit.engine.getEngineBehaviour().shouldBypassedPluginsBeRemovedFromPlaybackGraph();
     auto editNode = createNodeForEdit (*this, audiblePlaybackTime, cnp);
 
-    const auto& tempoSections = edit.tempoSequence.getTempoSections();
-    const bool hasTempoChanged = tempoSections.getChangeCount() != lastTempoSections.getChangeCount();
+    const auto& tempoSequence = edit.tempoSequence.getInternalSequence();
+    const bool hasTempoChanged = tempoSequence.hash() != lastTempoSequence.hash();
 
     nodePlaybackContext->setNode (std::move (editNode), cnp.sampleRate, cnp.blockSize);
     updateNumCPUs();
 
-    if (hasTempoChanged && lastTempoSections.size() > 0)
+    if (hasTempoChanged)
     {
         const auto sampleRate = cnp.sampleRate;
         const auto lastTime = TimePosition::fromSamples (nodePlaybackContext->playHead.getPosition(), sampleRate);
-        const auto lastBeats = lastTempoSections.timeToBeats (lastTime);
-        const auto lastPositionRemapped = tempoSections.beatsToTime (lastBeats);
+        const auto lastBeats = lastTempoSequence.toBeats (lastTime);
+        const auto lastPositionRemapped = tempoSequence.toTime (lastBeats);
 
         const auto lastSampleRemapped = toSamples (lastPositionRemapped, sampleRate);
         nodePlaybackContext->playHead.overridePosition (lastSampleRemapped);
     }
 
     if (hasTempoChanged)
-        lastTempoSections = tempoSections;
+        lastTempoSequence = tempoSequence;
 }
 
 void EditPlaybackContext::createPlayAudioNodes (TimePosition startTime)

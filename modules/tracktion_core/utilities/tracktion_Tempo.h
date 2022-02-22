@@ -28,14 +28,24 @@ namespace tempo
     /** Represents a number of bars and then beats in that bar. */
     struct BarsAndBeats
     {
-        int bars = 0;       /**< The number of bars. */
+        int bars = 0;       /**< The number of whole bars. */
         BeatDuration beats; /**< The number of beats in the current bar. */
+        int numerator = 0;  /**< The number of beats in the current bar. */
+
+        /** Returns the number bars elapsed. */
+        double getTotalBars() const;
 
         /** Returns the number of whole beats. */
         int getWholeBeats() const;
 
         /** Returns the number of fractional beats. */
         BeatDuration getFractionalBeats() const;
+    };
+
+    struct TimeSignature
+    {
+        int numerator = 0;
+        int denominator = 0;
     };
 
     //==============================================================================
@@ -58,6 +68,21 @@ namespace tempo
     };
 
     //==============================================================================
+    /** Used to determine the length of a beat in beat <-> time conversions. */
+    enum class LengthOfOneBeat
+    {
+        dependsOnTimeSignature, /**< Signifies that the length (in seconds) of one "beat" at
+                                     any point in an edit is considered to be the length of one division in the current
+                                     bar's time signature.
+                                     So for example at 120BPM, in a bar of 4/4, one beat would be the length of a
+                                     quarter-note (0.5s), but in a bar of 4/8, one beat would be the length of an
+                                     eighth-note (0.25s) */
+        isAlwaysACrotchet       /**< Signifies the length of one beat always depends only the current BPM at that
+                                     point in the edit, so where the BPM = 120, one beat is always 0.5s, regardless of
+                                     the time-sig. E.g. 7/4 is treated the same as 7/8/ */
+    };
+
+    //==============================================================================
     /**
         Represents a tempo map with at least one TempoChange and TimeSigChange.
         Once constructed, this can be used to convert between time and beats.
@@ -66,8 +91,10 @@ namespace tempo
     {
         struct Section;
 
+        //==============================================================================
         /** Creates a Sequence for at least one TempoChange and at least one TimeSigChange. */
-        Sequence (std::vector<TempoChange>, std::vector<TimeSigChange>);
+        Sequence (std::vector<TempoChange>, std::vector<TimeSigChange>,
+                  LengthOfOneBeat);
 
         /** Copies another Sequence. */
         Sequence (const Sequence&);
@@ -75,11 +102,34 @@ namespace tempo
         /** Move constructor. */
         Sequence (Sequence&&);
 
+        /** Copies another Sequence. */
+        Sequence& operator= (const Sequence&);
+
+        /** Moves another Sequence. */
+        Sequence& operator= (Sequence&&);
+
+        //==============================================================================
         /** Converts a time to a number of beats. */
         BeatPosition toBeats (TimePosition) const;
 
+        /** Converts a number of BarsAndBeats to a position. */
+        BeatPosition toBeats (BarsAndBeats) const;
+
         /** Converts a number of beats a time. */
         TimePosition toTime (BeatPosition) const;
+
+        /** Converts a number of BarsAndBeats to a position. */
+        TimePosition toTime (BarsAndBeats) const;
+
+        /** Converts a time to a number of BarsAndBeats. */
+        BarsAndBeats toBarsAndBeats (TimePosition) const;
+
+        //==============================================================================
+        /** Returns the tempo at a position. */
+        double getBpmAt (TimePosition) const;
+
+        /** Returns the number of beats per second at a position. */
+        double getBeatsPerSecondAt (TimePosition) const;
 
         /** Returns a unique hash of this sequence. */
         size_t hash() const;
@@ -90,7 +140,7 @@ namespace tempo
             You can set the position in time or beats and then use it to convert between
             times and beats much faster than a plain Sequence.
 
-            N.B. This is optomised for setting a time adding time and then converting that
+            N.B. This is optomised for setting a time, adding time and then converting that
             to beats. The other set/add operations are provided for convenience but will
             be slower to execute.
         */
@@ -98,11 +148,13 @@ namespace tempo
         {
             //==============================================================================
             /** Creates a Position from a sequence.
-                N.B. the Position takes a copy of the relevent data so the source
-                Sequence doesn't need to outlive the Position and there will be no
-                data-races between access to them.
+                N.B. the Position keeps a reference to the Sequence so this must live longer
+                than the Position.
             */
             Position (const Sequence&);
+
+            /** Creates a copy of another Position. */
+            Position (const Position&);
 
             //==============================================================================
             /** Returns the current time of the Position. */
@@ -113,6 +165,12 @@ namespace tempo
 
             /** Returns the current bars and beats of the Position. @see BarsAndBeats */
             BarsAndBeats getBarsBeats() const;
+
+            /** Returns the current tempo of the Position. */
+            double getTempo() const;
+
+            /** Returns the current TimeSignature of the Position. */
+            TimeSignature getTimeSignature() const;
 
             //==============================================================================
             /** Sets the Position to a new time. */
@@ -144,7 +202,8 @@ namespace tempo
             double getPPQTimeOfBarStart() const noexcept;
 
         private:
-            std::vector<Section> sections;
+            const Sequence& sequence;
+            const std::vector<Section>& sections;
             TimePosition time;
             size_t index = 0;
         };
@@ -172,6 +231,7 @@ namespace tempo
 namespace tempo
 {
 
+inline double BarsAndBeats::getTotalBars() const                { return bars + (numerator * beats.inBeats()); }
 inline int BarsAndBeats::getWholeBeats() const                  { return (int) std::floor (beats.inBeats()); }
 inline BeatDuration BarsAndBeats::getFractionalBeats() const    { return BeatDuration::fromBeats (beats.inBeats() - std::floor (beats.inBeats())); }
 
@@ -235,6 +295,30 @@ namespace details
 
         return {};
     }
+
+    inline BarsAndBeats toBarsAndBeats (const std::vector<Sequence::Section>& sections, TimePosition time)
+    {
+        for (int i = (int) sections.size(); --i > 0;)
+        {
+            auto& it = sections[(size_t) i];
+
+            if (it.startTime <= time || i == 0)
+            {
+                const auto beatsSinceFirstBar = (time - it.timeOfFirstBar).inSeconds() * it.beatsPerSecond;
+
+                if (beatsSinceFirstBar < 0)
+                    return { it.barNumberOfFirstBar + (int) std::floor (beatsSinceFirstBar / it.numerator),
+                             BeatDuration::fromBeats (std::fmod (std::fmod (beatsSinceFirstBar, it.numerator) + it.numerator, it.numerator)),
+                             it.numerator };
+
+                return { it.barNumberOfFirstBar + (int) std::floor (beatsSinceFirstBar / it.numerator),
+                         BeatDuration::fromBeats (std::fmod (beatsSinceFirstBar, it.numerator)),
+                         it.numerator };
+            }
+        }
+
+        return { 0, {} };
+    }
 }
 
 //==============================================================================
@@ -272,7 +356,8 @@ inline double Sequence::calcCurveBpm (double beat, const TempoChange t1, const T
 
 //==============================================================================
 //==============================================================================
-inline Sequence::Sequence (std::vector<TempoChange> tempos, std::vector<TimeSigChange> timeSigs)
+inline Sequence::Sequence (std::vector<TempoChange> tempos, std::vector<TimeSigChange> timeSigs,
+                           LengthOfOneBeat lengthOfOneBeat)
 {
     assert (tempos.size() > 0 && timeSigs.size() > 0);
     assert (tempos[0].startBeat == BeatPosition());
@@ -315,7 +400,7 @@ inline Sequence::Sequence (std::vector<TempoChange> tempos, std::vector<TimeSigC
     auto currTempo   = tempos[tempoIdx++];
     auto currTimeSig = timeSigs[timeSigIdx++];
 
-    const bool useDenominator = true; //edit.engine.getEngineBehaviour().lengthOfOneBeatDependsOnTimeSignature();
+    const bool useDenominator = lengthOfOneBeat == LengthOfOneBeat::dependsOnTimeSignature;
 
     for (size_t i = 0; i < beatsWithChanges.size(); ++i)
     {
@@ -414,14 +499,29 @@ inline Sequence::Sequence (Sequence&& o)
 {
 }
 
-inline size_t Sequence::hash() const
+inline Sequence& Sequence::operator= (const Sequence& o)
 {
-    return hashCode;
+    sections = o.sections;
+    hashCode = o.hashCode;
+    return *this;
 }
 
+inline Sequence& Sequence::operator= (Sequence&& o)
+{
+    sections = std::move (o.sections);
+    hashCode = o.hashCode;
+    return *this;
+}
+
+//==============================================================================
 inline BeatPosition Sequence::toBeats (TimePosition time) const
 {
     return details::toBeats (sections, time);
+}
+
+inline BeatPosition Sequence::toBeats (BarsAndBeats barsAndBeats) const
+{
+    return toBeats (details::toTime (sections, barsAndBeats));
 }
 
 inline TimePosition Sequence::toTime (BeatPosition beats) const
@@ -429,11 +529,61 @@ inline TimePosition Sequence::toTime (BeatPosition beats) const
     return details::toTime (sections, beats);
 }
 
+inline TimePosition Sequence::toTime (BarsAndBeats barsAndBeats) const
+{
+    return details::toTime (sections, barsAndBeats);
+}
+
+inline BarsAndBeats Sequence::toBarsAndBeats (TimePosition t) const
+{
+    return details::toBarsAndBeats (sections, t);
+}
+
+//==============================================================================
+inline double Sequence::getBpmAt (TimePosition t) const
+{
+    for (int i = (int) sections.size(); --i >= 0;)
+    {
+        auto& it = sections[(size_t) i];
+
+        if (it.startTime <= t || i == 0)
+            return it.bpm;
+    }
+
+    assert(false);
+    return 120.0;
+}
+
+inline double Sequence::getBeatsPerSecondAt (TimePosition t) const
+{
+    for (int i = (int) sections.size(); --i >= 0;)
+    {
+        auto& it = sections[(size_t) i];
+
+        if (it.startTime <= t || i == 0)
+            return it.beatsPerSecond;
+    }
+
+    assert(false);
+    return 2.0;
+}
+
+inline size_t Sequence::hash() const
+{
+    return hashCode;
+}
+
 
 //==============================================================================
 //==============================================================================
-inline Sequence::Position::Position (const Sequence& sequence)
-    : sections (sequence.sections)
+inline Sequence::Position::Position (const Sequence& sequenceToUse)
+    : sequence (sequenceToUse), sections (sequence.sections)
+{
+    assert (sections.size() > 0);
+}
+
+inline Sequence::Position::Position (const Position& o)
+    : sequence (o.sequence), sections (o.sections)
 {
     assert (sections.size() > 0);
 }
@@ -451,10 +601,23 @@ inline BarsAndBeats Sequence::Position::getBarsBeats() const
 
     if (beatsSinceFirstBar < 0)
         return { it.barNumberOfFirstBar + (int) std::floor (beatsSinceFirstBar / it.numerator),
-                 BeatDuration::fromBeats (std::fmod (std::fmod (beatsSinceFirstBar, it.numerator) + it.numerator, it.numerator)) };
+                 BeatDuration::fromBeats (std::fmod (std::fmod (beatsSinceFirstBar, it.numerator) + it.numerator, it.numerator)),
+                 it.numerator };
 
     return { it.barNumberOfFirstBar + (int) std::floor (beatsSinceFirstBar / it.numerator),
-             BeatDuration::fromBeats (std::fmod (beatsSinceFirstBar, it.numerator)) };
+             BeatDuration::fromBeats (std::fmod (beatsSinceFirstBar, it.numerator)),
+             it.numerator };
+}
+
+inline double Sequence::Position::getTempo() const
+{
+    return sections[index].bpm;
+}
+
+inline TimeSignature Sequence::Position::getTimeSignature() const
+{
+    auto& it = sections[index];
+    return { it.numerator, it.denominator };
 }
 
 //==============================================================================
