@@ -485,7 +485,7 @@ double TempoSequence::getBeatsPerSecondAt (TimePosition time, bool lengthOfOneBe
     if (lengthOfOneBeatDependsOnTimeSignature)
     {
         updateTempoDataIfNeeded();
-        return internalSequence.getBeatsPerSecondAt (time);
+        return internalSequence.getBeatsPerSecondAt (time).v;
     }
 
     return getBpmAt (time) / 60.0;

@@ -30,6 +30,24 @@ public:
     {
         using namespace tempo;
 
+        beginTest ("BPM conversions");
+        {
+            juce::UnitTest::expect (TimePosition (4s) * BeatsPerMinute { 60.0 } == BeatPosition::fromBeats (4));
+            juce::UnitTest::expect (BeatsPerMinute { 120.0 } * TimePosition (4s) == BeatPosition::fromBeats (8));
+            juce::UnitTest::expect (TimeDuration (1min) * BeatsPerMinute { 60.0 } == BeatDuration::fromBeats (60));
+            juce::UnitTest::expect (BeatsPerMinute { 120.0 } * TimeDuration (1min) == BeatDuration::fromBeats (120));
+
+            juce::UnitTest::expect (TimePosition (4s) * BeatsPerSecond { 1.0 } == BeatPosition::fromBeats (4));
+            juce::UnitTest::expect (BeatsPerSecond { 2.0 } * TimePosition (4s) == BeatPosition::fromBeats (8));
+            juce::UnitTest::expect (TimeDuration (1min) * BeatsPerSecond { 1.0 } == BeatDuration::fromBeats (60));
+            juce::UnitTest::expect (BeatsPerSecond { 2.0 } * TimeDuration (1min) == BeatDuration::fromBeats (120));
+
+            juce::UnitTest::expect (BeatPosition::fromBeats (4) * SecondsPerBeat { 1.0 } == TimePosition (4s));
+            juce::UnitTest::expect (SecondsPerBeat { 0.5 } * BeatPosition::fromBeats (8) == TimePosition (4s));
+            juce::UnitTest::expect (BeatDuration::fromBeats (60) * SecondsPerBeat { 1.0 } == TimeDuration (1min));
+            juce::UnitTest::expect (SecondsPerBeat { 0.5 } * BeatDuration::fromBeats (120) == TimeDuration (1min));
+        }
+
         beginTest ("60bpm 4/4");
         {
             Sequence seq ({{ BeatPosition(), 60.0, 0.0f }},

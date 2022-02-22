@@ -42,12 +42,24 @@ namespace tempo
         BeatDuration getFractionalBeats() const;
     };
 
+    /** Holds a time signature. */
     struct TimeSignature
     {
-        int numerator = 0;
-        int denominator = 0;
+        int numerator = 0;      /**< The numerator part of the signature. */
+        int denominator = 0;    /**< The denominator part of the signature. */
     };
 
+    /** A strong typedef for BPM values. */
+    struct BeatsPerMinute { double v = 0.0; };
+
+    /** A strong typedef for beats-per-second values. */
+    struct BeatsPerSecond { double v = 0.0; };
+
+    /** A strong typedef for seconds-per-beat values. */
+    struct SecondsPerBeat { double v = 0.0; };
+
+
+    //==============================================================================
     //==============================================================================
     /** Represents a change in tempo at a specific beat. */
     struct TempoChange
@@ -129,7 +141,7 @@ namespace tempo
         double getBpmAt (TimePosition) const;
 
         /** Returns the number of beats per second at a position. */
-        double getBeatsPerSecondAt (TimePosition) const;
+        BeatsPerSecond getBeatsPerSecondAt (TimePosition) const;
 
         /** Returns a unique hash of this sequence. */
         size_t hash() const;
@@ -216,6 +228,37 @@ namespace tempo
     };
 }
 
+/** Converts time to beats. */
+[[ nodiscard ]] constexpr BeatPosition operator* (TimePosition t, tempo::BeatsPerSecond bps)    { return BeatPosition::fromBeats (t.inSeconds() * bps.v); }
+/** Converts time to beats. */
+[[ nodiscard ]] constexpr BeatDuration operator* (TimeDuration t, tempo::BeatsPerSecond bps)    { return BeatDuration::fromBeats (t.inSeconds() * bps.v); }
+/** Converts time to beats. */
+[[ nodiscard ]] constexpr BeatPosition operator* (tempo::BeatsPerSecond bps, TimePosition t)    { return BeatPosition::fromBeats (t.inSeconds() * bps.v); }
+/** Converts time to beats. */
+[[ nodiscard ]] constexpr BeatDuration operator* (tempo::BeatsPerSecond bps, TimeDuration t)    { return BeatDuration::fromBeats (t.inSeconds() * bps.v); }
+
+/** Converts time to beats. */
+[[ nodiscard ]] constexpr BeatPosition operator* (TimePosition t, tempo::BeatsPerMinute bpm)    { return BeatPosition::fromBeats (t.inSeconds() / 60.0 * bpm.v); }
+/** Converts time to beats. */
+[[ nodiscard ]] constexpr BeatDuration operator* (TimeDuration t, tempo::BeatsPerMinute bpm)    { return BeatDuration::fromBeats (t.inSeconds() / 60.0 * bpm.v); }
+/** Converts time to beats. */
+[[ nodiscard ]] constexpr BeatPosition operator* (tempo::BeatsPerMinute bpm, TimePosition t)    { return BeatPosition::fromBeats (t.inSeconds() / 60.0 * bpm.v); }
+/** Converts time to beats. */
+[[ nodiscard ]] constexpr BeatDuration operator* (tempo::BeatsPerMinute bpm, TimeDuration t)    { return BeatDuration::fromBeats (t.inSeconds() / 60.0 * bpm.v); }
+
+/** Converts beats to time. */
+[[ nodiscard ]] constexpr TimePosition operator* (BeatPosition t, tempo::SecondsPerBeat spb)    { return TimePosition::fromSeconds (t.inBeats() * spb.v); }
+/** Converts beats to time. */
+[[ nodiscard ]] constexpr TimeDuration operator* (BeatDuration t, tempo::SecondsPerBeat spb)    { return TimeDuration::fromSeconds (t.inBeats() * spb.v); }
+/** Converts beats to time. */
+[[ nodiscard ]] constexpr TimePosition operator* (tempo::SecondsPerBeat spb, BeatPosition t)    { return TimePosition::fromSeconds (t.inBeats() * spb.v); }
+/** Converts beats to time. */
+[[ nodiscard ]] constexpr TimeDuration operator* (tempo::SecondsPerBeat spb, BeatDuration t)    { return TimeDuration::fromSeconds (t.inBeats() * spb.v); }
+
+/** Converts a SecondsPerBeat to BeatsPerSecond. */
+[[ nodiscard ]] constexpr tempo::BeatsPerSecond operator/ (double t, tempo::SecondsPerBeat spb) { return { t / spb.v }; }
+/** Converts a BeatsPerSecond to SecondsPerBeat. */
+[[ nodiscard ]] constexpr tempo::SecondsPerBeat operator/ (double t, tempo::BeatsPerSecond bps) { return { t / bps.v }; }
 
 //==============================================================================
 //        _        _           _  _
@@ -242,7 +285,9 @@ struct Sequence::Section
     double bpm;
     TimePosition startTime;
     BeatPosition startBeat;
-    double secondsPerBeat, beatsPerSecond, ppqAtStart;
+    SecondsPerBeat secondsPerBeat;
+    BeatsPerSecond beatsPerSecond;
+    double ppqAtStart;
     TimePosition timeOfFirstBar;
     BeatDuration beatsUntilFirstBar;
     int barNumberOfFirstBar, numerator, prevNumerator, denominator;
@@ -258,11 +303,11 @@ namespace details
             auto& it = sections[(size_t) i];
 
             if (it.startTime <= time)
-                return it.startBeat + BeatDuration::fromBeats ((time - it.startTime).inSeconds() * it.beatsPerSecond);
+                return it.startBeat + (time - it.startTime) * it.beatsPerSecond;
         }
 
         auto& it = sections[0];
-        return it.startBeat + BeatDuration::fromBeats (((time - it.startTime).inSeconds() * it.beatsPerSecond));
+        return it.startBeat + ((time - it.startTime) * it.beatsPerSecond);
     }
 
     inline TimePosition toTime (const std::vector<Sequence::Section>& sections, BeatPosition beats)
@@ -272,11 +317,11 @@ namespace details
             auto& it = sections[(size_t) i];
 
             if (toPosition (beats - it.startBeat) >= BeatPosition())
-                return it.startTime + TimeDuration::fromSeconds (it.secondsPerBeat * (beats - it.startBeat).inBeats());
+                return it.startTime + it.secondsPerBeat * (beats - it.startBeat);
         }
 
         auto& it = sections[0];
-        return it.startTime + TimeDuration::fromSeconds (it.secondsPerBeat * (beats - it.startBeat).inBeats());
+        return it.startTime + it.secondsPerBeat * (beats - it.startBeat);
     }
 
     inline TimePosition toTime (const std::vector<Sequence::Section>& sections, BarsAndBeats barsBeats)
@@ -287,10 +332,10 @@ namespace details
 
             if (it.barNumberOfFirstBar == barsBeats.bars + 1
                   && barsBeats.beats.inBeats() >= it.prevNumerator - it.beatsUntilFirstBar.inBeats())
-                return TimePosition::fromSeconds (it.timeOfFirstBar.inSeconds() - it.secondsPerBeat * (it.prevNumerator - barsBeats.beats.inBeats()));
+                return it.timeOfFirstBar - it.secondsPerBeat * (BeatDuration::fromBeats (it.prevNumerator) - barsBeats.beats);
 
             if (it.barNumberOfFirstBar <= barsBeats.bars || i == 0)
-                return TimePosition::fromSeconds (it.timeOfFirstBar.inSeconds() + it.secondsPerBeat * (((barsBeats.bars - it.barNumberOfFirstBar) * it.numerator) + barsBeats.beats.inBeats()));
+                return it.timeOfFirstBar + it.secondsPerBeat * (BeatDuration::fromBeats (((barsBeats.bars - it.barNumberOfFirstBar) * it.numerator)) + barsBeats.beats);
         }
 
         return {};
@@ -304,7 +349,7 @@ namespace details
 
             if (it.startTime <= time || i == 0)
             {
-                const auto beatsSinceFirstBar = (time - it.timeOfFirstBar).inSeconds() * it.beatsPerSecond;
+                const auto beatsSinceFirstBar = ((time - it.timeOfFirstBar) * it.beatsPerSecond).inBeats();
 
                 if (beatsSinceFirstBar < 0)
                     return { it.barNumberOfFirstBar + (int) std::floor (beatsSinceFirstBar / it.numerator),
@@ -422,9 +467,9 @@ inline Sequence::Sequence (std::vector<TempoChange> tempos, std::vector<TimeSigC
         if (nextTempoValid && (currTempo.curve != -1.0f && currTempo.curve != 1.0f))
             numSubdivisions = static_cast<int> (std::clamp (4.0 * (tempos[tempoIdx].startBeat - currentBeat).inBeats(), 1.0, 100.0));
 
-        const auto numBeats = (i < beatsWithChanges.size() - 1)
-                                    ? ((beatsWithChanges[i + 1] - currentBeat).inBeats() / (double) numSubdivisions)
-                                    : 1.0e6;
+        const auto numBeats = BeatDuration::fromBeats ((i < beatsWithChanges.size() - 1)
+                                                            ? ((beatsWithChanges[i + 1] - currentBeat).inBeats() / (double) numSubdivisions)
+                                                            : 1.0e6);
 
         for (int k = 0; k < numSubdivisions; ++k)
         {
@@ -438,12 +483,12 @@ inline Sequence::Sequence (std::vector<TempoChange> tempos, std::vector<TimeSigC
             it.startTime        = time;
             it.startBeat        = beatNum;
 
-            it.secondsPerBeat   = useDenominator ? (240.0 / (bpm * it.denominator))
-                                                 : (60.0 / bpm);
+            it.secondsPerBeat   = SecondsPerBeat { useDenominator ? (240.0 / (bpm * it.denominator))
+                                                                  : (60.0 / bpm) };
             it.beatsPerSecond   = 1.0 / it.secondsPerBeat;
 
             it.ppqAtStart = ppq;
-            ppq += 4 * numBeats / it.denominator;
+            ppq += 4 * numBeats.inBeats() / it.denominator;
 
             if (sections.empty())
             {
@@ -455,8 +500,8 @@ inline Sequence::Sequence (std::vector<TempoChange> tempos, std::vector<TimeSigC
             {
                 const auto& prevSection = sections[sections.size() - 1];
 
-                const auto beatsSincePreviousBarUntilStart = (time - prevSection.timeOfFirstBar).inSeconds() * prevSection.beatsPerSecond;
-                const auto barsSincePrevBar = (int) std::ceil (beatsSincePreviousBarUntilStart / prevSection.numerator - 1.0e-5);
+                const auto beatsSincePreviousBarUntilStart = (time - prevSection.timeOfFirstBar) * prevSection.beatsPerSecond;
+                const auto barsSincePrevBar = (int) std::ceil (beatsSincePreviousBarUntilStart.inBeats() / prevSection.numerator - 1.0e-5);
 
                 it.barNumberOfFirstBar = prevSection.barNumberOfFirstBar + barsSincePrevBar;
 
@@ -464,7 +509,7 @@ inline Sequence::Sequence (std::vector<TempoChange> tempos, std::vector<TimeSigC
                                                                              + (barsSincePrevBar * prevSection.numerator));
 
                 it.beatsUntilFirstBar = beatNumInEditOfNextBar - it.startBeat;
-                it.timeOfFirstBar = time + TimeDuration::fromSeconds (it.beatsUntilFirstBar.inBeats() * it.secondsPerBeat);
+                it.timeOfFirstBar = time + it.beatsUntilFirstBar * it.secondsPerBeat;
 
                 for (int j = (int) sections.size(); --j >= 0;)
                 {
@@ -480,8 +525,8 @@ inline Sequence::Sequence (std::vector<TempoChange> tempos, std::vector<TimeSigC
 
             sections.push_back (it);
 
-            time = time + TimeDuration::fromSeconds (numBeats * it.secondsPerBeat);
-            beatNum = beatNum + BeatDuration::fromBeats (numBeats);
+            time = time + numBeats * it.secondsPerBeat;
+            beatNum = beatNum + numBeats;
 
             bpm = nextTempoValid ? calcCurveBpm (beatNum.inBeats(), currTempo, tempos[tempoIdx])
                                  : currTempo.bpm;
@@ -554,7 +599,7 @@ inline double Sequence::getBpmAt (TimePosition t) const
     return 120.0;
 }
 
-inline double Sequence::getBeatsPerSecondAt (TimePosition t) const
+inline BeatsPerSecond Sequence::getBeatsPerSecondAt (TimePosition t) const
 {
     for (int i = (int) sections.size(); --i >= 0;)
     {
@@ -565,7 +610,7 @@ inline double Sequence::getBeatsPerSecondAt (TimePosition t) const
     }
 
     assert(false);
-    return 2.0;
+    return { 2.0 };
 }
 
 inline size_t Sequence::hash() const
@@ -591,13 +636,13 @@ inline Sequence::Position::Position (const Position& o)
 inline BeatPosition Sequence::Position::getBeats() const
 {
     const auto& it = sections[index];
-    return BeatPosition::fromBeats (it.startBeat.inBeats() + (time - it.startTime).inSeconds() * it.beatsPerSecond);
+    return it.startBeat + (time - it.startTime) * it.beatsPerSecond;
 }
 
 inline BarsAndBeats Sequence::Position::getBarsBeats() const
 {
     const auto& it = sections[index];
-    const auto beatsSinceFirstBar = (time - it.timeOfFirstBar).inSeconds() * it.beatsPerSecond;
+    const auto beatsSinceFirstBar = ((time - it.timeOfFirstBar) * it.beatsPerSecond).inBeats();
 
     if (beatsSinceFirstBar < 0)
         return { it.barNumberOfFirstBar + (int) std::floor (beatsSinceFirstBar / it.numerator),
@@ -677,7 +722,7 @@ inline void Sequence::Position::add (BeatDuration beats)
         {
             auto maxIndex = sections.size() - 1;
             const auto& it = sections[index];
-            auto beatTime = TimeDuration::fromSeconds (it.secondsPerBeat * beats.inBeats());
+            auto beatTime = it.secondsPerBeat * beats;
 
             if (index >= maxIndex
                  || sections[index + 1].startTime > (time + beatTime))
@@ -688,7 +733,7 @@ inline void Sequence::Position::add (BeatDuration beats)
 
             ++index;
             auto nextStart = sections[index].startTime;
-            beats = beats - BeatDuration::fromBeats ((nextStart - time).inSeconds() * it.beatsPerSecond);
+            beats = beats - (nextStart - time) * it.beatsPerSecond;
             time = nextStart;
         }
     }
@@ -697,7 +742,7 @@ inline void Sequence::Position::add (BeatDuration beats)
         for (;;)
         {
             const auto& it = sections[index];
-            auto beatTime = TimeDuration::fromSeconds (it.secondsPerBeat * beats.inBeats());
+            const auto beatTime = it.secondsPerBeat * beats;
 
             if (index <= 0
                  || sections[index].startTime <= (time + beatTime))
@@ -706,7 +751,7 @@ inline void Sequence::Position::add (BeatDuration beats)
                 break;
             }
 
-            beats = beats + BeatDuration::fromBeats ((time - it.startTime).inSeconds() * it.beatsPerSecond);
+            beats = beats + (time - it.startTime) * it.beatsPerSecond;
             time = sections[index].startTime;
             --index;
         }
@@ -730,16 +775,16 @@ inline void Sequence::Position::setPPQTime (double ppq)
     }
 
     const auto& it = sections[index];
-    auto beatsSinceStart = ((ppq - it.ppqAtStart) * it.denominator) / 4.0;
-    time = TimePosition::fromSeconds ((beatsSinceStart * it.secondsPerBeat)) + toDuration (it.startTime);
+    const auto beatsSinceStart = BeatPosition::fromBeats (((ppq - it.ppqAtStart) * it.denominator) / 4.0);
+    time = (beatsSinceStart * it.secondsPerBeat) + toDuration (it.startTime);
 }
 
 inline double Sequence::Position::getPPQTime() const noexcept
 {
     const auto& it = sections[index];
-    auto beatsSinceStart = (time - it.startTime).inSeconds() * it.beatsPerSecond;
+    const auto beatsSinceStart = (time - it.startTime) * it.beatsPerSecond;
 
-    return it.ppqAtStart + 4.0 * beatsSinceStart / it.denominator;
+    return it.ppqAtStart + 4.0 * beatsSinceStart.inBeats() / it.denominator;
 }
 
 inline double Sequence::Position::getPPQTimeOfBarStart() const noexcept
@@ -747,7 +792,7 @@ inline double Sequence::Position::getPPQTimeOfBarStart() const noexcept
     for (int i = int (index) + 1; --i >= 0;)
     {
         const auto& it = sections[(size_t) i];
-        const double beatsSinceFirstBar = (time - it.timeOfFirstBar).inSeconds() * it.beatsPerSecond;
+        const auto beatsSinceFirstBar = ((time - it.timeOfFirstBar) * it.beatsPerSecond).inBeats();
 
         if (beatsSinceFirstBar >= -it.beatsUntilFirstBar.inBeats() || i == 0)
         {
