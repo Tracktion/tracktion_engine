@@ -69,22 +69,14 @@ class RackNodePlayer
 {
 public:
     /** Creates an RackNodePlayer to process an Node with input. */
-    RackNodePlayer (std::unique_ptr<tracktion::graph::Node> nodeToProcess,
-                    std::shared_ptr<InputProvider> inputProviderToUse,
-                    bool overrideInputProvider)
-        : inputProvider (std::move (inputProviderToUse)),
-          overrideInputs (overrideInputProvider)
+    RackNodePlayer (std::unique_ptr<tracktion::graph::Node> nodeToProcess)
     {
         nodePlayer.setNode (std::move (nodeToProcess));
     }
 
     /** Creates an RackNodePlayer to process an Node with input, sample rate and block size. */
     RackNodePlayer (std::unique_ptr<tracktion::graph::Node> nodeToProcess,
-                    std::shared_ptr<InputProvider> inputProviderToUse,
-                    bool overrideInputProvider,
                     double sampleRateToUse, int blockSizeToUse)
-        : inputProvider (std::move (inputProviderToUse)),
-          overrideInputs (overrideInputProvider)
     {
         nodePlayer.setNode (std::move (nodeToProcess), sampleRateToUse, blockSizeToUse);
     }
@@ -116,25 +108,17 @@ public:
     int process (const tracktion::graph::Node::ProcessContext& pc,
                  TimePosition editTime, bool isPlaying, bool isScrubbing, bool isRendering)
     {
-        if (overrideInputs)
-            inputProvider->setInputs (pc.buffers);
-
         // The internal nodes won't be interested in the top level audio/midi inputs
         // They should only be referencing this for time and continuity
         tracktion::engine::PluginRenderContext rc (nullptr, juce::AudioChannelSet(), 0, 0,
                                                   nullptr, 0.0,
                                                   editTime, isPlaying, isScrubbing, isRendering, true);
 
-        inputProvider->setContext (&rc);
-     
         return nodePlayer.process (pc);
     }
     
 private:
     NodePlayerType nodePlayer;
-    
-    std::shared_ptr<InputProvider> inputProvider;
-    bool overrideInputs = true;
 };
 
 
@@ -142,30 +126,11 @@ private:
 //==============================================================================
 namespace RackNodeBuilder
 {
-    enum class Algorithm
-    {
-        remappingNode, /**< An algorithm using ChannelRemappingNodes. */
-        connectedNode  /**< An algorithm using ConnectedNodes. Should use less Nodes but is less well tested. */
-    };
-
-    //==============================================================================
-    /** Creates a Node for processing a Rack.
-        The InputProvider must be used for providing audio and MIDI input to the Rack.
-    */
-    std::unique_ptr<tracktion::graph::Node> createRackNode (Algorithm,
-                                                           tracktion::engine::RackType&,
-                                                           double sampleRate, int blockSize,
-                                                           std::shared_ptr<InputProvider>,
-                                                           tracktion::graph::PlayHeadState* playHeadState = nullptr,
-                                                           bool isRendering = true);
-
-    //==============================================================================
     /** Creates a Node for processing a Rack where the input comes from a Node. */
-    std::unique_ptr<tracktion::graph::Node> createRackNode (Algorithm,
-                                                           tracktion::engine::RackType&,
-                                                           double sampleRate, int blockSize,
-                                                           std::unique_ptr<tracktion::graph::Node>,
-                                                           tracktion::graph::PlayHeadState&, bool isRendering);
+    std::unique_ptr<tracktion::graph::Node> createRackNode (tracktion::engine::RackType&,
+                                                            double sampleRate, int blockSize,
+                                                            std::unique_ptr<tracktion::graph::Node>,
+                                                            ProcessState&, bool isRendering);
 }
 
 }} // namespace tracktion { inline namespace engine

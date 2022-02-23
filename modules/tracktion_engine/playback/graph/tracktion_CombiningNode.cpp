@@ -83,7 +83,7 @@ struct CombiningNode::TimedNode
         
         // Process all the Nodes
         for (auto n : nodesToProcess)
-            n->process (pc.referenceSampleRange);
+            n->process (pc.numSamples, pc.referenceSampleRange);
         
         // Then get the output from the source Node
         auto nodeOutput = node->getProcessedOutput();

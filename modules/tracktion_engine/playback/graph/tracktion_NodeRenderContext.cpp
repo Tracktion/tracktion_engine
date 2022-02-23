@@ -256,7 +256,7 @@ bool NodeRenderContext::renderNextBlock (std::atomic<float>& progressToUpdate)
                                                           (choc::buffer::ChannelCount) renderingBuffer.getNumChannels(),
                                                           (choc::buffer::FrameCount) referenceSampleRange.getLength());
 
-    nodePlayer->process ({ referenceSampleRange, { destView, midiBuffer} });
+    nodePlayer->process ({ (choc::buffer::FrameCount) referenceSampleRange.getLength(), referenceSampleRange, { destView, midiBuffer} });
 
     if (precount <= 0)
     {
@@ -436,7 +436,7 @@ juce::String NodeRenderContext::renderMidi (Renderer::RenderTask& owner,
         auto destView = choc::buffer::createChannelArrayView (renderingBuffer.getArrayOfWritePointers(),
                                                               (choc::buffer::ChannelCount) renderingBuffer.getNumChannels(), (choc::buffer::FrameCount) referenceSampleRange.getLength());
 
-        nodePlayer->process ({ referenceSampleRange, { destView, blockMidiBuffer} });
+        nodePlayer->process ({ (choc::buffer::FrameCount) referenceSampleRange.getLength(), referenceSampleRange, { destView, blockMidiBuffer} });
 
         // Set MIDI messages to beats and update final sequence
         for (auto& m : blockMidiBuffer)

@@ -19,14 +19,19 @@ struct ProcessState
     /** Creates a ProcessState. */
     ProcessState (tracktion::graph::PlayHeadState&);
 
+    /** Creates a ProcessState that will update the editBeatRange field. */
+    ProcessState (tracktion::graph::PlayHeadState&, const TempoSequence&);
+
     /** Updates the internal state based on a reference sample range and PlayHeadState. */
     void update (double sampleRate, juce::Range<int64_t> referenceSampleRange);
-    
+
     tracktion::graph::PlayHeadState& playHeadState;
+    std::unique_ptr<TempoSequencePosition> tempoPosition;
     double sampleRate = 44100.0;
     int numSamples = 0;
     juce::Range<int64_t> referenceSampleRange, timelineSampleRange;
     TimeRange editTimeRange;
+    BeatRange editBeatRange;
 };
 
 

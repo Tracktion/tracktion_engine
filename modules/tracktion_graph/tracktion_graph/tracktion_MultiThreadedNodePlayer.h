@@ -76,6 +76,7 @@ public:
 private:
     //==============================================================================
     std::atomic<size_t> numThreadsToUse { std::max ((size_t) 0, (size_t) std::thread::hardware_concurrency() - 1) };
+    choc::buffer::FrameCount numSamplesToProcess;
     juce::Range<int64_t> referenceSampleRange;
     std::atomic<bool> threadsShouldExit { false };
 

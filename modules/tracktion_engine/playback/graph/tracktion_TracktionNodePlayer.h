@@ -83,28 +83,33 @@ public:
         
         if (splitTimelineRange.isSplit)
         {
-            const auto firstNumSamples = (choc::buffer::FrameCount) splitTimelineRange.timelineRange1.getLength();
-            const auto firstRange = pc.referenceSampleRange.withLength (firstNumSamples);
+            const auto firstProportion = splitTimelineRange.timelineRange1.getLength() / (double) pc.referenceSampleRange.getLength();
+
+            const auto firstReferenceRange  = pc.referenceSampleRange.withEnd (pc.referenceSampleRange.getStart() + (int64_t) std::llround (pc.referenceSampleRange.getLength() * firstProportion));
+            const auto secondReferenceRange = juce::Range<int64_t> (firstReferenceRange.getEnd(), pc.referenceSampleRange.getEnd());
+            jassert (firstReferenceRange.getLength() + secondReferenceRange.getLength() == pc.referenceSampleRange.getLength());
+
+            const auto firstNumSamples  = (choc::buffer::FrameCount) std::llround (pc.numSamples * firstProportion);
+            const auto secondNumSamples = pc.numSamples - firstNumSamples;
+            jassert (firstNumSamples + secondNumSamples == pc.numSamples);
 
             {
                 auto destAudio = pc.buffers.audio.getStart (firstNumSamples);
                 auto& destMidi = pc.buffers.midi;
-                
-                processState.update (nodePlayer.getSampleRate(), firstRange);
-                tracktion::graph::Node::ProcessContext pc1 { firstRange, { destAudio , destMidi } };
+
+                processState.update (nodePlayer.getSampleRate(), firstReferenceRange);
+                tracktion::graph::Node::ProcessContext pc1 { firstNumSamples, firstReferenceRange, { destAudio , destMidi } };
                 numMisses += nodePlayer.process (pc1);
             }
-            
+
             {
                 const auto firstDuration = processState.editTimeRange.getLength();
-                const auto secondNumSamples = (choc::buffer::FrameCount) splitTimelineRange.timelineRange2.getLength();
-                const auto secondRange = juce::Range<int64_t>::withStartAndLength (firstRange.getEnd(), secondNumSamples);
-                
+
                 auto destAudio = pc.buffers.audio.getFrameRange ({ firstNumSamples, firstNumSamples + secondNumSamples });
                 scratchMidi.clear();
-                
-                tracktion::graph::Node::ProcessContext pc2 { secondRange, { destAudio, scratchMidi } };
-                processState.update (nodePlayer.getSampleRate(), secondRange);
+
+                tracktion::graph::Node::ProcessContext pc2 { secondNumSamples, secondReferenceRange, { destAudio, scratchMidi } };
+                processState.update (nodePlayer.getSampleRate(), secondReferenceRange);
                 numMisses += nodePlayer.process (pc2);
 
                 // Merge back MIDI from end of block

@@ -16,10 +16,15 @@ ProcessState::ProcessState (tracktion::graph::PlayHeadState& phs)
 {
 }
 
+ProcessState::ProcessState (tracktion::graph::PlayHeadState& phs, const TempoSequence& seq)
+    : playHeadState (phs), tempoPosition (std::make_unique<TempoSequencePosition> (seq))
+{
+}
+
 void ProcessState::update (double newSampleRate, juce::Range<int64_t> newReferenceSampleRange)
 {
     if (sampleRate != newSampleRate)
-        playHeadState.playHead.setScrubbingBlockLength (tracktion::graph::timeToSample (0.08, newSampleRate));
+        playHeadState.playHead.setScrubbingBlockLength (toSamples (TimeDuration (0.08s), newSampleRate));
     
     playHeadState.playHead.setReferenceSampleRange (newReferenceSampleRange);
     playHeadState.update (newReferenceSampleRange);
@@ -34,9 +39,17 @@ void ProcessState::update (double newSampleRate, juce::Range<int64_t> newReferen
     jassert (timelineSampleRange.getLength() == 0
              || timelineSampleRange.getLength() == newReferenceSampleRange.getLength());
 
-    editTimeRange = tracktion::timeRangeFromSamples (timelineSampleRange, sampleRate);
-}
+    editTimeRange = timeRangeFromSamples (timelineSampleRange, sampleRate);
 
+    if (! tempoPosition)
+        return;
+    
+    tempoPosition->setTime (editTimeRange.getStart());
+    const auto beatStart = tempoPosition->getBeats();
+    tempoPosition->setTime (editTimeRange.getEnd());
+    const auto beatEnd = tempoPosition->getBeats();
+    editBeatRange = { beatStart, beatEnd };
+}
 
 //==============================================================================
 //==============================================================================

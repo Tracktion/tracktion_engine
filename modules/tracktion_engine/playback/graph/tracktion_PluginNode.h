@@ -19,22 +19,14 @@ class TrackMuteState;
 /**
     Node for processing a plugin.
 */
-class PluginNode final  : public tracktion::graph::Node
+class PluginNode final  : public tracktion::graph::Node,
+                          public TracktionEngineNode
 {
 public:
     //==============================================================================
-    /** Creates a PluginNode to process a plugin on in a Rack with an InputProvider.
-        @param InputProvider            The InputProvider to provide inputs and a PluginRenderContext
-     
-    */
-    PluginNode (std::unique_ptr<Node> input,
-                tracktion::engine::Plugin::Ptr,
-                double sampleRateToUse, int blockSizeToUse,
-                std::shared_ptr<InputProvider>);
-
     /** Creates a PluginNode to process a plugin on a Track.
         @param const TrackMuteState*    The optional TrackMuteState to use
-        @param PlayHeadState            The PlayHeadState to monitor for jumps
+        @param ProcessState             The ProcessState for playhead access and time mapping
         @param rendering                Should be true if this is an offline render
         @param balanceLatency           If set to true, this creates a copy of the dry input and
                                         delays it by the plugin's latency and uses this when the
@@ -47,7 +39,7 @@ public:
                 tracktion::engine::Plugin::Ptr,
                 double sampleRateToUse, int blockSizeToUse,
                 const TrackMuteState*,
-                tracktion::graph::PlayHeadState&,
+                ProcessState&,
                 bool rendering, bool balanceLatency,
                 int maxNumChannelsToUse);
 
@@ -68,10 +60,9 @@ private:
     //==============================================================================
     std::unique_ptr<Node> input;
     tracktion::engine::Plugin::Ptr plugin;
-    std::shared_ptr<InputProvider> audioRenderContextProvider;
 
     const TrackMuteState* trackMuteState = nullptr;
-    tracktion::graph::PlayHeadState* playHeadState = nullptr;
+    tracktion::graph::PlayHeadState& playHeadState;
     bool isRendering = false;
     
     bool isInitialised = false;
@@ -86,7 +77,7 @@ private:
 
     //==============================================================================
     void initialisePlugin (double sampleRateToUse, int blockSizeToUse);
-    PluginRenderContext getPluginRenderContext (int64_t, juce::AudioBuffer<float>&);
+    PluginRenderContext getPluginRenderContext (TimePosition, juce::AudioBuffer<float>&);
     void replaceLatencyProcessorIfPossible (Node*);
 };
 

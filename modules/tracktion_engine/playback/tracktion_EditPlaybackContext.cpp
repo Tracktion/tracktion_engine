@@ -138,8 +138,9 @@ private:
 //==============================================================================
  struct EditPlaybackContext::NodePlaybackContext
  {
-     NodePlaybackContext (size_t numThreads, size_t maxNumThreadsToUse)
-        : player (processState, getPoolCreatorFunction (static_cast<tracktion::graph::ThreadPoolStrategy> (getThreadPoolStrategy()))),
+     NodePlaybackContext (const TempoSequence& ts, size_t numThreads, size_t maxNumThreadsToUse)
+        : tempoSequence (ts),
+          player (processState, getPoolCreatorFunction (static_cast<tracktion::graph::ThreadPoolStrategy> (getThreadPoolStrategy()))),
           maxNumThreads (maxNumThreadsToUse)
      {
          setNumThreads (numThreads);
@@ -191,22 +192,34 @@ private:
      {
          speedCompensation = juce::jlimit (-10.0, 10.0, plusOrMinus);
      }
+
+     void nudge (double nudgeAmmount)
+     {
+         blockLengthScaleFactor = 1.0 + std::clamp (nudgeAmmount, -0.5, 0.5);
+     }
      
      void updateReferenceSampleRange (int numSamples)
      {
          if (speedCompensation != 0.0)
              numSamples = juce::roundToInt (numSamples * (1.0 + (speedCompensation * 0.01)));
 
-         referenceSampleRange = juce::Range<int64_t>::withStartAndLength (referenceSampleRange.getEnd(), (int64_t) numSamples);
-         playHead.setReferenceSampleRange (referenceSampleRange);
+         double sampleDuration = static_cast<double> (numSamples);
+
+         if (blockLengthScaleFactor != 1.0)
+             sampleDuration *= blockLengthScaleFactor;
+
+         referenceStreamRange = juce::Range<double>::withStartAndLength (referenceStreamRange.getEnd(), sampleDuration);
+         playHead.setReferenceSampleRange (getReferenceSampleRange());
+         numSamplesToProcess = static_cast<choc::buffer::FrameCount> (numSamples);
      }
      
      void resyncToReferenceSampleRange (juce::Range<int64_t> newReferenceSampleRange)
      {
          const double sampleRate = getSampleRate();
          const auto currentPos = tracktion::graph::sampleToTime (playHead.getPosition(), sampleRate);
-         referenceSampleRange = newReferenceSampleRange;
-         playHead.setReferenceSampleRange (referenceSampleRange);
+         referenceStreamRange = juce::Range<double> (static_cast<double> (newReferenceSampleRange.getStart()),
+                                                     static_cast<double> (newReferenceSampleRange.getEnd()));
+         playHead.setReferenceSampleRange (getReferenceSampleRange());
          playHead.setPosition (tracktion::graph::timeToSample (currentPos, sampleRate));
      }
      
@@ -221,25 +234,25 @@ private:
              else
                  playHead.setPosition (samplePos);
          }
-         
-         const auto numSamples = referenceSampleRange.getLength();
+
+         const auto referenceSampleRange = getReferenceSampleRange();
          scratchMidiBuffer.clear();
 
-         if (isUsingInterpolator || destNumSamples != numSamples)
+         if (isUsingInterpolator || destNumSamples != (int) numSamplesToProcess)
          {
              // Initialise interpolators
              isUsingInterpolator = true;
              ensureNumInterpolators (numChannels);
              
              // Process required num samples
-             scratchAudioBuffer.setSize (numChannels, (int) numSamples, false, false, true);
+             scratchAudioBuffer.setSize (numChannels, (int) numSamplesToProcess, false, false, true);
              scratchAudioBuffer.clear();
              
-             tracktion::graph::Node::ProcessContext pc { referenceSampleRange, { tracktion::graph::toBufferView (scratchAudioBuffer), scratchMidiBuffer } };
+             tracktion::graph::Node::ProcessContext pc { numSamplesToProcess, referenceSampleRange, { tracktion::graph::toBufferView (scratchAudioBuffer), scratchMidiBuffer } };
              player.process (pc);
              
              // Then resample them to the dest num samples
-             const double ratio = numSamples / (double) destNumSamples;
+             const double ratio = numSamplesToProcess / (double) destNumSamples;
              
              for (int channel = 0; channel < numChannels; ++channel)
              {
@@ -253,8 +266,8 @@ private:
          {
              auto audioView = choc::buffer::createChannelArrayView (allChannels,
                                                                     (choc::buffer::ChannelCount) numChannels,
-                                                                    (choc::buffer::FrameCount) numSamples);
-             tracktion::graph::Node::ProcessContext pc { referenceSampleRange, { audioView, scratchMidiBuffer } };
+                                                                    numSamplesToProcess);
+             tracktion::graph::Node::ProcessContext pc { numSamplesToProcess, referenceSampleRange, { audioView, scratchMidiBuffer } };
              player.process (pc);
          }
      }
@@ -263,10 +276,11 @@ private:
      {
          return player.getSampleRate();
      }
-     
+
+     const TempoSequence& tempoSequence;
      tracktion::graph::PlayHead playHead;
      tracktion::graph::PlayHeadState playHeadState { playHead };
-     ProcessState processState { playHeadState };
+     ProcessState processState { playHeadState, tempoSequence };
      
  private:
      juce::AudioBuffer<float> scratchAudioBuffer;
@@ -275,12 +289,19 @@ private:
      const size_t maxNumThreads;
      
      int latencySamples = 0;
-     juce::Range<int64_t> referenceSampleRange;
+     choc::buffer::FrameCount numSamplesToProcess = 0;
+     juce::Range<double> referenceStreamRange;
      std::atomic<double> pendingPosition { 0.0 };
      std::atomic<bool> positionUpdatePending { false }, pendingRollInToLoop { false };
-     double speedCompensation = 0.0;
+     double speedCompensation = 0.0, blockLengthScaleFactor = 1.0;
      std::vector<std::unique_ptr<juce::LagrangeInterpolator>> interpolators;
      bool isUsingInterpolator = false;
+
+     juce::Range<int64_t> getReferenceSampleRange() const
+     {
+         return { static_cast<int64_t> (std::llround (referenceStreamRange.getStart())),
+                  static_cast<int64_t> (std::llround (referenceStreamRange.getEnd())) };
+     }
      
      void ensureNumInterpolators (int numRequired)
      {
@@ -318,7 +339,8 @@ EditPlaybackContext::EditPlaybackContext (TransportControl& tc)
 
     if (edit.shouldPlay())
     {
-        nodePlaybackContext = std::make_unique<NodePlaybackContext> (edit.engine.getEngineBehaviour().getNumberOfCPUsToUseForAudio(),
+        nodePlaybackContext = std::make_unique<NodePlaybackContext> (edit.tempoSequence,
+                                                                     edit.engine.getEngineBehaviour().getNumberOfCPUsToUseForAudio(),
                                                                      size_t (edit.getIsPreviewEdit() ? 0 : juce::SystemStats::getNumCpus() - 1));
         contextSyncroniser = std::make_unique<ContextSyncroniser>();
 
@@ -882,6 +904,12 @@ void EditPlaybackContext::setSpeedCompensation (double plusOrMinus)
 {
     if (nodePlaybackContext)
         nodePlaybackContext->setSpeedCompensation (plusOrMinus);
+}
+
+void EditPlaybackContext::nudge (double nudgeProportion)
+{
+    if (nodePlaybackContext)
+        nodePlaybackContext->nudge (nudgeProportion);
 }
 
 void EditPlaybackContext::postPosition (TimePosition newPosition)

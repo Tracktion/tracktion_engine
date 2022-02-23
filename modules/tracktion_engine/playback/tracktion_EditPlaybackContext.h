@@ -96,6 +96,7 @@ public:
     double getSampleRate() const;
     void updateNumCPUs();
     void setSpeedCompensation (double plusOrMinus);
+    void nudge (double nudgeProportion);
     void postPosition (TimePosition);
     void play();
     void stop();

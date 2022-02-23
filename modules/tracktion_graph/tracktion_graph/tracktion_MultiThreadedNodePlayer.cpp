@@ -235,6 +235,7 @@ int MultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
     const std::lock_guard<RealTimeSpinLock> lock (preparedNodeMutex);
     
     // Reset the stream range
+    numSamplesToProcess = pc.numSamples;
     referenceSampleRange = pc.referenceSampleRange;
 
     // Prepare all the nodes to be played back
@@ -244,7 +245,7 @@ int MultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
     if (numThreadsToUse.load (std::memory_order_acquire) == 0)
     {
         for (auto node : preparedNode->allNodes)
-            node->process (referenceSampleRange);
+            node->process (numSamplesToProcess, referenceSampleRange);
     }
     else
     {
@@ -499,7 +500,7 @@ void MultiThreadedNodePlayer::processNode (Node& node)
         #endif
 
         // Process Node
-        nodeToProcess->process (referenceSampleRange);
+        nodeToProcess->process (numSamplesToProcess, referenceSampleRange);
         nodeToProcess = updateProcessQueueForNode (*nodeToProcess);
 
         if (! nodeToProcess)

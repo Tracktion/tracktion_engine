@@ -444,7 +444,7 @@ namespace test_utilities
                 if (playHead)
                     playHead->setReferenceSampleRange (referenceSampleRange);
 
-                numProcessMisses += player->process ({ referenceSampleRange, { subSectionView, midi } });
+                numProcessMisses += player->process ({ (choc::buffer::FrameCount) numThisTime, referenceSampleRange, { subSectionView, midi } });
 
                 if (writer)
                 {

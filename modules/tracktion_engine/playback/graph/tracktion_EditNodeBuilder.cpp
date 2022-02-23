@@ -710,7 +710,7 @@ std::unique_ptr<tracktion::graph::Node> createSidechainInputNodeForPlugin (Plugi
 }
 
 std::unique_ptr<tracktion::graph::Node> createNodeForPlugin (Plugin& plugin, const TrackMuteState* trackMuteState, std::unique_ptr<Node> node,
-                                                            tracktion::graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
+                                                             const CreateNodeParams& params)
 {
     jassert (node != nullptr);
 
@@ -731,7 +731,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForPlugin (Plugin& plugin, con
     node = tracktion::graph::makeNode<PluginNode> (std::move (node),
                                                   plugin,
                                                   params.sampleRate, params.blockSize,
-                                                  trackMuteState, playHeadState,
+                                                  trackMuteState, params.processState,
                                                   params.forRendering, params.includeBypassedPlugins,
                                                   maxNumChannels);
 
@@ -802,11 +802,11 @@ std::unique_ptr<tracktion::graph::Node> createPluginNodeForList (PluginList& lis
         else if (auto insertPlugin = dynamic_cast<InsertPlugin*> (p))
         {
             node = makeNode<InsertSendReturnDependencyNode> (std::move (node), *insertPlugin);
-            node = createNodeForPlugin (*p, trackMuteState, std::move (node), playHeadState, params);
+            node = createNodeForPlugin (*p, trackMuteState, std::move (node), params);
         }
         else
         {
-            node = createNodeForPlugin (*p, trackMuteState, std::move (node), playHeadState, params);
+            node = createNodeForPlugin (*p, trackMuteState, std::move (node), params);
         }
     }
 
@@ -1103,9 +1103,8 @@ std::unique_ptr<Node> createNodeForRackType (RackType& rackType, const CreateNod
     const auto rackOutputID = getRackOutputBusID (rackType.rackID);
     
     auto rackInputNode = makeNode<ReturnNode> (rackInputID);
-    auto rackNode = RackNodeBuilder::createRackNode (RackNodeBuilder::Algorithm::connectedNode,
-                                                     rackType, params.sampleRate, params.blockSize, std::move (rackInputNode),
-                                                     params.processState.playHeadState, params.forRendering);
+    auto rackNode = RackNodeBuilder::createRackNode (rackType, params.sampleRate, params.blockSize, std::move (rackInputNode),
+                                                     params.processState, params.forRendering);
     auto rackOutputNode = makeNode<SendNode> (std::move (rackNode), rackOutputID);
 
     return makeNode<SinkNode> (std::move (rackOutputNode));
@@ -1243,7 +1242,7 @@ std::unique_ptr<tracktion::graph::Node> createMasterPluginsNode (Edit& edit, tra
                                       nullptr, std::move (node), playHeadState, params);
 
     if (auto masterVolPlugin = edit.getMasterVolumePlugin())
-        node = createNodeForPlugin (*masterVolPlugin, nullptr, std::move (node), playHeadState, params);
+        node = createNodeForPlugin (*masterVolPlugin, nullptr, std::move (node), params);
     
     return node;
 }

@@ -165,14 +165,15 @@ public:
     
     /** Call to process the node, which will in turn call the process method with the
         buffers to fill.
+        @param numSamples           The number of samples that need to be processed.
         @param referenceSampleRange The monotonic stream time in samples.
                                     This will be passed to the ProcessContext during the
                                     process callback so nodes can use this to determine file
-                                    reading positions etc.
-                                    Some nodes may ignore this completely but it should at the
-                                    least specify the number to samples to process in this block.
+                                    reading positions etc. Some nodes may ignore this completely.
+                                    N.B. the length of this may be different to the number of
+                                    samples to be processed so don't rely on them being the same!
     */
-    void process (juce::Range<int64_t> referenceSampleRange);
+    void process (choc::buffer::FrameCount numSamples, juce::Range<int64_t> referenceSampleRange);
     
     /** Returns true if this node has processed and its outputs can be retrieved. */
     bool hasProcessed() const;
@@ -213,6 +214,7 @@ public:
     /** Struct to describe a single iteration of a process call. */
     struct ProcessContext
     {
+        choc::buffer::FrameCount numSamples;
         juce::Range<int64_t> referenceSampleRange;
         AudioAndMidiBuffer buffers;
     };
@@ -380,7 +382,7 @@ inline void Node::prepareForNextBlock (juce::Range<int64_t> referenceSampleRange
     prefetchBlock (referenceSampleRange);
 }
 
-inline void Node::process (juce::Range<int64_t> referenceSampleRange)
+inline void Node::process (choc::buffer::FrameCount numSamples, juce::Range<int64_t> referenceSampleRange)
 {
    #if JUCE_DEBUG
     assert (! isBeingProcessed);
@@ -409,9 +411,8 @@ inline void Node::process (juce::Range<int64_t> referenceSampleRange)
     const auto numSamplesBeforeProcessing = audioBuffer.getNumFrames();
     juce::ignoreUnused (numChannelsBeforeProcessing, numSamplesBeforeProcessing);
 
-    auto numSamples = (int) referenceSampleRange.getLength();
     jassert (numSamples > 0); // This must be a valid number of samples to process
-    jassert (numChannelsBeforeProcessing == 0 || numSamples <= (int) audioBuffer.getNumFrames());
+    jassert (numChannelsBeforeProcessing == 0 || numSamples <= audioBuffer.getNumFrames());
     
     if (allocatedView.getSize() == audioBufferSize)
     {
@@ -425,10 +426,10 @@ inline void Node::process (juce::Range<int64_t> referenceSampleRange)
                                                                              : choc::buffer::ChannelArrayView<float> { {}, audioBufferSize }));
     }
     
-    audioView = audioView.getStart ((choc::buffer::FrameCount) numSamples);
+    audioView = audioView.getStart (numSamples);
 
     auto destAudioView = audioView;
-    ProcessContext pc { referenceSampleRange, { destAudioView, midiBuffer } };
+    ProcessContext pc { numSamples, referenceSampleRange, { destAudioView, midiBuffer } };
     process (pc);
     numSamplesProcessed.store ((int) numSamples, std::memory_order_release);
     

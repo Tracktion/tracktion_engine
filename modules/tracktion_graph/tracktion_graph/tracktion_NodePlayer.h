@@ -126,34 +126,38 @@ protected:
                                   const Node::ProcessContext& pc)
     {
         int numMisses = 0;
-        
+
         // Check to see if the timeline needs to be processed in two halves due to looping
         const auto splitTimelineRange = referenceSampleRangeToSplitTimelineRange (phs.playHead, pc.referenceSampleRange);
         
         if (splitTimelineRange.isSplit)
         {
-            const auto firstNumSamples = splitTimelineRange.timelineRange1.getLength();
-            const auto firstRange = pc.referenceSampleRange.withLength (firstNumSamples);
-            
+            const auto firstProportion = splitTimelineRange.timelineRange1.getLength() / (double) pc.referenceSampleRange.getLength();
+
+            const auto firstReferenceRange  = pc.referenceSampleRange.withEnd (pc.referenceSampleRange.getStart() + (int64_t) std::llround (pc.referenceSampleRange.getLength() * firstProportion));
+            const auto secondReferenceRange = juce::Range<int64_t> (firstReferenceRange.getEnd(), pc.referenceSampleRange.getEnd());
+            jassert (firstReferenceRange.getLength() + secondReferenceRange.getLength() == pc.referenceSampleRange.getLength());
+
+            const auto firstNumSamples  = (choc::buffer::FrameCount) std::llround (pc.numSamples * firstProportion);
+            const auto secondNumSamples = pc.numSamples - firstNumSamples;
+            jassert (firstNumSamples + secondNumSamples == pc.numSamples);
+
             {
-                auto inputAudio = pc.buffers.audio.getStart ((choc::buffer::FrameCount) firstNumSamples);
-                auto& inputMidi = pc.buffers.midi;
-                
-                phs.update (firstRange);
-                tracktion::graph::Node::ProcessContext pc1 { firstRange, { inputAudio , inputMidi } };
+                auto destAudio = pc.buffers.audio.getStart (firstNumSamples);
+                auto& destMidi = pc.buffers.midi;
+
+                phs.update (firstReferenceRange);
+                tracktion::graph::Node::ProcessContext pc1 { firstNumSamples, firstReferenceRange, { destAudio , destMidi } };
                 numMisses += processPostorderedNodes (rootNodeToProcess, nodes, pc1);
             }
-            
+
             {
-                const auto secondNumSamples = splitTimelineRange.timelineRange2.getLength();
-                const auto secondRange = juce::Range<int64_t>::withStartAndLength (firstRange.getEnd(), secondNumSamples);
-                
-                auto inputAudio = pc.buffers.audio.getFrameRange (tracktion::graph::frameRangeWithStartAndLength ((choc::buffer::FrameCount) firstNumSamples, (choc::buffer::FrameCount) secondNumSamples));
-                auto& inputMidi = pc.buffers.midi;
-                
+                auto destAudio = pc.buffers.audio.getFrameRange ({ firstNumSamples, firstNumSamples + secondNumSamples });
+                auto& destMidi = pc.buffers.midi;
+
                 //TODO: Use a scratch MidiMessageArray and then merge it back with the offset time
-                tracktion::graph::Node::ProcessContext pc2 { secondRange, { inputAudio , inputMidi } };
-                phs.update (secondRange);
+                tracktion::graph::Node::ProcessContext pc2 { secondNumSamples, secondReferenceRange, { destAudio, destMidi } };
+                phs.update (secondReferenceRange);
                 numMisses += processPostorderedNodes (rootNodeToProcess, nodes, pc2);
             }
         }
@@ -183,7 +187,7 @@ protected:
             {
                 if (! node->hasProcessed() && node->isReadyToProcess())
                 {
-                    node->process (pc.referenceSampleRange);
+                    node->process (pc.numSamples, pc.referenceSampleRange);
                     ++numNodesProcessed;
                 }
                 else

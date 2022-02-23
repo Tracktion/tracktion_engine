@@ -116,12 +116,10 @@ void MidiNode::processSection (ProcessContext& pc, juce::Range<int64_t> timeline
     if (shouldBeMutedDelegate && shouldBeMutedDelegate())
         return;
 
-    if (ms.size() > 0 && timelineRange.getStart() < lastStart )
-    {
-        currentSequence++;
-        if (currentSequence >= ms.size())
+    if (ms.size() > 0 && timelineRange.getStart() < lastStart)
+        if (++currentSequence >= ms.size())
             currentSequence = 0;
-    }
+
     lastStart = timelineRange.getStart();
 
     const auto sectionEditTime = getEditTimeRange();

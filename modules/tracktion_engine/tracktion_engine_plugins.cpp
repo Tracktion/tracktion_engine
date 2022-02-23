@@ -35,6 +35,7 @@ using namespace std::literals;
 
 #include "tracktion_engine.h"
 
+#include "playback/graph/tracktion_TracktionEngineNode.h"
 #include "playback/graph/tracktion_PluginNode.h"
 #include "playback/graph/tracktion_TrackMutingNode.h"
 #include "playback/graph/tracktion_RackNode.h"

@@ -45,7 +45,7 @@ public:
         
         // Then process them all in sequence
         for (auto node : orderedNodes)
-            node->process (pc.referenceSampleRange);
+            node->process (pc.numSamples, pc.referenceSampleRange);
 
         // Finally copy the output from the root Node to our player buffers
         auto output = rootNode->getProcessedOutput();

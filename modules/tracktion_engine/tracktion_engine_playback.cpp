@@ -48,6 +48,7 @@ extern "C"
 
 #include <tracktion_graph/tracktion_graph/tracktion_TestUtilities.h>
 #include <tracktion_graph/tracktion_graph/tracktion_TestNodes.h>
+#include <tracktion_graph/tracktion_graph/tracktion_PlayHead.h>
 
 #include "tracktion_engine.h"
 

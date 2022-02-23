@@ -29,7 +29,7 @@ namespace render_utils
         // Initialise playhead and continuity
         auto playHead = std::make_unique<tracktion::graph::PlayHead>();
         auto playHeadState = std::make_unique<tracktion::graph::PlayHeadState> (*playHead);
-        auto processState = std::make_unique<ProcessState> (*playHeadState);
+        auto processState = std::make_unique<ProcessState> (*playHeadState, r.edit->tempoSequence);
 
         CreateNodeParams cnp { *processState };
         cnp.sampleRate = r.sampleRateForAudio;
@@ -124,7 +124,7 @@ Renderer::RenderTask::RenderTask (const juce::String& taskDescription,
     // Initialise playhead and continuity
     playHead = std::make_unique<tracktion::graph::PlayHead>();
     playHeadState = std::make_unique<tracktion::graph::PlayHeadState> (*playHead);
-    processState = std::make_unique<ProcessState> (*playHeadState);
+    processState = std::make_unique<ProcessState> (*playHeadState, r.edit->tempoSequence);
 
     CreateNodeParams cnp { *processState };
     cnp.sampleRate = r.sampleRateForAudio;

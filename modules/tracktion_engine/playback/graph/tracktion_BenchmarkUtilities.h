@@ -124,7 +124,7 @@ namespace benchmark_utilities
 
         tracktion::graph::PlayHead playHead;
         tracktion::graph::PlayHeadState playHeadState { playHead };
-        ProcessState processState { playHeadState };
+        ProcessState processState { playHeadState, opts.edit->tempoSequence };
 
         //===
         ut.beginTest (opts.editName + " - building: " + description);

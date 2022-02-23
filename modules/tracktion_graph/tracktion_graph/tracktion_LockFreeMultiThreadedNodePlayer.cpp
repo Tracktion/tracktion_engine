@@ -80,6 +80,7 @@ int LockFreeMultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
         return -1;
 
     // Reset the stream range
+    numSamplesToProcess = pc.numSamples;
     referenceSampleRange = pc.referenceSampleRange;
 
     // Prepare all the nodes to be played back
@@ -92,7 +93,7 @@ int LockFreeMultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
     if (numThreadsToUse.load (std::memory_order_acquire) == 0 || preparedNode.allNodes.size() == 1)
     {
         for (auto node : preparedNode.allNodes)
-            node->process (referenceSampleRange);
+            node->process (numSamplesToProcess, referenceSampleRange);
     }
     else
     {
@@ -420,7 +421,7 @@ void LockFreeMultiThreadedNodePlayer::processNode (Node& node)
         #endif
 
         // Process Node
-        nodeToProcess->process (referenceSampleRange);
+        nodeToProcess->process (numSamplesToProcess, referenceSampleRange);
         nodeToProcess = updateProcessQueueForNode (*nodeToProcess);
 
         if (! nodeToProcess)
