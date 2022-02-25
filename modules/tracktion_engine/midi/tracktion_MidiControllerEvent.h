@@ -35,6 +35,7 @@ public:
     void setBeatPosition (BeatPosition, juce::UndoManager*);
 
     /** This takes into account quantising, groove templates, clip offset, etc */
+    BeatPosition getEditBeats (const MidiClip&) const;
     TimePosition getEditTime (const MidiClip&) const;
 
     juce::String getLevelDescription (MidiClip*) const;

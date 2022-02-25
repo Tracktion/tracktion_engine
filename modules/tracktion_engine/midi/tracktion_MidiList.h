@@ -129,11 +129,23 @@ public:
     void importFromEditTimeSequenceWithNoteExpression (const juce::MidiMessageSequence&, Edit*,
                                                        TimePosition editTimeOfListTimeZero, juce::UndoManager*);
 
-    // Add equivalent events to the sequence, for playback
-    void exportToPlaybackMidiSequence (juce::MidiMessageSequence&, MidiClip&, bool generateMPE) const;
+    /** Determines MIDI event timing. */
+    enum class TimeBase
+    {
+        seconds,    /** Event times will be in seconds. */
+        beats       /** Event times will be in beats. */
+    };
+
+    /** Creates a juce::MidiMessageSequence from the list in order to be played back
+        The sequence will be in terms of edit time, either in seconds or beats
+        @param MidiClip     The clip boundries to use and the groove template if the clip contains one
+        @param TimeBase     The format the exported MIDI event times will be in
+        @param generateMPE  Whether the sequence should create MPE or standard MIDI
+    */
+    juce::MidiMessageSequence exportToPlaybackMidiSequence (MidiClip&, TimeBase, bool generateMPE) const;
 
     /** Creates the default MIDI playback sequence. */
-    static juce::MidiMessageSequence createDefaultPlaybackMidiSequence (const MidiList&, MidiClip&, bool generateMPE);
+    static juce::MidiMessageSequence createDefaultPlaybackMidiSequence (const MidiList&, MidiClip&, TimeBase, bool generateMPE);
 
     //==============================================================================
     static bool looksLikeMPEData (const juce::File&);

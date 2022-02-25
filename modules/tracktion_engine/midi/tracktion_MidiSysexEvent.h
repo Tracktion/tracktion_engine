@@ -32,6 +32,7 @@ public:
 
     // takes into account quantising, groove templates, clip offset, etc
     TimePosition getEditTime (const MidiClip&) const;
+    BeatPosition getEditBeats (const MidiClip&) const;
 
     juce::ValueTree state;
 

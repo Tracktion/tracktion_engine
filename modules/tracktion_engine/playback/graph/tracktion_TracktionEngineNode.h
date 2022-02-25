@@ -52,23 +52,21 @@ public:
     
     //==============================================================================
     /** Returns the number of samples in the current process block. */
-    //[[expects: processState]]
     int getNumSamples() const                               { return processState.numSamples; }
 
     /** Returns the sample rate of the current process block. */
-    //[[expects: processState]]
     double getSampleRate() const                            { return processState.sampleRate; }
 
     /** Returns the timeline sample range of the current process block. */
-    //[[expects: processState]]
     juce::Range<int64_t> getTimelineSampleRange() const     { return processState.timelineSampleRange; }
 
-    /** Returns the edit time range (in seconds) of the current process block. */
-    //[[expects: processState]]
+    /** Returns the edit time range of the current process block. */
     TimeRange getEditTimeRange() const                      { return processState.editTimeRange; }
 
+    /** Returns the edit beat range of the current process block. */
+    BeatRange getEditBeatRange() const                      { return processState.editBeatRange; }
+
     /** Returns the reference sample range (from the DeviceManager) of the current process block. */
-    //[[expects: processState]]
     juce::Range<int64_t> getReferenceSampleRange() const    { return processState.referenceSampleRange; }
 
     //==============================================================================

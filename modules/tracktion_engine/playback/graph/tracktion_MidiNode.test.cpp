@@ -75,13 +75,14 @@ private:
         beginTest ("Basic MIDI");
         {
             auto sequence = masterSequence;
-            auto node = std::make_unique<tracktion::engine::MidiNode> (sequence,
-                                                                      juce::Range<int>::withStartAndLength (1, 1),
-                                                                      false,
-                                                                      TimeRange (0.0s, TimeDuration::fromSeconds (duration)),
-                                                                      LiveClipLevel(),
-                                                                      processState,
-                                                                      EditItemID());
+            auto node = std::make_unique<tracktion::engine::MidiNode> (std::vector<juce::MidiMessageSequence> ({ sequence }),
+                                                                       MidiList::TimeBase::seconds,
+                                                                       juce::Range<int>::withStartAndLength (1, 1),
+                                                                       false,
+                                                                       juce::Range<double> (0.0, duration),
+                                                                       LiveClipLevel(),
+                                                                       processState,
+                                                                       EditItemID());
             
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 0, duration);
 
@@ -91,22 +92,23 @@ private:
         
         beginTest ("Offset MIDI");
         {
-            const auto editTimeRange = TimeRange (1.0s, TimeDuration::fromSeconds (duration));
-            auto node = std::make_unique<tracktion::engine::MidiNode> (masterSequence,
-                                                                      juce::Range<int>::withStartAndLength (1, 1),
-                                                                      false,
-                                                                      editTimeRange,
-                                                                      LiveClipLevel(),
-                                                                      processState,
-                                                                      EditItemID());
+            const juce::Range<double> editTimeRange (1.0, duration);
+            auto node = std::make_unique<tracktion::engine::MidiNode> (std::vector<juce::MidiMessageSequence> ({ masterSequence }),
+                                                                       MidiList::TimeBase::seconds,
+                                                                       juce::Range<int>::withStartAndLength (1, 1),
+                                                                       false,
+                                                                       editTimeRange,
+                                                                       LiveClipLevel(),
+                                                                       processState,
+                                                                       EditItemID());
             
-            auto testContext = createTracktionTestContext (processState, std::move (node), ts, 0, editTimeRange.getEnd().inSeconds());
+            auto testContext = createTracktionTestContext (processState, std::move (node), ts, 0, editTimeRange.getEnd());
 
             juce::MidiMessageSequence expectedSequence;
             expectedSequence.addSequence (masterSequence,
                                           1.0,
-                                          editTimeRange.getStart().inSeconds(),
-                                          editTimeRange.getEnd().inSeconds());
+                                          editTimeRange.getStart(),
+                                          editTimeRange.getEnd());
 
             expectGreaterThan (expectedSequence.getNumEvents(), 0);
             expectEquals (expectedSequence.getNumEvents(), masterSequence.getNumEvents());

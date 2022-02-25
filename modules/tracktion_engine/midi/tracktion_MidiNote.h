@@ -37,6 +37,7 @@ public:
     BeatRange getRangeBeats() const noexcept                { return { getStartBeat(), getEndBeat() }; }
 
     TimePosition getPlaybackTime (NoteEdge, const MidiClip&, const GrooveTemplate*) const;
+    BeatPosition getPlaybackBeats (NoteEdge, const MidiClip&, const GrooveTemplate*) const;
 
     /** Returns the start, quantised according to the clip's settings. */
     BeatPosition getQuantisedStartBeat (const MidiClip&) const;
