@@ -204,6 +204,21 @@ namespace tempo
             void addBars (int bars);
 
             //==============================================================================
+            /** Returns the time of the next change.
+                You an use this to chunk processing in order to avoid an audio block
+                straddling a change. If there are no more changes in the future this will
+                return the time of the last one in the sequence (which may be in the past).
+            */
+            TimePosition getTimeOfNextChange() const;
+
+            /** Returns the time of the next change.
+                You an use this to chunk processing in order to avoid an audio block
+                straddling a change. If there are no more changes in the future this will
+                return the time of the last one in the sequence (which may be in the past).
+            */
+            BeatPosition getBeatOfNextChange() const;
+
+            //==============================================================================
             /** Sets the position to a PPQ. */
             void setPPQTime (double ppq);
 
@@ -761,6 +776,31 @@ inline void Sequence::Position::add (BeatDuration beats)
 inline void Sequence::Position::add (TimeDuration d)
 {
     set (time + d);
+}
+
+//==============================================================================
+inline TimePosition Sequence::Position::getTimeOfNextChange() const
+{
+    assert (sections.size() > 0);
+    const auto currentSectionTime = sections[index].startTime;
+
+    for (auto i = index + 1; i < sections.size(); ++i)
+        if (sections[i].startTime > currentSectionTime)
+            return sections[i].startTime;
+
+    return currentSectionTime;
+}
+
+inline BeatPosition Sequence::Position::getBeatOfNextChange() const
+{
+    assert (sections.size() > 0);
+    const auto currentSectionBeat = sections[index].startBeat;
+
+    for (auto i = index + 1; i < sections.size(); ++i)
+        if (sections[i].startBeat > currentSectionBeat)
+            return sections[i].startBeat;
+
+    return currentSectionBeat;
 }
 
 //==============================================================================

@@ -314,6 +314,22 @@ private:
             pos.add (BeatDuration::fromBeats (1.0));
         }
 
+        beginTest ("Next changes");
+        {
+            tempo::Sequence seq ({{ BeatPosition(), 120.0, 1.0f },
+                                  { BeatPosition::fromBeats (4), 60.0, 0.0f } },
+                                 {{ BeatPosition(), 4, 4, false }},
+                                 tempo::LengthOfOneBeat::dependsOnTimeSignature);
+            tempo::Sequence::Position pos (seq);
+
+            expect (pos.getTimeOfNextChange() == 2s);
+            expect (pos.getBeatOfNextChange() == BeatPosition::fromBeats (4));
+
+            pos.set (BeatPosition::fromBeats (10));
+            expect (pos.getTimeOfNextChange() == 2s);
+            expect (pos.getBeatOfNextChange() == BeatPosition::fromBeats (4));
+        }
+
         beginTest ("Multple change sequence");
         {
             {
@@ -336,6 +352,8 @@ private:
                 expectWithinAbsoluteError (pos.getTime().inSeconds(), TimePosition (2.711s).inSeconds(), 0.001);
                 pos.add (TimeDuration (4s));
                 expectWithinAbsoluteError (pos.getBeats().inBeats(), BeatPosition::fromBeats (8).inBeats(), 0.001);
+
+                expect (pos.getBeatOfNextChange() == BeatPosition::fromBeats (4));
             }
 
             {
