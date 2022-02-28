@@ -193,9 +193,9 @@ private:
          speedCompensation = juce::jlimit (-10.0, 10.0, plusOrMinus);
      }
 
-     void nudge (double nudgeAmmount)
+     void setTempoAdjustment (double plusOrMinusProportion)
      {
-         blockLengthScaleFactor = 1.0 + std::clamp (nudgeAmmount, -0.5, 0.5);
+         blockLengthScaleFactor = 1.0 + std::clamp (plusOrMinusProportion, -0.5, 0.5);
      }
      
      void updateReferenceSampleRange (int numSamples)
@@ -906,10 +906,10 @@ void EditPlaybackContext::setSpeedCompensation (double plusOrMinus)
         nodePlaybackContext->setSpeedCompensation (plusOrMinus);
 }
 
-void EditPlaybackContext::nudge (double nudgeProportion)
+void EditPlaybackContext::setTempoAdjustment (double plusOrMinusProportion)
 {
     if (nodePlaybackContext)
-        nodePlaybackContext->nudge (nudgeProportion);
+        nodePlaybackContext->setTempoAdjustment (plusOrMinusProportion);
 }
 
 void EditPlaybackContext::postPosition (TimePosition newPosition)

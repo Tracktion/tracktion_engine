@@ -164,7 +164,7 @@ private:
         nudgeSlider.onValueChange = [this]
                                     {
                                         if (auto epc = edit.getCurrentPlaybackContext())
-                                            epc->nudge (nudgeSlider.getValue() * 0.01);
+                                            epc->setTempoAdjustment (nudgeSlider.getValue() * 0.01);
                                     };
     }
     
