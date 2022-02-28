@@ -17,7 +17,7 @@ ProcessState::ProcessState (tracktion::graph::PlayHeadState& phs)
 }
 
 ProcessState::ProcessState (tracktion::graph::PlayHeadState& phs, const TempoSequence& seq)
-    : playHeadState (phs), tempoPosition (std::make_unique<TempoSequencePosition> (seq))
+    : playHeadState (phs), tempoPosition (std::make_unique<tempo::Sequence::Position> (seq.getInternalSequence()))
 {
 }
 
@@ -44,9 +44,9 @@ void ProcessState::update (double newSampleRate, juce::Range<int64_t> newReferen
     if (! tempoPosition)
         return;
     
-    tempoPosition->setTime (editTimeRange.getStart());
+    tempoPosition->set (editTimeRange.getStart());
     const auto beatStart = tempoPosition->getBeats();
-    tempoPosition->setTime (editTimeRange.getEnd());
+    tempoPosition->set (editTimeRange.getEnd());
     const auto beatEnd = tempoPosition->getBeats();
     editBeatRange = { beatStart, beatEnd };
 }
@@ -58,5 +58,20 @@ TracktionEngineNode::TracktionEngineNode (ProcessState& ps)
 {
 }
 
+std::optional<TimePosition> TracktionEngineNode::getTimeOfNextChange() const
+{
+    if (processState.tempoPosition)
+        return processState.tempoPosition->getTimeOfNextChange();
+
+    return {};
+}
+
+std::optional<BeatPosition> TracktionEngineNode::getBeatOfNextChange() const
+{
+    if (processState.tempoPosition)
+        return processState.tempoPosition->getBeatOfNextChange();
+
+    return {};
+}
 
 }} // namespace tracktion { inline namespace engine

@@ -26,7 +26,7 @@ struct ProcessState
     void update (double sampleRate, juce::Range<int64_t> referenceSampleRange);
 
     tracktion::graph::PlayHeadState& playHeadState;
-    std::unique_ptr<TempoSequencePosition> tempoPosition;
+    std::unique_ptr<tempo::Sequence::Position> tempoPosition;
     double sampleRate = 44100.0;
     int numSamples = 0;
     juce::Range<int64_t> referenceSampleRange, timelineSampleRange;
@@ -68,6 +68,13 @@ public:
 
     /** Returns the reference sample range (from the DeviceManager) of the current process block. */
     juce::Range<int64_t> getReferenceSampleRange() const    { return processState.referenceSampleRange; }
+
+    //==============================================================================
+    /** May return the time of the next tempo or time sig change. */
+    std::optional<TimePosition> getTimeOfNextChange() const;
+
+    /** May return the time of the next tempo or time sig change. */
+    std::optional<BeatPosition> getBeatOfNextChange() const;
 
     //==============================================================================
     /** Returns the PlayHeadState in use. */
