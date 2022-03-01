@@ -68,8 +68,9 @@ void ControlSurface::sendMidiCommandToController (int idx, const void* midiData,
 
 void ControlSurface::sendMidiCommandToController (int idx, const juce::MidiMessage& m)
 {
-    if (auto dev = owner->outputDevices[idx])
-        dev->fireMessage (m);
+    if (owner != nullptr)
+        if (auto dev = owner->outputDevices[idx])
+            dev->fireMessage (m);
 }
 
 bool ControlSurface::isSafeRecording() const
