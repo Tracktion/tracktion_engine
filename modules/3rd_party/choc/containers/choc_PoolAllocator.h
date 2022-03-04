@@ -19,6 +19,7 @@
 #ifndef CHOC_POOL_HEADER_INCLUDED
 #define CHOC_POOL_HEADER_INCLUDED
 
+#include <memory>
 #include <vector>
 #include <array>
 #include <cstdlib>
@@ -68,6 +69,14 @@ public:
     template <typename ObjectType, typename... Args>
     ObjectType& allocate (Args&&... constructorArgs);
 
+    /// Allocates a chunk of raw memory
+    void* allocateData (size_t numBytes);
+
+    /// Stores a copy of the given string in the pool, and returns a view of it.
+    /// The memory that it allocates is null-terminated, so the string_view can be
+    /// cast to a const char* if you need one.
+    std::string_view allocateString (std::string_view);
+
 
 private:
     //==============================================================================
@@ -80,7 +89,7 @@ private:
 
     struct Block
     {
-        Block();
+        Block (size_t);
         Block (Block&&);
         Block (const Block&) = delete;
         ~Block();
@@ -89,12 +98,13 @@ private:
         Item* getItem (size_t position) noexcept;
         Item& allocateItem (size_t);
 
-        size_t nextItemOffset = 0;
+        size_t nextItemOffset = 0, allocatedSize;
         std::unique_ptr<char[]> space;
     };
 
     std::vector<Block> blocks;
-    void addBlock();
+    void addBlock (size_t);
+    Item& allocateItem (size_t);
 };
 
 
@@ -115,7 +125,7 @@ inline void Pool::reset()
 {
     blocks.clear();
     blocks.reserve (32);
-    addBlock();
+    addBlock (blockSize);
 }
 
 struct Pool::Item
@@ -129,10 +139,11 @@ struct Pool::Item
     void* getItemData() noexcept                              { return reinterpret_cast<char*> (this) + getHeaderSize(); }
 };
 
-inline Pool::Block::Block() : space (new char[blockSize]) {}
+inline Pool::Block::Block (size_t size) : allocatedSize (size), space (new char[size]) {}
 
 inline Pool::Block::Block (Block&& other)
    : nextItemOffset (other.nextItemOffset),
+     allocatedSize (other.allocatedSize),
      space (std::move (other.space))
 {
     other.nextItemOffset = 0;
@@ -151,7 +162,7 @@ inline Pool::Block::~Block()
     }
 }
 
-inline bool Pool::Block::hasSpaceFor (size_t size) const noexcept    { return nextItemOffset + size <= blockSize; }
+inline bool Pool::Block::hasSpaceFor (size_t size) const noexcept    { return nextItemOffset + size <= allocatedSize; }
 inline Pool::Item* Pool::Block::getItem (size_t position) noexcept   { return reinterpret_cast<Item*> (space.get() + position); }
 
 inline Pool::Item& Pool::Block::allocateItem (size_t size)
@@ -163,19 +174,36 @@ inline Pool::Item& Pool::Block::allocateItem (size_t size)
     return *i;
 }
 
-inline void Pool::addBlock()  { blocks.push_back ({}); }
+inline void Pool::addBlock (size_t size)  { blocks.push_back (Block (size)); }
+
+inline Pool::Item& Pool::allocateItem (size_t size)
+{
+    if (! blocks.back().hasSpaceFor (size))
+        addBlock (std::max (blockSize, size));
+
+    return blocks.back().allocateItem (size);
+}
+
+inline void* Pool::allocateData (size_t size)
+{
+    return allocateItem (size).getItemData();
+}
+
+inline std::string_view Pool::allocateString (std::string_view s)
+{
+    auto len = s.length();
+    auto space = static_cast<char*> (allocateData (len + 1));
+    std::memcpy (space, s.data(), len);
+    space[len] = 0;
+    return space;
+}
 
 template <typename ObjectType, typename... Args>
 ObjectType& Pool::allocate (Args&&... constructorArgs)
 {
     static constexpr auto itemSize = Item::getSpaceNeeded (sizeof (ObjectType));
 
-    static_assert (itemSize <= blockSize, "Object size is larger than the maximum for the Pool class");
-
-    if (! blocks.back().hasSpaceFor (itemSize))
-        addBlock();
-
-    auto& newItem = blocks.back().allocateItem (itemSize);
+    auto& newItem = allocateItem (itemSize);
     auto allocatedObject = new (newItem.getItemData()) ObjectType (std::forward<Args> (constructorArgs)...);
 
     if constexpr (! std::is_trivially_destructible<ObjectType>::value)

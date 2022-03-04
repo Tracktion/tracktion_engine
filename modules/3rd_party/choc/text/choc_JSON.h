@@ -22,6 +22,7 @@
 #include <limits>
 #include <sstream>
 #include <string_view>
+#include <stdexcept>
 
 #include "choc_UTF8.h"
 #include "choc_FloatToString.h"
@@ -35,9 +36,11 @@ namespace choc::json
 
 //==============================================================================
 /// A parse exception, thrown by choc::json::parse() as needed.
-struct ParseError
+struct ParseError  : public std::runtime_error
 {
-    const char* message;
+    ParseError (const char* message, choc::text::LineAndColumn lc)
+        : std::runtime_error (message), lineAndColumn (lc) {}
+
     choc::text::LineAndColumn lineAndColumn;
 };
 
@@ -54,7 +57,9 @@ value::Value parseValue (std::string_view);
 
 //==============================================================================
 /// Formats a value as a JSON string.
-std::string toString (const value::ValueView&);
+/// If useLineBreaks is true, it'll be formatted as multi-line JSON, if false it'll
+/// just be returned as a single line.
+std::string toString (const value::ValueView&, bool useLineBreaks = false);
 
 /// Writes a version of a string to an output stream, with any illegal or non-ascii
 /// written as their equivalent JSON escape sequences.
@@ -90,7 +95,12 @@ std::string doubleToString (double value);
 template <typename OutputStreamType>
 void writeWithEscapeCharacters (OutputStreamType& out, text::UTF8Pointer source)
 {
-    auto hexDigit = [] (auto value) -> char { return "0123456789abcdef"[value & 15]; };
+    auto writeUnicode = [] (OutputStreamType& o, auto digit)
+    {
+        auto hexDigit = [] (auto value) -> char { return "0123456789abcdef"[value & 15]; };
+
+        o << "\\u" << hexDigit (digit >> 12) << hexDigit (digit >> 8) << hexDigit (digit >> 4) << hexDigit (digit);
+    };
 
     for (;;)
     {
@@ -111,10 +121,20 @@ void writeWithEscapeCharacters (OutputStreamType& out, text::UTF8Pointer source)
 
             default:
                 if (c > 31 && c < 127)
+                {
                     out << (char) c;
-                else
-                    out << "\\u" << hexDigit (c >> 12) << hexDigit (c >> 8) << hexDigit (c >> 4) << hexDigit (c);
+                    break;
+                }
 
+                if (c >= 0x10000)
+                {
+                    auto pair = choc::text::splitCodePointIntoSurrogatePair (c);
+                    writeUnicode (out, pair.high);
+                    writeUnicode (out, pair.low);
+                    break;
+                }
+
+                writeUnicode (out, c);
                 break;
         }
 
@@ -154,11 +174,18 @@ inline std::string doubleToString (double value)
 
 //==============================================================================
 template <typename Stream>
-void writeAsJSON (Stream& output, const value::ValueView& value)
+void writeAsJSON (Stream& output, const value::ValueView& value, bool useMultipleLines)
 {
+    static constexpr const char newLine = '\n';
+
     struct Writer
     {
         Stream& out;
+        uint32_t indentSize, currentIndent = 0;
+
+        std::string getIndent() const         { return std::string (currentIndent, ' '); }
+        void startIndent()                    { currentIndent += indentSize; out << newLine << getIndent(); }
+        void endIndent()                      { currentIndent -= indentSize; out << newLine << getIndent(); }
 
         void dump (const value::ValueView& v)
         {
@@ -174,12 +201,29 @@ void writeAsJSON (Stream& output, const value::ValueView& value)
         void dumpArrayOrVector (const value::ValueView& v)
         {
             out << '[';
-            auto num = v.size();
+            auto numElements = v.size();
 
-            for (uint32_t i = 0; i < num; ++i)
+            if (indentSize != 0 && numElements != 0)
             {
-                if (i != 0) out << ", ";
-                dump (v[i]);
+                startIndent();
+
+                for (uint32_t i = 0; i < numElements; ++i)
+                {
+                    dump (v[i]);
+
+                    if (i != numElements - 1)
+                        out << "," << newLine << getIndent();
+                }
+
+                endIndent();
+            }
+            else
+            {
+                for (uint32_t i = 0; i < numElements; ++i)
+                {
+                    if (i != 0) out << ", ";
+                    dump (v[i]);
+                }
             }
 
             out << ']';
@@ -190,33 +234,52 @@ void writeAsJSON (Stream& output, const value::ValueView& value)
             out << '{';
             auto numMembers = object.size();
 
-            for (uint32_t i = 0; i < numMembers; ++i)
+            if (indentSize != 0 && numMembers != 0)
             {
-                if (i != 0) out << ", ";
+                startIndent();
 
-                auto member = object.getObjectMemberAt (i);
-                out << getEscapedQuotedString (member.name) << ": ";
-                dump (member.value);
+                for (uint32_t i = 0; i < numMembers; ++i)
+                {
+                    auto member = object.getObjectMemberAt (i);
+                    out << getEscapedQuotedString (member.name) << ": ";
+                    dump (member.value);
+
+                    if (i != numMembers - 1)
+                        out << "," << newLine << getIndent();
+                }
+
+                endIndent();
+            }
+            else
+            {
+                for (uint32_t i = 0; i < numMembers; ++i)
+                {
+                    if (i != 0) out << ", ";
+
+                    auto member = object.getObjectMemberAt (i);
+                    out << getEscapedQuotedString (member.name) << ": ";
+                    dump (member.value);
+                }
             }
 
             out << '}';
         }
     };
 
-    Writer { output }.dump (value);
+    Writer { output, useMultipleLines ? 2u : 0u }.dump (value);
 }
 
-inline std::string toString (const value::ValueView& v)
+inline std::string toString (const value::ValueView& v, bool useLineBreaks)
 {
     std::ostringstream out;
-    writeAsJSON (out, v);
+    writeAsJSON (out, v, useLineBreaks);
     return out.str();
 }
 
 //==============================================================================
 [[noreturn]] static inline void throwParseError (const char* error, text::UTF8Pointer source, text::UTF8Pointer errorPos)
 {
-    throw ParseError { error, text::findLineAndColumn (source, errorPos) };
+    throw ParseError (error, text::findLineAndColumn (source, errorPos));
 }
 
 inline value::Value parse (text::UTF8Pointer text, bool parseBareValue)
@@ -273,7 +336,7 @@ inline value::Value parse (text::UTF8Pointer text, bool parseBareValue)
 
         value::Value parseObject()
         {
-            auto result = value::createObject ("JSON");
+            auto result = value::createObject ({});
             auto objectStart = current;
 
             skipWhitespace();
@@ -333,28 +396,23 @@ inline value::Value parse (text::UTF8Pointer text, bool parseBareValue)
         value::Value parseNumber (bool negate)
         {
             auto startPos = current;
-            bool isDouble = false;
+            bool hadDot = false, hadExponent = false;
 
             for (;;)
             {
                 auto lastPos = current;
                 auto c = pop();
 
-                if (c >= '0' && c <= '9')
-                    continue;
-
-                if (! isDouble && (c == 'e' || c == 'E' || c == '.'))
-                {
-                    isDouble = true;
-                    continue;
-                }
+                if (c >= '0' && c <= '9')                        continue;
+                if (c == '.' && ! hadDot)                        { hadDot = true; continue; }
+                if (! hadExponent && (c == 'e' || c == 'E'))     { hadDot = true; hadExponent = true; continue; }
 
                 if (isWhitespace (c) || c == ',' || c == '}' || c == ']' || c == 0)
                 {
                     current = lastPos;
                     char* endOfParsedNumber = nullptr;
 
-                    if (! isDouble)
+                    if (! (hadDot || hadExponent))
                     {
                         auto v = std::strtoll (startPos.data(), &endOfParsedNumber, 10);
 
@@ -437,7 +495,7 @@ inline value::Value parse (text::UTF8Pointer text, bool parseBareValue)
             if (text::isUnicodeHighSurrogate (result))
             {
                 if (! isLowSurrogate && popIf ("\\u"))
-                    return text::createUnicodeFromHighAndLowSurrogates (result, parseUnicodeCharacterNumber (true));
+                    return text::createUnicodeFromHighAndLowSurrogates ({ result, parseUnicodeCharacterNumber (true) });
 
                 throwError ("Expected a unicode low surrogate codepoint");
             }
@@ -453,7 +511,11 @@ inline value::Value parse (text::UTF8Pointer text, bool parseBareValue)
 
 inline value::Value parse (const char* text, size_t numbytes, bool parseBareValue)
 {
-    CHOC_ASSERT (text != nullptr);
+    if (text == nullptr)
+    {
+        CHOC_ASSERT (numbytes == 0);
+        text = "";
+    }
 
     if (auto error = text::findInvalidUTF8Data (text, numbytes))
         throwParseError ("Illegal UTF8 data", text::UTF8Pointer (text), text::UTF8Pointer (error));

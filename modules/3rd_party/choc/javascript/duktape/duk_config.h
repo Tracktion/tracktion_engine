@@ -2769,27 +2769,27 @@ typedef struct duk_hthread duk_context;
 #if defined(DUK_F_HAVE_64BIT)
 #if !defined(DUK_BSWAP64)
 #define DUK_BSWAP64(x) \
-	((((duk_uint64_t) (x)) >> 56U) | \
-	 ((((duk_uint64_t) (x)) >> 40U) & DUK_U64_CONSTANT(0xff00)) | \
-	 ((((duk_uint64_t) (x)) >> 24U) & DUK_U64_CONSTANT(0xff0000)) | \
-	 ((((duk_uint64_t) (x)) >> 8U) & DUK_U64_CONSTANT(0xff000000)) | \
-	 ((((duk_uint64_t) (x)) << 8U) & DUK_U64_CONSTANT(0xff00000000)) | \
-	 ((((duk_uint64_t) (x)) << 24U) & DUK_U64_CONSTANT(0xff0000000000)) | \
-	 ((((duk_uint64_t) (x)) << 40U) & DUK_U64_CONSTANT(0xff000000000000)) | \
-	 (((duk_uint64_t) (x)) << 56U))
+    ((((duk_uint64_t) (x)) >> 56U) | \
+     ((((duk_uint64_t) (x)) >> 40U) & DUK_U64_CONSTANT(0xff00)) | \
+     ((((duk_uint64_t) (x)) >> 24U) & DUK_U64_CONSTANT(0xff0000)) | \
+     ((((duk_uint64_t) (x)) >> 8U) & DUK_U64_CONSTANT(0xff000000)) | \
+     ((((duk_uint64_t) (x)) << 8U) & DUK_U64_CONSTANT(0xff00000000)) | \
+     ((((duk_uint64_t) (x)) << 24U) & DUK_U64_CONSTANT(0xff0000000000)) | \
+     ((((duk_uint64_t) (x)) << 40U) & DUK_U64_CONSTANT(0xff000000000000)) | \
+     (((duk_uint64_t) (x)) << 56U))
 #endif
 #endif
 #if !defined(DUK_BSWAP32)
 #define DUK_BSWAP32(x) \
-	((((duk_uint32_t) (x)) >> 24U) | \
-	 ((((duk_uint32_t) (x)) >> 8U) & 0xff00UL) | \
-	 ((((duk_uint32_t) (x)) << 8U) & 0xff0000UL) | \
-	 (((duk_uint32_t) (x)) << 24U))
+    ((((duk_uint32_t) (x)) >> 24U) | \
+     ((((duk_uint32_t) (x)) >> 8U) & 0xff00UL) | \
+     ((((duk_uint32_t) (x)) << 8U) & 0xff0000UL) | \
+     (((duk_uint32_t) (x)) << 24U))
 #endif
 #if !defined(DUK_BSWAP16)
 #define DUK_BSWAP16(x) \
-	((duk_uint16_t) (x) >> 8U) | \
-	((duk_uint16_t) (x) << 8U)
+    ((duk_uint16_t) (x) >> 8U) | \
+    ((duk_uint16_t) (x) << 8U)
 #endif
 
 /* DUK_USE_VARIADIC_MACROS: required from compilers, so no fill-in. */
@@ -3156,7 +3156,7 @@ typedef struct duk_hthread duk_context;
 /* External provider already defined. */
 #elif defined(DUK_USE_DATE_FMT_STRFTIME)
 #define DUK_USE_DATE_FORMAT_STRING(ctx,parts,tzoffset,flags) \
-	duk_bi_date_format_parts_strftime((ctx), (parts), (tzoffset), (flags))
+    duk_bi_date_format_parts_strftime((ctx), (parts), (tzoffset), (flags))
 #else
 /* No provider for DUK_USE_DATE_FORMAT_STRING(), fall back to ISO 8601 only. */
 #endif
