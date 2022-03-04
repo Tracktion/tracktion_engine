@@ -27,9 +27,18 @@ public:
     {
         for (auto ts : tracktion::graph::test_utilities::getTestSetups (*this))
         {
-            runBasicTests (ts, true);
-            runBasicTests (ts, false);
-            runLoopedTimelineTests (ts);
+            runBasicTests<WaveNode> (ts, true);
+            runBasicTests<WaveNode> (ts, false);
+            runLoopedTimelineTests<WaveNode> (ts);
+        }
+
+        logMessage ("WaveNodeRealTime");
+
+        for (auto ts : tracktion::graph::test_utilities::getTestSetups (*this))
+        {
+            runBasicTests<WaveNodeRealTime> (ts, true);
+            runBasicTests<WaveNodeRealTime> (ts, false);
+            runLoopedTimelineTests<WaveNodeRealTime> (ts);
         }
     }
 
@@ -46,6 +55,7 @@ private:
     
     //==============================================================================
     //==============================================================================
+    template<typename NodeType>
     void runBasicTests (test_utilities::TestSetup ts, bool playSyncedToRange)
     {
         using namespace tracktion::graph;
@@ -67,7 +77,7 @@ private:
         
         beginTest ("WaveNode at time 0s");
         {
-            auto node = makeNode<WaveNode> (sinAudioFile,
+            auto node = makeNode<NodeType> (sinAudioFile,
                                             TimeRange (0.0s, TimeDuration::fromSeconds (fileLengthSeconds)),
                                             TimeDuration(),
                                             TimeRange(),
@@ -89,7 +99,7 @@ private:
         beginTest ("WaveNode at time 0s, dragging");
         {
             // If the user is dragging the playhead doesn't move so the whole buffer will be 0.08s of the start of the clip
-            auto node = makeNode<WaveNode> (sinAudioFile,
+            auto node = makeNode<NodeType> (sinAudioFile,
                                             TimeRange (0.0s, TimeDuration::fromSeconds (fileLengthSeconds)),
                                             TimeDuration(),
                                             TimeRange(),
@@ -113,7 +123,7 @@ private:
 
         beginTest ("WaveNode at time 1s - 4s");
         {
-            auto node = makeNode<WaveNode> (sinAudioFile,
+            auto node = makeNode<NodeType> (sinAudioFile,
                                             TimeRange (1.0s, TimePosition (4.0s)),
                                             TimeDuration(),
                                             TimeRange(),
@@ -135,7 +145,7 @@ private:
 
         beginTest ("WaveNode at time 1s - 4s, loop every 1s");
         {
-            auto node = makeNode<WaveNode> (sinAudioFile,
+            auto node = makeNode<NodeType> (sinAudioFile,
                                             TimeRange (1.0s, TimePosition (4.0s)),
                                             TimeDuration(),
                                             TimeRange (0.0s, TimePosition (1.0s)),
@@ -156,6 +166,7 @@ private:
         }
     }
 
+    template<typename NodeType>
     void runLoopedTimelineTests (test_utilities::TestSetup ts)
     {
         using namespace tracktion::graph;
@@ -172,7 +183,7 @@ private:
         beginTest ("Loop 0s-1s");
         {
             // This test loops a 1s sin file so the output should be 5s of sin data
-            auto node = makeNode<WaveNode> (sinAudioFile,
+            auto node = makeNode<NodeType> (sinAudioFile,
                                             TimeRange (0.0s, TimeDuration::fromSeconds (fileLengthSeconds)),
                                             TimeDuration(),
                                             TimeRange(),
@@ -195,7 +206,7 @@ private:
         beginTest ("Loop 1s-2s");
         {
             // This test loops a 1s sin file so the output should be 5s of sin data
-            auto node = makeNode<WaveNode> (sinAudioFile,
+            auto node = makeNode<NodeType> (sinAudioFile,
                                             TimeRange (1.0s, TimeDuration::fromSeconds (fileLengthSeconds) + 1.0s),
                                             TimeDuration(),
                                             TimeRange(),

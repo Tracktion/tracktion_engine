@@ -19,7 +19,7 @@ public:
     AudioFileCacheReader (AudioFileCache::Reader::Ptr ptr, TimeDuration timeout,
                           const juce::AudioChannelSet& destBufferChannels,
                           const juce::AudioChannelSet& sourceBufferChannels)
-        : reader (ptr), timeoutMs ((int) std::lround (timeout.inSeconds() / 1000.0)),
+        : reader (ptr), timeoutMs ((int) std::lround (timeout.inSeconds() * 1000.0)),
           destChannelSet (destBufferChannels), sourceChannelSet (sourceBufferChannels)
     {
     }
@@ -780,16 +780,6 @@ void WaveNodeRealTime::processSection (ProcessContext& pc, TimeRange sectionEdit
     const auto numFrames = destBuffer.getNumFrames();
     const auto numChannels = destBuffer.getNumChannels();
 
-    if (audioReader->read (sectionEditTime, pc.buffers.audio))
-    {
-        if (! getPlayHeadState().isContiguousWithPreviousBlock() && ! getPlayHeadState().isFirstBlockOfLoop())
-            lastSampleFadeLength = std::min (numFrames, getPlayHead().isUserDragging() ? 40u : 10u);
-    }
-    else
-    {
-        lastSampleFadeLength = std::min (numFrames, 40u);
-    }
-
     // Calculate gains
     float gains[2];
 
@@ -807,6 +797,17 @@ void WaveNodeRealTime::processSection (ProcessContext& pc, TimeRange sectionEdit
 
     if (resamplerReader != nullptr)
         resamplerReader->setGains (gains[0], gains[1]);
+
+    // Read through the audio stack
+    if (audioReader->read (sectionEditTime, pc.buffers.audio))
+    {
+        if (! getPlayHeadState().isContiguousWithPreviousBlock() && ! getPlayHeadState().isFirstBlockOfLoop())
+            lastSampleFadeLength = std::min (numFrames, getPlayHead().isUserDragging() ? 40u : 10u);
+    }
+    else
+    {
+        lastSampleFadeLength = std::min (numFrames, 40u);
+    }
 
     // Crossfade if a fade needs to be applied
     jassert (numChannels <= (choc::buffer::ChannelCount) channelState->size()); // this should always have been made big enough
