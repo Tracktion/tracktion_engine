@@ -395,6 +395,31 @@ void AudioClipComponent::updateThumbnail()
     }
 }
 
+void drawMidiClip (juce::Graphics& g, te::MidiClip& mc, juce::Rectangle<int> r, te::TimeRange tr)
+{
+    auto timeToX = [width = r.getWidth(), tr] (auto time)
+    {
+        return juce::roundToInt (((time - tr.getStart()) * width) / (tr.getLength()));
+    };
+
+    for (auto n : mc.getSequence().getNotes())
+    {
+        auto sBeat = mc.getStartBeat() + toDuration (n->getStartBeat());
+        auto eBeat = mc.getStartBeat() + toDuration (n->getEndBeat());
+
+        auto s = mc.edit.tempoSequence.beatsToTime (sBeat);
+        auto e = mc.edit.tempoSequence.beatsToTime (eBeat);
+
+        auto t1 = (double) timeToX (s) - r.getX();
+        auto t2 = (double) timeToX (e) - r.getX();
+
+        double y = (1.0 - double (n->getNoteNumber()) / 127.0) * r.getHeight();
+
+        g.setColour (Colours::white.withAlpha (n->getVelocity() / 127.0f));
+        g.drawLine (float (t1), float (y), float (t2), float (y));
+    }
+}
+
 //==============================================================================
 MidiClipComponent::MidiClipComponent (EditViewState& evs, te::Clip::Ptr c)
     : ClipComponent (evs, c)

@@ -11,6 +11,9 @@
 namespace tracktion { inline namespace engine
 {
 
+class TimeRangeRemappingReader;
+class ResamplerReader;
+
 //==============================================================================
 /** An Node that plays back a wave file. */
 class WaveNode final    : public tracktion::graph::Node,
@@ -68,6 +71,61 @@ private:
     void processSection (ProcessContext&, juce::Range<int64_t> timelineRange);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveNode)
+};
+
+//==============================================================================
+/**
+    An Node that plays back a wave file.
+*/
+class WaveNodeRealTime final    : public graph::Node,
+                                  public TracktionEngineNode
+{
+public:
+    /** offset is a time added to the start of the file, e.g. an offset of 10.0
+        would produce ten seconds of silence followed by the file.
+    */
+    WaveNodeRealTime (const AudioFile&,
+                      TimeRange editTime,
+                      TimeDuration offset,
+                      TimeRange loopSection,
+                      LiveClipLevel,
+                      double speedRatio,
+                      const juce::AudioChannelSet& sourceChannelsToUse,
+                      const juce::AudioChannelSet& destChannelsToFill,
+                      ProcessState&,
+                      EditItemID,
+                      bool isOfflineRender);
+
+    //==============================================================================
+    graph::NodeProperties getNodeProperties() override;
+    void prepareToPlay (const graph::PlaybackInitialisationInfo&) override;
+    bool isReadyToProcess() override;
+    void process (ProcessContext&) override;
+
+private:
+    //==============================================================================
+    TimeRange editPosition, loopSection;
+    TimeDuration offset;
+    const double originalSpeedRatio = 0;
+    const EditItemID editItemID;
+    const bool isOfflineRender = false;
+
+    const AudioFile audioFile;
+    LiveClipLevel clipLevel;
+    juce::Range<int64_t> editPositionInSamples;
+    const juce::AudioChannelSet channelsToUse, destChannels;
+    double outputSampleRate = 44100.0;
+
+    size_t stateHash = 0;
+    ResamplerReader* resamplerReader = nullptr;
+    std::shared_ptr<TimeRangeRemappingReader> audioReader;
+    std::shared_ptr<std::vector<float>> channelState;
+
+    bool buildAudioReaderGraph();
+    void replaceStateIfPossible (Node*);
+    void processSection (ProcessContext&, TimeRange);
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveNodeRealTime)
 };
 
 }} // namespace tracktion { inline namespace engine

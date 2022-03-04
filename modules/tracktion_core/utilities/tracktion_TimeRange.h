@@ -348,3 +348,28 @@ template<typename PositionType>
 inline RangeType<PositionType> operator- (const RangeType<PositionType>& r, typename RangeType<PositionType>::Duration d)    { return RangeType<PositionType> (r.getStart() - d, r.getEnd() - d); }
 
 }} // namespace tracktion
+
+
+//==============================================================================
+//==============================================================================
+template<>
+struct std::hash<tracktion::TimeRange>
+{
+    std::size_t operator()(const tracktion::TimeRange tr) const noexcept
+    {
+        std::size_t h1 = std::hash<double>{} (tr.getStart().inSeconds());
+        std::size_t h2 = std::hash<double>{} (tr.getEnd().inSeconds());
+        return h1 ^ (h2 << 1); // or use boost::hash_combine
+    }
+};
+
+template<>
+struct std::hash<tracktion::BeatRange>
+{
+    std::size_t operator()(const tracktion::BeatRange tr) const noexcept
+    {
+        std::size_t h1 = std::hash<double>{} (tr.getStart().inBeats());
+        std::size_t h2 = std::hash<double>{} (tr.getEnd().inBeats());
+        return h1 ^ (h2 << 1); // or use boost::hash_combine
+    }
+};

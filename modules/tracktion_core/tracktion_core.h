@@ -39,6 +39,8 @@
 //==============================================================================
 
 //==============================================================================
+#include "audio/tracktion_AudioReader.h"
+
 #include "utilities/tracktion_Hash.h"
 #include "utilities/tracktion_Tempo.h"
 #include "utilities/tracktion_Time.h"

@@ -46,8 +46,15 @@ set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
     C_VISIBILITY_PRESET hidden
     CXX_VISIBILITY_PRESET hidden)
 
+set (SourceFiles
+    ../${CMAKE_PROJECT_NAME}.h
+    ../common/Components.h
+    ../common/Components.cpp
+    ../common/Utilities.h)
+set_source_files_properties(${SourceFiles}
+                            PROPERTIES HEADER_FILE_ONLY ON)
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE ${SourceFiles})
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX Source FILES ${SourceFiles})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/.. PREFIX Source FILES ${SourceFiles})
 
 if (DEFINED ENV{VST2_SDK_DIR})
     target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
@@ -64,7 +71,8 @@ target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
     JUCE_DISPLAY_SPLASH_SCREEN=0
     JUCE_REPORT_APP_USAGE=0
     JUCE_MODAL_LOOPS_PERMITTED=1
-    JUCE_STRICT_REFCOUNTEDPOINTER=1)
+    JUCE_STRICT_REFCOUNTEDPOINTER=1
+    TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH=1)
 
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
     tracktion::tracktion_core

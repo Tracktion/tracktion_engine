@@ -49,7 +49,7 @@ public:
                        float& rmax, float& rmin,
                        int timeoutMs);
 
-        void setLoopRange (SampleRange newRange);
+        void setLoopRange (SampleRange);
 
         int getNumChannels() const noexcept;
         double getSampleRate() const noexcept;

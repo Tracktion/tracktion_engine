@@ -345,31 +345,45 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
         }
 
         node = tracktion::graph::makeNode<SpeedRampWaveNode> (playFile,
-                                                             clip.getEditTimeRange(),
-                                                             nodeOffset,
-                                                             loopRange,
-                                                             clip.getLiveClipLevel(),
-                                                             speed,
-                                                             clip.getActiveChannels(),
-                                                             juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),
-                                                             params.processState,
-                                                             clip.itemID,
-                                                             params.forRendering,
-                                                             desc);
+                                                              clip.getEditTimeRange(),
+                                                              nodeOffset,
+                                                              loopRange,
+                                                              clip.getLiveClipLevel(),
+                                                              speed,
+                                                              clip.getActiveChannels(),
+                                                              juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),
+                                                              params.processState,
+                                                              clip.itemID,
+                                                              params.forRendering,
+                                                              desc);
+    }
+    else if (clip.canUseProxy())
+    {
+        node = tracktion::graph::makeNode<WaveNode> (playFile,
+                                                     clip.getEditTimeRange(),
+                                                     nodeOffset,
+                                                     loopRange,
+                                                     clip.getLiveClipLevel(),
+                                                     speed,
+                                                     clip.getActiveChannels(),
+                                                     juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),
+                                                     params.processState,
+                                                     clip.itemID,
+                                                     params.forRendering);
     }
     else
     {
-        node = tracktion::graph::makeNode<WaveNode> (playFile,
-                                                    clip.getEditTimeRange(),
-                                                    nodeOffset,
-                                                    loopRange,
-                                                    clip.getLiveClipLevel(),
-                                                    speed,
-                                                    clip.getActiveChannels(),
-                                                    juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),
-                                                    params.processState,
-                                                    clip.itemID,
-                                                    params.forRendering);
+        node = makeNode<WaveNodeRealTime> (playFile,
+                                           clip.getEditTimeRange(),
+                                           nodeOffset,
+                                           loopRange,
+                                           clip.getLiveClipLevel(),
+                                           speed,
+                                           clip.getActiveChannels(),
+                                           juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),
+                                           params.processState,
+                                           clip.itemID,
+                                           params.forRendering);
     }
     
     // Plugins
@@ -394,7 +408,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForMidiClip (MidiClip& clip, c
 {
     CRASH_TRACER
     const bool generateMPE = clip.getMPEMode();
-    const MidiList::TimeBase timeBase = MidiList::TimeBase::seconds;
+    const MidiList::TimeBase timeBase = MidiList::TimeBase::beats;
 
     std::vector<juce::MidiMessageSequence> sequences;
     sequences.emplace_back (clip.getSequenceLooped().exportToPlaybackMidiSequence (clip, timeBase, generateMPE));

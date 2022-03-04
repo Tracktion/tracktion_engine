@@ -31,6 +31,9 @@ namespace IDs
 namespace te = tracktion;
 
 //==============================================================================
+void drawMidiClip (juce::Graphics&, te::MidiClip&, juce::Rectangle<int>, te::TimeRange);
+
+//==============================================================================
 class EditViewState
 {
 public:

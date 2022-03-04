@@ -28,6 +28,7 @@
 #pragma once
 
 #include "common/Utilities.h"
+#include "common/Components.h"
 
 static auto pluckPatch = R"(
     <PLUGIN type="4osc" id="1065" enabled="1" filterType="1" ampVelocity="41.63125228881836"
@@ -70,6 +71,161 @@ const size_t midi_file_dataSize = 397;
 
 
 //==============================================================================
+//==============================================================================
+class ClipEditorComponent : public juce::Component,
+                            private juce::ValueTree::Listener
+{
+public:
+    ClipEditorComponent (te::MidiClip::Ptr);
+    ClipEditorComponent (te::WaveAudioClip::Ptr);
+
+    void paint (Graphics&) override;
+    void paintOverChildren (juce::Graphics&) override;
+
+    void mouseMove (const MouseEvent&) override;
+    void mouseDown (const MouseEvent&) override;
+    void mouseDrag (const MouseEvent&) override;
+    void mouseUp (const MouseEvent&) override;
+
+private:
+    te::MidiClip::Ptr midiClip;
+    te::WaveAudioClip::Ptr audioClip;
+    te::Clip::Ptr clip;
+    juce::ValueTree state { clip->state };
+    te::SelectionManager selectionManager { clip->edit.engine };
+    EditViewState editViewState { clip->edit, selectionManager };
+    std::unique_ptr<te::SmartThumbnail> thumbnail;
+
+    enum class DragType
+    {
+        none, loopStart, loopEnd
+    };
+
+    DragType dragType;
+    TimePosition dragStartTime;
+    te::TimeRange loopRangeOnDragStart;
+
+    void init();
+
+    void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
+};
+
+
+//==============================================================================
+ClipEditorComponent::ClipEditorComponent (te::MidiClip::Ptr c)
+    : midiClip (c), clip (c)
+{
+    init();
+}
+
+ClipEditorComponent::ClipEditorComponent (te::WaveAudioClip::Ptr c)
+    : audioClip (c), clip (c)
+{
+    thumbnail = std::make_unique<te::SmartThumbnail> (clip->edit.engine, te::AudioFile (clip->edit.engine, audioClip->getOriginalFile()), *this, &clip->edit);
+
+    init();
+}
+
+void ClipEditorComponent::paint (Graphics& g)
+{
+    const auto r = getLocalBounds();
+
+    g.setColour (Colours::black.withAlpha (0.15f));
+    g.fillRect (r.reduced (1));
+
+    g.setColour (Colours::white.withAlpha (0.5f));
+    g.drawRect (r);
+
+    if (midiClip)
+        drawMidiClip (g, *midiClip, r, clip->getEditTimeRange());
+    else if (thumbnail)
+        thumbnail->drawChannels (g, r, true,
+                                 te::toEditTimeRange (clip->getEditTimeRange()), 1.0f);
+}
+
+void ClipEditorComponent::paintOverChildren (juce::Graphics& g)
+{
+    const te::TimeRange loopRange (clip->getLoopStart(), clip->getLoopLength());
+    const auto loopStartX   = editViewState.timeToX (loopRange.getStart(), getWidth());
+    const auto loopEndX     = editViewState.timeToX (loopRange.getEnd(), getWidth());
+
+    const auto r = getLocalBounds();
+    g.setColour (Colours::white.withAlpha (0.8f));
+    g.fillRect (r.withX (loopStartX).withWidth (2));
+    g.fillRect (r.withX (loopEndX - 2).withWidth (2));
+
+    g.setColour (Colours::black.withAlpha (0.25f));
+    g.fillRect (r.withRight (loopStartX));
+    g.fillRect (r.withX (loopEndX));
+}
+
+void ClipEditorComponent::mouseMove (const MouseEvent& e)
+{
+    const te::TimeRange loopRange (clip->getLoopStart(), clip->getLoopLength());
+    const te::TimeRange targetRange (editViewState.xToTime (e.x - 2, getWidth()),
+                                     editViewState.xToTime (e.x + 2, getWidth()));
+
+    if (targetRange.contains (loopRange.getStart()))
+        setMouseCursor (MouseCursor::LeftRightResizeCursor);
+    else if (targetRange.contains (loopRange.getEnd()))
+        setMouseCursor (MouseCursor::LeftRightResizeCursor);
+    else
+        setMouseCursor (MouseCursor::ParentCursor);
+}
+
+void ClipEditorComponent::mouseDown (const MouseEvent& e)
+{
+    const te::TimeRange loopRange (clip->getLoopStart(), clip->getLoopLength());
+    loopRangeOnDragStart = { loopRange.getStart(), loopRange.getEnd() };
+    dragStartTime = editViewState.xToTime (e.x, getWidth());
+    const te::TimeRange targetRange (editViewState.xToTime (e.x - 2, getWidth()),
+                                     editViewState.xToTime (e.x + 2, getWidth()));
+
+    if (targetRange.contains (loopRange.getStart()))
+        dragType = DragType::loopStart;
+    else if (targetRange.contains (loopRange.getEnd()))
+        dragType = DragType::loopEnd;
+    else
+        dragType = DragType::none;
+}
+
+void ClipEditorComponent::mouseDrag (const MouseEvent& e)
+{
+    if (dragType == DragType::none)
+        return;
+
+    const auto dragDelta = toDuration (editViewState.xToTime (e.getDistanceFromDragStartX(), getWidth()));
+    const auto newPosition = clip->getEditTimeRange().clipPosition (dragStartTime + dragDelta);
+
+    if (dragType == DragType::loopStart)
+        clip->setLoopRange ({ std::min (newPosition, loopRangeOnDragStart.getEnd()), loopRangeOnDragStart.getEnd() });
+    if (dragType == DragType::loopEnd)
+        clip->setLoopRange ({ loopRangeOnDragStart.getStart(), std::max (loopRangeOnDragStart.getStart(), newPosition) });
+}
+
+void ClipEditorComponent::mouseUp (const MouseEvent& e)
+{
+    mouseDrag (e);
+    dragType = DragType::none;
+    setMouseCursor (MouseCursor::ParentCursor);
+}
+
+void ClipEditorComponent::init()
+{
+    editViewState.viewX2 = clip->getPosition().getEnd();
+    state.addListener (this);
+}
+
+void ClipEditorComponent::valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier& i)
+{
+    if (i == te::IDs::offset
+        || i == te::IDs::loopStart || i == te::IDs::loopLength
+        || i == te::IDs::loopStartBeats || i == te::IDs::loopLengthBeats)
+       repaint();
+}
+
+
+//==============================================================================
 class MidiPlaybackComponent : public Component,
                               private FilenameComponentListener,
                               private ChangeListener,
@@ -85,7 +241,8 @@ public:
         {
             TemporaryFile tempMidiFile ("mid");
             tempMidiFile.getFile().replaceWithData (midi_file_data, midi_file_dataSize);
-            loadMidiFile (tempMidiFile.getFile());
+            auto mc = loadMidiFile (tempMidiFile.getFile());
+            addAndMakeVisible (*(clipEditorComponent = std::make_unique<ClipEditorComponent> (mc)));
         }
 
         startTimerHz (2);
@@ -116,7 +273,7 @@ public:
 
             r.removeFromTop (8);
             topR = r.removeFromTop (30);
-            midiFileComp.setBounds (topR.reduced (2));
+            fileComp.setBounds (topR.reduced (2));
 
             topR = r.removeFromTop (30);
             cpuUsage.setBounds (topR.removeFromLeft (w).reduced (2));
@@ -127,6 +284,9 @@ public:
             nudgeSlider.setBounds (bottomR.removeFromBottom (30).reduced (2));
             tempoSlider.setBounds (bottomR.reduced (2));
         }
+
+        if (clipEditorComponent)
+            clipEditorComponent->setBounds (r.reduced (5, 0));
     }
     
     //==============================================================================
@@ -141,13 +301,13 @@ private:
     {
         transport.addChangeListener (this);
         
-        Helpers::addAndMakeVisible (*this, { &settingsButton, &playPauseButton, &midiFileComp, &cpuUsage,
+        Helpers::addAndMakeVisible (*this, { &settingsButton, &playPauseButton, &fileComp, &cpuUsage,
                                              &tempoSlider, &nudgeSlider, &tempoLabel, &nudgeLabel });
         
         settingsButton.onClick  = [this] { EngineHelpers::showAudioDeviceSettings (engine); };
         playPauseButton.onClick = [this] { EngineHelpers::togglePlay (edit); };
 
-        midiFileComp.addListener (this);
+        fileComp.addListener (this);
 
         tempoLabel.attachToComponent (&tempoSlider, true);
         tempoSlider.setTextBoxStyle (Slider::TextBoxRight, false, 80, 20);
@@ -170,7 +330,6 @@ private:
     
     void create4OSCPlugin()
     {
-        //==============================================================================
         if (auto synth = dynamic_cast<te::FourOscPlugin*> (edit.getPluginCache().createNewPlugin (te::FourOscPlugin::xmlTypeName, {}).get()))
         {
             if (auto e = parseXML (pluckPatch))
@@ -188,6 +347,7 @@ private:
     
     te::MidiClip::Ptr loadMidiFile (juce::File f)
     {
+        // Load MIDI files on to track 0 which has 4OSC
         if (auto track = EngineHelpers::getOrInsertAudioTrackAt (edit, 0))
         {
             juce::OwnedArray<te::MidiList> lists;
@@ -201,19 +361,48 @@ private:
 
             if (auto list = lists.getFirst())
             {
-                for (auto c : track->getClips())
-                    c->removeFromParentTrack();
+                // Remove clips from all tracks so this new one is the only clip
+                for (auto at : te::getAudioTracks (edit))
+                    for (auto c : at->getClips())
+                        c->removeFromParentTrack();
 
                 auto clip = track->insertMIDIClip ({ TimePosition(), edit.tempoSequence.beatsToTime (list->getLastBeatNumber()) }, nullptr);
 
                 if (auto midiClip = clip.get())
                 {
+                    midiClip->setLoopRange (clip->getEditTimeRange());
                     midiClip->getSequence().copyFrom (*list, nullptr);
                     return EngineHelpers::loopAroundClip (*midiClip);
                 }
             }
         }
         
+        return {};
+    }
+
+    te::WaveAudioClip::Ptr loadAudioFile (juce::File f)
+    {
+        // Load audio files on to track 1 to avoid being blocked by 4OSC on track 0
+        if (auto track = EngineHelpers::getOrInsertAudioTrackAt (edit, 1))
+        {
+            // Remove clips from all tracks so this new one is the only clip
+            for (auto at : te::getAudioTracks (edit))
+                for (auto c : at->getClips())
+                    c->removeFromParentTrack();
+
+            auto clip = track->insertWaveClip (f.getFileNameWithoutExtension(), f,
+                                               {{ 0s, TimeDuration::fromSeconds (te::AudioFile (engine, f).getLength()) }, {}},
+                                               false);
+
+            if (auto audioClip = clip.get())
+            {
+                audioClip->setUsesProxy (false);
+                audioClip->setLoopRange (clip->getEditTimeRange().withStart (0s));
+
+                return EngineHelpers::loopAroundClip (*audioClip);
+            }
+        }
+
         return {};
     }
     
@@ -223,14 +412,26 @@ private:
     te::TransportControl& transport { edit.getTransport() };
 
     TextButton settingsButton { "Settings" }, playPauseButton { "Play" };
-    FilenameComponent midiFileComp { "MIDI File", {}, true, false, false,
-                                     te::midiFileWildCard, {}, "Browse for a MIDI file to load..." };
+    FilenameComponent fileComp { "Audio or MIDI File", {}, true, false, false,
+                                 te::soundFileAndMidiWildCard, {}, "Browse for an audio or MIDI file to load..." };
+    std::unique_ptr<ClipEditorComponent> clipEditorComponent;
     Slider tempoSlider, nudgeSlider;
     Label tempoLabel { {}, "Tempo" }, nudgeLabel { {}, "Nudge" }, cpuUsage;
 
     void filenameComponentChanged (FilenameComponent*) override
     {
-        loadMidiFile (midiFileComp.getCurrentFile());
+        if (auto f = fileComp.getCurrentFile(); te::isMidiFile (f))
+        {
+            if (auto mc = loadMidiFile (f))
+                addAndMakeVisible (*(clipEditorComponent = std::make_unique<ClipEditorComponent> (mc)));
+        }
+        else
+        {
+            if (auto wc = loadAudioFile (f))
+                addAndMakeVisible (*(clipEditorComponent = std::make_unique<ClipEditorComponent> (wc)));
+        }
+
+        resized();
     }
 
     void changeListenerCallback (ChangeBroadcaster*) override
