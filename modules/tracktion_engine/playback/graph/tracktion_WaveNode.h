@@ -106,7 +106,7 @@ private:
     //==============================================================================
     TimeRange editPosition, loopSection;
     TimeDuration offset;
-    const double originalSpeedRatio = 0;
+    const double speedRatio = 0;
     const EditItemID editItemID;
     const bool isOfflineRender = false;
 

@@ -299,9 +299,9 @@ public:
             return true;
         }
 
-        const auto speedRatio = numSourceSamples / (double) destBuffer.getNumFrames();
+        const auto blockSpeedRatio = numSourceSamples / (double) destBuffer.getNumFrames();
 
-        source->setSpeedRatio (speedRatio);
+        source->setSpeedRatio (blockSpeedRatio);
         setPosition (tr.getStart());
 
         return readSamples (destBuffer);
@@ -326,8 +326,9 @@ public:
 class TimeRangeRemappingReader : public AudioReader
 {
 public:
-    TimeRangeRemappingReader (std::unique_ptr<TimeRangeReader> input, TimeRange sourceTimeRange)
-        : source (std::move (input)), materialTimeRange (sourceTimeRange)
+    TimeRangeRemappingReader (std::unique_ptr<TimeRangeReader> input,
+                              TimeRange sourceTimeRange, double speedRatioToUse)
+        : source (std::move (input)), materialTimeRange (sourceTimeRange), speedRatio (speedRatioToUse)
     {
     }
 
@@ -335,7 +336,7 @@ public:
                choc::buffer::ChannelArrayView<float>& destBuffer)
     {
         const auto offset = toDuration (materialTimeRange.getStart());
-        tr = { tr.getStart() - offset, tr.getEnd() - offset };
+        tr = { (tr.getStart() - offset) * speedRatio, (tr.getEnd() - offset) * speedRatio };
         return source->read (tr, destBuffer);
     }
 
@@ -351,7 +352,8 @@ public:
     }
 
     std::unique_ptr<TimeRangeReader> source;
-    TimeRange materialTimeRange;
+    const TimeRange materialTimeRange;
+    const double speedRatio;
 };
 
 
@@ -646,7 +648,7 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
      loopSection (TimePosition::fromSeconds (loop.getStart().inSeconds() * speed),
                   TimePosition::fromSeconds (loop.getEnd().inSeconds() * speed)),
      offset (off),
-     originalSpeedRatio (speed),
+     speedRatio (speed),
      editItemID (itemIDToUse),
      isOfflineRender (isRendering),
      audioFile (af),
@@ -660,7 +662,7 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
     hash_combine (stateHash, editPosition);
     hash_combine (stateHash, loopSection);
     hash_combine (stateHash, offset.inSeconds());
-    hash_combine (stateHash, originalSpeedRatio);
+    hash_combine (stateHash, speedRatio);
     hash_combine (stateHash, editItemID.getRawID());
     hash_combine (stateHash, channelsToUse.size());
     hash_combine (stateHash, destChannels.size());
@@ -728,7 +730,7 @@ bool WaveNodeRealTime::buildAudioReaderGraph()
     auto resamplerAudioReader   = std::make_unique<ResamplerReader> (std::move (offsetReader), outputSampleRate);
     resamplerReader = resamplerAudioReader.get();
     auto timeRangeReader        = std::make_unique<TimeRangeReader> (std::move (resamplerAudioReader));
-    audioReader                 = std::make_shared<TimeRangeRemappingReader> (std::move (timeRangeReader), editPosition);
+    audioReader                 = std::make_shared<TimeRangeRemappingReader> (std::move (timeRangeReader), editPosition, speedRatio);
 
     if (! channelState)
     {
