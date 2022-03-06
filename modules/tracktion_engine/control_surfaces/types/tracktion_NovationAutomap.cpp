@@ -1073,16 +1073,6 @@ void NovationAutomap::load (Edit& edit)
         hostAutomap->getConnection()->LoadInstanceGUID (getGUID (edit));
 }
 
-void NovationAutomap::shutDownDevice()                                  {}
-void NovationAutomap::updateMiscFeatures()                              {}
-void NovationAutomap::acceptMidiMessage (int, const juce::MidiMessage&) {}
-void NovationAutomap::moveFader (int, float)                            {}
-void NovationAutomap::moveMasterLevelFader (float, float)               {}
-void NovationAutomap::movePanPot (int, float)                           {}
-void NovationAutomap::moveAux (int, const char*, float)                 {}
-void NovationAutomap::clearAux (int)                                    {}
-void NovationAutomap::soloCountChanged (bool)                           {}
-
 void NovationAutomap::updateSoloAndMute (int channelNum, Track::MuteAndSoloLightState state, bool isBright)
 {
     if (hostAutomap != nullptr)
@@ -1101,25 +1091,17 @@ void NovationAutomap::recordStateChanged (bool isRecording)
         hostAutomap->recordChanged(isRecording);
 }
 
-void NovationAutomap::automationReadModeChanged (bool)          {}
-void NovationAutomap::automationWriteModeChanged (bool)         {}
-
 void NovationAutomap::faderBankChanged (int, const juce::StringArray& trackNames)
 {
     if (hostAutomap != nullptr)
         hostAutomap->faderBankChanged (trackNames);
 }
 
-void NovationAutomap::channelLevelChanged (int, float, float)   {}
-void NovationAutomap::trackSelectionChanged (int, bool)         {}
-
 void NovationAutomap::trackRecordEnabled (int channel, bool)
 {
     if (hostAutomap != nullptr)
         hostAutomap->armChanged (channel);
 }
-
-void NovationAutomap::masterLevelsChanged (float, float)        {}
 
 void NovationAutomap::timecodeChanged (int, int, int, int, bool, bool)
 {

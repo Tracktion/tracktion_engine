@@ -1049,6 +1049,8 @@ void MackieMCU::moveFaderInt (int dev, int channelNum, float newSliderPos)
 
 void MackieMCU::moveFader (int channelNum_, float newSliderPos)
 {
+    ControlSurface::moveFader (channelNum_, newSliderPos);
+
     int channelNum = channelNum_ % 8;
     int dev        = channelNum_ / 8;
 
@@ -1063,6 +1065,8 @@ void MackieMCU::moveFader (int channelNum_, float newSliderPos)
 
 void MackieMCU::moveMasterLevelFader (float newLeftSliderPos, float newRightSliderPos)
 {
+    ControlSurface::moveMasterLevelFader (newLeftSliderPos, newRightSliderPos);
+    
     moveFaderInt (deviceIdx, 8, (newLeftSliderPos + newRightSliderPos) * 0.5f);
 }
 
@@ -1077,6 +1081,8 @@ void MackieMCU::movePanPotInt (int dev, int channelNum, float newPan)
 
 void MackieMCU::movePanPot (int channelNum_, float newPan)
 {
+    ControlSurface::movePanPot (channelNum_, newPan);
+    
     int channelNum = channelNum_ % 8;
     int dev        = channelNum_ / 8;
 
@@ -1093,6 +1099,8 @@ juce::String MackieMCU::auxString (int chan) const
 
 void MackieMCU::moveAux (int channelNum_, const char* bus, float newPos)
 {
+    ControlSurface::moveAux (channelNum_, bus, newPos);
+    
     int channelNum = channelNum_ % 8;
     int dev        = channelNum_ / 8;
 
@@ -1207,6 +1215,8 @@ void MackieMCU::automationWriteModeChanged (bool isWriting)
 
 void MackieMCU::parameterChanged (int parameterNumber_, const ParameterSetting& newValue)
 {
+    ControlSurface::parameterChanged (parameterNumber_, newValue);
+    
     int parameterNumber = parameterNumber_ % 8;
     int dev             = parameterNumber_ / 8;
 

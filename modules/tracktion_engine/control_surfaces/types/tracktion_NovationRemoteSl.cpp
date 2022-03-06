@@ -430,17 +430,18 @@ void NovationRemoteSl::acceptMidiMessage (int, const juce::MidiMessage& m)
 
 void NovationRemoteSl::moveFader (int channelNum, float newSliderPos)
 {
+    ControlSurface::moveFader (channelNum, newSliderPos);
+    
     level[channelNum] = volumeFaderPositionToDB (newSliderPos);
 
     if (rightMode == rmVol)
         refreshRight (false);
 }
 
-void NovationRemoteSl::moveMasterLevelFader (float, float) {}
-void NovationRemoteSl::moveAux (int, const char*, float) {}
-
 void NovationRemoteSl::movePanPot (int channelNum, float newPan)
 {
+    ControlSurface::movePanPot (channelNum, newPan);
+    
     pan[channelNum] = newPan;
 
     if (rightMode == rmPan)
@@ -486,6 +487,8 @@ void NovationRemoteSl::faderBankChanged (int, const juce::StringArray& newNames)
 
 void NovationRemoteSl::parameterChanged (int parameterNumber, const ParameterSetting& newValue)
 {
+    ControlSurface::parameterChanged (parameterNumber, newValue);
+    
     param[parameterNumber] = newValue;
 
     if (leftMode == lmParam1 || leftMode == lmParam2)

@@ -31,7 +31,6 @@ public:
     void parameterChanged (int parameterNumber, const ParameterSetting& newValue) override;
     void clearParameter (int parameterNumber) override;
     void moveFader (int channelNum, float newSliderPos) override;
-    void moveMasterLevelFader (float newLeftSliderPos, float newRightSliderPos) override;
     void movePanPot (int channelNum, float newPan) override;
     void faderBankChanged (int newStartChannelNumber, const juce::StringArray& trackNames) override;
     void moveAux (int channelNum, const char* bus, float newPos) override;
