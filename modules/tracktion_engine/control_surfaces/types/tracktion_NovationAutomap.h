@@ -28,25 +28,11 @@ public:
     void paramChanged (AutomatableParameter*);
 
     void initialiseDevice (bool connect) override;
-    void shutDownDevice() override;
-    void updateMiscFeatures() override;
-    void acceptMidiMessage (int, const juce::MidiMessage&) override;
-    void moveFader (int channelNum, float newSliderPos) override;
-    void moveMasterLevelFader (float newLeftSliderPos, float newRightSliderPos) override;
-    void movePanPot (int channelNum, float newPan) override;
-    void moveAux (int channel, const char* bus, float newPos) override;
-    void clearAux (int channel) override;
     void updateSoloAndMute (int channelNum, Track::MuteAndSoloLightState, bool isBright) override;
-    void soloCountChanged (bool) override;
     void playStateChanged (bool isPlaying) override;
     void recordStateChanged (bool isRecording) override;
-    void automationReadModeChanged (bool isReading) override;
-    void automationWriteModeChanged (bool isWriting) override;
     void faderBankChanged (int newStartChannelNumber, const juce::StringArray& trackNames) override;
-    void channelLevelChanged (int channel, float l, float r) override;
-    void trackSelectionChanged(int channel, bool isSelected) override;
     void trackRecordEnabled (int channel, bool isEnabled) override;
-    void masterLevelsChanged(float leftLevel, float rightLevel) override;
     void timecodeChanged (int barsOrHours, int beatsOrMinutes, int ticksOrSeconds, int millisecs, bool isBarsBeats, bool isFrames) override;
     bool wantsMessage (int, const juce::MidiMessage&) override;
     bool canSetEatsAllMessages() override;

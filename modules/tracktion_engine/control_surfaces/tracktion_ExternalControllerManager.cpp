@@ -383,9 +383,10 @@ void ExternalControllerManager::changeListenerCallback (ChangeBroadcaster* sourc
             int num = mapTrackNumToChannelNum (track->getIndexInEditTrackList());
 
             for (auto device : devices)
-                if (device->followsTrackSelection)
-                    if (num != -1 && num != device->channelStart)
-                        device->changeFaderBank (num - device->channelStart, false);
+                if (device->isEnabled())
+                    if (device->followsTrackSelection)
+                        if (num != -1 && num != device->channelStart)
+                            device->changeFaderBank (num - device->channelStart, false);
         }
         FOR_EACH_ACTIVE_DEVICE (updateTrackSelectLights());
     }
@@ -500,8 +501,11 @@ void ExternalControllerManager::updateVolumePlugin (VolumeAndPanPlugin& vp)
 
             for (auto c : devices)
             {
-                c->moveFader (chan, vp.getSliderPos());
-                c->movePanPot (chan, vp.getPan());
+                if (c->isEnabled())
+                {
+                    c->moveFader (chan, vp.getSliderPos());
+                    c->movePanPot (chan, vp.getPan());
+                }
             }
         }
     }
@@ -531,8 +535,11 @@ void ExternalControllerManager::updateVCAPlugin (VCAPlugin& vca)
 
             for (auto c : devices)
             {
-                c->moveFader (chan, vca.getSliderPos());
-                c->movePanPot (chan, 0.0f);
+                if (c->isEnabled())
+                {
+                    c->moveFader (chan, vca.getSliderPos());
+                    c->movePanPot (chan, 0.0f);
+                }
             }
         }
     }

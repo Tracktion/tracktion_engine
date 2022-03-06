@@ -487,6 +487,8 @@ void AlphaTrackControlSurface::acceptMidiMessage (int, const juce::MidiMessage& 
 
 void AlphaTrackControlSurface::moveFader(int channelNum, float newSliderPos)
 {
+    ControlSurface::moveFader (channelNum, newSliderPos);
+
     if (channelNum == 0)
         faderPos = newSliderPos;
 
@@ -513,25 +515,15 @@ void AlphaTrackControlSurface::moveFaderInt (float newSliderPos)
     }
 }
 
-void AlphaTrackControlSurface::moveMasterLevelFader (float, float)
-{
-}
-
 void AlphaTrackControlSurface::movePanPot (int channelNum, float newPan)
 {
+    ControlSurface::movePanPot (channelNum, newPan);
+    
     if (channelNum == 0)
         pan = newPan;
 
     if (mode == Pan)
         updateDisplay();
-}
-
-void AlphaTrackControlSurface::moveAux (int, const char*, float)
-{
-}
-
-void AlphaTrackControlSurface::clearAux (int)
-{
 }
 
 void AlphaTrackControlSurface::updateSoloAndMute (int, Track::MuteAndSoloLightState state, bool isBright)
@@ -543,10 +535,6 @@ void AlphaTrackControlSurface::updateSoloAndMute (int, Track::MuteAndSoloLightSt
 void AlphaTrackControlSurface::soloCountChanged (bool anySoloTracks)
 {
     setLed (0x73, anySoloTracks);
-}
-
-void AlphaTrackControlSurface::playStateChanged (bool)
-{
 }
 
 void AlphaTrackControlSurface::recordStateChanged (bool isRecording)

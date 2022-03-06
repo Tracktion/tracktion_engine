@@ -72,20 +72,21 @@ public:
     // tells the device to move one of its faders.
     // the channel number is the physical channel on the device, regardless of bank selection
     // slider pos is 0 to 1.0
-    virtual void moveFader ([[maybe_unused]] int channelNum, [[maybe_unused]] float newSliderPos) {}
+    //
+    // If you override this, you must call parent class if you use pick mode
+    virtual void moveFader (int channelNum, float newSliderPos);
 
     // tells the device to move the master faders, if it has them. If it just has one master
     // fader, it can use the average of these levels.
     // slider pos is 0 to 1.0
-    virtual void moveMasterLevelFader ([[maybe_unused]] float newLeftSliderPos,
-                                       [[maybe_unused]] float newRightSliderPos) {}
+    virtual void moveMasterLevelFader (float newLeftSliderPos, float newRightSliderPos);
 
     // tells the device to move a pan pot.
     // the channel number is the physical channel on the device, regardless of bank selection
     // pan is -1.0 to 1.0
-    virtual void movePanPot ([[maybe_unused]] int channelNum, [[maybe_unused]] float newPan) {}
+    virtual void movePanPot ([[maybe_unused]] int channelNum, [[maybe_unused]] float newPan);
 
-    virtual void moveAux ([[maybe_unused]] int channel, [[maybe_unused]] const char* bus, [[maybe_unused]] float newPos) {}
+    virtual void moveAux ([[maybe_unused]] int channel, [[maybe_unused]] const char* bus, [[maybe_unused]] float newPos);
 
     virtual void clearAux (int) {}
 
@@ -162,7 +163,7 @@ public:
     //
     // parameterNumber is the physical parameter number on the device, not the
     // virtual one.
-    virtual void parameterChanged ([[maybe_unused]] int parameterNumber, [[maybe_unused]] const ParameterSetting& newValue) {}
+    virtual void parameterChanged ([[maybe_unused]] int parameterNumber, [[maybe_unused]] const ParameterSetting& newValue);
     virtual void clearParameter ([[maybe_unused]] int parameterNumber) {}
 
     virtual void markerChanged ([[maybe_unused]] int parameterNumber, [[maybe_unused]] const MarkerSetting& newValue) {}
@@ -389,6 +390,10 @@ public:
     int numMarkers = 0;
     int numCharactersForMarkerLabels = 0;
 
+    // pick up mode. input value must cross current value before input is accepted
+    // useful for non motorized faders, so the don't jump when adjusted
+    bool pickUpMode = false;
+
     int numAuxes = 0;
     int numCharactersForAuxLabels = 0;
     bool wantsAuxBanks = false;
@@ -399,9 +404,30 @@ public:
     ExternalController* owner = nullptr;
 
 private:
+    enum ControlType
+    {
+        ctrlFader,
+        ctrlMasterFader,
+        ctrlPan,
+        ctrlAux,
+        ctrlParam,
+    };
+
+    struct PickUpInfo
+    {
+        bool pickedUp = false;
+        std::optional<float> lastIn;
+        float lastOut = 0.0f;
+    };
+
     Edit* edit = nullptr;
 
     void performIfNotSafeRecording (const std::function<void()>&);
+
+    bool pickedUp (ControlType, int index, float value);
+    bool pickedUp (ControlType, float value);
+
+    std::map<std::pair<ControlType, int>, PickUpInfo> pickUpMap;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ControlSurface)
 };
