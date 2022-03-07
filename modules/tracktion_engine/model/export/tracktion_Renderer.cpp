@@ -405,7 +405,8 @@ bool Renderer::renderToFile (const juce::String& taskDescription,
                              const juce::BigInteger& tracksToDo,
                              bool usePlugins,
                              juce::Array<Clip*> clips,
-                             bool useThread)
+                             bool useThread,
+                             std::atomic<float>* progressToUpdate)
 {
     CRASH_TRACER
     auto& engine = edit.engine;
@@ -437,7 +438,7 @@ bool Renderer::renderToFile (const juce::String& taskDescription,
 
         addAcidInfo (edit, r);
         
-        if (auto task = render_utils::createRenderTask (r, taskDescription, nullptr, nullptr))
+        if (auto task = render_utils::createRenderTask (r, taskDescription, progressToUpdate, nullptr))
         {
             if (useThread)
             {
