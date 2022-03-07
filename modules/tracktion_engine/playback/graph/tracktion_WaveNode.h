@@ -12,6 +12,7 @@ namespace tracktion { inline namespace engine
 {
 
 class TimeRangeRemappingReader;
+class BeatRangeReader;
 class ResamplerReader;
 
 //==============================================================================
@@ -96,6 +97,24 @@ public:
                       EditItemID,
                       bool isOfflineRender);
 
+    /**
+        @param sourceFileTempoMap   A tempo map describing the changes in the source file.
+                                    This is relative to the start of the file, not the
+                                    positioning in the Edit
+    */
+    WaveNodeRealTime (const AudioFile&,
+                      TimeRange editTime,
+                      TimeDuration offset,
+                      TimeRange loopSection,
+                      LiveClipLevel,
+                      double speedRatio,
+                      const juce::AudioChannelSet& sourceChannelsToUse,
+                      const juce::AudioChannelSet& destChannelsToFill,
+                      ProcessState&,
+                      EditItemID,
+                      bool isOfflineRender,
+                      tempo::Sequence sourceFileTempoMap);
+
     //==============================================================================
     graph::NodeProperties getNodeProperties() override;
     void prepareToPlay (const graph::PlaybackInitialisationInfo&) override;
@@ -119,7 +138,11 @@ private:
     size_t stateHash = 0;
     ResamplerReader* resamplerReader = nullptr;
     std::shared_ptr<TimeRangeRemappingReader> audioReader;
+    std::shared_ptr<BeatRangeReader> beatRangeReader;
     std::shared_ptr<std::vector<float>> channelState;
+
+    std::unique_ptr<tempo::Sequence> tempoSequence;
+    std::unique_ptr<tempo::Sequence::Position> tempoPosition;
 
     bool buildAudioReaderGraph();
     void replaceStateIfPossible (Node*);
