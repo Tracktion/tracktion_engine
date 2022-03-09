@@ -298,6 +298,13 @@ void ExternalController::midiInOutDevicesChanged()
         }
     }
 
+    startTimer (100);
+}
+
+void ExternalController::timerCallback()
+{
+    stopTimer();
+    
     CRASH_TRACER
     if (controlSurface != nullptr)
         getControlSurface().initialiseDevice (isEnabled());
