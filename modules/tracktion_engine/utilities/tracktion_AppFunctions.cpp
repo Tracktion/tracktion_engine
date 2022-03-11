@@ -535,9 +535,9 @@ namespace AppFunctions
         getCurrentUIBehaviour().showHideMidiEditor (fs);
     }
 
-    void showHideTrackEditor()
+    void showHideTrackEditor (bool zoom)
     {
-        getCurrentUIBehaviour().showHideTrackEditor();
+        getCurrentUIBehaviour().showHideTrackEditor (zoom);
     }
 
     void showHideBrowser()

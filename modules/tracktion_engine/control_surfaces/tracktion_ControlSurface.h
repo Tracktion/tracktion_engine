@@ -282,7 +282,7 @@ public:
     void userToggledVideoWindow();
     void userToggledMixerWindow (bool fullscreen);
     void userToggledMidiEditorWindow (bool fullscreen);
-    void userToggledTrackEditorWindow();
+    void userToggledTrackEditorWindow (bool zoomed);
     void userToggledBrowserWindow();
     void userToggledActionsWindow();
     void userPressedUserAction (int);

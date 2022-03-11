@@ -449,7 +449,11 @@ void ControlSurface::userToggledMidiEditorWindow (bool fs)
     RETURN_IF_SAFE_RECORDING
     AppFunctions::showHideMidiEditor (fs);
 }
-void ControlSurface::userToggledTrackEditorWindow()     { performIfNotSafeRecording (&AppFunctions::showHideTrackEditor); }
+void ControlSurface::userToggledTrackEditorWindow (bool zoom)
+{
+    RETURN_IF_SAFE_RECORDING
+    AppFunctions::showHideTrackEditor (zoom);
+}
 void ControlSurface::userToggledBrowserWindow()         { performIfNotSafeRecording (&AppFunctions::showHideBrowser); }
 void ControlSurface::userToggledActionsWindow()         { performIfNotSafeRecording (&AppFunctions::showHideActions); }
 void ControlSurface::userPressedUserAction (int action)
