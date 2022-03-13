@@ -157,7 +157,8 @@ public:
                               bool usePlugins = true,
                               juce::Array<Clip*> clips = {},
                               bool useThread = true,
-                              std::atomic<float>* progressToUpdate = nullptr);
+                              std::atomic<float>* progressToUpdate = nullptr,
+                              std::atomic<bool>* cancelRender = nullptr);
 
     //==============================================================================
     /** @see measureStatistics()

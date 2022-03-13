@@ -406,7 +406,8 @@ bool Renderer::renderToFile (const juce::String& taskDescription,
                              bool usePlugins,
                              juce::Array<Clip*> clips,
                              bool useThread,
-                             std::atomic<float>* progressToUpdate)
+                             std::atomic<float>* progressToUpdate,
+                             std::atomic<bool>* cancelRenderTask)
 {
     CRASH_TRACER
     auto& engine = edit.engine;
@@ -446,8 +447,16 @@ bool Renderer::renderToFile (const juce::String& taskDescription,
             }
             else
             {
-                while (task->runJob() == juce::ThreadPoolJob::jobNeedsRunningAgain)
-                {}
+                while (true) {
+                    if (cancelRenderTask && *cancelRenderTask) {
+                        DBG("Cancelling rendering task!!!");
+                        turnOffAllPlugins (edit);
+                        return false;
+                    }
+                    if (task->runJob() != juce::ThreadPoolJob::jobNeedsRunningAgain) {
+                        break;
+                    }
+                }
             }
         }
     }
