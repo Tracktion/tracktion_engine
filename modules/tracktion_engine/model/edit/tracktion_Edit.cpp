@@ -1495,6 +1495,15 @@ TimecodeDisplayFormat Edit::getTimecodeFormat() const
 void Edit::setTimecodeFormat (TimecodeDisplayFormat newFormat)
 {
     timecodeFormat = newFormat;
+
+    for (auto sm : getSelectionManagers (*this))
+        if (! sm->containsType<ExternalPlugin>())
+            sm->refreshPropertyPanel();
+
+    auto& ecm = engine.getExternalControllerManager();
+
+    if (ecm.isAttachedToEdit (*this))
+        ecm.editPositionChanged (this, getTransport().position);
 }
 
 void Edit::toggleTimecodeMode()
@@ -1512,10 +1521,6 @@ void Edit::toggleTimecodeMode()
     }
 
     setTimecodeFormat (f);
-
-    for (auto sm : getSelectionManagers (*this))
-        if (! sm->containsType<ExternalPlugin>())
-            sm->refreshPropertyPanel();
 }
 
 //==============================================================================
