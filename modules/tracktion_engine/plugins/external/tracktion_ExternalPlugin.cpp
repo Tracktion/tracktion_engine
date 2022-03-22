@@ -8,6 +8,10 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#ifndef TRACKTION_FORCE_HEADLESS
+  #define TRACKTION_FORCE_HEADLESS 0
+#endif
+
 namespace tracktion_engine
 {
 
@@ -194,9 +198,10 @@ struct AsyncPluginDeleter  : private juce::Timer,
         CRASH_TRACER_PLUGIN (plugins.getLast()->getName().toUTF8());
 
         const juce::ScopedValueSetter<bool> setter (recursive, true, false);
-
+#if !TRACKTION_FORCE_HEADLESS
         juce::Component modal;
         modal.enterModalState (false);
+#endif
 
         plugins.removeLast();
     }
@@ -217,9 +222,10 @@ void cleanUpDanglingPlugins()
     {
         for (int count = 400; --count > 0 && d->releaseNextDanglingPlugin();)
         {
+#if !TRACKTION_FORCE_HEADLESS
             juce::Component modal;
             modal.enterModalState (false);
-
+#endif
             juce::MessageManager::getInstance()->runDispatchLoopUntil (10);
         }
     }
