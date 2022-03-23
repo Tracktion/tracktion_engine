@@ -270,6 +270,7 @@ public:
             int w = topR.getWidth() / 3;
             settingsButton.setBounds (topR.removeFromLeft (w).reduced (2));
             playPauseButton.setBounds (topR.removeFromLeft (w).reduced (2));
+            metronomeButton.setBounds (topR.reduced (2));
 
             r.removeFromTop (8);
             topR = r.removeFromTop (30);
@@ -301,11 +302,12 @@ private:
     {
         transport.addChangeListener (this);
         
-        Helpers::addAndMakeVisible (*this, { &settingsButton, &playPauseButton, &fileComp, &cpuUsage,
+        Helpers::addAndMakeVisible (*this, { &settingsButton, &playPauseButton, &metronomeButton, &fileComp, &cpuUsage,
                                              &tempoSlider, &nudgeSlider, &tempoLabel, &nudgeLabel });
         
         settingsButton.onClick  = [this] { EngineHelpers::showAudioDeviceSettings (engine); };
         playPauseButton.onClick = [this] { EngineHelpers::togglePlay (edit); };
+        metronomeButton.getToggleStateValue().referTo (edit.clickTrackEnabled.getPropertyAsValue());
 
         fileComp.addListener (this);
 
@@ -411,7 +413,8 @@ private:
     te::Edit edit { engine, te::createEmptyEdit (engine), te::Edit::forEditing, nullptr, 0 };
     te::TransportControl& transport { edit.getTransport() };
 
-    TextButton settingsButton { "Settings" }, playPauseButton { "Play" };
+    juce::TextButton settingsButton { "Settings" }, playPauseButton { "Play" };
+    juce::ToggleButton metronomeButton { "Metronome" };
     FilenameComponent fileComp { "Audio or MIDI File", {}, true, false, false,
                                  te::soundFileAndMidiWildCard, {}, "Browse for an audio or MIDI file to load..." };
     std::unique_ptr<ClipEditorComponent> clipEditorComponent;
