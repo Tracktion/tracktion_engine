@@ -69,6 +69,7 @@ public:
     TempoSetting::Ptr insertTempo (TimePosition);
     TempoSetting::Ptr insertTempo (BeatPosition, double bpm, float curve);
     TimeSigSetting::Ptr insertTimeSig (TimePosition);
+    TimeSigSetting::Ptr insertTimeSig (BeatPosition);
 
     void removeTempo (int index, bool remapEdit);
     void removeTemposBetween (TimeRange, bool remapEdit);

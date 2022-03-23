@@ -222,6 +222,11 @@ TimeSigSetting::Ptr TempoSequence::insertTimeSig (TimePosition time)
     return insertTimeSig (time, getUndoManager());
 }
 
+TimeSigSetting::Ptr TempoSequence::insertTimeSig (BeatPosition beats)
+{
+    return insertTimeSig (beatsToTime (beats));
+}
+
 TimeSigSetting::Ptr TempoSequence::insertTimeSig (TimePosition time, juce::UndoManager* um)
 {
     BeatPosition beatNum;
