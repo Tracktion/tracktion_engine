@@ -373,17 +373,59 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
     }
     else
     {
-        node = makeNode<WaveNodeRealTime> (playFile,
-                                           clip.getEditTimeRange(),
-                                           nodeOffset,
-                                           loopRange,
-                                           clip.getLiveClipLevel(),
-                                           speed,
-                                           clip.getActiveChannels(),
-                                           juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),
-                                           params.processState,
-                                           clip.itemID,
-                                           params.forRendering);
+        if (clip.getAutoTempo())
+        {
+            std::vector<tempo::TempoChange> tempos;
+            std::vector<tempo::TimeSigChange> timeSigs;
+            auto syncTempo = WaveNodeRealTime::SyncTempo::no;
+            auto syncPitch = WaveNodeRealTime::SyncPitch::no;
+
+            auto wi = clip.getWaveInfo();
+            auto& li = clip.getLoopInfo();
+
+            if (clip.getAutoTempo() && li.getNumBeats() > 0 && wi.hashCode != 0)
+            {
+                tempos.push_back ({ BeatPosition(), li.getBpm (wi), 0.0 });
+                timeSigs.push_back ({ BeatPosition(), li.getNumerator(), li.getDenominator(), false });
+                syncTempo = WaveNodeRealTime::SyncTempo::yes;
+            }
+            else
+            {
+                tempos.push_back ({ BeatPosition(), 120.0, 0.0 });
+                timeSigs.push_back ({ BeatPosition(), 4, 4, false });
+            }
+
+            tempo::Sequence seq (std::move (tempos),
+                                 std::move (timeSigs),
+                                 tempo::LengthOfOneBeat::dependsOnTimeSignature);
+
+            node = makeNode<WaveNodeRealTime> (playFile,
+                                               clip.getEditTimeRange(),
+                                               nodeOffset,
+                                               loopRange,
+                                               clip.getLiveClipLevel(),
+                                               speed,
+                                               clip.getActiveChannels(),
+                                               juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),
+                                               params.processState,
+                                               clip.itemID,
+                                               params.forRendering,
+                                               seq, syncTempo, syncPitch);
+        }
+        else
+        {
+            node = makeNode<WaveNodeRealTime> (playFile,
+                                               clip.getEditTimeRange(),
+                                               nodeOffset,
+                                               loopRange,
+                                               clip.getLiveClipLevel(),
+                                               speed,
+                                               clip.getActiveChannels(),
+                                               juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),
+                                               params.processState,
+                                               clip.itemID,
+                                               params.forRendering);
+        }
     }
     
     // Plugins

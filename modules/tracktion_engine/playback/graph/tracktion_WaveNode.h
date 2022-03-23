@@ -97,10 +97,17 @@ public:
                       EditItemID,
                       bool isOfflineRender);
 
+    //==============================================================================
+    enum class SyncTempo { no, yes };
+    enum class SyncPitch { no, yes };
+
     /**
         @param sourceFileTempoMap   A tempo map describing the changes in the source file.
                                     This is relative to the start of the file, not the
-                                    positioning in the Edit
+                                    positioning in the Edit.
+                                    This map is also used to describe a single tempo/time sig
+                                    for the file with a pair of changes at position 0. With this,
+                                    the file playback will match tempo changes in the Edit.
     */
     WaveNodeRealTime (const AudioFile&,
                       TimeRange editTime,
@@ -113,7 +120,8 @@ public:
                       ProcessState&,
                       EditItemID,
                       bool isOfflineRender,
-                      tempo::Sequence sourceFileTempoMap);
+                      tempo::Sequence sourceFileTempoMap,
+                      SyncTempo, SyncPitch);
 
     //==============================================================================
     graph::NodeProperties getNodeProperties() override;
@@ -141,8 +149,10 @@ private:
     std::shared_ptr<BeatRangeReader> beatRangeReader;
     std::shared_ptr<std::vector<float>> channelState;
 
-    std::unique_ptr<tempo::Sequence> tempoSequence;
+    std::unique_ptr<tempo::Sequence> fileTempoSequence;
     std::unique_ptr<tempo::Sequence::Position> tempoPosition;
+    SyncTempo syncTempo;
+    SyncPitch syncPitch;
 
     bool buildAudioReaderGraph();
     void replaceStateIfPossible (Node*);
