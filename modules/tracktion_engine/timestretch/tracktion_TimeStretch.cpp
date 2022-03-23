@@ -225,7 +225,7 @@ struct SoundTouchStretcher  : public TimeStretcher::Stretcher,
 
     bool setSpeedAndPitch (float speedRatio, float semitonesUp) override
     {
-        setTempo (1.0f / speedRatio);
+        setTempo (speedRatio);
         setPitchSemiTones (semitonesUp);
         inputOutputSampleRatio = getInputOutputSampleRatio();
         
