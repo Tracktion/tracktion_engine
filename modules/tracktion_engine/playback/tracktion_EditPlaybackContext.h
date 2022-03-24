@@ -95,8 +95,13 @@ public:
     TimePosition getAudibleTimelineTime();
     double getSampleRate() const;
     void updateNumCPUs();
+
+    /** This will increase/decrease playback speed by resampling, pitching the output up or down. */
     void setSpeedCompensation (double plusOrMinus);
+
+    /** This will increase/decrease playback speed by changing the tempo, maintaining pitch where possible. */
     void setTempoAdjustment (double plusOrMinusProportion);
+
     void postPosition (TimePosition);
     void play();
     void stop();

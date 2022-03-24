@@ -54,6 +54,9 @@ public:
                           {{ BeatPosition(), 4, 4, false }},
                           tempo::LengthOfOneBeat::dependsOnTimeSignature);
 
+            juce::UnitTest::expect (seq.getKeyAt (0s) == Key());
+            juce::UnitTest::expect (seq.getKeyAt (1s) == Key());
+
             expect (seq, {}, {});
             expect (seq, BeatPosition::fromBeats (1), 1s);
             expect (seq, BeatPosition::fromBeats (4), 4s);
@@ -140,6 +143,28 @@ public:
             expect (seq, BeatPosition::fromBeats (4), 4s);
             expect (seq, BeatPosition::fromBeats (60), 1min);
             expect (seq, BeatPosition::fromBeats (120), 2min);
+        }
+
+        beginTest ("0b: 120bpm 4/4 c=-1 p=60 s=0, 4b: 60bpm 4/4 p=42 s=1");
+        {
+            Sequence seq ({{ BeatPosition(), 120.0, -1.0f },
+                           { BeatPosition::fromBeats (4), 60.0, 0.0f } },
+                          {{ BeatPosition(), 4, 4, false }},
+                          {{ BeatPosition(), {} },
+                           { BeatPosition::fromBeats (4), { 42, 1 } } },
+                          tempo::LengthOfOneBeat::dependsOnTimeSignature);
+
+            expect (seq, {}, {});
+            expect (seq, BeatPosition::fromBeats (1), 1s);
+            expect (seq, BeatPosition::fromBeats (4), 4s);
+            expect (seq, BeatPosition::fromBeats (60), 1min);
+            expect (seq, BeatPosition::fromBeats (120), 2min);
+
+            juce::UnitTest::expect (seq.getKeyAt (0s) == Key());
+            juce::UnitTest::expect (seq.getKeyAt (1s) == Key());
+            juce::UnitTest::expect (seq.getKeyAt (seq.toTime (BeatPosition::fromBeats (3.0))) == Key());
+            juce::UnitTest::expect (seq.getKeyAt (seq.toTime (BeatPosition::fromBeats (4.0))) == Key { 42, 1 });
+            juce::UnitTest::expect (seq.getKeyAt (seq.toTime (BeatPosition::fromBeats (8.0))) == Key { 42, 1 });
         }
     }
 
@@ -371,6 +396,31 @@ private:
                 expect (pos.getTime() == 1min);
                 pos.add (1min);
                 expect (pos.getTime() == 2min);
+            }
+
+            {
+                tempo::Sequence seq ({{ BeatPosition(), 120.0, -1.0f },
+                                      { BeatPosition::fromBeats (4), 60.0, 0.0f } },
+                                     {{ BeatPosition(), 4, 4, false }},
+                                     {{ BeatPosition(), {} },
+                                      { BeatPosition::fromBeats (4), { 42, 1 } } },
+                                     tempo::LengthOfOneBeat::dependsOnTimeSignature);
+
+                tempo::Sequence::Position pos (seq);
+
+                expect (pos.getKey() == tempo::Key());
+                pos.set (1s);
+                expect (pos.getBeats() == BeatPosition::fromBeats (1));
+                expect (pos.getKey() == tempo::Key());
+                pos.add (3s);
+                expect (pos.getBeats() == BeatPosition::fromBeats (4));
+                expect (pos.getKey() == tempo::Key { 42, 1 });
+                pos.add (BeatDuration::fromBeats (56));
+                expect (pos.getKey() == tempo::Key { 42, 1 });
+                expect (pos.getTime() == 1min);
+                pos.add (1min);
+                expect (pos.getTime() == 2min);
+                expect (pos.getKey() == tempo::Key { 42, 1 });
             }
         }
     }

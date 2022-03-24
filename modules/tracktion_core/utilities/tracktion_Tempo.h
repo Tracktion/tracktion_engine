@@ -49,6 +49,13 @@ namespace tempo
         int denominator = 0;    /**< The denominator part of the signature. */
     };
 
+    /** Represents a musical key. */
+    struct Key
+    {
+        int pitch = 60;                 /**< The pitch in MIDI note number (0, 127). */
+        int scale = 0;                  /**< The scale. */
+    };
+
     /** A strong typedef for BPM values. */
     struct BeatsPerMinute { double v = 0.0; };
 
@@ -80,6 +87,14 @@ namespace tempo
     };
 
     //==============================================================================
+    /** Represents a change in key at a specific beat. */
+    struct KeyChange
+    {
+        BeatPosition startBeat;         /**< The position of the change. */
+        Key key;                        /**< The key at this position. */
+    };
+
+    //==============================================================================
     /** Used to determine the length of a beat in beat <-> time conversions. */
     enum class LengthOfOneBeat
     {
@@ -106,6 +121,12 @@ namespace tempo
         //==============================================================================
         /** Creates a Sequence for at least one TempoChange and at least one TimeSigChange. */
         Sequence (std::vector<TempoChange>, std::vector<TimeSigChange>,
+                  LengthOfOneBeat);
+
+        /** Creates a Sequence for at least one TempoChange and at least one TimeSigChange
+            and an optional number of KeyChange[s].
+        */
+        Sequence (std::vector<TempoChange>, std::vector<TimeSigChange>, std::vector<KeyChange>,
                   LengthOfOneBeat);
 
         /** Copies another Sequence. */
@@ -142,6 +163,9 @@ namespace tempo
 
         /** Returns the number of beats per second at a position. */
         BeatsPerSecond getBeatsPerSecondAt (TimePosition) const;
+
+        /** Returns the key at a position. */
+        Key getKeyAt (TimePosition) const;
 
         /** Returns a unique hash of this sequence. */
         size_t hash() const;
@@ -183,6 +207,9 @@ namespace tempo
 
             /** Returns the current TimeSignature of the Position. */
             TimeSignature getTimeSignature() const;
+
+            /** Returns the Key of the Position. */
+            Key getKey() const;
 
             //==============================================================================
             /** Sets the Position to a new time. */
@@ -275,6 +302,11 @@ namespace tempo
 /** Converts a BeatsPerSecond to SecondsPerBeat. */
 [[ nodiscard ]] constexpr tempo::SecondsPerBeat operator/ (double t, tempo::BeatsPerSecond bps) { return { t / bps.v }; }
 
+/** Compares two Keys. */
+[[ nodiscard ]] constexpr bool operator== (tempo::Key k1, tempo::Key k2) { return k1.pitch == k2.pitch && k1.scale == k2.scale; }
+/** Compares two Keys. */
+[[ nodiscard ]] constexpr bool operator!= (tempo::Key k1, tempo::Key k2) { return ! (k1 == k2); }
+
 //==============================================================================
 //        _        _           _  _
 //     __| |  ___ | |_   __ _ (_)| | ___
@@ -307,6 +339,7 @@ struct Sequence::Section
     BeatDuration beatsUntilFirstBar;
     int barNumberOfFirstBar, numerator, prevNumerator, denominator;
     bool triplets;
+    Key key;
 };
 
 namespace details
@@ -418,14 +451,24 @@ inline double Sequence::calcCurveBpm (double beat, const TempoChange t1, const T
 //==============================================================================
 inline Sequence::Sequence (std::vector<TempoChange> tempos, std::vector<TimeSigChange> timeSigs,
                            LengthOfOneBeat lengthOfOneBeat)
+    : Sequence (std::move (tempos), std::move (timeSigs), {}, lengthOfOneBeat)
 {
+}
+
+inline Sequence::Sequence (std::vector<TempoChange> tempos, std::vector<TimeSigChange> timeSigs, std::vector<KeyChange> keys,
+                           LengthOfOneBeat lengthOfOneBeat)
+{
+    if (keys.empty())
+        keys.push_back ({});
+
     assert (tempos.size() > 0 && timeSigs.size() > 0);
     assert (tempos[0].startBeat == BeatPosition());
     assert (timeSigs[0].startBeat == BeatPosition());
+    assert (keys[0].startBeat == BeatPosition());
 
     // Find the beats with changes
     std::vector<BeatPosition> beatsWithChanges;
-    beatsWithChanges.reserve (tempos.size() + timeSigs.size());
+    beatsWithChanges.reserve (tempos.size() + timeSigs.size() + keys.size());
 
     for (const auto& tempo : tempos)
     {
@@ -446,6 +489,15 @@ inline Sequence::Sequence (std::vector<TempoChange> tempos, std::vector<TimeSigC
         hash_combine (hashCode, timeSig.triplets);
     }
 
+    for (const auto& keyChange : keys)
+    {
+        beatsWithChanges.push_back (keyChange.startBeat);
+
+        hash_combine (hashCode, keyChange.startBeat.inBeats());
+        hash_combine (hashCode, keyChange.key.pitch);
+        hash_combine (hashCode, keyChange.key.scale);
+    }
+
     std::sort (beatsWithChanges.begin(), beatsWithChanges.end());
     beatsWithChanges.erase (std::unique (beatsWithChanges.begin(), beatsWithChanges.end()),
                             beatsWithChanges.end());
@@ -456,9 +508,11 @@ inline Sequence::Sequence (std::vector<TempoChange> tempos, std::vector<TimeSigC
     double ppq          = 0.0;
     size_t timeSigIdx   = 0;
     size_t tempoIdx     = 0;
+    size_t keyIdx       = 0;
 
     auto currTempo   = tempos[tempoIdx++];
     auto currTimeSig = timeSigs[timeSigIdx++];
+    auto currKey     = keys[keyIdx++];
 
     const bool useDenominator = lengthOfOneBeat == LengthOfOneBeat::dependsOnTimeSignature;
 
@@ -473,9 +527,12 @@ inline Sequence::Sequence (std::vector<TempoChange> tempos, std::vector<TimeSigC
         if (timeSigIdx < timeSigs.size() && timeSigs[timeSigIdx].startBeat == currentBeat)
             currTimeSig = timeSigs[timeSigIdx++];
 
+        if (keyIdx < keys.size() && keys[keyIdx].startBeat == currentBeat)
+            currKey = keys[keyIdx++];
+
         const bool nextTempoValid = tempoIdx < tempos.size();
         double bpm = nextTempoValid ? calcCurveBpm (currTempo.startBeat.inBeats(), currTempo, tempos[tempoIdx])
-                               : currTempo.bpm;
+                                    : currTempo.bpm;
 
         int numSubdivisions = 1;
 
@@ -504,6 +561,8 @@ inline Sequence::Sequence (std::vector<TempoChange> tempos, std::vector<TimeSigC
 
             it.ppqAtStart = ppq;
             ppq += 4 * numBeats.inBeats() / it.denominator;
+
+            it.key              = currKey.key;
 
             if (sections.empty())
             {
@@ -614,6 +673,20 @@ inline double Sequence::getBpmAt (TimePosition t) const
     return 120.0;
 }
 
+inline Key Sequence::getKeyAt (TimePosition t) const
+{
+    for (int i = (int) sections.size(); --i >= 0;)
+    {
+        auto& it = sections[(size_t) i];
+
+        if (it.startTime <= t || i == 0)
+            return it.key;
+    }
+
+    assert(false);
+    return {};
+}
+
 inline BeatsPerSecond Sequence::getBeatsPerSecondAt (TimePosition t) const
 {
     for (int i = (int) sections.size(); --i >= 0;)
@@ -678,6 +751,12 @@ inline TimeSignature Sequence::Position::getTimeSignature() const
 {
     auto& it = sections[index];
     return { it.numerator, it.denominator };
+}
+
+inline Key Sequence::Position::getKey() const
+{
+    auto& it = sections[index];
+    return it.key;
 }
 
 //==============================================================================
