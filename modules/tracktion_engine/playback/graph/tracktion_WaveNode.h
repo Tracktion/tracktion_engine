@@ -14,6 +14,7 @@ namespace tracktion { inline namespace engine
 class TimeRangeRemappingReader;
 class BeatRangeReader;
 class ResamplerReader;
+class PitchAdjustReader;
 
 //==============================================================================
 /** An Node that plays back a wave file. */
@@ -98,7 +99,10 @@ public:
                       bool isOfflineRender);
 
     //==============================================================================
+    /** Represets whether the file should try and match Edit tempo changes. */
     enum class SyncTempo { no, yes };
+
+    /** Represets whether the file should try and match Edit pitch changes. */
     enum class SyncPitch { no, yes };
 
     /**
@@ -145,6 +149,7 @@ private:
 
     size_t stateHash = 0;
     ResamplerReader* resamplerReader = nullptr;
+    PitchAdjustReader* pitchAdjustReader = nullptr;
     std::shared_ptr<TimeRangeRemappingReader> audioReader;
     std::shared_ptr<BeatRangeReader> beatRangeReader;
     std::shared_ptr<std::vector<float>> channelState;

@@ -373,10 +373,11 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
     }
     else
     {
-        if (clip.getAutoTempo())
+        if (clip.getAutoTempo() || clip.getAutoPitch())
         {
             std::vector<tempo::TempoChange> tempos;
             std::vector<tempo::TimeSigChange> timeSigs;
+            std::vector<tempo::KeyChange> keyChanges;
             auto syncTempo = WaveNodeRealTime::SyncTempo::no;
             auto syncPitch = WaveNodeRealTime::SyncPitch::no;
 
@@ -395,8 +396,15 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                 timeSigs.push_back ({ BeatPosition(), 4, 4, false });
             }
 
+            if (clip.getAutoPitch() && li.getRootNote() != -1)
+            {
+                keyChanges.push_back ({ BeatPosition(), { li.getRootNote(), 0 } });
+                syncPitch = WaveNodeRealTime::SyncPitch::yes;
+            }
+
             tempo::Sequence seq (std::move (tempos),
                                  std::move (timeSigs),
+                                 std::move (keyChanges),
                                  tempo::LengthOfOneBeat::dependsOnTimeSignature);
 
             node = makeNode<WaveNodeRealTime> (playFile,

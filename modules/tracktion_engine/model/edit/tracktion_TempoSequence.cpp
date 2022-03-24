@@ -556,6 +556,7 @@ void TempoSequence::updateTempoData()
     // Build the new sequence
     std::vector<tempo::TempoChange> tempoChanges;
     std::vector<tempo::TimeSigChange> timeSigChanges;
+    std::vector<tempo::KeyChange> keyChanges;
 
     // Copy change events
     {
@@ -564,10 +565,13 @@ void TempoSequence::updateTempoData()
 
         for (auto ts : getTimeSigs())
             timeSigChanges.push_back ({ ts->startBeatNumber.get(), ts->numerator.get(), ts->denominator.get(), ts->triplets.get() });
+
+        for (auto pc : edit.pitchSequence.getPitches())
+            keyChanges.push_back ({ pc->startBeat.get(), { pc->pitch.get(), static_cast<int> (pc->scale.get()) } });
     }
 
     const bool useDenominator = edit.engine.getEngineBehaviour().lengthOfOneBeatDependsOnTimeSignature();
-    tempo::Sequence newSeq (std::move (tempoChanges), std::move (timeSigChanges),
+    tempo::Sequence newSeq (std::move (tempoChanges), std::move (timeSigChanges), std::move (keyChanges),
                             useDenominator ? tempo::LengthOfOneBeat::dependsOnTimeSignature
                                            : tempo::LengthOfOneBeat::isAlwaysACrotchet);
 

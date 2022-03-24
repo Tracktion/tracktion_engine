@@ -56,7 +56,7 @@ struct PitchSequence::PitchList  : public ValueTreeObjectList<PitchSetting>,
 
     void handleAsyncUpdate() override
     {
-        pitchSequence.getEdit().sendTempoOrPitchSequenceChangedUpdates();
+        pitchSequence.getEdit().tempoSequence.updateTempoData();
     }
 
     PitchSequence& pitchSequence;

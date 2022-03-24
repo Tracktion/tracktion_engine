@@ -58,6 +58,14 @@ TracktionEngineNode::TracktionEngineNode (ProcessState& ps)
 {
 }
 
+tempo::Key TracktionEngineNode::getKey() const
+{
+    if (processState.tempoPosition)
+        return processState.tempoPosition->getKey();
+
+    return {};
+}
+
 std::optional<TimePosition> TracktionEngineNode::getTimeOfNextChange() const
 {
     if (processState.tempoPosition)

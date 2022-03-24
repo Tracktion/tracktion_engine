@@ -314,10 +314,23 @@ public:
         setPosition (toSamples (t, getSampleRate()));
     }
 
-    void setSpeedAndPitch (double speedRatio, float semitones)
+    void setSpeed (double speedRatio)
     {
         playbackSpeedRatio = speedRatio;
-        [[ maybe_unused ]] const bool ok = timeStretcher.setSpeedAndPitch ((float) speedRatio, semitones);
+        setSpeedAndPitch (playbackSpeedRatio, semitonesShift);
+    }
+
+    void setPitch (double semitones)
+    {
+        semitonesShift = semitones;
+        setSpeedAndPitch (playbackSpeedRatio, semitonesShift);
+    }
+
+    void setSpeedAndPitch (double speedRatio, double semitones)
+    {
+        playbackSpeedRatio = speedRatio;
+        semitonesShift = semitones;
+        [[ maybe_unused ]] const bool ok = timeStretcher.setSpeedAndPitch ((float) speedRatio, (float) semitonesShift);
         assert (ok);
     }
 
@@ -364,7 +377,7 @@ public:
     const int numChannels;
     TimeStretcher timeStretcher;
     AudioFifo inputFifo { numChannels, chunkSize }, outputFifo { numChannels, chunkSize * 10 };
-    double playbackSpeedRatio = 1.0, readPosition = 0.0;
+    double playbackSpeedRatio = 1.0, semitonesShift = 0.0, readPosition = 0.0;
 
     SampleCount getReadPosition() const
     {
@@ -374,17 +387,65 @@ public:
 
 
 //==============================================================================
-class TimeRangeReader : public AudioReader
+class PitchAdjustReader : public SingleInputAudioReader
+{
+public:
+    PitchAdjustReader (std::unique_ptr<AudioReader> input,
+                       TimeStretchReader* timeStretcher,
+                       const tempo::Sequence& fileTempoSequence)
+        : SingleInputAudioReader (std::move (input)),
+          timeStretchSource (timeStretcher),
+          rootPitch (fileTempoSequence.getKeyAt (0s).pitch)
+    {
+        assert (timeStretchSource != nullptr);
+    }
+
+    void setKey (tempo::Key newKey)
+    {
+        key = newKey;
+    }
+
+    bool readSamples (choc::buffer::ChannelArrayView<float>& destBuffer) override
+    {
+        int pitch = key.pitch;
+        int transposeBase = pitch - rootPitch;
+
+        while (transposeBase > 6)  transposeBase -= 12;
+        while (transposeBase < -6) transposeBase += 12;
+
+        timeStretchSource->setPitch (static_cast<double> (transposeBase));
+
+        return SingleInputAudioReader::readSamples (destBuffer);
+    }
+
+    TimeStretchReader* timeStretchSource;
+    const int rootPitch = 60;
+    tempo::Key key;
+};
+
+
+//==============================================================================
+class TimeRangeReader : public SingleInputAudioReader
 {
 public:
     TimeRangeReader (std::unique_ptr<ResamplerReader> input)
-        : resamplerReader (std::move (input)), source (resamplerReader.get())
+        : SingleInputAudioReader (std::move (input)),
+          resamplerReader (static_cast<ResamplerReader*> (source.get()))
     {
     }
 
     TimeRangeReader (std::unique_ptr<TimeStretchReader> input)
-        : timeStretchSource (std::move (input)), source (timeStretchSource.get())
+        : SingleInputAudioReader (std::move (input)),
+          timeStretchSource (static_cast<TimeStretchReader*> (source.get()))
     {
+    }
+
+    TimeRangeReader (std::unique_ptr<AudioReader> input,
+                     TimeStretchReader* timeStretcher)
+        : SingleInputAudioReader (std::move (input)),
+          timeStretchSource (timeStretcher)
+    {
+        assert (timeStretcher != nullptr);
     }
 
     bool read (TimeRange tr,
@@ -401,7 +462,7 @@ public:
         const auto blockSpeedRatio = numSourceSamples / (double) destBuffer.getNumFrames();
 
         if (timeStretchSource)
-            timeStretchSource->setSpeedAndPitch (blockSpeedRatio, 1.0f);
+            timeStretchSource->setSpeed (blockSpeedRatio);
         else
             resamplerReader->setSpeedRatio (blockSpeedRatio);
 
@@ -410,21 +471,8 @@ public:
         return readSamples (destBuffer);
     }
 
-    choc::buffer::ChannelCount getNumChannels() override    { return source->getNumChannels(); }
-    SampleCount getPosition() override                      { return source->getPosition(); }
-    void setPosition (SampleCount t) override               { source->setPosition (t); }
-    void setPosition (TimePosition t) override              { source->setPosition (t); }
-    double getSampleRate() override                         { return source->getSampleRate(); }
-
-    bool readSamples (choc::buffer::ChannelArrayView<float>& destBuffer) override
-    {
-        return timeStretchSource ? timeStretchSource->readSamples (destBuffer)
-                                 : resamplerReader->readSamples (destBuffer);
-    }
-
-    std::unique_ptr<ResamplerReader> resamplerReader;
-    std::unique_ptr<TimeStretchReader> timeStretchSource;
-    AudioReader* source = nullptr;
+    ResamplerReader* resamplerReader = nullptr;
+    TimeStretchReader* timeStretchSource = nullptr;
 };
 
 
@@ -912,7 +960,20 @@ bool WaveNodeRealTime::buildAudioReaderGraph()
     auto resamplerAudioReader   = std::make_unique<ResamplerReader> (std::move (offsetReader), outputSampleRate);
     resamplerReader = resamplerAudioReader.get();
     auto timeStretchReader      = std::make_unique<TimeStretchReader> (std::move (resamplerAudioReader));
-    auto timeRangeReader        = std::make_unique<TimeRangeReader> (std::move (timeStretchReader));
+
+    std::unique_ptr<TimeRangeReader> timeRangeReader;
+
+    if (fileTempoSequence && syncPitch == SyncPitch::yes)
+    {
+        auto timeStretcher = timeStretchReader.get();
+        auto pitchAdjuster = std::make_unique<PitchAdjustReader> (std::move (timeStretchReader), timeStretchReader.get(), *fileTempoSequence);
+        pitchAdjustReader  = pitchAdjuster.get();
+        timeRangeReader    = std::make_unique<TimeRangeReader> (std::move (pitchAdjuster), timeStretcher);
+    }
+    else
+    {
+        timeRangeReader        = std::make_unique<TimeRangeReader> (std::move (timeStretchReader));
+    }
 
     if (fileTempoSequence && syncTempo == SyncTempo::yes)
     {
@@ -953,6 +1014,7 @@ void WaveNodeRealTime::replaceStateIfPossible (Node* rootNodeToReplace)
 
             audioReader = other->audioReader;
             beatRangeReader = other->beatRangeReader;
+            pitchAdjustReader = other->pitchAdjustReader;
             channelState = other->channelState;
         }
     };
@@ -992,6 +1054,9 @@ void WaveNodeRealTime::processSection (ProcessContext& pc, TimeRange sectionEdit
 
     if (resamplerReader != nullptr)
         resamplerReader->setGains (gains[0], gains[1]);
+
+    if (pitchAdjustReader != nullptr)
+        pitchAdjustReader->setKey (getKey());
 
     // Read through the audio stack
     if (beatRangeReader && beatRangeReader->read (getEditBeatRange(), pc.buffers.audio))

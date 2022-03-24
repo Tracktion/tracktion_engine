@@ -69,6 +69,9 @@ public:
     /** Returns the reference sample range (from the DeviceManager) of the current process block. */
     juce::Range<int64_t> getReferenceSampleRange() const    { return processState.referenceSampleRange; }
 
+    /** Returns the key of the current process block. */
+    tempo::Key getKey() const;
+
     //==============================================================================
     /** May return the time of the next tempo or time sig change. */
     std::optional<TimePosition> getTimeOfNextChange() const;

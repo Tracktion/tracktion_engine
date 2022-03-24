@@ -763,13 +763,14 @@ void Edit::initialise()
 
 void Edit::initialiseTempoAndPitch()
 {
+    // Initiliase PitchSequence first as the TempoSequence depends on it
+    pitchSequence.initialise (*this, state.getOrCreateChildWithName (IDs::PITCHSEQUENCE, nullptr));
+
     const bool needToLoadOldTempoData = ! state.getChildWithName (IDs::TEMPOSEQUENCE).isValid();
     tempoSequence.setState (state.getOrCreateChildWithName (IDs::TEMPOSEQUENCE, nullptr), false);
 
     if (needToLoadOldTempoData)
         loadOldTimeSigInfo();
-
-    pitchSequence.initialise (*this, state.getOrCreateChildWithName (IDs::PITCHSEQUENCE, nullptr));
 }
 
 void Edit::initialiseTimecode (juce::ValueTree& transportState)
