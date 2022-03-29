@@ -954,13 +954,12 @@ TimePosition EditPlaybackContext::globalStreamTimeToEditTimeUnlooped (double glo
     return TimePosition::fromSamples (timelinePosition, sampleRate);
 }
 
-void EditPlaybackContext::resyncToGlobalStreamTime (juce::Range<double> globalStreamTime)
+void EditPlaybackContext::resyncToGlobalStreamTime (juce::Range<double> globalStreamTime, double sampleRate)
 {
     if (! nodePlaybackContext)
         return;
     
-    const double sampleRate = getSampleRate();
-    const auto globalSampleRange = tracktion::graph::timeToSample (globalStreamTime, sampleRate);
+    const auto globalSampleRange = tracktion_graph::timeToSample (globalStreamTime, sampleRate);
     nodePlaybackContext->resyncToReferenceSampleRange (globalSampleRange);
 }
 

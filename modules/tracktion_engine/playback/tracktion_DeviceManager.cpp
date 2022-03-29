@@ -1224,7 +1224,7 @@ void DeviceManager::audioDeviceAboutToStart (juce::AudioIODevice* device)
     const juce::ScopedLock sl (contextLock);
 
     for (auto c : activeContexts)
-        c->resyncToGlobalStreamTime ({ streamTime, streamTime + device->getCurrentBufferSizeSamples() / currentSampleRate });
+        c->resyncToGlobalStreamTime ({ streamTime, streamTime + device->getCurrentBufferSizeSamples() / currentSampleRate }, currentSampleRate);
 
     if (globalOutputAudioProcessor != nullptr)
         globalOutputAudioProcessor->prepareToPlay (currentSampleRate, device->getCurrentBufferSizeSamples());
@@ -1267,7 +1267,7 @@ void DeviceManager::addContext (EditPlaybackContext* c)
     {
         const juce::ScopedLock sl (contextLock);
         lastStreamTime = streamTime;
-        c->resyncToGlobalStreamTime ({ lastStreamTime, lastStreamTime + getBlockSize() / currentSampleRate });
+        c->resyncToGlobalStreamTime ({ lastStreamTime, lastStreamTime + getBlockSize() / currentSampleRate }, currentSampleRate);
         activeContexts.addIfNotAlreadyThere (c);
     }
 
