@@ -102,7 +102,7 @@ public:
     
     double globalStreamTimeToEditTime (double) const;
     double globalStreamTimeToEditTimeUnlooped (double) const;
-    void resyncToGlobalStreamTime (juce::Range<double>);
+    void resyncToGlobalStreamTime (juce::Range<double>, double sampleRate);
 
     /** @internal. Will be removed in a future release. */
     tracktion_graph::PlayHead* getNodePlayHead() const;
