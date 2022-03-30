@@ -112,7 +112,7 @@ private:
        #endif
 
         const float expectedPitchValue = sourcePitch * tracktion::engine::Pitch::semitonesToRatio (semitonesUp);
-        const int expectedSize = (int) std::ceil (sourceBuffer.getNumSamples() * stretchRatio);
+        const int expectedSize = (int) std::ceil (sourceBuffer.getNumSamples() / stretchRatio);
 
         // Check number of zero crossings and estimate pitch
         const int numZeroCrossingsShifted = getNumZeroCrossings (resultBuffer, expectedSize);
@@ -162,7 +162,7 @@ private:
         const int numChannels = sourceBuffer.getNumChannels();
         jassert (numChannels == 2); // Expected stereo for now
         
-        const int destSize = (int) std::ceil (sourceBuffer.getNumSamples() * stretchRatio) + 8192;
+        const int destSize = (int) std::ceil (sourceBuffer.getNumSamples() / stretchRatio) + 8192;
         juce::AudioBuffer<float> resultBuffer (sourceBuffer.getNumChannels(), destSize);
         int numInputsDone = 0, numOutputsDone = 0;
 
