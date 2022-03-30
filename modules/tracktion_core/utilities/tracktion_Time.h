@@ -269,6 +269,13 @@ private:
 /** Returns the absolute of this BeatPosition. */
 [[ nodiscard ]] BeatPosition abs (BeatPosition);
 
+/** Literal suffix to create a BeatDuration. */
+[[ nodiscard ]] constexpr BeatPosition operator"" _bp (long double beats);
+
+/** Literal suffix to create a BeatDuration. */
+[[ nodiscard ]] constexpr BeatPosition operator"" _bp (unsigned long long beats);
+
+
 //==============================================================================
 //==============================================================================
 /**
@@ -309,6 +316,11 @@ private:
 /** Returns the absolute of this BeatDuration. */
 [[ nodiscard ]] BeatDuration abs (BeatDuration);
 
+/** Literal suffix to create a BeatDuration. */
+[[ nodiscard ]] constexpr BeatDuration operator"" _bd (long double beats);
+
+/** Literal suffix to create a BeatDuration. */
+[[ nodiscard ]] constexpr BeatDuration operator"" _bd (unsigned long long beats);
 
 //==============================================================================
 /** Adds two BeatDurations together. */
@@ -617,6 +629,15 @@ inline BeatPosition abs (BeatPosition t)
     return BeatPosition::fromBeats (std::abs (t.inBeats()));
 }
 
+inline constexpr BeatPosition operator"" _bp (long double beats)
+{
+    return BeatPosition::fromBeats (beats);
+}
+
+inline constexpr BeatPosition operator"" _bp (unsigned long long beats)
+{
+    return BeatPosition::fromBeats (beats);
+}
 
 //==============================================================================
 //==============================================================================
@@ -646,6 +667,16 @@ inline BeatPosition roundToNearestBeat (BeatPosition t)
 inline BeatDuration abs (BeatDuration t)
 {
     return BeatDuration::fromBeats (std::abs (t.inBeats()));
+}
+
+inline constexpr BeatDuration operator"" _bd (long double beats)
+{
+    return BeatDuration::fromBeats (beats);
+}
+
+inline constexpr BeatDuration operator"" _bd (unsigned long long beats)
+{
+    return BeatDuration::fromBeats (beats);
 }
 
 constexpr BeatPosition toPosition (BeatDuration t)

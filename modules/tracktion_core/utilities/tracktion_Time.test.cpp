@@ -309,6 +309,11 @@ public:
             expectEquals (BeatPosition::fromBeats (42).inBeats(), 42.0);
             expectEquals (BeatPosition::fromBeats (42u).inBeats(), 42.0);
 
+            expect (BeatPosition::fromBeats (0.5) == 0.5_bp);
+            expect (BeatPosition::fromBeats (0.5f) == 0.5_bp);
+            expect (BeatPosition::fromBeats (42) == 42_bp);
+            expect (BeatPosition::fromBeats (42u) == 42_bp);
+
             // Ordering
             {
                 expect (BeatPosition::fromBeats (1) > BeatPosition());
@@ -347,6 +352,11 @@ public:
             expectEquals (BeatDuration::fromBeats (-0.5f).inBeats(), -0.5);
             expectEquals (BeatDuration::fromBeats (-42).inBeats(), -42.0);
 
+            expect (BeatDuration::fromBeats (0.5) == 0.5_bd);
+            expect (BeatDuration::fromBeats (0.5f) == 0.5_bd);
+            expect (BeatDuration::fromBeats (42) == 42_bd);
+            expect (BeatDuration::fromBeats (42u) == 42_bd);
+
             // Ordering
             {
                 expect (BeatDuration::fromBeats (1) > BeatDuration());
@@ -374,6 +384,10 @@ public:
             expectEquals ((BeatPosition::fromBeats (2.0) + BeatDuration::fromBeats (2.0)).inBeats(), 4.0);
             expectEquals ((BeatPosition::fromBeats (2.0) - BeatDuration::fromBeats (2.0)).inBeats(), 0.0);
             expectEquals ((BeatPosition::fromBeats (2.0) - BeatDuration::fromBeats (4.0)).inBeats(), -2.0);
+
+            expectEquals ((2.0_bp + 2.0_bd).inBeats(), 4.0);
+            expectEquals ((2_bp - 2.0_bd).inBeats(), 0.0);
+            expectEquals ((2_bp - 4_bd).inBeats(), -2.0);
         }
     }
 };
