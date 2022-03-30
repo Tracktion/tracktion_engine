@@ -505,7 +505,7 @@ void TranzportControlSurface::updateDisplay()
     }
     else
     {
-        sprintf (text + 16, sizeof (text) - 16, "%3d", abs (int (pan * 100)));
+        sprintf (text + 16, sizeof (text) - 16, "%3d", std::abs (int (pan * 100)));
         text[19] = pan < 0 ? 'L' : 'R';
     }
 

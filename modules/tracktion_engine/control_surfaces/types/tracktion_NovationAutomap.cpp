@@ -1136,6 +1136,6 @@ bool NovationAutomap::showingMarkers()                              { return fal
 bool NovationAutomap::showingTracks()                               { return true; }
 bool NovationAutomap::isPluginSelected (Plugin*)                    { return false; }
 
-}
+}} // namespace tracktion { inline namespace engine
 
 #endif
