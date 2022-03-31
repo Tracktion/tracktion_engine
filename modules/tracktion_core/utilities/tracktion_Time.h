@@ -79,6 +79,16 @@ private:
 /** Returns the absolute of this TimePosition. */
 [[ nodiscard ]] TimePosition abs (TimePosition);
 
+inline namespace literals
+{
+/** Literal suffix to create a TimePosition. */
+[[ nodiscard ]] constexpr TimePosition operator"" _tp (long double seconds);
+
+/** Literal suffix to create a TimeDuration. */
+[[ nodiscard ]] constexpr TimePosition operator"" _tp (unsigned long long seconds);
+}
+
+
 //==============================================================================
 //==============================================================================
 /**
@@ -134,6 +144,15 @@ private:
 
 /** Returns the absolute of this TimeDuration. */
 [[ nodiscard ]] TimeDuration abs (TimeDuration);
+
+inline namespace literals
+{
+/** Literal suffix to create a TimeDuration. */
+[[ nodiscard ]] constexpr TimeDuration operator"" _td (long double seconds);
+
+/** Literal suffix to create a TimeDuration. */
+[[ nodiscard ]] constexpr TimeDuration operator"" _td (unsigned long long seconds);
+}
 
 //==============================================================================
 /** Adds two TimeDurations together. */
@@ -269,12 +288,14 @@ private:
 /** Returns the absolute of this BeatPosition. */
 [[ nodiscard ]] BeatPosition abs (BeatPosition);
 
-/** Literal suffix to create a BeatDuration. */
+inline namespace literals
+{
+/** Literal suffix to create a BeatPosition. */
 [[ nodiscard ]] constexpr BeatPosition operator"" _bp (long double beats);
 
-/** Literal suffix to create a BeatDuration. */
+/** Literal suffix to create a BeatPosition. */
 [[ nodiscard ]] constexpr BeatPosition operator"" _bp (unsigned long long beats);
-
+}
 
 //==============================================================================
 //==============================================================================
@@ -316,11 +337,14 @@ private:
 /** Returns the absolute of this BeatDuration. */
 [[ nodiscard ]] BeatDuration abs (BeatDuration);
 
+inline namespace literals
+{
 /** Literal suffix to create a BeatDuration. */
 [[ nodiscard ]] constexpr BeatDuration operator"" _bd (long double beats);
 
 /** Literal suffix to create a BeatDuration. */
 [[ nodiscard ]] constexpr BeatDuration operator"" _bd (unsigned long long beats);
+}
 
 //==============================================================================
 /** Adds two BeatDurations together. */
@@ -459,6 +483,18 @@ inline TimePosition abs (TimePosition t)
     return TimePosition::fromSeconds (std::abs (t.inSeconds()));
 }
 
+inline namespace literals
+{
+inline constexpr TimePosition operator"" _tp (long double seconds)
+{
+    return TimePosition::fromSeconds (seconds);
+}
+
+inline constexpr TimePosition operator"" _tp (unsigned long long seconds)
+{
+    return TimePosition::fromSeconds (seconds);
+}
+}
 
 //==============================================================================
 template<typename Type>
@@ -513,6 +549,18 @@ inline TimeDuration abs (TimeDuration t)
     return TimeDuration::fromSeconds (std::abs (t.inSeconds()));
 }
 
+inline namespace literals
+{
+inline constexpr TimeDuration operator"" _td (long double seconds)
+{
+    return TimeDuration::fromSeconds (seconds);
+}
+
+inline constexpr TimeDuration operator"" _td (unsigned long long seconds)
+{
+    return TimeDuration::fromSeconds (seconds);
+}
+}
 
 //==============================================================================
 inline constexpr TimeDuration operator+ (const TimeDuration& t1, const TimeDuration& t2)
@@ -629,6 +677,8 @@ inline BeatPosition abs (BeatPosition t)
     return BeatPosition::fromBeats (std::abs (t.inBeats()));
 }
 
+inline namespace literals
+{
 inline constexpr BeatPosition operator"" _bp (long double beats)
 {
     return BeatPosition::fromBeats (beats);
@@ -638,6 +688,8 @@ inline constexpr BeatPosition operator"" _bp (unsigned long long beats)
 {
     return BeatPosition::fromBeats (beats);
 }
+}
+
 
 //==============================================================================
 //==============================================================================
@@ -669,6 +721,8 @@ inline BeatDuration abs (BeatDuration t)
     return BeatDuration::fromBeats (std::abs (t.inBeats()));
 }
 
+inline namespace literals
+{
 inline constexpr BeatDuration operator"" _bd (long double beats)
 {
     return BeatDuration::fromBeats (beats);
@@ -677,6 +731,7 @@ inline constexpr BeatDuration operator"" _bd (long double beats)
 inline constexpr BeatDuration operator"" _bd (unsigned long long beats)
 {
     return BeatDuration::fromBeats (beats);
+}
 }
 
 constexpr BeatPosition toPosition (BeatDuration t)
