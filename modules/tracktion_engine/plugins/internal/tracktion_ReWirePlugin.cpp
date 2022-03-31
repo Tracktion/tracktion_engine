@@ -256,7 +256,7 @@ public:
             }
 
             // time limit for guessing if we need to chase the time
-            timePerBlock = 0.060 + blockSize / sampleRate;
+            timePerBlock = TimeDuration::fromSamples (0.060 + blockSize, sampleRate);
 
             ReWirePrepareEventTarget (&eventTarget, 0, 0);
 
@@ -278,11 +278,12 @@ public:
 
     void updateTempoInfo (const TempoSequencePosition& position)
     {
-        auto& t = position.getCurrentTempo();
+        const auto bpm = position.getTempo();
+        const auto [numerator, denominator] = position.getTimeSignature();
 
-        inputToDeviceParams.fTempo = (t.bpm < 10) ? 120000 : (ReWire_uint32_t) (1000 * t.bpm);
-        inputToDeviceParams.fSignatureNumerator   = (t.numerator <= 0)   ? 4 : (ReWire_uint32_t) t.numerator;
-        inputToDeviceParams.fSignatureDenominator = (t.denominator == 0) ? 4 : (ReWire_uint32_t) t.denominator;
+        inputToDeviceParams.fTempo = (bpm < 10) ? 120000 : (ReWire_uint32_t) (1000 * bpm);
+        inputToDeviceParams.fSignatureNumerator   = (numerator <= 0)   ? 4 : (ReWire_uint32_t) numerator;
+        inputToDeviceParams.fSignatureDenominator = (denominator == 0) ? 4 : (ReWire_uint32_t) denominator;
 
         inputToDeviceParams.fPPQ15360TickOfBatchStart = juce::roundToInt (position.getPPQTime() * kReWirePPQ);
 
@@ -440,9 +441,9 @@ public:
 
     bool isPlaying (const PluginRenderContext& fc, ReWireDriveAudioInputParams& in)
     {
-        auto playheadOutputTime = fc.editTime;
+        const auto playheadOutputTime = fc.editTime;
 
-        if ((fc.isPlaying && playheadOutputTime >= 0) || fc.isRendering)
+        if ((fc.isPlaying && playheadOutputTime >= 0s) || fc.isRendering)
         {
             if (lastTime > playheadOutputTime || lastTime < playheadOutputTime - timePerBlock)
                 in.fPlayMode = kReWirePlayModeChaseAndPlay;
@@ -599,11 +600,11 @@ public:
         if (requestedReposition)
         {
             CRASH_TRACER
-            if (auto* transport = getTransport())
+            if (auto transport = getTransport())
             {
                 TempoSequencePosition pos (containerEdit->tempoSequence);
                 pos.setPPQTime (requestedPosition);
-                transport->setCurrentPosition (pos.getTime());
+                transport->setPosition (pos.getTime());
             }
 
             requestedReposition = false;
@@ -612,7 +613,7 @@ public:
         if (requestedPlay)
         {
             CRASH_TRACER
-            if (auto* transport = getTransport())
+            if (auto transport = getTransport())
                 transport->play (true);
 
             requestedPlay = false;
@@ -744,7 +745,9 @@ private:
     MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
 
     int references = 0, pluginsServedThisFrame = 0;
-    double sampleRate = 0, lastTime = 0, timePerBlock = 0;
+    double sampleRate = 0;
+    TimePosition lastTime;
+    TimeDuration timePerBlock;
     bool wasPlaying = false;
     Edit::WeakRef editRef;
 

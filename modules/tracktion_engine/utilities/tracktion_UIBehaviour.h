@@ -111,7 +111,7 @@ public:
     virtual void showHideOutputs()                                                  {}
     virtual void showHideMixer ([[maybe_unused]] bool fullscreen)                   {}
     virtual void showHideMidiEditor ([[maybe_unused]] bool fullscreen)              {}
-    virtual void showHideTrackEditor()                                              {}
+    virtual void showHideTrackEditor ([[maybe_unused]] bool zoom)                   {}
     virtual void showHideBrowser()                                                  {}
     virtual void showHideActions()                                                  {}
     virtual void showHideAllPanes()                                                 {}

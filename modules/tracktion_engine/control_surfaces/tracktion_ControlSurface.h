@@ -281,7 +281,7 @@ public:
     void userToggledVideoWindow();
     void userToggledMixerWindow (bool fullscreen);
     void userToggledMidiEditorWindow (bool fullscreen);
-    void userToggledTrackEditorWindow();
+    void userToggledTrackEditorWindow (bool zoomed);
     void userToggledBrowserWindow();
     void userToggledActionsWindow();
     void userPressedUserAction (int);
@@ -388,6 +388,10 @@ public:
     // number of markers that can be displayed
     int numMarkers = 0;
     int numCharactersForMarkerLabels = 0;
+
+    // pick up mode. input value must cross current value before input is accepted
+    // useful for non motorized faders, so the don't jump when adjusted
+    bool pickUpMode = false;
 
     int numAuxes = 0;
     int numCharactersForAuxLabels = 0;

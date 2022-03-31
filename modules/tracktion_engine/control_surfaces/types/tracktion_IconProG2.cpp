@@ -247,7 +247,7 @@ void IconProG2::acceptMidiMessageInt (int deviceIndex, const juce::MidiMessage& 
             }
             else if (d1 == 0x46)
             {
-                userToggledTrackEditorWindow();
+                userToggledTrackEditorWindow (shiftKeysDown != 0);
             }
             else if (d1 == 0x47)
             {

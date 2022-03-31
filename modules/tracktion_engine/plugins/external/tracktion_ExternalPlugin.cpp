@@ -237,7 +237,7 @@ struct ExtraVSTCallbacks  : public juce::VSTPluginFormat::ExtraFunctions
     juce::int64 getTempoAt (juce::int64 samplePos) override
     {
         auto sampleRate = edit.engine.getDeviceManager().getSampleRate();
-        return (juce::int64) (10000.0 * edit.tempoSequence.getTempoAt (samplePos / sampleRate).getBpm());
+        return (juce::int64) (10000.0 * edit.tempoSequence.getTempoAt (TimePosition::fromSamples (samplePos, sampleRate)).getBpm());
     }
 
     // returns 0: not supported, 1: off, 2:read, 3:write, 4:read/write

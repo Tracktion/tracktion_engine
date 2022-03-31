@@ -92,7 +92,7 @@ struct EditProxyFunctions
     {
         CRASH_TRACER
         if (auto tc = (TransportControl*) ref)
-            tc->setLoopRange ({ startTime, startTime + duration });
+            tc->setLoopRange ({ TimePosition::fromSeconds (startTime), TimeDuration::fromSeconds (duration) });
     }
 
     static void ARA_CALL requestEnableCycle (ARAPlaybackControllerHostRef ref, ARABool enable)
