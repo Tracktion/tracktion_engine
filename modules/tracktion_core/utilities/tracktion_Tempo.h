@@ -230,6 +230,11 @@ namespace tempo
             /** Increments the position by a number of bars. */
             void addBars (int bars);
 
+            /** Moves the position to the next change.
+                @returns true if the position was actually changed.
+            */
+            bool next();
+
             //==============================================================================
             /** Returns the time of the next change.
                 You an use this to chunk processing in order to avoid an audio block
@@ -806,6 +811,17 @@ inline void Sequence::Position::addBars (int bars)
         while (++bars <= 0)
             add (BeatDuration::fromBeats (-sections[index].numerator));
     }
+}
+
+inline bool Sequence::Position::next()
+{
+    const auto maxIndex = sections.size() - 1;
+
+    if (index == maxIndex)
+        return false;
+
+    time = sections[++index].startTime;
+    return true;
 }
 
 inline void Sequence::Position::add (BeatDuration beats)
