@@ -589,10 +589,10 @@ public:
     bool isTimecodeSyncEnabled() const noexcept             { return midiTimecodeSourceDeviceEnabled; }
 
     /** Returns the offset to apply to MIDI timecode. */
-    double getTimecodeOffset() const noexcept               { return timecodeOffset; }
+    TimeDuration getTimecodeOffset() const noexcept         { return timecodeOffset; }
 
     /** Sets the offset to apply to MIDI timecode. */
-    void setTimecodeOffset (double newOffset);
+    void setTimecodeOffset (TimeDuration newOffset);
 
     /** Returns true if hours are ignored when syncing to MIDI timecode. */
     bool isMidiTimecodeIgnoringHours() const                { return midiTimecodeIgnoringHours; }
@@ -772,9 +772,9 @@ public:
     juce::CachedValue<juce::String> lastSignificantChange;  /**< The last time a change was made to the Edit. @see getTimeOfLastChange */
 
     juce::CachedValue<TimeDuration> masterFadeIn,   /**< The duration in seconds of the fade in. */
-                                    masterFadeOut;  /**< The duration in seconds of the fade out. */
-    juce::CachedValue<double> timecodeOffset,       /**< The duration in seconds of the timecode offset. */
-                              videoOffset;          /**< The duration in seconds of the video offset. */
+                                    masterFadeOut,  /**< The duration in seconds of the fade out. */
+                                    timecodeOffset,       /**< The duration in seconds of the timecode offset. */
+                                    videoOffset;          /**< The duration in seconds of the video offset. */
 
     juce::CachedValue<AudioFadeCurve::Type> masterFadeInType,   /**< The curve type of the fade in. */
                                             masterFadeOutType;  /**< The curve type of the fade out. */

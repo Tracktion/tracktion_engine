@@ -33,7 +33,7 @@ public:
         if (edit != nullptr)
         {
             framesPerSecond = edit->getTimecodeFormat().getFPS();
-            offset = edit->getTimecodeOffset();
+            offset = edit->getTimecodeOffset().inSeconds();
 
             if (framesPerSecond == 25)
                 midiTCType = juce::MidiMessage::fps25;

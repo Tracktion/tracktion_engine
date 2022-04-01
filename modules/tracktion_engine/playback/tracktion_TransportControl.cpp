@@ -125,7 +125,7 @@ struct TransportControl::TransportState : private juce::ValueTree::Listener
     void setVideoPosition (TimePosition time, bool forceJump)
     {
         forceVideoJump = forceJump;
-        videoPosition = time.inSeconds();
+        videoPosition = time;
     }
 
     //==============================================================================
@@ -179,7 +179,8 @@ struct TransportControl::TransportState : private juce::ValueTree::Listener
     juce::CachedValue<bool> discardRecordings, clearDevices, justSendMMCIfEnabled, canSendMMCStop,
                             invertReturnToStartPosSelection, allowRecordingIfNoInputsArmed, clearDevicesOnStop;
     juce::CachedValue<bool> userDragging, lastUserDragTime, forceVideoJump, rewindButtonDown, fastForwardButtonDown, updatingFromPlayHead;
-    juce::CachedValue<double> startTime, endTime, cursorPosAtPlayStart, videoPosition;
+    juce::CachedValue<double> startTime, endTime, cursorPosAtPlayStart;
+    juce::CachedValue<TimePosition> videoPosition;
     juce::CachedValue<int> reallocationInhibitors, playbackContextAllocation, nudgeLeftCount, nudgeRightCount;
 
     juce::ValueTree state, transientState { IDs::TRANSPORT };
@@ -241,7 +242,7 @@ private:
             else if (i == IDs::videoPosition)
             {
                 videoPosition.forceUpdateOfCachedValue();
-                transport.listeners.call (&TransportControl::Listener::setVideoPosition, videoPosition, forceVideoJump);
+                transport.listeners.call (&TransportControl::Listener::setVideoPosition, videoPosition.get(), forceVideoJump);
             }
             else if (i == IDs::rewindButtonDown)
             {
@@ -275,13 +276,13 @@ private:
 //==============================================================================
 struct TransportControl::SectionPlayer  : private Timer
 {
-    SectionPlayer (TransportControl& tc, EditTimeRange sectionToPlay)
+    SectionPlayer (TransportControl& tc, TimeRange sectionToPlay)
         : transport (tc), section (sectionToPlay),
           originalTransportTime (tc.getCurrentPosition()),
           wasLooping (tc.looping)
     {
         jassert (! sectionToPlay.isEmpty());
-        transport.setCurrentPosition (sectionToPlay.getStart());
+        transport.setPosition (sectionToPlay.getStart());
         transport.looping = false;
         transport.play (false);
 
@@ -295,13 +296,13 @@ struct TransportControl::SectionPlayer  : private Timer
     }
 
     TransportControl& transport;
-    const EditTimeRange section;
+    const TimeRange section;
     const double originalTransportTime;
     const bool wasLooping;
 
     void timerCallback() override
     {
-        if (transport.getCurrentPosition() > section.getEnd())
+        if (transport.getPosition() > section.getEnd())
             transport.stop (false, false); // Will delete the SectionPlayer
     }
 };
@@ -789,7 +790,7 @@ void TransportControl::play (bool justSendMMCIfEnabled)
     transportState->play (justSendMMCIfEnabled);
 }
 
-void TransportControl::playSectionAndReset (EditTimeRange rangeToPlay)
+void TransportControl::playSectionAndReset (TimeRange rangeToPlay)
 {
     CRASH_TRACER
 
@@ -1535,7 +1536,7 @@ void TransportControl::performPositionChange()
 
     // MMC
     const double nudge = 0.05 / 96000.0;
-    const double mmcTime = std::max (0.0, newPos.inSeconds() + edit.getTimecodeOffset()) + nudge;
+    const double mmcTime = std::max (0_tp, newPos + edit.getTimecodeOffset()).inSeconds() + nudge;
     const int framesPerSecond = edit.getTimecodeFormat().getFPS();
     const int frames  = ((int) (mmcTime * framesPerSecond)) % framesPerSecond;
     const int hours   = (int) (mmcTime * (1.0 / 3600.0));

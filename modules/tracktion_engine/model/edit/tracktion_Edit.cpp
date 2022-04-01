@@ -1351,7 +1351,7 @@ void Edit::enableTimecodeSync (bool b)
     }
 }
 
-void Edit::setTimecodeOffset (double newOffset)
+void Edit::setTimecodeOffset (TimeDuration newOffset)
 {
     if (timecodeOffset != newOffset)
     {

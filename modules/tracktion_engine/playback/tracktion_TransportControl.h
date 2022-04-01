@@ -72,7 +72,7 @@ public:
     void play (bool justSendMMCIfEnabled);
 
     /** Plays a section of an Edit then stops playback, useful for previewing clips. */
-    void playSectionAndReset (EditTimeRange rangeToPlay);
+    void playSectionAndReset (TimeRange rangeToPlay);
 
     /** Starts recording. This will also start playback if stopped.
         @param justSendMMCIfEnabled             If this is true, playback isn't actually started,
@@ -319,7 +319,7 @@ public:
         virtual void setAllLevelMetersActive (bool metersBecameInactive) = 0;
 
         /** Should set a new position for any playing video. */
-        virtual void setVideoPosition (double time, bool forceJump) = 0;
+        virtual void setVideoPosition (TimePosition, bool forceJump) = 0;
         
         /** Should start video playback. */
         virtual void startVideo() = 0;

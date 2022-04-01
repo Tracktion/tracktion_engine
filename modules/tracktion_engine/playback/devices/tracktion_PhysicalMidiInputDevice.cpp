@@ -26,7 +26,7 @@ struct MidiTimecodeReader  : private juce::MessageListener,
             m.getFullFrameParameters (hours, minutes, seconds, frames, midiTCType);
 
             lastTime = getTime();
-            correctedTime = lastTime - owner.edit.getTimecodeOffset();
+            correctedTime = lastTime - owner.edit.getTimecodeOffset().inSeconds();
 
             postMessage (new TCMessage (1)); // stop
             jumpPending = true;
@@ -62,7 +62,7 @@ struct MidiTimecodeReader  : private juce::MessageListener,
 
                     lastTime = getTime() + 2.0 / getFPS();
 
-                    correctedTime = lastTime - owner.edit.getTimecodeOffset();
+                    correctedTime = lastTime - owner.edit.getTimecodeOffset().inSeconds();
 
                     const double drift = correctedTime - owner.context.getPosition().inSeconds();
 
