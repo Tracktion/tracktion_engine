@@ -103,37 +103,32 @@ BeatRange toBeats (EditTimeRange, const TempoSequence&);
 
 namespace juce
 {
-    using TimePosition = tracktion::core::TimePosition;
-    using TimeDuration = tracktion::core::TimeDuration;
-    using BeatPosition = tracktion::core::BeatPosition;
-    using BeatDuration = tracktion::core::BeatDuration;
-
     template<>
-    struct VariantConverter<TimePosition>
+    struct VariantConverter<tracktion::core::TimePosition>
     {
-        static TimePosition fromVar (const var& v)   { return TimePosition::fromSeconds (static_cast<double> (v)); }
-        static var toVar (TimePosition v)            { return v.inSeconds(); }
+        static tracktion::core::TimePosition fromVar (const var& v)   { return tracktion::core::TimePosition::fromSeconds (static_cast<double> (v)); }
+        static var toVar (tracktion::core::TimePosition v)            { return v.inSeconds(); }
     };
 
     template<>
-    struct VariantConverter<TimeDuration>
+    struct VariantConverter<tracktion::core::TimeDuration>
     {
-        static TimeDuration fromVar (const var& v)   { return TimeDuration::fromSeconds (static_cast<double> (v)); }
-        static var toVar (TimeDuration v)            { return v.inSeconds(); }
+        static tracktion::core::TimeDuration fromVar (const var& v)   { return tracktion::core::TimeDuration::fromSeconds (static_cast<double> (v)); }
+        static var toVar (tracktion::core::TimeDuration v)            { return v.inSeconds(); }
     };
 
     template<>
-    struct VariantConverter<BeatPosition>
+    struct VariantConverter<tracktion::core::BeatPosition>
     {
-        static BeatPosition fromVar (const var& v)   { return BeatPosition::fromBeats (static_cast<double> (v)); }
-        static var toVar (BeatPosition v)            { return v.inBeats(); }
+        static tracktion::core::BeatPosition fromVar (const var& v)   { return tracktion::core::BeatPosition::fromBeats (static_cast<double> (v)); }
+        static var toVar (tracktion::core::BeatPosition v)            { return v.inBeats(); }
     };
 
     template<>
-    struct VariantConverter<BeatDuration>
+    struct VariantConverter<tracktion::core::BeatDuration>
     {
-        static BeatDuration fromVar (const var& v)   { return BeatDuration::fromBeats (static_cast<double> (v)); }
-        static var toVar (BeatDuration v)            { return v.inBeats(); }
+        static tracktion::core::BeatDuration fromVar (const var& v)   { return tracktion::core::BeatDuration::fromBeats (static_cast<double> (v)); }
+        static var toVar (tracktion::core::BeatDuration v)            { return v.inBeats(); }
     };
 }
 

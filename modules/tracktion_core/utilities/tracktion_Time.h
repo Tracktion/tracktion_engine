@@ -334,6 +334,9 @@ private:
 /** Converts a BeatDuration to a BeatPosition. */
 [[ nodiscard ]] constexpr BeatPosition toPosition (BeatDuration);
 
+/** Rounds a BeatDuration to the nearest whole beat. */
+[[ nodiscard ]] BeatDuration roundToNearestBeat (BeatDuration);
+
 /** Returns the absolute of this BeatDuration. */
 [[ nodiscard ]] BeatDuration abs (BeatDuration);
 
@@ -714,6 +717,11 @@ inline constexpr BeatDuration toDuration (BeatPosition t)
 inline BeatPosition roundToNearestBeat (BeatPosition t)
 {
     return BeatPosition::fromBeats (juce::roundToInt (t.inBeats()));
+}
+
+inline BeatDuration roundToNearestBeat (BeatDuration t)
+{
+    return BeatDuration::fromBeats (juce::roundToInt (t.inBeats()));
 }
 
 inline BeatDuration abs (BeatDuration t)

@@ -109,6 +109,9 @@ struct RangeType
     /** Returns true if this range contains the provided one. */
     bool contains (const RangeType&) const;
 
+    /** Returns true if the given range intersects this one. */
+    bool intersects (const RangeType&) const;
+
     /** Returns true if this range overlaps the provided position. */
     bool contains (Position) const;
 
@@ -240,6 +243,8 @@ template<typename PositionType> inline typename RangeType<PositionType>::Positio
 template<typename PositionType> inline bool RangeType<PositionType>::isEmpty() const                                          { return end <= start; }
 template<typename PositionType> inline bool RangeType<PositionType>::overlaps (const RangeType& other) const                  { return other.start < end && start < other.end; }
 template<typename PositionType> inline bool RangeType<PositionType>::contains (const RangeType& other) const                  { return other.start >= start && other.end <= end; }
+template<typename PositionType> inline bool RangeType<PositionType>::intersects (const RangeType& other) const                { return other.start < end && start < other.end; }
+
 template<typename PositionType> inline bool RangeType<PositionType>::contains (Position time) const                           { return time >= start && time < end; }
 template<typename PositionType> inline bool RangeType<PositionType>::containsInclusive (Position time) const                  { return time >= start && time <= end; }
 

@@ -52,10 +52,10 @@ public:
                                float& minValue, float& maxValue) const noexcept override;
 
     void drawChannel (juce::Graphics&, juce::Rectangle<int> area, bool useHighRes,
-                      EditTimeRange time, int channelNum, float verticalZoomFactor);
+                      TimeRange time, int channelNum, float verticalZoomFactor);
 
     void drawChannels (juce::Graphics&, juce::Rectangle<int> area, bool useHighRes,
-                       EditTimeRange time, float verticalZoomFactor);
+                       TimeRange time, float verticalZoomFactor);
 
 private:
     //==============================================================================

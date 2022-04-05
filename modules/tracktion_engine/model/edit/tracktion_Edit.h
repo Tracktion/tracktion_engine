@@ -161,6 +161,9 @@ public:
     static constexpr double maximumLength = 48.0 * 60.0 * 60.0;
     
     /** Returns the maximum length an Edit can be. */
+    static TimeDuration getMaximumLength()          { return TimeDuration::fromSeconds (maximumLength); }
+
+    /** Returns the maximum length an Edit can be. */
     static TimeRange getMaximumEditTimeRange()      { return { TimePosition(), TimePosition::fromSeconds (maximumLength) }; }
 
     static TimePosition getMaximumEditEnd()         { return getMaximumEditTimeRange().getEnd(); }
