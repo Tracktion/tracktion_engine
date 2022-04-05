@@ -58,8 +58,8 @@ public:
     BeatPosition roundBeatUp (BeatPosition beatNumber) const;
     BeatPosition roundBeatToNearestNonZero (BeatPosition beatNumber) const;
 
-    double roundToNearest (double time, const Edit& edit) const;
-    double roundUp (double time, const Edit& edit) const;
+    TimePosition roundToNearest (TimePosition, const Edit&) const;
+    TimePosition roundUp (TimePosition, const Edit&) const;
 
     juce::ValueTree state;
     juce::CachedValue<juce::String> typeName;
@@ -74,7 +74,7 @@ private:
 
     void updateType();
     void updateFraction();
-    double roundTo (double time, double adjustment, const Edit&) const;
+    TimePosition roundTo (TimePosition, double adjustment, const Edit&) const;
     BeatPosition roundToBeat (BeatPosition beatNumber, double adjustment) const;
 
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;

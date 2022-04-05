@@ -98,10 +98,10 @@ void MidiInputDeviceNode::handleIncomingMidiMessage (const juce::MidiMessage& me
 
     if (playHead.isPlaying() && isLivePlayOverActive())
     {
-        const auto loopTimes = tracktion::graph::sampleToTime (playHead.getLoopRange(), sampleRate);
+        const auto loopTimes = timeRangeFromSamples (playHead.getLoopRange(), sampleRate);
         const auto messageReferenceSamplePosition = tracktion::graph::timeToSample (message.getTimeStamp(), sampleRate);
         const auto timelinePosition = playHead.referenceSamplePositionToTimelinePosition (messageReferenceSamplePosition);
-        auto sourceTime = tracktion::graph::sampleToTime (timelinePosition, sampleRate);
+        auto sourceTime = TimePosition::fromSamples (timelinePosition, sampleRate);
 
         if (message.isNoteOff())
             sourceTime = midiInputDevice.quantisation.roundUp (sourceTime, instance.edit);
@@ -112,13 +112,13 @@ void MidiInputDeviceNode::handleIncomingMidiMessage (const juce::MidiMessage& me
             if (sourceTime >= loopTimes.getEnd())
                 sourceTime = loopTimes.getStart();
 
-        juce::MidiMessage newMess (message, sourceTime);
+        juce::MidiMessage newMess (message, sourceTime.inSeconds());
 
         if (channelToUse > 0)
             newMess.setChannel (channelToUse);
 
         const juce::ScopedLock sl (liveInputLock);
-        liveRecordedMessages.addMidiMessage (newMess, sourceTime, midiSourceID);
+        liveRecordedMessages.addMidiMessage (newMess, sourceTime.inSeconds(), midiSourceID);
     }
 }
 

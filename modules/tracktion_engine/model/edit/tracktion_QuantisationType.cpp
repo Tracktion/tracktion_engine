@@ -142,12 +142,12 @@ void QuantisationType::setProportion (float prop)
     proportion = juce::jlimit (0.0f, 1.0f, prop);
 }
 
-double QuantisationType::roundToNearest (double time, const Edit& edit) const
+TimePosition QuantisationType::roundToNearest (TimePosition time, const Edit& edit) const
 {
     return roundTo (time, 0.5 - 1.0e-10, edit);
 }
 
-double QuantisationType::roundUp (double time, const Edit& edit) const
+TimePosition QuantisationType::roundUp (TimePosition time, const Edit& edit) const
 {
     return roundTo (time, 1.0 - 1.0e-10, edit);
 }
@@ -180,18 +180,18 @@ BeatPosition QuantisationType::roundBeatToNearestNonZero (BeatPosition beatNumbe
     return t == BeatPosition() ? BeatPosition::fromBeats (fractionOfBeat) : t;
 }
 
-double QuantisationType::roundTo (double time, double adjustment, const Edit& edit) const
+TimePosition QuantisationType::roundTo (TimePosition time, double adjustment, const Edit& edit) const
 {
     if (typeIndex == 0)
         return time;
 
     auto& s = edit.tempoSequence;
-    auto beats = s.timeToBeats (TimePosition::fromSeconds (time));
+    auto beats = s.timeToBeats (time);
 
     beats = BeatPosition::fromBeats (fractionOfBeat * std::floor (beats.inBeats() / fractionOfBeat + adjustment));
 
-    return proportion >= 1.0 ? s.beatsToTime (beats).inSeconds()
-                             : time + proportion.get() * (s.beatsToTime (beats) - TimeDuration::fromSeconds (time)).inSeconds();
+    return proportion >= 1.0 ? s.beatsToTime (beats)
+                             : time + toDuration (s.beatsToTime (beats) - toDuration (time)) * proportion.get();
 }
 
 juce::StringArray QuantisationType::getAvailableQuantiseTypes (bool translated)
@@ -239,7 +239,7 @@ void QuantisationType::applyQuantisationToSequence (juce::MidiMessageSequence& m
 
         if (m.isNoteOn())
         {
-            const auto noteOnTime = roundToNearest (start.inSeconds() + m.getTimeStamp(), ed) - start.inSeconds();
+            const auto noteOnTime = (roundToNearest (start + TimeDuration::fromSeconds (m.getTimeStamp()), ed) - start).inSeconds();
 
             if (auto noteOff = e->noteOffObject)
             {
@@ -247,12 +247,12 @@ void QuantisationType::applyQuantisationToSequence (juce::MidiMessageSequence& m
 
                 if (quantiseNoteOffs)
                 {
-                    auto noteOffTime = roundUp (start.inSeconds() + mOff.getTimeStamp(), ed) - start.inSeconds();
+                    auto noteOffTime = (roundUp (start + TimeDuration::fromSeconds (mOff.getTimeStamp()), ed) - start).inSeconds();
 
                     static constexpr double beatsToBumpUpBy = 1.0 / 512.0;
 
                     if (noteOffTime <= noteOnTime) // Don't want note on and off time the same
-                        noteOffTime = roundUp (noteOnTime + beatsToBumpUpBy, ed);
+                        noteOffTime = roundUp (TimePosition::fromSeconds (noteOnTime + beatsToBumpUpBy), ed).inSeconds();
 
                     mOff.setTimeStamp (noteOffTime);
                 }
@@ -266,7 +266,7 @@ void QuantisationType::applyQuantisationToSequence (juce::MidiMessageSequence& m
         }
         else if (m.isNoteOff() && quantiseNoteOffs)
         {
-            m.setTimeStamp (roundUp (start.inSeconds() + m.getTimeStamp(), ed) - start.inSeconds());
+            m.setTimeStamp ((roundUp (start + TimeDuration::fromSeconds (m.getTimeStamp()), ed) - start).inSeconds());
         }
     }
 }
