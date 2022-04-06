@@ -52,19 +52,19 @@ juce::String WaveAudioClip::getSelectableDescription()
     return TRANS("Audio Clip") + " - \"" + getName() + "\"";
 }
 
-double WaveAudioClip::getSourceLength() const
+TimeDuration WaveAudioClip::getSourceLength() const
 {
-    if (sourceLength == 0)
+    if (sourceLength == 0s)
     {
         // If we're using clip effects the audio file may currently be invalid
         // However, we know that the effects will produce an audio file of the same length as the originial so we'll return this
         // This could however be a problem with standard warp time, Edit clips and reverse etc...
 
-        sourceLength = clipEffects != nullptr || isReversed ? AudioFile (edit.engine, getOriginalFile()).getLength()
-                                                            : getAudioFile().getLength();
+        sourceLength = TimeDuration::fromSeconds (clipEffects != nullptr || isReversed ? AudioFile (edit.engine, getOriginalFile()).getLength()
+                                                                                       : getAudioFile().getLength());
     }
 
-    jassert (sourceLength >= 0.0);
+    jassert (sourceLength >= 0s);
     return sourceLength;
 }
 
@@ -75,7 +75,7 @@ void WaveAudioClip::sourceMediaChanged()
     if (compManager != nullptr && isCurrentTakeComp())
         setCurrentSourceFile (compManager->getCurrentCompFile());
 
-    sourceLength = 0.0;
+    sourceLength = 0s;
     markAsDirty();
 
     if (needsRender())
@@ -107,7 +107,7 @@ HashCode WaveAudioClip::getHash() const
 
 void WaveAudioClip::renderComplete()
 {
-    sourceLength = 0;
+    sourceLength = 0s;
     AudioClipBase::renderComplete();
 }
 
@@ -123,7 +123,7 @@ void WaveAudioClip::setLoopDefaults()
         loopInfo.setDenominator (ts.getTimeSigAt (pos.getStart()).denominator);
 
     if (loopInfo.getNumBeats() == 0.0)
-        loopInfo.setNumBeats (getSourceLength() * (ts.getTempoAt (pos.getStart()).getBpm() / 60.0));
+        loopInfo.setNumBeats (getSourceLength().inSeconds() * (ts.getTempoAt (pos.getStart()).getBpm() / 60.0));
 }
 
 void WaveAudioClip::reassignReferencedItem (const ReferencedItem& item,

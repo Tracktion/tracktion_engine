@@ -331,7 +331,7 @@ void AudioClipComponent::drawWaveform (Graphics& g, te::AudioClipBase& c, te::Sm
         if (! thumb.isOutOfDate())
         {
             drawChannels (g, thumb, area, false,
-                          te::toEditTimeRange (getTimeRangeForDrawing (left, right)),
+                          getTimeRangeForDrawing (left, right),
                           c.isLeftChannelActive(), c.isRightChannelActive(),
                           gainL, gainR);
         }
@@ -345,14 +345,14 @@ void AudioClipComponent::drawWaveform (Graphics& g, te::AudioClipBase& c, te::Sm
         
         drawChannels (g, thumb,
                       { left + xOffset, y, right - left, h },
-                      false, te::toEditTimeRange ({ t1, t2 }),
+                      false, { t1, t2 },
                       c.isLeftChannelActive(), c.isRightChannelActive(),
                       gainL, gainR);
     }
 }
 
 void AudioClipComponent::drawChannels (Graphics& g, te::SmartThumbnail& thumb, Rectangle<int> area, bool useHighRes,
-                                       te::EditTimeRange time, bool useLeft, bool useRight,
+                                       te::TimeRange time, bool useLeft, bool useRight,
                                        float leftGain, float rightGain)
 {
     if (useLeft && useRight && thumb.getNumChannels() > 1)
@@ -500,13 +500,13 @@ void RecordingClipComponent::drawThumbnail (Graphics& g, Colour waveformColour) 
     if (w > 0 && w < 10000)
     {
         g.setColour (waveformColour);
-        thumbnail->thumb.drawChannels (g, bounds, w, te::toEditTimeRange (times), 1.0f);
+        thumbnail->thumb.drawChannels (g, bounds, w, times, 1.0f);
     }
 }
 
 bool RecordingClipComponent::getBoundsAndTime (Rectangle<int>& bounds, tracktion::TimeRange& times) const
 {
-    auto editTimeToX = [this] (TimePosition t)
+    auto editTimeToX = [this] (te::TimePosition t)
     {
         if (auto p = getParentComponent())
             return editViewState.timeToX (t, p->getWidth()) - getX();
@@ -519,7 +519,7 @@ bool RecordingClipComponent::getBoundsAndTime (Rectangle<int>& bounds, tracktion
         if (auto p = getParentComponent())
             return editViewState.xToTime (x + getX(), p->getWidth());
 
-        return TimePosition();
+        return te::TimePosition();
     };
     
     bool hasLooped = false;
@@ -530,7 +530,7 @@ bool RecordingClipComponent::getBoundsAndTime (Rectangle<int>& bounds, tracktion
         auto localBounds = getLocalBounds();
         
         auto timeStarted = thumbnail->punchInTime;
-        auto unloopedPos = timeStarted + TimeDuration::fromSeconds (thumbnail->thumb.getTotalLength());
+        auto unloopedPos = timeStarted + te::TimeDuration::fromSeconds (thumbnail->thumb.getTotalLength());
         
         auto t1 = timeStarted;
         auto t2 = unloopedPos;

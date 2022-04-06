@@ -51,7 +51,7 @@ public:
     /** Must return the length in seconds of the source material e.g. the length
         of the audio file or edit.
     */
-    virtual double getSourceLength() const = 0;
+    virtual TimeDuration getSourceLength() const = 0;
 
     /** Returns the file used to play back the source and will get proxied etc. */
     virtual AudioFile getAudioFile() const  { return AudioFile (edit.engine, getCurrentSourceFile()); }

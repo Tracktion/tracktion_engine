@@ -102,7 +102,7 @@ private:
     };
 
     DragType dragType;
-    TimePosition dragStartTime;
+    te::TimePosition dragStartTime;
     te::TimeRange loopRangeOnDragStart;
 
     void init();
@@ -140,7 +140,7 @@ void ClipEditorComponent::paint (Graphics& g)
         drawMidiClip (g, *midiClip, r, clip->getEditTimeRange());
     else if (thumbnail)
         thumbnail->drawChannels (g, r, true,
-                                 te::toEditTimeRange (clip->getEditTimeRange()), 1.0f);
+                                 clip->getEditTimeRange(), 1.0f);
 }
 
 void ClipEditorComponent::paintOverChildren (juce::Graphics& g)
@@ -353,11 +353,11 @@ private:
         if (auto track = EngineHelpers::getOrInsertAudioTrackAt (edit, 0))
         {
             juce::OwnedArray<te::MidiList> lists;
-            juce::Array<BeatPosition> tempoChangeBeatNumbers;
+            juce::Array<te::BeatPosition> tempoChangeBeatNumbers;
             juce::Array<double> bpms;
             juce::Array<int> numerators;
             juce::Array<int> denominators;
-            BeatDuration songLength;
+            te::BeatDuration songLength;
             te::MidiList::readSeparateTracksFromFile (f, lists, tempoChangeBeatNumbers,
                                                       bpms, numerators, denominators, songLength, false);
 
@@ -368,7 +368,7 @@ private:
                     for (auto c : at->getClips())
                         c->removeFromParentTrack();
 
-                auto clip = track->insertMIDIClip ({ TimePosition(), edit.tempoSequence.beatsToTime (list->getLastBeatNumber()) }, nullptr);
+                auto clip = track->insertMIDIClip ({ te::TimePosition(), edit.tempoSequence.beatsToTime (list->getLastBeatNumber()) }, nullptr);
 
                 if (auto midiClip = clip.get())
                 {
@@ -393,13 +393,14 @@ private:
                     c->removeFromParentTrack();
 
             auto clip = track->insertWaveClip (f.getFileNameWithoutExtension(), f,
-                                               {{ 0s, TimeDuration::fromSeconds (te::AudioFile (engine, f).getLength()) }, {}},
+                                               {{ 0s, te::TimeDuration::fromSeconds (te::AudioFile (engine, f).getLength()) }, {}},
                                                false);
 
             if (auto audioClip = clip.get())
             {
                 audioClip->setUsesProxy (false);
                 audioClip->setLoopRange (clip->getEditTimeRange().withStart (0s));
+                audioClip->setAutoPitch (true);
 
                 return EngineHelpers::loopAroundClip (*audioClip);
             }

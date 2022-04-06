@@ -159,7 +159,7 @@ namespace EngineHelpers
 
             if (audioFile.isValid())
                 if (auto newClip = track->insertWaveClip (file.getFileNameWithoutExtension(), file,
-                                                          { { {}, TimeDuration::fromSeconds (audioFile.getLength()) }, {} }, false))
+                                                          { { {}, te::TimeDuration::fromSeconds (audioFile.getLength()) }, {} }, false))
                     return newClip;
         }
 
@@ -316,7 +316,7 @@ struct Thumbnail    : public Component
         {
             const float brightness = smartThumbnail.isOutOfDate() ? 0.4f : 0.66f;
             g.setColour (colour.withMultipliedBrightness (brightness));
-            smartThumbnail.drawChannels (g, r, true, { 0.0, smartThumbnail.getTotalLength() }, 1.0f);
+            smartThumbnail.drawChannels (g, r, true, { 0s, te::TimePosition::fromSeconds (smartThumbnail.getTotalLength()) }, 1.0f);
         }
     }
 

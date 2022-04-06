@@ -272,7 +272,7 @@ private:
             if (c.isLooping())
                 effectsRange = { c.getLoopStart(), c.getLoopStart() + c.getLoopLength() };
             else
-                effectsRange = { TimePosition(), TimePosition::fromSeconds (c.getSourceLength() / speedRatio) };
+                effectsRange = { TimePosition(), c.getSourceLength() / speedRatio };
         }
 
         TimeRange effectsRange;

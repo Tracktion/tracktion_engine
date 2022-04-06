@@ -402,17 +402,17 @@ TimeDuration AudioClipBase::getMaximumLength()
 {
     if (! isLooping())
     {
-        if (getSourceLength() <= 0)
-            return TimeDuration::fromSeconds (100000.0);
+        if (getSourceLength() <= 0_td)
+            return 100000.0_td;
 
         if (getAutoTempo())
             return edit.tempoSequence.beatsToTime (getStartBeat() + BeatDuration::fromBeats (loopInfo.getNumBeats()))
                      - getPosition().getStart();
 
-        return TimeDuration::fromSeconds (getSourceLength() / speedRatio);
+        return getSourceLength() / speedRatio;
     }
 
-    return TimeDuration::fromSeconds (Edit::maximumLength);
+    return Edit::getMaximumLength();
 }
 
 //==============================================================================
@@ -616,7 +616,7 @@ void AudioClipBase::reverseLoopPoints()
     if (isLooping())
     {
         // Reverse white loop points...
-        auto sourceEnd = TimePosition::fromSeconds (getSourceLength() / ratio);
+        auto sourceEnd = toPosition (getSourceLength() / ratio);
         auto o = getLoopRange();
         auto n = TimeRange::between (toPosition (sourceEnd - o.getEnd()),
                                      toPosition (sourceEnd - o.getStart()));
@@ -639,7 +639,7 @@ void AudioClipBase::reverseLoopPoints()
     else
     {
         // reverse offset
-        auto sourceEnd = TimePosition::fromSeconds (getSourceLength() / ratio);
+        auto sourceEnd = toPosition (getSourceLength() / ratio);
         auto newOffset = sourceEnd - (toPosition (getPosition().getLength()) - getPosition().getOffset());
         setOffset (newOffset);
     }
@@ -864,7 +864,7 @@ void AudioClipBase::setNumberOfLoops (int num)
         num = 0;
 
     auto pos = getPosition();
-    auto len = TimeDuration::fromSeconds (std::min (getSourceLength() / speedRatio, pos.getLength().inSeconds()));
+    auto len = std::min (getSourceLength() / speedRatio, pos.getLength());
 
     if (len <= TimeDuration())
         return;
@@ -963,13 +963,13 @@ void AudioClipBase::setLoopRange (TimeRange newRange)
     else
     {
         auto sourceLen = getSourceLength();
-        jassert (sourceLen > 0.0);
+        jassert (sourceLen > 0s);
 
         // limits the number of times longer than the source file length the loop length can be
         const double maxMultiplesOfSourceLengthForLooping = 50.0;
 
-        auto newStart  = juce::jlimit (TimePosition(), TimePosition::fromSeconds (sourceLen / getSpeedRatio()), newRange.getStart());
-        auto newLength = juce::jlimit (TimeDuration(), TimeDuration::fromSeconds (sourceLen * maxMultiplesOfSourceLengthForLooping / getSpeedRatio()), newRange.getLength());
+        auto newStart  = juce::jlimit (0_tp, toPosition (sourceLen) / getSpeedRatio(), newRange.getStart());
+        auto newLength = juce::jlimit (0_td, sourceLen * maxMultiplesOfSourceLengthForLooping / getSpeedRatio(), newRange.getLength());
 
         if (loopStart != newStart || loopLength != newLength)
         {

@@ -894,7 +894,7 @@ int StepVolumeEffect::getMaxNumNotes()
 
     auto startTime = pos.getStartOfSource();
     auto startBeat = ts.timeToBeats (startTime);
-    auto endBeat = ts.timeToBeats (startTime + (TimeDuration::fromSeconds (c.getSourceLength()) / clipEffects.getSpeedRatioEstimate()));
+    auto endBeat = ts.timeToBeats (startTime + (c.getSourceLength() / clipEffects.getSpeedRatioEstimate()));
 
     return (int) std::ceil ((endBeat - startBeat) / noteLength);
 }

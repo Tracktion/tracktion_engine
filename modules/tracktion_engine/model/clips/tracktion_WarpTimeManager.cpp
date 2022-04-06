@@ -446,7 +446,7 @@ TimePosition WarpTimeManager::warpTimeToSourceTime (TimePosition warpTime) const
     else if (warpTime > last.warpTime) // after the last marker
     {
         startMarker = last;
-        auto sourceLen = TimePosition::fromSeconds (clip->getSourceLength());
+        auto sourceLen = toPosition (clip->getSourceLength());
         endMarker = WarpMarker (sourceLen, sourceLen);
     }
     else

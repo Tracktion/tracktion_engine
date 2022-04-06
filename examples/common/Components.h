@@ -60,17 +60,17 @@ public:
         viewY.referTo (state, IDs::viewY, um, 0);
     }
     
-    int timeToX (TimePosition time, int width) const
+    int timeToX (te::TimePosition time, int width) const
     {
         return roundToInt (((time - viewX1) * width) / (viewX2 - viewX1));
     }
     
-    TimePosition xToTime (int x, int width) const
+    te::TimePosition xToTime (int x, int width) const
     {
         return toPosition ((viewX2 - viewX1) * (double (x) / width)) + toDuration (viewX1.get());
     }
     
-    TimePosition beatToTime (BeatPosition b) const
+    te::TimePosition beatToTime (te::BeatPosition b) const
     {
         auto& ts = edit.tempoSequence;
         return ts.beatsToTime (b);
@@ -82,7 +82,7 @@ public:
     CachedValue<bool> showMasterTrack, showGlobalTrack, showMarkerTrack, showChordTrack, showArrangerTrack,
                       drawWaveforms, showHeaders, showFooters, showMidiDevices, showWaveDevices;
     
-    CachedValue<TimePosition> viewX1, viewX2;
+    CachedValue<te::TimePosition> viewX1, viewX2;
     CachedValue<double> viewY;
     
     ValueTree state;
@@ -119,7 +119,7 @@ private:
     void drawWaveform (Graphics& g, te::AudioClipBase& c, te::SmartThumbnail& thumb, Colour colour,
                        int left, int right, int y, int h, int xOffset);
     void drawChannels (Graphics& g, te::SmartThumbnail& thumb, Rectangle<int> area, bool useHighRes,
-                       te::EditTimeRange time, bool useLeft, bool useRight,
+                       te::TimeRange time, bool useLeft, bool useRight,
                        float leftGain, float rightGain);
 
     std::unique_ptr<te::SmartThumbnail> thumbnail;
@@ -156,7 +156,7 @@ private:
     EditViewState& editViewState;
     
     te::RecordingThumbnailManager::Thumbnail::Ptr thumbnail;
-    TimePosition punchInTime = -1.0s;
+    te::TimePosition punchInTime = -1.0s;
 };
 
 //==============================================================================

@@ -265,8 +265,8 @@ void EditClip::updateWaveInfo()
 {
     // If the edit is empty this will cause the AudioSegmentList structure to have undefined content.
     // need to find a way around this, maybe just use a default length of 5s so silence is generated
-    jassert ((! needsRender()) || getSourceLength() > 0.0);
-    const double sourceLength = getSourceLength() == 0.0 ? 5.0 : getSourceLength();
+    jassert ((! needsRender()) || getSourceLength() > 0s);
+    const auto sourceLength = getSourceLength() == 0s ? 5.0 : getSourceLength().inSeconds();
 
     waveInfo.bitsPerSample      = renderOptions->getBitDepth();
     waveInfo.sampleRate         = renderOptions->getSampleRate();
@@ -365,7 +365,7 @@ void EditClip::updateLoopInfoBasedOnSource (bool updateLength)
 
     if (tempo > 0.0)
     {
-        clipNumBeats = (tempo * getSourceLength()) / 60.0;
+        clipNumBeats = (tempo * getSourceLength().inSeconds()) / 60.0;
         loopInfo.setNumBeats (clipNumBeats);
         loopInfo.setBpm (tempo, waveInfo);
         // need to set num beats or the tempo will get messed up
@@ -406,7 +406,7 @@ void EditClip::updateLoopInfoBasedOnSource (bool updateLength)
             {
                 auto bpmRatio = tempo / editBpm;
                 jassert (bpmRatio > 0.1 && bpmRatio < 10.0); // sensible?
-                auto newLength = TimeDuration::fromSeconds (getSourceLength()) * bpmRatio;
+                auto newLength = getSourceLength() * bpmRatio;
                 setLength (newLength, true);
             }
 

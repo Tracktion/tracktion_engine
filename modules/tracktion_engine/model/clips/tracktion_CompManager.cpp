@@ -101,7 +101,7 @@ juce::ValueTree CompManager::findSectionAtTime (double time)
     return {};
 }
 
-int CompManager::findSectionWithEndTime (EditTimeRange timeRange, int takeIndex, bool& timeFoundAtStartOfSection) const
+int CompManager::findSectionWithEndTime (juce::Range<double> timeRange, int takeIndex, bool& timeFoundAtStartOfSection) const
 {
     auto activeTree = getActiveTakeTree();
     auto numSections = activeTree.getNumChildren();
@@ -134,7 +134,7 @@ int CompManager::findSectionWithEndTime (EditTimeRange timeRange, int takeIndex,
     return -1;
 }
 
-EditTimeRange CompManager::getSectionTimes (const juce::ValueTree& section) const
+juce::Range<double> CompManager::getSectionTimes (const juce::ValueTree& section) const
 {
     jassert (section.hasType (IDs::COMPSECTION));
 
@@ -173,11 +173,11 @@ juce::String CompManager::getTakeName (int index) const
 }
 
 //==============================================================================
-EditTimeRange CompManager::getCompRange() const
+juce::Range<double> CompManager::getCompRange() const
 {
     auto endTime = clip.isLooping() ? getLoopLength()
                                     : (getMaxCompLength() * getSourceTimeMultiplier());
-    return EditTimeRange (0.0, endTime) - getOffset();
+    return juce::Range<double> (0.0, endTime) - getOffset();
 }
 
 double CompManager::getSpeedRatio() const
@@ -286,7 +286,7 @@ void CompManager::moveSectionEndTime (juce::ValueTree& section, double newTime)
 
     if (currentEndTime != newTime)
     {
-        removeSectionsWithinRange (EditTimeRange::between (currentEndTime, newTime), section);
+        removeSectionsWithinRange (juce::Range<double>::between (currentEndTime, newTime), section);
         section.setProperty (IDs::endTime, newTime, getUndoManager());
     }
 }
@@ -362,7 +362,7 @@ void CompManager::removeSection (const juce::ValueTree& section)
     section.getParent().removeChild (section, getUndoManager());
 }
 
-void CompManager::removeSectionsWithinRange (EditTimeRange timeRange, const juce::ValueTree& sectionToKeep)
+void CompManager::removeSectionsWithinRange (juce::Range<double> timeRange, const juce::ValueTree& sectionToKeep)
 {
     auto takeTree = getActiveTakeTree();
     jassert (takeTree.hasType (IDs::TAKE) && isTakeComp (takeTree));
@@ -434,7 +434,7 @@ void CompManager::keepSectionsSortedAndInRange()
         {
             auto sectionTimes = getSectionTimes (takeTree.getChild (i));
 
-            if (! compRange.overlaps (sectionTimes)
+            if (! (sectionTimes.getStart() < compRange.getEnd() && compRange.getStart() < sectionTimes.getEnd())
                 || sectionTimes.getEnd() < compRange.getStart())
             {
                 takeTree.removeChild (i, getUndoManager());
@@ -1014,7 +1014,7 @@ bool WaveCompManager::renderTake (CompRenderContext& context, AudioFileWriter& w
     // first build the audio graph of the comp
     CombiningAudioNode compNode;
     const int blockSize = 32768;
-    EditTimeRange takeRange (0.0, context.maxLength);
+    juce::Range<double> takeRange (0.0, context.maxLength);
     auto crossfadeLength = context.crossfadeLength;
     auto halfCrossfade = crossfadeLength / 2.0;
 
@@ -1041,8 +1041,8 @@ bool WaveCompManager::renderTake (CompRenderContext& context, AudioFileWriter& w
             AudioNode* node = new WaveAudioNode (takeFile, takeRange, 0.0, {}, {},
                                                  1.0, juce::AudioChannelSet::stereo());
 
-            auto segmentTimes = EditTimeRange (startTime, endTime).expanded (halfCrossfade) + offset;
-            EditTimeRange fadeIn, fadeOut;
+            auto segmentTimes = juce::Range<double> (startTime, endTime).expanded (halfCrossfade) + offset;
+            juce::Range<double> fadeIn, fadeOut;
 
             if (i != 0)
                 fadeIn = { segmentTimes.getStart(), segmentTimes.getStart() + crossfadeLength };
