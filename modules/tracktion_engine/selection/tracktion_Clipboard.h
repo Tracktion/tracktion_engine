@@ -58,7 +58,7 @@ public:
         struct ItemInfo
         {
             ProjectItemID itemID;
-            EditTimeRange range;
+            TimeRange range;
         };
 
         std::vector<ItemInfo> itemIDs;

@@ -924,7 +924,7 @@ std::unique_ptr<tracktion::graph::Node> createTrackCompNode (AudioTrack& at, tra
     if (auto tc = at.edit.getTrackCompManager().getTrackComp (&at))
     {
         const auto crossfadeTimeMs = at.edit.engine.getPropertyStorage().getProperty (SettingID::compCrossfadeMs, 20.0);
-        const auto crossfadeTime = static_cast<double> (crossfadeTimeMs) / 1000.0;
+        const auto crossfadeTime = TimeDuration::fromSeconds (static_cast<double> (crossfadeTimeMs) / 1000.0);
         
         const auto nonMuteTimes = tc->getNonMuteTimes (at, crossfadeTime);
         const auto muteTimes = TrackCompManager::TrackComp::getMuteTimes (nonMuteTimes);
@@ -932,17 +932,18 @@ std::unique_ptr<tracktion::graph::Node> createTrackCompNode (AudioTrack& at, tra
         if (muteTimes.isEmpty())
             return node;
 
-        node = makeNode<TimedMutingNode> (std::move (node), muteTimes, playHeadState);
+        node = makeNode<TimedMutingNode> (std::move (node), std::move (muteTimes), playHeadState);
 
         for (auto r : nonMuteTimes)
         {
-            auto fadeIn = r.withLength (TimeDuration::fromSeconds (crossfadeTime)) - TimeDuration::fromSeconds (0.0001);
-            auto fadeOut = fadeIn.movedToEndAt (r.getEnd() + TimeDuration::fromSeconds (0.0001));
+            auto fadeIn = r.withLength (crossfadeTime) - 0.0001s;
+            auto fadeOut = fadeIn.movedToEndAt (r.getEnd() + 0.0001s);
 
             if (! (fadeIn.isEmpty() && fadeOut.isEmpty()))
                 node = makeNode<FadeInOutNode> (std::move (node),
                                                 playHeadState,
-                                                fadeIn, fadeOut,
+                                                TimeRange { fadeIn.getStart(), fadeIn.getEnd() },
+                                                TimeRange { fadeOut.getStart(), fadeOut.getEnd() },
                                                 AudioFadeCurve::convex,
                                                 AudioFadeCurve::convex, false);
         }

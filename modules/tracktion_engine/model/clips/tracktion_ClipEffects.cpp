@@ -973,7 +973,7 @@ juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> StepVolumeEffec
                                        1.0, juce::AudioChannelSet::stereo());
     auto compNode = createTrackCompAudioNode (waveNode,
                                               TrackCompManager::TrackComp::getMuteTimes (nonMuteTimes),
-                                              nonMuteTimes, fade);
+                                              nonMuteTimes, TimeDuration::fromSeconds (fade));
 
     return new AudioNodeRenderJob (edit.engine, compNode, destFile, sourceFile);
 }

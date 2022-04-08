@@ -674,10 +674,10 @@ juce::String TimecodeDisplayFormat::toFullTimecode (TimePosition seconds, int su
 
 //==============================================================================
 TimecodeSnapType TimecodeDisplayFormat::getBestSnapType (const TempoSetting& tempo,
-                                                         double onScreenTimePerPixel,
+                                                         TimeDuration onScreenTimePerPixel,
                                                          bool isTripletOverride) const
 {
-    if (type >= TimecodeType::fps24 && (1.0 / getSubSecondDivisions()) / onScreenTimePerPixel > 2)
+    if (type >= TimecodeType::fps24 && (1.0 / getSubSecondDivisions()) / onScreenTimePerPixel.inSeconds() > 2)
         return TimecodeSnapType (type, 1);
 
     auto numSnapTypes = getNumSnapTypes();
@@ -686,7 +686,7 @@ TimecodeSnapType TimecodeDisplayFormat::getBestSnapType (const TempoSetting& tem
     {
         TimecodeSnapType snap (type, i);
         auto res = snap.getApproxIntervalTime (tempo, isTripletOverride);
-        auto t = res / onScreenTimePerPixel;
+        auto t = res / onScreenTimePerPixel.inSeconds();
 
         if (t > 12s)
             return snap;

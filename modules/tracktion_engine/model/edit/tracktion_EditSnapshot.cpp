@@ -288,11 +288,11 @@ void EditSnapshot::addMarkers (const juce::XmlElement& track)
         Marker m;
         m.name      = clip->getStringAttribute ("name", TRANS("unnamed"));
         m.colour    = juce::Colour::fromString (clip->getStringAttribute ("colour", TRANS("unnamed")));
-        auto start  = clip->getDoubleAttribute ("start", 0.0);
-        auto len    = clip->getDoubleAttribute ("length", 0.0);
+        auto start  = TimePosition::fromSeconds (clip->getDoubleAttribute ("start", 0.0));
+        auto len    = TimeDuration::fromSeconds (clip->getDoubleAttribute ("length", 0.0));
         m.time      = { start, start + len };
 
-        if (len > 0.0)
+        if (len > 0s)
             markers.add (m);
     }
 }

@@ -137,7 +137,7 @@ struct TimecodeDisplayFormat
                                     int part, int newValue, bool isRelative) const;
 
     //==============================================================================
-    TimecodeSnapType getBestSnapType (const TempoSetting&, double onScreenTimePerPixel, bool isTripletOverride) const;
+    TimecodeSnapType getBestSnapType (const TempoSetting&, TimeDuration onScreenTimePerPixel, bool isTripletOverride) const;
 
     int getNumSnapTypes() const;
     TimecodeSnapType getSnapType (int index) const;

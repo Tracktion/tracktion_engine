@@ -46,11 +46,11 @@ public:
         juce::ValueTree state;
 
         EditItemID getTrack() const      { return track; }
-        TimePosition getEnd() const      { return end; }
+        double getEnd() const      { return end; }
 
     private:
         EditItemID track;
-        TimePosition end;
+        double end = 0.0;
 
         void updateTrack();
         void updateEnd();
@@ -83,7 +83,7 @@ public:
         void setTimeFormat (TimeFormat);
 
         static juce::Array<TimeRange> getMuteTimes (const juce::Array<TimeRange>& nonMuteTimes);
-        juce::Array<TimeRange> getNonMuteTimes (Track&, double crossfadeTime) const;
+        juce::Array<TimeRange> getNonMuteTimes (Track&, TimeDuration crossfadeTime) const;
         TimeRange getTimeRange() const;
 
         void setName (const juce::String&);
@@ -94,22 +94,22 @@ public:
         void setSectionTrack (CompSection&, const Track::Ptr&);
         void removeSection (CompSection&);
 
-        CompSection* moveSectionToEndAt (CompSection*, TimePosition newEndTime);
-        CompSection* moveSection (CompSection*, TimeDuration timeDelta);
-        CompSection* moveSectionEndTime (CompSection*, TimePosition newTime);
+        CompSection* moveSectionToEndAt (CompSection*, double newEndTime);
+        CompSection* moveSection (CompSection*, double timeDelta);
+        CompSection* moveSectionEndTime (CompSection*, double newTime);
 
-        int removeSectionsWithinRange (TimeRange, CompSection* sectionToKeep);
-        juce::ValueTree addSection (EditItemID trackID, TimePosition endTime, juce::UndoManager*);
-        CompSection* addSection (Track::Ptr, TimePosition endTime);
-        CompSection* splitSectionAtTime (TimePosition);
+        int removeSectionsWithinRange (juce::Range<double>, CompSection* sectionToKeep);
+        juce::ValueTree addSection (EditItemID trackID, double endTime, juce::UndoManager*);
+        CompSection* addSection (Track::Ptr, double endTime);
+        CompSection* splitSectionAtTime (double);
 
-        CompSection* findSectionWithEdgeTimeWithin (const Track::Ptr&, TimeRange, bool& startEdge) const;
-        CompSection* findSectionAtTime (const Track::Ptr&, TimePosition) const;
+        CompSection* findSectionWithEdgeTimeWithin (const Track::Ptr&, juce::Range<double>, bool& startEdge) const;
+        CompSection* findSectionAtTime (const Track::Ptr&, double) const;
 
         struct Section
         {
             CompSection* compSection;
-            TimeRange timeRange;
+            juce::Range<double> timeRange;
         };
 
         juce::Array<Section> getSectionsForTrack (const Track::Ptr&) const;

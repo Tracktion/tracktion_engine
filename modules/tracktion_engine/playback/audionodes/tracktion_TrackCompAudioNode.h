@@ -44,27 +44,27 @@ inline AudioNode* createTrackCompAudioNode (AudioNode* input,
 inline AudioNode* createTrackCompAudioNode (AudioNode* input,
                                             const juce::Array<TimeRange>& muteTimes,
                                             const juce::Array<TimeRange>& nonMuteTimes,
-                                            double crossfadeTime)
+                                            TimeDuration crossfadeTime)
 {
     juce::Array<EditTimeRange> muteEditTimes;
     juce::Array<EditTimeRange> nonMuteEditTimes;
 
     for (auto t : muteTimes)
-        muteEditTimes.add (toEditTimeRange (t));
+        muteEditTimes.add ({ t.getStart().inSeconds(), t.getEnd().inSeconds() });
 
     for (auto t : nonMuteTimes)
-        nonMuteEditTimes.add (toEditTimeRange (t));
+        nonMuteEditTimes.add ({ t.getStart().inSeconds(), t.getEnd().inSeconds() });
 
     return createTrackCompAudioNode (input,
                                      muteEditTimes,
                                      nonMuteEditTimes,
-                                     crossfadeTime);
+                                     crossfadeTime.inSeconds());
 }
 
 inline AudioNode* createAudioNode (TrackCompManager::TrackComp& trackComp, Track& t, AudioNode* input)
 {
     auto crossfadeTimeMs = trackComp.edit.engine.getPropertyStorage().getProperty (SettingID::compCrossfadeMs, 20.0);
-    auto crossfadeTime = static_cast<double> (crossfadeTimeMs) / 1000.0;
+    auto crossfadeTime = TimeDuration::fromSeconds (static_cast<double> (crossfadeTimeMs) / 1000.0);
     auto nonMuteTimes = trackComp.getNonMuteTimes (t, crossfadeTime);
     
     return createTrackCompAudioNode (input, TrackCompManager::TrackComp::getMuteTimes (nonMuteTimes),

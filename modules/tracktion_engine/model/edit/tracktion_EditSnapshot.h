@@ -28,7 +28,7 @@ public:
     {
         juce::String name;
         juce::Colour colour;
-        EditTimeRange time;
+        TimeRange time;
     };
 
     //==============================================================================

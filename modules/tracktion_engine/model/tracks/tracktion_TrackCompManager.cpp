@@ -42,7 +42,7 @@ void TrackCompManager::CompSection::updateFrom (juce::ValueTree& v, const juce::
 }
 
 void TrackCompManager::CompSection::updateTrack()      { track = EditItemID::fromProperty (state, IDs::track); }
-void TrackCompManager::CompSection::updateEnd()        { end = TimePosition::fromSeconds (static_cast<double> (state[IDs::end])); }
+void TrackCompManager::CompSection::updateEnd()        { end = static_cast<double> (state[IDs::end]); }
 
 //==============================================================================
 TrackCompManager::TrackComp* TrackCompManager::TrackComp::createAndIncRefCount (Edit& edit, const juce::ValueTree& v)
@@ -90,7 +90,7 @@ juce::Array<TimeRange> TrackCompManager::TrackComp::getMuteTimes (const juce::Ar
     juce::Array<TimeRange> muteTimes;
     muteTimes.ensureStorageAllocated (nonMuteTimes.size() + 1);
 
-    TimePosition lastTime;
+    auto lastTime = 0_tp;
 
     if (! nonMuteTimes.isEmpty())
     {
@@ -108,9 +108,9 @@ juce::Array<TimeRange> TrackCompManager::TrackComp::getMuteTimes (const juce::Ar
     return muteTimes;
 }
 
-juce::Array<TimeRange> TrackCompManager::TrackComp::getNonMuteTimes (Track& t, double crossfadeTime) const
+juce::Array<TimeRange> TrackCompManager::TrackComp::getNonMuteTimes (Track& t, TimeDuration crossfadeTime) const
 {
-    auto halfCrossfade = TimeDuration::fromSeconds (crossfadeTime / 2.0);
+    auto halfCrossfade = crossfadeTime / 2.0;
     juce::Array<TimeRange> nonMuteTimes;
 
     auto& ts = edit.tempoSequence;
@@ -123,11 +123,12 @@ juce::Array<TimeRange> TrackCompManager::TrackComp::getNonMuteTimes (Track& t, d
 
         if (convertFromBeats)
         {
-            s = ts.beatsToTime (BeatPosition::fromBeats (s.inSeconds()));
-            e = ts.beatsToTime (BeatPosition::fromBeats (e.inSeconds()));
+            s = ts.beatsToTime (BeatPosition::fromBeats (s)).inSeconds();
+            e = ts.beatsToTime (BeatPosition::fromBeats (e)).inSeconds();
         }
 
-        nonMuteTimes.add ({ s - halfCrossfade, e + halfCrossfade });
+        nonMuteTimes.add ({ TimePosition::fromSeconds (s) - halfCrossfade,
+                            TimePosition::fromSeconds (e) + halfCrossfade });
     }
 
     // remove any overlaps
@@ -154,8 +155,8 @@ TimeRange TrackCompManager::TrackComp::getTimeRange() const
     TimeRange time;
 
     const auto crossfadeTimeMs = edit.engine.getPropertyStorage().getProperty (SettingID::compCrossfadeMs, 20.0);
-    const auto crossfadeTime = static_cast<double> (crossfadeTimeMs) / 1000.0;
-    const auto halfCrossfade = TimeDuration::fromSeconds (crossfadeTime / 2.0);
+    const auto crossfadeTime = TimeDuration::fromSeconds (static_cast<double> (crossfadeTimeMs) / 1000.0);
+    const auto halfCrossfade = crossfadeTime / 2.0;
 
     auto& ts = edit.tempoSequence;
     bool convertFromBeats = timeFormat == beats;
@@ -170,11 +171,12 @@ TimeRange TrackCompManager::TrackComp::getTimeRange() const
 
         if (convertFromBeats)
         {
-            s = ts.beatsToTime (BeatPosition::fromBeats (s.inSeconds()));
-            e = ts.beatsToTime (BeatPosition::fromBeats (e.inSeconds()));
+            s = ts.beatsToTime (BeatPosition::fromBeats (s)).inSeconds();
+            e = ts.beatsToTime (BeatPosition::fromBeats (e)).inSeconds();
         }
 
-        TimeRange secTime (s - halfCrossfade, e + halfCrossfade);
+        TimeRange secTime (TimePosition::fromSeconds (s) - halfCrossfade,
+                           TimePosition::fromSeconds (e) + halfCrossfade);
         time = time.isEmpty() ? secTime : time.getUnionWith (secTime);
     }
 
@@ -229,7 +231,7 @@ void TrackCompManager::TrackComp::removeSection (CompSection& cs)
         state.removeChild (cs.state, um);
 }
 
-TrackCompManager::CompSection* TrackCompManager::TrackComp::moveSectionToEndAt (CompSection* cs, TimePosition newEndTime)
+TrackCompManager::CompSection* TrackCompManager::TrackComp::moveSectionToEndAt (CompSection* cs, double newEndTime)
 {
     if (cs == nullptr)
         return {};
@@ -237,9 +239,9 @@ TrackCompManager::CompSection* TrackCompManager::TrackComp::moveSectionToEndAt (
     return moveSection (cs, newEndTime - cs->getEnd());
 }
 
-TrackCompManager::CompSection* TrackCompManager::TrackComp::moveSection (CompSection* cs, TimeDuration timeDelta)
+TrackCompManager::CompSection* TrackCompManager::TrackComp::moveSection (CompSection* cs, double timeDelta)
 {
-    if (timeDelta == TimeDuration() || cs == nullptr)
+    if (timeDelta == 0.0 || cs == nullptr)
         return cs;
 
     bool needToAddSectionAtStart = false;
@@ -248,7 +250,7 @@ TrackCompManager::CompSection* TrackCompManager::TrackComp::moveSection (CompSec
     // first section
     if (sectionIndex == 0)
     {
-        if (timeDelta > TimeDuration())
+        if (timeDelta > 0.0)
             needToAddSectionAtStart = true;
         else
             return cs;
@@ -257,11 +259,11 @@ TrackCompManager::CompSection* TrackCompManager::TrackComp::moveSection (CompSec
     // move section
     auto um = &edit.getUndoManager();
     juce::WeakReference<CompSection> prevCs = objects[sectionIndex - 1];
-    TimeRange oldSectionTimes (prevCs == nullptr ? TimePosition() : prevCs->getEnd(), cs->getEnd());
+    juce::Range<double> oldSectionTimes (prevCs == nullptr ? 0.0 : prevCs->getEnd(), cs->getEnd());
     auto newSectionTimes = oldSectionTimes + timeDelta;
 
-    if (newSectionTimes.getStart() < TimePosition())
-        newSectionTimes = newSectionTimes.movedToStartAt (TimePosition());
+    if (newSectionTimes.getStart() < 0.0)
+        newSectionTimes = newSectionTimes.movedToStartAt (0.0);
 
     if (oldSectionTimes == newSectionTimes)
         return cs;
@@ -270,22 +272,22 @@ TrackCompManager::CompSection* TrackCompManager::TrackComp::moveSection (CompSec
     prevCs = objects[objects.indexOf (cs) - 1];
 
     if (prevCs != nullptr)
-        prevCs->state.setProperty (IDs::end, newSectionTimes.getStart().inSeconds(), um);
+        prevCs->state.setProperty (IDs::end, newSectionTimes.getStart(), um);
 
-    cs->state.setProperty (IDs::end, newSectionTimes.getEnd().inSeconds(), um);
+    cs->state.setProperty (IDs::end, newSectionTimes.getEnd(), um);
 
     if (needToAddSectionAtStart)
-        addSection (nullptr, toPosition (timeDelta));
+        addSection (nullptr, timeDelta);
 
     return cs;
 }
 
-TrackCompManager::CompSection* TrackCompManager::TrackComp::moveSectionEndTime (CompSection* cs, TimePosition newTime)
+TrackCompManager::CompSection* TrackCompManager::TrackComp::moveSectionEndTime (CompSection* cs, double newTime)
 {
-    const auto minSectionLength = TimeDuration::fromSeconds (0.01);
+    const auto minSectionLength = 0.01;
 
     juce::WeakReference<CompSection> prevCs = objects[objects.indexOf (cs) - 1];
-    TimeRange oldSectionTimes (prevCs == nullptr ? TimePosition() : prevCs->getEnd(), cs->getEnd());
+    juce::Range<double> oldSectionTimes (prevCs == nullptr ? 0.0 : prevCs->getEnd(), cs->getEnd());
     auto newSectionTimes = oldSectionTimes.withEnd (newTime);
     auto um = &edit.getUndoManager();
 
@@ -293,27 +295,27 @@ TrackCompManager::CompSection* TrackCompManager::TrackComp::moveSectionEndTime (
     {
         // If expanding remove all sections within the new range
         removeSectionsWithinRange (newSectionTimes, cs);
-        cs->state.setProperty (IDs::end, newSectionTimes.getEnd().inSeconds(), um);
+        cs->state.setProperty (IDs::end, newSectionTimes.getEnd(), um);
         return cs;
     }
 
     if (newSectionTimes.getLength() >= minSectionLength)
     {
-        cs->state.setProperty (IDs::end, newSectionTimes.getEnd().inSeconds(), um);
+        cs->state.setProperty (IDs::end, newSectionTimes.getEnd(), um);
         return cs;
     }
 
     if (newSectionTimes.getLength() < minSectionLength)
     {
         newSectionTimes = oldSectionTimes.withLength (minSectionLength);
-        cs->state.setProperty (IDs::end, newSectionTimes.getEnd().inSeconds(), um);
+        cs->state.setProperty (IDs::end, newSectionTimes.getEnd(), um);
         return cs;
     }
 
     return cs;
 }
 
-int TrackCompManager::TrackComp::removeSectionsWithinRange (TimeRange timeRange, CompSection* sectionToKeep)
+int TrackCompManager::TrackComp::removeSectionsWithinRange (juce::Range<double> timeRange, CompSection* sectionToKeep)
 {
     int numRemoved = 0;
     auto sections = getSectionsForTrack ({});
@@ -324,7 +326,7 @@ int TrackCompManager::TrackComp::removeSectionsWithinRange (TimeRange timeRange,
         auto sectionTime = section.timeRange;
 
         if (section.compSection != sectionToKeep
-             && (timeRange.contains (sectionTime) || sectionTime.getLength() < TimeDuration()))
+             && (timeRange.contains (sectionTime) || sectionTime.getLength() < 0.0))
         {
             state.removeChild (section.compSection->state, &edit.getUndoManager());
             ++numRemoved;
@@ -345,12 +347,12 @@ struct SectionSorter
     }
 };
 
-juce::ValueTree TrackCompManager::TrackComp::addSection (EditItemID trackID, TimePosition endTime,
+juce::ValueTree TrackCompManager::TrackComp::addSection (EditItemID trackID, double endTime,
                                                          juce::UndoManager* um)
 {
     auto newSection = createValueTree (IDs::COMPSECTION,
                                        IDs::track, trackID,
-                                       IDs::end, endTime.inSeconds());
+                                       IDs::end, endTime);
 
     int insertIndex = 0;
     const int numSections = state.getNumChildren();
@@ -359,7 +361,7 @@ juce::ValueTree TrackCompManager::TrackComp::addSection (EditItemID trackID, Tim
     {
         auto v = state.getChild (i);
 
-        if (double (v[IDs::end]) < endTime.inSeconds())
+        if (double (v[IDs::end]) < endTime)
             break;
 
         insertIndex = i;
@@ -373,7 +375,7 @@ juce::ValueTree TrackCompManager::TrackComp::addSection (EditItemID trackID, Tim
     return newSection;
 }
 
-TrackCompManager::CompSection* TrackCompManager::TrackComp::addSection (Track::Ptr t, TimePosition endTime)
+TrackCompManager::CompSection* TrackCompManager::TrackComp::addSection (Track::Ptr t, double endTime)
 {
     auto trackID = t == nullptr ? EditItemID() : t->itemID;
     auto cs = getCompSectionFor (addSection (trackID, endTime, &edit.getUndoManager()));
@@ -381,7 +383,7 @@ TrackCompManager::CompSection* TrackCompManager::TrackComp::addSection (Track::P
     return cs;
 }
 
-TrackCompManager::CompSection* TrackCompManager::TrackComp::splitSectionAtTime (TimePosition time)
+TrackCompManager::CompSection* TrackCompManager::TrackComp::splitSectionAtTime (double time)
 {
     EditItemID trackID;
 
@@ -394,7 +396,7 @@ TrackCompManager::CompSection* TrackCompManager::TrackComp::splitSectionAtTime (
 juce::Array<TrackCompManager::TrackComp::Section> TrackCompManager::TrackComp::getSectionsForTrack (const Track::Ptr& track) const
 {
     juce::Array<Section> sections;
-    TimePosition lastTime;
+    double lastTime = 0.0;
     auto trackId = track == nullptr ? EditItemID() : track->itemID;
 
     for (auto cs : objects)
@@ -411,7 +413,7 @@ juce::Array<TrackCompManager::TrackComp::Section> TrackCompManager::TrackComp::g
 }
 
 TrackCompManager::CompSection* TrackCompManager::TrackComp::findSectionWithEdgeTimeWithin (const Track::Ptr& track,
-                                                                                           TimeRange timeRange,
+                                                                                           juce::Range<double> timeRange,
                                                                                            bool& startEdge) const
 {
     for (const auto& section : getSectionsForTrack (track))
@@ -432,7 +434,7 @@ TrackCompManager::CompSection* TrackCompManager::TrackComp::findSectionWithEdgeT
     return {};
 }
 
-TrackCompManager::CompSection* TrackCompManager::TrackComp::findSectionAtTime (const Track::Ptr& track, TimePosition time) const
+TrackCompManager::CompSection* TrackCompManager::TrackComp::findSectionAtTime (const Track::Ptr& track, double time) const
 {
     auto trackID = track != nullptr ? track->itemID : EditItemID();
 
@@ -485,9 +487,9 @@ void TrackCompManager::TrackComp::convertFromSecondsToBeats()
     for (auto cs : objects)
     {
         const auto s = cs->getEnd();
-        const auto b = ts.timeToBeats (s);
-        cs->state.setProperty (IDs::end, b.inBeats(), um);
-        jassert (cs->getEnd().inSeconds() == b.inBeats());
+        const auto b = ts.timeToBeats (TimePosition::fromSeconds (s)).inBeats();
+        cs->state.setProperty (IDs::end, b, um);
+        jassert (cs->getEnd() == b);
     }
 }
 
@@ -498,9 +500,9 @@ void TrackCompManager::TrackComp::convertFromBeatsToSeconds()
 
     for (auto cs : objects)
     {
-        const auto b = BeatPosition::fromBeats (cs->getEnd().inSeconds());
-        const auto s = ts.beatsToTime (b);
-        cs->state.setProperty (IDs::end, s.inSeconds(), um);
+        const auto b = cs->getEnd();
+        const auto s = ts.beatsToTime (BeatPosition::fromBeats (b)).inSeconds();
+        cs->state.setProperty (IDs::end, s, um);
         jassert (cs->getEnd() == s);
     }
 }
