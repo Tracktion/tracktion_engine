@@ -261,4 +261,9 @@ WarpTimeFactory& Engine::getWarpTimeFactory() const
     return *warpTimeFactory;
 }
 
+bool EngineBehaviour::shouldLoadPlugin (ExternalPlugin& p)
+{
+    return p.edit.shouldLoadPlugins();
+}
+
 }

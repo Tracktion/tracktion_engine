@@ -16,7 +16,8 @@ namespace tracktion_engine
 */
 class ExternalController  : private juce::AsyncUpdater,
                             private SelectableListener,
-                            private AutomatableParameter::Listener
+                            private AutomatableParameter::Listener,
+                            private juce::Timer
 {
 public:
     //==============================================================================
@@ -158,6 +159,8 @@ public:
     Engine& engine;
 
 private:
+    void timerCallback() override;
+
     static constexpr int maxDevices = 4;
     friend class ExternalControllerManager;
     friend class ControlSurface;

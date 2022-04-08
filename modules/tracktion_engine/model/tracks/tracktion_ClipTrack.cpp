@@ -463,7 +463,7 @@ EditTimeRange ClipTrack::getTotalRange() const
     return findUnionOfEditTimeRanges (clipList->objects);
 }
 
-void ClipTrack::addClip (const Clip::Ptr& clip)
+bool ClipTrack::addClip (const Clip::Ptr& clip)
 {
     CRASH_TRACER
 
@@ -478,12 +478,14 @@ void ClipTrack::addClip (const Clip::Ptr& clip)
             state.addChild (clip->state, -1, um);
 
             changed();
+            return true;
         }
         else
         {
-            clip->edit.engine.getUIBehaviour().showWarningMessage (TRANS("Can't add any more clips to a single track!"));
+            clip->edit.engine.getUIBehaviour().showWarningMessage (TRANS("Can't add any more clips to this track!"));
         }
     }
+    return false;
 }
 
 void ClipTrack::addCollectionClip (CollectionClip* cc)
@@ -586,25 +588,32 @@ Clip* ClipTrack::insertClipWithState (juce::ValueTree clipState)
                 clipState.setProperty (IDs::autoCrossfade, true, nullptr);
     }
 
-    state.addChild (clipState, -1, &edit.getUndoManager());
-
-    if (auto newClip = clipList->getClipForTree (clipState))
+    if (clipList->objects.size() < edit.engine.getEngineBehaviour().getEditLimits().maxClipsInTrack)
     {
-        if (auto at = dynamic_cast<AudioTrack*> (this))
+        state.addChild (clipState, -1, &edit.getUndoManager());
+
+        if (auto newClip = clipList->getClipForTree (clipState))
         {
-            if (newClip->getColour() == newClip->getDefaultColour())
+            if (auto at = dynamic_cast<AudioTrack*> (this))
             {
-                float hue = ((at->getAudioTrackNumber() - 1) % 9) / 9.0f;
-                newClip->setColour (newClip->getDefaultColour().withHue (hue));
+                if (newClip->getColour() == newClip->getDefaultColour())
+                {
+                    float hue = ((at->getAudioTrackNumber() - 1) % 9) / 9.0f;
+                    newClip->setColour (newClip->getDefaultColour().withHue (hue));
+                }
+
+                if (auto acb = dynamic_cast<AudioClipBase*> (newClip.get()))
+                    if (edit.engine.getEngineBehaviour().autoAddClipEdgeFades())
+                        if (! (clipState.hasProperty (IDs::fadeIn) && clipState.hasProperty (IDs::fadeOut)))
+                            acb->applyEdgeFades();
             }
 
-            if (auto acb = dynamic_cast<AudioClipBase*> (newClip.get()))
-                if (edit.engine.getEngineBehaviour().autoAddClipEdgeFades())
-                    if (! (clipState.hasProperty (IDs::fadeIn) && clipState.hasProperty (IDs::fadeOut)))
-                        acb->applyEdgeFades();
+            return newClip.get();
         }
-
-        return newClip.get();
+    }
+    else
+    {
+        edit.engine.getUIBehaviour().showWarningMessage (TRANS("Can't add any more clips to this track!"));
     }
 
     jassertfalse;

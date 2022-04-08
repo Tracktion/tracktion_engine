@@ -26,18 +26,12 @@ inline const char* rexErrorToString (REX::REXError e) noexcept
         case REX::kREXError_NoError:                   return "No error";
         case REX::kREXError_OperationAbortedByUser:    return "Operation aborted by user";
         case REX::kREXError_NoCreatorInfoAvailable:    return "No creator info available";
-        case REX::kREXError_NotEnoughMemoryForDLL:     return "Not enough memory for the DLL";
-        case REX::kREXError_UnableToLoadDLL:           return "Unable to load the DLL";
-        case REX::kREXError_DLLTooOld:                 return "DLL is too old";
-        case REX::kREXError_DLLNotFound:               return "DLL wasn't found";
-        case REX::kREXError_APITooOld:                 return "API is too old";
-        case REX::kREXError_OutOfMemory:               return "Out of memory";
+        case REX::kREXError_OutOfMemory:               return "Out of Memory";
         case REX::kREXError_FileCorrupt:               return "File is corrupt";
         case REX::kREXError_REX2FileTooNew:            return "REX2 file is too new";
         case REX::kREXError_FileHasZeroLoopLength:     return "File has a zero length for the loop";
-        case REX::kREXError_OSVersionNotSupported:     return "OS version is not supported";
-        case REX::kREXImplError_DLLNotLoaded:          return "DLL not loaded";
-        case REX::kREXImplError_DLLAlreadyLoaded:      return "DLL is already loaded";
+        case REX::kREXImplError_DLLNotInitialized:     return "DLL Not Initialized";
+        case REX::kREXImplError_DLLAlreadyInitialized: return "DLL Already Initialized";
         case REX::kREXImplError_InvalidHandle:         return "Invalid handle";
         case REX::kREXImplError_InvalidSize:           return "Invalid size";
         case REX::kREXImplError_InvalidArgument:       return "Invalid argument";
@@ -68,35 +62,15 @@ struct RexSystem
     RexSystem()
     {
         CRASH_TRACER
-        const REX::REXError e = REX::REXLoadDLL();
+        const REX::REXError e = REX::REXInitializeDLL();
 
-        if (e == REX::kREXError_DLLNotFound)
+        if (e == REX::kREXImplError_DLLNotInitialized)
         {
-            startupErrorMessage = TRANS("The Propellerheads REX format is not installed on your machine!")
-                                    + "\n\n"
-                                    + TRANS("In order to work with rx2 files, please download "
-                                            "the \"REX shared library\" installer from propellerheads.se");
-        }
-        else if (e == REX::kREXError_UnableToLoadDLL)
-        {
-            startupErrorMessage = TRANS("The Propellerheads REX format installed on your machine could not be loaded!")
-                                    + "\n\n"
-                                    + TRANS("For an unknown reason, the library could not be loaded.")
-                                    + "\n"
-                                    + TRANS("Please try using the latest \"REX shared library\" installer from propellerheads.se");
-        }
-        else if (e == REX::kREXError_DLLTooOld)
-        {
-            startupErrorMessage = TRANS("The Propellerheads REX format installed on your machine is outdated!")
-                                    + "\n\n"
-                                    + TRANS("In order to work with rx2 files, please download "
-                                            "the latest \"REX shared library\" installer from propellerheads.se");
+            startupErrorMessage = TRANS("Error loading Propellerheads REX DLL!");
         }
         else if (e != REX::kREXError_NoError)
         {
-            startupErrorMessage = TRANS("An unknown error occured with the Propellerheads REX format!")
-                                    + "\n\n"
-                                    + TRANS("Please try using the latest \"REX shared library\" installer from propellerheads.se");
+            startupErrorMessage = TRANS("An unknown error occured with the Propellerheads REX format!");
         }
 
         initialised = checkRexError (e);
@@ -107,7 +81,7 @@ struct RexSystem
         CRASH_TRACER
 
         if (initialised)
-            REX::REXUnloadDLL();
+            REX::REXUninitializeDLL();
     }
 
     juce::CriticalSection lock;
@@ -129,7 +103,7 @@ struct RexHandleWrapper
     {
         CRASH_TRACER
         ok = checkRexError (REX::REXCreate (&handle, (const char*) rexData,
-                                            (long) rexDataSize, nullptr, nullptr));
+                                            (REX::REX_int32_t) rexDataSize, nullptr, nullptr));
     }
 
     ~RexHandleWrapper()

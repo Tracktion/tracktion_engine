@@ -69,6 +69,8 @@ public:
     bool deleteFile() const;
     static bool deleteFiles (Engine&, const juce::Array<juce::File>& files);
 
+    bool moveToTrash() const;
+
     //==============================================================================
     bool isNull() const noexcept                { return hash == 0; }
     bool isValid() const;

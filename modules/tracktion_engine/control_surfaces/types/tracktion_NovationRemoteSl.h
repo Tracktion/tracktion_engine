@@ -23,9 +23,7 @@ public:
     void updateMiscFeatures() override;
     void acceptMidiMessage (int, const juce::MidiMessage&) override;
     void moveFader (int channelNum, float newSliderPos) override;
-    void moveMasterLevelFader (float newLeftSliderPos, float newRightSliderPos) override;
     void movePanPot (int channelNum, float newPan) override;
-    void moveAux (int channel, const char* bus, float newPos) override;
     void updateSoloAndMute (int channelNum, Track::MuteAndSoloLightState, bool isBright) override;
     void soloCountChanged (bool) override;
     void playStateChanged (bool isPlaying) override;

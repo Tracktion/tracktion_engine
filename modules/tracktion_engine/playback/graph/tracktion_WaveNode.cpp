@@ -67,7 +67,7 @@ void WaveNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&
     editPositionInSamples = tracktion_graph::timeToSample ({ editPosition.start, editPosition.end }, outputSampleRate);
     updateFileSampleRate();
 
-    const int numChannelsToUse = std::max (channelsToUse.size(), reader->getNumChannels());
+    const int numChannelsToUse = std::max (channelsToUse.size(), reader != nullptr ? reader->getNumChannels() : 0);
     replaceChannelStateIfPossible (info.rootNodeToReplace, numChannelsToUse);
 
     if (! channelState)

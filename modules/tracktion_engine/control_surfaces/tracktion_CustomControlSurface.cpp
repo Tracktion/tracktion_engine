@@ -213,6 +213,7 @@ juce::XmlElement* CustomControlSurface::createXml()
     element->setAttribute ("eatsMidi", eatsAllMidi);
     element->setAttribute ("channels", numberOfFaderChannels);
     element->setAttribute ("parameters", numParameterControls);
+    element->setAttribute ("pickUpMode", pickUpMode);
 
     for (auto m : mappings)
     {
@@ -232,6 +233,7 @@ bool CustomControlSurface::loadFromXml (const juce::XmlElement& xml)
     eatsAllMidi                 = xml.getBoolAttribute ("eatsMidi", false);
     numberOfFaderChannels       = xml.getIntAttribute ("channels", 8);
     numParameterControls        = xml.getIntAttribute ("parameters", 18);
+    pickUpMode                  = xml.getBoolAttribute ("pickUpMode", false);
 
     mappings.clear();
 
@@ -666,6 +668,8 @@ void CustomControlSurface::acceptMidiMessage (int, const juce::MidiMessage& m)
 
 void CustomControlSurface::moveFader (int faderIndex, float v)
 {
+    ControlSurface::moveFader (faderIndex, v);
+
     sendCommandToControllerForActionID (volTrackId + faderIndex, v);
 
     auto dbText = juce::Decibels::toString (volumeFaderPositionToDB (v));
@@ -674,6 +678,8 @@ void CustomControlSurface::moveFader (int faderIndex, float v)
 
 void CustomControlSurface::moveMasterLevelFader (float newLeftSliderPos, float newRightSliderPos)
 {
+    ControlSurface::moveMasterLevelFader (newLeftSliderPos, newRightSliderPos);
+    
     const float panApproximation = ((newLeftSliderPos - newRightSliderPos) * 0.5f) + 0.5f;
     sendCommandToControllerForActionID (masterPanId, panApproximation);
     sendCommandToControllerForActionID (masterVolumeId, std::max (newLeftSliderPos, newRightSliderPos));
@@ -684,6 +690,7 @@ void CustomControlSurface::moveMasterLevelFader (float newLeftSliderPos, float n
 
 void CustomControlSurface::movePanPot (int faderIndex, float v)
 {
+    ControlSurface::movePanPot (faderIndex, v);
     sendCommandToControllerForActionID (panTrackId + faderIndex, (v * 0.5f) + 0.5f);
 
     juce::String panText;
@@ -699,8 +706,10 @@ void CustomControlSurface::movePanPot (int faderIndex, float v)
     sendCommandToControllerForActionID (panTextTrackId + faderIndex, panText);
 }
 
-void CustomControlSurface::moveAux (int faderIndex, const char*, float v)
+void CustomControlSurface::moveAux (int faderIndex, const char* bus, float v)
 {
+    ControlSurface::moveAux (faderIndex, bus, v);
+
     sendCommandToControllerForActionID (auxTrackId + faderIndex, v);
 
     auto dbText = juce::Decibels::toString (volumeFaderPositionToDB (v));
@@ -816,6 +825,8 @@ void CustomControlSurface::scrollOnOffChanged (bool enabled)
 
 void CustomControlSurface::parameterChanged (int paramIndex, const ParameterSetting& setting)
 {
+    ControlSurface::parameterChanged (paramIndex, setting);
+
     if (paramIndex >= 0)
     {
         sendCommandToControllerForActionID (paramTrackId + paramIndex, setting.value);

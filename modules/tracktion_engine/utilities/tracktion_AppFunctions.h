@@ -87,7 +87,7 @@ namespace AppFunctions
     void showHideVideo();
     void showHideMixer (bool fs);
     void showHideMidiEditor (bool fs);
-    void showHideTrackEditor();
+    void showHideTrackEditor (bool zoom);
     void showHideBrowser();
     void showHideActions();
     void performUserAction (int);

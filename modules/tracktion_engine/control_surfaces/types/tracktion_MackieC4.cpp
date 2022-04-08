@@ -849,6 +849,8 @@ void MackieC4::currentSelectionChanged (juce::String)
 
 void MackieC4::parameterChanged (int parameterNumber, const ParameterSetting& newValue)
 {
+    ControlSurface::parameterChanged (parameterNumber, newValue);
+    
     if (mode == PluginMode3
         && parameterNumber >= 0
         && parameterNumber < 32)
@@ -877,6 +879,7 @@ void MackieC4::clearParameter (int parameterNumber)
 
 void MackieC4::moveFader (int channelNum, float newSliderPos)
 {
+    ControlSurface::moveFader (channelNum, newSliderPos);
     if (mode == MixerMode)
     {
         currentPotPos[channelNum * 2] = newSliderPos;
@@ -884,12 +887,9 @@ void MackieC4::moveFader (int channelNum, float newSliderPos)
     }
 }
 
-void MackieC4::moveMasterLevelFader (float, float)
-{
-}
-
 void MackieC4::movePanPot (int channelNum, float newPan)
 {
+    ControlSurface::movePanPot (channelNum, newPan);
     if (mode == MixerMode)
     {
         currentPotPos[channelNum * 2 + 1] = newPan * 0.5f + 0.5f;
@@ -954,8 +954,10 @@ void MackieC4::faderBankChanged (int, const juce::StringArray& trackNames)
     }
 }
 
-void MackieC4::moveAux (int channelNum, const char*, float newPos)
+void MackieC4::moveAux (int channelNum, const char* bus, float newPos)
 {
+    ControlSurface::moveAux (channelNum, bus, newPos);
+    
     if (mode == AuxMode)
     {
         currentPotPos[channelNum + 8] = newPos;

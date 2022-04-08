@@ -379,7 +379,6 @@ bool Clip::moveToTrack (Track& newTrack)
                 if (! to->isFrozen (Track::anyFreeze))
                 {
                     Clip::Ptr refHolder (this);
-                    removeFromParentTrack();
                     to->addClip (this);
                 }
             }

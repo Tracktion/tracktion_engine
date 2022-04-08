@@ -1072,7 +1072,7 @@ std::unique_ptr<tracktion_graph::Node> createNodeForTrack (Track& track, const C
         if (t->isPartOfSubmix() && ! shouldRenderTrackInSubmix (*t, params))
             return {};
 
-        if (t->isFrozen (Track::groupFreeze))
+        if (! params.forRendering && t->isFrozen (Track::groupFreeze))
             return {};
 
         return createNodeForAudioTrack (*t, params);
@@ -1291,7 +1291,7 @@ std::unique_ptr<tracktion_graph::Node> createNodeForEdit (EditPlaybackContext& e
                 if (! device->isEnabled())
                     continue;
                 
-                if (t->isFrozen (Track::groupFreeze))
+                if (! params.forRendering && t->isFrozen (Track::groupFreeze))
                 {
                     if (std::find (devicesWithFrozenNodes.begin(), devicesWithFrozenNodes.end(), device)
                         != devicesWithFrozenNodes.end())
