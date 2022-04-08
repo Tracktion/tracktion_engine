@@ -719,7 +719,7 @@ TimecodeDisplayIterator::TimecodeDisplayIterator (const Edit& edit, TimePosition
 TimePosition TimecodeDisplayIterator::next()
 {
     bool triplets = isTripletOverride || sequence.isTripletsAtTime (time);
-    auto nextTime = std::max (TimePosition(), minSnapType.roundTimeUp (time + 1.0e-5s, sequence, triplets));
+    auto nextTime = std::max (0_tp, minSnapType.roundTimeUp (time + 1.0e-5s, sequence, triplets));
 
     if (nextTime <= time)
     {

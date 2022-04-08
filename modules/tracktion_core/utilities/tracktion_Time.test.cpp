@@ -181,6 +181,7 @@ public:
             expect (TimePosition (1s) + 1s == TimePosition (1000ms) + 1000ms);
             expect (TimePosition (1s) + 1s == TimePosition (2000ms));
             expect (TimePosition (1s) - 1.0s == TimePosition (0ms));
+            expect ((0_tp + 1.0e-5s) == TimePosition::fromSeconds (1.0e-5));
 
             // Samples
             {

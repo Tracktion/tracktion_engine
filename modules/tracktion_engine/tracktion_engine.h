@@ -180,6 +180,14 @@
  #define TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH 0
 #endif
 
+/** Config: TRACKTION_ENABLE_REALTIME_TIMESTRETCHING
+    Enables real-time time-stretching without having to generate proxy files.
+    N.B. This is experimental and not ready for production yet.
+*/
+#ifndef TRACKTION_ENABLE_REALTIME_TIMESTRETCHING
+ #define TRACKTION_ENABLE_REALTIME_TIMESTRETCHING 0
+#endif
+
 /** Config: TRACKTION_ENABLE_ABLETON_LINK
     Enables Ableton Link support.
     You must have Link in your search path if you enable this.

@@ -365,7 +365,7 @@ namespace details
 
     inline TimePosition toTime (const std::vector<Sequence::Section>& sections, BeatPosition beats)
     {
-        for (int i = (int) sections.size(); --i > 0;)
+        for (int i = (int) sections.size(); --i >= 0;)
         {
             auto& it = sections[(size_t) i];
 
@@ -396,7 +396,7 @@ namespace details
 
     inline BarsAndBeats toBarsAndBeats (const std::vector<Sequence::Section>& sections, TimePosition time)
     {
-        for (int i = (int) sections.size(); --i > 0;)
+        for (int i = (int) sections.size(); --i >= 0;)
         {
             auto& it = sections[(size_t) i];
 

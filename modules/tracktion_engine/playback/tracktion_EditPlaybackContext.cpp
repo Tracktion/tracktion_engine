@@ -959,7 +959,7 @@ void EditPlaybackContext::resyncToGlobalStreamTime (juce::Range<double> globalSt
     if (! nodePlaybackContext)
         return;
     
-    const auto globalSampleRange = tracktion_graph::timeToSample (globalStreamTime, sampleRate);
+    const auto globalSampleRange = tracktion::graph::timeToSample (globalStreamTime, sampleRate);
     nodePlaybackContext->resyncToReferenceSampleRange (globalSampleRange);
 }
 

@@ -357,7 +357,11 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                               params.forRendering,
                                                               desc);
     }
+   #if TRACKTION_ENABLE_REALTIME_TIMESTRETCHING
     else if (clip.canUseProxy())
+   #else
+    else
+   #endif
     {
         node = tracktion::graph::makeNode<WaveNode> (playFile,
                                                      clip.getEditTimeRange(),
@@ -371,6 +375,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                      clip.itemID,
                                                      params.forRendering);
     }
+   #if TRACKTION_ENABLE_REALTIME_TIMESTRETCHING
     else
     {
         if (clip.getAutoTempo() || clip.getAutoPitch())
@@ -435,7 +440,8 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                params.forRendering);
         }
     }
-    
+   #endif
+
     // Plugins
     if (params.includePlugins)
     {
