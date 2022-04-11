@@ -66,7 +66,7 @@ private:
         AudioFile sinAudioFile (engine, sinFile->getFile());
         
         tracktion::graph::PlayHead playHead;
-        playHead.setScrubbingBlockLength (timeToSample (0.08, ts.sampleRate));
+        playHead.setScrubbingBlockLength (toSamples (0.08_tp, ts.sampleRate));
         tracktion::graph::PlayHeadState playHeadState (playHead);
         ProcessState processState (playHeadState);
 
@@ -92,8 +92,8 @@ private:
             // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, 6.0);
             
-            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, timeToSample ({ 0.0, fileLengthSeconds }, ts.sampleRate), 1.0f, 0.707f);
-            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, timeToSample ({ fileLengthSeconds, fileLengthSeconds + 1.0 }, ts.sampleRate), 0.0f, 0.0f);
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, graph::timeToSample ({ 0.0, fileLengthSeconds }, ts.sampleRate), 1.0f, 0.707f);
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, graph::timeToSample ({ fileLengthSeconds, fileLengthSeconds + 1.0 }, ts.sampleRate), 0.0f, 0.0f);
         }
 
         beginTest ("WaveNode at time 0s, dragging");
@@ -118,7 +118,7 @@ private:
 
             playHead.setUserIsDragging (false);
 
-            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, timeToSample ({ 0.0, fileLengthSeconds + 1.0 }, ts.sampleRate), 0.4f, 0.282f);
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, graph::timeToSample ({ 0.0, fileLengthSeconds + 1.0 }, ts.sampleRate), 0.4f, 0.282f);
         }
 
         beginTest ("WaveNode at time 1s - 4s");
@@ -138,9 +138,9 @@ private:
             // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, 6.0);
 
-            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, timeToSample ({ 0.0, 1.0 }, ts.sampleRate), 0.0f, 0.0f);
-            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, timeToSample ({ 1.0, 4.0 }, ts.sampleRate), 1.0f, 0.707f);
-            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, timeToSample ({ 4.0, 5.0 }, ts.sampleRate), 0.0f, 0.0f);
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, graph::timeToSample ({ 0.0, 1.0 }, ts.sampleRate), 0.0f, 0.0f);
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, graph::timeToSample ({ 1.0, 4.0 }, ts.sampleRate), 1.0f, 0.707f);
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, graph::timeToSample ({ 4.0, 5.0 }, ts.sampleRate), 0.0f, 0.0f);
         }
 
         beginTest ("WaveNode at time 1s - 4s, loop every 1s");
@@ -160,9 +160,9 @@ private:
             // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, 6.0);
 
-            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, timeToSample ({ 0.0, 1.0 }, ts.sampleRate), 0.0f, 0.0f);
-            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, timeToSample ({ 1.0, 4.0 }, ts.sampleRate), 1.0f, 0.707f);
-            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, timeToSample ({ 4.0, 5.0 }, ts.sampleRate), 0.0f, 0.0f);
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, graph::timeToSample ({ 0.0, 1.0 }, ts.sampleRate), 0.0f, 0.0f);
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, graph::timeToSample ({ 1.0, 4.0 }, ts.sampleRate), 1.0f, 0.707f);
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, graph::timeToSample ({ 4.0, 5.0 }, ts.sampleRate), 0.0f, 0.0f);
         }
     }
 
@@ -200,7 +200,7 @@ private:
 
             // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, 5.0);
-            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, timeToSample ({ 0.0, 5.0 }, ts.sampleRate), 1.0f, 0.707f);
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, graph::timeToSample ({ 0.0, 5.0 }, ts.sampleRate), 1.0f, 0.707f);
         }
 
         beginTest ("Loop 1s-2s");
@@ -224,7 +224,7 @@ private:
 
             // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, 5.0);
-            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, timeToSample ({ 0.0, 5.0 }, ts.sampleRate), 1.0f, 0.707f);
+            test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, graph::timeToSample ({ 0.0, 5.0 }, ts.sampleRate), 1.0f, 0.707f);
         }
     }
 };

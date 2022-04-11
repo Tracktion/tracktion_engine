@@ -30,7 +30,7 @@ FadeInOutAudioNode::~FadeInOutAudioNode()
 {
 }
 
-static int timeToSample (const AudioRenderContext& rc, EditTimeRange editTime, double t)
+int FadeInOutAudioNode::timeToSample (const AudioRenderContext& rc, EditTimeRange editTime, double t)
 {
     return (int) (rc.bufferNumSamples * (t - editTime.getStart()) / editTime.getLength() + 0.5);
 }

@@ -42,6 +42,8 @@ private:
 
     bool renderingNeeded (const AudioRenderContext&) const;
 
+    static int timeToSample (const AudioRenderContext&, EditTimeRange, double);
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FadeInOutAudioNode)
 };
 
