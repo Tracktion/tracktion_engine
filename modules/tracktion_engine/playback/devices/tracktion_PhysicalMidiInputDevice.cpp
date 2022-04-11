@@ -415,6 +415,38 @@ bool PhysicalMidiInputDevice::tryToSendTimecode (const juce::MidiMessage& messag
 
 void PhysicalMidiInputDevice::handleIncomingMidiMessage (const juce::MidiMessage& m)
 {
+    if (m.isNoteOn())
+    {
+        if (activeNotes.isNoteActive (m.getChannel(), m.getNoteNumber()))
+        {
+            // If the note is on and we get another on, send the off before the on
+            handleIncomingMidiMessageInt (juce::MidiMessage::noteOff (m.getChannel(), m.getNoteNumber(), 0.0f));
+            handleIncomingMidiMessageInt (m);
+        }
+        else
+        {
+            // otherwise send the on and track its on
+            activeNotes.startNote (m.getChannel(), m.getNoteNumber());
+            handleIncomingMidiMessageInt (m);
+        }
+    }
+    else if (m.isNoteOff())
+    {
+        // Ignore all note offs unless the note was already on
+        if (activeNotes.isNoteActive (m.getChannel(), m.getNoteNumber()))
+        {
+            activeNotes.clearNote (m.getChannel(), m.getNoteNumber());
+            handleIncomingMidiMessageInt (m);
+        }
+    }
+    else
+    {
+        handleIncomingMidiMessageInt (m);
+    }
+}
+
+void PhysicalMidiInputDevice::handleIncomingMidiMessageInt (const juce::MidiMessage& m)
+{
     if (externalController != nullptr && externalController->wantsMessage (*this, m))
     {
         externalController->acceptMidiMessage (*this, m);

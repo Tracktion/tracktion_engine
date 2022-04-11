@@ -48,6 +48,8 @@ protected:
     void closeDevice() override;
 
 private:
+    void handleIncomingMidiMessageInt (const juce::MidiMessage&);
+
     friend struct PhysicalMidiInputDeviceInstance;
     int deviceIndex = 0;
     std::unique_ptr<juce::MidiInput> inputDevice;
@@ -57,6 +59,8 @@ private:
     bool isReadingMidiTimecode = false, isAcceptingMMC = false, ignoreHours = false;
 
     bool tryToSendTimecode (const juce::MidiMessage&);
+
+    ActiveNoteList activeNotes;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PhysicalMidiInputDevice)
 };
