@@ -20,9 +20,6 @@ jobs:
           - name: Windows
             os: windows-latest
             platform: windows
-          - name: Windows_2016
-            os: windows-2016
-            platform: windows
         # cfg:
         # - { name: Linux, os: ubuntu-16.04, platform: linux }
         # - { name: macOS, os: macos-latest, platform: mac }
