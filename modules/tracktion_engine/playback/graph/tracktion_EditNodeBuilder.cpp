@@ -464,7 +464,11 @@ std::unique_ptr<tracktion::graph::Node> createNodeForMidiClip (MidiClip& clip, c
 {
     CRASH_TRACER
     const bool generateMPE = clip.getMPEMode();
-    const MidiList::TimeBase timeBase = MidiList::TimeBase::beats;
+   #if TRACKTION_ENABLE_REALTIME_TIMESTRETCHING
+    constexpr MidiList::TimeBase timeBase = MidiList::TimeBase::beats;
+   #else
+    constexpr MidiList::TimeBase timeBase = MidiList::TimeBase::seconds;
+   #endif
 
     std::vector<juce::MidiMessageSequence> sequences;
     sequences.emplace_back (clip.getSequenceLooped().exportToPlaybackMidiSequence (clip, timeBase, generateMPE));
@@ -474,7 +478,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForMidiClip (MidiClip& clip, c
 
     juce::Range<double> editTimeRange;
 
-    if (timeBase == MidiList::TimeBase::beats)
+    if constexpr (timeBase == MidiList::TimeBase::beats)
     {
         editTimeRange = { clip.getStartBeat().inBeats(), clip.getEndBeat().inBeats() };
     }

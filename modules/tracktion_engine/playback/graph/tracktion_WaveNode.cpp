@@ -158,7 +158,7 @@ public:
                 readPos -= loopLength;
 
             startOffsetInDestBuffer += numToRead;
-            numSamplesToDo -= numToRead;
+            numSamplesToDo -= (int) numToRead;
         }
 
         return allOk;
