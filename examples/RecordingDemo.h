@@ -32,7 +32,9 @@
 
 //==============================================================================
 class RecordingDemo  : public Component,
-                       private ChangeListener
+                       private ChangeListener,
+                       private ValueTree::Listener,
+                       private InterprocessConnection
 {
 public:
     //==============================================================================
@@ -59,14 +61,17 @@ public:
             createOrLoadEdit (d.getNonexistentChildFile ("Test", ".tracktionedit", false));
         
         selectionManager.addChangeListener (this);
-        
+
         setupButtons();
+
+        tryToConnectToPipe();
         
         setSize (700, 500);
     }
 
     ~RecordingDemo() override
     {
+        disconnect();
         te::EditFileOperations (*edit).save (true, true, false);
         engine.getTemporaryFileManager().getTempDirectory().deleteRecursively();
     }
@@ -110,6 +115,8 @@ private:
     Label editNameLabel { "No Edit Loaded" };
     ToggleButton showWaveformButton { "Show Waveforms" };
 
+    bool valueTreeChangeFromBackend = false;
+
     //==============================================================================
     void setupButtons()
     {
@@ -118,14 +125,21 @@ private:
             bool wasRecording = edit->getTransport().isRecording();
             EngineHelpers::togglePlay (*edit);
             if (wasRecording)
-                te::EditFileOperations (*edit).save (true, true, false);
+            {
+                DBG(edit->state.toXmlString());
+                te::EditFileOperations(*edit).save(true, true, false);
+            }
+               
         };
         recordButton.onClick = [this]
         {
             bool wasRecording = edit->getTransport().isRecording();
             EngineHelpers::toggleRecord (*edit);
             if (wasRecording)
-                te::EditFileOperations (*edit).save (true, true, false);
+            {
+                te::EditFileOperations(*edit).save(true, true, false);
+            }
+                
         };
         newTrackButton.onClick = [this]
         {
@@ -204,6 +218,8 @@ private:
         createTracksAndAssignInputs();
         
         te::EditFileOperations (*edit).save (true, true, false);
+
+        edit->state.addListener(this);
         
         editComponent = std::make_unique<EditComponent> (*edit, selectionManager);
         addAndMakeVisible (*editComponent);
@@ -259,6 +275,114 @@ private:
             auto sel = selectionManager.getSelectedObject (0);
             deleteButton.setEnabled (dynamic_cast<te::Clip*> (sel) != nullptr || dynamic_cast<te::Track*> (sel) != nullptr);
         }
+    }
+
+    void valueTreePropertyChanged(ValueTree& treeWhosePropertyHasChanged, const Identifier& property) override
+    {
+    }
+
+    void valueTreeChildAdded(ValueTree& parentTree, ValueTree& childWhichHasBeenAdded) override 
+    {
+        static juce::Identifier audioClipType("AUDIOCLIP");
+        static juce::Identifier audioClipSource("source");
+        static juce::Identifier newClipRecorded("NEWCLIPRECORDED");
+        static juce::Identifier payloadName("PAYLOAD");
+        static juce::Identifier clipAudioIdentifier("CLIPAUDIO");
+        static juce::Identifier trackInfoIdentifier("trackInfo");
+
+        if (childWhichHasBeenAdded.getType() == audioClipType)
+        {
+            // Prevent backend-to-valuetree change loop
+            if (valueTreeChangeFromBackend)
+            {
+                valueTreeChangeFromBackend = false;
+                return;
+            }
+
+            DBG(childWhichHasBeenAdded.toXmlString());
+
+            //get raw audio file name
+            String rawAudioFileName = childWhichHasBeenAdded.getProperty(audioClipSource);
+            //get raw audio of clip 
+            if (rawAudioFileName.isNotEmpty())
+            {   
+                //set the id of the clip to be a uuid
+                File clipAudio(edit->filePathResolver(rawAudioFileName));
+                MemoryBlock mb;
+                clipAudio.loadFileAsData(mb);
+
+                ValueTree newClipMessage(newClipRecorded);
+                ValueTree clipVtCopy = childWhichHasBeenAdded.createCopy();
+                newClipMessage.addChild(clipVtCopy, -1, nullptr);
+                ValueTree trackInfoVt(trackInfoIdentifier);
+                trackInfoVt.setProperty("TrackID", parentTree.getProperty("id"), nullptr);
+                newClipMessage.addChild(trackInfoVt, -1, nullptr);
+                ValueTree clipRawAudio(payloadName);
+                clipRawAudio.setProperty(clipAudioIdentifier, mb, nullptr);
+                newClipMessage.addChild(clipRawAudio, -1, nullptr);
+
+                sendMessageOverPipe(newClipMessage);
+            }
+            
+        }
+        
+    }
+
+    //InterprocessConnection helper
+    void tryToConnectToPipe()
+    {
+        if (!isConnected())
+        {
+            auto pipeAlreadyExists =
+                connectToPipe("Test", -1);
+
+            if (!pipeAlreadyExists)
+                createPipe("Test", -1, true);
+        }
+    }
+
+    void sendMessageOverPipe(ValueTree& messageToSend)
+    {
+        MemoryOutputStream os;
+        messageToSend.writeToStream(os);
+        sendMessage(os.getMemoryBlock());
+    }
+
+    // InterprocessConnection callbacks
+    void connectionMade() override
+    {
+        DBG("Connection made");
+    }
+
+    void connectionLost() override
+    {
+        DBG("Connection lost");
+    }
+
+    void messageReceived(const MemoryBlock& message) override
+    {
+        DBG(edit->state.toXmlString());
+        valueTreeChangeFromBackend = true;
+
+        auto messageVt = ValueTree::readFromData(message.getData(), message.getSize());
+
+        // handle audio file
+        String rawAudioFileName = messageVt.getChildWithName("AUDIOCLIP").getProperty("source");
+        File clipAudio(edit->filePathResolver(rawAudioFileName));
+        auto audioClip = messageVt.getChildWithName("PAYLOAD").getProperty("CLIPAUDIO");
+        clipAudio.create();
+        clipAudio.replaceWithData(audioClip.getBinaryData()->getData(), audioClip.getBinaryData()->getSize());
+
+        // handle edit valuetree
+        auto trackInfoVt = messageVt.getChildWithName("trackInfo");
+        auto clipInfoFromMessageVt = messageVt.getChildWithName("AUDIOCLIP").createCopy();
+        // set te id to 0 so te can handle interal id increment
+        clipInfoFromMessageVt.setProperty("id", 0, nullptr);
+        auto editTrackToAddClip = edit->state.getChildWithProperty("id", trackInfoVt.getProperty("TrackID"));
+        editTrackToAddClip.addChild(clipInfoFromMessageVt, -1, nullptr);
+        te::EditFileOperations(*edit).save(true, true, false);
+
+        DBG(edit->state.toXmlString());      
     }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RecordingDemo)
