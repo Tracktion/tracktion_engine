@@ -22,8 +22,18 @@ struct ProcessState
     /** Creates a ProcessState that will update the editBeatRange field. */
     ProcessState (tracktion::graph::PlayHeadState&, const TempoSequence&);
 
-    /** Updates the internal state based on a reference sample range and PlayHeadState. */
-    void update (double sampleRate, juce::Range<int64_t> referenceSampleRange);
+    /** An enum to indicate if the PlayHeadState continuity should be updated. */
+    enum class UpdateContinuityFlags { no, yes };
+
+    /** Updates the internal state based on a reference sample range.
+        @param UpdateContinuityFlags    If yes, the PlayHeadState will be updated, if no it won't be.
+                                        If you are calling update more than once in a block, for example
+                                        to update the reference sample range for timeline position, updating
+                                        the continuity flags more than once will render it useless as it
+                                        tracks changes from one call to the next. This flag lets you ensure
+                                        it is only called once per block.
+    */
+    void update (double sampleRate, juce::Range<int64_t> referenceSampleRange, UpdateContinuityFlags);
 
     tracktion::graph::PlayHeadState& playHeadState;
     std::unique_ptr<tempo::Sequence::Position> tempoPosition;

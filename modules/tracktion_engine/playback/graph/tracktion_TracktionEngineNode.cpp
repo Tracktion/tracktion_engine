@@ -21,13 +21,15 @@ ProcessState::ProcessState (tracktion::graph::PlayHeadState& phs, const TempoSeq
 {
 }
 
-void ProcessState::update (double newSampleRate, juce::Range<int64_t> newReferenceSampleRange)
+void ProcessState::update (double newSampleRate, juce::Range<int64_t> newReferenceSampleRange, UpdateContinuityFlags updateContinuityFlags)
 {
     if (sampleRate != newSampleRate)
         playHeadState.playHead.setScrubbingBlockLength (toSamples (TimeDuration (0.08s), newSampleRate));
     
     playHeadState.playHead.setReferenceSampleRange (newReferenceSampleRange);
-    playHeadState.update (newReferenceSampleRange);
+
+    if (updateContinuityFlags == UpdateContinuityFlags::yes)
+        playHeadState.update (newReferenceSampleRange);
 
     sampleRate = newSampleRate;
     numSamples = (int) newReferenceSampleRange.getLength();

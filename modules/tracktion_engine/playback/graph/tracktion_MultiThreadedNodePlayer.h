@@ -94,7 +94,7 @@ public:
                 auto destAudio = pc.buffers.audio.getStart (firstNumSamples);
                 auto& destMidi = pc.buffers.midi;
 
-                processState.update (nodePlayer.getSampleRate(), firstReferenceRange);
+                processState.update (nodePlayer.getSampleRate(), firstReferenceRange, ProcessState::UpdateContinuityFlags::yes);
                 tracktion::graph::Node::ProcessContext pc1 { firstNumSamples, firstReferenceRange, { destAudio , destMidi } };
                 numMisses += nodePlayer.process (pc1);
             }
@@ -106,7 +106,7 @@ public:
                 scratchMidi.clear();
 
                 tracktion::graph::Node::ProcessContext pc2 { secondNumSamples, secondReferenceRange, { destAudio, scratchMidi } };
-                processState.update (nodePlayer.getSampleRate(), secondReferenceRange);
+                processState.update (nodePlayer.getSampleRate(), secondReferenceRange, ProcessState::UpdateContinuityFlags::yes);
                 numMisses += nodePlayer.process (pc2);
 
                 // Merge back MIDI from end of block
@@ -115,7 +115,7 @@ public:
         }
         else
         {
-            processState.update (nodePlayer.getSampleRate(), pc.referenceSampleRange);
+            processState.update (nodePlayer.getSampleRate(), pc.referenceSampleRange, ProcessState::UpdateContinuityFlags::yes);
             numMisses += nodePlayer.process (pc);
         }
         

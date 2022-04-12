@@ -330,7 +330,7 @@ public:
     {
         playbackSpeedRatio = speedRatio;
         semitonesShift = semitones;
-        [[ maybe_unused ]] const bool ok = timeStretcher.setSpeedAndPitch ((float) 1.0 / speedRatio, (float) semitonesShift);
+        [[ maybe_unused ]] const bool ok = timeStretcher.setSpeedAndPitch ((float) (1.0 / speedRatio), (float) semitonesShift);
         assert (ok);
     }
 

@@ -169,7 +169,7 @@ void PluginNode::process (ProcessContext& pc)
     {
         auto numSamplesThisBlock = std::min (subBlockSize, numSamplesLeft);
 
-        auto outputAudioBuffer = tracktion::graph::toAudioBuffer (outputAudioView.getFrameRange (tracktion::graph::frameRangeWithStartAndLength (numSamplesDone, numSamplesThisBlock)));
+        auto outputAudioBuffer = toAudioBuffer (outputAudioView.getFrameRange (frameRangeWithStartAndLength (numSamplesDone, numSamplesThisBlock)));
         
         const auto blockPropStart = (numSamplesDone / (double) blockNumSamples);
         const auto blockPropEnd = ((numSamplesDone + numSamplesThisBlock) / (double) blockNumSamples);
@@ -182,9 +182,11 @@ void PluginNode::process (ProcessContext& pc)
         for (auto end = inputBuffers.midi.end(); inputMidiIter != end; ++inputMidiIter)
         {
             const auto timestamp = inputMidiIter->getTimeStamp();
-            
-            if (timestamp >= subBlockTimeRange.getEnd().inSeconds())
-                break;
+
+            // If the time range is empty, we need to pass through all the MIDI as it means the playhead is stopped
+            if (! subBlockTimeRange.isEmpty()
+                && timestamp >= subBlockTimeRange.getEnd().inSeconds())
+               break;
             
             midiMessageArray.addMidiMessage (*inputMidiIter,
                                              timestamp - subBlockTimeRange.getStart().inSeconds(),

@@ -149,7 +149,7 @@ private:
         playHeadState.playHead.setReferenceSampleRange (pc.referenceSampleRange);
 
         const auto sampleRate = nodePlayer.getSampleRate();
-        processState.update (sampleRate, pc.referenceSampleRange);
+        processState.update (sampleRate, pc.referenceSampleRange, ProcessState::UpdateContinuityFlags::no);
         const auto timeRange = processState.editTimeRange;
 
         if (processState.tempoPosition)
@@ -210,7 +210,7 @@ private:
         scratchMidi.clear();
 
         tracktion::graph::Node::ProcessContext pc2 { sampleRange.size(), referenceRange, { destAudio, scratchMidi } };
-        processState.update (sampleRate, referenceRange);
+        processState.update (sampleRate, referenceRange, ProcessState::UpdateContinuityFlags::yes);
         const auto numMisses = nodePlayer.process (pc2);
 
         // Merge back MIDI from end of block
