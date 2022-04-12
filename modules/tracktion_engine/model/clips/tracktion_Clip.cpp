@@ -269,15 +269,15 @@ void Clip::setPosition (ClipPosition newPosition)
 void Clip::setStart (TimePosition newStart, bool preserveSync, bool keepLength)
 {
     auto pos = getPosition();
-    auto delta = juce::jlimit (TimePosition(), Edit::getMaximumEditEnd(), newStart) - pos.time.getStart();
-
-    pos.time = pos.time.withStart (pos.time.getStart() + delta);
+    auto delta = juce::jlimit (0_tp, Edit::getMaximumEditEnd(), newStart) - pos.time.getStart();
 
     if (keepLength)
-        pos.time = pos.time.withEnd (pos.time.getEnd() + delta);
+        pos.time = pos.time + delta;
+    else
+        pos.time = pos.time.withStart (pos.time.getStart() + delta);
 
     if (preserveSync)
-        pos.offset = juce::jmax (TimePosition(), pos.offset + delta);
+        pos.offset = juce::jmax (0_tp, pos.offset + delta);
 
     setPosition (pos);
 }
