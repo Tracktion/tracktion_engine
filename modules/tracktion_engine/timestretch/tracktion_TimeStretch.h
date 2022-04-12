@@ -121,7 +121,7 @@ public:
     void reset();
     
     /** Sets the timestretch speed ratio and semitones pitch shift.
-        @param speedRatio   The ratio for timestretched speed. 1 = no stretching, 2 = twice as fast, 0.5 = half as fast etc.
+        @param speedRatio   The ratio for timestretched speed. 1 = no stretching, 2 = half as fast, 0.5 = twice as fast etc.
         @param semitones    The number of semitones to adjust the pitch by 0 = not shift, 12 = up one oct, -12 = down one oct etc.
     */
     bool setSpeedAndPitch (float speedRatio, float semitones);

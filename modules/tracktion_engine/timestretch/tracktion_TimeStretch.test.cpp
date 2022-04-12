@@ -94,7 +94,7 @@ private:
     {
         const double sampleRate = 44100.0;
         const int numChannels = 2;
-        const int blockSize = 512;
+        const int blockSize = 441;
         const float sourcePitch = 440.0f;
 
         tracktion::engine::TimeStretcher stretcher;
@@ -102,7 +102,7 @@ private:
                               {}, true);
         stretcher.setSpeedAndPitch (stretchRatio, semitonesUp);
 
-        const auto sourceBuffer = createSinBuffer (sampleRate, numChannels, 440.0f);
+        const auto sourceBuffer = createSinBuffer (sampleRate, numChannels, sourcePitch);
         const auto resultBuffer = processBuffer (stretcher, sourceBuffer, blockSize, stretchRatio,
                                                  mode == tracktion::engine::TimeStretcher::elastiquePro);
 
@@ -112,17 +112,17 @@ private:
        #endif
 
         const float expectedPitchValue = sourcePitch * tracktion::engine::Pitch::semitonesToRatio (semitonesUp);
-        const int expectedSize = (int) std::ceil (sourceBuffer.getNumSamples() / stretchRatio);
+        const int expectedSize = (int) std::ceil (sourceBuffer.getNumSamples() * stretchRatio);
 
         // Check number of zero crossings and estimate pitch
-        const int numZeroCrossingsShifted = getNumZeroCrossings (resultBuffer, expectedSize);
-        const float shiftedPitch = getPitchFromNumZeroCrossings (numZeroCrossingsShifted, expectedSize, sampleRate);
+        const int numZeroCrossingsShifted = getNumZeroCrossings (resultBuffer);
+        const float shiftedPitch = getPitchFromNumZeroCrossings (numZeroCrossingsShifted, resultBuffer.getNumSamples(), sampleRate);
 
         // Compare shiftedPitch to expectedPitchValue with a 6% tolerance
         expectWithinAbsoluteError (shiftedPitch, expectedPitchValue, expectedPitchValue * 0.06f);
         
-        // Compare expectedSize with the actual size of the results 0.5% tolerance
-        expectWithinAbsoluteError (resultBuffer.getNumSamples(), expectedSize, juce::roundToInt (expectedSize * 0.5f));
+        // Compare expectedSize with the actual size of the results 5% tolerance
+        expectWithinAbsoluteError (resultBuffer.getNumSamples(), expectedSize, juce::roundToInt (expectedSize * 0.05f));
     }
         
     //==============================================================================
@@ -162,8 +162,8 @@ private:
         const int numChannels = sourceBuffer.getNumChannels();
         jassert (numChannels == 2); // Expected stereo for now
         
-        const int destSize = (int) std::ceil (sourceBuffer.getNumSamples() / stretchRatio) + 8192;
-        juce::AudioBuffer<float> resultBuffer (sourceBuffer.getNumChannels(), destSize);
+        const int destSize = (int) std::ceil (sourceBuffer.getNumSamples() * stretchRatio);
+        juce::AudioBuffer<float> resultBuffer (sourceBuffer.getNumChannels(), destSize + 8192);
         int numInputsDone = 0, numOutputsDone = 0;
 
         for (;;)
@@ -173,7 +173,9 @@ private:
             
             if (stretcherRequiresFramesNeeded && numInputSamplesThisBlock < stretcher.getFramesNeeded())
                 break;
-            
+
+            jassert (numInputsDone < (sourceBuffer.getNumSamples() + blockSize));
+            jassert (numOutputsDone < destSize);
             const float* inputs[2] = { sourceBuffer.getReadPointer (0, numInputsDone),
                                        sourceBuffer.getReadPointer (1, numInputsDone) };
             float* outputs[2] = { resultBuffer.getWritePointer (0, numOutputsDone),
@@ -189,12 +191,15 @@ private:
             
             if (numInputsDone >= sourceBuffer.getNumSamples())
                 break;
+
+            if (numOutputsDone == destSize)
+                break;
         }
 
         // Flush until no outputs are left
         for (;;)
         {
-            if (numOutputsDone >= resultBuffer.getNumSamples())
+            if (numOutputsDone >= destSize)
                 break;
             
             float* outputs[2] = { resultBuffer.getWritePointer (0, numOutputsDone),
@@ -203,7 +208,10 @@ private:
             const int numOutputSamplesThisBlock = stretcher.flush (outputs);
             jassert (numOutputSamplesThisBlock <= blockSize);
             numOutputsDone += numOutputSamplesThisBlock;
-            
+
+            if (numOutputSamplesThisBlock <= 0)
+                break;
+
             if (numOutputSamplesThisBlock < blockSize)
                 break;
         }
@@ -223,9 +231,9 @@ private:
         return pitchInHertz;
     }
 
-    static int getNumZeroCrossings (const juce::AudioBuffer<float>& buffer, int numSamplesToUse)
+    static int getNumZeroCrossings (const juce::AudioBuffer<float>& buffer)
     {
-        jassert (numSamplesToUse <= buffer.getNumSamples());
+        int numSamplesToUse = buffer.getNumSamples();
         auto dest = buffer.getReadPointer (0);
         int numZeroCrossings = 0;
 
