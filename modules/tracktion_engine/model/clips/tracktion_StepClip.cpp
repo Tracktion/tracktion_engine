@@ -371,6 +371,11 @@ void StepClip::generateMidiSequenceForChannels (juce::MidiMessageSequence& resul
                                 eventStart = gt->editTimeToGroovyTime (startTime, c.grooveStrength, edit).inSeconds();
                                 eventEnd = gt->editTimeToGroovyTime (endTime, c.grooveStrength, edit).inSeconds();
                             }
+                            else
+                            {
+                                eventStart = startTime.inSeconds();
+                                eventEnd = endTime.inSeconds();
+                            }
                         }
                         else
                         {
