@@ -601,7 +601,7 @@ public:
                           TimeRange sourceTimeRange, TimeDuration offsetTime,
                           double speedRatioToUse)
         : source (std::move (input)),
-          materialTimeRange (sourceTimeRange), offset (offsetTime),
+          clipPosition (sourceTimeRange), offset (offsetTime),
           speedRatio (speedRatioToUse)
     {
     }
@@ -611,10 +611,36 @@ public:
                TimeDuration editDuration,
                bool isContiguous)
     {
-        const auto clipStartOffset = toDuration (materialTimeRange.getStart());
+        const auto clipStartOffset = toDuration (clipPosition.getStart());
         tr = { (tr.getStart() - clipStartOffset) * speedRatio, (tr.getEnd() - clipStartOffset) * speedRatio };
         tr = tr + (offset * speedRatio);
-        return source->read (tr, destBuffer, editDuration, isContiguous);
+        const auto readOk = source->read (tr, destBuffer, editDuration, isContiguous);
+
+        // Clear samples outside of clip position
+        // N.B. this shouldn't happen when using a clip combiner as the times should be clipped correctly
+        if (! tr.isEmpty())
+        {
+            using choc::buffer::FrameCount;
+            const auto timeToClearAtStart  = clipPosition.getStart() - tr.getStart();
+            const auto timeToClearAtEnd    = tr.getEnd() - clipPosition.getEnd();
+
+            const auto editTimeRangeLength = tr.getLength();
+            const auto numFrames = destBuffer.getNumFrames();
+
+            if (timeToClearAtStart > 0_td)
+            {
+                const auto numSamplesToClearAtStart = static_cast<FrameCount> (numFrames * (timeToClearAtStart / editTimeRangeLength) + 0.5);
+                destBuffer.getStart (numSamplesToClearAtStart).clear();
+            }
+
+            if (timeToClearAtEnd > 0_td)
+            {
+                const auto numSamplesToClearAtEnd = static_cast<FrameCount> (numFrames * (timeToClearAtEnd / editTimeRangeLength) + 0.5);
+                destBuffer.getEnd (numSamplesToClearAtEnd).clear();
+            }
+        }
+
+        return readOk;
     }
 
     choc::buffer::ChannelCount getNumChannels() override    { return source->getNumChannels(); }
@@ -631,8 +657,8 @@ public:
     }
 
     std::unique_ptr<TimeRangeReader> source;
-    const TimeRange materialTimeRange;
-    TimeDuration offset;
+    const TimeRange clipPosition;
+    const TimeDuration offset;
     const double speedRatio;
 };
 
