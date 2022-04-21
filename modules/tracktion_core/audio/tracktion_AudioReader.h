@@ -51,6 +51,9 @@ public:
     /** Should set the time position to be read from next. */
     virtual void setPosition (TimePosition) = 0;
 
+    /** Signifies a break in continuity and that the stream should reset itself. */
+    virtual void reset() = 0;
+
     //==============================================================================
     /** Must read a number of frames from the source, filling the buffer. */
     virtual bool readSamples (choc::buffer::ChannelArrayView<float>&) = 0;

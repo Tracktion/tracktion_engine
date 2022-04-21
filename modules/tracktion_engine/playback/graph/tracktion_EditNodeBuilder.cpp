@@ -378,6 +378,9 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
    #if TRACKTION_ENABLE_REALTIME_TIMESTRETCHING
     else
     {
+        const auto timeStretcherMode = clip.getActualTimeStretchMode();
+        const auto timeStretcherOpts = clip.elastiqueProOptions.get();
+
         if (clip.getAutoTempo() || clip.getAutoPitch())
         {
             std::vector<tempo::TempoChange> tempos;
@@ -413,11 +416,11 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                  tempo::LengthOfOneBeat::dependsOnTimeSignature);
 
             node = makeNode<WaveNodeRealTime> (playFile,
-                                               clip.getEditTimeRange(),
-                                               nodeOffset,
-                                               loopRange,
+                                               timeStretcherMode, timeStretcherOpts,
+                                               BeatRange (clip.getStartBeat(), clip.getEndBeat()),
+                                               toDuration (clip.getOffsetInBeats()),
+                                               BeatRange (clip.getLoopStartBeats(), clip.getLoopLengthBeats()),
                                                clip.getLiveClipLevel(),
-                                               speed,
                                                clip.getActiveChannels(),
                                                juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),
                                                params.processState,
@@ -428,11 +431,12 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
         else
         {
             node = makeNode<WaveNodeRealTime> (playFile,
+                                               timeStretcherMode, timeStretcherOpts,
                                                clip.getEditTimeRange(),
-                                               nodeOffset,
-                                               loopRange,
+                                               toDuration (clip.getPosition().getOffset()),
+                                               clip.getLoopRange(),
                                                clip.getLiveClipLevel(),
-                                               speed,
+                                               clip.getSpeedRatio(),
                                                clip.getActiveChannels(),
                                                juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),
                                                params.processState,

@@ -12,7 +12,8 @@ namespace tracktion { inline namespace engine
 {
 
 class TimeRangeRemappingReader;
-class BeatRangeReader;
+class EditToClipBeatReader;
+class EditToClipTimeReader;
 class ResamplerReader;
 class PitchAdjustReader;
 
@@ -87,6 +88,8 @@ public:
         would produce ten seconds of silence followed by the file.
     */
     WaveNodeRealTime (const AudioFile&,
+                      TimeStretcher::Mode,
+                      TimeStretcher::ElastiqueProOptions,
                       TimeRange editTime,
                       TimeDuration offset,
                       TimeRange loopSection,
@@ -114,11 +117,12 @@ public:
                                     the file playback will match tempo changes in the Edit.
     */
     WaveNodeRealTime (const AudioFile&,
-                      TimeRange editTime,
-                      TimeDuration offset,
-                      TimeRange loopSection,
+                      TimeStretcher::Mode,
+                      TimeStretcher::ElastiqueProOptions,
+                      BeatRange editTime,
+                      BeatDuration offset,
+                      BeatRange loopSection,
                       LiveClipLevel,
-                      double speedRatio,
                       const juce::AudioChannelSet& sourceChannelsToUse,
                       const juce::AudioChannelSet& destChannelsToFill,
                       ProcessState&,
@@ -135,33 +139,36 @@ public:
 
 private:
     //==============================================================================
-    TimeRange editPosition, loopSection;
-    TimeDuration offset;
-    const double speedRatio = 0;
+    BeatRange editPositionBeats, loopSectionBeats;
+    BeatDuration offsetBeats;
+    TimeRange editPositionTime, loopSectionTime;
+    TimeDuration offsetTime;
+    const double speedRatio = 1.0;
     const EditItemID editItemID;
     const bool isOfflineRender = false;
 
     const AudioFile audioFile;
+    TimeStretcher::Mode timeStretcherMode;
+    TimeStretcher::ElastiqueProOptions elastiqueProOptions;
     LiveClipLevel clipLevel;
-    juce::Range<int64_t> editPositionInSamples;
     const juce::AudioChannelSet channelsToUse, destChannels;
     double outputSampleRate = 44100.0;
 
     size_t stateHash = 0;
     ResamplerReader* resamplerReader = nullptr;
     PitchAdjustReader* pitchAdjustReader = nullptr;
-    std::shared_ptr<TimeRangeRemappingReader> audioReader;
-    std::shared_ptr<BeatRangeReader> beatRangeReader;
+    std::shared_ptr<EditToClipBeatReader> editToClipBeatReader;
+    std::shared_ptr<EditToClipTimeReader> editToClipTimeReader;
     std::shared_ptr<std::vector<float>> channelState;
 
-    std::unique_ptr<tempo::Sequence> fileTempoSequence;
-    std::unique_ptr<tempo::Sequence::Position> tempoPosition;
-    SyncTempo syncTempo;
-    SyncPitch syncPitch;
+    std::shared_ptr<tempo::Sequence> fileTempoSequence;
+    std::shared_ptr<tempo::Sequence::Position> fileTempoPosition;
+    SyncTempo syncTempo = SyncTempo::no;
+    SyncPitch syncPitch = SyncPitch::no;
 
     bool buildAudioReaderGraph();
     void replaceStateIfPossible (Node*);
-    void processSection (ProcessContext&, TimeRange);
+    void processSection (ProcessContext&);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveNodeRealTime)
 };
