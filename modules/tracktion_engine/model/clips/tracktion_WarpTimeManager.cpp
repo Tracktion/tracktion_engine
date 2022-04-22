@@ -420,8 +420,8 @@ juce::Array<TimeRange> WarpTimeManager::getWarpTimeRegions (const TimeRange over
         warpRegion = warpRegion.withStart (warpRegion.getEnd());
     }
 
-    timeRegion = timeRegion.withStart (overallTimeRegion.getStart() + overallTime)
-                           .withEnd (overallTimeRegion.getEnd());
+    timeRegion = { overallTimeRegion.getStart() + overallTime,
+                   overallTimeRegion.getEnd() };
 
     return visibleWarpRegions;
 }

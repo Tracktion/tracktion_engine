@@ -487,6 +487,12 @@ public:
     /** Returns true if this clp should use a time-stretched preview. */
     bool usesTimestretchedPreview() const noexcept                      { return useTimestretchedPreview; }
 
+    /** Returns an AudioSegmentList describing this file if it is using auto-tempo.
+        This can be useful for drawing waveforms.
+        [[ message_thread ]]
+    */
+    const AudioSegmentList& getAudioSegmentList();
+
     //==============================================================================
     /** Reverses the loop points to expose the same section of the source file but reversed. */
     void reverseLoopPoints();
@@ -608,6 +614,7 @@ protected:
     juce::CachedValue<BeatPosition> loopStartBeats;
     juce::CachedValue<BeatDuration> loopLengthBeats;
 
+    juce::CachedValue<int> proxyAllowed;
     juce::CachedValue<int> transpose;
     juce::CachedValue<float> pitchChange;
     LoopInfo loopInfo;
@@ -618,14 +625,14 @@ protected:
     juce::CachedValue<AutoPitchMode> autoPitchMode;
 
     mutable WarpTimeManager::Ptr warpTimeManager;
-    std::unique_ptr<AudioSegmentList> audioSegmentList;
+    mutable std::unique_ptr<AudioSegmentList> audioSegmentList;
     std::unique_ptr<ClipEffects> clipEffects;
     AsyncFunctionCaller asyncFunctionCaller;
 
     juce::AudioChannelSet activeChannels;
     void updateLeftRightChannelActivenessFlags();
 
-    bool proxyAllowed = true, useTimestretchedPreview = false;
+    bool useTimestretchedPreview = false;
     PluginList pluginList;
 
     bool lastRenderJobFailed = false;
@@ -669,7 +676,6 @@ private:
     bool shouldAttemptRender() const    { return (! lastRenderJobFailed) && needsRender(); }
 
     void clearCachedAudioSegmentList();
-    const AudioSegmentList* getAudioSegmentList();
 
     //==============================================================================
     void jobFinished (RenderManager::Job& job, bool completedOk) override;

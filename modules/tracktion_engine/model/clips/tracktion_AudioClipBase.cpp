@@ -224,6 +224,7 @@ AudioClipBase::AudioClipBase (const juce::ValueTree& v, EditItemID id, Type t, C
     loopStartBeats.referTo (state, IDs::loopStartBeats, um);
     loopLengthBeats.referTo (state, IDs::loopLengthBeats, um);
 
+    proxyAllowed.referTo (state, IDs::proxyAllowed, um, true);
     transpose.referTo (state, IDs::transpose, um);
     pitchChange.referTo (state, IDs::pitchChange, um);
 
@@ -1017,15 +1018,21 @@ void AudioClipBase::pitchTempoTrackChanged()
 
 void AudioClipBase::clearCachedAudioSegmentList()
 {
+    if (! edit.isLoading())
+        TRACKTION_ASSERT_MESSAGE_THREAD
+
     audioSegmentList.reset();
 }
 
-const AudioSegmentList* AudioClipBase::getAudioSegmentList()
+const AudioSegmentList& AudioClipBase::getAudioSegmentList()
 {
+    if (! edit.isLoading())
+        TRACKTION_ASSERT_MESSAGE_THREAD
+
     if (audioSegmentList == nullptr)
         audioSegmentList = AudioSegmentList::create (*this, false, false);
 
-    return audioSegmentList.get();
+    return *audioSegmentList;
 }
 
 //==============================================================================
@@ -1817,6 +1824,11 @@ void AudioClipBase::setUsesProxy (bool canUseProxy) noexcept
 
 bool AudioClipBase::usesTimeStretchedProxy() const
 {
+   #ifdef TRACKTION_ENABLE_REALTIME_TIMESTRETCHING
+    if (! proxyAllowed)
+        return false;
+   #endif
+
     return getAutoTempo() || getAutoPitch()
            || getPitchChange() != 0.0f
            || isUsingMelodyne()
@@ -2142,13 +2154,11 @@ HashCode AudioClipBase::getProxyHash()
 
     if (getAutoTempo() || getAutoPitch() || needsPlainStretch())
     {
-        if (auto* segmentList = getAudioSegmentList())
-        {
-            int i = 0;
+        auto& segmentList = getAudioSegmentList();
+        int i = 0;
 
-            for (auto& segment : segmentList->getSegments())
-                hash ^= static_cast<HashCode> (segment.getHashCode() * (i++ + 0.1));
-        }
+        for (auto& segment : segmentList.getSegments())
+            hash ^= static_cast<HashCode> (segment.getHashCode() * (i++ + 0.1));
     }
 
     return hash;
