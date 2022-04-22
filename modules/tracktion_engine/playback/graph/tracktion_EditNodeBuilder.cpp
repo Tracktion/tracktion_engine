@@ -431,7 +431,6 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
         else
         {
             node = makeNode<WaveNodeRealTime> (playFile,
-                                               timeStretcherMode, timeStretcherOpts,
                                                clip.getEditTimeRange(),
                                                toDuration (clip.getPosition().getOffset()),
                                                clip.getLoopRange(),
@@ -441,7 +440,8 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),
                                                params.processState,
                                                clip.itemID,
-                                               params.forRendering);
+                                               params.forRendering,
+                                               timeStretcherMode, timeStretcherOpts);
         }
     }
    #endif

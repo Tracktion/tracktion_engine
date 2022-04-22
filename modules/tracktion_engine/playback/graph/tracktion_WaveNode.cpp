@@ -1109,8 +1109,6 @@ void WaveNode::processSection (ProcessContext& pc, juce::Range<int64_t> timeline
 //==============================================================================
 //==============================================================================
 WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
-                                    TimeStretcher::Mode mode,
-                                    TimeStretcher::ElastiqueProOptions options,
                                     TimeRange editTime,
                                     TimeDuration off,
                                     TimeRange loop,
@@ -1120,7 +1118,9 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
                                     const juce::AudioChannelSet& destChannelsToFill,
                                     ProcessState& ps,
                                     EditItemID itemIDToUse,
-                                    bool isRendering)
+                                    bool isRendering,
+                                    TimeStretcher::Mode mode,
+                                    TimeStretcher::ElastiqueProOptions options)
    : TracktionEngineNode (ps),
      editPositionTime (editTime),
      loopSectionTime (loop.rescaled (loop.getStart(), speed)),

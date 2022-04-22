@@ -88,8 +88,6 @@ public:
         would produce ten seconds of silence followed by the file.
     */
     WaveNodeRealTime (const AudioFile&,
-                      TimeStretcher::Mode,
-                      TimeStretcher::ElastiqueProOptions,
                       TimeRange editTime,
                       TimeDuration offset,
                       TimeRange loopSection,
@@ -99,7 +97,9 @@ public:
                       const juce::AudioChannelSet& destChannelsToFill,
                       ProcessState&,
                       EditItemID,
-                      bool isOfflineRender);
+                      bool isOfflineRender,
+                      TimeStretcher::Mode = TimeStretcher::Mode::defaultMode,
+                      TimeStretcher::ElastiqueProOptions = {});
 
     //==============================================================================
     /** Represets whether the file should try and match Edit tempo changes. */
