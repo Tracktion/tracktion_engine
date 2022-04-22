@@ -156,14 +156,14 @@ private:
             std::thread t3 ([this, &intVec1]
                             {
                                 intVec1.clear();
-                                expectEquals<size_t> (intVec1.size(), 0);
-                                expectGreaterThan<size_t> (intVec1.capacity(), 0);
+                                expect (intVec1.size() == 0);
+                                expect (intVec1.capacity() > 0);
                                 intVec1.shrink_to_fit();
-                                expectEquals<size_t> (intVec1.capacity(), 0);
+                                expect (intVec1.capacity() == 0);
                             });
             t3.join();
-            expectEquals<size_t> (intVec1.size(), 0);
-            expectEquals<size_t> (intVec1.capacity(), 0);
+            expect (intVec1.size() == 0);
+            expect (intVec1.capacity() == 0);
         }
         
         beginTest ("rpallocator multi-thread");
