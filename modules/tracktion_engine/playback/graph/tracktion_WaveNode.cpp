@@ -606,13 +606,14 @@ public:
     {
     }
 
-    bool read (TimeRange tr,
+    bool read (TimeRange editTimeRange,
                choc::buffer::ChannelArrayView<float>& destBuffer,
                TimeDuration editDuration,
                bool isContiguous)
     {
         const auto clipStartOffset = toDuration (clipPosition.getStart());
-        tr = { (tr.getStart() - clipStartOffset) * speedRatio, (tr.getEnd() - clipStartOffset) * speedRatio };
+        TimeRange tr ((editTimeRange.getStart() - clipStartOffset) * speedRatio,
+                      (editTimeRange.getEnd() - clipStartOffset) * speedRatio);
         tr = tr + (offset * speedRatio);
         const auto readOk = source->read (tr, destBuffer, editDuration, isContiguous);
 
@@ -621,10 +622,10 @@ public:
         if (! tr.isEmpty())
         {
             using choc::buffer::FrameCount;
-            const auto timeToClearAtStart  = clipPosition.getStart() - tr.getStart();
-            const auto timeToClearAtEnd    = tr.getEnd() - clipPosition.getEnd();
+            const auto timeToClearAtStart  = editTimeRange.contains (clipPosition.getStart()) ? clipPosition.getStart() - editTimeRange.getStart() : 0_td;
+            const auto timeToClearAtEnd    = editTimeRange.contains (clipPosition.getEnd())   ? editTimeRange.getEnd() - clipPosition.getEnd()     : 0_td;
 
-            const auto editTimeRangeLength = tr.getLength();
+            const auto editTimeRangeLength = editTimeRange.getLength();
             const auto numFrames = destBuffer.getNumFrames();
 
             if (timeToClearAtStart > 0_td)
