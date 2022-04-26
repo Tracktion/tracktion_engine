@@ -512,7 +512,7 @@ private:
         if (auto track = EngineHelpers::getOrInsertAudioTrackAt (edit, 0))
         {
             // Find length of 1 bar
-            const tracktion::TimeRange editTimeRange (0s, edit.tempoSequence.barsBeatsToTime ({ 1, 0.0 }));
+            const tracktion::TimeRange editTimeRange (0s, edit.tempoSequence.barsBeatsToTime ({ 1, tracktion::BeatDuration() }));
             track->insertNewClip (te::TrackItem::Type::step, "Step Clip", editTimeRange, nullptr);
 
             if (auto stepClip = getClip())
