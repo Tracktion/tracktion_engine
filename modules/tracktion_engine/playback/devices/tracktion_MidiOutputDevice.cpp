@@ -181,7 +181,7 @@ public:
         lastBlockEndPPQ = 0;
 
         if (edit != nullptr)
-            position.reset (new TempoSequencePosition (edit->tempoSequence));
+            position = std::make_unique<tempo::Sequence::Position> (createPosition (edit->tempoSequence));
     }
 
     void addMessages (bool playHeadIsPlaying, TransportControl* tc, MidiMessageArray& buffer,
@@ -203,10 +203,10 @@ public:
         {
             const juce::ScopedLock sl (positionLock);
 
-            position->setTime (blockStartTime);
+            position->set (blockStartTime);
             auto blockStartPPQ = position->getPPQTime();
 
-            position->setTime (blockStartTime + blockLength);
+            position->set (blockStartTime + blockLength);
             auto endPPQ = position->getPPQTime();
 
             const bool jumped = std::abs (lastBlockEndPPQ - endPPQ) > 0.4;
@@ -253,7 +253,7 @@ private:
     bool wasPlaying = false;
     bool needsToSendPosition = false;
     juce::CriticalSection positionLock;
-    std::unique_ptr<TempoSequencePosition> position;
+    std::unique_ptr<tempo::Sequence::Position> position;
     TimePosition lastBlockStart;
     double lastBlockEndPPQ = 0;
 

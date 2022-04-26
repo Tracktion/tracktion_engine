@@ -102,7 +102,7 @@ namespace BezierHelpers
 struct BreakpointOscillatorModifier::BreakpointOscillatorModifierTimer    : public ModifierTimer
 {
     BreakpointOscillatorModifierTimer (BreakpointOscillatorModifier& bom)
-        : modifier (bom), tempoSequence (bom.edit.tempoSequence)
+        : modifier (bom)
     {
     }
 
@@ -132,7 +132,7 @@ struct BreakpointOscillatorModifier::BreakpointOscillatorModifierTimer    : publ
         }
         else
         {
-            tempoSequence.setTime (editTime);
+            tempoSequence.set (editTime);
             const auto currentTempo = tempoSequence.getTempo();
             const auto currentTimeSig = tempoSequence.getTimeSignature();
             const auto proportionOfBar = ModifierCommon::getBarFraction (rateTypeThisBlock);
@@ -178,7 +178,7 @@ struct BreakpointOscillatorModifier::BreakpointOscillatorModifierTimer    : publ
 
     BreakpointOscillatorModifier& modifier;
     Ramp ramp;
-    TempoSequencePosition tempoSequence;
+    tempo::Sequence::Position tempoSequence { createPosition (modifier.edit.tempoSequence) };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BreakpointOscillatorModifierTimer)
 };

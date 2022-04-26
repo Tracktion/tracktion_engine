@@ -165,13 +165,13 @@ public:
             const auto originalBeatRange = toBeats (originalTimeRange, ts);
 
             {
-                temp::EditTimeRange etr (originalTimeRange);
+                EditTimeRange etr (originalTimeRange);
                 expect (toTime (etr, ts) == originalTimeRange);
                 expect (toBeats (etr, ts) == originalBeatRange);
             }
 
             {
-                temp::EditTimeRange etr (originalBeatRange);
+                EditTimeRange etr (originalBeatRange);
                 expect (toTime (etr, ts) == originalTimeRange);
                 expect (toBeats (etr, ts) == originalBeatRange);
             }

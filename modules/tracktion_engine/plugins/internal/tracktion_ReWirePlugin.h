@@ -122,7 +122,7 @@ public:
     void setMidiChannel (int channel);
 
 private:
-    std::unique_ptr<TempoSequencePosition> currentTempoPosition;
+    std::unique_ptr<tempo::Sequence::Position> currentTempoPosition;
     int channelIndexL = 0, channelIndexR = 0;
     bool uiIsRunning = false;
 

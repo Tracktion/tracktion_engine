@@ -122,7 +122,6 @@ private:
     std::unique_ptr<TempoSettingList> tempos;
     std::unique_ptr<TimeSigList> timeSigs;
 
-    friend class TempoSequencePosition;
     tempo::Sequence internalSequence { {{ BeatPosition(), 120.0, 0.0f }},
                                        {{ BeatPosition(), 4, 4, false }},
                                        tempo::LengthOfOneBeat::dependsOnTimeSignature };
@@ -139,48 +138,17 @@ private:
 };
 
 //==============================================================================
-/**
-    Iterates a TempoSequence.
-
+//==============================================================================
+/** Creates a Position to iterate over the given TempoSequence.
     One of these lets you take a position in a tempo sequence, and skip forwards/backwards
     either by absolute times, or by bar/beat amounts.
+    This is dynamic and if the TempoSequence changes, the position will update to reflect this.
+
+    N.B. It is only safe to call this from the message thread or during audio callbacks.
+    Access at any other time could incur data races.
 */
-class TempoSequencePosition
-{
-public:
-    //==============================================================================
-    TempoSequencePosition (const TempoSequence&);
-    TempoSequencePosition (const TempoSequencePosition&);
+tempo::Sequence::Position createPosition (const TempoSequence&);
 
-    //==============================================================================
-    TimePosition getTime() const                                { return pos.getTime(); }
-    BeatPosition getBeats() const                               { return pos.getBeats(); }
-    tempo::BarsAndBeats getBarsBeatsTime() const                { return pos.getBarsBeats(); }
-
-    /** Returns the current tempo of the Position. */
-    double getPPQTime() const noexcept                          { return pos.getPPQTime(); }
-    double getPPQTimeOfBarStart() const noexcept                { return pos.getPPQTimeOfBarStart(); }
-
-    //==============================================================================
-    double getTempo() const                                     { return pos.getTempo(); }
-    tempo::TimeSignature getTimeSignature() const               { return pos.getTimeSignature(); }
-
-    //==============================================================================
-    void setTime (TimePosition t)                               { pos.set (t); }
-
-    void addBars (int bars)                                     { pos.addBars (bars); }
-    void addBeats (double beats)                                { pos.add (BeatDuration::fromBeats (beats)); }
-    void addSeconds (double seconds)                            { pos.add (TimeDuration::fromSeconds (seconds)); }
-    void setBarsBeats (tempo::BarsAndBeats t)                   { pos.set (t); }
-
-    void setPPQTime (double ppq)                                { pos.setPPQTime (ppq); }
-
-private:
-    //==============================================================================
-    tempo::Sequence::Position pos;
-
-    TempoSequencePosition& operator= (const TempoSequencePosition&);
-};
 
 //==============================================================================
 /** Takes a copy of all the beat related things in an edit in terms of bars/beats

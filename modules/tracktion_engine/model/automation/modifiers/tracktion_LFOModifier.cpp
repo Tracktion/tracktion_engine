@@ -14,7 +14,7 @@ namespace tracktion { inline namespace engine
 struct LFOModifier::LFOModifierTimer    : public ModifierTimer
 {
     LFOModifierTimer (LFOModifier& lfo)
-        : modifier (lfo), tempoSequence (lfo.edit.tempoSequence)
+        : modifier (lfo)
     {
     }
 
@@ -44,7 +44,7 @@ struct LFOModifier::LFOModifierTimer    : public ModifierTimer
         }
         else
         {
-            tempoSequence.setTime (editTime);
+            tempoSequence.set (editTime);
             const auto currentTempo = tempoSequence.getTempo();
             const auto currentTimeSig = tempoSequence.getTimeSignature();
             const auto proportionOfBar = ModifierCommon::getBarFraction (rateTypeThisBlock);
@@ -140,7 +140,7 @@ struct LFOModifier::LFOModifierTimer    : public ModifierTimer
 
     LFOModifier& modifier;
     Ramp ramp;
-    TempoSequencePosition tempoSequence;
+    tempo::Sequence::Position tempoSequence { createPosition (modifier.edit.tempoSequence) };
 
     juce::Random rand;
     float previousRandom = 0.0f, currentRandom = 0.0f, randomDifference = 0.0f;

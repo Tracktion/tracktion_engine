@@ -121,7 +121,7 @@ NodeRenderContext::NodeRenderContext (Renderer::RenderTask& owner_, Renderer::Pa
     lastTime = juce::Time::getMillisecondCounterHiRes();
     sleepCounter = 10;
 
-    currentTempoPosition = std::make_unique<TempoSequencePosition> (r.edit->tempoSequence);
+    currentTempoPosition = std::make_unique<tempo::Sequence::Position> (createPosition (r.edit->tempoSequence));
 
     peak = 0.0001f;
     rmsTotal = 0.0;
@@ -220,7 +220,7 @@ bool NodeRenderContext::renderNextBlock (std::atomic<float>& progressToUpdate)
             juce::Thread::sleep (timeToWait);
     }
 
-    currentTempoPosition->setTime (streamTime);
+    currentTempoPosition->set (streamTime);
 
     resetFP();
 
@@ -407,7 +407,7 @@ juce::String NodeRenderContext::renderMidi (Renderer::RenderTask& owner,
     }
 
     // Then render the blocks
-    TempoSequencePosition currentTempoPosition (r.edit->tempoSequence);
+    auto currentTempoPosition = createPosition (r.edit->tempoSequence);
     
     juce::AudioBuffer<float> renderingBuffer (2, samplesPerBlock + 256);
     tracktion::engine::MidiMessageArray blockMidiBuffer;
@@ -428,7 +428,7 @@ juce::String NodeRenderContext::renderMidi (Renderer::RenderTask& owner,
         r.edit->updateModifierTimers (streamTime, samplesPerBlock);
         
         // Then once eveything is ready, render the block
-        currentTempoPosition.setTime (streamTime);
+        currentTempoPosition.set (streamTime);
 
         renderingBuffer.clear();
         blockMidiBuffer.clear();
@@ -441,8 +441,8 @@ juce::String NodeRenderContext::renderMidi (Renderer::RenderTask& owner,
         // Set MIDI messages to beats and update final sequence
         for (auto& m : blockMidiBuffer)
         {
-            TempoSequencePosition eventPos (currentTempoPosition);
-            eventPos.setTime (TimePosition::fromSeconds (m.getTimeStamp()) + (streamTime - r.time.getStart()));
+            tempo::Sequence::Position eventPos (currentTempoPosition);
+            eventPos.set (TimePosition::fromSeconds (m.getTimeStamp()) + (streamTime - r.time.getStart()));
 
             outputSequence.addEvent (juce::MidiMessage (m, Edit::ticksPerQuarterNote * eventPos.getPPQTime()));
         }

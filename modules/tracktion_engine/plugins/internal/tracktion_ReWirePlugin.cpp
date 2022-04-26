@@ -242,13 +242,13 @@ public:
             {
                 if (auto* transport = getTransport())
                 {
-                    TempoSequencePosition markPos (edit->tempoSequence);
+                    auto markPos = createPosition (edit->tempoSequence);
                     const auto loopRange = transport->getLoopRange();
 
-                    markPos.setTime (loopRange.getStart());
+                    markPos.set (loopRange.getStart());
                     rewireLoopStart = juce::roundToInt (markPos.getPPQTime() * kReWirePPQ);
 
-                    markPos.setTime (loopRange.getEnd());
+                    markPos.set (loopRange.getEnd());
                     rewireLoopEnd = juce::roundToInt (markPos.getPPQTime() * kReWirePPQ);
 
                     rewireLooping = transport->looping;
@@ -276,7 +276,7 @@ public:
         storedMessages.clear();
     }
 
-    void updateTempoInfo (const TempoSequencePosition& position)
+    void updateTempoInfo (const tempo::Sequence::Position& position)
     {
         const auto bpm = position.getTempo();
         const auto [numerator, denominator] = position.getTimeSignature();
@@ -567,7 +567,7 @@ public:
                 {
                     transport->looping = rewireLooping;
 
-                    TempoSequencePosition markPos (containerEdit->tempoSequence);
+                    auto markPos = createPosition (containerEdit->tempoSequence);
 
                     markPos.setPPQTime (rewireLoopStart / (double)kReWirePPQ);
                     transport->setLoopIn (markPos.getTime());
@@ -585,12 +585,12 @@ public:
 
             if (auto transport = getTransport())
             {
-                TempoSequencePosition markPos (containerEdit->tempoSequence);
+                auto markPos = createPosition (containerEdit->tempoSequence);
                 const auto loopRange = transport->getLoopRange();
-                markPos.setTime (loopRange.getStart());
+                markPos.set (loopRange.getStart());
                 rewireLoopStart = juce::roundToInt (markPos.getPPQTime() * kReWirePPQ);
 
-                markPos.setTime (loopRange.getEnd());
+                markPos.set (loopRange.getEnd());
                 rewireLoopEnd = juce::roundToInt (markPos.getPPQTime() * kReWirePPQ);
 
                 rewireLooping = transport->looping;
@@ -602,7 +602,7 @@ public:
             CRASH_TRACER
             if (auto transport = getTransport())
             {
-                TempoSequencePosition pos (containerEdit->tempoSequence);
+                auto pos = createPosition (containerEdit->tempoSequence);
                 pos.setPPQTime (requestedPosition);
                 transport->setPosition (pos.getTime());
             }
@@ -1105,7 +1105,7 @@ void ReWirePlugin::initialise (const PluginInitialisationInfo& info)
         device->prepareToPlay (info.sampleRate, info.blockSizeSamples,
                                channelIndexL, channelIndexR, &edit);
 
-        currentTempoPosition.reset (new TempoSequencePosition (edit.tempoSequence));
+        currentTempoPosition.reset (new tempo::Sequence::Position (createPosition (edit.tempoSequence)));
     }
 }
 
@@ -1119,9 +1119,8 @@ void ReWirePlugin::prepareForNextBlock (TimePosition editTime)
 {
     if (currentTempoPosition != nullptr && device != nullptr)
     {
-        currentTempoPosition->setTime (editTime);
-
-        device->updateTempoInfo (TempoSequencePosition (*currentTempoPosition));
+        currentTempoPosition->set (editTime);
+        device->updateTempoInfo (*currentTempoPosition);
     }
 }
 

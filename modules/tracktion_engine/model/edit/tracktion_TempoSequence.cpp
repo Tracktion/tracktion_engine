@@ -636,18 +636,16 @@ HashCode TempoSequence::createHashForTemposInRange (TimeRange range) const
     return hash;
 }
 
+
 //==============================================================================
-TempoSequencePosition::TempoSequencePosition (const TempoSequence& s)
-   : pos (s.internalSequence)
+//==============================================================================
+tempo::Sequence::Position createPosition (const TempoSequence& s)
 {
-}
-
-TempoSequencePosition::TempoSequencePosition (const TempoSequencePosition& o)
-   : pos (o.pos)
-{
+    return tempo::Sequence::Position (s.getInternalSequence());
 }
 
 
+//==============================================================================
 //==============================================================================
 void EditTimecodeRemapperSnapshot::savePreChangeState (Edit& ed)
 {
@@ -767,9 +765,9 @@ public:
     }
 
 private:
-    void expectBarsAndBeats (TempoSequencePosition& pos, int bars, int beats)
+    void expectBarsAndBeats (tempo::Sequence::Position& pos, int bars, int beats)
     {
-        auto barsBeats = pos.getBarsBeatsTime();
+        auto barsBeats = pos.getBarsBeats();
         expectEquals (barsBeats.bars, bars);
         expectEquals (barsBeats.getWholeBeats(), beats);
     }
@@ -787,72 +785,72 @@ private:
 
         beginTest ("Defaults");
         {
-            TempoSequencePosition pos (edit->tempoSequence);
+            auto pos = createPosition (edit->tempoSequence);
 
             expectEquals (pos.getTempo(), 120.0);
             expectEquals (pos.getTimeSignature().numerator, 4);
             expectEquals (pos.getTimeSignature().denominator, 4);
             expectEquals (pos.getPPQTimeOfBarStart(), 0.0);
-            expectEquals (pos.getBarsBeatsTime().numerator, 4);
+            expectEquals (pos.getBarsBeats().numerator, 4);
         }
 
         beginTest ("Positive sequences");
         {
-            TempoSequencePosition pos (edit->tempoSequence);
-            pos.setTime ({});
+            auto pos = createPosition (edit->tempoSequence);
+            pos.set (0_tp);
 
             expectBarsAndBeats (pos, 0, 0);
-            pos.addBeats (1.0);
+            pos.add (1_bd);
             expectBarsAndBeats (pos, 0, 1);
-            pos.addBeats (1.0);
+            pos.add (1_bd);
             expectBarsAndBeats (pos, 0, 2);
-            pos.addBeats (1.0);
+            pos.add (1_bd);
             expectBarsAndBeats (pos, 0, 3);
-            pos.addBeats (1.0);
+            pos.add (1_bd);
             expectBarsAndBeats (pos, 1, 0);
 
             pos.addBars (1);
             expectBarsAndBeats (pos, 2, 0);
-            pos.addBeats (1.0);
+            pos.add (1_bd);
             expectBarsAndBeats (pos, 2, 1);
-            pos.addBeats (1.0);
+            pos.add (1_bd);
             expectBarsAndBeats (pos, 2, 2);
-            pos.addBeats (1.0);
+            pos.add (1_bd);
             expectBarsAndBeats (pos, 2, 3);
         }
 
         beginTest ("Negative sequences");
         {
-            TempoSequencePosition pos (edit->tempoSequence);
-            pos.setTime ({});
+            auto pos = createPosition (edit->tempoSequence);
+            pos.set (0_tp);
             pos.addBars (-2);
 
             expectBarsAndBeats (pos, -2, 0);
-            pos.addBeats (1.0);
+            pos.add (1_bd);
             expectBarsAndBeats (pos, -2, 1);
-            pos.addBeats (1.0);
+            pos.add (1_bd);
             expectBarsAndBeats (pos, -2, 2);
-            pos.addBeats (1.0);
+            pos.add (1_bd);
             expectBarsAndBeats (pos, -2, 3);
-            pos.addBeats (1.0);
+            pos.add (1_bd);
             expectBarsAndBeats (pos, -1, 0);
-            pos.addBeats (1.0);
+            pos.add (1_bd);
             expectBarsAndBeats (pos, -1, 1);
-            pos.addBeats (1.0);
+            pos.add (1_bd);
             expectBarsAndBeats (pos, -1, 2);
-            pos.addBeats (1.0);
+            pos.add (1_bd);
             expectBarsAndBeats (pos, -1, 3);
-            pos.addBeats (1.0);
+            pos.add (1_bd);
             expectBarsAndBeats (pos, 0, 0);
-            pos.addBeats (1.0);
+            pos.add (1_bd);
             expectBarsAndBeats (pos, 0, 1);
-            pos.addBeats (1.0);
+            pos.add (1_bd);
             expectBarsAndBeats (pos, 0, 2);
-            pos.addBeats (1.0);
+            pos.add (1_bd);
             expectBarsAndBeats (pos, 0, 3);
-            pos.addBeats (1.0);
+            pos.add (1_bd);
             expectBarsAndBeats (pos, 1, 0);
-            pos.addBeats (1.0);
+            pos.add (1_bd);
         }
     }
 

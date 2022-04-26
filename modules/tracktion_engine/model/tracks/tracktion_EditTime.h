@@ -64,8 +64,6 @@ BeatPosition toBeats (EditTime, const TempoSequence&);
 
 //==============================================================================
 //==============================================================================
-namespace temp
-{
 /**
     Represents a time range in an Edit stored as either time or beats.
     This is basically a variant to simplify APIs that can accept either time base.
@@ -94,7 +92,6 @@ TimeRange toTime (EditTimeRange, const TempoSequence&);
     N.B. This may be a slow operation if this was created using a TimeRange.
 */
 BeatRange toBeats (EditTimeRange, const TempoSequence&);
-}
 
 
 //==============================================================================
@@ -196,6 +193,7 @@ inline EditTime::EditTime (BeatPosition bp)
 {
 }
 
+//==============================================================================
 inline TimePosition toTime (EditTime et, const TempoSequence& ts)
 {
     // N.B. std::get unavailable prior to macOS 10.14
@@ -213,8 +211,7 @@ inline BeatPosition toBeats (EditTime et, const TempoSequence& ts)
     return tracktion::engine::toBeats (*std::get_if<TimePosition> (&et.position), ts);
 }
 
-namespace temp
-{
+//==============================================================================
 inline EditTimeRange::EditTimeRange (TimeRange r)
     : range (r)
 {
@@ -225,6 +222,7 @@ inline EditTimeRange::EditTimeRange (BeatRange r)
 {
 }
 
+//==============================================================================
 inline TimeRange toTime (EditTimeRange r, const TempoSequence& ts)
 {
     // N.B. std::get unavailable prior to macOS 10.14
@@ -241,8 +239,8 @@ inline BeatRange toBeats (EditTimeRange r, const TempoSequence& ts)
 
     return tracktion::engine::toBeats (*std::get_if<TimeRange> (&r.range), ts);
 }
-}
 
+//==============================================================================
 inline ClipPosition ClipPosition::rescaled (TimePosition anchorTime, double factor) const
 {
     return { time.rescaled (anchorTime, factor), TimePosition::fromSeconds (offset.inSeconds() * factor) };

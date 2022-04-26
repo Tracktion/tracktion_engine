@@ -22,8 +22,8 @@ juce::AudioPlayHead::CurrentPositionInfo getCurrentPositionInfo (Edit& edit)
     if (auto epc = transport.getCurrentPlaybackContext())
         currentTime = epc->getPosition();
     
-    TempoSequencePosition position (tempoSequence);
-    position.setTime (currentTime);
+    auto position = createPosition (tempoSequence);
+    position.set (currentTime);
     const auto timeSig = position.getTimeSignature();
 
     info.bpm = position.getTempo();
@@ -44,9 +44,9 @@ juce::AudioPlayHead::CurrentPositionInfo getCurrentPositionInfo (Edit& edit)
     info.timeInSamples = (int64_t) std::floor ((info.timeInSeconds * edit.engine.getDeviceManager().getSampleRate()) + 0.5);
 
     const auto loopRange = transport.getLoopRange();
-    position.setTime (loopRange.getStart());
+    position.set (loopRange.getStart());
     info.ppqLoopStart = position.getPPQTime();
-    position.setTime (loopRange.getEnd());
+    position.set (loopRange.getEnd());
     info.ppqLoopEnd = position.getPPQTime();
 
     return info;
@@ -94,8 +94,8 @@ void synchroniseEditPosition (Edit& edit, const juce::AudioPlayHead::CurrentPosi
     
     // Then the tempo info
     {
-        TempoSequencePosition position (edit.tempoSequence);
-        position.setTime (TimePosition::fromSeconds (info.timeInSeconds));
+        auto position = createPosition (edit.tempoSequence);
+        position.set (TimePosition::fromSeconds (info.timeInSeconds));
         const auto tempo = position.getTempo();
         const auto timeSig = position.getTimeSignature();
 

@@ -102,7 +102,7 @@ private:
     static const int sleepCounterMax = 100;
     int sleepCounter = 0;
 
-    std::unique_ptr<TempoSequencePosition> currentTempoPosition;
+    std::unique_ptr<tempo::Sequence::Position> currentTempoPosition;
     float peak = 0;
     double rmsTotal = 0;
     int64_t rmsNumSamps = 0;

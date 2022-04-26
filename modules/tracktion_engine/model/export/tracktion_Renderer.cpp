@@ -354,14 +354,14 @@ bool Renderer::RenderTask::addMidiMetaDataAndWriteToFile (juce::File destFile, j
     if (out.openedOk())
     {
         juce::MidiMessageSequence midiTempoSequence;
-        TempoSequencePosition currentTempoPosition (tempoSequence);
+        auto currentTempoPosition = createPosition (tempoSequence);
 
         for (int i = 0; i < tempoSequence.getNumTempos(); ++i)
         {
             auto ts = tempoSequence.getTempo (i);
             auto& matchingTimeSig = ts->getMatchingTimeSig();
 
-            currentTempoPosition.setTime (ts->getStartTime());
+            currentTempoPosition.set (ts->getStartTime());
 
             const double time = Edit::ticksPerQuarterNote * currentTempoPosition.getPPQTime();
             const double beatLengthMicrosecs = 60000000.0 / ts->getBpm();

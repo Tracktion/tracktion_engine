@@ -296,7 +296,6 @@ namespace tracktion { inline namespace engine
     class CompFactory;
     class WarpTimeFactory;
     class TempoSequence;
-    class TempoSequencePosition;
     class WarpTimeManager;
     class ControlSurface;
     struct AudioFileInfo;

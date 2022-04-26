@@ -14,7 +14,7 @@ namespace tracktion { inline namespace engine
 struct StepModifier::StepModifierTimer : public ModifierTimer
 {
     StepModifierTimer (StepModifier& sm)
-        : modifier (sm), tempoSequence (sm.edit.tempoSequence)
+        : modifier (sm)
     {
     }
 
@@ -46,7 +46,7 @@ struct StepModifier::StepModifierTimer : public ModifierTimer
         }
         else
         {
-            tempoSequence.setTime (editTime);
+            tempoSequence.set (editTime);
             const auto currentTempo = tempoSequence.getTempo();
             const auto currentTimeSig = tempoSequence.getTimeSignature();
             const auto proportionOfBar = ModifierCommon::getBarFraction (rateTypeThisBlock);
@@ -96,7 +96,7 @@ struct StepModifier::StepModifierTimer : public ModifierTimer
 
     StepModifier& modifier;
     Ramp ramp;
-    TempoSequencePosition tempoSequence;
+    tempo::Sequence::Position tempoSequence { createPosition (modifier.edit.tempoSequence) };
 };
 
 //==============================================================================

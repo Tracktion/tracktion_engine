@@ -63,19 +63,19 @@ ClickGenerator::ClickGenerator (Edit& e, bool isMidi, TimePosition endTime)
 {
     endTime = juce::jmin (endTime, TimePosition::fromSeconds (juce::jmax (edit.getLength().inSeconds() * 2, 60.0 * 60.0)));
 
-    TempoSequencePosition pos (edit.tempoSequence);
-    pos.setTime (TimePosition::fromSeconds (1.0e-10));
+    auto pos = createPosition (edit.tempoSequence);
+    pos.set (TimePosition::fromSeconds (1.0e-10));
     pos.addBars (-8);
 
     while (pos.getTime() < endTime)
     {
-        auto barsBeats = pos.getBarsBeatsTime();
+        auto barsBeats = pos.getBarsBeats();
 
         if (barsBeats.getWholeBeats() == 0)
             loudBeats.setBit (beatTimes.size());
 
         beatTimes.add (pos.getTime());
-        pos.addBeats (1.0);
+        pos.add (1_bd);
     }
 
     beatTimes.add (TimePosition::fromSeconds (1000000.0));

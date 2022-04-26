@@ -265,9 +265,6 @@ public:
     PluginPlayHead (ExternalPlugin& p)
         : plugin (p)
     {
-        currentPos = std::make_unique<TempoSequencePosition> (plugin.edit.tempoSequence);
-        loopStart  = std::make_unique<TempoSequencePosition> (plugin.edit.tempoSequence);
-        loopEnd    = std::make_unique<TempoSequencePosition> (plugin.edit.tempoSequence);
     }
 
     /** @warning Because some idiotic plugins call getCurrentPosition on the message thread, we can't keep a
@@ -293,9 +290,6 @@ public:
         zerostruct (result);
         result.frameRate = getFrameRate();
 
-        if (currentPos == nullptr)
-            return false;
-
         auto& transport = plugin.edit.getTransport();
         auto localTime = time.load();
 
@@ -307,32 +301,34 @@ public:
         if (result.isLooping)
         {
             const auto loopTimes = transport.getLoopRange();
-            loopStart->setTime (loopTimes.getStart());
-            result.ppqLoopStart = loopStart->getPPQTime();
+            loopStart.set (loopTimes.getStart());
+            result.ppqLoopStart = loopStart.getPPQTime();
 
-            loopEnd->setTime (loopTimes.getEnd());
-            result.ppqLoopEnd = loopEnd->getPPQTime();
+            loopEnd.set (loopTimes.getEnd());
+            result.ppqLoopEnd = loopEnd.getPPQTime();
         }
 
         result.timeInSamples    = (tracktion::toSamples (localTime, plugin.sampleRate));
         result.timeInSeconds    = localTime.inSeconds();
 
-        currentPos->setTime (localTime);
-        const auto timeSig = currentPos->getTimeSignature();
-        result.bpm                  = currentPos->getTempo();
+        currentPos.set (localTime);
+        const auto timeSig = currentPos.getTimeSignature();
+        result.bpm                  = currentPos.getTempo();
         result.timeSigNumerator     = timeSig.numerator;
         result.timeSigDenominator   = timeSig.denominator;
 
-        result.ppqPositionOfLastBarStart = currentPos->getPPQTimeOfBarStart();
+        result.ppqPositionOfLastBarStart = currentPos.getPPQTimeOfBarStart();
         result.ppqPosition = std::max (result.ppqPositionOfLastBarStart,
-                                       currentPos->getPPQTime());
+                                       currentPos.getPPQTime());
 
         return true;
     }
 
 private:
     ExternalPlugin& plugin;
-    std::unique_ptr<TempoSequencePosition> currentPos, loopStart, loopEnd;
+    tempo::Sequence::Position currentPos { createPosition (plugin.edit.tempoSequence) };
+    tempo::Sequence::Position loopStart { createPosition (plugin.edit.tempoSequence) };
+    tempo::Sequence::Position loopEnd { createPosition (plugin.edit.tempoSequence) };
     std::atomic<TimePosition> time { TimePosition() };
     std::atomic<bool> isPlaying { false };
 

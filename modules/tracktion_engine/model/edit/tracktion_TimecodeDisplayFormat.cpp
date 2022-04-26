@@ -605,13 +605,13 @@ TimecodeDuration TimecodeDisplayFormat::getNewTimeWithPartValue (TimecodeDuratio
         {
             auto t = toPosition (tracktion::abs (*time.seconds));
 
-            TempoSequencePosition pos (tempo);
-            pos.setTime (t);
+            auto pos = createPosition (tempo);
+            pos.set (t);
 
             auto barsBeats = tempo.timeToBarsBeats (t);
 
-            if (part == 0)       pos.addBeats ((newValue / (double) Edit::ticksPerQuarterNote) - barsBeats.getFractionalBeats().inBeats());
-            else if (part == 1)  pos.addBeats ((isRelative ? newValue : (newValue - 1)) - barsBeats.getWholeBeats());
+            if (part == 0)       pos.add (BeatDuration::fromBeats (newValue / (double) Edit::ticksPerQuarterNote) - barsBeats.getFractionalBeats());
+            else if (part == 1)  pos.add (BeatDuration::fromBeats ((isRelative ? newValue : (newValue - 1)) - barsBeats.getWholeBeats()));
             else if (part == 2)  pos.addBars  ((isRelative ? newValue : (newValue - 1)) - barsBeats.bars);
 
             return TimecodeDuration::fromSecondsOnly (toDuration (*time.seconds < 0s ? -pos.getTime() : pos.getTime()));

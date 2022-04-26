@@ -22,9 +22,6 @@ public:
     MelodynePlayhead (ExternalPlugin& p)
         : plugin (p)
     {
-        currentPos = std::make_unique<TempoSequencePosition> (plugin.edit.tempoSequence);
-        loopStart  = std::make_unique<TempoSequencePosition> (plugin.edit.tempoSequence);
-        loopEnd    = std::make_unique<TempoSequencePosition> (plugin.edit.tempoSequence);
     }
 
     /** Must be called before processing audio/MIDI */
@@ -51,31 +48,33 @@ public:
 
         if (result.isLooping)
         {
-            loopStart->setTime (loopTimeRange.getStart());
-            result.ppqLoopStart = loopStart->getPPQTime();
+            loopStart.set (loopTimeRange.getStart());
+            result.ppqLoopStart = loopStart.getPPQTime();
 
-            loopEnd->setTime (loopTimeRange.getEnd());
-            result.ppqLoopEnd   = loopEnd->getPPQTime();
+            loopEnd.set (loopTimeRange.getEnd());
+            result.ppqLoopEnd   = loopEnd.getPPQTime();
         }
 
         result.timeInSeconds    = time.inSeconds();
         result.timeInSamples    = toSamples (time, plugin.getAudioPluginInstance()->getSampleRate());
 
-        currentPos->setTime (time);
-        const auto timeSig = currentPos->getTimeSignature();
-        result.bpm                  = currentPos->getTempo();
+        currentPos.set (time);
+        const auto timeSig = currentPos.getTimeSignature();
+        result.bpm                  = currentPos.getTempo();
         result.timeSigNumerator     = timeSig.numerator;
         result.timeSigDenominator   = timeSig.denominator;
 
-        result.ppqPositionOfLastBarStart = currentPos->getPPQTimeOfBarStart();
-        result.ppqPosition = std::max (result.ppqPositionOfLastBarStart, currentPos->getPPQTime());
+        result.ppqPositionOfLastBarStart = currentPos.getPPQTimeOfBarStart();
+        result.ppqPosition = std::max (result.ppqPositionOfLastBarStart, currentPos.getPPQTime());
 
         return true;
     }
 
 private:
     ExternalPlugin& plugin;
-    std::unique_ptr<TempoSequencePosition> currentPos, loopStart, loopEnd;
+    tempo::Sequence::Position currentPos { createPosition (plugin.edit.tempoSequence) };
+    tempo::Sequence::Position loopStart { createPosition (plugin.edit.tempoSequence) };
+    tempo::Sequence::Position loopEnd { createPosition (plugin.edit.tempoSequence) };
     TimePosition time;
     bool isPlaying = false, isLooping = false;
     TimeRange loopTimeRange;

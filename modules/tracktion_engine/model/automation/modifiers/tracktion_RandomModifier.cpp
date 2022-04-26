@@ -14,7 +14,7 @@ namespace tracktion { inline namespace engine
 struct RandomModifier::RandomModifierTimer    : public ModifierTimer
 {
     RandomModifierTimer (RandomModifier& rm)
-        : modifier (rm), tempoSequence (rm.edit.tempoSequence)
+        : modifier (rm)
     {
     }
 
@@ -44,7 +44,7 @@ struct RandomModifier::RandomModifierTimer    : public ModifierTimer
         }
         else
         {
-            tempoSequence.setTime (editTime);
+            tempoSequence.set (editTime);
             const auto currentTempo = tempoSequence.getTempo();
             const auto currentTimeSig = tempoSequence.getTimeSignature();
             const auto proportionOfBar = ModifierCommon::getBarFraction (rateTypeThisBlock);
@@ -90,7 +90,7 @@ struct RandomModifier::RandomModifierTimer    : public ModifierTimer
 
     RandomModifier& modifier;
     Ramp ramp;
-    TempoSequencePosition tempoSequence;
+    tempo::Sequence::Position tempoSequence { createPosition (modifier.edit.tempoSequence) };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RandomModifierTimer)
 };
