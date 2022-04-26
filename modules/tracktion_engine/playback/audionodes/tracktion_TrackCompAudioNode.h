@@ -18,8 +18,8 @@ namespace tracktion { inline namespace engine
 {
 
 inline AudioNode* createTrackCompAudioNode (AudioNode* input,
-                                            const juce::Array<EditTimeRange>& muteTimes,
-                                            const juce::Array<EditTimeRange>& nonMuteTimes,
+                                            const juce::Array<legacy::EditTimeRange>& muteTimes,
+                                            const juce::Array<legacy::EditTimeRange>& nonMuteTimes,
                                             double crossfadeTime)
 {
     if (muteTimes.isEmpty())
@@ -46,8 +46,8 @@ inline AudioNode* createTrackCompAudioNode (AudioNode* input,
                                             const juce::Array<TimeRange>& nonMuteTimes,
                                             TimeDuration crossfadeTime)
 {
-    juce::Array<EditTimeRange> muteEditTimes;
-    juce::Array<EditTimeRange> nonMuteEditTimes;
+    juce::Array<legacy::EditTimeRange> muteEditTimes;
+    juce::Array<legacy::EditTimeRange> nonMuteEditTimes;
 
     for (auto t : muteTimes)
         muteEditTimes.add ({ t.getStart().inSeconds(), t.getEnd().inSeconds() });

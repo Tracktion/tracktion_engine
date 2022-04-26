@@ -527,7 +527,7 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
         std::unique_ptr<juce::AudioBuffer<float>> renderingBuffer;
 
         std::unique_ptr<AudioRenderContext> rc;
-        EditTimeRange streamRange;
+        legacy::EditTimeRange streamRange;
         double streamTime = 0;
     };
 
@@ -688,7 +688,7 @@ juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> VolumeEffect::c
                                                                                                 double sourceLength)
 {
     CRASH_TRACER
-    EditTimeRange timeRange (0.0, sourceLength);
+    legacy::EditTimeRange timeRange (0.0, sourceLength);
     jassert (! timeRange.isEmpty());
 
     auto n = new WaveAudioNode (sourceFile, timeRange, 0.0, {}, {},
@@ -793,7 +793,7 @@ juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> FadeInOutEffect
 {
     CRASH_TRACER
     AudioFile destFile (getDestinationFile());
-    EditTimeRange timeRange (0.0, sourceLength);
+    legacy::EditTimeRange timeRange (0.0, sourceLength);
     jassert (! timeRange.isEmpty());
 
     AudioNode* n = new WaveAudioNode (sourceFile, timeRange, 0.0, {}, {},
@@ -844,8 +844,8 @@ juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> FadeInOutEffect
             break;
     }
 
-    n = new TimedMutingAudioNode (n, { EditTimeRange ({}, effectRange.getStart().inSeconds()),
-                                       EditTimeRange (effectRange.getEnd().inSeconds(), sourceLength) });
+    n = new TimedMutingAudioNode (n, { legacy::EditTimeRange ({}, effectRange.getStart().inSeconds()),
+                                       legacy::EditTimeRange (effectRange.getEnd().inSeconds(), sourceLength) });
 
     return new AudioNodeRenderJob (edit.engine, n, destFile, sourceFile, blockSize);
 }
@@ -906,7 +906,7 @@ juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> StepVolumeEffec
     jassert (sourceLength > 0);
 
     auto destFile = getDestinationFile();
-    EditTimeRange timeRange (0.0, sourceLength);
+    legacy::EditTimeRange timeRange (0.0, sourceLength);
 
     auto speedRatio = clipEffects.getSpeedRatioEstimate();
     auto effectRange = clipEffects.getEffectsRange();
@@ -1109,7 +1109,7 @@ void PitchShiftEffect::initialise()
 juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> PitchShiftEffect::createRenderJob (const AudioFile& sourceFile, double sourceLength)
 {
     CRASH_TRACER
-    const EditTimeRange timeRange (0.0, sourceLength);
+    const legacy::EditTimeRange timeRange (0.0, sourceLength);
     jassert (! timeRange.isEmpty());
 
     auto n = new WaveAudioNode (sourceFile, timeRange, 0.0, {}, {},
@@ -1320,7 +1320,7 @@ juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> PluginEffect::c
 
     const ScopedPluginUnloadInhibitor lock (*pluginUnloadInhibitor);
 
-    const EditTimeRange timeRange (0.0, sourceLength);
+    const legacy::EditTimeRange timeRange (0.0, sourceLength);
     jassert (! timeRange.isEmpty());
 
     AudioNode* n = new WaveAudioNode (sourceFile, timeRange, 0.0, {}, {},

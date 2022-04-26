@@ -1131,7 +1131,7 @@ void DeviceManager::audioDeviceIOCallbackInternal (const float** inputChannelDat
         else
         {
             broadcastStreamTimeToMidiDevices (streamTime + outputLatencyTime);
-            EditTimeRange blockStreamTime;
+            juce::Range<double> blockStreamTime;
 
             {
                 SCOPED_REALTIME_CHECK

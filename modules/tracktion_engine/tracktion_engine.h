@@ -401,7 +401,6 @@ namespace tracktion { inline namespace engine
 #include "selection/tracktion_SelectableClass.h"
 #include "selection/tracktion_SelectionManager.h"
 #include "model/tracks/tracktion_EditTime.h"
-#include "model/tracks/tracktion_EditTimeRange.h"
 #include "utilities/tracktion_BackgroundJobs.h"
 #include "utilities/tracktion_MiscUtilities.h"
 #include "utilities/tracktion_TemporaryFileManager.h"

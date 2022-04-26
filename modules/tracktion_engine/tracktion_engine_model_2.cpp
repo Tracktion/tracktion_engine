@@ -38,7 +38,6 @@ using namespace std::literals;
 #include "model/tracks/tracktion_TempoTrack.cpp"
 #include "model/tracks/tracktion_EditTime.cpp"
 #include "model/tracks/tracktion_EditTime.test.cpp"
-#include "model/tracks/tracktion_EditTimeRange.cpp"
 #include "model/tracks/tracktion_TrackItem.cpp"
 #include "model/tracks/tracktion_TrackOutput.cpp"
 #include "model/tracks/tracktion_TrackCompManager.cpp"

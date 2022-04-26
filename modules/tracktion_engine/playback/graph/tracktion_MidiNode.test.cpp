@@ -83,7 +83,7 @@ private:
                                                                        LiveClipLevel(),
                                                                        processState,
                                                                        EditItemID());
-            
+
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 0, duration);
 
             expectGreaterThan (sequence.getNumEvents(), 0);
@@ -92,7 +92,7 @@ private:
         
         beginTest ("Offset MIDI");
         {
-            const juce::Range<double> editTimeRange (1.0, duration);
+            const auto editTimeRange = juce::Range<double>::withStartAndLength (1.0, duration);
             auto node = std::make_unique<tracktion::engine::MidiNode> (std::vector<juce::MidiMessageSequence> ({ masterSequence }),
                                                                        MidiList::TimeBase::seconds,
                                                                        juce::Range<int>::withStartAndLength (1, 1),
@@ -101,7 +101,7 @@ private:
                                                                        LiveClipLevel(),
                                                                        processState,
                                                                        EditItemID());
-            
+
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 0, editTimeRange.getEnd());
 
             juce::MidiMessageSequence expectedSequence;

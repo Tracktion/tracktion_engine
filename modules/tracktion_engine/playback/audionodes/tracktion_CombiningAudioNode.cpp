@@ -24,15 +24,15 @@ static inline int timeToGroupIndex (double t) noexcept
 //==============================================================================
 struct CombiningAudioNode::TimedAudioNode
 {
-    TimedAudioNode (EditTimeRange t, AudioNode* n)  : time (t), node (n)
+    TimedAudioNode (legacy::EditTimeRange t, AudioNode* n)  : time (t), node (n)
     {
     }
 
-    EditTimeRange time;
+    legacy::EditTimeRange time;
     const std::unique_ptr<AudioNode> node;
     int lastBufferSize = 0;
 
-    void render (const AudioRenderContext& rc, EditTimeRange editTime) const
+    void render (const AudioRenderContext& rc, legacy::EditTimeRange editTime) const
     {
         AudioRenderContext context (rc);
 
@@ -71,7 +71,7 @@ struct CombiningAudioNode::TimedAudioNode
 CombiningAudioNode::CombiningAudioNode() {}
 CombiningAudioNode::~CombiningAudioNode() {}
 
-void CombiningAudioNode::addInput (EditTimeRange time, AudioNode* inputNode)
+void CombiningAudioNode::addInput (legacy::EditTimeRange time, AudioNode* inputNode)
 {
     if (inputNode == nullptr)
         return;
@@ -203,7 +203,7 @@ void CombiningAudioNode::renderAdding (const AudioRenderContext& rc)
         invokeSplitRender (rc, *this);
 }
 
-void CombiningAudioNode::renderSection (const AudioRenderContext& rc, EditTimeRange editTime)
+void CombiningAudioNode::renderSection (const AudioRenderContext& rc, legacy::EditTimeRange editTime)
 {
     if (auto g = groups[timeToGroupIndex (editTime.getStart())])
     {

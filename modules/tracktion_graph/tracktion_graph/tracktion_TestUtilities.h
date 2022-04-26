@@ -266,8 +266,8 @@ namespace test_utilities
     /** Expects a specific magnitude and RMS from an AudioBuffer's channel. */
     static inline void expectAudioBuffer (juce::UnitTest& ut, const juce::AudioBuffer<float>& buffer, int channel, float mag, float rms)
     {
-        ut.expectWithinAbsoluteError (buffer.getMagnitude (channel, 0, buffer.getNumSamples()), mag, 0.001f);
-        ut.expectWithinAbsoluteError (buffer.getRMSLevel (channel, 0, buffer.getNumSamples()), rms, 0.001f);
+        ut.expectWithinAbsoluteError (buffer.getMagnitude (channel, 0, buffer.getNumSamples()), mag, 0.01f);
+        ut.expectWithinAbsoluteError (buffer.getRMSLevel (channel, 0, buffer.getNumSamples()), rms, 0.01f);
     }
 
     /** Splits a buffer in to two and expects a specific magnitude and RMS from each half AudioBuffer. */

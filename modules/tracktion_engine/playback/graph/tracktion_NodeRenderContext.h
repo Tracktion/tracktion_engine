@@ -93,7 +93,7 @@ private:
     MidiMessageArray midiBuffer;
 
     const float thresholdForStopping { dbToGain (-70.0f) };
-    double blockLength = 0;
+    TimeDuration blockLength;
     int numPreRenderBlocks = 0;
     int numLatencySamplesToDrop = 0;
     int realTimePerBlock = 0;
@@ -107,7 +107,7 @@ private:
     double rmsTotal = 0;
     int64_t rmsNumSamps = 0;
     int precount = 0;
-    double streamTime = 0;
+    TimePosition streamTime;
 
     int64_t samplesTrimmed = 0;
     bool hasStartedSavingToFile = 0;

@@ -121,6 +121,7 @@ void WaveOutputDeviceInstance::prepareToPlay (double, int blockSize)
     ditherers[1].reset (ditherDepth);
 }
 
+//==============================================================================
 int WaveOutputDevice::getLeftChannel() const
 {
     return deviceChannels.size() >= 1 ? deviceChannels[0].indexInDevice : -1;

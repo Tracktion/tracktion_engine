@@ -77,8 +77,6 @@ public:
     WaveOutputDeviceInstance (WaveOutputDevice&, EditPlaybackContext&);
 
     void prepareToPlay (double sampleRate, int blockSizeSamples);
-    void fillNextAudioBlock (PlayHead&, EditTimeRange streamTime,
-                             float** allChannels, int numSamples);
 
 protected:
     Ditherer ditherers[2];

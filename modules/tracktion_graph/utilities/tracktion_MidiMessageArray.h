@@ -136,10 +136,11 @@ struct MidiMessageArray
 
         messages.ensureStorageAllocated (messages.size() + source.size());
 
-        for (auto& m : source)
+        for (const auto& m : source)
         {
-            messages.add (m);
-            messages.getReference (messages.size() - 1).addToTimeStamp (delta);
+            auto copy = MidiMessageWithSource (m);
+            copy.addToTimeStamp (delta);
+            messages.add (std::move (copy));
         }
     }
 

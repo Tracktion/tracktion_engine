@@ -18,8 +18,8 @@ class FadeInOutAudioNode : public SingleInputAudioNode
 {
 public:
     FadeInOutAudioNode (AudioNode* input,
-                        EditTimeRange fadeIn,
-                        EditTimeRange fadeOut,
+                        legacy::EditTimeRange fadeIn,
+                        legacy::EditTimeRange fadeOut,
                         AudioFadeCurve::Type fadeInType,
                         AudioFadeCurve::Type fadeOutType,
                         bool clearSamplesOutsideFade = true);
@@ -32,17 +32,17 @@ public:
     void renderOver (const AudioRenderContext& rc) override;
     void renderAdding (const AudioRenderContext& rc) override;
 
-    void renderSection (const AudioRenderContext&, EditTimeRange editTime);
+    void renderSection (const AudioRenderContext&, legacy::EditTimeRange);
 
 private:
     //==============================================================================
-    EditTimeRange fadeIn, fadeOut;
+    legacy::EditTimeRange fadeIn, fadeOut;
     AudioFadeCurve::Type fadeInType, fadeOutType;
     bool clearExtraSamples = true;
 
     bool renderingNeeded (const AudioRenderContext&) const;
 
-    static int timeToSample (const AudioRenderContext&, EditTimeRange, double);
+    static int timeToSample (const AudioRenderContext&, legacy::EditTimeRange, double);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FadeInOutAudioNode)
 };

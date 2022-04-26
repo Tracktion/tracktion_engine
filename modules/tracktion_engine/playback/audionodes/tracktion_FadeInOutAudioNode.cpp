@@ -12,7 +12,7 @@ namespace tracktion { inline namespace engine
 {
 
 FadeInOutAudioNode::FadeInOutAudioNode (AudioNode* inp,
-                                        EditTimeRange in, EditTimeRange out,
+                                        legacy::EditTimeRange in, legacy::EditTimeRange out,
                                         AudioFadeCurve::Type fadeInType_,
                                         AudioFadeCurve::Type fadeOutType_,
                                         bool clearSamplesOutsideFade)
@@ -30,12 +30,12 @@ FadeInOutAudioNode::~FadeInOutAudioNode()
 {
 }
 
-int FadeInOutAudioNode::timeToSample (const AudioRenderContext& rc, EditTimeRange editTime, double t)
+int FadeInOutAudioNode::timeToSample (const AudioRenderContext& rc, legacy::EditTimeRange editTime, double t)
 {
     return (int) (rc.bufferNumSamples * (t - editTime.getStart()) / editTime.getLength() + 0.5);
 }
 
-void FadeInOutAudioNode::renderSection (const AudioRenderContext& rc, EditTimeRange editTime)
+void FadeInOutAudioNode::renderSection (const AudioRenderContext& rc, legacy::EditTimeRange editTime)
 {
     if (editTime.overlaps (fadeIn) && fadeIn.getLength() > 0.0)
     {

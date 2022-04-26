@@ -38,7 +38,7 @@ public:
 
         Any nodes passed-in will be deleted by this node when required.
     */
-    void addInput (EditTimeRange time, AudioNode* inputNode);
+    void addInput (legacy::EditTimeRange time, AudioNode* inputNode);
 
     void clear();
 
@@ -56,7 +56,7 @@ public:
     void renderAdding (const AudioRenderContext&) override;
     void prepareForNextBlock (const AudioRenderContext&) override;
 
-    void renderSection (const AudioRenderContext&, EditTimeRange editTime);
+    void renderSection (const AudioRenderContext&, legacy::EditTimeRange);
 
 private:
     struct TimedAudioNode;

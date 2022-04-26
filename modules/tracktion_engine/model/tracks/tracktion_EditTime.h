@@ -98,6 +98,42 @@ BeatRange toBeats (EditTimeRange, const TempoSequence&);
 
 
 //==============================================================================
+/** Represents the position of a clip on a timeline.
+*/
+struct ClipPosition
+{
+    TimeRange time;         /**< The TimeRange this ClipPosition occupies. */
+    TimePosition offset;    /**< The offset this ClipPosition has.
+                                 Offset is a bit unintuitive as the position this
+                                 relates to in the source material will depend on
+                                 lots of factors including looping and any time-stretching.
+                                 It can generally be thought of as an offset from
+                                 either the start of the file or the loop start position,
+                                 scaled by any time-stretching.
+                            */
+
+    /** Returns the start time. */
+    TimePosition getStart() const             { return time.getStart(); }
+    /** Returns the end time. */
+    TimePosition getEnd() const               { return time.getEnd(); }
+    /** Returns the length. */
+    TimeDuration getLength() const            { return time.getLength(); }
+    /** Returns the offset. */
+    TimePosition getOffset() const            { return offset; }
+    /** Returns what would be the the start of the source material in the timeline. */
+    TimePosition getStartOfSource() const     { return time.getStart() - TimeDuration::fromSeconds (offset.inSeconds()); }
+
+    /** Compares two ClipPositions. */
+    bool operator== (const ClipPosition& other) const  { return offset == other.offset && time == other.time; }
+    /** Compares two ClipPositions. */
+    bool operator!= (const ClipPosition& other) const  { return ! operator== (other); }
+
+    /** Returns a ClipPosition scaled around an anchor point. Useful for stretching a clip. */
+    ClipPosition rescaled (TimePosition anchorTime, double factor) const;
+};
+
+
+//==============================================================================
 //==============================================================================
 }} // namespace tracktion { inline namespace engine
 
@@ -206,5 +242,11 @@ inline BeatRange toBeats (EditTimeRange r, const TempoSequence& ts)
     return tracktion::engine::toBeats (*std::get_if<TimeRange> (&r.range), ts);
 }
 }
+
+inline ClipPosition ClipPosition::rescaled (TimePosition anchorTime, double factor) const
+{
+    return { time.rescaled (anchorTime, factor), TimePosition::fromSeconds (offset.inSeconds() * factor) };
+}
+
 
 }} // namespace tracktion { inline namespace engine

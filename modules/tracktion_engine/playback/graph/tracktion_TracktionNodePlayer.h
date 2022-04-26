@@ -135,7 +135,7 @@ private:
 
         auto destAudio = pc.buffers.audio.getFrameRange (sampleRange);
 
-        return { sampleRange.size(), subReferenceSampleRange, { destAudio, scratchMidi } };
+        return { sampleRange.size(), subReferenceSampleRange, { destAudio, pc.buffers.midi } };
     }
 
     int processReferenceRange (const tracktion::graph::Node::ProcessContext& pc, juce::Range<int64_t> referenceSampleRange)

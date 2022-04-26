@@ -19,12 +19,12 @@ namespace tracktion { inline namespace engine
 class TimedMutingAudioNode  : public SingleInputAudioNode
 {
 public:
-    TimedMutingAudioNode (AudioNode* inp, const juce::Array<EditTimeRange>& muteTimes_)
+    TimedMutingAudioNode (AudioNode* inp, const juce::Array<legacy::EditTimeRange>& muteTimes_)
         : SingleInputAudioNode (inp), muteTimes (muteTimes_)
     {
     }
 
-    void renderSection (const AudioRenderContext& rc, EditTimeRange editTime)
+    void renderSection (const AudioRenderContext& rc, legacy::EditTimeRange editTime)
     {
         for (auto r : muteTimes)
         {
@@ -78,7 +78,7 @@ public:
     }
 
 private:
-    juce::Array<EditTimeRange> muteTimes;
+    juce::Array<legacy::EditTimeRange> muteTimes;
 
     bool renderingNeeded (const AudioRenderContext& rc) const
     {
