@@ -181,6 +181,11 @@ public:
     /** Returns the length of loop in seconds. */
     virtual TimeDuration getLoopLength() const              { return TimeDuration(); }
 
+    /** Returns the loop range in seconds. */
+    TimeRange getLoopRange() const                          { return { getLoopStart(), getLoopLength() }; }
+    /** Returns the loop range in beats. */
+    BeatRange getLoopRangeBeats() const                     { return { getLoopStartBeats(), getLoopLengthBeats() }; }
+
     /** Sets the loop range the clip should use in seconds. */
     virtual void setLoopRange (TimeRange)                   {}
     /** Sets the loop range the clip should use in beats. */

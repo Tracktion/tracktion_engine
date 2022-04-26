@@ -378,6 +378,10 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
    #if TRACKTION_ENABLE_REALTIME_TIMESTRETCHING
     else
     {
+        // TODO: Speed fades are not currently supported with real-time stretching
+        jassert (clip.getFadeInBehaviour() != AudioClipBase::speedRamp);
+        jassert (clip.getFadeOutBehaviour() != AudioClipBase::speedRamp);
+
         const auto timeStretcherMode = clip.getActualTimeStretchMode();
         const auto timeStretcherOpts = clip.elastiqueProOptions.get();
 
