@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">99</td>
-            <td class="headerCovTableEntry">282</td>
-            <td class="headerCovTableEntryLo">35.1 %</td>
+            <td class="headerCovTableEntry">281</td>
+            <td class="headerCovTableEntryLo">35.2 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-27 19:55:46</td>
+            <td class="headerValue">2022-04-26 16:11:08</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">17</td>
@@ -441,207 +441,206 @@
 <a name="379"><span class="lineNum">     379 </span><span class="lineNoCov">          0 :                 if (! to-&gt;isFrozen (Track::anyFreeze))</span></a>
 <a name="380"><span class="lineNum">     380 </span>            :                 {</a>
 <a name="381"><span class="lineNum">     381 </span>            :                     Clip::Ptr refHolder (this);</a>
-<a name="382"><span class="lineNum">     382 </span><span class="lineNoCov">          0 :                     removeFromParentTrack();</span></a>
-<a name="383"><span class="lineNum">     383 </span><span class="lineNoCov">          0 :                     to-&gt;addClip (this);</span></a>
-<a name="384"><span class="lineNum">     384 </span>            :                 }</a>
-<a name="385"><span class="lineNum">     385 </span>            :             }</a>
-<a name="386"><span class="lineNum">     386 </span>            : </a>
-<a name="387"><span class="lineNum">     387 </span><span class="lineNoCov">          0 :             return true;</span></a>
-<a name="388"><span class="lineNum">     388 </span>            :         }</a>
-<a name="389"><span class="lineNum">     389 </span>            :     }</a>
-<a name="390"><span class="lineNum">     390 </span>            : </a>
-<a name="391"><span class="lineNum">     391 </span>            :     return false;</a>
-<a name="392"><span class="lineNum">     392 </span>            : }</a>
-<a name="393"><span class="lineNum">     393 </span>            : </a>
-<a name="394"><span class="lineNum">     394 </span>            : //==============================================================================</a>
-<a name="395"><span class="lineNum">     395 </span><span class="lineNoCov">          0 : void Clip::setSpeedRatio (double r)</span></a>
-<a name="396"><span class="lineNum">     396 </span>            : {</a>
-<a name="397"><span class="lineNum">     397 </span><span class="lineNoCov">          0 :     r = juce::jlimit (ClipConstants::speedRatioMin, ClipConstants::speedRatioMax, r);</span></a>
-<a name="398"><span class="lineNum">     398 </span>            : </a>
-<a name="399"><span class="lineNum">     399 </span><span class="lineNoCov">          0 :     if (speedRatio != r)</span></a>
-<a name="400"><span class="lineNum">     400 </span><span class="lineNoCov">          0 :         speedRatio = r;</span></a>
-<a name="401"><span class="lineNum">     401 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="402"><span class="lineNum">     402 </span>            : </a>
-<a name="403"><span class="lineNum">     403 </span><span class="lineNoCov">          0 : void Clip::rescale (double pivotTimeInEdit, double factor)</span></a>
-<a name="404"><span class="lineNum">     404 </span>            : {</a>
-<a name="405"><span class="lineNum">     405 </span><span class="lineNoCov">          0 :     auto pos = getPosition();</span></a>
-<a name="406"><span class="lineNum">     406 </span>            : </a>
-<a name="407"><span class="lineNum">     407 </span>            :     // limit the start to 0</a>
-<a name="408"><span class="lineNum">     408 </span><span class="lineNoCov">          0 :     if (pivotTimeInEdit + (factor * (pos.getStart() - pivotTimeInEdit)) &lt; 0)</span></a>
-<a name="409"><span class="lineNum">     409 </span><span class="lineNoCov">          0 :         factor = -pivotTimeInEdit / (pos.getStart() - pivotTimeInEdit);</span></a>
-<a name="410"><span class="lineNum">     410 </span>            : </a>
-<a name="411"><span class="lineNum">     411 </span><span class="lineNoCov">          0 :     if (factor &gt; 0.01 &amp;&amp; factor != 1.0)</span></a>
-<a name="412"><span class="lineNum">     412 </span>            :     {</a>
-<a name="413"><span class="lineNum">     413 </span>            :         bool canRescale = false;</a>
-<a name="414"><span class="lineNum">     414 </span>            : </a>
-<a name="415"><span class="lineNum">     415 </span><span class="lineNoCov">          0 :         if (auto acb = dynamic_cast&lt;AudioClipBase*&gt; (this))</span></a>
-<a name="416"><span class="lineNum">     416 </span>            :             canRescale = ! acb-&gt;getAutoTempo();</a>
-<a name="417"><span class="lineNum">     417 </span><span class="lineNoCov">          0 :         else if (type == Type::midi || type == Type::step)</span></a>
-<a name="418"><span class="lineNum">     418 </span>            :             canRescale = true;</a>
-<a name="419"><span class="lineNum">     419 </span>            : </a>
-<a name="420"><span class="lineNum">     420 </span><span class="lineNoCov">          0 :         if (canRescale)</span></a>
-<a name="421"><span class="lineNum">     421 </span>            :         {</a>
-<a name="422"><span class="lineNum">     422 </span><span class="lineNoCov">          0 :             setPosition (pos.rescaled (pivotTimeInEdit, factor));</span></a>
-<a name="423"><span class="lineNum">     423 </span><span class="lineNoCov">          0 :             setSpeedRatio (speedRatio / factor);</span></a>
-<a name="424"><span class="lineNum">     424 </span>            :         }</a>
-<a name="425"><span class="lineNum">     425 </span>            :     }</a>
-<a name="426"><span class="lineNum">     426 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="427"><span class="lineNum">     427 </span>            : </a>
-<a name="428"><span class="lineNum">     428 </span>            : //==============================================================================</a>
-<a name="429"><span class="lineNum">     429 </span><span class="lineNoCov">          0 : CollectionClip* Clip::getGroupClip() const</span></a>
-<a name="430"><span class="lineNum">     430 </span>            : {</a>
-<a name="431"><span class="lineNum">     431 </span><span class="lineNoCov">          0 :     if (auto ct = getClipTrack())</span></a>
-<a name="432"><span class="lineNum">     432 </span><span class="lineNoCov">          0 :         return ct-&gt;getCollectionClip (const_cast&lt;Clip*&gt; (this));</span></a>
-<a name="433"><span class="lineNum">     433 </span>            : </a>
-<a name="434"><span class="lineNum">     434 </span>            :     return {};</a>
-<a name="435"><span class="lineNum">     435 </span>            : }</a>
-<a name="436"><span class="lineNum">     436 </span>            : </a>
-<a name="437"><span class="lineNum">     437 </span>            : //==============================================================================</a>
-<a name="438"><span class="lineNum">     438 </span><span class="lineCov">         85 : void Clip::setCurrentSourceFile (const juce::File&amp; f)</span></a>
-<a name="439"><span class="lineNum">     439 </span>            : {</a>
-<a name="440"><span class="lineNum">     440 </span><span class="lineCov">         85 :     if (currentSourceFile != f)</span></a>
-<a name="441"><span class="lineNum">     441 </span>            :     {</a>
-<a name="442"><span class="lineNum">     442 </span><span class="lineCov">         85 :         currentSourceFile = f;</span></a>
-<a name="443"><span class="lineNum">     443 </span><span class="lineCov">         85 :         changed();</span></a>
-<a name="444"><span class="lineNum">     444 </span>            :     }</a>
-<a name="445"><span class="lineNum">     445 </span><span class="lineCov">         85 : }</span></a>
-<a name="446"><span class="lineNum">     446 </span>            : </a>
-<a name="447"><span class="lineNum">     447 </span>            : //==============================================================================</a>
-<a name="448"><span class="lineNum">     448 </span><span class="lineCov">        148 : void Clip::valueTreePropertyChanged (juce::ValueTree&amp; tree, const juce::Identifier&amp; id)</span></a>
-<a name="449"><span class="lineNum">     449 </span>            : {</a>
-<a name="450"><span class="lineNum">     450 </span><span class="lineCov">        148 :     if (tree == state)</span></a>
-<a name="451"><span class="lineNum">     451 </span>            :     {</a>
-<a name="452"><span class="lineNum">     452 </span><span class="lineCov">        148 :         if (id == IDs::start || id == IDs::length || id == IDs::offset)</span></a>
-<a name="453"><span class="lineNum">     453 </span>            :         {</a>
-<a name="454"><span class="lineNum">     454 </span><span class="lineCov">          1 :             if (track != nullptr)</span></a>
-<a name="455"><span class="lineNum">     455 </span>            :             {</a>
-<a name="456"><span class="lineNum">     456 </span><span class="lineCov">          1 :                 if (auto f = track-&gt;getParentFolderTrack())</span></a>
-<a name="457"><span class="lineNum">     457 </span><span class="lineNoCov">          0 :                     f-&gt;setDirtyClips();</span></a>
-<a name="458"><span class="lineNum">     458 </span>            : </a>
-<a name="459"><span class="lineNum">     459 </span><span class="lineCov">          1 :                 changed();</span></a>
-<a name="460"><span class="lineNum">     460 </span>            :             }</a>
-<a name="461"><span class="lineNum">     461 </span>            :         }</a>
-<a name="462"><span class="lineNum">     462 </span><span class="lineCov">        147 :         else if (id == IDs::source)</span></a>
-<a name="463"><span class="lineNum">     463 </span>            :         {</a>
-<a name="464"><span class="lineNum">     464 </span><span class="lineNoCov">          0 :             sourceFileReference.source.forceUpdateOfCachedValue();</span></a>
-<a name="465"><span class="lineNum">     465 </span><span class="lineNoCov">          0 :             sourceMediaChanged();</span></a>
-<a name="466"><span class="lineNum">     466 </span>            :         }</a>
-<a name="467"><span class="lineNum">     467 </span><span class="lineCov">          1 :         else if (id == IDs::colour || id == IDs::speed</span></a>
-<a name="468"><span class="lineNum">     468 </span><span class="lineCov">        147 :                  || id == IDs::sync || id == IDs::linkID)</span></a>
-<a name="469"><span class="lineNum">     469 </span>            :         {</a>
-<a name="470"><span class="lineNum">     470 </span><span class="lineCov">        147 :             changed();</span></a>
-<a name="471"><span class="lineNum">     471 </span>            :         }</a>
-<a name="472"><span class="lineNum">     472 </span><span class="lineNoCov">          0 :         else if (id == IDs::name)</span></a>
-<a name="473"><span class="lineNum">     473 </span>            :         {</a>
-<a name="474"><span class="lineNum">     474 </span><span class="lineNoCov">          0 :             auto weakRef = getWeakRef();</span></a>
-<a name="475"><span class="lineNum">     475 </span><span class="lineNoCov">          0 :             clipName.forceUpdateOfCachedValue();</span></a>
-<a name="476"><span class="lineNum">     476 </span><span class="lineNoCov">          0 :             changed();</span></a>
-<a name="477"><span class="lineNum">     477 </span>            : </a>
-<a name="478"><span class="lineNum">     478 </span><span class="lineNoCov">          0 :             juce::MessageManager::callAsync ([weakRef]</span></a>
-<a name="479"><span class="lineNum">     479 </span>            :             {</a>
-<a name="480"><span class="lineNum">     480 </span><span class="lineNoCov">          0 :                 if (weakRef != nullptr)</span></a>
-<a name="481"><span class="lineNum">     481 </span><span class="lineNoCov">          0 :                     SelectionManager::refreshAllPropertyPanels();</span></a>
-<a name="482"><span class="lineNum">     482 </span>            :             });</a>
-<a name="483"><span class="lineNum">     483 </span>            :         }</a>
-<a name="484"><span class="lineNum">     484 </span>            :     }</a>
-<a name="485"><span class="lineNum">     485 </span><span class="lineCov">        148 : }</span></a>
-<a name="486"><span class="lineNum">     486 </span>            : </a>
-<a name="487"><span class="lineNum">     487 </span><span class="lineCov">         86 : void Clip::valueTreeParentChanged (juce::ValueTree&amp; v)</span></a>
-<a name="488"><span class="lineNum">     488 </span>            : {</a>
-<a name="489"><span class="lineNum">     489 </span><span class="lineCov">         86 :     if (v == state)</span></a>
-<a name="490"><span class="lineNum">     490 </span><span class="lineCov">         86 :         updateParentTrack();</span></a>
-<a name="491"><span class="lineNum">     491 </span><span class="lineCov">         86 : }</span></a>
-<a name="492"><span class="lineNum">     492 </span>            : </a>
-<a name="493"><span class="lineNum">     493 </span><span class="lineCov">         86 : void Clip::updateParentTrack()</span></a>
-<a name="494"><span class="lineNum">     494 </span>            : {</a>
-<a name="495"><span class="lineNum">     495 </span>            :     TRACKTION_ASSERT_MESSAGE_THREAD</a>
-<a name="496"><span class="lineNum">     496 </span><span class="lineCov">        172 :     auto parent = state.getParent();</span></a>
-<a name="497"><span class="lineNum">     497 </span>            : </a>
-<a name="498"><span class="lineNum">     498 </span><span class="lineCov">         86 :     if (TrackList::isTrack (parent))</span></a>
-<a name="499"><span class="lineNum">     499 </span><span class="lineCov">         86 :         setTrack (dynamic_cast&lt;ClipTrack*&gt; (findTrackForID (edit, EditItemID::fromID (parent))));</span></a>
-<a name="500"><span class="lineNum">     500 </span>            :     else</a>
-<a name="501"><span class="lineNum">     501 </span><span class="lineNoCov">          0 :         setTrack ({});</span></a>
-<a name="502"><span class="lineNum">     502 </span><span class="lineCov">         86 : }</span></a>
-<a name="503"><span class="lineNum">     503 </span>            : </a>
-<a name="504"><span class="lineNum">     504 </span>            : //==============================================================================</a>
-<a name="505"><span class="lineNum">     505 </span><span class="lineNoCov">          0 : void Clip::cloneFrom (Clip* c)</span></a>
-<a name="506"><span class="lineNum">     506 </span>            : {</a>
-<a name="507"><span class="lineNum">     507 </span><span class="lineNoCov">          0 :     clipName                    .setValue (c-&gt;clipName, nullptr);</span></a>
-<a name="508"><span class="lineNum">     508 </span><span class="lineNoCov">          0 :     speedRatio                  .setValue (c-&gt;speedRatio, nullptr);</span></a>
-<a name="509"><span class="lineNum">     509 </span><span class="lineNoCov">          0 :     sourceFileReference.source  .setValue (c-&gt;sourceFileReference.source, nullptr);</span></a>
-<a name="510"><span class="lineNum">     510 </span><span class="lineNoCov">          0 :     colour                      .setValue (c-&gt;colour, nullptr);</span></a>
-<a name="511"><span class="lineNum">     511 </span><span class="lineNoCov">          0 :     syncType                    .setValue (c-&gt;syncType, nullptr);</span></a>
-<a name="512"><span class="lineNum">     512 </span><span class="lineNoCov">          0 :     showingTakes                .setValue (c-&gt;showingTakes, nullptr);</span></a>
-<a name="513"><span class="lineNum">     513 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="514"><span class="lineNum">     514 </span>            : </a>
-<a name="515"><span class="lineNum">     515 </span><span class="lineNoCov">          0 : void Clip::updateLinkedClips()</span></a>
-<a name="516"><span class="lineNum">     516 </span>            : {</a>
-<a name="517"><span class="lineNum">     517 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
-<a name="518"><span class="lineNum">     518 </span>            : </a>
-<a name="519"><span class="lineNum">     519 </span><span class="lineNoCov">          0 :     for (auto c : edit.findClipsInLinkGroup (linkID))</span></a>
-<a name="520"><span class="lineNum">     520 </span>            :     {</a>
-<a name="521"><span class="lineNum">     521 </span>            :         jassert (Selectable::isSelectableValid (c));</a>
-<a name="522"><span class="lineNum">     522 </span>            :         jassert (typeid (*c) == typeid (*this));</a>
-<a name="523"><span class="lineNum">     523 </span>            : </a>
-<a name="524"><span class="lineNum">     524 </span><span class="lineNoCov">          0 :         if (c != this &amp;&amp; typeid (*c) == typeid (*this))</span></a>
-<a name="525"><span class="lineNum">     525 </span>            :         {</a>
-<a name="526"><span class="lineNum">     526 </span><span class="lineNoCov">          0 :             const juce::ScopedValueSetter&lt;bool&gt; setter (c-&gt;cloneInProgress, true);</span></a>
-<a name="527"><span class="lineNum">     527 </span><span class="lineNoCov">          0 :             c-&gt;cloneFrom (this);</span></a>
-<a name="528"><span class="lineNum">     528 </span>            :         }</a>
-<a name="529"><span class="lineNum">     529 </span>            :     }</a>
-<a name="530"><span class="lineNum">     530 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="531"><span class="lineNum">     531 </span>            : </a>
-<a name="532"><span class="lineNum">     532 </span><span class="lineCov">        575 : ClipPosition Clip::getPosition() const</span></a>
-<a name="533"><span class="lineNum">     533 </span>            : {</a>
-<a name="534"><span class="lineNum">     534 </span><span class="lineCov">        575 :     auto s = clipStart.get();</span></a>
-<a name="535"><span class="lineNum">     535 </span><span class="lineCov">        575 :     return { { s, s + length.get() }, offset.get() };</span></a>
-<a name="536"><span class="lineNum">     536 </span>            : }</a>
-<a name="537"><span class="lineNum">     537 </span>            : </a>
-<a name="538"><span class="lineNum">     538 </span><span class="lineNoCov">          0 : double Clip::getContentBeatAtTime (double t) const</span></a>
-<a name="539"><span class="lineNum">     539 </span>            : {</a>
-<a name="540"><span class="lineNum">     540 </span><span class="lineNoCov">          0 :     return edit.tempoSequence.timeToBeats (t) - getContentStartBeat();</span></a>
-<a name="541"><span class="lineNum">     541 </span>            : }</a>
-<a name="542"><span class="lineNum">     542 </span>            : </a>
-<a name="543"><span class="lineNum">     543 </span><span class="lineNoCov">          0 : double Clip::getTimeOfContentBeat (double beat) const</span></a>
-<a name="544"><span class="lineNum">     544 </span>            : {</a>
-<a name="545"><span class="lineNum">     545 </span><span class="lineNoCov">          0 :     return edit.tempoSequence.beatsToTime (beat + getContentStartBeat());</span></a>
-<a name="546"><span class="lineNum">     546 </span>            : }</a>
-<a name="547"><span class="lineNum">     547 </span>            : </a>
-<a name="548"><span class="lineNum">     548 </span><span class="lineNoCov">          0 : TrackItem* Clip::getGroupParent() const</span></a>
-<a name="549"><span class="lineNum">     549 </span>            : {</a>
-<a name="550"><span class="lineNum">     550 </span><span class="lineNoCov">          0 :     return getGroupClip();</span></a>
-<a name="551"><span class="lineNum">     551 </span>            : }</a>
-<a name="552"><span class="lineNum">     552 </span>            : </a>
-<a name="553"><span class="lineNum">     553 </span><span class="lineNoCov">          0 : void Clip::setGroup (EditItemID newGroupID)</span></a>
-<a name="554"><span class="lineNum">     554 </span>            : {</a>
-<a name="555"><span class="lineNum">     555 </span><span class="lineNoCov">          0 :     groupID = newGroupID;</span></a>
-<a name="556"><span class="lineNum">     556 </span><span class="lineNoCov">          0 :     if (groupID == EditItemID())</span></a>
-<a name="557"><span class="lineNum">     557 </span><span class="lineNoCov">          0 :         state.removeProperty (IDs::groupID, getUndoManager());</span></a>
-<a name="558"><span class="lineNum">     558 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="559"><span class="lineNum">     559 </span>            : </a>
-<a name="560"><span class="lineNum">     560 </span><span class="lineCov">         86 : juce::Colour Clip::getColour() const</span></a>
-<a name="561"><span class="lineNum">     561 </span>            : {</a>
-<a name="562"><span class="lineNum">     562 </span><span class="lineNoCov">          0 :     return colour.get();</span></a>
-<a name="563"><span class="lineNum">     563 </span>            : }</a>
-<a name="564"><span class="lineNum">     564 </span>            : </a>
-<a name="565"><span class="lineNum">     565 </span>            : //==============================================================================</a>
-<a name="566"><span class="lineNum">     566 </span><span class="lineNoCov">          0 : void Clip::addListener (Listener* l)</span></a>
-<a name="567"><span class="lineNum">     567 </span>            : {</a>
-<a name="568"><span class="lineNum">     568 </span><span class="lineNoCov">          0 :     if (listeners.isEmpty())</span></a>
-<a name="569"><span class="lineNum">     569 </span><span class="lineNoCov">          0 :         edit.restartPlayback();</span></a>
-<a name="570"><span class="lineNum">     570 </span>            : </a>
-<a name="571"><span class="lineNum">     571 </span>            :     listeners.add (l);</a>
-<a name="572"><span class="lineNum">     572 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="573"><span class="lineNum">     573 </span>            : </a>
-<a name="574"><span class="lineNum">     574 </span><span class="lineNoCov">          0 : void Clip::removeListener (Listener* l)</span></a>
-<a name="575"><span class="lineNum">     575 </span>            : {</a>
-<a name="576"><span class="lineNum">     576 </span>            :     listeners.remove (l);</a>
-<a name="577"><span class="lineNum">     577 </span>            : </a>
-<a name="578"><span class="lineNum">     578 </span><span class="lineNoCov">          0 :     if (listeners.isEmpty())</span></a>
-<a name="579"><span class="lineNum">     579 </span><span class="lineNoCov">          0 :         edit.restartPlayback();</span></a>
-<a name="580"><span class="lineNum">     580 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="581"><span class="lineNum">     581 </span>            : </a>
-<a name="582"><span class="lineNum">     582 </span>            : }</a>
+<a name="382"><span class="lineNum">     382 </span><span class="lineNoCov">          0 :                     to-&gt;addClip (this);</span></a>
+<a name="383"><span class="lineNum">     383 </span>            :                 }</a>
+<a name="384"><span class="lineNum">     384 </span>            :             }</a>
+<a name="385"><span class="lineNum">     385 </span>            : </a>
+<a name="386"><span class="lineNum">     386 </span><span class="lineNoCov">          0 :             return true;</span></a>
+<a name="387"><span class="lineNum">     387 </span>            :         }</a>
+<a name="388"><span class="lineNum">     388 </span>            :     }</a>
+<a name="389"><span class="lineNum">     389 </span>            : </a>
+<a name="390"><span class="lineNum">     390 </span>            :     return false;</a>
+<a name="391"><span class="lineNum">     391 </span>            : }</a>
+<a name="392"><span class="lineNum">     392 </span>            : </a>
+<a name="393"><span class="lineNum">     393 </span>            : //==============================================================================</a>
+<a name="394"><span class="lineNum">     394 </span><span class="lineNoCov">          0 : void Clip::setSpeedRatio (double r)</span></a>
+<a name="395"><span class="lineNum">     395 </span>            : {</a>
+<a name="396"><span class="lineNum">     396 </span><span class="lineNoCov">          0 :     r = juce::jlimit (ClipConstants::speedRatioMin, ClipConstants::speedRatioMax, r);</span></a>
+<a name="397"><span class="lineNum">     397 </span>            : </a>
+<a name="398"><span class="lineNum">     398 </span><span class="lineNoCov">          0 :     if (speedRatio != r)</span></a>
+<a name="399"><span class="lineNum">     399 </span><span class="lineNoCov">          0 :         speedRatio = r;</span></a>
+<a name="400"><span class="lineNum">     400 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="401"><span class="lineNum">     401 </span>            : </a>
+<a name="402"><span class="lineNum">     402 </span><span class="lineNoCov">          0 : void Clip::rescale (double pivotTimeInEdit, double factor)</span></a>
+<a name="403"><span class="lineNum">     403 </span>            : {</a>
+<a name="404"><span class="lineNum">     404 </span><span class="lineNoCov">          0 :     auto pos = getPosition();</span></a>
+<a name="405"><span class="lineNum">     405 </span>            : </a>
+<a name="406"><span class="lineNum">     406 </span>            :     // limit the start to 0</a>
+<a name="407"><span class="lineNum">     407 </span><span class="lineNoCov">          0 :     if (pivotTimeInEdit + (factor * (pos.getStart() - pivotTimeInEdit)) &lt; 0)</span></a>
+<a name="408"><span class="lineNum">     408 </span><span class="lineNoCov">          0 :         factor = -pivotTimeInEdit / (pos.getStart() - pivotTimeInEdit);</span></a>
+<a name="409"><span class="lineNum">     409 </span>            : </a>
+<a name="410"><span class="lineNum">     410 </span><span class="lineNoCov">          0 :     if (factor &gt; 0.01 &amp;&amp; factor != 1.0)</span></a>
+<a name="411"><span class="lineNum">     411 </span>            :     {</a>
+<a name="412"><span class="lineNum">     412 </span>            :         bool canRescale = false;</a>
+<a name="413"><span class="lineNum">     413 </span>            : </a>
+<a name="414"><span class="lineNum">     414 </span><span class="lineNoCov">          0 :         if (auto acb = dynamic_cast&lt;AudioClipBase*&gt; (this))</span></a>
+<a name="415"><span class="lineNum">     415 </span>            :             canRescale = ! acb-&gt;getAutoTempo();</a>
+<a name="416"><span class="lineNum">     416 </span><span class="lineNoCov">          0 :         else if (type == Type::midi || type == Type::step)</span></a>
+<a name="417"><span class="lineNum">     417 </span>            :             canRescale = true;</a>
+<a name="418"><span class="lineNum">     418 </span>            : </a>
+<a name="419"><span class="lineNum">     419 </span><span class="lineNoCov">          0 :         if (canRescale)</span></a>
+<a name="420"><span class="lineNum">     420 </span>            :         {</a>
+<a name="421"><span class="lineNum">     421 </span><span class="lineNoCov">          0 :             setPosition (pos.rescaled (pivotTimeInEdit, factor));</span></a>
+<a name="422"><span class="lineNum">     422 </span><span class="lineNoCov">          0 :             setSpeedRatio (speedRatio / factor);</span></a>
+<a name="423"><span class="lineNum">     423 </span>            :         }</a>
+<a name="424"><span class="lineNum">     424 </span>            :     }</a>
+<a name="425"><span class="lineNum">     425 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="426"><span class="lineNum">     426 </span>            : </a>
+<a name="427"><span class="lineNum">     427 </span>            : //==============================================================================</a>
+<a name="428"><span class="lineNum">     428 </span><span class="lineNoCov">          0 : CollectionClip* Clip::getGroupClip() const</span></a>
+<a name="429"><span class="lineNum">     429 </span>            : {</a>
+<a name="430"><span class="lineNum">     430 </span><span class="lineNoCov">          0 :     if (auto ct = getClipTrack())</span></a>
+<a name="431"><span class="lineNum">     431 </span><span class="lineNoCov">          0 :         return ct-&gt;getCollectionClip (const_cast&lt;Clip*&gt; (this));</span></a>
+<a name="432"><span class="lineNum">     432 </span>            : </a>
+<a name="433"><span class="lineNum">     433 </span>            :     return {};</a>
+<a name="434"><span class="lineNum">     434 </span>            : }</a>
+<a name="435"><span class="lineNum">     435 </span>            : </a>
+<a name="436"><span class="lineNum">     436 </span>            : //==============================================================================</a>
+<a name="437"><span class="lineNum">     437 </span><span class="lineCov">         85 : void Clip::setCurrentSourceFile (const juce::File&amp; f)</span></a>
+<a name="438"><span class="lineNum">     438 </span>            : {</a>
+<a name="439"><span class="lineNum">     439 </span><span class="lineCov">         85 :     if (currentSourceFile != f)</span></a>
+<a name="440"><span class="lineNum">     440 </span>            :     {</a>
+<a name="441"><span class="lineNum">     441 </span><span class="lineCov">         85 :         currentSourceFile = f;</span></a>
+<a name="442"><span class="lineNum">     442 </span><span class="lineCov">         85 :         changed();</span></a>
+<a name="443"><span class="lineNum">     443 </span>            :     }</a>
+<a name="444"><span class="lineNum">     444 </span><span class="lineCov">         85 : }</span></a>
+<a name="445"><span class="lineNum">     445 </span>            : </a>
+<a name="446"><span class="lineNum">     446 </span>            : //==============================================================================</a>
+<a name="447"><span class="lineNum">     447 </span><span class="lineCov">        148 : void Clip::valueTreePropertyChanged (juce::ValueTree&amp; tree, const juce::Identifier&amp; id)</span></a>
+<a name="448"><span class="lineNum">     448 </span>            : {</a>
+<a name="449"><span class="lineNum">     449 </span><span class="lineCov">        148 :     if (tree == state)</span></a>
+<a name="450"><span class="lineNum">     450 </span>            :     {</a>
+<a name="451"><span class="lineNum">     451 </span><span class="lineCov">        148 :         if (id == IDs::start || id == IDs::length || id == IDs::offset)</span></a>
+<a name="452"><span class="lineNum">     452 </span>            :         {</a>
+<a name="453"><span class="lineNum">     453 </span><span class="lineCov">          1 :             if (track != nullptr)</span></a>
+<a name="454"><span class="lineNum">     454 </span>            :             {</a>
+<a name="455"><span class="lineNum">     455 </span><span class="lineCov">          1 :                 if (auto f = track-&gt;getParentFolderTrack())</span></a>
+<a name="456"><span class="lineNum">     456 </span><span class="lineNoCov">          0 :                     f-&gt;setDirtyClips();</span></a>
+<a name="457"><span class="lineNum">     457 </span>            : </a>
+<a name="458"><span class="lineNum">     458 </span><span class="lineCov">          1 :                 changed();</span></a>
+<a name="459"><span class="lineNum">     459 </span>            :             }</a>
+<a name="460"><span class="lineNum">     460 </span>            :         }</a>
+<a name="461"><span class="lineNum">     461 </span><span class="lineCov">        147 :         else if (id == IDs::source)</span></a>
+<a name="462"><span class="lineNum">     462 </span>            :         {</a>
+<a name="463"><span class="lineNum">     463 </span><span class="lineNoCov">          0 :             sourceFileReference.source.forceUpdateOfCachedValue();</span></a>
+<a name="464"><span class="lineNum">     464 </span><span class="lineNoCov">          0 :             sourceMediaChanged();</span></a>
+<a name="465"><span class="lineNum">     465 </span>            :         }</a>
+<a name="466"><span class="lineNum">     466 </span><span class="lineCov">          1 :         else if (id == IDs::colour || id == IDs::speed</span></a>
+<a name="467"><span class="lineNum">     467 </span><span class="lineCov">        147 :                  || id == IDs::sync || id == IDs::linkID)</span></a>
+<a name="468"><span class="lineNum">     468 </span>            :         {</a>
+<a name="469"><span class="lineNum">     469 </span><span class="lineCov">        147 :             changed();</span></a>
+<a name="470"><span class="lineNum">     470 </span>            :         }</a>
+<a name="471"><span class="lineNum">     471 </span><span class="lineNoCov">          0 :         else if (id == IDs::name)</span></a>
+<a name="472"><span class="lineNum">     472 </span>            :         {</a>
+<a name="473"><span class="lineNum">     473 </span><span class="lineNoCov">          0 :             auto weakRef = getWeakRef();</span></a>
+<a name="474"><span class="lineNum">     474 </span><span class="lineNoCov">          0 :             clipName.forceUpdateOfCachedValue();</span></a>
+<a name="475"><span class="lineNum">     475 </span><span class="lineNoCov">          0 :             changed();</span></a>
+<a name="476"><span class="lineNum">     476 </span>            : </a>
+<a name="477"><span class="lineNum">     477 </span><span class="lineNoCov">          0 :             juce::MessageManager::callAsync ([weakRef]</span></a>
+<a name="478"><span class="lineNum">     478 </span>            :             {</a>
+<a name="479"><span class="lineNum">     479 </span><span class="lineNoCov">          0 :                 if (weakRef != nullptr)</span></a>
+<a name="480"><span class="lineNum">     480 </span><span class="lineNoCov">          0 :                     SelectionManager::refreshAllPropertyPanels();</span></a>
+<a name="481"><span class="lineNum">     481 </span>            :             });</a>
+<a name="482"><span class="lineNum">     482 </span>            :         }</a>
+<a name="483"><span class="lineNum">     483 </span>            :     }</a>
+<a name="484"><span class="lineNum">     484 </span><span class="lineCov">        148 : }</span></a>
+<a name="485"><span class="lineNum">     485 </span>            : </a>
+<a name="486"><span class="lineNum">     486 </span><span class="lineCov">         86 : void Clip::valueTreeParentChanged (juce::ValueTree&amp; v)</span></a>
+<a name="487"><span class="lineNum">     487 </span>            : {</a>
+<a name="488"><span class="lineNum">     488 </span><span class="lineCov">         86 :     if (v == state)</span></a>
+<a name="489"><span class="lineNum">     489 </span><span class="lineCov">         86 :         updateParentTrack();</span></a>
+<a name="490"><span class="lineNum">     490 </span><span class="lineCov">         86 : }</span></a>
+<a name="491"><span class="lineNum">     491 </span>            : </a>
+<a name="492"><span class="lineNum">     492 </span><span class="lineCov">         86 : void Clip::updateParentTrack()</span></a>
+<a name="493"><span class="lineNum">     493 </span>            : {</a>
+<a name="494"><span class="lineNum">     494 </span>            :     TRACKTION_ASSERT_MESSAGE_THREAD</a>
+<a name="495"><span class="lineNum">     495 </span><span class="lineCov">        172 :     auto parent = state.getParent();</span></a>
+<a name="496"><span class="lineNum">     496 </span>            : </a>
+<a name="497"><span class="lineNum">     497 </span><span class="lineCov">         86 :     if (TrackList::isTrack (parent))</span></a>
+<a name="498"><span class="lineNum">     498 </span><span class="lineCov">         86 :         setTrack (dynamic_cast&lt;ClipTrack*&gt; (findTrackForID (edit, EditItemID::fromID (parent))));</span></a>
+<a name="499"><span class="lineNum">     499 </span>            :     else</a>
+<a name="500"><span class="lineNum">     500 </span><span class="lineNoCov">          0 :         setTrack ({});</span></a>
+<a name="501"><span class="lineNum">     501 </span><span class="lineCov">         86 : }</span></a>
+<a name="502"><span class="lineNum">     502 </span>            : </a>
+<a name="503"><span class="lineNum">     503 </span>            : //==============================================================================</a>
+<a name="504"><span class="lineNum">     504 </span><span class="lineNoCov">          0 : void Clip::cloneFrom (Clip* c)</span></a>
+<a name="505"><span class="lineNum">     505 </span>            : {</a>
+<a name="506"><span class="lineNum">     506 </span><span class="lineNoCov">          0 :     clipName                    .setValue (c-&gt;clipName, nullptr);</span></a>
+<a name="507"><span class="lineNum">     507 </span><span class="lineNoCov">          0 :     speedRatio                  .setValue (c-&gt;speedRatio, nullptr);</span></a>
+<a name="508"><span class="lineNum">     508 </span><span class="lineNoCov">          0 :     sourceFileReference.source  .setValue (c-&gt;sourceFileReference.source, nullptr);</span></a>
+<a name="509"><span class="lineNum">     509 </span><span class="lineNoCov">          0 :     colour                      .setValue (c-&gt;colour, nullptr);</span></a>
+<a name="510"><span class="lineNum">     510 </span><span class="lineNoCov">          0 :     syncType                    .setValue (c-&gt;syncType, nullptr);</span></a>
+<a name="511"><span class="lineNum">     511 </span><span class="lineNoCov">          0 :     showingTakes                .setValue (c-&gt;showingTakes, nullptr);</span></a>
+<a name="512"><span class="lineNum">     512 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="513"><span class="lineNum">     513 </span>            : </a>
+<a name="514"><span class="lineNum">     514 </span><span class="lineNoCov">          0 : void Clip::updateLinkedClips()</span></a>
+<a name="515"><span class="lineNum">     515 </span>            : {</a>
+<a name="516"><span class="lineNum">     516 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
+<a name="517"><span class="lineNum">     517 </span>            : </a>
+<a name="518"><span class="lineNum">     518 </span><span class="lineNoCov">          0 :     for (auto c : edit.findClipsInLinkGroup (linkID))</span></a>
+<a name="519"><span class="lineNum">     519 </span>            :     {</a>
+<a name="520"><span class="lineNum">     520 </span>            :         jassert (Selectable::isSelectableValid (c));</a>
+<a name="521"><span class="lineNum">     521 </span>            :         jassert (typeid (*c) == typeid (*this));</a>
+<a name="522"><span class="lineNum">     522 </span>            : </a>
+<a name="523"><span class="lineNum">     523 </span><span class="lineNoCov">          0 :         if (c != this &amp;&amp; typeid (*c) == typeid (*this))</span></a>
+<a name="524"><span class="lineNum">     524 </span>            :         {</a>
+<a name="525"><span class="lineNum">     525 </span><span class="lineNoCov">          0 :             const juce::ScopedValueSetter&lt;bool&gt; setter (c-&gt;cloneInProgress, true);</span></a>
+<a name="526"><span class="lineNum">     526 </span><span class="lineNoCov">          0 :             c-&gt;cloneFrom (this);</span></a>
+<a name="527"><span class="lineNum">     527 </span>            :         }</a>
+<a name="528"><span class="lineNum">     528 </span>            :     }</a>
+<a name="529"><span class="lineNum">     529 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="530"><span class="lineNum">     530 </span>            : </a>
+<a name="531"><span class="lineNum">     531 </span><span class="lineCov">        575 : ClipPosition Clip::getPosition() const</span></a>
+<a name="532"><span class="lineNum">     532 </span>            : {</a>
+<a name="533"><span class="lineNum">     533 </span><span class="lineCov">        575 :     auto s = clipStart.get();</span></a>
+<a name="534"><span class="lineNum">     534 </span><span class="lineCov">        575 :     return { { s, s + length.get() }, offset.get() };</span></a>
+<a name="535"><span class="lineNum">     535 </span>            : }</a>
+<a name="536"><span class="lineNum">     536 </span>            : </a>
+<a name="537"><span class="lineNum">     537 </span><span class="lineNoCov">          0 : double Clip::getContentBeatAtTime (double t) const</span></a>
+<a name="538"><span class="lineNum">     538 </span>            : {</a>
+<a name="539"><span class="lineNum">     539 </span><span class="lineNoCov">          0 :     return edit.tempoSequence.timeToBeats (t) - getContentStartBeat();</span></a>
+<a name="540"><span class="lineNum">     540 </span>            : }</a>
+<a name="541"><span class="lineNum">     541 </span>            : </a>
+<a name="542"><span class="lineNum">     542 </span><span class="lineNoCov">          0 : double Clip::getTimeOfContentBeat (double beat) const</span></a>
+<a name="543"><span class="lineNum">     543 </span>            : {</a>
+<a name="544"><span class="lineNum">     544 </span><span class="lineNoCov">          0 :     return edit.tempoSequence.beatsToTime (beat + getContentStartBeat());</span></a>
+<a name="545"><span class="lineNum">     545 </span>            : }</a>
+<a name="546"><span class="lineNum">     546 </span>            : </a>
+<a name="547"><span class="lineNum">     547 </span><span class="lineNoCov">          0 : TrackItem* Clip::getGroupParent() const</span></a>
+<a name="548"><span class="lineNum">     548 </span>            : {</a>
+<a name="549"><span class="lineNum">     549 </span><span class="lineNoCov">          0 :     return getGroupClip();</span></a>
+<a name="550"><span class="lineNum">     550 </span>            : }</a>
+<a name="551"><span class="lineNum">     551 </span>            : </a>
+<a name="552"><span class="lineNum">     552 </span><span class="lineNoCov">          0 : void Clip::setGroup (EditItemID newGroupID)</span></a>
+<a name="553"><span class="lineNum">     553 </span>            : {</a>
+<a name="554"><span class="lineNum">     554 </span><span class="lineNoCov">          0 :     groupID = newGroupID;</span></a>
+<a name="555"><span class="lineNum">     555 </span><span class="lineNoCov">          0 :     if (groupID == EditItemID())</span></a>
+<a name="556"><span class="lineNum">     556 </span><span class="lineNoCov">          0 :         state.removeProperty (IDs::groupID, getUndoManager());</span></a>
+<a name="557"><span class="lineNum">     557 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="558"><span class="lineNum">     558 </span>            : </a>
+<a name="559"><span class="lineNum">     559 </span><span class="lineCov">         86 : juce::Colour Clip::getColour() const</span></a>
+<a name="560"><span class="lineNum">     560 </span>            : {</a>
+<a name="561"><span class="lineNum">     561 </span><span class="lineNoCov">          0 :     return colour.get();</span></a>
+<a name="562"><span class="lineNum">     562 </span>            : }</a>
+<a name="563"><span class="lineNum">     563 </span>            : </a>
+<a name="564"><span class="lineNum">     564 </span>            : //==============================================================================</a>
+<a name="565"><span class="lineNum">     565 </span><span class="lineNoCov">          0 : void Clip::addListener (Listener* l)</span></a>
+<a name="566"><span class="lineNum">     566 </span>            : {</a>
+<a name="567"><span class="lineNum">     567 </span><span class="lineNoCov">          0 :     if (listeners.isEmpty())</span></a>
+<a name="568"><span class="lineNum">     568 </span><span class="lineNoCov">          0 :         edit.restartPlayback();</span></a>
+<a name="569"><span class="lineNum">     569 </span>            : </a>
+<a name="570"><span class="lineNum">     570 </span>            :     listeners.add (l);</a>
+<a name="571"><span class="lineNum">     571 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="572"><span class="lineNum">     572 </span>            : </a>
+<a name="573"><span class="lineNum">     573 </span><span class="lineNoCov">          0 : void Clip::removeListener (Listener* l)</span></a>
+<a name="574"><span class="lineNum">     574 </span>            : {</a>
+<a name="575"><span class="lineNum">     575 </span>            :     listeners.remove (l);</a>
+<a name="576"><span class="lineNum">     576 </span>            : </a>
+<a name="577"><span class="lineNum">     577 </span><span class="lineNoCov">          0 :     if (listeners.isEmpty())</span></a>
+<a name="578"><span class="lineNum">     578 </span><span class="lineNoCov">          0 :         edit.restartPlayback();</span></a>
+<a name="579"><span class="lineNum">     579 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="580"><span class="lineNum">     580 </span>            : </a>
+<a name="581"><span class="lineNum">     581 </span>            : }</a>
 </pre>
       </td>
     </tr>

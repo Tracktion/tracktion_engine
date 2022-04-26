@@ -104,6 +104,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a490ea648572ddb42a81e28880dc4ddd6"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#a490ea648572ddb42a81e28880dc4ddd6">setPluginDisabled</a> (const juce::String &amp;, bool)</td></tr>
 <tr class="memdesc:a490ea648572ddb42a81e28880dc4ddd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should implement a way of saving if plugin is disabled or not.  <a href="classtracktion__engine_1_1EngineBehaviour.html#a490ea648572ddb42a81e28880dc4ddd6">More...</a><br /></td></tr>
 <tr class="separator:a490ea648572ddb42a81e28880dc4ddd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea67f28e2abd5835eea99d91d4b7a467"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#aea67f28e2abd5835eea99d91d4b7a467">shouldLoadPlugin</a> (<a class="el" href="classtracktion__engine_1_1ExternalPlugin.html">ExternalPlugin</a> &amp;p)</td></tr>
+<tr class="memdesc:aea67f28e2abd5835eea99d91d4b7a467"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should the plugin be loaded.  <a href="classtracktion__engine_1_1EngineBehaviour.html#aea67f28e2abd5835eea99d91d4b7a467">More...</a><br /></td></tr>
+<tr class="separator:aea67f28e2abd5835eea99d91d4b7a467"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31d3d454835a27dcc11a9b997e6de597"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion__engine_1_1EngineBehaviour.html#a31d3d454835a27dcc11a9b997e6de597">doAdditionalInitialisation</a> (<a class="el" href="classtracktion__engine_1_1ExternalPlugin.html">ExternalPlugin</a> &amp;)</td></tr>
 <tr class="memdesc:a31d3d454835a27dcc11a9b997e6de597"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives the host a chance to do any extra configuration after a plugin is loaded.  <a href="classtracktion__engine_1_1EngineBehaviour.html#a31d3d454835a27dcc11a9b997e6de597">More...</a><br /></td></tr>
 <tr class="separator:a31d3d454835a27dcc11a9b997e6de597"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -408,6 +411,35 @@ Public Member Functions</h2></td></tr>
 
 <p>Should implement a way of saving if plugin is disabled or not. </p>
 <p>N.B. only in use for ExternalPlugins at the moment. </p>
+
+</div>
+</div>
+<a id="aea67f28e2abd5835eea99d91d4b7a467"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea67f28e2abd5835eea99d91d4b7a467">&#9670;&nbsp;</a></span>shouldLoadPlugin()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool tracktion_engine::EngineBehaviour::shouldLoadPlugin </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion__engine_1_1ExternalPlugin.html">ExternalPlugin</a> &amp;&#160;</td>
+          <td class="paramname"><em>p</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Should the plugin be loaded. </p>
+<p>Normally plugins aren't loaded when <a class="el" href="classtracktion__engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> is for exporting or examining. Override this if you always need a plugin loaded </p>
 
 </div>
 </div>
@@ -1465,7 +1497,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jan 27 2022 19:43:41 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Apr 26 2022 15:59:12 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

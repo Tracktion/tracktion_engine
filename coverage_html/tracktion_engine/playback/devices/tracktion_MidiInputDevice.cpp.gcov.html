@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-27 19:55:46</td>
+            <td class="headerValue">2022-04-26 16:11:08</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">5</td>
@@ -956,7 +956,7 @@
 <a name="894"><span class="lineNum">     894 </span>            : </a>
 <a name="895"><span class="lineNum">     895 </span>            :                 const auto isOutsideClipAndNotNoteOff = [startPos, maxEndPos] (const juce::MidiMessage&amp; m)</a>
 <a name="896"><span class="lineNum">     896 </span>            :                 {</a>
-<a name="897"><span class="lineNum">     897 </span><span class="lineNoCov">          0 :                     return m.getTimeStamp() &lt; startPos || (m.getTimeStamp() &gt; maxEndPos &amp;&amp; ! m.isNoteOff());</span></a>
+<a name="897"><span class="lineNum">     897 </span><span class="lineNoCov">          0 :                     return (m.getTimeStamp() &lt; startPos || m.getTimeStamp() &gt; maxEndPos) &amp;&amp; ! m.isNoteOff();</span></a>
 <a name="898"><span class="lineNum">     898 </span>            :                 };</a>
 <a name="899"><span class="lineNum">     899 </span>            : </a>
 <a name="900"><span class="lineNum">     900 </span><span class="lineNoCov">          0 :                 if (mi.recordToNoteAutomation)</span></a>

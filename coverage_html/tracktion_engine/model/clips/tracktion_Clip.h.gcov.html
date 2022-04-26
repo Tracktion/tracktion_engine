@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-27 19:55:46</td>
+            <td class="headerValue">2022-04-26 16:11:08</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">7</td>
@@ -96,16 +96,16 @@
 <a name="34"><span class="lineNum">      34 </span>            :         : levels (std::move (l)) {}</a>
 <a name="35"><span class="lineNum">      35 </span>            : </a>
 <a name="36"><span class="lineNum">      36 </span>            :     /** Returns the clip's absolute gain. */</a>
-<a name="37"><span class="lineNum">      37 </span><span class="lineCov">     513562 :     float getGain() const noexcept              { return levels ? dbToGain (levels-&gt;dbGain) : 1.0f; }</span></a>
+<a name="37"><span class="lineNum">      37 </span><span class="lineCov">     509410 :     float getGain() const noexcept              { return levels ? dbToGain (levels-&gt;dbGain) : 1.0f; }</span></a>
 <a name="38"><span class="lineNum">      38 </span>            : </a>
 <a name="39"><span class="lineNum">      39 </span>            :     /** Returns the clip's pan from -1.0 to 1.0. */</a>
 <a name="40"><span class="lineNum">      40 </span><span class="lineCov">      38244 :     float getPan() const noexcept               { return levels ? levels-&gt;pan.get() : 0.0f; }</span></a>
 <a name="41"><span class="lineNum">      41 </span>            : </a>
 <a name="42"><span class="lineNum">      42 </span>            :     /** Returns true if the clip is muted. */</a>
-<a name="43"><span class="lineNum">      43 </span><span class="lineCov">     186668 :     bool isMute() const noexcept                { return levels &amp;&amp; levels-&gt;mute.get(); }</span></a>
+<a name="43"><span class="lineNum">      43 </span><span class="lineCov">     185600 :     bool isMute() const noexcept                { return levels &amp;&amp; levels-&gt;mute.get(); }</span></a>
 <a name="44"><span class="lineNum">      44 </span>            : </a>
 <a name="45"><span class="lineNum">      45 </span>            :     /** Returns the clip's gain if the clip is not muted. */</a>
-<a name="46"><span class="lineNum">      46 </span><span class="lineCov">     365172 :     float getGainIncludingMute() const noexcept { return isMute() ? 0.0f : getGain(); }</span></a>
+<a name="46"><span class="lineNum">      46 </span><span class="lineCov">     362088 :     float getGainIncludingMute() const noexcept { return isMute() ? 0.0f : getGain(); }</span></a>
 <a name="47"><span class="lineNum">      47 </span>            : </a>
 <a name="48"><span class="lineNum">      48 </span>            :     /** Reutrns the left and right gains taking in to account mute and pan values. */</a>
 <a name="49"><span class="lineNum">      49 </span>            :     void getLeftAndRightGains (float&amp; left, float&amp; right) const noexcept</a>
@@ -193,7 +193,7 @@
 <a name="131"><span class="lineNum">     131 </span>            :     /** Returns the current source file, this is different to the SourceFileReference</a>
 <a name="132"><span class="lineNum">     132 </span>            :         as it could be a temporary comp file, clipFX, reverse render etc.</a>
 <a name="133"><span class="lineNum">     133 </span>            :     */</a>
-<a name="134"><span class="lineNum">     134 </span><span class="lineCov">        459 :     juce::File getCurrentSourceFile() const             { return currentSourceFile; }</span></a>
+<a name="134"><span class="lineNum">     134 </span><span class="lineCov">        463 :     juce::File getCurrentSourceFile() const             { return currentSourceFile; }</span></a>
 <a name="135"><span class="lineNum">     135 </span>            : </a>
 <a name="136"><span class="lineNum">     136 </span>            :     //==============================================================================</a>
 <a name="137"><span class="lineNum">     137 </span>            :     /** Returns an array of any ReferencedItem[s] e.g. audio files. */</a>
@@ -306,7 +306,7 @@
 <a name="244"><span class="lineNum">     244 </span>            : </a>
 <a name="245"><span class="lineNum">     245 </span>            :     //==============================================================================</a>
 <a name="246"><span class="lineNum">     246 </span>            :     /** Returns the speed ratio i.e. how quickly the clip plays back. */</a>
-<a name="247"><span class="lineNum">     247 </span><span class="lineCov">        452 :     double getSpeedRatio() const noexcept           { return speedRatio; }</span></a>
+<a name="247"><span class="lineNum">     247 </span><span class="lineCov">        456 :     double getSpeedRatio() const noexcept           { return speedRatio; }</span></a>
 <a name="248"><span class="lineNum">     248 </span>            :     </a>
 <a name="249"><span class="lineNum">     249 </span>            :     /** Sets a speed ratio i.e. how quickly the clip plays back. */</a>
 <a name="250"><span class="lineNum">     250 </span>            :     virtual void setSpeedRatio (double);</a>
@@ -319,7 +319,7 @@
 <a name="257"><span class="lineNum">     257 </span>            : </a>
 <a name="258"><span class="lineNum">     258 </span>            :     //==============================================================================</a>
 <a name="259"><span class="lineNum">     259 </span>            :     /** Returns true if the clip is part of a group. */</a>
-<a name="260"><span class="lineNum">     260 </span><span class="lineCov">        115 :     bool isGrouped() const override                 { return groupID.get().isValid(); }</span></a>
+<a name="260"><span class="lineNum">     260 </span><span class="lineCov">        110 :     bool isGrouped() const override                 { return groupID.get().isValid(); }</span></a>
 <a name="261"><span class="lineNum">     261 </span>            :     /** Returns the parent TrackItem if part of a group. */</a>
 <a name="262"><span class="lineNum">     262 </span>            :     TrackItem* getGroupParent() const override;</a>
 <a name="263"><span class="lineNum">     263 </span>            :     /** Sets the clip to be part of a group. */</a>

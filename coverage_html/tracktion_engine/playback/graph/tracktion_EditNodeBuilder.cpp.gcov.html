@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">306</td>
+            <td class="headerCovTableEntry">305</td>
             <td class="headerCovTableEntry">495</td>
-            <td class="headerCovTableEntryLo">61.8 %</td>
+            <td class="headerCovTableEntryLo">61.6 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-27 19:55:46</td>
+            <td class="headerValue">2022-04-26 16:11:08</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">30</td>
@@ -426,7 +426,7 @@
 <a name="364"><span class="lineNum">     364 </span>            :                                                     loopRange,</a>
 <a name="365"><span class="lineNum">     365 </span><span class="lineCov">        158 :                                                     clip.getLiveClipLevel(),</span></a>
 <a name="366"><span class="lineNum">     366 </span>            :                                                     speed,</a>
-<a name="367"><span class="lineNum">     367 </span><span class="lineCov">         79 :                                                     clip.getActiveChannels(),</span></a>
+<a name="367"><span class="lineNum">     367 </span><span class="lineNoCov">          0 :                                                     clip.getActiveChannels(),</span></a>
 <a name="368"><span class="lineNum">     368 </span><span class="lineCov">        158 :                                                     juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),</span></a>
 <a name="369"><span class="lineNum">     369 </span>            :                                                     params.processState,</a>
 <a name="370"><span class="lineNum">     370 </span><span class="lineCov">         79 :                                                     clip.itemID,</span></a>
@@ -1134,7 +1134,7 @@
 <a name="1072"><span class="lineNum">    1072 </span><span class="lineCov">        144 :         if (t-&gt;isPartOfSubmix() &amp;&amp; ! shouldRenderTrackInSubmix (*t, params))</span></a>
 <a name="1073"><span class="lineNum">    1073 </span>            :             return {};</a>
 <a name="1074"><span class="lineNum">    1074 </span>            : </a>
-<a name="1075"><span class="lineNum">    1075 </span><span class="lineCov">        120 :         if (t-&gt;isFrozen (Track::groupFreeze))</span></a>
+<a name="1075"><span class="lineNum">    1075 </span><span class="lineCov">        120 :         if (! params.forRendering &amp;&amp; t-&gt;isFrozen (Track::groupFreeze))</span></a>
 <a name="1076"><span class="lineNum">    1076 </span>            :             return {};</a>
 <a name="1077"><span class="lineNum">    1077 </span>            : </a>
 <a name="1078"><span class="lineNum">    1078 </span><span class="lineCov">        120 :         return createNodeForAudioTrack (*t, params);</span></a>
@@ -1353,7 +1353,7 @@
 <a name="1291"><span class="lineNum">    1291 </span><span class="lineCov">          4 :                 if (! device-&gt;isEnabled())</span></a>
 <a name="1292"><span class="lineNum">    1292 </span><span class="lineNoCov">          0 :                     continue;</span></a>
 <a name="1293"><span class="lineNum">    1293 </span>            :                 </a>
-<a name="1294"><span class="lineNum">    1294 </span><span class="lineCov">          4 :                 if (t-&gt;isFrozen (Track::groupFreeze))</span></a>
+<a name="1294"><span class="lineNum">    1294 </span><span class="lineCov">          4 :                 if (! params.forRendering &amp;&amp; t-&gt;isFrozen (Track::groupFreeze))</span></a>
 <a name="1295"><span class="lineNum">    1295 </span>            :                 {</a>
 <a name="1296"><span class="lineNum">    1296 </span><span class="lineNoCov">          0 :                     if (std::find (devicesWithFrozenNodes.begin(), devicesWithFrozenNodes.end(), device)</span></a>
 <a name="1297"><span class="lineNum">    1297 </span>            :                         != devicesWithFrozenNodes.end())</a>

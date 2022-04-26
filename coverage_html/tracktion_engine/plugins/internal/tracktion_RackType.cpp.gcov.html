@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">340</td>
-            <td class="headerCovTableEntry">691</td>
-            <td class="headerCovTableEntryLo">49.2 %</td>
+            <td class="headerCovTableEntry">689</td>
+            <td class="headerCovTableEntryLo">49.3 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-27 19:55:46</td>
+            <td class="headerValue">2022-04-26 16:11:08</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">69</td>
@@ -273,10 +273,10 @@
 <a name="211"><span class="lineNum">     211 </span><span class="lineCov">        162 :     pluginList.reset (new RackPluginList (*this, state));</span></a>
 <a name="212"><span class="lineNum">     212 </span><span class="lineCov">        162 :     connectionList.reset (new ConnectionList (*this, state));</span></a>
 <a name="213"><span class="lineNum">     213 </span>            : </a>
-<a name="214"><span class="lineNum">     214 </span><span class="lineCov">        162 :     if (getOutputNames().isEmpty())</span></a>
+<a name="214"><span class="lineNum">     214 </span><span class="lineCov">        324 :     if (getOutputNames().isEmpty())</span></a>
 <a name="215"><span class="lineNum">     215 </span><span class="lineCov">        162 :         addDefaultOutputs();</span></a>
 <a name="216"><span class="lineNum">     216 </span>            : </a>
-<a name="217"><span class="lineNum">     217 </span><span class="lineCov">        162 :     if (getInputNames().isEmpty())</span></a>
+<a name="217"><span class="lineNum">     217 </span><span class="lineCov">        324 :     if (getInputNames().isEmpty())</span></a>
 <a name="218"><span class="lineNum">     218 </span><span class="lineCov">        162 :         addDefaultInputs();</span></a>
 <a name="219"><span class="lineNum">     219 </span>            : </a>
 <a name="220"><span class="lineNum">     220 </span><span class="lineCov">        162 :     loadWindowPosition();</span></a>
@@ -455,7 +455,7 @@
 <a name="393"><span class="lineNum">     393 </span><span class="lineCov">         98 :         if (auto f = plugins[i])</span></a>
 <a name="394"><span class="lineNum">     394 </span><span class="lineCov">         98 :             rack-&gt;addPlugin (f, juce::Point&lt;float&gt; (1.0f / (plugins.size() + 1) * (i + 1), 0.5f), false);</span></a>
 <a name="395"><span class="lineNum">     395 </span>            : </a>
-<a name="396"><span class="lineNum">     396 </span><span class="lineCov">        196 :     juce::StringArray ins, outs;</span></a>
+<a name="396"><span class="lineNum">     396 </span><span class="lineCov">         98 :     juce::StringArray ins, outs;</span></a>
 <a name="397"><span class="lineNum">     397 </span><span class="lineCov">         98 :     plugins.getFirst()-&gt;getChannelNames (&amp;ins, nullptr);</span></a>
 <a name="398"><span class="lineNum">     398 </span><span class="lineCov">        196 :     plugins.getLast()-&gt;getChannelNames (nullptr, &amp;outs);</span></a>
 <a name="399"><span class="lineNum">     399 </span>            : </a>
@@ -531,9 +531,9 @@
 <a name="469"><span class="lineNum">     469 </span>            : {</a>
 <a name="470"><span class="lineNum">     470 </span><span class="lineCov">       3518 :     juce::Array&lt;Plugin*&gt; list;</span></a>
 <a name="471"><span class="lineNum">     471 </span>            : </a>
-<a name="472"><span class="lineNum">     472 </span><span class="lineCov">       6955 :     for (auto i : pluginList-&gt;objects)</span></a>
-<a name="473"><span class="lineNum">     473 </span><span class="lineCov">       3437 :         if (i-&gt;plugin != nullptr)</span></a>
-<a name="474"><span class="lineNum">     474 </span><span class="lineCov">       3437 :             list.add (i-&gt;plugin.get());</span></a>
+<a name="472"><span class="lineNum">     472 </span><span class="lineCov">       6962 :     for (auto i : pluginList-&gt;objects)</span></a>
+<a name="473"><span class="lineNum">     473 </span><span class="lineCov">       3444 :         if (i-&gt;plugin != nullptr)</span></a>
+<a name="474"><span class="lineNum">     474 </span><span class="lineCov">       3444 :             list.add (i-&gt;plugin.get());</span></a>
 <a name="475"><span class="lineNum">     475 </span>            : </a>
 <a name="476"><span class="lineNum">     476 </span><span class="lineCov">       3518 :     return list;</span></a>
 <a name="477"><span class="lineNum">     477 </span>            : }</a>
@@ -650,36 +650,36 @@
 <a name="588"><span class="lineNum">     588 </span>            : {</a>
 <a name="589"><span class="lineNum">     589 </span><span class="lineCov">       1068 :     if (! source.isValid())</span></a>
 <a name="590"><span class="lineNum">     590 </span>            :     {</a>
-<a name="591"><span class="lineNum">     591 </span><span class="lineCov">        502 :         if (sourcePin &gt;= getInputNames().size())</span></a>
+<a name="591"><span class="lineNum">     591 </span><span class="lineCov">       1004 :         if (sourcePin &gt;= getInputNames().size())</span></a>
 <a name="592"><span class="lineNum">     592 </span>            :             return false;</a>
 <a name="593"><span class="lineNum">     593 </span>            :     }</a>
 <a name="594"><span class="lineNum">     594 </span>            :     else</a>
 <a name="595"><span class="lineNum">     595 </span>            :     {</a>
-<a name="596"><span class="lineNum">     596 </span><span class="lineCov">       1132 :         juce::StringArray ins, outs;</span></a>
+<a name="596"><span class="lineNum">     596 </span><span class="lineCov">        566 :         juce::StringArray ins, outs;</span></a>
 <a name="597"><span class="lineNum">     597 </span>            : </a>
 <a name="598"><span class="lineNum">     598 </span><span class="lineCov">        566 :         if (auto p = edit.getPluginCache().getPluginFor (source))</span></a>
 <a name="599"><span class="lineNum">     599 </span><span class="lineCov">        566 :             p-&gt;getChannelNames (&amp;ins, &amp;outs);</span></a>
 <a name="600"><span class="lineNum">     600 </span>            : </a>
 <a name="601"><span class="lineNum">     601 </span><span class="lineCov">        566 :         if (sourcePin &gt; outs.size())</span></a>
-<a name="602"><span class="lineNum">     602 </span><span class="lineNoCov">          0 :             return false;</span></a>
+<a name="602"><span class="lineNum">     602 </span>            :             return false;</a>
 <a name="603"><span class="lineNum">     603 </span>            :     }</a>
 <a name="604"><span class="lineNum">     604 </span>            : </a>
 <a name="605"><span class="lineNum">     605 </span><span class="lineCov">       1068 :     if (! dest.isValid())</span></a>
 <a name="606"><span class="lineNum">     606 </span>            :     {</a>
-<a name="607"><span class="lineNum">     607 </span><span class="lineCov">        550 :         if (destPin &gt;= getOutputNames().size())</span></a>
+<a name="607"><span class="lineNum">     607 </span><span class="lineCov">       1100 :         if (destPin &gt;= getOutputNames().size())</span></a>
 <a name="608"><span class="lineNum">     608 </span>            :             return false;</a>
 <a name="609"><span class="lineNum">     609 </span>            :     }</a>
 <a name="610"><span class="lineNum">     610 </span>            :     else</a>
 <a name="611"><span class="lineNum">     611 </span>            :     {</a>
-<a name="612"><span class="lineNum">     612 </span><span class="lineCov">       1036 :         juce::StringArray ins, outs;</span></a>
+<a name="612"><span class="lineNum">     612 </span><span class="lineCov">        518 :         juce::StringArray ins, outs;</span></a>
 <a name="613"><span class="lineNum">     613 </span>            : </a>
 <a name="614"><span class="lineNum">     614 </span><span class="lineCov">        518 :         if (auto p = edit.getPluginCache().getPluginFor (dest))</span></a>
 <a name="615"><span class="lineNum">     615 </span><span class="lineCov">        486 :             p-&gt;getChannelNames (&amp;ins, &amp;outs);</span></a>
 <a name="616"><span class="lineNum">     616 </span><span class="lineCov">         32 :         else if (auto m = findModifierForID (getModifierList(), dest))</span></a>
-<a name="617"><span class="lineNum">     617 </span><span class="lineCov">         32 :             ins = m-&gt;getAudioInputNames();</span></a>
+<a name="617"><span class="lineNum">     617 </span><span class="lineCov">         64 :             ins = m-&gt;getAudioInputNames();</span></a>
 <a name="618"><span class="lineNum">     618 </span>            : </a>
 <a name="619"><span class="lineNum">     619 </span><span class="lineCov">        518 :         if (destPin &gt; ins.size())</span></a>
-<a name="620"><span class="lineNum">     620 </span><span class="lineNoCov">          0 :             return false;</span></a>
+<a name="620"><span class="lineNum">     620 </span>            :             return false;</a>
 <a name="621"><span class="lineNum">     621 </span>            :     }</a>
 <a name="622"><span class="lineNum">     622 </span>            : </a>
 <a name="623"><span class="lineNum">     623 </span><span class="lineCov">       1068 :     if (! (source.isValid() || dest.isValid()))</span></a>
@@ -1095,8 +1095,8 @@
 <a name="1033"><span class="lineNum">    1033 </span>            : </a>
 <a name="1034"><span class="lineNum">    1034 </span><span class="lineCov">       2424 :     numberOfInstancesInEdit = 0;</span></a>
 <a name="1035"><span class="lineNum">    1035 </span>            : </a>
-<a name="1036"><span class="lineNum">    1036 </span><span class="lineCov">      12389 :     for (auto p : getAllPlugins (edit, false))</span></a>
-<a name="1037"><span class="lineNum">    1037 </span><span class="lineCov">       7541 :         if (auto rf = dynamic_cast&lt;RackInstance*&gt; (p))</span></a>
+<a name="1036"><span class="lineNum">    1036 </span><span class="lineCov">      12396 :     for (auto p : getAllPlugins (edit, false))</span></a>
+<a name="1037"><span class="lineNum">    1037 </span><span class="lineCov">       7548 :         if (auto rf = dynamic_cast&lt;RackInstance*&gt; (p))</span></a>
 <a name="1038"><span class="lineNum">    1038 </span><span class="lineNoCov">          0 :             if (rf-&gt;type.get() == this)</span></a>
 <a name="1039"><span class="lineNum">    1039 </span><span class="lineNoCov">          0 :                 ++numberOfInstancesInEdit;</span></a>
 <a name="1040"><span class="lineNum">    1040 </span><span class="lineCov">       2424 : }</span></a>

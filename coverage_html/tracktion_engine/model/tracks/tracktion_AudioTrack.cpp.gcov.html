@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-27 19:55:46</td>
+            <td class="headerValue">2022-04-26 16:11:08</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">39</td>
@@ -329,7 +329,7 @@
 <a name="267"><span class="lineNum">     267 </span>            : </a>
 <a name="268"><span class="lineNum">     268 </span><span class="lineCov">        274 :     auto m = midiNoteMap.get();</span></a>
 <a name="269"><span class="lineNum">     269 </span>            : </a>
-<a name="270"><span class="lineNum">     270 </span><span class="lineCov">        548 :     auto lines = juce::StringArray::fromLines (m);</span></a>
+<a name="270"><span class="lineNum">     270 </span><span class="lineCov">        274 :     auto lines = juce::StringArray::fromLines (m);</span></a>
 <a name="271"><span class="lineNum">     271 </span><span class="lineCov">        274 :     for (auto l : lines)</span></a>
 <a name="272"><span class="lineNum">     272 </span>            :     {</a>
 <a name="273"><span class="lineNum">     273 </span><span class="lineNoCov">          0 :         if (l.startsWith (&quot;//&quot;))</span></a>
@@ -868,10 +868,10 @@
 <a name="806"><span class="lineNum">     806 </span>            : }</a>
 <a name="807"><span class="lineNum">     807 </span>            : </a>
 <a name="808"><span class="lineNum">     808 </span>            : //==============================================================================</a>
-<a name="809"><span class="lineNum">     809 </span><span class="lineCov">        626 : bool AudioTrack::isFrozen (FreezeType t) const</span></a>
+<a name="809"><span class="lineNum">     809 </span><span class="lineCov">        510 : bool AudioTrack::isFrozen (FreezeType t) const</span></a>
 <a name="810"><span class="lineNum">     810 </span>            : {</a>
-<a name="811"><span class="lineNum">     811 </span><span class="lineCov">        626 :     return t == anyFreeze ? (frozen || frozenIndividually)</span></a>
-<a name="812"><span class="lineNum">     812 </span><span class="lineCov">        626 :                           : (t == groupFreeze ? frozen : frozenIndividually);</span></a>
+<a name="811"><span class="lineNum">     811 </span><span class="lineCov">        510 :     return t == anyFreeze ? (frozen || frozenIndividually)</span></a>
+<a name="812"><span class="lineNum">     812 </span><span class="lineCov">        510 :                           : (t == groupFreeze ? frozen : frozenIndividually);</span></a>
 <a name="813"><span class="lineNum">     813 </span>            : }</a>
 <a name="814"><span class="lineNum">     814 </span>            : </a>
 <a name="815"><span class="lineNum">     815 </span><span class="lineCov">       1912 : void AudioTrack::setFrozen (bool b, FreezeType type)</span></a>
@@ -944,7 +944,7 @@
 <a name="882"><span class="lineNum">     882 </span><span class="lineCov">          2 :     setMute (false);</span></a>
 <a name="883"><span class="lineNum">     883 </span><span class="lineCov">          4 :     const FreezePointPlugin::ScopedTrackUnsoloer stu (edit);</span></a>
 <a name="884"><span class="lineNum">     884 </span>            : </a>
-<a name="885"><span class="lineNum">     885 </span><span class="lineCov">          4 :     juce::BigInteger trackNum;</span></a>
+<a name="885"><span class="lineNum">     885 </span><span class="lineCov">          2 :     juce::BigInteger trackNum;</span></a>
 <a name="886"><span class="lineNum">     886 </span><span class="lineCov">          2 :     trackNum.setBit (getIndexInEditTrackList());</span></a>
 <a name="887"><span class="lineNum">     887 </span>            :     auto freezeFile = getFreezeFile();</a>
 <a name="888"><span class="lineNum">     888 </span><span class="lineCov">          2 :     freezeFile.deleteFile();</span></a>

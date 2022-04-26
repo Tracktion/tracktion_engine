@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">315</td>
-            <td class="headerCovTableEntry">317</td>
-            <td class="headerCovTableEntryHi">99.4 %</td>
+            <td class="headerCovTableEntry">295</td>
+            <td class="headerCovTableEntry">297</td>
+            <td class="headerCovTableEntryHi">99.3 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-27 19:55:46</td>
+            <td class="headerValue">2022-04-26 16:11:08</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">13</td>
@@ -112,7 +112,7 @@
 <a name="50"><span class="lineNum">      50 </span>            :             </a>
 <a name="51"><span class="lineNum">      51 </span>            :             // Tests rebuilding the graph mid render</a>
 <a name="52"><span class="lineNum">      52 </span><span class="lineCov">          8 :             runRebuildTests (setup);</span></a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineCov">         16 :             runCycleTests (setup);</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">          8 :             runCycleTests (setup);</span></a>
 <a name="54"><span class="lineNum">      54 </span>            :         }</a>
 <a name="55"><span class="lineNum">      55 </span><span class="lineCov">          1 :     }</span></a>
 <a name="56"><span class="lineNum">      56 </span>            : </a>
@@ -253,7 +253,7 @@
 <a name="191"><span class="lineNum">     191 </span>            :                 so they should cancel out completely.</a>
 <a name="192"><span class="lineNum">     192 </span>            :                 This uses the test sample rate to determine the sin frequency to avoid rounding errors.</a>
 <a name="193"><span class="lineNum">     193 </span>            :             */</a>
-<a name="194"><span class="lineNum">     194 </span><span class="lineCov">          8 :             const double sampleRate = testSetup.sampleRate;</span></a>
+<a name="194"><span class="lineNum">     194 </span>            :             const double sampleRate = testSetup.sampleRate;</a>
 <a name="195"><span class="lineNum">     195 </span><span class="lineCov">          8 :             const double sinFrequency = sampleRate / 100.0;</span></a>
 <a name="196"><span class="lineNum">     196 </span><span class="lineCov">          8 :             const double numSamplesPerCycle = sampleRate / sinFrequency;</span></a>
 <a name="197"><span class="lineNum">     197 </span><span class="lineCov">          8 :             const int numLatencySamples = juce::roundToInt (numSamplesPerCycle / 2.0);</span></a>
@@ -267,7 +267,7 @@
 <a name="205"><span class="lineNum">     205 </span>            : </a>
 <a name="206"><span class="lineNum">     206 </span><span class="lineCov">          8 :             auto sumNode = std::make_unique&lt;BasicSummingNode&gt; (std::move (nodes));</span></a>
 <a name="207"><span class="lineNum">     207 </span>            : </a>
-<a name="208"><span class="lineNum">     208 </span><span class="lineCov">         16 :             auto testContext = createBasicTestContext (std::move (sumNode), testSetup, 1, 5.0);</span></a>
+<a name="208"><span class="lineNum">     208 </span><span class="lineCov">          8 :             auto testContext = createBasicTestContext (std::move (sumNode), testSetup, 1, 5.0);</span></a>
 <a name="209"><span class="lineNum">     209 </span>            : </a>
 <a name="210"><span class="lineNum">     210 </span>            :             // Start of buffer is +-1, after latency comp kicks in, the second half will be silent</a>
 <a name="211"><span class="lineNum">     211 </span><span class="lineCov">          8 :             test_utilities::expectAudioBuffer (*this, testContext-&gt;buffer, 0, numLatencySamples, 1.0f, 0.707f, 0.0f, 0.0f);</span></a>
@@ -280,13 +280,13 @@
 <a name="218"><span class="lineNum">     218 </span>            :                  1. There will be a half period of silence at the start of the output</a>
 <a name="219"><span class="lineNum">     219 </span>            :                  2. Instead of cancelling, the sins will now constructively interfere, doubling the magnitude</a>
 <a name="220"><span class="lineNum">     220 </span>            :             */</a>
-<a name="221"><span class="lineNum">     221 </span><span class="lineCov">          8 :             const double sampleRate = testSetup.sampleRate;</span></a>
-<a name="222"><span class="lineNum">     222 </span><span class="lineCov">          8 :             const double sinFrequency = sampleRate / 100.0;</span></a>
-<a name="223"><span class="lineNum">     223 </span><span class="lineCov">          8 :             const double numSamplesPerCycle = sampleRate / sinFrequency;</span></a>
+<a name="221"><span class="lineNum">     221 </span>            :             const double sampleRate = testSetup.sampleRate;</a>
+<a name="222"><span class="lineNum">     222 </span>            :             const double sinFrequency = sampleRate / 100.0;</a>
+<a name="223"><span class="lineNum">     223 </span>            :             const double numSamplesPerCycle = sampleRate / sinFrequency;</a>
 <a name="224"><span class="lineNum">     224 </span><span class="lineCov">          8 :             const int numLatencySamples = juce::roundToInt (numSamplesPerCycle / 2.0);</span></a>
 <a name="225"><span class="lineNum">     225 </span>            : </a>
 <a name="226"><span class="lineNum">     226 </span><span class="lineCov">          8 :             std::vector&lt;std::unique_ptr&lt;Node&gt;&gt; nodes;</span></a>
-<a name="227"><span class="lineNum">     227 </span><span class="lineCov">         16 :             nodes.push_back (makeGainNode (makeNode&lt;SinNode&gt; ((float) sinFrequency), 0.5f));</span></a>
+<a name="227"><span class="lineNum">     227 </span><span class="lineCov">          8 :             nodes.push_back (makeGainNode (makeNode&lt;SinNode&gt; ((float) sinFrequency), 0.5f));</span></a>
 <a name="228"><span class="lineNum">     228 </span>            : </a>
 <a name="229"><span class="lineNum">     229 </span><span class="lineCov">          8 :             auto sinNode = makeGainNode (makeNode&lt;SinNode&gt; ((float) sinFrequency), 0.5f);</span></a>
 <a name="230"><span class="lineNum">     230 </span>            :             auto latencySinNode = makeNode&lt;LatencyNode&gt; (std::move (sinNode), numLatencySamples);</a>
@@ -294,7 +294,7 @@
 <a name="232"><span class="lineNum">     232 </span>            : </a>
 <a name="233"><span class="lineNum">     233 </span>            :             auto sumNode = makeNode&lt;SummingNode&gt; (std::move (nodes));</a>
 <a name="234"><span class="lineNum">     234 </span>            : </a>
-<a name="235"><span class="lineNum">     235 </span><span class="lineCov">         16 :             auto testContext = createBasicTestContext (std::move (sumNode), testSetup, 1, 5.0);</span></a>
+<a name="235"><span class="lineNum">     235 </span><span class="lineCov">          8 :             auto testContext = createBasicTestContext (std::move (sumNode), testSetup, 1, 5.0);</span></a>
 <a name="236"><span class="lineNum">     236 </span>            :             // Start of buffer which should be silent</a>
 <a name="237"><span class="lineNum">     237 </span>            :             // Part of buffer after latency which should be all sin +-1.0</a>
 <a name="238"><span class="lineNum">     238 </span><span class="lineCov">          8 :             test_utilities::expectAudioBuffer (*this, testContext-&gt;buffer, 0, numLatencySamples, 0.0f, 0.0f, 1.0f, 0.707f);</span></a>
@@ -305,11 +305,11 @@
 <a name="243"><span class="lineNum">     243 </span>            :             /*  This has a sin input to a latency node leading to a send.</a>
 <a name="244"><span class="lineNum">     244 </span>            :                 The return branch also has a sin input. The latency should be compensated on the return node correctly.</a>
 <a name="245"><span class="lineNum">     245 </span>            :             */</a>
-<a name="246"><span class="lineNum">     246 </span><span class="lineCov">          8 :             const double sinFrequency = testSetup.sampleRate / 100.0;</span></a>
-<a name="247"><span class="lineNum">     247 </span><span class="lineCov">          8 :             const double numSamplesPerCycle = testSetup.sampleRate / sinFrequency;</span></a>
+<a name="246"><span class="lineNum">     246 </span>            :             const double sinFrequency = testSetup.sampleRate / 100.0;</a>
+<a name="247"><span class="lineNum">     247 </span>            :             const double numSamplesPerCycle = testSetup.sampleRate / sinFrequency;</a>
 <a name="248"><span class="lineNum">     248 </span><span class="lineCov">          8 :             const int numLatencySamples = juce::roundToInt (numSamplesPerCycle / 2.0);</span></a>
 <a name="249"><span class="lineNum">     249 </span>            : </a>
-<a name="250"><span class="lineNum">     250 </span><span class="lineCov">          8 :             auto track1 = makeNode&lt;SinNode&gt; ((float) sinFrequency);</span></a>
+<a name="250"><span class="lineNum">     250 </span>            :             auto track1 = makeNode&lt;SinNode&gt; ((float) sinFrequency);</a>
 <a name="251"><span class="lineNum">     251 </span>            :             track1 = makeNode&lt;LatencyNode&gt; (std::move (track1), numLatencySamples);</a>
 <a name="252"><span class="lineNum">     252 </span><span class="lineCov">          8 :             track1 = makeGainNode (std::move (track1), 0.5f);</span></a>
 <a name="253"><span class="lineNum">     253 </span><span class="lineCov">         16 :             track1 = makeNode&lt;SendNode&gt; (std::move (track1), 1);</span></a>
@@ -321,7 +321,7 @@
 <a name="259"><span class="lineNum">     259 </span>            :             </a>
 <a name="260"><span class="lineNum">     260 </span><span class="lineCov">          8 :             auto node = makeSummingNode ({ track1.release(), track2.release() });</span></a>
 <a name="261"><span class="lineNum">     261 </span>            : </a>
-<a name="262"><span class="lineNum">     262 </span><span class="lineCov">         16 :             auto testContext = createBasicTestContext (std::move (node), testSetup, 1, 5.0);</span></a>
+<a name="262"><span class="lineNum">     262 </span><span class="lineCov">          8 :             auto testContext = createBasicTestContext (std::move (node), testSetup, 1, 5.0);</span></a>
 <a name="263"><span class="lineNum">     263 </span>            : </a>
 <a name="264"><span class="lineNum">     264 </span>            :             // Start of buffer which should be silent</a>
 <a name="265"><span class="lineNum">     265 </span>            :             // Part of buffer after latency which should be all sin +-1.0</a>
@@ -333,11 +333,11 @@
 <a name="271"><span class="lineNum">     271 </span>            :             /*  This two tracks with sin input to a latency node leading to a send. The latency is different on each branch.</a>
 <a name="272"><span class="lineNum">     272 </span>            :                 The latency should be compensated on the return node correctly.</a>
 <a name="273"><span class="lineNum">     273 </span>            :             */</a>
-<a name="274"><span class="lineNum">     274 </span><span class="lineCov">          8 :             const double sinFrequency = testSetup.sampleRate / 100.0;</span></a>
-<a name="275"><span class="lineNum">     275 </span><span class="lineCov">          8 :             const double numSamplesPerCycle = testSetup.sampleRate / sinFrequency;</span></a>
+<a name="274"><span class="lineNum">     274 </span>            :             const double sinFrequency = testSetup.sampleRate / 100.0;</a>
+<a name="275"><span class="lineNum">     275 </span>            :             const double numSamplesPerCycle = testSetup.sampleRate / sinFrequency;</a>
 <a name="276"><span class="lineNum">     276 </span><span class="lineCov">          8 :             const int numLatencySamples = juce::roundToInt (numSamplesPerCycle / 2.0);</span></a>
 <a name="277"><span class="lineNum">     277 </span>            : </a>
-<a name="278"><span class="lineNum">     278 </span><span class="lineCov">          8 :             auto track1 = makeNode&lt;SinNode&gt; ((float) sinFrequency);</span></a>
+<a name="278"><span class="lineNum">     278 </span>            :             auto track1 = makeNode&lt;SinNode&gt; ((float) sinFrequency);</a>
 <a name="279"><span class="lineNum">     279 </span>            :             track1 = makeNode&lt;LatencyNode&gt; (std::move (track1), numLatencySamples);</a>
 <a name="280"><span class="lineNum">     280 </span><span class="lineCov">          8 :             track1 = makeGainNode (std::move (track1), 0.5f);</span></a>
 <a name="281"><span class="lineNum">     281 </span><span class="lineCov">         16 :             track1 = makeNode&lt;SendNode&gt; (std::move (track1), 1);</span></a>
@@ -355,7 +355,7 @@
 <a name="293"><span class="lineNum">     293 </span>            : </a>
 <a name="294"><span class="lineNum">     294 </span><span class="lineCov">          8 :             auto node = makeSummingNode ({ track1.release(), track2.release(), track3.release() });</span></a>
 <a name="295"><span class="lineNum">     295 </span>            : </a>
-<a name="296"><span class="lineNum">     296 </span><span class="lineCov">         16 :             auto testContext = createBasicTestContext (std::move (node), testSetup, 1, 5.0);</span></a>
+<a name="296"><span class="lineNum">     296 </span><span class="lineCov">          8 :             auto testContext = createBasicTestContext (std::move (node), testSetup, 1, 5.0);</span></a>
 <a name="297"><span class="lineNum">     297 </span>            : </a>
 <a name="298"><span class="lineNum">     298 </span>            :             // Start of buffer which should be silent</a>
 <a name="299"><span class="lineNum">     299 </span>            :             // Part of buffer after latency which should be all sin +-1.0</a>
@@ -368,11 +368,11 @@
 <a name="306"><span class="lineNum">     306 </span>            :                 There are then two other tracks that receive each of the send nodes.</a>
 <a name="307"><span class="lineNum">     307 </span>            :                 The latency should be compensated for and the output a mag 1 sin.</a>
 <a name="308"><span class="lineNum">     308 </span>            :             */</a>
-<a name="309"><span class="lineNum">     309 </span><span class="lineCov">          8 :             const double sinFrequency = testSetup.sampleRate / 100.0;</span></a>
-<a name="310"><span class="lineNum">     310 </span><span class="lineCov">          8 :             const double numSamplesPerCycle = testSetup.sampleRate / sinFrequency;</span></a>
+<a name="309"><span class="lineNum">     309 </span>            :             const double sinFrequency = testSetup.sampleRate / 100.0;</a>
+<a name="310"><span class="lineNum">     310 </span>            :             const double numSamplesPerCycle = testSetup.sampleRate / sinFrequency;</a>
 <a name="311"><span class="lineNum">     311 </span><span class="lineCov">          8 :             const int numLatencySamples = juce::roundToInt (numSamplesPerCycle / 2.0);</span></a>
 <a name="312"><span class="lineNum">     312 </span>            : </a>
-<a name="313"><span class="lineNum">     313 </span><span class="lineCov">          8 :             auto track1 = makeNode&lt;SinNode&gt; ((float) sinFrequency);</span></a>
+<a name="313"><span class="lineNum">     313 </span>            :             auto track1 = makeNode&lt;SinNode&gt; ((float) sinFrequency);</a>
 <a name="314"><span class="lineNum">     314 </span>            :             track1 = makeNode&lt;LatencyNode&gt; (std::move (track1), numLatencySamples);</a>
 <a name="315"><span class="lineNum">     315 </span><span class="lineCov">          8 :             track1 = makeGainNode (std::move (track1), 0.5f);</span></a>
 <a name="316"><span class="lineNum">     316 </span><span class="lineCov">         16 :             track1 = makeNode&lt;SendNode&gt; (std::move (track1), 1);</span></a>
@@ -388,7 +388,7 @@
 <a name="326"><span class="lineNum">     326 </span>            : </a>
 <a name="327"><span class="lineNum">     327 </span><span class="lineCov">          8 :             auto node = makeSummingNode ({ track1.release(), track2.release(), track3.release() });</span></a>
 <a name="328"><span class="lineNum">     328 </span>            : </a>
-<a name="329"><span class="lineNum">     329 </span><span class="lineCov">         16 :             auto testContext = createBasicTestContext (std::move (node), testSetup, 1, 5.0);</span></a>
+<a name="329"><span class="lineNum">     329 </span><span class="lineCov">          8 :             auto testContext = createBasicTestContext (std::move (node), testSetup, 1, 5.0);</span></a>
 <a name="330"><span class="lineNum">     330 </span>            : </a>
 <a name="331"><span class="lineNum">     331 </span>            :             // Start of buffer which should be silent</a>
 <a name="332"><span class="lineNum">     332 </span>            :             // Part of buffer after latency which should be all sin +-1.0</a>
@@ -402,13 +402,13 @@
 <a name="340"><span class="lineNum">     340 </span>            :         const double duration = 5.0;</a>
 <a name="341"><span class="lineNum">     341 </span>            :         </a>
 <a name="342"><span class="lineNum">     342 </span>            :         // Avoid creating events at the end of the duration as they'll get lost after latency is applied</a>
-<a name="343"><span class="lineNum">     343 </span><span class="lineCov">         16 :         const auto sequence = test_utilities::createRandomMidiMessageSequence (duration - 0.5, testSetup.random);</span></a>
+<a name="343"><span class="lineNum">     343 </span><span class="lineCov">          8 :         const auto sequence = test_utilities::createRandomMidiMessageSequence (duration - 0.5, testSetup.random);</span></a>
 <a name="344"><span class="lineNum">     344 </span>            :         </a>
 <a name="345"><span class="lineNum">     345 </span><span class="lineCov">          8 :         beginTest (&quot;Basic MIDI&quot;);</span></a>
 <a name="346"><span class="lineNum">     346 </span>            :         {</a>
 <a name="347"><span class="lineNum">     347 </span><span class="lineCov">          8 :             auto node = std::make_unique&lt;MidiNode&gt; (sequence);</span></a>
 <a name="348"><span class="lineNum">     348 </span>            :             </a>
-<a name="349"><span class="lineNum">     349 </span><span class="lineCov">         16 :             auto testContext = createBasicTestContext (std::move (node), testSetup, 1, duration);</span></a>
+<a name="349"><span class="lineNum">     349 </span><span class="lineCov">          8 :             auto testContext = createBasicTestContext (std::move (node), testSetup, 1, duration);</span></a>
 <a name="350"><span class="lineNum">     350 </span>            : </a>
 <a name="351"><span class="lineNum">     351 </span><span class="lineCov">          8 :             expectGreaterThan (sequence.getNumEvents(), 0);</span></a>
 <a name="352"><span class="lineNum">     352 </span><span class="lineCov">          8 :             test_utilities::expectMidiBuffer (*this, testContext-&gt;midi, sampleRate, sequence);</span></a>
@@ -423,9 +423,9 @@
 <a name="361"><span class="lineNum">     361 </span>            :             auto midiNode = makeNode&lt;MidiNode&gt; (sequence);</a>
 <a name="362"><span class="lineNum">     362 </span>            :             auto delayedNode = makeNode&lt;LatencyNode&gt; (std::move (midiNode), latencyNumSamples);</a>
 <a name="363"><span class="lineNum">     363 </span>            : </a>
-<a name="364"><span class="lineNum">     364 </span><span class="lineCov">         16 :             auto testContext = createBasicTestContext (std::move (delayedNode), testSetup, 1, duration);</span></a>
+<a name="364"><span class="lineNum">     364 </span><span class="lineCov">          8 :             auto testContext = createBasicTestContext (std::move (delayedNode), testSetup, 1, duration);</span></a>
 <a name="365"><span class="lineNum">     365 </span>            :             </a>
-<a name="366"><span class="lineNum">     366 </span><span class="lineCov">         16 :             auto extectedSequence = sequence;</span></a>
+<a name="366"><span class="lineNum">     366 </span><span class="lineCov">          8 :             auto extectedSequence = sequence;</span></a>
 <a name="367"><span class="lineNum">     367 </span><span class="lineCov">          8 :             extectedSequence.addTimeToMessages (delayedTime);</span></a>
 <a name="368"><span class="lineNum">     368 </span><span class="lineCov">          8 :             test_utilities::expectMidiBuffer (*this, testContext-&gt;midi, sampleRate, extectedSequence);</span></a>
 <a name="369"><span class="lineNum">     369 </span>            :         }</a>
@@ -445,9 +445,9 @@
 <a name="383"><span class="lineNum">     383 </span>            :             auto midiNode = makeNode&lt;MidiNode&gt; (sequence);</a>
 <a name="384"><span class="lineNum">     384 </span><span class="lineCov">          8 :             auto summedNode = makeSummingNode ({ delayedNode.release(), midiNode.release() });</span></a>
 <a name="385"><span class="lineNum">     385 </span>            : </a>
-<a name="386"><span class="lineNum">     386 </span><span class="lineCov">         16 :             auto testContext = createBasicTestContext (std::move (summedNode), testSetup, 1, duration);</span></a>
+<a name="386"><span class="lineNum">     386 </span><span class="lineCov">          8 :             auto testContext = createBasicTestContext (std::move (summedNode), testSetup, 1, duration);</span></a>
 <a name="387"><span class="lineNum">     387 </span>            :             </a>
-<a name="388"><span class="lineNum">     388 </span><span class="lineCov">         16 :             auto extectedSequence = sequence;</span></a>
+<a name="388"><span class="lineNum">     388 </span><span class="lineCov">          8 :             auto extectedSequence = sequence;</span></a>
 <a name="389"><span class="lineNum">     389 </span><span class="lineCov">          8 :             extectedSequence.addTimeToMessages (delayedTime);</span></a>
 <a name="390"><span class="lineNum">     390 </span><span class="lineCov">          8 :             test_utilities::expectMidiBuffer (*this, testContext-&gt;midi, sampleRate, extectedSequence);</span></a>
 <a name="391"><span class="lineNum">     391 </span>            :         }</a>
@@ -465,7 +465,7 @@
 <a name="403"><span class="lineNum">     403 </span>            :             </a>
 <a name="404"><span class="lineNum">     404 </span><span class="lineCov">          8 :             auto sumNode = makeSummingNode ({ track1.release(), track2.release() });</span></a>
 <a name="405"><span class="lineNum">     405 </span>            : </a>
-<a name="406"><span class="lineNum">     406 </span><span class="lineCov">         16 :             auto testContext = createBasicTestContext (std::move (sumNode), testSetup, 1, duration);</span></a>
+<a name="406"><span class="lineNum">     406 </span><span class="lineCov">          8 :             auto testContext = createBasicTestContext (std::move (sumNode), testSetup, 1, duration);</span></a>
 <a name="407"><span class="lineNum">     407 </span>            : </a>
 <a name="408"><span class="lineNum">     408 </span><span class="lineCov">          8 :             expectGreaterThan (sequence.getNumEvents(), 0);</span></a>
 <a name="409"><span class="lineNum">     409 </span><span class="lineCov">          8 :             test_utilities::expectMidiBuffer (*this, testContext-&gt;midi, sampleRate, sequence);</span></a>
@@ -484,7 +484,7 @@
 <a name="422"><span class="lineNum">     422 </span>            : </a>
 <a name="423"><span class="lineNum">     423 </span><span class="lineCov">          8 :             auto sumNode = makeSummingNode ({ track1.release(), track2.release() });</span></a>
 <a name="424"><span class="lineNum">     424 </span>            : </a>
-<a name="425"><span class="lineNum">     425 </span><span class="lineCov">         16 :             auto testContext = createBasicTestContext (std::move (sumNode), testSetup, 1, duration);</span></a>
+<a name="425"><span class="lineNum">     425 </span><span class="lineCov">          8 :             auto testContext = createBasicTestContext (std::move (sumNode), testSetup, 1, duration);</span></a>
 <a name="426"><span class="lineNum">     426 </span>            : </a>
 <a name="427"><span class="lineNum">     427 </span><span class="lineCov">          8 :             expectGreaterThan (sequence.getNumEvents(), 0);</span></a>
 <a name="428"><span class="lineNum">     428 </span><span class="lineCov">          8 :             test_utilities::expectMidiBuffer (*this, testContext-&gt;midi, sampleRate, sequence);</span></a>
@@ -600,7 +600,7 @@
 <a name="538"><span class="lineNum">     538 </span>            :             const double totalDuration = 5.0;</a>
 <a name="539"><span class="lineNum">     539 </span><span class="lineCov">          8 :             const int totalNumSamples = (int) std::floor (totalDuration * testSetup.sampleRate);</span></a>
 <a name="540"><span class="lineNum">     540 </span><span class="lineCov">         16 :             TestProcess&lt;NodePlayer&gt; playerContext (std::make_unique&lt;NodePlayer&gt; (std::make_unique&lt;SinNode&gt; (220.0f)),</span></a>
-<a name="541"><span class="lineNum">     541 </span><span class="lineCov">         24 :                                                    testSetup, 1, totalDuration, true);</span></a>
+<a name="541"><span class="lineNum">     541 </span><span class="lineCov">         16 :                                                    testSetup, 1, totalDuration, true);</span></a>
 <a name="542"><span class="lineNum">     542 </span><span class="lineCov">          8 :             const int firstHalfNumSamples = totalNumSamples / 2;</span></a>
 <a name="543"><span class="lineNum">     543 </span>            :             </a>
 <a name="544"><span class="lineNum">     544 </span><span class="lineCov">          8 :             playerContext.process (firstHalfNumSamples);</span></a>
@@ -631,12 +631,12 @@
 <a name="569"><span class="lineNum">     569 </span><span class="lineCov">          8 :             };</span></a>
 <a name="570"><span class="lineNum">     570 </span>            :             </a>
 <a name="571"><span class="lineNum">     571 </span>            :             const double totalDuration = 5.0;</a>
-<a name="572"><span class="lineNum">     572 </span><span class="lineCov">          8 :             const int totalNumSamples = (int) std::floor (totalDuration * testSetup.sampleRate);</span></a>
+<a name="572"><span class="lineNum">     572 </span>            :             const int totalNumSamples = (int) std::floor (totalDuration * testSetup.sampleRate);</a>
 <a name="573"><span class="lineNum">     573 </span><span class="lineCov">          8 :             auto node = makeSinNode();</span></a>
 <a name="574"><span class="lineNum">     574 </span><span class="lineCov">          8 :             const size_t expectedNodeID = node-&gt;getNodeProperties().nodeID;</span></a>
 <a name="575"><span class="lineNum">     575 </span><span class="lineCov">          8 :             TestProcess&lt;NodePlayer&gt; playerContext (std::make_unique&lt;NodePlayer&gt; (std::move (node)),</span></a>
 <a name="576"><span class="lineNum">     576 </span><span class="lineCov">         16 :                                                    testSetup, 1, totalDuration, true);</span></a>
-<a name="577"><span class="lineNum">     577 </span><span class="lineCov">          8 :             const int firstHalfNumSamples = totalNumSamples / 2;</span></a>
+<a name="577"><span class="lineNum">     577 </span>            :             const int firstHalfNumSamples = totalNumSamples / 2;</a>
 <a name="578"><span class="lineNum">     578 </span>            :             </a>
 <a name="579"><span class="lineNum">     579 </span><span class="lineCov">          8 :             playerContext.process (firstHalfNumSamples);</span></a>
 <a name="580"><span class="lineNum">     580 </span><span class="lineCov">          8 :             auto testContext = playerContext.getTestResult();</span></a>
@@ -648,7 +648,7 @@
 <a name="586"><span class="lineNum">     586 </span><span class="lineCov">          8 :             node = makeSinNode();</span></a>
 <a name="587"><span class="lineNum">     587 </span><span class="lineCov">          8 :             expectEquals (uint64_t (node-&gt;getNodeProperties().nodeID), uint64_t (expectedNodeID));</span></a>
 <a name="588"><span class="lineNum">     588 </span><span class="lineCov">          8 :             playerContext.setPlayer (std::make_unique&lt;NodePlayer&gt; (std::move (node)));</span></a>
-<a name="589"><span class="lineNum">     589 </span><span class="lineCov">          8 :             const int secondHalfNumSamples = totalNumSamples - firstHalfNumSamples;</span></a>
+<a name="589"><span class="lineNum">     589 </span>            :             const int secondHalfNumSamples = totalNumSamples - firstHalfNumSamples;</a>
 <a name="590"><span class="lineNum">     590 </span><span class="lineCov">          8 :             playerContext.process (secondHalfNumSamples);</span></a>
 <a name="591"><span class="lineNum">     591 </span><span class="lineCov">          8 :             testContext = playerContext.getTestResult();</span></a>
 <a name="592"><span class="lineNum">     592 </span>            :             </a>
@@ -667,7 +667,7 @@
 <a name="605"><span class="lineNum">     605 </span>            :             // This is the same as the previous text except that it uses setNode which passes the old</a>
 <a name="606"><span class="lineNum">     606 </span>            :             // node in the prepareToPlay call so the latency buffer can be obtained from the old graph</a>
 <a name="607"><span class="lineNum">     607 </span>            :             // and the 0.5s silence after swapping is avoided</a>
-<a name="608"><span class="lineNum">     608 </span><span class="lineCov">          8 :             const int latencyNumSamples = (int) std::floor (testSetup.sampleRate / 2.0);</span></a>
+<a name="608"><span class="lineNum">     608 </span>            :             const int latencyNumSamples = (int) std::floor (testSetup.sampleRate / 2.0);</a>
 <a name="609"><span class="lineNum">     609 </span><span class="lineCov">         16 :             auto makeSinNode = [latencyNumSamples]</span></a>
 <a name="610"><span class="lineNum">     610 </span>            :             {</a>
 <a name="611"><span class="lineNum">     611 </span>            :                 size_t nodeID = 1234;</a>
@@ -675,12 +675,12 @@
 <a name="613"><span class="lineNum">     613 </span><span class="lineCov">          8 :             };</span></a>
 <a name="614"><span class="lineNum">     614 </span>            :             </a>
 <a name="615"><span class="lineNum">     615 </span>            :             const double totalDuration = 5.0;</a>
-<a name="616"><span class="lineNum">     616 </span><span class="lineCov">          8 :             const int totalNumSamples = (int) std::floor (totalDuration * testSetup.sampleRate);</span></a>
+<a name="616"><span class="lineNum">     616 </span>            :             const int totalNumSamples = (int) std::floor (totalDuration * testSetup.sampleRate);</a>
 <a name="617"><span class="lineNum">     617 </span><span class="lineCov">          8 :             auto node = makeSinNode();</span></a>
 <a name="618"><span class="lineNum">     618 </span><span class="lineCov">          8 :             const size_t expectedNodeID = node-&gt;getNodeProperties().nodeID;</span></a>
 <a name="619"><span class="lineNum">     619 </span><span class="lineCov">          8 :             TestProcess&lt;NodePlayer&gt; playerContext (std::make_unique&lt;NodePlayer&gt; (std::move (node)),</span></a>
 <a name="620"><span class="lineNum">     620 </span><span class="lineCov">         16 :                                                    testSetup, 1, totalDuration, true);</span></a>
-<a name="621"><span class="lineNum">     621 </span><span class="lineCov">          8 :             const int firstHalfNumSamples = totalNumSamples / 2;</span></a>
+<a name="621"><span class="lineNum">     621 </span>            :             const int firstHalfNumSamples = totalNumSamples / 2;</a>
 <a name="622"><span class="lineNum">     622 </span>            :             </a>
 <a name="623"><span class="lineNum">     623 </span><span class="lineCov">          8 :             playerContext.process (firstHalfNumSamples);</span></a>
 <a name="624"><span class="lineNum">     624 </span><span class="lineCov">          8 :             auto testContext = playerContext.getTestResult();</span></a>
@@ -693,7 +693,7 @@
 <a name="631"><span class="lineNum">     631 </span><span class="lineCov">          8 :             test_utilities::expectUniqueNodeIDs (*this, *node, false);</span></a>
 <a name="632"><span class="lineNum">     632 </span><span class="lineCov">          8 :             expectEquals (uint64_t (node-&gt;getNodeProperties().nodeID), uint64_t (expectedNodeID));</span></a>
 <a name="633"><span class="lineNum">     633 </span><span class="lineCov">          8 :             playerContext.setNode (std::move (node));</span></a>
-<a name="634"><span class="lineNum">     634 </span><span class="lineCov">          8 :             const int secondHalfNumSamples = totalNumSamples - firstHalfNumSamples;</span></a>
+<a name="634"><span class="lineNum">     634 </span>            :             const int secondHalfNumSamples = totalNumSamples - firstHalfNumSamples;</a>
 <a name="635"><span class="lineNum">     635 </span><span class="lineCov">          8 :             playerContext.process (secondHalfNumSamples);</span></a>
 <a name="636"><span class="lineNum">     636 </span><span class="lineCov">          8 :             testContext = playerContext.getTestResult();</span></a>
 <a name="637"><span class="lineNum">     637 </span>            :             </a>

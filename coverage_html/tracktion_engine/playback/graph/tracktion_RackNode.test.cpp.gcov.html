@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-27 19:55:46</td>
+            <td class="headerValue">2022-04-26 16:11:08</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">10</td>
@@ -113,7 +113,7 @@
 <a name="51"><span class="lineNum">      51 </span>            :             // Rack tests</a>
 <a name="52"><span class="lineNum">      52 </span><span class="lineCov">         16 :             runRackTests&lt;NodePlayerType&gt; (setup);</span></a>
 <a name="53"><span class="lineNum">      53 </span><span class="lineCov">         16 :             runRackAudioInputTests&lt;NodePlayerType&gt; (setup);</span></a>
-<a name="54"><span class="lineNum">      54 </span><span class="lineCov">         32 :             runRackModifiertests&lt;NodePlayerType&gt; (setup);</span></a>
+<a name="54"><span class="lineNum">      54 </span><span class="lineCov">         16 :             runRackModifiertests&lt;NodePlayerType&gt; (setup);</span></a>
 <a name="55"><span class="lineNum">      55 </span>            :         }</a>
 <a name="56"><span class="lineNum">      56 </span>            : </a>
 <a name="57"><span class="lineNum">      57 </span><span class="lineCov">          2 :         auto elapsed = std::chrono::high_resolution_clock::now() - start;</span></a>
@@ -137,8 +137,8 @@
 <a name="75"><span class="lineNum">      75 </span><span class="lineCov">         16 :             auto rack = edit-&gt;getRackList().addNewRack();</span></a>
 <a name="76"><span class="lineNum">      76 </span><span class="lineCov">         16 :             expect (rack != nullptr);</span></a>
 <a name="77"><span class="lineNum">      77 </span><span class="lineCov">         16 :             expectEquals (rack-&gt;getConnections().size(), 0);</span></a>
-<a name="78"><span class="lineNum">      78 </span><span class="lineCov">         16 :             expectEquals (rack-&gt;getInputNames().size(), 3);</span></a>
-<a name="79"><span class="lineNum">      79 </span><span class="lineCov">         16 :             expectEquals (rack-&gt;getOutputNames().size(), 3);</span></a>
+<a name="78"><span class="lineNum">      78 </span><span class="lineCov">         32 :             expectEquals (rack-&gt;getInputNames().size(), 3);</span></a>
+<a name="79"><span class="lineNum">      79 </span><span class="lineCov">         32 :             expectEquals (rack-&gt;getOutputNames().size(), 3);</span></a>
 <a name="80"><span class="lineNum">      80 </span>            : </a>
 <a name="81"><span class="lineNum">      81 </span><span class="lineCov">         32 :             Plugin::Ptr pluginPtr = edit-&gt;getPluginCache().createNewPlugin (ToneGeneratorPlugin::xmlTypeName, {});</span></a>
 <a name="82"><span class="lineNum">      82 </span><span class="lineCov">         16 :             track-&gt;pluginList.insertPlugin (pluginPtr, 0, nullptr);</span></a>
@@ -200,7 +200,7 @@
 <a name="138"><span class="lineNum">     138 </span>            :         {</a>
 <a name="139"><span class="lineNum">     139 </span><span class="lineCov">         16 :             auto edit = Edit::createSingleTrackEdit (engine);</span></a>
 <a name="140"><span class="lineNum">     140 </span><span class="lineCov">         16 :             auto rack = edit-&gt;getRackList().addNewRack();</span></a>
-<a name="141"><span class="lineNum">     141 </span><span class="lineCov">         16 :             expectEquals (rack-&gt;getOutputNames().size(), 3);</span></a>
+<a name="141"><span class="lineNum">     141 </span><span class="lineCov">         32 :             expectEquals (rack-&gt;getOutputNames().size(), 3);</span></a>
 <a name="142"><span class="lineNum">     142 </span>            : </a>
 <a name="143"><span class="lineNum">     143 </span><span class="lineCov">         32 :             auto tonePlugin = edit-&gt;getPluginCache().createNewPlugin (ToneGeneratorPlugin::xmlTypeName, {});</span></a>
 <a name="144"><span class="lineNum">     144 </span><span class="lineCov">         16 :             rack-&gt;addPlugin (tonePlugin, {}, false);</span></a>
@@ -356,7 +356,7 @@
 <a name="294"><span class="lineNum">     294 </span>            : </a>
 <a name="295"><span class="lineNum">     295 </span><span class="lineCov">         16 :                 auto rackProcessor = std::make_unique&lt;RackNodePlayer&lt;NodePlayerType&gt;&gt; (std::move (rackNode), inputProvider, true, testSetup.sampleRate, testSetup.blockSize);</span></a>
 <a name="296"><span class="lineNum">     296 </span>            :                                         </a>
-<a name="297"><span class="lineNum">     297 </span><span class="lineCov">         32 :                 auto testContext = createTestContext (std::move (rackProcessor), testSetup, 2, 5.0);</span></a>
+<a name="297"><span class="lineNum">     297 </span><span class="lineCov">         16 :                 auto testContext = createTestContext (std::move (rackProcessor), testSetup, 2, 5.0);</span></a>
 <a name="298"><span class="lineNum">     298 </span><span class="lineCov">         16 :                 const int latencyNumSamples = juce::roundToInt (latencyTimeInSeconds * testSetup.sampleRate);</span></a>
 <a name="299"><span class="lineNum">     299 </span><span class="lineCov">         16 :                 test_utilities::expectAudioBuffer (*this, testContext-&gt;buffer, 0, latencyNumSamples, 0.0f, 0.0f, 1.0f, 0.707f);</span></a>
 <a name="300"><span class="lineNum">     300 </span><span class="lineCov">         16 :                 test_utilities::expectAudioBuffer (*this, testContext-&gt;buffer, 1, latencyNumSamples, 0.0f, 0.0f, 1.0f, 0.707f);</span></a>
@@ -370,7 +370,7 @@
 <a name="308"><span class="lineNum">     308 </span>            :         {</a>
 <a name="309"><span class="lineNum">     309 </span><span class="lineCov">         16 :             auto edit = Edit::createSingleTrackEdit (engine);</span></a>
 <a name="310"><span class="lineNum">     310 </span><span class="lineCov">         16 :             auto rack = edit-&gt;getRackList().addNewRack();</span></a>
-<a name="311"><span class="lineNum">     311 </span><span class="lineCov">         16 :             expectEquals (rack-&gt;getOutputNames().size(), 3);</span></a>
+<a name="311"><span class="lineNum">     311 </span><span class="lineCov">         32 :             expectEquals (rack-&gt;getOutputNames().size(), 3);</span></a>
 <a name="312"><span class="lineNum">     312 </span>            : </a>
 <a name="313"><span class="lineNum">     313 </span><span class="lineCov">         32 :             auto tonePlugin = edit-&gt;getPluginCache().createNewPlugin (ToneGeneratorPlugin::xmlTypeName, {});</span></a>
 <a name="314"><span class="lineNum">     314 </span><span class="lineCov">         16 :             rack-&gt;addPlugin (tonePlugin, {}, false);</span></a>

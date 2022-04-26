@@ -1783,8 +1783,8 @@
       <type>void</type>
       <name>showHideTrackEditor</name>
       <anchorfile>namespacetracktion__engine_1_1AppFunctions.html</anchorfile>
-      <anchor>aa2f9af6cd6699c07268abf55d70a0ec2</anchor>
-      <arglist>()</arglist>
+      <anchor>a2f4cd63dfdd53ebaa56a7f9facefc85b</anchor>
+      <arglist>(bool zoom)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -2670,8 +2670,8 @@
       <type>const char *</type>
       <name>getNamedResource</name>
       <anchorfile>namespacetracktion__engine_1_1TracktionBinaryData.html</anchorfile>
-      <anchor>a940960577376445804fdfca129b520bc</anchor>
-      <arglist>(const char *resourceNameUTF8, int &amp;dataSizeInBytes)</arglist>
+      <anchor>a48ac0559210ca50b35c1d5bab75c0cce</anchor>
+      <arglist>(const char *resourceNameUTF8, int &amp;dataSizeInBytes) noexcept</arglist>
     </member>
     <member kind="variable">
       <type>const char *</type>
@@ -7202,31 +7202,10 @@
     </member>
     <member kind="function">
       <type>void</type>
-      <name>moveMasterLevelFader</name>
-      <anchorfile>classtracktion__engine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>a9c6462c6e948e33fb3d7c1853647bfe1</anchor>
-      <arglist>(float newLeftSliderPos, float newRightSliderPos) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
       <name>movePanPot</name>
       <anchorfile>classtracktion__engine_1_1AlphaTrackControlSurface.html</anchorfile>
       <anchor>abcc4fafa032a0f7d37e39e32637c60b5</anchor>
       <arglist>(int channelNum, float newPan) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>moveAux</name>
-      <anchorfile>classtracktion__engine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>ac6b389a1fa77a4baba125f84b906f780</anchor>
-      <arglist>(int channel, const char *bus, float newPos) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>clearAux</name>
-      <anchorfile>classtracktion__engine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>a65feaf5198ee9330b8cda0966266d281</anchor>
-      <arglist>(int channel) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -7241,13 +7220,6 @@
       <anchorfile>classtracktion__engine_1_1AlphaTrackControlSurface.html</anchorfile>
       <anchor>af4acacbfa3ca71e42a28ebae9bc75927</anchor>
       <arglist>(int channelNum, Track::MuteAndSoloLightState, bool isBright) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>playStateChanged</name>
-      <anchorfile>classtracktion__engine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>a047a130aab50468f9fdb4dd524e49d96</anchor>
-      <arglist>(bool isPlaying) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -10002,6 +9974,13 @@
       <name>deleteFile</name>
       <anchorfile>classtracktion__engine_1_1AudioFile.html</anchorfile>
       <anchor>a6491cdf1092ce63a291db9736cca99f5</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>moveToTrash</name>
+      <anchorfile>classtracktion__engine_1_1AudioFile.html</anchorfile>
+      <anchor>add8b63d0f8c6c2693fada32431cbe62f</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
@@ -18184,10 +18163,10 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
-      <type>void</type>
+      <type>bool</type>
       <name>addClip</name>
       <anchorfile>classtracktion__engine_1_1ClipTrack.html</anchorfile>
-      <anchor>a22e7810cf49e7a255da2da7bd0dc1ae5</anchor>
+      <anchor>a6feb36fc8ff8d3260f79b2fab07cd55e</anchor>
       <arglist>(const Clip::Ptr &amp;clip)</arglist>
     </member>
     <member kind="function">
@@ -20147,15 +20126,15 @@
       <type>virtual void</type>
       <name>moveFader</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a44a7061910a9b9172a9b9e7cf604aaac</anchor>
-      <arglist>([[maybe_unused]] int channelNum, [[maybe_unused]] float newSliderPos)</arglist>
+      <anchor>a9f8866701873af7b5a9517923dc137c6</anchor>
+      <arglist>(int channelNum, float newSliderPos)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>moveMasterLevelFader</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a23b9cc8e5e3c2b960be3d1568da3e3ed</anchor>
-      <arglist>([[maybe_unused]] float newLeftSliderPos, [[maybe_unused]] float newRightSliderPos)</arglist>
+      <anchor>a43392909107121ec43f9deac6c577154</anchor>
+      <arglist>(float newLeftSliderPos, float newRightSliderPos)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
@@ -20868,8 +20847,8 @@
       <type>void</type>
       <name>userToggledTrackEditorWindow</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
-      <anchor>a428329e41edb961cad253d81eda3303d</anchor>
-      <arglist>()</arglist>
+      <anchor>a535391982d1bb4fe601b45405c0d48fc</anchor>
+      <arglist>(bool zoomed)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -21268,6 +21247,13 @@
       <name>numCharactersForMarkerLabels</name>
       <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
       <anchor>a5135b3749a7a5e2c8e5d009967fc68fb</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>pickUpMode</name>
+      <anchorfile>classtracktion__engine_1_1ControlSurface.html</anchorfile>
+      <anchor>a1454b8873950b4598adcac82c5210bcf</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -28474,8 +28460,8 @@
       <type>void</type>
       <name>resyncToGlobalStreamTime</name>
       <anchorfile>classtracktion__engine_1_1EditPlaybackContext.html</anchorfile>
-      <anchor>ab16b86519fb1a921371d55dc5514ebae</anchor>
-      <arglist>(juce::Range&lt; double &gt;)</arglist>
+      <anchor>a326c0b06418bd7fe31488a51b33b3ecd</anchor>
+      <arglist>(juce::Range&lt; double &gt;, double sampleRate)</arglist>
     </member>
     <member kind="function">
       <type>tracktion_graph::PlayHead *</type>
@@ -29581,6 +29567,13 @@
       <anchorfile>classtracktion__engine_1_1EngineBehaviour.html</anchorfile>
       <anchor>a490ea648572ddb42a81e28880dc4ddd6</anchor>
       <arglist>(const juce::String &amp;, bool)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual bool</type>
+      <name>shouldLoadPlugin</name>
+      <anchorfile>classtracktion__engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>aea67f28e2abd5835eea99d91d4b7a467</anchor>
+      <arglist>(ExternalPlugin &amp;p)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
@@ -38337,66 +38330,6 @@
     </member>
   </compound>
   <compound kind="struct">
-    <name>tracktion_engine::TransportControl::Listener</name>
-    <filename>structtracktion__engine_1_1TransportControl_1_1Listener.html</filename>
-    <member kind="function" virtualness="virtual">
-      <type>virtual</type>
-      <name>~Listener</name>
-      <anchorfile>structtracktion__engine_1_1TransportControl_1_1Listener.html</anchorfile>
-      <anchor>a8972c55267e3fc83d275fd67a02501c2</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>playbackContextChanged</name>
-      <anchorfile>structtracktion__engine_1_1TransportControl_1_1Listener.html</anchorfile>
-      <anchor>af14fb6032703baff7ea208504b4ac326</anchor>
-      <arglist>()=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>autoSaveNow</name>
-      <anchorfile>structtracktion__engine_1_1TransportControl_1_1Listener.html</anchorfile>
-      <anchor>a96cfe277102097c2d260da3201a1bcc2</anchor>
-      <arglist>()=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>setAllLevelMetersActive</name>
-      <anchorfile>structtracktion__engine_1_1TransportControl_1_1Listener.html</anchorfile>
-      <anchor>a5dad99fd212f92452f906454fd2c0e4e</anchor>
-      <arglist>(bool metersBecameInactive)=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>setVideoPosition</name>
-      <anchorfile>structtracktion__engine_1_1TransportControl_1_1Listener.html</anchorfile>
-      <anchor>a0da0a6bb675696134a5d74e448b591b1</anchor>
-      <arglist>(double time, bool forceJump)=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>startVideo</name>
-      <anchorfile>structtracktion__engine_1_1TransportControl_1_1Listener.html</anchorfile>
-      <anchor>a5d18a9eb8a107e0ffda8e76c361230fb</anchor>
-      <arglist>()=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>stopVideo</name>
-      <anchorfile>structtracktion__engine_1_1TransportControl_1_1Listener.html</anchorfile>
-      <anchor>a23a0a9a05256d9d75200b5e174702743</anchor>
-      <arglist>()=0</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual void</type>
-      <name>recordingFinished</name>
-      <anchorfile>structtracktion__engine_1_1TransportControl_1_1Listener.html</anchorfile>
-      <anchor>a4be095c8fe344e89eaa293e5afc3c1ca</anchor>
-      <arglist>(InputDeviceInstance &amp;, juce::ReferenceCountedArray&lt; Clip &gt;)</arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
     <name>tracktion_engine::AutomatableParameter::Listener</name>
     <filename>structtracktion__engine_1_1AutomatableParameter_1_1Listener.html</filename>
     <member kind="function" virtualness="virtual">
@@ -38479,6 +38412,66 @@
       <anchorfile>structtracktion__engine_1_1MidiLearnState_1_1Listener.html</anchorfile>
       <anchor>abdd5025fea6d85e339d3ae2f497d29c5</anchor>
       <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion_engine::TransportControl::Listener</name>
+    <filename>structtracktion__engine_1_1TransportControl_1_1Listener.html</filename>
+    <member kind="function" virtualness="virtual">
+      <type>virtual</type>
+      <name>~Listener</name>
+      <anchorfile>structtracktion__engine_1_1TransportControl_1_1Listener.html</anchorfile>
+      <anchor>a8972c55267e3fc83d275fd67a02501c2</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>playbackContextChanged</name>
+      <anchorfile>structtracktion__engine_1_1TransportControl_1_1Listener.html</anchorfile>
+      <anchor>af14fb6032703baff7ea208504b4ac326</anchor>
+      <arglist>()=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>autoSaveNow</name>
+      <anchorfile>structtracktion__engine_1_1TransportControl_1_1Listener.html</anchorfile>
+      <anchor>a96cfe277102097c2d260da3201a1bcc2</anchor>
+      <arglist>()=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>setAllLevelMetersActive</name>
+      <anchorfile>structtracktion__engine_1_1TransportControl_1_1Listener.html</anchorfile>
+      <anchor>a5dad99fd212f92452f906454fd2c0e4e</anchor>
+      <arglist>(bool metersBecameInactive)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>setVideoPosition</name>
+      <anchorfile>structtracktion__engine_1_1TransportControl_1_1Listener.html</anchorfile>
+      <anchor>a0da0a6bb675696134a5d74e448b591b1</anchor>
+      <arglist>(double time, bool forceJump)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>startVideo</name>
+      <anchorfile>structtracktion__engine_1_1TransportControl_1_1Listener.html</anchorfile>
+      <anchor>a5d18a9eb8a107e0ffda8e76c361230fb</anchor>
+      <arglist>()=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>stopVideo</name>
+      <anchorfile>structtracktion__engine_1_1TransportControl_1_1Listener.html</anchorfile>
+      <anchor>a23a0a9a05256d9d75200b5e174702743</anchor>
+      <arglist>()=0</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>recordingFinished</name>
+      <anchorfile>structtracktion__engine_1_1TransportControl_1_1Listener.html</anchorfile>
+      <anchor>a4be095c8fe344e89eaa293e5afc3c1ca</anchor>
+      <arglist>(InputDeviceInstance &amp;, juce::ReferenceCountedArray&lt; Clip &gt;)</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -39524,13 +39517,6 @@
       <anchorfile>classtracktion__engine_1_1MackieC4.html</anchorfile>
       <anchor>aa14674e4adae98d4a3c19380c997226e</anchor>
       <arglist>(int channelNum, float newSliderPos) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>moveMasterLevelFader</name>
-      <anchorfile>classtracktion__engine_1_1MackieC4.html</anchorfile>
-      <anchor>aa837b8c5a6eaf8afc80341a1a54af30c</anchor>
-      <arglist>(float newLeftSliderPos, float newRightSliderPos) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -47899,24 +47885,10 @@
     </member>
     <member kind="function">
       <type>void</type>
-      <name>moveMasterLevelFader</name>
-      <anchorfile>classtracktion__engine_1_1NovationRemoteSl.html</anchorfile>
-      <anchor>a7f2dc5cfc4390206af0f42b93a991032</anchor>
-      <arglist>(float newLeftSliderPos, float newRightSliderPos) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
       <name>movePanPot</name>
       <anchorfile>classtracktion__engine_1_1NovationRemoteSl.html</anchorfile>
       <anchor>af22674bb1456d671f2e38464dac32c29</anchor>
       <arglist>(int channelNum, float newPan) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>moveAux</name>
-      <anchorfile>classtracktion__engine_1_1NovationRemoteSl.html</anchorfile>
-      <anchor>ae7236fa992d9974680c853b0218295ca</anchor>
-      <arglist>(int channel, const char *bus, float newPos) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -48983,66 +48955,6 @@
     </member>
   </compound>
   <compound kind="struct">
-    <name>tracktion_engine::HostedAudioDeviceInterface::Parameters</name>
-    <filename>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</filename>
-    <member kind="variable">
-      <type>double</type>
-      <name>sampleRate</name>
-      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>a05687012e71d8ecd455cc940a957de4a</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>int</type>
-      <name>blockSize</name>
-      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>a22f02d68dff12d51f3ea1f81655dbaea</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>bool</type>
-      <name>useMidiDevices</name>
-      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>a3f2505c158909ee30ca58455bb254fd7</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>int</type>
-      <name>inputChannels</name>
-      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>a0b4fbeafa74f726691ae8f681d0b4e7f</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>int</type>
-      <name>outputChannels</name>
-      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>ae0fc6112d00d084a824f5d567dd94996</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>bool</type>
-      <name>fixedBlockSize</name>
-      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>aed3b302ceedbd1099eacb7984d88e04e</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::StringArray</type>
-      <name>inputNames</name>
-      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>a3fb5da1d11b102ba7b1f9451c53bbf0f</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::StringArray</type>
-      <name>outputNames</name>
-      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>a06c8157286b8b57614604a1f0f41b42b</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
     <name>tracktion_engine::Renderer::Parameters</name>
     <filename>structtracktion__engine_1_1Renderer_1_1Parameters.html</filename>
     <member kind="function">
@@ -49302,6 +49214,66 @@
       <name>resultAudioDuration</name>
       <anchorfile>structtracktion__engine_1_1Renderer_1_1Parameters.html</anchorfile>
       <anchor>a15d56f3ffe40efa03d2813fcbfe9f65a</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion_engine::HostedAudioDeviceInterface::Parameters</name>
+    <filename>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</filename>
+    <member kind="variable">
+      <type>double</type>
+      <name>sampleRate</name>
+      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>a05687012e71d8ecd455cc940a957de4a</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>blockSize</name>
+      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>a22f02d68dff12d51f3ea1f81655dbaea</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>useMidiDevices</name>
+      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>a3f2505c158909ee30ca58455bb254fd7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>inputChannels</name>
+      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>a0b4fbeafa74f726691ae8f681d0b4e7f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>outputChannels</name>
+      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>ae0fc6112d00d084a824f5d567dd94996</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>fixedBlockSize</name>
+      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>aed3b302ceedbd1099eacb7984d88e04e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::StringArray</type>
+      <name>inputNames</name>
+      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>a3fb5da1d11b102ba7b1f9451c53bbf0f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::StringArray</type>
+      <name>outputNames</name>
+      <anchorfile>structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>a06c8157286b8b57614604a1f0f41b42b</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -70808,8 +70780,8 @@
       <type>virtual void</type>
       <name>showHideTrackEditor</name>
       <anchorfile>classtracktion__engine_1_1UIBehaviour.html</anchorfile>
-      <anchor>a85392c1237fa8568d223a22490918d91</anchor>
-      <arglist>()</arglist>
+      <anchor>aba5d16e4055964c5f210ff6ce2f81947</anchor>
+      <arglist>([[maybe_unused]] bool zoom)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
@@ -80363,8 +80335,8 @@
       <type>void</type>
       <name>showHideTrackEditor</name>
       <anchorfile>namespacetracktion__engine_1_1AppFunctions.html</anchorfile>
-      <anchor>aa2f9af6cd6699c07268abf55d70a0ec2</anchor>
-      <arglist>()</arglist>
+      <anchor>a2f4cd63dfdd53ebaa56a7f9facefc85b</anchor>
+      <arglist>(bool zoom)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -80859,8 +80831,8 @@
       <type>const char *</type>
       <name>getNamedResource</name>
       <anchorfile>namespacetracktion__engine_1_1TracktionBinaryData.html</anchorfile>
-      <anchor>a940960577376445804fdfca129b520bc</anchor>
-      <arglist>(const char *resourceNameUTF8, int &amp;dataSizeInBytes)</arglist>
+      <anchor>a48ac0559210ca50b35c1d5bab75c0cce</anchor>
+      <arglist>(const char *resourceNameUTF8, int &amp;dataSizeInBytes) noexcept</arglist>
     </member>
     <member kind="variable">
       <type>const char *</type>

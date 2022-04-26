@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-01-27 19:55:46</td>
+            <td class="headerValue">2022-04-26 16:11:08</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -121,7 +121,7 @@
 <a name="59"><span class="lineNum">      59 </span>            :     AudioFile&amp; operator= (const AudioFile&amp;) noexcept;</a>
 <a name="60"><span class="lineNum">      60 </span>            :     ~AudioFile();</a>
 <a name="61"><span class="lineNum">      61 </span>            : </a>
-<a name="62"><span class="lineNum">      62 </span><span class="lineCov">        567 :     const juce::File&amp; getFile() const noexcept  { return file; }</span></a>
+<a name="62"><span class="lineNum">      62 </span><span class="lineCov">        565 :     const juce::File&amp; getFile() const noexcept  { return file; }</span></a>
 <a name="63"><span class="lineNum">      63 </span>            :     HashCode getHash() const noexcept           { return hash; }</a>
 <a name="64"><span class="lineNum">      64 </span>            :     juce::String getHashString() const          { return juce::String::toHexString (hash); }</a>
 <a name="65"><span class="lineNum">      65 </span>            : </a>
@@ -131,37 +131,39 @@
 <a name="69"><span class="lineNum">      69 </span>            :     bool deleteFile() const;</a>
 <a name="70"><span class="lineNum">      70 </span>            :     static bool deleteFiles (Engine&amp;, const juce::Array&lt;juce::File&gt;&amp; files);</a>
 <a name="71"><span class="lineNum">      71 </span>            : </a>
-<a name="72"><span class="lineNum">      72 </span>            :     //==============================================================================</a>
-<a name="73"><span class="lineNum">      73 </span>            :     bool isNull() const noexcept                { return hash == 0; }</a>
-<a name="74"><span class="lineNum">      74 </span>            :     bool isValid() const;</a>
-<a name="75"><span class="lineNum">      75 </span>            : </a>
-<a name="76"><span class="lineNum">      76 </span>            :     AudioFileInfo getInfo() const;</a>
+<a name="72"><span class="lineNum">      72 </span>            :     bool moveToTrash() const;</a>
+<a name="73"><span class="lineNum">      73 </span>            : </a>
+<a name="74"><span class="lineNum">      74 </span>            :     //==============================================================================</a>
+<a name="75"><span class="lineNum">      75 </span>            :     bool isNull() const noexcept                { return hash == 0; }</a>
+<a name="76"><span class="lineNum">      76 </span>            :     bool isValid() const;</a>
 <a name="77"><span class="lineNum">      77 </span>            : </a>
-<a name="78"><span class="lineNum">      78 </span>            :     int64_t getLengthInSamples() const;</a>
-<a name="79"><span class="lineNum">      79 </span>            :     double getLength() const;</a>
-<a name="80"><span class="lineNum">      80 </span>            :     int getNumChannels() const;</a>
-<a name="81"><span class="lineNum">      81 </span>            :     double getSampleRate() const;</a>
-<a name="82"><span class="lineNum">      82 </span>            :     int getBitsPerSample() const;</a>
-<a name="83"><span class="lineNum">      83 </span>            :     bool isFloatingPoint() const;</a>
-<a name="84"><span class="lineNum">      84 </span>            :     juce::StringPairArray getMetadata() const;</a>
-<a name="85"><span class="lineNum">      85 </span>            : </a>
-<a name="86"><span class="lineNum">      86 </span>            :     juce::AudioFormat* getFormat() const;</a>
+<a name="78"><span class="lineNum">      78 </span>            :     AudioFileInfo getInfo() const;</a>
+<a name="79"><span class="lineNum">      79 </span>            : </a>
+<a name="80"><span class="lineNum">      80 </span>            :     int64_t getLengthInSamples() const;</a>
+<a name="81"><span class="lineNum">      81 </span>            :     double getLength() const;</a>
+<a name="82"><span class="lineNum">      82 </span>            :     int getNumChannels() const;</a>
+<a name="83"><span class="lineNum">      83 </span>            :     double getSampleRate() const;</a>
+<a name="84"><span class="lineNum">      84 </span>            :     int getBitsPerSample() const;</a>
+<a name="85"><span class="lineNum">      85 </span>            :     bool isFloatingPoint() const;</a>
+<a name="86"><span class="lineNum">      86 </span>            :     juce::StringPairArray getMetadata() const;</a>
 <a name="87"><span class="lineNum">      87 </span>            : </a>
-<a name="88"><span class="lineNum">      88 </span>            :     bool isWavFile() const;</a>
-<a name="89"><span class="lineNum">      89 </span>            :     bool isAiffFile() const;</a>
-<a name="90"><span class="lineNum">      90 </span>            :     bool isOggFile() const;</a>
-<a name="91"><span class="lineNum">      91 </span>            :     bool isMp3File() const;</a>
-<a name="92"><span class="lineNum">      92 </span>            :     bool isFlacFile() const;</a>
-<a name="93"><span class="lineNum">      93 </span>            :     bool isRexFile() const;</a>
-<a name="94"><span class="lineNum">      94 </span>            : </a>
-<a name="95"><span class="lineNum">      95 </span>            :     Engine* engine = nullptr;</a>
+<a name="88"><span class="lineNum">      88 </span>            :     juce::AudioFormat* getFormat() const;</a>
+<a name="89"><span class="lineNum">      89 </span>            : </a>
+<a name="90"><span class="lineNum">      90 </span>            :     bool isWavFile() const;</a>
+<a name="91"><span class="lineNum">      91 </span>            :     bool isAiffFile() const;</a>
+<a name="92"><span class="lineNum">      92 </span>            :     bool isOggFile() const;</a>
+<a name="93"><span class="lineNum">      93 </span>            :     bool isMp3File() const;</a>
+<a name="94"><span class="lineNum">      94 </span>            :     bool isFlacFile() const;</a>
+<a name="95"><span class="lineNum">      95 </span>            :     bool isRexFile() const;</a>
 <a name="96"><span class="lineNum">      96 </span>            : </a>
-<a name="97"><span class="lineNum">      97 </span>            : private:</a>
-<a name="98"><span class="lineNum">      98 </span>            :     juce::File file;</a>
-<a name="99"><span class="lineNum">      99 </span>            :     HashCode hash = 0;</a>
-<a name="100"><span class="lineNum">     100 </span>            : };</a>
-<a name="101"><span class="lineNum">     101 </span>            : </a>
-<a name="102"><span class="lineNum">     102 </span>            : } // namespace tracktion_engine</a>
+<a name="97"><span class="lineNum">      97 </span>            :     Engine* engine = nullptr;</a>
+<a name="98"><span class="lineNum">      98 </span>            : </a>
+<a name="99"><span class="lineNum">      99 </span>            : private:</a>
+<a name="100"><span class="lineNum">     100 </span>            :     juce::File file;</a>
+<a name="101"><span class="lineNum">     101 </span>            :     HashCode hash = 0;</a>
+<a name="102"><span class="lineNum">     102 </span>            : };</a>
+<a name="103"><span class="lineNum">     103 </span>            : </a>
+<a name="104"><span class="lineNum">     104 </span>            : } // namespace tracktion_engine</a>
 </pre>
       </td>
     </tr>
