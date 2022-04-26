@@ -42,7 +42,7 @@ jobs:
           files: ./tests/coverage/build_linux/coverage.info
 
       - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@releases/v4.3.3
+        uses: JamesIves/github-pages-deploy-action@v4.3.3
         with:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           BRANCH: gh-pages 
