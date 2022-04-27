@@ -211,6 +211,7 @@ private:
          referenceStreamRange = juce::Range<double>::withStartAndLength (referenceStreamRange.getEnd(), sampleDuration);
          playHead.setReferenceSampleRange (getReferenceSampleRange());
          numSamplesToProcess = static_cast<choc::buffer::FrameCount> (numSamples);
+         processState.setPlaybackSpeedRatio (blockLengthScaleFactor);
      }
      
      void resyncToReferenceSampleRange (juce::Range<int64_t> newReferenceSampleRange)

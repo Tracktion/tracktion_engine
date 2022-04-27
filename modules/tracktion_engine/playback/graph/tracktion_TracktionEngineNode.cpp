@@ -53,6 +53,12 @@ void ProcessState::update (double newSampleRate, juce::Range<int64_t> newReferen
     editBeatRange = { beatStart, beatEnd };
 }
 
+void ProcessState::setPlaybackSpeedRatio (double newRatio)
+{
+    playbackSpeedRatio = newRatio;
+}
+
+
 //==============================================================================
 //==============================================================================
 TracktionEngineNode::TracktionEngineNode (ProcessState& ps)
@@ -66,6 +72,11 @@ tempo::Key TracktionEngineNode::getKey() const
         return processState.tempoPosition->getKey();
 
     return {};
+}
+
+double TracktionEngineNode::getPlaybackSpeedRatio() const
+{
+    return processState.playbackSpeedRatio;
 }
 
 std::optional<TimePosition> TracktionEngineNode::getTimeOfNextChange() const

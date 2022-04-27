@@ -35,9 +35,14 @@ struct ProcessState
     */
     void update (double sampleRate, juce::Range<int64_t> referenceSampleRange, UpdateContinuityFlags);
 
+    /** Sets a playback speed ratio.
+        Some Nodes might use this to adjust their playback speeds.
+    */
+    void setPlaybackSpeedRatio (double newRatio);
+
     tracktion::graph::PlayHeadState& playHeadState;
     std::unique_ptr<tempo::Sequence::Position> tempoPosition;
-    double sampleRate = 44100.0;
+    double sampleRate = 44100.0, playbackSpeedRatio = 1.0;
     int numSamples = 0;
     juce::Range<int64_t> referenceSampleRange, timelineSampleRange;
     TimeRange editTimeRange;
@@ -81,6 +86,9 @@ public:
 
     /** Returns the key of the current process block. */
     tempo::Key getKey() const;
+
+    /** Returns the playback speed ratio of the current process block. */
+    double getPlaybackSpeedRatio() const;
 
     //==============================================================================
     /** May return the time of the next tempo or time sig change. */

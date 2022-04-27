@@ -563,7 +563,8 @@ public:
     bool read (TimeRange tr,
                choc::buffer::ChannelArrayView<float>& destBuffer,
                TimeDuration editDuration,
-               bool isContiguous)
+               bool isContiguous,
+               double playbackSpeedRatio)
     {
         const auto numSourceSamples = toSamples (tr.getLength(), getSampleRate());
 
@@ -573,7 +574,7 @@ public:
             return true;
         }
 
-        const auto blockSpeedRatio = tr.getLength() / editDuration;
+        const auto blockSpeedRatio = (tr.getLength() / editDuration) * playbackSpeedRatio;
 
         if (timeStretchSource)
             timeStretchSource->setSpeed (blockSpeedRatio);
@@ -609,13 +610,14 @@ public:
     bool read (TimeRange editTimeRange,
                choc::buffer::ChannelArrayView<float>& destBuffer,
                TimeDuration editDuration,
-               bool isContiguous)
+               bool isContiguous,
+               double playbackSpeedRatio)
     {
         const auto clipStartOffset = toDuration (clipPosition.getStart());
         TimeRange tr ((editTimeRange.getStart() - clipStartOffset) * speedRatio,
                       (editTimeRange.getEnd() - clipStartOffset) * speedRatio);
         tr = tr + (offset * speedRatio);
-        const auto readOk = source->read (tr, destBuffer, editDuration, isContiguous);
+        const auto readOk = source->read (tr, destBuffer, editDuration, isContiguous, playbackSpeedRatio);
 
         // Clear samples outside of clip position
         // N.B. this shouldn't happen when using a clip combiner as the times should be clipped correctly
@@ -684,13 +686,14 @@ public:
     bool read (BeatRange br,
                choc::buffer::ChannelArrayView<float>& destBuffer,
                TimeDuration editDuration,
-               bool isContiguous)
+               bool isContiguous,
+               double playbackSpeedRatio)
     {
         // Apply offset first
         br = br + offset;
 
         // First apply the looping
-        return readLoopedBeatRange (br, destBuffer, editDuration, isContiguous);
+        return readLoopedBeatRange (br, destBuffer, editDuration, isContiguous, playbackSpeedRatio);
     }
 
     choc::buffer::ChannelCount getNumChannels() override    { return source->getNumChannels(); }
@@ -714,12 +717,13 @@ private:
     bool readLoopedBeatRange (BeatRange br,
                               choc::buffer::ChannelArrayView<float>& destBuffer,
                               TimeDuration editDuration,
-                              bool isContiguous)
+                              bool isContiguous,
+                              double playbackSpeedRatio)
     {
         using choc::buffer::FrameCount;
 
         if (loopRange.isEmpty())
-            return readBeatRange (br, destBuffer, editDuration, isContiguous);
+            return readBeatRange (br, destBuffer, editDuration, isContiguous, playbackSpeedRatio);
 
         const auto s = linearPositionToLoopPosition (br.getStart(), loopRange);
         const auto e = linearPositionToLoopPosition (br.getEnd(), loopRange);
@@ -727,10 +731,10 @@ private:
         if (s > e)
         {
             if (s >= loopRange.getEnd())
-                return readBeatRange ({ loopRange.getStart(), e }, destBuffer, editDuration, isContiguous);
+                return readBeatRange ({ loopRange.getStart(), e }, destBuffer, editDuration, isContiguous, playbackSpeedRatio);
 
             if (e <= loopRange.getStart())
-                return readBeatRange ({ s, loopRange.getEnd() }, destBuffer, editDuration, isContiguous);
+                return readBeatRange ({ s, loopRange.getEnd() }, destBuffer, editDuration, isContiguous, playbackSpeedRatio);
 
             // Oterhwise range is split
             const BeatRange br1 (s, loopRange.getEnd());
@@ -744,17 +748,18 @@ private:
             auto buffer1 = destBuffer.getStart (numFrames1);
             auto buffer2 = destBuffer.getFrameRange ({ numFrames1, numFrames });
 
-            return readBeatRange (br1, buffer1, editDuration * prop1, isContiguous)
-                && readBeatRange (br2, buffer2, editDuration * prop2, false);
+            return readBeatRange (br1, buffer1, editDuration * prop1, isContiguous, playbackSpeedRatio)
+                && readBeatRange (br2, buffer2, editDuration * prop2, false, playbackSpeedRatio);
         }
 
-        return readBeatRange ({ s, e }, destBuffer, editDuration, isContiguous);
+        return readBeatRange ({ s, e }, destBuffer, editDuration, isContiguous, playbackSpeedRatio);
     }
 
     bool readBeatRange (BeatRange br,
                         choc::buffer::ChannelArrayView<float>& destBuffer,
                         TimeDuration editDuration,
-                        bool isContiguous)
+                        bool isContiguous,
+                        double playbackSpeedRatio)
     {
         // Convert source beat range to source time range
         sourceSequencePosition.set (br.getStart());
@@ -762,7 +767,7 @@ private:
         sourceSequencePosition.set (br.getEnd());
         const auto endTime = (sourceSequencePosition.getTime());
 
-        return source->read ({ startTime, endTime }, destBuffer, editDuration, isContiguous);
+        return source->read ({ startTime, endTime }, destBuffer, editDuration, isContiguous, playbackSpeedRatio);
     }
 
     static inline BeatPosition linearPositionToLoopPosition (BeatPosition position, BeatRange loopRange)
@@ -784,10 +789,11 @@ public:
     bool read (BeatRange editBeatRange,
                choc::buffer::ChannelArrayView<float>& destBuffer,
                TimeDuration editDuration,
-               bool isContiguous)
+               bool isContiguous,
+               double playbackSpeedRatio)
     {
         const auto clipBeatRange = editBeatRange - toDuration (clipPosition.getStart());
-        const auto readOk = source->read (clipBeatRange, destBuffer, editDuration, isContiguous);
+        const auto readOk = source->read (clipBeatRange, destBuffer, editDuration, isContiguous, playbackSpeedRatio);
 
         // Clear samples outside of clip position
         // N.B. this shouldn't happen when using a clip combiner as the times should be clipped correctly
@@ -1095,8 +1101,8 @@ void WaveNode::processSection (ProcessContext& pc, juce::Range<int64_t> timeline
     // Silence any samples before or after our edit time range
     // N.B. this shouldn't happen when using a clip combiner as the times should be clipped correctly
     {
-        auto numSamplesToClearAtStart = editPositionInSamples.getStart() - timelineRange.getStart();
-        auto numSamplesToClearAtEnd = timelineRange.getEnd() - editPositionInSamples.getEnd();
+        auto numSamplesToClearAtStart = std::min (editPositionInSamples.getStart() - timelineRange.getStart(), (SampleCount) destBuffer.getNumFrames());
+        auto numSamplesToClearAtEnd = std::min (timelineRange.getEnd() - editPositionInSamples.getEnd(), (SampleCount) destBuffer.getNumFrames());
 
         if (numSamplesToClearAtStart > 0)
             destBuffer.getStart ((choc::buffer::FrameCount) numSamplesToClearAtStart).clear();
@@ -1407,8 +1413,8 @@ void WaveNodeRealTime::processSection (ProcessContext& pc)
     const auto isContiguous = getPlayHeadState().isContiguousWithPreviousBlock();
     const auto editSectionLength = getEditTimeRange().getLength();
 
-    if ((editToClipBeatReader && editToClipBeatReader->read (sectionEditBeats, pc.buffers.audio, editSectionLength, isContiguous))
-        || (editToClipTimeReader && editToClipTimeReader->read (sectionEditTime, pc.buffers.audio, editSectionLength, isContiguous)))
+    if ((editToClipBeatReader && editToClipBeatReader->read (sectionEditBeats, pc.buffers.audio, editSectionLength, isContiguous, getPlaybackSpeedRatio()))
+        || (editToClipTimeReader && editToClipTimeReader->read (sectionEditTime, pc.buffers.audio, editSectionLength, isContiguous, getPlaybackSpeedRatio())))
     {
         if (! isContiguous && ! getPlayHeadState().isFirstBlockOfLoop())
             lastSampleFadeLength = std::min (numFrames, getPlayHead().isUserDragging() ? 40u : 10u);
