@@ -56,6 +56,8 @@ public:
 
     void drawChannels (juce::Graphics&, juce::Rectangle<int> area, bool useHighRes,
                        EditTimeRange time, float verticalZoomFactor);
+    /**Returns number of thumbsamples read */
+    int getThumbnailMinMaxValues(std::vector<int8_t>& minValues, std::vector<int8_t>& maxValues, int numberOfThumbSamplesRequested, int startThumbSampleIndex, int channel);
 
 private:
     //==============================================================================

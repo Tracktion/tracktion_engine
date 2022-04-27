@@ -869,4 +869,22 @@ void TracktionThumbnail::drawChannels (juce::Graphics& g, juce::Rectangle<int> a
     }
 }
 
+int TracktionThumbnail::getThumbnailMinMaxValues(std::vector<int8_t>& minValues, std::vector<int8_t>& maxValues, int numberOfThumbSamplesRequested, int startThumbSampleIndex, int channel)
+{
+    const juce::ScopedLock sl(lock);
+
+    auto minMaxValuesPtr = channels[channel]->getData(startThumbSampleIndex);
+    int remainingNumberOfThumbSamples = channels[channel]->getSize() - startThumbSampleIndex;
+
+    //make sure there are the number of thumbnail samples asked for
+    int numberOfSamplesToRead = numberOfThumbSamplesRequested > remainingNumberOfThumbSamples ? remainingNumberOfThumbSamples : numberOfThumbSamplesRequested;
+
+    for (int i = 0; i < numberOfSamplesToRead; i++)
+    {
+        minValues.push_back(minMaxValuesPtr[i].getMinValue());
+        maxValues.push_back(minMaxValuesPtr[i].getMaxValue());
+    }
+    return numberOfSamplesToRead;
+}
+
 }
