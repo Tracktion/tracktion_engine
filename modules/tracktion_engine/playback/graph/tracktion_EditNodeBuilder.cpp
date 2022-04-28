@@ -432,7 +432,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
 
             if (clip.getAutoTempo() && li.getNumBeats() > 0 && wi.hashCode != 0)
             {
-                tempos.push_back ({ 0_bp, li.getBpm (wi) * 2.0, 1.0 });
+                tempos.push_back ({ 0_bp, li.getBpm (wi), 1.0 });
                 timeSigs.push_back ({ 0_bp, li.getNumerator(), li.getDenominator(), false });
                 syncTempo = WaveNodeRealTime::SyncTempo::yes;
             }
