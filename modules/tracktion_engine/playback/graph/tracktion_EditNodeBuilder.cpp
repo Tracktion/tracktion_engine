@@ -432,26 +432,27 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
 
             if (clip.getAutoTempo() && li.getNumBeats() > 0 && wi.hashCode != 0)
             {
-                tempos.push_back ({ BeatPosition(), li.getBpm (wi), 0.0 });
-                timeSigs.push_back ({ BeatPosition(), li.getNumerator(), li.getDenominator(), false });
+                tempos.push_back ({ 0_bp, li.getBpm (wi) * 2.0, 1.0 });
+                timeSigs.push_back ({ 0_bp, li.getNumerator(), li.getDenominator(), false });
                 syncTempo = WaveNodeRealTime::SyncTempo::yes;
             }
             else
             {
-                tempos.push_back ({ BeatPosition(), 120.0, 0.0 });
-                timeSigs.push_back ({ BeatPosition(), 4, 4, false });
+                tempos.push_back ({ 0_bp, 120.0, 0.0 });
+                timeSigs.push_back ({ 0_bp, 4, 4, false });
             }
 
             if (clip.getAutoPitch() && li.getRootNote() != -1)
             {
-                keyChanges.push_back ({ BeatPosition(), { li.getRootNote(), 0 } });
+                keyChanges.push_back ({ 0_bp, { li.getRootNote(), 0 } });
                 syncPitch = WaveNodeRealTime::SyncPitch::yes;
             }
 
             tempo::Sequence seq (std::move (tempos),
                                  std::move (timeSigs),
                                  std::move (keyChanges),
-                                 tempo::LengthOfOneBeat::dependsOnTimeSignature);
+                                 clip.edit.engine.getEngineBehaviour().lengthOfOneBeatDependsOnTimeSignature() ? tempo::LengthOfOneBeat::dependsOnTimeSignature
+                                                                                                               : tempo::LengthOfOneBeat::isAlwaysACrotchet);
 
             node = makeNode<WaveNodeRealTime> (playFile,
                                                timeStretcherMode, timeStretcherOpts,
