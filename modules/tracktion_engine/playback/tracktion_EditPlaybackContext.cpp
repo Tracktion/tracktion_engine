@@ -354,10 +354,9 @@ EditPlaybackContext::EditPlaybackContext (TransportControl& tc)
 
 EditPlaybackContext::~EditPlaybackContext()
 {
+    TRACKTION_ASSERT_MESSAGE_THREAD
+    releaseDeviceList();
     edit.engine.getDeviceManager().removeContext (this);
-
-    clearNodes();
-    midiDispatcher.setMidiDeviceList (juce::OwnedArray<MidiOutputDeviceInstance>());
 }
 
 void EditPlaybackContext::releaseDeviceList()
