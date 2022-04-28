@@ -56,8 +56,13 @@ public:
 
     void drawChannels (juce::Graphics&, juce::Rectangle<int> area, bool useHighRes,
                        EditTimeRange time, float verticalZoomFactor);
+
+    void getStartAndEndTimeOfPacket(float& startTime, float& endTime);
+    /**Returns and sets numberOfThumbSamplesToRead from all channels */
+    int getNumberOfTotalThumbSamples();
     /**Returns number of thumbsamples read */
     int getThumbnailMinMaxValues(std::vector<int8_t>& minValues, std::vector<int8_t>& maxValues, int numberOfThumbSamplesRequested, int startThumbSampleIndex, int channel);
+
 
 private:
     //==============================================================================
@@ -79,6 +84,9 @@ private:
     double sampleRate = 0;
     juce::CriticalSection lock, sourceLock;
 
+    int numberOfThumbSamplesToRead = 0;
+    int readPos = 0;
+
     bool setDataSource (LevelDataSource*);
     void setLevels (const MinMaxValue* const* values, int thumbIndex, int numChans, int numValues);
 
@@ -86,6 +94,9 @@ private:
                       double endTime, int channelNum, float verticalZoomFactor) override;
     void drawChannels (juce::Graphics&, const juce::Rectangle<int>& area, double startTimeSeconds,
                        double endTimeSeconds, float verticalZoomFactor) override;
+
+    /**Returns numberOfThumbSamplesToRead from a channel */
+    int getNumberOfThumbSamples(int channel);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TracktionThumbnail)
 };
