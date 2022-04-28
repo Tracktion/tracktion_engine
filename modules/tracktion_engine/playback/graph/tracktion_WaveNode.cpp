@@ -840,6 +840,195 @@ private:
     const BeatRange clipPosition;
 };
 
+
+//==============================================================================
+class EditReader
+{
+public:
+    EditReader (std::unique_ptr<EditToClipBeatReader> beatReader,
+                std::unique_ptr<EditToClipTimeReader> timeReader)
+        : editToClipBeatReader (std::move (beatReader)),
+          editToClipTimeReader (std::move (timeReader))
+    {
+        assert ((editToClipBeatReader || editToClipTimeReader) && "Must supply one valid reader");
+    }
+
+    bool isBeatBased() const            { return editToClipBeatReader != nullptr; }
+    bool isTimeBased() const            { return editToClipTimeReader != nullptr; }
+
+    choc::buffer::ChannelCount getNumChannels() const
+    {
+        return editToClipBeatReader ? editToClipBeatReader->getNumChannels()
+                                    : editToClipTimeReader->getNumChannels();
+    }
+
+    bool read (BeatRange editBeatRange,
+               TimeRange editTimeRange,
+               choc::buffer::ChannelArrayView<float>& destBuffer,
+               bool isContiguous,
+               double playbackSpeedRatio)
+    {
+        const auto editDuration = editTimeRange.getLength();
+
+        if (editToClipBeatReader)
+            return editToClipBeatReader->read (editBeatRange, destBuffer, editDuration, isContiguous, playbackSpeedRatio);
+
+        if (editToClipTimeReader)
+            return editToClipTimeReader->read (editTimeRange, destBuffer, editDuration, isContiguous, playbackSpeedRatio);
+
+        return false;
+    }
+
+private:
+    std::unique_ptr<EditToClipBeatReader> editToClipBeatReader;
+    std::unique_ptr<EditToClipTimeReader> editToClipTimeReader;
+};
+
+//==============================================================================
+class SpeedFadeEditReader
+{
+public:
+    SpeedFadeEditReader (std::unique_ptr<EditReader> editReader,
+                         SpeedFadeDescription speedFadeDesc,
+                         std::optional<tempo::Sequence::Position> editTempoPosition)
+        : reader (std::move (editReader)),
+          fadeDesc (speedFadeDesc),
+          tempoPosition (std::move (editTempoPosition))
+    {
+        for (int i = (int) getNumChannels(); --i >= 0;)
+        {
+            resamplers.emplace_back (juce::LagrangeInterpolator());
+            resamplers.back().reset();
+        }
+    }
+
+    bool isBeatBased() const            { return reader->isBeatBased(); }
+    bool isTimeBased() const            { return reader->isTimeBased(); }
+
+    choc::buffer::ChannelCount getNumChannels() const
+    {
+        return reader->getNumChannels();
+    }
+
+    bool read (BeatRange editBeatRange,
+               TimeRange editTimeRange,
+               choc::buffer::ChannelArrayView<float>& destBuffer,
+               bool isContiguous,
+               double playbackSpeedRatio)
+    {
+        if (! shouldWarp() || editTimeRange.isEmpty())
+            return  reader->read (editBeatRange, editTimeRange, destBuffer, isContiguous, playbackSpeedRatio);
+
+        const auto originalDuration = editTimeRange.getLength();
+        std::tie (editBeatRange, editTimeRange) = warpTimeRanges (editBeatRange, editTimeRange);
+
+        const auto editDuration = editTimeRange.getLength();
+        const auto ratio = editDuration / originalDuration;
+
+        const auto numChannels = destBuffer.getNumChannels();
+        assert (numChannels <= (choc::buffer::ChannelCount) resamplers.size());
+        assert (destBuffer.getNumChannels() == numChannels);
+
+        const auto numFrames = destBuffer.getNumFrames();
+        const int numSourceFramesToRead = static_cast<int> ((numFrames * ratio) + 0.5);
+        AudioScratchBuffer sourceData ((int) numChannels, numSourceFramesToRead);
+        auto sourceDataView = toBufferView (sourceData.buffer);
+        sourceDataView.clear();
+        const bool ok = reader->read (editBeatRange, editTimeRange, sourceDataView, isContiguous, playbackSpeedRatio);
+
+        const auto resamplerRatio = static_cast<double> (numSourceFramesToRead) / numFrames;
+
+        for (choc::buffer::ChannelCount channel = 0; channel < numChannels; ++channel)
+        {
+            if (channel < (choc::buffer::ChannelCount) resamplers.size())
+            {
+                const auto src = sourceData.buffer.getReadPointer ((int) channel);
+                const auto dest = destBuffer.getIterator (channel).sample;
+
+                auto& resampler = resamplers[(size_t) channel];
+                resampler.process (resamplerRatio, src, dest, (int) numFrames);
+            }
+            else
+            {
+                destBuffer.getChannel (channel).clear();
+            }
+        }
+
+        return ok;
+    }
+
+private:
+    std::unique_ptr<EditReader> reader;
+
+    SpeedFadeDescription fadeDesc;
+    std::optional<tempo::Sequence::Position> tempoPosition;
+    std::vector<juce::LagrangeInterpolator> resamplers;
+
+    bool shouldWarp() const
+    {
+        return tempoPosition && ! fadeDesc.isEmpty();
+    }
+
+    std::pair<BeatRange, TimeRange> warpTimeRanges (BeatRange br, TimeRange tr)
+    {
+        assert (shouldWarp());
+        tr = { warpTimePosition (tr.getStart()),
+               warpTimePosition (tr.getEnd()) };
+
+        tempoPosition->set (tr.getStart());
+        const auto startBeat = tempoPosition->getBeats();
+        tempoPosition->set (tr.getEnd());
+        const auto endBeat = tempoPosition->getBeats();
+        br = { startBeat, endBeat };
+
+        return { br, tr };
+    }
+
+    TimePosition warpTimePosition (TimePosition tp)
+    {
+        if (! fadeDesc.inTimeRange.isEmpty()
+            && fadeDesc.inTimeRange.containsInclusive (tp))
+        {
+            const auto prop = (tp - fadeDesc.inTimeRange.getStart()) / fadeDesc.inTimeRange.getLength();
+            const auto newProp = rescale (fadeDesc.fadeInType, prop, true);
+            return fadeDesc.inTimeRange.getStart() + (fadeDesc.inTimeRange.getLength() * newProp);
+        }
+        else if (! fadeDesc.outTimeRange.isEmpty()
+                 && fadeDesc.outTimeRange.containsInclusive (tp))
+        {
+            const auto prop = (tp - fadeDesc.outTimeRange.getStart()) / fadeDesc.outTimeRange.getLength();
+            const auto newProp = rescale (fadeDesc.fadeOutType, prop, false);
+            return fadeDesc.outTimeRange.getStart() + (fadeDesc.outTimeRange.getLength() * newProp);
+        }
+
+        return tp;
+    }
+
+    static double rescale (AudioFadeCurve::Type t, double proportion, bool rampUp)
+    {
+        switch (t)
+        {
+            case AudioFadeCurve::convex:
+                return rampUp ? (-2.0 * std::cos ((juce::MathConstants<double>::pi * proportion) / 2.0)) / juce::MathConstants<double>::pi + 1.0
+                              : 1.0 - ((-2.0 * std::cos ((juce::MathConstants<double>::pi * (proportion - 1.0)) / 2.0)) / juce::MathConstants<double>::pi + 1.0);
+
+            case AudioFadeCurve::concave:
+                return rampUp ? proportion - (2.0 * std::sin ((juce::MathConstants<double>::pi * proportion) / 2.0)) / juce::MathConstants<double>::pi + (2.0 / juce::MathConstants<double>::pi)
+                              : ((2.0 * std::sin ((juce::MathConstants<double>::pi * (proportion + 1.0)) / 2.0)) / juce::MathConstants<double>::pi) + proportion - (2.0 / juce::MathConstants<double>::pi);
+
+            case AudioFadeCurve::sCurve:
+                return rampUp ? (proportion / 2.0) - (std::sin (juce::MathConstants<double>::pi * proportion) / (2.0 * juce::MathConstants<double>::pi)) + 0.5
+                              : std::sin (juce::MathConstants<double>::pi * proportion) / (2.0 * juce::MathConstants<double>::pi) + (proportion / 2.0);
+
+            case AudioFadeCurve::linear:
+            default:
+                return rampUp ? (juce::square (proportion) * 0.5) + 0.5
+                              : ((-juce::square (proportion - 1.0)) * 0.5) + 0.5;
+        }
+    }
+};
+
+
 //==============================================================================
 //==============================================================================
 struct WaveNode::PerChannelState
@@ -1126,21 +1315,25 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
                                     ProcessState& ps,
                                     EditItemID itemIDToUse,
                                     bool isRendering,
+                                    SpeedFadeDescription speedDesc,
+                                    std::optional<tempo::Sequence::Position> editTempoSeq,
                                     TimeStretcher::Mode mode,
                                     TimeStretcher::ElastiqueProOptions options)
-   : TracktionEngineNode (ps),
-     editPositionTime (editTime),
-     loopSectionTime (loop.rescaled (loop.getStart(), speed)),
-     offsetTime (off),
-     speedRatio (speed),
-     editItemID (itemIDToUse),
-     isOfflineRender (isRendering),
-     audioFile (af),
-     timeStretcherMode (mode),
-     elastiqueProOptions (options),
-     clipLevel (level),
-     channelsToUse (channelSetToUse),
-     destChannels (destChannelsToFill)
+    : TracktionEngineNode (ps),
+      editPositionTime (editTime),
+      loopSectionTime (loop.rescaled (loop.getStart(), speed)),
+      offsetTime (off),
+      speedRatio (speed),
+      editItemID (itemIDToUse),
+      isOfflineRender (isRendering),
+      audioFile (af),
+      speedFadeDescription (std::move (speedDesc)),
+      editTempoSequence (std::move (editTempoSeq)),
+      timeStretcherMode (mode),
+      elastiqueProOptions (options),
+      clipLevel (level),
+      channelsToUse (channelSetToUse),
+      destChannels (destChannelsToFill)
 {
     // This won't work with invalid or non-existent files!
     jassert (! audioFile.isNull());
@@ -1153,6 +1346,7 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
     hash_combine (stateHash, channelsToUse.size());
     hash_combine (stateHash, destChannels.size());
     hash_combine (stateHash, audioFile.getHash());
+    hash_combine (stateHash, speedFadeDescription);
     hash_combine (stateHash, static_cast<int> (timeStretcherMode));
     hash_combine (stateHash, elastiqueProOptions.toString().hashCode());
 }
@@ -1169,6 +1363,8 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
                                     ProcessState& ps,
                                     EditItemID itemIDToUse,
                                     bool isRendering,
+                                    SpeedFadeDescription speedDesc,
+                                    std::optional<tempo::Sequence::Position> editTempoSeq,
                                     tempo::Sequence sourceFileTempoMap,
                                     SyncTempo syncTempo_,
                                     SyncPitch syncPitch_)
@@ -1179,6 +1375,8 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
       editItemID (itemIDToUse),
       isOfflineRender (isRendering),
       audioFile (af),
+      speedFadeDescription (std::move (speedDesc)),
+      editTempoSequence (std::move (editTempoSeq)),
       timeStretcherMode (mode),
       elastiqueProOptions (options),
       clipLevel (level),
@@ -1201,6 +1399,7 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
     hash_combine (stateHash, channelsToUse.size());
     hash_combine (stateHash, destChannels.size());
     hash_combine (stateHash, audioFile.getHash());
+    hash_combine (stateHash, speedFadeDescription);
     hash_combine (stateHash, static_cast<int> (timeStretcherMode));
     hash_combine (stateHash, elastiqueProOptions.toString().hashCode());
 
@@ -1268,7 +1467,7 @@ void WaveNodeRealTime::process (ProcessContext& pc)
 //==============================================================================
 bool WaveNodeRealTime::buildAudioReaderGraph()
 {
-    if (editToClipTimeReader || editToClipBeatReader)
+    if (editReader)
         return true;
 
     auto fileCacheReader = audioFile.engine->getAudioFileManager().cache.createReader (audioFile);
@@ -1294,6 +1493,7 @@ bool WaveNodeRealTime::buildAudioReaderGraph()
 
     auto timeStretcher = timeStretchReader.get();
     std::unique_ptr<TimeRangeReader> timeRangeReader;
+    std::unique_ptr<EditReader> basicEditReader;
 
     if (syncPitch == SyncPitch::yes)
     {
@@ -1315,17 +1515,21 @@ bool WaveNodeRealTime::buildAudioReaderGraph()
         assert (fileTempoSequence);
         auto beatRangeReader    = std::make_unique<BeatRangeReader> (std::move (timeRangeReader),
                                                                      loopSectionBeats, offsetBeats, *fileTempoPosition);
-        editToClipBeatReader    = std::make_shared<EditToClipBeatReader> (std::move (beatRangeReader), editPositionBeats);
+        auto editToClipBeatReader    = std::make_unique<EditToClipBeatReader> (std::move (beatRangeReader), editPositionBeats);
+        basicEditReader = std::make_unique<EditReader> (std::move (editToClipBeatReader), nullptr);
     }
     else
     {
-        editToClipTimeReader = std::make_shared<EditToClipTimeReader> (std::move (timeRangeReader), editPositionTime, offsetTime, speedRatio);
+        auto editToClipTimeReader = std::make_unique<EditToClipTimeReader> (std::move (timeRangeReader), editPositionTime, offsetTime, speedRatio);
+        basicEditReader = std::make_unique<EditReader> (nullptr, std::move (editToClipTimeReader));
     }
+
+    editReader = std::make_shared<SpeedFadeEditReader> (std::move (basicEditReader), speedFadeDescription, editTempoSequence);
 
     if (! channelState)
     {
         channelState = std::make_shared<std::vector<float>>();
-        const int numChannelsToUse = std::max (channelsToUse.size(), (int) (editToClipBeatReader ? editToClipBeatReader->getNumChannels() : editToClipTimeReader->getNumChannels()));
+        const int numChannelsToUse = std::max (channelsToUse.size(), (int) (editReader->getNumChannels()));
 
         for (int i = numChannelsToUse; --i >= 0;)
             channelState->emplace_back (0.0f);
@@ -1352,8 +1556,7 @@ void WaveNodeRealTime::replaceStateIfPossible (Node* rootNodeToReplace)
             fileTempoSequence = other->fileTempoSequence;
             fileTempoPosition = other->fileTempoPosition;
             resamplerReader = other->resamplerReader;
-            editToClipBeatReader = other->editToClipBeatReader;
-            editToClipTimeReader = other->editToClipTimeReader;
+            editReader = other->editReader;
             pitchAdjustReader = other->pitchAdjustReader;
             channelState = other->channelState;
         }
@@ -1369,15 +1572,15 @@ void WaveNodeRealTime::processSection (ProcessContext& pc)
     // Check that the number of channels requested matches the destination buffer num channels
     assert (destChannels.size() == (int) pc.buffers.audio.getNumChannels());
 
-    if (editToClipTimeReader == nullptr && editToClipBeatReader == nullptr)
+    if (editReader == nullptr)
         return;
 
-    if (editToClipTimeReader != nullptr
+    if (editReader->isTimeBased()
         && (sectionEditTime.getEnd() <= editPositionTime.getStart()
             || sectionEditTime.getStart() >= editPositionTime.getEnd()))
         return;
 
-    if (editToClipBeatReader != nullptr
+    if (editReader->isBeatBased()
         && (sectionEditBeats.getEnd() <= editPositionBeats.getStart()
             || sectionEditBeats.getStart() >= editPositionBeats.getEnd()))
       return;
@@ -1411,10 +1614,8 @@ void WaveNodeRealTime::processSection (ProcessContext& pc)
 
     // Read through the audio stack
     const auto isContiguous = getPlayHeadState().isContiguousWithPreviousBlock();
-    const auto editSectionLength = getEditTimeRange().getLength();
 
-    if ((editToClipBeatReader && editToClipBeatReader->read (sectionEditBeats, pc.buffers.audio, editSectionLength, isContiguous, getPlaybackSpeedRatio()))
-        || (editToClipTimeReader && editToClipTimeReader->read (sectionEditTime, pc.buffers.audio, editSectionLength, isContiguous, getPlaybackSpeedRatio())))
+    if (editReader->read (sectionEditBeats, sectionEditTime, pc.buffers.audio, isContiguous, getPlaybackSpeedRatio()))
     {
         if (! isContiguous && ! getPlayHeadState().isFirstBlockOfLoop())
             lastSampleFadeLength = std::min (numFrames, getPlayHead().isUserDragging() ? 40u : 10u);

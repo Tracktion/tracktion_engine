@@ -218,6 +218,40 @@ namespace
         return tracks;
     }
 
+    SpeedFadeDescription getSpeedFadeDescription (const AudioClipBase& clip)
+    {
+        if (clip.getFadeInBehaviour() == AudioClipBase::speedRamp
+            || clip.getFadeOutBehaviour() == AudioClipBase::speedRamp)
+        {
+            SpeedFadeDescription desc;
+            const auto clipPos = clip.getPosition();
+
+            if (clip.getFadeInBehaviour() == AudioClipBase::speedRamp)
+            {
+                desc.inTimeRange = TimeRange (clipPos.getStart(), clip.getFadeIn());
+                desc.fadeInType = clip.getFadeInType();
+            }
+            else
+            {
+                desc.inTimeRange = TimeRange (clipPos.getStart(), TimeDuration());
+            }
+
+            if (clip.getFadeOutBehaviour() == AudioClipBase::speedRamp)
+            {
+                desc.outTimeRange = TimeRange (clipPos.getEnd() - clip.getFadeOut(), clip.getFadeOut());
+                desc.fadeOutType = clip.getFadeOutType();
+            }
+            else
+            {
+                desc.outTimeRange = TimeRange (clipPos.getEnd(), TimeDuration());
+            }
+
+            return desc;
+        }
+
+        return {};
+    }
+
 //==============================================================================
 //==============================================================================
 std::unique_ptr<tracktion::graph::Node> createNodeForTrack (Track&, const CreateNodeParams&);
@@ -317,73 +351,73 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
     }
 
     std::unique_ptr<Node> node;
-    
-    if (clip.getFadeInBehaviour() == AudioClipBase::speedRamp
-        || clip.getFadeOutBehaviour() == AudioClipBase::speedRamp)
-    {
-        SpeedFadeDescription desc;
-        const auto clipPos = clip.getPosition();
-        
-        if (clip.getFadeInBehaviour() == AudioClipBase::speedRamp)
-        {
-            desc.inTimeRange = TimeRange (clipPos.getStart(), clip.getFadeIn());
-            desc.fadeInType = clip.getFadeInType();
-        }
-        else
-        {
-            desc.inTimeRange = TimeRange (clipPos.getStart(), TimeDuration());
-        }
-        
-        if (clip.getFadeOutBehaviour() == AudioClipBase::speedRamp)
-        {
-            desc.outTimeRange = TimeRange (clipPos.getEnd() - clip.getFadeOut(), clip.getFadeOut());
-            desc.fadeOutType = clip.getFadeOutType();
-        }
-        else
-        {
-            desc.outTimeRange = TimeRange (clipPos.getEnd(), TimeDuration());
-        }
 
-        node = tracktion::graph::makeNode<SpeedRampWaveNode> (playFile,
-                                                              clip.getEditTimeRange(),
-                                                              nodeOffset,
-                                                              loopRange,
-                                                              clip.getLiveClipLevel(),
-                                                              speed,
-                                                              clip.getActiveChannels(),
-                                                              juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),
-                                                              params.processState,
-                                                              clip.itemID,
-                                                              params.forRendering,
-                                                              desc);
-    }
    #if TRACKTION_ENABLE_REALTIME_TIMESTRETCHING
-    else if (clip.canUseProxy())
-   #else
-    else
+    if (clip.canUseProxy())
    #endif
     {
-        node = tracktion::graph::makeNode<WaveNode> (playFile,
-                                                     clip.getEditTimeRange(),
-                                                     nodeOffset,
-                                                     loopRange,
-                                                     clip.getLiveClipLevel(),
-                                                     speed,
-                                                     clip.getActiveChannels(),
-                                                     juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),
-                                                     params.processState,
-                                                     clip.itemID,
-                                                     params.forRendering);
+        if (clip.getFadeInBehaviour() == AudioClipBase::speedRamp
+            || clip.getFadeOutBehaviour() == AudioClipBase::speedRamp)
+        {
+            SpeedFadeDescription desc;
+            const auto clipPos = clip.getPosition();
+
+            if (clip.getFadeInBehaviour() == AudioClipBase::speedRamp)
+            {
+                desc.inTimeRange = TimeRange (clipPos.getStart(), clip.getFadeIn());
+                desc.fadeInType = clip.getFadeInType();
+            }
+            else
+            {
+                desc.inTimeRange = TimeRange (clipPos.getStart(), TimeDuration());
+            }
+
+            if (clip.getFadeOutBehaviour() == AudioClipBase::speedRamp)
+            {
+                desc.outTimeRange = TimeRange (clipPos.getEnd() - clip.getFadeOut(), clip.getFadeOut());
+                desc.fadeOutType = clip.getFadeOutType();
+            }
+            else
+            {
+                desc.outTimeRange = TimeRange (clipPos.getEnd(), TimeDuration());
+            }
+
+            node = tracktion::graph::makeNode<SpeedRampWaveNode> (playFile,
+                                                                  clip.getEditTimeRange(),
+                                                                  nodeOffset,
+                                                                  loopRange,
+                                                                  clip.getLiveClipLevel(),
+                                                                  speed,
+                                                                  clip.getActiveChannels(),
+                                                                  juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),
+                                                                  params.processState,
+                                                                  clip.itemID,
+                                                                  params.forRendering,
+                                                                  desc);
+        }
+        else
+        {
+            node = tracktion::graph::makeNode<WaveNode> (playFile,
+                                                         clip.getEditTimeRange(),
+                                                         nodeOffset,
+                                                         loopRange,
+                                                         clip.getLiveClipLevel(),
+                                                         speed,
+                                                         clip.getActiveChannels(),
+                                                         juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),
+                                                         params.processState,
+                                                         clip.itemID,
+                                                         params.forRendering);
+        }
     }
    #if TRACKTION_ENABLE_REALTIME_TIMESTRETCHING
     else
     {
-        // TODO: Speed fades are not currently supported with real-time stretching
-        jassert (clip.getFadeInBehaviour() != AudioClipBase::speedRamp);
-        jassert (clip.getFadeOutBehaviour() != AudioClipBase::speedRamp);
-
         const auto timeStretcherMode = clip.getActualTimeStretchMode();
         const auto timeStretcherOpts = clip.elastiqueProOptions.get();
+
+        const auto speedFadeDesc = getSpeedFadeDescription (clip);
+        std::optional<tempo::Sequence::Position> editTempoPosition (speedFadeDesc.isEmpty() ? std::optional<tempo::Sequence::Position>() : createPosition (clip.edit.tempoSequence));
 
         if (clip.getAutoTempo() || clip.getAutoPitch())
         {
@@ -430,6 +464,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                params.processState,
                                                clip.itemID,
                                                params.forRendering,
+                                               speedFadeDesc, std::move (editTempoPosition),
                                                seq, syncTempo, syncPitch);
         }
         else
@@ -445,6 +480,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                params.processState,
                                                clip.itemID,
                                                params.forRendering,
+                                               speedFadeDesc, std::move (editTempoPosition),
                                                timeStretcherMode, timeStretcherOpts);
         }
     }

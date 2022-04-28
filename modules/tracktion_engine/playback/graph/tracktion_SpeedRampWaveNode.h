@@ -8,6 +8,8 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#pragma once
+
 namespace tracktion { inline namespace engine
 {
 
@@ -17,6 +19,11 @@ struct SpeedFadeDescription
 {
     TimeRange inTimeRange, outTimeRange;
     AudioFadeCurve::Type fadeInType, fadeOutType;
+
+    bool isEmpty() const
+    {
+        return inTimeRange.isEmpty() && outTimeRange.isEmpty();
+    }
 };
 
 
@@ -84,3 +91,20 @@ private:
 };
 
 }} // namespace tracktion { inline namespace engine
+
+#ifndef DOXYGEN
+template<>
+struct std::hash<tracktion::engine::SpeedFadeDescription>
+{
+    size_t operator() (const tracktion::engine::SpeedFadeDescription& d) const noexcept
+    {
+        size_t seed = 0;
+        tracktion::hash_combine (seed, d.inTimeRange);
+        tracktion::hash_combine (seed, d.outTimeRange);
+        tracktion::hash_combine (seed, static_cast<int> (d.fadeInType));
+        tracktion::hash_combine (seed, static_cast<int> (d.fadeOutType));
+
+        return seed;
+    }
+};
+#endif

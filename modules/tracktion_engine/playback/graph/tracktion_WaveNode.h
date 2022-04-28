@@ -8,6 +8,8 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#include "tracktion_SpeedRampWaveNode.h"
+
 namespace tracktion { inline namespace engine
 {
 
@@ -16,6 +18,7 @@ class EditToClipBeatReader;
 class EditToClipTimeReader;
 class ResamplerReader;
 class PitchAdjustReader;
+class SpeedFadeEditReader;
 
 //==============================================================================
 /** An Node that plays back a wave file. */
@@ -98,6 +101,8 @@ public:
                       ProcessState&,
                       EditItemID,
                       bool isOfflineRender,
+                      SpeedFadeDescription = {},
+                      std::optional<tempo::Sequence::Position> editTempoSequence = {},
                       TimeStretcher::Mode = TimeStretcher::Mode::defaultMode,
                       TimeStretcher::ElastiqueProOptions = {});
 
@@ -128,6 +133,8 @@ public:
                       ProcessState&,
                       EditItemID,
                       bool isOfflineRender,
+                      SpeedFadeDescription,
+                      std::optional<tempo::Sequence::Position> editTempoSequence,
                       tempo::Sequence sourceFileTempoMap,
                       SyncTempo, SyncPitch);
 
@@ -148,6 +155,8 @@ private:
     const bool isOfflineRender = false;
 
     const AudioFile audioFile;
+    const SpeedFadeDescription speedFadeDescription;
+    const std::optional<tempo::Sequence::Position> editTempoSequence;
     TimeStretcher::Mode timeStretcherMode;
     TimeStretcher::ElastiqueProOptions elastiqueProOptions;
     LiveClipLevel clipLevel;
@@ -157,8 +166,7 @@ private:
     size_t stateHash = 0;
     ResamplerReader* resamplerReader = nullptr;
     PitchAdjustReader* pitchAdjustReader = nullptr;
-    std::shared_ptr<EditToClipBeatReader> editToClipBeatReader;
-    std::shared_ptr<EditToClipTimeReader> editToClipTimeReader;
+    std::shared_ptr<SpeedFadeEditReader> editReader;
     std::shared_ptr<std::vector<float>> channelState;
 
     std::shared_ptr<tempo::Sequence> fileTempoSequence;
