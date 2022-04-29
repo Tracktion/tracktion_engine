@@ -1,4 +1,3 @@
-#include "tracktion_Thumbnail.h"
 /*
     ,--.                     ,--.     ,--.  ,--.
   ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
@@ -891,15 +890,13 @@ int TracktionThumbnail::getNumberOfTotalThumbSamples()
 }
 
 int TracktionThumbnail::getNumberOfThumbSamples(int channel)
-{
-    
+{   
     // all channels will always have the same number of samples for a thumbnail
     auto sizeInSamples = channels[channel]->getSize();
     return sizeInSamples - readPos;
 }
 
-//todo: Unity calls InitializeGetThumbnailForClip(). This returna struct with the punchInTime, the begin time, end time, and the size of the return minValue and maxValues arrays.
-// Unity calls GetThumbnailForClip(), which returns the channel arrays of minValues, maxValues (as parameters)
+//todo: send average value data
 int TracktionThumbnail::getThumbnailMinMaxValues(std::vector<int8_t>& minValues, std::vector<int8_t>& maxValues, int numberOfThumbSamplesRequested, int startThumbSampleIndex, int channel)
 {
     const juce::ScopedLock sl(lock);
