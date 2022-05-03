@@ -869,18 +869,20 @@ void TracktionThumbnail::drawChannels (juce::Graphics& g, juce::Rectangle<int> a
     }
 }
 
-void TracktionThumbnail::getStartAndEndTimeOfPacket(float& startTime, float& endTime)
+void TracktionThumbnail::getPacketDetails(float& startTime, float& endTime, int& sizeInBytes, int& numberOfThumbSamplesPerChannel)
 {
     const juce::ScopedLock sl(lock);
     // all channels will always have the same number of samples for a thumbnail
-    startTime = (float)readPos * samplesPerThumbSample / sampleRate;
+    startTime = (float)startThumbSampleIndex * samplesPerThumbSample / sampleRate;
     endTime = (float)channels[0]->getSize() * samplesPerThumbSample / sampleRate;
+    //numberOfThumbSamplesPerChannelToRead is a state variable for getThumbnailAverageValues that will be called later on
+    numberOfThumbSamplesPerChannelToRead = numChannels > 0 ? getNumberOfThumbSamples(0) : 0;
+    sizeInBytes = getNumberOfTotalThumbSamples();
+    numberOfThumbSamplesPerChannel = numberOfThumbSamplesPerChannelToRead;
 }
 
 int TracktionThumbnail::getNumberOfTotalThumbSamples()
-{
-    const juce::ScopedLock sl(lock);
-    numberOfThumbSamplesToRead = numChannels > 0 ? getNumberOfThumbSamples(0) : 0;
+{    
     int totalNumberOfThumbSamples = 0;
     for (int ch = 0; ch < numChannels; ch++)
     {
@@ -893,26 +895,32 @@ int TracktionThumbnail::getNumberOfThumbSamples(int channel)
 {   
     // all channels will always have the same number of samples for a thumbnail
     auto sizeInSamples = channels[channel]->getSize();
-    return sizeInSamples - readPos;
+    return sizeInSamples - startThumbSampleIndex;
 }
 
-//todo: send average value data
-int TracktionThumbnail::getThumbnailMinMaxValues(std::vector<int8_t>& minValues, std::vector<int8_t>& maxValues, int numberOfThumbSamplesRequested, int startThumbSampleIndex, int channel)
+
+void TracktionThumbnail::getThumbnailAverageValues(int8_t* averageValues, uint32_t length)
 {
     const juce::ScopedLock sl(lock);
 
-    auto minMaxValuesPtr = channels[channel]->getData(startThumbSampleIndex);
-    int remainingNumberOfThumbSamples = channels[channel]->getSize() - startThumbSampleIndex;
+    //The length that unity assigns should match the current thumbnail state
+    jassert(length == numChannels * numberOfThumbSamplesPerChannelToRead);
 
-    //make sure there are the number of thumbnail samples asked for
-    int numberOfSamplesToRead = numberOfThumbSamplesRequested > remainingNumberOfThumbSamples ? remainingNumberOfThumbSamples : numberOfThumbSamplesRequested;
-
-    for (int i = 0; i < numberOfSamplesToRead; i++)
+    //channel interleaved implementation
+    for (int i = 0; i < numberOfThumbSamplesPerChannelToRead; i++)
     {
-        minValues.push_back(minMaxValuesPtr[i].getMinValue());
-        maxValues.push_back(minMaxValuesPtr[i].getMaxValue());
+        for (int ch = 0; ch < numChannels; ch++)
+        {
+            auto minMaxValuesPtr = channels[ch]->getData(startThumbSampleIndex);
+            int remainingNumberOfThumbSamples = channels[ch]->getSize() - startThumbSampleIndex;
+
+            averageValues[i + ch * numberOfThumbSamplesPerChannelToRead] = (minMaxValuesPtr[i].getMinValue() + minMaxValuesPtr[i].getMaxValue()) / 2;
+        }
     }
-    return numberOfSamplesToRead;
+       
+    //update thumbnail state
+    startThumbSampleIndex += numberOfThumbSamplesPerChannelToRead;
+    numberOfThumbSamplesPerChannelToRead = 0;
 }
 
 }
