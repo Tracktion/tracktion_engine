@@ -872,6 +872,15 @@ void TracktionThumbnail::drawChannels (juce::Graphics& g, juce::Rectangle<int> a
 void TracktionThumbnail::getPacketDetails(float& startTime, float& endTime, int& sizeInBytes, int& numberOfThumbSamplesPerChannel)
 {
     const juce::ScopedLock sl(lock);
+    if (numChannels <= 0)
+    {
+        startTime = 0.0f;
+        endTime = 0.0f;
+        sizeInBytes = 0.0f;
+        numberOfThumbSamplesPerChannel = 0.0f;
+        return;
+    }
+        
     // all channels will always have the same number of samples for a thumbnail
     startTime = (float)startThumbSampleIndex * samplesPerThumbSample / sampleRate;
     endTime = (float)channels[0]->getSize() * samplesPerThumbSample / sampleRate;
