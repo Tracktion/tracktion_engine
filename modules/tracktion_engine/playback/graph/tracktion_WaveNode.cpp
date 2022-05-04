@@ -497,6 +497,118 @@ public:
 };
 #endif
 
+struct WarpedTime
+{
+    TimePosition position;
+    double stretchRatio = 1.0;
+};
+
+WarpedTime warpTime (const WarpMap& map, TimePosition time)
+{
+    if (map.empty())
+        return { time, 1.0 };
+
+    assert (map.size() > (size_t) 1);
+    WarpPoint startMarker, endMarker;
+
+    auto first = map.front();
+    auto last  = map.back();
+
+    if (time <= first.warpTime) //below or on the 1st marker
+    {
+        const auto durationBefore = time - first.warpTime;
+        return { toPosition (-durationBefore), 1.0 };
+    }
+    else if (time > last.warpTime) // after the last marker
+    {
+        const auto durationBeyondEnd = time - last.warpTime;
+        return { last.sourceTime + durationBeyondEnd, 1.0 };
+    }
+    else
+    {
+        size_t index = 0;
+        auto numMarkers = map.size();
+
+        while (index < numMarkers && map[index].warpTime < time)
+            index++;
+
+        if (index > 0)
+            startMarker = map[index - 1];
+
+        endMarker = map[index];
+    }
+
+    const auto sourceDuration = endMarker.sourceTime - startMarker.sourceTime;
+    const auto warpedDuration = endMarker.warpTime - startMarker.warpTime;
+
+    TimePosition sourcePosition;
+
+    if (warpedDuration == 0.0s)
+        return { 0s, 1.0 };
+
+    const double warpProportion = (time - startMarker.warpTime) / warpedDuration;
+    sourcePosition = startMarker.sourceTime + (sourceDuration * warpProportion);
+    const double ratio = sourceDuration / warpedDuration;
+
+    return { sourcePosition, ratio };
+}
+
+//==============================================================================
+class WarpReader    : public SingleInputAudioReader
+{
+public:
+    WarpReader (std::unique_ptr<AudioReader> input,
+                WarpMap warpMap)
+        : SingleInputAudioReader (std::make_unique<TimeStretchReader> (std::move (input))),
+          reader (static_cast<TimeStretchReader*> (source.get())), map (warpMap)
+    {
+    }
+
+    SampleCount getPosition() override
+    {
+        return readPosition;
+    }
+
+    void setPosition (TimePosition t) override
+    {
+        setPosition (toSamples (t, getSampleRate()));
+    }
+
+    void setPosition (SampleCount t) override
+    {
+        if (t == readPosition)
+            return;
+
+        readPosition = t;
+        setSourcePosition (t);
+    }
+
+    bool readSamples (choc::buffer::ChannelArrayView<float>& destBuffer) override
+    {
+        const auto unwarpedStartTime = TimePosition::fromSamples (readPosition, getSampleRate());
+        const auto [warpedStartTime, ratio] = warpTime (map, unwarpedStartTime);
+
+        reader->setSpeed (ratio);
+        readPosition += (SampleCount) destBuffer.getNumFrames();
+
+        return reader->readSamples (destBuffer);
+    }
+
+private:
+    TimeStretchReader* reader = nullptr;
+    WarpMap map;
+    SampleCount readPosition = 0;
+
+    void setSourcePosition (SampleCount pos)
+    {
+        const auto sampleRate = getSampleRate();
+        const auto sourceTime = TimePosition::fromSamples (pos, sampleRate);
+        const auto warpedTime = warpTime (map, sourceTime).position;
+        const auto warpedSamplePos = toSamples (warpedTime, sampleRate);
+        source->setPosition (warpedSamplePos);
+    }
+};
+
 
 //==============================================================================
 class PitchAdjustReader : public SingleInputAudioReader
@@ -1365,6 +1477,7 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
                                     bool isRendering,
                                     SpeedFadeDescription speedDesc,
                                     std::optional<tempo::Sequence::Position> editTempoSeq,
+                                    std::optional<WarpMap> warp,
                                     tempo::Sequence sourceFileTempoMap,
                                     SyncTempo syncTempo_,
                                     SyncPitch syncPitch_)
@@ -1377,6 +1490,7 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
       audioFile (af),
       speedFadeDescription (std::move (speedDesc)),
       editTempoSequence (std::move (editTempoSeq)),
+      warpMap (std::move (warp)),
       timeStretcherMode (mode),
       elastiqueProOptions (options),
       clipLevel (level),
@@ -1400,6 +1514,10 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
     hash_combine (stateHash, destChannels.size());
     hash_combine (stateHash, audioFile.getHash());
     hash_combine (stateHash, speedFadeDescription);
+
+    if (warpMap)
+        hash_combine (stateHash, *warpMap);
+
     hash_combine (stateHash, static_cast<int> (timeStretcherMode));
     hash_combine (stateHash, elastiqueProOptions.toString().hashCode());
 
@@ -1475,15 +1593,18 @@ bool WaveNodeRealTime::buildAudioReaderGraph()
     if (fileCacheReader == nullptr)
         return false;
 
-    auto audioFileCacheReader   = std::make_unique<AudioFileCacheReader> (std::move (fileCacheReader), isOfflineRender ? 5s : 3ms,
-                                                                          destChannels, channelsToUse);
+    std::unique_ptr<AudioReader> loopReader = std::make_unique<AudioFileCacheReader> (std::move (fileCacheReader), isOfflineRender ? 5s : 3ms,
+                                                                                      destChannels, channelsToUse);
+
+    if (warpMap)
+        loopReader = std::make_unique<WarpReader> (std::move (loopReader), std::move (*warpMap));
 
     if (! loopSectionTime.isEmpty())
-        audioFileCacheReader->setLoopRange (loopSectionTime);
+        loopReader = std::make_unique<LoopReader> (std::move (loopReader), loopSectionTime);
 
     const bool timestretchDisabled = timeStretcherMode == TimeStretcher::Mode::disabled;
 
-    auto resamplerAudioReader   = std::make_unique<ResamplerReader> (std::move (audioFileCacheReader), outputSampleRate);
+    auto resamplerAudioReader   = std::make_unique<ResamplerReader> (std::move (loopReader), outputSampleRate);
     resamplerReader = resamplerAudioReader.get();
 
     std::unique_ptr<TimeStretchReader> timeStretchReader;

@@ -252,6 +252,19 @@ namespace
         return {};
     }
 
+    std::optional<WarpMap> getWarpMap (const AudioClipBase& clip)
+    {
+        if (! clip.getWarpTime())
+            return {};
+
+        WarpMap map;
+
+        for (auto m : clip.getWarpTimeManager().getMarkers())
+            map.push_back ({ m->sourceTime, m->warpTime });
+
+        return map;
+    }
+
 //==============================================================================
 //==============================================================================
 std::unique_ptr<tracktion::graph::Node> createNodeForTrack (Track&, const CreateNodeParams&);
@@ -417,6 +430,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
         const auto timeStretcherOpts = clip.elastiqueProOptions.get();
 
         const auto speedFadeDesc = getSpeedFadeDescription (clip);
+        auto warpMap = getWarpMap (clip);
         std::optional<tempo::Sequence::Position> editTempoPosition (speedFadeDesc.isEmpty() ? std::optional<tempo::Sequence::Position>() : createPosition (clip.edit.tempoSequence));
 
         if (clip.getAutoTempo() || clip.getAutoPitch())
@@ -466,6 +480,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                clip.itemID,
                                                params.forRendering,
                                                speedFadeDesc, std::move (editTempoPosition),
+                                               std::move (warpMap),
                                                seq, syncTempo, syncPitch);
         }
         else

@@ -20,6 +20,13 @@ class ResamplerReader;
 class PitchAdjustReader;
 class SpeedFadeEditReader;
 
+struct WarpPoint
+{
+    TimePosition sourceTime, warpTime;
+};
+
+using WarpMap = std::vector<WarpPoint>;
+
 //==============================================================================
 /** An Node that plays back a wave file. */
 class WaveNode final    : public tracktion::graph::Node,
@@ -135,6 +142,7 @@ public:
                       bool isOfflineRender,
                       SpeedFadeDescription,
                       std::optional<tempo::Sequence::Position> editTempoSequence,
+                      std::optional<WarpMap>,
                       tempo::Sequence sourceFileTempoMap,
                       SyncTempo, SyncPitch);
 
@@ -157,6 +165,7 @@ private:
     const AudioFile audioFile;
     const SpeedFadeDescription speedFadeDescription;
     const std::optional<tempo::Sequence::Position> editTempoSequence;
+    std::optional<WarpMap> warpMap;
     TimeStretcher::Mode timeStretcherMode;
     TimeStretcher::ElastiqueProOptions elastiqueProOptions;
     LiveClipLevel clipLevel;
@@ -182,3 +191,22 @@ private:
 };
 
 }} // namespace tracktion { inline namespace engine
+
+#ifndef DOXYGEN
+template<>
+struct std::hash<tracktion::engine::WarpMap>
+{
+    size_t operator() (const tracktion::engine::WarpMap& w) const noexcept
+    {
+        size_t seed = 0;
+
+        for (const auto& p : w)
+        {
+            tracktion::hash_combine (seed, p.sourceTime.inSeconds());
+            tracktion::hash_combine (seed, p.warpTime.inSeconds());
+        }
+
+        return seed;
+    }
+};
+#endif
