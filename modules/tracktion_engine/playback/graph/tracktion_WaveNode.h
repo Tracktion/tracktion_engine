@@ -171,6 +171,7 @@ private:
     LiveClipLevel clipLevel;
     const juce::AudioChannelSet channelsToUse, destChannels;
     double outputSampleRate = 44100.0;
+    bool isFirstBlock = true;
 
     size_t stateHash = 0;
     ResamplerReader* resamplerReader = nullptr;

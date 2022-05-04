@@ -1656,6 +1656,10 @@ bool WaveNodeRealTime::buildAudioReaderGraph()
             channelState->emplace_back (0.0f);
     }
 
+    // If we've just created a new reader, this will be the first
+    // block with it in so we need to fade the block in
+    isFirstBlock = true;
+
     return true;
 }
 
@@ -1671,6 +1675,12 @@ void WaveNodeRealTime::replaceStateIfPossible (Node* rootNodeToReplace)
     {
         if (auto other = dynamic_cast<WaveNodeRealTime*> (&node))
         {
+            if (other->editItemID != editItemID)
+                return;
+
+            // This will be used to fade out the last block if the state hash is different
+            channelState = other->channelState;
+
             if (other->stateHash != stateHash)
                 return;
 
@@ -1679,7 +1689,6 @@ void WaveNodeRealTime::replaceStateIfPossible (Node* rootNodeToReplace)
             resamplerReader = other->resamplerReader;
             editReader = other->editReader;
             pitchAdjustReader = other->pitchAdjustReader;
-            channelState = other->channelState;
         }
     };
     visitNodes (*rootNodeToReplace, visitor, true);
@@ -1706,7 +1715,6 @@ void WaveNodeRealTime::processSection (ProcessContext& pc)
             || sectionEditBeats.getStart() >= editPositionBeats.getEnd()))
       return;
 
-    uint32_t lastSampleFadeLength = 0;
 
     auto destBuffer = pc.buffers.audio;
     const auto numFrames = destBuffer.getNumFrames();
@@ -1735,6 +1743,8 @@ void WaveNodeRealTime::processSection (ProcessContext& pc)
 
     // Read through the audio stack
     const auto isContiguous = getPlayHeadState().isContiguousWithPreviousBlock();
+    uint32_t lastSampleFadeLength = isFirstBlock ? std::min (numFrames, 40u) : 0;
+    isFirstBlock = false;
 
     if (editReader->read (sectionEditBeats, sectionEditTime, pc.buffers.audio, isContiguous, getPlaybackSpeedRatio()))
     {
