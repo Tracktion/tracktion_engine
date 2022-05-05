@@ -670,6 +670,13 @@ public:
 
     bool handleIncomingMidiMessage (const juce::MidiMessage& message)
     {
+        //DBG(message.getDescription());
+        MidiList ml;
+        ml.addNote(message.getNoteNumber(),
+                0.0,
+                0.0,
+                message.getVelocity(), 0, nullptr);
+        DBG(ml.state.toXmlString());
         if (recording)
             recorded.addEvent (juce::MidiMessage (message, context.globalStreamTimeToEditTimeUnlooped (message.getTimeStamp())));
 

@@ -935,8 +935,15 @@ void TrackComponent::valueTreePropertyChanged (juce::ValueTree& v, const juce::I
 
 void TrackComponent::valueTreeChildAdded (juce::ValueTree&, juce::ValueTree& c)
 {
-    if (te::Clip::isClipState (c))
-        markAndUpdate (updateClips);
+    if (te::Clip::isClipState(c))
+    {
+        markAndUpdate(updateClips);
+        DBG(c.toXmlString());
+    }
+    if (c.getType() == Identifier("NOTE"))
+    {
+        DBG(c.toXmlString());
+    }
 }
 
 void TrackComponent::valueTreeChildRemoved (juce::ValueTree&, juce::ValueTree& c, int)

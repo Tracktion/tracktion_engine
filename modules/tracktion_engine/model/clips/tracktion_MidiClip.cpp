@@ -153,10 +153,13 @@ void MidiClip::initialise()
     {
         auto list = state.getChildWithName (IDs::SEQUENCE);
 
+        DBG(state.toXmlString());
         if (list.isValid())
             channelSequence.add (new MidiList (list, um));
         else
             state.addChild (MidiList::createMidiList(), -1, um);
+
+        DBG(state.toXmlString());
 
         currentTake = 0;
     }
