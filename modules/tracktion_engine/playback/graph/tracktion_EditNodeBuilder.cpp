@@ -218,6 +218,7 @@ namespace
         return tracks;
     }
 
+   #if TRACKTION_ENABLE_REALTIME_TIMESTRETCHING
     SpeedFadeDescription getSpeedFadeDescription (const AudioClipBase& clip)
     {
         if (clip.getFadeInBehaviour() == AudioClipBase::speedRamp
@@ -264,6 +265,7 @@ namespace
 
         return map;
     }
+   #endif
 
 //==============================================================================
 //==============================================================================
