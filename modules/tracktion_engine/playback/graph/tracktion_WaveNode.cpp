@@ -1281,27 +1281,35 @@ void WaveNode::replaceChannelStateIfPossible (Node* rootNodeToReplace, int numCh
     if (rootNodeToReplace == nullptr)
         return;
 
-    auto props = getNodeProperties();
-    auto nodeIDToLookFor = props.nodeID;
-
-    if (nodeIDToLookFor == 0)
+    if (getNodeProperties().nodeID == 0)
         return;
 
-    auto visitor = [this, nodeIDToLookFor, numChannelsToUse] (Node& node)
+    auto visitor = [this, numChannelsToUse] (Node& node)
     {
         if (auto other = dynamic_cast<WaveNode*> (&node))
         {
-            if (other->getNodeProperties().nodeID == nodeIDToLookFor)
-            {
-                if (! other->channelState)
-                    return;
-
-                if (other->channelState->size() == numChannelsToUse)
-                    channelState = other->channelState;
-            }
+            replaceChannelStateIfPossible (*other, numChannelsToUse);
+        }
+        else if (auto combiningNode = dynamic_cast<CombiningNode*> (&node))
+        {
+            for (auto internalNode : combiningNode->getInternalNodes())
+                if (auto internalWaveNode = dynamic_cast<WaveNode*> (internalNode))
+                    replaceChannelStateIfPossible (*internalWaveNode, numChannelsToUse);
         }
     };
     visitNodes (*rootNodeToReplace, visitor, true);
+}
+
+void WaveNode::replaceChannelStateIfPossible (WaveNode& other, int numChannelsToUse)
+{
+    if (other.editItemID != editItemID)
+        return;
+
+    if (! other.channelState)
+        return;
+
+    if (other.channelState->size() == numChannelsToUse)
+        channelState = other.channelState;
 }
 
 void WaveNode::processSection (ProcessContext& pc, juce::Range<int64_t> timelineRange)
@@ -1334,6 +1342,7 @@ void WaveNode::processSection (ProcessContext& pc, juce::Range<int64_t> timeline
 
     uint32_t lastSampleFadeLength = 0;
 
+    if (numFileSamples > 0)
     {
         SCOPED_REALTIME_CHECK
 
@@ -1342,13 +1351,23 @@ void WaveNode::processSection (ProcessContext& pc, juce::Range<int64_t> timeline
                                  isOfflineRender ? 5000 : 3))
         {
             if (! getPlayHeadState().isContiguousWithPreviousBlock() && ! getPlayHeadState().isFirstBlockOfLoop())
-                lastSampleFadeLength = std::min (numFrames, getPlayHead().isUserDragging() ? 40u : 10u);
+                lastSampleFadeLength = std::min (numFrames, 40u);
         }
         else
         {
             lastSampleFadeLength = std::min (numFrames, 40u);
             fileData.buffer.clear();
         }
+    }
+    else
+    {
+        for (auto state : *channelState)
+        {
+            state->resampler.reset();
+            state->lastSample = 0.0;
+        }
+
+        return;
     }
 
     float gains[2];

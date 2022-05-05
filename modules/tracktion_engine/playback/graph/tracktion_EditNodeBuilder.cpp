@@ -369,8 +369,8 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
     if (clip.canUseProxy())
    #endif
     {
-        if (clip.getFadeInBehaviour() == AudioClipBase::speedRamp
-            || clip.getFadeOutBehaviour() == AudioClipBase::speedRamp)
+        if ((clip.getFadeInBehaviour() == AudioClipBase::speedRamp && clip.getFadeIn() != 0_td)
+            || (clip.getFadeOutBehaviour() == AudioClipBase::speedRamp && clip.getFadeOut() != 0_td))
         {
             SpeedFadeDescription desc;
             const auto clipPos = clip.getPosition();
