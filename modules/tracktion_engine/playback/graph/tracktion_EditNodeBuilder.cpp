@@ -338,7 +338,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
 
     if (! usesTimestretchedProxy)
     {
-        nodeOffset = toDuration (clip.getPosition().getOffset());
+        nodeOffset = clip.getPosition().getOffset();
         loopRange = clip.getLoopRange();
         speed = clip.getSpeedRatio();
     }
@@ -487,7 +487,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
         {
             node = makeNode<WaveNodeRealTime> (playFile,
                                                clip.getEditTimeRange(),
-                                               toDuration (clip.getPosition().getOffset()),
+                                               clip.getPosition().getOffset(),
                                                clip.getLoopRange(),
                                                clip.getLiveClipLevel(),
                                                clip.getSpeedRatio(),

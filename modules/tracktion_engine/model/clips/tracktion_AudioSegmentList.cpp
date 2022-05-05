@@ -254,7 +254,7 @@ void AudioSegmentList::buildNormal (bool crossfade)
 
         for (int i = 0; ; ++i)
         {
-            auto startTime = clipPos.getStart() + clipLoopLen * i - toDuration (clipPos.getOffset());
+            auto startTime = clipPos.getStart() + clipLoopLen * i - clipPos.getOffset();
 
             if (startTime >= clipPos.getEnd())
                 break;

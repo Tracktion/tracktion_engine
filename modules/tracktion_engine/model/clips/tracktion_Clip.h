@@ -234,7 +234,7 @@ public:
     /** Sets the offset of the clip, i.e. how much the clip's content should be shifted within the clip boundary.
         @param newOffset    The offset in seconds
     */
-    void setOffset (TimePosition newOffset);
+    void setOffset (TimeDuration newOffset);
 
     /** Trims away any part of the clip that overlaps this region. */
     void trimAwayOverlap (TimeRange editRangeToTrim);
@@ -398,8 +398,8 @@ protected:
     bool cloneInProgress = false;
     juce::CachedValue<juce::String> clipName;
     ClipTrack* track = nullptr;
-    juce::CachedValue<TimePosition> clipStart, offset;
-    juce::CachedValue<TimeDuration> length;
+    juce::CachedValue<TimePosition> clipStart;
+    juce::CachedValue<TimeDuration> length, offset;
     juce::CachedValue<double> speedRatio;
     SourceFileReference sourceFileReference;
     juce::CachedValue<EditItemID> groupID;

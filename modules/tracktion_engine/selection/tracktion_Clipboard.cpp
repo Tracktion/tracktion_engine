@@ -185,7 +185,7 @@ static TimePosition pasteMIDIFileIntoEdit (Edit& edit, const juce::File& midiFil
                 const auto timeRange = tempoSequence.beatsToTime ({ startBeat, endBeat });
 
                 if (auto newClip = at->insertClipWithState (clipState, list->getImportedMidiTrackName(), TrackItem::Type::midi,
-                                                            { timeRange, TimePosition() }, false, false))
+                                                            { timeRange, 0_td }, false, false))
                 {
                     if (importAsNoteExpression)
                         if (auto mc = dynamic_cast<MidiClip*> (newClip))
@@ -365,7 +365,7 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
                         jassert (sourceItem->getLength() > 0);
 
                         if (auto newClip = targetTrack->insertWaveClip (sourceItem->getName(), sourceItem->getID(),
-                                                                        { { startTime, TimePosition::fromSeconds (startTime.inSeconds() + sourceItem->getLength()) }, TimePosition() }, false))
+                                                                        { { startTime, TimePosition::fromSeconds (startTime.inSeconds() + sourceItem->getLength()) }, TimeDuration() }, false))
                         {
                             newClipEndTime = newClip->getPosition().getEnd();
                             itemsAdded.add (newClip.get());

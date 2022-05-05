@@ -742,10 +742,10 @@ EditClip::Ptr ClipTrack::insertEditClip (TimeRange position, ProjectItemID sourc
     CRASH_TRACER
 
     auto name = TrackItem::getSuggestedNameForNewItem (TrackItem::Type::edit);
-    auto newState = createNewClipState (name, TrackItem::Type::edit, edit.createNewItemID(), { position, TimePosition() });
+    auto newState = createNewClipState (name, TrackItem::Type::edit, edit.createNewItemID(), { position, TimeDuration() });
     newState.setProperty (IDs::source, sourceID.toString(), nullptr);
 
-    if (auto c = insertClipWithState (newState, name, TrackItem::Type::edit, { position, TimePosition() }, false, false))
+    if (auto c = insertClipWithState (newState, name, TrackItem::Type::edit, { position, TimeDuration() }, false, false))
     {
         if (auto ec = dynamic_cast<EditClip*> (c))
             return *ec;
@@ -807,7 +807,7 @@ void ClipTrack::deleteRegionOfClip (Clip::Ptr c, TimeRange range, SelectionManag
 
 Clip* ClipTrack::insertNewClip (TrackItem::Type type, const juce::String& name, TimeRange pos, SelectionManager* sm)
 {
-    return insertNewClip (type, name, { pos, TimePosition() }, sm);
+    return insertNewClip (type, name, { pos, TimeDuration() }, sm);
 }
 
 Clip* ClipTrack::insertNewClip (TrackItem::Type type, const juce::String& name, ClipPosition position, SelectionManager* sm)
@@ -912,7 +912,7 @@ Clip* ClipTrack::splitClip (Clip& clip, const TimePosition time)
                 if (extra != 0)
                 {
                     auto newOffsetBeats = newClip->getOffsetInBeats() - (newClip->getLoopLengthBeats() * extra);
-                    auto offset = TimePosition::fromSeconds (newOffsetBeats.inBeats() / edit.tempoSequence.getBeatsPerSecondAt (newClip->getPosition().getStart()));
+                    auto offset = TimeDuration::fromSeconds (newOffsetBeats.inBeats() / edit.tempoSequence.getBeatsPerSecondAt (newClip->getPosition().getStart()));
 
                     newClip->setOffset (offset);
                 }

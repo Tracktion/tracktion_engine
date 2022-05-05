@@ -1060,7 +1060,7 @@ public:
                                                             { TimePosition::fromSeconds (start), TimePosition::fromSeconds (start + length) },
                                                             MidiInputDevice::MergeMode::never,
                                                             channelToApply, selectionManager);
-                clip->setOffset (TimePosition::fromSeconds (offset));
+                clip->setOffset (TimeDuration::fromSeconds (offset));
                 clips.add (clip);
             }
         }

@@ -731,13 +731,13 @@ void EditTimecodeRemapperSnapshot::remapEdit (Edit& ed)
                     auto ac = dynamic_cast<AudioClipBase*> (cp.clip.get());
 
                     if (ac != nullptr && ac->getAutoTempo())
-                        c->setPosition ({ { newStart, newEnd }, toPosition (newOffset) });
+                        c->setPosition ({ { newStart, newEnd }, newOffset });
                     else
                         c->setStart (newStart, false, true);
                 }
                 else
                 {
-                    c->setPosition ({ { newStart, newEnd }, toPosition (newOffset) });
+                    c->setPosition ({ { newStart, newEnd }, newOffset });
                 }
             }
         }

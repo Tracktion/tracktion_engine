@@ -2867,7 +2867,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
                     length = 2;
 
                 const TimeRange timeRange (TimePosition(), TimeDuration::fromSeconds (length));
-                mc->setPosition ({ timeRange, TimePosition() });
+                mc->setPosition ({ timeRange, TimeDuration() });
                 edit->getTransport().setLoopRange (timeRange);
             }
         }
@@ -2928,7 +2928,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
             }
 
             const TimeRange timeRange (TimePosition(), TimeDuration::fromSeconds (length));
-            wc->setPosition ({ timeRange, TimePosition() });
+            wc->setPosition ({ timeRange, TimeDuration() });
             edit->getTransport().setLoopRange (timeRange);
         }
     }

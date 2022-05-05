@@ -687,7 +687,7 @@ void MidiClip::disableLooping()
         auto lengthB = getLoopLengthBeats();
 
         pos.time = pos.time.withEnd (std::min (getTimeOfRelativeBeat (lengthB), pos.getEnd()));
-        pos.offset = toPosition (getTimeOfRelativeBeat (toDuration (offsetB)) - pos.getStart()); // TODO: is this correct? Needs testing..
+        pos.offset = getTimeOfRelativeBeat (toDuration (offsetB)) - pos.getStart(); // TODO: is this correct? Needs testing..
 
         setLoopRange ({});
         setPosition (pos);

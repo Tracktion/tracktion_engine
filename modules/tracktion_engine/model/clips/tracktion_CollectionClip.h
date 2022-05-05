@@ -29,7 +29,7 @@ public:
 
     juce::String getName() override;
 
-    ClipPosition getPosition() const override           { return { range, TimePosition() }; }
+    ClipPosition getPosition() const override           { return { range, TimeDuration() }; }
     Track* getTrack() const override                    { return track; }
 
     bool moveToTrack (Track&);

@@ -965,7 +965,7 @@ public:
 
             if (start < 0s)
             {
-                clipPos.offset = -start;
+                clipPos.offset = toDuration (-start);
                 clipPos.time = clipPos.time.withStart (0s);
             }
 

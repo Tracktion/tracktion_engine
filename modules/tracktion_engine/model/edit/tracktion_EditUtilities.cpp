@@ -719,7 +719,7 @@ juce::Result mergeMidiClips (juce::Array<MidiClip*> clips)
                     destinationList.addFrom (sourceList, nullptr);
                 }
 
-                newClip->setPosition ({ { startTime, endTime }, TimePosition() });
+                newClip->setPosition ({ { startTime, endTime }, TimeDuration() });
                 newClip->getSequence().addFrom (destinationList, &track->edit.getUndoManager());
 
                 for (int i = clips.size(); --i >= 0;)

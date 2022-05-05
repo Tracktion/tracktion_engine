@@ -100,7 +100,7 @@ BeatRange toBeats (EditTimeRange, const TempoSequence&);
 struct ClipPosition
 {
     TimeRange time;         /**< The TimeRange this ClipPosition occupies. */
-    TimePosition offset;    /**< The offset this ClipPosition has.
+    TimeDuration offset;    /**< The offset this ClipPosition has.
                                  Offset is a bit unintuitive as the position this
                                  relates to in the source material will depend on
                                  lots of factors including looping and any time-stretching.
@@ -116,9 +116,9 @@ struct ClipPosition
     /** Returns the length. */
     TimeDuration getLength() const            { return time.getLength(); }
     /** Returns the offset. */
-    TimePosition getOffset() const            { return offset; }
+    TimeDuration getOffset() const            { return offset; }
     /** Returns what would be the the start of the source material in the timeline. */
-    TimePosition getStartOfSource() const     { return time.getStart() - TimeDuration::fromSeconds (offset.inSeconds()); }
+    TimePosition getStartOfSource() const     { return time.getStart() - offset; }
 
     /** Compares two ClipPositions. */
     bool operator== (const ClipPosition& other) const  { return offset == other.offset && time == other.time; }
@@ -243,7 +243,7 @@ inline BeatRange toBeats (EditTimeRange r, const TempoSequence& ts)
 //==============================================================================
 inline ClipPosition ClipPosition::rescaled (TimePosition anchorTime, double factor) const
 {
-    return { time.rescaled (anchorTime, factor), TimePosition::fromSeconds (offset.inSeconds() * factor) };
+    return { time.rescaled (anchorTime, factor), offset * factor };
 }
 
 

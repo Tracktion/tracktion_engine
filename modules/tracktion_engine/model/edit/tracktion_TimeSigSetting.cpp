@@ -68,9 +68,9 @@ ClipPosition TimeSigSetting::getPosition() const
     auto s = startTime;
 
     if (auto nextTimeSig = ownerSequence.getTimeSig (ownerSequence.indexOfTimeSig (this) + 1))
-        return { { s, nextTimeSig->startTime }, TimePosition() };
+        return { { s, nextTimeSig->startTime }, TimeDuration() };
 
-    return { { s, s + TimeDuration::fromSeconds (1.0) }, TimePosition() };
+    return { { s, s + TimeDuration::fromSeconds (1.0) }, TimeDuration() };
 }
 
 juce::String TimeSigSetting::getName()

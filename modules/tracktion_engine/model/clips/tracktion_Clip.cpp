@@ -259,7 +259,7 @@ void Clip::setPosition (ClipPosition newPosition)
     const auto maxEnd = Edit::getMaximumEditEnd();
     newPosition.time = { juce::jlimit (TimePosition(), maxEnd, newPosition.time.getStart()),
                          juce::jlimit (newPosition.time.getStart(), maxEnd, newPosition.time.getEnd()) };
-    newPosition.offset = juce::jmax (TimePosition(), newPosition.offset);
+    newPosition.offset = juce::jmax (TimeDuration(), newPosition.offset);
 
     clipStart = newPosition.time.getStart();
     length = newPosition.time.getLength();
@@ -277,7 +277,7 @@ void Clip::setStart (TimePosition newStart, bool preserveSync, bool keepLength)
         pos.time = pos.time.withStart (pos.time.getStart() + delta);
 
     if (preserveSync)
-        pos.offset = juce::jmax (0_tp, pos.offset + delta);
+        pos.offset = juce::jmax (0_td, pos.offset + delta);
 
     setPosition (pos);
 }
@@ -299,10 +299,10 @@ void Clip::setEnd (TimePosition newEnd, bool preserveSync)
     setPosition (pos);
 }
 
-void Clip::setOffset (TimePosition newOffset)
+void Clip::setOffset (TimeDuration newOffset)
 {
     auto pos = getPosition();
-    pos.offset = juce::jmax (TimePosition(), newOffset);
+    pos.offset = juce::jmax (TimeDuration(), newOffset);
     setPosition (pos);
 }
 
@@ -343,7 +343,7 @@ TimePosition Clip::getSpottingPoint() const
     auto pos = getPosition();
 
     return juce::jlimit (TimePosition(), toPosition (pos.time.getLength()),
-                         marks.getFirst() - toDuration (pos.offset));
+                         marks.getFirst() - pos.offset);
 }
 
 void Clip::trimAwayOverlap (TimeRange r)
