@@ -1361,6 +1361,27 @@ void WaveNode::processSection (ProcessContext& pc, juce::Range<int64_t> timeline
     }
     else
     {
+        lastSampleFadeLength = 40u;
+
+        for (choc::buffer::ChannelCount channel = 0; channel < numChannels; ++channel)
+        {
+            if (channel >= (choc::buffer::ChannelCount) channelState->size())
+                continue;
+
+            auto& state = *channelState->getUnchecked ((int) channel);
+
+            if (state.lastSample == 0.0)
+                continue;
+            
+            const auto dest = destBuffer.getIterator (channel).sample;
+
+            for (uint32_t i = 0; i < lastSampleFadeLength; ++i)
+            {
+                auto alpha = i / (float) lastSampleFadeLength;
+                dest[i] = state.lastSample * (1.0f - alpha);
+            }
+        }
+
         for (auto state : *channelState)
         {
             state->resampler.reset();
@@ -1369,6 +1390,11 @@ void WaveNode::processSection (ProcessContext& pc, juce::Range<int64_t> timeline
 
         return;
     }
+
+    auto ratio = numFileSamples / (double) numFrames;
+
+    if (ratio <= 0.0)
+        return;
 
     float gains[2];
 
@@ -1383,11 +1409,6 @@ void WaveNode::processSection (ProcessContext& pc, juce::Range<int64_t> timeline
         gains[0] *= 0.4f;
         gains[1] *= 0.4f;
     }
-
-    auto ratio = numFileSamples / (double) numFrames;
-
-    if (ratio <= 0.0)
-        return;
 
     jassert (numChannels <= (choc::buffer::ChannelCount) channelState->size()); // this should always have been made big enough
 
