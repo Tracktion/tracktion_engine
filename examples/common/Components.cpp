@@ -319,7 +319,7 @@ void AudioClipComponent::drawWaveform (Graphics& g, te::AudioClipBase& c, te::Sm
     const bool usesTimeStretchedProxy = c.usesTimeStretchedProxy();
     
     const auto clipPos = c.getPosition();
-    auto offset = toDuration (clipPos.getOffset());
+    auto offset = clipPos.getOffset();
     auto speedRatio = c.getSpeedRatio();
     
     g.setColour (colour);
