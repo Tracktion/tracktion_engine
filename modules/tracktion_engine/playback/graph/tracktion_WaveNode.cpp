@@ -586,7 +586,7 @@ public:
     bool readSamples (choc::buffer::ChannelArrayView<float>& destBuffer) override
     {
         const auto unwarpedStartTime = TimePosition::fromSamples (readPosition, getSampleRate());
-        const auto [warpedStartTime, ratio] = warpTime (map, unwarpedStartTime);
+        const auto ratio = warpTime (map, unwarpedStartTime).stretchRatio;
 
         reader->setSpeed (ratio);
         readPosition += (SampleCount) destBuffer.getNumFrames();
