@@ -59,7 +59,9 @@ bool FadeInOutNode::isReadyToProcess()
 
 void FadeInOutNode::process (ProcessContext& pc)
 {
-    const auto timelineRange = referenceSampleRangeToSplitTimelineRange (playHeadState.playHead, pc.referenceSampleRange).timelineRange1;
+    const auto splitTimelineRange = referenceSampleRangeToSplitTimelineRange (playHeadState.playHead, pc.referenceSampleRange);
+    jassert (! splitTimelineRange.isSplit);
+    const auto timelineRange = splitTimelineRange.timelineRange1;
     jassert (timelineRange.isEmpty() || timelineRange.getLength() == pc.referenceSampleRange.getLength());
     
     auto sourceBuffers = input->getProcessedOutput();
@@ -125,7 +127,8 @@ void FadeInOutNode::process (ProcessContext& pc)
         }
     }
 
-    const bool pastFadeOutTime = timelineRange.getEnd() >= fadeOutSampleRange.getEnd();
+    const bool pastFadeOutTime = timelineRange.getStart() >= fadeOutSampleRange.getEnd();
+    const bool intersectsFadeOutTime = timelineRange.getEnd() >= fadeOutSampleRange.getEnd();
 
     if (clearExtraSamples && pastFadeOutTime)
     {
@@ -145,7 +148,7 @@ void FadeInOutNode::process (ProcessContext& pc)
         uint32_t endSamp;
         double alpha2;
 
-        if (pastFadeOutTime)
+        if (intersectsFadeOutTime)
         {
             endSamp = (uint32_t) (timelineRange.getEnd() - fadeOutSampleRange.getEnd());
             alpha2 = 1.0;

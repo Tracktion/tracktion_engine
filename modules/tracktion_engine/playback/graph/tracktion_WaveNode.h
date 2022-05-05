@@ -186,6 +186,7 @@ private:
 
     bool buildAudioReaderGraph();
     void replaceStateIfPossible (Node*);
+    void replaceStateIfPossible (WaveNodeRealTime&);
     void processSection (ProcessContext&);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveNodeRealTime)

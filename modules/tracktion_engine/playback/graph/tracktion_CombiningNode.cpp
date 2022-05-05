@@ -44,6 +44,11 @@ struct CombiningNode::TimedNode
         }
     }
 
+    std::vector<Node*> getNodes() const
+    {
+        return nodesToProcess;
+    }
+
     void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info,
                         choc::buffer::ChannelArrayView<float> view)
     {
@@ -170,6 +175,17 @@ void CombiningNode::addInput (std::unique_ptr<Node> input, TimeRange time)
         jassert (tan != nullptr);
         g->insert (j, tan);
     }
+}
+
+std::vector<Node*> CombiningNode::getInternalNodes() const
+{
+    std::vector<Node*> leafNodes;
+
+    for (auto i : inputs)
+        for (auto n : i->getNodes())
+            leafNodes.push_back (n);
+
+    return leafNodes;
 }
 
 std::vector<tracktion::graph::Node*> CombiningNode::getDirectInputNodes()

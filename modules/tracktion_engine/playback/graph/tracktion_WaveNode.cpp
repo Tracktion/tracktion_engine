@@ -1568,20 +1568,6 @@ void WaveNodeRealTime::process (ProcessContext& pc)
     processSection (pc);
 }
 
-/*
-    EditTimeBeats
-        |   (Separate as will be different when launching)
-    ClipTimeBeats
-        |
-    ClipOffsetBeats
-        |
-    ClipLoopBeats
-        |
-    TempoMapBeats (Only if sync to tempo)
-        |
-    FileTime
- */
-
 //==============================================================================
 bool WaveNodeRealTime::buildAudioReaderGraph()
 {
@@ -1675,23 +1661,34 @@ void WaveNodeRealTime::replaceStateIfPossible (Node* rootNodeToReplace)
     {
         if (auto other = dynamic_cast<WaveNodeRealTime*> (&node))
         {
-            if (other->editItemID != editItemID)
-                return;
-
-            // This will be used to fade out the last block if the state hash is different
-            channelState = other->channelState;
-
-            if (other->stateHash != stateHash)
-                return;
-
-            fileTempoSequence = other->fileTempoSequence;
-            fileTempoPosition = other->fileTempoPosition;
-            resamplerReader = other->resamplerReader;
-            editReader = other->editReader;
-            pitchAdjustReader = other->pitchAdjustReader;
+            replaceStateIfPossible (*other);
+        }
+        else if (auto combiningNode = dynamic_cast<CombiningNode*> (&node))
+        {
+            for (auto internalNode : combiningNode->getInternalNodes())
+                if (auto internalWaveNodeRealTime = dynamic_cast<WaveNodeRealTime*> (internalNode))
+                    replaceStateIfPossible (*internalWaveNodeRealTime);
         }
     };
     visitNodes (*rootNodeToReplace, visitor, true);
+}
+
+void WaveNodeRealTime::replaceStateIfPossible (WaveNodeRealTime& other)
+{
+    if (other.editItemID != editItemID)
+        return;
+
+    // This will be used to fade out the last block if the state hash is different
+    channelState = other.channelState;
+
+    if (other.stateHash != stateHash)
+        return;
+
+    fileTempoSequence = other.fileTempoSequence;
+    fileTempoPosition = other.fileTempoPosition;
+    resamplerReader = other.resamplerReader;
+    editReader = other.editReader;
+    pitchAdjustReader = other.pitchAdjustReader;
 }
 
 void WaveNodeRealTime::processSection (ProcessContext& pc)
@@ -1749,7 +1746,7 @@ void WaveNodeRealTime::processSection (ProcessContext& pc)
     if (editReader->read (sectionEditBeats, sectionEditTime, pc.buffers.audio, isContiguous, getPlaybackSpeedRatio()))
     {
         if (! isContiguous && ! getPlayHeadState().isFirstBlockOfLoop())
-            lastSampleFadeLength = std::min (numFrames, getPlayHead().isUserDragging() ? 40u : 10u);
+            lastSampleFadeLength = std::min (numFrames, 40u);
     }
     else
     {

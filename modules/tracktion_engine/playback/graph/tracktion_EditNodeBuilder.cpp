@@ -285,10 +285,10 @@ std::unique_ptr<tracktion::graph::Node> createFadeNodeForClip (AudioClipBase& cl
     auto fIn = clip.getFadeIn();
     auto fOut = clip.getFadeOut();
 
-    if (fIn > TimeDuration() || fOut > TimeDuration())
+    if (fIn > 0_td || fOut > 0_td)
     {
-        const bool speedIn = clip.getFadeInBehaviour() == AudioClipBase::speedRamp && fIn > TimeDuration();
-        const bool speedOut = clip.getFadeOutBehaviour() == AudioClipBase::speedRamp && fOut > TimeDuration();
+        const bool speedIn = clip.getFadeInBehaviour() == AudioClipBase::speedRamp && fIn > 0_td;
+        const bool speedOut = clip.getFadeOutBehaviour() == AudioClipBase::speedRamp && fOut > 0_td;
 
         auto pos = clip.getPosition();
         node = makeNode<FadeInOutNode> (std::move (node), playHeadState,
