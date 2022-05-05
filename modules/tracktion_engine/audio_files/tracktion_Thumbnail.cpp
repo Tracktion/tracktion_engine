@@ -913,7 +913,8 @@ void TracktionThumbnail::getThumbnailAverageValues(int8_t* averageValues, uint32
     const juce::ScopedLock sl(lock);
 
     //The length that unity assigns should match the current thumbnail state
-    jassert(length == numChannels * numberOfThumbSamplesPerChannelToRead);
+    if (length != numChannels * numberOfThumbSamplesPerChannelToRead)
+        return;
 
     //channel interleaved implementation
     for (int i = 0; i < numberOfThumbSamplesPerChannelToRead; i++)
