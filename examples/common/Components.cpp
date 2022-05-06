@@ -938,9 +938,13 @@ void TrackComponent::valueTreeChildAdded (juce::ValueTree&, juce::ValueTree& c)
     if (te::Clip::isClipState(c))
     {
         markAndUpdate(updateClips);
-        DBG(c.toXmlString());
+        //DBG(c.toXmlString());
     }
     if (c.getType() == Identifier("NOTE"))
+    {
+        //DBG(c.toXmlString());
+    } 
+    if (c.getType() == Identifier("CONTROL"))
     {
         DBG(c.toXmlString());
     }

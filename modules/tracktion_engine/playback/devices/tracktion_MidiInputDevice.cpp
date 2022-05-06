@@ -669,17 +669,19 @@ public:
     }
 
     bool handleIncomingMidiMessage (const juce::MidiMessage& message)
-    {
-        //DBG(message.getDescription());
-        MidiList ml;
-        ml.addNote(message.getNoteNumber(),
-                0.0,
-                0.0,
-                message.getVelocity(), 0, nullptr);
-        DBG(ml.state.toXmlString());
+    {               
         if (recording)
-            recorded.addEvent (juce::MidiMessage (message, context.globalStreamTimeToEditTimeUnlooped (message.getTimeStamp())));
+        {
+            MidiList ml;
+            ml.setMidiChannel(MidiChannel(message.getChannel()));
 
+            recorded.addEvent(juce::MidiMessage(message, context.globalStreamTimeToEditTimeUnlooped(message.getTimeStamp())));
+            juce::MidiMessageSequence recordedCopy = recorded;
+            recorded.updateMatchedPairs();
+            ml.importMidiSequence(recorded, &edit, getPunchInTime(), nullptr);
+            DBG(ml.state.toXmlString());
+        }
+            
         juce::ScopedLock sl (consumerLock);
 
         for (auto c : consumers)

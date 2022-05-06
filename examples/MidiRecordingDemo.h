@@ -243,6 +243,33 @@ private:
                                      || dynamic_cast<te::Track*> (sel) != nullptr
                                      || dynamic_cast<te::Plugin*> (sel));
         }
+
+        //for now get the only track
+        auto track = EngineHelpers::getOrInsertAudioTrackAt(*edit, 0);
+        bool needed = false;
+
+        if (track->edit.getTransport().isRecording())
+        {
+            for (auto in : track->edit.getAllInputDevices())
+            {
+                if (in->isRecordingActive() && track == in->getTargetTracks().getFirst())
+                {
+                    needed = true;
+                    break;
+                }
+            }
+        }
+
+        if (needed)
+        {
+            if (auto at = dynamic_cast<te::AudioTrack*> (track))
+            {
+                for (auto* idi : at->edit.getEditInputDevices().getDevicesForTargetTrack(*at))
+                {
+                    DBG(idi->getPunchInTime());
+                }
+            }
+        }
     }
     
     void createTracksAndAssignInputs()
