@@ -11,6 +11,8 @@ The aim of Tracktion Engine is to provide a high level data model and set of cla
 
 Take a look at the [features document](FEATURES.md) for the full range of features.
 
+If you are converting a Tracktion Engine v1 or earlier project to v2, read through the [Engine 2.0 Transition document](docs/Engine_2.0_Transition.md) for a list of design and breaking changes (as well as new functionality).
+
 ##### Supported Platforms
 - macOS
 - Windows
