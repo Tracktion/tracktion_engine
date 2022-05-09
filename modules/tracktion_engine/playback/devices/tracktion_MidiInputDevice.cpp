@@ -601,7 +601,7 @@ Clip* MidiInputDevice::addMidiToTrackAsTransaction (Clip* takeClip, AudioTrack& 
 }
 
 //==============================================================================
-class MidiInputDeviceInstanceBase  : public InputDeviceInstance
+class MidiInputDeviceInstanceBase  : public InputDeviceInstance, private juce::Timer
 {
 public:
     MidiInputDeviceInstanceBase (MidiInputDevice& d, EditPlaybackContext& c)
@@ -672,14 +672,17 @@ public:
     {               
         if (recording)
         {
-            MidiList ml;
-            ml.setMidiChannel(MidiChannel(message.getChannel()));
+            if (!isTimerRunning())
+                startTimer(60);
 
             recorded.addEvent(juce::MidiMessage(message, context.globalStreamTimeToEditTimeUnlooped(message.getTimeStamp())));
-            juce::MidiMessageSequence recordedCopy = recorded;
-            recorded.updateMatchedPairs();
-            ml.importMidiSequence(recorded, &edit, getPunchInTime(), nullptr);
-            DBG(ml.state.toXmlString());
+
+            inMidiMessageHandler = true;
+
+            if (!inMidiTimer)
+                recordedCopy = recorded;
+            
+            inMidiMessageHandler = false;
         }
             
         juce::ScopedLock sl (consumerLock);
@@ -1108,8 +1111,40 @@ private:
     double pausedTime = 0;
     MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
 
+    // midi thread / message thread concurrency
+    std::atomic<bool> inMidiTimer{ false }, inMidiMessageHandler{ false };
+    juce::MidiMessageSequence recordedCopy;
+    //-----------------------------------------
+
     void addConsumer (Consumer* c) override      { juce::ScopedLock sl (consumerLock); consumers.addIfNotAlreadyThere (c); }
     void removeConsumer (Consumer* c) override   { juce::ScopedLock sl (consumerLock); consumers.removeAllInstancesOf (c); }
+
+    void timerCallback() override
+    {
+        // on message thread
+
+        inMidiTimer = true;
+        if (!inMidiMessageHandler)
+        {
+            auto& mi = getMidiInput();
+            auto channelToApply = mi.recordToNoteAutomation ? mi.getChannelToUse()
+                : applyChannel(recorded, mi.getChannelToUse());
+
+            MidiList ml;
+            ml.setMidiChannel(MidiChannel(channelToApply));
+
+            recordedCopy.updateMatchedPairs();
+            ml.importMidiSequence(recordedCopy, &edit, getPunchInTime(), nullptr);
+
+            //todo:: update edit valuetree
+            DBG(ml.state.toXmlString());
+        }
+        inMidiTimer = false;
+
+        //stop callback (edit is updated with recorded midi elsewhere in tracktion at this point)
+        if (!recording)          
+            stopTimer();       
+    }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiInputDeviceInstanceBase)
 };
