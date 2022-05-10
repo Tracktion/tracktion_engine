@@ -267,6 +267,9 @@ private:
                 for (auto* idi : at->edit.getEditInputDevices().getDevicesForTargetTrack(*at))
                 {
                     DBG(idi->getPunchInTime());
+                    ValueTree recordingMidiClip("RECORDINGMIDICLIP");
+                    recordingMidiClip.setProperty("start", idi->getPunchInTime(), nullptr);
+                    track->state.addChild(recordingMidiClip, -1, nullptr);
                 }
             }
         }

@@ -680,8 +680,11 @@ public:
             inMidiMessageHandler = true;
 
             if (!inMidiTimer)
+            {
                 recordedCopy = recorded;
-            
+                isNewRecordedCopy = true;
+            }
+                           
             inMidiMessageHandler = false;
         }
             
@@ -1112,7 +1115,7 @@ private:
     MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
 
     // midi thread / message thread concurrency
-    std::atomic<bool> inMidiTimer{ false }, inMidiMessageHandler{ false };
+    std::atomic<bool> inMidiTimer{ false }, inMidiMessageHandler{ false }, isNewRecordedCopy{ false };
     juce::MidiMessageSequence recordedCopy;
     //-----------------------------------------
 
@@ -1122,7 +1125,6 @@ private:
     void timerCallback() override
     {
         // on message thread
-
         inMidiTimer = true;
         if (!inMidiMessageHandler)
         {
@@ -1136,14 +1138,32 @@ private:
             recordedCopy.updateMatchedPairs();
             ml.importMidiSequence(recordedCopy, &edit, getPunchInTime(), nullptr);
 
-            //todo:: update edit valuetree
-            DBG(ml.state.toXmlString());
+            if (isNewRecordedCopy)
+            {
+                for (const auto& track : getTargetTracks())
+                {
+                    auto recordingMidiClip = track->state.getChildWithName("RECORDINGMIDICLIP");
+                    if (recordingMidiClip.isValid())
+                    {
+                        // see if there is a sequence with the associated channelNumber
+                        auto sequence = recordingMidiClip.getChildWithProperty("channelNumber", channelToApply);
+                        recordingMidiClip.removeChild(sequence, nullptr);
+                        recordingMidiClip.addChild(ml.state, -1, nullptr);
+                    }
+                }
+                isNewRecordedCopy = false;
+            }
         }
         inMidiTimer = false;
 
-        //stop callback (edit is updated with recorded midi elsewhere in tracktion at this point)
-        if (!recording)          
-            stopTimer();       
+        //stop callback (edit is updated with recorded midi elsewhere in tracktion at this point)        
+        if (!recording)
+        {
+            stopTimer();
+            //clear RECORDINGMIDICLIP state nodes at this point
+            for (const auto& track : getTargetTracks())
+                track->state.removeChild(track->state.getChildWithName("RECORDINGMIDICLIP"), nullptr);
+        }                     
     }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiInputDeviceInstanceBase)
