@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-04-26 16:11:08</td>
+            <td class="headerValue">2022-05-18 10:26:13</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
@@ -159,18 +159,18 @@
 <a name="97"><span class="lineNum">      97 </span>            :         /** Returns true if there are no free Nodes to be processed and the calling</a>
 <a name="98"><span class="lineNum">      98 </span>            :             thread should wait until there are Nodes ready.</a>
 <a name="99"><span class="lineNum">      99 </span>            :         */</a>
-<a name="100"><span class="lineNum">     100 </span><span class="lineCov">    2882230 :         bool shouldWait()</span></a>
+<a name="100"><span class="lineNum">     100 </span><span class="lineCov">    3596540 :         bool shouldWait()</span></a>
 <a name="101"><span class="lineNum">     101 </span>            :         {</a>
-<a name="102"><span class="lineNum">     102 </span><span class="lineCov">    2882230 :             if (shouldExit())</span></a>
+<a name="102"><span class="lineNum">     102 </span><span class="lineCov">    3596540 :             if (shouldExit())</span></a>
 <a name="103"><span class="lineNum">     103 </span>            :                 return false;</a>
 <a name="104"><span class="lineNum">     104 </span>            :             </a>
-<a name="105"><span class="lineNum">     105 </span><span class="lineCov">    2882200 :             return player.numNodesQueued == 0;</span></a>
+<a name="105"><span class="lineNum">     105 </span><span class="lineCov">    3596510 :             return player.numNodesQueued == 0;</span></a>
 <a name="106"><span class="lineNum">     106 </span>            :         }</a>
 <a name="107"><span class="lineNum">     107 </span>            : </a>
 <a name="108"><span class="lineNum">     108 </span>            :         /** Returns true if all the Nodes have been processed. */</a>
 <a name="109"><span class="lineNum">     109 </span>            :         bool isFinalNodeReady()</a>
 <a name="110"><span class="lineNum">     110 </span>            :         {</a>
-<a name="111"><span class="lineNum">     111 </span><span class="lineCov">     631373 :             if (! player.preparedNode.rootNode)</span></a>
+<a name="111"><span class="lineNum">     111 </span><span class="lineCov">    1360040 :             if (! player.preparedNode.rootNode)</span></a>
 <a name="112"><span class="lineNum">     112 </span>            :                 return true;</a>
 <a name="113"><span class="lineNum">     113 </span>            : </a>
 <a name="114"><span class="lineNum">     114 </span>            :             return player.preparedNode.rootNode-&gt;hasProcessed();</a>
@@ -182,7 +182,7 @@
 <a name="120"><span class="lineNum">     120 </span>            :         */</a>
 <a name="121"><span class="lineNum">     121 </span>            :         bool process()</a>
 <a name="122"><span class="lineNum">     122 </span>            :         {</a>
-<a name="123"><span class="lineNum">     123 </span><span class="lineCov">    2259190 :             return player.processNextFreeNode();</span></a>
+<a name="123"><span class="lineNum">     123 </span><span class="lineCov">    2242800 :             return player.processNextFreeNode();</span></a>
 <a name="124"><span class="lineNum">     124 </span>            :         }</a>
 <a name="125"><span class="lineNum">     125 </span>            :         </a>
 <a name="126"><span class="lineNum">     126 </span>            :     private:</a>

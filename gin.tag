@@ -27521,15 +27521,15 @@
       <type>void</type>
       <name>clearAllInputs</name>
       <anchorfile>classtracktion__engine_1_1EditInputDevices.html</anchorfile>
-      <anchor>aedb103ef1940a4a7fba0b78fa0513b82</anchor>
-      <arglist>(const AudioTrack &amp;)</arglist>
+      <anchor>a84a1979d70a5b52b3c1c24923e1251b6</anchor>
+      <arglist>(AudioTrack &amp;)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>clearInputsOfDevice</name>
       <anchorfile>classtracktion__engine_1_1EditInputDevices.html</anchorfile>
-      <anchor>aafa335d983323bca6f1db4beb27f5f1c</anchor>
-      <arglist>(const AudioTrack &amp;, const InputDevice &amp;)</arglist>
+      <anchor>a22b9a9c6d964345a69a9f232990aa7d1</anchor>
+      <arglist>(AudioTrack &amp;, const InputDevice &amp;)</arglist>
     </member>
     <member kind="function">
       <type>InputDeviceInstance *</type>
@@ -81284,11 +81284,6 @@
     <subgroup>tracktion_engine-utilities</subgroup>
   </compound>
   <compound kind="group">
-    <name>tracktion_graph-tracktion_graph</name>
-    <title>tracktion_graph</title>
-    <filename>group__tracktion__graph-tracktion__graph.html</filename>
-  </compound>
-  <compound kind="group">
     <name>tracktion_graph</name>
     <title>tracktion_graph</title>
     <filename>group__tracktion__graph.html</filename>
@@ -81389,13 +81384,18 @@
     </member>
   </compound>
   <compound kind="group">
-    <name>tracktion_engine-utilities</name>
-    <title>utilities</title>
-    <filename>group__tracktion__engine-utilities.html</filename>
+    <name>tracktion_graph-tracktion_graph</name>
+    <title>tracktion_graph</title>
+    <filename>group__tracktion__graph-tracktion__graph.html</filename>
   </compound>
   <compound kind="group">
     <name>tracktion_graph-utilities</name>
     <title>utilities</title>
     <filename>group__tracktion__graph-utilities.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>tracktion_engine-utilities</name>
+    <title>utilities</title>
+    <filename>group__tracktion__engine-utilities.html</filename>
   </compound>
 </tagfile>
