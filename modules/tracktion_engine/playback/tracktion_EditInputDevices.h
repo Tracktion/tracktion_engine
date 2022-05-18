@@ -23,8 +23,8 @@ public:
 
     bool isInputDeviceAssigned (const InputDevice&);
 
-    void clearAllInputs (const AudioTrack&);
-    void clearInputsOfDevice (const AudioTrack&, const InputDevice&);
+    void clearAllInputs (AudioTrack&);
+    void clearInputsOfDevice (AudioTrack&, const InputDevice&);
     InputDeviceInstance* getInputInstance (const AudioTrack&, int index) const;
     juce::Array<InputDeviceInstance*> getDevicesForTargetTrack (const AudioTrack&) const;
 
