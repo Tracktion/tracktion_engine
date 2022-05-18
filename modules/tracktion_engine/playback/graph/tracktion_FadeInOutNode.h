@@ -16,11 +16,12 @@ namespace tracktion { inline namespace engine
 /**
     A Node that fades in and out given time regions.
 */
-class FadeInOutNode final : public tracktion::graph::Node
+class FadeInOutNode final : public Node,
+                            public TracktionEngineNode
 {
 public:
     FadeInOutNode (std::unique_ptr<tracktion::graph::Node> input,
-                   tracktion::graph::PlayHeadState&,
+                   ProcessState&,
                    TimeRange fadeIn, TimeRange fadeOut,
                    AudioFadeCurve::Type fadeInType, AudioFadeCurve::Type fadeOutType,
                    bool clearSamplesOutsideFade);
@@ -28,21 +29,20 @@ public:
     //==============================================================================
     tracktion::graph::NodeProperties getNodeProperties() override;
     std::vector<Node*> getDirectInputNodes() override;
-    void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
     void process (ProcessContext&) override;
 
 private:
     //==============================================================================
     std::unique_ptr<tracktion::graph::Node> input;
-    tracktion::graph::PlayHeadState& playHeadState;
     TimeRange fadeIn, fadeOut;
     AudioFadeCurve::Type fadeInType, fadeOutType;
-    juce::Range<int64_t> fadeInSampleRange, fadeOutSampleRange;
     bool clearExtraSamples = true;
 
     //==============================================================================
-    bool renderingNeeded (const juce::Range<int64_t>&) const;
+    bool renderingNeeded (TimeRange);
+    void processSection (choc::buffer::ChannelArrayView<float>, TimeRange);
+    static int timeToSample (int numSamples, TimeRange editTime, TimePosition);
 };
 
 }} // namespace tracktion { inline namespace engine

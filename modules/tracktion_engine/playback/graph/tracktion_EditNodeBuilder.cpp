@@ -272,7 +272,7 @@ namespace
 std::unique_ptr<tracktion::graph::Node> createNodeForTrack (Track&, const CreateNodeParams&);
 
 std::unique_ptr<tracktion::graph::Node> createPluginNodeForList (PluginList&, const TrackMuteState*, std::unique_ptr<Node>,
-                                                                tracktion::graph::PlayHeadState&, const CreateNodeParams&);
+                                                                 tracktion::graph::PlayHeadState&, const CreateNodeParams&);
 
 std::unique_ptr<tracktion::graph::Node> createPluginNodeForTrack (Track&, TrackMuteState&, std::unique_ptr<Node>,
                                                                  tracktion::graph::PlayHeadState&, const CreateNodeParams&);
@@ -282,7 +282,7 @@ std::unique_ptr<tracktion::graph::Node> createLiveInputNodeForDevice (InputDevic
 
 //==============================================================================
 //==============================================================================
-std::unique_ptr<tracktion::graph::Node> createFadeNodeForClip (AudioClipBase& clip, PlayHeadState& playHeadState, std::unique_ptr<Node> node)
+std::unique_ptr<tracktion::graph::Node> createFadeNodeForClip (AudioClipBase& clip, std::unique_ptr<Node> node, const CreateNodeParams& params)
 {
     auto fIn = clip.getFadeIn();
     auto fOut = clip.getFadeOut();
@@ -293,7 +293,7 @@ std::unique_ptr<tracktion::graph::Node> createFadeNodeForClip (AudioClipBase& cl
         const bool speedOut = clip.getFadeOutBehaviour() == AudioClipBase::speedRamp && fOut > 0_td;
 
         auto pos = clip.getPosition();
-        node = makeNode<FadeInOutNode> (std::move (node), playHeadState,
+        node = makeNode<FadeInOutNode> (std::move (node), params.processState,
                                         speedIn ? TimeRange (pos.getStart(), pos.getStart() + juce::jmin (TimeDuration::fromSeconds (0.003), fIn))
                                                 : TimeRange (pos.getStart(), pos.getStart() + fIn),
                                         speedOut ? TimeRange (pos.getEnd() - juce::jmin (TimeDuration::fromSeconds (0.003), fOut), pos.getEnd())
@@ -517,7 +517,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
     }
 
     // Create FadeInOutNode
-    node = createFadeNodeForClip (clip, playHeadState, std::move (node));
+    node = createFadeNodeForClip (clip, std::move (node), params);
     
     return node;
 }
@@ -698,8 +698,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForFrozenAudioTrack (AudioTrac
     return node;
 }
 
-std::unique_ptr<tracktion::graph::Node> createARAClipsNode (const juce::Array<Clip*>& clips, const TrackMuteState&,
-                                                           tracktion::graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
+std::unique_ptr<tracktion::graph::Node> createARAClipsNode (const juce::Array<Clip*>& clips, const TrackMuteState&, const CreateNodeParams& params)
 {
     juce::Array<AudioClipBase*> araClips;
 
@@ -716,7 +715,7 @@ std::unique_ptr<tracktion::graph::Node> createARAClipsNode (const juce::Array<Cl
     
     for (auto araClip : araClips)
         if (auto araNode = createNodeForAudioClip (*araClip, true, params))
-            nodes.push_back (createFadeNodeForClip (*araClip, playHeadState, std::move (araNode)));
+            nodes.push_back (createFadeNodeForClip (*araClip, std::move (araNode), params));
     
     if (nodes.size() == 1)
         return std::move (nodes.front());
@@ -732,7 +731,7 @@ std::unique_ptr<tracktion::graph::Node> createClipsNode (const juce::Array<Clip*
     if (auto clipsNode = createNodeForClips (clips, trackMuteState, params))
         nodes.push_back (std::move (clipsNode));
     
-    if (auto araNode = createARAClipsNode (clips, trackMuteState, params.processState.playHeadState, params))
+    if (auto araNode = createARAClipsNode (clips, trackMuteState, params))
         nodes.push_back (std::move (araNode));
     
     if (nodes.empty())
@@ -988,7 +987,7 @@ juce::Array<Track*> getDirectInputTracks (AudioTrack& at)
     return inputTracks;
 }
 
-std::unique_ptr<tracktion::graph::Node> createTrackCompNode (AudioTrack& at, tracktion::graph::PlayHeadState& playHeadState, std::unique_ptr<tracktion::graph::Node> node)
+std::unique_ptr<tracktion::graph::Node> createTrackCompNode (AudioTrack& at, std::unique_ptr<tracktion::graph::Node> node, const CreateNodeParams& params)
 {
     if (at.getCompGroup() == -1)
         return node;
@@ -1004,7 +1003,7 @@ std::unique_ptr<tracktion::graph::Node> createTrackCompNode (AudioTrack& at, tra
         if (muteTimes.isEmpty())
             return node;
 
-        node = makeNode<TimedMutingNode> (std::move (node), std::move (muteTimes), playHeadState);
+        node = makeNode<TimedMutingNode> (std::move (node), std::move (muteTimes), params.processState.playHeadState);
 
         for (auto r : nonMuteTimes)
         {
@@ -1013,7 +1012,7 @@ std::unique_ptr<tracktion::graph::Node> createTrackCompNode (AudioTrack& at, tra
 
             if (! (fadeIn.isEmpty() && fadeOut.isEmpty()))
                 node = makeNode<FadeInOutNode> (std::move (node),
-                                                playHeadState,
+                                                params.processState,
                                                 TimeRange { fadeIn.getStart(), fadeIn.getEnd() },
                                                 TimeRange { fadeOut.getStart(), fadeOut.getEnd() },
                                                 AudioFadeCurve::convex,
@@ -1046,7 +1045,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioTrack (AudioTrack& at,
         // When recording, clips should be muted but the plugin should still be audible so use two muting Nodes
         node = makeNode<TrackMutingNode> (std::move (clipsMuteState), std::move (node), true);
         
-        node = createTrackCompNode (at, playHeadState, std::move (node));
+        node = createTrackCompNode (at, std::move (node), params);
     }
     
     auto liveInputNode = createLiveInputsNode (at, playHeadState, params);
@@ -1377,15 +1376,15 @@ std::unique_ptr<tracktion::graph::Node> createMasterPluginsNode (Edit& edit, tra
     return node;
 }
 
-std::unique_ptr<tracktion::graph::Node> createMasterFadeInOutNode (Edit& edit, tracktion::graph::PlayHeadState& playHeadState, std::unique_ptr<Node> node, const CreateNodeParams& params)
+std::unique_ptr<tracktion::graph::Node> createMasterFadeInOutNode (Edit& edit, std::unique_ptr<Node> node, const CreateNodeParams& params)
 {
     if (! params.includeMasterPlugins)
         return node;
     
-    if (edit.masterFadeIn > TimeDuration() || edit.masterFadeOut > TimeDuration())
+    if (edit.masterFadeIn > 0_td || edit.masterFadeOut > 0_td)
     {
         auto length = edit.getLength();
-        return makeNode<FadeInOutNode> (std::move (node), playHeadState,
+        return makeNode<FadeInOutNode> (std::move (node), params.processState,
                                         TimeRange { TimePosition(), edit.masterFadeIn },
                                         TimeRange { toPosition (length) - edit.masterFadeOut, length },
                                         edit.masterFadeInType.get(),
@@ -1506,7 +1505,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForEdit (EditPlaybackContext& 
             if (edit.engine.getDeviceManager().getDefaultWaveOutDevice() == device)
                 node = createMasterPluginsNode (edit, playHeadState, std::move (node), params);
             
-            node = createMasterFadeInOutNode (edit, playHeadState, std::move (node), params);
+            node = createMasterFadeInOutNode (edit, std::move (node), params);
             node = EditNodeBuilder::insertOptionalLastStageNode (std::move (node));
 
             if (edit.getIsPreviewEdit() && node != nullptr)
@@ -1568,7 +1567,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForEdit (Edit& edit, const Cre
 
     auto node = std::unique_ptr<Node> (std::move (sumNode));
     node = createMasterPluginsNode (edit, playHeadState, std::move (node), params);
-    node = createMasterFadeInOutNode (edit, playHeadState, std::move (node), params);
+    node = createMasterFadeInOutNode (edit, std::move (node), params);
     node = createRackNode (std::move (node), edit.getRackList(), params);
 
     return node;

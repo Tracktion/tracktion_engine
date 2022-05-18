@@ -45,6 +45,9 @@ public:
 
         runMuteSolo (ts, 3.0s, 2, false);
         runMuteSolo (ts, 3.0s, 2, true);
+
+        runClipFade (ts, 3.0s, 2, false);
+        runClipFade (ts, 3.0s, 2, true);
     }
 
 private:
@@ -456,6 +459,50 @@ private:
         }
     }
 
+    void runClipFade (test_utilities::TestSetup ts,
+                      TimeDuration durationInSeconds,
+                      int numChannels,
+                      bool isMultiThreaded)
+    {
+        const auto description = test_utilities::getDescription (ts)
+                                    + juce::String (isMultiThreaded ? ", MT" : ", ST");
+
+        auto sinFile = test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, durationInSeconds.inSeconds(), numChannels, 220.0f);
+
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = Edit::createSingleTrackEdit (engine);
+        edit->getMasterVolumePlugin()->setVolumeDb (0.0f);
+        auto clip = getAudioTracks (*edit)[0]->insertWaveClip ({}, sinFile->getFile(), ClipPosition { { {}, durationInSeconds } }, false);
+        clip->setFadeInType (AudioFadeCurve::linear);
+        clip->setFadeOutType (AudioFadeCurve::linear);
+
+        beginTest ("No fade");
+        {
+            expectRMS (*this, *edit, { 0s, durationInSeconds }, getAllTracks (*edit), 0.707f);
+        }
+
+        beginTest ("Fade in");
+        {
+            clip->setFadeIn (durationInSeconds);
+            expectRMS (*this, *edit, { 0s, durationInSeconds }, getAllTracks (*edit), 0.707f / 2.0f);
+            clip->setFadeIn (0_td);
+        }
+
+        beginTest ("Fade out");
+        {
+            clip->setFadeOut (durationInSeconds);
+            expectRMS (*this, *edit, { 0s, durationInSeconds }, getAllTracks (*edit), 0.707f / 2.0f);
+            clip->setFadeOut (0_td);
+        }
+
+        beginTest ("Fade in and out");
+        {
+            clip->setFadeIn (durationInSeconds / 2);
+            clip->setFadeOut (durationInSeconds / 2);
+            expectRMS (*this, *edit, { 0s, durationInSeconds }, getAllTracks (*edit), 0.707f / 2.0f);
+        }
+    }
+
     //==============================================================================
     //==============================================================================
     static std::unique_ptr<tracktion::graph::Node> createNode (Edit& edit, ProcessState& processState,
@@ -474,6 +521,13 @@ private:
         auto blockSize = edit.engine.getDeviceManager().getBlockSize();
         auto stats = logStats (ut, Renderer::measureStatistics ("", edit, tr, getTracksMask (tracks), blockSize));
         ut.expect (juce::isWithin (stats.peak, expectedPeak, 0.01f), juce::String ("Expected peak: ") + juce::String (expectedPeak, 4));
+    }
+
+    static void expectRMS (juce::UnitTest& ut, Edit& edit, TimeRange tr, juce::Array<Track*> tracks, float expectedRMS)
+    {
+        auto blockSize = edit.engine.getDeviceManager().getBlockSize();
+        auto stats = logStats (ut, Renderer::measureStatistics ("", edit, tr, getTracksMask (tracks), blockSize));
+        ut.expect (juce::isWithin (stats.average, expectedRMS, 0.01f), juce::String ("Expected RMS: ") + juce::String (expectedRMS, 4));
     }
 
     static void expectPeakAndResetMuteSolo (juce::UnitTest& ut, Edit& edit, TimeRange tr, juce::Array<Track*> tracks, float expectedPeak)
