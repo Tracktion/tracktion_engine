@@ -311,7 +311,8 @@ struct ClipTrack::CollectionClipList  : public juce::ValueTree::Listener
 ClipTrack::ClipTrack (Edit& ed, const juce::ValueTree& v, double defaultHeight, double minHeight, double maxHeight)
     : Track (ed, v, defaultHeight, minHeight, maxHeight)
 {
-    ClipList::sortClips (state, &edit.getUndoManager());
+    if (! edit.getUndoManager().isPerformingUndoRedo())
+        ClipList::sortClips (state, &edit.getUndoManager());
 
     collectionClipList.reset (new CollectionClipList (*this, state));
     clipList.reset (new ClipList (*this, state));
