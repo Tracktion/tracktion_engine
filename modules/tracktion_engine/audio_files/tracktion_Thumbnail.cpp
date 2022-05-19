@@ -917,15 +917,17 @@ void TracktionThumbnail::getThumbnailAverageValues(int8_t* averageValues, uint32
         return;
 
     //channel interleaved implementation
-    for (int i = 0; i < numberOfThumbSamplesPerChannelToRead; i++)
+    for (int i = 0; i < numberOfThumbSamplesPerChannelToRead * numChannels;)
     {
         for (int ch = 0; ch < numChannels; ch++)
         {
             auto minMaxValuesPtr = channels[ch]->getData(startThumbSampleIndex);
-            int remainingNumberOfThumbSamples = channels[ch]->getSize() - startThumbSampleIndex;
 
-            averageValues[i + ch * numberOfThumbSamplesPerChannelToRead] = (minMaxValuesPtr[i].getMinValue() + minMaxValuesPtr[i].getMaxValue()) / 2;
+            int minVal = minMaxValuesPtr[i].getMinValue();
+            int maxVal = minMaxValuesPtr[i].getMaxValue();
+            averageValues[i + ch] = (int8_t)((minVal + maxVal) / 2);
         }
+        i = i + numChannels;
     }
        
     //update thumbnail state
