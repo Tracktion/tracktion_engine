@@ -785,13 +785,14 @@ public:
 
         for (;;)
         {
-            auto takeRange = TimeRange (toPosition (loopLength * take),
-                                        std::min (loopLength * (take + 1),
-                                                  recordedFileLength));
+            const auto takeStart    = toPosition (loopLength * take);
+            const auto takeEnd      = toPosition (std::min (loopLength * (take + 1),
+                                                            recordedFileLength));
 
-            if (takeRange.getLength() < 0.1s)
+            if ((takeEnd - takeStart) < 0.1s)
                 break;
 
+            const auto takeRange = TimeRange (takeStart, takeEnd);
             auto takeFile = recordedFile.getFile()
                              .getSiblingFile (recordedFile.getFile().getFileNameWithoutExtension()
                                                 + "_take_" + juce::String (take + 1))
