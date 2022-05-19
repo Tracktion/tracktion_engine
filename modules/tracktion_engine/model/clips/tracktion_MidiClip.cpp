@@ -36,7 +36,7 @@ static std::unique_ptr<MidiList> createLoopRangeDefinesAllRepetitionsSequence (M
             auto start  = (note->getStartBeat() - loopStartBeats) + loopPos;
             auto length = note->getLengthBeats();
 
-            if (start < loopPos)
+            if (start < loopPos && start + length > loopPos)
             {
                 length = length - loopPos - start;
                 start  = start + loopPos - start;
