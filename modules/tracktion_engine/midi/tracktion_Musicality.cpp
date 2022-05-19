@@ -1169,7 +1169,7 @@ MidiNote* PatternGenerator::addNote (MidiList& sequence, int pitch, BeatPosition
     }
 
     if (startBeat + lengthInBeats > toPosition (clip.getLengthInBeats()))
-        lengthInBeats = lengthInBeats - toDuration (startBeat) + lengthInBeats - clip.getLengthInBeats();
+        lengthInBeats = lengthInBeats - (toDuration (startBeat) + lengthInBeats - clip.getLengthInBeats());
 
     return sequence.addNote (pitch, startBeat, lengthInBeats, vel, colourIndex, um);
 }
@@ -1596,7 +1596,7 @@ void PatternGenerator::generateArpPattern()
             if (stepCur >= styleValues.size())
                 stepCur = 0;
 
-            if (stepLengthLeft < BeatDuration())
+            if (stepLengthLeft < 0.0001_bd)
             {
                 stepCur = 0;
                 stepStart = true;
