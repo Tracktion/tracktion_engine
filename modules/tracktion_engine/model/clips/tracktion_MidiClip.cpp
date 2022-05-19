@@ -38,12 +38,12 @@ static std::unique_ptr<MidiList> createLoopRangeDefinesAllRepetitionsSequence (M
 
             if (start < loopPos)
             {
-                length = length - loopPos - start;
-                start  = start + loopPos - start;
+                length = length - (loopPos - start);
+                start  = start + (loopPos - start);
             }
 
             if (start + length > nextLoopPos)
-                length = length - (start + length) - nextLoopPos;
+                length = length - ((start + length) - nextLoopPos);
 
             if (start >= loopPos && start < nextLoopPos && length > BeatDuration())
                 v.addChild (MidiNote::createNote (*note, toPosition (start), length), -1, nullptr);
