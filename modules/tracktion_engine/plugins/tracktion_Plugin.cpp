@@ -523,7 +523,6 @@ void Plugin::deleteFromParent()
 
 Track* Plugin::getOwnerTrack() const
 {
-    jassert (getReferenceCount() > 0);
     return getTrackContainingPlugin (edit, this);
 }
 
