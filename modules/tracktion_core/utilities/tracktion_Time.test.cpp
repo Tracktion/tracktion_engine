@@ -274,7 +274,7 @@ public:
             }
         }
 
-        beginTest ("Time addition/subtraction");
+        beginTest ("Time arithmatic");
         {
             expectEquals ((TimePosition (2s) - TimePosition (2s)).inSeconds(), 0.0);
             expectEquals ((TimePosition (0s) - TimePosition (2s)).inSeconds(), -2.0);
@@ -287,6 +287,19 @@ public:
             expectEquals ((TimePosition (2s) + TimeDuration (2s)).inSeconds(), 4.0);
             expectEquals ((TimePosition (2s) - TimeDuration (2s)).inSeconds(), 0.0);
             expectEquals ((TimePosition (2s) - TimeDuration (4s)).inSeconds(), -2.0);
+
+            expectEquals (1_tp * 2,     2_tp);
+            expectEquals (-4_tp * 4,    -16_tp);
+            expectEquals (1_tp / 2,     0.5_tp);
+            expectEquals (-4_tp / 4,    -1_tp);
+
+            expectEquals (1_td * 2,     2_td);
+            expectEquals (-4_td * 4,    -16_td);
+            expectEquals (1_td / 2,     0.5_td);
+            expectEquals (-4_td / 4,    -1_td);
+
+            expectEquals (1_tp / 2_td,  0.5);
+            expectEquals (1_td / 2_td,  0.5);
         }
 
         beginTest ("BeatPosition");
@@ -372,7 +385,7 @@ public:
             }
         }
 
-        beginTest ("Beat addition/subtraction");
+        beginTest ("Beat arithmatic");
         {
             expectEquals ((BeatPosition::fromBeats (2.0) - BeatPosition::fromBeats (2.0)).inBeats(), 0.0);
             expectEquals ((BeatPosition::fromBeats (0.0) - BeatPosition::fromBeats (2.0)).inBeats(), -2.0);
@@ -389,6 +402,19 @@ public:
             expectEquals ((2.0_bp + 2.0_bd).inBeats(), 4.0);
             expectEquals ((2_bp - 2.0_bd).inBeats(), 0.0);
             expectEquals ((2_bp - 4_bd).inBeats(), -2.0);
+
+            expectEquals (1_bp * 2,     2_bp);
+            expectEquals (-4_bp * 4,    -16_bp);
+            expectEquals (1_bp / 2,     0.5_bp);
+            expectEquals (-4_bp / 4,    -1_bp);
+
+            expectEquals (1_bd * 2,     2_bd);
+            expectEquals (-4_bd * 4,    -16_bd);
+            expectEquals (1_bd / 2,     0.5_bd);
+            expectEquals (-4_bd / 4,    -1_bd);
+
+            expectEquals (1_bp / 2_bd,  0.5);
+            expectEquals (1_bd / 2_bd,  0.5);
         }
     }
 };

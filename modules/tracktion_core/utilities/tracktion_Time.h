@@ -791,7 +791,7 @@ inline constexpr BeatPosition operator* (const BeatPosition& t, Type ammount)
 
 inline constexpr BeatPosition operator/ (const BeatPosition& t, double ammount)
 {
-    return BeatPosition::fromBeats (t.inBeats() * ammount);
+    return BeatPosition::fromBeats (t.inBeats() / ammount);
 }
 
 template<typename Type>
@@ -802,7 +802,7 @@ inline constexpr BeatDuration operator* (const BeatDuration& t, Type ammount)
 
 inline constexpr BeatDuration operator/ (const BeatDuration& t, double ammount)
 {
-    return BeatDuration::fromBeats (t.inBeats() * ammount);
+    return BeatDuration::fromBeats (t.inBeats() / ammount);
 }
 
 inline constexpr double operator/ (const BeatPosition& t1, const BeatDuration& t2)
