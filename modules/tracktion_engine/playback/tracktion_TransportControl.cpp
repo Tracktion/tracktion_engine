@@ -1350,22 +1350,25 @@ bool TransportControl::performRecord()
 
             auto prerollStart = transportState->startTime.get();
             double numCountInBeats = edit.getNumCountInBeats();
+            const auto& ts = edit.tempoSequence;
 
             if (numCountInBeats > 0)
             {
-                auto currentBeat = edit.tempoSequence.timeToBeats (transportState->startTime);
-                prerollStart = edit.tempoSequence.beatsToTime (currentBeat - BeatDuration::fromBeats (numCountInBeats + 0.5));
+                auto currentBeat = ts.timeToBeats (transportState->startTime);
+                prerollStart = ts.beatsToTime (currentBeat - BeatDuration::fromBeats (numCountInBeats + 0.5));
+                // N.B. this +0.5 beats here specifies the behaviour further down when setting the click range.
+                // If this changes, that will also need to change.
             }
 
             if (edit.getAbletonLink().isConnected())
             {
-                double barLength = edit.tempoSequence.getTimeSig (0)->numerator;
+                double barLength = ts.getTimeSig (0)->numerator;
                 double beatsUntilNextLinkCycle = edit.getAbletonLink().getBeatsUntilNextCycle (barLength);
 
                 if (numCountInBeats > 0)
                     beatsUntilNextLinkCycle -= 0.5;
 
-                prerollStart = prerollStart - toDuration (edit.tempoSequence.beatsToTime (BeatPosition::fromBeats (beatsUntilNextLinkCycle)));
+                prerollStart = prerollStart - toDuration (ts.beatsToTime (BeatPosition::fromBeats (beatsUntilNextLinkCycle)));
             }
 
             transportState->cursorPosAtPlayStart = position.get();
@@ -1413,9 +1416,19 @@ bool TransportControl::performRecord()
                 playbackContext->prepareForRecording (prerollStart, transportState->startTime.get());
 
                 if (edit.getNumCountInBeats() > 0)
-                    edit.setClickTrackRange ({ prerollStart, transportState->startTime.get() });
+                {
+                    // As the pre-roll will be "num count in beats - 0.5" we have to add that back on before our calculation
+                    // We also roll back 0.5 beats the end time to avoid hearing a block that starts directly or just before a beat
+                    const auto clickStartBeat = ts.timeToBeats (prerollStart);
+                    const auto clickEndBeat = ts.timeToBeats (transportState->startTime.get());
+
+                    edit.setClickTrackRange (ts.beatsToTime ({ BeatPosition::fromBeats (std::ceil (clickStartBeat.inBeats() + 0.5)),
+                                                               BeatPosition::fromBeats (std::ceil (clickEndBeat.inBeats())) - 0.5_bd }));
+                }
                 else
+                {
                     edit.setClickTrackRange ({});
+                }
                 
                 transportState->playing = true; // N.B. set these after the devices have been rebuilt and the playingFlag has been set
                 screenSaverDefeater = std::make_unique<ScreenSaverDefeater>();
