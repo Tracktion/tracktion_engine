@@ -61,6 +61,7 @@ public:
 
     void getThumbnailAverageValues(int8_t* averageValues, uint32_t length);
 
+    void getThumbnailMinMaxValues(int8_t* minValues, int8_t* maxValues, uint32_t length);
 
 private:
     //==============================================================================
