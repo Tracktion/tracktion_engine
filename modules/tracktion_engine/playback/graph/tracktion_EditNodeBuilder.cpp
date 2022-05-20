@@ -582,7 +582,8 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                clip.itemID,
                                                params.forRendering,
                                                speedFadeDesc, std::move (editTempoPosition),
-                                               timeStretcherMode, timeStretcherOpts);
+                                               timeStretcherMode, timeStretcherOpts,
+                                               clip.getPitchChange());
         }
     }
    #endif

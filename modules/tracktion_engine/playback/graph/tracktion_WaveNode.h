@@ -112,7 +112,8 @@ public:
                       SpeedFadeDescription = {},
                       std::optional<tempo::Sequence::Position> editTempoSequence = {},
                       TimeStretcher::Mode = TimeStretcher::Mode::defaultMode,
-                      TimeStretcher::ElastiqueProOptions = {});
+                      TimeStretcher::ElastiqueProOptions = {},
+                      float pitchChangeSemitones = 0.0f);
 
     //==============================================================================
     /** Represets whether the file should try and match Edit tempo changes. */
@@ -174,6 +175,7 @@ private:
     TimeStretcher::ElastiqueProOptions elastiqueProOptions;
     LiveClipLevel clipLevel;
     const juce::AudioChannelSet channelsToUse, destChannels;
+    float pitchChangeSemitones = 0.0;
     double outputSampleRate = 44100.0;
     bool isFirstBlock = true;
 

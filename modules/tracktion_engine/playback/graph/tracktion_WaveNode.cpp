@@ -619,7 +619,18 @@ public:
                        const tempo::Sequence& fileTempoSequence)
         : SingleInputAudioReader (std::move (input)),
           timeStretchSource (timeStretcher),
-          rootPitch (fileTempoSequence.getKeyAt (0s).pitch)
+          rootPitch (fileTempoSequence.getKeyAt (0s).pitch),
+          syncToKey (true)
+    {
+        assert (timeStretchSource != nullptr);
+    }
+
+    PitchAdjustReader (std::unique_ptr<AudioReader> input,
+                       TimeStretchReader* timeStretcher,
+                       float numSemitones)
+        : SingleInputAudioReader (std::move (input)),
+          timeStretchSource (timeStretcher),
+          numSemitonesShift (numSemitones)
     {
         assert (timeStretchSource != nullptr);
     }
@@ -631,13 +642,20 @@ public:
 
     bool readSamples (choc::buffer::ChannelArrayView<float>& destBuffer) override
     {
-        int pitch = key.pitch;
-        int transposeBase = pitch - rootPitch;
+        if (syncToKey)
+        {
+            int pitch = key.pitch;
+            int transposeBase = pitch - rootPitch;
 
-        while (transposeBase > 6)  transposeBase -= 12;
-        while (transposeBase < -6) transposeBase += 12;
+            while (transposeBase > 6)  transposeBase -= 12;
+            while (transposeBase < -6) transposeBase += 12;
 
-        timeStretchSource->setPitch (static_cast<double> (transposeBase));
+            timeStretchSource->setPitch (static_cast<double> (transposeBase));
+        }
+        else
+        {
+            timeStretchSource->setPitch (static_cast<double> (numSemitonesShift));
+        }
 
         return SingleInputAudioReader::readSamples (destBuffer);
     }
@@ -645,6 +663,9 @@ public:
     TimeStretchReader* timeStretchSource;
     const int rootPitch = 60;
     tempo::Key key;
+
+    bool syncToKey = false;
+    float numSemitonesShift = 0.0f;
 };
 
 
@@ -1470,7 +1491,8 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
                                     SpeedFadeDescription speedDesc,
                                     std::optional<tempo::Sequence::Position> editTempoSeq,
                                     TimeStretcher::Mode mode,
-                                    TimeStretcher::ElastiqueProOptions options)
+                                    TimeStretcher::ElastiqueProOptions options,
+                                    float pitchChange)
     : TracktionEngineNode (ps),
       editPositionTime (editTime),
       loopSectionTime (loop.rescaled (loop.getStart(), speed)),
@@ -1485,7 +1507,8 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
       elastiqueProOptions (options),
       clipLevel (level),
       channelsToUse (channelSetToUse),
-      destChannels (destChannelsToFill)
+      destChannels (destChannelsToFill),
+      pitchChangeSemitones (pitchChange)
 {
     // This won't work with invalid or non-existent files!
     jassert (! audioFile.isNull());
@@ -1501,6 +1524,7 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
     hash_combine (stateHash, speedFadeDescription);
     hash_combine (stateHash, static_cast<int> (timeStretcherMode));
     hash_combine (stateHash, elastiqueProOptions.toString().hashCode());
+    hash_combine (stateHash, pitchChangeSemitones);
 }
 
 WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
@@ -1662,9 +1686,22 @@ bool WaveNodeRealTime::buildAudioReaderGraph()
     else
     {
         if (timestretchDisabled)
+        {
             timeRangeReader    = std::make_unique<TimeRangeReader> (std::move (resamplerAudioReader));
+        }
         else
-            timeRangeReader    = std::make_unique<TimeRangeReader> (std::move (timeStretchReader), timeStretcher);
+        {
+            if (pitchChangeSemitones != 0.0f)
+            {
+                auto pitchAdjuster = std::make_unique<PitchAdjustReader> (std::move (timeStretchReader), timeStretchReader.get(), pitchChangeSemitones);
+                pitchAdjustReader  = pitchAdjuster.get();
+                timeRangeReader    = std::make_unique<TimeRangeReader> (std::move (pitchAdjuster), timeStretcher);
+            }
+            else
+            {
+                timeRangeReader    = std::make_unique<TimeRangeReader> (std::move (timeStretchReader), timeStretcher);
+            }
+        }
     }
 
     if (syncTempo == SyncTempo::yes || syncPitch == SyncPitch::yes)
