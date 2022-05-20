@@ -1520,7 +1520,8 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
                                     std::optional<WarpMap> warp,
                                     tempo::Sequence sourceFileTempoMap,
                                     SyncTempo syncTempo_,
-                                    SyncPitch syncPitch_)
+                                    SyncPitch syncPitch_,
+                                    std::optional<tempo::Sequence> chordPitchSequence_)
     : TracktionEngineNode (ps),
       editPositionBeats (editTime),
       loopSectionBeats (loop),
@@ -1543,6 +1544,12 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
     fileTempoSequence = std::make_shared<tempo::Sequence> (std::move (sourceFileTempoMap));
     fileTempoPosition = std::make_shared<tempo::Sequence::Position> (*fileTempoSequence);
 
+    if (chordPitchSequence_)
+    {
+        chordPitchSequence = std::make_shared<tempo::Sequence> (*chordPitchSequence_);
+        chordPitchPosition = std::make_shared<tempo::Sequence::Position> (*chordPitchSequence);
+    }
+
     // This won't work with invalid or non-existent files!
     jassert (! audioFile.isNull());
 
@@ -1564,6 +1571,9 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
     hash_combine (stateHash, fileTempoSequence->hash());
     hash_combine (stateHash, syncTempo);
     hash_combine (stateHash, syncPitch);
+
+    if (chordPitchSequence)
+        hash_combine (stateHash, chordPitchSequence->hash());
 }
 
 tracktion::graph::NodeProperties WaveNodeRealTime::getNodeProperties()
@@ -1657,7 +1667,7 @@ bool WaveNodeRealTime::buildAudioReaderGraph()
             timeRangeReader    = std::make_unique<TimeRangeReader> (std::move (timeStretchReader), timeStretcher);
     }
 
-    if (syncTempo == SyncTempo::yes)
+    if (syncTempo == SyncTempo::yes || syncPitch == SyncPitch::yes)
     {
         assert (fileTempoSequence);
         auto beatRangeReader    = std::make_unique<BeatRangeReader> (std::move (timeRangeReader),
@@ -1776,7 +1786,7 @@ void WaveNodeRealTime::processSection (ProcessContext& pc)
         resamplerReader->setGains (gains[0], gains[1]);
 
     if (pitchAdjustReader != nullptr)
-        pitchAdjustReader->setKey (getKey());
+        pitchAdjustReader->setKey (getKeyToSyncTo (sectionEditTime.getStart()));
 
     // Read through the audio stack
     const auto isContiguous = getPlayHeadState().isContiguousWithPreviousBlock();
@@ -1820,6 +1830,17 @@ void WaveNodeRealTime::processSection (ProcessContext& pc)
             destBuffer.getChannel (channel).clear();
         }
     }
+}
+
+tempo::Key WaveNodeRealTime::getKeyToSyncTo (TimePosition editPosition) const
+{
+    if (chordPitchPosition)
+    {
+        chordPitchPosition->set (editPosition);
+        return chordPitchPosition->getKey();
+    }
+
+    return getKey();
 }
 
 }} // namespace tracktion { inline namespace engine

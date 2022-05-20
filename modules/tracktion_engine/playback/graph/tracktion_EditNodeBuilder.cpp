@@ -265,6 +265,88 @@ namespace
 
         return map;
     }
+
+    /**
+        Returns a tempo::Sequence with the key changes required for a clip to sync to the chord track.
+    */
+    std::optional<tempo::Sequence> getChordTrackSequenceIfRequired (AudioClipBase& clip)
+    {
+        if (! clip.getAutoPitch())
+            return {};
+
+        if (clip.getAutoPitchMode() != AudioClipBase::chordTrackMono)
+            return {};
+
+        if (auto pg = clip.getPatternGenerator())
+        {
+            // First get the properties that are static for the whole clip
+            const auto clipRootKey = clip.getLoopInfo().getRootNote() % 12;
+            const auto clipTransposeSemitones = clip.getTransposeSemiTones (false);
+            const auto scale = static_cast<int> (pg->scaleType.get());
+
+            // Next get the progression in Edit-time
+            juce::OwnedArray<PatternGenerator::ProgressionItem> progression;
+            pg->getFlattenedChordProgression (progression, true);
+
+            // Then iterate the progression
+            std::vector<tempo::KeyChange> keyChanges;
+            auto editTempoSequencePosition = createPosition (clip.edit.tempoSequence);
+            BeatPosition beatPos;
+
+            for (auto p : progression)
+            {
+                // Find the key (pitch/scale) of the Edit
+                editTempoSequencePosition.set (beatPos);
+                const auto editKey = editTempoSequencePosition.getKey();
+
+                const int scaleNote = editKey.pitch % 12;
+                int chordTrackPitchDelta = 0;
+
+                // If this section has a chord, find the pitch offset for it
+                if (p->chordName.get().isNotEmpty())
+                {
+                    const int chordNote = p->getRootNote (scaleNote, Scale (static_cast<Scale::ScaleType> (editKey.scale)));
+                    chordTrackPitchDelta = chordNote - scaleNote;
+                }
+
+                // Then find the base transposition from the Edit's key and clip's key
+                int transposeBase = scaleNote - clipRootKey;
+
+                while (transposeBase > 6)  transposeBase -= 12;
+                while (transposeBase < -6) transposeBase += 12;
+
+                // Shift by the section's octave
+                transposeBase += p->octave * 12;
+
+                // Put the three transposition sections back together and add it as a KeyChange
+                const int finalPitch = transposeBase + chordTrackPitchDelta + clipTransposeSemitones;
+                keyChanges.push_back ({ beatPos, { finalPitch, scale } });
+
+                beatPos = beatPos + p->lengthInBeats;
+            }
+
+            // Finally copy tempo data from Edit's tempo sequence
+            std::vector<tempo::TempoChange> tempoChanges;
+            std::vector<tempo::TimeSigChange> timeSigChanges;
+
+            {
+                for (auto ts : clip.edit.tempoSequence.getTempos())
+                    tempoChanges.push_back ({ ts->startBeatNumber.get(), ts->bpm.get(), ts->curve.get() });
+
+                for (auto ts : clip.edit.tempoSequence.getTimeSigs())
+                    timeSigChanges.push_back ({ ts->startBeatNumber.get(), ts->numerator.get(), ts->denominator.get(), ts->triplets.get() });
+            }
+
+            const bool useDenominator = clip.edit.engine.getEngineBehaviour().lengthOfOneBeatDependsOnTimeSignature();
+            tempo::Sequence seq (std::move (tempoChanges), std::move (timeSigChanges), std::move (keyChanges),
+                                    useDenominator ? tempo::LengthOfOneBeat::dependsOnTimeSignature
+                                                   : tempo::LengthOfOneBeat::isAlwaysACrotchet);
+
+            return seq;
+        }
+
+        return {};
+    }
    #endif
 
 //==============================================================================
@@ -483,7 +565,8 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                params.forRendering,
                                                speedFadeDesc, std::move (editTempoPosition),
                                                std::move (warpMap),
-                                               seq, syncTempo, syncPitch);
+                                               seq, syncTempo, syncPitch,
+                                               getChordTrackSequenceIfRequired (clip));
         }
         else
         {

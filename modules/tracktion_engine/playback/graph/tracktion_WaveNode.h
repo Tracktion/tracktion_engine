@@ -128,6 +128,8 @@ public:
                                     This map is also used to describe a single tempo/time sig
                                     for the file with a pair of changes at position 0. With this,
                                     the file playback will match tempo changes in the Edit.
+        @param chordPitchSequence   If this is supplied and SyncPitch == yes, rather than syncing
+                                    to the Edit's pitch sequence, it will sync to this pitch sequence.
     */
     WaveNodeRealTime (const AudioFile&,
                       TimeStretcher::Mode,
@@ -145,7 +147,8 @@ public:
                       std::optional<tempo::Sequence::Position> editTempoSequence,
                       std::optional<WarpMap>,
                       tempo::Sequence sourceFileTempoMap,
-                      SyncTempo, SyncPitch);
+                      SyncTempo, SyncPitch,
+                      std::optional<tempo::Sequence> chordPitchSequence);
 
     //==============================================================================
     graph::NodeProperties getNodeProperties() override;
@@ -184,11 +187,14 @@ private:
     std::shared_ptr<tempo::Sequence::Position> fileTempoPosition;
     SyncTempo syncTempo = SyncTempo::no;
     SyncPitch syncPitch = SyncPitch::no;
+    std::shared_ptr<tempo::Sequence> chordPitchSequence;
+    std::shared_ptr<tempo::Sequence::Position> chordPitchPosition;
 
     bool buildAudioReaderGraph();
     void replaceStateIfPossible (Node*);
     void replaceStateIfPossible (WaveNodeRealTime&);
     void processSection (ProcessContext&);
+    tempo::Key getKeyToSyncTo (TimePosition) const;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveNodeRealTime)
 };
