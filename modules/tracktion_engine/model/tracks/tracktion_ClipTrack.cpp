@@ -534,9 +534,11 @@ Clip* ClipTrack::insertClipWithState (juce::ValueTree clipState)
     jassert (clipState.isValid());
     jassert (! clipState.getParent().isValid());
 
+    auto& engineBehaviour = edit.engine.getEngineBehaviour();
+
     if (clipState.hasType (IDs::MIDICLIP))
     {
-        setPropertyIfMissing (clipState, IDs::sync, edit.engine.getEngineBehaviour().areMidiClipsRemappedWhenTempoChanges()
+        setPropertyIfMissing (clipState, IDs::sync, engineBehaviour.areMidiClipsRemappedWhenTempoChanges()
                                                        ? Clip::syncBarsBeats : Clip::syncAbsolute, nullptr);
     }
     else if (clipState.hasType (IDs::AUDIOCLIP) || clipState.hasType (IDs::EDITCLIP))
@@ -547,7 +549,7 @@ Clip* ClipTrack::insertClipWithState (juce::ValueTree clipState)
 
             if (sourceFile.exists())
             {
-                auto loopInfo = AudioFile (edit.engine, sourceFile).getInfo().loopInfo;
+                auto loopInfo = engineBehaviour.getLoopInfoForNewClip (AudioFile (edit.engine, sourceFile), &edit);
 
                 if (loopInfo.getRootNote() != -1)
                     clipState.setProperty (IDs::autoPitch, true, nullptr);

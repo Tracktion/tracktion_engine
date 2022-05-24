@@ -200,7 +200,13 @@ public:
     /** If this returns true, it means that newly inserted clips will automatically have a fade-in and fade-out of 3ms applied. */
     virtual bool autoAddClipEdgeFades()                                             { return false; }
     
-    
+    /** Called when a new audio clip is about to be inserted.
+        By default this just reads metadata from the file but if you want to modify
+        the LoopInfo that will be used for this clip, this is the place to do it.
+        @see ClipTrack::insertClipWithState
+    */
+    virtual LoopInfo getLoopInfoForNewClip (const AudioFile& af, Edit*)             { return af.getInfo().loopInfo; }
+
     struct ControlSurfaces
     {
         bool mackieMCU = true;

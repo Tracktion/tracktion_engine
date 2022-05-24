@@ -261,6 +261,7 @@ namespace tracktion { inline namespace graph
 //==============================================================================
 namespace tracktion { inline namespace engine
 {
+    class EngineBehaviour;
     class Engine;
     class DeviceManager;
     class MidiProgramManager;
@@ -455,9 +456,7 @@ namespace tracktion { inline namespace engine
 
 #include "utilities/tracktion_PropertyStorage.h"
 #include "utilities/tracktion_UIBehaviour.h"
-#include "utilities/tracktion_EngineBehaviour.h"
 #include "utilities/tracktion_Engine.h"
-#include "utilities/tracktion_Pitch.h"
 
 #include "playback/tracktion_LevelMeasurer.h"
 
@@ -497,6 +496,9 @@ namespace tracktion { inline namespace engine
 #include "model/edit/tracktion_SourceFileReference.h"
 #include "model/clips/tracktion_Clip.h"
 #include "model/edit/tracktion_EditUtilities.h"
+
+#include "utilities/tracktion_EngineBehaviour.h"
+#include "utilities/tracktion_Pitch.h"
 
 #include "audio_files/tracktion_AudioFileCache.h"
 #include "audio_files/tracktion_Thumbnail.h"
