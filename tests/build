@@ -175,6 +175,7 @@ buildExample "TestRunner" RUN_EXAMPLE=1
 buildExample "Benchmarks" RUN_EXAMPLE=1 DISABLE_TOOLS=1
 
 # Then just build these examples (don't build with tooling as they won't be run)
+buildExample "DemoRunner" DISABLE_TOOLS=1
 buildExample "DistortionEffectDemo" DISABLE_TOOLS=1
 buildExample "EngineInPluginDemo" DISABLE_TOOLS=1
 buildExample "IRPluginDemo" DISABLE_TOOLS=1
