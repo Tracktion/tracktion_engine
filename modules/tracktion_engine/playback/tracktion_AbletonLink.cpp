@@ -13,8 +13,13 @@ namespace tracktion { inline namespace engine
 
 struct AbletonLink::ImplBase  : public juce::Timer
 {
-    ImplBase (TransportControl& t) : transport (t)
+    ImplBase (TransportControl& t)
+        : transport (t)
+    {}
+
+    bool isConnected() const
     {
+        return numPeers > 0;
     }
 
     void activateTimer (bool isActive)
@@ -30,44 +35,59 @@ struct AbletonLink::ImplBase  : public juce::Timer
         }
     }
 
-    void timerCallback() override
+    void syncronise (TimePosition pos)
     {
-        if (! transport.isPlaying() || ! isConnected)
+        if (! isConnected() || ! transport.isPlaying())
             return;
 
-        auto& deviceManager = transport.engine.getDeviceManager();
+        // Get the current tempo info
+        const auto& seq = transport.edit.tempoSequence.getInternalSequence();
+        const auto localBarsAndBeatsPos = seq.toBarsAndBeats (pos);
+        const auto numerator = static_cast<double> (localBarsAndBeatsPos.numerator);
 
-        const double bps = transport.edit.tempoSequence.getBeatsPerSecondAt (getCurrentPositionSeconds());
-        const double linkBps = getTempoFromLink() / 60.0;
+        // Calculate any device latency and custom latency
+        const double bps = transport.edit.tempoSequence.getBeatsPerSecondAt (pos);
+        auto& dm = transport.engine.getDeviceManager();
+        const auto outputLatencyBeats = ((dm.getBlockLength() * 2).inSeconds() + dm.getOutputLatencySeconds()) * bps;
+        const auto customOffsetBeats = (customOffsetMs / 1000.0) * bps;
 
-        const double currentPosBeats = transport.edit.tempoSequence.timeToBeats (getCurrentPositionSeconds()).inBeats();
-        const double outputLatencyBeats = deviceManager.getOutputLatencySeconds() * bps;
-        const double customOffsetBeats = (customOffsetMs / 1000.0) * bps;
+        // Calculate the bar phase from the transport position
+        const auto outputLatencyPhase = outputLatencyBeats / numerator;
+        const auto customOffsetPhase = customOffsetBeats / numerator;
 
-        const double quantum = transport.edit.tempoSequence.getTimeSig(0)->numerator;
-        const double tempoDivisor = isTempoOutOfRange (linkBps * 60.0) ? (bps / linkBps) : 1.0;
+        const auto localPhase = (localBarsAndBeatsPos.beats.inBeats() / numerator)
+                                    - outputLatencyPhase + customOffsetPhase;
 
-        const double linkPhase = getBarPhase (quantum);
-        const double localPhase = negativeAwareFmod (currentPosBeats, quantum * tempoDivisor) / tempoDivisor;
+        const auto linkPhase = getBarPhase (numerator) / numerator;
+        linkBarPhase = linkPhase;
 
-        double offset = (linkPhase - localPhase) - (outputLatencyBeats + customOffsetBeats);
+        // Find the phase offset between tracktion and link and ensure this stays between 0-1
+        auto offsetPhase = linkPhase - localPhase;
 
-        if (std::abs (offset) > (quantum * 0.5))
-            offset = offset > 0 ? offset - quantum : quantum + offset;
+        if (offsetPhase < 0.0)          offsetPhase += 1.0;
+        if (offsetPhase >= 1.0)         offsetPhase -= 1.0;
 
+        chaseProportion = offsetPhase;
+
+        const auto offsetBeats = offsetPhase * numerator;
         const auto timeNow = juce::Time::getMillisecondCounter();
 
-        if (std::abs (offset) >= 0.25 && timeNow > inhibitTimer)
+        // If we're out of sync by more than a beat, re-sync by jumping
+        if (std::abs (offsetBeats) >= 1.0 && timeNow > inhibitTimer)
         {
             inhibitTimer = timeNow + 250;
 
-            listeners.call (&Listener::linkRequestedPositionChange, offset * tempoDivisor);
+            setSpeedCompensation (0.0);
+            listeners.call (&Listener::linkRequestedPositionChange, BeatDuration::fromBeats (offsetBeats));
         }
         else
         {
-            const double speedComp = juce::jlimit (-10.0, 10.0, offset * 10.0);
-            setSpeedCompensation (speedComp);
+            setSpeedCompensation (offsetPhase);
         }
+    }
+
+    void timerCallback() override
+    {
     }
 
     void setTempoFromLink (double bpm)
@@ -82,6 +102,18 @@ struct AbletonLink::ImplBase  : public juce::Timer
                 inhibitTimer = juce::Time::getMillisecondCounter() + 100;
                 listeners.call (&Listener::linkRequestedTempoChange, bpm);
             }
+        });
+    }
+
+    void setStartStopFromLink (bool isPlaying)
+    {
+        juce::MessageManager::callAsync ([this, bailOut = Edit::WeakRef (&transport.edit), isPlaying]
+        {
+            if (bailOut == nullptr)
+                return;
+
+            inhibitTimer = juce::Time::getMillisecondCounter() + 100;
+            listeners.call (&Listener::linkRequestedStartStopChange, isPlaying);
         });
     }
 
@@ -101,14 +133,6 @@ struct AbletonLink::ImplBase  : public juce::Timer
         return quantum - getBarPhase (quantum);
     }
 
-    TimePosition getCurrentPositionSeconds() const
-    {
-        if (auto epc = transport.getCurrentPlaybackContext())
-            return epc->getPosition();
-
-        return transport.getPosition();
-    }
-
     void setCustomOffset (int offsetMs)
     {
         customOffsetMs = offsetMs;
@@ -118,7 +142,7 @@ struct AbletonLink::ImplBase  : public juce::Timer
     {
         allowedTempos = minMaxTempo;
 
-        if (isConnected)
+        if (isConnected())
             setTempoFromLink (getTempoFromLink());
     }
 
@@ -145,6 +169,10 @@ struct AbletonLink::ImplBase  : public juce::Timer
 
     virtual bool isEnabled() const = 0;
     virtual void setEnabled (bool) = 0;
+    virtual bool isPlaying() const = 0;
+    virtual void enableStartStopSync (bool) = 0;
+    virtual bool getStartStopSyncEnabledFromLink() const = 0;
+    virtual void setStartStopToLink (bool) = 0;
     virtual void setTempoToLink (double bpm) = 0;
     virtual double getTempoFromLink() = 0;
     virtual double getBeatNow (double quantum) = 0;
@@ -158,17 +186,25 @@ struct AbletonLink::ImplBase  : public juce::Timer
         return a - b * std::floor (a / b);
     }
 
-    void setSpeedCompensation (double speedComp)
+    void setSpeedCompensation (double phaseProportion)
     {
-         if (auto epc = transport.getCurrentPlaybackContext())
-             epc->setSpeedCompensation (speedComp);
+        if (auto epc = transport.getCurrentPlaybackContext())
+        {
+           #if TRACKTION_ENABLE_REALTIME_TIMESTRETCHING
+            epc->setTempoAdjustment (phaseProportion * 10.0);
+           #else
+            const double speedComp = juce::jlimit (-10.0, 10.0, phaseProportion * 1000.0);
+            epc->setSpeedCompensation (speedComp);
+           #endif
+        }
     }
 
     TransportControl& transport;
     juce::ListenerList<Listener> listeners;
-    bool isConnected = false;
-    int customOffsetMs = 0;
+    std::atomic<size_t> numPeers { 0 };
+    std::atomic<int> customOffsetMs { 0 };
     uint32_t inhibitTimer = 0;
+    std::atomic<double> linkBarPhase { 0.0 }, chaseProportion { 0.0 };
 
     juce::Range<double> allowedTempos { 0.0, 999.0 };
 };
@@ -227,60 +263,99 @@ struct AbletonLink::ImplBase  : public juce::Timer
     //==========================================================================
     struct LinkImpl  : public AbletonLink::ImplBase
     {
-        LinkImpl (TransportControl& t)  : AbletonLink::ImplBase (t)
+        LinkImpl (TransportControl& t)
+            : AbletonLink::ImplBase (t)
         {
-            setupCallbacks();
+            link.setNumPeersCallback ([this] (std::size_t n) { numPeersCallback (n); });
+            link.setTempoCallback ([this] (double bpm) { setTempoFromLink (bpm); });
+            link.setStartStopCallback ([this] (bool isPlaying) { setStartStopFromLink (isPlaying); });
         }
 
-        void setupCallbacks()
+        ~LinkImpl() override
         {
-            link.setNumPeersCallback ([this] (std::size_t n) { isConnectedCallback (n); });
-            link.setTempoCallback ([this] (double bpm) { setTempoFromLink (bpm); });
+            link.setNumPeersCallback ([] (std::size_t) {});
+            link.setTempoCallback ([] (double) {});
+            link.setStartStopCallback ([] (bool) {});
         }
 
         bool isEnabled() const override
         {
+            TRACKTION_ASSERT_MESSAGE_THREAD
             return link.isEnabled();
         }
 
         void setEnabled (bool isEnabled) override
         {
+            TRACKTION_ASSERT_MESSAGE_THREAD
             link.enable (isEnabled);
             activateTimer (isEnabled);
 
             if (isEnabled)
-                setTempoFromLink (link.captureAppTimeline().tempo());
+                setTempoFromLink (link.captureAppSessionState().tempo());
         }
 
-        void isConnectedCallback (std::size_t numPeers)
+        bool isPlaying() const override
         {
-            isConnected = numPeers > 0;
+            TRACKTION_ASSERT_MESSAGE_THREAD
+            return link.captureAppSessionState().isPlaying();
+        }
+
+        void enableStartStopSync (bool enable) override
+        {
+            TRACKTION_ASSERT_MESSAGE_THREAD
+            link.enableStartStopSync (enable);
+        }
+
+        bool getStartStopSyncEnabledFromLink() const override
+        {
+            TRACKTION_ASSERT_MESSAGE_THREAD
+            return link.isStartStopSyncEnabled();
+        }
+
+        void numPeersCallback (std::size_t newNumPeers)
+        {
+            jassert (! juce::MessageManager::existsAndIsCurrentThread());
+            numPeers = newNumPeers;
             callConnectionChanged();
 
-            if (isConnected)
-                setTempoFromLink (link.captureAppTimeline().tempo());
+            if (isConnected())
+                setTempoFromLink (link.captureAudioSessionState().tempo());
         }
 
         void setTempoToLink (double bpm) override
         {
-            auto timeline = link.captureAppTimeline();
-            timeline.setTempo (bpm, clock.micros());
-            link.commitAppTimeline (timeline);
+            TRACKTION_ASSERT_MESSAGE_THREAD
+            auto state = link.captureAppSessionState();
+            state.setTempo (bpm, clock.micros());
+            link.commitAppSessionState (state);
+        }
+
+        void setStartStopToLink (bool isPlaying) override
+        {
+            TRACKTION_ASSERT_MESSAGE_THREAD
+            auto state = link.captureAppSessionState();
+            state.setIsPlaying (isPlaying, clock.micros());
+            link.commitAppSessionState (state);
         }
 
         double getTempoFromLink() override
         {
-            return link.captureAppTimeline().tempo();
+            jassert (! juce::MessageManager::existsAndIsCurrentThread());
+            return link.captureAudioSessionState().tempo();
         }
 
         double getBeatNow (double quantum) override
         {
-            return link.captureAppTimeline().beatAtTime (clock.micros(), quantum);
+            jassert (! juce::MessageManager::existsAndIsCurrentThread());
+            return link.captureAudioSessionState().beatAtTime (clock.micros(), quantum);
         }
 
         double getBarPhase (double quantum) override
         {
-            return link.captureAppTimeline().phaseAtTime (clock.micros(), quantum);
+            if (juce::MessageManager::existsAndIsCurrentThread())
+                return link.captureAppSessionState().phaseAtTime (clock.micros(), quantum);
+
+            return link.captureAudioSessionState().phaseAtTime (clock.micros(), quantum);
         }
 
         ableton::Link::Clock clock;
@@ -435,7 +510,28 @@ bool AbletonLink::isEnabled() const
 
 bool AbletonLink::isConnected() const
 {
-    return implementation != nullptr && implementation->isConnected;
+    return implementation != nullptr && implementation->isConnected();
+}
+
+size_t AbletonLink::getNumPeers() const
+{
+    return implementation != nullptr && implementation->numPeers;
+}
+
+bool AbletonLink::isPlaying() const
+{
+    return implementation != nullptr && implementation->isPlaying();
+}
+
+void AbletonLink::enableStartStopSync (bool enable)
+{
+    if (implementation != nullptr)
+        implementation->enableStartStopSync (enable);
+}
+
+bool AbletonLink::isStartStopSyncEnabled() const
+{
+    return implementation != nullptr && implementation->getStartStopSyncEnabledFromLink();
 }
 
 double AbletonLink::getBeatsUntilNextCycle (double quantum) const
@@ -444,6 +540,12 @@ double AbletonLink::getBeatsUntilNextCycle (double quantum) const
         return implementation->getBeatsUntilNextCycle (quantum);
 
     return 0.0;
+}
+
+void AbletonLink::requestStartStopChange (bool isPlaying)
+{
+    if (implementation != nullptr)
+        implementation->setStartStopToLink (isPlaying);
 }
 
 void AbletonLink::requestTempoChange (double newBpm)
@@ -458,6 +560,16 @@ void AbletonLink::setTempoConstraint (juce::Range<double> minMaxTempo)
         implementation->setTempoConstraint (minMaxTempo);
 }
 
+double AbletonLink::getBarPhase() const
+{
+    return implementation != nullptr ? implementation->linkBarPhase.load() : 0.0;
+}
+
+double AbletonLink::getChaseProportion() const
+{
+    return implementation != nullptr ? implementation->chaseProportion.load() : 0.0;
+}
+
 double AbletonLink::getSessionTempo() const
 {
     if (implementation != nullptr)
@@ -470,6 +582,12 @@ void AbletonLink::setCustomOffset (int offsetMs)
 {
     if (implementation != nullptr)
         implementation->setCustomOffset (offsetMs);
+}
+
+void AbletonLink::syncronise (TimePosition pos)
+{
+    if (implementation != nullptr)
+        implementation->syncronise (pos);
 }
 
 void AbletonLink::addListener (Listener* l)

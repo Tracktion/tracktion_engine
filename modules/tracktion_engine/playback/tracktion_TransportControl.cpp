@@ -1267,11 +1267,11 @@ void TransportControl::performPlay()
 
         if (edit.getAbletonLink().isConnected())
         {
-            double barLength = edit.tempoSequence.getTimeSig(0)->numerator;
-            double beatsUntilNextLinkCycle = edit.getAbletonLink().getBeatsUntilNextCycle (barLength);
+            const double barLength = edit.tempoSequence.getTimeSig(0)->numerator;
+            const double beatsUntilNextLinkCycle = edit.getAbletonLink().getBeatsUntilNextCycle (barLength);
 
-            double cyclePos = std::fmod (transportState->startTime.get().inSeconds(), barLength);
-            double nextLinkCycle = edit.tempoSequence.beatsToTime (BeatPosition::fromBeats (beatsUntilNextLinkCycle)).inSeconds();
+            const double cyclePos = std::fmod (transportState->startTime.get().inSeconds(), barLength);
+            const double nextLinkCycle = edit.tempoSequence.beatsToTime (BeatPosition::fromBeats (beatsUntilNextLinkCycle)).inSeconds();
 
             transportState->startTime = TimePosition::fromSeconds ((transportState->startTime.get().inSeconds() - cyclePos) + (barLength - nextLinkCycle));
         }

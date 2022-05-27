@@ -104,9 +104,12 @@ public:
     //==============================================================================
     DemoRunner()
     {
-        Helpers::addAndMakeVisible (*this, { &loadButton, &currentDemoName });
+        Helpers::addAndMakeVisible (*this, { &loadButton, &settingsButton, &currentDemoName });
 
-        loadButton.onClick = [this] { showLoadDemoMenu(); };
+        loadButton.onClick      = [this] { showLoadDemoMenu(); };
+        settingsButton.onClick  = [this] { EngineHelpers::showAudioDeviceSettings (engine); };
+
+        currentDemoName.setJustificationType (juce::Justification::centred);
 
         setSize (800, 600);
     }
@@ -137,7 +140,9 @@ public:
     {
         auto r = getLocalBounds();
         auto topR = r.removeFromTop (30);
-        loadButton.setBounds (topR.removeFromLeft (topR.getWidth() / 4).reduced (2));
+        const int buttonW = topR.getWidth() / 4;
+        loadButton.setBounds (topR.removeFromLeft (buttonW).reduced (2));
+        settingsButton.setBounds (topR.removeFromRight (buttonW).reduced (2));
         currentDemoName.setBounds (topR.reduced (2));
 
         if (demo)
@@ -148,7 +153,7 @@ private:
     //==============================================================================
     te::Engine engine { ProjectInfo::projectName };
 
-    TextButton loadButton { "Load Demo" };
+    TextButton loadButton { "Load Demo" }, settingsButton { "Audio Settings" };
     Label currentDemoName { {}, "No demo loaded" };
     std::unique_ptr<Component> demo;
 

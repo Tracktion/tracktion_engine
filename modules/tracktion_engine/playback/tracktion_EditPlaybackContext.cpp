@@ -762,6 +762,10 @@ void EditPlaybackContext::fillNextNodeBlock (float** allChannels, int numChannel
     edit.updateModifierTimers (editTime, numSamples);
     midiDispatcher.masterTimeUpdate (editTime);
 
+   #if TRACKTION_ENABLE_ABLETON_LINK
+    edit.getAbletonLink().syncronise (editTime);
+   #endif
+
     nodePlaybackContext->process (allChannels, numChannels, numSamples);
     
     // Dispatch any MIDI messages that have been injected in to the MidiOutputDeviceInstances by the Node
