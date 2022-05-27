@@ -322,19 +322,19 @@ struct AbletonLink::ImplBase  : public juce::Timer
                 setTempoFromLink (link.captureAudioSessionState().tempo());
         }
 
-        void setTempoToLink (double bpm) override
-        {
-            TRACKTION_ASSERT_MESSAGE_THREAD
-            auto state = link.captureAppSessionState();
-            state.setTempo (bpm, clock.micros());
-            link.commitAppSessionState (state);
-        }
-
         void setStartStopToLink (bool isPlaying) override
         {
             TRACKTION_ASSERT_MESSAGE_THREAD
             auto state = link.captureAppSessionState();
             state.setIsPlaying (isPlaying, clock.micros());
+            link.commitAppSessionState (state);
+        }
+
+        void setTempoToLink (double bpm) override
+        {
+            TRACKTION_ASSERT_MESSAGE_THREAD
+            auto state = link.captureAppSessionState();
+            state.setTempo (bpm, clock.micros());
             link.commitAppSessionState (state);
         }
 
@@ -375,29 +375,27 @@ struct AbletonLink::ImplBase  : public juce::Timer
             : AbletonLink::ImplBase (t),
               link (ABLLinkNew (120))
         {
-            setupCallbacks();
-            setEnabled (isActive);
-        };
+            ABLLinkSetSessionTempoCallback (link, tempoChangedCallback, this);
+            ABLLinkSetIsConnectedCallback (link, isConnectedCallback, this);
+            ABLLinkSetIsEnabledCallback (link, isEnabledCallback, this);
 
-        ~LinkImpl()
+            setEnabled (isActive);
+        }
+
+        ~LinkImpl() override
         {
              ABLLinkDelete (link);
         }
 
-        void setupCallbacks()
-        {
-            ABLLinkSetSessionTempoCallback (link, tempoChangedCallback, this);
-            ABLLinkSetIsConnectedCallback (link, isConnectedCallback, this);
-            ABLLinkSetIsEnabledCallback (link, isEnabledCallback, this);
-        }
-
         bool isEnabled() const override
         {
+            TRACKTION_ASSERT_MESSAGE_THREAD
             return ABLLinkIsEnabled (link) && isActive;
         }
 
         void setEnabled (bool isEnabled) override
         {
+            TRACKTION_ASSERT_MESSAGE_THREAD
             isActive = isEnabled;
             ABLLinkSetActive (link, isEnabled);
 
@@ -412,29 +410,59 @@ struct AbletonLink::ImplBase  : public juce::Timer
             });
         }
 
+        bool isPlaying() const override
+        {
+            TRACKTION_ASSERT_MESSAGE_THREAD
+            return ABLLinkIsPlaying (ABLLinkCaptureAppSessionState (link));
+        }
+
+        void enableStartStopSync (bool) override
+        {
+            jassertfalse; // This is only settable via the system prefs
+        }
+
+        bool getStartStopSyncEnabledFromLink() const override
+        {
+            TRACKTION_ASSERT_MESSAGE_THREAD
+            return ABLLinkIsStartStopSyncEnabled (link);
+        }
+
+        void setStartStopToLink (bool isPlaying) override
+        {
+            TRACKTION_ASSERT_MESSAGE_THREAD
+            auto state = ABLLinkCaptureAppSessionState (link);
+            ABLLinkSetIsPlaying (state, isPlaying, (std::uint64_t) juce::Time::getHighResolutionTicks());
+            ABLLinkCommitAppSessionState (link, state);
+        }
+
         void setTempoToLink (double bpm) override
         {
-            auto timeline = ABLLinkCaptureAppTimeline (link);
-
-            ABLLinkSetTempo (timeline, bpm, (uint64) juce::Time::getHighResolutionTicks());
-            ABLLinkCommitAppTimeline (link, timeline);
+            TRACKTION_ASSERT_MESSAGE_THREAD
+            auto state = ABLLinkCaptureAppSessionState (link);
+            ABLLinkSetTempo (state, bpm, (std::uint64_t) juce::Time::getHighResolutionTicks());
+            ABLLinkCommitAppSessionState (link, state);
         }
 
         double getTempoFromLink() override
         {
-            return ABLLinkGetTempo (ABLLinkCaptureAppTimeline (link));
+            jassert (! juce::MessageManager::existsAndIsCurrentThread());
+            return ABLLinkGetTempo (ABLLinkCaptureAudioSessionState (link));
         }
 
         double getBeatNow (double quantum) override
         {
-            auto timeline = ABLLinkCaptureAppTimeline (link);
-            return ABLLinkBeatAtTime (timeline, (uint64) juce::Time::getHighResolutionTicks(), quantum);
+            jassert (! juce::MessageManager::existsAndIsCurrentThread());
+            auto state = ABLLinkCaptureAudioSessionState (link);
+            return ABLLinkBeatAtTime (state, (std::uint64_t) juce::Time::getHighResolutionTicks(), quantum);
         }
 
         double getBarPhase (double quantum) override
         {
-            auto timeline = ABLLinkCaptureAppTimeline (link);
-            return ABLLinkPhaseAtTime (timeline, (uint64) juce::Time::getHighResolutionTicks(), quantum);
+            auto state = juce::MessageManager::existsAndIsCurrentThread()
+                            ? ABLLinkCaptureAppSessionState (link)
+                            : ABLLinkCaptureAudioSessionState (link);
+
+            return ABLLinkPhaseAtTime (state, (std::uint64_t) juce::Time::getHighResolutionTicks(), quantum);
         }
 
         static void tempoChangedCallback (double bpm, void *context)
@@ -447,7 +475,7 @@ struct AbletonLink::ImplBase  : public juce::Timer
         {
             auto* thisPtr = static_cast<LinkImpl*> (context);
 
-            thisPtr->isConnected = isConnected;
+            thisPtr->numPeers = (size_t) (isConnected ? 1 : 0);
             thisPtr->activateTimer (isConnected);
 
             isEnabledCallback (isConnected, context);
@@ -458,7 +486,7 @@ struct AbletonLink::ImplBase  : public juce::Timer
             auto* thisPtr = static_cast<LinkImpl*> (context);
 
             if (! isEnabled)
-                thisPtr->isConnected = false;
+                thisPtr->numPeers = (size_t) 0;
 
             thisPtr->callConnectionChanged();
 

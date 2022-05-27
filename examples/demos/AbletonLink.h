@@ -173,4 +173,4 @@ private:
 };
 
 //==============================================================================
-static DemoTypeBase<AbletonLink> abletonLinkDemo ("AbletonLink");
+static DemoTypeBase<AbletonLink> abletonLinkDemo ("Ableton Link");
