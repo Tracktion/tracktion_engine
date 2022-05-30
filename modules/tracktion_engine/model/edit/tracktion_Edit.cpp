@@ -2889,7 +2889,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
                    #if ! TRACKTION_ENABLE_REALTIME_TIMESTRETCHING
                     wc->setUsesTimestretchedPreview (true);
                    #endif
-                    wc->setLoopInfo (engine.getEngineBehaviour().getLoopInfoForNewClip (af, edit.get()));
+                    wc->setLoopInfo (af.getInfo().loopInfo);
                     wc->setTimeStretchMode (TimeStretcher::defaultMode);
                 }
 

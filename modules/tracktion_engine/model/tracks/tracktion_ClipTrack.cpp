@@ -549,7 +549,7 @@ Clip* ClipTrack::insertClipWithState (juce::ValueTree clipState)
 
             if (sourceFile.exists())
             {
-                auto loopInfo = engineBehaviour.getLoopInfoForNewClip (AudioFile (edit.engine, sourceFile), &edit);
+                auto loopInfo = AudioFile (edit.engine, sourceFile).getInfo().loopInfo;
 
                 if (loopInfo.getRootNote() != -1)
                     clipState.setProperty (IDs::autoPitch, true, nullptr);
