@@ -69,7 +69,7 @@ target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
     JUCE_REPORT_APP_USAGE=0
     JUCE_MODAL_LOOPS_PERMITTED=1
     JUCE_STRICT_REFCOUNTEDPOINTER=1
-    TRACKTION_ENABLE_ABLETON_LINK=1)
+    TRACKTION_ENABLE_ABLETON_LINK=0) # Enable this if you have the Ableton Link SDK present
 
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
     tracktion::tracktion_core

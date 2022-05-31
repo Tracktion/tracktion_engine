@@ -16,6 +16,8 @@
 using namespace tracktion::literals;
 using namespace std::literals;
 
+#if TRACKTION_ENABLE_ABLETON_LINK
+
 //==============================================================================
 struct AbletonLink : public juce::Component,
                      private te::AbletonLink::Listener,
@@ -185,3 +187,5 @@ private:
 
 //==============================================================================
 static DemoTypeBase<AbletonLink> abletonLinkDemo ("Ableton Link");
+
+#endif
