@@ -12,71 +12,150 @@ namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
+//==============================================================================
+/** Creates a Position to iterate over the given TempoSequence.
+    One of these lets you take a position in a tempo sequence, and skip forwards/backwards
+    either by absolute times, or by bar/beat amounts.
+    This is dynamic and if the TempoSequence changes, the position will update to reflect this.
+
+    N.B. It is only safe to call this from the message thread or during audio callbacks.
+    Access at any other time could incur data races.
+*/
+tempo::Sequence::Position createPosition (const TempoSequence&);
+
+
+//==============================================================================
+//==============================================================================
 /**
     Holds a list of TempoSetting objects, to form a sequence of tempo changes.
 
     You can query this at particular points, but it's wise to use a
-    TempoSequencePosition object to iterate it.
+    tempo::Sequence::Position object to iterate it. @see createPosition
 */
 class TempoSequence  : public Selectable,
                        private juce::AsyncUpdater
 {
 public:
     //==============================================================================
+    /** Creates a TempoSequence for an Edit. */
     TempoSequence (Edit&);
+
+    /** Destructor */
     ~TempoSequence() override;
 
+    /** Returns the Edit this TempoSequence refers to. */
     Edit& getEdit() const                           { return edit; }
 
+    /** Returns the state this TempoSequence models. */
     const juce::ValueTree& getState() const         { return state; }
+
+    /** Sets the state this TempoSequence should refer to. */
     void setState (const juce::ValueTree&, bool remapEdit);
+
+    /** Resets this to a default, empty state. */
     void createEmptyState();
 
+    /** Copies the contents of another TempoSequence. */
     void copyFrom (const TempoSequence&);
-    void freeResources();
 
     //==============================================================================
-    juce::UndoManager* getUndoManager() const noexcept;
-
-    //==============================================================================
+    /** Returns an array of the TimeSigSetting. */
     const juce::Array<TimeSigSetting*>& getTimeSigs() const;
-    int getNumTimeSigs() const;
-    TimeSigSetting* getTimeSig (int index) const;
-    TimeSigSetting& getTimeSigAt (TimePosition) const;
-    TimeSigSetting& getTimeSigAtBeat (BeatPosition) const;
 
-    int indexOfTimeSigAt (TimePosition time) const;
+    /** Returns the number of TimeSigSetting[s] in the sequence. */
+    int getNumTimeSigs() const;
+
+    /** Returns the TimeSigSetting at a given index. */
+    TimeSigSetting* getTimeSig (int index) const;
+
+    /** Returns the TimeSigSetting at a given position. */
+    TimeSigSetting& getTimeSigAt (TimePosition) const;
+
+    /** Returns the TimeSigSetting at a given position. */
+    TimeSigSetting& getTimeSigAt (BeatPosition) const;
+
+    /** Returns the index of TimeSigSetting at a given position. */
+    int indexOfTimeSigAt (TimePosition) const;
+
+    /** Returns the index of a given TimeSigSetting. */
     int indexOfTimeSig (const TimeSigSetting*) const;
 
     //==============================================================================
+    /** Returns the TempoSettings. */
     const juce::Array<TempoSetting*>& getTempos() const;
+
+    /** Returns the current number of TempoSettings. */
     int getNumTempos() const;
+
+    /** Returns the TempoSetting at the given index. */
     TempoSetting* getTempo (int index) const;
+
+    /** Returns the TempoSetting at the given position. */
     TempoSetting& getTempoAt (TimePosition) const;
-    TempoSetting& getTempoAtBeat (BeatPosition) const;
+
+    /** Returns the TempoSetting at the given position. */
+    TempoSetting& getTempoAt (BeatPosition) const;
+
+    /** Returns the tempo at a given position.
+        N.B. This is the actual tempo at the time, including any curves.
+        I.e. it is not just the bpm of the previous TempoSetting
+    */
     double getBpmAt (TimePosition) const; // takes ramping into account
+
+    /** Returns the tempo at a given position.
+        N.B. This is the actual tempo at the time, including any curves.
+        I.e. it is not just the bpm of the previous TempoSetting
+    */
     double getBeatsPerSecondAt (TimePosition, bool lengthOfOneBeatDependsOnTimeSignature = false) const;
+
+    /** Returns true if the TempoSetting is triplets at the given time. */
     bool isTripletsAtTime (TimePosition) const;
 
+    /** Returns the index of the TempoSetting at the given position. */
     int indexOfTempoAt (TimePosition) const;
+
+    /** Returns the index of the TempoSetting after the given position. */
     int indexOfNextTempoAt (TimePosition) const;
+
+    /** Returns the index of the given TempoSetting. */
     int indexOfTempo (const TempoSetting*) const;
 
+    /** Returns the number of TempoSetting[s] in the given range. */
     int countTemposInRegion (TimeRange) const;
-    HashCode createHashForTemposInRange (TimeRange) const;
 
-    /** inserts a tempo break that can be edited later. */
+    //==============================================================================
+    /** Inserts a tempo break that can be edited later. */
     TempoSetting::Ptr insertTempo (TimePosition);
+
+    /** Inserts a tempo with a bpm and curve value. @see TempoSetting. */
     TempoSetting::Ptr insertTempo (BeatPosition, double bpm, float curve);
+
+    /** Inserts a new TimeSigSetting at the given position. */
     TimeSigSetting::Ptr insertTimeSig (TimePosition);
+
+    /** Inserts a new TimeSigSetting at the given position. */
     TimeSigSetting::Ptr insertTimeSig (BeatPosition);
 
+    /** Removes the TempoSetting at a given index.
+        @param remapEdit    If true, this will update the positions of Edit content
+    */
     void removeTempo (int index, bool remapEdit);
+
+    /** Removes any TempoSetting[s] within the range.
+        @param remapEdit    If true, this will update the positions of Edit content
+    */
     void removeTemposBetween (TimeRange, bool remapEdit);
+
+    /** Removes the TimeSigSetting at a given index. */
     void removeTimeSig (int index);
+
+    /** Removes any TimeSigSetting[s] within the range. */
     void removeTimeSigsBetween (TimeRange);
 
+    /** Moves the TempoSetting at a given index by a number of beats. */
     void moveTempoStart (int index, BeatDuration deltaBeats, bool snapToBeat);
+
+    /** Moves the TimeSigSetting at a given index by a number of beats. */
     void moveTimeSigStart (int index, BeatDuration deltaBeats, bool snapToBeat);
 
     /** Inserts space in to a sequence, shifting TempoSettings and TimeSigs. */
@@ -114,10 +193,7 @@ public:
     const tempo::Sequence& getInternalSequence() const;
 
     //==============================================================================
-    juce::String getSelectableDescription() override;
-
-    //==============================================================================
-    Edit& edit;
+    Edit& edit; /**< The Edit this sequence belongs to. */
 
     //==============================================================================
     [[ deprecated ("Use new overload set above") ]] tempo::BarsAndBeats timeToBarsBeats (TimePosition) const;
@@ -127,8 +203,16 @@ public:
     [[ deprecated ("Use new overload set above") ]] BeatRange timeToBeats (TimeRange range) const;
     [[ deprecated ("Use new overload set above") ]] TimePosition beatsToTime (BeatPosition beats) const;
     [[ deprecated ("Use new overload set above") ]] TimeRange beatsToTime (BeatRange range) const;
+    [[ deprecated ("Use new overload set above") ]] TimeSigSetting& getTimeSigAtBeat (BeatPosition) const;
+    [[ deprecated ("Use new overload set above") ]] TempoSetting& getTempoAtBeat (BeatPosition) const;
 
-    /* @internal */
+    /** @internal */
+    juce::UndoManager* getUndoManager() const noexcept;
+    /** @internal */
+    juce::String getSelectableDescription() override;
+    /** @internal */
+    void freeResources();
+    /** @internal */
     void updateTempoData();
 
 private:
@@ -155,21 +239,10 @@ private:
     TempoSetting::Ptr insertTempo (BeatPosition, double bpm, float curve, juce::UndoManager*);
     TempoSetting::Ptr insertTempo (TimePosition, juce::UndoManager*);
     TimeSigSetting::Ptr insertTimeSig (TimePosition, juce::UndoManager*);
+    HashCode createHashForTemposInRange (TimeRange) const;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TempoSequence)
 };
-
-//==============================================================================
-//==============================================================================
-/** Creates a Position to iterate over the given TempoSequence.
-    One of these lets you take a position in a tempo sequence, and skip forwards/backwards
-    either by absolute times, or by bar/beat amounts.
-    This is dynamic and if the TempoSequence changes, the position will update to reflect this.
-
-    N.B. It is only safe to call this from the message thread or during audio callbacks.
-    Access at any other time could incur data races.
-*/
-tempo::Sequence::Position createPosition (const TempoSequence&);
 
 
 //==============================================================================

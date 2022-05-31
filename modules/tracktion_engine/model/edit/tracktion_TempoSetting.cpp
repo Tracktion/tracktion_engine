@@ -112,7 +112,7 @@ TempoSetting* TempoSetting::getPreviousTempo() const
 
 TimeSigSetting& TempoSetting::getMatchingTimeSig() const
 {
-    return ownerSequence.getTimeSigAtBeat (startBeatNumber);
+    return ownerSequence.getTimeSigAt (startBeatNumber);
 }
 
 HashCode TempoSetting::getHash() const noexcept

@@ -210,11 +210,11 @@ TempoSetting::Ptr TempoSequence::insertTempo (BeatPosition beatNum, double bpm, 
     int index = -1;
 
     if (getNumTempos() > 0)
-        index = state.indexOf (getTempoAtBeat (beatNum).state) + 1;
+        index = state.indexOf (getTempoAt (beatNum).state) + 1;
 
     state.addChild (TempoSetting::create (beatNum, bpm, curve), index, um);
 
-    return getTempoAtBeat (beatNum);
+    return getTempoAt (beatNum);
 }
 
 TimeSigSetting::Ptr TempoSequence::insertTimeSig (TimePosition time)
@@ -239,7 +239,7 @@ TimeSigSetting::Ptr TempoSequence::insertTimeSig (TimePosition time, juce::UndoM
     if (getNumTimeSigs() > 0)
     {
         beatNum = tracktion::roundToNearestBeat (toBeats (time));
-        auto& prev = getTimeSigAtBeat (beatNum);
+        auto& prev = getTimeSigAt (beatNum);
 
         index = state.indexOf (prev.state) + 1;
         newTree = prev.state.createCopy();
@@ -253,7 +253,7 @@ TimeSigSetting::Ptr TempoSequence::insertTimeSig (TimePosition time, juce::UndoM
 
     state.addChild (newTree, index, um);
 
-    return getTimeSigAtBeat (beatNum);
+    return getTimeSigAt (beatNum);
 }
 
 void TempoSequence::removeTempo (int index, bool remapEdit)
@@ -414,7 +414,7 @@ TimeSigSetting& TempoSequence::getTimeSigAt (TimePosition time) const
     return *getTimeSig (indexOfTimeSigAt (time));
 }
 
-TimeSigSetting& TempoSequence::getTimeSigAtBeat (BeatPosition beat) const
+TimeSigSetting& TempoSequence::getTimeSigAt (BeatPosition beat) const
 {
     for (int i = getNumTimeSigs(); --i >= 0;)
         if (timeSigs->objects.getUnchecked (i)->startBeatNumber <= beat)
@@ -445,7 +445,7 @@ TempoSetting& TempoSequence::getTempoAt (TimePosition time) const
     return *getTempo (indexOfTempoAt (time));
 }
 
-TempoSetting& TempoSequence::getTempoAtBeat (BeatPosition beat) const
+TempoSetting& TempoSequence::getTempoAt (BeatPosition beat) const
 {
     for (int i = getNumTempos(); --i >= 0;)
         if (tempos->objects.getUnchecked (i)->startBeatNumber <= beat)
@@ -673,6 +673,15 @@ TimeRange TempoSequence::beatsToTime (BeatRange range) const
     return toTime (range);
 }
 
+TimeSigSetting& TempoSequence::getTimeSigAtBeat (BeatPosition beat) const
+{
+    return getTimeSigAt (beat);
+}
+
+TempoSetting& TempoSequence::getTempoAtBeat (BeatPosition beat) const
+{
+    return getTempoAt (beat);
+}
 
 //==============================================================================
 //==============================================================================
@@ -899,21 +908,21 @@ private:
 
         beginTest ("Insertions");
         {
-            expectWithinAbsoluteError (ts.getTempoAt ({}).getBpm(), 120.0, 0.001);
-            expectWithinAbsoluteError (ts.getTempoAt ({}).getCurve(), 1.0f, 0.001f);
+            expectWithinAbsoluteError (ts.getTempoAt (0_tp).getBpm(), 120.0, 0.001);
+            expectWithinAbsoluteError (ts.getTempoAt (0_tp).getCurve(), 1.0f, 0.001f);
 
-            ts.insertTempo (BeatPosition::fromBeats (4), 120, 0.0);
-            ts.insertTempo (BeatPosition::fromBeats (4), 300, 0.0);
-            ts.insertTempo (BeatPosition::fromBeats (8), 300, 0.0);
+            ts.insertTempo (4_bp, 120, 0.0);
+            ts.insertTempo (4_bp, 300, 0.0);
+            ts.insertTempo (8_bp, 300, 0.0);
 
             expectTempoSetting (*ts.getTempo (0), 0.0, 120.0, 1.0f);
             expectTempoSetting (*ts.getTempo (1), 2.0, 120.0, 0.0f);
             expectTempoSetting (*ts.getTempo (2), 2.0, 300.0, 0.0f);
             expectTempoSetting (*ts.getTempo (3), 2.8, 300.0, 0.0f);
 
-            expectTempoSetting (ts.getTempoAt ({}), 0.0, 120.0, 1.0f);
-            expectTempoSetting (ts.getTempoAt (TimePosition (2.0s)), 2.0, 300.0, 0.0f);
-            expectTempoSetting (ts.getTempoAt (TimePosition (3.0s)), 2.8, 300.0, 0.0f);
+            expectTempoSetting (ts.getTempoAt (0_tp), 0.0, 120.0, 1.0f);
+            expectTempoSetting (ts.getTempoAt (2.0s), 2.0, 300.0, 0.0f);
+            expectTempoSetting (ts.getTempoAt (3.0s), 2.8, 300.0, 0.0f);
         }
     }
 };

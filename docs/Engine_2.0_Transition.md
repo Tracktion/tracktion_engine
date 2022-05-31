@@ -45,3 +45,6 @@ This feature also allows temporary adjustment of the tempo, speeding up or slowi
 ## TempoSequencePosition has Been Removed
 
 This class has been replaced by the more optimised and `tempo::Sequence::Position`. You can still create one from a `TempoSequence` using the `createPosition (tempoSquence)` function.
+
+## TempoSequence API changes
+The API of TempoSequence has changed slightly to make better use of the new time primitives. Updating to the new API should be simple.
