@@ -523,7 +523,7 @@ private:
             jassert (ed.tempoSequence.getNumTempos() > 0);
 
             tempo::Sequence::Position tempoPosition (ed.tempoSequence.getInternalSequence());
-            tempoPosition.set (TimePosition::fromSeconds (range->start));
+            tempoPosition.set (range ? TimePosition::fromSeconds (range->start) : 0_tp);
 
             // Add first item
             {
@@ -536,12 +536,16 @@ private:
             for (;;)
             {
                 foundLastTempo = ! tempoPosition.next();
+
+                if (foundLastTempo)
+                    break;
+
                 const auto time = tempoPosition.getTime();
 
                 ARAContentTempoEntry item = { time.inSeconds(), tempoPosition.getBeats().inBeats() };
                 items.add (item);
 
-                if (time >= TimePosition::fromSeconds (range->start + range->duration))
+                if (range && time >= TimePosition::fromSeconds (range->start + range->duration))
                     break;
             }
 
