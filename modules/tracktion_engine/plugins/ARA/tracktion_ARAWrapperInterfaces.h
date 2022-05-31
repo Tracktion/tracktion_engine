@@ -574,8 +574,8 @@ private:
             auto chordTrack = ed.getChordTrack();
             jassert (! chordTrack->getClips().isEmpty());
 
-            auto rangeStartBeat = range ? ed.tempoSequence.timeToBeats (TimePosition::fromSeconds (range->start)) : BeatPosition::fromBeats (-std::numeric_limits<float>::max());
-            auto rangeEndBeat = range ? ed.tempoSequence.timeToBeats (TimePosition::fromSeconds (range->start + range->duration)) : BeatPosition::fromBeats (std::numeric_limits<float>::max());
+            auto rangeStartBeat = range ? ed.tempoSequence.toBeats (TimePosition::fromSeconds (range->start)) : BeatPosition::fromBeats (-std::numeric_limits<float>::max());
+            auto rangeEndBeat = range ? ed.tempoSequence.toBeats (TimePosition::fromSeconds (range->start + range->duration)) : BeatPosition::fromBeats (std::numeric_limits<float>::max());
             auto endBeatOfPreviousClip = BeatPosition::fromBeats (-std::numeric_limits<float>::max());
 
             // construct a "no chord" for representing gaps in the chord track
