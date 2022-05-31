@@ -20,12 +20,14 @@ namespace tracktion { inline namespace graph
 namespace test_utilities
 {
     /** Creates a random MidiMessageSequence sequence. */
-    static inline juce::MidiMessageSequence createRandomMidiMessageSequence (double durationSeconds, juce::Random r)
+    static inline juce::MidiMessageSequence createRandomMidiMessageSequence (double durationSeconds, juce::Random r,
+                                                                             juce::Range<double> noteLengthRange = { 0.1, 0.6 })
     {
         juce::MidiMessageSequence sequence;
         int noteNumber = -1;
 
-        for (double time = 0.0; time < durationSeconds; time += r.nextDouble() * 0.5 + 0.1)
+        for (double time = 0.0; time < durationSeconds;
+             time += r.nextDouble() * noteLengthRange.getLength() + noteLengthRange.getStart())
         {
             if (noteNumber != -1)
             {
@@ -38,6 +40,8 @@ namespace test_utilities
                 sequence.addEvent (juce::MidiMessage::noteOn (1, noteNumber, 1.0f), time);
             }
         }
+
+        sequence.updateMatchedPairs();
 
         return sequence;
     }

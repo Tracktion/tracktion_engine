@@ -56,6 +56,7 @@ using namespace std::literals;
 #include "model/clips/tracktion_MarkerClip.cpp"
 #include "model/clips/tracktion_CollectionClip.cpp"
 #include "model/clips/tracktion_MidiClip.cpp"
+#include "model/clips/tracktion_MidiClip.test.cpp"
 #include "model/clips/tracktion_StepClipChannel.cpp"
 #include "model/clips/tracktion_StepClipPattern.cpp"
 #include "model/clips/tracktion_StepClip.cpp"
