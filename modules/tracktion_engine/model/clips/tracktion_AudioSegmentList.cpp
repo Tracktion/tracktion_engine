@@ -383,7 +383,7 @@ void AudioSegmentList::chopSegmentsForChords()
 
         for (auto& p : progression)
         {
-            auto chordTime = ts.beatsToTime (pos);
+            auto chordTime = ts.toTime (pos);
 
             if (chordTime > getStart() + 0.01s && chordTime < getEnd() - 0.01s)
             {
@@ -448,8 +448,8 @@ static juce::Array<SampleCount> trimInitialSyncSamples (const juce::Array<Sample
 void AudioSegmentList::initialiseSegment (Segment& seg, BeatPosition startBeat, BeatPosition endBeat, double sampleRate)
 {
     auto& ts = clip.edit.tempoSequence;
-    seg.start = ts.beatsToTime (startBeat);
-    seg.length = ts.beatsToTime (endBeat) - seg.start;
+    seg.start = ts.toTime (startBeat);
+    seg.length = ts.toTime (endBeat) - seg.start;
     seg.stretchRatio = calcStretchRatio (seg, sampleRate);
     seg.fadeIn = false;
     seg.fadeOut = false;
@@ -602,7 +602,7 @@ void AudioSegmentList::buildAutoTempo (bool crossfade)
                 auto oldLength = endBeat     - startBeat;
                 auto newLength = loopEndBeat - startBeat;
 
-                seg.length = ts.beatsToTime (clipStartBeat + toDuration (loopEndBeat)) - seg.start;
+                seg.length = ts.toTime (clipStartBeat + toDuration (loopEndBeat)) - seg.start;
                 seg.lengthSample = static_cast<SampleCount> (seg.lengthSample * (newLength / oldLength) + 0.5);
 
                 jassert (seg.startSample >= range.getStart());
@@ -650,7 +650,7 @@ void AudioSegmentList::buildAutoTempo (bool crossfade)
                     auto oldLength = endBeat     - startBeat;
                     auto newLength = loopEndBeat - startBeat;
 
-                    seg.length = ts.beatsToTime (clipStartBeat + toDuration (loopEndBeat)) - seg.start;
+                    seg.length = ts.toTime (clipStartBeat + toDuration (loopEndBeat)) - seg.start;
                     seg.lengthSample = static_cast<SampleCount> (seg.lengthSample * (newLength / oldLength) + 0.5);
 
                     jassert (seg.startSample >= range.getStart());
@@ -729,7 +729,7 @@ float AudioSegmentList::getPitchAt (TimePosition t)
         auto& ps = clip.edit.pitchSequence;
         auto& pitchSetting = ps.getPitchAt (t);
 
-        auto beat = ts.timeToBeats (t);
+        auto beat = ts.toBeats (t);
         BeatPosition pos;
 
         for (auto& p : progression)

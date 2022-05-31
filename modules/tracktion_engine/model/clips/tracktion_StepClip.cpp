@@ -217,8 +217,8 @@ juce::Array<BeatPosition> StepClip::getBeatTimesOfPatternStarts() const
     auto& tempoSequence = edit.tempoSequence;
     auto pos = getPosition();
 
-    auto patternStartBeats  = tempoSequence.timeToBeats (pos.getStartOfSource());
-    auto endBeat            = tempoSequence.timeToBeats (pos.getEnd());
+    auto patternStartBeats  = tempoSequence.toBeats (pos.getStartOfSource());
+    auto endBeat            = tempoSequence.toBeats (pos.getEnd());
     auto ratio              = 1.0 / speedRatio;
     bool repeatSeq          = repeatSequence;
 
@@ -287,10 +287,10 @@ void StepClip::resizeClipForPatternInstances()
         {
             auto& ts = edit.tempoSequence;
             auto pos = getPosition();
-            auto startBeat = ts.timeToBeats (pos.getStart());
+            auto startBeat = ts.toBeats (pos.getStart());
             auto endBeat = startBeat + toDuration (end);
 
-            setEnd (ts.beatsToTime (endBeat), false);
+            setEnd (ts.toTime (endBeat), false);
         }
     }
 }
@@ -363,8 +363,8 @@ void StepClip::generateMidiSequenceForChannels (juce::MidiMessageSequence& resul
 
                         if (convertToSeconds)
                         {
-                            const auto startTime = tempoSequence.beatsToTime (start) - toDuration (pos.getStart());
-                            const auto endTime = tempoSequence.beatsToTime (end) - toDuration (pos.getStart());
+                            const auto startTime = tempoSequence.toTime (start) - toDuration (pos.getStart());
+                            const auto endTime = tempoSequence.toTime (end) - toDuration (pos.getStart());
 
                             if (auto gt = gtm.getTemplateByName (c.grooveTemplate))
                             {
@@ -414,8 +414,8 @@ void StepClip::generateMidiSequence (juce::MidiMessageSequence& result,
     auto& tempoSequence = edit.tempoSequence;
     auto pos = getPosition();
 
-    auto clipStartBeat = tempoSequence.timeToBeats (pos.getStart());
-    auto clipEndBeat   = tempoSequence.timeToBeats (pos.getEnd());
+    auto clipStartBeat = tempoSequence.toBeats (pos.getStart());
+    auto clipEndBeat   = tempoSequence.toBeats (pos.getEnd());
     bool repeatSeq = repeatSequence;
     auto starts = getBeatTimesOfPatternStarts();
 
@@ -433,7 +433,7 @@ void StepClip::generateMidiSequence (juce::MidiMessageSequence& result,
 
             if (instance != nullptr)
             {
-                result.addTimeToMessages (-tempoSequence.beatsToTime (clipStartBeat + toDuration (startBeat)).inSeconds());
+                result.addTimeToMessages (-tempoSequence.toTime (clipStartBeat + toDuration (startBeat)).inSeconds());
                 break;
             }
         }

@@ -893,8 +893,8 @@ int StepVolumeEffect::getMaxNumNotes()
     auto pos = c.getPosition();
 
     auto startTime = pos.getStartOfSource();
-    auto startBeat = ts.timeToBeats (startTime);
-    auto endBeat = ts.timeToBeats (startTime + (c.getSourceLength() / clipEffects.getSpeedRatioEstimate()));
+    auto startBeat = ts.toBeats (startTime);
+    auto endBeat = ts.toBeats (startTime + (c.getSourceLength() / clipEffects.getSpeedRatioEstimate()));
 
     return (int) std::ceil ((endBeat - startBeat) / noteLength);
 }
@@ -926,8 +926,8 @@ juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> StepVolumeEffec
         auto length = noteLength.get();
         auto startTime = pos.getStart();
 
-        auto startBeat = ts.timeToBeats (pos.getStart() + toDuration (effectRange.getStart()));
-        auto endBeat = ts.timeToBeats (pos.getEnd());
+        auto startBeat = ts.toBeats (pos.getStart() + toDuration (effectRange.getStart()));
+        auto endBeat = ts.toBeats (pos.getEnd());
         auto numNotes = std::min (p.getNumNotes(), (int) std::ceil ((endBeat - startBeat) / length));
 
         auto beat = startBeat;
@@ -940,9 +940,9 @@ juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> StepVolumeEffec
                 continue;
             }
 
-            auto s = ts.beatsToTime (beat) - toDuration (startTime);
+            auto s = ts.toTime (beat) - toDuration (startTime);
             beat = beat + length;
-            auto e = ts.beatsToTime (beat) - toDuration (startTime);
+            auto e = ts.toTime (beat) - toDuration (startTime);
 
             nonMuteTimes.add ({ s - halfCrossfade,
                                 e + halfCrossfade });

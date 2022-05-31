@@ -2693,7 +2693,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingPreset (Engine& engine, juce:
 
     if (v.hasType (IDs::PROGRESSION))
     {
-        auto clipLength = edit->tempoSequence.beatsToTime (BeatPosition::fromBeats (32 * 4));
+        auto clipLength = edit->tempoSequence.toTime (BeatPosition::fromBeats (32 * 4));
         edit->getTransport().setLoopRange ({ TimePosition(), clipLength });
 
         if (auto mc = track->insertMIDIClip ({ TimePosition(), clipLength }, nullptr))
@@ -2709,7 +2709,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingPreset (Engine& engine, juce:
     }
     else if (v.hasType (IDs::BASSPATTERN))
     {
-        auto clipLength = edit->tempoSequence.beatsToTime (BeatPosition::fromBeats (32 * 4));
+        auto clipLength = edit->tempoSequence.toTime (BeatPosition::fromBeats (32 * 4));
         edit->getTransport().setLoopRange ({ TimePosition(), clipLength });
 
         if (auto mc = track->insertMIDIClip ({ TimePosition(), clipLength }, nullptr))
@@ -2726,7 +2726,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingPreset (Engine& engine, juce:
     }
     else if (v.hasType (IDs::CHORDPATTERN))
     {
-        auto clipLength = edit->tempoSequence.beatsToTime (BeatPosition::fromBeats (32 * 4));
+        auto clipLength = edit->tempoSequence.toTime (BeatPosition::fromBeats (32 * 4));
         edit->getTransport().setLoopRange ({ TimePosition(), clipLength });
 
         if (auto mc = track->insertMIDIClip ({ TimePosition(), clipLength }, nullptr))

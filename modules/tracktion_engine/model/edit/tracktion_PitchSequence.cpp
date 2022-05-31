@@ -160,7 +160,7 @@ int PitchSequence::indexOfPitch (const PitchSetting* pitchSetting) const
 
 PitchSetting::Ptr PitchSequence::insertPitch (TimePosition time)
 {
-    return insertPitch (edit->tempoSequence.timeToBeats (time), -1);
+    return insertPitch (edit->tempoSequence.toBeats (time), -1);
 }
 
 PitchSetting::Ptr PitchSequence::insertPitch (BeatPosition beatNum, int pitch)

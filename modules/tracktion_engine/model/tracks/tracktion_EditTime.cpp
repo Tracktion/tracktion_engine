@@ -13,12 +13,12 @@ namespace tracktion { inline namespace engine
 
 BeatPosition toBeats (TimePosition tp, const TempoSequence& ts)
 {
-    return ts.timeToBeats (tp);
+    return ts.toBeats (tp);
 }
 
 TimePosition toTime (BeatPosition bp, const TempoSequence& ts)
 {
-    return ts.beatsToTime (bp);
+    return ts.toTime (bp);
 }
 
 BeatRange toBeats (TimeRange r, const TempoSequence& ts)

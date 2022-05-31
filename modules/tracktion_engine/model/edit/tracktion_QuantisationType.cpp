@@ -186,12 +186,12 @@ TimePosition QuantisationType::roundTo (TimePosition time, double adjustment, co
         return time;
 
     auto& s = edit.tempoSequence;
-    auto beats = s.timeToBeats (time);
+    auto beats = s.toBeats (time);
 
     beats = BeatPosition::fromBeats (fractionOfBeat * std::floor (beats.inBeats() / fractionOfBeat + adjustment));
 
-    return proportion >= 1.0 ? s.beatsToTime (beats)
-                             : time + toDuration (s.beatsToTime (beats) - toDuration (time)) * proportion.get();
+    return proportion >= 1.0 ? s.toTime (beats)
+                             : time + toDuration (s.toTime (beats) - toDuration (time)) * proportion.get();
 }
 
 juce::StringArray QuantisationType::getAvailableQuantiseTypes (bool translated)

@@ -469,8 +469,8 @@ void SelectedMidiEvents::nudge (TimecodeSnapType snapType, int leftRight, int up
                                 ? snapType.roundTimeDown (start - TimeDuration::fromSeconds (0.01), ed.tempoSequence)
                                 : snapType.roundTimeUp   (start + TimeDuration::fromSeconds (0.01), ed.tempoSequence);
 
-                auto delta = ed.tempoSequence.timeToBeats (snapped)
-                                - ed.tempoSequence.timeToBeats (start);
+                auto delta = ed.tempoSequence.toBeats (snapped)
+                                - ed.tempoSequence.toBeats (start);
 
                 juce::Array<MidiClip*> uniqueClips;
                 auto startTime = TimePosition::fromSeconds (std::numeric_limits<double>::max());
@@ -581,8 +581,8 @@ void SelectedMidiEvents::moveControllerData (const juce::Array<MidiClip*>& clips
 
         auto& ts = c->edit.tempoSequence;
 
-        const auto startTimeAfter = ts.beatsToTime (ts.timeToBeats (startTime) + deltaBeats);
-        const auto endTimeAfter   = ts.beatsToTime (ts.timeToBeats (endTime) + deltaBeats);
+        const auto startTimeAfter = ts.toTime (ts.toBeats (startTime) + deltaBeats);
+        const auto endTimeAfter   = ts.toTime (ts.toBeats (endTime) + deltaBeats);
 
         for (auto evt : seq.getControllerEvents())
             if (onlyTheseEvents == nullptr || onlyTheseEvents->contains (evt))

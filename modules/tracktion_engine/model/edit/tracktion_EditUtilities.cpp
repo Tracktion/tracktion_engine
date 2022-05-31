@@ -53,7 +53,7 @@ void insertSpaceIntoEdit (Edit& edit, TimeRange timeRange)
 void insertSpaceIntoEditFromBeatRange (Edit& edit, BeatRange beatRange)
 {
     auto& ts = edit.tempoSequence;
-    const auto timeToInsertAt = ts.beatsToTime (beatRange.getStart());
+    const auto timeToInsertAt = ts.toTime (beatRange.getStart());
     auto& tempoAtInsertionPoint = ts.getTempoAt (timeToInsertAt - TimeDuration::fromSeconds (0.0001));
 
     const auto lengthInTimeToInsert = TimeDuration::fromSeconds (beatRange.getLength().inBeats() * tempoAtInsertionPoint.getApproxBeatLength().inSeconds());

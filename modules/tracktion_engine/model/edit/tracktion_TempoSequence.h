@@ -86,16 +86,28 @@ public:
     void deleteRegion (TimeRange);
 
     //==============================================================================
-    BeatPosition timeToBeats (TimePosition) const;
-    BeatRange timeToBeats (TimeRange) const;
+    /** Converts a time to a number of beats. */
+    BeatPosition toBeats (TimePosition) const;
 
-    tempo::BarsAndBeats timeToBarsBeats (TimePosition) const;
-    TimePosition barsBeatsToTime (tempo::BarsAndBeats) const;
-    BeatPosition barsBeatsToBeats (tempo::BarsAndBeats) const;
+    /** Converts a time range to a beat range. */
+    BeatRange toBeats (TimeRange) const;
 
-    TimePosition beatsToTime (BeatPosition) const;
-    TimeRange beatsToTime (BeatRange) const;
+    /** Converts a number of BarsAndBeats to a position. */
+    BeatPosition toBeats (tempo::BarsAndBeats) const;
 
+    /** Converts a number of beats a time. */
+    TimePosition toTime (BeatPosition) const;
+
+    /** Converts a beat range to a time range. */
+    TimeRange toTime (BeatRange) const;
+
+    /** Converts a number of BarsAndBeats to a position. */
+    TimePosition toTime (tempo::BarsAndBeats) const;
+
+    /** Converts a time to a number of BarsAndBeats. */
+    tempo::BarsAndBeats toBarsAndBeats (TimePosition) const;
+
+    //==============================================================================
     /** N.B. It is only safe to call this from the message thread or during audio callbacks.
         Access at any other time could incur data races.
     */
@@ -107,7 +119,17 @@ public:
     //==============================================================================
     Edit& edit;
 
-    void updateTempoData(); // internal
+    //==============================================================================
+    [[ deprecated ("Use new overload set above") ]] tempo::BarsAndBeats timeToBarsBeats (TimePosition) const;
+    [[ deprecated ("Use new overload set above") ]] TimePosition barsBeatsToTime (tempo::BarsAndBeats) const;
+    [[ deprecated ("Use new overload set above") ]] BeatPosition barsBeatsToBeats (tempo::BarsAndBeats) const;
+    [[ deprecated ("Use new overload set above") ]] BeatPosition timeToBeats (TimePosition time) const;
+    [[ deprecated ("Use new overload set above") ]] BeatRange timeToBeats (TimeRange range) const;
+    [[ deprecated ("Use new overload set above") ]] TimePosition beatsToTime (BeatPosition beats) const;
+    [[ deprecated ("Use new overload set above") ]] TimeRange beatsToTime (BeatRange range) const;
+
+    /* @internal */
+    void updateTempoData();
 
 private:
     //==============================================================================

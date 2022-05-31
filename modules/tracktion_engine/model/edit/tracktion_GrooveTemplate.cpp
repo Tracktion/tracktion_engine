@@ -143,9 +143,9 @@ BeatPosition GrooveTemplate::beatsTimeToGroovyTime (BeatPosition beatsTime, floa
 
 TimePosition GrooveTemplate::editTimeToGroovyTime (TimePosition editTime, float strength, Edit& edit) const
 {
-    auto beats = edit.tempoSequence.timeToBeats (editTime);
+    auto beats = edit.tempoSequence.toBeats (editTime);
     beats = beatsTimeToGroovyTime (beats, strength);
-    return edit.tempoSequence.beatsToTime (beats);
+    return edit.tempoSequence.toTime (beats);
 }
 
 bool GrooveTemplate::isEmpty() const

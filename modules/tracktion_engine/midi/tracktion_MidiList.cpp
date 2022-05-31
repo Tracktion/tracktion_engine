@@ -77,7 +77,7 @@ public:
 
     void processMidiMessage (const juce::MidiMessage& message)
     {
-        currentEventBeat = tempoSequence != nullptr ? (tempoSequence->timeToBeats (TimePosition::fromSeconds (message.getTimeStamp())) - toDuration (firstBeatNum))
+        currentEventBeat = tempoSequence != nullptr ? (tempoSequence->toBeats (TimePosition::fromSeconds (message.getTimeStamp())) - toDuration (firstBeatNum))
                                                     : BeatPosition::fromBeats (message.getTimeStamp());
 
         mpeInstrument.processNextMidiEvent (message);
@@ -299,7 +299,7 @@ static void addMidiExpressionToSequence (juce::MidiMessageSequence& seq, const j
         return;
 
     const auto time = tb == MidiList::TimeBase::beats ? beat.inBeats()
-                                                      : ts.beatsToTime (beat).inSeconds();
+                                                      : ts.toTime (beat).inSeconds();
 
     if (state.hasType (IDs::PITCHBEND))
         seq.addEvent (juce::MidiMessage (createPitchbend (midiChannel, state[IDs::v], 48.0f), time));
@@ -326,9 +326,9 @@ static void addExpressiveNoteToSequence (juce::MidiMessageSequence& seq, const M
 
     auto state = note.state;
     const auto noteStartBeat = tb == MidiList::TimeBase::beats ? BeatPosition::fromBeats (downTime)
-                                                               : clip.edit.tempoSequence.timeToBeats (TimePosition::fromSeconds (downTime));
+                                                               : clip.edit.tempoSequence.toBeats (TimePosition::fromSeconds (downTime));
     const auto noteEndBeat = tb == MidiList::TimeBase::beats ? BeatPosition::fromBeats (upTime)
-                                                             : clip.edit.tempoSequence.timeToBeats (TimePosition::fromSeconds (upTime));
+                                                             : clip.edit.tempoSequence.toBeats (TimePosition::fromSeconds (upTime));
 
     // First add expression with defaults if not present
     addMidiNoteOnExpressionToSequence (seq, state, midiChannel, downTime);
@@ -702,7 +702,7 @@ TimePosition MidiNote::getEditStartTime (const MidiClip& c) const
 {
     const auto quantisedBeatInEdit = c.getQuantisation().roundBeatToNearest (startBeat + toDuration (c.getContentStartBeat()));
 
-    return c.edit.tempoSequence.beatsToTime (quantisedBeatInEdit);
+    return c.edit.tempoSequence.toTime (quantisedBeatInEdit);
 }
 
 TimePosition MidiNote::getEditEndTime (const MidiClip& c) const
@@ -710,15 +710,15 @@ TimePosition MidiNote::getEditEndTime (const MidiClip& c) const
     const auto quantisedBeatInEdit = c.getQuantisation().roundBeatToNearest (startBeat + toDuration (c.getContentStartBeat()))
                                         + lengthInBeats;
 
-    return c.edit.tempoSequence.beatsToTime (quantisedBeatInEdit);
+    return c.edit.tempoSequence.toTime (quantisedBeatInEdit);
 }
 
 TimeRange MidiNote::getEditTimeRange (const MidiClip& c) const
 {
     const auto quantisedStartBeat = c.getQuantisation().roundBeatToNearest (startBeat - toDuration (c.getLoopStartBeats()) + toDuration (c.getContentStartBeat()));
 
-    return { c.edit.tempoSequence.beatsToTime (quantisedStartBeat),
-             c.edit.tempoSequence.beatsToTime (quantisedStartBeat + lengthInBeats) };
+    return { c.edit.tempoSequence.toTime (quantisedStartBeat),
+             c.edit.tempoSequence.toTime (quantisedStartBeat + lengthInBeats) };
 }
 
 TimeDuration MidiNote::getLengthSeconds (const MidiClip& c) const
@@ -811,12 +811,12 @@ BeatPosition MidiNote::getPlaybackBeats (NoteEdge edge, const MidiClip& clip, co
     // nudge the note-up backwards just a bit to make sure the ordering is correct
     auto time = edge == startEdge ? clip.getQuantisation().roundBeatToNearest (startBeat + toDuration (clip.getContentStartBeat()))
                                   : std::min (clip.getQuantisation().roundBeatToNearest (startBeat + toDuration (clip.getContentStartBeat()))
-                                              + lengthInBeats, clip.edit.tempoSequence.timeToBeats (pos.getEnd())) - BeatDuration::fromBeats (0.00001);
+                                              + lengthInBeats, clip.edit.tempoSequence.toBeats (pos.getEnd())) - BeatDuration::fromBeats (0.00001);
 
     if (grooveTemplate != nullptr)
         time = grooveTemplate->beatsTimeToGroovyTime (time, clip.getGrooveStrength());
 
-    return time - toDuration (clip.edit.tempoSequence.timeToBeats (pos.getStart()));
+    return time - toDuration (clip.edit.tempoSequence.toBeats (pos.getStart()));
 }
 
 //==============================================================================
@@ -906,7 +906,7 @@ BeatPosition MidiControllerEvent::getEditBeats (const MidiClip& c) const
 
 TimePosition MidiControllerEvent::getEditTime (const MidiClip& c) const
 {
-    return c.edit.tempoSequence.beatsToTime (getEditBeats (c));
+    return c.edit.tempoSequence.toTime (getEditBeats (c));
 }
 
 juce::String MidiControllerEvent::getLevelDescription (MidiClip* ownerClip) const
@@ -1087,7 +1087,7 @@ struct MidiList::EventDelegate<MidiSysexEvent>
 
 TimePosition MidiSysexEvent::getEditTime (const MidiClip& c) const
 {
-    return c.edit.tempoSequence.beatsToTime (getEditBeats (c));
+    return c.edit.tempoSequence.toTime (getEditBeats (c));
 }
 
 BeatPosition MidiSysexEvent::getEditBeats (const MidiClip& c) const
@@ -1725,14 +1725,14 @@ void MidiList::importMidiSequence (const juce::MidiMessageSequence& sequence, Ed
                                    TimePosition editTimeOfListTimeZero, juce::UndoManager* um)
 {
     auto ts = edit != nullptr ? &edit->tempoSequence : nullptr;
-    auto firstBeatNum = ts != nullptr ? ts->timeToBeats (editTimeOfListTimeZero) : BeatPosition();
+    auto firstBeatNum = ts != nullptr ? ts->toBeats (editTimeOfListTimeZero) : BeatPosition();
     const int channelNumber = getMidiChannel().getChannelNumber();
 
     for (int i = 0; i < sequence.getNumEvents(); ++i)
     {
         auto& m = sequence.getEventPointer (i)->message;
 
-        auto beatTime = ts != nullptr ? ts->timeToBeats (TimePosition::fromSeconds (m.getTimeStamp())) - toDuration (firstBeatNum)
+        auto beatTime = ts != nullptr ? ts->toBeats (TimePosition::fromSeconds (m.getTimeStamp())) - toDuration (firstBeatNum)
                                       : BeatPosition::fromBeats (m.getTimeStamp());
 
         if (m.isSysEx())
@@ -1755,7 +1755,7 @@ void MidiList::importMidiSequence (const juce::MidiMessageSequence& sequence, Ed
 
                 addNote (m.getNoteNumber(),
                          beatTime,
-                         ts != nullptr ? ((ts->timeToBeats (keyUpTime) - firstBeatNum) - toDuration (beatTime))
+                         ts != nullptr ? ((ts->toBeats (keyUpTime) - firstBeatNum) - toDuration (beatTime))
                                        : (BeatDuration::fromBeats (keyUpTime.inSeconds()) - toDuration (beatTime)),
                          m.getVelocity(), edit != nullptr ? edit->engine.getEngineBehaviour().getDefaultNoteColour() : 0, um);
             }
@@ -1794,7 +1794,7 @@ void MidiList::importFromEditTimeSequenceWithNoteExpression (const juce::MidiMes
                                                              TimePosition editTimeOfListTimeZero, juce::UndoManager* um)
 {
     auto ts = edit != nullptr ? &edit->tempoSequence : nullptr;
-    auto firstBeatNum = ts != nullptr ? ts->timeToBeats (editTimeOfListTimeZero) : BeatPosition();
+    auto firstBeatNum = ts != nullptr ? ts->toBeats (editTimeOfListTimeZero) : BeatPosition();
     const int channelNumber = getMidiChannel().getChannelNumber();
 
     juce::MPEZoneLayout layout;
@@ -1804,7 +1804,7 @@ void MidiList::importFromEditTimeSequenceWithNoteExpression (const juce::MidiMes
     for (int i = 0; i < sequence.getNumEvents(); ++i)
     {
         auto& m = sequence.getEventPointer (i)->message;
-        const auto beatTime = ts != nullptr ? ts->timeToBeats (TimePosition::fromSeconds (m.getTimeStamp())) - toDuration (firstBeatNum)
+        const auto beatTime = ts != nullptr ? ts->toBeats (TimePosition::fromSeconds (m.getTimeStamp())) - toDuration (firstBeatNum)
                                             : BeatPosition::fromBeats (m.getTimeStamp());
 
         if (m.isSysEx())
@@ -1872,8 +1872,8 @@ juce::MidiMessageSequence MidiList::createDefaultPlaybackMidiSequence (const Mid
 
     // NB: allow extra space here in case the notes get quantised or nudged around later on..
     const auto overlapAllowance = BeatDuration::fromBeats (0.5);
-    auto firstNoteBeat = toPosition (ts.timeToBeats (clip.getPosition().getStart()) - midiStartBeat - overlapAllowance);
-    auto lastNoteBeat  = toPosition (ts.timeToBeats (clip.getPosition().getEnd())   - midiStartBeat + overlapAllowance);
+    auto firstNoteBeat = toPosition (ts.toBeats (clip.getPosition().getStart()) - midiStartBeat - overlapAllowance);
+    auto lastNoteBeat  = toPosition (ts.toBeats (clip.getPosition().getEnd())   - midiStartBeat + overlapAllowance);
 
     auto& notes = list.getNotes();
     const auto numNotes = notes.size();

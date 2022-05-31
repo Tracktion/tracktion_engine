@@ -407,7 +407,7 @@ TimeDuration AudioClipBase::getMaximumLength()
             return 100000.0_td;
 
         if (getAutoTempo())
-            return edit.tempoSequence.beatsToTime (getStartBeat() + BeatDuration::fromBeats (loopInfo.getNumBeats()))
+            return edit.tempoSequence.toTime (getStartBeat() + BeatDuration::fromBeats (loopInfo.getNumBeats()))
                      - getPosition().getStart();
 
         return getSourceLength() / speedRatio;
@@ -958,7 +958,7 @@ void AudioClipBase::setLoopRange (TimeRange newRange)
         auto pos = getPosition();
         auto& ts = edit.tempoSequence;
         auto newStart = BeatPosition::fromBeats (newRange.getStart().inSeconds() * ts.getBeatsPerSecondAt (pos.getStart()));
-        auto newLength = ts.timeToBeats (pos.getStart() + newRange.getLength()) - ts.timeToBeats (pos.getStart());
+        auto newLength = ts.toBeats (pos.getStart() + newRange.getLength()) - ts.toBeats (pos.getStart());
         setLoopRangeBeats ({ newStart, newStart + newLength });
     }
     else
@@ -1103,9 +1103,9 @@ void AudioClipBase::melodyneConvertToMIDI()
                     juce::ValueTree note (IDs::NOTE);
                     note.setProperty ("p", e.message.getNoteNumber(), um);
                     note.setProperty ("v", e.message.getVelocity(), um);
-                    note.setProperty ("b", ts.timeToBeats (TimePosition::fromSeconds (e.message.getTimeStamp())).inBeats(), um);
-                    note.setProperty ("l", (ts.timeToBeats (TimePosition::fromSeconds (e.noteOffObject->message.getTimeStamp()))
-                                            - ts.timeToBeats (TimePosition::fromSeconds (e.message.getTimeStamp()))).inBeats(), um);
+                    note.setProperty ("b", ts.toBeats (TimePosition::fromSeconds (e.message.getTimeStamp())).inBeats(), um);
+                    note.setProperty ("l", (ts.toBeats (TimePosition::fromSeconds (e.noteOffObject->message.getTimeStamp()))
+                                            - ts.toBeats (TimePosition::fromSeconds (e.message.getTimeStamp()))).inBeats(), um);
 
                     ms.addChild (note, -1, um);
                 }

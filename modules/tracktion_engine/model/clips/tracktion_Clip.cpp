@@ -533,12 +533,12 @@ ClipPosition Clip::getPosition() const
 
 BeatPosition Clip::getContentBeatAtTime (TimePosition t) const
 {
-    return edit.tempoSequence.timeToBeats (t) - toDuration (getContentStartBeat());
+    return edit.tempoSequence.toBeats (t) - toDuration (getContentStartBeat());
 }
 
 TimePosition Clip::getTimeOfContentBeat (BeatPosition beat) const
 {
-    return edit.tempoSequence.beatsToTime (beat + toDuration (getContentStartBeat()));
+    return edit.tempoSequence.toTime (beat + toDuration (getContentStartBeat()));
 }
 
 TrackItem* Clip::getGroupParent() const

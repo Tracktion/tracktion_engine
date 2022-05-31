@@ -200,7 +200,7 @@ TempoSetting::Ptr TempoSequence::insertTempo (TimePosition time, juce::UndoManag
     float defaultCurve = 1.0f;
 
     if (getNumTempos() > 0)
-        return insertTempo (tracktion::roundToNearestBeat (timeToBeats (time)), bpm, defaultCurve, um);
+        return insertTempo (tracktion::roundToNearestBeat (toBeats (time)), bpm, defaultCurve, um);
 
     return insertTempo ({}, bpm, defaultCurve, um);
 }
@@ -224,7 +224,7 @@ TimeSigSetting::Ptr TempoSequence::insertTimeSig (TimePosition time)
 
 TimeSigSetting::Ptr TempoSequence::insertTimeSig (BeatPosition beats)
 {
-    return insertTimeSig (beatsToTime (beats));
+    return insertTimeSig (toTime (beats));
 }
 
 TimeSigSetting::Ptr TempoSequence::insertTimeSig (TimePosition time, juce::UndoManager* um)
@@ -238,7 +238,7 @@ TimeSigSetting::Ptr TempoSequence::insertTimeSig (TimePosition time, juce::UndoM
 
     if (getNumTimeSigs() > 0)
     {
-        beatNum = tracktion::roundToNearestBeat (timeToBeats (time));
+        beatNum = tracktion::roundToNearestBeat (toBeats (time));
         auto& prev = getTimeSigAtBeat (beatNum);
 
         index = state.indexOf (prev.state) + 1;
@@ -382,13 +382,13 @@ void TempoSequence::insertSpaceIntoSequence (TimePosition time, TimeDuration amo
 
 void TempoSequence::deleteRegion (TimeRange range)
 {
-    const auto beatRange = timeToBeats (range);
+    const auto beatRange = toBeats (range);
     
     removeTemposBetween (range, false);
     removeTimeSigsBetween (range);
 
     const bool snapToBeat = false;
-    const auto startTime = beatsToTime (beatRange.getStart());
+    const auto startTime = toTime (beatRange.getStart());
     const auto deltaBeats = -beatRange.getLength();
 
     // Move timesig settings
@@ -502,47 +502,48 @@ bool TempoSequence::isTripletsAtTime (TimePosition time) const
 }
 
 //==============================================================================
-tempo::BarsAndBeats TempoSequence::timeToBarsBeats (TimePosition t) const
-{
-    updateTempoDataIfNeeded();
-    return internalSequence.toBarsAndBeats (t);
-}
-
-TimePosition TempoSequence::barsBeatsToTime (tempo::BarsAndBeats barsBeats) const
-{
-    updateTempoDataIfNeeded();
-    return internalSequence.toTime (barsBeats);
-}
-
-BeatPosition TempoSequence::barsBeatsToBeats (tempo::BarsAndBeats barsBeats) const
-{
-    return timeToBeats (barsBeatsToTime (barsBeats));
-}
-
-BeatPosition TempoSequence::timeToBeats (TimePosition time) const
+BeatPosition TempoSequence::toBeats (TimePosition time) const
 {
     updateTempoDataIfNeeded();
     return internalSequence.toBeats (time);
 }
 
-BeatRange TempoSequence::timeToBeats (TimeRange range) const
+BeatRange TempoSequence::toBeats (TimeRange range) const
 {
-    return { timeToBeats (range.getStart()),
-             timeToBeats (range.getEnd()) };
+    return { toBeats (range.getStart()),
+             toBeats (range.getEnd()) };
 }
 
-TimePosition TempoSequence::beatsToTime (BeatPosition beats) const
+BeatPosition TempoSequence::toBeats (tempo::BarsAndBeats barsBeats) const
+{
+    return toBeats (toTime (barsBeats));
+}
+
+TimePosition TempoSequence::toTime (BeatPosition beats) const
 {
     updateTempoDataIfNeeded();
     return internalSequence.toTime (beats);
 }
 
-TimeRange TempoSequence::beatsToTime (BeatRange range) const
+TimeRange TempoSequence::toTime (BeatRange range) const
 {
-    return { beatsToTime (range.getStart()),
-             beatsToTime (range.getEnd()) };
+    return { toTime (range.getStart()),
+             toTime (range.getEnd()) };
 }
 
+TimePosition TempoSequence::toTime (tempo::BarsAndBeats barsBeats) const
+{
+    updateTempoDataIfNeeded();
+    return internalSequence.toTime (barsBeats);
+}
+
+tempo::BarsAndBeats TempoSequence::toBarsAndBeats (TimePosition t) const
+{
+    updateTempoDataIfNeeded();
+    return internalSequence.toBarsAndBeats (t);
+}
+
+//==============================================================================
 const tempo::Sequence& TempoSequence::getInternalSequence() const
 {
     return internalSequence;
@@ -636,6 +637,42 @@ HashCode TempoSequence::createHashForTemposInRange (TimeRange range) const
     return hash;
 }
 
+//==============================================================================
+tempo::BarsAndBeats TempoSequence::timeToBarsBeats (TimePosition t) const
+{
+    return toBarsAndBeats (t);
+}
+
+TimePosition TempoSequence::barsBeatsToTime (tempo::BarsAndBeats barsBeats) const
+{
+    return toTime (barsBeats);
+}
+
+BeatPosition TempoSequence::barsBeatsToBeats (tempo::BarsAndBeats barsBeats) const
+{
+    return toBeats (barsBeats);
+}
+
+BeatPosition TempoSequence::timeToBeats (TimePosition time) const
+{
+    return toBeats (time);
+}
+
+BeatRange TempoSequence::timeToBeats (TimeRange range) const
+{
+    return toBeats (range);
+}
+
+TimePosition TempoSequence::beatsToTime (BeatPosition beats) const
+{
+    return toTime (beats);
+}
+
+TimeRange TempoSequence::beatsToTime (BeatRange range) const
+{
+    return toTime (range);
+}
+
 
 //==============================================================================
 //==============================================================================
@@ -661,9 +698,9 @@ void EditTimecodeRemapperSnapshot::savePreChangeState (Edit& ed)
 
             ClipPos cp;
             cp.clip = c;
-            cp.startBeat        = tempoSequence.timeToBeats (pos.getStart());
-            cp.endBeat          = tempoSequence.timeToBeats (pos.getEnd());
-            cp.contentStartBeat = toDuration (tempoSequence.timeToBeats (pos.getStartOfSource()));
+            cp.startBeat        = tempoSequence.toBeats (pos.getStart());
+            cp.endBeat          = tempoSequence.toBeats (pos.getEnd());
+            cp.contentStartBeat = toDuration (tempoSequence.toBeats (pos.getStartOfSource()));
             clips.add (cp);
         }
     }
@@ -697,8 +734,8 @@ void EditTimecodeRemapperSnapshot::savePreChangeState (Edit& ed)
     }
 
     const auto loopRange = ed.getTransport().getLoopRange();
-    loopPositionBeats = { tempoSequence.timeToBeats (loopRange.getStart()),
-                          tempoSequence.timeToBeats (loopRange.getEnd()) };
+    loopPositionBeats = { tempoSequence.toBeats (loopRange.getStart()),
+                          tempoSequence.toBeats (loopRange.getEnd()) };
 }
 
 void EditTimecodeRemapperSnapshot::remapEdit (Edit& ed)
@@ -707,15 +744,15 @@ void EditTimecodeRemapperSnapshot::remapEdit (Edit& ed)
     auto& tempoSequence = ed.tempoSequence;
     tempoSequence.updateTempoData();
 
-    transport.setLoopRange (tempoSequence.beatsToTime (loopPositionBeats));
+    transport.setLoopRange (tempoSequence.toTime (loopPositionBeats));
 
     for (auto& cp : clips)
     {
         if (auto c = dynamic_cast<Clip*> (cp.clip.get()))
         {
-            auto newStart  = tempoSequence.beatsToTime (cp.startBeat);
-            auto newEnd    = tempoSequence.beatsToTime (cp.endBeat);
-            auto newOffset = newStart - tempoSequence.beatsToTime (toPosition (cp.contentStartBeat));
+            auto newStart  = tempoSequence.toTime (cp.startBeat);
+            auto newEnd    = tempoSequence.toTime (cp.endBeat);
+            auto newOffset = newStart - tempoSequence.toTime (toPosition (cp.contentStartBeat));
 
             auto pos = c->getPosition();
 
@@ -747,7 +784,7 @@ void EditTimecodeRemapperSnapshot::remapEdit (Edit& ed)
 
     for (auto& a : automation)
         for (int i = a.beats.size(); --i >= 0;)
-            a.curve.setPointTime (i, tempoSequence.beatsToTime (a.beats.getUnchecked (i)));
+            a.curve.setPointTime (i, tempoSequence.toTime (a.beats.getUnchecked (i)));
 }
 
 //==============================================================================

@@ -127,13 +127,13 @@ EditItemID TrackItem::getTrackID() const
     return {};
 }
 
-BeatPosition TrackItem::getStartBeat() const         { return edit.tempoSequence.timeToBeats (getPosition().getStart()); }
-BeatPosition TrackItem::getContentStartBeat() const  { return edit.tempoSequence.timeToBeats (getPosition().getStartOfSource()); }
+BeatPosition TrackItem::getStartBeat() const         { return edit.tempoSequence.toBeats (getPosition().getStart()); }
+BeatPosition TrackItem::getContentStartBeat() const  { return edit.tempoSequence.toBeats (getPosition().getStartOfSource()); }
 BeatDuration TrackItem::getLengthInBeats() const     { return getEndBeat() - getStartBeat(); }
 BeatPosition TrackItem::getOffsetInBeats() const     { return BeatPosition::fromBeats (getPosition().getOffset().inSeconds() * edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart())); }
 
-BeatPosition TrackItem::getEndBeat() const                              { return edit.tempoSequence.timeToBeats (getPosition().getEnd()); }
-TimePosition TrackItem::getTimeOfRelativeBeat (BeatDuration b) const    { return edit.tempoSequence.beatsToTime (getStartBeat() + b); }
-BeatPosition TrackItem::getBeatOfRelativeTime (TimeDuration t) const    { return edit.tempoSequence.timeToBeats (getPosition().getStart() + t); }
+BeatPosition TrackItem::getEndBeat() const                              { return edit.tempoSequence.toBeats (getPosition().getEnd()); }
+TimePosition TrackItem::getTimeOfRelativeBeat (BeatDuration b) const    { return edit.tempoSequence.toTime (getStartBeat() + b); }
+BeatPosition TrackItem::getBeatOfRelativeTime (TimeDuration t) const    { return edit.tempoSequence.toBeats (getPosition().getStart() + t); }
 
 }} // namespace tracktion { inline namespace engine

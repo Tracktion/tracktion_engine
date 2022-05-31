@@ -562,9 +562,9 @@ Clip* ClipTrack::insertClipWithState (juce::ValueTree clipState)
 
                     auto& ts = edit.tempoSequence;
 
-                    auto startBeat = ts.timeToBeats (TimePosition::fromSeconds (static_cast<double> (clipState[IDs::start])));
+                    auto startBeat = ts.toBeats (TimePosition::fromSeconds (static_cast<double> (clipState[IDs::start])));
                     auto endBeat   = startBeat + BeatDuration::fromBeats (loopInfo.getNumBeats());
-                    auto newLength = ts.beatsToTime (endBeat) - ts.beatsToTime (startBeat);
+                    auto newLength = ts.toTime (endBeat) - ts.toTime (startBeat);
 
                     clipState.setProperty (IDs::length, newLength.inSeconds(), nullptr);
                 }

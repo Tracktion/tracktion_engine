@@ -900,11 +900,11 @@ void TransportControl::syncToEdit (Edit* editToSyncTo, bool isPreview)
             auto& tempo   = tempoSequence.getTempoAt (position);
             auto& timeSig = tempoSequence.getTimeSigAt (position);
 
-            auto barsBeats = tempoSequence.timeToBarsBeats (targetContext->isLooping()
-                                                              ? targetContext->getLoopTimes().getStart()
-                                                              : position);
+            auto barsBeats = tempoSequence.toBarsAndBeats (targetContext->isLooping()
+                                                            ? targetContext->getLoopTimes().getStart()
+                                                            : position);
 
-            auto previousBarTime = tempoSequence.barsBeatsToTime ({ barsBeats.bars, {} });
+            auto previousBarTime = tempoSequence.toTime ({ barsBeats.bars, {} });
 
             auto syncInterval = isPreview ? targetContext->getLoopTimes().getLength()
                                           : TimeDuration::fromSeconds ((60.0 / tempo.getBpm() * timeSig.numerator));
@@ -1271,7 +1271,7 @@ void TransportControl::performPlay()
             const double beatsUntilNextLinkCycle = edit.getAbletonLink().getBeatsUntilNextCycle (barLength);
 
             const double cyclePos = std::fmod (transportState->startTime.get().inSeconds(), barLength);
-            const double nextLinkCycle = edit.tempoSequence.beatsToTime (BeatPosition::fromBeats (beatsUntilNextLinkCycle)).inSeconds();
+            const double nextLinkCycle = edit.tempoSequence.toTime (BeatPosition::fromBeats (beatsUntilNextLinkCycle)).inSeconds();
 
             transportState->startTime = TimePosition::fromSeconds ((transportState->startTime.get().inSeconds() - cyclePos) + (barLength - nextLinkCycle));
         }
@@ -1354,8 +1354,8 @@ bool TransportControl::performRecord()
 
             if (numCountInBeats > 0)
             {
-                auto currentBeat = ts.timeToBeats (transportState->startTime);
-                prerollStart = ts.beatsToTime (currentBeat - BeatDuration::fromBeats (numCountInBeats + 0.5));
+                auto currentBeat = ts.toBeats (transportState->startTime);
+                prerollStart = ts.toTime (currentBeat - BeatDuration::fromBeats (numCountInBeats + 0.5));
                 // N.B. this +0.5 beats here specifies the behaviour further down when setting the click range.
                 // If this changes, that will also need to change.
             }
@@ -1368,7 +1368,7 @@ bool TransportControl::performRecord()
                 if (numCountInBeats > 0)
                     beatsUntilNextLinkCycle -= 0.5;
 
-                prerollStart = prerollStart - toDuration (ts.beatsToTime (BeatPosition::fromBeats (beatsUntilNextLinkCycle)));
+                prerollStart = prerollStart - toDuration (ts.toTime (BeatPosition::fromBeats (beatsUntilNextLinkCycle)));
             }
 
             transportState->cursorPosAtPlayStart = position.get();
@@ -1419,11 +1419,11 @@ bool TransportControl::performRecord()
                 {
                     // As the pre-roll will be "num count in beats - 0.5" we have to add that back on before our calculation
                     // We also roll back 0.5 beats the end time to avoid hearing a block that starts directly or just before a beat
-                    const auto clickStartBeat = ts.timeToBeats (prerollStart);
-                    const auto clickEndBeat = ts.timeToBeats (transportState->startTime.get());
+                    const auto clickStartBeat = ts.toBeats (prerollStart);
+                    const auto clickEndBeat = ts.toBeats (transportState->startTime.get());
 
-                    edit.setClickTrackRange (ts.beatsToTime ({ BeatPosition::fromBeats (std::ceil (clickStartBeat.inBeats() + 0.5)),
-                                                               BeatPosition::fromBeats (std::ceil (clickEndBeat.inBeats())) - 0.5_bd }));
+                    edit.setClickTrackRange (ts.toTime ({ BeatPosition::fromBeats (std::ceil (clickStartBeat.inBeats() + 0.5)),
+                                                          BeatPosition::fromBeats (std::ceil (clickEndBeat.inBeats())) - 0.5_bd }));
                 }
                 else
                 {

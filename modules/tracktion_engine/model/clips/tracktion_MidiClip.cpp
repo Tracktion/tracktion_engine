@@ -299,8 +299,8 @@ MidiClip::ScopedEventsList::~ScopedEventsList()
 //==============================================================================
 void MidiClip::extendStart (TimePosition newStartTime)
 {
-    auto offsetNeededInBeats = edit.tempoSequence.timeToBeats (getPosition().getStart())
-                                 - edit.tempoSequence.timeToBeats (newStartTime);
+    auto offsetNeededInBeats = edit.tempoSequence.toBeats (getPosition().getStart())
+                                 - edit.tempoSequence.toBeats (newStartTime);
 
     setStart (newStartTime, false, false);
 
@@ -672,7 +672,7 @@ void MidiClip::setNumberOfLoops (int num)
     auto newStartBeat = BeatPosition::fromBeats (pos.getOffset().inSeconds() * ts.getBeatsPerSecondAt (pos.getStart()));
     setLoopRangeBeats ({ newStartBeat, newStartBeat + originalLength.get() });
 
-    auto endTime = ts.beatsToTime (getStartBeat() + originalLength.get() * num);
+    auto endTime = ts.toTime (getStartBeat() + originalLength.get() * num);
     setLength (endTime - pos.getStart(), true);
     setOffset ({});
 }
@@ -720,7 +720,7 @@ void MidiClip::setLoopRange (TimeRange newRange)
     auto& ts = edit.tempoSequence;
     auto pos = getPosition();
     auto newStartBeat = BeatPosition::fromBeats (newRange.getStart().inSeconds() * ts.getBeatsPerSecondAt (pos.getStart()));
-    auto newLengthBeats = ts.timeToBeats (pos.getStart() + newRange.getLength()) - ts.timeToBeats (pos.getStart());
+    auto newLengthBeats = ts.toBeats (pos.getStart() + newRange.getLength()) - ts.toBeats (pos.getStart());
 
     setLoopRangeBeats ({ newStartBeat, newStartBeat + newLengthBeats });
 }

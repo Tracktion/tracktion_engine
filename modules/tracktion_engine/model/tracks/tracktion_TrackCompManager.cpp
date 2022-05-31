@@ -123,8 +123,8 @@ juce::Array<TimeRange> TrackCompManager::TrackComp::getNonMuteTimes (Track& t, T
 
         if (convertFromBeats)
         {
-            s = ts.beatsToTime (BeatPosition::fromBeats (s)).inSeconds();
-            e = ts.beatsToTime (BeatPosition::fromBeats (e)).inSeconds();
+            s = ts.toTime (BeatPosition::fromBeats (s)).inSeconds();
+            e = ts.toTime (BeatPosition::fromBeats (e)).inSeconds();
         }
 
         nonMuteTimes.add ({ TimePosition::fromSeconds (s) - halfCrossfade,
@@ -171,8 +171,8 @@ TimeRange TrackCompManager::TrackComp::getTimeRange() const
 
         if (convertFromBeats)
         {
-            s = ts.beatsToTime (BeatPosition::fromBeats (s)).inSeconds();
-            e = ts.beatsToTime (BeatPosition::fromBeats (e)).inSeconds();
+            s = ts.toTime (BeatPosition::fromBeats (s)).inSeconds();
+            e = ts.toTime (BeatPosition::fromBeats (e)).inSeconds();
         }
 
         TimeRange secTime (TimePosition::fromSeconds (s) - halfCrossfade,
@@ -487,7 +487,7 @@ void TrackCompManager::TrackComp::convertFromSecondsToBeats()
     for (auto cs : objects)
     {
         const auto s = cs->getEnd();
-        const auto b = ts.timeToBeats (TimePosition::fromSeconds (s)).inBeats();
+        const auto b = ts.toBeats (TimePosition::fromSeconds (s)).inBeats();
         cs->state.setProperty (IDs::end, b, um);
         jassert (cs->getEnd() == b);
     }
@@ -501,7 +501,7 @@ void TrackCompManager::TrackComp::convertFromBeatsToSeconds()
     for (auto cs : objects)
     {
         const auto b = cs->getEnd();
-        const auto s = ts.beatsToTime (BeatPosition::fromBeats (b)).inSeconds();
+        const auto s = ts.toTime (BeatPosition::fromBeats (b)).inSeconds();
         cs->state.setProperty (IDs::end, s, um);
         jassert (cs->getEnd() == s);
     }

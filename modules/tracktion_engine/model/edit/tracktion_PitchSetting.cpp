@@ -50,7 +50,7 @@ Track* PitchSetting::getTrack() const
 ClipPosition PitchSetting::getPosition() const
 {
     auto& ps = edit.pitchSequence;
-    auto s = edit.tempoSequence.beatsToTime (startBeat);
+    auto s = edit.tempoSequence.toTime (startBeat);
 
     if (auto nextPitch = ps.getPitch (ps.indexOfPitch (this) + 1))
         return { { s, nextPitch->getPosition().getStart() }, TimeDuration() };
