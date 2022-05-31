@@ -238,6 +238,7 @@ struct AbletonLink::ImplBase  : public juce::Timer
     #if JUCE_CLANG // TODO: Ignore conversion errors on Windows too
      #pragma clang diagnostic push
      #pragma clang diagnostic ignored "-Wconversion"
+     #pragma clang diagnostic ignored "-Wshadow"
     #endif
 
     #if JUCE_ANDROID
