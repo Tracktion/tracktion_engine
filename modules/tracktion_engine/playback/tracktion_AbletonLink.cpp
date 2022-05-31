@@ -46,7 +46,7 @@ struct AbletonLink::ImplBase  : public juce::Timer
         const auto numerator = static_cast<double> (localBarsAndBeatsPos.numerator);
 
         // Calculate any device latency and custom latency
-        const double bps = transport.edit.tempoSequence.getBeatsPerSecondAt (pos);
+        const double bps = seq.getBeatsPerSecondAt (pos).v;
         auto& dm = transport.engine.getDeviceManager();
         const auto outputLatencyBeats = ((dm.getBlockLength() * 2).inSeconds() + dm.getOutputLatencySeconds()) * bps;
         const auto customOffsetBeats = (customOffsetMs / 1000.0) * bps;
@@ -55,25 +55,23 @@ struct AbletonLink::ImplBase  : public juce::Timer
         const auto outputLatencyPhase = outputLatencyBeats / numerator;
         const auto customOffsetPhase = customOffsetBeats / numerator;
 
-        const auto localPhase = (localBarsAndBeatsPos.beats.inBeats() / numerator)
-                                    - outputLatencyPhase + customOffsetPhase;
+        auto localPhase = (localBarsAndBeatsPos.beats.inBeats() / numerator)
+                            - outputLatencyPhase + customOffsetPhase;
+        localPhase = negativeAwareFmod (localPhase, 1.0);
 
         const auto linkPhase = getBarPhase (numerator) / numerator;
         linkBarPhase = linkPhase;
 
-        // Find the phase offset between tracktion and link and ensure this stays between 0-1
+        // Find the phase offset between tracktion
+        // If this is 0 this means perfect phase, > 0 means link is ahead, < 0 means tracktion is ahead
         auto offsetPhase = linkPhase - localPhase;
-
-        if (offsetPhase < 0.0)          offsetPhase += 1.0;
-        if (offsetPhase >= 1.0)         offsetPhase -= 1.0;
-
         chaseProportion = offsetPhase;
 
         const auto offsetBeats = offsetPhase * numerator;
         const auto timeNow = juce::Time::getMillisecondCounter();
 
         // If we're out of sync by more than a beat, re-sync by jumping
-        if (std::abs (offsetBeats) >= 1.0 && timeNow > inhibitTimer)
+        if (std::abs (offsetBeats) >= (numerator / 2.0) && timeNow > inhibitTimer)
         {
             inhibitTimer = timeNow + 250;
 
@@ -543,7 +541,7 @@ bool AbletonLink::isConnected() const
 
 size_t AbletonLink::getNumPeers() const
 {
-    return implementation != nullptr && implementation->numPeers;
+    return implementation != nullptr ? implementation->numPeers.load() : 0;
 }
 
 bool AbletonLink::isPlaying() const

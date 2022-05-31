@@ -143,11 +143,22 @@ private:
 
     void linkRequestedPositionChange (te::BeatDuration adjustment) override
     {
-        auto& ts = edit.tempoSequence;
-        const auto timePos = transport.getPosition();
-        const auto beatPos = ts.timeToBeats (timePos);
-        const auto newTimePos = ts.beatsToTime (beatPos + adjustment);
-        transport.setPosition (newTimePos);
+        if (auto epc = transport.getCurrentPlaybackContext())
+        {
+            auto& ts = edit.tempoSequence;
+            const auto timePos = epc->getPosition();
+            const auto beatPos = ts.timeToBeats (timePos);
+            const auto newTimePos = ts.beatsToTime (beatPos + adjustment);
+            epc->postPosition (newTimePos);
+        }
+        else
+        {
+            auto& ts = edit.tempoSequence;
+            const auto timePos = transport.getPosition();
+            const auto beatPos = ts.timeToBeats (timePos);
+            const auto newTimePos = ts.beatsToTime (beatPos + adjustment);
+            transport.setPosition (newTimePos);
+        }
     }
 
     void linkConnectionChanged() override
