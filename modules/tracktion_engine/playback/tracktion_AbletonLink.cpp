@@ -211,53 +211,52 @@ struct AbletonLink::ImplBase  : public juce::Timer
 
 #if (JUCE_WINDOWS || JUCE_MAC || JUCE_LINUX || JUCE_ANDROID)
 
-    #if JUCE_MAC
-     #define LINK_PLATFORM_MACOSX  1
-    #endif
-
-    #if JUCE_WINDOWS
-     #define LINK_PLATFORM_WINDOWS 1
-    #endif
-
-    #if JUCE_LINUX || JUCE_ANDROID
-     #define LINK_PLATFORM_LINUX 1
-    #endif
-
-    //==========================================================================
-    // To use Link on desktop and Android, grab the open source repo from github
-    // and add these folders to your project's header search paths:
-    // [relative path from project]/AbletonLink/include
-    // [relative path from project]/AbletonLink/modules/asio-standalone/asio/include
-    //
-    // If you're building on Android, you will also need the ifaddrs header and source
-    // from here: https://github.com/libpd/abl_link/tree/master/external/android-ifaddrs
-    // Add the folder they are in to your header search paths also.
-
-    }} // namespace tracktion { inline namespace engine
-
-    #if JUCE_CLANG // TODO: Ignore conversion errors on Windows too
-     #pragma clang diagnostic push
-     #pragma clang diagnostic ignored "-Wconversion"
-     #pragma clang diagnostic ignored "-Wshadow"
-    #endif
-
-    #if JUCE_ANDROID
-     #include <ifaddrs.h>
-    #endif
-
-    #include <ableton/Link.hpp>
-    #include <ableton/link/HostTimeFilter.hpp>
-
-    #if JUCE_ANDROID
-     #include <ifaddrs.cpp>
-    #endif
-
-    #if JUCE_CLANG
-     #pragma clang diagnostic pop
-    #endif
-
-    namespace tracktion { inline namespace engine
-    {
+//ddd    #if JUCE_MAC
+//     #define LINK_PLATFORM_MACOSX  1
+//    #endif
+//
+//    #if JUCE_WINDOWS
+//     #define LINK_PLATFORM_WINDOWS 1
+//    #endif
+//
+//    #if JUCE_LINUX || JUCE_ANDROID
+//     #define LINK_PLATFORM_LINUX 1
+//    #endif
+//
+//    //==========================================================================
+//    // To use Link on desktop and Android, grab the open source repo from github
+//    // and add these folders to your project's header search paths:
+//    // [relative path from project]/AbletonLink/include
+//    // [relative path from project]/AbletonLink/modules/asio-standalone/asio/include
+//    //
+//    // If you're building on Android, you will also need the ifaddrs header and source
+//    // from here: https://github.com/libpd/abl_link/tree/master/external/android-ifaddrs
+//    // Add the folder they are in to your header search paths also.
+//
+//    }} // namespace tracktion { inline namespace engine
+//
+//    #if JUCE_CLANG // TODO: Ignore conversion errors on Windows too
+//     #pragma clang diagnostic push
+//     #pragma clang diagnostic ignored "-Wconversion"
+//     #pragma clang diagnostic ignored "-Wshadow"
+//    #endif
+//
+//    #if JUCE_ANDROID
+//     #include <ifaddrs.h>
+//    #endif
+//
+//    #include <ableton/Link.hpp>
+//
+//    #if JUCE_ANDROID
+//     #include <ifaddrs.cpp>
+//    #endif
+//
+//    #if JUCE_CLANG
+//     #pragma clang diagnostic pop
+//    #endif
+//
+//    namespace tracktion { inline namespace engine
+//    {
 
     //==========================================================================
     struct LinkImpl  : public AbletonLink::ImplBase
