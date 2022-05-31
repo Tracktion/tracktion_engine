@@ -59,8 +59,6 @@ public:
 
     void getPacketDetails(float& startTime, float& endTime, int& sizeInBytes, int& numberOfThumbSamplesPerChannel);
 
-    void getThumbnailAverageValues(int8_t* averageValues, uint32_t length);
-
     void getThumbnailMinMaxValues(int8_t* minValues, int8_t* maxValues, uint32_t length);
 
 private:
