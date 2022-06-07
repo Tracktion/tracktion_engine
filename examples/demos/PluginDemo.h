@@ -40,29 +40,11 @@ public:
     PluginDemo (te::Engine& e)
         : engine (e)
     {
-        pluginsButton.onClick = [this]
-        {
-            DialogWindow::LaunchOptions o;
-            o.dialogTitle                   = TRANS("Plugins");
-            o.dialogBackgroundColour        = Colours::black;
-            o.escapeKeyTriggersCloseButton  = true;
-            o.useNativeTitleBar             = true;
-            o.resizable                     = true;
-            o.useBottomRightCornerResizer   = true;
-            
-            auto v = new PluginListComponent (engine.getPluginManager().pluginFormatManager,
-                                              engine.getPluginManager().knownPluginList,
-                                              engine.getTemporaryFileManager().getTempFile ("PluginScanDeadMansPedal"),
-                                              te::getApplicationSettings());
-            v->setSize (800, 600);
-            o.content.setOwned (v);
-            o.launchAsync();
-        };
         newEditButton.onClick = [this] { createOrLoadEdit(); };
         
         updatePlayButtonText();
         editNameLabel.setJustificationType (Justification::centred);
-        Helpers::addAndMakeVisible (*this, { &pluginsButton, &newEditButton, &playPauseButton, &showEditButton,
+        Helpers::addAndMakeVisible (*this, { &newEditButton, &playPauseButton, &showEditButton,
                                              &newTrackButton, &deleteButton, &editNameLabel });
 
         deleteButton.setEnabled (false);
@@ -100,7 +82,6 @@ public:
         auto r = getLocalBounds();
         int w = r.getWidth() / 6;
         auto topR = r.removeFromTop (30);
-        pluginsButton.setBounds (topR.removeFromLeft (w).reduced (2));
         newEditButton.setBounds (topR.removeFromLeft (w).reduced (2));
         playPauseButton.setBounds (topR.removeFromLeft (w).reduced (2));
         showEditButton.setBounds (topR.removeFromLeft (w).reduced (2));
@@ -120,7 +101,7 @@ private:
     std::unique_ptr<te::Edit> edit;
     std::unique_ptr<EditComponent> editComponent;
 
-    TextButton pluginsButton { "Plugins" }, newEditButton { "New" }, playPauseButton { "Play" },
+    TextButton newEditButton { "New" }, playPauseButton { "Play" },
                showEditButton { "Show Edit" }, newTrackButton { "New Track" }, deleteButton { "Delete" };
     Label editNameLabel { "No Edit Loaded" };
     ToggleButton showWaveformButton { "Show Waveforms" };

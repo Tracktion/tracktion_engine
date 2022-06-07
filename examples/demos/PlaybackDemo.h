@@ -73,31 +73,10 @@ public:
 
         playPauseButton.onClick = [this] { EngineHelpers::togglePlay (*edit); };
 
-        // Show the plugin scan dialog
-        // If you're loading an Edit with plugins in, you'll need to perform a scan first
-        pluginsButton.onClick = [this]
-        {
-            DialogWindow::LaunchOptions o;
-            o.dialogTitle                   = TRANS("Plugins");
-            o.dialogBackgroundColour        = Colours::black;
-            o.escapeKeyTriggersCloseButton  = true;
-            o.useNativeTitleBar             = true;
-            o.resizable                     = true;
-            o.useBottomRightCornerResizer   = true;
-
-            auto v = new PluginListComponent (engine.getPluginManager().pluginFormatManager,
-                                              engine.getPluginManager().knownPluginList,
-                                              engine.getTemporaryFileManager().getTempFile ("PluginScanDeadMansPedal"),
-                                              te::getApplicationSettings());
-            v->setSize (800, 600);
-            o.content.setOwned (v);
-            o.launchAsync();
-        };
-
         updatePlayButtonText();
         editNameLabel.setJustificationType (Justification::centred);
         cpuLabel.setJustificationType (Justification::centred);
-        Helpers::addAndMakeVisible (*this, { &pluginsButton, &playPauseButton, &editNameLabel, &cpuLabel });
+        Helpers::addAndMakeVisible (*this, { &playPauseButton, &editNameLabel, &cpuLabel });
 
         setSize (600, 400);
         startTimerHz (5);
@@ -118,7 +97,6 @@ public:
     {
         auto r = getLocalBounds();
         auto topR = r.removeFromTop (30);
-        pluginsButton.setBounds (topR.removeFromLeft (topR.getWidth() / 2).reduced (2));
         playPauseButton.setBounds (topR.reduced (2));
 
         auto middleR = r.withSizeKeepingCentre (r.getWidth(), 40);
@@ -132,7 +110,7 @@ private:
     te::Engine& engine;
     std::unique_ptr<te::Edit> edit;
 
-    TextButton pluginsButton { "Plugins" }, playPauseButton { "Play" };
+    TextButton playPauseButton { "Play" };
     Label editNameLabel { "No Edit Loaded" }, cpuLabel;
 
     //==============================================================================
