@@ -1235,6 +1235,8 @@ void DeviceManager::audioDeviceAboutToStart (juce::AudioIODevice* device)
     else
         cpuAvgCounter = cpuReportingInterval = 1;
 
+    jassert (currentSampleRate > 0.0);
+    
    #if JUCE_ANDROID
     steadyLoadContext.setSampleRate (device->getCurrentSampleRate());
    #endif

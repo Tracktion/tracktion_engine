@@ -235,15 +235,24 @@ public:
     //==============================================================================
     MidiPlaybackComponent()
     {
+//ddd        edit.tempoSequence.insertTempo (BeatPosition::fromBeats (2), 120.0, 0.0);
+//        edit.tempoSequence.insertTempo (BeatPosition::fromBeats (8), 60.0, 0.0);
+//        edit.tempoSequence.insertTimeSig (BeatPosition::fromBeats (4))->denominator = 8;
+//        edit.pitchSequence.insertPitch (te::BeatPosition::fromBeats (4), 66);
+
         create4OSCPlugin();
         addUIComponents();
 
-        {
-            TemporaryFile tempMidiFile ("mid");
-            tempMidiFile.getFile().replaceWithData (midi_file_data, midi_file_dataSize);
-            auto mc = loadMidiFile (tempMidiFile.getFile());
-            addAndMakeVisible (*(clipEditorComponent = std::make_unique<ClipEditorComponent> (mc)));
-        }
+//ddd        {
+//            TemporaryFile tempMidiFile ("mid");
+//            tempMidiFile.getFile().replaceWithData (midi_file_data, midi_file_dataSize);
+//            auto mc = loadMidiFile (tempMidiFile.getFile());
+//            addAndMakeVisible (*(clipEditorComponent = std::make_unique<ClipEditorComponent> (mc)));
+//        }
+        if (auto wc = loadAudioFile (juce::String ("/Users/dave/Music/Samples/Amen Breaks/412149__leonsptvx__amen-break-materjal.wav")))
+//        if (auto wc = loadAudioFile (juce::String ("/Users/dave/Music/Samples/Test Samples/Click 120bpm.wav")))
+//        if (auto wc = loadAudioFile (juce::String ("/Users/dave/Music/Samples/Tones/sin clip.wav")))
+            addAndMakeVisible (*(clipEditorComponent = std::make_unique<ClipEditorComponent> (wc)));
 
         startTimerHz (2);
         

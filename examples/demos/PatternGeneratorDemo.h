@@ -27,7 +27,7 @@
 
 #pragma once
 
-#include "common/Utilities.h"
+#include "../common/Utilities.h"
 
 static String organPatch = "<PLUGIN type=\"4osc\" windowLocked=\"1\" id=\"1069\" enabled=\"1\" filterType=\"1\" presetDirty=\"0\" presetName=\"4OSC: Organ\" filterFreq=\"127.00000000000000000000\" ampAttack=\"0.60000002384185791016\" ampDecay=\"10.00000000000000000000\" ampSustain=\"100.00000000000000000000\" ampRelease=\"0.40000000596046447754\" waveShape1=\"4\" tune2=\"-24.00000000000000000000\" waveShape2=\"4\"> <MACROPARAMETERS id=\"1069\"/> <MODIFIERASSIGNMENTS/> <MODMATRIX/> </PLUGIN>";
 
@@ -42,7 +42,8 @@ class PatternGeneratorComponent   : public Component,
 {
 public:
     //==============================================================================
-    PatternGeneratorComponent()
+    PatternGeneratorComponent (Engine& e)
+        : engine (e)
     {
         setupEdit();
         refreshMidiInputs();
@@ -73,7 +74,7 @@ public:
         {
             auto topR = r.removeFromTop (30);
             int w = topR.getWidth() / 3;
-            settingsButton.setBounds (topR.removeFromLeft (w).reduced (2));
+            refreshMidiDevicesButton.setBounds (topR.removeFromLeft (w).reduced (2));
             playPauseButton.setBounds (topR.removeFromLeft (w).reduced (2));
             midiInputsBox.setBounds (topR.removeFromLeft (w).reduced (2));
             
@@ -164,13 +165,9 @@ private:
     {
         transport.addChangeListener (this);
         
-        Helpers::addAndMakeVisible (*this, { &settingsButton, &playPauseButton, &midiInputsBox, &modeBox, &keyBox, &scaleBox, &cpuUsage, &tempoSlider });
+        Helpers::addAndMakeVisible (*this, { &refreshMidiDevicesButton, &playPauseButton, &midiInputsBox, &modeBox, &keyBox, &scaleBox, &cpuUsage, &tempoSlider });
         
-        settingsButton.onClick  = [this]
-        {
-            EngineHelpers::showAudioDeviceSettings (engine);
-            refreshMidiInputs();
-        };
+        refreshMidiDevicesButton.onClick  = [this] { refreshMidiInputs(); };
         playPauseButton.onClick = [this] { EngineHelpers::togglePlay (edit); };
         
         midiInputsBox.addListener (this);
@@ -263,7 +260,7 @@ private:
         if (auto track = EngineHelpers::getOrInsertAudioTrackAt (edit, 0))
         {
             // Find length of 8 bars
-            const tracktion::TimeRange editTimeRange (0s, edit.tempoSequence.barsBeatsToTime ({ 8, {} }));
+            const tracktion::TimeRange editTimeRange (0s, edit.tempoSequence.toTime ({ 8, {} }));
             track->insertNewClip (te::TrackItem::Type::midi, "MIDI Clip", editTimeRange, nullptr);
             
             if (auto midiClip = getClip())
@@ -318,11 +315,11 @@ private:
     }
 
     //==============================================================================
-    te::Engine engine { ProjectInfo::projectName };
+    te::Engine& engine;
     te::Edit edit { engine, te::createEmptyEdit (engine), te::Edit::forEditing, nullptr, 0 };
     te::TransportControl& transport { edit.getTransport() };
 
-    TextButton settingsButton { "Settings" }, playPauseButton { "Play" };
+    TextButton refreshMidiDevicesButton { "Refresh MIDI Devices" }, playPauseButton { "Play" };
     ComboBox midiInputsBox { "MIDI Inputs" }, modeBox, keyBox, scaleBox;
     OwnedArray<ComboBox> chordBoxes;
     Slider tempoSlider;
@@ -371,3 +368,6 @@ private:
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PatternGeneratorComponent)
 };
+
+//==============================================================================
+static DemoTypeBase<PatternGeneratorComponent> patternGeneratorComponent ("Pattern Generator");

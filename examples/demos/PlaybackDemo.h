@@ -30,6 +30,9 @@
 #include "common/Utilities.h"
 #include "common/PlaybackDemoAudio.h"
 
+using namespace tracktion::literals;
+using namespace std::literals;
+
 //==============================================================================
 class PlaybackDemo  : public Component,
                       private ChangeListener,
@@ -37,17 +40,18 @@ class PlaybackDemo  : public Component,
 {
 public:
     //==============================================================================
-    PlaybackDemo()
+    PlaybackDemo (te::Engine& e)
+        : engine (e)
     {
         const auto editFilePath = JUCEApplication::getCommandLineParameters().replace ("-NSDocumentRevisionsDebugMode YES", "").unquoted().trim();
-        
+
         const File editFile (editFilePath);
 
         if (editFile.existsAsFile())
         {
             edit = te::loadEditFromFile (engine, editFile);
             auto& transport = edit->getTransport();
-            transport.setLoopRange ({ 0.0s, edit->getLength() });
+            transport.setLoopRange ({ 0_tp, edit->getLength() });
             transport.looping = true;
             transport.play (false);
             transport.addChangeListener (this);
@@ -58,15 +62,15 @@ public:
         {
             auto f = File::createTempFile (".ogg");
             f.replaceWithData (PlaybackDemoAudio::BITs_Export_2_ogg, PlaybackDemoAudio::BITs_Export_2_oggSize);
-            
+
             edit = te::createEmptyEdit (engine, editFile);
             edit->getTransport().addChangeListener (this);
             auto clip = EngineHelpers::loadAudioFileAsClip (*edit, f);
             EngineHelpers::loopAroundClip (*clip);
-            
+
             editNameLabel.setText ("Demo Song", dontSendNotification);
         }
-        
+
         playPauseButton.onClick = [this] { EngineHelpers::togglePlay (*edit); };
 
         // Show the plugin scan dialog
@@ -90,11 +94,10 @@ public:
             o.launchAsync();
         };
 
-        settingsButton.onClick  = [this] { EngineHelpers::showAudioDeviceSettings (engine); };
         updatePlayButtonText();
         editNameLabel.setJustificationType (Justification::centred);
         cpuLabel.setJustificationType (Justification::centred);
-        Helpers::addAndMakeVisible (*this, { &pluginsButton, &settingsButton, &playPauseButton, &editNameLabel, &cpuLabel });
+        Helpers::addAndMakeVisible (*this, { &pluginsButton, &playPauseButton, &editNameLabel, &cpuLabel });
 
         setSize (600, 400);
         startTimerHz (5);
@@ -115,8 +118,7 @@ public:
     {
         auto r = getLocalBounds();
         auto topR = r.removeFromTop (30);
-        pluginsButton.setBounds (topR.removeFromLeft (topR.getWidth() / 3).reduced (2));
-        settingsButton.setBounds (topR.removeFromLeft (topR.getWidth() / 2).reduced (2));
+        pluginsButton.setBounds (topR.removeFromLeft (topR.getWidth() / 2).reduced (2));
         playPauseButton.setBounds (topR.reduced (2));
 
         auto middleR = r.withSizeKeepingCentre (r.getWidth(), 40);
@@ -127,10 +129,10 @@ public:
 
 private:
     //==============================================================================
-    te::Engine engine { ProjectInfo::projectName };
+    te::Engine& engine;
     std::unique_ptr<te::Edit> edit;
 
-    TextButton pluginsButton { "Plugins" }, settingsButton { "Settings" }, playPauseButton { "Play" };
+    TextButton pluginsButton { "Plugins" }, playPauseButton { "Play" };
     Label editNameLabel { "No Edit Loaded" }, cpuLabel;
 
     //==============================================================================
@@ -152,3 +154,6 @@ private:
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PlaybackDemo)
 };
+
+//==============================================================================
+static DemoTypeBase<PlaybackDemo> playbackDemo ("Playback");

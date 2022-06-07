@@ -799,6 +799,16 @@ Plugin::Ptr PluginManager::createPlugin (Edit& ed, const juce::ValueTree& v, boo
 }
 
 //==============================================================================
+void PluginManager::registerBuiltInType (std::unique_ptr<BuiltInType> t)
+{
+    for (auto builtIn : builtInTypes)
+        if (builtIn->type == t->type)
+            return;
+
+    builtInTypes.add (t.release());
+}
+
+//==============================================================================
 PluginCache::PluginCache (Edit& ed) : edit (ed)
 {
     startTimer (1000);

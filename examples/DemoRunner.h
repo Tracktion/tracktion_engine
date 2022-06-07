@@ -93,7 +93,16 @@ struct DemoTypeBase
 //==============================================================================
 //==============================================================================
 // Include demo files to register them
-#include "demos/AbletonLink.h"
+#include "demos/AbletonLinkDemo.h"
+#include "demos/DistortionEffectDemo.h"
+#include "demos/IRPluginDemo.h"
+#include "demos/MidiRecordingDemo.h"
+#include "demos/PatternGeneratorDemo.h"
+#include "demos/PitchAndTimeDemo.h"
+#include "demos/PlaybackDemo.h"
+#include "demos/PluginDemo.h"
+#include "demos/RecordingDemo.h"
+#include "demos/StepSequencerDemo.h"
 
 
 //==============================================================================
@@ -151,7 +160,7 @@ public:
 
 private:
     //==============================================================================
-    te::Engine engine { ProjectInfo::projectName };
+    te::Engine engine { ProjectInfo::projectName, std::make_unique<ExtendedUIBehaviour>(), nullptr };
 
     TextButton loadButton { "Load Demo" }, settingsButton { "Audio Settings" };
     Label currentDemoName { {}, "No demo loaded" };

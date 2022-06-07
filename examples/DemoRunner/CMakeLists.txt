@@ -48,7 +48,16 @@ set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
 
 set(SourceFiles
     ../${CMAKE_PROJECT_NAME}.h
-    ../demos/AbletonLink.h)
+    ../demos/AbletonLinkDemo.h
+    ../demos/DistortionEffectDemo.h
+    ../demos/IRPluginDemo.h
+    ../demos/MidiRecordingDemo.h
+    ../demos/PatternGeneratorDemo.h
+    ../demos/PitchAndTimeDemo.h
+    ../demos/PlaybackDemo.h
+    ../demos/PluginDemo.h
+    ../demos/RecordingDemo.h
+    ../demos/StepSequencerDemo.h)
 
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE ${SourceFiles})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/.. PREFIX Source FILES ${SourceFiles})
@@ -69,6 +78,7 @@ target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
     JUCE_REPORT_APP_USAGE=0
     JUCE_MODAL_LOOPS_PERMITTED=1
     JUCE_STRICT_REFCOUNTEDPOINTER=1
+    TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH=1
     TRACKTION_ENABLE_ABLETON_LINK=0) # Enable this if you have the Ableton Link SDK present
 
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE

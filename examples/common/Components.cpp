@@ -407,8 +407,8 @@ void drawMidiClip (juce::Graphics& g, te::MidiClip& mc, juce::Rectangle<int> r, 
         auto sBeat = mc.getStartBeat() + toDuration (n->getStartBeat());
         auto eBeat = mc.getStartBeat() + toDuration (n->getEndBeat());
 
-        auto s = mc.edit.tempoSequence.beatsToTime (sBeat);
-        auto e = mc.edit.tempoSequence.beatsToTime (eBeat);
+        auto s = mc.edit.tempoSequence.toTime (sBeat);
+        auto e = mc.edit.tempoSequence.toTime (eBeat);
 
         auto t1 = (double) timeToX (s) - r.getX();
         auto t2 = (double) timeToX (e) - r.getX();

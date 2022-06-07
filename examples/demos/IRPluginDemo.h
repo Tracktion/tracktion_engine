@@ -44,13 +44,14 @@ class IRPluginDemo    :  public Component,
 {
 public:
     //==============================================================================
-    IRPluginDemo()
+    IRPluginDemo (Engine& e)
+        : engine (e)
     {
         // Register our custom plugin with the engine so it can be found using PluginCache::createNewPlugin
         engine.getPluginManager().createBuiltInType<ImpulseResponsePlugin>();
         
-        Helpers::addAndMakeVisible (*this, { &preGainSlider, &postGainSlider, &highPassCutoffSlider, &lowPassCutoffSlider,
-                                             &settingsButton, &playPauseButton, &IRButton, &preGainLabel, &postGainLabel,
+        Helpers::addAndMakeVisible (*this, { &preGainSlider, &highPassCutoffSlider, &lowPassCutoffSlider,
+                                             &playPauseButton, &IRButton, &preGainLabel, &postGainLabel,
                                              &highPassCutoffLabel, &lowPassCutoffLabel });
 
         // Load demo audio file
@@ -80,31 +81,22 @@ public:
 
         // Setup button callbacks
         playPauseButton.onClick = [this] { EngineHelpers::togglePlay (edit); };
-        settingsButton.onClick =  [this] { EngineHelpers::showAudioDeviceSettings (engine); };
         IRButton.onClick =        [this] { showIRButtonMenu(); };
 
         // Setup slider value source
-        auto preGainParam = plugin->getAutomatableParameterByID ("preGain");
-        bindSliderToParameter (preGainSlider, *preGainParam);
+        auto gainParam = plugin->getAutomatableParameterByID ("gain");
+        bindSliderToParameter (preGainSlider, *gainParam);
         preGainSlider.setSkewFactorFromMidPoint (1.0);
         preGainLabel.attachToComponent (&preGainSlider,true);
         preGainLabel.setText ("Pre",sendNotification);
 
-        auto postGainParam = plugin->getAutomatableParameterByID ("postGain");
-        bindSliderToParameter (postGainSlider, *postGainParam);
-        postGainSlider.setSkewFactorFromMidPoint (1.0);
-        postGainLabel.attachToComponent (&postGainSlider, true);
-        postGainLabel.setText ("Post", sendNotification);
-
-        auto highPassCutoffParam = plugin->getAutomatableParameterByID ("highPassCutoff");
+        auto highPassCutoffParam = plugin->getAutomatableParameterByID ("highPassMidiNoteNumber");
         bindSliderToParameter (highPassCutoffSlider, *highPassCutoffParam);
-        highPassCutoffSlider.setSkewFactorFromMidPoint (2000.0);
         highPassCutoffLabel.attachToComponent (&highPassCutoffSlider, true);
         highPassCutoffLabel.setText ("HPF", sendNotification);
 
-        auto lowPassCutoffParam = plugin->getAutomatableParameterByID ("lowPassCutoff");
+        auto lowPassCutoffParam = plugin->getAutomatableParameterByID ("lowPassMidiNoteNumber");
         bindSliderToParameter (lowPassCutoffSlider, *lowPassCutoffParam);
-        lowPassCutoffSlider.setSkewFactorFromMidPoint (2000.0);
         lowPassCutoffLabel.attachToComponent (&lowPassCutoffSlider, true);
         lowPassCutoffLabel.setText ("LPF", sendNotification);
 
@@ -123,24 +115,22 @@ public:
     {
         auto r = getLocalBounds();
         auto topR = r.removeFromTop (30);
-        IRButton.setBounds (topR.removeFromLeft (topR.getWidth() / 3).reduced (2));
-        settingsButton.setBounds (topR.removeFromLeft (topR.getWidth() / 2).reduced (2));
+        IRButton.setBounds (topR.removeFromLeft (topR.getWidth() / 2).reduced (2));
         playPauseButton.setBounds (topR.reduced (2));
 
         preGainSlider.setBounds   (50, 50,  500, 50);
         highPassCutoffSlider.setBounds (50, 100, 500, 50);
         lowPassCutoffSlider.setBounds (50, 150, 500, 50);
-        postGainSlider.setBounds  (50, 200, 500, 50);
     }
 
 private:
     //==============================================================================
-    te::Engine engine { ProjectInfo::projectName };
+    te::Engine& engine;
     te::Edit edit { Edit::Options { engine, te::createEmptyEdit (engine), ProjectItemID::createNewID (0) } };
     std::unique_ptr<TemporaryFile> oggTempFile, IRTempFile;
 
-    TextButton IRButton { "Load IR" }, settingsButton { "Settings" }, playPauseButton { "Play" };
-    Slider preGainSlider, postGainSlider, highPassCutoffSlider, lowPassCutoffSlider;
+    TextButton IRButton { "Load IR" }, playPauseButton { "Play" };
+    Slider preGainSlider, highPassCutoffSlider, lowPassCutoffSlider;
 
     Label preGainLabel, postGainLabel, highPassCutoffLabel, lowPassCutoffLabel;
     std::unique_ptr<juce::FileChooser> fileChooser;
@@ -205,3 +195,6 @@ private:
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (IRPluginDemo)
 };
+
+//==============================================================================
+static DemoTypeBase<IRPluginDemo> irPluginDemo ("Impulse Response Plugin");

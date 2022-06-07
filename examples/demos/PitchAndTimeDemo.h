@@ -27,9 +27,9 @@
 
 #pragma once
 
-#include "common/Utilities.h"
+#include "../common/Utilities.h"
 #include "DistortionEffectDemo.h"
-#include "common/PlaybackDemoAudio.h"
+#include "../common/PlaybackDemoAudio.h"
 
 using namespace tracktion_engine;
 
@@ -39,7 +39,8 @@ class PitchAndTimeComponent   : public Component,
 {
 public:
     //==============================================================================
-    PitchAndTimeComponent()
+    PitchAndTimeComponent (Engine& e)
+        : engine (e)
     {
         setSize (600, 400);
 
@@ -47,11 +48,10 @@ public:
         updatePlayButtonText();
 
         Helpers::addAndMakeVisible (*this,
-                                    { &settingsButton, &playPauseButton, &loadFileButton, &thumbnail,
+                                    { &playPauseButton, &loadFileButton, &thumbnail,
                                       &rootNoteEditor, &rootTempoEditor, &keySlider, &tempoSlider,
                                       &pitchShiftLabel, &pitchShiftSlider, &modeButton });
 
-        settingsButton.onClick  = [this] { EngineHelpers::showAudioDeviceSettings (engine); };
         playPauseButton.onClick = [this] { EngineHelpers::togglePlay (edit); };
         loadFileButton.onClick  = [this] { EngineHelpers::browseForAudioFile (engine, [this] (const File& f) { setFile (f); }); };
 
@@ -131,7 +131,6 @@ public:
 
         {
             auto topR = r.removeFromTop (30);
-            settingsButton.setBounds (topR.removeFromLeft (topR.getWidth() / 3).reduced (2));
             playPauseButton.setBounds (topR.removeFromLeft (topR.getWidth() / 2).reduced (2));
             loadFileButton.setBounds (topR.reduced (2));
         }
@@ -158,7 +157,7 @@ public:
 
 private:
     //==============================================================================
-    te::Engine engine { ProjectInfo::projectName };
+    te::Engine& engine;
     te::Edit edit { engine, te::createEmptyEdit (engine), te::Edit::forEditing, nullptr, 0 };
     te::TransportControl& transport { edit.getTransport() };
 
@@ -167,7 +166,7 @@ private:
                                    engine.getAudioFileFormatManager().readFormatManager.getWildcardForAllFormats() };
     std::unique_ptr<TemporaryFile> defaultTempFile;
 
-    TextButton settingsButton { "Settings" }, playPauseButton { "Play" }, loadFileButton { "Load file" };
+    TextButton playPauseButton { "Play" }, loadFileButton { "Load file" };
     Thumbnail thumbnail { transport };
     TextEditor rootNoteEditor, rootTempoEditor;
     Slider keySlider, tempoSlider, pitchShiftSlider;
@@ -276,3 +275,6 @@ private:
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PitchAndTimeComponent)
 };
+
+//==============================================================================
+static DemoTypeBase<PitchAndTimeComponent> pitchAndTimeComponent ("Pitch and Time");

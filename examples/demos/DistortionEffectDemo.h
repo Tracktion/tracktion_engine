@@ -27,9 +27,9 @@ END_JUCE_PIP_METADATA
 
 #pragma once
 
-#include "common/Utilities.h"
-#include "common/Components.h"
-#include "common/PlaybackDemoAudio.h"
+#include "../common/Utilities.h"
+#include "../common/Components.h"
+#include "../common/PlaybackDemoAudio.h"
 
 using namespace tracktion_engine;
 
@@ -166,12 +166,13 @@ class DistortionEffectDemo  : public Component,
 {
 public:
     //==============================================================================
-    DistortionEffectDemo()
+    DistortionEffectDemo (te::Engine& e)
+        : engine (e)
     {
         // Register our custom plugin with the engine so it can be found using PluginCache::createNewPlugin
         engine.getPluginManager().createBuiltInType<DistortionPlugin>();
         
-        Helpers::addAndMakeVisible (*this, { &gainSlider, &settingsButton, &playPauseButton });
+        Helpers::addAndMakeVisible (*this, { &gainSlider, &playPauseButton });
 
         oggTempFile = std::make_unique<TemporaryFile> (".ogg");
         auto f = oggTempFile->getFile();
@@ -199,7 +200,6 @@ public:
 
         // Setup button callbacks
         playPauseButton.onClick = [this] { EngineHelpers::togglePlay(edit); };
-        settingsButton.onClick = [this] { EngineHelpers::showAudioDeviceSettings(engine); };
 
         // Setup slider value source
         auto gainParam = gainPlugin->getAutomatableParameterByID ("gain");
@@ -220,8 +220,6 @@ public:
     {
         auto r = getLocalBounds();
         auto topR = r.removeFromTop (30);
-        pluginsButton.setBounds (topR.removeFromLeft (topR.getWidth() / 3).reduced (2));
-        settingsButton.setBounds (topR.removeFromLeft (topR.getWidth() / 2).reduced (2));
         playPauseButton.setBounds (topR.reduced (2));
 
         gainSlider.setBounds (50, 50, 500, 50);
@@ -229,11 +227,11 @@ public:
 
 private:
     //==============================================================================
-    te::Engine engine { ProjectInfo::projectName };
+    te::Engine& engine;
     te::Edit edit { Edit::Options { engine, te::createEmptyEdit (engine), ProjectItemID::createNewID (0) } };
     std::unique_ptr<TemporaryFile> oggTempFile;
 
-    TextButton pluginsButton { "Plugins" }, settingsButton { "Settings" }, playPauseButton { "Play" };
+    TextButton playPauseButton { "Play" };
     Slider gainSlider;
 
     //==============================================================================
@@ -250,3 +248,5 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DistortionEffectDemo)
 };
 
+//==============================================================================
+static DemoTypeBase<DistortionEffectDemo> distortionEffectDemo ("Distortion Plugin");

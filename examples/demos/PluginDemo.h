@@ -4,11 +4,11 @@
 
  BEGIN_JUCE_PIP_METADATA
 
-  name:             MidiRecordingDemo
+  name:             PluginDemo
   version:          0.0.1
   vendor:           Tracktion
   website:          www.tracktion.com
-  description:      This example simply creates a new project and records from one midi input. It also allows a synth plgin to be added to the track
+  description:      This example simply creates a new project and records from all avaliable inputs.
 
   dependencies:     juce_audio_basics, juce_audio_devices, juce_audio_formats, juce_audio_processors, juce_audio_utils,
                     juce_core, juce_data_structures, juce_dsp, juce_events, juce_graphics,
@@ -19,7 +19,7 @@
   defines:          JUCE_MODAL_LOOPS_PERMITTED=1
 
   type:             Component
-  mainClass:        MidiRecordingDemo
+  mainClass:        PluginDemo
 
  END_JUCE_PIP_METADATA
 
@@ -32,14 +32,14 @@
 #include "common/PluginWindow.h"
 
 //==============================================================================
-class MidiRecordingDemo  : public Component,
-                           private ChangeListener
+class PluginDemo  : public Component,
+                    private ChangeListener
 {
 public:
     //==============================================================================
-    MidiRecordingDemo()
+    PluginDemo (te::Engine& e)
+        : engine (e)
     {
-        settingsButton.onClick  = [this] { EngineHelpers::showAudioDeviceSettings (engine); };
         pluginsButton.onClick = [this]
         {
             DialogWindow::LaunchOptions o;
@@ -61,18 +61,15 @@ public:
         newEditButton.onClick = [this] { createOrLoadEdit(); };
         
         updatePlayButtonText();
-        updateRecordButtonText();
-        
         editNameLabel.setJustificationType (Justification::centred);
-        
-        Helpers::addAndMakeVisible (*this, { &settingsButton, &pluginsButton, &newEditButton, &playPauseButton, &showEditButton,
-                                             &recordButton, &newTrackButton, &deleteButton, &editNameLabel });
+        Helpers::addAndMakeVisible (*this, { &pluginsButton, &newEditButton, &playPauseButton, &showEditButton,
+                                             &newTrackButton, &deleteButton, &editNameLabel });
 
         deleteButton.setEnabled (false);
         
-        auto d = File::getSpecialLocation (File::tempDirectory).getChildFile ("MidiRecordingDemo");
+        auto d = File::getSpecialLocation (File::tempDirectory).getChildFile ("PluginDemo");
         d.createDirectory();
-        
+
         auto f = Helpers::findRecentEdit (d);
         if (f.existsAsFile())
             createOrLoadEdit (f);
@@ -86,7 +83,7 @@ public:
         setSize (600, 400);
     }
 
-    ~MidiRecordingDemo() override
+    ~PluginDemo() override
     {
         te::EditFileOperations (*edit).save (true, true, false);
         engine.getTemporaryFileManager().getTempDirectory().deleteRecursively();
@@ -101,13 +98,11 @@ public:
     void resized() override
     {
         auto r = getLocalBounds();
-        int w = r.getWidth() / 8;
+        int w = r.getWidth() / 6;
         auto topR = r.removeFromTop (30);
-        settingsButton.setBounds (topR.removeFromLeft (w).reduced (2));
         pluginsButton.setBounds (topR.removeFromLeft (w).reduced (2));
         newEditButton.setBounds (topR.removeFromLeft (w).reduced (2));
         playPauseButton.setBounds (topR.removeFromLeft (w).reduced (2));
-        recordButton.setBounds (topR.removeFromLeft (w).reduced (2));
         showEditButton.setBounds (topR.removeFromLeft (w).reduced (2));
         newTrackButton.setBounds (topR.removeFromLeft (w).reduced (2));
         deleteButton.setBounds (topR.removeFromLeft (w).reduced (2));
@@ -120,13 +115,13 @@ public:
 
 private:
     //==============================================================================
-    te::Engine engine { ProjectInfo::projectName, std::make_unique<ExtendedUIBehaviour>(), nullptr };
+    te::Engine& engine;
     te::SelectionManager selectionManager { engine };
     std::unique_ptr<te::Edit> edit;
     std::unique_ptr<EditComponent> editComponent;
 
-    TextButton settingsButton { "Settings" }, pluginsButton { "Plugins" }, newEditButton { "New" }, playPauseButton { "Play" },
-               showEditButton { "Show Edit" }, newTrackButton { "New Track" }, deleteButton { "Delete" }, recordButton { "Record" };
+    TextButton pluginsButton { "Plugins" }, newEditButton { "New" }, playPauseButton { "Play" },
+               showEditButton { "Show Edit" }, newTrackButton { "New Track" }, deleteButton { "Delete" };
     Label editNameLabel { "No Edit Loaded" };
     ToggleButton showWaveformButton { "Show Waveforms" };
 
@@ -136,13 +131,6 @@ private:
         playPauseButton.onClick = [this]
         {
             EngineHelpers::togglePlay (*edit);
-        };
-        recordButton.onClick = [this]
-        {
-            bool wasRecording = edit->getTransport().isRecording();
-            EngineHelpers::toggleRecord (*edit);
-            if (wasRecording)
-                te::EditFileOperations (*edit).save (true, true, false);
         };
         newTrackButton.onClick = [this]
         {
@@ -179,12 +167,6 @@ private:
             playPauseButton.setButtonText (edit->getTransport().isPlaying() ? "Stop" : "Play");
     }
     
-    void updateRecordButtonText()
-    {
-        if (edit != nullptr)
-            recordButton.setButtonText (edit->getTransport().isRecording() ? "Abort" : "Record");
-    }
-    
     void createOrLoadEdit (File editFile = {})
     {
         if (editFile == File())
@@ -198,13 +180,12 @@ private:
         
         selectionManager.deselectAll();
         editComponent = nullptr;
-        
+
         if (editFile.existsAsFile())
             edit = te::loadEditFromFile (engine, editFile);
         else
             edit = te::createEmptyEdit (engine, editFile);
 
-        edit->editFileRetriever = [editFile] { return editFile; };
         edit->playInStopEnabled = true;
         
         auto& transport = edit->getTransport();
@@ -217,35 +198,19 @@ private:
             editFile.revealToUser();
         };
         
-        createTracksAndAssignInputs();
-        
         te::EditFileOperations (*edit).save (true, true, false);
+        
+        enableAllInputs();
         
         editComponent = std::make_unique<EditComponent> (*edit, selectionManager);
         editComponent->getEditViewState().showFooters = true;
         editComponent->getEditViewState().showMidiDevices = true;
-        editComponent->getEditViewState().showWaveDevices = false;
+        editComponent->getEditViewState().showWaveDevices = true;
         
         addAndMakeVisible (*editComponent);
     }
     
-    void changeListenerCallback (ChangeBroadcaster* source) override
-    {
-        if (edit != nullptr && source == &edit->getTransport())
-        {
-            updatePlayButtonText();
-            updateRecordButtonText();
-        }
-        else if (source == &selectionManager)
-        {
-            auto sel = selectionManager.getSelectedObject (0);
-            deleteButton.setEnabled (dynamic_cast<te::Clip*> (sel) != nullptr
-                                     || dynamic_cast<te::Track*> (sel) != nullptr
-                                     || dynamic_cast<te::Plugin*> (sel));
-        }
-    }
-    
-    void createTracksAndAssignInputs()
+    void enableAllInputs()
     {
         auto& dm = engine.getDeviceManager();
         
@@ -258,28 +223,39 @@ private:
             }
         }
         
-        edit->getTransport().ensureContextAllocated();
+        for (int i = 0; i < dm.getNumWaveInDevices(); i++)
+            if (auto wip = dm.getWaveInDevice (i))
+                wip->setStereoPair (false);
         
-        if (te::getAudioTracks (*edit).size () == 0)
+        for (int i = 0; i < dm.getNumWaveInDevices(); i++)
         {
-            int trackNum = 0;
-            for (auto instance : edit->getAllInputDevices())
+            if (auto wip = dm.getWaveInDevice (i))
             {
-                if (instance->getInputDevice().getDeviceType() == te::InputDevice::physicalMidiDevice)
-                {
-                    if (auto t = EngineHelpers::getOrInsertAudioTrackAt (*edit, trackNum))
-                    {
-                        instance->setTargetTrack (*t, 0, true);
-                        instance->setRecordingEnabled (*t, true);
-                    
-                        trackNum++;
-                    }
-                }
+                wip->setEndToEnd (true);
+                wip->setEnabled (true);
             }
         }
         
-        edit->restartPlayback();
+        edit->getTransport().ensureContextAllocated();
+    }
+    
+    void changeListenerCallback (ChangeBroadcaster* source) override
+    {
+        if (edit != nullptr && source == &edit->getTransport())
+        {
+            updatePlayButtonText();
+        }
+        else if (source == &selectionManager)
+        {
+            auto sel = selectionManager.getSelectedObject (0);
+            deleteButton.setEnabled (dynamic_cast<te::Clip*> (sel) != nullptr
+                                     || dynamic_cast<te::Track*> (sel) != nullptr
+                                     || dynamic_cast<te::Plugin*> (sel));
+        }
     }
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiRecordingDemo)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginDemo)
 };
+
+//==============================================================================
+static DemoTypeBase<PluginDemo> pluginDemo ("Plugin Hosting");

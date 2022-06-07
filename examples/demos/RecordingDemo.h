@@ -36,16 +36,16 @@ class RecordingDemo  : public Component,
 {
 public:
     //==============================================================================
-    RecordingDemo()
+    RecordingDemo (te::Engine& e)
+        : engine (e)
     {
-        settingsButton.onClick  = [this] { EngineHelpers::showAudioDeviceSettings (engine); createTracksAndAssignInputs(); };
         newEditButton.onClick = [this] { createOrLoadEdit(); };
         
         updatePlayButtonText();
         updateRecordButtonText();
         editNameLabel.setJustificationType (Justification::centred);
-        Helpers::addAndMakeVisible (*this, { &settingsButton, &newEditButton, &playPauseButton, &recordButton, &showEditButton,
-                                             &newTrackButton, &clearTracksButton, &deleteButton, &editNameLabel, &showWaveformButton });
+        Helpers::addAndMakeVisible (*this, { &newEditButton, &playPauseButton, &recordButton, &showEditButton,
+                                             &newTrackButton, &clearTracksButton, &deleteButton, &editNameLabel, &showWaveformButton, &undoButton, &redoButton });
 
         deleteButton.setEnabled (false);
         
@@ -80,9 +80,8 @@ public:
     void resized() override
     {
         auto r = getLocalBounds();
-        int w = r.getWidth() / 8;
+        int w = r.getWidth() / 9;
         auto topR = r.removeFromTop (30);
-        settingsButton.setBounds (topR.removeFromLeft (w).reduced (2));
         newEditButton.setBounds (topR.removeFromLeft (w).reduced (2));
         playPauseButton.setBounds (topR.removeFromLeft (w).reduced (2));
         recordButton.setBounds (topR.removeFromLeft (w).reduced (2));
@@ -90,6 +89,9 @@ public:
         newTrackButton.setBounds (topR.removeFromLeft (w).reduced (2));
         clearTracksButton.setBounds (topR.removeFromLeft (w).reduced (2));
         deleteButton.setBounds (topR.removeFromLeft (w).reduced (2));
+        undoButton.setBounds(topR.removeFromLeft(w).reduced(2));
+        redoButton.setBounds(topR.removeFromLeft(w).reduced(2));
+
         topR = r.removeFromTop (30);
         showWaveformButton.setBounds (topR.removeFromLeft (w * 2).reduced (2));
         editNameLabel.setBounds (topR);
@@ -100,13 +102,14 @@ public:
 
 private:
     //==============================================================================
-    te::Engine engine { ProjectInfo::projectName };
+    te::Engine& engine;
     te::SelectionManager selectionManager { engine };
     std::unique_ptr<te::Edit> edit;
     std::unique_ptr<EditComponent> editComponent;
 
-    TextButton settingsButton { "Settings" }, newEditButton { "New" }, playPauseButton { "Play" }, recordButton { "Record" },
-               showEditButton { "Show Edit" }, newTrackButton { "New Track" }, clearTracksButton { "Clear Tracks" }, deleteButton { "Delete" };
+    TextButton newEditButton { "New" }, playPauseButton { "Play" }, recordButton { "Record" },
+               showEditButton { "Show Edit" }, newTrackButton { "New Track" }, clearTracksButton { "Clear Tracks" }, deleteButton { "Delete" },
+               undoButton {"Undo"}, redoButton {"Redo"};
     Label editNameLabel { "No Edit Loaded" };
     ToggleButton showWaveformButton { "Show Waveforms" };
 
@@ -155,6 +158,14 @@ private:
             auto& evs = editComponent->getEditViewState();
             evs.drawWaveforms = ! evs.drawWaveforms.get();
             showWaveformButton.setToggleState (evs.drawWaveforms, dontSendNotification);
+        };
+        undoButton.onClick = [this]
+        {
+            edit->getUndoManager().undo();
+        };
+        redoButton.onClick = [this]
+        {
+            edit->getUndoManager().redo();
         };
     }
     
@@ -263,3 +274,6 @@ private:
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RecordingDemo)
 };
+
+//==============================================================================
+static DemoTypeBase<RecordingDemo> recordingDemo ("Audio Recording");

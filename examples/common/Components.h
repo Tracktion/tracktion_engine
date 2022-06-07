@@ -73,7 +73,7 @@ public:
     te::TimePosition beatToTime (te::BeatPosition b) const
     {
         auto& ts = edit.tempoSequence;
-        return ts.beatsToTime (b);
+        return ts.toTime (b);
     }
     
     te::Edit& edit;
