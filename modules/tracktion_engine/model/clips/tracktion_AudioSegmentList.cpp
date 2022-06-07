@@ -562,7 +562,7 @@ void AudioSegmentList::buildAutoTempo (bool crossfade)
         if (loopLengthBeats == BeatDuration())
             return;
 
-        auto offsetBeat = toDuration (clip.getOffsetInBeats());
+        auto offsetBeat = clip.getOffsetInBeats();
 
         while (offsetBeat > loopLengthBeats)
             offsetBeat = offsetBeat - loopLengthBeats;

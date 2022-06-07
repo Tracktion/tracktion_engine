@@ -103,7 +103,7 @@ public:
     BeatPosition getBeatOfRelativeTime (TimeDuration) const;
 
     /** Returns an the offset of this item in beats. */
-    BeatPosition getOffsetInBeats() const;
+    BeatDuration getOffsetInBeats() const;
 
     //==============================================================================
     /** Returns the ID of the Track this item lives on. */

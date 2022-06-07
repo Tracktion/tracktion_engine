@@ -1315,7 +1315,7 @@ TimePosition AudioClipBase::clipTimeToSourceFileTime (TimePosition t)
             return TimePosition::fromSeconds (b.inBeats() / loopInfo.getBeatsPerSecond (getAudioFile().getInfo()));
         }
 
-        auto b = getBeatOfRelativeTime (toDuration (t)) - getStartBeat() + toDuration (getOffsetInBeats());
+        auto b = getBeatOfRelativeTime (toDuration (t)) - getStartBeat() + getOffsetInBeats();
 
         return TimePosition::fromSeconds (b.inBeats() / loopInfo.getBeatsPerSecond (getAudioFile().getInfo()));
     }
@@ -1709,11 +1709,11 @@ void AudioClipBase::getRescaledMarkPoints (juce::Array<TimePosition>& times, juc
             {
                 auto loopLen = getLoopLengthBeats();
                 auto clipLen = getLengthInBeats();
-                auto b = loopLen - toDuration (getOffsetInBeats());
+                auto b = loopLen - getOffsetInBeats();
 
                 for (int i = 0; i < beats.size(); ++i)
                 {
-                    auto newB = BeatDuration::fromBeats (beats[i].inSeconds() - (getOffsetInBeats() - getLoopStartBeats()).inBeats());
+                    auto newB = BeatDuration::fromBeats (beats[i].inSeconds() - (toPosition (getOffsetInBeats()) - getLoopStartBeats()).inBeats());
 
                     if (newB > BeatDuration() && newB < b)
                     {
@@ -1742,7 +1742,7 @@ void AudioClipBase::getRescaledMarkPoints (juce::Array<TimePosition>& times, juc
             {
                 for (int i = 0; i < beats.size(); ++i)
                 {
-                    auto newT = getTimeOfRelativeBeat (BeatPosition::fromBeats (beats[i].inSeconds()) - getOffsetInBeats());
+                    auto newT = getTimeOfRelativeBeat (BeatPosition::fromBeats (beats[i].inSeconds()) - toPosition (getOffsetInBeats()));
 
                     if (newT >= TimePosition())
                     {

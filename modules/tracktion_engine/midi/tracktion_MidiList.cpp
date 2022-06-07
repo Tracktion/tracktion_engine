@@ -811,7 +811,7 @@ BeatPosition MidiNote::getPlaybackBeats (NoteEdge edge, const MidiClip& clip, co
     // nudge the note-up backwards just a bit to make sure the ordering is correct
     auto time = edge == startEdge ? clip.getQuantisation().roundBeatToNearest (startBeat + toDuration (clip.getContentStartBeat()))
                                   : std::min (clip.getQuantisation().roundBeatToNearest (startBeat + toDuration (clip.getContentStartBeat()))
-                                              + lengthInBeats, clip.edit.tempoSequence.toBeats (pos.getEnd())) - BeatDuration::fromBeats (0.00001);
+                                              + lengthInBeats, clip.edit.tempoSequence.toBeats (pos.getEnd())) - 0.00001_bd;
 
     if (grooveTemplate != nullptr)
         time = grooveTemplate->beatsTimeToGroovyTime (time, clip.getGrooveStrength());
@@ -1871,7 +1871,7 @@ juce::MidiMessageSequence MidiList::createDefaultPlaybackMidiSequence (const Mid
     auto channelNumber = list.getMidiChannel().getChannelNumber();
 
     // NB: allow extra space here in case the notes get quantised or nudged around later on..
-    const auto overlapAllowance = BeatDuration::fromBeats (0.5);
+    const auto overlapAllowance = 0.5_bd;
     auto firstNoteBeat = toPosition (ts.toBeats (clip.getPosition().getStart()) - midiStartBeat - overlapAllowance);
     auto lastNoteBeat  = toPosition (ts.toBeats (clip.getPosition().getEnd())   - midiStartBeat + overlapAllowance);
 

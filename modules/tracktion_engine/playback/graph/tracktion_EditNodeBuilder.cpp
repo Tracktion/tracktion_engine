@@ -555,7 +555,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
             node = makeNode<WaveNodeRealTime> (playFile,
                                                timeStretcherMode, timeStretcherOpts,
                                                BeatRange (clip.getStartBeat(), clip.getEndBeat()),
-                                               toDuration (clip.getOffsetInBeats()),
+                                               clip.getOffsetInBeats(),
                                                BeatRange (clip.getLoopStartBeats(), clip.getLoopLengthBeats()),
                                                clip.getLiveClipLevel(),
                                                clip.getActiveChannels(),

@@ -1303,16 +1303,16 @@ juce::Array<MidiNote*> Clipboard::MIDIEvents::pasteNotesIntoClip (MidiClip& clip
 
     if (clip.isLooping())
     {
-        const auto offsetBeats = toDuration (clip.getOffsetInBeats() + toDuration (clip.getLoopStartBeats()));
+        const auto offsetBeats = clip.getOffsetInBeats() + toDuration (clip.getLoopStartBeats());
 
-        if ((insertPos - offsetBeats) < BeatPosition() || insertPos - offsetBeats >= toPosition (clip.getLoopLengthBeats() - BeatDuration::fromBeats (0.001)))
+        if ((insertPos - offsetBeats) < BeatPosition() || insertPos - offsetBeats >= toPosition (clip.getLoopLengthBeats() - 0.001_bd))
             return {};
     }
     else
     {
-        const auto offsetBeats = toDuration (clip.getOffsetInBeats());
+        const auto offsetBeats = clip.getOffsetInBeats();
 
-        if ((insertPos - offsetBeats) < BeatPosition() || insertPos - offsetBeats >= toPosition (clip.getLengthInBeats() - BeatDuration::fromBeats (0.001)))
+        if ((insertPos - offsetBeats) < BeatPosition() || insertPos - offsetBeats >= toPosition (clip.getLengthInBeats() - 0.001_bd))
             return {};
     }
 
@@ -1403,16 +1403,16 @@ juce::Array<MidiControllerEvent*> Clipboard::MIDIEvents::pasteControllersIntoCli
 
     if (clip.isLooping())
     {
-        auto offsetBeats = toDuration (clip.getLoopStartBeats() + toDuration (clip.getOffsetInBeats()));
+        auto offsetBeats = toDuration (clip.getLoopStartBeats() + clip.getOffsetInBeats());
 
-        if (insertPos - offsetBeats < BeatPosition() || insertPos - offsetBeats >= toPosition (clip.getLoopLengthBeats() - BeatDuration::fromBeats (0.001)))
+        if (insertPos - offsetBeats < 0_bp || insertPos - offsetBeats >= toPosition (clip.getLoopLengthBeats() - 0.001_bd))
             return {};
     }
     else
     {
-        auto offsetBeats = toDuration (clip.getOffsetInBeats());
+        auto offsetBeats = clip.getOffsetInBeats();
 
-        if (insertPos - offsetBeats < BeatPosition() || insertPos - offsetBeats >= toPosition (clip.getLengthInBeats() - BeatDuration::fromBeats (0.001)))
+        if (insertPos - offsetBeats < 0_bp || insertPos - offsetBeats >= toPosition (clip.getLengthInBeats() - 0.001_bd))
             return {};
     }
 

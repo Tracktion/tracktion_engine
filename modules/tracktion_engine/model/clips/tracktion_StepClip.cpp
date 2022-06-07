@@ -283,12 +283,12 @@ void StepClip::resizeClipForPatternInstances()
             end = end + pattern.getNoteLength() * pattern.getNumNotes() * ratio;
         }
 
-        if (end > toPosition (getLengthInBeats()))
+        if (end > getLengthInBeats())
         {
             auto& ts = edit.tempoSequence;
             auto pos = getPosition();
             auto startBeat = ts.toBeats (pos.getStart());
-            auto endBeat = startBeat + toDuration (end);
+            auto endBeat = startBeat + end;
 
             setEnd (ts.toTime (endBeat), false);
         }
