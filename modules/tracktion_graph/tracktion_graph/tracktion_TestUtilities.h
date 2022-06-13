@@ -103,7 +103,7 @@ namespace test_utilities
     static inline void logMidiMessageSequence (juce::UnitTest& ut, const juce::MidiMessageSequence& seq)
     {
         for (int i = 0; i < seq.getNumEvents(); ++i)
-            ut.logMessage (seq.getEventPointer (i)->message.getDescription());
+            ut.logMessage (seq.getEventPointer (i)->message.getDescription() + " - " + juce::String (seq.getEventPointer (i)->message.getTimeStamp()));
     }
 
     /** Logs a MidiBuffer. */

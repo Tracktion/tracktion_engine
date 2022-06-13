@@ -741,7 +741,7 @@ std::unique_ptr<RenderOptions> RenderOptions::forGeneralExporter (Edit& edit)
     return ro;
 }
 
-std::unique_ptr<RenderOptions> RenderOptions::forTrackRender (juce::Array<Track*>& tracks,
+std::unique_ptr<RenderOptions> RenderOptions::forTrackRender (juce::Array<Track*> tracks,
                                                               AddRenderOptions addOption)
 {
     if (auto first = tracks.getFirst())
@@ -766,7 +766,7 @@ std::unique_ptr<RenderOptions> RenderOptions::forTrackRender (juce::Array<Track*
     return {};
 }
 
-std::unique_ptr<RenderOptions> RenderOptions::forClipRender (juce::Array<Clip*>& clips, bool midiNotes)
+std::unique_ptr<RenderOptions> RenderOptions::forClipRender (juce::Array<Clip*> clips, bool midiNotes)
 {
     if (auto first = clips.getFirst())
     {

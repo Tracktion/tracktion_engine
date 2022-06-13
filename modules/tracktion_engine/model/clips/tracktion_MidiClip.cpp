@@ -102,6 +102,7 @@ MidiClip::MidiClip (const juce::ValueTree& v, EditItemID id, ClipTrack& targetTr
     loopLengthBeats.referTo (state, IDs::loopLengthBeats, um, BeatDuration());
     originalLength.referTo (state, IDs::originalLength, um, BeatDuration());
 
+    proxyAllowed.referTo (state, IDs::proxyAllowed, um, true);
     currentTake.referTo (state, IDs::currentTake, um);
 
     auto grooveTree = state.getOrCreateChildWithName (IDs::GROOVE, um);

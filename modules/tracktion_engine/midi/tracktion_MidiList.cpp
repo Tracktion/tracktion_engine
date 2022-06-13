@@ -357,16 +357,31 @@ static void addToSequence (juce::MidiMessageSequence& seq, const MidiClip& clip,
     if (note.isMute() || note.getLengthBeats() <= BeatDuration::fromBeats (0.00001))
         return;
 
-    const auto downTime = tb == MidiList::TimeBase::seconds ? note.getPlaybackTime (MidiNote::startEdge, clip, grooveTemplate).inSeconds()
-                                                            : note.getPlaybackBeats (MidiNote::startEdge, clip, grooveTemplate).inBeats();
+    const auto downTime = [&]
+    {
+        switch (tb)
+        {
+            case MidiList::TimeBase::beatsRaw:  return note.getStartBeat().inBeats();
+            case MidiList::TimeBase::beats:     return note.getPlaybackBeats (MidiNote::startEdge, clip, grooveTemplate).inBeats();
+            case MidiList::TimeBase::seconds:   return note.getPlaybackTime (MidiNote::startEdge, clip, grooveTemplate).inSeconds();
+        }
+    }();
+
     auto velocity = (uint8_t) note.getVelocity();
     int noteNumber = note.getNoteNumber();
 
     if (addNoteUp)
     {
         // nudge the note-up backwards just a bit to make sure the ordering is correct
-        const auto upTime = tb == MidiList::TimeBase::seconds ? note.getPlaybackTime (MidiNote::endEdge, clip, grooveTemplate).inSeconds()
-                                                              : note.getPlaybackBeats (MidiNote::endEdge, clip, grooveTemplate).inBeats();
+        const auto upTime = [&]
+        {
+            switch (tb)
+            {
+                case MidiList::TimeBase::beatsRaw:  return note.getEndBeat().inBeats();
+                case MidiList::TimeBase::beats:     return note.getPlaybackBeats (MidiNote::endEdge, clip, grooveTemplate).inBeats();
+                case MidiList::TimeBase::seconds:   return note.getPlaybackTime (MidiNote::endEdge, clip, grooveTemplate).inSeconds();
+            }
+        }();
 
         if (upTime > downTime && upTime > 0.0)
         {
@@ -385,10 +400,12 @@ static void addToSequence (juce::MidiMessageSequence& seq, const MidiClip& clip,
 {
     const auto time = [&]
                       {
-                          if (tb == MidiList::TimeBase::beats)
-                              return std::max (BeatPosition(), controller.getEditBeats (clip) - toDuration (clip.getStartBeat())).inBeats();
-
-                          return std::max (TimePosition(), controller.getEditTime (clip) - toDuration (clip.getPosition().getStart())).inSeconds();
+                          switch (tb)
+                          {
+                              case MidiList::TimeBase::beatsRaw:  return controller.getBeatPosition().inBeats();
+                              case MidiList::TimeBase::beats:     return std::max (0_bp, controller.getEditBeats (clip) - toDuration (clip.getStartBeat())).inBeats();
+                              case MidiList::TimeBase::seconds:   return std::max (0_tp, controller.getEditTime (clip) - toDuration (clip.getPosition().getStart())).inSeconds();
+                          }
                       }();
 
     const auto type = controller.getType();
@@ -436,10 +453,12 @@ static void addToSequence (juce::MidiMessageSequence& seq, const MidiClip& clip,
 {
     const auto time = [&]
                       {
-                          if (tb == MidiList::TimeBase::beats)
-                              return std::max (BeatPosition(), sysex.getEditBeats (clip) - toDuration (clip.getStartBeat())).inBeats();
-
-                          return std::max (TimePosition(), sysex.getEditTime (clip) - toDuration (clip.getPosition().getStart())).inSeconds();
+                          switch (tb)
+                          {
+                              case MidiList::TimeBase::beatsRaw:  return sysex.getBeatPosition().inBeats();
+                              case MidiList::TimeBase::beats:     return std::max (0_bp, sysex.getEditBeats (clip) - toDuration (clip.getStartBeat())).inBeats();
+                              case MidiList::TimeBase::seconds:   return std::max (0_tp, sysex.getEditTime (clip) - toDuration (clip.getPosition().getStart())).inSeconds();
+                          }
                       }();
     auto m = sysex.getMessage();
     m.setTimeStamp (time);

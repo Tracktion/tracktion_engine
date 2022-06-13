@@ -610,29 +610,41 @@ std::unique_ptr<tracktion::graph::Node> createNodeForMidiClip (MidiClip& clip, c
 {
     CRASH_TRACER
     const bool generateMPE = clip.getMPEMode();
-   #if TRACKTION_ENABLE_REALTIME_TIMESTRETCHING
-    constexpr MidiList::TimeBase timeBase = MidiList::TimeBase::beats;
-   #else
-    constexpr MidiList::TimeBase timeBase = MidiList::TimeBase::seconds;
-   #endif
+    const auto timeBase = /*dddclip.canUseProxy() ? MidiList::TimeBase::seconds
+                                             : */MidiList::TimeBase::beatsRaw;
+
+    const auto channels = generateMPE ? juce::Range<int> (2, 15)
+                                      : juce::Range<int>::withStartAndLength (clip.getMidiChannel().getChannelNumber(), 1);
+
+    if (timeBase == MidiList::TimeBase::beatsRaw)
+    {
+        std::vector<juce::MidiMessageSequence> sequences;
+        sequences.emplace_back (clip.getSequence().exportToPlaybackMidiSequence (clip, timeBase, generateMPE));
+
+        return graph::makeNode<LoopingMidiNode> (std::move (sequences),
+                                                 channels,
+                                                 generateMPE,
+                                                 BeatRange (clip.getStartBeat(), clip.getEndBeat()),
+                                                 BeatRange (clip.getLoopStartBeats(), clip.getLoopLengthBeats()),
+                                                 clip.getOffsetInBeats(),
+                                                 clip.getLiveClipLevel(),
+                                                 params.processState,
+                                                 clip.itemID,
+                                                 [&trackMuteState]
+                                                 {
+                                                      if (! trackMuteState.shouldTrackBeAudible())
+                                                         return ! trackMuteState.shouldTrackMidiBeProcessed();
+
+                                                     return false;
+                                                 });
+    }
+
+    // Use looped sequence in seconds time base
+    const auto clipTimeRange = clip.getEditTimeRange();
+    const juce::Range<double> editTimeRange { clipTimeRange.getStart().inSeconds(), clipTimeRange.getEnd().inSeconds() };
 
     std::vector<juce::MidiMessageSequence> sequences;
     sequences.emplace_back (clip.getSequenceLooped().exportToPlaybackMidiSequence (clip, timeBase, generateMPE));
-
-    auto channels = generateMPE ? juce::Range<int> (2, 15)
-                                : juce::Range<int>::withStartAndLength (clip.getMidiChannel().getChannelNumber(), 1);
-
-    juce::Range<double> editTimeRange;
-
-    if constexpr (timeBase == MidiList::TimeBase::beats)
-    {
-        editTimeRange = { clip.getStartBeat().inBeats(), clip.getEndBeat().inBeats() };
-    }
-    else
-    {
-        const auto clipTimeRange = clip.getEditTimeRange();
-        editTimeRange = { clipTimeRange.getStart().inSeconds(), clipTimeRange.getEnd().inSeconds() };
-    }
 
     return graph::makeNode<MidiNode> (std::move (sequences),
                                       timeBase,

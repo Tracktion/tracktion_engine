@@ -152,6 +152,10 @@ using namespace std::literals;
 #include "playback/graph/tracktion_LiveMidiOutputNode.h"
 #include "playback/graph/tracktion_LiveMidiOutputNode.cpp"
 
+#include "playback/graph/tracktion_LoopingMidiNode.h"
+#include "playback/graph/tracktion_LoopingMidiNode.cpp"
+#include "playback/graph/tracktion_LoopingMidiNode.test.cpp"
+
 #include "playback/graph/tracktion_MelodyneNode.h"
 #include "playback/graph/tracktion_MelodyneNode.cpp"
 

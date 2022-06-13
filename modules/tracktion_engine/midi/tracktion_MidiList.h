@@ -132,8 +132,9 @@ public:
     /** Determines MIDI event timing. */
     enum class TimeBase
     {
-        seconds,    /** Event times will be in seconds. */
-        beats       /** Event times will be in beats. */
+        seconds,    /** Event times will be in seconds relative to the Edit timeline. */
+        beats,      /** Event times will be in beats relative to the Edit timeline. */
+        beatsRaw    /** Event times will be in beats with no quantisation or groove. */
     };
 
     /** Creates a juce::MidiMessageSequence from the list in order to be played back

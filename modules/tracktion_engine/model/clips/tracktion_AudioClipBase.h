@@ -460,7 +460,7 @@ public:
     AudioFile getProxyFileToCreate (bool renderTimestretched);
     
     /** Can be used to disable proxy file generation for this clip.
-        N.B. if disabled, this clip won't fully sync to the TempoSequence.
+        If disabled, the audio engine will time-stretch the file in real time which may use more CPU.
     */
     void setUsesProxy (bool canUseProxy) noexcept;
     

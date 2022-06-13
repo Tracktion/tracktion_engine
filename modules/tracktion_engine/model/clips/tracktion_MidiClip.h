@@ -35,6 +35,17 @@ public:
 
     const SelectedMidiEvents* getSelectedEvents() const             { return selectedEvents; }
 
+    //==============================================================================
+    /** Can be used to disable proxy sequence generation for this clip.
+        N.B. If disabled, the audio engine will perform quantisation and groove
+        adjustments in real time which may use more CPU.
+    */
+    void setUsesProxy (bool canUseProxy) noexcept   { proxyAllowed = canUseProxy; }
+
+    /** Retuns true if this clip can use a proxy sequence. */
+    bool canUseProxy() const noexcept               { return proxyAllowed; }
+
+    //==============================================================================
     void scaleVerticallyToFit();
 
     bool hasValidSequence() const noexcept                          { return channelSequence.size() > 0; }
@@ -161,7 +172,7 @@ private:
     juce::OwnedArray<MidiList> channelSequence;
     std::shared_ptr<ClipLevel> level { std::make_shared<ClipLevel>() };
 
-    juce::CachedValue<int> currentTake;
+    juce::CachedValue<int> proxyAllowed, currentTake;
     juce::CachedValue<float> grooveStrength;
     juce::CachedValue<BeatPosition> loopStartBeats;
     juce::CachedValue<BeatDuration> loopLengthBeats, originalLength;

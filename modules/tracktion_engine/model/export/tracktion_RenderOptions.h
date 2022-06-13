@@ -80,8 +80,8 @@ public:
     //==============================================================================
     /** Creates a default RenderOptions object for a general purpose exporter. */
     static std::unique_ptr<RenderOptions> forGeneralExporter (Edit&);
-    static std::unique_ptr<RenderOptions> forTrackRender (juce::Array<Track*>& tracks, AddRenderOptions addOption);
-    static std::unique_ptr<RenderOptions> forClipRender (juce::Array<Clip*>& clips, bool midiNotes);
+    static std::unique_ptr<RenderOptions> forTrackRender (juce::Array<Track*> tracks, AddRenderOptions addOption);
+    static std::unique_ptr<RenderOptions> forClipRender (juce::Array<Clip*> clips, bool midiNotes);
     static std::unique_ptr<RenderOptions> forEditClip (Clip& editClip);
 
     //==============================================================================
