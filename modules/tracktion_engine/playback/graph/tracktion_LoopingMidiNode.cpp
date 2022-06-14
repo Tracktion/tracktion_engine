@@ -341,8 +341,8 @@ private:
     //==============================================================================
     std::unique_ptr<MidiGenerator> generator;
     std::shared_ptr<ActiveNoteList> activeNoteList;
-    EditBeatRange clipRange;
-    ClipBeatRange loopTimes;
+    const EditBeatRange clipRange;
+    const ClipBeatRange loopTimes;
 
     //==============================================================================
     struct SplitRange
@@ -390,6 +390,61 @@ private:
     }
 };
 
+
+//==============================================================================
+class OffsetMidiEventGenerator  : public MidiGenerator
+{
+public:
+    OffsetMidiEventGenerator (std::unique_ptr<MidiGenerator> gen,
+                              ClipBeatDuration offsetToUse)
+        : generator (std::move (gen)),
+          clipOffset (offsetToUse)
+    {
+    }
+
+    void createMessagesForTime (MidiMessageArray& destBuffer,
+                                EditBeatPosition editBeatPosition,
+                                ActiveNoteList& noteList,
+                                juce::Range<int> channelNumbers,
+                                LiveClipLevel& clipLevel,
+                                bool useMPEChannelMode, MidiMessageArray::MPESourceID midiSourceID,
+                                juce::Array<juce::MidiMessage>& controllerMessagesScratchBuffer) override
+    {
+        generator->createMessagesForTime (destBuffer,
+                                          editBeatPosition + clipOffset,
+                                          noteList,
+                                          channelNumbers,
+                                          clipLevel,
+                                          useMPEChannelMode, midiSourceID,
+                                          controllerMessagesScratchBuffer);
+    }
+
+    void nextSequence() override
+    {
+        generator->nextSequence();
+    }
+
+    void visitEventsInRange (EditBeatRange editTimeRange,
+                             const std::function<bool (const juce::MidiMessage&)>& visitor,
+                             const std::function<void (ActiveNoteList&, BlockBeatPosition timeInBeats)>& createNoteOffsCallback) override
+    {
+        editTimeRange = editTimeRange + clipOffset;
+
+        auto visitEvent = [&] (const juce::MidiMessage& e)
+                          {
+                              const EditBeatPosition editBeatPosition = e.getTimeStamp() - clipOffset;
+                              return visitor (juce::MidiMessage (e, editBeatPosition));
+                          };
+
+        generator->visitEventsInRange (editTimeRange, visitEvent, createNoteOffsCallback);
+    }
+
+private:
+    //==============================================================================
+    std::unique_ptr<MidiGenerator> generator;
+    const ClipBeatDuration clipOffset;
+
+};
 
 //==============================================================================
 class ActiveNoteGenerator : public MidiGenerator
@@ -491,7 +546,8 @@ LoopingMidiNode::LoopingMidiNode (std::vector<juce::MidiMessageSequence> sequenc
 
     auto eventGenerator = std::make_unique<MidiEventGenerator> (std::move (sequences));
     auto loopedGenerator = std::make_unique<LoopedMidiEventGenerator> (std::move (eventGenerator), activeNoteList, clipRangeRaw, loopRangeRaw);
-    generator = std::make_unique<ActiveNoteGenerator> (std::move (loopedGenerator), activeNoteList);
+    auto offsetGenerator = std::make_unique<OffsetMidiEventGenerator> (std::move (loopedGenerator), sequenceOffset.inBeats());
+    generator = std::make_unique<ActiveNoteGenerator> (std::move (offsetGenerator), activeNoteList);
 
     controllerMessagesScratchBuffer.ensureStorageAllocated (32);
 }

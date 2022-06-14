@@ -1891,8 +1891,10 @@ juce::MidiMessageSequence MidiList::createDefaultPlaybackMidiSequence (const Mid
 
     // NB: allow extra space here in case the notes get quantised or nudged around later on..
     const auto overlapAllowance = 0.5_bd;
-    auto firstNoteBeat = toPosition (ts.toBeats (clip.getPosition().getStart()) - midiStartBeat - overlapAllowance);
-    auto lastNoteBeat  = toPosition (ts.toBeats (clip.getPosition().getEnd())   - midiStartBeat + overlapAllowance);
+    auto firstNoteBeat = timeBase == TimeBase::beatsRaw ? list.getFirstBeatNumber() - overlapAllowance
+                                                        : toPosition (ts.toBeats (clip.getPosition().getStart()) - midiStartBeat - overlapAllowance);
+    auto lastNoteBeat  = timeBase == TimeBase::beatsRaw ? list.getLastBeatNumber() + overlapAllowance
+                                                        : toPosition (ts.toBeats (clip.getPosition().getEnd())   - midiStartBeat + overlapAllowance);
 
     auto& notes = list.getNotes();
     const auto numNotes = notes.size();
