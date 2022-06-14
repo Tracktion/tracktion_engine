@@ -907,34 +907,6 @@ int TracktionThumbnail::getNumberOfThumbSamples(int channel)
     return sizeInSamples - startThumbSampleIndex;
 }
 
-
-void TracktionThumbnail::getThumbnailAverageValues(int8_t* averageValues, uint32_t length)
-{
-    const juce::ScopedLock sl(lock);
-
-    //The length that unity assigns should match the current thumbnail state
-    if (length != numChannels * numberOfThumbSamplesPerChannelToRead)
-        return;
-
-    //channel interleaved implementation
-    for (int i = 0; i < numberOfThumbSamplesPerChannelToRead * numChannels;)
-    {
-        for (int ch = 0; ch < numChannels; ch++)
-        {
-            auto minMaxValuesPtr = channels[ch]->getData(startThumbSampleIndex);
-
-            int minVal = minMaxValuesPtr[i].getMinValue();
-            int maxVal = minMaxValuesPtr[i].getMaxValue();
-            averageValues[i + ch] = (int8_t)((minVal + maxVal) / 2);
-        }
-        i = i + numChannels;
-    }
-       
-    //update thumbnail state
-    startThumbSampleIndex += numberOfThumbSamplesPerChannelToRead;
-    numberOfThumbSamplesPerChannelToRead = 0;
-}
-
 void TracktionThumbnail::getThumbnailMinMaxValues(int8_t* minValues, int8_t* maxValues, uint32_t length)
 {
     const juce::ScopedLock sl(lock);
