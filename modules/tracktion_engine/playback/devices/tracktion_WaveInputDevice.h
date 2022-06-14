@@ -137,6 +137,68 @@ public:
 
     Engine& engine;
 
+    // BEATCONNECT MODIFICATION START
+    struct AudioFifo
+    {
+        #define AUDIOFIFO_SIZE  256
+
+        AudioFifo()
+        {
+            memset(m_Buffer, 0, AUDIOFIFO_SIZE);
+        }
+
+        void addToFifo(const juce::AudioBuffer<float>* someData, int numItems)
+        {
+            int start1, size1, start2, size2;
+            m_AbstractFifo.prepareToWrite(numItems, start1, size1, start2, size2);
+
+            if (size1 > 0)
+            {
+                // memcpy(m_Buffer + start1, someData, size1);
+                for (int i = start1; i < start1 + size1; i++)
+                    m_Buffer[i] = *someData;
+            }
+
+            if (size2 > 0)
+            {
+                // memcpy(m_Buffer + start2, someData + size1, size2);
+                for (int i = start2; i < start2 + size2; i++)
+                    m_Buffer[i] = *(someData + size1);
+            }
+
+            m_AbstractFifo.finishedWrite(size1 + size2);
+        }
+
+        void readFromFifo(juce::AudioBuffer<float>* someData, int numItems)
+        {
+            int start1, size1, start2, size2;
+            m_AbstractFifo.prepareToRead(numItems, start1, size1, start2, size2);
+
+            if (size1 > 0)
+            {
+                // memcpy(someData, m_Buffer + start1, size1);
+                int j = 0;
+                for (int i = start1; i < start1 + size1; i++, j++)
+                    someData[j] = m_Buffer[i];
+            }
+
+            if (size2 > 0)
+            {
+                // memcpy(someData + size1, m_Buffer + start2, size2);
+                int j = 0;
+                for (int i = start2; i < start2 + size2; i++, j++)
+                    (someData + size1)[j] = m_Buffer[i];
+            }
+
+            m_AbstractFifo.finishedRead(size1 + size2);
+        }
+
+        juce::AbstractFifo m_AbstractFifo{ AUDIOFIFO_SIZE };
+        juce::AudioBuffer<float> m_Buffer[AUDIOFIFO_SIZE];
+    } 
+    m_AudioFifo;
+    // BEATCONNECT MODIFICATION END
+
 private:
     int activeUsers = 0;
     bool hasWarned = false, hasSentStop = false;

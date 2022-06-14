@@ -1707,6 +1707,12 @@ void WaveInputRecordingThread::run()
 
             if (block->thumbnail != nullptr)
             {
+                // BEATCONNECT MODIFICATION START
+                // DBG("Write buffer : " << block->buffer.getNumSamples());
+                if (block->buffer.getNumSamples() > 0)
+                    m_AudioFifo.addToFifo(&block->buffer, 1);
+                // BEATCONNECT MODIFICATION END
+
                 block->thumbnail->addBlock (block->buffer, 0, block->buffer.getNumSamples());
                 block->thumbnail = nullptr;
             }
