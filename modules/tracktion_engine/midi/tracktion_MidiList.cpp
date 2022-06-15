@@ -363,7 +363,8 @@ static void addToSequence (juce::MidiMessageSequence& seq, const MidiClip& clip,
         {
             case MidiList::TimeBase::beatsRaw:  return note.getStartBeat().inBeats();
             case MidiList::TimeBase::beats:     return note.getPlaybackBeats (MidiNote::startEdge, clip, grooveTemplate).inBeats();
-            case MidiList::TimeBase::seconds:   return note.getPlaybackTime (MidiNote::startEdge, clip, grooveTemplate).inSeconds();
+            case MidiList::TimeBase::seconds:   [[ fallthrough ]];
+            default:                            return note.getPlaybackTime (MidiNote::startEdge, clip, grooveTemplate).inSeconds();
         }
     }();
 
