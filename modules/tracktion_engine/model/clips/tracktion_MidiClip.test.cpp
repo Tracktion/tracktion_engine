@@ -85,6 +85,11 @@ private:
                 ScopedBenchmark sb (getDescription ("Calculate looped sequence in beats"));
                 [[ maybe_unused ]] auto playbackSeq = c->getSequenceLooped().exportToPlaybackMidiSequence (*c, MidiList::TimeBase::beats, false);
             }
+
+            {
+                ScopedBenchmark sb (getDescription ("Calculate looped sequence in beats raw"));
+                [[ maybe_unused ]] auto playbackSeq = c->getSequenceLooped().exportToPlaybackMidiSequence (*c, MidiList::TimeBase::beatsRaw, false);
+            }
         }
     }
 };

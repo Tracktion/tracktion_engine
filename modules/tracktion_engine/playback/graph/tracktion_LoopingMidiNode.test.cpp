@@ -41,6 +41,8 @@ private:
     //==============================================================================
     void runMidiTests (test_utilities::TestSetup ts)
     {
+        beginTest ("Setup");
+
         // Create a random sequence, loop it, render it and check its the same when proxy is on/off
         auto& engine = *tracktion::engine::Engine::getEngines()[0];
         auto edit = Edit::createSingleTrackEdit (engine);
@@ -58,22 +60,47 @@ private:
         const auto loopEnd      = 16.0 - (1.0 + r.nextDouble() * 3.0);
         mc->setLoopRangeBeats ({ BeatPosition::fromBeats (loopStart), BeatPosition::fromBeats (loopEnd) });
 
-        // Loop for 1 min
-        mc->setEnd (60_tp, true);
+        // Loop for 30s
+        mc->setEnd (30_tp, true);
 
-        auto renderOpts = RenderOptions::forClipRender ({ mc.get() }, true);
+        // Basic sequence
+        beginTest ("Looped sequence");
+        testMidiClip (*mc, ts);
+
+        // Quantised sequence
+        beginTest ("Quantised sequence");
+        QuantisationType quantisation;
+        quantisation.setType ("1/16");
+        mc->setQuantisation (quantisation);
+        testMidiClip (*mc, ts);
+
+        // Grooved sequence
+        beginTest ("Grooved sequence");
+        auto& gtm = engine.getGrooveTemplateManager();
+        expect (gtm.getNumTemplates() > 0);
+        mc->setGrooveTemplate (gtm.getTemplateName (0));
+        mc->setGrooveStrength (1.0f);
+        testMidiClip (*mc, ts);
+    }
+
+    void testMidiClip (MidiClip& mc, test_utilities::TestSetup ts)
+    {
+        auto renderOpts = RenderOptions::forClipRender ({ &mc }, true);
         renderOpts->setFormat (RenderOptions::midi);
         renderOpts->setIncludePlugins (false);
-        auto params = renderOpts->getRenderParameters (*mc);
+        auto params = renderOpts->getRenderParameters (mc);
         params.sampleRateForAudio = ts.sampleRate;
         params.blockSizeForAudio = ts.blockSize;
 
         juce::TemporaryFile t1, t2;
+
+        mc.setUsesProxy (true);
+        expect (mc.canUseProxy());
         params.destFile = t1.getFile();
         const auto seqWithProxyFile = Renderer::renderToFile ("proxy", params);
 
-        mc->setUsesProxy (false);
-        expect (! mc->canUseProxy());
+        mc.setUsesProxy (false);
+        expect (! mc.canUseProxy());
         params.destFile = t2.getFile();
         const auto seqWithoutProxyFile = Renderer::renderToFile ("non-proxy", params);
 
