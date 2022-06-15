@@ -219,8 +219,6 @@ public:
 
     virtual bool exhausted() = 0;
     virtual juce::MidiMessage getEvent() = 0;
-
-    double getTimeStamp() { return getEvent().getTimeStamp(); }
 };
 
 
@@ -383,7 +381,9 @@ public:
 
     juce::MidiMessage getEvent() override
     {
-        return { generator.getEvent(), generator.getTimeStamp() - cachedSequenceOffset };
+        auto e = generator.getEvent();
+        e.addToTimeStamp (-cachedSequenceOffset);
+        return e;
     }
 
     bool advance() override
@@ -457,7 +457,10 @@ public:
     juce::MidiMessage getEvent() override
     {
         const auto offsetBeats = clipRange.getStart() - loopTimes.getStart() + (loopIndex * loopTimes.getLength());
-        return { generator->getEvent(), generator->getTimeStamp() + offsetBeats };
+
+        auto e = generator->getEvent();
+        e.addToTimeStamp (offsetBeats);
+        return e;
     }
 
     bool advance() override
@@ -533,7 +536,9 @@ public:
 
     juce::MidiMessage getEvent() override
     {
-        return { generator->getEvent(), generator->getTimeStamp() - clipOffset };
+        auto e = generator->getEvent();
+        e.addToTimeStamp (-clipOffset);
+        return e;
     }
 
     bool advance() override
