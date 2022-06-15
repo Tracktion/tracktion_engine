@@ -610,8 +610,8 @@ std::unique_ptr<tracktion::graph::Node> createNodeForMidiClip (MidiClip& clip, c
 {
     CRASH_TRACER
     const bool generateMPE = clip.getMPEMode();
-    const auto timeBase = /*dddclip.canUseProxy() ? MidiList::TimeBase::seconds
-                                             : */MidiList::TimeBase::beatsRaw;
+    const auto timeBase = clip.canUseProxy() ? MidiList::TimeBase::seconds
+                                             : MidiList::TimeBase::beatsRaw;
 
     const auto channels = generateMPE ? juce::Range<int> (2, 15)
                                       : juce::Range<int>::withStartAndLength (clip.getMidiChannel().getChannelNumber(), 1);
@@ -630,6 +630,9 @@ std::unique_ptr<tracktion::graph::Node> createNodeForMidiClip (MidiClip& clip, c
                                                  clip.getLiveClipLevel(),
                                                  params.processState,
                                                  clip.itemID,
+                                                 clip.getQuantisation(),
+                                                 clip.edit.engine.getGrooveTemplateManager().getTemplateByName (clip.getGrooveTemplate()),
+                                                 clip.getGrooveStrength(),
                                                  [&trackMuteState]
                                                  {
                                                       if (! trackMuteState.shouldTrackBeAudible())

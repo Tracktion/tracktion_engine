@@ -33,6 +33,9 @@ public:
                      LiveClipLevel,
                      ProcessState&,
                      EditItemID,
+                     const QuantisationType&,
+                     const GrooveTemplate* groove,
+                     float grooveStrength,
                      std::function<bool()> shouldBeMutedDelegate = nullptr);
 
     tracktion::graph::NodeProperties getNodeProperties() override;
@@ -44,7 +47,6 @@ private:
     //==============================================================================
     std::unique_ptr<MidiGenerator> generator;
     std::shared_ptr<ActiveNoteList> activeNoteList;
-    int64_t lastStart = 0;
     juce::Range<int> channelNumbers;
     bool useMPEChannelMode;
     const BeatRange editRange;

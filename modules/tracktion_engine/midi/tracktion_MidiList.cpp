@@ -379,7 +379,8 @@ static void addToSequence (juce::MidiMessageSequence& seq, const MidiClip& clip,
             {
                 case MidiList::TimeBase::beatsRaw:  return note.getEndBeat().inBeats();
                 case MidiList::TimeBase::beats:     return note.getPlaybackBeats (MidiNote::endEdge, clip, grooveTemplate).inBeats();
-                case MidiList::TimeBase::seconds:   return note.getPlaybackTime (MidiNote::endEdge, clip, grooveTemplate).inSeconds();
+                case MidiList::TimeBase::seconds:   [[ fallthrough ]];
+                default:                            return note.getPlaybackTime (MidiNote::endEdge, clip, grooveTemplate).inSeconds();
             }
         }();
 
@@ -404,7 +405,8 @@ static void addToSequence (juce::MidiMessageSequence& seq, const MidiClip& clip,
                           {
                               case MidiList::TimeBase::beatsRaw:  return controller.getBeatPosition().inBeats();
                               case MidiList::TimeBase::beats:     return std::max (0_bp, controller.getEditBeats (clip) - toDuration (clip.getStartBeat())).inBeats();
-                              case MidiList::TimeBase::seconds:   return std::max (0_tp, controller.getEditTime (clip) - toDuration (clip.getPosition().getStart())).inSeconds();
+                              case MidiList::TimeBase::seconds:   [[ fallthrough ]];
+                              default:                            return std::max (0_tp, controller.getEditTime (clip) - toDuration (clip.getPosition().getStart())).inSeconds();
                           }
                       }();
 
@@ -457,7 +459,8 @@ static void addToSequence (juce::MidiMessageSequence& seq, const MidiClip& clip,
                           {
                               case MidiList::TimeBase::beatsRaw:  return sysex.getBeatPosition().inBeats();
                               case MidiList::TimeBase::beats:     return std::max (0_bp, sysex.getEditBeats (clip) - toDuration (clip.getStartBeat())).inBeats();
-                              case MidiList::TimeBase::seconds:   return std::max (0_tp, sysex.getEditTime (clip) - toDuration (clip.getPosition().getStart())).inSeconds();
+                              case MidiList::TimeBase::seconds:   [[ fallthrough ]];
+                              default:                            return std::max (0_tp, sysex.getEditTime (clip) - toDuration (clip.getPosition().getStart())).inSeconds();
                           }
                       }();
     auto m = sysex.getMessage();
