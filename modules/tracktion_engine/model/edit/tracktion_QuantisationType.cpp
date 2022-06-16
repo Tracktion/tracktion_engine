@@ -71,6 +71,14 @@ QuantisationType& QuantisationType::operator= (const QuantisationType& other)
     return *this;
 }
 
+bool QuantisationType::operator== (const QuantisationType& o) const
+{
+    return proportion == o.proportion
+        && typeIndex == o.typeIndex
+        && fractionOfBeat == o.fractionOfBeat
+        && quantiseNoteOffs == o.quantiseNoteOffs;
+}
+
 void QuantisationType::initialiseCachedValues (juce::UndoManager* um)
 {
     state.addListener (this);

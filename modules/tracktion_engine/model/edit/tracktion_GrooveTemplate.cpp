@@ -48,6 +48,14 @@ GrooveTemplate::~GrooveTemplate()
 {
 }
 
+bool GrooveTemplate::operator== (const GrooveTemplate& o) const
+{
+    return latenesses == o.latenesses
+        && numNotes == o.numNotes
+        && notesPerBeat == o.notesPerBeat
+        && parameterized == o.parameterized;
+}
+
 bool GrooveTemplate::isParameterized() const
 {
     return parameterized;

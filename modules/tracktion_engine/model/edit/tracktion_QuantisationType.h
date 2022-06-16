@@ -24,6 +24,7 @@ public:
 
     QuantisationType (const QuantisationType&);
     QuantisationType& operator= (const QuantisationType&);
+    bool operator== (const QuantisationType&) const;
 
     void applyQuantisationToSequence (juce::MidiMessageSequence&, Edit&, TimePosition sequenceStartOffset);
 

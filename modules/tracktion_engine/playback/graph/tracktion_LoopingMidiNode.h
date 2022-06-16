@@ -11,7 +11,7 @@
 namespace tracktion { inline namespace engine
 {
 
-class MidiGenerator;
+class GeneratorAndNoteList;
 
 //==============================================================================
 //==============================================================================
@@ -34,7 +34,7 @@ public:
                      ProcessState&,
                      EditItemID,
                      const QuantisationType&,
-                     const GrooveTemplate* groove,
+                     const GrooveTemplate*,
                      float grooveStrength,
                      std::function<bool()> shouldBeMutedDelegate = nullptr);
 
@@ -45,21 +45,16 @@ public:
 
 private:
     //==============================================================================
-    std::unique_ptr<MidiGenerator> generator;
-    std::shared_ptr<ActiveNoteList> activeNoteList;
+    std::unique_ptr<GeneratorAndNoteList> generatorAndNoteList;
     juce::Range<int> channelNumbers;
     bool useMPEChannelMode;
     const BeatRange editRange;
-    BeatRange loopRange;
-    const BeatDuration offset;
     LiveClipLevel clipLevel;
     EditItemID editItemID;
     std::function<bool()> shouldBeMutedDelegate = nullptr;
 
     MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
-    bool wasMute = false, shouldCreateMessagesForTime = false;
-
-    juce::Array<juce::MidiMessage> controllerMessagesScratchBuffer;
+    bool wasMute = false;
 };
 
 }} // namespace tracktion { inline namespace engine
