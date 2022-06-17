@@ -176,7 +176,7 @@ namespace TestRunner
         tests.addArray (UnitTest::getTestsInCategory ("tracktion_core"));
         tests.addArray (UnitTest::getTestsInCategory ("tracktion_graph"));
         tests.addArray (UnitTest::getTestsInCategory ("Tracktion"));
-//ddd        tests.addArray (UnitTest::getTestsInCategory ("Tracktion:Longer"));
+        tests.addArray (UnitTest::getTestsInCategory ("Tracktion:Longer"));
         
         const auto startTime = Time::getCurrentTime();
         testRunner.runTests (tests);
