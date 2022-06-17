@@ -1,0 +1,13 @@
+<map id="tracktion::engine::ControlSurface" name="tracktion::engine::ControlSurface">
+<area shape="rect" id="node1" title="Base class for types of control surface." alt="" coords="193,201,333,243"/>
+<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1AlphaTrackControlSurface.html" title=" " alt="" coords="381,5,571,47"/>
+<area shape="rect" id="node4" href="$classtracktion_1_1engine_1_1CustomControlSurface.html" title=" " alt="" coords="392,71,560,112"/>
+<area shape="rect" id="node5" href="$classtracktion_1_1engine_1_1MackieC4.html" title=" " alt="" coords="406,136,546,177"/>
+<area shape="rect" id="node6" href="$classtracktion_1_1engine_1_1MackieMCU.html" title=" " alt="" coords="406,201,546,243"/>
+<area shape="rect" id="node8" href="$classtracktion_1_1engine_1_1MackieXT.html" title=" " alt="" coords="406,267,546,308"/>
+<area shape="rect" id="node9" href="$classtracktion_1_1engine_1_1NovationRemoteSl.html" title=" " alt="" coords="404,332,548,373"/>
+<area shape="rect" id="node11" href="$classtracktion_1_1engine_1_1TranzportControlSurface.html" title=" " alt="" coords="387,397,565,439"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="5,201,145,243"/>
+<area shape="rect" id="node7" href="$classtracktion_1_1engine_1_1IconProG2.html" title=" " alt="" coords="622,201,762,243"/>
+<area shape="rect" id="node10" href="$classtracktion_1_1engine_1_1RemoteSLCompact.html" title=" " alt="" coords="619,332,765,373"/>
+</map>

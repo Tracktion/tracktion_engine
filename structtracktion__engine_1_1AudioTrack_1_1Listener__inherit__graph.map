@@ -1,4 +1,0 @@
-<map id="tracktion_engine::AudioTrack::Listener" name="tracktion_engine::AudioTrack::Listener">
-<area shape="rect" id="node1" title="Listener interface to be notified of recorded MIDI being sent to the plugins." alt="" coords="5,5,216,47"/>
-<area shape="rect" id="node2" href="$classtracktion__engine_1_1LiveMidiInjectingNode.html" title="A Node that injects MIDI message in to the stream, for keyboard key entry, note previews and MIDI ste..." alt="" coords="13,95,208,136"/>
-</map>

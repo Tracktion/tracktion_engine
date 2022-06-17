@@ -1,0 +1,10 @@
+<map id="tracktion::engine::ThreadPoolJobWithProgress" name="tracktion::engine::ThreadPoolJobWithProgress">
+<area shape="rect" id="node1" title=" " alt="" coords="5,119,207,161"/>
+<area shape="rect" id="node2" href="$structtracktion_1_1engine_1_1AudioProxyGenerator_1_1GeneratorJob.html" title=" " alt="" coords="256,5,417,61"/>
+<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1ExportJob.html" title=" " alt="" coords="267,86,407,127"/>
+<area shape="rect" id="node4" href="$classtracktion_1_1engine_1_1Renderer_1_1RenderTask.html" title="Task that actually performs the render operation in blocks." alt="" coords="255,151,419,193"/>
+<area shape="rect" id="node5" href="$classtracktion_1_1engine_1_1RenderManager_1_1Job.html" title="The base class that all generator jobs derive from." alt="" coords="260,217,413,258"/>
+<area shape="rect" id="node6" href="$classtracktion_1_1engine_1_1EditRenderJob.html" title=" " alt="" coords="474,151,614,193"/>
+<area shape="rect" id="node7" href="$classtracktion_1_1engine_1_1ReverseRenderJob.html" title=" " alt="" coords="473,217,615,258"/>
+<area shape="rect" id="node8" href="$classtracktion_1_1engine_1_1WarpTimeRenderJob.html" title=" " alt="" coords="467,282,621,323"/>
+</map>

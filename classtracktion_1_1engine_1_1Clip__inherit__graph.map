@@ -1,0 +1,15 @@
+<map id="tracktion::engine::Clip" name="tracktion::engine::Clip">
+<area shape="rect" id="node1" title="A clip in an edit." alt="" coords="381,177,547,203"/>
+<area shape="rect" id="node6" href="$classtracktion_1_1engine_1_1ArrangerClip.html" title=" " alt="" coords="595,5,735,47"/>
+<area shape="rect" id="node7" href="$classtracktion_1_1engine_1_1AudioClipBase.html" title="Base class for Clips that produce some kind of audio e.g." alt="" coords="595,71,735,112"/>
+<area shape="rect" id="node10" href="$classtracktion_1_1engine_1_1ChordClip.html" title=" " alt="" coords="595,136,735,177"/>
+<area shape="rect" id="node11" href="$classtracktion_1_1engine_1_1MarkerClip.html" title=" " alt="" coords="595,201,735,243"/>
+<area shape="rect" id="node12" href="$classtracktion_1_1engine_1_1MidiClip.html" title=" " alt="" coords="595,267,735,308"/>
+<area shape="rect" id="node13" href="$classtracktion_1_1engine_1_1StepClip.html" title=" " alt="" coords="595,332,735,373"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1TrackItem.html" title="Base class for EditItems that live in a Track, e.g." alt="" coords="193,136,333,177"/>
+<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g." alt="" coords="5,104,145,145"/>
+<area shape="rect" id="node4" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="5,169,145,211"/>
+<area shape="rect" id="node5" href="$classtracktion_1_1engine_1_1Exportable.html" title="An interface for objects within an edit that can be exported." alt="" coords="193,201,333,243"/>
+<area shape="rect" id="node8" href="$classtracktion_1_1engine_1_1EditClip.html" title="This is the main source of an Edit clip and is responsible for managing its properties." alt="" coords="783,39,923,80"/>
+<area shape="rect" id="node9" href="$classtracktion_1_1engine_1_1WaveAudioClip.html" title="An audio clip that uses an audio file as its source." alt="" coords="783,104,923,145"/>
+</map>

@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['gainfade_13009',['gainFade',['../classtracktion__engine_1_1AudioClipBase.html#a78fd00ca9bc2d5291139eb2c7e6a2c5baf7a04918139d777044b363d0d4f03b5e',1,'tracktion_engine::AudioClipBase']]],
-  ['glidelength_13010',['glideLength',['../namespacetracktion__engine.html#a621c43a54efb4eb950c0b1cad5e97eaca13cdced4c5e7c68ee57a6667491a2fa4',1,'tracktion_engine']]],
-  ['groovetemplates_13011',['grooveTemplates',['../namespacetracktion__engine.html#a621c43a54efb4eb950c0b1cad5e97eacacb2c1d30fff1f26672afd4f682e279fe',1,'tracktion_engine']]],
-  ['group_13012',['Group',['../classtracktion__engine_1_1AutomatableParameterTree.html#ae2cc80a091deed4407517e89007ab453a46a68811ee685370d646a0a81a8c560c',1,'tracktion_engine::AutomatableParameterTree']]],
-  ['groupfreeze_13013',['groupFreeze',['../classtracktion__engine_1_1Track.html#a08c9e5775ff105835e103e955ca29dd1a13589841e89bbe72e29bfe639ae50ea7',1,'tracktion_engine::Track']]]
+  ['gainfade_12987',['gainFade',['../classtracktion_1_1engine_1_1AudioClipBase.html#a02bb26c86c226f50eae674e40ab39ddca5926118a95d7c0a60556e8e3f7ff4252',1,'tracktion::engine::AudioClipBase']]],
+  ['glidelength_12988',['glideLength',['../namespacetracktion_1_1engine.html#aef0092bdbd8a28c3968f7f81912f815ea13cdced4c5e7c68ee57a6667491a2fa4',1,'tracktion::engine']]],
+  ['groovetemplates_12989',['grooveTemplates',['../namespacetracktion_1_1engine.html#aef0092bdbd8a28c3968f7f81912f815eacb2c1d30fff1f26672afd4f682e279fe',1,'tracktion::engine']]],
+  ['group_12990',['Group',['../classtracktion_1_1engine_1_1AutomatableParameterTree.html#a7fae26c556e0bb8413d916eb3e9aa484afc71e51f42a7defdad27ed479e8f2f50',1,'tracktion::engine::AutomatableParameterTree']]],
+  ['groupfreeze_12991',['groupFreeze',['../classtracktion_1_1engine_1_1Track.html#a66a906a4bc31c0cd0233d75b6fb4bc91a88d42ec012865602a3056590e370f70b',1,'tracktion::engine::Track']]]
 ];

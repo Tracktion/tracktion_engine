@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span><span class="lineNoCov">          0 : ExternalController::ExternalController (Engine&amp; e, ControlSurface* c)  : engine (e), controlSurface (c)</span></a>
@@ -732,7 +732,7 @@
 <a name="670"><span class="lineNum">     670 </span><span class="lineNoCov">          0 :     if (auto tc = getTransport())</span></a>
 <a name="671"><span class="lineNum">     671 </span>            :         if (auto ed = getEdit())</a>
 <a name="672"><span class="lineNum">     672 </span><span class="lineNoCov">          0 :             if (auto mc = ed-&gt;getMarkerManager().getMarkers().getObjectPointer (marker + startMarkerNumber))</span></a>
-<a name="673"><span class="lineNum">     673 </span><span class="lineNoCov">          0 :                 tc-&gt;setCurrentPosition (mc-&gt;getPosition().getStart());</span></a>
+<a name="673"><span class="lineNum">     673 </span><span class="lineNoCov">          0 :                 tc-&gt;setPosition (mc-&gt;getPosition().getStart());</span></a>
 <a name="674"><span class="lineNum">     674 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="675"><span class="lineNum">     675 </span>            : </a>
 <a name="676"><span class="lineNum">     676 </span><span class="lineNoCov">          0 : void ExternalController::updateParameters()</span></a>
@@ -1401,7 +1401,7 @@
 <a name="1339"><span class="lineNum">    1339 </span><span class="lineNoCov">          0 :     return result.substring (0, maxLen);</span></a>
 <a name="1340"><span class="lineNum">    1340 </span>            : }</a>
 <a name="1341"><span class="lineNum">    1341 </span>            : </a>
-<a name="1342"><span class="lineNum">    1342 </span>            : }</a>
+<a name="1342"><span class="lineNum">    1342 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

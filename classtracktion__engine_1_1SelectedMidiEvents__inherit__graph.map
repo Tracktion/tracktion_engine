@@ -1,4 +1,0 @@
-<map id="tracktion_engine::SelectedMidiEvents" name="tracktion_engine::SelectedMidiEvents">
-<area shape="rect" id="node1" title="Represents a set of selected MIDI notes." alt="" coords="11,80,206,121"/>
-<area shape="rect" id="node2" href="$classtracktion__engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="5,5,212,32"/>
-</map>

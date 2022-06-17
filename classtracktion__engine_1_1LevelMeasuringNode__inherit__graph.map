@@ -1,4 +1,0 @@
-<map id="tracktion_engine::LevelMeasuringNode" name="tracktion_engine::LevelMeasuringNode">
-<area shape="rect" id="node1" title="A Node that passes its incomming audio and MIDI through a LevelMeasurer." alt="" coords="5,80,281,107"/>
-<area shape="rect" id="node2" href="$classtracktion__graph_1_1Node.html" title="Main graph Node processor class." alt="" coords="60,5,227,32"/>
-</map>

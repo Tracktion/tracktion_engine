@@ -1,9 +1,9 @@
 var searchData=
 [
-  ['mergemode_12777',['MergeMode',['../classtracktion__engine_1_1MidiInputDevice.html#aea8b5a0f437a390621e3b0cd9991e6f4',1,'tracktion_engine::MidiInputDevice']]],
-  ['mode_12778',['Mode',['../classtracktion__engine_1_1PatternGenerator.html#ac6f8919585281ff61acb1ceaa58cf354',1,'tracktion_engine::PatternGenerator::Mode()'],['../classtracktion__engine_1_1MIDITrackerModifier.html#a9172427cd295dc1cd3a715e45d33201a',1,'tracktion_engine::MIDITrackerModifier::Mode()'],['../classtracktion__engine_1_1LevelMeasurer.html#a72e36717aa0d4926c5a3b3995c3218fa',1,'tracktion_engine::LevelMeasurer::Mode()'],['../classtracktion__engine_1_1TimeStretcher.html#a867fc09d026f0019c3b2feac9b6acb0b',1,'tracktion_engine::TimeStretcher::Mode()']]],
-  ['modsource_12779',['ModSource',['../classtracktion__engine_1_1FourOscPlugin.html#abd9fd2c168fd8b282fff0fdffaa2de9d',1,'tracktion_engine::FourOscPlugin']]],
-  ['moveclipaction_12780',['MoveClipAction',['../namespacetracktion__engine.html#acd25807c96b4f856485e08678a4725fb',1,'tracktion_engine']]],
-  ['multithreaded_12781',['MultiThreaded',['../namespacetracktion__engine_1_1benchmark__utilities.html#a9e1f609633d3a31cb10d2da031eda07b',1,'tracktion_engine::benchmark_utilities']]],
-  ['muteandsololightstate_12782',['MuteAndSoloLightState',['../classtracktion__engine_1_1Track.html#a63b8fd4800f10b56f9c00902d0d1c702',1,'tracktion_engine::Track']]]
+  ['mergemode_12751',['MergeMode',['../classtracktion_1_1engine_1_1MidiInputDevice.html#a43580ddbc607e05168cd78e36f9df151',1,'tracktion::engine::MidiInputDevice']]],
+  ['mode_12752',['Mode',['../classtracktion_1_1engine_1_1PatternGenerator.html#a87e3536a690758ecd3435e00a2a01086',1,'tracktion::engine::PatternGenerator::Mode()'],['../classtracktion_1_1engine_1_1MIDITrackerModifier.html#a4600a89f9295c8b0e9c7b6df6614da86',1,'tracktion::engine::MIDITrackerModifier::Mode()'],['../classtracktion_1_1engine_1_1LevelMeasurer.html#a3ddbe3b40b23e1b24d9032a51c04294a',1,'tracktion::engine::LevelMeasurer::Mode()'],['../classtracktion_1_1engine_1_1TimeStretcher.html#aef6990d119f230d6c5ffb78f4470c79e',1,'tracktion::engine::TimeStretcher::Mode()']]],
+  ['modsource_12753',['ModSource',['../classtracktion_1_1engine_1_1FourOscPlugin.html#a3ee8e2d778f393a87c3ef50a0bdd94cc',1,'tracktion::engine::FourOscPlugin']]],
+  ['moveclipaction_12754',['MoveClipAction',['../namespacetracktion_1_1engine.html#addf8245ddf875ad562228c1b4911c5ee',1,'tracktion::MoveClipAction()'],['../namespacetracktion_1_1engine.html#addf8245ddf875ad562228c1b4911c5ee',1,'tracktion::engine::MoveClipAction()']]],
+  ['multithreaded_12755',['MultiThreaded',['../namespacetracktion_1_1engine_1_1benchmark__utilities.html#acbaa9c9a2c7b9d5a33c3dbc121968924',1,'tracktion::engine::benchmark_utilities']]],
+  ['muteandsololightstate_12756',['MuteAndSoloLightState',['../classtracktion_1_1engine_1_1Track.html#af2bbaf1bca5f5d7f9102746c0e1dd686',1,'tracktion::engine::Track']]]
 ];

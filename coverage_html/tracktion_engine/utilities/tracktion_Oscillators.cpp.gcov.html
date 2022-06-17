@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">22</td>
@@ -69,7 +69,7 @@
 <a name="7"><span class="lineNum">       7 </span>            : */</a>
 <a name="8"><span class="lineNum">       8 </span>            : </a>
 <a name="9"><span class="lineNum">       9 </span>            : </a>
-<a name="10"><span class="lineNum">      10 </span>            : namespace tracktion_engine</a>
+<a name="10"><span class="lineNum">      10 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="11"><span class="lineNum">      11 </span>            : {</a>
 <a name="12"><span class="lineNum">      12 </span>            : </a>
 <a name="13"><span class="lineNum">      13 </span>            : //==============================================================================</a>
@@ -135,21 +135,21 @@
 <a name="73"><span class="lineNum">      73 </span><span class="lineCov">       4096 :         lookupTables = BandlimitedWaveLookupTables::getLookupTables (sampleRate);</span></a>
 <a name="74"><span class="lineNum">      74 </span><span class="lineCov">       4096 : }</span></a>
 <a name="75"><span class="lineNum">      75 </span>            : </a>
-<a name="76"><span class="lineNum">      76 </span><span class="lineCov">      33056 : void Oscillator::process (juce::AudioBuffer&lt;float&gt;&amp; buffer, int startSample, int numSamples)</span></a>
+<a name="76"><span class="lineNum">      76 </span><span class="lineCov">      30848 : void Oscillator::process (juce::AudioBuffer&lt;float&gt;&amp; buffer, int startSample, int numSamples)</span></a>
 <a name="77"><span class="lineNum">      77 </span>            : {</a>
-<a name="78"><span class="lineNum">      78 </span><span class="lineCov">      33056 :     if (lookupTables != nullptr)</span></a>
+<a name="78"><span class="lineNum">      78 </span><span class="lineCov">      30848 :     if (lookupTables != nullptr)</span></a>
 <a name="79"><span class="lineNum">      79 </span>            :     {</a>
-<a name="80"><span class="lineNum">      80 </span><span class="lineCov">      33056 :         switch (wave)</span></a>
+<a name="80"><span class="lineNum">      80 </span><span class="lineCov">      30848 :         switch (wave)</span></a>
 <a name="81"><span class="lineNum">      81 </span>            :         {</a>
 <a name="82"><span class="lineNum">      82 </span>            :             case none:      break;</a>
 <a name="83"><span class="lineNum">      83 </span><span class="lineNoCov">          0 :             case sine:      processSine (buffer, startSample, numSamples);  break;</span></a>
 <a name="84"><span class="lineNum">      84 </span><span class="lineNoCov">          0 :             case square:    processSquare (buffer, startSample, numSamples);  break;</span></a>
 <a name="85"><span class="lineNum">      85 </span><span class="lineNoCov">          0 :             case saw:       processLookup (buffer, startSample, numSamples, lookupTables-&gt;sawUpFunctions);    break;</span></a>
-<a name="86"><span class="lineNum">      86 </span><span class="lineCov">      16528 :             case triangle:  processLookup (buffer, startSample, numSamples, lookupTables-&gt;triangleFunctions); break;</span></a>
+<a name="86"><span class="lineNum">      86 </span><span class="lineCov">      15424 :             case triangle:  processLookup (buffer, startSample, numSamples, lookupTables-&gt;triangleFunctions); break;</span></a>
 <a name="87"><span class="lineNum">      87 </span><span class="lineNoCov">          0 :             case noise:     processNoise (buffer, startSample, numSamples); break;</span></a>
 <a name="88"><span class="lineNum">      88 </span>            :         }</a>
 <a name="89"><span class="lineNum">      89 </span>            :     }</a>
-<a name="90"><span class="lineNum">      90 </span><span class="lineCov">      33056 : }</span></a>
+<a name="90"><span class="lineNum">      90 </span><span class="lineCov">      30848 : }</span></a>
 <a name="91"><span class="lineNum">      91 </span>            : </a>
 <a name="92"><span class="lineNum">      92 </span><span class="lineNoCov">          0 : void Oscillator::processSine (juce::AudioBuffer&lt;float&gt;&amp; buffer, int startSample, int numSamples)</span></a>
 <a name="93"><span class="lineNum">      93 </span>            : {</a>
@@ -186,36 +186,36 @@
 <a name="124"><span class="lineNum">     124 </span>            :     }</a>
 <a name="125"><span class="lineNum">     125 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="126"><span class="lineNum">     126 </span>            : </a>
-<a name="127"><span class="lineNum">     127 </span><span class="lineCov">      16528 : void Oscillator::processLookup (juce::AudioBuffer&lt;float&gt;&amp; buffer, int startSample, int numSamples,</span></a>
+<a name="127"><span class="lineNum">     127 </span><span class="lineCov">      15424 : void Oscillator::processLookup (juce::AudioBuffer&lt;float&gt;&amp; buffer, int startSample, int numSamples,</span></a>
 <a name="128"><span class="lineNum">     128 </span>            :                                 const juce::OwnedArray&lt;juce::dsp::LookupTableTransform&lt;float&gt;&gt;&amp; tableSet)</a>
 <a name="129"><span class="lineNum">     129 </span>            : {</a>
-<a name="130"><span class="lineNum">     130 </span><span class="lineCov">      16528 :     const float frequency = std::min (float (sampleRate) / 2.0f, 440.0f * std::pow (2.0f, (note - 69.0f) / 12.0f));</span></a>
-<a name="131"><span class="lineNum">     131 </span><span class="lineCov">      16528 :     const float period = 1.0f / float (frequency);</span></a>
-<a name="132"><span class="lineNum">     132 </span><span class="lineCov">      16528 :     const float periodInSamples = float (period * sampleRate);</span></a>
-<a name="133"><span class="lineNum">     133 </span><span class="lineCov">      16528 :     const float delta = 1.0f / periodInSamples;</span></a>
+<a name="130"><span class="lineNum">     130 </span><span class="lineCov">      15424 :     const float frequency = std::min (float (sampleRate) / 2.0f, 440.0f * std::pow (2.0f, (note - 69.0f) / 12.0f));</span></a>
+<a name="131"><span class="lineNum">     131 </span><span class="lineCov">      15424 :     const float period = 1.0f / float (frequency);</span></a>
+<a name="132"><span class="lineNum">     132 </span><span class="lineCov">      15424 :     const float periodInSamples = float (period * sampleRate);</span></a>
+<a name="133"><span class="lineNum">     133 </span><span class="lineCov">      15424 :     const float delta = 1.0f / periodInSamples;</span></a>
 <a name="134"><span class="lineNum">     134 </span>            : </a>
-<a name="135"><span class="lineNum">     135 </span><span class="lineCov">      16528 :     auto* channels = buffer.getArrayOfWritePointers();</span></a>
-<a name="136"><span class="lineNum">     136 </span><span class="lineCov">      16528 :     const int numChannels = buffer.getNumChannels();</span></a>
+<a name="135"><span class="lineNum">     135 </span><span class="lineCov">      15424 :     auto* channels = buffer.getArrayOfWritePointers();</span></a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineCov">      15424 :     const int numChannels = buffer.getNumChannels();</span></a>
 <a name="137"><span class="lineNum">     137 </span>            : </a>
-<a name="138"><span class="lineNum">     138 </span><span class="lineCov">      16528 :     int tableIndex = juce::jlimit (0, tableSet.size() - 1, int ((note - 0.5) / lookupTables-&gt;tablePerNumNotes));</span></a>
+<a name="138"><span class="lineNum">     138 </span><span class="lineCov">      15424 :     int tableIndex = juce::jlimit (0, tableSet.size() - 1, int ((note - 0.5) / lookupTables-&gt;tablePerNumNotes));</span></a>
 <a name="139"><span class="lineNum">     139 </span>            : </a>
 <a name="140"><span class="lineNum">     140 </span>            :     auto table = tableSet[tableIndex];</a>
 <a name="141"><span class="lineNum">     141 </span>            :     jassert (table != nullptr);</a>
 <a name="142"><span class="lineNum">     142 </span>            : </a>
-<a name="143"><span class="lineNum">     143 </span><span class="lineCov">      16528 :     if (table != nullptr)</span></a>
+<a name="143"><span class="lineNum">     143 </span><span class="lineCov">      15424 :     if (table != nullptr)</span></a>
 <a name="144"><span class="lineNum">     144 </span>            :     {</a>
-<a name="145"><span class="lineNum">     145 </span><span class="lineCov">     545424 :         for (int samp = 0; samp &lt; numSamples; samp++)</span></a>
+<a name="145"><span class="lineNum">     145 </span><span class="lineCov">     508992 :         for (int samp = 0; samp &lt; numSamples; samp++)</span></a>
 <a name="146"><span class="lineNum">     146 </span>            :         {</a>
-<a name="147"><span class="lineNum">     147 </span><span class="lineCov">     528896 :             float value = table-&gt;processSampleUnchecked (phase) * gain;</span></a>
-<a name="148"><span class="lineNum">     148 </span><span class="lineCov">    1057790 :             for (int ch = 0; ch &lt; numChannels; ch++)</span></a>
-<a name="149"><span class="lineNum">     149 </span><span class="lineCov">     528896 :                 channels[ch][startSample + samp] += value;</span></a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineCov">     493568 :             float value = table-&gt;processSampleUnchecked (phase) * gain;</span></a>
+<a name="148"><span class="lineNum">     148 </span><span class="lineCov">     987136 :             for (int ch = 0; ch &lt; numChannels; ch++)</span></a>
+<a name="149"><span class="lineNum">     149 </span><span class="lineCov">     493568 :                 channels[ch][startSample + samp] += value;</span></a>
 <a name="150"><span class="lineNum">     150 </span>            : </a>
-<a name="151"><span class="lineNum">     151 </span><span class="lineCov">     528896 :             phase += delta;</span></a>
-<a name="152"><span class="lineNum">     152 </span><span class="lineCov">     532194 :             while (phase &gt;= 1.0f)</span></a>
-<a name="153"><span class="lineNum">     153 </span><span class="lineCov">       3298 :                 phase -= 1.0f;</span></a>
+<a name="151"><span class="lineNum">     151 </span><span class="lineCov">     493568 :             phase += delta;</span></a>
+<a name="152"><span class="lineNum">     152 </span><span class="lineCov">     496646 :             while (phase &gt;= 1.0f)</span></a>
+<a name="153"><span class="lineNum">     153 </span><span class="lineCov">       3078 :                 phase -= 1.0f;</span></a>
 <a name="154"><span class="lineNum">     154 </span>            :         }</a>
 <a name="155"><span class="lineNum">     155 </span>            :     }</a>
-<a name="156"><span class="lineNum">     156 </span><span class="lineCov">      16528 : }</span></a>
+<a name="156"><span class="lineNum">     156 </span><span class="lineCov">      15424 : }</span></a>
 <a name="157"><span class="lineNum">     157 </span>            : </a>
 <a name="158"><span class="lineNum">     158 </span><span class="lineNoCov">          0 : void Oscillator::processSquare (juce::AudioBuffer&lt;float&gt;&amp; buffer, int startSample, int numSamples)</span></a>
 <a name="159"><span class="lineNum">     159 </span>            : {</a>
@@ -264,17 +264,17 @@
 <a name="202"><span class="lineNum">     202 </span><span class="lineCov">       4096 :         oscillators.add (new Oscillator());</span></a>
 <a name="203"><span class="lineNum">     203 </span><span class="lineCov">        128 : }</span></a>
 <a name="204"><span class="lineNum">     204 </span>            : </a>
-<a name="205"><span class="lineNum">     205 </span><span class="lineCov">         16 : void MultiVoiceOscillator::start()</span></a>
+<a name="205"><span class="lineNum">     205 </span><span class="lineCov">          8 : void MultiVoiceOscillator::start()</span></a>
 <a name="206"><span class="lineNum">     206 </span>            : {</a>
-<a name="207"><span class="lineNum">     207 </span><span class="lineCov">         16 :     static juce::Random r;</span></a>
+<a name="207"><span class="lineNum">     207 </span><span class="lineCov">          8 :     static juce::Random r;</span></a>
 <a name="208"><span class="lineNum">     208 </span>            : </a>
-<a name="209"><span class="lineNum">     209 </span><span class="lineCov">        144 :     for (int i = 0; i &lt; oscillators.size(); i += 2)</span></a>
+<a name="209"><span class="lineNum">     209 </span><span class="lineCov">         72 :     for (int i = 0; i &lt; oscillators.size(); i += 2)</span></a>
 <a name="210"><span class="lineNum">     210 </span>            :     {</a>
-<a name="211"><span class="lineNum">     211 </span><span class="lineCov">        128 :         float phase = r.nextFloat();</span></a>
+<a name="211"><span class="lineNum">     211 </span><span class="lineCov">         64 :         float phase = r.nextFloat();</span></a>
 <a name="212"><span class="lineNum">     212 </span>            :         oscillators[i + 0]-&gt;start (phase);</a>
-<a name="213"><span class="lineNum">     213 </span><span class="lineCov">        128 :         oscillators[i + 1]-&gt;start (phase);</span></a>
+<a name="213"><span class="lineNum">     213 </span><span class="lineCov">         64 :         oscillators[i + 1]-&gt;start (phase);</span></a>
 <a name="214"><span class="lineNum">     214 </span>            :     }</a>
-<a name="215"><span class="lineNum">     215 </span><span class="lineCov">         16 : }</span></a>
+<a name="215"><span class="lineNum">     215 </span><span class="lineCov">          8 : }</span></a>
 <a name="216"><span class="lineNum">     216 </span>            : </a>
 <a name="217"><span class="lineNum">     217 </span><span class="lineCov">        256 : void MultiVoiceOscillator::setSampleRate (double sr)</span></a>
 <a name="218"><span class="lineNum">     218 </span>            : {</a>
@@ -282,68 +282,68 @@
 <a name="220"><span class="lineNum">     220 </span><span class="lineCov">       4096 :         o-&gt;setSampleRate (sr);</span></a>
 <a name="221"><span class="lineNum">     221 </span><span class="lineCov">        256 : }</span></a>
 <a name="222"><span class="lineNum">     222 </span>            : </a>
-<a name="223"><span class="lineNum">     223 </span><span class="lineCov">      16544 : void MultiVoiceOscillator::setWave (Oscillator::Waves w)</span></a>
+<a name="223"><span class="lineNum">     223 </span><span class="lineCov">      15432 : void MultiVoiceOscillator::setWave (Oscillator::Waves w)</span></a>
 <a name="224"><span class="lineNum">     224 </span>            : {</a>
-<a name="225"><span class="lineNum">     225 </span><span class="lineCov">     281248 :     for (auto o : oscillators)</span></a>
+<a name="225"><span class="lineNum">     225 </span><span class="lineCov">     262344 :     for (auto o : oscillators)</span></a>
 <a name="226"><span class="lineNum">     226 </span>            :         o-&gt;setWave (w);</a>
-<a name="227"><span class="lineNum">     227 </span><span class="lineCov">      16544 : }</span></a>
+<a name="227"><span class="lineNum">     227 </span><span class="lineCov">      15432 : }</span></a>
 <a name="228"><span class="lineNum">     228 </span>            : </a>
-<a name="229"><span class="lineNum">     229 </span><span class="lineCov">      16544 : void MultiVoiceOscillator::setNote (float n)</span></a>
+<a name="229"><span class="lineNum">     229 </span><span class="lineCov">      15432 : void MultiVoiceOscillator::setNote (float n)</span></a>
 <a name="230"><span class="lineNum">     230 </span>            : {</a>
-<a name="231"><span class="lineNum">     231 </span><span class="lineCov">      16544 :     note = n;</span></a>
-<a name="232"><span class="lineNum">     232 </span><span class="lineCov">      16544 : }</span></a>
+<a name="231"><span class="lineNum">     231 </span><span class="lineCov">      15432 :     note = n;</span></a>
+<a name="232"><span class="lineNum">     232 </span><span class="lineCov">      15432 : }</span></a>
 <a name="233"><span class="lineNum">     233 </span>            : </a>
-<a name="234"><span class="lineNum">     234 </span><span class="lineCov">      16544 : void MultiVoiceOscillator::setGain (float g)</span></a>
+<a name="234"><span class="lineNum">     234 </span><span class="lineCov">      15432 : void MultiVoiceOscillator::setGain (float g)</span></a>
 <a name="235"><span class="lineNum">     235 </span>            : {</a>
-<a name="236"><span class="lineNum">     236 </span><span class="lineCov">      16544 :     gain = g;</span></a>
-<a name="237"><span class="lineNum">     237 </span><span class="lineCov">      16544 : }</span></a>
+<a name="236"><span class="lineNum">     236 </span><span class="lineCov">      15432 :     gain = g;</span></a>
+<a name="237"><span class="lineNum">     237 </span><span class="lineCov">      15432 : }</span></a>
 <a name="238"><span class="lineNum">     238 </span>            : </a>
-<a name="239"><span class="lineNum">     239 </span><span class="lineCov">      16544 : void MultiVoiceOscillator::setPan (float p)</span></a>
+<a name="239"><span class="lineNum">     239 </span><span class="lineCov">      15432 : void MultiVoiceOscillator::setPan (float p)</span></a>
 <a name="240"><span class="lineNum">     240 </span>            : {</a>
-<a name="241"><span class="lineNum">     241 </span><span class="lineCov">      16544 :     pan = p;</span></a>
-<a name="242"><span class="lineNum">     242 </span><span class="lineCov">      16544 : }</span></a>
+<a name="241"><span class="lineNum">     241 </span><span class="lineCov">      15432 :     pan = p;</span></a>
+<a name="242"><span class="lineNum">     242 </span><span class="lineCov">      15432 : }</span></a>
 <a name="243"><span class="lineNum">     243 </span>            : </a>
-<a name="244"><span class="lineNum">     244 </span><span class="lineCov">      16544 : void MultiVoiceOscillator::setPulseWidth (float p)</span></a>
+<a name="244"><span class="lineNum">     244 </span><span class="lineCov">      15432 : void MultiVoiceOscillator::setPulseWidth (float p)</span></a>
 <a name="245"><span class="lineNum">     245 </span>            : {</a>
-<a name="246"><span class="lineNum">     246 </span><span class="lineCov">     281248 :     for (auto o : oscillators)</span></a>
+<a name="246"><span class="lineNum">     246 </span><span class="lineCov">     262344 :     for (auto o : oscillators)</span></a>
 <a name="247"><span class="lineNum">     247 </span>            :         o-&gt;setPulseWidth (p);</a>
-<a name="248"><span class="lineNum">     248 </span><span class="lineCov">      16544 : }</span></a>
+<a name="248"><span class="lineNum">     248 </span><span class="lineCov">      15432 : }</span></a>
 <a name="249"><span class="lineNum">     249 </span>            : </a>
-<a name="250"><span class="lineNum">     250 </span><span class="lineCov">      16544 : void MultiVoiceOscillator::setNumVoices (int n)</span></a>
+<a name="250"><span class="lineNum">     250 </span><span class="lineCov">      15432 : void MultiVoiceOscillator::setNumVoices (int n)</span></a>
 <a name="251"><span class="lineNum">     251 </span>            : {</a>
-<a name="252"><span class="lineNum">     252 </span><span class="lineCov">      16544 :     voices = n;</span></a>
-<a name="253"><span class="lineNum">     253 </span><span class="lineCov">      16544 : }</span></a>
+<a name="252"><span class="lineNum">     252 </span><span class="lineCov">      15432 :     voices = n;</span></a>
+<a name="253"><span class="lineNum">     253 </span><span class="lineCov">      15432 : }</span></a>
 <a name="254"><span class="lineNum">     254 </span>            : </a>
-<a name="255"><span class="lineNum">     255 </span><span class="lineCov">      16544 : void MultiVoiceOscillator::setDetune (float d)</span></a>
+<a name="255"><span class="lineNum">     255 </span><span class="lineCov">      15432 : void MultiVoiceOscillator::setDetune (float d)</span></a>
 <a name="256"><span class="lineNum">     256 </span>            : {</a>
-<a name="257"><span class="lineNum">     257 </span><span class="lineCov">      16544 :     detune = d;</span></a>
-<a name="258"><span class="lineNum">     258 </span><span class="lineCov">      16544 : }</span></a>
+<a name="257"><span class="lineNum">     257 </span><span class="lineCov">      15432 :     detune = d;</span></a>
+<a name="258"><span class="lineNum">     258 </span><span class="lineCov">      15432 : }</span></a>
 <a name="259"><span class="lineNum">     259 </span>            : </a>
-<a name="260"><span class="lineNum">     260 </span><span class="lineCov">      16544 : void MultiVoiceOscillator::setSpread (float s)</span></a>
+<a name="260"><span class="lineNum">     260 </span><span class="lineCov">      15432 : void MultiVoiceOscillator::setSpread (float s)</span></a>
 <a name="261"><span class="lineNum">     261 </span>            : {</a>
-<a name="262"><span class="lineNum">     262 </span><span class="lineCov">      16544 :     spread = s;</span></a>
-<a name="263"><span class="lineNum">     263 </span><span class="lineCov">      16544 : }</span></a>
+<a name="262"><span class="lineNum">     262 </span><span class="lineCov">      15432 :     spread = s;</span></a>
+<a name="263"><span class="lineNum">     263 </span><span class="lineCov">      15432 : }</span></a>
 <a name="264"><span class="lineNum">     264 </span>            : </a>
-<a name="265"><span class="lineNum">     265 </span><span class="lineCov">      16528 : void MultiVoiceOscillator::process (juce::AudioBuffer&lt;float&gt;&amp; buffer, int startSample, int numSamples)</span></a>
+<a name="265"><span class="lineNum">     265 </span><span class="lineCov">      15424 : void MultiVoiceOscillator::process (juce::AudioBuffer&lt;float&gt;&amp; buffer, int startSample, int numSamples)</span></a>
 <a name="266"><span class="lineNum">     266 </span>            : {</a>
-<a name="267"><span class="lineNum">     267 </span><span class="lineCov">      16528 :     if (voices == 1)</span></a>
+<a name="267"><span class="lineNum">     267 </span><span class="lineCov">      15424 :     if (voices == 1)</span></a>
 <a name="268"><span class="lineNum">     268 </span>            :     {</a>
-<a name="269"><span class="lineNum">     269 </span><span class="lineCov">      16528 :         float leftGain  = 1.0f - pan;</span></a>
-<a name="270"><span class="lineNum">     270 </span><span class="lineCov">      16528 :         float rightGain = 1.0f + pan;</span></a>
+<a name="269"><span class="lineNum">     269 </span><span class="lineCov">      15424 :         float leftGain  = 1.0f - pan;</span></a>
+<a name="270"><span class="lineNum">     270 </span><span class="lineCov">      15424 :         float rightGain = 1.0f + pan;</span></a>
 <a name="271"><span class="lineNum">     271 </span>            : </a>
-<a name="272"><span class="lineNum">     272 </span><span class="lineCov">      49584 :         for (int i = 0; i &lt; 2; i++)</span></a>
+<a name="272"><span class="lineNum">     272 </span><span class="lineCov">      46272 :         for (int i = 0; i &lt; 2; i++)</span></a>
 <a name="273"><span class="lineNum">     273 </span>            :         {</a>
-<a name="274"><span class="lineNum">     274 </span><span class="lineCov">      33056 :             bool left = (i % 2) == 0;</span></a>
-<a name="275"><span class="lineNum">     275 </span><span class="lineCov">      33056 :             float panGain = left ? leftGain : rightGain;</span></a>
+<a name="274"><span class="lineNum">     274 </span><span class="lineCov">      30848 :             bool left = (i % 2) == 0;</span></a>
+<a name="275"><span class="lineNum">     275 </span><span class="lineCov">      30848 :             float panGain = left ? leftGain : rightGain;</span></a>
 <a name="276"><span class="lineNum">     276 </span>            : </a>
-<a name="277"><span class="lineNum">     277 </span><span class="lineCov">      33056 :             float* data = buffer.getWritePointer (left ? 0 : 1, startSample);</span></a>
-<a name="278"><span class="lineNum">     278 </span><span class="lineCov">      33056 :             float* dataPointers[] = {data};</span></a>
+<a name="277"><span class="lineNum">     277 </span><span class="lineCov">      30848 :             float* data = buffer.getWritePointer (left ? 0 : 1, startSample);</span></a>
+<a name="278"><span class="lineNum">     278 </span><span class="lineCov">      30848 :             float* dataPointers[] = {data};</span></a>
 <a name="279"><span class="lineNum">     279 </span>            : </a>
-<a name="280"><span class="lineNum">     280 </span><span class="lineCov">      33056 :             juce::AudioBuffer&lt;float&gt; channelBuffer (dataPointers, 1, numSamples);</span></a>
+<a name="280"><span class="lineNum">     280 </span><span class="lineCov">      30848 :             juce::AudioBuffer&lt;float&gt; channelBuffer (dataPointers, 1, numSamples);</span></a>
 <a name="281"><span class="lineNum">     281 </span>            : </a>
-<a name="282"><span class="lineNum">     282 </span><span class="lineCov">      33056 :             oscillators[i]-&gt;setGain (gain * panGain / voices);</span></a>
-<a name="283"><span class="lineNum">     283 </span><span class="lineCov">      33056 :             oscillators[i]-&gt;setNote (note);</span></a>
-<a name="284"><span class="lineNum">     284 </span><span class="lineCov">      33056 :             oscillators[i]-&gt;process (channelBuffer, 0, numSamples);</span></a>
+<a name="282"><span class="lineNum">     282 </span><span class="lineCov">      30848 :             oscillators[i]-&gt;setGain (gain * panGain / voices);</span></a>
+<a name="283"><span class="lineNum">     283 </span><span class="lineCov">      30848 :             oscillators[i]-&gt;setNote (note);</span></a>
+<a name="284"><span class="lineNum">     284 </span><span class="lineCov">      30848 :             oscillators[i]-&gt;process (channelBuffer, 0, numSamples);</span></a>
 <a name="285"><span class="lineNum">     285 </span>            :         }</a>
 <a name="286"><span class="lineNum">     286 </span>            :     }</a>
 <a name="287"><span class="lineNum">     287 </span>            :     else</a>
@@ -371,7 +371,7 @@
 <a name="309"><span class="lineNum">     309 </span><span class="lineNoCov">          0 :             oscillators[i]-&gt;process (channelBuffer, 0, numSamples);</span></a>
 <a name="310"><span class="lineNum">     310 </span>            :         }</a>
 <a name="311"><span class="lineNum">     311 </span>            :     }</a>
-<a name="312"><span class="lineNum">     312 </span><span class="lineCov">      16528 : }</span></a>
+<a name="312"><span class="lineNum">     312 </span><span class="lineCov">      15424 : }</span></a>
 <a name="313"><span class="lineNum">     313 </span>            : </a>
 <a name="314"><span class="lineNum">     314 </span>            : //==============================================================================</a>
 <a name="315"><span class="lineNum">     315 </span>            : static juce::Array&lt;BandlimitedWaveLookupTables*&gt; tableCache;</a>
@@ -422,7 +422,7 @@
 <a name="360"><span class="lineNum">     360 </span><span class="lineCov">          1 :     tableCache.removeFirstMatchingValue (this);</span></a>
 <a name="361"><span class="lineNum">     361 </span><span class="lineCov">          2 : }</span></a>
 <a name="362"><span class="lineNum">     362 </span>            : </a>
-<a name="363"><span class="lineNum">     363 </span>            : }</a>
+<a name="363"><span class="lineNum">     363 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

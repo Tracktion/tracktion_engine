@@ -1,0 +1,4 @@
+<map id="tracktion::graph::ConnectedNode" name="tracktion::graph::ConnectedNode">
+<area shape="rect" id="node1" title="An Node which sums together the multiple inputs adding additional latency to provide a coherent outpu..." alt="" coords="5,80,241,107"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class." alt="" coords="40,5,207,32"/>
+</map>

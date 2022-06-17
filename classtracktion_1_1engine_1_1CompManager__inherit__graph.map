@@ -1,0 +1,5 @@
+<map id="tracktion::engine::CompManager" name="tracktion::engine::CompManager">
+<area shape="rect" id="node1" title=" " alt="" coords="95,5,235,47"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1MidiCompManager.html" title=" " alt="" coords="5,95,151,136"/>
+<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1WaveCompManager.html" title=" " alt="" coords="175,95,328,136"/>
+</map>

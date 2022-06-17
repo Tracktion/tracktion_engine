@@ -1,0 +1,4 @@
+<map id="tracktion::engine::CombiningAudioNode" name="tracktion::engine::CombiningAudioNode">
+<area shape="rect" id="node1" title="An AudioNode that mixes a sequence of clips of other nodes." alt="" coords="5,95,168,136"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1AudioNode.html" title="Base class for nodes in an audio playback graph." alt="" coords="17,5,157,47"/>
+</map>

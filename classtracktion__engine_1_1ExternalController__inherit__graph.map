@@ -1,5 +1,0 @@
-<map id="tracktion_engine::ExternalController" name="tracktion_engine::ExternalController">
-<area shape="rect" id="node1" title="Acts as a holder for a ControlSurface object." alt="" coords="276,39,469,80"/>
-<area shape="rect" id="node2" href="$classtracktion__engine_1_1SelectableListener.html" title=" " alt="" coords="13,5,220,47"/>
-<area shape="rect" id="node3" href="$structtracktion__engine_1_1AutomatableParameter_1_1Listener.html" title=" " alt="" coords="5,71,228,112"/>
-</map>

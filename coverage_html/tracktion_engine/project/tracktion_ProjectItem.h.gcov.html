@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : /**</a>
@@ -169,8 +169,8 @@
 <a name="107"><span class="lineNum">     107 </span>            :     void setDescription (const juce::String&amp; newDesc);</a>
 <a name="108"><span class="lineNum">     108 </span>            : </a>
 <a name="109"><span class="lineNum">     109 </span>            :     /** optional set of interesting time markers, for wave files */</a>
-<a name="110"><span class="lineNum">     110 </span>            :     juce::Array&lt;double&gt; getMarkedPoints() const;</a>
-<a name="111"><span class="lineNum">     111 </span>            :     void setMarkedPoints (const juce::Array&lt;double&gt;&amp; points);</a>
+<a name="110"><span class="lineNum">     110 </span>            :     juce::Array&lt;TimePosition&gt; getMarkedPoints() const;</a>
+<a name="111"><span class="lineNum">     111 </span>            :     void setMarkedPoints (const juce::Array&lt;TimePosition&gt;&amp; points);</a>
 <a name="112"><span class="lineNum">     112 </span>            : </a>
 <a name="113"><span class="lineNum">     113 </span>            :     /** copies the full description, categories, properties, etc. */</a>
 <a name="114"><span class="lineNum">     114 </span>            :     void copyAllPropertiesFrom (const ProjectItem&amp; other);</a>
@@ -247,7 +247,7 @@
 <a name="185"><span class="lineNum">     185 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ProjectItem)</a>
 <a name="186"><span class="lineNum">     186 </span>            : };</a>
 <a name="187"><span class="lineNum">     187 </span>            : </a>
-<a name="188"><span class="lineNum">     188 </span>            : } // namespace tracktion_engine</a>
+<a name="188"><span class="lineNum">     188 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['visitorfn_12746',['VisitorFn',['../classtracktion__engine_1_1AudioNode.html#ad1dfdddbf6c74511a9881786dd4ad7e6',1,'tracktion_engine::AudioNode']]]
+  ['visitorfn_12720',['VisitorFn',['../classtracktion_1_1engine_1_1AudioNode.html#a52c19135ada560f55f79654428c89dff',1,'tracktion::engine::AudioNode']]]
 ];

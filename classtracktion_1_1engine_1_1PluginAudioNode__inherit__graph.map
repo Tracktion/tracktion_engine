@@ -1,0 +1,4 @@
+<map id="tracktion::engine::PluginAudioNode" name="tracktion::engine::PluginAudioNode">
+<area shape="rect" id="node1" title=" " alt="" coords="5,95,145,136"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1AudioNode.html" title="Base class for nodes in an audio playback graph." alt="" coords="5,5,145,47"/>
+</map>

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['weakref_12747',['WeakRef',['../classtracktion__engine_1_1Selectable.html#a03901c25cc0479dcdb3fa3ce8b8b28ae',1,'tracktion_engine::Selectable::WeakRef()'],['../classtracktion__engine_1_1Engine.html#a437a2a51d647b379f64a4ed42244d7b0',1,'tracktion_engine::Engine::WeakRef()']]]
+  ['warpmap_12721',['WarpMap',['../namespacetracktion_1_1engine.html#adeeadbd2dea66b29cc5bb3586b64326a',1,'tracktion::WarpMap()'],['../namespacetracktion_1_1engine.html#adeeadbd2dea66b29cc5bb3586b64326a',1,'tracktion::engine::WarpMap()']]],
+  ['weakref_12722',['WeakRef',['../classtracktion_1_1engine_1_1Selectable.html#a8e3066afe6d51968a989e0bf802cc3e5',1,'tracktion::engine::Selectable::WeakRef()'],['../classtracktion_1_1engine_1_1Engine.html#adbb75db4a93dd93cd8e0b20dd818343e',1,'tracktion::engine::Engine::WeakRef()']]]
 ];

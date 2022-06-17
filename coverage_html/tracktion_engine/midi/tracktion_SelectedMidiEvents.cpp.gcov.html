@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">261</td>
+            <td class="headerCovTableEntry">260</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span><span class="lineNoCov">          0 : SelectedMidiEvents::SelectedMidiEvents (MidiClip&amp; m)  : clips ({ &amp;m })</span></a>
@@ -412,17 +412,17 @@
 <a name="350"><span class="lineNum">     350 </span>            :     }</a>
 <a name="351"><span class="lineNum">     351 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="352"><span class="lineNum">     352 </span>            : </a>
-<a name="353"><span class="lineNum">     353 </span><span class="lineNoCov">          0 : void SelectedMidiEvents::moveEvents (double deltaStart, double deltaLength, int deltaNote)</span></a>
+<a name="353"><span class="lineNum">     353 </span><span class="lineNoCov">          0 : void SelectedMidiEvents::moveEvents (TimeDuration deltaStart, TimeDuration deltaLength, int deltaNote)</span></a>
 <a name="354"><span class="lineNum">     354 </span>            : {</a>
 <a name="355"><span class="lineNum">     355 </span>            :     auto* undoManager = &amp;getEdit().getUndoManager();</a>
 <a name="356"><span class="lineNum">     356 </span>            :     auto notes = selectedNotes; // Use a copy in case any of them get deleted while moving</a>
 <a name="357"><span class="lineNum">     357 </span>            : </a>
 <a name="358"><span class="lineNum">     358 </span><span class="lineNoCov">          0 :     juce::Array&lt;MidiClip*&gt; uniqueClips;</span></a>
 <a name="359"><span class="lineNum">     359 </span>            : </a>
-<a name="360"><span class="lineNum">     360 </span><span class="lineNoCov">          0 :     double startTime = std::numeric_limits&lt;double&gt;::max();</span></a>
-<a name="361"><span class="lineNum">     361 </span><span class="lineNoCov">          0 :     double endTime   = std::numeric_limits&lt;double&gt;::lowest();</span></a>
+<a name="360"><span class="lineNum">     360 </span><span class="lineNoCov">          0 :     auto startTime = TimePosition::fromSeconds (std::numeric_limits&lt;double&gt;::max());</span></a>
+<a name="361"><span class="lineNum">     361 </span><span class="lineNoCov">          0 :     auto endTime   = TimePosition::fromSeconds (std::numeric_limits&lt;double&gt;::lowest());</span></a>
 <a name="362"><span class="lineNum">     362 </span>            : </a>
-<a name="363"><span class="lineNum">     363 </span>            :     std::optional&lt;double&gt; deltaBeat;</a>
+<a name="363"><span class="lineNum">     363 </span><span class="lineNoCov">          0 :     std::optional&lt;BeatDuration&gt; deltaBeat;</span></a>
 <a name="364"><span class="lineNum">     364 </span>            : </a>
 <a name="365"><span class="lineNum">     365 </span><span class="lineNoCov">          0 :     for (auto note : notes)</span></a>
 <a name="366"><span class="lineNum">     366 </span>            :     {</a>
@@ -439,11 +439,11 @@
 <a name="377"><span class="lineNum">     377 </span>            :             }</a>
 <a name="378"><span class="lineNum">     378 </span>            : </a>
 <a name="379"><span class="lineNum">     379 </span><span class="lineNoCov">          0 :             auto pos = note-&gt;getEditTimeRange (*clip);</span></a>
-<a name="380"><span class="lineNum">     380 </span><span class="lineNoCov">          0 :             auto newStartBeat = clip-&gt;getContentBeatAtTime (pos.start + deltaStart) + clip-&gt;getLoopStartBeats();</span></a>
-<a name="381"><span class="lineNum">     381 </span><span class="lineNoCov">          0 :             auto newEndBeat = clip-&gt;getContentBeatAtTime (pos.end + deltaStart + deltaLength) + clip-&gt;getLoopStartBeats();</span></a>
+<a name="380"><span class="lineNum">     380 </span><span class="lineNoCov">          0 :             auto newStartBeat = clip-&gt;getContentBeatAtTime (pos.getStart() + deltaStart) + toDuration (clip-&gt;getLoopStartBeats());</span></a>
+<a name="381"><span class="lineNum">     381 </span><span class="lineNoCov">          0 :             auto newEndBeat = clip-&gt;getContentBeatAtTime (pos.getEnd() + deltaStart + deltaLength) + toDuration (clip-&gt;getLoopStartBeats());</span></a>
 <a name="382"><span class="lineNum">     382 </span>            : </a>
 <a name="383"><span class="lineNum">     383 </span><span class="lineNoCov">          0 :             if (! deltaBeat.has_value())</span></a>
-<a name="384"><span class="lineNum">     384 </span><span class="lineNoCov">          0 :                 deltaBeat = newStartBeat - note-&gt;getBeatPosition();</span></a>
+<a name="384"><span class="lineNum">     384 </span>            :                 deltaBeat = newStartBeat - note-&gt;getBeatPosition();</a>
 <a name="385"><span class="lineNum">     385 </span>            : </a>
 <a name="386"><span class="lineNum">     386 </span><span class="lineNoCov">          0 :             note-&gt;setStartAndLength (newStartBeat, newEndBeat - newStartBeat, undoManager);</span></a>
 <a name="387"><span class="lineNum">     387 </span>            :         }</a>
@@ -454,7 +454,7 @@
 <a name="392"><span class="lineNum">     392 </span><span class="lineNoCov">          0 :         if (auto clip = clipForEvent (sysexEvent))</span></a>
 <a name="393"><span class="lineNum">     393 </span>            :         {</a>
 <a name="394"><span class="lineNum">     394 </span><span class="lineNoCov">          0 :             auto deltaTime = sysexEvent-&gt;getEditTime (*clip) + deltaStart;</span></a>
-<a name="395"><span class="lineNum">     395 </span><span class="lineNoCov">          0 :             sysexEvent-&gt;setBeatPosition (clip-&gt;getContentBeatAtTime (deltaTime) + clip-&gt;getLoopStartBeats(), undoManager);</span></a>
+<a name="395"><span class="lineNum">     395 </span><span class="lineNoCov">          0 :             sysexEvent-&gt;setBeatPosition (clip-&gt;getContentBeatAtTime (deltaTime) + toDuration (clip-&gt;getLoopStartBeats()), undoManager);</span></a>
 <a name="396"><span class="lineNum">     396 </span>            :         }</a>
 <a name="397"><span class="lineNum">     397 </span>            :     }</a>
 <a name="398"><span class="lineNum">     398 </span>            : </a>
@@ -474,186 +474,189 @@
 <a name="412"><span class="lineNum">     412 </span><span class="lineNoCov">          0 :             endTime   = std::max (endTime, controllerEvent-&gt;getEditTime (clip));</span></a>
 <a name="413"><span class="lineNum">     413 </span>            : </a>
 <a name="414"><span class="lineNum">     414 </span><span class="lineNoCov">          0 :             auto start = controllerEvent-&gt;getEditTime (clip);</span></a>
-<a name="415"><span class="lineNum">     415 </span><span class="lineNoCov">          0 :             auto newStartBeat = clip.getContentBeatAtTime (start + deltaStart) + clip.getLoopStartBeats();</span></a>
+<a name="415"><span class="lineNum">     415 </span><span class="lineNoCov">          0 :             auto newStartBeat = clip.getContentBeatAtTime (start + deltaStart) + toDuration (clip.getLoopStartBeats());</span></a>
 <a name="416"><span class="lineNum">     416 </span>            : </a>
 <a name="417"><span class="lineNum">     417 </span><span class="lineNoCov">          0 :             if (! deltaBeat.has_value())</span></a>
-<a name="418"><span class="lineNum">     418 </span><span class="lineNoCov">          0 :                 deltaBeat = newStartBeat - controllerEvent-&gt;getBeatPosition();</span></a>
+<a name="418"><span class="lineNum">     418 </span>            :                 deltaBeat = newStartBeat - controllerEvent-&gt;getBeatPosition();</a>
 <a name="419"><span class="lineNum">     419 </span>            :         }</a>
 <a name="420"><span class="lineNum">     420 </span>            : </a>
-<a name="421"><span class="lineNum">     421 </span><span class="lineNoCov">          0 :         moveControllerData (uniqueClips, &amp;selectedControllers, *deltaBeat, startTime - 0.001, endTime + 0.001, false);</span></a>
-<a name="422"><span class="lineNum">     422 </span>            :     }</a>
-<a name="423"><span class="lineNum">     423 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="424"><span class="lineNum">     424 </span>            : </a>
-<a name="425"><span class="lineNum">     425 </span><span class="lineNoCov">          0 : void SelectedMidiEvents::setNoteLengths (double newLength)</span></a>
-<a name="426"><span class="lineNum">     426 </span>            : {</a>
-<a name="427"><span class="lineNum">     427 </span>            :     auto um = &amp;getEdit().getUndoManager();</a>
-<a name="428"><span class="lineNum">     428 </span>            : </a>
-<a name="429"><span class="lineNum">     429 </span><span class="lineNoCov">          0 :     for (auto note : selectedNotes)</span></a>
-<a name="430"><span class="lineNum">     430 </span><span class="lineNoCov">          0 :         note-&gt;setStartAndLength (note-&gt;getStartBeat(), newLength, um);</span></a>
-<a name="431"><span class="lineNum">     431 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="432"><span class="lineNum">     432 </span>            : </a>
-<a name="433"><span class="lineNum">     433 </span><span class="lineNoCov">          0 : void SelectedMidiEvents::setVelocities (int newVelocity)</span></a>
-<a name="434"><span class="lineNum">     434 </span>            : {</a>
-<a name="435"><span class="lineNum">     435 </span>            :     auto undoManager = &amp;getEdit().getUndoManager();</a>
-<a name="436"><span class="lineNum">     436 </span>            : </a>
-<a name="437"><span class="lineNum">     437 </span><span class="lineNoCov">          0 :     for (auto note : selectedNotes)</span></a>
-<a name="438"><span class="lineNum">     438 </span><span class="lineNoCov">          0 :         note-&gt;setVelocity (newVelocity, undoManager);</span></a>
-<a name="439"><span class="lineNum">     439 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="440"><span class="lineNum">     440 </span>            : </a>
-<a name="441"><span class="lineNum">     441 </span><span class="lineNoCov">          0 : void SelectedMidiEvents::changeColour (uint8_t newColour)</span></a>
-<a name="442"><span class="lineNum">     442 </span>            : {</a>
-<a name="443"><span class="lineNum">     443 </span>            :     auto undoManager = &amp;getEdit().getUndoManager();</a>
-<a name="444"><span class="lineNum">     444 </span>            : </a>
-<a name="445"><span class="lineNum">     445 </span><span class="lineNoCov">          0 :     for (auto note : selectedNotes)</span></a>
-<a name="446"><span class="lineNum">     446 </span><span class="lineNoCov">          0 :         note-&gt;setColour (newColour, undoManager);</span></a>
-<a name="447"><span class="lineNum">     447 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="448"><span class="lineNum">     448 </span>            : </a>
-<a name="449"><span class="lineNum">     449 </span><span class="lineNoCov">          0 : void SelectedMidiEvents::nudge (TimecodeSnapType snapType, int leftRight, int upDown)</span></a>
-<a name="450"><span class="lineNum">     450 </span>            : {</a>
-<a name="451"><span class="lineNum">     451 </span>            :     auto&amp; ed = getEdit();</a>
-<a name="452"><span class="lineNum">     452 </span>            :     auto undoManager = &amp;ed.getUndoManager();</a>
-<a name="453"><span class="lineNum">     453 </span>            : </a>
-<a name="454"><span class="lineNum">     454 </span><span class="lineNoCov">          0 :     if (upDown != 0)</span></a>
-<a name="455"><span class="lineNum">     455 </span><span class="lineNoCov">          0 :         for (auto note : selectedNotes)</span></a>
-<a name="456"><span class="lineNum">     456 </span><span class="lineNoCov">          0 :             note-&gt;setNoteNumber (note-&gt;getNoteNumber() + upDown, undoManager);</span></a>
-<a name="457"><span class="lineNum">     457 </span>            : </a>
-<a name="458"><span class="lineNum">     458 </span><span class="lineNoCov">          0 :     if (leftRight != 0)</span></a>
-<a name="459"><span class="lineNum">     459 </span>            :     {</a>
-<a name="460"><span class="lineNum">     460 </span><span class="lineNoCov">          0 :         if (auto firstSelected = selectedNotes.getFirst())</span></a>
-<a name="461"><span class="lineNum">     461 </span>            :         {</a>
-<a name="462"><span class="lineNum">     462 </span><span class="lineNoCov">          0 :             if (auto clip = clips[0])</span></a>
-<a name="463"><span class="lineNum">     463 </span>            :             {</a>
-<a name="464"><span class="lineNum">     464 </span><span class="lineNoCov">          0 :                 double start = firstSelected-&gt;getEditStartTime (*clip);</span></a>
-<a name="465"><span class="lineNum">     465 </span>            : </a>
-<a name="466"><span class="lineNum">     466 </span>            :                 double snapped = leftRight &lt; 0</a>
-<a name="467"><span class="lineNum">     467 </span><span class="lineNoCov">          0 :                                     ? snapType.roundTimeDown (start - 0.01, ed.tempoSequence)</span></a>
-<a name="468"><span class="lineNum">     468 </span><span class="lineNoCov">          0 :                                     : snapType.roundTimeUp   (start + 0.01, ed.tempoSequence);</span></a>
-<a name="469"><span class="lineNum">     469 </span>            : </a>
-<a name="470"><span class="lineNum">     470 </span><span class="lineNoCov">          0 :                 double delta = ed.tempoSequence.timeToBeats (snapped)</span></a>
-<a name="471"><span class="lineNum">     471 </span><span class="lineNoCov">          0 :                                 - ed.tempoSequence.timeToBeats (start);</span></a>
-<a name="472"><span class="lineNum">     472 </span>            : </a>
-<a name="473"><span class="lineNum">     473 </span><span class="lineNoCov">          0 :                 juce::Array&lt;MidiClip*&gt; uniqueClips;</span></a>
-<a name="474"><span class="lineNum">     474 </span><span class="lineNoCov">          0 :                 double startTime = std::numeric_limits&lt;double&gt;::max();</span></a>
-<a name="475"><span class="lineNum">     475 </span><span class="lineNoCov">          0 :                 double endTime   = std::numeric_limits&lt;double&gt;::lowest();</span></a>
-<a name="476"><span class="lineNum">     476 </span>            : </a>
-<a name="477"><span class="lineNum">     477 </span><span class="lineNoCov">          0 :                 for (auto note : selectedNotes)</span></a>
-<a name="478"><span class="lineNum">     478 </span>            :                 {</a>
-<a name="479"><span class="lineNum">     479 </span><span class="lineNoCov">          0 :                     auto noteClip = clipForEvent (note);</span></a>
-<a name="480"><span class="lineNum">     480 </span><span class="lineNoCov">          0 :                     uniqueClips.addIfNotAlreadyThere (noteClip);</span></a>
-<a name="481"><span class="lineNum">     481 </span>            : </a>
-<a name="482"><span class="lineNum">     482 </span><span class="lineNoCov">          0 :                     startTime = std::min (startTime, note-&gt;getEditStartTime (*noteClip));</span></a>
-<a name="483"><span class="lineNum">     483 </span><span class="lineNoCov">          0 :                     endTime   = std::max (endTime, note-&gt;getEditEndTime (*noteClip));</span></a>
-<a name="484"><span class="lineNum">     484 </span>            : </a>
-<a name="485"><span class="lineNum">     485 </span><span class="lineNoCov">          0 :                     note-&gt;setStartAndLength (note-&gt;getStartBeat() + delta,</span></a>
-<a name="486"><span class="lineNum">     486 </span>            :                                              note-&gt;getLengthBeats(),</a>
-<a name="487"><span class="lineNum">     487 </span>            :                                              undoManager);</a>
-<a name="488"><span class="lineNum">     488 </span>            :                 }</a>
-<a name="489"><span class="lineNum">     489 </span>            : </a>
-<a name="490"><span class="lineNum">     490 </span><span class="lineNoCov">          0 :                 if (shouldLockControllerToNotes &amp;&amp; shouldLockControllerToNotes())</span></a>
-<a name="491"><span class="lineNum">     491 </span><span class="lineNoCov">          0 :                     moveControllerData (uniqueClips, nullptr, delta, startTime, endTime, false);</span></a>
-<a name="492"><span class="lineNum">     492 </span>            :             }</a>
-<a name="493"><span class="lineNum">     493 </span>            :         }</a>
-<a name="494"><span class="lineNum">     494 </span>            :     }</a>
-<a name="495"><span class="lineNum">     495 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="496"><span class="lineNum">     496 </span>            : </a>
-<a name="497"><span class="lineNum">     497 </span><span class="lineNoCov">          0 : EditTimeRange SelectedMidiEvents::getSelectedRange() const</span></a>
-<a name="498"><span class="lineNum">     498 </span>            : {</a>
-<a name="499"><span class="lineNum">     499 </span>            :     bool doneFirst = false;</a>
-<a name="500"><span class="lineNum">     500 </span><span class="lineNoCov">          0 :     EditTimeRange time;</span></a>
-<a name="501"><span class="lineNum">     501 </span>            : </a>
-<a name="502"><span class="lineNum">     502 </span><span class="lineNoCov">          0 :     for (auto n : selectedNotes)</span></a>
-<a name="503"><span class="lineNum">     503 </span>            :     {</a>
-<a name="504"><span class="lineNum">     504 </span><span class="lineNoCov">          0 :         if (auto clip = clipForEvent (n))</span></a>
-<a name="505"><span class="lineNum">     505 </span>            :         {</a>
-<a name="506"><span class="lineNum">     506 </span><span class="lineNoCov">          0 :             auto noteRange = n-&gt;getEditTimeRange (*clip);</span></a>
-<a name="507"><span class="lineNum">     507 </span>            : </a>
-<a name="508"><span class="lineNum">     508 </span><span class="lineNoCov">          0 :             if (! doneFirst)</span></a>
-<a name="509"><span class="lineNum">     509 </span>            :             {</a>
-<a name="510"><span class="lineNum">     510 </span><span class="lineNoCov">          0 :                 time = noteRange;</span></a>
-<a name="511"><span class="lineNum">     511 </span>            :                 doneFirst = true;</a>
-<a name="512"><span class="lineNum">     512 </span><span class="lineNoCov">          0 :                 continue;</span></a>
-<a name="513"><span class="lineNum">     513 </span>            :             }</a>
-<a name="514"><span class="lineNum">     514 </span>            : </a>
-<a name="515"><span class="lineNum">     515 </span><span class="lineNoCov">          0 :             time = time.getUnionWith (noteRange);</span></a>
-<a name="516"><span class="lineNum">     516 </span>            :         }</a>
-<a name="517"><span class="lineNum">     517 </span>            :     }</a>
-<a name="518"><span class="lineNum">     518 </span>            : </a>
-<a name="519"><span class="lineNum">     519 </span><span class="lineNoCov">          0 :     return time;</span></a>
-<a name="520"><span class="lineNum">     520 </span>            : }</a>
-<a name="521"><span class="lineNum">     521 </span>            : </a>
-<a name="522"><span class="lineNum">     522 </span><span class="lineNoCov">          0 : void SelectedMidiEvents::sendSelectionChangedMessage (SelectionManager* sm)</span></a>
-<a name="523"><span class="lineNum">     523 </span>            : {</a>
-<a name="524"><span class="lineNum">     524 </span><span class="lineNoCov">          0 :     if (sm != nullptr)</span></a>
-<a name="525"><span class="lineNum">     525 </span>            :     {</a>
-<a name="526"><span class="lineNum">     526 </span><span class="lineNoCov">          0 :         ++(sm-&gt;selectionChangeCount);</span></a>
-<a name="527"><span class="lineNum">     527 </span><span class="lineNoCov">          0 :         sm-&gt;sendChangeMessage();</span></a>
-<a name="528"><span class="lineNum">     528 </span>            :     }</a>
-<a name="529"><span class="lineNum">     529 </span>            : </a>
-<a name="530"><span class="lineNum">     530 </span><span class="lineNoCov">          0 :     changed();</span></a>
-<a name="531"><span class="lineNum">     531 </span><span class="lineNoCov">          0 :     sendChangeMessage();</span></a>
-<a name="532"><span class="lineNum">     532 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="533"><span class="lineNum">     533 </span>            : </a>
-<a name="534"><span class="lineNum">     534 </span><span class="lineNoCov">          0 : void SelectedMidiEvents::setClips (juce::Array&lt;MidiClip*&gt; clips_)</span></a>
-<a name="535"><span class="lineNum">     535 </span>            : {</a>
-<a name="536"><span class="lineNum">     536 </span>            :     // You should try and avoid changing the list of clips, instead</a>
-<a name="537"><span class="lineNum">     537 </span>            :     // create a new SelectedMidiEvents for the new clips. If you do</a>
-<a name="538"><span class="lineNum">     538 </span>            :     // change the clips, then this fuction will deselect and events</a>
-<a name="539"><span class="lineNum">     539 </span>            :     // that no longer belong to a clip in the clip list.</a>
-<a name="540"><span class="lineNum">     540 </span>            : </a>
-<a name="541"><span class="lineNum">     541 </span><span class="lineNoCov">          0 :     clips = clips_;</span></a>
+<a name="421"><span class="lineNum">     421 </span><span class="lineNoCov">          0 :         moveControllerData (uniqueClips, &amp;selectedControllers, *deltaBeat,</span></a>
+<a name="422"><span class="lineNum">     422 </span>            :                             startTime - TimeDuration::fromSeconds (0.001), endTime + TimeDuration::fromSeconds (0.001),</a>
+<a name="423"><span class="lineNum">     423 </span>            :                             false);</a>
+<a name="424"><span class="lineNum">     424 </span>            :     }</a>
+<a name="425"><span class="lineNum">     425 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="426"><span class="lineNum">     426 </span>            : </a>
+<a name="427"><span class="lineNum">     427 </span><span class="lineNoCov">          0 : void SelectedMidiEvents::setNoteLengths (BeatDuration newLength)</span></a>
+<a name="428"><span class="lineNum">     428 </span>            : {</a>
+<a name="429"><span class="lineNum">     429 </span>            :     auto um = &amp;getEdit().getUndoManager();</a>
+<a name="430"><span class="lineNum">     430 </span>            : </a>
+<a name="431"><span class="lineNum">     431 </span><span class="lineNoCov">          0 :     for (auto note : selectedNotes)</span></a>
+<a name="432"><span class="lineNum">     432 </span><span class="lineNoCov">          0 :         note-&gt;setStartAndLength (note-&gt;getStartBeat(), newLength, um);</span></a>
+<a name="433"><span class="lineNum">     433 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="434"><span class="lineNum">     434 </span>            : </a>
+<a name="435"><span class="lineNum">     435 </span><span class="lineNoCov">          0 : void SelectedMidiEvents::setVelocities (int newVelocity)</span></a>
+<a name="436"><span class="lineNum">     436 </span>            : {</a>
+<a name="437"><span class="lineNum">     437 </span>            :     auto undoManager = &amp;getEdit().getUndoManager();</a>
+<a name="438"><span class="lineNum">     438 </span>            : </a>
+<a name="439"><span class="lineNum">     439 </span><span class="lineNoCov">          0 :     for (auto note : selectedNotes)</span></a>
+<a name="440"><span class="lineNum">     440 </span><span class="lineNoCov">          0 :         note-&gt;setVelocity (newVelocity, undoManager);</span></a>
+<a name="441"><span class="lineNum">     441 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="442"><span class="lineNum">     442 </span>            : </a>
+<a name="443"><span class="lineNum">     443 </span><span class="lineNoCov">          0 : void SelectedMidiEvents::changeColour (uint8_t newColour)</span></a>
+<a name="444"><span class="lineNum">     444 </span>            : {</a>
+<a name="445"><span class="lineNum">     445 </span>            :     auto undoManager = &amp;getEdit().getUndoManager();</a>
+<a name="446"><span class="lineNum">     446 </span>            : </a>
+<a name="447"><span class="lineNum">     447 </span><span class="lineNoCov">          0 :     for (auto note : selectedNotes)</span></a>
+<a name="448"><span class="lineNum">     448 </span><span class="lineNoCov">          0 :         note-&gt;setColour (newColour, undoManager);</span></a>
+<a name="449"><span class="lineNum">     449 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="450"><span class="lineNum">     450 </span>            : </a>
+<a name="451"><span class="lineNum">     451 </span><span class="lineNoCov">          0 : void SelectedMidiEvents::nudge (TimecodeSnapType snapType, int leftRight, int upDown)</span></a>
+<a name="452"><span class="lineNum">     452 </span>            : {</a>
+<a name="453"><span class="lineNum">     453 </span>            :     auto&amp; ed = getEdit();</a>
+<a name="454"><span class="lineNum">     454 </span>            :     auto undoManager = &amp;ed.getUndoManager();</a>
+<a name="455"><span class="lineNum">     455 </span>            : </a>
+<a name="456"><span class="lineNum">     456 </span><span class="lineNoCov">          0 :     if (upDown != 0)</span></a>
+<a name="457"><span class="lineNum">     457 </span><span class="lineNoCov">          0 :         for (auto note : selectedNotes)</span></a>
+<a name="458"><span class="lineNum">     458 </span><span class="lineNoCov">          0 :             note-&gt;setNoteNumber (note-&gt;getNoteNumber() + upDown, undoManager);</span></a>
+<a name="459"><span class="lineNum">     459 </span>            : </a>
+<a name="460"><span class="lineNum">     460 </span><span class="lineNoCov">          0 :     if (leftRight != 0)</span></a>
+<a name="461"><span class="lineNum">     461 </span>            :     {</a>
+<a name="462"><span class="lineNum">     462 </span><span class="lineNoCov">          0 :         if (auto firstSelected = selectedNotes.getFirst())</span></a>
+<a name="463"><span class="lineNum">     463 </span>            :         {</a>
+<a name="464"><span class="lineNum">     464 </span><span class="lineNoCov">          0 :             if (auto clip = clips[0])</span></a>
+<a name="465"><span class="lineNum">     465 </span>            :             {</a>
+<a name="466"><span class="lineNum">     466 </span><span class="lineNoCov">          0 :                 auto start = firstSelected-&gt;getEditStartTime (*clip);</span></a>
+<a name="467"><span class="lineNum">     467 </span>            : </a>
+<a name="468"><span class="lineNum">     468 </span>            :                 auto snapped = leftRight &lt; 0</a>
+<a name="469"><span class="lineNum">     469 </span><span class="lineNoCov">          0 :                                 ? snapType.roundTimeDown (start - TimeDuration::fromSeconds (0.01), ed.tempoSequence)</span></a>
+<a name="470"><span class="lineNum">     470 </span><span class="lineNoCov">          0 :                                 : snapType.roundTimeUp   (start + TimeDuration::fromSeconds (0.01), ed.tempoSequence);</span></a>
+<a name="471"><span class="lineNum">     471 </span>            : </a>
+<a name="472"><span class="lineNum">     472 </span><span class="lineNoCov">          0 :                 auto delta = ed.tempoSequence.toBeats (snapped)</span></a>
+<a name="473"><span class="lineNum">     473 </span><span class="lineNoCov">          0 :                                 - ed.tempoSequence.toBeats (start);</span></a>
+<a name="474"><span class="lineNum">     474 </span>            : </a>
+<a name="475"><span class="lineNum">     475 </span><span class="lineNoCov">          0 :                 juce::Array&lt;MidiClip*&gt; uniqueClips;</span></a>
+<a name="476"><span class="lineNum">     476 </span><span class="lineNoCov">          0 :                 auto startTime = TimePosition::fromSeconds (std::numeric_limits&lt;double&gt;::max());</span></a>
+<a name="477"><span class="lineNum">     477 </span><span class="lineNoCov">          0 :                 auto endTime   = TimePosition::fromSeconds (std::numeric_limits&lt;double&gt;::lowest());</span></a>
+<a name="478"><span class="lineNum">     478 </span>            : </a>
+<a name="479"><span class="lineNum">     479 </span><span class="lineNoCov">          0 :                 for (auto note : selectedNotes)</span></a>
+<a name="480"><span class="lineNum">     480 </span>            :                 {</a>
+<a name="481"><span class="lineNum">     481 </span><span class="lineNoCov">          0 :                     auto noteClip = clipForEvent (note);</span></a>
+<a name="482"><span class="lineNum">     482 </span><span class="lineNoCov">          0 :                     uniqueClips.addIfNotAlreadyThere (noteClip);</span></a>
+<a name="483"><span class="lineNum">     483 </span>            : </a>
+<a name="484"><span class="lineNum">     484 </span><span class="lineNoCov">          0 :                     startTime = std::min (startTime, note-&gt;getEditStartTime (*noteClip));</span></a>
+<a name="485"><span class="lineNum">     485 </span><span class="lineNoCov">          0 :                     endTime   = std::max (endTime, note-&gt;getEditEndTime (*noteClip));</span></a>
+<a name="486"><span class="lineNum">     486 </span>            : </a>
+<a name="487"><span class="lineNum">     487 </span><span class="lineNoCov">          0 :                     note-&gt;setStartAndLength (note-&gt;getStartBeat() + delta,</span></a>
+<a name="488"><span class="lineNum">     488 </span>            :                                              note-&gt;getLengthBeats(),</a>
+<a name="489"><span class="lineNum">     489 </span>            :                                              undoManager);</a>
+<a name="490"><span class="lineNum">     490 </span>            :                 }</a>
+<a name="491"><span class="lineNum">     491 </span>            : </a>
+<a name="492"><span class="lineNum">     492 </span><span class="lineNoCov">          0 :                 if (shouldLockControllerToNotes &amp;&amp; shouldLockControllerToNotes())</span></a>
+<a name="493"><span class="lineNum">     493 </span><span class="lineNoCov">          0 :                     moveControllerData (uniqueClips, nullptr, delta, startTime, endTime, false);</span></a>
+<a name="494"><span class="lineNum">     494 </span>            :             }</a>
+<a name="495"><span class="lineNum">     495 </span>            :         }</a>
+<a name="496"><span class="lineNum">     496 </span>            :     }</a>
+<a name="497"><span class="lineNum">     497 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="498"><span class="lineNum">     498 </span>            : </a>
+<a name="499"><span class="lineNum">     499 </span><span class="lineNoCov">          0 : TimeRange SelectedMidiEvents::getSelectedRange() const</span></a>
+<a name="500"><span class="lineNum">     500 </span>            : {</a>
+<a name="501"><span class="lineNum">     501 </span>            :     bool doneFirst = false;</a>
+<a name="502"><span class="lineNum">     502 </span><span class="lineNoCov">          0 :     TimeRange time;</span></a>
+<a name="503"><span class="lineNum">     503 </span>            : </a>
+<a name="504"><span class="lineNum">     504 </span><span class="lineNoCov">          0 :     for (auto n : selectedNotes)</span></a>
+<a name="505"><span class="lineNum">     505 </span>            :     {</a>
+<a name="506"><span class="lineNum">     506 </span><span class="lineNoCov">          0 :         if (auto clip = clipForEvent (n))</span></a>
+<a name="507"><span class="lineNum">     507 </span>            :         {</a>
+<a name="508"><span class="lineNum">     508 </span><span class="lineNoCov">          0 :             auto noteRange = n-&gt;getEditTimeRange (*clip);</span></a>
+<a name="509"><span class="lineNum">     509 </span>            : </a>
+<a name="510"><span class="lineNum">     510 </span><span class="lineNoCov">          0 :             if (! doneFirst)</span></a>
+<a name="511"><span class="lineNum">     511 </span>            :             {</a>
+<a name="512"><span class="lineNum">     512 </span><span class="lineNoCov">          0 :                 time = noteRange;</span></a>
+<a name="513"><span class="lineNum">     513 </span>            :                 doneFirst = true;</a>
+<a name="514"><span class="lineNum">     514 </span><span class="lineNoCov">          0 :                 continue;</span></a>
+<a name="515"><span class="lineNum">     515 </span>            :             }</a>
+<a name="516"><span class="lineNum">     516 </span>            : </a>
+<a name="517"><span class="lineNum">     517 </span><span class="lineNoCov">          0 :             time = time.getUnionWith (noteRange);</span></a>
+<a name="518"><span class="lineNum">     518 </span>            :         }</a>
+<a name="519"><span class="lineNum">     519 </span>            :     }</a>
+<a name="520"><span class="lineNum">     520 </span>            : </a>
+<a name="521"><span class="lineNum">     521 </span><span class="lineNoCov">          0 :     return time;</span></a>
+<a name="522"><span class="lineNum">     522 </span>            : }</a>
+<a name="523"><span class="lineNum">     523 </span>            : </a>
+<a name="524"><span class="lineNum">     524 </span><span class="lineNoCov">          0 : void SelectedMidiEvents::sendSelectionChangedMessage (SelectionManager* sm)</span></a>
+<a name="525"><span class="lineNum">     525 </span>            : {</a>
+<a name="526"><span class="lineNum">     526 </span><span class="lineNoCov">          0 :     if (sm != nullptr)</span></a>
+<a name="527"><span class="lineNum">     527 </span>            :     {</a>
+<a name="528"><span class="lineNum">     528 </span><span class="lineNoCov">          0 :         ++(sm-&gt;selectionChangeCount);</span></a>
+<a name="529"><span class="lineNum">     529 </span><span class="lineNoCov">          0 :         sm-&gt;sendChangeMessage();</span></a>
+<a name="530"><span class="lineNum">     530 </span>            :     }</a>
+<a name="531"><span class="lineNum">     531 </span>            : </a>
+<a name="532"><span class="lineNum">     532 </span><span class="lineNoCov">          0 :     changed();</span></a>
+<a name="533"><span class="lineNum">     533 </span><span class="lineNoCov">          0 :     sendChangeMessage();</span></a>
+<a name="534"><span class="lineNum">     534 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="535"><span class="lineNum">     535 </span>            : </a>
+<a name="536"><span class="lineNum">     536 </span><span class="lineNoCov">          0 : void SelectedMidiEvents::setClips (juce::Array&lt;MidiClip*&gt; clips_)</span></a>
+<a name="537"><span class="lineNum">     537 </span>            : {</a>
+<a name="538"><span class="lineNum">     538 </span>            :     // You should try and avoid changing the list of clips, instead</a>
+<a name="539"><span class="lineNum">     539 </span>            :     // create a new SelectedMidiEvents for the new clips. If you do</a>
+<a name="540"><span class="lineNum">     540 </span>            :     // change the clips, then this fuction will deselect and events</a>
+<a name="541"><span class="lineNum">     541 </span>            :     // that no longer belong to a clip in the clip list.</a>
 <a name="542"><span class="lineNum">     542 </span>            : </a>
-<a name="543"><span class="lineNum">     543 </span><span class="lineNoCov">          0 :     for (int i = selectedNotes.size(); --i &gt;= 0;)</span></a>
-<a name="544"><span class="lineNum">     544 </span><span class="lineNoCov">          0 :         if (clipForEvent (selectedNotes[i]) == nullptr)</span></a>
-<a name="545"><span class="lineNum">     545 </span><span class="lineNoCov">          0 :             selectedNotes.remove (i);</span></a>
-<a name="546"><span class="lineNum">     546 </span>            : </a>
-<a name="547"><span class="lineNum">     547 </span><span class="lineNoCov">          0 :     for (int i = selectedSysexes.size(); --i &gt;= 0;)</span></a>
-<a name="548"><span class="lineNum">     548 </span><span class="lineNoCov">          0 :         if (clipForEvent (selectedSysexes[i]) == nullptr)</span></a>
-<a name="549"><span class="lineNum">     549 </span><span class="lineNoCov">          0 :             selectedSysexes.remove (i);</span></a>
-<a name="550"><span class="lineNum">     550 </span>            : </a>
-<a name="551"><span class="lineNum">     551 </span><span class="lineNoCov">          0 :     for (int i = selectedControllers.size(); --i &gt;= 0;)</span></a>
-<a name="552"><span class="lineNum">     552 </span><span class="lineNoCov">          0 :         if (clipForEvent (selectedControllers[i]) == nullptr)</span></a>
-<a name="553"><span class="lineNum">     553 </span><span class="lineNoCov">          0 :             selectedControllers.remove (i);</span></a>
-<a name="554"><span class="lineNum">     554 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="555"><span class="lineNum">     555 </span>            : </a>
-<a name="556"><span class="lineNum">     556 </span><span class="lineNoCov">          0 : void SelectedMidiEvents::moveControllerData (const juce::Array&lt;MidiClip*&gt;&amp; clips, const juce::Array&lt;MidiControllerEvent*&gt;* onlyTheseEvents,</span></a>
-<a name="557"><span class="lineNum">     557 </span>            :                                              double deltaBeats, double startTime, double endTime, bool makeCopy)</a>
-<a name="558"><span class="lineNum">     558 </span>            : {</a>
-<a name="559"><span class="lineNum">     559 </span><span class="lineNoCov">          0 :     for (auto c : clips)</span></a>
-<a name="560"><span class="lineNum">     560 </span>            :     {</a>
-<a name="561"><span class="lineNum">     561 </span><span class="lineNoCov">          0 :         juce::Array&lt;juce::ValueTree&gt; itemsToRemove;</span></a>
-<a name="562"><span class="lineNum">     562 </span>            : </a>
-<a name="563"><span class="lineNum">     563 </span><span class="lineNoCov">          0 :         auto&amp; seq = c-&gt;getSequence();</span></a>
+<a name="543"><span class="lineNum">     543 </span><span class="lineNoCov">          0 :     clips = clips_;</span></a>
+<a name="544"><span class="lineNum">     544 </span>            : </a>
+<a name="545"><span class="lineNum">     545 </span><span class="lineNoCov">          0 :     for (int i = selectedNotes.size(); --i &gt;= 0;)</span></a>
+<a name="546"><span class="lineNum">     546 </span><span class="lineNoCov">          0 :         if (clipForEvent (selectedNotes[i]) == nullptr)</span></a>
+<a name="547"><span class="lineNum">     547 </span><span class="lineNoCov">          0 :             selectedNotes.remove (i);</span></a>
+<a name="548"><span class="lineNum">     548 </span>            : </a>
+<a name="549"><span class="lineNum">     549 </span><span class="lineNoCov">          0 :     for (int i = selectedSysexes.size(); --i &gt;= 0;)</span></a>
+<a name="550"><span class="lineNum">     550 </span><span class="lineNoCov">          0 :         if (clipForEvent (selectedSysexes[i]) == nullptr)</span></a>
+<a name="551"><span class="lineNum">     551 </span><span class="lineNoCov">          0 :             selectedSysexes.remove (i);</span></a>
+<a name="552"><span class="lineNum">     552 </span>            : </a>
+<a name="553"><span class="lineNum">     553 </span><span class="lineNoCov">          0 :     for (int i = selectedControllers.size(); --i &gt;= 0;)</span></a>
+<a name="554"><span class="lineNum">     554 </span><span class="lineNoCov">          0 :         if (clipForEvent (selectedControllers[i]) == nullptr)</span></a>
+<a name="555"><span class="lineNum">     555 </span><span class="lineNoCov">          0 :             selectedControllers.remove (i);</span></a>
+<a name="556"><span class="lineNum">     556 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="557"><span class="lineNum">     557 </span>            : </a>
+<a name="558"><span class="lineNum">     558 </span><span class="lineNoCov">          0 : void SelectedMidiEvents::moveControllerData (const juce::Array&lt;MidiClip*&gt;&amp; clips, const juce::Array&lt;MidiControllerEvent*&gt;* onlyTheseEvents,</span></a>
+<a name="559"><span class="lineNum">     559 </span>            :                                              BeatDuration deltaBeats, TimePosition startTime, TimePosition endTime, bool makeCopy)</a>
+<a name="560"><span class="lineNum">     560 </span>            : {</a>
+<a name="561"><span class="lineNum">     561 </span><span class="lineNoCov">          0 :     for (auto c : clips)</span></a>
+<a name="562"><span class="lineNum">     562 </span>            :     {</a>
+<a name="563"><span class="lineNum">     563 </span><span class="lineNoCov">          0 :         juce::Array&lt;juce::ValueTree&gt; itemsToRemove;</span></a>
 <a name="564"><span class="lineNum">     564 </span>            : </a>
-<a name="565"><span class="lineNum">     565 </span><span class="lineNoCov">          0 :         juce::Array&lt;MidiControllerEvent*&gt; movedEvents;</span></a>
-<a name="566"><span class="lineNum">     566 </span><span class="lineNoCov">          0 :         for (auto evt : seq.getControllerEvents())</span></a>
-<a name="567"><span class="lineNum">     567 </span>            :         {</a>
-<a name="568"><span class="lineNum">     568 </span><span class="lineNoCov">          0 :             if (evt-&gt;getEditTime (*c) &gt;= startTime &amp;&amp; evt-&gt;getEditTime (*c) &lt; endTime)</span></a>
-<a name="569"><span class="lineNum">     569 </span>            :             {</a>
-<a name="570"><span class="lineNum">     570 </span><span class="lineNoCov">          0 :                 if (makeCopy)</span></a>
-<a name="571"><span class="lineNum">     571 </span><span class="lineNoCov">          0 :                     seq.addControllerEvent (MidiControllerEvent (evt-&gt;state.createCopy()), c-&gt;getUndoManager());</span></a>
-<a name="572"><span class="lineNum">     572 </span>            : </a>
-<a name="573"><span class="lineNum">     573 </span><span class="lineNoCov">          0 :                 auto beat = evt-&gt;getBeatPosition() + deltaBeats;</span></a>
-<a name="574"><span class="lineNum">     574 </span><span class="lineNoCov">          0 :                 evt-&gt;setBeatPosition (beat, c-&gt;getUndoManager());</span></a>
-<a name="575"><span class="lineNum">     575 </span>            :                 movedEvents.add (evt);</a>
-<a name="576"><span class="lineNum">     576 </span>            :             }</a>
-<a name="577"><span class="lineNum">     577 </span>            :         }</a>
-<a name="578"><span class="lineNum">     578 </span>            : </a>
-<a name="579"><span class="lineNum">     579 </span><span class="lineNoCov">          0 :         auto&amp; ts = c-&gt;edit.tempoSequence;</span></a>
-<a name="580"><span class="lineNum">     580 </span>            : </a>
-<a name="581"><span class="lineNum">     581 </span><span class="lineNoCov">          0 :         double startTimeAfter = ts.beatsToTime (ts.timeToBeats (startTime) + deltaBeats);</span></a>
-<a name="582"><span class="lineNum">     582 </span><span class="lineNoCov">          0 :         double endTimeAfter   = ts.beatsToTime (ts.timeToBeats (endTime) + deltaBeats);</span></a>
+<a name="565"><span class="lineNum">     565 </span><span class="lineNoCov">          0 :         auto&amp; seq = c-&gt;getSequence();</span></a>
+<a name="566"><span class="lineNum">     566 </span>            : </a>
+<a name="567"><span class="lineNum">     567 </span><span class="lineNoCov">          0 :         juce::Array&lt;MidiControllerEvent*&gt; movedEvents;</span></a>
+<a name="568"><span class="lineNum">     568 </span>            : </a>
+<a name="569"><span class="lineNum">     569 </span><span class="lineNoCov">          0 :         for (auto evt : seq.getControllerEvents())</span></a>
+<a name="570"><span class="lineNum">     570 </span>            :         {</a>
+<a name="571"><span class="lineNum">     571 </span><span class="lineNoCov">          0 :             if (evt-&gt;getEditTime (*c) &gt;= startTime &amp;&amp; evt-&gt;getEditTime (*c) &lt; endTime)</span></a>
+<a name="572"><span class="lineNum">     572 </span>            :             {</a>
+<a name="573"><span class="lineNum">     573 </span><span class="lineNoCov">          0 :                 if (makeCopy)</span></a>
+<a name="574"><span class="lineNum">     574 </span><span class="lineNoCov">          0 :                     seq.addControllerEvent (MidiControllerEvent (evt-&gt;state.createCopy()), c-&gt;getUndoManager());</span></a>
+<a name="575"><span class="lineNum">     575 </span>            : </a>
+<a name="576"><span class="lineNum">     576 </span><span class="lineNoCov">          0 :                 auto beat = evt-&gt;getBeatPosition() + deltaBeats;</span></a>
+<a name="577"><span class="lineNum">     577 </span><span class="lineNoCov">          0 :                 evt-&gt;setBeatPosition (beat, c-&gt;getUndoManager());</span></a>
+<a name="578"><span class="lineNum">     578 </span>            :                 movedEvents.add (evt);</a>
+<a name="579"><span class="lineNum">     579 </span>            :             }</a>
+<a name="580"><span class="lineNum">     580 </span>            :         }</a>
+<a name="581"><span class="lineNum">     581 </span>            : </a>
+<a name="582"><span class="lineNum">     582 </span><span class="lineNoCov">          0 :         auto&amp; ts = c-&gt;edit.tempoSequence;</span></a>
 <a name="583"><span class="lineNum">     583 </span>            : </a>
-<a name="584"><span class="lineNum">     584 </span><span class="lineNoCov">          0 :         for (auto evt : seq.getControllerEvents())</span></a>
-<a name="585"><span class="lineNum">     585 </span><span class="lineNoCov">          0 :             if (onlyTheseEvents == nullptr || onlyTheseEvents-&gt;contains (evt))</span></a>
-<a name="586"><span class="lineNum">     586 </span><span class="lineNoCov">          0 :                 if (! movedEvents.contains (evt) &amp;&amp; evt-&gt;getEditTime (*c) &gt;= startTimeAfter &amp;&amp; evt-&gt;getEditTime (*c) &lt;= endTimeAfter)</span></a>
-<a name="587"><span class="lineNum">     587 </span><span class="lineNoCov">          0 :                     itemsToRemove.add (evt-&gt;state);</span></a>
-<a name="588"><span class="lineNum">     588 </span>            : </a>
-<a name="589"><span class="lineNum">     589 </span><span class="lineNoCov">          0 :         for (auto&amp; v : itemsToRemove)</span></a>
-<a name="590"><span class="lineNum">     590 </span><span class="lineNoCov">          0 :             seq.state.removeChild (v, c-&gt;getUndoManager());</span></a>
-<a name="591"><span class="lineNum">     591 </span>            :     }</a>
-<a name="592"><span class="lineNum">     592 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="593"><span class="lineNum">     593 </span>            : </a>
-<a name="594"><span class="lineNum">     594 </span>            : }</a>
+<a name="584"><span class="lineNum">     584 </span><span class="lineNoCov">          0 :         const auto startTimeAfter = ts.toTime (ts.toBeats (startTime) + deltaBeats);</span></a>
+<a name="585"><span class="lineNum">     585 </span><span class="lineNoCov">          0 :         const auto endTimeAfter   = ts.toTime (ts.toBeats (endTime) + deltaBeats);</span></a>
+<a name="586"><span class="lineNum">     586 </span>            : </a>
+<a name="587"><span class="lineNum">     587 </span><span class="lineNoCov">          0 :         for (auto evt : seq.getControllerEvents())</span></a>
+<a name="588"><span class="lineNum">     588 </span><span class="lineNoCov">          0 :             if (onlyTheseEvents == nullptr || onlyTheseEvents-&gt;contains (evt))</span></a>
+<a name="589"><span class="lineNum">     589 </span><span class="lineNoCov">          0 :                 if (! movedEvents.contains (evt) &amp;&amp; evt-&gt;getEditTime (*c) &gt;= startTimeAfter &amp;&amp; evt-&gt;getEditTime (*c) &lt;= endTimeAfter)</span></a>
+<a name="590"><span class="lineNum">     590 </span><span class="lineNoCov">          0 :                     itemsToRemove.add (evt-&gt;state);</span></a>
+<a name="591"><span class="lineNum">     591 </span>            : </a>
+<a name="592"><span class="lineNum">     592 </span><span class="lineNoCov">          0 :         for (auto&amp; v : itemsToRemove)</span></a>
+<a name="593"><span class="lineNum">     593 </span><span class="lineNoCov">          0 :             seq.state.removeChild (v, c-&gt;getUndoManager());</span></a>
+<a name="594"><span class="lineNum">     594 </span>            :     }</a>
+<a name="595"><span class="lineNum">     595 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="596"><span class="lineNum">     596 </span>            : </a>
+<a name="597"><span class="lineNum">     597 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

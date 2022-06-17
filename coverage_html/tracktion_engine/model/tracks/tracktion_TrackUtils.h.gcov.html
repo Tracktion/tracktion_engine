@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">7</td>
-            <td class="headerCovTableEntry">32</td>
-            <td class="headerCovTableEntryLo">21.9 %</td>
+            <td class="headerCovTableEntry">33</td>
+            <td class="headerCovTableEntryLo">21.2 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : /**</a>
@@ -213,7 +213,7 @@
 <a name="151"><span class="lineNum">     151 </span>            : struct TrackSection</a>
 <a name="152"><span class="lineNum">     152 </span>            : {</a>
 <a name="153"><span class="lineNum">     153 </span>            :     Track* track = nullptr; /**&lt; The Track this section refers to. */</a>
-<a name="154"><span class="lineNum">     154 </span>            :     EditTimeRange range;    /**&lt; The time range this section refers to. */</a>
+<a name="154"><span class="lineNum">     154 </span>            :     TimeRange range;        /**&lt; The time range this section refers to. */</a>
 <a name="155"><span class="lineNum">     155 </span>            : </a>
 <a name="156"><span class="lineNum">     156 </span>            :     /** Merges an overlapping TrackItem track/time range with this section.</a>
 <a name="157"><span class="lineNum">     157 </span>            :         @returns true if this item was from the same track and overlapping time</a>
@@ -223,7 +223,7 @@
 <a name="161"><span class="lineNum">     161 </span><span class="lineNoCov">          0 :     bool merge (const TrackItem&amp; c)</span></a>
 <a name="162"><span class="lineNum">     162 </span>            :     {</a>
 <a name="163"><span class="lineNum">     163 </span><span class="lineNoCov">          0 :         if (c.getTrack() == track</span></a>
-<a name="164"><span class="lineNum">     164 </span><span class="lineNoCov">          0 :              &amp;&amp; c.getEditTimeRange().overlaps (range.expanded (0.0001)))</span></a>
+<a name="164"><span class="lineNum">     164 </span><span class="lineNoCov">          0 :              &amp;&amp; c.getEditTimeRange().overlaps (range.expanded (TimeDuration::fromSeconds (0.0001))))</span></a>
 <a name="165"><span class="lineNum">     165 </span>            :         {</a>
 <a name="166"><span class="lineNum">     166 </span><span class="lineNoCov">          0 :             range = range.getUnionWith (c.getEditTimeRange());</span></a>
 <a name="167"><span class="lineNum">     167 </span><span class="lineNoCov">          0 :             return true;</span></a>
@@ -278,7 +278,7 @@
 <a name="216"><span class="lineNum">     216 </span>            :     /** Construts a section for a given TrackItem. */</a>
 <a name="217"><span class="lineNum">     217 </span>            :     TrackAutomationSection (TrackItem&amp;);</a>
 <a name="218"><span class="lineNum">     218 </span>            : </a>
-<a name="219"><span class="lineNum">     219 </span>            :     EditTimeRange position; /** The time range of the automation section. */</a>
+<a name="219"><span class="lineNum">     219 </span>            :     TimeRange position;     /** The time range of the automation section. */</a>
 <a name="220"><span class="lineNum">     220 </span>            :     Track::Ptr src,         /** The source Track. */</a>
 <a name="221"><span class="lineNum">     221 </span>            :                dst;         /** The destination Track. */</a>
 <a name="222"><span class="lineNum">     222 </span>            : </a>
@@ -304,7 +304,7 @@
 <a name="242"><span class="lineNum">     242 </span>            : /** Moves a set of automation optionally applying an offset and copying the</a>
 <a name="243"><span class="lineNum">     243 </span>            :     automation (rather than moving it).</a>
 <a name="244"><span class="lineNum">     244 </span>            : */</a>
-<a name="245"><span class="lineNum">     245 </span>            : void moveAutomation (const juce::Array&lt;TrackAutomationSection&gt;&amp;, double offset, bool copy);</a>
+<a name="245"><span class="lineNum">     245 </span>            : void moveAutomation (const juce::Array&lt;TrackAutomationSection&gt;&amp;, TimeDuration offset, bool copy);</a>
 <a name="246"><span class="lineNum">     246 </span>            : </a>
 <a name="247"><span class="lineNum">     247 </span>            : </a>
 <a name="248"><span class="lineNum">     248 </span>            : //==============================================================================</a>
@@ -312,16 +312,16 @@
 <a name="250"><span class="lineNum">     250 </span>            :     Returns the index of the next item after the given time.</a>
 <a name="251"><span class="lineNum">     251 </span>            : */</a>
 <a name="252"><span class="lineNum">     252 </span>            : template &lt;typename ArrayType&gt;</a>
-<a name="253"><span class="lineNum">     253 </span><span class="lineNoCov">          0 : int findIndexOfNextItemAt (const ArrayType&amp; items, double time)</span></a>
+<a name="253"><span class="lineNum">     253 </span><span class="lineNoCov">          0 : int findIndexOfNextItemAt (const ArrayType&amp; items, TimePosition time)</span></a>
 <a name="254"><span class="lineNum">     254 </span>            : {</a>
 <a name="255"><span class="lineNum">     255 </span><span class="lineNoCov">          0 :     for (int i = items.size(); --i &gt;= 0;)</span></a>
 <a name="256"><span class="lineNum">     256 </span>            :     {</a>
-<a name="257"><span class="lineNum">     257 </span><span class="lineNoCov">          0 :         auto pos = items.getUnchecked(i)-&gt;getPosition().time;</span></a>
+<a name="257"><span class="lineNum">     257 </span><span class="lineNoCov">          0 :         auto pos = items.getUnchecked (i)-&gt;getPosition().time;</span></a>
 <a name="258"><span class="lineNum">     258 </span>            : </a>
 <a name="259"><span class="lineNum">     259 </span><span class="lineNoCov">          0 :         if (pos.getStart() &lt; time)</span></a>
 <a name="260"><span class="lineNum">     260 </span>            :         {</a>
 <a name="261"><span class="lineNum">     261 </span><span class="lineNoCov">          0 :             if (pos.getEnd() &gt; time)</span></a>
-<a name="262"><span class="lineNum">     262 </span>            :                 return i;</a>
+<a name="262"><span class="lineNum">     262 </span><span class="lineNoCov">          0 :                 return i;</span></a>
 <a name="263"><span class="lineNum">     263 </span>            : </a>
 <a name="264"><span class="lineNum">     264 </span><span class="lineNoCov">          0 :             return i + 1;</span></a>
 <a name="265"><span class="lineNum">     265 </span>            :         }</a>
@@ -334,12 +334,12 @@
 <a name="272"><span class="lineNum">     272 </span>            :     Returns the the time range that covers all the given TrackItems.</a>
 <a name="273"><span class="lineNum">     273 </span>            : */</a>
 <a name="274"><span class="lineNum">     274 </span>            : template &lt;typename ArrayType&gt;</a>
-<a name="275"><span class="lineNum">     275 </span><span class="lineCov">        804 : EditTimeRange findUnionOfEditTimeRanges (const ArrayType&amp; items)</span></a>
+<a name="275"><span class="lineNum">     275 </span><span class="lineCov">        884 : TimeRange findUnionOfEditTimeRanges (const ArrayType&amp; items)</span></a>
 <a name="276"><span class="lineNum">     276 </span>            : {</a>
-<a name="277"><span class="lineNum">     277 </span><span class="lineCov">        804 :     EditTimeRange total;</span></a>
+<a name="277"><span class="lineNum">     277 </span><span class="lineCov">        884 :     TimeRange total;</span></a>
 <a name="278"><span class="lineNum">     278 </span>            :     bool first = true;</a>
 <a name="279"><span class="lineNum">     279 </span>            : </a>
-<a name="280"><span class="lineNum">     280 </span><span class="lineCov">        807 :     for (auto&amp; item : items)</span></a>
+<a name="280"><span class="lineNum">     280 </span><span class="lineCov">        887 :     for (auto&amp; item : items)</span></a>
 <a name="281"><span class="lineNum">     281 </span>            :     {</a>
 <a name="282"><span class="lineNum">     282 </span><span class="lineCov">          3 :         auto time = item-&gt;getEditTimeRange();</span></a>
 <a name="283"><span class="lineNum">     283 </span>            : </a>
@@ -354,10 +354,10 @@
 <a name="292"><span class="lineNum">     292 </span>            :         }</a>
 <a name="293"><span class="lineNum">     293 </span>            :     }</a>
 <a name="294"><span class="lineNum">     294 </span>            : </a>
-<a name="295"><span class="lineNum">     295 </span><span class="lineCov">        804 :     return total;</span></a>
+<a name="295"><span class="lineNum">     295 </span><span class="lineCov">        884 :     return total;</span></a>
 <a name="296"><span class="lineNum">     296 </span>            : }</a>
 <a name="297"><span class="lineNum">     297 </span>            : </a>
-<a name="298"><span class="lineNum">     298 </span>            : } // namespace tracktion_engine</a>
+<a name="298"><span class="lineNum">     298 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">14</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : /**</a>
@@ -136,7 +136,7 @@
 <a name="74"><span class="lineNum">      74 </span>            :         But by returning false here, you can opt to remove them from the playback graph entirely</a>
 <a name="75"><span class="lineNum">      75 </span>            :         which means they won't introduce latency which can be useful for tracking.</a>
 <a name="76"><span class="lineNum">      76 </span>            :     */</a>
-<a name="77"><span class="lineNum">      77 </span><span class="lineCov">        276 :     virtual bool shouldBypassedPluginsBeRemovedFromPlaybackGraph()                { return false; }</span></a>
+<a name="77"><span class="lineNum">      77 </span><span class="lineCov">        298 :     virtual bool shouldBypassedPluginsBeRemovedFromPlaybackGraph()                { return false; }</span></a>
 <a name="78"><span class="lineNum">      78 </span>            : </a>
 <a name="79"><span class="lineNum">      79 </span>            :     /** Gives plugins an opportunity to save custom data when the plugin state gets flushed. */</a>
 <a name="80"><span class="lineNum">      80 </span><span class="lineNoCov">          0 :     virtual void saveCustomPluginProperties (juce::ValueTree&amp;, juce::AudioPluginInstance&amp;, juce::UndoManager*) {}</span></a>
@@ -183,25 +183,25 @@
 <a name="121"><span class="lineNum">     121 </span>            : </a>
 <a name="122"><span class="lineNum">     122 </span><span class="lineNoCov">          0 :     virtual bool shouldPlayMidiGuideNotes()                                         { return false; }</span></a>
 <a name="123"><span class="lineNum">     123 </span>            : </a>
-<a name="124"><span class="lineNum">     124 </span><span class="lineCov">        225 :     virtual int getNumberOfCPUsToUseForAudio()                                      { return juce::jmax (1, juce::SystemStats::getNumCpus()); }</span></a>
+<a name="124"><span class="lineNum">     124 </span><span class="lineCov">        297 :     virtual int getNumberOfCPUsToUseForAudio()                                      { return juce::jmax (1, juce::SystemStats::getNumCpus()); }</span></a>
 <a name="125"><span class="lineNum">     125 </span>            : </a>
 <a name="126"><span class="lineNum">     126 </span>            :     /** Should muted tracks processing be disabled to save CPU */</a>
-<a name="127"><span class="lineNum">     127 </span><span class="lineCov">        284 :     virtual bool shouldProcessMutedTracks()                                         { return false; }</span></a>
+<a name="127"><span class="lineNum">     127 </span><span class="lineCov">        396 :     virtual bool shouldProcessMutedTracks()                                         { return false; }</span></a>
 <a name="128"><span class="lineNum">     128 </span>            : </a>
 <a name="129"><span class="lineNum">     129 </span>            :     /** Should audio inputs be audible when monitor-enabled but not record enabled.  */</a>
 <a name="130"><span class="lineNum">     130 </span><span class="lineCov">        128 :     virtual bool monitorAudioInputsWithoutRecordEnable()                            { return false; }</span></a>
 <a name="131"><span class="lineNum">     131 </span>            : </a>
-<a name="132"><span class="lineNum">     132 </span><span class="lineCov">         85 :     virtual bool areAudioClipsRemappedWhenTempoChanges()                            { return true; }</span></a>
+<a name="132"><span class="lineNum">     132 </span><span class="lineCov">         87 :     virtual bool areAudioClipsRemappedWhenTempoChanges()                            { return true; }</span></a>
 <a name="133"><span class="lineNum">     133 </span><span class="lineNoCov">          0 :     virtual void setAudioClipsRemappedWhenTempoChanges (bool)                       {}</span></a>
 <a name="134"><span class="lineNum">     134 </span><span class="lineNoCov">          0 :     virtual bool areAutoTempoClipsRemappedWhenTempoChanges()                        { return true; }</span></a>
 <a name="135"><span class="lineNum">     135 </span><span class="lineNoCov">          0 :     virtual void setAutoTempoClipsRemappedWhenTempoChanges (bool)                   {}</span></a>
-<a name="136"><span class="lineNum">     136 </span><span class="lineCov">          1 :     virtual bool areMidiClipsRemappedWhenTempoChanges()                             { return true; }</span></a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineCov">          9 :     virtual bool areMidiClipsRemappedWhenTempoChanges()                             { return true; }</span></a>
 <a name="137"><span class="lineNum">     137 </span><span class="lineNoCov">          0 :     virtual void setMidiClipsRemappedWhenTempoChanges (bool)                        {}</span></a>
-<a name="138"><span class="lineNum">     138 </span><span class="lineCov">        282 :     virtual bool arePluginsRemappedWhenTempoChanges()                               { return true; }</span></a>
+<a name="138"><span class="lineNum">     138 </span><span class="lineCov">        296 :     virtual bool arePluginsRemappedWhenTempoChanges()                               { return true; }</span></a>
 <a name="139"><span class="lineNum">     139 </span><span class="lineNoCov">          0 :     virtual void setPluginsRemappedWhenTempoChanges (bool)                          {}</span></a>
 <a name="140"><span class="lineNum">     140 </span>            : </a>
 <a name="141"><span class="lineNum">     141 </span>            :     /** Should return the maximum number of elements that can be added to an Edit. */</a>
-<a name="142"><span class="lineNum">     142 </span><span class="lineCov">       1053 :     virtual EditLimits getEditLimits()                                              { return {}; }</span></a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineCov">       1105 :     virtual EditLimits getEditLimits()                                              { return {}; }</span></a>
 <a name="143"><span class="lineNum">     143 </span>            : </a>
 <a name="144"><span class="lineNum">     144 </span>            :     /** If this returns true, it means that the length (in seconds) of one &quot;beat&quot; at</a>
 <a name="145"><span class="lineNum">     145 </span>            :         any point in an edit is considered to be the length of one division in the current</a>
@@ -217,7 +217,7 @@
 <a name="155"><span class="lineNum">     155 </span>            :         You shouldn't dynamically change this function's return value - just implement a</a>
 <a name="156"><span class="lineNum">     156 </span>            :         function that always returns true or false.</a>
 <a name="157"><span class="lineNum">     157 </span>            :     */</a>
-<a name="158"><span class="lineNum">     158 </span><span class="lineCov">        301 :     virtual bool lengthOfOneBeatDependsOnTimeSignature()                            { return true; }</span></a>
+<a name="158"><span class="lineNum">     158 </span><span class="lineCov">        373 :     virtual bool lengthOfOneBeatDependsOnTimeSignature()                            { return true; }</span></a>
 <a name="159"><span class="lineNum">     159 </span>            : </a>
 <a name="160"><span class="lineNum">     160 </span>            :     struct LevelMeterSettings</a>
 <a name="161"><span class="lineNum">     161 </span>            :     {</a>
@@ -229,12 +229,12 @@
 <a name="167"><span class="lineNum">     167 </span><span class="lineNoCov">          0 :     virtual void setLevelMeterSettings (LevelMeterSettings)                         {}</span></a>
 <a name="168"><span class="lineNum">     168 </span>            : </a>
 <a name="169"><span class="lineNum">     169 </span>            :     // 0 = normal, 1 = high, 2 = realtime</a>
-<a name="170"><span class="lineNum">     170 </span><span class="lineCov">        152 :     virtual void setProcessPriority (int /*level*/)                                 {}</span></a>
+<a name="170"><span class="lineNum">     170 </span><span class="lineCov">        168 :     virtual void setProcessPriority (int /*level*/)                                 {}</span></a>
 <a name="171"><span class="lineNum">     171 </span>            : </a>
 <a name="172"><span class="lineNum">     172 </span>            :     /** If this returns true, you must implement describeWaveDevices to determine the wave devices for a given device.</a>
 <a name="173"><span class="lineNum">     173 </span>            :         If it's false, a standard, stereo pair layout will be automatically generated.</a>
 <a name="174"><span class="lineNum">     174 </span>            :     */</a>
-<a name="175"><span class="lineNum">     175 </span><span class="lineCov">     362377 :     virtual bool isDescriptionOfWaveDevicesSupported()                              { return false; }</span></a>
+<a name="175"><span class="lineNum">     175 </span><span class="lineCov">     695730 :     virtual bool isDescriptionOfWaveDevicesSupported()                              { return false; }</span></a>
 <a name="176"><span class="lineNum">     176 </span>            : </a>
 <a name="177"><span class="lineNum">     177 </span>            :     /** If isDescriptionOfWaveDevicesSupported returns true, this should be implemented to describe the wave devices</a>
 <a name="178"><span class="lineNum">     178 </span>            :         for a given audio device.</a>
@@ -246,9 +246,9 @@
 <a name="184"><span class="lineNum">     184 </span>            :         You can override this to add your own messages but should generally follow the</a>
 <a name="185"><span class="lineNum">     185 </span>            :         procedure in MidiList::createDefaultPlaybackMidiSequence.</a>
 <a name="186"><span class="lineNum">     186 </span>            :     */</a>
-<a name="187"><span class="lineNum">     187 </span><span class="lineCov">          2 :     virtual juce::MidiMessageSequence createPlaybackMidiSequence (const MidiList&amp; list, MidiClip&amp; clip, bool generateMPE)</span></a>
+<a name="187"><span class="lineNum">     187 </span><span class="lineCov">         50 :     virtual juce::MidiMessageSequence createPlaybackMidiSequence (const MidiList&amp; list, MidiClip&amp; clip, MidiList::TimeBase tb, bool generateMPE)</span></a>
 <a name="188"><span class="lineNum">     188 </span>            :     {</a>
-<a name="189"><span class="lineNum">     189 </span><span class="lineCov">          2 :         return MidiList::createDefaultPlaybackMidiSequence (list, clip, generateMPE);</span></a>
+<a name="189"><span class="lineNum">     189 </span><span class="lineCov">         50 :         return MidiList::createDefaultPlaybackMidiSequence (list, clip, tb, generateMPE);</span></a>
 <a name="190"><span class="lineNum">     190 </span>            :     }</a>
 <a name="191"><span class="lineNum">     191 </span>            :     </a>
 <a name="192"><span class="lineNum">     192 </span>            :     /** Must return the default looped sequence type to use.</a>
@@ -257,30 +257,29 @@
 <a name="195"><span class="lineNum">     195 </span>            :         0: loopRangeDefinesAllRepetitions           // The looped sequence is the same for all repetitions including the first.</a>
 <a name="196"><span class="lineNum">     196 </span>            :         1: loopRangeDefinesSubsequentRepetitions    // The first section is the whole sequence, subsequent repitions are determined by the loop range.</a>
 <a name="197"><span class="lineNum">     197 </span>            :     */</a>
-<a name="198"><span class="lineNum">     198 </span><span class="lineCov">          1 :     virtual int getDefaultLoopedSequenceType()                                      { return 0; }</span></a>
+<a name="198"><span class="lineNum">     198 </span><span class="lineCov">          9 :     virtual int getDefaultLoopedSequenceType()                                      { return 0; }</span></a>
 <a name="199"><span class="lineNum">     199 </span>            : </a>
 <a name="200"><span class="lineNum">     200 </span>            :     /** If this returns true, it means that newly inserted clips will automatically have a fade-in and fade-out of 3ms applied. */</a>
-<a name="201"><span class="lineNum">     201 </span><span class="lineCov">         85 :     virtual bool autoAddClipEdgeFades()                                             { return false; }</span></a>
+<a name="201"><span class="lineNum">     201 </span><span class="lineCov">         87 :     virtual bool autoAddClipEdgeFades()                                             { return false; }</span></a>
 <a name="202"><span class="lineNum">     202 </span>            :     </a>
-<a name="203"><span class="lineNum">     203 </span>            :     </a>
-<a name="204"><span class="lineNum">     204 </span>            :     struct ControlSurfaces</a>
-<a name="205"><span class="lineNum">     205 </span>            :     {</a>
-<a name="206"><span class="lineNum">     206 </span>            :         bool mackieMCU = true;</a>
-<a name="207"><span class="lineNum">     207 </span>            :         bool mackieC4 = true;</a>
-<a name="208"><span class="lineNum">     208 </span>            :         bool iconProG2 = true;</a>
-<a name="209"><span class="lineNum">     209 </span>            :         bool tranzport = true;</a>
-<a name="210"><span class="lineNum">     210 </span>            :         bool alphaTrack = true;</a>
-<a name="211"><span class="lineNum">     211 </span>            :         bool remoteSL = true;</a>
-<a name="212"><span class="lineNum">     212 </span>            :         bool remoteSLCompact = true;</a>
-<a name="213"><span class="lineNum">     213 </span>            :         bool automap = true;</a>
-<a name="214"><span class="lineNum">     214 </span>            :     };</a>
-<a name="215"><span class="lineNum">     215 </span>            :     </a>
-<a name="216"><span class="lineNum">     216 </span>            :     /** Return the control surfaces you want enabled in the engine */</a>
-<a name="217"><span class="lineNum">     217 </span>            :     </a>
-<a name="218"><span class="lineNum">     218 </span><span class="lineNoCov">          0 :     virtual ControlSurfaces getDesiredControlSurfaces()                             { return {}; }</span></a>
-<a name="219"><span class="lineNum">     219 </span>            : };</a>
-<a name="220"><span class="lineNum">     220 </span>            : </a>
-<a name="221"><span class="lineNum">     221 </span>            : } // namespace tracktion_engine</a>
+<a name="203"><span class="lineNum">     203 </span>            :     struct ControlSurfaces</a>
+<a name="204"><span class="lineNum">     204 </span>            :     {</a>
+<a name="205"><span class="lineNum">     205 </span>            :         bool mackieMCU = true;</a>
+<a name="206"><span class="lineNum">     206 </span>            :         bool mackieC4 = true;</a>
+<a name="207"><span class="lineNum">     207 </span>            :         bool iconProG2 = true;</a>
+<a name="208"><span class="lineNum">     208 </span>            :         bool tranzport = true;</a>
+<a name="209"><span class="lineNum">     209 </span>            :         bool alphaTrack = true;</a>
+<a name="210"><span class="lineNum">     210 </span>            :         bool remoteSL = true;</a>
+<a name="211"><span class="lineNum">     211 </span>            :         bool remoteSLCompact = true;</a>
+<a name="212"><span class="lineNum">     212 </span>            :         bool automap = true;</a>
+<a name="213"><span class="lineNum">     213 </span>            :     };</a>
+<a name="214"><span class="lineNum">     214 </span>            :     </a>
+<a name="215"><span class="lineNum">     215 </span>            :     /** Return the control surfaces you want enabled in the engine */</a>
+<a name="216"><span class="lineNum">     216 </span>            :     </a>
+<a name="217"><span class="lineNum">     217 </span><span class="lineNoCov">          0 :     virtual ControlSurfaces getDesiredControlSurfaces()                             { return {}; }</span></a>
+<a name="218"><span class="lineNum">     218 </span>            : };</a>
+<a name="219"><span class="lineNum">     219 </span>            : </a>
+<a name="220"><span class="lineNum">     220 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

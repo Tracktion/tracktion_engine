@@ -1,5 +1,0 @@
-<map id="tracktion_engine::WaveInputDevice" name="tracktion_engine::WaveInputDevice">
-<area shape="rect" id="node1" title="A (virtual) audio input device." alt="" coords="10,155,218,196"/>
-<area shape="rect" id="node2" href="$classtracktion__engine_1_1InputDevice.html" title="Represents an input device." alt="" coords="5,80,223,107"/>
-<area shape="rect" id="node3" href="$classtracktion__engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="11,5,217,32"/>
-</map>

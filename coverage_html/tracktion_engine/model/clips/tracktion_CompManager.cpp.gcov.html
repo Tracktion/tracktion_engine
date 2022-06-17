@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">694</td>
+            <td class="headerCovTableEntry">692</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -76,7 +76,7 @@
 <a name="14"><span class="lineNum">      14 </span>            : #include &quot;../../playback/audionodes/tracktion_CombiningAudioNode.h&quot;</a>
 <a name="15"><span class="lineNum">      15 </span>            : </a>
 <a name="16"><span class="lineNum">      16 </span>            : </a>
-<a name="17"><span class="lineNum">      17 </span>            : namespace tracktion_engine</a>
+<a name="17"><span class="lineNum">      17 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="18"><span class="lineNum">      18 </span>            : {</a>
 <a name="19"><span class="lineNum">      19 </span>            : </a>
 <a name="20"><span class="lineNum">      20 </span>            : struct CompManager::RenderTrigger   : public ValueTreeAllEventListener,</a>
@@ -109,7 +109,7 @@
 <a name="47"><span class="lineNum">      47 </span>            : </a>
 <a name="48"><span class="lineNum">      48 </span><span class="lineNoCov">          0 :     renderTrigger = std::make_unique&lt;RenderTrigger&gt; (*this);</span></a>
 <a name="49"><span class="lineNum">      49 </span>            : </a>
-<a name="50"><span class="lineNum">      50 </span><span class="lineNoCov">          0 :     lastOffset = clip.getPosition().getOffset();</span></a>
+<a name="50"><span class="lineNum">      50 </span><span class="lineNoCov">          0 :     lastOffset = clip.getPosition().getOffset().inSeconds();</span></a>
 <a name="51"><span class="lineNum">      51 </span><span class="lineNoCov">          0 :     lastTimeRatio = getSourceTimeMultiplier();</span></a>
 <a name="52"><span class="lineNum">      52 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="53"><span class="lineNum">      53 </span>            : </a>
@@ -163,7 +163,7 @@
 <a name="101"><span class="lineNum">     101 </span><span class="lineNoCov">          0 :     return {};</span></a>
 <a name="102"><span class="lineNum">     102 </span>            : }</a>
 <a name="103"><span class="lineNum">     103 </span>            : </a>
-<a name="104"><span class="lineNum">     104 </span><span class="lineNoCov">          0 : int CompManager::findSectionWithEndTime (EditTimeRange timeRange, int takeIndex, bool&amp; timeFoundAtStartOfSection) const</span></a>
+<a name="104"><span class="lineNum">     104 </span><span class="lineNoCov">          0 : int CompManager::findSectionWithEndTime (juce::Range&lt;double&gt; timeRange, int takeIndex, bool&amp; timeFoundAtStartOfSection) const</span></a>
 <a name="105"><span class="lineNum">     105 </span>            : {</a>
 <a name="106"><span class="lineNum">     106 </span><span class="lineNoCov">          0 :     auto activeTree = getActiveTakeTree();</span></a>
 <a name="107"><span class="lineNum">     107 </span><span class="lineNoCov">          0 :     auto numSections = activeTree.getNumChildren();</span></a>
@@ -196,7 +196,7 @@
 <a name="134"><span class="lineNum">     134 </span>            :     return -1;</a>
 <a name="135"><span class="lineNum">     135 </span>            : }</a>
 <a name="136"><span class="lineNum">     136 </span>            : </a>
-<a name="137"><span class="lineNum">     137 </span><span class="lineNoCov">          0 : EditTimeRange CompManager::getSectionTimes (const juce::ValueTree&amp; section) const</span></a>
+<a name="137"><span class="lineNum">     137 </span><span class="lineNoCov">          0 : juce::Range&lt;double&gt; CompManager::getSectionTimes (const juce::ValueTree&amp; section) const</span></a>
 <a name="138"><span class="lineNum">     138 </span>            : {</a>
 <a name="139"><span class="lineNum">     139 </span>            :     jassert (section.hasType (IDs::COMPSECTION));</a>
 <a name="140"><span class="lineNum">     140 </span>            : </a>
@@ -235,11 +235,11 @@
 <a name="173"><span class="lineNum">     173 </span>            : }</a>
 <a name="174"><span class="lineNum">     174 </span>            : </a>
 <a name="175"><span class="lineNum">     175 </span>            : //==============================================================================</a>
-<a name="176"><span class="lineNum">     176 </span><span class="lineNoCov">          0 : EditTimeRange CompManager::getCompRange() const</span></a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineNoCov">          0 : juce::Range&lt;double&gt; CompManager::getCompRange() const</span></a>
 <a name="177"><span class="lineNum">     177 </span>            : {</a>
 <a name="178"><span class="lineNum">     178 </span><span class="lineNoCov">          0 :     auto endTime = clip.isLooping() ? getLoopLength()</span></a>
 <a name="179"><span class="lineNum">     179 </span><span class="lineNoCov">          0 :                                     : (getMaxCompLength() * getSourceTimeMultiplier());</span></a>
-<a name="180"><span class="lineNum">     180 </span><span class="lineNoCov">          0 :     return EditTimeRange (0.0, endTime) - getOffset();</span></a>
+<a name="180"><span class="lineNum">     180 </span><span class="lineNoCov">          0 :     return juce::Range&lt;double&gt; (0.0, endTime) - getOffset();</span></a>
 <a name="181"><span class="lineNum">     181 </span>            : }</a>
 <a name="182"><span class="lineNum">     182 </span>            : </a>
 <a name="183"><span class="lineNum">     183 </span><span class="lineNoCov">          0 : double CompManager::getSpeedRatio() const</span></a>
@@ -348,7 +348,7 @@
 <a name="286"><span class="lineNum">     286 </span>            : </a>
 <a name="287"><span class="lineNum">     287 </span><span class="lineNoCov">          0 :     if (currentEndTime != newTime)</span></a>
 <a name="288"><span class="lineNum">     288 </span>            :     {</a>
-<a name="289"><span class="lineNum">     289 </span><span class="lineNoCov">          0 :         removeSectionsWithinRange (EditTimeRange::between (currentEndTime, newTime), section);</span></a>
+<a name="289"><span class="lineNum">     289 </span><span class="lineNoCov">          0 :         removeSectionsWithinRange (juce::Range&lt;double&gt;::between (currentEndTime, newTime), section);</span></a>
 <a name="290"><span class="lineNum">     290 </span><span class="lineNoCov">          0 :         section.setProperty (IDs::endTime, newTime, getUndoManager());</span></a>
 <a name="291"><span class="lineNum">     291 </span>            :     }</a>
 <a name="292"><span class="lineNum">     292 </span><span class="lineNoCov">          0 : }</span></a>
@@ -424,7 +424,7 @@
 <a name="362"><span class="lineNum">     362 </span><span class="lineNoCov">          0 :     section.getParent().removeChild (section, getUndoManager());</span></a>
 <a name="363"><span class="lineNum">     363 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="364"><span class="lineNum">     364 </span>            : </a>
-<a name="365"><span class="lineNum">     365 </span><span class="lineNoCov">          0 : void CompManager::removeSectionsWithinRange (EditTimeRange timeRange, const juce::ValueTree&amp; sectionToKeep)</span></a>
+<a name="365"><span class="lineNum">     365 </span><span class="lineNoCov">          0 : void CompManager::removeSectionsWithinRange (juce::Range&lt;double&gt; timeRange, const juce::ValueTree&amp; sectionToKeep)</span></a>
 <a name="366"><span class="lineNum">     366 </span>            : {</a>
 <a name="367"><span class="lineNum">     367 </span><span class="lineNoCov">          0 :     auto takeTree = getActiveTakeTree();</span></a>
 <a name="368"><span class="lineNum">     368 </span>            :     jassert (takeTree.hasType (IDs::TAKE) &amp;&amp; isTakeComp (takeTree));</a>
@@ -496,7 +496,7 @@
 <a name="434"><span class="lineNum">     434 </span>            :         {</a>
 <a name="435"><span class="lineNum">     435 </span><span class="lineNoCov">          0 :             auto sectionTimes = getSectionTimes (takeTree.getChild (i));</span></a>
 <a name="436"><span class="lineNum">     436 </span>            : </a>
-<a name="437"><span class="lineNum">     437 </span><span class="lineNoCov">          0 :             if (! compRange.overlaps (sectionTimes)</span></a>
+<a name="437"><span class="lineNum">     437 </span><span class="lineNoCov">          0 :             if (! (sectionTimes.getStart() &lt; compRange.getEnd() &amp;&amp; compRange.getStart() &lt; sectionTimes.getEnd())</span></a>
 <a name="438"><span class="lineNum">     438 </span><span class="lineNoCov">          0 :                 || sectionTimes.getEnd() &lt; compRange.getStart())</span></a>
 <a name="439"><span class="lineNum">     439 </span>            :             {</a>
 <a name="440"><span class="lineNum">     440 </span><span class="lineNoCov">          0 :                 takeTree.removeChild (i, getUndoManager());</span></a>
@@ -567,13 +567,13 @@
 <a name="505"><span class="lineNum">     505 </span>            :     {</a>
 <a name="506"><span class="lineNum">     506 </span>            :         // need to find the tempo changes between the source start and  how long the result will be</a>
 <a name="507"><span class="lineNum">     507 </span><span class="lineNoCov">          0 :         const double sourceTempo = getSourceTempo();</span></a>
-<a name="508"><span class="lineNum">     508 </span><span class="lineNoCov">          0 :         const double sourceStart = clip.getPosition().getStart();</span></a>
+<a name="508"><span class="lineNum">     508 </span><span class="lineNoCov">          0 :         const double sourceStart = clip.getPosition().getStart().inSeconds();</span></a>
 <a name="509"><span class="lineNum">     509 </span><span class="lineNoCov">          0 :         const double takeEnd = sourceStart + maxSourceLength - getOffset();</span></a>
 <a name="510"><span class="lineNum">     510 </span>            : </a>
 <a name="511"><span class="lineNum">     511 </span><span class="lineNoCov">          0 :         auto&amp; ts = clip.edit.tempoSequence;</span></a>
-<a name="512"><span class="lineNum">     512 </span><span class="lineNoCov">          0 :         auto&amp; tempoSetting = ts.getTempoAt (sourceStart);</span></a>
+<a name="512"><span class="lineNum">     512 </span><span class="lineNoCov">          0 :         auto&amp; tempoSetting = ts.getTempoAt (TimePosition::fromSeconds (sourceStart));</span></a>
 <a name="513"><span class="lineNum">     513 </span>            : </a>
-<a name="514"><span class="lineNum">     514 </span><span class="lineNoCov">          0 :         displayWarning = &amp;tempoSetting != &amp;ts.getTempoAt (takeEnd);</span></a>
+<a name="514"><span class="lineNum">     514 </span><span class="lineNoCov">          0 :         displayWarning = &amp;tempoSetting != &amp;ts.getTempoAt (TimePosition::fromSeconds (takeEnd));</span></a>
 <a name="515"><span class="lineNum">     515 </span><span class="lineNoCov">          0 :         speedRatio = tempoSetting.getBpm() / sourceTempo;</span></a>
 <a name="516"><span class="lineNum">     516 </span>            :     }</a>
 <a name="517"><span class="lineNum">     517 </span>            :     else</a>
@@ -840,8 +840,8 @@
 <a name="778"><span class="lineNum">     778 </span><span class="lineNoCov">          0 :     return getSourceFileForTake (takeIndex).getInfo().getLengthInSeconds();</span></a>
 <a name="779"><span class="lineNum">     779 </span>            : }</a>
 <a name="780"><span class="lineNum">     780 </span>            : </a>
-<a name="781"><span class="lineNum">     781 </span><span class="lineNoCov">          0 : double WaveCompManager::getOffset() const       { return clip.getPosition().getOffset(); }</span></a>
-<a name="782"><span class="lineNum">     782 </span><span class="lineNoCov">          0 : double WaveCompManager::getLoopLength() const   { return clip.getLoopLength(); }</span></a>
+<a name="781"><span class="lineNum">     781 </span><span class="lineNoCov">          0 : double WaveCompManager::getOffset() const       { return clip.getPosition().getOffset().inSeconds(); }</span></a>
+<a name="782"><span class="lineNum">     782 </span><span class="lineNoCov">          0 : double WaveCompManager::getLoopLength() const   { return clip.getLoopLength().inSeconds(); }</span></a>
 <a name="783"><span class="lineNum">     783 </span><span class="lineNoCov">          0 : bool WaveCompManager::getAutoTempo()            { return clip.getAutoTempo(); }</span></a>
 <a name="784"><span class="lineNum">     784 </span>            : </a>
 <a name="785"><span class="lineNum">     785 </span><span class="lineNoCov">          0 : double WaveCompManager::getSourceTempo()</span></a>
@@ -1076,7 +1076,7 @@
 <a name="1014"><span class="lineNum">    1014 </span>            :     // first build the audio graph of the comp</a>
 <a name="1015"><span class="lineNum">    1015 </span><span class="lineNoCov">          0 :     CombiningAudioNode compNode;</span></a>
 <a name="1016"><span class="lineNum">    1016 </span>            :     const int blockSize = 32768;</a>
-<a name="1017"><span class="lineNum">    1017 </span><span class="lineNoCov">          0 :     EditTimeRange takeRange (0.0, context.maxLength);</span></a>
+<a name="1017"><span class="lineNum">    1017 </span><span class="lineNoCov">          0 :     juce::Range&lt;double&gt; takeRange (0.0, context.maxLength);</span></a>
 <a name="1018"><span class="lineNum">    1018 </span><span class="lineNoCov">          0 :     auto crossfadeLength = context.crossfadeLength;</span></a>
 <a name="1019"><span class="lineNum">    1019 </span><span class="lineNoCov">          0 :     auto halfCrossfade = crossfadeLength / 2.0;</span></a>
 <a name="1020"><span class="lineNum">    1020 </span>            : </a>
@@ -1103,8 +1103,8 @@
 <a name="1041"><span class="lineNum">    1041 </span>            :             AudioNode* node = new WaveAudioNode (takeFile, takeRange, 0.0, {}, {},</a>
 <a name="1042"><span class="lineNum">    1042 </span><span class="lineNoCov">          0 :                                                  1.0, juce::AudioChannelSet::stereo());</span></a>
 <a name="1043"><span class="lineNum">    1043 </span>            : </a>
-<a name="1044"><span class="lineNum">    1044 </span><span class="lineNoCov">          0 :             auto segmentTimes = EditTimeRange (startTime, endTime).expanded (halfCrossfade) + offset;</span></a>
-<a name="1045"><span class="lineNum">    1045 </span>            :             EditTimeRange fadeIn, fadeOut;</a>
+<a name="1044"><span class="lineNum">    1044 </span>            :             auto segmentTimes = juce::Range&lt;double&gt; (startTime, endTime).expanded (halfCrossfade) + offset;</a>
+<a name="1045"><span class="lineNum">    1045 </span>            :             juce::Range&lt;double&gt; fadeIn, fadeOut;</a>
 <a name="1046"><span class="lineNum">    1046 </span>            : </a>
 <a name="1047"><span class="lineNum">    1047 </span><span class="lineNoCov">          0 :             if (i != 0)</span></a>
 <a name="1048"><span class="lineNum">    1048 </span><span class="lineNoCov">          0 :                 fadeIn = { segmentTimes.getStart(), segmentTimes.getStart() + crossfadeLength };</span></a>
@@ -1139,7 +1139,7 @@
 <a name="1077"><span class="lineNum">    1077 </span>            : </a>
 <a name="1078"><span class="lineNum">    1078 </span><span class="lineNoCov">          0 :         PlaybackInitialisationInfo info =</span></a>
 <a name="1079"><span class="lineNum">    1079 </span>            :         {</a>
-<a name="1080"><span class="lineNum">    1080 </span><span class="lineNoCov">          0 :             takeRange.getStart(),</span></a>
+<a name="1080"><span class="lineNum">    1080 </span>            :             takeRange.getStart(),</a>
 <a name="1081"><span class="lineNum">    1081 </span><span class="lineNoCov">          0 :             writer.getSampleRate(),</span></a>
 <a name="1082"><span class="lineNum">    1082 </span>            :             blockSize,</a>
 <a name="1083"><span class="lineNum">    1083 </span>            :             &amp;allNodes,</a>
@@ -1165,7 +1165,7 @@
 <a name="1103"><span class="lineNum">    1103 </span>            :         return false;</a>
 <a name="1104"><span class="lineNum">    1104 </span>            : </a>
 <a name="1105"><span class="lineNum">    1105 </span>            :     // now perform the render</a>
-<a name="1106"><span class="lineNum">    1106 </span><span class="lineNoCov">          0 :     auto streamTime = takeRange.getStart();</span></a>
+<a name="1106"><span class="lineNum">    1106 </span>            :     auto streamTime = takeRange.getStart();</a>
 <a name="1107"><span class="lineNum">    1107 </span><span class="lineNoCov">          0 :     auto blockLength = blockSize / writer.getSampleRate();</span></a>
 <a name="1108"><span class="lineNum">    1108 </span><span class="lineNoCov">          0 :     SampleCount samplesToWrite = juce::roundToInt (takeRange.getLength() * writer.getSampleRate());</span></a>
 <a name="1109"><span class="lineNum">    1109 </span>            : </a>
@@ -1409,17 +1409,17 @@
 <a name="1347"><span class="lineNum">    1347 </span><span class="lineNoCov">          0 : HashCode MidiCompManager::getBaseTakeHash (int takeIndex) const</span></a>
 <a name="1348"><span class="lineNum">    1348 </span>            : {</a>
 <a name="1349"><span class="lineNum">    1349 </span><span class="lineNoCov">          0 :     return takeIndex</span></a>
-<a name="1350"><span class="lineNum">    1350 </span><span class="lineNoCov">          0 :              ^ static_cast&lt;HashCode&gt; (clip.getLoopLengthBeats() * 153.0)</span></a>
-<a name="1351"><span class="lineNum">    1351 </span><span class="lineNoCov">          0 :              ^ static_cast&lt;HashCode&gt; (clip.getLoopStartBeats() * 264.0);</span></a>
+<a name="1350"><span class="lineNum">    1350 </span><span class="lineNoCov">          0 :              ^ static_cast&lt;HashCode&gt; (clip.getLoopLengthBeats().inBeats() * 153.0)</span></a>
+<a name="1351"><span class="lineNum">    1351 </span><span class="lineNoCov">          0 :              ^ static_cast&lt;HashCode&gt; (clip.getLoopStartBeats().inBeats() * 264.0);</span></a>
 <a name="1352"><span class="lineNum">    1352 </span>            : }</a>
 <a name="1353"><span class="lineNum">    1353 </span>            : </a>
 <a name="1354"><span class="lineNum">    1354 </span><span class="lineNoCov">          0 : double MidiCompManager::getTakeLength (int takeIndex) const</span></a>
 <a name="1355"><span class="lineNum">    1355 </span>            : {</a>
 <a name="1356"><span class="lineNum">    1356 </span><span class="lineNoCov">          0 :     if (clip.isLooping())</span></a>
-<a name="1357"><span class="lineNum">    1357 </span><span class="lineNoCov">          0 :         return clip.getLoopLengthBeats();</span></a>
+<a name="1357"><span class="lineNum">    1357 </span><span class="lineNoCov">          0 :         return clip.getLoopLengthBeats().inBeats();</span></a>
 <a name="1358"><span class="lineNum">    1358 </span>            : </a>
 <a name="1359"><span class="lineNum">    1359 </span><span class="lineNoCov">          0 :     if (auto ml = clip.getTakeSequence (takeIndex))</span></a>
-<a name="1360"><span class="lineNum">    1360 </span><span class="lineNoCov">          0 :         return ml-&gt;getLastBeatNumber();</span></a>
+<a name="1360"><span class="lineNum">    1360 </span><span class="lineNoCov">          0 :         return ml-&gt;getLastBeatNumber().inBeats();</span></a>
 <a name="1361"><span class="lineNum">    1361 </span>            : </a>
 <a name="1362"><span class="lineNum">    1362 </span>            :     return 0.0;</a>
 <a name="1363"><span class="lineNum">    1363 </span>            : }</a>
@@ -1512,34 +1512,34 @@
 <a name="1450"><span class="lineNum">    1450 </span>            : </a>
 <a name="1451"><span class="lineNum">    1451 </span><span class="lineNoCov">          0 :         const auto numSegments = takeTree.getNumChildren();</span></a>
 <a name="1452"><span class="lineNum">    1452 </span><span class="lineNoCov">          0 :         const auto numTakes = getNumTakes();</span></a>
-<a name="1453"><span class="lineNum">    1453 </span><span class="lineNoCov">          0 :         const auto loopStart = clip.getLoopStartBeats();</span></a>
-<a name="1454"><span class="lineNum">    1454 </span>            :         double startBeat = 0.0;</a>
+<a name="1453"><span class="lineNum">    1453 </span><span class="lineNoCov">          0 :         const auto loopStart = toDuration (clip.getLoopStartBeats());</span></a>
+<a name="1454"><span class="lineNum">    1454 </span>            :         BeatPosition startBeat;</a>
 <a name="1455"><span class="lineNum">    1455 </span>            : </a>
 <a name="1456"><span class="lineNum">    1456 </span><span class="lineNoCov">          0 :         for (int i = 0; i &lt; numSegments; ++i)</span></a>
 <a name="1457"><span class="lineNum">    1457 </span>            :         {</a>
 <a name="1458"><span class="lineNum">    1458 </span><span class="lineNoCov">          0 :             auto compSegment = takeTree.getChild (i);</span></a>
 <a name="1459"><span class="lineNum">    1459 </span><span class="lineNoCov">          0 :             const auto takeIndex = static_cast&lt;int&gt; (compSegment.getProperty (IDs::takeIndex));</span></a>
-<a name="1460"><span class="lineNum">    1460 </span><span class="lineNoCov">          0 :             const auto endBeat = static_cast&lt;double&gt; (compSegment.getProperty (IDs::endTime));</span></a>
+<a name="1460"><span class="lineNum">    1460 </span><span class="lineNoCov">          0 :             const auto endBeat = BeatPosition::fromBeats (static_cast&lt;double&gt; (compSegment.getProperty (IDs::endTime)));</span></a>
 <a name="1461"><span class="lineNum">    1461 </span>            : </a>
 <a name="1462"><span class="lineNum">    1462 </span><span class="lineNoCov">          0 :             if (juce::isPositiveAndBelow (takeIndex, numTakes))</span></a>
 <a name="1463"><span class="lineNum">    1463 </span>            :             {</a>
 <a name="1464"><span class="lineNum">    1464 </span><span class="lineNoCov">          0 :                 if (auto src = getSequenceLooped (takeIndex))</span></a>
 <a name="1465"><span class="lineNum">    1465 </span>            :                 {</a>
-<a name="1466"><span class="lineNum">    1466 </span>            :                     const juce::Range&lt;double&gt; beats (startBeat, endBeat);</a>
+<a name="1466"><span class="lineNum">    1466 </span>            :                     const BeatRange beats (startBeat, endBeat);</a>
 <a name="1467"><span class="lineNum">    1467 </span>            : </a>
 <a name="1468"><span class="lineNum">    1468 </span><span class="lineNoCov">          0 :                     for (auto n : src-&gt;getNotes())</span></a>
 <a name="1469"><span class="lineNum">    1469 </span>            :                     {</a>
-<a name="1470"><span class="lineNum">    1470 </span>            :                         auto nBeats = n-&gt;getRangeBeats();</a>
+<a name="1470"><span class="lineNum">    1470 </span><span class="lineNoCov">          0 :                         auto nBeats = n-&gt;getRangeBeats();</span></a>
 <a name="1471"><span class="lineNum">    1471 </span>            : </a>
 <a name="1472"><span class="lineNum">    1472 </span><span class="lineNoCov">          0 :                         if (nBeats.getStart() &gt; endBeat)</span></a>
 <a name="1473"><span class="lineNum">    1473 </span>            :                             break;</a>
 <a name="1474"><span class="lineNum">    1474 </span>            : </a>
-<a name="1475"><span class="lineNum">    1475 </span>            :                         auto newRange = beats.getIntersectionWith (nBeats);</a>
+<a name="1475"><span class="lineNum">    1475 </span><span class="lineNoCov">          0 :                         auto newRange = beats.getIntersectionWith (nBeats);</span></a>
 <a name="1476"><span class="lineNum">    1476 </span>            : </a>
 <a name="1477"><span class="lineNum">    1477 </span><span class="lineNoCov">          0 :                         if (! newRange.isEmpty())</span></a>
 <a name="1478"><span class="lineNum">    1478 </span>            :                         {</a>
 <a name="1479"><span class="lineNum">    1479 </span><span class="lineNoCov">          0 :                             MidiNote newNote (n-&gt;state.createCopy());</span></a>
-<a name="1480"><span class="lineNum">    1480 </span>            :                             newRange += loopStart;</a>
+<a name="1480"><span class="lineNum">    1480 </span>            :                             newRange = newRange + loopStart;</a>
 <a name="1481"><span class="lineNum">    1481 </span><span class="lineNoCov">          0 :                             newNote.setStartAndLength (newRange.getStart(), newRange.getLength(), nullptr);</span></a>
 <a name="1482"><span class="lineNum">    1482 </span><span class="lineNoCov">          0 :                             dest-&gt;addNote (newNote, um);</span></a>
 <a name="1483"><span class="lineNum">    1483 </span>            :                         }</a>
@@ -1547,7 +1547,7 @@
 <a name="1485"><span class="lineNum">    1485 </span>            : </a>
 <a name="1486"><span class="lineNum">    1486 </span><span class="lineNoCov">          0 :                     for (auto e : src-&gt;getControllerEvents())</span></a>
 <a name="1487"><span class="lineNum">    1487 </span>            :                     {</a>
-<a name="1488"><span class="lineNum">    1488 </span><span class="lineNoCov">          0 :                         auto b = e-&gt;getBeatPosition();</span></a>
+<a name="1488"><span class="lineNum">    1488 </span>            :                         auto b = e-&gt;getBeatPosition();</a>
 <a name="1489"><span class="lineNum">    1489 </span>            : </a>
 <a name="1490"><span class="lineNum">    1490 </span><span class="lineNoCov">          0 :                         if (b &gt; endBeat)</span></a>
 <a name="1491"><span class="lineNum">    1491 </span>            :                             break;</a>
@@ -1580,7 +1580,7 @@
 <a name="1518"><span class="lineNum">    1518 </span>            :     }</a>
 <a name="1519"><span class="lineNum">    1519 </span>            : }</a>
 <a name="1520"><span class="lineNum">    1520 </span>            : </a>
-<a name="1521"><span class="lineNum">    1521 </span>            : }</a>
+<a name="1521"><span class="lineNum">    1521 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

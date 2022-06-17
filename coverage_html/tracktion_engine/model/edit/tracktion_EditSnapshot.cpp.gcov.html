@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : //==============================================================================</a>
@@ -146,14 +146,14 @@
 <a name="84"><span class="lineNum">      84 </span><span class="lineNoCov">          0 :     listHolder-&gt;list-&gt;removeSnapshot (*this);</span></a>
 <a name="85"><span class="lineNum">      85 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="86"><span class="lineNum">      86 </span>            : </a>
-<a name="87"><span class="lineNum">      87 </span><span class="lineNoCov">          0 : void EditSnapshot::setState (juce::ValueTree newState, double editLength)</span></a>
+<a name="87"><span class="lineNum">      87 </span><span class="lineNoCov">          0 : void EditSnapshot::setState (juce::ValueTree newState, TimeDuration editLength)</span></a>
 <a name="88"><span class="lineNum">      88 </span>            : {</a>
 <a name="89"><span class="lineNum">      89 </span><span class="lineNoCov">          0 :     if (state.getReferenceCount() == 1)</span></a>
 <a name="90"><span class="lineNum">      90 </span><span class="lineNoCov">          0 :         state = std::move (newState);</span></a>
 <a name="91"><span class="lineNum">      91 </span>            :     else</a>
 <a name="92"><span class="lineNum">      92 </span><span class="lineNoCov">          0 :         state = newState.createCopy();</span></a>
 <a name="93"><span class="lineNum">      93 </span>            : </a>
-<a name="94"><span class="lineNum">      94 </span><span class="lineNoCov">          0 :     length = editLength;</span></a>
+<a name="94"><span class="lineNum">      94 </span><span class="lineNoCov">          0 :     length = editLength.inSeconds();</span></a>
 <a name="95"><span class="lineNum">      95 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="96"><span class="lineNum">      96 </span>            : </a>
 <a name="97"><span class="lineNum">      97 </span><span class="lineNoCov">          0 : bool EditSnapshot::isValid() const</span></a>
@@ -289,7 +289,7 @@
 <a name="227"><span class="lineNum">     227 </span><span class="lineNoCov">          0 :         return;</span></a>
 <a name="228"><span class="lineNum">     228 </span>            : </a>
 <a name="229"><span class="lineNum">     229 </span><span class="lineNoCov">          0 :     name = pi-&gt;getName();</span></a>
-<a name="230"><span class="lineNum">     230 </span><span class="lineNoCov">          0 :     setState (newState, pi-&gt;getLength());</span></a>
+<a name="230"><span class="lineNum">     230 </span><span class="lineNoCov">          0 :     setState (newState, TimeDuration::fromSeconds (pi-&gt;getLength()));</span></a>
 <a name="231"><span class="lineNum">     231 </span><span class="lineNoCov">          0 :     refreshFromState();</span></a>
 <a name="232"><span class="lineNum">     232 </span>            : }</a>
 <a name="233"><span class="lineNum">     233 </span>            : </a>
@@ -350,11 +350,11 @@
 <a name="288"><span class="lineNum">     288 </span>            :         Marker m;</a>
 <a name="289"><span class="lineNum">     289 </span><span class="lineNoCov">          0 :         m.name      = clip-&gt;getStringAttribute (&quot;name&quot;, TRANS(&quot;unnamed&quot;));</span></a>
 <a name="290"><span class="lineNum">     290 </span><span class="lineNoCov">          0 :         m.colour    = juce::Colour::fromString (clip-&gt;getStringAttribute (&quot;colour&quot;, TRANS(&quot;unnamed&quot;)));</span></a>
-<a name="291"><span class="lineNum">     291 </span><span class="lineNoCov">          0 :         auto start  = clip-&gt;getDoubleAttribute (&quot;start&quot;, 0.0);</span></a>
-<a name="292"><span class="lineNum">     292 </span><span class="lineNoCov">          0 :         auto len    = clip-&gt;getDoubleAttribute (&quot;length&quot;, 0.0);</span></a>
+<a name="291"><span class="lineNum">     291 </span><span class="lineNoCov">          0 :         auto start  = TimePosition::fromSeconds (clip-&gt;getDoubleAttribute (&quot;start&quot;, 0.0));</span></a>
+<a name="292"><span class="lineNum">     292 </span><span class="lineNoCov">          0 :         auto len    = TimeDuration::fromSeconds (clip-&gt;getDoubleAttribute (&quot;length&quot;, 0.0));</span></a>
 <a name="293"><span class="lineNum">     293 </span><span class="lineNoCov">          0 :         m.time      = { start, start + len };</span></a>
 <a name="294"><span class="lineNum">     294 </span>            : </a>
-<a name="295"><span class="lineNum">     295 </span><span class="lineNoCov">          0 :         if (len &gt; 0.0)</span></a>
+<a name="295"><span class="lineNum">     295 </span><span class="lineNoCov">          0 :         if (len &gt; 0s)</span></a>
 <a name="296"><span class="lineNum">     296 </span>            :             markers.add (m);</a>
 <a name="297"><span class="lineNum">     297 </span>            :     }</a>
 <a name="298"><span class="lineNum">     298 </span><span class="lineNoCov">          0 : }</span></a>
@@ -377,7 +377,7 @@
 <a name="315"><span class="lineNum">     315 </span><span class="lineNoCov">          0 :     return result;</span></a>
 <a name="316"><span class="lineNum">     316 </span>            : }</a>
 <a name="317"><span class="lineNum">     317 </span>            : </a>
-<a name="318"><span class="lineNum">     318 </span>            : }</a>
+<a name="318"><span class="lineNum">     318 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

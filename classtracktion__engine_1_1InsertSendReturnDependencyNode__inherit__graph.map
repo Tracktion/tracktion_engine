@@ -1,4 +1,0 @@
-<map id="tracktion_engine::InsertSendReturnDependencyNode" name="tracktion_engine::InsertSendReturnDependencyNode">
-<area shape="rect" id="node1" title="This is a bit confusing but is required to ensure the following set of dependencies in the graph: Ins..." alt="" coords="5,80,217,121"/>
-<area shape="rect" id="node2" href="$classtracktion__graph_1_1Node.html" title="Main graph Node processor class." alt="" coords="28,5,195,32"/>
-</map>

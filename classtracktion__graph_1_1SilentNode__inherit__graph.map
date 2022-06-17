@@ -1,4 +1,0 @@
-<map id="tracktion_graph::SilentNode" name="tracktion_graph::SilentNode">
-<area shape="rect" id="node1" title="Just a simple audio node that doesn&#39;t take any input so can be used as a stub." alt="" coords="5,80,208,107"/>
-<area shape="rect" id="node2" href="$classtracktion__graph_1_1Node.html" title="Main graph Node processor class." alt="" coords="23,5,190,32"/>
-</map>

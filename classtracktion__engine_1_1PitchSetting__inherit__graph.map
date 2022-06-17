@@ -1,7 +1,0 @@
-<map id="tracktion_engine::PitchSetting" name="tracktion_engine::PitchSetting">
-<area shape="rect" id="node1" title=" " alt="" coords="219,169,437,196"/>
-<area shape="rect" id="node2" href="$classtracktion__engine_1_1TrackItem.html" title="Base class for EditItems that live in a Track, e.g." alt="" coords="113,87,316,114"/>
-<area shape="rect" id="node3" href="$classtracktion__engine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g." alt="" coords="5,5,200,32"/>
-<area shape="rect" id="node4" href="$classtracktion__engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="225,5,431,32"/>
-<area shape="rect" id="node5" href="$structtracktion__engine_1_1ValueTreeAllEventListener.html" title=" " alt="" coords="340,80,543,121"/>
-</map>

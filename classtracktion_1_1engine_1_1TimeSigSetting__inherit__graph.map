@@ -1,0 +1,7 @@
+<map id="tracktion::engine::TimeSigSetting" name="tracktion::engine::TimeSigSetting">
+<area shape="rect" id="node1" title=" " alt="" coords="181,184,321,225"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1TrackItem.html" title="Base class for EditItems that live in a Track, e.g." alt="" coords="87,95,227,136"/>
+<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g." alt="" coords="5,5,145,47"/>
+<area shape="rect" id="node4" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="169,5,309,47"/>
+<area shape="rect" id="node5" href="$structtracktion_1_1engine_1_1ValueTreeAllEventListener.html" title=" " alt="" coords="251,95,441,136"/>
+</map>

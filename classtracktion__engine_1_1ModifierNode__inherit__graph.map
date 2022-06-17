@@ -1,4 +1,0 @@
-<map id="tracktion_engine::ModifierNode" name="tracktion_engine::ModifierNode">
-<area shape="rect" id="node1" title="Node for processing a Modifier." alt="" coords="5,80,232,107"/>
-<area shape="rect" id="node2" href="$classtracktion__graph_1_1Node.html" title="Main graph Node processor class." alt="" coords="35,5,202,32"/>
-</map>

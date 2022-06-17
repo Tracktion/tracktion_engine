@@ -1,12 +1,12 @@
 var searchData=
 [
-  ['undomanager_12679',['undoManager',['../classtracktion__engine_1_1CurveEditor.html#acb0d9a8e0db11fcb9bc6729c3c947562',1,'tracktion_engine::CurveEditor']]],
-  ['updatelinkedclipscaller_12680',['updateLinkedClipsCaller',['../classtracktion__engine_1_1Clip.html#a96c8a16443562164c2babfac47bef783',1,'tracktion_engine::Clip']]],
-  ['updateparametersrecursioncheck_12681',['updateParametersRecursionCheck',['../classtracktion__engine_1_1AutomatableParameter.html#a0f0328e055c8b22705ab2a5fe1666dd5',1,'tracktion_engine::AutomatableParameter']]],
-  ['usemasterplugins_12682',['useMasterPlugins',['../structtracktion__engine_1_1Renderer_1_1Parameters.html#afa245c4b5777d5b43d15532c3ab1234a',1,'tracktion_engine::Renderer::Parameters']]],
-  ['usemididevices_12683',['useMidiDevices',['../structtracktion__engine_1_1HostedAudioDeviceInterface_1_1Parameters.html#a3f2505c158909ee30ca58455bb254fd7',1,'tracktion_engine::HostedAudioDeviceInterface::Parameters']]],
-  ['useplugins_12684',['usePlugins',['../structtracktion__engine_1_1Renderer_1_1Parameters.html#a449441e71d735916e57ad639e4cbe99f',1,'tracktion_engine::Renderer::Parameters::usePlugins()'],['../classtracktion__engine_1_1RenderOptions.html#a62dcb1279bbc050d65dc0500097b9791',1,'tracktion_engine::RenderOptions::usePlugins()']]],
-  ['usermovedauxes_12685',['userMovedAuxes',['../classtracktion__engine_1_1MackieMCU.html#ac3786059246180a1817112af90197a60',1,'tracktion_engine::MackieMCU']]],
-  ['usesidechaintrigger_12686',['useSidechainTrigger',['../classtracktion__engine_1_1CompressorPlugin.html#ab0f1eef110a1ca9d67d593caa47a25c0',1,'tracktion_engine::CompressorPlugin']]],
-  ['usetimestretchedpreview_12687',['useTimestretchedPreview',['../classtracktion__engine_1_1AudioClipBase.html#a5889cdbf709f9abe22f5f6929c12a003',1,'tracktion_engine::AudioClipBase']]]
+  ['undomanager_12654',['undoManager',['../classtracktion_1_1engine_1_1CurveEditor.html#a671c17b019313c1c51d93e7138f54e1b',1,'tracktion::engine::CurveEditor']]],
+  ['updatelinkedclipscaller_12655',['updateLinkedClipsCaller',['../classtracktion_1_1engine_1_1Clip.html#a9c89c3d8c22d9fdcd30aaba4b6cc297f',1,'tracktion::engine::Clip']]],
+  ['updateparametersrecursioncheck_12656',['updateParametersRecursionCheck',['../classtracktion_1_1engine_1_1AutomatableParameter.html#a5a2a44f883b8320b13fbf844b98608ee',1,'tracktion::engine::AutomatableParameter']]],
+  ['usemasterplugins_12657',['useMasterPlugins',['../structtracktion_1_1engine_1_1Renderer_1_1Parameters.html#a4a12175a30470928f45c45c13183daeb',1,'tracktion::engine::Renderer::Parameters']]],
+  ['usemididevices_12658',['useMidiDevices',['../structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html#a0fa9298cdd4b197d2f9045317f84da88',1,'tracktion::engine::HostedAudioDeviceInterface::Parameters']]],
+  ['useplugins_12659',['usePlugins',['../structtracktion_1_1engine_1_1Renderer_1_1Parameters.html#a8d80154278bb789507563fbfa74b16ad',1,'tracktion::engine::Renderer::Parameters::usePlugins()'],['../classtracktion_1_1engine_1_1RenderOptions.html#a6c9421d60281de374f19a28299e8e509',1,'tracktion::engine::RenderOptions::usePlugins()']]],
+  ['usermovedauxes_12660',['userMovedAuxes',['../classtracktion_1_1engine_1_1MackieMCU.html#a2ec7a3878dac6aa83de6fe3fcee4c868',1,'tracktion::engine::MackieMCU']]],
+  ['usesidechaintrigger_12661',['useSidechainTrigger',['../classtracktion_1_1engine_1_1CompressorPlugin.html#aae77b2709da6cce5521a0c0a0cb2cbe5',1,'tracktion::engine::CompressorPlugin']]],
+  ['usetimestretchedpreview_12662',['useTimestretchedPreview',['../classtracktion_1_1engine_1_1AudioClipBase.html#a320432300b0923504c8a773758b48246',1,'tracktion::engine::AudioClipBase']]]
 ];

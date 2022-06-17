@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : class PhysicalMidiInputDevice  : public MidiInputDevice</a>
@@ -110,20 +110,24 @@
 <a name="48"><span class="lineNum">      48 </span>            :     void closeDevice() override;</a>
 <a name="49"><span class="lineNum">      49 </span>            : </a>
 <a name="50"><span class="lineNum">      50 </span>            : private:</a>
-<a name="51"><span class="lineNum">      51 </span>            :     friend struct PhysicalMidiInputDeviceInstance;</a>
-<a name="52"><span class="lineNum">      52 </span>            :     int deviceIndex = 0;</a>
-<a name="53"><span class="lineNum">      53 </span>            :     std::unique_ptr&lt;juce::MidiInput&gt; inputDevice;</a>
-<a name="54"><span class="lineNum">      54 </span>            : </a>
-<a name="55"><span class="lineNum">      55 </span>            :     std::unique_ptr&lt;MidiControllerParser&gt; controllerParser;</a>
-<a name="56"><span class="lineNum">      56 </span>            :     ExternalController* externalController = nullptr;</a>
-<a name="57"><span class="lineNum">      57 </span>            :     bool isReadingMidiTimecode = false, isAcceptingMMC = false, ignoreHours = false;</a>
-<a name="58"><span class="lineNum">      58 </span>            : </a>
-<a name="59"><span class="lineNum">      59 </span>            :     bool tryToSendTimecode (const juce::MidiMessage&amp;);</a>
+<a name="51"><span class="lineNum">      51 </span>            :     void handleIncomingMidiMessageInt (const juce::MidiMessage&amp;);</a>
+<a name="52"><span class="lineNum">      52 </span>            : </a>
+<a name="53"><span class="lineNum">      53 </span>            :     friend struct PhysicalMidiInputDeviceInstance;</a>
+<a name="54"><span class="lineNum">      54 </span>            :     int deviceIndex = 0;</a>
+<a name="55"><span class="lineNum">      55 </span>            :     std::unique_ptr&lt;juce::MidiInput&gt; inputDevice;</a>
+<a name="56"><span class="lineNum">      56 </span>            : </a>
+<a name="57"><span class="lineNum">      57 </span>            :     std::unique_ptr&lt;MidiControllerParser&gt; controllerParser;</a>
+<a name="58"><span class="lineNum">      58 </span>            :     ExternalController* externalController = nullptr;</a>
+<a name="59"><span class="lineNum">      59 </span>            :     bool isReadingMidiTimecode = false, isAcceptingMMC = false, ignoreHours = false;</a>
 <a name="60"><span class="lineNum">      60 </span>            : </a>
-<a name="61"><span class="lineNum">      61 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PhysicalMidiInputDevice)</a>
-<a name="62"><span class="lineNum">      62 </span>            : };</a>
-<a name="63"><span class="lineNum">      63 </span>            : </a>
-<a name="64"><span class="lineNum">      64 </span>            : } // namespace tracktion_engine</a>
+<a name="61"><span class="lineNum">      61 </span>            :     bool tryToSendTimecode (const juce::MidiMessage&amp;);</a>
+<a name="62"><span class="lineNum">      62 </span>            : </a>
+<a name="63"><span class="lineNum">      63 </span>            :     ActiveNoteList activeNotes;</a>
+<a name="64"><span class="lineNum">      64 </span>            : </a>
+<a name="65"><span class="lineNum">      65 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PhysicalMidiInputDevice)</a>
+<a name="66"><span class="lineNum">      66 </span>            : };</a>
+<a name="67"><span class="lineNum">      67 </span>            : </a>
+<a name="68"><span class="lineNum">      68 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

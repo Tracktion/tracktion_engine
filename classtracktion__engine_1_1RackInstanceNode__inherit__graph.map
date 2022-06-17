@@ -1,4 +1,0 @@
-<map id="tracktion_engine::RackInstanceNode" name="tracktion_engine::RackInstanceNode">
-<area shape="rect" id="node1" title="Sends an input Node to a Rack bus handling the channel mapping and channel gain levels." alt="" coords="5,80,265,107"/>
-<area shape="rect" id="node2" href="$classtracktion__graph_1_1Node.html" title="Main graph Node processor class." alt="" coords="52,5,219,32"/>
-</map>

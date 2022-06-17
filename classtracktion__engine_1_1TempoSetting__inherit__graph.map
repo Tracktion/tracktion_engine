@@ -1,5 +1,0 @@
-<map id="tracktion_engine::TempoSetting" name="tracktion_engine::TempoSetting">
-<area shape="rect" id="node1" title="A tempo value, as used in a TempoSequence." alt="" coords="5,169,233,196"/>
-<area shape="rect" id="node2" href="$classtracktion__engine_1_1CurveEditorPoint.html" title=" " alt="" coords="12,80,227,121"/>
-<area shape="rect" id="node3" href="$classtracktion__engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="16,5,223,32"/>
-</map>

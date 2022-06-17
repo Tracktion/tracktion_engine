@@ -1,0 +1,13 @@
+<map id="tracktion::engine::Modifier" name="tracktion::engine::Modifier">
+<area shape="rect" id="node1" title="Bass class for parameter Modifiers." alt="" coords="415,169,555,211"/>
+<area shape="rect" id="node6" href="$classtracktion_1_1engine_1_1BreakpointOscillatorModifier.html" title=" " alt="" coords="603,5,811,47"/>
+<area shape="rect" id="node7" href="$classtracktion_1_1engine_1_1EnvelopeFollowerModifier.html" title=" " alt="" coords="611,71,802,112"/>
+<area shape="rect" id="node8" href="$classtracktion_1_1engine_1_1LFOModifier.html" title=" " alt="" coords="637,136,777,177"/>
+<area shape="rect" id="node9" href="$classtracktion_1_1engine_1_1MIDITrackerModifier.html" title=" " alt="" coords="631,201,782,243"/>
+<area shape="rect" id="node10" href="$classtracktion_1_1engine_1_1RandomModifier.html" title=" " alt="" coords="637,267,777,308"/>
+<area shape="rect" id="node11" href="$classtracktion_1_1engine_1_1StepModifier.html" title=" " alt="" coords="637,332,777,373"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1AutomatableEditItem.html" title="Base class for elements that have some kind of automatable parameters." alt="" coords="199,104,361,145"/>
+<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g." alt="" coords="5,104,145,145"/>
+<area shape="rect" id="node4" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="210,169,350,211"/>
+<area shape="rect" id="node5" href="$structtracktion_1_1engine_1_1AutomatableParameter_1_1ModifierSource.html" title="Base class for things that can be used to modify parameters." alt="" coords="193,235,367,291"/>
+</map>

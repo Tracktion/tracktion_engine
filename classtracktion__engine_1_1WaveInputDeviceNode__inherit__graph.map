@@ -1,5 +1,0 @@
-<map id="tracktion_engine::WaveInputDeviceNode" name="tracktion_engine::WaveInputDeviceNode">
-<area shape="rect" id="node1" title="A Node that intercepts incoming live audio and inserts it in to the playback graph." alt="" coords="93,95,301,136"/>
-<area shape="rect" id="node2" href="$classtracktion__graph_1_1Node.html" title="Main graph Node processor class." alt="" coords="5,13,172,39"/>
-<area shape="rect" id="node3" href="$structtracktion__engine_1_1InputDeviceInstance_1_1Consumer.html" title="Base class for classes that want to listen to an InputDevice and get a callback for each block of inp..." alt="" coords="196,5,413,47"/>
-</map>

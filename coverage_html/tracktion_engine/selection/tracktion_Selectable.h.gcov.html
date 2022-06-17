@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
@@ -71,7 +71,7 @@
 <a name="9"><span class="lineNum">       9 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="10"><span class="lineNum">      10 </span>            : */</a>
 <a name="11"><span class="lineNum">      11 </span>            : </a>
-<a name="12"><span class="lineNum">      12 </span>            : namespace tracktion_engine</a>
+<a name="12"><span class="lineNum">      12 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="13"><span class="lineNum">      13 </span>            : {</a>
 <a name="14"><span class="lineNum">      14 </span>            : </a>
 <a name="15"><span class="lineNum">      15 </span>            : class SelectableClass;</a>
@@ -121,7 +121,7 @@
 <a name="59"><span class="lineNum">      59 </span>            :     /** Called just before the selectable is about to be deleted so any subclasses</a>
 <a name="60"><span class="lineNum">      60 </span>            :         should still be valid at this point.</a>
 <a name="61"><span class="lineNum">      61 </span>            :     */</a>
-<a name="62"><span class="lineNum">      62 </span><span class="lineCov">       6669 :     virtual void selectableAboutToBeDeleted() {}</span></a>
+<a name="62"><span class="lineNum">      62 </span><span class="lineCov">       6917 :     virtual void selectableAboutToBeDeleted() {}</span></a>
 <a name="63"><span class="lineNum">      63 </span>            : </a>
 <a name="64"><span class="lineNum">      64 </span>            :     //==============================================================================</a>
 <a name="65"><span class="lineNum">      65 </span>            :     void addSelectableListener (SelectableListener*);</a>
@@ -299,7 +299,7 @@
 <a name="237"><span class="lineNum">     237 </span>            :     mutable juce::Array&lt;SelectableClass*&gt; classes;</a>
 <a name="238"><span class="lineNum">     238 </span>            : };</a>
 <a name="239"><span class="lineNum">     239 </span>            : </a>
-<a name="240"><span class="lineNum">     240 </span>            : } // namespace tracktion_engine</a>
+<a name="240"><span class="lineNum">     240 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : //==============================================================================</a>
@@ -204,7 +204,7 @@
 <a name="142"><span class="lineNum">     142 </span>            :     /** Returns the start position in the file that the effect should apply to.</a>
 <a name="143"><span class="lineNum">     143 </span>            :         In practice this is the loop start point.</a>
 <a name="144"><span class="lineNum">     144 </span>            :     */</a>
-<a name="145"><span class="lineNum">     145 </span>            :     double getEffectsStartTime() const</a>
+<a name="145"><span class="lineNum">     145 </span>            :     TimePosition getEffectsStartTime() const</a>
 <a name="146"><span class="lineNum">     146 </span>            :     {</a>
 <a name="147"><span class="lineNum">     147 </span>            :         return getCachedClipProperties().effectsRange.getStart();</a>
 <a name="148"><span class="lineNum">     148 </span>            :     }</a>
@@ -212,7 +212,7 @@
 <a name="150"><span class="lineNum">     150 </span>            :     /** Returns the length of the effect. This will be the effective length of the source file</a>
 <a name="151"><span class="lineNum">     151 </span>            :         i.e. taking into account loop length and speed ratio.</a>
 <a name="152"><span class="lineNum">     152 </span>            :     */</a>
-<a name="153"><span class="lineNum">     153 </span>            :     double getEffectsLength() const</a>
+<a name="153"><span class="lineNum">     153 </span>            :     TimeDuration getEffectsLength() const</a>
 <a name="154"><span class="lineNum">     154 </span>            :     {</a>
 <a name="155"><span class="lineNum">     155 </span><span class="lineNoCov">          0 :         return getCachedClipProperties().effectsRange.getLength();</span></a>
 <a name="156"><span class="lineNum">     156 </span>            :     }</a>
@@ -220,7 +220,7 @@
 <a name="158"><span class="lineNum">     158 </span>            :     /** Returns the range of the file that the effect should apply to.</a>
 <a name="159"><span class="lineNum">     159 </span>            :         In practice this is the loop start point and loop length.</a>
 <a name="160"><span class="lineNum">     160 </span>            :     */</a>
-<a name="161"><span class="lineNum">     161 </span>            :     EditTimeRange getEffectsRange() const</a>
+<a name="161"><span class="lineNum">     161 </span>            :     TimeRange getEffectsRange() const</a>
 <a name="162"><span class="lineNum">     162 </span>            :     {</a>
 <a name="163"><span class="lineNum">     163 </span><span class="lineNoCov">          0 :         return getCachedClipProperties().effectsRange;</span></a>
 <a name="164"><span class="lineNum">     164 </span>            :     }</a>
@@ -328,16 +328,16 @@
 <a name="266"><span class="lineNum">     266 </span>            :                 // need to find the tempo changes between the source start and  how long the result will be</a>
 <a name="267"><span class="lineNum">     267 </span><span class="lineNoCov">          0 :                 auto info = AudioFile (c.edit.engine, c.getOriginalFile()).getInfo();</span></a>
 <a name="268"><span class="lineNum">     268 </span><span class="lineNoCov">          0 :                 auto sourceTempo = c.getLoopInfo().getBpm (info);</span></a>
-<a name="269"><span class="lineNum">     269 </span><span class="lineNoCov">          0 :                 speedRatio = c.edit.tempoSequence.getTempoAt (c.getPosition().time.start).getBpm() / sourceTempo;</span></a>
+<a name="269"><span class="lineNum">     269 </span><span class="lineNoCov">          0 :                 speedRatio = c.edit.tempoSequence.getTempoAt (c.getPosition().time.getStart()).getBpm() / sourceTempo;</span></a>
 <a name="270"><span class="lineNum">     270 </span>            :             }</a>
 <a name="271"><span class="lineNum">     271 </span>            : </a>
 <a name="272"><span class="lineNum">     272 </span><span class="lineNoCov">          0 :             if (c.isLooping())</span></a>
 <a name="273"><span class="lineNum">     273 </span><span class="lineNoCov">          0 :                 effectsRange = { c.getLoopStart(), c.getLoopStart() + c.getLoopLength() };</span></a>
 <a name="274"><span class="lineNum">     274 </span>            :             else</a>
-<a name="275"><span class="lineNum">     275 </span><span class="lineNoCov">          0 :                 effectsRange = { 0.0, c.getSourceLength() / speedRatio };</span></a>
+<a name="275"><span class="lineNum">     275 </span><span class="lineNoCov">          0 :                 effectsRange = { TimePosition(), c.getSourceLength() / speedRatio };</span></a>
 <a name="276"><span class="lineNum">     276 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="277"><span class="lineNum">     277 </span>            : </a>
-<a name="278"><span class="lineNum">     278 </span>            :         EditTimeRange effectsRange;</a>
+<a name="278"><span class="lineNum">     278 </span>            :         TimeRange effectsRange;</a>
 <a name="279"><span class="lineNum">     279 </span>            :         double speedRatio = 1.0;</a>
 <a name="280"><span class="lineNum">     280 </span>            :     };</a>
 <a name="281"><span class="lineNum">     281 </span>            : </a>
@@ -436,12 +436,12 @@
 <a name="374"><span class="lineNum">     374 </span>            : {</a>
 <a name="375"><span class="lineNum">     375 </span>            :     FadeInOutEffect (const juce::ValueTree&amp;, ClipEffects&amp;);</a>
 <a name="376"><span class="lineNum">     376 </span>            : </a>
-<a name="377"><span class="lineNum">     377 </span>            :     void setFadeIn (double);</a>
-<a name="378"><span class="lineNum">     378 </span>            :     void setFadeOut (double);</a>
+<a name="377"><span class="lineNum">     377 </span>            :     void setFadeIn (TimeDuration);</a>
+<a name="378"><span class="lineNum">     378 </span>            :     void setFadeOut (TimeDuration);</a>
 <a name="379"><span class="lineNum">     379 </span>            : </a>
 <a name="380"><span class="lineNum">     380 </span>            :     juce::ReferenceCountedObjectPtr&lt;ClipEffectRenderJob&gt; createRenderJob (const AudioFile&amp; sourceFile, double sourceLength) override;</a>
 <a name="381"><span class="lineNum">     381 </span>            : </a>
-<a name="382"><span class="lineNum">     382 </span>            :     juce::CachedValue&lt;double&gt; fadeIn, fadeOut;</a>
+<a name="382"><span class="lineNum">     382 </span>            :     juce::CachedValue&lt;TimeDuration&gt; fadeIn, fadeOut;</a>
 <a name="383"><span class="lineNum">     383 </span>            :     juce::CachedValue&lt;AudioFadeCurve::Type&gt; fadeInType, fadeOutType;</a>
 <a name="384"><span class="lineNum">     384 </span>            : </a>
 <a name="385"><span class="lineNum">     385 </span>            : protected:</a>
@@ -495,181 +495,182 @@
 <a name="433"><span class="lineNum">     433 </span>            :         JUCE_LEAK_DETECTOR (Pattern)</a>
 <a name="434"><span class="lineNum">     434 </span>            :     };</a>
 <a name="435"><span class="lineNum">     435 </span>            : </a>
-<a name="436"><span class="lineNum">     436 </span>            :     juce::CachedValue&lt;double&gt; noteLength, crossfade;</a>
-<a name="437"><span class="lineNum">     437 </span>            :     juce::CachedValue&lt;juce::String&gt; pattern;</a>
-<a name="438"><span class="lineNum">     438 </span>            : </a>
-<a name="439"><span class="lineNum">     439 </span>            : protected:</a>
-<a name="440"><span class="lineNum">     440 </span>            :     HashCode getIndividualHash() const override;</a>
-<a name="441"><span class="lineNum">     441 </span>            : </a>
-<a name="442"><span class="lineNum">     442 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (StepVolumeEffect)</a>
-<a name="443"><span class="lineNum">     443 </span>            : };</a>
-<a name="444"><span class="lineNum">     444 </span>            : </a>
-<a name="445"><span class="lineNum">     445 </span>            : //==============================================================================</a>
-<a name="446"><span class="lineNum">     446 </span>            : /**</a>
-<a name="447"><span class="lineNum">     447 </span>            : */</a>
-<a name="448"><span class="lineNum">     448 </span>            : struct PitchShiftEffect  : public ClipEffect,</a>
-<a name="449"><span class="lineNum">     449 </span>            :                            private juce::Timer</a>
-<a name="450"><span class="lineNum">     450 </span>            : {</a>
-<a name="451"><span class="lineNum">     451 </span>            :     PitchShiftEffect (const juce::ValueTree&amp;, ClipEffects&amp;);</a>
-<a name="452"><span class="lineNum">     452 </span>            : </a>
-<a name="453"><span class="lineNum">     453 </span>            :     void initialise() override;</a>
-<a name="454"><span class="lineNum">     454 </span>            : </a>
-<a name="455"><span class="lineNum">     455 </span>            :     juce::ReferenceCountedObjectPtr&lt;ClipEffectRenderJob&gt; createRenderJob (const AudioFile&amp; sourceFile, double sourceLength) override;</a>
-<a name="456"><span class="lineNum">     456 </span>            : </a>
-<a name="457"><span class="lineNum">     457 </span>            :     bool hasProperties() override;</a>
-<a name="458"><span class="lineNum">     458 </span>            :     void propertiesButtonPressed (SelectionManager&amp;) override;</a>
-<a name="459"><span class="lineNum">     459 </span>            :     HashCode getIndividualHash() const override;</a>
-<a name="460"><span class="lineNum">     460 </span>            : </a>
-<a name="461"><span class="lineNum">     461 </span>            :     void valueTreePropertyChanged (juce::ValueTree&amp;, const juce::Identifier&amp;) override;</a>
-<a name="462"><span class="lineNum">     462 </span>            :     void valueTreeChanged() override;</a>
-<a name="463"><span class="lineNum">     463 </span>            :     void timerCallback() override;</a>
-<a name="464"><span class="lineNum">     464 </span>            : </a>
-<a name="465"><span class="lineNum">     465 </span>            :     juce::ReferenceCountedObjectPtr&lt;PitchShiftPlugin&gt; plugin;</a>
-<a name="466"><span class="lineNum">     466 </span>            :     std::unique_ptr&lt;ClipEffects::RenderInhibitor&gt; inhibitor;</a>
-<a name="467"><span class="lineNum">     467 </span>            : </a>
-<a name="468"><span class="lineNum">     468 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PitchShiftEffect)</a>
-<a name="469"><span class="lineNum">     469 </span>            : };</a>
-<a name="470"><span class="lineNum">     470 </span>            : </a>
-<a name="471"><span class="lineNum">     471 </span>            : //==============================================================================</a>
-<a name="472"><span class="lineNum">     472 </span>            : /**</a>
-<a name="473"><span class="lineNum">     473 </span>            : */</a>
-<a name="474"><span class="lineNum">     474 </span>            : struct WarpTimeEffect   : public ClipEffect</a>
-<a name="475"><span class="lineNum">     475 </span>            : {</a>
-<a name="476"><span class="lineNum">     476 </span>            :     WarpTimeEffect (const juce::ValueTree&amp;, ClipEffects&amp;);</a>
-<a name="477"><span class="lineNum">     477 </span>            : </a>
-<a name="478"><span class="lineNum">     478 </span>            :     juce::ReferenceCountedObjectPtr&lt;ClipEffectRenderJob&gt; createRenderJob (const AudioFile&amp;, double sourceLength) override;</a>
-<a name="479"><span class="lineNum">     479 </span>            : </a>
-<a name="480"><span class="lineNum">     480 </span>            :     HashCode getIndividualHash() const override;</a>
-<a name="481"><span class="lineNum">     481 </span>            :     void sourceChanged() override;</a>
-<a name="482"><span class="lineNum">     482 </span>            : </a>
-<a name="483"><span class="lineNum">     483 </span>            :     WarpTimeManager::Ptr warpTimeManager;</a>
-<a name="484"><span class="lineNum">     484 </span>            :     std::unique_ptr&lt;Edit::LoadFinishedCallback&lt;WarpTimeEffect&gt;&gt; editLoadedCallback;</a>
-<a name="485"><span class="lineNum">     485 </span>            : </a>
-<a name="486"><span class="lineNum">     486 </span>            :     void editFinishedLoading();</a>
-<a name="487"><span class="lineNum">     487 </span>            : </a>
-<a name="488"><span class="lineNum">     488 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WarpTimeEffect)</a>
-<a name="489"><span class="lineNum">     489 </span>            : };</a>
-<a name="490"><span class="lineNum">     490 </span>            : </a>
-<a name="491"><span class="lineNum">     491 </span>            : //==============================================================================</a>
-<a name="492"><span class="lineNum">     492 </span>            : /**</a>
-<a name="493"><span class="lineNum">     493 </span>            : */</a>
-<a name="494"><span class="lineNum">     494 </span>            : struct PluginEffect  : public ClipEffect,</a>
-<a name="495"><span class="lineNum">     495 </span>            :                        public AutomatableParameter::Listener,</a>
-<a name="496"><span class="lineNum">     496 </span>            :                        private juce::Timer</a>
-<a name="497"><span class="lineNum">     497 </span>            : {</a>
-<a name="498"><span class="lineNum">     498 </span>            :     PluginEffect (const juce::ValueTree&amp;, ClipEffects&amp;);</a>
-<a name="499"><span class="lineNum">     499 </span>            : </a>
-<a name="500"><span class="lineNum">     500 </span>            :     juce::ReferenceCountedObjectPtr&lt;ClipEffectRenderJob&gt; createRenderJob (const AudioFile&amp;, double sourceLength) override;</a>
-<a name="501"><span class="lineNum">     501 </span>            : </a>
-<a name="502"><span class="lineNum">     502 </span><span class="lineNoCov">          0 :     void initialise() override </span></a>
-<a name="503"><span class="lineNum">     503 </span>            :     {</a>
-<a name="504"><span class="lineNum">     504 </span><span class="lineNoCov">          0 :         if (plugin != nullptr)</span></a>
-<a name="505"><span class="lineNum">     505 </span><span class="lineNoCov">          0 :             for (auto ap : plugin-&gt;getAutomatableParameters())</span></a>
-<a name="506"><span class="lineNum">     506 </span>            :                 ap-&gt;updateStream();</a>
-<a name="507"><span class="lineNum">     507 </span><span class="lineNoCov">          0 :     }</span></a>
-<a name="508"><span class="lineNum">     508 </span>            : </a>
-<a name="509"><span class="lineNum">     509 </span>            :     void flushStateToValueTree() override;</a>
-<a name="510"><span class="lineNum">     510 </span>            :     bool hasProperties() override;</a>
-<a name="511"><span class="lineNum">     511 </span>            :     void propertiesButtonPressed (SelectionManager&amp;) override;</a>
-<a name="512"><span class="lineNum">     512 </span>            :     HashCode getIndividualHash() const override;</a>
-<a name="513"><span class="lineNum">     513 </span>            : </a>
-<a name="514"><span class="lineNum">     514 </span>            :     void valueTreePropertyChanged (juce::ValueTree&amp;, const juce::Identifier&amp;) override;</a>
-<a name="515"><span class="lineNum">     515 </span>            :     void valueTreeChanged() override;</a>
-<a name="516"><span class="lineNum">     516 </span>            : </a>
-<a name="517"><span class="lineNum">     517 </span>            :     void timerCallback() override;</a>
-<a name="518"><span class="lineNum">     518 </span>            :     void curveHasChanged (AutomatableParameter&amp;) override;</a>
-<a name="519"><span class="lineNum">     519 </span>            : </a>
-<a name="520"><span class="lineNum">     520 </span>            :     Plugin::Ptr plugin;</a>
-<a name="521"><span class="lineNum">     521 </span>            :     std::unique_ptr&lt;ClipEffects::RenderInhibitor&gt; inhibitor;</a>
-<a name="522"><span class="lineNum">     522 </span>            :     std::unique_ptr&lt;PluginUnloadInhibitor&gt; pluginUnloadInhibitor;</a>
-<a name="523"><span class="lineNum">     523 </span>            :     juce::CachedValue&lt;int&gt; currentCurve;</a>
-<a name="524"><span class="lineNum">     524 </span>            :     mutable juce::CachedValue&lt;juce::int64&gt; lastHash;</a>
-<a name="525"><span class="lineNum">     525 </span>            : </a>
-<a name="526"><span class="lineNum">     526 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginEffect)</a>
-<a name="527"><span class="lineNum">     527 </span>            : };</a>
-<a name="528"><span class="lineNum">     528 </span>            : </a>
-<a name="529"><span class="lineNum">     529 </span>            : //==============================================================================</a>
-<a name="530"><span class="lineNum">     530 </span>            : /**</a>
-<a name="531"><span class="lineNum">     531 </span>            : */</a>
-<a name="532"><span class="lineNum">     532 </span>            : struct NormaliseEffect  : public ClipEffect,</a>
-<a name="533"><span class="lineNum">     533 </span>            :                           public Selectable</a>
-<a name="534"><span class="lineNum">     534 </span>            : {</a>
-<a name="535"><span class="lineNum">     535 </span>            :     NormaliseEffect (const juce::ValueTree&amp;, ClipEffects&amp;);</a>
-<a name="536"><span class="lineNum">     536 </span>            :     ~NormaliseEffect() override;</a>
-<a name="537"><span class="lineNum">     537 </span>            : </a>
-<a name="538"><span class="lineNum">     538 </span>            :     juce::ReferenceCountedObjectPtr&lt;ClipEffectRenderJob&gt; createRenderJob (const AudioFile&amp; sourceFile, double sourceLength) override;</a>
-<a name="539"><span class="lineNum">     539 </span>            : </a>
-<a name="540"><span class="lineNum">     540 </span>            :     bool hasProperties() override;</a>
-<a name="541"><span class="lineNum">     541 </span>            :     void propertiesButtonPressed (SelectionManager&amp;) override;</a>
-<a name="542"><span class="lineNum">     542 </span>            :     juce::String getSelectableDescription() override;</a>
-<a name="543"><span class="lineNum">     543 </span>            : </a>
-<a name="544"><span class="lineNum">     544 </span>            :     juce::CachedValue&lt;double&gt; maxLevelDB;</a>
-<a name="545"><span class="lineNum">     545 </span>            : </a>
-<a name="546"><span class="lineNum">     546 </span>            : private:</a>
-<a name="547"><span class="lineNum">     547 </span>            :     struct NormaliseRenderJob;</a>
-<a name="548"><span class="lineNum">     548 </span>            : </a>
-<a name="549"><span class="lineNum">     549 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NormaliseEffect)</a>
-<a name="550"><span class="lineNum">     550 </span>            : };</a>
-<a name="551"><span class="lineNum">     551 </span>            : </a>
-<a name="552"><span class="lineNum">     552 </span>            : //==============================================================================</a>
-<a name="553"><span class="lineNum">     553 </span>            : /**</a>
-<a name="554"><span class="lineNum">     554 </span>            : */</a>
-<a name="555"><span class="lineNum">     555 </span>            : struct MakeMonoEffect : public ClipEffect,</a>
-<a name="556"><span class="lineNum">     556 </span>            :                         public Selectable</a>
-<a name="557"><span class="lineNum">     557 </span>            : {</a>
-<a name="558"><span class="lineNum">     558 </span>            :     enum SrcChannels</a>
-<a name="559"><span class="lineNum">     559 </span>            :     {</a>
-<a name="560"><span class="lineNum">     560 </span>            :         chLR = 0,</a>
-<a name="561"><span class="lineNum">     561 </span>            :         chL  = 1,</a>
-<a name="562"><span class="lineNum">     562 </span>            :         chR  = 2</a>
-<a name="563"><span class="lineNum">     563 </span>            :     };</a>
-<a name="564"><span class="lineNum">     564 </span>            : </a>
-<a name="565"><span class="lineNum">     565 </span>            :     MakeMonoEffect (const juce::ValueTree&amp;, ClipEffects&amp;);</a>
-<a name="566"><span class="lineNum">     566 </span>            :     ~MakeMonoEffect() override;</a>
-<a name="567"><span class="lineNum">     567 </span>            : </a>
-<a name="568"><span class="lineNum">     568 </span>            :     juce::ReferenceCountedObjectPtr&lt;ClipEffectRenderJob&gt; createRenderJob (const AudioFile&amp;, double sourceLength) override;</a>
-<a name="569"><span class="lineNum">     569 </span>            : </a>
-<a name="570"><span class="lineNum">     570 </span>            :     bool hasProperties() override;</a>
-<a name="571"><span class="lineNum">     571 </span>            :     void propertiesButtonPressed (SelectionManager&amp;) override;</a>
-<a name="572"><span class="lineNum">     572 </span>            :     juce::String getSelectableDescription() override;</a>
-<a name="573"><span class="lineNum">     573 </span>            : </a>
-<a name="574"><span class="lineNum">     574 </span>            :     juce::CachedValue&lt;int&gt; channels;</a>
-<a name="575"><span class="lineNum">     575 </span>            : </a>
-<a name="576"><span class="lineNum">     576 </span>            : private:</a>
-<a name="577"><span class="lineNum">     577 </span>            :     struct MakeMonoRenderJob;</a>
-<a name="578"><span class="lineNum">     578 </span>            : </a>
-<a name="579"><span class="lineNum">     579 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MakeMonoEffect)</a>
-<a name="580"><span class="lineNum">     580 </span>            : };</a>
-<a name="581"><span class="lineNum">     581 </span>            : </a>
-<a name="582"><span class="lineNum">     582 </span>            : //==============================================================================</a>
-<a name="583"><span class="lineNum">     583 </span>            : /**</a>
-<a name="584"><span class="lineNum">     584 </span>            : */</a>
-<a name="585"><span class="lineNum">     585 </span>            : struct ReverseEffect  : public ClipEffect</a>
-<a name="586"><span class="lineNum">     586 </span>            : {</a>
-<a name="587"><span class="lineNum">     587 </span>            :     ReverseEffect (const juce::ValueTree&amp;, ClipEffects&amp;);</a>
-<a name="588"><span class="lineNum">     588 </span>            : </a>
-<a name="589"><span class="lineNum">     589 </span>            :     juce::ReferenceCountedObjectPtr&lt;ClipEffectRenderJob&gt; createRenderJob (const AudioFile&amp;, double sourceLength) override;</a>
-<a name="590"><span class="lineNum">     590 </span>            : </a>
-<a name="591"><span class="lineNum">     591 </span>            :     struct ReverseRenderJob;</a>
-<a name="592"><span class="lineNum">     592 </span>            : </a>
-<a name="593"><span class="lineNum">     593 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ReverseEffect)</a>
-<a name="594"><span class="lineNum">     594 </span>            : };</a>
-<a name="595"><span class="lineNum">     595 </span>            : </a>
-<a name="596"><span class="lineNum">     596 </span>            : //==============================================================================</a>
-<a name="597"><span class="lineNum">     597 </span>            : /**</a>
-<a name="598"><span class="lineNum">     598 </span>            : */</a>
-<a name="599"><span class="lineNum">     599 </span>            : struct InvertEffect  : public ClipEffect</a>
-<a name="600"><span class="lineNum">     600 </span>            : {</a>
-<a name="601"><span class="lineNum">     601 </span>            :     InvertEffect (const juce::ValueTree&amp;, ClipEffects&amp;);</a>
-<a name="602"><span class="lineNum">     602 </span>            : </a>
-<a name="603"><span class="lineNum">     603 </span>            :     juce::ReferenceCountedObjectPtr&lt;ClipEffect::ClipEffectRenderJob&gt; createRenderJob (const AudioFile&amp;, double sourceLength) override;</a>
-<a name="604"><span class="lineNum">     604 </span>            : </a>
-<a name="605"><span class="lineNum">     605 </span>            :     struct InvertRenderJob;</a>
-<a name="606"><span class="lineNum">     606 </span>            : </a>
-<a name="607"><span class="lineNum">     607 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (InvertEffect)</a>
-<a name="608"><span class="lineNum">     608 </span>            : };</a>
-<a name="609"><span class="lineNum">     609 </span>            : </a>
-<a name="610"><span class="lineNum">     610 </span>            : } // namespace tracktion_engine</a>
+<a name="436"><span class="lineNum">     436 </span>            :     juce::CachedValue&lt;BeatDuration&gt; noteLength;</a>
+<a name="437"><span class="lineNum">     437 </span>            :     juce::CachedValue&lt;double&gt; crossfade;</a>
+<a name="438"><span class="lineNum">     438 </span>            :     juce::CachedValue&lt;juce::String&gt; pattern;</a>
+<a name="439"><span class="lineNum">     439 </span>            : </a>
+<a name="440"><span class="lineNum">     440 </span>            : protected:</a>
+<a name="441"><span class="lineNum">     441 </span>            :     HashCode getIndividualHash() const override;</a>
+<a name="442"><span class="lineNum">     442 </span>            : </a>
+<a name="443"><span class="lineNum">     443 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (StepVolumeEffect)</a>
+<a name="444"><span class="lineNum">     444 </span>            : };</a>
+<a name="445"><span class="lineNum">     445 </span>            : </a>
+<a name="446"><span class="lineNum">     446 </span>            : //==============================================================================</a>
+<a name="447"><span class="lineNum">     447 </span>            : /**</a>
+<a name="448"><span class="lineNum">     448 </span>            : */</a>
+<a name="449"><span class="lineNum">     449 </span>            : struct PitchShiftEffect  : public ClipEffect,</a>
+<a name="450"><span class="lineNum">     450 </span>            :                            private juce::Timer</a>
+<a name="451"><span class="lineNum">     451 </span>            : {</a>
+<a name="452"><span class="lineNum">     452 </span>            :     PitchShiftEffect (const juce::ValueTree&amp;, ClipEffects&amp;);</a>
+<a name="453"><span class="lineNum">     453 </span>            : </a>
+<a name="454"><span class="lineNum">     454 </span>            :     void initialise() override;</a>
+<a name="455"><span class="lineNum">     455 </span>            : </a>
+<a name="456"><span class="lineNum">     456 </span>            :     juce::ReferenceCountedObjectPtr&lt;ClipEffectRenderJob&gt; createRenderJob (const AudioFile&amp; sourceFile, double sourceLength) override;</a>
+<a name="457"><span class="lineNum">     457 </span>            : </a>
+<a name="458"><span class="lineNum">     458 </span>            :     bool hasProperties() override;</a>
+<a name="459"><span class="lineNum">     459 </span>            :     void propertiesButtonPressed (SelectionManager&amp;) override;</a>
+<a name="460"><span class="lineNum">     460 </span>            :     HashCode getIndividualHash() const override;</a>
+<a name="461"><span class="lineNum">     461 </span>            : </a>
+<a name="462"><span class="lineNum">     462 </span>            :     void valueTreePropertyChanged (juce::ValueTree&amp;, const juce::Identifier&amp;) override;</a>
+<a name="463"><span class="lineNum">     463 </span>            :     void valueTreeChanged() override;</a>
+<a name="464"><span class="lineNum">     464 </span>            :     void timerCallback() override;</a>
+<a name="465"><span class="lineNum">     465 </span>            : </a>
+<a name="466"><span class="lineNum">     466 </span>            :     juce::ReferenceCountedObjectPtr&lt;PitchShiftPlugin&gt; plugin;</a>
+<a name="467"><span class="lineNum">     467 </span>            :     std::unique_ptr&lt;ClipEffects::RenderInhibitor&gt; inhibitor;</a>
+<a name="468"><span class="lineNum">     468 </span>            : </a>
+<a name="469"><span class="lineNum">     469 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PitchShiftEffect)</a>
+<a name="470"><span class="lineNum">     470 </span>            : };</a>
+<a name="471"><span class="lineNum">     471 </span>            : </a>
+<a name="472"><span class="lineNum">     472 </span>            : //==============================================================================</a>
+<a name="473"><span class="lineNum">     473 </span>            : /**</a>
+<a name="474"><span class="lineNum">     474 </span>            : */</a>
+<a name="475"><span class="lineNum">     475 </span>            : struct WarpTimeEffect   : public ClipEffect</a>
+<a name="476"><span class="lineNum">     476 </span>            : {</a>
+<a name="477"><span class="lineNum">     477 </span>            :     WarpTimeEffect (const juce::ValueTree&amp;, ClipEffects&amp;);</a>
+<a name="478"><span class="lineNum">     478 </span>            : </a>
+<a name="479"><span class="lineNum">     479 </span>            :     juce::ReferenceCountedObjectPtr&lt;ClipEffectRenderJob&gt; createRenderJob (const AudioFile&amp;, double sourceLength) override;</a>
+<a name="480"><span class="lineNum">     480 </span>            : </a>
+<a name="481"><span class="lineNum">     481 </span>            :     HashCode getIndividualHash() const override;</a>
+<a name="482"><span class="lineNum">     482 </span>            :     void sourceChanged() override;</a>
+<a name="483"><span class="lineNum">     483 </span>            : </a>
+<a name="484"><span class="lineNum">     484 </span>            :     WarpTimeManager::Ptr warpTimeManager;</a>
+<a name="485"><span class="lineNum">     485 </span>            :     std::unique_ptr&lt;Edit::LoadFinishedCallback&lt;WarpTimeEffect&gt;&gt; editLoadedCallback;</a>
+<a name="486"><span class="lineNum">     486 </span>            : </a>
+<a name="487"><span class="lineNum">     487 </span>            :     void editFinishedLoading();</a>
+<a name="488"><span class="lineNum">     488 </span>            : </a>
+<a name="489"><span class="lineNum">     489 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WarpTimeEffect)</a>
+<a name="490"><span class="lineNum">     490 </span>            : };</a>
+<a name="491"><span class="lineNum">     491 </span>            : </a>
+<a name="492"><span class="lineNum">     492 </span>            : //==============================================================================</a>
+<a name="493"><span class="lineNum">     493 </span>            : /**</a>
+<a name="494"><span class="lineNum">     494 </span>            : */</a>
+<a name="495"><span class="lineNum">     495 </span>            : struct PluginEffect  : public ClipEffect,</a>
+<a name="496"><span class="lineNum">     496 </span>            :                        public AutomatableParameter::Listener,</a>
+<a name="497"><span class="lineNum">     497 </span>            :                        private juce::Timer</a>
+<a name="498"><span class="lineNum">     498 </span>            : {</a>
+<a name="499"><span class="lineNum">     499 </span>            :     PluginEffect (const juce::ValueTree&amp;, ClipEffects&amp;);</a>
+<a name="500"><span class="lineNum">     500 </span>            : </a>
+<a name="501"><span class="lineNum">     501 </span>            :     juce::ReferenceCountedObjectPtr&lt;ClipEffectRenderJob&gt; createRenderJob (const AudioFile&amp;, double sourceLength) override;</a>
+<a name="502"><span class="lineNum">     502 </span>            : </a>
+<a name="503"><span class="lineNum">     503 </span><span class="lineNoCov">          0 :     void initialise() override </span></a>
+<a name="504"><span class="lineNum">     504 </span>            :     {</a>
+<a name="505"><span class="lineNum">     505 </span><span class="lineNoCov">          0 :         if (plugin != nullptr)</span></a>
+<a name="506"><span class="lineNum">     506 </span><span class="lineNoCov">          0 :             for (auto ap : plugin-&gt;getAutomatableParameters())</span></a>
+<a name="507"><span class="lineNum">     507 </span>            :                 ap-&gt;updateStream();</a>
+<a name="508"><span class="lineNum">     508 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="509"><span class="lineNum">     509 </span>            : </a>
+<a name="510"><span class="lineNum">     510 </span>            :     void flushStateToValueTree() override;</a>
+<a name="511"><span class="lineNum">     511 </span>            :     bool hasProperties() override;</a>
+<a name="512"><span class="lineNum">     512 </span>            :     void propertiesButtonPressed (SelectionManager&amp;) override;</a>
+<a name="513"><span class="lineNum">     513 </span>            :     HashCode getIndividualHash() const override;</a>
+<a name="514"><span class="lineNum">     514 </span>            : </a>
+<a name="515"><span class="lineNum">     515 </span>            :     void valueTreePropertyChanged (juce::ValueTree&amp;, const juce::Identifier&amp;) override;</a>
+<a name="516"><span class="lineNum">     516 </span>            :     void valueTreeChanged() override;</a>
+<a name="517"><span class="lineNum">     517 </span>            : </a>
+<a name="518"><span class="lineNum">     518 </span>            :     void timerCallback() override;</a>
+<a name="519"><span class="lineNum">     519 </span>            :     void curveHasChanged (AutomatableParameter&amp;) override;</a>
+<a name="520"><span class="lineNum">     520 </span>            : </a>
+<a name="521"><span class="lineNum">     521 </span>            :     Plugin::Ptr plugin;</a>
+<a name="522"><span class="lineNum">     522 </span>            :     std::unique_ptr&lt;ClipEffects::RenderInhibitor&gt; inhibitor;</a>
+<a name="523"><span class="lineNum">     523 </span>            :     std::unique_ptr&lt;PluginUnloadInhibitor&gt; pluginUnloadInhibitor;</a>
+<a name="524"><span class="lineNum">     524 </span>            :     juce::CachedValue&lt;int&gt; currentCurve;</a>
+<a name="525"><span class="lineNum">     525 </span>            :     mutable juce::CachedValue&lt;juce::int64&gt; lastHash;</a>
+<a name="526"><span class="lineNum">     526 </span>            : </a>
+<a name="527"><span class="lineNum">     527 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginEffect)</a>
+<a name="528"><span class="lineNum">     528 </span>            : };</a>
+<a name="529"><span class="lineNum">     529 </span>            : </a>
+<a name="530"><span class="lineNum">     530 </span>            : //==============================================================================</a>
+<a name="531"><span class="lineNum">     531 </span>            : /**</a>
+<a name="532"><span class="lineNum">     532 </span>            : */</a>
+<a name="533"><span class="lineNum">     533 </span>            : struct NormaliseEffect  : public ClipEffect,</a>
+<a name="534"><span class="lineNum">     534 </span>            :                           public Selectable</a>
+<a name="535"><span class="lineNum">     535 </span>            : {</a>
+<a name="536"><span class="lineNum">     536 </span>            :     NormaliseEffect (const juce::ValueTree&amp;, ClipEffects&amp;);</a>
+<a name="537"><span class="lineNum">     537 </span>            :     ~NormaliseEffect() override;</a>
+<a name="538"><span class="lineNum">     538 </span>            : </a>
+<a name="539"><span class="lineNum">     539 </span>            :     juce::ReferenceCountedObjectPtr&lt;ClipEffectRenderJob&gt; createRenderJob (const AudioFile&amp; sourceFile, double sourceLength) override;</a>
+<a name="540"><span class="lineNum">     540 </span>            : </a>
+<a name="541"><span class="lineNum">     541 </span>            :     bool hasProperties() override;</a>
+<a name="542"><span class="lineNum">     542 </span>            :     void propertiesButtonPressed (SelectionManager&amp;) override;</a>
+<a name="543"><span class="lineNum">     543 </span>            :     juce::String getSelectableDescription() override;</a>
+<a name="544"><span class="lineNum">     544 </span>            : </a>
+<a name="545"><span class="lineNum">     545 </span>            :     juce::CachedValue&lt;double&gt; maxLevelDB;</a>
+<a name="546"><span class="lineNum">     546 </span>            : </a>
+<a name="547"><span class="lineNum">     547 </span>            : private:</a>
+<a name="548"><span class="lineNum">     548 </span>            :     struct NormaliseRenderJob;</a>
+<a name="549"><span class="lineNum">     549 </span>            : </a>
+<a name="550"><span class="lineNum">     550 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NormaliseEffect)</a>
+<a name="551"><span class="lineNum">     551 </span>            : };</a>
+<a name="552"><span class="lineNum">     552 </span>            : </a>
+<a name="553"><span class="lineNum">     553 </span>            : //==============================================================================</a>
+<a name="554"><span class="lineNum">     554 </span>            : /**</a>
+<a name="555"><span class="lineNum">     555 </span>            : */</a>
+<a name="556"><span class="lineNum">     556 </span>            : struct MakeMonoEffect : public ClipEffect,</a>
+<a name="557"><span class="lineNum">     557 </span>            :                         public Selectable</a>
+<a name="558"><span class="lineNum">     558 </span>            : {</a>
+<a name="559"><span class="lineNum">     559 </span>            :     enum SrcChannels</a>
+<a name="560"><span class="lineNum">     560 </span>            :     {</a>
+<a name="561"><span class="lineNum">     561 </span>            :         chLR = 0,</a>
+<a name="562"><span class="lineNum">     562 </span>            :         chL  = 1,</a>
+<a name="563"><span class="lineNum">     563 </span>            :         chR  = 2</a>
+<a name="564"><span class="lineNum">     564 </span>            :     };</a>
+<a name="565"><span class="lineNum">     565 </span>            : </a>
+<a name="566"><span class="lineNum">     566 </span>            :     MakeMonoEffect (const juce::ValueTree&amp;, ClipEffects&amp;);</a>
+<a name="567"><span class="lineNum">     567 </span>            :     ~MakeMonoEffect() override;</a>
+<a name="568"><span class="lineNum">     568 </span>            : </a>
+<a name="569"><span class="lineNum">     569 </span>            :     juce::ReferenceCountedObjectPtr&lt;ClipEffectRenderJob&gt; createRenderJob (const AudioFile&amp;, double sourceLength) override;</a>
+<a name="570"><span class="lineNum">     570 </span>            : </a>
+<a name="571"><span class="lineNum">     571 </span>            :     bool hasProperties() override;</a>
+<a name="572"><span class="lineNum">     572 </span>            :     void propertiesButtonPressed (SelectionManager&amp;) override;</a>
+<a name="573"><span class="lineNum">     573 </span>            :     juce::String getSelectableDescription() override;</a>
+<a name="574"><span class="lineNum">     574 </span>            : </a>
+<a name="575"><span class="lineNum">     575 </span>            :     juce::CachedValue&lt;int&gt; channels;</a>
+<a name="576"><span class="lineNum">     576 </span>            : </a>
+<a name="577"><span class="lineNum">     577 </span>            : private:</a>
+<a name="578"><span class="lineNum">     578 </span>            :     struct MakeMonoRenderJob;</a>
+<a name="579"><span class="lineNum">     579 </span>            : </a>
+<a name="580"><span class="lineNum">     580 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MakeMonoEffect)</a>
+<a name="581"><span class="lineNum">     581 </span>            : };</a>
+<a name="582"><span class="lineNum">     582 </span>            : </a>
+<a name="583"><span class="lineNum">     583 </span>            : //==============================================================================</a>
+<a name="584"><span class="lineNum">     584 </span>            : /**</a>
+<a name="585"><span class="lineNum">     585 </span>            : */</a>
+<a name="586"><span class="lineNum">     586 </span>            : struct ReverseEffect  : public ClipEffect</a>
+<a name="587"><span class="lineNum">     587 </span>            : {</a>
+<a name="588"><span class="lineNum">     588 </span>            :     ReverseEffect (const juce::ValueTree&amp;, ClipEffects&amp;);</a>
+<a name="589"><span class="lineNum">     589 </span>            : </a>
+<a name="590"><span class="lineNum">     590 </span>            :     juce::ReferenceCountedObjectPtr&lt;ClipEffectRenderJob&gt; createRenderJob (const AudioFile&amp;, double sourceLength) override;</a>
+<a name="591"><span class="lineNum">     591 </span>            : </a>
+<a name="592"><span class="lineNum">     592 </span>            :     struct ReverseRenderJob;</a>
+<a name="593"><span class="lineNum">     593 </span>            : </a>
+<a name="594"><span class="lineNum">     594 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ReverseEffect)</a>
+<a name="595"><span class="lineNum">     595 </span>            : };</a>
+<a name="596"><span class="lineNum">     596 </span>            : </a>
+<a name="597"><span class="lineNum">     597 </span>            : //==============================================================================</a>
+<a name="598"><span class="lineNum">     598 </span>            : /**</a>
+<a name="599"><span class="lineNum">     599 </span>            : */</a>
+<a name="600"><span class="lineNum">     600 </span>            : struct InvertEffect  : public ClipEffect</a>
+<a name="601"><span class="lineNum">     601 </span>            : {</a>
+<a name="602"><span class="lineNum">     602 </span>            :     InvertEffect (const juce::ValueTree&amp;, ClipEffects&amp;);</a>
+<a name="603"><span class="lineNum">     603 </span>            : </a>
+<a name="604"><span class="lineNum">     604 </span>            :     juce::ReferenceCountedObjectPtr&lt;ClipEffect::ClipEffectRenderJob&gt; createRenderJob (const AudioFile&amp;, double sourceLength) override;</a>
+<a name="605"><span class="lineNum">     605 </span>            : </a>
+<a name="606"><span class="lineNum">     606 </span>            :     struct InvertRenderJob;</a>
+<a name="607"><span class="lineNum">     607 </span>            : </a>
+<a name="608"><span class="lineNum">     608 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (InvertEffect)</a>
+<a name="609"><span class="lineNum">     609 </span>            : };</a>
+<a name="610"><span class="lineNum">     610 </span>            : </a>
+<a name="611"><span class="lineNum">     611 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

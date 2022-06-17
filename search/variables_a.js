@@ -1,13 +1,13 @@
 var searchData=
 [
-  ['keepexistingitemsselected_12048',['keepExistingItemsSelected',['../structtracktion__engine_1_1SelectableClass_1_1SelectOtherObjectsParams.html#a30b3c34663424819133ba435e7607242',1,'tracktion_engine::SelectableClass::SelectOtherObjectsParams']]],
-  ['key_12049',['key',['../structtracktion__engine_1_1KeyResult.html#ae0e68bee61a75098e2de819ded1a7def',1,'tracktion_engine::KeyResult']]],
-  ['keyboardstate_12050',['keyboardState',['../classtracktion__engine_1_1MidiInputDevice.html#ab2660cedeaeb07907f6495c6f4d7e27d',1,'tracktion_engine::MidiInputDevice']]],
-  ['keydownvelocities_12051',['keyDownVelocities',['../classtracktion__engine_1_1MidiInputDevice.html#a175b39cdf0ee9701aea5add53b436555',1,'tracktion_engine::MidiInputDevice']]],
-  ['keymapsuffix_12052',['keyMapSuffix',['../namespacetracktion__engine.html#ab3c09093e9404a4ba516e4f8998234b0',1,'tracktion_engine']]],
-  ['keymapwildcard_12053',['keyMapWildCard',['../namespacetracktion__engine.html#a8fdd3fccbea05237183536945d6e4cb9',1,'tracktion_engine']]],
-  ['keynote_12054',['keyNote',['../structtracktion__engine_1_1SamplerPlugin_1_1SamplerSound.html#abb9379f617dfef46f6a0a0d7582627c2',1,'tracktion_engine::SamplerPlugin::SamplerSound']]],
-  ['keysdown_12055',['keysDown',['../classtracktion__engine_1_1MidiInputDevice.html#ab510f68af378183c6f6de0d8a20e4df9',1,'tracktion_engine::MidiInputDevice']]],
-  ['keysup_12056',['keysUp',['../classtracktion__engine_1_1MidiInputDevice.html#afdeaafdfa342a6c6856cc2a9b5b3bc1b',1,'tracktion_engine::MidiInputDevice']]],
-  ['knownpluginlist_12057',['knownPluginList',['../classtracktion__engine_1_1PluginManager.html#ab320268b14d29669d6f7a21e64673356',1,'tracktion_engine::PluginManager']]]
+  ['keepexistingitemsselected_12031',['keepExistingItemsSelected',['../structtracktion_1_1engine_1_1SelectableClass_1_1SelectOtherObjectsParams.html#a583fba5006e57819f0f1b7798f84c398',1,'tracktion::engine::SelectableClass::SelectOtherObjectsParams']]],
+  ['key_12032',['key',['../structtracktion_1_1engine_1_1KeyResult.html#a50c3f1e80324cba1955c405e39292b1d',1,'tracktion::engine::KeyResult']]],
+  ['keyboardstate_12033',['keyboardState',['../classtracktion_1_1engine_1_1MidiInputDevice.html#a92fdbc6a44b121b8dd779bee41d7ef02',1,'tracktion::engine::MidiInputDevice']]],
+  ['keydownvelocities_12034',['keyDownVelocities',['../classtracktion_1_1engine_1_1MidiInputDevice.html#abcae49fcd17c811726b2616977157cd0',1,'tracktion::engine::MidiInputDevice']]],
+  ['keymapsuffix_12035',['keyMapSuffix',['../namespacetracktion_1_1engine.html#a9cbbe3be6814817ff65ab8f1ea2a5ba4',1,'tracktion::engine::keyMapSuffix()'],['../namespacetracktion_1_1engine.html#a9cbbe3be6814817ff65ab8f1ea2a5ba4',1,'tracktion::keyMapSuffix()']]],
+  ['keymapwildcard_12036',['keyMapWildCard',['../namespacetracktion_1_1engine.html#ac099f7fa922c71a9e5025d30bf4844bb',1,'tracktion::keyMapWildCard()'],['../namespacetracktion_1_1engine.html#ac099f7fa922c71a9e5025d30bf4844bb',1,'tracktion::engine::keyMapWildCard()']]],
+  ['keynote_12037',['keyNote',['../structtracktion_1_1engine_1_1SamplerPlugin_1_1SamplerSound.html#a0cefd8c3e4932109997f6d4412c3a68a',1,'tracktion::engine::SamplerPlugin::SamplerSound']]],
+  ['keysdown_12038',['keysDown',['../classtracktion_1_1engine_1_1MidiInputDevice.html#a24f33f8fe9630014b1a8e3ebec11e8b8',1,'tracktion::engine::MidiInputDevice']]],
+  ['keysup_12039',['keysUp',['../classtracktion_1_1engine_1_1MidiInputDevice.html#a663fba4a8f5a9e7142fe3ebc26bfe402',1,'tracktion::engine::MidiInputDevice']]],
+  ['knownpluginlist_12040',['knownPluginList',['../classtracktion_1_1engine_1_1PluginManager.html#aa7c4d84d28757381fa8f694a78eb9177',1,'tracktion::engine::PluginManager']]]
 ];

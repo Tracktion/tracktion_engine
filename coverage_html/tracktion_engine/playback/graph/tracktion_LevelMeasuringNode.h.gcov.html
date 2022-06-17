@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">3</td>
@@ -70,28 +70,28 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : /**</a>
 <a name="15"><span class="lineNum">      15 </span>            :     A Node that passes its incomming audio and MIDI through a LevelMeasurer.</a>
 <a name="16"><span class="lineNum">      16 </span>            : */</a>
-<a name="17"><span class="lineNum">      17 </span>            : class LevelMeasuringNode final  : public tracktion_graph::Node</a>
+<a name="17"><span class="lineNum">      17 </span>            : class LevelMeasuringNode final  : public tracktion::graph::Node</a>
 <a name="18"><span class="lineNum">      18 </span>            : {</a>
 <a name="19"><span class="lineNum">      19 </span>            : public:</a>
-<a name="20"><span class="lineNum">      20 </span>            :     LevelMeasuringNode (std::unique_ptr&lt;tracktion_graph::Node&gt; inputNode, LevelMeasurer&amp;);</a>
+<a name="20"><span class="lineNum">      20 </span>            :     LevelMeasuringNode (std::unique_ptr&lt;tracktion::graph::Node&gt; inputNode, LevelMeasurer&amp;);</a>
 <a name="21"><span class="lineNum">      21 </span>            :     </a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineCov">        308 :     tracktion_graph::NodeProperties getNodeProperties() override        { return input-&gt;getNodeProperties(); }</span></a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineCov">        462 :     std::vector&lt;tracktion_graph::Node*&gt; getDirectInputNodes() override  { return { input.get() }; }</span></a>
-<a name="24"><span class="lineNum">      24 </span><span class="lineCov">        154 :     bool isReadyToProcess() override                                    { return input-&gt;hasProcessed(); }</span></a>
-<a name="25"><span class="lineNum">      25 </span>            :     void process (tracktion_graph::Node::ProcessContext&amp;) override;</a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineCov">        340 :     tracktion::graph::NodeProperties getNodeProperties() override        { return input-&gt;getNodeProperties(); }</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">        510 :     std::vector&lt;tracktion::graph::Node*&gt; getDirectInputNodes() override  { return { input.get() }; }</span></a>
+<a name="24"><span class="lineNum">      24 </span><span class="lineCov">        170 :     bool isReadyToProcess() override                                    { return input-&gt;hasProcessed(); }</span></a>
+<a name="25"><span class="lineNum">      25 </span>            :     void process (tracktion::graph::Node::ProcessContext&amp;) override;</a>
 <a name="26"><span class="lineNum">      26 </span>            :     </a>
 <a name="27"><span class="lineNum">      27 </span>            : private:</a>
-<a name="28"><span class="lineNum">      28 </span>            :     std::unique_ptr&lt;tracktion_graph::Node&gt; input;</a>
+<a name="28"><span class="lineNum">      28 </span>            :     std::unique_ptr&lt;tracktion::graph::Node&gt; input;</a>
 <a name="29"><span class="lineNum">      29 </span>            :     LevelMeasurer&amp; levelMeasurer;</a>
 <a name="30"><span class="lineNum">      30 </span>            : };</a>
 <a name="31"><span class="lineNum">      31 </span>            : </a>
-<a name="32"><span class="lineNum">      32 </span>            : } // namespace tracktion_engine</a>
+<a name="32"><span class="lineNum">      32 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

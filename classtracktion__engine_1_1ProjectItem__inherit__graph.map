@@ -1,4 +1,0 @@
-<map id="tracktion_engine::ProjectItem" name="tracktion_engine::ProjectItem">
-<area shape="rect" id="node1" title="Represents a file&#45;based resource that is used in a project." alt="" coords="5,80,220,107"/>
-<area shape="rect" id="node2" href="$classtracktion__engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="9,5,216,32"/>
-</map>

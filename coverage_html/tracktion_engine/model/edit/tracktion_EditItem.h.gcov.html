@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : //==============================================================================</a>
@@ -79,11 +79,11 @@
 <a name="17"><span class="lineNum">      17 </span>            : */</a>
 <a name="18"><span class="lineNum">      18 </span>            : struct EditItemID</a>
 <a name="19"><span class="lineNum">      19 </span>            : {</a>
-<a name="20"><span class="lineNum">      20 </span><span class="lineCov">        709 :     EditItemID() = default;</span></a>
+<a name="20"><span class="lineNum">      20 </span><span class="lineCov">        747 :     EditItemID() = default;</span></a>
 <a name="21"><span class="lineNum">      21 </span>            :     EditItemID (const EditItemID&amp;) = default;</a>
 <a name="22"><span class="lineNum">      22 </span>            :     EditItemID&amp; operator= (const EditItemID&amp;) = default;</a>
 <a name="23"><span class="lineNum">      23 </span>            : </a>
-<a name="24"><span class="lineNum">      24 </span><span class="lineCov">        111 :     bool isValid() const noexcept       { return itemID != 0; }</span></a>
+<a name="24"><span class="lineNum">      24 </span><span class="lineCov">        136 :     bool isValid() const noexcept       { return itemID != 0; }</span></a>
 <a name="25"><span class="lineNum">      25 </span>            :     bool isInvalid() const noexcept     { return itemID == 0; }</a>
 <a name="26"><span class="lineNum">      26 </span>            : </a>
 <a name="27"><span class="lineNum">      27 </span>            :     static EditItemID fromID (const juce::ValueTree&amp;);</a>
@@ -170,37 +170,37 @@
 <a name="108"><span class="lineNum">     108 </span>            : struct EditItemCache</a>
 <a name="109"><span class="lineNum">     109 </span>            : {</a>
 <a name="110"><span class="lineNum">     110 </span>            :     EditItemCache() = default;</a>
-<a name="111"><span class="lineNum">     111 </span><span class="lineCov">        195 :     ~EditItemCache() { jassert (knownEditItems.empty()); }</span></a>
+<a name="111"><span class="lineNum">     111 </span><span class="lineCov">        209 :     ~EditItemCache() { jassert (knownEditItems.empty()); }</span></a>
 <a name="112"><span class="lineNum">     112 </span>            : </a>
 <a name="113"><span class="lineNum">     113 </span>            :     EditItemType* findItem (EditItemID id) const</a>
 <a name="114"><span class="lineNum">     114 </span>            :     {</a>
 <a name="115"><span class="lineNum">     115 </span>            :         auto o = knownEditItems.find (id);</a>
 <a name="116"><span class="lineNum">     116 </span>            : </a>
-<a name="117"><span class="lineNum">     117 </span><span class="lineCov">       1164 :         if (o != knownEditItems.cend())</span></a>
+<a name="117"><span class="lineNum">     117 </span><span class="lineCov">       1244 :         if (o != knownEditItems.cend())</span></a>
 <a name="118"><span class="lineNum">     118 </span><span class="lineCov">         16 :             return o-&gt;second;</span></a>
 <a name="119"><span class="lineNum">     119 </span>            : </a>
 <a name="120"><span class="lineNum">     120 </span>            :         return {};</a>
 <a name="121"><span class="lineNum">     121 </span>            :     }</a>
 <a name="122"><span class="lineNum">     122 </span>            : </a>
 <a name="123"><span class="lineNum">     123 </span>            :     template&lt;typename Visitor&gt;</a>
-<a name="124"><span class="lineNum">     124 </span><span class="lineCov">        390 :     void visitItems (Visitor&amp;&amp; visitor) const</span></a>
+<a name="124"><span class="lineNum">     124 </span><span class="lineCov">        418 :     void visitItems (Visitor&amp;&amp; visitor) const</span></a>
 <a name="125"><span class="lineNum">     125 </span>            :     {</a>
-<a name="126"><span class="lineNum">     126 </span><span class="lineCov">        390 :         for (auto iter : knownEditItems)</span></a>
+<a name="126"><span class="lineNum">     126 </span><span class="lineCov">        418 :         for (auto iter : knownEditItems)</span></a>
 <a name="127"><span class="lineNum">     127 </span><span class="lineNoCov">          0 :             std::forward&lt;Visitor&gt; (visitor)(iter.second);</span></a>
-<a name="128"><span class="lineNum">     128 </span><span class="lineCov">        390 :     }</span></a>
+<a name="128"><span class="lineNum">     128 </span><span class="lineCov">        418 :     }</span></a>
 <a name="129"><span class="lineNum">     129 </span>            : </a>
 <a name="130"><span class="lineNum">     130 </span>            :     void addItem (EditItemType&amp; item)</a>
 <a name="131"><span class="lineNum">     131 </span>            :     {</a>
 <a name="132"><span class="lineNum">     132 </span>            :         jassert (knownEditItems.find (item.itemID) == knownEditItems.end());</a>
 <a name="133"><span class="lineNum">     133 </span>            : </a>
-<a name="134"><span class="lineNum">     134 </span><span class="lineCov">       1343 :         if (item.itemID.isValid())</span></a>
-<a name="135"><span class="lineNum">     135 </span><span class="lineCov">       1343 :             knownEditItems[item.itemID] = &amp;item;</span></a>
+<a name="134"><span class="lineNum">     134 </span><span class="lineCov">       1437 :         if (item.itemID.isValid())</span></a>
+<a name="135"><span class="lineNum">     135 </span><span class="lineCov">       1437 :             knownEditItems[item.itemID] = &amp;item;</span></a>
 <a name="136"><span class="lineNum">     136 </span>            :     }</a>
 <a name="137"><span class="lineNum">     137 </span>            : </a>
 <a name="138"><span class="lineNum">     138 </span>            :     void removeItem (EditItemType&amp; item)</a>
 <a name="139"><span class="lineNum">     139 </span>            :     {</a>
-<a name="140"><span class="lineNum">     140 </span><span class="lineCov">       1343 :         if (item.itemID.isValid())</span></a>
-<a name="141"><span class="lineNum">     141 </span><span class="lineCov">       1343 :             knownEditItems.erase (item.itemID);</span></a>
+<a name="140"><span class="lineNum">     140 </span><span class="lineCov">       1437 :         if (item.itemID.isValid())</span></a>
+<a name="141"><span class="lineNum">     141 </span><span class="lineCov">       1437 :             knownEditItems.erase (item.itemID);</span></a>
 <a name="142"><span class="lineNum">     142 </span>            :     }</a>
 <a name="143"><span class="lineNum">     143 </span>            : </a>
 <a name="144"><span class="lineNum">     144 </span>            : private:</a>
@@ -209,15 +209,15 @@
 <a name="147"><span class="lineNum">     147 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EditItemCache)</a>
 <a name="148"><span class="lineNum">     148 </span>            : };</a>
 <a name="149"><span class="lineNum">     149 </span>            : </a>
-<a name="150"><span class="lineNum">     150 </span>            : } // namespace tracktion_engine</a>
+<a name="150"><span class="lineNum">     150 </span>            : }} // namespace tracktion { inline namespace engine</a>
 <a name="151"><span class="lineNum">     151 </span>            : </a>
 <a name="152"><span class="lineNum">     152 </span>            : namespace juce</a>
 <a name="153"><span class="lineNum">     153 </span>            : {</a>
 <a name="154"><span class="lineNum">     154 </span>            :     template &lt;&gt;</a>
-<a name="155"><span class="lineNum">     155 </span>            :     struct VariantConverter&lt;tracktion_engine::EditItemID&gt;</a>
+<a name="155"><span class="lineNum">     155 </span>            :     struct VariantConverter&lt;tracktion::engine::EditItemID&gt;</a>
 <a name="156"><span class="lineNum">     156 </span>            :     {</a>
-<a name="157"><span class="lineNum">     157 </span><span class="lineCov">       2200 :         static tracktion_engine::EditItemID fromVar (const juce::var&amp; v)   { return tracktion_engine::EditItemID::fromVar (v); }</span></a>
-<a name="158"><span class="lineNum">     158 </span><span class="lineCov">         64 :         static juce::var toVar (const tracktion_engine::EditItemID&amp; v)     { return juce::var ((juce::int64) v.getRawID()); }</span></a>
+<a name="157"><span class="lineNum">     157 </span><span class="lineCov">       2200 :         static tracktion::engine::EditItemID fromVar (const juce::var&amp; v)   { return tracktion::engine::EditItemID::fromVar (v); }</span></a>
+<a name="158"><span class="lineNum">     158 </span><span class="lineCov">         64 :         static juce::var toVar (const tracktion::engine::EditItemID&amp; v)     { return juce::var ((juce::int64) v.getRawID()); }</span></a>
 <a name="159"><span class="lineNum">     159 </span>            :     };</a>
 <a name="160"><span class="lineNum">     160 </span>            : }</a>
 <a name="161"><span class="lineNum">     161 </span>            : </a>
@@ -225,9 +225,9 @@
 <a name="163"><span class="lineNum">     163 </span>            : namespace std</a>
 <a name="164"><span class="lineNum">     164 </span>            : {</a>
 <a name="165"><span class="lineNum">     165 </span>            :     template&lt;&gt;</a>
-<a name="166"><span class="lineNum">     166 </span>            :     struct hash&lt;tracktion_engine::EditItemID&gt;</a>
+<a name="166"><span class="lineNum">     166 </span>            :     struct hash&lt;tracktion::engine::EditItemID&gt;</a>
 <a name="167"><span class="lineNum">     167 </span>            :     {</a>
-<a name="168"><span class="lineNum">     168 </span>            :         size_t operator() (const tracktion_engine::EditItemID&amp; e) const noexcept   { return (size_t) e.getRawID(); }</a>
+<a name="168"><span class="lineNum">     168 </span>            :         size_t operator() (const tracktion::engine::EditItemID&amp; e) const noexcept   { return (size_t) e.getRawID(); }</a>
 <a name="169"><span class="lineNum">     169 </span>            :     };</a>
 <a name="170"><span class="lineNum">     170 </span>            : }</a>
 <a name="171"><span class="lineNum">     171 </span>            : #endif</a>

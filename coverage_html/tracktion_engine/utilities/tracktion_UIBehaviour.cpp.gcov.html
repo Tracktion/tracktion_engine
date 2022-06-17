@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span><span class="lineNoCov">          0 : bool UIBehaviour::paste (const Clipboard&amp; clipboard)</span></a>
@@ -141,11 +141,11 @@
 <a name="79"><span class="lineNum">      79 </span><span class="lineNoCov">          0 :     auto&amp; ed = clips.getFirst()-&gt;edit;</span></a>
 <a name="80"><span class="lineNum">      80 </span><span class="lineNoCov">          0 :     sm.keepSelectedObjectsOnScreen();</span></a>
 <a name="81"><span class="lineNum">      81 </span>            : </a>
-<a name="82"><span class="lineNum">      82 </span>            :     double delta = 0.0;</a>
+<a name="82"><span class="lineNum">      82 </span>            :     TimeDuration delta;</a>
 <a name="83"><span class="lineNum">      83 </span>            :     int trackDelta = 0;</a>
 <a name="84"><span class="lineNum">      84 </span>            : </a>
-<a name="85"><span class="lineNum">      85 </span><span class="lineNoCov">          0 :     if (commandDesc.contains (&quot;right&quot;))        delta =  0.00001;</span></a>
-<a name="86"><span class="lineNum">      86 </span><span class="lineNoCov">          0 :     else if (commandDesc.contains (&quot;left&quot;))    delta = -0.00001;</span></a>
+<a name="85"><span class="lineNum">      85 </span><span class="lineNoCov">          0 :     if (commandDesc.contains (&quot;right&quot;))        delta = TimeDuration::fromSeconds (0.00001);</span></a>
+<a name="86"><span class="lineNum">      86 </span><span class="lineNoCov">          0 :     else if (commandDesc.contains (&quot;left&quot;))    delta = TimeDuration::fromSeconds (-0.00001);</span></a>
 <a name="87"><span class="lineNum">      87 </span><span class="lineNoCov">          0 :     else if (commandDesc.contains (&quot;up&quot;))      trackDelta = -1;</span></a>
 <a name="88"><span class="lineNum">      88 </span><span class="lineNoCov">          0 :     else if (commandDesc.contains (&quot;down&quot;))    trackDelta =  1;</span></a>
 <a name="89"><span class="lineNum">      89 </span>            : </a>
@@ -194,10 +194,10 @@
 <a name="132"><span class="lineNum">     132 </span><span class="lineNoCov">          0 :                     clips.getUnchecked(i)-&gt;moveToTrack (*targetTrack);</span></a>
 <a name="133"><span class="lineNum">     133 </span>            : </a>
 <a name="134"><span class="lineNum">     134 </span><span class="lineNoCov">          0 :             if (sections.size())</span></a>
-<a name="135"><span class="lineNum">     135 </span><span class="lineNoCov">          0 :                 moveAutomation (sections, 0, false);</span></a>
+<a name="135"><span class="lineNum">     135 </span><span class="lineNoCov">          0 :                 moveAutomation (sections, {}, false);</span></a>
 <a name="136"><span class="lineNum">     136 </span>            :         }</a>
 <a name="137"><span class="lineNum">     137 </span>            :     }</a>
-<a name="138"><span class="lineNum">     138 </span><span class="lineNoCov">          0 :     else if (delta != 0)</span></a>
+<a name="138"><span class="lineNum">     138 </span><span class="lineNoCov">          0 :     else if (delta != TimeDuration())</span></a>
 <a name="139"><span class="lineNum">     139 </span>            :     {</a>
 <a name="140"><span class="lineNum">     140 </span><span class="lineNoCov">          0 :         juce::Array&lt;TrackAutomationSection&gt; sections;</span></a>
 <a name="141"><span class="lineNum">     141 </span>            : </a>
@@ -212,7 +212,7 @@
 <a name="150"><span class="lineNum">     150 </span><span class="lineNoCov">          0 :             auto origClip1Start = first-&gt;getPosition().getStart();</span></a>
 <a name="151"><span class="lineNum">     151 </span>            :             auto clipStart = origClip1Start;</a>
 <a name="152"><span class="lineNum">     152 </span>            : </a>
-<a name="153"><span class="lineNum">     153 </span><span class="lineNoCov">          0 :             if (delta &gt; 0)</span></a>
+<a name="153"><span class="lineNum">     153 </span><span class="lineNoCov">          0 :             if (delta &gt; TimeDuration())</span></a>
 <a name="154"><span class="lineNum">     154 </span><span class="lineNoCov">          0 :                 first-&gt;setStart (snapType.roundTimeUp   (origClip1Start + delta, ed.tempoSequence), false, true);</span></a>
 <a name="155"><span class="lineNum">     155 </span>            :             else</a>
 <a name="156"><span class="lineNum">     156 </span><span class="lineNoCov">          0 :                 first-&gt;setStart (snapType.roundTimeDown (origClip1Start + delta, ed.tempoSequence), false, true);</span></a>
@@ -274,12 +274,12 @@
 <a name="212"><span class="lineNum">     212 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="213"><span class="lineNum">     213 </span>            : </a>
 <a name="214"><span class="lineNum">     214 </span>            : //==============================================================================</a>
-<a name="215"><span class="lineNum">     215 </span><span class="lineNoCov">          0 : double UIBehaviour::getEditingPosition (Edit&amp; e)</span></a>
+<a name="215"><span class="lineNum">     215 </span><span class="lineNoCov">          0 : TimePosition UIBehaviour::getEditingPosition (Edit&amp; e)</span></a>
 <a name="216"><span class="lineNum">     216 </span>            : {</a>
-<a name="217"><span class="lineNum">     217 </span><span class="lineNoCov">          0 :     return e.getTransport().position;</span></a>
+<a name="217"><span class="lineNum">     217 </span><span class="lineNoCov">          0 :     return e.getTransport().getPosition();</span></a>
 <a name="218"><span class="lineNum">     218 </span>            : }</a>
 <a name="219"><span class="lineNum">     219 </span>            : </a>
-<a name="220"><span class="lineNum">     220 </span><span class="lineNoCov">          0 : EditTimeRange UIBehaviour::getEditingRange (Edit&amp; e)</span></a>
+<a name="220"><span class="lineNum">     220 </span><span class="lineNoCov">          0 : TimeRange UIBehaviour::getEditingRange (Edit&amp; e)</span></a>
 <a name="221"><span class="lineNum">     221 </span>            : {</a>
 <a name="222"><span class="lineNum">     222 </span><span class="lineNoCov">          0 :     return e.getTransport().getLoopRange();</span></a>
 <a name="223"><span class="lineNum">     223 </span>            : }</a>
@@ -289,7 +289,7 @@
 <a name="227"><span class="lineNum">     227 </span><span class="lineNoCov">          0 :     p.windowState-&gt;recreateWindowIfShowing();</span></a>
 <a name="228"><span class="lineNum">     228 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="229"><span class="lineNum">     229 </span>            : </a>
-<a name="230"><span class="lineNum">     230 </span>            : }</a>
+<a name="230"><span class="lineNum">     230 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

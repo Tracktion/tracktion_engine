@@ -1,0 +1,5 @@
+<map id="tracktion::engine::WaveNode" name="tracktion::engine::WaveNode">
+<area shape="rect" id="node1" title="An Node that plays back a wave file." alt="" coords="112,95,252,136"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class." alt="" coords="5,13,172,39"/>
+<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1TracktionEngineNode.html" title="Base class for Nodes that provides information about the current process call." alt="" coords="196,5,355,47"/>
+</map>

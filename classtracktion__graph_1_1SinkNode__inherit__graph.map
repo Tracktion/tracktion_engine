@@ -1,4 +1,0 @@
-<map id="tracktion_graph::SinkNode" name="tracktion_graph::SinkNode">
-<area shape="rect" id="node1" title="Blocks audio and MIDI input from reaching the outputs." alt="" coords="5,80,200,107"/>
-<area shape="rect" id="node2" href="$classtracktion__graph_1_1Node.html" title="Main graph Node processor class." alt="" coords="19,5,186,32"/>
-</map>

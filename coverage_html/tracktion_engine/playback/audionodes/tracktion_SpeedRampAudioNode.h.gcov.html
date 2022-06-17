@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">192</td>
+            <td class="headerCovTableEntry">190</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -72,7 +72,7 @@
 <a name="10"><span class="lineNum">      10 </span>            : </a>
 <a name="11"><span class="lineNum">      11 </span>            : #pragma once</a>
 <a name="12"><span class="lineNum">      12 </span>            : </a>
-<a name="13"><span class="lineNum">      13 </span>            : namespace tracktion_engine</a>
+<a name="13"><span class="lineNum">      13 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="14"><span class="lineNum">      14 </span>            : {</a>
 <a name="15"><span class="lineNum">      15 </span>            : </a>
 <a name="16"><span class="lineNum">      16 </span>            : class SubSampleWaveAudioNode    : public AudioNode</a>
@@ -80,9 +80,9 @@
 <a name="18"><span class="lineNum">      18 </span>            : public:</a>
 <a name="19"><span class="lineNum">      19 </span>            :     SubSampleWaveAudioNode (Engine&amp; e,</a>
 <a name="20"><span class="lineNum">      20 </span>            :                             const AudioFile&amp; af,</a>
-<a name="21"><span class="lineNum">      21 </span>            :                             EditTimeRange editTime,</a>
+<a name="21"><span class="lineNum">      21 </span>            :                             legacy::EditTimeRange editTime,</a>
 <a name="22"><span class="lineNum">      22 </span>            :                             double off,</a>
-<a name="23"><span class="lineNum">      23 </span>            :                             EditTimeRange loop,</a>
+<a name="23"><span class="lineNum">      23 </span>            :                             legacy::EditTimeRange loop,</a>
 <a name="24"><span class="lineNum">      24 </span>            :                             LiveClipLevel level,</a>
 <a name="25"><span class="lineNum">      25 </span>            :                             double speed,</a>
 <a name="26"><span class="lineNum">      26 </span>            :                             const juce::AudioChannelSet&amp; channels)</a>
@@ -163,7 +163,7 @@
 <a name="101"><span class="lineNum">     101 </span><span class="lineNoCov">          0 :             localReader-&gt;setReadPosition (static_cast&lt;SampleCount&gt; (editTimeToFileSample (rc.getEditTime().editRange1.getStart()) + 0.5) - 5);</span></a>
 <a name="102"><span class="lineNum">     102 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="103"><span class="lineNum">     103 </span>            : </a>
-<a name="104"><span class="lineNum">     104 </span><span class="lineNoCov">          0 :     void renderSection (const AudioRenderContext&amp; rc, EditTimeRange editTime)</span></a>
+<a name="104"><span class="lineNum">     104 </span><span class="lineNoCov">          0 :     void renderSection (const AudioRenderContext&amp; rc, legacy::EditTimeRange editTime)</span></a>
 <a name="105"><span class="lineNum">     105 </span>            :     {</a>
 <a name="106"><span class="lineNum">     106 </span>            :         // keep a local copy, because releaseAudioNodeResources may remove the reader halfway through..</a>
 <a name="107"><span class="lineNum">     107 </span>            :         const auto localReader (reader);</a>
@@ -274,7 +274,7 @@
 <a name="212"><span class="lineNum">     212 </span>            : </a>
 <a name="213"><span class="lineNum">     213 </span>            : private:</a>
 <a name="214"><span class="lineNum">     214 </span>            :     //==============================================================================</a>
-<a name="215"><span class="lineNum">     215 </span>            :     EditTimeRange editPosition, loopSection;</a>
+<a name="215"><span class="lineNum">     215 </span>            :     legacy::EditTimeRange editPosition, loopSection;</a>
 <a name="216"><span class="lineNum">     216 </span>            :     double offset;</a>
 <a name="217"><span class="lineNum">     217 </span>            :     double originalSpeedRatio, outputSampleRate = 44100.0;</a>
 <a name="218"><span class="lineNum">     218 </span>            : </a>
@@ -329,8 +329,8 @@
 <a name="267"><span class="lineNum">     267 </span>            : {</a>
 <a name="268"><span class="lineNum">     268 </span>            : public:</a>
 <a name="269"><span class="lineNum">     269 </span>            :     SpeedRampAudioNode (AudioNode* source,</a>
-<a name="270"><span class="lineNum">     270 </span>            :                         EditTimeRange in,</a>
-<a name="271"><span class="lineNum">     271 </span>            :                         EditTimeRange out,</a>
+<a name="270"><span class="lineNum">     270 </span>            :                         legacy::EditTimeRange in,</a>
+<a name="271"><span class="lineNum">     271 </span>            :                         legacy::EditTimeRange out,</a>
 <a name="272"><span class="lineNum">     272 </span>            :                         AudioFadeCurve::Type fadeInType_,</a>
 <a name="273"><span class="lineNum">     273 </span>            :                         AudioFadeCurve::Type fadeOutType_)</a>
 <a name="274"><span class="lineNum">     274 </span><span class="lineNoCov">          0 :         : SingleInputAudioNode (source),</span></a>
@@ -358,7 +358,7 @@
 <a name="296"><span class="lineNum">     296 </span><span class="lineNoCov">          0 :             input-&gt;renderAdding (rc);</span></a>
 <a name="297"><span class="lineNum">     297 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="298"><span class="lineNum">     298 </span>            : </a>
-<a name="299"><span class="lineNum">     299 </span><span class="lineNoCov">          0 :     void renderSection (const AudioRenderContext&amp; rc, EditTimeRange editTime)</span></a>
+<a name="299"><span class="lineNum">     299 </span><span class="lineNoCov">          0 :     void renderSection (const AudioRenderContext&amp; rc, legacy::EditTimeRange editTime)</span></a>
 <a name="300"><span class="lineNum">     300 </span>            :     {</a>
 <a name="301"><span class="lineNum">     301 </span><span class="lineNoCov">          0 :         const bool intersectsFadeIn  = fadeIn.getLength()  &gt; 0.0 &amp;&amp; editTime.overlaps (fadeIn);</span></a>
 <a name="302"><span class="lineNum">     302 </span><span class="lineNoCov">          0 :         const bool intersectsFadeOut = fadeOut.getLength() &gt; 0.0 &amp;&amp; editTime.overlaps (fadeOut);</span></a>
@@ -371,8 +371,8 @@
 <a name="309"><span class="lineNum">     309 </span><span class="lineNoCov">          0 :             auto streamTime = rc.streamTime;</span></a>
 <a name="310"><span class="lineNum">     310 </span>            : </a>
 <a name="311"><span class="lineNum">     311 </span>            :             {</a>
-<a name="312"><span class="lineNum">     312 </span><span class="lineNoCov">          0 :                 EditTimeRange fadeInSection (editTime.getStart(), fadeOut.getStart());</span></a>
-<a name="313"><span class="lineNum">     313 </span><span class="lineNoCov">          0 :                 auto fadeInTime = fadeInSection.getLength();</span></a>
+<a name="312"><span class="lineNum">     312 </span>            :                 legacy::EditTimeRange fadeInSection (editTime.getStart(), fadeOut.getStart());</a>
+<a name="313"><span class="lineNum">     313 </span>            :                 auto fadeInTime = fadeInSection.getLength();</a>
 <a name="314"><span class="lineNum">     314 </span>            : </a>
 <a name="315"><span class="lineNum">     315 </span><span class="lineNoCov">          0 :                 AudioRenderContext rc2 (rc);</span></a>
 <a name="316"><span class="lineNum">     316 </span><span class="lineNoCov">          0 :                 rc2.streamTime = rc.streamTime.withLength (fadeInTime);</span></a>
@@ -409,7 +409,7 @@
 <a name="347"><span class="lineNum">     347 </span>            : </a>
 <a name="348"><span class="lineNum">     348 </span>            : private:</a>
 <a name="349"><span class="lineNum">     349 </span>            :     //==============================================================================</a>
-<a name="350"><span class="lineNum">     350 </span>            :     EditTimeRange fadeIn, fadeOut;</a>
+<a name="350"><span class="lineNum">     350 </span>            :     legacy::EditTimeRange fadeIn, fadeOut;</a>
 <a name="351"><span class="lineNum">     351 </span>            :     AudioFadeCurve::Type fadeInType, fadeOutType;</a>
 <a name="352"><span class="lineNum">     352 </span>            : </a>
 <a name="353"><span class="lineNum">     353 </span><span class="lineNoCov">          0 :     bool renderingNeeded (const AudioRenderContext&amp; rc) const</span></a>
@@ -429,8 +429,8 @@
 <a name="367"><span class="lineNum">     367 </span><span class="lineNoCov">          0 :                 || fadeOut.overlaps (editTime.editRange1);</span></a>
 <a name="368"><span class="lineNum">     368 </span>            :     }</a>
 <a name="369"><span class="lineNum">     369 </span>            : </a>
-<a name="370"><span class="lineNum">     370 </span><span class="lineNoCov">          0 :     void renderRampSection (const AudioRenderContext&amp; rc, EditTimeRange editTime,</span></a>
-<a name="371"><span class="lineNum">     371 </span>            :                             EditTimeRange fade, bool rampUp)</a>
+<a name="370"><span class="lineNum">     370 </span><span class="lineNoCov">          0 :     void renderRampSection (const AudioRenderContext&amp; rc, legacy::EditTimeRange editTime,</span></a>
+<a name="371"><span class="lineNum">     371 </span>            :                             legacy::EditTimeRange fade, bool rampUp)</a>
 <a name="372"><span class="lineNum">     372 </span>            :     {</a>
 <a name="373"><span class="lineNum">     373 </span><span class="lineNoCov">          0 :         auto startSample = rc.bufferStartSample;</span></a>
 <a name="374"><span class="lineNum">     374 </span><span class="lineNoCov">          0 :         auto sampleRate = rc.bufferNumSamples / editTime.getLength();</span></a>
@@ -465,7 +465,7 @@
 <a name="403"><span class="lineNum">     403 </span>            :             jassert (juce::isPositiveAndNotGreaterThan (startProp, 1.0)</a>
 <a name="404"><span class="lineNum">     404 </span>            :                       &amp;&amp; juce::isPositiveAndNotGreaterThan (endProp, 1.0));</a>
 <a name="405"><span class="lineNum">     405 </span>            : </a>
-<a name="406"><span class="lineNum">     406 </span><span class="lineNoCov">          0 :             EditTimeRange newEditTime (fade.getStart() + fade.getLength() * startProp,</span></a>
+<a name="406"><span class="lineNum">     406 </span><span class="lineNoCov">          0 :             legacy::EditTimeRange newEditTime (fade.getStart() + fade.getLength() * startProp,</span></a>
 <a name="407"><span class="lineNum">     407 </span><span class="lineNoCov">          0 :                                        fade.getStart() + fade.getLength() * endProp);</span></a>
 <a name="408"><span class="lineNum">     408 </span>            : </a>
 <a name="409"><span class="lineNum">     409 </span><span class="lineNoCov">          0 :             auto numSamples = juce::roundToInt (editTimeIntersection.getLength() * sampleRate);</span></a>
@@ -527,7 +527,7 @@
 <a name="465"><span class="lineNum">     465 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SpeedRampAudioNode)</a>
 <a name="466"><span class="lineNum">     466 </span>            : };</a>
 <a name="467"><span class="lineNum">     467 </span>            : </a>
-<a name="468"><span class="lineNum">     468 </span>            : } // namespace tracktion_engine</a>
+<a name="468"><span class="lineNum">     468 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

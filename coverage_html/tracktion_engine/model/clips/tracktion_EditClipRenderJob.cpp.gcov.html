@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span><span class="lineNoCov">          0 : RenderManager::Job::Ptr EditRenderJob::getOrCreateRenderJob (Engine&amp; e, Renderer::Parameters&amp; params,</span></a>
@@ -349,9 +349,9 @@
 <a name="287"><span class="lineNum">     287 </span><span class="lineNoCov">          0 :         auto tracksToDo = toTrackArray (*r.edit, r.tracksToDo);</span></a>
 <a name="288"><span class="lineNum">     288 </span>            : </a>
 <a name="289"><span class="lineNum">     289 </span>            :         // Initialise playhead and continuity</a>
-<a name="290"><span class="lineNum">     290 </span><span class="lineNoCov">          0 :         auto playHead = std::make_unique&lt;tracktion_graph::PlayHead&gt;();</span></a>
-<a name="291"><span class="lineNum">     291 </span>            :         auto playHeadState = std::make_unique&lt;tracktion_graph::PlayHeadState&gt; (*playHead);</a>
-<a name="292"><span class="lineNum">     292 </span><span class="lineNoCov">          0 :         auto processState = std::make_unique&lt;ProcessState&gt; (*playHeadState);</span></a>
+<a name="290"><span class="lineNum">     290 </span><span class="lineNoCov">          0 :         auto playHead = std::make_unique&lt;tracktion::graph::PlayHead&gt;();</span></a>
+<a name="291"><span class="lineNum">     291 </span>            :         auto playHeadState = std::make_unique&lt;tracktion::graph::PlayHeadState&gt; (*playHead);</a>
+<a name="292"><span class="lineNum">     292 </span><span class="lineNoCov">          0 :         auto processState = std::make_unique&lt;ProcessState&gt; (*playHeadState, r.edit-&gt;tempoSequence);</span></a>
 <a name="293"><span class="lineNum">     293 </span>            : </a>
 <a name="294"><span class="lineNum">     294 </span><span class="lineNoCov">          0 :         CreateNodeParams cnp { *processState };</span></a>
 <a name="295"><span class="lineNum">     295 </span><span class="lineNoCov">          0 :         cnp.sampleRate = r.sampleRateForAudio;</span></a>
@@ -364,7 +364,7 @@
 <a name="302"><span class="lineNum">     302 </span><span class="lineNoCov">          0 :         cnp.addAntiDenormalisationNoise = r.addAntiDenormalisationNoise;</span></a>
 <a name="303"><span class="lineNum">     303 </span><span class="lineNoCov">          0 :         cnp.includeBypassedPlugins = false;</span></a>
 <a name="304"><span class="lineNum">     304 </span>            : </a>
-<a name="305"><span class="lineNum">     305 </span><span class="lineNoCov">          0 :         std::unique_ptr&lt;tracktion_graph::Node&gt; node;</span></a>
+<a name="305"><span class="lineNum">     305 </span><span class="lineNoCov">          0 :         std::unique_ptr&lt;tracktion::graph::Node&gt; node;</span></a>
 <a name="306"><span class="lineNum">     306 </span><span class="lineNoCov">          0 :         callBlocking ([this, &amp;node, &amp;cnp] { node = createNodeForEdit (*r.edit, cnp); });</span></a>
 <a name="307"><span class="lineNum">     307 </span>            : </a>
 <a name="308"><span class="lineNum">     308 </span><span class="lineNoCov">          0 :         if (node)</span></a>
@@ -475,7 +475,7 @@
 <a name="413"><span class="lineNum">     413 </span>            :         return false;</a>
 <a name="414"><span class="lineNum">     414 </span>            : </a>
 <a name="415"><span class="lineNum">     415 </span>            :     os.release();</a>
-<a name="416"><span class="lineNum">     416 </span><span class="lineNoCov">          0 :     auto numToDo = (SampleCount) (params.time.getLength() * params.sampleRateForAudio);</span></a>
+<a name="416"><span class="lineNum">     416 </span><span class="lineNoCov">          0 :     auto numToDo = (SampleCount) tracktion::toSamples (params.time.getLength(), params.sampleRateForAudio);</span></a>
 <a name="417"><span class="lineNum">     417 </span><span class="lineNoCov">          0 :     auto blockSize = std::min (4096, (int) numToDo);</span></a>
 <a name="418"><span class="lineNum">     418 </span>            :     SampleCount numDone = 0;</a>
 <a name="419"><span class="lineNum">     419 </span>            : </a>
@@ -500,7 +500,7 @@
 <a name="438"><span class="lineNum">     438 </span>            :     return true;</a>
 <a name="439"><span class="lineNum">     439 </span>            : }</a>
 <a name="440"><span class="lineNum">     440 </span>            : </a>
-<a name="441"><span class="lineNum">     441 </span>            : }</a>
+<a name="441"><span class="lineNum">     441 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : //==============================================================================</a>
@@ -88,7 +88,7 @@
 <a name="26"><span class="lineNum">      26 </span>            : </a>
 <a name="27"><span class="lineNum">      27 </span>            :     //==============================================================================</a>
 <a name="28"><span class="lineNum">      28 </span>            :     ClipPosition getPosition() const override;</a>
-<a name="29"><span class="lineNum">      29 </span>            :     double getStartBeat() const                     { return startBeatNumber; }</a>
+<a name="29"><span class="lineNum">      29 </span>            :     BeatPosition getStartBeat() const                     { return startBeatNumber; }</a>
 <a name="30"><span class="lineNum">      30 </span>            : </a>
 <a name="31"><span class="lineNum">      31 </span>            :     //==============================================================================</a>
 <a name="32"><span class="lineNum">      32 </span>            :     // time sig in the form &quot;4/4&quot;</a>
@@ -108,20 +108,20 @@
 <a name="46"><span class="lineNum">      46 </span>            :     juce::ValueTree state;</a>
 <a name="47"><span class="lineNum">      47 </span>            :     TempoSequence&amp; ownerSequence;</a>
 <a name="48"><span class="lineNum">      48 </span>            : </a>
-<a name="49"><span class="lineNum">      49 </span>            :     juce::CachedValue&lt;double&gt; startBeatNumber;</a>
+<a name="49"><span class="lineNum">      49 </span>            :     juce::CachedValue&lt;BeatPosition&gt; startBeatNumber;</a>
 <a name="50"><span class="lineNum">      50 </span>            :     juce::CachedValue&lt;int&gt; numerator, denominator;</a>
 <a name="51"><span class="lineNum">      51 </span>            :     juce::CachedValue&lt;bool&gt; triplets;</a>
 <a name="52"><span class="lineNum">      52 </span>            : </a>
-<a name="53"><span class="lineNum">      53 </span>            :     double startTime = 0; // (updated by TempoSequence)</a>
-<a name="54"><span class="lineNum">      54 </span>            :     double endTime = 0;</a>
+<a name="53"><span class="lineNum">      53 </span>            :     TimePosition startTime; // (updated by TempoSequence)</a>
+<a name="54"><span class="lineNum">      54 </span>            :     TimePosition endTime;</a>
 <a name="55"><span class="lineNum">      55 </span>            : </a>
 <a name="56"><span class="lineNum">      56 </span>            : private:</a>
-<a name="57"><span class="lineNum">      57 </span><span class="lineCov">        195 :     void valueTreeChanged() override { changed(); }</span></a>
+<a name="57"><span class="lineNum">      57 </span><span class="lineCov">        209 :     void valueTreeChanged() override { changed(); }</span></a>
 <a name="58"><span class="lineNum">      58 </span>            : </a>
 <a name="59"><span class="lineNum">      59 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TimeSigSetting)</a>
 <a name="60"><span class="lineNum">      60 </span>            : };</a>
 <a name="61"><span class="lineNum">      61 </span>            : </a>
-<a name="62"><span class="lineNum">      62 </span>            : } // namespace tracktion_engine</a>
+<a name="62"><span class="lineNum">      62 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

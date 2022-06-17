@@ -1,4 +1,0 @@
-<map id="tracktion_engine::TempoSequence" name="tracktion_engine::TempoSequence">
-<area shape="rect" id="node1" title="Holds a list of TempoSetting objects, to form a sequence of tempo changes." alt="" coords="5,80,251,107"/>
-<area shape="rect" id="node2" href="$classtracktion__engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="25,5,231,32"/>
-</map>

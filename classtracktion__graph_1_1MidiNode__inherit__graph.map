@@ -1,4 +1,0 @@
-<map id="tracktion_graph::MidiNode" name="tracktion_graph::MidiNode">
-<area shape="rect" id="node1" title="Plays back a MIDI sequence." alt="" coords="5,80,200,107"/>
-<area shape="rect" id="node2" href="$classtracktion__graph_1_1Node.html" title="Main graph Node processor class." alt="" coords="19,5,186,32"/>
-</map>

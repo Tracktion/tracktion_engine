@@ -1,5 +1,0 @@
-<map id="tracktion_engine::AuxSendNode" name="tracktion_engine::AuxSendNode">
-<area shape="rect" id="node1" title="Node for an aux send." alt="" coords="5,155,236,181"/>
-<area shape="rect" id="node2" href="$classtracktion__graph_1_1SendNode.html" title=" " alt="" coords="21,80,220,107"/>
-<area shape="rect" id="node3" href="$classtracktion__graph_1_1Node.html" title="Main graph Node processor class." alt="" coords="37,5,204,32"/>
-</map>

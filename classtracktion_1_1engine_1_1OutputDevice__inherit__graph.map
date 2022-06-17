@@ -1,0 +1,7 @@
+<map id="tracktion::engine::OutputDevice" name="tracktion::engine::OutputDevice">
+<area shape="rect" id="node1" title="Base class for audio or midi output devices, to which a track&#39;s output can be sent." alt="" coords="117,95,257,136"/>
+<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1MidiOutputDevice.html" title=" " alt="" coords="33,184,173,225"/>
+<area shape="rect" id="node5" href="$classtracktion_1_1engine_1_1WaveOutputDevice.html" title="A (virtual) audio output device." alt="" coords="198,184,345,225"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="117,5,257,47"/>
+<area shape="rect" id="node4" href="$classtracktion_1_1engine_1_1SoftwareMidiOutputDevice.html" title="Create a software midi port on macOS." alt="" coords="5,273,201,315"/>
+</map>

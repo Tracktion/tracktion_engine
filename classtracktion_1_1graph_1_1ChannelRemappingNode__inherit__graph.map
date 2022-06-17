@@ -1,0 +1,4 @@
+<map id="tracktion::graph::ChannelRemappingNode" name="tracktion::graph::ChannelRemappingNode">
+<area shape="rect" id="node1" title="Maps channels from one to another." alt="" coords="5,80,192,121"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class." alt="" coords="15,5,182,32"/>
+</map>

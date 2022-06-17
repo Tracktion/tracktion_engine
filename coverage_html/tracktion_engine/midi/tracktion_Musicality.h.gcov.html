@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span><span class="lineNoCov">          0 : class Chord</span></a>
@@ -225,8 +225,8 @@
 <a name="163"><span class="lineNum">     163 </span>            :     ~PatternGenerator() override;</a>
 <a name="164"><span class="lineNum">     164 </span>            : </a>
 <a name="165"><span class="lineNum">     165 </span>            :     //==============================================================================</a>
-<a name="166"><span class="lineNum">     166 </span>            :     double getMinimumChordLength() const;</a>
-<a name="167"><span class="lineNum">     167 </span>            :     double getMaximumChordLength() const;</a>
+<a name="166"><span class="lineNum">     166 </span>            :     BeatDuration getMinimumChordLength() const;</a>
+<a name="167"><span class="lineNum">     167 </span>            :     BeatDuration getMaximumChordLength() const;</a>
 <a name="168"><span class="lineNum">     168 </span>            : </a>
 <a name="169"><span class="lineNum">     169 </span>            :     void validateChordLengths();</a>
 <a name="170"><span class="lineNum">     170 </span>            : </a>
@@ -244,7 +244,7 @@
 <a name="182"><span class="lineNum">     182 </span>            : </a>
 <a name="183"><span class="lineNum">     183 </span>            :         juce::CachedValue&lt;juce::String&gt; chordName;  // Chord name is simplified, use getChordName() to get unsimplified</a>
 <a name="184"><span class="lineNum">     184 </span>            :         juce::CachedValue&lt;juce::String&gt; pitches;    // A comma seperated list of pitches used for custom chords, otherwise empty</a>
-<a name="185"><span class="lineNum">     185 </span>            :         juce::CachedValue&lt;double&gt; lengthInBeats;</a>
+<a name="185"><span class="lineNum">     185 </span>            :         juce::CachedValue&lt;BeatDuration&gt; lengthInBeats;</a>
 <a name="186"><span class="lineNum">     186 </span>            :         juce::CachedValue&lt;int&gt; octave, inversion;</a>
 <a name="187"><span class="lineNum">     187 </span>            : </a>
 <a name="188"><span class="lineNum">     188 </span>            :         void setChordName (juce::String chord);</a>
@@ -311,107 +311,108 @@
 <a name="249"><span class="lineNum">     249 </span>            :     juce::CachedValue&lt;Mode&gt; mode;</a>
 <a name="250"><span class="lineNum">     250 </span>            :     juce::CachedValue&lt;Scale::ScaleType&gt; scaleType;</a>
 <a name="251"><span class="lineNum">     251 </span>            :     juce::CachedValue&lt;bool&gt; autoUpdate, arpUpDown, arpPlayRoot, allNotes, octaveUp, octaveDown, spread;</a>
-<a name="252"><span class="lineNum">     252 </span>            :     juce::CachedValue&lt;float&gt; arpPatternLength, melodyNoteLength, velocity, gate;</a>
-<a name="253"><span class="lineNum">     253 </span>            :     juce::CachedValue&lt;juce::String&gt; arpStyle;</a>
-<a name="254"><span class="lineNum">     254 </span>            :     juce::CachedValue&lt;int&gt; scaleRoot, arpSteps, octave;</a>
-<a name="255"><span class="lineNum">     255 </span>            :     juce::CachedValue&lt;juce::int64&gt; patternHash;</a>
-<a name="256"><span class="lineNum">     256 </span>            : </a>
-<a name="257"><span class="lineNum">     257 </span>            :     juce::ValueTree getChordPattern();</a>
-<a name="258"><span class="lineNum">     258 </span>            :     juce::ValueTree getBassPattern();</a>
-<a name="259"><span class="lineNum">     259 </span>            : </a>
-<a name="260"><span class="lineNum">     260 </span>            :     void setChordPattern (juce::ValueTree pattern);</a>
-<a name="261"><span class="lineNum">     261 </span>            :     void setBassPattern (juce::ValueTree pattern);</a>
-<a name="262"><span class="lineNum">     262 </span>            : </a>
-<a name="263"><span class="lineNum">     263 </span>            :     void generatePattern();</a>
-<a name="264"><span class="lineNum">     264 </span>            : </a>
-<a name="265"><span class="lineNum">     265 </span>            :     Scale getScaleAtBeat (double beat) const;</a>
-<a name="266"><span class="lineNum">     266 </span>            :     int getNoteAtBeat (double beat) const;</a>
-<a name="267"><span class="lineNum">     267 </span>            : </a>
-<a name="268"><span class="lineNum">     268 </span>            :     bool getAutoUpdate();</a>
-<a name="269"><span class="lineNum">     269 </span>            :     void setAutoUpdate (bool on);</a>
-<a name="270"><span class="lineNum">     270 </span>            :     void refreshPatternIfNeeded();</a>
-<a name="271"><span class="lineNum">     271 </span>            : </a>
-<a name="272"><span class="lineNum">     272 </span>            :     void editFinishedLoading();</a>
-<a name="273"><span class="lineNum">     273 </span>            : </a>
-<a name="274"><span class="lineNum">     274 </span>            :     double getFlattenedChordProgression (juce::OwnedArray&lt;ProgressionItem&gt;&amp; progression, bool globalTime = false);</a>
-<a name="275"><span class="lineNum">     275 </span>            : </a>
-<a name="276"><span class="lineNum">     276 </span>            : private:</a>
-<a name="277"><span class="lineNum">     277 </span>            :     const int maxChords = 64;</a>
-<a name="278"><span class="lineNum">     278 </span>            : </a>
-<a name="279"><span class="lineNum">     279 </span>            :     struct ProgressionList;</a>
-<a name="280"><span class="lineNum">     280 </span>            :     std::unique_ptr&lt;ProgressionList&gt; progressionList;</a>
-<a name="281"><span class="lineNum">     281 </span>            : </a>
-<a name="282"><span class="lineNum">     282 </span><span class="lineNoCov">          0 :     void valueTreeChanged() override {}</span></a>
-<a name="283"><span class="lineNum">     283 </span>            :     void valueTreePropertyChanged (juce::ValueTree&amp; p, const juce::Identifier&amp; c) override;</a>
-<a name="284"><span class="lineNum">     284 </span>            : </a>
-<a name="285"><span class="lineNum">     285 </span>            :     ChordClip* getChordClipAt (double beat) const;</a>
-<a name="286"><span class="lineNum">     286 </span>            : </a>
-<a name="287"><span class="lineNum">     287 </span>            :     MidiNote* addNote (MidiList&amp; sequence, int pitch, double startBeat, double lengthInBeats,</a>
-<a name="288"><span class="lineNum">     288 </span>            :                        int velocity, int colourIndex, juce::UndoManager*);</a>
-<a name="289"><span class="lineNum">     289 </span>            : </a>
-<a name="290"><span class="lineNum">     290 </span>            :     void clearPattern();</a>
-<a name="291"><span class="lineNum">     291 </span>            :     void generateArpPattern();</a>
-<a name="292"><span class="lineNum">     292 </span>            :     void generateChordPattern();</a>
-<a name="293"><span class="lineNum">     293 </span>            :     void generateBassPattern();</a>
-<a name="294"><span class="lineNum">     294 </span>            :     void generateMelodyPattern();</a>
-<a name="295"><span class="lineNum">     295 </span>            : </a>
-<a name="296"><span class="lineNum">     296 </span>            :     void updateHash();</a>
-<a name="297"><span class="lineNum">     297 </span>            :     void clearHash();</a>
-<a name="298"><span class="lineNum">     298 </span>            :     HashCode hashNotes (MidiList&amp;, int version);</a>
-<a name="299"><span class="lineNum">     299 </span>            : </a>
-<a name="300"><span class="lineNum">     300 </span>            :     MidiClip* getMidiClip() const;</a>
-<a name="301"><span class="lineNum">     301 </span>            : </a>
-<a name="302"><span class="lineNum">     302 </span>            :     //==============================================================================</a>
-<a name="303"><span class="lineNum">     303 </span>            :     std::unique_ptr&lt;juce::Timer&gt; editLoadedCallback;</a>
-<a name="304"><span class="lineNum">     304 </span>            : </a>
-<a name="305"><span class="lineNum">     305 </span>            :     //==============================================================================</a>
-<a name="306"><span class="lineNum">     306 </span>            :     struct AutoUpdateManager;</a>
-<a name="307"><span class="lineNum">     307 </span>            :     std::unique_ptr&lt;AutoUpdateManager&gt; autoUpdateManager;</a>
-<a name="308"><span class="lineNum">     308 </span>            : </a>
-<a name="309"><span class="lineNum">     309 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PatternGenerator)</a>
-<a name="310"><span class="lineNum">     310 </span>            : };</a>
-<a name="311"><span class="lineNum">     311 </span>            : </a>
-<a name="312"><span class="lineNum">     312 </span>            : //==============================================================================</a>
-<a name="313"><span class="lineNum">     313 </span>            : struct KeyResult</a>
-<a name="314"><span class="lineNum">     314 </span>            : {</a>
-<a name="315"><span class="lineNum">     315 </span>            :     KeyResult() = default;</a>
-<a name="316"><span class="lineNum">     316 </span><span class="lineNoCov">          0 :     KeyResult (double r_, int k_, Scale::ScaleType s_) : r (r_), key (k_), scale (s_) {}</span></a>
-<a name="317"><span class="lineNum">     317 </span>            : </a>
-<a name="318"><span class="lineNum">     318 </span>            :     double r = 0; // correlation coefficient</a>
-<a name="319"><span class="lineNum">     319 </span>            :     int key = 0;  // midi note = 0 - 11</a>
-<a name="320"><span class="lineNum">     320 </span>            :     Scale::ScaleType scale = Scale::major; // major or minor</a>
-<a name="321"><span class="lineNum">     321 </span>            : </a>
-<a name="322"><span class="lineNum">     322 </span>            :     bool operator&lt; (const KeyResult&amp; other) const { return r &lt; other.r; }</a>
-<a name="323"><span class="lineNum">     323 </span>            : };</a>
-<a name="324"><span class="lineNum">     324 </span>            : </a>
-<a name="325"><span class="lineNum">     325 </span>            : juce::Array&lt;KeyResult&gt; determineKeyOfNotes (const juce::Array&lt;MidiNote*&gt;&amp; notes);</a>
-<a name="326"><span class="lineNum">     326 </span>            : </a>
-<a name="327"><span class="lineNum">     327 </span>            : } // namespace tracktion_engine</a>
-<a name="328"><span class="lineNum">     328 </span>            : </a>
-<a name="329"><span class="lineNum">     329 </span>            : namespace juce</a>
-<a name="330"><span class="lineNum">     330 </span>            : {</a>
-<a name="331"><span class="lineNum">     331 </span>            :     template &lt;&gt;</a>
-<a name="332"><span class="lineNum">     332 </span>            :     struct VariantConverter&lt;tracktion_engine::Chord::ChordType&gt;</a>
-<a name="333"><span class="lineNum">     333 </span>            :     {</a>
-<a name="334"><span class="lineNum">     334 </span>            :         static tracktion_engine::Chord::ChordType fromVar (const var&amp; v)   { return (tracktion_engine::Chord::ChordType) static_cast&lt;int&gt; (v); }</a>
-<a name="335"><span class="lineNum">     335 </span>            :         static var toVar (tracktion_engine::Chord::ChordType v)            { return static_cast&lt;int&gt; (v); }</a>
-<a name="336"><span class="lineNum">     336 </span>            :     };</a>
-<a name="337"><span class="lineNum">     337 </span>            : </a>
+<a name="252"><span class="lineNum">     252 </span>            :     juce::CachedValue&lt;float&gt; arpPatternLength, velocity, gate;</a>
+<a name="253"><span class="lineNum">     253 </span>            :     juce::CachedValue&lt;BeatDuration&gt; melodyNoteLength;</a>
+<a name="254"><span class="lineNum">     254 </span>            :     juce::CachedValue&lt;juce::String&gt; arpStyle;</a>
+<a name="255"><span class="lineNum">     255 </span>            :     juce::CachedValue&lt;int&gt; scaleRoot, arpSteps, octave;</a>
+<a name="256"><span class="lineNum">     256 </span>            :     juce::CachedValue&lt;juce::int64&gt; patternHash;</a>
+<a name="257"><span class="lineNum">     257 </span>            : </a>
+<a name="258"><span class="lineNum">     258 </span>            :     juce::ValueTree getChordPattern();</a>
+<a name="259"><span class="lineNum">     259 </span>            :     juce::ValueTree getBassPattern();</a>
+<a name="260"><span class="lineNum">     260 </span>            : </a>
+<a name="261"><span class="lineNum">     261 </span>            :     void setChordPattern (juce::ValueTree pattern);</a>
+<a name="262"><span class="lineNum">     262 </span>            :     void setBassPattern (juce::ValueTree pattern);</a>
+<a name="263"><span class="lineNum">     263 </span>            : </a>
+<a name="264"><span class="lineNum">     264 </span>            :     void generatePattern();</a>
+<a name="265"><span class="lineNum">     265 </span>            : </a>
+<a name="266"><span class="lineNum">     266 </span>            :     Scale getScaleAtBeat (BeatPosition) const;</a>
+<a name="267"><span class="lineNum">     267 </span>            :     int getNoteAtBeat (BeatPosition) const;</a>
+<a name="268"><span class="lineNum">     268 </span>            : </a>
+<a name="269"><span class="lineNum">     269 </span>            :     bool getAutoUpdate();</a>
+<a name="270"><span class="lineNum">     270 </span>            :     void setAutoUpdate (bool on);</a>
+<a name="271"><span class="lineNum">     271 </span>            :     void refreshPatternIfNeeded();</a>
+<a name="272"><span class="lineNum">     272 </span>            : </a>
+<a name="273"><span class="lineNum">     273 </span>            :     void editFinishedLoading();</a>
+<a name="274"><span class="lineNum">     274 </span>            : </a>
+<a name="275"><span class="lineNum">     275 </span>            :     BeatDuration getFlattenedChordProgression (juce::OwnedArray&lt;ProgressionItem&gt;&amp; progression, bool globalTime = false);</a>
+<a name="276"><span class="lineNum">     276 </span>            : </a>
+<a name="277"><span class="lineNum">     277 </span>            : private:</a>
+<a name="278"><span class="lineNum">     278 </span>            :     const int maxChords = 64;</a>
+<a name="279"><span class="lineNum">     279 </span>            : </a>
+<a name="280"><span class="lineNum">     280 </span>            :     struct ProgressionList;</a>
+<a name="281"><span class="lineNum">     281 </span>            :     std::unique_ptr&lt;ProgressionList&gt; progressionList;</a>
+<a name="282"><span class="lineNum">     282 </span>            : </a>
+<a name="283"><span class="lineNum">     283 </span><span class="lineNoCov">          0 :     void valueTreeChanged() override {}</span></a>
+<a name="284"><span class="lineNum">     284 </span>            :     void valueTreePropertyChanged (juce::ValueTree&amp;, const juce::Identifier&amp;) override;</a>
+<a name="285"><span class="lineNum">     285 </span>            : </a>
+<a name="286"><span class="lineNum">     286 </span>            :     ChordClip* getChordClipAt (TimePosition) const;</a>
+<a name="287"><span class="lineNum">     287 </span>            : </a>
+<a name="288"><span class="lineNum">     288 </span>            :     MidiNote* addNote (MidiList&amp; sequence, int pitch, BeatPosition startBeat, BeatDuration lengthInBeats,</a>
+<a name="289"><span class="lineNum">     289 </span>            :                        int velocity, int colourIndex, juce::UndoManager*);</a>
+<a name="290"><span class="lineNum">     290 </span>            : </a>
+<a name="291"><span class="lineNum">     291 </span>            :     void clearPattern();</a>
+<a name="292"><span class="lineNum">     292 </span>            :     void generateArpPattern();</a>
+<a name="293"><span class="lineNum">     293 </span>            :     void generateChordPattern();</a>
+<a name="294"><span class="lineNum">     294 </span>            :     void generateBassPattern();</a>
+<a name="295"><span class="lineNum">     295 </span>            :     void generateMelodyPattern();</a>
+<a name="296"><span class="lineNum">     296 </span>            : </a>
+<a name="297"><span class="lineNum">     297 </span>            :     void updateHash();</a>
+<a name="298"><span class="lineNum">     298 </span>            :     void clearHash();</a>
+<a name="299"><span class="lineNum">     299 </span>            :     HashCode hashNotes (MidiList&amp;, int version);</a>
+<a name="300"><span class="lineNum">     300 </span>            : </a>
+<a name="301"><span class="lineNum">     301 </span>            :     MidiClip* getMidiClip() const;</a>
+<a name="302"><span class="lineNum">     302 </span>            : </a>
+<a name="303"><span class="lineNum">     303 </span>            :     //==============================================================================</a>
+<a name="304"><span class="lineNum">     304 </span>            :     std::unique_ptr&lt;juce::Timer&gt; editLoadedCallback;</a>
+<a name="305"><span class="lineNum">     305 </span>            : </a>
+<a name="306"><span class="lineNum">     306 </span>            :     //==============================================================================</a>
+<a name="307"><span class="lineNum">     307 </span>            :     struct AutoUpdateManager;</a>
+<a name="308"><span class="lineNum">     308 </span>            :     std::unique_ptr&lt;AutoUpdateManager&gt; autoUpdateManager;</a>
+<a name="309"><span class="lineNum">     309 </span>            : </a>
+<a name="310"><span class="lineNum">     310 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PatternGenerator)</a>
+<a name="311"><span class="lineNum">     311 </span>            : };</a>
+<a name="312"><span class="lineNum">     312 </span>            : </a>
+<a name="313"><span class="lineNum">     313 </span>            : //==============================================================================</a>
+<a name="314"><span class="lineNum">     314 </span>            : struct KeyResult</a>
+<a name="315"><span class="lineNum">     315 </span>            : {</a>
+<a name="316"><span class="lineNum">     316 </span>            :     KeyResult() = default;</a>
+<a name="317"><span class="lineNum">     317 </span><span class="lineNoCov">          0 :     KeyResult (double r_, int k_, Scale::ScaleType s_) : r (r_), key (k_), scale (s_) {}</span></a>
+<a name="318"><span class="lineNum">     318 </span>            : </a>
+<a name="319"><span class="lineNum">     319 </span>            :     double r = 0; // correlation coefficient</a>
+<a name="320"><span class="lineNum">     320 </span>            :     int key = 0;  // midi note = 0 - 11</a>
+<a name="321"><span class="lineNum">     321 </span>            :     Scale::ScaleType scale = Scale::major; // major or minor</a>
+<a name="322"><span class="lineNum">     322 </span>            : </a>
+<a name="323"><span class="lineNum">     323 </span>            :     bool operator&lt; (const KeyResult&amp; other) const { return r &lt; other.r; }</a>
+<a name="324"><span class="lineNum">     324 </span>            : };</a>
+<a name="325"><span class="lineNum">     325 </span>            : </a>
+<a name="326"><span class="lineNum">     326 </span>            : juce::Array&lt;KeyResult&gt; determineKeyOfNotes (const juce::Array&lt;MidiNote*&gt;&amp; notes);</a>
+<a name="327"><span class="lineNum">     327 </span>            : </a>
+<a name="328"><span class="lineNum">     328 </span>            : }} // namespace tracktion { inline namespace engine</a>
+<a name="329"><span class="lineNum">     329 </span>            : </a>
+<a name="330"><span class="lineNum">     330 </span>            : namespace juce</a>
+<a name="331"><span class="lineNum">     331 </span>            : {</a>
+<a name="332"><span class="lineNum">     332 </span>            :     template &lt;&gt;</a>
+<a name="333"><span class="lineNum">     333 </span>            :     struct VariantConverter&lt;tracktion::engine::Chord::ChordType&gt;</a>
+<a name="334"><span class="lineNum">     334 </span>            :     {</a>
+<a name="335"><span class="lineNum">     335 </span>            :         static tracktion::engine::Chord::ChordType fromVar (const var&amp; v)   { return (tracktion::engine::Chord::ChordType) static_cast&lt;int&gt; (v); }</a>
+<a name="336"><span class="lineNum">     336 </span>            :         static var toVar (tracktion::engine::Chord::ChordType v)            { return static_cast&lt;int&gt; (v); }</a>
+<a name="337"><span class="lineNum">     337 </span>            :     };</a>
 <a name="338"><span class="lineNum">     338 </span>            : </a>
-<a name="339"><span class="lineNum">     339 </span>            :     template &lt;&gt;</a>
-<a name="340"><span class="lineNum">     340 </span>            :     struct VariantConverter&lt;tracktion_engine::Scale::ScaleType&gt;</a>
-<a name="341"><span class="lineNum">     341 </span>            :     {</a>
-<a name="342"><span class="lineNum">     342 </span><span class="lineNoCov">          0 :         static tracktion_engine::Scale::ScaleType fromVar (const var&amp; v)   { return (tracktion_engine::Scale::ScaleType) static_cast&lt;int&gt; (v); }</span></a>
-<a name="343"><span class="lineNum">     343 </span><span class="lineNoCov">          0 :         static var toVar (tracktion_engine::Scale::ScaleType v)            { return static_cast&lt;int&gt; (v); }</span></a>
-<a name="344"><span class="lineNum">     344 </span>            :     };</a>
-<a name="345"><span class="lineNum">     345 </span>            : </a>
-<a name="346"><span class="lineNum">     346 </span>            :     template &lt;&gt;</a>
-<a name="347"><span class="lineNum">     347 </span>            :     struct VariantConverter&lt;tracktion_engine::PatternGenerator::Mode&gt;</a>
-<a name="348"><span class="lineNum">     348 </span>            :     {</a>
-<a name="349"><span class="lineNum">     349 </span><span class="lineNoCov">          0 :         static tracktion_engine::PatternGenerator::Mode fromVar (const var&amp; v)   { return (tracktion_engine::PatternGenerator::Mode) static_cast&lt;int&gt; (v); }</span></a>
-<a name="350"><span class="lineNum">     350 </span><span class="lineNoCov">          0 :         static var toVar (tracktion_engine::PatternGenerator::Mode v)            { return static_cast&lt;int&gt; (v); }</span></a>
-<a name="351"><span class="lineNum">     351 </span>            :     };</a>
-<a name="352"><span class="lineNum">     352 </span>            : }</a>
+<a name="339"><span class="lineNum">     339 </span>            : </a>
+<a name="340"><span class="lineNum">     340 </span>            :     template &lt;&gt;</a>
+<a name="341"><span class="lineNum">     341 </span>            :     struct VariantConverter&lt;tracktion::engine::Scale::ScaleType&gt;</a>
+<a name="342"><span class="lineNum">     342 </span>            :     {</a>
+<a name="343"><span class="lineNum">     343 </span><span class="lineNoCov">          0 :         static tracktion::engine::Scale::ScaleType fromVar (const var&amp; v)   { return (tracktion::engine::Scale::ScaleType) static_cast&lt;int&gt; (v); }</span></a>
+<a name="344"><span class="lineNum">     344 </span><span class="lineNoCov">          0 :         static var toVar (tracktion::engine::Scale::ScaleType v)            { return static_cast&lt;int&gt; (v); }</span></a>
+<a name="345"><span class="lineNum">     345 </span>            :     };</a>
+<a name="346"><span class="lineNum">     346 </span>            : </a>
+<a name="347"><span class="lineNum">     347 </span>            :     template &lt;&gt;</a>
+<a name="348"><span class="lineNum">     348 </span>            :     struct VariantConverter&lt;tracktion::engine::PatternGenerator::Mode&gt;</a>
+<a name="349"><span class="lineNum">     349 </span>            :     {</a>
+<a name="350"><span class="lineNum">     350 </span><span class="lineNoCov">          0 :         static tracktion::engine::PatternGenerator::Mode fromVar (const var&amp; v)   { return (tracktion::engine::PatternGenerator::Mode) static_cast&lt;int&gt; (v); }</span></a>
+<a name="351"><span class="lineNum">     351 </span><span class="lineNoCov">          0 :         static var toVar (tracktion::engine::PatternGenerator::Mode v)            { return static_cast&lt;int&gt; (v); }</span></a>
+<a name="352"><span class="lineNum">     352 </span>            :     };</a>
+<a name="353"><span class="lineNum">     353 </span>            : }</a>
 </pre>
       </td>
     </tr>

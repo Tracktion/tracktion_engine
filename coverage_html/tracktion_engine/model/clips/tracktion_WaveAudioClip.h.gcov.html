@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : //==============================================================================</a>
@@ -137,7 +137,7 @@
 <a name="75"><span class="lineNum">      75 </span><span class="lineNoCov">          0 :     bool usesSourceFile() override                              { return true; }</span></a>
 <a name="76"><span class="lineNum">      76 </span>            : </a>
 <a name="77"><span class="lineNum">      77 </span>            :     /** @internal */</a>
-<a name="78"><span class="lineNum">      78 </span>            :     double getSourceLength() const override;</a>
+<a name="78"><span class="lineNum">      78 </span>            :     TimeDuration getSourceLength() const override;</a>
 <a name="79"><span class="lineNum">      79 </span>            :     /** @internal */</a>
 <a name="80"><span class="lineNum">      80 </span>            :     void sourceMediaChanged() override;</a>
 <a name="81"><span class="lineNum">      81 </span>            : </a>
@@ -174,13 +174,13 @@
 <a name="112"><span class="lineNum">     112 </span>            : </a>
 <a name="113"><span class="lineNum">     113 </span>            : private:</a>
 <a name="114"><span class="lineNum">     114 </span>            :     //==============================================================================</a>
-<a name="115"><span class="lineNum">     115 </span>            :     mutable double sourceLength = 0;</a>
+<a name="115"><span class="lineNum">     115 </span>            :     mutable TimeDuration sourceLength;</a>
 <a name="116"><span class="lineNum">     116 </span>            :     WaveCompManager::Ptr compManager;</a>
 <a name="117"><span class="lineNum">     117 </span>            : </a>
 <a name="118"><span class="lineNum">     118 </span>            :     static constexpr int takeIndexNeedsUpdating = -2;</a>
 <a name="119"><span class="lineNum">     119 </span>            :     mutable int currentTakeIndex = takeIndexNeedsUpdating;</a>
 <a name="120"><span class="lineNum">     120 </span>            : </a>
-<a name="121"><span class="lineNum">     121 </span><span class="lineCov">         88 :     juce::ValueTree getTakesTree() const                        { return state.getChildWithName (IDs::TAKES); }</span></a>
+<a name="121"><span class="lineNum">     121 </span><span class="lineCov">         90 :     juce::ValueTree getTakesTree() const                        { return state.getChildWithName (IDs::TAKES); }</span></a>
 <a name="122"><span class="lineNum">     122 </span>            :     void invalidateCurrentTake() noexcept;</a>
 <a name="123"><span class="lineNum">     123 </span>            :     void invalidateCurrentTake (const juce::ValueTree&amp;) noexcept;</a>
 <a name="124"><span class="lineNum">     124 </span>            : </a>
@@ -193,7 +193,7 @@
 <a name="131"><span class="lineNum">     131 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveAudioClip)</a>
 <a name="132"><span class="lineNum">     132 </span>            : };</a>
 <a name="133"><span class="lineNum">     133 </span>            : </a>
-<a name="134"><span class="lineNum">     134 </span>            : } // namespace tracktion_engine</a>
+<a name="134"><span class="lineNum">     134 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

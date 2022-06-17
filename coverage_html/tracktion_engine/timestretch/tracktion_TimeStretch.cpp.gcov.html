@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">6</td>
+            <td class="headerCovTableEntry">11</td>
             <td class="headerCovTableEntry">92</td>
-            <td class="headerCovTableEntryLo">6.5 %</td>
+            <td class="headerCovTableEntryLo">12.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">3</td>
             <td class="headerCovTableEntry">29</td>
-            <td class="headerCovTableEntryLo">6.9 %</td>
+            <td class="headerCovTableEntryLo">10.3 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -88,7 +88,7 @@
 <a name="26"><span class="lineNum">      26 </span>            :  #define NOMINMAX</a>
 <a name="27"><span class="lineNum">      27 </span>            : #endif</a>
 <a name="28"><span class="lineNum">      28 </span>            : </a>
-<a name="29"><span class="lineNum">      29 </span>            : namespace tracktion_engine</a>
+<a name="29"><span class="lineNum">      29 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="30"><span class="lineNum">      30 </span>            : {</a>
 <a name="31"><span class="lineNum">      31 </span>            : </a>
 <a name="32"><span class="lineNum">      32 </span><span class="lineNoCov">          0 : TimeStretcher::ElastiqueProOptions::ElastiqueProOptions (const juce::String&amp; string)</span></a>
@@ -114,14 +114,14 @@
 <a name="52"><span class="lineNum">      52 </span>            :     jassertfalse; //unknown string format</a>
 <a name="53"><span class="lineNum">      53 </span>            : }</a>
 <a name="54"><span class="lineNum">      54 </span>            : </a>
-<a name="55"><span class="lineNum">      55 </span><span class="lineNoCov">          0 : juce::String TimeStretcher::ElastiqueProOptions::toString() const</span></a>
+<a name="55"><span class="lineNum">      55 </span><span class="lineCov">         80 : juce::String TimeStretcher::ElastiqueProOptions::toString() const</span></a>
 <a name="56"><span class="lineNum">      56 </span>            : {</a>
 <a name="57"><span class="lineNum">      57 </span>            :     // version / midside / sync / preserve / order</a>
 <a name="58"><span class="lineNum">      58 </span>            :     return juce::String::formatted (&quot;1/%d/%d/%d/%d&quot;,</a>
-<a name="59"><span class="lineNum">      59 </span><span class="lineNoCov">          0 :                                     midSideStereo        ? 1 : 0,</span></a>
-<a name="60"><span class="lineNum">      60 </span><span class="lineNoCov">          0 :                                     syncTimeStrPitchShft ? 1 : 0,</span></a>
-<a name="61"><span class="lineNum">      61 </span><span class="lineNoCov">          0 :                                     preserveFormants     ? 1 : 0,</span></a>
-<a name="62"><span class="lineNum">      62 </span><span class="lineNoCov">          0 :                                     envelopeOrder);</span></a>
+<a name="59"><span class="lineNum">      59 </span><span class="lineCov">         80 :                                     midSideStereo        ? 1 : 0,</span></a>
+<a name="60"><span class="lineNum">      60 </span><span class="lineCov">         80 :                                     syncTimeStrPitchShft ? 1 : 0,</span></a>
+<a name="61"><span class="lineNum">      61 </span><span class="lineCov">         80 :                                     preserveFormants     ? 1 : 0,</span></a>
+<a name="62"><span class="lineNum">      62 </span><span class="lineCov">        400 :                                     envelopeOrder);</span></a>
 <a name="63"><span class="lineNum">      63 </span>            : }</a>
 <a name="64"><span class="lineNum">      64 </span>            : </a>
 <a name="65"><span class="lineNum">      65 </span><span class="lineNoCov">          0 : bool TimeStretcher::ElastiqueProOptions::operator== (const ElastiqueProOptions&amp; other) const</span></a>
@@ -422,7 +422,7 @@
 <a name="360"><span class="lineNum">     360 </span>            : #define Point CarbonDummyPointName</a>
 <a name="361"><span class="lineNum">     361 </span>            : #define Component CarbonDummyCompName</a>
 <a name="362"><span class="lineNum">     362 </span>            : </a>
-<a name="363"><span class="lineNum">     363 </span>            : } // namespace tracktion_engine</a>
+<a name="363"><span class="lineNum">     363 </span>            : }} // namespace tracktion { inline namespace engine</a>
 <a name="364"><span class="lineNum">     364 </span>            : #if TRACKTION_BUILD_RUBBERBAND</a>
 <a name="365"><span class="lineNum">     365 </span>            :  #if __has_include(&lt;rubberband/single/RubberBandSingle.cpp&gt;)</a>
 <a name="366"><span class="lineNum">     366 </span>            :   #include &lt;rubberband/single/RubberBandSingle.cpp&gt;</a>
@@ -440,7 +440,7 @@
 <a name="378"><span class="lineNum">     378 </span>            :   #error &quot;TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND enabled but not found in the search path!&quot;</a>
 <a name="379"><span class="lineNum">     379 </span>            :  #endif</a>
 <a name="380"><span class="lineNum">     380 </span>            : #endif</a>
-<a name="381"><span class="lineNum">     381 </span>            : namespace tracktion_engine {</a>
+<a name="381"><span class="lineNum">     381 </span>            : namespace tracktion { inline namespace engine {</a>
 <a name="382"><span class="lineNum">     382 </span>            :     </a>
 <a name="383"><span class="lineNum">     383 </span>            : #undef WIN32_LEAN_AND_MEAN</a>
 <a name="384"><span class="lineNum">     384 </span>            : #undef Point</a>
@@ -483,7 +483,7 @@
 <a name="421"><span class="lineNum">     421 </span>            : </a>
 <a name="422"><span class="lineNum">     422 </span>            :     bool setSpeedAndPitch (float speedRatio, float semitonesUp) override</a>
 <a name="423"><span class="lineNum">     423 </span>            :     {</a>
-<a name="424"><span class="lineNum">     424 </span>            :         const float pitch = juce::jlimit (0.25f, 4.0f, tracktion_engine::Pitch::semitonesToRatio (semitonesUp));</a>
+<a name="424"><span class="lineNum">     424 </span>            :         const float pitch = juce::jlimit (0.25f, 4.0f, tracktion::engine::Pitch::semitonesToRatio (semitonesUp));</a>
 <a name="425"><span class="lineNum">     425 </span>            : </a>
 <a name="426"><span class="lineNum">     426 </span>            :         rubberBandStretcher.setPitchScale (pitch);</a>
 <a name="427"><span class="lineNum">     427 </span>            :         rubberBandStretcher.setTimeRatio (speedRatio);</a>
@@ -599,9 +599,9 @@
 <a name="537"><span class="lineNum">     537 </span><span class="lineNoCov">          0 : static juce::String getRubberBandMelodic()    { return &quot;RubberBand (&quot; + TRANS(&quot;Melodic&quot;) + &quot;)&quot;; }</span></a>
 <a name="538"><span class="lineNum">     538 </span><span class="lineNoCov">          0 : static juce::String getRubberBandPercussive() { return &quot;RubberBand (&quot; + TRANS(&quot;Percussive&quot;) + &quot;)&quot;; }</span></a>
 <a name="539"><span class="lineNum">     539 </span>            : </a>
-<a name="540"><span class="lineNum">     540 </span><span class="lineCov">         85 : TimeStretcher::Mode TimeStretcher::checkModeIsAvailable (Mode m)</span></a>
+<a name="540"><span class="lineNum">     540 </span><span class="lineCov">         87 : TimeStretcher::Mode TimeStretcher::checkModeIsAvailable (Mode m)</span></a>
 <a name="541"><span class="lineNum">     541 </span>            : {</a>
-<a name="542"><span class="lineNum">     542 </span><span class="lineCov">         85 :     switch (m)</span></a>
+<a name="542"><span class="lineNum">     542 </span><span class="lineCov">         87 :     switch (m)</span></a>
 <a name="543"><span class="lineNum">     543 </span>            :     {</a>
 <a name="544"><span class="lineNum">     544 </span>            :         case elastiqueTransient:</a>
 <a name="545"><span class="lineNum">     545 </span>            :         case elastiqueTonal:</a>
@@ -637,10 +637,10 @@
 <a name="575"><span class="lineNum">     575 </span>            :         case rubberbandPercussive:</a>
 <a name="576"><span class="lineNum">     576 </span>            :             return m;</a>
 <a name="577"><span class="lineNum">     577 </span>            :        #endif</a>
-<a name="578"><span class="lineNum">     578 </span><span class="lineCov">         85 :         case disabled:</span></a>
+<a name="578"><span class="lineNum">     578 </span><span class="lineCov">         87 :         case disabled:</span></a>
 <a name="579"><span class="lineNum">     579 </span>            :         case melodyne:</a>
 <a name="580"><span class="lineNum">     580 </span>            :         default:</a>
-<a name="581"><span class="lineNum">     581 </span><span class="lineCov">         85 :             return m;</span></a>
+<a name="581"><span class="lineNum">     581 </span><span class="lineCov">         87 :             return m;</span></a>
 <a name="582"><span class="lineNum">     582 </span>            :     }</a>
 <a name="583"><span class="lineNum">     583 </span>            : }</a>
 <a name="584"><span class="lineNum">     584 </span>            : </a>
@@ -724,13 +724,13 @@
 <a name="662"><span class="lineNum">     662 </span><span class="lineNoCov">          0 :     return {};</span></a>
 <a name="663"><span class="lineNum">     663 </span>            : }</a>
 <a name="664"><span class="lineNum">     664 </span>            : </a>
-<a name="665"><span class="lineNum">     665 </span><span class="lineCov">        596 : bool TimeStretcher::isMelodyne (Mode mode)</span></a>
+<a name="665"><span class="lineNum">     665 </span><span class="lineCov">        654 : bool TimeStretcher::isMelodyne (Mode mode)</span></a>
 <a name="666"><span class="lineNum">     666 </span>            : {</a>
 <a name="667"><span class="lineNum">     667 </span>            :    #if TRACKTION_ENABLE_ARA</a>
 <a name="668"><span class="lineNum">     668 </span>            :     return mode == melodyne;</a>
 <a name="669"><span class="lineNum">     669 </span>            :    #else</a>
 <a name="670"><span class="lineNum">     670 </span>            :     juce::ignoreUnused (mode);</a>
-<a name="671"><span class="lineNum">     671 </span><span class="lineCov">        596 :     return false;</span></a>
+<a name="671"><span class="lineNum">     671 </span><span class="lineCov">        654 :     return false;</span></a>
 <a name="672"><span class="lineNum">     672 </span>            :    #endif</a>
 <a name="673"><span class="lineNum">     673 </span>            : }</a>
 <a name="674"><span class="lineNum">     674 </span>            : </a>
@@ -786,7 +786,7 @@
 <a name="724"><span class="lineNum">     724 </span>            :         case rubberbandMelodic:</a>
 <a name="725"><span class="lineNum">     725 </span>            :         case rubberbandPercussive:</a>
 <a name="726"><span class="lineNum">     726 </span>            :             juce::ignoreUnused (options, realtime);</a>
-<a name="727"><span class="lineNum">     727 </span>            :             stretcher.reset (new tracktion_engine::RubberBandStretcher (sourceSampleRate, samplesPerBlock, numChannels,</a>
+<a name="727"><span class="lineNum">     727 </span>            :             stretcher.reset (new tracktion::engine::RubberBandStretcher (sourceSampleRate, samplesPerBlock, numChannels,</a>
 <a name="728"><span class="lineNum">     728 </span>            :                                                                         mode == rubberbandPercussive));</a>
 <a name="729"><span class="lineNum">     729 </span>            :             break;</a>
 <a name="730"><span class="lineNum">     730 </span>            :        #else</a>
@@ -879,7 +879,7 @@
 <a name="817"><span class="lineNum">     817 </span>            :     return 0;</a>
 <a name="818"><span class="lineNum">     818 </span>            : }</a>
 <a name="819"><span class="lineNum">     819 </span>            : </a>
-<a name="820"><span class="lineNum">     820 </span>            : }</a>
+<a name="820"><span class="lineNum">     820 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

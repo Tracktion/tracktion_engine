@@ -1,5 +1,0 @@
-<map id="tracktion_engine::PlayHeadPositionNode" name="tracktion_engine::PlayHeadPositionNode">
-<area shape="rect" id="node1" title="A Node that calculates a position to show visually what time is currently being processed by the grap..." alt="" coords="91,95,292,136"/>
-<area shape="rect" id="node2" href="$classtracktion__graph_1_1Node.html" title="Main graph Node processor class." alt="" coords="5,13,172,39"/>
-<area shape="rect" id="node3" href="$classtracktion__engine_1_1TracktionEngineNode.html" title="Base class for Nodes that provides information about the current process call." alt="" coords="196,5,395,47"/>
-</map>

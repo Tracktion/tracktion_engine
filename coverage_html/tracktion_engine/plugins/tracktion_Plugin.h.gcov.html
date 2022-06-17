@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">16</td>
+            <td class="headerCovTableEntry">14</td>
             <td class="headerCovTableEntry">33</td>
-            <td class="headerCovTableEntryLo">48.5 %</td>
+            <td class="headerCovTableEntryLo">42.4 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">12</td>
+            <td class="headerCovTableEntry">10</td>
             <td class="headerCovTableEntry">25</td>
-            <td class="headerCovTableEntryLo">48.0 %</td>
+            <td class="headerCovTableEntryLo">40.0 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -70,17 +70,17 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
-<a name="14"><span class="lineNum">      14 </span><span class="lineCov">       3398 : struct PluginCreationInfo</span></a>
+<a name="14"><span class="lineNum">      14 </span><span class="lineCov">       3538 : struct PluginCreationInfo</span></a>
 <a name="15"><span class="lineNum">      15 </span>            : {</a>
-<a name="16"><span class="lineNum">      16 </span><span class="lineCov">       2389 :     PluginCreationInfo (const PluginCreationInfo&amp;) = default;</span></a>
+<a name="16"><span class="lineNum">      16 </span><span class="lineCov">       2487 :     PluginCreationInfo (const PluginCreationInfo&amp;) = default;</span></a>
 <a name="17"><span class="lineNum">      17 </span>            :     PluginCreationInfo (PluginCreationInfo&amp;&amp;) = default;</a>
 <a name="18"><span class="lineNum">      18 </span>            :     PluginCreationInfo&amp; operator= (PluginCreationInfo&amp;&amp;) = delete;</a>
 <a name="19"><span class="lineNum">      19 </span>            : </a>
 <a name="20"><span class="lineNum">      20 </span>            :     PluginCreationInfo (Edit&amp; ed, const juce::ValueTree&amp; s, bool isNew) noexcept</a>
-<a name="21"><span class="lineNum">      21 </span><span class="lineCov">       1009 :         : edit (ed), state (s), isNewPlugin (isNew) {}</span></a>
+<a name="21"><span class="lineNum">      21 </span><span class="lineCov">       1051 :         : edit (ed), state (s), isNewPlugin (isNew) {}</span></a>
 <a name="22"><span class="lineNum">      22 </span>            : </a>
 <a name="23"><span class="lineNum">      23 </span>            :     PluginCreationInfo() = delete;</a>
 <a name="24"><span class="lineNum">      24 </span>            :     PluginCreationInfo&amp; operator= (const PluginCreationInfo&amp;) = delete;</a>
@@ -96,7 +96,7 @@
 <a name="34"><span class="lineNum">      34 </span>            : */</a>
 <a name="35"><span class="lineNum">      35 </span>            : struct PluginInitialisationInfo</a>
 <a name="36"><span class="lineNum">      36 </span>            : {</a>
-<a name="37"><span class="lineNum">      37 </span>            :     double startTime;</a>
+<a name="37"><span class="lineNum">      37 </span>            :     TimePosition startTime;</a>
 <a name="38"><span class="lineNum">      38 </span>            :     double sampleRate;</a>
 <a name="39"><span class="lineNum">      39 </span>            :     int blockSizeSamples;</a>
 <a name="40"><span class="lineNum">      40 </span>            : };</a>
@@ -112,12 +112,12 @@
 <a name="50"><span class="lineNum">      50 </span>            :                          const juce::AudioChannelSet&amp; bufferChannels,</a>
 <a name="51"><span class="lineNum">      51 </span>            :                          int bufferStart, int bufferSize,</a>
 <a name="52"><span class="lineNum">      52 </span>            :                          MidiMessageArray* midiBuffer, double midiOffset,</a>
-<a name="53"><span class="lineNum">      53 </span>            :                          double editTime, bool playing, bool scrubbing, bool rendering,</a>
+<a name="53"><span class="lineNum">      53 </span>            :                          TimePosition editTime, bool playing, bool scrubbing, bool rendering,</a>
 <a name="54"><span class="lineNum">      54 </span>            :                          bool allowBypassedProcessing) noexcept;</a>
 <a name="55"><span class="lineNum">      55 </span>            : </a>
 <a name="56"><span class="lineNum">      56 </span>            :     /** Creates a copy of another PluginRenderContext. */</a>
-<a name="57"><span class="lineNum">      57 </span><span class="lineCov">    1158380 :     PluginRenderContext (const PluginRenderContext&amp;) = default;</span></a>
-<a name="58"><span class="lineNum">      58 </span><span class="lineCov">    1158380 :     PluginRenderContext (PluginRenderContext&amp;&amp;) = default;</span></a>
+<a name="57"><span class="lineNum">      57 </span><span class="lineNoCov">          0 :     PluginRenderContext (const PluginRenderContext&amp;) = default;</span></a>
+<a name="58"><span class="lineNum">      58 </span><span class="lineNoCov">          0 :     PluginRenderContext (PluginRenderContext&amp;&amp;) = default;</span></a>
 <a name="59"><span class="lineNum">      59 </span>            : </a>
 <a name="60"><span class="lineNum">      60 </span>            :     /** Deleted assignment operators. */</a>
 <a name="61"><span class="lineNum">      61 </span>            :     PluginRenderContext&amp; operator= (const PluginRenderContext&amp;) = delete;</a>
@@ -146,7 +146,7 @@
 <a name="84"><span class="lineNum">      84 </span>            :     double midiBufferOffset = 0.0;</a>
 <a name="85"><span class="lineNum">      85 </span>            : </a>
 <a name="86"><span class="lineNum">      86 </span>            :     /** The time in seconds that the start of this context represents. */</a>
-<a name="87"><span class="lineNum">      87 </span>            :     double editTime = 0.0;</a>
+<a name="87"><span class="lineNum">      87 </span>            :     TimePosition editTime;</a>
 <a name="88"><span class="lineNum">      88 </span>            : </a>
 <a name="89"><span class="lineNum">      89 </span>            :     /** True if the the playhead is currently playing. */</a>
 <a name="90"><span class="lineNum">      90 </span>            :     bool isPlaying = false;</a>
@@ -211,7 +211,7 @@
 <a name="149"><span class="lineNum">     149 </span>            :     //==============================================================================</a>
 <a name="150"><span class="lineNum">     150 </span>            :     /** Enable/disable the plugin.  */</a>
 <a name="151"><span class="lineNum">     151 </span>            :     virtual void setEnabled (bool);</a>
-<a name="152"><span class="lineNum">     152 </span><span class="lineCov">    1395816 :     bool isEnabled() const noexcept                         { return enabled; }</span></a>
+<a name="152"><span class="lineNum">     152 </span><span class="lineCov">    3190280 :     bool isEnabled() const noexcept                         { return enabled; }</span></a>
 <a name="153"><span class="lineNum">     153 </span>            : </a>
 <a name="154"><span class="lineNum">     154 </span>            :     /** This is a bit different to being enabled as when frozen a plugin can't be interacted with. */</a>
 <a name="155"><span class="lineNum">     155 </span>            :     void setFrozen (bool shouldBeFrozen);</a>
@@ -261,7 +261,7 @@
 <a name="199"><span class="lineNum">     199 </span>            :     virtual void applyToBuffer (const PluginRenderContext&amp;) = 0;</a>
 <a name="200"><span class="lineNum">     200 </span>            : </a>
 <a name="201"><span class="lineNum">     201 </span>            :     /** Called between successive rendering blocks. */</a>
-<a name="202"><span class="lineNum">     202 </span><span class="lineCov">    1174300 :     virtual void prepareForNextBlock (double /*editTime*/) {}</span></a>
+<a name="202"><span class="lineNum">     202 </span><span class="lineCov">    2080100 :     virtual void prepareForNextBlock (TimePosition /*editTime*/) {}</span></a>
 <a name="203"><span class="lineNum">     203 </span>            : </a>
 <a name="204"><span class="lineNum">     204 </span>            :     // wrapper on applyTobuffer, called by the node</a>
 <a name="205"><span class="lineNum">     205 </span>            :     void applyToBufferWithAutomation (const PluginRenderContext&amp;);</a>
@@ -278,15 +278,15 @@
 <a name="216"><span class="lineNum">     216 </span>            :     */</a>
 <a name="217"><span class="lineNum">     217 </span>            :     virtual int getNumOutputChannelsGivenInputs (int numInputChannels);</a>
 <a name="218"><span class="lineNum">     218 </span>            : </a>
-<a name="219"><span class="lineNum">     219 </span><span class="lineCov">        120 :     virtual bool producesAudioWhenNoAudioInput()        { return isAutomationNeeded(); }</span></a>
+<a name="219"><span class="lineNum">     219 </span><span class="lineCov">        552 :     virtual bool producesAudioWhenNoAudioInput()        { return isAutomationNeeded(); }</span></a>
 <a name="220"><span class="lineNum">     220 </span><span class="lineNoCov">          0 :     virtual bool noTail()                               { return true; }</span></a>
 <a name="221"><span class="lineNum">     221 </span>            : </a>
 <a name="222"><span class="lineNum">     222 </span>            :     virtual void getChannelNames (juce::StringArray* ins, juce::StringArray* outs);</a>
 <a name="223"><span class="lineNum">     223 </span><span class="lineNoCov">          0 :     virtual bool takesAudioInput()                      { return ! isSynth(); }</span></a>
 <a name="224"><span class="lineNum">     224 </span><span class="lineCov">       1540 :     virtual bool takesMidiInput()                       { return false; }</span></a>
 <a name="225"><span class="lineNum">     225 </span><span class="lineNoCov">          0 :     virtual bool isSynth()                              { return false; }</span></a>
-<a name="226"><span class="lineNum">     226 </span><span class="lineCov">        370 :     virtual double getLatencySeconds()                  { return 0.0; }</span></a>
-<a name="227"><span class="lineNum">     227 </span><span class="lineCov">         12 :     virtual double getTailLength() const                { return 0.0; }</span></a>
+<a name="226"><span class="lineNum">     226 </span><span class="lineCov">        426 :     virtual double getLatencySeconds()                  { return 0.0; }</span></a>
+<a name="227"><span class="lineNum">     227 </span><span class="lineCov">         60 :     virtual double getTailLength() const                { return 0.0; }</span></a>
 <a name="228"><span class="lineNum">     228 </span>            :     virtual bool canSidechain();</a>
 <a name="229"><span class="lineNum">     229 </span>            : </a>
 <a name="230"><span class="lineNum">     230 </span>            :     juce::StringArray getInputChannelNames();</a>
@@ -333,10 +333,10 @@
 <a name="271"><span class="lineNum">     271 </span>            :     virtual bool needsConstantBufferSize() = 0;</a>
 <a name="272"><span class="lineNum">     272 </span>            : </a>
 <a name="273"><span class="lineNum">     273 </span>            :     /** for things like VSTs where the DLL is missing.    */</a>
-<a name="274"><span class="lineNum">     274 </span><span class="lineCov">        158 :     virtual bool isMissing()                                            { return false; }</span></a>
+<a name="274"><span class="lineNum">     274 </span><span class="lineCov">        214 :     virtual bool isMissing()                                            { return false; }</span></a>
 <a name="275"><span class="lineNum">     275 </span>            : </a>
 <a name="276"><span class="lineNum">     276 </span>            :     /** Plugins can be disabled to avoid them crashing Edits. */</a>
-<a name="277"><span class="lineNum">     277 </span><span class="lineCov">        160 :     virtual bool isDisabled()                                           { return false; }</span></a>
+<a name="277"><span class="lineNum">     277 </span><span class="lineCov">        216 :     virtual bool isDisabled()                                           { return false; }</span></a>
 <a name="278"><span class="lineNum">     278 </span>            : </a>
 <a name="279"><span class="lineNum">     279 </span>            :     bool isInRack() const;</a>
 <a name="280"><span class="lineNum">     280 </span>            :     juce::ReferenceCountedObjectPtr&lt;RackType&gt; getOwnerRackType() const;</a>
@@ -394,7 +394,7 @@
 <a name="332"><span class="lineNum">     332 </span>            :     //==============================================================================</a>
 <a name="333"><span class="lineNum">     333 </span>            :     // setting a master plugin whose settings will be mirrored</a>
 <a name="334"><span class="lineNum">     334 </span>            :     bool setPluginToMirror (const Plugin::Ptr&amp;); // fails if type is wrong</a>
-<a name="335"><span class="lineNum">     335 </span><span class="lineCov">        332 :     virtual void updateFromMirroredPluginIfNeeded (Plugin&amp;) {}</span></a>
+<a name="335"><span class="lineNum">     335 </span><span class="lineCov">        356 :     virtual void updateFromMirroredPluginIfNeeded (Plugin&amp;) {}</span></a>
 <a name="336"><span class="lineNum">     336 </span>            :     Plugin::Ptr getMirroredPlugin() const;</a>
 <a name="337"><span class="lineNum">     337 </span>            : </a>
 <a name="338"><span class="lineNum">     338 </span>            :     //==============================================================================</a>
@@ -480,7 +480,7 @@
 <a name="418"><span class="lineNum">     418 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Plugin)</a>
 <a name="419"><span class="lineNum">     419 </span>            : };</a>
 <a name="420"><span class="lineNum">     420 </span>            : </a>
-<a name="421"><span class="lineNum">     421 </span>            : } // namespace tracktion_engine</a>
+<a name="421"><span class="lineNum">     421 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

@@ -1,9 +1,0 @@
-<map id="tracktion_engine::EnvelopeFollowerModifier" name="tracktion_engine::EnvelopeFollowerModifier">
-<area shape="rect" id="node1" title=" " alt="" coords="769,93,968,135"/>
-<area shape="rect" id="node2" href="$structtracktion__engine_1_1Modifier.html" title="Bass class for parameter Modifiers." alt="" coords="524,71,716,98"/>
-<area shape="rect" id="node3" href="$classtracktion__engine_1_1AutomatableEditItem.html" title="Base class for elements that have some kind of automatable parameters." alt="" coords="248,5,471,47"/>
-<area shape="rect" id="node4" href="$classtracktion__engine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g." alt="" coords="5,13,200,39"/>
-<area shape="rect" id="node5" href="$classtracktion__engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="256,71,463,98"/>
-<area shape="rect" id="node6" href="$structtracktion__engine_1_1AutomatableParameter_1_1ModifierSource.html" title="Base class for things that can be used to modify parameters." alt="" coords="248,123,471,164"/>
-<area shape="rect" id="node7" href="$structtracktion__engine_1_1ValueTreeAllEventListener.html" title=" " alt="" coords="519,123,721,164"/>
-</map>

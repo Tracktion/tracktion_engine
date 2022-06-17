@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : class MidiNoteDispatcher   : private juce::HighResolutionTimer</a>
@@ -82,10 +82,10 @@
 <a name="20"><span class="lineNum">      20 </span>            :     //==============================================================================</a>
 <a name="21"><span class="lineNum">      21 </span>            :     void setMidiDeviceList (const juce::OwnedArray&lt;MidiOutputDeviceInstance&gt;&amp;);</a>
 <a name="22"><span class="lineNum">      22 </span>            : </a>
-<a name="23"><span class="lineNum">      23 </span>            :     void dispatchPendingMessagesForDevices (double editTime);</a>
+<a name="23"><span class="lineNum">      23 </span>            :     void dispatchPendingMessagesForDevices (TimePosition editTime);</a>
 <a name="24"><span class="lineNum">      24 </span>            :     </a>
-<a name="25"><span class="lineNum">      25 </span>            :     void masterTimeUpdate (double editTime);</a>
-<a name="26"><span class="lineNum">      26 </span>            :     void prepareToPlay (double editTime);</a>
+<a name="25"><span class="lineNum">      25 </span>            :     void masterTimeUpdate (TimePosition editTime);</a>
+<a name="26"><span class="lineNum">      26 </span>            :     void prepareToPlay (TimePosition editTime);</a>
 <a name="27"><span class="lineNum">      27 </span>            : </a>
 <a name="28"><span class="lineNum">      28 </span>            :     void hiResTimerCallback() override;</a>
 <a name="29"><span class="lineNum">      29 </span>            : </a>
@@ -102,15 +102,16 @@
 <a name="40"><span class="lineNum">      40 </span>            :     //==============================================================================</a>
 <a name="41"><span class="lineNum">      41 </span>            :     juce::OwnedArray&lt;DeviceState&gt; devices;</a>
 <a name="42"><span class="lineNum">      42 </span>            :     juce::CriticalSection timeLock, deviceLock;</a>
-<a name="43"><span class="lineNum">      43 </span>            :     double masterTime = 0, hiResClockOfMasterTime = 0;</a>
-<a name="44"><span class="lineNum">      44 </span>            : </a>
-<a name="45"><span class="lineNum">      45 </span>            :     double getCurrentTime() const;</a>
-<a name="46"><span class="lineNum">      46 </span>            :     void dispatchPendingMessages (DeviceState&amp;, double editTime);</a>
-<a name="47"><span class="lineNum">      47 </span>            : </a>
-<a name="48"><span class="lineNum">      48 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiNoteDispatcher)</a>
-<a name="49"><span class="lineNum">      49 </span>            : };</a>
-<a name="50"><span class="lineNum">      50 </span>            : </a>
-<a name="51"><span class="lineNum">      51 </span>            : } // namespace tracktion_engine</a>
+<a name="43"><span class="lineNum">      43 </span>            :     TimePosition masterTime;</a>
+<a name="44"><span class="lineNum">      44 </span>            :     double hiResClockOfMasterTime = 0;</a>
+<a name="45"><span class="lineNum">      45 </span>            : </a>
+<a name="46"><span class="lineNum">      46 </span>            :     TimePosition getCurrentTime() const;</a>
+<a name="47"><span class="lineNum">      47 </span>            :     void dispatchPendingMessages (DeviceState&amp;, TimePosition editTime);</a>
+<a name="48"><span class="lineNum">      48 </span>            : </a>
+<a name="49"><span class="lineNum">      49 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiNoteDispatcher)</a>
+<a name="50"><span class="lineNum">      50 </span>            : };</a>
+<a name="51"><span class="lineNum">      51 </span>            : </a>
+<a name="52"><span class="lineNum">      52 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

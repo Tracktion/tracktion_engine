@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">10</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : struct RackInputAutomatableParameter   : public AutomatableParameter</a>
@@ -372,7 +372,7 @@
 <a name="310"><span class="lineNum">     310 </span><span class="lineNoCov">          0 :         type-&gt;deregisterInstance (this);</span></a>
 <a name="311"><span class="lineNum">     311 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="312"><span class="lineNum">     312 </span>            : </a>
-<a name="313"><span class="lineNum">     313 </span><span class="lineNoCov">          0 : void RackInstance::updateAutomatableParamPosition (double time)</span></a>
+<a name="313"><span class="lineNum">     313 </span><span class="lineNoCov">          0 : void RackInstance::updateAutomatableParamPosition (TimePosition time)</span></a>
 <a name="314"><span class="lineNum">     314 </span>            : {</a>
 <a name="315"><span class="lineNum">     315 </span><span class="lineNoCov">          0 :     Plugin::updateAutomatableParamPosition (time);</span></a>
 <a name="316"><span class="lineNum">     316 </span>            : </a>
@@ -385,7 +385,7 @@
 <a name="323"><span class="lineNum">     323 </span><span class="lineNoCov">          0 :     return 0.0;</span></a>
 <a name="324"><span class="lineNum">     324 </span>            : }</a>
 <a name="325"><span class="lineNum">     325 </span>            : </a>
-<a name="326"><span class="lineNum">     326 </span><span class="lineNoCov">          0 : void RackInstance::prepareForNextBlock (double)</span></a>
+<a name="326"><span class="lineNum">     326 </span><span class="lineNoCov">          0 : void RackInstance::prepareForNextBlock (TimePosition)</span></a>
 <a name="327"><span class="lineNum">     327 </span>            : {</a>
 <a name="328"><span class="lineNum">     328 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="329"><span class="lineNum">     329 </span>            : </a>
@@ -444,7 +444,7 @@
 <a name="382"><span class="lineNum">     382 </span><span class="lineNoCov">          0 :     return juce::String (ouput) + &quot;. &quot; + type-&gt;getOutputNames()[ouput];</span></a>
 <a name="383"><span class="lineNum">     383 </span>            : }</a>
 <a name="384"><span class="lineNum">     384 </span>            : </a>
-<a name="385"><span class="lineNum">     385 </span>            : }</a>
+<a name="385"><span class="lineNum">     385 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

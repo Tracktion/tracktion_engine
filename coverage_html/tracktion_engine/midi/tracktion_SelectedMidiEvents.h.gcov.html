@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : /** Represents a set of selected MIDI notes.</a>
@@ -113,14 +113,14 @@
 <a name="51"><span class="lineNum">      51 </span>            :     const juce::Array&lt;MidiControllerEvent*&gt;&amp; getSelectedControllers() const noexcept    { return selectedControllers; }</a>
 <a name="52"><span class="lineNum">      52 </span>            : </a>
 <a name="53"><span class="lineNum">      53 </span>            :     //==============================================================================</a>
-<a name="54"><span class="lineNum">      54 </span>            :     void moveEvents (double deltaStart, double deltaLength, int deltaNote);</a>
-<a name="55"><span class="lineNum">      55 </span>            :     void setNoteLengths (double newLength);</a>
+<a name="54"><span class="lineNum">      54 </span>            :     void moveEvents (TimeDuration deltaStart, TimeDuration deltaLength, int deltaNote);</a>
+<a name="55"><span class="lineNum">      55 </span>            :     void setNoteLengths (BeatDuration newLength);</a>
 <a name="56"><span class="lineNum">      56 </span>            :     void setVelocities (int newVelocity);</a>
 <a name="57"><span class="lineNum">      57 </span>            :     void changeColour (uint8_t newColour);</a>
 <a name="58"><span class="lineNum">      58 </span>            : </a>
 <a name="59"><span class="lineNum">      59 </span>            :     void nudge (TimecodeSnapType, int leftRight, int upDown);</a>
 <a name="60"><span class="lineNum">      60 </span>            : </a>
-<a name="61"><span class="lineNum">      61 </span>            :     EditTimeRange getSelectedRange() const;</a>
+<a name="61"><span class="lineNum">      61 </span>            :     TimeRange getSelectedRange() const;</a>
 <a name="62"><span class="lineNum">      62 </span>            : </a>
 <a name="63"><span class="lineNum">      63 </span>            :     //==============================================================================</a>
 <a name="64"><span class="lineNum">      64 </span>            :     juce::String getSelectableDescription() override;</a>
@@ -134,7 +134,7 @@
 <a name="72"><span class="lineNum">      72 </span>            :         a copy at the original location</a>
 <a name="73"><span class="lineNum">      73 </span>            :      */</a>
 <a name="74"><span class="lineNum">      74 </span>            :     static void moveControllerData (const juce::Array&lt;MidiClip*&gt;&amp; clips, const juce::Array&lt;MidiControllerEvent*&gt;* onlyTheseEvents,</a>
-<a name="75"><span class="lineNum">      75 </span>            :                                     double deltaBeats, double startTime, double endTime, bool makeCopy);</a>
+<a name="75"><span class="lineNum">      75 </span>            :                                     BeatDuration deltaBeats, TimePosition startTime, TimePosition endTime, bool makeCopy);</a>
 <a name="76"><span class="lineNum">      76 </span>            : </a>
 <a name="77"><span class="lineNum">      77 </span>            :     /** Host should set this callback to specify if it wants MIDI CC locked to MIDI notes when</a>
 <a name="78"><span class="lineNum">      78 </span>            :         nudging</a>
@@ -157,7 +157,7 @@
 <a name="95"><span class="lineNum">      95 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SelectedMidiEvents)</a>
 <a name="96"><span class="lineNum">      96 </span>            : };</a>
 <a name="97"><span class="lineNum">      97 </span>            : </a>
-<a name="98"><span class="lineNum">      98 </span>            : } // namespace tracktion_engine</a>
+<a name="98"><span class="lineNum">      98 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

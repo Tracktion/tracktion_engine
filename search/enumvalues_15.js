@@ -1,15 +1,15 @@
 var searchData=
 [
-  ['v_13369',['v',['../classtracktion__engine_1_1Scale.html#a2d0ae3a7183bcef888e5761a9d53a283a9e3669d19b675bd57058fd4664205d2a',1,'tracktion_engine::Scale']]],
-  ['velocity_13370',['velocity',['../classtracktion__engine_1_1MIDITrackerModifier.html#a474c9c2a6ee7e0cb7651b0786a9c4114a2603f1992ac5100390456ee85bd8bbad',1,'tracktion_engine::MIDITrackerModifier']]],
-  ['vertical_13371',['vertical',['../structtracktion__engine_1_1FileDragList.html#ab75aa51166149f86fc6b8ddf588ae857a393a53cd4b2e2d65694046eae0ddbc44',1,'tracktion_engine::FileDragList']]],
-  ['vi_13372',['vi',['../classtracktion__engine_1_1Scale.html#a2d0ae3a7183bcef888e5761a9d53a283a35b36b28916d38b34abddf832e286126',1,'tracktion_engine::Scale']]],
-  ['video_13373',['video',['../classtracktion__engine_1_1TrackItem.html#a3f25eeb14a154b5ca7f8887494fa564fa421b47ffd946ca083b65cd668c6b17e6',1,'tracktion_engine::TrackItem::video()'],['../classtracktion__engine_1_1ProjectItem.html#aa8229b40bf594edde8093a3f7aeb91f7a421b47ffd946ca083b65cd668c6b17e6',1,'tracktion_engine::ProjectItem::video()']]],
-  ['vii_13374',['vii',['../classtracktion__engine_1_1Scale.html#a2d0ae3a7183bcef888e5761a9d53a283a44b7ed6c8297b6f269c8b872b0fd6266',1,'tracktion_engine::Scale']]],
-  ['virtualmididevice_13375',['virtualMidiDevice',['../classtracktion__engine_1_1InputDevice.html#a315fe0cecf76906c7c0c6f32a3a435f0add434a7440b6fd062be6894b7103e92e',1,'tracktion_engine::InputDevice']]],
-  ['virtualmididevices_13376',['virtualmididevices',['../namespacetracktion__engine.html#a621c43a54efb4eb950c0b1cad5e97eacadc17b81e0fcc4244d653e30e5552af7f',1,'tracktion_engine']]],
-  ['virtualmidiin_13377',['virtualmidiin',['../namespacetracktion__engine.html#a621c43a54efb4eb950c0b1cad5e97eaca30c1138f8420913e5253a0fd215212f4',1,'tracktion_engine']]],
-  ['voltexttrackid_13378',['volTextTrackId',['../classtracktion__engine_1_1CustomControlSurface.html#afd5a2df81c9aa2cc64e85994facd04eda923f7db90ba161f0def08bd17be19ccb',1,'tracktion_engine::CustomControlSurface']]],
-  ['voltrackid_13379',['volTrackId',['../classtracktion__engine_1_1CustomControlSurface.html#afd5a2df81c9aa2cc64e85994facd04eda1e09526d8cbe0fa2927719e66f0e297c',1,'tracktion_engine::CustomControlSurface']]],
-  ['volume_13380',['volume',['../classtracktion__engine_1_1ClipEffect.html#a2db4cad593f6e7b028f6c3fdf38cdce4a210ab9e731c9c36c2c38db15c28a8d1c',1,'tracktion_engine::ClipEffect']]]
+  ['v_13346',['v',['../classtracktion_1_1engine_1_1Scale.html#aa84f44f74d8de0baa054ca6fda7d2178a9e3669d19b675bd57058fd4664205d2a',1,'tracktion::engine::Scale']]],
+  ['velocity_13347',['velocity',['../classtracktion_1_1engine_1_1MIDITrackerModifier.html#accface57dc74546c41dfd87fd0d083bda39b10f055e9ba2da2eb18d8095069e1d',1,'tracktion::engine::MIDITrackerModifier']]],
+  ['vertical_13348',['vertical',['../structtracktion_1_1engine_1_1FileDragList.html#aeb4e4dcd988d065049230592ae9830b7ad1af1777ab5284ffed99fbdb99d29042',1,'tracktion::engine::FileDragList']]],
+  ['vi_13349',['vi',['../classtracktion_1_1engine_1_1Scale.html#aa84f44f74d8de0baa054ca6fda7d2178a35b36b28916d38b34abddf832e286126',1,'tracktion::engine::Scale']]],
+  ['video_13350',['video',['../classtracktion_1_1engine_1_1TrackItem.html#a01da0e462b71b30657a62268ef090f24a421b47ffd946ca083b65cd668c6b17e6',1,'tracktion::engine::TrackItem::video()'],['../classtracktion_1_1engine_1_1ProjectItem.html#a863e45f26bfc71747622cf23cfef8514a421b47ffd946ca083b65cd668c6b17e6',1,'tracktion::engine::ProjectItem::video()']]],
+  ['vii_13351',['vii',['../classtracktion_1_1engine_1_1Scale.html#aa84f44f74d8de0baa054ca6fda7d2178a44b7ed6c8297b6f269c8b872b0fd6266',1,'tracktion::engine::Scale']]],
+  ['virtualmididevice_13352',['virtualMidiDevice',['../classtracktion_1_1engine_1_1InputDevice.html#ac142baad652904d37630d4e5c1142d8fa2ed2b08e0167e75c5f18c81c0a11bd2b',1,'tracktion::engine::InputDevice']]],
+  ['virtualmididevices_13353',['virtualmididevices',['../namespacetracktion_1_1engine.html#aef0092bdbd8a28c3968f7f81912f815eadc17b81e0fcc4244d653e30e5552af7f',1,'tracktion::engine']]],
+  ['virtualmidiin_13354',['virtualmidiin',['../namespacetracktion_1_1engine.html#aef0092bdbd8a28c3968f7f81912f815ea30c1138f8420913e5253a0fd215212f4',1,'tracktion::engine']]],
+  ['voltexttrackid_13355',['volTextTrackId',['../classtracktion_1_1engine_1_1CustomControlSurface.html#a616409a4913a2ad7dd074e25b022a5cda00af214d90dc38b6b266dc2ae6f076f9',1,'tracktion::engine::CustomControlSurface']]],
+  ['voltrackid_13356',['volTrackId',['../classtracktion_1_1engine_1_1CustomControlSurface.html#a616409a4913a2ad7dd074e25b022a5cda3aa817479fc244779fc2fa1f0ef10d3b',1,'tracktion::engine::CustomControlSurface']]],
+  ['volume_13357',['volume',['../classtracktion_1_1engine_1_1ClipEffect.html#a68a4d5b963dfd7e9e1f7d1f62ccb9d51a210ab9e731c9c36c2c38db15c28a8d1c',1,'tracktion::engine::ClipEffect']]]
 ];

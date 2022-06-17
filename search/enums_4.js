@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['fadebehaviour_12771',['FadeBehaviour',['../classtracktion__engine_1_1AudioClipBase.html#a78fd00ca9bc2d5291139eb2c7e6a2c5b',1,'tracktion_engine::AudioClipBase']]],
-  ['freezetype_12772',['FreezeType',['../classtracktion__engine_1_1Track.html#a08c9e5775ff105835e103e955ca29dd1',1,'tracktion_engine::Track']]]
+  ['fadebehaviour_12745',['FadeBehaviour',['../classtracktion_1_1engine_1_1AudioClipBase.html#a02bb26c86c226f50eae674e40ab39ddc',1,'tracktion::engine::AudioClipBase']]],
+  ['freezetype_12746',['FreezeType',['../classtracktion_1_1engine_1_1Track.html#a66a906a4bc31c0cd0233d75b6fb4bc91',1,'tracktion::engine::Track']]]
 ];

@@ -1,0 +1,7 @@
+<map id="tracktion::engine::MidiInputDevice" name="tracktion::engine::MidiInputDevice">
+<area shape="rect" id="node1" title=" " alt="" coords="381,39,521,80"/>
+<area shape="rect" id="node4" href="$classtracktion_1_1engine_1_1PhysicalMidiInputDevice.html" title=" " alt="" coords="569,5,752,47"/>
+<area shape="rect" id="node5" href="$classtracktion_1_1engine_1_1VirtualMidiInputDevice.html" title=" " alt="" coords="575,71,746,112"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1InputDevice.html" title="Represents an input device." alt="" coords="193,39,333,80"/>
+<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="5,39,145,80"/>
+</map>

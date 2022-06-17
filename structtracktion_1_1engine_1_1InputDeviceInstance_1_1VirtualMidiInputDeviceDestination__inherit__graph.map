@@ -1,0 +1,5 @@
+<map id="tracktion::engine::InputDeviceInstance::VirtualMidiInputDeviceDestination" name="tracktion::engine::InputDeviceInstance::VirtualMidiInputDeviceDestination">
+<area shape="rect" id="node1" title=" " alt="" coords="5,199,260,255"/>
+<area shape="rect" id="node2" href="$structtracktion_1_1engine_1_1InputDeviceInstance_1_1InputDeviceDestination.html" title=" " alt="" coords="41,95,224,151"/>
+<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="63,5,203,47"/>
+</map>

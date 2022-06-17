@@ -1,0 +1,5 @@
+<map id="tracktion::engine::MacroParameterList" name="tracktion::engine::MacroParameterList">
+<area shape="rect" id="node1" title=" " alt="" coords="10,184,162,225"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1AutomatableEditItem.html" title="Base class for elements that have some kind of automatable parameters." alt="" coords="5,95,167,136"/>
+<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g." alt="" coords="16,5,156,47"/>
+</map>

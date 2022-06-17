@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">3</td>
@@ -120,7 +120,7 @@
 <a name="58"><span class="lineNum">      58 </span>            :  #pragma clang diagnostic pop</a>
 <a name="59"><span class="lineNum">      59 </span>            : #endif</a>
 <a name="60"><span class="lineNum">      60 </span>            : </a>
-<a name="61"><span class="lineNum">      61 </span>            : namespace tracktion_engine</a>
+<a name="61"><span class="lineNum">      61 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="62"><span class="lineNum">      62 </span>            : {</a>
 <a name="63"><span class="lineNum">      63 </span>            : </a>
 <a name="64"><span class="lineNum">      64 </span>            : using namespace ARA;</a>
@@ -725,12 +725,12 @@
 <a name="663"><span class="lineNum">     663 </span>            :     return {};</a>
 <a name="664"><span class="lineNum">     664 </span>            : }</a>
 <a name="665"><span class="lineNum">     665 </span>            : </a>
-<a name="666"><span class="lineNum">     666 </span>            : } // namespace tracktion_engine</a>
+<a name="666"><span class="lineNum">     666 </span>            : }} // namespace tracktion { inline namespace engine</a>
 <a name="667"><span class="lineNum">     667 </span>            : </a>
 <a name="668"><span class="lineNum">     668 </span>            : #else</a>
 <a name="669"><span class="lineNum">     669 </span>            : </a>
 <a name="670"><span class="lineNum">     670 </span>            : //==============================================================================</a>
-<a name="671"><span class="lineNum">     671 </span>            : namespace tracktion_engine</a>
+<a name="671"><span class="lineNum">     671 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="672"><span class="lineNum">     672 </span>            : {</a>
 <a name="673"><span class="lineNum">     673 </span>            : </a>
 <a name="674"><span class="lineNum">     674 </span>            : struct ARADocumentHolder::Pimpl {};</a>
@@ -748,12 +748,12 @@
 <a name="686"><span class="lineNum">     686 </span><span class="lineNoCov">          0 : juce::MidiMessageSequence MelodyneFileReader::getAnalysedMIDISequence()   { return {}; }</span></a>
 <a name="687"><span class="lineNum">     687 </span><span class="lineNoCov">          0 : void MelodyneFileReader::sourceClipChanged()                        {}</span></a>
 <a name="688"><span class="lineNum">     688 </span>            : </a>
-<a name="689"><span class="lineNum">     689 </span><span class="lineCov">        195 : ARADocumentHolder::ARADocumentHolder (Edit&amp; e, const juce::ValueTree&amp;) : edit (e) { juce::ignoreUnused (edit); }</span></a>
-<a name="690"><span class="lineNum">     690 </span><span class="lineCov">        195 : ARADocumentHolder::~ARADocumentHolder() {}</span></a>
+<a name="689"><span class="lineNum">     689 </span><span class="lineCov">        209 : ARADocumentHolder::ARADocumentHolder (Edit&amp; e, const juce::ValueTree&amp;) : edit (e) { juce::ignoreUnused (edit); }</span></a>
+<a name="690"><span class="lineNum">     690 </span><span class="lineCov">        209 : ARADocumentHolder::~ARADocumentHolder() {}</span></a>
 <a name="691"><span class="lineNum">     691 </span><span class="lineNoCov">          0 : ARADocumentHolder::Pimpl* ARADocumentHolder::getPimpl()             { return {}; }</span></a>
 <a name="692"><span class="lineNum">     692 </span><span class="lineNoCov">          0 : void ARADocumentHolder::flushStateToValueTree() {}</span></a>
 <a name="693"><span class="lineNum">     693 </span>            : </a>
-<a name="694"><span class="lineNum">     694 </span>            : } // namespace tracktion_engine</a>
+<a name="694"><span class="lineNum">     694 </span>            : }} // namespace tracktion { inline namespace engine</a>
 <a name="695"><span class="lineNum">     695 </span>            : </a>
 <a name="696"><span class="lineNum">     696 </span>            : #endif</a>
 </pre>

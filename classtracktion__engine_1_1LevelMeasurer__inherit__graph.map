@@ -1,4 +1,0 @@
-<map id="tracktion_engine::LevelMeasurer" name="tracktion_engine::LevelMeasurer">
-<area shape="rect" id="node1" title="Monitors the levels of buffers that are passed in, and keeps peak values, overloads,..." alt="" coords="5,5,240,32"/>
-<area shape="rect" id="node2" href="$classtracktion__engine_1_1SharedLevelMeasurer.html" title="A shared level measurer that can be used by several threads to provide a total output level." alt="" coords="31,80,215,121"/>
-</map>

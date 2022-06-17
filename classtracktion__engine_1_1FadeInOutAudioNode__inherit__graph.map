@@ -1,5 +1,0 @@
-<map id="tracktion_engine::FadeInOutAudioNode" name="tracktion_engine::FadeInOutAudioNode">
-<area shape="rect" id="node1" title="An AudioNode that fades its input node in/out at given times." alt="" coords="20,169,201,211"/>
-<area shape="rect" id="node2" href="$classtracktion__engine_1_1SingleInputAudioNode.html" title=" " alt="" coords="21,80,200,121"/>
-<area shape="rect" id="node3" href="$classtracktion__engine_1_1AudioNode.html" title="Base class for nodes in an audio playback graph." alt="" coords="5,5,216,32"/>
-</map>

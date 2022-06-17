@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">198</td>
+            <td class="headerCovTableEntry">196</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : namespace BezierHelpers</a>
@@ -164,11 +164,11 @@
 <a name="102"><span class="lineNum">     102 </span>            : struct BreakpointOscillatorModifier::BreakpointOscillatorModifierTimer    : public ModifierTimer</a>
 <a name="103"><span class="lineNum">     103 </span>            : {</a>
 <a name="104"><span class="lineNum">     104 </span>            :     BreakpointOscillatorModifierTimer (BreakpointOscillatorModifier&amp; bom)</a>
-<a name="105"><span class="lineNum">     105 </span><span class="lineNoCov">          0 :         : modifier (bom), tempoSequence (bom.edit.tempoSequence)</span></a>
+<a name="105"><span class="lineNum">     105 </span><span class="lineNoCov">          0 :         : modifier (bom)</span></a>
 <a name="106"><span class="lineNum">     106 </span>            :     {</a>
 <a name="107"><span class="lineNum">     107 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="108"><span class="lineNum">     108 </span>            : </a>
-<a name="109"><span class="lineNum">     109 </span><span class="lineNoCov">          0 :     void updateStreamTime (double editTime, int numSamples) override</span></a>
+<a name="109"><span class="lineNum">     109 </span><span class="lineNoCov">          0 :     void updateStreamTime (TimePosition editTime, int numSamples) override</span></a>
 <a name="110"><span class="lineNum">     110 </span>            :     {</a>
 <a name="111"><span class="lineNum">     111 </span>            :         using namespace ModifierCommon;</a>
 <a name="112"><span class="lineNum">     112 </span><span class="lineNoCov">          0 :         const double blockLength = numSamples / modifier.getSampleRate();</span></a>
@@ -185,7 +185,7 @@
 <a name="123"><span class="lineNum">     123 </span>            :             ramp.setDuration (durationPerPattern);</a>
 <a name="124"><span class="lineNum">     124 </span>            : </a>
 <a name="125"><span class="lineNum">     125 </span><span class="lineNoCov">          0 :             if (syncTypeThisBlock == transport)</span></a>
-<a name="126"><span class="lineNum">     126 </span><span class="lineNoCov">          0 :                 ramp.setPosition (std::fmod ((float) editTime, durationPerPattern));</span></a>
+<a name="126"><span class="lineNum">     126 </span><span class="lineNoCov">          0 :                 ramp.setPosition (std::fmod ((float) editTime.inSeconds(), durationPerPattern));</span></a>
 <a name="127"><span class="lineNum">     127 </span>            : </a>
 <a name="128"><span class="lineNum">     128 </span><span class="lineNoCov">          0 :             modifier.setPhase (ramp.getProportion());</span></a>
 <a name="129"><span class="lineNum">     129 </span>            : </a>
@@ -194,15 +194,15 @@
 <a name="132"><span class="lineNum">     132 </span>            :         }</a>
 <a name="133"><span class="lineNum">     133 </span>            :         else</a>
 <a name="134"><span class="lineNum">     134 </span>            :         {</a>
-<a name="135"><span class="lineNum">     135 </span><span class="lineNoCov">          0 :             tempoSequence.setTime (editTime);</span></a>
-<a name="136"><span class="lineNum">     136 </span><span class="lineNoCov">          0 :             auto currentTempo = tempoSequence.getCurrentTempo();</span></a>
-<a name="137"><span class="lineNum">     137 </span>            :             auto proportionOfBar = ModifierCommon::getBarFraction (rateTypeThisBlock);</a>
-<a name="138"><span class="lineNum">     138 </span>            : </a>
-<a name="139"><span class="lineNum">     139 </span><span class="lineNoCov">          0 :             if (syncTypeThisBlock == transport)</span></a>
-<a name="140"><span class="lineNum">     140 </span>            :             {</a>
-<a name="141"><span class="lineNum">     141 </span><span class="lineNoCov">          0 :                 auto editTimeInBeats = (float) (currentTempo.startBeatInEdit</span></a>
-<a name="142"><span class="lineNum">     142 </span><span class="lineNoCov">          0 :                                                  + (editTime - currentTempo.startTime) * currentTempo.beatsPerSecond);</span></a>
-<a name="143"><span class="lineNum">     143 </span><span class="lineNoCov">          0 :                 auto bars = (editTimeInBeats / currentTempo.numerator) * rateThisBlock;</span></a>
+<a name="135"><span class="lineNum">     135 </span><span class="lineNoCov">          0 :             tempoSequence.set (editTime);</span></a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineNoCov">          0 :             const auto currentTempo = tempoSequence.getTempo();</span></a>
+<a name="137"><span class="lineNum">     137 </span>            :             const auto currentTimeSig = tempoSequence.getTimeSignature();</a>
+<a name="138"><span class="lineNum">     138 </span>            :             const auto proportionOfBar = ModifierCommon::getBarFraction (rateTypeThisBlock);</a>
+<a name="139"><span class="lineNum">     139 </span>            : </a>
+<a name="140"><span class="lineNum">     140 </span><span class="lineNoCov">          0 :             if (syncTypeThisBlock == transport)</span></a>
+<a name="141"><span class="lineNum">     141 </span>            :             {</a>
+<a name="142"><span class="lineNum">     142 </span>            :                 const auto editTimeInBeats = tempoSequence.getBeats().inBeats();</a>
+<a name="143"><span class="lineNum">     143 </span><span class="lineNoCov">          0 :                 const auto bars = (editTimeInBeats / currentTimeSig.numerator) * rateThisBlock;</span></a>
 <a name="144"><span class="lineNum">     144 </span>            : </a>
 <a name="145"><span class="lineNum">     145 </span><span class="lineNoCov">          0 :                 if (rateTypeThisBlock &gt;= fourBars &amp;&amp; rateTypeThisBlock &lt;= sixtyFourthD)</span></a>
 <a name="146"><span class="lineNum">     146 </span>            :                 {</a>
@@ -212,9 +212,9 @@
 <a name="150"><span class="lineNum">     150 </span>            :             }</a>
 <a name="151"><span class="lineNum">     151 </span>            :             else</a>
 <a name="152"><span class="lineNum">     152 </span>            :             {</a>
-<a name="153"><span class="lineNum">     153 </span><span class="lineNoCov">          0 :                 auto bpm = (currentTempo.bpm * rateThisBlock) / proportionOfBar;</span></a>
+<a name="153"><span class="lineNum">     153 </span><span class="lineNoCov">          0 :                 auto bpm = (currentTempo * rateThisBlock) / proportionOfBar;</span></a>
 <a name="154"><span class="lineNum">     154 </span><span class="lineNoCov">          0 :                 auto secondsPerBeat = 60.0 / bpm;</span></a>
-<a name="155"><span class="lineNum">     155 </span><span class="lineNoCov">          0 :                 auto secondsPerStep = static_cast&lt;float&gt; (secondsPerBeat * currentTempo.numerator);</span></a>
+<a name="155"><span class="lineNum">     155 </span><span class="lineNoCov">          0 :                 auto secondsPerStep = static_cast&lt;float&gt; (secondsPerBeat * currentTimeSig.numerator);</span></a>
 <a name="156"><span class="lineNum">     156 </span>            :                 auto secondsPerPattern = secondsPerStep;</a>
 <a name="157"><span class="lineNum">     157 </span>            :                 ramp.setDuration (secondsPerPattern);</a>
 <a name="158"><span class="lineNum">     158 </span>            : </a>
@@ -240,7 +240,7 @@
 <a name="178"><span class="lineNum">     178 </span>            : </a>
 <a name="179"><span class="lineNum">     179 </span>            :     BreakpointOscillatorModifier&amp; modifier;</a>
 <a name="180"><span class="lineNum">     180 </span>            :     Ramp ramp;</a>
-<a name="181"><span class="lineNum">     181 </span>            :     TempoSequencePosition tempoSequence;</a>
+<a name="181"><span class="lineNum">     181 </span>            :     tempo::Sequence::Position tempoSequence { createPosition (modifier.edit.tempoSequence) };</a>
 <a name="182"><span class="lineNum">     182 </span>            : </a>
 <a name="183"><span class="lineNum">     183 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BreakpointOscillatorModifierTimer)</a>
 <a name="184"><span class="lineNum">     184 </span>            : };</a>
@@ -515,7 +515,7 @@
 <a name="453"><span class="lineNum">     453 </span><span class="lineNoCov">          0 :         changedTimer.startTimerHz (30);</span></a>
 <a name="454"><span class="lineNum">     454 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="455"><span class="lineNum">     455 </span>            : </a>
-<a name="456"><span class="lineNum">     456 </span>            : }</a>
+<a name="456"><span class="lineNum">     456 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

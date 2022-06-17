@@ -1,0 +1,5 @@
+<map id="tracktion::engine::SpeedRampAudioNode" name="tracktion::engine::SpeedRampAudioNode">
+<area shape="rect" id="node1" title="An AudioNode that speeds up and slows down its input node in/out at given times." alt="" coords="5,184,176,225"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1SingleInputAudioNode.html" title=" " alt="" coords="7,95,174,136"/>
+<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1AudioNode.html" title="Base class for nodes in an audio playback graph." alt="" coords="21,5,161,47"/>
+</map>

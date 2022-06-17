@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : /**</a>
@@ -126,7 +126,7 @@
 <a name="64"><span class="lineNum">      64 </span>            :     struct ElastiqueProOptions</a>
 <a name="65"><span class="lineNum">      65 </span>            :     {</a>
 <a name="66"><span class="lineNum">      66 </span>            :         /** Create a default set of options. */</a>
-<a name="67"><span class="lineNum">      67 </span><span class="lineCov">         89 :         ElastiqueProOptions() = default;</span></a>
+<a name="67"><span class="lineNum">      67 </span><span class="lineCov">        171 :         ElastiqueProOptions() = default;</span></a>
 <a name="68"><span class="lineNum">      68 </span>            :         /** Create a set of options from a saved string @see toString. */</a>
 <a name="69"><span class="lineNum">      69 </span>            :         ElastiqueProOptions (const juce::String&amp; string);</a>
 <a name="70"><span class="lineNum">      70 </span>            : </a>
@@ -183,7 +183,7 @@
 <a name="121"><span class="lineNum">     121 </span>            :     void reset();</a>
 <a name="122"><span class="lineNum">     122 </span>            :     </a>
 <a name="123"><span class="lineNum">     123 </span>            :     /** Sets the timestretch speed ratio and semitones pitch shift.</a>
-<a name="124"><span class="lineNum">     124 </span>            :         @param speedRatio   The ratio for timestretched speed. 1 = no stretching, 2 = twice as fast, 0.5 = half as fast etc.</a>
+<a name="124"><span class="lineNum">     124 </span>            :         @param speedRatio   The ratio for timestretched speed. 1 = no stretching, 2 = half as fast, 0.5 = twice as fast etc.</a>
 <a name="125"><span class="lineNum">     125 </span>            :         @param semitones    The number of semitones to adjust the pitch by 0 = not shift, 12 = up one oct, -12 = down one oct etc.</a>
 <a name="126"><span class="lineNum">     126 </span>            :     */</a>
 <a name="127"><span class="lineNum">     127 </span>            :     bool setSpeedAndPitch (float speedRatio, float semitones);</a>
@@ -237,22 +237,22 @@
 <a name="175"><span class="lineNum">     175 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TimeStretcher)</a>
 <a name="176"><span class="lineNum">     176 </span>            : };</a>
 <a name="177"><span class="lineNum">     177 </span>            : </a>
-<a name="178"><span class="lineNum">     178 </span>            : } // namespace tracktion_engine</a>
+<a name="178"><span class="lineNum">     178 </span>            : }} // namespace tracktion { inline namespace engine</a>
 <a name="179"><span class="lineNum">     179 </span>            : </a>
 <a name="180"><span class="lineNum">     180 </span>            : namespace juce</a>
 <a name="181"><span class="lineNum">     181 </span>            : {</a>
 <a name="182"><span class="lineNum">     182 </span>            :     template &lt;&gt;</a>
-<a name="183"><span class="lineNum">     183 </span>            :     struct VariantConverter&lt;tracktion_engine::TimeStretcher::Mode&gt;</a>
+<a name="183"><span class="lineNum">     183 </span>            :     struct VariantConverter&lt;tracktion::engine::TimeStretcher::Mode&gt;</a>
 <a name="184"><span class="lineNum">     184 </span>            :     {</a>
-<a name="185"><span class="lineNum">     185 </span><span class="lineCov">         85 :         static tracktion_engine::TimeStretcher::Mode fromVar (const var&amp; v)   { return (tracktion_engine::TimeStretcher::Mode) static_cast&lt;int&gt; (v); }</span></a>
-<a name="186"><span class="lineNum">     186 </span><span class="lineCov">         85 :         static var toVar (tracktion_engine::TimeStretcher::Mode v)            { return static_cast&lt;int&gt; (v); }</span></a>
+<a name="185"><span class="lineNum">     185 </span><span class="lineCov">         87 :         static tracktion::engine::TimeStretcher::Mode fromVar (const var&amp; v)   { return (tracktion::engine::TimeStretcher::Mode) static_cast&lt;int&gt; (v); }</span></a>
+<a name="186"><span class="lineNum">     186 </span><span class="lineCov">         87 :         static var toVar (tracktion::engine::TimeStretcher::Mode v)            { return static_cast&lt;int&gt; (v); }</span></a>
 <a name="187"><span class="lineNum">     187 </span>            :     };</a>
 <a name="188"><span class="lineNum">     188 </span>            : </a>
 <a name="189"><span class="lineNum">     189 </span>            :     template &lt;&gt;</a>
-<a name="190"><span class="lineNum">     190 </span>            :     struct VariantConverter&lt;tracktion_engine::TimeStretcher::ElastiqueProOptions&gt;</a>
+<a name="190"><span class="lineNum">     190 </span>            :     struct VariantConverter&lt;tracktion::engine::TimeStretcher::ElastiqueProOptions&gt;</a>
 <a name="191"><span class="lineNum">     191 </span>            :     {</a>
-<a name="192"><span class="lineNum">     192 </span><span class="lineNoCov">          0 :         static tracktion_engine::TimeStretcher::ElastiqueProOptions fromVar (const var&amp; v) { return tracktion_engine::TimeStretcher::ElastiqueProOptions (v.toString()); }</span></a>
-<a name="193"><span class="lineNum">     193 </span><span class="lineNoCov">          0 :         static var toVar (const tracktion_engine::TimeStretcher::ElastiqueProOptions&amp; v)   { return v.toString(); }</span></a>
+<a name="192"><span class="lineNum">     192 </span><span class="lineNoCov">          0 :         static tracktion::engine::TimeStretcher::ElastiqueProOptions fromVar (const var&amp; v) { return tracktion::engine::TimeStretcher::ElastiqueProOptions (v.toString()); }</span></a>
+<a name="193"><span class="lineNum">     193 </span><span class="lineNoCov">          0 :         static var toVar (const tracktion::engine::TimeStretcher::ElastiqueProOptions&amp; v)   { return v.toString(); }</span></a>
 <a name="194"><span class="lineNum">     194 </span>            :     };</a>
 <a name="195"><span class="lineNum">     195 </span>            : }</a>
 </pre>

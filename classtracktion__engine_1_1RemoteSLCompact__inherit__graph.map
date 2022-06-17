@@ -1,6 +1,0 @@
-<map id="tracktion_engine::RemoteSLCompact" name="tracktion_engine::RemoteSLCompact">
-<area shape="rect" id="node1" title=" " alt="" coords="13,259,204,300"/>
-<area shape="rect" id="node2" href="$classtracktion__engine_1_1NovationRemoteSl.html" title=" " alt="" coords="9,169,208,211"/>
-<area shape="rect" id="node3" href="$classtracktion__engine_1_1ControlSurface.html" title="Base class for types of control surface." alt="" coords="15,80,202,121"/>
-<area shape="rect" id="node4" href="$classtracktion__engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="5,5,212,32"/>
-</map>

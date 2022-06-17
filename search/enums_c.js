@@ -1,10 +1,12 @@
 var searchData=
 [
-  ['scaletype_12800',['ScaleType',['../classtracktion__engine_1_1Scale.html#a3a7c774dd731ec6eb04c59487db984df',1,'tracktion_engine::Scale']]],
-  ['setnamemode_12801',['SetNameMode',['../classtracktion__engine_1_1ProjectItem.html#a9a9b90a5f2f8cd7bb74859aa903d298e',1,'tracktion_engine::ProjectItem']]],
-  ['settingid_12802',['SettingID',['../namespacetracktion__engine.html#a621c43a54efb4eb950c0b1cad5e97eac',1,'tracktion_engine']]],
-  ['srcchannels_12803',['SrcChannels',['../structtracktion__engine_1_1MakeMonoEffect.html#a7914e55bca3778c39873dbaf7420c796',1,'tracktion_engine::MakeMonoEffect']]],
-  ['state_12804',['State',['../classtracktion__engine_1_1LinEnvelope.html#a3042e4b483b70a7f33149413dd768b79',1,'tracktion_engine::LinEnvelope']]],
-  ['steps_12805',['Steps',['../classtracktion__engine_1_1Scale.html#a4f98c3b3c9338b3421f5c20ab18cdd0b',1,'tracktion_engine::Scale']]],
-  ['synctype_12806',['SyncType',['../classtracktion__engine_1_1Clip.html#acd9203fe7f0840fbb358f85c97c89ef5',1,'tracktion_engine::Clip::SyncType()'],['../namespacetracktion__engine_1_1ModifierCommon.html#a6f3d847fb87438e114ddac3f989d0bc3',1,'tracktion_engine::ModifierCommon::SyncType()']]]
+  ['scaletype_12774',['ScaleType',['../classtracktion_1_1engine_1_1Scale.html#a52437d60f63fb74c47254de4751aec0e',1,'tracktion::engine::Scale']]],
+  ['setnamemode_12775',['SetNameMode',['../classtracktion_1_1engine_1_1ProjectItem.html#adc684adf3e111a2244fb8c0f0a9f38f5',1,'tracktion::engine::ProjectItem']]],
+  ['settingid_12776',['SettingID',['../namespacetracktion_1_1engine.html#aef0092bdbd8a28c3968f7f81912f815e',1,'tracktion::SettingID()'],['../namespacetracktion_1_1engine.html#aef0092bdbd8a28c3968f7f81912f815e',1,'tracktion::engine::SettingID()']]],
+  ['srcchannels_12777',['SrcChannels',['../structtracktion_1_1engine_1_1MakeMonoEffect.html#ac18d60d1750340975f985c76013ec13e',1,'tracktion::engine::MakeMonoEffect']]],
+  ['state_12778',['State',['../classtracktion_1_1engine_1_1LinEnvelope.html#ae5add9a31285d6c029daeca514a46438',1,'tracktion::engine::LinEnvelope']]],
+  ['steps_12779',['Steps',['../classtracktion_1_1engine_1_1Scale.html#a440c2752d50115f83ba28784b4e317e5',1,'tracktion::engine::Scale']]],
+  ['syncpitch_12780',['SyncPitch',['../classtracktion_1_1engine_1_1WaveNodeRealTime.html#af292642e27cb2347fb2b23363ac68eec',1,'tracktion::engine::WaveNodeRealTime']]],
+  ['synctempo_12781',['SyncTempo',['../classtracktion_1_1engine_1_1WaveNodeRealTime.html#a83ad7c0014cb30ab5b7e76554cdad3c9',1,'tracktion::engine::WaveNodeRealTime']]],
+  ['synctype_12782',['SyncType',['../classtracktion_1_1engine_1_1Clip.html#af0cfff3f282a7f6b1b92dc5ae61c97b7',1,'tracktion::engine::Clip::SyncType()'],['../namespacetracktion_1_1engine_1_1ModifierCommon.html#a4dcd9d7ff08bc5c648d14f9b798e6276',1,'tracktion::engine::ModifierCommon::SyncType()']]]
 ];

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : /**</a>
@@ -81,10 +81,10 @@
 <a name="19"><span class="lineNum">      19 </span>            : {</a>
 <a name="20"><span class="lineNum">      20 </span>            :     void reset (int numBits) noexcept</a>
 <a name="21"><span class="lineNum">      21 </span>            :     {</a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineCov">      18432 :         auto wordLen = std::pow (2.0f, (float)(numBits - 1));</span></a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineCov">      18440 :         auto invWordLen = 1.0f / wordLen;</span></a>
-<a name="24"><span class="lineNum">      24 </span><span class="lineCov">      18440 :         amp = invWordLen / RAND_MAX;</span></a>
-<a name="25"><span class="lineNum">      25 </span><span class="lineCov">      18432 :         offset = invWordLen * 0.5f;</span></a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineCov">      20480 :         auto wordLen = std::pow (2.0f, (float)(numBits - 1));</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">      20488 :         auto invWordLen = 1.0f / wordLen;</span></a>
+<a name="24"><span class="lineNum">      24 </span><span class="lineCov">      20488 :         amp = invWordLen / RAND_MAX;</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineCov">      20480 :         offset = invWordLen * 0.5f;</span></a>
 <a name="26"><span class="lineNum">      26 </span>            :     }</a>
 <a name="27"><span class="lineNum">      27 </span>            : </a>
 <a name="28"><span class="lineNum">      28 </span>            :     //==============================================================================</a>
@@ -123,7 +123,7 @@
 <a name="61"><span class="lineNum">      61 </span>            :     float s1 = 0, s2 = 0;</a>
 <a name="62"><span class="lineNum">      62 </span>            : };</a>
 <a name="63"><span class="lineNum">      63 </span>            : </a>
-<a name="64"><span class="lineNum">      64 </span>            : } // namespace tracktion_engine</a>
+<a name="64"><span class="lineNum">      64 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

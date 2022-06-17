@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">15</td>
-            <td class="headerCovTableEntry">35</td>
-            <td class="headerCovTableEntryLo">42.9 %</td>
+            <td class="headerCovTableEntry">34</td>
+            <td class="headerCovTableEntryLo">44.1 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : //==============================================================================</a>
@@ -108,15 +108,15 @@
 <a name="46"><span class="lineNum">      46 </span>            :         timestretched then this will return a proportion of getSourceLength, if it</a>
 <a name="47"><span class="lineNum">      47 </span>            :         is looped this will return infinite.</a>
 <a name="48"><span class="lineNum">      48 </span>            :     */</a>
-<a name="49"><span class="lineNum">      49 </span>            :     double getMaximumLength() override;</a>
+<a name="49"><span class="lineNum">      49 </span>            :     TimeDuration getMaximumLength() override;</a>
 <a name="50"><span class="lineNum">      50 </span>            : </a>
 <a name="51"><span class="lineNum">      51 </span>            :     /** Must return the length in seconds of the source material e.g. the length</a>
 <a name="52"><span class="lineNum">      52 </span>            :         of the audio file or edit.</a>
 <a name="53"><span class="lineNum">      53 </span>            :     */</a>
-<a name="54"><span class="lineNum">      54 </span>            :     virtual double getSourceLength() const = 0;</a>
+<a name="54"><span class="lineNum">      54 </span>            :     virtual TimeDuration getSourceLength() const = 0;</a>
 <a name="55"><span class="lineNum">      55 </span>            : </a>
 <a name="56"><span class="lineNum">      56 </span>            :     /** Returns the file used to play back the source and will get proxied etc. */</a>
-<a name="57"><span class="lineNum">      57 </span><span class="lineCov">        455 :     virtual AudioFile getAudioFile() const  { return AudioFile (edit.engine, getCurrentSourceFile()); }</span></a>
+<a name="57"><span class="lineNum">      57 </span><span class="lineCov">        495 :     virtual AudioFile getAudioFile() const  { return AudioFile (edit.engine, getCurrentSourceFile()); }</span></a>
 <a name="58"><span class="lineNum">      58 </span>            : </a>
 <a name="59"><span class="lineNum">      59 </span>            :     /** Returns the current AudioFile being used by the Clip, either the</a>
 <a name="60"><span class="lineNum">      60 </span>            :         original source or a proxy.</a>
@@ -215,24 +215,24 @@
 <a name="153"><span class="lineNum">     153 </span>            :     bool isRightChannelActive() const;</a>
 <a name="154"><span class="lineNum">     154 </span>            : </a>
 <a name="155"><span class="lineNum">     155 </span>            :     /** Returns the layout of the active channels. */</a>
-<a name="156"><span class="lineNum">     156 </span><span class="lineCov">        158 :     juce::AudioChannelSet getActiveChannels() const     { return activeChannels; }</span></a>
+<a name="156"><span class="lineNum">     156 </span><span class="lineCov">        174 :     juce::AudioChannelSet getActiveChannels() const     { return activeChannels; }</span></a>
 <a name="157"><span class="lineNum">     157 </span>            : </a>
 <a name="158"><span class="lineNum">     158 </span>            :     //==============================================================================</a>
 <a name="159"><span class="lineNum">     159 </span>            :     /** Sets the fade in duration in seconds.</a>
 <a name="160"><span class="lineNum">     160 </span>            :         If the duration is longer than the clip or overlaps the fade out, this will</a>
 <a name="161"><span class="lineNum">     161 </span>            :         reduce the fade out accordingly.</a>
 <a name="162"><span class="lineNum">     162 </span>            :     */</a>
-<a name="163"><span class="lineNum">     163 </span>            :     bool setFadeIn (double length);</a>
+<a name="163"><span class="lineNum">     163 </span>            :     bool setFadeIn (TimeDuration length);</a>
 <a name="164"><span class="lineNum">     164 </span>            :     /** Returns the fade in duration in seconds. */</a>
-<a name="165"><span class="lineNum">     165 </span>            :     double getFadeIn() const;</a>
+<a name="165"><span class="lineNum">     165 </span>            :     TimeDuration getFadeIn() const;</a>
 <a name="166"><span class="lineNum">     166 </span>            : </a>
 <a name="167"><span class="lineNum">     167 </span>            :     /** Sets the fade out duration in seconds.</a>
 <a name="168"><span class="lineNum">     168 </span>            :         If the duration is longer than the clip or overlaps the fade in, this will</a>
 <a name="169"><span class="lineNum">     169 </span>            :         reduce the fade in accordingly.</a>
 <a name="170"><span class="lineNum">     170 </span>            :     */</a>
-<a name="171"><span class="lineNum">     171 </span>            :     bool setFadeOut (double length);</a>
+<a name="171"><span class="lineNum">     171 </span>            :     bool setFadeOut (TimeDuration length);</a>
 <a name="172"><span class="lineNum">     172 </span>            :     /** Returns the fade out duration in seconds. */</a>
-<a name="173"><span class="lineNum">     173 </span>            :     double getFadeOut() const;</a>
+<a name="173"><span class="lineNum">     173 </span>            :     TimeDuration getFadeOut() const;</a>
 <a name="174"><span class="lineNum">     174 </span>            : </a>
 <a name="175"><span class="lineNum">     175 </span>            :     /** Sets the curve shape for the fade in to use. */</a>
 <a name="176"><span class="lineNum">     176 </span>            :     void setFadeInType (AudioFadeCurve::Type);</a>
@@ -278,12 +278,12 @@
 <a name="216"><span class="lineNum">     216 </span>            :     /** Sets the fade in behaviour. */</a>
 <a name="217"><span class="lineNum">     217 </span>            :     void setFadeInBehaviour (FadeBehaviour newBehaviour)    { fadeInBehaviour = newBehaviour; }</a>
 <a name="218"><span class="lineNum">     218 </span>            :     /** Returns the fade in behaviour. */</a>
-<a name="219"><span class="lineNum">     219 </span><span class="lineCov">         79 :     FadeBehaviour getFadeInBehaviour() const                { return fadeInBehaviour; }</span></a>
+<a name="219"><span class="lineNum">     219 </span><span class="lineCov">         87 :     FadeBehaviour getFadeInBehaviour() const                { return fadeInBehaviour; }</span></a>
 <a name="220"><span class="lineNum">     220 </span>            : </a>
 <a name="221"><span class="lineNum">     221 </span>            :     /** Sets the fade out behaviour. */</a>
 <a name="222"><span class="lineNum">     222 </span>            :     void setFadeOutBehaviour (FadeBehaviour newBehaviour)   { fadeOutBehaviour = newBehaviour; }</a>
 <a name="223"><span class="lineNum">     223 </span>            :     /** Returns the fade out behaviour. */</a>
-<a name="224"><span class="lineNum">     224 </span><span class="lineCov">         79 :     FadeBehaviour getFadeOutBehaviour() const               { return fadeOutBehaviour; }</span></a>
+<a name="224"><span class="lineNum">     224 </span><span class="lineCov">         87 :     FadeBehaviour getFadeOutBehaviour() const               { return fadeOutBehaviour; }</span></a>
 <a name="225"><span class="lineNum">     225 </span>            : </a>
 <a name="226"><span class="lineNum">     226 </span>            :     //==============================================================================</a>
 <a name="227"><span class="lineNum">     227 </span>            :     /** Override this to fill in the LoopInfo structure as best fits the source. */</a>
@@ -299,30 +299,30 @@
 <a name="237"><span class="lineNum">     237 </span><span class="lineNoCov">          0 :     LoopInfo&amp; getLoopInfo()                             { return loopInfo; }</span></a>
 <a name="238"><span class="lineNum">     238 </span>            : </a>
 <a name="239"><span class="lineNum">     239 </span>            :     /** Returns the loop range in seconds. */</a>
-<a name="240"><span class="lineNum">     240 </span>            :     EditTimeRange getLoopRange() const;</a>
+<a name="240"><span class="lineNum">     240 </span>            :     TimeRange getLoopRange() const;</a>
 <a name="241"><span class="lineNum">     241 </span>            : </a>
 <a name="242"><span class="lineNum">     242 </span>            :     /** @internal */</a>
 <a name="243"><span class="lineNum">     243 </span><span class="lineNoCov">          0 :     bool canLoop() const override                       { return ! isUsingMelodyne(); }</span></a>
 <a name="244"><span class="lineNum">     244 </span>            :     /** @internal */</a>
-<a name="245"><span class="lineNum">     245 </span><span class="lineCov">         79 :     bool isLooping() const override                     { return getAutoTempo() ? (loopLengthBeats &gt; 0.0) : (loopLength &gt; 0.0); }</span></a>
+<a name="245"><span class="lineNum">     245 </span><span class="lineCov">        174 :     bool isLooping() const override                     { return getAutoTempo() ? (loopLengthBeats &gt; BeatDuration()) : (loopLength &gt; TimeDuration()); }</span></a>
 <a name="246"><span class="lineNum">     246 </span>            :     /** @internal */</a>
-<a name="247"><span class="lineNum">     247 </span><span class="lineCov">         79 :     bool beatBasedLooping() const override              { return isLooping() &amp;&amp; getAutoTempo(); }</span></a>
+<a name="247"><span class="lineNum">     247 </span><span class="lineCov">         87 :     bool beatBasedLooping() const override              { return isLooping() &amp;&amp; getAutoTempo(); }</span></a>
 <a name="248"><span class="lineNum">     248 </span>            :     /** @internal */</a>
 <a name="249"><span class="lineNum">     249 </span>            :     void setNumberOfLoops (int num) override;</a>
 <a name="250"><span class="lineNum">     250 </span>            :     /** @internal */</a>
 <a name="251"><span class="lineNum">     251 </span>            :     void disableLooping() override;</a>
 <a name="252"><span class="lineNum">     252 </span>            :     /** @internal */</a>
-<a name="253"><span class="lineNum">     253 </span>            :     double getLoopStartBeats() const override;</a>
+<a name="253"><span class="lineNum">     253 </span>            :     BeatPosition getLoopStartBeats() const override;</a>
 <a name="254"><span class="lineNum">     254 </span>            :     /** @internal */</a>
-<a name="255"><span class="lineNum">     255 </span>            :     double getLoopStart() const override;</a>
+<a name="255"><span class="lineNum">     255 </span>            :     TimePosition getLoopStart() const override;</a>
 <a name="256"><span class="lineNum">     256 </span>            :     /** @internal */</a>
-<a name="257"><span class="lineNum">     257 </span>            :     double getLoopLengthBeats() const override;</a>
+<a name="257"><span class="lineNum">     257 </span>            :     BeatDuration getLoopLengthBeats() const override;</a>
 <a name="258"><span class="lineNum">     258 </span>            :     /** @internal */</a>
-<a name="259"><span class="lineNum">     259 </span>            :     double getLoopLength() const override;</a>
+<a name="259"><span class="lineNum">     259 </span>            :     TimeDuration getLoopLength() const override;</a>
 <a name="260"><span class="lineNum">     260 </span>            :     /** @internal */</a>
-<a name="261"><span class="lineNum">     261 </span>            :     void setLoopRange (EditTimeRange) override;</a>
+<a name="261"><span class="lineNum">     261 </span>            :     void setLoopRange (TimeRange) override;</a>
 <a name="262"><span class="lineNum">     262 </span>            :     /** @internal */</a>
-<a name="263"><span class="lineNum">     263 </span>            :     void setLoopRangeBeats (juce::Range&lt;double&gt;) override;</a>
+<a name="263"><span class="lineNum">     263 </span>            :     void setLoopRangeBeats (BeatRange) override;</a>
 <a name="264"><span class="lineNum">     264 </span>            : </a>
 <a name="265"><span class="lineNum">     265 </span>            :     /** Enables auto-detection of beats.</a>
 <a name="266"><span class="lineNum">     266 </span>            :         If this is true the LoopInfo will be set based on what beats were detected.</a>
@@ -375,7 +375,7 @@
 <a name="313"><span class="lineNum">     313 </span><span class="lineNoCov">          0 :     void setAutoTempo (bool shouldUseAutoTempo)         { autoTempo = shouldUseAutoTempo; }</span></a>
 <a name="314"><span class="lineNum">     314 </span>            :     </a>
 <a name="315"><span class="lineNum">     315 </span>            :     /** Returns true if auto-tempo has been set. */</a>
-<a name="316"><span class="lineNum">     316 </span><span class="lineCov">        448 :     bool getAutoTempo() const                           { return autoTempo; }</span></a>
+<a name="316"><span class="lineNum">     316 </span><span class="lineCov">        494 :     bool getAutoTempo() const                           { return autoTempo; }</span></a>
 <a name="317"><span class="lineNum">     317 </span>            : </a>
 <a name="318"><span class="lineNum">     318 </span>            :     /** Enables/disables auto-pitch.</a>
 <a name="319"><span class="lineNum">     319 </span>            :         If enabled, this clip will adjust its playback pitch to stay in sync with the Edit's PitchSequence.</a>
@@ -383,7 +383,7 @@
 <a name="321"><span class="lineNum">     321 </span><span class="lineNoCov">          0 :     void setAutoPitch (bool shouldUseAutoPitch)         { autoPitch = shouldUseAutoPitch; }</span></a>
 <a name="322"><span class="lineNum">     322 </span>            : </a>
 <a name="323"><span class="lineNum">     323 </span>            :     /** Returns true if auto-pitch has been set. */</a>
-<a name="324"><span class="lineNum">     324 </span><span class="lineCov">        369 :     bool getAutoPitch() const                           { return autoPitch; }</span></a>
+<a name="324"><span class="lineNum">     324 </span><span class="lineCov">        407 :     bool getAutoPitch() const                           { return autoPitch; }</span></a>
 <a name="325"><span class="lineNum">     325 </span>            : </a>
 <a name="326"><span class="lineNum">     326 </span>            :     /** Sets the AutoPitchMode to use. */</a>
 <a name="327"><span class="lineNum">     327 </span>            :     void setAutoPitchMode (AutoPitchMode m)             { autoPitchMode = m; }</a>
@@ -418,7 +418,7 @@
 <a name="356"><span class="lineNum">     356 </span>            :     void setPitchChange (float semitones)               { pitchChange = juce::jlimit (-48.0f, 48.0f, semitones); }</a>
 <a name="357"><span class="lineNum">     357 </span>            :     </a>
 <a name="358"><span class="lineNum">     358 </span>            :     /** Returns the number of semitones to transpose the clip by. */</a>
-<a name="359"><span class="lineNum">     359 </span><span class="lineCov">        369 :     float getPitchChange() const                        { return pitchChange; }</span></a>
+<a name="359"><span class="lineNum">     359 </span><span class="lineCov">        407 :     float getPitchChange() const                        { return pitchChange; }</span></a>
 <a name="360"><span class="lineNum">     360 </span>            :     </a>
 <a name="361"><span class="lineNum">     361 </span>            :     /** Returns the pitch change as a normalised ratio. 0 = no change, &lt;0 = pitched down, &gt;0 = pitched up. */</a>
 <a name="362"><span class="lineNum">     362 </span>            :     float getPitchRatio() const                         { return juce::jlimit (0.1f, 10.0f, std::pow (2.0f, pitchChange / 12.0f)); }</a>
@@ -501,7 +501,7 @@
 <a name="439"><span class="lineNum">     439 </span>            :         ~ProxyRenderingInfo();</a>
 <a name="440"><span class="lineNum">     440 </span>            : </a>
 <a name="441"><span class="lineNum">     441 </span>            :         std::unique_ptr&lt;AudioSegmentList&gt; audioSegmentList;</a>
-<a name="442"><span class="lineNum">     442 </span>            :         EditTimeRange clipTime;</a>
+<a name="442"><span class="lineNum">     442 </span>            :         TimeRange clipTime;</a>
 <a name="443"><span class="lineNum">     443 </span>            :         double speedRatio;</a>
 <a name="444"><span class="lineNum">     444 </span>            :         TimeStretcher::Mode mode;</a>
 <a name="445"><span class="lineNum">     445 </span>            :         TimeStretcher::ElastiqueProOptions options;</a>
@@ -522,12 +522,12 @@
 <a name="460"><span class="lineNum">     460 </span>            :     AudioFile getProxyFileToCreate (bool renderTimestretched);</a>
 <a name="461"><span class="lineNum">     461 </span>            :     </a>
 <a name="462"><span class="lineNum">     462 </span>            :     /** Can be used to disable proxy file generation for this clip.</a>
-<a name="463"><span class="lineNum">     463 </span>            :         N.B. if disabled, this clip won't fully sync to the TempoSequence.</a>
+<a name="463"><span class="lineNum">     463 </span>            :         If disabled, the audio engine will time-stretch the file in real time which may use more CPU.</a>
 <a name="464"><span class="lineNum">     464 </span>            :     */</a>
 <a name="465"><span class="lineNum">     465 </span>            :     void setUsesProxy (bool canUseProxy) noexcept;</a>
 <a name="466"><span class="lineNum">     466 </span>            :     </a>
 <a name="467"><span class="lineNum">     467 </span>            :     /** Retuns true if this clip can use a proxy file. */</a>
-<a name="468"><span class="lineNum">     468 </span><span class="lineCov">       1078 :     bool canUseProxy() const noexcept               { return proxyAllowed &amp;&amp; edit.canRenderProxies(); }</span></a>
+<a name="468"><span class="lineNum">     468 </span><span class="lineCov">       1234 :     bool canUseProxy() const noexcept               { return proxyAllowed &amp;&amp; edit.canRenderProxies(); }</span></a>
 <a name="469"><span class="lineNum">     469 </span>            : </a>
 <a name="470"><span class="lineNum">     470 </span>            :     /** Retuns true if this clip use a proxy file due to timestretching.</a>
 <a name="471"><span class="lineNum">     471 </span>            :         This can be because auto-tempo, auto-pitch or a pitch change has been set.</a>
@@ -544,221 +544,229 @@
 <a name="482"><span class="lineNum">     482 </span>            :     void beginRenderingNewProxyIfNeeded();</a>
 <a name="483"><span class="lineNum">     483 </span>            : </a>
 <a name="484"><span class="lineNum">     484 </span>            :     /** Can be enabled to use a simpler playback node for time-stretched previews. */</a>
-<a name="485"><span class="lineNum">     485 </span><span class="lineNoCov">          0 :     void setUsesTimestretchedPreview (bool shouldUsePreview) noexcept   { useTimestretchedPreview = shouldUsePreview; }</span></a>
+<a name="485"><span class="lineNum">     485 </span>            :     void setUsesTimestretchedPreview (bool shouldUsePreview) noexcept   { useTimestretchedPreview = shouldUsePreview; }</a>
 <a name="486"><span class="lineNum">     486 </span>            : </a>
 <a name="487"><span class="lineNum">     487 </span>            :     /** Returns true if this clp should use a time-stretched preview. */</a>
 <a name="488"><span class="lineNum">     488 </span>            :     bool usesTimestretchedPreview() const noexcept                      { return useTimestretchedPreview; }</a>
 <a name="489"><span class="lineNum">     489 </span>            : </a>
-<a name="490"><span class="lineNum">     490 </span>            :     //==============================================================================</a>
-<a name="491"><span class="lineNum">     491 </span>            :     /** Reverses the loop points to expose the same section of the source file but reversed. */</a>
-<a name="492"><span class="lineNum">     492 </span>            :     void reverseLoopPoints();</a>
-<a name="493"><span class="lineNum">     493 </span>            :     </a>
-<a name="494"><span class="lineNum">     494 </span>            :     /** Trims the fade in out lengths to avoid any overlap between them. */</a>
-<a name="495"><span class="lineNum">     495 </span>            :     void checkFadeLengthsForOverrun();</a>
-<a name="496"><span class="lineNum">     496 </span>            : </a>
-<a name="497"><span class="lineNum">     497 </span>            :     /** Defines a prevous/next direction. @see getOverlappingClip */</a>
-<a name="498"><span class="lineNum">     498 </span>            :     enum class ClipDirection { previous, next, none };</a>
+<a name="490"><span class="lineNum">     490 </span>            :     /** Returns an AudioSegmentList describing this file if it is using auto-tempo.</a>
+<a name="491"><span class="lineNum">     491 </span>            :         This can be useful for drawing waveforms.</a>
+<a name="492"><span class="lineNum">     492 </span>            :         [[ message_thread ]]</a>
+<a name="493"><span class="lineNum">     493 </span>            :     */</a>
+<a name="494"><span class="lineNum">     494 </span>            :     const AudioSegmentList&amp; getAudioSegmentList();</a>
+<a name="495"><span class="lineNum">     495 </span>            : </a>
+<a name="496"><span class="lineNum">     496 </span>            :     //==============================================================================</a>
+<a name="497"><span class="lineNum">     497 </span>            :     /** Reverses the loop points to expose the same section of the source file but reversed. */</a>
+<a name="498"><span class="lineNum">     498 </span>            :     void reverseLoopPoints();</a>
 <a name="499"><span class="lineNum">     499 </span>            :     </a>
-<a name="500"><span class="lineNum">     500 </span>            :     /** Returns the previous/next overlapping clip if one exists. */</a>
-<a name="501"><span class="lineNum">     501 </span>            :     AudioClipBase* getOverlappingClip (ClipDirection) const;</a>
+<a name="500"><span class="lineNum">     500 </span>            :     /** Trims the fade in out lengths to avoid any overlap between them. */</a>
+<a name="501"><span class="lineNum">     501 </span>            :     void checkFadeLengthsForOverrun();</a>
 <a name="502"><span class="lineNum">     502 </span>            : </a>
-<a name="503"><span class="lineNum">     503 </span>            :     //==============================================================================</a>
-<a name="504"><span class="lineNum">     504 </span>            :     /** The MelodyneFileReader proxy if this clip is using Melodyne. */</a>
-<a name="505"><span class="lineNum">     505 </span>            :     juce::ReferenceCountedObjectPtr&lt;MelodyneFileReader&gt; melodyneProxy;</a>
-<a name="506"><span class="lineNum">     506 </span>            : </a>
-<a name="507"><span class="lineNum">     507 </span>            :     /** Returns true if this clip is using Melodyne. */</a>
-<a name="508"><span class="lineNum">     508 </span>            :     bool isUsingMelodyne() const;</a>
-<a name="509"><span class="lineNum">     509 </span>            : </a>
-<a name="510"><span class="lineNum">     510 </span>            :     /** Shows the Melodyne window if this clip is using Melodyne. */</a>
-<a name="511"><span class="lineNum">     511 </span>            :     void showMelodyneWindow();</a>
+<a name="503"><span class="lineNum">     503 </span>            :     /** Defines a prevous/next direction. @see getOverlappingClip */</a>
+<a name="504"><span class="lineNum">     504 </span>            :     enum class ClipDirection { previous, next, none };</a>
+<a name="505"><span class="lineNum">     505 </span>            :     </a>
+<a name="506"><span class="lineNum">     506 </span>            :     /** Returns the previous/next overlapping clip if one exists. */</a>
+<a name="507"><span class="lineNum">     507 </span>            :     AudioClipBase* getOverlappingClip (ClipDirection) const;</a>
+<a name="508"><span class="lineNum">     508 </span>            : </a>
+<a name="509"><span class="lineNum">     509 </span>            :     //==============================================================================</a>
+<a name="510"><span class="lineNum">     510 </span>            :     /** The MelodyneFileReader proxy if this clip is using Melodyne. */</a>
+<a name="511"><span class="lineNum">     511 </span>            :     juce::ReferenceCountedObjectPtr&lt;MelodyneFileReader&gt; melodyneProxy;</a>
 <a name="512"><span class="lineNum">     512 </span>            : </a>
-<a name="513"><span class="lineNum">     513 </span>            :     /** Hides the Melodyne window if this clip is using Melodyne. */</a>
-<a name="514"><span class="lineNum">     514 </span>            :     void hideMelodyneWindow();</a>
+<a name="513"><span class="lineNum">     513 </span>            :     /** Returns true if this clip is using Melodyne. */</a>
+<a name="514"><span class="lineNum">     514 </span>            :     bool isUsingMelodyne() const;</a>
 <a name="515"><span class="lineNum">     515 </span>            : </a>
-<a name="516"><span class="lineNum">     516 </span>            :     /** If this clip is using Melodyne, this will create a new MIDI clip based</a>
-<a name="517"><span class="lineNum">     517 </span>            :         on the Melodyne analysis.</a>
-<a name="518"><span class="lineNum">     518 </span>            :     */</a>
-<a name="519"><span class="lineNum">     519 </span>            :     void melodyneConvertToMIDI();</a>
-<a name="520"><span class="lineNum">     520 </span>            : </a>
-<a name="521"><span class="lineNum">     521 </span>            :     /** @internal */</a>
-<a name="522"><span class="lineNum">     522 </span>            :     void loadMelodyneState();</a>
-<a name="523"><span class="lineNum">     523 </span>            : </a>
-<a name="524"><span class="lineNum">     524 </span>            :     /** This internal method is used solely to find out if createAudioNode()</a>
-<a name="525"><span class="lineNum">     525 </span>            :         should return nullptr or not.</a>
+<a name="516"><span class="lineNum">     516 </span>            :     /** Shows the Melodyne window if this clip is using Melodyne. */</a>
+<a name="517"><span class="lineNum">     517 </span>            :     void showMelodyneWindow();</a>
+<a name="518"><span class="lineNum">     518 </span>            : </a>
+<a name="519"><span class="lineNum">     519 </span>            :     /** Hides the Melodyne window if this clip is using Melodyne. */</a>
+<a name="520"><span class="lineNum">     520 </span>            :     void hideMelodyneWindow();</a>
+<a name="521"><span class="lineNum">     521 </span>            : </a>
+<a name="522"><span class="lineNum">     522 </span>            :     /** If this clip is using Melodyne, this will create a new MIDI clip based</a>
+<a name="523"><span class="lineNum">     523 </span>            :         on the Melodyne analysis.</a>
+<a name="524"><span class="lineNum">     524 </span>            :     */</a>
+<a name="525"><span class="lineNum">     525 </span>            :     void melodyneConvertToMIDI();</a>
 <a name="526"><span class="lineNum">     526 </span>            : </a>
-<a name="527"><span class="lineNum">     527 </span>            :         Though a bit spaghetti, the ARA node generation will be handled elsewhere,</a>
-<a name="528"><span class="lineNum">     528 </span>            :         the parent AudioTrack, for the sake of live-play.</a>
+<a name="527"><span class="lineNum">     527 </span>            :     /** @internal */</a>
+<a name="528"><span class="lineNum">     528 </span>            :     void loadMelodyneState();</a>
 <a name="529"><span class="lineNum">     529 </span>            : </a>
-<a name="530"><span class="lineNum">     530 </span>            :         @returns False if something went wrong!</a>
-<a name="531"><span class="lineNum">     531 </span>            : </a>
-<a name="532"><span class="lineNum">     532 </span>            :                  It's possible no ARA-compatible plugins were found,</a>
-<a name="533"><span class="lineNum">     533 </span>            :                  or that ARA complained about something resulting</a>
-<a name="534"><span class="lineNum">     534 </span>            :                  in failure to set it up accordingly.</a>
-<a name="535"><span class="lineNum">     535 </span>            :                  Celemony's ARA is really flaky and touchy, so the latter</a>
-<a name="536"><span class="lineNum">     536 </span>            :                  is most likely!</a>
-<a name="537"><span class="lineNum">     537 </span>            :     */</a>
-<a name="538"><span class="lineNum">     538 </span>            :     bool setupARA (bool dontPopupErrorMessages);</a>
-<a name="539"><span class="lineNum">     539 </span>            : </a>
-<a name="540"><span class="lineNum">     540 </span>            :     /** The ElastiqueProOptions for fine tuning Elastique (if available). */</a>
-<a name="541"><span class="lineNum">     541 </span>            :     juce::CachedValue&lt;TimeStretcher::ElastiqueProOptions&gt; elastiqueProOptions;</a>
-<a name="542"><span class="lineNum">     542 </span>            : </a>
-<a name="543"><span class="lineNum">     543 </span>            :     //==============================================================================</a>
-<a name="544"><span class="lineNum">     544 </span>            :     /** @internal */</a>
-<a name="545"><span class="lineNum">     545 </span>            :     void initialise() override;</a>
-<a name="546"><span class="lineNum">     546 </span>            :     /** @internal */</a>
-<a name="547"><span class="lineNum">     547 </span>            :     void cloneFrom (Clip*) override;</a>
-<a name="548"><span class="lineNum">     548 </span>            :     /** @internal */</a>
-<a name="549"><span class="lineNum">     549 </span>            :     void flushStateToValueTree() override;</a>
-<a name="550"><span class="lineNum">     550 </span>            : </a>
-<a name="551"><span class="lineNum">     551 </span>            :     //==============================================================================</a>
+<a name="530"><span class="lineNum">     530 </span>            :     /** This internal method is used solely to find out if createAudioNode()</a>
+<a name="531"><span class="lineNum">     531 </span>            :         should return nullptr or not.</a>
+<a name="532"><span class="lineNum">     532 </span>            : </a>
+<a name="533"><span class="lineNum">     533 </span>            :         Though a bit spaghetti, the ARA node generation will be handled elsewhere,</a>
+<a name="534"><span class="lineNum">     534 </span>            :         the parent AudioTrack, for the sake of live-play.</a>
+<a name="535"><span class="lineNum">     535 </span>            : </a>
+<a name="536"><span class="lineNum">     536 </span>            :         @returns False if something went wrong!</a>
+<a name="537"><span class="lineNum">     537 </span>            : </a>
+<a name="538"><span class="lineNum">     538 </span>            :                  It's possible no ARA-compatible plugins were found,</a>
+<a name="539"><span class="lineNum">     539 </span>            :                  or that ARA complained about something resulting</a>
+<a name="540"><span class="lineNum">     540 </span>            :                  in failure to set it up accordingly.</a>
+<a name="541"><span class="lineNum">     541 </span>            :                  Celemony's ARA is really flaky and touchy, so the latter</a>
+<a name="542"><span class="lineNum">     542 </span>            :                  is most likely!</a>
+<a name="543"><span class="lineNum">     543 </span>            :     */</a>
+<a name="544"><span class="lineNum">     544 </span>            :     bool setupARA (bool dontPopupErrorMessages);</a>
+<a name="545"><span class="lineNum">     545 </span>            : </a>
+<a name="546"><span class="lineNum">     546 </span>            :     /** The ElastiqueProOptions for fine tuning Elastique (if available). */</a>
+<a name="547"><span class="lineNum">     547 </span>            :     juce::CachedValue&lt;TimeStretcher::ElastiqueProOptions&gt; elastiqueProOptions;</a>
+<a name="548"><span class="lineNum">     548 </span>            : </a>
+<a name="549"><span class="lineNum">     549 </span>            :     //==============================================================================</a>
+<a name="550"><span class="lineNum">     550 </span>            :     /** @internal */</a>
+<a name="551"><span class="lineNum">     551 </span>            :     void initialise() override;</a>
 <a name="552"><span class="lineNum">     552 </span>            :     /** @internal */</a>
-<a name="553"><span class="lineNum">     553 </span>            :     void setTrack (ClipTrack*) override;</a>
+<a name="553"><span class="lineNum">     553 </span>            :     void cloneFrom (Clip*) override;</a>
 <a name="554"><span class="lineNum">     554 </span>            :     /** @internal */</a>
-<a name="555"><span class="lineNum">     555 </span>            :     bool canGoOnTrack (Track&amp;) override;</a>
-<a name="556"><span class="lineNum">     556 </span>            :     /** @internal */</a>
-<a name="557"><span class="lineNum">     557 </span>            :     void changed() override;</a>
-<a name="558"><span class="lineNum">     558 </span>            : </a>
-<a name="559"><span class="lineNum">     559 </span>            :     //==============================================================================</a>
+<a name="555"><span class="lineNum">     555 </span>            :     void flushStateToValueTree() override;</a>
+<a name="556"><span class="lineNum">     556 </span>            : </a>
+<a name="557"><span class="lineNum">     557 </span>            :     //==============================================================================</a>
+<a name="558"><span class="lineNum">     558 </span>            :     /** @internal */</a>
+<a name="559"><span class="lineNum">     559 </span>            :     void setTrack (ClipTrack*) override;</a>
 <a name="560"><span class="lineNum">     560 </span>            :     /** @internal */</a>
-<a name="561"><span class="lineNum">     561 </span>            :     juce::Colour getDefaultColour() const override;</a>
+<a name="561"><span class="lineNum">     561 </span>            :     bool canGoOnTrack (Track&amp;) override;</a>
 <a name="562"><span class="lineNum">     562 </span>            :     /** @internal */</a>
-<a name="563"><span class="lineNum">     563 </span>            :     PatternGenerator* getPatternGenerator() override;</a>
+<a name="563"><span class="lineNum">     563 </span>            :     void changed() override;</a>
 <a name="564"><span class="lineNum">     564 </span>            : </a>
 <a name="565"><span class="lineNum">     565 </span>            :     //==============================================================================</a>
 <a name="566"><span class="lineNum">     566 </span>            :     /** @internal */</a>
-<a name="567"><span class="lineNum">     567 </span>            :     void addMark (double relCursorPos);</a>
+<a name="567"><span class="lineNum">     567 </span>            :     juce::Colour getDefaultColour() const override;</a>
 <a name="568"><span class="lineNum">     568 </span>            :     /** @internal */</a>
-<a name="569"><span class="lineNum">     569 </span>            :     void moveMarkTo (double relCursorPos);</a>
-<a name="570"><span class="lineNum">     570 </span>            :     /** @internal */</a>
-<a name="571"><span class="lineNum">     571 </span>            :     void deleteMark (double relCursorPos);</a>
+<a name="569"><span class="lineNum">     569 </span>            :     PatternGenerator* getPatternGenerator() override;</a>
+<a name="570"><span class="lineNum">     570 </span>            : </a>
+<a name="571"><span class="lineNum">     571 </span>            :     //==============================================================================</a>
 <a name="572"><span class="lineNum">     572 </span>            :     /** @internal */</a>
-<a name="573"><span class="lineNum">     573 </span>            :     void getRescaledMarkPoints (juce::Array&lt;double&gt;&amp; rescaled, juce::Array&lt;int&gt;&amp; orig) const;</a>
+<a name="573"><span class="lineNum">     573 </span>            :     void addMark (TimePosition relCursorPos);</a>
 <a name="574"><span class="lineNum">     574 </span>            :     /** @internal */</a>
-<a name="575"><span class="lineNum">     575 </span>            :     juce::Array&lt;double&gt; getRescaledMarkPoints() const override;</a>
-<a name="576"><span class="lineNum">     576 </span>            : </a>
-<a name="577"><span class="lineNum">     577 </span>            :     /** @internal */</a>
-<a name="578"><span class="lineNum">     578 </span>            :     juce::Array&lt;ReferencedItem&gt; getReferencedItems() override;</a>
-<a name="579"><span class="lineNum">     579 </span>            :     /** @internal */</a>
-<a name="580"><span class="lineNum">     580 </span>            :     void reassignReferencedItem (const ReferencedItem&amp;, ProjectItemID newID, double newStartTime) override;</a>
-<a name="581"><span class="lineNum">     581 </span>            : </a>
-<a name="582"><span class="lineNum">     582 </span>            :     //==============================================================================</a>
+<a name="575"><span class="lineNum">     575 </span>            :     void moveMarkTo (TimePosition relCursorPos);</a>
+<a name="576"><span class="lineNum">     576 </span>            :     /** @internal */</a>
+<a name="577"><span class="lineNum">     577 </span>            :     void deleteMark (TimePosition relCursorPos);</a>
+<a name="578"><span class="lineNum">     578 </span>            :     /** @internal */</a>
+<a name="579"><span class="lineNum">     579 </span>            :     void getRescaledMarkPoints (juce::Array&lt;TimePosition&gt;&amp; rescaled, juce::Array&lt;int&gt;&amp; orig) const;</a>
+<a name="580"><span class="lineNum">     580 </span>            :     /** @internal */</a>
+<a name="581"><span class="lineNum">     581 </span>            :     juce::Array&lt;TimePosition&gt; getRescaledMarkPoints() const override;</a>
+<a name="582"><span class="lineNum">     582 </span>            : </a>
 <a name="583"><span class="lineNum">     583 </span>            :     /** @internal */</a>
-<a name="584"><span class="lineNum">     584 </span>            :     bool addClipPlugin (const Plugin::Ptr&amp;, SelectionManager&amp;) override;</a>
+<a name="584"><span class="lineNum">     584 </span>            :     juce::Array&lt;ReferencedItem&gt; getReferencedItems() override;</a>
 <a name="585"><span class="lineNum">     585 </span>            :     /** @internal */</a>
-<a name="586"><span class="lineNum">     586 </span>            :     Plugin::Array getAllPlugins() override;</a>
-<a name="587"><span class="lineNum">     587 </span>            :     /** @internal */</a>
-<a name="588"><span class="lineNum">     588 </span>            :     void sendMirrorUpdateToAllPlugins (Plugin&amp;) const override;</a>
+<a name="586"><span class="lineNum">     586 </span>            :     void reassignReferencedItem (const ReferencedItem&amp;, ProjectItemID newID, double newStartTime) override;</a>
+<a name="587"><span class="lineNum">     587 </span>            : </a>
+<a name="588"><span class="lineNum">     588 </span>            :     //==============================================================================</a>
 <a name="589"><span class="lineNum">     589 </span>            :     /** @internal */</a>
-<a name="590"><span class="lineNum">     590 </span><span class="lineCov">        327 :     PluginList* getPluginList() override           { return &amp;pluginList; }</span></a>
-<a name="591"><span class="lineNum">     591 </span>            : </a>
-<a name="592"><span class="lineNum">     592 </span>            : protected:</a>
-<a name="593"><span class="lineNum">     593 </span>            :     //==============================================================================</a>
-<a name="594"><span class="lineNum">     594 </span>            :     friend class WaveCompManager;</a>
-<a name="595"><span class="lineNum">     595 </span>            : </a>
-<a name="596"><span class="lineNum">     596 </span>            :     //==============================================================================</a>
-<a name="597"><span class="lineNum">     597 </span>            :     std::shared_ptr&lt;ClipLevel&gt; level { std::make_shared&lt;ClipLevel&gt;() };</a>
-<a name="598"><span class="lineNum">     598 </span>            :     juce::CachedValue&lt;juce::String&gt; channels;</a>
-<a name="599"><span class="lineNum">     599 </span>            : </a>
-<a name="600"><span class="lineNum">     600 </span>            :     juce::CachedValue&lt;double&gt; fadeIn, fadeOut;</a>
-<a name="601"><span class="lineNum">     601 </span>            :     double autoFadeIn = 0, autoFadeOut = 0;</a>
-<a name="602"><span class="lineNum">     602 </span>            :     juce::CachedValue&lt;AudioFadeCurve::Type&gt; fadeInType, fadeOutType;</a>
-<a name="603"><span class="lineNum">     603 </span>            :     juce::CachedValue&lt;bool&gt; autoCrossfade;</a>
-<a name="604"><span class="lineNum">     604 </span>            :     juce::CachedValue&lt;FadeBehaviour&gt; fadeInBehaviour, fadeOutBehaviour;</a>
+<a name="590"><span class="lineNum">     590 </span>            :     bool addClipPlugin (const Plugin::Ptr&amp;, SelectionManager&amp;) override;</a>
+<a name="591"><span class="lineNum">     591 </span>            :     /** @internal */</a>
+<a name="592"><span class="lineNum">     592 </span>            :     Plugin::Array getAllPlugins() override;</a>
+<a name="593"><span class="lineNum">     593 </span>            :     /** @internal */</a>
+<a name="594"><span class="lineNum">     594 </span>            :     void sendMirrorUpdateToAllPlugins (Plugin&amp;) const override;</a>
+<a name="595"><span class="lineNum">     595 </span>            :     /** @internal */</a>
+<a name="596"><span class="lineNum">     596 </span><span class="lineCov">        351 :     PluginList* getPluginList() override           { return &amp;pluginList; }</span></a>
+<a name="597"><span class="lineNum">     597 </span>            : </a>
+<a name="598"><span class="lineNum">     598 </span>            : protected:</a>
+<a name="599"><span class="lineNum">     599 </span>            :     //==============================================================================</a>
+<a name="600"><span class="lineNum">     600 </span>            :     friend class WaveCompManager;</a>
+<a name="601"><span class="lineNum">     601 </span>            : </a>
+<a name="602"><span class="lineNum">     602 </span>            :     //==============================================================================</a>
+<a name="603"><span class="lineNum">     603 </span>            :     std::shared_ptr&lt;ClipLevel&gt; level { std::make_shared&lt;ClipLevel&gt;() };</a>
+<a name="604"><span class="lineNum">     604 </span>            :     juce::CachedValue&lt;juce::String&gt; channels;</a>
 <a name="605"><span class="lineNum">     605 </span>            : </a>
-<a name="606"><span class="lineNum">     606 </span>            :     juce::CachedValue&lt;double&gt; loopStart, loopLength;</a>
-<a name="607"><span class="lineNum">     607 </span>            :     juce::CachedValue&lt;double&gt; loopStartBeats, loopLengthBeats;</a>
-<a name="608"><span class="lineNum">     608 </span>            : </a>
-<a name="609"><span class="lineNum">     609 </span>            :     juce::CachedValue&lt;int&gt; transpose;</a>
-<a name="610"><span class="lineNum">     610 </span>            :     juce::CachedValue&lt;float&gt; pitchChange;</a>
-<a name="611"><span class="lineNum">     611 </span>            :     LoopInfo loopInfo;</a>
-<a name="612"><span class="lineNum">     612 </span>            : </a>
-<a name="613"><span class="lineNum">     613 </span>            :     juce::CachedValue&lt;float&gt; beatSensitivity;</a>
-<a name="614"><span class="lineNum">     614 </span>            :     juce::CachedValue&lt;TimeStretcher::Mode&gt; timeStretchMode;</a>
-<a name="615"><span class="lineNum">     615 </span>            :     juce::CachedValue&lt;bool&gt; autoPitch, autoTempo, isReversed, autoDetectBeats, warpTime, clipEffectsVisible;</a>
-<a name="616"><span class="lineNum">     616 </span>            :     juce::CachedValue&lt;AutoPitchMode&gt; autoPitchMode;</a>
-<a name="617"><span class="lineNum">     617 </span>            : </a>
-<a name="618"><span class="lineNum">     618 </span>            :     mutable WarpTimeManager::Ptr warpTimeManager;</a>
-<a name="619"><span class="lineNum">     619 </span>            :     std::unique_ptr&lt;AudioSegmentList&gt; audioSegmentList;</a>
-<a name="620"><span class="lineNum">     620 </span>            :     std::unique_ptr&lt;ClipEffects&gt; clipEffects;</a>
-<a name="621"><span class="lineNum">     621 </span>            :     AsyncFunctionCaller asyncFunctionCaller;</a>
-<a name="622"><span class="lineNum">     622 </span>            : </a>
-<a name="623"><span class="lineNum">     623 </span>            :     juce::AudioChannelSet activeChannels;</a>
-<a name="624"><span class="lineNum">     624 </span>            :     void updateLeftRightChannelActivenessFlags();</a>
-<a name="625"><span class="lineNum">     625 </span>            : </a>
-<a name="626"><span class="lineNum">     626 </span>            :     bool proxyAllowed = true, useTimestretchedPreview = false;</a>
-<a name="627"><span class="lineNum">     627 </span>            :     PluginList pluginList;</a>
-<a name="628"><span class="lineNum">     628 </span>            : </a>
-<a name="629"><span class="lineNum">     629 </span>            :     bool lastRenderJobFailed = false;</a>
-<a name="630"><span class="lineNum">     630 </span>            : </a>
-<a name="631"><span class="lineNum">     631 </span>            :     RenderManager::Job::Ptr renderJob;</a>
-<a name="632"><span class="lineNum">     632 </span>            :     AudioFile lastProxy;</a>
-<a name="633"><span class="lineNum">     633 </span>            : </a>
-<a name="634"><span class="lineNum">     634 </span>            :     //==============================================================================</a>
-<a name="635"><span class="lineNum">     635 </span>            :     /** Triggers a source or proxy render after a timeout. Call this if something changes that</a>
-<a name="636"><span class="lineNum">     636 </span>            :         may affect either the source or the proxy e.g. Edit clip tracks or tempo sequence.</a>
-<a name="637"><span class="lineNum">     637 </span>            :     */</a>
-<a name="638"><span class="lineNum">     638 </span>            :     void createNewProxyAsync();</a>
+<a name="606"><span class="lineNum">     606 </span>            :     juce::CachedValue&lt;TimeDuration&gt; fadeIn, fadeOut;</a>
+<a name="607"><span class="lineNum">     607 </span>            :     TimeDuration autoFadeIn, autoFadeOut;</a>
+<a name="608"><span class="lineNum">     608 </span>            :     juce::CachedValue&lt;AudioFadeCurve::Type&gt; fadeInType, fadeOutType;</a>
+<a name="609"><span class="lineNum">     609 </span>            :     juce::CachedValue&lt;bool&gt; autoCrossfade;</a>
+<a name="610"><span class="lineNum">     610 </span>            :     juce::CachedValue&lt;FadeBehaviour&gt; fadeInBehaviour, fadeOutBehaviour;</a>
+<a name="611"><span class="lineNum">     611 </span>            : </a>
+<a name="612"><span class="lineNum">     612 </span>            :     juce::CachedValue&lt;TimePosition&gt; loopStart;</a>
+<a name="613"><span class="lineNum">     613 </span>            :     juce::CachedValue&lt;TimeDuration&gt; loopLength;</a>
+<a name="614"><span class="lineNum">     614 </span>            :     juce::CachedValue&lt;BeatPosition&gt; loopStartBeats;</a>
+<a name="615"><span class="lineNum">     615 </span>            :     juce::CachedValue&lt;BeatDuration&gt; loopLengthBeats;</a>
+<a name="616"><span class="lineNum">     616 </span>            : </a>
+<a name="617"><span class="lineNum">     617 </span>            :     juce::CachedValue&lt;int&gt; proxyAllowed;</a>
+<a name="618"><span class="lineNum">     618 </span>            :     juce::CachedValue&lt;int&gt; transpose;</a>
+<a name="619"><span class="lineNum">     619 </span>            :     juce::CachedValue&lt;float&gt; pitchChange;</a>
+<a name="620"><span class="lineNum">     620 </span>            :     LoopInfo loopInfo;</a>
+<a name="621"><span class="lineNum">     621 </span>            : </a>
+<a name="622"><span class="lineNum">     622 </span>            :     juce::CachedValue&lt;float&gt; beatSensitivity;</a>
+<a name="623"><span class="lineNum">     623 </span>            :     juce::CachedValue&lt;TimeStretcher::Mode&gt; timeStretchMode;</a>
+<a name="624"><span class="lineNum">     624 </span>            :     juce::CachedValue&lt;bool&gt; autoPitch, autoTempo, isReversed, autoDetectBeats, warpTime, clipEffectsVisible;</a>
+<a name="625"><span class="lineNum">     625 </span>            :     juce::CachedValue&lt;AutoPitchMode&gt; autoPitchMode;</a>
+<a name="626"><span class="lineNum">     626 </span>            : </a>
+<a name="627"><span class="lineNum">     627 </span>            :     mutable WarpTimeManager::Ptr warpTimeManager;</a>
+<a name="628"><span class="lineNum">     628 </span>            :     mutable std::unique_ptr&lt;AudioSegmentList&gt; audioSegmentList;</a>
+<a name="629"><span class="lineNum">     629 </span>            :     std::unique_ptr&lt;ClipEffects&gt; clipEffects;</a>
+<a name="630"><span class="lineNum">     630 </span>            :     AsyncFunctionCaller asyncFunctionCaller;</a>
+<a name="631"><span class="lineNum">     631 </span>            : </a>
+<a name="632"><span class="lineNum">     632 </span>            :     juce::AudioChannelSet activeChannels;</a>
+<a name="633"><span class="lineNum">     633 </span>            :     void updateLeftRightChannelActivenessFlags();</a>
+<a name="634"><span class="lineNum">     634 </span>            : </a>
+<a name="635"><span class="lineNum">     635 </span>            :     bool useTimestretchedPreview = false;</a>
+<a name="636"><span class="lineNum">     636 </span>            :     PluginList pluginList;</a>
+<a name="637"><span class="lineNum">     637 </span>            : </a>
+<a name="638"><span class="lineNum">     638 </span>            :     bool lastRenderJobFailed = false;</a>
 <a name="639"><span class="lineNum">     639 </span>            : </a>
-<a name="640"><span class="lineNum">     640 </span>            :     /** @internal */</a>
-<a name="641"><span class="lineNum">     641 </span>            :     void valueTreePropertyChanged (juce::ValueTree&amp;, const juce::Identifier&amp;) override;</a>
-<a name="642"><span class="lineNum">     642 </span>            :     /** @internal */</a>
-<a name="643"><span class="lineNum">     643 </span>            :     void valueTreeChildAdded (juce::ValueTree&amp; parent, juce::ValueTree&amp;) override;</a>
-<a name="644"><span class="lineNum">     644 </span>            :     /** @internal */</a>
-<a name="645"><span class="lineNum">     645 </span>            :     void valueTreeChildRemoved (juce::ValueTree&amp; parent, juce::ValueTree&amp;, int) override;</a>
-<a name="646"><span class="lineNum">     646 </span>            :     /** @internal */</a>
-<a name="647"><span class="lineNum">     647 </span>            :     void valueTreeChildOrderChanged (juce::ValueTree&amp;, int, int) override;</a>
-<a name="648"><span class="lineNum">     648 </span>            :     /** @internal */</a>
-<a name="649"><span class="lineNum">     649 </span>            :     void valueTreeParentChanged (juce::ValueTree&amp;) override;</a>
-<a name="650"><span class="lineNum">     650 </span>            : </a>
-<a name="651"><span class="lineNum">     651 </span>            : private:</a>
-<a name="652"><span class="lineNum">     652 </span>            :     //==============================================================================</a>
-<a name="653"><span class="lineNum">     653 </span>            :     class TempoDetectTask;</a>
-<a name="654"><span class="lineNum">     654 </span>            :     class BeatSensitivityComp;</a>
-<a name="655"><span class="lineNum">     655 </span>            : </a>
-<a name="656"><span class="lineNum">     656 </span>            :     void updateReversedState();</a>
-<a name="657"><span class="lineNum">     657 </span>            :     void updateAutoTempoState();</a>
-<a name="658"><span class="lineNum">     658 </span>            :     void updateClipEffectsState();</a>
+<a name="640"><span class="lineNum">     640 </span>            :     RenderManager::Job::Ptr renderJob;</a>
+<a name="641"><span class="lineNum">     641 </span>            :     AudioFile lastProxy;</a>
+<a name="642"><span class="lineNum">     642 </span>            : </a>
+<a name="643"><span class="lineNum">     643 </span>            :     //==============================================================================</a>
+<a name="644"><span class="lineNum">     644 </span>            :     /** Triggers a source or proxy render after a timeout. Call this if something changes that</a>
+<a name="645"><span class="lineNum">     645 </span>            :         may affect either the source or the proxy e.g. Edit clip tracks or tempo sequence.</a>
+<a name="646"><span class="lineNum">     646 </span>            :     */</a>
+<a name="647"><span class="lineNum">     647 </span>            :     void createNewProxyAsync();</a>
+<a name="648"><span class="lineNum">     648 </span>            : </a>
+<a name="649"><span class="lineNum">     649 </span>            :     /** @internal */</a>
+<a name="650"><span class="lineNum">     650 </span>            :     void valueTreePropertyChanged (juce::ValueTree&amp;, const juce::Identifier&amp;) override;</a>
+<a name="651"><span class="lineNum">     651 </span>            :     /** @internal */</a>
+<a name="652"><span class="lineNum">     652 </span>            :     void valueTreeChildAdded (juce::ValueTree&amp; parent, juce::ValueTree&amp;) override;</a>
+<a name="653"><span class="lineNum">     653 </span>            :     /** @internal */</a>
+<a name="654"><span class="lineNum">     654 </span>            :     void valueTreeChildRemoved (juce::ValueTree&amp; parent, juce::ValueTree&amp;, int) override;</a>
+<a name="655"><span class="lineNum">     655 </span>            :     /** @internal */</a>
+<a name="656"><span class="lineNum">     656 </span>            :     void valueTreeChildOrderChanged (juce::ValueTree&amp;, int, int) override;</a>
+<a name="657"><span class="lineNum">     657 </span>            :     /** @internal */</a>
+<a name="658"><span class="lineNum">     658 </span>            :     void valueTreeParentChanged (juce::ValueTree&amp;) override;</a>
 <a name="659"><span class="lineNum">     659 </span>            : </a>
-<a name="660"><span class="lineNum">     660 </span>            :     enum { updateCrossfadesFlag = 0, updateCrossfadesOverlappedFlag = 1 };</a>
-<a name="661"><span class="lineNum">     661 </span>            :     void updateAutoCrossfades (bool updateOverlapped);</a>
-<a name="662"><span class="lineNum">     662 </span>            : </a>
-<a name="663"><span class="lineNum">     663 </span>            :     /** Checks the source's hash to see if it has changed and if so starts a new render</a>
-<a name="664"><span class="lineNum">     664 </span>            :         process.This will in turn call getRenderJob on a background thead.</a>
-<a name="665"><span class="lineNum">     665 </span>            :     */</a>
-<a name="666"><span class="lineNum">     666 </span>            :     void renderSource();</a>
-<a name="667"><span class="lineNum">     667 </span><span class="lineCov">        148 :     bool shouldAttemptRender() const    { return (! lastRenderJobFailed) &amp;&amp; needsRender(); }</span></a>
+<a name="660"><span class="lineNum">     660 </span>            : private:</a>
+<a name="661"><span class="lineNum">     661 </span>            :     //==============================================================================</a>
+<a name="662"><span class="lineNum">     662 </span>            :     class TempoDetectTask;</a>
+<a name="663"><span class="lineNum">     663 </span>            :     class BeatSensitivityComp;</a>
+<a name="664"><span class="lineNum">     664 </span>            : </a>
+<a name="665"><span class="lineNum">     665 </span>            :     void updateReversedState();</a>
+<a name="666"><span class="lineNum">     666 </span>            :     void updateAutoTempoState();</a>
+<a name="667"><span class="lineNum">     667 </span>            :     void updateClipEffectsState();</a>
 <a name="668"><span class="lineNum">     668 </span>            : </a>
-<a name="669"><span class="lineNum">     669 </span>            :     void clearCachedAudioSegmentList();</a>
-<a name="670"><span class="lineNum">     670 </span>            :     const AudioSegmentList* getAudioSegmentList();</a>
+<a name="669"><span class="lineNum">     669 </span>            :     enum { updateCrossfadesFlag = 0, updateCrossfadesOverlappedFlag = 1 };</a>
+<a name="670"><span class="lineNum">     670 </span>            :     void updateAutoCrossfades (bool updateOverlapped);</a>
 <a name="671"><span class="lineNum">     671 </span>            : </a>
-<a name="672"><span class="lineNum">     672 </span>            :     //==============================================================================</a>
-<a name="673"><span class="lineNum">     673 </span>            :     void jobFinished (RenderManager::Job&amp; job, bool completedOk) override;</a>
-<a name="674"><span class="lineNum">     674 </span>            :     void timerCallback() override;</a>
-<a name="675"><span class="lineNum">     675 </span>            : </a>
-<a name="676"><span class="lineNum">     676 </span>            :     double clipTimeToSourceFileTime (double clipTime);</a>
+<a name="672"><span class="lineNum">     672 </span>            :     /** Checks the source's hash to see if it has changed and if so starts a new render</a>
+<a name="673"><span class="lineNum">     673 </span>            :         process.This will in turn call getRenderJob on a background thead.</a>
+<a name="674"><span class="lineNum">     674 </span>            :     */</a>
+<a name="675"><span class="lineNum">     675 </span>            :     void renderSource();</a>
+<a name="676"><span class="lineNum">     676 </span><span class="lineCov">        160 :     bool shouldAttemptRender() const    { return (! lastRenderJobFailed) &amp;&amp; needsRender(); }</span></a>
 <a name="677"><span class="lineNum">     677 </span>            : </a>
-<a name="678"><span class="lineNum">     678 </span>            :     //==============================================================================</a>
-<a name="679"><span class="lineNum">     679 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioClipBase)</a>
-<a name="680"><span class="lineNum">     680 </span>            : };</a>
-<a name="681"><span class="lineNum">     681 </span>            : </a>
-<a name="682"><span class="lineNum">     682 </span>            : } // namespace tracktion_engine</a>
+<a name="678"><span class="lineNum">     678 </span>            :     void clearCachedAudioSegmentList();</a>
+<a name="679"><span class="lineNum">     679 </span>            : </a>
+<a name="680"><span class="lineNum">     680 </span>            :     //==============================================================================</a>
+<a name="681"><span class="lineNum">     681 </span>            :     void jobFinished (RenderManager::Job&amp; job, bool completedOk) override;</a>
+<a name="682"><span class="lineNum">     682 </span>            :     void timerCallback() override;</a>
 <a name="683"><span class="lineNum">     683 </span>            : </a>
-<a name="684"><span class="lineNum">     684 </span>            : namespace juce</a>
-<a name="685"><span class="lineNum">     685 </span>            : {</a>
-<a name="686"><span class="lineNum">     686 </span>            :     template &lt;&gt;</a>
-<a name="687"><span class="lineNum">     687 </span>            :     struct VariantConverter&lt;tracktion_engine::AudioClipBase::FadeBehaviour&gt;</a>
-<a name="688"><span class="lineNum">     688 </span>            :     {</a>
-<a name="689"><span class="lineNum">     689 </span><span class="lineNoCov">          0 :         static tracktion_engine::AudioClipBase::FadeBehaviour fromVar (const var&amp; v)   { return (tracktion_engine::AudioClipBase::FadeBehaviour) static_cast&lt;int&gt; (v); }</span></a>
-<a name="690"><span class="lineNum">     690 </span><span class="lineNoCov">          0 :         static var toVar (tracktion_engine::AudioClipBase::FadeBehaviour v)            { return static_cast&lt;int&gt; (v); }</span></a>
-<a name="691"><span class="lineNum">     691 </span>            :     };</a>
-<a name="692"><span class="lineNum">     692 </span>            : </a>
-<a name="693"><span class="lineNum">     693 </span>            :     template &lt;&gt;</a>
-<a name="694"><span class="lineNum">     694 </span>            :     struct VariantConverter&lt;tracktion_engine::AudioClipBase::AutoPitchMode&gt;</a>
-<a name="695"><span class="lineNum">     695 </span>            :     {</a>
-<a name="696"><span class="lineNum">     696 </span><span class="lineNoCov">          0 :         static tracktion_engine::AudioClipBase::AutoPitchMode fromVar (const var&amp; v)   { return (tracktion_engine::AudioClipBase::AutoPitchMode) static_cast&lt;int&gt; (v); }</span></a>
-<a name="697"><span class="lineNum">     697 </span><span class="lineNoCov">          0 :         static var toVar (tracktion_engine::AudioClipBase::AutoPitchMode v)            { return static_cast&lt;int&gt; (v); }</span></a>
-<a name="698"><span class="lineNum">     698 </span>            :     };</a>
-<a name="699"><span class="lineNum">     699 </span>            : }</a>
+<a name="684"><span class="lineNum">     684 </span>            :     TimePosition clipTimeToSourceFileTime (TimePosition clipTime);</a>
+<a name="685"><span class="lineNum">     685 </span>            : </a>
+<a name="686"><span class="lineNum">     686 </span>            :     //==============================================================================</a>
+<a name="687"><span class="lineNum">     687 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioClipBase)</a>
+<a name="688"><span class="lineNum">     688 </span>            : };</a>
+<a name="689"><span class="lineNum">     689 </span>            : </a>
+<a name="690"><span class="lineNum">     690 </span>            : }} // namespace tracktion { inline namespace engine</a>
+<a name="691"><span class="lineNum">     691 </span>            : </a>
+<a name="692"><span class="lineNum">     692 </span>            : namespace juce</a>
+<a name="693"><span class="lineNum">     693 </span>            : {</a>
+<a name="694"><span class="lineNum">     694 </span>            :     template &lt;&gt;</a>
+<a name="695"><span class="lineNum">     695 </span>            :     struct VariantConverter&lt;tracktion::engine::AudioClipBase::FadeBehaviour&gt;</a>
+<a name="696"><span class="lineNum">     696 </span>            :     {</a>
+<a name="697"><span class="lineNum">     697 </span><span class="lineNoCov">          0 :         static tracktion::engine::AudioClipBase::FadeBehaviour fromVar (const var&amp; v)   { return (tracktion::engine::AudioClipBase::FadeBehaviour) static_cast&lt;int&gt; (v); }</span></a>
+<a name="698"><span class="lineNum">     698 </span><span class="lineNoCov">          0 :         static var toVar (tracktion::engine::AudioClipBase::FadeBehaviour v)            { return static_cast&lt;int&gt; (v); }</span></a>
+<a name="699"><span class="lineNum">     699 </span>            :     };</a>
+<a name="700"><span class="lineNum">     700 </span>            : </a>
+<a name="701"><span class="lineNum">     701 </span>            :     template &lt;&gt;</a>
+<a name="702"><span class="lineNum">     702 </span>            :     struct VariantConverter&lt;tracktion::engine::AudioClipBase::AutoPitchMode&gt;</a>
+<a name="703"><span class="lineNum">     703 </span>            :     {</a>
+<a name="704"><span class="lineNum">     704 </span><span class="lineNoCov">          0 :         static tracktion::engine::AudioClipBase::AutoPitchMode fromVar (const var&amp; v)   { return (tracktion::engine::AudioClipBase::AutoPitchMode) static_cast&lt;int&gt; (v); }</span></a>
+<a name="705"><span class="lineNum">     705 </span><span class="lineNoCov">          0 :         static var toVar (tracktion::engine::AudioClipBase::AutoPitchMode v)            { return static_cast&lt;int&gt; (v); }</span></a>
+<a name="706"><span class="lineNum">     706 </span>            :     };</a>
+<a name="707"><span class="lineNum">     707 </span>            : }</a>
 </pre>
       </td>
     </tr>

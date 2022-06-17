@@ -1,0 +1,7 @@
+<map id="tracktion::engine::RenderManager::Job::Listener" name="tracktion::engine::RenderManager::Job::Listener">
+<area shape="rect" id="node1" title=" " alt="" coords="159,5,320,61"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1AudioClipBase.html" title="Base class for Clips that produce some kind of audio e.g." alt="" coords="87,109,227,151"/>
+<area shape="rect" id="node5" href="$classtracktion_1_1engine_1_1WarpTimeManager.html" title="A WarpTimeManager contains a list of WarpMarkers and some source material and maps times from a linea..." alt="" coords="251,109,396,151"/>
+<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1EditClip.html" title="This is the main source of an Edit clip and is responsible for managing its properties." alt="" coords="5,199,145,240"/>
+<area shape="rect" id="node4" href="$classtracktion_1_1engine_1_1WaveAudioClip.html" title="An audio clip that uses an audio file as its source." alt="" coords="169,199,309,240"/>
+</map>

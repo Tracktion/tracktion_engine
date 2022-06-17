@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : //==============================================================================</a>
@@ -113,7 +113,7 @@
 <a name="51"><span class="lineNum">      51 </span>            :     static SampleCount copySectionToNewFile (Engine&amp; e,</a>
 <a name="52"><span class="lineNum">      52 </span>            :                                              const juce::File&amp; sourceFile,</a>
 <a name="53"><span class="lineNum">      53 </span>            :                                              const juce::File&amp; destFile,</a>
-<a name="54"><span class="lineNum">      54 </span>            :                                              EditTimeRange range);</a>
+<a name="54"><span class="lineNum">      54 </span>            :                                              TimeRange range);</a>
 <a name="55"><span class="lineNum">      55 </span>            : </a>
 <a name="56"><span class="lineNum">      56 </span>            :     static void addBWAVStartToMetadata (juce::StringPairArray&amp; metadata, SampleCount start);</a>
 <a name="57"><span class="lineNum">      57 </span>            : </a>
@@ -250,7 +250,7 @@
 <a name="188"><span class="lineNum">     188 </span>            :     };</a>
 <a name="189"><span class="lineNum">     189 </span>            : };</a>
 <a name="190"><span class="lineNum">     190 </span>            : </a>
-<a name="191"><span class="lineNum">     191 </span>            : } // namespace tracktion_engine</a>
+<a name="191"><span class="lineNum">     191 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

@@ -1,9 +1,9 @@
 var searchData=
 [
-  ['off_13154',['off',['../classtracktion__engine_1_1PatternGenerator.html#ac6f8919585281ff61acb1ceaa58cf354a3262d48df5d75e3452f0f16b313b7808',1,'tracktion_engine::PatternGenerator']]],
-  ['ogg_13155',['ogg',['../classtracktion__engine_1_1RenderOptions.html#a24077cbf9c84024660e08a2e84278fd4aed11558ce903da82f9eae61f4b9bf981',1,'tracktion_engine::RenderOptions']]],
-  ['onebar_13156',['oneBar',['../classtracktion__engine_1_1Edit.html#a59f77ec0d1b5ff6397583d7c063ad672a6e45a5543108e522a7069c90787b390d',1,'tracktion_engine::Edit']]],
-  ['onebeat_13157',['oneBeat',['../classtracktion__engine_1_1Edit.html#a59f77ec0d1b5ff6397583d7c063ad672a304659151ad21517e875f879b072e528',1,'tracktion_engine::Edit']]],
-  ['optional_13158',['optional',['../classtracktion__engine_1_1MidiInputDevice.html#aea8b5a0f437a390621e3b0cd9991e6f4ad57c24f3fe52d16e7169b912dd647f0d',1,'tracktion_engine::MidiInputDevice']]],
-  ['osc_13159',['osc',['../classtracktion__engine_1_1ExternalControllerManager.html#a630c77e754712fdee07922815d7708fbae5583b8a52715827447e9fbd5bcae62d',1,'tracktion_engine::ExternalControllerManager']]]
+  ['off_13132',['off',['../classtracktion_1_1engine_1_1PatternGenerator.html#a87e3536a690758ecd3435e00a2a01086a3262d48df5d75e3452f0f16b313b7808',1,'tracktion::engine::PatternGenerator']]],
+  ['ogg_13133',['ogg',['../classtracktion_1_1engine_1_1RenderOptions.html#ad6d5a75dec65fce82ab44309d512c399a0aa60866b8a15ce058a029eb312fdf0c',1,'tracktion::engine::RenderOptions']]],
+  ['onebar_13134',['oneBar',['../classtracktion_1_1engine_1_1Edit.html#a5ecd9cc3e9357f31269f6cbc7ca79c4ca6e45a5543108e522a7069c90787b390d',1,'tracktion::engine::Edit']]],
+  ['onebeat_13135',['oneBeat',['../classtracktion_1_1engine_1_1Edit.html#a5ecd9cc3e9357f31269f6cbc7ca79c4ca304659151ad21517e875f879b072e528',1,'tracktion::engine::Edit']]],
+  ['optional_13136',['optional',['../classtracktion_1_1engine_1_1MidiInputDevice.html#a43580ddbc607e05168cd78e36f9df151ad57c24f3fe52d16e7169b912dd647f0d',1,'tracktion::engine::MidiInputDevice']]],
+  ['osc_13137',['osc',['../classtracktion_1_1engine_1_1ExternalControllerManager.html#a86fb7dd18627fac10e78d5e03c920a12a6bb88b80aec21195ce3ad628587d5faf',1,'tracktion::engine::ExternalControllerManager']]]
 ];

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : //==============================================================================</a>
@@ -99,7 +99,7 @@
 <a name="37"><span class="lineNum">      37 </span>            :     Edit&amp; getEdit() const;</a>
 <a name="38"><span class="lineNum">      38 </span>            : </a>
 <a name="39"><span class="lineNum">      39 </span>            :     /** Creates a tree to prepresent a TempoSetting. */</a>
-<a name="40"><span class="lineNum">      40 </span>            :     static juce::ValueTree create (double startBeat, double bpm, float curve);</a>
+<a name="40"><span class="lineNum">      40 </span>            :     static juce::ValueTree create (BeatPosition startBeat, double bpm, float curve);</a>
 <a name="41"><span class="lineNum">      41 </span>            : </a>
 <a name="42"><span class="lineNum">      42 </span>            :     /** Minimum BPM a setting can have. */</a>
 <a name="43"><span class="lineNum">      43 </span>            :     static constexpr double minBPM = 20.0;</a>
@@ -113,23 +113,23 @@
 <a name="51"><span class="lineNum">      51 </span>            : </a>
 <a name="52"><span class="lineNum">      52 </span>            :     //==============================================================================</a>
 <a name="53"><span class="lineNum">      53 </span>            :     /** Returns the start beat of the setting. */</a>
-<a name="54"><span class="lineNum">      54 </span>            :     double getStartBeat() const     { return startBeatNumber; }</a>
+<a name="54"><span class="lineNum">      54 </span>            :     BeatPosition getStartBeat() const     { return startBeatNumber; }</a>
 <a name="55"><span class="lineNum">      55 </span>            : </a>
 <a name="56"><span class="lineNum">      56 </span>            :     /** Returns the BPM of the setting. */</a>
-<a name="57"><span class="lineNum">      57 </span><span class="lineCov">       1074 :     double getBpm() const           { return bpm; }</span></a>
+<a name="57"><span class="lineNum">      57 </span><span class="lineCov">        181 :     double getBpm() const           { return bpm; }</span></a>
 <a name="58"><span class="lineNum">      58 </span>            : </a>
 <a name="59"><span class="lineNum">      59 </span>            :     /** Returns the curve of the setting. */</a>
-<a name="60"><span class="lineNum">      60 </span><span class="lineCov">       1704 :     float getCurve() const          { return curve; }</span></a>
+<a name="60"><span class="lineNum">      60 </span><span class="lineCov">         38 :     float getCurve() const          { return curve; }</span></a>
 <a name="61"><span class="lineNum">      61 </span>            : </a>
 <a name="62"><span class="lineNum">      62 </span>            :     /** Returns the start time in seconds of the tempo setting. */</a>
-<a name="63"><span class="lineNum">      63 </span>            :     double getStartTime() const;</a>
+<a name="63"><span class="lineNum">      63 </span>            :     TimePosition getStartTime() const;</a>
 <a name="64"><span class="lineNum">      64 </span>            : </a>
 <a name="65"><span class="lineNum">      65 </span>            :     /** Sets the properties of this tempo setting.</a>
 <a name="66"><span class="lineNum">      66 </span>            :         @param remapEditPositions   If true, this will adjust any Edit items start/end</a>
 <a name="67"><span class="lineNum">      67 </span>            :                                     positions so they fall on the same beat as they</a>
 <a name="68"><span class="lineNum">      68 </span>            :                                     currently do.</a>
 <a name="69"><span class="lineNum">      69 </span>            :     */</a>
-<a name="70"><span class="lineNum">      70 </span>            :     void set (double startBeatNum, double newBpm, float newCurve, bool remapEditPositions);</a>
+<a name="70"><span class="lineNum">      70 </span>            :     void set (BeatPosition, double newBpm, float newCurve, bool remapEditPositions);</a>
 <a name="71"><span class="lineNum">      71 </span>            : </a>
 <a name="72"><span class="lineNum">      72 </span>            :     /** Sets the BPM of this tempo setting. */</a>
 <a name="73"><span class="lineNum">      73 </span>            :     void setBpm (double newBpm);</a>
@@ -141,7 +141,7 @@
 <a name="79"><span class="lineNum">      79 </span>            :     */</a>
 <a name="80"><span class="lineNum">      80 </span>            :     void setCurve (float curve);</a>
 <a name="81"><span class="lineNum">      81 </span>            : </a>
-<a name="82"><span class="lineNum">      82 </span>            :     void setStartBeat (double newStartBeat);</a>
+<a name="82"><span class="lineNum">      82 </span>            :     void setStartBeat (BeatPosition);</a>
 <a name="83"><span class="lineNum">      83 </span>            : </a>
 <a name="84"><span class="lineNum">      84 </span>            :     /** Removes the TempoSetting from the sequence. */</a>
 <a name="85"><span class="lineNum">      85 </span>            :     void removeFromEdit();</a>
@@ -150,7 +150,7 @@
 <a name="88"><span class="lineNum">      88 </span>            :     /** Returns the approximate length of one beat based on the bpm and matching</a>
 <a name="89"><span class="lineNum">      89 </span>            :         time sig denonimator.</a>
 <a name="90"><span class="lineNum">      90 </span>            :     */</a>
-<a name="91"><span class="lineNum">      91 </span>            :     double getApproxBeatLength() const; // doesn't take into account ramping, etc</a>
+<a name="91"><span class="lineNum">      91 </span>            :     TimeDuration getApproxBeatLength() const; // doesn't take into account ramping, etc</a>
 <a name="92"><span class="lineNum">      92 </span>            : </a>
 <a name="93"><span class="lineNum">      93 </span>            :     /** Returns the previous tempo setting in the sequence. */</a>
 <a name="94"><span class="lineNum">      94 </span>            :     TempoSetting* getPreviousTempo() const;</a>
@@ -163,15 +163,15 @@
 <a name="101"><span class="lineNum">     101 </span>            :     TempoSequence&amp; ownerSequence;</a>
 <a name="102"><span class="lineNum">     102 </span>            :     juce::ValueTree state;</a>
 <a name="103"><span class="lineNum">     103 </span>            : </a>
-<a name="104"><span class="lineNum">     104 </span>            :     juce::CachedValue&lt;double&gt; startBeatNumber;</a>
+<a name="104"><span class="lineNum">     104 </span>            :     juce::CachedValue&lt;BeatPosition&gt; startBeatNumber;</a>
 <a name="105"><span class="lineNum">     105 </span>            :     juce::CachedValue&lt;double&gt; bpm;</a>
 <a name="106"><span class="lineNum">     106 </span>            :     juce::CachedValue&lt;float&gt; curve;</a>
 <a name="107"><span class="lineNum">     107 </span>            : </a>
 <a name="108"><span class="lineNum">     108 </span>            :     /** @internal */</a>
-<a name="109"><span class="lineNum">     109 </span>            :     double startTime = 0; // (updated by TempoSequence)</a>
+<a name="109"><span class="lineNum">     109 </span>            :     TimePosition startTime; // (updated by TempoSequence)</a>
 <a name="110"><span class="lineNum">     110 </span>            : };</a>
 <a name="111"><span class="lineNum">     111 </span>            : </a>
-<a name="112"><span class="lineNum">     112 </span>            : } // namespace tracktion_engine</a>
+<a name="112"><span class="lineNum">     112 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

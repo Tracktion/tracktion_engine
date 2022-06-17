@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">15</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : #if TRACKTION_UNIT_TESTS</a>
@@ -131,256 +131,257 @@
 <a name="69"><span class="lineNum">      69 </span>            : </a>
 <a name="70"><span class="lineNum">      70 </span><span class="lineCov">          4 :         beginTest (&quot;Test injected impulses align&quot;);</span></a>
 <a name="71"><span class="lineNum">      71 </span>            :         {</a>
-<a name="72"><span class="lineNum">      72 </span>            :             // Start recording, add an impulse after 1s then wait another 1s and stop recording</a>
-<a name="73"><span class="lineNum">      73 </span><span class="lineCov">          8 :             ProcessThread processThread (audioIO, params);</span></a>
-<a name="74"><span class="lineNum">      74 </span>            : </a>
-<a name="75"><span class="lineNum">      75 </span>            :             transport.stop (false, false);</a>
-<a name="76"><span class="lineNum">      76 </span>            : </a>
-<a name="77"><span class="lineNum">      77 </span>            :             transport.record (false, false);</a>
-<a name="78"><span class="lineNum">      78 </span>            :             auto&amp; epc = *transport.getCurrentPlaybackContext();</a>
-<a name="79"><span class="lineNum">      79 </span><span class="lineCov">          4 :             processThread.waitForThreadToStart();</span></a>
-<a name="80"><span class="lineNum">      80 </span><span class="lineCov">          4 :             waitUntilPlayheadPosition (epc, 1.0);</span></a>
-<a name="81"><span class="lineNum">      81 </span>            : </a>
-<a name="82"><span class="lineNum">      82 </span>            :             processThread.insertImpulseIntoNextBlock();</a>
-<a name="83"><span class="lineNum">      83 </span><span class="lineCov">          4 :             waitUntilPlayheadPosition (epc, 2.0);</span></a>
-<a name="84"><span class="lineNum">      84 </span><span class="lineCov">          4 :             expect (! processThread.needsToInsertImpulse(), &quot;Impulse not inserted&quot;);</span></a>
-<a name="85"><span class="lineNum">      85 </span>            : </a>
-<a name="86"><span class="lineNum">      86 </span>            :             transport.stop (false, true);</a>
-<a name="87"><span class="lineNum">      87 </span>            :         }</a>
-<a name="88"><span class="lineNum">      88 </span>            : </a>
-<a name="89"><span class="lineNum">      89 </span>            :         {</a>
-<a name="90"><span class="lineNum">      90 </span>            :             // Get recorded audio files and check the impulse is in the same place</a>
-<a name="91"><span class="lineNum">      91 </span><span class="lineCov">          4 :             auto clips = getAllClipsFromTracks&lt;WaveAudioClip&gt; (*edit);</span></a>
-<a name="92"><span class="lineNum">      92 </span><span class="lineCov">          4 :             expectEquals (clips.size(), getAudioTracks (*edit).size());</span></a>
-<a name="93"><span class="lineNum">      93 </span><span class="lineCov">          4 :             auto audioFiles = getSourceFilesFromClips (clips);</span></a>
-<a name="94"><span class="lineNum">      94 </span><span class="lineCov">          4 :             auto sampleIndicies = getSampleIndiciesOfImpulse (engine, audioFiles);</span></a>
-<a name="95"><span class="lineNum">      95 </span>            : </a>
-<a name="96"><span class="lineNum">      96 </span><span class="lineCov">          4 :             expect (tempDir.tempDir.exists() &amp;&amp; tempDir.tempDir.isDirectory(), &quot;Output dir not created&quot;);</span></a>
-<a name="97"><span class="lineNum">      97 </span><span class="lineCov">          4 :             expect (tempDir.tempDir.hasWriteAccess(), &quot;Output dir is read only&quot;);</span></a>
-<a name="98"><span class="lineNum">      98 </span><span class="lineCov">          4 :             expectEquals (tempDir.tempDir.getFullPathName(), juce::File::getCurrentWorkingDirectory().getFullPathName(), &quot;Current directory has changed&quot;);</span></a>
-<a name="99"><span class="lineNum">      99 </span><span class="lineCov">          4 :             expectEquals (audioFiles.size(), deviceManager.getNumWaveInDevices(), &quot;Audio files not created&quot;);</span></a>
-<a name="100"><span class="lineNum">     100 </span>            : </a>
-<a name="101"><span class="lineNum">     101 </span><span class="lineCov">         68 :             for (const auto&amp; f : audioFiles)</span></a>
-<a name="102"><span class="lineNum">     102 </span>            :             {</a>
-<a name="103"><span class="lineNum">     103 </span><span class="lineCov">         64 :                 expect (f.existsAsFile(), juce::String (&quot;File doesn't exist FILE&quot;).replace (&quot;FILE&quot;, f.getFullPathName()));</span></a>
-<a name="104"><span class="lineNum">     104 </span><span class="lineCov">         64 :                 expectGreaterOrEqual (getFileLength (engine, f), 2.0, &quot;File length less then 2 seconds&quot;);</span></a>
-<a name="105"><span class="lineNum">     105 </span>            :             }</a>
-<a name="106"><span class="lineNum">     106 </span>            : </a>
-<a name="107"><span class="lineNum">     107 </span><span class="lineCov">          8 :             expectEquals ((int) std::count_if (sampleIndicies.begin(), sampleIndicies.end(),</span></a>
-<a name="108"><span class="lineNum">     108 </span>            :                                                [] (auto index) { return index != -1; }),</a>
-<a name="109"><span class="lineNum">     109 </span>            :                           audioFiles.size(), &quot;Some files don't have an impulse in them&quot;);</a>
-<a name="110"><span class="lineNum">     110 </span>            : </a>
-<a name="111"><span class="lineNum">     111 </span>            :             int fileIndex = 0;</a>
-<a name="112"><span class="lineNum">     112 </span>            :             </a>
-<a name="113"><span class="lineNum">     113 </span><span class="lineCov">         68 :             for (auto index : sampleIndicies)</span></a>
-<a name="114"><span class="lineNum">     114 </span>            :             {</a>
-<a name="115"><span class="lineNum">     115 </span><span class="lineCov">        128 :                 expectGreaterOrEqual&lt;int64_t&gt; (index, 0, juce::String (&quot;File doesn't have an impulse in: FILE&quot;).replace (&quot;FILE&quot;, audioFiles[fileIndex].getFullPathName()));</span></a>
-<a name="116"><span class="lineNum">     116 </span>            :                 </a>
-<a name="117"><span class="lineNum">     117 </span><span class="lineCov">         64 :                 if (index != sampleIndicies[0])</span></a>
-<a name="118"><span class="lineNum">     118 </span><span class="lineNoCov">          0 :                     expect (false, juce::String (&quot;Mismatch of impulse indicies (FIRST &amp; SECOND samples, difference of DIFF)&quot;)</span></a>
-<a name="119"><span class="lineNum">     119 </span><span class="lineNoCov">          0 :                                     .replace (&quot;FIRST&quot;, juce::String (index))</span></a>
-<a name="120"><span class="lineNum">     120 </span><span class="lineNoCov">          0 :                                     .replace (&quot;SECOND&quot;, juce::String (sampleIndicies[0]))</span></a>
-<a name="121"><span class="lineNum">     121 </span><span class="lineNoCov">          0 :                                     .replace (&quot;DIFF&quot;, juce::String (index - sampleIndicies[0])));</span></a>
-<a name="122"><span class="lineNum">     122 </span>            :                 </a>
-<a name="123"><span class="lineNum">     123 </span><span class="lineCov">         64 :                 ++fileIndex;</span></a>
-<a name="124"><span class="lineNum">     124 </span>            :             }</a>
-<a name="125"><span class="lineNum">     125 </span>            :         }</a>
-<a name="126"><span class="lineNum">     126 </span><span class="lineCov">          4 :     }</span></a>
-<a name="127"><span class="lineNum">     127 </span>            : </a>
-<a name="128"><span class="lineNum">     128 </span>            :     void cleanUp()</a>
-<a name="129"><span class="lineNum">     129 </span>            :     {</a>
-<a name="130"><span class="lineNum">     130 </span>            :         auto&amp; deviceManager = Engine::getEngines()[0]-&gt;getDeviceManager();</a>
-<a name="131"><span class="lineNum">     131 </span>            :         deviceManager.closeDevices();</a>
-<a name="132"><span class="lineNum">     132 </span>            :         deviceManager.removeHostedAudioDeviceInterface();</a>
-<a name="133"><span class="lineNum">     133 </span>            :         deviceManager.deviceManager.closeAudioDevice();</a>
-<a name="134"><span class="lineNum">     134 </span>            :     }</a>
-<a name="135"><span class="lineNum">     135 </span>            : </a>
-<a name="136"><span class="lineNum">     136 </span>            :     //==============================================================================</a>
-<a name="137"><span class="lineNum">     137 </span>            :     template&lt;class Clock, class Duration&gt;</a>
-<a name="138"><span class="lineNum">     138 </span><span class="lineCov">       3903 :     static void yield_until (const std::chrono::time_point&lt;Clock, Duration&gt;&amp; sleep_time)</span></a>
-<a name="139"><span class="lineNum">     139 </span>            :     {</a>
-<a name="140"><span class="lineNum">     140 </span><span class="lineCov">    9290010 :         while (Clock::now() &lt; sleep_time)</span></a>
-<a name="141"><span class="lineNum">     141 </span>            :             std::this_thread::yield();</a>
-<a name="142"><span class="lineNum">     142 </span><span class="lineCov">       3904 :     }</span></a>
-<a name="143"><span class="lineNum">     143 </span>            :     </a>
-<a name="144"><span class="lineNum">     144 </span>            :     void waitUntilPlayheadPosition (const EditPlaybackContext&amp; epc, double time)</a>
-<a name="145"><span class="lineNum">     145 </span>            :     {</a>
-<a name="146"><span class="lineNum">     146 </span>            :         using namespace std::chrono_literals;</a>
-<a name="147"><span class="lineNum">     147 </span>            :         </a>
-<a name="148"><span class="lineNum">     148 </span>            :         while (epc.getUnloopedPosition() &lt; time)</a>
-<a name="149"><span class="lineNum">     149 </span>            :             std::this_thread::sleep_for (1ms);</a>
-<a name="150"><span class="lineNum">     150 </span>            :     }</a>
-<a name="151"><span class="lineNum">     151 </span>            : </a>
-<a name="152"><span class="lineNum">     152 </span>            :     //==============================================================================</a>
-<a name="153"><span class="lineNum">     153 </span><span class="lineCov">          4 :     std::unique_ptr&lt;Edit&gt; createEditWithTracksForInputs (Engine&amp; engine, const HostedAudioDeviceInterface::Parameters&amp; params)</span></a>
-<a name="154"><span class="lineNum">     154 </span>            :     {</a>
-<a name="155"><span class="lineNum">     155 </span><span class="lineCov">          8 :         auto edit = std::make_unique&lt;Edit&gt; (Edit::Options { engine, createEmptyEdit (engine), ProjectItemID::createNewID (0) });</span></a>
-<a name="156"><span class="lineNum">     156 </span>            :         auto&amp; transport = edit-&gt;getTransport();</a>
-<a name="157"><span class="lineNum">     157 </span><span class="lineCov">          4 :         transport.ensureContextAllocated();</span></a>
-<a name="158"><span class="lineNum">     158 </span>            :         auto context = transport.getCurrentPlaybackContext();</a>
-<a name="159"><span class="lineNum">     159 </span>            : </a>
-<a name="160"><span class="lineNum">     160 </span><span class="lineCov">          4 :         edit-&gt;ensureNumberOfAudioTracks (params.inputChannels);</span></a>
-<a name="161"><span class="lineNum">     161 </span><span class="lineCov">          4 :         auto audioTracks = getAudioTracks (*edit);</span></a>
-<a name="162"><span class="lineNum">     162 </span>            :         auto inputInstances = context-&gt;getAllInputs();</a>
-<a name="163"><span class="lineNum">     163 </span><span class="lineCov">          4 :         inputInstances.removeIf ([] (auto instance) { return instance-&gt;owner.isMidi(); });</span></a>
-<a name="164"><span class="lineNum">     164 </span>            : </a>
-<a name="165"><span class="lineNum">     165 </span><span class="lineCov">          4 :         expectEquals (inputInstances.size(), params.inputChannels);</span></a>
-<a name="166"><span class="lineNum">     166 </span><span class="lineCov">          4 :         expectEquals (inputInstances.size(), audioTracks.size());</span></a>
-<a name="167"><span class="lineNum">     167 </span>            : </a>
-<a name="168"><span class="lineNum">     168 </span><span class="lineCov">         68 :         for (int i = 0; i &lt; params.inputChannels; ++i)</span></a>
-<a name="169"><span class="lineNum">     169 </span>            :         {</a>
-<a name="170"><span class="lineNum">     170 </span>            :             auto track = audioTracks.getUnchecked (i);</a>
-<a name="171"><span class="lineNum">     171 </span>            :             auto inputInstance = inputInstances.getUnchecked (i);</a>
-<a name="172"><span class="lineNum">     172 </span><span class="lineCov">         64 :             inputInstance-&gt;setTargetTrack (*track, 0, true);</span></a>
-<a name="173"><span class="lineNum">     173 </span><span class="lineCov">         64 :             inputInstance-&gt;setRecordingEnabled (*track, true);</span></a>
-<a name="174"><span class="lineNum">     174 </span>            :         }</a>
-<a name="175"><span class="lineNum">     175 </span>            : </a>
-<a name="176"><span class="lineNum">     176 </span><span class="lineCov">          4 :         return edit;</span></a>
-<a name="177"><span class="lineNum">     177 </span>            :     }</a>
-<a name="178"><span class="lineNum">     178 </span>            : </a>
-<a name="179"><span class="lineNum">     179 </span>            :     //==============================================================================</a>
-<a name="180"><span class="lineNum">     180 </span>            :     struct ProcessThread</a>
-<a name="181"><span class="lineNum">     181 </span>            :     {</a>
-<a name="182"><span class="lineNum">     182 </span><span class="lineCov">          4 :         ProcessThread (HostedAudioDeviceInterface&amp; deviceInterface, const HostedAudioDeviceInterface::Parameters&amp; params)</span></a>
-<a name="183"><span class="lineNum">     183 </span><span class="lineCov">          4 :             : audioIO (deviceInterface)</span></a>
-<a name="184"><span class="lineNum">     184 </span>            :         {</a>
-<a name="185"><span class="lineNum">     185 </span><span class="lineCov">          4 :             silenceBuffer.setSize (params.inputChannels, params.blockSize);</span></a>
-<a name="186"><span class="lineNum">     186 </span><span class="lineCov">          4 :             silenceBuffer.clear();</span></a>
-<a name="187"><span class="lineNum">     187 </span><span class="lineCov">          4 :             auto msPerBlock = juce::roundToInt ((params.blockSize / params.sampleRate) * 1000.0);</span></a>
-<a name="188"><span class="lineNum">     188 </span>            : </a>
-<a name="189"><span class="lineNum">     189 </span><span class="lineCov">          4 :             processThread = std::thread ([&amp;, msPerBlock]</span></a>
-<a name="190"><span class="lineNum">     190 </span>            :                                          {</a>
-<a name="191"><span class="lineNum">     191 </span><span class="lineCov">       3908 :                                              hasStarted = true;</span></a>
-<a name="192"><span class="lineNum">     192 </span>            :                 </a>
-<a name="193"><span class="lineNum">     193 </span><span class="lineCov">       3908 :                                              while (! shouldStop.load())</span></a>
-<a name="194"><span class="lineNum">     194 </span>            :                                              {</a>
-<a name="195"><span class="lineNum">     195 </span><span class="lineCov">       3904 :                                                  auto endTime = std::chrono::steady_clock::now() + std::chrono::milliseconds (msPerBlock);</span></a>
-<a name="196"><span class="lineNum">     196 </span>            : </a>
-<a name="197"><span class="lineNum">     197 </span><span class="lineCov">       3904 :                                                  if (insertImpulse.exchange (false))</span></a>
-<a name="198"><span class="lineNum">     198 </span><span class="lineCov">         68 :                                                      for (int c = silenceBuffer.getNumChannels(); --c &gt;= 0;)</span></a>
-<a name="199"><span class="lineNum">     199 </span><span class="lineCov">         64 :                                                          silenceBuffer.setSample (c, 0, 1.0f);</span></a>
-<a name="200"><span class="lineNum">     200 </span>            : </a>
-<a name="201"><span class="lineNum">     201 </span><span class="lineCov">       3904 :                                                  audioIO.processBlock (silenceBuffer, emptyMidiBuffer);</span></a>
-<a name="202"><span class="lineNum">     202 </span><span class="lineCov">       3903 :                                                  silenceBuffer.clear();</span></a>
-<a name="203"><span class="lineNum">     203 </span><span class="lineCov">       3903 :                                                  emptyMidiBuffer.clear();</span></a>
-<a name="204"><span class="lineNum">     204 </span>            : </a>
-<a name="205"><span class="lineNum">     205 </span><span class="lineCov">       3903 :                                                  yield_until (endTime);</span></a>
-<a name="206"><span class="lineNum">     206 </span>            :                                              }</a>
-<a name="207"><span class="lineNum">     207 </span><span class="lineCov">          4 :                                          });</span></a>
-<a name="208"><span class="lineNum">     208 </span><span class="lineCov">          4 :         }</span></a>
-<a name="209"><span class="lineNum">     209 </span>            : </a>
-<a name="210"><span class="lineNum">     210 </span><span class="lineCov">          4 :         ~ProcessThread()</span></a>
-<a name="211"><span class="lineNum">     211 </span><span class="lineCov">          4 :         {</span></a>
-<a name="212"><span class="lineNum">     212 </span>            :             shouldStop.store (true);</a>
-<a name="213"><span class="lineNum">     213 </span><span class="lineCov">          4 :             processThread.join();</span></a>
-<a name="214"><span class="lineNum">     214 </span><span class="lineCov">          4 :         }</span></a>
-<a name="215"><span class="lineNum">     215 </span>            :         </a>
-<a name="216"><span class="lineNum">     216 </span><span class="lineCov">          4 :         void waitForThreadToStart()</span></a>
-<a name="217"><span class="lineNum">     217 </span>            :         {</a>
-<a name="218"><span class="lineNum">     218 </span><span class="lineCov">          4 :             while (! hasStarted)</span></a>
-<a name="219"><span class="lineNum">     219 </span>            :                 std::this_thread::yield();</a>
-<a name="220"><span class="lineNum">     220 </span><span class="lineCov">          4 :         }</span></a>
-<a name="221"><span class="lineNum">     221 </span>            : </a>
-<a name="222"><span class="lineNum">     222 </span>            :         void insertImpulseIntoNextBlock()</a>
-<a name="223"><span class="lineNum">     223 </span>            :         {</a>
-<a name="224"><span class="lineNum">     224 </span>            :             insertImpulse.store (true);</a>
-<a name="225"><span class="lineNum">     225 </span>            :         }</a>
-<a name="226"><span class="lineNum">     226 </span>            :         </a>
-<a name="227"><span class="lineNum">     227 </span>            :         bool needsToInsertImpulse() const</a>
-<a name="228"><span class="lineNum">     228 </span>            :         {</a>
-<a name="229"><span class="lineNum">     229 </span>            :             return insertImpulse;</a>
-<a name="230"><span class="lineNum">     230 </span>            :         }</a>
-<a name="231"><span class="lineNum">     231 </span>            : </a>
-<a name="232"><span class="lineNum">     232 </span>            :     private:</a>
-<a name="233"><span class="lineNum">     233 </span>            :         HostedAudioDeviceInterface&amp; audioIO;</a>
-<a name="234"><span class="lineNum">     234 </span>            :         HostedAudioDeviceInterface::Parameters parameters;</a>
-<a name="235"><span class="lineNum">     235 </span>            : </a>
-<a name="236"><span class="lineNum">     236 </span>            :         juce::AudioBuffer&lt;float&gt; silenceBuffer;</a>
-<a name="237"><span class="lineNum">     237 </span>            :         juce::MidiBuffer emptyMidiBuffer;</a>
-<a name="238"><span class="lineNum">     238 </span>            : </a>
-<a name="239"><span class="lineNum">     239 </span>            :         std::thread processThread;</a>
-<a name="240"><span class="lineNum">     240 </span>            :         std::atomic&lt;bool&gt; hasStarted { false }, shouldStop { false }, insertImpulse { false };</a>
-<a name="241"><span class="lineNum">     241 </span>            :     };</a>
-<a name="242"><span class="lineNum">     242 </span>            : </a>
-<a name="243"><span class="lineNum">     243 </span>            :     //==============================================================================</a>
-<a name="244"><span class="lineNum">     244 </span>            :     struct TempCurrentWorkingDirectory</a>
-<a name="245"><span class="lineNum">     245 </span>            :     {</a>
-<a name="246"><span class="lineNum">     246 </span><span class="lineCov">          4 :         TempCurrentWorkingDirectory()</span></a>
-<a name="247"><span class="lineNum">     247 </span><span class="lineCov">          4 :         {</span></a>
-<a name="248"><span class="lineNum">     248 </span><span class="lineCov">          4 :             tempDir.createDirectory();</span></a>
-<a name="249"><span class="lineNum">     249 </span><span class="lineCov">          4 :             tempDir.setAsCurrentWorkingDirectory();</span></a>
-<a name="250"><span class="lineNum">     250 </span><span class="lineCov">          4 :         }</span></a>
-<a name="251"><span class="lineNum">     251 </span>            : </a>
-<a name="252"><span class="lineNum">     252 </span><span class="lineCov">          4 :         ~TempCurrentWorkingDirectory()</span></a>
-<a name="253"><span class="lineNum">     253 </span><span class="lineCov">          4 :         {</span></a>
-<a name="254"><span class="lineNum">     254 </span><span class="lineCov">          4 :             tempDir.deleteRecursively (false);</span></a>
-<a name="255"><span class="lineNum">     255 </span><span class="lineCov">          4 :             originalCwd.setAsCurrentWorkingDirectory();</span></a>
-<a name="256"><span class="lineNum">     256 </span><span class="lineCov">          4 :         }</span></a>
-<a name="257"><span class="lineNum">     257 </span>            : </a>
-<a name="258"><span class="lineNum">     258 </span>            :         juce::File originalCwd = juce::File::getCurrentWorkingDirectory();</a>
-<a name="259"><span class="lineNum">     259 </span>            :         juce::File tempDir = juce::File::createTempFile ({});</a>
-<a name="260"><span class="lineNum">     260 </span>            :     };</a>
-<a name="261"><span class="lineNum">     261 </span>            : </a>
-<a name="262"><span class="lineNum">     262 </span>            :     //==============================================================================</a>
-<a name="263"><span class="lineNum">     263 </span>            :     template&lt;typename ClipType&gt;</a>
-<a name="264"><span class="lineNum">     264 </span><span class="lineCov">          4 :     juce::Array&lt;ClipType*&gt; getAllClipsFromTracks (Edit&amp; edit)</span></a>
-<a name="265"><span class="lineNum">     265 </span>            :     {</a>
-<a name="266"><span class="lineNum">     266 </span><span class="lineCov">          4 :         juce::Array&lt;ClipType*&gt; clips;</span></a>
-<a name="267"><span class="lineNum">     267 </span>            : </a>
-<a name="268"><span class="lineNum">     268 </span><span class="lineCov">         72 :         for (auto audioTrack : getAudioTracks (edit))</span></a>
-<a name="269"><span class="lineNum">     269 </span><span class="lineCov">        192 :             for (auto clip : audioTrack-&gt;getClips())</span></a>
-<a name="270"><span class="lineNum">     270 </span><span class="lineCov">         64 :                 if (auto waveClip = dynamic_cast&lt;ClipType*&gt; (clip))</span></a>
-<a name="271"><span class="lineNum">     271 </span>            :                     clips.add (waveClip);</a>
-<a name="272"><span class="lineNum">     272 </span>            : </a>
-<a name="273"><span class="lineNum">     273 </span><span class="lineCov">          4 :         return clips;</span></a>
-<a name="274"><span class="lineNum">     274 </span>            :     }</a>
-<a name="275"><span class="lineNum">     275 </span>            : </a>
-<a name="276"><span class="lineNum">     276 </span>            :     template&lt;typename ClipType&gt;</a>
-<a name="277"><span class="lineNum">     277 </span>            :     juce::Array&lt;juce::File&gt; getSourceFilesFromClips (const juce::Array&lt;ClipType*&gt;&amp; clips)</a>
-<a name="278"><span class="lineNum">     278 </span>            :     {</a>
-<a name="279"><span class="lineNum">     279 </span>            :         juce::Array&lt;juce::File&gt; files;</a>
-<a name="280"><span class="lineNum">     280 </span>            : </a>
-<a name="281"><span class="lineNum">     281 </span>            :         for (auto clip : clips)</a>
-<a name="282"><span class="lineNum">     282 </span>            :             files.add (clip-&gt;getCurrentSourceFile());</a>
-<a name="283"><span class="lineNum">     283 </span>            : </a>
-<a name="284"><span class="lineNum">     284 </span>            :         return files;</a>
-<a name="285"><span class="lineNum">     285 </span>            :     }</a>
-<a name="286"><span class="lineNum">     286 </span>            : </a>
-<a name="287"><span class="lineNum">     287 </span><span class="lineCov">         64 :     int64_t findImpulseSampleIndex (Engine&amp; engine, juce::File&amp; file)</span></a>
-<a name="288"><span class="lineNum">     288 </span>            :     {</a>
-<a name="289"><span class="lineNum">     289 </span><span class="lineCov">         64 :         if (auto reader = std::unique_ptr&lt;juce::AudioFormatReader&gt; (tracktion_engine::AudioFileUtils::createReaderFor (engine, file)))</span></a>
-<a name="290"><span class="lineNum">     290 </span><span class="lineCov">         64 :             return reader-&gt;searchForLevel (0, reader-&gt;lengthInSamples,</span></a>
-<a name="291"><span class="lineNum">     291 </span>            :                                            0.9f, 1.1f,</a>
-<a name="292"><span class="lineNum">     292 </span>            :                                            0);</a>
-<a name="293"><span class="lineNum">     293 </span>            : </a>
-<a name="294"><span class="lineNum">     294 </span>            :         return -1;</a>
-<a name="295"><span class="lineNum">     295 </span>            :     }</a>
-<a name="296"><span class="lineNum">     296 </span>            : </a>
-<a name="297"><span class="lineNum">     297 </span><span class="lineCov">          4 :     std::vector&lt;int64_t&gt; getSampleIndiciesOfImpulse (Engine&amp; engine, const juce::Array&lt;juce::File&gt;&amp; files)</span></a>
-<a name="298"><span class="lineNum">     298 </span>            :     {</a>
-<a name="299"><span class="lineNum">     299 </span>            :         std::vector&lt;int64_t&gt; sampleIndicies;</a>
-<a name="300"><span class="lineNum">     300 </span>            : </a>
-<a name="301"><span class="lineNum">     301 </span><span class="lineCov">         68 :         for (auto file : files)</span></a>
-<a name="302"><span class="lineNum">     302 </span><span class="lineCov">         64 :             sampleIndicies.push_back (findImpulseSampleIndex (engine, file));</span></a>
-<a name="303"><span class="lineNum">     303 </span>            : </a>
-<a name="304"><span class="lineNum">     304 </span><span class="lineCov">          4 :         return sampleIndicies;</span></a>
-<a name="305"><span class="lineNum">     305 </span>            :     }</a>
-<a name="306"><span class="lineNum">     306 </span>            :     </a>
-<a name="307"><span class="lineNum">     307 </span><span class="lineCov">         64 :     double getFileLength (Engine&amp; engine, const juce::File&amp; file)</span></a>
-<a name="308"><span class="lineNum">     308 </span>            :     {</a>
-<a name="309"><span class="lineNum">     309 </span><span class="lineCov">         64 :         if (auto reader = std::unique_ptr&lt;juce::AudioFormatReader&gt; (tracktion_engine::AudioFileUtils::createReaderFor (engine, file)))</span></a>
-<a name="310"><span class="lineNum">     310 </span><span class="lineCov">         64 :             if (reader-&gt;sampleRate &gt; 0.0)</span></a>
-<a name="311"><span class="lineNum">     311 </span><span class="lineCov">         64 :                 return reader-&gt;lengthInSamples / reader-&gt;sampleRate;</span></a>
-<a name="312"><span class="lineNum">     312 </span>            : </a>
-<a name="313"><span class="lineNum">     313 </span>            :         return 0.0;</a>
-<a name="314"><span class="lineNum">     314 </span>            :     }</a>
-<a name="315"><span class="lineNum">     315 </span>            : };</a>
-<a name="316"><span class="lineNum">     316 </span>            : </a>
-<a name="317"><span class="lineNum">     317 </span>            : static RecordingSyncTests recordingSyncTests;</a>
-<a name="318"><span class="lineNum">     318 </span>            : </a>
-<a name="319"><span class="lineNum">     319 </span>            : #endif // TRACKTION_UNIT_TESTS</a>
-<a name="320"><span class="lineNum">     320 </span>            : </a>
-<a name="321"><span class="lineNum">     321 </span>            : }</a>
+<a name="72"><span class="lineNum">      72 </span>            :             using namespace std::chrono_literals;</a>
+<a name="73"><span class="lineNum">      73 </span>            :             // Start recording, add an impulse after 1s then wait another 1s and stop recording</a>
+<a name="74"><span class="lineNum">      74 </span><span class="lineCov">          8 :             ProcessThread processThread (audioIO, params);</span></a>
+<a name="75"><span class="lineNum">      75 </span>            : </a>
+<a name="76"><span class="lineNum">      76 </span>            :             transport.stop (false, false);</a>
+<a name="77"><span class="lineNum">      77 </span>            : </a>
+<a name="78"><span class="lineNum">      78 </span>            :             transport.record (false, false);</a>
+<a name="79"><span class="lineNum">      79 </span>            :             auto&amp; epc = *transport.getCurrentPlaybackContext();</a>
+<a name="80"><span class="lineNum">      80 </span><span class="lineCov">          4 :             processThread.waitForThreadToStart();</span></a>
+<a name="81"><span class="lineNum">      81 </span><span class="lineCov">          4 :             waitUntilPlayheadPosition (epc, 1.0s);</span></a>
+<a name="82"><span class="lineNum">      82 </span>            : </a>
+<a name="83"><span class="lineNum">      83 </span>            :             processThread.insertImpulseIntoNextBlock();</a>
+<a name="84"><span class="lineNum">      84 </span><span class="lineCov">          4 :             waitUntilPlayheadPosition (epc, 2.0s);</span></a>
+<a name="85"><span class="lineNum">      85 </span><span class="lineCov">          4 :             expect (! processThread.needsToInsertImpulse(), &quot;Impulse not inserted&quot;);</span></a>
+<a name="86"><span class="lineNum">      86 </span>            : </a>
+<a name="87"><span class="lineNum">      87 </span>            :             transport.stop (false, true);</a>
+<a name="88"><span class="lineNum">      88 </span>            :         }</a>
+<a name="89"><span class="lineNum">      89 </span>            : </a>
+<a name="90"><span class="lineNum">      90 </span>            :         {</a>
+<a name="91"><span class="lineNum">      91 </span>            :             // Get recorded audio files and check the impulse is in the same place</a>
+<a name="92"><span class="lineNum">      92 </span><span class="lineCov">          4 :             auto clips = getAllClipsFromTracks&lt;WaveAudioClip&gt; (*edit);</span></a>
+<a name="93"><span class="lineNum">      93 </span><span class="lineCov">          4 :             expectEquals (clips.size(), getAudioTracks (*edit).size());</span></a>
+<a name="94"><span class="lineNum">      94 </span><span class="lineCov">          4 :             auto audioFiles = getSourceFilesFromClips (clips);</span></a>
+<a name="95"><span class="lineNum">      95 </span><span class="lineCov">          4 :             auto sampleIndicies = getSampleIndiciesOfImpulse (engine, audioFiles);</span></a>
+<a name="96"><span class="lineNum">      96 </span>            : </a>
+<a name="97"><span class="lineNum">      97 </span><span class="lineCov">          4 :             expect (tempDir.tempDir.exists() &amp;&amp; tempDir.tempDir.isDirectory(), &quot;Output dir not created&quot;);</span></a>
+<a name="98"><span class="lineNum">      98 </span><span class="lineCov">          4 :             expect (tempDir.tempDir.hasWriteAccess(), &quot;Output dir is read only&quot;);</span></a>
+<a name="99"><span class="lineNum">      99 </span><span class="lineCov">          4 :             expectEquals (tempDir.tempDir.getFullPathName(), juce::File::getCurrentWorkingDirectory().getFullPathName(), &quot;Current directory has changed&quot;);</span></a>
+<a name="100"><span class="lineNum">     100 </span><span class="lineCov">          4 :             expectEquals (audioFiles.size(), deviceManager.getNumWaveInDevices(), &quot;Audio files not created&quot;);</span></a>
+<a name="101"><span class="lineNum">     101 </span>            : </a>
+<a name="102"><span class="lineNum">     102 </span><span class="lineCov">         68 :             for (const auto&amp; f : audioFiles)</span></a>
+<a name="103"><span class="lineNum">     103 </span>            :             {</a>
+<a name="104"><span class="lineNum">     104 </span><span class="lineCov">         64 :                 expect (f.existsAsFile(), juce::String (&quot;File doesn't exist FILE&quot;).replace (&quot;FILE&quot;, f.getFullPathName()));</span></a>
+<a name="105"><span class="lineNum">     105 </span><span class="lineCov">         64 :                 expectGreaterOrEqual (getFileLength (engine, f), 2.0, &quot;File length less then 2 seconds&quot;);</span></a>
+<a name="106"><span class="lineNum">     106 </span>            :             }</a>
+<a name="107"><span class="lineNum">     107 </span>            : </a>
+<a name="108"><span class="lineNum">     108 </span><span class="lineCov">          8 :             expectEquals ((int) std::count_if (sampleIndicies.begin(), sampleIndicies.end(),</span></a>
+<a name="109"><span class="lineNum">     109 </span>            :                                                [] (auto index) { return index != -1; }),</a>
+<a name="110"><span class="lineNum">     110 </span>            :                           audioFiles.size(), &quot;Some files don't have an impulse in them&quot;);</a>
+<a name="111"><span class="lineNum">     111 </span>            : </a>
+<a name="112"><span class="lineNum">     112 </span>            :             int fileIndex = 0;</a>
+<a name="113"><span class="lineNum">     113 </span>            :             </a>
+<a name="114"><span class="lineNum">     114 </span><span class="lineCov">         68 :             for (auto index : sampleIndicies)</span></a>
+<a name="115"><span class="lineNum">     115 </span>            :             {</a>
+<a name="116"><span class="lineNum">     116 </span><span class="lineCov">        128 :                 expectGreaterOrEqual&lt;int64_t&gt; (index, 0, juce::String (&quot;File doesn't have an impulse in: FILE&quot;).replace (&quot;FILE&quot;, audioFiles[fileIndex].getFullPathName()));</span></a>
+<a name="117"><span class="lineNum">     117 </span>            :                 </a>
+<a name="118"><span class="lineNum">     118 </span><span class="lineCov">         64 :                 if (index != sampleIndicies[0])</span></a>
+<a name="119"><span class="lineNum">     119 </span><span class="lineNoCov">          0 :                     expect (false, juce::String (&quot;Mismatch of impulse indicies (FIRST &amp; SECOND samples, difference of DIFF)&quot;)</span></a>
+<a name="120"><span class="lineNum">     120 </span><span class="lineNoCov">          0 :                                     .replace (&quot;FIRST&quot;, juce::String (index))</span></a>
+<a name="121"><span class="lineNum">     121 </span><span class="lineNoCov">          0 :                                     .replace (&quot;SECOND&quot;, juce::String (sampleIndicies[0]))</span></a>
+<a name="122"><span class="lineNum">     122 </span><span class="lineNoCov">          0 :                                     .replace (&quot;DIFF&quot;, juce::String (index - sampleIndicies[0])));</span></a>
+<a name="123"><span class="lineNum">     123 </span>            :                 </a>
+<a name="124"><span class="lineNum">     124 </span><span class="lineCov">         64 :                 ++fileIndex;</span></a>
+<a name="125"><span class="lineNum">     125 </span>            :             }</a>
+<a name="126"><span class="lineNum">     126 </span>            :         }</a>
+<a name="127"><span class="lineNum">     127 </span><span class="lineCov">          4 :     }</span></a>
+<a name="128"><span class="lineNum">     128 </span>            : </a>
+<a name="129"><span class="lineNum">     129 </span>            :     void cleanUp()</a>
+<a name="130"><span class="lineNum">     130 </span>            :     {</a>
+<a name="131"><span class="lineNum">     131 </span>            :         auto&amp; deviceManager = Engine::getEngines()[0]-&gt;getDeviceManager();</a>
+<a name="132"><span class="lineNum">     132 </span>            :         deviceManager.closeDevices();</a>
+<a name="133"><span class="lineNum">     133 </span>            :         deviceManager.removeHostedAudioDeviceInterface();</a>
+<a name="134"><span class="lineNum">     134 </span>            :         deviceManager.deviceManager.closeAudioDevice();</a>
+<a name="135"><span class="lineNum">     135 </span>            :     }</a>
+<a name="136"><span class="lineNum">     136 </span>            : </a>
+<a name="137"><span class="lineNum">     137 </span>            :     //==============================================================================</a>
+<a name="138"><span class="lineNum">     138 </span>            :     template&lt;class Clock, class Duration&gt;</a>
+<a name="139"><span class="lineNum">     139 </span><span class="lineCov">       3887 :     static void yield_until (const std::chrono::time_point&lt;Clock, Duration&gt;&amp; sleep_time)</span></a>
+<a name="140"><span class="lineNum">     140 </span>            :     {</a>
+<a name="141"><span class="lineNum">     141 </span><span class="lineCov">   10349200 :         while (Clock::now() &lt; sleep_time)</span></a>
+<a name="142"><span class="lineNum">     142 </span>            :             std::this_thread::yield();</a>
+<a name="143"><span class="lineNum">     143 </span><span class="lineCov">       3887 :     }</span></a>
+<a name="144"><span class="lineNum">     144 </span>            :     </a>
+<a name="145"><span class="lineNum">     145 </span>            :     void waitUntilPlayheadPosition (const EditPlaybackContext&amp; epc, TimePosition time)</a>
+<a name="146"><span class="lineNum">     146 </span>            :     {</a>
+<a name="147"><span class="lineNum">     147 </span>            :         using namespace std::chrono_literals;</a>
+<a name="148"><span class="lineNum">     148 </span>            :         </a>
+<a name="149"><span class="lineNum">     149 </span>            :         while (epc.getUnloopedPosition() &lt; time)</a>
+<a name="150"><span class="lineNum">     150 </span>            :             std::this_thread::sleep_for (1ms);</a>
+<a name="151"><span class="lineNum">     151 </span>            :     }</a>
+<a name="152"><span class="lineNum">     152 </span>            : </a>
+<a name="153"><span class="lineNum">     153 </span>            :     //==============================================================================</a>
+<a name="154"><span class="lineNum">     154 </span><span class="lineCov">          4 :     std::unique_ptr&lt;Edit&gt; createEditWithTracksForInputs (Engine&amp; engine, const HostedAudioDeviceInterface::Parameters&amp; params)</span></a>
+<a name="155"><span class="lineNum">     155 </span>            :     {</a>
+<a name="156"><span class="lineNum">     156 </span><span class="lineCov">          8 :         auto edit = std::make_unique&lt;Edit&gt; (Edit::Options { engine, createEmptyEdit (engine), ProjectItemID::createNewID (0) });</span></a>
+<a name="157"><span class="lineNum">     157 </span>            :         auto&amp; transport = edit-&gt;getTransport();</a>
+<a name="158"><span class="lineNum">     158 </span><span class="lineCov">          4 :         transport.ensureContextAllocated();</span></a>
+<a name="159"><span class="lineNum">     159 </span>            :         auto context = transport.getCurrentPlaybackContext();</a>
+<a name="160"><span class="lineNum">     160 </span>            : </a>
+<a name="161"><span class="lineNum">     161 </span><span class="lineCov">          4 :         edit-&gt;ensureNumberOfAudioTracks (params.inputChannels);</span></a>
+<a name="162"><span class="lineNum">     162 </span><span class="lineCov">          4 :         auto audioTracks = getAudioTracks (*edit);</span></a>
+<a name="163"><span class="lineNum">     163 </span>            :         auto inputInstances = context-&gt;getAllInputs();</a>
+<a name="164"><span class="lineNum">     164 </span><span class="lineCov">          4 :         inputInstances.removeIf ([] (auto instance) { return instance-&gt;owner.isMidi(); });</span></a>
+<a name="165"><span class="lineNum">     165 </span>            : </a>
+<a name="166"><span class="lineNum">     166 </span><span class="lineCov">          4 :         expectEquals (inputInstances.size(), params.inputChannels);</span></a>
+<a name="167"><span class="lineNum">     167 </span><span class="lineCov">          4 :         expectEquals (inputInstances.size(), audioTracks.size());</span></a>
+<a name="168"><span class="lineNum">     168 </span>            : </a>
+<a name="169"><span class="lineNum">     169 </span><span class="lineCov">         68 :         for (int i = 0; i &lt; params.inputChannels; ++i)</span></a>
+<a name="170"><span class="lineNum">     170 </span>            :         {</a>
+<a name="171"><span class="lineNum">     171 </span>            :             auto track = audioTracks.getUnchecked (i);</a>
+<a name="172"><span class="lineNum">     172 </span>            :             auto inputInstance = inputInstances.getUnchecked (i);</a>
+<a name="173"><span class="lineNum">     173 </span><span class="lineCov">         64 :             inputInstance-&gt;setTargetTrack (*track, 0, true);</span></a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineCov">         64 :             inputInstance-&gt;setRecordingEnabled (*track, true);</span></a>
+<a name="175"><span class="lineNum">     175 </span>            :         }</a>
+<a name="176"><span class="lineNum">     176 </span>            : </a>
+<a name="177"><span class="lineNum">     177 </span><span class="lineCov">          4 :         return edit;</span></a>
+<a name="178"><span class="lineNum">     178 </span>            :     }</a>
+<a name="179"><span class="lineNum">     179 </span>            : </a>
+<a name="180"><span class="lineNum">     180 </span>            :     //==============================================================================</a>
+<a name="181"><span class="lineNum">     181 </span>            :     struct ProcessThread</a>
+<a name="182"><span class="lineNum">     182 </span>            :     {</a>
+<a name="183"><span class="lineNum">     183 </span><span class="lineCov">          4 :         ProcessThread (HostedAudioDeviceInterface&amp; deviceInterface, const HostedAudioDeviceInterface::Parameters&amp; params)</span></a>
+<a name="184"><span class="lineNum">     184 </span><span class="lineCov">          4 :             : audioIO (deviceInterface)</span></a>
+<a name="185"><span class="lineNum">     185 </span>            :         {</a>
+<a name="186"><span class="lineNum">     186 </span><span class="lineCov">          4 :             silenceBuffer.setSize (params.inputChannels, params.blockSize);</span></a>
+<a name="187"><span class="lineNum">     187 </span><span class="lineCov">          4 :             silenceBuffer.clear();</span></a>
+<a name="188"><span class="lineNum">     188 </span><span class="lineCov">          4 :             auto msPerBlock = juce::roundToInt ((params.blockSize / params.sampleRate) * 1000.0);</span></a>
+<a name="189"><span class="lineNum">     189 </span>            : </a>
+<a name="190"><span class="lineNum">     190 </span><span class="lineCov">          4 :             processThread = std::thread ([&amp;, msPerBlock]</span></a>
+<a name="191"><span class="lineNum">     191 </span>            :                                          {</a>
+<a name="192"><span class="lineNum">     192 </span><span class="lineCov">       3891 :                                              hasStarted = true;</span></a>
+<a name="193"><span class="lineNum">     193 </span>            :                 </a>
+<a name="194"><span class="lineNum">     194 </span><span class="lineCov">       3891 :                                              while (! shouldStop.load())</span></a>
+<a name="195"><span class="lineNum">     195 </span>            :                                              {</a>
+<a name="196"><span class="lineNum">     196 </span><span class="lineCov">       3887 :                                                  auto endTime = std::chrono::steady_clock::now() + std::chrono::milliseconds (msPerBlock);</span></a>
+<a name="197"><span class="lineNum">     197 </span>            : </a>
+<a name="198"><span class="lineNum">     198 </span><span class="lineCov">       3887 :                                                  if (insertImpulse.exchange (false))</span></a>
+<a name="199"><span class="lineNum">     199 </span><span class="lineCov">         68 :                                                      for (int c = silenceBuffer.getNumChannels(); --c &gt;= 0;)</span></a>
+<a name="200"><span class="lineNum">     200 </span><span class="lineCov">         64 :                                                          silenceBuffer.setSample (c, 0, 1.0f);</span></a>
+<a name="201"><span class="lineNum">     201 </span>            : </a>
+<a name="202"><span class="lineNum">     202 </span><span class="lineCov">       3887 :                                                  audioIO.processBlock (silenceBuffer, emptyMidiBuffer);</span></a>
+<a name="203"><span class="lineNum">     203 </span><span class="lineCov">       3887 :                                                  silenceBuffer.clear();</span></a>
+<a name="204"><span class="lineNum">     204 </span><span class="lineCov">       3887 :                                                  emptyMidiBuffer.clear();</span></a>
+<a name="205"><span class="lineNum">     205 </span>            : </a>
+<a name="206"><span class="lineNum">     206 </span><span class="lineCov">       3887 :                                                  yield_until (endTime);</span></a>
+<a name="207"><span class="lineNum">     207 </span>            :                                              }</a>
+<a name="208"><span class="lineNum">     208 </span><span class="lineCov">          4 :                                          });</span></a>
+<a name="209"><span class="lineNum">     209 </span><span class="lineCov">          4 :         }</span></a>
+<a name="210"><span class="lineNum">     210 </span>            : </a>
+<a name="211"><span class="lineNum">     211 </span><span class="lineCov">          4 :         ~ProcessThread()</span></a>
+<a name="212"><span class="lineNum">     212 </span><span class="lineCov">          4 :         {</span></a>
+<a name="213"><span class="lineNum">     213 </span>            :             shouldStop.store (true);</a>
+<a name="214"><span class="lineNum">     214 </span><span class="lineCov">          4 :             processThread.join();</span></a>
+<a name="215"><span class="lineNum">     215 </span><span class="lineCov">          4 :         }</span></a>
+<a name="216"><span class="lineNum">     216 </span>            :         </a>
+<a name="217"><span class="lineNum">     217 </span><span class="lineCov">          4 :         void waitForThreadToStart()</span></a>
+<a name="218"><span class="lineNum">     218 </span>            :         {</a>
+<a name="219"><span class="lineNum">     219 </span><span class="lineCov">          4 :             while (! hasStarted)</span></a>
+<a name="220"><span class="lineNum">     220 </span>            :                 std::this_thread::yield();</a>
+<a name="221"><span class="lineNum">     221 </span><span class="lineCov">          4 :         }</span></a>
+<a name="222"><span class="lineNum">     222 </span>            : </a>
+<a name="223"><span class="lineNum">     223 </span>            :         void insertImpulseIntoNextBlock()</a>
+<a name="224"><span class="lineNum">     224 </span>            :         {</a>
+<a name="225"><span class="lineNum">     225 </span>            :             insertImpulse.store (true);</a>
+<a name="226"><span class="lineNum">     226 </span>            :         }</a>
+<a name="227"><span class="lineNum">     227 </span>            :         </a>
+<a name="228"><span class="lineNum">     228 </span>            :         bool needsToInsertImpulse() const</a>
+<a name="229"><span class="lineNum">     229 </span>            :         {</a>
+<a name="230"><span class="lineNum">     230 </span>            :             return insertImpulse;</a>
+<a name="231"><span class="lineNum">     231 </span>            :         }</a>
+<a name="232"><span class="lineNum">     232 </span>            : </a>
+<a name="233"><span class="lineNum">     233 </span>            :     private:</a>
+<a name="234"><span class="lineNum">     234 </span>            :         HostedAudioDeviceInterface&amp; audioIO;</a>
+<a name="235"><span class="lineNum">     235 </span>            :         HostedAudioDeviceInterface::Parameters parameters;</a>
+<a name="236"><span class="lineNum">     236 </span>            : </a>
+<a name="237"><span class="lineNum">     237 </span>            :         juce::AudioBuffer&lt;float&gt; silenceBuffer;</a>
+<a name="238"><span class="lineNum">     238 </span>            :         juce::MidiBuffer emptyMidiBuffer;</a>
+<a name="239"><span class="lineNum">     239 </span>            : </a>
+<a name="240"><span class="lineNum">     240 </span>            :         std::thread processThread;</a>
+<a name="241"><span class="lineNum">     241 </span>            :         std::atomic&lt;bool&gt; hasStarted { false }, shouldStop { false }, insertImpulse { false };</a>
+<a name="242"><span class="lineNum">     242 </span>            :     };</a>
+<a name="243"><span class="lineNum">     243 </span>            : </a>
+<a name="244"><span class="lineNum">     244 </span>            :     //==============================================================================</a>
+<a name="245"><span class="lineNum">     245 </span>            :     struct TempCurrentWorkingDirectory</a>
+<a name="246"><span class="lineNum">     246 </span>            :     {</a>
+<a name="247"><span class="lineNum">     247 </span><span class="lineCov">          4 :         TempCurrentWorkingDirectory()</span></a>
+<a name="248"><span class="lineNum">     248 </span><span class="lineCov">          4 :         {</span></a>
+<a name="249"><span class="lineNum">     249 </span><span class="lineCov">          4 :             tempDir.createDirectory();</span></a>
+<a name="250"><span class="lineNum">     250 </span><span class="lineCov">          4 :             tempDir.setAsCurrentWorkingDirectory();</span></a>
+<a name="251"><span class="lineNum">     251 </span><span class="lineCov">          4 :         }</span></a>
+<a name="252"><span class="lineNum">     252 </span>            : </a>
+<a name="253"><span class="lineNum">     253 </span><span class="lineCov">          4 :         ~TempCurrentWorkingDirectory()</span></a>
+<a name="254"><span class="lineNum">     254 </span><span class="lineCov">          4 :         {</span></a>
+<a name="255"><span class="lineNum">     255 </span><span class="lineCov">          4 :             tempDir.deleteRecursively (false);</span></a>
+<a name="256"><span class="lineNum">     256 </span><span class="lineCov">          4 :             originalCwd.setAsCurrentWorkingDirectory();</span></a>
+<a name="257"><span class="lineNum">     257 </span><span class="lineCov">          4 :         }</span></a>
+<a name="258"><span class="lineNum">     258 </span>            : </a>
+<a name="259"><span class="lineNum">     259 </span>            :         juce::File originalCwd = juce::File::getCurrentWorkingDirectory();</a>
+<a name="260"><span class="lineNum">     260 </span>            :         juce::File tempDir = juce::File::createTempFile ({});</a>
+<a name="261"><span class="lineNum">     261 </span>            :     };</a>
+<a name="262"><span class="lineNum">     262 </span>            : </a>
+<a name="263"><span class="lineNum">     263 </span>            :     //==============================================================================</a>
+<a name="264"><span class="lineNum">     264 </span>            :     template&lt;typename ClipType&gt;</a>
+<a name="265"><span class="lineNum">     265 </span><span class="lineCov">          4 :     juce::Array&lt;ClipType*&gt; getAllClipsFromTracks (Edit&amp; edit)</span></a>
+<a name="266"><span class="lineNum">     266 </span>            :     {</a>
+<a name="267"><span class="lineNum">     267 </span><span class="lineCov">          4 :         juce::Array&lt;ClipType*&gt; clips;</span></a>
+<a name="268"><span class="lineNum">     268 </span>            : </a>
+<a name="269"><span class="lineNum">     269 </span><span class="lineCov">         72 :         for (auto audioTrack : getAudioTracks (edit))</span></a>
+<a name="270"><span class="lineNum">     270 </span><span class="lineCov">        192 :             for (auto clip : audioTrack-&gt;getClips())</span></a>
+<a name="271"><span class="lineNum">     271 </span><span class="lineCov">         64 :                 if (auto waveClip = dynamic_cast&lt;ClipType*&gt; (clip))</span></a>
+<a name="272"><span class="lineNum">     272 </span>            :                     clips.add (waveClip);</a>
+<a name="273"><span class="lineNum">     273 </span>            : </a>
+<a name="274"><span class="lineNum">     274 </span><span class="lineCov">          4 :         return clips;</span></a>
+<a name="275"><span class="lineNum">     275 </span>            :     }</a>
+<a name="276"><span class="lineNum">     276 </span>            : </a>
+<a name="277"><span class="lineNum">     277 </span>            :     template&lt;typename ClipType&gt;</a>
+<a name="278"><span class="lineNum">     278 </span>            :     juce::Array&lt;juce::File&gt; getSourceFilesFromClips (const juce::Array&lt;ClipType*&gt;&amp; clips)</a>
+<a name="279"><span class="lineNum">     279 </span>            :     {</a>
+<a name="280"><span class="lineNum">     280 </span>            :         juce::Array&lt;juce::File&gt; files;</a>
+<a name="281"><span class="lineNum">     281 </span>            : </a>
+<a name="282"><span class="lineNum">     282 </span>            :         for (auto clip : clips)</a>
+<a name="283"><span class="lineNum">     283 </span>            :             files.add (clip-&gt;getCurrentSourceFile());</a>
+<a name="284"><span class="lineNum">     284 </span>            : </a>
+<a name="285"><span class="lineNum">     285 </span>            :         return files;</a>
+<a name="286"><span class="lineNum">     286 </span>            :     }</a>
+<a name="287"><span class="lineNum">     287 </span>            : </a>
+<a name="288"><span class="lineNum">     288 </span><span class="lineCov">         64 :     int64_t findImpulseSampleIndex (Engine&amp; engine, juce::File&amp; file)</span></a>
+<a name="289"><span class="lineNum">     289 </span>            :     {</a>
+<a name="290"><span class="lineNum">     290 </span><span class="lineCov">         64 :         if (auto reader = std::unique_ptr&lt;juce::AudioFormatReader&gt; (tracktion::engine::AudioFileUtils::createReaderFor (engine, file)))</span></a>
+<a name="291"><span class="lineNum">     291 </span><span class="lineCov">         64 :             return reader-&gt;searchForLevel (0, reader-&gt;lengthInSamples,</span></a>
+<a name="292"><span class="lineNum">     292 </span>            :                                            0.9f, 1.1f,</a>
+<a name="293"><span class="lineNum">     293 </span>            :                                            0);</a>
+<a name="294"><span class="lineNum">     294 </span>            : </a>
+<a name="295"><span class="lineNum">     295 </span>            :         return -1;</a>
+<a name="296"><span class="lineNum">     296 </span>            :     }</a>
+<a name="297"><span class="lineNum">     297 </span>            : </a>
+<a name="298"><span class="lineNum">     298 </span><span class="lineCov">          4 :     std::vector&lt;int64_t&gt; getSampleIndiciesOfImpulse (Engine&amp; engine, const juce::Array&lt;juce::File&gt;&amp; files)</span></a>
+<a name="299"><span class="lineNum">     299 </span>            :     {</a>
+<a name="300"><span class="lineNum">     300 </span>            :         std::vector&lt;int64_t&gt; sampleIndicies;</a>
+<a name="301"><span class="lineNum">     301 </span>            : </a>
+<a name="302"><span class="lineNum">     302 </span><span class="lineCov">         68 :         for (auto file : files)</span></a>
+<a name="303"><span class="lineNum">     303 </span><span class="lineCov">         64 :             sampleIndicies.push_back (findImpulseSampleIndex (engine, file));</span></a>
+<a name="304"><span class="lineNum">     304 </span>            : </a>
+<a name="305"><span class="lineNum">     305 </span><span class="lineCov">          4 :         return sampleIndicies;</span></a>
+<a name="306"><span class="lineNum">     306 </span>            :     }</a>
+<a name="307"><span class="lineNum">     307 </span>            :     </a>
+<a name="308"><span class="lineNum">     308 </span><span class="lineCov">         64 :     double getFileLength (Engine&amp; engine, const juce::File&amp; file)</span></a>
+<a name="309"><span class="lineNum">     309 </span>            :     {</a>
+<a name="310"><span class="lineNum">     310 </span><span class="lineCov">         64 :         if (auto reader = std::unique_ptr&lt;juce::AudioFormatReader&gt; (tracktion::engine::AudioFileUtils::createReaderFor (engine, file)))</span></a>
+<a name="311"><span class="lineNum">     311 </span><span class="lineCov">         64 :             if (reader-&gt;sampleRate &gt; 0.0)</span></a>
+<a name="312"><span class="lineNum">     312 </span><span class="lineCov">         64 :                 return reader-&gt;lengthInSamples / reader-&gt;sampleRate;</span></a>
+<a name="313"><span class="lineNum">     313 </span>            : </a>
+<a name="314"><span class="lineNum">     314 </span>            :         return 0.0;</a>
+<a name="315"><span class="lineNum">     315 </span>            :     }</a>
+<a name="316"><span class="lineNum">     316 </span>            : };</a>
+<a name="317"><span class="lineNum">     317 </span>            : </a>
+<a name="318"><span class="lineNum">     318 </span>            : static RecordingSyncTests recordingSyncTests;</a>
+<a name="319"><span class="lineNum">     319 </span>            : </a>
+<a name="320"><span class="lineNum">     320 </span>            : #endif // TRACKTION_UNIT_TESTS</a>
+<a name="321"><span class="lineNum">     321 </span>            : </a>
+<a name="322"><span class="lineNum">     322 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

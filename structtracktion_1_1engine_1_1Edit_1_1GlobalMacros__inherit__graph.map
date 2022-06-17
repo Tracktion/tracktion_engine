@@ -1,0 +1,4 @@
+<map id="tracktion::engine::Edit::GlobalMacros" name="tracktion::engine::Edit::GlobalMacros">
+<area shape="rect" id="node1" title="Holds the global Macros for the Edit." alt="" coords="25,95,169,136"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1MacroParameterElement.html" title="Base class for elements which can contain macro parameters." alt="" coords="5,5,188,47"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="tracktion::engine::InputDeviceInstance::WaveInputDeviceDestination" name="tracktion::engine::InputDeviceInstance::WaveInputDeviceDestination">
+<area shape="rect" id="node1" title=" " alt="" coords="5,199,224,255"/>
+<area shape="rect" id="node2" href="$structtracktion_1_1engine_1_1InputDeviceInstance_1_1InputDeviceDestination.html" title=" " alt="" coords="23,95,206,151"/>
+<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="45,5,185,47"/>
+</map>

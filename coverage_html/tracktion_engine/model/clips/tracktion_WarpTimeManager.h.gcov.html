@@ -32,16 +32,16 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">29</td>
+            <td class="headerCovTableEntry">35</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">12</td>
+            <td class="headerCovTableEntry">13</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : //==============================================================================</a>
@@ -82,10 +82,10 @@
 <a name="20"><span class="lineNum">      20 </span><span class="lineNoCov">          0 : struct WarpMarker</span></a>
 <a name="21"><span class="lineNum">      21 </span>            : {</a>
 <a name="22"><span class="lineNum">      22 </span>            :     /** Creates an empty WarpMarker. */</a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineNoCov">          0 :     WarpMarker() noexcept {}</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineNoCov">          0 :     WarpMarker() noexcept = default;</span></a>
 <a name="24"><span class="lineNum">      24 </span>            : </a>
 <a name="25"><span class="lineNum">      25 </span>            :     /** Creates a WarpMarker with a source and warp time. */</a>
-<a name="26"><span class="lineNum">      26 </span>            :     WarpMarker (double s, double w)</a>
+<a name="26"><span class="lineNum">      26 </span>            :     WarpMarker (TimePosition s, TimePosition w)</a>
 <a name="27"><span class="lineNum">      27 </span><span class="lineNoCov">          0 :         : sourceTime (s), warpTime (w) {}</span></a>
 <a name="28"><span class="lineNum">      28 </span>            : </a>
 <a name="29"><span class="lineNum">      29 </span>            :     /** Loads a WarpMarker from a saved state. */</a>
@@ -96,19 +96,19 @@
 <a name="34"><span class="lineNum">      34 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="35"><span class="lineNum">      35 </span>            : </a>
 <a name="36"><span class="lineNum">      36 </span>            :     /** Updates this WarpMarker from a ValueTree property. */</a>
-<a name="37"><span class="lineNum">      37 </span>            :     void updateFrom (const juce::ValueTree&amp; v, const juce::Identifier&amp; i)</a>
+<a name="37"><span class="lineNum">      37 </span><span class="lineNoCov">          0 :     void updateFrom (const juce::ValueTree&amp; v, const juce::Identifier&amp; i)</span></a>
 <a name="38"><span class="lineNum">      38 </span>            :     {</a>
-<a name="39"><span class="lineNum">      39 </span>            :         if (i == IDs::sourceTime)</a>
-<a name="40"><span class="lineNum">      40 </span>            :             sourceTime = double (v.getProperty (IDs::sourceTime));</a>
-<a name="41"><span class="lineNum">      41 </span>            :         else if (i == IDs::warpTime)</a>
-<a name="42"><span class="lineNum">      42 </span>            :             warpTime = double (v.getProperty (IDs::warpTime));</a>
-<a name="43"><span class="lineNum">      43 </span>            :     }</a>
+<a name="39"><span class="lineNum">      39 </span><span class="lineNoCov">          0 :         if (i == IDs::sourceTime)</span></a>
+<a name="40"><span class="lineNum">      40 </span><span class="lineNoCov">          0 :             sourceTime = TimePosition::fromSeconds (double (v.getProperty (IDs::sourceTime)));</span></a>
+<a name="41"><span class="lineNum">      41 </span><span class="lineNoCov">          0 :         else if (i == IDs::warpTime)</span></a>
+<a name="42"><span class="lineNum">      42 </span><span class="lineNoCov">          0 :             warpTime = TimePosition::fromSeconds (double (v.getProperty (IDs::warpTime)));</span></a>
+<a name="43"><span class="lineNum">      43 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="44"><span class="lineNum">      44 </span>            : </a>
 <a name="45"><span class="lineNum">      45 </span>            :     /** Returns a hash for this marker. */</a>
 <a name="46"><span class="lineNum">      46 </span>            :     HashCode getHash() const noexcept;</a>
 <a name="47"><span class="lineNum">      47 </span>            : </a>
 <a name="48"><span class="lineNum">      48 </span>            :     juce::ValueTree state;</a>
-<a name="49"><span class="lineNum">      49 </span>            :     double sourceTime = 0, warpTime = 0;</a>
+<a name="49"><span class="lineNum">      49 </span>            :     TimePosition sourceTime, warpTime;</a>
 <a name="50"><span class="lineNum">      50 </span>            : };</a>
 <a name="51"><span class="lineNum">      51 </span>            : </a>
 <a name="52"><span class="lineNum">      52 </span>            : </a>
@@ -147,7 +147,7 @@
 <a name="85"><span class="lineNum">      85 </span>            :     AudioFile getSourceFile() const;</a>
 <a name="86"><span class="lineNum">      86 </span>            :     </a>
 <a name="87"><span class="lineNum">      87 </span>            :     /** Returns the length of the source file. */</a>
-<a name="88"><span class="lineNum">      88 </span>            :     double getSourceLength() const;</a>
+<a name="88"><span class="lineNum">      88 </span>            :     TimeDuration getSourceLength() const;</a>
 <a name="89"><span class="lineNum">      89 </span>            : </a>
 <a name="90"><span class="lineNum">      90 </span>            :     //==============================================================================</a>
 <a name="91"><span class="lineNum">      91 </span>            :     /** Returns true if the end marker is being used as the end of the source material.</a>
@@ -173,37 +173,37 @@
 <a name="111"><span class="lineNum">     111 </span>            :     void removeAllMarkers();</a>
 <a name="112"><span class="lineNum">     112 </span>            :     </a>
 <a name="113"><span class="lineNum">     113 </span>            :     /** Moves a WarpMarker at a given index to a new time. */</a>
-<a name="114"><span class="lineNum">     114 </span>            :     double moveMarker (int index, double newWarpTime);</a>
+<a name="114"><span class="lineNum">     114 </span>            :     TimePosition moveMarker (int index, TimePosition newWarpTime);</a>
 <a name="115"><span class="lineNum">     115 </span>            : </a>
 <a name="116"><span class="lineNum">     116 </span>            :     /** Sets the end time of the source material.</a>
 <a name="117"><span class="lineNum">     117 </span>            :         Only functional if isWarpEndMarkerEnabled returns true.</a>
 <a name="118"><span class="lineNum">     118 </span>            :     */</a>
-<a name="119"><span class="lineNum">     119 </span>            :     void setWarpEndMarkerTime (double endTime);</a>
+<a name="119"><span class="lineNum">     119 </span>            :     void setWarpEndMarkerTime (TimePosition endTime);</a>
 <a name="120"><span class="lineNum">     120 </span>            : </a>
 <a name="121"><span class="lineNum">     121 </span>            :     //==============================================================================</a>
 <a name="122"><span class="lineNum">     122 </span>            :     /** Time region can be longer than the clip and the returned array will loop over the clip to match the length */</a>
-<a name="123"><span class="lineNum">     123 </span>            :     juce::Array&lt;EditTimeRange&gt; getWarpTimeRegions (EditTimeRange overallTimeRegion) const;</a>
+<a name="123"><span class="lineNum">     123 </span>            :     juce::Array&lt;TimeRange&gt; getWarpTimeRegions (TimeRange overallTimeRegion) const;</a>
 <a name="124"><span class="lineNum">     124 </span>            :     </a>
 <a name="125"><span class="lineNum">     125 </span>            :     /** Returns an array of transient times that have been detected from the source file.</a>
 <a name="126"><span class="lineNum">     126 </span>            :         The bool here will be false if the detection job hasn't finished running yet so call it again peridically</a>
 <a name="127"><span class="lineNum">     127 </span>            :         until it is true.</a>
 <a name="128"><span class="lineNum">     128 </span>            :     */</a>
-<a name="129"><span class="lineNum">     129 </span>            :     std::pair&lt;bool, juce::Array&lt;double&gt;&gt; getTransientTimes() const    { return transientTimes; }</a>
+<a name="129"><span class="lineNum">     129 </span>            :     std::pair&lt;bool, juce::Array&lt;TimePosition&gt;&gt; getTransientTimes() const    { return transientTimes; }</a>
 <a name="130"><span class="lineNum">     130 </span>            : </a>
 <a name="131"><span class="lineNum">     131 </span>            :     /** Converts a warp time (i.e. a linear time) to the time in the source file after warping has been applied. */</a>
-<a name="132"><span class="lineNum">     132 </span>            :     double warpTimeToSourceTime (double warpTime) const;</a>
+<a name="132"><span class="lineNum">     132 </span>            :     TimePosition warpTimeToSourceTime (TimePosition warpTime) const;</a>
 <a name="133"><span class="lineNum">     133 </span>            : </a>
 <a name="134"><span class="lineNum">     134 </span>            :     /** Converts a source time (i.e. time in the file) to a linear time after warping has been applied. */</a>
-<a name="135"><span class="lineNum">     135 </span>            :     double sourceTimeToWarpTime (double sourceTime) const;</a>
+<a name="135"><span class="lineNum">     135 </span>            :     TimePosition sourceTimeToWarpTime (TimePosition sourceTime) const;</a>
 <a name="136"><span class="lineNum">     136 </span>            : </a>
 <a name="137"><span class="lineNum">     137 </span>            :     /** Returns the start time of the warped region (can be -ve) */</a>
-<a name="138"><span class="lineNum">     138 </span>            :     double getWarpedStart() const;</a>
+<a name="138"><span class="lineNum">     138 </span>            :     TimePosition getWarpedStart() const;</a>
 <a name="139"><span class="lineNum">     139 </span>            : </a>
 <a name="140"><span class="lineNum">     140 </span>            :     /** Returns the endTime of the entire warped region */</a>
-<a name="141"><span class="lineNum">     141 </span>            :     double getWarpedEnd() const;</a>
+<a name="141"><span class="lineNum">     141 </span>            :     TimePosition getWarpedEnd() const;</a>
 <a name="142"><span class="lineNum">     142 </span>            : </a>
 <a name="143"><span class="lineNum">     143 </span>            :     /** Sets position in warped region of the redered file end point */</a>
-<a name="144"><span class="lineNum">     144 </span>            :     double getWarpEndMarkerTime() const;</a>
+<a name="144"><span class="lineNum">     144 </span>            :     TimePosition getWarpEndMarkerTime() const;</a>
 <a name="145"><span class="lineNum">     145 </span>            : </a>
 <a name="146"><span class="lineNum">     146 </span>            :     /** Returns a hash representing this warp list. */</a>
 <a name="147"><span class="lineNum">     147 </span>            :     HashCode getHash() const;</a>
@@ -262,7 +262,7 @@
 <a name="200"><span class="lineNum">     200 </span>            : </a>
 <a name="201"><span class="lineNum">     201 </span>            :     std::unique_ptr&lt;WarpMarkerList&gt; markers;</a>
 <a name="202"><span class="lineNum">     202 </span>            :     RenderManager::Job::Ptr transientDetectionJob;</a>
-<a name="203"><span class="lineNum">     203 </span>            :     std::pair&lt;bool, juce::Array&lt;double&gt;&gt; transientTimes { false, {} };</a>
+<a name="203"><span class="lineNum">     203 </span>            :     std::pair&lt;bool, juce::Array&lt;TimePosition&gt;&gt; transientTimes { false, {} };</a>
 <a name="204"><span class="lineNum">     204 </span>            :     std::unique_ptr&lt;Edit::LoadFinishedCallback&lt;WarpTimeManager&gt;&gt; editLoadedCallback;</a>
 <a name="205"><span class="lineNum">     205 </span>            : </a>
 <a name="206"><span class="lineNum">     206 </span>            :     juce::UndoManager* getUndoManager() const;</a>
@@ -304,7 +304,7 @@
 <a name="242"><span class="lineNum">     242 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WarpTimeFactory)</a>
 <a name="243"><span class="lineNum">     243 </span>            : };</a>
 <a name="244"><span class="lineNum">     244 </span>            : </a>
-<a name="245"><span class="lineNum">     245 </span>            : } // namespace tracktion_engine</a>
+<a name="245"><span class="lineNum">     245 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

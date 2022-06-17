@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
@@ -72,11 +72,11 @@
 <a name="10"><span class="lineNum">      10 </span>            : </a>
 <a name="11"><span class="lineNum">      11 </span>            : #pragma once</a>
 <a name="12"><span class="lineNum">      12 </span>            : </a>
-<a name="13"><span class="lineNum">      13 </span>            : namespace tracktion_engine</a>
+<a name="13"><span class="lineNum">      13 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="14"><span class="lineNum">      14 </span>            : {</a>
 <a name="15"><span class="lineNum">      15 </span>            : </a>
 <a name="16"><span class="lineNum">      16 </span><span class="lineCov">          2 : AuxSendNode::AuxSendNode (std::unique_ptr&lt;Node&gt; inputNode, int busIDToUse,</span></a>
-<a name="17"><span class="lineNum">      17 </span>            :                           AuxSendPlugin&amp; sourceSendPlugin, tracktion_graph::PlayHeadState&amp; phs,</a>
+<a name="17"><span class="lineNum">      17 </span>            :                           AuxSendPlugin&amp; sourceSendPlugin, tracktion::graph::PlayHeadState&amp; phs,</a>
 <a name="18"><span class="lineNum">      18 </span><span class="lineCov">          2 :                           const TrackMuteState* trackMuteState)</span></a>
 <a name="19"><span class="lineNum">      19 </span>            :     : SendNode (std::move (inputNode), busIDToUse,</a>
 <a name="20"><span class="lineNum">      20 </span><span class="lineCov">       1036 :                 [&amp;sourceSendPlugin, trackMuteState]</span></a>
@@ -96,12 +96,12 @@
 <a name="34"><span class="lineNum">      34 </span><span class="lineCov">          2 : }</span></a>
 <a name="35"><span class="lineNum">      35 </span>            : </a>
 <a name="36"><span class="lineNum">      36 </span>            : //==============================================================================</a>
-<a name="37"><span class="lineNum">      37 </span><span class="lineCov">          4 : void AuxSendNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&amp; info)</span></a>
+<a name="37"><span class="lineNum">      37 </span><span class="lineCov">          4 : void AuxSendNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&amp; info)</span></a>
 <a name="38"><span class="lineNum">      38 </span>            : {</a>
 <a name="39"><span class="lineNum">      39 </span><span class="lineCov">          4 :     sampleRate = info.sampleRate;</span></a>
 <a name="40"><span class="lineNum">      40 </span>            :     </a>
 <a name="41"><span class="lineNum">      41 </span><span class="lineCov">          4 :     if (auto props = getNodeProperties(); props.latencyNumSamples &gt; 0)</span></a>
-<a name="42"><span class="lineNum">      42 </span><span class="lineNoCov">          0 :         automationAdjustmentTime = -tracktion_graph::sampleToTime (props.latencyNumSamples, sampleRate);</span></a>
+<a name="42"><span class="lineNum">      42 </span><span class="lineNoCov">          0 :         automationAdjustmentTime = TimeDuration::fromSamples (-props.latencyNumSamples, sampleRate);</span></a>
 <a name="43"><span class="lineNum">      43 </span><span class="lineCov">          4 : }</span></a>
 <a name="44"><span class="lineNum">      44 </span>            : </a>
 <a name="45"><span class="lineNum">      45 </span><span class="lineCov">       1034 : void AuxSendNode::process (ProcessContext&amp; pc)</span></a>
@@ -110,14 +110,14 @@
 <a name="48"><span class="lineNum">      48 </span><span class="lineCov">       1034 :         &amp;&amp; sendPlugin.edit.getAutomationRecordManager().isReadingAutomation())</span></a>
 <a name="49"><span class="lineNum">      49 </span>            :     {</a>
 <a name="50"><span class="lineNum">      50 </span><span class="lineNoCov">          0 :         const auto editSamplePos = playHeadState.playHead.referenceSamplePositionToTimelinePosition (pc.referenceSampleRange.getStart());</span></a>
-<a name="51"><span class="lineNum">      51 </span><span class="lineNoCov">          0 :         const auto editTime = tracktion_graph::sampleToTime (editSamplePos, sampleRate) + automationAdjustmentTime;</span></a>
+<a name="51"><span class="lineNum">      51 </span><span class="lineNoCov">          0 :         const auto editTime = TimePosition::fromSamples (editSamplePos, sampleRate) + automationAdjustmentTime;</span></a>
 <a name="52"><span class="lineNum">      52 </span><span class="lineNoCov">          0 :         sendPlugin.updateParameterStreams (editTime);</span></a>
 <a name="53"><span class="lineNum">      53 </span>            :     }</a>
 <a name="54"><span class="lineNum">      54 </span>            :     </a>
 <a name="55"><span class="lineNum">      55 </span><span class="lineCov">       1034 :     SendNode::process (pc);</span></a>
 <a name="56"><span class="lineNum">      56 </span><span class="lineCov">       1034 : }</span></a>
 <a name="57"><span class="lineNum">      57 </span>            : </a>
-<a name="58"><span class="lineNum">      58 </span>            : }</a>
+<a name="58"><span class="lineNum">      58 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

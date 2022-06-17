@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">8</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : #if TRACKTION_UNIT_TESTS</a>
@@ -108,18 +108,18 @@
 <a name="46"><span class="lineNum">      46 </span>            : </a>
 <a name="47"><span class="lineNum">      47 </span><span class="lineCov">          3 :                 for (auto t : { track1, track2 })</span></a>
 <a name="48"><span class="lineNum">      48 </span>            :                 {</a>
-<a name="49"><span class="lineNum">      49 </span><span class="lineCov">          2 :                     auto clip = t-&gt;insertWaveClip (&quot;sin&quot;, af.getFile(), {{ 0.0, af.getLength() }}, false);</span></a>
-<a name="50"><span class="lineNum">      50 </span><span class="lineCov">          2 :                     expectEquals (clip-&gt;getPosition().getStart(), 0.0);</span></a>
-<a name="51"><span class="lineNum">      51 </span><span class="lineCov">          2 :                     expectEquals (clip-&gt;getPosition().getEnd(), 1.0);</span></a>
+<a name="49"><span class="lineNum">      49 </span><span class="lineCov">          2 :                     auto clip = t-&gt;insertWaveClip (&quot;sin&quot;, af.getFile(), {{ TimePosition(), TimePosition::fromSeconds (af.getLength()) }}, false);</span></a>
+<a name="50"><span class="lineNum">      50 </span><span class="lineCov">          2 :                     expectEquals (clip-&gt;getPosition().getStart(), TimePosition());</span></a>
+<a name="51"><span class="lineNum">      51 </span><span class="lineCov">          2 :                     expectEquals (clip-&gt;getPosition().getEnd(), TimePosition::fromSeconds (1.0));</span></a>
 <a name="52"><span class="lineNum">      52 </span>            :                 }</a>
 <a name="53"><span class="lineNum">      53 </span>            :             }</a>
 <a name="54"><span class="lineNum">      54 </span>            : </a>
-<a name="55"><span class="lineNum">      55 </span><span class="lineCov">          1 :             expectPeak (*edit, { 0.0, 1.0 }, { track1, track2 }, 2.0f);</span></a>
+<a name="55"><span class="lineNum">      55 </span><span class="lineCov">          1 :             expectPeak (*edit, { 0.0s, TimePosition (1.0s) }, { track1, track2 }, 2.0f);</span></a>
 <a name="56"><span class="lineNum">      56 </span>            : </a>
 <a name="57"><span class="lineNum">      57 </span>            :             // Set end to 0.5s for volume off</a>
-<a name="58"><span class="lineNum">      58 </span><span class="lineCov">          2 :             track1-&gt;getClips()[0]-&gt;setPosition ({{ 0.0, 0.5 }});</span></a>
-<a name="59"><span class="lineNum">      59 </span><span class="lineCov">          1 :             expectPeak (*edit, { 0.0, 0.5 }, { track1, track2 }, 2.0f);</span></a>
-<a name="60"><span class="lineNum">      60 </span><span class="lineCov">          1 :             expectPeak (*edit, { 0.5, 1.0 }, { track1, track2 }, 1.0f);</span></a>
+<a name="58"><span class="lineNum">      58 </span><span class="lineCov">          2 :             track1-&gt;getClips()[0]-&gt;setPosition ({{ TimePosition(), TimePosition::fromSeconds (0.5) }});</span></a>
+<a name="59"><span class="lineNum">      59 </span><span class="lineCov">          1 :             expectPeak (*edit, { 0.0s, TimePosition (0.5s) }, { track1, track2 }, 2.0f);</span></a>
+<a name="60"><span class="lineNum">      60 </span><span class="lineCov">          1 :             expectPeak (*edit, { 0.5s, TimePosition (1.0s) }, { track1, track2 }, 1.0f);</span></a>
 <a name="61"><span class="lineNum">      61 </span>            : </a>
 <a name="62"><span class="lineNum">      62 </span><span class="lineCov">          1 :             engine.getAudioFileManager().releaseAllFiles();</span></a>
 <a name="63"><span class="lineNum">      63 </span><span class="lineCov">          2 :             edit-&gt;getTempDirectory (false).deleteRecursively();</span></a>
@@ -140,20 +140,20 @@
 <a name="78"><span class="lineNum">      78 </span>            : </a>
 <a name="79"><span class="lineNum">      79 </span><span class="lineCov">          2 :                 for (auto t : { track1 })</span></a>
 <a name="80"><span class="lineNum">      80 </span>            :                 {</a>
-<a name="81"><span class="lineNum">      81 </span><span class="lineCov">          1 :                     auto clip = t-&gt;insertWaveClip (&quot;sin&quot;, af.getFile(), {{ 0.0, af.getLength() }}, false);</span></a>
-<a name="82"><span class="lineNum">      82 </span><span class="lineCov">          1 :                     expectEquals (clip-&gt;getPosition().getStart(), 0.0);</span></a>
-<a name="83"><span class="lineNum">      83 </span><span class="lineCov">          1 :                     expectEquals (clip-&gt;getPosition().getEnd(), 1.0);</span></a>
+<a name="81"><span class="lineNum">      81 </span><span class="lineCov">          1 :                     auto clip = t-&gt;insertWaveClip (&quot;sin&quot;, af.getFile(), {{ TimePosition(), TimePosition::fromSeconds (af.getLength()) }}, false);</span></a>
+<a name="82"><span class="lineNum">      82 </span><span class="lineCov">          1 :                     expectEquals (clip-&gt;getPosition().getStart(), TimePosition());</span></a>
+<a name="83"><span class="lineNum">      83 </span><span class="lineCov">          1 :                     expectEquals (clip-&gt;getPosition().getEnd(), TimePosition::fromSeconds (1.0));</span></a>
 <a name="84"><span class="lineNum">      84 </span>            :                 }</a>
 <a name="85"><span class="lineNum">      85 </span>            :             }</a>
 <a name="86"><span class="lineNum">      86 </span>            : </a>
-<a name="87"><span class="lineNum">      87 </span><span class="lineCov">          1 :             expectPeak (*edit, { 0.0, 1.0 }, { track1 }, 1.0f);</span></a>
+<a name="87"><span class="lineNum">      87 </span><span class="lineCov">          1 :             expectPeak (*edit, { 0.0s, TimePosition (1.0s) }, { track1 }, 1.0f);</span></a>
 <a name="88"><span class="lineNum">      88 </span>            : </a>
 <a name="89"><span class="lineNum">      89 </span><span class="lineCov">          1 :             engine.getAudioFileManager().releaseAllFiles();</span></a>
 <a name="90"><span class="lineNum">      90 </span><span class="lineCov">          2 :             edit-&gt;getTempDirectory (false).deleteRecursively();</span></a>
 <a name="91"><span class="lineNum">      91 </span>            :         }</a>
 <a name="92"><span class="lineNum">      92 </span><span class="lineCov">          1 :     }</span></a>
 <a name="93"><span class="lineNum">      93 </span>            : </a>
-<a name="94"><span class="lineNum">      94 </span><span class="lineCov">          4 :     void expectPeak (Edit&amp; edit, EditTimeRange tr, juce::Array&lt;Track*&gt; tracks, float expectedPeak)</span></a>
+<a name="94"><span class="lineNum">      94 </span><span class="lineCov">          4 :     void expectPeak (Edit&amp; edit, TimeRange tr, juce::Array&lt;Track*&gt; tracks, float expectedPeak)</span></a>
 <a name="95"><span class="lineNum">      95 </span>            :     {</a>
 <a name="96"><span class="lineNum">      96 </span><span class="lineCov">          4 :         auto blockSize = edit.engine.getDeviceManager().getBlockSize();</span></a>
 <a name="97"><span class="lineNum">      97 </span><span class="lineCov">          4 :         auto stats = logStats (Renderer::measureStatistics (&quot;PDC Tests&quot;, edit, tr, getTracksMask (tracks), blockSize));</span></a>
@@ -234,7 +234,7 @@
 <a name="172"><span class="lineNum">     172 </span>            : </a>
 <a name="173"><span class="lineNum">     173 </span>            : #endif</a>
 <a name="174"><span class="lineNum">     174 </span>            : </a>
-<a name="175"><span class="lineNum">     175 </span>            : } // namespace tracktion_engine</a>
+<a name="175"><span class="lineNum">     175 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

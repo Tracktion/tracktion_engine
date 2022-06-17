@@ -1,0 +1,14 @@
+<map id="tracktion::engine::Clipboard::ContentType" name="tracktion::engine::Clipboard::ContentType">
+<area shape="rect" id="node1" title=" " alt="" coords="5,332,179,373"/>
+<area shape="rect" id="node2" href="$structtracktion_1_1engine_1_1Clipboard_1_1AutomationPoints.html" title=" " alt="" coords="227,5,435,47"/>
+<area shape="rect" id="node3" href="$structtracktion_1_1engine_1_1Clipboard_1_1Clips.html" title=" " alt="" coords="261,71,401,112"/>
+<area shape="rect" id="node4" href="$structtracktion_1_1engine_1_1Clipboard_1_1MIDIEvents.html" title=" " alt="" coords="247,136,414,177"/>
+<area shape="rect" id="node5" href="$structtracktion_1_1engine_1_1Clipboard_1_1Modifiers.html" title=" " alt="" coords="255,201,407,243"/>
+<area shape="rect" id="node6" href="$structtracktion_1_1engine_1_1Clipboard_1_1Pitches.html" title=" " alt="" coords="261,267,401,308"/>
+<area shape="rect" id="node7" href="$structtracktion_1_1engine_1_1Clipboard_1_1Plugins.html" title=" " alt="" coords="261,332,401,373"/>
+<area shape="rect" id="node8" href="$structtracktion_1_1engine_1_1Clipboard_1_1ProjectItems.html" title=" " alt="" coords="243,397,418,439"/>
+<area shape="rect" id="node9" href="$structtracktion_1_1engine_1_1Clipboard_1_1Takes.html" title=" " alt="" coords="261,463,401,504"/>
+<area shape="rect" id="node10" href="$structtracktion_1_1engine_1_1Clipboard_1_1TempoChanges.html" title=" " alt="" coords="235,528,426,569"/>
+<area shape="rect" id="node11" href="$structtracktion_1_1engine_1_1Clipboard_1_1TimeSigs.html" title=" " alt="" coords="255,593,407,635"/>
+<area shape="rect" id="node12" href="$structtracktion_1_1engine_1_1Clipboard_1_1Tracks.html" title=" " alt="" coords="261,659,401,700"/>
+</map>

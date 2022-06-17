@@ -1,0 +1,8 @@
+<map id="tracktion::engine::SingleInputAudioNode" name="tracktion::engine::SingleInputAudioNode">
+<area shape="rect" id="node1" title=" " alt="" coords="193,104,360,145"/>
+<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1FadeInOutAudioNode.html" title="An AudioNode that fades its input node in/out at given times." alt="" coords="418,5,577,47"/>
+<area shape="rect" id="node4" href="$structtracktion_1_1engine_1_1MuteAudioNode.html" title=" " alt="" coords="427,71,567,112"/>
+<area shape="rect" id="node5" href="$classtracktion_1_1engine_1_1SpeedRampAudioNode.html" title="An AudioNode that speeds up and slows down its input node in/out at given times." alt="" coords="412,136,583,177"/>
+<area shape="rect" id="node6" href="$classtracktion_1_1engine_1_1TimedMutingAudioNode.html" title=" " alt="" coords="408,201,587,243"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1AudioNode.html" title="Base class for nodes in an audio playback graph." alt="" coords="5,104,145,145"/>
+</map>

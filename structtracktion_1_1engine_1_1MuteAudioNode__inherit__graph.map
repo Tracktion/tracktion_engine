@@ -1,0 +1,5 @@
+<map id="tracktion::engine::MuteAudioNode" name="tracktion::engine::MuteAudioNode">
+<area shape="rect" id="node1" title=" " alt="" coords="19,184,159,225"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1SingleInputAudioNode.html" title=" " alt="" coords="5,95,172,136"/>
+<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1AudioNode.html" title="Base class for nodes in an audio playback graph." alt="" coords="19,5,159,47"/>
+</map>

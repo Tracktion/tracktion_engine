@@ -1,9 +1,0 @@
-<map id="tracktion_engine::AutomatableParameter" name="tracktion_engine::AutomatableParameter">
-<area shape="rect" id="node1" title=" " alt="" coords="260,129,483,171"/>
-<area shape="rect" id="node3" href="$structtracktion__engine_1_1DiscreteLabelledParameter.html" title=" " alt="" coords="557,5,751,47"/>
-<area shape="rect" id="node4" href="$classtracktion__engine_1_1ExternalAutomatableParameter.html" title=" " alt="" coords="557,71,751,112"/>
-<area shape="rect" id="node5" href="$classtracktion__engine_1_1MacroParameter.html" title="A MacroParameter is an AutomatableParameter which is a collection of Mappings." alt="" coords="531,137,777,163"/>
-<area shape="rect" id="node6" href="$structtracktion__engine_1_1PluginWetDryAutomatableParam.html" title="specialised AutomatableParameter for wet/dry." alt="" coords="557,188,751,229"/>
-<area shape="rect" id="node7" href="$structtracktion__engine_1_1SuffixedParameter.html" title=" " alt="" coords="559,253,749,295"/>
-<area shape="rect" id="node2" href="$classtracktion__engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="5,137,212,163"/>
-</map>

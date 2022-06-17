@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : /**</a>
@@ -133,16 +133,16 @@
 <a name="71"><span class="lineNum">      71 </span>            :     A Node that handles muting/soloing of its input node, according to</a>
 <a name="72"><span class="lineNum">      72 </span>            :     the audibility of a track.</a>
 <a name="73"><span class="lineNum">      73 </span>            : */</a>
-<a name="74"><span class="lineNum">      74 </span>            : class TrackMutingNode final : public tracktion_graph::Node</a>
+<a name="74"><span class="lineNum">      74 </span>            : class TrackMutingNode final : public tracktion::graph::Node</a>
 <a name="75"><span class="lineNum">      75 </span>            : {</a>
 <a name="76"><span class="lineNum">      76 </span>            : public:</a>
-<a name="77"><span class="lineNum">      77 </span>            :     TrackMutingNode (std::unique_ptr&lt;TrackMuteState&gt;, std::unique_ptr&lt;tracktion_graph::Node&gt; input,</a>
+<a name="77"><span class="lineNum">      77 </span>            :     TrackMutingNode (std::unique_ptr&lt;TrackMuteState&gt;, std::unique_ptr&lt;tracktion::graph::Node&gt; input,</a>
 <a name="78"><span class="lineNum">      78 </span>            :                      bool dontMuteIfTrackContentsShouldBeProcessed);</a>
 <a name="79"><span class="lineNum">      79 </span>            : </a>
 <a name="80"><span class="lineNum">      80 </span>            :     //==============================================================================</a>
-<a name="81"><span class="lineNum">      81 </span>            :     tracktion_graph::NodeProperties getNodeProperties() override;</a>
+<a name="81"><span class="lineNum">      81 </span>            :     tracktion::graph::NodeProperties getNodeProperties() override;</a>
 <a name="82"><span class="lineNum">      82 </span>            :     std::vector&lt;Node*&gt; getDirectInputNodes() override;</a>
-<a name="83"><span class="lineNum">      83 </span><span class="lineCov">        458 :     void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&amp;) override {}</span></a>
+<a name="83"><span class="lineNum">      83 </span><span class="lineCov">        586 :     void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&amp;) override {}</span></a>
 <a name="84"><span class="lineNum">      84 </span>            :     bool isReadyToProcess() override;</a>
 <a name="85"><span class="lineNum">      85 </span>            :     void prefetchBlock (juce::Range&lt;int64_t&gt;) override;</a>
 <a name="86"><span class="lineNum">      86 </span>            :     void process (ProcessContext&amp;) override;</a>
@@ -150,7 +150,7 @@
 <a name="88"><span class="lineNum">      88 </span>            : private:</a>
 <a name="89"><span class="lineNum">      89 </span>            :     //==============================================================================</a>
 <a name="90"><span class="lineNum">      90 </span>            :     std::unique_ptr&lt;TrackMuteState&gt; trackMuteState;</a>
-<a name="91"><span class="lineNum">      91 </span>            :     std::unique_ptr&lt;tracktion_graph::Node&gt; input;</a>
+<a name="91"><span class="lineNum">      91 </span>            :     std::unique_ptr&lt;tracktion::graph::Node&gt; input;</a>
 <a name="92"><span class="lineNum">      92 </span>            :     bool dontMuteIfTrackContentsShouldBeProcessed = false;</a>
 <a name="93"><span class="lineNum">      93 </span>            : </a>
 <a name="94"><span class="lineNum">      94 </span>            :     //==============================================================================</a>
@@ -158,7 +158,7 @@
 <a name="96"><span class="lineNum">      96 </span>            :     void sendAllNotesOffIfDesired (MidiMessageArray&amp;);</a>
 <a name="97"><span class="lineNum">      97 </span>            : };</a>
 <a name="98"><span class="lineNum">      98 </span>            : </a>
-<a name="99"><span class="lineNum">      99 </span>            : } // namespace tracktion_engine</a>
+<a name="99"><span class="lineNum">      99 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

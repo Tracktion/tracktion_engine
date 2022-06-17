@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -73,9 +73,9 @@
 <a name="11"><span class="lineNum">      11 </span>            : #pragma once</a>
 <a name="12"><span class="lineNum">      12 </span>            : </a>
 <a name="13"><span class="lineNum">      13 </span>            : #include &quot;tracktion_PlayHead.h&quot;</a>
-<a name="14"><span class="lineNum">      14 </span>            : </a>
+<a name="14"><span class="lineNum">      14 </span>            : #include &quot;tracktion_EditTimeRange.h&quot;</a>
 <a name="15"><span class="lineNum">      15 </span>            : </a>
-<a name="16"><span class="lineNum">      16 </span>            : namespace tracktion_engine</a>
+<a name="16"><span class="lineNum">      16 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="17"><span class="lineNum">      17 </span>            : {</a>
 <a name="18"><span class="lineNum">      18 </span>            : </a>
 <a name="19"><span class="lineNum">      19 </span>            : class AudioNode;</a>
@@ -132,7 +132,7 @@
 <a name="70"><span class="lineNum">      70 </span><span class="lineNoCov">          0 : struct AudioRenderContext</span></a>
 <a name="71"><span class="lineNum">      71 </span>            : {</a>
 <a name="72"><span class="lineNum">      72 </span>            :     //==============================================================================</a>
-<a name="73"><span class="lineNum">      73 </span>            :     inline AudioRenderContext (PlayHead&amp; ph, EditTimeRange stream,</a>
+<a name="73"><span class="lineNum">      73 </span>            :     inline AudioRenderContext (PlayHead&amp; ph, legacy::EditTimeRange stream,</a>
 <a name="74"><span class="lineNum">      74 </span>            :                                juce::AudioBuffer&lt;float&gt;* buffer,</a>
 <a name="75"><span class="lineNum">      75 </span>            :                                const juce::AudioChannelSet&amp; bufferChannels,</a>
 <a name="76"><span class="lineNum">      76 </span>            :                                int bufferStart, int bufferSize,</a>
@@ -161,7 +161,7 @@
 <a name="99"><span class="lineNum">      99 </span>            :         out what section of the edit needs to be rendered, Playhead provides conversion</a>
 <a name="100"><span class="lineNum">     100 </span>            :         methods such as Playhead::streamTimeToEditWindow() or getEditTime()</a>
 <a name="101"><span class="lineNum">     101 </span>            :     */</a>
-<a name="102"><span class="lineNum">     102 </span>            :     EditTimeRange streamTime;</a>
+<a name="102"><span class="lineNum">     102 </span>            :     legacy::EditTimeRange streamTime;</a>
 <a name="103"><span class="lineNum">     103 </span>            : </a>
 <a name="104"><span class="lineNum">     104 </span>            :     /** The target audio buffer which needs to be filled.</a>
 <a name="105"><span class="lineNum">     105 </span>            :         This may be nullptr if no audio is being processed.</a>
@@ -371,7 +371,7 @@
 <a name="309"><span class="lineNum">     309 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="310"><span class="lineNum">     310 </span>            : };</a>
 <a name="311"><span class="lineNum">     311 </span>            : </a>
-<a name="312"><span class="lineNum">     312 </span>            : } // namespace tracktion_engine</a>
+<a name="312"><span class="lineNum">     312 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

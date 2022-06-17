@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['osctype_12788',['OscType',['../classtracktion__engine_1_1ToneGeneratorPlugin.html#ae1e8a55ecbc93fc4bea000e6b5ae31e4',1,'tracktion_engine::ToneGeneratorPlugin']]]
+  ['osctype_12762',['OscType',['../classtracktion_1_1engine_1_1ToneGeneratorPlugin.html#a7fbfcbed97976615c9a1aa400f9ef6a3',1,'tracktion::engine::ToneGeneratorPlugin']]]
 ];

@@ -1,0 +1,10 @@
+<map id="tracktion::engine::AutomatableParameter::ModifierAssignment" name="tracktion::engine::AutomatableParameter::ModifierAssignment">
+<area shape="rect" id="node1" title="Connects a modifier source to an AutomatableParameter." alt="" coords="5,224,179,280"/>
+<area shape="rect" id="node2" href="$structtracktion_1_1engine_1_1BreakpointOscillatorModifier_1_1Assignment.html" title=" " alt="" coords="230,5,438,61"/>
+<area shape="rect" id="node3" href="$structtracktion_1_1engine_1_1EnvelopeFollowerModifier_1_1Assignment.html" title=" " alt="" coords="239,85,429,141"/>
+<area shape="rect" id="node4" href="$structtracktion_1_1engine_1_1LFOModifier_1_1Assignment.html" title=" " alt="" coords="241,166,427,207"/>
+<area shape="rect" id="node5" href="$structtracktion_1_1engine_1_1MacroParameter_1_1Assignment.html" title="An Assignment between a MacroParameter and an AutomatableParameter." alt="" coords="227,231,441,273"/>
+<area shape="rect" id="node6" href="$structtracktion_1_1engine_1_1MIDITrackerModifier_1_1Assignment.html" title=" " alt="" coords="259,297,409,353"/>
+<area shape="rect" id="node7" href="$structtracktion_1_1engine_1_1RandomModifier_1_1Assignment.html" title=" " alt="" coords="227,378,441,419"/>
+<area shape="rect" id="node8" href="$structtracktion_1_1engine_1_1StepModifier_1_1Assignment.html" title=" " alt="" coords="239,443,429,485"/>
+</map>

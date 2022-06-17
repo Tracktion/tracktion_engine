@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : //==============================================================================</a>
@@ -132,12 +132,12 @@
 <a name="70"><span class="lineNum">      70 </span>            :         This is useful when finding out what edges to drag etc. If no section is found</a>
 <a name="71"><span class="lineNum">      71 </span>            :         then -1 is returned.</a>
 <a name="72"><span class="lineNum">      72 </span>            :     */</a>
-<a name="73"><span class="lineNum">      73 </span>            :     int findSectionWithEndTime (EditTimeRange range, int takeIndex, bool&amp; timeFoundAtStartOfSection) const;</a>
+<a name="73"><span class="lineNum">      73 </span>            :     int findSectionWithEndTime (juce::Range&lt;double&gt; range, int takeIndex, bool&amp; timeFoundAtStartOfSection) const;</a>
 <a name="74"><span class="lineNum">      74 </span>            : </a>
 <a name="75"><span class="lineNum">      75 </span>            :     /** Returns the time range a given section occupies for a given take.</a>
 <a name="76"><span class="lineNum">      76 </span>            :         If there is no segment at the indexes this will return an empty range.</a>
 <a name="77"><span class="lineNum">      77 </span>            :     */</a>
-<a name="78"><span class="lineNum">      78 </span>            :     EditTimeRange getSectionTimes (const juce::ValueTree&amp;) const;</a>
+<a name="78"><span class="lineNum">      78 </span>            :     juce::Range&lt;double&gt; getSectionTimes (const juce::ValueTree&amp;) const;</a>
 <a name="79"><span class="lineNum">      79 </span>            : </a>
 <a name="80"><span class="lineNum">      80 </span>            :     //==============================================================================</a>
 <a name="81"><span class="lineNum">      81 </span><span class="lineNoCov">          0 :     juce::ValueTree getTakesTree()                      { return takesTree; }</span></a>
@@ -182,7 +182,7 @@
 <a name="120"><span class="lineNum">     120 </span>            :     double getMaxCompLength() const                 { return maxCompLength; }</a>
 <a name="121"><span class="lineNum">     121 </span>            : </a>
 <a name="122"><span class="lineNum">     122 </span>            :     /** Returns the time range available for comping i.e. taking into account any offset or looped regions. */</a>
-<a name="123"><span class="lineNum">     123 </span>            :     EditTimeRange getCompRange() const;</a>
+<a name="123"><span class="lineNum">     123 </span>            :     juce::Range&lt;double&gt; getCompRange() const;</a>
 <a name="124"><span class="lineNum">     124 </span>            : </a>
 <a name="125"><span class="lineNum">     125 </span>            :     /** Returns the effective speed ratio used for displaying waveforms.</a>
 <a name="126"><span class="lineNum">     126 </span>            :         If the source is using auto-tempo with tempo changes this will use an averaged version of this.</a>
@@ -240,7 +240,7 @@
 <a name="178"><span class="lineNum">     178 </span>            :     /** Removes all sections which lie within the given time range. Useful when performing drag operations.</a>
 <a name="179"><span class="lineNum">     179 </span>            :         @returns the number of sections removed removed.</a>
 <a name="180"><span class="lineNum">     180 </span>            :     */</a>
-<a name="181"><span class="lineNum">     181 </span>            :     void removeSectionsWithinRange (EditTimeRange timeRange, const juce::ValueTree&amp; sectionToKeep);</a>
+<a name="181"><span class="lineNum">     181 </span>            :     void removeSectionsWithinRange (juce::Range&lt;double&gt; timeRange, const juce::ValueTree&amp; sectionToKeep);</a>
 <a name="182"><span class="lineNum">     182 </span>            : </a>
 <a name="183"><span class="lineNum">     183 </span>            : protected:</a>
 <a name="184"><span class="lineNum">     184 </span>            :     juce::ValueTree takesTree;</a>
@@ -411,7 +411,7 @@
 <a name="349"><span class="lineNum">     349 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiCompManager)</a>
 <a name="350"><span class="lineNum">     350 </span>            : };</a>
 <a name="351"><span class="lineNum">     351 </span>            : </a>
-<a name="352"><span class="lineNum">     352 </span>            : } // namespace tracktion_engine</a>
+<a name="352"><span class="lineNum">     352 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

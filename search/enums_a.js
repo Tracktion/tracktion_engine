@@ -1,10 +1,10 @@
 var searchData=
 [
-  ['panlaw_12789',['PanLaw',['../namespacetracktion__engine.html#aa66979ba0d42f3a7acd9b009ad4726ca',1,'tracktion_engine']]],
-  ['poolmemoryallocations_12790',['PoolMemoryAllocations',['../namespacetracktion__engine_1_1benchmark__utilities.html#a516991ef908c48542b44f860913ac712',1,'tracktion_engine::benchmark_utilities']]],
-  ['position_12791',['Position',['../classtracktion__engine_1_1FreezePointPlugin.html#a32460f5e433d63b58b7bb49793c6cbbe',1,'tracktion_engine::FreezePointPlugin']]],
-  ['preferredlayout_12792',['PreferredLayout',['../structtracktion__engine_1_1FileDragList.html#ab75aa51166149f86fc6b8ddf588ae857',1,'tracktion_engine::FileDragList']]],
-  ['processingposition_12793',['ProcessingPosition',['../structtracktion__engine_1_1Modifier.html#a0947341de41d4d4d6eb121950a190461',1,'tracktion_engine::Modifier']]],
-  ['projectsorttype_12794',['ProjectSortType',['../classtracktion__engine_1_1Project.html#a914dbce41a5f619ab635894d628df89b',1,'tracktion_engine::Project']]],
-  ['protocol_12795',['Protocol',['../classtracktion__engine_1_1ExternalControllerManager.html#a630c77e754712fdee07922815d7708fb',1,'tracktion_engine::ExternalControllerManager']]]
+  ['panlaw_12763',['PanLaw',['../namespacetracktion_1_1engine.html#a40238495220f5d933844bcfe2397d810',1,'tracktion::PanLaw()'],['../namespacetracktion_1_1engine.html#a40238495220f5d933844bcfe2397d810',1,'tracktion::engine::PanLaw()']]],
+  ['poolmemoryallocations_12764',['PoolMemoryAllocations',['../namespacetracktion_1_1engine_1_1benchmark__utilities.html#af922dd3f8b06e0e8071049c5aeedbdbb',1,'tracktion::engine::benchmark_utilities']]],
+  ['position_12765',['Position',['../classtracktion_1_1engine_1_1FreezePointPlugin.html#a25ec4cb74b5bfec05a60eae087e47e4e',1,'tracktion::engine::FreezePointPlugin']]],
+  ['preferredlayout_12766',['PreferredLayout',['../structtracktion_1_1engine_1_1FileDragList.html#aeb4e4dcd988d065049230592ae9830b7',1,'tracktion::engine::FileDragList']]],
+  ['processingposition_12767',['ProcessingPosition',['../structtracktion_1_1engine_1_1Modifier.html#af0bbf1482adac6bf37da3e1eb3fe6464',1,'tracktion::engine::Modifier']]],
+  ['projectsorttype_12768',['ProjectSortType',['../classtracktion_1_1engine_1_1Project.html#afa805bb4a21a91a9d9f7a365a5df3c6e',1,'tracktion::engine::Project']]],
+  ['protocol_12769',['Protocol',['../classtracktion_1_1engine_1_1ExternalControllerManager.html#a86fb7dd18627fac10e78d5e03c920a12',1,'tracktion::engine::ExternalControllerManager']]]
 ];

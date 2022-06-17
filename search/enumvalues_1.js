@@ -1,11 +1,12 @@
 var searchData=
 [
-  ['bar_12865',['bar',['../namespacetracktion__engine_1_1ModifierCommon.html#a5c2031bd5c73a8a84414be138b141813a52baa52c043175aa3657c084803ef596',1,'tracktion_engine::ModifierCommon']]],
-  ['barsbeats_12866',['barsBeats',['../namespacetracktion__engine.html#a4f395d9883e2e8cd69c9468c77cbd4bba77c84d786e6839a25295c0e73b3342c9',1,'tracktion_engine']]],
-  ['bass_12867',['bass',['../classtracktion__engine_1_1PatternGenerator.html#ac6f8919585281ff61acb1ceaa58cf354a9eca04f99c3d4532f3a8a11f9d264d12',1,'tracktion_engine::PatternGenerator']]],
-  ['beats_12868',['beats',['../structtracktion__engine_1_1TrackCompManager_1_1TrackComp.html#a546aff7fb3efe57b1bded52c57e3700fa64185d2346f83f91caed7d860b69b5ce',1,'tracktion_engine::TrackCompManager::TrackComp']]],
-  ['beforeallplugins_12869',['beforeAllPlugins',['../classtracktion__engine_1_1FreezePointPlugin.html#a32460f5e433d63b58b7bb49793c6cbbeae4cb9d25482721952a4b476346762d0b',1,'tracktion_engine::FreezePointPlugin']]],
-  ['bfspreordering_12870',['bfsPreordering',['../namespacetracktion__graph.html#a184300edcc70de77310266edbee53aa4a867d33f817886982c81cc3934e489e24',1,'tracktion_graph']]],
-  ['bfsreversepreordering_12871',['bfsReversePreordering',['../namespacetracktion__graph.html#a184300edcc70de77310266edbee53aa4a25f364f7adcbbf7a7cc5874f97ae1f12',1,'tracktion_graph']]],
-  ['bypassfilters_12872',['bypassFilters',['../namespacetracktion__engine.html#a621c43a54efb4eb950c0b1cad5e97eaca32dc181ee9a3989f69390fd115610849',1,'tracktion_engine']]]
+  ['bar_12843',['bar',['../namespacetracktion_1_1engine_1_1ModifierCommon.html#a8196f0dce2231f21fcd54b02462ddacba1db8ef3c4b1fd3f8bab2c981521813c6',1,'tracktion::engine::ModifierCommon']]],
+  ['barsbeats_12844',['barsBeats',['../namespacetracktion_1_1engine.html#a106acf13adac6f34b462a0c4de6e4fe3a77c84d786e6839a25295c0e73b3342c9',1,'tracktion::engine']]],
+  ['bass_12845',['bass',['../classtracktion_1_1engine_1_1PatternGenerator.html#a87e3536a690758ecd3435e00a2a01086a9eca04f99c3d4532f3a8a11f9d264d12',1,'tracktion::engine::PatternGenerator']]],
+  ['beats_12846',['beats',['../structtracktion_1_1engine_1_1TrackCompManager_1_1TrackComp.html#a24a568ee55b4a58b14273344e1773c05a0347ae578ba0fb5a17c2b65c7b584dd3',1,'tracktion::engine::TrackCompManager::TrackComp::beats()'],['../classtracktion_1_1engine_1_1MidiList.html#a9d9af5294100f73961a88ccca2dc3394a1e4cb5f584d055a0992385c1b2155786',1,'tracktion::engine::MidiList::beats()']]],
+  ['beatsraw_12847',['beatsRaw',['../classtracktion_1_1engine_1_1MidiList.html#a9d9af5294100f73961a88ccca2dc3394adedba50d634ac3088c83b9cbdc6fc2ac',1,'tracktion::engine::MidiList']]],
+  ['beforeallplugins_12848',['beforeAllPlugins',['../classtracktion_1_1engine_1_1FreezePointPlugin.html#a25ec4cb74b5bfec05a60eae087e47e4ea54f572813afbcbe8c0466c807fbe7800',1,'tracktion::engine::FreezePointPlugin']]],
+  ['bfspreordering_12849',['bfsPreordering',['../namespacetracktion_1_1graph.html#a6e378d0ba35c5e768fff3ed692e30c58a867d33f817886982c81cc3934e489e24',1,'tracktion::graph']]],
+  ['bfsreversepreordering_12850',['bfsReversePreordering',['../namespacetracktion_1_1graph.html#a6e378d0ba35c5e768fff3ed692e30c58a25f364f7adcbbf7a7cc5874f97ae1f12',1,'tracktion::graph']]],
+  ['bypassfilters_12851',['bypassFilters',['../namespacetracktion_1_1engine.html#aef0092bdbd8a28c3968f7f81912f815ea32dc181ee9a3989f69390fd115610849',1,'tracktion::engine']]]
 ];

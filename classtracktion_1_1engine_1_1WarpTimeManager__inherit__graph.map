@@ -1,0 +1,4 @@
+<map id="tracktion::engine::WarpTimeManager" name="tracktion::engine::WarpTimeManager">
+<area shape="rect" id="node1" title="A WarpTimeManager contains a list of WarpMarkers and some source material and maps times from a linea..." alt="" coords="13,109,159,151"/>
+<area shape="rect" id="node2" href="$structtracktion_1_1engine_1_1RenderManager_1_1Job_1_1Listener.html" title=" " alt="" coords="5,5,167,61"/>
+</map>

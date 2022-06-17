@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -75,7 +75,7 @@
 <a name="13"><span class="lineNum">      13 </span>            : #include &quot;tracktion_AudioNode.h&quot;</a>
 <a name="14"><span class="lineNum">      14 </span>            : </a>
 <a name="15"><span class="lineNum">      15 </span>            : </a>
-<a name="16"><span class="lineNum">      16 </span>            : namespace tracktion_engine</a>
+<a name="16"><span class="lineNum">      16 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="17"><span class="lineNum">      17 </span>            : {</a>
 <a name="18"><span class="lineNum">      18 </span>            : </a>
 <a name="19"><span class="lineNum">      19 </span>            : //==============================================================================</a>
@@ -139,7 +139,7 @@
 <a name="77"><span class="lineNum">      77 </span><span class="lineNoCov">          0 :         if (! hasInitialised)</span></a>
 <a name="78"><span class="lineNum">      78 </span>            :         {</a>
 <a name="79"><span class="lineNum">      79 </span><span class="lineNoCov">          0 :             hasInitialised = true;</span></a>
-<a name="80"><span class="lineNum">      80 </span><span class="lineNoCov">          0 :             plugin-&gt;baseClassInitialise ({ info.startTime, info.sampleRate, info.blockSizeSamples });</span></a>
+<a name="80"><span class="lineNum">      80 </span><span class="lineNoCov">          0 :             plugin-&gt;baseClassInitialise ({ TimePosition::fromSeconds (info.startTime), info.sampleRate, info.blockSizeSamples });</span></a>
 <a name="81"><span class="lineNum">      81 </span><span class="lineNoCov">          0 :             latencySeconds = plugin-&gt;getLatencySeconds();</span></a>
 <a name="82"><span class="lineNum">      82 </span>            : </a>
 <a name="83"><span class="lineNum">      83 </span><span class="lineNoCov">          0 :             if (input != nullptr)</span></a>
@@ -224,14 +224,14 @@
 <a name="162"><span class="lineNum">     162 </span><span class="lineNoCov">          0 :             rc.addAntiDenormalisationNoise();</span></a>
 <a name="163"><span class="lineNum">     163 </span>            : </a>
 <a name="164"><span class="lineNum">     164 </span><span class="lineNoCov">          0 :         if (! rc.isContiguousWithPreviousBlock())</span></a>
-<a name="165"><span class="lineNum">     165 </span><span class="lineNoCov">          0 :             plugin-&gt;updateParameterStreams (rc.getEditTime().editRange1.getStart());</span></a>
+<a name="165"><span class="lineNum">     165 </span><span class="lineNoCov">          0 :             plugin-&gt;updateParameterStreams (TimePosition::fromSeconds (rc.getEditTime().editRange1.getStart()));</span></a>
 <a name="166"><span class="lineNum">     166 </span>            : </a>
 <a name="167"><span class="lineNum">     167 </span><span class="lineNoCov">          0 :         plugin-&gt;applyToBufferWithAutomation (createPluginRenderContext (rc));</span></a>
 <a name="168"><span class="lineNum">     168 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="169"><span class="lineNum">     169 </span>            : </a>
 <a name="170"><span class="lineNum">     170 </span><span class="lineNoCov">          0 :     void prepareForNextBlock (const AudioRenderContext&amp; rc) override</span></a>
 <a name="171"><span class="lineNum">     171 </span>            :     {</a>
-<a name="172"><span class="lineNum">     172 </span><span class="lineNoCov">          0 :         plugin-&gt;prepareForNextBlock (rc.getEditTime().editRange1.getStart());</span></a>
+<a name="172"><span class="lineNum">     172 </span><span class="lineNoCov">          0 :         plugin-&gt;prepareForNextBlock (TimePosition::fromSeconds (rc.getEditTime().editRange1.getStart()));</span></a>
 <a name="173"><span class="lineNum">     173 </span><span class="lineNoCov">          0 :         input-&gt;prepareForNextBlock (rc);</span></a>
 <a name="174"><span class="lineNum">     174 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="175"><span class="lineNum">     175 </span>            : </a>
@@ -246,7 +246,7 @@
 <a name="184"><span class="lineNum">     184 </span>            :     {</a>
 <a name="185"><span class="lineNum">     185 </span><span class="lineNoCov">          0 :         return { rc.destBuffer, rc.destBufferChannels, rc.bufferStartSample, rc.bufferNumSamples,</span></a>
 <a name="186"><span class="lineNum">     186 </span><span class="lineNoCov">          0 :                  rc.bufferForMidiMessages, rc.midiBufferOffset,</span></a>
-<a name="187"><span class="lineNum">     187 </span><span class="lineNoCov">          0 :                  rc.getEditTime().editRange1.getStart(),</span></a>
+<a name="187"><span class="lineNum">     187 </span><span class="lineNoCov">          0 :                  TimePosition::fromSeconds (rc.getEditTime().editRange1.getStart()),</span></a>
 <a name="188"><span class="lineNum">     188 </span><span class="lineNoCov">          0 :                  rc.playhead.isPlaying(), rc.playhead.isUserDragging(), rc.isRendering,</span></a>
 <a name="189"><span class="lineNum">     189 </span><span class="lineNoCov">          0 :                  false };</span></a>
 <a name="190"><span class="lineNum">     190 </span>            :     }</a>
@@ -254,7 +254,7 @@
 <a name="192"><span class="lineNum">     192 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginAudioNode)</a>
 <a name="193"><span class="lineNum">     193 </span>            : };</a>
 <a name="194"><span class="lineNum">     194 </span>            : </a>
-<a name="195"><span class="lineNum">     195 </span>            : } // namespace tracktion_engine</a>
+<a name="195"><span class="lineNum">     195 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

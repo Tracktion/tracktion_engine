@@ -1,0 +1,8 @@
+<map id="tracktion::engine::MarkerClip" name="tracktion::engine::MarkerClip">
+<area shape="rect" id="node1" title=" " alt="" coords="168,259,308,300"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1Clip.html" title="A clip in an edit." alt="" coords="155,184,321,211"/>
+<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1TrackItem.html" title="Base class for EditItems that live in a Track, e.g." alt="" coords="87,95,227,136"/>
+<area shape="rect" id="node4" href="$classtracktion_1_1engine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g." alt="" coords="5,5,145,47"/>
+<area shape="rect" id="node5" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="169,5,309,47"/>
+<area shape="rect" id="node6" href="$classtracktion_1_1engine_1_1Exportable.html" title="An interface for objects within an edit that can be exported." alt="" coords="251,95,391,136"/>
+</map>

@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">3</td>
-            <td class="headerCovTableEntry">381</td>
+            <td class="headerCovTableEntry">384</td>
             <td class="headerCovTableEntryLo">0.8 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
@@ -70,13 +70,13 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
-<a name="14"><span class="lineNum">      14 </span><span class="lineCov">        212 : CurveEditorPoint::~CurveEditorPoint()</span></a>
+<a name="14"><span class="lineNum">      14 </span><span class="lineCov">        226 : CurveEditorPoint::~CurveEditorPoint()</span></a>
 <a name="15"><span class="lineNum">      15 </span>            : {</a>
-<a name="16"><span class="lineNum">      16 </span><span class="lineCov">        212 :     notifyListenersOfDeletion();</span></a>
-<a name="17"><span class="lineNum">      17 </span><span class="lineCov">        212 : }</span></a>
+<a name="16"><span class="lineNum">      16 </span><span class="lineCov">        226 :     notifyListenersOfDeletion();</span></a>
+<a name="17"><span class="lineNum">      17 </span><span class="lineCov">        226 : }</span></a>
 <a name="18"><span class="lineNum">      18 </span>            : </a>
 <a name="19"><span class="lineNum">      19 </span><span class="lineNoCov">          0 : static CurveEditor* getPointIndexes (juce::Array&lt;int&gt;&amp; set, const SelectableList&amp; items)</span></a>
 <a name="20"><span class="lineNum">      20 </span>            : {</a>
@@ -120,7 +120,7 @@
 <a name="58"><span class="lineNum">      58 </span><span class="lineNoCov">          0 :     return arePointsOnSameCurve (items);</span></a>
 <a name="59"><span class="lineNum">      59 </span>            : }</a>
 <a name="60"><span class="lineNum">      60 </span>            : </a>
-<a name="61"><span class="lineNum">      61 </span><span class="lineNoCov">          0 : EditTimeRange CurveEditorPoint::getPointTimeRange (const SelectableList&amp; items)</span></a>
+<a name="61"><span class="lineNum">      61 </span><span class="lineNoCov">          0 : TimeRange CurveEditorPoint::getPointTimeRange (const SelectableList&amp; items)</span></a>
 <a name="62"><span class="lineNum">      62 </span>            : {</a>
 <a name="63"><span class="lineNum">      63 </span><span class="lineNoCov">          0 :     juce::Array&lt;int&gt; set;</span></a>
 <a name="64"><span class="lineNum">      64 </span>            : </a>
@@ -179,7 +179,7 @@
 <a name="117"><span class="lineNum">     117 </span>            : {</a>
 <a name="118"><span class="lineNum">     118 </span>            :     CRASH_TRACER</a>
 <a name="119"><span class="lineNum">     119 </span>            : </a>
-<a name="120"><span class="lineNum">     120 </span><span class="lineNoCov">          0 :     if ((rightTime - leftTime) == 0.0)</span></a>
+<a name="120"><span class="lineNum">     120 </span><span class="lineNoCov">          0 :     if ((rightTime - leftTime) == TimeDuration())</span></a>
 <a name="121"><span class="lineNum">     121 </span>            :         return;</a>
 <a name="122"><span class="lineNum">     122 </span>            : </a>
 <a name="123"><span class="lineNum">     123 </span><span class="lineNoCov">          0 :     const bool isOver = isMouseOverOrDragging();</span></a>
@@ -211,7 +211,7 @@
 <a name="149"><span class="lineNum">     149 </span><span class="lineNoCov">          0 :         auto lastY = valueToY (getValueAt (leftTime));</span></a>
 <a name="150"><span class="lineNum">     150 </span>            : </a>
 <a name="151"><span class="lineNum">     151 </span><span class="lineNoCov">          0 :         juce::Path curvePath;</span></a>
-<a name="152"><span class="lineNum">     152 </span><span class="lineNoCov">          0 :         curvePath.startNewSubPath (std::max (0.0f, timeToX (0)), lastY);</span></a>
+<a name="152"><span class="lineNum">     152 </span><span class="lineNoCov">          0 :         curvePath.startNewSubPath (std::max (0.0f, timeToX ({})), lastY);</span></a>
 <a name="153"><span class="lineNum">     153 </span><span class="lineNoCov">          0 :         curvePath.preallocateSpace (numPoints * 5 + 1);</span></a>
 <a name="154"><span class="lineNum">     154 </span>            : </a>
 <a name="155"><span class="lineNum">     155 </span><span class="lineNoCov">          0 :         if (numPoints &gt; 0)</span></a>
@@ -242,8 +242,8 @@
 <a name="180"><span class="lineNum">     180 </span>            :                         float lineY1, lineY2;</a>
 <a name="181"><span class="lineNum">     181 </span><span class="lineNoCov">          0 :                         getBezierEnds (index, lineX1, lineY1, lineX2, lineY2);</span></a>
 <a name="182"><span class="lineNum">     182 </span>            : </a>
-<a name="183"><span class="lineNum">     183 </span><span class="lineNoCov">          0 :                         curvePath.lineTo (getPosition ({ lineX1, lineY1 }));</span></a>
-<a name="184"><span class="lineNum">     184 </span><span class="lineNoCov">          0 :                         curvePath.quadraticTo (bp, getPosition ({ lineX2, lineY2 }));</span></a>
+<a name="183"><span class="lineNum">     183 </span><span class="lineNoCov">          0 :                         curvePath.lineTo (getPosition ({ TimePosition::fromSeconds (lineX1), lineY1 }));</span></a>
+<a name="184"><span class="lineNum">     184 </span><span class="lineNoCov">          0 :                         curvePath.quadraticTo (bp, getPosition ({ TimePosition::fromSeconds (lineX2), lineY2 }));</span></a>
 <a name="185"><span class="lineNum">     185 </span><span class="lineNoCov">          0 :                         curvePath.lineTo (p2);</span></a>
 <a name="186"><span class="lineNum">     186 </span>            :                     }</a>
 <a name="187"><span class="lineNum">     187 </span>            :                 }</a>
@@ -311,8 +311,8 @@
 <a name="249"><span class="lineNum">     249 </span>            :         {</a>
 <a name="250"><span class="lineNum">     250 </span><span class="lineNoCov">          0 :             auto pos = getPosition (getBezierHandle (i));</span></a>
 <a name="251"><span class="lineNum">     251 </span>            : </a>
-<a name="252"><span class="lineNum">     252 </span>            :             juce::Rectangle&lt;float&gt; r (pos.x - pointRadius,</a>
-<a name="253"><span class="lineNum">     253 </span>            :                                       pos.y - pointRadius,</a>
+<a name="252"><span class="lineNum">     252 </span><span class="lineNoCov">          0 :             juce::Rectangle&lt;float&gt; r (pos.x - pointRadius,</span></a>
+<a name="253"><span class="lineNum">     253 </span><span class="lineNoCov">          0 :                                       pos.y - pointRadius,</span></a>
 <a name="254"><span class="lineNum">     254 </span>            :                                       pointRadius * 2,</a>
 <a name="255"><span class="lineNum">     255 </span><span class="lineNoCov">          0 :                                       pointRadius * 2);</span></a>
 <a name="256"><span class="lineNum">     256 </span>            :             r = r.reduced (2);</a>
@@ -352,7 +352,7 @@
 <a name="290"><span class="lineNum">     290 </span>            : </a>
 <a name="291"><span class="lineNum">     291 </span><span class="lineNoCov">          0 :         if (std::abs (x - px) &lt; pointRadius</span></a>
 <a name="292"><span class="lineNum">     292 </span><span class="lineNoCov">          0 :              &amp;&amp; std::abs (y - py) &lt; pointRadius + 2)</span></a>
-<a name="293"><span class="lineNum">     293 </span>            :             return true;</a>
+<a name="293"><span class="lineNum">     293 </span><span class="lineNoCov">          0 :             return true;</span></a>
 <a name="294"><span class="lineNum">     294 </span>            :     }</a>
 <a name="295"><span class="lineNum">     295 </span>            : </a>
 <a name="296"><span class="lineNum">     296 </span>            :     return false;</a>
@@ -464,7 +464,7 @@
 <a name="402"><span class="lineNum">     402 </span><span class="lineNoCov">          0 :                 auto c2 = getPointCurve (lineUnderMouse + 1);</span></a>
 <a name="403"><span class="lineNum">     403 </span>            : </a>
 <a name="404"><span class="lineNum">     404 </span><span class="lineNoCov">          0 :                 addPoint (t1, v1, c1);</span></a>
-<a name="405"><span class="lineNum">     405 </span><span class="lineNoCov">          0 :                 addPoint (t2 - 0.0000001, v2, c2); // Shift this a fraction forwards so it inserts before any existing points</span></a>
+<a name="405"><span class="lineNum">     405 </span><span class="lineNoCov">          0 :                 addPoint (t2 - TimeDuration::fromSeconds (0.0000001), v2, c2); // Shift this a fraction forwards so it inserts before any existing points</span></a>
 <a name="406"><span class="lineNum">     406 </span>            : </a>
 <a name="407"><span class="lineNum">     407 </span><span class="lineNoCov">          0 :                 lineUnderMouse++;</span></a>
 <a name="408"><span class="lineNum">     408 </span>            : </a>
@@ -481,7 +481,7 @@
 <a name="419"><span class="lineNum">     419 </span><span class="lineNoCov">          0 :             if (getNumPoints() == 1)</span></a>
 <a name="420"><span class="lineNum">     420 </span><span class="lineNoCov">          0 :                 point1 = getPointValue (0);</span></a>
 <a name="421"><span class="lineNum">     421 </span>            :             else</a>
-<a name="422"><span class="lineNum">     422 </span><span class="lineNoCov">          0 :                 point1 = getValueAt (0);</span></a>
+<a name="422"><span class="lineNum">     422 </span><span class="lineNoCov">          0 :                 point1 = getValueAt ({});</span></a>
 <a name="423"><span class="lineNum">     423 </span>            :         }</a>
 <a name="424"><span class="lineNum">     424 </span><span class="lineNoCov">          0 :         else if (getNumPoints())</span></a>
 <a name="425"><span class="lineNum">     425 </span>            :         {</a>
@@ -512,9 +512,9 @@
 <a name="450"><span class="lineNum">     450 </span>            : </a>
 <a name="451"><span class="lineNum">     451 </span><span class="lineNoCov">          0 :         if (movingAllPoints)</span></a>
 <a name="452"><span class="lineNum">     452 </span>            :         {</a>
-<a name="453"><span class="lineNum">     453 </span><span class="lineNoCov">          0 :             auto delta = t - mouseDownTime;</span></a>
+<a name="453"><span class="lineNum">     453 </span>            :             auto delta = t - mouseDownTime;</a>
 <a name="454"><span class="lineNum">     454 </span>            : </a>
-<a name="455"><span class="lineNum">     455 </span><span class="lineNoCov">          0 :             if (delta &gt; 0)</span></a>
+<a name="455"><span class="lineNum">     455 </span><span class="lineNoCov">          0 :             if (delta &gt; TimeDuration())</span></a>
 <a name="456"><span class="lineNum">     456 </span>            :             {</a>
 <a name="457"><span class="lineNum">     457 </span><span class="lineNoCov">          0 :                 for (int i = getNumPoints(); --i &gt;= pointBeingMoved;)</span></a>
 <a name="458"><span class="lineNum">     458 </span><span class="lineNoCov">          0 :                     movePoint (i, getPointTime (i) + delta, getPointValue (i), false);</span></a>
@@ -544,7 +544,7 @@
 <a name="482"><span class="lineNum">     482 </span>            :         }</a>
 <a name="483"><span class="lineNum">     483 </span>            :         else</a>
 <a name="484"><span class="lineNum">     484 </span>            :         {</a>
-<a name="485"><span class="lineNum">     485 </span>            :             auto newTime = t;</a>
+<a name="485"><span class="lineNum">     485 </span><span class="lineNoCov">          0 :             auto newTime = t;</span></a>
 <a name="486"><span class="lineNum">     486 </span><span class="lineNoCov">          0 :             auto newValue = yToValue (e.position.y);</span></a>
 <a name="487"><span class="lineNum">     487 </span>            : </a>
 <a name="488"><span class="lineNum">     488 </span><span class="lineNoCov">          0 :             if (juce::ModifierKeys::getCurrentModifiers().isShiftDown())</span></a>
@@ -578,10 +578,10 @@
 <a name="516"><span class="lineNum">     516 </span>            : </a>
 <a name="517"><span class="lineNum">     517 </span><span class="lineNoCov">          0 :         if (getNumPoints() &lt;= 0)</span></a>
 <a name="518"><span class="lineNum">     518 </span><span class="lineNoCov">          0 :             setValueWhenNoPoints (point1 - offset);</span></a>
-<a name="519"><span class="lineNum">     519 </span><span class="lineNoCov">          0 :         else if (getNumPoints() == 1 || mouseDownTime &lt; getPointTime(0))</span></a>
-<a name="520"><span class="lineNum">     520 </span><span class="lineNoCov">          0 :             movePoint (0, getPointTime(0), point1 - offset, false);</span></a>
+<a name="519"><span class="lineNum">     519 </span><span class="lineNoCov">          0 :         else if (getNumPoints() == 1 || mouseDownTime &lt; getPointTime (0))</span></a>
+<a name="520"><span class="lineNum">     520 </span><span class="lineNoCov">          0 :             movePoint (0, getPointTime (0), point1 - offset, false);</span></a>
 <a name="521"><span class="lineNum">     521 </span><span class="lineNoCov">          0 :         else if (mouseDownTime &gt; getPointTime (getNumPoints() - 1))</span></a>
-<a name="522"><span class="lineNum">     522 </span><span class="lineNoCov">          0 :             movePoint (getNumPoints() - 1, getPointTime(getNumPoints() - 1), point2 - offset, false);</span></a>
+<a name="522"><span class="lineNum">     522 </span><span class="lineNoCov">          0 :             movePoint (getNumPoints() - 1, getPointTime (getNumPoints() - 1), point2 - offset, false);</span></a>
 <a name="523"><span class="lineNum">     523 </span>            :     }</a>
 <a name="524"><span class="lineNum">     524 </span>            : </a>
 <a name="525"><span class="lineNum">     525 </span>            :     CRASH_TRACER</a>
@@ -710,7 +710,7 @@
 <a name="648"><span class="lineNum">     648 </span><span class="lineNoCov">          0 :     if (getItem() == nullptr || pointBeingMoved &gt;= 0)</span></a>
 <a name="649"><span class="lineNum">     649 </span>            :         return;</a>
 <a name="650"><span class="lineNum">     650 </span>            : </a>
-<a name="651"><span class="lineNum">     651 </span><span class="lineNoCov">          0 :     pos.x = std::max (timeToX (0), pos.x);</span></a>
+<a name="651"><span class="lineNum">     651 </span><span class="lineNoCov">          0 :     pos.x = std::max (timeToX ({}), pos.x);</span></a>
 <a name="652"><span class="lineNum">     652 </span>            : </a>
 <a name="653"><span class="lineNum">     653 </span>            :     const auto captureRadius = pointRadius * pointRadius;</a>
 <a name="654"><span class="lineNum">     654 </span>            :     int point = -1;</a>
@@ -776,20 +776,20 @@
 <a name="714"><span class="lineNum">     714 </span>            :     }</a>
 <a name="715"><span class="lineNum">     715 </span>            : }</a>
 <a name="716"><span class="lineNum">     716 </span>            : </a>
-<a name="717"><span class="lineNum">     717 </span><span class="lineNoCov">          0 : void CurveEditor::setTimes (double l, double r)</span></a>
+<a name="717"><span class="lineNum">     717 </span><span class="lineNoCov">          0 : void CurveEditor::setTimes (TimePosition l, TimePosition r)</span></a>
 <a name="718"><span class="lineNum">     718 </span>            : {</a>
 <a name="719"><span class="lineNum">     719 </span><span class="lineNoCov">          0 :     leftTime = l;</span></a>
 <a name="720"><span class="lineNum">     720 </span><span class="lineNoCov">          0 :     rightTime = r;</span></a>
 <a name="721"><span class="lineNum">     721 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="722"><span class="lineNum">     722 </span>            : </a>
-<a name="723"><span class="lineNum">     723 </span><span class="lineNoCov">          0 : float CurveEditor::timeToX (double t) const</span></a>
+<a name="723"><span class="lineNum">     723 </span><span class="lineNoCov">          0 : float CurveEditor::timeToX (TimePosition t) const</span></a>
 <a name="724"><span class="lineNum">     724 </span>            : {</a>
-<a name="725"><span class="lineNum">     725 </span><span class="lineNoCov">          0 :     return (float) (getWidth() * (t - leftTime) / (rightTime - leftTime));</span></a>
+<a name="725"><span class="lineNum">     725 </span><span class="lineNoCov">          0 :     return (float) (getWidth() * ((t - leftTime) / (rightTime - leftTime)));</span></a>
 <a name="726"><span class="lineNum">     726 </span>            : }</a>
 <a name="727"><span class="lineNum">     727 </span>            : </a>
-<a name="728"><span class="lineNum">     728 </span><span class="lineNoCov">          0 : double CurveEditor::xToTime (double x) const</span></a>
+<a name="728"><span class="lineNum">     728 </span><span class="lineNoCov">          0 : TimePosition CurveEditor::xToTime (double x) const</span></a>
 <a name="729"><span class="lineNum">     729 </span>            : {</a>
-<a name="730"><span class="lineNum">     730 </span><span class="lineNoCov">          0 :     return std::max (0.0, leftTime + (x * (rightTime - leftTime)) / getWidth());</span></a>
+<a name="730"><span class="lineNum">     730 </span><span class="lineNoCov">          0 :     return TimePosition::fromSeconds (std::max (0.0, leftTime.inSeconds() + (x * (rightTime - leftTime).inSeconds()) / getWidth()));</span></a>
 <a name="731"><span class="lineNum">     731 </span>            : }</a>
 <a name="732"><span class="lineNum">     732 </span>            : </a>
 <a name="733"><span class="lineNum">     733 </span><span class="lineNoCov">          0 : float CurveEditor::valueToY (float val) const</span></a>
@@ -804,7 +804,7 @@
 <a name="742"><span class="lineNum">     742 </span>            : </a>
 <a name="743"><span class="lineNum">     743 </span><span class="lineNoCov">          0 : juce::Point&lt;float&gt; CurveEditor::getPosition (CurvePoint p) const</span></a>
 <a name="744"><span class="lineNum">     744 </span>            : {</a>
-<a name="745"><span class="lineNum">     745 </span><span class="lineNoCov">          0 :     return { timeToX (p.time), valueToY (p.value) };</span></a>
+<a name="745"><span class="lineNum">     745 </span><span class="lineNoCov">          0 :     return { timeToX (toTime (p.time, edit.tempoSequence)), valueToY (p.value) };</span></a>
 <a name="746"><span class="lineNum">     746 </span>            : }</a>
 <a name="747"><span class="lineNum">     747 </span>            : </a>
 <a name="748"><span class="lineNum">     748 </span><span class="lineNoCov">          0 : juce::Point&lt;float&gt; CurveEditor::getPosition (int index)</span></a>
@@ -848,7 +848,7 @@
 <a name="786"><span class="lineNum">     786 </span><span class="lineNoCov">          0 :     return edit;</span></a>
 <a name="787"><span class="lineNum">     787 </span>            : }</a>
 <a name="788"><span class="lineNum">     788 </span>            : </a>
-<a name="789"><span class="lineNum">     789 </span><span class="lineNoCov">          0 : double CurveEditor::snapTime (double time, juce::ModifierKeys)</span></a>
+<a name="789"><span class="lineNum">     789 </span><span class="lineNoCov">          0 : TimePosition CurveEditor::snapTime (TimePosition time, juce::ModifierKeys)</span></a>
 <a name="790"><span class="lineNum">     790 </span>            : {</a>
 <a name="791"><span class="lineNum">     791 </span><span class="lineNoCov">          0 :     return time;</span></a>
 <a name="792"><span class="lineNum">     792 </span>            : }</a>
@@ -880,7 +880,7 @@
 <a name="818"><span class="lineNum">     818 </span><span class="lineNoCov">          0 :     return {};</span></a>
 <a name="819"><span class="lineNum">     819 </span>            : }</a>
 <a name="820"><span class="lineNum">     820 </span>            : </a>
-<a name="821"><span class="lineNum">     821 </span>            : }</a>
+<a name="821"><span class="lineNum">     821 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

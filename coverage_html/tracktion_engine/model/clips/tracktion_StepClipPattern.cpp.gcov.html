@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span><span class="lineNoCov">          0 : StepClip::Pattern::Pattern (StepClip&amp; c, const juce::ValueTree&amp; v) noexcept</span></a>
@@ -83,14 +83,14 @@
 <a name="21"><span class="lineNum">      21 </span>            : {</a>
 <a name="22"><span class="lineNum">      22 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="23"><span class="lineNum">      23 </span>            : </a>
-<a name="24"><span class="lineNum">      24 </span><span class="lineNoCov">          0 : juce::String StepClip::Pattern::getName() const               { return state[IDs::name]; }</span></a>
-<a name="25"><span class="lineNum">      25 </span><span class="lineNoCov">          0 : void StepClip::Pattern::setName (const juce::String&amp; name)    { state.setProperty (IDs::name, name, clip.getUndoManager()); }</span></a>
+<a name="24"><span class="lineNum">      24 </span><span class="lineNoCov">          0 : juce::String StepClip::Pattern::getName() const                 { return state[IDs::name]; }</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineNoCov">          0 : void StepClip::Pattern::setName (const juce::String&amp; name)      { state.setProperty (IDs::name, name, clip.getUndoManager()); }</span></a>
 <a name="26"><span class="lineNum">      26 </span>            : </a>
-<a name="27"><span class="lineNum">      27 </span><span class="lineNoCov">          0 : int StepClip::Pattern::getNumNotes() const              { return state[IDs::numNotes]; }</span></a>
-<a name="28"><span class="lineNum">      28 </span><span class="lineNoCov">          0 : void StepClip::Pattern::setNumNotes (int n)             { state.setProperty (IDs::numNotes, n, clip.getUndoManager()); }</span></a>
+<a name="27"><span class="lineNum">      27 </span><span class="lineNoCov">          0 : int StepClip::Pattern::getNumNotes() const                      { return state[IDs::numNotes]; }</span></a>
+<a name="28"><span class="lineNum">      28 </span><span class="lineNoCov">          0 : void StepClip::Pattern::setNumNotes (int n)                     { state.setProperty (IDs::numNotes, n, clip.getUndoManager()); }</span></a>
 <a name="29"><span class="lineNum">      29 </span>            : </a>
-<a name="30"><span class="lineNum">      30 </span><span class="lineNoCov">          0 : double StepClip::Pattern::getNoteLength() const         { return state[IDs::noteLength]; }</span></a>
-<a name="31"><span class="lineNum">      31 </span><span class="lineNoCov">          0 : void StepClip::Pattern::setNoteLength (double n)        { state.setProperty (IDs::noteLength, n, clip.getUndoManager()); }</span></a>
+<a name="30"><span class="lineNum">      30 </span><span class="lineNoCov">          0 : BeatDuration StepClip::Pattern::getNoteLength() const           { return BeatDuration::fromBeats (static_cast&lt;double&gt; (state[IDs::noteLength])); }</span></a>
+<a name="31"><span class="lineNum">      31 </span><span class="lineNoCov">          0 : void StepClip::Pattern::setNoteLength (BeatDuration n)          { state.setProperty (IDs::noteLength, n.inBeats(), clip.getUndoManager()); }</span></a>
 <a name="32"><span class="lineNum">      32 </span>            : </a>
 <a name="33"><span class="lineNum">      33 </span><span class="lineNoCov">          0 : juce::BigInteger StepClip::Pattern::getChannel (int channel) const</span></a>
 <a name="34"><span class="lineNum">      34 </span>            : {</a>
@@ -467,7 +467,7 @@
 <a name="405"><span class="lineNum">     405 </span><span class="lineNoCov">          0 :          + TRANS(&quot;Variation 123&quot;).replace (&quot;123&quot;, juce::String (patternIndex + 1)) + &quot;)&quot;;</span></a>
 <a name="406"><span class="lineNum">     406 </span>            : }</a>
 <a name="407"><span class="lineNum">     407 </span>            : </a>
-<a name="408"><span class="lineNum">     408 </span>            : }</a>
+<a name="408"><span class="lineNum">     408 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

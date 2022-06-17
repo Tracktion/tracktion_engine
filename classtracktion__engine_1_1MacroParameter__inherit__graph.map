@@ -1,6 +1,0 @@
-<map id="tracktion_engine::MacroParameter" name="tracktion_engine::MacroParameter">
-<area shape="rect" id="node1" title="A MacroParameter is an AutomatableParameter which is a collection of Mappings." alt="" coords="531,46,777,73"/>
-<area shape="rect" id="node2" href="$classtracktion__engine_1_1AutomatableParameter.html" title=" " alt="" coords="260,5,483,47"/>
-<area shape="rect" id="node3" href="$classtracktion__engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="5,13,212,39"/>
-<area shape="rect" id="node4" href="$structtracktion__engine_1_1AutomatableParameter_1_1ModifierSource.html" title="Base class for things that can be used to modify parameters." alt="" coords="260,71,483,112"/>
-</map>

@@ -1,0 +1,4 @@
+<map id="tracktion::engine::SelectionManager" name="tracktion::engine::SelectionManager">
+<area shape="rect" id="node1" title="Manages a list of items that are currently selected." alt="" coords="7,95,147,136"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1SelectableListener.html" title=" " alt="" coords="5,5,148,47"/>
+</map>

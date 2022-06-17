@@ -1,0 +1,5 @@
+<map id="tracktion::engine::RackType" name="tracktion::engine::RackType">
+<area shape="rect" id="node1" title=" " alt="" coords="97,95,237,136"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="5,5,145,47"/>
+<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1MacroParameterElement.html" title="Base class for elements which can contain macro parameters." alt="" coords="169,5,352,47"/>
+</map>

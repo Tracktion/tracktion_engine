@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['samplecount_12742',['SampleCount',['../namespacetracktion__engine.html#af6e78e734757e52f0c102915ff0e31af',1,'tracktion_engine']]],
-  ['samplerange_12743',['SampleRange',['../namespacetracktion__engine.html#a7ea280cde41080ecb2a991c485b516a0',1,'tracktion_engine']]],
-  ['scopedlocktype_12744',['ScopedLockType',['../structtracktion__engine_1_1SelectableList.html#a3bb05706a9a9c268ebda69768d66e4ec',1,'tracktion_engine::SelectableList::ScopedLockType()'],['../classtracktion__engine_1_1ValueTreeObjectList.html#aa67ed8c378970e4b769e37c01c399b7d',1,'tracktion_engine::ValueTreeObjectList::ScopedLockType()']]]
+  ['samplecount_12716',['SampleCount',['../namespacetracktion_1_1engine.html#a85052134975073481bd9888cbc71f3c4',1,'tracktion::SampleCount()'],['../namespacetracktion_1_1engine.html#a85052134975073481bd9888cbc71f3c4',1,'tracktion::engine::SampleCount()']]],
+  ['samplerange_12717',['SampleRange',['../namespacetracktion_1_1engine.html#a8944ee32cc6ed4eb531572d627f9538f',1,'tracktion::SampleRange()'],['../namespacetracktion_1_1engine.html#a8944ee32cc6ed4eb531572d627f9538f',1,'tracktion::engine::SampleRange()']]],
+  ['scopedlocktype_12718',['ScopedLockType',['../structtracktion_1_1engine_1_1SelectableList.html#aa0e5fa7a2aa62bd2db3d6103e2234a38',1,'tracktion::engine::SelectableList::ScopedLockType()'],['../classtracktion_1_1engine_1_1ValueTreeObjectList.html#a8da8a7eeddfc212e9d275380b655c4e7',1,'tracktion::engine::ValueTreeObjectList::ScopedLockType()']]]
 ];

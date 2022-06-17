@@ -1,4 +1,0 @@
-<map id="tracktion_engine::WaveAudioNode" name="tracktion_engine::WaveAudioNode">
-<area shape="rect" id="node1" title="An AudioNode that plays back a wave file." alt="" coords="5,80,252,107"/>
-<area shape="rect" id="node2" href="$classtracktion__engine_1_1AudioNode.html" title="Base class for nodes in an audio playback graph." alt="" coords="23,5,234,32"/>
-</map>

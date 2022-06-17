@@ -1,0 +1,4 @@
+<map id="tracktion::engine::TrackList" name="tracktion::engine::TrackList">
+<area shape="rect" id="node1" title="An iterable list of Track[s] that live either in an Edit or as subtracks of a Track." alt="" coords="11,109,151,151"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1ValueTreeObjectList.html" title=" " alt="" coords="5,5,156,61"/>
+</map>

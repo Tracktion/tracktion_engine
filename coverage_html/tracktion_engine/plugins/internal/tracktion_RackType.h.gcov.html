@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : struct RackConnection</a>
@@ -109,7 +109,7 @@
 <a name="47"><span class="lineNum">      47 </span>            :     void initialisePluginsIfNeeded (const PluginInitialisationInfo&amp;) const;</a>
 <a name="48"><span class="lineNum">      48 </span>            :     void deregisterInstance (RackInstance*);</a>
 <a name="49"><span class="lineNum">      49 </span>            : </a>
-<a name="50"><span class="lineNum">      50 </span>            :     void updateAutomatableParamPositions (double time);</a>
+<a name="50"><span class="lineNum">      50 </span>            :     void updateAutomatableParamPositions (TimePosition);</a>
 <a name="51"><span class="lineNum">      51 </span>            : </a>
 <a name="52"><span class="lineNum">      52 </span>            :     double getLatencySeconds (double sampleRate, int blockSize);</a>
 <a name="53"><span class="lineNum">      53 </span>            : </a>
@@ -280,7 +280,7 @@
 <a name="218"><span class="lineNum">     218 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RackTypeList)</a>
 <a name="219"><span class="lineNum">     219 </span>            : };</a>
 <a name="220"><span class="lineNum">     220 </span>            : </a>
-<a name="221"><span class="lineNum">     221 </span>            : } // namespace tracktion_engine</a>
+<a name="221"><span class="lineNum">     221 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

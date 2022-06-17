@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -69,7 +69,7 @@
 <a name="7"><span class="lineNum">       7 </span>            : */</a>
 <a name="8"><span class="lineNum">       8 </span>            : </a>
 <a name="9"><span class="lineNum">       9 </span>            : </a>
-<a name="10"><span class="lineNum">      10 </span>            : namespace tracktion_engine</a>
+<a name="10"><span class="lineNum">      10 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="11"><span class="lineNum">      11 </span>            : {</a>
 <a name="12"><span class="lineNum">      12 </span>            : </a>
 <a name="13"><span class="lineNum">      13 </span>            : //==============================================================================</a>
@@ -114,13 +114,13 @@
 <a name="52"><span class="lineNum">      52 </span><span class="lineCov">       2048 :     Oscillator() = default;</span></a>
 <a name="53"><span class="lineNum">      53 </span>            : </a>
 <a name="54"><span class="lineNum">      54 </span>            :     void start();</a>
-<a name="55"><span class="lineNum">      55 </span><span class="lineCov">        256 :     void start (float p)            { phase = p;        }</span></a>
+<a name="55"><span class="lineNum">      55 </span><span class="lineCov">        128 :     void start (float p)            { phase = p;        }</span></a>
 <a name="56"><span class="lineNum">      56 </span>            : </a>
 <a name="57"><span class="lineNum">      57 </span>            :     void setSampleRate (double sr);</a>
-<a name="58"><span class="lineNum">      58 </span><span class="lineCov">     264704 :     void setWave (Waves w)          { wave  = w;        }</span></a>
-<a name="59"><span class="lineNum">      59 </span><span class="lineCov">      33056 :     void setNote (float n)          { note = n;         }</span></a>
-<a name="60"><span class="lineNum">      60 </span><span class="lineCov">      33056 :     void setGain (float g)          { gain = g;         }</span></a>
-<a name="61"><span class="lineNum">      61 </span><span class="lineCov">     264704 :     void setPulseWidth (float p)    { pulseWidth = p;   }</span></a>
+<a name="58"><span class="lineNum">      58 </span><span class="lineCov">     246912 :     void setWave (Waves w)          { wave  = w;        }</span></a>
+<a name="59"><span class="lineNum">      59 </span><span class="lineCov">      30848 :     void setNote (float n)          { note = n;         }</span></a>
+<a name="60"><span class="lineNum">      60 </span><span class="lineCov">      30848 :     void setGain (float g)          { gain = g;         }</span></a>
+<a name="61"><span class="lineNum">      61 </span><span class="lineCov">     246912 :     void setPulseWidth (float p)    { pulseWidth = p;   }</span></a>
 <a name="62"><span class="lineNum">      62 </span>            : </a>
 <a name="63"><span class="lineNum">      63 </span>            :     void process (juce::AudioBuffer&lt;float&gt;&amp; buffer, int startSample, int numSamples);</a>
 <a name="64"><span class="lineNum">      64 </span>            : </a>
@@ -171,7 +171,7 @@
 <a name="109"><span class="lineNum">     109 </span>            :     float detune = 0, spread = 0, gain = 1.0f, note = 69.0f, pan = 0.0f;</a>
 <a name="110"><span class="lineNum">     110 </span>            : };</a>
 <a name="111"><span class="lineNum">     111 </span>            : </a>
-<a name="112"><span class="lineNum">     112 </span>            : } // namespace tracktion_engine</a>
+<a name="112"><span class="lineNum">     112 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

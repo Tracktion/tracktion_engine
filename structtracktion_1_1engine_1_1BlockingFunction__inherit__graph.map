@@ -1,0 +1,4 @@
+<map id="tracktion::engine::BlockingFunction" name="tracktion::engine::BlockingFunction">
+<area shape="rect" id="node1" title=" " alt="" coords="26,95,166,136"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1MessageThreadCallback.html" title="Calls a function on the message thread checking a calling thread for an exit signal." alt="" coords="5,5,187,47"/>
+</map>

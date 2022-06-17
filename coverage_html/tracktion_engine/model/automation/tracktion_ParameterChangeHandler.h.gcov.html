@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : /** Manages a set of AutomatableParameters for an Edit and notifies controllers and</a>
@@ -89,8 +89,8 @@
 <a name="27"><span class="lineNum">      27 </span>            :     /** Temporarily disables change events e.g. during a tempo change. */</a>
 <a name="28"><span class="lineNum">      28 </span>            :     struct Disabler</a>
 <a name="29"><span class="lineNum">      29 </span>            :     {</a>
-<a name="30"><span class="lineNum">      30 </span><span class="lineCov">          5 :         Disabler (ParameterChangeHandler&amp; p) : owner (p)    { p.enabled = false; }</span></a>
-<a name="31"><span class="lineNum">      31 </span><span class="lineCov">          5 :         ~Disabler()                                         { owner.enabled = true; }</span></a>
+<a name="30"><span class="lineNum">      30 </span><span class="lineCov">         11 :         Disabler (ParameterChangeHandler&amp; p) : owner (p)    { p.enabled = false; }</span></a>
+<a name="31"><span class="lineNum">      31 </span><span class="lineCov">         11 :         ~Disabler()                                         { owner.enabled = true; }</span></a>
 <a name="32"><span class="lineNum">      32 </span>            : </a>
 <a name="33"><span class="lineNum">      33 </span>            :         ParameterChangeHandler&amp; owner;</a>
 <a name="34"><span class="lineNum">      34 </span>            :         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Disabler)</a>
@@ -146,7 +146,7 @@
 <a name="84"><span class="lineNum">      84 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ParameterChangeHandler)</a>
 <a name="85"><span class="lineNum">      85 </span>            : };</a>
 <a name="86"><span class="lineNum">      86 </span>            : </a>
-<a name="87"><span class="lineNum">      87 </span>            : } // namespace tracktion_engine</a>
+<a name="87"><span class="lineNum">      87 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

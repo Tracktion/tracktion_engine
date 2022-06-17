@@ -1,0 +1,4 @@
+<map id="tracktion::engine::Renderer::RenderTask" name="tracktion::engine::Renderer::RenderTask">
+<area shape="rect" id="node1" title="Task that actually performs the render operation in blocks." alt="" coords="24,95,188,136"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1ThreadPoolJobWithProgress.html" title=" " alt="" coords="5,5,207,47"/>
+</map>

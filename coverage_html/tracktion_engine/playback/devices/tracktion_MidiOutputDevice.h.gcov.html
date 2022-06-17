@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : /** */</a>
@@ -86,7 +86,7 @@
 <a name="24"><span class="lineNum">      24 </span>            :     virtual MidiOutputDeviceInstance* createInstance (EditPlaybackContext&amp;);</a>
 <a name="25"><span class="lineNum">      25 </span>            : </a>
 <a name="26"><span class="lineNum">      26 </span>            :     //==============================================================================</a>
-<a name="27"><span class="lineNum">      27 </span>            :     juce::String prepareToPlay (Edit*, double start);</a>
+<a name="27"><span class="lineNum">      27 </span>            :     juce::String prepareToPlay (Edit*, TimePosition);</a>
 <a name="28"><span class="lineNum">      28 </span>            :     bool start();</a>
 <a name="29"><span class="lineNum">      29 </span>            :     void stop();</a>
 <a name="30"><span class="lineNum">      30 </span>            : </a>
@@ -114,7 +114,7 @@
 <a name="52"><span class="lineNum">      52 </span>            :     void fireMessage (const juce::MidiMessage&amp;);</a>
 <a name="53"><span class="lineNum">      53 </span>            :     void sendNoteOffMessages();</a>
 <a name="54"><span class="lineNum">      54 </span>            : </a>
-<a name="55"><span class="lineNum">      55 </span>            :     double getDeviceDelay() const noexcept;</a>
+<a name="55"><span class="lineNum">      55 </span>            :     TimeDuration getDeviceDelay() const noexcept;</a>
 <a name="56"><span class="lineNum">      56 </span>            : </a>
 <a name="57"><span class="lineNum">      57 </span>            :     int getPreDelayMs() const noexcept                  { return preDelayMillisecs; }</a>
 <a name="58"><span class="lineNum">      58 </span>            :     void setPreDelayMs (int);</a>
@@ -191,20 +191,20 @@
 <a name="129"><span class="lineNum">     129 </span>            :     MidiOutputDeviceInstance (MidiOutputDevice&amp;, EditPlaybackContext&amp;);</a>
 <a name="130"><span class="lineNum">     130 </span>            :     ~MidiOutputDeviceInstance();</a>
 <a name="131"><span class="lineNum">     131 </span>            : </a>
-<a name="132"><span class="lineNum">     132 </span>            :     juce::String prepareToPlay (double start, bool shouldSendMidiTC);</a>
+<a name="132"><span class="lineNum">     132 </span>            :     juce::String prepareToPlay (TimePosition start, bool shouldSendMidiTC);</a>
 <a name="133"><span class="lineNum">     133 </span>            :     bool start();</a>
 <a name="134"><span class="lineNum">     134 </span>            :     void stop();</a>
 <a name="135"><span class="lineNum">     135 </span>            : </a>
 <a name="136"><span class="lineNum">     136 </span>            :     MidiOutputDevice&amp; getMidiOutput() const noexcept     { return static_cast&lt;MidiOutputDevice&amp;&gt; (owner); }</a>
 <a name="137"><span class="lineNum">     137 </span>            : </a>
-<a name="138"><span class="lineNum">     138 </span>            :     void mergeInMidiMessages (const MidiMessageArray&amp;, double editTime);</a>
-<a name="139"><span class="lineNum">     139 </span>            :     void addMidiClockMessagesToCurrentBlock (bool isPlaying, bool isDragging, EditTimeRange streamTime);</a>
-<a name="140"><span class="lineNum">     140 </span><span class="lineCov">       3903 :     MidiMessageArray&amp; getPendingMessages() { return midiMessages; }</span></a>
+<a name="138"><span class="lineNum">     138 </span>            :     void mergeInMidiMessages (const MidiMessageArray&amp;, TimePosition editTime);</a>
+<a name="139"><span class="lineNum">     139 </span>            :     void addMidiClockMessagesToCurrentBlock (bool isPlaying, bool isDragging, TimeRange streamTime);</a>
+<a name="140"><span class="lineNum">     140 </span><span class="lineCov">       3887 :     MidiMessageArray&amp; getPendingMessages() { return midiMessages; }</span></a>
 <a name="141"><span class="lineNum">     141 </span>            : </a>
 <a name="142"><span class="lineNum">     142 </span>            :     // For MidiOutputDevices that aren't connected to a physical piece of hardware,</a>
 <a name="143"><span class="lineNum">     143 </span>            :     // they should handle sending midi messages to their logical device now</a>
 <a name="144"><span class="lineNum">     144 </span>            :     // and clear the input buffer</a>
-<a name="145"><span class="lineNum">     145 </span><span class="lineNoCov">          0 :     virtual bool sendMessages (MidiMessageArray&amp;, double /*editTime*/) { return false; }</span></a>
+<a name="145"><span class="lineNum">     145 </span><span class="lineNoCov">          0 :     virtual bool sendMessages (MidiMessageArray&amp;, TimePosition /*editTime*/) { return false; }</span></a>
 <a name="146"><span class="lineNum">     146 </span>            : </a>
 <a name="147"><span class="lineNum">     147 </span>            : private:</a>
 <a name="148"><span class="lineNum">     148 </span>            :     std::unique_ptr&lt;MidiTimecodeGenerator&gt; timecodeGenerator;</a>
@@ -218,7 +218,7 @@
 <a name="156"><span class="lineNum">     156 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiOutputDeviceInstance)</a>
 <a name="157"><span class="lineNum">     157 </span>            : };</a>
 <a name="158"><span class="lineNum">     158 </span>            : </a>
-<a name="159"><span class="lineNum">     159 </span>            : } // namespace tracktion_engine</a>
+<a name="159"><span class="lineNum">     159 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

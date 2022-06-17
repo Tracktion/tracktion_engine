@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">69</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : static constexpr int maxRackAudioChans = 64;</a>
@@ -505,15 +505,15 @@
 <a name="443"><span class="lineNum">     443 </span><span class="lineCov">         98 :     return rack;</span></a>
 <a name="444"><span class="lineNum">     444 </span>            : }</a>
 <a name="445"><span class="lineNum">     445 </span>            : </a>
-<a name="446"><span class="lineNum">     446 </span><span class="lineCov">       1068 : juce::StringArray RackType::getInputNames() const</span></a>
+<a name="446"><span class="lineNum">     446 </span><span class="lineCov">        892 : juce::StringArray RackType::getInputNames() const</span></a>
 <a name="447"><span class="lineNum">     447 </span>            : {</a>
-<a name="448"><span class="lineNum">     448 </span><span class="lineCov">       1068 :     juce::StringArray s;</span></a>
+<a name="448"><span class="lineNum">     448 </span><span class="lineCov">        892 :     juce::StringArray s;</span></a>
 <a name="449"><span class="lineNum">     449 </span>            : </a>
-<a name="450"><span class="lineNum">     450 </span><span class="lineCov">      24928 :     for (const auto&amp; v : state)</span></a>
-<a name="451"><span class="lineNum">     451 </span><span class="lineCov">      11930 :         if (v.hasType (IDs::INPUT))</span></a>
-<a name="452"><span class="lineNum">     452 </span><span class="lineCov">       2494 :             s.add (v.getProperty (IDs::name));</span></a>
+<a name="450"><span class="lineNum">     450 </span><span class="lineCov">      18576 :     for (const auto&amp; v : state)</span></a>
+<a name="451"><span class="lineNum">     451 </span><span class="lineCov">       8842 :         if (v.hasType (IDs::INPUT))</span></a>
+<a name="452"><span class="lineNum">     452 </span><span class="lineCov">       1918 :             s.add (v.getProperty (IDs::name));</span></a>
 <a name="453"><span class="lineNum">     453 </span>            : </a>
-<a name="454"><span class="lineNum">     454 </span><span class="lineCov">       1068 :     return s;</span></a>
+<a name="454"><span class="lineNum">     454 </span><span class="lineCov">        892 :     return s;</span></a>
 <a name="455"><span class="lineNum">     455 </span>            : }</a>
 <a name="456"><span class="lineNum">     456 </span>            : </a>
 <a name="457"><span class="lineNum">     457 </span><span class="lineCov">       1004 : juce::StringArray RackType::getOutputNames() const</span></a>
@@ -531,9 +531,9 @@
 <a name="469"><span class="lineNum">     469 </span>            : {</a>
 <a name="470"><span class="lineNum">     470 </span><span class="lineCov">       3518 :     juce::Array&lt;Plugin*&gt; list;</span></a>
 <a name="471"><span class="lineNum">     471 </span>            : </a>
-<a name="472"><span class="lineNum">     472 </span><span class="lineCov">       7058 :     for (auto i : pluginList-&gt;objects)</span></a>
-<a name="473"><span class="lineNum">     473 </span><span class="lineCov">       3540 :         if (i-&gt;plugin != nullptr)</span></a>
-<a name="474"><span class="lineNum">     474 </span><span class="lineCov">       3540 :             list.add (i-&gt;plugin.get());</span></a>
+<a name="472"><span class="lineNum">     472 </span><span class="lineCov">       7102 :     for (auto i : pluginList-&gt;objects)</span></a>
+<a name="473"><span class="lineNum">     473 </span><span class="lineCov">       3584 :         if (i-&gt;plugin != nullptr)</span></a>
+<a name="474"><span class="lineNum">     474 </span><span class="lineCov">       3584 :             list.add (i-&gt;plugin.get());</span></a>
 <a name="475"><span class="lineNum">     475 </span>            : </a>
 <a name="476"><span class="lineNum">     476 </span><span class="lineCov">       3518 :     return list;</span></a>
 <a name="477"><span class="lineNum">     477 </span>            : }</a>
@@ -1095,8 +1095,8 @@
 <a name="1033"><span class="lineNum">    1033 </span>            : </a>
 <a name="1034"><span class="lineNum">    1034 </span><span class="lineCov">       2424 :     numberOfInstancesInEdit = 0;</span></a>
 <a name="1035"><span class="lineNum">    1035 </span>            : </a>
-<a name="1036"><span class="lineNum">    1036 </span><span class="lineCov">      12492 :     for (auto p : getAllPlugins (edit, false))</span></a>
-<a name="1037"><span class="lineNum">    1037 </span><span class="lineCov">       7644 :         if (auto rf = dynamic_cast&lt;RackInstance*&gt; (p))</span></a>
+<a name="1036"><span class="lineNum">    1036 </span><span class="lineCov">      12536 :     for (auto p : getAllPlugins (edit, false))</span></a>
+<a name="1037"><span class="lineNum">    1037 </span><span class="lineCov">       7688 :         if (auto rf = dynamic_cast&lt;RackInstance*&gt; (p))</span></a>
 <a name="1038"><span class="lineNum">    1038 </span><span class="lineNoCov">          0 :             if (rf-&gt;type.get() == this)</span></a>
 <a name="1039"><span class="lineNum">    1039 </span><span class="lineNoCov">          0 :                 ++numberOfInstancesInEdit;</span></a>
 <a name="1040"><span class="lineNum">    1040 </span><span class="lineCov">       2424 : }</span></a>
@@ -1119,7 +1119,7 @@
 <a name="1057"><span class="lineNum">    1057 </span><span class="lineNoCov">          0 :     countInstancesInEdit();</span></a>
 <a name="1058"><span class="lineNum">    1058 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1059"><span class="lineNum">    1059 </span>            : </a>
-<a name="1060"><span class="lineNum">    1060 </span><span class="lineNoCov">          0 : void RackType::updateAutomatableParamPositions (double time)</span></a>
+<a name="1060"><span class="lineNum">    1060 </span><span class="lineNoCov">          0 : void RackType::updateAutomatableParamPositions (TimePosition time)</span></a>
 <a name="1061"><span class="lineNum">    1061 </span>            : {</a>
 <a name="1062"><span class="lineNum">    1062 </span><span class="lineNoCov">          0 :     for (auto f : getPlugins())</span></a>
 <a name="1063"><span class="lineNum">    1063 </span><span class="lineNoCov">          0 :         f-&gt;updateAutomatableParamPosition (time);</span></a>
@@ -1245,16 +1245,16 @@
 <a name="1183"><span class="lineNum">    1183 </span>            : struct RackTypeList::ValueTreeList  : public ValueTreeObjectList&lt;RackType&gt;</a>
 <a name="1184"><span class="lineNum">    1184 </span>            : {</a>
 <a name="1185"><span class="lineNum">    1185 </span>            :     ValueTreeList (RackTypeList&amp; l, const juce::ValueTree&amp; parentTree)</a>
-<a name="1186"><span class="lineNum">    1186 </span><span class="lineCov">        195 :         : ValueTreeObjectList&lt;RackType&gt; (parentTree), list (l)</span></a>
+<a name="1186"><span class="lineNum">    1186 </span><span class="lineCov">        209 :         : ValueTreeObjectList&lt;RackType&gt; (parentTree), list (l)</span></a>
 <a name="1187"><span class="lineNum">    1187 </span>            :     {</a>
 <a name="1188"><span class="lineNum">    1188 </span>            :         // NB: rebuildObjects() is called after construction so that the edit has a valid</a>
 <a name="1189"><span class="lineNum">    1189 </span>            :         // list while they're being created</a>
 <a name="1190"><span class="lineNum">    1190 </span>            :     }</a>
 <a name="1191"><span class="lineNum">    1191 </span>            : </a>
-<a name="1192"><span class="lineNum">    1192 </span><span class="lineCov">        390 :     ~ValueTreeList() override</span></a>
-<a name="1193"><span class="lineNum">    1193 </span><span class="lineCov">        390 :     {</span></a>
-<a name="1194"><span class="lineNum">    1194 </span><span class="lineCov">        195 :         freeObjects();</span></a>
-<a name="1195"><span class="lineNum">    1195 </span><span class="lineCov">        390 :     }</span></a>
+<a name="1192"><span class="lineNum">    1192 </span><span class="lineCov">        418 :     ~ValueTreeList() override</span></a>
+<a name="1193"><span class="lineNum">    1193 </span><span class="lineCov">        418 :     {</span></a>
+<a name="1194"><span class="lineNum">    1194 </span><span class="lineCov">        209 :         freeObjects();</span></a>
+<a name="1195"><span class="lineNum">    1195 </span><span class="lineCov">        418 :     }</span></a>
 <a name="1196"><span class="lineNum">    1196 </span>            : </a>
 <a name="1197"><span class="lineNum">    1197 </span><span class="lineCov">       3474 :     bool isSuitableType (const juce::ValueTree&amp; v) const override</span></a>
 <a name="1198"><span class="lineNum">    1198 </span>            :     {</a>
@@ -1290,32 +1290,32 @@
 <a name="1228"><span class="lineNum">    1228 </span>            : };</a>
 <a name="1229"><span class="lineNum">    1229 </span>            : </a>
 <a name="1230"><span class="lineNum">    1230 </span>            : //==============================================================================</a>
-<a name="1231"><span class="lineNum">    1231 </span><span class="lineCov">        195 : RackTypeList::RackTypeList (Edit&amp; ed) : edit (ed)</span></a>
+<a name="1231"><span class="lineNum">    1231 </span><span class="lineCov">        209 : RackTypeList::RackTypeList (Edit&amp; ed) : edit (ed)</span></a>
 <a name="1232"><span class="lineNum">    1232 </span>            : {</a>
-<a name="1233"><span class="lineNum">    1233 </span><span class="lineCov">        195 : }</span></a>
+<a name="1233"><span class="lineNum">    1233 </span><span class="lineCov">        209 : }</span></a>
 <a name="1234"><span class="lineNum">    1234 </span>            : </a>
-<a name="1235"><span class="lineNum">    1235 </span><span class="lineCov">        195 : void RackTypeList::initialise (const juce::ValueTree&amp; v)</span></a>
+<a name="1235"><span class="lineNum">    1235 </span><span class="lineCov">        209 : void RackTypeList::initialise (const juce::ValueTree&amp; v)</span></a>
 <a name="1236"><span class="lineNum">    1236 </span>            : {</a>
-<a name="1237"><span class="lineNum">    1237 </span><span class="lineCov">        390 :     CRASH_TRACER</span></a>
+<a name="1237"><span class="lineNum">    1237 </span><span class="lineCov">        418 :     CRASH_TRACER</span></a>
 <a name="1238"><span class="lineNum">    1238 </span>            : </a>
-<a name="1239"><span class="lineNum">    1239 </span><span class="lineCov">        195 :     state = v;</span></a>
+<a name="1239"><span class="lineNum">    1239 </span><span class="lineCov">        209 :     state = v;</span></a>
 <a name="1240"><span class="lineNum">    1240 </span>            :     jassert (state.hasType (IDs::RACKS));</a>
 <a name="1241"><span class="lineNum">    1241 </span>            : </a>
-<a name="1242"><span class="lineNum">    1242 </span><span class="lineCov">        195 :     list.reset (new ValueTreeList (*this, v));</span></a>
-<a name="1243"><span class="lineNum">    1243 </span><span class="lineCov">        195 :     list-&gt;rebuildObjects();</span></a>
-<a name="1244"><span class="lineNum">    1244 </span><span class="lineCov">        195 : }</span></a>
+<a name="1242"><span class="lineNum">    1242 </span><span class="lineCov">        209 :     list.reset (new ValueTreeList (*this, v));</span></a>
+<a name="1243"><span class="lineNum">    1243 </span><span class="lineCov">        209 :     list-&gt;rebuildObjects();</span></a>
+<a name="1244"><span class="lineNum">    1244 </span><span class="lineCov">        209 : }</span></a>
 <a name="1245"><span class="lineNum">    1245 </span>            : </a>
-<a name="1246"><span class="lineNum">    1246 </span><span class="lineCov">        390 : RackTypeList::~RackTypeList()</span></a>
+<a name="1246"><span class="lineNum">    1246 </span><span class="lineCov">        418 : RackTypeList::~RackTypeList()</span></a>
 <a name="1247"><span class="lineNum">    1247 </span>            : {</a>
-<a name="1248"><span class="lineNum">    1248 </span><span class="lineCov">        357 :     for (auto t : list-&gt;objects)</span></a>
+<a name="1248"><span class="lineNum">    1248 </span><span class="lineCov">        371 :     for (auto t : list-&gt;objects)</span></a>
 <a name="1249"><span class="lineNum">    1249 </span><span class="lineCov">        162 :         t-&gt;hideWindowForShutdown();</span></a>
 <a name="1250"><span class="lineNum">    1250 </span>            : </a>
 <a name="1251"><span class="lineNum">    1251 </span>            :     list = nullptr;</a>
-<a name="1252"><span class="lineNum">    1252 </span><span class="lineCov">        195 : }</span></a>
+<a name="1252"><span class="lineNum">    1252 </span><span class="lineCov">        209 : }</span></a>
 <a name="1253"><span class="lineNum">    1253 </span>            : </a>
-<a name="1254"><span class="lineNum">    1254 </span><span class="lineCov">       3740 : const juce::Array&lt;RackType*&gt;&amp; RackTypeList::getTypes() const noexcept</span></a>
+<a name="1254"><span class="lineNum">    1254 </span><span class="lineCov">       3990 : const juce::Array&lt;RackType*&gt;&amp; RackTypeList::getTypes() const noexcept</span></a>
 <a name="1255"><span class="lineNum">    1255 </span>            : {</a>
-<a name="1256"><span class="lineNum">    1256 </span><span class="lineCov">       3740 :     return list-&gt;objects;</span></a>
+<a name="1256"><span class="lineNum">    1256 </span><span class="lineCov">       3990 :     return list-&gt;objects;</span></a>
 <a name="1257"><span class="lineNum">    1257 </span>            : }</a>
 <a name="1258"><span class="lineNum">    1258 </span>            : </a>
 <a name="1259"><span class="lineNum">    1259 </span><span class="lineNoCov">          0 : int RackTypeList::size() const</span></a>
@@ -1497,7 +1497,7 @@
 <a name="1435"><span class="lineNum">    1435 </span><span class="lineCov">        162 :     : PluginWindowState (r.edit), rack (r), state (std::move (windowStateTree))</span></a>
 <a name="1436"><span class="lineNum">    1436 </span><span class="lineNoCov">          0 : {}</span></a>
 <a name="1437"><span class="lineNum">    1437 </span>            : </a>
-<a name="1438"><span class="lineNum">    1438 </span>            : }</a>
+<a name="1438"><span class="lineNum">    1438 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

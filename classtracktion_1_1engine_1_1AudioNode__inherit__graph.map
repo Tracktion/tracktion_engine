@@ -1,0 +1,12 @@
+<map id="tracktion::engine::AudioNode" name="tracktion::engine::AudioNode">
+<area shape="rect" id="node1" title="Base class for nodes in an audio playback graph." alt="" coords="5,136,145,177"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1CombiningAudioNode.html" title="An AudioNode that mixes a sequence of clips of other nodes." alt="" coords="213,5,376,47"/>
+<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1PluginAudioNode.html" title=" " alt="" coords="225,71,365,112"/>
+<area shape="rect" id="node4" href="$classtracktion_1_1engine_1_1SingleInputAudioNode.html" title=" " alt="" coords="211,136,378,177"/>
+<area shape="rect" id="node9" href="$classtracktion_1_1engine_1_1SubSampleWaveAudioNode.html" title=" " alt="" coords="193,201,396,243"/>
+<area shape="rect" id="node10" href="$classtracktion_1_1engine_1_1WaveAudioNode.html" title="An AudioNode that plays back a wave file." alt="" coords="225,267,365,308"/>
+<area shape="rect" id="node5" href="$classtracktion_1_1engine_1_1FadeInOutAudioNode.html" title="An AudioNode that fades its input node in/out at given times." alt="" coords="454,39,613,80"/>
+<area shape="rect" id="node6" href="$structtracktion_1_1engine_1_1MuteAudioNode.html" title=" " alt="" coords="463,104,603,145"/>
+<area shape="rect" id="node7" href="$classtracktion_1_1engine_1_1SpeedRampAudioNode.html" title="An AudioNode that speeds up and slows down its input node in/out at given times." alt="" coords="448,169,619,211"/>
+<area shape="rect" id="node8" href="$classtracktion_1_1engine_1_1TimedMutingAudioNode.html" title=" " alt="" coords="444,235,623,276"/>
+</map>

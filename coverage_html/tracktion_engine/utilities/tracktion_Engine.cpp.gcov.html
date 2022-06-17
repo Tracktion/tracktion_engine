@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">22</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : static Engine* instance = nullptr;</a>
@@ -178,9 +178,9 @@
 <a name="116"><span class="lineNum">     116 </span><span class="lineNoCov">          0 :     return &quot;Tracktion Engine v1.2.0&quot;;</span></a>
 <a name="117"><span class="lineNum">     117 </span>            : }</a>
 <a name="118"><span class="lineNum">     118 </span>            : </a>
-<a name="119"><span class="lineNum">     119 </span><span class="lineCov">        102 : juce::Array&lt;Engine*&gt; Engine::getEngines()</span></a>
+<a name="119"><span class="lineNum">     119 </span><span class="lineCov">        137 : juce::Array&lt;Engine*&gt; Engine::getEngines()</span></a>
 <a name="120"><span class="lineNum">     120 </span>            : {</a>
-<a name="121"><span class="lineNum">     121 </span><span class="lineCov">        102 :     return engines;</span></a>
+<a name="121"><span class="lineNum">     121 </span><span class="lineCov">        137 :     return engines;</span></a>
 <a name="122"><span class="lineNum">     122 </span>            : }</a>
 <a name="123"><span class="lineNum">     123 </span>            : </a>
 <a name="124"><span class="lineNum">     124 </span>            : #if TRACKTION_ENABLE_SINGLETONS</a>
@@ -191,22 +191,22 @@
 <a name="129"><span class="lineNum">     129 </span>            : }</a>
 <a name="130"><span class="lineNum">     130 </span>            : #endif</a>
 <a name="131"><span class="lineNum">     131 </span>            : </a>
-<a name="132"><span class="lineNum">     132 </span><span class="lineCov">        492 : ProjectManager&amp; Engine::getProjectManager() const</span></a>
+<a name="132"><span class="lineNum">     132 </span><span class="lineCov">        520 : ProjectManager&amp; Engine::getProjectManager() const</span></a>
 <a name="133"><span class="lineNum">     133 </span>            : {</a>
 <a name="134"><span class="lineNum">     134 </span>            :     jassert (projectManager != nullptr);</a>
-<a name="135"><span class="lineNum">     135 </span><span class="lineCov">        492 :     return *projectManager;</span></a>
+<a name="135"><span class="lineNum">     135 </span><span class="lineCov">        520 :     return *projectManager;</span></a>
 <a name="136"><span class="lineNum">     136 </span>            : }</a>
 <a name="137"><span class="lineNum">     137 </span>            : </a>
-<a name="138"><span class="lineNum">     138 </span><span class="lineCov">       5553 : AudioFileFormatManager&amp; Engine::getAudioFileFormatManager() const</span></a>
+<a name="138"><span class="lineNum">     138 </span><span class="lineCov">       5845 : AudioFileFormatManager&amp; Engine::getAudioFileFormatManager() const</span></a>
 <a name="139"><span class="lineNum">     139 </span>            : {</a>
 <a name="140"><span class="lineNum">     140 </span>            :     jassert (audioFileFormatManager != nullptr);</a>
-<a name="141"><span class="lineNum">     141 </span><span class="lineCov">       5553 :     return *audioFileFormatManager;</span></a>
+<a name="141"><span class="lineNum">     141 </span><span class="lineCov">       5845 :     return *audioFileFormatManager;</span></a>
 <a name="142"><span class="lineNum">     142 </span>            : }</a>
 <a name="143"><span class="lineNum">     143 </span>            : </a>
-<a name="144"><span class="lineNum">     144 </span><span class="lineCov">      64994 : DeviceManager&amp; Engine::getDeviceManager() const</span></a>
+<a name="144"><span class="lineNum">     144 </span><span class="lineCov">      65083 : DeviceManager&amp; Engine::getDeviceManager() const</span></a>
 <a name="145"><span class="lineNum">     145 </span>            : {</a>
 <a name="146"><span class="lineNum">     146 </span>            :     jassert (deviceManager != nullptr);</a>
-<a name="147"><span class="lineNum">     147 </span><span class="lineCov">      64994 :     return *deviceManager;</span></a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineCov">      65083 :     return *deviceManager;</span></a>
 <a name="148"><span class="lineNum">     148 </span>            : }</a>
 <a name="149"><span class="lineNum">     149 </span>            : </a>
 <a name="150"><span class="lineNum">     150 </span><span class="lineCov">          7 : MidiProgramManager&amp; Engine::getMidiProgramManager() const</span></a>
@@ -215,10 +215,10 @@
 <a name="153"><span class="lineNum">     153 </span><span class="lineCov">          7 :     return *midiProgramManager;</span></a>
 <a name="154"><span class="lineNum">     154 </span>            : }</a>
 <a name="155"><span class="lineNum">     155 </span>            : </a>
-<a name="156"><span class="lineNum">     156 </span><span class="lineCov">       4082 : ExternalControllerManager&amp; Engine::getExternalControllerManager() const</span></a>
+<a name="156"><span class="lineNum">     156 </span><span class="lineCov">       4420 : ExternalControllerManager&amp; Engine::getExternalControllerManager() const</span></a>
 <a name="157"><span class="lineNum">     157 </span>            : {</a>
 <a name="158"><span class="lineNum">     158 </span>            :     jassert (externalControllerManager != nullptr);</a>
-<a name="159"><span class="lineNum">     159 </span><span class="lineCov">       4082 :     return *externalControllerManager;</span></a>
+<a name="159"><span class="lineNum">     159 </span><span class="lineCov">       4420 :     return *externalControllerManager;</span></a>
 <a name="160"><span class="lineNum">     160 </span>            : }</a>
 <a name="161"><span class="lineNum">     161 </span>            : </a>
 <a name="162"><span class="lineNum">     162 </span><span class="lineNoCov">          0 : RenderManager&amp; Engine::getRenderManager() const</span></a>
@@ -233,40 +233,40 @@
 <a name="171"><span class="lineNum">     171 </span><span class="lineCov">         66 :     return *backgroundJobManager;</span></a>
 <a name="172"><span class="lineNum">     172 </span>            : }</a>
 <a name="173"><span class="lineNum">     173 </span>            : </a>
-<a name="174"><span class="lineNum">     174 </span><span class="lineCov">       8519 : PropertyStorage&amp; Engine::getPropertyStorage() const</span></a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineCov">       8844 : PropertyStorage&amp; Engine::getPropertyStorage() const</span></a>
 <a name="175"><span class="lineNum">     175 </span>            : {</a>
 <a name="176"><span class="lineNum">     176 </span>            :     jassert (propertyStorage != nullptr);</a>
-<a name="177"><span class="lineNum">     177 </span><span class="lineCov">       8519 :     return *propertyStorage;</span></a>
+<a name="177"><span class="lineNum">     177 </span><span class="lineCov">       8844 :     return *propertyStorage;</span></a>
 <a name="178"><span class="lineNum">     178 </span>            : }</a>
 <a name="179"><span class="lineNum">     179 </span>            : </a>
-<a name="180"><span class="lineNum">     180 </span><span class="lineCov">        430 : UIBehaviour&amp; Engine::getUIBehaviour() const</span></a>
+<a name="180"><span class="lineNum">     180 </span><span class="lineCov">        500 : UIBehaviour&amp; Engine::getUIBehaviour() const</span></a>
 <a name="181"><span class="lineNum">     181 </span>            : {</a>
 <a name="182"><span class="lineNum">     182 </span>            :     jassert (uiBehaviour != nullptr);</a>
-<a name="183"><span class="lineNum">     183 </span><span class="lineCov">        430 :     return *uiBehaviour;</span></a>
+<a name="183"><span class="lineNum">     183 </span><span class="lineCov">        500 :     return *uiBehaviour;</span></a>
 <a name="184"><span class="lineNum">     184 </span>            : }</a>
 <a name="185"><span class="lineNum">     185 </span>            : </a>
-<a name="186"><span class="lineNum">     186 </span><span class="lineCov">     365252 : EngineBehaviour&amp; Engine::getEngineBehaviour() const</span></a>
+<a name="186"><span class="lineNum">     186 </span><span class="lineCov">     699120 : EngineBehaviour&amp; Engine::getEngineBehaviour() const</span></a>
 <a name="187"><span class="lineNum">     187 </span>            : {</a>
 <a name="188"><span class="lineNum">     188 </span>            :     jassert (engineBehaviour != nullptr);</a>
-<a name="189"><span class="lineNum">     189 </span><span class="lineCov">     365252 :     return *engineBehaviour;</span></a>
+<a name="189"><span class="lineNum">     189 </span><span class="lineCov">     699120 :     return *engineBehaviour;</span></a>
 <a name="190"><span class="lineNum">     190 </span>            : }</a>
 <a name="191"><span class="lineNum">     191 </span>            : </a>
-<a name="192"><span class="lineNum">     192 </span><span class="lineCov">       1854 : AudioFileManager&amp; Engine::getAudioFileManager() const</span></a>
+<a name="192"><span class="lineNum">     192 </span><span class="lineCov">       2121 : AudioFileManager&amp; Engine::getAudioFileManager() const</span></a>
 <a name="193"><span class="lineNum">     193 </span>            : {</a>
 <a name="194"><span class="lineNum">     194 </span>            :     jassert (audioFileManager != nullptr);</a>
-<a name="195"><span class="lineNum">     195 </span><span class="lineCov">       1854 :     return *audioFileManager;</span></a>
+<a name="195"><span class="lineNum">     195 </span><span class="lineCov">       2121 :     return *audioFileManager;</span></a>
 <a name="196"><span class="lineNum">     196 </span>            : }</a>
 <a name="197"><span class="lineNum">     197 </span>            : </a>
-<a name="198"><span class="lineNum">     198 </span><span class="lineCov">        410 : MidiLearnState&amp; Engine::getMidiLearnState() const</span></a>
+<a name="198"><span class="lineNum">     198 </span><span class="lineCov">        416 : MidiLearnState&amp; Engine::getMidiLearnState() const</span></a>
 <a name="199"><span class="lineNum">     199 </span>            : {</a>
 <a name="200"><span class="lineNum">     200 </span>            :     jassert (midiLearnState != nullptr);</a>
-<a name="201"><span class="lineNum">     201 </span><span class="lineCov">        410 :     return *midiLearnState;</span></a>
+<a name="201"><span class="lineNum">     201 </span><span class="lineCov">        416 :     return *midiLearnState;</span></a>
 <a name="202"><span class="lineNum">     202 </span>            : }</a>
 <a name="203"><span class="lineNum">     203 </span>            : </a>
-<a name="204"><span class="lineNum">     204 </span><span class="lineCov">       2266 : PluginManager&amp; Engine::getPluginManager() const</span></a>
+<a name="204"><span class="lineNum">     204 </span><span class="lineCov">       2336 : PluginManager&amp; Engine::getPluginManager() const</span></a>
 <a name="205"><span class="lineNum">     205 </span>            : {</a>
 <a name="206"><span class="lineNum">     206 </span>            :     jassert (pluginManager != nullptr);</a>
-<a name="207"><span class="lineNum">     207 </span><span class="lineCov">       2266 :     return *pluginManager;</span></a>
+<a name="207"><span class="lineNum">     207 </span><span class="lineCov">       2336 :     return *pluginManager;</span></a>
 <a name="208"><span class="lineNum">     208 </span>            : }</a>
 <a name="209"><span class="lineNum">     209 </span>            : </a>
 <a name="210"><span class="lineNum">     210 </span><span class="lineNoCov">          0 : EditDeleter&amp; Engine::getEditDeleter() const</span></a>
@@ -275,10 +275,10 @@
 <a name="213"><span class="lineNum">     213 </span><span class="lineNoCov">          0 :     return *editDeleter;</span></a>
 <a name="214"><span class="lineNum">     214 </span>            : }</a>
 <a name="215"><span class="lineNum">     215 </span>            : </a>
-<a name="216"><span class="lineNum">     216 </span><span class="lineCov">        195 : TemporaryFileManager&amp; Engine::getTemporaryFileManager() const</span></a>
+<a name="216"><span class="lineNum">     216 </span><span class="lineCov">        209 : TemporaryFileManager&amp; Engine::getTemporaryFileManager() const</span></a>
 <a name="217"><span class="lineNum">     217 </span>            : {</a>
 <a name="218"><span class="lineNum">     218 </span>            :     jassert (temporaryFileManager != nullptr);</a>
-<a name="219"><span class="lineNum">     219 </span><span class="lineCov">        195 :     return *temporaryFileManager;</span></a>
+<a name="219"><span class="lineNum">     219 </span><span class="lineCov">        209 :     return *temporaryFileManager;</span></a>
 <a name="220"><span class="lineNum">     220 </span>            : }</a>
 <a name="221"><span class="lineNum">     221 </span>            : </a>
 <a name="222"><span class="lineNum">     222 </span><span class="lineCov">        192 : RecordingThumbnailManager&amp; Engine::getRecordingThumbnailManager() const</span></a>
@@ -287,24 +287,24 @@
 <a name="225"><span class="lineNum">     225 </span><span class="lineCov">        192 :     return *recordingThumbnailManager;</span></a>
 <a name="226"><span class="lineNum">     226 </span>            : }</a>
 <a name="227"><span class="lineNum">     227 </span>            : </a>
-<a name="228"><span class="lineNum">     228 </span><span class="lineCov">      55869 : WaveInputRecordingThread&amp; Engine::getWaveInputRecordingThread() const</span></a>
+<a name="228"><span class="lineNum">     228 </span><span class="lineCov">      55761 : WaveInputRecordingThread&amp; Engine::getWaveInputRecordingThread() const</span></a>
 <a name="229"><span class="lineNum">     229 </span>            : {</a>
 <a name="230"><span class="lineNum">     230 </span>            :     jassert (waveInputRecordingThread != nullptr);</a>
-<a name="231"><span class="lineNum">     231 </span><span class="lineCov">      55869 :     return *waveInputRecordingThread;</span></a>
+<a name="231"><span class="lineNum">     231 </span><span class="lineCov">      55761 :     return *waveInputRecordingThread;</span></a>
 <a name="232"><span class="lineNum">     232 </span>            : }</a>
 <a name="233"><span class="lineNum">     233 </span>            : </a>
-<a name="234"><span class="lineNum">     234 </span><span class="lineCov">       1621 : ActiveEdits&amp; Engine::getActiveEdits() const noexcept</span></a>
+<a name="234"><span class="lineNum">     234 </span><span class="lineCov">       1717 : ActiveEdits&amp; Engine::getActiveEdits() const noexcept</span></a>
 <a name="235"><span class="lineNum">     235 </span>            : {</a>
 <a name="236"><span class="lineNum">     236 </span>            :     jassert (activeEdits != nullptr);</a>
-<a name="237"><span class="lineNum">     237 </span><span class="lineCov">       1621 :     return *activeEdits;</span></a>
+<a name="237"><span class="lineNum">     237 </span><span class="lineCov">       1717 :     return *activeEdits;</span></a>
 <a name="238"><span class="lineNum">     238 </span>            : }</a>
 <a name="239"><span class="lineNum">     239 </span>            : </a>
-<a name="240"><span class="lineNum">     240 </span><span class="lineCov">          2 : GrooveTemplateManager&amp; Engine::getGrooveTemplateManager()</span></a>
+<a name="240"><span class="lineNum">     240 </span><span class="lineCov">         82 : GrooveTemplateManager&amp; Engine::getGrooveTemplateManager()</span></a>
 <a name="241"><span class="lineNum">     241 </span>            : {</a>
-<a name="242"><span class="lineNum">     242 </span><span class="lineCov">          2 :     if (! grooveTemplateManager)</span></a>
+<a name="242"><span class="lineNum">     242 </span><span class="lineCov">         82 :     if (! grooveTemplateManager)</span></a>
 <a name="243"><span class="lineNum">     243 </span><span class="lineCov">          2 :         grooveTemplateManager = std::make_unique&lt;GrooveTemplateManager&gt; (*this);</span></a>
 <a name="244"><span class="lineNum">     244 </span>            : </a>
-<a name="245"><span class="lineNum">     245 </span><span class="lineCov">          2 :     return *grooveTemplateManager;</span></a>
+<a name="245"><span class="lineNum">     245 </span><span class="lineCov">         82 :     return *grooveTemplateManager;</span></a>
 <a name="246"><span class="lineNum">     246 </span>            : }</a>
 <a name="247"><span class="lineNum">     247 </span>            : </a>
 <a name="248"><span class="lineNum">     248 </span><span class="lineNoCov">          0 : CompFactory&amp; Engine::getCompFactory() const</span></a>
@@ -328,7 +328,7 @@
 <a name="266"><span class="lineNum">     266 </span><span class="lineNoCov">          0 :     return p.edit.shouldLoadPlugins();</span></a>
 <a name="267"><span class="lineNum">     267 </span>            : }</a>
 <a name="268"><span class="lineNum">     268 </span>            : </a>
-<a name="269"><span class="lineNum">     269 </span>            : }</a>
+<a name="269"><span class="lineNum">     269 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

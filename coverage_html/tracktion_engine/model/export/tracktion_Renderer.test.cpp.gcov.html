@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">42</td>
-            <td class="headerCovTableEntry">42</td>
+            <td class="headerCovTableEntry">41</td>
+            <td class="headerCovTableEntry">41</td>
             <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : #if TRACKTION_UNIT_TESTS</a>
@@ -108,24 +108,24 @@
 <a name="46"><span class="lineNum">      46 </span><span class="lineCov">          1 :             track-&gt;pluginList.insertPlugin (*synth, 0, nullptr);</span></a>
 <a name="47"><span class="lineNum">      47 </span>            : </a>
 <a name="48"><span class="lineNum">      48 </span>            :             // Insert a MIDI clip with a 1-beat note</a>
-<a name="49"><span class="lineNum">      49 </span><span class="lineCov">          1 :             auto midiClip = track-&gt;insertMIDIClip ({ 0.0, 1.0 }, nullptr);</span></a>
-<a name="50"><span class="lineNum">      50 </span><span class="lineCov">          1 :             midiClip-&gt;getSequence().addNote (69, 0.0, 1.0, 127, 0, nullptr);</span></a>
+<a name="49"><span class="lineNum">      49 </span><span class="lineCov">          1 :             auto midiClip = track-&gt;insertMIDIClip ({ 0.0s, TimePosition (1.0s) }, nullptr);</span></a>
+<a name="50"><span class="lineNum">      50 </span><span class="lineCov">          1 :             midiClip-&gt;getSequence().addNote (69, BeatPosition::fromBeats (0.0), BeatDuration::fromBeats (1.0), 127, 0, nullptr);</span></a>
 <a name="51"><span class="lineNum">      51 </span><span class="lineCov">          1 :             const auto trackLength = track-&gt;getLengthIncludingInputTracks();</span></a>
-<a name="52"><span class="lineNum">      52 </span><span class="lineCov">          1 :             expectWithinAbsoluteError (trackLength, 1.0, 0.001);</span></a>
+<a name="52"><span class="lineNum">      52 </span><span class="lineCov">          1 :             expectWithinAbsoluteError (trackLength.inSeconds(), 1.0, 0.001);</span></a>
 <a name="53"><span class="lineNum">      53 </span>            : </a>
 <a name="54"><span class="lineNum">      54 </span>            :             // Check expected end allowance</a>
 <a name="55"><span class="lineNum">      55 </span><span class="lineCov">          1 :             juce::Array&lt;EditItemID&gt; trackIDs { track-&gt;itemID };</span></a>
 <a name="56"><span class="lineNum">      56 </span><span class="lineCov">          1 :             juce::Array&lt;Clip*&gt; clips { midiClip.get() };</span></a>
 <a name="57"><span class="lineNum">      57 </span><span class="lineCov">          1 :             const auto endAllowance = RenderOptions::findEndAllowance (*edit, &amp;trackIDs, &amp;clips);</span></a>
-<a name="58"><span class="lineNum">      58 </span><span class="lineCov">          1 :             expectWithinAbsoluteError (endAllowance, tailLength, 0.001);</span></a>
+<a name="58"><span class="lineNum">      58 </span><span class="lineCov">          1 :             expectWithinAbsoluteError (endAllowance.inSeconds(), tailLength, 0.001);</span></a>
 <a name="59"><span class="lineNum">      59 </span>            : </a>
 <a name="60"><span class="lineNum">      60 </span>            :             // Ensure freezing that track has the track length plus the end allowance</a>
-<a name="61"><span class="lineNum">      61 </span><span class="lineCov">          1 :             const auto expectedTotalLength = trackLength + tailLength;</span></a>
+<a name="61"><span class="lineNum">      61 </span>            :             const auto expectedTotalLength = trackLength + TimeDuration::fromSeconds (tailLength);</a>
 <a name="62"><span class="lineNum">      62 </span>            : </a>
 <a name="63"><span class="lineNum">      63 </span>            :             {</a>
 <a name="64"><span class="lineNum">      64 </span><span class="lineCov">          1 :                 track-&gt;setFrozen (true, AudioTrack::individualFreeze);</span></a>
 <a name="65"><span class="lineNum">      65 </span><span class="lineCov">          1 :                 const auto freezeFile = AudioFile (engine, TemporaryFileManager::getFreezeFileForTrack (*track));</span></a>
-<a name="66"><span class="lineNum">      66 </span><span class="lineCov">          1 :                 expectWithinAbsoluteError (freezeFile.getLength(), expectedTotalLength, 0.001);</span></a>
+<a name="66"><span class="lineNum">      66 </span><span class="lineCov">          1 :                 expectWithinAbsoluteError (freezeFile.getLength(), expectedTotalLength.inSeconds(), 0.001);</span></a>
 <a name="67"><span class="lineNum">      67 </span>            : </a>
 <a name="68"><span class="lineNum">      68 </span><span class="lineCov">          1 :                 engine.getAudioFileManager().releaseAllFiles();</span></a>
 <a name="69"><span class="lineNum">      69 </span><span class="lineCov">          1 :                 edit-&gt;getTempDirectory (false).deleteRecursively();</span></a>
@@ -139,13 +139,13 @@
 <a name="77"><span class="lineNum">      77 </span><span class="lineCov">          1 :                 auto track2 = edit-&gt;insertNewAudioTrack ({ {},{} }, nullptr);</span></a>
 <a name="78"><span class="lineNum">      78 </span><span class="lineCov">          1 :                 track-&gt;getOutput().setOutputToTrack (track2.get());</span></a>
 <a name="79"><span class="lineNum">      79 </span><span class="lineCov">          1 :                 trackIDs = juce::Array&lt;EditItemID&gt; { track2-&gt;itemID };</span></a>
-<a name="80"><span class="lineNum">      80 </span><span class="lineCov">          1 :                 expectEquals (RenderOptions::findEndAllowance (*edit, &amp;trackIDs, nullptr), 0.0,</span></a>
-<a name="81"><span class="lineNum">      81 </span>            :                               &quot;Endo allowance of new empty track is not 0&quot;);</a>
+<a name="80"><span class="lineNum">      80 </span><span class="lineCov">          1 :                 expectEquals (RenderOptions::findEndAllowance (*edit, &amp;trackIDs, nullptr), TimeDuration(),</span></a>
+<a name="81"><span class="lineNum">      81 </span>            :                               &quot;End allowance of new empty track is not 0&quot;);</a>
 <a name="82"><span class="lineNum">      82 </span>            : </a>
 <a name="83"><span class="lineNum">      83 </span>            :                 // Now freeze this track and it should contain track's end allowance</a>
 <a name="84"><span class="lineNum">      84 </span><span class="lineCov">          1 :                 track2-&gt;setFrozen (true, AudioTrack::individualFreeze);</span></a>
 <a name="85"><span class="lineNum">      85 </span><span class="lineCov">          1 :                 const auto freezeFile = AudioFile (engine, TemporaryFileManager::getFreezeFileForTrack (*track2));</span></a>
-<a name="86"><span class="lineNum">      86 </span><span class="lineCov">          1 :                 expectWithinAbsoluteError (freezeFile.getLength(), expectedTotalLength, 0.001);</span></a>
+<a name="86"><span class="lineNum">      86 </span><span class="lineCov">          1 :                 expectWithinAbsoluteError (freezeFile.getLength(), expectedTotalLength.inSeconds(), 0.001);</span></a>
 <a name="87"><span class="lineNum">      87 </span>            : </a>
 <a name="88"><span class="lineNum">      88 </span><span class="lineCov">          1 :                 engine.getAudioFileManager().releaseAllFiles();</span></a>
 <a name="89"><span class="lineNum">      89 </span><span class="lineCov">          1 :                 edit-&gt;getTempDirectory (false).deleteRecursively();</span></a>
@@ -159,7 +159,7 @@
 <a name="97"><span class="lineNum">      97 </span>            : </a>
 <a name="98"><span class="lineNum">      98 </span>            : #endif</a>
 <a name="99"><span class="lineNum">      99 </span>            : </a>
-<a name="100"><span class="lineNum">     100 </span>            : } // namespace tracktion_engine</a>
+<a name="100"><span class="lineNum">     100 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

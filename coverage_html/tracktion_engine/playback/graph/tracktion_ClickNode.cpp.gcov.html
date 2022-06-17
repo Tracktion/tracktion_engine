@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">12</td>
@@ -71,7 +71,7 @@
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
 <a name="11"><span class="lineNum">      11 </span>            : </a>
-<a name="12"><span class="lineNum">      12 </span>            : namespace tracktion_engine</a>
+<a name="12"><span class="lineNum">      12 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="13"><span class="lineNum">      13 </span>            : {</a>
 <a name="14"><span class="lineNum">      14 </span>            : </a>
 <a name="15"><span class="lineNum">      15 </span>            : namespace</a>
@@ -120,30 +120,30 @@
 <a name="58"><span class="lineNum">      58 </span>            : </a>
 <a name="59"><span class="lineNum">      59 </span>            : //==============================================================================</a>
 <a name="60"><span class="lineNum">      60 </span>            : //==============================================================================</a>
-<a name="61"><span class="lineNum">      61 </span><span class="lineCov">          4 : ClickGenerator::ClickGenerator (Edit&amp; e, bool isMidi, double endTime)</span></a>
+<a name="61"><span class="lineNum">      61 </span><span class="lineCov">          4 : ClickGenerator::ClickGenerator (Edit&amp; e, bool isMidi, TimePosition endTime)</span></a>
 <a name="62"><span class="lineNum">      62 </span><span class="lineCov">          4 :     : edit (e), midi (isMidi)</span></a>
 <a name="63"><span class="lineNum">      63 </span>            : {</a>
-<a name="64"><span class="lineNum">      64 </span><span class="lineCov">          4 :     endTime = juce::jmin (endTime, juce::jmax (edit.getLength() * 2, 60.0 * 60.0));</span></a>
+<a name="64"><span class="lineNum">      64 </span><span class="lineCov">          4 :     endTime = juce::jmin (endTime, TimePosition::fromSeconds (juce::jmax (edit.getLength().inSeconds() * 2, 60.0 * 60.0)));</span></a>
 <a name="65"><span class="lineNum">      65 </span>            : </a>
-<a name="66"><span class="lineNum">      66 </span><span class="lineCov">          4 :     TempoSequencePosition pos (edit.tempoSequence);</span></a>
-<a name="67"><span class="lineNum">      67 </span><span class="lineCov">          4 :     pos.setTime (1.0e-10);</span></a>
+<a name="66"><span class="lineNum">      66 </span><span class="lineCov">          4 :     auto pos = createPosition (edit.tempoSequence);</span></a>
+<a name="67"><span class="lineNum">      67 </span><span class="lineCov">          4 :     pos.set (TimePosition::fromSeconds (1.0e-10));</span></a>
 <a name="68"><span class="lineNum">      68 </span><span class="lineCov">          4 :     pos.addBars (-8);</span></a>
 <a name="69"><span class="lineNum">      69 </span>            : </a>
 <a name="70"><span class="lineNum">      70 </span><span class="lineCov">      28932 :     while (pos.getTime() &lt; endTime)</span></a>
 <a name="71"><span class="lineNum">      71 </span>            :     {</a>
-<a name="72"><span class="lineNum">      72 </span><span class="lineCov">      28928 :         auto barsBeats = pos.getBarsBeatsTime();</span></a>
+<a name="72"><span class="lineNum">      72 </span><span class="lineCov">      28928 :         auto barsBeats = pos.getBarsBeats();</span></a>
 <a name="73"><span class="lineNum">      73 </span>            : </a>
 <a name="74"><span class="lineNum">      74 </span><span class="lineCov">      28928 :         if (barsBeats.getWholeBeats() == 0)</span></a>
 <a name="75"><span class="lineNum">      75 </span><span class="lineCov">       7232 :             loudBeats.setBit (beatTimes.size());</span></a>
 <a name="76"><span class="lineNum">      76 </span>            : </a>
 <a name="77"><span class="lineNum">      77 </span><span class="lineCov">      28928 :         beatTimes.add (pos.getTime());</span></a>
-<a name="78"><span class="lineNum">      78 </span><span class="lineCov">      28928 :         pos.addBeats (1.0);</span></a>
+<a name="78"><span class="lineNum">      78 </span><span class="lineCov">      28928 :         pos.add (1_bd);</span></a>
 <a name="79"><span class="lineNum">      79 </span>            :     }</a>
 <a name="80"><span class="lineNum">      80 </span>            : </a>
-<a name="81"><span class="lineNum">      81 </span><span class="lineCov">          4 :     beatTimes.add (1000000.0);</span></a>
+<a name="81"><span class="lineNum">      81 </span><span class="lineCov">          4 :     beatTimes.add (TimePosition::fromSeconds (1000000.0));</span></a>
 <a name="82"><span class="lineNum">      82 </span><span class="lineCov">          4 : }</span></a>
 <a name="83"><span class="lineNum">      83 </span>            : </a>
-<a name="84"><span class="lineNum">      84 </span><span class="lineCov">          4 : void ClickGenerator::prepareToPlay (double newSampleRate, double startTime)</span></a>
+<a name="84"><span class="lineNum">      84 </span><span class="lineCov">          4 : void ClickGenerator::prepareToPlay (double newSampleRate, TimePosition startTime)</span></a>
 <a name="85"><span class="lineNum">      85 </span>            : {</a>
 <a name="86"><span class="lineNum">      86 </span><span class="lineCov">          4 :     if (sampleRate != newSampleRate)</span></a>
 <a name="87"><span class="lineNum">      87 </span>            :     {</a>
@@ -188,7 +188,7 @@
 <a name="126"><span class="lineNum">     126 </span><span class="lineCov">          4 : }</span></a>
 <a name="127"><span class="lineNum">     127 </span>            : </a>
 <a name="128"><span class="lineNum">     128 </span><span class="lineCov">       3756 : void ClickGenerator::processBlock (choc::buffer::ChannelArrayView&lt;float&gt;* destBuffer,</span></a>
-<a name="129"><span class="lineNum">     129 </span>            :                                    MidiMessageArray* bufferForMidiMessages, EditTimeRange editTime)</a>
+<a name="129"><span class="lineNum">     129 </span>            :                                    MidiMessageArray* bufferForMidiMessages, TimeRange editTime)</a>
 <a name="130"><span class="lineNum">     130 </span>            : {</a>
 <a name="131"><span class="lineNum">     131 </span>            :     // Use the end time here to avoid the end of blocks playing the start of a beat</a>
 <a name="132"><span class="lineNum">     132 </span><span class="lineCov">       3756 :     if (isMutedAtTime (editTime.getEnd()))</span></a>
@@ -205,7 +205,7 @@
 <a name="143"><span class="lineNum">     143 </span>            : </a>
 <a name="144"><span class="lineNum">     144 </span><span class="lineNoCov">          0 :     if (midi &amp;&amp; bufferForMidiMessages != nullptr)</span></a>
 <a name="145"><span class="lineNum">     145 </span>            :     {</a>
-<a name="146"><span class="lineNum">     146 </span>            :         double t = beatTimes.getUnchecked (currentBeat);</a>
+<a name="146"><span class="lineNum">     146 </span>            :         auto t = beatTimes.getUnchecked (currentBeat);</a>
 <a name="147"><span class="lineNum">     147 </span>            : </a>
 <a name="148"><span class="lineNum">     148 </span><span class="lineNoCov">          0 :         while (t &lt; editTime.getEnd())</span></a>
 <a name="149"><span class="lineNum">     149 </span>            :         {</a>
@@ -214,7 +214,7 @@
 <a name="152"><span class="lineNum">     152 </span>            : </a>
 <a name="153"><span class="lineNum">     153 </span><span class="lineNoCov">          0 :             if (t &gt;= editTime.getStart())</span></a>
 <a name="154"><span class="lineNum">     154 </span><span class="lineNoCov">          0 :                 bufferForMidiMessages-&gt;addMidiMessage (juce::MidiMessage::noteOn (10, note, gain),</span></a>
-<a name="155"><span class="lineNum">     155 </span>            :                                                        t - editTime.getStart(),</a>
+<a name="155"><span class="lineNum">     155 </span>            :                                                        (t - editTime.getStart()).inSeconds(),</a>
 <a name="156"><span class="lineNum">     156 </span>            :                                                        MidiMessageArray::notMPE);</a>
 <a name="157"><span class="lineNum">     157 </span>            : </a>
 <a name="158"><span class="lineNum">     158 </span><span class="lineNoCov">          0 :             t = beatTimes.getUnchecked (++currentBeat);</span></a>
@@ -223,7 +223,7 @@
 <a name="161"><span class="lineNum">     161 </span><span class="lineNoCov">          0 :     else if (! midi &amp;&amp; destBuffer != nullptr)</span></a>
 <a name="162"><span class="lineNum">     162 </span>            :     {</a>
 <a name="163"><span class="lineNum">     163 </span><span class="lineNoCov">          0 :         --currentBeat;</span></a>
-<a name="164"><span class="lineNum">     164 </span>            :         double t = beatTimes[currentBeat];</a>
+<a name="164"><span class="lineNum">     164 </span>            :         auto t = beatTimes[currentBeat];</a>
 <a name="165"><span class="lineNum">     165 </span>            : </a>
 <a name="166"><span class="lineNum">     166 </span><span class="lineNoCov">          0 :         while (t &lt; editTime.getEnd())</span></a>
 <a name="167"><span class="lineNum">     167 </span>            :         {</a>
@@ -231,7 +231,7 @@
 <a name="169"><span class="lineNum">     169 </span>            : </a>
 <a name="170"><span class="lineNum">     170 </span><span class="lineNoCov">          0 :             if (b.getNumSamples() &gt; 0)</span></a>
 <a name="171"><span class="lineNum">     171 </span>            :             {</a>
-<a name="172"><span class="lineNum">     172 </span><span class="lineNoCov">          0 :                 auto clickStartOffset = juce::roundToInt ((t - editTime.getStart()) * sampleRate);</span></a>
+<a name="172"><span class="lineNum">     172 </span><span class="lineNoCov">          0 :                 auto clickStartOffset = juce::roundToInt (((t - editTime.getStart()).inSeconds()) * sampleRate);</span></a>
 <a name="173"><span class="lineNum">     173 </span>            : </a>
 <a name="174"><span class="lineNum">     174 </span><span class="lineNoCov">          0 :                 auto dstStart = (choc::buffer::FrameCount) std::max (0, clickStartOffset);</span></a>
 <a name="175"><span class="lineNum">     175 </span><span class="lineNoCov">          0 :                 auto srcStart = (choc::buffer::FrameCount) std::max (0, -clickStartOffset);</span></a>
@@ -251,7 +251,7 @@
 <a name="189"><span class="lineNum">     189 </span>            :     }</a>
 <a name="190"><span class="lineNum">     190 </span>            : }</a>
 <a name="191"><span class="lineNum">     191 </span>            : </a>
-<a name="192"><span class="lineNum">     192 </span><span class="lineCov">       3756 : bool ClickGenerator::isMutedAtTime (double time) const</span></a>
+<a name="192"><span class="lineNum">     192 </span><span class="lineCov">       3756 : bool ClickGenerator::isMutedAtTime (TimePosition time) const</span></a>
 <a name="193"><span class="lineNum">     193 </span>            : {</a>
 <a name="194"><span class="lineNum">     194 </span><span class="lineCov">       3756 :     const bool clickEnabled = edit.clickTrackEnabled.get();</span></a>
 <a name="195"><span class="lineNum">     195 </span>            : </a>
@@ -267,21 +267,21 @@
 <a name="205"><span class="lineNum">     205 </span>            : </a>
 <a name="206"><span class="lineNum">     206 </span>            : //==============================================================================</a>
 <a name="207"><span class="lineNum">     207 </span>            : //==============================================================================</a>
-<a name="208"><span class="lineNum">     208 </span><span class="lineCov">          4 : ClickNode::ClickNode (Edit&amp; e, int numAudioChannels, bool isMidi, tracktion_graph::PlayHead&amp; playHeadToUse)</span></a>
+<a name="208"><span class="lineNum">     208 </span><span class="lineCov">          4 : ClickNode::ClickNode (Edit&amp; e, int numAudioChannels, bool isMidi, tracktion::graph::PlayHead&amp; playHeadToUse)</span></a>
 <a name="209"><span class="lineNum">     209 </span>            :     : edit (e), playHead (playHeadToUse),</a>
-<a name="210"><span class="lineNum">     210 </span>            :       clickGenerator (edit, isMidi, Edit::maximumLength),</a>
+<a name="210"><span class="lineNum">     210 </span>            :       clickGenerator (edit, isMidi, Edit::getMaximumEditEnd()),</a>
 <a name="211"><span class="lineNum">     211 </span><span class="lineCov">          4 :       numChannels (numAudioChannels), generateMidi (isMidi)</span></a>
 <a name="212"><span class="lineNum">     212 </span>            : {</a>
 <a name="213"><span class="lineNum">     213 </span><span class="lineCov">          4 : }</span></a>
 <a name="214"><span class="lineNum">     214 </span>            : </a>
-<a name="215"><span class="lineNum">     215 </span><span class="lineCov">         24 : std::vector&lt;tracktion_graph::Node*&gt; ClickNode::getDirectInputNodes()</span></a>
+<a name="215"><span class="lineNum">     215 </span><span class="lineCov">         24 : std::vector&lt;tracktion::graph::Node*&gt; ClickNode::getDirectInputNodes()</span></a>
 <a name="216"><span class="lineNum">     216 </span>            : {</a>
 <a name="217"><span class="lineNum">     217 </span><span class="lineCov">         24 :     return {};</span></a>
 <a name="218"><span class="lineNum">     218 </span>            : }</a>
 <a name="219"><span class="lineNum">     219 </span>            : </a>
-<a name="220"><span class="lineNum">     220 </span><span class="lineCov">         48 : tracktion_graph::NodeProperties ClickNode::getNodeProperties()</span></a>
+<a name="220"><span class="lineNum">     220 </span><span class="lineCov">         48 : tracktion::graph::NodeProperties ClickNode::getNodeProperties()</span></a>
 <a name="221"><span class="lineNum">     221 </span>            : {</a>
-<a name="222"><span class="lineNum">     222 </span><span class="lineCov">         48 :     tracktion_graph::NodeProperties props;</span></a>
+<a name="222"><span class="lineNum">     222 </span><span class="lineCov">         48 :     tracktion::graph::NodeProperties props;</span></a>
 <a name="223"><span class="lineNum">     223 </span><span class="lineCov">         48 :     props.hasAudio = ! generateMidi;</span></a>
 <a name="224"><span class="lineNum">     224 </span><span class="lineCov">         48 :     props.hasMidi = generateMidi;</span></a>
 <a name="225"><span class="lineNum">     225 </span><span class="lineCov">         48 :     props.numberOfChannels = numChannels;</span></a>
@@ -290,11 +290,11 @@
 <a name="228"><span class="lineNum">     228 </span><span class="lineCov">         48 :     return props;</span></a>
 <a name="229"><span class="lineNum">     229 </span>            : }</a>
 <a name="230"><span class="lineNum">     230 </span>            : </a>
-<a name="231"><span class="lineNum">     231 </span><span class="lineCov">          4 : void ClickNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&amp; info)</span></a>
+<a name="231"><span class="lineNum">     231 </span><span class="lineCov">          4 : void ClickNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&amp; info)</span></a>
 <a name="232"><span class="lineNum">     232 </span>            : {</a>
 <a name="233"><span class="lineNum">     233 </span><span class="lineCov">          4 :     sampleRate = info.sampleRate;</span></a>
 <a name="234"><span class="lineNum">     234 </span><span class="lineCov">          4 :     clickGenerator.prepareToPlay (sampleRate,</span></a>
-<a name="235"><span class="lineNum">     235 </span><span class="lineCov">          4 :                                   tracktion_graph::sampleToTime (playHead.getPosition(), sampleRate));</span></a>
+<a name="235"><span class="lineNum">     235 </span><span class="lineCov">          4 :                                   TimePosition::fromSamples (playHead.getPosition(), sampleRate));</span></a>
 <a name="236"><span class="lineNum">     236 </span><span class="lineCov">          4 : }</span></a>
 <a name="237"><span class="lineNum">     237 </span>            : </a>
 <a name="238"><span class="lineNum">     238 </span><span class="lineCov">         12 : bool ClickNode::isReadyToProcess()</span></a>
@@ -302,15 +302,15 @@
 <a name="240"><span class="lineNum">     240 </span><span class="lineCov">         12 :     return true;</span></a>
 <a name="241"><span class="lineNum">     241 </span>            : }</a>
 <a name="242"><span class="lineNum">     242 </span>            : </a>
-<a name="243"><span class="lineNum">     243 </span><span class="lineCov">       3903 : void ClickNode::process (ProcessContext&amp; pc)</span></a>
+<a name="243"><span class="lineNum">     243 </span><span class="lineCov">       3888 : void ClickNode::process (ProcessContext&amp; pc)</span></a>
 <a name="244"><span class="lineNum">     244 </span>            : {</a>
 <a name="245"><span class="lineNum">     245 </span>            :     SCOPED_REALTIME_CHECK</a>
 <a name="246"><span class="lineNum">     246 </span>            : </a>
-<a name="247"><span class="lineNum">     247 </span><span class="lineCov">       3903 :     if (playHead.isUserDragging() || ! playHead.isPlaying())</span></a>
-<a name="248"><span class="lineNum">     248 </span><span class="lineCov">        147 :         return;</span></a>
+<a name="247"><span class="lineNum">     247 </span><span class="lineCov">       3888 :     if (playHead.isUserDragging() || ! playHead.isPlaying())</span></a>
+<a name="248"><span class="lineNum">     248 </span><span class="lineCov">        132 :         return;</span></a>
 <a name="249"><span class="lineNum">     249 </span>            : </a>
 <a name="250"><span class="lineNum">     250 </span><span class="lineCov">       3756 :     const auto splitTimelinePosition = referenceSampleRangeToSplitTimelineRange (playHead, pc.referenceSampleRange);</span></a>
-<a name="251"><span class="lineNum">     251 </span><span class="lineCov">       3756 :     const EditTimeRange editTime (tracktion_graph::sampleToTime (splitTimelinePosition.timelineRange1, sampleRate));</span></a>
+<a name="251"><span class="lineNum">     251 </span><span class="lineCov">       3756 :     const auto editTime = tracktion::timeRangeFromSamples (splitTimelinePosition.timelineRange1, sampleRate);</span></a>
 <a name="252"><span class="lineNum">     252 </span><span class="lineCov">       3756 :     clickGenerator.processBlock (&amp;pc.buffers.audio, &amp;pc.buffers.midi, editTime);</span></a>
 <a name="253"><span class="lineNum">     253 </span>            : }</a>
 <a name="254"><span class="lineNum">     254 </span>            : </a>
@@ -372,7 +372,7 @@
 <a name="310"><span class="lineNum">     310 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="311"><span class="lineNum">     311 </span>            : }</a>
 <a name="312"><span class="lineNum">     312 </span>            : </a>
-<a name="313"><span class="lineNum">     313 </span>            : }</a>
+<a name="313"><span class="lineNum">     313 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

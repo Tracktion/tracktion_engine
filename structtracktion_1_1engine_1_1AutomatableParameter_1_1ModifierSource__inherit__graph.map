@@ -1,0 +1,11 @@
+<map id="tracktion::engine::AutomatableParameter::ModifierSource" name="tracktion::engine::AutomatableParameter::ModifierSource">
+<area shape="rect" id="node1" title="Base class for things that can be used to modify parameters." alt="" coords="5,130,179,186"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1MacroParameter.html" title="A MacroParameter is an AutomatableParameter which is a collection of Mappings." alt="" coords="227,104,367,145"/>
+<area shape="rect" id="node3" href="$structtracktion_1_1engine_1_1Modifier.html" title="Bass class for parameter Modifiers." alt="" coords="227,169,367,211"/>
+<area shape="rect" id="node4" href="$classtracktion_1_1engine_1_1BreakpointOscillatorModifier.html" title=" " alt="" coords="415,5,623,47"/>
+<area shape="rect" id="node5" href="$classtracktion_1_1engine_1_1EnvelopeFollowerModifier.html" title=" " alt="" coords="423,71,614,112"/>
+<area shape="rect" id="node6" href="$classtracktion_1_1engine_1_1LFOModifier.html" title=" " alt="" coords="449,136,589,177"/>
+<area shape="rect" id="node7" href="$classtracktion_1_1engine_1_1MIDITrackerModifier.html" title=" " alt="" coords="443,201,594,243"/>
+<area shape="rect" id="node8" href="$classtracktion_1_1engine_1_1RandomModifier.html" title=" " alt="" coords="449,267,589,308"/>
+<area shape="rect" id="node9" href="$classtracktion_1_1engine_1_1StepModifier.html" title=" " alt="" coords="449,332,589,373"/>
+</map>

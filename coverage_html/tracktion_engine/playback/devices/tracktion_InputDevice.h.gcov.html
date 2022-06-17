@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">12</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : /**</a>
@@ -98,7 +98,7 @@
 <a name="36"><span class="lineNum">      36 </span>            :     ~InputDevice() override;</a>
 <a name="37"><span class="lineNum">      37 </span>            : </a>
 <a name="38"><span class="lineNum">      38 </span>            :     //==============================================================================</a>
-<a name="39"><span class="lineNum">      39 </span><span class="lineCov">       5468 :     const juce::String&amp; getName() const         { return name; }</span></a>
+<a name="39"><span class="lineNum">      39 </span><span class="lineCov">       5482 :     const juce::String&amp; getName() const         { return name; }</span></a>
 <a name="40"><span class="lineNum">      40 </span><span class="lineNoCov">          0 :     const juce::String&amp; getType() const         { return type; }</span></a>
 <a name="41"><span class="lineNum">      41 </span>            : </a>
 <a name="42"><span class="lineNum">      42 </span>            :     virtual DeviceType getDeviceType() const = 0;</a>
@@ -185,7 +185,7 @@
 <a name="123"><span class="lineNum">     123 </span>            :     */</a>
 <a name="124"><span class="lineNum">     124 </span><span class="lineNoCov">          0 :     virtual bool shouldTrackContentsBeMuted()   { return false; }</span></a>
 <a name="125"><span class="lineNum">     125 </span>            : </a>
-<a name="126"><span class="lineNum">     126 </span>            :     virtual juce::String prepareToRecord (double start, double punchIn,</a>
+<a name="126"><span class="lineNum">     126 </span>            :     virtual juce::String prepareToRecord (TimePosition start, TimePosition punchIn,</a>
 <a name="127"><span class="lineNum">     127 </span>            :                                           double sampleRate, int blockSizeSamples,</a>
 <a name="128"><span class="lineNum">     128 </span>            :                                           bool isLivePunch) = 0;</a>
 <a name="129"><span class="lineNum">     129 </span>            : </a>
@@ -198,10 +198,10 @@
 <a name="136"><span class="lineNum">     136 </span><span class="lineNoCov">          0 :     virtual juce::File getRecordingFile() const     { return {}; }</span></a>
 <a name="137"><span class="lineNum">     137 </span>            : </a>
 <a name="138"><span class="lineNum">     138 </span>            :     virtual void prepareAndPunchRecord();</a>
-<a name="139"><span class="lineNum">     139 </span>            :     virtual double getPunchInTime() = 0;</a>
+<a name="139"><span class="lineNum">     139 </span>            :     virtual TimePosition getPunchInTime() = 0;</a>
 <a name="140"><span class="lineNum">     140 </span>            :     virtual Clip::Array stopRecording() = 0;</a>
-<a name="141"><span class="lineNum">     141 </span>            :     virtual Clip::Array applyLastRecordingToEdit (EditTimeRange recordedRange,</a>
-<a name="142"><span class="lineNum">     142 </span>            :                                                   bool isLooping, EditTimeRange loopRange,</a>
+<a name="141"><span class="lineNum">     141 </span>            :     virtual Clip::Array applyLastRecordingToEdit (TimeRange recordedRange,</a>
+<a name="142"><span class="lineNum">     142 </span>            :                                                   bool isLooping, TimeRange loopRange,</a>
 <a name="143"><span class="lineNum">     143 </span>            :                                                   bool discardRecordings,</a>
 <a name="144"><span class="lineNum">     144 </span>            :                                                   SelectionManager*) = 0;</a>
 <a name="145"><span class="lineNum">     145 </span>            : </a>
@@ -353,7 +353,7 @@
 <a name="291"><span class="lineNum">     291 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (InputDeviceInstance)</a>
 <a name="292"><span class="lineNum">     292 </span>            : };</a>
 <a name="293"><span class="lineNum">     293 </span>            : </a>
-<a name="294"><span class="lineNum">     294 </span>            : } // namespace tracktion_engine</a>
+<a name="294"><span class="lineNum">     294 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

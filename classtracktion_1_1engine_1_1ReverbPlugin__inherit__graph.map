@@ -1,0 +1,10 @@
+<map id="tracktion::engine::ReverbPlugin" name="tracktion::engine::ReverbPlugin">
+<area shape="rect" id="node1" title=" " alt="" coords="620,136,760,177"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1Plugin.html" title=" " alt="" coords="432,136,572,177"/>
+<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="219,5,359,47"/>
+<area shape="rect" id="node4" href="$classtracktion_1_1engine_1_1Exportable.html" title="An interface for objects within an edit that can be exported." alt="" coords="219,71,359,112"/>
+<area shape="rect" id="node5" href="$classtracktion_1_1engine_1_1AutomatableEditItem.html" title="Base class for elements that have some kind of automatable parameters." alt="" coords="208,136,369,177"/>
+<area shape="rect" id="node6" href="$classtracktion_1_1engine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g." alt="" coords="5,136,145,177"/>
+<area shape="rect" id="node7" href="$classtracktion_1_1engine_1_1MacroParameterElement.html" title="Base class for elements which can contain macro parameters." alt="" coords="197,201,380,243"/>
+<area shape="rect" id="node8" href="$structtracktion_1_1engine_1_1ValueTreeAllEventListener.html" title=" " alt="" coords="193,267,384,308"/>
+</map>

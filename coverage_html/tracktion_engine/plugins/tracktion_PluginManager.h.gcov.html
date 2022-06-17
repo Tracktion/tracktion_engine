@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">4</td>
-            <td class="headerCovTableEntry">4</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntry">3</td>
             <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">59</td>
@@ -70,7 +70,7 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : class PluginManager  : private juce::ChangeListener</a>
@@ -121,18 +121,18 @@
 <a name="59"><span class="lineNum">      59 </span>            :         virtual Plugin::Ptr create (PluginCreationInfo) = 0;</a>
 <a name="60"><span class="lineNum">      60 </span>            :     };</a>
 <a name="61"><span class="lineNum">      61 </span>            : </a>
-<a name="62"><span class="lineNum">      62 </span><span class="lineCov">         24 :     void registerBuiltInType (BuiltInType* t)   { builtInTypes.add (t); }</span></a>
+<a name="62"><span class="lineNum">      62 </span>            :     void registerBuiltInType (std::unique_ptr&lt;BuiltInType&gt;);</a>
 <a name="63"><span class="lineNum">      63 </span>            : </a>
 <a name="64"><span class="lineNum">      64 </span>            :     //==============================================================================</a>
 <a name="65"><span class="lineNum">      65 </span>            :     template &lt;typename Type&gt;</a>
 <a name="66"><span class="lineNum">      66 </span>            :     struct BuiltInTypeBase  : public PluginManager::BuiltInType</a>
 <a name="67"><span class="lineNum">      67 </span>            :     {</a>
 <a name="68"><span class="lineNum">      68 </span><span class="lineCov">         46 :         BuiltInTypeBase() : BuiltInType (Type::xmlTypeName) {}</span></a>
-<a name="69"><span class="lineNum">      69 </span><span class="lineCov">       1624 :         Plugin::Ptr create (PluginCreationInfo info) override   { return new Type (info); }</span></a>
+<a name="69"><span class="lineNum">      69 </span><span class="lineCov">       1680 :         Plugin::Ptr create (PluginCreationInfo info) override   { return new Type (info); }</span></a>
 <a name="70"><span class="lineNum">      70 </span>            :     };</a>
 <a name="71"><span class="lineNum">      71 </span>            : </a>
 <a name="72"><span class="lineNum">      72 </span>            :     template &lt;typename Type&gt;</a>
-<a name="73"><span class="lineNum">      73 </span><span class="lineCov">         48 :     void createBuiltInType()  { registerBuiltInType (new BuiltInTypeBase&lt;Type&gt;()); }</span></a>
+<a name="73"><span class="lineNum">      73 </span><span class="lineCov">         48 :     void createBuiltInType()  { registerBuiltInType (std::make_unique&lt;BuiltInTypeBase&lt;Type&gt;&gt;()); }</span></a>
 <a name="74"><span class="lineNum">      74 </span>            : </a>
 <a name="75"><span class="lineNum">      75 </span>            :     //==============================================================================</a>
 <a name="76"><span class="lineNum">      76 </span>            :     /** Callback that is used to create plugin instances from a PluginDescription.</a>
@@ -195,7 +195,7 @@
 <a name="133"><span class="lineNum">     133 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginCache)</a>
 <a name="134"><span class="lineNum">     134 </span>            : };</a>
 <a name="135"><span class="lineNum">     135 </span>            : </a>
-<a name="136"><span class="lineNum">     136 </span>            : } // namespace tracktion_engine</a>
+<a name="136"><span class="lineNum">     136 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

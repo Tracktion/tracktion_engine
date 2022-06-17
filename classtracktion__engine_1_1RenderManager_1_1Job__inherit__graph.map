@@ -1,7 +1,0 @@
-<map id="tracktion_engine::RenderManager::Job" name="tracktion_engine::RenderManager::Job">
-<area shape="rect" id="node1" title="The base class that all generator jobs derive from." alt="" coords="237,57,423,98"/>
-<area shape="rect" id="node3" href="$classtracktion__engine_1_1EditRenderJob.html" title=" " alt="" coords="471,5,701,32"/>
-<area shape="rect" id="node4" href="$classtracktion__engine_1_1ReverseRenderJob.html" title=" " alt="" coords="490,57,682,98"/>
-<area shape="rect" id="node5" href="$classtracktion__engine_1_1WarpTimeRenderJob.html" title=" " alt="" coords="483,122,689,163"/>
-<area shape="rect" id="node2" href="$classtracktion__engine_1_1ThreadPoolJobWithProgress.html" title=" " alt="" coords="5,57,189,98"/>
-</map>

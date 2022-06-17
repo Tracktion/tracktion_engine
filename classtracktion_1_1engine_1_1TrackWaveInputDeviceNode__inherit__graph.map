@@ -1,0 +1,4 @@
+<map id="tracktion::engine::TrackWaveInputDeviceNode" name="tracktion::engine::TrackWaveInputDeviceNode">
+<area shape="rect" id="node1" title="A Node that takes audio from the output of a track and sends it to its corresponding InputDevice." alt="" coords="5,80,209,121"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class." alt="" coords="24,5,191,32"/>
+</map>

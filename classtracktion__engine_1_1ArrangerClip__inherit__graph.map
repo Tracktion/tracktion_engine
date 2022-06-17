@@ -1,8 +1,0 @@
-<map id="tracktion_engine::ArrangerClip" name="tracktion_engine::ArrangerClip">
-<area shape="rect" id="node1" title=" " alt="" coords="219,229,439,256"/>
-<area shape="rect" id="node2" href="$classtracktion__engine_1_1Clip.html" title="A clip in an edit." alt="" coords="247,155,411,181"/>
-<area shape="rect" id="node3" href="$classtracktion__engine_1_1TrackItem.html" title="Base class for EditItems that live in a Track, e.g." alt="" coords="113,80,316,107"/>
-<area shape="rect" id="node4" href="$classtracktion__engine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g." alt="" coords="5,5,200,32"/>
-<area shape="rect" id="node5" href="$classtracktion__engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="225,5,431,32"/>
-<area shape="rect" id="node6" href="$classtracktion__engine_1_1Exportable.html" title="An interface for objects within an edit that can be exported." alt="" coords="341,80,550,107"/>
-</map>

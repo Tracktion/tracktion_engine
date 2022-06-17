@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-05-18 10:26:13</td>
+            <td class="headerValue">2022-06-17 21:16:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -70,13 +70,13 @@
 <a name="8"><span class="lineNum">       8 </span>            :     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.</a>
 <a name="9"><span class="lineNum">       9 </span>            : */</a>
 <a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion_engine</a>
+<a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span><span class="lineNoCov">          0 : WaveAudioNode::WaveAudioNode (const AudioFile&amp; af,</span></a>
-<a name="15"><span class="lineNum">      15 </span>            :                               EditTimeRange editTime,</a>
+<a name="15"><span class="lineNum">      15 </span>            :                               legacy::EditTimeRange editTime,</a>
 <a name="16"><span class="lineNum">      16 </span>            :                               double off,</a>
-<a name="17"><span class="lineNum">      17 </span>            :                               EditTimeRange loop,</a>
+<a name="17"><span class="lineNum">      17 </span>            :                               legacy::EditTimeRange loop,</a>
 <a name="18"><span class="lineNum">      18 </span>            :                               LiveClipLevel level,</a>
 <a name="19"><span class="lineNum">      19 </span>            :                               double speed,</a>
 <a name="20"><span class="lineNum">      20 </span><span class="lineNoCov">          0 :                               const juce::AudioChannelSet&amp; channelSetToUse)</span></a>
@@ -195,7 +195,7 @@
 <a name="133"><span class="lineNum">     133 </span><span class="lineNoCov">          0 :     invokeSplitRender (rc, *this);</span></a>
 <a name="134"><span class="lineNum">     134 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="135"><span class="lineNum">     135 </span>            : </a>
-<a name="136"><span class="lineNum">     136 </span><span class="lineNoCov">          0 : void WaveAudioNode::renderSection (const AudioRenderContext&amp; rc, EditTimeRange editTime)</span></a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineNoCov">          0 : void WaveAudioNode::renderSection (const AudioRenderContext&amp; rc, legacy::EditTimeRange editTime)</span></a>
 <a name="137"><span class="lineNum">     137 </span>            : {</a>
 <a name="138"><span class="lineNum">     138 </span>            :     // keep a local copy, because releaseAudioNodeResources may remove the reader halfway through..</a>
 <a name="139"><span class="lineNum">     139 </span>            :     const auto localReader = reader;</a>
@@ -299,7 +299,7 @@
 <a name="237"><span class="lineNum">     237 </span><span class="lineNoCov">          0 :         localReader-&gt;setReadPosition (editTimeToFileSample (rc.getEditTime().editRange1.getStart()));</span></a>
 <a name="238"><span class="lineNum">     238 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="239"><span class="lineNum">     239 </span>            : </a>
-<a name="240"><span class="lineNum">     240 </span>            : }</a>
+<a name="240"><span class="lineNum">     240 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>
