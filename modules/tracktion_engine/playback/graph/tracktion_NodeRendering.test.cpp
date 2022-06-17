@@ -8,12 +8,12 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 #if TRACKTION_BENCHMARKS
 
-using namespace tracktion_graph;
+using namespace tracktion::graph;
 
 //==============================================================================
 //==============================================================================
@@ -27,7 +27,7 @@ public:
     
     void runTest() override
     {
-        using namespace tracktion_graph;
+        using namespace tracktion::graph;
         test_utilities::TestSetup ts;
         ts.sampleRate = 96000.0;
         ts.blockSize = 128;
@@ -97,14 +97,14 @@ private:
         // Create Edit with 20 tracks
         // Create 12 5s files per track
         // Render the whole thing
-        using namespace tracktion_graph;
+        using namespace tracktion::graph;
         using namespace test_utilities;
-        auto& engine = *tracktion_engine::Engine::getEngines()[0];
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
         const auto description = benchmark_utilities::getDescription (opts)
                                     + juce::String (useSingleFile ? ", single file" : ", multiple files");
         
-        tracktion_graph::PlayHead playHead;
-        tracktion_graph::PlayHeadState playHeadState { playHead };
+        tracktion::graph::PlayHead playHead;
+        tracktion::graph::PlayHeadState playHeadState { playHead };
         ProcessState processState { playHeadState };
 
         //===
@@ -116,7 +116,7 @@ private:
 
         const auto totalNumFiles = size_t (numTracks * numFilesPerTrack);
         expect (useSingleFile || (context.files.size() == totalNumFiles));
-        expectWithinAbsoluteError (context.edit->getLength(), durationInSeconds, 0.01);
+        expectWithinAbsoluteError (context.edit->getLength().inSeconds(), durationInSeconds, 0.01);
 
         renderEdit (*this, opts);
     }
@@ -137,7 +137,7 @@ private:
         edit->ensureNumberOfAudioTracks (numTracks);
         
         if (useSingleFile)
-            files.push_back (tracktion_graph::test_utilities::getSinFile<juce::WavAudioFormat> (sampleRate, durationOfFile, 2, 220.0f));
+            files.push_back (tracktion::graph::test_utilities::getSinFile<juce::WavAudioFormat> (sampleRate, durationOfFile, 2, 220.0f));
 
         for (auto t : getAudioTracks (*edit))
         {
@@ -146,12 +146,12 @@ private:
                 if (! useSingleFile)
                 {
                     const float frequency = (float) r.nextInt ({ 110, 880 });
-                    auto file = tracktion_graph::test_utilities::getSinFile<juce::WavAudioFormat> (sampleRate, durationOfFile, 2, frequency);
+                    auto file = tracktion::graph::test_utilities::getSinFile<juce::WavAudioFormat> (sampleRate, durationOfFile, 2, frequency);
                     files.push_back (std::move (file));
                 }
 
                 auto& file = files.back();
-                const auto timeRange = EditTimeRange::withStartAndLength (i * durationOfFile, durationOfFile);
+                const auto timeRange = TimeRange (TimePosition::fromSeconds (durationOfFile) * i, TimeDuration::fromSeconds (durationOfFile));
                 auto waveClip = t->insertWaveClip (file->getFile().getFileName(), file->getFile(),
                                                    {{ timeRange }}, false);
                 waveClip->setGainDB (gainToDb (1.0f / numTracks));
@@ -166,4 +166,4 @@ static PerformanceTests performanceTests;
 
 #endif
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

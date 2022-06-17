@@ -19,6 +19,7 @@
 #ifndef CHOC_SINC_INTERPOLATE_HEADER_INCLUDED
 #define CHOC_SINC_INTERPOLATE_HEADER_INCLUDED
 
+#include <cmath>
 #include "choc_SampleBuffers.h"
 
 namespace choc::interpolation
@@ -137,14 +138,17 @@ void sincInterpolate (DestBufferOrView&& destBuffer, const SourceBufferOrView& s
     auto numChans = destBuffer.getNumChannels();
     CHOC_ASSERT (sourceBuffer.getNumChannels() == numChans);
 
-    if (destBuffer.getNumFrames() != sourceBuffer.getNumFrames())
+    if (! destBuffer.getSize().isEmpty())
     {
-        for (decltype (numChans) i = 0; i < numChans; ++i)
-            InterpolationFunctions::resampleMono (destBuffer.getChannel(i), sourceBuffer.getChannel(i));
-    }
-    else
-    {
-        copy (destBuffer, sourceBuffer);
+        if (destBuffer.getNumFrames() != sourceBuffer.getNumFrames())
+        {
+            for (decltype (numChans) i = 0; i < numChans; ++i)
+                InterpolationFunctions::resampleMono (destBuffer.getChannel(i), sourceBuffer.getChannel(i));
+        }
+        else
+        {
+            copy (destBuffer, sourceBuffer);
+        }
     }
 }
 

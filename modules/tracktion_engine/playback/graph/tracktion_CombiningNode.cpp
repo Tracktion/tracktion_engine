@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 namespace combining_node_utils
@@ -18,16 +18,16 @@ namespace combining_node_utils
     static constexpr double decayTimeAllowance = 5.0;
     static constexpr int secondsPerGroup = 8;
 
-    static inline constexpr int timeToGroupIndex (double t) noexcept
+    static inline constexpr int timeToGroupIndex (TimePosition t) noexcept
     {
-        return ((int) t) / secondsPerGroup;
+        return static_cast<int> (t.inSeconds()) / secondsPerGroup;
     }
 }
 
 //==============================================================================
 struct CombiningNode::TimedNode
 {
-    TimedNode (std::unique_ptr<Node> sourceNode, EditTimeRange t)
+    TimedNode (std::unique_ptr<Node> sourceNode, TimeRange t)
         : time (t), node (std::move (sourceNode))
     {
         for (auto n = node.get();;)
@@ -44,11 +44,16 @@ struct CombiningNode::TimedNode
         }
     }
 
-    void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info,
+    std::vector<Node*> getNodes() const
+    {
+        return nodesToProcess;
+    }
+
+    void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info,
                         choc::buffer::ChannelArrayView<float> view)
     {
         auto info2 = info;
-        info2.allocateAudioBuffer = [view] (choc::buffer::Size size) -> tracktion_graph::NodeBuffer
+        info2.allocateAudioBuffer = [view] (choc::buffer::Size size) -> tracktion::graph::NodeBuffer
                                     {
                                         jassert (size.numFrames == view.getNumFrames());
                                         jassert (size.numChannels <= view.getNumChannels());
@@ -83,7 +88,7 @@ struct CombiningNode::TimedNode
         
         // Process all the Nodes
         for (auto n : nodesToProcess)
-            n->process (pc.referenceSampleRange);
+            n->process (pc.numSamples, pc.referenceSampleRange);
         
         // Then get the output from the source Node
         auto nodeOutput = node->getProcessedOutput();
@@ -109,7 +114,7 @@ struct CombiningNode::TimedNode
         return size;
     }
     
-    EditTimeRange time;
+    TimeRange time;
 
 private:
     const std::unique_ptr<Node> node;
@@ -127,7 +132,7 @@ CombiningNode::CombiningNode (ProcessState& ps)
 
 CombiningNode::~CombiningNode() {}
 
-void CombiningNode::addInput (std::unique_ptr<Node> input, EditTimeRange time)
+void CombiningNode::addInput (std::unique_ptr<Node> input, TimeRange time)
 {
     assert (input != nullptr);
 
@@ -140,20 +145,20 @@ void CombiningNode::addInput (std::unique_ptr<Node> input, EditTimeRange time)
     nodeProperties.hasMidi |= props.hasMidi;
     nodeProperties.numberOfChannels = std::max (nodeProperties.numberOfChannels, props.numberOfChannels);
     nodeProperties.latencyNumSamples = std::max (nodeProperties.latencyNumSamples, props.latencyNumSamples);
-    tracktion_graph::hash_combine (nodeProperties.nodeID, props.nodeID);
+    hash_combine (nodeProperties.nodeID, props.nodeID);
 
     int i;
     for (i = 0; i < inputs.size(); ++i)
-        if (inputs.getUnchecked (i)->time.start >= time.getStart())
+        if (inputs.getUnchecked (i)->time.getStart() >= time.getStart())
             break;
 
     auto tan = inputs.insert (i, new TimedNode (std::move (input), time));
 
-    jassert (time.end <= Edit::maximumLength);
+    jassert (time.getEnd() <= Edit::getMaximumEditEnd());
 
     // add the node to any groups it's near to.
-    auto start = std::max (0, combining_node_utils::timeToGroupIndex (time.start - (combining_node_utils::secondsPerGroup / 2 + 2)));
-    auto end   = std::max (0, combining_node_utils::timeToGroupIndex (time.end   + (combining_node_utils::secondsPerGroup / 2 + 2)));
+    auto start = std::max (0, combining_node_utils::timeToGroupIndex (time.getStart() - TimeDuration::fromSeconds (combining_node_utils::secondsPerGroup / 2 + 2)));
+    auto end   = std::max (0, combining_node_utils::timeToGroupIndex (time.getEnd()   + TimeDuration::fromSeconds (combining_node_utils::secondsPerGroup / 2 + 2)));
 
     while (groups.size() <= end)
         groups.add (new juce::Array<TimedNode*>());
@@ -164,7 +169,7 @@ void CombiningNode::addInput (std::unique_ptr<Node> input, EditTimeRange time)
 
         int j;
         for (j = 0; j < g->size(); ++j)
-            if (g->getUnchecked (j)->time.start >= time.start)
+            if (g->getUnchecked (j)->time.getStart() >= time.getStart())
                 break;
 
         jassert (tan != nullptr);
@@ -172,17 +177,28 @@ void CombiningNode::addInput (std::unique_ptr<Node> input, EditTimeRange time)
     }
 }
 
-std::vector<tracktion_graph::Node*> CombiningNode::getDirectInputNodes()
+std::vector<Node*> CombiningNode::getInternalNodes() const
+{
+    std::vector<Node*> leafNodes;
+
+    for (auto i : inputs)
+        for (auto n : i->getNodes())
+            leafNodes.push_back (n);
+
+    return leafNodes;
+}
+
+std::vector<tracktion::graph::Node*> CombiningNode::getDirectInputNodes()
 {
     return {};
 }
 
-tracktion_graph::NodeProperties CombiningNode::getNodeProperties()
+tracktion::graph::NodeProperties CombiningNode::getNodeProperties()
 {
     return nodeProperties;
 }
 
-void CombiningNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
+void CombiningNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
     isReadyToProcessBlock.store (true, std::memory_order_release);
     tempAudioBuffer.resize (choc::buffer::Size::create ((choc::buffer::ChannelCount) nodeProperties.numberOfChannels,
@@ -235,9 +251,9 @@ void CombiningNode::process (ProcessContext& pc)
     {
         for (auto tan : *g)
         {
-            if (tan->time.end > editTime.getStart())
+            if (tan->time.getEnd() > editTime.getStart())
             {
-                if (tan->time.start >= editTime.getEnd())
+                if (tan->time.getStart() >= editTime.getEnd())
                     break;
 
                 // Clear the allocated storage
@@ -264,15 +280,15 @@ size_t CombiningNode::getAllocatedBytes() const
     return size;
 }
 
-void CombiningNode::prefetchGroup (juce::Range<int64_t> referenceSampleRange, EditTimeRange editTime)
+void CombiningNode::prefetchGroup (juce::Range<int64_t> referenceSampleRange, TimeRange editTime)
 {
     if (auto g = groups[combining_node_utils::timeToGroupIndex (editTime.getStart())])
     {
         for (auto tan : *g)
         {
-            if (tan->time.end > editTime.getStart())
+            if (tan->time.getEnd() > editTime.getStart())
             {
-                if (tan->time.start >= editTime.getEnd())
+                if (tan->time.getStart() >= editTime.getEnd())
                     break;
 
                 tan->prefetchBlock (referenceSampleRange);
@@ -281,4 +297,4 @@ void CombiningNode::prefetchGroup (juce::Range<int64_t> referenceSampleRange, Ed
     }
 }
 
-}
+}} // namespace tracktion { inline namespace engine

@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 EditItem::EditItem (EditItemID id, Edit& ed)
@@ -451,4 +451,4 @@ void EditItemID::remapIDs (juce::ValueTree& v, juce::UndoManager* um, Edit& ed, 
 std::function<void (juce::ValueTree&, const juce::Identifier&, const std::map<juce::String, EditItemID>&, juce::UndoManager*)> EditItemID::applyNewIDsToExternalValueTree;
 std::function<void (juce::XmlElement&, const juce::String&, const std::map<juce::String, EditItemID>&)> EditItemID::applyNewIDsToExternalXML;
 
-}
+}} // namespace tracktion { inline namespace engine

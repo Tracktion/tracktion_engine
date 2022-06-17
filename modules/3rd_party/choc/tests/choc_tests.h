@@ -22,13 +22,19 @@
 #include "../platform/choc_Platform.h"
 #include "../platform/choc_SpinLock.h"
 #include "../platform/choc_DynamicLibrary.h"
+#include "../platform/choc_Endianness.h"
 #include "../text/choc_CodePrinter.h"
 #include "../text/choc_FloatToString.h"
 #include "../text/choc_HTML.h"
 #include "../text/choc_JSON.h"
 #include "../text/choc_StringUtilities.h"
 #include "../text/choc_UTF8.h"
+#include "../text/choc_TextTable.h"
+#include "../text/choc_Files.h"
+#include "../text/choc_Wildcard.h"
+#include "../text/choc_Base64.h"
 #include "../math/choc_MathHelpers.h"
+#include "../containers/choc_COM.h"
 #include "../containers/choc_DirtyList.h"
 #include "../containers/choc_Span.h"
 #include "../containers/choc_Value.h"
@@ -40,6 +46,7 @@
 #include "../containers/choc_PoolAllocator.h"
 #include "../containers/choc_ObjectPointer.h"
 #include "../containers/choc_ObjectReference.h"
+#include "../containers/choc_AlignedMemoryBlock.h"
 #include "../audio/choc_MIDI.h"
 #include "../audio/choc_MIDIFile.h"
 #include "../audio/choc_SampleBuffers.h"
@@ -48,7 +55,7 @@
 #include "../audio/choc_AudioMIDIBlockDispatcher.h"
 #include "../javascript/choc_javascript.h"
 
-#include <iostream>
+#include "choc_UnitTest.h"
 
 /**
     To keep things simpole for users, I've just shoved all the tests for everything into this
@@ -64,146 +71,12 @@
 namespace choc::test
 {
 
-/// Keeps track of the number of passes/fails for a test-run.
-struct TestProgress
-{
-    void startCategory (std::string category);
-    void startTest (std::string_view testName);
-    void endTest();
-    void fail (const char* filename, int lineNumber, std::string_view message);
-    void check (bool, const char* filename, int lineNumber, std::string_view failureMessage);
-    void print (std::string_view);
-
-    /// Call this at the end to print out the number of passes and fails
-    void printReport();
-
-    /// This is used to print progress messages as the tests run. If you don't
-    /// supply your own funciton here, the default will print to std::cout
-    std::function<void(std::string_view)> printMessage;
-
-    std::string currentCategory, currentTest;
-    int numPasses = 0, numFails = 0;
-    bool currentTestFailed = false;
-    std::vector<std::string> failedTests;
-};
-
 /// Just create a TestProgress and pass it to this function to run all the
 /// tests. The TestProgress object contains a callback that will be used
 /// to log its progress.
 bool runAllTests (TestProgress&);
 
 
-// Some macros to use to perform tests. If you want to use this to write your own tests,
-// have a look at the tests for choc functions, and it should be pretty obvious how the
-// macros are supposed to be used.
-
-#define CHOC_CATEGORY(category)          progress.startCategory (#category);
-#define CHOC_TEST(name)                  ScopedTest scopedTest_ ## __LINE__ (progress, #name);
-#define CHOC_FAIL(message)               progress.fail (__FILE__, __LINE__, message);
-#define CHOC_EXPECT_TRUE(b)              progress.check (b, __FILE__, __LINE__, "Expected " #b);
-#define CHOC_EXPECT_FALSE(b)             progress.check (! (b), __FILE__, __LINE__, "Expected ! " #b);
-#define CHOC_EXPECT_EQ(a, b)             { auto x = a; auto y = b; progress.check (x == y, __FILE__, __LINE__, "Expected " #a " (" + choc::test::convertToString (x) + ") == " #b " (" + choc::test::convertToString (y) + ")"); }
-#define CHOC_EXPECT_NE(a, b)             { auto x = a; auto y = b; progress.check (x != y, __FILE__, __LINE__, "Expected " #a " (" + choc::test::convertToString (x) + ") != " #b); }
-#define CHOC_EXPECT_NEAR(a, b, diff)     { auto x = a; auto y = b; auto d = diff; progress.check (std::abs (x - y) <= d, __FILE__, __LINE__, #a " (" + choc::test::convertToString (x) + ") and " #b " (" + choc::test::convertToString (y) + ") differ by more than " + choc::test::convertToString (d)); }
-#define CHOC_CATCH_UNEXPECTED_EXCEPTION  catch (...) { CHOC_FAIL ("Unexpected exception thrown"); }
-
-
-//==============================================================================
-//        _        _           _  _
-//     __| |  ___ | |_   __ _ (_)| | ___
-//    / _` | / _ \| __| / _` || || |/ __|
-//   | (_| ||  __/| |_ | (_| || || |\__ \ _  _  _
-//    \__,_| \___| \__| \__,_||_||_||___/(_)(_)(_)
-//
-//   Code beyond this point is implementation detail...
-//
-//==============================================================================
-
-inline void TestProgress::print (std::string_view message)
-{
-    if (printMessage != nullptr)
-        printMessage (message);
-    else
-        std::cout << message << std::endl;
-}
-
-inline void TestProgress::startCategory (std::string category)
-{
-    currentCategory = std::move( category);
-}
-
-inline void TestProgress::startTest (std::string_view testName)
-{
-    CHOC_ASSERT (! currentCategory.empty());
-    currentTest = currentCategory + "/" + std::string (testName);
-    currentTestFailed = false;
-    print ("[ RUN      ] " + currentTest);
-}
-
-inline void TestProgress::endTest()
-{
-    if (currentTestFailed)
-    {
-        print ("[     FAIL ] " + currentTest);
-        ++numFails;
-        failedTests.push_back (currentTest);
-    }
-    else
-    {
-        print ("[       OK ] " + currentTest);
-        ++numPasses;
-    }
-
-    currentTest = {};
-}
-
-inline void TestProgress::fail (const char* filename, int lineNumber, std::string_view message)
-{
-    currentTestFailed = true;
-    CHOC_ASSERT (! currentTest.empty());
-    print ("FAILED: " + std::string (filename) + ":" + std::to_string (lineNumber));
-    print (message);
-}
-
-inline void TestProgress::check (bool condition, const char* filename, int lineNumber, std::string_view message)
-{
-    if (! condition)
-        fail (filename, lineNumber, message);
-}
-
-inline void TestProgress::printReport()
-{
-    print ("========================================================");
-    print (" Passed:      " + std::to_string (numPasses));
-    print (" Failed:      " + std::to_string (numFails));
-
-    for (auto& failed : failedTests)
-        print ("  Failed test: " + failed);
-
-    print ("========================================================");
-}
-
-struct ScopedTest
-{
-    ScopedTest (TestProgress& p, std::string name) : progress (p)   { progress.startTest (std::move (name)); }
-    ~ScopedTest()                                                   { progress.endTest(); }
-
-    TestProgress& progress;
-};
-
-template <typename Type>
-std::string convertToString (Type n)
-{
-    if constexpr (std::is_same<const Type, const char* const>::value)           return std::string (n);
-    else if constexpr (std::is_same<const Type, const std::string>::value)      return n;
-    else if constexpr (std::is_same<const Type, const std::string_view>::value) return std::string (n);
-    else                                                                        return std::to_string (n);
-}
-
-//==============================================================================
-//
-//  The tests themselves....
-//
 //==============================================================================
 inline void testContainerUtils (TestProgress& progress)
 {
@@ -244,6 +117,49 @@ inline void testContainerUtils (TestProgress& progress)
         CHOC_EXPECT_TRUE (c == f1);
         c = f2;
         CHOC_EXPECT_TRUE (c == f2);
+    }
+
+    {
+        CHOC_TEST (Endianness)
+
+        auto a = 0x0102030405060708ull;
+        uint8_t buffer[16];
+
+        choc::memory::writeNativeEndian (buffer, a);
+        CHOC_EXPECT_EQ (a, choc::memory::readNativeEndian<decltype(a)> (buffer));
+
+        choc::memory::writeLittleEndian (buffer, a);
+        CHOC_EXPECT_EQ (buffer[0], 8);
+        CHOC_EXPECT_EQ (buffer[1], 7);
+        CHOC_EXPECT_EQ (buffer[6], 2);
+        CHOC_EXPECT_EQ (buffer[7], 1);
+        CHOC_EXPECT_EQ (choc::memory::readLittleEndian<decltype(a)> (buffer), a);
+
+        choc::memory::writeBigEndian (buffer, a);
+        CHOC_EXPECT_EQ (buffer[0], 1);
+        CHOC_EXPECT_EQ (buffer[1], 2);
+        CHOC_EXPECT_EQ (buffer[6], 7);
+        CHOC_EXPECT_EQ (buffer[7], 8);
+        CHOC_EXPECT_EQ (choc::memory::readBigEndian<decltype(a)> (buffer), a);
+
+        CHOC_EXPECT_EQ (choc::memory::bitcast<uint64_t> (1.0), 0x3ff0000000000000ull);
+        CHOC_EXPECT_EQ (choc::memory::bitcast<double> (0x3ff0000000000000ull), 1.0);
+        CHOC_EXPECT_EQ (choc::memory::bitcast<uint32_t> (1.0f), 0x3f800000u);
+        CHOC_EXPECT_EQ (choc::memory::bitcast<float> (0x3f800000u), 1.0f);
+    }
+
+    {
+        CHOC_TEST (AlignedMemoryBlock)
+
+        choc::AlignedMemoryBlock<32> m (345);
+        CHOC_EXPECT_TRUE (m.data() != nullptr);
+        CHOC_EXPECT_TRUE ((reinterpret_cast<size_t> (m.data()) & 31u) == 0);
+        CHOC_EXPECT_EQ (m.size(), 345u);
+        m.resize (1);
+        CHOC_EXPECT_TRUE ((reinterpret_cast<size_t> (m.data()) & 31u) == 0);
+        CHOC_EXPECT_EQ (m.size(), 1u);
+        m.reset();
+        CHOC_EXPECT_TRUE (m.size() == 0 && m.data() == nullptr);
     }
 }
 
@@ -443,15 +359,86 @@ inline void testStringUtilities (TestProgress& progress)
 
     {
         CHOC_TEST (UTF8)
-        {
-            auto text = "line1\xd7\x90\n\xcf\x88line2\nli\xe1\xb4\x81ne3\nline4\xe1\xb4\xa8";
-            choc::text::UTF8Pointer p (text);
 
-            CHOC_EXPECT_TRUE (choc::text::findInvalidUTF8Data (text, std::string_view (text).length()) == nullptr);
-            CHOC_EXPECT_EQ (2u, choc::text::findLineAndColumn (p, p.find ("ine2")).line);
-            CHOC_EXPECT_EQ (3u, choc::text::findLineAndColumn (p, p.find ("ine2")).column);
-            CHOC_EXPECT_TRUE (p.find ("ine4").findStartOfLine (p).startsWith ("line4"));
+        auto text = "line1\xd7\x90\n\xcf\x88line2\nli\xe1\xb4\x81ne3\nline4\xe1\xb4\xa8";
+        choc::text::UTF8Pointer p (text);
+
+        CHOC_EXPECT_TRUE (choc::text::findInvalidUTF8Data (text, std::string_view (text).length()) == nullptr);
+        CHOC_EXPECT_EQ (2u, choc::text::findLineAndColumn (p, p.find ("ine2")).line);
+        CHOC_EXPECT_EQ (3u, choc::text::findLineAndColumn (p, p.find ("ine2")).column);
+        CHOC_EXPECT_TRUE (p.find ("ine4").findStartOfLine (p).startsWith ("line4"));
+
+        CHOC_EXPECT_EQ (0x12345u, choc::text::createUnicodeFromHighAndLowSurrogates (choc::text::splitCodePointIntoSurrogatePair (0x12345u)));
+    }
+
+    {
+        CHOC_TEST (TextTable)
+
+        choc::text::TextTable table;
+        table << "1" << "234" << "5";
+        table.newRow();
+        table << "" << "2345" << "x" << "y";
+        table.newRow();
+        table << "2345";
+
+        CHOC_EXPECT_EQ (table.getNumRows(), 3u);
+        CHOC_EXPECT_EQ (table.getNumColumns(), 4u);
+        CHOC_EXPECT_EQ (table.toString ("<", ";", ">"), std::string ("<1   ;234 ;5; ><    ;2345;x;y><2345;    ; ; >"));
+    }
+
+    {
+        CHOC_TEST (Base64)
+
+        CHOC_EXPECT_EQ (choc::base64::encodeToString (std::string_view ("")), "");
+        CHOC_EXPECT_EQ (choc::base64::encodeToString (std::string_view ("f")), "Zg==");
+        CHOC_EXPECT_EQ (choc::base64::encodeToString (std::string_view ("fo")), "Zm8=");
+        CHOC_EXPECT_EQ (choc::base64::encodeToString (std::string_view ("foo")), "Zm9v");
+        CHOC_EXPECT_EQ (choc::base64::encodeToString (std::string_view ("foob")), "Zm9vYg==");
+        CHOC_EXPECT_EQ (choc::base64::encodeToString (std::string_view ("fooba")), "Zm9vYmE=");
+        CHOC_EXPECT_EQ (choc::base64::encodeToString (std::string_view ("foobar")), "Zm9vYmFy");
+
+        std::vector<uint8_t> data;
+
+        auto testRoundTrip = [&]
+        {
+            auto base64 = choc::base64::encodeToString (data);
+            std::vector<uint8_t> decoded;
+            choc::base64::decodeToContainer (decoded, base64);
+            return decoded == data;
+        };
+
+        CHOC_EXPECT_TRUE (testRoundTrip());
+
+        for (int start = 0; start < 256; ++start)
+        {
+            data.clear();
+            int byte = start;
+
+            for (int i = 0; i < 80; ++i)
+            {
+                data.push_back ((uint8_t) byte);
+                CHOC_EXPECT_TRUE (testRoundTrip());
+                byte = (byte * 7 + 3);
+            }
         }
+    }
+}
+
+inline void testFileUtilities (TestProgress& progress)
+{
+    CHOC_CATEGORY (Files);
+
+    {
+        CHOC_TEST (WildcardPattern)
+
+        choc::text::WildcardPattern p1 ("*.xyz;*.foo", false), p2 ("*", false), p3, p4 ("abc?.x", true);
+
+        CHOC_EXPECT_TRUE (p1.matches ("sdf.xyz") && p1.matches ("sdf.XyZ") && p1.matches (".xyz") && p1.matches ("dfg.foo"));
+        CHOC_EXPECT_FALSE (p1.matches ("sdf.xxyz") || p1.matches ("") || p1.matches ("abc.xy") || p1.matches (".xyzz"));
+        CHOC_EXPECT_TRUE (p2.matches ("") && p2.matches ("abcd"));
+        CHOC_EXPECT_TRUE (p3.matches ("") && p3.matches ("dfgdfg"));
+        CHOC_EXPECT_TRUE (p4.matches ("abcd.x"));
+        CHOC_EXPECT_FALSE (p4.matches ("abcd.X") || p4.matches ("abcdd.x") || p4.matches ("abc.x"));
     }
 }
 
@@ -494,7 +481,7 @@ inline void testValues (TestProgress& progress)
                                             "int32Field", (int32_t) 1,
                                             "boolField", true);
         CHOC_EXPECT_TRUE (v.isObject());
-        CHOC_EXPECT_EQ (5ul, v.getRawDataSize());
+        CHOC_EXPECT_EQ (4ul + sizeof (choc::value::BoolStorageType), v.getRawDataSize());
         CHOC_EXPECT_EQ (2ul, v.size());
 
         auto member0 = v.getObjectMemberAt (0);
@@ -561,7 +548,7 @@ inline void testValues (TestProgress& progress)
             auto v1 = choc::value::createEmptyArray();
             v1.addArrayElement (false);
             v1.addArrayElement (2.0);
-            CHOC_EXPECT_EQ (1u, ((size_t) v1[1].getRawData()) & 3);
+            CHOC_EXPECT_EQ (sizeof (choc::value::BoolStorageType), ((size_t) v1[1].getRawData()) - (size_t) v1.getRawData());
         }
 
         auto v2 = choc::value::createObject ("foo",
@@ -569,13 +556,11 @@ inline void testValues (TestProgress& progress)
                                              "y", choc::value::createVector (3, [] (uint32_t) { return true; }),
                                              "z", choc::value::createVector (3, [] (uint32_t) { return 1.0; }));
 
-        CHOC_EXPECT_EQ (3u, ((size_t) v2["y"].getRawData()) & 3);
-        CHOC_EXPECT_EQ (2u, ((size_t) v2["z"].getRawData()) & 3);
+        CHOC_EXPECT_EQ (3 * sizeof (choc::value::BoolStorageType), ((size_t) v2["y"].getRawData()) - (size_t) v2.getRawData());
+        CHOC_EXPECT_EQ (6 * sizeof (choc::value::BoolStorageType), ((size_t) v2["z"].getRawData()) - (size_t) v2.getRawData());
     }
 
     {
-        CHOC_TEST (Serialisation)
-
         auto v = choc::value::createObject ("testObject",
                                             "int32", (int32_t) 1,
                                             "int64", (int64_t) 2,
@@ -610,67 +595,139 @@ inline void testValues (TestProgress& progress)
             v.addMember ("complexArray", array);
         }
 
-        v.addMember ("object", choc::value::createObject ("object",
+        v.setMember ("object", choc::value::createObject ("object",
                                                           "int32", choc::value::createPrimitive (1)));
 
-        CHOC_EXPECT_EQ (90ul, v.getRawDataSize());
+        CHOC_EXPECT_EQ (88ul + 2 * sizeof (choc::value::BoolStorageType), v.getRawDataSize());
 
-        struct Serialiser
+        CHOC_EXPECT_EQ (v.getType().getSignature (false), "o12_i32_i64_f32_f64_b_s_s_s_V6_f32_a3_i32_A3_1xi32_1xf64_1xb_o1_i32");
+        CHOC_EXPECT_EQ (v.getType().getSignature (true), "o12_testObject_int32_i32_int64_i64_float32_f32_float64_f64_boolean_b_string1_s_string2_s_string3_s_vector_V6_f32_primitiveArray_a3_i32_complexArray_A3_1xi32_1xf64_1xb_object_o1_object_int32_i32");
+        CHOC_EXPECT_EQ (v.getType().getDescription(), "object \"testObject\" { int32: int32, int64: int64, float32: float32, float64: float64, boolean: bool, string1: string, string2: string, string3: string, vector: vector 6 x float32, primitiveArray: array 3 x int32, complexArray: array (1 x int32, 1 x float64, 1 x bool), object: object \"object\" { int32: int32 } }");
+
         {
-            choc::value::InputData getData() const  { return { data.data(), data.data() + data.size() }; }
+            CHOC_TEST (TypeRoundTrip)
 
-            void write (const void* d, size_t num)
+            auto typeAsValue = v.getType().toValue();
+            auto roundTripped = choc::value::Type::fromValue (typeAsValue);
+            CHOC_EXPECT_EQ (v.getType().getSignature (true), roundTripped.getSignature (true));
+        }
+
+        {
+            CHOC_TEST (SetMembers)
+
+            try
             {
-                data.insert (data.end(), static_cast<const char*> (d), static_cast<const char*> (d) + num);
+                v.addMember ("vector", 1234);
+                CHOC_FAIL ("Failed to fail");
+            }
+            catch (choc::value::Error& e)
+            {
+                CHOC_EXPECT_EQ (e.description, std::string ("This object already contains a member with the given name"));
             }
 
-            std::vector<uint8_t> data;
-        };
+            auto v1 = v;
+            float floatVector[] = { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 8.0f };
+            auto vector = choc::value::createVector (floatVector, 6);
+            v1.setMember ("vector", vector);
+            CHOC_EXPECT_EQ (v1["vector"][5].get<float>(), 8.0f);
 
-        auto compare = [&] (const choc::value::ValueView& original, const choc::value::ValueView& deserialised)
-        {
-            std::ostringstream s1, s2;
-            choc::json::writeAsJSON (s1, original);
-            choc::json::writeAsJSON (s2, deserialised);
-            CHOC_EXPECT_EQ (s1.str(), s2.str());
-        };
-
-        {
-            Serialiser serialised;
-            v.serialise (serialised);
-            auto data = serialised.getData();
-            auto deserialised = choc::value::Value::deserialise (data);
-            compare (v, deserialised);
-        }
-
-        {
-            Serialiser serialised;
-            v.getView().serialise (serialised);
-            auto data = serialised.getData();
-            auto deserialised = choc::value::Value::deserialise (data);
-            compare (v, deserialised);
-        }
-
-        {
-            Serialiser serialised;
-            v.serialise (serialised);
-            auto data = serialised.getData();
-
-            choc::value::ValueView::deserialise (data, [&] (const choc::value::ValueView& deserialised)
             {
-                compare (v, deserialised);
-            });
+                auto v2 = v1;
+                v2.setMember ("vector", 12345);
+                CHOC_EXPECT_EQ (v2["vector"].getInt32(), 12345);
+            }
+
+            {
+                auto v2 = v1;
+                v2.setMember ("vector", "modified");
+                CHOC_EXPECT_EQ (v2["vector"].getString(), "modified");
+            }
         }
 
         {
-            Serialiser serialised;
-            v.getView().serialise (serialised);
-            auto data = serialised.getData();
+            CHOC_TEST (Casting)
+            CHOC_EXPECT_EQ (choc::value::createString ("1.2").get<float>(), 1.2f);
+            CHOC_EXPECT_EQ (choc::value::createString ("1.2").get<double>(), 1.2);
+            CHOC_EXPECT_EQ (choc::value::createString ("1234567").get<int32_t>(), 1234567);
+            CHOC_EXPECT_EQ (choc::value::createString ("1234567").get<uint32_t>(), 1234567u);
+            CHOC_EXPECT_EQ (choc::value::createString ("123456789012345").get<int64_t>(), 123456789012345ll);
+            CHOC_EXPECT_EQ (choc::value::createString ("123456789012345").get<uint64_t>(), 123456789012345ull);
+            CHOC_EXPECT_EQ (choc::value::createString ("1").get<bool>(), true);
+            CHOC_EXPECT_EQ (choc::value::createString ("0").get<bool>(), false);
+            CHOC_EXPECT_EQ (choc::value::createString ("true").get<bool>(), true);
 
-            choc::value::ValueView::deserialise (data, [&] (const choc::value::ValueView& deserialised)
+            CHOC_EXPECT_EQ (choc::value::createString ("x").getWithDefault<float> (1.2f), 1.2f);
+            CHOC_EXPECT_EQ (choc::value::createString ("x").getWithDefault<double> (1.2), 1.2);
+            CHOC_EXPECT_EQ (choc::value::createString ("x").getWithDefault<int32_t> (123), 123);
+            CHOC_EXPECT_EQ (choc::value::createString ("x").getWithDefault<uint32_t> (123u), 123u);
+            CHOC_EXPECT_EQ (choc::value::createString ("x").getWithDefault<int64_t> (123ll), 123ll);
+            CHOC_EXPECT_EQ (choc::value::createString ("x").getWithDefault<uint64_t> (123ull), 123ull);
+            CHOC_EXPECT_EQ (choc::value::createString ("x").getWithDefault<bool> (true), true);
+            CHOC_EXPECT_EQ (choc::value::createString ("x").getWithDefault<bool> (false), false);
+        }
+
+        {
+            CHOC_TEST (Serialisation)
+
+            struct Serialiser
             {
+                choc::value::InputData getData() const  { return { data.data(), data.data() + data.size() }; }
+
+                void write (const void* d, size_t num)
+                {
+                    data.insert (data.end(), static_cast<const char*> (d), static_cast<const char*> (d) + num);
+                }
+
+                std::vector<uint8_t> data;
+            };
+
+            auto compare = [&] (const choc::value::ValueView& original, const choc::value::ValueView& deserialised)
+            {
+                auto s1 = choc::json::toString (original, false);
+                auto s2 = choc::json::toString (deserialised, false);
+                CHOC_EXPECT_EQ (s1, s2);
+                auto s3 = choc::json::toString (original, true);
+                auto s4 = choc::json::toString (deserialised, true);
+                CHOC_EXPECT_EQ (s3, s4);
+            };
+
+            {
+                Serialiser serialised;
+                v.serialise (serialised);
+                auto data = serialised.getData();
+                auto deserialised = choc::value::Value::deserialise (data);
                 compare (v, deserialised);
-            });
+            }
+
+            {
+                Serialiser serialised;
+                v.getView().serialise (serialised);
+                auto data = serialised.getData();
+                auto deserialised = choc::value::Value::deserialise (data);
+                compare (v, deserialised);
+            }
+
+            {
+                Serialiser serialised;
+                v.serialise (serialised);
+                auto data = serialised.getData();
+
+                choc::value::ValueView::deserialise (data, [&] (const choc::value::ValueView& deserialised)
+                {
+                    compare (v, deserialised);
+                });
+            }
+
+            {
+                Serialiser serialised;
+                v.getView().serialise (serialised);
+                auto data = serialised.getData();
+
+                choc::value::ValueView::deserialise (data, [&] (const choc::value::ValueView& deserialised)
+                {
+                    compare (v, deserialised);
+                });
+            }
         }
     }
 }
@@ -689,6 +746,8 @@ inline void testJSON (TestProgress& progress)
         CHOC_EXPECT_EQ ("\"-Infinity\"",  choc::json::doubleToString (-std::numeric_limits<double>::infinity()));
         CHOC_EXPECT_EQ (1.28,             choc::json::parseValue ("1.28").getFloat64());
         CHOC_EXPECT_EQ (-4,               choc::json::parseValue ("-4.0").getFloat64());
+        CHOC_EXPECT_EQ (10.0,             choc::json::parseValue ("1.0e1").getFloat64());
+        CHOC_EXPECT_EQ (10.0,             choc::json::parseValue ("1E1").getFloat64());
         CHOC_EXPECT_EQ ("1234",           std::string (choc::json::parseValue ("\"1234\"").getString()));
     }
 
@@ -701,7 +760,7 @@ inline void testJSON (TestProgress& progress)
         }
         catch (choc::json::ParseError& e)
         {
-            CHOC_EXPECT_EQ (e.message, message);
+            CHOC_EXPECT_EQ (e.what(), message);
             CHOC_EXPECT_EQ (e.lineAndColumn.line, line);
             CHOC_EXPECT_EQ (e.lineAndColumn.column, column);
         }
@@ -837,6 +896,10 @@ inline void testJSON (TestProgress& progress)
         CHOC_EXPECT_EQ (32,        v["tests"][0]["actions"][0]["blockSize"].get<int>());
 
         CHOC_EXPECT_EQ ("test2", v["tests"][1]["name"].get<std::string>());
+        CHOC_EXPECT_TRUE (strcmp ("test2", v["tests"][1]["name"].get<const char*>()) == 0);
+
+        auto s = choc::value::createString ({});
+        CHOC_EXPECT_TRUE (s.get<const char*>()[0] == 0);
     }
 
     {
@@ -1453,8 +1516,13 @@ inline void testFIFOs (TestProgress& progress)
         // The total available space includes the message headers, so although it looks like we've got space for 1000 bytes,
         // we actually only have space for 1000 - sizeof (MessageHeader)
         CHOC_EXPECT_TRUE (queue.push (&buffer[0], 200));
-        CHOC_EXPECT_TRUE (queue.push (&buffer[0], 200));
-        CHOC_EXPECT_TRUE (queue.push (&buffer[0], 200));
+
+        CHOC_EXPECT_TRUE (queue.push (400, [&] (void* dest)
+        {
+            memcpy (dest, buffer.data(), 200);
+            memcpy (static_cast<char*> (dest) + 200, buffer.data(), 200);
+        }));
+
         CHOC_EXPECT_TRUE (queue.push (&buffer[0], 200));
         CHOC_EXPECT_FALSE (queue.push (&buffer[0], 1001 - 4 * 4));
 
@@ -1611,7 +1679,7 @@ inline void testJavascript (TestProgress& progress)
         }
         catch (const choc::javascript::Error& e)
         {
-            CHOC_EXPECT_EQ ("SyntaxError: parse error (line 1, end of input)", e.message);
+            CHOC_EXPECT_EQ (e.what(), std::string ("SyntaxError: parse error (line 1, end of input)"));
         }
     }
 
@@ -1667,10 +1735,61 @@ inline void testJavascript (TestProgress& progress)
 }
 
 //==============================================================================
+inline void testCOM (TestProgress& progress)
+{
+    CHOC_CATEGORY (COM);
+
+    {
+        CHOC_TEST (RefCounting)
+
+        static int numObjs = 0;
+
+        struct TestObj final  : public choc::com::ObjectWithAtomicRefCount<choc::com::Object>
+        {
+            TestObj() { ++numObjs; }
+            ~TestObj() { --numObjs; }
+        };
+
+        {
+            auto t1 = choc::com::create<TestObj>();
+            CHOC_EXPECT_EQ (numObjs, 1);
+            auto t2 = choc::com::create<TestObj>();
+            CHOC_EXPECT_EQ (numObjs, 2);
+            auto t3 = t2;
+            t2.reset();
+            CHOC_EXPECT_EQ (numObjs, 2);
+            t3 = t1;
+            CHOC_EXPECT_EQ (numObjs, 1);
+            auto t5 = t1;
+        }
+
+        CHOC_EXPECT_EQ (numObjs, 0);
+    }
+
+    {
+        CHOC_TEST (String)
+
+        auto s1 = choc::com::createString ("abc");
+        auto s2 = choc::com::createString ("def");
+        auto s3 = s1;
+        CHOC_EXPECT_EQ (toString (s1), "abc");
+        s1 = s2;
+        CHOC_EXPECT_EQ (toString (s1), "def");
+        CHOC_EXPECT_EQ (toString (s2), "def");
+        CHOC_EXPECT_EQ (toString (s3), "abc");
+        s1 = choc::com::createString ("zzz");
+        CHOC_EXPECT_EQ (toString (s1), "zzz");
+        s1 = {};
+        CHOC_EXPECT_EQ (toString (s1), "");
+    }
+}
+
+//==============================================================================
 inline bool runAllTests (TestProgress& progress)
 {
     testContainerUtils (progress);
     testStringUtilities (progress);
+    testFileUtilities (progress);
     testValues (progress);
     testJSON (progress);
     testMIDI (progress);
@@ -1678,6 +1797,7 @@ inline bool runAllTests (TestProgress& progress)
     testFIFOs (progress);
     testMIDIFiles (progress);
     testJavascript (progress);
+    testCOM (progress);
 
     progress.printReport();
     return progress.numFails == 0;

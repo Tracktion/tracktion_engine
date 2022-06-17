@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 CurveEditorPoint::~CurveEditorPoint()
@@ -58,7 +58,7 @@ bool CurveEditorPoint::arePointsConsecutive (const SelectableList& items)
     return arePointsOnSameCurve (items);
 }
 
-EditTimeRange CurveEditorPoint::getPointTimeRange (const SelectableList& items)
+TimeRange CurveEditorPoint::getPointTimeRange (const SelectableList& items)
 {
     juce::Array<int> set;
 
@@ -117,7 +117,7 @@ void CurveEditor::paint (juce::Graphics& g)
 {
     CRASH_TRACER
 
-    if ((rightTime - leftTime) == 0.0)
+    if ((rightTime - leftTime) == TimeDuration())
         return;
 
     const bool isOver = isMouseOverOrDragging();
@@ -149,7 +149,7 @@ void CurveEditor::paint (juce::Graphics& g)
         auto lastY = valueToY (getValueAt (leftTime));
 
         juce::Path curvePath;
-        curvePath.startNewSubPath (std::max (0.0f, timeToX (0)), lastY);
+        curvePath.startNewSubPath (std::max (0.0f, timeToX ({})), lastY);
         curvePath.preallocateSpace (numPoints * 5 + 1);
 
         if (numPoints > 0)
@@ -180,8 +180,8 @@ void CurveEditor::paint (juce::Graphics& g)
                         float lineY1, lineY2;
                         getBezierEnds (index, lineX1, lineY1, lineX2, lineY2);
 
-                        curvePath.lineTo (getPosition ({ lineX1, lineY1 }));
-                        curvePath.quadraticTo (bp, getPosition ({ lineX2, lineY2 }));
+                        curvePath.lineTo (getPosition ({ TimePosition::fromSeconds (lineX1), lineY1 }));
+                        curvePath.quadraticTo (bp, getPosition ({ TimePosition::fromSeconds (lineX2), lineY2 }));
                         curvePath.lineTo (p2);
                     }
                 }
@@ -402,7 +402,7 @@ void CurveEditor::mouseDrag (const juce::MouseEvent& e)
                 auto c2 = getPointCurve (lineUnderMouse + 1);
 
                 addPoint (t1, v1, c1);
-                addPoint (t2 - 0.0000001, v2, c2); // Shift this a fraction forwards so it inserts before any existing points
+                addPoint (t2 - TimeDuration::fromSeconds (0.0000001), v2, c2); // Shift this a fraction forwards so it inserts before any existing points
 
                 lineUnderMouse++;
 
@@ -419,7 +419,7 @@ void CurveEditor::mouseDrag (const juce::MouseEvent& e)
             if (getNumPoints() == 1)
                 point1 = getPointValue (0);
             else
-                point1 = getValueAt (0);
+                point1 = getValueAt ({});
         }
         else if (getNumPoints())
         {
@@ -452,7 +452,7 @@ void CurveEditor::mouseDrag (const juce::MouseEvent& e)
         {
             auto delta = t - mouseDownTime;
 
-            if (delta > 0)
+            if (delta > TimeDuration())
             {
                 for (int i = getNumPoints(); --i >= pointBeingMoved;)
                     movePoint (i, getPointTime (i) + delta, getPointValue (i), false);
@@ -516,10 +516,10 @@ void CurveEditor::mouseDrag (const juce::MouseEvent& e)
 
         if (getNumPoints() <= 0)
             setValueWhenNoPoints (point1 - offset);
-        else if (getNumPoints() == 1 || mouseDownTime < getPointTime(0))
-            movePoint (0, getPointTime(0), point1 - offset, false);
+        else if (getNumPoints() == 1 || mouseDownTime < getPointTime (0))
+            movePoint (0, getPointTime (0), point1 - offset, false);
         else if (mouseDownTime > getPointTime (getNumPoints() - 1))
-            movePoint (getNumPoints() - 1, getPointTime(getNumPoints() - 1), point2 - offset, false);
+            movePoint (getNumPoints() - 1, getPointTime (getNumPoints() - 1), point2 - offset, false);
     }
 
     CRASH_TRACER
@@ -648,7 +648,7 @@ void CurveEditor::updatePointUnderMouse (juce::Point<float> pos)
     if (getItem() == nullptr || pointBeingMoved >= 0)
         return;
 
-    pos.x = std::max (timeToX (0), pos.x);
+    pos.x = std::max (timeToX ({}), pos.x);
 
     const auto captureRadius = pointRadius * pointRadius;
     int point = -1;
@@ -714,20 +714,20 @@ void CurveEditor::updatePointUnderMouse (juce::Point<float> pos)
     }
 }
 
-void CurveEditor::setTimes (double l, double r)
+void CurveEditor::setTimes (TimePosition l, TimePosition r)
 {
     leftTime = l;
     rightTime = r;
 }
 
-float CurveEditor::timeToX (double t) const
+float CurveEditor::timeToX (TimePosition t) const
 {
-    return (float) (getWidth() * (t - leftTime) / (rightTime - leftTime));
+    return (float) (getWidth() * ((t - leftTime) / (rightTime - leftTime)));
 }
 
-double CurveEditor::xToTime (double x) const
+TimePosition CurveEditor::xToTime (double x) const
 {
-    return std::max (0.0, leftTime + (x * (rightTime - leftTime)) / getWidth());
+    return TimePosition::fromSeconds (std::max (0.0, leftTime.inSeconds() + (x * (rightTime - leftTime).inSeconds()) / getWidth()));
 }
 
 float CurveEditor::valueToY (float val) const
@@ -742,7 +742,7 @@ float CurveEditor::yToValue (double y) const
 
 juce::Point<float> CurveEditor::getPosition (CurvePoint p) const
 {
-    return { timeToX (p.time), valueToY (p.value) };
+    return { timeToX (toTime (p.time, edit.tempoSequence)), valueToY (p.value) };
 }
 
 juce::Point<float> CurveEditor::getPosition (int index)
@@ -786,7 +786,7 @@ Edit& CurveEditor::getEdit() const
     return edit;
 }
 
-double CurveEditor::snapTime (double time, juce::ModifierKeys)
+TimePosition CurveEditor::snapTime (TimePosition time, juce::ModifierKeys)
 {
     return time;
 }
@@ -818,4 +818,4 @@ CurveEditorPoint* CurveEditor::getSelectedPoint (int idx)
     return {};
 }
 
-}
+}} // namespace tracktion { inline namespace engine

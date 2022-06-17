@@ -8,26 +8,26 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
 //==============================================================================
-TimedMutingNode::TimedMutingNode (std::unique_ptr<tracktion_graph::Node> inputNode,
-                                  juce::Array<EditTimeRange> muteTimes_,
-                                  tracktion_graph::PlayHeadState& playHeadStateToUse)
+TimedMutingNode::TimedMutingNode (std::unique_ptr<tracktion::graph::Node> inputNode,
+                                  juce::Array<TimeRange> muteTimes_,
+                                  tracktion::graph::PlayHeadState& playHeadStateToUse)
     : input (std::move (inputNode)),
       playHeadState (playHeadStateToUse),
       muteTimes (std::move (muteTimes_))
 {
     jassert (! muteTimes.isEmpty());
 
-    setOptimisations ({ tracktion_graph::ClearBuffers::no,
-                        tracktion_graph::AllocateAudioBuffer::yes });
+    setOptimisations ({ tracktion::graph::ClearBuffers::no,
+                        tracktion::graph::AllocateAudioBuffer::yes });
 }
 
 //==============================================================================
-tracktion_graph::NodeProperties TimedMutingNode::getNodeProperties()
+tracktion::graph::NodeProperties TimedMutingNode::getNodeProperties()
 {
     auto props = input->getNodeProperties();
     props.nodeID = 0;
@@ -35,12 +35,12 @@ tracktion_graph::NodeProperties TimedMutingNode::getNodeProperties()
     return props;
 }
 
-std::vector<tracktion_graph::Node*> TimedMutingNode::getDirectInputNodes()
+std::vector<tracktion::graph::Node*> TimedMutingNode::getDirectInputNodes()
 {
     return { input.get() };
 }
 
-void TimedMutingNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
+void TimedMutingNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
     sampleRate = info.sampleRate;
 }
@@ -69,10 +69,10 @@ void TimedMutingNode::process (ProcessContext& pc)
     }
 
     copy (destAudioBlock, sourceBuffers.audio);
-    processSection (destAudioBlock, tracktion_graph::sampleToTime (timelineRange, sampleRate));
+    processSection (destAudioBlock, tracktion::timeRangeFromSamples (timelineRange, sampleRate));
 }
 
-void TimedMutingNode::processSection (choc::buffer::ChannelArrayView<float> view, EditTimeRange editTime)
+void TimedMutingNode::processSection (choc::buffer::ChannelArrayView<float> view, TimeRange editTime)
 {
     for (auto r : muteTimes)
     {
@@ -88,18 +88,18 @@ void TimedMutingNode::processSection (choc::buffer::ChannelArrayView<float> view
                 }
                 else if (editTime.contains (mute))
                 {
-                    auto startSample = tracktion_graph::timeToSample (mute.getStart() - editTime.getStart(), sampleRate);
-                    auto numSamples  = tracktion_graph::timeToSample (mute.getLength(), sampleRate);
+                    auto startSample = tracktion::toSamples (mute.getStart() - editTime.getStart(), sampleRate);
+                    auto numSamples  = tracktion::toSamples (mute.getLength(), sampleRate);
                     muteSection (view, startSample, numSamples);
                 }
                 else if (mute.getEnd() <= editTime.getEnd())
                 {
-                    auto numSamples = tracktion_graph::timeToSample (editTime.getEnd() - mute.getEnd(), sampleRate);
+                    auto numSamples = tracktion::toSamples (editTime.getEnd() - mute.getEnd(), sampleRate);
                     muteSection (view, 0, numSamples);
                 }
                 else if (mute.getStart() >= editTime.getStart())
                 {
-                    auto startSample = tracktion_graph::timeToSample (mute.getStart() - editTime.getStart(), sampleRate);
+                    auto startSample = tracktion::toSamples (mute.getStart() - editTime.getStart(), sampleRate);
                     muteSection (view, startSample, choc::buffer::FrameCount (view.getNumFrames()) - startSample);
                 }
             }
@@ -117,4 +117,4 @@ void TimedMutingNode::muteSection (choc::buffer::ChannelArrayView<float> block, 
                                (choc::buffer::FrameCount) (startSample + numSamples) }).clear();
 }
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

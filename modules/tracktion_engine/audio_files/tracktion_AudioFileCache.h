@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -49,7 +49,7 @@ public:
                        float& rmax, float& rmin,
                        int timeoutMs);
 
-        void setLoopRange (SampleRange newRange);
+        void setLoopRange (SampleRange);
 
         int getNumChannels() const noexcept;
         double getSampleRate() const noexcept;
@@ -116,4 +116,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioFileCache)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

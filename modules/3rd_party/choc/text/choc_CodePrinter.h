@@ -46,6 +46,9 @@ struct CodePrinter
     /// Clears and resets the state of the printer.
     void reset();
 
+    /// Returns true if nothing has been printed.
+    bool empty() const;
+
     //==============================================================================
     CodePrinter& operator<< (const char*);
     CodePrinter& operator<< (const std::string&);
@@ -145,7 +148,8 @@ private:
 //
 //==============================================================================
 
-inline void CodePrinter::reset()    { *this = {}; }
+inline void CodePrinter::reset()            { *this = {}; }
+inline bool CodePrinter::empty() const      { return lines.empty(); }
 
 inline CodePrinter& CodePrinter::operator<< (const char* s)            { writeBlock (s); return *this; }
 inline CodePrinter& CodePrinter::operator<< (const std::string& s)     { writeBlock (s); return *this; }

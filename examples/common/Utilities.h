@@ -8,7 +8,8 @@
 
 #pragma once
 
-namespace te = tracktion_engine;
+namespace te = tracktion;
+using namespace std::literals;
 
 //==============================================================================
 namespace Helpers
@@ -158,7 +159,7 @@ namespace EngineHelpers
 
             if (audioFile.isValid())
                 if (auto newClip = track->insertWaveClip (file.getFileNameWithoutExtension(), file,
-                                                          { { 0.0, audioFile.getLength() }, 0.0 }, false))
+                                                          { { {}, te::TimeDuration::fromSeconds (audioFile.getLength()) }, {} }, false))
                     return newClip;
         }
 
@@ -171,7 +172,7 @@ namespace EngineHelpers
         auto& transport = clip.edit.getTransport();
         transport.setLoopRange (clip.getEditTimeRange());
         transport.looping = true;
-        transport.position = 0.0;
+        transport.setPosition (0s);
         transport.play (false);
 
         return clip;
@@ -315,7 +316,7 @@ struct Thumbnail    : public Component
         {
             const float brightness = smartThumbnail.isOutOfDate() ? 0.4f : 0.66f;
             g.setColour (colour.withMultipliedBrightness (brightness));
-            smartThumbnail.drawChannels (g, r, true, { 0.0, smartThumbnail.getTotalLength() }, 1.0f);
+            smartThumbnail.drawChannels (g, r, true, { 0s, te::TimePosition::fromSeconds (smartThumbnail.getTotalLength()) }, 1.0f);
         }
     }
 
@@ -329,7 +330,7 @@ struct Thumbnail    : public Component
     {
         jassert (getWidth() > 0);
         const float proportion = e.position.x / getWidth();
-        transport.position = proportion * transport.getLoopRange().getLength();
+        transport.setPosition (toPosition (transport.getLoopRange().getLength()) * proportion);
     }
 
     void mouseUp (const MouseEvent&) override
@@ -345,8 +346,8 @@ private:
 
     void updateCursorPosition()
     {
-        const double loopLength = transport.getLoopRange().getLength();
-        const double proportion = loopLength == 0.0 ? 0.0 : transport.getCurrentPosition() / loopLength;
+        const auto loopLength = transport.getLoopRange().getLength().inSeconds();
+        const auto proportion = loopLength == 0.0 ? 0.0 : transport.getPosition().inSeconds() / loopLength;
 
         auto r = getLocalBounds().toFloat();
         const float x = r.getWidth() * float (proportion);

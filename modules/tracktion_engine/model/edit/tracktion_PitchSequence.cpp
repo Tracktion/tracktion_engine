@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 struct PitchSequence::PitchList  : public ValueTreeObjectList<PitchSetting>,
@@ -56,7 +56,7 @@ struct PitchSequence::PitchList  : public ValueTreeObjectList<PitchSetting>,
 
     void handleAsyncUpdate() override
     {
-        pitchSequence.getEdit().sendTempoOrPitchSequenceChangedUpdates();
+        pitchSequence.getEdit().tempoSequence.updateTempoData();
     }
 
     PitchSequence& pitchSequence;
@@ -83,7 +83,7 @@ void PitchSequence::clear()
     {
         auto pitch = first->getPitch();
         state.removeAllChildren (getUndoManager());
-        insertPitch (0, pitch);
+        insertPitch ({}, pitch);
     }
     else
     {
@@ -99,7 +99,7 @@ void PitchSequence::initialise (Edit& ed, const juce::ValueTree& v)
     list = std::make_unique<PitchList> (*this, state);
 
     if (getNumPitches() == 0)
-        insertPitch (0, 60);
+        insertPitch ({}, 60);
 
     sortEvents();
 }
@@ -117,9 +117,9 @@ void PitchSequence::copyFrom (const PitchSequence& other)
 const juce::Array<PitchSetting*>& PitchSequence::getPitches() const    { return list->objects; }
 int PitchSequence::getNumPitches() const                               { return list->objects.size(); }
 PitchSetting* PitchSequence::getPitch (int index) const                { return list->objects[index]; }
-PitchSetting& PitchSequence::getPitchAt (double time) const            { return *list->objects[indexOfPitchAt (time)]; }
+PitchSetting& PitchSequence::getPitchAt (TimePosition time) const      { return *list->objects[indexOfPitchAt (time)]; }
 
-PitchSetting& PitchSequence::getPitchAtBeat (double beat) const
+PitchSetting& PitchSequence::getPitchAtBeat (BeatPosition beat) const
 {
     for (int i = list->objects.size(); --i > 0;)
     {
@@ -133,7 +133,7 @@ PitchSetting& PitchSequence::getPitchAtBeat (double beat) const
     return *list->objects.getFirst();
 }
 
-int PitchSequence::indexOfPitchAt (double t) const
+int PitchSequence::indexOfPitchAt (TimePosition t) const
 {
     for (int i = list->objects.size(); --i > 0;)
         if (list->objects.getUnchecked (i)->getPosition().getStart() <= t)
@@ -143,7 +143,7 @@ int PitchSequence::indexOfPitchAt (double t) const
     return 0;
 }
 
-int PitchSequence::indexOfNextPitchAt (double t) const
+int PitchSequence::indexOfNextPitchAt (TimePosition t) const
 {
     for (int i = 0; i < list->objects.size(); ++i)
         if (list->objects.getUnchecked (i)->getPosition().getStart() >= t)
@@ -158,12 +158,12 @@ int PitchSequence::indexOfPitch (const PitchSetting* pitchSetting) const
     return list->objects.indexOf ((PitchSetting*) pitchSetting);
 }
 
-PitchSetting::Ptr PitchSequence::insertPitch (double time)
+PitchSetting::Ptr PitchSequence::insertPitch (TimePosition time)
 {
-    return insertPitch (edit->tempoSequence.timeToBeats (time), -1);
+    return insertPitch (edit->tempoSequence.toBeats (time), -1);
 }
 
-PitchSetting::Ptr PitchSequence::insertPitch (double beatNum, int pitch)
+PitchSetting::Ptr PitchSequence::insertPitch (BeatPosition beatNum, int pitch)
 {
     int newIndex = -1;
 
@@ -187,7 +187,7 @@ PitchSetting::Ptr PitchSequence::insertPitch (double beatNum, int pitch)
     }
 
     auto v = createValueTree (IDs::PITCH,
-                              IDs::startBeat, beatNum,
+                              IDs::startBeat, beatNum.inBeats(),
                               IDs::pitch, pitch);
 
     if (newIndex < 0)
@@ -199,31 +199,31 @@ PitchSetting::Ptr PitchSequence::insertPitch (double beatNum, int pitch)
     return list->objects[newIndex];
 }
 
-void PitchSequence::movePitchStart (PitchSetting& p, double deltaBeats, bool snapToBeat)
+void PitchSequence::movePitchStart (PitchSetting& p, BeatDuration deltaBeats, bool snapToBeat)
 {
     auto index = indexOfPitch (&p);
 
-    if (index > 0 && deltaBeats != 0)
+    if (index > 0 && deltaBeats != BeatDuration())
     {
         if (auto t = getPitch (index))
         {
             t->startBeat.forceUpdateOfCachedValue();
             auto newBeat = t->getStartBeat() + deltaBeats;
-            t->setStartBeat (juce::jlimit (0.0, 1e10, snapToBeat ? juce::roundToInt (newBeat)
-                                                                 : newBeat));
+            t->setStartBeat (BeatPosition::fromBeats (juce::jlimit (0.0, 1e10, snapToBeat ? juce::roundToInt (newBeat.inBeats())
+                                                                                          : newBeat.inBeats())));
         }
     }
 }
 
-void PitchSequence::insertSpaceIntoSequence (double time, double amountOfSpaceInSeconds, bool snapToBeat)
+void PitchSequence::insertSpaceIntoSequence (TimePosition time, TimeDuration amountOfSpaceInSeconds, bool snapToBeat)
 {
-    // there may be a temp change at this time so we need to find the tempo to the left of it hence the nudge
-    time = time - 0.00001;
-    auto beatsToInsert = getEdit().tempoSequence.getBeatsPerSecondAt (time) * amountOfSpaceInSeconds;
+    // there may be a tempo change at this time so we need to find the tempo to the left of it hence the nudge
+    time = time - TimeDuration::fromSeconds (0.00001);
+    auto beatsToInsert = getEdit().tempoSequence.getBeatsPerSecondAt (time) * amountOfSpaceInSeconds.inSeconds();
     auto endIndex = indexOfNextPitchAt (time);
 
     for (int i = getNumPitches(); --i >= endIndex;)
-        movePitchStart (*getPitch (i), beatsToInsert, snapToBeat);
+        movePitchStart (*getPitch (i), BeatDuration::fromBeats (beatsToInsert), snapToBeat);
 }
 
 void PitchSequence::sortEvents()
@@ -243,4 +243,4 @@ void PitchSequence::sortEvents()
     state.sort (sorter, getUndoManager(), true);
 }
 
-}
+}} // namespace tracktion { inline namespace engine

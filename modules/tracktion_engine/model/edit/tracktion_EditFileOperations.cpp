@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 struct ThreadedEditFileWriter   : private juce::Thread
@@ -281,7 +281,7 @@ bool EditFileOperations::save (bool warnOfFailure,
     tempFile.deleteFile();
 
     if (auto item = edit.engine.getProjectManager().getProjectItem (edit))
-        item->setLength (edit.getLength());
+        item->setLength (edit.getLength().inSeconds());
 
     edit.resetChangedStatus();
     return true;
@@ -514,4 +514,4 @@ juce::ValueTree createEmptyEdit (Engine& e)
     return loadEditFromFile (e, {}, ProjectItemID::createNewID (0));
 }
 
-}
+}} // namespace tracktion { inline namespace engine

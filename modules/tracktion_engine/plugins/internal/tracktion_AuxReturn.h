@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 class AuxReturnPlugin   : public Plugin
@@ -45,4 +45,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AuxReturnPlugin)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

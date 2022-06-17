@@ -172,17 +172,8 @@ function buildExample()
 
 # First build and test these examples
 buildExample "TestRunner" RUN_EXAMPLE=1
-buildExample "tracktion_graph_TestRunner" RUN_EXAMPLE=1
 buildExample "Benchmarks" RUN_EXAMPLE=1 DISABLE_TOOLS=1
 
 # Then just build these examples (don't build with tooling as they won't be run)
-buildExample "DistortionEffectDemo" DISABLE_TOOLS=1
+buildExample "DemoRunner" DISABLE_TOOLS=1
 buildExample "EngineInPluginDemo" DISABLE_TOOLS=1
-buildExample "IRPluginDemo" DISABLE_TOOLS=1
-buildExample "MidiRecordingDemo" DISABLE_TOOLS=1
-buildExample "PatternGeneratorDemo" DISABLE_TOOLS=1
-buildExample "PitchAndTimeDemo" DISABLE_TOOLS=1
-buildExample "PlaybackDemo" DISABLE_TOOLS=1
-buildExample "PluginDemo" DISABLE_TOOLS=1
-buildExample "RecordingDemo" DISABLE_TOOLS=1
-buildExample "StepSequencerDemo" DISABLE_TOOLS=1

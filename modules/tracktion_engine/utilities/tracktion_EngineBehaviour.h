@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 /**
@@ -184,9 +184,9 @@ public:
         You can override this to add your own messages but should generally follow the
         procedure in MidiList::createDefaultPlaybackMidiSequence.
     */
-    virtual juce::MidiMessageSequence createPlaybackMidiSequence (const MidiList& list, MidiClip& clip, bool generateMPE)
+    virtual juce::MidiMessageSequence createPlaybackMidiSequence (const MidiList& list, MidiClip& clip, MidiList::TimeBase tb, bool generateMPE)
     {
-        return MidiList::createDefaultPlaybackMidiSequence (list, clip, generateMPE);
+        return MidiList::createDefaultPlaybackMidiSequence (list, clip, tb, generateMPE);
     }
     
     /** Must return the default looped sequence type to use.
@@ -199,7 +199,6 @@ public:
 
     /** If this returns true, it means that newly inserted clips will automatically have a fade-in and fade-out of 3ms applied. */
     virtual bool autoAddClipEdgeFades()                                             { return false; }
-    
     
     struct ControlSurfaces
     {
@@ -218,4 +217,4 @@ public:
     virtual ControlSurfaces getDesiredControlSurfaces()                             { return {}; }
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

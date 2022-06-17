@@ -42,7 +42,8 @@ What Tracktion Engine doesn't provide is any kind of UI. You'll have to write co
     - MIDI pattern generation (bass, melody, chord and arp progressions)
     - MIDI input and output
     - Virtual MIDI inputs (combine multiple MIDI inputs)
-    - Sync to incoming MIDI clock and MTC
+    - Sync to incoming MIDI Time Code (MTC)
+    - Send outgoing MIDI Clock and MTC
     - MPE (exported from note-expression data)    
 - Plugins
     - Utility plugins: aux send/return, freeze point, inserts, level meter, ReWire, text, volume &pan

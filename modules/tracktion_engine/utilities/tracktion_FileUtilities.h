@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 bool isMidiFile (const juce::File&);
@@ -72,4 +72,4 @@ struct FileDragList  : public juce::ReferenceCountedObject
     static juce::var create (const juce::File& file, PreferredLayout peferredLayout);
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

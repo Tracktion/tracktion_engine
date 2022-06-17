@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 inline void addSortedListToMenu (juce::PopupMenu& m, juce::StringArray names, int startID)
@@ -41,33 +41,6 @@ inline juce::AffineTransform getScaleAroundCentre (juce::Rectangle<float> r, flo
     auto h = r.getHeight();
 
     return juce::AffineTransform::scale ((w + numPixels) / w, (h + numPixels) / h, cx, cy);
-}
-
-/** Returns the index in the first array of the first match found.
-    This is usually just used to find out if there are any matches between the two arrays.
-*/
-inline int indexOfFirstFoundInSecond (const juce::StringArray& array1,
-                                      const juce::StringArray& array2) noexcept
-{
-    if (array2.isEmpty())
-        return -1;
-
-    for (int i1 = 0; i1 < array1.size(); ++i1)
-        if (array2.contains (array1[i1]))
-            return i1;
-
-    return -1;
-}
-
-/** Returns true if all of the strings of the first array are found in the second array. */
-inline bool allFirstFoundInSecond (const juce::StringArray& array1,
-                                   const juce::StringArray& array2) noexcept
-{
-    for (const auto& s : array1)
-        if (! array2.contains (s))
-            return false;
-
-    return true;
 }
 
 inline void moveXMLAttributeToStart (juce::XmlElement& xml, juce::StringRef att)
@@ -149,4 +122,4 @@ public:
     }
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

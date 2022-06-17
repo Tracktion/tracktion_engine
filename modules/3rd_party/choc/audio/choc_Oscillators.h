@@ -19,6 +19,7 @@
 #ifndef CHOC_OSCILLATOR_HEADER_INCLUDED
 #define CHOC_OSCILLATOR_HEADER_INCLUDED
 
+#include <cmath>
 #include "choc_SampleBuffers.h"
 
 /**

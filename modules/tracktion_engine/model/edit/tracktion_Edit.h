@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
  class ClipEffect;
@@ -161,7 +161,12 @@ public:
     static constexpr double maximumLength = 48.0 * 60.0 * 60.0;
     
     /** Returns the maximum length an Edit can be. */
-    static EditTimeRange getMaximumEditTimeRange()  { return { 0.0, maximumLength }; }
+    static TimeDuration getMaximumLength()          { return TimeDuration::fromSeconds (maximumLength); }
+
+    /** Returns the maximum length an Edit can be. */
+    static TimeRange getMaximumEditTimeRange()      { return { TimePosition(), TimePosition::fromSeconds (maximumLength) }; }
+
+    static TimePosition getMaximumEditEnd()         { return getMaximumEditTimeRange().getEnd(); }
 
     static const int ticksPerQuarterNote = 960; /**< The number of ticks per quarter note. */
 
@@ -452,7 +457,7 @@ public:
     void removeModifierTimer (ModifierTimer&);
 
     /** Updates all the ModifierTimers with a given edit time and number of samples. */
-    void updateModifierTimers (double editTime, int numSamples) const;
+    void updateModifierTimers (TimePosition editTime, int numSamples) const;
 
     /** Holds the global Macros for the Edit. */
     struct GlobalMacros : public MacroParameterElement
@@ -509,20 +514,20 @@ public:
 
     //==============================================================================
     /** Finds the next marker or start/end of a clip after a certain time. */
-    double getNextTimeOfInterest (double afterThisTime);
+    TimePosition getNextTimeOfInterest (TimePosition afterThisTime);
 
     /** Finds the previous marker or start/end of a clip after a certain time. */
-    double getPreviousTimeOfInterest (double beforeThisTime);
+    TimePosition getPreviousTimeOfInterest (TimePosition beforeThisTime);
 
     //==============================================================================
     /** Returns the PluginCache which manages all active Plugin[s] for this Edit. */
     PluginCache& getPluginCache() noexcept;
 
     /** Returns the time of first clip. */
-    double getFirstClipTime() const;
+    TimePosition getFirstClipTime() const;
 
     /** Returns the end time of last clip. */
-    double getLength() const;
+    TimeDuration getLength() const;
 
     //==============================================================================
     /** Returns the master VolumeAndPanPlugin. */
@@ -587,10 +592,10 @@ public:
     bool isTimecodeSyncEnabled() const noexcept             { return midiTimecodeSourceDeviceEnabled; }
 
     /** Returns the offset to apply to MIDI timecode. */
-    double getTimecodeOffset() const noexcept               { return timecodeOffset; }
+    TimeDuration getTimecodeOffset() const noexcept         { return timecodeOffset; }
 
     /** Sets the offset to apply to MIDI timecode. */
-    void setTimecodeOffset (double newOffset);
+    void setTimecodeOffset (TimeDuration newOffset);
 
     /** Returns true if hours are ignored when syncing to MIDI timecode. */
     bool isMidiTimecodeIgnoringHours() const                { return midiTimecodeIgnoringHours; }
@@ -618,10 +623,10 @@ public:
 
     //==============================================================================
     /** Sets a range for the click track to be audible within. */
-    void setClickTrackRange (EditTimeRange) noexcept;
+    void setClickTrackRange (TimeRange) noexcept;
 
     /** Returns the range the click track will be audible within. */
-    EditTimeRange getClickTrackRange() const noexcept;
+    TimeRange getClickTrackRange() const noexcept;
 
     /** Returns the click track volume. */
     float getClickTrackVolume() const noexcept              { return juce::jlimit (0.2f, 1.0f, clickTrackGain.get()); }
@@ -669,7 +674,7 @@ public:
     /** Invalidates the stored length so the next call to getLength will update form the Edit contents.
         You shouldn't normally need to call this as it will happen automatically as clips are added/removed.
     */
-    void invalidateStoredLength() noexcept              { totalEditLength = -1.0; }
+    void invalidateStoredLength() noexcept              { totalEditLength = {}; }
 
     /** If there's a change to send out to the listeners, do it now rather than
         waiting for the next timer message.
@@ -769,10 +774,10 @@ public:
     //==============================================================================
     juce::CachedValue<juce::String> lastSignificantChange;  /**< The last time a change was made to the Edit. @see getTimeOfLastChange */
 
-    juce::CachedValue<double> masterFadeIn,     /**< The duration in seconds of the fade in. */
-                              masterFadeOut,    /**< The duration in seconds of the fade out. */
-                              timecodeOffset,   /**< The duration in seconds of the timecode offset. */
-                              videoOffset;      /**< The duration in seconds of the video offset. */
+    juce::CachedValue<TimeDuration> masterFadeIn,   /**< The duration in seconds of the fade in. */
+                                    masterFadeOut,  /**< The duration in seconds of the fade out. */
+                                    timecodeOffset,       /**< The duration in seconds of the timecode offset. */
+                                    videoOffset;          /**< The duration in seconds of the video offset. */
 
     juce::CachedValue<AudioFadeCurve::Type> masterFadeInType,   /**< The curve type of the fade in. */
                                             masterFadeOutType;  /**< The curve type of the fade out. */
@@ -828,7 +833,7 @@ private:
     juce::Array<ModifierTimer*, juce::CriticalSection> modifierTimers;
     std::unique_ptr<GlobalMacros> globalMacros;
 
-    mutable double totalEditLength = -1.0;
+    mutable std::optional<TimeDuration> totalEditLength;
     std::atomic<bool> isLoadInProgress { true };
     std::atomic<int> performingRenderCount { 0 };
     bool shouldRestartPlayback = false;
@@ -843,7 +848,7 @@ private:
     juce::Array<EditItemID> lowLatencyDisabledPlugins;
     double normalLatencyBufferSizeSeconds = 0.0;
     bool isPreviewEdit = false;
-    std::atomic<double> clickMark1Time { 0.0 }, clickMark2Time { 0.0 };
+    std::atomic<TimePosition> clickMark1Time { TimePosition() }, clickMark2Time { TimePosition() };
     std::atomic<bool> isFullyConstructed { false };
     mutable std::atomic<uint64_t> nextID { 0 }; // 0 is used as flag to initialise the next ID count
     
@@ -951,4 +956,4 @@ private:
     ActiveEdits();
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

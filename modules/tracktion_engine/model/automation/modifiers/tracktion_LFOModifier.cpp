@@ -8,17 +8,17 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 struct LFOModifier::LFOModifierTimer    : public ModifierTimer
 {
     LFOModifierTimer (LFOModifier& lfo)
-        : modifier (lfo), tempoSequence (lfo.edit.tempoSequence)
+        : modifier (lfo)
     {
     }
 
-    void updateStreamTime (double editTime, int numSamples) override
+    void updateStreamTime (TimePosition editTime, int numSamples) override
     {
         const double blockLength = numSamples / modifier.getSampleRate();
         modifier.setEditTime (editTime);
@@ -35,7 +35,7 @@ struct LFOModifier::LFOModifierTimer    : public ModifierTimer
             ramp.setDuration (durationPerPattern);
 
             if (syncTypeThisBlock == ModifierCommon::transport)
-                ramp.setPosition (std::fmod ((float) editTime, durationPerPattern));
+                ramp.setPosition (std::fmod ((float) editTime.inSeconds(), durationPerPattern));
 
             setPhase (ramp.getProportion());
 
@@ -44,14 +44,15 @@ struct LFOModifier::LFOModifierTimer    : public ModifierTimer
         }
         else
         {
-            tempoSequence.setTime (editTime);
-            const auto currentTempo = tempoSequence.getCurrentTempo();
-            const double proportionOfBar = ModifierCommon::getBarFraction (rateTypeThisBlock);
+            tempoSequence.set (editTime);
+            const auto currentTempo = tempoSequence.getTempo();
+            const auto currentTimeSig = tempoSequence.getTimeSignature();
+            const auto proportionOfBar = ModifierCommon::getBarFraction (rateTypeThisBlock);
 
             if (syncTypeThisBlock == ModifierCommon::transport)
             {
-                const float editTimeInBeats = (float) (currentTempo.startBeatInEdit + (editTime - currentTempo.startTime) * currentTempo.beatsPerSecond);
-                const double bars = (editTimeInBeats / currentTempo.numerator) * rateThisBlock;
+                const auto editTimeInBeats = tempoSequence.getBeats().inBeats();
+                const auto bars = (editTimeInBeats / currentTimeSig.numerator) * rateThisBlock;
 
                 if (rateTypeThisBlock >= ModifierCommon::fourBars && rateTypeThisBlock <= ModifierCommon::sixtyFourthD)
                 {
@@ -61,9 +62,9 @@ struct LFOModifier::LFOModifierTimer    : public ModifierTimer
             }
             else
             {
-                const double bpm = (currentTempo.bpm * rateThisBlock) / proportionOfBar;
+                const double bpm = (currentTempo * rateThisBlock) / proportionOfBar;
                 const double secondsPerBeat = 60.0 / bpm;
-                const float secondsPerStep = static_cast<float> (secondsPerBeat * currentTempo.numerator);
+                const float secondsPerStep = static_cast<float> (secondsPerBeat * currentTimeSig.numerator);
                 const float secondsPerPattern = secondsPerStep;
                 ramp.setDuration (secondsPerPattern);
 
@@ -139,7 +140,7 @@ struct LFOModifier::LFOModifierTimer    : public ModifierTimer
 
     LFOModifier& modifier;
     Ramp ramp;
-    TempoSequencePosition tempoSequence;
+    tempo::Sequence::Position tempoSequence { createPosition (modifier.edit.tempoSequence) };
 
     juce::Random rand;
     float previousRandom = 0.0f, currentRandom = 0.0f, randomDifference = 0.0f;
@@ -296,4 +297,4 @@ void LFOModifier::valueTreeChanged()
         changedTimer.startTimerHz (30);
 }
 
-}
+}} // namespace tracktion { inline namespace engine

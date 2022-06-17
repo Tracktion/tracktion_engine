@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 /** Keeps a list of external controllers and keeps them connected to the
@@ -84,7 +84,7 @@ public:
     void masterLevelsChanged (float leftLevel, float rightLevel);
     void timecodeChanged (int barsOrHours, int beatsOrMinutes, int ticksOrSeconds,
                           int millisecs, bool isBarsBeats, bool isFrames);
-    void editPositionChanged (Edit*, double newCursorPosition);
+    void editPositionChanged (Edit*, TimePosition newCursorPosition);
     void updateVolumePlugin (VolumeAndPanPlugin&);
     void updateVCAPlugin (VCAPlugin& vca);
     void snapChanged (bool isOn);
@@ -179,4 +179,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ExternalControllerManager)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

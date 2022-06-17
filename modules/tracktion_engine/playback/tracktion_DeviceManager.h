@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 class HostedAudioDeviceInterface;
@@ -73,6 +73,7 @@ public:
     int getBitDepth() const;
     int getBlockSize() const;
     double getBlockSizeMs() const;
+    TimeDuration getBlockLength() const;
 
     int getNumWaveOutDevices() const                            { return waveOutputs.size(); }
     WaveOutputDevice* getWaveOutDevice (int index) const        { return waveOutputs[index]; }
@@ -243,4 +244,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DeviceManager)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

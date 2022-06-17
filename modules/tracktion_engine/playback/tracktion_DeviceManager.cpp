@@ -10,7 +10,7 @@
 
 juce::AudioDeviceManager* gDeviceManager = nullptr; // TODO
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 #if TRACKTION_LOG_DEVICES
@@ -837,6 +837,11 @@ double DeviceManager::getBlockSizeMs() const
     return getBlockSize() * 1000.0 / getSampleRate();
 }
 
+TimeDuration DeviceManager::getBlockLength() const
+{
+    return TimeDuration::fromSamples (getBlockSize(), getSampleRate());
+}
+
 void DeviceManager::setDefaultWaveOutDevice (int index)
 {
     if (auto wod = getWaveOutDevice (index))
@@ -1126,7 +1131,7 @@ void DeviceManager::audioDeviceIOCallbackInternal (const float** inputChannelDat
         else
         {
             broadcastStreamTimeToMidiDevices (streamTime + outputLatencyTime);
-            EditTimeRange blockStreamTime;
+            juce::Range<double> blockStreamTime;
 
             {
                 SCOPED_REALTIME_CHECK
@@ -1230,6 +1235,8 @@ void DeviceManager::audioDeviceAboutToStart (juce::AudioIODevice* device)
     else
         cpuAvgCounter = cpuReportingInterval = 1;
 
+    jassert (currentSampleRate > 0.0);
+    
    #if JUCE_ANDROID
     steadyLoadContext.setSampleRate (device->getCurrentSampleRate());
    #endif
@@ -1306,4 +1313,4 @@ void DeviceManager::setGlobalOutputAudioProcessor (juce::AudioProcessor* newProc
             globalOutputAudioProcessor->prepareToPlay (currentSampleRate, audioIODevice->getCurrentBufferSizeSamples());
 }
 
-}
+}} // namespace tracktion { inline namespace engine

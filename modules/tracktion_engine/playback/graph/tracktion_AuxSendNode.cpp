@@ -10,11 +10,11 @@
 
 #pragma once
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 AuxSendNode::AuxSendNode (std::unique_ptr<Node> inputNode, int busIDToUse,
-                          AuxSendPlugin& sourceSendPlugin, tracktion_graph::PlayHeadState& phs,
+                          AuxSendPlugin& sourceSendPlugin, tracktion::graph::PlayHeadState& phs,
                           const TrackMuteState* trackMuteState)
     : SendNode (std::move (inputNode), busIDToUse,
                 [&sourceSendPlugin, trackMuteState]
@@ -34,12 +34,12 @@ AuxSendNode::AuxSendNode (std::unique_ptr<Node> inputNode, int busIDToUse,
 }
 
 //==============================================================================
-void AuxSendNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
+void AuxSendNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
     sampleRate = info.sampleRate;
     
     if (auto props = getNodeProperties(); props.latencyNumSamples > 0)
-        automationAdjustmentTime = -tracktion_graph::sampleToTime (props.latencyNumSamples, sampleRate);
+        automationAdjustmentTime = TimeDuration::fromSamples (-props.latencyNumSamples, sampleRate);
 }
 
 void AuxSendNode::process (ProcessContext& pc)
@@ -48,11 +48,11 @@ void AuxSendNode::process (ProcessContext& pc)
         && sendPlugin.edit.getAutomationRecordManager().isReadingAutomation())
     {
         const auto editSamplePos = playHeadState.playHead.referenceSamplePositionToTimelinePosition (pc.referenceSampleRange.getStart());
-        const auto editTime = tracktion_graph::sampleToTime (editSamplePos, sampleRate) + automationAdjustmentTime;
+        const auto editTime = TimePosition::fromSamples (editSamplePos, sampleRate) + automationAdjustmentTime;
         sendPlugin.updateParameterStreams (editTime);
     }
     
     SendNode::process (pc);
 }
 
-}
+}} // namespace tracktion { inline namespace engine

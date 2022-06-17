@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 /**
@@ -123,7 +123,7 @@ public:
     */
     virtual bool shouldTrackContentsBeMuted()   { return false; }
 
-    virtual juce::String prepareToRecord (double start, double punchIn,
+    virtual juce::String prepareToRecord (TimePosition start, TimePosition punchIn,
                                           double sampleRate, int blockSizeSamples,
                                           bool isLivePunch) = 0;
 
@@ -136,10 +136,10 @@ public:
     virtual juce::File getRecordingFile() const     { return {}; }
 
     virtual void prepareAndPunchRecord();
-    virtual double getPunchInTime() = 0;
+    virtual TimePosition getPunchInTime() = 0;
     virtual Clip::Array stopRecording() = 0;
-    virtual Clip::Array applyLastRecordingToEdit (EditTimeRange recordedRange,
-                                                  bool isLooping, EditTimeRange loopRange,
+    virtual Clip::Array applyLastRecordingToEdit (TimeRange recordedRange,
+                                                  bool isLooping, TimeRange loopRange,
                                                   bool discardRecordings,
                                                   SelectionManager*) = 0;
 
@@ -291,4 +291,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (InputDeviceInstance)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

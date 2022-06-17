@@ -18,7 +18,7 @@ namespace juce
     };
 }
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -618,4 +618,4 @@ inline void renamePropertyRecursive (juce::ValueTree& tree,
         renamePropertyRecursive (child, oldName, newName, um);
 }
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

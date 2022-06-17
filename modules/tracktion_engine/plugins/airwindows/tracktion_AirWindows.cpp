@@ -7,7 +7,7 @@
 */
 
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -1073,4 +1073,4 @@ AirWindowsuLawEncode::AirWindowsuLawEncode (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::ulawencode::uLawEncode> (&callback)) {}
 
 
-}
+}} // namespace tracktion { inline namespace engine

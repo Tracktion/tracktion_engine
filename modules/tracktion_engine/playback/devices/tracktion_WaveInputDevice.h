@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 /** A (virtual) audio input device.
@@ -101,7 +101,7 @@ private:
     void addInstance (WaveInputDeviceInstance*);
     void removeInstance (WaveInputDeviceInstance*);
 
-    double getAdjustmentSeconds();
+    TimeDuration getAdjustmentSeconds();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveInputDevice)
 };
@@ -150,4 +150,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveInputRecordingThread)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

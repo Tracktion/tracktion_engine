@@ -10,7 +10,7 @@
 
 #pragma once
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 struct InputProvider;
@@ -19,22 +19,14 @@ class TrackMuteState;
 /**
     Node for processing a plugin.
 */
-class PluginNode final  : public tracktion_graph::Node
+class PluginNode final  : public tracktion::graph::Node,
+                          public TracktionEngineNode
 {
 public:
     //==============================================================================
-    /** Creates a PluginNode to process a plugin on in a Rack with an InputProvider.
-        @param InputProvider            The InputProvider to provide inputs and a PluginRenderContext
-     
-    */
-    PluginNode (std::unique_ptr<Node> input,
-                tracktion_engine::Plugin::Ptr,
-                double sampleRateToUse, int blockSizeToUse,
-                std::shared_ptr<InputProvider>);
-
     /** Creates a PluginNode to process a plugin on a Track.
         @param const TrackMuteState*    The optional TrackMuteState to use
-        @param PlayHeadState            The PlayHeadState to monitor for jumps
+        @param ProcessState             The ProcessState for playhead access and time mapping
         @param rendering                Should be true if this is an offline render
         @param balanceLatency           If set to true, this creates a copy of the dry input and
                                         delays it by the plugin's latency and uses this when the
@@ -44,10 +36,10 @@ public:
 
     */
     PluginNode (std::unique_ptr<Node> input,
-                tracktion_engine::Plugin::Ptr,
+                tracktion::engine::Plugin::Ptr,
                 double sampleRateToUse, int blockSizeToUse,
                 const TrackMuteState*,
-                tracktion_graph::PlayHeadState&,
+                ProcessState&,
                 bool rendering, bool balanceLatency,
                 int maxNumChannelsToUse);
 
@@ -57,37 +49,36 @@ public:
     //==============================================================================
     Plugin& getPlugin()                                 { return *plugin; }
     
-    tracktion_graph::NodeProperties getNodeProperties() override;
+    tracktion::graph::NodeProperties getNodeProperties() override;
     std::vector<Node*> getDirectInputNodes() override   { return { input.get() }; }
     bool isReadyToProcess() override                    { return input->hasProcessed(); }
-    void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override;
+    void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     void prefetchBlock (juce::Range<int64_t>) override;
     void process (ProcessContext&) override;
     
 private:
     //==============================================================================
     std::unique_ptr<Node> input;
-    tracktion_engine::Plugin::Ptr plugin;
-    std::shared_ptr<InputProvider> audioRenderContextProvider;
+    tracktion::engine::Plugin::Ptr plugin;
 
     const TrackMuteState* trackMuteState = nullptr;
-    tracktion_graph::PlayHeadState* playHeadState = nullptr;
+    tracktion::graph::PlayHeadState& playHeadState;
     bool isRendering = false;
     
     bool isInitialised = false;
     double sampleRate = 44100.0;
     int latencyNumSamples = 0, maxNumChannels = -1;
-    tracktion_engine::MidiMessageArray midiMessageArray;
+    tracktion::engine::MidiMessageArray midiMessageArray;
     int subBlockSizeToUse = -1;
     bool balanceLatency = true, canProcessBypassed = false;
-    double automationAdjustmentTime = 0.0;
+    TimeDuration automationAdjustmentTime;
     
-    std::shared_ptr<tracktion_graph::LatencyProcessor> latencyProcessor;
+    std::shared_ptr<tracktion::graph::LatencyProcessor> latencyProcessor;
 
     //==============================================================================
     void initialisePlugin (double sampleRateToUse, int blockSizeToUse);
-    PluginRenderContext getPluginRenderContext (int64_t, juce::AudioBuffer<float>&);
+    PluginRenderContext getPluginRenderContext (TimePosition, juce::AudioBuffer<float>&);
     void replaceLatencyProcessorIfPossible (Node*);
 };
 
-}
+}} // namespace tracktion { inline namespace engine

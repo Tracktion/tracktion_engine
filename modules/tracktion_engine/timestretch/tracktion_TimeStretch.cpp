@@ -26,7 +26,7 @@
  #define NOMINMAX
 #endif
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 TimeStretcher::ElastiqueProOptions::ElastiqueProOptions (const juce::String& string)
@@ -360,7 +360,7 @@ private:
 #define Point CarbonDummyPointName
 #define Component CarbonDummyCompName
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine
 #if TRACKTION_BUILD_RUBBERBAND
  #if __has_include(<rubberband/single/RubberBandSingle.cpp>)
   #include <rubberband/single/RubberBandSingle.cpp>
@@ -378,7 +378,7 @@ private:
   #error "TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND enabled but not found in the search path!"
  #endif
 #endif
-namespace tracktion_engine {
+namespace tracktion { inline namespace engine {
     
 #undef WIN32_LEAN_AND_MEAN
 #undef Point
@@ -421,7 +421,7 @@ struct RubberBandStretcher  : public TimeStretcher::Stretcher
 
     bool setSpeedAndPitch (float speedRatio, float semitonesUp) override
     {
-        const float pitch = juce::jlimit (0.25f, 4.0f, tracktion_engine::Pitch::semitonesToRatio (semitonesUp));
+        const float pitch = juce::jlimit (0.25f, 4.0f, tracktion::engine::Pitch::semitonesToRatio (semitonesUp));
 
         rubberBandStretcher.setPitchScale (pitch);
         rubberBandStretcher.setTimeRatio (speedRatio);
@@ -724,7 +724,7 @@ void TimeStretcher::initialise (double sourceSampleRate, int samplesPerBlock,
         case rubberbandMelodic:
         case rubberbandPercussive:
             juce::ignoreUnused (options, realtime);
-            stretcher.reset (new tracktion_engine::RubberBandStretcher (sourceSampleRate, samplesPerBlock, numChannels,
+            stretcher.reset (new tracktion::engine::RubberBandStretcher (sourceSampleRate, samplesPerBlock, numChannels,
                                                                         mode == rubberbandPercussive));
             break;
        #else
@@ -817,4 +817,4 @@ int TimeStretcher::flush (float* const* outChannels)
     return 0;
 }
 
-}
+}} // namespace tracktion { inline namespace engine

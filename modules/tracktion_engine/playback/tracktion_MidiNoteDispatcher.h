@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 class MidiNoteDispatcher   : private juce::HighResolutionTimer
@@ -20,10 +20,10 @@ public:
     //==============================================================================
     void setMidiDeviceList (const juce::OwnedArray<MidiOutputDeviceInstance>&);
 
-    void dispatchPendingMessagesForDevices (double editTime);
+    void dispatchPendingMessagesForDevices (TimePosition editTime);
     
-    void masterTimeUpdate (double editTime);
-    void prepareToPlay (double editTime);
+    void masterTimeUpdate (TimePosition editTime);
+    void prepareToPlay (TimePosition editTime);
 
     void hiResTimerCallback() override;
 
@@ -40,12 +40,13 @@ private:
     //==============================================================================
     juce::OwnedArray<DeviceState> devices;
     juce::CriticalSection timeLock, deviceLock;
-    double masterTime = 0, hiResClockOfMasterTime = 0;
+    TimePosition masterTime;
+    double hiResClockOfMasterTime = 0;
 
-    double getCurrentTime() const;
-    void dispatchPendingMessages (DeviceState&, double editTime);
+    TimePosition getCurrentTime() const;
+    void dispatchPendingMessages (DeviceState&, TimePosition editTime);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiNoteDispatcher)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

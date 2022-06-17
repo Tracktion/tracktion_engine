@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 #if TRACKTION_ENABLE_REWIRE
@@ -242,13 +242,13 @@ public:
             {
                 if (auto* transport = getTransport())
                 {
-                    TempoSequencePosition markPos (edit->tempoSequence);
+                    auto markPos = createPosition (edit->tempoSequence);
                     const auto loopRange = transport->getLoopRange();
 
-                    markPos.setTime (loopRange.getStart());
+                    markPos.set (loopRange.getStart());
                     rewireLoopStart = juce::roundToInt (markPos.getPPQTime() * kReWirePPQ);
 
-                    markPos.setTime (loopRange.getEnd());
+                    markPos.set (loopRange.getEnd());
                     rewireLoopEnd = juce::roundToInt (markPos.getPPQTime() * kReWirePPQ);
 
                     rewireLooping = transport->looping;
@@ -256,7 +256,7 @@ public:
             }
 
             // time limit for guessing if we need to chase the time
-            timePerBlock = 0.060 + blockSize / sampleRate;
+            timePerBlock = TimeDuration::fromSamples (0.060 + blockSize, sampleRate);
 
             ReWirePrepareEventTarget (&eventTarget, 0, 0);
 
@@ -276,13 +276,14 @@ public:
         storedMessages.clear();
     }
 
-    void updateTempoInfo (const TempoSequencePosition& position)
+    void updateTempoInfo (const tempo::Sequence::Position& position)
     {
-        auto& t = position.getCurrentTempo();
+        const auto bpm = position.getTempo();
+        const auto [numerator, denominator] = position.getTimeSignature();
 
-        inputToDeviceParams.fTempo = (t.bpm < 10) ? 120000 : (ReWire_uint32_t) (1000 * t.bpm);
-        inputToDeviceParams.fSignatureNumerator   = (t.numerator <= 0)   ? 4 : (ReWire_uint32_t) t.numerator;
-        inputToDeviceParams.fSignatureDenominator = (t.denominator == 0) ? 4 : (ReWire_uint32_t) t.denominator;
+        inputToDeviceParams.fTempo = (bpm < 10) ? 120000 : (ReWire_uint32_t) (1000 * bpm);
+        inputToDeviceParams.fSignatureNumerator   = (numerator <= 0)   ? 4 : (ReWire_uint32_t) numerator;
+        inputToDeviceParams.fSignatureDenominator = (denominator == 0) ? 4 : (ReWire_uint32_t) denominator;
 
         inputToDeviceParams.fPPQ15360TickOfBatchStart = juce::roundToInt (position.getPPQTime() * kReWirePPQ);
 
@@ -440,9 +441,9 @@ public:
 
     bool isPlaying (const PluginRenderContext& fc, ReWireDriveAudioInputParams& in)
     {
-        auto playheadOutputTime = fc.editTime;
+        const auto playheadOutputTime = fc.editTime;
 
-        if ((fc.isPlaying && playheadOutputTime >= 0) || fc.isRendering)
+        if ((fc.isPlaying && playheadOutputTime >= 0s) || fc.isRendering)
         {
             if (lastTime > playheadOutputTime || lastTime < playheadOutputTime - timePerBlock)
                 in.fPlayMode = kReWirePlayModeChaseAndPlay;
@@ -566,7 +567,7 @@ public:
                 {
                     transport->looping = rewireLooping;
 
-                    TempoSequencePosition markPos (containerEdit->tempoSequence);
+                    auto markPos = createPosition (containerEdit->tempoSequence);
 
                     markPos.setPPQTime (rewireLoopStart / (double)kReWirePPQ);
                     transport->setLoopIn (markPos.getTime());
@@ -584,12 +585,12 @@ public:
 
             if (auto transport = getTransport())
             {
-                TempoSequencePosition markPos (containerEdit->tempoSequence);
+                auto markPos = createPosition (containerEdit->tempoSequence);
                 const auto loopRange = transport->getLoopRange();
-                markPos.setTime (loopRange.getStart());
+                markPos.set (loopRange.getStart());
                 rewireLoopStart = juce::roundToInt (markPos.getPPQTime() * kReWirePPQ);
 
-                markPos.setTime (loopRange.getEnd());
+                markPos.set (loopRange.getEnd());
                 rewireLoopEnd = juce::roundToInt (markPos.getPPQTime() * kReWirePPQ);
 
                 rewireLooping = transport->looping;
@@ -599,11 +600,11 @@ public:
         if (requestedReposition)
         {
             CRASH_TRACER
-            if (auto* transport = getTransport())
+            if (auto transport = getTransport())
             {
-                TempoSequencePosition pos (containerEdit->tempoSequence);
+                auto pos = createPosition (containerEdit->tempoSequence);
                 pos.setPPQTime (requestedPosition);
-                transport->setCurrentPosition (pos.getTime());
+                transport->setPosition (pos.getTime());
             }
 
             requestedReposition = false;
@@ -612,7 +613,7 @@ public:
         if (requestedPlay)
         {
             CRASH_TRACER
-            if (auto* transport = getTransport())
+            if (auto transport = getTransport())
                 transport->play (true);
 
             requestedPlay = false;
@@ -744,7 +745,9 @@ private:
     MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
 
     int references = 0, pluginsServedThisFrame = 0;
-    double sampleRate = 0, lastTime = 0, timePerBlock = 0;
+    double sampleRate = 0;
+    TimePosition lastTime;
+    TimeDuration timePerBlock;
     bool wasPlaying = false;
     Edit::WeakRef editRef;
 
@@ -1102,7 +1105,7 @@ void ReWirePlugin::initialise (const PluginInitialisationInfo& info)
         device->prepareToPlay (info.sampleRate, info.blockSizeSamples,
                                channelIndexL, channelIndexR, &edit);
 
-        currentTempoPosition.reset (new TempoSequencePosition (edit.tempoSequence));
+        currentTempoPosition.reset (new tempo::Sequence::Position (createPosition (edit.tempoSequence)));
     }
 }
 
@@ -1112,13 +1115,12 @@ void ReWirePlugin::deinitialise()
         device->deinitialise();
 }
 
-void ReWirePlugin::prepareForNextBlock (double editTime)
+void ReWirePlugin::prepareForNextBlock (TimePosition editTime)
 {
     if (currentTempoPosition != nullptr && device != nullptr)
     {
-        currentTempoPosition->setTime (editTime);
-
-        device->updateTempoInfo (TempoSequencePosition (*currentTempoPosition));
+        currentTempoPosition->set (editTime);
+        device->updateTempoInfo (*currentTempoPosition);
     }
 }
 
@@ -1376,4 +1378,4 @@ juce::StringArray ReWirePlugin::getDeviceChannelNames() const
 
 #endif
 
-}
+}} // namespace tracktion { inline namespace engine

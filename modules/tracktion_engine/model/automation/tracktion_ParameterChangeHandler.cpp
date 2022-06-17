@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 ParameterChangeHandler::ParameterChangeHandler (Edit& e) : edit (e)
@@ -85,4 +85,4 @@ int ParameterChangeHandler::getPendingActionFunctionId (bool consumeEvent) noexc
     return pendingActionId;
 }
 
-}
+}} // namespace tracktion { inline namespace engine

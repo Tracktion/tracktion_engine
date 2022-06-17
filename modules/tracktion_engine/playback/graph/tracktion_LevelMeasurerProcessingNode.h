@@ -8,16 +8,16 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 /**
     A Node that introduces latency to balance the latency at the root Node and its position in the graph.
 */
-class LevelMeasurerProcessingNode final : public tracktion_graph::Node
+class LevelMeasurerProcessingNode final : public tracktion::graph::Node
 {
 public:
-    LevelMeasurerProcessingNode (std::unique_ptr<tracktion_graph::Node> inputNode, LevelMeterPlugin& levelMeterPlugin)
+    LevelMeasurerProcessingNode (std::unique_ptr<tracktion::graph::Node> inputNode, LevelMeterPlugin& levelMeterPlugin)
         : input (std::move (inputNode)),
           meterPlugin (levelMeterPlugin)
     {
@@ -29,15 +29,15 @@ public:
             meterPlugin.baseClassDeinitialise();
     }
     
-    tracktion_graph::NodeProperties getNodeProperties() override
+    tracktion::graph::NodeProperties getNodeProperties() override
     {
         return input->getNodeProperties();
     }
     
-    std::vector<tracktion_graph::Node*> getDirectInputNodes() override  { return { input.get() }; }
+    std::vector<tracktion::graph::Node*> getDirectInputNodes() override  { return { input.get() }; }
     bool isReadyToProcess() override                                    { return input->hasProcessed(); }
         
-    void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info) override
+    void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info) override
     {
         initialisePlugin();
         
@@ -49,7 +49,7 @@ public:
         if (numSamplesLatencyToIntroduce <= 0)
             return;
         
-        latencyProcessor = std::make_shared<tracktion_graph::LatencyProcessor>();
+        latencyProcessor = std::make_shared<tracktion::graph::LatencyProcessor>();
         latencyProcessor->setLatencyNumSamples (numSamplesLatencyToIntroduce);
         latencyProcessor->prepareToPlay (info.sampleRate, info.blockSize, getNodeProperties().numberOfChannels);
         
@@ -98,12 +98,12 @@ public:
     }
 
 private:
-    std::unique_ptr<tracktion_graph::Node> input;
+    std::unique_ptr<tracktion::graph::Node> input;
     LevelMeterPlugin& meterPlugin;
     Plugin::Ptr pluginPtr { meterPlugin };
     bool isInitialised = false;
     
-    std::shared_ptr<tracktion_graph::LatencyProcessor> latencyProcessor;
+    std::shared_ptr<tracktion::graph::LatencyProcessor> latencyProcessor;
     
     choc::buffer::ChannelArrayBuffer<float> tempAudioBuffer;
     MidiMessageArray tempMidiBuffer;
@@ -112,13 +112,13 @@ private:
     void initialisePlugin()
     {
         // N.B. This is deliberately zeroed as it (correctly) assumes the LevelMeterPlugin doesn't need the info during initialisation
-        meterPlugin.baseClassInitialise ({ 0.0, 0.0, 0 });
+        meterPlugin.baseClassInitialise ({ TimePosition(), 0.0, 0 });
         isInitialised = true;
     }
     
     void processLevelMeasurer (LevelMeasurer& measurer, choc::buffer::ChannelArrayView<float> block, MidiMessageArray& midi)
     {
-        auto buffer = tracktion_graph::toAudioBuffer (block);
+        auto buffer = tracktion::graph::toAudioBuffer (block);
         measurer.processBuffer (buffer, 0, buffer.getNumSamples());
 
         measurer.setShowMidi (meterPlugin.showMidiActivity);
@@ -126,4 +126,4 @@ private:
     }
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

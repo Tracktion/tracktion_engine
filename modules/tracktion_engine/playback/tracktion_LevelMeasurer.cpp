@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -329,4 +329,4 @@ void SharedLevelMeasurer::addBuffer (const juce::AudioBuffer<float>& inBuffer, i
         sumBuffer.addFrom (i, 0, inBuffer, i, startSample, numSamples);
 }
 
-}
+}} // namespace tracktion { inline namespace engine
