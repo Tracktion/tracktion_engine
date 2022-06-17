@@ -106,7 +106,6 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveInputDevice)
 };
 
-
 //==============================================================================
 class WaveInputRecordingThread  : public juce::Thread,
                                   private juce::Timer
@@ -142,60 +141,75 @@ public:
     {
         #define AUDIOFIFO_SIZE  256
 
-        AudioFifo()
+        void addToFifo(juce::AudioBuffer<float>& NextBuffer)
         {
-            memset(m_Buffer, 0, AUDIOFIFO_SIZE);
+            int start1, size1, start2, size2;
+            m_AbstractFifo.prepareToWrite(1, start1, size1, start2, size2);
+
+            jassert(size1 == 1);
+            jassert(size2 == 0);
+            jassert(start2 == 0);
+
+            if (size1 > 0)
+            {
+                for (int i = start1; i < start1 + size1; i++)
+                    m_BufferArray[i] = NextBuffer;
+            }
+
+            m_AbstractFifo.finishedWrite(size1);
         }
 
-        void addToFifo(const juce::AudioBuffer<float>* someData, int numItems)
+        void addToFifo(const juce::AudioBuffer<float>* NextBuffer, int numItems)
         {
             int start1, size1, start2, size2;
             m_AbstractFifo.prepareToWrite(numItems, start1, size1, start2, size2);
 
+            jassert(numItems <= (size1 + size2));
+
             if (size1 > 0)
             {
-                // memcpy(m_Buffer + start1, someData, size1);
-                for (int i = start1; i < start1 + size1; i++)
-                    m_Buffer[i] = *someData;
+                int j = 0;
+                for (int i = start1; i < start1 + size1; i++, j++)
+                    m_BufferArray[i] = NextBuffer[j];
             }
-
+            
             if (size2 > 0)
             {
-                // memcpy(m_Buffer + start2, someData + size1, size2);
-                for (int i = start2; i < start2 + size2; i++)
-                    m_Buffer[i] = *(someData + size1);
+                int j = 0;
+                for (int i = start2; i < start2 + size2; i++, j++)
+                    m_BufferArray[i] = NextBuffer[size1 + j];
             }
 
             m_AbstractFifo.finishedWrite(size1 + size2);
         }
 
-        void readFromFifo(juce::AudioBuffer<float>* someData, int numItems)
+        void readFromFifo(juce::AudioBuffer<float>* NextBuffer, int numItems)
         {
             int start1, size1, start2, size2;
             m_AbstractFifo.prepareToRead(numItems, start1, size1, start2, size2);
 
+            jassert(numItems <= (size1 + size2));
+
             if (size1 > 0)
             {
-                // memcpy(someData, m_Buffer + start1, size1);
                 int j = 0;
                 for (int i = start1; i < start1 + size1; i++, j++)
-                    someData[j] = m_Buffer[i];
+                    NextBuffer[j] = m_BufferArray[i];
             }
 
             if (size2 > 0)
             {
-                // memcpy(someData + size1, m_Buffer + start2, size2);
-                int j = 0;
+                int j = size1;
                 for (int i = start2; i < start2 + size2; i++, j++)
-                    (someData + size1)[j] = m_Buffer[i];
+                    NextBuffer[j] = m_BufferArray[i];
             }
 
             m_AbstractFifo.finishedRead(size1 + size2);
         }
 
         juce::AbstractFifo m_AbstractFifo{ AUDIOFIFO_SIZE };
-        juce::AudioBuffer<float> m_Buffer[AUDIOFIFO_SIZE];
-    } 
+        juce::AudioBuffer<float> m_BufferArray[AUDIOFIFO_SIZE];
+    }
     m_AudioFifo;
     // BEATCONNECT MODIFICATION END
 
