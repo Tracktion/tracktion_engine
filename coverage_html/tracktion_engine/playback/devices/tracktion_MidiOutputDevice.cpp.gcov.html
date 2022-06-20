@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">115</td>
+            <td class="headerCovTableEntry">0</td>
             <td class="headerCovTableEntry">344</td>
-            <td class="headerCovTableEntryLo">33.4 %</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-06-17 21:16:19</td>
+            <td class="headerValue">2022-06-20 17:12:47</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">17</td>
+            <td class="headerCovTableEntry">0</td>
             <td class="headerCovTableEntry">48</td>
-            <td class="headerCovTableEntryLo">35.4 %</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -80,31 +80,31 @@
 <a name="18"><span class="lineNum">      18 </span>            : {</a>
 <a name="19"><span class="lineNum">      19 </span>            : public:</a>
 <a name="20"><span class="lineNum">      20 </span>            :     MidiTimecodeGenerator()</a>
-<a name="21"><span class="lineNum">      21 </span><span class="lineCov">          8 :     {</span></a>
+<a name="21"><span class="lineNum">      21 </span><span class="lineNoCov">          0 :     {</span></a>
 <a name="22"><span class="lineNum">      22 </span>            :         update (nullptr);</a>
 <a name="23"><span class="lineNum">      23 </span>            :     }</a>
 <a name="24"><span class="lineNum">      24 </span>            : </a>
-<a name="25"><span class="lineNum">      25 </span><span class="lineCov">          4 :     void update (Edit* edit)</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineNoCov">          0 :     void update (Edit* edit)</span></a>
 <a name="26"><span class="lineNum">      26 </span>            :     {</a>
-<a name="27"><span class="lineNum">      27 </span><span class="lineCov">         15 :         framesPerSecond = 24;</span></a>
-<a name="28"><span class="lineNum">      28 </span><span class="lineCov">          7 :         midiTCType = juce::MidiMessage::fps24;</span></a>
-<a name="29"><span class="lineNum">      29 </span><span class="lineCov">          7 :         isDropFrame = false;</span></a>
-<a name="30"><span class="lineNum">      30 </span><span class="lineCov">          7 :         offset = 0;</span></a>
-<a name="31"><span class="lineNum">      31 </span><span class="lineCov">         15 :         timeBetweenMessages = 0.1;</span></a>
+<a name="27"><span class="lineNum">      27 </span><span class="lineNoCov">          0 :         framesPerSecond = 24;</span></a>
+<a name="28"><span class="lineNum">      28 </span><span class="lineNoCov">          0 :         midiTCType = juce::MidiMessage::fps24;</span></a>
+<a name="29"><span class="lineNum">      29 </span><span class="lineNoCov">          0 :         isDropFrame = false;</span></a>
+<a name="30"><span class="lineNum">      30 </span><span class="lineNoCov">          0 :         offset = 0;</span></a>
+<a name="31"><span class="lineNum">      31 </span><span class="lineNoCov">          0 :         timeBetweenMessages = 0.1;</span></a>
 <a name="32"><span class="lineNum">      32 </span>            : </a>
-<a name="33"><span class="lineNum">      33 </span><span class="lineCov">          4 :         if (edit != nullptr)</span></a>
+<a name="33"><span class="lineNum">      33 </span><span class="lineNoCov">          0 :         if (edit != nullptr)</span></a>
 <a name="34"><span class="lineNum">      34 </span>            :         {</a>
-<a name="35"><span class="lineNum">      35 </span><span class="lineCov">          4 :             framesPerSecond = edit-&gt;getTimecodeFormat().getFPS();</span></a>
-<a name="36"><span class="lineNum">      36 </span><span class="lineCov">          4 :             offset = edit-&gt;getTimecodeOffset().inSeconds();</span></a>
+<a name="35"><span class="lineNum">      35 </span><span class="lineNoCov">          0 :             framesPerSecond = edit-&gt;getTimecodeFormat().getFPS();</span></a>
+<a name="36"><span class="lineNum">      36 </span><span class="lineNoCov">          0 :             offset = edit-&gt;getTimecodeOffset().inSeconds();</span></a>
 <a name="37"><span class="lineNum">      37 </span>            : </a>
-<a name="38"><span class="lineNum">      38 </span><span class="lineCov">          4 :             if (framesPerSecond == 25)</span></a>
+<a name="38"><span class="lineNum">      38 </span><span class="lineNoCov">          0 :             if (framesPerSecond == 25)</span></a>
 <a name="39"><span class="lineNum">      39 </span><span class="lineNoCov">          0 :                 midiTCType = juce::MidiMessage::fps25;</span></a>
-<a name="40"><span class="lineNum">      40 </span><span class="lineCov">          4 :             else if (framesPerSecond == 30)</span></a>
+<a name="40"><span class="lineNum">      40 </span><span class="lineNoCov">          0 :             else if (framesPerSecond == 30)</span></a>
 <a name="41"><span class="lineNum">      41 </span><span class="lineNoCov">          0 :                 midiTCType = juce::MidiMessage::fps30drop;</span></a>
 <a name="42"><span class="lineNum">      42 </span>            : </a>
-<a name="43"><span class="lineNum">      43 </span><span class="lineCov">          4 :             timeBetweenMessages = 1.0 / (framesPerSecond  * 4);</span></a>
+<a name="43"><span class="lineNum">      43 </span><span class="lineNoCov">          0 :             timeBetweenMessages = 1.0 / (framesPerSecond  * 4);</span></a>
 <a name="44"><span class="lineNum">      44 </span>            :         }</a>
-<a name="45"><span class="lineNum">      45 </span><span class="lineCov">          4 :     }</span></a>
+<a name="45"><span class="lineNum">      45 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="46"><span class="lineNum">      46 </span>            : </a>
 <a name="47"><span class="lineNum">      47 </span><span class="lineNoCov">          0 :     void addMessages (bool isPlaying, bool isScrubbing,</span></a>
 <a name="48"><span class="lineNum">      48 </span>            :                       TransportControl* tc,</a>
@@ -228,23 +228,23 @@
 <a name="166"><span class="lineNum">     166 </span>            : class MidiClockGenerator</a>
 <a name="167"><span class="lineNum">     167 </span>            : {</a>
 <a name="168"><span class="lineNum">     168 </span>            : public:</a>
-<a name="169"><span class="lineNum">     169 </span><span class="lineCov">          8 :     MidiClockGenerator()</span></a>
-<a name="170"><span class="lineNum">     170 </span><span class="lineCov">          8 :     {</span></a>
-<a name="171"><span class="lineNum">     171 </span><span class="lineCov">          8 :         reset (nullptr);</span></a>
-<a name="172"><span class="lineNum">     172 </span><span class="lineCov">          8 :     }</span></a>
+<a name="169"><span class="lineNum">     169 </span><span class="lineNoCov">          0 :     MidiClockGenerator()</span></a>
+<a name="170"><span class="lineNum">     170 </span><span class="lineNoCov">          0 :     {</span></a>
+<a name="171"><span class="lineNum">     171 </span><span class="lineNoCov">          0 :         reset (nullptr);</span></a>
+<a name="172"><span class="lineNum">     172 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="173"><span class="lineNum">     173 </span>            : </a>
-<a name="174"><span class="lineNum">     174 </span><span class="lineCov">          8 :     void reset (Edit* edit)</span></a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineNoCov">          0 :     void reset (Edit* edit)</span></a>
 <a name="175"><span class="lineNum">     175 </span>            :     {</a>
-<a name="176"><span class="lineNum">     176 </span><span class="lineCov">          8 :         const juce::ScopedLock sl (positionLock);</span></a>
-<a name="177"><span class="lineNum">     177 </span><span class="lineCov">          8 :         wasPlaying = false;</span></a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineNoCov">          0 :         const juce::ScopedLock sl (positionLock);</span></a>
+<a name="177"><span class="lineNum">     177 </span><span class="lineNoCov">          0 :         wasPlaying = false;</span></a>
 <a name="178"><span class="lineNum">     178 </span>            :         position = nullptr;</a>
-<a name="179"><span class="lineNum">     179 </span><span class="lineCov">          8 :         needsToSendPosition = true;</span></a>
-<a name="180"><span class="lineNum">     180 </span><span class="lineCov">          8 :         lastBlockStart = -100000.0s;</span></a>
-<a name="181"><span class="lineNum">     181 </span><span class="lineCov">          8 :         lastBlockEndPPQ = 0;</span></a>
+<a name="179"><span class="lineNum">     179 </span><span class="lineNoCov">          0 :         needsToSendPosition = true;</span></a>
+<a name="180"><span class="lineNum">     180 </span><span class="lineNoCov">          0 :         lastBlockStart = -100000.0s;</span></a>
+<a name="181"><span class="lineNum">     181 </span><span class="lineNoCov">          0 :         lastBlockEndPPQ = 0;</span></a>
 <a name="182"><span class="lineNum">     182 </span>            : </a>
-<a name="183"><span class="lineNum">     183 </span><span class="lineCov">          8 :         if (edit != nullptr)</span></a>
+<a name="183"><span class="lineNum">     183 </span><span class="lineNoCov">          0 :         if (edit != nullptr)</span></a>
 <a name="184"><span class="lineNum">     184 </span><span class="lineNoCov">          0 :             position = std::make_unique&lt;tempo::Sequence::Position&gt; (createPosition (edit-&gt;tempoSequence));</span></a>
-<a name="185"><span class="lineNum">     185 </span><span class="lineCov">          8 :     }</span></a>
+<a name="185"><span class="lineNum">     185 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="186"><span class="lineNum">     186 </span>            : </a>
 <a name="187"><span class="lineNum">     187 </span><span class="lineNoCov">          0 :     void addMessages (bool playHeadIsPlaying, TransportControl* tc, MidiMessageArray&amp; buffer,</span></a>
 <a name="188"><span class="lineNum">     188 </span>            :                       TimePosition blockStartTime, TimeDuration blockLength)</a>
@@ -323,48 +323,48 @@
 <a name="261"><span class="lineNum">     261 </span>            : };</a>
 <a name="262"><span class="lineNum">     262 </span>            : </a>
 <a name="263"><span class="lineNum">     263 </span>            : //==============================================================================</a>
-<a name="264"><span class="lineNum">     264 </span><span class="lineCov">          4 : MidiOutputDevice::MidiOutputDevice (Engine&amp; e, const juce::String&amp; deviceName, int index)</span></a>
-<a name="265"><span class="lineNum">     265 </span><span class="lineCov">          4 :     : OutputDevice (e, TRANS(&quot;MIDI Output&quot;), deviceName),</span></a>
-<a name="266"><span class="lineNum">     266 </span><span class="lineCov">          8 :       deviceIndex (index)</span></a>
+<a name="264"><span class="lineNum">     264 </span><span class="lineNoCov">          0 : MidiOutputDevice::MidiOutputDevice (Engine&amp; e, const juce::String&amp; deviceName, int index)</span></a>
+<a name="265"><span class="lineNum">     265 </span><span class="lineNoCov">          0 :     : OutputDevice (e, TRANS(&quot;MIDI Output&quot;), deviceName),</span></a>
+<a name="266"><span class="lineNum">     266 </span><span class="lineNoCov">          0 :       deviceIndex (index)</span></a>
 <a name="267"><span class="lineNum">     267 </span>            : {</a>
-<a name="268"><span class="lineNum">     268 </span><span class="lineCov">          4 :     enabled = true;</span></a>
+<a name="268"><span class="lineNum">     268 </span><span class="lineNoCov">          0 :     enabled = true;</span></a>
 <a name="269"><span class="lineNum">     269 </span>            :         </a>
-<a name="270"><span class="lineNum">     270 </span><span class="lineCov">          4 :     timecodeGenerator = std::make_unique&lt;MidiTimecodeGenerator&gt;();</span></a>
-<a name="271"><span class="lineNum">     271 </span><span class="lineCov">          4 :     midiClockGenerator = std::make_unique&lt;MidiClockGenerator&gt;();</span></a>
-<a name="272"><span class="lineNum">     272 </span><span class="lineCov">          4 :     programNameSet = getMidiProgramManager().getDefaultCustomName();</span></a>
+<a name="270"><span class="lineNum">     270 </span><span class="lineNoCov">          0 :     timecodeGenerator = std::make_unique&lt;MidiTimecodeGenerator&gt;();</span></a>
+<a name="271"><span class="lineNum">     271 </span><span class="lineNoCov">          0 :     midiClockGenerator = std::make_unique&lt;MidiClockGenerator&gt;();</span></a>
+<a name="272"><span class="lineNum">     272 </span><span class="lineNoCov">          0 :     programNameSet = getMidiProgramManager().getDefaultCustomName();</span></a>
 <a name="273"><span class="lineNum">     273 </span>            : </a>
-<a name="274"><span class="lineNum">     274 </span><span class="lineCov">          4 :     loadProps();</span></a>
-<a name="275"><span class="lineNum">     275 </span><span class="lineCov">          4 :     shouldSendAllControllersOffMessages = getControllerOffMessagesSent (engine);</span></a>
-<a name="276"><span class="lineNum">     276 </span><span class="lineCov">          4 : }</span></a>
+<a name="274"><span class="lineNum">     274 </span><span class="lineNoCov">          0 :     loadProps();</span></a>
+<a name="275"><span class="lineNum">     275 </span><span class="lineNoCov">          0 :     shouldSendAllControllersOffMessages = getControllerOffMessagesSent (engine);</span></a>
+<a name="276"><span class="lineNum">     276 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="277"><span class="lineNum">     277 </span>            : </a>
-<a name="278"><span class="lineNum">     278 </span><span class="lineCov">         12 : MidiOutputDevice::~MidiOutputDevice()</span></a>
+<a name="278"><span class="lineNum">     278 </span><span class="lineNoCov">          0 : MidiOutputDevice::~MidiOutputDevice()</span></a>
 <a name="279"><span class="lineNum">     279 </span>            : {</a>
-<a name="280"><span class="lineNum">     280 </span><span class="lineCov">          4 :     notifyListenersOfDeletion();</span></a>
-<a name="281"><span class="lineNum">     281 </span><span class="lineCov">          4 :     closeDevice();</span></a>
-<a name="282"><span class="lineNum">     282 </span><span class="lineCov">          4 : }</span></a>
+<a name="280"><span class="lineNum">     280 </span><span class="lineNoCov">          0 :     notifyListenersOfDeletion();</span></a>
+<a name="281"><span class="lineNum">     281 </span><span class="lineNoCov">          0 :     closeDevice();</span></a>
+<a name="282"><span class="lineNum">     282 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="283"><span class="lineNum">     283 </span>            : </a>
-<a name="284"><span class="lineNum">     284 </span><span class="lineCov">          4 : void MidiOutputDevice::setEnabled (bool b)</span></a>
+<a name="284"><span class="lineNum">     284 </span><span class="lineNoCov">          0 : void MidiOutputDevice::setEnabled (bool b)</span></a>
 <a name="285"><span class="lineNum">     285 </span>            : {</a>
-<a name="286"><span class="lineNum">     286 </span><span class="lineCov">          4 :     if (b != enabled || firstSetEnabledCall)</span></a>
+<a name="286"><span class="lineNum">     286 </span><span class="lineNoCov">          0 :     if (b != enabled || firstSetEnabledCall)</span></a>
 <a name="287"><span class="lineNum">     287 </span>            :     {</a>
-<a name="288"><span class="lineNum">     288 </span><span class="lineCov">          4 :         enabled = b;</span></a>
+<a name="288"><span class="lineNum">     288 </span><span class="lineNoCov">          0 :         enabled = b;</span></a>
 <a name="289"><span class="lineNum">     289 </span>            :         ScopedWaitCursor waitCursor;</a>
 <a name="290"><span class="lineNum">     290 </span>            : </a>
-<a name="291"><span class="lineNum">     291 </span><span class="lineCov">          4 :         if (b)</span></a>
+<a name="291"><span class="lineNum">     291 </span><span class="lineNoCov">          0 :         if (b)</span></a>
 <a name="292"><span class="lineNum">     292 </span>            :         {</a>
-<a name="293"><span class="lineNum">     293 </span><span class="lineCov">          4 :             enabled = false;</span></a>
-<a name="294"><span class="lineNum">     294 </span><span class="lineCov">          4 :             saveProps();</span></a>
+<a name="293"><span class="lineNum">     293 </span><span class="lineNoCov">          0 :             enabled = false;</span></a>
+<a name="294"><span class="lineNum">     294 </span><span class="lineNoCov">          0 :             saveProps();</span></a>
 <a name="295"><span class="lineNum">     295 </span>            : </a>
-<a name="296"><span class="lineNum">     296 </span><span class="lineCov">          4 :             DeadMansPedalMessage dmp (engine.getPropertyStorage(),</span></a>
-<a name="297"><span class="lineNum">     297 </span><span class="lineCov">          8 :                                       TRANS(&quot;The last time the app was started, the MIDI output device \&quot;XZZX\&quot; failed to &quot;</span></a>
-<a name="298"><span class="lineNum">     298 </span><span class="lineCov">          8 :                                             &quot;start properly, and has been disabled.&quot;).replace (&quot;XZZX&quot;, getName())</span></a>
-<a name="299"><span class="lineNum">     299 </span><span class="lineCov">         16 :                                         + &quot;\n\n&quot; + TRANS(&quot;Use the settings panel to re-enable it.&quot;));</span></a>
+<a name="296"><span class="lineNum">     296 </span><span class="lineNoCov">          0 :             DeadMansPedalMessage dmp (engine.getPropertyStorage(),</span></a>
+<a name="297"><span class="lineNum">     297 </span><span class="lineNoCov">          0 :                                       TRANS(&quot;The last time the app was started, the MIDI output device \&quot;XZZX\&quot; failed to &quot;</span></a>
+<a name="298"><span class="lineNum">     298 </span><span class="lineNoCov">          0 :                                             &quot;start properly, and has been disabled.&quot;).replace (&quot;XZZX&quot;, getName())</span></a>
+<a name="299"><span class="lineNum">     299 </span><span class="lineNoCov">          0 :                                         + &quot;\n\n&quot; + TRANS(&quot;Use the settings panel to re-enable it.&quot;));</span></a>
 <a name="300"><span class="lineNum">     300 </span>            : </a>
-<a name="301"><span class="lineNum">     301 </span><span class="lineCov">          4 :             enabled = true;</span></a>
-<a name="302"><span class="lineNum">     302 </span><span class="lineCov">          8 :             auto error = openDevice();</span></a>
-<a name="303"><span class="lineNum">     303 </span><span class="lineCov">          4 :             enabled = error.isEmpty();</span></a>
+<a name="301"><span class="lineNum">     301 </span><span class="lineNoCov">          0 :             enabled = true;</span></a>
+<a name="302"><span class="lineNum">     302 </span><span class="lineNoCov">          0 :             auto error = openDevice();</span></a>
+<a name="303"><span class="lineNum">     303 </span><span class="lineNoCov">          0 :             enabled = error.isEmpty();</span></a>
 <a name="304"><span class="lineNum">     304 </span>            : </a>
-<a name="305"><span class="lineNum">     305 </span><span class="lineCov">          4 :             if (! enabled)</span></a>
+<a name="305"><span class="lineNum">     305 </span><span class="lineNoCov">          0 :             if (! enabled)</span></a>
 <a name="306"><span class="lineNum">     306 </span><span class="lineNoCov">          0 :                 engine.getUIBehaviour().showWarningMessage (error);</span></a>
 <a name="307"><span class="lineNum">     307 </span>            :         }</a>
 <a name="308"><span class="lineNum">     308 </span>            :         else</a>
@@ -372,13 +372,13 @@
 <a name="310"><span class="lineNum">     310 </span><span class="lineNoCov">          0 :             closeDevice();</span></a>
 <a name="311"><span class="lineNum">     311 </span>            :         }</a>
 <a name="312"><span class="lineNum">     312 </span>            : </a>
-<a name="313"><span class="lineNum">     313 </span><span class="lineCov">          4 :         firstSetEnabledCall = false;</span></a>
-<a name="314"><span class="lineNum">     314 </span><span class="lineCov">          4 :         saveProps();</span></a>
-<a name="315"><span class="lineNum">     315 </span><span class="lineCov">          4 :         engine.getDeviceManager().checkDefaultDevicesAreValid();</span></a>
+<a name="313"><span class="lineNum">     313 </span><span class="lineNoCov">          0 :         firstSetEnabledCall = false;</span></a>
+<a name="314"><span class="lineNum">     314 </span><span class="lineNoCov">          0 :         saveProps();</span></a>
+<a name="315"><span class="lineNum">     315 </span><span class="lineNoCov">          0 :         engine.getDeviceManager().checkDefaultDevicesAreValid();</span></a>
 <a name="316"><span class="lineNum">     316 </span>            : </a>
-<a name="317"><span class="lineNum">     317 </span><span class="lineCov">          4 :         engine.getExternalControllerManager().midiInOutDevicesChanged();</span></a>
+<a name="317"><span class="lineNum">     317 </span><span class="lineNoCov">          0 :         engine.getExternalControllerManager().midiInOutDevicesChanged();</span></a>
 <a name="318"><span class="lineNum">     318 </span>            :     }</a>
-<a name="319"><span class="lineNum">     319 </span><span class="lineCov">          4 : }</span></a>
+<a name="319"><span class="lineNum">     319 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="320"><span class="lineNum">     320 </span>            : </a>
 <a name="321"><span class="lineNum">     321 </span><span class="lineNoCov">          0 : juce::String MidiOutputDevice::prepareToPlay (Edit* edit, TimePosition)</span></a>
 <a name="322"><span class="lineNum">     322 </span>            : {</a>
@@ -426,9 +426,9 @@
 <a name="364"><span class="lineNum">     364 </span><span class="lineNoCov">          0 :     e.getPropertyStorage().setProperty (SettingID::sendControllerOffMessages, b);</span></a>
 <a name="365"><span class="lineNum">     365 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="366"><span class="lineNum">     366 </span>            : </a>
-<a name="367"><span class="lineNum">     367 </span><span class="lineCov">          4 : bool MidiOutputDevice::getControllerOffMessagesSent (Engine&amp; e)</span></a>
+<a name="367"><span class="lineNum">     367 </span><span class="lineNoCov">          0 : bool MidiOutputDevice::getControllerOffMessagesSent (Engine&amp; e)</span></a>
 <a name="368"><span class="lineNum">     368 </span>            : {</a>
-<a name="369"><span class="lineNum">     369 </span><span class="lineCov">          4 :     return e.getPropertyStorage().getProperty (SettingID::sendControllerOffMessages, true);</span></a>
+<a name="369"><span class="lineNum">     369 </span><span class="lineNoCov">          0 :     return e.getPropertyStorage().getProperty (SettingID::sendControllerOffMessages, true);</span></a>
 <a name="370"><span class="lineNum">     370 </span>            : }</a>
 <a name="371"><span class="lineNum">     371 </span>            : </a>
 <a name="372"><span class="lineNum">     372 </span><span class="lineNoCov">          0 : juce::String MidiOutputDevice::getNameForMidiNoteNumber (int note, int midiChannel, bool useSharp) const</span></a>
@@ -438,15 +438,15 @@
 <a name="376"><span class="lineNum">     376 </span><span class="lineNoCov">          0 :                                                                    engine.getEngineBehaviour().getMiddleCOctave());</span></a>
 <a name="377"><span class="lineNum">     377 </span>            : }</a>
 <a name="378"><span class="lineNum">     378 </span>            : </a>
-<a name="379"><span class="lineNum">     379 </span><span class="lineCov">          4 : void MidiOutputDevice::updateMidiTC (Edit* edit)</span></a>
+<a name="379"><span class="lineNum">     379 </span><span class="lineNoCov">          0 : void MidiOutputDevice::updateMidiTC (Edit* edit)</span></a>
 <a name="380"><span class="lineNum">     380 </span>            : {</a>
-<a name="381"><span class="lineNum">     381 </span><span class="lineCov">          4 :     timecodeGenerator-&gt;update (edit);</span></a>
-<a name="382"><span class="lineNum">     382 </span><span class="lineCov">          4 : }</span></a>
+<a name="381"><span class="lineNum">     381 </span><span class="lineNoCov">          0 :     timecodeGenerator-&gt;update (edit);</span></a>
+<a name="382"><span class="lineNum">     382 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="383"><span class="lineNum">     383 </span>            : </a>
-<a name="384"><span class="lineNum">     384 </span><span class="lineCov">          4 : void MidiOutputDevice::setSendingMMC (bool b)</span></a>
+<a name="384"><span class="lineNum">     384 </span><span class="lineNoCov">          0 : void MidiOutputDevice::setSendingMMC (bool b)</span></a>
 <a name="385"><span class="lineNum">     385 </span>            : {</a>
-<a name="386"><span class="lineNum">     386 </span><span class="lineCov">          4 :     sendingMMC = b;</span></a>
-<a name="387"><span class="lineNum">     387 </span><span class="lineCov">          4 : }</span></a>
+<a name="386"><span class="lineNum">     386 </span><span class="lineNoCov">          0 :     sendingMMC = b;</span></a>
+<a name="387"><span class="lineNum">     387 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="388"><span class="lineNum">     388 </span>            : </a>
 <a name="389"><span class="lineNum">     389 </span><span class="lineNoCov">          0 : bool MidiOutputDevice::isConnectedToExternalController() const</span></a>
 <a name="390"><span class="lineNum">     390 </span>            : {</a>
@@ -457,51 +457,51 @@
 <a name="395"><span class="lineNum">     395 </span>            :     return false;</a>
 <a name="396"><span class="lineNum">     396 </span>            : }</a>
 <a name="397"><span class="lineNum">     397 </span>            : </a>
-<a name="398"><span class="lineNum">     398 </span><span class="lineCov">          4 : void MidiOutputDevice::loadProps()</span></a>
+<a name="398"><span class="lineNum">     398 </span><span class="lineNoCov">          0 : void MidiOutputDevice::loadProps()</span></a>
 <a name="399"><span class="lineNum">     399 </span>            : {</a>
-<a name="400"><span class="lineNum">     400 </span><span class="lineCov">          4 :     preDelayMillisecs = 0;</span></a>
-<a name="401"><span class="lineNum">     401 </span><span class="lineCov">          4 :     sendTimecode = false;</span></a>
-<a name="402"><span class="lineNum">     402 </span><span class="lineCov">          4 :     sendMidiClock = false;</span></a>
-<a name="403"><span class="lineNum">     403 </span><span class="lineCov">          4 :     sendControllerMidiClock = false;</span></a>
+<a name="400"><span class="lineNum">     400 </span><span class="lineNoCov">          0 :     preDelayMillisecs = 0;</span></a>
+<a name="401"><span class="lineNum">     401 </span><span class="lineNoCov">          0 :     sendTimecode = false;</span></a>
+<a name="402"><span class="lineNum">     402 </span><span class="lineNoCov">          0 :     sendMidiClock = false;</span></a>
+<a name="403"><span class="lineNum">     403 </span><span class="lineNoCov">          0 :     sendControllerMidiClock = false;</span></a>
 <a name="404"><span class="lineNum">     404 </span>            : </a>
-<a name="405"><span class="lineNum">     405 </span><span class="lineCov">          4 :     if (auto n = engine.getPropertyStorage().getXmlPropertyItem (SettingID::midiout, getName()))</span></a>
+<a name="405"><span class="lineNum">     405 </span><span class="lineNoCov">          0 :     if (auto n = engine.getPropertyStorage().getXmlPropertyItem (SettingID::midiout, getName()))</span></a>
 <a name="406"><span class="lineNum">     406 </span>            :     {</a>
-<a name="407"><span class="lineNum">     407 </span><span class="lineCov">          3 :         enabled = n-&gt;getBoolAttribute (&quot;enabled&quot;, enabled);</span></a>
-<a name="408"><span class="lineNum">     408 </span><span class="lineCov">          3 :         preDelayMillisecs = n-&gt;getIntAttribute (&quot;preDelay&quot;, preDelayMillisecs);</span></a>
-<a name="409"><span class="lineNum">     409 </span><span class="lineCov">          3 :         sendTimecode = n-&gt;getBoolAttribute (&quot;sendTimecode&quot;, sendTimecode);</span></a>
-<a name="410"><span class="lineNum">     410 </span><span class="lineCov">          3 :         sendMidiClock = n-&gt;getBoolAttribute (&quot;sendMidiClock&quot;, sendMidiClock);</span></a>
+<a name="407"><span class="lineNum">     407 </span><span class="lineNoCov">          0 :         enabled = n-&gt;getBoolAttribute (&quot;enabled&quot;, enabled);</span></a>
+<a name="408"><span class="lineNum">     408 </span><span class="lineNoCov">          0 :         preDelayMillisecs = n-&gt;getIntAttribute (&quot;preDelay&quot;, preDelayMillisecs);</span></a>
+<a name="409"><span class="lineNum">     409 </span><span class="lineNoCov">          0 :         sendTimecode = n-&gt;getBoolAttribute (&quot;sendTimecode&quot;, sendTimecode);</span></a>
+<a name="410"><span class="lineNum">     410 </span><span class="lineNoCov">          0 :         sendMidiClock = n-&gt;getBoolAttribute (&quot;sendMidiClock&quot;, sendMidiClock);</span></a>
 <a name="411"><span class="lineNum">     411 </span>            :         timecodeGenerator-&gt;update (nullptr);</a>
 <a name="412"><span class="lineNum">     412 </span>            : </a>
-<a name="413"><span class="lineNum">     413 </span><span class="lineCov">          3 :         if (getName() == &quot;Microsoft GS Wavetable SW Synth&quot;)</span></a>
+<a name="413"><span class="lineNum">     413 </span><span class="lineNoCov">          0 :         if (getName() == &quot;Microsoft GS Wavetable SW Synth&quot;)</span></a>
 <a name="414"><span class="lineNum">     414 </span><span class="lineNoCov">          0 :             programNameSet = n-&gt;getStringAttribute (&quot;programNames&quot;, TRANS(&quot;General MIDI&quot;));</span></a>
 <a name="415"><span class="lineNum">     415 </span>            :         else</a>
-<a name="416"><span class="lineNum">     416 </span><span class="lineCov">          3 :             programNameSet = n-&gt;getStringAttribute (&quot;programNames&quot;, getMidiProgramManager().getDefaultCustomName());</span></a>
+<a name="416"><span class="lineNum">     416 </span><span class="lineNoCov">          0 :             programNameSet = n-&gt;getStringAttribute (&quot;programNames&quot;, getMidiProgramManager().getDefaultCustomName());</span></a>
 <a name="417"><span class="lineNum">     417 </span>            :     }</a>
-<a name="418"><span class="lineNum">     418 </span><span class="lineCov">          4 : }</span></a>
+<a name="418"><span class="lineNum">     418 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="419"><span class="lineNum">     419 </span>            : </a>
-<a name="420"><span class="lineNum">     420 </span><span class="lineCov">         12 : void MidiOutputDevice::saveProps()</span></a>
+<a name="420"><span class="lineNum">     420 </span><span class="lineNoCov">          0 : void MidiOutputDevice::saveProps()</span></a>
 <a name="421"><span class="lineNum">     421 </span>            : {</a>
-<a name="422"><span class="lineNum">     422 </span><span class="lineCov">         12 :     juce::XmlElement n (&quot;SETTINGS&quot;);</span></a>
+<a name="422"><span class="lineNum">     422 </span><span class="lineNoCov">          0 :     juce::XmlElement n (&quot;SETTINGS&quot;);</span></a>
 <a name="423"><span class="lineNum">     423 </span>            : </a>
-<a name="424"><span class="lineNum">     424 </span><span class="lineCov">         12 :     n.setAttribute (&quot;enabled&quot;, enabled);</span></a>
-<a name="425"><span class="lineNum">     425 </span><span class="lineCov">         12 :     n.setAttribute (&quot;preDelay&quot;, preDelayMillisecs);</span></a>
-<a name="426"><span class="lineNum">     426 </span><span class="lineCov">         12 :     n.setAttribute (&quot;sendTimecode&quot;, sendTimecode);</span></a>
-<a name="427"><span class="lineNum">     427 </span><span class="lineCov">         12 :     n.setAttribute (&quot;sendMidiClock&quot;, sendMidiClock);</span></a>
-<a name="428"><span class="lineNum">     428 </span><span class="lineCov">         12 :     n.setAttribute (&quot;programNames&quot;, programNameSet);</span></a>
+<a name="424"><span class="lineNum">     424 </span><span class="lineNoCov">          0 :     n.setAttribute (&quot;enabled&quot;, enabled);</span></a>
+<a name="425"><span class="lineNum">     425 </span><span class="lineNoCov">          0 :     n.setAttribute (&quot;preDelay&quot;, preDelayMillisecs);</span></a>
+<a name="426"><span class="lineNum">     426 </span><span class="lineNoCov">          0 :     n.setAttribute (&quot;sendTimecode&quot;, sendTimecode);</span></a>
+<a name="427"><span class="lineNum">     427 </span><span class="lineNoCov">          0 :     n.setAttribute (&quot;sendMidiClock&quot;, sendMidiClock);</span></a>
+<a name="428"><span class="lineNum">     428 </span><span class="lineNoCov">          0 :     n.setAttribute (&quot;programNames&quot;, programNameSet);</span></a>
 <a name="429"><span class="lineNum">     429 </span>            : </a>
-<a name="430"><span class="lineNum">     430 </span><span class="lineCov">         12 :     engine.getPropertyStorage().setXmlPropertyItem (SettingID::midiout, getName(), n);</span></a>
-<a name="431"><span class="lineNum">     431 </span><span class="lineCov">         12 : }</span></a>
+<a name="430"><span class="lineNum">     430 </span><span class="lineNoCov">          0 :     engine.getPropertyStorage().setXmlPropertyItem (SettingID::midiout, getName(), n);</span></a>
+<a name="431"><span class="lineNum">     431 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="432"><span class="lineNum">     432 </span>            : </a>
-<a name="433"><span class="lineNum">     433 </span><span class="lineCov">          4 : juce::String MidiOutputDevice::openDevice()</span></a>
+<a name="433"><span class="lineNum">     433 </span><span class="lineNoCov">          0 : juce::String MidiOutputDevice::openDevice()</span></a>
 <a name="434"><span class="lineNum">     434 </span>            : {</a>
-<a name="435"><span class="lineNum">     435 </span><span class="lineCov">          4 :     if (isEnabled())</span></a>
+<a name="435"><span class="lineNum">     435 </span><span class="lineNoCov">          0 :     if (isEnabled())</span></a>
 <a name="436"><span class="lineNum">     436 </span>            :     {</a>
-<a name="437"><span class="lineNum">     437 </span><span class="lineCov">          4 :         if (outputDevice == nullptr)</span></a>
+<a name="437"><span class="lineNum">     437 </span><span class="lineNoCov">          0 :         if (outputDevice == nullptr)</span></a>
 <a name="438"><span class="lineNum">     438 </span>            :         {</a>
-<a name="439"><span class="lineNum">     439 </span><span class="lineCov">          8 :             CRASH_TRACER</span></a>
-<a name="440"><span class="lineNum">     440 </span><span class="lineCov">          4 :             TRACKTION_LOG (&quot;opening MIDI out device:&quot; + getName());</span></a>
+<a name="439"><span class="lineNum">     439 </span><span class="lineNoCov">          0 :             CRASH_TRACER</span></a>
+<a name="440"><span class="lineNum">     440 </span><span class="lineNoCov">          0 :             TRACKTION_LOG (&quot;opening MIDI out device:&quot; + getName());</span></a>
 <a name="441"><span class="lineNum">     441 </span>            : </a>
-<a name="442"><span class="lineNum">     442 </span><span class="lineCov">          4 :             if (deviceIndex &gt;= 0)</span></a>
+<a name="442"><span class="lineNum">     442 </span><span class="lineNoCov">          0 :             if (deviceIndex &gt;= 0)</span></a>
 <a name="443"><span class="lineNum">     443 </span>            :             {</a>
 <a name="444"><span class="lineNum">     444 </span><span class="lineNoCov">          0 :                 outputDevice = juce::MidiOutput::openDevice (juce::MidiOutput::getAvailableDevices()[deviceIndex].identifier);</span></a>
 <a name="445"><span class="lineNum">     445 </span>            : </a>
@@ -511,7 +511,7 @@
 <a name="449"><span class="lineNum">     449 </span><span class="lineNoCov">          0 :                     return TRANS(&quot;Couldn't open device&quot;);</span></a>
 <a name="450"><span class="lineNum">     450 </span>            :                 }</a>
 <a name="451"><span class="lineNum">     451 </span>            :             }</a>
-<a name="452"><span class="lineNum">     452 </span><span class="lineCov">          4 :             else if (softDevice)</span></a>
+<a name="452"><span class="lineNum">     452 </span><span class="lineNoCov">          0 :             else if (softDevice)</span></a>
 <a name="453"><span class="lineNum">     453 </span>            :             {</a>
 <a name="454"><span class="lineNum">     454 </span>            :                #if JUCE_MAC</a>
 <a name="455"><span class="lineNum">     455 </span>            :                 outputDevice = juce::MidiOutput::createNewDevice (getName());</a>
@@ -527,19 +527,19 @@
 <a name="465"><span class="lineNum">     465 </span>            :         }</a>
 <a name="466"><span class="lineNum">     466 </span>            :     }</a>
 <a name="467"><span class="lineNum">     467 </span>            : </a>
-<a name="468"><span class="lineNum">     468 </span><span class="lineCov">          4 :     return {};</span></a>
+<a name="468"><span class="lineNum">     468 </span><span class="lineNoCov">          0 :     return {};</span></a>
 <a name="469"><span class="lineNum">     469 </span>            : }</a>
 <a name="470"><span class="lineNum">     470 </span>            : </a>
-<a name="471"><span class="lineNum">     471 </span><span class="lineCov">          4 : void MidiOutputDevice::closeDevice()</span></a>
+<a name="471"><span class="lineNum">     471 </span><span class="lineNoCov">          0 : void MidiOutputDevice::closeDevice()</span></a>
 <a name="472"><span class="lineNum">     472 </span>            : {</a>
-<a name="473"><span class="lineNum">     473 </span><span class="lineCov">          4 :     saveProps();</span></a>
+<a name="473"><span class="lineNum">     473 </span><span class="lineNoCov">          0 :     saveProps();</span></a>
 <a name="474"><span class="lineNum">     474 </span>            : </a>
-<a name="475"><span class="lineNum">     475 </span><span class="lineCov">          4 :     if (outputDevice != nullptr)</span></a>
+<a name="475"><span class="lineNum">     475 </span><span class="lineNoCov">          0 :     if (outputDevice != nullptr)</span></a>
 <a name="476"><span class="lineNum">     476 </span>            :     {</a>
 <a name="477"><span class="lineNum">     477 </span><span class="lineNoCov">          0 :         TRACKTION_LOG (&quot;closing MIDI output: &quot; + getName());</span></a>
 <a name="478"><span class="lineNum">     478 </span>            :         outputDevice = nullptr;</a>
 <a name="479"><span class="lineNum">     479 </span>            :     }</a>
-<a name="480"><span class="lineNum">     480 </span><span class="lineCov">          4 : }</span></a>
+<a name="480"><span class="lineNum">     480 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="481"><span class="lineNum">     481 </span>            : </a>
 <a name="482"><span class="lineNum">     482 </span><span class="lineNoCov">          0 : void MidiOutputDevice::sendNoteOffMessages()</span></a>
 <a name="483"><span class="lineNum">     483 </span>            : {</a>
@@ -605,7 +605,7 @@
 <a name="543"><span class="lineNum">     543 </span>            : </a>
 <a name="544"><span class="lineNum">     544 </span><span class="lineNoCov">          0 : TimeDuration MidiOutputDevice::getDeviceDelay() const noexcept</span></a>
 <a name="545"><span class="lineNum">     545 </span>            : {</a>
-<a name="546"><span class="lineNum">     546 </span><span class="lineCov">       7774 :     return TimeDuration::fromSeconds ((preDelayMillisecs + audioAdjustmentDelay) * 0.001);</span></a>
+<a name="546"><span class="lineNum">     546 </span><span class="lineNoCov">          0 :     return TimeDuration::fromSeconds ((preDelayMillisecs + audioAdjustmentDelay) * 0.001);</span></a>
 <a name="547"><span class="lineNum">     547 </span>            : }</a>
 <a name="548"><span class="lineNum">     548 </span>            : </a>
 <a name="549"><span class="lineNum">     549 </span><span class="lineNoCov">          0 : void MidiOutputDevice::setPreDelayMs (int ms)</span></a>
@@ -692,21 +692,21 @@
 <a name="630"><span class="lineNum">     630 </span>            : }</a>
 <a name="631"><span class="lineNum">     631 </span>            : </a>
 <a name="632"><span class="lineNum">     632 </span>            : //==============================================================================</a>
-<a name="633"><span class="lineNum">     633 </span><span class="lineCov">          4 : MidiOutputDeviceInstance::MidiOutputDeviceInstance (MidiOutputDevice&amp; d, EditPlaybackContext&amp; e)</span></a>
-<a name="634"><span class="lineNum">     634 </span><span class="lineCov">          4 :     : OutputDeviceInstance (d, e)</span></a>
+<a name="633"><span class="lineNum">     633 </span><span class="lineNoCov">          0 : MidiOutputDeviceInstance::MidiOutputDeviceInstance (MidiOutputDevice&amp; d, EditPlaybackContext&amp; e)</span></a>
+<a name="634"><span class="lineNum">     634 </span><span class="lineNoCov">          0 :     : OutputDeviceInstance (d, e)</span></a>
 <a name="635"><span class="lineNum">     635 </span>            : {</a>
-<a name="636"><span class="lineNum">     636 </span><span class="lineCov">          4 :     timecodeGenerator = std::make_unique&lt;MidiTimecodeGenerator&gt;();</span></a>
-<a name="637"><span class="lineNum">     637 </span><span class="lineCov">          4 :     midiClockGenerator = std::make_unique&lt;MidiClockGenerator&gt;();</span></a>
-<a name="638"><span class="lineNum">     638 </span><span class="lineCov">          4 : }</span></a>
+<a name="636"><span class="lineNum">     636 </span><span class="lineNoCov">          0 :     timecodeGenerator = std::make_unique&lt;MidiTimecodeGenerator&gt;();</span></a>
+<a name="637"><span class="lineNum">     637 </span><span class="lineNoCov">          0 :     midiClockGenerator = std::make_unique&lt;MidiClockGenerator&gt;();</span></a>
+<a name="638"><span class="lineNum">     638 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="639"><span class="lineNum">     639 </span>            : </a>
-<a name="640"><span class="lineNum">     640 </span><span class="lineCov">          4 : MidiOutputDeviceInstance::~MidiOutputDeviceInstance()</span></a>
+<a name="640"><span class="lineNum">     640 </span><span class="lineNoCov">          0 : MidiOutputDeviceInstance::~MidiOutputDeviceInstance()</span></a>
 <a name="641"><span class="lineNum">     641 </span>            : {</a>
-<a name="642"><span class="lineNum">     642 </span><span class="lineCov">          4 : }</span></a>
+<a name="642"><span class="lineNum">     642 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="643"><span class="lineNum">     643 </span>            : </a>
-<a name="644"><span class="lineNum">     644 </span><span class="lineCov">          8 : juce::String MidiOutputDeviceInstance::prepareToPlay (TimePosition, bool shouldSendMidiTC)</span></a>
+<a name="644"><span class="lineNum">     644 </span><span class="lineNoCov">          0 : juce::String MidiOutputDeviceInstance::prepareToPlay (TimePosition, bool shouldSendMidiTC)</span></a>
 <a name="645"><span class="lineNum">     645 </span>            : {</a>
-<a name="646"><span class="lineNum">     646 </span><span class="lineCov">          8 :     if (getMidiOutput().outputDevice == nullptr)</span></a>
-<a name="647"><span class="lineNum">     647 </span><span class="lineCov">          8 :         return TRANS(&quot;Couldn't open the MIDI port&quot;);</span></a>
+<a name="646"><span class="lineNum">     646 </span><span class="lineNoCov">          0 :     if (getMidiOutput().outputDevice == nullptr)</span></a>
+<a name="647"><span class="lineNum">     647 </span><span class="lineNoCov">          0 :         return TRANS(&quot;Couldn't open the MIDI port&quot;);</span></a>
 <a name="648"><span class="lineNum">     648 </span>            : </a>
 <a name="649"><span class="lineNum">     649 </span>            :     stop();</a>
 <a name="650"><span class="lineNum">     650 </span>            : </a>
@@ -720,9 +720,9 @@
 <a name="658"><span class="lineNum">     658 </span><span class="lineNoCov">          0 :     return {};</span></a>
 <a name="659"><span class="lineNum">     659 </span>            : }</a>
 <a name="660"><span class="lineNum">     660 </span>            : </a>
-<a name="661"><span class="lineNum">     661 </span><span class="lineCov">          8 : bool MidiOutputDeviceInstance::start()</span></a>
+<a name="661"><span class="lineNum">     661 </span><span class="lineNoCov">          0 : bool MidiOutputDeviceInstance::start()</span></a>
 <a name="662"><span class="lineNum">     662 </span>            : {</a>
-<a name="663"><span class="lineNum">     663 </span><span class="lineCov">          8 :     if (getMidiOutput().outputDevice != nullptr)</span></a>
+<a name="663"><span class="lineNum">     663 </span><span class="lineNoCov">          0 :     if (getMidiOutput().outputDevice != nullptr)</span></a>
 <a name="664"><span class="lineNum">     664 </span>            :     {</a>
 <a name="665"><span class="lineNum">     665 </span><span class="lineNoCov">          0 :         audioAdjustmentDelay = juce::roundToInt (2.0 * edit.engine.getDeviceManager().getBlockSizeMs());</span></a>
 <a name="666"><span class="lineNum">     666 </span><span class="lineNoCov">          0 :         playing = true;</span></a>
@@ -734,7 +734,7 @@
 <a name="672"><span class="lineNum">     672 </span>            : </a>
 <a name="673"><span class="lineNum">     673 </span><span class="lineNoCov">          0 : void MidiOutputDeviceInstance::stop()</span></a>
 <a name="674"><span class="lineNum">     674 </span>            : {</a>
-<a name="675"><span class="lineNum">     675 </span><span class="lineCov">          8 :     if (playing)</span></a>
+<a name="675"><span class="lineNum">     675 </span><span class="lineNoCov">          0 :     if (playing)</span></a>
 <a name="676"><span class="lineNum">     676 </span>            :     {</a>
 <a name="677"><span class="lineNum">     677 </span><span class="lineNoCov">          0 :         playing = false;</span></a>
 <a name="678"><span class="lineNum">     678 </span><span class="lineNoCov">          0 :         getMidiOutput().sendNoteOffMessages();</span></a>

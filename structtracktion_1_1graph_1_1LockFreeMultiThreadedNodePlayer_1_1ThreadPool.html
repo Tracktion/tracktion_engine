@@ -93,6 +93,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4546a45948d2e79ace1c598bdb38a739"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1LockFreeMultiThreadedNodePlayer_1_1ThreadPool.html#a4546a45948d2e79ace1c598bdb38a739">signalOne</a> ()=0</td></tr>
 <tr class="memdesc:a4546a45948d2e79ace1c598bdb38a739"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called by the player when a <a class="el" href="classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class.">Node</a> becomes available to process.  <a href="structtracktion_1_1graph_1_1LockFreeMultiThreadedNodePlayer_1_1ThreadPool.html#a4546a45948d2e79ace1c598bdb38a739">More...</a><br /></td></tr>
 <tr class="separator:a4546a45948d2e79ace1c598bdb38a739"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e09f162a7605da25afe4144a2866052"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1LockFreeMultiThreadedNodePlayer_1_1ThreadPool.html#a2e09f162a7605da25afe4144a2866052">signal</a> (int numToSignal)=0</td></tr>
+<tr class="memdesc:a2e09f162a7605da25afe4144a2866052"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called by the player when more than one <a class="el" href="classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class.">Node</a> becomes available to process.  <a href="structtracktion_1_1graph_1_1LockFreeMultiThreadedNodePlayer_1_1ThreadPool.html#a2e09f162a7605da25afe4144a2866052">More...</a><br /></td></tr>
+<tr class="separator:a2e09f162a7605da25afe4144a2866052"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afb6c350d31df0e0d886bc92a815ecaae"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1LockFreeMultiThreadedNodePlayer_1_1ThreadPool.html#afb6c350d31df0e0d886bc92a815ecaae">signalAll</a> ()=0</td></tr>
 <tr class="memdesc:afb6c350d31df0e0d886bc92a815ecaae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called by the player when more than one <a class="el" href="classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class.">Node</a> becomes available to process.  <a href="structtracktion_1_1graph_1_1LockFreeMultiThreadedNodePlayer_1_1ThreadPool.html#afb6c350d31df0e0d886bc92a815ecaae">More...</a><br /></td></tr>
 <tr class="separator:afb6c350d31df0e0d886bc92a815ecaae"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -248,6 +251,35 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Called by the player when a <a class="el" href="classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class.">Node</a> becomes available to process. </p>
+<p>Subclasses should use this to try and get a thread to call process as soon as possible. </p>
+
+</div>
+</div>
+<a id="a2e09f162a7605da25afe4144a2866052"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e09f162a7605da25afe4144a2866052">&#9670;&nbsp;</a></span>signal()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void tracktion::graph::LockFreeMultiThreadedNodePlayer::ThreadPool::signal </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>numToSignal</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called by the player when more than one <a class="el" href="classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class.">Node</a> becomes available to process. </p>
 <p>Subclasses should use this to try and get a thread to call process as soon as possible. </p>
 
 </div>
@@ -437,7 +469,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jun 17 2022 21:04:22 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jun 20 2022 16:56:22 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

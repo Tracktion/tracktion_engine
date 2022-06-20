@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-06-17 21:16:19</td>
+            <td class="headerValue">2022-06-20 17:12:47</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">3</td>
@@ -204,11 +204,11 @@
 <a name="142"><span class="lineNum">     142 </span><span class="lineNoCov">          0 :     return &quot;wav;aiff;aif;ogg;mp3;mid;midi;flac;au;voc;caf;w64;rx2;rcy;rex;m4a;wfaf&quot;;</span></a>
 <a name="143"><span class="lineNum">     143 </span>            : }</a>
 <a name="144"><span class="lineNum">     144 </span>            : </a>
-<a name="145"><span class="lineNum">     145 </span><span class="lineCov">       1664 : juce::AudioFormat* AudioFileFormatManager::getNamedFormat (const juce::String&amp; formatName) const</span></a>
+<a name="145"><span class="lineNum">     145 </span><span class="lineCov">        224 : juce::AudioFormat* AudioFileFormatManager::getNamedFormat (const juce::String&amp; formatName) const</span></a>
 <a name="146"><span class="lineNum">     146 </span>            : {</a>
-<a name="147"><span class="lineNum">     147 </span><span class="lineCov">       1664 :     for (auto format : allFormats)</span></a>
-<a name="148"><span class="lineNum">     148 </span><span class="lineCov">       1664 :         if (format-&gt;getFormatName() == formatName)</span></a>
-<a name="149"><span class="lineNum">     149 </span><span class="lineCov">       1664 :             return format;</span></a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineCov">        224 :     for (auto format : allFormats)</span></a>
+<a name="148"><span class="lineNum">     148 </span><span class="lineCov">        224 :         if (format-&gt;getFormatName() == formatName)</span></a>
+<a name="149"><span class="lineNum">     149 </span><span class="lineCov">        224 :             return format;</span></a>
 <a name="150"><span class="lineNum">     150 </span>            : </a>
 <a name="151"><span class="lineNum">     151 </span><span class="lineNoCov">          0 :     return getDefaultFormat();</span></a>
 <a name="152"><span class="lineNum">     152 </span>            : }</a>

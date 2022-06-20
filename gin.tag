@@ -66261,6 +66261,13 @@
     </member>
     <member kind="function" virtualness="pure">
       <type>virtual void</type>
+      <name>signal</name>
+      <anchorfile>structtracktion_1_1graph_1_1LockFreeMultiThreadedNodePlayer_1_1ThreadPool.html</anchorfile>
+      <anchor>a2e09f162a7605da25afe4144a2866052</anchor>
+      <arglist>(int numToSignal)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
       <name>signalAll</name>
       <anchorfile>structtracktion_1_1graph_1_1LockFreeMultiThreadedNodePlayer_1_1ThreadPool.html</anchorfile>
       <anchor>afb6c350d31df0e0d886bc92a815ecaae</anchor>

@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">1</td>
             <td class="headerCovTableEntry">2</td>
-            <td class="headerCovTableEntry">2</td>
-            <td class="headerCovTableEntryHi">100.0 %</td>
+            <td class="headerCovTableEntryLo">50.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-06-17 21:16:19</td>
+            <td class="headerValue">2022-06-20 17:12:47</td>
             <td></td>
             <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
             <td class="headerCovTableEntry">1</td>
-            <td class="headerCovTableEntry">1</td>
-            <td class="headerCovTableEntryHi">100.0 %</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -84,7 +84,7 @@
 <a name="22"><span class="lineNum">      22 </span>            :     ~MidiInputDevice() override;</a>
 <a name="23"><span class="lineNum">      23 </span>            : </a>
 <a name="24"><span class="lineNum">      24 </span>            :     void setEnabled (bool) override;</a>
-<a name="25"><span class="lineNum">      25 </span><span class="lineCov">          4 :     bool isMidi() const override                    { return true; }</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineNoCov">          0 :     bool isMidi() const override                    { return true; }</span></a>
 <a name="26"><span class="lineNum">      26 </span>            : </a>
 <a name="27"><span class="lineNum">      27 </span>            :     MidiChannel getChannelToUse() const noexcept    { return channelToUse; }</a>
 <a name="28"><span class="lineNum">      28 </span>            :     void setChannelToUse (int);</a>
@@ -164,7 +164,7 @@
 <a name="102"><span class="lineNum">     102 </span>            : </a>
 <a name="103"><span class="lineNum">     103 </span>            :     private:</a>
 <a name="104"><span class="lineNum">     104 </span>            :         friend class juce::SharedResourcePointer&lt;MidiKeyChangeDispatcher&gt;;</a>
-<a name="105"><span class="lineNum">     105 </span><span class="lineCov">        209 :         MidiKeyChangeDispatcher() {}</span></a>
+<a name="105"><span class="lineNum">     105 </span><span class="lineCov">        205 :         MidiKeyChangeDispatcher() {}</span></a>
 <a name="106"><span class="lineNum">     106 </span>            :     };</a>
 <a name="107"><span class="lineNum">     107 </span>            : </a>
 <a name="108"><span class="lineNum">     108 </span>            : protected:</a>

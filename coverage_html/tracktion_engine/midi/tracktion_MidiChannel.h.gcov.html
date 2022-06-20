@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-06-17 21:16:19</td>
+            <td class="headerValue">2022-06-20 17:12:47</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -79,7 +79,7 @@
 <a name="17"><span class="lineNum">      17 </span>            : */</a>
 <a name="18"><span class="lineNum">      18 </span>            : struct MidiChannel</a>
 <a name="19"><span class="lineNum">      19 </span>            : {</a>
-<a name="20"><span class="lineNum">      20 </span><span class="lineCov">        325 :     MidiChannel() = default;</span></a>
+<a name="20"><span class="lineNum">      20 </span><span class="lineCov">        257 :     MidiChannel() = default;</span></a>
 <a name="21"><span class="lineNum">      21 </span>            :     MidiChannel (const MidiChannel&amp;) = default;</a>
 <a name="22"><span class="lineNum">      22 </span>            :     MidiChannel&amp; operator= (const MidiChannel&amp;) = default;</a>
 <a name="23"><span class="lineNum">      23 </span>            : </a>
@@ -105,7 +105,7 @@
 <a name="43"><span class="lineNum">      43 </span>            :     }</a>
 <a name="44"><span class="lineNum">      44 </span>            : </a>
 <a name="45"><span class="lineNum">      45 </span>            :     // Returns 1-16 or 0 for invalid</a>
-<a name="46"><span class="lineNum">      46 </span><span class="lineCov">         62 :     int getChannelNumber() const noexcept                       { return (int) channel; }</span></a>
+<a name="46"><span class="lineNum">      46 </span><span class="lineCov">         58 :     int getChannelNumber() const noexcept                       { return (int) channel; }</span></a>
 <a name="47"><span class="lineNum">      47 </span>            : </a>
 <a name="48"><span class="lineNum">      48 </span>            :     bool isValid() const noexcept                               { return channel != 0; }</a>
 <a name="49"><span class="lineNum">      49 </span>            : </a>

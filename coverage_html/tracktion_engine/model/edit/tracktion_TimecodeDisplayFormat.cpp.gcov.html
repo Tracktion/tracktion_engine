@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">0</td>
             <td class="headerCovTableEntry">300</td>
-            <td class="headerCovTableEntryLo">0.7 %</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-06-17 21:16:19</td>
+            <td class="headerValue">2022-06-20 17:12:47</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">1</td>
             <td class="headerCovTableEntry">46</td>
-            <td class="headerCovTableEntryLo">4.3 %</td>
+            <td class="headerCovTableEntryLo">2.2 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -409,11 +409,11 @@
 <a name="347"><span class="lineNum">     347 </span><span class="lineNoCov">          0 : bool TimecodeDisplayFormat::isMilliseconds() const    { return type == TimecodeType::millisecs; }</span></a>
 <a name="348"><span class="lineNum">     348 </span><span class="lineNoCov">          0 : bool TimecodeDisplayFormat::isSMPTE() const           { return type == TimecodeType::fps24 || type == TimecodeType::fps25 || type == TimecodeType::fps30; }</span></a>
 <a name="349"><span class="lineNum">     349 </span>            : </a>
-<a name="350"><span class="lineNum">     350 </span><span class="lineCov">         16 : int TimecodeDisplayFormat::getFPS() const</span></a>
+<a name="350"><span class="lineNum">     350 </span><span class="lineNoCov">          0 : int TimecodeDisplayFormat::getFPS() const</span></a>
 <a name="351"><span class="lineNum">     351 </span>            : {</a>
 <a name="352"><span class="lineNum">     352 </span>            :     const int defaultFPS = 24;</a>
 <a name="353"><span class="lineNum">     353 </span>            : </a>
-<a name="354"><span class="lineNum">     354 </span><span class="lineCov">         16 :     switch (type)</span></a>
+<a name="354"><span class="lineNum">     354 </span><span class="lineNoCov">          0 :     switch (type)</span></a>
 <a name="355"><span class="lineNum">     355 </span>            :     {</a>
 <a name="356"><span class="lineNum">     356 </span>            :         case TimecodeType::millisecs:       return defaultFPS;</a>
 <a name="357"><span class="lineNum">     357 </span>            :         case TimecodeType::barsBeats:       return defaultFPS;</a>

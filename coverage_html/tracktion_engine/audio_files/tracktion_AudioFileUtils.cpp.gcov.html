@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">50</td>
+            <td class="headerCovTableEntry">25</td>
             <td class="headerCovTableEntry">162</td>
-            <td class="headerCovTableEntryLo">30.9 %</td>
+            <td class="headerCovTableEntryLo">15.4 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-06-17 21:16:19</td>
+            <td class="headerValue">2022-06-20 17:12:47</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">7</td>
+            <td class="headerCovTableEntry">5</td>
             <td class="headerCovTableEntry">16</td>
-            <td class="headerCovTableEntryLo">43.8 %</td>
+            <td class="headerCovTableEntryLo">31.2 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -73,24 +73,24 @@
 <a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
-<a name="14"><span class="lineNum">      14 </span><span class="lineCov">        129 : juce::AudioFormatReader* AudioFileUtils::createReaderFor (Engine&amp; engine, const juce::File&amp; file)</span></a>
+<a name="14"><span class="lineNum">      14 </span><span class="lineCov">          1 : juce::AudioFormatReader* AudioFileUtils::createReaderFor (Engine&amp; engine, const juce::File&amp; file)</span></a>
 <a name="15"><span class="lineNum">      15 </span>            : {</a>
-<a name="16"><span class="lineNum">      16 </span><span class="lineCov">        129 :     return engine.getAudioFileFormatManager().readFormatManager.createReaderFor (file);</span></a>
+<a name="16"><span class="lineNum">      16 </span><span class="lineCov">          1 :     return engine.getAudioFileFormatManager().readFormatManager.createReaderFor (file);</span></a>
 <a name="17"><span class="lineNum">      17 </span>            : }</a>
 <a name="18"><span class="lineNum">      18 </span>            : </a>
-<a name="19"><span class="lineNum">      19 </span><span class="lineCov">        203 : juce::AudioFormatReader* AudioFileUtils::createReaderFindingFormat (Engine&amp; engine, const juce::File&amp; file, juce::AudioFormat*&amp; format)</span></a>
+<a name="19"><span class="lineNum">      19 </span><span class="lineCov">         75 : juce::AudioFormatReader* AudioFileUtils::createReaderFindingFormat (Engine&amp; engine, const juce::File&amp; file, juce::AudioFormat*&amp; format)</span></a>
 <a name="20"><span class="lineNum">      20 </span>            : {</a>
-<a name="21"><span class="lineNum">      21 </span><span class="lineCov">        203 :     auto&amp; manager = engine.getAudioFileFormatManager().readFormatManager;</span></a>
+<a name="21"><span class="lineNum">      21 </span><span class="lineCov">         75 :     auto&amp; manager = engine.getAudioFileFormatManager().readFormatManager;</span></a>
 <a name="22"><span class="lineNum">      22 </span>            : </a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineCov">        225 :     for (auto af : manager)</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">         97 :     for (auto af : manager)</span></a>
 <a name="24"><span class="lineNum">      24 </span>            :     {</a>
-<a name="25"><span class="lineNum">      25 </span><span class="lineCov">        222 :         if (af-&gt;canHandleFile (file))</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineCov">         94 :         if (af-&gt;canHandleFile (file))</span></a>
 <a name="26"><span class="lineNum">      26 </span>            :         {</a>
-<a name="27"><span class="lineNum">      27 </span><span class="lineCov">        203 :             if (auto in = file.createInputStream())</span></a>
+<a name="27"><span class="lineNum">      27 </span><span class="lineCov">         75 :             if (auto in = file.createInputStream())</span></a>
 <a name="28"><span class="lineNum">      28 </span>            :             {</a>
-<a name="29"><span class="lineNum">      29 </span><span class="lineCov">        200 :                 if (auto r = af-&gt;createReaderFor (in.release(), true))</span></a>
+<a name="29"><span class="lineNum">      29 </span><span class="lineCov">         72 :                 if (auto r = af-&gt;createReaderFor (in.release(), true))</span></a>
 <a name="30"><span class="lineNum">      30 </span>            :                 {</a>
-<a name="31"><span class="lineNum">      31 </span><span class="lineCov">        200 :                     format = af;</span></a>
+<a name="31"><span class="lineNum">      31 </span><span class="lineCov">         72 :                     format = af;</span></a>
 <a name="32"><span class="lineNum">      32 </span>            :                     return r;</a>
 <a name="33"><span class="lineNum">      33 </span>            :                 }</a>
 <a name="34"><span class="lineNum">      34 </span>            :             }</a>
@@ -119,20 +119,20 @@
 <a name="57"><span class="lineNum">      57 </span>            :     return {};</a>
 <a name="58"><span class="lineNum">      58 </span>            : }</a>
 <a name="59"><span class="lineNum">      59 </span>            : </a>
-<a name="60"><span class="lineNum">      60 </span><span class="lineCov">         68 : juce::AudioFormatWriter* AudioFileUtils::createWriterFor (juce::AudioFormat* format, const juce::File&amp; file,</span></a>
+<a name="60"><span class="lineNum">      60 </span><span class="lineCov">          4 : juce::AudioFormatWriter* AudioFileUtils::createWriterFor (juce::AudioFormat* format, const juce::File&amp; file,</span></a>
 <a name="61"><span class="lineNum">      61 </span>            :                                                           double sampleRate, unsigned int numChannels, int bitsPerSample,</a>
 <a name="62"><span class="lineNum">      62 </span>            :                                                           const juce::StringPairArray&amp; metadata, int quality)</a>
 <a name="63"><span class="lineNum">      63 </span>            : {</a>
-<a name="64"><span class="lineNum">      64 </span><span class="lineCov">         68 :     std::unique_ptr&lt;juce::FileOutputStream&gt; out (file.createOutputStream());</span></a>
+<a name="64"><span class="lineNum">      64 </span><span class="lineCov">          4 :     std::unique_ptr&lt;juce::FileOutputStream&gt; out (file.createOutputStream());</span></a>
 <a name="65"><span class="lineNum">      65 </span>            : </a>
-<a name="66"><span class="lineNum">      66 </span><span class="lineCov">         68 :     if (out != nullptr)</span></a>
+<a name="66"><span class="lineNum">      66 </span><span class="lineCov">          4 :     if (out != nullptr)</span></a>
 <a name="67"><span class="lineNum">      67 </span>            :     {</a>
-<a name="68"><span class="lineNum">      68 </span><span class="lineCov">         68 :         if (auto writer = format-&gt;createWriterFor (out.get(), sampleRate,</span></a>
+<a name="68"><span class="lineNum">      68 </span><span class="lineCov">          4 :         if (auto writer = format-&gt;createWriterFor (out.get(), sampleRate,</span></a>
 <a name="69"><span class="lineNum">      69 </span>            :                                                    numChannels, bitsPerSample,</a>
-<a name="70"><span class="lineNum">      70 </span><span class="lineCov">         68 :                                                    metadata, quality))</span></a>
+<a name="70"><span class="lineNum">      70 </span><span class="lineCov">          4 :                                                    metadata, quality))</span></a>
 <a name="71"><span class="lineNum">      71 </span>            :         {</a>
 <a name="72"><span class="lineNum">      72 </span>            :             out.release();</a>
-<a name="73"><span class="lineNum">      73 </span><span class="lineCov">         68 :             return writer;</span></a>
+<a name="73"><span class="lineNum">      73 </span><span class="lineCov">          4 :             return writer;</span></a>
 <a name="74"><span class="lineNum">      74 </span>            :         }</a>
 <a name="75"><span class="lineNum">      75 </span>            :     }</a>
 <a name="76"><span class="lineNum">      76 </span>            : </a>
@@ -417,12 +417,12 @@
 <a name="355"><span class="lineNum">     355 </span>            :     return false;</a>
 <a name="356"><span class="lineNum">     356 </span>            : }</a>
 <a name="357"><span class="lineNum">     357 </span>            : </a>
-<a name="358"><span class="lineNum">     358 </span><span class="lineCov">        140 : void AudioFileUtils::addBWAVStartToMetadata (juce::StringPairArray&amp; metadata, SampleCount time)</span></a>
+<a name="358"><span class="lineNum">     358 </span><span class="lineCov">         76 : void AudioFileUtils::addBWAVStartToMetadata (juce::StringPairArray&amp; metadata, SampleCount time)</span></a>
 <a name="359"><span class="lineNum">     359 </span>            : {</a>
-<a name="360"><span class="lineNum">     360 </span><span class="lineCov">        280 :     metadata.addArray (juce::WavAudioFormat::createBWAVMetadata ({}, &quot;tracktion&quot;,</span></a>
+<a name="360"><span class="lineNum">     360 </span><span class="lineCov">        152 :     metadata.addArray (juce::WavAudioFormat::createBWAVMetadata ({}, &quot;tracktion&quot;,</span></a>
 <a name="361"><span class="lineNum">     361 </span>            :                                                                  {}, juce::Time::getCurrentTime(),</a>
 <a name="362"><span class="lineNum">     362 </span>            :                                                                  time, {}));</a>
-<a name="363"><span class="lineNum">     363 </span><span class="lineCov">        140 : }</span></a>
+<a name="363"><span class="lineNum">     363 </span><span class="lineCov">         76 : }</span></a>
 <a name="364"><span class="lineNum">     364 </span>            : </a>
 <a name="365"><span class="lineNum">     365 </span><span class="lineNoCov">          0 : SampleCount AudioFileUtils::getFileLengthSamples (Engine&amp; e, const juce::File&amp; file)</span></a>
 <a name="366"><span class="lineNum">     366 </span>            : {</a>
@@ -435,57 +435,57 @@
 <a name="373"><span class="lineNum">     373 </span><span class="lineNoCov">          0 :     return 0;</span></a>
 <a name="374"><span class="lineNum">     374 </span>            : }</a>
 <a name="375"><span class="lineNum">     375 </span>            : </a>
-<a name="376"><span class="lineNum">     376 </span><span class="lineCov">         64 : static bool isWavFile (const juce::File&amp; file)</span></a>
+<a name="376"><span class="lineNum">     376 </span><span class="lineNoCov">          0 : static bool isWavFile (const juce::File&amp; file)</span></a>
 <a name="377"><span class="lineNum">     377 </span>            : {</a>
-<a name="378"><span class="lineNum">     378 </span><span class="lineCov">        128 :     juce::AudioFormatManager afm;</span></a>
-<a name="379"><span class="lineNum">     379 </span><span class="lineCov">        128 :     afm.registerFormat (new juce::WavAudioFormat(), true);</span></a>
+<a name="378"><span class="lineNum">     378 </span><span class="lineNoCov">          0 :     juce::AudioFormatManager afm;</span></a>
+<a name="379"><span class="lineNum">     379 </span><span class="lineNoCov">          0 :     afm.registerFormat (new juce::WavAudioFormat(), true);</span></a>
 <a name="380"><span class="lineNum">     380 </span>            : </a>
-<a name="381"><span class="lineNum">     381 </span><span class="lineCov">         64 :     std::unique_ptr&lt;juce::AudioFormatReader&gt; reader (afm.createReaderFor (file));</span></a>
-<a name="382"><span class="lineNum">     382 </span><span class="lineCov">         64 :     return reader != nullptr;</span></a>
+<a name="381"><span class="lineNum">     381 </span><span class="lineNoCov">          0 :     std::unique_ptr&lt;juce::AudioFormatReader&gt; reader (afm.createReaderFor (file));</span></a>
+<a name="382"><span class="lineNum">     382 </span><span class="lineNoCov">          0 :     return reader != nullptr;</span></a>
 <a name="383"><span class="lineNum">     383 </span>            : }</a>
 <a name="384"><span class="lineNum">     384 </span>            : </a>
-<a name="385"><span class="lineNum">     385 </span><span class="lineCov">         64 : void AudioFileUtils::applyBWAVStartTime (const juce::File&amp; file, SampleCount time)</span></a>
+<a name="385"><span class="lineNum">     385 </span><span class="lineNoCov">          0 : void AudioFileUtils::applyBWAVStartTime (const juce::File&amp; file, SampleCount time)</span></a>
 <a name="386"><span class="lineNum">     386 </span>            : {</a>
-<a name="387"><span class="lineNum">     387 </span><span class="lineCov">         64 :     if (isWavFile (file))</span></a>
+<a name="387"><span class="lineNum">     387 </span><span class="lineNoCov">          0 :     if (isWavFile (file))</span></a>
 <a name="388"><span class="lineNum">     388 </span>            :     {</a>
 <a name="389"><span class="lineNum">     389 </span>            :         int pos = 0;</a>
 <a name="390"><span class="lineNum">     390 </span>            : </a>
 <a name="391"><span class="lineNum">     391 </span>            :         {</a>
-<a name="392"><span class="lineNum">     392 </span><span class="lineCov">        128 :             juce::FileInputStream fi (file);</span></a>
+<a name="392"><span class="lineNum">     392 </span><span class="lineNoCov">          0 :             juce::FileInputStream fi (file);</span></a>
 <a name="393"><span class="lineNum">     393 </span>            : </a>
-<a name="394"><span class="lineNum">     394 </span><span class="lineCov">         64 :             if (fi.openedOk())</span></a>
+<a name="394"><span class="lineNum">     394 </span><span class="lineNoCov">          0 :             if (fi.openedOk())</span></a>
 <a name="395"><span class="lineNum">     395 </span>            :             {</a>
-<a name="396"><span class="lineNum">     396 </span><span class="lineCov">     131136 :                 for (int i = 0; i &lt; 2048; ++i)</span></a>
+<a name="396"><span class="lineNum">     396 </span><span class="lineNoCov">          0 :                 for (int i = 0; i &lt; 2048; ++i)</span></a>
 <a name="397"><span class="lineNum">     397 </span>            :                 {</a>
-<a name="398"><span class="lineNum">     398 </span><span class="lineCov">     131072 :                     char n[5] = { 0 };</span></a>
-<a name="399"><span class="lineNum">     399 </span><span class="lineCov">     131072 :                     fi.setPosition (i);</span></a>
-<a name="400"><span class="lineNum">     400 </span><span class="lineCov">     131072 :                     fi.read (n, 4);</span></a>
+<a name="398"><span class="lineNum">     398 </span><span class="lineNoCov">          0 :                     char n[5] = { 0 };</span></a>
+<a name="399"><span class="lineNum">     399 </span><span class="lineNoCov">          0 :                     fi.setPosition (i);</span></a>
+<a name="400"><span class="lineNum">     400 </span><span class="lineNoCov">          0 :                     fi.read (n, 4);</span></a>
 <a name="401"><span class="lineNum">     401 </span>            : </a>
-<a name="402"><span class="lineNum">     402 </span><span class="lineCov">     655360 :                     for (int j = 0; j &lt; 4; ++j)</span></a>
-<a name="403"><span class="lineNum">     403 </span><span class="lineCov">     524288 :                         n[j] &amp;= 127; // to avoid ASCII char assertions</span></a>
+<a name="402"><span class="lineNum">     402 </span><span class="lineNoCov">          0 :                     for (int j = 0; j &lt; 4; ++j)</span></a>
+<a name="403"><span class="lineNum">     403 </span><span class="lineNoCov">          0 :                         n[j] &amp;= 127; // to avoid ASCII char assertions</span></a>
 <a name="404"><span class="lineNum">     404 </span>            : </a>
-<a name="405"><span class="lineNum">     405 </span><span class="lineCov">     131072 :                     if (juce::String (n).equalsIgnoreCase (&quot;bext&quot;))</span></a>
-<a name="406"><span class="lineNum">     406 </span><span class="lineCov">         64 :                         pos = i + 8;</span></a>
+<a name="405"><span class="lineNum">     405 </span><span class="lineNoCov">          0 :                     if (juce::String (n).equalsIgnoreCase (&quot;bext&quot;))</span></a>
+<a name="406"><span class="lineNum">     406 </span><span class="lineNoCov">          0 :                         pos = i + 8;</span></a>
 <a name="407"><span class="lineNum">     407 </span>            :                 }</a>
 <a name="408"><span class="lineNum">     408 </span>            :             }</a>
 <a name="409"><span class="lineNum">     409 </span>            :         }</a>
 <a name="410"><span class="lineNum">     410 </span>            : </a>
-<a name="411"><span class="lineNum">     411 </span><span class="lineCov">         64 :         if (pos &gt; 0)</span></a>
+<a name="411"><span class="lineNum">     411 </span><span class="lineNoCov">          0 :         if (pos &gt; 0)</span></a>
 <a name="412"><span class="lineNum">     412 </span>            :         {</a>
-<a name="413"><span class="lineNum">     413 </span><span class="lineCov">         64 :             pos += 256 + 32 + 32 + 10 + 8;</span></a>
+<a name="413"><span class="lineNum">     413 </span><span class="lineNoCov">          0 :             pos += 256 + 32 + 32 + 10 + 8;</span></a>
 <a name="414"><span class="lineNum">     414 </span>            : </a>
-<a name="415"><span class="lineNum">     415 </span><span class="lineCov">        128 :             juce::FileOutputStream fo (file);</span></a>
+<a name="415"><span class="lineNum">     415 </span><span class="lineNoCov">          0 :             juce::FileOutputStream fo (file);</span></a>
 <a name="416"><span class="lineNum">     416 </span>            : </a>
-<a name="417"><span class="lineNum">     417 </span><span class="lineCov">         64 :             if (fo.openedOk())</span></a>
+<a name="417"><span class="lineNum">     417 </span><span class="lineNoCov">          0 :             if (fo.openedOk())</span></a>
 <a name="418"><span class="lineNum">     418 </span>            :             {</a>
-<a name="419"><span class="lineNum">     419 </span><span class="lineCov">         64 :                 fo.setPosition (pos);</span></a>
+<a name="419"><span class="lineNum">     419 </span><span class="lineNoCov">          0 :                 fo.setPosition (pos);</span></a>
 <a name="420"><span class="lineNum">     420 </span>            : </a>
-<a name="421"><span class="lineNum">     421 </span><span class="lineCov">         64 :                 fo.writeInt ((int) (uint32_t) (time &amp; 0xffffffff));</span></a>
-<a name="422"><span class="lineNum">     422 </span><span class="lineCov">         64 :                 fo.writeInt ((int) (uint32_t) (time &gt;&gt; 32));</span></a>
+<a name="421"><span class="lineNum">     421 </span><span class="lineNoCov">          0 :                 fo.writeInt ((int) (uint32_t) (time &amp; 0xffffffff));</span></a>
+<a name="422"><span class="lineNum">     422 </span><span class="lineNoCov">          0 :                 fo.writeInt ((int) (uint32_t) (time &gt;&gt; 32));</span></a>
 <a name="423"><span class="lineNum">     423 </span>            :             }</a>
 <a name="424"><span class="lineNum">     424 </span>            :         }</a>
 <a name="425"><span class="lineNum">     425 </span>            :     }</a>
-<a name="426"><span class="lineNum">     426 </span><span class="lineCov">         64 : }</span></a>
+<a name="426"><span class="lineNum">     426 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="427"><span class="lineNum">     427 </span>            : </a>
 <a name="428"><span class="lineNum">     428 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
