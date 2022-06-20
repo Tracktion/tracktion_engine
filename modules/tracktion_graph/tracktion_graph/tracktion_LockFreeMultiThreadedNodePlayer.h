@@ -66,6 +66,11 @@ public:
         /** Called by the player when more than one Node becomes available to process.
             Subclasses should use this to try and get a thread to call process as soon as possible.
         */
+        virtual void signal (int numToSignal) = 0;
+
+        /** Called by the player when more than one Node becomes available to process.
+            Subclasses should use this to try and get a thread to call process as soon as possible.
+        */
         virtual void signalAll() = 0;
         
         /** Called by the player when the audio thread has no free Nodes to process.

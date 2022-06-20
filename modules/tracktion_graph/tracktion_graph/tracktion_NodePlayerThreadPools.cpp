@@ -80,6 +80,17 @@ struct ThreadPoolCV : public LockFreeMultiThreadedNodePlayer::ThreadPool
         condition.notify_one();
     }
 
+    void signal (int numToSignal) override
+    {
+        {
+            std::unique_lock<std::mutex> lock (mutex);
+            triggered.store (true, std::memory_order_release);
+        }
+
+        for (int i = std::min ((int) threads.size(), numToSignal); --i >= 0;)
+             condition.notify_one();
+    }
+
     void signalAll() override
     {
         {
@@ -188,6 +199,10 @@ struct ThreadPoolRT : public LockFreeMultiThreadedNodePlayer::ThreadPool
     {
     }
 
+    void signal (int) override
+    {
+    }
+
     void signalAll() override
     {
     }
@@ -293,6 +308,17 @@ struct ThreadPoolHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
         }
         
         condition.notify_one();
+    }
+
+    void signal (int numToSignal) override
+    {
+        {
+            std::unique_lock<std::mutex> lock (mutex);
+            triggered.store (true, std::memory_order_release);
+        }
+
+        for (int i = std::min ((int) threads.size(), numToSignal); --i >= 0;)
+             condition.notify_one();
     }
 
     void signalAll() override
@@ -425,6 +451,11 @@ struct ThreadPoolSem : public LockFreeMultiThreadedNodePlayer::ThreadPool
         if (semaphore) semaphore->signal();
     }
 
+    void signal (int numToSignal) override
+    {
+        if (semaphore) semaphore->signal (std::min (numToSignal, (int) threads.size()));
+    }
+
     void signalAll() override
     {
         if (semaphore) semaphore->signal ((int) threads.size());
@@ -515,6 +546,11 @@ struct ThreadPoolSemHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
     void signalOne() override
     {
         if (semaphore) semaphore->signal();
+    }
+
+    void signal (int numToSignal) override
+    {
+        if (semaphore) semaphore->signal (std::min (numToSignal, (int) threads.size()));
     }
 
     void signalAll() override

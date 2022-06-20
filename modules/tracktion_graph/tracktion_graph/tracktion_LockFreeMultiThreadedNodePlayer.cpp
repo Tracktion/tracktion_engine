@@ -356,7 +356,9 @@ void LockFreeMultiThreadedNodePlayer::resetProcessQueue()
     // Make sure this is only incremented after all the nodes have been queued
     // or the threads will start queueing Nodes at the same time
     numNodesQueued += numNodesJustQueued;
-    threadPool->signalAll();
+
+    if (int numThreadsToSignal = (int) numNodesQueued.load(); numThreadsToSignal > 1)
+        threadPool->signal (numThreadsToSignal);
 }
 
 Node* LockFreeMultiThreadedNodePlayer::updateProcessQueueForNode (Node& node)
