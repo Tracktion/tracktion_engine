@@ -66,11 +66,11 @@
 //==============================================================================
 #if __has_include(<choc/audio/choc_SampleBuffers.h>)
  #include <choc/audio/choc_SampleBuffers.h>
- #include <choc/audio/choc_MIDI.h>
+ #include <choc/audio/choc_MIDISequence.h>
  #include <choc/audio/choc_MultipleReaderMultipleWriterFIFO.h>
 #else
  #include "../3rd_party/choc/audio/choc_SampleBuffers.h"
- #include "../3rd_party/choc/audio/choc_MIDI.h"
+ #include "../3rd_party/choc/audio/choc_MIDISequence.h"
  #include "../3rd_party/choc/containers/choc_MultipleReaderMultipleWriterFIFO.h"
 #endif
 

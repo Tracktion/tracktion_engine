@@ -53,6 +53,14 @@ set(SourceFiles
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE ${SourceFiles})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX Source FILES ${SourceFiles})
 
+message(${CMAKE_CURRENT_SOURCE_DIR})
+file(GLOB_RECURSE LibraryFiles CONFIGURE_DEPENDS
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../modules/3rd_party/choc/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../modules/3rd_party/choc/*.h)
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/../../modules/3rd_party PREFIX Libraries FILES ${LibraryFiles})
+
+add_library(Source ${ModuleFiles} ${SourceFiles} ${LibraryFiles})
+
 if (DEFINED ENV{VST2_SDK_DIR})
     target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
         JUCE_PLUGINHOST_VST=1)

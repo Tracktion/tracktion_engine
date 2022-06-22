@@ -28,6 +28,13 @@ inline choc::buffer::BufferView<SampleType, choc::buffer::SeparateChannelLayout>
 }
 
 //==============================================================================
+/** Converts a choc::midi event to a juce::MidiMessage */
+inline juce::MidiMessage toMidiMessage (const choc::midi::Sequence::Event& e)
+{
+    return { e.message.data(), (int) e.message.length(), e.timeInSeconds };
+}
+
+//==============================================================================
 /** Mutiplies a choc::buffer::BufferView by a juce::SmoothedValue. */
 template<typename BufferViewType, typename SampleType, typename SmoothingType>
 void multiplyBy (BufferViewType& view, juce::SmoothedValue<SampleType, SmoothingType>& value) noexcept

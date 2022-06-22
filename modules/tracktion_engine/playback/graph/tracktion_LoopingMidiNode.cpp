@@ -29,6 +29,193 @@ using ClipBeatRange = juce::Range<double>;
 using SequenceBeatRange = juce::Range<double>;
 using BlockBeatRange = juce::Range<double>;
 
+namespace chocMidiHelpers
+{
+    //==============================================================================
+    struct PitchWheel
+    {
+        void addToBuffer (int channel, juce::Array<juce::MidiMessage>& dest) const
+        {
+            if (value)
+                dest.add (juce::MidiMessage::pitchWheel (channel, static_cast<int> (*value)));
+        }
+
+        void update (uint32_t v)
+        {
+            value = v;
+        }
+
+    private:
+        std::optional<uint32_t> value;
+    };
+
+    struct ControllerValues
+    {
+        void addToBuffer (int channel, juce::Array<juce::MidiMessage>& dest) const
+        {
+            std::for_each (std::begin (values), std::end (values),
+                           [&, index = 0] (const auto& v) mutable
+                           {
+                               if (v)
+                                   dest.add (juce::MidiMessage::controllerEvent (channel, index, *v));
+
+                               ++index;
+                           });
+        }
+
+        void update (int controller, uint8_t value)
+        {
+            values[controller] = value;
+        }
+
+    private:
+        std::optional<uint8_t> values[128];
+    };
+
+    struct ProgramChange
+    {
+        void addToBuffer (int channel, double time, juce::Array<juce::MidiMessage>& dest) const
+        {
+            if (! value)
+                return;
+
+            if (bankLSB && bankMSB)
+            {
+                dest.add (juce::MidiMessage::controllerEvent (channel, 0x00, *bankMSB).withTimeStamp (time));
+                dest.add (juce::MidiMessage::controllerEvent (channel, 0x20, *bankLSB).withTimeStamp (time));
+            }
+
+            dest.add (juce::MidiMessage::programChange (channel, *value).withTimeStamp (time));
+        }
+
+        // Returns true if this is a bank number change, and false otherwise.
+        bool trySetBank (uint8_t controller, uint8_t v)
+        {
+            switch (controller)
+            {
+                case 0x00: bankMSB = v; return true;
+                case 0x20: bankLSB = v; return true;
+            }
+
+            return false;
+        }
+
+        void setProgram (uint8_t v)
+        {
+            value = v;
+        }
+
+    private:
+        std::optional<uint8_t> value, bankLSB, bankMSB;
+    };
+
+    struct ParameterNumberState
+    {
+        // If the effective parameter number has changed since the last time this function was called,
+        // this will emit the current parameter in full (MSB and LSB).
+        // This should be called before each data message (entry, increment, decrement: 0x06, 0x26, 0x60, 0x61)
+        // to ensure that the data message operates on the correct parameter number.
+        void sendIfNecessary (int channel, double time, juce::Array<juce::MidiMessage>& dest)
+        {
+            const auto newestMsb = newestKind == Kind::rpn ? newestRpnMsb : newestNrpnMsb;
+            const auto newestLsb = newestKind == Kind::rpn ? newestRpnLsb : newestNrpnLsb;
+
+            auto lastSent = std::tie (lastSentKind, lastSentMsb, lastSentLsb);
+            const auto newest = std::tie (newestKind, newestMsb, newestLsb);
+
+            if (lastSent == newest || ! newestMsb || ! newestLsb)
+                return;
+
+            dest.add (juce::MidiMessage::controllerEvent (channel, newestKind == Kind::rpn ? 0x65 : 0x63, *newestMsb).withTimeStamp (time));
+            dest.add (juce::MidiMessage::controllerEvent (channel, newestKind == Kind::rpn ? 0x64 : 0x62, *newestLsb).withTimeStamp (time));
+
+            lastSent = newest;
+        }
+
+        bool trySetProgramNumber (uint8_t controller, uint8_t value)
+        {
+            switch (controller)
+            {
+                case 0x65: newestRpnMsb  = value; newestKind = Kind::rpn;  return true;
+                case 0x64: newestRpnLsb  = value; newestKind = Kind::rpn;  return true;
+                case 0x63: newestNrpnMsb = value; newestKind = Kind::nrpn; return true;
+                case 0x62: newestNrpnLsb = value; newestKind = Kind::nrpn; return true;
+            }
+
+            return false;
+        }
+
+    private:
+        enum class Kind { rpn, nrpn };
+
+        std::optional<uint8_t> newestRpnLsb, newestRpnMsb, newestNrpnLsb, newestNrpnMsb;
+        std::optional<uint8_t> lastSentLsb, lastSentMsb;
+        Kind lastSentKind = Kind::rpn, newestKind = Kind::rpn;
+    };
+
+    void createControllerUpdatesForTime (const choc::midi::Sequence& sequence,
+                                         uint8_t channel, double time,
+                                         juce::Array<juce::MidiMessage>& dest)
+    {
+        ProgramChange programChange;
+        ControllerValues controllerValues;
+        PitchWheel pitchWheel;
+        ParameterNumberState parameterNumberState;
+
+        for (const auto& event : sequence)
+        {
+            if (! event.message.isShortMessage())
+                continue;
+
+            const auto mm = event.message.getShortMessage();
+
+            if (! (mm.getChannel1to16() == channel && event.timeInSeconds <= time))
+                continue;
+
+            if (mm.isController())
+            {
+                const auto num = mm.getControllerNumber();
+
+                if (parameterNumberState.trySetProgramNumber (num, mm.getControllerValue()))
+                    continue;
+
+                if (programChange.trySetBank (num, mm.getControllerValue()))
+                    continue;
+
+                constexpr int passthroughs[] { 0x06, 0x26, 0x60, 0x61 };
+
+                if (std::find (std::begin (passthroughs), std::end (passthroughs), num) != std::end (passthroughs))
+                {
+                    parameterNumberState.sendIfNecessary (channel, event.timeInSeconds, dest);
+                    dest.add (toMidiMessage (event));
+                }
+                else
+                {
+                    controllerValues.update (num, mm.getControllerValue());
+                }
+            }
+            else if (mm.isProgramChange())
+            {
+                programChange.setProgram (mm.getProgramChangeNumber());
+            }
+            else if (mm.isPitchWheel())
+            {
+                pitchWheel.update (mm.getPitchWheelValue());
+            }
+        }
+
+        pitchWheel.addToBuffer (channel, dest);
+
+        controllerValues.addToBuffer (channel, dest);
+
+        // Also emits bank change messages if necessary.
+        programChange.addToBuffer (channel, time, dest);
+
+        // Set the parameter number to its final state.
+        parameterNumberState.sendIfNecessary (channel, time, dest);
+    }
+}
+
 //==============================================================================
 //==============================================================================
 namespace MidiHelpers
@@ -189,6 +376,228 @@ namespace MidiHelpers
             }
         }
     }
+
+    choc::midi::Sequence& addSequence (choc::midi::Sequence& dest, const juce::MidiMessageSequence& src, double timeStampOffset)
+    {
+        for (auto meh : src)
+        {
+            dest.events.push_back ({ meh->message.getTimeStamp() + timeStampOffset,
+                                     { meh->message.getRawData(), (size_t) meh->message.getRawDataSize() } });
+        }
+
+        return dest;
+    }
+
+    void createNoteOffMap (std::vector<std::pair<size_t, size_t>>& noteOffMap,
+                           const choc::midi::Sequence& seq)
+    {
+        noteOffMap.clear();
+        const auto seqLen = seq.events.size();
+
+        for (size_t i = 0; i < seqLen; ++i)
+        {
+            const auto& e = seq.events[i].message;
+
+            if (! e.isShortMessage())
+                continue;
+
+            const auto m = e.getShortMessage();
+
+            if (m.isNoteOn())
+            {
+                const auto note = m.getNoteNumber();
+                const auto chan = m.getChannel0to15();
+
+                for (size_t j = i + 1; j < seqLen; ++j)
+                {
+                    const auto& e2 = seq.events[j].message;
+
+                    if (! e2.isShortMessage())
+                        continue;
+
+                    const auto m2 = e2.getShortMessage();
+
+                    if (m2.getNoteNumber() == note
+                        && m2.getChannel0to15() == chan
+                        && m2.isNoteOff())
+                    {
+                        noteOffMap.emplace_back (std::make_pair (i, j));
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    choc::midi::Sequence::Event* getNoteOff (size_t noteOnIndex,
+                                             choc::midi::Sequence& ms,
+                                             const std::vector<std::pair<size_t, size_t>>& noteOffMap)
+    {
+        auto found = std::find_if (noteOffMap.begin(), noteOffMap.end(),
+                                   [noteOnIndex] (const auto& m) { return m.first == noteOnIndex; });
+
+        if (found != noteOffMap.end())
+            return &ms.events[found->second];
+
+        return {};
+    }
+
+    const choc::midi::Sequence::Event* getNoteOff (size_t noteOnIndex,
+                                                   const choc::midi::Sequence& ms,
+                                                   const std::vector<std::pair<size_t, size_t>>& noteOffMap)
+    {
+        auto found = std::find_if (noteOffMap.begin(), noteOffMap.end(),
+                                   [noteOnIndex] (const auto& m) { return m.first == noteOnIndex; });
+
+        if (found != noteOffMap.end())
+            return &ms.events[found->second];
+
+        return {};
+    }
+
+    void applyQuantisationToSequence (const QuantisationType& q, bool canQuantiseNoteOffs,
+                                      choc::midi::Sequence& ms, const std::vector<std::pair<size_t, size_t>>& noteOffMap)
+    {
+        if (! q.isEnabled())
+            return;
+
+        const bool quantiseNoteOffs = canQuantiseNoteOffs && q.isQuantisingNoteOffs();
+
+        size_t index = ms.events.size();
+        std::for_each (ms.events.rbegin(), ms.events.rend(),
+                       [&] (auto& e)
+                       {
+                           --index;
+
+                           if (! e.message.isShortMessage())
+                               return;
+
+                           const auto m = e.message.getShortMessage();
+
+                           if (m.isNoteOn())
+                           {
+                               const auto noteOnTime = q.roundBeatToNearest (BeatPosition::fromBeats (e.timeInSeconds)).inBeats();
+
+                               if (auto noteOff = getNoteOff (index, ms, noteOffMap))
+                               {
+                                   if (quantiseNoteOffs)
+                                   {
+                                       auto noteOffTime = (q.roundBeatUp (BeatPosition::fromBeats (noteOff->timeInSeconds))).inBeats();
+
+                                       static constexpr double beatsToBumpUpBy = 1.0 / 512.0;
+
+                                       if (noteOffTime <= noteOnTime) // Don't want note on and off time the same
+                                           noteOffTime = q.roundBeatUp (BeatPosition::fromBeats (noteOnTime + beatsToBumpUpBy)).inBeats();
+
+                                       noteOff->timeInSeconds = noteOffTime;
+                                   }
+                                   else
+                                   {
+                                       // nudge the note-up backwards just a bit to make sure the ordering is correct
+                                       noteOff->timeInSeconds = (noteOnTime + (noteOff->timeInSeconds - e.timeInSeconds) - 0.00001);
+                                   }
+                               }
+
+                               e.timeInSeconds = noteOnTime;
+                           }
+                           else if (m.isNoteOff() && quantiseNoteOffs)
+                           {
+                               e.timeInSeconds = q.roundBeatUp (BeatPosition::fromBeats (e.timeInSeconds)).inBeats();
+                           }
+                       });
+    }
+
+    void applyGrooveToSequence (const GrooveTemplate& groove, float grooveStrength, choc::midi::Sequence& ms)
+    {
+        for (auto& e : ms)
+        {
+            if (! e.message.isShortMessage())
+                continue;
+
+            const auto m = e.message.getShortMessage();
+
+            if (m.isNoteOn() || m.isNoteOff())
+                e.timeInSeconds = groove.beatsTimeToGroovyTime (BeatPosition::fromBeats (e.timeInSeconds), grooveStrength).inBeats();
+        }
+    }
+
+    void createMessagesForTime (MidiMessageArray& destBuffer,
+                                const choc::midi::Sequence& sourceSequence,
+                                const std::vector<std::pair<size_t, size_t>>& noteOffMap,
+                                double time,
+                                juce::Range<int> channelNumbers,
+                                LiveClipLevel& clipLevel,
+                                bool useMPEChannelMode, MidiMessageArray::MPESourceID midiSourceID,
+                                juce::Array<juce::MidiMessage>& controllerMessagesScratchBuffer)
+    {
+        if (useMPEChannelMode)
+        {
+            const auto indexOfTime = [&]() -> size_t
+                                     {
+                                         const auto numEvents = sourceSequence.events.size();
+
+                                         for (size_t i = 0; i < numEvents; ++i)
+                                             if (sourceSequence.events[i].timeInSeconds >= time)
+                                                 return i;
+
+                                         return {};
+                                     }();
+
+            controllerMessagesScratchBuffer.clearQuick();
+
+            for (int i = channelNumbers.getStart(); i <= channelNumbers.getEnd(); ++i)
+                MPEStartTrimmer::reconstructExpression (controllerMessagesScratchBuffer, sourceSequence, indexOfTime, i);
+
+            for (auto& m : controllerMessagesScratchBuffer)
+                destBuffer.addMidiMessage (m, 0.0001, midiSourceID);
+        }
+        else
+        {
+            {
+                controllerMessagesScratchBuffer.clearQuick();
+
+                for (int i = channelNumbers.getStart(); i <= channelNumbers.getEnd(); ++i)
+                    chocMidiHelpers::createControllerUpdatesForTime (sourceSequence, (uint8_t) i, time, controllerMessagesScratchBuffer);
+
+                for (auto& m : controllerMessagesScratchBuffer)
+                    destBuffer.addMidiMessage (m, midiSourceID);
+            }
+
+            if (! clipLevel.isMute())
+            {
+                auto volScale = clipLevel.getGain();
+
+                for (size_t i = 0; i < sourceSequence.events.size(); ++i)
+                {
+                    auto e = sourceSequence.events[i];
+
+                    if (! e.message.isShortMessage())
+                        continue;
+
+                    const auto m = e.message.getShortMessage();
+
+                    if (! m.isNoteOn())
+                        continue;
+
+                    if (auto noteOffEvent = getNoteOff (i, sourceSequence, noteOffMap))
+                    {
+                        if (e.timeInSeconds >= time)
+                            break;
+
+                        // don't play very short notes or ones that have already finished
+                        if (noteOffEvent->timeInSeconds > time + 0.0001)
+                        {
+                            juce::MidiMessage m2 ((int) m.data[0], (int) m.data[1], (int) m.data[2], e.timeInSeconds);
+                            m2.multiplyVelocity (volScale);
+
+                            // give these a tiny offset to make sure they're played after the controller updates
+                            destBuffer.addMidiMessage (m2, 0.0001, midiSourceID);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 //==============================================================================
@@ -219,6 +628,93 @@ public:
 
     virtual bool exhausted() = 0;
     virtual juce::MidiMessage getEvent() = 0;
+};
+
+
+//==============================================================================
+struct EventGenerator   : public MidiGenerator
+{
+    EventGenerator (const choc::midi::Sequence& seq,
+                    const std::vector<std::pair<size_t, size_t>>& noteOffs)
+        : sequence (seq), noteOffMap (noteOffs)
+    {
+    }
+
+    void createMessagesForTime (MidiMessageArray& destBuffer,
+                                SequenceBeatPosition time,
+                                ActiveNoteList& activeNoteList,
+                                juce::Range<int> channelNumbers,
+                                LiveClipLevel& clipLevel,
+                                bool useMPEChannelMode, MidiMessageArray::MPESourceID midiSourceID,
+                                juce::Array<juce::MidiMessage>& controllerMessagesScratchBuffer) override
+    {
+        thread_local MidiMessageArray scratchBuffer;
+        scratchBuffer.clear();
+
+        MidiHelpers::createMessagesForTime (scratchBuffer,
+                                            sequence, noteOffMap,
+                                            time,
+                                            channelNumbers,
+                                            clipLevel,
+                                            useMPEChannelMode, midiSourceID,
+                                            controllerMessagesScratchBuffer);
+
+        // This isn't quite right as there could be notes that are turned on in the original buffer after the scratch buffer?
+        for (const auto& e : scratchBuffer)
+        {
+            if (e.isNoteOn())
+                activeNoteList.startNote (e.getChannel(), e.getNoteNumber());
+            else if (e.isNoteOff())
+                activeNoteList.clearNote (e.getChannel(), e.getNoteNumber());
+        }
+
+        destBuffer.mergeFrom (scratchBuffer);
+    }
+
+    void setTime (SequenceBeatPosition pos) override
+    {
+        auto numEvents = sequence.events.size();
+
+        // Set the index to the start of the range
+        if (numEvents != 0)
+        {
+            currentIndex = std::clamp<size_t> (currentIndex, 0, numEvents - 1);
+
+            if (sequence.events[currentIndex].timeInSeconds >= pos)
+            {
+                while (currentIndex > 0 && sequence.events[currentIndex - 1].timeInSeconds >= pos)
+                    --currentIndex;
+            }
+            else
+            {
+                while (currentIndex < numEvents && sequence.events[currentIndex].timeInSeconds < pos)
+                    ++currentIndex;
+            }
+        }
+    }
+
+    juce::MidiMessage getEvent() override
+    {
+        [[ maybe_unused ]] auto numEvents = sequence.events.size();
+        jassert (currentIndex < numEvents);
+
+        return toMidiMessage (sequence.events[currentIndex]);
+    }
+
+    bool advance() override
+    {
+        ++currentIndex;
+        return ! exhausted();
+    }
+
+    bool exhausted() override
+    {
+        return currentIndex >= sequence.events.size();
+    }
+
+    const choc::midi::Sequence& sequence;
+    const std::vector<std::pair<size_t, size_t>>& noteOffMap;
+    size_t currentIndex = 0;
 };
 
 
@@ -323,6 +819,28 @@ public:
     {
         // Cache the sequence at 0.0 time to reserve the required storage
         cacheSequence (0.0);
+
+        // Reserve the scratch space for the note on/off map
+        size_t maxNumEvents = 0, maxNumNoteOns = 0;
+
+        for (auto& sequence : sequences)
+        {
+            size_t squenceNumEvents = 0, squenceNumNoteOns = 0;
+
+            for (auto meh : sequence)
+            {
+                ++squenceNumEvents;
+
+                if (meh->message.isNoteOn())
+                    ++squenceNumNoteOns;
+            }
+
+            maxNumEvents = std::max (squenceNumEvents, maxNumEvents);
+            maxNumNoteOns = std::max (squenceNumNoteOns, maxNumNoteOns);
+        }
+
+        noteOffMap.reserve (maxNumNoteOns);
+        currentSequence.events.reserve (maxNumEvents);
     }
 
     void createMessagesForTime (MidiMessageArray& destBuffer,
@@ -362,19 +880,18 @@ public:
             if (++currentSequenceIndex >= sequences.size())
                 currentSequenceIndex = 0;
 
-        currentSequence.clear();
-        currentSequence.addSequence (sequences[currentSequenceIndex], offsetBeats);
-        currentSequence.updateMatchedPairs();
-
-        // For some reason, isQuantisingNoteOffs is ignored by the existing MidiList::getPlaybackBeats
-        // to maintain compatibility we'll have to do the same
-        MidiHelpers::applyQuantisationToSequence (quantisation, currentSequence, false);
+        // Create the cached sequence (without allocating)
+        currentSequence.events.clear();
+        MidiHelpers::addSequence (currentSequence, sequences[currentSequenceIndex], offsetBeats);
+        jassert (std::is_sorted (currentSequence.begin(), currentSequence.end()));
+        MidiHelpers::createNoteOffMap (noteOffMap, currentSequence);
+        MidiHelpers::applyQuantisationToSequence (quantisation, false, currentSequence, noteOffMap);
 
         if (! groove.isEmpty())
             MidiHelpers::applyGrooveToSequence (groove, grooveStrength, currentSequence);
 
-        currentSequence.updateMatchedPairs();
-        currentSequence.sort();
+        currentSequence.sortEvents();
+        MidiHelpers::createNoteOffMap (noteOffMap, currentSequence);
 
         cachedSequenceOffset = offsetBeats;
     }
@@ -398,8 +915,10 @@ public:
 
 private:
     std::vector<juce::MidiMessageSequence> sequences;
-    juce::MidiMessageSequence currentSequence;
-    SequenceEventGenerator generator { currentSequence };
+
+    choc::midi::Sequence currentSequence;
+    std::vector<std::pair<size_t, size_t>> noteOffMap;
+    EventGenerator generator { currentSequence, noteOffMap };
 
     const QuantisationType quantisation;
     const GrooveTemplate groove;
@@ -632,7 +1151,6 @@ public:
 
         if (shouldSendNoteOffs)
         {
-            DBG("SENDING NOTE OFFS");
             MidiHelpers::createNoteOffs (*activeNoteList,
                                          destBuffer,
                                          midiSourceID,
