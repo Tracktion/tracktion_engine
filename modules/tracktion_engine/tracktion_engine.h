@@ -34,7 +34,8 @@
 #pragma once
 #define TRACKTION_ENGINE_H_INCLUDED
 
-#if ! JUCE_MODAL_LOOPS_PERMITTED
+// Android does not support modal loops.
+#if ! JUCE_MODAL_LOOPS_PERMITTED && ! JUCE_ANDROID
  #error "You must define JUCE_MODAL_LOOPS_PERMITTED=1 to use Tracktion Engine"
 #endif
 
