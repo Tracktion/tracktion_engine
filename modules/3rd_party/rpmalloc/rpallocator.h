@@ -170,3 +170,8 @@ private:
         thread_local details::ScopedRPThreadFinaliser init;
     }
 };
+
+template <typename T, typename U>
+bool operator== (const rpallocator <T>&, const rpallocator <U>&) { return true; }
+template <typename T, typename U>
+bool operator!= (const rpallocator <T>&, const rpallocator <U>&) { return false; }
