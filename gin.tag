@@ -4124,6 +4124,13 @@
       <arglist>(juce::AudioBuffer&lt; SampleType &gt; &amp;buffer)</arglist>
     </member>
     <member kind="function">
+      <type>juce::MidiMessage</type>
+      <name>toMidiMessage</name>
+      <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
+      <anchor>a75610fd2541186d3d2577e14ac219446</anchor>
+      <arglist>(const choc::midi::Sequence::Event &amp;e)</arglist>
+    </member>
+    <member kind="function">
       <type>void</type>
       <name>multiplyBy</name>
       <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
@@ -47502,6 +47509,13 @@
       <anchor>af7861625bb6dcd66bf0de5a68f73ca12</anchor>
       <arglist>(juce::Array&lt; juce::MidiMessage &gt; &amp;mpeMessagesToAddAtStart, const juce::MidiMessageSequence &amp;data, int trimIndex, int channel)</arglist>
     </member>
+    <member kind="function" static="yes">
+      <type>static void</type>
+      <name>reconstructExpression</name>
+      <anchorfile>structtracktion_1_1engine_1_1MPEStartTrimmer.html</anchorfile>
+      <anchor>a13f8fe03f24a77e9fa47c1588cc0be36</anchor>
+      <arglist>(juce::Array&lt; juce::MidiMessage &gt; &amp;mpeMessagesToAddAtStart, const choc::midi::Sequence &amp;data, size_t trimIndex, int channel1to16)</arglist>
+    </member>
   </compound>
   <compound kind="class">
     <name>tracktion::engine::MultiThreadedNodePlayer</name>
@@ -84743,6 +84757,13 @@
       <arglist>(juce::AudioBuffer&lt; SampleType &gt; &amp;buffer)</arglist>
     </member>
     <member kind="function">
+      <type>juce::MidiMessage</type>
+      <name>toMidiMessage</name>
+      <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
+      <anchor>a75610fd2541186d3d2577e14ac219446</anchor>
+      <arglist>(const choc::midi::Sequence::Event &amp;e)</arglist>
+    </member>
+    <member kind="function">
       <type>void</type>
       <name>multiplyBy</name>
       <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
@@ -84915,6 +84936,11 @@
     <subgroup>tracktion_engine-utilities</subgroup>
   </compound>
   <compound kind="group">
+    <name>tracktion_graph-tracktion_graph</name>
+    <title>tracktion_graph</title>
+    <filename>group__tracktion__graph-tracktion__graph.html</filename>
+  </compound>
+  <compound kind="group">
     <name>tracktion_graph</name>
     <title>tracktion_graph</title>
     <filename>group__tracktion__graph.html</filename>
@@ -84924,18 +84950,13 @@
     <subgroup>tracktion_graph-utilities</subgroup>
   </compound>
   <compound kind="group">
-    <name>tracktion_graph-tracktion_graph</name>
-    <title>tracktion_graph</title>
-    <filename>group__tracktion__graph-tracktion__graph.html</filename>
+    <name>tracktion_graph-utilities</name>
+    <title>utilities</title>
+    <filename>group__tracktion__graph-utilities.html</filename>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-utilities</name>
     <title>utilities</title>
     <filename>group__tracktion__engine-utilities.html</filename>
-  </compound>
-  <compound kind="group">
-    <name>tracktion_graph-utilities</name>
-    <title>utilities</title>
-    <filename>group__tracktion__graph-utilities.html</filename>
   </compound>
 </tagfile>
