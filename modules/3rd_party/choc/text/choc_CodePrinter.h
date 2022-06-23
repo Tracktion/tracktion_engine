@@ -115,6 +115,9 @@ struct CodePrinter
     /// Modifies the current total indent level. @see createIndent()
     void setTotalIndent (size_t newTotalNumSpaces);
 
+    /// Gets rid of any trailing blanks
+    void trimTrailingBlankLines();
+
 private:
     struct Line
     {
@@ -209,7 +212,10 @@ struct CodePrinter::Indent
         owner.addIndent (-amount);
 
         if (closeBrace != 0)
+        {
+            owner.trimTrailingBlankLines();
             owner << closeBrace;
+        }
     }
 
 private:
@@ -325,6 +331,13 @@ inline void CodePrinter::writeBlock (std::string_view text)
 
     append ({ lineStart, end });
 }
+
+inline void CodePrinter::trimTrailingBlankLines()
+{
+    while (isLastLineEmpty())
+        lines.pop_back();
+}
+
 
 } // namespace choc::text
 

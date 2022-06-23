@@ -31,7 +31,7 @@ inline choc::buffer::BufferView<SampleType, choc::buffer::SeparateChannelLayout>
 /** Converts a choc::midi event to a juce::MidiMessage */
 inline juce::MidiMessage toMidiMessage (const choc::midi::Sequence::Event& e)
 {
-    return { e.message.data(), (int) e.message.length(), e.timeInSeconds };
+    return { e.message.data(), (int) e.message.length(), e.timeStamp };
 }
 
 //==============================================================================

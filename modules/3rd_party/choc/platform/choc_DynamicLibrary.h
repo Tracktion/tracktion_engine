@@ -30,14 +30,27 @@ namespace choc::file
 */
 struct DynamicLibrary
 {
+    DynamicLibrary() = delete;
+
     /// Attempts to laod a library with the given name or path.
     DynamicLibrary (std::string_view library);
+
+    DynamicLibrary (const DynamicLibrary&) = delete;
+    DynamicLibrary& operator= (const DynamicLibrary&) = delete;
+    DynamicLibrary (DynamicLibrary&&);
+    DynamicLibrary& operator= (DynamicLibrary&&);
 
     /// On destruction, this object releases the library that was loaded
     ~DynamicLibrary();
 
     /// Returns a pointer to the function with this name, or nullptr if not found.
     void* findFunction (std::string_view functionName);
+
+    /// Returns true if the library was successfully loaded
+    operator bool() const noexcept              { return handle != nullptr; }
+
+    /// Releases any handle that this object is holding
+    void close();
 
     /// platform-specific handle. Will be nullptr if not loaded
     void* handle = nullptr;
@@ -56,6 +69,24 @@ struct DynamicLibrary
 //
 //==============================================================================
 
+inline DynamicLibrary::~DynamicLibrary()
+{
+    close();
+}
+
+inline DynamicLibrary::DynamicLibrary (DynamicLibrary&& other) : handle (other.handle)
+{
+    other.handle = nullptr;
+}
+
+inline DynamicLibrary& DynamicLibrary::operator= (DynamicLibrary&& other)
+{
+    close();
+    handle = other.handle;
+    other.handle = nullptr;
+    return *this;
+}
+
 } // namespace choc::file
 
 #if ! (defined (_WIN32) || defined (_WIN64))
@@ -67,24 +98,33 @@ inline choc::file::DynamicLibrary::DynamicLibrary (std::string_view library)
     handle = ::dlopen (std::string (library).c_str(), RTLD_LOCAL | RTLD_NOW);
 }
 
-inline choc::file::DynamicLibrary::~DynamicLibrary()
+inline void choc::file::DynamicLibrary::close()
 {
     if (handle != nullptr)
+    {
         ::dlclose (handle);
+        handle = nullptr;
+    }
 }
 
 inline void* choc::file::DynamicLibrary::findFunction (std::string_view name)
 {
-    return ::dlsym (handle, std::string (name).c_str());
+    if (handle != nullptr)
+        return ::dlsym (handle, std::string (name).c_str());
+
+    return {};
 }
 
 #else
 
 //==============================================================================
 #ifndef _WINDOWS_ // only use these local definitions if windows.h isn't already included
- extern "C" __declspec(dllimport)  void* __stdcall LoadLibraryA (const char*);
- extern "C" __declspec(dllimport)  int   __stdcall FreeLibrary (void*);
- extern "C" __declspec(dllimport)  void* __stdcall GetProcAddress (void*, const char*);
+ namespace choc_win32_library_fns
+ {
+    extern "C" __declspec(dllimport)  void* __stdcall LoadLibraryA (const char*);
+    extern "C" __declspec(dllimport)  int __stdcall FreeLibrary (void*);
+    extern "C" __declspec(dllimport)  void* GetProcAddress (void*, const char*);
+ }
  using CHOC_HMODULE = void*;
 #else
  using CHOC_HMODULE = HMODULE;
@@ -92,18 +132,24 @@ inline void* choc::file::DynamicLibrary::findFunction (std::string_view name)
 
 inline choc::file::DynamicLibrary::DynamicLibrary (std::string_view library)
 {
-    handle = ::LoadLibraryA (std::string (library).c_str());
+    handle = choc_win32_library_fns::LoadLibraryA (std::string (library).c_str());
 }
 
-inline choc::file::DynamicLibrary::~DynamicLibrary()
+inline void choc::file::DynamicLibrary::close()
 {
     if (handle != nullptr)
-        ::FreeLibrary ((CHOC_HMODULE) handle);
+    {
+        choc_win32_library_fns::FreeLibrary ((CHOC_HMODULE) handle);
+        handle = nullptr;
+    }
 }
 
 inline void* choc::file::DynamicLibrary::findFunction (std::string_view name)
 {
-    return ::GetProcAddress ((CHOC_HMODULE) handle, std::string (name).c_str());
+    if (handle != nullptr)
+        return choc_win32_library_fns::GetProcAddress ((CHOC_HMODULE) handle, std::string (name).c_str());
+
+    return {};
 }
 
 #endif

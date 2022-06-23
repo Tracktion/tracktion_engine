@@ -192,11 +192,36 @@ PrimitiveType ArgumentList::get (size_t index, PrimitiveType defaultValue) const
 /// macro to 1 in one of your compile units
 #if CHOC_JAVASCRIPT_IMPLEMENTATION
 
+#include "../platform/choc_Platform.h"
+
+#if CHOC_WINDOWS
+ #include <windows.h>
+#else
+ #include <cmath>
+ #include <climits>
+ #include <ctime>
+ #include <cstddef>
+ #include <cstdarg>
+ #include <cstring>
+ #include <ctime>
+#endif
+
+#include <csetjmp>
+
+#if CHOC_LINUX || CHOC_OSX
+ #include <sys/time.h>
+#endif
+
 namespace choc::javascript
 {
 
 namespace duktape
 {
+ using std::signbit;
+ using std::fpclassify;
+ using std::isnan;
+ using std::isinf;
+ using std::isfinite;
  #include "../platform/choc_DisableAllWarnings.h"
  #include "duktape/duktape.c.inc"
  #include "../platform/choc_ReenableAllWarnings.h"

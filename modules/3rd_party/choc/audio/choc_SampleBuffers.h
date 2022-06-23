@@ -289,8 +289,10 @@ struct AllocatedBuffer
     AllocatedBuffer (const SourceView& viewToCopy);
 
     /// Allows the buffer to be cast to a compatible view.
-    template <typename TargetSampleType>
-    operator BufferView<TargetSampleType, LayoutType>() const                   { return static_cast<BufferView<TargetSampleType, LayoutType>> (view); }
+    operator BufferView<Sample, LayoutType>() const                             { return view; }
+
+    /// Allows the buffer to be cast to a compatible view.
+    operator BufferView<const Sample, LayoutType>() const                       { return static_cast<BufferView<const Sample, LayoutType>> (view); }
 
     /// Provides a version of this buffer as a view.
     BufferView<Sample, LayoutType> getView() const                              { return view; }

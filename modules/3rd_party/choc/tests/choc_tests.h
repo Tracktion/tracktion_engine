@@ -19,6 +19,8 @@
 #ifndef CHOC_TESTS_HEADER_INCLUDED
 #define CHOC_TESTS_HEADER_INCLUDED
 
+#include "../containers/choc_NonAllocatingStableSort.h"
+#include "../platform/choc_DetectDebugger.h"
 #include "../platform/choc_Platform.h"
 #include "../platform/choc_SpinLock.h"
 #include "../platform/choc_DynamicLibrary.h"
@@ -33,6 +35,7 @@
 #include "../text/choc_Files.h"
 #include "../text/choc_Wildcard.h"
 #include "../text/choc_Base64.h"
+#include "../text/choc_xxHash.h"
 #include "../math/choc_MathHelpers.h"
 #include "../containers/choc_COM.h"
 #include "../containers/choc_DirtyList.h"
@@ -50,6 +53,7 @@
 #include "../audio/choc_MIDI.h"
 #include "../audio/choc_MIDIFile.h"
 #include "../audio/choc_SampleBuffers.h"
+#include "../audio/choc_AudioSampleData.h"
 #include "../audio/choc_SincInterpolator.h"
 #include "../audio/choc_SampleBufferUtilities.h"
 #include "../audio/choc_AudioMIDIBlockDispatcher.h"
@@ -76,6 +80,99 @@ namespace choc::test
 /// to log its progress.
 bool runAllTests (TestProgress&);
 
+
+inline void testPlatform (TestProgress& progress)
+{
+    CHOC_CATEGORY (Platform);
+
+    {
+        CHOC_TEST (DetectDebugger)
+        CHOC_EXPECT_FALSE (choc::isDebuggerActive());
+    }
+
+    {
+        CHOC_TEST (Endianness)
+
+        {
+            union { uint32_t i; char c[4]; } n;
+            n.i = 0x01020304;
+
+           #if CHOC_LITTLE_ENDIAN
+            CHOC_EXPECT_EQ (n.c[0], 4);
+           #endif
+
+           #if CHOC_BIG_ENDIAN
+            CHOC_EXPECT_EQ (n.c[0], 1);
+           #endif
+        }
+
+        auto a = 0x0102030405060708ull;
+        uint8_t buffer[16];
+
+        CHOC_EXPECT_EQ (choc::memory::swapByteOrder ((uint16_t) 0x1122u), 0x2211u);
+        CHOC_EXPECT_EQ (choc::memory::swapByteOrder ((uint32_t) 0x11223344u), 0x44332211u);
+        CHOC_EXPECT_EQ (choc::memory::swapByteOrder ((uint64_t) 0x1122334455667788ull), 0x8877665544332211ull);
+
+        choc::memory::writeNativeEndian (buffer, a);
+        CHOC_EXPECT_EQ (a, choc::memory::readNativeEndian<decltype(a)> (buffer));
+
+        choc::memory::writeLittleEndian (buffer, a);
+        CHOC_EXPECT_EQ (buffer[0], 8);
+        CHOC_EXPECT_EQ (buffer[1], 7);
+        CHOC_EXPECT_EQ (buffer[6], 2);
+        CHOC_EXPECT_EQ (buffer[7], 1);
+        CHOC_EXPECT_EQ (choc::memory::readLittleEndian<decltype(a)> (buffer), a);
+
+        choc::memory::writeBigEndian (buffer, a);
+        CHOC_EXPECT_EQ (buffer[0], 1);
+        CHOC_EXPECT_EQ (buffer[1], 2);
+        CHOC_EXPECT_EQ (buffer[6], 7);
+        CHOC_EXPECT_EQ (buffer[7], 8);
+        CHOC_EXPECT_EQ (choc::memory::readBigEndian<decltype(a)> (buffer), a);
+
+        CHOC_EXPECT_EQ (choc::memory::bitcast<uint64_t> (1.0), 0x3ff0000000000000ull);
+        CHOC_EXPECT_EQ (choc::memory::bitcast<double> (0x3ff0000000000000ull), 1.0);
+        CHOC_EXPECT_EQ (choc::memory::bitcast<uint32_t> (1.0f), 0x3f800000u);
+        CHOC_EXPECT_EQ (choc::memory::bitcast<float> (0x3f800000u), 1.0f);
+    }
+
+    {
+        CHOC_TEST (ClearBitCount)
+
+        CHOC_EXPECT_EQ (choc::math::countUpperClearBits ((uint32_t) 1), 31u);
+        CHOC_EXPECT_EQ (choc::math::countUpperClearBits ((uint64_t) 1), 63u);
+        CHOC_EXPECT_EQ (choc::math::countUpperClearBits ((uint32_t) 0x700000), 9u);
+        CHOC_EXPECT_EQ (choc::math::countUpperClearBits ((uint32_t) 0xffffffff), 0u);
+        CHOC_EXPECT_EQ (choc::math::countUpperClearBits ((uint64_t) 0x700000), 32u + 9u);
+        CHOC_EXPECT_EQ (choc::math::countUpperClearBits ((uint64_t) 0xffffffffull), 32u);
+        CHOC_EXPECT_EQ (choc::math::countUpperClearBits ((uint64_t) 0x70000000000000ull), 9u);
+        CHOC_EXPECT_EQ (choc::math::countUpperClearBits ((uint64_t) 0xffffffff00000000ull), 0u);
+    }
+
+    {
+        CHOC_TEST (DynamicLibrary)
+
+       #if CHOC_WINDOWS
+        if (auto kernel = choc::file::DynamicLibrary ("Kernel32.dll"))
+        {
+            CHOC_EXPECT_TRUE (kernel);
+            auto k2 = std::move (kernel);
+            CHOC_EXPECT_TRUE (k2.findFunction ("GetSystemTime") != nullptr);
+            CHOC_EXPECT_TRUE (k2.findFunction ("XYZ") == nullptr);
+        }
+        else
+        {
+            CHOC_FAIL ("Failed to load kernel32");
+        }
+       #endif
+
+       #if ! CHOC_LINUX // (can't seem to get this to link in github actions)
+        choc::file::DynamicLibrary nope ("foo123487654");
+        CHOC_EXPECT_TRUE (! nope);
+        CHOC_EXPECT_TRUE (nope.findFunction ("xyz") == nullptr);
+       #endif
+    }
+}
 
 //==============================================================================
 inline void testContainerUtils (TestProgress& progress)
@@ -117,35 +214,6 @@ inline void testContainerUtils (TestProgress& progress)
         CHOC_EXPECT_TRUE (c == f1);
         c = f2;
         CHOC_EXPECT_TRUE (c == f2);
-    }
-
-    {
-        CHOC_TEST (Endianness)
-
-        auto a = 0x0102030405060708ull;
-        uint8_t buffer[16];
-
-        choc::memory::writeNativeEndian (buffer, a);
-        CHOC_EXPECT_EQ (a, choc::memory::readNativeEndian<decltype(a)> (buffer));
-
-        choc::memory::writeLittleEndian (buffer, a);
-        CHOC_EXPECT_EQ (buffer[0], 8);
-        CHOC_EXPECT_EQ (buffer[1], 7);
-        CHOC_EXPECT_EQ (buffer[6], 2);
-        CHOC_EXPECT_EQ (buffer[7], 1);
-        CHOC_EXPECT_EQ (choc::memory::readLittleEndian<decltype(a)> (buffer), a);
-
-        choc::memory::writeBigEndian (buffer, a);
-        CHOC_EXPECT_EQ (buffer[0], 1);
-        CHOC_EXPECT_EQ (buffer[1], 2);
-        CHOC_EXPECT_EQ (buffer[6], 7);
-        CHOC_EXPECT_EQ (buffer[7], 8);
-        CHOC_EXPECT_EQ (choc::memory::readBigEndian<decltype(a)> (buffer), a);
-
-        CHOC_EXPECT_EQ (choc::memory::bitcast<uint64_t> (1.0), 0x3ff0000000000000ull);
-        CHOC_EXPECT_EQ (choc::memory::bitcast<double> (0x3ff0000000000000ull), 1.0);
-        CHOC_EXPECT_EQ (choc::memory::bitcast<uint32_t> (1.0f), 0x3f800000u);
-        CHOC_EXPECT_EQ (choc::memory::bitcast<float> (0x3f800000u), 1.0f);
     }
 
     {
@@ -420,6 +488,86 @@ inline void testStringUtilities (TestProgress& progress)
                 CHOC_EXPECT_TRUE (testRoundTrip());
                 byte = (byte * 7 + 3);
             }
+        }
+    }
+
+    {
+        CHOC_TEST (URIEncoding)
+        CHOC_EXPECT_EQ (choc::text::percentEncodeURI ("ABC://``\\123-abc~-xyz"), "ABC%3a%2f%2f%60%60%5c123-abc~-xyz");
+    }
+
+    {
+        CHOC_TEST (xxHash)
+
+        struct Test
+        {
+            std::string_view input;
+            uint32_t seed;
+            uint32_t hash32;
+            uint64_t hash64;
+        };
+
+        constexpr Test tests[] = {
+            { "", 0, 0x2cc5d05u, 0xef46db3751d8e999u },
+            { "C", 1, 0xdfbce743u, 0xbb9cff53b7445da8u },
+            { "EK", 2, 0x956c6231u, 0x2057a2db0cbfa023u },
+            { "KIO", 3, 0x8269d336u, 0x878204a3ab2b0cbdu },
+            { "IKUW", 4, 0x43388fd5u, 0x99f454dbf4f8d5e9u },
+            { "KUWQS", 5, 0x5c2d65bu, 0xbdc87b641d37787cu },
+            { "USQ_][", 6, 0x3b5a98eeu, 0xa47f857228b0fc74u },
+            { "SQ_][Yg", 7, 0xf68b9027u, 0xb99cd3405c695045u },
+            { "QSUWikmo", 8, 0x6da56924u, 0x85fa50a6adfb0378u },
+            { "SUWikmoac", 9, 0xf79c62f5u, 0x19b8a3ab91ee1344u },
+            { "UkiomcageI", 10, 0xd498b3eau, 0xd6ebe7ba5c03e1d8u },
+            { "kiomcageIGM", 11, 0x87739234u, 0xb58219f701ed8e8au },
+            { "ikegacKMGICE", 12, 0xc74af22fu, 0xc16a0d06b5705ad0u },
+            { "kegacKMGICEqA", 13, 0x31a02c0cu, 0xe334f0db41934ce9u },
+            { "ecaMKIGECAq][Y", 14, 0xf8ccea89u, 0x724918b9b637bf89u },
+            { "caMKIGECAq][YWU", 15, 0x5443abd7u, 0xdd6386ed9cb516du },
+            { "acegikmo_acegikm", 16, 0x84ffaa2du, 0x9a67ab4327b988e7u },
+            { "ekioma_ecigmkQOUSY", 18, 0x10d40da9u, 0x50224b0a592395f0u },
+            { "kioma_ecigmkQOUSYW]", 19, 0x34494b81u, 0x85e378fea54379b7u },
+            { "kce_akmgiSUOQ[]WYQSMO", 21, 0xd33b77a2u, 0x28fb408b710db96eu },
+            { "ca_mkigUSQO][YWSQOM[YW", 22, 0x588fe96au, 0x6318fc8a76594d7bu },
+            { "_aceWY[]OQSUUWY[MOQSEGIK", 24, 0x4eb5e87u, 0x670d63f8b5a60384u },
+            { "aceWY[]OQSUUWY[MOQSEGIKoq", 25, 0x727bfaeau, 0xe1f5af9d6511b6dfu },
+            { "YW][QOUSWU[YOMSQGEKIqoCAECI", 27, 0x7abed4e7u, 0x6664317746e019fau },
+            { "WYSUOQY[UWQSMOIKEGACoqGICEqA", 28, 0xa4c7f508u, 0xdb11256faac2467cu },
+            { "QO[YWUSQOMKIGECAqoIGECAqomkigec", 31, 0x5d5e2778u, 0x41424284e2253e86u },
+            { "OQSUWY[]_acegikmKMOQSUWY[]_acegi", 32, 0x8cf29158u, 0x1f9a864d4c2ef30eu },
+            { "QSUWY[]_acegikmKMOQSUWY[]_acegi]_", 33, 0x8dfda7e5u, 0x5fd725e54d9d5608u },
+            { "YW][a_ecigmkMKQOUSYW][a_ecig_]cagek", 35, 0x842c29f5u, 0x2929a36df1365d1fu },
+            { "WYce_akmgiOQKMWYSU_a[]giceac]_ikegqA", 36, 0x4b3d4fbau, 0x975dcc8958c35dd9u },
+            { "ca_mkigQOMKYWUSa_][igecca_]kigeAqomIGE", 38, 0xac870e96u, 0xd6893eeacf4cf3edu },
+            { "a_mkigQOMKYWUSa_][igecca_]kigeAqomIGEC_", 39, 0xec9bab74u, 0xd5f77f507395788u },
+            { "aceSUWYKMOQcegi[]_aegik]_acCEGImoqAacegY[", 41, 0xd07660fau, 0x9ecdfb63c489228u },
+            { "cUSYWMKQOecig][a_geki_]caECIGomAqcage[Y_]A", 42, 0xeab316f2u, 0xd38549656406504du },
+            { "USYWMKQOecig][a_geki_]caECIGomAqcage[Y_]AqE", 43, 0x9c95496du, 0xaa7aa3068f97dab8u },
+            { "MKigeca_][kigeca_]IGECAqomgeca_][YECAqomkiGECAq", 47, 0xf7176037u, 0x1cbd705f76c815e9u },
+            { "KMOQSUWYmoqACEGI]_acegikikmoqACEY[]_acegIKMOQSUW", 48, 0x4bb111deu, 0xdb5ad15a8c64851eu },
+            { "MOQSUWYmoqACEGI]_acegikikmoqACEY[]_acegIKMOQSUWkm", 49, 0x354d9f5u, 0x778add70ef71bd44u },
+            { "OUSYWomAqECIG_]cagekikiomAqEC[Y_]cageKIOMSQWUmkqoC", 50, 0x2588e2d2u, 0xf9341494a5e0e8dcu },
+            { "UqAmoGICEac]_ikegmoikCEqA]_Y[egacMOIKUWQSoqkmEGACIKEG", 53, 0x4a2a2ec3u, 0xa4fc2925334eb991u },
+            { "omIGECca_]kigeomkiECAq_][YgecaOMKIWUSQqomkGECAKIGESQOMm", 55, 0x15e3bc0cu, 0x1983a0fd074d4547u },
+            { "qgeki_]caAqECkiomcage[Y_]SQWUKIOMCAGEmkqoOMSQGEKIqoCAigmka", 58, 0x8fe33c30u, 0x226cac49fa9e3291u },
+            { "gac]_CEqAmoikegac]_Y[UWQSMOIKEGACoqkmQSMOIKEGACoqkmgice_a[]WY", 61, 0xf36eac3du, 0x9f39b71c967657f5u },
+            { "]_acegikmoqACEGIKMOQSUWY[]_acegiUWY[]_acegikmoqACEGIKMOQSUWY[]_a", 64, 0xb1cca1fu, 0x6a1b54e459c4f910u },
+            { "_acegikmoqACEGIKMOQSUWY[]_acegiUWY[]_acegikmoqACEGIKMOQSUWY[]_aGI", 65, 0x1954b8d2u, 0xa7bc3d9bb019ff88u },
+            { "gekiomAqECIGMKQOUSYW][a_ecigWU[Y_]cagekiomAqECIGMKQOUSYW][a_IGMKQOU", 67, 0x1b6c90c9u, 0xe4e33001a3a5ce1au },
+            { "qomIGECQOMKYWUSa_][igec[YWUca_]kigeAqomIGECQOMKYWUSa_][MKIGUSQO][YWeca", 70, 0xba086ea7u, 0x8826868d435e6f08u },
+            { "omIGECQOMKYWUSa_][igec[YWUca_]kigeAqomIGECQOMKYWUSa_][MKIGUSQO][YWeca_m", 71, 0xbaba8050u, 0x4a74507e42327b09u },
+            { "qUSYWMKQOecig][a__]caWU[YomAqgekiMKQOECIG][a_USYWQOUSIGMKa_ecYW][qoCAigmkO", 74, 0x3334060bu, 0xef9a38af81f74e2du },
+        };
+
+        for (auto t : tests)
+        {
+            choc::hash::xxHash32 h32 (t.seed);
+            h32.addInput (t.input.data(), t.input.length());
+            CHOC_EXPECT_EQ (t.hash32, h32.getHash());
+
+            choc::hash::xxHash64 h64 (t.seed);
+            h64.addInput (t.input.data(), t.input.length());
+            CHOC_EXPECT_EQ (t.hash64, h64.getHash());
         }
     }
 }
@@ -1471,6 +1619,76 @@ inline void testChannelSets (TestProgress& progress)
     }
 }
 
+
+//==============================================================================
+template <typename Format, typename Buffer>
+inline void testIntToFloatBuffer (TestProgress& progress, Buffer& buffer, uint32_t sampleStride)
+{
+    std::vector<uint8_t> data;
+    data.resize (buffer.getNumChannels() * buffer.getNumFrames() * sampleStride);
+    auto b2 = buffer;
+    auto b3 = buffer;
+
+    choc::audio::sampledata::copyToInterleavedIntData<Format> (data.data(), sampleStride, buffer);
+    choc::audio::sampledata::copyFromInterleavedIntData<Format> (b2, data.data(), sampleStride);
+    choc::audio::sampledata::copyToInterleavedIntData<Format> (data.data(), sampleStride, b2);
+    choc::audio::sampledata::copyFromInterleavedIntData<Format> (b3, data.data(), sampleStride);
+
+    CHOC_EXPECT_EQ (true, contentMatches (b2, b3));
+}
+
+template <typename Format>
+inline void testIntToFloatFormat (TestProgress& progress)
+{
+    std::array testValues { 10.0f, 1.1f, 1.0f, 0.99f, 0.8f, 0.6f, 0.5f, 0.3f, 0.2f, 0.01f, 0.0f };
+    char data[8];
+
+    for (auto f1 : testValues)
+    {
+        {
+            Format::write (data, f1);
+            auto f2 = Format::template read<float> (data);
+            Format::write (data, f2);
+            auto f3 = Format::template read<float> (data);
+            CHOC_EXPECT_EQ (f2, f3);
+        }
+
+        {
+            Format::write (data, -f1);
+            auto f2 = Format::template read<float> (data);
+            Format::write (data, f2);
+            auto f3 = Format::template read<float> (data);
+            CHOC_EXPECT_EQ (f2, f3);
+        }
+    }
+
+    for (uint32_t numChans = 1; numChans < 4; ++numChans)
+    {
+        const uint32_t numFrames = 32;
+        size_t testIndex = 0;
+
+        auto source = choc::buffer::createChannelArrayBuffer (numChans, numFrames, [&]
+        {
+            ++testIndex;
+            return testValues[testIndex % testValues.size()] * ((testIndex & 1) ? -1.0f : 1.0f);
+        });
+
+        testIntToFloatBuffer<Format> (progress, source, Format::sizeInBytes);
+    }
+}
+
+inline void testIntToFloat (TestProgress& progress)
+{
+    { CHOC_TEST(Int8);               testIntToFloatFormat<choc::audio::sampledata::Int8> (progress); }
+    { CHOC_TEST(UInt8);              testIntToFloatFormat<choc::audio::sampledata::UInt8> (progress); }
+    { CHOC_TEST(Int16LittleEndian);  testIntToFloatFormat<choc::audio::sampledata::Int16LittleEndian> (progress); }
+    { CHOC_TEST(Int16BigEndian);     testIntToFloatFormat<choc::audio::sampledata::Int16BigEndian> (progress); }
+    { CHOC_TEST(Int24LittleEndian);  testIntToFloatFormat<choc::audio::sampledata::Int24LittleEndian> (progress); }
+    { CHOC_TEST(Int24BigEndian);     testIntToFloatFormat<choc::audio::sampledata::Int24BigEndian> (progress); }
+    { CHOC_TEST(Int32LittleEndian);  testIntToFloatFormat<choc::audio::sampledata::Int32LittleEndian> (progress); }
+    { CHOC_TEST(Int32BigEndian);     testIntToFloatFormat<choc::audio::sampledata::Int32BigEndian> (progress); }
+}
+
 //==============================================================================
 inline void testFIFOs (TestProgress& progress)
 {
@@ -1621,7 +1839,7 @@ inline void testMIDIFiles (TestProgress& progress)
                               });
 
             for (auto& e : mf.toSequence())
-                output2 += choc::text::floatToString (e.timeInSeconds, 3) + " " + e.message.toHexString() + "\n";
+                output2 += choc::text::floatToString (e.timeStamp, 3) + " " + e.message.toHexString() + "\n";
 
             // This is just a simple regression test to see whether anything changes. Update the hash number if it does.
             CHOC_EXPECT_EQ (5294939095423848520ull, simpleHash (output1));
@@ -1784,9 +2002,53 @@ inline void testCOM (TestProgress& progress)
     }
 }
 
+inline void testStableSort (TestProgress& progress)
+{
+    CHOC_CATEGORY (StableSort);
+
+    {
+        CHOC_TEST (StableSort)
+
+        for (int len = 0; len < 500; ++len)
+        {
+            std::vector<int> v;
+
+            for (int i = 0; i < len; ++i)
+                v.push_back (rand() & 63);
+
+            {
+                auto comp = [] (int a, int b) { return a / 2 < b / 2; };
+
+                auto v2 = v;
+                std::stable_sort (v2.begin(), v2.end(), comp);
+
+                auto v3 = v;
+                choc::sorting::stable_sort (v3.begin(), v3.end(), comp);
+                CHOC_EXPECT_TRUE (v2 == v3);
+
+                auto v4 = v;
+                choc::sorting::stable_sort (v4.data(), v4.data() + v4.size(), comp);
+                CHOC_EXPECT_TRUE (v2 == v4);
+            }
+
+            auto v2 = v;
+            std::stable_sort (v2.begin(), v2.end());
+
+            auto v3 = v;
+            choc::sorting::stable_sort (v3.begin(), v3.end());
+            CHOC_EXPECT_TRUE (v2 == v3);
+
+            auto v4 = v;
+            choc::sorting::stable_sort (v4.data(), v4.data() + v4.size());
+            CHOC_EXPECT_TRUE (v2 == v4);
+        }
+    }
+}
+
 //==============================================================================
 inline bool runAllTests (TestProgress& progress)
 {
+    testPlatform (progress);
     testContainerUtils (progress);
     testStringUtilities (progress);
     testFileUtilities (progress);
@@ -1794,10 +2056,12 @@ inline bool runAllTests (TestProgress& progress)
     testJSON (progress);
     testMIDI (progress);
     testChannelSets (progress);
+    testIntToFloat (progress);
     testFIFOs (progress);
     testMIDIFiles (progress);
     testJavascript (progress);
     testCOM (progress);
+    testStableSort (progress);
 
     progress.printReport();
     return progress.numFails == 0;

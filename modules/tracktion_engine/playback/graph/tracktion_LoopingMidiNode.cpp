@@ -169,7 +169,7 @@ namespace chocMidiHelpers
 
             const auto mm = event.message.getShortMessage();
 
-            if (! (mm.getChannel1to16() == channel && event.timeInSeconds <= time))
+            if (! (mm.getChannel1to16() == channel && event.timeStamp <= time))
                 continue;
 
             if (mm.isController())
@@ -186,7 +186,7 @@ namespace chocMidiHelpers
 
                 if (std::find (std::begin (passthroughs), std::end (passthroughs), num) != std::end (passthroughs))
                 {
-                    parameterNumberState.sendIfNecessary (channel, event.timeInSeconds, dest);
+                    parameterNumberState.sendIfNecessary (channel, event.timeStamp, dest);
                     dest.add (toMidiMessage (event));
                 }
                 else
@@ -476,33 +476,33 @@ namespace MidiHelpers
 
                            if (m.isNoteOn())
                            {
-                               const auto noteOnTime = q.roundBeatToNearest (BeatPosition::fromBeats (e.timeInSeconds)).inBeats();
+                               const auto noteOnTime = q.roundBeatToNearest (BeatPosition::fromBeats (e.timeStamp)).inBeats();
 
                                if (auto noteOff = getNoteOff (index, ms, noteOffMap))
                                {
                                    if (quantiseNoteOffs)
                                    {
-                                       auto noteOffTime = (q.roundBeatUp (BeatPosition::fromBeats (noteOff->timeInSeconds))).inBeats();
+                                       auto noteOffTime = (q.roundBeatUp (BeatPosition::fromBeats (noteOff->timeStamp))).inBeats();
 
                                        static constexpr double beatsToBumpUpBy = 1.0 / 512.0;
 
                                        if (noteOffTime <= noteOnTime) // Don't want note on and off time the same
                                            noteOffTime = q.roundBeatUp (BeatPosition::fromBeats (noteOnTime + beatsToBumpUpBy)).inBeats();
 
-                                       noteOff->timeInSeconds = noteOffTime;
+                                       noteOff->timeStamp = noteOffTime;
                                    }
                                    else
                                    {
                                        // nudge the note-up backwards just a bit to make sure the ordering is correct
-                                       noteOff->timeInSeconds = (noteOnTime + (noteOff->timeInSeconds - e.timeInSeconds) - 0.00001);
+                                       noteOff->timeStamp = (noteOnTime + (noteOff->timeStamp - e.timeStamp) - 0.00001);
                                    }
                                }
 
-                               e.timeInSeconds = noteOnTime;
+                               e.timeStamp = noteOnTime;
                            }
                            else if (m.isNoteOff() && quantiseNoteOffs)
                            {
-                               e.timeInSeconds = q.roundBeatUp (BeatPosition::fromBeats (e.timeInSeconds)).inBeats();
+                               e.timeStamp = q.roundBeatUp (BeatPosition::fromBeats (e.timeStamp)).inBeats();
                            }
                        });
     }
@@ -517,7 +517,7 @@ namespace MidiHelpers
             const auto m = e.message.getShortMessage();
 
             if (m.isNoteOn() || m.isNoteOff())
-                e.timeInSeconds = groove.beatsTimeToGroovyTime (BeatPosition::fromBeats (e.timeInSeconds), grooveStrength).inBeats();
+                e.timeStamp = groove.beatsTimeToGroovyTime (BeatPosition::fromBeats (e.timeStamp), grooveStrength).inBeats();
         }
     }
 
@@ -537,7 +537,7 @@ namespace MidiHelpers
                                          const auto numEvents = sourceSequence.events.size();
 
                                          for (size_t i = 0; i < numEvents; ++i)
-                                             if (sourceSequence.events[i].timeInSeconds >= time)
+                                             if (sourceSequence.events[i].timeStamp >= time)
                                                  return i;
 
                                          return {};
@@ -581,13 +581,13 @@ namespace MidiHelpers
 
                     if (auto noteOffEvent = getNoteOff (i, sourceSequence, noteOffMap))
                     {
-                        if (e.timeInSeconds >= time)
+                        if (e.timeStamp >= time)
                             break;
 
                         // don't play very short notes or ones that have already finished
-                        if (noteOffEvent->timeInSeconds > time + 0.0001)
+                        if (noteOffEvent->timeStamp > time + 0.0001)
                         {
-                            juce::MidiMessage m2 ((int) m.data[0], (int) m.data[1], (int) m.data[2], e.timeInSeconds);
+                            juce::MidiMessage m2 ((int) m.data[0], (int) m.data[1], (int) m.data[2], e.timeStamp);
                             m2.multiplyVelocity (volScale);
 
                             // give these a tiny offset to make sure they're played after the controller updates
@@ -680,14 +680,14 @@ struct EventGenerator   : public MidiGenerator
         {
             currentIndex = std::clamp<size_t> (currentIndex, 0, numEvents - 1);
 
-            if (sequence.events[currentIndex].timeInSeconds >= pos)
+            if (sequence.events[currentIndex].timeStamp >= pos)
             {
-                while (currentIndex > 0 && sequence.events[currentIndex - 1].timeInSeconds >= pos)
+                while (currentIndex > 0 && sequence.events[currentIndex - 1].timeStamp >= pos)
                     --currentIndex;
             }
             else
             {
-                while (currentIndex < numEvents && sequence.events[currentIndex].timeInSeconds < pos)
+                while (currentIndex < numEvents && sequence.events[currentIndex].timeStamp < pos)
                     ++currentIndex;
             }
         }

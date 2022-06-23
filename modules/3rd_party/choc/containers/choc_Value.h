@@ -429,8 +429,8 @@ struct SimpleStringDictionary  : public StringDictionary
 
     void clear();
 
-private:
-    friend class Value;
+    /// The strings are stored in a single chunk, which can be saved and
+    /// reloaded if necessary.
     std::vector<char> strings;
 };
 

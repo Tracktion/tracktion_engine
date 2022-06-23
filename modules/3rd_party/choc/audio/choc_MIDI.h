@@ -178,7 +178,7 @@ struct Message
     /// Returns the size of the message in bytes.
     size_t length() const;
     /// Returns the size of the message in bytes.
-    uint8_t size() const;
+    size_t size() const;
     /// Returns a byte from the message
     uint8_t operator[] (size_t index) const;
     /// Returns a pointer to the raw message data.
@@ -394,6 +394,7 @@ inline void Message::appendData (const void* data, size_t size)    { content.app
 
 inline bool Message::empty() const           { return content.empty(); }
 inline size_t Message::length() const        { return content.length(); }
+inline size_t Message::size() const          { return content.length(); }
 inline const uint8_t* Message::data() const  { return reinterpret_cast<const uint8_t*> (content.data()); }
 
 inline uint8_t Message::operator[] (size_t i) const { CHOC_ASSERT (i < content.length()); return static_cast<uint8_t> (content[i]); }

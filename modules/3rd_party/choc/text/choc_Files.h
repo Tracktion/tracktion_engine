@@ -38,6 +38,15 @@ struct Error  : public std::runtime_error
     Error (const std::string& error) : std::runtime_error (error) {}
 };
 
+/// Attempts to read the entire contents of the given file into memory,
+/// throwing an Error exception if anything goes wrong. The lambda argument will be
+/// called with the amount of space needed as a uint64_t parameter, and it must
+/// return a pointer to a sufficiently large block of memory to write the data into
+/// (or nullptr if it can't provide a suitable buffer, in which case nothing will be done).
+/// Returns the number of bytes successfully read.
+template <typename GetDestBufferFn>
+size_t readFileContent (const std::string& filename, GetDestBufferFn&&);
+
 /// Attempts to load the contents of the given filename into a string,
 /// throwing an Error exception if anything goes wrong.
 std::string loadFileAsString (const std::string& filename);
@@ -93,6 +102,8 @@ struct TempFile
 
 #endif
 
+
+
 //==============================================================================
 //        _        _           _  _
 //     __| |  ___ | |_   __ _ (_)| | ___
@@ -104,7 +115,8 @@ struct TempFile
 //
 //==============================================================================
 
-inline std::string loadFileAsString (const std::string& filename)
+template <typename GetDestBufferFn>
+size_t readFileContent (const std::string& filename, GetDestBufferFn&& getBuffer)
 {
     if (filename.empty())
         throw Error ("Illegal filename");
@@ -126,21 +138,35 @@ inline std::string loadFileAsString (const std::string& filename)
         if (fileSize == 0)
             return {};
 
-        std::string content (static_cast<std::string::size_type> (fileSize),
-                             std::string::value_type());
-        stream.seekg (0);
+        if (auto destBuffer = getBuffer (static_cast<uint64_t> (fileSize)))
+        {
+            stream.seekg (0);
 
-        if (stream.read (content.data(), static_cast<std::streamsize> (fileSize)))
-            return content;
+            if (stream.read (static_cast<std::ifstream::char_type*> (destBuffer), static_cast<std::streamsize> (fileSize)))
+                return static_cast<size_t> (fileSize);
 
-        throw Error ("Failed to read from file: " + filename);
+            throw Error ("Failed to read from file: " + filename);
+        }
     }
     catch (const std::ios_base::failure& e)
     {
         throw Error ("Failed to read from file: " + filename + ": " + e.what());
     }
 
-    return {};
+    return 0;
+}
+
+inline std::string loadFileAsString (const std::string& filename)
+{
+    std::string result;
+
+    readFileContent (filename, [&] (uint64_t size)
+    {
+        result.resize (static_cast<std::string::size_type> (size));
+        return result.data();
+    });
+
+    return result;
 }
 
 inline void replaceFileWithContent (const std::string& filename, std::string_view newContent)
