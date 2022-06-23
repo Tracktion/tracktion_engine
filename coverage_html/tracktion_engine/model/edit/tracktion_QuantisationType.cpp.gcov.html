@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-06-22 14:06:44</td>
+            <td class="headerValue">2022-06-23 09:28:58</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">14</td>
@@ -202,9 +202,9 @@
 <a name="140"><span class="lineNum">     140 </span><span class="lineNoCov">          0 :     return quantisationTypes[typeIndex].snapLevel;</span></a>
 <a name="141"><span class="lineNum">     141 </span>            : }</a>
 <a name="142"><span class="lineNum">     142 </span>            : </a>
-<a name="143"><span class="lineNum">     143 </span><span class="lineCov">     390424 : bool QuantisationType::isEnabled() const</span></a>
+<a name="143"><span class="lineNum">     143 </span><span class="lineCov">     476992 : bool QuantisationType::isEnabled() const</span></a>
 <a name="144"><span class="lineNum">     144 </span>            : {</a>
-<a name="145"><span class="lineNum">     145 </span><span class="lineCov">     390424 :     return typeIndex != 0 &amp;&amp; proportion &gt; 0.0f;</span></a>
+<a name="145"><span class="lineNum">     145 </span><span class="lineCov">     476992 :     return typeIndex != 0 &amp;&amp; proportion &gt; 0.0f;</span></a>
 <a name="146"><span class="lineNum">     146 </span>            : }</a>
 <a name="147"><span class="lineNum">     147 </span>            : </a>
 <a name="148"><span class="lineNum">     148 </span><span class="lineNoCov">          0 : void QuantisationType::setProportion (float prop)</span></a>
@@ -222,20 +222,20 @@
 <a name="160"><span class="lineNum">     160 </span><span class="lineNoCov">          0 :     return roundTo (time, 1.0 - 1.0e-10, edit);</span></a>
 <a name="161"><span class="lineNum">     161 </span>            : }</a>
 <a name="162"><span class="lineNum">     162 </span>            : </a>
-<a name="163"><span class="lineNum">     163 </span><span class="lineCov">    1561800 : BeatPosition QuantisationType::roundToBeat (BeatPosition beatNumber, double adjustment) const</span></a>
+<a name="163"><span class="lineNum">     163 </span><span class="lineCov">    1592000 : BeatPosition QuantisationType::roundToBeat (BeatPosition beatNumber, double adjustment) const</span></a>
 <a name="164"><span class="lineNum">     164 </span>            : {</a>
-<a name="165"><span class="lineNum">     165 </span><span class="lineCov">    1561800 :     if (typeIndex == 0)</span></a>
-<a name="166"><span class="lineNum">     166 </span><span class="lineCov">        548 :         return beatNumber;</span></a>
+<a name="165"><span class="lineNum">     165 </span><span class="lineCov">    1592000 :     if (typeIndex == 0)</span></a>
+<a name="166"><span class="lineNum">     166 </span><span class="lineCov">        564 :         return beatNumber;</span></a>
 <a name="167"><span class="lineNum">     167 </span>            : </a>
-<a name="168"><span class="lineNum">     168 </span><span class="lineCov">    1561260 :     const double beats = fractionOfBeat * floor (beatNumber.inBeats() / fractionOfBeat + adjustment);</span></a>
+<a name="168"><span class="lineNum">     168 </span><span class="lineCov">    1591440 :     const double beats = fractionOfBeat * floor (beatNumber.inBeats() / fractionOfBeat + adjustment);</span></a>
 <a name="169"><span class="lineNum">     169 </span>            : </a>
-<a name="170"><span class="lineNum">     170 </span><span class="lineCov">    1561260 :     return BeatPosition::fromBeats (proportion == 1.0 ? beats</span></a>
-<a name="171"><span class="lineNum">     171 </span><span class="lineCov">    1561260 :                                                       : beatNumber.inBeats() + proportion * (beats - beatNumber.inBeats()));</span></a>
+<a name="170"><span class="lineNum">     170 </span><span class="lineCov">    1591440 :     return BeatPosition::fromBeats (proportion == 1.0 ? beats</span></a>
+<a name="171"><span class="lineNum">     171 </span><span class="lineCov">    1591440 :                                                       : beatNumber.inBeats() + proportion * (beats - beatNumber.inBeats()));</span></a>
 <a name="172"><span class="lineNum">     172 </span>            : }</a>
 <a name="173"><span class="lineNum">     173 </span>            : </a>
-<a name="174"><span class="lineNum">     174 </span><span class="lineCov">    1561800 : BeatPosition QuantisationType::roundBeatToNearest (BeatPosition beatNumber) const</span></a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineCov">    1592000 : BeatPosition QuantisationType::roundBeatToNearest (BeatPosition beatNumber) const</span></a>
 <a name="175"><span class="lineNum">     175 </span>            : {</a>
-<a name="176"><span class="lineNum">     176 </span><span class="lineCov">    1561800 :     return roundToBeat (beatNumber, 0.5);</span></a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineCov">    1592000 :     return roundToBeat (beatNumber, 0.5);</span></a>
 <a name="177"><span class="lineNum">     177 </span>            : }</a>
 <a name="178"><span class="lineNum">     178 </span>            : </a>
 <a name="179"><span class="lineNum">     179 </span><span class="lineNoCov">          0 : BeatPosition QuantisationType::roundBeatUp (BeatPosition beatNumber) const</span></a>
