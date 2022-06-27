@@ -36,6 +36,11 @@ public:
    #endif
     static juce::Array<Engine*> getEngines();
 
+    // BEATCONNECT MODIFICATION START
+    const std::map<HashCode, std::unique_ptr<AudioFifo>>& getAudioFifo() const;
+    void addBlockToAudioFifo(const HashCode& p_FifoID, const juce::AudioBuffer<float>& p_NextBuffer);
+    // BEATCONNECT MODIFICATION END
+
     TemporaryFileManager& getTemporaryFileManager() const;
     AudioFileFormatManager& getAudioFileFormatManager() const;
     PropertyStorage& getPropertyStorage() const;
@@ -62,6 +67,10 @@ public:
 
 private:
     void initialise();
+
+    // BEATCONNECT MODIFICATION START
+    std::map<HashCode, std::unique_ptr<AudioFifo>> audioFifo;
+    // BEATCONNECT MODIFICATION END
 
     std::unique_ptr<ProjectManager> projectManager;
     std::unique_ptr<TemporaryFileManager> temporaryFileManager;

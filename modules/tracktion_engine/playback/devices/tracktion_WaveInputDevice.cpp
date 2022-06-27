@@ -512,8 +512,13 @@ public:
         void addBlockToRecord (const juce::AudioBuffer<float>& buffer, int start, int numSamples)
         {
             if (fileWriter != nullptr)
-                engine.getWaveInputRecordingThread().addBlockToRecord (*fileWriter, buffer,
-                                                                       start, numSamples, thumbnail);
+            {
+                // BEATCONNECT MODIFICATION START
+                engine.addBlockToAudioFifo(fileWriter->file.getHash(), buffer);
+                // BEATCONNECT MODIFICATION END
+
+                engine.getWaveInputRecordingThread().addBlockToRecord(*fileWriter, buffer, start, numSamples, thumbnail);
+            }
         }
     };
 
@@ -1695,11 +1700,6 @@ void WaveInputRecordingThread::run()
 
         if (auto block = queue->removeFirstPending())
         {
-            // BEATCONNECT MODIFICATION START
-            if (block->buffer.getNumSamples() > 0)
-                m_AudioFifo.addToFifo(block->buffer);
-            // BEATCONNECT MODIFICATION END
-
             if (! block->writer.load()->appendBuffer (block->buffer, block->buffer.getNumSamples()))
             {
                 if (! hasSentStop)

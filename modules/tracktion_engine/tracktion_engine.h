@@ -252,6 +252,10 @@ namespace tracktion_graph
 //==============================================================================
 namespace tracktion_engine
 {
+    // BEATCONNECT MODIFICATION START
+    class AudioFifo;
+    // BEATCONNECT MODIFICATION END
+
     class Engine;
     class DeviceManager;
     class MidiProgramManager;

@@ -261,4 +261,23 @@ WarpTimeFactory& Engine::getWarpTimeFactory() const
     return *warpTimeFactory;
 }
 
+// BEATCONNECT MODIFICATION START
+const std::map<HashCode, std::unique_ptr<AudioFifo>>& Engine::getAudioFifo() const
+{
+    return audioFifo;
+}
+
+void Engine::addBlockToAudioFifo(const HashCode& p_FifoID, const juce::AudioBuffer<float>& p_NextBuffer)
+{
+    auto it = audioFifo.find(p_FifoID);
+    if (it == audioFifo.end())
+    {
+        audioFifo[p_FifoID] = std::make_unique<AudioFifo>(p_NextBuffer.getNumChannels(), 100000);
+        it = audioFifo.find(p_FifoID);
+    }
+
+    it->second->write(p_NextBuffer);
+}
+// BEATCONNECT MODIFICATION END
+
 }
