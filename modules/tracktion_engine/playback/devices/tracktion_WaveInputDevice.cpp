@@ -330,7 +330,10 @@ public:
             if (! res.wasOk())
                 return res.getErrorMessage();
 
-            auto rc = std::make_unique<RecordingContext> (edit.engine, recordedFile);
+            // BEATCONNECT MODIFICATION START
+            auto rc = std::make_unique<RecordingContext> (edit.engine, recordedFile, punchIn, getTargetTracks());
+            // BEATCONNECT MODIFICATION END
+
             rc->sampleRate = sr;
 
             juce::StringPairArray metadata;
@@ -492,10 +495,16 @@ public:
 
     struct RecordingContext
     {
-        RecordingContext (Engine& e, const juce::File& f)
-            : engine (e), file (f), diskSpaceChecker (e, f),
-              threadInitialiser (e.getWaveInputRecordingThread())
-        {}
+        // BEATCONNECT MODIFICATION START
+        RecordingContext (Engine& e, const juce::File& f, const double punchIn, const juce::Array<AudioTrack*>&& t)
+            : engine (e)
+            , file (f)
+            , diskSpaceChecker (e, f)
+            , threadInitialiser(e.getWaveInputRecordingThread())
+        {
+            engine.createFifoBundle(sampleID, punchIn, std::forward<const juce::Array<AudioTrack*>>(t));
+        }
+        // BEATCONNECT MODIFICATION END
 
         Engine& engine;
         juce::File file;
@@ -509,12 +518,18 @@ public:
         RecordingThumbnailManager::Thumbnail::Ptr thumbnail;
         WaveInputRecordingThread::ScopedInitialiser threadInitialiser;
 
+        // BEATCONNECT MODIFICATION START
+        // Create sample ID (juce::Uuid)
+        // The juce::Uuid constructor will create a random id.
+        juce::Uuid sampleID;
+        // BEATCONNECT MODIFICATION END
+
         void addBlockToRecord (const juce::AudioBuffer<float>& buffer, int start, int numSamples)
         {
             if (fileWriter != nullptr)
             {
                 // BEATCONNECT MODIFICATION START
-                engine.addBlockToAudioFifo(fileWriter->file.getHash(), buffer);
+                engine.addBlockToAudioFifo(sampleID, buffer);
                 // BEATCONNECT MODIFICATION END
 
                 engine.getWaveInputRecordingThread().addBlockToRecord(*fileWriter, buffer, start, numSamples, thumbnail);

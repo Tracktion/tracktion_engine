@@ -262,21 +262,41 @@ WarpTimeFactory& Engine::getWarpTimeFactory() const
 }
 
 // BEATCONNECT MODIFICATION START
-const std::map<HashCode, std::unique_ptr<AudioFifo>>& Engine::getAudioFifo() const
+Engine::FifoBundle::FifoBundle(const double p_PunchIn, const juce::Array<AudioTrack*>&& p_Tracks)
+    : m_PunchIn(p_PunchIn)
 {
-    return audioFifo;
+    for (const auto const p : p_Tracks)
+    {
+        jassert(nullptr != p);
+        if (nullptr != p)
+        {
+            const juce::String Temp1 = p->state.getProperty("uuid");
+            const std::string Temp2(Temp1.getCharPointer());
+            m_ListTracksID.push_back(Temp2);
+        }
+    }
 }
 
-void Engine::addBlockToAudioFifo(const HashCode& p_FifoID, const juce::AudioBuffer<float>& p_NextBuffer)
+const std::map<juce::Uuid, std::unique_ptr<Engine::FifoBundle>>& Engine::getAudioFifo() const
 {
-    auto it = audioFifo.find(p_FifoID);
-    if (it == audioFifo.end())
-    {
-        audioFifo[p_FifoID] = std::make_unique<AudioFifo>(p_NextBuffer.getNumChannels(), 100000);
-        it = audioFifo.find(p_FifoID);
-    }
+    return m_ListFifoBundle;
+}
 
-    it->second->write(p_NextBuffer);
+void Engine::addBlockToAudioFifo(const juce::Uuid& p_FifoID, const juce::AudioBuffer<float>& p_NextBuffer)
+{
+    jassert(p_FifoID != 0);
+    auto it = m_ListFifoBundle.find(p_FifoID);
+    jassert(it != m_ListFifoBundle.end());
+
+    if(nullptr == it->second->m_Fifo)
+        it->second->m_Fifo = std::make_unique<AudioFifo>(p_NextBuffer.getNumChannels(), 100000);
+    it->second->m_Fifo->write(p_NextBuffer);
+}
+
+void Engine::createFifoBundle(const juce::Uuid& p_FifoID, const double p_PunchIn, const juce::Array<AudioTrack*>&& p_Tracks)
+{
+    jassert(p_FifoID != 0);
+    m_ListFifoBundle[p_FifoID] = std::make_unique<FifoBundle>(p_PunchIn, std::forward<const juce::Array<AudioTrack*>>(p_Tracks));
 }
 // BEATCONNECT MODIFICATION END
 

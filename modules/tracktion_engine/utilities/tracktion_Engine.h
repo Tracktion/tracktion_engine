@@ -37,8 +37,17 @@ public:
     static juce::Array<Engine*> getEngines();
 
     // BEATCONNECT MODIFICATION START
-    const std::map<HashCode, std::unique_ptr<AudioFifo>>& getAudioFifo() const;
-    void addBlockToAudioFifo(const HashCode& p_FifoID, const juce::AudioBuffer<float>& p_NextBuffer);
+    struct FifoBundle
+    {
+        FifoBundle(const double p_PunchIn, const juce::Array<AudioTrack*>&& p_Tracks);
+
+        double m_PunchIn = 0;
+        std::vector<std::string> m_ListTracksID;
+        std::unique_ptr<AudioFifo> m_Fifo;
+    };
+    const std::map<juce::Uuid, std::unique_ptr<Engine::FifoBundle>>& getAudioFifo() const;
+    void addBlockToAudioFifo(const juce::Uuid& p_FifoID, const juce::AudioBuffer<float>& p_NextBuffer);
+    void createFifoBundle(const juce::Uuid& p_FifoID, const double p_PunchIn, const juce::Array<AudioTrack*>&& p_Tracks);
     // BEATCONNECT MODIFICATION END
 
     TemporaryFileManager& getTemporaryFileManager() const;
@@ -69,7 +78,7 @@ private:
     void initialise();
 
     // BEATCONNECT MODIFICATION START
-    std::map<HashCode, std::unique_ptr<AudioFifo>> audioFifo;
+    std::map<juce::Uuid, std::unique_ptr<FifoBundle>> m_ListFifoBundle;
     // BEATCONNECT MODIFICATION END
 
     std::unique_ptr<ProjectManager> projectManager;
