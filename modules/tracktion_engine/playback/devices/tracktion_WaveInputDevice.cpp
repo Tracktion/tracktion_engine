@@ -502,7 +502,12 @@ public:
             , diskSpaceChecker (e, f)
             , threadInitialiser(e.getWaveInputRecordingThread())
         {
-            engine.createFifoBundle(sampleID, punchIn, std::forward<const juce::Array<AudioTrack*>>(t));
+            const std::string fn = f.getFileName().getCharPointer();
+            engine.createFifoBundle(
+                sampleID, 
+                punchIn, 
+                std::forward<const juce::Array<AudioTrack*>>(t), 
+                std::forward<const std::string>(fn));
         }
         // BEATCONNECT MODIFICATION END
 

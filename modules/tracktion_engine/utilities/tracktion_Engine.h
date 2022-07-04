@@ -39,15 +39,16 @@ public:
     // BEATCONNECT MODIFICATION START
     struct FifoBundle
     {
-        FifoBundle(const double p_PunchIn, const juce::Array<AudioTrack*>&& p_Tracks);
+        FifoBundle(const double p_PunchIn, const juce::Array<AudioTrack*>&& p_Tracks, const std::string& p_FileName);
 
         double m_PunchIn = 0;
         std::vector<std::string> m_ListTracksID;
+        std::string m_FileName;
         std::unique_ptr<AudioFifo> m_Fifo;
     };
     const std::map<juce::Uuid, std::unique_ptr<Engine::FifoBundle>>& getAudioFifo() const;
     void addBlockToAudioFifo(const juce::Uuid& p_FifoID, const juce::AudioBuffer<float>& p_NextBuffer);
-    void createFifoBundle(const juce::Uuid& p_FifoID, const double p_PunchIn, const juce::Array<AudioTrack*>&& p_Tracks);
+    void createFifoBundle(const juce::Uuid& p_FifoID, const double p_PunchIn, const juce::Array<AudioTrack*>&& p_Tracks, const std::string& p_FileName);
     // BEATCONNECT MODIFICATION END
 
     TemporaryFileManager& getTemporaryFileManager() const;
