@@ -177,6 +177,10 @@ public:
     /** Returns the listener list so Nodes can manually call them. */
     juce::ListenerList<Listener>& getListeners()            { return listeners; }
 
+    // BEATCONNECT MODIFICATION START
+    RecordingThumbnailManager::Thumbnail::Ptr receivingThumbnail;
+    // BEATCONNECT MODIFICATION END
+
 protected:
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
     bool isTrackAudible (bool areAnyTracksSolo) const override;
