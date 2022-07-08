@@ -331,6 +331,9 @@ public:
                 return res.getErrorMessage();
 
             // BEATCONNECT MODIFICATION START
+            //  jassert(state.hasType("INPUTDEVICE"));
+            //  juce::String SampleID = state.getProperty("uuid");
+            //  jassert(!SampleID.isEmpty());
             auto rc = std::make_unique<RecordingContext> (edit.engine, recordedFile, punchIn, getTargetTracks());
             // BEATCONNECT MODIFICATION END
 
@@ -496,18 +499,22 @@ public:
     struct RecordingContext
     {
         // BEATCONNECT MODIFICATION START
-        RecordingContext (Engine& e, const juce::File& f, const double punchIn, const juce::Array<AudioTrack*>&& t)
-            : engine (e)
-            , file (f)
-            , diskSpaceChecker (e, f)
-            , threadInitialiser(e.getWaveInputRecordingThread())
+        RecordingContext (
+            Engine& p_Engine,
+            const juce::File& p_File, 
+            const double punchIn, 
+            const juce::Array<AudioTrack*>&& p_TrackList)
+            : engine (p_Engine)
+            , file (p_File)
+            , diskSpaceChecker (p_Engine, p_File)
+            , threadInitialiser(p_Engine.getWaveInputRecordingThread())
         {
-            const std::string fn = f.getFileName().getCharPointer();
+            const std::string FileName = p_File.getFileName().getCharPointer();
             engine.createFifoBundle(
-                sampleID, 
+                m_SampleID,
                 punchIn, 
-                std::forward<const juce::Array<AudioTrack*>>(t), 
-                std::forward<const std::string>(fn));
+                std::forward<const juce::Array<AudioTrack*>>(p_TrackList),
+                FileName);
         }
         // BEATCONNECT MODIFICATION END
 
@@ -526,7 +533,7 @@ public:
         // BEATCONNECT MODIFICATION START
         // Create sample ID (juce::Uuid)
         // The juce::Uuid constructor will create a random id.
-        juce::Uuid sampleID;
+        juce::Uuid m_SampleID;
         // BEATCONNECT MODIFICATION END
 
         void addBlockToRecord (const juce::AudioBuffer<float>& buffer, int start, int numSamples)
@@ -534,7 +541,7 @@ public:
             if (fileWriter != nullptr)
             {
                 // BEATCONNECT MODIFICATION START
-                engine.addBlockToAudioFifo(sampleID, buffer);
+                engine.addBlockToAudioFifo(m_SampleID, buffer);
                 // BEATCONNECT MODIFICATION END
 
                 engine.getWaveInputRecordingThread().addBlockToRecord(*fileWriter, buffer, start, numSamples, thumbnail);
