@@ -56,7 +56,7 @@ We are still in the process of fleshing out Doxygen formatted comments but the D
 
 ## Benchmarks
 We're in the process of creating a portal to view and examine our benchmarks. This is really for our own internal use but might be of interest to some people:
-https://tracktion.github.io/tracktion_benchmarks
+https://tracktion.github.io/tracktion_engine/benchmarks.html
 
 ## Contributing
 Tracktion Engine is provided in JUCE module format, for bug reports and features requests, please visit the [JUCE Forum and post using the Tracktion Engine category](https://forum.juce.com/c/tracktion-engine) -
