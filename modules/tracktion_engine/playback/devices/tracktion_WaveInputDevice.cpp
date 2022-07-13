@@ -541,7 +541,18 @@ public:
             if (fileWriter != nullptr)
             {
                 // BEATCONNECT MODIFICATION START
-                engine.addBlockToAudioFifo(m_SampleID, buffer);
+                if (start > 0)
+                {
+                    jassert(numSamples < buffer.getNumSamples());
+                    juce::AudioBuffer<float> newbuffer;
+                    newbuffer.setSize(buffer.getNumChannels(), numSamples);
+                    for(int i = 0; i < buffer.getNumChannels(); i++)
+                        newbuffer.copyFrom(i, 0, buffer, i, start, numSamples);
+
+                    engine.addBlockToAudioFifo(m_SampleID, newbuffer);
+                }
+                else
+                    engine.addBlockToAudioFifo(m_SampleID, buffer);
                 // BEATCONNECT MODIFICATION END
 
                 engine.getWaveInputRecordingThread().addBlockToRecord(*fileWriter, buffer, start, numSamples, thumbnail);
