@@ -93,6 +93,35 @@ extern "C"
 
 #define JUCE_CORE_INCLUDE_JNI_HELPERS 1 // Required for Ableton Link on Android
 
+
+//==============================================================================
+#undef VERSION
+#define PACKAGE ""
+#define VERSION "0.1.9"
+#define CPU_CLIPS_NEGATIVE 0
+#define CPU_CLIPS_POSITIVE 0
+
+#include "../3rd_party/choc/platform/choc_DisableAllWarnings.h"
+
+extern "C"
+{
+    #include "../3rd_party/libsamplerate/samplerate.h"
+    #include "../3rd_party/libsamplerate/src_linear.c"
+    #include "../3rd_party/libsamplerate/src_sinc.c"
+    #include "../3rd_party/libsamplerate/src_zoh.c"
+    #include "../3rd_party/libsamplerate/samplerate.c"
+}
+
+#undef PACKAGE
+#undef VERSION
+#undef CPU_CLIPS_NEGATIVE
+#undef CPU_CLIPS_POSITIVE
+
+#include "../3rd_party/choc/platform/choc_ReenableAllWarnings.h"
+
+
+//==============================================================================
+//==============================================================================
 #if TRACKTION_UNIT_TESTS
  #include <tracktion_core/tracktion_TestConfig.h>
 #endif
