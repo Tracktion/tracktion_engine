@@ -552,7 +552,10 @@ public:
                     engine.addBlockToAudioFifo(m_SampleID, newbuffer);
                 }
                 else
+                {
+                    jassert(numSamples == buffer.getNumSamples());
                     engine.addBlockToAudioFifo(m_SampleID, buffer);
+                }
                 // BEATCONNECT MODIFICATION END
 
                 engine.getWaveInputRecordingThread().addBlockToRecord(*fileWriter, buffer, start, numSamples, thumbnail);
