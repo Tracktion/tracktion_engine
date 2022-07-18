@@ -493,6 +493,14 @@ public:
     */
     const AudioSegmentList& getAudioSegmentList();
 
+    /** Sets the resampling qulity to use.
+        N.B. the higher the quality, the more higher the CPU usage during playback.
+    */
+    void setResamplingQuality (ResamplingQuality);
+
+    /** Returns the resampling quality to the be used. */
+    ResamplingQuality getResamplingQuality() const;
+
     //==============================================================================
     /** Reverses the loop points to expose the same section of the source file but reversed. */
     void reverseLoopPoints();
@@ -608,6 +616,7 @@ protected:
     juce::CachedValue<AudioFadeCurve::Type> fadeInType, fadeOutType;
     juce::CachedValue<bool> autoCrossfade;
     juce::CachedValue<FadeBehaviour> fadeInBehaviour, fadeOutBehaviour;
+    juce::CachedValue<ResamplingQuality> resamplingQuality;
 
     juce::CachedValue<TimePosition> loopStart;
     juce::CachedValue<TimeDuration> loopLength;

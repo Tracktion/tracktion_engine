@@ -28,6 +28,7 @@ struct WarpPoint
 using WarpMap = std::vector<WarpPoint>;
 
 //==============================================================================
+//==============================================================================
 /** An Node that plays back a wave file. */
 class WaveNode final    : public tracktion::graph::Node,
                           public TracktionEngineNode
@@ -51,7 +52,8 @@ public:
               const juce::AudioChannelSet& destChannelsToFill,
               ProcessState&,
               EditItemID,
-              bool isOfflineRender);
+              bool isOfflineRender,
+              ResamplingQuality);
 
     //==============================================================================
     tracktion::graph::NodeProperties getNodeProperties() override;
@@ -66,6 +68,7 @@ private:
     double originalSpeedRatio = 0, outputSampleRate = 44100.0;
     const EditItemID editItemID;
     bool isOfflineRender = false;
+    const ResamplingQuality resamplingQuality;
 
     AudioFile audioFile;
     LiveClipLevel clipLevel;
@@ -87,6 +90,8 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveNode)
 };
 
+
+//==============================================================================
 //==============================================================================
 /**
     An Node that plays back a wave file.
@@ -109,6 +114,7 @@ public:
                       ProcessState&,
                       EditItemID,
                       bool isOfflineRender,
+                      ResamplingQuality,
                       SpeedFadeDescription = {},
                       std::optional<tempo::Sequence::Position> editTempoSequence = {},
                       TimeStretcher::Mode = TimeStretcher::Mode::defaultMode,
@@ -144,6 +150,7 @@ public:
                       ProcessState&,
                       EditItemID,
                       bool isOfflineRender,
+                      ResamplingQuality,
                       SpeedFadeDescription,
                       std::optional<tempo::Sequence::Position> editTempoSequence,
                       std::optional<WarpMap>,
@@ -166,6 +173,7 @@ private:
     const double speedRatio = 1.0;
     const EditItemID editItemID;
     const bool isOfflineRender = false;
+    const ResamplingQuality resamplingQuality;
 
     const AudioFile audioFile;
     const SpeedFadeDescription speedFadeDescription;

@@ -433,6 +433,7 @@ bool Renderer::renderToFile (const juce::String& taskDescription,
         r.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (engine);
         r.usePlugins = usePlugins;
         r.useMasterPlugins = usePlugins;
+        r.tracksToDo = tracksToDo;
         r.allowedClips = clips;
         r.createMidiFile = outputFile.hasFileExtension (".mid");
 

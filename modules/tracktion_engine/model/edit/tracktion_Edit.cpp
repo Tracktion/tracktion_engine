@@ -159,7 +159,7 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
                          || i == IDs::channels || i == IDs::isReversed
                          || i == IDs::currentTake || i == IDs::sequence || i == IDs::repeatSequence
                          || i == IDs::loopedSequenceType || i == IDs::grooveStrength
-                         || i == IDs::proxyAllowed || i == IDs::warpTime)
+                         || i == IDs::proxyAllowed || i == IDs::resamplingQuality || i == IDs::warpTime)
                 {
                     restart();
                 }
