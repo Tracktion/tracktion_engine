@@ -988,10 +988,10 @@ void AudioClipBase::setLoopRangeBeats (BeatRange newRangeBeats)
     if (loopStartBeats != newStartBeat || loopLengthBeats != newLengthBeat)
     {
         Clip::setSpeedRatio (1.0);
-
+        setAutoTempo (true);
+        
         loopStartBeats  = newStartBeat;
         loopLengthBeats = newLengthBeat;
-        setAutoTempo (true);
     }
 }
 
@@ -2427,29 +2427,31 @@ void AudioClipBase::updateReversedState()
 
 void AudioClipBase::updateAutoTempoState()
 {
-    if (isLooping() && autoTempo) // convert beat based looping to time based looping
+    if (isLooping())
     {
         auto bps = edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart());
 
-        loopStart  = TimePosition::fromSeconds (loopStartBeats.get().inBeats()  / bps);
-        loopLength = TimeDuration::fromSeconds (loopLengthBeats.get().inBeats() / bps);
+        if (autoTempo)
+        {
+            // convert time based looping to beat based looping
+            loopStartBeats  = BeatPosition::fromBeats (loopStart.get().inSeconds()  * bps);
+            loopLengthBeats = BeatDuration::fromBeats (loopLength.get().inSeconds() * bps);
 
-        loopStartBeats  = BeatPosition();
-        loopLengthBeats = BeatDuration();
+            loopStart  = 0_tp;
+            loopLength = 0_td;
+        }
+        else
+        {
+            // convert beat based looping to time based looping
+            loopStart  = TimePosition::fromSeconds (loopStartBeats.get().inBeats()  / bps);
+            loopLength = TimeDuration::fromSeconds (loopLengthBeats.get().inBeats() / bps);
+
+            loopStartBeats  = 0_bp;
+            loopLengthBeats = 0_bd;
+        }
+
+        changed();
     }
-
-    if (isLooping() && ! autoTempo) // convert time based looping to beat based looping
-    {
-        auto bps = edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart());
-
-        loopStartBeats  = BeatPosition::fromBeats (loopStart.get().inSeconds()  * bps);
-        loopLengthBeats = BeatDuration::fromBeats (loopLength.get().inSeconds() * bps);
-
-        loopStart  = TimePosition();
-        loopLength = TimeDuration();
-    }
-
-    changed();
 }
 
 void AudioClipBase::updateClipEffectsState()
