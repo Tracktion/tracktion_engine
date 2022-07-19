@@ -328,6 +328,7 @@ struct AbletonLink::ImplBase  : public juce::Timer
             ABLLinkSetSessionTempoCallback (link, tempoChangedCallback, this);
             ABLLinkSetIsConnectedCallback (link, isConnectedCallback, this);
             ABLLinkSetIsEnabledCallback (link, isEnabledCallback, this);
+            ABLLinkSetStartStopCallback (link, startStopCallback, this);
 
             setEnabled (isActive);
         }
@@ -442,6 +443,12 @@ struct AbletonLink::ImplBase  : public juce::Timer
 
             if (isEnabled)
                 broadcastTempo (thisPtr);
+        }
+
+        static void startStopCallback (bool isPlaying, void *context)
+        {
+            auto* thisPtr = static_cast<LinkImpl*> (context);
+            thisPtr->setStartStopFromLink (isPlaying);
         }
 
         static void broadcastTempo (LinkImpl* context)
