@@ -89,8 +89,7 @@ private:
                                             juce::AudioChannelSet::canonicalChannelSet (1),
                                             processState,
                                             EditItemID(),
-                                            true,
-                                            ResamplingQuality::lagrange);
+                                            true);
             
             // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, 6.0);
@@ -112,8 +111,7 @@ private:
                                             juce::AudioChannelSet::canonicalChannelSet (1),
                                             processState,
                                             EditItemID(),
-                                            true,
-                                            ResamplingQuality::lagrange);
+                                            true);
             
             playHead.setUserIsDragging (true);
             
@@ -137,8 +135,7 @@ private:
                                             juce::AudioChannelSet::canonicalChannelSet (1),
                                             processState,
                                             EditItemID(),
-                                            true,
-                                            ResamplingQuality::lagrange);
+                                            true);
             
             // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, 6.0);
@@ -160,8 +157,7 @@ private:
                                             juce::AudioChannelSet::canonicalChannelSet (1),
                                             processState,
                                             EditItemID(),
-                                            true,
-                                            ResamplingQuality::lagrange);
+                                            true);
             
             // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, 6.0);
@@ -199,8 +195,7 @@ private:
                                             juce::AudioChannelSet::canonicalChannelSet (1),
                                             processState,
                                             EditItemID(),
-                                            true,
-                                            ResamplingQuality::lagrange);
+                                            true);
 
             // Loop playback between 0s & 1s on the timeline
             playHead.play ({ 0, timeToSample (1.0, ts.sampleRate) }, true);
@@ -223,8 +218,7 @@ private:
                                             juce::AudioChannelSet::canonicalChannelSet (1),
                                             processState,
                                             EditItemID(),
-                                            true,
-                                            ResamplingQuality::lagrange);
+                                            true);
 
             // Loop playback between 0s & 1s on the timeline
             playHead.setReferenceSampleRange ({ 0, ts.blockSize });
