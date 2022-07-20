@@ -95,6 +95,24 @@ extern "C"
 
 
 //==============================================================================
+//==============================================================================
+#if TRACKTION_UNIT_TESTS
+ #include <tracktion_core/tracktion_TestConfig.h>
+#endif
+
+#include <tracktion_graph/tracktion_graph.h>
+
+#include <tracktion_graph/tracktion_graph/tracktion_TestUtilities.h>
+#include <tracktion_graph/tracktion_graph/tracktion_TestNodes.h>
+#include <tracktion_graph/tracktion_graph/tracktion_PlayHead.h>
+
+//==============================================================================
+//==============================================================================
+#include "tracktion_engine.h"
+
+
+//==============================================================================
+//==============================================================================
 #if __has_include(<samplerate.h>)
  #include <samplerate.h>
 #else
@@ -131,20 +149,8 @@ extern "C"
 
 #endif //__has_include(<samplerate.h>)
 
+
 //==============================================================================
-//==============================================================================
-#if TRACKTION_UNIT_TESTS
- #include <tracktion_core/tracktion_TestConfig.h>
-#endif
-
-#include <tracktion_graph/tracktion_graph.h>
-
-#include <tracktion_graph/tracktion_graph/tracktion_TestUtilities.h>
-#include <tracktion_graph/tracktion_graph/tracktion_TestNodes.h>
-#include <tracktion_graph/tracktion_graph/tracktion_PlayHead.h>
-
-#include "tracktion_engine.h"
-
 #if JUCE_LINUX || JUCE_WINDOWS
  #include <cstdarg>
 #endif
