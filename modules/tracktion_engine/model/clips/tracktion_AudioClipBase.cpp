@@ -2349,6 +2349,10 @@ void AudioClipBase::valueTreePropertyChanged (juce::ValueTree& tree, const juce:
             updateLeftRightChannelActivenessFlags();
             changed();
         }
+        else if (id == IDs::proxyAllowed)
+        {
+            propertiesChanged();
+        }
         else
         {
             Clip::valueTreePropertyChanged (tree, id);

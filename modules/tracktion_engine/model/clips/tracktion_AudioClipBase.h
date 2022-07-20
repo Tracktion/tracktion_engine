@@ -494,6 +494,8 @@ public:
     const AudioSegmentList& getAudioSegmentList();
 
     /** Sets the resampling qulity to use.
+        This is only applicable if setUsesProxy has been set to false.
+        If a proxy is used, Lagrange interpolation will be used.
         N.B. the higher the quality, the more higher the CPU usage during playback.
     */
     void setResamplingQuality (ResamplingQuality);
