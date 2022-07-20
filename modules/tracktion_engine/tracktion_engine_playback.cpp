@@ -125,6 +125,10 @@ extern "C"
 
 #include "../3rd_party/choc/platform/choc_DisableAllWarnings.h"
 
+#if __GNUC__
+ #pragma GCC diagnostic ignored "-Wpedantic"
+#endif
+
 extern "C"
 {
     #include "../3rd_party/libsamplerate/samplerate.h"
