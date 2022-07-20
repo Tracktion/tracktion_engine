@@ -172,7 +172,7 @@ public:
     static Statistics measureStatistics (const juce::String& taskDescription,
                                          Edit& edit, TimeRange range,
                                          const juce::BigInteger& tracksToDo,
-                                         int blockSizeForAudio);
+                                         int blockSizeForAudio, double sampleRateForAudio = 44100.0);
 
     //==============================================================================
     struct RenderResult

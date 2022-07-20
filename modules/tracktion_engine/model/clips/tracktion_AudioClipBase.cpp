@@ -224,6 +224,7 @@ AudioClipBase::AudioClipBase (const juce::ValueTree& v, EditItemID id, Type t, C
     loopStartBeats.referTo (state, IDs::loopStartBeats, um);
     loopLengthBeats.referTo (state, IDs::loopLengthBeats, um);
 
+    resamplingQuality.referTo (state, IDs::resamplingQuality, um, ResamplingQuality::lagrange);
     proxyAllowed.referTo (state, IDs::proxyAllowed, um, true);
     transpose.referTo (state, IDs::transpose, um);
     pitchChange.referTo (state, IDs::pitchChange, um);
@@ -328,6 +329,8 @@ void AudioClipBase::cloneFrom (Clip* c)
         isReversed          .setValue (other->isReversed, nullptr);
         autoDetectBeats     .setValue (other->autoDetectBeats, nullptr);
         warpTime            .setValue (other->warpTime, nullptr);
+        proxyAllowed        .setValue (other->proxyAllowed, nullptr);
+        resamplingQuality   .setValue (other->resamplingQuality, nullptr);
 
         copyValueTree (loopInfo.state, other->loopInfo.state, nullptr);
 
@@ -1033,6 +1036,16 @@ const AudioSegmentList& AudioClipBase::getAudioSegmentList()
         audioSegmentList = AudioSegmentList::create (*this, false, false);
 
     return *audioSegmentList;
+}
+
+void AudioClipBase::setResamplingQuality (ResamplingQuality rq)
+{
+    resamplingQuality = rq;
+}
+
+ResamplingQuality AudioClipBase::getResamplingQuality() const
+{
+    return resamplingQuality;
 }
 
 //==============================================================================
@@ -2335,6 +2348,10 @@ void AudioClipBase::valueTreePropertyChanged (juce::ValueTree& tree, const juce:
             channels.forceUpdateOfCachedValue();
             updateLeftRightChannelActivenessFlags();
             changed();
+        }
+        else if (id == IDs::proxyAllowed)
+        {
+            propertiesChanged();
         }
         else
         {

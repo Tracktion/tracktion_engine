@@ -93,6 +93,9 @@ extern "C"
 
 #define JUCE_CORE_INCLUDE_JNI_HELPERS 1 // Required for Ableton Link on Android
 
+
+//==============================================================================
+//==============================================================================
 #if TRACKTION_UNIT_TESTS
  #include <tracktion_core/tracktion_TestConfig.h>
 #endif
@@ -103,8 +106,55 @@ extern "C"
 #include <tracktion_graph/tracktion_graph/tracktion_TestNodes.h>
 #include <tracktion_graph/tracktion_graph/tracktion_PlayHead.h>
 
+//==============================================================================
+//==============================================================================
 #include "tracktion_engine.h"
 
+
+//==============================================================================
+//==============================================================================
+#if __has_include(<samplerate.h>)
+ #include <samplerate.h>
+#else
+
+#undef VERSION
+#define PACKAGE ""
+#define VERSION "0.1.9"
+#define CPU_CLIPS_NEGATIVE 0
+#define CPU_CLIPS_POSITIVE 0
+
+#include "../3rd_party/choc/platform/choc_DisableAllWarnings.h"
+
+#if __GNUC__
+ #pragma GCC diagnostic ignored "-Wpedantic"
+#endif
+
+extern "C"
+{
+    #include "../3rd_party/libsamplerate/samplerate.h"
+}
+
+#if TRACKTION_BUILD_LIBSAMPLERATE
+ extern "C"
+ {
+     #include "../3rd_party/libsamplerate/src_linear.c"
+     #include "../3rd_party/libsamplerate/src_sinc.c"
+     #include "../3rd_party/libsamplerate/src_zoh.c"
+     #include "../3rd_party/libsamplerate/samplerate.c"
+ }
+#endif //TRACKTION_BUILD_LIBSAMPLERATE
+
+#undef PACKAGE
+#undef VERSION
+#undef CPU_CLIPS_NEGATIVE
+#undef CPU_CLIPS_POSITIVE
+
+#include "../3rd_party/choc/platform/choc_ReenableAllWarnings.h"
+
+#endif //__has_include(<samplerate.h>)
+
+
+//==============================================================================
 #if JUCE_LINUX || JUCE_WINDOWS
  #include <cstdarg>
 #endif

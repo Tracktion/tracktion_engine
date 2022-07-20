@@ -563,6 +563,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                params.processState,
                                                clip.itemID,
                                                params.forRendering,
+                                               clip.getResamplingQuality(),
                                                speedFadeDesc, std::move (editTempoPosition),
                                                std::move (warpMap),
                                                seq, syncTempo, syncPitch,
@@ -581,6 +582,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                params.processState,
                                                clip.itemID,
                                                params.forRendering,
+                                               clip.getResamplingQuality(),
                                                speedFadeDesc, std::move (editTempoPosition),
                                                timeStretcherMode, timeStretcherOpts,
                                                clip.getPitchChange());

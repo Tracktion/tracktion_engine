@@ -640,6 +640,7 @@ namespace IDs
     DECLARE_ID (highPassMidiNoteNumber)
     DECLARE_ID (lowPassMidiNoteNumber)
     DECLARE_ID (proxyAllowed)
+    DECLARE_ID (resamplingQuality)
 
     #undef DECLARE_ID
 }

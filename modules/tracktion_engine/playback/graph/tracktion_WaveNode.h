@@ -28,6 +28,7 @@ struct WarpPoint
 using WarpMap = std::vector<WarpPoint>;
 
 //==============================================================================
+//==============================================================================
 /** An Node that plays back a wave file. */
 class WaveNode final    : public tracktion::graph::Node,
                           public TracktionEngineNode
@@ -87,6 +88,8 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveNode)
 };
 
+
+//==============================================================================
 //==============================================================================
 /**
     An Node that plays back a wave file.
@@ -109,6 +112,7 @@ public:
                       ProcessState&,
                       EditItemID,
                       bool isOfflineRender,
+                      ResamplingQuality = ResamplingQuality::lagrange,
                       SpeedFadeDescription = {},
                       std::optional<tempo::Sequence::Position> editTempoSequence = {},
                       TimeStretcher::Mode = TimeStretcher::Mode::defaultMode,
@@ -144,6 +148,7 @@ public:
                       ProcessState&,
                       EditItemID,
                       bool isOfflineRender,
+                      ResamplingQuality,
                       SpeedFadeDescription,
                       std::optional<tempo::Sequence::Position> editTempoSequence,
                       std::optional<WarpMap>,
@@ -166,6 +171,7 @@ private:
     const double speedRatio = 1.0;
     const EditItemID editItemID;
     const bool isOfflineRender = false;
+    const ResamplingQuality resamplingQuality;
 
     const AudioFile audioFile;
     const SpeedFadeDescription speedFadeDescription;
