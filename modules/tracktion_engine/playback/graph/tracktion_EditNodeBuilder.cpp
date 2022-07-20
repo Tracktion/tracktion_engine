@@ -504,8 +504,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                          juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),
                                                          params.processState,
                                                          clip.itemID,
-                                                         params.forRendering,
-                                                         clip.getResamplingQuality());
+                                                         params.forRendering);
         }
     }
    #if TRACKTION_ENABLE_REALTIME_TIMESTRETCHING
@@ -786,8 +785,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForFrozenAudioTrack (AudioTrac
                                                      1.0, juce::AudioChannelSet::stereo(), juce::AudioChannelSet::stereo(),
                                                      params.processState,
                                                      track.itemID,
-                                                     params.forRendering,
-                                                     ResamplingQuality::lagrange);
+                                                     params.forRendering);
 
     // Plugins
     if (params.includePlugins)
@@ -1419,8 +1417,7 @@ std::unique_ptr<tracktion::graph::Node> createGroupFreezeNodeForDevice (Edit& ed
                                                              juce::AudioChannelSet::stereo(),
                                                              processState,
                                                              EditItemID::fromRawID ((uint64_t) device.getName().hash()),
-                                                             false,
-                                                             ResamplingQuality::lagrange);
+                                                             false);
 
             return makeNode<TrackMutingNode> (std::make_unique<TrackMuteState> (edit), std::move (node), false);
         }

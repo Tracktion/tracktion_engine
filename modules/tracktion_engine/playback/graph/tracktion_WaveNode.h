@@ -52,8 +52,7 @@ public:
               const juce::AudioChannelSet& destChannelsToFill,
               ProcessState&,
               EditItemID,
-              bool isOfflineRender,
-              ResamplingQuality);
+              bool isOfflineRender);
 
     //==============================================================================
     tracktion::graph::NodeProperties getNodeProperties() override;
@@ -68,7 +67,6 @@ private:
     double originalSpeedRatio = 0, outputSampleRate = 44100.0;
     const EditItemID editItemID;
     bool isOfflineRender = false;
-    [[ maybe_unused ]] const ResamplingQuality resamplingQuality;
 
     AudioFile audioFile;
     LiveClipLevel clipLevel;
@@ -114,7 +112,7 @@ public:
                       ProcessState&,
                       EditItemID,
                       bool isOfflineRender,
-                      ResamplingQuality,
+                      ResamplingQuality = ResamplingQuality::lagrange,
                       SpeedFadeDescription = {},
                       std::optional<tempo::Sequence::Position> editTempoSequence = {},
                       TimeStretcher::Mode = TimeStretcher::Mode::defaultMode,
