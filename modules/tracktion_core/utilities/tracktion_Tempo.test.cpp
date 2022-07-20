@@ -8,10 +8,11 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#if TRACKTION_UNIT_TESTS_TIME
 
 #include "tracktion_Tempo.h"
 #include "../../3rd_party/choc/text/choc_StringUtilities.h"
+
+#if TRACKTION_UNIT_TESTS_TIME
 
 namespace tracktion { inline namespace core
 {

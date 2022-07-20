@@ -558,7 +558,7 @@ ProjectItem::Ptr Renderer::renderToProjectItem (const juce::String& taskDescript
 //==============================================================================
 Renderer::Statistics Renderer::measureStatistics (const juce::String& taskDescription, Edit& edit,
                                                   TimeRange range, const juce::BigInteger& tracksToDo,
-                                                  int blockSizeForAudio)
+                                                  int blockSizeForAudio, double sampleRateForAudio)
 {
     CRASH_TRACER
     Statistics result;
@@ -573,6 +573,7 @@ Renderer::Statistics Renderer::measureStatistics (const juce::String& taskDescri
         Parameters r (edit);
         r.audioFormat = edit.engine.getAudioFileFormatManager().getDefaultFormat();
         r.blockSizeForAudio = blockSizeForAudio;
+        r.sampleRateForAudio = sampleRateForAudio;
         r.time = range;
         r.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (edit.engine);
         r.tracksToDo = tracksToDo;

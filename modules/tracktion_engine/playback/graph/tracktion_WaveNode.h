@@ -68,7 +68,7 @@ private:
     double originalSpeedRatio = 0, outputSampleRate = 44100.0;
     const EditItemID editItemID;
     bool isOfflineRender = false;
-    const ResamplingQuality resamplingQuality;
+    [[ maybe_unused ]] const ResamplingQuality resamplingQuality;
 
     AudioFile audioFile;
     LiveClipLevel clipLevel;

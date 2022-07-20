@@ -17,10 +17,10 @@ using namespace tracktion::graph;
 
 //==============================================================================
 //==============================================================================
-class PerformanceTests : public juce::UnitTest
+class WaveNodeBenchmarks : public juce::UnitTest
 {
 public:
-    PerformanceTests()
+    WaveNodeBenchmarks()
         : juce::UnitTest ("Node Benchmarks", "tracktion_benchmarks")
     {
     }
@@ -162,7 +162,68 @@ private:
     }
 };
 
-static PerformanceTests performanceTests;
+static WaveNodeBenchmarks waveNodeBenchmarks;
+
+
+//==============================================================================
+//==============================================================================
+class ResamplingBenchmarks : public juce::UnitTest
+{
+public:
+    ResamplingBenchmarks()
+        : juce::UnitTest ("Resampling Benchmarks", "tracktion_benchmarks")
+    {
+    }
+
+    void runTest() override
+    {
+        runResamplingRendering ("lagrange",     ResamplingQuality::lagrange);
+        runResamplingRendering ("sincFast",     ResamplingQuality::sincFast);
+        runResamplingRendering ("sincMedium",   ResamplingQuality::sincMedium);
+        runResamplingRendering ("sincBest",     ResamplingQuality::sincBest);
+    }
+
+private:
+    //==============================================================================
+    //==============================================================================
+    void runResamplingRendering (juce::String qualityName,
+                                 ResamplingQuality quality)
+    {
+        constexpr double fileSampleRate = 96000.0;
+        constexpr double playbackSampleRate = 44100.0;
+
+        beginTest (qualityName);
+
+        using namespace test_utilities;
+
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = Edit::createSingleTrackEdit (engine);
+        edit->ensureNumberOfAudioTracks (1);
+        auto t = getAudioTracks (*edit)[0];
+
+        const auto durationOfFile = 30s;
+        auto sinFile = getSinFile<juce::WavAudioFormat> (fileSampleRate, 30.0, 2, 220.0f);
+        const auto timeRange = TimeRange (0s, TimePosition (durationOfFile));
+        auto waveClip = t->insertWaveClip (sinFile->getFile().getFileName(), sinFile->getFile(),
+                                           {{ timeRange }}, false);
+        waveClip->setUsesProxy (false);
+        waveClip->setResamplingQuality (quality);
+
+        Renderer::Statistics results;
+
+        {
+            ScopedBenchmark sb (createBenchmarkDescription ("Resampling", "WaveNode quality", "30s sin wave, 96KHz to 44.1Khz, " + qualityName.toStdString()));
+            results = Renderer::measureStatistics ("Rendering resampling",
+                                                   *edit, timeRange,
+                                                   toBitSet ({ t }),
+                                                   256, playbackSampleRate);
+        }
+
+        expectWithinAbsoluteError (results.peak, 1.0f, 0.001f);
+    }
+};
+
+static ResamplingBenchmarks resamplingBenchmarks;
 
 #endif
 
