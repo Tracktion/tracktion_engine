@@ -162,7 +162,7 @@ struct AbletonLink::ImplBase  : public juce::Timer
 
     bool isTempoOutOfRange (double bpm) const
     {
-        return ! allowedTempos.contains (bpm);
+        return ! (allowedTempos.getStart() <= bpm && bpm <= allowedTempos.getEnd());
     }
 
     virtual bool isEnabled() const = 0;
