@@ -18,6 +18,7 @@ What Tracktion Engine doesn't provide is any kind of UI. You'll have to write co
     - WAV, AIFF, Flac, OGG, MP3, CAF and Rex file formats
     - Audio clips supporting the above file formats and loop start/end/offset
     - Time and pitch-stretching (provided via Elastique*, Rubber-band* or SoundTouch), conforming to dynamic tempo/key changes
+    - High quality sample rate conversion utilising libsamplerate
     - Clip time warping (Warp Time)
     - Speed ramp fade in/out
     - ACID and Apple Loop metadata
