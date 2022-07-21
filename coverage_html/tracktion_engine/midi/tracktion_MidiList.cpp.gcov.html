@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">162</td>
+            <td class="headerCovTableEntry">161</td>
             <td class="headerCovTableEntry">888</td>
-            <td class="headerCovTableEntryLo">18.2 %</td>
+            <td class="headerCovTableEntryLo">18.1 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-07-19 12:24:51</td>
+            <td class="headerValue">2022-07-21 15:16:39</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">26</td>
@@ -417,40 +417,40 @@
 <a name="355"><span class="lineNum">     355 </span>            :     jassert (channelNumber &lt; 17); // SysEx?</a>
 <a name="356"><span class="lineNum">     356 </span>            : </a>
 <a name="357"><span class="lineNum">     357 </span><span class="lineCov">       1418 :     if (note.isMute() || note.getLengthBeats() &lt;= BeatDuration::fromBeats (0.00001))</span></a>
-<a name="358"><span class="lineNum">     358 </span><span class="lineCov">         24 :         return;</span></a>
+<a name="358"><span class="lineNum">     358 </span><span class="lineNoCov">          0 :         return;</span></a>
 <a name="359"><span class="lineNum">     359 </span>            : </a>
-<a name="360"><span class="lineNum">     360 </span><span class="lineCov">       1394 :     const auto downTime = [&amp;]</span></a>
+<a name="360"><span class="lineNum">     360 </span><span class="lineCov">       1418 :     const auto downTime = [&amp;]</span></a>
 <a name="361"><span class="lineNum">     361 </span>            :     {</a>
-<a name="362"><span class="lineNum">     362 </span><span class="lineCov">       1394 :         switch (tb)</span></a>
+<a name="362"><span class="lineNum">     362 </span><span class="lineCov">       1418 :         switch (tb)</span></a>
 <a name="363"><span class="lineNum">     363 </span>            :         {</a>
-<a name="364"><span class="lineNum">     364 </span><span class="lineCov">        240 :             case MidiList::TimeBase::beatsRaw:  return note.getStartBeat().inBeats();</span></a>
+<a name="364"><span class="lineNum">     364 </span><span class="lineCov">        264 :             case MidiList::TimeBase::beatsRaw:  return note.getStartBeat().inBeats();</span></a>
 <a name="365"><span class="lineNum">     365 </span><span class="lineNoCov">          0 :             case MidiList::TimeBase::beats:     return note.getPlaybackBeats (MidiNote::startEdge, clip, grooveTemplate).inBeats();</span></a>
 <a name="366"><span class="lineNum">     366 </span><span class="lineCov">       1154 :             case MidiList::TimeBase::seconds:   [[ fallthrough ]];</span></a>
 <a name="367"><span class="lineNum">     367 </span><span class="lineCov">       1154 :             default:                            return note.getPlaybackTime (MidiNote::startEdge, clip, grooveTemplate).inSeconds();</span></a>
 <a name="368"><span class="lineNum">     368 </span>            :         }</a>
-<a name="369"><span class="lineNum">     369 </span><span class="lineCov">       1394 :     }();</span></a>
+<a name="369"><span class="lineNum">     369 </span><span class="lineCov">       1418 :     }();</span></a>
 <a name="370"><span class="lineNum">     370 </span>            : </a>
-<a name="371"><span class="lineNum">     371 </span><span class="lineCov">       1394 :     auto velocity = (uint8_t) note.getVelocity();</span></a>
-<a name="372"><span class="lineNum">     372 </span><span class="lineCov">       1394 :     int noteNumber = note.getNoteNumber();</span></a>
+<a name="371"><span class="lineNum">     371 </span><span class="lineCov">       1418 :     auto velocity = (uint8_t) note.getVelocity();</span></a>
+<a name="372"><span class="lineNum">     372 </span><span class="lineCov">       1418 :     int noteNumber = note.getNoteNumber();</span></a>
 <a name="373"><span class="lineNum">     373 </span>            : </a>
-<a name="374"><span class="lineNum">     374 </span><span class="lineCov">       1394 :     if (addNoteUp)</span></a>
+<a name="374"><span class="lineNum">     374 </span><span class="lineCov">       1418 :     if (addNoteUp)</span></a>
 <a name="375"><span class="lineNum">     375 </span>            :     {</a>
 <a name="376"><span class="lineNum">     376 </span>            :         // nudge the note-up backwards just a bit to make sure the ordering is correct</a>
-<a name="377"><span class="lineNum">     377 </span><span class="lineCov">       1394 :         const auto upTime = [&amp;]</span></a>
+<a name="377"><span class="lineNum">     377 </span><span class="lineCov">       1418 :         const auto upTime = [&amp;]</span></a>
 <a name="378"><span class="lineNum">     378 </span>            :         {</a>
-<a name="379"><span class="lineNum">     379 </span><span class="lineCov">       1394 :             switch (tb)</span></a>
+<a name="379"><span class="lineNum">     379 </span><span class="lineCov">       1418 :             switch (tb)</span></a>
 <a name="380"><span class="lineNum">     380 </span>            :             {</a>
-<a name="381"><span class="lineNum">     381 </span><span class="lineCov">        240 :                 case MidiList::TimeBase::beatsRaw:  return note.getEndBeat().inBeats();</span></a>
+<a name="381"><span class="lineNum">     381 </span><span class="lineCov">        264 :                 case MidiList::TimeBase::beatsRaw:  return note.getEndBeat().inBeats();</span></a>
 <a name="382"><span class="lineNum">     382 </span><span class="lineNoCov">          0 :                 case MidiList::TimeBase::beats:     return note.getPlaybackBeats (MidiNote::endEdge, clip, grooveTemplate).inBeats();</span></a>
 <a name="383"><span class="lineNum">     383 </span><span class="lineCov">       1154 :                 case MidiList::TimeBase::seconds:   [[ fallthrough ]];</span></a>
 <a name="384"><span class="lineNum">     384 </span><span class="lineCov">       1154 :                 default:                            return note.getPlaybackTime (MidiNote::endEdge, clip, grooveTemplate).inSeconds();</span></a>
 <a name="385"><span class="lineNum">     385 </span>            :             }</a>
-<a name="386"><span class="lineNum">     386 </span><span class="lineCov">       1394 :         }();</span></a>
+<a name="386"><span class="lineNum">     386 </span><span class="lineCov">       1418 :         }();</span></a>
 <a name="387"><span class="lineNum">     387 </span>            : </a>
-<a name="388"><span class="lineNum">     388 </span><span class="lineCov">       1394 :         if (upTime &gt; downTime &amp;&amp; upTime &gt; 0.0)</span></a>
+<a name="388"><span class="lineNum">     388 </span><span class="lineCov">       1418 :         if (upTime &gt; downTime &amp;&amp; upTime &gt; 0.0)</span></a>
 <a name="389"><span class="lineNum">     389 </span>            :         {</a>
-<a name="390"><span class="lineNum">     390 </span><span class="lineCov">       2746 :             seq.addEvent (juce::MidiMessage::noteOn (channelNumber, noteNumber, velocity), std::max (0.0, downTime));</span></a>
-<a name="391"><span class="lineNum">     391 </span><span class="lineCov">       1394 :             seq.addEvent (juce::MidiMessage::noteOff (channelNumber, noteNumber), upTime);</span></a>
+<a name="390"><span class="lineNum">     390 </span><span class="lineCov">       2794 :             seq.addEvent (juce::MidiMessage::noteOn (channelNumber, noteNumber, velocity), std::max (0.0, downTime));</span></a>
+<a name="391"><span class="lineNum">     391 </span><span class="lineCov">       1418 :             seq.addEvent (juce::MidiMessage::noteOff (channelNumber, noteNumber), upTime);</span></a>
 <a name="392"><span class="lineNum">     392 </span>            :         }</a>
 <a name="393"><span class="lineNum">     393 </span>            :     }</a>
 <a name="394"><span class="lineNum">     394 </span><span class="lineNoCov">          0 :     else if (downTime &gt;= 0.0)</span></a>
@@ -1813,28 +1813,28 @@
 <a name="1751"><span class="lineNum">    1751 </span><span class="lineNoCov">          0 :     auto firstBeatNum = ts != nullptr ? ts-&gt;toBeats (editTimeOfListTimeZero) : BeatPosition();</span></a>
 <a name="1752"><span class="lineNum">    1752 </span>            :     const int channelNumber = getMidiChannel().getChannelNumber();</a>
 <a name="1753"><span class="lineNum">    1753 </span>            : </a>
-<a name="1754"><span class="lineNum">    1754 </span><span class="lineCov">        176 :     for (int i = 0; i &lt; sequence.getNumEvents(); ++i)</span></a>
+<a name="1754"><span class="lineNum">    1754 </span><span class="lineCov">        184 :     for (int i = 0; i &lt; sequence.getNumEvents(); ++i)</span></a>
 <a name="1755"><span class="lineNum">    1755 </span>            :     {</a>
-<a name="1756"><span class="lineNum">    1756 </span><span class="lineCov">        168 :         auto&amp; m = sequence.getEventPointer (i)-&gt;message;</span></a>
+<a name="1756"><span class="lineNum">    1756 </span><span class="lineCov">        176 :         auto&amp; m = sequence.getEventPointer (i)-&gt;message;</span></a>
 <a name="1757"><span class="lineNum">    1757 </span>            : </a>
 <a name="1758"><span class="lineNum">    1758 </span><span class="lineNoCov">          0 :         auto beatTime = ts != nullptr ? ts-&gt;toBeats (TimePosition::fromSeconds (m.getTimeStamp())) - toDuration (firstBeatNum)</span></a>
-<a name="1759"><span class="lineNum">    1759 </span><span class="lineCov">        168 :                                       : BeatPosition::fromBeats (m.getTimeStamp());</span></a>
+<a name="1759"><span class="lineNum">    1759 </span><span class="lineCov">        176 :                                       : BeatPosition::fromBeats (m.getTimeStamp());</span></a>
 <a name="1760"><span class="lineNum">    1760 </span>            : </a>
-<a name="1761"><span class="lineNum">    1761 </span><span class="lineCov">        168 :         if (m.isSysEx())</span></a>
+<a name="1761"><span class="lineNum">    1761 </span><span class="lineCov">        176 :         if (m.isSysEx())</span></a>
 <a name="1762"><span class="lineNum">    1762 </span>            :         {</a>
 <a name="1763"><span class="lineNum">    1763 </span><span class="lineNoCov">          0 :             importedName = TRANS(&quot;SysEx&quot;);</span></a>
 <a name="1764"><span class="lineNum">    1764 </span><span class="lineNoCov">          0 :             addSysExEvent (m, beatTime, um);</span></a>
 <a name="1765"><span class="lineNum">    1765 </span>            :         }</a>
-<a name="1766"><span class="lineNum">    1766 </span><span class="lineCov">        168 :         else if (m.isTrackNameEvent())</span></a>
+<a name="1766"><span class="lineNum">    1766 </span><span class="lineCov">        176 :         else if (m.isTrackNameEvent())</span></a>
 <a name="1767"><span class="lineNum">    1767 </span>            :         {</a>
 <a name="1768"><span class="lineNum">    1768 </span><span class="lineNoCov">          0 :             importedName = m.getTextFromTextMetaEvent();</span></a>
 <a name="1769"><span class="lineNum">    1769 </span>            :         }</a>
-<a name="1770"><span class="lineNum">    1770 </span><span class="lineCov">        168 :         else if (m.isForChannel (channelNumber))</span></a>
+<a name="1770"><span class="lineNum">    1770 </span><span class="lineCov">        176 :         else if (m.isForChannel (channelNumber))</span></a>
 <a name="1771"><span class="lineNum">    1771 </span>            :         {</a>
-<a name="1772"><span class="lineNum">    1772 </span><span class="lineCov">        168 :             if (channelNumber == 10)</span></a>
+<a name="1772"><span class="lineNum">    1772 </span><span class="lineCov">        176 :             if (channelNumber == 10)</span></a>
 <a name="1773"><span class="lineNum">    1773 </span><span class="lineNoCov">          0 :                 importedName = TRANS(&quot;Drums&quot;);</span></a>
 <a name="1774"><span class="lineNum">    1774 </span>            : </a>
-<a name="1775"><span class="lineNum">    1775 </span><span class="lineCov">        168 :             if (m.isNoteOn())</span></a>
+<a name="1775"><span class="lineNum">    1775 </span><span class="lineCov">        176 :             if (m.isNoteOn())</span></a>
 <a name="1776"><span class="lineNum">    1776 </span>            :             {</a>
 <a name="1777"><span class="lineNum">    1777 </span><span class="lineCov">         88 :                 const auto keyUpTime = TimePosition::fromSeconds (sequence.getTimeOfMatchingKeyUp (i));</span></a>
 <a name="1778"><span class="lineNum">    1778 </span>            : </a>
@@ -1844,27 +1844,27 @@
 <a name="1782"><span class="lineNum">    1782 </span>            :                                        : (BeatDuration::fromBeats (keyUpTime.inSeconds()) - toDuration (beatTime)),</a>
 <a name="1783"><span class="lineNum">    1783 </span><span class="lineCov">         88 :                          m.getVelocity(), edit != nullptr ? edit-&gt;engine.getEngineBehaviour().getDefaultNoteColour() : 0, um);</span></a>
 <a name="1784"><span class="lineNum">    1784 </span>            :             }</a>
-<a name="1785"><span class="lineNum">    1785 </span><span class="lineCov">         80 :             else if (m.isAftertouch())</span></a>
+<a name="1785"><span class="lineNum">    1785 </span><span class="lineCov">         88 :             else if (m.isAftertouch())</span></a>
 <a name="1786"><span class="lineNum">    1786 </span>            :             {</a>
 <a name="1787"><span class="lineNum">    1787 </span><span class="lineNoCov">          0 :                 addControllerEvent (beatTime, MidiControllerEvent::aftertouchType,</span></a>
 <a name="1788"><span class="lineNum">    1788 </span><span class="lineNoCov">          0 :                                     m.getAfterTouchValue() &lt;&lt; 7, m.getNoteNumber(), um);</span></a>
 <a name="1789"><span class="lineNum">    1789 </span>            :             }</a>
-<a name="1790"><span class="lineNum">    1790 </span><span class="lineCov">         80 :             else if (m.isPitchWheel())</span></a>
+<a name="1790"><span class="lineNum">    1790 </span><span class="lineCov">         88 :             else if (m.isPitchWheel())</span></a>
 <a name="1791"><span class="lineNum">    1791 </span>            :             {</a>
 <a name="1792"><span class="lineNum">    1792 </span><span class="lineNoCov">          0 :                 addControllerEvent (beatTime, MidiControllerEvent::pitchWheelType, m.getPitchWheelValue(), um);</span></a>
 <a name="1793"><span class="lineNum">    1793 </span>            :             }</a>
-<a name="1794"><span class="lineNum">    1794 </span><span class="lineCov">         80 :             else if (m.isController())</span></a>
+<a name="1794"><span class="lineNum">    1794 </span><span class="lineCov">         88 :             else if (m.isController())</span></a>
 <a name="1795"><span class="lineNum">    1795 </span>            :             {</a>
 <a name="1796"><span class="lineNum">    1796 </span><span class="lineNoCov">          0 :                 addControllerEvent (beatTime, m.getControllerNumber(), m.getControllerValue() &lt;&lt; 7, um);</span></a>
 <a name="1797"><span class="lineNum">    1797 </span>            :             }</a>
-<a name="1798"><span class="lineNum">    1798 </span><span class="lineCov">         80 :             else if (m.isProgramChange())</span></a>
+<a name="1798"><span class="lineNum">    1798 </span><span class="lineCov">         88 :             else if (m.isProgramChange())</span></a>
 <a name="1799"><span class="lineNum">    1799 </span>            :             {</a>
 <a name="1800"><span class="lineNum">    1800 </span><span class="lineNoCov">          0 :                 if (importedName.isEmpty())</span></a>
 <a name="1801"><span class="lineNum">    1801 </span><span class="lineNoCov">          0 :                     importedName = TRANS(juce::MidiMessage::getGMInstrumentName (m.getProgramChangeNumber()));</span></a>
 <a name="1802"><span class="lineNum">    1802 </span>            : </a>
 <a name="1803"><span class="lineNum">    1803 </span><span class="lineNoCov">          0 :                 addControllerEvent (beatTime, MidiControllerEvent::programChangeType, m.getProgramChangeNumber() &lt;&lt; 7, um);</span></a>
 <a name="1804"><span class="lineNum">    1804 </span>            :             }</a>
-<a name="1805"><span class="lineNum">    1805 </span><span class="lineCov">         80 :             else if (m.isChannelPressure())</span></a>
+<a name="1805"><span class="lineNum">    1805 </span><span class="lineCov">         88 :             else if (m.isChannelPressure())</span></a>
 <a name="1806"><span class="lineNum">    1806 </span>            :             {</a>
 <a name="1807"><span class="lineNum">    1807 </span><span class="lineNoCov">          0 :                 addControllerEvent (beatTime, MidiControllerEvent::channelPressureType, m.getChannelPressureValue() &lt;&lt; 7, um);</span></a>
 <a name="1808"><span class="lineNum">    1808 </span>            :             }</a>

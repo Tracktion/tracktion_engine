@@ -103,9 +103,9 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:aacc30526af85e088125e76c5fb89da80"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Renderer.html#aacc30526af85e088125e76c5fb89da80">renderToFile</a> (const juce::String &amp;taskDescription, const juce::File &amp;outputFile, <a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &amp;edit, TimeRange range, const juce::BigInteger &amp;tracksToDo, bool usePlugins=true, juce::Array&lt; <a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a> * &gt; clips={}, bool useThread=true)</td></tr>
 <tr class="memdesc:aacc30526af85e088125e76c5fb89da80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders an <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> to a file within the given time range and the track indicies described by the BigInteger.  <a href="classtracktion_1_1engine_1_1Renderer.html#aacc30526af85e088125e76c5fb89da80">More...</a><br /></td></tr>
 <tr class="separator:aacc30526af85e088125e76c5fb89da80"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad3f5873204c73307a92ee7b61e5629bf"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structtracktion_1_1engine_1_1Renderer_1_1Statistics.html">Statistics</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Renderer.html#ad3f5873204c73307a92ee7b61e5629bf">measureStatistics</a> (const juce::String &amp;taskDescription, <a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &amp;edit, TimeRange range, const juce::BigInteger &amp;tracksToDo, int blockSizeForAudio)</td></tr>
-<tr class="memdesc:ad3f5873204c73307a92ee7b61e5629bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders a section of an edit to measure various details about its audio content.  <a href="classtracktion_1_1engine_1_1Renderer.html#ad3f5873204c73307a92ee7b61e5629bf">More...</a><br /></td></tr>
-<tr class="separator:ad3f5873204c73307a92ee7b61e5629bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31135b1aead953e9f389393944fbbd39"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structtracktion_1_1engine_1_1Renderer_1_1Statistics.html">Statistics</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Renderer.html#a31135b1aead953e9f389393944fbbd39">measureStatistics</a> (const juce::String &amp;taskDescription, <a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &amp;edit, TimeRange range, const juce::BigInteger &amp;tracksToDo, int blockSizeForAudio, double sampleRateForAudio=44100.0)</td></tr>
+<tr class="memdesc:a31135b1aead953e9f389393944fbbd39"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders a section of an edit to measure various details about its audio content.  <a href="classtracktion_1_1engine_1_1Renderer.html#a31135b1aead953e9f389393944fbbd39">More...</a><br /></td></tr>
+<tr class="separator:a31135b1aead953e9f389393944fbbd39"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="acb968cd727302932c216e9ebebde2957"></a>
@@ -325,8 +325,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ad3f5873204c73307a92ee7b61e5629bf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad3f5873204c73307a92ee7b61e5629bf">&#9670;&nbsp;</a></span>measureStatistics()</h2>
+<a id="a31135b1aead953e9f389393944fbbd39"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a31135b1aead953e9f389393944fbbd39">&#9670;&nbsp;</a></span>measureStatistics()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -362,7 +362,13 @@ Static Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>blockSizeForAudio</em>&#160;</td>
+          <td class="paramname"><em>blockSizeForAudio</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>sampleRateForAudio</em> = <code>44100.0</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -387,7 +393,7 @@ Static Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jul 19 2022 12:09:16 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jul 21 2022 15:04:49 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

@@ -475,6 +475,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad3318abebe34d8c2a2eb2975bbd34679"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classtracktion_1_1engine_1_1AudioSegmentList.html">AudioSegmentList</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html#ad3318abebe34d8c2a2eb2975bbd34679">getAudioSegmentList</a> ()</td></tr>
 <tr class="memdesc:ad3318abebe34d8c2a2eb2975bbd34679"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an <a class="el" href="classtracktion_1_1engine_1_1AudioSegmentList.html" title="Holds a list of audio regions for playback of things like warp time.">AudioSegmentList</a> describing this file if it is using auto-tempo.  <a href="classtracktion_1_1engine_1_1AudioClipBase.html#ad3318abebe34d8c2a2eb2975bbd34679">More...</a><br /></td></tr>
 <tr class="separator:ad3318abebe34d8c2a2eb2975bbd34679"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9432459ae370ede018e28a3fa0ddf8f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html#ae9432459ae370ede018e28a3fa0ddf8f">setResamplingQuality</a> (<a class="el" href="namespacetracktion_1_1engine.html#a80cc60aadbaf1dca652f40a5544b3e6b">ResamplingQuality</a>)</td></tr>
+<tr class="memdesc:ae9432459ae370ede018e28a3fa0ddf8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the resampling qulity to use.  <a href="classtracktion_1_1engine_1_1AudioClipBase.html#ae9432459ae370ede018e28a3fa0ddf8f">More...</a><br /></td></tr>
+<tr class="separator:ae9432459ae370ede018e28a3fa0ddf8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a18a65e4b01714920e02c33005100b7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetracktion_1_1engine.html#a80cc60aadbaf1dca652f40a5544b3e6b">ResamplingQuality</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html#a3a18a65e4b01714920e02c33005100b7">getResamplingQuality</a> () const</td></tr>
+<tr class="memdesc:a3a18a65e4b01714920e02c33005100b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the resampling quality to the be used.  <a href="classtracktion_1_1engine_1_1AudioClipBase.html#a3a18a65e4b01714920e02c33005100b7">More...</a><br /></td></tr>
+<tr class="separator:a3a18a65e4b01714920e02c33005100b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ba2d7aaf8b2b0f468ee4797feeb0770"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html#a0ba2d7aaf8b2b0f468ee4797feeb0770">reverseLoopPoints</a> ()</td></tr>
 <tr class="memdesc:a0ba2d7aaf8b2b0f468ee4797feeb0770"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reverses the loop points to expose the same section of the source file but reversed.  <a href="classtracktion_1_1engine_1_1AudioClipBase.html#a0ba2d7aaf8b2b0f468ee4797feeb0770">More...</a><br /></td></tr>
 <tr class="separator:a0ba2d7aaf8b2b0f468ee4797feeb0770"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -928,6 +934,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a669255edf8bf0c6bce4ad9ec867db0a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7ad7f9a2aedb72d3ef80c4a0d3059e42"><td class="memItemLeft" align="right" valign="top">juce::CachedValue&lt; <a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html#a02bb26c86c226f50eae674e40ab39ddc">FadeBehaviour</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html#a7ad7f9a2aedb72d3ef80c4a0d3059e42">fadeOutBehaviour</a></td></tr>
 <tr class="separator:a7ad7f9a2aedb72d3ef80c4a0d3059e42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ae53fdea331cd38e3b057909a7bc8a1"><td class="memItemLeft" align="right" valign="top">juce::CachedValue&lt; <a class="el" href="namespacetracktion_1_1engine.html#a80cc60aadbaf1dca652f40a5544b3e6b">ResamplingQuality</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html#a6ae53fdea331cd38e3b057909a7bc8a1">resamplingQuality</a></td></tr>
+<tr class="separator:a6ae53fdea331cd38e3b057909a7bc8a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9ec86dea67aec4ed1436b33ee581aec2"><td class="memItemLeft" align="right" valign="top">juce::CachedValue&lt; TimePosition &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html#a9ec86dea67aec4ed1436b33ee581aec2">loopStart</a></td></tr>
 <tr class="separator:a9ec86dea67aec4ed1436b33ee581aec2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a210cfa34f79b46afd3c89a1cb1f1e5ad"><td class="memItemLeft" align="right" valign="top">juce::CachedValue&lt; TimeDuration &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html#a210cfa34f79b46afd3c89a1cb1f1e5ad">loopLength</a></td></tr>
@@ -3919,6 +3927,46 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="ae9432459ae370ede018e28a3fa0ddf8f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae9432459ae370ede018e28a3fa0ddf8f">&#9670;&nbsp;</a></span>setResamplingQuality()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::AudioClipBase::setResamplingQuality </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacetracktion_1_1engine.html#a80cc60aadbaf1dca652f40a5544b3e6b">ResamplingQuality</a>&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets the resampling qulity to use. </p>
+<p>This is only applicable if setUsesProxy has been set to false. If a proxy is used, Lagrange interpolation will be used. N.B. the higher the quality, the more higher the CPU usage during playback. </p>
+
+</div>
+</div>
+<a id="a3a18a65e4b01714920e02c33005100b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a18a65e4b01714920e02c33005100b7">&#9670;&nbsp;</a></span>getResamplingQuality()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacetracktion_1_1engine.html#a80cc60aadbaf1dca652f40a5544b3e6b">ResamplingQuality</a> tracktion::engine::AudioClipBase::getResamplingQuality </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the resampling quality to the be used. </p>
+
+</div>
+</div>
 <a id="a0ba2d7aaf8b2b0f468ee4797feeb0770"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0ba2d7aaf8b2b0f468ee4797feeb0770">&#9670;&nbsp;</a></span>reverseLoopPoints()</h2>
 
@@ -5150,6 +5198,28 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a6ae53fdea331cd38e3b057909a7bc8a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6ae53fdea331cd38e3b057909a7bc8a1">&#9670;&nbsp;</a></span>resamplingQuality</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::CachedValue&lt;<a class="el" href="namespacetracktion_1_1engine.html#a80cc60aadbaf1dca652f40a5544b3e6b">ResamplingQuality</a>&gt; tracktion::engine::AudioClipBase::resamplingQuality</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a9ec86dea67aec4ed1436b33ee581aec2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9ec86dea67aec4ed1436b33ee581aec2">&#9670;&nbsp;</a></span>loopStart</h2>
 
@@ -5786,7 +5856,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jul 19 2022 12:09:14 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jul 21 2022 15:04:48 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

@@ -1022,6 +1022,13 @@ Enumerations</h2></td></tr>
 <br />
  }</td></tr>
 <tr class="separator:a106acf13adac6f34b462a0c4de6e4fe3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80cc60aadbaf1dca652f40a5544b3e6b"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a80cc60aadbaf1dca652f40a5544b3e6b">ResamplingQuality</a> { <a class="el" href="namespacetracktion_1_1engine.html#a80cc60aadbaf1dca652f40a5544b3e6ba358bbd8944e77ed1509836a4fb9ad265">ResamplingQuality::lagrange</a>, 
+<a class="el" href="namespacetracktion_1_1engine.html#a80cc60aadbaf1dca652f40a5544b3e6baa72f77d7d8c1b76e929603e5964990cd">ResamplingQuality::sincFast</a>, 
+<a class="el" href="namespacetracktion_1_1engine.html#a80cc60aadbaf1dca652f40a5544b3e6baace0edda6e9949c6547a238e023d9a1c">ResamplingQuality::sincMedium</a>, 
+<a class="el" href="namespacetracktion_1_1engine.html#a80cc60aadbaf1dca652f40a5544b3e6ba68f771a1079c302c71e2526c357497d0">ResamplingQuality::sincBest</a>
+ }</td></tr>
+<tr class="memdesc:a80cc60aadbaf1dca652f40a5544b3e6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specifies a number of resampling qualities that can be used.  <a href="namespacetracktion_1_1engine.html#a80cc60aadbaf1dca652f40a5544b3e6b">More...</a><br /></td></tr>
+<tr class="separator:a80cc60aadbaf1dca652f40a5544b3e6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a40238495220f5d933844bcfe2397d810"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a40238495220f5d933844bcfe2397d810">PanLaw</a> { <br />
 &#160;&#160;<a class="el" href="namespacetracktion_1_1engine.html#a40238495220f5d933844bcfe2397d810aebabcdb59c49709439ce5b4f30e8f545">PanLawDefault</a> = -1, 
 <a class="el" href="namespacetracktion_1_1engine.html#a40238495220f5d933844bcfe2397d810aed7f066574fd62bf7ad505132fab47ae">PanLawLinear</a> = 0, 
@@ -2186,6 +2193,40 @@ Variables</h2></td></tr>
 <tr><td class="fieldname"><a id="a106acf13adac6f34b462a0c4de6e4fe3aa2dc2407a46ee1b7331225183f4b34c0"></a>fps24&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a106acf13adac6f34b462a0c4de6e4fe3a745ffcdd19b34f7d8d4028a0380f7808"></a>fps25&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a106acf13adac6f34b462a0c4de6e4fe3a51b0fa64094004b47e32034da78f7a75"></a>fps30&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
+<a id="a80cc60aadbaf1dca652f40a5544b3e6b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a80cc60aadbaf1dca652f40a5544b3e6b">&#9670;&nbsp;</a></span>ResamplingQuality</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="namespacetracktion_1_1engine.html#a80cc60aadbaf1dca652f40a5544b3e6b">tracktion::engine::ResamplingQuality</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Specifies a number of resampling qualities that can be used. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a80cc60aadbaf1dca652f40a5544b3e6ba358bbd8944e77ed1509836a4fb9ad265"></a>lagrange&#160;</td><td class="fielddoc"><p>Lagrange interpolation. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a80cc60aadbaf1dca652f40a5544b3e6baa72f77d7d8c1b76e929603e5964990cd"></a>sincFast&#160;</td><td class="fielddoc"><p>Fast sinc interpolation provided by libsamplerate. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a80cc60aadbaf1dca652f40a5544b3e6baace0edda6e9949c6547a238e023d9a1c"></a>sincMedium&#160;</td><td class="fielddoc"><p>Medium quality sinc interpolation provided by libsamplerate. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a80cc60aadbaf1dca652f40a5544b3e6ba68f771a1079c302c71e2526c357497d0"></a>sincBest&#160;</td><td class="fielddoc"><p>Best quality sinc interpolation provided by libsamplerate. </p>
+</td></tr>
 </table>
 
 </div>
@@ -12095,7 +12136,7 @@ template&lt;typename... Properties&gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jul 19 2022 12:09:14 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jul 21 2022 15:04:48 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

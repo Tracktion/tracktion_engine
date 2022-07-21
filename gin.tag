@@ -2139,8 +2139,10 @@
     <filename>tracktion__AudioUtilities_8h.html</filename>
     <class kind="class">tracktion::engine::AudioMidiFifo</class>
     <class kind="class">tracktion::engine::AudioBufferSnapshot</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::ResamplingQuality &gt;</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
+    <namespace>juce</namespace>
     <member kind="typedef">
       <type>int64_t</type>
       <name>SampleCount</name>
@@ -2154,6 +2156,17 @@
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
       <anchor>a8944ee32cc6ed4eb531572d627f9538f</anchor>
       <arglist></arglist>
+    </member>
+    <member kind="enumeration">
+      <type></type>
+      <name>ResamplingQuality</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a80cc60aadbaf1dca652f40a5544b3e6b</anchor>
+      <arglist></arglist>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="a80cc60aadbaf1dca652f40a5544b3e6ba358bbd8944e77ed1509836a4fb9ad265">lagrange</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="a80cc60aadbaf1dca652f40a5544b3e6baa72f77d7d8c1b76e929603e5964990cd">sincFast</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="a80cc60aadbaf1dca652f40a5544b3e6baace0edda6e9949c6547a238e023d9a1c">sincMedium</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="a80cc60aadbaf1dca652f40a5544b3e6ba68f771a1079c302c71e2526c357497d0">sincBest</enumvalue>
     </member>
     <member kind="enumeration">
       <type></type>
@@ -9337,6 +9350,20 @@
     </member>
     <member kind="function">
       <type>void</type>
+      <name>setResamplingQuality</name>
+      <anchorfile>classtracktion_1_1engine_1_1AudioClipBase.html</anchorfile>
+      <anchor>ae9432459ae370ede018e28a3fa0ddf8f</anchor>
+      <arglist>(ResamplingQuality)</arglist>
+    </member>
+    <member kind="function">
+      <type>ResamplingQuality</type>
+      <name>getResamplingQuality</name>
+      <anchorfile>classtracktion_1_1engine_1_1AudioClipBase.html</anchorfile>
+      <anchor>a3a18a65e4b01714920e02c33005100b7</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
       <name>reverseLoopPoints</name>
       <anchorfile>classtracktion_1_1engine_1_1AudioClipBase.html</anchorfile>
       <anchor>a0ba2d7aaf8b2b0f468ee4797feeb0770</anchor>
@@ -9676,6 +9703,13 @@
       <name>fadeOutBehaviour</name>
       <anchorfile>classtracktion_1_1engine_1_1AudioClipBase.html</anchorfile>
       <anchor>a7ad7f9a2aedb72d3ef80c4a0d3059e42</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>juce::CachedValue&lt; ResamplingQuality &gt;</type>
+      <name>resamplingQuality</name>
+      <anchorfile>classtracktion_1_1engine_1_1AudioClipBase.html</anchorfile>
+      <anchor>a6ae53fdea331cd38e3b057909a7bc8a1</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable" protection="protected">
@@ -49391,66 +49425,6 @@
     </member>
   </compound>
   <compound kind="struct">
-    <name>tracktion::engine::HostedAudioDeviceInterface::Parameters</name>
-    <filename>structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</filename>
-    <member kind="variable">
-      <type>double</type>
-      <name>sampleRate</name>
-      <anchorfile>structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>a0817dd532bb7bf4cd6d203041df75dcc</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>int</type>
-      <name>blockSize</name>
-      <anchorfile>structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>a609ddcd242993e377e68c92dfd520af9</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>bool</type>
-      <name>useMidiDevices</name>
-      <anchorfile>structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>a0fa9298cdd4b197d2f9045317f84da88</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>int</type>
-      <name>inputChannels</name>
-      <anchorfile>structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>a52350afe61dbaac4e66c666107947f38</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>int</type>
-      <name>outputChannels</name>
-      <anchorfile>structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>a28d44d5d9fb1850e0e9679ea81313c73</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>bool</type>
-      <name>fixedBlockSize</name>
-      <anchorfile>structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>ae8b11776d06f44adf6a91e845be2fd74</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::StringArray</type>
-      <name>inputNames</name>
-      <anchorfile>structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>ab87998d992d56dbb1b2fc7bf3207e82c</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::StringArray</type>
-      <name>outputNames</name>
-      <anchorfile>structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>a18506932872b517b1be4c078ba689256</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
     <name>tracktion::engine::SimpleLFO::Parameters</name>
     <filename>structtracktion_1_1engine_1_1SimpleLFO_1_1Parameters.html</filename>
     <member kind="function">
@@ -49507,6 +49481,66 @@
       <name>pulseWidth</name>
       <anchorfile>structtracktion_1_1engine_1_1SimpleLFO_1_1Parameters.html</anchorfile>
       <anchor>aab3e6a2ae9cc7e319438cf69315d3488</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::HostedAudioDeviceInterface::Parameters</name>
+    <filename>structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</filename>
+    <member kind="variable">
+      <type>double</type>
+      <name>sampleRate</name>
+      <anchorfile>structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>a0817dd532bb7bf4cd6d203041df75dcc</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>blockSize</name>
+      <anchorfile>structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>a609ddcd242993e377e68c92dfd520af9</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>useMidiDevices</name>
+      <anchorfile>structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>a0fa9298cdd4b197d2f9045317f84da88</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>inputChannels</name>
+      <anchorfile>structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>a52350afe61dbaac4e66c666107947f38</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>outputChannels</name>
+      <anchorfile>structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>a28d44d5d9fb1850e0e9679ea81313c73</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>fixedBlockSize</name>
+      <anchorfile>structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>ae8b11776d06f44adf6a91e845be2fd74</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::StringArray</type>
+      <name>inputNames</name>
+      <anchorfile>structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>ab87998d992d56dbb1b2fc7bf3207e82c</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::StringArray</type>
+      <name>outputNames</name>
+      <anchorfile>structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
+      <anchor>a18506932872b517b1be4c078ba689256</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -58578,8 +58612,8 @@
       <type>static Statistics</type>
       <name>measureStatistics</name>
       <anchorfile>classtracktion_1_1engine_1_1Renderer.html</anchorfile>
-      <anchor>ad3f5873204c73307a92ee7b61e5629bf</anchor>
-      <arglist>(const juce::String &amp;taskDescription, Edit &amp;edit, TimeRange range, const juce::BigInteger &amp;tracksToDo, int blockSizeForAudio)</arglist>
+      <anchor>a31135b1aead953e9f389393944fbbd39</anchor>
+      <arglist>(const juce::String &amp;taskDescription, Edit &amp;edit, TimeRange range, const juce::BigInteger &amp;tracksToDo, int blockSizeForAudio, double sampleRateForAudio=44100.0)</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -77325,6 +77359,24 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>juce::VariantConverter&lt; tracktion::engine::ResamplingQuality &gt;</name>
+    <filename>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1ResamplingQuality_01_4.html</filename>
+    <member kind="function" static="yes">
+      <type>static tracktion::engine::ResamplingQuality</type>
+      <name>fromVar</name>
+      <anchorfile>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1ResamplingQuality_01_4.html</anchorfile>
+      <anchor>a96c1fa50451723aa1ca03c4591a9d394</anchor>
+      <arglist>(const var &amp;v)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static var</type>
+      <name>toVar</name>
+      <anchorfile>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1ResamplingQuality_01_4.html</anchorfile>
+      <anchor>a6a0e1da2090a5991160ffd7a3156ac34</anchor>
+      <arglist>(tracktion::engine::ResamplingQuality v)</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>juce::VariantConverter&lt; tracktion::engine::Scale::ScaleType &gt;</name>
     <filename>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1Scale_1_1ScaleType_01_4.html</filename>
     <member kind="function" static="yes">
@@ -79599,15 +79651,15 @@
       <type></type>
       <name>WaveNodeRealTime</name>
       <anchorfile>classtracktion_1_1engine_1_1WaveNodeRealTime.html</anchorfile>
-      <anchor>abb07726ea099fe877331c2d9e07d59d4</anchor>
-      <arglist>(const AudioFile &amp;, TimeRange editTime, TimeDuration offset, TimeRange loopSection, LiveClipLevel, double speedRatio, const juce::AudioChannelSet &amp;sourceChannelsToUse, const juce::AudioChannelSet &amp;destChannelsToFill, ProcessState &amp;, EditItemID, bool isOfflineRender, SpeedFadeDescription={}, std::optional&lt; tempo::Sequence::Position &gt; editTempoSequence={}, TimeStretcher::Mode=TimeStretcher::Mode::defaultMode, TimeStretcher::ElastiqueProOptions={}, float pitchChangeSemitones=0.0f)</arglist>
+      <anchor>a9f415d25d3f48af04de517ffa5a677f0</anchor>
+      <arglist>(const AudioFile &amp;, TimeRange editTime, TimeDuration offset, TimeRange loopSection, LiveClipLevel, double speedRatio, const juce::AudioChannelSet &amp;sourceChannelsToUse, const juce::AudioChannelSet &amp;destChannelsToFill, ProcessState &amp;, EditItemID, bool isOfflineRender, ResamplingQuality=ResamplingQuality::lagrange, SpeedFadeDescription={}, std::optional&lt; tempo::Sequence::Position &gt; editTempoSequence={}, TimeStretcher::Mode=TimeStretcher::Mode::defaultMode, TimeStretcher::ElastiqueProOptions={}, float pitchChangeSemitones=0.0f)</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>WaveNodeRealTime</name>
       <anchorfile>classtracktion_1_1engine_1_1WaveNodeRealTime.html</anchorfile>
-      <anchor>ae70f557c0f19973a4e55e2b9904f3de5</anchor>
-      <arglist>(const AudioFile &amp;, TimeStretcher::Mode, TimeStretcher::ElastiqueProOptions, BeatRange editTime, BeatDuration offset, BeatRange loopSection, LiveClipLevel, const juce::AudioChannelSet &amp;sourceChannelsToUse, const juce::AudioChannelSet &amp;destChannelsToFill, ProcessState &amp;, EditItemID, bool isOfflineRender, SpeedFadeDescription, std::optional&lt; tempo::Sequence::Position &gt; editTempoSequence, std::optional&lt; WarpMap &gt;, tempo::Sequence sourceFileTempoMap, SyncTempo, SyncPitch, std::optional&lt; tempo::Sequence &gt; chordPitchSequence)</arglist>
+      <anchor>a4d80cd7e8e10757fa70be24c26bb66bf</anchor>
+      <arglist>(const AudioFile &amp;, TimeStretcher::Mode, TimeStretcher::ElastiqueProOptions, BeatRange editTime, BeatDuration offset, BeatRange loopSection, LiveClipLevel, const juce::AudioChannelSet &amp;sourceChannelsToUse, const juce::AudioChannelSet &amp;destChannelsToFill, ProcessState &amp;, EditItemID, bool isOfflineRender, ResamplingQuality, SpeedFadeDescription, std::optional&lt; tempo::Sequence::Position &gt; editTempoSequence, std::optional&lt; WarpMap &gt;, tempo::Sequence sourceFileTempoMap, SyncTempo, SyncPitch, std::optional&lt; tempo::Sequence &gt; chordPitchSequence)</arglist>
     </member>
     <member kind="function">
       <type>graph::NodeProperties</type>
@@ -79959,6 +80011,7 @@
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::RenderOptions::AddRenderOptions &gt;</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::RenderOptions::RenderType &gt;</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::RenderOptions::TargetFileFormat &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::ResamplingQuality &gt;</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::Scale::ScaleType &gt;</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::TimecodeDisplayFormat &gt;</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::TimeStretcher::ElastiqueProOptions &gt;</class>
@@ -80852,6 +80905,17 @@
       <enumvalue file="namespacetracktion_1_1engine.html" anchor="a106acf13adac6f34b462a0c4de6e4fe3aa2dc2407a46ee1b7331225183f4b34c0">fps24</enumvalue>
       <enumvalue file="namespacetracktion_1_1engine.html" anchor="a106acf13adac6f34b462a0c4de6e4fe3a745ffcdd19b34f7d8d4028a0380f7808">fps25</enumvalue>
       <enumvalue file="namespacetracktion_1_1engine.html" anchor="a106acf13adac6f34b462a0c4de6e4fe3a51b0fa64094004b47e32034da78f7a75">fps30</enumvalue>
+    </member>
+    <member kind="enumeration">
+      <type></type>
+      <name>ResamplingQuality</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a80cc60aadbaf1dca652f40a5544b3e6b</anchor>
+      <arglist></arglist>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="a80cc60aadbaf1dca652f40a5544b3e6ba358bbd8944e77ed1509836a4fb9ad265">lagrange</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="a80cc60aadbaf1dca652f40a5544b3e6baa72f77d7d8c1b76e929603e5964990cd">sincFast</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="a80cc60aadbaf1dca652f40a5544b3e6baace0edda6e9949c6547a238e023d9a1c">sincMedium</enumvalue>
+      <enumvalue file="namespacetracktion_1_1engine.html" anchor="a80cc60aadbaf1dca652f40a5544b3e6ba68f771a1079c302c71e2526c357497d0">sincBest</enumvalue>
     </member>
     <member kind="enumeration">
       <type></type>
