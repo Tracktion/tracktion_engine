@@ -32,16 +32,16 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">350</td>
+            <td class="headerCovTableEntry">342</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-07-26 10:23:50</td>
+            <td class="headerValue">2022-07-26 13:06:33</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">35</td>
+            <td class="headerCovTableEntry">34</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
@@ -73,22 +73,22 @@
 <a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
-<a name="14"><span class="lineNum">      14 </span><span class="lineNoCov">          0 : void dumpSegments (const juce::Array&lt;AudioSegmentList::Segment&gt;&amp; segments)</span></a>
+<a name="14"><span class="lineNum">      14 </span>            : inline void dumpSegments (const juce::Array&lt;AudioSegmentList::Segment&gt;&amp; segments)</a>
 <a name="15"><span class="lineNum">      15 </span>            : {</a>
 <a name="16"><span class="lineNum">      16 </span>            : </a>
 <a name="17"><span class="lineNum">      17 </span>            :     DBG (&quot;******************************************&quot;);</a>
-<a name="18"><span class="lineNum">      18 </span><span class="lineNoCov">          0 :     for (auto&amp; s : segments)</span></a>
+<a name="18"><span class="lineNum">      18 </span>            :     for (auto&amp; s : segments)</a>
 <a name="19"><span class="lineNum">      19 </span>            :     {</a>
-<a name="20"><span class="lineNum">      20 </span><span class="lineNoCov">          0 :         juce::String text;</span></a>
+<a name="20"><span class="lineNum">      20 </span>            :         juce::String text;</a>
 <a name="21"><span class="lineNum">      21 </span>            : </a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineNoCov">          0 :         text += &quot;Start: &quot; + juce::String (s.start.inSeconds()) + &quot;(&quot; + juce::String (s.startSample) + &quot;)\n&quot;;</span></a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineNoCov">          0 :         text += &quot;Length: &quot; + juce::String (s.length.inSeconds()) + &quot;(&quot; + juce::String (s.lengthSample) + &quot;)\n&quot;;</span></a>
-<a name="24"><span class="lineNum">      24 </span><span class="lineNoCov">          0 :         text += &quot;Transpose: &quot; + juce::String (s.transpose) + &quot;\n&quot;;</span></a>
-<a name="25"><span class="lineNum">      25 </span><span class="lineNoCov">          0 :         text += &quot;===============================================&quot;;</span></a>
+<a name="22"><span class="lineNum">      22 </span>            :         text += &quot;Start: &quot; + juce::String (s.start.inSeconds()) + &quot;(&quot; + juce::String (s.startSample) + &quot;)\n&quot;;</a>
+<a name="23"><span class="lineNum">      23 </span>            :         text += &quot;Length: &quot; + juce::String (s.length.inSeconds()) + &quot;(&quot; + juce::String (s.lengthSample) + &quot;)\n&quot;;</a>
+<a name="24"><span class="lineNum">      24 </span>            :         text += &quot;Transpose: &quot; + juce::String (s.transpose) + &quot;\n&quot;;</a>
+<a name="25"><span class="lineNum">      25 </span>            :         text += &quot;===============================================&quot;;</a>
 <a name="26"><span class="lineNum">      26 </span>            : </a>
 <a name="27"><span class="lineNum">      27 </span>            :         DBG(text);</a>
 <a name="28"><span class="lineNum">      28 </span>            :     }</a>
-<a name="29"><span class="lineNum">      29 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="29"><span class="lineNum">      29 </span>            : }</a>
 <a name="30"><span class="lineNum">      30 </span>            : </a>
 <a name="31"><span class="lineNum">      31 </span>            : //==============================================================================</a>
 <a name="32"><span class="lineNum">      32 </span><span class="lineNoCov">          0 : TimeRange AudioSegmentList::Segment::getRange() const                          { return { start, start + length }; }</span></a>

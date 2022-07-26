@@ -32,17 +32,17 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">106</td>
-            <td class="headerCovTableEntry">310</td>
-            <td class="headerCovTableEntryLo">34.2 %</td>
+            <td class="headerCovTableEntry">308</td>
+            <td class="headerCovTableEntryLo">34.4 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-07-26 10:23:50</td>
+            <td class="headerValue">2022-07-26 13:06:33</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">20</td>
-            <td class="headerCovTableEntry">56</td>
-            <td class="headerCovTableEntryLo">35.7 %</td>
+            <td class="headerCovTableEntry">55</td>
+            <td class="headerCovTableEntryLo">36.4 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -78,7 +78,7 @@
 <a name="16"><span class="lineNum">      16 </span>            : </a>
 <a name="17"><span class="lineNum">      17 </span>            : static const char* commandLineUID = &quot;PluginScan&quot;;</a>
 <a name="18"><span class="lineNum">      18 </span>            : </a>
-<a name="19"><span class="lineNum">      19 </span><span class="lineNoCov">          0 : juce::MemoryBlock createScanMessage (const juce::XmlElement&amp; xml)</span></a>
+<a name="19"><span class="lineNum">      19 </span><span class="lineNoCov">          0 : inline juce::MemoryBlock createScanMessage (const juce::XmlElement&amp; xml)</span></a>
 <a name="20"><span class="lineNum">      20 </span>            : {</a>
 <a name="21"><span class="lineNum">      21 </span><span class="lineNoCov">          0 :     juce::MemoryOutputStream mo;</span></a>
 <a name="22"><span class="lineNum">      22 </span><span class="lineNoCov">          0 :     xml.writeTo (mo, juce::XmlElement::TextFormat().withoutHeader().singleLine());</span></a>
@@ -443,10 +443,10 @@
 <a name="381"><span class="lineNum">     381 </span>            : };</a>
 <a name="382"><span class="lineNum">     382 </span>            : </a>
 <a name="383"><span class="lineNum">     383 </span>            : //==============================================================================</a>
-<a name="384"><span class="lineNum">     384 </span><span class="lineNoCov">          0 : SettingID getPluginListPropertyName()</span></a>
+<a name="384"><span class="lineNum">     384 </span>            : inline SettingID getPluginListPropertyName()</a>
 <a name="385"><span class="lineNum">     385 </span>            : {</a>
 <a name="386"><span class="lineNum">     386 </span>            :    #if JUCE_64BIT</a>
-<a name="387"><span class="lineNum">     387 </span><span class="lineNoCov">          0 :     return SettingID::knownPluginList64;</span></a>
+<a name="387"><span class="lineNum">     387 </span>            :     return SettingID::knownPluginList64;</a>
 <a name="388"><span class="lineNum">     388 </span>            :    #else</a>
 <a name="389"><span class="lineNum">     389 </span>            :     return SettingID::knownPluginList;</a>
 <a name="390"><span class="lineNum">     390 </span>            :    #endif</a>

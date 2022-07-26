@@ -32,16 +32,16 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">193</td>
+            <td class="headerCovTableEntry">185</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-07-26 10:23:50</td>
+            <td class="headerValue">2022-07-26 13:06:33</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">24</td>
+            <td class="headerCovTableEntry">23</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
@@ -321,7 +321,7 @@
 <a name="259"><span class="lineNum">     259 </span>            : };</a>
 <a name="260"><span class="lineNum">     260 </span>            : </a>
 <a name="261"><span class="lineNum">     261 </span>            : //==============================================================================</a>
-<a name="262"><span class="lineNum">     262 </span><span class="lineNoCov">          0 : SearchOperation* createPluralOptions (juce::String s)</span></a>
+<a name="262"><span class="lineNum">     262 </span><span class="lineNoCov">          0 : inline SearchOperation* createPluralOptions (juce::String s)</span></a>
 <a name="263"><span class="lineNum">     263 </span>            : {</a>
 <a name="264"><span class="lineNum">     264 </span><span class="lineNoCov">          0 :     SearchOperation* c = new WordMatchOperation (s);</span></a>
 <a name="265"><span class="lineNum">     265 </span>            : </a>
@@ -390,25 +390,25 @@
 <a name="328"><span class="lineNum">     328 </span>            :     return c;</a>
 <a name="329"><span class="lineNum">     329 </span>            : }</a>
 <a name="330"><span class="lineNum">     330 </span>            : </a>
-<a name="331"><span class="lineNum">     331 </span><span class="lineNoCov">          0 : SearchOperation* multipleWordMatch (const juce::String&amp; s)</span></a>
+<a name="331"><span class="lineNum">     331 </span>            : inline SearchOperation* multipleWordMatch (const juce::String&amp; s)</a>
 <a name="332"><span class="lineNum">     332 </span>            : {</a>
-<a name="333"><span class="lineNum">     333 </span><span class="lineNoCov">          0 :     juce::StringArray a;</span></a>
-<a name="334"><span class="lineNum">     334 </span><span class="lineNoCov">          0 :     a.addTokens (s, false);</span></a>
+<a name="333"><span class="lineNum">     333 </span>            :     juce::StringArray a;</a>
+<a name="334"><span class="lineNum">     334 </span>            :     a.addTokens (s, false);</a>
 <a name="335"><span class="lineNum">     335 </span>            : </a>
 <a name="336"><span class="lineNum">     336 </span>            :     SearchOperation* c = nullptr;</a>
 <a name="337"><span class="lineNum">     337 </span>            : </a>
-<a name="338"><span class="lineNum">     338 </span><span class="lineNoCov">          0 :     for (int i = a.size(); --i &gt;= 0;)</span></a>
+<a name="338"><span class="lineNum">     338 </span>            :     for (int i = a.size(); --i &gt;= 0;)</a>
 <a name="339"><span class="lineNum">     339 </span>            :     {</a>
-<a name="340"><span class="lineNum">     340 </span><span class="lineNoCov">          0 :         if (c == nullptr)</span></a>
-<a name="341"><span class="lineNum">     341 </span><span class="lineNoCov">          0 :             c = new WordMatchOperation (a[i]);</span></a>
+<a name="340"><span class="lineNum">     340 </span>            :         if (c == nullptr)</a>
+<a name="341"><span class="lineNum">     341 </span>            :             c = new WordMatchOperation (a[i]);</a>
 <a name="342"><span class="lineNum">     342 </span>            :         else</a>
-<a name="343"><span class="lineNum">     343 </span><span class="lineNoCov">          0 :             c = new AndOperation (c, new WordMatchOperation (a[i]));</span></a>
+<a name="343"><span class="lineNum">     343 </span>            :             c = new AndOperation (c, new WordMatchOperation (a[i]));</a>
 <a name="344"><span class="lineNum">     344 </span>            :     }</a>
 <a name="345"><span class="lineNum">     345 </span>            : </a>
-<a name="346"><span class="lineNum">     346 </span><span class="lineNoCov">          0 :     return c;</span></a>
+<a name="346"><span class="lineNum">     346 </span>            :     return c;</a>
 <a name="347"><span class="lineNum">     347 </span>            : }</a>
 <a name="348"><span class="lineNum">     348 </span>            : </a>
-<a name="349"><span class="lineNum">     349 </span><span class="lineNoCov">          0 : SearchOperation* createCondition (const juce::StringArray&amp; words, int start, int length)</span></a>
+<a name="349"><span class="lineNum">     349 </span><span class="lineNoCov">          0 : inline SearchOperation* createCondition (const juce::StringArray&amp; words, int start, int length)</span></a>
 <a name="350"><span class="lineNum">     350 </span>            : {</a>
 <a name="351"><span class="lineNum">     351 </span><span class="lineNoCov">          0 :     if (length == 0)</span></a>
 <a name="352"><span class="lineNum">     352 </span>            :         return {};</a>
