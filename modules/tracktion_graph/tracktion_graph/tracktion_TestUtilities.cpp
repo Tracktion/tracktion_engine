@@ -16,7 +16,7 @@
 
 namespace tracktion { inline namespace graph { namespace test_utilities
 {
-    std::string demangle (std::string name)
+    inline std::string demangle (std::string name)
     {
        #if __has_include (<cxxabi.h>)
         int status;

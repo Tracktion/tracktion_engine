@@ -139,7 +139,55 @@ bool ExternalPlayheadSynchroniser::synchronise (juce::AudioPlayHead& playhead)
 {
     if (positionInfoLock.tryEnter())
     {
+       #if TRACKTION_JUCE7
+        const auto pos = playhead.getPosition();
+        const bool sucess = pos.hasValue();
+
+        if (sucess)
+        {
+            positionInfo.resetToDefault();
+
+            if (const auto sig = pos->getTimeSignature())
+            {
+                positionInfo.timeSigNumerator   = sig->numerator;
+                positionInfo.timeSigDenominator = sig->denominator;
+            }
+
+            if (const auto loop = pos->getLoopPoints())
+            {
+                positionInfo.ppqLoopStart     = loop->ppqStart;
+                positionInfo.ppqLoopEnd       = loop->ppqEnd;
+            }
+
+            if (const auto frame = pos->getFrameRate())
+                positionInfo.frameRate = *frame;
+
+            if (const auto timeInSeconds = pos->getTimeInSeconds())
+                positionInfo.timeInSeconds = *timeInSeconds;
+
+            if (const auto lastBarStartPpq = pos->getPpqPositionOfLastBarStart())
+                positionInfo.ppqPositionOfLastBarStart = *lastBarStartPpq;
+
+            if (const auto ppqPosition = pos->getPpqPosition())
+                positionInfo.ppqPosition = *ppqPosition;
+
+            if (const auto originTime = pos->getEditOriginTime())
+                positionInfo.editOriginTime = *originTime;
+
+            if (const auto bpm = pos->getBpm())
+                positionInfo.bpm = *bpm;
+
+            if (const auto timeInSamples = pos->getTimeInSamples())
+                positionInfo.timeInSamples = *timeInSamples;
+
+            positionInfo.isPlaying      = pos->getIsPlaying();
+            positionInfo.isRecording    = pos->getIsRecording();
+            positionInfo.isLooping      = pos->getIsLooping();
+        }
+       #else
         const bool sucess = playhead.getCurrentPosition (positionInfo);
+       #endif
+
         positionInfoLock.exit();
 
         if (sucess)

@@ -13,14 +13,14 @@ namespace tracktion { inline namespace engine
 
 namespace AppFunctions
 {
-    UIBehaviour& getCurrentUIBehaviour()
+    inline UIBehaviour& getCurrentUIBehaviour()
     {
         auto e = Engine::getEngines()[0];
         jassert (e != nullptr);
         return e->getUIBehaviour();
     }
 
-    Edit* getCurrentlyFocusedEdit()
+    inline Edit* getCurrentlyFocusedEdit()
     {
         if (auto e = getCurrentUIBehaviour().getCurrentlyFocusedEdit())
             return e;
@@ -29,7 +29,7 @@ namespace AppFunctions
         return nullptr;
     }
 
-    TransportControl* getActiveTransport()
+    inline TransportControl* getActiveTransport()
     {
         if (auto ed = getCurrentlyFocusedEdit())
             return &ed->getTransport();
@@ -37,7 +37,7 @@ namespace AppFunctions
         return {};
     }
 
-    SelectionManager* getCurrentlyFocusedSelectionManagerWithValidEdit()
+    inline SelectionManager* getCurrentlyFocusedSelectionManagerWithValidEdit()
     {
         if (auto sm = getCurrentUIBehaviour().getCurrentlyFocusedSelectionManager())
             if (sm->edit != nullptr)
@@ -46,7 +46,7 @@ namespace AppFunctions
         return nullptr;
     }
 
-    SelectableList getSelectedItems()
+    inline SelectableList getSelectedItems()
     {
         SelectableList items;
 
@@ -67,17 +67,17 @@ namespace AppFunctions
         return false;
     }
 
-    void nudgeSelected (const juce::String& commandDesc)
+    inline void nudgeSelected (const juce::String& commandDesc)
     {
         getCurrentUIBehaviour().nudgeSelected (commandDesc);
     }
 
-    void zoomHorizontal (float increment)
+    inline void zoomHorizontal (float increment)
     {
         getCurrentUIBehaviour().zoomHorizontal (increment);
     }
 
-    void zoomVertical (float amount)
+    inline void zoomVertical (float amount)
     {
         getCurrentUIBehaviour().zoomVertical (amount);
     }

@@ -696,7 +696,7 @@ struct WarpedTime
     double stretchRatio = 1.0;
 };
 
-WarpedTime warpTime (const WarpMap& map, TimePosition time)
+inline WarpedTime warpTime (const WarpMap& map, TimePosition time)
 {
     if (map.empty())
         return { time, 1.0 };

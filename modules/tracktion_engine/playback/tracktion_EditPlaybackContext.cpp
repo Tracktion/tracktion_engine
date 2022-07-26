@@ -15,13 +15,13 @@ namespace tracktion { inline namespace engine
 //==============================================================================
 namespace EditPlaybackContextInternal
 {
-    int& getThreadPoolStrategyType()
+    inline int& getThreadPoolStrategyType()
     {
         static int type = static_cast<int> (tracktion::graph::ThreadPoolStrategy::lightweightSemHybrid);
         return type;
     }
 
-    bool& getPooledMemoryFlag()
+    inline bool& getPooledMemoryFlag()
     {
         static bool usePool = false;
         return usePool;
@@ -993,7 +993,7 @@ void EditPlaybackContext::enablePooledMemory (bool enable)
 //==============================================================================
 static int numHighPriorityPlayers = 0, numRealtimeDefeaters = 0;
 
-void updateProcessPriority (Engine& engine)
+inline void updateProcessPriority (Engine& engine)
 {
     int level = 0;
 

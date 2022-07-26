@@ -20,9 +20,9 @@ void Renderer::turnOffAllPlugins (Edit& edit)
 
 namespace render_utils
 {
-    std::unique_ptr<Renderer::RenderTask> createRenderTask (Renderer::Parameters r, juce::String desc,
-                                                            std::atomic<float>* progressToUpdate,
-                                                            juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* thumbnail)
+    inline std::unique_ptr<Renderer::RenderTask> createRenderTask (Renderer::Parameters r, juce::String desc,
+                                                                   std::atomic<float>* progressToUpdate,
+                                                                   juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* thumbnail)
     {
         auto tracksToDo = toTrackArray (*r.edit, r.tracksToDo);
         

@@ -16,7 +16,7 @@ extern void cleanUpDanglingPlugins();
 
 static const char* commandLineUID = "PluginScan";
 
-juce::MemoryBlock createScanMessage (const juce::XmlElement& xml)
+inline juce::MemoryBlock createScanMessage (const juce::XmlElement& xml)
 {
     juce::MemoryOutputStream mo;
     xml.writeTo (mo, juce::XmlElement::TextFormat().withoutHeader().singleLine());
@@ -381,7 +381,7 @@ struct CustomScanner  : public juce::KnownPluginList::CustomScanner
 };
 
 //==============================================================================
-SettingID getPluginListPropertyName()
+inline SettingID getPluginListPropertyName()
 {
    #if JUCE_64BIT
     return SettingID::knownPluginList64;

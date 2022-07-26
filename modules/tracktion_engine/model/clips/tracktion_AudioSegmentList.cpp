@@ -11,7 +11,7 @@
 namespace tracktion { inline namespace engine
 {
 
-void dumpSegments (const juce::Array<AudioSegmentList::Segment>& segments)
+inline void dumpSegments (const juce::Array<AudioSegmentList::Segment>& segments)
 {
 
     DBG ("******************************************");

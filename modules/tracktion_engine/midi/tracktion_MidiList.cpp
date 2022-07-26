@@ -272,7 +272,7 @@ namespace NoteHelpers
     }
 }
 
-void addMidiNoteOnExpressionToSequence (juce::MidiMessageSequence& seq, const juce::ValueTree& state, int midiChannel, double noteOnTime) noexcept
+inline void addMidiNoteOnExpressionToSequence (juce::MidiMessageSequence& seq, const juce::ValueTree& state, int midiChannel, double noteOnTime) noexcept
 {
     using namespace NoteHelpers;
     jassert (state.hasType (IDs::NOTE));
@@ -553,8 +553,13 @@ private:
     void stopNote (MidiNote& note)
     {
         for (int ch = midiChannelBegin; ch < midiChannelEnd; ++ch)
+        {
             if (midiChannels[ch].notes.contains (&note))
-                return midiChannels[ch].notes.removeFirstMatchingValue (&note);
+            {
+                midiChannels[ch].notes.removeFirstMatchingValue (&note);
+                return;
+            }
+        }
 
         jassertfalse;
     }

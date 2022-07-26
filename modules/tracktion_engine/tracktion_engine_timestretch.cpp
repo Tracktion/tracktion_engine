@@ -31,6 +31,8 @@
   #pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
  #endif
  #pragma clang diagnostic ignored "-Wextra-semi"
+ #pragma clang diagnostic ignored "-Wextra-semi"
+ #pragma clang diagnostic ignored "-Wmissing-prototypes"
 #endif
 
 #ifdef __GNUC__

@@ -63,7 +63,7 @@ static juce::String chordSymbol (const juce::String& name)
     return name.substring (1);
 }
 
-juce::String fixLegacyChordNames (const juce::String& oldName)
+inline juce::String fixLegacyChordNames (const juce::String& oldName)
 {
     if (chordNameHasSymbol (oldName, "maj"))        return chordNote (oldName) + Chord (Chord::majorTriad).getSymbol();
     if (chordNameHasSymbol (oldName, "min"))        return chordNote (oldName) + Chord (Chord::minorTriad).getSymbol();

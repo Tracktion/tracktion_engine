@@ -295,7 +295,7 @@ static void askUserAboutProjectItemPastingOptions (Engine& engine,
     }
 }
 
-bool isRecursiveEditClipPaste (const Clipboard::ProjectItems& items, Edit& edit)
+inline bool isRecursiveEditClipPaste (const Clipboard::ProjectItems& items, Edit& edit)
 {
     auto& pm = edit.engine.getProjectManager();
 

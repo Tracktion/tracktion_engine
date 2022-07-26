@@ -153,9 +153,9 @@ namespace chocMidiHelpers
         Kind lastSentKind = Kind::rpn, newestKind = Kind::rpn;
     };
 
-    void createControllerUpdatesForTime (const choc::midi::Sequence& sequence,
-                                         uint8_t channel, double time,
-                                         juce::Array<juce::MidiMessage>& dest)
+    inline void createControllerUpdatesForTime (const choc::midi::Sequence& sequence,
+                                                uint8_t channel, double time,
+                                                juce::Array<juce::MidiMessage>& dest)
     {
         ProgramChange programChange;
         ControllerValues controllerValues;
@@ -221,8 +221,8 @@ namespace chocMidiHelpers
 namespace MidiHelpers
 {
     /** Snips out a section of a sequence adding note on/off events for notes at the loop boundries. */
-    juce::MidiMessageSequence createLoopSection (juce::MidiMessageSequence sourceSequence,
-                                                 juce::Range<double> loopRange)
+    inline juce::MidiMessageSequence createLoopSection (juce::MidiMessageSequence sourceSequence,
+                                                        juce::Range<double> loopRange)
     {
         juce::MidiMessageSequence res;
 
@@ -277,8 +277,8 @@ namespace MidiHelpers
     }
 
     /** Snips out a section of a set of sequences adding note on/off events for notes at the loop boundries. */
-    std::vector<juce::MidiMessageSequence> createLoopSection (const std::vector<juce::MidiMessageSequence>& sourceSequences,
-                                                              juce::Range<double> loopRange)
+    inline std::vector<juce::MidiMessageSequence> createLoopSection (const std::vector<juce::MidiMessageSequence>& sourceSequences,
+                                                                     juce::Range<double> loopRange)
     {
         std::vector<juce::MidiMessageSequence> res;
 
@@ -288,7 +288,7 @@ namespace MidiHelpers
         return res;
     }
 
-    void applyQuantisationToSequence (const QuantisationType& q, juce::MidiMessageSequence& ms, bool canQuantiseNoteOffs)
+    inline void applyQuantisationToSequence (const QuantisationType& q, juce::MidiMessageSequence& ms, bool canQuantiseNoteOffs)
     {
         if (! q.isEnabled())
             return;
@@ -335,7 +335,7 @@ namespace MidiHelpers
         }
     }
 
-    void applyGrooveToSequence (const GrooveTemplate& groove, float grooveStrength, juce::MidiMessageSequence& ms)
+    inline void applyGrooveToSequence (const GrooveTemplate& groove, float grooveStrength, juce::MidiMessageSequence& ms)
     {
         for (auto mh : ms)
         {
@@ -346,10 +346,10 @@ namespace MidiHelpers
         }
     }
 
-    void createNoteOffs (ActiveNoteList& activeNoteList,
-                         MidiMessageArray& destination,
-                         MidiMessageArray::MPESourceID midiSourceID,
-                         double midiTimeOffset, bool isPlaying)
+    inline void createNoteOffs (ActiveNoteList& activeNoteList,
+                                MidiMessageArray& destination,
+                                MidiMessageArray::MPESourceID midiSourceID,
+                                double midiTimeOffset, bool isPlaying)
     {
         int activeChannels = 0;
 
@@ -377,7 +377,7 @@ namespace MidiHelpers
         }
     }
 
-    choc::midi::Sequence& addSequence (choc::midi::Sequence& dest, const juce::MidiMessageSequence& src, double timeStampOffset)
+    inline choc::midi::Sequence& addSequence (choc::midi::Sequence& dest, const juce::MidiMessageSequence& src, double timeStampOffset)
     {
         for (auto meh : src)
         {
@@ -388,8 +388,8 @@ namespace MidiHelpers
         return dest;
     }
 
-    void createNoteOffMap (std::vector<std::pair<size_t, size_t>>& noteOffMap,
-                           const choc::midi::Sequence& seq)
+    inline void createNoteOffMap (std::vector<std::pair<size_t, size_t>>& noteOffMap,
+                                  const choc::midi::Sequence& seq)
     {
         noteOffMap.clear();
         const auto seqLen = seq.events.size();
@@ -429,9 +429,9 @@ namespace MidiHelpers
         }
     }
 
-    choc::midi::Sequence::Event* getNoteOff (size_t noteOnIndex,
-                                             choc::midi::Sequence& ms,
-                                             const std::vector<std::pair<size_t, size_t>>& noteOffMap)
+    inline choc::midi::Sequence::Event* getNoteOff (size_t noteOnIndex,
+                                                    choc::midi::Sequence& ms,
+                                                    const std::vector<std::pair<size_t, size_t>>& noteOffMap)
     {
         auto found = std::find_if (noteOffMap.begin(), noteOffMap.end(),
                                    [noteOnIndex] (const auto& m) { return m.first == noteOnIndex; });
@@ -442,9 +442,9 @@ namespace MidiHelpers
         return {};
     }
 
-    const choc::midi::Sequence::Event* getNoteOff (size_t noteOnIndex,
-                                                   const choc::midi::Sequence& ms,
-                                                   const std::vector<std::pair<size_t, size_t>>& noteOffMap)
+    inline const choc::midi::Sequence::Event* getNoteOff (size_t noteOnIndex,
+                                                          const choc::midi::Sequence& ms,
+                                                          const std::vector<std::pair<size_t, size_t>>& noteOffMap)
     {
         auto found = std::find_if (noteOffMap.begin(), noteOffMap.end(),
                                    [noteOnIndex] (const auto& m) { return m.first == noteOnIndex; });
@@ -455,8 +455,8 @@ namespace MidiHelpers
         return {};
     }
 
-    void applyQuantisationToSequence (const QuantisationType& q, bool canQuantiseNoteOffs,
-                                      choc::midi::Sequence& ms, const std::vector<std::pair<size_t, size_t>>& noteOffMap)
+    inline void applyQuantisationToSequence (const QuantisationType& q, bool canQuantiseNoteOffs,
+                                             choc::midi::Sequence& ms, const std::vector<std::pair<size_t, size_t>>& noteOffMap)
     {
         if (! q.isEnabled())
             return;
@@ -507,7 +507,7 @@ namespace MidiHelpers
                        });
     }
 
-    void applyGrooveToSequence (const GrooveTemplate& groove, float grooveStrength, choc::midi::Sequence& ms)
+    inline void applyGrooveToSequence (const GrooveTemplate& groove, float grooveStrength, choc::midi::Sequence& ms)
     {
         for (auto& e : ms)
         {
@@ -521,14 +521,14 @@ namespace MidiHelpers
         }
     }
 
-    void createMessagesForTime (MidiMessageArray& destBuffer,
-                                const choc::midi::Sequence& sourceSequence,
-                                const std::vector<std::pair<size_t, size_t>>& noteOffMap,
-                                double time,
-                                juce::Range<int> channelNumbers,
-                                LiveClipLevel& clipLevel,
-                                bool useMPEChannelMode, MidiMessageArray::MPESourceID midiSourceID,
-                                juce::Array<juce::MidiMessage>& controllerMessagesScratchBuffer)
+    inline void createMessagesForTime (MidiMessageArray& destBuffer,
+                                       const choc::midi::Sequence& sourceSequence,
+                                       const std::vector<std::pair<size_t, size_t>>& noteOffMap,
+                                       double time,
+                                       juce::Range<int> channelNumbers,
+                                       LiveClipLevel& clipLevel,
+                                       bool useMPEChannelMode, MidiMessageArray::MPESourceID midiSourceID,
+                                       juce::Array<juce::MidiMessage>& controllerMessagesScratchBuffer)
     {
         if (useMPEChannelMode)
         {

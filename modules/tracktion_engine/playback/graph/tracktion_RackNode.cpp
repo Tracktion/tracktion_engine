@@ -381,11 +381,11 @@ namespace RackNodeBuilder
     }
 
     //==============================================================================
-    std::unique_ptr<tracktion::graph::Node> createRackNodeConnectedNode (RackType& rack,
-                                                                         double sampleRate, int blockSize,
-                                                                         std::unique_ptr<tracktion::graph::Node> inputNodeToUse,
-                                                                         ProcessState& processState,
-                                                                         bool isRendering)
+    inline std::unique_ptr<tracktion::graph::Node> createRackNodeConnectedNode (RackType& rack,
+                                                                                double sampleRate, int blockSize,
+                                                                                std::unique_ptr<tracktion::graph::Node> inputNodeToUse,
+                                                                                ProcessState& processState,
+                                                                                bool isRendering)
     {
         using namespace tracktion::graph;
         

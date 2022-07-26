@@ -32,8 +32,43 @@ public:
         isPlaying = playing;
         isLooping = looping;
         loopTimeRange = loopTimes;
+
+        loopStart.set (loopTimeRange.getStart());
+        loopEnd.set (loopTimeRange.getEnd());
+        currentPos.set (time);
     }
 
+   #if TRACKTION_JUCE7
+    juce::Optional<PositionInfo> getPosition() const override
+    {
+        PositionInfo result;
+
+        result.setFrameRate (getFrameRate());
+
+        auto& transport = plugin.edit.getTransport();
+
+        result.setIsPlaying (isPlaying);
+        result.setIsLooping (isLooping);
+        result.setIsRecording (transport.isRecording());
+        result.setEditOriginTime (transport.getTimeWhenStarted().inSeconds());
+
+        if (isLooping)
+            result.setLoopPoints (juce::AudioPlayHead::LoopPoints ({ loopStart.getPPQTime(), loopEnd.getPPQTime() }));
+
+        result.setTimeInSeconds (time.inSeconds());
+        result.setTimeInSamples (toSamples (time, plugin.getAudioPluginInstance()->getSampleRate()));
+
+        const auto timeSig = currentPos.getTimeSignature();
+        result.setBpm (currentPos.getTempo());
+        result.setTimeSignature (juce::AudioPlayHead::TimeSignature ({ timeSig.numerator, timeSig.denominator }));
+
+        const auto ppqPositionOfLastBarStart = currentPos.getPPQTimeOfBarStart();
+        result.setPpqPositionOfLastBarStart (ppqPositionOfLastBarStart);
+        result.setPpqPosition (std::max (ppqPositionOfLastBarStart, currentPos.getPPQTime()));
+
+        return result;
+    }
+   #else
     bool getCurrentPosition (CurrentPositionInfo& result) override
     {
         zerostruct (result);
@@ -69,6 +104,7 @@ public:
 
         return true;
     }
+  #endif
 
 private:
     ExternalPlugin& plugin;

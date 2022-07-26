@@ -45,19 +45,19 @@ namespace IDs
 
 namespace TransportHelpers
 {
-    TimePosition snapTime (TransportControl& tc, TimePosition t, bool invertSnap)
+    inline TimePosition snapTime (TransportControl& tc, TimePosition t, bool invertSnap)
     {
         return (tc.snapToTimecode ^ invertSnap) ? tc.getSnapType().roundTimeNearest (t, tc.edit.tempoSequence)
                                                 : t;
     }
 
-    TimePosition snapTimeUp (TransportControl& tc, TimePosition t, bool invertSnap)
+    inline TimePosition snapTimeUp (TransportControl& tc, TimePosition t, bool invertSnap)
     {
         return (tc.snapToTimecode ^ invertSnap) ? tc.getSnapType().roundTimeUp (t, tc.edit.tempoSequence)
                                                 : t;
     }
 
-    TimePosition snapTimeDown (TransportControl& tc, TimePosition t, bool invertSnap)
+    inline TimePosition snapTimeDown (TransportControl& tc, TimePosition t, bool invertSnap)
     {
         return (tc.snapToTimecode ^ invertSnap) ? tc.getSnapType().roundTimeDown (t, tc.edit.tempoSequence)
                                                 : t;
@@ -1189,7 +1189,7 @@ void TransportControl::sendMMCCommand (juce::MidiMessage::MidiMachineControlComm
     sendMMC (juce::MidiMessage::midiMachineControlCommand (command));
 }
 
-bool anyEnabledMidiOutDevicesSendingMMC (DeviceManager& dm)
+inline bool anyEnabledMidiOutDevicesSendingMMC (DeviceManager& dm)
 {
     for (int i = dm.getNumMidiOutDevices(); --i >= 0;)
         if (auto mo = dm.getMidiOutDevice (i))

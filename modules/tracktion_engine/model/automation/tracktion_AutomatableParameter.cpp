@@ -13,7 +13,7 @@ namespace tracktion { inline namespace engine
 
 namespace AutomationScaleHelpers
 {
-    float getQuadraticBezierControlPoint (float y1, float y2, float curve) noexcept
+    inline float getQuadraticBezierControlPoint (float y1, float y2, float curve) noexcept
     {
         jassert (curve >= -0.5f && curve <= 0.5f);
 
@@ -35,7 +35,7 @@ namespace AutomationScaleHelpers
         return y;
     }
 
-    float getCurvedValue (float value, float start, float end, float curve) noexcept
+    inline float getCurvedValue (float value, float start, float end, float curve) noexcept
     {
         if (curve == 0.0f)
             return ((end - start) * value) + start;
@@ -44,7 +44,7 @@ namespace AutomationScaleHelpers
         return (float) AutomationCurve::getBezierXfromT (value, start, control, end);
     }
 
-    float mapValue (float inputVal, float offset, float value, float curve) noexcept
+    inline float mapValue (float inputVal, float offset, float value, float curve) noexcept
     {
         return inputVal < 0.0 ? offset - getCurvedValue (-inputVal, 0.0f, value, curve)
                               : offset + getCurvedValue (inputVal, 0.0f, value, curve);
