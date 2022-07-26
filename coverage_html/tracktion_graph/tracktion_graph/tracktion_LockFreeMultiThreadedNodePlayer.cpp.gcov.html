@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-07-21 15:16:39</td>
+            <td class="headerValue">2022-07-26 10:23:50</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">19</td>
@@ -83,20 +83,20 @@
 <a name="21"><span class="lineNum">      21 </span><span class="lineCov">         88 :     threadPool = getPoolCreatorFunction (ThreadPoolStrategy::realTime) (*this);</span></a>
 <a name="22"><span class="lineNum">      22 </span><span class="lineCov">         88 : }</span></a>
 <a name="23"><span class="lineNum">      23 </span>            : </a>
-<a name="24"><span class="lineNum">      24 </span><span class="lineCov">        816 : LockFreeMultiThreadedNodePlayer::LockFreeMultiThreadedNodePlayer (ThreadPoolCreator poolCreator)</span></a>
+<a name="24"><span class="lineNum">      24 </span><span class="lineCov">        848 : LockFreeMultiThreadedNodePlayer::LockFreeMultiThreadedNodePlayer (ThreadPoolCreator poolCreator)</span></a>
 <a name="25"><span class="lineNum">      25 </span>            : {</a>
-<a name="26"><span class="lineNum">      26 </span><span class="lineCov">        408 :     threadPool = poolCreator (*this);</span></a>
-<a name="27"><span class="lineNum">      27 </span><span class="lineCov">        408 : }</span></a>
+<a name="26"><span class="lineNum">      26 </span><span class="lineCov">        424 :     threadPool = poolCreator (*this);</span></a>
+<a name="27"><span class="lineNum">      27 </span><span class="lineCov">        424 : }</span></a>
 <a name="28"><span class="lineNum">      28 </span>            : </a>
-<a name="29"><span class="lineNum">      29 </span><span class="lineCov">        908 : LockFreeMultiThreadedNodePlayer::~LockFreeMultiThreadedNodePlayer()</span></a>
+<a name="29"><span class="lineNum">      29 </span><span class="lineCov">        940 : LockFreeMultiThreadedNodePlayer::~LockFreeMultiThreadedNodePlayer()</span></a>
 <a name="30"><span class="lineNum">      30 </span>            : {</a>
-<a name="31"><span class="lineNum">      31 </span><span class="lineCov">        496 :     if (numThreadsToUse &gt; 0)</span></a>
+<a name="31"><span class="lineNum">      31 </span><span class="lineCov">        512 :     if (numThreadsToUse &gt; 0)</span></a>
 <a name="32"><span class="lineNum">      32 </span>            :         clearThreads();</a>
-<a name="33"><span class="lineNum">      33 </span><span class="lineCov">        496 : }</span></a>
+<a name="33"><span class="lineNum">      33 </span><span class="lineCov">        512 : }</span></a>
 <a name="34"><span class="lineNum">      34 </span>            : </a>
-<a name="35"><span class="lineNum">      35 </span><span class="lineCov">        373 : void LockFreeMultiThreadedNodePlayer::setNumThreads (size_t newNumThreads)</span></a>
+<a name="35"><span class="lineNum">      35 </span><span class="lineCov">        389 : void LockFreeMultiThreadedNodePlayer::setNumThreads (size_t newNumThreads)</span></a>
 <a name="36"><span class="lineNum">      36 </span>            : {</a>
-<a name="37"><span class="lineNum">      37 </span><span class="lineCov">        373 :     if (newNumThreads == numThreadsToUse)</span></a>
+<a name="37"><span class="lineNum">      37 </span><span class="lineCov">        389 :     if (newNumThreads == numThreadsToUse)</span></a>
 <a name="38"><span class="lineNum">      38 </span>            :         return;</a>
 <a name="39"><span class="lineNum">      39 </span>            : </a>
 <a name="40"><span class="lineNum">      40 </span>            :     clearThreads();</a>
@@ -109,10 +109,10 @@
 <a name="47"><span class="lineNum">      47 </span><span class="lineCov">        888 :     setNode (std::move (newNode), getSampleRate(), blockSize);</span></a>
 <a name="48"><span class="lineNum">      48 </span><span class="lineCov">        888 : }</span></a>
 <a name="49"><span class="lineNum">      49 </span>            : </a>
-<a name="50"><span class="lineNum">      50 </span><span class="lineCov">       1749 : void LockFreeMultiThreadedNodePlayer::setNode (std::unique_ptr&lt;Node&gt; newNode, double sampleRateToUse, int blockSizeToUse)</span></a>
+<a name="50"><span class="lineNum">      50 </span><span class="lineCov">       1765 : void LockFreeMultiThreadedNodePlayer::setNode (std::unique_ptr&lt;Node&gt; newNode, double sampleRateToUse, int blockSizeToUse)</span></a>
 <a name="51"><span class="lineNum">      51 </span>            : {</a>
-<a name="52"><span class="lineNum">      52 </span><span class="lineCov">       1749 :     setNewCurrentNode (std::move (newNode), sampleRateToUse, blockSizeToUse);</span></a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineCov">       1749 : }</span></a>
+<a name="52"><span class="lineNum">      52 </span><span class="lineCov">       1765 :     setNewCurrentNode (std::move (newNode), sampleRateToUse, blockSizeToUse);</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">       1765 : }</span></a>
 <a name="54"><span class="lineNum">      54 </span>            : </a>
 <a name="55"><span class="lineNum">      55 </span><span class="lineCov">        364 : void LockFreeMultiThreadedNodePlayer::prepareToPlay (double sampleRateToUse, int blockSizeToUse)</span></a>
 <a name="56"><span class="lineNum">      56 </span>            : {</a>
@@ -129,65 +129,65 @@
 <a name="67"><span class="lineNum">      67 </span><span class="lineCov">        364 :     setNode (std::move (currentNode), sampleRateToUse, blockSizeToUse);</span></a>
 <a name="68"><span class="lineNum">      68 </span><span class="lineCov">        364 : }</span></a>
 <a name="69"><span class="lineNum">      69 </span>            : </a>
-<a name="70"><span class="lineNum">      70 </span><span class="lineCov">    2343140 : int LockFreeMultiThreadedNodePlayer::process (const Node::ProcessContext&amp; pc)</span></a>
+<a name="70"><span class="lineNum">      70 </span><span class="lineCov">    3327540 : int LockFreeMultiThreadedNodePlayer::process (const Node::ProcessContext&amp; pc)</span></a>
 <a name="71"><span class="lineNum">      71 </span>            : {</a>
-<a name="72"><span class="lineNum">      72 </span><span class="lineCov">    2343140 :     std::unique_lock&lt;RealTimeSpinLock&gt; tryLock (clearNodesLock, std::try_to_lock);</span></a>
+<a name="72"><span class="lineNum">      72 </span><span class="lineCov">    3327540 :     std::unique_lock&lt;RealTimeSpinLock&gt; tryLock (clearNodesLock, std::try_to_lock);</span></a>
 <a name="73"><span class="lineNum">      73 </span>            :     </a>
-<a name="74"><span class="lineNum">      74 </span><span class="lineCov">    2343140 :     if (! tryLock.owns_lock())</span></a>
+<a name="74"><span class="lineNum">      74 </span><span class="lineCov">    3327540 :     if (! tryLock.owns_lock())</span></a>
 <a name="75"><span class="lineNum">      75 </span>            :         return -1;</a>
 <a name="76"><span class="lineNum">      76 </span>            : </a>
-<a name="77"><span class="lineNum">      77 </span><span class="lineCov">    2343140 :     updatePreparedNode();</span></a>
+<a name="77"><span class="lineNum">      77 </span><span class="lineCov">    3327540 :     updatePreparedNode();</span></a>
 <a name="78"><span class="lineNum">      78 </span>            : </a>
-<a name="79"><span class="lineNum">      79 </span><span class="lineCov">    2343140 :     if (! preparedNode.rootNode)</span></a>
+<a name="79"><span class="lineNum">      79 </span><span class="lineCov">    3327540 :     if (! preparedNode.rootNode)</span></a>
 <a name="80"><span class="lineNum">      80 </span>            :         return -1;</a>
 <a name="81"><span class="lineNum">      81 </span>            : </a>
 <a name="82"><span class="lineNum">      82 </span>            :     // Reset the stream range</a>
-<a name="83"><span class="lineNum">      83 </span><span class="lineCov">    2343140 :     numSamplesToProcess = pc.numSamples;</span></a>
-<a name="84"><span class="lineNum">      84 </span><span class="lineCov">    2343140 :     referenceSampleRange = pc.referenceSampleRange;</span></a>
+<a name="83"><span class="lineNum">      83 </span><span class="lineCov">    3327540 :     numSamplesToProcess = pc.numSamples;</span></a>
+<a name="84"><span class="lineNum">      84 </span><span class="lineCov">    3327540 :     referenceSampleRange = pc.referenceSampleRange;</span></a>
 <a name="85"><span class="lineNum">      85 </span>            : </a>
 <a name="86"><span class="lineNum">      86 </span>            :     // Prepare all the nodes to be played back</a>
-<a name="87"><span class="lineNum">      87 </span><span class="lineCov">   12150100 :     for (auto node : preparedNode.allNodes)</span></a>
-<a name="88"><span class="lineNum">      88 </span><span class="lineCov">    9806980 :         node-&gt;prepareForNextBlock (referenceSampleRange);</span></a>
+<a name="87"><span class="lineNum">      87 </span><span class="lineCov">   20027700 :     for (auto node : preparedNode.allNodes)</span></a>
+<a name="88"><span class="lineNum">      88 </span><span class="lineCov">   16700100 :         node-&gt;prepareForNextBlock (referenceSampleRange);</span></a>
 <a name="89"><span class="lineNum">      89 </span>            : </a>
 <a name="90"><span class="lineNum">      90 </span>            :     // We need to retain the root so we can get the output from it</a>
 <a name="91"><span class="lineNum">      91 </span>            :     preparedNode.rootNode-&gt;retain();</a>
 <a name="92"><span class="lineNum">      92 </span>            : </a>
-<a name="93"><span class="lineNum">      93 </span><span class="lineCov">    2343140 :     if (numThreadsToUse.load (std::memory_order_acquire) == 0 || preparedNode.allNodes.size() == 1)</span></a>
+<a name="93"><span class="lineNum">      93 </span><span class="lineCov">    3327540 :     if (numThreadsToUse.load (std::memory_order_acquire) == 0 || preparedNode.allNodes.size() == 1)</span></a>
 <a name="94"><span class="lineNum">      94 </span>            :     {</a>
-<a name="95"><span class="lineNum">      95 </span><span class="lineCov">    2166970 :         for (auto node : preparedNode.allNodes)</span></a>
-<a name="96"><span class="lineNum">      96 </span><span class="lineCov">    1102610 :             node-&gt;process (numSamplesToProcess, referenceSampleRange);</span></a>
+<a name="95"><span class="lineNum">      95 </span><span class="lineCov">    2166300 :         for (auto node : preparedNode.allNodes)</span></a>
+<a name="96"><span class="lineNum">      96 </span><span class="lineCov">    1102280 :             node-&gt;process (numSamplesToProcess, referenceSampleRange);</span></a>
 <a name="97"><span class="lineNum">      97 </span>            :     }</a>
 <a name="98"><span class="lineNum">      98 </span>            :     else</a>
 <a name="99"><span class="lineNum">      99 </span>            :     {</a>
 <a name="100"><span class="lineNum">     100 </span>            :         // Reset the queue to be processed</a>
 <a name="101"><span class="lineNum">     101 </span>            :         jassert (preparedNode.playbackNodes.size() == preparedNode.allNodes.size());</a>
-<a name="102"><span class="lineNum">     102 </span><span class="lineCov">    1278780 :         resetProcessQueue();</span></a>
+<a name="102"><span class="lineNum">     102 </span><span class="lineCov">    2263520 :         resetProcessQueue();</span></a>
 <a name="103"><span class="lineNum">     103 </span>            : </a>
 <a name="104"><span class="lineNum">     104 </span>            :         // Try to process Nodes until the root is ready</a>
 <a name="105"><span class="lineNum">     105 </span>            :         for (;;)</a>
 <a name="106"><span class="lineNum">     106 </span>            :         {</a>
-<a name="107"><span class="lineNum">     107 </span><span class="lineCov">    2863870 :             if (preparedNode.rootNode-&gt;hasProcessed())</span></a>
+<a name="107"><span class="lineNum">     107 </span><span class="lineCov">    5153480 :             if (preparedNode.rootNode-&gt;hasProcessed())</span></a>
 <a name="108"><span class="lineNum">     108 </span>            :                 break;</a>
 <a name="109"><span class="lineNum">     109 </span>            : </a>
-<a name="110"><span class="lineNum">     110 </span><span class="lineCov">    1585090 :             if (! processNextFreeNode())</span></a>
-<a name="111"><span class="lineNum">     111 </span><span class="lineCov">      92479 :                 threadPool-&gt;waitForFinalNode();</span></a>
+<a name="110"><span class="lineNum">     110 </span><span class="lineCov">    2889960 :             if (! processNextFreeNode())</span></a>
+<a name="111"><span class="lineNum">     111 </span><span class="lineCov">     412722 :                 threadPool-&gt;waitForFinalNode();</span></a>
 <a name="112"><span class="lineNum">     112 </span>            :         }</a>
 <a name="113"><span class="lineNum">     113 </span>            :     }</a>
 <a name="114"><span class="lineNum">     114 </span>            : </a>
 <a name="115"><span class="lineNum">     115 </span>            :     // Add output from graph to buffers</a>
 <a name="116"><span class="lineNum">     116 </span>            :     {</a>
 <a name="117"><span class="lineNum">     117 </span>            :         auto output = preparedNode.rootNode-&gt;getProcessedOutput();</a>
-<a name="118"><span class="lineNum">     118 </span><span class="lineCov">    2343140 :         auto numAudioChannels = std::min (output.audio.getNumChannels(), pc.buffers.audio.getNumChannels());</span></a>
+<a name="118"><span class="lineNum">     118 </span><span class="lineCov">    3327540 :         auto numAudioChannels = std::min (output.audio.getNumChannels(), pc.buffers.audio.getNumChannels());</span></a>
 <a name="119"><span class="lineNum">     119 </span>            : </a>
-<a name="120"><span class="lineNum">     120 </span><span class="lineCov">    2343140 :         if (numAudioChannels &gt; 0)</span></a>
-<a name="121"><span class="lineNum">     121 </span><span class="lineCov">    2142810 :             add (pc.buffers.audio.getFirstChannels (numAudioChannels),</span></a>
-<a name="122"><span class="lineNum">     122 </span><span class="lineCov">    2142810 :                  output.audio.getFirstChannels (numAudioChannels));</span></a>
+<a name="120"><span class="lineNum">     120 </span><span class="lineCov">    3327540 :         if (numAudioChannels &gt; 0)</span></a>
+<a name="121"><span class="lineNum">     121 </span><span class="lineCov">    3127350 :             add (pc.buffers.audio.getFirstChannels (numAudioChannels),</span></a>
+<a name="122"><span class="lineNum">     122 </span><span class="lineCov">    3127350 :                  output.audio.getFirstChannels (numAudioChannels));</span></a>
 <a name="123"><span class="lineNum">     123 </span>            : </a>
-<a name="124"><span class="lineNum">     124 </span><span class="lineCov">    2343140 :         pc.buffers.midi.mergeFrom (output.midi);</span></a>
+<a name="124"><span class="lineNum">     124 </span><span class="lineCov">    3327540 :         pc.buffers.midi.mergeFrom (output.midi);</span></a>
 <a name="125"><span class="lineNum">     125 </span>            :     }</a>
 <a name="126"><span class="lineNum">     126 </span>            : </a>
 <a name="127"><span class="lineNum">     127 </span>            :     // We need to retain the root so we can get the output from it</a>
-<a name="128"><span class="lineNum">     128 </span><span class="lineCov">    2343140 :     preparedNode.rootNode-&gt;release();</span></a>
+<a name="128"><span class="lineNum">     128 </span><span class="lineCov">    3327540 :     preparedNode.rootNode-&gt;release();</span></a>
 <a name="129"><span class="lineNum">     129 </span>            : </a>
 <a name="130"><span class="lineNum">     130 </span>            :     return -1;</a>
 <a name="131"><span class="lineNum">     131 </span>            : }</a>
@@ -223,17 +223,17 @@
 <a name="161"><span class="lineNum">     161 </span>            : </a>
 <a name="162"><span class="lineNum">     162 </span>            : //==============================================================================</a>
 <a name="163"><span class="lineNum">     163 </span>            : //==============================================================================</a>
-<a name="164"><span class="lineNum">     164 </span><span class="lineCov">       1749 : std::vector&lt;Node*&gt; LockFreeMultiThreadedNodePlayer::prepareToPlay (Node* node, Node* oldNode,</span></a>
+<a name="164"><span class="lineNum">     164 </span><span class="lineCov">       1765 : std::vector&lt;Node*&gt; LockFreeMultiThreadedNodePlayer::prepareToPlay (Node* node, Node* oldNode,</span></a>
 <a name="165"><span class="lineNum">     165 </span>            :                                                                    double sampleRateToUse, int blockSizeToUse,</a>
 <a name="166"><span class="lineNum">     166 </span>            :                                                                    AudioBufferPool* pool)</a>
 <a name="167"><span class="lineNum">     167 </span>            : {</a>
-<a name="168"><span class="lineNum">     168 </span><span class="lineCov">       1749 :     createThreads();</span></a>
+<a name="168"><span class="lineNum">     168 </span><span class="lineCov">       1765 :     createThreads();</span></a>
 <a name="169"><span class="lineNum">     169 </span>            : </a>
 <a name="170"><span class="lineNum">     170 </span>            :     sampleRate.store (sampleRateToUse, std::memory_order_release);</a>
-<a name="171"><span class="lineNum">     171 </span><span class="lineCov">       1749 :     blockSize = blockSizeToUse;</span></a>
+<a name="171"><span class="lineNum">     171 </span><span class="lineCov">       1765 :     blockSize = blockSizeToUse;</span></a>
 <a name="172"><span class="lineNum">     172 </span>            :     </a>
-<a name="173"><span class="lineNum">     173 </span><span class="lineCov">       1749 :     if (pool == nullptr)</span></a>
-<a name="174"><span class="lineNum">     174 </span><span class="lineCov">       3498 :         return node_player_utils::prepareToPlay (node, oldNode, sampleRateToUse, blockSizeToUse);</span></a>
+<a name="173"><span class="lineNum">     173 </span><span class="lineCov">       1765 :     if (pool == nullptr)</span></a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineCov">       3530 :         return node_player_utils::prepareToPlay (node, oldNode, sampleRateToUse, blockSizeToUse);</span></a>
 <a name="175"><span class="lineNum">     175 </span>            : </a>
 <a name="176"><span class="lineNum">     176 </span>            :     return node_player_utils::prepareToPlay (node, oldNode, sampleRateToUse, blockSizeToUse,</a>
 <a name="177"><span class="lineNum">     177 </span>            :                                              [pool] (auto s) -&gt; NodeBuffer</a>
@@ -248,26 +248,26 @@
 <a name="186"><span class="lineNum">     186 </span>            : }</a>
 <a name="187"><span class="lineNum">     187 </span>            : </a>
 <a name="188"><span class="lineNum">     188 </span>            : //==============================================================================</a>
-<a name="189"><span class="lineNum">     189 </span><span class="lineCov">    2344390 : void LockFreeMultiThreadedNodePlayer::updatePreparedNode()</span></a>
+<a name="189"><span class="lineNum">     189 </span><span class="lineCov">    3328790 : void LockFreeMultiThreadedNodePlayer::updatePreparedNode()</span></a>
 <a name="190"><span class="lineNum">     190 </span>            : {</a>
 <a name="191"><span class="lineNum">     191 </span>            :     isUpdatingPreparedNode = true;</a>
 <a name="192"><span class="lineNum">     192 </span>            : </a>
-<a name="193"><span class="lineNum">     193 </span><span class="lineCov">    2344390 :     if (auto newPreparedNode = pendingPreparedNode.exchange (nullptr))</span></a>
-<a name="194"><span class="lineNum">     194 </span><span class="lineCov">       1664 :         std::swap (preparedNode, *newPreparedNode);</span></a>
+<a name="193"><span class="lineNum">     193 </span><span class="lineCov">    3328790 :     if (auto newPreparedNode = pendingPreparedNode.exchange (nullptr))</span></a>
+<a name="194"><span class="lineNum">     194 </span><span class="lineCov">       1680 :         std::swap (preparedNode, *newPreparedNode);</span></a>
 <a name="195"><span class="lineNum">     195 </span>            : </a>
 <a name="196"><span class="lineNum">     196 </span>            :     isUpdatingPreparedNode = false;</a>
-<a name="197"><span class="lineNum">     197 </span><span class="lineCov">    2344390 : }</span></a>
+<a name="197"><span class="lineNum">     197 </span><span class="lineCov">    3328790 : }</span></a>
 <a name="198"><span class="lineNum">     198 </span>            : </a>
 <a name="199"><span class="lineNum">     199 </span>            : //==============================================================================</a>
 <a name="200"><span class="lineNum">     200 </span><span class="lineNoCov">          0 : void LockFreeMultiThreadedNodePlayer::clearThreads()</span></a>
 <a name="201"><span class="lineNum">     201 </span>            : {</a>
-<a name="202"><span class="lineNum">     202 </span><span class="lineCov">        940 :     threadPool-&gt;clearThreads();</span></a>
-<a name="203"><span class="lineNum">     203 </span><span class="lineCov">        856 : }</span></a>
+<a name="202"><span class="lineNum">     202 </span><span class="lineCov">        956 :     threadPool-&gt;clearThreads();</span></a>
+<a name="203"><span class="lineNum">     203 </span><span class="lineCov">        872 : }</span></a>
 <a name="204"><span class="lineNum">     204 </span>            : </a>
-<a name="205"><span class="lineNum">     205 </span><span class="lineCov">       2277 : void LockFreeMultiThreadedNodePlayer::createThreads()</span></a>
+<a name="205"><span class="lineNum">     205 </span><span class="lineCov">       2293 : void LockFreeMultiThreadedNodePlayer::createThreads()</span></a>
 <a name="206"><span class="lineNum">     206 </span>            : {</a>
-<a name="207"><span class="lineNum">     207 </span><span class="lineCov">       2277 :     threadPool-&gt;createThreads (numThreadsToUse.load());</span></a>
-<a name="208"><span class="lineNum">     208 </span><span class="lineCov">       2277 : }</span></a>
+<a name="207"><span class="lineNum">     207 </span><span class="lineCov">       2293 :     threadPool-&gt;createThreads (numThreadsToUse.load());</span></a>
+<a name="208"><span class="lineNum">     208 </span><span class="lineCov">       2293 : }</span></a>
 <a name="209"><span class="lineNum">     209 </span>            : </a>
 <a name="210"><span class="lineNum">     210 </span>            : inline void LockFreeMultiThreadedNodePlayer::pause()</a>
 <a name="211"><span class="lineNum">     211 </span>            : {</a>
@@ -281,32 +281,32 @@
 <a name="219"><span class="lineNum">     219 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="220"><span class="lineNum">     220 </span>            : </a>
 <a name="221"><span class="lineNum">     221 </span>            : //==============================================================================</a>
-<a name="222"><span class="lineNum">     222 </span><span class="lineCov">       1749 : void LockFreeMultiThreadedNodePlayer::setNewCurrentNode (std::unique_ptr&lt;Node&gt; newRoot,</span></a>
+<a name="222"><span class="lineNum">     222 </span><span class="lineCov">       1765 : void LockFreeMultiThreadedNodePlayer::setNewCurrentNode (std::unique_ptr&lt;Node&gt; newRoot,</span></a>
 <a name="223"><span class="lineNum">     223 </span>            :                                                          double sampleRateToUse, int blockSizeToUse)</a>
 <a name="224"><span class="lineNum">     224 </span>            : {</a>
-<a name="225"><span class="lineNum">     225 </span><span class="lineCov">       1749 :     while (isUpdatingPreparedNode)</span></a>
+<a name="225"><span class="lineNum">     225 </span><span class="lineCov">       1765 :     while (isUpdatingPreparedNode)</span></a>
 <a name="226"><span class="lineNum">     226 </span>            :         pause();</a>
 <a name="227"><span class="lineNum">     227 </span>            : </a>
 <a name="228"><span class="lineNum">     228 </span>            :     const bool useAudioBufferPool = useMemoryPool;</a>
 <a name="229"><span class="lineNum">     229 </span>            :     auto currentRoot = preparedNode.rootNode.get();</a>
 <a name="230"><span class="lineNum">     230 </span>            :     auto newNodes = prepareToPlay (newRoot.get(), currentRoot,</a>
 <a name="231"><span class="lineNum">     231 </span>            :                                    sampleRateToUse, blockSizeToUse,</a>
-<a name="232"><span class="lineNum">     232 </span><span class="lineCov">       1749 :                                    useAudioBufferPool ? pendingPreparedNodeStorage.audioBufferPool.get() : nullptr);</span></a>
+<a name="232"><span class="lineNum">     232 </span><span class="lineCov">       1765 :                                    useAudioBufferPool ? pendingPreparedNodeStorage.audioBufferPool.get() : nullptr);</span></a>
 <a name="233"><span class="lineNum">     233 </span>            : </a>
-<a name="234"><span class="lineNum">     234 </span><span class="lineCov">       1749 :     std::stable_sort (newNodes.begin(), newNodes.end(),</span></a>
+<a name="234"><span class="lineNum">     234 </span><span class="lineCov">       1765 :     std::stable_sort (newNodes.begin(), newNodes.end(),</span></a>
 <a name="235"><span class="lineNum">     235 </span>            :                       [] (auto n1, auto n2)</a>
 <a name="236"><span class="lineNum">     236 </span>            :                       {</a>
 <a name="237"><span class="lineNum">     237 </span>            :                           return n1-&gt;isReadyToProcess() &amp;&amp; ! n2-&gt;isReadyToProcess();</a>
 <a name="238"><span class="lineNum">     238 </span>            :                       });</a>
 <a name="239"><span class="lineNum">     239 </span>            : </a>
 <a name="240"><span class="lineNum">     240 </span>            :     pendingPreparedNode = nullptr;</a>
-<a name="241"><span class="lineNum">     241 </span><span class="lineCov">       1749 :     rootNode = newRoot.get();</span></a>
+<a name="241"><span class="lineNum">     241 </span><span class="lineCov">       1765 :     rootNode = newRoot.get();</span></a>
 <a name="242"><span class="lineNum">     242 </span>            :     pendingPreparedNodeStorage.rootNode = std::move (newRoot);</a>
-<a name="243"><span class="lineNum">     243 </span><span class="lineCov">       1749 :     pendingPreparedNodeStorage.allNodes = std::move (newNodes);</span></a>
-<a name="244"><span class="lineNum">     244 </span><span class="lineCov">       1749 :     pendingPreparedNodeStorage.nodesReadyToBeProcessed = std::make_unique&lt;LockFreeFifo&lt;Node*&gt;&gt; ((int) pendingPreparedNodeStorage.allNodes.size());</span></a>
-<a name="245"><span class="lineNum">     245 </span><span class="lineCov">       1749 :     buildNodesOutputLists (pendingPreparedNodeStorage);</span></a>
+<a name="243"><span class="lineNum">     243 </span><span class="lineCov">       1765 :     pendingPreparedNodeStorage.allNodes = std::move (newNodes);</span></a>
+<a name="244"><span class="lineNum">     244 </span><span class="lineCov">       1765 :     pendingPreparedNodeStorage.nodesReadyToBeProcessed = std::make_unique&lt;LockFreeFifo&lt;Node*&gt;&gt; ((int) pendingPreparedNodeStorage.allNodes.size());</span></a>
+<a name="245"><span class="lineNum">     245 </span><span class="lineCov">       1765 :     buildNodesOutputLists (pendingPreparedNodeStorage);</span></a>
 <a name="246"><span class="lineNum">     246 </span>            :     </a>
-<a name="247"><span class="lineNum">     247 </span><span class="lineCov">       1749 :     if (useAudioBufferPool)</span></a>
+<a name="247"><span class="lineNum">     247 </span><span class="lineCov">       1765 :     if (useAudioBufferPool)</span></a>
 <a name="248"><span class="lineNum">     248 </span>            :     {</a>
 <a name="249"><span class="lineNum">     249 </span><span class="lineNoCov">          0 :         const size_t poolCapacity = pendingPreparedNodeStorage.allNodes.size();</span></a>
 <a name="250"><span class="lineNum">     250 </span>            :         </a>
@@ -326,15 +326,15 @@
 <a name="264"><span class="lineNum">     264 </span>            :     }</a>
 <a name="265"><span class="lineNum">     265 </span>            : </a>
 <a name="266"><span class="lineNum">     266 </span>            :     pendingPreparedNode = &amp;pendingPreparedNodeStorage;</a>
-<a name="267"><span class="lineNum">     267 </span><span class="lineCov">       1749 : }</span></a>
+<a name="267"><span class="lineNum">     267 </span><span class="lineCov">       1765 : }</span></a>
 <a name="268"><span class="lineNum">     268 </span>            : </a>
 <a name="269"><span class="lineNum">     269 </span>            : //==============================================================================</a>
-<a name="270"><span class="lineNum">     270 </span><span class="lineCov">       1749 : void LockFreeMultiThreadedNodePlayer::buildNodesOutputLists (PreparedNode&amp; preparedNode)</span></a>
+<a name="270"><span class="lineNum">     270 </span><span class="lineCov">       1765 : void LockFreeMultiThreadedNodePlayer::buildNodesOutputLists (PreparedNode&amp; preparedNode)</span></a>
 <a name="271"><span class="lineNum">     271 </span>            : {</a>
 <a name="272"><span class="lineNum">     272 </span>            :     preparedNode.playbackNodes.clear();</a>
-<a name="273"><span class="lineNum">     273 </span><span class="lineCov">       1749 :     preparedNode.playbackNodes.reserve (preparedNode.allNodes.size());</span></a>
+<a name="273"><span class="lineNum">     273 </span><span class="lineCov">       1765 :     preparedNode.playbackNodes.reserve (preparedNode.allNodes.size());</span></a>
 <a name="274"><span class="lineNum">     274 </span>            : </a>
-<a name="275"><span class="lineNum">     275 </span><span class="lineCov">       5560 :     for (auto n : preparedNode.allNodes)</span></a>
+<a name="275"><span class="lineNum">     275 </span><span class="lineCov">       5688 :     for (auto n : preparedNode.allNodes)</span></a>
 <a name="276"><span class="lineNum">     276 </span>            :     {</a>
 <a name="277"><span class="lineNum">     277 </span>            :        #if JUCE_DEBUG</a>
 <a name="278"><span class="lineNum">     278 </span>            :         for (auto&amp; pn : preparedNode.playbackNodes)</a>
@@ -343,31 +343,31 @@
 <a name="281"><span class="lineNum">     281 </span>            : </a>
 <a name="282"><span class="lineNum">     282 </span>            :         jassert (std::count (preparedNode.allNodes.begin(), preparedNode.allNodes.end(), n) == 1);</a>
 <a name="283"><span class="lineNum">     283 </span>            : </a>
-<a name="284"><span class="lineNum">     284 </span><span class="lineCov">       7622 :         preparedNode.playbackNodes.push_back (std::make_unique&lt;PlaybackNode&gt; (*n));</span></a>
-<a name="285"><span class="lineNum">     285 </span><span class="lineCov">       3811 :         n-&gt;internal = preparedNode.playbackNodes.back().get();</span></a>
+<a name="284"><span class="lineNum">     284 </span><span class="lineCov">       7846 :         preparedNode.playbackNodes.push_back (std::make_unique&lt;PlaybackNode&gt; (*n));</span></a>
+<a name="285"><span class="lineNum">     285 </span><span class="lineCov">       3923 :         n-&gt;internal = preparedNode.playbackNodes.back().get();</span></a>
 <a name="286"><span class="lineNum">     286 </span>            :     }</a>
 <a name="287"><span class="lineNum">     287 </span>            : </a>
 <a name="288"><span class="lineNum">     288 </span>            :     // Iterate all nodes, for each input, add to the current Nodes output list</a>
-<a name="289"><span class="lineNum">     289 </span><span class="lineCov">       5560 :     for (auto node : preparedNode.allNodes)</span></a>
+<a name="289"><span class="lineNum">     289 </span><span class="lineCov">       5688 :     for (auto node : preparedNode.allNodes)</span></a>
 <a name="290"><span class="lineNum">     290 </span>            :     {</a>
-<a name="291"><span class="lineNum">     291 </span><span class="lineCov">      10680 :         for (auto inputNode : node-&gt;getDirectInputNodes())</span></a>
+<a name="291"><span class="lineNum">     291 </span><span class="lineCov">      11000 :         for (auto inputNode : node-&gt;getDirectInputNodes())</span></a>
 <a name="292"><span class="lineNum">     292 </span>            :         {</a>
 <a name="293"><span class="lineNum">     293 </span>            :             // Check the input is actually still in the graph</a>
 <a name="294"><span class="lineNum">     294 </span>            :             jassert (std::find (preparedNode.allNodes.begin(), preparedNode.allNodes.end(), inputNode) != preparedNode.allNodes.end());</a>
-<a name="295"><span class="lineNum">     295 </span><span class="lineCov">       3058 :             static_cast&lt;PlaybackNode*&gt; (inputNode-&gt;internal)-&gt;outputs.push_back (node);</span></a>
-<a name="296"><span class="lineNum">     296 </span><span class="lineCov">       3058 :             inputNode-&gt;numOutputNodes++;</span></a>
+<a name="295"><span class="lineNum">     295 </span><span class="lineCov">       3154 :             static_cast&lt;PlaybackNode*&gt; (inputNode-&gt;internal)-&gt;outputs.push_back (node);</span></a>
+<a name="296"><span class="lineNum">     296 </span><span class="lineCov">       3154 :             inputNode-&gt;numOutputNodes++;</span></a>
 <a name="297"><span class="lineNum">     297 </span>            :         }</a>
 <a name="298"><span class="lineNum">     298 </span>            :     }</a>
-<a name="299"><span class="lineNum">     299 </span><span class="lineCov">       1749 : }</span></a>
+<a name="299"><span class="lineNum">     299 </span><span class="lineCov">       1765 : }</span></a>
 <a name="300"><span class="lineNum">     300 </span>            : </a>
-<a name="301"><span class="lineNum">     301 </span><span class="lineCov">    1278780 : void LockFreeMultiThreadedNodePlayer::resetProcessQueue()</span></a>
+<a name="301"><span class="lineNum">     301 </span><span class="lineCov">    2263520 : void LockFreeMultiThreadedNodePlayer::resetProcessQueue()</span></a>
 <a name="302"><span class="lineNum">     302 </span>            : {</a>
 <a name="303"><span class="lineNum">     303 </span>            :     // Clear the nodesReadyToBeProcessed list</a>
 <a name="304"><span class="lineNum">     304 </span>            :     for (;;)</a>
 <a name="305"><span class="lineNum">     305 </span>            :     {</a>
 <a name="306"><span class="lineNum">     306 </span>            :         Node* temp;</a>
 <a name="307"><span class="lineNum">     307 </span>            : </a>
-<a name="308"><span class="lineNum">     308 </span><span class="lineCov">    1278780 :         if (! preparedNode.nodesReadyToBeProcessed-&gt;try_dequeue (temp))</span></a>
+<a name="308"><span class="lineNum">     308 </span><span class="lineCov">    2263520 :         if (! preparedNode.nodesReadyToBeProcessed-&gt;try_dequeue (temp))</span></a>
 <a name="309"><span class="lineNum">     309 </span>            :             break;</a>
 <a name="310"><span class="lineNum">     310 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="311"><span class="lineNum">     311 </span>            : </a>
@@ -375,11 +375,11 @@
 <a name="313"><span class="lineNum">     313 </span>            : </a>
 <a name="314"><span class="lineNum">     314 </span>            :     // Reset all the counters</a>
 <a name="315"><span class="lineNum">     315 </span>            :     // And then move any Nodes that are ready to the correct queue</a>
-<a name="316"><span class="lineNum">     316 </span><span class="lineCov">    9983150 :     for (auto&amp; playbackNode : preparedNode.playbackNodes)</span></a>
+<a name="316"><span class="lineNum">     316 </span><span class="lineCov">   17861400 :     for (auto&amp; playbackNode : preparedNode.playbackNodes)</span></a>
 <a name="317"><span class="lineNum">     317 </span>            :     {</a>
 <a name="318"><span class="lineNum">     318 </span>            :         jassert (playbackNode-&gt;hasBeenQueued);</a>
 <a name="319"><span class="lineNum">     319 </span>            :         playbackNode-&gt;hasBeenQueued = false;</a>
-<a name="320"><span class="lineNum">     320 </span><span class="lineCov">    8704370 :         playbackNode-&gt;numInputsToBeProcessed.store (playbackNode-&gt;numInputs, std::memory_order_release);</span></a>
+<a name="320"><span class="lineNum">     320 </span><span class="lineCov">   15597800 :         playbackNode-&gt;numInputsToBeProcessed.store (playbackNode-&gt;numInputs, std::memory_order_release);</span></a>
 <a name="321"><span class="lineNum">     321 </span>            : </a>
 <a name="322"><span class="lineNum">     322 </span>            :         // Check only ready nodes will be queued</a>
 <a name="323"><span class="lineNum">     323 </span>            :        #if JUCE_DEBUG</a>
@@ -404,14 +404,14 @@
 <a name="342"><span class="lineNum">     342 </span>            :     size_t numNodesJustQueued = 0;</a>
 <a name="343"><span class="lineNum">     343 </span>            : </a>
 <a name="344"><span class="lineNum">     344 </span>            :     // Make sure the counters are reset for all nodes before queueing any</a>
-<a name="345"><span class="lineNum">     345 </span><span class="lineCov">    9983150 :     for (auto&amp; playbackNode : preparedNode.playbackNodes)</span></a>
+<a name="345"><span class="lineNum">     345 </span><span class="lineCov">   17861400 :     for (auto&amp; playbackNode : preparedNode.playbackNodes)</span></a>
 <a name="346"><span class="lineNum">     346 </span>            :     {</a>
-<a name="347"><span class="lineNum">     347 </span><span class="lineCov">    8704370 :         if (playbackNode-&gt;numInputsToBeProcessed.load (std::memory_order_acquire) == 0)</span></a>
+<a name="347"><span class="lineNum">     347 </span><span class="lineCov">   15597800 :         if (playbackNode-&gt;numInputsToBeProcessed.load (std::memory_order_acquire) == 0)</span></a>
 <a name="348"><span class="lineNum">     348 </span>            :         {</a>
 <a name="349"><span class="lineNum">     349 </span>            :             jassert (! playbackNode-&gt;hasBeenQueued);</a>
 <a name="350"><span class="lineNum">     350 </span>            :             playbackNode-&gt;hasBeenQueued = true;</a>
-<a name="351"><span class="lineNum">     351 </span><span class="lineCov">    1317550 :             preparedNode.nodesReadyToBeProcessed-&gt;try_enqueue (&amp;playbackNode-&gt;node);</span></a>
-<a name="352"><span class="lineNum">     352 </span><span class="lineCov">    1317550 :             ++numNodesJustQueued;</span></a>
+<a name="351"><span class="lineNum">     351 </span><span class="lineCov">    2302240 :             preparedNode.nodesReadyToBeProcessed-&gt;try_enqueue (&amp;playbackNode-&gt;node);</span></a>
+<a name="352"><span class="lineNum">     352 </span><span class="lineCov">    2302240 :             ++numNodesJustQueued;</span></a>
 <a name="353"><span class="lineNum">     353 </span>            :         }</a>
 <a name="354"><span class="lineNum">     354 </span>            :     }</a>
 <a name="355"><span class="lineNum">     355 </span>            : </a>
@@ -419,33 +419,33 @@
 <a name="357"><span class="lineNum">     357 </span>            :     // or the threads will start queueing Nodes at the same time</a>
 <a name="358"><span class="lineNum">     358 </span>            :     numNodesQueued += numNodesJustQueued;</a>
 <a name="359"><span class="lineNum">     359 </span>            : </a>
-<a name="360"><span class="lineNum">     360 </span><span class="lineCov">    1278780 :     if (int numThreadsToSignal = (int) numNodesQueued.load(); numThreadsToSignal &gt; 1)</span></a>
-<a name="361"><span class="lineNum">     361 </span><span class="lineCov">      38769 :         threadPool-&gt;signal (numThreadsToSignal);</span></a>
-<a name="362"><span class="lineNum">     362 </span><span class="lineCov">    1278780 : }</span></a>
+<a name="360"><span class="lineNum">     360 </span><span class="lineCov">    2263520 :     if (int numThreadsToSignal = (int) numNodesQueued.load(); numThreadsToSignal &gt; 1)</span></a>
+<a name="361"><span class="lineNum">     361 </span><span class="lineCov">      38725 :         threadPool-&gt;signal (numThreadsToSignal);</span></a>
+<a name="362"><span class="lineNum">     362 </span><span class="lineCov">    2263520 : }</span></a>
 <a name="363"><span class="lineNum">     363 </span>            : </a>
-<a name="364"><span class="lineNum">     364 </span><span class="lineCov">    8704230 : Node* LockFreeMultiThreadedNodePlayer::updateProcessQueueForNode (Node&amp; node)</span></a>
+<a name="364"><span class="lineNum">     364 </span><span class="lineCov">   15597800 : Node* LockFreeMultiThreadedNodePlayer::updateProcessQueueForNode (Node&amp; node)</span></a>
 <a name="365"><span class="lineNum">     365 </span>            : {</a>
-<a name="366"><span class="lineNum">     366 </span><span class="lineCov">    8704230 :     auto playbackNode = static_cast&lt;PlaybackNode*&gt; (node.internal);</span></a>
+<a name="366"><span class="lineNum">     366 </span><span class="lineCov">   15597800 :     auto playbackNode = static_cast&lt;PlaybackNode*&gt; (node.internal);</span></a>
 <a name="367"><span class="lineNum">     367 </span>            : </a>
-<a name="368"><span class="lineNum">     368 </span><span class="lineCov">    9096490 :     for (auto output : playbackNode-&gt;outputs)</span></a>
+<a name="368"><span class="lineNum">     368 </span><span class="lineCov">   15989600 :     for (auto output : playbackNode-&gt;outputs)</span></a>
 <a name="369"><span class="lineNum">     369 </span>            :     {</a>
-<a name="370"><span class="lineNum">     370 </span><span class="lineCov">    7602190 :         auto outputPlaybackNode = static_cast&lt;PlaybackNode*&gt; (output-&gt;internal);</span></a>
+<a name="370"><span class="lineNum">     370 </span><span class="lineCov">   13510800 :         auto outputPlaybackNode = static_cast&lt;PlaybackNode*&gt; (output-&gt;internal);</span></a>
 <a name="371"><span class="lineNum">     371 </span>            : </a>
 <a name="372"><span class="lineNum">     372 </span>            :         // fetch_sub returns the previous value so it will now be 0</a>
-<a name="373"><span class="lineNum">     373 </span><span class="lineCov">    7602190 :         if (outputPlaybackNode-&gt;numInputsToBeProcessed.fetch_sub (1, std::memory_order_acq_rel) == 1)</span></a>
+<a name="373"><span class="lineNum">     373 </span><span class="lineCov">   13510800 :         if (outputPlaybackNode-&gt;numInputsToBeProcessed.fetch_sub (1, std::memory_order_acq_rel) == 1)</span></a>
 <a name="374"><span class="lineNum">     374 </span>            :         {</a>
 <a name="375"><span class="lineNum">     375 </span>            :             jassert (outputPlaybackNode-&gt;node.isReadyToProcess());</a>
 <a name="376"><span class="lineNum">     376 </span>            :             jassert (! outputPlaybackNode-&gt;hasBeenQueued);</a>
 <a name="377"><span class="lineNum">     377 </span>            :             outputPlaybackNode-&gt;hasBeenQueued = true;</a>
 <a name="378"><span class="lineNum">     378 </span>            : </a>
 <a name="379"><span class="lineNum">     379 </span>            :             // If there is only one Node or we're at the last Node we can reutrn this to be processed by the same thread</a>
-<a name="380"><span class="lineNum">     380 </span><span class="lineCov">    7386800 :             if (playbackNode-&gt;outputs.size() == 1</span></a>
-<a name="381"><span class="lineNum">     381 </span><span class="lineCov">    7386800 :                 || output == playbackNode-&gt;outputs.back())</span></a>
-<a name="382"><span class="lineNum">     382 </span><span class="lineCov">    7210050 :                return &amp;outputPlaybackNode-&gt;node;</span></a>
+<a name="380"><span class="lineNum">     380 </span><span class="lineCov">   13295600 :             if (playbackNode-&gt;outputs.size() == 1</span></a>
+<a name="381"><span class="lineNum">     381 </span><span class="lineCov">   13295600 :                 || output == playbackNode-&gt;outputs.back())</span></a>
+<a name="382"><span class="lineNum">     382 </span><span class="lineCov">   13119000 :                return &amp;outputPlaybackNode-&gt;node;</span></a>
 <a name="383"><span class="lineNum">     383 </span>            :             </a>
-<a name="384"><span class="lineNum">     384 </span><span class="lineCov">     176745 :             preparedNode.nodesReadyToBeProcessed-&gt;try_enqueue (&amp;outputPlaybackNode-&gt;node);</span></a>
+<a name="384"><span class="lineNum">     384 </span><span class="lineCov">     176569 :             preparedNode.nodesReadyToBeProcessed-&gt;try_enqueue (&amp;outputPlaybackNode-&gt;node);</span></a>
 <a name="385"><span class="lineNum">     385 </span>            :             numNodesQueued.fetch_add (1, std::memory_order_acq_rel);</a>
-<a name="386"><span class="lineNum">     386 </span><span class="lineCov">     176745 :             threadPool-&gt;signalOne();</span></a>
+<a name="386"><span class="lineNum">     386 </span><span class="lineCov">     176569 :             threadPool-&gt;signalOne();</span></a>
 <a name="387"><span class="lineNum">     387 </span>            :         }</a>
 <a name="388"><span class="lineNum">     388 </span>            :     }</a>
 <a name="389"><span class="lineNum">     389 </span>            : </a>
@@ -453,25 +453,25 @@
 <a name="391"><span class="lineNum">     391 </span>            : }</a>
 <a name="392"><span class="lineNum">     392 </span>            : </a>
 <a name="393"><span class="lineNum">     393 </span>            : //==============================================================================</a>
-<a name="394"><span class="lineNum">     394 </span><span class="lineCov">    1676030 : bool LockFreeMultiThreadedNodePlayer::processNextFreeNode()</span></a>
+<a name="394"><span class="lineNum">     394 </span><span class="lineCov">    3001690 : bool LockFreeMultiThreadedNodePlayer::processNextFreeNode()</span></a>
 <a name="395"><span class="lineNum">     395 </span>            : {</a>
-<a name="396"><span class="lineNum">     396 </span><span class="lineCov">    1676030 :     Node* nodeToProcess = nullptr;</span></a>
+<a name="396"><span class="lineNum">     396 </span><span class="lineCov">    3001690 :     Node* nodeToProcess = nullptr;</span></a>
 <a name="397"><span class="lineNum">     397 </span>            : </a>
-<a name="398"><span class="lineNum">     398 </span><span class="lineCov">    1676030 :     if (numNodesQueued.load (std::memory_order_acquire) == 0)</span></a>
+<a name="398"><span class="lineNum">     398 </span><span class="lineCov">    3001690 :     if (numNodesQueued.load (std::memory_order_acquire) == 0)</span></a>
 <a name="399"><span class="lineNum">     399 </span>            :         return false;</a>
 <a name="400"><span class="lineNum">     400 </span>            : </a>
-<a name="401"><span class="lineNum">     401 </span><span class="lineCov">    1494550 :     if (! preparedNode.nodesReadyToBeProcessed-&gt;try_dequeue (nodeToProcess))</span></a>
+<a name="401"><span class="lineNum">     401 </span><span class="lineCov">    2479080 :     if (! preparedNode.nodesReadyToBeProcessed-&gt;try_dequeue (nodeToProcess))</span></a>
 <a name="402"><span class="lineNum">     402 </span>            :         return false;</a>
 <a name="403"><span class="lineNum">     403 </span>            : </a>
 <a name="404"><span class="lineNum">     404 </span>            :     numNodesQueued.fetch_sub (1, std::memory_order_acq_rel);</a>
 <a name="405"><span class="lineNum">     405 </span>            : </a>
 <a name="406"><span class="lineNum">     406 </span>            :     assert (nodeToProcess != nullptr);</a>
-<a name="407"><span class="lineNum">     407 </span><span class="lineCov">    1494290 :     processNode (*nodeToProcess);</span></a>
+<a name="407"><span class="lineNum">     407 </span><span class="lineCov">    2478800 :     processNode (*nodeToProcess);</span></a>
 <a name="408"><span class="lineNum">     408 </span>            : </a>
 <a name="409"><span class="lineNum">     409 </span>            :     return true;</a>
 <a name="410"><span class="lineNum">     410 </span>            : }</a>
 <a name="411"><span class="lineNum">     411 </span>            : </a>
-<a name="412"><span class="lineNum">     412 </span><span class="lineCov">    1494290 : void LockFreeMultiThreadedNodePlayer::processNode (Node&amp; node)</span></a>
+<a name="412"><span class="lineNum">     412 </span><span class="lineCov">    2478810 : void LockFreeMultiThreadedNodePlayer::processNode (Node&amp; node)</span></a>
 <a name="413"><span class="lineNum">     413 </span>            : {</a>
 <a name="414"><span class="lineNum">     414 </span>            :     auto* nodeToProcess = &amp;node;</a>
 <a name="415"><span class="lineNum">     415 </span>            : </a>
@@ -485,13 +485,13 @@
 <a name="423"><span class="lineNum">     423 </span>            :         #endif</a>
 <a name="424"><span class="lineNum">     424 </span>            : </a>
 <a name="425"><span class="lineNum">     425 </span>            :         // Process Node</a>
-<a name="426"><span class="lineNum">     426 </span><span class="lineCov">    8704330 :         nodeToProcess-&gt;process (numSamplesToProcess, referenceSampleRange);</span></a>
-<a name="427"><span class="lineNum">     427 </span><span class="lineCov">    8704250 :         nodeToProcess = updateProcessQueueForNode (*nodeToProcess);</span></a>
+<a name="426"><span class="lineNum">     426 </span><span class="lineCov">   15597800 :         nodeToProcess-&gt;process (numSamplesToProcess, referenceSampleRange);</span></a>
+<a name="427"><span class="lineNum">     427 </span><span class="lineCov">   15597800 :         nodeToProcess = updateProcessQueueForNode (*nodeToProcess);</span></a>
 <a name="428"><span class="lineNum">     428 </span>            : </a>
-<a name="429"><span class="lineNum">     429 </span><span class="lineCov">    8704330 :         if (! nodeToProcess)</span></a>
+<a name="429"><span class="lineNum">     429 </span><span class="lineCov">   15597800 :         if (! nodeToProcess)</span></a>
 <a name="430"><span class="lineNum">     430 </span>            :             break;</a>
 <a name="431"><span class="lineNum">     431 </span>            :     }</a>
-<a name="432"><span class="lineNum">     432 </span><span class="lineCov">    1494300 : }</span></a>
+<a name="432"><span class="lineNum">     432 </span><span class="lineCov">    2478810 : }</span></a>
 <a name="433"><span class="lineNum">     433 </span>            : </a>
 <a name="434"><span class="lineNum">     434 </span>            : }}</a>
 </pre>

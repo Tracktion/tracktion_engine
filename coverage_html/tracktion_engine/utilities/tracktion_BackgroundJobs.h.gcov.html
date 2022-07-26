@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-07-21 15:16:39</td>
+            <td class="headerValue">2022-07-26 10:23:50</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">14</td>
@@ -79,7 +79,7 @@
 <a name="17"><span class="lineNum">      17 </span>            : class ThreadPoolJobWithProgress  : public juce::ThreadPoolJob</a>
 <a name="18"><span class="lineNum">      18 </span>            : {</a>
 <a name="19"><span class="lineNum">      19 </span>            : public:</a>
-<a name="20"><span class="lineNum">      20 </span><span class="lineCov">        129 :     ThreadPoolJobWithProgress (const juce::String&amp; name)  : ThreadPoolJob (name) {}</span></a>
+<a name="20"><span class="lineNum">      20 </span><span class="lineCov">        145 :     ThreadPoolJobWithProgress (const juce::String&amp; name)  : ThreadPoolJob (name) {}</span></a>
 <a name="21"><span class="lineNum">      21 </span>            :     ~ThreadPoolJobWithProgress();</a>
 <a name="22"><span class="lineNum">      22 </span>            : </a>
 <a name="23"><span class="lineNum">      23 </span>            :     virtual float getCurrentTaskProgress() = 0;</a>
@@ -279,13 +279,13 @@
 <a name="217"><span class="lineNum">     217 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BackgroundJobManager)</a>
 <a name="218"><span class="lineNum">     218 </span>            : };</a>
 <a name="219"><span class="lineNum">     219 </span>            : </a>
-<a name="220"><span class="lineNum">     220 </span><span class="lineCov">        129 : inline ThreadPoolJobWithProgress::~ThreadPoolJobWithProgress()</span></a>
+<a name="220"><span class="lineNum">     220 </span><span class="lineCov">        145 : inline ThreadPoolJobWithProgress::~ThreadPoolJobWithProgress()</span></a>
 <a name="221"><span class="lineNum">     221 </span>            : {</a>
 <a name="222"><span class="lineNum">     222 </span>            :     jassert (manager == nullptr); // You haven't called prepareForJobDeletion!</a>
 <a name="223"><span class="lineNum">     223 </span>            : </a>
-<a name="224"><span class="lineNum">     224 </span><span class="lineCov">        129 :     if (manager != nullptr)</span></a>
+<a name="224"><span class="lineNum">     224 </span><span class="lineCov">        145 :     if (manager != nullptr)</span></a>
 <a name="225"><span class="lineNum">     225 </span><span class="lineNoCov">          0 :         manager-&gt;removeJobInternal (*this);</span></a>
-<a name="226"><span class="lineNum">     226 </span><span class="lineCov">        129 : }</span></a>
+<a name="226"><span class="lineNum">     226 </span><span class="lineCov">        145 : }</span></a>
 <a name="227"><span class="lineNum">     227 </span>            : </a>
 <a name="228"><span class="lineNum">     228 </span>            : inline void ThreadPoolJobWithProgress::setManager (BackgroundJobManager&amp; m)</a>
 <a name="229"><span class="lineNum">     229 </span>            : {</a>

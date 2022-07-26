@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-07-21 15:16:39</td>
+            <td class="headerValue">2022-07-26 10:23:50</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">20</td>
@@ -73,38 +73,38 @@
 <a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
-<a name="14"><span class="lineNum">      14 </span><span class="lineCov">         28 : TimeDuration RenderOptions::findEndAllowance (Edit&amp; edit,</span></a>
+<a name="14"><span class="lineNum">      14 </span><span class="lineCov">         44 : TimeDuration RenderOptions::findEndAllowance (Edit&amp; edit,</span></a>
 <a name="15"><span class="lineNum">      15 </span>            :                                               juce::Array&lt;EditItemID&gt;* tracks,</a>
 <a name="16"><span class="lineNum">      16 </span>            :                                               juce::Array&lt;Clip*&gt;* clips)</a>
 <a name="17"><span class="lineNum">      17 </span>            : {</a>
-<a name="18"><span class="lineNum">      18 </span><span class="lineCov">         28 :     auto allTracks = getAllTracks (edit);</span></a>
-<a name="19"><span class="lineNum">      19 </span><span class="lineCov">         28 :     Plugin::Array plugins;</span></a>
+<a name="18"><span class="lineNum">      18 </span><span class="lineCov">         44 :     auto allTracks = getAllTracks (edit);</span></a>
+<a name="19"><span class="lineNum">      19 </span><span class="lineCov">         44 :     Plugin::Array plugins;</span></a>
 <a name="20"><span class="lineNum">      20 </span>            : </a>
-<a name="21"><span class="lineNum">      21 </span><span class="lineCov">         28 :     if (tracks != nullptr)</span></a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineCov">        198 :         for (auto t : allTracks)</span></a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineCov">        170 :             if (tracks-&gt;contains (t-&gt;itemID))</span></a>
-<a name="24"><span class="lineNum">      24 </span><span class="lineCov">        121 :                 for (auto p : t-&gt;pluginList)</span></a>
-<a name="25"><span class="lineNum">      25 </span><span class="lineCov">         63 :                     plugins.addIfNotAlreadyThere (p);</span></a>
+<a name="21"><span class="lineNum">      21 </span><span class="lineCov">         44 :     if (tracks != nullptr)</span></a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineCov">        310 :         for (auto t : allTracks)</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">        266 :             if (tracks-&gt;contains (t-&gt;itemID))</span></a>
+<a name="24"><span class="lineNum">      24 </span><span class="lineCov">        185 :                 for (auto p : t-&gt;pluginList)</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineCov">         95 :                     plugins.addIfNotAlreadyThere (p);</span></a>
 <a name="26"><span class="lineNum">      26 </span>            : </a>
-<a name="27"><span class="lineNum">      27 </span><span class="lineCov">         28 :     if (clips != nullptr)</span></a>
-<a name="28"><span class="lineNum">      28 </span><span class="lineCov">         50 :         for (auto c : *clips)</span></a>
-<a name="29"><span class="lineNum">      29 </span><span class="lineCov">         25 :             if (auto pl = c-&gt;getPluginList())</span></a>
+<a name="27"><span class="lineNum">      27 </span><span class="lineCov">         44 :     if (clips != nullptr)</span></a>
+<a name="28"><span class="lineNum">      28 </span><span class="lineCov">         82 :         for (auto c : *clips)</span></a>
+<a name="29"><span class="lineNum">      29 </span><span class="lineCov">         41 :             if (auto pl = c-&gt;getPluginList())</span></a>
 <a name="30"><span class="lineNum">      30 </span><span class="lineNoCov">          0 :                 for (auto p : *pl)</span></a>
 <a name="31"><span class="lineNum">      31 </span><span class="lineNoCov">          0 :                     plugins.addIfNotAlreadyThere (p);</span></a>
 <a name="32"><span class="lineNum">      32 </span>            : </a>
-<a name="33"><span class="lineNum">      33 </span><span class="lineCov">         28 :     TimeDuration allowance;</span></a>
+<a name="33"><span class="lineNum">      33 </span><span class="lineCov">         44 :     TimeDuration allowance;</span></a>
 <a name="34"><span class="lineNum">      34 </span>            : </a>
-<a name="35"><span class="lineNum">      35 </span><span class="lineCov">         91 :     for (auto p : plugins)</span></a>
+<a name="35"><span class="lineNum">      35 </span><span class="lineCov">        139 :     for (auto p : plugins)</span></a>
 <a name="36"><span class="lineNum">      36 </span>            :     {</a>
-<a name="37"><span class="lineNum">      37 </span><span class="lineCov">         63 :         auto tailLength = p-&gt;getTailLength();</span></a>
+<a name="37"><span class="lineNum">      37 </span><span class="lineCov">         95 :         auto tailLength = p-&gt;getTailLength();</span></a>
 <a name="38"><span class="lineNum">      38 </span>            : </a>
-<a name="39"><span class="lineNum">      39 </span><span class="lineCov">         63 :         if (tailLength == std::numeric_limits&lt;double&gt;::infinity())</span></a>
+<a name="39"><span class="lineNum">      39 </span><span class="lineCov">         95 :         if (tailLength == std::numeric_limits&lt;double&gt;::infinity())</span></a>
 <a name="40"><span class="lineNum">      40 </span>            :             tailLength = 0.0;</a>
 <a name="41"><span class="lineNum">      41 </span>            : </a>
-<a name="42"><span class="lineNum">      42 </span><span class="lineCov">         66 :         allowance = std::max (allowance, TimeDuration::fromSeconds (tailLength));</span></a>
+<a name="42"><span class="lineNum">      42 </span><span class="lineCov">         98 :         allowance = std::max (allowance, TimeDuration::fromSeconds (tailLength));</span></a>
 <a name="43"><span class="lineNum">      43 </span>            :     }</a>
 <a name="44"><span class="lineNum">      44 </span>            : </a>
-<a name="45"><span class="lineNum">      45 </span><span class="lineCov">         28 :     return allowance;</span></a>
+<a name="45"><span class="lineNum">      45 </span><span class="lineCov">         44 :     return allowance;</span></a>
 <a name="46"><span class="lineNum">      46 </span>            : }</a>
 <a name="47"><span class="lineNum">      47 </span>            : </a>
 <a name="48"><span class="lineNum">      48 </span><span class="lineNoCov">          0 : static TimeRange findTimeFromClips (const juce::Array&lt;Clip*&gt;&amp; clips, TimeDuration endAllowance) noexcept</span></a>
@@ -282,50 +282,50 @@
 <a name="220"><span class="lineNum">     220 </span><span class="lineNoCov">          0 :                 : nullptr;</span></a>
 <a name="221"><span class="lineNum">     221 </span>            : }</a>
 <a name="222"><span class="lineNum">     222 </span>            : </a>
-<a name="223"><span class="lineNum">     223 </span><span class="lineCov">         24 : void RenderOptions::relinkCachedValues (juce::UndoManager* um)</span></a>
+<a name="223"><span class="lineNum">     223 </span><span class="lineCov">         40 : void RenderOptions::relinkCachedValues (juce::UndoManager* um)</span></a>
 <a name="224"><span class="lineNum">     224 </span>            : {</a>
-<a name="225"><span class="lineNum">     225 </span><span class="lineCov">         24 :     type.referTo (state, IDs::renderType, um, RenderType::allExport);</span></a>
-<a name="226"><span class="lineNum">     226 </span><span class="lineCov">         48 :     tracksProperty.referTo (state, IDs::renderTracks, um, {});</span></a>
-<a name="227"><span class="lineNum">     227 </span><span class="lineCov">         24 :     createMidiFile.referTo (state, IDs::renderCreateMidiFile, um, false);</span></a>
-<a name="228"><span class="lineNum">     228 </span><span class="lineCov">         24 :     format.referTo (state, IDs::renderFormat, um, wav);</span></a>
+<a name="225"><span class="lineNum">     225 </span><span class="lineCov">         40 :     type.referTo (state, IDs::renderType, um, RenderType::allExport);</span></a>
+<a name="226"><span class="lineNum">     226 </span><span class="lineCov">         80 :     tracksProperty.referTo (state, IDs::renderTracks, um, {});</span></a>
+<a name="227"><span class="lineNum">     227 </span><span class="lineCov">         40 :     createMidiFile.referTo (state, IDs::renderCreateMidiFile, um, false);</span></a>
+<a name="228"><span class="lineNum">     228 </span><span class="lineCov">         40 :     format.referTo (state, IDs::renderFormat, um, wav);</span></a>
 <a name="229"><span class="lineNum">     229 </span>            : </a>
-<a name="230"><span class="lineNum">     230 </span><span class="lineCov">         24 :     stereo.referTo (state, IDs::renderStereo, um, true);</span></a>
+<a name="230"><span class="lineNum">     230 </span><span class="lineCov">         40 :     stereo.referTo (state, IDs::renderStereo, um, true);</span></a>
 <a name="231"><span class="lineNum">     231 </span>            : </a>
-<a name="232"><span class="lineNum">     232 </span><span class="lineCov">         24 :     sampleRate.referTo (state, IDs::renderSampleRate, um, 44100.0);</span></a>
-<a name="233"><span class="lineNum">     233 </span><span class="lineCov">         24 :     bitDepth.referTo (state, IDs::renderBitDepth, um, 32);</span></a>
-<a name="234"><span class="lineNum">     234 </span><span class="lineCov">         24 :     qualityIndex.referTo (state, IDs::renderQualityIndex, um, 5);</span></a>
-<a name="235"><span class="lineNum">     235 </span><span class="lineCov">         24 :     rmsLevelDb.referTo (state, IDs::renderRMSLevelDb, um, 0.0);</span></a>
-<a name="236"><span class="lineNum">     236 </span><span class="lineCov">         24 :     peakLevelDb.referTo (state, IDs::renderPeakLevelDb, um, 0.0);</span></a>
+<a name="232"><span class="lineNum">     232 </span><span class="lineCov">         40 :     sampleRate.referTo (state, IDs::renderSampleRate, um, 44100.0);</span></a>
+<a name="233"><span class="lineNum">     233 </span><span class="lineCov">         40 :     bitDepth.referTo (state, IDs::renderBitDepth, um, 32);</span></a>
+<a name="234"><span class="lineNum">     234 </span><span class="lineCov">         40 :     qualityIndex.referTo (state, IDs::renderQualityIndex, um, 5);</span></a>
+<a name="235"><span class="lineNum">     235 </span><span class="lineCov">         40 :     rmsLevelDb.referTo (state, IDs::renderRMSLevelDb, um, 0.0);</span></a>
+<a name="236"><span class="lineNum">     236 </span><span class="lineCov">         40 :     peakLevelDb.referTo (state, IDs::renderPeakLevelDb, um, 0.0);</span></a>
 <a name="237"><span class="lineNum">     237 </span>            : </a>
-<a name="238"><span class="lineNum">     238 </span><span class="lineCov">         24 :     removeSilence.referTo (state, IDs::renderRemoveSilence, um, false);</span></a>
-<a name="239"><span class="lineNum">     239 </span><span class="lineCov">         24 :     normalise.referTo (state, IDs::renderNormalise, um, false);</span></a>
-<a name="240"><span class="lineNum">     240 </span><span class="lineCov">         24 :     dither.referTo (state, IDs::renderDither, um, false);</span></a>
-<a name="241"><span class="lineNum">     241 </span><span class="lineCov">         24 :     adjustBasedOnRMS.referTo (state, IDs::renderAdjustBasedOnRMS, um, false);</span></a>
-<a name="242"><span class="lineNum">     242 </span><span class="lineCov">         24 :     markedRegion.referTo (state, IDs::renderMarkedRegion, um, false);</span></a>
-<a name="243"><span class="lineNum">     243 </span><span class="lineCov">         24 :     selectedTracks.referTo (state, IDs::renderSelectedTracks, um, false);</span></a>
-<a name="244"><span class="lineNum">     244 </span><span class="lineCov">         24 :     selectedClips.referTo (state, IDs::renderSelectedClips, um, false);</span></a>
-<a name="245"><span class="lineNum">     245 </span><span class="lineCov">         24 :     tracksToSeparateFiles.referTo (state, IDs::renderTracksToSeparateFiles, um, false);</span></a>
-<a name="246"><span class="lineNum">     246 </span><span class="lineCov">         24 :     realTime.referTo (state, IDs::renderRealTime, um, false);</span></a>
-<a name="247"><span class="lineNum">     247 </span><span class="lineCov">         24 :     usePlugins.referTo (state, IDs::renderPlugins, um, true);</span></a>
+<a name="238"><span class="lineNum">     238 </span><span class="lineCov">         40 :     removeSilence.referTo (state, IDs::renderRemoveSilence, um, false);</span></a>
+<a name="239"><span class="lineNum">     239 </span><span class="lineCov">         40 :     normalise.referTo (state, IDs::renderNormalise, um, false);</span></a>
+<a name="240"><span class="lineNum">     240 </span><span class="lineCov">         40 :     dither.referTo (state, IDs::renderDither, um, false);</span></a>
+<a name="241"><span class="lineNum">     241 </span><span class="lineCov">         40 :     adjustBasedOnRMS.referTo (state, IDs::renderAdjustBasedOnRMS, um, false);</span></a>
+<a name="242"><span class="lineNum">     242 </span><span class="lineCov">         40 :     markedRegion.referTo (state, IDs::renderMarkedRegion, um, false);</span></a>
+<a name="243"><span class="lineNum">     243 </span><span class="lineCov">         40 :     selectedTracks.referTo (state, IDs::renderSelectedTracks, um, false);</span></a>
+<a name="244"><span class="lineNum">     244 </span><span class="lineCov">         40 :     selectedClips.referTo (state, IDs::renderSelectedClips, um, false);</span></a>
+<a name="245"><span class="lineNum">     245 </span><span class="lineCov">         40 :     tracksToSeparateFiles.referTo (state, IDs::renderTracksToSeparateFiles, um, false);</span></a>
+<a name="246"><span class="lineNum">     246 </span><span class="lineCov">         40 :     realTime.referTo (state, IDs::renderRealTime, um, false);</span></a>
+<a name="247"><span class="lineNum">     247 </span><span class="lineCov">         40 :     usePlugins.referTo (state, IDs::renderPlugins, um, true);</span></a>
 <a name="248"><span class="lineNum">     248 </span>            : </a>
-<a name="249"><span class="lineNum">     249 </span><span class="lineCov">         24 :     addRenderOptions.referTo (state, IDs::renderOptions, um, none);</span></a>
-<a name="250"><span class="lineNum">     250 </span><span class="lineCov">         24 :     addRenderToLibrary.referTo (state, IDs::addRenderToLibrary, um, false);</span></a>
-<a name="251"><span class="lineNum">     251 </span><span class="lineCov">         24 :     reverseRender.referTo (state, IDs::reverseRender, um, false);</span></a>
-<a name="252"><span class="lineNum">     252 </span><span class="lineCov">         24 :     addMetadata.referTo (state, IDs::renderAddMetadata, um, false);</span></a>
+<a name="249"><span class="lineNum">     249 </span><span class="lineCov">         40 :     addRenderOptions.referTo (state, IDs::renderOptions, um, none);</span></a>
+<a name="250"><span class="lineNum">     250 </span><span class="lineCov">         40 :     addRenderToLibrary.referTo (state, IDs::addRenderToLibrary, um, false);</span></a>
+<a name="251"><span class="lineNum">     251 </span><span class="lineCov">         40 :     reverseRender.referTo (state, IDs::reverseRender, um, false);</span></a>
+<a name="252"><span class="lineNum">     252 </span><span class="lineCov">         40 :     addMetadata.referTo (state, IDs::renderAddMetadata, um, false);</span></a>
 <a name="253"><span class="lineNum">     253 </span>            : </a>
-<a name="254"><span class="lineNum">     254 </span><span class="lineCov">         24 :     sampleRate = engine.getDeviceManager().getSampleRate();</span></a>
-<a name="255"><span class="lineNum">     255 </span><span class="lineCov">         24 :     tracks = EditItemID::parseStringList (tracksProperty);</span></a>
-<a name="256"><span class="lineNum">     256 </span><span class="lineCov">         24 :     updateHash();</span></a>
-<a name="257"><span class="lineNum">     257 </span><span class="lineCov">         24 : }</span></a>
+<a name="254"><span class="lineNum">     254 </span><span class="lineCov">         40 :     sampleRate = engine.getDeviceManager().getSampleRate();</span></a>
+<a name="255"><span class="lineNum">     255 </span><span class="lineCov">         40 :     tracks = EditItemID::parseStringList (tracksProperty);</span></a>
+<a name="256"><span class="lineNum">     256 </span><span class="lineCov">         40 :     updateHash();</span></a>
+<a name="257"><span class="lineNum">     257 </span><span class="lineCov">         40 : }</span></a>
 <a name="258"><span class="lineNum">     258 </span>            : </a>
-<a name="259"><span class="lineNum">     259 </span><span class="lineCov">        672 : void RenderOptions::valueTreePropertyChanged (juce::ValueTree&amp; v, const juce::Identifier&amp; i)</span></a>
+<a name="259"><span class="lineNum">     259 </span><span class="lineCov">       1120 : void RenderOptions::valueTreePropertyChanged (juce::ValueTree&amp; v, const juce::Identifier&amp; i)</span></a>
 <a name="260"><span class="lineNum">     260 </span>            : {</a>
-<a name="261"><span class="lineNum">     261 </span><span class="lineCov">        672 :     if (v == state &amp;&amp; i == IDs::renderTracks)</span></a>
+<a name="261"><span class="lineNum">     261 </span><span class="lineCov">       1120 :     if (v == state &amp;&amp; i == IDs::renderTracks)</span></a>
 <a name="262"><span class="lineNum">     262 </span>            :     {</a>
 <a name="263"><span class="lineNum">     263 </span><span class="lineNoCov">          0 :         tracks = EditItemID::parseStringList (tracksProperty);</span></a>
 <a name="264"><span class="lineNum">     264 </span><span class="lineNoCov">          0 :         updateHash();</span></a>
 <a name="265"><span class="lineNum">     265 </span>            :     }</a>
-<a name="266"><span class="lineNum">     266 </span><span class="lineCov">        672 : }</span></a>
+<a name="266"><span class="lineNum">     266 </span><span class="lineCov">       1120 : }</span></a>
 <a name="267"><span class="lineNum">     267 </span>            : </a>
 <a name="268"><span class="lineNum">     268 </span>            : //==============================================================================</a>
 <a name="269"><span class="lineNum">     269 </span><span class="lineNoCov">          0 : static juce::StringPairArray getMetadata (Edit&amp; edit)</span></a>
@@ -480,44 +480,44 @@
 <a name="418"><span class="lineNum">     418 </span><span class="lineNoCov">          0 :     return params;</span></a>
 <a name="419"><span class="lineNum">     419 </span>            : }</a>
 <a name="420"><span class="lineNum">     420 </span>            : </a>
-<a name="421"><span class="lineNum">     421 </span><span class="lineCov">         24 : Renderer::Parameters RenderOptions::getRenderParameters (MidiClip&amp; clip)</span></a>
+<a name="421"><span class="lineNum">     421 </span><span class="lineCov">         40 : Renderer::Parameters RenderOptions::getRenderParameters (MidiClip&amp; clip)</span></a>
 <a name="422"><span class="lineNum">     422 </span>            : {</a>
-<a name="423"><span class="lineNum">     423 </span><span class="lineCov">         24 :     Renderer::Parameters params (clip.edit);</span></a>
+<a name="423"><span class="lineNum">     423 </span><span class="lineCov">         40 :     Renderer::Parameters params (clip.edit);</span></a>
 <a name="424"><span class="lineNum">     424 </span>            : </a>
-<a name="425"><span class="lineNum">     425 </span><span class="lineCov">         24 :     params.destFile                 = destFile;</span></a>
-<a name="426"><span class="lineNum">     426 </span><span class="lineCov">         24 :     params.createMidiFile           = format == midi;</span></a>
-<a name="427"><span class="lineNum">     427 </span><span class="lineCov">         24 :     params.audioFormat              = getAudioFormat();</span></a>
+<a name="425"><span class="lineNum">     425 </span><span class="lineCov">         40 :     params.destFile                 = destFile;</span></a>
+<a name="426"><span class="lineNum">     426 </span><span class="lineCov">         40 :     params.createMidiFile           = format == midi;</span></a>
+<a name="427"><span class="lineNum">     427 </span><span class="lineCov">         40 :     params.audioFormat              = getAudioFormat();</span></a>
 <a name="428"><span class="lineNum">     428 </span>            : </a>
-<a name="429"><span class="lineNum">     429 </span><span class="lineCov">         24 :     params.bitDepth                 = bitDepth;</span></a>
-<a name="430"><span class="lineNum">     430 </span><span class="lineCov">         24 :     params.blockSizeForAudio        = clip.edit.engine.getDeviceManager().getBlockSize();</span></a>
-<a name="431"><span class="lineNum">     431 </span><span class="lineCov">         24 :     params.sampleRateForAudio       = sampleRate;</span></a>
-<a name="432"><span class="lineNum">     432 </span><span class="lineCov">         24 :     params.endAllowance             = endAllowance;</span></a>
-<a name="433"><span class="lineNum">     433 </span><span class="lineCov">         24 :     params.shouldNormalise          = normalise;</span></a>
-<a name="434"><span class="lineNum">     434 </span><span class="lineCov">         24 :     params.trimSilenceAtEnds        = removeSilence;</span></a>
-<a name="435"><span class="lineNum">     435 </span><span class="lineCov">         24 :     params.shouldNormaliseByRMS     = adjustBasedOnRMS;</span></a>
-<a name="436"><span class="lineNum">     436 </span><span class="lineCov">         24 :     params.normaliseToLevelDb       = (float) (adjustBasedOnRMS ? rmsLevelDb : peakLevelDb);</span></a>
-<a name="437"><span class="lineNum">     437 </span><span class="lineCov">         24 :     params.canRenderInMono          = true;</span></a>
-<a name="438"><span class="lineNum">     438 </span><span class="lineCov">         24 :     params.mustRenderInMono         = ! stereo;</span></a>
-<a name="439"><span class="lineNum">     439 </span><span class="lineCov">         24 :     params.usePlugins               = true;</span></a>
-<a name="440"><span class="lineNum">     440 </span><span class="lineCov">         24 :     params.useMasterPlugins         = false;</span></a>
-<a name="441"><span class="lineNum">     441 </span><span class="lineCov">         24 :     params.realTimeRender           = realTime;</span></a>
-<a name="442"><span class="lineNum">     442 </span><span class="lineCov">         24 :     params.ditheringEnabled         = dither;</span></a>
-<a name="443"><span class="lineNum">     443 </span><span class="lineCov">         24 :     params.quality                  = qualityIndex;</span></a>
-<a name="444"><span class="lineNum">     444 </span><span class="lineCov">         24 :     params.category                 = ProjectItem::Category::rendered;</span></a>
-<a name="445"><span class="lineNum">     445 </span><span class="lineCov">         24 :     params.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (clip.edit.engine);</span></a>
-<a name="446"><span class="lineNum">     446 </span><span class="lineCov">         24 :     params.time                     = clip.getEditTimeRange();</span></a>
-<a name="447"><span class="lineNum">     447 </span><span class="lineCov">         24 :     params.tracksToDo               = getTrackIndexes (clip.edit);</span></a>
-<a name="448"><span class="lineNum">     448 </span><span class="lineCov">         24 :     params.allowedClips             = allowedClips;</span></a>
+<a name="429"><span class="lineNum">     429 </span><span class="lineCov">         40 :     params.bitDepth                 = bitDepth;</span></a>
+<a name="430"><span class="lineNum">     430 </span><span class="lineCov">         40 :     params.blockSizeForAudio        = clip.edit.engine.getDeviceManager().getBlockSize();</span></a>
+<a name="431"><span class="lineNum">     431 </span><span class="lineCov">         40 :     params.sampleRateForAudio       = sampleRate;</span></a>
+<a name="432"><span class="lineNum">     432 </span><span class="lineCov">         40 :     params.endAllowance             = endAllowance;</span></a>
+<a name="433"><span class="lineNum">     433 </span><span class="lineCov">         40 :     params.shouldNormalise          = normalise;</span></a>
+<a name="434"><span class="lineNum">     434 </span><span class="lineCov">         40 :     params.trimSilenceAtEnds        = removeSilence;</span></a>
+<a name="435"><span class="lineNum">     435 </span><span class="lineCov">         40 :     params.shouldNormaliseByRMS     = adjustBasedOnRMS;</span></a>
+<a name="436"><span class="lineNum">     436 </span><span class="lineCov">         40 :     params.normaliseToLevelDb       = (float) (adjustBasedOnRMS ? rmsLevelDb : peakLevelDb);</span></a>
+<a name="437"><span class="lineNum">     437 </span><span class="lineCov">         40 :     params.canRenderInMono          = true;</span></a>
+<a name="438"><span class="lineNum">     438 </span><span class="lineCov">         40 :     params.mustRenderInMono         = ! stereo;</span></a>
+<a name="439"><span class="lineNum">     439 </span><span class="lineCov">         40 :     params.usePlugins               = true;</span></a>
+<a name="440"><span class="lineNum">     440 </span><span class="lineCov">         40 :     params.useMasterPlugins         = false;</span></a>
+<a name="441"><span class="lineNum">     441 </span><span class="lineCov">         40 :     params.realTimeRender           = realTime;</span></a>
+<a name="442"><span class="lineNum">     442 </span><span class="lineCov">         40 :     params.ditheringEnabled         = dither;</span></a>
+<a name="443"><span class="lineNum">     443 </span><span class="lineCov">         40 :     params.quality                  = qualityIndex;</span></a>
+<a name="444"><span class="lineNum">     444 </span><span class="lineCov">         40 :     params.category                 = ProjectItem::Category::rendered;</span></a>
+<a name="445"><span class="lineNum">     445 </span><span class="lineCov">         40 :     params.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (clip.edit.engine);</span></a>
+<a name="446"><span class="lineNum">     446 </span><span class="lineCov">         40 :     params.time                     = clip.getEditTimeRange();</span></a>
+<a name="447"><span class="lineNum">     447 </span><span class="lineCov">         40 :     params.tracksToDo               = getTrackIndexes (clip.edit);</span></a>
+<a name="448"><span class="lineNum">     448 </span><span class="lineCov">         40 :     params.allowedClips             = allowedClips;</span></a>
 <a name="449"><span class="lineNum">     449 </span>            : </a>
-<a name="450"><span class="lineNum">     450 </span><span class="lineCov">         24 :     return params;</span></a>
+<a name="450"><span class="lineNum">     450 </span><span class="lineCov">         40 :     return params;</span></a>
 <a name="451"><span class="lineNum">     451 </span>            : }</a>
 <a name="452"><span class="lineNum">     452 </span>            : </a>
-<a name="453"><span class="lineNum">     453 </span><span class="lineCov">         88 : juce::AudioFormat* RenderOptions::getAudioFormat()</span></a>
+<a name="453"><span class="lineNum">     453 </span><span class="lineCov">        136 : juce::AudioFormat* RenderOptions::getAudioFormat()</span></a>
 <a name="454"><span class="lineNum">     454 </span>            : {</a>
-<a name="455"><span class="lineNum">     455 </span><span class="lineCov">         88 :     auto&amp; afm = engine.getAudioFileFormatManager();</span></a>
+<a name="455"><span class="lineNum">     455 </span><span class="lineCov">        136 :     auto&amp; afm = engine.getAudioFileFormatManager();</span></a>
 <a name="456"><span class="lineNum">     456 </span>            : </a>
-<a name="457"><span class="lineNum">     457 </span><span class="lineCov">         88 :     if (format == midi)      return {};</span></a>
-<a name="458"><span class="lineNum">     458 </span><span class="lineCov">         40 :     if (format == wav)       return afm.getWavFormat();</span></a>
+<a name="457"><span class="lineNum">     457 </span><span class="lineCov">        136 :     if (format == midi)      return {};</span></a>
+<a name="458"><span class="lineNum">     458 </span><span class="lineCov">         56 :     if (format == wav)       return afm.getWavFormat();</span></a>
 <a name="459"><span class="lineNum">     459 </span><span class="lineNoCov">          0 :     if (format == aiff)      return afm.getAiffFormat();</span></a>
 <a name="460"><span class="lineNum">     460 </span><span class="lineNoCov">          0 :     if (format == flac)      return afm.getFlacFormat();</span></a>
 <a name="461"><span class="lineNum">     461 </span><span class="lineNoCov">          0 :     if (format == ogg)       return afm.getOggFormat();</span></a>
@@ -743,48 +743,48 @@
 <a name="681"><span class="lineNum">     681 </span>            : }</a>
 <a name="682"><span class="lineNum">     682 </span>            : </a>
 <a name="683"><span class="lineNum">     683 </span>            : //==============================================================================</a>
-<a name="684"><span class="lineNum">     684 </span><span class="lineCov">         24 : void RenderOptions::setToDefault()</span></a>
+<a name="684"><span class="lineNum">     684 </span><span class="lineCov">         40 : void RenderOptions::setToDefault()</span></a>
 <a name="685"><span class="lineNum">     685 </span>            : {</a>
-<a name="686"><span class="lineNum">     686 </span><span class="lineCov">         24 :     type                     = RenderType::allExport;</span></a>
+<a name="686"><span class="lineNum">     686 </span><span class="lineCov">         40 :     type                     = RenderType::allExport;</span></a>
 <a name="687"><span class="lineNum">     687 </span>            : </a>
-<a name="688"><span class="lineNum">     688 </span><span class="lineCov">         24 :     createMidiFile           = false;</span></a>
-<a name="689"><span class="lineNum">     689 </span><span class="lineCov">         24 :     format                   = wav;</span></a>
-<a name="690"><span class="lineNum">     690 </span><span class="lineCov">         24 :     stereo                   = true;</span></a>
-<a name="691"><span class="lineNum">     691 </span><span class="lineCov">         24 :     sampleRate               = 44100.0;</span></a>
-<a name="692"><span class="lineNum">     692 </span><span class="lineCov">         24 :     bitDepth                 = 32;</span></a>
-<a name="693"><span class="lineNum">     693 </span><span class="lineCov">         24 :     qualityIndex             = 5;</span></a>
-<a name="694"><span class="lineNum">     694 </span><span class="lineCov">         24 :     rmsLevelDb               = 0.0;</span></a>
-<a name="695"><span class="lineNum">     695 </span><span class="lineCov">         24 :     peakLevelDb              = 0.0;</span></a>
-<a name="696"><span class="lineNum">     696 </span><span class="lineCov">         24 :     endAllowance             = {};</span></a>
+<a name="688"><span class="lineNum">     688 </span><span class="lineCov">         40 :     createMidiFile           = false;</span></a>
+<a name="689"><span class="lineNum">     689 </span><span class="lineCov">         40 :     format                   = wav;</span></a>
+<a name="690"><span class="lineNum">     690 </span><span class="lineCov">         40 :     stereo                   = true;</span></a>
+<a name="691"><span class="lineNum">     691 </span><span class="lineCov">         40 :     sampleRate               = 44100.0;</span></a>
+<a name="692"><span class="lineNum">     692 </span><span class="lineCov">         40 :     bitDepth                 = 32;</span></a>
+<a name="693"><span class="lineNum">     693 </span><span class="lineCov">         40 :     qualityIndex             = 5;</span></a>
+<a name="694"><span class="lineNum">     694 </span><span class="lineCov">         40 :     rmsLevelDb               = 0.0;</span></a>
+<a name="695"><span class="lineNum">     695 </span><span class="lineCov">         40 :     peakLevelDb              = 0.0;</span></a>
+<a name="696"><span class="lineNum">     696 </span><span class="lineCov">         40 :     endAllowance             = {};</span></a>
 <a name="697"><span class="lineNum">     697 </span>            : </a>
-<a name="698"><span class="lineNum">     698 </span><span class="lineCov">         24 :     removeSilence            = false;</span></a>
-<a name="699"><span class="lineNum">     699 </span><span class="lineCov">         24 :     normalise                = false;</span></a>
-<a name="700"><span class="lineNum">     700 </span><span class="lineCov">         24 :     dither                   = false;</span></a>
-<a name="701"><span class="lineNum">     701 </span><span class="lineCov">         24 :     adjustBasedOnRMS         = false;</span></a>
-<a name="702"><span class="lineNum">     702 </span><span class="lineCov">         24 :     markedRegion             = false;</span></a>
-<a name="703"><span class="lineNum">     703 </span><span class="lineCov">         24 :     selectedTracks           = false;</span></a>
-<a name="704"><span class="lineNum">     704 </span><span class="lineCov">         24 :     selectedClips            = false;</span></a>
-<a name="705"><span class="lineNum">     705 </span><span class="lineCov">         24 :     tracksToSeparateFiles    = false;</span></a>
-<a name="706"><span class="lineNum">     706 </span><span class="lineCov">         24 :     realTime                 = false;</span></a>
-<a name="707"><span class="lineNum">     707 </span><span class="lineCov">         24 :     usePlugins               = true;</span></a>
+<a name="698"><span class="lineNum">     698 </span><span class="lineCov">         40 :     removeSilence            = false;</span></a>
+<a name="699"><span class="lineNum">     699 </span><span class="lineCov">         40 :     normalise                = false;</span></a>
+<a name="700"><span class="lineNum">     700 </span><span class="lineCov">         40 :     dither                   = false;</span></a>
+<a name="701"><span class="lineNum">     701 </span><span class="lineCov">         40 :     adjustBasedOnRMS         = false;</span></a>
+<a name="702"><span class="lineNum">     702 </span><span class="lineCov">         40 :     markedRegion             = false;</span></a>
+<a name="703"><span class="lineNum">     703 </span><span class="lineCov">         40 :     selectedTracks           = false;</span></a>
+<a name="704"><span class="lineNum">     704 </span><span class="lineCov">         40 :     selectedClips            = false;</span></a>
+<a name="705"><span class="lineNum">     705 </span><span class="lineCov">         40 :     tracksToSeparateFiles    = false;</span></a>
+<a name="706"><span class="lineNum">     706 </span><span class="lineCov">         40 :     realTime                 = false;</span></a>
+<a name="707"><span class="lineNum">     707 </span><span class="lineCov">         40 :     usePlugins               = true;</span></a>
 <a name="708"><span class="lineNum">     708 </span>            : </a>
-<a name="709"><span class="lineNum">     709 </span><span class="lineCov">         24 :     addRenderOptions         = none;</span></a>
-<a name="710"><span class="lineNum">     710 </span><span class="lineCov">         24 :     addRenderToLibrary       = false;</span></a>
-<a name="711"><span class="lineNum">     711 </span><span class="lineCov">         24 :     reverseRender            = false;</span></a>
+<a name="709"><span class="lineNum">     709 </span><span class="lineCov">         40 :     addRenderOptions         = none;</span></a>
+<a name="710"><span class="lineNum">     710 </span><span class="lineCov">         40 :     addRenderToLibrary       = false;</span></a>
+<a name="711"><span class="lineNum">     711 </span><span class="lineCov">         40 :     reverseRender            = false;</span></a>
 <a name="712"><span class="lineNum">     712 </span>            : </a>
-<a name="713"><span class="lineNum">     713 </span><span class="lineCov">         24 :     addMetadata              = false;</span></a>
-<a name="714"><span class="lineNum">     714 </span><span class="lineCov">         24 : }</span></a>
+<a name="713"><span class="lineNum">     713 </span><span class="lineCov">         40 :     addMetadata              = false;</span></a>
+<a name="714"><span class="lineNum">     714 </span><span class="lineCov">         40 : }</span></a>
 <a name="715"><span class="lineNum">     715 </span>            : </a>
-<a name="716"><span class="lineNum">     716 </span><span class="lineCov">         24 : void RenderOptions::updateLastUsedRenderPath (RenderOptions&amp; renderOptions, const juce::String&amp; itemID)</span></a>
+<a name="716"><span class="lineNum">     716 </span><span class="lineCov">         40 : void RenderOptions::updateLastUsedRenderPath (RenderOptions&amp; renderOptions, const juce::String&amp; itemID)</span></a>
 <a name="717"><span class="lineNum">     717 </span>            : {</a>
-<a name="718"><span class="lineNum">     718 </span><span class="lineCov">         24 :     auto&amp; storage = renderOptions.engine.getPropertyStorage();</span></a>
-<a name="719"><span class="lineNum">     719 </span><span class="lineCov">         48 :     auto lastEditID = storage.getProperty (SettingID::lastEditRender).toString();</span></a>
+<a name="718"><span class="lineNum">     718 </span><span class="lineCov">         40 :     auto&amp; storage = renderOptions.engine.getPropertyStorage();</span></a>
+<a name="719"><span class="lineNum">     719 </span><span class="lineCov">         80 :     auto lastEditID = storage.getProperty (SettingID::lastEditRender).toString();</span></a>
 <a name="720"><span class="lineNum">     720 </span>            : </a>
-<a name="721"><span class="lineNum">     721 </span><span class="lineCov">         24 :     if (itemID == lastEditID)</span></a>
+<a name="721"><span class="lineNum">     721 </span><span class="lineCov">         40 :     if (itemID == lastEditID)</span></a>
 <a name="722"><span class="lineNum">     722 </span><span class="lineCov">         32 :         renderOptions.destFile = storage.getDefaultLoadSaveDirectory (&quot;exportRender&quot;);</span></a>
 <a name="723"><span class="lineNum">     723 </span>            : </a>
-<a name="724"><span class="lineNum">     724 </span><span class="lineCov">         24 :     storage.setProperty (SettingID::lastEditRender, itemID);</span></a>
-<a name="725"><span class="lineNum">     725 </span><span class="lineCov">         24 : }</span></a>
+<a name="724"><span class="lineNum">     724 </span><span class="lineCov">         40 :     storage.setProperty (SettingID::lastEditRender, itemID);</span></a>
+<a name="725"><span class="lineNum">     725 </span><span class="lineCov">         40 : }</span></a>
 <a name="726"><span class="lineNum">     726 </span>            : </a>
 <a name="727"><span class="lineNum">     727 </span><span class="lineNoCov">          0 : std::unique_ptr&lt;RenderOptions&gt; RenderOptions::forGeneralExporter (Edit&amp; edit)</span></a>
 <a name="728"><span class="lineNum">     728 </span>            : {</a>
@@ -828,32 +828,32 @@
 <a name="766"><span class="lineNum">     766 </span>            :     return {};</a>
 <a name="767"><span class="lineNum">     767 </span>            : }</a>
 <a name="768"><span class="lineNum">     768 </span>            : </a>
-<a name="769"><span class="lineNum">     769 </span><span class="lineCov">         24 : std::unique_ptr&lt;RenderOptions&gt; RenderOptions::forClipRender (juce::Array&lt;Clip*&gt; clips, bool midiNotes)</span></a>
+<a name="769"><span class="lineNum">     769 </span><span class="lineCov">         40 : std::unique_ptr&lt;RenderOptions&gt; RenderOptions::forClipRender (juce::Array&lt;Clip*&gt; clips, bool midiNotes)</span></a>
 <a name="770"><span class="lineNum">     770 </span>            : {</a>
-<a name="771"><span class="lineNum">     771 </span><span class="lineCov">         24 :     if (auto first = clips.getFirst())</span></a>
+<a name="771"><span class="lineNum">     771 </span><span class="lineCov">         40 :     if (auto first = clips.getFirst())</span></a>
 <a name="772"><span class="lineNum">     772 </span>            :     {</a>
-<a name="773"><span class="lineNum">     773 </span><span class="lineCov">         24 :         auto&amp; edit = first-&gt;edit;</span></a>
+<a name="773"><span class="lineNum">     773 </span><span class="lineCov">         40 :         auto&amp; edit = first-&gt;edit;</span></a>
 <a name="774"><span class="lineNum">     774 </span>            : </a>
-<a name="775"><span class="lineNum">     775 </span><span class="lineCov">         24 :         std::unique_ptr&lt;RenderOptions&gt; ro (new RenderOptions (edit.engine));</span></a>
-<a name="776"><span class="lineNum">     776 </span><span class="lineCov">         24 :         ro-&gt;setToDefault();</span></a>
-<a name="777"><span class="lineNum">     777 </span><span class="lineCov">         24 :         updateLastUsedRenderPath (*ro, edit.getProjectItemID().toString());</span></a>
+<a name="775"><span class="lineNum">     775 </span><span class="lineCov">         40 :         std::unique_ptr&lt;RenderOptions&gt; ro (new RenderOptions (edit.engine));</span></a>
+<a name="776"><span class="lineNum">     776 </span><span class="lineCov">         40 :         ro-&gt;setToDefault();</span></a>
+<a name="777"><span class="lineNum">     777 </span><span class="lineCov">         40 :         updateLastUsedRenderPath (*ro, edit.getProjectItemID().toString());</span></a>
 <a name="778"><span class="lineNum">     778 </span>            : </a>
-<a name="779"><span class="lineNum">     779 </span><span class="lineCov">         24 :         ro-&gt;allowedClips = clips;</span></a>
+<a name="779"><span class="lineNum">     779 </span><span class="lineCov">         40 :         ro-&gt;allowedClips = clips;</span></a>
 <a name="780"><span class="lineNum">     780 </span>            :         bool areAllClipsMono = true;</a>
 <a name="781"><span class="lineNum">     781 </span>            :         </a>
-<a name="782"><span class="lineNum">     782 </span><span class="lineCov">         48 :         for (auto c : clips)</span></a>
+<a name="782"><span class="lineNum">     782 </span><span class="lineCov">         80 :         for (auto c : clips)</span></a>
 <a name="783"><span class="lineNum">     783 </span>            :         {</a>
-<a name="784"><span class="lineNum">     784 </span><span class="lineCov">         24 :             if (auto t = c-&gt;getTrack())</span></a>
+<a name="784"><span class="lineNum">     784 </span><span class="lineCov">         40 :             if (auto t = c-&gt;getTrack())</span></a>
 <a name="785"><span class="lineNum">     785 </span>            :             {</a>
-<a name="786"><span class="lineNum">     786 </span><span class="lineCov">         24 :                 ro-&gt;tracks.addIfNotAlreadyThere (t-&gt;itemID);</span></a>
+<a name="786"><span class="lineNum">     786 </span><span class="lineCov">         40 :                 ro-&gt;tracks.addIfNotAlreadyThere (t-&gt;itemID);</span></a>
 <a name="787"><span class="lineNum">     787 </span>            : </a>
-<a name="788"><span class="lineNum">     788 </span><span class="lineCov">         24 :                 if (auto at = dynamic_cast&lt;AudioTrack*&gt; (t))</span></a>
-<a name="789"><span class="lineNum">     789 </span><span class="lineCov">         24 :                     if (auto dest = at-&gt;getOutput().getDestinationTrack())</span></a>
+<a name="788"><span class="lineNum">     788 </span><span class="lineCov">         40 :                 if (auto at = dynamic_cast&lt;AudioTrack*&gt; (t))</span></a>
+<a name="789"><span class="lineNum">     789 </span><span class="lineCov">         40 :                     if (auto dest = at-&gt;getOutput().getDestinationTrack())</span></a>
 <a name="790"><span class="lineNum">     790 </span><span class="lineNoCov">          0 :                         ro-&gt;tracks.addIfNotAlreadyThere (dest-&gt;itemID);</span></a>
 <a name="791"><span class="lineNum">     791 </span>            :             }</a>
 <a name="792"><span class="lineNum">     792 </span>            :             </a>
 <a name="793"><span class="lineNum">     793 </span>            :             // Assume any non-audio clips should be rendered in stereo</a>
-<a name="794"><span class="lineNum">     794 </span><span class="lineCov">         24 :             if (auto audioClip = dynamic_cast&lt;AudioClipBase*&gt; (c))</span></a>
+<a name="794"><span class="lineNum">     794 </span><span class="lineCov">         40 :             if (auto audioClip = dynamic_cast&lt;AudioClipBase*&gt; (c))</span></a>
 <a name="795"><span class="lineNum">     795 </span>            :             {</a>
 <a name="796"><span class="lineNum">     796 </span><span class="lineNoCov">          0 :                 if (audioClip-&gt;getWaveInfo().numChannels &gt; 1)</span></a>
 <a name="797"><span class="lineNum">     797 </span>            :                     areAllClipsMono = false;</a>
@@ -864,16 +864,16 @@
 <a name="802"><span class="lineNum">     802 </span>            :             }</a>
 <a name="803"><span class="lineNum">     803 </span>            :         }</a>
 <a name="804"><span class="lineNum">     804 </span>            :         </a>
-<a name="805"><span class="lineNum">     805 </span><span class="lineCov">         24 :         ro-&gt;type = midiNotes ? RenderType::midi</span></a>
-<a name="806"><span class="lineNum">     806 </span><span class="lineCov">         24 :                              : RenderType::clip;</span></a>
+<a name="805"><span class="lineNum">     805 </span><span class="lineCov">         40 :         ro-&gt;type = midiNotes ? RenderType::midi</span></a>
+<a name="806"><span class="lineNum">     806 </span><span class="lineCov">         40 :                              : RenderType::clip;</span></a>
 <a name="807"><span class="lineNum">     807 </span>            : </a>
-<a name="808"><span class="lineNum">     808 </span><span class="lineCov">         24 :         ro-&gt;stereo            = ! areAllClipsMono;</span></a>
-<a name="809"><span class="lineNum">     809 </span><span class="lineCov">         24 :         ro-&gt;selectedClips     = false;</span></a>
-<a name="810"><span class="lineNum">     810 </span><span class="lineCov">         24 :         ro-&gt;endAllowance      = ro-&gt;usePlugins ? findEndAllowance (edit, &amp;ro-&gt;tracks, &amp;clips) : TimeDuration();</span></a>
-<a name="811"><span class="lineNum">     811 </span><span class="lineCov">         24 :         ro-&gt;removeSilence     = midiNotes;</span></a>
-<a name="812"><span class="lineNum">     812 </span><span class="lineCov">         24 :         ro-&gt;addRenderOptions  = nextTrack;</span></a>
-<a name="813"><span class="lineNum">     813 </span><span class="lineCov">         24 :         ro-&gt;updateDefaultFilename (&amp;edit);</span></a>
-<a name="814"><span class="lineNum">     814 </span><span class="lineCov">         24 :         ro-&gt;updateHash();</span></a>
+<a name="808"><span class="lineNum">     808 </span><span class="lineCov">         40 :         ro-&gt;stereo            = ! areAllClipsMono;</span></a>
+<a name="809"><span class="lineNum">     809 </span><span class="lineCov">         40 :         ro-&gt;selectedClips     = false;</span></a>
+<a name="810"><span class="lineNum">     810 </span><span class="lineCov">         40 :         ro-&gt;endAllowance      = ro-&gt;usePlugins ? findEndAllowance (edit, &amp;ro-&gt;tracks, &amp;clips) : TimeDuration();</span></a>
+<a name="811"><span class="lineNum">     811 </span><span class="lineCov">         40 :         ro-&gt;removeSilence     = midiNotes;</span></a>
+<a name="812"><span class="lineNum">     812 </span><span class="lineCov">         40 :         ro-&gt;addRenderOptions  = nextTrack;</span></a>
+<a name="813"><span class="lineNum">     813 </span><span class="lineCov">         40 :         ro-&gt;updateDefaultFilename (&amp;edit);</span></a>
+<a name="814"><span class="lineNum">     814 </span><span class="lineCov">         40 :         ro-&gt;updateHash();</span></a>
 <a name="815"><span class="lineNum">     815 </span>            :         return ro;</a>
 <a name="816"><span class="lineNum">     816 </span>            :     }</a>
 <a name="817"><span class="lineNum">     817 </span>            : </a>
@@ -891,30 +891,30 @@
 <a name="829"><span class="lineNum">     829 </span>            : }</a>
 <a name="830"><span class="lineNum">     830 </span>            : </a>
 <a name="831"><span class="lineNum">     831 </span>            : //==============================================================================</a>
-<a name="832"><span class="lineNum">     832 </span><span class="lineCov">         24 : RenderOptions::RenderOptions (Engine&amp; e)</span></a>
-<a name="833"><span class="lineNum">     833 </span><span class="lineCov">         24 :     : RenderOptions (e, juce::ValueTree (IDs::RENDER), nullptr)</span></a>
+<a name="832"><span class="lineNum">     832 </span><span class="lineCov">         40 : RenderOptions::RenderOptions (Engine&amp; e)</span></a>
+<a name="833"><span class="lineNum">     833 </span><span class="lineCov">         40 :     : RenderOptions (e, juce::ValueTree (IDs::RENDER), nullptr)</span></a>
 <a name="834"><span class="lineNum">     834 </span>            : {</a>
-<a name="835"><span class="lineNum">     835 </span><span class="lineCov">         24 : }</span></a>
+<a name="835"><span class="lineNum">     835 </span><span class="lineCov">         40 : }</span></a>
 <a name="836"><span class="lineNum">     836 </span>            : </a>
-<a name="837"><span class="lineNum">     837 </span><span class="lineCov">         24 : RenderOptions::RenderOptions (Engine&amp; e, const juce::ValueTree&amp; s, juce::UndoManager* um)</span></a>
-<a name="838"><span class="lineNum">     838 </span><span class="lineCov">        576 :     : engine (e), state (s)</span></a>
+<a name="837"><span class="lineNum">     837 </span><span class="lineCov">         40 : RenderOptions::RenderOptions (Engine&amp; e, const juce::ValueTree&amp; s, juce::UndoManager* um)</span></a>
+<a name="838"><span class="lineNum">     838 </span><span class="lineCov">        960 :     : engine (e), state (s)</span></a>
 <a name="839"><span class="lineNum">     839 </span>            : {</a>
-<a name="840"><span class="lineNum">     840 </span><span class="lineCov">         24 :     state.addListener (this);</span></a>
-<a name="841"><span class="lineNum">     841 </span><span class="lineCov">         24 :     relinkCachedValues (um);</span></a>
-<a name="842"><span class="lineNum">     842 </span><span class="lineCov">         24 : }</span></a>
+<a name="840"><span class="lineNum">     840 </span><span class="lineCov">         40 :     state.addListener (this);</span></a>
+<a name="841"><span class="lineNum">     841 </span><span class="lineCov">         40 :     relinkCachedValues (um);</span></a>
+<a name="842"><span class="lineNum">     842 </span><span class="lineCov">         40 : }</span></a>
 <a name="843"><span class="lineNum">     843 </span>            : </a>
 <a name="844"><span class="lineNum">     844 </span><span class="lineNoCov">          0 : RenderOptions::RenderOptions (const RenderOptions&amp; other, juce::UndoManager* um)</span></a>
 <a name="845"><span class="lineNum">     845 </span><span class="lineNoCov">          0 :     : RenderOptions (other.engine, other.state.createCopy(), um)</span></a>
 <a name="846"><span class="lineNum">     846 </span>            : {</a>
 <a name="847"><span class="lineNum">     847 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="848"><span class="lineNum">     848 </span>            : </a>
-<a name="849"><span class="lineNum">     849 </span><span class="lineCov">         72 : RenderOptions::~RenderOptions()</span></a>
+<a name="849"><span class="lineNum">     849 </span><span class="lineCov">        120 : RenderOptions::~RenderOptions()</span></a>
 <a name="850"><span class="lineNum">     850 </span>            : {</a>
-<a name="851"><span class="lineNum">     851 </span><span class="lineCov">         24 :     state.removeListener (this);</span></a>
+<a name="851"><span class="lineNum">     851 </span><span class="lineCov">         40 :     state.removeListener (this);</span></a>
 <a name="852"><span class="lineNum">     852 </span>            : </a>
-<a name="853"><span class="lineNum">     853 </span><span class="lineCov">         24 :     if (! isEditClipRender())</span></a>
-<a name="854"><span class="lineNum">     854 </span><span class="lineCov">         24 :         engine.getPropertyStorage().setDefaultLoadSaveDirectory (&quot;exportRender&quot;, destFile);</span></a>
-<a name="855"><span class="lineNum">     855 </span><span class="lineCov">         48 : }</span></a>
+<a name="853"><span class="lineNum">     853 </span><span class="lineCov">         40 :     if (! isEditClipRender())</span></a>
+<a name="854"><span class="lineNum">     854 </span><span class="lineCov">         40 :         engine.getPropertyStorage().setDefaultLoadSaveDirectory (&quot;exportRender&quot;, destFile);</span></a>
+<a name="855"><span class="lineNum">     855 </span><span class="lineCov">         80 : }</span></a>
 <a name="856"><span class="lineNum">     856 </span>            : </a>
 <a name="857"><span class="lineNum">     857 </span><span class="lineNoCov">          0 : void RenderOptions::setUINeedsRefresh()</span></a>
 <a name="858"><span class="lineNum">     858 </span>            : {</a>
@@ -931,20 +931,20 @@
 <a name="869"><span class="lineNum">     869 </span>            : }</a>
 <a name="870"><span class="lineNum">     870 </span>            : </a>
 <a name="871"><span class="lineNum">     871 </span>            : //==============================================================================</a>
-<a name="872"><span class="lineNum">     872 </span><span class="lineCov">         24 : RenderOptions::TargetFileFormat RenderOptions::setFormat (TargetFileFormat f)</span></a>
+<a name="872"><span class="lineNum">     872 </span><span class="lineCov">         40 : RenderOptions::TargetFileFormat RenderOptions::setFormat (TargetFileFormat f)</span></a>
 <a name="873"><span class="lineNum">     873 </span>            : {</a>
-<a name="874"><span class="lineNum">     874 </span><span class="lineCov">         24 :     auto&amp; afm = engine.getAudioFileFormatManager();</span></a>
-<a name="875"><span class="lineNum">     875 </span><span class="lineCov">         24 :     format = f;</span></a>
+<a name="874"><span class="lineNum">     874 </span><span class="lineCov">         40 :     auto&amp; afm = engine.getAudioFileFormatManager();</span></a>
+<a name="875"><span class="lineNum">     875 </span><span class="lineCov">         40 :     format = f;</span></a>
 <a name="876"><span class="lineNum">     876 </span>            : </a>
-<a name="877"><span class="lineNum">     877 </span><span class="lineCov">         24 :     LAMEManager::registerAudioFormat (afm);</span></a>
+<a name="877"><span class="lineNum">     877 </span><span class="lineCov">         40 :     LAMEManager::registerAudioFormat (afm);</span></a>
 <a name="878"><span class="lineNum">     878 </span>            : </a>
-<a name="879"><span class="lineNum">     879 </span><span class="lineCov">         24 :     if (format == mp3 &amp;&amp; afm.getLameFormat() == nullptr)</span></a>
+<a name="879"><span class="lineNum">     879 </span><span class="lineCov">         40 :     if (format == mp3 &amp;&amp; afm.getLameFormat() == nullptr)</span></a>
 <a name="880"><span class="lineNum">     880 </span><span class="lineNoCov">          0 :         format = wav;</span></a>
 <a name="881"><span class="lineNum">     881 </span>            : </a>
-<a name="882"><span class="lineNum">     882 </span><span class="lineCov">         24 :     updateFileName();</span></a>
-<a name="883"><span class="lineNum">     883 </span><span class="lineCov">         24 :     updateOptionsForFormat();</span></a>
+<a name="882"><span class="lineNum">     882 </span><span class="lineCov">         40 :     updateFileName();</span></a>
+<a name="883"><span class="lineNum">     883 </span><span class="lineCov">         40 :     updateOptionsForFormat();</span></a>
 <a name="884"><span class="lineNum">     884 </span>            : </a>
-<a name="885"><span class="lineNum">     885 </span><span class="lineCov">         24 :     return format;</span></a>
+<a name="885"><span class="lineNum">     885 </span><span class="lineCov">         40 :     return format;</span></a>
 <a name="886"><span class="lineNum">     886 </span>            : }</a>
 <a name="887"><span class="lineNum">     887 </span>            : </a>
 <a name="888"><span class="lineNum">     888 </span><span class="lineNoCov">          0 : void RenderOptions::setFormatType (const juce::String&amp; typeString)</span></a>
@@ -989,8 +989,8 @@
 <a name="927"><span class="lineNum">     927 </span>            : {</a>
 <a name="928"><span class="lineNum">     928 </span>            :     HashCode tracksHash = 0;</a>
 <a name="929"><span class="lineNum">     929 </span>            : </a>
-<a name="930"><span class="lineNum">     930 </span><span class="lineCov">         96 :     for (auto&amp; t : tracks)</span></a>
-<a name="931"><span class="lineNum">     931 </span><span class="lineCov">         48 :         tracksHash ^= static_cast&lt;HashCode&gt; (t.getRawID()); // TODO: this will probably be buggy if the IDs are all low sequential integers!</span></a>
+<a name="930"><span class="lineNum">     930 </span><span class="lineCov">        160 :     for (auto&amp; t : tracks)</span></a>
+<a name="931"><span class="lineNum">     931 </span><span class="lineCov">         80 :         tracksHash ^= static_cast&lt;HashCode&gt; (t.getRawID()); // TODO: this will probably be buggy if the IDs are all low sequential integers!</span></a>
 <a name="932"><span class="lineNum">     932 </span>            : </a>
 <a name="933"><span class="lineNum">     933 </span><span class="lineNoCov">          0 :     return tracksHash;</span></a>
 <a name="934"><span class="lineNum">     934 </span>            : }</a>
@@ -1008,17 +1008,17 @@
 <a name="946"><span class="lineNum">     946 </span>            :     }</a>
 <a name="947"><span class="lineNum">     947 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="948"><span class="lineNum">     948 </span>            : </a>
-<a name="949"><span class="lineNum">     949 </span><span class="lineCov">         24 : juce::BigInteger RenderOptions::getTrackIndexes (const Edit&amp; ed) const</span></a>
+<a name="949"><span class="lineNum">     949 </span><span class="lineCov">         40 : juce::BigInteger RenderOptions::getTrackIndexes (const Edit&amp; ed) const</span></a>
 <a name="950"><span class="lineNum">     950 </span>            : {</a>
-<a name="951"><span class="lineNum">     951 </span><span class="lineCov">         24 :     juce::BigInteger res;</span></a>
+<a name="951"><span class="lineNum">     951 </span><span class="lineCov">         40 :     juce::BigInteger res;</span></a>
 <a name="952"><span class="lineNum">     952 </span>            : </a>
-<a name="953"><span class="lineNum">     953 </span><span class="lineCov">         24 :     auto trks = getAllTracks (ed);</span></a>
+<a name="953"><span class="lineNum">     953 </span><span class="lineCov">         40 :     auto trks = getAllTracks (ed);</span></a>
 <a name="954"><span class="lineNum">     954 </span>            : </a>
-<a name="955"><span class="lineNum">     955 </span><span class="lineCov">         48 :     for (int i = tracks.size(); --i &gt;= 0;)</span></a>
-<a name="956"><span class="lineNum">     956 </span><span class="lineCov">         24 :         if (auto t = findTrackForID (ed, tracks.getUnchecked (i)))</span></a>
-<a name="957"><span class="lineNum">     957 </span><span class="lineCov">         24 :             res.setBit (trks.indexOf (t));</span></a>
+<a name="955"><span class="lineNum">     955 </span><span class="lineCov">         80 :     for (int i = tracks.size(); --i &gt;= 0;)</span></a>
+<a name="956"><span class="lineNum">     956 </span><span class="lineCov">         40 :         if (auto t = findTrackForID (ed, tracks.getUnchecked (i)))</span></a>
+<a name="957"><span class="lineNum">     957 </span><span class="lineCov">         40 :             res.setBit (trks.indexOf (t));</span></a>
 <a name="958"><span class="lineNum">     958 </span>            : </a>
-<a name="959"><span class="lineNum">     959 </span><span class="lineCov">         24 :     return res;</span></a>
+<a name="959"><span class="lineNum">     959 </span><span class="lineCov">         40 :     return res;</span></a>
 <a name="960"><span class="lineNum">     960 </span>            : }</a>
 <a name="961"><span class="lineNum">     961 </span>            : </a>
 <a name="962"><span class="lineNum">     962 </span><span class="lineNoCov">          0 : void RenderOptions::setSelected (bool onlySelectedTrackAndClips)</span></a>
@@ -1027,16 +1027,16 @@
 <a name="965"><span class="lineNum">     965 </span><span class="lineNoCov">          0 :     selectedClips = onlySelectedTrackAndClips;</span></a>
 <a name="966"><span class="lineNum">     966 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="967"><span class="lineNum">     967 </span>            : </a>
-<a name="968"><span class="lineNum">     968 </span><span class="lineCov">         24 : void RenderOptions::setFilename (juce::String value, bool canPromptToOverwriteExisting)</span></a>
+<a name="968"><span class="lineNum">     968 </span><span class="lineCov">         40 : void RenderOptions::setFilename (juce::String value, bool canPromptToOverwriteExisting)</span></a>
 <a name="969"><span class="lineNum">     969 </span>            : {</a>
-<a name="970"><span class="lineNum">     970 </span><span class="lineCov">         24 :     juce::RecentlyOpenedFilesList recent;</span></a>
-<a name="971"><span class="lineNum">     971 </span><span class="lineCov">         72 :     auto recentList = engine.getPropertyStorage().getProperty (SettingID::renderRecentFilesList).toString();</span></a>
-<a name="972"><span class="lineNum">     972 </span><span class="lineCov">         24 :     recent.restoreFromString (recentList);</span></a>
+<a name="970"><span class="lineNum">     970 </span><span class="lineCov">         40 :     juce::RecentlyOpenedFilesList recent;</span></a>
+<a name="971"><span class="lineNum">     971 </span><span class="lineCov">        120 :     auto recentList = engine.getPropertyStorage().getProperty (SettingID::renderRecentFilesList).toString();</span></a>
+<a name="972"><span class="lineNum">     972 </span><span class="lineCov">         40 :     recent.restoreFromString (recentList);</span></a>
 <a name="973"><span class="lineNum">     973 </span>            : </a>
 <a name="974"><span class="lineNum">     974 </span>            :     juce::File f;</a>
 <a name="975"><span class="lineNum">     975 </span>            : </a>
 <a name="976"><span class="lineNum">     976 </span>            :    #if JUCE_MODAL_LOOPS_PERMITTED</a>
-<a name="977"><span class="lineNum">     977 </span><span class="lineCov">         24 :     if (value.startsWithIgnoreCase (&quot;$browse&quot;))</span></a>
+<a name="977"><span class="lineNum">     977 </span><span class="lineCov">         40 :     if (value.startsWithIgnoreCase (&quot;$browse&quot;))</span></a>
 <a name="978"><span class="lineNum">     978 </span>            :     {</a>
 <a name="979"><span class="lineNum">     979 </span>            :         enum</a>
 <a name="980"><span class="lineNum">     980 </span>            :         {</a>
@@ -1085,18 +1085,18 @@
 <a name="1023"><span class="lineNum">    1023 </span>            :     else</a>
 <a name="1024"><span class="lineNum">    1024 </span>            :    #endif</a>
 <a name="1025"><span class="lineNum">    1025 </span>            :     {</a>
-<a name="1026"><span class="lineNum">    1026 </span><span class="lineCov">         48 :         f = juce::File (value);</span></a>
+<a name="1026"><span class="lineNum">    1026 </span><span class="lineCov">         80 :         f = juce::File (value);</span></a>
 <a name="1027"><span class="lineNum">    1027 </span>            :     }</a>
 <a name="1028"><span class="lineNum">    1028 </span>            : </a>
-<a name="1029"><span class="lineNum">    1029 </span><span class="lineCov">         24 :     if (f.existsAsFile()</span></a>
+<a name="1029"><span class="lineNum">    1029 </span><span class="lineCov">         40 :     if (f.existsAsFile()</span></a>
 <a name="1030"><span class="lineNum">    1030 </span>            :         #if JUCE_MODAL_LOOPS_PERMITTED</a>
 <a name="1031"><span class="lineNum">    1031 </span><span class="lineNoCov">          0 :           &amp;&amp; canPromptToOverwriteExisting</span></a>
-<a name="1032"><span class="lineNum">    1032 </span><span class="lineCov">         48 :           &amp;&amp; engine.getUIBehaviour().showOkCancelAlertBox (TRANS(&quot;File Already Exists&quot;),</span></a>
+<a name="1032"><span class="lineNum">    1032 </span><span class="lineCov">         80 :           &amp;&amp; engine.getUIBehaviour().showOkCancelAlertBox (TRANS(&quot;File Already Exists&quot;),</span></a>
 <a name="1033"><span class="lineNum">    1033 </span><span class="lineNoCov">          0 :                                                            TRANS(&quot;The file you have chosen already exists, do you want to delete it?&quot;)</span></a>
-<a name="1034"><span class="lineNum">    1034 </span><span class="lineCov">         24 :                                                              + juce::newLine + juce::newLine</span></a>
-<a name="1035"><span class="lineNum">    1035 </span><span class="lineCov">         48 :                                                              + TRANS(&quot;If you choose to cancel, a non existent file name will be chosen automatically.&quot;)</span></a>
-<a name="1036"><span class="lineNum">    1036 </span><span class="lineCov">         24 :                                                              + juce::newLine</span></a>
-<a name="1037"><span class="lineNum">    1037 </span><span class="lineCov">         48 :                                                              + &quot;(&quot; + TRANS(&quot;This operation can't be undone&quot;) + &quot;)&quot;)</span></a>
+<a name="1034"><span class="lineNum">    1034 </span><span class="lineCov">         40 :                                                              + juce::newLine + juce::newLine</span></a>
+<a name="1035"><span class="lineNum">    1035 </span><span class="lineCov">         80 :                                                              + TRANS(&quot;If you choose to cancel, a non existent file name will be chosen automatically.&quot;)</span></a>
+<a name="1036"><span class="lineNum">    1036 </span><span class="lineCov">         40 :                                                              + juce::newLine</span></a>
+<a name="1037"><span class="lineNum">    1037 </span><span class="lineCov">         80 :                                                              + &quot;(&quot; + TRANS(&quot;This operation can't be undone&quot;) + &quot;)&quot;)</span></a>
 <a name="1038"><span class="lineNum">    1038 </span>            :          #endif</a>
 <a name="1039"><span class="lineNum">    1039 </span>            :         )</a>
 <a name="1040"><span class="lineNum">    1040 </span>            :     {</a>
@@ -1106,15 +1106,15 @@
 <a name="1044"><span class="lineNum">    1044 </span><span class="lineNoCov">          0 :             f.moveToTrash();</span></a>
 <a name="1045"><span class="lineNum">    1045 </span>            :     }</a>
 <a name="1046"><span class="lineNum">    1046 </span>            : </a>
-<a name="1047"><span class="lineNum">    1047 </span><span class="lineCov">         24 :     destFile = f.getFullPathName();</span></a>
-<a name="1048"><span class="lineNum">    1048 </span><span class="lineCov">         24 :     updateDefaultFilename (nullptr);</span></a>
+<a name="1047"><span class="lineNum">    1047 </span><span class="lineCov">         40 :     destFile = f.getFullPathName();</span></a>
+<a name="1048"><span class="lineNum">    1048 </span><span class="lineCov">         40 :     updateDefaultFilename (nullptr);</span></a>
 <a name="1049"><span class="lineNum">    1049 </span>            : </a>
-<a name="1050"><span class="lineNum">    1050 </span><span class="lineCov">         48 :     if (destFile != juce::File())</span></a>
+<a name="1050"><span class="lineNum">    1050 </span><span class="lineCov">         80 :     if (destFile != juce::File())</span></a>
 <a name="1051"><span class="lineNum">    1051 </span>            :     {</a>
-<a name="1052"><span class="lineNum">    1052 </span><span class="lineCov">         24 :         recent.addFile (destFile);</span></a>
-<a name="1053"><span class="lineNum">    1053 </span><span class="lineCov">         48 :         auto newRecentList = recent.toString();</span></a>
+<a name="1052"><span class="lineNum">    1052 </span><span class="lineCov">         40 :         recent.addFile (destFile);</span></a>
+<a name="1053"><span class="lineNum">    1053 </span><span class="lineCov">         80 :         auto newRecentList = recent.toString();</span></a>
 <a name="1054"><span class="lineNum">    1054 </span>            : </a>
-<a name="1055"><span class="lineNum">    1055 </span><span class="lineCov">         24 :         if (recentList != newRecentList)</span></a>
+<a name="1055"><span class="lineNum">    1055 </span><span class="lineCov">         40 :         if (recentList != newRecentList)</span></a>
 <a name="1056"><span class="lineNum">    1056 </span><span class="lineCov">          1 :             engine.getPropertyStorage().setProperty (SettingID::renderRecentFilesList, newRecentList);</span></a>
 <a name="1057"><span class="lineNum">    1057 </span>            :     }</a>
 <a name="1058"><span class="lineNum">    1058 </span>            : }</a>
@@ -1196,46 +1196,46 @@
 <a name="1134"><span class="lineNum">    1134 </span>            : }</a>
 <a name="1135"><span class="lineNum">    1135 </span>            : </a>
 <a name="1136"><span class="lineNum">    1136 </span>            : //==============================================================================</a>
-<a name="1137"><span class="lineNum">    1137 </span><span class="lineCov">         72 : void RenderOptions::updateHash()</span></a>
+<a name="1137"><span class="lineNum">    1137 </span><span class="lineCov">        120 : void RenderOptions::updateHash()</span></a>
 <a name="1138"><span class="lineNum">    1138 </span>            : {</a>
-<a name="1139"><span class="lineNum">    1139 </span><span class="lineCov">         72 :     hash = (tracks.isEmpty() ? 0 : getTracksHash())</span></a>
-<a name="1140"><span class="lineNum">    1140 </span><span class="lineCov">         72 :            ^ (((HashCode) createMidiFile)        &lt;&lt; 0)</span></a>
-<a name="1141"><span class="lineNum">    1141 </span><span class="lineCov">         72 :            ^ (((HashCode) format)                &lt;&lt; 1)</span></a>
-<a name="1142"><span class="lineNum">    1142 </span><span class="lineCov">         72 :            ^ (((HashCode) stereo)                &lt;&lt; 2)</span></a>
-<a name="1143"><span class="lineNum">    1143 </span><span class="lineCov">         72 :            ^ (((HashCode) sampleRate)            &lt;&lt; 3)</span></a>
-<a name="1144"><span class="lineNum">    1144 </span><span class="lineCov">         72 :            ^ (((HashCode) bitDepth)              &lt;&lt; 4)</span></a>
-<a name="1145"><span class="lineNum">    1145 </span><span class="lineCov">         72 :            ^ (((HashCode) qualityIndex)          &lt;&lt; 5)</span></a>
-<a name="1146"><span class="lineNum">    1146 </span><span class="lineCov">         72 :            ^ (((HashCode) removeSilence)         &lt;&lt; 6)</span></a>
-<a name="1147"><span class="lineNum">    1147 </span><span class="lineCov">         72 :            ^ (((HashCode) normalise)             &lt;&lt; 7)</span></a>
-<a name="1148"><span class="lineNum">    1148 </span><span class="lineCov">         72 :            ^ (((HashCode) dither)                &lt;&lt; 8)</span></a>
-<a name="1149"><span class="lineNum">    1149 </span><span class="lineCov">         72 :            ^ (((HashCode) adjustBasedOnRMS)      &lt;&lt; 9)</span></a>
-<a name="1150"><span class="lineNum">    1150 </span><span class="lineCov">         72 :            ^ ((HashCode) (rmsLevelDb * -4567.2))</span></a>
-<a name="1151"><span class="lineNum">    1151 </span><span class="lineCov">         72 :            ^ ((HashCode) (peakLevelDb * 2453.1))</span></a>
-<a name="1152"><span class="lineNum">    1152 </span><span class="lineCov">         72 :            ^ (((HashCode) markedRegion)          &lt;&lt; 10)</span></a>
-<a name="1153"><span class="lineNum">    1153 </span><span class="lineCov">         72 :            ^ (((HashCode) selectedTracks)        &lt;&lt; 12)</span></a>
-<a name="1154"><span class="lineNum">    1154 </span><span class="lineCov">         72 :            ^ (((HashCode) selectedClips)         &lt;&lt; 12)</span></a>
-<a name="1155"><span class="lineNum">    1155 </span><span class="lineCov">         72 :            ^ (((HashCode) tracksToSeparateFiles) &lt;&lt; 13)</span></a>
-<a name="1156"><span class="lineNum">    1156 </span><span class="lineCov">         72 :            ^ (((HashCode) realTime)              &lt;&lt; 14)</span></a>
-<a name="1157"><span class="lineNum">    1157 </span><span class="lineCov">         72 :            ^ (((HashCode) usePlugins)            &lt;&lt; 15)</span></a>
-<a name="1158"><span class="lineNum">    1158 </span><span class="lineCov">         72 :            ^ (((HashCode) addMetadata)           &lt;&lt; 16);</span></a>
-<a name="1159"><span class="lineNum">    1159 </span><span class="lineCov">         72 : }</span></a>
+<a name="1139"><span class="lineNum">    1139 </span><span class="lineCov">        120 :     hash = (tracks.isEmpty() ? 0 : getTracksHash())</span></a>
+<a name="1140"><span class="lineNum">    1140 </span><span class="lineCov">        120 :            ^ (((HashCode) createMidiFile)        &lt;&lt; 0)</span></a>
+<a name="1141"><span class="lineNum">    1141 </span><span class="lineCov">        120 :            ^ (((HashCode) format)                &lt;&lt; 1)</span></a>
+<a name="1142"><span class="lineNum">    1142 </span><span class="lineCov">        120 :            ^ (((HashCode) stereo)                &lt;&lt; 2)</span></a>
+<a name="1143"><span class="lineNum">    1143 </span><span class="lineCov">        120 :            ^ (((HashCode) sampleRate)            &lt;&lt; 3)</span></a>
+<a name="1144"><span class="lineNum">    1144 </span><span class="lineCov">        120 :            ^ (((HashCode) bitDepth)              &lt;&lt; 4)</span></a>
+<a name="1145"><span class="lineNum">    1145 </span><span class="lineCov">        120 :            ^ (((HashCode) qualityIndex)          &lt;&lt; 5)</span></a>
+<a name="1146"><span class="lineNum">    1146 </span><span class="lineCov">        120 :            ^ (((HashCode) removeSilence)         &lt;&lt; 6)</span></a>
+<a name="1147"><span class="lineNum">    1147 </span><span class="lineCov">        120 :            ^ (((HashCode) normalise)             &lt;&lt; 7)</span></a>
+<a name="1148"><span class="lineNum">    1148 </span><span class="lineCov">        120 :            ^ (((HashCode) dither)                &lt;&lt; 8)</span></a>
+<a name="1149"><span class="lineNum">    1149 </span><span class="lineCov">        120 :            ^ (((HashCode) adjustBasedOnRMS)      &lt;&lt; 9)</span></a>
+<a name="1150"><span class="lineNum">    1150 </span><span class="lineCov">        120 :            ^ ((HashCode) (rmsLevelDb * -4567.2))</span></a>
+<a name="1151"><span class="lineNum">    1151 </span><span class="lineCov">        120 :            ^ ((HashCode) (peakLevelDb * 2453.1))</span></a>
+<a name="1152"><span class="lineNum">    1152 </span><span class="lineCov">        120 :            ^ (((HashCode) markedRegion)          &lt;&lt; 10)</span></a>
+<a name="1153"><span class="lineNum">    1153 </span><span class="lineCov">        120 :            ^ (((HashCode) selectedTracks)        &lt;&lt; 12)</span></a>
+<a name="1154"><span class="lineNum">    1154 </span><span class="lineCov">        120 :            ^ (((HashCode) selectedClips)         &lt;&lt; 12)</span></a>
+<a name="1155"><span class="lineNum">    1155 </span><span class="lineCov">        120 :            ^ (((HashCode) tracksToSeparateFiles) &lt;&lt; 13)</span></a>
+<a name="1156"><span class="lineNum">    1156 </span><span class="lineCov">        120 :            ^ (((HashCode) realTime)              &lt;&lt; 14)</span></a>
+<a name="1157"><span class="lineNum">    1157 </span><span class="lineCov">        120 :            ^ (((HashCode) usePlugins)            &lt;&lt; 15)</span></a>
+<a name="1158"><span class="lineNum">    1158 </span><span class="lineCov">        120 :            ^ (((HashCode) addMetadata)           &lt;&lt; 16);</span></a>
+<a name="1159"><span class="lineNum">    1159 </span><span class="lineCov">        120 : }</span></a>
 <a name="1160"><span class="lineNum">    1160 </span>            : </a>
-<a name="1161"><span class="lineNum">    1161 </span><span class="lineCov">         24 : void RenderOptions::updateFileName()</span></a>
+<a name="1161"><span class="lineNum">    1161 </span><span class="lineCov">         40 : void RenderOptions::updateFileName()</span></a>
 <a name="1162"><span class="lineNum">    1162 </span>            : {</a>
-<a name="1163"><span class="lineNum">    1163 </span><span class="lineCov">         24 :     if (format == midi)</span></a>
-<a name="1164"><span class="lineNum">    1164 </span><span class="lineCov">         48 :         destFile = destFile.withFileExtension (&quot;mid&quot;);</span></a>
+<a name="1163"><span class="lineNum">    1163 </span><span class="lineCov">         40 :     if (format == midi)</span></a>
+<a name="1164"><span class="lineNum">    1164 </span><span class="lineCov">         80 :         destFile = destFile.withFileExtension (&quot;mid&quot;);</span></a>
 <a name="1165"><span class="lineNum">    1165 </span><span class="lineNoCov">          0 :     else if (auto af = getAudioFormat())</span></a>
 <a name="1166"><span class="lineNum">    1166 </span><span class="lineNoCov">          0 :         destFile = destFile.withFileExtension (af-&gt;getFileExtensions()[0]);</span></a>
 <a name="1167"><span class="lineNum">    1167 </span>            :     else</a>
 <a name="1168"><span class="lineNum">    1168 </span><span class="lineNoCov">          0 :         destFile = juce::File();</span></a>
 <a name="1169"><span class="lineNum">    1169 </span>            : </a>
-<a name="1170"><span class="lineNum">    1170 </span><span class="lineCov">         24 :     setFilename (destFile.getFullPathName(), false);</span></a>
-<a name="1171"><span class="lineNum">    1171 </span><span class="lineCov">         24 :     updateHash();</span></a>
-<a name="1172"><span class="lineNum">    1172 </span><span class="lineCov">         24 : }</span></a>
+<a name="1170"><span class="lineNum">    1170 </span><span class="lineCov">         40 :     setFilename (destFile.getFullPathName(), false);</span></a>
+<a name="1171"><span class="lineNum">    1171 </span><span class="lineCov">         40 :     updateHash();</span></a>
+<a name="1172"><span class="lineNum">    1172 </span><span class="lineCov">         40 : }</span></a>
 <a name="1173"><span class="lineNum">    1173 </span>            : </a>
-<a name="1174"><span class="lineNum">    1174 </span><span class="lineCov">         24 : void RenderOptions::updateOptionsForFormat()</span></a>
+<a name="1174"><span class="lineNum">    1174 </span><span class="lineCov">         40 : void RenderOptions::updateOptionsForFormat()</span></a>
 <a name="1175"><span class="lineNum">    1175 </span>            : {</a>
-<a name="1176"><span class="lineNum">    1176 </span><span class="lineCov">         24 :     if (auto af = getAudioFormat())</span></a>
+<a name="1176"><span class="lineNum">    1176 </span><span class="lineCov">         40 :     if (auto af = getAudioFormat())</span></a>
 <a name="1177"><span class="lineNum">    1177 </span>            :     {</a>
 <a name="1178"><span class="lineNum">    1178 </span>            :         // sample rate</a>
 <a name="1179"><span class="lineNum">    1179 </span><span class="lineNoCov">          0 :         auto rates = af-&gt;getPossibleSampleRates();</span></a>
@@ -1272,19 +1272,19 @@
 <a name="1210"><span class="lineNum">    1210 </span><span class="lineNoCov">          0 :         if (! juce::isPositiveAndBelow (qualityIndex.get(), qualities.size()))</span></a>
 <a name="1211"><span class="lineNum">    1211 </span><span class="lineNoCov">          0 :             qualityIndex = 0;</span></a>
 <a name="1212"><span class="lineNum">    1212 </span>            :     }</a>
-<a name="1213"><span class="lineNum">    1213 </span><span class="lineCov">         24 : }</span></a>
+<a name="1213"><span class="lineNum">    1213 </span><span class="lineCov">         40 : }</span></a>
 <a name="1214"><span class="lineNum">    1214 </span>            : </a>
-<a name="1215"><span class="lineNum">    1215 </span><span class="lineCov">         48 : void RenderOptions::updateDefaultFilename (Edit* edit)</span></a>
+<a name="1215"><span class="lineNum">    1215 </span><span class="lineCov">         80 : void RenderOptions::updateDefaultFilename (Edit* edit)</span></a>
 <a name="1216"><span class="lineNum">    1216 </span>            : {</a>
-<a name="1217"><span class="lineNum">    1217 </span><span class="lineCov">         96 :     if (destFile == juce::File()</span></a>
-<a name="1218"><span class="lineNum">    1218 </span><span class="lineCov">         40 :         || destFile.existsAsFile()</span></a>
-<a name="1219"><span class="lineNum">    1219 </span><span class="lineCov">        104 :         || destFile.getFileExtension() != getCurrentFileExtension())</span></a>
+<a name="1217"><span class="lineNum">    1217 </span><span class="lineCov">        160 :     if (destFile == juce::File()</span></a>
+<a name="1218"><span class="lineNum">    1218 </span><span class="lineCov">         56 :         || destFile.existsAsFile()</span></a>
+<a name="1219"><span class="lineNum">    1219 </span><span class="lineCov">        152 :         || destFile.getFileExtension() != getCurrentFileExtension())</span></a>
 <a name="1220"><span class="lineNum">    1220 </span>            :     {</a>
 <a name="1221"><span class="lineNum">    1221 </span>            :         const ProjectItem::Category category = isRender() ? ProjectItem::Category::rendered</a>
 <a name="1222"><span class="lineNum">    1222 </span>            :                                                           : ProjectItem::Category::exports;</a>
-<a name="1223"><span class="lineNum">    1223 </span><span class="lineCov">         48 :         juce::String nameStem;</span></a>
+<a name="1223"><span class="lineNum">    1223 </span><span class="lineCov">         80 :         juce::String nameStem;</span></a>
 <a name="1224"><span class="lineNum">    1224 </span>            : </a>
-<a name="1225"><span class="lineNum">    1225 </span><span class="lineCov">         24 :         if (selectedTracks || selectedClips)</span></a>
+<a name="1225"><span class="lineNum">    1225 </span><span class="lineCov">         40 :         if (selectedTracks || selectedClips)</span></a>
 <a name="1226"><span class="lineNum">    1226 </span>            :         {</a>
 <a name="1227"><span class="lineNum">    1227 </span><span class="lineNoCov">          0 :             if (auto sm = engine.getUIBehaviour().getCurrentlyFocusedSelectionManager())</span></a>
 <a name="1228"><span class="lineNum">    1228 </span>            :             {</a>
@@ -1296,41 +1296,41 @@
 <a name="1234"><span class="lineNum">    1234 </span>            :             }</a>
 <a name="1235"><span class="lineNum">    1235 </span>            :         }</a>
 <a name="1236"><span class="lineNum">    1236 </span>            : </a>
-<a name="1237"><span class="lineNum">    1237 </span><span class="lineCov">         24 :         if (nameStem.trim().isEmpty())</span></a>
+<a name="1237"><span class="lineNum">    1237 </span><span class="lineCov">         40 :         if (nameStem.trim().isEmpty())</span></a>
 <a name="1238"><span class="lineNum">    1238 </span>            :         {</a>
-<a name="1239"><span class="lineNum">    1239 </span><span class="lineCov">         24 :             if (edit == nullptr)</span></a>
+<a name="1239"><span class="lineNum">    1239 </span><span class="lineCov">         40 :             if (edit == nullptr)</span></a>
 <a name="1240"><span class="lineNum">    1240 </span><span class="lineNoCov">          0 :                 edit = engine.getUIBehaviour().getCurrentlyFocusedEdit();</span></a>
 <a name="1241"><span class="lineNum">    1241 </span>            : </a>
-<a name="1242"><span class="lineNum">    1242 </span><span class="lineCov">         24 :             if (edit != nullptr)</span></a>
+<a name="1242"><span class="lineNum">    1242 </span><span class="lineCov">         40 :             if (edit != nullptr)</span></a>
 <a name="1243"><span class="lineNum">    1243 </span>            :             {</a>
-<a name="1244"><span class="lineNum">    1244 </span><span class="lineCov">         24 :                 nameStem = edit-&gt;getName();</span></a>
+<a name="1244"><span class="lineNum">    1244 </span><span class="lineCov">         40 :                 nameStem = edit-&gt;getName();</span></a>
 <a name="1245"><span class="lineNum">    1245 </span>            : </a>
-<a name="1246"><span class="lineNum">    1246 </span><span class="lineCov">         24 :                 if (isTrackRender() &amp;&amp; tracks.size() &gt; 0)</span></a>
+<a name="1246"><span class="lineNum">    1246 </span><span class="lineCov">         40 :                 if (isTrackRender() &amp;&amp; tracks.size() &gt; 0)</span></a>
 <a name="1247"><span class="lineNum">    1247 </span><span class="lineNoCov">          0 :                     if (auto t = findTrackForID (*edit, tracks[0]))</span></a>
 <a name="1248"><span class="lineNum">    1248 </span><span class="lineNoCov">          0 :                         nameStem += &quot; &quot; + t-&gt;getName();</span></a>
 <a name="1249"><span class="lineNum">    1249 </span>            : </a>
-<a name="1250"><span class="lineNum">    1250 </span><span class="lineCov">         48 :                 nameStem += &quot; &quot; + (category == ProjectItem::Category::exports ? TRANS(&quot;Export&quot;)</span></a>
-<a name="1251"><span class="lineNum">    1251 </span><span class="lineCov">         24 :                                                                               : TRANS(&quot;Render&quot;)) + &quot; 1&quot;;</span></a>
+<a name="1250"><span class="lineNum">    1250 </span><span class="lineCov">         80 :                 nameStem += &quot; &quot; + (category == ProjectItem::Category::exports ? TRANS(&quot;Export&quot;)</span></a>
+<a name="1251"><span class="lineNum">    1251 </span><span class="lineCov">         40 :                                                                               : TRANS(&quot;Render&quot;)) + &quot; 1&quot;;</span></a>
 <a name="1252"><span class="lineNum">    1252 </span>            :             }</a>
 <a name="1253"><span class="lineNum">    1253 </span>            :         }</a>
 <a name="1254"><span class="lineNum">    1254 </span>            : </a>
-<a name="1255"><span class="lineNum">    1255 </span><span class="lineCov">         24 :         const auto dir = destFile.existsAsFile() ? destFile.getParentDirectory()</span></a>
-<a name="1256"><span class="lineNum">    1256 </span><span class="lineCov">         24 :                                                  : engine.getPropertyStorage().getDefaultLoadSaveDirectory (category);</span></a>
+<a name="1255"><span class="lineNum">    1255 </span><span class="lineCov">         40 :         const auto dir = destFile.existsAsFile() ? destFile.getParentDirectory()</span></a>
+<a name="1256"><span class="lineNum">    1256 </span><span class="lineCov">         40 :                                                  : engine.getPropertyStorage().getDefaultLoadSaveDirectory (category);</span></a>
 <a name="1257"><span class="lineNum">    1257 </span>            : </a>
-<a name="1258"><span class="lineNum">    1258 </span><span class="lineCov">         48 :         destFile = dir.getChildFile (juce::File::createLegalFileName (nameStem)</span></a>
-<a name="1259"><span class="lineNum">    1259 </span><span class="lineCov">         96 :                                        + getCurrentFileExtension());</span></a>
+<a name="1258"><span class="lineNum">    1258 </span><span class="lineCov">         80 :         destFile = dir.getChildFile (juce::File::createLegalFileName (nameStem)</span></a>
+<a name="1259"><span class="lineNum">    1259 </span><span class="lineCov">        160 :                                        + getCurrentFileExtension());</span></a>
 <a name="1260"><span class="lineNum">    1260 </span>            : </a>
-<a name="1261"><span class="lineNum">    1261 </span><span class="lineCov">         48 :         destFile = getNonExistentSiblingWithIncrementedNumberSuffix (destFile, false);</span></a>
+<a name="1261"><span class="lineNum">    1261 </span><span class="lineCov">         80 :         destFile = getNonExistentSiblingWithIncrementedNumberSuffix (destFile, false);</span></a>
 <a name="1262"><span class="lineNum">    1262 </span>            :     }</a>
-<a name="1263"><span class="lineNum">    1263 </span><span class="lineCov">         48 : }</span></a>
+<a name="1263"><span class="lineNum">    1263 </span><span class="lineCov">         80 : }</span></a>
 <a name="1264"><span class="lineNum">    1264 </span>            : </a>
-<a name="1265"><span class="lineNum">    1265 </span><span class="lineCov">         64 : juce::String RenderOptions::getCurrentFileExtension()</span></a>
+<a name="1265"><span class="lineNum">    1265 </span><span class="lineCov">         96 : juce::String RenderOptions::getCurrentFileExtension()</span></a>
 <a name="1266"><span class="lineNum">    1266 </span>            : {</a>
-<a name="1267"><span class="lineNum">    1267 </span><span class="lineCov">         64 :     if (format == midi)</span></a>
-<a name="1268"><span class="lineNum">    1268 </span><span class="lineCov">         24 :         return &quot;.mid&quot;;</span></a>
+<a name="1267"><span class="lineNum">    1267 </span><span class="lineCov">         96 :     if (format == midi)</span></a>
+<a name="1268"><span class="lineNum">    1268 </span><span class="lineCov">         40 :         return &quot;.mid&quot;;</span></a>
 <a name="1269"><span class="lineNum">    1269 </span>            : </a>
-<a name="1270"><span class="lineNum">    1270 </span><span class="lineCov">         40 :     if (auto af = getAudioFormat())</span></a>
-<a name="1271"><span class="lineNum">    1271 </span><span class="lineCov">         80 :         return af-&gt;getFileExtensions()[0];</span></a>
+<a name="1270"><span class="lineNum">    1270 </span><span class="lineCov">         56 :     if (auto af = getAudioFormat())</span></a>
+<a name="1271"><span class="lineNum">    1271 </span><span class="lineCov">        112 :         return af-&gt;getFileExtensions()[0];</span></a>
 <a name="1272"><span class="lineNum">    1272 </span>            : </a>
 <a name="1273"><span class="lineNum">    1273 </span><span class="lineNoCov">          0 :     return {};</span></a>
 <a name="1274"><span class="lineNum">    1274 </span>            : }</a>

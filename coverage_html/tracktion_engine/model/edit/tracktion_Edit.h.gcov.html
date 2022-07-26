@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-07-21 15:16:39</td>
+            <td class="headerValue">2022-07-26 10:23:50</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">3</td>
@@ -207,7 +207,7 @@
 <a name="145"><span class="lineNum">     145 </span>            :     EditRole getEditRole() const noexcept   { return editRole; }</a>
 <a name="146"><span class="lineNum">     146 </span>            :     </a>
 <a name="147"><span class="lineNum">     147 </span>            :     /** Returns true if this Edit should be played back (or false if it was just opened for inspection). */</a>
-<a name="148"><span class="lineNum">     148 </span><span class="lineCov">        784 :     bool shouldPlay() const noexcept        { return (editRole &amp; playDisabled) == 0; }</span></a>
+<a name="148"><span class="lineNum">     148 </span><span class="lineCov">        834 :     bool shouldPlay() const noexcept        { return (editRole &amp; playDisabled) == 0; }</span></a>
 <a name="149"><span class="lineNum">     149 </span>            : </a>
 <a name="150"><span class="lineNum">     150 </span>            :     /** Returns true if this Edit can render proxy files. */</a>
 <a name="151"><span class="lineNum">     151 </span><span class="lineCov">        594 :     bool canRenderProxies() const noexcept  { return (editRole &amp; proxiesDisabled) == 0; }</span></a>
@@ -351,7 +351,7 @@
 <a name="289"><span class="lineNum">     289 </span>            : </a>
 <a name="290"><span class="lineNum">     290 </span>            :     //==============================================================================</a>
 <a name="291"><span class="lineNum">     291 </span>            :     /** Returns the juce::UndoManager used for this Edit. */</a>
-<a name="292"><span class="lineNum">     292 </span><span class="lineCov">      22407 :     juce::UndoManager&amp; getUndoManager() noexcept                { return undoManager; }</span></a>
+<a name="292"><span class="lineNum">     292 </span><span class="lineCov">      23655 :     juce::UndoManager&amp; getUndoManager() noexcept                { return undoManager; }</span></a>
 <a name="293"><span class="lineNum">     293 </span>            : </a>
 <a name="294"><span class="lineNum">     294 </span>            :     /** Undoes the most recent changes made. */</a>
 <a name="295"><span class="lineNum">     295 </span>            :     void undo();</a>
@@ -598,10 +598,10 @@
 <a name="536"><span class="lineNum">     536 </span>            :     /** Returns the master volume AutomatableParameter.</a>
 <a name="537"><span class="lineNum">     537 </span>            :         N.B. this is in slider position, not dB</a>
 <a name="538"><span class="lineNum">     538 </span>            :     */</a>
-<a name="539"><span class="lineNum">     539 </span><span class="lineCov">        410 :     AutomatableParameter::Ptr getMasterSliderPosParameter() const       { jassert (masterVolumePlugin != nullptr); return masterVolumePlugin-&gt;volParam; }</span></a>
+<a name="539"><span class="lineNum">     539 </span><span class="lineCov">        442 :     AutomatableParameter::Ptr getMasterSliderPosParameter() const       { jassert (masterVolumePlugin != nullptr); return masterVolumePlugin-&gt;volParam; }</span></a>
 <a name="540"><span class="lineNum">     540 </span>            : </a>
 <a name="541"><span class="lineNum">     541 </span>            :     /** Returns the master pan AutomatableParameter. */</a>
-<a name="542"><span class="lineNum">     542 </span><span class="lineCov">        410 :     AutomatableParameter::Ptr getMasterPanParameter() const             { jassert (masterVolumePlugin != nullptr); return masterVolumePlugin-&gt;panParam; }</span></a>
+<a name="542"><span class="lineNum">     542 </span><span class="lineCov">        442 :     AutomatableParameter::Ptr getMasterPanParameter() const             { jassert (masterVolumePlugin != nullptr); return masterVolumePlugin-&gt;panParam; }</span></a>
 <a name="543"><span class="lineNum">     543 </span>            : </a>
 <a name="544"><span class="lineNum">     544 </span>            :     /** Sets the master volume level.</a>
 <a name="545"><span class="lineNum">     545 </span>            :         N.B. this is in slider position, not dB</a>
@@ -736,7 +736,7 @@
 <a name="674"><span class="lineNum">     674 </span>            :     /** Invalidates the stored length so the next call to getLength will update form the Edit contents.</a>
 <a name="675"><span class="lineNum">     675 </span>            :         You shouldn't normally need to call this as it will happen automatically as clips are added/removed.</a>
 <a name="676"><span class="lineNum">     676 </span>            :     */</a>
-<a name="677"><span class="lineNum">     677 </span><span class="lineCov">       1535 :     void invalidateStoredLength() noexcept              { totalEditLength = {}; }</span></a>
+<a name="677"><span class="lineNum">     677 </span><span class="lineCov">       1679 :     void invalidateStoredLength() noexcept              { totalEditLength = {}; }</span></a>
 <a name="678"><span class="lineNum">     678 </span>            : </a>
 <a name="679"><span class="lineNum">     679 </span>            :     /** If there's a change to send out to the listeners, do it now rather than</a>
 <a name="680"><span class="lineNum">     680 </span>            :         waiting for the next timer message.</a>
@@ -785,19 +785,19 @@
 <a name="723"><span class="lineNum">     723 </span>            :     template&lt;typename OwnerType&gt;</a>
 <a name="724"><span class="lineNum">     724 </span>            :     struct LoadFinishedCallback   : public Timer</a>
 <a name="725"><span class="lineNum">     725 </span>            :     {</a>
-<a name="726"><span class="lineNum">     726 </span><span class="lineCov">        839 :         LoadFinishedCallback (OwnerType&amp; o, Edit&amp; e)</span></a>
-<a name="727"><span class="lineNum">     727 </span><span class="lineCov">        839 :             : owner (o), edit (e)</span></a>
+<a name="726"><span class="lineNum">     726 </span><span class="lineCov">        903 :         LoadFinishedCallback (OwnerType&amp; o, Edit&amp; e)</span></a>
+<a name="727"><span class="lineNum">     727 </span><span class="lineCov">        903 :             : owner (o), edit (e)</span></a>
 <a name="728"><span class="lineNum">     728 </span>            :         {</a>
-<a name="729"><span class="lineNum">     729 </span><span class="lineCov">        839 :             startTimer (10);</span></a>
+<a name="729"><span class="lineNum">     729 </span><span class="lineCov">        903 :             startTimer (10);</span></a>
 <a name="730"><span class="lineNum">     730 </span>            :         }</a>
 <a name="731"><span class="lineNum">     731 </span>            : </a>
-<a name="732"><span class="lineNum">     732 </span><span class="lineCov">        105 :         void timerCallback() override</span></a>
+<a name="732"><span class="lineNum">     732 </span><span class="lineCov">        169 :         void timerCallback() override</span></a>
 <a name="733"><span class="lineNum">     733 </span>            :         {</a>
-<a name="734"><span class="lineNum">     734 </span><span class="lineCov">        105 :             if (edit.isLoading())</span></a>
+<a name="734"><span class="lineNum">     734 </span><span class="lineCov">        169 :             if (edit.isLoading())</span></a>
 <a name="735"><span class="lineNum">     735 </span>            :                 return;</a>
 <a name="736"><span class="lineNum">     736 </span>            : </a>
-<a name="737"><span class="lineNum">     737 </span><span class="lineCov">        105 :             stopTimer();</span></a>
-<a name="738"><span class="lineNum">     738 </span><span class="lineCov">        105 :             owner.editFinishedLoading();</span></a>
+<a name="737"><span class="lineNum">     737 </span><span class="lineCov">        169 :             stopTimer();</span></a>
+<a name="738"><span class="lineNum">     738 </span><span class="lineCov">        169 :             owner.editFinishedLoading();</span></a>
 <a name="739"><span class="lineNum">     739 </span>            :         }</a>
 <a name="740"><span class="lineNum">     740 </span>            : </a>
 <a name="741"><span class="lineNum">     741 </span>            :         OwnerType&amp; owner;</a>

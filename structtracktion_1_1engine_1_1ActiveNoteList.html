@@ -85,6 +85,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a863b72f9fd6fae06f0ee565baa6a9738"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a03d6d68e11b96df80fb03217d222ee6f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1ActiveNoteList.html#a03d6d68e11b96df80fb03217d222ee6f">clearNote</a> (int channel, int note) noexcept</td></tr>
 <tr class="separator:a03d6d68e11b96df80fb03217d222ee6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4d514ba72bbc4a8c5308a0b8bf6d5e7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1ActiveNoteList.html#ac4d514ba72bbc4a8c5308a0b8bf6d5e7">areAnyNotesActive</a> () const noexcept</td></tr>
+<tr class="separator:ac4d514ba72bbc4a8c5308a0b8bf6d5e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab9158fc2b8a4f1e8d23de9214292680c"><td class="memTemplParams" colspan="2">template&lt;typename Visitor &gt; </td></tr>
 <tr class="memitem:ab9158fc2b8a4f1e8d23de9214292680c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1ActiveNoteList.html#ab9158fc2b8a4f1e8d23de9214292680c">iterate</a> (Visitor &amp;&amp;v) const noexcept</td></tr>
 <tr class="separator:ab9158fc2b8a4f1e8d23de9214292680c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -241,6 +243,33 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="ac4d514ba72bbc4a8c5308a0b8bf6d5e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4d514ba72bbc4a8c5308a0b8bf6d5e7">&#9670;&nbsp;</a></span>areAnyNotesActive()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::ActiveNoteList::areAnyNotesActive </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="structtracktion_1_1engine_1_1ActiveNoteList.html#aeba8c2f635506fd9f9643c052c938989">activeChannels</a>.</p>
+
+</div>
+</div>
 <a id="ab9158fc2b8a4f1e8d23de9214292680c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab9158fc2b8a4f1e8d23de9214292680c">&#9670;&nbsp;</a></span>iterate()</h2>
 
@@ -324,7 +353,7 @@ template&lt;typename Visitor &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="structtracktion_1_1engine_1_1ActiveNoteList.html#a03d6d68e11b96df80fb03217d222ee6f">clearNote()</a>, <a class="el" href="structtracktion_1_1engine_1_1ActiveNoteList.html#ac25e2e37e44b8cc241288c2fa39b7edb">isNoteActive()</a>, <a class="el" href="structtracktion_1_1engine_1_1ActiveNoteList.html#ab9158fc2b8a4f1e8d23de9214292680c">iterate()</a>, <a class="el" href="structtracktion_1_1engine_1_1ActiveNoteList.html#a73f9423e49714fe3138bd4f9fc0491dd">reset()</a>, and <a class="el" href="structtracktion_1_1engine_1_1ActiveNoteList.html#a863b72f9fd6fae06f0ee565baa6a9738">startNote()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="structtracktion_1_1engine_1_1ActiveNoteList.html#ac4d514ba72bbc4a8c5308a0b8bf6d5e7">areAnyNotesActive()</a>, <a class="el" href="structtracktion_1_1engine_1_1ActiveNoteList.html#a03d6d68e11b96df80fb03217d222ee6f">clearNote()</a>, <a class="el" href="structtracktion_1_1engine_1_1ActiveNoteList.html#ac25e2e37e44b8cc241288c2fa39b7edb">isNoteActive()</a>, <a class="el" href="structtracktion_1_1engine_1_1ActiveNoteList.html#ab9158fc2b8a4f1e8d23de9214292680c">iterate()</a>, <a class="el" href="structtracktion_1_1engine_1_1ActiveNoteList.html#a73f9423e49714fe3138bd4f9fc0491dd">reset()</a>, and <a class="el" href="structtracktion_1_1engine_1_1ActiveNoteList.html#a863b72f9fd6fae06f0ee565baa6a9738">startNote()</a>.</p>
 
 </div>
 </div>
@@ -334,7 +363,7 @@ template&lt;typename Visitor &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jul 21 2022 15:04:48 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Jul 26 2022 10:08:54 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

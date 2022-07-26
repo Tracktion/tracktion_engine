@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-07-21 15:16:39</td>
+            <td class="headerValue">2022-07-26 10:23:50</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">13</td>
@@ -301,10 +301,10 @@
 <a name="239"><span class="lineNum">     239 </span>            :     hostedAudioDeviceInterface.reset();</a>
 <a name="240"><span class="lineNum">     240 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="241"><span class="lineNum">     241 </span>            : </a>
-<a name="242"><span class="lineNum">     242 </span><span class="lineCov">        638 : juce::String DeviceManager::getDefaultAudioOutDeviceName (bool translated)</span></a>
+<a name="242"><span class="lineNum">     242 </span><span class="lineCov">        670 : juce::String DeviceManager::getDefaultAudioOutDeviceName (bool translated)</span></a>
 <a name="243"><span class="lineNum">     243 </span>            : {</a>
-<a name="244"><span class="lineNum">     244 </span><span class="lineCov">        638 :     return translated ? (&quot;(&quot; + TRANS(&quot;Default audio output&quot;) + &quot;)&quot;)</span></a>
-<a name="245"><span class="lineNum">     245 </span><span class="lineCov">       1276 :                       : &quot;(default audio output)&quot;;</span></a>
+<a name="244"><span class="lineNum">     244 </span><span class="lineCov">        670 :     return translated ? (&quot;(&quot; + TRANS(&quot;Default audio output&quot;) + &quot;)&quot;)</span></a>
+<a name="245"><span class="lineNum">     245 </span><span class="lineCov">       1340 :                       : &quot;(default audio output)&quot;;</span></a>
 <a name="246"><span class="lineNum">     246 </span>            : }</a>
 <a name="247"><span class="lineNum">     247 </span>            : </a>
 <a name="248"><span class="lineNum">     248 </span><span class="lineCov">         24 : juce::String DeviceManager::getDefaultMidiOutDeviceName (bool translated)</span></a>
@@ -870,9 +870,9 @@
 <a name="808"><span class="lineNum">     808 </span>            :     }</a>
 <a name="809"><span class="lineNum">     809 </span>            : }</a>
 <a name="810"><span class="lineNum">     810 </span>            : </a>
-<a name="811"><span class="lineNum">     811 </span><span class="lineCov">         26 : double DeviceManager::getSampleRate() const</span></a>
+<a name="811"><span class="lineNum">     811 </span><span class="lineCov">         42 : double DeviceManager::getSampleRate() const</span></a>
 <a name="812"><span class="lineNum">     812 </span>            : {</a>
-<a name="813"><span class="lineNum">     813 </span><span class="lineCov">        188 :     if (auto device = deviceManager.getCurrentAudioDevice())</span></a>
+<a name="813"><span class="lineNum">     813 </span><span class="lineCov">        204 :     if (auto device = deviceManager.getCurrentAudioDevice())</span></a>
 <a name="814"><span class="lineNum">     814 </span><span class="lineNoCov">          0 :         return device-&gt;getCurrentSampleRate();</span></a>
 <a name="815"><span class="lineNum">     815 </span>            : </a>
 <a name="816"><span class="lineNum">     816 </span>            :     return 44100;</a>
@@ -886,9 +886,9 @@
 <a name="824"><span class="lineNum">     824 </span>            :     return 16;</a>
 <a name="825"><span class="lineNum">     825 </span>            : }</a>
 <a name="826"><span class="lineNum">     826 </span>            : </a>
-<a name="827"><span class="lineNum">     827 </span><span class="lineCov">         30 : int DeviceManager::getBlockSize() const</span></a>
+<a name="827"><span class="lineNum">     827 </span><span class="lineCov">         46 : int DeviceManager::getBlockSize() const</span></a>
 <a name="828"><span class="lineNum">     828 </span>            : {</a>
-<a name="829"><span class="lineNum">     829 </span><span class="lineCov">        346 :     if (auto device = deviceManager.getCurrentAudioDevice())</span></a>
+<a name="829"><span class="lineNum">     829 </span><span class="lineCov">        362 :     if (auto device = deviceManager.getCurrentAudioDevice())</span></a>
 <a name="830"><span class="lineNum">     830 </span><span class="lineNoCov">          0 :         return device-&gt;getCurrentBufferSizeSamples();</span></a>
 <a name="831"><span class="lineNum">     831 </span>            : </a>
 <a name="832"><span class="lineNum">     832 </span>            :     return 256;</a>

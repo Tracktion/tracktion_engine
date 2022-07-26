@@ -6884,6 +6884,13 @@
       <arglist>(int channel, int note) noexcept</arglist>
     </member>
     <member kind="function">
+      <type>bool</type>
+      <name>areAnyNotesActive</name>
+      <anchorfile>structtracktion_1_1engine_1_1ActiveNoteList.html</anchorfile>
+      <anchor>ac4d514ba72bbc4a8c5308a0b8bf6d5e7</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
       <type>void</type>
       <name>iterate</name>
       <anchorfile>structtracktion_1_1engine_1_1ActiveNoteList.html</anchorfile>
