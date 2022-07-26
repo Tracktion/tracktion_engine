@@ -82,6 +82,18 @@ static juce::StringArray getMidiDeviceNames (juce::Array<juce::MidiDeviceInfo> d
 }
 
 //==============================================================================
+TracktionEngineAudioDeviceManager::TracktionEngineAudioDeviceManager (Engine& e)
+    : engine (e)
+{
+}
+
+void TracktionEngineAudioDeviceManager::createAudioDeviceTypes (juce::OwnedArray<juce::AudioIODeviceType>& types)
+{
+    if (engine.getEngineBehaviour().addSystemAudioIODeviceTypes())
+        juce::AudioDeviceManager::createAudioDeviceTypes (types);
+}
+
+//==============================================================================
 struct DeviceManager::WaveDeviceList
 {
     WaveDeviceList (DeviceManager& dm_) : dm (dm_)

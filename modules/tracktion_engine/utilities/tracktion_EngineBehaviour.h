@@ -94,9 +94,15 @@ public:
       */
     virtual bool canScanPluginsOutOfProcess()                                       { return false; }
 
-    // You may want to disable auto initialisation of the device manager if you
-    // are using the engine in a plugin
+    /** You may want to disable auto initialisation of the device manager if you
+        are using the engine in a plugin.
+    */
     virtual bool autoInitialiseDeviceManager()                                      { return true; }
+
+    /** In plugin builds, you might want to avoid adding the system audio devices
+        and only use the host inputs.
+    */
+    virtual bool addSystemAudioIODeviceTypes()                                      { return true; }
 
     // some debate surrounds whether middle-C is C3, C4 or C5. In Tracktion we
     // default this value to 4
