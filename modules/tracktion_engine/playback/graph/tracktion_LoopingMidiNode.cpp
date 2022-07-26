@@ -1143,18 +1143,29 @@ public:
         const auto volScale = clipLevel.getGain();
         const auto isLastBlockOfClip = sectionEditBeatRange.containsInclusive (editRange.getEnd());
         const double beatDurationOfOneSample = sectionEditBeatRange.getLength().inBeats() / numSamples;
+        const auto timeDurationOfOneSample = sectionEditTimeRange.getLength() / numSamples;
+        assert (timeDurationOfOneSample >= 10us);
 
         const auto clipIntersection = sectionEditBeatRange.getIntersectionWith (editRange);
 
         if (clipIntersection.isEmpty())
+        {
+            if (activeNoteList->areAnyNotesActive())
+                MidiHelpers::createNoteOffs (*activeNoteList,
+                                             destBuffer,
+                                             midiSourceID,
+                                             (sectionEditTimeRange.getLength() - timeDurationOfOneSample).inSeconds(),
+                                             isPlaying);
+
             return;
+        }
 
         if (shouldSendNoteOffs)
         {
             MidiHelpers::createNoteOffs (*activeNoteList,
                                          destBuffer,
                                          midiSourceID,
-                                         (sectionEditTimeRange.getLength() - 10us).inSeconds(),
+                                         (sectionEditTimeRange.getLength() - timeDurationOfOneSample).inSeconds(),
                                          isPlaying);
             shouldSendNoteOffs = false;
             shouldCreateMessagesForTime = true;
@@ -1220,13 +1231,16 @@ public:
             MidiHelpers::createNoteOffs (*activeNoteList,
                                          destBuffer,
                                          midiSourceID,
-                                         (sectionEditTimeRange.getLength() - 10us).inSeconds(),
+                                         (sectionEditTimeRange.getLength() - timeDurationOfOneSample).inSeconds(),
                                          isPlaying);
 
         if (isLastBlockOfClip)
         {
             const auto endOfClipBeats = editRange.getEnd() - sectionEditBeatRange.getStart();
-            const auto eventTimeSeconds = endOfClipBeats.inBeats() * secondsPerBeat.inSeconds();
+
+            // If the section ends right at the end of the clip, we need to nudge the note-offs back so they get played in this buffer
+            auto eventTimeSeconds = (endOfClipBeats.inBeats() - beatDurationOfOneSample) * secondsPerBeat.inSeconds();
+
             MidiHelpers::createNoteOffs (*activeNoteList,
                                          destBuffer,
                                          midiSourceID,

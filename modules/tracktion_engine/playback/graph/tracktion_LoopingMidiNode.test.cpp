@@ -33,6 +33,9 @@ public:
                         .replace ("RND", setup.randomiseBlockSizes ? "Y" : "N"));
 
             runMidiTests (setup);
+
+            runStuckNotesTests (setup, true);
+            runStuckNotesTests (setup, false);
         }
     }
 
@@ -83,6 +86,36 @@ private:
         testMidiClip (*mc, ts);
     }
 
+    void runStuckNotesTests (test_utilities::TestSetup ts, bool usesProxy)
+    {
+        beginTest ("Stuck notes");
+
+        // Create an empty edit
+        // Add a MIDI clip with 8 notes 1 beat each
+        // Render that clip and ensure there is no note after beat 8
+
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
+        auto edit = Edit::createSingleTrackEdit (engine);
+        auto mc = getAudioTracks (*edit)[0]->insertMIDIClip ({ 0_tp, 0_tp }, nullptr);
+        auto& sequence = mc->getSequence();
+
+        for (int i = 0; i < 8; ++i)
+            sequence.addNote (40 + i, BeatPosition::fromBeats (i), 1_bd, 127, 0, nullptr);
+
+        mc->setUsesProxy (usesProxy);
+        mc->setLoopRangeBeats ({ sequence.getFirstBeatNumber(), sequence.getLastBeatNumber() });
+        mc->setEnd (edit->tempoSequence.toTime (sequence.getLastBeatNumber()), true);
+
+        std::vector<juce::MidiMessage> noteEvents;
+
+        for (auto meh : renderMidiClip (*mc, ts, { 0_tp, 100_tp }))
+             if (meh->message.isNoteOnOrOff())
+                noteEvents.push_back (meh->message);
+
+        // Check the last note ends before the end of the clip
+        expectLessOrEqual (noteEvents.back().getTimeStamp(), mc->getPosition().getEnd().inSeconds());
+    }
+
     void testMidiClip (MidiClip& mc, test_utilities::TestSetup ts)
     {
         auto renderOpts = RenderOptions::forClipRender ({ &mc }, true);
@@ -107,6 +140,24 @@ private:
         test_utilities::expectMidiMessageSequence (*this, getSeqFromFile (seqWithProxyFile), getSeqFromFile (seqWithProxyFile));
     }
 
+    juce::MidiMessageSequence renderMidiClip (MidiClip& mc, test_utilities::TestSetup ts,
+                                              TimeRange rangeToRender)
+    {
+        auto renderOpts = RenderOptions::forClipRender ({ &mc }, true);
+        renderOpts->setFormat (RenderOptions::midi);
+        renderOpts->setIncludePlugins (false);
+        auto params = renderOpts->getRenderParameters (mc);
+        params.sampleRateForAudio = ts.sampleRate;
+        params.blockSizeForAudio = ts.blockSize;
+        params.time = rangeToRender;
+
+        juce::TemporaryFile t1;
+        params.destFile = t1.getFile();
+        const auto seqFile = Renderer::renderToFile ("proxy", params);
+
+        return getSeqFromFile (seqFile);
+    }
+
     static juce::MidiMessageSequence getSeqFromFile (juce::File f)
     {
         juce::MidiFile midiFile;
@@ -117,6 +168,8 @@ private:
             if (! in.openedOk() || ! midiFile.readFrom (in))
                 return {};
         }
+
+        midiFile.convertTimestampTicksToSeconds();
 
         // Track 0 contains meta events from the tempo track etc.
         return *midiFile.getTrack (1);
