@@ -220,8 +220,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a36b47f2a4163af149ba36f6ecf284f43"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a36b47f2a4163af149ba36f6ecf284f43">reloadAllContextDevices</a> ()</td></tr>
 <tr class="separator:a36b47f2a4163af149ba36f6ecf284f43"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6b87ec7ece6ecaa44b6f61bd90e2424"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#af6b87ec7ece6ecaa44b6f61bd90e2424">setGlobalOutputAudioProcessor</a> (juce::AudioProcessor *)</td></tr>
+<tr class="memdesc:af6b87ec7ece6ecaa44b6f61bd90e2424"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a global processor to be applied to the output.  <a href="classtracktion_1_1engine_1_1DeviceManager.html#af6b87ec7ece6ecaa44b6f61bd90e2424">More...</a><br /></td></tr>
 <tr class="separator:af6b87ec7ece6ecaa44b6f61bd90e2424"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac04ddb52b0f3cee4dbd8f88023456d26"><td class="memItemLeft" align="right" valign="top">juce::AudioProcessor *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#ac04ddb52b0f3cee4dbd8f88023456d26">getGlobalOutputAudioProcessor</a> () const</td></tr>
+<tr class="memdesc:ac04ddb52b0f3cee4dbd8f88023456d26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a previously set globalOutputAudioProcessor.  <a href="classtracktion_1_1engine_1_1DeviceManager.html#ac04ddb52b0f3cee4dbd8f88023456d26">More...</a><br /></td></tr>
 <tr class="separator:ac04ddb52b0f3cee4dbd8f88023456d26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
@@ -237,10 +239,12 @@ Static Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
+<tr class="memitem:abb186390b8724c5ec565c0d4daa2dcb2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1Engine.html">Engine</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#abb186390b8724c5ec565c0d4daa2dcb2">engine</a></td></tr>
+<tr class="separator:abb186390b8724c5ec565c0d4daa2dcb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab67d28f80a498f38ef38580ab6a0601d"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classtracktion_1_1engine_1_1HostedAudioDeviceInterface.html">HostedAudioDeviceInterface</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#ab67d28f80a498f38ef38580ab6a0601d">hostedAudioDeviceInterface</a></td></tr>
 <tr class="separator:ab67d28f80a498f38ef38580ab6a0601d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1d46be55e9f505ec63994878745bc235"><td class="memItemLeft" align="right" valign="top">juce::AudioDeviceManager&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a1d46be55e9f505ec63994878745bc235">deviceManager</a></td></tr>
-<tr class="separator:a1d46be55e9f505ec63994878745bc235"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4cbd2ecb27149e3ac4fe90752f5561d2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1TracktionEngineAudioDeviceManager.html">TracktionEngineAudioDeviceManager</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a4cbd2ecb27149e3ac4fe90752f5561d2">deviceManager</a> { <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#abb186390b8724c5ec565c0d4daa2dcb2">engine</a> }</td></tr>
+<tr class="separator:a4cbd2ecb27149e3ac4fe90752f5561d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2540ee332880d6f8294e29cd7cc1de15"><td class="memItemLeft" align="right" valign="top">juce::OwnedArray&lt; <a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html">MidiInputDevice</a>, juce::CriticalSection &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a2540ee332880d6f8294e29cd7cc1de15">midiInputs</a></td></tr>
 <tr class="separator:a2540ee332880d6f8294e29cd7cc1de15"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ea74ac643600dc31adbc96dfe79b667"><td class="memItemLeft" align="right" valign="top">juce::OwnedArray&lt; <a class="el" href="classtracktion_1_1engine_1_1MidiOutputDevice.html">MidiOutputDevice</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a1ea74ac643600dc31adbc96dfe79b667">midiOutputs</a></td></tr>
@@ -249,10 +253,9 @@ Public Attributes</h2></td></tr>
 <tr class="separator:af9dcd0cd3c7cfd39fcf4936fe5277dd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad3e2e5007c3888004474ca6177589c84"><td class="memItemLeft" align="right" valign="top">juce::OwnedArray&lt; <a class="el" href="classtracktion_1_1engine_1_1WaveOutputDevice.html">WaveOutputDevice</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#ad3e2e5007c3888004474ca6177589c84">waveOutputs</a></td></tr>
 <tr class="separator:ad3e2e5007c3888004474ca6177589c84"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa27e24f0ea12a0a69db6b881cdb2e2b1"><td class="memItemLeft" align="right" valign="top">std::function&lt; void(<a class="el" href="classtracktion_1_1engine_1_1InputDevice.html">InputDevice</a> *)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#aa27e24f0ea12a0a69db6b881cdb2e2b1">warnOfWastedMidiMessagesFunction</a></td></tr>
-<tr class="separator:aa27e24f0ea12a0a69db6b881cdb2e2b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abb186390b8724c5ec565c0d4daa2dcb2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1Engine.html">Engine</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#abb186390b8724c5ec565c0d4daa2dcb2">engine</a></td></tr>
-<tr class="separator:abb186390b8724c5ec565c0d4daa2dcb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e27cf1e633b2993729a27a9fc4d5062"><td class="memItemLeft" align="right" valign="top">std::function&lt; void(<a class="el" href="classtracktion_1_1engine_1_1InputDevice.html">InputDevice</a> *)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a8e27cf1e633b2993729a27a9fc4d5062">warnOfWastedMidiMessagesFunction</a></td></tr>
+<tr class="memdesc:a8e27cf1e633b2993729a27a9fc4d5062"><td class="mdescLeft">&#160;</td><td class="mdescRight">If this is set, it will get called (possibly on the midi thread) when incoming messages seem to be unused.  <a href="classtracktion_1_1engine_1_1DeviceManager.html#a8e27cf1e633b2993729a27a9fc4d5062">More...</a><br /></td></tr>
+<tr class="separator:a8e27cf1e633b2993729a27a9fc4d5062"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a955f510910509fa35db0d63607c9f6ff"></a>
@@ -1643,6 +1646,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets a global processor to be applied to the output. </p>
+<p>This can be used to set a limiter or similar on the whole ouput. It shouldn't be used for musical effects. </p>
+
 </div>
 </div>
 <a id="ac04ddb52b0f3cee4dbd8f88023456d26"></a>
@@ -1660,9 +1666,25 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns a previously set globalOutputAudioProcessor. </p>
+
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="abb186390b8724c5ec565c0d4daa2dcb2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb186390b8724c5ec565c0d4daa2dcb2">&#9670;&nbsp;</a></span>engine</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1Engine.html">Engine</a>&amp; tracktion::engine::DeviceManager::engine</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ab67d28f80a498f38ef38580ab6a0601d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab67d28f80a498f38ef38580ab6a0601d">&#9670;&nbsp;</a></span>hostedAudioDeviceInterface</h2>
 
@@ -1677,14 +1699,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a1d46be55e9f505ec63994878745bc235"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1d46be55e9f505ec63994878745bc235">&#9670;&nbsp;</a></span>deviceManager</h2>
+<a id="a4cbd2ecb27149e3ac4fe90752f5561d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4cbd2ecb27149e3ac4fe90752f5561d2">&#9670;&nbsp;</a></span>deviceManager</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">juce::AudioDeviceManager tracktion::engine::DeviceManager::deviceManager</td>
+          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1TracktionEngineAudioDeviceManager.html">TracktionEngineAudioDeviceManager</a> tracktion::engine::DeviceManager::deviceManager { <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#abb186390b8724c5ec565c0d4daa2dcb2">engine</a> }</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1753,31 +1775,20 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aa27e24f0ea12a0a69db6b881cdb2e2b1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa27e24f0ea12a0a69db6b881cdb2e2b1">&#9670;&nbsp;</a></span>warnOfWastedMidiMessagesFunction</h2>
+<a id="a8e27cf1e633b2993729a27a9fc4d5062"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8e27cf1e633b2993729a27a9fc4d5062">&#9670;&nbsp;</a></span>warnOfWastedMidiMessagesFunction</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::function&lt;void(<a class="el" href="classtracktion_1_1engine_1_1InputDevice.html">InputDevice</a>*)&gt; tracktion::engine::DeviceManager::warnOfWastedMidiMessagesFunction</td>
+          <td class="memname">std::function&lt;void (<a class="el" href="classtracktion_1_1engine_1_1InputDevice.html">InputDevice</a>*)&gt; tracktion::engine::DeviceManager::warnOfWastedMidiMessagesFunction</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-</div>
-</div>
-<a id="abb186390b8724c5ec565c0d4daa2dcb2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abb186390b8724c5ec565c0d4daa2dcb2">&#9670;&nbsp;</a></span>engine</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1Engine.html">Engine</a>&amp; tracktion::engine::DeviceManager::engine</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
+<p>If this is set, it will get called (possibly on the midi thread) when incoming messages seem to be unused. </p>
+<p>May want to use it to warn the user. </p>
 
 </div>
 </div>
@@ -1787,7 +1798,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jul 26 2022 12:54:45 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jul 27 2022 10:06:14 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

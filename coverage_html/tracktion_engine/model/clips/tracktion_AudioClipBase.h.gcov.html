@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-07-26 13:06:33</td>
+            <td class="headerValue">2022-07-27 10:18:39</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
@@ -116,7 +116,7 @@
 <a name="54"><span class="lineNum">      54 </span>            :     virtual TimeDuration getSourceLength() const = 0;</a>
 <a name="55"><span class="lineNum">      55 </span>            : </a>
 <a name="56"><span class="lineNum">      56 </span>            :     /** Returns the file used to play back the source and will get proxied etc. */</a>
-<a name="57"><span class="lineNum">      57 </span><span class="lineCov">        357 :     virtual AudioFile getAudioFile() const  { return AudioFile (edit.engine, getCurrentSourceFile()); }</span></a>
+<a name="57"><span class="lineNum">      57 </span><span class="lineCov">        363 :     virtual AudioFile getAudioFile() const  { return AudioFile (edit.engine, getCurrentSourceFile()); }</span></a>
 <a name="58"><span class="lineNum">      58 </span>            : </a>
 <a name="59"><span class="lineNum">      59 </span>            :     /** Returns the current AudioFile being used by the Clip, either the</a>
 <a name="60"><span class="lineNum">      60 </span>            :         original source or a proxy.</a>
@@ -375,7 +375,7 @@
 <a name="313"><span class="lineNum">     313 </span><span class="lineNoCov">          0 :     void setAutoTempo (bool shouldUseAutoTempo)         { autoTempo = shouldUseAutoTempo; }</span></a>
 <a name="314"><span class="lineNum">     314 </span>            :     </a>
 <a name="315"><span class="lineNum">     315 </span>            :     /** Returns true if auto-tempo has been set. */</a>
-<a name="316"><span class="lineNum">     316 </span><span class="lineCov">        420 :     bool getAutoTempo() const                           { return autoTempo; }</span></a>
+<a name="316"><span class="lineNum">     316 </span><span class="lineCov">        426 :     bool getAutoTempo() const                           { return autoTempo; }</span></a>
 <a name="317"><span class="lineNum">     317 </span>            : </a>
 <a name="318"><span class="lineNum">     318 </span>            :     /** Enables/disables auto-pitch.</a>
 <a name="319"><span class="lineNum">     319 </span>            :         If enabled, this clip will adjust its playback pitch to stay in sync with the Edit's PitchSequence.</a>
@@ -383,7 +383,7 @@
 <a name="321"><span class="lineNum">     321 </span><span class="lineNoCov">          0 :     void setAutoPitch (bool shouldUseAutoPitch)         { autoPitch = shouldUseAutoPitch; }</span></a>
 <a name="322"><span class="lineNum">     322 </span>            : </a>
 <a name="323"><span class="lineNum">     323 </span>            :     /** Returns true if auto-pitch has been set. */</a>
-<a name="324"><span class="lineNum">     324 </span><span class="lineCov">        333 :     bool getAutoPitch() const                           { return autoPitch; }</span></a>
+<a name="324"><span class="lineNum">     324 </span><span class="lineCov">        339 :     bool getAutoPitch() const                           { return autoPitch; }</span></a>
 <a name="325"><span class="lineNum">     325 </span>            : </a>
 <a name="326"><span class="lineNum">     326 </span>            :     /** Sets the AutoPitchMode to use. */</a>
 <a name="327"><span class="lineNum">     327 </span>            :     void setAutoPitchMode (AutoPitchMode m)             { autoPitchMode = m; }</a>
@@ -418,7 +418,7 @@
 <a name="356"><span class="lineNum">     356 </span>            :     void setPitchChange (float semitones)               { pitchChange = juce::jlimit (-48.0f, 48.0f, semitones); }</a>
 <a name="357"><span class="lineNum">     357 </span>            :     </a>
 <a name="358"><span class="lineNum">     358 </span>            :     /** Returns the number of semitones to transpose the clip by. */</a>
-<a name="359"><span class="lineNum">     359 </span><span class="lineCov">        333 :     float getPitchChange() const                        { return pitchChange; }</span></a>
+<a name="359"><span class="lineNum">     359 </span><span class="lineCov">        339 :     float getPitchChange() const                        { return pitchChange; }</span></a>
 <a name="360"><span class="lineNum">     360 </span>            :     </a>
 <a name="361"><span class="lineNum">     361 </span>            :     /** Returns the pitch change as a normalised ratio. 0 = no change, &lt;0 = pitched down, &gt;0 = pitched up. */</a>
 <a name="362"><span class="lineNum">     362 </span>            :     float getPitchRatio() const                         { return juce::jlimit (0.1f, 10.0f, std::pow (2.0f, pitchChange / 12.0f)); }</a>
@@ -527,7 +527,7 @@
 <a name="465"><span class="lineNum">     465 </span>            :     void setUsesProxy (bool canUseProxy) noexcept;</a>
 <a name="466"><span class="lineNum">     466 </span>            :     </a>
 <a name="467"><span class="lineNum">     467 </span>            :     /** Retuns true if this clip can use a proxy file. */</a>
-<a name="468"><span class="lineNum">     468 </span><span class="lineCov">        595 :     bool canUseProxy() const noexcept               { return proxyAllowed &amp;&amp; edit.canRenderProxies(); }</span></a>
+<a name="468"><span class="lineNum">     468 </span><span class="lineCov">        597 :     bool canUseProxy() const noexcept               { return proxyAllowed &amp;&amp; edit.canRenderProxies(); }</span></a>
 <a name="469"><span class="lineNum">     469 </span>            : </a>
 <a name="470"><span class="lineNum">     470 </span>            :     /** Retuns true if this clip use a proxy file due to timestretching.</a>
 <a name="471"><span class="lineNum">     471 </span>            :         This can be because auto-tempo, auto-pitch or a pitch change has been set.</a>
@@ -746,7 +746,7 @@
 <a name="684"><span class="lineNum">     684 </span>            :         process.This will in turn call getRenderJob on a background thead.</a>
 <a name="685"><span class="lineNum">     685 </span>            :     */</a>
 <a name="686"><span class="lineNum">     686 </span>            :     void renderSource();</a>
-<a name="687"><span class="lineNum">     687 </span><span class="lineCov">         91 :     bool shouldAttemptRender() const    { return (! lastRenderJobFailed) &amp;&amp; needsRender(); }</span></a>
+<a name="687"><span class="lineNum">     687 </span><span class="lineCov">         94 :     bool shouldAttemptRender() const    { return (! lastRenderJobFailed) &amp;&amp; needsRender(); }</span></a>
 <a name="688"><span class="lineNum">     688 </span>            : </a>
 <a name="689"><span class="lineNum">     689 </span>            :     void clearCachedAudioSegmentList();</a>
 <a name="690"><span class="lineNum">     690 </span>            : </a>

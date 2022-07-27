@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-07-26 13:06:33</td>
+            <td class="headerValue">2022-07-27 10:18:39</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">9</td>
@@ -105,12 +105,12 @@
 <a name="43"><span class="lineNum">      43 </span>            : </a>
 <a name="44"><span class="lineNum">      44 </span><span class="lineNoCov">          0 : bool TrackMuteState::shouldTrackBeAudible() const</span></a>
 <a name="45"><span class="lineNum">      45 </span>            : {</a>
-<a name="46"><span class="lineNum">      46 </span><span class="lineCov">    5777450 :     return wasBeingPlayedFlag || wasJustMuted();</span></a>
+<a name="46"><span class="lineNum">      46 </span><span class="lineCov">    5777460 :     return wasBeingPlayedFlag || wasJustMuted();</span></a>
 <a name="47"><span class="lineNum">      47 </span>            : }</a>
 <a name="48"><span class="lineNum">      48 </span>            : </a>
 <a name="49"><span class="lineNum">      49 </span><span class="lineNoCov">          0 : bool TrackMuteState::shouldTrackContentsBeProcessed() const</span></a>
 <a name="50"><span class="lineNum">      50 </span>            : {</a>
-<a name="51"><span class="lineNum">      51 </span><span class="lineCov">    3882130 :     return callInputWhileMuted || wasBeingPlayedFlag;</span></a>
+<a name="51"><span class="lineNum">      51 </span><span class="lineCov">    3882170 :     return callInputWhileMuted || wasBeingPlayedFlag;</span></a>
 <a name="52"><span class="lineNum">      52 </span>            : }</a>
 <a name="53"><span class="lineNum">      53 </span>            : </a>
 <a name="54"><span class="lineNum">      54 </span><span class="lineNoCov">          0 : bool TrackMuteState::shouldTrackMidiBeProcessed() const</span></a>
@@ -162,9 +162,9 @@
 <a name="100"><span class="lineNum">     100 </span><span class="lineCov">       8734 :     return props;</span></a>
 <a name="101"><span class="lineNum">     101 </span>            : }</a>
 <a name="102"><span class="lineNum">     102 </span>            : </a>
-<a name="103"><span class="lineNum">     103 </span><span class="lineCov">     366291 : std::vector&lt;tracktion::graph::Node*&gt; TrackMutingNode::getDirectInputNodes()</span></a>
+<a name="103"><span class="lineNum">     103 </span><span class="lineCov">     359091 : std::vector&lt;tracktion::graph::Node*&gt; TrackMutingNode::getDirectInputNodes()</span></a>
 <a name="104"><span class="lineNum">     104 </span>            : {</a>
-<a name="105"><span class="lineNum">     105 </span><span class="lineCov">     366291 :     return { input.get() };</span></a>
+<a name="105"><span class="lineNum">     105 </span><span class="lineCov">     359091 :     return { input.get() };</span></a>
 <a name="106"><span class="lineNum">     106 </span>            : }</a>
 <a name="107"><span class="lineNum">     107 </span>            : </a>
 <a name="108"><span class="lineNum">     108 </span><span class="lineCov">       1558 : bool TrackMutingNode::isReadyToProcess()</span></a>

@@ -126,7 +126,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a6fc10afdb07b280c2b117e828d8595da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return true if your application supports scanning plugins out of process.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#a6fc10afdb07b280c2b117e828d8595da">More...</a><br /></td></tr>
 <tr class="separator:a6fc10afdb07b280c2b117e828d8595da"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9107f745067757cab9c5e5d58b188d9d"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a9107f745067757cab9c5e5d58b188d9d">autoInitialiseDeviceManager</a> ()</td></tr>
+<tr class="memdesc:a9107f745067757cab9c5e5d58b188d9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">You may want to disable auto initialisation of the device manager if you are using the engine in a plugin.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#a9107f745067757cab9c5e5d58b188d9d">More...</a><br /></td></tr>
 <tr class="separator:a9107f745067757cab9c5e5d58b188d9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb8ba08bf8b3da07a756fa9194ea7ae0"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#aeb8ba08bf8b3da07a756fa9194ea7ae0">addSystemAudioIODeviceTypes</a> ()</td></tr>
+<tr class="memdesc:aeb8ba08bf8b3da07a756fa9194ea7ae0"><td class="mdescLeft">&#160;</td><td class="mdescRight">In plugin builds, you might want to avoid adding the system audio devices and only use the host inputs.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#aeb8ba08bf8b3da07a756fa9194ea7ae0">More...</a><br /></td></tr>
+<tr class="separator:aeb8ba08bf8b3da07a756fa9194ea7ae0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4bf6af8049c0afb0240d0ddc9b22593c"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a4bf6af8049c0afb0240d0ddc9b22593c">getMiddleCOctave</a> ()</td></tr>
 <tr class="separator:a4bf6af8049c0afb0240d0ddc9b22593c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1cf026c35e59330c677c2a0a1384e063"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a1cf026c35e59330c677c2a0a1384e063">setMiddleCOctave</a> (int)</td></tr>
@@ -673,6 +677,35 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>You may want to disable auto initialisation of the device manager if you are using the engine in a plugin. </p>
+
+</div>
+</div>
+<a id="aeb8ba08bf8b3da07a756fa9194ea7ae0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb8ba08bf8b3da07a756fa9194ea7ae0">&#9670;&nbsp;</a></span>addSystemAudioIODeviceTypes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool tracktion::engine::EngineBehaviour::addSystemAudioIODeviceTypes </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>In plugin builds, you might want to avoid adding the system audio devices and only use the host inputs. </p>
 
 </div>
 </div>
@@ -1503,7 +1536,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jul 26 2022 12:54:45 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jul 27 2022 10:06:14 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

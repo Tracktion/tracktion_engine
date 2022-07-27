@@ -3093,6 +3093,7 @@
     <name>tracktion_DeviceManager.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/</path>
     <filename>tracktion__DeviceManager_8h.html</filename>
+    <class kind="class">tracktion::engine::TracktionEngineAudioDeviceManager</class>
     <class kind="class">tracktion::engine::DeviceManager</class>
     <class kind="struct">tracktion::engine::DeviceManager::CPUUsageListener</class>
     <class kind="struct">tracktion::engine::DeviceManager::ContextDeviceListRebuilder</class>
@@ -25910,6 +25911,13 @@
       <arglist>(bool translated)</arglist>
     </member>
     <member kind="variable">
+      <type>Engine &amp;</type>
+      <name>engine</name>
+      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
+      <anchor>abb186390b8724c5ec565c0d4daa2dcb2</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
       <type>std::unique_ptr&lt; HostedAudioDeviceInterface &gt;</type>
       <name>hostedAudioDeviceInterface</name>
       <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
@@ -25917,10 +25925,10 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>juce::AudioDeviceManager</type>
+      <type>TracktionEngineAudioDeviceManager</type>
       <name>deviceManager</name>
       <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>a1d46be55e9f505ec63994878745bc235</anchor>
+      <anchor>a4cbd2ecb27149e3ac4fe90752f5561d2</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -25955,14 +25963,7 @@
       <type>std::function&lt; void(InputDevice *)&gt;</type>
       <name>warnOfWastedMidiMessagesFunction</name>
       <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>aa27e24f0ea12a0a69db6b881cdb2e2b1</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>Engine &amp;</type>
-      <name>engine</name>
-      <anchorfile>classtracktion_1_1engine_1_1DeviceManager.html</anchorfile>
-      <anchor>abb186390b8724c5ec565c0d4daa2dcb2</anchor>
+      <anchor>a8e27cf1e633b2993729a27a9fc4d5062</anchor>
       <arglist></arglist>
     </member>
     <member kind="friend" protection="private">
@@ -30129,6 +30130,13 @@
       <name>autoInitialiseDeviceManager</name>
       <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
       <anchor>a9107f745067757cab9c5e5d58b188d9d</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual bool</type>
+      <name>addSystemAudioIODeviceTypes</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>aeb8ba08bf8b3da07a756fa9194ea7ae0</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function" virtualness="virtual">
@@ -49432,66 +49440,6 @@
     </member>
   </compound>
   <compound kind="struct">
-    <name>tracktion::engine::SimpleLFO::Parameters</name>
-    <filename>structtracktion_1_1engine_1_1SimpleLFO_1_1Parameters.html</filename>
-    <member kind="function">
-      <type></type>
-      <name>Parameters</name>
-      <anchorfile>structtracktion_1_1engine_1_1SimpleLFO_1_1Parameters.html</anchorfile>
-      <anchor>a574662e1128a2b64ce773a8a4759f9ac</anchor>
-      <arglist>()=default</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>Parameters</name>
-      <anchorfile>structtracktion_1_1engine_1_1SimpleLFO_1_1Parameters.html</anchorfile>
-      <anchor>a5ee1bde70925845599d2cc91b4f6945c</anchor>
-      <arglist>(float frequencyIn, float phaseOffsetIn, float offsetIn, float depthIn, WaveShape waveShapeIn, float pulseWidthIn)</arglist>
-    </member>
-    <member kind="variable">
-      <type>WaveShape</type>
-      <name>waveShape</name>
-      <anchorfile>structtracktion_1_1engine_1_1SimpleLFO_1_1Parameters.html</anchorfile>
-      <anchor>a31a2a14e44ab59a0f183a186a3be6b7e</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>float</type>
-      <name>frequency</name>
-      <anchorfile>structtracktion_1_1engine_1_1SimpleLFO_1_1Parameters.html</anchorfile>
-      <anchor>aa3910200d3ba136ecd55bd4badb63ad8</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>float</type>
-      <name>phaseOffset</name>
-      <anchorfile>structtracktion_1_1engine_1_1SimpleLFO_1_1Parameters.html</anchorfile>
-      <anchor>a856690ba0dd3988c19679c2cff630c6c</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>float</type>
-      <name>offset</name>
-      <anchorfile>structtracktion_1_1engine_1_1SimpleLFO_1_1Parameters.html</anchorfile>
-      <anchor>a792bc391153c79b34b4bfd5c31c86b2a</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>float</type>
-      <name>depth</name>
-      <anchorfile>structtracktion_1_1engine_1_1SimpleLFO_1_1Parameters.html</anchorfile>
-      <anchor>a43413b390222b3c12ef89d040e6f9c9b</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>float</type>
-      <name>pulseWidth</name>
-      <anchorfile>structtracktion_1_1engine_1_1SimpleLFO_1_1Parameters.html</anchorfile>
-      <anchor>aab3e6a2ae9cc7e319438cf69315d3488</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
     <name>tracktion::engine::HostedAudioDeviceInterface::Parameters</name>
     <filename>structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</filename>
     <member kind="variable">
@@ -49548,6 +49496,66 @@
       <name>outputNames</name>
       <anchorfile>structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
       <anchor>a18506932872b517b1be4c078ba689256</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::SimpleLFO::Parameters</name>
+    <filename>structtracktion_1_1engine_1_1SimpleLFO_1_1Parameters.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>Parameters</name>
+      <anchorfile>structtracktion_1_1engine_1_1SimpleLFO_1_1Parameters.html</anchorfile>
+      <anchor>a574662e1128a2b64ce773a8a4759f9ac</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>Parameters</name>
+      <anchorfile>structtracktion_1_1engine_1_1SimpleLFO_1_1Parameters.html</anchorfile>
+      <anchor>a5ee1bde70925845599d2cc91b4f6945c</anchor>
+      <arglist>(float frequencyIn, float phaseOffsetIn, float offsetIn, float depthIn, WaveShape waveShapeIn, float pulseWidthIn)</arglist>
+    </member>
+    <member kind="variable">
+      <type>WaveShape</type>
+      <name>waveShape</name>
+      <anchorfile>structtracktion_1_1engine_1_1SimpleLFO_1_1Parameters.html</anchorfile>
+      <anchor>a31a2a14e44ab59a0f183a186a3be6b7e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>frequency</name>
+      <anchorfile>structtracktion_1_1engine_1_1SimpleLFO_1_1Parameters.html</anchorfile>
+      <anchor>aa3910200d3ba136ecd55bd4badb63ad8</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>phaseOffset</name>
+      <anchorfile>structtracktion_1_1engine_1_1SimpleLFO_1_1Parameters.html</anchorfile>
+      <anchor>a856690ba0dd3988c19679c2cff630c6c</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>offset</name>
+      <anchorfile>structtracktion_1_1engine_1_1SimpleLFO_1_1Parameters.html</anchorfile>
+      <anchor>a792bc391153c79b34b4bfd5c31c86b2a</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>depth</name>
+      <anchorfile>structtracktion_1_1engine_1_1SimpleLFO_1_1Parameters.html</anchorfile>
+      <anchor>a43413b390222b3c12ef89d040e6f9c9b</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>pulseWidth</name>
+      <anchorfile>structtracktion_1_1engine_1_1SimpleLFO_1_1Parameters.html</anchorfile>
+      <anchor>aab3e6a2ae9cc7e319438cf69315d3488</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -69928,6 +69936,24 @@
     </member>
   </compound>
   <compound kind="class">
+    <name>tracktion::engine::TracktionEngineAudioDeviceManager</name>
+    <filename>classtracktion_1_1engine_1_1TracktionEngineAudioDeviceManager.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>TracktionEngineAudioDeviceManager</name>
+      <anchorfile>classtracktion_1_1engine_1_1TracktionEngineAudioDeviceManager.html</anchorfile>
+      <anchor>a2b1857308f13b1472ae52e606af4cf7e</anchor>
+      <arglist>(Engine &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>createAudioDeviceTypes</name>
+      <anchorfile>classtracktion_1_1engine_1_1TracktionEngineAudioDeviceManager.html</anchorfile>
+      <anchor>a46d0c0e84dd2db3067768793b7508acd</anchor>
+      <arglist>(juce::OwnedArray&lt; juce::AudioIODeviceType &gt; &amp;) override</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
     <name>tracktion::engine::TracktionEngineNode</name>
     <filename>classtracktion_1_1engine_1_1TracktionEngineNode.html</filename>
     <member kind="function">
@@ -79883,25 +79909,6 @@
     </member>
   </compound>
   <compound kind="struct">
-    <name>tracktion::engine::Plugin::WindowState</name>
-    <filename>structtracktion_1_1engine_1_1Plugin_1_1WindowState.html</filename>
-    <base>tracktion::engine::PluginWindowState</base>
-    <member kind="function">
-      <type></type>
-      <name>WindowState</name>
-      <anchorfile>structtracktion_1_1engine_1_1Plugin_1_1WindowState.html</anchorfile>
-      <anchor>a1291a8a07e6f1c2af0979b2b0419f1c8</anchor>
-      <arglist>(Plugin &amp;)</arglist>
-    </member>
-    <member kind="variable">
-      <type>Plugin &amp;</type>
-      <name>plugin</name>
-      <anchorfile>structtracktion_1_1engine_1_1Plugin_1_1WindowState.html</anchorfile>
-      <anchor>a3c3b085de35f422c79719353833e630a</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
     <name>tracktion::engine::RackType::WindowState</name>
     <filename>structtracktion_1_1engine_1_1RackType_1_1WindowState.html</filename>
     <base>tracktion::engine::PluginWindowState</base>
@@ -79924,6 +79931,25 @@
       <name>state</name>
       <anchorfile>structtracktion_1_1engine_1_1RackType_1_1WindowState.html</anchorfile>
       <anchor>a2dd9ed0ee683826b4e8a11d2eb9bb23e</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::Plugin::WindowState</name>
+    <filename>structtracktion_1_1engine_1_1Plugin_1_1WindowState.html</filename>
+    <base>tracktion::engine::PluginWindowState</base>
+    <member kind="function">
+      <type></type>
+      <name>WindowState</name>
+      <anchorfile>structtracktion_1_1engine_1_1Plugin_1_1WindowState.html</anchorfile>
+      <anchor>a1291a8a07e6f1c2af0979b2b0419f1c8</anchor>
+      <arglist>(Plugin &amp;)</arglist>
+    </member>
+    <member kind="variable">
+      <type>Plugin &amp;</type>
+      <name>plugin</name>
+      <anchorfile>structtracktion_1_1engine_1_1Plugin_1_1WindowState.html</anchorfile>
+      <anchor>a3c3b085de35f422c79719353833e630a</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -80412,6 +80438,7 @@
     <class kind="class">tracktion::engine::TrackOutput</class>
     <class kind="struct">tracktion::engine::TrackSection</class>
     <class kind="class">tracktion::engine::TracktionArchiveFile</class>
+    <class kind="class">tracktion::engine::TracktionEngineAudioDeviceManager</class>
     <class kind="class">tracktion::engine::TracktionEngineNode</class>
     <class kind="class">tracktion::engine::TracktionNodePlayer</class>
     <class kind="class">tracktion::engine::TracktionThumbnail</class>
@@ -80819,6 +80846,7 @@
     <class kind="class">tracktion::engine::TrackOutput</class>
     <class kind="struct">tracktion::engine::TrackSection</class>
     <class kind="class">tracktion::engine::TracktionArchiveFile</class>
+    <class kind="class">tracktion::engine::TracktionEngineAudioDeviceManager</class>
     <class kind="class">tracktion::engine::TracktionEngineNode</class>
     <class kind="class">tracktion::engine::TracktionNodePlayer</class>
     <class kind="class">tracktion::engine::TracktionThumbnail</class>
