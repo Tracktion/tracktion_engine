@@ -1180,10 +1180,10 @@ public:
                                               channelNumbers, clipLevel, useMPEChannelMode, midiSourceID,
                                               controllerMessagesScratchBuffer);
             shouldCreateMessagesForTime = false;
-        }
 
-        // Ensure generator is initialised
-        generator->setTime (sectionEditBeatRange.getStart().inBeats());
+            // Ensure generator is initialised
+            generator->setTime (sectionEditBeatRange.getStart().inBeats());
+        }
 
         // Iterate notes in blocks
         {
@@ -1195,10 +1195,9 @@ public:
                 auto e = generator->getEvent();
                 const EditBeatPosition editBeatPosition = e.getTimeStamp();
 
-                // Ensure we stop at the clip end if the event is not a note-off
-                if (! e.isNoteOff()
-                    && editBeatPosition >= clipIntersection.getEnd().inBeats())
-                   break;
+                // Ensure we stop at the clip end
+                if (editBeatPosition >= clipIntersection.getEnd().inBeats())
+                    break;
 
                 BlockBeatPosition blockBeatPosition = editBeatPosition - sectionEditBeatRange.getStart().inBeats();
 

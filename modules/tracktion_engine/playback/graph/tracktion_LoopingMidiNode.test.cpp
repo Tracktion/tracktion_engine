@@ -112,11 +112,23 @@ private:
             mc->setNumberOfLoops (numLoopIterations);
 
         std::vector<juce::MidiMessage> noteEvents;
+        const auto renderedSequence = renderMidiClip (*mc, ts, { 0_tp, 100_tp });
 
-        for (auto meh : renderMidiClip (*mc, ts, { 0_tp, 100_tp }))
-             if (meh->message.isNoteOnOrOff())
-                noteEvents.push_back (meh->message);
+        for (auto meh : renderedSequence)
+        {
+            if (! meh->message.isNoteOnOrOff())
+                continue;
 
+            if (meh->message.isNoteOn())
+            {
+                const auto duration = meh->noteOffObject->message.getTimeStamp() - meh->message.getTimeStamp();
+                expectEquals (duration, 0.5); // duration of 1 beat
+            }
+
+            noteEvents.push_back (meh->message);
+        }
+
+        // Check we have the correct number of notes
         expectEquals ((int) noteEvents.size(), 16 * numLoopIterations);
 
         // Check the last note ends before the end of the clip
