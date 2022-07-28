@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-07-27 10:18:39</td>
+            <td class="headerValue">2022-07-28 09:21:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">11</td>
@@ -152,11 +152,11 @@
 <a name="90"><span class="lineNum">      90 </span><span class="lineCov">          3 :     return sourceFileReference.getFile();</span></a>
 <a name="91"><span class="lineNum">      91 </span>            : }</a>
 <a name="92"><span class="lineNum">      92 </span>            : </a>
-<a name="93"><span class="lineNum">      93 </span><span class="lineCov">         94 : bool WaveAudioClip::needsRender() const</span></a>
+<a name="93"><span class="lineNum">      93 </span><span class="lineCov">         87 : bool WaveAudioClip::needsRender() const</span></a>
 <a name="94"><span class="lineNum">      94 </span>            : {</a>
 <a name="95"><span class="lineNum">      95 </span>            :     return ! isUsingMelodyne()</a>
-<a name="96"><span class="lineNum">      96 </span><span class="lineCov">         94 :         &amp;&amp; (isReversed || warpTime || (clipEffects != nullptr &amp;&amp; canHaveEffects()))</span></a>
-<a name="97"><span class="lineNum">      97 </span><span class="lineCov">        188 :         &amp;&amp; AudioFile (edit.engine, getOriginalFile()).isValid();</span></a>
+<a name="96"><span class="lineNum">      96 </span><span class="lineCov">         87 :         &amp;&amp; (isReversed || warpTime || (clipEffects != nullptr &amp;&amp; canHaveEffects()))</span></a>
+<a name="97"><span class="lineNum">      97 </span><span class="lineCov">        174 :         &amp;&amp; AudioFile (edit.engine, getOriginalFile()).isValid();</span></a>
 <a name="98"><span class="lineNum">      98 </span>            : }</a>
 <a name="99"><span class="lineNum">      99 </span>            : </a>
 <a name="100"><span class="lineNum">     100 </span><span class="lineCov">          3 : HashCode WaveAudioClip::getHash() const</span></a>
