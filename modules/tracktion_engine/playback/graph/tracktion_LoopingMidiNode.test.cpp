@@ -112,6 +112,8 @@ private:
              if (meh->message.isNoteOnOrOff())
                 noteEvents.push_back (meh->message);
 
+        expectEquals ((int) noteEvents.size(), 16);
+
         // Check the last note ends before the end of the clip
         expectLessOrEqual (noteEvents.back().getTimeStamp(), mc->getPosition().getEnd().inSeconds());
     }

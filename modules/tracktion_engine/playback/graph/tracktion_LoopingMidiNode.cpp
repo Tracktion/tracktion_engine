@@ -1195,7 +1195,8 @@ public:
                 auto e = generator->getEvent();
                 const EditBeatPosition editBeatPosition = e.getTimeStamp();
 
-                if (editBeatPosition >= sectionEditBeatRange.getEnd().inBeats())
+                // Ensure we stop at the clip end
+                if (editBeatPosition >= clipIntersection.getEnd().inBeats())
                     break;
 
                 BlockBeatPosition blockBeatPosition = editBeatPosition - sectionEditBeatRange.getStart().inBeats();
