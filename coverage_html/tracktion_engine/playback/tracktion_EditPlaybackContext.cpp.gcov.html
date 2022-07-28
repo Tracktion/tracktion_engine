@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-07-28 09:21:23</td>
+            <td class="headerValue">2022-07-28 11:20:54</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">21</td>
@@ -881,17 +881,17 @@
 <a name="819"><span class="lineNum">     819 </span>            : </a>
 <a name="820"><span class="lineNum">     820 </span>            : static bool hasCheckedDenormNoise = false;</a>
 <a name="821"><span class="lineNum">     821 </span>            : </a>
-<a name="822"><span class="lineNum">     822 </span><span class="lineCov">        120 : bool EditPlaybackContext::shouldAddAntiDenormalisationNoise (Engine&amp; e)</span></a>
+<a name="822"><span class="lineNum">     822 </span><span class="lineCov">        136 : bool EditPlaybackContext::shouldAddAntiDenormalisationNoise (Engine&amp; e)</span></a>
 <a name="823"><span class="lineNum">     823 </span>            : {</a>
 <a name="824"><span class="lineNum">     824 </span>            :     static bool shouldAdd;</a>
 <a name="825"><span class="lineNum">     825 </span>            : </a>
-<a name="826"><span class="lineNum">     826 </span><span class="lineCov">        120 :     if (! hasCheckedDenormNoise)</span></a>
+<a name="826"><span class="lineNum">     826 </span><span class="lineCov">        136 :     if (! hasCheckedDenormNoise)</span></a>
 <a name="827"><span class="lineNum">     827 </span>            :     {</a>
 <a name="828"><span class="lineNum">     828 </span><span class="lineCov">          1 :         shouldAdd = e.getPropertyStorage().getProperty (SettingID::addAntiDenormalNoise, false);</span></a>
 <a name="829"><span class="lineNum">     829 </span><span class="lineCov">          1 :         hasCheckedDenormNoise = true;</span></a>
 <a name="830"><span class="lineNum">     830 </span>            :     }</a>
 <a name="831"><span class="lineNum">     831 </span>            : </a>
-<a name="832"><span class="lineNum">     832 </span><span class="lineCov">        120 :     return shouldAdd;</span></a>
+<a name="832"><span class="lineNum">     832 </span><span class="lineCov">        136 :     return shouldAdd;</span></a>
 <a name="833"><span class="lineNum">     833 </span>            : }</a>
 <a name="834"><span class="lineNum">     834 </span>            : </a>
 <a name="835"><span class="lineNum">     835 </span><span class="lineNoCov">          0 : void EditPlaybackContext::setAddAntiDenormalisationNoise (Engine&amp; e, bool b)</span></a>
@@ -1040,7 +1040,7 @@
 <a name="978"><span class="lineNum">     978 </span>            : </a>
 <a name="979"><span class="lineNum">     979 </span><span class="lineNoCov">          0 : int EditPlaybackContext::getThreadPoolStrategy()</span></a>
 <a name="980"><span class="lineNum">     980 </span>            : {</a>
-<a name="981"><span class="lineNum">     981 </span><span class="lineCov">        224 :     const int type = juce::jlimit (static_cast&lt;int&gt; (tracktion::graph::ThreadPoolStrategy::conditionVariable),</span></a>
+<a name="981"><span class="lineNum">     981 </span><span class="lineCov">        240 :     const int type = juce::jlimit (static_cast&lt;int&gt; (tracktion::graph::ThreadPoolStrategy::conditionVariable),</span></a>
 <a name="982"><span class="lineNum">     982 </span>            :                                    static_cast&lt;int&gt; (tracktion::graph::ThreadPoolStrategy::lightweightSemHybrid),</a>
 <a name="983"><span class="lineNum">     983 </span>            :                                    EditPlaybackContextInternal::getThreadPoolStrategyType());</a>
 <a name="984"><span class="lineNum">     984 </span>            :     </a>

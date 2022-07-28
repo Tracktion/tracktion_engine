@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-07-28 09:21:23</td>
+            <td class="headerValue">2022-07-28 11:20:54</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">14</td>
@@ -87,9 +87,9 @@
 <a name="25"><span class="lineNum">      25 </span><span class="lineCov">          2 :     return engine.getPropertyStorage().getAppCacheFolder().getChildFile (&quot;Temporary&quot;);</span></a>
 <a name="26"><span class="lineNum">      26 </span>            : }</a>
 <a name="27"><span class="lineNum">      27 </span>            : </a>
-<a name="28"><span class="lineNum">      28 </span><span class="lineCov">        221 : const juce::File&amp; TemporaryFileManager::getTempDirectory() const</span></a>
+<a name="28"><span class="lineNum">      28 </span><span class="lineCov">        237 : const juce::File&amp; TemporaryFileManager::getTempDirectory() const</span></a>
 <a name="29"><span class="lineNum">      29 </span>            : {</a>
-<a name="30"><span class="lineNum">      30 </span><span class="lineCov">        221 :     return tempDir;</span></a>
+<a name="30"><span class="lineNum">      30 </span><span class="lineCov">        237 :     return tempDir;</span></a>
 <a name="31"><span class="lineNum">      31 </span>            : }</a>
 <a name="32"><span class="lineNum">      32 </span>            : </a>
 <a name="33"><span class="lineNum">      33 </span><span class="lineNoCov">          0 : bool TemporaryFileManager::setTempDirectory (const juce::File&amp; newFile)</span></a>
@@ -263,7 +263,7 @@
 <a name="201"><span class="lineNum">     201 </span>            : //==============================================================================</a>
 <a name="202"><span class="lineNum">     202 </span><span class="lineNoCov">          0 : static juce::String getClipProxyPrefix()                { return &quot;clip_&quot;; }</span></a>
 <a name="203"><span class="lineNum">     203 </span><span class="lineNoCov">          0 : static juce::String getFileProxyPrefix()                { return &quot;proxy_&quot;; }</span></a>
-<a name="204"><span class="lineNum">     204 </span><span class="lineCov">        221 : static juce::String getDeviceFreezePrefix (Edit&amp; edit)  { return &quot;freeze_&quot; + edit.getProjectItemID().toStringSuitableForFilename() + &quot;_&quot;; }</span></a>
+<a name="204"><span class="lineNum">     204 </span><span class="lineCov">        237 : static juce::String getDeviceFreezePrefix (Edit&amp; edit)  { return &quot;freeze_&quot; + edit.getProjectItemID().toStringSuitableForFilename() + &quot;_&quot;; }</span></a>
 <a name="205"><span class="lineNum">     205 </span><span class="lineCov">          4 : static juce::String getTrackFreezePrefix()              { return &quot;trackFreeze_&quot;; }</span></a>
 <a name="206"><span class="lineNum">     206 </span><span class="lineNoCov">          0 : static juce::String getCompPrefix()                     { return &quot;comp_&quot;; }</span></a>
 <a name="207"><span class="lineNum">     207 </span>            : </a>
@@ -314,10 +314,10 @@
 <a name="252"><span class="lineNum">     252 </span><span class="lineCov">          8 :              .getChildFile (getTrackFreezePrefix() + &quot;0_&quot; + track.itemID.toString() + &quot;.freeze&quot;);</span></a>
 <a name="253"><span class="lineNum">     253 </span>            : }</a>
 <a name="254"><span class="lineNum">     254 </span>            : </a>
-<a name="255"><span class="lineNum">     255 </span><span class="lineCov">        221 : juce::Array&lt;juce::File&gt; TemporaryFileManager::getFrozenTrackFiles (Edit&amp; edit)</span></a>
+<a name="255"><span class="lineNum">     255 </span><span class="lineCov">        237 : juce::Array&lt;juce::File&gt; TemporaryFileManager::getFrozenTrackFiles (Edit&amp; edit)</span></a>
 <a name="256"><span class="lineNum">     256 </span>            : {</a>
-<a name="257"><span class="lineNum">     257 </span><span class="lineCov">        221 :     return edit.getTempDirectory (false)</span></a>
-<a name="258"><span class="lineNum">     258 </span><span class="lineCov">        221 :              .findChildFiles (juce::File::findFiles, false, getDeviceFreezePrefix (edit) + &quot;*&quot;);</span></a>
+<a name="257"><span class="lineNum">     257 </span><span class="lineCov">        237 :     return edit.getTempDirectory (false)</span></a>
+<a name="258"><span class="lineNum">     258 </span><span class="lineCov">        237 :              .findChildFiles (juce::File::findFiles, false, getDeviceFreezePrefix (edit) + &quot;*&quot;);</span></a>
 <a name="259"><span class="lineNum">     259 </span>            : }</a>
 <a name="260"><span class="lineNum">     260 </span>            : </a>
 <a name="261"><span class="lineNum">     261 </span><span class="lineNoCov">          0 : static ProjectItemID getProjectItemIDFromFilename (const juce::String&amp; name)</span></a>
@@ -379,12 +379,12 @@
 <a name="317"><span class="lineNum">     317 </span><span class="lineNoCov">          0 :     return EditItemID::fromVar (tokens[0] + tokens[1]);</span></a>
 <a name="318"><span class="lineNum">     318 </span>            : }</a>
 <a name="319"><span class="lineNum">     319 </span>            : </a>
-<a name="320"><span class="lineNum">     320 </span><span class="lineCov">        221 : void TemporaryFileManager::purgeOrphanFreezeAndProxyFiles (Edit&amp; edit)</span></a>
+<a name="320"><span class="lineNum">     320 </span><span class="lineCov">        237 : void TemporaryFileManager::purgeOrphanFreezeAndProxyFiles (Edit&amp; edit)</span></a>
 <a name="321"><span class="lineNum">     321 </span>            : {</a>
 <a name="322"><span class="lineNum">     322 </span>            :     CRASH_TRACER</a>
-<a name="323"><span class="lineNum">     323 </span><span class="lineCov">        221 :     juce::Array&lt;juce::File&gt; filesToDelete;</span></a>
+<a name="323"><span class="lineNum">     323 </span><span class="lineCov">        237 :     juce::Array&lt;juce::File&gt; filesToDelete;</span></a>
 <a name="324"><span class="lineNum">     324 </span>            : </a>
-<a name="325"><span class="lineNum">     325 </span><span class="lineCov">        663 :     for (auto entry : juce::RangedDirectoryIterator (edit.getTempDirectory (false), false, &quot;*&quot;))</span></a>
+<a name="325"><span class="lineNum">     325 </span><span class="lineCov">        711 :     for (auto entry : juce::RangedDirectoryIterator (edit.getTempDirectory (false), false, &quot;*&quot;))</span></a>
 <a name="326"><span class="lineNum">     326 </span>            :     {</a>
 <a name="327"><span class="lineNum">     327 </span><span class="lineNoCov">          0 :         auto name = entry.getFile().getFileName();</span></a>
 <a name="328"><span class="lineNum">     328 </span><span class="lineNoCov">          0 :         auto itemID = getEditItemIDFromFilename (name);</span></a>
@@ -424,12 +424,12 @@
 <a name="362"><span class="lineNum">     362 </span>            :         }</a>
 <a name="363"><span class="lineNum">     363 </span>            :     }</a>
 <a name="364"><span class="lineNum">     364 </span>            : </a>
-<a name="365"><span class="lineNum">     365 </span><span class="lineCov">        221 :     for (auto&amp; f : filesToDelete)</span></a>
+<a name="365"><span class="lineNum">     365 </span><span class="lineCov">        237 :     for (auto&amp; f : filesToDelete)</span></a>
 <a name="366"><span class="lineNum">     366 </span>            :     {</a>
 <a name="367"><span class="lineNum">     367 </span>            :         DBG (&quot;Purging temp file: &quot; &lt;&lt; f.getFileName());</a>
 <a name="368"><span class="lineNum">     368 </span><span class="lineNoCov">          0 :         AudioFile (edit.engine, f).deleteFile();</span></a>
 <a name="369"><span class="lineNum">     369 </span>            :     }</a>
-<a name="370"><span class="lineNum">     370 </span><span class="lineCov">        221 : }</span></a>
+<a name="370"><span class="lineNum">     370 </span><span class="lineCov">        237 : }</span></a>
 <a name="371"><span class="lineNum">     371 </span>            : </a>
 <a name="372"><span class="lineNum">     372 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-07-28 09:21:23</td>
+            <td class="headerValue">2022-07-28 11:20:54</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">6</td>
@@ -73,16 +73,16 @@
 <a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
-<a name="14"><span class="lineNum">      14 </span><span class="lineCov">        221 : MarkerManager::MarkerManager (Edit&amp; e, const juce::ValueTree&amp; v)</span></a>
-<a name="15"><span class="lineNum">      15 </span><span class="lineCov">        221 :     : edit (e), state (v)</span></a>
+<a name="14"><span class="lineNum">      14 </span><span class="lineCov">        237 : MarkerManager::MarkerManager (Edit&amp; e, const juce::ValueTree&amp; v)</span></a>
+<a name="15"><span class="lineNum">      15 </span><span class="lineCov">        237 :     : edit (e), state (v)</span></a>
 <a name="16"><span class="lineNum">      16 </span>            : {</a>
-<a name="17"><span class="lineNum">      17 </span><span class="lineCov">        221 :     state.addListener (this);</span></a>
-<a name="18"><span class="lineNum">      18 </span><span class="lineCov">        221 : }</span></a>
+<a name="17"><span class="lineNum">      17 </span><span class="lineCov">        237 :     state.addListener (this);</span></a>
+<a name="18"><span class="lineNum">      18 </span><span class="lineCov">        237 : }</span></a>
 <a name="19"><span class="lineNum">      19 </span>            : </a>
-<a name="20"><span class="lineNum">      20 </span><span class="lineCov">        442 : MarkerManager::~MarkerManager()</span></a>
+<a name="20"><span class="lineNum">      20 </span><span class="lineCov">        474 : MarkerManager::~MarkerManager()</span></a>
 <a name="21"><span class="lineNum">      21 </span>            : {</a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineCov">        221 :     state.removeListener (this);</span></a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineCov">        442 : }</span></a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineCov">        237 :     state.removeListener (this);</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">        474 : }</span></a>
 <a name="24"><span class="lineNum">      24 </span>            : </a>
 <a name="25"><span class="lineNum">      25 </span><span class="lineNoCov">          0 : juce::ReferenceCountedArray&lt;MarkerClip&gt; MarkerManager::getMarkers() const</span></a>
 <a name="26"><span class="lineNum">      26 </span>            : {</a>
@@ -212,14 +212,14 @@
 <a name="150"><span class="lineNum">     150 </span><span class="lineNoCov">          0 :     return createMarker (number, pos, length, getNewMarkerMode(), sm);</span></a>
 <a name="151"><span class="lineNum">     151 </span>            : }</a>
 <a name="152"><span class="lineNum">     152 </span>            : </a>
-<a name="153"><span class="lineNum">     153 </span><span class="lineCov">       1105 : void MarkerManager::valueTreeChanged (const juce::ValueTree&amp; v)</span></a>
+<a name="153"><span class="lineNum">     153 </span><span class="lineCov">       1185 : void MarkerManager::valueTreeChanged (const juce::ValueTree&amp; v)</span></a>
 <a name="154"><span class="lineNum">     154 </span>            : {</a>
-<a name="155"><span class="lineNum">     155 </span><span class="lineCov">       1105 :     if (v.hasType (IDs::MARKERTRACK) || v.getParent().hasType (IDs::MARKERTRACK))</span></a>
-<a name="156"><span class="lineNum">     156 </span><span class="lineCov">       1105 :         sendChangeMessage();</span></a>
-<a name="157"><span class="lineNum">     157 </span><span class="lineCov">       1105 : }</span></a>
+<a name="155"><span class="lineNum">     155 </span><span class="lineCov">       1185 :     if (v.hasType (IDs::MARKERTRACK) || v.getParent().hasType (IDs::MARKERTRACK))</span></a>
+<a name="156"><span class="lineNum">     156 </span><span class="lineCov">       1185 :         sendChangeMessage();</span></a>
+<a name="157"><span class="lineNum">     157 </span><span class="lineCov">       1185 : }</span></a>
 <a name="158"><span class="lineNum">     158 </span>            : </a>
-<a name="159"><span class="lineNum">     159 </span><span class="lineCov">        663 : void MarkerManager::valueTreePropertyChanged (juce::ValueTree&amp; v, const juce::Identifier&amp;)  { valueTreeChanged (v); }</span></a>
-<a name="160"><span class="lineNum">     160 </span><span class="lineCov">        442 : void MarkerManager::valueTreeChildAdded (juce::ValueTree&amp; p, juce::ValueTree&amp;)              { valueTreeChanged (p); }</span></a>
+<a name="159"><span class="lineNum">     159 </span><span class="lineCov">        711 : void MarkerManager::valueTreePropertyChanged (juce::ValueTree&amp; v, const juce::Identifier&amp;)  { valueTreeChanged (v); }</span></a>
+<a name="160"><span class="lineNum">     160 </span><span class="lineCov">        474 : void MarkerManager::valueTreeChildAdded (juce::ValueTree&amp; p, juce::ValueTree&amp;)              { valueTreeChanged (p); }</span></a>
 <a name="161"><span class="lineNum">     161 </span><span class="lineNoCov">          0 : void MarkerManager::valueTreeChildRemoved (juce::ValueTree&amp; p, juce::ValueTree&amp;, int)       { valueTreeChanged (p); }</span></a>
 <a name="162"><span class="lineNum">     162 </span><span class="lineNoCov">          0 : void MarkerManager::valueTreeParentChanged (juce::ValueTree&amp; v)                             { valueTreeChanged (v); }</span></a>
 <a name="163"><span class="lineNum">     163 </span>            : </a>

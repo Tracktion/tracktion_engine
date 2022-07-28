@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-07-28 09:21:23</td>
+            <td class="headerValue">2022-07-28 11:20:54</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">19</td>
@@ -128,32 +128,32 @@
 <a name="66"><span class="lineNum">      66 </span>            :     void resetName();</a>
 <a name="67"><span class="lineNum">      67 </span>            :     </a>
 <a name="68"><span class="lineNum">      68 </span>            :     /** Sub-classes can impliment this to avoid certain characters being used in a name. */</a>
-<a name="69"><span class="lineNum">      69 </span><span class="lineCov">        572 :     virtual void sanityCheckName()                              {}</span></a>
+<a name="69"><span class="lineNum">      69 </span><span class="lineCov">        604 :     virtual void sanityCheckName()                              {}</span></a>
 <a name="70"><span class="lineNum">      70 </span>            : </a>
 <a name="71"><span class="lineNum">      71 </span>            :     //==============================================================================</a>
 <a name="72"><span class="lineNum">      72 </span>            :     /** Returns true if this is an AudioTrack. */</a>
-<a name="73"><span class="lineNum">      73 </span><span class="lineCov">       2226 :     virtual bool isAudioTrack() const                           { return false; }</span></a>
+<a name="73"><span class="lineNum">      73 </span><span class="lineCov">       2386 :     virtual bool isAudioTrack() const                           { return false; }</span></a>
 <a name="74"><span class="lineNum">      74 </span>            : </a>
 <a name="75"><span class="lineNum">      75 </span>            :     /** Returns true if this is an AutomationTrack. */</a>
 <a name="76"><span class="lineNum">      76 </span><span class="lineNoCov">          0 :     virtual bool isAutomationTrack() const                      { return false; }</span></a>
 <a name="77"><span class="lineNum">      77 </span>            : </a>
 <a name="78"><span class="lineNum">      78 </span>            :     /** Returns true if this is a FolderTrack. */</a>
-<a name="79"><span class="lineNum">      79 </span><span class="lineCov">       2210 :     virtual bool isFolderTrack() const                          { return false; }</span></a>
+<a name="79"><span class="lineNum">      79 </span><span class="lineCov">       2370 :     virtual bool isFolderTrack() const                          { return false; }</span></a>
 <a name="80"><span class="lineNum">      80 </span>            : </a>
 <a name="81"><span class="lineNum">      81 </span>            :     /** Returns true if this is a MarkerTrack. */</a>
-<a name="82"><span class="lineNum">      82 </span><span class="lineCov">        442 :     virtual bool isMarkerTrack() const                          { return false; }</span></a>
+<a name="82"><span class="lineNum">      82 </span><span class="lineCov">        474 :     virtual bool isMarkerTrack() const                          { return false; }</span></a>
 <a name="83"><span class="lineNum">      83 </span>            : </a>
 <a name="84"><span class="lineNum">      84 </span>            :     /** Returns true if this is a TempoTrack. */</a>
-<a name="85"><span class="lineNum">      85 </span><span class="lineCov">        894 :     virtual bool isTempoTrack() const                           { return false; }</span></a>
+<a name="85"><span class="lineNum">      85 </span><span class="lineCov">        958 :     virtual bool isTempoTrack() const                           { return false; }</span></a>
 <a name="86"><span class="lineNum">      86 </span>            : </a>
 <a name="87"><span class="lineNum">      87 </span>            :     /** Returns true if this is a ChordTrack. */</a>
-<a name="88"><span class="lineNum">      88 </span><span class="lineCov">        884 :     virtual bool isChordTrack() const                           { return false; }</span></a>
+<a name="88"><span class="lineNum">      88 </span><span class="lineCov">        948 :     virtual bool isChordTrack() const                           { return false; }</span></a>
 <a name="89"><span class="lineNum">      89 </span>            : </a>
 <a name="90"><span class="lineNum">      90 </span>            :     /** Returns true if this is an ArrangerTrack. */</a>
-<a name="91"><span class="lineNum">      91 </span><span class="lineCov">        442 :     virtual bool isArrangerTrack() const                        { return false; }</span></a>
+<a name="91"><span class="lineNum">      91 </span><span class="lineCov">        474 :     virtual bool isArrangerTrack() const                        { return false; }</span></a>
 <a name="92"><span class="lineNum">      92 </span>            : </a>
 <a name="93"><span class="lineNum">      93 </span>            :     /** Returns true if this is a MasterTrack. */</a>
-<a name="94"><span class="lineNum">      94 </span><span class="lineCov">       5436 :     virtual bool isMasterTrack() const                          { return false; }</span></a>
+<a name="94"><span class="lineNum">      94 </span><span class="lineCov">       5772 :     virtual bool isMasterTrack() const                          { return false; }</span></a>
 <a name="95"><span class="lineNum">      95 </span>            : </a>
 <a name="96"><span class="lineNum">      96 </span>            :     //==============================================================================</a>
 <a name="97"><span class="lineNum">      97 </span>            :     /** Returns true if this Track can contain MarkerClip[s]. */</a>
@@ -169,7 +169,7 @@
 <a name="107"><span class="lineNum">     107 </span>            :     bool canContainEditClips() const                            { return isAudioTrack(); }</a>
 <a name="108"><span class="lineNum">     108 </span>            : </a>
 <a name="109"><span class="lineNum">     109 </span>            :     /** Returns true if this Track can contain Plugin[s]. */</a>
-<a name="110"><span class="lineNum">     110 </span><span class="lineCov">       1574 :     bool canContainPlugins() const                              { return isAudioTrack() || isFolderTrack() || isMasterTrack(); }</span></a>
+<a name="110"><span class="lineNum">     110 </span><span class="lineCov">       1686 :     bool canContainPlugins() const                              { return isAudioTrack() || isFolderTrack() || isMasterTrack(); }</span></a>
 <a name="111"><span class="lineNum">     111 </span>            : </a>
 <a name="112"><span class="lineNum">     112 </span>            :     /** Returns true if this Track is movable. @see AudioTrack, FolderTrack */</a>
 <a name="113"><span class="lineNum">     113 </span>            :     bool isMovable() const                                      { return isAudioTrack() || isFolderTrack(); }</a>
@@ -181,7 +181,7 @@
 <a name="119"><span class="lineNum">     119 </span><span class="lineNoCov">          0 :     bool acceptsInput() const                                   { return isAudioTrack(); }</span></a>
 <a name="120"><span class="lineNum">     120 </span>            : </a>
 <a name="121"><span class="lineNum">     121 </span>            :     /** Returns true if this track creates audible output. @see AudioTrack */</a>
-<a name="122"><span class="lineNum">     122 </span><span class="lineCov">        212 :     bool createsOutput() const                                  { return isAudioTrack(); }</span></a>
+<a name="122"><span class="lineNum">     122 </span><span class="lineCov">        228 :     bool createsOutput() const                                  { return isAudioTrack(); }</span></a>
 <a name="123"><span class="lineNum">     123 </span>            : </a>
 <a name="124"><span class="lineNum">     124 </span>            :     /** Returns true if this track can show automation. @see AudioTrack, FolderTrack, AutomationTrack */</a>
 <a name="125"><span class="lineNum">     125 </span>            :     bool wantsAutomation() const                                { return ! (isMarkerTrack() || isChordTrack() || isArrangerTrack());  }</a>
@@ -201,7 +201,7 @@
 <a name="139"><span class="lineNum">     139 </span>            :     };</a>
 <a name="140"><span class="lineNum">     140 </span>            : </a>
 <a name="141"><span class="lineNum">     141 </span>            :     /** Returns true if this track is frozen using the given type. */</a>
-<a name="142"><span class="lineNum">     142 </span><span class="lineCov">       2210 :     virtual bool isFrozen (FreezeType) const                    { return false; }</span></a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineCov">       2370 :     virtual bool isFrozen (FreezeType) const                    { return false; }</span></a>
 <a name="143"><span class="lineNum">     143 </span>            : </a>
 <a name="144"><span class="lineNum">     144 </span>            :     /** Attempts to freeze or unfreeze the track using a given FreezeType. */</a>
 <a name="145"><span class="lineNum">     145 </span><span class="lineNoCov">          0 :     virtual void setFrozen (bool /*shouldBeFrozen*/, FreezeType){}</span></a>
@@ -285,10 +285,10 @@
 <a name="223"><span class="lineNum">     223 </span>            :     juce::ValueTree getParentTrackTree() const;</a>
 <a name="224"><span class="lineNum">     224 </span>            : </a>
 <a name="225"><span class="lineNum">     225 </span>            :     /** Returns the parent Track if this is a nested track. */</a>
-<a name="226"><span class="lineNum">     226 </span><span class="lineCov">    1943547 :     Track* getParentTrack() const                               { return dynamic_cast&lt;Track*&gt; (cachedParentTrack.get()); }</span></a>
+<a name="226"><span class="lineNum">     226 </span><span class="lineCov">    2928851 :     Track* getParentTrack() const                               { return dynamic_cast&lt;Track*&gt; (cachedParentTrack.get()); }</span></a>
 <a name="227"><span class="lineNum">     227 </span>            : </a>
 <a name="228"><span class="lineNum">     228 </span>            :     /** Returns the parent FolderTrack if this is nested in one. */</a>
-<a name="229"><span class="lineNum">     229 </span><span class="lineCov">    1942345 :     FolderTrack* getParentFolderTrack() const                   { return getParentTrack() != nullptr ? cachedParentFolderTrack : nullptr; }</span></a>
+<a name="229"><span class="lineNum">     229 </span><span class="lineCov">    2927633 :     FolderTrack* getParentFolderTrack() const                   { return getParentTrack() != nullptr ? cachedParentFolderTrack : nullptr; }</span></a>
 <a name="230"><span class="lineNum">     230 </span>            : </a>
 <a name="231"><span class="lineNum">     231 </span>            :     /** Tests whether this is a child of a given Track. */</a>
 <a name="232"><span class="lineNum">     232 </span>            :     bool isAChildOf (const Track&amp; possibleParent) const;</a>
@@ -311,13 +311,13 @@
 <a name="249"><span class="lineNum">     249 </span>            :         @param includeMutingByDestination   If this is true, this will retrn true if any</a>
 <a name="250"><span class="lineNum">     250 </span>            :                                             tracks this feeds in to are muted.</a>
 <a name="251"><span class="lineNum">     251 </span>            :     */</a>
-<a name="252"><span class="lineNum">     252 </span><span class="lineCov">       2077 :     virtual bool isMuted (bool /*includeMutingByDestination*/) const    { return false; }</span></a>
+<a name="252"><span class="lineNum">     252 </span><span class="lineCov">       2189 :     virtual bool isMuted (bool /*includeMutingByDestination*/) const    { return false; }</span></a>
 <a name="253"><span class="lineNum">     253 </span>            : </a>
 <a name="254"><span class="lineNum">     254 </span>            :     /** Returns true if this track is soloed.</a>
 <a name="255"><span class="lineNum">     255 </span>            :         @param includeIndirectSolo  If this is true, this will retrn true if any</a>
 <a name="256"><span class="lineNum">     256 </span>            :                                     tracks this feeds in to are soloed.</a>
 <a name="257"><span class="lineNum">     257 </span>            :     */</a>
-<a name="258"><span class="lineNum">     258 </span><span class="lineCov">       2807 :     virtual bool isSolo (bool /*includeIndirectSolo*/) const            { return false; }</span></a>
+<a name="258"><span class="lineNum">     258 </span><span class="lineCov">       2919 :     virtual bool isSolo (bool /*includeIndirectSolo*/) const            { return false; }</span></a>
 <a name="259"><span class="lineNum">     259 </span>            : </a>
 <a name="260"><span class="lineNum">     260 </span>            :     /** Returns true if this track is solo isolated.</a>
 <a name="261"><span class="lineNum">     261 </span>            :         @param includeIndirectSolo  If this is true, this will retrn true if any</a>
@@ -463,7 +463,7 @@
 <a name="401"><span class="lineNum">     401 </span>            :     /** @internal */</a>
 <a name="402"><span class="lineNum">     402 </span>            :     void valueTreeChildRemoved (juce::ValueTree&amp;, juce::ValueTree&amp;, int) override;</a>
 <a name="403"><span class="lineNum">     403 </span>            :     /** @internal */</a>
-<a name="404"><span class="lineNum">     404 </span><span class="lineCov">        122 :     void valueTreeChildOrderChanged (juce::ValueTree&amp;, int, int) override {}</span></a>
+<a name="404"><span class="lineNum">     404 </span><span class="lineCov">        170 :     void valueTreeChildOrderChanged (juce::ValueTree&amp;, int, int) override {}</span></a>
 <a name="405"><span class="lineNum">     405 </span>            :     /** @internal */</a>
 <a name="406"><span class="lineNum">     406 </span>            :     void valueTreeParentChanged (juce::ValueTree&amp;) override;</a>
 <a name="407"><span class="lineNum">     407 </span>            : </a>
