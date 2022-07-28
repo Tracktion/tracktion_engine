@@ -1195,9 +1195,10 @@ public:
                 auto e = generator->getEvent();
                 const EditBeatPosition editBeatPosition = e.getTimeStamp();
 
-                // Ensure we stop at the clip end
-                if (editBeatPosition >= clipIntersection.getEnd().inBeats())
-                    break;
+                // Ensure we stop at the clip end if the event is not a note-off
+                if (! e.isNoteOff()
+                    && editBeatPosition >= clipIntersection.getEnd().inBeats())
+                   break;
 
                 BlockBeatPosition blockBeatPosition = editBeatPosition - sectionEditBeatRange.getStart().inBeats();
 
@@ -1402,7 +1403,6 @@ void LoopingMidiNode::process (ProcessContext& pc)
                                           isPlaying,
                                           getPlayHeadState().isContiguousWithPreviousBlock(),
                                           getPlayHeadState().isLastBlockOfLoop());
-
 }
 
 }} // namespace tracktion { inline namespace engine
