@@ -19,7 +19,7 @@ class LoopingMidiNodeTests : public juce::UnitTest
 {
 public:
     LoopingMidiNodeTests()
-        : juce::UnitTest ("LoopingMidiNodeTests", "tracktion_graph")
+        : juce::UnitTest ("LoopingMidiNodeTests", "tracktion_engine")
     {
     }
     
