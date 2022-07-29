@@ -1,29 +1,12 @@
-/*******************************************************************************
- The block below describes the properties of this PIP. A PIP is a short snippet
- of code that can be read by the Projucer and used to generate a JUCE project.
+/*
+    ,--.                     ,--.     ,--.  ,--.
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
+    |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
+    `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
- BEGIN_JUCE_PIP_METADATA
-
-  name:             PitchAndTimeDemo
-  version:          0.0.1
-  vendor:           Tracktion
-  website:          www.tracktion.com
-  description:      This example shows how to load an audio clip and adjust its speed and pitch so you can play along with it in a different key or tempo.
-
-  dependencies:     juce_audio_basics, juce_audio_devices, juce_audio_formats, juce_audio_processors, juce_audio_utils,
-                    juce_core, juce_data_structures, juce_dsp, juce_events, juce_graphics,
-                    juce_gui_basics, juce_gui_extra, juce_osc, tracktion_engine, tracktion_graph
-  exporters:        linux_make, vs2017, xcode_iphone, xcode_mac
-
-  moduleFlags:      JUCE_STRICT_REFCOUNTEDPOINTER=1, JUCE_PLUGINHOST_VST3=1, JUCE_PLUGINHOST_AU=1
-  defines:          TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH=1, JUCE_MODAL_LOOPS_PERMITTED=1, TRACKTION_BUILD_RUBBERBAND=1
-
-  type:             Component
-  mainClass:        PitchAndTimeComponent
-
- END_JUCE_PIP_METADATA
-
-*******************************************************************************/
+    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+*/
 
 #pragma once
 
