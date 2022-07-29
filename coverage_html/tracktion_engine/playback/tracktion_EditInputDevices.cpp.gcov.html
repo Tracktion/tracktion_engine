@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-07-29 12:00:29</td>
+            <td class="headerValue">2022-07-29 17:48:57</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">8</td>
@@ -73,19 +73,19 @@
 <a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
-<a name="14"><span class="lineNum">      14 </span><span class="lineCov">        237 : EditInputDevices::EditInputDevices (Edit&amp; e, const juce::ValueTree&amp; v)</span></a>
-<a name="15"><span class="lineNum">      15 </span><span class="lineCov">        237 :     : edit (e), state (v), editState (e.state)</span></a>
+<a name="14"><span class="lineNum">      14 </span><span class="lineCov">        239 : EditInputDevices::EditInputDevices (Edit&amp; e, const juce::ValueTree&amp; v)</span></a>
+<a name="15"><span class="lineNum">      15 </span><span class="lineCov">        239 :     : edit (e), state (v), editState (e.state)</span></a>
 <a name="16"><span class="lineNum">      16 </span>            : {</a>
-<a name="17"><span class="lineNum">      17 </span><span class="lineCov">        237 :     editState.addListener (this);</span></a>
-<a name="18"><span class="lineNum">      18 </span><span class="lineCov">        474 :     callBlocking ([this] { edit.engine.getDeviceManager().addChangeListener (this); });</span></a>
-<a name="19"><span class="lineNum">      19 </span><span class="lineCov">        237 : }</span></a>
+<a name="17"><span class="lineNum">      17 </span><span class="lineCov">        239 :     editState.addListener (this);</span></a>
+<a name="18"><span class="lineNum">      18 </span><span class="lineCov">        478 :     callBlocking ([this] { edit.engine.getDeviceManager().addChangeListener (this); });</span></a>
+<a name="19"><span class="lineNum">      19 </span><span class="lineCov">        239 : }</span></a>
 <a name="20"><span class="lineNum">      20 </span>            : </a>
-<a name="21"><span class="lineNum">      21 </span><span class="lineCov">        474 : EditInputDevices::~EditInputDevices()</span></a>
+<a name="21"><span class="lineNum">      21 </span><span class="lineCov">        478 : EditInputDevices::~EditInputDevices()</span></a>
 <a name="22"><span class="lineNum">      22 </span>            : {</a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineCov">        237 :     cancelPendingUpdate();</span></a>
-<a name="24"><span class="lineNum">      24 </span><span class="lineCov">        237 :     edit.engine.getDeviceManager().removeChangeListener (this);</span></a>
-<a name="25"><span class="lineNum">      25 </span><span class="lineCov">        237 :     removeNonExistantInputDeviceStates();</span></a>
-<a name="26"><span class="lineNum">      26 </span><span class="lineCov">        474 : }</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">        239 :     cancelPendingUpdate();</span></a>
+<a name="24"><span class="lineNum">      24 </span><span class="lineCov">        239 :     edit.engine.getDeviceManager().removeChangeListener (this);</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineCov">        239 :     removeNonExistantInputDeviceStates();</span></a>
+<a name="26"><span class="lineNum">      26 </span><span class="lineCov">        478 : }</span></a>
 <a name="27"><span class="lineNum">      27 </span>            : </a>
 <a name="28"><span class="lineNum">      28 </span><span class="lineNoCov">          0 : int EditInputDevices::getMaxNumInputs() const</span></a>
 <a name="29"><span class="lineNum">      29 </span>            : {</a>
@@ -110,13 +110,13 @@
 <a name="48"><span class="lineNum">      48 </span><span class="lineNoCov">          0 :     return v[IDs::type].toString().trim() == &quot;MIDI&quot;;</span></a>
 <a name="49"><span class="lineNum">      49 </span>            : }</a>
 <a name="50"><span class="lineNum">      50 </span>            : </a>
-<a name="51"><span class="lineNum">      51 </span><span class="lineCov">        512 : bool EditInputDevices::isInputDeviceAssigned (const InputDevice&amp; d)</span></a>
+<a name="51"><span class="lineNum">      51 </span><span class="lineCov">        516 : bool EditInputDevices::isInputDeviceAssigned (const InputDevice&amp; d)</span></a>
 <a name="52"><span class="lineNum">      52 </span>            : {</a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineCov">        512 :     for (const auto&amp; v : state)</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">        516 :     for (const auto&amp; v : state)</span></a>
 <a name="54"><span class="lineNum">      54 </span><span class="lineNoCov">          0 :         if (isForDevice (v, d))</span></a>
 <a name="55"><span class="lineNum">      55 </span><span class="lineNoCov">          0 :             return true;</span></a>
 <a name="56"><span class="lineNum">      56 </span>            : </a>
-<a name="57"><span class="lineNum">      57 </span><span class="lineCov">        512 :     return false;</span></a>
+<a name="57"><span class="lineNum">      57 </span><span class="lineCov">        516 :     return false;</span></a>
 <a name="58"><span class="lineNum">      58 </span>            : }</a>
 <a name="59"><span class="lineNum">      59 </span>            : </a>
 <a name="60"><span class="lineNum">      60 </span><span class="lineNoCov">          0 : void EditInputDevices::clearAllInputs (AudioTrack&amp; at)</span></a>
@@ -192,23 +192,23 @@
 <a name="130"><span class="lineNum">     130 </span>            : }</a>
 <a name="131"><span class="lineNum">     131 </span>            : </a>
 <a name="132"><span class="lineNum">     132 </span>            : //==============================================================================</a>
-<a name="133"><span class="lineNum">     133 </span><span class="lineCov">        237 : void EditInputDevices::removeNonExistantInputDeviceStates()</span></a>
+<a name="133"><span class="lineNum">     133 </span><span class="lineCov">        239 : void EditInputDevices::removeNonExistantInputDeviceStates()</span></a>
 <a name="134"><span class="lineNum">     134 </span>            : {</a>
-<a name="135"><span class="lineNum">     135 </span><span class="lineCov">        237 :     auto&amp; dm = edit.engine.getDeviceManager();</span></a>
-<a name="136"><span class="lineNum">     136 </span><span class="lineCov">        237 :     juce::Array&lt;InputDevice*&gt; devices;</span></a>
-<a name="137"><span class="lineNum">     137 </span><span class="lineCov">        237 :     devices.addArray (dm.midiInputs);</span></a>
-<a name="138"><span class="lineNum">     138 </span><span class="lineCov">        237 :     devices.addArray (dm.waveInputs);</span></a>
+<a name="135"><span class="lineNum">     135 </span><span class="lineCov">        239 :     auto&amp; dm = edit.engine.getDeviceManager();</span></a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineCov">        239 :     juce::Array&lt;InputDevice*&gt; devices;</span></a>
+<a name="137"><span class="lineNum">     137 </span><span class="lineCov">        239 :     devices.addArray (dm.midiInputs);</span></a>
+<a name="138"><span class="lineNum">     138 </span><span class="lineCov">        239 :     devices.addArray (dm.waveInputs);</span></a>
 <a name="139"><span class="lineNum">     139 </span>            : </a>
-<a name="140"><span class="lineNum">     140 </span><span class="lineCov">        237 :     if (! edit.isLoading())</span></a>
+<a name="140"><span class="lineNum">     140 </span><span class="lineCov">        239 :     if (! edit.isLoading())</span></a>
 <a name="141"><span class="lineNum">     141 </span>            :     {</a>
-<a name="142"><span class="lineNum">     142 </span><span class="lineCov">        730 :         for (auto* at : getAudioTracks (edit))</span></a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineCov">        736 :         for (auto* at : getAudioTracks (edit))</span></a>
 <a name="143"><span class="lineNum">     143 </span>            :         {</a>
-<a name="144"><span class="lineNum">     144 </span><span class="lineCov">        256 :             if (auto* wid = &amp;at-&gt;getWaveInputDevice())</span></a>
-<a name="145"><span class="lineNum">     145 </span><span class="lineCov">        256 :                 if (wid-&gt;isEnabled())</span></a>
+<a name="144"><span class="lineNum">     144 </span><span class="lineCov">        258 :             if (auto* wid = &amp;at-&gt;getWaveInputDevice())</span></a>
+<a name="145"><span class="lineNum">     145 </span><span class="lineCov">        258 :                 if (wid-&gt;isEnabled())</span></a>
 <a name="146"><span class="lineNum">     146 </span><span class="lineNoCov">          0 :                     devices.add (wid);</span></a>
 <a name="147"><span class="lineNum">     147 </span>            : </a>
-<a name="148"><span class="lineNum">     148 </span><span class="lineCov">        256 :             if (auto* mid = &amp;at-&gt;getMidiInputDevice())</span></a>
-<a name="149"><span class="lineNum">     149 </span><span class="lineCov">        256 :                 if (mid-&gt;isEnabled())</span></a>
+<a name="148"><span class="lineNum">     148 </span><span class="lineCov">        258 :             if (auto* mid = &amp;at-&gt;getMidiInputDevice())</span></a>
+<a name="149"><span class="lineNum">     149 </span><span class="lineCov">        258 :                 if (mid-&gt;isEnabled())</span></a>
 <a name="150"><span class="lineNum">     150 </span><span class="lineNoCov">          0 :                     devices.add (mid);</span></a>
 <a name="151"><span class="lineNum">     151 </span>            :         }</a>
 <a name="152"><span class="lineNum">     152 </span>            :     }</a>
@@ -222,10 +222,10 @@
 <a name="160"><span class="lineNum">     160 </span>            :         return false;</a>
 <a name="161"><span class="lineNum">     161 </span>            :     };</a>
 <a name="162"><span class="lineNum">     162 </span>            : </a>
-<a name="163"><span class="lineNum">     163 </span><span class="lineCov">        237 :     for (int i = state.getNumChildren(); --i &gt;= 0;)</span></a>
+<a name="163"><span class="lineNum">     163 </span><span class="lineCov">        239 :     for (int i = state.getNumChildren(); --i &gt;= 0;)</span></a>
 <a name="164"><span class="lineNum">     164 </span><span class="lineNoCov">          0 :         if (! isDevicePresent (state.getChild(i)))</span></a>
 <a name="165"><span class="lineNum">     165 </span><span class="lineNoCov">          0 :             state.removeChild (i, nullptr);</span></a>
-<a name="166"><span class="lineNum">     166 </span><span class="lineCov">        237 : }</span></a>
+<a name="166"><span class="lineNum">     166 </span><span class="lineCov">        239 : }</span></a>
 <a name="167"><span class="lineNum">     167 </span>            : </a>
 <a name="168"><span class="lineNum">     168 </span><span class="lineNoCov">          0 : void EditInputDevices::addTrackDeviceInstanceToContext (const juce::ValueTree&amp; v) const</span></a>
 <a name="169"><span class="lineNum">     169 </span>            : {</a>
@@ -282,12 +282,12 @@
 <a name="220"><span class="lineNum">     220 </span><span class="lineNoCov">          0 :     return v.hasProperty (IDs::sourceTrack);</span></a>
 <a name="221"><span class="lineNum">     221 </span>            : }</a>
 <a name="222"><span class="lineNum">     222 </span>            : </a>
-<a name="223"><span class="lineNum">     223 </span><span class="lineCov">      10074 : void EditInputDevices::valueTreeChildAdded (juce::ValueTree&amp; p, juce::ValueTree&amp; c)</span></a>
+<a name="223"><span class="lineNum">     223 </span><span class="lineCov">      10166 : void EditInputDevices::valueTreeChildAdded (juce::ValueTree&amp; p, juce::ValueTree&amp; c)</span></a>
 <a name="224"><span class="lineNum">     224 </span>            : {</a>
-<a name="225"><span class="lineNum">     225 </span><span class="lineCov">      10074 :     if (p == state)</span></a>
+<a name="225"><span class="lineNum">     225 </span><span class="lineCov">      10166 :     if (p == state)</span></a>
 <a name="226"><span class="lineNum">     226 </span><span class="lineNoCov">          0 :         if (c.hasType (IDs::INPUTDEVICE) &amp;&amp; isTrackDevice (c))</span></a>
 <a name="227"><span class="lineNum">     227 </span><span class="lineNoCov">          0 :             addTrackDeviceInstanceToContext (c);</span></a>
-<a name="228"><span class="lineNum">     228 </span><span class="lineCov">      10074 : }</span></a>
+<a name="228"><span class="lineNum">     228 </span><span class="lineCov">      10166 : }</span></a>
 <a name="229"><span class="lineNum">     229 </span>            : </a>
 <a name="230"><span class="lineNum">     230 </span><span class="lineCov">        594 : void EditInputDevices::valueTreeChildRemoved (juce::ValueTree&amp; p, juce::ValueTree&amp; c, int)</span></a>
 <a name="231"><span class="lineNum">     231 </span>            : {</a>

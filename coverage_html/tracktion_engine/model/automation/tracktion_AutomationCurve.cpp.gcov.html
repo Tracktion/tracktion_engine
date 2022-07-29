@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-07-29 12:00:29</td>
+            <td class="headerValue">2022-07-29 17:48:57</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">6</td>
@@ -77,12 +77,12 @@
 <a name="15"><span class="lineNum">      15 </span>            : {</a>
 <a name="16"><span class="lineNum">      16 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="17"><span class="lineNum">      17 </span>            : </a>
-<a name="18"><span class="lineNum">      18 </span><span class="lineCov">       2174 : AutomationCurve::AutomationCurve (const juce::ValueTree&amp; p, const juce::ValueTree&amp; v)</span></a>
-<a name="19"><span class="lineNum">      19 </span><span class="lineCov">       2174 :     : parentState (p), state (v)</span></a>
+<a name="18"><span class="lineNum">      18 </span><span class="lineCov">       2182 : AutomationCurve::AutomationCurve (const juce::ValueTree&amp; p, const juce::ValueTree&amp; v)</span></a>
+<a name="19"><span class="lineNum">      19 </span><span class="lineCov">       2182 :     : parentState (p), state (v)</span></a>
 <a name="20"><span class="lineNum">      20 </span>            : {</a>
-<a name="21"><span class="lineNum">      21 </span><span class="lineCov">       2174 :     if (! state.isValid())</span></a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineCov">       2174 :         state = juce::ValueTree (IDs::AUTOMATIONCURVE);</span></a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineCov">       2174 : }</span></a>
+<a name="21"><span class="lineNum">      21 </span><span class="lineCov">       2182 :     if (! state.isValid())</span></a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineCov">       2182 :         state = juce::ValueTree (IDs::AUTOMATIONCURVE);</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">       2182 : }</span></a>
 <a name="24"><span class="lineNum">      24 </span>            : </a>
 <a name="25"><span class="lineNum">      25 </span><span class="lineNoCov">          0 : AutomationCurve::AutomationCurve (const AutomationCurve&amp; other)</span></a>
 <a name="26"><span class="lineNum">      26 </span><span class="lineNoCov">          0 :     : parentState (other.parentState), state (other.state), ownerParam (other.ownerParam)</span></a>
@@ -113,13 +113,13 @@
 <a name="51"><span class="lineNum">      51 </span><span class="lineNoCov">          0 :     parentState = v;</span></a>
 <a name="52"><span class="lineNum">      52 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="53"><span class="lineNum">      53 </span>            : </a>
-<a name="54"><span class="lineNum">      54 </span><span class="lineCov">       2174 : void AutomationCurve::setOwnerParameter (AutomatableParameter* p)</span></a>
+<a name="54"><span class="lineNum">      54 </span><span class="lineCov">       2182 : void AutomationCurve::setOwnerParameter (AutomatableParameter* p)</span></a>
 <a name="55"><span class="lineNum">      55 </span>            : {</a>
-<a name="56"><span class="lineNum">      56 </span><span class="lineCov">       2174 :     ownerParam = p;</span></a>
+<a name="56"><span class="lineNum">      56 </span><span class="lineCov">       2182 :     ownerParam = p;</span></a>
 <a name="57"><span class="lineNum">      57 </span>            : </a>
-<a name="58"><span class="lineNum">      58 </span><span class="lineCov">       2174 :     if (p != nullptr)</span></a>
-<a name="59"><span class="lineNum">      59 </span><span class="lineCov">       2174 :         state.setProperty (IDs::paramID, p-&gt;paramID, nullptr);</span></a>
-<a name="60"><span class="lineNum">      60 </span><span class="lineCov">       2174 : }</span></a>
+<a name="58"><span class="lineNum">      58 </span><span class="lineCov">       2182 :     if (p != nullptr)</span></a>
+<a name="59"><span class="lineNum">      59 </span><span class="lineCov">       2182 :         state.setProperty (IDs::paramID, p-&gt;paramID, nullptr);</span></a>
+<a name="60"><span class="lineNum">      60 </span><span class="lineCov">       2182 : }</span></a>
 <a name="61"><span class="lineNum">      61 </span>            : </a>
 <a name="62"><span class="lineNum">      62 </span><span class="lineNoCov">          0 : juce::UndoManager* AutomationCurve::getUndoManager() const</span></a>
 <a name="63"><span class="lineNum">      63 </span>            : {</a>
@@ -129,7 +129,7 @@
 <a name="67"><span class="lineNum">      67 </span>            : //==============================================================================</a>
 <a name="68"><span class="lineNum">      68 </span><span class="lineCov">         26 : int AutomationCurve::getNumPoints() const noexcept</span></a>
 <a name="69"><span class="lineNum">      69 </span>            : {</a>
-<a name="70"><span class="lineNum">      70 </span><span class="lineCov">       2056 :     return state.getNumChildren();</span></a>
+<a name="70"><span class="lineNum">      70 </span><span class="lineCov">       2072 :     return state.getNumChildren();</span></a>
 <a name="71"><span class="lineNum">      71 </span>            : }</a>
 <a name="72"><span class="lineNum">      72 </span>            : </a>
 <a name="73"><span class="lineNum">      73 </span><span class="lineNoCov">          0 : AutomationCurve::AutomationPoint AutomationCurve::getPoint (int index) const noexcept</span></a>

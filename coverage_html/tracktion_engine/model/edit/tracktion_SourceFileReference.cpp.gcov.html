@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-07-29 12:00:29</td>
+            <td class="headerValue">2022-07-29 17:48:57</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
@@ -73,13 +73,13 @@
 <a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
-<a name="14"><span class="lineNum">      14 </span><span class="lineCov">         64 : SourceFileReference::SourceFileReference (Edit&amp; e, juce::ValueTree&amp; v, const juce::Identifier&amp; prop)</span></a>
-<a name="15"><span class="lineNum">      15 </span><span class="lineCov">         64 :     : edit (e), source (v, prop, &amp;e.getUndoManager()), state (v)</span></a>
+<a name="14"><span class="lineNum">      14 </span><span class="lineCov">         66 : SourceFileReference::SourceFileReference (Edit&amp; e, juce::ValueTree&amp; v, const juce::Identifier&amp; prop)</span></a>
+<a name="15"><span class="lineNum">      15 </span><span class="lineCov">         66 :     : edit (e), source (v, prop, &amp;e.getUndoManager()), state (v)</span></a>
 <a name="16"><span class="lineNum">      16 </span>            : {</a>
 <a name="17"><span class="lineNum">      17 </span>            :     ignoreUnused (state);</a>
 <a name="18"><span class="lineNum">      18 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="19"><span class="lineNum">      19 </span>            : </a>
-<a name="20"><span class="lineNum">      20 </span><span class="lineCov">         64 : SourceFileReference::~SourceFileReference()</span></a>
+<a name="20"><span class="lineNum">      20 </span><span class="lineCov">         66 : SourceFileReference::~SourceFileReference()</span></a>
 <a name="21"><span class="lineNum">      21 </span>            : {</a>
 <a name="22"><span class="lineNum">      22 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="23"><span class="lineNum">      23 </span>            : </a>
@@ -128,13 +128,13 @@
 <a name="66"><span class="lineNum">      66 </span>            : </a>
 <a name="67"><span class="lineNum">      67 </span><span class="lineNoCov">          0 : bool SourceFileReference::isUsingProjectReference() const</span></a>
 <a name="68"><span class="lineNum">      68 </span>            : {</a>
-<a name="69"><span class="lineNum">      69 </span><span class="lineCov">         64 :     return getSourceProjectItemID().isValid();</span></a>
+<a name="69"><span class="lineNum">      69 </span><span class="lineCov">         66 :     return getSourceProjectItemID().isValid();</span></a>
 <a name="70"><span class="lineNum">      70 </span>            : }</a>
 <a name="71"><span class="lineNum">      71 </span>            : </a>
-<a name="72"><span class="lineNum">      72 </span><span class="lineCov">         64 : ProjectItemID SourceFileReference::getSourceProjectItemID() const</span></a>
+<a name="72"><span class="lineNum">      72 </span><span class="lineCov">         66 : ProjectItemID SourceFileReference::getSourceProjectItemID() const</span></a>
 <a name="73"><span class="lineNum">      73 </span>            : {</a>
 <a name="74"><span class="lineNum">      74 </span>            :     jassert (source.get() == state[source.getPropertyID()].toString());</a>
-<a name="75"><span class="lineNum">      75 </span><span class="lineCov">         64 :     return ProjectItemID (source.get());</span></a>
+<a name="75"><span class="lineNum">      75 </span><span class="lineCov">         66 :     return ProjectItemID (source.get());</span></a>
 <a name="76"><span class="lineNum">      76 </span>            : }</a>
 <a name="77"><span class="lineNum">      77 </span>            : </a>
 <a name="78"><span class="lineNum">      78 </span><span class="lineNoCov">          0 : ProjectItem::Ptr SourceFileReference::getSourceProjectItem() const</span></a>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-07-29 12:00:29</td>
+            <td class="headerValue">2022-07-29 17:48:57</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">16</td>
@@ -196,26 +196,26 @@
 <a name="134"><span class="lineNum">     134 </span>            :     latenesses.clearQuick();</a>
 <a name="135"><span class="lineNum">     135 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="136"><span class="lineNum">     136 </span>            : </a>
-<a name="137"><span class="lineNum">     137 </span><span class="lineCov">       1632 : BeatPosition GrooveTemplate::beatsTimeToGroovyTime (BeatPosition beatsTime, float strength) const</span></a>
+<a name="137"><span class="lineNum">     137 </span><span class="lineCov">       1856 : BeatPosition GrooveTemplate::beatsTimeToGroovyTime (BeatPosition beatsTime, float strength) const</span></a>
 <a name="138"><span class="lineNum">     138 </span>            : {</a>
-<a name="139"><span class="lineNum">     139 </span><span class="lineCov">       1632 :     auto activeStrength = parameterized ? strength : 1.0f;</span></a>
+<a name="139"><span class="lineNum">     139 </span><span class="lineCov">       1856 :     auto activeStrength = parameterized ? strength : 1.0f;</span></a>
 <a name="140"><span class="lineNum">     140 </span>            : </a>
-<a name="141"><span class="lineNum">     141 </span><span class="lineCov">       1632 :     const double beatNum    = std::floor (beatsTime.inBeats() * notesPerBeat);</span></a>
-<a name="142"><span class="lineNum">     142 </span><span class="lineCov">       1632 :     const double offset     = notesPerBeat * (beatsTime.inBeats() - (beatNum / notesPerBeat));</span></a>
-<a name="143"><span class="lineNum">     143 </span><span class="lineCov">       1632 :     const int latenessIndex = juce::roundToInt (beatNum) % numNotes;</span></a>
+<a name="141"><span class="lineNum">     141 </span><span class="lineCov">       1856 :     const double beatNum    = std::floor (beatsTime.inBeats() * notesPerBeat);</span></a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineCov">       1856 :     const double offset     = notesPerBeat * (beatsTime.inBeats() - (beatNum / notesPerBeat));</span></a>
+<a name="143"><span class="lineNum">     143 </span><span class="lineCov">       1856 :     const int latenessIndex = juce::roundToInt (beatNum) % numNotes;</span></a>
 <a name="144"><span class="lineNum">     144 </span>            : </a>
-<a name="145"><span class="lineNum">     145 </span><span class="lineCov">       1632 :     const double lateness   = latenesses[latenessIndex] * activeStrength;</span></a>
-<a name="146"><span class="lineNum">     146 </span><span class="lineCov">       1632 :     const double t1         = (beatNum + 0.5f * lateness);</span></a>
-<a name="147"><span class="lineNum">     147 </span><span class="lineCov">       1632 :     const double t2minust1  = 1.0 + 0.5f * ((latenesses[(latenessIndex + 1) % numNotes] * activeStrength) - lateness);</span></a>
+<a name="145"><span class="lineNum">     145 </span><span class="lineCov">       1856 :     const double lateness   = latenesses[latenessIndex] * activeStrength;</span></a>
+<a name="146"><span class="lineNum">     146 </span><span class="lineCov">       1856 :     const double t1         = (beatNum + 0.5f * lateness);</span></a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineCov">       1856 :     const double t2minust1  = 1.0 + 0.5f * ((latenesses[(latenessIndex + 1) % numNotes] * activeStrength) - lateness);</span></a>
 <a name="148"><span class="lineNum">     148 </span>            : </a>
-<a name="149"><span class="lineNum">     149 </span><span class="lineCov">       1632 :     return BeatPosition::fromBeats ((t1 + offset * t2minust1) / notesPerBeat);</span></a>
+<a name="149"><span class="lineNum">     149 </span><span class="lineCov">       1856 :     return BeatPosition::fromBeats ((t1 + offset * t2minust1) / notesPerBeat);</span></a>
 <a name="150"><span class="lineNum">     150 </span>            : }</a>
 <a name="151"><span class="lineNum">     151 </span>            : </a>
-<a name="152"><span class="lineNum">     152 </span><span class="lineCov">        768 : TimePosition GrooveTemplate::editTimeToGroovyTime (TimePosition editTime, float strength, Edit&amp; edit) const</span></a>
+<a name="152"><span class="lineNum">     152 </span><span class="lineCov">        896 : TimePosition GrooveTemplate::editTimeToGroovyTime (TimePosition editTime, float strength, Edit&amp; edit) const</span></a>
 <a name="153"><span class="lineNum">     153 </span>            : {</a>
-<a name="154"><span class="lineNum">     154 </span><span class="lineCov">        768 :     auto beats = edit.tempoSequence.toBeats (editTime);</span></a>
-<a name="155"><span class="lineNum">     155 </span><span class="lineCov">        768 :     beats = beatsTimeToGroovyTime (beats, strength);</span></a>
-<a name="156"><span class="lineNum">     156 </span><span class="lineCov">        768 :     return edit.tempoSequence.toTime (beats);</span></a>
+<a name="154"><span class="lineNum">     154 </span><span class="lineCov">        896 :     auto beats = edit.tempoSequence.toBeats (editTime);</span></a>
+<a name="155"><span class="lineNum">     155 </span><span class="lineCov">        896 :     beats = beatsTimeToGroovyTime (beats, strength);</span></a>
+<a name="156"><span class="lineNum">     156 </span><span class="lineCov">        896 :     return edit.tempoSequence.toTime (beats);</span></a>
 <a name="157"><span class="lineNum">     157 </span>            : }</a>
 <a name="158"><span class="lineNum">     158 </span>            : </a>
 <a name="159"><span class="lineNum">     159 </span><span class="lineCov">        184 : bool GrooveTemplate::isEmpty() const</span></a>
@@ -348,10 +348,10 @@
 <a name="286"><span class="lineNum">     286 </span><span class="lineNoCov">          0 :     return activeGrooves[index];</span></a>
 <a name="287"><span class="lineNum">     287 </span>            : }</a>
 <a name="288"><span class="lineNum">     288 </span>            : </a>
-<a name="289"><span class="lineNum">     289 </span><span class="lineCov">        122 : const GrooveTemplate* GrooveTemplateManager::getTemplateByName (const juce::String&amp; name)</span></a>
+<a name="289"><span class="lineNum">     289 </span><span class="lineCov">        128 : const GrooveTemplate* GrooveTemplateManager::getTemplateByName (const juce::String&amp; name)</span></a>
 <a name="290"><span class="lineNum">     290 </span>            : {</a>
-<a name="291"><span class="lineNum">     291 </span><span class="lineCov">      17370 :     for (auto gt : activeGrooves)</span></a>
-<a name="292"><span class="lineNum">     292 </span><span class="lineCov">      17272 :         if (gt-&gt;getName() == name)</span></a>
+<a name="291"><span class="lineNum">     291 </span><span class="lineCov">      18432 :     for (auto gt : activeGrooves)</span></a>
+<a name="292"><span class="lineNum">     292 </span><span class="lineCov">      18328 :         if (gt-&gt;getName() == name)</span></a>
 <a name="293"><span class="lineNum">     293 </span><span class="lineCov">         24 :             return gt;</span></a>
 <a name="294"><span class="lineNum">     294 </span>            : </a>
 <a name="295"><span class="lineNum">     295 </span>            :     return {};</a>

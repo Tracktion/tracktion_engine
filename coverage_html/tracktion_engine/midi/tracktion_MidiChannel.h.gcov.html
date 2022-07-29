@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-07-29 12:00:29</td>
+            <td class="headerValue">2022-07-29 17:48:57</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -79,18 +79,18 @@
 <a name="17"><span class="lineNum">      17 </span>            : */</a>
 <a name="18"><span class="lineNum">      18 </span>            : struct MidiChannel</a>
 <a name="19"><span class="lineNum">      19 </span>            : {</a>
-<a name="20"><span class="lineNum">      20 </span><span class="lineCov">        337 :     MidiChannel() = default;</span></a>
+<a name="20"><span class="lineNum">      20 </span><span class="lineCov">        349 :     MidiChannel() = default;</span></a>
 <a name="21"><span class="lineNum">      21 </span>            :     MidiChannel (const MidiChannel&amp;) = default;</a>
 <a name="22"><span class="lineNum">      22 </span>            :     MidiChannel&amp; operator= (const MidiChannel&amp;) = default;</a>
 <a name="23"><span class="lineNum">      23 </span>            : </a>
 <a name="24"><span class="lineNum">      24 </span>            :     // Takes a number 1-16</a>
-<a name="25"><span class="lineNum">      25 </span><span class="lineCov">         81 :     explicit MidiChannel (int channelNumber1to16) noexcept  : channel ((uint8_t) channelNumber1to16)</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineCov">         89 :     explicit MidiChannel (int channelNumber1to16) noexcept  : channel ((uint8_t) channelNumber1to16)</span></a>
 <a name="26"><span class="lineNum">      26 </span>            :     {</a>
 <a name="27"><span class="lineNum">      27 </span>            :         jassert (channelNumber1to16 &gt; 0 &amp;&amp; channelNumber1to16 &lt;= 16);</a>
 <a name="28"><span class="lineNum">      28 </span>            :     }</a>
 <a name="29"><span class="lineNum">      29 </span>            : </a>
 <a name="30"><span class="lineNum">      30 </span>            :     explicit MidiChannel (const juce::var&amp; storedChannel) noexcept</a>
-<a name="31"><span class="lineNum">      31 </span><span class="lineCov">         81 :         : channel ((uint8_t) static_cast&lt;int&gt; (storedChannel))</span></a>
+<a name="31"><span class="lineNum">      31 </span><span class="lineCov">         93 :         : channel ((uint8_t) static_cast&lt;int&gt; (storedChannel))</span></a>
 <a name="32"><span class="lineNum">      32 </span>            :     {</a>
 <a name="33"><span class="lineNum">      33 </span>            :         if (! isValid())</a>
 <a name="34"><span class="lineNum">      34 </span>            :             channel = 1;</a>
@@ -105,14 +105,14 @@
 <a name="43"><span class="lineNum">      43 </span>            :     }</a>
 <a name="44"><span class="lineNum">      44 </span>            : </a>
 <a name="45"><span class="lineNum">      45 </span>            :     // Returns 1-16 or 0 for invalid</a>
-<a name="46"><span class="lineNum">      46 </span><span class="lineCov">         90 :     int getChannelNumber() const noexcept                       { return (int) channel; }</span></a>
+<a name="46"><span class="lineNum">      46 </span><span class="lineCov">        102 :     int getChannelNumber() const noexcept                       { return (int) channel; }</span></a>
 <a name="47"><span class="lineNum">      47 </span>            : </a>
 <a name="48"><span class="lineNum">      48 </span>            :     bool isValid() const noexcept                               { return channel != 0; }</a>
 <a name="49"><span class="lineNum">      49 </span>            : </a>
 <a name="50"><span class="lineNum">      50 </span>            :     bool operator== (const MidiChannel&amp; other) const noexcept   { return channel == other.channel; }</a>
 <a name="51"><span class="lineNum">      51 </span>            :     bool operator!= (const MidiChannel&amp; other) const noexcept   { return channel != other.channel; }</a>
 <a name="52"><span class="lineNum">      52 </span>            : </a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineCov">         81 :     operator juce::var() const                                  { return juce::var (getChannelNumber()); }</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">         89 :     operator juce::var() const                                  { return juce::var (getChannelNumber()); }</span></a>
 <a name="54"><span class="lineNum">      54 </span>            : </a>
 <a name="55"><span class="lineNum">      55 </span>            : private:</a>
 <a name="56"><span class="lineNum">      56 </span>            :     uint8_t channel = 0;</a>
