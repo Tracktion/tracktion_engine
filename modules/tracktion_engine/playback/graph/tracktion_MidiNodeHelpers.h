@@ -121,7 +121,7 @@ namespace MidiNodeHelpers
     inline void sanityCheckMidiBuffer (const MidiMessageArray& midi, double maxTimeStamp)
     {
         for (const auto& m : midi)
-            jassert (m.getTimeStamp() < maxTimeStamp);
+            jassertquiet (m.getTimeStamp() < maxTimeStamp);
     }
 }
 
