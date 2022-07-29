@@ -78,6 +78,9 @@ Functions</h2></td></tr>
 <tr class="separator:a5e260e7d2d706c13759a9ff1eb80ed00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac2c6ffe5a4da7c6933f42a0cc83313b2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine_1_1MidiNodeHelpers.html#ac2c6ffe5a4da7c6933f42a0cc83313b2">createNoteOffs</a> (<a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html">MidiMessageArray</a> &amp;destination, const juce::MidiMessageSequence &amp;sourceSequence, <a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html#ae21e698aa78c0b638625b354dc998efb">MidiMessageArray::MPESourceID</a> midiSourceID, double time, double midiTimeOffset, bool isPlaying)</td></tr>
 <tr class="separator:ac2c6ffe5a4da7c6933f42a0cc83313b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe685681eef1653d3a025b7570268b6f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine_1_1MidiNodeHelpers.html#afe685681eef1653d3a025b7570268b6f">sanityCheckMidiBuffer</a> (const <a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html">MidiMessageArray</a> &amp;midi, double maxTimeStamp)</td></tr>
+<tr class="memdesc:afe685681eef1653d3a025b7570268b6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asserts if any MIDI messages are timestamped outside the given range.  <a href="namespacetracktion_1_1engine_1_1MidiNodeHelpers.html#afe685681eef1653d3a025b7570268b6f">More...</a><br /></td></tr>
+<tr class="separator:afe685681eef1653d3a025b7570268b6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="a5e260e7d2d706c13759a9ff1eb80ed00"></a>
@@ -200,10 +203,40 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="afe685681eef1653d3a025b7570268b6f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe685681eef1653d3a025b7570268b6f">&#9670;&nbsp;</a></span>sanityCheckMidiBuffer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::MidiNodeHelpers::sanityCheckMidiBuffer </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html">MidiMessageArray</a> &amp;&#160;</td>
+          <td class="paramname"><em>midi</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>maxTimeStamp</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Asserts if any MIDI messages are timestamped outside the given range. </p>
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jul 28 2022 12:12:16 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jul 29 2022 11:47:57 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

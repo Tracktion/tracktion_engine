@@ -4622,6 +4622,13 @@
       <anchor>ac2c6ffe5a4da7c6933f42a0cc83313b2</anchor>
       <arglist>(MidiMessageArray &amp;destination, const juce::MidiMessageSequence &amp;sourceSequence, MidiMessageArray::MPESourceID midiSourceID, double time, double midiTimeOffset, bool isPlaying)</arglist>
     </member>
+    <member kind="function">
+      <type>void</type>
+      <name>sanityCheckMidiBuffer</name>
+      <anchorfile>namespacetracktion_1_1engine_1_1MidiNodeHelpers.html</anchorfile>
+      <anchor>afe685681eef1653d3a025b7570268b6f</anchor>
+      <arglist>(const MidiMessageArray &amp;midi, double maxTimeStamp)</arglist>
+    </member>
   </compound>
   <compound kind="file">
     <name>tracktion_MidiNote.h</name>
@@ -84379,6 +84386,13 @@
       <anchorfile>namespacetracktion_1_1engine_1_1MidiNodeHelpers.html</anchorfile>
       <anchor>ac2c6ffe5a4da7c6933f42a0cc83313b2</anchor>
       <arglist>(MidiMessageArray &amp;destination, const juce::MidiMessageSequence &amp;sourceSequence, MidiMessageArray::MPESourceID midiSourceID, double time, double midiTimeOffset, bool isPlaying)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>sanityCheckMidiBuffer</name>
+      <anchorfile>namespacetracktion_1_1engine_1_1MidiNodeHelpers.html</anchorfile>
+      <anchor>afe685681eef1653d3a025b7570268b6f</anchor>
+      <arglist>(const MidiMessageArray &amp;midi, double maxTimeStamp)</arglist>
     </member>
   </compound>
   <compound kind="namespace">
