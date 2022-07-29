@@ -40,6 +40,9 @@ public:
             runStuckNotesTests (setup, true, 2);
             runStuckNotesTests (setup, false, 2);
         }
+
+        runProgramChangeTests (false);
+        runProgramChangeTests (true);
     }
 
 private:
@@ -133,6 +136,95 @@ private:
 
         // Check the last note ends before the end of the clip
         expectLessOrEqual (noteEvents.back().getTimeStamp(), mc->getPosition().getEnd().inSeconds());
+    }
+
+    void runProgramChangeTests (bool sendBankSelect)
+    {
+        const auto seqXml = R"(
+        <SEQUENCE ver="1" channelNumber="1">
+          <CONTROL b="0.0" type="4097" val="6784"/>
+          <CONTROL b="0.0" type="7" val="12800"/>
+          <CONTROL b="0.0" type="39" val="5376"/>
+          <CONTROL b="0.0" type="10" val="8192"/>
+          <CONTROL b="0.0" type="42" val="0"/>
+          <NOTE p="46" b="0.0" l="0.7139999999999986" v="100" c="0"/>
+          <NOTE p="47" b="1.186" l="0.7139999999999986" v="100" c="0"/>
+          <NOTE p="50" b="1.899999999999999" l="0.7680000000000007" v="90" c="0"/>
+          <NOTE p="53" b="2.667999999999999" l="1.536000000000001" v="110" c="0"/>
+          <NOTE p="58" b="3.204000000000001" l="0.7699999999999996" v="95" c="0"/>
+          <NOTE p="57" b="3.974" l="0.7519999999999989" v="100" c="0"/>
+          <NOTE p="56" b="4.726" l="0.75" v="100" c="0"/>
+          <NOTE p="57" b="5.476" l="0.7760000000000034" v="102" c="0"/>
+          <NOTE p="53" b="6.252" l="1.043999999999997" v="105" c="0"/>
+        </SEQUENCE>)";
+
+        beginTest ("Program/bank changes");
+
+        // Create a clip with the above sequence
+        // Render the output and ensure the CC messages are before the note events
+
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
+        auto edit = Edit::createSingleTrackEdit (engine);
+        auto mc = getAudioTracks (*edit)[0]->insertMIDIClip ({ 0_tp, 0_tp }, nullptr);
+        mc->setSendingBankChanges (sendBankSelect);
+
+        auto& sequence = mc->getSequence();
+        sequence.copyFrom (MidiList (juce::ValueTree::fromXml (seqXml), nullptr), nullptr);
+        mc->setEnd (edit->tempoSequence.toTime (sequence.getLastBeatNumber()), true);
+
+        for (auto timeBase : { MidiList::TimeBase::seconds, MidiList::TimeBase::beats, MidiList::TimeBase::beatsRaw })
+        {
+            bool hasFoundNoteEvents = false;
+            int numNonNoteEventsAferNoteEvents = 0, numCCEvents = 0, numPCEvents = 0, numNoteOnEvents = 0, numNoteOffEvents = 0;
+
+            const auto midiMessageSequence = sequence.exportToPlaybackMidiSequence (*mc, timeBase, false);
+
+            for (auto meh : midiMessageSequence)
+            {
+                if (meh->message.isNoteOnOrOff())
+                    hasFoundNoteEvents = true;
+
+                if (meh->message.isController())
+                {
+                    ++numCCEvents;
+
+                    if (hasFoundNoteEvents)
+                        ++numNonNoteEventsAferNoteEvents;
+                }
+                else if (meh->message.isProgramChange())
+                {
+                    ++numPCEvents;
+
+                    if (hasFoundNoteEvents)
+                        ++numNonNoteEventsAferNoteEvents;
+                }
+                else if (meh->message.isNoteOn())
+                {
+                    ++numNoteOnEvents;
+                }
+                else if (meh->message.isNoteOff())
+                {
+                    ++numNoteOffEvents;
+                }
+            }
+
+            expectEquals (numNoteOnEvents, numNoteOffEvents);
+            expectEquals (numNoteOnEvents, 9);
+            expectEquals (numCCEvents, 4 + (sendBankSelect ? 2 : 0));
+            expectEquals (numPCEvents, 1);
+            expectEquals (numNonNoteEventsAferNoteEvents, 0);
+
+            // Check round-trip import of sequence
+            {
+                MidiList importedList;
+                importedList.setMidiChannel (MidiChannel (1));
+                importedList.importMidiSequence (midiMessageSequence, nullptr, 0_tp, nullptr);
+
+                expectEquals (importedList.getNotes().size(), sequence.getNotes().size());
+                expectEquals (importedList.getControllerEvents().size(), sequence.getControllerEvents().size() + (sendBankSelect ? 2 : 0));
+                expectEquals (importedList.getSysexEvents().size(), sequence.getSysexEvents().size());
+            }
+        }
     }
 
     void testMidiClip (MidiClip& mc, test_utilities::TestSetup ts)

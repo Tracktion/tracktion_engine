@@ -1914,6 +1914,38 @@ juce::MidiMessageSequence MidiList::createDefaultPlaybackMidiSequence (const Mid
     if (grooveTemplate != nullptr && grooveTemplate->isEmpty())
         grooveTemplate = nullptr;
 
+    // Do controllers first in case they send and program or bank change messages
+    auto& controllerEvents = list.getControllerEvents();
+
+    {
+        // Add cumulative controller events that are off the start
+        juce::Array<int> doneControllers;
+
+        for (auto e : controllerEvents)
+        {
+            auto beat = e->getBeatPosition();
+
+            if (beat < firstNoteBeat)
+            {
+                if (! doneControllers.contains (e->getType()))
+                {
+                    addToSequence (destSequence, clip, timeBase, *e, channelNumber);
+                    doneControllers.add (e->getType());
+                }
+            }
+        }
+    }
+
+    // Add the real controller events:
+    for (auto e : controllerEvents)
+    {
+        auto beat = e->getBeatPosition();
+
+        if (beat >= firstNoteBeat && beat < lastNoteBeat)
+            addToSequence (destSequence, clip, timeBase, *e, channelNumber);
+    }
+
+    // Then the note events
     if (! generateMPE)
     {
         for (int i = 0; i < numNotes; ++i)
@@ -1963,36 +1995,6 @@ juce::MidiMessageSequence MidiList::createDefaultPlaybackMidiSequence (const Mid
 
             assigner.addNote (*note);
         }
-    }
-
-    auto& controllerEvents = list.getControllerEvents();
-
-    {
-        // Add cumulative controller events that are off the start
-        juce::Array<int> doneControllers;
-
-        for (auto e : controllerEvents)
-        {
-            auto beat = e->getBeatPosition();
-
-            if (beat < firstNoteBeat)
-            {
-                if (! doneControllers.contains (e->getType()))
-                {
-                    addToSequence (destSequence, clip, timeBase, *e, channelNumber);
-                    doneControllers.add (e->getType());
-                }
-            }
-        }
-    }
-
-    // Add the real controller events:
-    for (auto e : controllerEvents)
-    {
-        auto beat = e->getBeatPosition();
-
-        if (beat >= firstNoteBeat && beat < lastNoteBeat)
-            addToSequence (destSequence, clip, timeBase, *e, channelNumber);
     }
 
     // Add the SysEx events:
