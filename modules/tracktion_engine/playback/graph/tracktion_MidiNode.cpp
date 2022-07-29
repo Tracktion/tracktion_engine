@@ -10,6 +10,7 @@
 
 #include "tracktion_MidiNodeHelpers.h"
 
+#define TRACKTION_SANITY_CHECK_MIDI_BUFFERS 0
 
 namespace tracktion { inline namespace engine
 {
@@ -216,6 +217,10 @@ void MidiNode::processSection (Node::ProcessContext& pc,
                                          localTime.getEnd(),
                                          localTime.getLength() - 0.00001,
                                          getPlayHead().isPlaying());
+
+   #if TRACKTION_SANITY_CHECK_MIDI_BUFFERS
+    MidiNodeHelpers::sanityCheckMidiBuffer (pc.buffers.midi, localTime.getLength());
+   #endif
 }
 
 

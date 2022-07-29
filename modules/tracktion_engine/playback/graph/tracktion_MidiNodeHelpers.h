@@ -43,7 +43,7 @@ namespace MidiNodeHelpers
                     sourceSequence.createControllerUpdatesForTime (i, time, controllerMessagesScratchBuffer);
 
                 for (auto& m : controllerMessagesScratchBuffer)
-                    destBuffer.addMidiMessage (m, midiSourceID);
+                    destBuffer.addMidiMessage (m, 0.0001, midiSourceID);
             }
 
             if (! clipLevel.isMute())
@@ -115,6 +115,13 @@ namespace MidiNodeHelpers
                     destination.addMidiMessage (juce::MidiMessage::allNotesOff (i), midiTimeOffset, midiSourceID);
             }
         }
+    }
+
+    /** Asserts if any MIDI messages are timestamped outside the given range. */
+    inline void sanityCheckMidiBuffer (const MidiMessageArray& midi, double maxTimeStamp)
+    {
+        for (const auto& m : midi)
+            jassert (m.getTimeStamp() < maxTimeStamp);
     }
 }
 

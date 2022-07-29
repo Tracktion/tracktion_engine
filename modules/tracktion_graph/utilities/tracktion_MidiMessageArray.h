@@ -238,7 +238,7 @@ struct MidiMessageArray
 
     void sortByTimestamp()
     {
-        std::stable_sort (messages.begin(), messages.end(), [] (const juce::MidiMessage& a, const juce::MidiMessage& b)
+        choc::sorting::stable_sort (messages.begin(), messages.end(), [] (const juce::MidiMessage& a, const juce::MidiMessage& b)
         {
             auto t1 = a.getTimeStamp();
             auto t2 = b.getTimeStamp();
