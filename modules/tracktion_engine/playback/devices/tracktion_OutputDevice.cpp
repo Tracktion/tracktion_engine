@@ -84,7 +84,7 @@ juce::String OutputDevice::getDeviceID() const
     if (isMidi())
         n += TRANS("MIDI");
     else
-        n += engine.getDeviceManager().deviceManager.getCurrentAudioDeviceType();
+        n += engine.getDeviceManager().deviceManager->getCurrentAudioDeviceType();
 
     return juce::String::toHexString (n.hashCode());
 }

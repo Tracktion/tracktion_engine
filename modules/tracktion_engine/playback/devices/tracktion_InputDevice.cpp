@@ -123,7 +123,7 @@ juce::String InputDevice::getSelectableDescription()
 
 void InputDevice::setRetrospectiveLock (Engine& e, const juce::Array<InputDeviceInstance*>& devices, bool lock)
 {
-    const juce::ScopedLock sl (e.getDeviceManager().deviceManager.getAudioCallbackLock());
+    const juce::ScopedLock sl (e.getDeviceManager().deviceManager->getAudioCallbackLock());
 
     for (auto* idi : devices)
         idi->getInputDevice().retrospectiveRecordLock = lock;

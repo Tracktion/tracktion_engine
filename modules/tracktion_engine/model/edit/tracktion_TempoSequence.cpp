@@ -590,7 +590,7 @@ void TempoSequence::updateTempoData()
 
     {
         //TODO: This lock should be removed when all playback classes are using the new tempo::Sequence class
-        juce::ScopedLock sl (edit.engine.getDeviceManager().deviceManager.getAudioCallbackLock());
+        juce::ScopedLock sl (edit.engine.getDeviceManager().deviceManager->getAudioCallbackLock());
         internalSequence = std::move (newSeq);
     }
 }

@@ -460,7 +460,7 @@ void Plugin::baseClassInitialise (const PluginInitialisationInfo& info)
 
     {
         auto& dm = engine.getDeviceManager();
-        const juce::ScopedLock sl (dm.deviceManager.getAudioCallbackLock());
+        const juce::ScopedLock sl (dm.deviceManager->getAudioCallbackLock());
 
         if (initialiseCount++ == 0 || sampleRateOrBlockSizeChanged)
         {

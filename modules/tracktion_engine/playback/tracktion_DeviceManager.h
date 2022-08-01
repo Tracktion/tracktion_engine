@@ -20,7 +20,7 @@ class DeviceManager     : public juce::ChangeBroadcaster,
                           private juce::AudioIODeviceCallback
 {
     friend class Engine;
-    DeviceManager (Engine&);
+    DeviceManager (Engine&, const std::shared_ptr<juce::AudioDeviceManager>& devMgr = nullptr);
 
 public:
     //==============================================================================
@@ -153,7 +153,7 @@ public:
     double getOutputLatencySeconds() const;
 
     std::unique_ptr<HostedAudioDeviceInterface> hostedAudioDeviceInterface;
-    juce::AudioDeviceManager deviceManager;
+    std::shared_ptr<juce::AudioDeviceManager> deviceManager;
 
     juce::OwnedArray<MidiInputDevice, juce::CriticalSection> midiInputs;
     juce::OwnedArray<MidiOutputDevice> midiOutputs;

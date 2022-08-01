@@ -2040,11 +2040,11 @@ void Edit::setLowLatencyMonitoring (bool enabled, const juce::Array<EditItemID>&
     juce::AudioDeviceManager::AudioDeviceSetup setup;
 
     auto& deviceManager = engine.getDeviceManager().deviceManager;
-    deviceManager.getAudioDeviceSetup (setup);
+    deviceManager->getAudioDeviceSetup (setup);
 
     if (lowLatencyMonitoring)
     {
-        if (deviceManager.getCurrentAudioDevice() != nullptr)
+        if (deviceManager->getCurrentAudioDevice() != nullptr)
         {
             normalLatencyBufferSizeSeconds = setup.bufferSize / setup.sampleRate;
             setup.bufferSize = juce::roundToInt ((static_cast<double> (engine.getPropertyStorage().getProperty (SettingID::lowLatencyBuffer, 5.8)) / 1000.0) * setup.sampleRate);
@@ -2062,7 +2062,7 @@ void Edit::setLowLatencyMonitoring (bool enabled, const juce::Array<EditItemID>&
         setup.bufferSize = juce::roundToInt (normalLatencyBufferSizeSeconds * setup.sampleRate);
     }
 
-    if (auto dev = deviceManager.getCurrentAudioDevice())
+    if (auto dev = deviceManager->getCurrentAudioDevice())
     {
         if (! enabled || (enabled && setup.bufferSize < dev->getCurrentBufferSizeSamples()))
         {
@@ -2080,7 +2080,7 @@ void Edit::setLowLatencyMonitoring (bool enabled, const juce::Array<EditItemID>&
 
             const bool isPlaying = getTransport().isPlaying();
             getTransport().freePlaybackContext();
-            deviceManager.setAudioDeviceSetup (setup, false);
+            deviceManager->setAudioDeviceSetup (setup, false);
             getTransport().ensureContextAllocated();
 
             if (isPlaying)

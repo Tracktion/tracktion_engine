@@ -311,7 +311,7 @@ void HostedAudioDeviceInterface::initialise (const Parameters& p)
 
     // First check for an existing hosted device
     if (deviceType == nullptr)
-        for (auto device : dm.deviceManager.getAvailableDeviceTypes())
+        for (auto device : dm.deviceManager->getAvailableDeviceTypes())
             if (auto hostedAudioDeviceType = dynamic_cast<HostedAudioDeviceType*> (device))
                 deviceType = hostedAudioDeviceType;
 
@@ -319,13 +319,13 @@ void HostedAudioDeviceInterface::initialise (const Parameters& p)
     if (deviceType == nullptr)
     {
         deviceType = new HostedAudioDeviceType (*this);
-        dm.deviceManager.addAudioDeviceType (std::unique_ptr<HostedAudioDeviceType> (deviceType));
+        dm.deviceManager->addAudioDeviceType (std::unique_ptr<HostedAudioDeviceType> (deviceType));
     }
 
-    dm.deviceManager.setCurrentAudioDeviceType ("Hosted Device", true);
+    dm.deviceManager->setCurrentAudioDeviceType ("Hosted Device", true);
     dm.initialise (parameters.inputChannels, parameters.outputChannels);
-    jassert (dm.deviceManager.getCurrentAudioDeviceType() == "Hosted Device");
-    jassert (dm.deviceManager.getCurrentDeviceTypeObject() == deviceType);
+    jassert (dm.deviceManager->getCurrentAudioDeviceType() == "Hosted Device");
+    jassert (dm.deviceManager->getCurrentDeviceTypeObject() == deviceType);
 
     for (int i = 0; i < dm.getNumWaveOutDevices(); i++)
         if (auto wo = dm.getWaveOutDevice (i))

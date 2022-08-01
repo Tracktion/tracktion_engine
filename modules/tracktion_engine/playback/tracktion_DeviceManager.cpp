@@ -86,7 +86,7 @@ struct DeviceManager::WaveDeviceList
 {
     WaveDeviceList (DeviceManager& dm_) : dm (dm_)
     {
-        if (auto device = dm.deviceManager.getCurrentAudioDevice())
+        if (auto device = dm.deviceManager->getCurrentAudioDevice())
         {
             deviceName = device->getName();
 
@@ -192,15 +192,22 @@ private:
 
 //==============================================================================
 //==============================================================================
-DeviceManager::DeviceManager (Engine& e) : engine (e)
+DeviceManager::DeviceManager (Engine& e, const std::shared_ptr<juce::AudioDeviceManager>& devMgr) : engine (e)
 {
     CRASH_TRACER
 
     contextDeviceClearer = std::make_unique<ContextDeviceClearer> (*this);
 
-    deviceManager.addChangeListener (this);
-
-    gDeviceManager = &deviceManager;
+    if (devMgr == nullptr)
+    {
+        deviceManager = std::make_shared<juce::AudioDeviceManager>();
+    }
+    else
+    {
+        deviceManager = devMgr;
+    }
+    deviceManager->addChangeListener (this);
+    gDeviceManager = deviceManager.get();
 }
 
 DeviceManager::~DeviceManager()
@@ -208,7 +215,7 @@ DeviceManager::~DeviceManager()
     gDeviceManager = nullptr;
 
     CRASH_TRACER
-    deviceManager.removeChangeListener (this);
+    deviceManager->removeChangeListener (this);
 }
 
 HostedAudioDeviceInterface& DeviceManager::getHostedAudioDeviceInterface()
@@ -222,16 +229,16 @@ HostedAudioDeviceInterface& DeviceManager::getHostedAudioDeviceInterface()
 bool DeviceManager::isHostedAudioDeviceInterfaceInUse() const
 {
     return hostedAudioDeviceInterface != nullptr
-        && deviceManager.getCurrentAudioDeviceType() == "Hosted Device";
+        && deviceManager->getCurrentAudioDeviceType() == "Hosted Device";
 }
 
 void DeviceManager::removeHostedAudioDeviceInterface()
 {
-    for (auto device : deviceManager.getAvailableDeviceTypes())
+    for (auto device : deviceManager->getAvailableDeviceTypes())
     {
         if (device->getTypeName() == "Hosted Device")
         {
-            deviceManager.removeAudioDeviceType (device);
+            deviceManager->removeAudioDeviceType (device);
             break;
         }
     }
@@ -272,7 +279,7 @@ void DeviceManager::closeDevices()
     jassert (activeContexts.isEmpty());
     clearAllContextDevices();
 
-    deviceManager.removeAudioCallback (this);
+    deviceManager->removeAudioCallback (this);
 
     midiOutputs.clear();
     midiInputs.clear();
@@ -448,14 +455,14 @@ bool DeviceManager::isMSWavetableSynthPresent() const
 void DeviceManager::resetToDefaults (bool deviceSettings, bool resetInputDevices, bool resetOutputDevices, bool latencySettings, bool mixSettings)
 {
     TRACKTION_LOG ("Returning audio settings to defaults");
-    deviceManager.removeAudioCallback (this);
+    deviceManager->removeAudioCallback (this);
 
     auto& storage = engine.getPropertyStorage();
 
     if (deviceSettings)
     {
         storage.removeProperty (SettingID::audio_device_setup);
-        storage.removePropertyItem (SettingID::audiosettings, deviceManager.getCurrentAudioDeviceType());
+        storage.removePropertyItem (SettingID::audiosettings, deviceManager->getCurrentAudioDeviceType());
     }
 
     if (latencySettings)
@@ -481,7 +488,7 @@ void DeviceManager::resetToDefaults (bool deviceSettings, bool resetInputDevices
             wod->resetToDefault();
 
     loadSettings();
-    deviceManager.addAudioCallback (this);
+    deviceManager->addAudioCallback (this);
     TransportControl::restartAllTransports (engine, false);
     SelectionManager::refreshAllPropertyPanels();
 }
@@ -583,7 +590,7 @@ void DeviceManager::rebuildWaveDeviceList()
 
     ContextDeviceListRebuilder deviceRebuilder (*this);
 
-    deviceManager.removeAudioCallback (this);
+    deviceManager->removeAudioCallback (this);
 
     waveInputs.clear();
     waveOutputs.clear();
@@ -644,7 +651,7 @@ void DeviceManager::rebuildWaveDeviceList()
     TransportControl::restartAllTransports (engine, false);
 
     checkDefaultDevicesAreValid();
-    deviceManager.addAudioCallback (this);
+    deviceManager->addAudioCallback (this);
 }
 
 void DeviceManager::loadSettings()
@@ -656,7 +663,7 @@ void DeviceManager::loadSettings()
         CRASH_TRACER
         if (isHostedAudioDeviceInterfaceInUse())
         {
-            error = deviceManager.initialise (defaultNumInputChannelsToOpen,
+            error = deviceManager->initialise (defaultNumInputChannelsToOpen,
                                               defaultNumOutputChannelsToOpen,
                                               nullptr, false, "Hosted Device", nullptr);
         }
@@ -665,11 +672,11 @@ void DeviceManager::loadSettings()
             auto audioXml = storage.getXmlProperty (SettingID::audio_device_setup);
 
             if (audioXml != nullptr)
-                error = deviceManager.initialise (defaultNumInputChannelsToOpen,
+                error = deviceManager->initialise (defaultNumInputChannelsToOpen,
                                                   defaultNumOutputChannelsToOpen,
                                                   audioXml.get(), true);
             else
-                error = deviceManager.initialiseWithDefaultDevices (defaultNumInputChannelsToOpen,
+                error = deviceManager->initialiseWithDefaultDevices (defaultNumInputChannelsToOpen,
                                                                     defaultNumOutputChannelsToOpen);
         }
 
@@ -688,7 +695,7 @@ void DeviceManager::loadSettings()
 
     if (! engine.getEngineBehaviour().isDescriptionOfWaveDevicesSupported())   //else UI will take care about inputs/outputs names and their mapping to device channels
     {
-        if (auto n = storage.getXmlPropertyItem (SettingID::audiosettings, deviceManager.getCurrentAudioDeviceType()))
+        if (auto n = storage.getXmlPropertyItem (SettingID::audiosettings, deviceManager->getCurrentAudioDeviceType()))
         {
             outMonoChans.parseString (n->getStringAttribute ("monoChansOut", outMonoChans.toString (2)), 2);
             inStereoChans.parseString (n->getStringAttribute ("stereoChansIn", inStereoChans.toString (2)), 2);
@@ -697,7 +704,7 @@ void DeviceManager::loadSettings()
         }
     }
 
-    auto currentDeviceType = deviceManager.getCurrentAudioDeviceType();
+    auto currentDeviceType = deviceManager->getCurrentAudioDeviceType();
     defaultWaveOutIndex = storage.getPropertyItem (SettingID::defaultWaveOutDevice, currentDeviceType, 0);
     defaultWaveInIndex = storage.getPropertyItem (SettingID::defaultWaveInDevice, currentDeviceType, 0);
 
@@ -709,12 +716,12 @@ void DeviceManager::saveSettings()
 {
     auto& storage = engine.getPropertyStorage();
 
-    if (auto audioXml = deviceManager.createStateXml())
+    if (auto audioXml = deviceManager->createStateXml())
         storage.setXmlProperty (SettingID::audio_device_setup, *audioXml);
 
     if (! engine.getEngineBehaviour().isDescriptionOfWaveDevicesSupported())
     {
-        if (deviceManager.getCurrentAudioDevice() != nullptr)
+        if (deviceManager->getCurrentAudioDevice() != nullptr)
         {
             juce::XmlElement n ("AUDIODEVICE");
 
@@ -723,7 +730,7 @@ void DeviceManager::saveSettings()
             n.setAttribute ("monoChansOut", outMonoChans.toString (2));
             n.setAttribute ("stereoChansIn", inStereoChans.toString (2));
 
-            storage.setXmlPropertyItem (SettingID::audiosettings, deviceManager.getCurrentAudioDeviceType(), n);
+            storage.setXmlPropertyItem (SettingID::audiosettings, deviceManager->getCurrentAudioDeviceType(), n);
         }
     }
 }
@@ -750,7 +757,7 @@ void DeviceManager::checkDefaultDevicesAreValid()
         }
 
         if (defaultWaveOutIndex >= 0)
-            storage.setPropertyItem (SettingID::defaultWaveOutDevice, deviceManager.getCurrentAudioDeviceType(), defaultWaveOutIndex);
+            storage.setPropertyItem (SettingID::defaultWaveOutDevice, deviceManager->getCurrentAudioDeviceType(), defaultWaveOutIndex);
     }
 
     if (getDefaultMidiOutDevice() == nullptr
@@ -786,7 +793,7 @@ void DeviceManager::checkDefaultDevicesAreValid()
         }
 
         if (defaultWaveInIndex >= 0)
-            storage.setPropertyItem (SettingID::defaultWaveInDevice, deviceManager.getCurrentAudioDeviceType(), defaultWaveInIndex);
+            storage.setPropertyItem (SettingID::defaultWaveInDevice, deviceManager->getCurrentAudioDeviceType(), defaultWaveInIndex);
     }
 
     if (getDefaultMidiInDevice() == nullptr
@@ -810,7 +817,7 @@ void DeviceManager::checkDefaultDevicesAreValid()
 
 double DeviceManager::getSampleRate() const
 {
-    if (auto device = deviceManager.getCurrentAudioDevice())
+    if (auto device = deviceManager->getCurrentAudioDevice())
         return device->getCurrentSampleRate();
 
     return 44100;
@@ -818,7 +825,7 @@ double DeviceManager::getSampleRate() const
 
 int DeviceManager::getBitDepth() const
 {
-    if (auto device = deviceManager.getCurrentAudioDevice())
+    if (auto device = deviceManager->getCurrentAudioDevice())
         return device->getCurrentBitDepth();
 
     return 16;
@@ -826,7 +833,7 @@ int DeviceManager::getBitDepth() const
 
 int DeviceManager::getBlockSize() const
 {
-    if (auto device = deviceManager.getCurrentAudioDevice())
+    if (auto device = deviceManager->getCurrentAudioDevice())
         return device->getCurrentBufferSizeSamples();
 
     return 256;
@@ -850,7 +857,7 @@ void DeviceManager::setDefaultWaveOutDevice (int index)
         {
             defaultWaveOutIndex = index;
             engine.getPropertyStorage().setPropertyItem (SettingID::defaultWaveOutDevice,
-                                                         deviceManager.getCurrentAudioDeviceType(), index);
+                                                         deviceManager->getCurrentAudioDeviceType(), index);
         }
     }
 
@@ -866,7 +873,7 @@ void DeviceManager::setDefaultWaveInDevice (int index)
         {
             defaultWaveInIndex = index;
             engine.getPropertyStorage().setPropertyItem (SettingID::defaultWaveInDevice,
-                                                         deviceManager.getCurrentAudioDeviceType(), index);
+                                                         deviceManager->getCurrentAudioDeviceType(), index);
         }
     }
 
@@ -1049,7 +1056,7 @@ OutputDevice* DeviceManager::findOutputDeviceWithName (const juce::String& name)
 
 int DeviceManager::getRecordAdjustmentSamples()
 {
-    if (auto d = deviceManager.getCurrentAudioDevice())
+    if (auto d = deviceManager->getCurrentAudioDevice())
         return d->getOutputLatencyInSamples() + d->getInputLatencyInSamples();
 
     return 0;
@@ -1057,7 +1064,7 @@ int DeviceManager::getRecordAdjustmentSamples()
 
 double DeviceManager::getRecordAdjustmentMs()
 {
-    if (auto d = deviceManager.getCurrentAudioDevice())
+    if (auto d = deviceManager->getCurrentAudioDevice())
         return getRecordAdjustmentSamples() * 1000.0 / d->getCurrentSampleRate();
 
     return 0.0;
@@ -1160,7 +1167,7 @@ void DeviceManager::audioDeviceIOCallbackInternal (const float** inputChannelDat
                                 dest[j] = 0;
 
             streamTime = blockStreamTime.getEnd();
-            currentCpuUsage = deviceManager.getCpuUsage();
+            currentCpuUsage = deviceManager->getCpuUsage();
         }
 
         if (globalOutputAudioProcessor != nullptr)
@@ -1253,7 +1260,7 @@ void DeviceManager::audioDeviceStopped()
 
 void DeviceManager::updateNumCPUs()
 {
-    const juce::ScopedLock sl (deviceManager.getAudioCallbackLock());
+    const juce::ScopedLock sl (deviceManager->getAudioCallbackLock());
     const juce::ScopedLock cl (contextLock);
 
     for (auto c : activeContexts)
@@ -1305,11 +1312,11 @@ void DeviceManager::reloadAllContextDevices()
 
 void DeviceManager::setGlobalOutputAudioProcessor (juce::AudioProcessor* newProcessor)
 {
-    const juce::ScopedLock sl (deviceManager.getAudioCallbackLock());
+    const juce::ScopedLock sl (deviceManager->getAudioCallbackLock());
     globalOutputAudioProcessor.reset (newProcessor);
 
     if (globalOutputAudioProcessor != nullptr)
-        if (auto* audioIODevice = deviceManager.getCurrentAudioDevice())
+        if (auto* audioIODevice = deviceManager->getCurrentAudioDevice())
             globalOutputAudioProcessor->prepareToPlay (currentSampleRate, audioIODevice->getCurrentBufferSizeSamples());
 }
 
