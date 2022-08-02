@@ -84,7 +84,7 @@ public:
             callback->audioDeviceIOCallback (buffer.getArrayOfReadPointers(),
                                              std::min (buffer.getNumChannels(), audioIf.parameters.inputChannels),
                                              buffer.getArrayOfWritePointers(),
-                                             std::min (buffer.getNumChannels(), audioIf.parameters.inputChannels),
+                                             std::min (buffer.getNumChannels(), audioIf.parameters.outputChannels),
                                              buffer.getNumSamples());
     }
 
