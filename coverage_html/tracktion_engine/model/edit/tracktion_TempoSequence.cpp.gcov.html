@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-08-02 14:58:32</td>
+            <td class="headerValue">2022-08-02 15:07:38</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">65</td>
@@ -564,10 +564,10 @@
 <a name="502"><span class="lineNum">     502 </span>            : }</a>
 <a name="503"><span class="lineNum">     503 </span>            : </a>
 <a name="504"><span class="lineNum">     504 </span>            : //==============================================================================</a>
-<a name="505"><span class="lineNum">     505 </span><span class="lineCov">       4188 : BeatPosition TempoSequence::toBeats (TimePosition time) const</span></a>
+<a name="505"><span class="lineNum">     505 </span><span class="lineCov">       4316 : BeatPosition TempoSequence::toBeats (TimePosition time) const</span></a>
 <a name="506"><span class="lineNum">     506 </span>            : {</a>
-<a name="507"><span class="lineNum">     507 </span><span class="lineCov">       4188 :     updateTempoDataIfNeeded();</span></a>
-<a name="508"><span class="lineNum">     508 </span><span class="lineCov">       4188 :     return internalSequence.toBeats (time);</span></a>
+<a name="507"><span class="lineNum">     507 </span><span class="lineCov">       4316 :     updateTempoDataIfNeeded();</span></a>
+<a name="508"><span class="lineNum">     508 </span><span class="lineCov">       4316 :     return internalSequence.toBeats (time);</span></a>
 <a name="509"><span class="lineNum">     509 </span>            : }</a>
 <a name="510"><span class="lineNum">     510 </span>            : </a>
 <a name="511"><span class="lineNum">     511 </span><span class="lineCov">          2 : BeatRange TempoSequence::toBeats (TimeRange range) const</span></a>
@@ -581,10 +581,10 @@
 <a name="519"><span class="lineNum">     519 </span><span class="lineCov">         38 :     return toBeats (toTime (barsBeats));</span></a>
 <a name="520"><span class="lineNum">     520 </span>            : }</a>
 <a name="521"><span class="lineNum">     521 </span>            : </a>
-<a name="522"><span class="lineNum">     522 </span><span class="lineCov">       3575 : TimePosition TempoSequence::toTime (BeatPosition beats) const</span></a>
+<a name="522"><span class="lineNum">     522 </span><span class="lineCov">       3703 : TimePosition TempoSequence::toTime (BeatPosition beats) const</span></a>
 <a name="523"><span class="lineNum">     523 </span>            : {</a>
-<a name="524"><span class="lineNum">     524 </span><span class="lineCov">       3575 :     updateTempoDataIfNeeded();</span></a>
-<a name="525"><span class="lineNum">     525 </span><span class="lineCov">       3575 :     return internalSequence.toTime (beats);</span></a>
+<a name="524"><span class="lineNum">     524 </span><span class="lineCov">       3703 :     updateTempoDataIfNeeded();</span></a>
+<a name="525"><span class="lineNum">     525 </span><span class="lineCov">       3703 :     return internalSequence.toTime (beats);</span></a>
 <a name="526"><span class="lineNum">     526 </span>            : }</a>
 <a name="527"><span class="lineNum">     527 </span>            : </a>
 <a name="528"><span class="lineNum">     528 </span><span class="lineCov">         15 : TimeRange TempoSequence::toTime (BeatRange range) const</span></a>
@@ -657,14 +657,14 @@
 <a name="595"><span class="lineNum">     595 </span>            :     }</a>
 <a name="596"><span class="lineNum">     596 </span><span class="lineCov">        403 : }</span></a>
 <a name="597"><span class="lineNum">     597 </span>            : </a>
-<a name="598"><span class="lineNum">     598 </span><span class="lineCov">       8330 : void TempoSequence::updateTempoDataIfNeeded() const</span></a>
+<a name="598"><span class="lineNum">     598 </span><span class="lineCov">       8586 : void TempoSequence::updateTempoDataIfNeeded() const</span></a>
 <a name="599"><span class="lineNum">     599 </span>            : {</a>
-<a name="600"><span class="lineNum">     600 </span><span class="lineCov">       8330 :     if (tempos-&gt;isUpdatePending())</span></a>
+<a name="600"><span class="lineNum">     600 </span><span class="lineCov">       8586 :     if (tempos-&gt;isUpdatePending())</span></a>
 <a name="601"><span class="lineNum">     601 </span><span class="lineCov">          9 :         tempos-&gt;handleAsyncUpdate();</span></a>
 <a name="602"><span class="lineNum">     602 </span>            : </a>
-<a name="603"><span class="lineNum">     603 </span><span class="lineCov">       8330 :     if (timeSigs-&gt;isUpdatePending())</span></a>
+<a name="603"><span class="lineNum">     603 </span><span class="lineCov">       8586 :     if (timeSigs-&gt;isUpdatePending())</span></a>
 <a name="604"><span class="lineNum">     604 </span><span class="lineCov">        141 :         timeSigs-&gt;handleAsyncUpdate();</span></a>
-<a name="605"><span class="lineNum">     605 </span><span class="lineCov">       8330 : }</span></a>
+<a name="605"><span class="lineNum">     605 </span><span class="lineCov">       8586 : }</span></a>
 <a name="606"><span class="lineNum">     606 </span>            : </a>
 <a name="607"><span class="lineNum">     607 </span><span class="lineCov">         58 : void TempoSequence::handleAsyncUpdate()</span></a>
 <a name="608"><span class="lineNum">     608 </span>            : {</a>

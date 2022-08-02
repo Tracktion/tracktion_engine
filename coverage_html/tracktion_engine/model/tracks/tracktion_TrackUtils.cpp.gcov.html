@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-08-02 14:58:32</td>
+            <td class="headerValue">2022-08-02 15:07:38</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">20</td>
@@ -181,24 +181,24 @@
 <a name="119"><span class="lineNum">     119 </span><span class="lineCov">        293 :         visitAllTopLevel (f);</span></a>
 <a name="120"><span class="lineNum">     120 </span><span class="lineCov">       6967 : }</span></a>
 <a name="121"><span class="lineNum">     121 </span>            : </a>
-<a name="122"><span class="lineNum">     122 </span><span class="lineCov">      95846 : bool TrackList::isMovableTrack (const juce::ValueTree&amp; v) noexcept</span></a>
+<a name="122"><span class="lineNum">     122 </span><span class="lineCov">      95833 : bool TrackList::isMovableTrack (const juce::ValueTree&amp; v) noexcept</span></a>
 <a name="123"><span class="lineNum">     123 </span>            : {</a>
-<a name="124"><span class="lineNum">     124 </span><span class="lineCov">      95846 :     return v.hasType (IDs::TRACK) || v.hasType (IDs::FOLDERTRACK) || v.hasType (IDs::AUTOMATIONTRACK);</span></a>
+<a name="124"><span class="lineNum">     124 </span><span class="lineCov">      95833 :     return v.hasType (IDs::TRACK) || v.hasType (IDs::FOLDERTRACK) || v.hasType (IDs::AUTOMATIONTRACK);</span></a>
 <a name="125"><span class="lineNum">     125 </span>            : }</a>
 <a name="126"><span class="lineNum">     126 </span>            : </a>
-<a name="127"><span class="lineNum">     127 </span><span class="lineCov">      79066 : bool TrackList::isArrangerTrack (const juce::ValueTree&amp; v) noexcept { return v.hasType (IDs::ARRANGERTRACK); }</span></a>
-<a name="128"><span class="lineNum">     128 </span><span class="lineCov">      86181 : bool TrackList::isChordTrack (const juce::ValueTree&amp; v) noexcept    { return v.hasType (IDs::CHORDTRACK); }</span></a>
+<a name="127"><span class="lineNum">     127 </span><span class="lineCov">      79053 : bool TrackList::isArrangerTrack (const juce::ValueTree&amp; v) noexcept { return v.hasType (IDs::ARRANGERTRACK); }</span></a>
+<a name="128"><span class="lineNum">     128 </span><span class="lineCov">      86168 : bool TrackList::isChordTrack (const juce::ValueTree&amp; v) noexcept    { return v.hasType (IDs::CHORDTRACK); }</span></a>
 <a name="129"><span class="lineNum">     129 </span><span class="lineCov">      51717 : bool TrackList::isMarkerTrack (const juce::ValueTree&amp; v) noexcept   { return v.hasType (IDs::MARKERTRACK); }</span></a>
-<a name="130"><span class="lineNum">     130 </span><span class="lineCov">      81760 : bool TrackList::isTempoTrack (const juce::ValueTree&amp; v) noexcept    { return v.hasType (IDs::TEMPOTRACK); }</span></a>
-<a name="131"><span class="lineNum">     131 </span><span class="lineCov">      85821 : bool TrackList::isMasterTrack (const juce::ValueTree&amp; v) noexcept   { return v.hasType (IDs::MASTERTRACK); }</span></a>
+<a name="130"><span class="lineNum">     130 </span><span class="lineCov">      81747 : bool TrackList::isTempoTrack (const juce::ValueTree&amp; v) noexcept    { return v.hasType (IDs::TEMPOTRACK); }</span></a>
+<a name="131"><span class="lineNum">     131 </span><span class="lineCov">      85808 : bool TrackList::isMasterTrack (const juce::ValueTree&amp; v) noexcept   { return v.hasType (IDs::MASTERTRACK); }</span></a>
 <a name="132"><span class="lineNum">     132 </span>            : </a>
-<a name="133"><span class="lineNum">     133 </span><span class="lineCov">      34410 : bool TrackList::isFixedTrack (const juce::ValueTree&amp; v) noexcept</span></a>
+<a name="133"><span class="lineNum">     133 </span><span class="lineCov">      34397 : bool TrackList::isFixedTrack (const juce::ValueTree&amp; v) noexcept</span></a>
 <a name="134"><span class="lineNum">     134 </span>            : {</a>
-<a name="135"><span class="lineNum">     135 </span><span class="lineCov">     130470 :     return isMarkerTrack (v) || isTempoTrack (v) || isChordTrack (v) || isArrangerTrack (v) || isMasterTrack (v)</span></a>
-<a name="136"><span class="lineNum">     136 </span><span class="lineCov">      68103 :         || (v.hasType (IDs::AUTOMATIONTRACK) &amp;&amp; isMasterTrack (v.getParent()));</span></a>
+<a name="135"><span class="lineNum">     135 </span><span class="lineCov">     130418 :     return isMarkerTrack (v) || isTempoTrack (v) || isChordTrack (v) || isArrangerTrack (v) || isMasterTrack (v)</span></a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineCov">      68077 :         || (v.hasType (IDs::AUTOMATIONTRACK) &amp;&amp; isMasterTrack (v.getParent()));</span></a>
 <a name="137"><span class="lineNum">     137 </span>            : }</a>
 <a name="138"><span class="lineNum">     138 </span>            : </a>
-<a name="139"><span class="lineNum">     139 </span><span class="lineCov">      35981 : bool TrackList::isTrack (const juce::ValueTree&amp; v) noexcept         { return isMovableTrack (v) || isFixedTrack (v); }</span></a>
+<a name="139"><span class="lineNum">     139 </span><span class="lineCov">      35968 : bool TrackList::isTrack (const juce::ValueTree&amp; v) noexcept         { return isMovableTrack (v) || isFixedTrack (v); }</span></a>
 <a name="140"><span class="lineNum">     140 </span>            : </a>
 <a name="141"><span class="lineNum">     141 </span><span class="lineNoCov">          0 : bool TrackList::isTrack (const juce::Identifier&amp; i) noexcept</span></a>
 <a name="142"><span class="lineNum">     142 </span>            : {</a>
@@ -216,9 +216,9 @@
 <a name="154"><span class="lineNum">     154 </span>            :     return false;</a>
 <a name="155"><span class="lineNum">     155 </span>            : }</a>
 <a name="156"><span class="lineNum">     156 </span>            : </a>
-<a name="157"><span class="lineNum">     157 </span><span class="lineCov">      13660 : bool TrackList::isSuitableType (const juce::ValueTree&amp; v) const</span></a>
+<a name="157"><span class="lineNum">     157 </span><span class="lineCov">      13644 : bool TrackList::isSuitableType (const juce::ValueTree&amp; v) const</span></a>
 <a name="158"><span class="lineNum">     158 </span>            : {</a>
-<a name="159"><span class="lineNum">     159 </span><span class="lineCov">      13660 :     return isTrack (v);</span></a>
+<a name="159"><span class="lineNum">     159 </span><span class="lineCov">      13644 :     return isTrack (v);</span></a>
 <a name="160"><span class="lineNum">     160 </span>            : }</a>
 <a name="161"><span class="lineNum">     161 </span>            : </a>
 <a name="162"><span class="lineNum">     162 </span><span class="lineCov">       1461 : Track* TrackList::createNewObject (const juce::ValueTree&amp; v)</span></a>
