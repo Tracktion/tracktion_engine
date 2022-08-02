@@ -84,7 +84,7 @@ struct ClipTrack::ClipList  : public ValueTreeObjectList<Clip>,
             clipTrack.changed();
             clipTrack.setFrozen (false, Track::groupFreeze);
 
-            if (! clipTrack.edit.isLoading())
+            if (! clipTrack.edit.isLoading() && ! clipTrack.edit.getUndoManager().isPerformingUndoRedo())
                 triggerAsyncUpdate();
 
             clipTrack.trackItemsDirty = true;
@@ -100,7 +100,9 @@ struct ClipTrack::ClipList  : public ValueTreeObjectList<Clip>,
         {
             if (id == IDs::start || id == IDs::length)
             {
-                triggerAsyncUpdate();
+                if (! ! clipTrack.edit.getUndoManager().isPerformingUndoRedo())
+                    triggerAsyncUpdate();
+                
                 clipTrack.trackItemsDirty = true;
             }
         }
