@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-08-03 13:19:17</td>
+            <td class="headerValue">2022-08-03 15:09:18</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
@@ -116,7 +116,7 @@
 <a name="54"><span class="lineNum">      54 </span>            :     virtual TimeDuration getSourceLength() const = 0;</a>
 <a name="55"><span class="lineNum">      55 </span>            : </a>
 <a name="56"><span class="lineNum">      56 </span>            :     /** Returns the file used to play back the source and will get proxied etc. */</a>
-<a name="57"><span class="lineNum">      57 </span><span class="lineCov">        361 :     virtual AudioFile getAudioFile() const  { return AudioFile (edit.engine, getCurrentSourceFile()); }</span></a>
+<a name="57"><span class="lineNum">      57 </span><span class="lineCov">      13817 :     virtual AudioFile getAudioFile() const  { return AudioFile (edit.engine, getCurrentSourceFile()); }</span></a>
 <a name="58"><span class="lineNum">      58 </span>            : </a>
 <a name="59"><span class="lineNum">      59 </span>            :     /** Returns the current AudioFile being used by the Clip, either the</a>
 <a name="60"><span class="lineNum">      60 </span>            :         original source or a proxy.</a>
@@ -215,7 +215,7 @@
 <a name="153"><span class="lineNum">     153 </span>            :     bool isRightChannelActive() const;</a>
 <a name="154"><span class="lineNum">     154 </span>            : </a>
 <a name="155"><span class="lineNum">     155 </span>            :     /** Returns the layout of the active channels. */</a>
-<a name="156"><span class="lineNum">     156 </span><span class="lineCov">        174 :     juce::AudioChannelSet getActiveChannels() const     { return activeChannels; }</span></a>
+<a name="156"><span class="lineNum">     156 </span><span class="lineCov">       6902 :     juce::AudioChannelSet getActiveChannels() const     { return activeChannels; }</span></a>
 <a name="157"><span class="lineNum">     157 </span>            : </a>
 <a name="158"><span class="lineNum">     158 </span>            :     //==============================================================================</a>
 <a name="159"><span class="lineNum">     159 </span>            :     /** Sets the fade in duration in seconds.</a>
@@ -278,12 +278,12 @@
 <a name="216"><span class="lineNum">     216 </span>            :     /** Sets the fade in behaviour. */</a>
 <a name="217"><span class="lineNum">     217 </span>            :     void setFadeInBehaviour (FadeBehaviour newBehaviour)    { fadeInBehaviour = newBehaviour; }</a>
 <a name="218"><span class="lineNum">     218 </span>            :     /** Returns the fade in behaviour. */</a>
-<a name="219"><span class="lineNum">     219 </span><span class="lineCov">         87 :     FadeBehaviour getFadeInBehaviour() const                { return fadeInBehaviour; }</span></a>
+<a name="219"><span class="lineNum">     219 </span><span class="lineCov">       3451 :     FadeBehaviour getFadeInBehaviour() const                { return fadeInBehaviour; }</span></a>
 <a name="220"><span class="lineNum">     220 </span>            : </a>
 <a name="221"><span class="lineNum">     221 </span>            :     /** Sets the fade out behaviour. */</a>
 <a name="222"><span class="lineNum">     222 </span>            :     void setFadeOutBehaviour (FadeBehaviour newBehaviour)   { fadeOutBehaviour = newBehaviour; }</a>
 <a name="223"><span class="lineNum">     223 </span>            :     /** Returns the fade out behaviour. */</a>
-<a name="224"><span class="lineNum">     224 </span><span class="lineCov">         87 :     FadeBehaviour getFadeOutBehaviour() const               { return fadeOutBehaviour; }</span></a>
+<a name="224"><span class="lineNum">     224 </span><span class="lineCov">       3451 :     FadeBehaviour getFadeOutBehaviour() const               { return fadeOutBehaviour; }</span></a>
 <a name="225"><span class="lineNum">     225 </span>            : </a>
 <a name="226"><span class="lineNum">     226 </span>            :     //==============================================================================</a>
 <a name="227"><span class="lineNum">     227 </span>            :     /** Override this to fill in the LoopInfo structure as best fits the source. */</a>
@@ -304,9 +304,9 @@
 <a name="242"><span class="lineNum">     242 </span>            :     /** @internal */</a>
 <a name="243"><span class="lineNum">     243 </span><span class="lineNoCov">          0 :     bool canLoop() const override                       { return ! isUsingMelodyne(); }</span></a>
 <a name="244"><span class="lineNum">     244 </span>            :     /** @internal */</a>
-<a name="245"><span class="lineNum">     245 </span><span class="lineCov">        174 :     bool isLooping() const override                     { return getAutoTempo() ? (loopLengthBeats &gt; BeatDuration()) : (loopLength &gt; TimeDuration()); }</span></a>
+<a name="245"><span class="lineNum">     245 </span><span class="lineCov">       6910 :     bool isLooping() const override                     { return getAutoTempo() ? (loopLengthBeats &gt; BeatDuration()) : (loopLength &gt; TimeDuration()); }</span></a>
 <a name="246"><span class="lineNum">     246 </span>            :     /** @internal */</a>
-<a name="247"><span class="lineNum">     247 </span><span class="lineCov">         87 :     bool beatBasedLooping() const override              { return isLooping() &amp;&amp; getAutoTempo(); }</span></a>
+<a name="247"><span class="lineNum">     247 </span><span class="lineCov">       3455 :     bool beatBasedLooping() const override              { return isLooping() &amp;&amp; getAutoTempo(); }</span></a>
 <a name="248"><span class="lineNum">     248 </span>            :     /** @internal */</a>
 <a name="249"><span class="lineNum">     249 </span>            :     void setNumberOfLoops (int num) override;</a>
 <a name="250"><span class="lineNum">     250 </span>            :     /** @internal */</a>
@@ -375,7 +375,7 @@
 <a name="313"><span class="lineNum">     313 </span><span class="lineNoCov">          0 :     void setAutoTempo (bool shouldUseAutoTempo)         { autoTempo = shouldUseAutoTempo; }</span></a>
 <a name="314"><span class="lineNum">     314 </span>            :     </a>
 <a name="315"><span class="lineNum">     315 </span>            :     /** Returns true if auto-tempo has been set. */</a>
-<a name="316"><span class="lineNum">     316 </span><span class="lineCov">        424 :     bool getAutoTempo() const                           { return autoTempo; }</span></a>
+<a name="316"><span class="lineNum">     316 </span><span class="lineCov">      13880 :     bool getAutoTempo() const                           { return autoTempo; }</span></a>
 <a name="317"><span class="lineNum">     317 </span>            : </a>
 <a name="318"><span class="lineNum">     318 </span>            :     /** Enables/disables auto-pitch.</a>
 <a name="319"><span class="lineNum">     319 </span>            :         If enabled, this clip will adjust its playback pitch to stay in sync with the Edit's PitchSequence.</a>
@@ -383,7 +383,7 @@
 <a name="321"><span class="lineNum">     321 </span><span class="lineNoCov">          0 :     void setAutoPitch (bool shouldUseAutoPitch)         { autoPitch = shouldUseAutoPitch; }</span></a>
 <a name="322"><span class="lineNum">     322 </span>            : </a>
 <a name="323"><span class="lineNum">     323 </span>            :     /** Returns true if auto-pitch has been set. */</a>
-<a name="324"><span class="lineNum">     324 </span><span class="lineCov">        337 :     bool getAutoPitch() const                           { return autoPitch; }</span></a>
+<a name="324"><span class="lineNum">     324 </span><span class="lineCov">      10425 :     bool getAutoPitch() const                           { return autoPitch; }</span></a>
 <a name="325"><span class="lineNum">     325 </span>            : </a>
 <a name="326"><span class="lineNum">     326 </span>            :     /** Sets the AutoPitchMode to use. */</a>
 <a name="327"><span class="lineNum">     327 </span>            :     void setAutoPitchMode (AutoPitchMode m)             { autoPitchMode = m; }</a>
@@ -397,7 +397,7 @@
 <a name="335"><span class="lineNum">     335 </span>            :     void setWarpTime (bool shouldUseWarpTime)           { warpTime = shouldUseWarpTime; }</a>
 <a name="336"><span class="lineNum">     336 </span>            :     </a>
 <a name="337"><span class="lineNum">     337 </span>            :     /** Returns true if warp time is enabled. */</a>
-<a name="338"><span class="lineNum">     338 </span><span class="lineCov">          3 :     bool getWarpTime() const                            { return warpTime; }</span></a>
+<a name="338"><span class="lineNum">     338 </span><span class="lineCov">          7 :     bool getWarpTime() const                            { return warpTime; }</span></a>
 <a name="339"><span class="lineNum">     339 </span>            : </a>
 <a name="340"><span class="lineNum">     340 </span>            :     /** Returns the WarpTimeManager for this clip used to maipluate warp markers. */</a>
 <a name="341"><span class="lineNum">     341 </span>            :     WarpTimeManager&amp; getWarpTimeManager() const;</a>
@@ -418,7 +418,7 @@
 <a name="356"><span class="lineNum">     356 </span>            :     void setPitchChange (float semitones)               { pitchChange = juce::jlimit (-48.0f, 48.0f, semitones); }</a>
 <a name="357"><span class="lineNum">     357 </span>            :     </a>
 <a name="358"><span class="lineNum">     358 </span>            :     /** Returns the number of semitones to transpose the clip by. */</a>
-<a name="359"><span class="lineNum">     359 </span><span class="lineCov">        337 :     float getPitchChange() const                        { return pitchChange; }</span></a>
+<a name="359"><span class="lineNum">     359 </span><span class="lineCov">      10425 :     float getPitchChange() const                        { return pitchChange; }</span></a>
 <a name="360"><span class="lineNum">     360 </span>            :     </a>
 <a name="361"><span class="lineNum">     361 </span>            :     /** Returns the pitch change as a normalised ratio. 0 = no change, &lt;0 = pitched down, &gt;0 = pitched up. */</a>
 <a name="362"><span class="lineNum">     362 </span>            :     float getPitchRatio() const                         { return juce::jlimit (0.1f, 10.0f, std::pow (2.0f, pitchChange / 12.0f)); }</a>
@@ -527,7 +527,7 @@
 <a name="465"><span class="lineNum">     465 </span>            :     void setUsesProxy (bool canUseProxy) noexcept;</a>
 <a name="466"><span class="lineNum">     466 </span>            :     </a>
 <a name="467"><span class="lineNum">     467 </span>            :     /** Retuns true if this clip can use a proxy file. */</a>
-<a name="468"><span class="lineNum">     468 </span><span class="lineCov">        596 :     bool canUseProxy() const noexcept               { return proxyAllowed &amp;&amp; edit.canRenderProxies(); }</span></a>
+<a name="468"><span class="lineNum">     468 </span><span class="lineCov">      47186 :     bool canUseProxy() const noexcept               { return proxyAllowed &amp;&amp; edit.canRenderProxies(); }</span></a>
 <a name="469"><span class="lineNum">     469 </span>            : </a>
 <a name="470"><span class="lineNum">     470 </span>            :     /** Retuns true if this clip use a proxy file due to timestretching.</a>
 <a name="471"><span class="lineNum">     471 </span>            :         This can be because auto-tempo, auto-pitch or a pitch change has been set.</a>
@@ -665,7 +665,7 @@
 <a name="603"><span class="lineNum">     603 </span>            :     /** @internal */</a>
 <a name="604"><span class="lineNum">     604 </span>            :     void sendMirrorUpdateToAllPlugins (Plugin&amp;) const override;</a>
 <a name="605"><span class="lineNum">     605 </span>            :     /** @internal */</a>
-<a name="606"><span class="lineNum">     606 </span><span class="lineCov">        351 :     PluginList* getPluginList() override           { return &amp;pluginList; }</span></a>
+<a name="606"><span class="lineNum">     606 </span><span class="lineCov">     141483 :     PluginList* getPluginList() override           { return &amp;pluginList; }</span></a>
 <a name="607"><span class="lineNum">     607 </span>            : </a>
 <a name="608"><span class="lineNum">     608 </span>            : protected:</a>
 <a name="609"><span class="lineNum">     609 </span>            :     //==============================================================================</a>
@@ -746,7 +746,7 @@
 <a name="684"><span class="lineNum">     684 </span>            :         process.This will in turn call getRenderJob on a background thead.</a>
 <a name="685"><span class="lineNum">     685 </span>            :     */</a>
 <a name="686"><span class="lineNum">     686 </span>            :     void renderSource();</a>
-<a name="687"><span class="lineNum">     687 </span><span class="lineCov">         93 :     bool shouldAttemptRender() const    { return (! lastRenderJobFailed) &amp;&amp; needsRender(); }</span></a>
+<a name="687"><span class="lineNum">     687 </span><span class="lineCov">       3457 :     bool shouldAttemptRender() const    { return (! lastRenderJobFailed) &amp;&amp; needsRender(); }</span></a>
 <a name="688"><span class="lineNum">     688 </span>            : </a>
 <a name="689"><span class="lineNum">     689 </span>            :     void clearCachedAudioSegmentList();</a>
 <a name="690"><span class="lineNum">     690 </span>            : </a>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-08-03 13:19:17</td>
+            <td class="headerValue">2022-08-03 15:09:18</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">5</td>
@@ -78,19 +78,19 @@
 <a name="16"><span class="lineNum">      16 </span><span class="lineCov">          1 :     return engine.getAudioFileFormatManager().readFormatManager.createReaderFor (file);</span></a>
 <a name="17"><span class="lineNum">      17 </span>            : }</a>
 <a name="18"><span class="lineNum">      18 </span>            : </a>
-<a name="19"><span class="lineNum">      19 </span><span class="lineCov">         75 : juce::AudioFormatReader* AudioFileUtils::createReaderFindingFormat (Engine&amp; engine, const juce::File&amp; file, juce::AudioFormat*&amp; format)</span></a>
+<a name="19"><span class="lineNum">      19 </span><span class="lineCov">       1766 : juce::AudioFormatReader* AudioFileUtils::createReaderFindingFormat (Engine&amp; engine, const juce::File&amp; file, juce::AudioFormat*&amp; format)</span></a>
 <a name="20"><span class="lineNum">      20 </span>            : {</a>
-<a name="21"><span class="lineNum">      21 </span><span class="lineCov">         75 :     auto&amp; manager = engine.getAudioFileFormatManager().readFormatManager;</span></a>
+<a name="21"><span class="lineNum">      21 </span><span class="lineCov">       1766 :     auto&amp; manager = engine.getAudioFileFormatManager().readFormatManager;</span></a>
 <a name="22"><span class="lineNum">      22 </span>            : </a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineCov">         97 :     for (auto af : manager)</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">       1788 :     for (auto af : manager)</span></a>
 <a name="24"><span class="lineNum">      24 </span>            :     {</a>
-<a name="25"><span class="lineNum">      25 </span><span class="lineCov">         94 :         if (af-&gt;canHandleFile (file))</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineCov">       1785 :         if (af-&gt;canHandleFile (file))</span></a>
 <a name="26"><span class="lineNum">      26 </span>            :         {</a>
-<a name="27"><span class="lineNum">      27 </span><span class="lineCov">         75 :             if (auto in = file.createInputStream())</span></a>
+<a name="27"><span class="lineNum">      27 </span><span class="lineCov">       1766 :             if (auto in = file.createInputStream())</span></a>
 <a name="28"><span class="lineNum">      28 </span>            :             {</a>
-<a name="29"><span class="lineNum">      29 </span><span class="lineCov">         72 :                 if (auto r = af-&gt;createReaderFor (in.release(), true))</span></a>
+<a name="29"><span class="lineNum">      29 </span><span class="lineCov">       1763 :                 if (auto r = af-&gt;createReaderFor (in.release(), true))</span></a>
 <a name="30"><span class="lineNum">      30 </span>            :                 {</a>
-<a name="31"><span class="lineNum">      31 </span><span class="lineCov">         72 :                     format = af;</span></a>
+<a name="31"><span class="lineNum">      31 </span><span class="lineCov">       1763 :                     format = af;</span></a>
 <a name="32"><span class="lineNum">      32 </span>            :                     return r;</a>
 <a name="33"><span class="lineNum">      33 </span>            :                 }</a>
 <a name="34"><span class="lineNum">      34 </span>            :             }</a>
@@ -100,18 +100,18 @@
 <a name="38"><span class="lineNum">      38 </span>            :     return {};</a>
 <a name="39"><span class="lineNum">      39 </span>            : }</a>
 <a name="40"><span class="lineNum">      40 </span>            : </a>
-<a name="41"><span class="lineNum">      41 </span><span class="lineCov">         72 : juce::MemoryMappedAudioFormatReader* AudioFileUtils::createMemoryMappedReader (Engine&amp; engine, const juce::File&amp; file, juce::AudioFormat*&amp; format)</span></a>
+<a name="41"><span class="lineNum">      41 </span><span class="lineCov">       1763 : juce::MemoryMappedAudioFormatReader* AudioFileUtils::createMemoryMappedReader (Engine&amp; engine, const juce::File&amp; file, juce::AudioFormat*&amp; format)</span></a>
 <a name="42"><span class="lineNum">      42 </span>            : {</a>
-<a name="43"><span class="lineNum">      43 </span><span class="lineCov">         72 :     auto&amp; manager = engine.getAudioFileFormatManager().readFormatManager;</span></a>
+<a name="43"><span class="lineNum">      43 </span><span class="lineCov">       1763 :     auto&amp; manager = engine.getAudioFileFormatManager().readFormatManager;</span></a>
 <a name="44"><span class="lineNum">      44 </span>            : </a>
-<a name="45"><span class="lineNum">      45 </span><span class="lineCov">         87 :     for (auto af : manager)</span></a>
+<a name="45"><span class="lineNum">      45 </span><span class="lineCov">       1778 :     for (auto af : manager)</span></a>
 <a name="46"><span class="lineNum">      46 </span>            :     {</a>
-<a name="47"><span class="lineNum">      47 </span><span class="lineCov">         84 :         if (af-&gt;canHandleFile (file))</span></a>
+<a name="47"><span class="lineNum">      47 </span><span class="lineCov">       1775 :         if (af-&gt;canHandleFile (file))</span></a>
 <a name="48"><span class="lineNum">      48 </span>            :         {</a>
-<a name="49"><span class="lineNum">      49 </span><span class="lineCov">         72 :             if (auto r = af-&gt;createMemoryMappedReader (file))</span></a>
+<a name="49"><span class="lineNum">      49 </span><span class="lineCov">       1763 :             if (auto r = af-&gt;createMemoryMappedReader (file))</span></a>
 <a name="50"><span class="lineNum">      50 </span>            :             {</a>
-<a name="51"><span class="lineNum">      51 </span><span class="lineCov">         69 :                 format = af;</span></a>
-<a name="52"><span class="lineNum">      52 </span><span class="lineCov">         69 :                 return r;</span></a>
+<a name="51"><span class="lineNum">      51 </span><span class="lineCov">       1760 :                 format = af;</span></a>
+<a name="52"><span class="lineNum">      52 </span><span class="lineCov">       1760 :                 return r;</span></a>
 <a name="53"><span class="lineNum">      53 </span>            :             }</a>
 <a name="54"><span class="lineNum">      54 </span>            :         }</a>
 <a name="55"><span class="lineNum">      55 </span>            :     }</a>
@@ -417,12 +417,12 @@
 <a name="355"><span class="lineNum">     355 </span>            :     return false;</a>
 <a name="356"><span class="lineNum">     356 </span>            : }</a>
 <a name="357"><span class="lineNum">     357 </span>            : </a>
-<a name="358"><span class="lineNum">     358 </span><span class="lineCov">         76 : void AudioFileUtils::addBWAVStartToMetadata (juce::StringPairArray&amp; metadata, SampleCount time)</span></a>
+<a name="358"><span class="lineNum">     358 </span><span class="lineCov">         80 : void AudioFileUtils::addBWAVStartToMetadata (juce::StringPairArray&amp; metadata, SampleCount time)</span></a>
 <a name="359"><span class="lineNum">     359 </span>            : {</a>
-<a name="360"><span class="lineNum">     360 </span><span class="lineCov">        152 :     metadata.addArray (juce::WavAudioFormat::createBWAVMetadata ({}, &quot;tracktion&quot;,</span></a>
+<a name="360"><span class="lineNum">     360 </span><span class="lineCov">        160 :     metadata.addArray (juce::WavAudioFormat::createBWAVMetadata ({}, &quot;tracktion&quot;,</span></a>
 <a name="361"><span class="lineNum">     361 </span>            :                                                                  {}, juce::Time::getCurrentTime(),</a>
 <a name="362"><span class="lineNum">     362 </span>            :                                                                  time, {}));</a>
-<a name="363"><span class="lineNum">     363 </span><span class="lineCov">         76 : }</span></a>
+<a name="363"><span class="lineNum">     363 </span><span class="lineCov">         80 : }</span></a>
 <a name="364"><span class="lineNum">     364 </span>            : </a>
 <a name="365"><span class="lineNum">     365 </span><span class="lineNoCov">          0 : SampleCount AudioFileUtils::getFileLengthSamples (Engine&amp; e, const juce::File&amp; file)</span></a>
 <a name="366"><span class="lineNum">     366 </span>            : {</a>

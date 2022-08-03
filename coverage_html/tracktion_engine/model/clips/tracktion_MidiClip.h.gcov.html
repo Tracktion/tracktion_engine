@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-08-03 13:19:17</td>
+            <td class="headerValue">2022-08-03 15:09:18</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">3</td>
@@ -131,7 +131,7 @@
 <a name="69"><span class="lineNum">      69 </span>            : </a>
 <a name="70"><span class="lineNum">      70 </span>            :     bool usesGrooveStrength() const;</a>
 <a name="71"><span class="lineNum">      71 </span>            : </a>
-<a name="72"><span class="lineNum">      72 </span><span class="lineCov">        880 :     float getGrooveStrength() const                                 { return grooveStrength; }</span></a>
+<a name="72"><span class="lineNum">      72 </span><span class="lineCov">        752 :     float getGrooveStrength() const                                 { return grooveStrength; }</span></a>
 <a name="73"><span class="lineNum">      73 </span><span class="lineCov">          8 :     void setGrooveStrength (float g)                                { grooveStrength = juce::jlimit (0.0f, 1.0f, g); }</span></a>
 <a name="74"><span class="lineNum">      74 </span>            : </a>
 <a name="75"><span class="lineNum">      75 </span>            :     //==============================================================================</a>
@@ -184,14 +184,14 @@
 <a name="122"><span class="lineNum">     122 </span>            :     MidiList* getTakeSequence (int takeIndex) const { return channelSequence[takeIndex]; }</a>
 <a name="123"><span class="lineNum">     123 </span>            : </a>
 <a name="124"><span class="lineNum">     124 </span><span class="lineNoCov">          0 :     bool canLoop() const override                   { return true; }</span></a>
-<a name="125"><span class="lineNum">     125 </span><span class="lineCov">        130 :     bool isLooping() const override                 { return loopLengthBeats &gt; BeatDuration(); }</span></a>
+<a name="125"><span class="lineNum">     125 </span><span class="lineCov">        312 :     bool isLooping() const override                 { return loopLengthBeats &gt; BeatDuration(); }</span></a>
 <a name="126"><span class="lineNum">     126 </span><span class="lineNoCov">          0 :     bool beatBasedLooping() const override          { return isLooping(); }</span></a>
 <a name="127"><span class="lineNum">     127 </span>            :     void setNumberOfLoops (int) override;</a>
 <a name="128"><span class="lineNum">     128 </span>            :     void disableLooping() override;</a>
 <a name="129"><span class="lineNum">     129 </span>            :     void setLoopRange (TimeRange) override;</a>
 <a name="130"><span class="lineNum">     130 </span>            :     void setLoopRangeBeats (BeatRange) override;</a>
-<a name="131"><span class="lineNum">     131 </span><span class="lineCov">        100 :     BeatPosition getLoopStartBeats() const override       { return loopStartBeats; }</span></a>
-<a name="132"><span class="lineNum">     132 </span><span class="lineCov">         80 :     BeatDuration getLoopLengthBeats() const override      { return loopLengthBeats; }</span></a>
+<a name="131"><span class="lineNum">     131 </span><span class="lineCov">        102 :     BeatPosition getLoopStartBeats() const override       { return loopStartBeats; }</span></a>
+<a name="132"><span class="lineNum">     132 </span><span class="lineCov">         82 :     BeatDuration getLoopLengthBeats() const override      { return loopLengthBeats; }</span></a>
 <a name="133"><span class="lineNum">     133 </span>            :     TimePosition getLoopStart() const override;</a>
 <a name="134"><span class="lineNum">     134 </span>            :     TimeDuration getLoopLength() const override;</a>
 <a name="135"><span class="lineNum">     135 </span>            : </a>

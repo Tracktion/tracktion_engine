@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">129</td>
+            <td class="headerCovTableEntry">175</td>
             <td class="headerCovTableEntry">795</td>
-            <td class="headerCovTableEntryLo">16.2 %</td>
+            <td class="headerCovTableEntryLo">22.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-08-03 13:19:17</td>
+            <td class="headerValue">2022-08-03 15:09:18</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">9</td>
+            <td class="headerCovTableEntry">17</td>
             <td class="headerCovTableEntry">90</td>
-            <td class="headerCovTableEntryLo">10.0 %</td>
+            <td class="headerCovTableEntryLo">18.9 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -73,8 +73,8 @@
 <a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
-<a name="14"><span class="lineNum">      14 </span><span class="lineNoCov">          0 : Clipboard::Clipboard() {}</span></a>
-<a name="15"><span class="lineNum">      15 </span><span class="lineNoCov">          0 : Clipboard::~Clipboard() { clearSingletonInstance(); }</span></a>
+<a name="14"><span class="lineNum">      14 </span><span class="lineCov">          2 : Clipboard::Clipboard() {}</span></a>
+<a name="15"><span class="lineNum">      15 </span><span class="lineCov">          4 : Clipboard::~Clipboard() { clearSingletonInstance(); }</span></a>
 <a name="16"><span class="lineNum">      16 </span>            : </a>
 <a name="17"><span class="lineNum">      17 </span>            : JUCE_IMPLEMENT_SINGLETON (Clipboard)</a>
 <a name="18"><span class="lineNum">      18 </span>            : </a>
@@ -102,7 +102,7 @@
 <a name="40"><span class="lineNum">      40 </span><span class="lineNoCov">          0 : void Clipboard::addListener (juce::ChangeListener* l)      { broadcaster.addChangeListener (l); }</span></a>
 <a name="41"><span class="lineNum">      41 </span><span class="lineNoCov">          0 : void Clipboard::removeListener (juce::ChangeListener* l)   { broadcaster.removeChangeListener (l); }</span></a>
 <a name="42"><span class="lineNum">      42 </span>            : </a>
-<a name="43"><span class="lineNum">      43 </span><span class="lineNoCov">          0 : Clipboard::ContentType::EditPastingOptions::EditPastingOptions (Edit&amp; e, EditInsertPoint&amp; ip, SelectionManager* sm)</span></a>
+<a name="43"><span class="lineNum">      43 </span><span class="lineCov">          1 : Clipboard::ContentType::EditPastingOptions::EditPastingOptions (Edit&amp; e, EditInsertPoint&amp; ip, SelectionManager* sm)</span></a>
 <a name="44"><span class="lineNum">      44 </span><span class="lineNoCov">          0 :     : edit (e), insertPoint (ip), selectionManager (sm)</span></a>
 <a name="45"><span class="lineNum">      45 </span><span class="lineNoCov">          0 : {}</span></a>
 <a name="46"><span class="lineNum">      46 </span>            : </a>
@@ -485,17 +485,17 @@
 <a name="423"><span class="lineNum">     423 </span>            : </a>
 <a name="424"><span class="lineNum">     424 </span>            : //==============================================================================</a>
 <a name="425"><span class="lineNum">     425 </span>            : //==============================================================================</a>
-<a name="426"><span class="lineNum">     426 </span><span class="lineNoCov">          0 : Clipboard::Clips::Clips() {}</span></a>
-<a name="427"><span class="lineNum">     427 </span><span class="lineNoCov">          0 : Clipboard::Clips::~Clips() {}</span></a>
+<a name="426"><span class="lineNum">     426 </span><span class="lineCov">          1 : Clipboard::Clips::Clips() {}</span></a>
+<a name="427"><span class="lineNum">     427 </span><span class="lineCov">          1 : Clipboard::Clips::~Clips() {}</span></a>
 <a name="428"><span class="lineNum">     428 </span>            : </a>
-<a name="429"><span class="lineNum">     429 </span><span class="lineNoCov">          0 : void Clipboard::Clips::addClip (int trackOffset, const juce::ValueTree&amp; state)</span></a>
+<a name="429"><span class="lineNum">     429 </span><span class="lineCov">       5000 : void Clipboard::Clips::addClip (int trackOffset, const juce::ValueTree&amp; state)</span></a>
 <a name="430"><span class="lineNum">     430 </span>            : {</a>
 <a name="431"><span class="lineNum">     431 </span>            :     ClipInfo ci;</a>
-<a name="432"><span class="lineNum">     432 </span><span class="lineNoCov">          0 :     ci.trackOffset = trackOffset;</span></a>
-<a name="433"><span class="lineNum">     433 </span><span class="lineNoCov">          0 :     ci.state = state.createCopy();</span></a>
+<a name="432"><span class="lineNum">     432 </span><span class="lineCov">       5000 :     ci.trackOffset = trackOffset;</span></a>
+<a name="433"><span class="lineNum">     433 </span><span class="lineCov">       5000 :     ci.state = state.createCopy();</span></a>
 <a name="434"><span class="lineNum">     434 </span>            : </a>
-<a name="435"><span class="lineNum">     435 </span><span class="lineNoCov">          0 :     clips.push_back (ci);</span></a>
-<a name="436"><span class="lineNum">     436 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="435"><span class="lineNum">     435 </span><span class="lineCov">       5000 :     clips.push_back (ci);</span></a>
+<a name="436"><span class="lineNum">     436 </span><span class="lineCov">       5000 : }</span></a>
 <a name="437"><span class="lineNum">     437 </span>            : </a>
 <a name="438"><span class="lineNum">     438 </span><span class="lineNoCov">          0 : void Clipboard::Clips::addSelectedClips (const SelectableList&amp; selectedObjects,</span></a>
 <a name="439"><span class="lineNum">     439 </span>            :                                          TimeRange range,</a>
@@ -662,13 +662,13 @@
 <a name="600"><span class="lineNum">     600 </span>            :     }</a>
 <a name="601"><span class="lineNum">     601 </span>            : }</a>
 <a name="602"><span class="lineNum">     602 </span>            : </a>
-<a name="603"><span class="lineNum">     603 </span><span class="lineNoCov">          0 : static void fixClipTimes (juce::ValueTree&amp; state, const Clipboard::Clips::ClipInfo&amp; clip,</span></a>
+<a name="603"><span class="lineNum">     603 </span><span class="lineCov">       5000 : static void fixClipTimes (juce::ValueTree&amp; state, const Clipboard::Clips::ClipInfo&amp; clip,</span></a>
 <a name="604"><span class="lineNum">     604 </span>            :                           TempoSequence&amp; tempoSequence, TimePosition startOffset)</a>
 <a name="605"><span class="lineNum">     605 </span>            : {</a>
 <a name="606"><span class="lineNum">     606 </span>            :     TimePosition start, offset;</a>
 <a name="607"><span class="lineNum">     607 </span>            :     TimeDuration length;</a>
 <a name="608"><span class="lineNum">     608 </span>            : </a>
-<a name="609"><span class="lineNum">     609 </span><span class="lineNoCov">          0 :     if (clip.hasBeatTimes)</span></a>
+<a name="609"><span class="lineNum">     609 </span><span class="lineCov">       5000 :     if (clip.hasBeatTimes)</span></a>
 <a name="610"><span class="lineNum">     610 </span>            :     {</a>
 <a name="611"><span class="lineNum">     611 </span><span class="lineNoCov">          0 :         auto offsetInBeats = BeatDuration::fromBeats (tempoSequence.toBeats (startOffset).inBeats());</span></a>
 <a name="612"><span class="lineNum">     612 </span><span class="lineNoCov">          0 :         auto range = tempoSequence.toTime ({ clip.startBeats + offsetInBeats, clip.startBeats + offsetInBeats + clip.lengthBeats });</span></a>
@@ -678,27 +678,27 @@
 <a name="616"><span class="lineNum">     616 </span>            :     }</a>
 <a name="617"><span class="lineNum">     617 </span>            :     else</a>
 <a name="618"><span class="lineNum">     618 </span>            :     {</a>
-<a name="619"><span class="lineNum">     619 </span><span class="lineNoCov">          0 :         start  = TimePosition::fromSeconds (static_cast&lt;double&gt; (state.getProperty (IDs::start)))</span></a>
-<a name="620"><span class="lineNum">     620 </span><span class="lineNoCov">          0 :                     + TimeDuration::fromSeconds (startOffset.inSeconds());</span></a>
-<a name="621"><span class="lineNum">     621 </span><span class="lineNoCov">          0 :         length = TimeDuration::fromSeconds (static_cast&lt;double&gt; (state.getProperty (IDs::length)));</span></a>
-<a name="622"><span class="lineNum">     622 </span><span class="lineNoCov">          0 :         offset = TimePosition::fromSeconds (static_cast&lt;double&gt; (state.getProperty (IDs::offset)));</span></a>
+<a name="619"><span class="lineNum">     619 </span><span class="lineCov">       5000 :         start  = TimePosition::fromSeconds (static_cast&lt;double&gt; (state.getProperty (IDs::start)))</span></a>
+<a name="620"><span class="lineNum">     620 </span><span class="lineCov">       5000 :                     + TimeDuration::fromSeconds (startOffset.inSeconds());</span></a>
+<a name="621"><span class="lineNum">     621 </span><span class="lineCov">       5000 :         length = TimeDuration::fromSeconds (static_cast&lt;double&gt; (state.getProperty (IDs::length)));</span></a>
+<a name="622"><span class="lineNum">     622 </span><span class="lineCov">       5000 :         offset = TimePosition::fromSeconds (static_cast&lt;double&gt; (state.getProperty (IDs::offset)));</span></a>
 <a name="623"><span class="lineNum">     623 </span>            :     }</a>
 <a name="624"><span class="lineNum">     624 </span>            : </a>
 <a name="625"><span class="lineNum">     625 </span>            :     // if clip is coming from preset, it'll have this</a>
 <a name="626"><span class="lineNum">     626 </span>            :     // property, so resize it to match tempo</a>
-<a name="627"><span class="lineNum">     627 </span><span class="lineNoCov">          0 :     if (const double srcBpm = state[IDs::bpm]; srcBpm &gt; 0)</span></a>
+<a name="627"><span class="lineNum">     627 </span><span class="lineCov">       5000 :     if (const double srcBpm = state[IDs::bpm]; srcBpm &gt; 0)</span></a>
 <a name="628"><span class="lineNum">     628 </span>            :     {</a>
 <a name="629"><span class="lineNum">     629 </span><span class="lineNoCov">          0 :         auto&amp; destTempo = tempoSequence.getTempoAt (start);</span></a>
 <a name="630"><span class="lineNum">     630 </span><span class="lineNoCov">          0 :         length = TimeDuration::fromSeconds (length.inSeconds() * srcBpm / destTempo.getBpm());</span></a>
 <a name="631"><span class="lineNum">     631 </span>            :     }</a>
 <a name="632"><span class="lineNum">     632 </span>            : </a>
-<a name="633"><span class="lineNum">     633 </span><span class="lineNoCov">          0 :     state.setProperty (IDs::start, start.inSeconds(), nullptr);</span></a>
-<a name="634"><span class="lineNum">     634 </span><span class="lineNoCov">          0 :     state.setProperty (IDs::length, length.inSeconds(), nullptr);</span></a>
-<a name="635"><span class="lineNum">     635 </span><span class="lineNoCov">          0 :     state.setProperty (IDs::offset, offset.inSeconds(), nullptr);</span></a>
+<a name="633"><span class="lineNum">     633 </span><span class="lineCov">       5000 :     state.setProperty (IDs::start, start.inSeconds(), nullptr);</span></a>
+<a name="634"><span class="lineNum">     634 </span><span class="lineCov">       5000 :     state.setProperty (IDs::length, length.inSeconds(), nullptr);</span></a>
+<a name="635"><span class="lineNum">     635 </span><span class="lineCov">       5000 :     state.setProperty (IDs::offset, offset.inSeconds(), nullptr);</span></a>
 <a name="636"><span class="lineNum">     636 </span>            : </a>
-<a name="637"><span class="lineNum">     637 </span><span class="lineNoCov">          0 :     state.removeProperty (IDs::bpm, nullptr);</span></a>
-<a name="638"><span class="lineNum">     638 </span><span class="lineNoCov">          0 :     state.removeProperty (IDs::key, nullptr);</span></a>
-<a name="639"><span class="lineNum">     639 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="637"><span class="lineNum">     637 </span><span class="lineCov">       5000 :     state.removeProperty (IDs::bpm, nullptr);</span></a>
+<a name="638"><span class="lineNum">     638 </span><span class="lineCov">       5000 :     state.removeProperty (IDs::key, nullptr);</span></a>
+<a name="639"><span class="lineNum">     639 </span><span class="lineCov">       5000 : }</span></a>
 <a name="640"><span class="lineNum">     640 </span>            : </a>
 <a name="641"><span class="lineNum">     641 </span><span class="lineNoCov">          0 : static bool pastePointsToCurve (const std::vector&lt;AutomationCurve::AutomationPoint&gt;&amp; points, juce::Range&lt;float&gt; valueRange, AutomationCurve&amp; targetCurve, TimeRange targetRange)</span></a>
 <a name="642"><span class="lineNum">     642 </span>            : {</a>
@@ -731,14 +731,14 @@
 <a name="669"><span class="lineNum">     669 </span>            :     return false;</a>
 <a name="670"><span class="lineNum">     670 </span>            : }</a>
 <a name="671"><span class="lineNum">     671 </span>            : </a>
-<a name="672"><span class="lineNum">     672 </span><span class="lineNoCov">          0 : bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions&amp; options) const</span></a>
+<a name="672"><span class="lineNum">     672 </span><span class="lineCov">          1 : bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions&amp; options) const</span></a>
 <a name="673"><span class="lineNum">     673 </span>            : {</a>
-<a name="674"><span class="lineNum">     674 </span><span class="lineNoCov">          0 :     if (clips.empty())</span></a>
+<a name="674"><span class="lineNum">     674 </span><span class="lineCov">          1 :     if (clips.empty())</span></a>
 <a name="675"><span class="lineNum">     675 </span>            :         return false;</a>
 <a name="676"><span class="lineNum">     676 </span>            : </a>
 <a name="677"><span class="lineNum">     677 </span>            :     auto targetTrack = options.startTrack;</a>
 <a name="678"><span class="lineNum">     678 </span>            : </a>
-<a name="679"><span class="lineNum">     679 </span><span class="lineNoCov">          0 :     if (targetTrack == nullptr)</span></a>
+<a name="679"><span class="lineNum">     679 </span><span class="lineCov">          1 :     if (targetTrack == nullptr)</span></a>
 <a name="680"><span class="lineNum">     680 </span>            :     {</a>
 <a name="681"><span class="lineNum">     681 </span><span class="lineNoCov">          0 :         TimePosition t;</span></a>
 <a name="682"><span class="lineNum">     682 </span><span class="lineNoCov">          0 :         options.insertPoint.chooseInsertPoint (targetTrack, t, false, options.selectionManager);</span></a>
@@ -746,22 +746,22 @@
 <a name="684"><span class="lineNum">     684 </span>            :     }</a>
 <a name="685"><span class="lineNum">     685 </span>            : </a>
 <a name="686"><span class="lineNum">     686 </span>            :     // We can't paste into a folder or submix track, so find the next clip track</a>
-<a name="687"><span class="lineNum">     687 </span><span class="lineNoCov">          0 :     while (targetTrack != nullptr &amp;&amp; targetTrack-&gt;isFolderTrack())</span></a>
+<a name="687"><span class="lineNum">     687 </span><span class="lineCov">          1 :     while (targetTrack != nullptr &amp;&amp; targetTrack-&gt;isFolderTrack())</span></a>
 <a name="688"><span class="lineNum">     688 </span><span class="lineNoCov">          0 :         targetTrack = targetTrack-&gt;getSiblingTrack (1, false);</span></a>
 <a name="689"><span class="lineNum">     689 </span>            : </a>
-<a name="690"><span class="lineNum">     690 </span><span class="lineNoCov">          0 :     if (targetTrack == nullptr)</span></a>
+<a name="690"><span class="lineNum">     690 </span><span class="lineCov">          1 :     if (targetTrack == nullptr)</span></a>
 <a name="691"><span class="lineNum">     691 </span>            :         return false;</a>
 <a name="692"><span class="lineNum">     692 </span>            : </a>
 <a name="693"><span class="lineNum">     693 </span>            :     std::map&lt;EditItemID, EditItemID&gt; remappedIDs;</a>
-<a name="694"><span class="lineNum">     694 </span><span class="lineNoCov">          0 :     SelectableList itemsAdded;</span></a>
+<a name="694"><span class="lineNum">     694 </span><span class="lineCov">          1 :     SelectableList itemsAdded;</span></a>
 <a name="695"><span class="lineNum">     695 </span>            : </a>
-<a name="696"><span class="lineNum">     696 </span><span class="lineNoCov">          0 :     for (auto&amp; clip : clips)</span></a>
+<a name="696"><span class="lineNum">     696 </span><span class="lineCov">       5001 :     for (auto&amp; clip : clips)</span></a>
 <a name="697"><span class="lineNum">     697 </span>            :     {</a>
-<a name="698"><span class="lineNum">     698 </span><span class="lineNoCov">          0 :         auto newClipState = clip.state.createCopy();</span></a>
-<a name="699"><span class="lineNum">     699 </span><span class="lineNoCov">          0 :         EditItemID::remapIDs (newClipState, nullptr, options.edit, &amp;remappedIDs);</span></a>
-<a name="700"><span class="lineNum">     700 </span><span class="lineNoCov">          0 :         fixClipTimes (newClipState, clip, options.edit.tempoSequence, options.startTime);</span></a>
+<a name="698"><span class="lineNum">     698 </span><span class="lineCov">      10000 :         auto newClipState = clip.state.createCopy();</span></a>
+<a name="699"><span class="lineNum">     699 </span><span class="lineCov">       5000 :         EditItemID::remapIDs (newClipState, nullptr, options.edit, &amp;remappedIDs);</span></a>
+<a name="700"><span class="lineNum">     700 </span><span class="lineCov">       5000 :         fixClipTimes (newClipState, clip, options.edit.tempoSequence, options.startTime);</span></a>
 <a name="701"><span class="lineNum">     701 </span>            : </a>
-<a name="702"><span class="lineNum">     702 </span><span class="lineNoCov">          0 :         if (newClipState.hasType (IDs::MARKERCLIP))</span></a>
+<a name="702"><span class="lineNum">     702 </span><span class="lineCov">       5000 :         if (newClipState.hasType (IDs::MARKERCLIP))</span></a>
 <a name="703"><span class="lineNum">     703 </span>            :         {</a>
 <a name="704"><span class="lineNum">     704 </span><span class="lineNoCov">          0 :             if (auto markerTrack = options.edit.getMarkerTrack())</span></a>
 <a name="705"><span class="lineNum">     705 </span>            :             {</a>
@@ -778,7 +778,7 @@
 <a name="716"><span class="lineNum">     716 </span>            :                 jassertfalse;</a>
 <a name="717"><span class="lineNum">     717 </span>            :             }</a>
 <a name="718"><span class="lineNum">     718 </span>            :         }</a>
-<a name="719"><span class="lineNum">     719 </span><span class="lineNoCov">          0 :         else if (newClipState.hasType (IDs::CHORDCLIP))</span></a>
+<a name="719"><span class="lineNum">     719 </span><span class="lineCov">       5000 :         else if (newClipState.hasType (IDs::CHORDCLIP))</span></a>
 <a name="720"><span class="lineNum">     720 </span>            :         {</a>
 <a name="721"><span class="lineNum">     721 </span><span class="lineNoCov">          0 :             if (auto chordTrack = options.edit.getChordTrack())</span></a>
 <a name="722"><span class="lineNum">     722 </span>            :             {</a>
@@ -786,7 +786,7 @@
 <a name="724"><span class="lineNum">     724 </span><span class="lineNoCov">          0 :                     itemsAdded.add (newClip);</span></a>
 <a name="725"><span class="lineNum">     725 </span>            :             }</a>
 <a name="726"><span class="lineNum">     726 </span>            :         }</a>
-<a name="727"><span class="lineNum">     727 </span><span class="lineNoCov">          0 :         else if (newClipState.hasType (IDs::ARRANGERCLIP))</span></a>
+<a name="727"><span class="lineNum">     727 </span><span class="lineCov">       5000 :         else if (newClipState.hasType (IDs::ARRANGERCLIP))</span></a>
 <a name="728"><span class="lineNum">     728 </span>            :         {</a>
 <a name="729"><span class="lineNum">     729 </span><span class="lineNoCov">          0 :             if (auto arrangerTrack = options.edit.getArrangerTrack())</span></a>
 <a name="730"><span class="lineNum">     730 </span>            :             {</a>
@@ -796,10 +796,10 @@
 <a name="734"><span class="lineNum">     734 </span>            :         }</a>
 <a name="735"><span class="lineNum">     735 </span>            :         else</a>
 <a name="736"><span class="lineNum">     736 </span>            :         {</a>
-<a name="737"><span class="lineNum">     737 </span><span class="lineNoCov">          0 :             if (auto clipTrack = dynamic_cast&lt;ClipTrack*&gt; (targetTrack-&gt;getSiblingTrack (clip.trackOffset, false)))</span></a>
+<a name="737"><span class="lineNum">     737 </span><span class="lineCov">       5000 :             if (auto clipTrack = dynamic_cast&lt;ClipTrack*&gt; (targetTrack-&gt;getSiblingTrack (clip.trackOffset, false)))</span></a>
 <a name="738"><span class="lineNum">     738 </span>            :             {</a>
-<a name="739"><span class="lineNum">     739 </span><span class="lineNoCov">          0 :                 if (auto newClip = clipTrack-&gt;insertClipWithState (newClipState))</span></a>
-<a name="740"><span class="lineNum">     740 </span><span class="lineNoCov">          0 :                     itemsAdded.add (newClip);</span></a>
+<a name="739"><span class="lineNum">     739 </span><span class="lineCov">       5000 :                 if (auto newClip = clipTrack-&gt;insertClipWithState (newClipState))</span></a>
+<a name="740"><span class="lineNum">     740 </span><span class="lineCov">       5000 :                     itemsAdded.add (newClip);</span></a>
 <a name="741"><span class="lineNum">     741 </span>            :             }</a>
 <a name="742"><span class="lineNum">     742 </span>            :             else</a>
 <a name="743"><span class="lineNum">     743 </span>            :             {</a>
@@ -808,7 +808,7 @@
 <a name="746"><span class="lineNum">     746 </span>            :         }</a>
 <a name="747"><span class="lineNum">     747 </span>            :     }</a>
 <a name="748"><span class="lineNum">     748 </span>            : </a>
-<a name="749"><span class="lineNum">     749 </span><span class="lineNoCov">          0 :     for (auto&amp; curve : automationCurves)</span></a>
+<a name="749"><span class="lineNum">     749 </span><span class="lineCov">          1 :     for (auto&amp; curve : automationCurves)</span></a>
 <a name="750"><span class="lineNum">     750 </span>            :     {</a>
 <a name="751"><span class="lineNum">     751 </span><span class="lineNoCov">          0 :         if (! curve.points.empty())</span></a>
 <a name="752"><span class="lineNum">     752 </span>            :         {</a>
@@ -835,23 +835,23 @@
 <a name="773"><span class="lineNum">     773 </span>            :         }</a>
 <a name="774"><span class="lineNum">     774 </span>            :     }</a>
 <a name="775"><span class="lineNum">     775 </span>            : </a>
-<a name="776"><span class="lineNum">     776 </span><span class="lineNoCov">          0 :     if (itemsAdded.isEmpty())</span></a>
+<a name="776"><span class="lineNum">     776 </span><span class="lineCov">          1 :     if (itemsAdded.isEmpty())</span></a>
 <a name="777"><span class="lineNum">     777 </span>            :         return false;</a>
 <a name="778"><span class="lineNum">     778 </span>            : </a>
-<a name="779"><span class="lineNum">     779 </span><span class="lineNoCov">          0 :     if (auto sm = options.selectionManager)</span></a>
+<a name="779"><span class="lineNum">     779 </span><span class="lineCov">          1 :     if (auto sm = options.selectionManager)</span></a>
 <a name="780"><span class="lineNum">     780 </span><span class="lineNoCov">          0 :         sm-&gt;select (itemsAdded);</span></a>
 <a name="781"><span class="lineNum">     781 </span>            : </a>
-<a name="782"><span class="lineNum">     782 </span><span class="lineNoCov">          0 :     if (options.setTransportToEnd &amp;&amp; ! options.edit.getTransport().isPlaying())</span></a>
+<a name="782"><span class="lineNum">     782 </span><span class="lineCov">          1 :     if (options.setTransportToEnd &amp;&amp; ! options.edit.getTransport().isPlaying())</span></a>
 <a name="783"><span class="lineNum">     783 </span><span class="lineNoCov">          0 :         options.edit.getTransport().setPosition (getTimeRangeForSelectedItems (itemsAdded).getEnd());</span></a>
 <a name="784"><span class="lineNum">     784 </span>            : </a>
 <a name="785"><span class="lineNum">     785 </span>            :     return true;</a>
 <a name="786"><span class="lineNum">     786 </span>            : }</a>
 <a name="787"><span class="lineNum">     787 </span>            : </a>
-<a name="788"><span class="lineNum">     788 </span><span class="lineNoCov">          0 : bool Clipboard::Clips::pasteIntoEdit (Edit&amp; edit, EditInsertPoint&amp; insertPoint, SelectionManager* sm) const</span></a>
+<a name="788"><span class="lineNum">     788 </span><span class="lineCov">          1 : bool Clipboard::Clips::pasteIntoEdit (Edit&amp; edit, EditInsertPoint&amp; insertPoint, SelectionManager* sm) const</span></a>
 <a name="789"><span class="lineNum">     789 </span>            : {</a>
 <a name="790"><span class="lineNum">     790 </span>            :     Clipboard::ContentType::EditPastingOptions options (edit, insertPoint, sm);</a>
-<a name="791"><span class="lineNum">     791 </span><span class="lineNoCov">          0 :     insertPoint.chooseInsertPoint (options.startTrack, options.startTime, false, sm);</span></a>
-<a name="792"><span class="lineNum">     792 </span><span class="lineNoCov">          0 :     return pasteIntoEdit (options);</span></a>
+<a name="791"><span class="lineNum">     791 </span><span class="lineCov">          1 :     insertPoint.chooseInsertPoint (options.startTrack, options.startTime, false, sm);</span></a>
+<a name="792"><span class="lineNum">     792 </span><span class="lineCov">          2 :     return pasteIntoEdit (options);</span></a>
 <a name="793"><span class="lineNum">     793 </span>            : }</a>
 <a name="794"><span class="lineNum">     794 </span>            : </a>
 <a name="795"><span class="lineNum">     795 </span><span class="lineNoCov">          0 : bool Clipboard::Clips::pasteAfterSelected (Edit&amp; edit, EditInsertPoint&amp; insertPoint, SelectionManager&amp; sm) const</span></a>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-08-03 13:19:17</td>
+            <td class="headerValue">2022-08-03 15:09:18</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">6</td>
@@ -75,7 +75,7 @@
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : /**</a>
 <a name="15"><span class="lineNum">      15 </span>            : */</a>
-<a name="16"><span class="lineNum">      16 </span><span class="lineCov">         46 : class LoopInfo</span></a>
+<a name="16"><span class="lineNum">      16 </span><span class="lineCov">       6774 : class LoopInfo</span></a>
 <a name="17"><span class="lineNum">      17 </span>            : {</a>
 <a name="18"><span class="lineNum">      18 </span>            : public:</a>
 <a name="19"><span class="lineNum">      19 </span>            :     LoopInfo (Engine&amp;);</a>
@@ -165,18 +165,18 @@
 <a name="103"><span class="lineNum">     103 </span>            :     void setBpm (double newBpm, double currentBpm);</a>
 <a name="104"><span class="lineNum">     104 </span>            : </a>
 <a name="105"><span class="lineNum">     105 </span>            :     template&lt;typename Type&gt;</a>
-<a name="106"><span class="lineNum">     106 </span><span class="lineCov">       1035 :     void setProp (const juce::Identifier&amp; i, Type v)</span></a>
+<a name="106"><span class="lineNum">     106 </span><span class="lineCov">      34801 :     void setProp (const juce::Identifier&amp; i, Type v)</span></a>
 <a name="107"><span class="lineNum">     107 </span>            :     {</a>
-<a name="108"><span class="lineNum">     108 </span><span class="lineCov">       1035 :         duplicateIfShared();</span></a>
-<a name="109"><span class="lineNum">     109 </span><span class="lineCov">       1035 :         const juce::ScopedLock sl (lock);</span></a>
-<a name="110"><span class="lineNum">     110 </span><span class="lineCov">       1035 :         state.setProperty (i, v, um);</span></a>
-<a name="111"><span class="lineNum">     111 </span><span class="lineCov">       1035 :     }</span></a>
+<a name="108"><span class="lineNum">     108 </span><span class="lineCov">      34801 :         duplicateIfShared();</span></a>
+<a name="109"><span class="lineNum">     109 </span><span class="lineCov">      34801 :         const juce::ScopedLock sl (lock);</span></a>
+<a name="110"><span class="lineNum">     110 </span><span class="lineCov">      34801 :         state.setProperty (i, v, um);</span></a>
+<a name="111"><span class="lineNum">     111 </span><span class="lineCov">      34801 :     }</span></a>
 <a name="112"><span class="lineNum">     112 </span>            : </a>
 <a name="113"><span class="lineNum">     113 </span>            :     template&lt;typename Type&gt;</a>
-<a name="114"><span class="lineNum">     114 </span><span class="lineCov">        138 :     Type getProp (const juce::Identifier&amp; i) const</span></a>
+<a name="114"><span class="lineNum">     114 </span><span class="lineCov">      20322 :     Type getProp (const juce::Identifier&amp; i) const</span></a>
 <a name="115"><span class="lineNum">     115 </span>            :     {</a>
-<a name="116"><span class="lineNum">     116 </span><span class="lineCov">        138 :         const juce::ScopedLock sl (lock);</span></a>
-<a name="117"><span class="lineNum">     117 </span><span class="lineCov">        138 :         return state.getProperty (i);</span></a>
+<a name="116"><span class="lineNum">     116 </span><span class="lineCov">      20322 :         const juce::ScopedLock sl (lock);</span></a>
+<a name="117"><span class="lineNum">     117 </span><span class="lineCov">      20322 :         return state.getProperty (i);</span></a>
 <a name="118"><span class="lineNum">     118 </span>            :     }</a>
 <a name="119"><span class="lineNum">     119 </span>            : </a>
 <a name="120"><span class="lineNum">     120 </span>            :     JUCE_LEAK_DETECTOR (LoopInfo)</a>
