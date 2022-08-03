@@ -152,7 +152,7 @@ namespace JUnit
 //==============================================================================
 namespace TestRunner
 {
-    int runTests (const File& junitResultsFile, std::vector<juce::String> categories)
+    int runTests (const File& junitResultsFile, Array<UnitTest*> tests)
     {
         CoutLogger logger;
         Logger::setCurrentLogger (&logger);
@@ -161,11 +161,6 @@ namespace TestRunner
 
         UnitTestRunner testRunner;
         testRunner.setAssertOnFailure (false);
-
-        Array<UnitTest*> tests;
-
-        for (auto& category : categories)
-            tests.addArray (UnitTest::getTestsInCategory (category));
 
         const auto startTime = Time::getCurrentTime();
         testRunner.runTests (tests);
@@ -193,9 +188,30 @@ namespace TestRunner
         return numFailues > 0 ? 1 : 0;
     }
 
+    int runCategories (const File& junitResultsFile, std::vector<juce::String> categories)
+    {
+        Array<UnitTest*> tests;
+
+        for (auto& category : categories)
+            tests.addArray (UnitTest::getTestsInCategory (category));
+
+        return runTests (junitResultsFile, std::move (tests));
+    }
+
     int runTests (const File& junitResultsFile, juce::String category)
     {
-        return runTests (junitResultsFile, std::vector<juce::String> { category });
+        return runCategories (junitResultsFile, std::vector<juce::String> { category });
+    }
+
+    int runSingleTest (const File& junitResultsFile, juce::String name)
+    {
+        Array<UnitTest*> tests;
+
+        for (auto test : UnitTest::getAllTests())
+            if (test->getName() == name)
+                tests.add (test);
+
+        return runTests (junitResultsFile, std::move (tests));
     }
 }
 
