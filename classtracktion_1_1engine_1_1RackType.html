@@ -131,10 +131,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af79a6aeefa865ad9e5e365897ab829dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2fa1010e696cff8bd77ffb34dd69c059"><td class="memItemLeft" align="right" valign="top">juce::Array&lt; const <a class="el" href="structtracktion_1_1engine_1_1RackConnection.html">RackConnection</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1RackType.html#a2fa1010e696cff8bd77ffb34dd69c059">getConnections</a> () const noexcept</td></tr>
 <tr class="separator:a2fa1010e696cff8bd77ffb34dd69c059"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a15bb9998cac1a7feff3f5b4cdb9730b1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1RackType.html#a15bb9998cac1a7feff3f5b4cdb9730b1">addConnection</a> (<a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a> source, int sourcePin, <a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a> dest, int destPin)</td></tr>
-<tr class="separator:a15bb9998cac1a7feff3f5b4cdb9730b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a308b3d989501d011b94cea88e5c42f3c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1RackType.html#a308b3d989501d011b94cea88e5c42f3c">removeConnection</a> (<a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a> source, int sourcePin, <a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a> dest, int destPin)</td></tr>
-<tr class="separator:a308b3d989501d011b94cea88e5c42f3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61e5f36ef97ac220b224f91848e12a63"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1RackType.html#a61e5f36ef97ac220b224f91848e12a63">addConnection</a> (<a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a> source, int sourcePin, <a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a> dest, int destPin)</td></tr>
+<tr class="separator:a61e5f36ef97ac220b224f91848e12a63"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a977ea75f169fa8912217c511940d508d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1RackType.html#a977ea75f169fa8912217c511940d508d">removeConnection</a> (<a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a> source, int sourcePin, <a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a> dest, int destPin)</td></tr>
+<tr class="separator:a977ea75f169fa8912217c511940d508d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7bc4d616b8b69db43c87e96faebe2db8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1RackType.html#a7bc4d616b8b69db43c87e96faebe2db8">isConnectionLegal</a> (<a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a> source, int sourcePin, <a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a> dest, int destPin) const</td></tr>
 <tr class="separator:a7bc4d616b8b69db43c87e96faebe2db8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7cd26e77f6017d068935372c300c5088"><td class="memItemLeft" align="right" valign="top">juce::Array&lt; <a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1RackType.html#a7cd26e77f6017d068935372c300c5088">getPluginsWhichTakeInputFrom</a> (<a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>) const</td></tr>
@@ -695,14 +695,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a15bb9998cac1a7feff3f5b4cdb9730b1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a15bb9998cac1a7feff3f5b4cdb9730b1">&#9670;&nbsp;</a></span>addConnection()</h2>
+<a id="a61e5f36ef97ac220b224f91848e12a63"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61e5f36ef97ac220b224f91848e12a63">&#9670;&nbsp;</a></span>addConnection()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void tracktion::engine::RackType::addConnection </td>
+          <td class="memname">bool tracktion::engine::RackType::addConnection </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>&#160;</td>
           <td class="paramname"><em>source</em>, </td>
@@ -735,14 +735,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a308b3d989501d011b94cea88e5c42f3c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a308b3d989501d011b94cea88e5c42f3c">&#9670;&nbsp;</a></span>removeConnection()</h2>
+<a id="a977ea75f169fa8912217c511940d508d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a977ea75f169fa8912217c511940d508d">&#9670;&nbsp;</a></span>removeConnection()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void tracktion::engine::RackType::removeConnection </td>
+          <td class="memname">bool tracktion::engine::RackType::removeConnection </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>&#160;</td>
           <td class="paramname"><em>source</em>, </td>
@@ -1412,7 +1412,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Aug 3 2022 10:08:30 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Aug 3 2022 10:53:40 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

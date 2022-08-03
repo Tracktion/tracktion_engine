@@ -57452,17 +57452,17 @@
       <arglist>() const noexcept</arglist>
     </member>
     <member kind="function">
-      <type>void</type>
+      <type>bool</type>
       <name>addConnection</name>
       <anchorfile>classtracktion_1_1engine_1_1RackType.html</anchorfile>
-      <anchor>a15bb9998cac1a7feff3f5b4cdb9730b1</anchor>
+      <anchor>a61e5f36ef97ac220b224f91848e12a63</anchor>
       <arglist>(EditItemID source, int sourcePin, EditItemID dest, int destPin)</arglist>
     </member>
     <member kind="function">
-      <type>void</type>
+      <type>bool</type>
       <name>removeConnection</name>
       <anchorfile>classtracktion_1_1engine_1_1RackType.html</anchorfile>
-      <anchor>a308b3d989501d011b94cea88e5c42f3c</anchor>
+      <anchor>a977ea75f169fa8912217c511940d508d</anchor>
       <arglist>(EditItemID source, int sourcePin, EditItemID dest, int destPin)</arglist>
     </member>
     <member kind="function">

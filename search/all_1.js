@@ -37,7 +37,7 @@ var searchData=
   ['addclipboardentryparams_36',['AddClipboardEntryParams',['../structtracktion_1_1engine_1_1SelectableClass_1_1AddClipboardEntryParams.html',1,'tracktion::engine::SelectableClass::AddClipboardEntryParams'],['../structtracktion_1_1engine_1_1SelectableClass_1_1AddClipboardEntryParams.html#a72a1784e2d763a276ec88376c32312a6',1,'tracktion::engine::SelectableClass::AddClipboardEntryParams::AddClipboardEntryParams()']]],
   ['addclipplugin_37',['addClipPlugin',['../classtracktion_1_1engine_1_1AudioClipBase.html#a39f4b10bd425350d51ba92d1c18e9da1',1,'tracktion::engine::AudioClipBase::addClipPlugin()'],['../classtracktion_1_1engine_1_1Clip.html#ad8719c23fa2ec0b8c3a5053570eba860',1,'tracktion::engine::Clip::addClipPlugin()']]],
   ['addcollectionclip_38',['addCollectionClip',['../classtracktion_1_1engine_1_1ClipTrack.html#a7d76cd61529f191155547be19fca7afd',1,'tracktion::engine::ClipTrack']]],
-  ['addconnection_39',['addConnection',['../classtracktion_1_1engine_1_1RackType.html#a15bb9998cac1a7feff3f5b4cdb9730b1',1,'tracktion::engine::RackType']]],
+  ['addconnection_39',['addConnection',['../classtracktion_1_1engine_1_1RackType.html#a61e5f36ef97ac220b224f91848e12a63',1,'tracktion::engine::RackType']]],
   ['addconsumer_40',['addConsumer',['../classtracktion_1_1engine_1_1InputDeviceInstance.html#aa60622b0f764b26d9b173b2f95d610e8',1,'tracktion::engine::InputDeviceInstance']]],
   ['addcontext_41',['addContext',['../classtracktion_1_1engine_1_1DeviceManager.html#a6ad54c2a49de9671d15cf54828a46aa0',1,'tracktion::engine::DeviceManager']]],
   ['addcontroller_42',['addController',['../classtracktion_1_1engine_1_1ExternalControllerManager.html#ae0877c93ab48f12360a7eace606e248b',1,'tracktion::engine::ExternalControllerManager']]],

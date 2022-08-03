@@ -100,7 +100,7 @@ var searchData=
   ['removeclient_10130',['removeClient',['../classtracktion_1_1engine_1_1LevelMeasurer.html#a1c38df211c457709e0b4364fd9cdba08',1,'tracktion::engine::LevelMeasurer']]],
   ['removeclip_10131',['removeClip',['../classtracktion_1_1engine_1_1CollectionClip.html#a5c988f58b72598902141909c2bedfab4',1,'tracktion::engine::CollectionClip::removeClip(Clip *)'],['../classtracktion_1_1engine_1_1CollectionClip.html#a912c576cf0c7004b56c1358b53e7760c',1,'tracktion::engine::CollectionClip::removeClip(EditItemID)']]],
   ['removecollectionclip_10132',['removeCollectionClip',['../classtracktion_1_1engine_1_1ClipTrack.html#a2024d0b36ffb2d2005d70c679c36defa',1,'tracktion::engine::ClipTrack']]],
-  ['removeconnection_10133',['removeConnection',['../classtracktion_1_1engine_1_1RackType.html#a308b3d989501d011b94cea88e5c42f3c',1,'tracktion::engine::RackType']]],
+  ['removeconnection_10133',['removeConnection',['../classtracktion_1_1engine_1_1RackType.html#a977ea75f169fa8912217c511940d508d',1,'tracktion::engine::RackType']]],
   ['removeconsumer_10134',['removeConsumer',['../classtracktion_1_1engine_1_1InputDeviceInstance.html#ac0c474410036f01b30c7e383fecda626',1,'tracktion::engine::InputDeviceInstance']]],
   ['removecontext_10135',['removeContext',['../classtracktion_1_1engine_1_1DeviceManager.html#af58c41860f61450a1ae7bc304c91449b',1,'tracktion::engine::DeviceManager']]],
   ['removecontrollerevent_10136',['removeControllerEvent',['../classtracktion_1_1engine_1_1MidiList.html#a059f1e5499f188a86e294b45d6df8365',1,'tracktion::engine::MidiList']]],
