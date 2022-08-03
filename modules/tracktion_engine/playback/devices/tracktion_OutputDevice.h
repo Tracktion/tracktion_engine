@@ -27,8 +27,8 @@ public:
     juce::String getAlias() const;
     void setAlias (const juce::String& alias);
 
-    /** called after all devices are constructed, so it can use all the device
-        names in its calculations..
+    /** Called after all devices are constructed, so it can use all the device
+        names in its calculations.
     */
     void initialiseDefaultAlias();
 

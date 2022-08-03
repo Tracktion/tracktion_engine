@@ -347,7 +347,7 @@ public:
     Edit* getEditIfOnEditScreen() const;
 
     //==============================================================================
-    /** These values need to be set by the subclass.. */
+    /** These values need to be set by the subclass. */
     juce::String deviceDescription;
 
     // The number of multiple similar devices can be connected to add additional tracks
