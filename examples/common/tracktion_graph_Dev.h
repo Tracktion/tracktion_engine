@@ -188,7 +188,7 @@ namespace TestRunner
         return numFailues > 0 ? 1 : 0;
     }
 
-    int runCategories (const File& junitResultsFile, std::vector<juce::String> categories)
+    int runTests (const File& junitResultsFile, std::vector<juce::String> categories)
     {
         Array<UnitTest*> tests;
 
@@ -200,7 +200,7 @@ namespace TestRunner
 
     int runTests (const File& junitResultsFile, juce::String category)
     {
-        return runCategories (junitResultsFile, std::vector<juce::String> { category });
+        return runTests (junitResultsFile, std::vector<juce::String> { category });
     }
 
     int runSingleTest (const File& junitResultsFile, juce::String name)
