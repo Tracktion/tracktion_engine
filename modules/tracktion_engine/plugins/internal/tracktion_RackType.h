@@ -72,10 +72,10 @@ public:
     //==============================================================================
     juce::Array<const RackConnection*> getConnections() const noexcept;
 
-    void addConnection (EditItemID source, int sourcePin,
+    bool addConnection (EditItemID source, int sourcePin,
                         EditItemID dest, int destPin);
 
-    void removeConnection (EditItemID source, int sourcePin,
+    bool removeConnection (EditItemID source, int sourcePin,
                            EditItemID dest, int destPin);
 
     // check that this doesn't create loops, etc
