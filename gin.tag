@@ -64288,8 +64288,8 @@
       <type>void</type>
       <name>generateMidiSequence</name>
       <anchorfile>classtracktion_1_1engine_1_1StepClip.html</anchorfile>
-      <anchor>af246f452211d2b2a6dcb1bed358aa9ac</anchor>
-      <arglist>(juce::MidiMessageSequence &amp;, bool convertToSeconds=true, PatternInstance *instance=nullptr)</arglist>
+      <anchor>a2b6e4faa75f98e237d86f7370e56c503</anchor>
+      <arglist>(juce::MidiMessageSequence &amp;result, bool convertToSeconds=true, PatternInstance *instance=nullptr)</arglist>
     </member>
     <member kind="function">
       <type>juce::Array&lt; BeatPosition &gt;</type>

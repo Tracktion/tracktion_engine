@@ -16,7 +16,7 @@ var searchData=
   ['gates_1360',['gates',['../structtracktion_1_1engine_1_1StepClip_1_1Pattern_1_1CachedPattern.html#abdbc6caca9a80ffcaaf466532ef50785',1,'tracktion::engine::StepClip::Pattern::CachedPattern']]],
   ['generatecollectionclips_1361',['generateCollectionClips',['../classtracktion_1_1engine_1_1FolderTrack.html#a811367b04a8523618a271b788263902a',1,'tracktion::engine::FolderTrack']]],
   ['generatehash_1362',['generateHash',['../classtracktion_1_1engine_1_1EditClip.html#a2182debd45b4fbb44a30e5cad93a35bb',1,'tracktion::engine::EditClip']]],
-  ['generatemidisequence_1363',['generateMidiSequence',['../classtracktion_1_1engine_1_1StepClip.html#af246f452211d2b2a6dcb1bed358aa9ac',1,'tracktion::engine::StepClip']]],
+  ['generatemidisequence_1363',['generateMidiSequence',['../classtracktion_1_1engine_1_1StepClip.html#a2b6e4faa75f98e237d86f7370e56c503',1,'tracktion::engine::StepClip']]],
   ['generatepattern_1364',['generatePattern',['../classtracktion_1_1engine_1_1PatternGenerator.html#a066c5130eff19a797ee475a03fd8c421',1,'tracktion::engine::PatternGenerator']]],
   ['generator_1365',['generator',['../structtracktion_1_1engine_1_1PatternGenerator_1_1ProgressionItem.html#a0c4390c9a25a1ac2961515acb4f88239',1,'tracktion::engine::PatternGenerator::ProgressionItem']]],
   ['generatorjob_1366',['GeneratorJob',['../structtracktion_1_1engine_1_1AudioProxyGenerator_1_1GeneratorJob.html',1,'tracktion::engine::AudioProxyGenerator::GeneratorJob'],['../structtracktion_1_1engine_1_1AudioProxyGenerator_1_1GeneratorJob.html#aba41da4ec9b272b9a2897f2d7f922394',1,'tracktion::engine::AudioProxyGenerator::GeneratorJob::GeneratorJob()']]],
