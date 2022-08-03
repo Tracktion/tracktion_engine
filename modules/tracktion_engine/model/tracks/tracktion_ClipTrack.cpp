@@ -100,9 +100,9 @@ struct ClipTrack::ClipList  : public ValueTreeObjectList<Clip>,
         {
             if (id == IDs::start || id == IDs::length)
             {
-                if (! ! clipTrack.edit.getUndoManager().isPerformingUndoRedo())
+                if (! clipTrack.edit.getUndoManager().isPerformingUndoRedo())
                     triggerAsyncUpdate();
-                
+
                 clipTrack.trackItemsDirty = true;
             }
         }
