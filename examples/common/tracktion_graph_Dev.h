@@ -152,7 +152,7 @@ namespace JUnit
 //==============================================================================
 namespace TestRunner
 {
-    int runTests (const File& junitResultsFile, Array<UnitTest*> tests)
+    int runUnitTests (const File& junitResultsFile, Array<UnitTest*> tests)
     {
         CoutLogger logger;
         Logger::setCurrentLogger (&logger);
@@ -195,7 +195,7 @@ namespace TestRunner
         for (auto& category : categories)
             tests.addArray (UnitTest::getTestsInCategory (category));
 
-        return runTests (junitResultsFile, std::move (tests));
+        return runUnitTests (junitResultsFile, std::move (tests));
     }
 
     int runTests (const File& junitResultsFile, juce::String category)
@@ -211,7 +211,7 @@ namespace TestRunner
             if (test->getName() == name)
                 tests.add (test);
 
-        return runTests (junitResultsFile, std::move (tests));
+        return runUnitTests (junitResultsFile, std::move (tests));
     }
 }
 
