@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-08-03 11:46:53</td>
+            <td class="headerValue">2022-08-03 13:19:17</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">43</td>
@@ -296,7 +296,7 @@
 <a name="234"><span class="lineNum">     234 </span>            :         {</a>
 <a name="235"><span class="lineNum">     235 </span><span class="lineCov">         66 :             if (auto c = ct.findClipForID (EditItemID::fromID (child)))</span></a>
 <a name="236"><span class="lineNum">     236 </span>            :             {</a>
-<a name="237"><span class="lineNum">     237 </span><span class="lineCov">         30 :                 if (c-&gt;isGrouped())</span></a>
+<a name="237"><span class="lineNum">     237 </span><span class="lineCov">         26 :                 if (c-&gt;isGrouped())</span></a>
 <a name="238"><span class="lineNum">     238 </span>            :                 {</a>
 <a name="239"><span class="lineNum">     239 </span><span class="lineNoCov">          0 :                     auto cc = findOrCreateCollectionClip (c-&gt;getGroupID());</span></a>
 <a name="240"><span class="lineNum">     240 </span><span class="lineNoCov">          0 :                     cc-&gt;addClip (c);</span></a>
@@ -501,8 +501,8 @@
 <a name="439"><span class="lineNum">     439 </span><span class="lineCov">        125 : Clip* ClipTrack::findClipForID (EditItemID id) const</span></a>
 <a name="440"><span class="lineNum">     440 </span>            : {</a>
 <a name="441"><span class="lineNum">     441 </span><span class="lineCov">        125 :     for (auto* c : clipList-&gt;objects)</span></a>
-<a name="442"><span class="lineNum">     442 </span><span class="lineCov">         89 :         if (c-&gt;itemID == id)</span></a>
-<a name="443"><span class="lineNum">     443 </span><span class="lineCov">         89 :             return c;</span></a>
+<a name="442"><span class="lineNum">     442 </span><span class="lineCov">         85 :         if (c-&gt;itemID == id)</span></a>
+<a name="443"><span class="lineNum">     443 </span><span class="lineCov">         85 :             return c;</span></a>
 <a name="444"><span class="lineNum">     444 </span>            : </a>
 <a name="445"><span class="lineNum">     445 </span>            :     return {};</a>
 <a name="446"><span class="lineNum">     446 </span>            : }</a>
