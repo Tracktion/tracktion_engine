@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-08-03 15:09:18</td>
+            <td class="headerValue">2022-08-03 15:57:43</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">46</td>
@@ -290,18 +290,18 @@
 <a name="228"><span class="lineNum">     228 </span>            : </a>
 <a name="229"><span class="lineNum">     229 </span><span class="lineCov">         40 :         sourceSequence.updateMatchedPairs();</span></a>
 <a name="230"><span class="lineNum">     230 </span>            : </a>
-<a name="231"><span class="lineNum">     231 </span><span class="lineCov">        872 :         for (int i = 0; i &lt; sourceSequence.getNumEvents(); ++i)</span></a>
+<a name="231"><span class="lineNum">     231 </span><span class="lineCov">        776 :         for (int i = 0; i &lt; sourceSequence.getNumEvents(); ++i)</span></a>
 <a name="232"><span class="lineNum">     232 </span>            :         {</a>
-<a name="233"><span class="lineNum">     233 </span><span class="lineCov">        832 :             if (auto meh = sourceSequence.getEventPointer (i))</span></a>
+<a name="233"><span class="lineNum">     233 </span><span class="lineCov">        736 :             if (auto meh = sourceSequence.getEventPointer (i))</span></a>
 <a name="234"><span class="lineNum">     234 </span>            :             {</a>
-<a name="235"><span class="lineNum">     235 </span><span class="lineCov">        832 :                 if (meh-&gt;noteOffObject != nullptr</span></a>
-<a name="236"><span class="lineNum">     236 </span><span class="lineCov">        832 :                     &amp;&amp; meh-&gt;message.isNoteOn())</span></a>
+<a name="235"><span class="lineNum">     235 </span><span class="lineCov">        736 :                 if (meh-&gt;noteOffObject != nullptr</span></a>
+<a name="236"><span class="lineNum">     236 </span><span class="lineCov">        736 :                     &amp;&amp; meh-&gt;message.isNoteOn())</span></a>
 <a name="237"><span class="lineNum">     237 </span>            :                 {</a>
 <a name="238"><span class="lineNum">     238 </span>            :                     juce::Range&lt;double&gt; noteRange (meh-&gt;message.getTimeStamp(),</a>
-<a name="239"><span class="lineNum">     239 </span><span class="lineCov">        416 :                                                    meh-&gt;noteOffObject-&gt;message.getTimeStamp());</span></a>
+<a name="239"><span class="lineNum">     239 </span><span class="lineCov">        368 :                                                    meh-&gt;noteOffObject-&gt;message.getTimeStamp());</span></a>
 <a name="240"><span class="lineNum">     240 </span>            : </a>
 <a name="241"><span class="lineNum">     241 </span>            :                     // Note before loop start</a>
-<a name="242"><span class="lineNum">     242 </span><span class="lineCov">        416 :                     if (noteRange.getEnd() &lt; loopRange.getStart())</span></a>
+<a name="242"><span class="lineNum">     242 </span><span class="lineCov">        368 :                     if (noteRange.getEnd() &lt; loopRange.getStart())</span></a>
 <a name="243"><span class="lineNum">     243 </span>            :                         continue;</a>
 <a name="244"><span class="lineNum">     244 </span>            : </a>
 <a name="245"><span class="lineNum">     245 </span>            :                     // Past the end of the sequence</a>
@@ -319,7 +319,7 @@
 <a name="257"><span class="lineNum">     257 </span><span class="lineCov">        296 :                     res.addEvent ({ meh-&gt;message, noteRange.getStart() });</span></a>
 <a name="258"><span class="lineNum">     258 </span><span class="lineCov">        296 :                     res.addEvent ({ meh-&gt;noteOffObject-&gt;message, noteRange.getEnd() });</span></a>
 <a name="259"><span class="lineNum">     259 </span>            :                 }</a>
-<a name="260"><span class="lineNum">     260 </span><span class="lineCov">        416 :                 else if (! meh-&gt;message.isNoteOff())</span></a>
+<a name="260"><span class="lineNum">     260 </span><span class="lineCov">        368 :                 else if (! meh-&gt;message.isNoteOff())</span></a>
 <a name="261"><span class="lineNum">     261 </span>            :                 {</a>
 <a name="262"><span class="lineNum">     262 </span><span class="lineNoCov">          0 :                     if (meh-&gt;message.getTimeStamp() &gt;= loopRange.getEnd())</span></a>
 <a name="263"><span class="lineNum">     263 </span>            :                         break;</a>
@@ -755,23 +755,23 @@
 <a name="693"><span class="lineNum">     693 </span>            :         }</a>
 <a name="694"><span class="lineNum">     694 </span><span class="lineCov">        232 :     }</span></a>
 <a name="695"><span class="lineNum">     695 </span>            : </a>
-<a name="696"><span class="lineNum">     696 </span><span class="lineCov">     504956 :     juce::MidiMessage getEvent() override</span></a>
+<a name="696"><span class="lineNum">     696 </span><span class="lineCov">     504764 :     juce::MidiMessage getEvent() override</span></a>
 <a name="697"><span class="lineNum">     697 </span>            :     {</a>
-<a name="698"><span class="lineNum">     698 </span><span class="lineCov">     504956 :         [[ maybe_unused ]] auto numEvents = sequence.events.size();</span></a>
+<a name="698"><span class="lineNum">     698 </span><span class="lineCov">     504764 :         [[ maybe_unused ]] auto numEvents = sequence.events.size();</span></a>
 <a name="699"><span class="lineNum">     699 </span>            :         jassert (currentIndex &lt; numEvents);</a>
 <a name="700"><span class="lineNum">     700 </span>            : </a>
-<a name="701"><span class="lineNum">     701 </span><span class="lineCov">     504956 :         return toMidiMessage (sequence.events[currentIndex]);</span></a>
+<a name="701"><span class="lineNum">     701 </span><span class="lineCov">     504764 :         return toMidiMessage (sequence.events[currentIndex]);</span></a>
 <a name="702"><span class="lineNum">     702 </span>            :     }</a>
 <a name="703"><span class="lineNum">     703 </span>            : </a>
 <a name="704"><span class="lineNum">     704 </span><span class="lineNoCov">          0 :     bool advance() override</span></a>
 <a name="705"><span class="lineNum">     705 </span>            :     {</a>
-<a name="706"><span class="lineNum">     706 </span><span class="lineCov">       2560 :         ++currentIndex;</span></a>
+<a name="706"><span class="lineNum">     706 </span><span class="lineCov">       2368 :         ++currentIndex;</span></a>
 <a name="707"><span class="lineNum">     707 </span><span class="lineNoCov">          0 :         return ! exhausted();</span></a>
 <a name="708"><span class="lineNum">     708 </span>            :     }</a>
 <a name="709"><span class="lineNum">     709 </span>            : </a>
-<a name="710"><span class="lineNum">     710 </span><span class="lineCov">       2560 :     bool exhausted() override</span></a>
+<a name="710"><span class="lineNum">     710 </span><span class="lineCov">       2368 :     bool exhausted() override</span></a>
 <a name="711"><span class="lineNum">     711 </span>            :     {</a>
-<a name="712"><span class="lineNum">     712 </span><span class="lineCov">     512636 :         return currentIndex &gt;= sequence.events.size();</span></a>
+<a name="712"><span class="lineNum">     712 </span><span class="lineCov">     511868 :         return currentIndex &gt;= sequence.events.size();</span></a>
 <a name="713"><span class="lineNum">     713 </span>            :     }</a>
 <a name="714"><span class="lineNum">     714 </span>            : </a>
 <a name="715"><span class="lineNum">     715 </span>            :     const choc::midi::Sequence&amp; sequence;</a>
@@ -958,21 +958,21 @@
 <a name="896"><span class="lineNum">     896 </span><span class="lineCov">        192 :         cachedSequenceOffset = offsetBeats;</span></a>
 <a name="897"><span class="lineNum">     897 </span><span class="lineCov">        192 :     }</span></a>
 <a name="898"><span class="lineNum">     898 </span>            : </a>
-<a name="899"><span class="lineNum">     899 </span><span class="lineCov">     504956 :     juce::MidiMessage getEvent() override</span></a>
+<a name="899"><span class="lineNum">     899 </span><span class="lineCov">     504764 :     juce::MidiMessage getEvent() override</span></a>
 <a name="900"><span class="lineNum">     900 </span>            :     {</a>
-<a name="901"><span class="lineNum">     901 </span><span class="lineCov">     504956 :         auto e = generator.getEvent();</span></a>
-<a name="902"><span class="lineNum">     902 </span><span class="lineCov">     504956 :         e.addToTimeStamp (-cachedSequenceOffset);</span></a>
-<a name="903"><span class="lineNum">     903 </span><span class="lineCov">     504956 :         return e;</span></a>
+<a name="901"><span class="lineNum">     901 </span><span class="lineCov">     504764 :         auto e = generator.getEvent();</span></a>
+<a name="902"><span class="lineNum">     902 </span><span class="lineCov">     504764 :         e.addToTimeStamp (-cachedSequenceOffset);</span></a>
+<a name="903"><span class="lineNum">     903 </span><span class="lineCov">     504764 :         return e;</span></a>
 <a name="904"><span class="lineNum">     904 </span>            :     }</a>
 <a name="905"><span class="lineNum">     905 </span>            : </a>
-<a name="906"><span class="lineNum">     906 </span><span class="lineCov">       2560 :     bool advance() override</span></a>
+<a name="906"><span class="lineNum">     906 </span><span class="lineCov">       2368 :     bool advance() override</span></a>
 <a name="907"><span class="lineNum">     907 </span>            :     {</a>
-<a name="908"><span class="lineNum">     908 </span><span class="lineCov">       2560 :         return generator.advance();</span></a>
+<a name="908"><span class="lineNum">     908 </span><span class="lineCov">       2368 :         return generator.advance();</span></a>
 <a name="909"><span class="lineNum">     909 </span>            :     }</a>
 <a name="910"><span class="lineNum">     910 </span>            : </a>
-<a name="911"><span class="lineNum">     911 </span><span class="lineCov">     510076 :     bool exhausted() override</span></a>
+<a name="911"><span class="lineNum">     911 </span><span class="lineCov">     509500 :     bool exhausted() override</span></a>
 <a name="912"><span class="lineNum">     912 </span>            :     {</a>
-<a name="913"><span class="lineNum">     913 </span><span class="lineCov">     510076 :         return generator.exhausted();</span></a>
+<a name="913"><span class="lineNum">     913 </span><span class="lineCov">     509500 :         return generator.exhausted();</span></a>
 <a name="914"><span class="lineNum">     914 </span>            :     }</a>
 <a name="915"><span class="lineNum">     915 </span>            : </a>
 <a name="916"><span class="lineNum">     916 </span>            : private:</a>
@@ -1035,31 +1035,31 @@
 <a name="973"><span class="lineNum">     973 </span><span class="lineCov">         80 :         generator-&gt;setTime (sequencePos);</span></a>
 <a name="974"><span class="lineNum">     974 </span><span class="lineCov">         80 :     }</span></a>
 <a name="975"><span class="lineNum">     975 </span>            : </a>
-<a name="976"><span class="lineNum">     976 </span><span class="lineCov">     504956 :     juce::MidiMessage getEvent() override</span></a>
+<a name="976"><span class="lineNum">     976 </span><span class="lineCov">     504764 :     juce::MidiMessage getEvent() override</span></a>
 <a name="977"><span class="lineNum">     977 </span>            :     {</a>
-<a name="978"><span class="lineNum">     978 </span><span class="lineCov">     504956 :         const auto offsetBeats = clipRange.getStart() - loopTimes.getStart() + (loopIndex * loopTimes.getLength());</span></a>
+<a name="978"><span class="lineNum">     978 </span><span class="lineCov">     504764 :         const auto offsetBeats = clipRange.getStart() - loopTimes.getStart() + (loopIndex * loopTimes.getLength());</span></a>
 <a name="979"><span class="lineNum">     979 </span>            : </a>
-<a name="980"><span class="lineNum">     980 </span><span class="lineCov">     504956 :         auto e = generator-&gt;getEvent();</span></a>
+<a name="980"><span class="lineNum">     980 </span><span class="lineCov">     504764 :         auto e = generator-&gt;getEvent();</span></a>
 <a name="981"><span class="lineNum">     981 </span>            :         e.addToTimeStamp (offsetBeats);</a>
-<a name="982"><span class="lineNum">     982 </span><span class="lineCov">     504956 :         return e;</span></a>
+<a name="982"><span class="lineNum">     982 </span><span class="lineCov">     504764 :         return e;</span></a>
 <a name="983"><span class="lineNum">     983 </span>            :     }</a>
 <a name="984"><span class="lineNum">     984 </span>            : </a>
-<a name="985"><span class="lineNum">     985 </span><span class="lineCov">       2560 :     bool advance() override</span></a>
+<a name="985"><span class="lineNum">     985 </span><span class="lineCov">       2368 :     bool advance() override</span></a>
 <a name="986"><span class="lineNum">     986 </span>            :     {</a>
-<a name="987"><span class="lineNum">     987 </span><span class="lineCov">       2560 :         generator-&gt;advance();</span></a>
+<a name="987"><span class="lineNum">     987 </span><span class="lineCov">       2368 :         generator-&gt;advance();</span></a>
 <a name="988"><span class="lineNum">     988 </span>            : </a>
-<a name="989"><span class="lineNum">     989 </span><span class="lineCov">       2560 :         if (exhausted())</span></a>
+<a name="989"><span class="lineNum">     989 </span><span class="lineCov">       2368 :         if (exhausted())</span></a>
 <a name="990"><span class="lineNum">     990 </span>            :         {</a>
 <a name="991"><span class="lineNum">     991 </span><span class="lineCov">        152 :             setLoopIndex (loopIndex + 1);</span></a>
 <a name="992"><span class="lineNum">     992 </span><span class="lineCov">        152 :             generator-&gt;setTime (0.0);</span></a>
 <a name="993"><span class="lineNum">     993 </span>            :         }</a>
 <a name="994"><span class="lineNum">     994 </span>            : </a>
-<a name="995"><span class="lineNum">     995 </span><span class="lineCov">       2560 :         return exhausted();</span></a>
+<a name="995"><span class="lineNum">     995 </span><span class="lineCov">       2368 :         return exhausted();</span></a>
 <a name="996"><span class="lineNum">     996 </span>            :     }</a>
 <a name="997"><span class="lineNum">     997 </span>            : </a>
-<a name="998"><span class="lineNum">     998 </span><span class="lineCov">     510076 :     bool exhausted() override</span></a>
+<a name="998"><span class="lineNum">     998 </span><span class="lineCov">     509500 :     bool exhausted() override</span></a>
 <a name="999"><span class="lineNum">     999 </span>            :     {</a>
-<a name="1000"><span class="lineNum">    1000 </span><span class="lineCov">     510076 :         return generator-&gt;exhausted();</span></a>
+<a name="1000"><span class="lineNum">    1000 </span><span class="lineCov">     509500 :         return generator-&gt;exhausted();</span></a>
 <a name="1001"><span class="lineNum">    1001 </span>            :     }</a>
 <a name="1002"><span class="lineNum">    1002 </span>            : </a>
 <a name="1003"><span class="lineNum">    1003 </span>            : private:</a>
@@ -1115,21 +1115,21 @@
 <a name="1053"><span class="lineNum">    1053 </span><span class="lineCov">         40 :         generator-&gt;setTime (editBeatPosition + clipOffset);</span></a>
 <a name="1054"><span class="lineNum">    1054 </span><span class="lineCov">         40 :     }</span></a>
 <a name="1055"><span class="lineNum">    1055 </span>            : </a>
-<a name="1056"><span class="lineNum">    1056 </span><span class="lineCov">     504956 :     juce::MidiMessage getEvent() override</span></a>
+<a name="1056"><span class="lineNum">    1056 </span><span class="lineCov">     504764 :     juce::MidiMessage getEvent() override</span></a>
 <a name="1057"><span class="lineNum">    1057 </span>            :     {</a>
-<a name="1058"><span class="lineNum">    1058 </span><span class="lineCov">     504956 :         auto e = generator-&gt;getEvent();</span></a>
-<a name="1059"><span class="lineNum">    1059 </span><span class="lineCov">     504956 :         e.addToTimeStamp (-clipOffset);</span></a>
-<a name="1060"><span class="lineNum">    1060 </span><span class="lineCov">     504956 :         return e;</span></a>
+<a name="1058"><span class="lineNum">    1058 </span><span class="lineCov">     504764 :         auto e = generator-&gt;getEvent();</span></a>
+<a name="1059"><span class="lineNum">    1059 </span><span class="lineCov">     504764 :         e.addToTimeStamp (-clipOffset);</span></a>
+<a name="1060"><span class="lineNum">    1060 </span><span class="lineCov">     504764 :         return e;</span></a>
 <a name="1061"><span class="lineNum">    1061 </span>            :     }</a>
 <a name="1062"><span class="lineNum">    1062 </span>            : </a>
-<a name="1063"><span class="lineNum">    1063 </span><span class="lineCov">       2560 :     bool advance() override</span></a>
+<a name="1063"><span class="lineNum">    1063 </span><span class="lineCov">       2368 :     bool advance() override</span></a>
 <a name="1064"><span class="lineNum">    1064 </span>            :     {</a>
-<a name="1065"><span class="lineNum">    1065 </span><span class="lineCov">       2560 :         return generator-&gt;advance();</span></a>
+<a name="1065"><span class="lineNum">    1065 </span><span class="lineCov">       2368 :         return generator-&gt;advance();</span></a>
 <a name="1066"><span class="lineNum">    1066 </span>            :     }</a>
 <a name="1067"><span class="lineNum">    1067 </span>            : </a>
-<a name="1068"><span class="lineNum">    1068 </span><span class="lineCov">     504956 :     bool exhausted() override</span></a>
+<a name="1068"><span class="lineNum">    1068 </span><span class="lineCov">     504764 :     bool exhausted() override</span></a>
 <a name="1069"><span class="lineNum">    1069 </span>            :     {</a>
-<a name="1070"><span class="lineNum">    1070 </span><span class="lineCov">     504956 :         return generator-&gt;exhausted();</span></a>
+<a name="1070"><span class="lineNum">    1070 </span><span class="lineCov">     504764 :         return generator-&gt;exhausted();</span></a>
 <a name="1071"><span class="lineNum">    1071 </span>            :     }</a>
 <a name="1072"><span class="lineNum">    1072 </span>            : </a>
 <a name="1073"><span class="lineNum">    1073 </span>            : private:</a>
@@ -1251,42 +1251,42 @@
 <a name="1189"><span class="lineNum">    1189 </span>            :         {</a>
 <a name="1190"><span class="lineNum">    1190 </span>            :             for (;;)</a>
 <a name="1191"><span class="lineNum">    1191 </span>            :             {</a>
-<a name="1192"><span class="lineNum">    1192 </span><span class="lineCov">     504956 :                 if (generator-&gt;exhausted())</span></a>
+<a name="1192"><span class="lineNum">    1192 </span><span class="lineCov">     504764 :                 if (generator-&gt;exhausted())</span></a>
 <a name="1193"><span class="lineNum">    1193 </span>            :                     break;</a>
 <a name="1194"><span class="lineNum">    1194 </span>            : </a>
-<a name="1195"><span class="lineNum">    1195 </span><span class="lineCov">     507516 :                 auto e = generator-&gt;getEvent();</span></a>
-<a name="1196"><span class="lineNum">    1196 </span><span class="lineCov">     504956 :                 const EditBeatPosition editBeatPosition = e.getTimeStamp();</span></a>
+<a name="1195"><span class="lineNum">    1195 </span><span class="lineCov">     507132 :                 auto e = generator-&gt;getEvent();</span></a>
+<a name="1196"><span class="lineNum">    1196 </span><span class="lineCov">     504764 :                 const EditBeatPosition editBeatPosition = e.getTimeStamp();</span></a>
 <a name="1197"><span class="lineNum">    1197 </span>            : </a>
 <a name="1198"><span class="lineNum">    1198 </span>            :                 // Ensure we stop at the clip end</a>
-<a name="1199"><span class="lineNum">    1199 </span><span class="lineCov">     504956 :                 if (editBeatPosition &gt;= clipIntersection.getEnd().inBeats())</span></a>
+<a name="1199"><span class="lineNum">    1199 </span><span class="lineCov">     504764 :                 if (editBeatPosition &gt;= clipIntersection.getEnd().inBeats())</span></a>
 <a name="1200"><span class="lineNum">    1200 </span>            :                     break;</a>
 <a name="1201"><span class="lineNum">    1201 </span>            : </a>
-<a name="1202"><span class="lineNum">    1202 </span><span class="lineCov">       2560 :                 BlockBeatPosition blockBeatPosition = editBeatPosition - sectionEditBeatRange.getStart().inBeats();</span></a>
+<a name="1202"><span class="lineNum">    1202 </span><span class="lineCov">       2368 :                 BlockBeatPosition blockBeatPosition = editBeatPosition - sectionEditBeatRange.getStart().inBeats();</span></a>
 <a name="1203"><span class="lineNum">    1203 </span>            : </a>
 <a name="1204"><span class="lineNum">    1204 </span>            :                 // This time correction is due to rounding errors accumulating and casuing events to be slightly negative in a block</a>
-<a name="1205"><span class="lineNum">    1205 </span><span class="lineCov">       2560 :                 if (blockBeatPosition &lt; -0.000001)</span></a>
+<a name="1205"><span class="lineNum">    1205 </span><span class="lineCov">       2368 :                 if (blockBeatPosition &lt; -0.000001)</span></a>
 <a name="1206"><span class="lineNum">    1206 </span>            :                 {</a>
 <a name="1207"><span class="lineNum">    1207 </span><span class="lineNoCov">          0 :                     generator-&gt;advance();</span></a>
 <a name="1208"><span class="lineNum">    1208 </span><span class="lineNoCov">          0 :                     continue;</span></a>
 <a name="1209"><span class="lineNum">    1209 </span>            :                 }</a>
 <a name="1210"><span class="lineNum">    1210 </span>            : </a>
-<a name="1211"><span class="lineNum">    1211 </span><span class="lineCov">       2560 :                 blockBeatPosition = std::max (blockBeatPosition, 0.0);</span></a>
+<a name="1211"><span class="lineNum">    1211 </span><span class="lineCov">       2368 :                 blockBeatPosition = std::max (blockBeatPosition, 0.0);</span></a>
 <a name="1212"><span class="lineNum">    1212 </span>            : </a>
 <a name="1213"><span class="lineNum">    1213 </span>            :                 // Note-offs that are on the end boundry need to be nudged back by 1 sample so they're not lost (which leads to stuck notes)</a>
-<a name="1214"><span class="lineNum">    1214 </span><span class="lineCov">       2560 :                 if (e.isNoteOff() &amp;&amp; juce::isWithin (editBeatPosition, sectionEditBeatRange.getEnd().inBeats(), beatDurationOfOneSample))</span></a>
-<a name="1215"><span class="lineNum">    1215 </span><span class="lineCov">          4 :                     blockBeatPosition = blockBeatPosition - beatDurationOfOneSample;</span></a>
+<a name="1214"><span class="lineNum">    1214 </span><span class="lineCov">       2368 :                 if (e.isNoteOff() &amp;&amp; juce::isWithin (editBeatPosition, sectionEditBeatRange.getEnd().inBeats(), beatDurationOfOneSample))</span></a>
+<a name="1215"><span class="lineNum">    1215 </span><span class="lineCov">          8 :                     blockBeatPosition = blockBeatPosition - beatDurationOfOneSample;</span></a>
 <a name="1216"><span class="lineNum">    1216 </span>            : </a>
-<a name="1217"><span class="lineNum">    1217 </span><span class="lineCov">       2560 :                 e.multiplyVelocity (volScale);</span></a>
-<a name="1218"><span class="lineNum">    1218 </span><span class="lineCov">       2560 :                 const auto eventTimeSeconds = blockBeatPosition * secondsPerBeat.inSeconds();</span></a>
-<a name="1219"><span class="lineNum">    1219 </span><span class="lineCov">       2560 :                 destBuffer.addMidiMessage (e, eventTimeSeconds, midiSourceID);</span></a>
+<a name="1217"><span class="lineNum">    1217 </span><span class="lineCov">       2368 :                 e.multiplyVelocity (volScale);</span></a>
+<a name="1218"><span class="lineNum">    1218 </span><span class="lineCov">       2368 :                 const auto eventTimeSeconds = blockBeatPosition * secondsPerBeat.inSeconds();</span></a>
+<a name="1219"><span class="lineNum">    1219 </span><span class="lineCov">       2368 :                 destBuffer.addMidiMessage (e, eventTimeSeconds, midiSourceID);</span></a>
 <a name="1220"><span class="lineNum">    1220 </span>            : </a>
 <a name="1221"><span class="lineNum">    1221 </span>            :                 // Update note list</a>
-<a name="1222"><span class="lineNum">    1222 </span><span class="lineCov">       2560 :                 if (e.isNoteOn())</span></a>
-<a name="1223"><span class="lineNum">    1223 </span><span class="lineCov">       1280 :                     activeNoteList-&gt;startNote (e.getChannel(), e.getNoteNumber());</span></a>
-<a name="1224"><span class="lineNum">    1224 </span><span class="lineCov">       1280 :                 else if (e.isNoteOff())</span></a>
-<a name="1225"><span class="lineNum">    1225 </span><span class="lineCov">       1280 :                     activeNoteList-&gt;clearNote (e.getChannel(), e.getNoteNumber());</span></a>
+<a name="1222"><span class="lineNum">    1222 </span><span class="lineCov">       2368 :                 if (e.isNoteOn())</span></a>
+<a name="1223"><span class="lineNum">    1223 </span><span class="lineCov">       1184 :                     activeNoteList-&gt;startNote (e.getChannel(), e.getNoteNumber());</span></a>
+<a name="1224"><span class="lineNum">    1224 </span><span class="lineCov">       1184 :                 else if (e.isNoteOff())</span></a>
+<a name="1225"><span class="lineNum">    1225 </span><span class="lineCov">       1184 :                     activeNoteList-&gt;clearNote (e.getChannel(), e.getNoteNumber());</span></a>
 <a name="1226"><span class="lineNum">    1226 </span>            : </a>
-<a name="1227"><span class="lineNum">    1227 </span><span class="lineCov">       2560 :                 generator-&gt;advance();</span></a>
+<a name="1227"><span class="lineNum">    1227 </span><span class="lineCov">       2368 :                 generator-&gt;advance();</span></a>
 <a name="1228"><span class="lineNum">    1228 </span>            :             }</a>
 <a name="1229"><span class="lineNum">    1229 </span>            :         }</a>
 <a name="1230"><span class="lineNum">    1230 </span>            : </a>

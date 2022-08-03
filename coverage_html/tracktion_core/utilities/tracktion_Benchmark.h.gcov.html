@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-08-03 15:09:18</td>
+            <td class="headerValue">2022-08-03 15:57:43</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">8</td>
@@ -98,7 +98,7 @@
 <a name="36"><span class="lineNum">      36 </span>            : </a>
 <a name="37"><span class="lineNum">      37 </span>            : //==============================================================================</a>
 <a name="38"><span class="lineNum">      38 </span>            : /** Holds the duration a benchmark took to run. */</a>
-<a name="39"><span class="lineNum">      39 </span><span class="lineCov">        510 : struct BenchmarkResult</span></a>
+<a name="39"><span class="lineNum">      39 </span><span class="lineCov">        519 : struct BenchmarkResult</span></a>
 <a name="40"><span class="lineNum">      40 </span>            : {</a>
 <a name="41"><span class="lineNum">      41 </span>            :     BenchmarkDescription description;   /**&lt; The BenchmarkDescription. */</a>
 <a name="42"><span class="lineNum">      42 </span>            :     double duration = 0.0, mean = 0.0, min = 0.0, max = 0.0, variance = 0.0;</a>
@@ -107,12 +107,12 @@
 <a name="45"><span class="lineNum">      45 </span>            : };</a>
 <a name="46"><span class="lineNum">      46 </span>            : </a>
 <a name="47"><span class="lineNum">      47 </span>            : /** Creates a BenchmarkResult from a set of Statistics. */</a>
-<a name="48"><span class="lineNum">      48 </span><span class="lineCov">        122 : inline BenchmarkResult createBenchmarkResult (BenchmarkDescription description,</span></a>
+<a name="48"><span class="lineNum">      48 </span><span class="lineCov">        125 : inline BenchmarkResult createBenchmarkResult (BenchmarkDescription description,</span></a>
 <a name="49"><span class="lineNum">      49 </span>            :                                               const tracktion::graph::PerformanceMeasurement::Statistics&amp; stats)</a>
 <a name="50"><span class="lineNum">      50 </span>            : {</a>
 <a name="51"><span class="lineNum">      51 </span>            :     return { description,</a>
-<a name="52"><span class="lineNum">      52 </span><span class="lineCov">        122 :              stats.totalSeconds, stats.meanSeconds, stats.minimumSeconds, stats.maximumSeconds,</span></a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineCov">        244 :              stats.getVariance(), (int64_t) juce::Time::getHighResolutionTicksPerSecond() };</span></a>
+<a name="52"><span class="lineNum">      52 </span><span class="lineCov">        125 :              stats.totalSeconds, stats.meanSeconds, stats.minimumSeconds, stats.maximumSeconds,</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">        250 :              stats.getVariance(), (int64_t) juce::Time::getHighResolutionTicksPerSecond() };</span></a>
 <a name="54"><span class="lineNum">      54 </span>            : }</a>
 <a name="55"><span class="lineNum">      55 </span>            : </a>
 <a name="56"><span class="lineNum">      56 </span>            : //==============================================================================</a>
@@ -146,9 +146,9 @@
 <a name="84"><span class="lineNum">      84 </span><span class="lineCov">          3 :     }</span></a>
 <a name="85"><span class="lineNum">      85 </span>            :     </a>
 <a name="86"><span class="lineNum">      86 </span>            :     /** Returns the timing results. */</a>
-<a name="87"><span class="lineNum">      87 </span><span class="lineCov">         86 :     BenchmarkResult getResult() const</span></a>
+<a name="87"><span class="lineNum">      87 </span><span class="lineCov">         89 :     BenchmarkResult getResult() const</span></a>
 <a name="88"><span class="lineNum">      88 </span>            :     {</a>
-<a name="89"><span class="lineNum">      89 </span><span class="lineCov">         86 :         return createBenchmarkResult (description, measurement.getStatistics());</span></a>
+<a name="89"><span class="lineNum">      89 </span><span class="lineCov">         89 :         return createBenchmarkResult (description, measurement.getStatistics());</span></a>
 <a name="90"><span class="lineNum">      90 </span>            :     }</a>
 <a name="91"><span class="lineNum">      91 </span>            :     </a>
 <a name="92"><span class="lineNum">      92 </span>            : private:</a>
@@ -173,11 +173,11 @@
 <a name="111"><span class="lineNum">     111 </span>            :     BenchmarkList() = default;</a>
 <a name="112"><span class="lineNum">     112 </span>            :     </a>
 <a name="113"><span class="lineNum">     113 </span>            :     /** Adds a result to the list. [[ thread_safe ]] */</a>
-<a name="114"><span class="lineNum">     114 </span><span class="lineCov">        158 :     void addResult (BenchmarkResult r)</span></a>
+<a name="114"><span class="lineNum">     114 </span><span class="lineCov">        161 :     void addResult (BenchmarkResult r)</span></a>
 <a name="115"><span class="lineNum">     115 </span>            :     {</a>
-<a name="116"><span class="lineNum">     116 </span><span class="lineCov">        158 :         std::lock_guard lock (mutex);</span></a>
-<a name="117"><span class="lineNum">     117 </span><span class="lineCov">        158 :         results.emplace_back (std::move (r));</span></a>
-<a name="118"><span class="lineNum">     118 </span><span class="lineCov">        158 :     }</span></a>
+<a name="116"><span class="lineNum">     116 </span><span class="lineCov">        161 :         std::lock_guard lock (mutex);</span></a>
+<a name="117"><span class="lineNum">     117 </span><span class="lineCov">        161 :         results.emplace_back (std::move (r));</span></a>
+<a name="118"><span class="lineNum">     118 </span><span class="lineCov">        161 :     }</span></a>
 <a name="119"><span class="lineNum">     119 </span>            :     </a>
 <a name="120"><span class="lineNum">     120 </span>            :     /** Returns all the results. [[ thread_safe ]] */</a>
 <a name="121"><span class="lineNum">     121 </span>            :     std::vector&lt;BenchmarkResult&gt; getResults() const</a>
@@ -194,10 +194,10 @@
 <a name="132"><span class="lineNum">     132 </span>            :     }</a>
 <a name="133"><span class="lineNum">     133 </span>            : </a>
 <a name="134"><span class="lineNum">     134 </span>            :     /** Gets the singleton instance. [[ thread_safe ]] */</a>
-<a name="135"><span class="lineNum">     135 </span><span class="lineCov">        158 :     static BenchmarkList&amp; getInstance()</span></a>
+<a name="135"><span class="lineNum">     135 </span><span class="lineCov">        161 :     static BenchmarkList&amp; getInstance()</span></a>
 <a name="136"><span class="lineNum">     136 </span>            :     {</a>
-<a name="137"><span class="lineNum">     137 </span><span class="lineCov">        158 :         static BenchmarkList list;</span></a>
-<a name="138"><span class="lineNum">     138 </span><span class="lineCov">        158 :         return list;</span></a>
+<a name="137"><span class="lineNum">     137 </span><span class="lineCov">        161 :         static BenchmarkList list;</span></a>
+<a name="138"><span class="lineNum">     138 </span><span class="lineCov">        161 :         return list;</span></a>
 <a name="139"><span class="lineNum">     139 </span>            :     }</a>
 <a name="140"><span class="lineNum">     140 </span>            :     </a>
 <a name="141"><span class="lineNum">     141 </span>            : private:</a>
