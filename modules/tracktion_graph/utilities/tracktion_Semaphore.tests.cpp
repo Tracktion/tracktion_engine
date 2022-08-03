@@ -179,6 +179,8 @@ private:
         // Wait for the threads to complete
         for (auto& t : threads)
             t.join();
+
+        BenchmarkList::getInstance().addResult (benchmark.getResult());
     }
 
     void runConditionVariableBenchmarks()
@@ -228,6 +230,8 @@ private:
         // Wait for the threads to complete
         for (auto& t : threads)
             t.join();
+
+        BenchmarkList::getInstance().addResult (benchmark.getResult());
     }
 };
 
