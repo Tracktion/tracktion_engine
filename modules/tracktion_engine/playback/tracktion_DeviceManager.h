@@ -184,6 +184,8 @@ public:
 
     int getNumCpuOverloads() { return numCpuOverloads; }
 
+    void resetNumCpuOverloads() { numCpuOverloads = 0; }
+
 private:
     struct WaveDeviceList;
     struct ContextDeviceClearer;
