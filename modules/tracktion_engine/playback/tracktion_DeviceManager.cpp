@@ -1124,7 +1124,6 @@ void DeviceManager::audioDeviceIOCallbackInternal (const float** inputChannelDat
             currentCpuUsage = std::min (0.9, currentCpuUsage * 0.99);
 
             numCpuOverloads++;
-            std::cout << "Audio Engine: CPU OVERLOAD!\n";
         }
         else
         {
