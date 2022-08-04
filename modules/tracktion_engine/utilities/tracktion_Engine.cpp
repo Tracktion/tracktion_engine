@@ -14,7 +14,10 @@ namespace tracktion { inline namespace engine
 static Engine* instance = nullptr;
 static juce::Array<Engine*> engines;
 
-Engine::Engine (std::unique_ptr<PropertyStorage> ps, std::unique_ptr<UIBehaviour> ub, std::unique_ptr<EngineBehaviour> eb)
+Engine::Engine (std::unique_ptr<PropertyStorage> ps, 
+                std::unique_ptr<UIBehaviour> ub, 
+                std::unique_ptr<EngineBehaviour> eb, 
+                const std::shared_ptr<juce::AudioDeviceManager>& devMgr)
 {
     instance = this;
     engines.add (this);
@@ -32,11 +35,13 @@ Engine::Engine (std::unique_ptr<PropertyStorage> ps, std::unique_ptr<UIBehaviour
     else
         engineBehaviour = std::move (eb);
 
-    initialise();
+    initialise(devMgr);
 }
 
-Engine::Engine (juce::String applicationName, std::unique_ptr<UIBehaviour> ub, std::unique_ptr<EngineBehaviour> eb)
-    : Engine (std::make_unique<PropertyStorage> (applicationName), std::move (ub), std::move (eb))
+Engine::Engine (juce::String applicationName, 
+                std::unique_ptr<UIBehaviour> ub, 
+                std::unique_ptr<EngineBehaviour> eb, 
+                const std::shared_ptr<juce::AudioDeviceManager>& devMgr) : Engine (std::make_unique<PropertyStorage> (applicationName), std::move (ub), std::move (eb), devMgr)
 {
 }
 
@@ -44,7 +49,7 @@ Engine::Engine (juce::String applicationName)  : Engine (applicationName, nullpt
 {
 }
 
-void Engine::initialise()
+void Engine::initialise(const std::shared_ptr<juce::AudioDeviceManager>& devMgr)
 {
     Selectable::initialise();
     AudioScratchBuffer::initialise();
@@ -59,7 +64,7 @@ void Engine::initialise()
     midiLearnState.reset (new MidiLearnState (*this));
     renderManager.reset (new RenderManager (*this));
     audioFileManager.reset (new AudioFileManager (*this));
-    deviceManager.reset (new DeviceManager (*this));
+    deviceManager.reset (new DeviceManager (*this, devMgr));
     midiProgramManager.reset (new MidiProgramManager (*this));
 
     externalControllerManager.reset (new ExternalControllerManager (*this));

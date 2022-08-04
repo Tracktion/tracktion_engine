@@ -23,8 +23,10 @@ class Engine
 {
 public:
     Engine (juce::String applicationName);
-    Engine (juce::String applicationName, std::unique_ptr<UIBehaviour>, std::unique_ptr<EngineBehaviour>);
-    Engine (std::unique_ptr<PropertyStorage>, std::unique_ptr<UIBehaviour>, std::unique_ptr<EngineBehaviour>);
+    Engine (juce::String applicationName, std::unique_ptr<UIBehaviour>, 
+        std::unique_ptr<EngineBehaviour>, const std::shared_ptr<juce::AudioDeviceManager>& devMgr = nullptr);
+    Engine (std::unique_ptr<PropertyStorage>, std::unique_ptr<UIBehaviour>, 
+        std::unique_ptr<EngineBehaviour>, const std::shared_ptr<juce::AudioDeviceManager>& devMgr = nullptr);
     ~Engine();
 
     /** Returns the current version of Tracktion Engine. */
@@ -61,7 +63,7 @@ public:
     using WeakRef = juce::WeakReference<Engine>;
 
 private:
-    void initialise();
+    void initialise(const std::shared_ptr<juce::AudioDeviceManager>& devMgr = nullptr);
 
     std::unique_ptr<ProjectManager> projectManager;
     std::unique_ptr<TemporaryFileManager> temporaryFileManager;
