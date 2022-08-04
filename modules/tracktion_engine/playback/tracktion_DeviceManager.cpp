@@ -1128,7 +1128,7 @@ void DeviceManager::audioDeviceIOCallbackInternal (const float** inputChannelDat
         }
         else
         {
-            broadcastStreamTimeToMidiDevices (  streamTime + outputLatencyTime);
+            broadcastStreamTimeToMidiDevices (streamTime + outputLatencyTime);
             EditTimeRange blockStreamTime;
 
             {
