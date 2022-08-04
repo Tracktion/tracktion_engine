@@ -182,6 +182,8 @@ public:
 
     Engine& engine;
 
+    int getNumCpuOverloads() { return numCpuOverloads; }
+
 private:
     struct WaveDeviceList;
     struct ContextDeviceClearer;
@@ -189,6 +191,7 @@ private:
     bool sendMidiTimecode = false;
 
     std::atomic<double> currentCpuUsage { 0 }, streamTime { 0 }, cpuLimitBeforeMuting { 0.98 };
+    std::atomic<int> numCpuOverloads { 0 };
     double currentLatencyMs = 0, outputLatencyTime = 0, currentSampleRate = 0;
     juce::Array<EditPlaybackContext*> contextsToRestart;
 
