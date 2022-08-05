@@ -50,6 +50,9 @@
   <input type="checkbox" id="show_variance_button" name="variance_name" oninput="updateGraphs();">
   <label class="tickboxes"for="variance_name">Show variance</label>
 
+  <input type="checkbox" id="normalise_button" name="normalise_name" oninput="updateGraphs();">
+  <label class="tickboxes"for="normalise_name">Normalise results</label>
+
   <br/><br/>
   <button id="fetch_results_button" type="button" onclick="fetchResults();">Update Results</button>
 
@@ -85,6 +88,7 @@
     var showTotal;
     var showMinMaxMean;
     var showVariances;
+    var normalise;
 
     var hashes = new Set();
     var categories = new Set();
@@ -93,6 +97,7 @@
     var platforms = new Set();
 
     var currentResults = new Map();
+    var currentMin, currentMax;
 
     function updateMenus()
     {
@@ -171,8 +176,11 @@
       const lightBlue           = '#36a2ebaa';
 
       var scales = {
-            y: {},
-          };
+          y: {
+            min: normalise ? currentMin : undefined,
+            max: normalise ? currentMax : undefined
+          }
+        };
 
       var datasets = [];
 
@@ -275,6 +283,8 @@
         {
           document.getElementById ("loader").style.display = "none";
           currentResults.clear();
+          currentMax = Number.MIN_VALUE;
+          currentMin = Number.MAX_VALUE;
 
           results.forEach (result =>
                           {
@@ -291,6 +301,9 @@
                             values.means      = result.benchmark_duration_mean;       
                             values.variances  = result.benchmark_duration_variance;
 
+                            currentMax = Math.max (currentMax, ...values.durations, ...values.maximums);
+                            currentMin = Math.min (currentMin, ...values.durations, ...values.minimums);
+
                             currentResults.set (result.benchmark_hash, values);
                           });
 
@@ -303,6 +316,7 @@
       showTotal         = show_total_button.checked;
       showMinMaxMean    = show_minmax_button.checked;
       showVariances     = show_variance_button.checked;
+      normalise         = normalise_button.checked;
 
       charts.innerHTML = "";
       
