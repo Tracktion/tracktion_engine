@@ -681,7 +681,7 @@ public:
     const int numChannels;
     TimeStretcher timeStretcher;
     AudioFifo inputFifo { numChannels, chunkSize }, outputFifo { numChannels, chunkSize };
-    double playbackSpeedRatio = 1.0, semitonesShift = 0.0, readPosition = 0.0;
+    double playbackSpeedRatio = 1.0, semitonesShift = 0.0, readPosition = std::numeric_limits<double>::lowest();
 
     SampleCount getReadPosition() const
     {
