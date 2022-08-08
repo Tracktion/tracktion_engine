@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-08-05 18:43:36</td>
+            <td class="headerValue">2022-08-08 16:58:25</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">16</td>
@@ -106,15 +106,15 @@
 <a name="44"><span class="lineNum">      44 </span><span class="lineCov">       3387 :     initialiseMissingProps();</span></a>
 <a name="45"><span class="lineNum">      45 </span><span class="lineCov">       3387 : }</span></a>
 <a name="46"><span class="lineNum">      46 </span>            : </a>
-<a name="47"><span class="lineNum">      47 </span><span class="lineCov">      19037 : LoopInfo::LoopInfo (const LoopInfo&amp; other)</span></a>
-<a name="48"><span class="lineNum">      48 </span><span class="lineCov">      19037 :     : engine (other.engine)</span></a>
+<a name="47"><span class="lineNum">      47 </span><span class="lineCov">      19032 : LoopInfo::LoopInfo (const LoopInfo&amp; other)</span></a>
+<a name="48"><span class="lineNum">      48 </span><span class="lineCov">      19032 :     : engine (other.engine)</span></a>
 <a name="49"><span class="lineNum">      49 </span>            : {</a>
 <a name="50"><span class="lineNum">      50 </span>            :     *this = other;</a>
-<a name="51"><span class="lineNum">      51 </span><span class="lineCov">      19037 : }</span></a>
+<a name="51"><span class="lineNum">      51 </span><span class="lineCov">      19032 : }</span></a>
 <a name="52"><span class="lineNum">      52 </span>            : </a>
 <a name="53"><span class="lineNum">      53 </span><span class="lineCov">       1763 : LoopInfo&amp; LoopInfo::operator= (const LoopInfo&amp; o)</span></a>
 <a name="54"><span class="lineNum">      54 </span>            : {</a>
-<a name="55"><span class="lineNum">      55 </span><span class="lineCov">      20800 :     return copyFrom (o.state);</span></a>
+<a name="55"><span class="lineNum">      55 </span><span class="lineCov">      20795 :     return copyFrom (o.state);</span></a>
 <a name="56"><span class="lineNum">      56 </span>            : }</a>
 <a name="57"><span class="lineNum">      57 </span>            : </a>
 <a name="58"><span class="lineNum">      58 </span>            : //==============================================================================</a>
@@ -295,11 +295,11 @@
 <a name="233"><span class="lineNum">     233 </span><span class="lineCov">       6910 :     setPropertyIfMissing (state, IDs::outMarker, -1, um);</span></a>
 <a name="234"><span class="lineNum">     234 </span><span class="lineCov">       6910 : }</span></a>
 <a name="235"><span class="lineNum">     235 </span>            : </a>
-<a name="236"><span class="lineNum">     236 </span><span class="lineCov">      20800 : LoopInfo&amp; LoopInfo::copyFrom (const juce::ValueTree&amp; o)</span></a>
+<a name="236"><span class="lineNum">     236 </span><span class="lineCov">      20795 : LoopInfo&amp; LoopInfo::copyFrom (const juce::ValueTree&amp; o)</span></a>
 <a name="237"><span class="lineNum">     237 </span>            : {</a>
-<a name="238"><span class="lineNum">     238 </span><span class="lineCov">      20800 :     const juce::ScopedLock sl (lock);</span></a>
-<a name="239"><span class="lineNum">     239 </span><span class="lineCov">      20800 :     copyValueTree (state, o, um);</span></a>
-<a name="240"><span class="lineNum">     240 </span><span class="lineCov">      20800 :     return *this;</span></a>
+<a name="238"><span class="lineNum">     238 </span><span class="lineCov">      20795 :     const juce::ScopedLock sl (lock);</span></a>
+<a name="239"><span class="lineNum">     239 </span><span class="lineCov">      20795 :     copyValueTree (state, o, um);</span></a>
+<a name="240"><span class="lineNum">     240 </span><span class="lineCov">      20795 :     return *this;</span></a>
 <a name="241"><span class="lineNum">     241 </span>            : }</a>
 <a name="242"><span class="lineNum">     242 </span>            : </a>
 <a name="243"><span class="lineNum">     243 </span><span class="lineNoCov">          0 : void LoopInfo::removeChildIfEmpty (const juce::Identifier&amp; i)</span></a>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-08-05 18:43:36</td>
+            <td class="headerValue">2022-08-08 16:58:25</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">14</td>
@@ -222,20 +222,20 @@
 <a name="160"><span class="lineNum">     160 </span><span class="lineNoCov">          0 :     return roundTo (time, 1.0 - 1.0e-10, edit);</span></a>
 <a name="161"><span class="lineNum">     161 </span>            : }</a>
 <a name="162"><span class="lineNum">     162 </span>            : </a>
-<a name="163"><span class="lineNum">     163 </span><span class="lineCov">    7347170 : BeatPosition QuantisationType::roundToBeat (BeatPosition beatNumber, double adjustment) const</span></a>
+<a name="163"><span class="lineNum">     163 </span><span class="lineCov">    7348660 : BeatPosition QuantisationType::roundToBeat (BeatPosition beatNumber, double adjustment) const</span></a>
 <a name="164"><span class="lineNum">     164 </span>            : {</a>
-<a name="165"><span class="lineNum">     165 </span><span class="lineCov">    7347170 :     if (typeIndex == 0)</span></a>
-<a name="166"><span class="lineNum">     166 </span><span class="lineCov">    7345120 :         return beatNumber;</span></a>
+<a name="165"><span class="lineNum">     165 </span><span class="lineCov">    7348660 :     if (typeIndex == 0)</span></a>
+<a name="166"><span class="lineNum">     166 </span><span class="lineCov">    7345520 :         return beatNumber;</span></a>
 <a name="167"><span class="lineNum">     167 </span>            : </a>
-<a name="168"><span class="lineNum">     168 </span><span class="lineCov">       2048 :     const double beats = fractionOfBeat * floor (beatNumber.inBeats() / fractionOfBeat + adjustment);</span></a>
+<a name="168"><span class="lineNum">     168 </span><span class="lineCov">       3136 :     const double beats = fractionOfBeat * floor (beatNumber.inBeats() / fractionOfBeat + adjustment);</span></a>
 <a name="169"><span class="lineNum">     169 </span>            : </a>
-<a name="170"><span class="lineNum">     170 </span><span class="lineCov">       2048 :     return BeatPosition::fromBeats (proportion == 1.0 ? beats</span></a>
-<a name="171"><span class="lineNum">     171 </span><span class="lineCov">       2048 :                                                       : beatNumber.inBeats() + proportion * (beats - beatNumber.inBeats()));</span></a>
+<a name="170"><span class="lineNum">     170 </span><span class="lineCov">       3136 :     return BeatPosition::fromBeats (proportion == 1.0 ? beats</span></a>
+<a name="171"><span class="lineNum">     171 </span><span class="lineCov">       3136 :                                                       : beatNumber.inBeats() + proportion * (beats - beatNumber.inBeats()));</span></a>
 <a name="172"><span class="lineNum">     172 </span>            : }</a>
 <a name="173"><span class="lineNum">     173 </span>            : </a>
-<a name="174"><span class="lineNum">     174 </span><span class="lineCov">    7347170 : BeatPosition QuantisationType::roundBeatToNearest (BeatPosition beatNumber) const</span></a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineCov">    7348660 : BeatPosition QuantisationType::roundBeatToNearest (BeatPosition beatNumber) const</span></a>
 <a name="175"><span class="lineNum">     175 </span>            : {</a>
-<a name="176"><span class="lineNum">     176 </span><span class="lineCov">    7347170 :     return roundToBeat (beatNumber, 0.5);</span></a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineCov">    7348660 :     return roundToBeat (beatNumber, 0.5);</span></a>
 <a name="177"><span class="lineNum">     177 </span>            : }</a>
 <a name="178"><span class="lineNum">     178 </span>            : </a>
 <a name="179"><span class="lineNum">     179 </span><span class="lineNoCov">          0 : BeatPosition QuantisationType::roundBeatUp (BeatPosition beatNumber) const</span></a>

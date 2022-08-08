@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-08-05 18:43:36</td>
+            <td class="headerValue">2022-08-08 16:58:25</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">14</td>
@@ -146,10 +146,10 @@
 <a name="84"><span class="lineNum">      84 </span>            :             // Wait until all the threads have started and are waiting on the event</a>
 <a name="85"><span class="lineNum">      85 </span>            :             for (;;)</a>
 <a name="86"><span class="lineNum">      86 </span>            :             {</a>
-<a name="87"><span class="lineNum">      87 </span><span class="lineCov">          7 :                 if (numThreadsRunning == numThreads)</span></a>
+<a name="87"><span class="lineNum">      87 </span><span class="lineCov">          5 :                 if (numThreadsRunning == numThreads)</span></a>
 <a name="88"><span class="lineNum">      88 </span>            :                     break;</a>
 <a name="89"><span class="lineNum">      89 </span>            :             </a>
-<a name="90"><span class="lineNum">      90 </span><span class="lineCov">          5 :                 std::this_thread::sleep_for (std::chrono::milliseconds (1));</span></a>
+<a name="90"><span class="lineNum">      90 </span><span class="lineCov">          3 :                 std::this_thread::sleep_for (std::chrono::milliseconds (1));</span></a>
 <a name="91"><span class="lineNum">      91 </span>            :             }</a>
 <a name="92"><span class="lineNum">      92 </span>            :             </a>
 <a name="93"><span class="lineNum">      93 </span>            :             // Sleep for a few more ms to ensure they're all waiting</a>
