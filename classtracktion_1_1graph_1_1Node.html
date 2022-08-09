@@ -121,6 +121,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6cb3cafc0fa760ab48d4bc3e8da241d0"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1Node.html#a6cb3cafc0fa760ab48d4bc3e8da241d0">getDirectInputNodes</a> ()</td></tr>
 <tr class="memdesc:a6cb3cafc0fa760ab48d4bc3e8da241d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return all the inputs directly feeding in to this node.  <a href="classtracktion_1_1graph_1_1Node.html#a6cb3cafc0fa760ab48d4bc3e8da241d0">More...</a><br /></td></tr>
 <tr class="separator:a6cb3cafc0fa760ab48d4bc3e8da241d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea8b99cdbe626c76bc7517bdce2870c8"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1Node.html#aea8b99cdbe626c76bc7517bdce2870c8">getInternalNodes</a> ()</td></tr>
+<tr class="memdesc:aea8b99cdbe626c76bc7517bdce2870c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Can return Nodes that are internal to this <a class="el" href="classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class.">Node</a> but don't make up the main graph constructed from <a class="el" href="classtracktion_1_1graph_1_1Node.html#a6cb3cafc0fa760ab48d4bc3e8da241d0" title="Should return all the inputs directly feeding in to this node.">getDirectInputNodes()</a>.  <a href="classtracktion_1_1graph_1_1Node.html#aea8b99cdbe626c76bc7517bdce2870c8">More...</a><br /></td></tr>
+<tr class="separator:aea8b99cdbe626c76bc7517bdce2870c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2291fdfb7d1ce385e30ae52d9f2fdfc0"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structtracktion_1_1graph_1_1NodeProperties.html">NodeProperties</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1Node.html#a2291fdfb7d1ce385e30ae52d9f2fdfc0">getNodeProperties</a> ()=0</td></tr>
 <tr class="memdesc:a2291fdfb7d1ce385e30ae52d9f2fdfc0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return the properties of the node.  <a href="classtracktion_1_1graph_1_1Node.html#a2291fdfb7d1ce385e30ae52d9f2fdfc0">More...</a><br /></td></tr>
 <tr class="separator:a2291fdfb7d1ce385e30ae52d9f2fdfc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -404,6 +407,36 @@ Protected Member Functions</h2></td></tr>
 <p>Reimplemented in <a class="el" href="classtracktion_1_1graph_1_1ForwardingNode.html#aa8493050f2da02adeceb19d38e7a6b91">tracktion::graph::ForwardingNode</a>, <a class="el" href="classtracktion_1_1graph_1_1SinkNode.html#a590c2dfba0f5e5d657c211a9bc879fb9">tracktion::graph::SinkNode</a>, <a class="el" href="classtracktion_1_1graph_1_1ChannelRemappingNode.html#a2bd6c49d30f11671f24596ecb02f64a9">tracktion::graph::ChannelRemappingNode</a>, <a class="el" href="classtracktion_1_1graph_1_1ReturnNode.html#a6ff6c8a3519a3520d81f54f561e1bd63">tracktion::graph::ReturnNode</a>, <a class="el" href="classtracktion_1_1graph_1_1SendNode.html#a8dc02730a87aabe34be93f236bb9d0b9">tracktion::graph::SendNode</a>, <a class="el" href="classtracktion_1_1graph_1_1GainNode.html#a8a2151f226d6f3910e7f3b9a91b47e18">tracktion::graph::GainNode</a>, <a class="el" href="classtracktion_1_1graph_1_1FunctionNode.html#a88a35d34f2d0f81c0bb4c951a2b69059">tracktion::graph::FunctionNode</a>, <a class="el" href="classtracktion_1_1graph_1_1BasicSummingNode.html#ac2373c3f3ddcc5c49a9d0be049d1b3a0">tracktion::graph::BasicSummingNode</a>, <a class="el" href="classtracktion_1_1graph_1_1SummingNode.html#af7165114b5f53c0d9ce9b56dcd84c785">tracktion::graph::SummingNode</a>, <a class="el" href="classtracktion_1_1engine_1_1TrackMutingNode.html#a71925029d037fbb0cc696121947b7689">tracktion::engine::TrackMutingNode</a>, <a class="el" href="classtracktion_1_1graph_1_1ConnectedNode.html#af258b3d5371e9d023ea0203022281063">tracktion::graph::ConnectedNode</a>, <a class="el" href="classtracktion_1_1engine_1_1ClickNode.html#a07192fe7f3b337f27ac1bfa8850a7117">tracktion::engine::ClickNode</a>, <a class="el" href="classtracktion_1_1engine_1_1InsertSendNode.html#afbb6982fb605ff89c7f73cd91f68a434">tracktion::engine::InsertSendNode</a>, <a class="el" href="classtracktion_1_1graph_1_1LatencyNode.html#a554ea296ed1c7d7de1ed40ebe4ca27e6">tracktion::graph::LatencyNode</a>, <a class="el" href="classtracktion_1_1engine_1_1ModifierNode.html#ae01e82c8c3672160af8bb10528fc11d8">tracktion::engine::ModifierNode</a>, <a class="el" href="classtracktion_1_1engine_1_1PluginNode.html#a8066f50ce0ade0b1864e1ed4b1fd09da">tracktion::engine::PluginNode</a>, <a class="el" href="classtracktion_1_1engine_1_1CombiningNode.html#a766ef604ccc992cd30e2f42c3cfee18e">tracktion::engine::CombiningNode</a>, <a class="el" href="classtracktion_1_1engine_1_1PlayHeadPositionNode.html#a2383e5d4dbc5515cd5041adf6933da5c">tracktion::engine::PlayHeadPositionNode</a>, <a class="el" href="classtracktion_1_1engine_1_1LevelMeasurerProcessingNode.html#ad39f8fb954c3346958499169341e60a1">tracktion::engine::LevelMeasurerProcessingNode</a>, <a class="el" href="classtracktion_1_1engine_1_1InsertSendReturnDependencyNode.html#af08aa8e71b9a9641dce2ca669234174e">tracktion::engine::InsertSendReturnDependencyNode</a>, <a class="el" href="classtracktion_1_1engine_1_1InsertReturnNode.html#ae32ea5760e1aee2fe3311d912eecd0dd">tracktion::engine::InsertReturnNode</a>, <a class="el" href="classtracktion_1_1engine_1_1LiveMidiInjectingNode.html#a2e3b679682ac1d36268e0c7f874791fe">tracktion::engine::LiveMidiInjectingNode</a>, <a class="el" href="classtracktion_1_1engine_1_1TimeStretchingWaveNode.html#aa5d6878435749423c2a20e97baed5b96">tracktion::engine::TimeStretchingWaveNode</a>, <a class="el" href="classtracktion_1_1engine_1_1LiveMidiOutputNode.html#a52d0c7d7c41adc84d78505e9a56113fb">tracktion::engine::LiveMidiOutputNode</a>, <a class="el" href="classtracktion_1_1engine_1_1MelodyneNode.html#aa63df2e3607193922a678c7c1f4219b5">tracktion::engine::MelodyneNode</a>, <a class="el" href="classtracktion_1_1engine_1_1MidiOutputDeviceInstanceInjectingNode.html#a0673d1919bd05eb5130a01181a2e9f22">tracktion::engine::MidiOutputDeviceInstanceInjectingNode</a>, <a class="el" href="classtracktion_1_1engine_1_1RackReturnNode.html#a958d02929764686b9659da93f7079580">tracktion::engine::RackReturnNode</a>, <a class="el" href="classtracktion_1_1engine_1_1TimedMutingNode.html#a14f094412f45f8dd9f99b713164ff26b">tracktion::engine::TimedMutingNode</a>, <a class="el" href="classtracktion_1_1engine_1_1RackInstanceNode.html#a358208eee953b86aea072a98f926098d">tracktion::engine::RackInstanceNode</a>, <a class="el" href="classtracktion_1_1engine_1_1LevelMeasuringNode.html#a49e05e584d98458ed8c4620ce279e555">tracktion::engine::LevelMeasuringNode</a>, <a class="el" href="classtracktion_1_1engine_1_1TrackMidiInputDeviceNode.html#abc5a40a6ef684e9ab0ce9b70f1c8fd0b">tracktion::engine::TrackMidiInputDeviceNode</a>, <a class="el" href="classtracktion_1_1engine_1_1SharedLevelMeasuringNode.html#af864783b7174d005f435636b71ac8f54">tracktion::engine::SharedLevelMeasuringNode</a>, and <a class="el" href="classtracktion_1_1engine_1_1TrackWaveInputDeviceNode.html#aab24f670a308d77d304d0d0ac3cc31cb">tracktion::engine::TrackWaveInputDeviceNode</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classtracktion_1_1graph_1_1Node.html#aa17b5841967655ebae9539c5755acfd5">initialise()</a>, <a class="el" href="namespacetracktion_1_1graph_1_1test__utilities.html#a79c19dc6bb0e3e4eaae305450b41b87b">tracktion::graph::test_utilities::logGraph()</a>, <a class="el" href="classtracktion_1_1graph_1_1Node.html#a675b8e91270dc50242a1ef62e79dc8a7">prepareForNextBlock()</a>, <a class="el" href="structtracktion_1_1graph_1_1detail_1_1VisitNodesWithRecord.html#a19db24adb60fbf8cc283f0bec33df29c">tracktion::graph::detail::VisitNodesWithRecord::visit()</a>, and <a class="el" href="structtracktion_1_1graph_1_1detail_1_1VisitNodesWithRecordBFS.html#a1f0be2a2e0893e2b5bcfebfa4607730d">tracktion::graph::detail::VisitNodesWithRecordBFS::visit()</a>.</p>
+
+</div>
+</div>
+<a id="aea8b99cdbe626c76bc7517bdce2870c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea8b99cdbe626c76bc7517bdce2870c8">&#9670;&nbsp;</a></span>getInternalNodes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual std::vector&lt;<a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a>*&gt; tracktion::graph::Node::getInternalNodes </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Can return Nodes that are internal to this <a class="el" href="classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class.">Node</a> but don't make up the main graph constructed from <a class="el" href="classtracktion_1_1graph_1_1Node.html#a6cb3cafc0fa760ab48d4bc3e8da241d0" title="Should return all the inputs directly feeding in to this node.">getDirectInputNodes()</a>. </p>
+<p>Most uses cases won't need to implement this but it could be used in situations where sub-graphs are created and processed internally to a <a class="el" href="classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class.">Node</a> but other Nodes in a graph still need to have access to them. This call can make them visible. </p>
+
+<p>Reimplemented in <a class="el" href="classtracktion_1_1engine_1_1CombiningNode.html#a0b087349f9b4850d64a1ec7bb7886208">tracktion::engine::CombiningNode</a>.</p>
 
 </div>
 </div>
@@ -748,7 +781,7 @@ Protected Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 9 2022 09:30:12 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Aug 9 2022 10:04:25 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

@@ -18843,8 +18843,8 @@
       <type>std::vector&lt; Node * &gt;</type>
       <name>getInternalNodes</name>
       <anchorfile>classtracktion_1_1engine_1_1CombiningNode.html</anchorfile>
-      <anchor>ab09e4ecf03d9d2c53cc14fe7c3891890</anchor>
-      <arglist>() const</arglist>
+      <anchor>a0b087349f9b4850d64a1ec7bb7886208</anchor>
+      <arglist>() override</arglist>
     </member>
     <member kind="function">
       <type>std::vector&lt; Node * &gt;</type>
@@ -48028,6 +48028,13 @@
       <name>getDirectInputNodes</name>
       <anchorfile>classtracktion_1_1graph_1_1Node.html</anchorfile>
       <anchor>a6cb3cafc0fa760ab48d4bc3e8da241d0</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual std::vector&lt; Node * &gt;</type>
+      <name>getInternalNodes</name>
+      <anchorfile>classtracktion_1_1graph_1_1Node.html</anchorfile>
+      <anchor>aea8b99cdbe626c76bc7517bdce2870c8</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function" virtualness="pure">

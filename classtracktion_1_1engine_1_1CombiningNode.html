@@ -91,9 +91,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a38994fe7923f2959cf741b7849790871"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1CombiningNode.html#a38994fe7923f2959cf741b7849790871">addInput</a> (std::unique_ptr&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> &gt;, TimeRange)</td></tr>
 <tr class="memdesc:a38994fe7923f2959cf741b7849790871"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds an input node to be played at a given time range.  <a href="classtracktion_1_1engine_1_1CombiningNode.html#a38994fe7923f2959cf741b7849790871">More...</a><br /></td></tr>
 <tr class="separator:a38994fe7923f2959cf741b7849790871"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab09e4ecf03d9d2c53cc14fe7c3891890"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1CombiningNode.html#ab09e4ecf03d9d2c53cc14fe7c3891890">getInternalNodes</a> () const</td></tr>
-<tr class="memdesc:ab09e4ecf03d9d2c53cc14fe7c3891890"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the inputs that have been added.  <a href="classtracktion_1_1engine_1_1CombiningNode.html#ab09e4ecf03d9d2c53cc14fe7c3891890">More...</a><br /></td></tr>
-<tr class="separator:ab09e4ecf03d9d2c53cc14fe7c3891890"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b087349f9b4850d64a1ec7bb7886208"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1CombiningNode.html#a0b087349f9b4850d64a1ec7bb7886208">getInternalNodes</a> () override</td></tr>
+<tr class="memdesc:a0b087349f9b4850d64a1ec7bb7886208"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the inputs that have been added.  <a href="classtracktion_1_1engine_1_1CombiningNode.html#a0b087349f9b4850d64a1ec7bb7886208">More...</a><br /></td></tr>
+<tr class="separator:a0b087349f9b4850d64a1ec7bb7886208"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a766ef604ccc992cd30e2f42c3cfee18e"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1CombiningNode.html#a766ef604ccc992cd30e2f42c3cfee18e">getDirectInputNodes</a> () override</td></tr>
 <tr class="memdesc:a766ef604ccc992cd30e2f42c3cfee18e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return all the inputs directly feeding in to this node.  <a href="classtracktion_1_1engine_1_1CombiningNode.html#a766ef604ccc992cd30e2f42c3cfee18e">More...</a><br /></td></tr>
 <tr class="separator:a766ef604ccc992cd30e2f42c3cfee18e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -286,23 +286,33 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="ab09e4ecf03d9d2c53cc14fe7c3891890"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab09e4ecf03d9d2c53cc14fe7c3891890">&#9670;&nbsp;</a></span>getInternalNodes()</h2>
+<a id="a0b087349f9b4850d64a1ec7bb7886208"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b087349f9b4850d64a1ec7bb7886208">&#9670;&nbsp;</a></span>getInternalNodes()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">std::vector&lt;<a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a>*&gt; tracktion::engine::CombiningNode::getInternalNodes </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Returns the inputs that have been added. </p>
 <p>N.B. This is a bit of a temporary hack to ensure WaveNodes can access previous Nodes that have been added via a CombinngNode. This will be cleaned up in the future. </p>
+
+<p>Reimplemented from <a class="el" href="classtracktion_1_1graph_1_1Node.html#aea8b99cdbe626c76bc7517bdce2870c8">tracktion::graph::Node</a>.</p>
 
 </div>
 </div>
@@ -521,7 +531,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 9 2022 09:30:11 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Aug 9 2022 10:04:23 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

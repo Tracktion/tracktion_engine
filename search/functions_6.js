@@ -459,7 +459,7 @@ var searchData=
   ['getinstance_8536',['getInstance',['../structMelodyneInstanceFactory.html#a10162f1ea54afe7e6eb2d42a32aaa789',1,'MelodyneInstanceFactory']]],
   ['getinstancestateforinputdevice_8537',['getInstanceStateForInputDevice',['../classtracktion_1_1engine_1_1EditInputDevices.html#a33a6ec26e68d1c67d5d100ab97e513ab',1,'tracktion::engine::EditInputDevices']]],
   ['getinterestingtimes_8538',['getInterestingTimes',['../classtracktion_1_1engine_1_1Clip.html#ad3376ba3671ff623ea96a5fc74220cf9',1,'tracktion::engine::Clip']]],
-  ['getinternalnodes_8539',['getInternalNodes',['../classtracktion_1_1engine_1_1CombiningNode.html#ab09e4ecf03d9d2c53cc14fe7c3891890',1,'tracktion::engine::CombiningNode']]],
+  ['getinternalnodes_8539',['getInternalNodes',['../classtracktion_1_1engine_1_1CombiningNode.html#a0b087349f9b4850d64a1ec7bb7886208',1,'tracktion::engine::CombiningNode::getInternalNodes()'],['../classtracktion_1_1graph_1_1Node.html#aea8b99cdbe626c76bc7517bdce2870c8',1,'tracktion::graph::Node::getInternalNodes()']]],
   ['getinternalsequence_8540',['getInternalSequence',['../classtracktion_1_1engine_1_1TempoSequence.html#a77d8f4407859cbc26a89134070cfbd31',1,'tracktion::engine::TempoSequence']]],
   ['getintersectionwith_8541',['getIntersectionWith',['../structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html#abbee6a29fe2a23b23548d423db5aeeb6',1,'tracktion::engine::legacy::EditTimeRange']]],
   ['getintervalname_8542',['getIntervalName',['../classtracktion_1_1engine_1_1Scale.html#ac5b5b557b8b19d0f2f41a5a8139de601',1,'tracktion::engine::Scale']]],
