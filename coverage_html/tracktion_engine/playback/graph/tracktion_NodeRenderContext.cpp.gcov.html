@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-08-09 15:07:30</td>
+            <td class="headerValue">2022-08-09 16:39:41</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">8</td>
@@ -81,8 +81,8 @@
 <a name="19"><span class="lineNum">      19 </span>            :     {</a>
 <a name="20"><span class="lineNum">      20 </span><span class="lineCov">         80 :         Plugin::Array plugins, insideRacks;</span></a>
 <a name="21"><span class="lineNum">      21 </span>            : </a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineCov">       1247 :         for (auto n : getNodes (node, VertexOrdering::preordering))</span></a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineCov">       1087 :             if (auto pluginNode = dynamic_cast&lt;PluginNode*&gt; (n))</span></a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineCov">       1241 :         for (auto n : getNodes (node, VertexOrdering::preordering))</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">       1081 :             if (auto pluginNode = dynamic_cast&lt;PluginNode*&gt; (n))</span></a>
 <a name="24"><span class="lineNum">      24 </span><span class="lineCov">        178 :                 plugins.add (&amp;pluginNode-&gt;getPlugin());</span></a>
 <a name="25"><span class="lineNum">      25 </span>            : </a>
 <a name="26"><span class="lineNum">      26 </span><span class="lineCov">        258 :         for (auto plugin : plugins)</span></a>
@@ -295,12 +295,12 @@
 <a name="233"><span class="lineNum">     233 </span>            :     // Wait for any nodes to render their sources or proxies</a>
 <a name="234"><span class="lineNum">     234 </span><span class="lineCov">     116013 :     auto leafNodesReady = [this, referenceSampleRange]</span></a>
 <a name="235"><span class="lineNum">     235 </span>            :     {</a>
-<a name="236"><span class="lineNum">     236 </span><span class="lineCov">     995481 :         for (auto node : getNodes (*nodePlayer-&gt;getNode(), VertexOrdering::postordering))</span></a>
+<a name="236"><span class="lineNum">     236 </span><span class="lineCov">     991851 :         for (auto node : getNodes (*nodePlayer-&gt;getNode(), VertexOrdering::postordering))</span></a>
 <a name="237"><span class="lineNum">     237 </span>            :         {</a>
 <a name="238"><span class="lineNum">     238 </span>            :             // Call prepare for next block here to ensure isReadyToProcess internals are updated</a>
-<a name="239"><span class="lineNum">     239 </span><span class="lineCov">     814564 :             node-&gt;prepareForNextBlock (referenceSampleRange);</span></a>
+<a name="239"><span class="lineNum">     239 </span><span class="lineCov">     810934 :             node-&gt;prepareForNextBlock (referenceSampleRange);</span></a>
 <a name="240"><span class="lineNum">     240 </span>            :          </a>
-<a name="241"><span class="lineNum">     241 </span><span class="lineCov">    1629130 :             if (node-&gt;getDirectInputNodes().empty() &amp;&amp; ! node-&gt;isReadyToProcess())</span></a>
+<a name="241"><span class="lineNum">     241 </span><span class="lineCov">    1621870 :             if (node-&gt;getDirectInputNodes().empty() &amp;&amp; ! node-&gt;isReadyToProcess())</span></a>
 <a name="242"><span class="lineNum">     242 </span>            :                 return false;</a>
 <a name="243"><span class="lineNum">     243 </span>            :         }</a>
 <a name="244"><span class="lineNum">     244 </span>            :         </a>
@@ -501,12 +501,12 @@
 <a name="439"><span class="lineNum">     439 </span><span class="lineCov">    2856760 :         nodePlayer-&gt;process ({ (choc::buffer::FrameCount) referenceSampleRange.getLength(), referenceSampleRange, { destView, blockMidiBuffer} });</span></a>
 <a name="440"><span class="lineNum">     440 </span>            : </a>
 <a name="441"><span class="lineNum">     441 </span>            :         // Set MIDI messages to beats and update final sequence</a>
-<a name="442"><span class="lineNum">     442 </span><span class="lineCov">    2863020 :         for (auto&amp; m : blockMidiBuffer)</span></a>
+<a name="442"><span class="lineNum">     442 </span><span class="lineCov">    2861590 :         for (auto&amp; m : blockMidiBuffer)</span></a>
 <a name="443"><span class="lineNum">     443 </span>            :         {</a>
 <a name="444"><span class="lineNum">     444 </span>            :             tempo::Sequence::Position eventPos (currentTempoPosition);</a>
-<a name="445"><span class="lineNum">     445 </span><span class="lineCov">       6256 :             eventPos.set (TimePosition::fromSeconds (m.getTimeStamp()) + (streamTime - r.time.getStart()));</span></a>
+<a name="445"><span class="lineNum">     445 </span><span class="lineCov">       4832 :             eventPos.set (TimePosition::fromSeconds (m.getTimeStamp()) + (streamTime - r.time.getStart()));</span></a>
 <a name="446"><span class="lineNum">     446 </span>            : </a>
-<a name="447"><span class="lineNum">     447 </span><span class="lineCov">       6256 :             outputSequence.addEvent (juce::MidiMessage (m, Edit::ticksPerQuarterNote * eventPos.getPPQTime()));</span></a>
+<a name="447"><span class="lineNum">     447 </span><span class="lineCov">       4832 :             outputSequence.addEvent (juce::MidiMessage (m, Edit::ticksPerQuarterNote * eventPos.getPPQTime()));</span></a>
 <a name="448"><span class="lineNum">     448 </span>            :         }</a>
 <a name="449"><span class="lineNum">     449 </span>            : </a>
 <a name="450"><span class="lineNum">     450 </span>            :         streamTime = blockEnd;</a>

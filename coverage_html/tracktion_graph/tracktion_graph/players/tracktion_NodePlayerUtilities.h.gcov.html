@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-08-09 15:07:30</td>
+            <td class="headerValue">2022-08-09 16:39:41</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
@@ -109,7 +109,7 @@
 <a name="47"><span class="lineNum">      47 </span>            :         // give them a chance to do things like balance latency</a>
 <a name="48"><span class="lineNum">      48 </span>            :         const PlaybackInitialisationInfo info { sampleRate, blockSize, *node, oldNode,</a>
 <a name="49"><span class="lineNum">      49 </span><span class="lineCov">       2812 :                                                 allocateAudioBuffer, deallocateAudioBuffer };</span></a>
-<a name="50"><span class="lineNum">      50 </span><span class="lineCov">      63681 :         visitNodes (*node, [&amp;] (Node&amp; n) { n.initialise (info); }, false);</span></a>
+<a name="50"><span class="lineNum">      50 </span><span class="lineCov">      63669 :         visitNodes (*node, [&amp;] (Node&amp; n) { n.initialise (info); }, false);</span></a>
 <a name="51"><span class="lineNum">      51 </span>            :         </a>
 <a name="52"><span class="lineNum">      52 </span>            :         // Then find all the nodes as it might have changed after initialisation</a>
 <a name="53"><span class="lineNum">      53 </span><span class="lineCov">       1406 :         return tracktion::graph::getNodes (*node, tracktion::graph::VertexOrdering::postordering);</span></a>
