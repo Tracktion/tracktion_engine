@@ -1504,9 +1504,9 @@ void WaveNode::replaceChannelStateIfPossible (Node* rootNodeToReplace, int numCh
         {
             replaceChannelStateIfPossible (*other, numChannelsToUse);
         }
-        else if (auto combiningNode = dynamic_cast<CombiningNode*> (&node))
+        else
         {
-            for (auto internalNode : combiningNode->getInternalNodes())
+            for (auto internalNode : node.getInternalNodes())
                 if (auto internalWaveNode = dynamic_cast<WaveNode*> (internalNode))
                     replaceChannelStateIfPossible (*internalWaveNode, numChannelsToUse);
         }
@@ -1953,9 +1953,9 @@ void WaveNodeRealTime::replaceStateIfPossible (Node* rootNodeToReplace)
         {
             replaceStateIfPossible (*other);
         }
-        else if (auto combiningNode = dynamic_cast<CombiningNode*> (&node))
+        else
         {
-            for (auto internalNode : combiningNode->getInternalNodes())
+            for (auto internalNode : node.getInternalNodes())
                 if (auto internalWaveNodeRealTime = dynamic_cast<WaveNodeRealTime*> (internalNode))
                     replaceStateIfPossible (*internalWaveNodeRealTime);
         }

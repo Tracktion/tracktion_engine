@@ -40,7 +40,7 @@ public:
         N.B. This is a bit of a temporary hack to ensure WaveNodes can access previous
         Nodes that have been added via a CombinngNode. This will be cleaned up in the future.
     */
-    std::vector<Node*> getInternalNodes() const;
+    std::vector<Node*> getInternalNodes() override;
 
     //==============================================================================
     std::vector<Node*> getDirectInputNodes() override;

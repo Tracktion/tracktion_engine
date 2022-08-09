@@ -201,6 +201,15 @@ public:
     /** Should return all the inputs directly feeding in to this node. */
     virtual std::vector<Node*> getDirectInputNodes() { return {}; }
 
+    /** Can return Nodes that are internal to this Node but don't make up the main
+        graph constructed from getDirectInputNodes().
+        Most uses cases won't need to implement this but it could be used in
+        situations where sub-graphs are created and processed internally to a Node
+        but other Nodes in a graph still need to have access to them. This call can
+        make them visible.
+    */
+    virtual std::vector<Node*> getInternalNodes() { return {}; }
+
     /** Should return the properties of the node.
         This should not be called until after initialise.
     */

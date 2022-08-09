@@ -1339,9 +1339,9 @@ void LoopingMidiNode::prepareToPlay (const tracktion::graph::PlaybackInitialisat
                             if (midiNode->getNodeProperties().nodeID == nodeIDToLookFor)
                                 foundMidiNode = midiNode;
                         }
-                        else if (auto combiningNode = dynamic_cast<CombiningNode*> (&n))
+                        else
                         {
-                            for (auto internalNode : combiningNode->getInternalNodes())
+                            for (auto internalNode : n.getInternalNodes())
                                 if (auto internalMidiNode = dynamic_cast<LoopingMidiNode*> (internalNode))
                                     if (internalMidiNode->getNodeProperties().nodeID == nodeIDToLookFor)
                                         foundMidiNode = internalMidiNode;

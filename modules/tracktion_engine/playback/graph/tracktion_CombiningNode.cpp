@@ -177,7 +177,7 @@ void CombiningNode::addInput (std::unique_ptr<Node> input, TimeRange time)
     }
 }
 
-std::vector<Node*> CombiningNode::getInternalNodes() const
+std::vector<Node*> CombiningNode::getInternalNodes()
 {
     std::vector<Node*> leafNodes;
 
