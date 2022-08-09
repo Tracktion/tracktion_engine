@@ -795,7 +795,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForClips (EditItemID trackID, 
                 {
                     if (auto midiNode = createNodeForMidiClip (*midiClip, trackMuteState, params))
                     {
-                        if (auto loopingMidiNode = dynamic_cast<LoopingMidiNode*> (midiNode.get()))
+                        if (dynamic_cast<LoopingMidiNode*> (midiNode.get()) != nullptr)
                         {
                             midiCombiner->addInput (std::unique_ptr<LoopingMidiNode> (dynamic_cast<LoopingMidiNode*> (midiNode.release())),
                                                     clip->getPosition().time);
