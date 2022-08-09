@@ -31,17 +31,17 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">78</td>
-            <td class="headerCovTableEntry">78</td>
+            <td class="headerCovTableEntry">128</td>
+            <td class="headerCovTableEntry">128</td>
             <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-08-09 16:39:41</td>
+            <td class="headerValue">2022-08-09 17:11:43</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">14</td>
-            <td class="headerCovTableEntry">14</td>
+            <td class="headerCovTableEntry">20</td>
+            <td class="headerCovTableEntry">20</td>
             <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
@@ -146,10 +146,10 @@
 <a name="84"><span class="lineNum">      84 </span>            :             // Wait until all the threads have started and are waiting on the event</a>
 <a name="85"><span class="lineNum">      85 </span>            :             for (;;)</a>
 <a name="86"><span class="lineNum">      86 </span>            :             {</a>
-<a name="87"><span class="lineNum">      87 </span><span class="lineCov">          4 :                 if (numThreadsRunning == numThreads)</span></a>
+<a name="87"><span class="lineNum">      87 </span><span class="lineCov">          6 :                 if (numThreadsRunning == numThreads)</span></a>
 <a name="88"><span class="lineNum">      88 </span>            :                     break;</a>
 <a name="89"><span class="lineNum">      89 </span>            :             </a>
-<a name="90"><span class="lineNum">      90 </span><span class="lineCov">          2 :                 std::this_thread::sleep_for (std::chrono::milliseconds (1));</span></a>
+<a name="90"><span class="lineNum">      90 </span><span class="lineCov">          4 :                 std::this_thread::sleep_for (std::chrono::milliseconds (1));</span></a>
 <a name="91"><span class="lineNum">      91 </span>            :             }</a>
 <a name="92"><span class="lineNum">      92 </span>            :             </a>
 <a name="93"><span class="lineNum">      93 </span>            :             // Sleep for a few more ms to ensure they're all waiting</a>
@@ -186,121 +186,252 @@
 <a name="124"><span class="lineNum">     124 </span><span class="lineCov">          1 :         runConditionVariableBenchmarks();</span></a>
 <a name="125"><span class="lineNum">     125 </span><span class="lineCov">          1 :         runSemaphoreBenchmarks&lt;Semaphore&gt; (&quot;Semaphore&quot;);</span></a>
 <a name="126"><span class="lineNum">     126 </span><span class="lineCov">          1 :         runSemaphoreBenchmarks&lt;LightweightSemaphore&gt; (&quot;LightweightSemaphore&quot;);</span></a>
-<a name="127"><span class="lineNum">     127 </span><span class="lineCov">          1 :     }</span></a>
-<a name="128"><span class="lineNum">     128 </span>            : </a>
-<a name="129"><span class="lineNum">     129 </span>            : private:</a>
-<a name="130"><span class="lineNum">     130 </span>            :     template&lt;typename SemaphoreType&gt;</a>
-<a name="131"><span class="lineNum">     131 </span><span class="lineCov">          2 :     void runSemaphoreBenchmarks (juce::String semaphoreName)</span></a>
-<a name="132"><span class="lineNum">     132 </span>            :     {</a>
-<a name="133"><span class="lineNum">     133 </span>            :         constexpr int numThreads = 10;</a>
-<a name="134"><span class="lineNum">     134 </span><span class="lineCov">          8 :         Benchmark benchmark (createBenchmarkDescription (&quot;Threads&quot;,</span></a>
-<a name="135"><span class="lineNum">     135 </span>            :                                                          juce::String (&quot;Semaphore signal&quot;).replace (&quot;Semaphore&quot;, semaphoreName).toStdString(),</a>
-<a name="136"><span class="lineNum">     136 </span>            :                                                          juce::String (&quot;Signal numThreads from waiting&quot;).replace (&quot;numThreads&quot;, juce::String (numThreads)).toStdString()));</a>
-<a name="137"><span class="lineNum">     137 </span>            : </a>
-<a name="138"><span class="lineNum">     138 </span>            :         using namespace std::literals;</a>
-<a name="139"><span class="lineNum">     139 </span><span class="lineCov">          2 :         std::atomic&lt;int&gt; numThreadsRunning { 0 };</span></a>
-<a name="140"><span class="lineNum">     140 </span><span class="lineCov">          2 :         SemaphoreType event;</span></a>
-<a name="141"><span class="lineNum">     141 </span><span class="lineCov">          2 :         auto signalTime = std::chrono::steady_clock::now();</span></a>
-<a name="142"><span class="lineNum">     142 </span>            : </a>
-<a name="143"><span class="lineNum">     143 </span>            :         // Start all the threads</a>
-<a name="144"><span class="lineNum">     144 </span><span class="lineCov">          2 :         std::vector&lt;std::thread&gt; threads;</span></a>
-<a name="145"><span class="lineNum">     145 </span>            : </a>
-<a name="146"><span class="lineNum">     146 </span><span class="lineCov">         22 :         for (int i = 0; i &lt; numThreads; ++i)</span></a>
-<a name="147"><span class="lineNum">     147 </span>            :         {</a>
-<a name="148"><span class="lineNum">     148 </span><span class="lineCov">         40 :             threads.emplace_back ([&amp;]</span></a>
-<a name="149"><span class="lineNum">     149 </span>            :                                   {</a>
-<a name="150"><span class="lineNum">     150 </span>            :                                       ++numThreadsRunning;</a>
-<a name="151"><span class="lineNum">     151 </span>            :                                       event.wait();</a>
-<a name="152"><span class="lineNum">     152 </span>            :                                   });</a>
-<a name="153"><span class="lineNum">     153 </span>            :         }</a>
-<a name="154"><span class="lineNum">     154 </span>            : </a>
-<a name="155"><span class="lineNum">     155 </span>            :         // Wait until all the threads have started and are waiting on the event</a>
-<a name="156"><span class="lineNum">     156 </span>            :         for (;;)</a>
-<a name="157"><span class="lineNum">     157 </span>            :         {</a>
-<a name="158"><span class="lineNum">     158 </span><span class="lineCov">          4 :             if (numThreadsRunning == numThreads)</span></a>
-<a name="159"><span class="lineNum">     159 </span>            :                 break;</a>
-<a name="160"><span class="lineNum">     160 </span>            : </a>
-<a name="161"><span class="lineNum">     161 </span><span class="lineCov">          2 :             std::this_thread::sleep_for (1ms);</span></a>
-<a name="162"><span class="lineNum">     162 </span>            :         }</a>
-<a name="163"><span class="lineNum">     163 </span>            : </a>
-<a name="164"><span class="lineNum">     164 </span>            :         // Sleep for a few more ms to ensure they're all waiting</a>
-<a name="165"><span class="lineNum">     165 </span><span class="lineCov">          2 :         std::this_thread::sleep_for (5ms);</span></a>
-<a name="166"><span class="lineNum">     166 </span>            : </a>
-<a name="167"><span class="lineNum">     167 </span>            :         // Signal all the threads</a>
-<a name="168"><span class="lineNum">     168 </span><span class="lineCov">          2 :         signalTime = std::chrono::steady_clock::now();</span></a>
-<a name="169"><span class="lineNum">     169 </span>            : </a>
-<a name="170"><span class="lineNum">     170 </span>            :         {</a>
-<a name="171"><span class="lineNum">     171 </span>            :             // Signal all the threads</a>
-<a name="172"><span class="lineNum">     172 </span><span class="lineCov">          2 :             signalTime = std::chrono::steady_clock::now();</span></a>
+<a name="127"><span class="lineNum">     127 </span>            : </a>
+<a name="128"><span class="lineNum">     128 </span><span class="lineCov">          1 :         runNonWaitingConditionVariableBenchmarks();</span></a>
+<a name="129"><span class="lineNum">     129 </span><span class="lineCov">          1 :         runNonWaitingSemaphoreBenchmarks&lt;Semaphore&gt; (&quot;Semaphore&quot;);</span></a>
+<a name="130"><span class="lineNum">     130 </span><span class="lineCov">          1 :         runNonWaitingSemaphoreBenchmarks&lt;LightweightSemaphore&gt; (&quot;LightweightSemaphore&quot;);</span></a>
+<a name="131"><span class="lineNum">     131 </span><span class="lineCov">          1 :     }</span></a>
+<a name="132"><span class="lineNum">     132 </span>            : </a>
+<a name="133"><span class="lineNum">     133 </span>            : private:</a>
+<a name="134"><span class="lineNum">     134 </span>            :     template&lt;typename SemaphoreType&gt;</a>
+<a name="135"><span class="lineNum">     135 </span><span class="lineCov">          2 :     void runSemaphoreBenchmarks (juce::String semaphoreName)</span></a>
+<a name="136"><span class="lineNum">     136 </span>            :     {</a>
+<a name="137"><span class="lineNum">     137 </span>            :         constexpr int numThreads = 10;</a>
+<a name="138"><span class="lineNum">     138 </span><span class="lineCov">          8 :         Benchmark benchmark (createBenchmarkDescription (&quot;Threads&quot;,</span></a>
+<a name="139"><span class="lineNum">     139 </span>            :                                                          juce::String (&quot;Semaphore signal&quot;).replace (&quot;Semaphore&quot;, semaphoreName).toStdString(),</a>
+<a name="140"><span class="lineNum">     140 </span>            :                                                          juce::String (&quot;Signal numThreads from waiting&quot;).replace (&quot;numThreads&quot;, juce::String (numThreads)).toStdString()));</a>
+<a name="141"><span class="lineNum">     141 </span>            : </a>
+<a name="142"><span class="lineNum">     142 </span>            :         using namespace std::literals;</a>
+<a name="143"><span class="lineNum">     143 </span><span class="lineCov">          2 :         std::atomic&lt;int&gt; numThreadsRunning { 0 };</span></a>
+<a name="144"><span class="lineNum">     144 </span><span class="lineCov">          2 :         SemaphoreType event;</span></a>
+<a name="145"><span class="lineNum">     145 </span><span class="lineCov">          2 :         auto signalTime = std::chrono::steady_clock::now();</span></a>
+<a name="146"><span class="lineNum">     146 </span>            : </a>
+<a name="147"><span class="lineNum">     147 </span>            :         // Start all the threads</a>
+<a name="148"><span class="lineNum">     148 </span><span class="lineCov">          2 :         std::vector&lt;std::thread&gt; threads;</span></a>
+<a name="149"><span class="lineNum">     149 </span>            : </a>
+<a name="150"><span class="lineNum">     150 </span><span class="lineCov">         22 :         for (int i = 0; i &lt; numThreads; ++i)</span></a>
+<a name="151"><span class="lineNum">     151 </span>            :         {</a>
+<a name="152"><span class="lineNum">     152 </span><span class="lineCov">         40 :             threads.emplace_back ([&amp;]</span></a>
+<a name="153"><span class="lineNum">     153 </span>            :                                   {</a>
+<a name="154"><span class="lineNum">     154 </span>            :                                       ++numThreadsRunning;</a>
+<a name="155"><span class="lineNum">     155 </span>            :                                       event.wait();</a>
+<a name="156"><span class="lineNum">     156 </span>            :                                   });</a>
+<a name="157"><span class="lineNum">     157 </span>            :         }</a>
+<a name="158"><span class="lineNum">     158 </span>            : </a>
+<a name="159"><span class="lineNum">     159 </span>            :         // Wait until all the threads have started and are waiting on the event</a>
+<a name="160"><span class="lineNum">     160 </span>            :         for (;;)</a>
+<a name="161"><span class="lineNum">     161 </span>            :         {</a>
+<a name="162"><span class="lineNum">     162 </span><span class="lineCov">          4 :             if (numThreadsRunning == numThreads)</span></a>
+<a name="163"><span class="lineNum">     163 </span>            :                 break;</a>
+<a name="164"><span class="lineNum">     164 </span>            : </a>
+<a name="165"><span class="lineNum">     165 </span><span class="lineCov">          2 :             std::this_thread::sleep_for (1ms);</span></a>
+<a name="166"><span class="lineNum">     166 </span>            :         }</a>
+<a name="167"><span class="lineNum">     167 </span>            : </a>
+<a name="168"><span class="lineNum">     168 </span>            :         // Sleep for a few more ms to ensure they're all waiting</a>
+<a name="169"><span class="lineNum">     169 </span><span class="lineCov">          2 :         std::this_thread::sleep_for (5ms);</span></a>
+<a name="170"><span class="lineNum">     170 </span>            : </a>
+<a name="171"><span class="lineNum">     171 </span>            :         // Signal all the threads</a>
+<a name="172"><span class="lineNum">     172 </span><span class="lineCov">          2 :         signalTime = std::chrono::steady_clock::now();</span></a>
 <a name="173"><span class="lineNum">     173 </span>            : </a>
-<a name="174"><span class="lineNum">     174 </span>            :             benchmark.start();</a>
-<a name="175"><span class="lineNum">     175 </span>            :             event.signal (numThreads);</a>
-<a name="176"><span class="lineNum">     176 </span>            :             benchmark.stop();</a>
-<a name="177"><span class="lineNum">     177 </span>            :         }</a>
-<a name="178"><span class="lineNum">     178 </span>            : </a>
-<a name="179"><span class="lineNum">     179 </span>            :         // Wait for the threads to complete</a>
-<a name="180"><span class="lineNum">     180 </span><span class="lineCov">         22 :         for (auto&amp; t : threads)</span></a>
-<a name="181"><span class="lineNum">     181 </span><span class="lineCov">         20 :             t.join();</span></a>
+<a name="174"><span class="lineNum">     174 </span>            :         {</a>
+<a name="175"><span class="lineNum">     175 </span>            :             // Signal all the threads</a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineCov">          2 :             signalTime = std::chrono::steady_clock::now();</span></a>
+<a name="177"><span class="lineNum">     177 </span>            : </a>
+<a name="178"><span class="lineNum">     178 </span>            :             benchmark.start();</a>
+<a name="179"><span class="lineNum">     179 </span>            :             event.signal (numThreads);</a>
+<a name="180"><span class="lineNum">     180 </span>            :             benchmark.stop();</a>
+<a name="181"><span class="lineNum">     181 </span>            :         }</a>
 <a name="182"><span class="lineNum">     182 </span>            : </a>
-<a name="183"><span class="lineNum">     183 </span><span class="lineCov">          4 :         BenchmarkList::getInstance().addResult (benchmark.getResult());</span></a>
-<a name="184"><span class="lineNum">     184 </span><span class="lineCov">          2 :     }</span></a>
-<a name="185"><span class="lineNum">     185 </span>            : </a>
-<a name="186"><span class="lineNum">     186 </span><span class="lineCov">          1 :     void runConditionVariableBenchmarks()</span></a>
-<a name="187"><span class="lineNum">     187 </span>            :     {</a>
-<a name="188"><span class="lineNum">     188 </span>            :         constexpr int numThreads = 10;</a>
-<a name="189"><span class="lineNum">     189 </span><span class="lineCov">          2 :         Benchmark benchmark (createBenchmarkDescription (&quot;Threads&quot;,</span></a>
-<a name="190"><span class="lineNum">     190 </span><span class="lineCov">          2 :                                                          juce::String (&quot;CV signal&quot;).toStdString(),</span></a>
-<a name="191"><span class="lineNum">     191 </span><span class="lineCov">          3 :                                                          juce::String (&quot;Signal numThreads from waiting&quot;).replace (&quot;numThreads&quot;, juce::String (numThreads)).toStdString()));</span></a>
-<a name="192"><span class="lineNum">     192 </span>            : </a>
-<a name="193"><span class="lineNum">     193 </span>            :         using namespace std::literals;</a>
-<a name="194"><span class="lineNum">     194 </span><span class="lineCov">          1 :         std::atomic&lt;int&gt; numThreadsRunning { 0 };</span></a>
-<a name="195"><span class="lineNum">     195 </span><span class="lineCov">          1 :         juce::WaitableEvent event (true);</span></a>
+<a name="183"><span class="lineNum">     183 </span>            :         // Wait for the threads to complete</a>
+<a name="184"><span class="lineNum">     184 </span><span class="lineCov">         22 :         for (auto&amp; t : threads)</span></a>
+<a name="185"><span class="lineNum">     185 </span><span class="lineCov">         20 :             t.join();</span></a>
+<a name="186"><span class="lineNum">     186 </span>            : </a>
+<a name="187"><span class="lineNum">     187 </span><span class="lineCov">          4 :         BenchmarkList::getInstance().addResult (benchmark.getResult());</span></a>
+<a name="188"><span class="lineNum">     188 </span><span class="lineCov">          2 :     }</span></a>
+<a name="189"><span class="lineNum">     189 </span>            : </a>
+<a name="190"><span class="lineNum">     190 </span><span class="lineCov">          1 :     void runConditionVariableBenchmarks()</span></a>
+<a name="191"><span class="lineNum">     191 </span>            :     {</a>
+<a name="192"><span class="lineNum">     192 </span>            :         constexpr int numThreads = 10;</a>
+<a name="193"><span class="lineNum">     193 </span><span class="lineCov">          2 :         Benchmark benchmark (createBenchmarkDescription (&quot;Threads&quot;,</span></a>
+<a name="194"><span class="lineNum">     194 </span><span class="lineCov">          2 :                                                          juce::String (&quot;CV signal&quot;).toStdString(),</span></a>
+<a name="195"><span class="lineNum">     195 </span><span class="lineCov">          3 :                                                          juce::String (&quot;Signal numThreads from waiting&quot;).replace (&quot;numThreads&quot;, juce::String (numThreads)).toStdString()));</span></a>
 <a name="196"><span class="lineNum">     196 </span>            : </a>
-<a name="197"><span class="lineNum">     197 </span>            :         // Start all the threads</a>
-<a name="198"><span class="lineNum">     198 </span><span class="lineCov">          1 :         std::vector&lt;std::thread&gt; threads;</span></a>
-<a name="199"><span class="lineNum">     199 </span>            : </a>
-<a name="200"><span class="lineNum">     200 </span><span class="lineCov">         11 :         for (int i = 0; i &lt; numThreads; ++i)</span></a>
-<a name="201"><span class="lineNum">     201 </span>            :         {</a>
-<a name="202"><span class="lineNum">     202 </span><span class="lineCov">         10 :             threads.emplace_back ([&amp;]</span></a>
-<a name="203"><span class="lineNum">     203 </span>            :                                   {</a>
-<a name="204"><span class="lineNum">     204 </span><span class="lineCov">         10 :                                       ++numThreadsRunning;</span></a>
-<a name="205"><span class="lineNum">     205 </span><span class="lineCov">         10 :                                       event.wait (-1);</span></a>
-<a name="206"><span class="lineNum">     206 </span><span class="lineCov">         10 :                                   });</span></a>
-<a name="207"><span class="lineNum">     207 </span>            :         }</a>
-<a name="208"><span class="lineNum">     208 </span>            : </a>
-<a name="209"><span class="lineNum">     209 </span>            :         // Wait until all the threads have started and are waiting on the event</a>
-<a name="210"><span class="lineNum">     210 </span>            :         for (;;)</a>
-<a name="211"><span class="lineNum">     211 </span>            :         {</a>
-<a name="212"><span class="lineNum">     212 </span><span class="lineCov">          2 :             if (numThreadsRunning == numThreads)</span></a>
-<a name="213"><span class="lineNum">     213 </span>            :                 break;</a>
-<a name="214"><span class="lineNum">     214 </span>            : </a>
-<a name="215"><span class="lineNum">     215 </span><span class="lineCov">          1 :             std::this_thread::sleep_for (1ms);</span></a>
-<a name="216"><span class="lineNum">     216 </span>            :         }</a>
-<a name="217"><span class="lineNum">     217 </span>            : </a>
-<a name="218"><span class="lineNum">     218 </span>            :         // Sleep for a few more ms to ensure they're all waiting</a>
-<a name="219"><span class="lineNum">     219 </span><span class="lineCov">          1 :         std::this_thread::sleep_for (5ms);</span></a>
-<a name="220"><span class="lineNum">     220 </span>            : </a>
-<a name="221"><span class="lineNum">     221 </span>            :         {</a>
-<a name="222"><span class="lineNum">     222 </span>            :             benchmark.start();</a>
-<a name="223"><span class="lineNum">     223 </span>            : </a>
-<a name="224"><span class="lineNum">     224 </span>            :             // Signal all the threads</a>
-<a name="225"><span class="lineNum">     225 </span><span class="lineCov">          1 :             event.signal();</span></a>
-<a name="226"><span class="lineNum">     226 </span>            : </a>
-<a name="227"><span class="lineNum">     227 </span>            :             benchmark.stop();</a>
-<a name="228"><span class="lineNum">     228 </span>            :         }</a>
-<a name="229"><span class="lineNum">     229 </span>            : </a>
-<a name="230"><span class="lineNum">     230 </span>            :         // Wait for the threads to complete</a>
-<a name="231"><span class="lineNum">     231 </span><span class="lineCov">         11 :         for (auto&amp; t : threads)</span></a>
-<a name="232"><span class="lineNum">     232 </span><span class="lineCov">         10 :             t.join();</span></a>
+<a name="197"><span class="lineNum">     197 </span>            :         using namespace std::literals;</a>
+<a name="198"><span class="lineNum">     198 </span><span class="lineCov">          1 :         std::atomic&lt;int&gt; numThreadsRunning { 0 };</span></a>
+<a name="199"><span class="lineNum">     199 </span><span class="lineCov">          1 :         juce::WaitableEvent event (true);</span></a>
+<a name="200"><span class="lineNum">     200 </span>            : </a>
+<a name="201"><span class="lineNum">     201 </span>            :         // Start all the threads</a>
+<a name="202"><span class="lineNum">     202 </span><span class="lineCov">          1 :         std::vector&lt;std::thread&gt; threads;</span></a>
+<a name="203"><span class="lineNum">     203 </span>            : </a>
+<a name="204"><span class="lineNum">     204 </span><span class="lineCov">         11 :         for (int i = 0; i &lt; numThreads; ++i)</span></a>
+<a name="205"><span class="lineNum">     205 </span>            :         {</a>
+<a name="206"><span class="lineNum">     206 </span><span class="lineCov">         10 :             threads.emplace_back ([&amp;]</span></a>
+<a name="207"><span class="lineNum">     207 </span>            :                                   {</a>
+<a name="208"><span class="lineNum">     208 </span><span class="lineCov">         10 :                                       ++numThreadsRunning;</span></a>
+<a name="209"><span class="lineNum">     209 </span><span class="lineCov">         10 :                                       event.wait (-1);</span></a>
+<a name="210"><span class="lineNum">     210 </span><span class="lineCov">         10 :                                   });</span></a>
+<a name="211"><span class="lineNum">     211 </span>            :         }</a>
+<a name="212"><span class="lineNum">     212 </span>            : </a>
+<a name="213"><span class="lineNum">     213 </span>            :         // Wait until all the threads have started and are waiting on the event</a>
+<a name="214"><span class="lineNum">     214 </span>            :         for (;;)</a>
+<a name="215"><span class="lineNum">     215 </span>            :         {</a>
+<a name="216"><span class="lineNum">     216 </span><span class="lineCov">          2 :             if (numThreadsRunning == numThreads)</span></a>
+<a name="217"><span class="lineNum">     217 </span>            :                 break;</a>
+<a name="218"><span class="lineNum">     218 </span>            : </a>
+<a name="219"><span class="lineNum">     219 </span><span class="lineCov">          1 :             std::this_thread::sleep_for (1ms);</span></a>
+<a name="220"><span class="lineNum">     220 </span>            :         }</a>
+<a name="221"><span class="lineNum">     221 </span>            : </a>
+<a name="222"><span class="lineNum">     222 </span>            :         // Sleep for a few more ms to ensure they're all waiting</a>
+<a name="223"><span class="lineNum">     223 </span><span class="lineCov">          1 :         std::this_thread::sleep_for (5ms);</span></a>
+<a name="224"><span class="lineNum">     224 </span>            : </a>
+<a name="225"><span class="lineNum">     225 </span>            :         {</a>
+<a name="226"><span class="lineNum">     226 </span>            :             benchmark.start();</a>
+<a name="227"><span class="lineNum">     227 </span>            : </a>
+<a name="228"><span class="lineNum">     228 </span>            :             // Signal all the threads</a>
+<a name="229"><span class="lineNum">     229 </span><span class="lineCov">          1 :             event.signal();</span></a>
+<a name="230"><span class="lineNum">     230 </span>            : </a>
+<a name="231"><span class="lineNum">     231 </span>            :             benchmark.stop();</a>
+<a name="232"><span class="lineNum">     232 </span>            :         }</a>
 <a name="233"><span class="lineNum">     233 </span>            : </a>
-<a name="234"><span class="lineNum">     234 </span><span class="lineCov">          2 :         BenchmarkList::getInstance().addResult (benchmark.getResult());</span></a>
-<a name="235"><span class="lineNum">     235 </span><span class="lineCov">          1 :     }</span></a>
-<a name="236"><span class="lineNum">     236 </span>            : };</a>
+<a name="234"><span class="lineNum">     234 </span>            :         // Wait for the threads to complete</a>
+<a name="235"><span class="lineNum">     235 </span><span class="lineCov">         11 :         for (auto&amp; t : threads)</span></a>
+<a name="236"><span class="lineNum">     236 </span><span class="lineCov">         10 :             t.join();</span></a>
 <a name="237"><span class="lineNum">     237 </span>            : </a>
-<a name="238"><span class="lineNum">     238 </span>            : static ThreadSignallingBenchmarks threadSignallingBenchmarks;</a>
-<a name="239"><span class="lineNum">     239 </span>            : #endif</a>
+<a name="238"><span class="lineNum">     238 </span><span class="lineCov">          2 :         BenchmarkList::getInstance().addResult (benchmark.getResult());</span></a>
+<a name="239"><span class="lineNum">     239 </span><span class="lineCov">          1 :     }</span></a>
 <a name="240"><span class="lineNum">     240 </span>            : </a>
-<a name="241"><span class="lineNum">     241 </span>            : }} // namespace tracktion_engine</a>
+<a name="241"><span class="lineNum">     241 </span>            :     template&lt;typename SemaphoreType&gt;</a>
+<a name="242"><span class="lineNum">     242 </span><span class="lineCov">          2 :     void runNonWaitingSemaphoreBenchmarks (juce::String semaphoreName)</span></a>
+<a name="243"><span class="lineNum">     243 </span>            :     {</a>
+<a name="244"><span class="lineNum">     244 </span>            :         constexpr int numThreads = 10;</a>
+<a name="245"><span class="lineNum">     245 </span>            :         using namespace std::literals;</a>
+<a name="246"><span class="lineNum">     246 </span><span class="lineCov">          8 :         Benchmark benchmark (createBenchmarkDescription (&quot;Threads&quot;,</span></a>
+<a name="247"><span class="lineNum">     247 </span>            :                                                          juce::String (&quot;Semaphore signal&quot;).replace (&quot;Semaphore&quot;, semaphoreName).toStdString(),</a>
+<a name="248"><span class="lineNum">     248 </span>            :                                                          juce::String (&quot;Signal numThreads (may not be waiting)&quot;).replace (&quot;numThreads&quot;, juce::String (numThreads)).toStdString()));</a>
+<a name="249"><span class="lineNum">     249 </span>            : </a>
+<a name="250"><span class="lineNum">     250 </span><span class="lineCov">          2 :         std::atomic&lt;int&gt; numThreadsRunning { 0 };</span></a>
+<a name="251"><span class="lineNum">     251 </span><span class="lineCov">          2 :         std::atomic&lt;bool&gt; threadShouldExit { false };</span></a>
+<a name="252"><span class="lineNum">     252 </span><span class="lineCov">          2 :         SemaphoreType event;</span></a>
+<a name="253"><span class="lineNum">     253 </span><span class="lineCov">          2 :         auto signalTime = std::chrono::steady_clock::now();</span></a>
+<a name="254"><span class="lineNum">     254 </span>            : </a>
+<a name="255"><span class="lineNum">     255 </span>            :         // Start all the threads</a>
+<a name="256"><span class="lineNum">     256 </span><span class="lineCov">          2 :         std::vector&lt;std::thread&gt; threads;</span></a>
+<a name="257"><span class="lineNum">     257 </span>            : </a>
+<a name="258"><span class="lineNum">     258 </span><span class="lineCov">         22 :         for (int i = 0; i &lt; numThreads; ++i)</span></a>
+<a name="259"><span class="lineNum">     259 </span>            :         {</a>
+<a name="260"><span class="lineNum">     260 </span><span class="lineCov">    1743642 :             threads.emplace_back ([&amp;]</span></a>
+<a name="261"><span class="lineNum">     261 </span>            :                                   {</a>
+<a name="262"><span class="lineNum">     262 </span>            :                                       ++numThreadsRunning;</a>
+<a name="263"><span class="lineNum">     263 </span>            : </a>
+<a name="264"><span class="lineNum">     264 </span><span class="lineCov">    1743620 :                                       while (! threadShouldExit)</span></a>
+<a name="265"><span class="lineNum">     265 </span>            :                                           event.wait();</a>
+<a name="266"><span class="lineNum">     266 </span>            : </a>
+<a name="267"><span class="lineNum">     267 </span>            :                                       --numThreadsRunning;</a>
+<a name="268"><span class="lineNum">     268 </span>            :                                   });</a>
+<a name="269"><span class="lineNum">     269 </span>            :         }</a>
+<a name="270"><span class="lineNum">     270 </span>            : </a>
+<a name="271"><span class="lineNum">     271 </span>            :         // Wait until all the threads have started and are waiting on the event</a>
+<a name="272"><span class="lineNum">     272 </span>            :         for (;;)</a>
+<a name="273"><span class="lineNum">     273 </span>            :         {</a>
+<a name="274"><span class="lineNum">     274 </span><span class="lineCov">          4 :             if (numThreadsRunning == numThreads)</span></a>
+<a name="275"><span class="lineNum">     275 </span>            :                 break;</a>
+<a name="276"><span class="lineNum">     276 </span>            : </a>
+<a name="277"><span class="lineNum">     277 </span><span class="lineCov">          2 :             std::this_thread::sleep_for (1ms);</span></a>
+<a name="278"><span class="lineNum">     278 </span>            :         }</a>
+<a name="279"><span class="lineNum">     279 </span>            : </a>
+<a name="280"><span class="lineNum">     280 </span>            :         // Sleep for a few more ms to ensure they're all waiting</a>
+<a name="281"><span class="lineNum">     281 </span><span class="lineCov">          2 :         std::this_thread::sleep_for (5ms);</span></a>
+<a name="282"><span class="lineNum">     282 </span>            : </a>
+<a name="283"><span class="lineNum">     283 </span>            :         // Signal all the threads</a>
+<a name="284"><span class="lineNum">     284 </span><span class="lineCov">          2 :         signalTime = std::chrono::steady_clock::now();</span></a>
+<a name="285"><span class="lineNum">     285 </span>            : </a>
+<a name="286"><span class="lineNum">     286 </span><span class="lineCov">     200002 :         for (int i = 0; i &lt; 100'000; ++i)</span></a>
+<a name="287"><span class="lineNum">     287 </span>            :         {</a>
+<a name="288"><span class="lineNum">     288 </span>            :             benchmark.start();</a>
+<a name="289"><span class="lineNum">     289 </span>            :             event.signal (numThreads);</a>
+<a name="290"><span class="lineNum">     290 </span>            :             benchmark.stop();</a>
+<a name="291"><span class="lineNum">     291 </span>            :         }</a>
+<a name="292"><span class="lineNum">     292 </span>            : </a>
+<a name="293"><span class="lineNum">     293 </span>            :         // Wait for the threads to complete</a>
+<a name="294"><span class="lineNum">     294 </span>            :         threadShouldExit = true;</a>
+<a name="295"><span class="lineNum">     295 </span>            : </a>
+<a name="296"><span class="lineNum">     296 </span><span class="lineCov">      37548 :         while (numThreadsRunning &gt; 0)</span></a>
+<a name="297"><span class="lineNum">     297 </span>            :             event.signal (numThreads);</a>
+<a name="298"><span class="lineNum">     298 </span>            : </a>
+<a name="299"><span class="lineNum">     299 </span><span class="lineCov">         22 :         for (auto&amp; t : threads)</span></a>
+<a name="300"><span class="lineNum">     300 </span><span class="lineCov">         20 :             t.join();</span></a>
+<a name="301"><span class="lineNum">     301 </span>            : </a>
+<a name="302"><span class="lineNum">     302 </span><span class="lineCov">          4 :         BenchmarkList::getInstance().addResult (benchmark.getResult());</span></a>
+<a name="303"><span class="lineNum">     303 </span><span class="lineCov">          2 :     }</span></a>
+<a name="304"><span class="lineNum">     304 </span>            : </a>
+<a name="305"><span class="lineNum">     305 </span><span class="lineCov">          1 :     void runNonWaitingConditionVariableBenchmarks()</span></a>
+<a name="306"><span class="lineNum">     306 </span>            :     {</a>
+<a name="307"><span class="lineNum">     307 </span>            :         constexpr int numThreads = 10;</a>
+<a name="308"><span class="lineNum">     308 </span>            :         using namespace std::literals;</a>
+<a name="309"><span class="lineNum">     309 </span><span class="lineCov">          2 :         Benchmark benchmark (createBenchmarkDescription (&quot;Threads&quot;,</span></a>
+<a name="310"><span class="lineNum">     310 </span><span class="lineCov">          2 :                                                          juce::String (&quot;CV signal&quot;).toStdString(),</span></a>
+<a name="311"><span class="lineNum">     311 </span><span class="lineCov">          3 :                                                          juce::String (&quot;Signal numThreads (may not be waiting)&quot;).replace (&quot;numThreads&quot;, juce::String (numThreads)).toStdString()));</span></a>
+<a name="312"><span class="lineNum">     312 </span>            : </a>
+<a name="313"><span class="lineNum">     313 </span><span class="lineCov">          1 :         std::atomic&lt;int&gt; numThreadsRunning { 0 };</span></a>
+<a name="314"><span class="lineNum">     314 </span><span class="lineCov">          1 :         std::atomic&lt;bool&gt; threadShouldExit { false };</span></a>
+<a name="315"><span class="lineNum">     315 </span><span class="lineCov">          1 :         juce::WaitableEvent event;</span></a>
+<a name="316"><span class="lineNum">     316 </span><span class="lineCov">          1 :         auto signalTime = std::chrono::steady_clock::now();</span></a>
+<a name="317"><span class="lineNum">     317 </span>            : </a>
+<a name="318"><span class="lineNum">     318 </span>            :         // Start all the threads</a>
+<a name="319"><span class="lineNum">     319 </span><span class="lineCov">          1 :         std::vector&lt;std::thread&gt; threads;</span></a>
+<a name="320"><span class="lineNum">     320 </span>            : </a>
+<a name="321"><span class="lineNum">     321 </span><span class="lineCov">         11 :         for (int i = 0; i &lt; numThreads; ++i)</span></a>
+<a name="322"><span class="lineNum">     322 </span>            :         {</a>
+<a name="323"><span class="lineNum">     323 </span><span class="lineCov">         10 :             threads.emplace_back ([&amp;]</span></a>
+<a name="324"><span class="lineNum">     324 </span>            :                                   {</a>
+<a name="325"><span class="lineNum">     325 </span><span class="lineCov">         10 :                                       ++numThreadsRunning;</span></a>
+<a name="326"><span class="lineNum">     326 </span>            : </a>
+<a name="327"><span class="lineNum">     327 </span><span class="lineCov">       6860 :                                       while (! threadShouldExit)</span></a>
+<a name="328"><span class="lineNum">     328 </span><span class="lineCov">       6850 :                                           event.wait();</span></a>
+<a name="329"><span class="lineNum">     329 </span>            : </a>
+<a name="330"><span class="lineNum">     330 </span>            :                                       --numThreadsRunning;</a>
+<a name="331"><span class="lineNum">     331 </span><span class="lineCov">         10 :                                   });</span></a>
+<a name="332"><span class="lineNum">     332 </span>            :         }</a>
+<a name="333"><span class="lineNum">     333 </span>            : </a>
+<a name="334"><span class="lineNum">     334 </span>            :         // Wait until all the threads have started and are waiting on the event</a>
+<a name="335"><span class="lineNum">     335 </span>            :         for (;;)</a>
+<a name="336"><span class="lineNum">     336 </span>            :         {</a>
+<a name="337"><span class="lineNum">     337 </span><span class="lineCov">          2 :             if (numThreadsRunning == numThreads)</span></a>
+<a name="338"><span class="lineNum">     338 </span>            :                 break;</a>
+<a name="339"><span class="lineNum">     339 </span>            : </a>
+<a name="340"><span class="lineNum">     340 </span><span class="lineCov">          1 :             std::this_thread::sleep_for (1ms);</span></a>
+<a name="341"><span class="lineNum">     341 </span>            :         }</a>
+<a name="342"><span class="lineNum">     342 </span>            : </a>
+<a name="343"><span class="lineNum">     343 </span>            :         // Sleep for a few more ms to ensure they're all waiting</a>
+<a name="344"><span class="lineNum">     344 </span><span class="lineCov">          1 :         std::this_thread::sleep_for (5ms);</span></a>
+<a name="345"><span class="lineNum">     345 </span>            : </a>
+<a name="346"><span class="lineNum">     346 </span>            :         // Signal all the threads</a>
+<a name="347"><span class="lineNum">     347 </span><span class="lineCov">          1 :         signalTime = std::chrono::steady_clock::now();</span></a>
+<a name="348"><span class="lineNum">     348 </span>            : </a>
+<a name="349"><span class="lineNum">     349 </span><span class="lineCov">     100001 :         for (int i = 0; i &lt; 100'000; ++i)</span></a>
+<a name="350"><span class="lineNum">     350 </span>            :         {</a>
+<a name="351"><span class="lineNum">     351 </span>            :             benchmark.start();</a>
+<a name="352"><span class="lineNum">     352 </span><span class="lineCov">     100000 :             event.signal();</span></a>
+<a name="353"><span class="lineNum">     353 </span>            :             benchmark.stop();</a>
+<a name="354"><span class="lineNum">     354 </span>            :         }</a>
+<a name="355"><span class="lineNum">     355 </span>            : </a>
+<a name="356"><span class="lineNum">     356 </span>            :         // Wait for the threads to complete</a>
+<a name="357"><span class="lineNum">     357 </span>            :         threadShouldExit = true;</a>
+<a name="358"><span class="lineNum">     358 </span>            : </a>
+<a name="359"><span class="lineNum">     359 </span><span class="lineCov">       3599 :         while (numThreadsRunning &gt; 0)</span></a>
+<a name="360"><span class="lineNum">     360 </span><span class="lineCov">       3598 :             event.signal();</span></a>
+<a name="361"><span class="lineNum">     361 </span>            : </a>
+<a name="362"><span class="lineNum">     362 </span><span class="lineCov">         11 :         for (auto&amp; t : threads)</span></a>
+<a name="363"><span class="lineNum">     363 </span><span class="lineCov">         10 :             t.join();</span></a>
+<a name="364"><span class="lineNum">     364 </span>            : </a>
+<a name="365"><span class="lineNum">     365 </span><span class="lineCov">          2 :         BenchmarkList::getInstance().addResult (benchmark.getResult());</span></a>
+<a name="366"><span class="lineNum">     366 </span><span class="lineCov">          1 :     }</span></a>
+<a name="367"><span class="lineNum">     367 </span>            : };</a>
+<a name="368"><span class="lineNum">     368 </span>            : </a>
+<a name="369"><span class="lineNum">     369 </span>            : static ThreadSignallingBenchmarks threadSignallingBenchmarks;</a>
+<a name="370"><span class="lineNum">     370 </span>            : #endif</a>
+<a name="371"><span class="lineNum">     371 </span>            : </a>
+<a name="372"><span class="lineNum">     372 </span>            : }} // namespace tracktion_engine</a>
 </pre>
       </td>
     </tr>
