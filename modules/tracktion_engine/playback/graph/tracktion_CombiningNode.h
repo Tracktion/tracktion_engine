@@ -23,7 +23,7 @@ class CombiningNode final : public tracktion::graph::Node,
                             public TracktionEngineNode
 {
 public:
-    CombiningNode (ProcessState&);
+    CombiningNode (EditItemID, ProcessState&);
     ~CombiningNode() override;
 
     //==============================================================================
@@ -56,15 +56,19 @@ public:
     size_t getAllocatedBytes() const override;
 
 private:
+    const EditItemID itemID;
+    
     struct TimedNode;
     juce::OwnedArray<TimedNode> inputs;
     juce::OwnedArray<juce::Array<TimedNode*>> groups;
     std::atomic<bool> isReadyToProcessBlock { false };
     choc::buffer::ChannelArrayBuffer<float> tempAudioBuffer;
+    MidiMessageArray noteOffEventsToSend;
 
     tracktion::graph::NodeProperties nodeProperties;
 
     void prefetchGroup (juce::Range<int64_t>, TimeRange);
+    void queueNoteOffsForClipsNoLongerPresent (const CombiningNode& oldNode);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CombiningNode)
 };

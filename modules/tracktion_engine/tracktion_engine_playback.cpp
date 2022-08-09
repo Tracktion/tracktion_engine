@@ -209,9 +209,6 @@ using namespace std::literals;
 #include "playback/graph/tracktion_MelodyneNode.h"
 #include "playback/graph/tracktion_MelodyneNode.cpp"
 
-#include "playback/graph/tracktion_MidiCombiningNode.h"
-#include "playback/graph/tracktion_MidiCombiningNode.cpp"
-
 #include "playback/graph/tracktion_MidiNode.h"
 #include "playback/graph/tracktion_MidiNode.cpp"
 

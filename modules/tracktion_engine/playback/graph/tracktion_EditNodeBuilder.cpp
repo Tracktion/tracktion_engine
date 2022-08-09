@@ -713,8 +713,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForClip (Clip& clip, const Tra
         return createNodeForAudioClip (*audioClip, false, params);
 
     if (auto midiClip = dynamic_cast<MidiClip*> (&clip))
-        if (midiClip->canUseProxy())
-            return createNodeForMidiClip (*midiClip, trackMuteState, params);
+        return createNodeForMidiClip (*midiClip, trackMuteState, params);
 
     if (auto stepClip = dynamic_cast<StepClip*> (&clip))
         return createNodeForStepClip (*stepClip, trackMuteState, params);
@@ -727,26 +726,8 @@ std::unique_ptr<tracktion::graph::Node> createNodeForClips (EditItemID trackID, 
     // If there are no clips, we still need to send note-offs for clips that might have been deleted whilst still playing
     // In the future, this will be removed during the transform stage
     if (clips.size() == 0)
-        return std::make_unique<MidiCombiningNode> (trackID, params.processState);
+        return std::make_unique<CombiningNode> (trackID, params.processState);
 
-    if (clips.size() == 1)
-    {
-        auto clip = clips.getFirst();
-
-        // If a single clip is a MidiClip, always wrap it in a MidiCombingingNode to handle the note-offs
-        auto isNonProxyMidiClip = [&]
-        {
-            if (auto midiClip = dynamic_cast<MidiClip*> (clip))
-                return ! midiClip->canUseProxy();
-
-            return false;
-        };
-
-        if ((params.allowedClips == nullptr || params.allowedClips->contains (clip))
-             && ! isNonProxyMidiClip())
-            return createNodeForClip (*clip, trackMuteState, params);
-    }
-    
     const bool clipsHaveLatency = [&]
     {
         if (params.includePlugins)
@@ -759,24 +740,38 @@ std::unique_ptr<tracktion::graph::Node> createNodeForClips (EditItemID trackID, 
 
         return false;
     }();
-    
+
     // If any of the clips have latency, it's impossible to use a CombiningNode as it doesn't
     // continuously process Nodes which means the latency FIFO doesn't get flushed. So just
     // use a normal SummingNode instead
     if (clipsHaveLatency)
     {
         auto combiner = std::make_unique<SummingNode>();
-        
+
         for (auto clip : clips)
             if (params.allowedClips == nullptr || params.allowedClips->contains (clip))
                 if (auto clipNode = createNodeForClip (*clip, trackMuteState, params))
                     combiner->addInput (std::move (clipNode));
-            
+
         return combiner;
     }
 
-    auto combiner = std::make_unique<CombiningNode> (params.processState);
-    auto midiCombiner = std::make_unique<MidiCombiningNode> (trackID, params.processState);
+    if (clips.size() == 1)
+    {
+        auto clip = clips.getFirst();
+
+        if (params.allowedClips == nullptr || params.allowedClips->contains (clip))
+        {
+            auto combiner = std::make_unique<CombiningNode> (trackID, params.processState);
+
+            if (auto clipNode = createNodeForClip (*clip, trackMuteState, params))
+                combiner->addInput (std::move (clipNode), clip->getPosition().time);
+
+            return combiner;
+        }
+    }
+
+    auto combiner = std::make_unique<CombiningNode> (trackID, params.processState);
 
     // Use a CombiningNode for most clips
     for (auto clip : clips)
@@ -784,47 +779,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForClips (EditItemID trackID, 
             if (auto clipNode = createNodeForClip (*clip, trackMuteState, params))
                 combiner->addInput (std::move (clipNode), clip->getPosition().time);
 
-    // Use a MidiCombiningNode for LoopingMidiNodes
-    for (auto clip : clips)
-    {
-        if (params.allowedClips == nullptr || params.allowedClips->contains (clip))
-        {
-            if (auto midiClip = dynamic_cast<MidiClip*> (clip))
-            {
-                if (! midiClip->canUseProxy())
-                {
-                    if (auto midiNode = createNodeForMidiClip (*midiClip, trackMuteState, params))
-                    {
-                        if (dynamic_cast<LoopingMidiNode*> (midiNode.get()) != nullptr)
-                        {
-                            midiCombiner->addInput (std::unique_ptr<LoopingMidiNode> (dynamic_cast<LoopingMidiNode*> (midiNode.release())),
-                                                    clip->getPosition().time);
-                        }
-                    }
-                    else
-                    {
-                        assert (false && "Non-proxy MidiClip isn't creating a LoopingMidiNode!");
-                    }
-                }
-            }
-        }
-    }
-
-    if (combiner->getNumInputs() == 0 && midiCombiner->getNumInputs() == 0)
-        return {};
-
-    if (combiner->getNumInputs() > 0 && midiCombiner->getNumInputs() == 0)
-        return combiner;
-
-    if (midiCombiner->getNumInputs() > 0 && combiner->getNumInputs() == 0)
-        return midiCombiner;
-
-    auto summingNode = std::make_unique<SummingNode>();
-    summingNode->addInput (std::move (combiner));
-    summingNode->addInput (std::move (midiCombiner));
-
-    return summingNode;
-
+    return combiner;
 }
 
 //==============================================================================

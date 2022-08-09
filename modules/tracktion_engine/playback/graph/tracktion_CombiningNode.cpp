@@ -8,6 +8,8 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#include "tracktion_LoopingMidiNode.h"
+
 namespace tracktion { inline namespace engine
 {
 
@@ -125,9 +127,11 @@ private:
 };
 
 //==============================================================================
-CombiningNode::CombiningNode (ProcessState& ps)
-    : TracktionEngineNode (ps)
+CombiningNode::CombiningNode (EditItemID id, ProcessState& ps)
+    : TracktionEngineNode (ps),
+      itemID (id)
 {
+    hash_combine (nodeProperties.nodeID, itemID);
 }
 
 CombiningNode::~CombiningNode() {}
@@ -216,6 +220,17 @@ void CombiningNode::prepareToPlay (const tracktion::graph::PlaybackInitialisatio
         if (! i->isReadyToProcess())
             isReadyToProcessBlock.store (false, std::memory_order_release);
     }
+
+    // Inspect the old graph to find clips that need to be killed
+    if (info.rootNodeToReplace != nullptr)
+    {
+        visitNodes (*info.rootNodeToReplace, [this, itemID = itemID] (Node& n)
+                    {
+                        if (auto combiningNode = dynamic_cast<CombiningNode*> (&n))
+                            if (combiningNode->itemID == itemID)
+                                queueNoteOffsForClipsNoLongerPresent (*combiningNode);
+                    }, true);
+    }
 }
 
 bool CombiningNode::isReadyToProcess()
@@ -252,6 +267,10 @@ void CombiningNode::process (ProcessContext& pc)
     const auto editTime = getEditTimeRange();
     const auto initialEvents = pc.buffers.midi.size();
 
+    // Merge any note-offs from clips that have been deleted
+    pc.buffers.midi.mergeFromAndClear (noteOffEventsToSend);
+
+    // Then process the list
     if (auto g = groups[combining_node_utils::timeToGroupIndex (editTime.getStart())])
     {
         for (auto tan : *g)
@@ -297,6 +316,37 @@ void CombiningNode::prefetchGroup (juce::Range<int64_t> referenceSampleRange, Ti
                     break;
 
                 tan->prefetchBlock (referenceSampleRange);
+            }
+        }
+    }
+}
+
+void CombiningNode::queueNoteOffsForClipsNoLongerPresent (const CombiningNode& oldCombiningNode)
+{
+    // Find any LoopingMidiNodes that are no longer present
+    // Add note-offs for any note-ons they have
+    std::vector<EditItemID> currentNodeIDs;
+
+    for (auto timedNode : inputs)
+        for (auto node : timedNode->getNodes())
+            if (auto loopingMidiNode = dynamic_cast<LoopingMidiNode*> (node))
+                currentNodeIDs.push_back (loopingMidiNode->getItemID());
+
+    for (auto oldTimedNode : oldCombiningNode.inputs)
+    {
+        for (auto oldNode : oldTimedNode->getNodes())
+        {
+            if (auto oldLoopingMidiNode = dynamic_cast<LoopingMidiNode*> (oldNode))
+            {
+                if (std::find (currentNodeIDs.begin(), currentNodeIDs.end(), oldLoopingMidiNode->getItemID())
+                    == currentNodeIDs.end())
+                {
+                    oldLoopingMidiNode->getActiveNoteList()->iterate ([this, mpeSourceID = oldLoopingMidiNode->getMPESourceID()]
+                                                                      (int chan, int note)
+                                                                      {
+                                                                          noteOffEventsToSend.addMidiMessage (juce::MidiMessage::noteOff (chan, note), mpeSourceID);
+                                                                      });
+                }
             }
         }
     }
