@@ -121,7 +121,7 @@ struct ElastiqueStretcher  : public TimeStretcher::Stretcher
         }
     }
 
-    ~ElastiqueStretcher()
+    ~ElastiqueStretcher() override
     {
         if (elastique != nullptr)
             CElastiqueProV3If::DestroyInstance (elastique);
