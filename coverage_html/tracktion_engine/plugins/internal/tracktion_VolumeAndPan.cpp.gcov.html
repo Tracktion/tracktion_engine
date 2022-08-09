@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-08-09 10:20:30</td>
+            <td class="headerValue">2022-08-09 15:07:30</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">21</td>
@@ -211,72 +211,72 @@
 <a name="149"><span class="lineNum">     149 </span>            : const char* VolumeAndPanPlugin::xmlTypeName = &quot;volume&quot;;</a>
 <a name="150"><span class="lineNum">     150 </span>            : </a>
 <a name="151"><span class="lineNum">     151 </span>            : //==============================================================================</a>
-<a name="152"><span class="lineNum">     152 </span><span class="lineCov">       2194 : void VolumeAndPanPlugin::initialise (const PluginInitialisationInfo&amp;)</span></a>
+<a name="152"><span class="lineNum">     152 </span><span class="lineCov">       2356 : void VolumeAndPanPlugin::initialise (const PluginInitialisationInfo&amp;)</span></a>
 <a name="153"><span class="lineNum">     153 </span>            : {</a>
-<a name="154"><span class="lineNum">     154 </span><span class="lineCov">       2194 :     refreshVCATrack();</span></a>
+<a name="154"><span class="lineNum">     154 </span><span class="lineCov">       2356 :     refreshVCATrack();</span></a>
 <a name="155"><span class="lineNum">     155 </span>            :     auto sliderPos = getSliderPos();</a>
-<a name="156"><span class="lineNum">     156 </span><span class="lineCov">       2194 :     getGainsFromVolumeFaderPositionAndPan (sliderPos, getPan(), getPanLaw(), lastGainL, lastGainR);</span></a>
-<a name="157"><span class="lineNum">     157 </span><span class="lineCov">       2194 :     lastGainS = volumeFaderPositionToGain (sliderPos);</span></a>
-<a name="158"><span class="lineNum">     158 </span><span class="lineCov">       2194 : }</span></a>
+<a name="156"><span class="lineNum">     156 </span><span class="lineCov">       2356 :     getGainsFromVolumeFaderPositionAndPan (sliderPos, getPan(), getPanLaw(), lastGainL, lastGainR);</span></a>
+<a name="157"><span class="lineNum">     157 </span><span class="lineCov">       2356 :     lastGainS = volumeFaderPositionToGain (sliderPos);</span></a>
+<a name="158"><span class="lineNum">     158 </span><span class="lineCov">       2356 : }</span></a>
 <a name="159"><span class="lineNum">     159 </span>            : </a>
 <a name="160"><span class="lineNum">     160 </span><span class="lineNoCov">          0 : void VolumeAndPanPlugin::initialiseWithoutStopping (const PluginInitialisationInfo&amp;)</span></a>
 <a name="161"><span class="lineNum">     161 </span>            : {</a>
 <a name="162"><span class="lineNum">     162 </span><span class="lineNoCov">          0 :     refreshVCATrack();</span></a>
 <a name="163"><span class="lineNum">     163 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="164"><span class="lineNum">     164 </span>            : </a>
-<a name="165"><span class="lineNum">     165 </span><span class="lineCov">       2194 : void VolumeAndPanPlugin::deinitialise()</span></a>
+<a name="165"><span class="lineNum">     165 </span><span class="lineCov">       2356 : void VolumeAndPanPlugin::deinitialise()</span></a>
 <a name="166"><span class="lineNum">     166 </span>            : {</a>
 <a name="167"><span class="lineNum">     167 </span>            :     vcaTrack = nullptr;</a>
-<a name="168"><span class="lineNum">     168 </span><span class="lineCov">       2194 : }</span></a>
+<a name="168"><span class="lineNum">     168 </span><span class="lineCov">       2356 : }</span></a>
 <a name="169"><span class="lineNum">     169 </span>            : </a>
 <a name="170"><span class="lineNum">     170 </span>            : //==============================================================================</a>
-<a name="171"><span class="lineNum">     171 </span><span class="lineCov">    9018790 : static float getParentVcaDb (Track&amp; track, TimePosition time)</span></a>
+<a name="171"><span class="lineNum">     171 </span><span class="lineCov">   10437900 : static float getParentVcaDb (Track&amp; track, TimePosition time)</span></a>
 <a name="172"><span class="lineNum">     172 </span>            : {</a>
 <a name="173"><span class="lineNum">     173 </span>            :     float posOffset = 0.0f;</a>
 <a name="174"><span class="lineNum">     174 </span>            : </a>
-<a name="175"><span class="lineNum">     175 </span><span class="lineCov">   12847800 :     for (FolderTrack::Ptr p = track.getParentFolderTrack(); p != nullptr; p = p-&gt;getParentFolderTrack())</span></a>
+<a name="175"><span class="lineNum">     175 </span><span class="lineCov">   14266900 :     for (FolderTrack::Ptr p = track.getParentFolderTrack(); p != nullptr; p = p-&gt;getParentFolderTrack())</span></a>
 <a name="176"><span class="lineNum">     176 </span>            :     {</a>
-<a name="177"><span class="lineNum">     177 </span><span class="lineCov">    3828960 :         float db = p-&gt;getVcaDb (time);</span></a>
+<a name="177"><span class="lineNum">     177 </span><span class="lineCov">    3829030 :         float db = p-&gt;getVcaDb (time);</span></a>
 <a name="178"><span class="lineNum">     178 </span>            : </a>
-<a name="179"><span class="lineNum">     179 </span><span class="lineCov">    3829080 :         if (db &lt; -96.0f)</span></a>
+<a name="179"><span class="lineNum">     179 </span><span class="lineCov">    3829130 :         if (db &lt; -96.0f)</span></a>
 <a name="180"><span class="lineNum">     180 </span>            :             return -100.0f;</a>
 <a name="181"><span class="lineNum">     181 </span>            : </a>
-<a name="182"><span class="lineNum">     182 </span><span class="lineCov">    3829080 :         posOffset += decibelsToVolumeFaderPosition (db)</span></a>
-<a name="183"><span class="lineNum">     183 </span><span class="lineCov">    3828960 :                        - decibelsToVolumeFaderPosition (0.0f);</span></a>
+<a name="182"><span class="lineNum">     182 </span><span class="lineCov">    3829130 :         posOffset += decibelsToVolumeFaderPosition (db)</span></a>
+<a name="183"><span class="lineNum">     183 </span><span class="lineCov">    3829070 :                        - decibelsToVolumeFaderPosition (0.0f);</span></a>
 <a name="184"><span class="lineNum">     184 </span>            :     }</a>
 <a name="185"><span class="lineNum">     185 </span>            : </a>
-<a name="186"><span class="lineNum">     186 </span><span class="lineCov">    9018670 :     return volumeFaderPositionToDB (decibelsToVolumeFaderPosition (0) + posOffset);</span></a>
+<a name="186"><span class="lineNum">     186 </span><span class="lineCov">   10437600 :     return volumeFaderPositionToDB (decibelsToVolumeFaderPosition (0) + posOffset);</span></a>
 <a name="187"><span class="lineNum">     187 </span>            : }</a>
 <a name="188"><span class="lineNum">     188 </span>            : </a>
-<a name="189"><span class="lineNum">     189 </span><span class="lineCov">   24686500 : void VolumeAndPanPlugin::applyToBuffer (const PluginRenderContext&amp; fc)</span></a>
+<a name="189"><span class="lineNum">     189 </span><span class="lineCov">   26019000 : void VolumeAndPanPlugin::applyToBuffer (const PluginRenderContext&amp; fc)</span></a>
 <a name="190"><span class="lineNum">     190 </span>            : {</a>
-<a name="191"><span class="lineNum">     191 </span><span class="lineCov">   24686500 :     if (isEnabled())</span></a>
+<a name="191"><span class="lineNum">     191 </span><span class="lineCov">   26019000 :     if (isEnabled())</span></a>
 <a name="192"><span class="lineNum">     192 </span>            :     {</a>
 <a name="193"><span class="lineNum">     193 </span>            :         SCOPED_REALTIME_CHECK</a>
 <a name="194"><span class="lineNum">     194 </span>            : </a>
-<a name="195"><span class="lineNum">     195 </span><span class="lineCov">   24687500 :         if (fc.destBuffer != nullptr)</span></a>
+<a name="195"><span class="lineNum">     195 </span><span class="lineCov">   26021300 :         if (fc.destBuffer != nullptr)</span></a>
 <a name="196"><span class="lineNum">     196 </span>            :         {</a>
-<a name="197"><span class="lineNum">     197 </span><span class="lineCov">   24687500 :             const int numChansIn = fc.destBuffer-&gt;getNumChannels();</span></a>
-<a name="198"><span class="lineNum">     198 </span><span class="lineCov">   24687500 :             const float vcaPosDelta = vcaTrack != nullptr</span></a>
-<a name="199"><span class="lineNum">     199 </span><span class="lineCov">   33692600 :                                     ? decibelsToVolumeFaderPosition (getParentVcaDb (*vcaTrack, fc.editTime))</span></a>
-<a name="200"><span class="lineNum">     200 </span><span class="lineCov">    9011090 :                                         - decibelsToVolumeFaderPosition (0.0f)</span></a>
+<a name="197"><span class="lineNum">     197 </span><span class="lineCov">   26021300 :             const int numChansIn = fc.destBuffer-&gt;getNumChannels();</span></a>
+<a name="198"><span class="lineNum">     198 </span><span class="lineCov">   26021300 :             const float vcaPosDelta = vcaTrack != nullptr</span></a>
+<a name="199"><span class="lineNum">     199 </span><span class="lineCov">   36438200 :                                     ? decibelsToVolumeFaderPosition (getParentVcaDb (*vcaTrack, fc.editTime))</span></a>
+<a name="200"><span class="lineNum">     200 </span><span class="lineCov">   10425600 :                                         - decibelsToVolumeFaderPosition (0.0f)</span></a>
 <a name="201"><span class="lineNum">     201 </span>            :                                     : 0.0f;</a>
 <a name="202"><span class="lineNum">     202 </span>            : </a>
 <a name="203"><span class="lineNum">     203 </span>            :             float lgain, rgain;</a>
-<a name="204"><span class="lineNum">     204 </span><span class="lineCov">   24673500 :             getGainsFromVolumeFaderPositionAndPan (getSliderPos() + vcaPosDelta, getPan(), getPanLaw(), lgain, rgain);</span></a>
-<a name="205"><span class="lineNum">     205 </span><span class="lineCov">   24659800 :             lgain *= (polarity ? -1 : 1);</span></a>
-<a name="206"><span class="lineNum">     206 </span><span class="lineCov">   24659800 :             rgain *= (polarity ? -1 : 1);</span></a>
+<a name="204"><span class="lineNum">     204 </span><span class="lineCov">   25998900 :             getGainsFromVolumeFaderPositionAndPan (getSliderPos() + vcaPosDelta, getPan(), getPanLaw(), lgain, rgain);</span></a>
+<a name="205"><span class="lineNum">     205 </span><span class="lineCov">   25996300 :             lgain *= (polarity ? -1 : 1);</span></a>
+<a name="206"><span class="lineNum">     206 </span><span class="lineCov">   25996300 :             rgain *= (polarity ? -1 : 1);</span></a>
 <a name="207"><span class="lineNum">     207 </span>            : </a>
-<a name="208"><span class="lineNum">     208 </span><span class="lineCov">   24659800 :             fc.destBuffer-&gt;applyGainRamp (0, fc.bufferStartSample, fc.bufferNumSamples, lastGainL, lgain);</span></a>
+<a name="208"><span class="lineNum">     208 </span><span class="lineCov">   25996300 :             fc.destBuffer-&gt;applyGainRamp (0, fc.bufferStartSample, fc.bufferNumSamples, lastGainL, lgain);</span></a>
 <a name="209"><span class="lineNum">     209 </span>            : </a>
-<a name="210"><span class="lineNum">     210 </span><span class="lineCov">   24611300 :             if (numChansIn &gt; 1)</span></a>
-<a name="211"><span class="lineNum">     211 </span><span class="lineCov">   24604900 :                 fc.destBuffer-&gt;applyGainRamp (1, fc.bufferStartSample, fc.bufferNumSamples, lastGainR, rgain);</span></a>
+<a name="210"><span class="lineNum">     210 </span><span class="lineCov">   25973800 :             if (numChansIn &gt; 1)</span></a>
+<a name="211"><span class="lineNum">     211 </span><span class="lineCov">   25966900 :                 fc.destBuffer-&gt;applyGainRamp (1, fc.bufferStartSample, fc.bufferNumSamples, lastGainR, rgain);</span></a>
 <a name="212"><span class="lineNum">     212 </span>            : </a>
-<a name="213"><span class="lineNum">     213 </span><span class="lineCov">   24587100 :             lastGainL = lgain;</span></a>
-<a name="214"><span class="lineNum">     214 </span><span class="lineCov">   24587100 :             lastGainR = rgain;</span></a>
+<a name="213"><span class="lineNum">     213 </span><span class="lineCov">   25952500 :             lastGainL = lgain;</span></a>
+<a name="214"><span class="lineNum">     214 </span><span class="lineCov">   25952500 :             lastGainR = rgain;</span></a>
 <a name="215"><span class="lineNum">     215 </span>            : </a>
 <a name="216"><span class="lineNum">     216 </span>            :             // If the number of channels is greater than two, just apply volume</a>
-<a name="217"><span class="lineNum">     217 </span><span class="lineCov">   24587100 :             if (numChansIn &gt; 2)</span></a>
+<a name="217"><span class="lineNum">     217 </span><span class="lineCov">   25952500 :             if (numChansIn &gt; 2)</span></a>
 <a name="218"><span class="lineNum">     218 </span>            :             {</a>
 <a name="219"><span class="lineNum">     219 </span><span class="lineNoCov">          0 :                 const float gain = volumeFaderPositionToGain (getSliderPos() + vcaPosDelta) * (polarity ? -1 : 1);</span></a>
 <a name="220"><span class="lineNum">     220 </span>            : </a>
@@ -287,15 +287,15 @@
 <a name="225"><span class="lineNum">     225 </span>            :             }</a>
 <a name="226"><span class="lineNum">     226 </span>            :         }</a>
 <a name="227"><span class="lineNum">     227 </span>            : </a>
-<a name="228"><span class="lineNum">     228 </span><span class="lineCov">   24587100 :         if (applyToMidi &amp;&amp; fc.bufferForMidiMessages != nullptr)</span></a>
+<a name="228"><span class="lineNum">     228 </span><span class="lineCov">   25952500 :         if (applyToMidi &amp;&amp; fc.bufferForMidiMessages != nullptr)</span></a>
 <a name="229"><span class="lineNum">     229 </span><span class="lineNoCov">          0 :             fc.bufferForMidiMessages-&gt;multiplyVelocities (volumeFaderPositionToGain (getSliderPos()));</span></a>
 <a name="230"><span class="lineNum">     230 </span>            :     }</a>
-<a name="231"><span class="lineNum">     231 </span><span class="lineCov">   24586100 : }</span></a>
+<a name="231"><span class="lineNum">     231 </span><span class="lineCov">   25950200 : }</span></a>
 <a name="232"><span class="lineNum">     232 </span>            : </a>
-<a name="233"><span class="lineNum">     233 </span><span class="lineCov">       2194 : void VolumeAndPanPlugin::refreshVCATrack()</span></a>
+<a name="233"><span class="lineNum">     233 </span><span class="lineCov">       2356 : void VolumeAndPanPlugin::refreshVCATrack()</span></a>
 <a name="234"><span class="lineNum">     234 </span>            : {</a>
-<a name="235"><span class="lineNum">     235 </span><span class="lineCov">       2194 :     vcaTrack = ignoreVca ? nullptr : dynamic_cast&lt;AudioTrack*&gt; (getOwnerTrack());</span></a>
-<a name="236"><span class="lineNum">     236 </span><span class="lineCov">       2194 : }</span></a>
+<a name="235"><span class="lineNum">     235 </span><span class="lineCov">       2356 :     vcaTrack = ignoreVca ? nullptr : dynamic_cast&lt;AudioTrack*&gt; (getOwnerTrack());</span></a>
+<a name="236"><span class="lineNum">     236 </span><span class="lineCov">       2356 : }</span></a>
 <a name="237"><span class="lineNum">     237 </span>            : </a>
 <a name="238"><span class="lineNum">     238 </span><span class="lineCov">         16 : float VolumeAndPanPlugin::getVolumeDb() const</span></a>
 <a name="239"><span class="lineNum">     239 </span>            : {</a>
@@ -322,8 +322,8 @@
 <a name="260"><span class="lineNum">     260 </span>            : </a>
 <a name="261"><span class="lineNum">     261 </span><span class="lineNoCov">          0 : PanLaw VolumeAndPanPlugin::getPanLaw() const noexcept</span></a>
 <a name="262"><span class="lineNum">     262 </span>            : {</a>
-<a name="263"><span class="lineNum">     263 </span><span class="lineCov">   24675700 :     PanLaw p = (PanLaw) panLaw.get();</span></a>
-<a name="264"><span class="lineNum">     264 </span><span class="lineCov">   24675700 :     return p == PanLawDefault ? getDefaultPanLaw() : p;</span></a>
+<a name="263"><span class="lineNum">     263 </span><span class="lineCov">   26001300 :     PanLaw p = (PanLaw) panLaw.get();</span></a>
+<a name="264"><span class="lineNum">     264 </span><span class="lineCov">   26001300 :     return p == PanLawDefault ? getDefaultPanLaw() : p;</span></a>
 <a name="265"><span class="lineNum">     265 </span>            : }</a>
 <a name="266"><span class="lineNum">     266 </span>            : </a>
 <a name="267"><span class="lineNum">     267 </span>            : //==============================================================================</a>

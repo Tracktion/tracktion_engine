@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-08-09 10:20:30</td>
+            <td class="headerValue">2022-08-09 15:07:30</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -270,7 +270,7 @@
 <a name="208"><span class="lineNum">     208 </span>            : }</a>
 <a name="209"><span class="lineNum">     209 </span>            : </a>
 <a name="210"><span class="lineNum">     210 </span>            : template&lt;typename PositionType&gt;</a>
-<a name="211"><span class="lineNum">     211 </span><span class="lineCov">   14746388 : inline RangeType&lt;PositionType&gt;::RangeType (Position s, Position e)</span></a>
+<a name="211"><span class="lineNum">     211 </span><span class="lineCov">   14747288 : inline RangeType&lt;PositionType&gt;::RangeType (Position s, Position e)</span></a>
 <a name="212"><span class="lineNum">     212 </span><span class="lineCov">       3731 :     : start (s), end (e)</span></a>
 <a name="213"><span class="lineNum">     213 </span>            : {</a>
 <a name="214"><span class="lineNum">     214 </span>            :     checkInvariants();</a>
@@ -307,8 +307,8 @@
 <a name="245"><span class="lineNum">     245 </span><span class="lineNoCov">          0 : template&lt;typename PositionType&gt; inline bool RangeType&lt;PositionType&gt;::contains (const RangeType&amp; other) const                  { return other.start &gt;= start &amp;&amp; other.end &lt;= end; }</span></a>
 <a name="246"><span class="lineNum">     246 </span><span class="lineCov">       3366 : template&lt;typename PositionType&gt; inline bool RangeType&lt;PositionType&gt;::intersects (const RangeType&amp; other) const                { return other.start &lt; end &amp;&amp; start &lt; other.end; }</span></a>
 <a name="247"><span class="lineNum">     247 </span>            : </a>
-<a name="248"><span class="lineNum">     248 </span><span class="lineCov">    3477244 : template&lt;typename PositionType&gt; inline bool RangeType&lt;PositionType&gt;::contains (Position time) const                           { return time &gt;= start &amp;&amp; time &lt; end; }</span></a>
-<a name="249"><span class="lineNum">     249 </span><span class="lineCov">    1428386 : template&lt;typename PositionType&gt; inline bool RangeType&lt;PositionType&gt;::containsInclusive (Position time) const                  { return time &gt;= start &amp;&amp; time &lt;= end; }</span></a>
+<a name="248"><span class="lineNum">     248 </span><span class="lineCov">    3477224 : template&lt;typename PositionType&gt; inline bool RangeType&lt;PositionType&gt;::contains (Position time) const                           { return time &gt;= start &amp;&amp; time &lt; end; }</span></a>
+<a name="249"><span class="lineNum">     249 </span><span class="lineCov">     502402 : template&lt;typename PositionType&gt; inline bool RangeType&lt;PositionType&gt;::containsInclusive (Position time) const                  { return time &gt;= start &amp;&amp; time &lt;= end; }</span></a>
 <a name="250"><span class="lineNum">     250 </span>            : </a>
 <a name="251"><span class="lineNum">     251 </span>            : template&lt;typename PositionType&gt;</a>
 <a name="252"><span class="lineNum">     252 </span>            : inline RangeType&lt;PositionType&gt; RangeType&lt;PositionType&gt;::getUnionWith (RangeType o) const</a>
@@ -320,7 +320,7 @@
 <a name="258"><span class="lineNum">     258 </span>            : template&lt;typename PositionType&gt;</a>
 <a name="259"><span class="lineNum">     259 </span>            : inline RangeType&lt;PositionType&gt; RangeType&lt;PositionType&gt;::getIntersectionWith (RangeType o) const</a>
 <a name="260"><span class="lineNum">     260 </span>            : {</a>
-<a name="261"><span class="lineNum">     261 </span><span class="lineCov">    1428380 :     auto newStart = std::max (start, o.start);</span></a>
+<a name="261"><span class="lineNum">     261 </span><span class="lineCov">     502396 :     auto newStart = std::max (start, o.start);</span></a>
 <a name="262"><span class="lineNum">     262 </span><span class="lineNoCov">          0 :     return { newStart, std::max (newStart, std::min (end, o.end)) };</span></a>
 <a name="263"><span class="lineNum">     263 </span>            : }</a>
 <a name="264"><span class="lineNum">     264 </span>            : </a>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-08-09 10:20:30</td>
+            <td class="headerValue">2022-08-09 15:07:30</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">11</td>
@@ -330,13 +330,13 @@
 <a name="268"><span class="lineNum">     268 </span><span class="lineNoCov">          0 : bool FloatAudioFormat::canDoStereo()    { return true; }</span></a>
 <a name="269"><span class="lineNum">     269 </span><span class="lineNoCov">          0 : bool FloatAudioFormat::canDoMono()      { return true; }</span></a>
 <a name="270"><span class="lineNum">     270 </span>            : </a>
-<a name="271"><span class="lineNum">     271 </span><span class="lineCov">         10 : bool FloatAudioFormat::canHandleFile (const juce::File&amp; f)</span></a>
+<a name="271"><span class="lineNum">     271 </span><span class="lineCov">         11 : bool FloatAudioFormat::canHandleFile (const juce::File&amp; f)</span></a>
 <a name="272"><span class="lineNum">     272 </span>            : {</a>
-<a name="273"><span class="lineNum">     273 </span><span class="lineCov">         10 :     return f.hasFileExtension (&quot;.trkaudio&quot;)</span></a>
+<a name="273"><span class="lineNum">     273 </span><span class="lineCov">         11 :     return f.hasFileExtension (&quot;.trkaudio&quot;)</span></a>
 <a name="274"><span class="lineNum">     274 </span>            :        #if JUCE_WINDOWS</a>
 <a name="275"><span class="lineNum">     275 </span>            :         || f.hasFileExtension ({})</a>
 <a name="276"><span class="lineNum">     276 </span>            :        #endif</a>
-<a name="277"><span class="lineNum">     277 </span><span class="lineCov">         12 :         || f.hasFileExtension (&quot;.freeze&quot;);</span></a>
+<a name="277"><span class="lineNum">     277 </span><span class="lineCov">         13 :         || f.hasFileExtension (&quot;.freeze&quot;);</span></a>
 <a name="278"><span class="lineNum">     278 </span>            : }</a>
 <a name="279"><span class="lineNum">     279 </span>            : </a>
 <a name="280"><span class="lineNum">     280 </span><span class="lineCov">          2 : juce::AudioFormatReader* FloatAudioFormat::createReaderFor (juce::InputStream* in, bool deleteStreamIfOpeningFails)</span></a>

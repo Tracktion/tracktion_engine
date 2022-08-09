@@ -1,13 +1,14 @@
 <map id="tracktion::engine::TracktionEngineNode" name="tracktion::engine::TracktionEngineNode">
-<area shape="rect" id="node1" title="Base class for Nodes that provides information about the current process call." alt="" coords="5,300,164,341"/>
+<area shape="rect" id="node1" title="Base class for Nodes that provides information about the current process call." alt="" coords="5,332,164,373"/>
 <area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1CombiningNode.html" title="An Node that mixes a sequence of clips of other nodes." alt="" coords="240,5,380,47"/>
 <area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1FadeInOutNode.html" title="A Node that fades in and out given time regions." alt="" coords="240,71,380,112"/>
 <area shape="rect" id="node4" href="$classtracktion_1_1engine_1_1LoopingMidiNode.html" title="A Node that plays MIDI data from a MidiMessageSequence, at a specific MIDI channel." alt="" coords="240,136,380,177"/>
-<area shape="rect" id="node5" href="$classtracktion_1_1engine_1_1MidiNode.html" title="A Node that plays MIDI data from a MidiMessageSequence, at a specific MIDI channel." alt="" coords="240,201,380,243"/>
-<area shape="rect" id="node6" href="$classtracktion_1_1engine_1_1PlayHeadPositionNode.html" title="A Node that calculates a position to show visually what time is currently being processed by the grap..." alt="" coords="225,267,395,308"/>
-<area shape="rect" id="node7" href="$classtracktion_1_1engine_1_1PluginNode.html" title="Node for processing a plugin." alt="" coords="240,332,380,373"/>
-<area shape="rect" id="node8" href="$classtracktion_1_1engine_1_1SpeedRampWaveNode.html" title="An Node that plays back a wave file." alt="" coords="225,397,395,439"/>
-<area shape="rect" id="node9" href="$classtracktion_1_1engine_1_1TrackMidiInputDeviceNode.html" title="A Node that takes MIDI from the output of a track and sends it to its corresponding InputDevice." alt="" coords="212,463,408,504"/>
-<area shape="rect" id="node10" href="$classtracktion_1_1engine_1_1WaveNode.html" title="An Node that plays back a wave file." alt="" coords="240,528,380,569"/>
-<area shape="rect" id="node11" href="$classtracktion_1_1engine_1_1WaveNodeRealTime.html" title="An Node that plays back a wave file." alt="" coords="233,593,387,635"/>
+<area shape="rect" id="node5" href="$classtracktion_1_1engine_1_1MidiCombiningNode.html" title="A Node that mixes a sequence of clips of other nodes." alt="" coords="233,201,387,243"/>
+<area shape="rect" id="node6" href="$classtracktion_1_1engine_1_1MidiNode.html" title="A Node that plays MIDI data from a MidiMessageSequence, at a specific MIDI channel." alt="" coords="240,267,380,308"/>
+<area shape="rect" id="node7" href="$classtracktion_1_1engine_1_1PlayHeadPositionNode.html" title="A Node that calculates a position to show visually what time is currently being processed by the grap..." alt="" coords="225,332,395,373"/>
+<area shape="rect" id="node8" href="$classtracktion_1_1engine_1_1PluginNode.html" title="Node for processing a plugin." alt="" coords="240,397,380,439"/>
+<area shape="rect" id="node9" href="$classtracktion_1_1engine_1_1SpeedRampWaveNode.html" title="An Node that plays back a wave file." alt="" coords="225,463,395,504"/>
+<area shape="rect" id="node10" href="$classtracktion_1_1engine_1_1TrackMidiInputDeviceNode.html" title="A Node that takes MIDI from the output of a track and sends it to its corresponding InputDevice." alt="" coords="212,528,408,569"/>
+<area shape="rect" id="node11" href="$classtracktion_1_1engine_1_1WaveNode.html" title="An Node that plays back a wave file." alt="" coords="240,593,380,635"/>
+<area shape="rect" id="node12" href="$classtracktion_1_1engine_1_1WaveNodeRealTime.html" title="An Node that plays back a wave file." alt="" coords="233,659,387,700"/>
 </map>

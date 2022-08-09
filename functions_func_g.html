@@ -106,6 +106,9 @@ $(function() {
 <li>getActiveEdits()
 : <a class="el" href="classtracktion_1_1engine_1_1Engine.html#ae9a78269a5fb8e240a5ae5744830f84d">tracktion::engine::Engine</a>
 </li>
+<li>getActiveNoteList()
+: <a class="el" href="classtracktion_1_1engine_1_1LoopingMidiNode.html#a86eea3be0c823cfac6e0976bf09fb81b">tracktion::engine::LoopingMidiNode</a>
+</li>
 <li>getActiveNotes()
 : <a class="el" href="classtracktion_1_1engine_1_1ExternalPlugin.html#a80de29f86b26a377cbe2aa747b621cce">tracktion::engine::ExternalPlugin</a>
 </li>
@@ -175,6 +178,7 @@ $(function() {
 </li>
 <li>getAllocatedBytes()
 : <a class="el" href="classtracktion_1_1engine_1_1CombiningNode.html#afe4d86ffdd4ac4cbeeff45592fc7c42a">tracktion::engine::CombiningNode</a>
+, <a class="el" href="classtracktion_1_1engine_1_1MidiCombiningNode.html#ab88d3a93919e07e1ad1474466bc955db">tracktion::engine::MidiCombiningNode</a>
 , <a class="el" href="classtracktion_1_1graph_1_1Node.html#a6d44c627cb782cd5ea3a0a685942656b">tracktion::graph::Node</a>
 </li>
 <li>getAllocatedSize()
@@ -1066,6 +1070,7 @@ $(function() {
 , <a class="el" href="classtracktion_1_1engine_1_1LiveMidiInjectingNode.html#a2e3b679682ac1d36268e0c7f874791fe">tracktion::engine::LiveMidiInjectingNode</a>
 , <a class="el" href="classtracktion_1_1engine_1_1LiveMidiOutputNode.html#a52d0c7d7c41adc84d78505e9a56113fb">tracktion::engine::LiveMidiOutputNode</a>
 , <a class="el" href="classtracktion_1_1engine_1_1MelodyneNode.html#aa63df2e3607193922a678c7c1f4219b5">tracktion::engine::MelodyneNode</a>
+, <a class="el" href="classtracktion_1_1engine_1_1MidiCombiningNode.html#a283cf1b7fcaf5447447dc1d4e807a08d">tracktion::engine::MidiCombiningNode</a>
 , <a class="el" href="classtracktion_1_1engine_1_1MidiOutputDeviceInstanceInjectingNode.html#a0673d1919bd05eb5130a01181a2e9f22">tracktion::engine::MidiOutputDeviceInstanceInjectingNode</a>
 , <a class="el" href="classtracktion_1_1engine_1_1ModifierNode.html#ae01e82c8c3672160af8bb10528fc11d8">tracktion::engine::ModifierNode</a>
 , <a class="el" href="classtracktion_1_1engine_1_1PlayHeadPositionNode.html#a2383e5d4dbc5515cd5041adf6933da5c">tracktion::engine::PlayHeadPositionNode</a>
@@ -1558,6 +1563,7 @@ $(function() {
 </li>
 <li>getInternalNodes()
 : <a class="el" href="classtracktion_1_1engine_1_1CombiningNode.html#a0b087349f9b4850d64a1ec7bb7886208">tracktion::engine::CombiningNode</a>
+, <a class="el" href="classtracktion_1_1engine_1_1MidiCombiningNode.html#ab295819d579bcfdb98c41ba89ffde404">tracktion::engine::MidiCombiningNode</a>
 , <a class="el" href="classtracktion_1_1graph_1_1Node.html#aea8b99cdbe626c76bc7517bdce2870c8">tracktion::graph::Node</a>
 </li>
 <li>getInternalSequence()
@@ -1582,7 +1588,8 @@ $(function() {
 : <a class="el" href="classtracktion_1_1engine_1_1CurveEditor.html#a70809ea542b8b40fbcde4d6f2443398e">tracktion::engine::CurveEditor</a>
 </li>
 <li>getItemID()
-: <a class="el" href="classtracktion_1_1engine_1_1ProjectItemID.html#a98ae14506b9e27d89517967dcb11c7ec">tracktion::engine::ProjectItemID</a>
+: <a class="el" href="classtracktion_1_1engine_1_1LoopingMidiNode.html#a295c93ae4e9aafaf4a816e94e2373230">tracktion::engine::LoopingMidiNode</a>
+, <a class="el" href="classtracktion_1_1engine_1_1ProjectItemID.html#a98ae14506b9e27d89517967dcb11c7ec">tracktion::engine::ProjectItemID</a>
 , <a class="el" href="classtracktion_1_1engine_1_1TrackMuteState.html#a4d39ff2fdf345812ca84ab9ae3eb3b04">tracktion::engine::TrackMuteState</a>
 </li>
 <li>getItemsOfType()
@@ -2032,7 +2039,8 @@ $(function() {
 : <a class="el" href="classtracktion_1_1engine_1_1MidiClip.html#acdeded8b69fc9d68b4ab3dfc4c0ec614">tracktion::engine::MidiClip</a>
 </li>
 <li>getMPESourceID()
-: <a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html#acfbe2f4bd2a128b361b19033123aa525">tracktion::engine::MidiInputDevice</a>
+: <a class="el" href="classtracktion_1_1engine_1_1LoopingMidiNode.html#a6a1087202f9905fce33a5d04c7781c89">tracktion::engine::LoopingMidiNode</a>
+, <a class="el" href="classtracktion_1_1engine_1_1MidiInputDevice.html#acfbe2f4bd2a128b361b19033123aa525">tracktion::engine::MidiInputDevice</a>
 </li>
 <li>getMusicalContextContentGrade()
 : <a class="el" href="classMusicalContextWrapper.html#ae0eecab9ba0e1323e8578df62c1e2c2b">MusicalContextWrapper</a>
@@ -2210,6 +2218,7 @@ $(function() {
 , <a class="el" href="classtracktion_1_1engine_1_1LiveMidiOutputNode.html#ac2b25c723bea8ecb18a6f386a83ffa58">tracktion::engine::LiveMidiOutputNode</a>
 , <a class="el" href="classtracktion_1_1engine_1_1LoopingMidiNode.html#a49c95e24abf3c97fc053626c0b5b5523">tracktion::engine::LoopingMidiNode</a>
 , <a class="el" href="classtracktion_1_1engine_1_1MelodyneNode.html#a6e9635f3ddfda166f5f946cca084b1bd">tracktion::engine::MelodyneNode</a>
+, <a class="el" href="classtracktion_1_1engine_1_1MidiCombiningNode.html#acf17029e3b33b3a24cb20d939d58c368">tracktion::engine::MidiCombiningNode</a>
 , <a class="el" href="classtracktion_1_1engine_1_1MidiInputDeviceNode.html#ab7ce6eb6b390bf26d7d1734e5519dfc9">tracktion::engine::MidiInputDeviceNode</a>
 , <a class="el" href="classtracktion_1_1engine_1_1MidiNode.html#a475e61ba5375cb7d37769fe359d4cb81">tracktion::engine::MidiNode</a>
 , <a class="el" href="classtracktion_1_1engine_1_1MidiOutputDeviceInstanceInjectingNode.html#a471e9d8b8811929997096d801a75b525">tracktion::engine::MidiOutputDeviceInstanceInjectingNode</a>
@@ -2366,7 +2375,9 @@ $(function() {
 : <a class="el" href="classtracktion_1_1engine_1_1DeviceManager.html#a7f2dc75ee9d09f4b54779590f924133c">tracktion::engine::DeviceManager</a>
 </li>
 <li>getNumInputs()
-: <a class="el" href="classtracktion_1_1engine_1_1ExternalPlugin.html#aa74646c8b5d8b35b03a027fe2733ab22">tracktion::engine::ExternalPlugin</a>
+: <a class="el" href="classtracktion_1_1engine_1_1CombiningNode.html#a3e8ac6f32f9ec70aa9de4c89ffced455">tracktion::engine::CombiningNode</a>
+, <a class="el" href="classtracktion_1_1engine_1_1ExternalPlugin.html#aa74646c8b5d8b35b03a027fe2733ab22">tracktion::engine::ExternalPlugin</a>
+, <a class="el" href="classtracktion_1_1engine_1_1MidiCombiningNode.html#a51e1a06cf88c06ce86f2eb6ac933e207">tracktion::engine::MidiCombiningNode</a>
 </li>
 <li>getNumIntervals()
 : <a class="el" href="structtracktion_1_1engine_1_1ReferencedMaterialList_1_1IntervalList.html#a408eddb8dede7e77d6c07114564304bd">tracktion::engine::ReferencedMaterialList::IntervalList</a>
@@ -2546,7 +2557,7 @@ $(function() {
 : <a class="el" href="classtracktion_1_1engine_1_1PluginCache.html#a16a140dfee1a8288c2d6e0d0e39196e7">tracktion::engine::PluginCache</a>
 </li>
 <li>getOrCreateRenderJob()
-: <a class="el" href="classtracktion_1_1engine_1_1EditRenderJob.html#ad66f0c0919d83acc5ec702f64c8617ad">tracktion::engine::EditRenderJob</a>
+: <a class="el" href="classtracktion_1_1engine_1_1EditRenderJob.html#ad640cec10e16c2df985bfd41c237181b">tracktion::engine::EditRenderJob</a>
 , <a class="el" href="classtracktion_1_1engine_1_1ReverseRenderJob.html#ae8b690d40b139854ce64aacd341c23cc">tracktion::engine::ReverseRenderJob</a>
 , <a class="el" href="classtracktion_1_1engine_1_1WarpTimeRenderJob.html#ac0404951f42ad72a539b0d08a783e157">tracktion::engine::WarpTimeRenderJob</a>
 </li>
@@ -2801,7 +2812,7 @@ $(function() {
 , <a class="el" href="classtracktion_1_1engine_1_1ExternalControllerManager.html#a76d1ba58e7c29e94d0576d7eb176cc81">tracktion::engine::ExternalControllerManager</a>
 </li>
 <li>getPluginFor()
-: <a class="el" href="classtracktion_1_1engine_1_1PluginCache.html#aad6d44f7f523c4bd8fec906cd68cbc55">tracktion::engine::PluginCache</a>
+: <a class="el" href="classtracktion_1_1engine_1_1PluginCache.html#acca11fe34c4b8d9331fefee86389d45f">tracktion::engine::PluginCache</a>
 </li>
 <li>getPluginForID()
 : <a class="el" href="classtracktion_1_1engine_1_1RackType.html#aa21a43d8ba827481b6cf50dc9847bd83">tracktion::engine::RackType</a>
@@ -2918,7 +2929,7 @@ $(function() {
 <li>getPosition()
 : <a class="el" href="classtracktion_1_1engine_1_1Clip.html#ad5d23bd5e81685800213ed0d19c23a00">tracktion::engine::Clip</a>
 , <a class="el" href="classtracktion_1_1engine_1_1CollectionClip.html#aec5cc46a33ec83b8113df08b6b7ff456">tracktion::engine::CollectionClip</a>
-, <a class="el" href="classtracktion_1_1engine_1_1CurveEditor.html#a6a72daafc1660b2dafef4b59008b4175">tracktion::engine::CurveEditor</a>
+, <a class="el" href="classtracktion_1_1engine_1_1CurveEditor.html#a7f91906c7b7276e1c12f5b79a2d64485">tracktion::engine::CurveEditor</a>
 , <a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#ac29559b6ee8c41af6ad7a87f58cd9f67">tracktion::engine::EditPlaybackContext</a>
 , <a class="el" href="classtracktion_1_1engine_1_1PitchSetting.html#a59a3acae8a8579d3d220471e9ba2cfed">tracktion::engine::PitchSetting</a>
 , <a class="el" href="classtracktion_1_1engine_1_1PlayHead.html#ae7747574de9ec6e23b307b7592b9ae2c">tracktion::engine::PlayHead</a>
@@ -3006,7 +3017,7 @@ $(function() {
 </li>
 <li>getProject()
 : <a class="el" href="classtracktion_1_1engine_1_1ProjectItem.html#a7648f073aa79e0f80ebe6a9e78e1db1f">tracktion::engine::ProjectItem</a>
-, <a class="el" href="classtracktion_1_1engine_1_1ProjectManager.html#ab554dcb1aaf1b0b21f381900a2547ef4">tracktion::engine::ProjectManager</a>
+, <a class="el" href="classtracktion_1_1engine_1_1ProjectManager.html#aed10046e261658350892417cc1e76b9e">tracktion::engine::ProjectManager</a>
 </li>
 <li>getProjectFile()
 : <a class="el" href="classtracktion_1_1engine_1_1Project.html#a24c5b70a41758a3a85f1be2a8a884f53">tracktion::engine::Project</a>
@@ -3092,7 +3103,7 @@ $(function() {
 : <a class="el" href="classtracktion_1_1engine_1_1MidiNote.html#acbed41d685a317165b389cae72bee84b">tracktion::engine::MidiNote</a>
 </li>
 <li>getQuantisedLengthBeats()
-: <a class="el" href="classtracktion_1_1engine_1_1MidiNote.html#ac42420ec6b2f7ac825aa1cd0338741ca">tracktion::engine::MidiNote</a>
+: <a class="el" href="classtracktion_1_1engine_1_1MidiNote.html#aeacad629335a67800fe997e1b681bf8c">tracktion::engine::MidiNote</a>
 </li>
 <li>getQuantisedStartBeat()
 : <a class="el" href="classtracktion_1_1engine_1_1MidiNote.html#a327fc5e1f0d0cc03046ebfad67686598">tracktion::engine::MidiNote</a>
@@ -3205,7 +3216,7 @@ $(function() {
 : <a class="el" href="classtracktion_1_1engine_1_1EditClip.html#a81e64e95b48f4ab6d332d4cb5580e685">tracktion::engine::EditClip</a>
 </li>
 <li>getRenderParameters()
-: <a class="el" href="classtracktion_1_1engine_1_1RenderOptions.html#a5ab4c5a88b593743c3bffc2259ce04e0">tracktion::engine::RenderOptions</a>
+: <a class="el" href="classtracktion_1_1engine_1_1RenderOptions.html#aaaf9d556cb2c3aa3e98dfecd791545b5">tracktion::engine::RenderOptions</a>
 </li>
 <li>getRenderProgress()
 : <a class="el" href="classtracktion_1_1engine_1_1CompManager.html#a3fb3b9d6a86f3c7cb29c3ca335ba2f22">tracktion::engine::CompManager</a>
@@ -3625,7 +3636,7 @@ $(function() {
 : <a class="el" href="structtracktion_1_1engine_1_1StepModifier_1_1Assignment.html#a1a93426aac42bd7d980c4ec0b1737381">tracktion::engine::StepModifier::Assignment</a>
 </li>
 <li>getSteps()
-: <a class="el" href="classtracktion_1_1engine_1_1Chord.html#ac2d92b945d7782866da817999d7b2f4d">tracktion::engine::Chord</a>
+: <a class="el" href="classtracktion_1_1engine_1_1Chord.html#a016608a5f2f90e6da66128ec00044420">tracktion::engine::Chord</a>
 , <a class="el" href="classtracktion_1_1engine_1_1Scale.html#af44a21692ae705aa4d1f5af92cc4766a">tracktion::engine::Scale</a>
 </li>
 <li>getStereo()
@@ -3822,7 +3833,7 @@ $(function() {
 : <a class="el" href="classtracktion_1_1engine_1_1TempoSequence.html#a81225627c38a6cffe33788bb518ea4fc">tracktion::engine::TempoSequence</a>
 </li>
 <li>getTimeSigAt()
-: <a class="el" href="classtracktion_1_1engine_1_1TempoSequence.html#a07ff0501d1a6b340483eee3947514011">tracktion::engine::TempoSequence</a>
+: <a class="el" href="classtracktion_1_1engine_1_1TempoSequence.html#af1c23874aef5b1af5e46d177d159896d">tracktion::engine::TempoSequence</a>
 </li>
 <li>getTimeSigAtBeat()
 : <a class="el" href="classtracktion_1_1engine_1_1TempoSequence.html#a562dd2534d6b3199e7c5d7ddf203016f">tracktion::engine::TempoSequence</a>
@@ -4188,7 +4199,7 @@ $(function() {
 : <a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#a1b1f7f1ca6dbe36fc9c64f15bdb92210">tracktion::engine::EditPlaybackContext</a>
 </li>
 <li>GrooveTemplate()
-: <a class="el" href="classtracktion_1_1engine_1_1GrooveTemplate.html#a89a005ec76d179c87d2d3a533373a34c">tracktion::engine::GrooveTemplate</a>
+: <a class="el" href="classtracktion_1_1engine_1_1GrooveTemplate.html#a63d0e9681bfb62818b49d176ef2d14b7">tracktion::engine::GrooveTemplate</a>
 </li>
 <li>GrooveTemplateManager()
 : <a class="el" href="classtracktion_1_1engine_1_1GrooveTemplateManager.html#ab033d72d07f26707f8c139383dd39d05">tracktion::engine::GrooveTemplateManager</a>
@@ -4200,7 +4211,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 9 2022 10:04:25 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Aug 9 2022 14:48:35 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

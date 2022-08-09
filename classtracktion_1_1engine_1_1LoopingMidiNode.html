@@ -86,6 +86,15 @@ Inheritance diagram for tracktion::engine::LoopingMidiNode:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a6d865a42598cfcf751033ea8af837f7f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1LoopingMidiNode.html#a6d865a42598cfcf751033ea8af837f7f">LoopingMidiNode</a> (std::vector&lt; juce::MidiMessageSequence &gt; sequences, juce::Range&lt; int &gt; midiChannelNumbers, bool useMPE, BeatRange editRange, BeatRange loopRange, BeatDuration offset, <a class="el" href="structtracktion_1_1engine_1_1LiveClipLevel.html">LiveClipLevel</a>, <a class="el" href="structtracktion_1_1engine_1_1ProcessState.html">ProcessState</a> &amp;, <a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>, const <a class="el" href="classtracktion_1_1engine_1_1QuantisationType.html">QuantisationType</a> &amp;, const <a class="el" href="classtracktion_1_1engine_1_1GrooveTemplate.html">GrooveTemplate</a> *, float grooveStrength, std::function&lt; bool()&gt; shouldBeMutedDelegate=nullptr)</td></tr>
 <tr class="separator:a6d865a42598cfcf751033ea8af837f7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a295c93ae4e9aafaf4a816e94e2373230"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1LoopingMidiNode.html#a295c93ae4e9aafaf4a816e94e2373230">getItemID</a> () const</td></tr>
+<tr class="memdesc:a295c93ae4e9aafaf4a816e94e2373230"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="structtracktion_1_1engine_1_1EditItemID.html" title="ID for objects of type EditElement - e.g.">EditItemID</a> to identify this <a class="el" href="classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class.">Node</a>.  <a href="classtracktion_1_1engine_1_1LoopingMidiNode.html#a295c93ae4e9aafaf4a816e94e2373230">More...</a><br /></td></tr>
+<tr class="separator:a295c93ae4e9aafaf4a816e94e2373230"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a1087202f9905fce33a5d04c7781c89"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html#ae21e698aa78c0b638625b354dc998efb">MidiMessageArray::MPESourceID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1LoopingMidiNode.html#a6a1087202f9905fce33a5d04c7781c89">getMPESourceID</a> () const</td></tr>
+<tr class="memdesc:a6a1087202f9905fce33a5d04c7781c89"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the MPESourceID used by this <a class="el" href="classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class.">Node</a>.  <a href="classtracktion_1_1engine_1_1LoopingMidiNode.html#a6a1087202f9905fce33a5d04c7781c89">More...</a><br /></td></tr>
+<tr class="separator:a6a1087202f9905fce33a5d04c7781c89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a86eea3be0c823cfac6e0976bf09fb81b"><td class="memItemLeft" align="right" valign="top">const std::shared_ptr&lt; <a class="el" href="structtracktion_1_1engine_1_1ActiveNoteList.html">ActiveNoteList</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1LoopingMidiNode.html#a86eea3be0c823cfac6e0976bf09fb81b">getActiveNoteList</a> () const</td></tr>
+<tr class="memdesc:a86eea3be0c823cfac6e0976bf09fb81b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="structtracktion_1_1engine_1_1ActiveNoteList.html">ActiveNoteList</a> in use for this <a class="el" href="classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class.">Node</a>.  <a href="classtracktion_1_1engine_1_1LoopingMidiNode.html#a86eea3be0c823cfac6e0976bf09fb81b">More...</a><br /></td></tr>
+<tr class="separator:a86eea3be0c823cfac6e0976bf09fb81b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49c95e24abf3c97fc053626c0b5b5523"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1graph_1_1NodeProperties.html">tracktion::graph::NodeProperties</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1LoopingMidiNode.html#a49c95e24abf3c97fc053626c0b5b5523">getNodeProperties</a> () override</td></tr>
 <tr class="memdesc:a49c95e24abf3c97fc053626c0b5b5523"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return the properties of the node.  <a href="classtracktion_1_1engine_1_1LoopingMidiNode.html#a49c95e24abf3c97fc053626c0b5b5523">More...</a><br /></td></tr>
 <tr class="separator:a49c95e24abf3c97fc053626c0b5b5523"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -299,6 +308,64 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a295c93ae4e9aafaf4a816e94e2373230"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a295c93ae4e9aafaf4a816e94e2373230">&#9670;&nbsp;</a></span>getItemID()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a> tracktion::engine::LoopingMidiNode::getItemID </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the <a class="el" href="structtracktion_1_1engine_1_1EditItemID.html" title="ID for objects of type EditElement - e.g.">EditItemID</a> to identify this <a class="el" href="classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class.">Node</a>. </p>
+
+</div>
+</div>
+<a id="a6a1087202f9905fce33a5d04c7781c89"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a1087202f9905fce33a5d04c7781c89">&#9670;&nbsp;</a></span>getMPESourceID()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html#ae21e698aa78c0b638625b354dc998efb">MidiMessageArray::MPESourceID</a> tracktion::engine::LoopingMidiNode::getMPESourceID </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the MPESourceID used by this <a class="el" href="classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class.">Node</a>. </p>
+
+</div>
+</div>
+<a id="a86eea3be0c823cfac6e0976bf09fb81b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a86eea3be0c823cfac6e0976bf09fb81b">&#9670;&nbsp;</a></span>getActiveNoteList()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::shared_ptr&lt;<a class="el" href="structtracktion_1_1engine_1_1ActiveNoteList.html">ActiveNoteList</a>&gt;&amp; tracktion::engine::LoopingMidiNode::getActiveNoteList </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the <a class="el" href="structtracktion_1_1engine_1_1ActiveNoteList.html">ActiveNoteList</a> in use for this <a class="el" href="classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class.">Node</a>. </p>
+<p>Call this after prepareToPlay to get the one in use. </p>
+
+</div>
+</div>
 <a id="a49c95e24abf3c97fc053626c0b5b5523"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a49c95e24abf3c97fc053626c0b5b5523">&#9670;&nbsp;</a></span>getNodeProperties()</h2>
 
@@ -427,7 +494,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 9 2022 10:04:24 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Aug 9 2022 14:48:34 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

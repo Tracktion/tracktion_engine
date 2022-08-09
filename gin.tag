@@ -4523,6 +4523,14 @@
     <namespace>juce</namespace>
   </compound>
   <compound kind="file">
+    <name>tracktion_MidiCombiningNode.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/playback/graph/</path>
+    <filename>tracktion__MidiCombiningNode_8h.html</filename>
+    <class kind="class">tracktion::engine::MidiCombiningNode</class>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::engine</namespace>
+  </compound>
+  <compound kind="file">
     <name>tracktion_MidiControllerEvent.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/midi/</path>
     <filename>tracktion__MidiControllerEvent_8h.html</filename>
@@ -18838,6 +18846,13 @@
       <anchorfile>classtracktion_1_1engine_1_1CombiningNode.html</anchorfile>
       <anchor>a38994fe7923f2959cf741b7849790871</anchor>
       <arglist>(std::unique_ptr&lt; Node &gt;, TimeRange)</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>getNumInputs</name>
+      <anchorfile>classtracktion_1_1engine_1_1CombiningNode.html</anchorfile>
+      <anchor>a3e8ac6f32f9ec70aa9de4c89ffced455</anchor>
+      <arglist>() const</arglist>
     </member>
     <member kind="function">
       <type>std::vector&lt; Node * &gt;</type>
@@ -39838,6 +39853,27 @@
       <arglist>(std::vector&lt; juce::MidiMessageSequence &gt; sequences, juce::Range&lt; int &gt; midiChannelNumbers, bool useMPE, BeatRange editRange, BeatRange loopRange, BeatDuration offset, LiveClipLevel, ProcessState &amp;, EditItemID, const QuantisationType &amp;, const GrooveTemplate *, float grooveStrength, std::function&lt; bool()&gt; shouldBeMutedDelegate=nullptr)</arglist>
     </member>
     <member kind="function">
+      <type>EditItemID</type>
+      <name>getItemID</name>
+      <anchorfile>classtracktion_1_1engine_1_1LoopingMidiNode.html</anchorfile>
+      <anchor>a295c93ae4e9aafaf4a816e94e2373230</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>MidiMessageArray::MPESourceID</type>
+      <name>getMPESourceID</name>
+      <anchorfile>classtracktion_1_1engine_1_1LoopingMidiNode.html</anchorfile>
+      <anchor>a6a1087202f9905fce33a5d04c7781c89</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>const std::shared_ptr&lt; ActiveNoteList &gt; &amp;</type>
+      <name>getActiveNoteList</name>
+      <anchorfile>classtracktion_1_1engine_1_1LoopingMidiNode.html</anchorfile>
+      <anchor>a86eea3be0c823cfac6e0976bf09fb81b</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
       <type>tracktion::graph::NodeProperties</type>
       <name>getNodeProperties</name>
       <anchorfile>classtracktion_1_1engine_1_1LoopingMidiNode.html</anchorfile>
@@ -42938,6 +42974,96 @@
       <anchorfile>classtracktion_1_1engine_1_1MidiClip.html</anchorfile>
       <anchor>a28433d816ae9d06b4cc17e4e53840edf</anchor>
       <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>tracktion::engine::MidiCombiningNode</name>
+    <filename>classtracktion_1_1engine_1_1MidiCombiningNode.html</filename>
+    <base>tracktion::graph::Node</base>
+    <base>tracktion::engine::TracktionEngineNode</base>
+    <member kind="function">
+      <type></type>
+      <name>MidiCombiningNode</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiCombiningNode.html</anchorfile>
+      <anchor>a0154be102c22370bccd8b77a21588b48</anchor>
+      <arglist>(EditItemID, ProcessState &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~MidiCombiningNode</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiCombiningNode.html</anchorfile>
+      <anchor>aacd6be9cd23383d8fed8a81b13bd3f1a</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>addInput</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiCombiningNode.html</anchorfile>
+      <anchor>aa424e972ff086f997c2a5a42341cfd93</anchor>
+      <arglist>(std::unique_ptr&lt; LoopingMidiNode &gt;, TimeRange)</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>getNumInputs</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiCombiningNode.html</anchorfile>
+      <anchor>a51e1a06cf88c06ce86f2eb6ac933e207</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; Node * &gt;</type>
+      <name>getInternalNodes</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiCombiningNode.html</anchorfile>
+      <anchor>ab295819d579bcfdb98c41ba89ffde404</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; Node * &gt;</type>
+      <name>getDirectInputNodes</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiCombiningNode.html</anchorfile>
+      <anchor>a283cf1b7fcaf5447447dc1d4e807a08d</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>tracktion::graph::NodeProperties</type>
+      <name>getNodeProperties</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiCombiningNode.html</anchorfile>
+      <anchor>acf17029e3b33b3a24cb20d939d58c368</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>prepareToPlay</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiCombiningNode.html</anchorfile>
+      <anchor>a0385e1bd7eab7de55694c1b36aa2ddae</anchor>
+      <arglist>(const tracktion::graph::PlaybackInitialisationInfo &amp;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isReadyToProcess</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiCombiningNode.html</anchorfile>
+      <anchor>a12f5560a60e694e41811a7c7bc45188e</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>prefetchBlock</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiCombiningNode.html</anchorfile>
+      <anchor>ad5c864cddf720003306a9174e124f23b</anchor>
+      <arglist>(juce::Range&lt; int64_t &gt;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>process</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiCombiningNode.html</anchorfile>
+      <anchor>ae8837f97ddfd0fa5290b0aa11a90009f</anchor>
+      <arglist>(ProcessContext &amp;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>size_t</type>
+      <name>getAllocatedBytes</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiCombiningNode.html</anchorfile>
+      <anchor>ab88d3a93919e07e1ad1474466bc955db</anchor>
+      <arglist>() const override</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -80275,6 +80401,7 @@
     <class kind="class">tracktion::engine::MidiAssignable</class>
     <class kind="struct">tracktion::engine::MidiChannel</class>
     <class kind="class">tracktion::engine::MidiClip</class>
+    <class kind="class">tracktion::engine::MidiCombiningNode</class>
     <class kind="class">tracktion::engine::MidiCompManager</class>
     <class kind="class">tracktion::engine::MidiControllerEvent</class>
     <class kind="struct">tracktion::engine::MidiExpression</class>
@@ -80331,8 +80458,8 @@
     <class kind="class">tracktion::engine::PitchSetting</class>
     <class kind="struct">tracktion::engine::PitchShiftEffect</class>
     <class kind="class">tracktion::engine::PitchShiftPlugin</class>
-    <class kind="struct">tracktion::graph::PlaybackInitialisationInfo</class>
     <class kind="struct">tracktion::engine::PlaybackInitialisationInfo</class>
+    <class kind="struct">tracktion::graph::PlaybackInitialisationInfo</class>
     <class kind="class">tracktion::engine::PlayHead</class>
     <class kind="class">tracktion::graph::PlayHead</class>
     <class kind="class">tracktion::engine::PlayHeadPositionNode</class>
@@ -80706,6 +80833,7 @@
     <class kind="class">tracktion::engine::MidiAssignable</class>
     <class kind="struct">tracktion::engine::MidiChannel</class>
     <class kind="class">tracktion::engine::MidiClip</class>
+    <class kind="class">tracktion::engine::MidiCombiningNode</class>
     <class kind="class">tracktion::engine::MidiCompManager</class>
     <class kind="class">tracktion::engine::MidiControllerEvent</class>
     <class kind="struct">tracktion::engine::MidiExpression</class>

@@ -91,6 +91,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a38994fe7923f2959cf741b7849790871"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1CombiningNode.html#a38994fe7923f2959cf741b7849790871">addInput</a> (std::unique_ptr&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> &gt;, TimeRange)</td></tr>
 <tr class="memdesc:a38994fe7923f2959cf741b7849790871"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds an input node to be played at a given time range.  <a href="classtracktion_1_1engine_1_1CombiningNode.html#a38994fe7923f2959cf741b7849790871">More...</a><br /></td></tr>
 <tr class="separator:a38994fe7923f2959cf741b7849790871"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e8ac6f32f9ec70aa9de4c89ffced455"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1CombiningNode.html#a3e8ac6f32f9ec70aa9de4c89ffced455">getNumInputs</a> () const</td></tr>
+<tr class="memdesc:a3e8ac6f32f9ec70aa9de4c89ffced455"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of inputs added.  <a href="classtracktion_1_1engine_1_1CombiningNode.html#a3e8ac6f32f9ec70aa9de4c89ffced455">More...</a><br /></td></tr>
+<tr class="separator:a3e8ac6f32f9ec70aa9de4c89ffced455"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b087349f9b4850d64a1ec7bb7886208"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1CombiningNode.html#a0b087349f9b4850d64a1ec7bb7886208">getInternalNodes</a> () override</td></tr>
 <tr class="memdesc:a0b087349f9b4850d64a1ec7bb7886208"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the inputs that have been added.  <a href="classtracktion_1_1engine_1_1CombiningNode.html#a0b087349f9b4850d64a1ec7bb7886208">More...</a><br /></td></tr>
 <tr class="separator:a0b087349f9b4850d64a1ec7bb7886208"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -283,6 +286,25 @@ Additional Inherited Members</h2></td></tr>
 <p>Adds an input node to be played at a given time range. </p>
 <p>The offset is relative to the combining node's zero-time, so the input node's time of 0 is equal to its (start + offset) relative to the combiner node's start.</p>
 <p>Any nodes passed-in will be deleted by this node when required. </p>
+
+</div>
+</div>
+<a id="a3e8ac6f32f9ec70aa9de4c89ffced455"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e8ac6f32f9ec70aa9de4c89ffced455">&#9670;&nbsp;</a></span>getNumInputs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int tracktion::engine::CombiningNode::getNumInputs </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the number of inputs added. </p>
 
 </div>
 </div>
@@ -531,7 +553,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 9 2022 10:04:23 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Aug 9 2022 14:48:33 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

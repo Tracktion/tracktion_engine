@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-08-09 10:20:30</td>
+            <td class="headerValue">2022-08-09 15:07:30</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">62</td>
@@ -94,9 +94,9 @@
 <a name="32"><span class="lineNum">      32 </span><span class="lineCov">        368 :         return { false, true, 0 };</span></a>
 <a name="33"><span class="lineNum">      33 </span>            :     }</a>
 <a name="34"><span class="lineNum">      34 </span>            :     </a>
-<a name="35"><span class="lineNum">      35 </span><span class="lineCov">     184390 :     bool isReadyToProcess() override</span></a>
+<a name="35"><span class="lineNum">      35 </span><span class="lineCov">     184530 :     bool isReadyToProcess() override</span></a>
 <a name="36"><span class="lineNum">      36 </span>            :     {</a>
-<a name="37"><span class="lineNum">      37 </span><span class="lineCov">     184390 :         return true;</span></a>
+<a name="37"><span class="lineNum">      37 </span><span class="lineCov">     184530 :         return true;</span></a>
 <a name="38"><span class="lineNum">      38 </span>            :     }</a>
 <a name="39"><span class="lineNum">      39 </span>            :     </a>
 <a name="40"><span class="lineNum">      40 </span><span class="lineCov">         40 :     void prepareToPlay (const PlaybackInitialisationInfo&amp; info) override</span></a>
@@ -104,22 +104,22 @@
 <a name="42"><span class="lineNum">      42 </span><span class="lineCov">         40 :         sampleRate = info.sampleRate;</span></a>
 <a name="43"><span class="lineNum">      43 </span><span class="lineCov">         40 :     }</span></a>
 <a name="44"><span class="lineNum">      44 </span>            :     </a>
-<a name="45"><span class="lineNum">      45 </span><span class="lineCov">     184390 :     void process (ProcessContext&amp; pc) override</span></a>
+<a name="45"><span class="lineNum">      45 </span><span class="lineCov">     184530 :     void process (ProcessContext&amp; pc) override</span></a>
 <a name="46"><span class="lineNum">      46 </span>            :     {</a>
-<a name="47"><span class="lineNum">      47 </span><span class="lineCov">     184390 :         const int numSamples = (int) pc.referenceSampleRange.getLength();</span></a>
-<a name="48"><span class="lineNum">      48 </span><span class="lineCov">     184390 :         const double blockDuration = numSamples / sampleRate;</span></a>
-<a name="49"><span class="lineNum">      49 </span><span class="lineCov">     184390 :         const auto timeRange = juce::Range&lt;double&gt;::withStartAndLength (lastTime, blockDuration);</span></a>
+<a name="47"><span class="lineNum">      47 </span><span class="lineCov">     184530 :         const int numSamples = (int) pc.referenceSampleRange.getLength();</span></a>
+<a name="48"><span class="lineNum">      48 </span><span class="lineCov">     184530 :         const double blockDuration = numSamples / sampleRate;</span></a>
+<a name="49"><span class="lineNum">      49 </span><span class="lineCov">     184530 :         const auto timeRange = juce::Range&lt;double&gt;::withStartAndLength (lastTime, blockDuration);</span></a>
 <a name="50"><span class="lineNum">      50 </span>            :         </a>
-<a name="51"><span class="lineNum">      51 </span><span class="lineCov">     185030 :         for (int index = sequence.getNextIndexAtTime (timeRange.getStart()); index &gt;= 0; ++index)</span></a>
+<a name="51"><span class="lineNum">      51 </span><span class="lineCov">     185050 :         for (int index = sequence.getNextIndexAtTime (timeRange.getStart()); index &gt;= 0; ++index)</span></a>
 <a name="52"><span class="lineNum">      52 </span>            :         {</a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineCov">     185030 :             if (auto eventHolder = sequence.getEventPointer (index))</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">     185050 :             if (auto eventHolder = sequence.getEventPointer (index))</span></a>
 <a name="54"><span class="lineNum">      54 </span>            :             {</a>
-<a name="55"><span class="lineNum">      55 </span><span class="lineCov">     157770 :                 auto time = sequence.getEventTime (index);</span></a>
+<a name="55"><span class="lineNum">      55 </span><span class="lineCov">     158195 :                 auto time = sequence.getEventTime (index);</span></a>
 <a name="56"><span class="lineNum">      56 </span>            :                 </a>
 <a name="57"><span class="lineNum">      57 </span>            :                 if (! timeRange.contains (time))</a>
 <a name="58"><span class="lineNum">      58 </span>            :                     break;</a>
 <a name="59"><span class="lineNum">      59 </span>            :                 </a>
-<a name="60"><span class="lineNum">      60 </span><span class="lineCov">        640 :                 pc.buffers.midi.addMidiMessage (eventHolder-&gt;message, time - timeRange.getStart(),</span></a>
+<a name="60"><span class="lineNum">      60 </span><span class="lineCov">        520 :                 pc.buffers.midi.addMidiMessage (eventHolder-&gt;message, time - timeRange.getStart(),</span></a>
 <a name="61"><span class="lineNum">      61 </span>            :                                                 tracktion_engine::MidiMessageArray::notMPE);</a>
 <a name="62"><span class="lineNum">      62 </span>            :             }</a>
 <a name="63"><span class="lineNum">      63 </span>            :             else</a>
@@ -128,8 +128,8 @@
 <a name="66"><span class="lineNum">      66 </span>            :             }</a>
 <a name="67"><span class="lineNum">      67 </span>            :         }</a>
 <a name="68"><span class="lineNum">      68 </span>            :         </a>
-<a name="69"><span class="lineNum">      69 </span><span class="lineCov">     184390 :         lastTime = timeRange.getEnd();</span></a>
-<a name="70"><span class="lineNum">      70 </span><span class="lineCov">     184390 :     }</span></a>
+<a name="69"><span class="lineNum">      69 </span><span class="lineCov">     184530 :         lastTime = timeRange.getEnd();</span></a>
+<a name="70"><span class="lineNum">      70 </span><span class="lineCov">     184530 :     }</span></a>
 <a name="71"><span class="lineNum">      71 </span>            :     </a>
 <a name="72"><span class="lineNum">      72 </span>            : private:</a>
 <a name="73"><span class="lineNum">      73 </span>            :     juce::MidiMessageSequence sequence;</a>
@@ -158,9 +158,9 @@
 <a name="96"><span class="lineNum">      96 </span><span class="lineCov">       3130 :         return props;</span></a>
 <a name="97"><span class="lineNum">      97 </span>            :     }</a>
 <a name="98"><span class="lineNum">      98 </span>            :     </a>
-<a name="99"><span class="lineNum">      99 </span><span class="lineCov">    1512010 :     bool isReadyToProcess() override</span></a>
+<a name="99"><span class="lineNum">      99 </span><span class="lineCov">    1513150 :     bool isReadyToProcess() override</span></a>
 <a name="100"><span class="lineNum">     100 </span>            :     {</a>
-<a name="101"><span class="lineNum">     101 </span><span class="lineCov">    1512010 :         return true;</span></a>
+<a name="101"><span class="lineNum">     101 </span><span class="lineCov">    1513150 :         return true;</span></a>
 <a name="102"><span class="lineNum">     102 </span>            :     }</a>
 <a name="103"><span class="lineNum">     103 </span>            :     </a>
 <a name="104"><span class="lineNum">     104 </span><span class="lineCov">        354 :     void prepareToPlay (const PlaybackInitialisationInfo&amp; info) override</span></a>
@@ -168,10 +168,10 @@
 <a name="106"><span class="lineNum">     106 </span><span class="lineCov">        354 :         oscillator.reset (frequency, info.sampleRate);</span></a>
 <a name="107"><span class="lineNum">     107 </span><span class="lineCov">        354 :     }</span></a>
 <a name="108"><span class="lineNum">     108 </span>            : </a>
-<a name="109"><span class="lineNum">     109 </span><span class="lineCov">    1512010 :     void process (ProcessContext&amp; pc) override</span></a>
+<a name="109"><span class="lineNum">     109 </span><span class="lineCov">    1513150 :     void process (ProcessContext&amp; pc) override</span></a>
 <a name="110"><span class="lineNum">     110 </span>            :     {</a>
-<a name="111"><span class="lineNum">     111 </span><span class="lineCov">  116394000 :         setAllFrames (pc.buffers.audio, [&amp;] { return oscillator.getNext(); });</span></a>
-<a name="112"><span class="lineNum">     112 </span><span class="lineCov">    1512010 :     }</span></a>
+<a name="111"><span class="lineNum">     111 </span><span class="lineCov">  116395000 :         setAllFrames (pc.buffers.audio, [&amp;] { return oscillator.getNext(); });</span></a>
+<a name="112"><span class="lineNum">     112 </span><span class="lineCov">    1513150 :     }</span></a>
 <a name="113"><span class="lineNum">     113 </span>            :     </a>
 <a name="114"><span class="lineNum">     114 </span>            : private:</a>
 <a name="115"><span class="lineNum">     115 </span>            :     const int numChannels;</a>
@@ -189,40 +189,40 @@
 <a name="127"><span class="lineNum">     127 </span>            : class SilentNode final  : public Node</a>
 <a name="128"><span class="lineNum">     128 </span>            : {</a>
 <a name="129"><span class="lineNum">     129 </span>            : public:</a>
-<a name="130"><span class="lineNum">     130 </span><span class="lineCov">       1532 :     SilentNode (int numChannelsToUse = 1)</span></a>
-<a name="131"><span class="lineNum">     131 </span><span class="lineCov">       1532 :         : numChannels (numChannelsToUse)</span></a>
+<a name="130"><span class="lineNum">     130 </span><span class="lineCov">        144 :     SilentNode (int numChannelsToUse = 1)</span></a>
+<a name="131"><span class="lineNum">     131 </span><span class="lineCov">        144 :         : numChannels (numChannelsToUse)</span></a>
 <a name="132"><span class="lineNum">     132 </span>            :     {</a>
 <a name="133"><span class="lineNum">     133 </span>            :         setOptimisations ({ ClearBuffers::no,</a>
 <a name="134"><span class="lineNum">     134 </span>            :                             AllocateAudioBuffer::no });</a>
-<a name="135"><span class="lineNum">     135 </span><span class="lineCov">       1532 :     }</span></a>
+<a name="135"><span class="lineNum">     135 </span><span class="lineCov">        144 :     }</span></a>
 <a name="136"><span class="lineNum">     136 </span>            :     </a>
-<a name="137"><span class="lineNum">     137 </span><span class="lineCov">   89751600 :     NodeProperties getNodeProperties() override</span></a>
+<a name="137"><span class="lineNum">     137 </span><span class="lineCov">       3168 :     NodeProperties getNodeProperties() override</span></a>
 <a name="138"><span class="lineNum">     138 </span>            :     {</a>
-<a name="139"><span class="lineNum">     139 </span><span class="lineCov">   89751600 :         NodeProperties props;</span></a>
-<a name="140"><span class="lineNum">     140 </span><span class="lineCov">   89751600 :         props.hasAudio = true;</span></a>
+<a name="139"><span class="lineNum">     139 </span><span class="lineCov">       3168 :         NodeProperties props;</span></a>
+<a name="140"><span class="lineNum">     140 </span><span class="lineCov">       3168 :         props.hasAudio = true;</span></a>
 <a name="141"><span class="lineNum">     141 </span>            :         props.hasMidi = false;</a>
-<a name="142"><span class="lineNum">     142 </span><span class="lineCov">   89751600 :         props.numberOfChannels = numChannels;</span></a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineCov">       3168 :         props.numberOfChannels = numChannels;</span></a>
 <a name="143"><span class="lineNum">     143 </span>            :         </a>
-<a name="144"><span class="lineNum">     144 </span><span class="lineCov">   89751600 :         return props;</span></a>
+<a name="144"><span class="lineNum">     144 </span><span class="lineCov">       3168 :         return props;</span></a>
 <a name="145"><span class="lineNum">     145 </span>            :     }</a>
 <a name="146"><span class="lineNum">     146 </span>            :     </a>
-<a name="147"><span class="lineNum">     147 </span><span class="lineCov">     294784 :     bool isReadyToProcess() override</span></a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineCov">     258406 :     bool isReadyToProcess() override</span></a>
 <a name="148"><span class="lineNum">     148 </span>            :     {</a>
-<a name="149"><span class="lineNum">     149 </span><span class="lineCov">     294784 :         return true;</span></a>
+<a name="149"><span class="lineNum">     149 </span><span class="lineCov">     258406 :         return true;</span></a>
 <a name="150"><span class="lineNum">     150 </span>            :     }</a>
 <a name="151"><span class="lineNum">     151 </span>            :     </a>
-<a name="152"><span class="lineNum">     152 </span><span class="lineCov">       3267 :     void prepareToPlay (const PlaybackInitialisationInfo&amp; info) override</span></a>
+<a name="152"><span class="lineNum">     152 </span><span class="lineCov">        176 :     void prepareToPlay (const PlaybackInitialisationInfo&amp; info) override</span></a>
 <a name="153"><span class="lineNum">     153 </span>            :     {</a>
-<a name="154"><span class="lineNum">     154 </span><span class="lineCov">       3267 :         audioBuffer.resize (choc::buffer::Size::create ((choc::buffer::ChannelCount) numChannels,</span></a>
-<a name="155"><span class="lineNum">     155 </span><span class="lineCov">       3267 :                                                         (choc::buffer::FrameCount) info.blockSize));</span></a>
+<a name="154"><span class="lineNum">     154 </span><span class="lineCov">        176 :         audioBuffer.resize (choc::buffer::Size::create ((choc::buffer::ChannelCount) numChannels,</span></a>
+<a name="155"><span class="lineNum">     155 </span><span class="lineCov">        176 :                                                         (choc::buffer::FrameCount) info.blockSize));</span></a>
 <a name="156"><span class="lineNum">     156 </span>            :         audioBuffer.clear();</a>
-<a name="157"><span class="lineNum">     157 </span><span class="lineCov">       3267 :     }</span></a>
+<a name="157"><span class="lineNum">     157 </span><span class="lineCov">        176 :     }</span></a>
 <a name="158"><span class="lineNum">     158 </span>            :     </a>
-<a name="159"><span class="lineNum">     159 </span><span class="lineCov">   15140700 :     void process (ProcessContext&amp; pc) override</span></a>
+<a name="159"><span class="lineNum">     159 </span><span class="lineCov">     442872 :     void process (ProcessContext&amp; pc) override</span></a>
 <a name="160"><span class="lineNum">     160 </span>            :     {</a>
-<a name="161"><span class="lineNum">     161 </span><span class="lineCov">   15140700 :         pc.buffers.midi.clear();</span></a>
-<a name="162"><span class="lineNum">     162 </span><span class="lineCov">   15142400 :         setAudioOutput (nullptr, audioBuffer.getView().getStart (pc.buffers.audio.getNumFrames()));</span></a>
-<a name="163"><span class="lineNum">     163 </span><span class="lineCov">   15142400 :     }</span></a>
+<a name="161"><span class="lineNum">     161 </span><span class="lineCov">     442872 :         pc.buffers.midi.clear();</span></a>
+<a name="162"><span class="lineNum">     162 </span><span class="lineCov">     442872 :         setAudioOutput (nullptr, audioBuffer.getView().getStart (pc.buffers.audio.getNumFrames()));</span></a>
+<a name="163"><span class="lineNum">     163 </span><span class="lineCov">     442872 :     }</span></a>
 <a name="164"><span class="lineNum">     164 </span>            :     </a>
 <a name="165"><span class="lineNum">     165 </span>            : private:</a>
 <a name="166"><span class="lineNum">     166 </span>            :     const int numChannels;</a>
@@ -268,31 +268,31 @@
 <a name="206"><span class="lineNum">     206 </span><span class="lineCov">        266 :         return inputNodes;</span></a>
 <a name="207"><span class="lineNum">     207 </span>            :     }</a>
 <a name="208"><span class="lineNum">     208 </span>            : </a>
-<a name="209"><span class="lineNum">     209 </span><span class="lineCov">     221268 :     bool isReadyToProcess() override</span></a>
+<a name="209"><span class="lineNum">     209 </span><span class="lineCov">     221436 :     bool isReadyToProcess() override</span></a>
 <a name="210"><span class="lineNum">     210 </span>            :     {</a>
-<a name="211"><span class="lineNum">     211 </span><span class="lineCov">     663804 :         for (auto&amp; node : nodes)</span></a>
-<a name="212"><span class="lineNum">     212 </span><span class="lineCov">     442536 :             if (! node-&gt;hasProcessed())</span></a>
+<a name="211"><span class="lineNum">     211 </span><span class="lineCov">     664308 :         for (auto&amp; node : nodes)</span></a>
+<a name="212"><span class="lineNum">     212 </span><span class="lineCov">     442872 :             if (! node-&gt;hasProcessed())</span></a>
 <a name="213"><span class="lineNum">     213 </span>            :                 return false;</a>
 <a name="214"><span class="lineNum">     214 </span>            :         </a>
 <a name="215"><span class="lineNum">     215 </span>            :         return true;</a>
 <a name="216"><span class="lineNum">     216 </span>            :     }</a>
 <a name="217"><span class="lineNum">     217 </span>            : </a>
-<a name="218"><span class="lineNum">     218 </span><span class="lineCov">     221268 :     void process (ProcessContext&amp; pc) override</span></a>
+<a name="218"><span class="lineNum">     218 </span><span class="lineCov">     221436 :     void process (ProcessContext&amp; pc) override</span></a>
 <a name="219"><span class="lineNum">     219 </span>            :     {</a>
-<a name="220"><span class="lineNum">     220 </span><span class="lineCov">     221268 :         const auto numChannels = pc.buffers.audio.getNumChannels();</span></a>
+<a name="220"><span class="lineNum">     220 </span><span class="lineCov">     221436 :         const auto numChannels = pc.buffers.audio.getNumChannels();</span></a>
 <a name="221"><span class="lineNum">     221 </span>            : </a>
 <a name="222"><span class="lineNum">     222 </span>            :         // Get each of the inputs and add them to dest</a>
-<a name="223"><span class="lineNum">     223 </span><span class="lineCov">     663804 :         for (auto&amp; node : nodes)</span></a>
+<a name="223"><span class="lineNum">     223 </span><span class="lineCov">     664308 :         for (auto&amp; node : nodes)</span></a>
 <a name="224"><span class="lineNum">     224 </span>            :         {</a>
 <a name="225"><span class="lineNum">     225 </span>            :             auto inputFromNode = node-&gt;getProcessedOutput();</a>
 <a name="226"><span class="lineNum">     226 </span>            :             </a>
-<a name="227"><span class="lineNum">     227 </span><span class="lineCov">     442536 :             if (auto numChannelsToAdd = std::min (inputFromNode.audio.getNumChannels(), numChannels))</span></a>
-<a name="228"><span class="lineNum">     228 </span><span class="lineCov">     442536 :                 add (pc.buffers.audio.getFirstChannels (numChannelsToAdd),</span></a>
-<a name="229"><span class="lineNum">     229 </span><span class="lineCov">     442536 :                      inputFromNode.audio.getFirstChannels (numChannelsToAdd));</span></a>
+<a name="227"><span class="lineNum">     227 </span><span class="lineCov">     442872 :             if (auto numChannelsToAdd = std::min (inputFromNode.audio.getNumChannels(), numChannels))</span></a>
+<a name="228"><span class="lineNum">     228 </span><span class="lineCov">     442872 :                 add (pc.buffers.audio.getFirstChannels (numChannelsToAdd),</span></a>
+<a name="229"><span class="lineNum">     229 </span><span class="lineCov">     442872 :                      inputFromNode.audio.getFirstChannels (numChannelsToAdd));</span></a>
 <a name="230"><span class="lineNum">     230 </span>            :             </a>
-<a name="231"><span class="lineNum">     231 </span><span class="lineCov">     442536 :             pc.buffers.midi.mergeFrom (inputFromNode.midi);</span></a>
+<a name="231"><span class="lineNum">     231 </span><span class="lineCov">     442872 :             pc.buffers.midi.mergeFrom (inputFromNode.midi);</span></a>
 <a name="232"><span class="lineNum">     232 </span>            :         }</a>
-<a name="233"><span class="lineNum">     233 </span><span class="lineCov">     221268 :     }</span></a>
+<a name="233"><span class="lineNum">     233 </span><span class="lineCov">     221436 :     }</span></a>
 <a name="234"><span class="lineNum">     234 </span>            : </a>
 <a name="235"><span class="lineNum">     235 </span>            : private:</a>
 <a name="236"><span class="lineNum">     236 </span>            :     std::vector&lt;std::unique_ptr&lt;Node&gt;&gt; nodes;</a>
@@ -334,28 +334,28 @@
 <a name="272"><span class="lineNum">     272 </span><span class="lineCov">       1424 :         return { node.get() };</span></a>
 <a name="273"><span class="lineNum">     273 </span>            :     }</a>
 <a name="274"><span class="lineNum">     274 </span>            : </a>
-<a name="275"><span class="lineNum">     275 </span><span class="lineCov">    1032580 :     bool isReadyToProcess() override</span></a>
+<a name="275"><span class="lineNum">     275 </span><span class="lineCov">    1033370 :     bool isReadyToProcess() override</span></a>
 <a name="276"><span class="lineNum">     276 </span>            :     {</a>
-<a name="277"><span class="lineNum">     277 </span><span class="lineCov">    1032580 :         return node-&gt;hasProcessed();</span></a>
+<a name="277"><span class="lineNum">     277 </span><span class="lineCov">    1033370 :         return node-&gt;hasProcessed();</span></a>
 <a name="278"><span class="lineNum">     278 </span>            :     }</a>
 <a name="279"><span class="lineNum">     279 </span>            :     </a>
-<a name="280"><span class="lineNum">     280 </span><span class="lineCov">    1032580 :     void process (ProcessContext&amp; pc) override</span></a>
+<a name="280"><span class="lineNum">     280 </span><span class="lineCov">    1033370 :     void process (ProcessContext&amp; pc) override</span></a>
 <a name="281"><span class="lineNum">     281 </span>            :     {</a>
 <a name="282"><span class="lineNum">     282 </span>            :         auto inputBuffer = node-&gt;getProcessedOutput().audio;</a>
 <a name="283"><span class="lineNum">     283 </span>            : </a>
-<a name="284"><span class="lineNum">     284 </span><span class="lineCov">    1032580 :         auto numFrames = pc.referenceSampleRange.getLength();</span></a>
-<a name="285"><span class="lineNum">     285 </span><span class="lineCov">    1032580 :         const auto numChannels = std::min (inputBuffer.getNumChannels(), pc.buffers.audio.getNumChannels());</span></a>
+<a name="284"><span class="lineNum">     284 </span><span class="lineCov">    1033370 :         auto numFrames = pc.referenceSampleRange.getLength();</span></a>
+<a name="285"><span class="lineNum">     285 </span><span class="lineCov">    1033370 :         const auto numChannels = std::min (inputBuffer.getNumChannels(), pc.buffers.audio.getNumChannels());</span></a>
 <a name="286"><span class="lineNum">     286 </span>            :         jassert (inputBuffer.getNumFrames() == numFrames);</a>
 <a name="287"><span class="lineNum">     287 </span>            : </a>
-<a name="288"><span class="lineNum">     288 </span><span class="lineCov">    2138920 :         for (choc::buffer::ChannelCount c = 0; c &lt; numChannels; ++c)</span></a>
+<a name="288"><span class="lineNum">     288 </span><span class="lineCov">    2140550 :         for (choc::buffer::ChannelCount c = 0; c &lt; numChannels; ++c)</span></a>
 <a name="289"><span class="lineNum">     289 </span>            :         {</a>
 <a name="290"><span class="lineNum">     290 </span>            :             auto destIter = pc.buffers.audio.getIterator (c);</a>
 <a name="291"><span class="lineNum">     291 </span>            :             auto sourceIter = inputBuffer.getIterator (c);</a>
 <a name="292"><span class="lineNum">     292 </span>            : </a>
-<a name="293"><span class="lineNum">     293 </span><span class="lineCov">   85166300 :             for (choc::buffer::FrameCount i = 0; i &lt; numFrames; ++i)</span></a>
+<a name="293"><span class="lineNum">     293 </span><span class="lineCov">   85167200 :             for (choc::buffer::FrameCount i = 0; i &lt; numFrames; ++i)</span></a>
 <a name="294"><span class="lineNum">     294 </span><span class="lineCov">  168120000 :                 *destIter++ = function (*sourceIter++);</span></a>
 <a name="295"><span class="lineNum">     295 </span>            :         }</a>
-<a name="296"><span class="lineNum">     296 </span><span class="lineCov">    1032580 :     }</span></a>
+<a name="296"><span class="lineNum">     296 </span><span class="lineCov">    1033370 :     }</span></a>
 <a name="297"><span class="lineNum">     297 </span>            :     </a>
 <a name="298"><span class="lineNum">     298 </span>            : private:</a>
 <a name="299"><span class="lineNum">     299 </span>            :     std::unique_ptr&lt;Node&gt; node;</a>
@@ -410,9 +410,9 @@
 <a name="348"><span class="lineNum">     348 </span><span class="lineCov">         24 :         return { input };</span></a>
 <a name="349"><span class="lineNum">     349 </span>            :     }</a>
 <a name="350"><span class="lineNum">     350 </span>            : </a>
-<a name="351"><span class="lineNum">     351 </span><span class="lineCov">         32 :     bool isReadyToProcess() override</span></a>
+<a name="351"><span class="lineNum">     351 </span><span class="lineCov">          8 :     bool isReadyToProcess() override</span></a>
 <a name="352"><span class="lineNum">     352 </span>            :     {</a>
-<a name="353"><span class="lineNum">     353 </span><span class="lineCov">         32 :         return input-&gt;hasProcessed();</span></a>
+<a name="353"><span class="lineNum">     353 </span><span class="lineCov">          8 :         return input-&gt;hasProcessed();</span></a>
 <a name="354"><span class="lineNum">     354 </span>            :     }</a>
 <a name="355"><span class="lineNum">     355 </span>            :     </a>
 <a name="356"><span class="lineNum">     356 </span><span class="lineCov">       1034 :     void process (ProcessContext&amp; pc) override</span></a>
@@ -474,15 +474,15 @@
 <a name="412"><span class="lineNum">     412 </span><span class="lineCov">       3237 :         return gainFunction;</span></a>
 <a name="413"><span class="lineNum">     413 </span>            :     }</a>
 <a name="414"><span class="lineNum">     414 </span>            :                                                 </a>
-<a name="415"><span class="lineNum">     415 </span><span class="lineCov">  100660000 :     NodeProperties getNodeProperties() override</span></a>
+<a name="415"><span class="lineNum">     415 </span><span class="lineCov">  119276000 :     NodeProperties getNodeProperties() override</span></a>
 <a name="416"><span class="lineNum">     416 </span>            :     {</a>
-<a name="417"><span class="lineNum">     417 </span><span class="lineCov">  100660000 :         auto props = input-&gt;getNodeProperties();</span></a>
+<a name="417"><span class="lineNum">     417 </span><span class="lineCov">  119276000 :         auto props = input-&gt;getNodeProperties();</span></a>
 <a name="418"><span class="lineNum">     418 </span>            :         constexpr size_t sendNodeMagicHash = 0x73656e644e6f6465;</a>
 <a name="419"><span class="lineNum">     419 </span>            :         </a>
-<a name="420"><span class="lineNum">     420 </span><span class="lineCov">  100660000 :         if (props.nodeID != 0)</span></a>
+<a name="420"><span class="lineNum">     420 </span><span class="lineCov">  119276000 :         if (props.nodeID != 0)</span></a>
 <a name="421"><span class="lineNum">     421 </span>            :             hash_combine (props.nodeID, sendNodeMagicHash);</a>
 <a name="422"><span class="lineNum">     422 </span>            :         </a>
-<a name="423"><span class="lineNum">     423 </span><span class="lineCov">  100660000 :         return props;</span></a>
+<a name="423"><span class="lineNum">     423 </span><span class="lineCov">  119276000 :         return props;</span></a>
 <a name="424"><span class="lineNum">     424 </span>            :     }</a>
 <a name="425"><span class="lineNum">     425 </span>            :     </a>
 <a name="426"><span class="lineNum">     426 </span><span class="lineCov">     190609 :     std::vector&lt;Node*&gt; getDirectInputNodes() override</span></a>
@@ -490,26 +490,26 @@
 <a name="428"><span class="lineNum">     428 </span><span class="lineCov">     190609 :         return { input.get() };</span></a>
 <a name="429"><span class="lineNum">     429 </span>            :     }</a>
 <a name="430"><span class="lineNum">     430 </span>            : </a>
-<a name="431"><span class="lineNum">     431 </span><span class="lineCov">     468050 :     bool isReadyToProcess() override</span></a>
+<a name="431"><span class="lineNum">     431 </span><span class="lineCov">     462840 :     bool isReadyToProcess() override</span></a>
 <a name="432"><span class="lineNum">     432 </span>            :     {</a>
-<a name="433"><span class="lineNum">     433 </span><span class="lineCov">     468050 :         return input-&gt;hasProcessed();</span></a>
+<a name="433"><span class="lineNum">     433 </span><span class="lineCov">     462840 :         return input-&gt;hasProcessed();</span></a>
 <a name="434"><span class="lineNum">     434 </span>            :     }</a>
 <a name="435"><span class="lineNum">     435 </span>            :     </a>
-<a name="436"><span class="lineNum">     436 </span><span class="lineCov">   18987900 :     void process (ProcessContext&amp; pc) override</span></a>
+<a name="436"><span class="lineNum">     436 </span><span class="lineCov">   18949900 :     void process (ProcessContext&amp; pc) override</span></a>
 <a name="437"><span class="lineNum">     437 </span>            :     {</a>
 <a name="438"><span class="lineNum">     438 </span>            :         auto source = input-&gt;getProcessedOutput();</a>
 <a name="439"><span class="lineNum">     439 </span>            :         jassert (pc.buffers.audio.getSize() == source.audio.getSize());</a>
 <a name="440"><span class="lineNum">     440 </span>            : </a>
 <a name="441"><span class="lineNum">     441 </span>            :         // Just pass out input on to our output</a>
 <a name="442"><span class="lineNum">     442 </span>            :         // N.B We need to clear manually here due to optimisations</a>
-<a name="443"><span class="lineNum">     443 </span><span class="lineCov">   18987900 :         setAudioOutput (input.get(), source.audio);</span></a>
+<a name="443"><span class="lineNum">     443 </span><span class="lineCov">   18949900 :         setAudioOutput (input.get(), source.audio);</span></a>
 <a name="444"><span class="lineNum">     444 </span>            : </a>
 <a name="445"><span class="lineNum">     445 </span>            :         // If the source only outputs to this node, we can steal its data</a>
-<a name="446"><span class="lineNum">     446 </span><span class="lineCov">   19024200 :         if (numOutputNodes == 1)</span></a>
+<a name="446"><span class="lineNum">     446 </span><span class="lineCov">   19003900 :         if (numOutputNodes == 1)</span></a>
 <a name="447"><span class="lineNum">     447 </span><span class="lineNoCov">          0 :             pc.buffers.midi.swapWith (source.midi);</span></a>
 <a name="448"><span class="lineNum">     448 </span>            :         else</a>
-<a name="449"><span class="lineNum">     449 </span><span class="lineCov">   19024200 :             pc.buffers.midi.copyFrom (source.midi);</span></a>
-<a name="450"><span class="lineNum">     450 </span><span class="lineCov">   18926600 :     }</span></a>
+<a name="449"><span class="lineNum">     449 </span><span class="lineCov">   19003900 :             pc.buffers.midi.copyFrom (source.midi);</span></a>
+<a name="450"><span class="lineNum">     450 </span><span class="lineCov">   18941400 :     }</span></a>
 <a name="451"><span class="lineNum">     451 </span>            :     </a>
 <a name="452"><span class="lineNum">     452 </span>            : private:</a>
 <a name="453"><span class="lineNum">     453 </span>            :     std::unique_ptr&lt;Node&gt; input;</a>
@@ -537,37 +537,37 @@
 <a name="475"><span class="lineNum">     475 </span>            :                             AllocateAudioBuffer::yes });</a>
 <a name="476"><span class="lineNum">     476 </span><span class="lineCov">       1679 :     }</span></a>
 <a name="477"><span class="lineNum">     477 </span>            : </a>
-<a name="478"><span class="lineNum">     478 </span><span class="lineCov">   12271900 :     NodeProperties getNodeProperties() override</span></a>
+<a name="478"><span class="lineNum">     478 </span><span class="lineCov">   14537500 :     NodeProperties getNodeProperties() override</span></a>
 <a name="479"><span class="lineNum">     479 </span>            :     {</a>
-<a name="480"><span class="lineNum">     480 </span><span class="lineCov">   12271900 :         NodeProperties props;</span></a>
+<a name="480"><span class="lineNum">     480 </span><span class="lineCov">   14537500 :         NodeProperties props;</span></a>
 <a name="481"><span class="lineNum">     481 </span>            :         props.hasAudio = false;</a>
 <a name="482"><span class="lineNum">     482 </span>            :         props.hasMidi = false;</a>
 <a name="483"><span class="lineNum">     483 </span>            :         props.numberOfChannels = 0;</a>
 <a name="484"><span class="lineNum">     484 </span>            : </a>
-<a name="485"><span class="lineNum">     485 </span><span class="lineCov">   24543900 :         for (auto&amp; node : getDirectInputNodes())</span></a>
+<a name="485"><span class="lineNum">     485 </span><span class="lineCov">   29074900 :         for (auto&amp; node : getDirectInputNodes())</span></a>
 <a name="486"><span class="lineNum">     486 </span>            :         {</a>
-<a name="487"><span class="lineNum">     487 </span><span class="lineCov">   12271900 :             auto nodeProps = node-&gt;getNodeProperties();</span></a>
-<a name="488"><span class="lineNum">     488 </span><span class="lineCov">   12271900 :             props.hasAudio = props.hasAudio || nodeProps.hasAudio;</span></a>
-<a name="489"><span class="lineNum">     489 </span><span class="lineCov">   12272500 :             props.hasMidi = props.hasMidi || nodeProps.hasMidi;</span></a>
-<a name="490"><span class="lineNum">     490 </span><span class="lineCov">   12271900 :             props.numberOfChannels = std::max (props.numberOfChannels, nodeProps.numberOfChannels);</span></a>
-<a name="491"><span class="lineNum">     491 </span><span class="lineCov">   12271900 :             props.latencyNumSamples = std::max (props.latencyNumSamples, nodeProps.latencyNumSamples);</span></a>
-<a name="492"><span class="lineNum">     492 </span><span class="lineCov">   12271900 :             hash_combine (props.nodeID, nodeProps.nodeID);</span></a>
+<a name="487"><span class="lineNum">     487 </span><span class="lineCov">   14537500 :             auto nodeProps = node-&gt;getNodeProperties();</span></a>
+<a name="488"><span class="lineNum">     488 </span><span class="lineCov">   14537500 :             props.hasAudio = props.hasAudio || nodeProps.hasAudio;</span></a>
+<a name="489"><span class="lineNum">     489 </span><span class="lineCov">   14538000 :             props.hasMidi = props.hasMidi || nodeProps.hasMidi;</span></a>
+<a name="490"><span class="lineNum">     490 </span><span class="lineCov">   14537500 :             props.numberOfChannels = std::max (props.numberOfChannels, nodeProps.numberOfChannels);</span></a>
+<a name="491"><span class="lineNum">     491 </span><span class="lineCov">   14537500 :             props.latencyNumSamples = std::max (props.latencyNumSamples, nodeProps.latencyNumSamples);</span></a>
+<a name="492"><span class="lineNum">     492 </span><span class="lineCov">   14537500 :             hash_combine (props.nodeID, nodeProps.nodeID);</span></a>
 <a name="493"><span class="lineNum">     493 </span>            :         }</a>
 <a name="494"><span class="lineNum">     494 </span>            :         </a>
 <a name="495"><span class="lineNum">     495 </span>            :         constexpr size_t returnNodeMagicHash = 0x72657475726e;</a>
 <a name="496"><span class="lineNum">     496 </span>            :         </a>
-<a name="497"><span class="lineNum">     497 </span><span class="lineCov">   12271900 :         if (props.nodeID != 0)</span></a>
+<a name="497"><span class="lineNum">     497 </span><span class="lineCov">   14537500 :         if (props.nodeID != 0)</span></a>
 <a name="498"><span class="lineNum">     498 </span>            :             hash_combine (props.nodeID, returnNodeMagicHash);</a>
 <a name="499"><span class="lineNum">     499 </span>            : </a>
-<a name="500"><span class="lineNum">     500 </span><span class="lineCov">   12271900 :         return props;</span></a>
+<a name="500"><span class="lineNum">     500 </span><span class="lineCov">   14537500 :         return props;</span></a>
 <a name="501"><span class="lineNum">     501 </span>            :     }</a>
 <a name="502"><span class="lineNum">     502 </span>            :     </a>
 <a name="503"><span class="lineNum">     503 </span><span class="lineCov">     181177 :     std::vector&lt;Node*&gt; getDirectInputNodes() override</span></a>
 <a name="504"><span class="lineNum">     504 </span>            :     {</a>
-<a name="505"><span class="lineNum">     505 </span><span class="lineCov">   12453100 :         if (! input)</span></a>
+<a name="505"><span class="lineNum">     505 </span><span class="lineCov">   14718600 :         if (! input)</span></a>
 <a name="506"><span class="lineNum">     506 </span>            :             return {};</a>
 <a name="507"><span class="lineNum">     507 </span>            : </a>
-<a name="508"><span class="lineNum">     508 </span><span class="lineCov">   12443300 :         return { input.get() };</span></a>
+<a name="508"><span class="lineNum">     508 </span><span class="lineCov">   14708800 :         return { input.get() };</span></a>
 <a name="509"><span class="lineNum">     509 </span>            :     }</a>
 <a name="510"><span class="lineNum">     510 </span>            :     </a>
 <a name="511"><span class="lineNum">     511 </span><span class="lineCov">       5920 :     bool transform (Node&amp; rootNode) override</span></a>
@@ -581,14 +581,14 @@
 <a name="519"><span class="lineNum">     519 </span>            :         return false;</a>
 <a name="520"><span class="lineNum">     520 </span>            :     }</a>
 <a name="521"><span class="lineNum">     521 </span>            : </a>
-<a name="522"><span class="lineNum">     522 </span><span class="lineCov">     426284 :     bool isReadyToProcess() override</span></a>
+<a name="522"><span class="lineNum">     522 </span><span class="lineCov">     426310 :     bool isReadyToProcess() override</span></a>
 <a name="523"><span class="lineNum">     523 </span>            :     {</a>
-<a name="524"><span class="lineNum">     524 </span><span class="lineCov">     426284 :         return ! input || input-&gt;hasProcessed();</span></a>
+<a name="524"><span class="lineNum">     524 </span><span class="lineCov">     426310 :         return ! input || input-&gt;hasProcessed();</span></a>
 <a name="525"><span class="lineNum">     525 </span>            :     }</a>
 <a name="526"><span class="lineNum">     526 </span>            :     </a>
-<a name="527"><span class="lineNum">     527 </span><span class="lineCov">   19410200 :     void process (ProcessContext&amp; pc) override</span></a>
+<a name="527"><span class="lineNum">     527 </span><span class="lineCov">   19397800 :     void process (ProcessContext&amp; pc) override</span></a>
 <a name="528"><span class="lineNum">     528 </span>            :     {</a>
-<a name="529"><span class="lineNum">     529 </span><span class="lineCov">   19410200 :         if (! input)</span></a>
+<a name="529"><span class="lineNum">     529 </span><span class="lineCov">   19397800 :         if (! input)</span></a>
 <a name="530"><span class="lineNum">     530 </span>            :         {</a>
 <a name="531"><span class="lineNum">     531 </span>            :             // N.B We need to clear manually here due to optimisations</a>
 <a name="532"><span class="lineNum">     532 </span><span class="lineNoCov">          0 :             pc.buffers.midi.clear();</span></a>
@@ -601,8 +601,8 @@
 <a name="539"><span class="lineNum">     539 </span>            :         jassert (pc.buffers.audio.getSize() == source.audio.getSize());</a>
 <a name="540"><span class="lineNum">     540 </span>            : </a>
 <a name="541"><span class="lineNum">     541 </span>            :         // Copy the input on to our output, the SummingNode will copy all the sends and get all the input</a>
-<a name="542"><span class="lineNum">     542 </span><span class="lineCov">   19410200 :         setAudioOutput (input.get(), source.audio);</span></a>
-<a name="543"><span class="lineNum">     543 </span><span class="lineCov">   19425500 :         pc.buffers.midi.copyFrom (source.midi);</span></a>
+<a name="542"><span class="lineNum">     542 </span><span class="lineCov">   19397800 :         setAudioOutput (input.get(), source.audio);</span></a>
+<a name="543"><span class="lineNum">     543 </span><span class="lineCov">   19424900 :         pc.buffers.midi.copyFrom (source.midi);</span></a>
 <a name="544"><span class="lineNum">     544 </span>            :     }</a>
 <a name="545"><span class="lineNum">     545 </span>            :     </a>
 <a name="546"><span class="lineNum">     546 </span>            : private:</a>
@@ -620,12 +620,12 @@
 <a name="558"><span class="lineNum">     558 </span>            :         </a>
 <a name="559"><span class="lineNum">     559 </span>            :         std::vector&lt;SendNode*&gt; sends;</a>
 <a name="560"><span class="lineNum">     560 </span><span class="lineCov">       1859 :         visitNodes (rootNode,</span></a>
-<a name="561"><span class="lineNum">     561 </span><span class="lineCov">    1464420 :                     [&amp;] (Node&amp; n)</span></a>
+<a name="561"><span class="lineNum">     561 </span><span class="lineCov">    1800580 :                     [&amp;] (Node&amp; n)</span></a>
 <a name="562"><span class="lineNum">     562 </span>            :                     {</a>
-<a name="563"><span class="lineNum">     563 </span><span class="lineCov">    1464420 :                        if (auto send = dynamic_cast&lt;SendNode*&gt; (&amp;n))</span></a>
+<a name="563"><span class="lineNum">     563 </span><span class="lineCov">    1800580 :                        if (auto send = dynamic_cast&lt;SendNode*&gt; (&amp;n))</span></a>
 <a name="564"><span class="lineNum">     564 </span><span class="lineCov">     140947 :                            if (send-&gt;getBusID() == busID)</span></a>
 <a name="565"><span class="lineNum">     565 </span><span class="lineCov">       3267 :                                sends.push_back (send);</span></a>
-<a name="566"><span class="lineNum">     566 </span><span class="lineCov">    1464420 :                     }, true);</span></a>
+<a name="566"><span class="lineNum">     566 </span><span class="lineCov">    1800580 :                     }, true);</span></a>
 <a name="567"><span class="lineNum">     567 </span>            :         </a>
 <a name="568"><span class="lineNum">     568 </span>            :         // Remove any send nodes that feed back in to this</a>
 <a name="569"><span class="lineNum">     569 </span>            :         std::vector&lt;Node*&gt; sendsToRemove;</a>
@@ -635,7 +635,7 @@
 <a name="573"><span class="lineNum">     573 </span><span class="lineCov">       3267 :             visitNodes (*send,</span></a>
 <a name="574"><span class="lineNum">     574 </span>            :                         [&amp;] (Node&amp; n)</a>
 <a name="575"><span class="lineNum">     575 </span>            :                         {</a>
-<a name="576"><span class="lineNum">     576 </span><span class="lineCov">     113176 :                             if (&amp;n == this)</span></a>
+<a name="576"><span class="lineNum">     576 </span><span class="lineCov">     148992 :                             if (&amp;n == this)</span></a>
 <a name="577"><span class="lineNum">     577 </span><span class="lineCov">         30 :                                 sendsToRemove.push_back (send);</span></a>
 <a name="578"><span class="lineNum">     578 </span>            :                         }, true);</a>
 <a name="579"><span class="lineNum">     579 </span>            :         }</a>
@@ -724,25 +724,25 @@
 <a name="662"><span class="lineNum">     662 </span><span class="lineCov">        160 :         return { input.get() };</span></a>
 <a name="663"><span class="lineNum">     663 </span>            :     }</a>
 <a name="664"><span class="lineNum">     664 </span>            : </a>
-<a name="665"><span class="lineNum">     665 </span><span class="lineCov">     184390 :     bool isReadyToProcess() override</span></a>
+<a name="665"><span class="lineNum">     665 </span><span class="lineCov">     184530 :     bool isReadyToProcess() override</span></a>
 <a name="666"><span class="lineNum">     666 </span>            :     {</a>
-<a name="667"><span class="lineNum">     667 </span><span class="lineCov">     184390 :         return input-&gt;hasProcessed();</span></a>
+<a name="667"><span class="lineNum">     667 </span><span class="lineCov">     184530 :         return input-&gt;hasProcessed();</span></a>
 <a name="668"><span class="lineNum">     668 </span>            :     }</a>
 <a name="669"><span class="lineNum">     669 </span>            :     </a>
-<a name="670"><span class="lineNum">     670 </span><span class="lineCov">     184390 :     void process (ProcessContext&amp; pc) override</span></a>
+<a name="670"><span class="lineNum">     670 </span><span class="lineCov">     184530 :     void process (ProcessContext&amp; pc) override</span></a>
 <a name="671"><span class="lineNum">     671 </span>            :     {</a>
 <a name="672"><span class="lineNum">     672 </span>            :         auto inputBuffers = input-&gt;getProcessedOutput();</a>
 <a name="673"><span class="lineNum">     673 </span>            :         </a>
 <a name="674"><span class="lineNum">     674 </span>            :         // Pass on MIDI</a>
-<a name="675"><span class="lineNum">     675 </span><span class="lineCov">     184390 :         if (passMIDI)</span></a>
-<a name="676"><span class="lineNum">     676 </span><span class="lineCov">     184390 :             pc.buffers.midi.mergeFrom (inputBuffers.midi);</span></a>
+<a name="675"><span class="lineNum">     675 </span><span class="lineCov">     184530 :         if (passMIDI)</span></a>
+<a name="676"><span class="lineNum">     676 </span><span class="lineCov">     184530 :             pc.buffers.midi.mergeFrom (inputBuffers.midi);</span></a>
 <a name="677"><span class="lineNum">     677 </span>            :         </a>
 <a name="678"><span class="lineNum">     678 </span>            :         // Remap audio</a>
-<a name="679"><span class="lineNum">     679 </span><span class="lineCov">     626926 :         for (auto channel : channelMap)</span></a>
-<a name="680"><span class="lineNum">     680 </span><span class="lineCov">     442536 :             if (channel.first &lt; (int) inputBuffers.audio.getNumChannels())</span></a>
-<a name="681"><span class="lineNum">     681 </span><span class="lineCov">     442536 :                 add (pc.buffers.audio.getChannel ((choc::buffer::ChannelCount) channel.second),</span></a>
-<a name="682"><span class="lineNum">     682 </span><span class="lineCov">     442536 :                      inputBuffers.audio.getChannel ((choc::buffer::ChannelCount) channel.first));</span></a>
-<a name="683"><span class="lineNum">     683 </span><span class="lineCov">     184390 :     }</span></a>
+<a name="679"><span class="lineNum">     679 </span><span class="lineCov">     627402 :         for (auto channel : channelMap)</span></a>
+<a name="680"><span class="lineNum">     680 </span><span class="lineCov">     442872 :             if (channel.first &lt; (int) inputBuffers.audio.getNumChannels())</span></a>
+<a name="681"><span class="lineNum">     681 </span><span class="lineCov">     442872 :                 add (pc.buffers.audio.getChannel ((choc::buffer::ChannelCount) channel.second),</span></a>
+<a name="682"><span class="lineNum">     682 </span><span class="lineCov">     442872 :                      inputBuffers.audio.getChannel ((choc::buffer::ChannelCount) channel.first));</span></a>
+<a name="683"><span class="lineNum">     683 </span><span class="lineCov">     184530 :     }</span></a>
 <a name="684"><span class="lineNum">     684 </span>            : </a>
 <a name="685"><span class="lineNum">     685 </span>            : private:</a>
 <a name="686"><span class="lineNum">     686 </span>            :     std::unique_ptr&lt;Node&gt; input;</a>
@@ -774,13 +774,13 @@
 <a name="712"><span class="lineNum">     712 </span>            :         jassert (input);</a>
 <a name="713"><span class="lineNum">     713 </span><span class="lineCov">       1769 :     }</span></a>
 <a name="714"><span class="lineNum">     714 </span>            :         </a>
-<a name="715"><span class="lineNum">     715 </span><span class="lineCov">    1399730 :     NodeProperties getNodeProperties() override</span></a>
+<a name="715"><span class="lineNum">     715 </span><span class="lineCov">    1652180 :     NodeProperties getNodeProperties() override</span></a>
 <a name="716"><span class="lineNum">     716 </span>            :     {</a>
 <a name="717"><span class="lineNum">     717 </span>            :         constexpr size_t sinkNodeMagicHash = 0x95ab5e9dcd;</a>
-<a name="718"><span class="lineNum">     718 </span><span class="lineCov">    1399730 :         auto props = input-&gt;getNodeProperties();</span></a>
+<a name="718"><span class="lineNum">     718 </span><span class="lineCov">    1652180 :         auto props = input-&gt;getNodeProperties();</span></a>
 <a name="719"><span class="lineNum">     719 </span>            :         hash_combine (props.nodeID, sinkNodeMagicHash);</a>
 <a name="720"><span class="lineNum">     720 </span>            :         </a>
-<a name="721"><span class="lineNum">     721 </span><span class="lineCov">    1399730 :         return props;</span></a>
+<a name="721"><span class="lineNum">     721 </span><span class="lineCov">    1652180 :         return props;</span></a>
 <a name="722"><span class="lineNum">     722 </span>            :     }</a>
 <a name="723"><span class="lineNum">     723 </span>            :     </a>
 <a name="724"><span class="lineNum">     724 </span><span class="lineCov">     169813 :     std::vector&lt;Node*&gt; getDirectInputNodes() override</span></a>
@@ -788,14 +788,14 @@
 <a name="726"><span class="lineNum">     726 </span><span class="lineCov">     169813 :         return { input.get() };</span></a>
 <a name="727"><span class="lineNum">     727 </span>            :     }</a>
 <a name="728"><span class="lineNum">     728 </span>            : </a>
-<a name="729"><span class="lineNum">     729 </span><span class="lineCov">      21630 :     bool isReadyToProcess() override</span></a>
+<a name="729"><span class="lineNum">     729 </span><span class="lineCov">      41041 :     bool isReadyToProcess() override</span></a>
 <a name="730"><span class="lineNum">     730 </span>            :     {</a>
-<a name="731"><span class="lineNum">     731 </span><span class="lineCov">      21630 :         return input-&gt;hasProcessed();</span></a>
+<a name="731"><span class="lineNum">     731 </span><span class="lineCov">      41041 :         return input-&gt;hasProcessed();</span></a>
 <a name="732"><span class="lineNum">     732 </span>            :     }</a>
 <a name="733"><span class="lineNum">     733 </span>            :     </a>
-<a name="734"><span class="lineNum">     734 </span><span class="lineCov">   18241500 :     void process (ProcessContext&amp;) override</span></a>
+<a name="734"><span class="lineNum">     734 </span><span class="lineCov">   18358400 :     void process (ProcessContext&amp;) override</span></a>
 <a name="735"><span class="lineNum">     735 </span>            :     {</a>
-<a name="736"><span class="lineNum">     736 </span><span class="lineCov">   18241500 :     }</span></a>
+<a name="736"><span class="lineNum">     736 </span><span class="lineCov">   18358400 :     }</span></a>
 <a name="737"><span class="lineNum">     737 </span>            : </a>
 <a name="738"><span class="lineNum">     738 </span>            : private:</a>
 <a name="739"><span class="lineNum">     739 </span>            :     std::unique_ptr&lt;Node&gt; input;</a>
@@ -833,17 +833,17 @@
 <a name="771"><span class="lineNum">     771 </span><span class="lineCov">        384 :         return { input };</span></a>
 <a name="772"><span class="lineNum">     772 </span>            :     }</a>
 <a name="773"><span class="lineNum">     773 </span>            : </a>
-<a name="774"><span class="lineNum">     774 </span><span class="lineCov">     110714 :     bool isReadyToProcess() override</span></a>
+<a name="774"><span class="lineNum">     774 </span><span class="lineCov">     110798 :     bool isReadyToProcess() override</span></a>
 <a name="775"><span class="lineNum">     775 </span>            :     {</a>
-<a name="776"><span class="lineNum">     776 </span><span class="lineCov">     110714 :         return input-&gt;hasProcessed();</span></a>
+<a name="776"><span class="lineNum">     776 </span><span class="lineCov">     110798 :         return input-&gt;hasProcessed();</span></a>
 <a name="777"><span class="lineNum">     777 </span>            :     }</a>
 <a name="778"><span class="lineNum">     778 </span>            :     </a>
-<a name="779"><span class="lineNum">     779 </span><span class="lineCov">     184390 :     void process (ProcessContext&amp; pc) override</span></a>
+<a name="779"><span class="lineNum">     779 </span><span class="lineCov">     184530 :     void process (ProcessContext&amp; pc) override</span></a>
 <a name="780"><span class="lineNum">     780 </span>            :     {</a>
-<a name="781"><span class="lineNum">     781 </span><span class="lineCov">     184390 :         auto inputBuffers = input-&gt;getProcessedOutput();</span></a>
-<a name="782"><span class="lineNum">     782 </span><span class="lineCov">     184390 :         copy (pc.buffers.audio, inputBuffers.audio);</span></a>
-<a name="783"><span class="lineNum">     783 </span><span class="lineCov">     184390 :         pc.buffers.midi.copyFrom (inputBuffers.midi);</span></a>
-<a name="784"><span class="lineNum">     784 </span><span class="lineCov">     184390 :     }</span></a>
+<a name="781"><span class="lineNum">     781 </span><span class="lineCov">     184530 :         auto inputBuffers = input-&gt;getProcessedOutput();</span></a>
+<a name="782"><span class="lineNum">     782 </span><span class="lineCov">     184530 :         copy (pc.buffers.audio, inputBuffers.audio);</span></a>
+<a name="783"><span class="lineNum">     783 </span><span class="lineCov">     184530 :         pc.buffers.midi.copyFrom (inputBuffers.midi);</span></a>
+<a name="784"><span class="lineNum">     784 </span><span class="lineCov">     184530 :     }</span></a>
 <a name="785"><span class="lineNum">     785 </span>            : </a>
 <a name="786"><span class="lineNum">     786 </span>            : private:</a>
 <a name="787"><span class="lineNum">     787 </span>            :     tracktion::graph::Node* input;</a>

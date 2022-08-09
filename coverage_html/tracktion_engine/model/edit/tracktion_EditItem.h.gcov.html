@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">16</td>
-            <td class="headerCovTableEntry">18</td>
-            <td class="headerCovTableEntryMed">88.9 %</td>
+            <td class="headerCovTableEntry">17</td>
+            <td class="headerCovTableEntry">19</td>
+            <td class="headerCovTableEntryMed">89.5 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-08-09 10:20:30</td>
+            <td class="headerValue">2022-08-09 15:07:30</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -83,7 +83,7 @@
 <a name="21"><span class="lineNum">      21 </span>            :     EditItemID (const EditItemID&amp;) = default;</a>
 <a name="22"><span class="lineNum">      22 </span>            :     EditItemID&amp; operator= (const EditItemID&amp;) = default;</a>
 <a name="23"><span class="lineNum">      23 </span>            : </a>
-<a name="24"><span class="lineNum">      24 </span><span class="lineCov">      25425 :     bool isValid() const noexcept       { return itemID != 0; }</span></a>
+<a name="24"><span class="lineNum">      24 </span><span class="lineCov">      25502 :     bool isValid() const noexcept       { return itemID != 0; }</span></a>
 <a name="25"><span class="lineNum">      25 </span>            :     bool isInvalid() const noexcept     { return itemID == 0; }</a>
 <a name="26"><span class="lineNum">      26 </span>            : </a>
 <a name="27"><span class="lineNum">      27 </span>            :     static EditItemID fromID (const juce::ValueTree&amp;);</a>
@@ -227,7 +227,7 @@
 <a name="165"><span class="lineNum">     165 </span>            :     template&lt;&gt;</a>
 <a name="166"><span class="lineNum">     166 </span>            :     struct hash&lt;tracktion::engine::EditItemID&gt;</a>
 <a name="167"><span class="lineNum">     167 </span>            :     {</a>
-<a name="168"><span class="lineNum">     168 </span>            :         size_t operator() (const tracktion::engine::EditItemID&amp; e) const noexcept   { return (size_t) e.getRawID(); }</a>
+<a name="168"><span class="lineNum">     168 </span><span class="lineCov">       2093 :         size_t operator() (const tracktion::engine::EditItemID&amp; e) const noexcept   { return (size_t) e.getRawID(); }</span></a>
 <a name="169"><span class="lineNum">     169 </span>            :     };</a>
 <a name="170"><span class="lineNum">     170 </span>            : }</a>
 <a name="171"><span class="lineNum">     171 </span>            : #endif</a>
