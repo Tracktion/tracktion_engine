@@ -13,8 +13,15 @@
 #include "tracktion_engine.h"
 
 #if TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE
- // If you get a build error here you'll need to add the Elastique SDK to your header search path!
- #include "elastique_pro/incl/elastiqueProV3API.h"
+ #ifdef __GNUC__
+  #pragma GCC diagnostic push
+  #pragma GCC diagnostic ignored "-Wextra-semi"
+
+  // If you get a build error here you'll need to add the Elastique SDK to your header search path!
+  #include "elastique_pro/incl/elastiqueProV3API.h"
+
+  #pragma GCC diagnostic pop
+ #endif
 #endif
 
 #ifdef __clang__

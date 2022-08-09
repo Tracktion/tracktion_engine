@@ -1313,6 +1313,11 @@ LoopingMidiNode::LoopingMidiNode (std::vector<juce::MidiMessageSequence> sequenc
                                                                    grooveStrength);
 }
 
+const std::shared_ptr<ActiveNoteList>& LoopingMidiNode::getActiveNoteList() const
+{
+    return generatorAndNoteList->getActiveNoteList();
+}
+
 tracktion::graph::NodeProperties LoopingMidiNode::getNodeProperties()
 {
     tracktion::graph::NodeProperties props;

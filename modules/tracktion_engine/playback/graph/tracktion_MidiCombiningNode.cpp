@@ -11,7 +11,7 @@
 namespace tracktion { inline namespace engine
 {
 
-namespace combining_node_utils
+namespace midi_combining_node_utils
 {
     // how much extra time to give a track before it gets cut off - to allow for plugins
     // that ring on.
@@ -25,50 +25,28 @@ namespace combining_node_utils
 }
 
 //==============================================================================
-struct CombiningNode::TimedNode
+struct MidiCombiningNode::TimedNode
 {
-    TimedNode (std::unique_ptr<Node> sourceNode, TimeRange t)
+    TimedNode (std::unique_ptr<LoopingMidiNode> sourceNode, TimeRange t)
         : time (t), node (std::move (sourceNode))
     {
-        for (auto n = node.get();;)
-        {
-            nodesToProcess.insert (nodesToProcess.begin(), n);
-            auto inputNodes = n->getDirectInputNodes();
-            
-            if (inputNodes.empty())
-                break;
-            
-            // This doesn't work with parallel input Nodes
-            assert (inputNodes.size() == 1);
-            n = inputNodes.front();
-        }
+        // This only works with single depth MIDI Nodes
+        assert (node->getDirectInputNodes().size() == 0);
     }
 
     std::vector<Node*> getNodes() const
     {
-        return nodesToProcess;
+        return { node.get() };
     }
 
-    void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info,
-                        choc::buffer::ChannelArrayView<float> view)
+    void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
     {
-        auto info2 = info;
-        info2.allocateAudioBuffer = [view] (choc::buffer::Size size) -> tracktion::graph::NodeBuffer
-                                    {
-                                        jassert (size.numFrames == view.getNumFrames());
-                                        jassert (size.numChannels <= view.getNumChannels());
-                                        
-                                        return { view.getFirstChannels (size.numChannels), {} };
-                                    };
-        info2.deallocateAudioBuffer = nullptr;
-        
-        for (auto n : nodesToProcess)
-            n->initialise (info2);
+        node->initialise (info);
     }
     
     bool isReadyToProcess() const
     {
-        return nodesToProcess.front()->isReadyToProcess();
+        return node->isReadyToProcess();
     }
 
     void prefetchBlock (juce::Range<int64_t> referenceSampleRange)
@@ -76,9 +54,7 @@ struct CombiningNode::TimedNode
         if (hasPrefetched)
             return;
         
-        for (auto n : nodesToProcess)
-            n->prepareForNextBlock (referenceSampleRange);
-
+        node->prepareForNextBlock (referenceSampleRange);
         hasPrefetched = true;
     }
 
@@ -86,19 +62,10 @@ struct CombiningNode::TimedNode
     {
         jassert (hasPrefetched);
         
-        // Process all the Nodes
-        for (auto n : nodesToProcess)
-            n->process (pc.numSamples, pc.referenceSampleRange);
+        node->Node::process (pc.numSamples, pc.referenceSampleRange);
         
         // Then get the output from the source Node
         auto nodeOutput = node->getProcessedOutput();
-        const auto numDestChannels = pc.buffers.audio.getNumChannels();
-        const auto numChannelsToAdd = std::min (nodeOutput.audio.getNumChannels(), numDestChannels);
-
-        if (numChannelsToAdd > 0)
-            add (pc.buffers.audio.getFirstChannels (numChannelsToAdd),
-                 nodeOutput.audio.getFirstChannels (numChannelsToAdd));
-        
         pc.buffers.midi.mergeFrom (nodeOutput.midi);
         
         hasPrefetched = false;
@@ -106,33 +73,29 @@ struct CombiningNode::TimedNode
 
     size_t getAllocatedBytes() const
     {
-        size_t size = 0;
-        
-        for (auto n : nodesToProcess)
-            size += n->getAllocatedBytes();
-
-        return size;
+        return node->getAllocatedBytes();
     }
     
     TimeRange time;
+    const std::unique_ptr<LoopingMidiNode> node;
 
 private:
-    const std::unique_ptr<Node> node;
-    std::vector<Node*> nodesToProcess;
     bool hasPrefetched = false;
 
     JUCE_DECLARE_NON_COPYABLE (TimedNode)
 };
 
 //==============================================================================
-CombiningNode::CombiningNode (ProcessState& ps)
-    : TracktionEngineNode (ps)
+MidiCombiningNode::MidiCombiningNode (EditItemID id, ProcessState& ps)
+    : TracktionEngineNode (ps),
+      itemID (id)
 {
+    hash_combine (nodeProperties.nodeID, itemID);
 }
 
-CombiningNode::~CombiningNode() {}
+MidiCombiningNode::~MidiCombiningNode() {}
 
-void CombiningNode::addInput (std::unique_ptr<Node> input, TimeRange time)
+void MidiCombiningNode::addInput (std::unique_ptr<LoopingMidiNode> input, TimeRange time)
 {
     assert (input != nullptr);
 
@@ -157,8 +120,8 @@ void CombiningNode::addInput (std::unique_ptr<Node> input, TimeRange time)
     jassert (time.getEnd() <= Edit::getMaximumEditEnd());
 
     // add the node to any groups it's near to.
-    auto start = std::max (0, combining_node_utils::timeToGroupIndex (time.getStart() - TimeDuration::fromSeconds (combining_node_utils::secondsPerGroup / 2 + 2)));
-    auto end   = std::max (0, combining_node_utils::timeToGroupIndex (time.getEnd()   + TimeDuration::fromSeconds (combining_node_utils::secondsPerGroup / 2 + 2)));
+    auto start = std::max (0, midi_combining_node_utils::timeToGroupIndex (time.getStart() - TimeDuration::fromSeconds (midi_combining_node_utils::secondsPerGroup / 2 + 2)));
+    auto end   = std::max (0, midi_combining_node_utils::timeToGroupIndex (time.getEnd()   + TimeDuration::fromSeconds (midi_combining_node_utils::secondsPerGroup / 2 + 2)));
 
     while (groups.size() <= end)
         groups.add (new juce::Array<TimedNode*>());
@@ -177,12 +140,12 @@ void CombiningNode::addInput (std::unique_ptr<Node> input, TimeRange time)
     }
 }
 
-int CombiningNode::getNumInputs() const
+int MidiCombiningNode::getNumInputs() const
 {
     return inputs.size();
 }
 
-std::vector<Node*> CombiningNode::getInternalNodes()
+std::vector<Node*> MidiCombiningNode::getInternalNodes()
 {
     std::vector<Node*> leafNodes;
 
@@ -193,37 +156,46 @@ std::vector<Node*> CombiningNode::getInternalNodes()
     return leafNodes;
 }
 
-std::vector<tracktion::graph::Node*> CombiningNode::getDirectInputNodes()
+std::vector<tracktion::graph::Node*> MidiCombiningNode::getDirectInputNodes()
 {
     return {};
 }
 
-tracktion::graph::NodeProperties CombiningNode::getNodeProperties()
+tracktion::graph::NodeProperties MidiCombiningNode::getNodeProperties()
 {
     return nodeProperties;
 }
 
-void CombiningNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
+void MidiCombiningNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
     isReadyToProcessBlock.store (true, std::memory_order_release);
-    tempAudioBuffer.resize (choc::buffer::Size::create ((choc::buffer::ChannelCount) nodeProperties.numberOfChannels,
-                                                        (choc::buffer::FrameCount) info.blockSize));
 
     for (auto& i : inputs)
     {
-        i->prepareToPlay (info, tempAudioBuffer.getView());
+        i->prepareToPlay (info);
         
         if (! i->isReadyToProcess())
             isReadyToProcessBlock.store (false, std::memory_order_release);
     }
+
+    // Inspect the old graph to find clips that need to be killed
+    if (info.rootNodeToReplace != nullptr)
+    {
+        visitNodes (*info.rootNodeToReplace, [this, itemID = itemID] (Node& n)
+                    {
+                        if (auto midiCombiningNode = dynamic_cast<MidiCombiningNode*> (&n))
+                            if (midiCombiningNode->itemID == itemID)
+                                queueNoteOffsForClipsNoLongerPresent (*midiCombiningNode);
+                    }, true);
+    }
 }
 
-bool CombiningNode::isReadyToProcess()
+bool MidiCombiningNode::isReadyToProcess()
 {
     return isReadyToProcessBlock.load (std::memory_order_acquire);
 }
 
-void CombiningNode::prefetchBlock (juce::Range<int64_t> referenceSampleRange)
+void MidiCombiningNode::prefetchBlock (juce::Range<int64_t> referenceSampleRange)
 {
     SCOPED_REALTIME_CHECK
 
@@ -233,7 +205,7 @@ void CombiningNode::prefetchBlock (juce::Range<int64_t> referenceSampleRange)
     // Update ready to process state based on nodes intersecting this time
     isReadyToProcessBlock.store (true, std::memory_order_release);
     
-    if (auto g = groups[combining_node_utils::timeToGroupIndex (editTime.getStart())])
+    if (auto g = groups[midi_combining_node_utils::timeToGroupIndex (editTime.getStart())])
     {
         for (auto tan : *g)
         {
@@ -246,13 +218,17 @@ void CombiningNode::prefetchBlock (juce::Range<int64_t> referenceSampleRange)
     }
 }
 
-void CombiningNode::process (ProcessContext& pc)
+void MidiCombiningNode::process (ProcessContext& pc)
 {
     SCOPED_REALTIME_CHECK
     const auto editTime = getEditTimeRange();
     const auto initialEvents = pc.buffers.midi.size();
 
-    if (auto g = groups[combining_node_utils::timeToGroupIndex (editTime.getStart())])
+    // Merge any note-offs from clips that have been deleted
+    pc.buffers.midi.mergeFromAndClear (noteOffEventsToSend);
+
+    // Then process the list
+    if (auto g = groups[midi_combining_node_utils::timeToGroupIndex (editTime.getStart())])
     {
         for (auto tan : *g)
         {
@@ -261,9 +237,6 @@ void CombiningNode::process (ProcessContext& pc)
                 if (tan->time.getStart() >= editTime.getEnd())
                     break;
 
-                // Clear the allocated storage
-                tempAudioBuffer.clear();
-                
                 // Then process the buffer.
                 // This will use the local buffer for the Nodes in the TimedNode and put the result in pc.buffers
                 tan->process (pc);
@@ -275,9 +248,9 @@ void CombiningNode::process (ProcessContext& pc)
         pc.buffers.midi.sortByTimestamp();
 }
 
-size_t CombiningNode::getAllocatedBytes() const
+size_t MidiCombiningNode::getAllocatedBytes() const
 {
-    size_t size = tempAudioBuffer.getView().data.getBytesNeeded (tempAudioBuffer.getSize());
+    size_t size = 0;
     
     for (const auto& i : inputs)
         size += i->getAllocatedBytes();
@@ -285,9 +258,9 @@ size_t CombiningNode::getAllocatedBytes() const
     return size;
 }
 
-void CombiningNode::prefetchGroup (juce::Range<int64_t> referenceSampleRange, TimeRange editTime)
+void MidiCombiningNode::prefetchGroup (juce::Range<int64_t> referenceSampleRange, TimeRange editTime)
 {
-    if (auto g = groups[combining_node_utils::timeToGroupIndex (editTime.getStart())])
+    if (auto g = groups[midi_combining_node_utils::timeToGroupIndex (editTime.getStart())])
     {
         for (auto tan : *g)
         {
@@ -298,6 +271,30 @@ void CombiningNode::prefetchGroup (juce::Range<int64_t> referenceSampleRange, Ti
 
                 tan->prefetchBlock (referenceSampleRange);
             }
+        }
+    }
+}
+
+void MidiCombiningNode::queueNoteOffsForClipsNoLongerPresent (const MidiCombiningNode& oldNode)
+{
+    // Find any LoopingMidiNodes that are no longer present
+    // Add note-offs for any note-ons they have
+
+    std::vector<EditItemID> currentNodeIDs;
+
+    for (auto input : inputs)
+        currentNodeIDs.push_back (input->node->getItemID());
+
+    for (auto oldTimedNode : oldNode.inputs)
+    {
+        if (std::find (currentNodeIDs.begin(), currentNodeIDs.end(), oldTimedNode->node->getItemID())
+            == currentNodeIDs.end())
+        {
+            oldTimedNode->node->getActiveNoteList()->iterate ([this, mpeSourceID = oldTimedNode->node->getMPESourceID()]
+                                                              (int chan, int note)
+                                                              {
+                                                                  noteOffEventsToSend.addMidiMessage (juce::MidiMessage::noteOff (chan, note), mpeSourceID);
+                                                              });
         }
     }
 }

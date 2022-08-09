@@ -11,20 +11,22 @@
 namespace tracktion { inline namespace engine
 {
 
-/** An Node that mixes a sequence of clips of other nodes.
+/** A Node that mixes a sequence of clips of other nodes.
 
     This node takes a set of input Nodes with associated start + end times,
     and mixes together their output.
 
     It initialises and releases its inputs as required according to its current
     play position.
+
+    Additionally, this will send note-off events for clips that have been deleted.
 */
-class CombiningNode final : public tracktion::graph::Node,
-                            public TracktionEngineNode
+class MidiCombiningNode final : public tracktion::graph::Node,
+                                public TracktionEngineNode
 {
 public:
-    CombiningNode (ProcessState&);
-    ~CombiningNode() override;
+    MidiCombiningNode (EditItemID, ProcessState&);
+    ~MidiCombiningNode() override;
 
     //==============================================================================
     /** Adds an input node to be played at a given time range.
@@ -34,7 +36,7 @@ public:
 
         Any nodes passed-in will be deleted by this node when required.
     */
-    void addInput (std::unique_ptr<Node>, TimeRange);
+    void addInput (std::unique_ptr<LoopingMidiNode>, TimeRange);
 
     /** Returns the number of inputs added. */
     int getNumInputs() const;
@@ -56,17 +58,20 @@ public:
     size_t getAllocatedBytes() const override;
 
 private:
+    const EditItemID itemID;
+
     struct TimedNode;
     juce::OwnedArray<TimedNode> inputs;
     juce::OwnedArray<juce::Array<TimedNode*>> groups;
     std::atomic<bool> isReadyToProcessBlock { false };
-    choc::buffer::ChannelArrayBuffer<float> tempAudioBuffer;
+    MidiMessageArray noteOffEventsToSend;
 
     tracktion::graph::NodeProperties nodeProperties;
 
     void prefetchGroup (juce::Range<int64_t>, TimeRange);
+    void queueNoteOffsForClipsNoLongerPresent (const MidiCombiningNode& oldNode);
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CombiningNode)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiCombiningNode)
 };
 
 }} // namespace tracktion { inline namespace engine
