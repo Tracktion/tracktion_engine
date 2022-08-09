@@ -124,6 +124,10 @@ public:
         runConditionVariableBenchmarks();
         runSemaphoreBenchmarks<Semaphore> ("Semaphore");
         runSemaphoreBenchmarks<LightweightSemaphore> ("LightweightSemaphore");
+
+        runNonWaitingConditionVariableBenchmarks();
+        runNonWaitingSemaphoreBenchmarks<Semaphore> ("Semaphore");
+        runNonWaitingSemaphoreBenchmarks<LightweightSemaphore> ("LightweightSemaphore");
     }
 
 private:
@@ -228,6 +232,133 @@ private:
         }
 
         // Wait for the threads to complete
+        for (auto& t : threads)
+            t.join();
+
+        BenchmarkList::getInstance().addResult (benchmark.getResult());
+    }
+
+    template<typename SemaphoreType>
+    void runNonWaitingSemaphoreBenchmarks (juce::String semaphoreName)
+    {
+        constexpr int numThreads = 10;
+        using namespace std::literals;
+        Benchmark benchmark (createBenchmarkDescription ("Threads",
+                                                         juce::String ("Semaphore signal").replace ("Semaphore", semaphoreName).toStdString(),
+                                                         juce::String ("Signal numThreads (may not be waiting)").replace ("numThreads", juce::String (numThreads)).toStdString()));
+
+        std::atomic<int> numThreadsRunning { 0 };
+        std::atomic<bool> threadShouldExit { false };
+        SemaphoreType event;
+        auto signalTime = std::chrono::steady_clock::now();
+
+        // Start all the threads
+        std::vector<std::thread> threads;
+
+        for (int i = 0; i < numThreads; ++i)
+        {
+            threads.emplace_back ([&]
+                                  {
+                                      ++numThreadsRunning;
+
+                                      while (! threadShouldExit)
+                                          event.wait();
+
+                                      --numThreadsRunning;
+                                  });
+        }
+
+        // Wait until all the threads have started and are waiting on the event
+        for (;;)
+        {
+            if (numThreadsRunning == numThreads)
+                break;
+
+            std::this_thread::sleep_for (1ms);
+        }
+
+        // Sleep for a few more ms to ensure they're all waiting
+        std::this_thread::sleep_for (5ms);
+
+        // Signal all the threads
+        signalTime = std::chrono::steady_clock::now();
+
+        for (int i = 0; i < 100'000; ++i)
+        {
+            benchmark.start();
+            event.signal (numThreads);
+            benchmark.stop();
+        }
+
+        // Wait for the threads to complete
+        threadShouldExit = true;
+
+        while (numThreadsRunning > 0)
+            event.signal (numThreads);
+
+        for (auto& t : threads)
+            t.join();
+
+        BenchmarkList::getInstance().addResult (benchmark.getResult());
+    }
+
+    void runNonWaitingConditionVariableBenchmarks()
+    {
+        constexpr int numThreads = 10;
+        using namespace std::literals;
+        Benchmark benchmark (createBenchmarkDescription ("Threads",
+                                                         juce::String ("CV signal").toStdString(),
+                                                         juce::String ("Signal numThreads (may not be waiting)").replace ("numThreads", juce::String (numThreads)).toStdString()));
+
+        std::atomic<int> numThreadsRunning { 0 };
+        std::atomic<bool> threadShouldExit { false };
+        juce::WaitableEvent event;
+        auto signalTime = std::chrono::steady_clock::now();
+
+        // Start all the threads
+        std::vector<std::thread> threads;
+
+        for (int i = 0; i < numThreads; ++i)
+        {
+            threads.emplace_back ([&]
+                                  {
+                                      ++numThreadsRunning;
+
+                                      while (! threadShouldExit)
+                                          event.wait();
+
+                                      --numThreadsRunning;
+                                  });
+        }
+
+        // Wait until all the threads have started and are waiting on the event
+        for (;;)
+        {
+            if (numThreadsRunning == numThreads)
+                break;
+
+            std::this_thread::sleep_for (1ms);
+        }
+
+        // Sleep for a few more ms to ensure they're all waiting
+        std::this_thread::sleep_for (5ms);
+
+        // Signal all the threads
+        signalTime = std::chrono::steady_clock::now();
+
+        for (int i = 0; i < 100'000; ++i)
+        {
+            benchmark.start();
+            event.signal();
+            benchmark.stop();
+        }
+
+        // Wait for the threads to complete
+        threadShouldExit = true;
+
+        while (numThreadsRunning > 0)
+            event.signal();
+
         for (auto& t : threads)
             t.join();
 
