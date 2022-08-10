@@ -42,6 +42,16 @@ To enable this feature for clips, simply call `setUsesProxy (false)` on it.
 
 This feature also allows temporary adjustment of the tempo, speeding up or slowing down playback without changing the pitch of audio clip playback. This can be accessed by setting `EditPlaybackContext::setTempoAdjustment` but is usually handled internally by syncing to MIDI timecode or AbletonLink.
 
+## High Quality Sample Rate Conversion using libsamplerate
+
+If you use the `AudioClipBase::setUsesProxy (false)` mode to enable real-time time-stretching for audio clips, you can use the `AudioClipBase::setResamplingQuality` function to use higher quality sinc-based sample rate conversion. This produces less aliasing artefacts at the cost of some CPU cycles.
+
+The are several options: *lagrange* (the old and now default mode), *sincFast*, *sincMedium* and *sincBest*.
+
+## New MIDI playback mode
+
+There's a new MIDI playback mode which is enabled by calling `MidiClip::setUsesProxy (false)`. This generates looped MIDI sequences during playback which can speed up graph creation of long sequences and is generally better for situations where MIDI changes a lot. It does come at the expense of some bursty CPU use though when the playhead traverses a loop boundry.
+
 ## TempoSequencePosition has Been Removed
 
 This class has been replaced by the more optimised and `tempo::Sequence::Position`. You can still create one from a `TempoSequence` using the `createPosition (tempoSquence)` function.
