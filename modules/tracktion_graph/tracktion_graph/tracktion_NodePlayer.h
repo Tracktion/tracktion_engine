@@ -45,25 +45,25 @@ public:
     /** Sets the Node to process with a new sample rate and block size. */
     void setNode (std::unique_ptr<Node> newNode, double sampleRateToUse, int blockSizeToUse)
     {
-        auto newNodes = prepareToPlay (newNode.get(), input.get(), sampleRateToUse, blockSizeToUse);
+        auto newGraph = prepareToPlay (newNode.get(), input.get(), sampleRateToUse, blockSizeToUse);
         std::unique_ptr<Node> oldNode;
         
         {
             const juce::SpinLock::ScopedLockType sl (inputAndNodesLock);
             oldNode = std::move (input);
             input = std::move (newNode);
-            allNodes = std::move (newNodes);
+            graph = std::move (newGraph);
         }
     }
 
     /** Prepares the current Node to be played. */
     void prepareToPlay (double sampleRateToUse, int blockSizeToUse, Node* oldNode = nullptr)
     {
-        allNodes = prepareToPlay (input.get(), oldNode, sampleRateToUse, blockSizeToUse);
+        graph = prepareToPlay (input.get(), oldNode, sampleRateToUse, blockSizeToUse);
     }
 
     /** Prepares a specific Node to be played and returns all the Nodes. */
-    std::vector<Node*> prepareToPlay (Node* node, Node* oldNode, double sampleRateToUse, int blockSizeToUse)
+    NodeGraph prepareToPlay (Node* node, Node* oldNode, double sampleRateToUse, int blockSizeToUse)
     {
         sampleRate = sampleRateToUse;
         blockSize = blockSizeToUse;
@@ -90,9 +90,9 @@ public:
             int numMisses = 0;
             
             if (playHeadState != nullptr)
-                numMisses = processWithPlayHeadState (*playHeadState, *input, allNodes, pc);
+                numMisses = processWithPlayHeadState (*playHeadState, *input, graph->orderedNodes, pc);
             else
-                numMisses = processPostorderedNodes (*input, allNodes, pc);
+                numMisses = processPostorderedNodes (*input, graph->orderedNodes, pc);
             
             inputAndNodesLock.exit();
             
@@ -114,9 +114,9 @@ public:
 
 protected:
     std::unique_ptr<Node> input;
+    std::optional<NodeGraph> graph;
     PlayHeadState* playHeadState = nullptr;
     
-    std::vector<Node*> allNodes;
     double sampleRate = 44100.0;
     int blockSize = 512;
     

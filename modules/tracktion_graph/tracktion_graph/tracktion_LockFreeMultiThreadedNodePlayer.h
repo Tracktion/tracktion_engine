@@ -237,7 +237,7 @@ private:
     struct PreparedNode
     {
         std::unique_ptr<Node> rootNode;
-        std::vector<Node*> allNodes;
+        NodeGraph graph;
         std::vector<std::unique_ptr<PlaybackNode>> playbackNodes;
         std::unique_ptr<LockFreeFifo<Node*>> nodesReadyToBeProcessed;
         std::unique_ptr<AudioBufferPool> audioBufferPool;
@@ -256,9 +256,9 @@ private:
     
     //==============================================================================
     /** Prepares a specific Node to be played and returns all the Nodes. */
-    std::vector<Node*> prepareToPlay (Node* node, Node* oldNode,
-                                      double sampleRateToUse, int blockSizeToUse,
-                                      AudioBufferPool*);
+    NodeGraph prepareToPlay (Node* node, Node* oldNode,
+                             double sampleRateToUse, int blockSizeToUse,
+                             AudioBufferPool*);
 
     //==============================================================================
     void updatePreparedNode();

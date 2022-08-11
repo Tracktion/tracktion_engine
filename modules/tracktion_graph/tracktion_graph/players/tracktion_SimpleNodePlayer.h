@@ -33,18 +33,18 @@ public:
     /** Prepares the Node to be played. */
     void prepareToPlay (double sampleRateToUse, int blockSizeToUse)
     {
-        orderedNodes = node_player_utils::prepareToPlay (rootNode.get(), nullptr, sampleRateToUse, blockSizeToUse);
+        graph = node_player_utils::prepareToPlay (rootNode.get(), nullptr, sampleRateToUse, blockSizeToUse);
     }
 
     /** Processes a block of audio and MIDI data. */
     void process (const Node::ProcessContext& pc)
     {
         // Prepare all nodes for the next block
-        for (auto node : orderedNodes)
+        for (auto node : graph.orderedNodes)
             node->prepareForNextBlock (pc.referenceSampleRange);
         
         // Then process them all in sequence
-        for (auto node : orderedNodes)
+        for (auto node : graph.orderedNodes)
             node->process (pc.numSamples, pc.referenceSampleRange);
 
         // Finally copy the output from the root Node to our player buffers
@@ -61,7 +61,7 @@ public:
     
 private:
     std::unique_ptr<Node> rootNode;
-    std::vector<Node*> orderedNodes;
+    NodeGraph graph;
 };
 
 }}

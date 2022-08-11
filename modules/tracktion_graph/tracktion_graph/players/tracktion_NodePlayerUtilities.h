@@ -33,24 +33,30 @@ namespace node_player_utils
     }
 
     /** Prepares a specific Node to be played and returns all the Nodes. */
-    static std::vector<Node*> prepareToPlay (Node* node, Node* oldNode, double sampleRate, int blockSize,
-                                             std::function<NodeBuffer (choc::buffer::Size)> allocateAudioBuffer = nullptr,
-                                             std::function<void (NodeBuffer&&)> deallocateAudioBuffer = nullptr)
+    static NodeGraph prepareToPlay (Node* node, Node* oldNode,
+                                    double sampleRate, int blockSize,
+                                    std::function<NodeBuffer (choc::buffer::Size)> allocateAudioBuffer = nullptr,
+                                    std::function<void (NodeBuffer&&)> deallocateAudioBuffer = nullptr)
     {
         if (node == nullptr)
             return {};
         
         // First give the Nodes a chance to transform
-        transformNodes (*node);
-        
+        auto nodeGraph = transformAndCreateNodeGraph (*node);
+
+        std::optional<NodeGraph> oldGraph;
+
+        if (oldNode)
+            oldGraph = createNodeGraph (*oldNode);
+
         // Next, initialise all the nodes, this will call prepareToPlay on them and also
         // give them a chance to do things like balance latency
         const PlaybackInitialisationInfo info { sampleRate, blockSize, *node, oldNode,
-                                                allocateAudioBuffer, deallocateAudioBuffer };
+                                                allocateAudioBuffer, deallocateAudioBuffer,
+                                                &nodeGraph, oldGraph ? &(*oldGraph) : nullptr };
         visitNodes (*node, [&] (Node& n) { n.initialise (info); }, false);
         
-        // Then find all the nodes as it might have changed after initialisation
-        return tracktion::graph::getNodes (*node, tracktion::graph::VertexOrdering::postordering);
+        return nodeGraph;
     }
 
     inline void reserveAudioBufferPool (Node* rootNode, const std::vector<Node*>& allNodes,

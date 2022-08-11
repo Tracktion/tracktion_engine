@@ -102,7 +102,7 @@ private:
     struct PreparedNode
     {
         std::unique_ptr<Node> rootNode;
-        std::vector<Node*> allNodes;
+        NodeGraph graph;
         std::vector<std::unique_ptr<PlaybackNode>> playbackNodes;
         choc::fifo::MultipleReaderMultipleWriterFIFO<Node*> nodesReadyToBeProcessed;
     };
@@ -120,7 +120,7 @@ private:
     
     //==============================================================================
     /** Prepares a specific Node to be played and returns all the Nodes. */
-    std::vector<Node*> prepareToPlay (Node* node, Node* oldNode, double sampleRateToUse, int blockSizeToUse);
+    NodeGraph prepareToPlay (Node* node, Node* oldNode, double sampleRateToUse, int blockSizeToUse);
 
     //==============================================================================
     void clearThreads();
@@ -128,7 +128,7 @@ private:
     static void pause();
 
     //==============================================================================
-    void setNewCurrentNode (std::unique_ptr<Node> newRoot, std::vector<Node*> newNodes);
+    void setNewCurrentNode (std::unique_ptr<Node> newRoot, NodeGraph newGraph);
     
     //==============================================================================
     static void buildNodesOutputLists (std::vector<Node*>&, std::vector<std::unique_ptr<PlaybackNode>>&);

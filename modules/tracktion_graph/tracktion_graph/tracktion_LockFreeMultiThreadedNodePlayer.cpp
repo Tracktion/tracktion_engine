@@ -84,21 +84,21 @@ int LockFreeMultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
     referenceSampleRange = pc.referenceSampleRange;
 
     // Prepare all the nodes to be played back
-    for (auto node : preparedNode.allNodes)
+    for (auto node : preparedNode.graph.orderedNodes)
         node->prepareForNextBlock (referenceSampleRange);
 
     // We need to retain the root so we can get the output from it
     preparedNode.rootNode->retain();
 
-    if (numThreadsToUse.load (std::memory_order_acquire) == 0 || preparedNode.allNodes.size() == 1)
+    if (numThreadsToUse.load (std::memory_order_acquire) == 0 || preparedNode.graph.orderedNodes.size() == 1)
     {
-        for (auto node : preparedNode.allNodes)
+        for (auto node : preparedNode.graph.orderedNodes)
             node->process (numSamplesToProcess, referenceSampleRange);
     }
     else
     {
         // Reset the queue to be processed
-        jassert (preparedNode.playbackNodes.size() == preparedNode.allNodes.size());
+        jassert (preparedNode.playbackNodes.size() == preparedNode.graph.orderedNodes.size());
         resetProcessQueue();
 
         // Try to process Nodes until the root is ready
@@ -161,9 +161,9 @@ void LockFreeMultiThreadedNodePlayer::enablePooledMemoryAllocations (bool usePoo
 
 //==============================================================================
 //==============================================================================
-std::vector<Node*> LockFreeMultiThreadedNodePlayer::prepareToPlay (Node* node, Node* oldNode,
-                                                                   double sampleRateToUse, int blockSizeToUse,
-                                                                   AudioBufferPool* pool)
+NodeGraph LockFreeMultiThreadedNodePlayer::prepareToPlay (Node* node, Node* oldNode,
+                                                          double sampleRateToUse, int blockSizeToUse,
+                                                          AudioBufferPool* pool)
 {
     createThreads();
 
@@ -227,11 +227,11 @@ void LockFreeMultiThreadedNodePlayer::setNewCurrentNode (std::unique_ptr<Node> n
 
     const bool useAudioBufferPool = useMemoryPool;
     auto currentRoot = preparedNode.rootNode.get();
-    auto newNodes = prepareToPlay (newRoot.get(), currentRoot,
+    auto newGraph = prepareToPlay (newRoot.get(), currentRoot,
                                    sampleRateToUse, blockSizeToUse,
                                    useAudioBufferPool ? pendingPreparedNodeStorage.audioBufferPool.get() : nullptr);
 
-    std::stable_sort (newNodes.begin(), newNodes.end(),
+    std::stable_sort (newGraph.orderedNodes.begin(), newGraph.orderedNodes.end(),
                       [] (auto n1, auto n2)
                       {
                           return n1->isReadyToProcess() && ! n2->isReadyToProcess();
@@ -240,13 +240,13 @@ void LockFreeMultiThreadedNodePlayer::setNewCurrentNode (std::unique_ptr<Node> n
     pendingPreparedNode = nullptr;
     rootNode = newRoot.get();
     pendingPreparedNodeStorage.rootNode = std::move (newRoot);
-    pendingPreparedNodeStorage.allNodes = std::move (newNodes);
-    pendingPreparedNodeStorage.nodesReadyToBeProcessed = std::make_unique<LockFreeFifo<Node*>> ((int) pendingPreparedNodeStorage.allNodes.size());
+    pendingPreparedNodeStorage.graph = std::move (newGraph);
+    pendingPreparedNodeStorage.nodesReadyToBeProcessed = std::make_unique<LockFreeFifo<Node*>> ((int) pendingPreparedNodeStorage.graph.orderedNodes.size());
     buildNodesOutputLists (pendingPreparedNodeStorage);
     
     if (useAudioBufferPool)
     {
-        const size_t poolCapacity = pendingPreparedNodeStorage.allNodes.size();
+        const size_t poolCapacity = pendingPreparedNodeStorage.graph.orderedNodes.size();
         
         if (! pendingPreparedNodeStorage.audioBufferPool)
             pendingPreparedNodeStorage.audioBufferPool = std::make_unique<AudioBufferPool> (poolCapacity);
@@ -254,7 +254,7 @@ void LockFreeMultiThreadedNodePlayer::setNewCurrentNode (std::unique_ptr<Node> n
             pendingPreparedNodeStorage.audioBufferPool->setCapacity (poolCapacity);
         
         node_player_utils::reserveAudioBufferPool (pendingPreparedNodeStorage.rootNode.get(),
-                                                   pendingPreparedNodeStorage.allNodes,
+                                                   pendingPreparedNodeStorage.graph.orderedNodes,
                                                    *pendingPreparedNodeStorage.audioBufferPool,
                                                    numThreadsToUse, blockSize);
     }
@@ -270,28 +270,28 @@ void LockFreeMultiThreadedNodePlayer::setNewCurrentNode (std::unique_ptr<Node> n
 void LockFreeMultiThreadedNodePlayer::buildNodesOutputLists (PreparedNode& preparedNode)
 {
     preparedNode.playbackNodes.clear();
-    preparedNode.playbackNodes.reserve (preparedNode.allNodes.size());
+    preparedNode.playbackNodes.reserve (preparedNode.graph.orderedNodes.size());
 
-    for (auto n : preparedNode.allNodes)
+    for (auto n : preparedNode.graph.orderedNodes)
     {
        #if JUCE_DEBUG
         for (auto& pn : preparedNode.playbackNodes)
             jassert (&pn->node != n);
        #endif
 
-        jassert (std::count (preparedNode.allNodes.begin(), preparedNode.allNodes.end(), n) == 1);
+        jassert (std::count (preparedNode.graph.orderedNodes.begin(), preparedNode.graph.orderedNodes.end(), n) == 1);
 
         preparedNode.playbackNodes.push_back (std::make_unique<PlaybackNode> (*n));
         n->internal = preparedNode.playbackNodes.back().get();
     }
 
     // Iterate all nodes, for each input, add to the current Nodes output list
-    for (auto node : preparedNode.allNodes)
+    for (auto node : preparedNode.graph.orderedNodes)
     {
         for (auto inputNode : node->getDirectInputNodes())
         {
             // Check the input is actually still in the graph
-            jassert (std::find (preparedNode.allNodes.begin(), preparedNode.allNodes.end(), inputNode) != preparedNode.allNodes.end());
+            jassert (std::find (preparedNode.graph.orderedNodes.begin(), preparedNode.graph.orderedNodes.end(), inputNode) != preparedNode.graph.orderedNodes.end());
             static_cast<PlaybackNode*> (inputNode->internal)->outputs.push_back (node);
             inputNode->numOutputNodes++;
         }

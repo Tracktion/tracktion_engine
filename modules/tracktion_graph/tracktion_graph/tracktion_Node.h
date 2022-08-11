@@ -96,6 +96,32 @@ struct NodeBuffer
 };
 
 //==============================================================================
+/**
+    A Node and its ID cached for quick lookup (without having to traverse the graph).
+*/
+struct NodeAndID
+{
+    Node* node = nullptr;
+    size_t id = 0;
+};
+
+/** Compares two NodeAndIDs. */
+inline bool operator< (NodeAndID n1, NodeAndID n2)
+{
+    return n1.id < n2.id;
+}
+
+/**
+    Holds a graph in an order ready for processing and a sorted map for quick lookups.
+*/
+struct NodeGraph
+{
+    Node* rootNode = nullptr;
+    std::vector<Node*> orderedNodes;
+    std::vector<NodeAndID> sortedNodes;
+};
+
+//==============================================================================
 /** Passed into Nodes when they are being initialised, to give them useful
     contextual information that they may need
 */
@@ -107,6 +133,8 @@ struct PlaybackInitialisationInfo
     Node* rootNodeToReplace = nullptr;
     std::function<NodeBuffer (choc::buffer::Size)> allocateAudioBuffer = nullptr;
     std::function<void (NodeBuffer&&)> deallocateAudioBuffer = nullptr;
+    NodeGraph* nodeGraph = nullptr;
+    NodeGraph* oldNodeGraph = nullptr;
 };
 
 /** Holds some really basic properties of a node */
@@ -332,7 +360,7 @@ static inline std::vector<Node*> getNodes (Node&, VertexOrdering);
     repeatedly for Node until they all return false indicating no topological
     changes have been made.
 */
-static inline void transformNodes (Node& rootNode)
+static inline std::vector<Node*> transformNodes (Node& rootNode)
 {
     for (;;)
     {
@@ -345,7 +373,7 @@ static inline void transformNodes (Node& rootNode)
                 needToTransformAgain = true;
 
         if (! needToTransformAgain)
-            break;
+            return allNodes;
     }
 }
 
@@ -610,6 +638,32 @@ inline std::vector<Node*> getNodes (Node& node, VertexOrdering vertexOrdering)
        std::reverse (visitedNodes.begin(), visitedNodes.end());
     
     return visitedNodes;
+}
+
+inline std::vector<NodeAndID> createNodeMap (const std::vector<Node*>& nodes)
+{
+    std::vector<NodeAndID> nodeMap;
+
+    for (auto n : nodes)
+        nodeMap.push_back ({ n, n->getNodeProperties().nodeID });
+
+    std::sort (nodeMap.begin(), nodeMap.end());
+
+    return nodeMap;
+}
+
+inline NodeGraph createNodeGraph (Node& rootNode)
+{
+    auto orderedNodes = getNodes (rootNode, tracktion::graph::VertexOrdering::postordering);
+    auto sortedNodes = createNodeMap (orderedNodes);
+    return { &rootNode, std::move (orderedNodes), std::move (sortedNodes) };
+}
+
+inline NodeGraph transformAndCreateNodeGraph (Node& rootNode)
+{
+    auto orderedNodes = transformNodes (rootNode);
+    auto sortedNodes = createNodeMap (orderedNodes);
+    return { &rootNode, std::move (orderedNodes), std::move (sortedNodes) };
 }
 
 }}
