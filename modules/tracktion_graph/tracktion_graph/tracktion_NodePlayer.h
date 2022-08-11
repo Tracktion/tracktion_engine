@@ -52,14 +52,14 @@ public:
             const juce::SpinLock::ScopedLockType sl (inputAndNodesLock);
             oldNode = std::move (input);
             input = std::move (newNode);
-            graph = std::move (newGraph);
+            nodeGraph = std::move (newGraph);
         }
     }
 
     /** Prepares the current Node to be played. */
     void prepareToPlay (double sampleRateToUse, int blockSizeToUse, Node* oldNode = nullptr)
     {
-        graph = prepareToPlay (input.get(), oldNode, sampleRateToUse, blockSizeToUse);
+        nodeGraph = prepareToPlay (input.get(), oldNode, sampleRateToUse, blockSizeToUse);
     }
 
     /** Prepares a specific Node to be played and returns all the Nodes. */
@@ -90,9 +90,9 @@ public:
             int numMisses = 0;
             
             if (playHeadState != nullptr)
-                numMisses = processWithPlayHeadState (*playHeadState, *input, graph->orderedNodes, pc);
+                numMisses = processWithPlayHeadState (*playHeadState, *input, nodeGraph->orderedNodes, pc);
             else
-                numMisses = processPostorderedNodes (*input, graph->orderedNodes, pc);
+                numMisses = processPostorderedNodes (*input, nodeGraph->orderedNodes, pc);
             
             inputAndNodesLock.exit();
             
@@ -114,7 +114,7 @@ public:
 
 protected:
     std::unique_ptr<Node> input;
-    std::optional<NodeGraph> graph;
+    std::optional<NodeGraph> nodeGraph;
     PlayHeadState* playHeadState = nullptr;
     
     double sampleRate = 44100.0;
