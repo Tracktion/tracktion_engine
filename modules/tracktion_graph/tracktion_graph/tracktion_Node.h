@@ -116,10 +116,15 @@ inline bool operator< (NodeAndID n1, NodeAndID n2)
 */
 struct NodeGraph
 {
-    Node* rootNode = nullptr;
+    std::unique_ptr<Node> rootNode;
     std::vector<Node*> orderedNodes;
     std::vector<NodeAndID> sortedNodes;
 };
+
+
+/** Transforms a Node and then returns a NodeGraph of it ready to be initialised. */
+std::unique_ptr<NodeGraph> createNodeGraph (std::unique_ptr<Node>);
+
 
 //==============================================================================
 /** Passed into Nodes when they are being initialised, to give them useful
@@ -652,18 +657,18 @@ inline std::vector<NodeAndID> createNodeMap (const std::vector<Node*>& nodes)
     return nodeMap;
 }
 
-inline NodeGraph createNodeGraph (Node& rootNode)
+inline std::unique_ptr<NodeGraph> createNodeGraph (std::unique_ptr<Node> rootNode)
 {
-    auto orderedNodes = getNodes (rootNode, tracktion::graph::VertexOrdering::postordering);
+    assert (rootNode != nullptr);
+    auto orderedNodes = transformNodes (*rootNode);
     auto sortedNodes = createNodeMap (orderedNodes);
-    return { &rootNode, std::move (orderedNodes), std::move (sortedNodes) };
-}
 
-inline NodeGraph transformAndCreateNodeGraph (Node& rootNode)
-{
-    auto orderedNodes = transformNodes (rootNode);
-    auto sortedNodes = createNodeMap (orderedNodes);
-    return { &rootNode, std::move (orderedNodes), std::move (sortedNodes) };
+    auto nodeGraph = std::make_unique<NodeGraph>();
+    nodeGraph->rootNode = std::move (rootNode);
+    nodeGraph->orderedNodes = std::move (orderedNodes);
+    nodeGraph->sortedNodes = std::move (sortedNodes);
+
+    return nodeGraph;
 }
 
 }}

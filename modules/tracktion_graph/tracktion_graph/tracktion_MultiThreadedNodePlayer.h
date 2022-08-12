@@ -48,12 +48,15 @@ public:
     void setNode (std::unique_ptr<Node> newNode, double sampleRateToUse, int blockSizeToUse);
 
     /** Prepares the current Node to be played. */
-    void prepareToPlay (double sampleRateToUse, int blockSizeToUse, Node* oldNode = nullptr);
+    void prepareToPlay (double sampleRateToUse, int blockSizeToUse);
 
     /** Returns the current Node. */
     Node* getNode()
     {
-        return currentNode.load (std::memory_order_acquire);
+        if (auto cpn = currentPreparedNode.load (std::memory_order_acquire); cpn->graph != nullptr)
+            return cpn->graph->rootNode.get();
+
+        return nullptr;
     }
 
     /** Process a block of the Node. */
@@ -101,15 +104,14 @@ private:
     
     struct PreparedNode
     {
-        std::unique_ptr<Node> rootNode;
-        NodeGraph graph;
+        std::unique_ptr<NodeGraph> graph;
         std::vector<std::unique_ptr<PlaybackNode>> playbackNodes;
         choc::fifo::MultipleReaderMultipleWriterFIFO<Node*> nodesReadyToBeProcessed;
     };
     
     RealTimeSpinLock preparedNodeMutex;
     std::unique_ptr<PreparedNode> preparedNode;
-    std::atomic<Node*> currentNode { nullptr };
+    std::atomic<PreparedNode*> currentPreparedNode { nullptr };
 
     std::atomic<size_t> numNodesQueued { 0 };
     RealTimeSpinLock clearNodesLock;
@@ -120,7 +122,7 @@ private:
     
     //==============================================================================
     /** Prepares a specific Node to be played and returns all the Nodes. */
-    NodeGraph prepareToPlay (Node* node, Node* oldNode, double sampleRateToUse, int blockSizeToUse);
+    std::unique_ptr<NodeGraph> prepareToPlay (std::unique_ptr<Node>, NodeGraph* oldGraph, double sampleRateToUse, int blockSizeToUse);
 
     //==============================================================================
     void clearThreads();
@@ -128,7 +130,7 @@ private:
     static void pause();
 
     //==============================================================================
-    void setNewCurrentNode (std::unique_ptr<Node> newRoot, NodeGraph newGraph);
+    void setNewGraph (std::unique_ptr<NodeGraph>);
     
     //==============================================================================
     static void buildNodesOutputLists (std::vector<Node*>&, std::vector<std::unique_ptr<PlaybackNode>>&);

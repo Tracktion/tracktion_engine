@@ -113,10 +113,10 @@ public:
         /** Returns true if all the Nodes have been processed. */
         bool isFinalNodeReady()
         {
-            if (! player.preparedNode.rootNode)
+            if (! player.preparedNode.graph)
                 return true;
 
-            return player.preparedNode.rootNode->hasProcessed();
+            return player.preparedNode.graph->rootNode->hasProcessed();
         }
 
         /** Process the next chain of Nodes.
@@ -236,8 +236,7 @@ private:
     
     struct PreparedNode
     {
-        std::unique_ptr<Node> rootNode;
-        NodeGraph graph;
+        std::unique_ptr<NodeGraph> graph;
         std::vector<std::unique_ptr<PlaybackNode>> playbackNodes;
         std::unique_ptr<LockFreeFifo<Node*>> nodesReadyToBeProcessed;
         std::unique_ptr<AudioBufferPool> audioBufferPool;
@@ -256,9 +255,9 @@ private:
     
     //==============================================================================
     /** Prepares a specific Node to be played and returns all the Nodes. */
-    NodeGraph prepareToPlay (Node* node, Node* oldNode,
-                             double sampleRateToUse, int blockSizeToUse,
-                             AudioBufferPool*);
+    std::unique_ptr<NodeGraph> prepareToPlay (std::unique_ptr<Node>, NodeGraph* oldGraph,
+                                              double sampleRateToUse, int blockSizeToUse,
+                                              AudioBufferPool*);
 
     //==============================================================================
     void updatePreparedNode();
@@ -269,8 +268,8 @@ private:
     void pause();
 
     //==============================================================================
-    void setNewCurrentNode (std::unique_ptr<Node> newRoot, double sampleRateToUse, int blockSizeToUse);
-    
+    void postNewGraph (std::unique_ptr<NodeGraph>);
+
     //==============================================================================
     static void buildNodesOutputLists (PreparedNode&);
     void resetProcessQueue();

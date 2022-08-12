@@ -33,29 +33,25 @@ namespace node_player_utils
     }
 
     /** Prepares a specific Node to be played and returns all the Nodes. */
-    static NodeGraph prepareToPlay (Node* node, Node* oldNode,
-                                    double sampleRate, int blockSize,
-                                    std::function<NodeBuffer (choc::buffer::Size)> allocateAudioBuffer = nullptr,
-                                    std::function<void (NodeBuffer&&)> deallocateAudioBuffer = nullptr)
+    static std::unique_ptr<NodeGraph> prepareToPlay (std::unique_ptr<Node> node, NodeGraph* oldGraph,
+                                                     double sampleRate, int blockSize,
+                                                     std::function<NodeBuffer (choc::buffer::Size)> allocateAudioBuffer = nullptr,
+                                                     std::function<void (NodeBuffer&&)> deallocateAudioBuffer = nullptr)
     {
         if (node == nullptr)
             return {};
         
         // First give the Nodes a chance to transform
-        auto nodeGraph = transformAndCreateNodeGraph (*node);
+        auto nodeGraph = createNodeGraph (std::move (node));
 
-        std::optional<NodeGraph> oldGraph;
-
-        if (oldNode)
-            oldGraph = createNodeGraph (*oldNode);
-
-        // Next, initialise all the nodes, this will call prepareToPlay on them and also
-        // give them a chance to do things like balance latency
-        const PlaybackInitialisationInfo info { sampleRate, blockSize, *node, oldNode,
+        // Next, initialise all the nodes, this will call prepareToPlay on them
+        const PlaybackInitialisationInfo info { sampleRate, blockSize, *nodeGraph->rootNode, oldGraph ? oldGraph->rootNode.get() : nullptr,
                                                 allocateAudioBuffer, deallocateAudioBuffer,
-                                                &nodeGraph, oldGraph ? &(*oldGraph) : nullptr };
-        visitNodes (*node, [&] (Node& n) { n.initialise (info); }, false);
-        
+                                                nodeGraph.get(), oldGraph ? oldGraph : nullptr };
+
+        for (auto n : nodeGraph->orderedNodes)
+            n->initialise (info);
+
         return nodeGraph;
     }
 
