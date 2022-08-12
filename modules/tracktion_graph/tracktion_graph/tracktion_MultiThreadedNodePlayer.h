@@ -53,8 +53,9 @@ public:
     /** Returns the current Node. */
     Node* getNode()
     {
-        if (auto cpn = currentPreparedNode.load (std::memory_order_acquire); cpn->graph != nullptr)
-            return cpn->graph->rootNode.get();
+        if (auto cpn = currentPreparedNode.load (std::memory_order_acquire);
+            cpn != nullptr && cpn->graph != nullptr)
+           return cpn->graph->rootNode.get();
 
         return nullptr;
     }

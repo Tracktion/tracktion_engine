@@ -347,7 +347,7 @@ void MultiThreadedNodePlayer::setNewGraph (std::unique_ptr<NodeGraph> newGraph)
     newPreparedNode->nodesReadyToBeProcessed.reset (newPreparedNode->graph->orderedNodes.size());
     buildNodesOutputLists (newPreparedNode->graph->orderedNodes, newPreparedNode->playbackNodes);
 
-    currentPreparedNode = preparedNode.get();
+    currentPreparedNode = newPreparedNode.get();
 
     // Then swap the storage under the lock so the old Node isn't being processed whilst it is deleted
     const std::lock_guard<RealTimeSpinLock> lock (preparedNodeMutex);
