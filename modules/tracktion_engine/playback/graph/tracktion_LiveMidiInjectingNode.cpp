@@ -44,28 +44,15 @@ std::vector<tracktion::graph::Node*> LiveMidiInjectingNode::getDirectInputNodes(
 
 void LiveMidiInjectingNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
-    if (info.rootNodeToReplace == nullptr)
-        return;
-    
-    auto nodeIDToLookFor = getNodeProperties().nodeID;
-    
-    if (nodeIDToLookFor == 0)
-        return;
-
-    auto visitor = [this, nodeIDToLookFor] (Node& node)
+    if (auto oldNode = findNodeWithIDIfNonZero<LiveMidiInjectingNode> (info.nodeGraphToReplace, getNodeProperties().nodeID))
     {
-        if (auto other = dynamic_cast<LiveMidiInjectingNode*> (&node))
+        if (oldNode->track == track)
         {
-            if (other->getNodeProperties().nodeID == nodeIDToLookFor
-                && other->track == track)
-            {
-                const juce::ScopedLock sl2 (other->liveMidiLock);
-                liveMidiMessages.swapWith (other->liveMidiMessages);
-                midiSourceID = other->midiSourceID;
-            }
+            const juce::ScopedLock sl2 (oldNode->liveMidiLock);
+            liveMidiMessages.swapWith (oldNode->liveMidiMessages);
+            midiSourceID = oldNode->midiSourceID;
         }
-    };
-    visitNodes (*info.rootNodeToReplace, visitor, true);
+    }
 }
 
 bool LiveMidiInjectingNode::isReadyToProcess()

@@ -43,11 +43,11 @@ public:
         
     void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info) override
     {
-        latencyNumSamples = info.rootNode.getNodeProperties().latencyNumSamples;
+        latencyNumSamples = info.nodeGraph.rootNode->getNodeProperties().latencyNumSamples;
         
         // Member variables have to be updated from the previous Node or if the graph gets
         // rebuilt during the countdown period, the playhead time will jump back
-        updateFromPreviousNode (info.rootNodeToReplace);
+        updateFromPreviousNode (info.nodeGraphToReplace);
     }
     
     void process (ProcessContext& pc) override
@@ -109,28 +109,13 @@ private:
         updateReferencePositionOnJump = false;
     }
 
-    void updateFromPreviousNode (Node* rootNodeToReplace)
+    void updateFromPreviousNode (NodeGraph* nodeGraphToReplace)
     {
-        if (rootNodeToReplace == nullptr)
-            return;
-        
-        auto nodeIDToLookFor = getNodeProperties().nodeID;
-        
-        if (nodeIDToLookFor == 0)
-            return;
-
-        auto visitor = [this, nodeIDToLookFor] (Node& node)
+        if (auto oldNode = findNodeWithIDIfNonZero<PlayHeadPositionNode> (nodeGraphToReplace, getNodeProperties().nodeID))
         {
-            if (auto other = dynamic_cast<PlayHeadPositionNode*> (&node))
-            {
-                if (other->getNodeProperties().nodeID == nodeIDToLookFor)
-                {
-                    state = other->state;
-                    updateReferencePositionOnJump = false;
-                }
-            }
-        };
-        visitNodes (*rootNodeToReplace, visitor, true);
+            state = oldNode->state;
+            updateReferencePositionOnJump = false;
+        }
     }
 };
 

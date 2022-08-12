@@ -111,6 +111,12 @@ inline bool operator< (NodeAndID n1, NodeAndID n2)
     return n1.id < n2.id;
 }
 
+/** Compares two NodeAndIDs. */
+inline bool operator== (NodeAndID n1, NodeAndID n2)
+{
+    return n1.node == n2.node && n1.id == n2.id;
+}
+
 /**
     Holds a graph in an order ready for processing and a sorted map for quick lookups.
 */
@@ -134,12 +140,10 @@ struct PlaybackInitialisationInfo
 {
     double sampleRate;
     int blockSize;
-    Node& rootNode;
-    Node* rootNodeToReplace = nullptr;
+    NodeGraph& nodeGraph;
+    NodeGraph* nodeGraphToReplace = nullptr;
     std::function<NodeBuffer (choc::buffer::Size)> allocateAudioBuffer = nullptr;
     std::function<void (NodeBuffer&&)> deallocateAudioBuffer = nullptr;
-    NodeGraph* nodeGraph = nullptr;
-    NodeGraph* oldNodeGraph = nullptr;
 };
 
 /** Holds some really basic properties of a node */
@@ -650,9 +654,16 @@ inline std::vector<NodeAndID> createNodeMap (const std::vector<Node*>& nodes)
     std::vector<NodeAndID> nodeMap;
 
     for (auto n : nodes)
+    {
         nodeMap.push_back ({ n, n->getNodeProperties().nodeID });
 
+        for (auto internalNode : n->getInternalNodes())
+            nodeMap.push_back ({ internalNode, internalNode->getNodeProperties().nodeID });
+    }
+
     std::sort (nodeMap.begin(), nodeMap.end());
+    nodeMap.erase (std::unique (nodeMap.begin(), nodeMap.end()),
+                   nodeMap.end());
 
     return nodeMap;
 }

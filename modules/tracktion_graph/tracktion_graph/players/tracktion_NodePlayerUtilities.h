@@ -45,9 +45,9 @@ namespace node_player_utils
         auto nodeGraph = createNodeGraph (std::move (node));
 
         // Next, initialise all the nodes, this will call prepareToPlay on them
-        const PlaybackInitialisationInfo info { sampleRate, blockSize, *nodeGraph->rootNode, oldGraph ? oldGraph->rootNode.get() : nullptr,
-                                                allocateAudioBuffer, deallocateAudioBuffer,
-                                                nodeGraph.get(), oldGraph ? oldGraph : nullptr };
+        const PlaybackInitialisationInfo info { sampleRate, blockSize,
+                                                *nodeGraph, oldGraph,
+                                                allocateAudioBuffer, deallocateAudioBuffer };
 
         for (auto n : nodeGraph->orderedNodes)
             n->initialise (info);

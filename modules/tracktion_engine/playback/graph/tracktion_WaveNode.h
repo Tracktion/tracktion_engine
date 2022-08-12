@@ -81,7 +81,7 @@ private:
     int64_t editPositionToFileSample (int64_t) const noexcept;
     int64_t editTimeToFileSample (TimePosition) const noexcept;
     bool updateFileSampleRate();
-    void replaceChannelStateIfPossible (Node*, int numChannelsToUse);
+    void replaceChannelStateIfPossible (NodeGraph*, int numChannelsToUse);
     void replaceChannelStateIfPossible (WaveNode&, int numChannelsToUse);
     void processSection (ProcessContext&, juce::Range<int64_t> timelineRange);
 
@@ -199,7 +199,7 @@ private:
     std::shared_ptr<tempo::Sequence::Position> chordPitchPosition;
 
     bool buildAudioReaderGraph();
-    void replaceStateIfPossible (Node*);
+    void replaceStateIfPossible (NodeGraph*);
     void replaceStateIfPossible (WaveNodeRealTime&);
     void processSection (ProcessContext&);
     tempo::Key getKeyToSyncTo (TimePosition) const;

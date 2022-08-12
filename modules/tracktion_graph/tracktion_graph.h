@@ -85,6 +85,7 @@
 #include "utilities/tracktion_MidiMessageArray.h"
 namespace tracktion_engine = tracktion::engine;
 
+#include "tracktion_graph/tracktion_Node.h"
 #include "tracktion_graph/tracktion_Utility.h"
 
 #include "utilities/tracktion_AudioBufferPool.h"
@@ -99,7 +100,6 @@ namespace tracktion_engine = tracktion::engine;
 
 #include "tracktion_graph/tracktion_PlayHead.h"
 
-#include "tracktion_graph/tracktion_Node.h"
 #include "tracktion_graph/tracktion_PlayHeadState.h"
 
 #include "tracktion_graph/players/tracktion_NodePlayerUtilities.h"
