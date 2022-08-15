@@ -66,6 +66,10 @@ public:
 
         static constexpr auto maxNumChannels = 8;
 
+        // BEATCONNECT MODIFICATION START
+        int getNumChannelsUsed() noexcept;
+        // BEATCONNECT MODIFICATION END
+
         /** @internal */
         void setNumChannelsUsed (int) noexcept;
         void setOverload (int channel, bool hasOverloaded) noexcept;
