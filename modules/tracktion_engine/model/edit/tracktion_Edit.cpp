@@ -24,7 +24,13 @@ struct Edit::UndoTransactionTimer   : private juce::Timer,
     UndoTransactionTimer (Edit& e)
         : edit (e)
     {
-        callBlocking ([&] { edit.getUndoManager().addChangeListener (this); });
+        // Add the change listener asyncronously to avoid messages coming in
+        // from the Edit initialisation phase
+        juce::MessageManager::callAsync ([editRef = Edit::WeakRef (&edit)]
+                                         {
+                                             if (auto e = dynamic_cast<Edit*> (editRef.get()))
+                                                 e->getUndoManager().addChangeListener (e->undoTransactionTimer.get());
+                                         });
     }
 
     ~UndoTransactionTimer() override
@@ -46,15 +52,11 @@ struct Edit::UndoTransactionTimer   : private juce::Timer,
 
     void changeListenerCallback (juce::ChangeBroadcaster*) override
     {
-        if (juce::Time::getCurrentTime() > timeToStartTransactions)
-        {
-            edit.markAsChanged();
-            startTimer (350);
-        }
+        edit.markAsChanged();
+        startTimer (350);
     }
 
     Edit& edit;
-    const juce::Time timeToStartTransactions { juce::Time::getCurrentTime() + juce::RelativeTime::seconds (5.0) };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (UndoTransactionTimer)
 };
