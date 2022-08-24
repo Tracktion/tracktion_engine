@@ -28,8 +28,8 @@ struct Edit::UndoTransactionTimer   : private juce::Timer,
         // from the Edit initialisation phase
         juce::MessageManager::callAsync ([editRef = Edit::WeakRef (&edit)]
                                          {
-                                             if (auto e = dynamic_cast<Edit*> (editRef.get()))
-                                                 e->getUndoManager().addChangeListener (e->undoTransactionTimer.get());
+                                             if (auto ed = dynamic_cast<Edit*> (editRef.get()))
+                                                 ed->getUndoManager().addChangeListener (ed->undoTransactionTimer.get());
                                          });
     }
 

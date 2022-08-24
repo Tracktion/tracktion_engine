@@ -97,6 +97,7 @@ namespace tracktion_engine = tracktion::engine;
 #include "utilities/tracktion_Semaphore.h"
 #include "utilities/tracktion_Threads.h"
 #include "utilities/tracktion_LatencyProcessor.h"
+#include "utilities/tracktion_LockFreeObject.h"
 
 #include "tracktion_graph/tracktion_PlayHead.h"
 

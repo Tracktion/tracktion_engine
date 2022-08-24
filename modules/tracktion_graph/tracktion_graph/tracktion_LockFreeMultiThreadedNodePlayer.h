@@ -27,6 +27,8 @@ namespace tracktion { inline namespace graph
 namespace tracktion { inline namespace graph
 {
 
+//==============================================================================
+//==============================================================================
 /**
     Plays back a node with mutiple threads.
     The setting of Nodes and processing are all lock-free.
@@ -35,6 +37,47 @@ namespace tracktion { inline namespace graph
 */
 class LockFreeMultiThreadedNodePlayer
 {
+private:
+    //==============================================================================
+    template<typename Type>
+    class LockFreeFifo
+    {
+    public:
+        LockFreeFifo (int capacity)
+            : fifo (std::make_unique<farbot::fifo<Type>> (juce::nextPowerOfTwo (capacity)))
+        {}
+
+        bool try_enqueue (Type&& item)      { return fifo->push (std::move (item)); }
+        bool try_dequeue (Type& item)       { return fifo->pop (item); }
+
+    private:
+        std::unique_ptr<farbot::fifo<Type>> fifo;
+    };
+
+    struct PlaybackNode
+    {
+        PlaybackNode (Node& n)
+            : node (n), numInputs (node.getDirectInputNodes().size())
+        {}
+
+        Node& node;
+        const size_t numInputs;
+        std::vector<Node*> outputs;
+        std::atomic<size_t> numInputsToBeProcessed { 0 };
+        std::atomic<bool> hasBeenQueued { true };
+       #if JUCE_DEBUG
+        std::atomic<bool> hasBeenDequeued { false };
+       #endif
+    };
+
+    struct PreparedNode
+    {
+        std::unique_ptr<NodeGraph> graph;
+        std::vector<std::unique_ptr<PlaybackNode>> playbackNodes;
+        std::unique_ptr<LockFreeFifo<Node*>> nodesReadyToBeProcessed;
+        std::unique_ptr<AudioBufferPool> audioBufferPool;
+    };
+
 public:
     //==============================================================================
     /**
@@ -113,10 +156,12 @@ public:
         /** Returns true if all the Nodes have been processed. */
         bool isFinalNodeReady()
         {
-            if (! player.preparedNode.graph)
+            assert (currentPreparedNode);
+
+            if (! currentPreparedNode.load()->graph)
                 return true;
 
-            return player.preparedNode.graph->rootNode->hasProcessed();
+            return currentPreparedNode.load()->graph->rootNode->hasProcessed();
         }
 
         /** Process the next chain of Nodes.
@@ -125,12 +170,21 @@ public:
         */
         bool process()
         {
-            return player.processNextFreeNode();
+            if (auto cpn = currentPreparedNode.load())
+                return player.processNextFreeNode (*currentPreparedNode.load());
+
+            return false;
+        }
+
+        void setCurrentNode (LockFreeMultiThreadedNodePlayer::PreparedNode* nodeInUse)
+        {
+            currentPreparedNode = nodeInUse;
         }
         
     private:
         LockFreeMultiThreadedNodePlayer& player;
         std::atomic<bool> threadsShouldExit { false };
+        std::atomic<LockFreeMultiThreadedNodePlayer::PreparedNode*> currentPreparedNode { nullptr };
     };
 
     //==============================================================================
@@ -195,22 +249,6 @@ public:
 
 private:
     //==============================================================================
-    template<typename Type>
-    class LockFreeFifo
-    {
-    public:
-        LockFreeFifo (int capacity)
-            : fifo (std::make_unique<farbot::fifo<Type>> (juce::nextPowerOfTwo (capacity)))
-        {}
-        
-        bool try_enqueue (Type&& item)      { return fifo->push (std::move (item)); }
-        bool try_dequeue (Type& item)       { return fifo->pop (item); }
-        
-    private:
-        std::unique_ptr<farbot::fifo<Type>> fifo;
-    };
-
-    //==============================================================================
     std::atomic<size_t> numThreadsToUse { std::max ((size_t) 0, (size_t) std::thread::hardware_concurrency() - 1) };
     juce::Range<int64_t> referenceSampleRange;
     choc::buffer::FrameCount numSamplesToProcess = 0;
@@ -218,36 +256,12 @@ private:
 
     std::unique_ptr<ThreadPool> threadPool;
     
-    struct PlaybackNode
-    {
-        PlaybackNode (Node& n)
-            : node (n), numInputs (node.getDirectInputNodes().size())
-        {}
-        
-        Node& node;
-        const size_t numInputs;
-        std::vector<Node*> outputs;
-        std::atomic<size_t> numInputsToBeProcessed { 0 };
-        std::atomic<bool> hasBeenQueued { true };
-       #if JUCE_DEBUG
-        std::atomic<bool> hasBeenDequeued { false };
-       #endif
-    };
-    
-    struct PreparedNode
-    {
-        std::unique_ptr<NodeGraph> graph;
-        std::vector<std::unique_ptr<PlaybackNode>> playbackNodes;
-        std::unique_ptr<LockFreeFifo<Node*>> nodesReadyToBeProcessed;
-        std::unique_ptr<AudioBufferPool> audioBufferPool;
-    };
-    
+    LockFreeObject<PreparedNode> preparedNodeObject;
     Node* rootNode = nullptr;
-    PreparedNode preparedNode, pendingPreparedNodeStorage;
-    std::atomic<PreparedNode*> pendingPreparedNode { nullptr };
-    std::atomic<bool> isUpdatingPreparedNode { false };
+    NodeGraph* lastGraphPosted = nullptr;
+    AudioBufferPool* lastAudioBufferPoolPosted = nullptr;
+
     std::atomic<size_t> numNodesQueued { 0 };
-    RealTimeSpinLock clearNodesLock;
 
     //==============================================================================
     std::atomic<double> sampleRate { 44100.0 };
@@ -260,9 +274,6 @@ private:
                                               AudioBufferPool*);
 
     //==============================================================================
-    void updatePreparedNode();
-
-    //==============================================================================
     void clearThreads();
     void createThreads();
     void pause();
@@ -272,12 +283,12 @@ private:
 
     //==============================================================================
     static void buildNodesOutputLists (PreparedNode&);
-    void resetProcessQueue();
-    Node* updateProcessQueueForNode (Node&);
-    void processNode (Node&);
+    void resetProcessQueue (PreparedNode&);
+    Node* updateProcessQueueForNode (PreparedNode&, Node&);
+    void processNode (PreparedNode&, Node&);
 
     //==============================================================================
-    bool processNextFreeNode();
+    bool processNextFreeNode (PreparedNode&);
 };
 
 }}
