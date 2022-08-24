@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-08-10 11:19:20</td>
+            <td class="headerValue">2022-08-24 11:20:00</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">14</td>
@@ -137,21 +137,21 @@
 <a name="75"><span class="lineNum">      75 </span><span class="lineCov">       3466 :     }</span></a>
 <a name="76"><span class="lineNum">      76 </span>            : </a>
 <a name="77"><span class="lineNum">      77 </span>            :     /** @internal. */</a>
-<a name="78"><span class="lineNum">      78 </span><span class="lineCov">         76 :     void handleAsyncUpdate() override</span></a>
+<a name="78"><span class="lineNum">      78 </span><span class="lineCov">         74 :     void handleAsyncUpdate() override</span></a>
 <a name="79"><span class="lineNum">      79 </span>            :     {</a>
 <a name="80"><span class="lineNum">      80 </span>            :         auto compareAndReset = [] (bool&amp; flag) -&gt; bool</a>
 <a name="81"><span class="lineNum">      81 </span>            :         {</a>
-<a name="82"><span class="lineNum">      82 </span><span class="lineCov">        111 :             if (! flag)</span></a>
+<a name="82"><span class="lineNum">      82 </span><span class="lineCov">        107 :             if (! flag)</span></a>
 <a name="83"><span class="lineNum">      83 </span>            :                 return false;</a>
 <a name="84"><span class="lineNum">      84 </span>            : </a>
 <a name="85"><span class="lineNum">      85 </span><span class="lineCov">         79 :             flag = false;</span></a>
 <a name="86"><span class="lineNum">      86 </span>            :             return true;</a>
 <a name="87"><span class="lineNum">      87 </span>            :         };</a>
 <a name="88"><span class="lineNum">      88 </span>            : </a>
-<a name="89"><span class="lineNum">      89 </span><span class="lineCov">        187 :         for (auto&amp;&amp; f : functions)</span></a>
+<a name="89"><span class="lineNum">      89 </span><span class="lineCov">        181 :         for (auto&amp;&amp; f : functions)</span></a>
 <a name="90"><span class="lineNum">      90 </span>            :             if (compareAndReset (f.second.first))</a>
 <a name="91"><span class="lineNum">      91 </span>            :                 f.second.second();</a>
-<a name="92"><span class="lineNum">      92 </span><span class="lineCov">         76 :     }</span></a>
+<a name="92"><span class="lineNum">      92 </span><span class="lineCov">         74 :     }</span></a>
 <a name="93"><span class="lineNum">      93 </span>            : </a>
 <a name="94"><span class="lineNum">      94 </span>            :     std::map&lt;int, std::pair&lt;bool, std::function&lt;void (void)&gt;&gt;&gt; functions;</a>
 <a name="95"><span class="lineNum">      95 </span>            : };</a>
@@ -187,8 +187,8 @@
 <a name="125"><span class="lineNum">     125 </span>            : class MessageThreadCallback   : private juce::AsyncUpdater</a>
 <a name="126"><span class="lineNum">     126 </span>            : {</a>
 <a name="127"><span class="lineNum">     127 </span>            : public:</a>
-<a name="128"><span class="lineNum">     128 </span><span class="lineCov">      13460 :     MessageThreadCallback() = default;</span></a>
-<a name="129"><span class="lineNum">     129 </span><span class="lineCov">      26920 :     ~MessageThreadCallback() override       { cancelPendingUpdate(); }</span></a>
+<a name="128"><span class="lineNum">     128 </span><span class="lineCov">      13199 :     MessageThreadCallback() = default;</span></a>
+<a name="129"><span class="lineNum">     129 </span><span class="lineCov">      26398 :     ~MessageThreadCallback() override       { cancelPendingUpdate(); }</span></a>
 <a name="130"><span class="lineNum">     130 </span>            : </a>
 <a name="131"><span class="lineNum">     131 </span>            :     /** Returns true if the callback has completed. */</a>
 <a name="132"><span class="lineNum">     132 </span>            :     bool hasFinished() const noexcept       { return finished; }</a>
@@ -196,12 +196,12 @@
 <a name="134"><span class="lineNum">     134 </span>            :     /** Triggers the callback to happen on the message thread and blocks</a>
 <a name="135"><span class="lineNum">     135 </span>            :         until it has returned or the thread signals it should exit.</a>
 <a name="136"><span class="lineNum">     136 </span>            :     */</a>
-<a name="137"><span class="lineNum">     137 </span><span class="lineCov">      13460 :     void triggerAndWaitForCallback()</span></a>
+<a name="137"><span class="lineNum">     137 </span><span class="lineCov">      13199 :     void triggerAndWaitForCallback()</span></a>
 <a name="138"><span class="lineNum">     138 </span>            :     {</a>
-<a name="139"><span class="lineNum">     139 </span><span class="lineCov">      13460 :         if (juce::MessageManager::getInstance()-&gt;isThisTheMessageThread())</span></a>
+<a name="139"><span class="lineNum">     139 </span><span class="lineCov">      13199 :         if (juce::MessageManager::getInstance()-&gt;isThisTheMessageThread())</span></a>
 <a name="140"><span class="lineNum">     140 </span>            :         {</a>
-<a name="141"><span class="lineNum">     141 </span><span class="lineCov">      13295 :             handleAsyncUpdate();</span></a>
-<a name="142"><span class="lineNum">     142 </span><span class="lineCov">      13295 :             return;</span></a>
+<a name="141"><span class="lineNum">     141 </span><span class="lineCov">      13034 :             handleAsyncUpdate();</span></a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineCov">      13034 :             return;</span></a>
 <a name="143"><span class="lineNum">     143 </span>            :         }</a>
 <a name="144"><span class="lineNum">     144 </span>            : </a>
 <a name="145"><span class="lineNum">     145 </span><span class="lineCov">        165 :         triggerAsyncUpdate();</span></a>
@@ -251,17 +251,17 @@
 <a name="189"><span class="lineNum">     189 </span>            :     std::atomic&lt;bool&gt; finished { false }, hasBeenCancelled { false };</a>
 <a name="190"><span class="lineNum">     190 </span>            :     juce::WaitableEvent waiter;</a>
 <a name="191"><span class="lineNum">     191 </span>            : </a>
-<a name="192"><span class="lineNum">     192 </span><span class="lineCov">      13460 :     void handleAsyncUpdate() override</span></a>
+<a name="192"><span class="lineNum">     192 </span><span class="lineCov">      13199 :     void handleAsyncUpdate() override</span></a>
 <a name="193"><span class="lineNum">     193 </span>            :     {</a>
-<a name="194"><span class="lineNum">     194 </span><span class="lineCov">      26920 :         CRASH_TRACER</span></a>
+<a name="194"><span class="lineNum">     194 </span><span class="lineCov">      26398 :         CRASH_TRACER</span></a>
 <a name="195"><span class="lineNum">     195 </span>            :         TRACKTION_ASSERT_MESSAGE_THREAD</a>
 <a name="196"><span class="lineNum">     196 </span>            :         </a>
-<a name="197"><span class="lineNum">     197 </span><span class="lineCov">      13460 :         if (hasBeenCancelled)</span></a>
+<a name="197"><span class="lineNum">     197 </span><span class="lineCov">      13199 :         if (hasBeenCancelled)</span></a>
 <a name="198"><span class="lineNum">     198 </span><span class="lineNoCov">          0 :             return;</span></a>
 <a name="199"><span class="lineNum">     199 </span>            : </a>
-<a name="200"><span class="lineNum">     200 </span><span class="lineCov">      13460 :         performAction();</span></a>
+<a name="200"><span class="lineNum">     200 </span><span class="lineCov">      13199 :         performAction();</span></a>
 <a name="201"><span class="lineNum">     201 </span>            :         finished = true;</a>
-<a name="202"><span class="lineNum">     202 </span><span class="lineCov">      13460 :         waiter.signal();</span></a>
+<a name="202"><span class="lineNum">     202 </span><span class="lineCov">      13199 :         waiter.signal();</span></a>
 <a name="203"><span class="lineNum">     203 </span>            :     }</a>
 <a name="204"><span class="lineNum">     204 </span>            : </a>
 <a name="205"><span class="lineNum">     205 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MessageThreadCallback)</a>
@@ -270,20 +270,20 @@
 <a name="208"><span class="lineNum">     208 </span>            : //==============================================================================</a>
 <a name="209"><span class="lineNum">     209 </span>            : struct BlockingFunction  : public MessageThreadCallback</a>
 <a name="210"><span class="lineNum">     210 </span>            : {</a>
-<a name="211"><span class="lineNum">     211 </span><span class="lineCov">      13460 :     BlockingFunction (std::function&lt;void()&gt; f)  : fn (f) {}</span></a>
+<a name="211"><span class="lineNum">     211 </span><span class="lineCov">      13199 :     BlockingFunction (std::function&lt;void()&gt; f)  : fn (f) {}</span></a>
 <a name="212"><span class="lineNum">     212 </span>            : </a>
 <a name="213"><span class="lineNum">     213 </span>            : private:</a>
 <a name="214"><span class="lineNum">     214 </span>            :     std::function&lt;void()&gt; fn;</a>
-<a name="215"><span class="lineNum">     215 </span><span class="lineCov">      13460 :     void performAction() override    { fn(); }</span></a>
+<a name="215"><span class="lineNum">     215 </span><span class="lineCov">      13199 :     void performAction() override    { fn(); }</span></a>
 <a name="216"><span class="lineNum">     216 </span>            : </a>
 <a name="217"><span class="lineNum">     217 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BlockingFunction)</a>
 <a name="218"><span class="lineNum">     218 </span>            : };</a>
 <a name="219"><span class="lineNum">     219 </span>            : </a>
-<a name="220"><span class="lineNum">     220 </span><span class="lineCov">      13460 : inline bool callBlocking (std::function&lt;void()&gt; f)</span></a>
+<a name="220"><span class="lineNum">     220 </span><span class="lineCov">      13199 : inline bool callBlocking (std::function&lt;void()&gt; f)</span></a>
 <a name="221"><span class="lineNum">     221 </span>            : {</a>
-<a name="222"><span class="lineNum">     222 </span><span class="lineCov">      26920 :     BlockingFunction bf (f);</span></a>
-<a name="223"><span class="lineNum">     223 </span><span class="lineCov">      13460 :     bf.triggerAndWaitForCallback();</span></a>
-<a name="224"><span class="lineNum">     224 </span><span class="lineCov">      13460 :     return bf.hasFinished();</span></a>
+<a name="222"><span class="lineNum">     222 </span><span class="lineCov">      26398 :     BlockingFunction bf (f);</span></a>
+<a name="223"><span class="lineNum">     223 </span><span class="lineCov">      13199 :     bf.triggerAndWaitForCallback();</span></a>
+<a name="224"><span class="lineNum">     224 </span><span class="lineCov">      13199 :     return bf.hasFinished();</span></a>
 <a name="225"><span class="lineNum">     225 </span>            : }</a>
 <a name="226"><span class="lineNum">     226 </span>            : </a>
 <a name="227"><span class="lineNum">     227 </span>            : }} // namespace tracktion { inline namespace engine</a>
