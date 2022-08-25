@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-08-24 11:20:00</td>
+            <td class="headerValue">2022-08-25 19:20:28</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">31</td>
@@ -347,10 +347,10 @@
 <a name="285"><span class="lineNum">     285 </span><span class="lineCov">      22184 :     return pluginList.getPlugins();</span></a>
 <a name="286"><span class="lineNum">     286 </span>            : }</a>
 <a name="287"><span class="lineNum">     287 </span>            : </a>
-<a name="288"><span class="lineNum">     288 </span><span class="lineCov">        196 : void Track::sendMirrorUpdateToAllPlugins (Plugin&amp; p) const</span></a>
+<a name="288"><span class="lineNum">     288 </span><span class="lineCov">        192 : void Track::sendMirrorUpdateToAllPlugins (Plugin&amp; p) const</span></a>
 <a name="289"><span class="lineNum">     289 </span>            : {</a>
-<a name="290"><span class="lineNum">     290 </span><span class="lineCov">        196 :     pluginList.sendMirrorUpdateToAllPlugins (p);</span></a>
-<a name="291"><span class="lineNum">     291 </span><span class="lineCov">        196 : }</span></a>
+<a name="290"><span class="lineNum">     290 </span><span class="lineCov">        192 :     pluginList.sendMirrorUpdateToAllPlugins (p);</span></a>
+<a name="291"><span class="lineNum">     291 </span><span class="lineCov">        192 : }</span></a>
 <a name="292"><span class="lineNum">     292 </span>            : </a>
 <a name="293"><span class="lineNum">     293 </span><span class="lineNoCov">          0 : void Track::flipAllPluginsEnablement()</span></a>
 <a name="294"><span class="lineNum">     294 </span>            : {</a>
@@ -590,9 +590,9 @@
 <a name="528"><span class="lineNum">     528 </span><span class="lineNoCov">          0 :     tags = s.joinIntoString (&quot;|&quot;).replace (&quot; &quot;, &quot;_&quot;);</span></a>
 <a name="529"><span class="lineNum">     529 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="530"><span class="lineNum">     530 </span>            : </a>
-<a name="531"><span class="lineNum">     531 </span><span class="lineCov">      30027 : void Track::valueTreePropertyChanged (juce::ValueTree&amp; v, const juce::Identifier&amp; i)</span></a>
+<a name="531"><span class="lineNum">     531 </span><span class="lineCov">      36816 : void Track::valueTreePropertyChanged (juce::ValueTree&amp; v, const juce::Identifier&amp; i)</span></a>
 <a name="532"><span class="lineNum">     532 </span>            : {</a>
-<a name="533"><span class="lineNum">     533 </span><span class="lineCov">      30027 :     if (v == state)</span></a>
+<a name="533"><span class="lineNum">     533 </span><span class="lineCov">      36816 :     if (v == state)</span></a>
 <a name="534"><span class="lineNum">     534 </span>            :     {</a>
 <a name="535"><span class="lineNum">     535 </span><span class="lineCov">       1502 :         if (i == IDs::tags)</span></a>
 <a name="536"><span class="lineNum">     536 </span>            :         {</a>
@@ -639,7 +639,7 @@
 <a name="577"><span class="lineNum">     577 </span><span class="lineNoCov">          0 :                     p-&gt;setProcessingEnabled (p-&gt;getOwnerTrack()-&gt;isProcessing (true));</span></a>
 <a name="578"><span class="lineNum">     578 </span>            :         }</a>
 <a name="579"><span class="lineNum">     579 </span>            :     }</a>
-<a name="580"><span class="lineNum">     580 </span><span class="lineCov">      30027 : }</span></a>
+<a name="580"><span class="lineNum">     580 </span><span class="lineCov">      36816 : }</span></a>
 <a name="581"><span class="lineNum">     581 </span>            : </a>
 <a name="582"><span class="lineNum">     582 </span><span class="lineCov">      21768 : void Track::valueTreeChildAdded (juce::ValueTree&amp; p, juce::ValueTree&amp; c)</span></a>
 <a name="583"><span class="lineNum">     583 </span>            : {</a>

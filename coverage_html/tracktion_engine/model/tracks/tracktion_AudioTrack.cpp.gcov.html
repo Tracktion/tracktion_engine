@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-08-24 11:20:00</td>
+            <td class="headerValue">2022-08-25 19:20:28</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">40</td>
@@ -130,10 +130,10 @@
 <a name="68"><span class="lineNum">      68 </span>            :         return true;</a>
 <a name="69"><span class="lineNum">      69 </span>            :     }</a>
 <a name="70"><span class="lineNum">      70 </span>            : </a>
-<a name="71"><span class="lineNum">      71 </span><span class="lineCov">      61093 :     void valueTreeChanged() override</span></a>
+<a name="71"><span class="lineNum">      71 </span><span class="lineCov">      67866 :     void valueTreeChanged() override</span></a>
 <a name="72"><span class="lineNum">      72 </span>            :     {</a>
 <a name="73"><span class="lineNum">      73 </span>            :         markAndUpdate (updateFreeze);</a>
-<a name="74"><span class="lineNum">      74 </span><span class="lineCov">      61093 :     }</span></a>
+<a name="74"><span class="lineNum">      74 </span><span class="lineCov">      67866 :     }</span></a>
 <a name="75"><span class="lineNum">      75 </span>            : </a>
 <a name="76"><span class="lineNum">      76 </span><span class="lineCov">        242 :     void handleAsyncUpdate() override</span></a>
 <a name="77"><span class="lineNum">      77 </span>            :     {</a>
@@ -694,9 +694,9 @@
 <a name="632"><span class="lineNum">     632 </span><span class="lineCov">       2402 : }</span></a>
 <a name="633"><span class="lineNum">     633 </span>            : </a>
 <a name="634"><span class="lineNum">     634 </span>            : //==============================================================================</a>
-<a name="635"><span class="lineNum">     635 </span><span class="lineCov">      29500 : void AudioTrack::valueTreePropertyChanged (juce::ValueTree&amp; v, const juce::Identifier&amp; i)</span></a>
+<a name="635"><span class="lineNum">     635 </span><span class="lineCov">      36273 : void AudioTrack::valueTreePropertyChanged (juce::ValueTree&amp; v, const juce::Identifier&amp; i)</span></a>
 <a name="636"><span class="lineNum">     636 </span>            : {</a>
-<a name="637"><span class="lineNum">     637 </span><span class="lineCov">      29500 :     if (v == state)</span></a>
+<a name="637"><span class="lineNum">     637 </span><span class="lineCov">      36273 :     if (v == state)</span></a>
 <a name="638"><span class="lineNum">     638 </span>            :     {</a>
 <a name="639"><span class="lineNum">     639 </span><span class="lineCov">       1211 :         if (i == IDs::maxInputs)</span></a>
 <a name="640"><span class="lineNum">     640 </span>            :         {</a>
@@ -740,21 +740,21 @@
 <a name="678"><span class="lineNum">     678 </span><span class="lineNoCov">          0 :             updateMidiNoteMapCache();</span></a>
 <a name="679"><span class="lineNum">     679 </span>            :         }</a>
 <a name="680"><span class="lineNum">     680 </span>            :     }</a>
-<a name="681"><span class="lineNum">     681 </span><span class="lineCov">      28289 :     else if (Clip::isClipState (v))</span></a>
+<a name="681"><span class="lineNum">     681 </span><span class="lineCov">      35062 :     else if (Clip::isClipState (v))</span></a>
 <a name="682"><span class="lineNum">     682 </span>            :     {</a>
 <a name="683"><span class="lineNum">     683 </span>            :         TRACKTION_ASSERT_MESSAGE_THREAD;</a>
 <a name="684"><span class="lineNum">     684 </span>            : </a>
-<a name="685"><span class="lineNum">     685 </span><span class="lineCov">      16941 :         if (i == IDs::start || i == IDs::length)</span></a>
+<a name="685"><span class="lineNum">     685 </span><span class="lineCov">      23714 :         if (i == IDs::start || i == IDs::length)</span></a>
 <a name="686"><span class="lineNum">     686 </span><span class="lineCov">         60 :             asyncCaller.updateAsync (updateAutoCrossfadesFlag);</span></a>
 <a name="687"><span class="lineNum">     687 </span>            : </a>
-<a name="688"><span class="lineNum">     688 </span><span class="lineCov">      16941 :         if (i == IDs::mute &amp;&amp; bool (v.getProperty (i)))</span></a>
+<a name="688"><span class="lineNum">     688 </span><span class="lineCov">      23714 :         if (i == IDs::mute &amp;&amp; bool (v.getProperty (i)))</span></a>
 <a name="689"><span class="lineNum">     689 </span><span class="lineNoCov">          0 :             if (trackMuter == nullptr &amp;&amp; ! bool (v.getProperty (IDs::processMidiWhenMuted, false)))</span></a>
 <a name="690"><span class="lineNum">     690 </span><span class="lineNoCov">          0 :                 if (v.hasType (IDs::MIDICLIP))</span></a>
 <a name="691"><span class="lineNum">     691 </span><span class="lineNoCov">          0 :                     trackMuter = std::make_unique&lt;TrackMuter&gt; (*this);</span></a>
 <a name="692"><span class="lineNum">     692 </span>            :     }</a>
 <a name="693"><span class="lineNum">     693 </span>            : </a>
-<a name="694"><span class="lineNum">     694 </span><span class="lineCov">      29500 :     ClipTrack::valueTreePropertyChanged (v, i);</span></a>
-<a name="695"><span class="lineNum">     695 </span><span class="lineCov">      29500 : }</span></a>
+<a name="694"><span class="lineNum">     694 </span><span class="lineCov">      36273 :     ClipTrack::valueTreePropertyChanged (v, i);</span></a>
+<a name="695"><span class="lineNum">     695 </span><span class="lineCov">      36273 : }</span></a>
 <a name="696"><span class="lineNum">     696 </span>            : </a>
 <a name="697"><span class="lineNum">     697 </span>            : </a>
 <a name="698"><span class="lineNum">     698 </span>            : //==============================================================================</a>

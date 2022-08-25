@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">14</td>
-            <td class="headerCovTableEntry">45</td>
-            <td class="headerCovTableEntryLo">31.1 %</td>
+            <td class="headerCovTableEntry">15</td>
+            <td class="headerCovTableEntry">46</td>
+            <td class="headerCovTableEntryLo">32.6 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-08-24 11:20:00</td>
+            <td class="headerValue">2022-08-25 19:20:28</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">13</td>
-            <td class="headerCovTableEntry">44</td>
-            <td class="headerCovTableEntryLo">29.5 %</td>
+            <td class="headerCovTableEntry">14</td>
+            <td class="headerCovTableEntry">45</td>
+            <td class="headerCovTableEntryLo">31.1 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -240,7 +240,7 @@
 <a name="178"><span class="lineNum">     178 </span>            :     /** If this returns true, you must implement describeWaveDevices to determine the wave devices for a given device.</a>
 <a name="179"><span class="lineNum">     179 </span>            :         If it's false, a standard, stereo pair layout will be automatically generated.</a>
 <a name="180"><span class="lineNum">     180 </span>            :     */</a>
-<a name="181"><span class="lineNum">     181 </span><span class="lineCov">    4908270 :     virtual bool isDescriptionOfWaveDevicesSupported()                              { return false; }</span></a>
+<a name="181"><span class="lineNum">     181 </span><span class="lineCov">    4905780 :     virtual bool isDescriptionOfWaveDevicesSupported()                              { return false; }</span></a>
 <a name="182"><span class="lineNum">     182 </span>            : </a>
 <a name="183"><span class="lineNum">     183 </span>            :     /** If isDescriptionOfWaveDevicesSupported returns true, this should be implemented to describe the wave devices</a>
 <a name="184"><span class="lineNum">     184 </span>            :         for a given audio device.</a>
@@ -267,25 +267,35 @@
 <a name="205"><span class="lineNum">     205 </span>            : </a>
 <a name="206"><span class="lineNum">     206 </span>            :     /** If this returns true, it means that newly inserted clips will automatically have a fade-in and fade-out of 3ms applied. */</a>
 <a name="207"><span class="lineNum">     207 </span><span class="lineCov">       3387 :     virtual bool autoAddClipEdgeFades()                                             { return false; }</span></a>
-<a name="208"><span class="lineNum">     208 </span>            :     </a>
-<a name="209"><span class="lineNum">     209 </span>            :     struct ControlSurfaces</a>
-<a name="210"><span class="lineNum">     210 </span>            :     {</a>
-<a name="211"><span class="lineNum">     211 </span>            :         bool mackieMCU = true;</a>
-<a name="212"><span class="lineNum">     212 </span>            :         bool mackieC4 = true;</a>
-<a name="213"><span class="lineNum">     213 </span>            :         bool iconProG2 = true;</a>
-<a name="214"><span class="lineNum">     214 </span>            :         bool tranzport = true;</a>
-<a name="215"><span class="lineNum">     215 </span>            :         bool alphaTrack = true;</a>
-<a name="216"><span class="lineNum">     216 </span>            :         bool remoteSL = true;</a>
-<a name="217"><span class="lineNum">     217 </span>            :         bool remoteSLCompact = true;</a>
-<a name="218"><span class="lineNum">     218 </span>            :         bool automap = true;</a>
-<a name="219"><span class="lineNum">     219 </span>            :     };</a>
-<a name="220"><span class="lineNum">     220 </span>            :     </a>
-<a name="221"><span class="lineNum">     221 </span>            :     /** Return the control surfaces you want enabled in the engine */</a>
-<a name="222"><span class="lineNum">     222 </span>            :     </a>
-<a name="223"><span class="lineNum">     223 </span><span class="lineNoCov">          0 :     virtual ControlSurfaces getDesiredControlSurfaces()                             { return {}; }</span></a>
-<a name="224"><span class="lineNum">     224 </span>            : };</a>
-<a name="225"><span class="lineNum">     225 </span>            : </a>
-<a name="226"><span class="lineNum">     226 </span>            : }} // namespace tracktion { inline namespace engine</a>
+<a name="208"><span class="lineNum">     208 </span>            : </a>
+<a name="209"><span class="lineNum">     209 </span>            :     /** Determines the default properties of clips. */</a>
+<a name="210"><span class="lineNum">     210 </span>            :     struct ClipDefaults</a>
+<a name="211"><span class="lineNum">     211 </span>            :     {</a>
+<a name="212"><span class="lineNum">     212 </span>            :         bool useProxyFile = true;                                           ///&lt; @see AudioClipBase::setUsesProxy</a>
+<a name="213"><span class="lineNum">     213 </span>            :         ResamplingQuality resamplingQuality = ResamplingQuality::lagrange;  ///&lt; @see setResamplingQuality::setResamplingQuality</a>
+<a name="214"><span class="lineNum">     214 </span>            :     };</a>
+<a name="215"><span class="lineNum">     215 </span>            : </a>
+<a name="216"><span class="lineNum">     216 </span>            :     /** Returns the defaults to be applied to new clips. */</a>
+<a name="217"><span class="lineNum">     217 </span><span class="lineCov">       3387 :     virtual ClipDefaults getClipDefaults()                                          { return {}; }</span></a>
+<a name="218"><span class="lineNum">     218 </span>            : </a>
+<a name="219"><span class="lineNum">     219 </span>            :     struct ControlSurfaces</a>
+<a name="220"><span class="lineNum">     220 </span>            :     {</a>
+<a name="221"><span class="lineNum">     221 </span>            :         bool mackieMCU = true;</a>
+<a name="222"><span class="lineNum">     222 </span>            :         bool mackieC4 = true;</a>
+<a name="223"><span class="lineNum">     223 </span>            :         bool iconProG2 = true;</a>
+<a name="224"><span class="lineNum">     224 </span>            :         bool tranzport = true;</a>
+<a name="225"><span class="lineNum">     225 </span>            :         bool alphaTrack = true;</a>
+<a name="226"><span class="lineNum">     226 </span>            :         bool remoteSL = true;</a>
+<a name="227"><span class="lineNum">     227 </span>            :         bool remoteSLCompact = true;</a>
+<a name="228"><span class="lineNum">     228 </span>            :         bool automap = true;</a>
+<a name="229"><span class="lineNum">     229 </span>            :     };</a>
+<a name="230"><span class="lineNum">     230 </span>            :     </a>
+<a name="231"><span class="lineNum">     231 </span>            :     /** Return the control surfaces you want enabled in the engine */</a>
+<a name="232"><span class="lineNum">     232 </span>            :     </a>
+<a name="233"><span class="lineNum">     233 </span><span class="lineNoCov">          0 :     virtual ControlSurfaces getDesiredControlSurfaces()                             { return {}; }</span></a>
+<a name="234"><span class="lineNum">     234 </span>            : };</a>
+<a name="235"><span class="lineNum">     235 </span>            : </a>
+<a name="236"><span class="lineNum">     236 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

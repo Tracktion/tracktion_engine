@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-08-24 11:20:00</td>
+            <td class="headerValue">2022-08-25 19:20:28</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
@@ -153,7 +153,7 @@
 <a name="91"><span class="lineNum">      91 </span>            :     /** @internal */</a>
 <a name="92"><span class="lineNum">      92 </span>            :     juce::StringArray getTakeDescriptions() const override;</a>
 <a name="93"><span class="lineNum">      93 </span>            :     /** @internal */</a>
-<a name="94"><span class="lineNum">      94 </span><span class="lineCov">          3 :     bool hasAnyTakes() const override                           { return getTakesTree().getNumChildren() &gt; 0; }</span></a>
+<a name="94"><span class="lineNum">      94 </span><span class="lineCov">          4 :     bool hasAnyTakes() const override                           { return getTakesTree().getNumChildren() &gt; 0; }</span></a>
 <a name="95"><span class="lineNum">      95 </span>            :     /** @internal */</a>
 <a name="96"><span class="lineNum">      96 </span>            :     int getNumTakes (bool includeComps) override;</a>
 <a name="97"><span class="lineNum">      97 </span>            :     /** @internal */</a>
@@ -180,7 +180,7 @@
 <a name="118"><span class="lineNum">     118 </span>            :     static constexpr int takeIndexNeedsUpdating = -2;</a>
 <a name="119"><span class="lineNum">     119 </span>            :     mutable int currentTakeIndex = takeIndexNeedsUpdating;</a>
 <a name="120"><span class="lineNum">     120 </span>            : </a>
-<a name="121"><span class="lineNum">     121 </span><span class="lineCov">       3390 :     juce::ValueTree getTakesTree() const                        { return state.getChildWithName (IDs::TAKES); }</span></a>
+<a name="121"><span class="lineNum">     121 </span><span class="lineCov">       3391 :     juce::ValueTree getTakesTree() const                        { return state.getChildWithName (IDs::TAKES); }</span></a>
 <a name="122"><span class="lineNum">     122 </span>            :     void invalidateCurrentTake() noexcept;</a>
 <a name="123"><span class="lineNum">     123 </span>            :     void invalidateCurrentTake (const juce::ValueTree&amp;) noexcept;</a>
 <a name="124"><span class="lineNum">     124 </span>            : </a>

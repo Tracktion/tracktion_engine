@@ -79,6 +79,9 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1EngineBehaviour_1_1ClipDefaults.html">ClipDefaults</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines the default properties of clips.  <a href="structtracktion_1_1engine_1_1EngineBehaviour_1_1ClipDefaults.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1EngineBehaviour_1_1ControlSurfaces.html">ControlSurfaces</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1EngineBehaviour_1_1LevelMeterSettings.html">LevelMeterSettings</a></td></tr>
@@ -197,6 +200,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:afbc7c115034593c0915d100f071ded40"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#afbc7c115034593c0915d100f071ded40">autoAddClipEdgeFades</a> ()</td></tr>
 <tr class="memdesc:afbc7c115034593c0915d100f071ded40"><td class="mdescLeft">&#160;</td><td class="mdescRight">If this returns true, it means that newly inserted clips will automatically have a fade-in and fade-out of 3ms applied.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#afbc7c115034593c0915d100f071ded40">More...</a><br /></td></tr>
 <tr class="separator:afbc7c115034593c0915d100f071ded40"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa77c190ce1e9f1ec2187a97aac3a2ff"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structtracktion_1_1engine_1_1EngineBehaviour_1_1ClipDefaults.html">ClipDefaults</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#afa77c190ce1e9f1ec2187a97aac3a2ff">getClipDefaults</a> ()</td></tr>
+<tr class="memdesc:afa77c190ce1e9f1ec2187a97aac3a2ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the defaults to be applied to new clips.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#afa77c190ce1e9f1ec2187a97aac3a2ff">More...</a><br /></td></tr>
+<tr class="separator:afa77c190ce1e9f1ec2187a97aac3a2ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a91b4473992ad5fd88cce3e3a4e5b9822"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structtracktion_1_1engine_1_1EngineBehaviour_1_1ControlSurfaces.html">ControlSurfaces</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a91b4473992ad5fd88cce3e3a4e5b9822">getDesiredControlSurfaces</a> ()</td></tr>
 <tr class="memdesc:a91b4473992ad5fd88cce3e3a4e5b9822"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the control surfaces you want enabled in the engine.  <a href="classtracktion_1_1engine_1_1EngineBehaviour.html#a91b4473992ad5fd88cce3e3a4e5b9822">More...</a><br /></td></tr>
 <tr class="separator:a91b4473992ad5fd88cce3e3a4e5b9822"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1503,6 +1509,33 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="afa77c190ce1e9f1ec2187a97aac3a2ff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa77c190ce1e9f1ec2187a97aac3a2ff">&#9670;&nbsp;</a></span>getClipDefaults()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="structtracktion_1_1engine_1_1EngineBehaviour_1_1ClipDefaults.html">ClipDefaults</a> tracktion::engine::EngineBehaviour::getClipDefaults </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the defaults to be applied to new clips. </p>
+
+</div>
+</div>
 <a id="a91b4473992ad5fd88cce3e3a4e5b9822"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a91b4473992ad5fd88cce3e3a4e5b9822">&#9670;&nbsp;</a></span>getDesiredControlSurfaces()</h2>
 
@@ -1536,7 +1569,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Aug 24 2022 11:00:39 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Aug 25 2022 19:01:35 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

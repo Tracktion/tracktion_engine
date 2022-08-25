@@ -3770,6 +3770,7 @@
     <class kind="struct">tracktion::engine::EditLimits</class>
     <class kind="class">tracktion::engine::EngineBehaviour</class>
     <class kind="struct">tracktion::engine::EngineBehaviour::LevelMeterSettings</class>
+    <class kind="struct">tracktion::engine::EngineBehaviour::ClipDefaults</class>
     <class kind="struct">tracktion::engine::EngineBehaviour::ControlSurfaces</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
@@ -17540,6 +17541,24 @@
       <arglist>(juce::ChangeListener *)</arglist>
     </member>
   </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::EngineBehaviour::ClipDefaults</name>
+    <filename>structtracktion_1_1engine_1_1EngineBehaviour_1_1ClipDefaults.html</filename>
+    <member kind="variable">
+      <type>bool</type>
+      <name>useProxyFile</name>
+      <anchorfile>structtracktion_1_1engine_1_1EngineBehaviour_1_1ClipDefaults.html</anchorfile>
+      <anchor>ab1aac7cbf3fdf2ce32f2dc1da11b80b8</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>ResamplingQuality</type>
+      <name>resamplingQuality</name>
+      <anchorfile>structtracktion_1_1engine_1_1EngineBehaviour_1_1ClipDefaults.html</anchorfile>
+      <anchor>a5e6b2d1702f86599ab72b7e990a2d506</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
   <compound kind="class">
     <name>tracktion::engine::ClipEffect</name>
     <filename>classtracktion_1_1engine_1_1ClipEffect.html</filename>
@@ -30039,6 +30058,7 @@
   <compound kind="class">
     <name>tracktion::engine::EngineBehaviour</name>
     <filename>classtracktion_1_1engine_1_1EngineBehaviour.html</filename>
+    <class kind="struct">tracktion::engine::EngineBehaviour::ClipDefaults</class>
     <class kind="struct">tracktion::engine::EngineBehaviour::ControlSurfaces</class>
     <class kind="struct">tracktion::engine::EngineBehaviour::LevelMeterSettings</class>
     <member kind="function">
@@ -30347,6 +30367,13 @@
       <name>autoAddClipEdgeFades</name>
       <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
       <anchor>afbc7c115034593c0915d100f071ded40</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual ClipDefaults</type>
+      <name>getClipDefaults</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>afa77c190ce1e9f1ec2187a97aac3a2ff</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function" virtualness="virtual">
@@ -79951,6 +79978,25 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>tracktion::engine::Plugin::WindowState</name>
+    <filename>structtracktion_1_1engine_1_1Plugin_1_1WindowState.html</filename>
+    <base>tracktion::engine::PluginWindowState</base>
+    <member kind="function">
+      <type></type>
+      <name>WindowState</name>
+      <anchorfile>structtracktion_1_1engine_1_1Plugin_1_1WindowState.html</anchorfile>
+      <anchor>a1291a8a07e6f1c2af0979b2b0419f1c8</anchor>
+      <arglist>(Plugin &amp;)</arglist>
+    </member>
+    <member kind="variable">
+      <type>Plugin &amp;</type>
+      <name>plugin</name>
+      <anchorfile>structtracktion_1_1engine_1_1Plugin_1_1WindowState.html</anchorfile>
+      <anchor>a3c3b085de35f422c79719353833e630a</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>tracktion::engine::RackType::WindowState</name>
     <filename>structtracktion_1_1engine_1_1RackType_1_1WindowState.html</filename>
     <base>tracktion::engine::PluginWindowState</base>
@@ -79973,57 +80019,6 @@
       <name>state</name>
       <anchorfile>structtracktion_1_1engine_1_1RackType_1_1WindowState.html</anchorfile>
       <anchor>a2dd9ed0ee683826b4e8a11d2eb9bb23e</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
-    <name>tracktion::engine::Plugin::WindowState</name>
-    <filename>structtracktion_1_1engine_1_1Plugin_1_1WindowState.html</filename>
-    <base>tracktion::engine::PluginWindowState</base>
-    <member kind="function">
-      <type></type>
-      <name>WindowState</name>
-      <anchorfile>structtracktion_1_1engine_1_1Plugin_1_1WindowState.html</anchorfile>
-      <anchor>a1291a8a07e6f1c2af0979b2b0419f1c8</anchor>
-      <arglist>(Plugin &amp;)</arglist>
-    </member>
-    <member kind="variable">
-      <type>Plugin &amp;</type>
-      <name>plugin</name>
-      <anchorfile>structtracktion_1_1engine_1_1Plugin_1_1WindowState.html</anchorfile>
-      <anchor>a3c3b085de35f422c79719353833e630a</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
-    <name>tracktion::engine::Plugin::Wire</name>
-    <filename>structtracktion_1_1engine_1_1Plugin_1_1Wire.html</filename>
-    <member kind="function">
-      <type></type>
-      <name>Wire</name>
-      <anchorfile>structtracktion_1_1engine_1_1Plugin_1_1Wire.html</anchorfile>
-      <anchor>a5648f0c5bc0294511cb309b50cf4f6b7</anchor>
-      <arglist>(const juce::ValueTree &amp;, juce::UndoManager *)</arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::ValueTree</type>
-      <name>state</name>
-      <anchorfile>structtracktion_1_1engine_1_1Plugin_1_1Wire.html</anchorfile>
-      <anchor>a12156a091ead90997511077709886a86</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::CachedValue&lt; int &gt;</type>
-      <name>sourceChannelIndex</name>
-      <anchorfile>structtracktion_1_1engine_1_1Plugin_1_1Wire.html</anchorfile>
-      <anchor>a16c2bbb4f6540eb6dafa198bafeff57c</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::CachedValue&lt; int &gt;</type>
-      <name>destChannelIndex</name>
-      <anchorfile>structtracktion_1_1engine_1_1Plugin_1_1Wire.html</anchorfile>
-      <anchor>a3f3fbb1c04ca917351ced275755b188b</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -80063,6 +80058,38 @@
       <name>gainDb</name>
       <anchorfile>structtracktion_1_1engine_1_1PatchBayPlugin_1_1Wire.html</anchorfile>
       <anchor>a118b07841111d0ea5710a9a4412a5a8e</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::Plugin::Wire</name>
+    <filename>structtracktion_1_1engine_1_1Plugin_1_1Wire.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>Wire</name>
+      <anchorfile>structtracktion_1_1engine_1_1Plugin_1_1Wire.html</anchorfile>
+      <anchor>a5648f0c5bc0294511cb309b50cf4f6b7</anchor>
+      <arglist>(const juce::ValueTree &amp;, juce::UndoManager *)</arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::ValueTree</type>
+      <name>state</name>
+      <anchorfile>structtracktion_1_1engine_1_1Plugin_1_1Wire.html</anchorfile>
+      <anchor>a12156a091ead90997511077709886a86</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::CachedValue&lt; int &gt;</type>
+      <name>sourceChannelIndex</name>
+      <anchorfile>structtracktion_1_1engine_1_1Plugin_1_1Wire.html</anchorfile>
+      <anchor>a16c2bbb4f6540eb6dafa198bafeff57c</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::CachedValue&lt; int &gt;</type>
+      <name>destChannelIndex</name>
+      <anchorfile>structtracktion_1_1engine_1_1Plugin_1_1Wire.html</anchorfile>
+      <anchor>a3f3fbb1c04ca917351ced275755b188b</anchor>
       <arglist></arglist>
     </member>
   </compound>

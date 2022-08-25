@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-08-24 11:20:00</td>
+            <td class="headerValue">2022-08-25 19:20:28</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">15</td>
@@ -215,9 +215,9 @@
 <a name="153"><span class="lineNum">     153 </span>            :                               });</a>
 <a name="154"><span class="lineNum">     154 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="155"><span class="lineNum">     155 </span>            : </a>
-<a name="156"><span class="lineNum">     156 </span><span class="lineCov">          4 : void Selectable::propertiesChanged()</span></a>
+<a name="156"><span class="lineNum">     156 </span><span class="lineCov">       3391 : void Selectable::propertiesChanged()</span></a>
 <a name="157"><span class="lineNum">     157 </span>            : {</a>
-<a name="158"><span class="lineNum">     158 </span><span class="lineCov">          4 :     for (SelectionManager::Iterator sm; sm.next();)</span></a>
+<a name="158"><span class="lineNum">     158 </span><span class="lineCov">       3391 :     for (SelectionManager::Iterator sm; sm.next();)</span></a>
 <a name="159"><span class="lineNum">     159 </span>            :     {</a>
 <a name="160"><span class="lineNum">     160 </span>            :         if (sm-&gt;isSelected (this))</a>
 <a name="161"><span class="lineNum">     161 </span>            :         {</a>
@@ -228,7 +228,7 @@
 <a name="166"><span class="lineNum">     166 </span>            :                 sm-&gt;select (s, true);</a>
 <a name="167"><span class="lineNum">     167 </span>            :         }</a>
 <a name="168"><span class="lineNum">     168 </span>            :     }</a>
-<a name="169"><span class="lineNum">     169 </span><span class="lineCov">          4 : }</span></a>
+<a name="169"><span class="lineNum">     169 </span><span class="lineCov">       3391 : }</span></a>
 <a name="170"><span class="lineNum">     170 </span>            : </a>
 <a name="171"><span class="lineNum">     171 </span><span class="lineCov">      39677 : void Selectable::notifyListenersOfDeletion()</span></a>
 <a name="172"><span class="lineNum">     172 </span>            : {</a>
@@ -427,11 +427,11 @@
 <a name="365"><span class="lineNum">     365 </span><span class="lineNoCov">          0 :     selected.clear();</span></a>
 <a name="366"><span class="lineNum">     366 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="367"><span class="lineNum">     367 </span>            : </a>
-<a name="368"><span class="lineNum">     368 </span><span class="lineCov">      34888 : SelectionManager::Iterator::Iterator() {}</span></a>
+<a name="368"><span class="lineNum">     368 </span><span class="lineCov">      38275 : SelectionManager::Iterator::Iterator() {}</span></a>
 <a name="369"><span class="lineNum">     369 </span>            : </a>
 <a name="370"><span class="lineNum">     370 </span><span class="lineCov">        599 : bool SelectionManager::Iterator::next()</span></a>
 <a name="371"><span class="lineNum">     371 </span>            : {</a>
-<a name="372"><span class="lineNum">     372 </span><span class="lineCov">      34888 :     return juce::isPositiveAndBelow (++index, allManagers.size());</span></a>
+<a name="372"><span class="lineNum">     372 </span><span class="lineCov">      38275 :     return juce::isPositiveAndBelow (++index, allManagers.size());</span></a>
 <a name="373"><span class="lineNum">     373 </span>            : }</a>
 <a name="374"><span class="lineNum">     374 </span>            : </a>
 <a name="375"><span class="lineNum">     375 </span><span class="lineNoCov">          0 : SelectionManager* SelectionManager::Iterator::get() const</span></a>

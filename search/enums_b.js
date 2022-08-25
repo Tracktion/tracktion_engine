@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['ratetype_12797',['RateType',['../namespacetracktion_1_1engine_1_1ModifierCommon.html#a8196f0dce2231f21fcd54b02462ddacb',1,'tracktion::engine::ModifierCommon']]],
-  ['relationship_12798',['Relationship',['../classtracktion_1_1engine_1_1SelectableClass.html#a200aab7124e35fb928b511a41b71c18a',1,'tracktion::engine::SelectableClass']]],
-  ['renamemode_12799',['RenameMode',['../classtracktion_1_1engine_1_1ProjectItem.html#a4ff8de8ad9bd9e16b03850e1f51b5e82',1,'tracktion::engine::ProjectItem']]],
-  ['rendertype_12800',['RenderType',['../classtracktion_1_1engine_1_1RenderOptions.html#a746fb0730e47bc8ccd5bb16b5ef39c1c',1,'tracktion::engine::RenderOptions']]],
-  ['resamplingquality_12801',['ResamplingQuality',['../namespacetracktion_1_1engine.html#a80cc60aadbaf1dca652f40a5544b3e6b',1,'tracktion::ResamplingQuality()'],['../namespacetracktion_1_1engine.html#a80cc60aadbaf1dca652f40a5544b3e6b',1,'tracktion::engine::ResamplingQuality()']]]
+  ['ratetype_12803',['RateType',['../namespacetracktion_1_1engine_1_1ModifierCommon.html#a8196f0dce2231f21fcd54b02462ddacb',1,'tracktion::engine::ModifierCommon']]],
+  ['relationship_12804',['Relationship',['../classtracktion_1_1engine_1_1SelectableClass.html#a200aab7124e35fb928b511a41b71c18a',1,'tracktion::engine::SelectableClass']]],
+  ['renamemode_12805',['RenameMode',['../classtracktion_1_1engine_1_1ProjectItem.html#a4ff8de8ad9bd9e16b03850e1f51b5e82',1,'tracktion::engine::ProjectItem']]],
+  ['rendertype_12806',['RenderType',['../classtracktion_1_1engine_1_1RenderOptions.html#a746fb0730e47bc8ccd5bb16b5ef39c1c',1,'tracktion::engine::RenderOptions']]],
+  ['resamplingquality_12807',['ResamplingQuality',['../namespacetracktion_1_1engine.html#a80cc60aadbaf1dca652f40a5544b3e6b',1,'tracktion::ResamplingQuality()'],['../namespacetracktion_1_1engine.html#a80cc60aadbaf1dca652f40a5544b3e6b',1,'tracktion::engine::ResamplingQuality()']]]
 ];
