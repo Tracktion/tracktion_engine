@@ -171,14 +171,18 @@ public:
         bool process()
         {
             if (auto cpn = currentPreparedNode.load())
-                return player.processNextFreeNode (*currentPreparedNode.load());
+                return player.processNextFreeNode (*cpn);
 
             return false;
         }
 
+        /** Sets the current PreparedNode in use. This should live as long as the threads are running once set. */
         void setCurrentNode (LockFreeMultiThreadedNodePlayer::PreparedNode* nodeInUse)
         {
             currentPreparedNode = nodeInUse;
+
+            // If a nullptr is being set, you must stop the threads first.
+            assert (nodeInUse || shouldExit());
         }
         
     private:
