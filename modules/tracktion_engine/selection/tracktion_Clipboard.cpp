@@ -507,6 +507,11 @@ void Clipboard::Clips::addSelectedClips (const SelectableList& selectedObjects,
                                             IDs::fadeIn,  fadeIn.overlaps (inOutPoints)  ? fadeIn.getIntersectionWith (inOutPoints).getLength().inSeconds() : 0.0,
                                             IDs::fadeOut, fadeOut.overlaps (inOutPoints) ? fadeOut.getIntersectionWith (inOutPoints).getLength().inSeconds() : 0.0);
                 }
+
+                // Also flush these properties so the defaults aren't picked up
+                addValueTreeProperties (info.state,
+                                        IDs::proxyAllowed, acb->canUseProxy(),
+                                        IDs::resamplingQuality, juce::VariantConverter<ResamplingQuality>::toVar (acb->getResamplingQuality()));
             }
 
             info.trackOffset = allTracks.indexOf (clip->getTrack()) - firstTrackIndex;

@@ -608,9 +608,19 @@ Clip* ClipTrack::insertClipWithState (juce::ValueTree clipState)
                 }
 
                 if (auto acb = dynamic_cast<AudioClipBase*> (newClip.get()))
+                {
                     if (edit.engine.getEngineBehaviour().autoAddClipEdgeFades())
                         if (! (clipState.hasProperty (IDs::fadeIn) && clipState.hasProperty (IDs::fadeOut)))
                             acb->applyEdgeFades();
+
+                    const auto defaults = edit.engine.getEngineBehaviour().getClipDefaults();
+
+                    if (! clipState.hasProperty (IDs::proxyAllowed))
+                        acb->setUsesProxy (defaults.useProxyFile);
+
+                    if (! clipState.hasProperty (IDs::resamplingQuality))
+                        acb->setResamplingQuality (defaults.resamplingQuality);
+                }
             }
 
             return newClip.get();
