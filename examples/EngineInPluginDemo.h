@@ -139,7 +139,6 @@ private:
                     if (&instance->getInputDevice() == dev)
                         instance->setTargetTrack (*t, 0, false);
 
-
         edit.restartPlayback();
     }
 
@@ -254,6 +253,7 @@ private:
               plugin (p)
         {
             addAndMakeVisible (clickTrackButton);
+            addAndMakeVisible (midiKeyboard);
 
             pluginPositionInfo.resetToDefault();
             editPositionInfo.resetToDefault();
@@ -285,6 +285,7 @@ private:
         void resized() override
         {
             auto r = getLocalBounds();
+            midiKeyboard.setBounds (r.removeFromBottom (70));
             clickTrackButton.setBounds (r.reduced (10).removeFromBottom (26));
         }
         
@@ -292,8 +293,19 @@ private:
         EngineInPluginDemo& plugin;
         AudioPlayHead::CurrentPositionInfo pluginPositionInfo, editPositionInfo;
         te::LambdaTimer repaintTimer { [this] { update(); } };
-        ToggleButton clickTrackButton { "Enable Click Track" };
-        
+        juce::ToggleButton clickTrackButton { "Enable Click Track" };
+        juce::MidiKeyboardComponent midiKeyboard { getMidiInputDevice().keyboardState, juce::MidiKeyboardComponent::horizontalKeyboard };
+
+        te::MidiInputDevice& getMidiInputDevice() const
+        {
+            auto& dm = plugin.engineWrapper->engine.getDeviceManager();
+            auto dev = dm.getMidiInDevice (0);
+            assert (dev != nullptr);
+            assert (te::HostedAudioDeviceInterface::isHostedMidiInputDevice (*dev));
+
+            return *dev;
+        }
+
         void update()
         {
             if (plugin.engineWrapper)

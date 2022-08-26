@@ -191,13 +191,27 @@ public:
 
     void processBlock (juce::MidiBuffer& midi)
     {
+        // Process the messages via the base class to update the keybaord state
+        for (auto mm : midi)
+            MidiInputDevice::handleIncomingMidiMessage (nullptr, mm.getMessage());
+
+        // Pending messages will then be filled with the messages to process
+        const juce::ScopedLock sl (pendingMidiMessagesMutex);
+
         for (auto instance : instances)
-            if (auto* hostedInstance = dynamic_cast<HostedMidiInputDeviceInstance*> (instance))
-                hostedInstance->processBlock (midi);
+            if (auto hostedInstance = dynamic_cast<HostedMidiInputDeviceInstance*> (instance))
+                hostedInstance->processBlock (pendingMidiMessages);
+
+        pendingMidiMessages.clear();
     }
 
     using MidiInputDevice::handleIncomingMidiMessage;
-    void handleIncomingMidiMessage (const juce::MidiMessage&) override {}
+    void handleIncomingMidiMessage (const juce::MidiMessage& m) override
+    {
+        const juce::ScopedLock sl (pendingMidiMessagesMutex);
+        pendingMidiMessages.addEvent (m, 0);
+    }
+
     juce::String openDevice() override { return {}; }
     void closeDevice() override {}
 
@@ -234,6 +248,8 @@ private:
     
     //==============================================================================
     HostedAudioDeviceInterface& audioIf;
+    juce::MidiBuffer pendingMidiMessages;
+    juce::CriticalSection pendingMidiMessagesMutex;
 };
 
 //==============================================================================
