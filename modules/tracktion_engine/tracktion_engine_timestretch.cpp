@@ -16,10 +16,12 @@
  #ifdef __GNUC__
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Wextra-semi"
+ #endif
 
   // If you get a build error here you'll need to add the Elastique SDK to your header search path!
   #include "elastique_pro/incl/elastiqueProV3API.h"
 
+ #ifdef __GNUC__
   #pragma GCC diagnostic pop
  #endif
 #endif
