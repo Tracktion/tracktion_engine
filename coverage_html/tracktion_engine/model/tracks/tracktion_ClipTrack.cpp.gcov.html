@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-08-26 13:31:39</td>
+            <td class="headerValue">2022-08-26 17:23:32</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">43</td>
@@ -296,7 +296,7 @@
 <a name="234"><span class="lineNum">     234 </span>            :         {</a>
 <a name="235"><span class="lineNum">     235 </span><span class="lineCov">       8489 :             if (auto c = ct.findClipForID (EditItemID::fromID (child)))</span></a>
 <a name="236"><span class="lineNum">     236 </span>            :             {</a>
-<a name="237"><span class="lineNum">     237 </span><span class="lineCov">       1709 :                 if (c-&gt;isGrouped())</span></a>
+<a name="237"><span class="lineNum">     237 </span><span class="lineCov">       1539 :                 if (c-&gt;isGrouped())</span></a>
 <a name="238"><span class="lineNum">     238 </span>            :                 {</a>
 <a name="239"><span class="lineNum">     239 </span><span class="lineNoCov">          0 :                     auto cc = findOrCreateCollectionClip (c-&gt;getGroupID());</span></a>
 <a name="240"><span class="lineNum">     240 </span><span class="lineNoCov">          0 :                     cc-&gt;addClip (c);</span></a>
@@ -501,8 +501,8 @@
 <a name="439"><span class="lineNum">     439 </span><span class="lineCov">       8549 : Clip* ClipTrack::findClipForID (EditItemID id) const</span></a>
 <a name="440"><span class="lineNum">     440 </span>            : {</a>
 <a name="441"><span class="lineNum">     441 </span><span class="lineCov">     400754 :     for (auto* c : clipList-&gt;objects)</span></a>
-<a name="442"><span class="lineNum">     442 </span><span class="lineCov">     393974 :         if (c-&gt;itemID == id)</span></a>
-<a name="443"><span class="lineNum">     443 </span><span class="lineCov">       1769 :             return c;</span></a>
+<a name="442"><span class="lineNum">     442 </span><span class="lineCov">     393804 :         if (c-&gt;itemID == id)</span></a>
+<a name="443"><span class="lineNum">     443 </span><span class="lineCov">       1599 :             return c;</span></a>
 <a name="444"><span class="lineNum">     444 </span>            : </a>
 <a name="445"><span class="lineNum">     445 </span>            :     return {};</a>
 <a name="446"><span class="lineNum">     446 </span>            : }</a>
@@ -1100,13 +1100,13 @@
 <a name="1038"><span class="lineNum">    1038 </span><span class="lineCov">      15270 :     return destArray;</span></a>
 <a name="1039"><span class="lineNum">    1039 </span>            : }</a>
 <a name="1040"><span class="lineNum">    1040 </span>            : </a>
-<a name="1041"><span class="lineNum">    1041 </span><span class="lineCov">        372 : void ClipTrack::sendMirrorUpdateToAllPlugins (Plugin&amp; p) const</span></a>
+<a name="1041"><span class="lineNum">    1041 </span><span class="lineCov">        364 : void ClipTrack::sendMirrorUpdateToAllPlugins (Plugin&amp; p) const</span></a>
 <a name="1042"><span class="lineNum">    1042 </span>            : {</a>
-<a name="1043"><span class="lineNum">    1043 </span><span class="lineCov">        372 :     pluginList.sendMirrorUpdateToAllPlugins (p);</span></a>
+<a name="1043"><span class="lineNum">    1043 </span><span class="lineCov">        364 :     pluginList.sendMirrorUpdateToAllPlugins (p);</span></a>
 <a name="1044"><span class="lineNum">    1044 </span>            : </a>
-<a name="1045"><span class="lineNum">    1045 </span><span class="lineCov">        453 :     for (auto c : clipList-&gt;objects)</span></a>
-<a name="1046"><span class="lineNum">    1046 </span><span class="lineCov">         81 :         c-&gt;sendMirrorUpdateToAllPlugins (p);</span></a>
-<a name="1047"><span class="lineNum">    1047 </span><span class="lineCov">        372 : }</span></a>
+<a name="1045"><span class="lineNum">    1045 </span><span class="lineCov">        443 :     for (auto c : clipList-&gt;objects)</span></a>
+<a name="1046"><span class="lineNum">    1046 </span><span class="lineCov">         79 :         c-&gt;sendMirrorUpdateToAllPlugins (p);</span></a>
+<a name="1047"><span class="lineNum">    1047 </span><span class="lineCov">        364 : }</span></a>
 <a name="1048"><span class="lineNum">    1048 </span>            : </a>
 <a name="1049"><span class="lineNum">    1049 </span><span class="lineNoCov">          0 : bool ClipTrack::areAnyClipsUsingFile (const AudioFile&amp; af)</span></a>
 <a name="1050"><span class="lineNum">    1050 </span>            : {</a>

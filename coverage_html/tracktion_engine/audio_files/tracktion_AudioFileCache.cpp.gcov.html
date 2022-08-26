@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">289</td>
+            <td class="headerCovTableEntry">287</td>
             <td class="headerCovTableEntry">412</td>
-            <td class="headerCovTableEntryLo">70.1 %</td>
+            <td class="headerCovTableEntryLo">69.7 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-08-26 13:31:39</td>
+            <td class="headerValue">2022-08-26 17:23:32</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">37</td>
@@ -75,10 +75,10 @@
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span><span class="lineCov">       3841 : static void clearSetOfChannels (int** channels, int numChannels, int offset, int numSamples) noexcept</span></a>
 <a name="15"><span class="lineNum">      15 </span>            : {</a>
-<a name="16"><span class="lineNum">      16 </span><span class="lineCov">      11516 :     for (int i = 0; i &lt; numChannels; ++i)</span></a>
-<a name="17"><span class="lineNum">      17 </span><span class="lineCov">       7676 :         if (auto chan = (float*) channels[i])</span></a>
-<a name="18"><span class="lineNum">      18 </span><span class="lineCov">       7562 :             juce::FloatVectorOperations::clear (chan + offset, numSamples);</span></a>
-<a name="19"><span class="lineNum">      19 </span><span class="lineCov">       3840 : }</span></a>
+<a name="16"><span class="lineNum">      16 </span><span class="lineCov">      11508 :     for (int i = 0; i &lt; numChannels; ++i)</span></a>
+<a name="17"><span class="lineNum">      17 </span><span class="lineCov">       7670 :         if (auto chan = (float*) channels[i])</span></a>
+<a name="18"><span class="lineNum">      18 </span><span class="lineCov">       7556 :             juce::FloatVectorOperations::clear (chan + offset, numSamples);</span></a>
+<a name="19"><span class="lineNum">      19 </span><span class="lineCov">       3838 : }</span></a>
 <a name="20"><span class="lineNum">      20 </span>            : </a>
 <a name="21"><span class="lineNum">      21 </span>            : class AudioFileCache::CachedFile</a>
 <a name="22"><span class="lineNum">      22 </span>            : {</a>
@@ -94,64 +94,64 @@
 <a name="32"><span class="lineNum">      32 </span>            : </a>
 <a name="33"><span class="lineNum">      33 </span>            :     enum { readAheadSamples = 48000 };</a>
 <a name="34"><span class="lineNum">      34 </span>            : </a>
-<a name="35"><span class="lineNum">      35 </span><span class="lineCov">      37432 :     void touchFiles()</span></a>
+<a name="35"><span class="lineNum">      35 </span><span class="lineCov">      34762 :     void touchFiles()</span></a>
 <a name="36"><span class="lineNum">      36 </span>            :     {</a>
-<a name="37"><span class="lineNum">      37 </span><span class="lineCov">      37432 :         juce::Array&lt;SampleCount&gt; readPoints;</span></a>
+<a name="37"><span class="lineNum">      37 </span><span class="lineCov">      34762 :         juce::Array&lt;SampleCount&gt; readPoints;</span></a>
 <a name="38"><span class="lineNum">      38 </span>            :         readPoints.ensureStorageAllocated (64);</a>
 <a name="39"><span class="lineNum">      39 </span>            : </a>
 <a name="40"><span class="lineNum">      40 </span>            :         {</a>
-<a name="41"><span class="lineNum">      41 </span><span class="lineCov">      37432 :             const juce::ScopedReadLock sl (clientListLock);</span></a>
+<a name="41"><span class="lineNum">      41 </span><span class="lineCov">      34762 :             const juce::ScopedReadLock sl (clientListLock);</span></a>
 <a name="42"><span class="lineNum">      42 </span>            : </a>
-<a name="43"><span class="lineNum">      43 </span><span class="lineCov">     117949 :             for (auto r : clients)</span></a>
+<a name="43"><span class="lineNum">      43 </span><span class="lineCov">     113965 :             for (auto r : clients)</span></a>
 <a name="44"><span class="lineNum">      44 </span>            :             {</a>
-<a name="45"><span class="lineNum">      45 </span><span class="lineCov">      80517 :                 const auto readPos = r-&gt;readPos.load();</span></a>
+<a name="45"><span class="lineNum">      45 </span><span class="lineCov">      79203 :                 const auto readPos = r-&gt;readPos.load();</span></a>
 <a name="46"><span class="lineNum">      46 </span>            :                 const auto loopLength = r-&gt;loopLength.load();</a>
 <a name="47"><span class="lineNum">      47 </span>            : </a>
-<a name="48"><span class="lineNum">      48 </span><span class="lineCov">      80517 :                 if (r-&gt;getReferenceCount() &gt; 1 &amp;&amp; readPos &gt; -readAheadSamples)</span></a>
+<a name="48"><span class="lineNum">      48 </span><span class="lineCov">      79203 :                 if (r-&gt;getReferenceCount() &gt; 1 &amp;&amp; readPos &gt; -readAheadSamples)</span></a>
 <a name="49"><span class="lineNum">      49 </span>            :                 {</a>
-<a name="50"><span class="lineNum">      50 </span><span class="lineCov">      51324 :                     if (loopLength &gt; 0)</span></a>
-<a name="51"><span class="lineNum">      51 </span><span class="lineCov">          1 :                         if (readPos + readAheadSamples &gt; r-&gt;loopStart + loopLength)</span></a>
-<a name="52"><span class="lineNum">      52 </span><span class="lineCov">          1 :                             readPoints.addIfNotAlreadyThere (r-&gt;loopStart);</span></a>
+<a name="50"><span class="lineNum">      50 </span><span class="lineCov">      46042 :                     if (loopLength &gt; 0)</span></a>
+<a name="51"><span class="lineNum">      51 </span><span class="lineNoCov">          0 :                         if (readPos + readAheadSamples &gt; r-&gt;loopStart + loopLength)</span></a>
+<a name="52"><span class="lineNum">      52 </span><span class="lineNoCov">          0 :                             readPoints.addIfNotAlreadyThere (r-&gt;loopStart);</span></a>
 <a name="53"><span class="lineNum">      53 </span>            : </a>
-<a name="54"><span class="lineNum">      54 </span><span class="lineCov">      79338 :                     readPoints.addIfNotAlreadyThere (std::max (SampleCount(), readPos));</span></a>
+<a name="54"><span class="lineNum">      54 </span><span class="lineCov">      71217 :                     readPoints.addIfNotAlreadyThere (std::max (SampleCount(), readPos));</span></a>
 <a name="55"><span class="lineNum">      55 </span>            :                 }</a>
 <a name="56"><span class="lineNum">      56 </span>            :             }</a>
 <a name="57"><span class="lineNum">      57 </span>            :         }</a>
 <a name="58"><span class="lineNum">      58 </span>            : </a>
-<a name="59"><span class="lineNum">      59 </span><span class="lineCov">      37432 :         const juce::ScopedReadLock sl (readerLock);</span></a>
+<a name="59"><span class="lineNum">      59 </span><span class="lineCov">      34762 :         const juce::ScopedReadLock sl (readerLock);</span></a>
 <a name="60"><span class="lineNum">      60 </span>            : </a>
-<a name="61"><span class="lineNum">      61 </span><span class="lineCov">      63928 :         for (auto pos : readPoints)</span></a>
-<a name="62"><span class="lineNum">      62 </span><span class="lineCov">      26496 :             touchAllReaders ({ pos, pos + 128 });</span></a>
+<a name="61"><span class="lineNum">      61 </span><span class="lineCov">      58579 :         for (auto pos : readPoints)</span></a>
+<a name="62"><span class="lineNum">      62 </span><span class="lineCov">      23817 :             touchAllReaders ({ pos, pos + 128 });</span></a>
 <a name="63"><span class="lineNum">      63 </span>            : </a>
-<a name="64"><span class="lineNum">      64 </span><span class="lineCov">      63928 :         for (auto pos : readPoints)</span></a>
-<a name="65"><span class="lineNum">      65 </span><span class="lineCov">      26496 :             touchAllReaders ({ pos + 128, pos + 4096 });</span></a>
+<a name="64"><span class="lineNum">      64 </span><span class="lineCov">      58579 :         for (auto pos : readPoints)</span></a>
+<a name="65"><span class="lineNum">      65 </span><span class="lineCov">      23817 :             touchAllReaders ({ pos + 128, pos + 4096 });</span></a>
 <a name="66"><span class="lineNum">      66 </span>            : </a>
-<a name="67"><span class="lineNum">      67 </span><span class="lineCov">     262024 :         for (int distanceAhead = 4096; distanceAhead &lt; 48000; distanceAhead += 8192)</span></a>
-<a name="68"><span class="lineNum">      68 </span><span class="lineCov">     383568 :             for (auto pos : readPoints)</span></a>
-<a name="69"><span class="lineNum">      69 </span><span class="lineCov">     158976 :                 touchAllReaders ({ pos + distanceAhead, pos + distanceAhead + 8192 });</span></a>
-<a name="70"><span class="lineNum">      70 </span><span class="lineCov">      37432 :     }</span></a>
+<a name="67"><span class="lineNum">      67 </span><span class="lineCov">     243334 :         for (int distanceAhead = 4096; distanceAhead &lt; 48000; distanceAhead += 8192)</span></a>
+<a name="68"><span class="lineNum">      68 </span><span class="lineCov">     351474 :             for (auto pos : readPoints)</span></a>
+<a name="69"><span class="lineNum">      69 </span><span class="lineCov">     142902 :                 touchAllReaders ({ pos + distanceAhead, pos + distanceAhead + 8192 });</span></a>
+<a name="70"><span class="lineNum">      70 </span><span class="lineCov">      34762 :     }</span></a>
 <a name="71"><span class="lineNum">      71 </span>            : </a>
-<a name="72"><span class="lineNum">      72 </span><span class="lineCov">     211968 :     void touchAllReaders (SampleRange range) const</span></a>
+<a name="72"><span class="lineNum">      72 </span><span class="lineCov">     190536 :     void touchAllReaders (SampleRange range) const</span></a>
 <a name="73"><span class="lineNum">      73 </span>            :     {</a>
-<a name="74"><span class="lineNum">      74 </span><span class="lineCov">     423896 :         for (auto* r : readers)</span></a>
+<a name="74"><span class="lineNum">      74 </span><span class="lineCov">     381032 :         for (auto* r : readers)</span></a>
 <a name="75"><span class="lineNum">      75 </span>            :         {</a>
-<a name="76"><span class="lineNum">      76 </span><span class="lineCov">     211928 :             if (r != nullptr)</span></a>
+<a name="76"><span class="lineNum">      76 </span><span class="lineCov">     190496 :             if (r != nullptr)</span></a>
 <a name="77"><span class="lineNum">      77 </span>            :             {</a>
 <a name="78"><span class="lineNum">      78 </span>            :                 auto section = r-&gt;getMappedSection();</a>
 <a name="79"><span class="lineNum">      79 </span>            :                 range = range.getIntersectionWith (SampleRange (section.getStart(), section.getEnd()));</a>
 <a name="80"><span class="lineNum">      80 </span>            : </a>
-<a name="81"><span class="lineNum">      81 </span><span class="lineCov">   11919000 :                 for (auto i = range.getStart(); i &lt; range.getEnd(); i += 64)</span></a>
-<a name="82"><span class="lineNum">      82 </span><span class="lineCov">   11707100 :                     r-&gt;touchSample (i);</span></a>
+<a name="81"><span class="lineNum">      81 </span><span class="lineCov">   10495300 :                 for (auto i = range.getStart(); i &lt; range.getEnd(); i += 64)</span></a>
+<a name="82"><span class="lineNum">      82 </span><span class="lineCov">   10304800 :                     r-&gt;touchSample (i);</span></a>
 <a name="83"><span class="lineNum">      83 </span>            :             }</a>
 <a name="84"><span class="lineNum">      84 </span>            :         }</a>
-<a name="85"><span class="lineNum">      85 </span><span class="lineCov">     211968 :     }</span></a>
+<a name="85"><span class="lineNum">      85 </span><span class="lineCov">     190536 :     }</span></a>
 <a name="86"><span class="lineNum">      86 </span>            : </a>
-<a name="87"><span class="lineNum">      87 </span><span class="lineCov">     471337 :     bool updateBlocks()</span></a>
+<a name="87"><span class="lineNum">      87 </span><span class="lineCov">     436615 :     bool updateBlocks()</span></a>
 <a name="88"><span class="lineNum">      88 </span>            :     {</a>
 <a name="89"><span class="lineNum">      89 </span>            :         {</a>
-<a name="90"><span class="lineNum">      90 </span><span class="lineCov">     471337 :             const juce::ScopedReadLock sl (readerLock);</span></a>
+<a name="90"><span class="lineNum">      90 </span><span class="lineCov">     436615 :             const juce::ScopedReadLock sl (readerLock);</span></a>
 <a name="91"><span class="lineNum">      91 </span>            :             </a>
-<a name="92"><span class="lineNum">      92 </span><span class="lineCov">     471337 :             if (mapEntireFile &amp;&amp; readers.size() &gt; 0)</span></a>
+<a name="92"><span class="lineNum">      92 </span><span class="lineCov">     436615 :             if (mapEntireFile &amp;&amp; readers.size() &gt; 0)</span></a>
 <a name="93"><span class="lineNum">      93 </span>            :                 return false;</a>
 <a name="94"><span class="lineNum">      94 </span>            :         }</a>
 <a name="95"><span class="lineNum">      95 </span>            : </a>
@@ -315,18 +315,18 @@
 <a name="253"><span class="lineNum">     253 </span>            :         return {};</a>
 <a name="254"><span class="lineNum">     254 </span>            :     }</a>
 <a name="255"><span class="lineNum">     255 </span>            : </a>
-<a name="256"><span class="lineNum">     256 </span><span class="lineCov">       5258 :     void purgeOrphanReaders()</span></a>
+<a name="256"><span class="lineNum">     256 </span><span class="lineCov">       4896 :     void purgeOrphanReaders()</span></a>
 <a name="257"><span class="lineNum">     257 </span>            :     {</a>
-<a name="258"><span class="lineNum">     258 </span><span class="lineCov">       5258 :         const juce::ScopedWriteLock sl (clientListLock);</span></a>
+<a name="258"><span class="lineNum">     258 </span><span class="lineCov">       4896 :         const juce::ScopedWriteLock sl (clientListLock);</span></a>
 <a name="259"><span class="lineNum">     259 </span>            : </a>
-<a name="260"><span class="lineNum">     260 </span><span class="lineCov">      18427 :         for (int i = clients.size(); --i &gt;= 0;)</span></a>
-<a name="261"><span class="lineNum">     261 </span><span class="lineCov">      13169 :             if (clients.getObjectPointerUnchecked (i)-&gt;getReferenceCount() &lt;= 1)</span></a>
+<a name="260"><span class="lineNum">     260 </span><span class="lineCov">      17346 :         for (int i = clients.size(); --i &gt;= 0;)</span></a>
+<a name="261"><span class="lineNum">     261 </span><span class="lineCov">      12450 :             if (clients.getObjectPointerUnchecked (i)-&gt;getReferenceCount() &lt;= 1)</span></a>
 <a name="262"><span class="lineNum">     262 </span><span class="lineCov">       7138 :                 clients.remove (i);</span></a>
-<a name="263"><span class="lineNum">     263 </span><span class="lineCov">       5258 :     }</span></a>
+<a name="263"><span class="lineNum">     263 </span><span class="lineCov">       4896 :     }</span></a>
 <a name="264"><span class="lineNum">     264 </span>            : </a>
 <a name="265"><span class="lineNum">     265 </span>            :     bool isUnused() const</a>
 <a name="266"><span class="lineNum">     266 </span>            :     {</a>
-<a name="267"><span class="lineNum">     267 </span><span class="lineCov">       2439 :         const juce::ScopedReadLock sl (clientListLock);</span></a>
+<a name="267"><span class="lineNum">     267 </span><span class="lineCov">       2299 :         const juce::ScopedReadLock sl (clientListLock);</span></a>
 <a name="268"><span class="lineNum">     268 </span>            :         </a>
 <a name="269"><span class="lineNum">     269 </span>            :         return clients.isEmpty();</a>
 <a name="270"><span class="lineNum">     270 </span>            :     }</a>
@@ -346,23 +346,23 @@
 <a name="284"><span class="lineNum">     284 </span>            : </a>
 <a name="285"><span class="lineNum">     285 </span>            :     struct LockedReaderFinder</a>
 <a name="286"><span class="lineNum">     286 </span>            :     {</a>
-<a name="287"><span class="lineNum">     287 </span><span class="lineCov">    4901310 :         LockedReaderFinder (CachedFile&amp; f, SampleCount startSample, int timeoutMs)  : lock (f.readerLock)</span></a>
+<a name="287"><span class="lineNum">     287 </span><span class="lineCov">    4908880 :         LockedReaderFinder (CachedFile&amp; f, SampleCount startSample, int timeoutMs)  : lock (f.readerLock)</span></a>
 <a name="288"><span class="lineNum">     288 </span>            :         {</a>
 <a name="289"><span class="lineNum">     289 </span>            :             uint32_t startTime = 0;</a>
 <a name="290"><span class="lineNum">     290 </span>            : </a>
 <a name="291"><span class="lineNum">     291 </span>            :             for (;;)</a>
 <a name="292"><span class="lineNum">     292 </span>            :             {</a>
-<a name="293"><span class="lineNum">     293 </span><span class="lineCov">    5941910 :                 if (lock.tryEnterRead())</span></a>
+<a name="293"><span class="lineNum">     293 </span><span class="lineCov">    5817650 :                 if (lock.tryEnterRead())</span></a>
 <a name="294"><span class="lineNum">     294 </span>            :                 {</a>
-<a name="295"><span class="lineNum">     295 </span><span class="lineCov">    5905570 :                     reader = f.findReaderFor (startSample);</span></a>
+<a name="295"><span class="lineNum">     295 </span><span class="lineCov">    5786540 :                     reader = f.findReaderFor (startSample);</span></a>
 <a name="296"><span class="lineNum">     296 </span>            : </a>
-<a name="297"><span class="lineNum">     297 </span><span class="lineCov">    5905570 :                     if (reader != nullptr)</span></a>
+<a name="297"><span class="lineNum">     297 </span><span class="lineCov">    5786540 :                     if (reader != nullptr)</span></a>
 <a name="298"><span class="lineNum">     298 </span>            :                         return;</a>
 <a name="299"><span class="lineNum">     299 </span>            : </a>
-<a name="300"><span class="lineNum">     300 </span><span class="lineCov">     995323 :                     lock.exitRead();</span></a>
+<a name="300"><span class="lineNum">     300 </span><span class="lineCov">     874031 :                     lock.exitRead();</span></a>
 <a name="301"><span class="lineNum">     301 </span>            :                 }</a>
 <a name="302"><span class="lineNum">     302 </span>            : </a>
-<a name="303"><span class="lineNum">     303 </span><span class="lineCov">    1040530 :                 if (timeoutMs &lt; 0)</span></a>
+<a name="303"><span class="lineNum">     303 </span><span class="lineCov">     908508 :                 if (timeoutMs &lt; 0)</span></a>
 <a name="304"><span class="lineNum">     304 </span>            :                 {</a>
 <a name="305"><span class="lineNum">     305 </span><span class="lineNoCov">          0 :                     if (startTime != 0) // second failed after calling updateBlocks failed</span></a>
 <a name="306"><span class="lineNum">     306 </span>            :                         break;</a>
@@ -372,21 +372,21 @@
 <a name="310"><span class="lineNum">     310 </span><span class="lineNoCov">          0 :                     continue;</span></a>
 <a name="311"><span class="lineNum">     311 </span>            :                 }</a>
 <a name="312"><span class="lineNum">     312 </span>            : </a>
-<a name="313"><span class="lineNum">     313 </span><span class="lineCov">    1040530 :                 if (timeoutMs == 0)</span></a>
+<a name="313"><span class="lineNum">     313 </span><span class="lineCov">     908508 :                 if (timeoutMs == 0)</span></a>
 <a name="314"><span class="lineNum">     314 </span>            :                     break;</a>
 <a name="315"><span class="lineNum">     315 </span>            : </a>
-<a name="316"><span class="lineNum">     316 </span><span class="lineCov">    1040530 :                 auto now = juce::Time::getMillisecondCounter();</span></a>
+<a name="316"><span class="lineNum">     316 </span><span class="lineCov">     908508 :                 auto now = juce::Time::getMillisecondCounter();</span></a>
 <a name="317"><span class="lineNum">     317 </span>            : </a>
-<a name="318"><span class="lineNum">     318 </span><span class="lineCov">    1040610 :                 if (startTime == 0)</span></a>
+<a name="318"><span class="lineNum">     318 </span><span class="lineCov">     908733 :                 if (startTime == 0)</span></a>
 <a name="319"><span class="lineNum">     319 </span>            :                     startTime = now;</a>
 <a name="320"><span class="lineNum">     320 </span>            : </a>
-<a name="321"><span class="lineNum">     321 </span><span class="lineCov">    1040610 :                 const int elapsed = (int) (now - startTime);</span></a>
+<a name="321"><span class="lineNum">     321 </span><span class="lineCov">     908733 :                 const int elapsed = (int) (now - startTime);</span></a>
 <a name="322"><span class="lineNum">     322 </span>            : </a>
-<a name="323"><span class="lineNum">     323 </span><span class="lineCov">    1040610 :                 if (elapsed &gt; timeoutMs)</span></a>
+<a name="323"><span class="lineNum">     323 </span><span class="lineCov">     908733 :                 if (elapsed &gt; timeoutMs)</span></a>
 <a name="324"><span class="lineNum">     324 </span>            :                     break;</a>
 <a name="325"><span class="lineNum">     325 </span>            : </a>
-<a name="326"><span class="lineNum">     326 </span><span class="lineCov">    1040610 :                 if (elapsed &gt; 0)</span></a>
-<a name="327"><span class="lineNum">     327 </span><span class="lineCov">     710568 :                     juce::Thread::yield();</span></a>
+<a name="326"><span class="lineNum">     326 </span><span class="lineCov">     908733 :                 if (elapsed &gt; 0)</span></a>
+<a name="327"><span class="lineNum">     327 </span><span class="lineCov">     593967 :                     juce::Thread::yield();</span></a>
 <a name="328"><span class="lineNum">     328 </span>            :             }</a>
 <a name="329"><span class="lineNum">     329 </span>            : </a>
 <a name="330"><span class="lineNum">     330 </span><span class="lineNoCov">          0 :             isLocked = false;</span></a>
@@ -395,7 +395,7 @@
 <a name="333"><span class="lineNum">     333 </span>            :         ~LockedReaderFinder()</a>
 <a name="334"><span class="lineNum">     334 </span>            :         {</a>
 <a name="335"><span class="lineNum">     335 </span><span class="lineNoCov">          0 :             if (isLocked)</span></a>
-<a name="336"><span class="lineNum">     336 </span><span class="lineCov">    4909110 :                 lock.exitRead();</span></a>
+<a name="336"><span class="lineNum">     336 </span><span class="lineCov">    4911320 :                 lock.exitRead();</span></a>
 <a name="337"><span class="lineNum">     337 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="338"><span class="lineNum">     338 </span>            : </a>
 <a name="339"><span class="lineNum">     339 </span>            :         juce::MemoryMappedAudioFormatReader* reader = nullptr;</a>
@@ -405,7 +405,7 @@
 <a name="343"><span class="lineNum">     343 </span>            :         JUCE_DECLARE_NON_COPYABLE (LockedReaderFinder)</a>
 <a name="344"><span class="lineNum">     344 </span>            :     };</a>
 <a name="345"><span class="lineNum">     345 </span>            : </a>
-<a name="346"><span class="lineNum">     346 </span><span class="lineCov">    4901500 :     bool read (SampleCount startSample, int** destSamples, int numDestChannels,</span></a>
+<a name="346"><span class="lineNum">     346 </span><span class="lineCov">    4909150 :     bool read (SampleCount startSample, int** destSamples, int numDestChannels,</span></a>
 <a name="347"><span class="lineNum">     347 </span>            :                int startOffsetInDestBuffer, int numSamples, int timeoutMs)</a>
 <a name="348"><span class="lineNum">     348 </span>            :     {</a>
 <a name="349"><span class="lineNum">     349 </span>            :         jassert (destSamples != nullptr);</a>
@@ -413,26 +413,26 @@
 <a name="351"><span class="lineNum">     351 </span>            : </a>
 <a name="352"><span class="lineNum">     352 </span>            :         bool allDataRead = true;</a>
 <a name="353"><span class="lineNum">     353 </span>            : </a>
-<a name="354"><span class="lineNum">     354 </span><span class="lineCov">    9811470 :         while (numSamples &gt; 0)</span></a>
+<a name="354"><span class="lineNum">     354 </span><span class="lineCov">    9821280 :         while (numSamples &gt; 0)</span></a>
 <a name="355"><span class="lineNum">     355 </span>            :         {</a>
-<a name="356"><span class="lineNum">     356 </span><span class="lineCov">    4905060 :             if (startSample &gt;= info.lengthInSamples)</span></a>
+<a name="356"><span class="lineNum">     356 </span><span class="lineCov">    4912610 :             if (startSample &gt;= info.lengthInSamples)</span></a>
 <a name="357"><span class="lineNum">     357 </span>            :             {</a>
 <a name="358"><span class="lineNum">     358 </span><span class="lineCov">       3841 :                 clearSetOfChannels (destSamples, numDestChannels, startOffsetInDestBuffer, numSamples);</span></a>
-<a name="359"><span class="lineNum">     359 </span><span class="lineCov">       3840 :                 break;</span></a>
+<a name="359"><span class="lineNum">     359 </span><span class="lineCov">       3838 :                 break;</span></a>
 <a name="360"><span class="lineNum">     360 </span>            :             }</a>
 <a name="361"><span class="lineNum">     361 </span>            : </a>
-<a name="362"><span class="lineNum">     362 </span><span class="lineCov">    4901220 :             const LockedReaderFinder l (*this, startSample, timeoutMs);</span></a>
+<a name="362"><span class="lineNum">     362 </span><span class="lineCov">    4908760 :             const LockedReaderFinder l (*this, startSample, timeoutMs);</span></a>
 <a name="363"><span class="lineNum">     363 </span>            :             SCOPED_REALTIME_CHECK</a>
 <a name="364"><span class="lineNum">     364 </span>            : </a>
-<a name="365"><span class="lineNum">     365 </span><span class="lineCov">    4910250 :             if (l.isLocked &amp;&amp; l.reader != nullptr)</span></a>
+<a name="365"><span class="lineNum">     365 </span><span class="lineCov">    4912500 :             if (l.isLocked &amp;&amp; l.reader != nullptr)</span></a>
 <a name="366"><span class="lineNum">     366 </span>            :             {</a>
-<a name="367"><span class="lineNum">     367 </span><span class="lineCov">    4910250 :                 auto numThisTime = std::min (numSamples, (int) (l.reader-&gt;getMappedSection().getEnd() - startSample));</span></a>
+<a name="367"><span class="lineNum">     367 </span><span class="lineCov">    4912500 :                 auto numThisTime = std::min (numSamples, (int) (l.reader-&gt;getMappedSection().getEnd() - startSample));</span></a>
 <a name="368"><span class="lineNum">     368 </span>            : </a>
-<a name="369"><span class="lineNum">     369 </span><span class="lineCov">    4910250 :                 l.reader-&gt;readSamples (destSamples, numDestChannels, startOffsetInDestBuffer, startSample, numThisTime);</span></a>
+<a name="369"><span class="lineNum">     369 </span><span class="lineCov">    4912500 :                 l.reader-&gt;readSamples (destSamples, numDestChannels, startOffsetInDestBuffer, startSample, numThisTime);</span></a>
 <a name="370"><span class="lineNum">     370 </span>            : </a>
-<a name="371"><span class="lineNum">     371 </span><span class="lineCov">    4909110 :                 startSample += numThisTime;</span></a>
-<a name="372"><span class="lineNum">     372 </span><span class="lineCov">    4909110 :                 startOffsetInDestBuffer += numThisTime;</span></a>
-<a name="373"><span class="lineNum">     373 </span><span class="lineCov">    4909110 :                 numSamples -= numThisTime;</span></a>
+<a name="371"><span class="lineNum">     371 </span><span class="lineCov">    4911320 :                 startSample += numThisTime;</span></a>
+<a name="372"><span class="lineNum">     372 </span><span class="lineCov">    4911320 :                 startOffsetInDestBuffer += numThisTime;</span></a>
+<a name="373"><span class="lineNum">     373 </span><span class="lineCov">    4911320 :                 numSamples -= numThisTime;</span></a>
 <a name="374"><span class="lineNum">     374 </span>            :             }</a>
 <a name="375"><span class="lineNum">     375 </span>            :             else</a>
 <a name="376"><span class="lineNum">     376 </span>            :             {</a>
@@ -443,8 +443,8 @@
 <a name="381"><span class="lineNum">     381 </span>            :             }</a>
 <a name="382"><span class="lineNum">     382 </span>            :         }</a>
 <a name="383"><span class="lineNum">     383 </span>            : </a>
-<a name="384"><span class="lineNum">     384 </span><span class="lineCov">    4910250 :         lastReadTime = juce::Time::getApproximateMillisecondCounter();</span></a>
-<a name="385"><span class="lineNum">     385 </span><span class="lineCov">    4908820 :         return allDataRead;</span></a>
+<a name="384"><span class="lineNum">     384 </span><span class="lineCov">    4912510 :         lastReadTime = juce::Time::getApproximateMillisecondCounter();</span></a>
+<a name="385"><span class="lineNum">     385 </span><span class="lineCov">    4912510 :         return allDataRead;</span></a>
 <a name="386"><span class="lineNum">     386 </span>            :     }</a>
 <a name="387"><span class="lineNum">     387 </span>            : </a>
 <a name="388"><span class="lineNum">     388 </span><span class="lineNoCov">          0 :     bool getRange (SampleCount startSample, int numSamples,</span></a>
@@ -525,8 +525,8 @@
 <a name="463"><span class="lineNum">     463 </span>            : </a>
 <a name="464"><span class="lineNum">     464 </span>            :     juce::MemoryMappedAudioFormatReader* findReaderFor (SampleCount sample) const</a>
 <a name="465"><span class="lineNum">     465 </span>            :     {</a>
-<a name="466"><span class="lineNum">     466 </span><span class="lineCov">    5905420 :         for (auto r : readers)</span></a>
-<a name="467"><span class="lineNum">     467 </span><span class="lineCov">    4910100 :             if (r != nullptr &amp;&amp; r-&gt;getMappedSection().contains (sample))</span></a>
+<a name="466"><span class="lineNum">     466 </span><span class="lineCov">    5786150 :         for (auto r : readers)</span></a>
+<a name="467"><span class="lineNum">     467 </span><span class="lineCov">    4912120 :             if (r != nullptr &amp;&amp; r-&gt;getMappedSection().contains (sample))</span></a>
 <a name="468"><span class="lineNum">     468 </span>            :                 return r;</a>
 <a name="469"><span class="lineNum">     469 </span>            : </a>
 <a name="470"><span class="lineNum">     470 </span>            :         return {};</a>
@@ -555,21 +555,21 @@
 <a name="493"><span class="lineNum">     493 </span>            : </a>
 <a name="494"><span class="lineNum">     494 </span>            :         uint32_t lastOldFlePurge = 0;</a>
 <a name="495"><span class="lineNum">     495 </span>            : </a>
-<a name="496"><span class="lineNum">     496 </span><span class="lineCov">      19631 :         while (! threadShouldExit())</span></a>
+<a name="496"><span class="lineNum">     496 </span><span class="lineCov">      17334 :         while (! threadShouldExit())</span></a>
 <a name="497"><span class="lineNum">     497 </span>            :         {</a>
-<a name="498"><span class="lineNum">     498 </span><span class="lineCov">      19630 :             if (owner.serviceNextReader())</span></a>
+<a name="498"><span class="lineNum">     498 </span><span class="lineCov">      17333 :             if (owner.serviceNextReader())</span></a>
 <a name="499"><span class="lineNum">     499 </span><span class="lineNoCov">          0 :                 continue;</span></a>
 <a name="500"><span class="lineNum">     500 </span>            : </a>
-<a name="501"><span class="lineNum">     501 </span><span class="lineCov">      19630 :             auto now = juce::Time::getApproximateMillisecondCounter();</span></a>
+<a name="501"><span class="lineNum">     501 </span><span class="lineCov">      17333 :             auto now = juce::Time::getApproximateMillisecondCounter();</span></a>
 <a name="502"><span class="lineNum">     502 </span>            : </a>
-<a name="503"><span class="lineNum">     503 </span><span class="lineCov">      19630 :             if (now &gt; lastOldFlePurge + 2000)</span></a>
+<a name="503"><span class="lineNum">     503 </span><span class="lineCov">      17333 :             if (now &gt; lastOldFlePurge + 2000)</span></a>
 <a name="504"><span class="lineNum">     504 </span>            :             {</a>
 <a name="505"><span class="lineNum">     505 </span>            :                 lastOldFlePurge = now;</a>
-<a name="506"><span class="lineNum">     506 </span><span class="lineCov">        188 :                 owner.purgeOldFiles();</span></a>
-<a name="507"><span class="lineNum">     507 </span><span class="lineCov">        188 :                 continue;</span></a>
+<a name="506"><span class="lineNum">     506 </span><span class="lineCov">        166 :                 owner.purgeOldFiles();</span></a>
+<a name="507"><span class="lineNum">     507 </span><span class="lineCov">        166 :                 continue;</span></a>
 <a name="508"><span class="lineNum">     508 </span>            :             }</a>
 <a name="509"><span class="lineNum">     509 </span>            : </a>
-<a name="510"><span class="lineNum">     510 </span><span class="lineCov">      19442 :             wait (20);</span></a>
+<a name="510"><span class="lineNum">     510 </span><span class="lineCov">      17167 :             wait (20);</span></a>
 <a name="511"><span class="lineNum">     511 </span>            : </a>
 <a name="512"><span class="lineNum">     512 </span>            :             //DBG (&quot;Total cache mapping: &quot; &lt;&lt; owner.getBytesInUse() / (1024 * 1024) &lt;&lt; &quot; Mb&quot;);</a>
 <a name="513"><span class="lineNum">     513 </span>            :         }</a>
@@ -595,14 +595,14 @@
 <a name="533"><span class="lineNum">     533 </span>            :     {</a>
 <a name="534"><span class="lineNum">     534 </span><span class="lineCov">          1 :         juce::FloatVectorOperations::disableDenormalisedNumberSupport();</span></a>
 <a name="535"><span class="lineNum">     535 </span>            : </a>
-<a name="536"><span class="lineNum">     536 </span><span class="lineCov">       1566 :         while (! threadShouldExit())</span></a>
+<a name="536"><span class="lineNum">     536 </span><span class="lineCov">       1387 :         while (! threadShouldExit())</span></a>
 <a name="537"><span class="lineNum">     537 </span>            :         {</a>
 <a name="538"><span class="lineNum">     538 </span>            :             {</a>
-<a name="539"><span class="lineNum">     539 </span><span class="lineCov">       3130 :                 const ScopedCpuMeter cpu (owner.cpuUsage, 0.2);</span></a>
-<a name="540"><span class="lineNum">     540 </span><span class="lineCov">       1565 :                 owner.touchReaders();</span></a>
+<a name="539"><span class="lineNum">     539 </span><span class="lineCov">       2772 :                 const ScopedCpuMeter cpu (owner.cpuUsage, 0.2);</span></a>
+<a name="540"><span class="lineNum">     540 </span><span class="lineCov">       1386 :                 owner.touchReaders();</span></a>
 <a name="541"><span class="lineNum">     541 </span>            :             }</a>
 <a name="542"><span class="lineNum">     542 </span>            : </a>
-<a name="543"><span class="lineNum">     543 </span><span class="lineCov">       3130 :             wait (TransportControl::getNumPlayingTransports (owner.engine) &gt; 0 ? 10 : 250);</span></a>
+<a name="543"><span class="lineNum">     543 </span><span class="lineCov">       2772 :             wait (TransportControl::getNumPlayingTransports (owner.engine) &gt; 0 ? 10 : 250);</span></a>
 <a name="544"><span class="lineNum">     544 </span>            :         }</a>
 <a name="545"><span class="lineNum">     545 </span><span class="lineCov">          1 :     }</span></a>
 <a name="546"><span class="lineNum">     546 </span>            : </a>
@@ -673,8 +673,8 @@
 <a name="611"><span class="lineNum">     611 </span>            : //==============================================================================</a>
 <a name="612"><span class="lineNum">     612 </span><span class="lineCov">       7138 : AudioFileCache::CachedFile* AudioFileCache::getOrCreateCachedFile (const AudioFile&amp; f)</span></a>
 <a name="613"><span class="lineNum">     613 </span>            : {</a>
-<a name="614"><span class="lineNum">     614 </span><span class="lineCov">    1108410 :     for (auto s : activeFiles)</span></a>
-<a name="615"><span class="lineNum">     615 </span><span class="lineCov">    1106650 :         if (s-&gt;info.hashCode == f.getHash())</span></a>
+<a name="614"><span class="lineNum">     614 </span><span class="lineCov">    1108290 :     for (auto s : activeFiles)</span></a>
+<a name="615"><span class="lineNum">     615 </span><span class="lineCov">    1106530 :         if (s-&gt;info.hashCode == f.getHash())</span></a>
 <a name="616"><span class="lineNum">     616 </span><span class="lineCov">       5379 :             return s;</span></a>
 <a name="617"><span class="lineNum">     617 </span>            : </a>
 <a name="618"><span class="lineNum">     618 </span><span class="lineCov">       1759 :     auto&amp; manager = engine.getAudioFileFormatManager().memoryMappedFormatManager;</span></a>
@@ -696,8 +696,8 @@
 <a name="634"><span class="lineNum">     634 </span>            : {</a>
 <a name="635"><span class="lineNum">     635 </span><span class="lineCov">        251 :     const juce::ScopedReadLock sl (fileListLock);</span></a>
 <a name="636"><span class="lineNum">     636 </span>            : </a>
-<a name="637"><span class="lineNum">     637 </span><span class="lineCov">       1746 :     for (auto f : activeFiles)</span></a>
-<a name="638"><span class="lineNum">     638 </span><span class="lineCov">       1495 :         if (f-&gt;file == file)</span></a>
+<a name="637"><span class="lineNum">     637 </span><span class="lineCov">       1468 :     for (auto f : activeFiles)</span></a>
+<a name="638"><span class="lineNum">     638 </span><span class="lineCov">       1217 :         if (f-&gt;file == file)</span></a>
 <a name="639"><span class="lineNum">     639 </span><span class="lineCov">          5 :             f-&gt;releaseReader();</span></a>
 <a name="640"><span class="lineNum">     640 </span><span class="lineCov">        251 : }</span></a>
 <a name="641"><span class="lineNum">     641 </span>            : </a>
@@ -719,57 +719,57 @@
 <a name="657"><span class="lineNum">     657 </span>            :             f-&gt;validateFile();</a>
 <a name="658"><span class="lineNum">     658 </span><span class="lineCov">          1 : }</span></a>
 <a name="659"><span class="lineNum">     659 </span>            : </a>
-<a name="660"><span class="lineNum">     660 </span><span class="lineCov">        188 : void AudioFileCache::purgeOldFiles()</span></a>
+<a name="660"><span class="lineNum">     660 </span><span class="lineCov">        166 : void AudioFileCache::purgeOldFiles()</span></a>
 <a name="661"><span class="lineNum">     661 </span>            : {</a>
-<a name="662"><span class="lineNum">     662 </span><span class="lineCov">        376 :     CRASH_TRACER</span></a>
-<a name="663"><span class="lineNum">     663 </span><span class="lineCov">        188 :     auto oldestAllowedTime = juce::Time::getApproximateMillisecondCounter() - 2000;</span></a>
+<a name="662"><span class="lineNum">     662 </span><span class="lineCov">        332 :     CRASH_TRACER</span></a>
+<a name="663"><span class="lineNum">     663 </span><span class="lineCov">        166 :     auto oldestAllowedTime = juce::Time::getApproximateMillisecondCounter() - 2000;</span></a>
 <a name="664"><span class="lineNum">     664 </span>            : </a>
-<a name="665"><span class="lineNum">     665 </span><span class="lineCov">        188 :     const juce::ScopedWriteLock sl (fileListLock);</span></a>
+<a name="665"><span class="lineNum">     665 </span><span class="lineCov">        166 :     const juce::ScopedWriteLock sl (fileListLock);</span></a>
 <a name="666"><span class="lineNum">     666 </span>            : </a>
-<a name="667"><span class="lineNum">     667 </span><span class="lineCov">       5446 :     for (auto f :  activeFiles)</span></a>
-<a name="668"><span class="lineNum">     668 </span><span class="lineCov">       5258 :         f-&gt;purgeOrphanReaders();</span></a>
+<a name="667"><span class="lineNum">     667 </span><span class="lineCov">       5062 :     for (auto f :  activeFiles)</span></a>
+<a name="668"><span class="lineNum">     668 </span><span class="lineCov">       4896 :         f-&gt;purgeOrphanReaders();</span></a>
 <a name="669"><span class="lineNum">     669 </span>            : </a>
-<a name="670"><span class="lineNum">     670 </span><span class="lineCov">       5446 :     for (int i = activeFiles.size(); --i &gt;= 0;)</span></a>
+<a name="670"><span class="lineNum">     670 </span><span class="lineCov">       5062 :     for (int i = activeFiles.size(); --i &gt;= 0;)</span></a>
 <a name="671"><span class="lineNum">     671 </span>            :     {</a>
 <a name="672"><span class="lineNum">     672 </span>            :         auto f = activeFiles.getUnchecked (i);</a>
 <a name="673"><span class="lineNum">     673 </span>            : </a>
-<a name="674"><span class="lineNum">     674 </span><span class="lineCov">       7697 :         if (f-&gt;lastReadTime &lt; oldestAllowedTime &amp;&amp; f-&gt;isUnused())</span></a>
+<a name="674"><span class="lineNum">     674 </span><span class="lineCov">       7195 :         if (f-&gt;lastReadTime &lt; oldestAllowedTime &amp;&amp; f-&gt;isUnused())</span></a>
 <a name="675"><span class="lineNum">     675 </span><span class="lineCov">       1759 :             activeFiles.remove (i);</span></a>
 <a name="676"><span class="lineNum">     676 </span>            :     }</a>
-<a name="677"><span class="lineNum">     677 </span><span class="lineCov">        188 : }</span></a>
+<a name="677"><span class="lineNum">     677 </span><span class="lineCov">        166 : }</span></a>
 <a name="678"><span class="lineNum">     678 </span>            : </a>
-<a name="679"><span class="lineNum">     679 </span><span class="lineCov">      19630 : bool AudioFileCache::serviceNextReader()</span></a>
+<a name="679"><span class="lineNum">     679 </span><span class="lineCov">      17333 : bool AudioFileCache::serviceNextReader()</span></a>
 <a name="680"><span class="lineNum">     680 </span>            : {</a>
-<a name="681"><span class="lineNum">     681 </span><span class="lineCov">      19630 :     const juce::ScopedReadLock sl (fileListLock);</span></a>
+<a name="681"><span class="lineNum">     681 </span><span class="lineCov">      17333 :     const juce::ScopedReadLock sl (fileListLock);</span></a>
 <a name="682"><span class="lineNum">     682 </span>            : </a>
-<a name="683"><span class="lineNum">     683 </span><span class="lineCov">     490967 :     for (int i = activeFiles.size(); --i &gt;= 0;)</span></a>
+<a name="683"><span class="lineNum">     683 </span><span class="lineCov">     453948 :     for (int i = activeFiles.size(); --i &gt;= 0;)</span></a>
 <a name="684"><span class="lineNum">     684 </span>            :     {</a>
-<a name="685"><span class="lineNum">     685 </span><span class="lineCov">     471337 :         if (++nextFileToService &gt;= activeFiles.size())</span></a>
-<a name="686"><span class="lineNum">     686 </span><span class="lineCov">       7072 :             nextFileToService = 0;</span></a>
+<a name="685"><span class="lineNum">     685 </span><span class="lineCov">     436615 :         if (++nextFileToService &gt;= activeFiles.size())</span></a>
+<a name="686"><span class="lineNum">     686 </span><span class="lineCov">       6845 :             nextFileToService = 0;</span></a>
 <a name="687"><span class="lineNum">     687 </span>            : </a>
-<a name="688"><span class="lineNum">     688 </span><span class="lineCov">     471337 :         auto* f = activeFiles.getUnchecked (nextFileToService);</span></a>
+<a name="688"><span class="lineNum">     688 </span><span class="lineCov">     436615 :         auto* f = activeFiles.getUnchecked (nextFileToService);</span></a>
 <a name="689"><span class="lineNum">     689 </span>            : </a>
-<a name="690"><span class="lineNum">     690 </span><span class="lineCov">     471337 :         if (f-&gt;updateBlocks())</span></a>
+<a name="690"><span class="lineNum">     690 </span><span class="lineCov">     436615 :         if (f-&gt;updateBlocks())</span></a>
 <a name="691"><span class="lineNum">     691 </span>            :             return true;</a>
 <a name="692"><span class="lineNum">     692 </span>            :     }</a>
 <a name="693"><span class="lineNum">     693 </span>            : </a>
 <a name="694"><span class="lineNum">     694 </span>            :     return false;</a>
 <a name="695"><span class="lineNum">     695 </span>            : }</a>
 <a name="696"><span class="lineNum">     696 </span>            : </a>
-<a name="697"><span class="lineNum">     697 </span><span class="lineCov">       1565 : void AudioFileCache::touchReaders()</span></a>
+<a name="697"><span class="lineNum">     697 </span><span class="lineCov">       1386 : void AudioFileCache::touchReaders()</span></a>
 <a name="698"><span class="lineNum">     698 </span>            : {</a>
 <a name="699"><span class="lineNum">     699 </span>            :     int64_t totalBytes = 0;</a>
 <a name="700"><span class="lineNum">     700 </span>            : </a>
-<a name="701"><span class="lineNum">     701 </span><span class="lineCov">       1565 :     const juce::ScopedReadLock sl (fileListLock);</span></a>
+<a name="701"><span class="lineNum">     701 </span><span class="lineCov">       1386 :     const juce::ScopedReadLock sl (fileListLock);</span></a>
 <a name="702"><span class="lineNum">     702 </span>            : </a>
-<a name="703"><span class="lineNum">     703 </span><span class="lineCov">      38997 :     for (auto f : activeFiles)</span></a>
+<a name="703"><span class="lineNum">     703 </span><span class="lineCov">      36148 :     for (auto f : activeFiles)</span></a>
 <a name="704"><span class="lineNum">     704 </span>            :     {</a>
-<a name="705"><span class="lineNum">     705 </span><span class="lineCov">      37432 :         f-&gt;touchFiles();</span></a>
-<a name="706"><span class="lineNum">     706 </span><span class="lineCov">      37432 :         totalBytes += f-&gt;totalBytesInUse;</span></a>
+<a name="705"><span class="lineNum">     705 </span><span class="lineCov">      34762 :         f-&gt;touchFiles();</span></a>
+<a name="706"><span class="lineNum">     706 </span><span class="lineCov">      34762 :         totalBytes += f-&gt;totalBytesInUse;</span></a>
 <a name="707"><span class="lineNum">     707 </span>            :     }</a>
 <a name="708"><span class="lineNum">     708 </span>            : </a>
-<a name="709"><span class="lineNum">     709 </span><span class="lineCov">       1565 :     totalBytesUsed = totalBytes;</span></a>
-<a name="710"><span class="lineNum">     710 </span><span class="lineCov">       1565 : }</span></a>
+<a name="709"><span class="lineNum">     709 </span><span class="lineCov">       1386 :     totalBytesUsed = totalBytes;</span></a>
+<a name="710"><span class="lineNum">     710 </span><span class="lineCov">       1386 : }</span></a>
 <a name="711"><span class="lineNum">     711 </span>            : </a>
 <a name="712"><span class="lineNum">     712 </span><span class="lineNoCov">          0 : bool AudioFileCache::hasCacheMissed (bool clearMissedFlag)</span></a>
 <a name="713"><span class="lineNum">     713 </span>            : {</a>
@@ -826,28 +826,28 @@
 <a name="764"><span class="lineNum">     764 </span>            : {</a>
 <a name="765"><span class="lineNum">     765 </span><span class="lineCov">       7138 : }</span></a>
 <a name="766"><span class="lineNum">     766 </span>            : </a>
-<a name="767"><span class="lineNum">     767 </span><span class="lineCov">    4942620 : void AudioFileCache::Reader::setReadPosition (SampleCount pos) noexcept</span></a>
+<a name="767"><span class="lineNum">     767 </span><span class="lineCov">    4947060 : void AudioFileCache::Reader::setReadPosition (SampleCount pos) noexcept</span></a>
 <a name="768"><span class="lineNum">     768 </span>            : {</a>
 <a name="769"><span class="lineNum">     769 </span>            :     const auto localLoopStart = loopStart.load();</a>
 <a name="770"><span class="lineNum">     770 </span>            :     const auto localLoopLength = loopLength.load();</a>
 <a name="771"><span class="lineNum">     771 </span>            : </a>
-<a name="772"><span class="lineNum">     772 </span><span class="lineCov">    4942620 :     if (loopLength == 0)</span></a>
+<a name="772"><span class="lineNum">     772 </span><span class="lineCov">    4947060 :     if (loopLength == 0)</span></a>
 <a name="773"><span class="lineNum">     773 </span>            :         readPos = pos;</a>
-<a name="774"><span class="lineNum">     774 </span><span class="lineCov">      44486 :     else if (pos &gt;= 0)</span></a>
-<a name="775"><span class="lineNum">     775 </span><span class="lineCov">      44472 :         readPos = localLoopStart + (pos % localLoopLength);</span></a>
+<a name="774"><span class="lineNum">     774 </span><span class="lineCov">      44678 :     else if (pos &gt;= 0)</span></a>
+<a name="775"><span class="lineNum">     775 </span><span class="lineCov">      44664 :         readPos = localLoopStart + (pos % localLoopLength);</span></a>
 <a name="776"><span class="lineNum">     776 </span>            :     else</a>
 <a name="777"><span class="lineNum">     777 </span><span class="lineCov">         14 :         readPos = localLoopStart + juce::negativeAwareModulo (pos, localLoopLength);</span></a>
-<a name="778"><span class="lineNum">     778 </span><span class="lineCov">    4942620 : }</span></a>
+<a name="778"><span class="lineNum">     778 </span><span class="lineCov">    4947060 : }</span></a>
 <a name="779"><span class="lineNum">     779 </span>            : </a>
 <a name="780"><span class="lineNum">     780 </span><span class="lineCov">       7054 : int AudioFileCache::Reader::getNumChannels() const noexcept</span></a>
 <a name="781"><span class="lineNum">     781 </span>            : {</a>
-<a name="782"><span class="lineNum">     782 </span><span class="lineCov">    4888050 :     return file != nullptr ? static_cast&lt;CachedFile*&gt; (file)-&gt;info.numChannels</span></a>
+<a name="782"><span class="lineNum">     782 </span><span class="lineCov">    4888330 :     return file != nullptr ? static_cast&lt;CachedFile*&gt; (file)-&gt;info.numChannels</span></a>
 <a name="783"><span class="lineNum">     783 </span><span class="lineNoCov">          0 :                            : (int) fallbackReader-&gt;numChannels;</span></a>
 <a name="784"><span class="lineNum">     784 </span>            : }</a>
 <a name="785"><span class="lineNum">     785 </span>            : </a>
-<a name="786"><span class="lineNum">     786 </span><span class="lineCov">     406296 : double AudioFileCache::Reader::getSampleRate() const noexcept</span></a>
+<a name="786"><span class="lineNum">     786 </span><span class="lineCov">     405638 : double AudioFileCache::Reader::getSampleRate() const noexcept</span></a>
 <a name="787"><span class="lineNum">     787 </span>            : {</a>
-<a name="788"><span class="lineNum">     788 </span><span class="lineCov">     406296 :     return file != nullptr ? static_cast&lt;CachedFile*&gt; (file)-&gt;info.sampleRate</span></a>
+<a name="788"><span class="lineNum">     788 </span><span class="lineCov">     405638 :     return file != nullptr ? static_cast&lt;CachedFile*&gt; (file)-&gt;info.sampleRate</span></a>
 <a name="789"><span class="lineNum">     789 </span><span class="lineNoCov">          0 :                            : (int) fallbackReader-&gt;sampleRate;</span></a>
 <a name="790"><span class="lineNum">     790 </span>            : }</a>
 <a name="791"><span class="lineNum">     791 </span>            : </a>
@@ -857,7 +857,7 @@
 <a name="795"><span class="lineNum">     795 </span><span class="lineCov">         32 :     loopLength = newRange.getLength();</span></a>
 <a name="796"><span class="lineNum">     796 </span><span class="lineCov">         32 : }</span></a>
 <a name="797"><span class="lineNum">     797 </span>            : </a>
-<a name="798"><span class="lineNum">     798 </span><span class="lineCov">    4910480 : bool AudioFileCache::Reader::readSamples (int numSamples,</span></a>
+<a name="798"><span class="lineNum">     798 </span><span class="lineCov">    4912730 : bool AudioFileCache::Reader::readSamples (int numSamples,</span></a>
 <a name="799"><span class="lineNum">     799 </span>            :                                           juce::AudioBuffer&lt;float&gt;&amp; destBuffer,</a>
 <a name="800"><span class="lineNum">     800 </span>            :                                           const juce::AudioChannelSet&amp; destBufferChannels,</a>
 <a name="801"><span class="lineNum">     801 </span>            :                                           int startOffsetInDestBuffer,</a>
@@ -865,10 +865,10 @@
 <a name="803"><span class="lineNum">     803 </span>            :                                           int timeoutMs)</a>
 <a name="804"><span class="lineNum">     804 </span>            : {</a>
 <a name="805"><span class="lineNum">     805 </span>            :     jassert (numSamples &lt; CachedFile::readAheadSamples); // this method fails unless broken down into chunks smaller than this</a>
-<a name="806"><span class="lineNum">     806 </span><span class="lineCov">    4910480 :     const auto numDestChans = destBuffer.getNumChannels();</span></a>
+<a name="806"><span class="lineNum">     806 </span><span class="lineCov">    4912730 :     const auto numDestChans = destBuffer.getNumChannels();</span></a>
 <a name="807"><span class="lineNum">     807 </span>            : </a>
 <a name="808"><span class="lineNum">     808 </span>            :     // This may need to deal with the generic surround case if destBuffer number of channels &gt; channelsToUse.size()</a>
-<a name="809"><span class="lineNum">     809 </span><span class="lineCov">    4910480 :     if (cache.engine.getEngineBehaviour().isDescriptionOfWaveDevicesSupported())</span></a>
+<a name="809"><span class="lineNum">     809 </span><span class="lineCov">    4912730 :     if (cache.engine.getEngineBehaviour().isDescriptionOfWaveDevicesSupported())</span></a>
 <a name="810"><span class="lineNum">     810 </span>            :     {</a>
 <a name="811"><span class="lineNum">     811 </span>            :         static constexpr int maxNumChannels = 32;</a>
 <a name="812"><span class="lineNum">     812 </span><span class="lineNoCov">          0 :         float* chans[maxNumChannels] = {};</span></a>
@@ -907,18 +907,18 @@
 <a name="845"><span class="lineNum">     845 </span>            :     }</a>
 <a name="846"><span class="lineNum">     846 </span>            :     else</a>
 <a name="847"><span class="lineNum">     847 </span>            :     {</a>
-<a name="848"><span class="lineNum">     848 </span><span class="lineCov">    4910450 :         float* chans[2] = {};</span></a>
+<a name="848"><span class="lineNum">     848 </span><span class="lineCov">    4912620 :         float* chans[2] = {};</span></a>
 <a name="849"><span class="lineNum">     849 </span>            :         bool dupeChannel = false;</a>
 <a name="850"><span class="lineNum">     850 </span>            : </a>
-<a name="851"><span class="lineNum">     851 </span><span class="lineCov">    4910450 :         if (numDestChans &gt; 1)</span></a>
+<a name="851"><span class="lineNum">     851 </span><span class="lineCov">    4912620 :         if (numDestChans &gt; 1)</span></a>
 <a name="852"><span class="lineNum">     852 </span>            :         {</a>
-<a name="853"><span class="lineNum">     853 </span><span class="lineCov">    4256080 :             if (sourceBufferChannels.getChannelIndexForType (juce::AudioChannelSet::left) &gt;= 0</span></a>
-<a name="854"><span class="lineNum">     854 </span><span class="lineCov">    4256050 :                  &amp;&amp; sourceBufferChannels.getChannelIndexForType (juce::AudioChannelSet::right) &gt;= 0)</span></a>
+<a name="853"><span class="lineNum">     853 </span><span class="lineCov">    4255980 :             if (sourceBufferChannels.getChannelIndexForType (juce::AudioChannelSet::left) &gt;= 0</span></a>
+<a name="854"><span class="lineNum">     854 </span><span class="lineCov">    4255890 :                  &amp;&amp; sourceBufferChannels.getChannelIndexForType (juce::AudioChannelSet::right) &gt;= 0)</span></a>
 <a name="855"><span class="lineNum">     855 </span>            :             {</a>
-<a name="856"><span class="lineNum">     856 </span><span class="lineCov">    4226630 :                 chans[0] = destBuffer.getWritePointer (0, startOffsetInDestBuffer);</span></a>
+<a name="856"><span class="lineNum">     856 </span><span class="lineCov">    4224630 :                 chans[0] = destBuffer.getWritePointer (0, startOffsetInDestBuffer);</span></a>
 <a name="857"><span class="lineNum">     857 </span>            : </a>
-<a name="858"><span class="lineNum">     858 </span><span class="lineCov">    4226630 :                 if (getNumChannels() &gt; 1)</span></a>
-<a name="859"><span class="lineNum">     859 </span><span class="lineCov">    4226600 :                     chans[1] = destBuffer.getWritePointer (1, startOffsetInDestBuffer);</span></a>
+<a name="858"><span class="lineNum">     858 </span><span class="lineCov">    4224630 :                 if (getNumChannels() &gt; 1)</span></a>
+<a name="859"><span class="lineNum">     859 </span><span class="lineCov">    4224780 :                     chans[1] = destBuffer.getWritePointer (1, startOffsetInDestBuffer);</span></a>
 <a name="860"><span class="lineNum">     860 </span>            :                 else</a>
 <a name="861"><span class="lineNum">     861 </span>            :                     dupeChannel = true;</a>
 <a name="862"><span class="lineNum">     862 </span>            :             }</a>
@@ -935,45 +935,45 @@
 <a name="873"><span class="lineNum">     873 </span>            :         }</a>
 <a name="874"><span class="lineNum">     874 </span>            :         else</a>
 <a name="875"><span class="lineNum">     875 </span>            :         {</a>
-<a name="876"><span class="lineNum">     876 </span><span class="lineCov">    1308740 :             if (sourceBufferChannels.getChannelIndexForType (juce::AudioChannelSet::left) &gt;= 0 || getNumChannels() &lt; 2)</span></a>
-<a name="877"><span class="lineNum">     877 </span><span class="lineCov">     654368 :                 chans[0] = destBuffer.getWritePointer (0, startOffsetInDestBuffer);</span></a>
+<a name="876"><span class="lineNum">     876 </span><span class="lineCov">    1313300 :             if (sourceBufferChannels.getChannelIndexForType (juce::AudioChannelSet::left) &gt;= 0 || getNumChannels() &lt; 2)</span></a>
+<a name="877"><span class="lineNum">     877 </span><span class="lineCov">     656650 :                 chans[0] = destBuffer.getWritePointer (0, startOffsetInDestBuffer);</span></a>
 <a name="878"><span class="lineNum">     878 </span>            :             else</a>
 <a name="879"><span class="lineNum">     879 </span><span class="lineNoCov">          0 :                 chans[1] = destBuffer.getWritePointer (0, startOffsetInDestBuffer);</span></a>
 <a name="880"><span class="lineNum">     880 </span>            :         }</a>
 <a name="881"><span class="lineNum">     881 </span>            : </a>
-<a name="882"><span class="lineNum">     882 </span><span class="lineCov">    4881000 :         if (readSamples ((int**) chans, 2, 0, numSamples, timeoutMs))</span></a>
+<a name="882"><span class="lineNum">     882 </span><span class="lineCov">    4881280 :         if (readSamples ((int**) chans, 2, 0, numSamples, timeoutMs))</span></a>
 <a name="883"><span class="lineNum">     883 </span>            :         {</a>
-<a name="884"><span class="lineNum">     884 </span><span class="lineCov">    4909310 :             const bool isFloatingPoint = (file != nullptr) ? static_cast&lt;CachedFile*&gt; (file)-&gt;info.isFloatingPoint</span></a>
+<a name="884"><span class="lineNum">     884 </span><span class="lineCov">    4912620 :             const bool isFloatingPoint = (file != nullptr) ? static_cast&lt;CachedFile*&gt; (file)-&gt;info.isFloatingPoint</span></a>
 <a name="885"><span class="lineNum">     885 </span><span class="lineNoCov">          0 :                                                            : fallbackReader-&gt;usesFloatingPointData;</span></a>
 <a name="886"><span class="lineNum">     886 </span>            : </a>
-<a name="887"><span class="lineNum">     887 </span><span class="lineCov">    4909310 :             if (! isFloatingPoint)</span></a>
-<a name="888"><span class="lineNum">     888 </span><span class="lineCov">   14714800 :                 for (int i = 0; i &lt; 2; ++i)</span></a>
-<a name="889"><span class="lineNum">     889 </span><span class="lineCov">    9807090 :                     if (auto* chan = chans[i])</span></a>
-<a name="890"><span class="lineNum">     890 </span><span class="lineCov">    9151860 :                         juce::FloatVectorOperations::convertFixedToFloat (chan, (const int*) chan, 1.0f / 0x7fffffff, numSamples);</span></a>
+<a name="887"><span class="lineNum">     887 </span><span class="lineCov">    4912620 :             if (! isFloatingPoint)</span></a>
+<a name="888"><span class="lineNum">     888 </span><span class="lineCov">   14730900 :                 for (int i = 0; i &lt; 2; ++i)</span></a>
+<a name="889"><span class="lineNum">     889 </span><span class="lineCov">    9816370 :                     if (auto* chan = chans[i])</span></a>
+<a name="890"><span class="lineNum">     890 </span><span class="lineCov">    9158850 :                         juce::FloatVectorOperations::convertFixedToFloat (chan, (const int*) chan, 1.0f / 0x7fffffff, numSamples);</span></a>
 <a name="891"><span class="lineNum">     891 </span>            : </a>
-<a name="892"><span class="lineNum">     892 </span><span class="lineCov">    4907660 :             if (dupeChannel)</span></a>
+<a name="892"><span class="lineNum">     892 </span><span class="lineCov">    4914570 :             if (dupeChannel)</span></a>
 <a name="893"><span class="lineNum">     893 </span>            :             {</a>
-<a name="894"><span class="lineNum">     894 </span><span class="lineCov">        866 :                 if (chans[0] == nullptr)</span></a>
+<a name="894"><span class="lineNum">     894 </span><span class="lineCov">        867 :                 if (chans[0] == nullptr)</span></a>
 <a name="895"><span class="lineNum">     895 </span><span class="lineNoCov">          0 :                     juce::FloatVectorOperations::copy (destBuffer.getWritePointer (0), chans[1], numSamples);</span></a>
-<a name="896"><span class="lineNum">     896 </span><span class="lineCov">        866 :                 else if (chans[1] == nullptr)</span></a>
-<a name="897"><span class="lineNum">     897 </span><span class="lineCov">        866 :                     juce::FloatVectorOperations::copy (destBuffer.getWritePointer (1), chans[0], numSamples);</span></a>
+<a name="896"><span class="lineNum">     896 </span><span class="lineCov">        867 :                 else if (chans[1] == nullptr)</span></a>
+<a name="897"><span class="lineNum">     897 </span><span class="lineCov">        867 :                     juce::FloatVectorOperations::copy (destBuffer.getWritePointer (1), chans[0], numSamples);</span></a>
 <a name="898"><span class="lineNum">     898 </span>            :             }</a>
 <a name="899"><span class="lineNum">     899 </span>            : </a>
-<a name="900"><span class="lineNum">     900 </span><span class="lineCov">    4907660 :             return true;</span></a>
+<a name="900"><span class="lineNum">     900 </span><span class="lineCov">    4914570 :             return true;</span></a>
 <a name="901"><span class="lineNum">     901 </span>            :         }</a>
 <a name="902"><span class="lineNum">     902 </span>            :     }</a>
 <a name="903"><span class="lineNum">     903 </span>            : </a>
 <a name="904"><span class="lineNum">     904 </span>            :     return false;</a>
 <a name="905"><span class="lineNum">     905 </span>            : }</a>
 <a name="906"><span class="lineNum">     906 </span>            : </a>
-<a name="907"><span class="lineNum">     907 </span><span class="lineCov">    4887660 : bool AudioFileCache::Reader::readSamples (int** destSamples, int numDestChannels,</span></a>
+<a name="907"><span class="lineNum">     907 </span><span class="lineCov">    4888130 : bool AudioFileCache::Reader::readSamples (int** destSamples, int numDestChannels,</span></a>
 <a name="908"><span class="lineNum">     908 </span>            :                                           int startOffsetInDestBuffer, int numSamples, int timeoutMs)</a>
 <a name="909"><span class="lineNum">     909 </span>            : {</a>
 <a name="910"><span class="lineNum">     910 </span>            :     jassert (numSamples &lt; CachedFile::readAheadSamples); // this method fails unless broken down into chunks smaller than this</a>
 <a name="911"><span class="lineNum">     911 </span>            :     jassert (getReferenceCount() &gt; 1 || file == nullptr); // may be being used after the cache has been deleted</a>
 <a name="912"><span class="lineNum">     912 </span>            :     jassert (timeoutMs &gt;= 0);</a>
 <a name="913"><span class="lineNum">     913 </span>            : </a>
-<a name="914"><span class="lineNum">     914 </span><span class="lineCov">    4887660 :     if (readPos &lt; 0)</span></a>
+<a name="914"><span class="lineNum">     914 </span><span class="lineCov">    4888130 :     if (readPos &lt; 0)</span></a>
 <a name="915"><span class="lineNum">     915 </span>            :     {</a>
 <a name="916"><span class="lineNum">     916 </span><span class="lineCov">         28 :         auto silence = (int) std::min (-readPos, (SampleCount) numSamples);</span></a>
 <a name="917"><span class="lineNum">     917 </span>            : </a>
@@ -991,11 +991,11 @@
 <a name="929"><span class="lineNum">     929 </span>            : </a>
 <a name="930"><span class="lineNum">     930 </span>            :     bool allOk = true;</a>
 <a name="931"><span class="lineNum">     931 </span>            : </a>
-<a name="932"><span class="lineNum">     932 </span><span class="lineCov">    4887660 :     if (loopLength == 0)</span></a>
+<a name="932"><span class="lineNum">     932 </span><span class="lineCov">    4888130 :     if (loopLength == 0)</span></a>
 <a name="933"><span class="lineNum">     933 </span>            :     {</a>
-<a name="934"><span class="lineNum">     934 </span><span class="lineCov">    4843170 :         if (auto cf = static_cast&lt;CachedFile*&gt; (file))</span></a>
+<a name="934"><span class="lineNum">     934 </span><span class="lineCov">    4843450 :         if (auto cf = static_cast&lt;CachedFile*&gt; (file))</span></a>
 <a name="935"><span class="lineNum">     935 </span>            :         {</a>
-<a name="936"><span class="lineNum">     936 </span><span class="lineCov">    4843170 :             allOk = cf-&gt;read (readPos, destSamples, numDestChannels, startOffsetInDestBuffer, numSamples, timeoutMs);</span></a>
+<a name="936"><span class="lineNum">     936 </span><span class="lineCov">    4843450 :             allOk = cf-&gt;read (readPos, destSamples, numDestChannels, startOffsetInDestBuffer, numSamples, timeoutMs);</span></a>
 <a name="937"><span class="lineNum">     937 </span>            :         }</a>
 <a name="938"><span class="lineNum">     938 </span>            :         else</a>
 <a name="939"><span class="lineNum">     939 </span>            :         {</a>
@@ -1005,17 +1005,17 @@
 <a name="943"><span class="lineNum">     943 </span>            : </a>
 <a name="944"><span class="lineNum">     944 </span>            :         readPos += numSamples;</a>
 <a name="945"><span class="lineNum">     945 </span>            :     }</a>
-<a name="946"><span class="lineNum">     946 </span><span class="lineCov">      44486 :     else if (loopLength &gt; 1)</span></a>
+<a name="946"><span class="lineNum">     946 </span><span class="lineCov">      44678 :     else if (loopLength &gt; 1)</span></a>
 <a name="947"><span class="lineNum">     947 </span>            :     {</a>
-<a name="948"><span class="lineNum">     948 </span><span class="lineCov">      89034 :         while (numSamples &gt; 0)</span></a>
+<a name="948"><span class="lineNum">     948 </span><span class="lineCov">      89418 :         while (numSamples &gt; 0)</span></a>
 <a name="949"><span class="lineNum">     949 </span>            :         {</a>
 <a name="950"><span class="lineNum">     950 </span>            :             jassert (juce::isPositiveAndBelow (readPos.load() - loopStart.load(), loopLength.load()));</a>
 <a name="951"><span class="lineNum">     951 </span>            : </a>
-<a name="952"><span class="lineNum">     952 </span><span class="lineCov">      44548 :             auto numToRead = (int) std::min ((SampleCount) numSamples, loopStart + loopLength - readPos);</span></a>
+<a name="952"><span class="lineNum">     952 </span><span class="lineCov">      44740 :             auto numToRead = (int) std::min ((SampleCount) numSamples, loopStart + loopLength - readPos);</span></a>
 <a name="953"><span class="lineNum">     953 </span>            : </a>
-<a name="954"><span class="lineNum">     954 </span><span class="lineCov">      44548 :             if (auto cf = static_cast&lt;CachedFile*&gt; (file))</span></a>
+<a name="954"><span class="lineNum">     954 </span><span class="lineCov">      44740 :             if (auto cf = static_cast&lt;CachedFile*&gt; (file))</span></a>
 <a name="955"><span class="lineNum">     955 </span>            :             {</a>
-<a name="956"><span class="lineNum">     956 </span><span class="lineCov">      44548 :                 allOk = cf-&gt;read (readPos, destSamples, numDestChannels, startOffsetInDestBuffer, numToRead, timeoutMs) &amp;&amp; allOk;</span></a>
+<a name="956"><span class="lineNum">     956 </span><span class="lineCov">      44740 :                 allOk = cf-&gt;read (readPos, destSamples, numDestChannels, startOffsetInDestBuffer, numToRead, timeoutMs) &amp;&amp; allOk;</span></a>
 <a name="957"><span class="lineNum">     957 </span>            :             }</a>
 <a name="958"><span class="lineNum">     958 </span>            :             else</a>
 <a name="959"><span class="lineNum">     959 </span>            :             {</a>
@@ -1025,21 +1025,21 @@
 <a name="963"><span class="lineNum">     963 </span>            : </a>
 <a name="964"><span class="lineNum">     964 </span>            :             readPos += numToRead;</a>
 <a name="965"><span class="lineNum">     965 </span>            : </a>
-<a name="966"><span class="lineNum">     966 </span><span class="lineCov">      44548 :             if (readPos &gt;= loopStart + loopLength)</span></a>
+<a name="966"><span class="lineNum">     966 </span><span class="lineCov">      44740 :             if (readPos &gt;= loopStart + loopLength)</span></a>
 <a name="967"><span class="lineNum">     967 </span>            :                 readPos -= loopLength;</a>
 <a name="968"><span class="lineNum">     968 </span>            : </a>
-<a name="969"><span class="lineNum">     969 </span><span class="lineCov">      44548 :             startOffsetInDestBuffer += numToRead;</span></a>
-<a name="970"><span class="lineNum">     970 </span><span class="lineCov">      44548 :             numSamples -= numToRead;</span></a>
+<a name="969"><span class="lineNum">     969 </span><span class="lineCov">      44740 :             startOffsetInDestBuffer += numToRead;</span></a>
+<a name="970"><span class="lineNum">     970 </span><span class="lineCov">      44740 :             numSamples -= numToRead;</span></a>
 <a name="971"><span class="lineNum">     971 </span>            :         }</a>
 <a name="972"><span class="lineNum">     972 </span>            : </a>
-<a name="973"><span class="lineNum">     973 </span><span class="lineCov">      44486 :         return allOk;</span></a>
+<a name="973"><span class="lineNum">     973 </span><span class="lineCov">      44678 :         return allOk;</span></a>
 <a name="974"><span class="lineNum">     974 </span>            :     }</a>
 <a name="975"><span class="lineNum">     975 </span>            :     else</a>
 <a name="976"><span class="lineNum">     976 </span>            :     {</a>
 <a name="977"><span class="lineNum">     977 </span><span class="lineNoCov">          0 :         clearSetOfChannels (destSamples, numDestChannels, startOffsetInDestBuffer, numSamples);</span></a>
 <a name="978"><span class="lineNum">     978 </span>            :     }</a>
 <a name="979"><span class="lineNum">     979 </span>            : </a>
-<a name="980"><span class="lineNum">     980 </span><span class="lineCov">    4864790 :     if (! allOk)</span></a>
+<a name="980"><span class="lineNum">     980 </span><span class="lineCov">    4867940 :     if (! allOk)</span></a>
 <a name="981"><span class="lineNum">     981 </span><span class="lineNoCov">          0 :         cache.cacheMissed = true;</span></a>
 <a name="982"><span class="lineNum">     982 </span>            : </a>
 <a name="983"><span class="lineNum">     983 </span>            :     return allOk;</a>
