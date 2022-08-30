@@ -35480,12 +35480,13 @@
     <filename>classtracktion_1_1engine_1_1HostedMidiInputDeviceNode.html</filename>
     <base>tracktion::graph::Node</base>
     <base>tracktion::engine::InputDeviceInstance::Consumer</base>
+    <base protection="private">tracktion::engine::TracktionEngineNode</base>
     <member kind="function">
       <type></type>
       <name>HostedMidiInputDeviceNode</name>
       <anchorfile>classtracktion_1_1engine_1_1HostedMidiInputDeviceNode.html</anchorfile>
-      <anchor>a9014a41a01807bad30e0c0ac961fe9ea</anchor>
-      <arglist>(InputDeviceInstance &amp;, MidiInputDevice &amp;, MidiMessageArray::MPESourceID, tracktion::graph::PlayHeadState &amp;)</arglist>
+      <anchor>a0c4f4aeed037537fd109c8ae3c1b4bb4</anchor>
+      <arglist>(InputDeviceInstance &amp;, MidiInputDevice &amp;, MidiMessageArray::MPESourceID, tracktion::graph::PlayHeadState &amp;, tracktion::ProcessState &amp;)</arglist>
     </member>
     <member kind="function">
       <type></type>

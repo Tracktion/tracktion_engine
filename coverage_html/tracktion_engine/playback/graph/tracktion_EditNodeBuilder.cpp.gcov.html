@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-08-26 17:23:32</td>
+            <td class="headerValue">2022-08-30 14:32:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">31</td>
@@ -721,7 +721,7 @@
 <a name="659"><span class="lineNum">     659 </span>            :                                       clip.getLiveClipLevel(),</a>
 <a name="660"><span class="lineNum">     660 </span>            :                                       params.processState,</a>
 <a name="661"><span class="lineNum">     661 </span>            :                                       clip.itemID,</a>
-<a name="662"><span class="lineNum">     662 </span><span class="lineCov">    2407750 :                                       [&amp;trackMuteState]</span></a>
+<a name="662"><span class="lineNum">     662 </span><span class="lineCov">    2407740 :                                       [&amp;trackMuteState]</span></a>
 <a name="663"><span class="lineNum">     663 </span>            :                                       {</a>
 <a name="664"><span class="lineNum">     664 </span>            :                                           if (! trackMuteState.shouldTrackBeAudible())</a>
 <a name="665"><span class="lineNum">     665 </span><span class="lineNoCov">          0 :                                               return ! trackMuteState.shouldTrackMidiBeProcessed();</span></a>
@@ -926,7 +926,7 @@
 <a name="864"><span class="lineNum">     864 </span>            :                 return makeNode&lt;TrackMidiInputDeviceNode&gt; (*midiDevice, makeNode&lt;ReturnNode&gt; (getMidiInputDeviceBusID (sourceTrack-&gt;itemID)), params.processState);</a>
 <a name="865"><span class="lineNum">     865 </span>            : </a>
 <a name="866"><span class="lineNum">     866 </span>            :         if (HostedAudioDeviceInterface::isHostedMidiInputDevice (*midiDevice))</a>
-<a name="867"><span class="lineNum">     867 </span>            :             return makeNode&lt;HostedMidiInputDeviceNode&gt; (inputDeviceInstance, *midiDevice, midiDevice-&gt;getMPESourceID(), playHeadState);</a>
+<a name="867"><span class="lineNum">     867 </span>            :             return makeNode&lt;HostedMidiInputDeviceNode&gt; (inputDeviceInstance, *midiDevice, midiDevice-&gt;getMPESourceID(), playHeadState, params.processState);</a>
 <a name="868"><span class="lineNum">     868 </span>            : </a>
 <a name="869"><span class="lineNum">     869 </span>            :         return makeNode&lt;MidiInputDeviceNode&gt; (inputDeviceInstance, *midiDevice, midiDevice-&gt;getMPESourceID(), playHeadState);</a>
 <a name="870"><span class="lineNum">     870 </span>            :     }</a>
@@ -1068,7 +1068,7 @@
 <a name="1006"><span class="lineNum">    1006 </span>            :     node = makeNode&lt;RackInstanceNode&gt; (std::move (node), std::move (returnChannelMap));</a>
 <a name="1007"><span class="lineNum">    1007 </span>            : </a>
 <a name="1008"><span class="lineNum">    1008 </span>            :     return makeNode&lt;RackReturnNode&gt; (std::move (node),</a>
-<a name="1009"><span class="lineNum">    1009 </span><span class="lineCov">   17085800 :                                      [wetGain = rackInstance.wetGain] { return wetGain-&gt;getCurrentValue(); },</span></a>
+<a name="1009"><span class="lineNum">    1009 </span><span class="lineCov">   17077000 :                                      [wetGain = rackInstance.wetGain] { return wetGain-&gt;getCurrentValue(); },</span></a>
 <a name="1010"><span class="lineNum">    1010 </span>            :                                      inputNode,</a>
 <a name="1011"><span class="lineNum">    1011 </span><span class="lineCov">       1588 :                                      [dryGain = rackInstance.dryGain] { return dryGain-&gt;getCurrentValue(); });</span></a>
 <a name="1012"><span class="lineNum">    1012 </span>            : }</a>

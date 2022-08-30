@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-08-26 17:23:32</td>
+            <td class="headerValue">2022-08-30 14:32:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">114</td>
@@ -100,15 +100,15 @@
 <a name="38"><span class="lineNum">      38 </span><span class="lineCov">        261 :         edit.getUndoManager().removeChangeListener (this);</span></a>
 <a name="39"><span class="lineNum">      39 </span><span class="lineCov">        522 :     }</span></a>
 <a name="40"><span class="lineNum">      40 </span>            : </a>
-<a name="41"><span class="lineNum">      41 </span><span class="lineCov">         42 :     void timerCallback() override</span></a>
+<a name="41"><span class="lineNum">      41 </span><span class="lineCov">         35 :     void timerCallback() override</span></a>
 <a name="42"><span class="lineNum">      42 </span>            :     {</a>
-<a name="43"><span class="lineNum">      43 </span><span class="lineCov">         42 :         if (edit.numUndoTransactionInhibitors &gt; 0)</span></a>
+<a name="43"><span class="lineNum">      43 </span><span class="lineCov">         35 :         if (edit.numUndoTransactionInhibitors &gt; 0)</span></a>
 <a name="44"><span class="lineNum">      44 </span>            :             return;</a>
 <a name="45"><span class="lineNum">      45 </span>            : </a>
-<a name="46"><span class="lineNum">      46 </span><span class="lineCov">         42 :         if (! juce::Component::isMouseButtonDownAnywhere())</span></a>
+<a name="46"><span class="lineNum">      46 </span><span class="lineCov">         35 :         if (! juce::Component::isMouseButtonDownAnywhere())</span></a>
 <a name="47"><span class="lineNum">      47 </span>            :         {</a>
-<a name="48"><span class="lineNum">      48 </span><span class="lineCov">         42 :             stopTimer();</span></a>
-<a name="49"><span class="lineNum">      49 </span><span class="lineCov">         42 :             edit.getUndoManager().beginNewTransaction();</span></a>
+<a name="48"><span class="lineNum">      48 </span><span class="lineCov">         35 :             stopTimer();</span></a>
+<a name="49"><span class="lineNum">      49 </span><span class="lineCov">         35 :             edit.getUndoManager().beginNewTransaction();</span></a>
 <a name="50"><span class="lineNum">      50 </span>            :         }</a>
 <a name="51"><span class="lineNum">      51 </span>            :     }</a>
 <a name="52"><span class="lineNum">      52 </span>            : </a>
@@ -1122,7 +1122,7 @@
 <a name="1060"><span class="lineNum">    1060 </span><span class="lineCov">      34412 :     shouldRestartPlayback = true;</span></a>
 <a name="1061"><span class="lineNum">    1061 </span>            : </a>
 <a name="1062"><span class="lineNum">    1062 </span><span class="lineCov">      34412 :     if (! isTimerRunning())</span></a>
-<a name="1063"><span class="lineNum">    1063 </span><span class="lineCov">        375 :         startTimer (1);</span></a>
+<a name="1063"><span class="lineNum">    1063 </span><span class="lineCov">        377 :         startTimer (1);</span></a>
 <a name="1064"><span class="lineNum">    1064 </span><span class="lineCov">       6968 : }</span></a>
 <a name="1065"><span class="lineNum">    1065 </span>            : </a>
 <a name="1066"><span class="lineNum">    1066 </span><span class="lineNoCov">          0 : EditPlaybackContext* Edit::getCurrentPlaybackContext() const</span></a>
@@ -1663,20 +1663,20 @@
 <a name="1601"><span class="lineNum">    1601 </span><span class="lineCov">          2 :         timerCallback();</span></a>
 <a name="1602"><span class="lineNum">    1602 </span><span class="lineCov">          2 : }</span></a>
 <a name="1603"><span class="lineNum">    1603 </span>            : </a>
-<a name="1604"><span class="lineNum">    1604 </span><span class="lineCov">        172 : void Edit::timerCallback()</span></a>
+<a name="1604"><span class="lineNum">    1604 </span><span class="lineCov">        174 : void Edit::timerCallback()</span></a>
 <a name="1605"><span class="lineNum">    1605 </span>            : {</a>
-<a name="1606"><span class="lineNum">    1606 </span><span class="lineCov">        172 :     if (! isFullyConstructed.load (std::memory_order_relaxed))</span></a>
+<a name="1606"><span class="lineNum">    1606 </span><span class="lineCov">        174 :     if (! isFullyConstructed.load (std::memory_order_relaxed))</span></a>
 <a name="1607"><span class="lineNum">    1607 </span>            :         return;</a>
 <a name="1608"><span class="lineNum">    1608 </span>            : </a>
-<a name="1609"><span class="lineNum">    1609 </span><span class="lineCov">        172 :     if (shouldRestartPlayback &amp;&amp; shouldPlay())</span></a>
+<a name="1609"><span class="lineNum">    1609 </span><span class="lineCov">        174 :     if (shouldRestartPlayback &amp;&amp; shouldPlay())</span></a>
 <a name="1610"><span class="lineNum">    1610 </span>            :     {</a>
-<a name="1611"><span class="lineNum">    1611 </span><span class="lineCov">        172 :         shouldRestartPlayback = false;</span></a>
-<a name="1612"><span class="lineNum">    1612 </span><span class="lineCov">        172 :         parameterControlMappings-&gt;checkForDeletedParams();</span></a>
+<a name="1611"><span class="lineNum">    1611 </span><span class="lineCov">        174 :         shouldRestartPlayback = false;</span></a>
+<a name="1612"><span class="lineNum">    1612 </span><span class="lineCov">        174 :         parameterControlMappings-&gt;checkForDeletedParams();</span></a>
 <a name="1613"><span class="lineNum">    1613 </span>            : </a>
-<a name="1614"><span class="lineNum">    1614 </span><span class="lineCov">        172 :         getTransport().editHasChanged();</span></a>
+<a name="1614"><span class="lineNum">    1614 </span><span class="lineCov">        174 :         getTransport().editHasChanged();</span></a>
 <a name="1615"><span class="lineNum">    1615 </span>            :     }</a>
 <a name="1616"><span class="lineNum">    1616 </span>            : </a>
-<a name="1617"><span class="lineNum">    1617 </span><span class="lineCov">        172 :     stopTimer();</span></a>
+<a name="1617"><span class="lineNum">    1617 </span><span class="lineCov">        174 :     stopTimer();</span></a>
 <a name="1618"><span class="lineNum">    1618 </span>            : }</a>
 <a name="1619"><span class="lineNum">    1619 </span>            : </a>
 <a name="1620"><span class="lineNum">    1620 </span>            : //==============================================================================</a>
@@ -2090,13 +2090,13 @@
 <a name="2028"><span class="lineNum">    2028 </span><span class="lineCov">         16 :     modifierTimers.removeFirstMatchingValue (&amp;mt);</span></a>
 <a name="2029"><span class="lineNum">    2029 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="2030"><span class="lineNum">    2030 </span>            : </a>
-<a name="2031"><span class="lineNum">    2031 </span><span class="lineCov">    2971200 : void Edit::updateModifierTimers (TimePosition editTime, int numSamples) const</span></a>
+<a name="2031"><span class="lineNum">    2031 </span><span class="lineCov">    2975200 : void Edit::updateModifierTimers (TimePosition editTime, int numSamples) const</span></a>
 <a name="2032"><span class="lineNum">    2032 </span>            : {</a>
 <a name="2033"><span class="lineNum">    2033 </span>            :     const juce::ScopedLock sl (modifierTimers.getLock());</a>
 <a name="2034"><span class="lineNum">    2034 </span>            : </a>
-<a name="2035"><span class="lineNum">    2035 </span><span class="lineCov">    2971220 :     for (auto mt : modifierTimers)</span></a>
+<a name="2035"><span class="lineNum">    2035 </span><span class="lineCov">    2975220 :     for (auto mt : modifierTimers)</span></a>
 <a name="2036"><span class="lineNum">    2036 </span><span class="lineCov">         16 :         mt-&gt;updateStreamTime (editTime, numSamples);</span></a>
-<a name="2037"><span class="lineNum">    2037 </span><span class="lineCov">    2971200 : }</span></a>
+<a name="2037"><span class="lineNum">    2037 </span><span class="lineCov">    2975200 : }</span></a>
 <a name="2038"><span class="lineNum">    2038 </span>            : </a>
 <a name="2039"><span class="lineNum">    2039 </span>            : //==============================================================================</a>
 <a name="2040"><span class="lineNum">    2040 </span><span class="lineNoCov">          0 : void Edit::setLowLatencyMonitoring (bool enabled, const juce::Array&lt;EditItemID&gt;&amp; plugins)</span></a>

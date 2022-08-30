@@ -1,5 +1,6 @@
 <map id="tracktion::engine::HostedMidiInputDeviceNode" name="tracktion::engine::HostedMidiInputDeviceNode">
-<area shape="rect" id="node1" title="A Node that intercepts MIDI from a plugin callback and inserts it in to the playback graph." alt="" coords="77,109,285,151"/>
-<area shape="rect" id="node2" href="$classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class." alt="" coords="5,20,172,47"/>
-<area shape="rect" id="node3" href="$structtracktion_1_1engine_1_1InputDeviceInstance_1_1Consumer.html" title="Base class for classes that want to listen to an InputDevice and get a callback for each block of inp..." alt="" coords="197,5,351,61"/>
+<area shape="rect" id="node1" title="A Node that intercepts MIDI from a plugin callback and inserts it in to the playback graph." alt="" coords="220,63,428,105"/>
+<area shape="rect" id="node2" href="$classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class." alt="" coords="5,5,172,32"/>
+<area shape="rect" id="node3" href="$structtracktion_1_1engine_1_1InputDeviceInstance_1_1Consumer.html" title="Base class for classes that want to listen to an InputDevice and get a callback for each block of inp..." alt="" coords="11,56,166,112"/>
+<area shape="rect" id="node4" href="$classtracktion_1_1engine_1_1TracktionEngineNode.html" title="Base class for Nodes that provides information about the current process call." alt="" coords="9,137,168,178"/>
 </map>

@@ -46,6 +46,6 @@ var searchData=
   ['hittest_9318',['hitTest',['../classtracktion_1_1engine_1_1CurveEditor.html#a3d1f5aef8b43251ef18ec030021a741b',1,'tracktion::engine::CurveEditor']]],
   ['home_9319',['home',['../classtracktion_1_1engine_1_1CustomControlSurface.html#aaf42a16fd827be52f8426d1de755023d',1,'tracktion::engine::CustomControlSurface']]],
   ['hostedaudiodeviceinterface_9320',['HostedAudioDeviceInterface',['../classtracktion_1_1engine_1_1HostedAudioDeviceInterface.html#adfbb6a97536ff24e66f63a3b35b3f2da',1,'tracktion::engine::HostedAudioDeviceInterface']]],
-  ['hostedmidiinputdevicenode_9321',['HostedMidiInputDeviceNode',['../classtracktion_1_1engine_1_1HostedMidiInputDeviceNode.html#a9014a41a01807bad30e0c0ac961fe9ea',1,'tracktion::engine::HostedMidiInputDeviceNode']]],
+  ['hostedmidiinputdevicenode_9321',['HostedMidiInputDeviceNode',['../classtracktion_1_1engine_1_1HostedMidiInputDeviceNode.html#a0c4f4aeed037537fd109c8ae3c1b4bb4',1,'tracktion::engine::HostedMidiInputDeviceNode']]],
   ['hovertimercallback_9322',['hoverTimerCallback',['../classtracktion_1_1engine_1_1MouseHoverDetector.html#a22f1cac519cd14348b5601bd94effe30',1,'tracktion::engine::MouseHoverDetector']]]
 ];
