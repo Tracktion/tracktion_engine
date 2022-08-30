@@ -387,10 +387,8 @@ private:
 
                     auto& dm = edit.engine.getDeviceManager();
                     const auto start = edit.getTransport().getPosition();
-                    const double sampleRate = dm.getSampleRate();
-                    const int blockSize = dm.getBlockSize();
 
-                    if (auto error = instance->prepareToRecord (start, start, sampleRate, blockSize, true); error.isNotEmpty())
+                    if (auto error = instance->prepareToRecord (start, start, dm.getSampleRate(), dm.getBlockSize(), true); error.isNotEmpty())
                         edit.engine.getUIBehaviour().showWarningMessage (error);
                     else
                         instance->startRecording();
