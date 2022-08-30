@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-08-30 14:32:20</td>
+            <td class="headerValue">2022-08-30 15:22:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">43</td>
@@ -103,9 +103,9 @@
 <a name="41"><span class="lineNum">      41 </span><span class="lineNoCov">          0 :         return {};</span></a>
 <a name="42"><span class="lineNum">      42 </span>            :     }</a>
 <a name="43"><span class="lineNum">      43 </span>            : </a>
-<a name="44"><span class="lineNum">      44 </span><span class="lineCov">      40652 :     bool isSuitableType (const juce::ValueTree&amp; v) const override</span></a>
+<a name="44"><span class="lineNum">      44 </span><span class="lineCov">      40644 :     bool isSuitableType (const juce::ValueTree&amp; v) const override</span></a>
 <a name="45"><span class="lineNum">      45 </span>            :     {</a>
-<a name="46"><span class="lineNum">      46 </span><span class="lineCov">      40652 :         return Clip::isClipState (v);</span></a>
+<a name="46"><span class="lineNum">      46 </span><span class="lineCov">      40644 :         return Clip::isClipState (v);</span></a>
 <a name="47"><span class="lineNum">      47 </span>            :     }</a>
 <a name="48"><span class="lineNum">      48 </span>            : </a>
 <a name="49"><span class="lineNum">      49 </span><span class="lineCov">      23439 :     Clip* createNewObject (const juce::ValueTree&amp; v) override</span></a>
@@ -290,13 +290,13 @@
 <a name="228"><span class="lineNum">     228 </span>            :         }</a>
 <a name="229"><span class="lineNum">     229 </span><span class="lineCov">      36532 :     }</span></a>
 <a name="230"><span class="lineNum">     230 </span>            : </a>
-<a name="231"><span class="lineNum">     231 </span><span class="lineCov">      21572 :     void valueTreeChildAdded (juce::ValueTree&amp;, juce::ValueTree&amp; child) override</span></a>
+<a name="231"><span class="lineNum">     231 </span><span class="lineCov">      21564 :     void valueTreeChildAdded (juce::ValueTree&amp;, juce::ValueTree&amp; child) override</span></a>
 <a name="232"><span class="lineNum">     232 </span>            :     {</a>
-<a name="233"><span class="lineNum">     233 </span><span class="lineCov">      21572 :         if (Clip::isClipState (child))</span></a>
+<a name="233"><span class="lineNum">     233 </span><span class="lineCov">      21564 :         if (Clip::isClipState (child))</span></a>
 <a name="234"><span class="lineNum">     234 </span>            :         {</a>
 <a name="235"><span class="lineNum">     235 </span><span class="lineCov">       8489 :             if (auto c = ct.findClipForID (EditItemID::fromID (child)))</span></a>
 <a name="236"><span class="lineNum">     236 </span>            :             {</a>
-<a name="237"><span class="lineNum">     237 </span><span class="lineCov">       1781 :                 if (c-&gt;isGrouped())</span></a>
+<a name="237"><span class="lineNum">     237 </span><span class="lineCov">       1790 :                 if (c-&gt;isGrouped())</span></a>
 <a name="238"><span class="lineNum">     238 </span>            :                 {</a>
 <a name="239"><span class="lineNum">     239 </span><span class="lineNoCov">          0 :                     auto cc = findOrCreateCollectionClip (c-&gt;getGroupID());</span></a>
 <a name="240"><span class="lineNum">     240 </span><span class="lineNoCov">          0 :                     cc-&gt;addClip (c);</span></a>
@@ -305,7 +305,7 @@
 <a name="243"><span class="lineNum">     243 </span>            :                 }</a>
 <a name="244"><span class="lineNum">     244 </span>            :             }</a>
 <a name="245"><span class="lineNum">     245 </span>            :         }</a>
-<a name="246"><span class="lineNum">     246 </span><span class="lineCov">      21572 :     }</span></a>
+<a name="246"><span class="lineNum">     246 </span><span class="lineCov">      21564 :     }</span></a>
 <a name="247"><span class="lineNum">     247 </span>            : </a>
 <a name="248"><span class="lineNum">     248 </span><span class="lineCov">      10276 :     void valueTreeChildRemoved (juce::ValueTree&amp;, juce::ValueTree&amp; child, int) override</span></a>
 <a name="249"><span class="lineNum">     249 </span>            :     {</a>
@@ -501,8 +501,8 @@
 <a name="439"><span class="lineNum">     439 </span><span class="lineCov">       8549 : Clip* ClipTrack::findClipForID (EditItemID id) const</span></a>
 <a name="440"><span class="lineNum">     440 </span>            : {</a>
 <a name="441"><span class="lineNum">     441 </span><span class="lineCov">     400754 :     for (auto* c : clipList-&gt;objects)</span></a>
-<a name="442"><span class="lineNum">     442 </span><span class="lineCov">     394046 :         if (c-&gt;itemID == id)</span></a>
-<a name="443"><span class="lineNum">     443 </span><span class="lineCov">       1841 :             return c;</span></a>
+<a name="442"><span class="lineNum">     442 </span><span class="lineCov">     394055 :         if (c-&gt;itemID == id)</span></a>
+<a name="443"><span class="lineNum">     443 </span><span class="lineCov">       1850 :             return c;</span></a>
 <a name="444"><span class="lineNum">     444 </span>            : </a>
 <a name="445"><span class="lineNum">     445 </span>            :     return {};</a>
 <a name="446"><span class="lineNum">     446 </span>            : }</a>
