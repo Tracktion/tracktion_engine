@@ -191,7 +191,7 @@ public:
 
     void processBlock (juce::MidiBuffer& midi)
     {
-        // Process the messages via the base class to update the keybaord state
+        // Process the messages via the base class to update the keyboard state
         for (auto mm : midi)
             MidiInputDevice::handleIncomingMidiMessage (nullptr, mm.getMessage());
 
@@ -225,25 +225,46 @@ private:
         {
         }
 
-        bool startRecording() override              { return false; }
+        bool startRecording() override
+        {
+            // We need to keep a list of tracks the are being recorded to
+            // here, since user may un-arm track to stop recording
+            activeTracks.clear();
+
+            for (auto destTrack : getTargetTracks())
+                if (isRecordingActive (*destTrack))
+                    activeTracks.add (destTrack);
+
+            if (! recording)
+            {
+                getHostedMidiInputDevice().masterTimeUpdate (startTime.inSeconds());
+                recording = true;
+            }
+
+            return recording;
+        }
 
         void processBlock (juce::MidiBuffer& midi)
         {
+            const auto globalStreamTime = edit.engine.getDeviceManager().getCurrentStreamTime();
+
             // N.B. This assumes that the number of samples processed per block is constant.
             // I.e. that there is no speed compensation set (which shouldn't be the case when
             // running as a plugin)
             for (auto mmm : midi)
             {
-                const auto referenceTime = tracktion::graph::sampleToTime (mmm.samplePosition, sampleRate);
+                const auto blockStreamTime = tracktion::graph::sampleToTime (mmm.samplePosition, sampleRate);
 
                 auto msg = mmm.getMessage();
-                msg.setTimeStamp (referenceTime);
+                msg.setTimeStamp (globalStreamTime + blockStreamTime);
                 handleIncomingMidiMessage (std::move (msg));
             }
         }
         
     private:
         const double sampleRate = context.getSampleRate();
+
+        HostedMidiInputDevice& getHostedMidiInputDevice() const   { return static_cast<HostedMidiInputDevice&> (owner); }
     };
     
     //==============================================================================

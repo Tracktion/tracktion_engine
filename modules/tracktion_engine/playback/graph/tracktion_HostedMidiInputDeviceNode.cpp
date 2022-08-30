@@ -12,8 +12,9 @@ namespace tracktion { inline namespace engine
 {
 
 HostedMidiInputDeviceNode::HostedMidiInputDeviceNode (InputDeviceInstance& idi, MidiInputDevice&, MidiMessageArray::MPESourceID msi,
-                                                      tracktion::graph::PlayHeadState&)
-    : instance (idi),
+                                                      tracktion::graph::PlayHeadState&, tracktion::ProcessState& ps)
+    : TracktionEngineNode (ps),
+      instance (idi),
       midiSourceID (msi)
 {
 }
@@ -65,9 +66,11 @@ void HostedMidiInputDeviceNode::process (ProcessContext& pc)
 
 void HostedMidiInputDeviceNode::handleIncomingMidiMessage (const juce::MidiMessage& message)
 {
-    // Timestamps will be offsets form the next buffer in seconds
+    const auto globalStreamTime = instance.edit.engine.getDeviceManager().getCurrentStreamTime();
+
+    // Timestamps will have global stream times so convert these to buffer offsets
     const std::lock_guard<tracktion::graph::RealTimeSpinLock> lock (bufferMutex);
-    incomingMessages.addMidiMessage (message, midiSourceID);
+    incomingMessages.addMidiMessage (message, message.getTimeStamp() - globalStreamTime, midiSourceID);
 }
 
 }} // namespace tracktion { inline namespace engine

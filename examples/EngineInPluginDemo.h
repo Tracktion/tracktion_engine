@@ -120,6 +120,10 @@ private:
             auto dev = dm.getMidiInDevice (i);
             dev->setEnabled (true);
             dev->setEndToEndEnabled (true);
+            dev->recordingEnabled = true;
+
+            if (! dev->isEndToEndEnabled())
+                dev->flipEndToEnd();
         }
         
         edit.playInStopEnabled = true;
@@ -127,10 +131,21 @@ private:
 
         // Add the midi input to track 1
         if (auto t = EngineHelpers::getOrInsertAudioTrackAt (edit, 0))
+        {
             if (auto dev = dm.getMidiInDevice (0))
+            {
                 for (auto instance : edit.getAllInputDevices())
+                {
                     if (&instance->getInputDevice() == dev)
+                    {
                         instance->setTargetTrack (*t, 0, true);
+
+                        if (auto destination = instance->getDestination (*t, 0))
+                            destination->recordEnabled = true;
+                    }
+                }
+            }
+        }
 
         // Also add the same midi input to track 2
         if (auto t = EngineHelpers::getOrInsertAudioTrackAt (edit, 1))
@@ -245,23 +260,34 @@ private:
 
     //==============================================================================
     //==============================================================================
-    class PluginEditor : public AudioProcessorEditor
+    class PluginEditor : public AudioProcessorEditor,
+                         private te::TransportControl::Listener
     {
     public:
         PluginEditor (EngineInPluginDemo& p)
             : AudioProcessorEditor (p),
               plugin (p)
         {
+            plugin.engineWrapper->transport.addListener (this);
+
             addAndMakeVisible (clickTrackButton);
+            addAndMakeVisible (recordMidiButton);
             addAndMakeVisible (midiKeyboard);
 
             pluginPositionInfo.resetToDefault();
             editPositionInfo.resetToDefault();
-            
+
+            recordMidiButton.onClick = [this] { recordMidiButtonClicked(); };
+
             repaintTimer.startTimerHz (25);
             update();
 
             setSize (400, 300);
+        }
+
+        ~PluginEditor() override
+        {
+            plugin.engineWrapper->transport.removeListener (this);
         }
         
         void paint (Graphics& g) override
@@ -275,8 +301,7 @@ private:
                  << newLine
                  << "Tracktion Engine Info:" << newLine
                  << PlayHeadHelpers::getTimecodeDisplay (editPositionInfo) << newLine
-                 << "Build:" << newLine
-                 << Time::getCompilationDate().toString (true, true);
+                 << "Build:" << Time::getCompilationDate().toString (true, true);
             g.setColour (Colours::white);
             g.setFont (15.0f);
             g.drawFittedText (text, r.reduced (10), Justification::topLeft, 5);
@@ -286,15 +311,19 @@ private:
         {
             auto r = getLocalBounds();
             midiKeyboard.setBounds (r.removeFromBottom (70));
-            clickTrackButton.setBounds (r.reduced (10).removeFromBottom (26));
+            r = r.reduced (10);
+            recordMidiButton.setBounds (r.removeFromBottom (26));
+            clickTrackButton.setBounds (r.removeFromBottom (26));
         }
         
     private:
         EngineInPluginDemo& plugin;
+        te::Edit& edit { plugin.engineWrapper->edit };
         AudioPlayHead::CurrentPositionInfo pluginPositionInfo, editPositionInfo;
         te::LambdaTimer repaintTimer { [this] { update(); } };
         juce::ToggleButton clickTrackButton { "Enable Click Track" };
         juce::MidiKeyboardComponent midiKeyboard { getMidiInputDevice().keyboardState, juce::MidiKeyboardComponent::horizontalKeyboard };
+        juce::TextButton recordMidiButton { "Start MIDI Recording" };
 
         te::MidiInputDevice& getMidiInputDevice() const
         {
@@ -313,10 +342,75 @@ private:
                 pluginPositionInfo = plugin.engineWrapper->playheadSynchroniser.getPositionInfo();
                 editPositionInfo = getCurrentPositionInfo (plugin.engineWrapper->edit);
                 clickTrackButton.getToggleStateValue().referTo (plugin.engineWrapper->edit.clickTrackEnabled.getPropertyAsValue());
+
+                // Update recording button
+                bool isRecording = false;
+
+                if (auto instance = getRecordingMidiInputInstance())
+                    isRecording = instance->isRecording();
+
+                if (isRecording)
+                {
+                    recordMidiButton.setButtonText ("Stop MIDI Recording");
+                    recordMidiButton.setColour (juce::TextButton::buttonColourId, juce::Colours::red);
+                }
+                else
+                {
+                    recordMidiButton.setButtonText ("Start MIDI Recording");
+                    recordMidiButton.setColour (juce::TextButton::buttonColourId, getLookAndFeel().findColour (juce::TextButton::buttonColourId));
+                }
             }
             
             repaint();
         }
+
+        te::InputDeviceInstance* getRecordingMidiInputInstance()
+        {
+            if (auto t = EngineHelpers::getOrInsertAudioTrackAt (edit, 0))
+                if (auto instance = edit.getEditInputDevices().getInputInstance (*t, 0))
+                    return dynamic_cast<te::InputDeviceInstance*> (instance);
+
+            return nullptr;
+        }
+
+        void recordMidiButtonClicked()
+        {
+            if (auto instance = getRecordingMidiInputInstance())
+            {
+                if (instance->isRecording())
+                {
+                    instance->stopRecording();
+                }
+                else
+                {
+                    EngineHelpers::removeAllClips (*EngineHelpers::getOrInsertAudioTrackAt (edit, 0));
+
+                    auto& dm = edit.engine.getDeviceManager();
+                    const auto start = edit.getTransport().getPosition();
+                    const double sampleRate = dm.getSampleRate();
+                    const int blockSize = dm.getBlockSize();
+
+                    if (auto error = instance->prepareToRecord (start, start, sampleRate, blockSize, true); error.isNotEmpty())
+                        edit.engine.getUIBehaviour().showWarningMessage (error);
+                    else
+                        instance->startRecording();
+                }
+            }
+        }
+
+        void playbackContextChanged() override
+        {
+        }
+
+        void autoSaveNow() override {}
+        void setAllLevelMetersActive (bool /*metersBecameInactive*/) override {}
+        void setVideoPosition (te::TimePosition, bool /*forceJump*/) override {}
+        void startVideo() override {}
+        void stopVideo() override {}
+
+        void recordingFinished (te::InputDeviceInstance&,
+                                juce::ReferenceCountedArray<te::Clip> /*recordedClips*/) override
+        {}
     };
 
     //==============================================================================
