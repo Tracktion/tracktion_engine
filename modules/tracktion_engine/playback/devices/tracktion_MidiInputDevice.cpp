@@ -1120,8 +1120,8 @@ private:
     /*BEATCONNECT MODIFICATION START*/
     // midi thread / message thread concurrency
     std::atomic<bool> inMidiTimer{ false }, inMidiMessageHandler{ false }, isNewRecordedCopy{ false };
-    /*BEATCONNECT MODIFICATION END*/
     juce::MidiMessageSequence recordedCopy;
+    /*BEATCONNECT MODIFICATION END*/
     //-----------------------------------------
 
     void addConsumer (Consumer* c) override      { juce::ScopedLock sl (consumerLock); consumers.addIfNotAlreadyThere (c); }
