@@ -869,6 +869,8 @@ void TracktionThumbnail::drawChannels (juce::Graphics& g, juce::Rectangle<int> a
     }
 }
 
+/*BEATCONNECT MODIFICATION START*/
+
 void TracktionThumbnail::getPacketDetails(float& startTime, float& endTime, int& sizeInBytes, int& numberOfThumbSamplesPerChannel)
 {
     const juce::ScopedLock sl(lock);
@@ -932,6 +934,6 @@ void TracktionThumbnail::getThumbnailMinMaxValues(int8_t* minValues, int8_t* max
     startThumbSampleIndex += numberOfThumbSamplesPerChannelToRead;
     numberOfThumbSamplesPerChannelToRead = 0;
 }
-
+/*BEATCONNECT MODIFICATION END*/
 
 }
