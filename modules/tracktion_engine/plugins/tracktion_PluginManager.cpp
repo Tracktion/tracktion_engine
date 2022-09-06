@@ -651,12 +651,24 @@ void PluginManager::changeListenerCallback (juce::ChangeBroadcaster*)
 
 Plugin::Ptr PluginManager::createExistingPlugin (Edit& ed, const juce::ValueTree& v)
 {
-    return createPlugin (ed, v, false);
+    if (auto p = createPlugin (ed, v, false))
+    {
+        p->initialiseFully();
+        return p;
+    }
+
+    return {};
 }
 
 Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const juce::ValueTree& v)
 {
-    return createPlugin (ed, v, true);
+    if (auto p = createPlugin (ed, v, true))
+    {
+        p->initialiseFully();
+        return p;
+    }
+
+    return {};
 }
 
 Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const juce::String& type, const juce::PluginDescription& desc)
