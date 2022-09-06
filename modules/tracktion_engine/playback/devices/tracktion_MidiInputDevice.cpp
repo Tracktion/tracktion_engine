@@ -601,7 +601,7 @@ Clip* MidiInputDevice::addMidiToTrackAsTransaction (Clip* takeClip, AudioTrack& 
 }
 
 //==============================================================================
-class MidiInputDeviceInstanceBase  : public InputDeviceInstance, private juce::Timer
+class MidiInputDeviceInstanceBase  : public InputDeviceInstance, /*BEATCONNECT MODIFICATION START*/private juce::Timer/*BEATCONNECT MODIFICATION END*/
 {
 public:
     MidiInputDeviceInstanceBase (MidiInputDevice& d, EditPlaybackContext& c)
@@ -672,20 +672,23 @@ public:
     {               
         if (recording)
         {
+            /*BEATCONNECT MODIFICATION START*/
             if (!isTimerRunning())
                 startTimer(60);
+            /*BEATCONNECT MODIFICATION END*/
 
             recorded.addEvent(juce::MidiMessage(message, context.globalStreamTimeToEditTimeUnlooped(message.getTimeStamp())));
-
+            /*BEATCONNECT MODIFICATION START*/
             inMidiMessageHandler = true;
 
             if (!inMidiTimer)
             {
-                recordedCopy = recorded;
+                recordedCopy = recorded;               
                 isNewRecordedCopy = true;
             }
                            
             inMidiMessageHandler = false;
+            /*BEATCONNECT MODIFICATION END*/
         }
             
         juce::ScopedLock sl (consumerLock);
@@ -1114,14 +1117,17 @@ private:
     double pausedTime = 0;
     MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
 
+    /*BEATCONNECT MODIFICATION START*/
     // midi thread / message thread concurrency
     std::atomic<bool> inMidiTimer{ false }, inMidiMessageHandler{ false }, isNewRecordedCopy{ false };
     juce::MidiMessageSequence recordedCopy;
+    /*BEATCONNECT MODIFICATION END*/
     //-----------------------------------------
 
     void addConsumer (Consumer* c) override      { juce::ScopedLock sl (consumerLock); consumers.addIfNotAlreadyThere (c); }
     void removeConsumer (Consumer* c) override   { juce::ScopedLock sl (consumerLock); consumers.removeAllInstancesOf (c); }
 
+    /*BEATCONNECT MODIFICATION START*/
     void timerCallback() override
     {
         // on message thread
@@ -1163,8 +1169,9 @@ private:
             //clear RECORDINGMIDICLIP state nodes at this point
             for (const auto& track : getTargetTracks())
                 track->state.removeChild(track->state.getChildWithName("RECORDINGMIDICLIP"), nullptr);
-        }                     
+        }  
     }
+    /*BEATCONNECT MODIFICATION END*/
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiInputDeviceInstanceBase)
 };

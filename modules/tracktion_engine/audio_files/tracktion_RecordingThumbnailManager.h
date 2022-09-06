@@ -48,7 +48,7 @@ public:
 
         Thumbnail (Engine& e, const juce::File& f)
             : engine (e),
-              thumb (1024, engine.getAudioFileFormatManager().readFormatManager,
+              thumb (/*BEATCONNECT MODIFICATION START*/1024/*BEATCONNECT MODIFICATION END*/, engine.getAudioFileFormatManager().readFormatManager,
                      engine.getAudioFileManager().getAudioThumbnailCache()),
                 file (f), hash (f.hashCode64())
         {
