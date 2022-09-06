@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">15</td>
+            <td class="headerCovTableEntry">16</td>
             <td class="headerCovTableEntry">46</td>
-            <td class="headerCovTableEntryLo">32.6 %</td>
+            <td class="headerCovTableEntryLo">34.8 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-09-06 11:18:34</td>
+            <td class="headerValue">2022-09-06 15:15:44</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">14</td>
+            <td class="headerCovTableEntry">15</td>
             <td class="headerCovTableEntry">45</td>
-            <td class="headerCovTableEntryLo">31.1 %</td>
+            <td class="headerCovTableEntryLo">33.3 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -136,7 +136,7 @@
 <a name="74"><span class="lineNum">      74 </span>            :         But by returning false here, you can opt to remove them from the playback graph entirely</a>
 <a name="75"><span class="lineNum">      75 </span>            :         which means they won't introduce latency which can be useful for tracking.</a>
 <a name="76"><span class="lineNum">      76 </span>            :     */</a>
-<a name="77"><span class="lineNum">      77 </span><span class="lineCov">        348 :     virtual bool shouldBypassedPluginsBeRemovedFromPlaybackGraph()                { return false; }</span></a>
+<a name="77"><span class="lineNum">      77 </span><span class="lineCov">        349 :     virtual bool shouldBypassedPluginsBeRemovedFromPlaybackGraph()                { return false; }</span></a>
 <a name="78"><span class="lineNum">      78 </span>            : </a>
 <a name="79"><span class="lineNum">      79 </span>            :     /** Gives plugins an opportunity to save custom data when the plugin state gets flushed. */</a>
 <a name="80"><span class="lineNum">      80 </span><span class="lineNoCov">          0 :     virtual void saveCustomPluginProperties (juce::ValueTree&amp;, juce::AudioPluginInstance&amp;, juce::UndoManager*) {}</span></a>
@@ -176,7 +176,7 @@
 <a name="114"><span class="lineNum">     114 </span><span class="lineNoCov">          0 :     virtual int getDefaultNoteColour()                                              { return 0; }</span></a>
 <a name="115"><span class="lineNum">     115 </span>            : </a>
 <a name="116"><span class="lineNum">     116 </span>            :     // Notifies the host application that an edit has just been saved</a>
-<a name="117"><span class="lineNum">     117 </span><span class="lineNoCov">          0 :     virtual void editHasBeenSaved (Edit&amp; /*edit*/, juce::File /*path*/)             {}</span></a>
+<a name="117"><span class="lineNum">     117 </span><span class="lineCov">          1 :     virtual void editHasBeenSaved (Edit&amp; /*edit*/, juce::File /*path*/)             {}</span></a>
 <a name="118"><span class="lineNum">     118 </span>            : </a>
 <a name="119"><span class="lineNum">     119 </span>            :     //==============================================================================</a>
 <a name="120"><span class="lineNum">     120 </span>            :     /** Should return true if the incoming timestamp for MIDI messages should be used.</a>
@@ -203,11 +203,11 @@
 <a name="141"><span class="lineNum">     141 </span><span class="lineNoCov">          0 :     virtual void setAutoTempoClipsRemappedWhenTempoChanges (bool)                   {}</span></a>
 <a name="142"><span class="lineNum">     142 </span><span class="lineCov">       5053 :     virtual bool areMidiClipsRemappedWhenTempoChanges()                             { return true; }</span></a>
 <a name="143"><span class="lineNum">     143 </span><span class="lineNoCov">          0 :     virtual void setMidiClipsRemappedWhenTempoChanges (bool)                        {}</span></a>
-<a name="144"><span class="lineNum">     144 </span><span class="lineCov">        552 :     virtual bool arePluginsRemappedWhenTempoChanges()                               { return true; }</span></a>
+<a name="144"><span class="lineNum">     144 </span><span class="lineCov">        553 :     virtual bool arePluginsRemappedWhenTempoChanges()                               { return true; }</span></a>
 <a name="145"><span class="lineNum">     145 </span><span class="lineNoCov">          0 :     virtual void setPluginsRemappedWhenTempoChanges (bool)                          {}</span></a>
 <a name="146"><span class="lineNum">     146 </span>            : </a>
 <a name="147"><span class="lineNum">     147 </span>            :     /** Should return the maximum number of elements that can be added to an Edit. */</a>
-<a name="148"><span class="lineNum">     148 </span><span class="lineCov">      10217 :     virtual EditLimits getEditLimits()                                              { return {}; }</span></a>
+<a name="148"><span class="lineNum">     148 </span><span class="lineCov">      10220 :     virtual EditLimits getEditLimits()                                              { return {}; }</span></a>
 <a name="149"><span class="lineNum">     149 </span>            : </a>
 <a name="150"><span class="lineNum">     150 </span>            :     /** If this returns true, it means that the length (in seconds) of one &quot;beat&quot; at</a>
 <a name="151"><span class="lineNum">     151 </span>            :         any point in an edit is considered to be the length of one division in the current</a>
@@ -223,7 +223,7 @@
 <a name="161"><span class="lineNum">     161 </span>            :         You shouldn't dynamically change this function's return value - just implement a</a>
 <a name="162"><span class="lineNum">     162 </span>            :         function that always returns true or false.</a>
 <a name="163"><span class="lineNum">     163 </span>            :     */</a>
-<a name="164"><span class="lineNum">     164 </span><span class="lineCov">        425 :     virtual bool lengthOfOneBeatDependsOnTimeSignature()                            { return true; }</span></a>
+<a name="164"><span class="lineNum">     164 </span><span class="lineCov">        427 :     virtual bool lengthOfOneBeatDependsOnTimeSignature()                            { return true; }</span></a>
 <a name="165"><span class="lineNum">     165 </span>            : </a>
 <a name="166"><span class="lineNum">     166 </span>            :     struct LevelMeterSettings</a>
 <a name="167"><span class="lineNum">     167 </span>            :     {</a>
@@ -235,12 +235,12 @@
 <a name="173"><span class="lineNum">     173 </span><span class="lineNoCov">          0 :     virtual void setLevelMeterSettings (LevelMeterSettings)                         {}</span></a>
 <a name="174"><span class="lineNum">     174 </span>            : </a>
 <a name="175"><span class="lineNum">     175 </span>            :     // 0 = normal, 1 = high, 2 = realtime</a>
-<a name="176"><span class="lineNum">     176 </span><span class="lineCov">        168 :     virtual void setProcessPriority (int /*level*/)                                 {}</span></a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineCov">        170 :     virtual void setProcessPriority (int /*level*/)                                 {}</span></a>
 <a name="177"><span class="lineNum">     177 </span>            : </a>
 <a name="178"><span class="lineNum">     178 </span>            :     /** If this returns true, you must implement describeWaveDevices to determine the wave devices for a given device.</a>
 <a name="179"><span class="lineNum">     179 </span>            :         If it's false, a standard, stereo pair layout will be automatically generated.</a>
 <a name="180"><span class="lineNum">     180 </span>            :     */</a>
-<a name="181"><span class="lineNum">     181 </span><span class="lineCov">    4907860 :     virtual bool isDescriptionOfWaveDevicesSupported()                              { return false; }</span></a>
+<a name="181"><span class="lineNum">     181 </span><span class="lineCov">    4907470 :     virtual bool isDescriptionOfWaveDevicesSupported()                              { return false; }</span></a>
 <a name="182"><span class="lineNum">     182 </span>            : </a>
 <a name="183"><span class="lineNum">     183 </span>            :     /** If isDescriptionOfWaveDevicesSupported returns true, this should be implemented to describe the wave devices</a>
 <a name="184"><span class="lineNum">     184 </span>            :         for a given audio device.</a>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-09-06 11:18:34</td>
+            <td class="headerValue">2022-09-06 15:15:44</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">6</td>
@@ -77,12 +77,12 @@
 <a name="15"><span class="lineNum">      15 </span>            : {</a>
 <a name="16"><span class="lineNum">      16 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="17"><span class="lineNum">      17 </span>            : </a>
-<a name="18"><span class="lineNum">      18 </span><span class="lineCov">       3796 : AutomationCurve::AutomationCurve (const juce::ValueTree&amp; p, const juce::ValueTree&amp; v)</span></a>
-<a name="19"><span class="lineNum">      19 </span><span class="lineCov">       3796 :     : parentState (p), state (v)</span></a>
+<a name="18"><span class="lineNum">      18 </span><span class="lineCov">       3810 : AutomationCurve::AutomationCurve (const juce::ValueTree&amp; p, const juce::ValueTree&amp; v)</span></a>
+<a name="19"><span class="lineNum">      19 </span><span class="lineCov">       3810 :     : parentState (p), state (v)</span></a>
 <a name="20"><span class="lineNum">      20 </span>            : {</a>
-<a name="21"><span class="lineNum">      21 </span><span class="lineCov">       3796 :     if (! state.isValid())</span></a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineCov">       3796 :         state = juce::ValueTree (IDs::AUTOMATIONCURVE);</span></a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineCov">       3796 : }</span></a>
+<a name="21"><span class="lineNum">      21 </span><span class="lineCov">       3810 :     if (! state.isValid())</span></a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineCov">       3810 :         state = juce::ValueTree (IDs::AUTOMATIONCURVE);</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">       3810 : }</span></a>
 <a name="24"><span class="lineNum">      24 </span>            : </a>
 <a name="25"><span class="lineNum">      25 </span><span class="lineNoCov">          0 : AutomationCurve::AutomationCurve (const AutomationCurve&amp; other)</span></a>
 <a name="26"><span class="lineNum">      26 </span><span class="lineNoCov">          0 :     : parentState (other.parentState), state (other.state), ownerParam (other.ownerParam)</span></a>
@@ -113,13 +113,13 @@
 <a name="51"><span class="lineNum">      51 </span><span class="lineNoCov">          0 :     parentState = v;</span></a>
 <a name="52"><span class="lineNum">      52 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="53"><span class="lineNum">      53 </span>            : </a>
-<a name="54"><span class="lineNum">      54 </span><span class="lineCov">       3796 : void AutomationCurve::setOwnerParameter (AutomatableParameter* p)</span></a>
+<a name="54"><span class="lineNum">      54 </span><span class="lineCov">       3810 : void AutomationCurve::setOwnerParameter (AutomatableParameter* p)</span></a>
 <a name="55"><span class="lineNum">      55 </span>            : {</a>
-<a name="56"><span class="lineNum">      56 </span><span class="lineCov">       3796 :     ownerParam = p;</span></a>
+<a name="56"><span class="lineNum">      56 </span><span class="lineCov">       3810 :     ownerParam = p;</span></a>
 <a name="57"><span class="lineNum">      57 </span>            : </a>
-<a name="58"><span class="lineNum">      58 </span><span class="lineCov">       3796 :     if (p != nullptr)</span></a>
-<a name="59"><span class="lineNum">      59 </span><span class="lineCov">       3796 :         state.setProperty (IDs::paramID, p-&gt;paramID, nullptr);</span></a>
-<a name="60"><span class="lineNum">      60 </span><span class="lineCov">       3796 : }</span></a>
+<a name="58"><span class="lineNum">      58 </span><span class="lineCov">       3810 :     if (p != nullptr)</span></a>
+<a name="59"><span class="lineNum">      59 </span><span class="lineCov">       3810 :         state.setProperty (IDs::paramID, p-&gt;paramID, nullptr);</span></a>
+<a name="60"><span class="lineNum">      60 </span><span class="lineCov">       3810 : }</span></a>
 <a name="61"><span class="lineNum">      61 </span>            : </a>
 <a name="62"><span class="lineNum">      62 </span><span class="lineNoCov">          0 : juce::UndoManager* AutomationCurve::getUndoManager() const</span></a>
 <a name="63"><span class="lineNum">      63 </span>            : {</a>
@@ -129,7 +129,7 @@
 <a name="67"><span class="lineNum">      67 </span>            : //==============================================================================</a>
 <a name="68"><span class="lineNum">      68 </span><span class="lineCov">         26 : int AutomationCurve::getNumPoints() const noexcept</span></a>
 <a name="69"><span class="lineNum">      69 </span>            : {</a>
-<a name="70"><span class="lineNum">      70 </span><span class="lineCov">       3840 :     return state.getNumChildren();</span></a>
+<a name="70"><span class="lineNum">      70 </span><span class="lineCov">       3868 :     return state.getNumChildren();</span></a>
 <a name="71"><span class="lineNum">      71 </span>            : }</a>
 <a name="72"><span class="lineNum">      72 </span>            : </a>
 <a name="73"><span class="lineNum">      73 </span><span class="lineNoCov">          0 : AutomationCurve::AutomationPoint AutomationCurve::getPoint (int index) const noexcept</span></a>
@@ -149,10 +149,10 @@
 <a name="87"><span class="lineNum">      87 </span><span class="lineNoCov">          0 :     return TimePosition::fromSeconds (static_cast&lt;double&gt; (state.getChild (index).getProperty (IDs::t)));</span></a>
 <a name="88"><span class="lineNum">      88 </span>            : }</a>
 <a name="89"><span class="lineNum">      89 </span>            : </a>
-<a name="90"><span class="lineNum">      90 </span><span class="lineCov">         12 : float AutomationCurve::getPointValue (int index) const noexcept</span></a>
+<a name="90"><span class="lineNum">      90 </span><span class="lineCov">         14 : float AutomationCurve::getPointValue (int index) const noexcept</span></a>
 <a name="91"><span class="lineNum">      91 </span>            : {</a>
-<a name="92"><span class="lineNum">      92 </span><span class="lineCov">         12 :     if (index &gt;= getNumPoints() &amp;&amp; ownerParam != nullptr)</span></a>
-<a name="93"><span class="lineNum">      93 </span><span class="lineCov">         12 :         return ownerParam-&gt;getCurrentBaseValue();</span></a>
+<a name="92"><span class="lineNum">      92 </span><span class="lineCov">         14 :     if (index &gt;= getNumPoints() &amp;&amp; ownerParam != nullptr)</span></a>
+<a name="93"><span class="lineNum">      93 </span><span class="lineCov">         14 :         return ownerParam-&gt;getCurrentBaseValue();</span></a>
 <a name="94"><span class="lineNum">      94 </span>            : </a>
 <a name="95"><span class="lineNum">      95 </span><span class="lineNoCov">          0 :     return state.getChild (index).getProperty (IDs::v);</span></a>
 <a name="96"><span class="lineNum">      96 </span>            : }</a>
@@ -171,11 +171,11 @@
 <a name="109"><span class="lineNum">     109 </span>            :     return -1;</a>
 <a name="110"><span class="lineNum">     110 </span>            : }</a>
 <a name="111"><span class="lineNum">     111 </span>            : </a>
-<a name="112"><span class="lineNum">     112 </span><span class="lineCov">         12 : int AutomationCurve::nextIndexAfter (TimePosition t) const</span></a>
+<a name="112"><span class="lineNum">     112 </span><span class="lineCov">         14 : int AutomationCurve::nextIndexAfter (TimePosition t) const</span></a>
 <a name="113"><span class="lineNum">     113 </span>            : {</a>
 <a name="114"><span class="lineNum">     114 </span>            :     auto num = getNumPoints();</a>
 <a name="115"><span class="lineNum">     115 </span>            : </a>
-<a name="116"><span class="lineNum">     116 </span><span class="lineCov">         12 :     for (int i = 0; i &lt; num; ++i)</span></a>
+<a name="116"><span class="lineNum">     116 </span><span class="lineCov">         14 :     for (int i = 0; i &lt; num; ++i)</span></a>
 <a name="117"><span class="lineNum">     117 </span><span class="lineNoCov">          0 :         if (getPointTime (i) &gt;= t)</span></a>
 <a name="118"><span class="lineNum">     118 </span><span class="lineNoCov">          0 :             return i;</span></a>
 <a name="119"><span class="lineNum">     119 </span>            : </a>
@@ -188,16 +188,16 @@
 <a name="126"><span class="lineNum">     126 </span>            : }</a>
 <a name="127"><span class="lineNum">     127 </span>            : </a>
 <a name="128"><span class="lineNum">     128 </span>            : //==============================================================================</a>
-<a name="129"><span class="lineNum">     129 </span><span class="lineCov">         12 : float AutomationCurve::getValueAt (TimePosition timePos) const</span></a>
+<a name="129"><span class="lineNum">     129 </span><span class="lineCov">         14 : float AutomationCurve::getValueAt (TimePosition timePos) const</span></a>
 <a name="130"><span class="lineNum">     130 </span>            : {</a>
 <a name="131"><span class="lineNum">     131 </span>            :     TRACKTION_ASSERT_MESSAGE_THREAD</a>
 <a name="132"><span class="lineNum">     132 </span>            :     jassert (getOwnerParameter() != nullptr);</a>
 <a name="133"><span class="lineNum">     133 </span>            : </a>
-<a name="134"><span class="lineNum">     134 </span><span class="lineCov">         12 :     const auto index = nextIndexAfter (timePos);</span></a>
-<a name="135"><span class="lineNum">     135 </span><span class="lineCov">         12 :     const auto time = timePos.inSeconds();</span></a>
+<a name="134"><span class="lineNum">     134 </span><span class="lineCov">         14 :     const auto index = nextIndexAfter (timePos);</span></a>
+<a name="135"><span class="lineNum">     135 </span><span class="lineCov">         14 :     const auto time = timePos.inSeconds();</span></a>
 <a name="136"><span class="lineNum">     136 </span>            : </a>
-<a name="137"><span class="lineNum">     137 </span><span class="lineCov">         12 :     if (index &lt;= 0)</span></a>
-<a name="138"><span class="lineNum">     138 </span><span class="lineCov">         12 :         return getPointValue (0);</span></a>
+<a name="137"><span class="lineNum">     137 </span><span class="lineCov">         14 :     if (index &lt;= 0)</span></a>
+<a name="138"><span class="lineNum">     138 </span><span class="lineCov">         14 :         return getPointValue (0);</span></a>
 <a name="139"><span class="lineNum">     139 </span>            : </a>
 <a name="140"><span class="lineNum">     140 </span>            :     auto numPoints = getNumPoints();</a>
 <a name="141"><span class="lineNum">     141 </span>            : </a>

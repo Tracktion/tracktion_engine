@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">62</td>
+            <td class="headerCovTableEntry">65</td>
             <td class="headerCovTableEntry">102</td>
-            <td class="headerCovTableEntryLo">60.8 %</td>
+            <td class="headerCovTableEntryLo">63.7 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-09-06 11:18:34</td>
+            <td class="headerValue">2022-09-06 15:15:44</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">17</td>
+            <td class="headerCovTableEntry">18</td>
             <td class="headerCovTableEntry">21</td>
-            <td class="headerCovTableEntryMed">81.0 %</td>
+            <td class="headerCovTableEntryMed">85.7 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -231,20 +231,20 @@
 <a name="169"><span class="lineNum">     169 </span><span class="lineCov">          2 :                             IDs::type, xmlTypeName);</span></a>
 <a name="170"><span class="lineNum">     170 </span>            : }</a>
 <a name="171"><span class="lineNum">     171 </span>            : </a>
-<a name="172"><span class="lineNum">     172 </span><span class="lineNoCov">          0 : void FreezePointPlugin::initialiseFully()</span></a>
+<a name="172"><span class="lineNum">     172 </span><span class="lineCov">          2 : void FreezePointPlugin::initialiseFully()</span></a>
 <a name="173"><span class="lineNum">     173 </span>            : {</a>
 <a name="174"><span class="lineNum">     174 </span>            :     Plugin::initialiseFully();</a>
-<a name="175"><span class="lineNum">     175 </span><span class="lineNoCov">          0 :     updateTrackFreezeStatus();</span></a>
-<a name="176"><span class="lineNum">     176 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="175"><span class="lineNum">     175 </span><span class="lineCov">          2 :     updateTrackFreezeStatus();</span></a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineCov">          2 : }</span></a>
 <a name="177"><span class="lineNum">     177 </span>            : </a>
 <a name="178"><span class="lineNum">     178 </span><span class="lineCov">          2 : void FreezePointPlugin::initialise (const PluginInitialisationInfo&amp;) {}</span></a>
 <a name="179"><span class="lineNum">     179 </span><span class="lineCov">          2 : void FreezePointPlugin::deinitialise() {}</span></a>
 <a name="180"><span class="lineNum">     180 </span><span class="lineCov">        658 : void FreezePointPlugin::applyToBuffer (const PluginRenderContext&amp;) {}</span></a>
 <a name="181"><span class="lineNum">     181 </span>            : </a>
 <a name="182"><span class="lineNum">     182 </span>            : //==============================================================================</a>
-<a name="183"><span class="lineNum">     183 </span><span class="lineCov">          2 : void FreezePointPlugin::updateTrackFreezeStatus()</span></a>
+<a name="183"><span class="lineNum">     183 </span><span class="lineCov">          4 : void FreezePointPlugin::updateTrackFreezeStatus()</span></a>
 <a name="184"><span class="lineNum">     184 </span>            : {</a>
-<a name="185"><span class="lineNum">     185 </span><span class="lineCov">          2 :     if (auto at = dynamic_cast&lt;AudioTrack*&gt; (getOwnerTrack()))</span></a>
+<a name="185"><span class="lineNum">     185 </span><span class="lineCov">          4 :     if (auto at = dynamic_cast&lt;AudioTrack*&gt; (getOwnerTrack()))</span></a>
 <a name="186"><span class="lineNum">     186 </span>            :     {</a>
 <a name="187"><span class="lineNum">     187 </span>            :         auto newIndex = at-&gt;pluginList.indexOf (this);</a>
 <a name="188"><span class="lineNum">     188 </span>            : </a>
@@ -261,7 +261,7 @@
 <a name="199"><span class="lineNum">     199 </span><span class="lineCov">          2 :             lastFreezeIndex = newIndex;</span></a>
 <a name="200"><span class="lineNum">     200 </span>            :         }</a>
 <a name="201"><span class="lineNum">     201 </span>            :     }</a>
-<a name="202"><span class="lineNum">     202 </span><span class="lineCov">          2 : }</span></a>
+<a name="202"><span class="lineNum">     202 </span><span class="lineCov">          4 : }</span></a>
 <a name="203"><span class="lineNum">     203 </span>            : </a>
 <a name="204"><span class="lineNum">     204 </span><span class="lineCov">          2 : bool FreezePointPlugin::isTrackFrozen() const</span></a>
 <a name="205"><span class="lineNum">     205 </span>            : {</a>

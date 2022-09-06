@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-09-06 11:18:34</td>
+            <td class="headerValue">2022-09-06 15:15:44</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">8</td>
@@ -73,23 +73,23 @@
 <a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
-<a name="14"><span class="lineNum">      14 </span><span class="lineCov">       2319 : LevelMeterPlugin::LevelMeterPlugin (PluginCreationInfo info)  : Plugin (info)</span></a>
+<a name="14"><span class="lineNum">      14 </span><span class="lineCov">       2325 : LevelMeterPlugin::LevelMeterPlugin (PluginCreationInfo info)  : Plugin (info)</span></a>
 <a name="15"><span class="lineNum">      15 </span>            : {</a>
-<a name="16"><span class="lineNum">      16 </span><span class="lineCov">        773 :     showMidiActivity.referTo (state, IDs::showMidi, getUndoManager());</span></a>
+<a name="16"><span class="lineNum">      16 </span><span class="lineCov">        775 :     showMidiActivity.referTo (state, IDs::showMidi, getUndoManager());</span></a>
 <a name="17"><span class="lineNum">      17 </span>            : </a>
-<a name="18"><span class="lineNum">      18 </span><span class="lineCov">        773 :     measurer.setShowMidi (showMidiActivity);</span></a>
-<a name="19"><span class="lineNum">      19 </span><span class="lineCov">        773 : }</span></a>
+<a name="18"><span class="lineNum">      18 </span><span class="lineCov">        775 :     measurer.setShowMidi (showMidiActivity);</span></a>
+<a name="19"><span class="lineNum">      19 </span><span class="lineCov">        775 : }</span></a>
 <a name="20"><span class="lineNum">      20 </span>            : </a>
-<a name="21"><span class="lineNum">      21 </span><span class="lineCov">       1546 : LevelMeterPlugin::~LevelMeterPlugin()</span></a>
+<a name="21"><span class="lineNum">      21 </span><span class="lineCov">       1550 : LevelMeterPlugin::~LevelMeterPlugin()</span></a>
 <a name="22"><span class="lineNum">      22 </span>            : {</a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineCov">        773 :     notifyListenersOfDeletion();</span></a>
-<a name="24"><span class="lineNum">      24 </span><span class="lineCov">       1546 : }</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">        775 :     notifyListenersOfDeletion();</span></a>
+<a name="24"><span class="lineNum">      24 </span><span class="lineCov">       1550 : }</span></a>
 <a name="25"><span class="lineNum">      25 </span>            : </a>
-<a name="26"><span class="lineNum">      26 </span><span class="lineCov">        552 : juce::ValueTree LevelMeterPlugin::create()</span></a>
+<a name="26"><span class="lineNum">      26 </span><span class="lineCov">        553 : juce::ValueTree LevelMeterPlugin::create()</span></a>
 <a name="27"><span class="lineNum">      27 </span>            : {</a>
-<a name="28"><span class="lineNum">      28 </span><span class="lineCov">        552 :     juce::ValueTree v (IDs::PLUGIN);</span></a>
-<a name="29"><span class="lineNum">      29 </span><span class="lineCov">        552 :     v.setProperty (IDs::type, xmlTypeName, nullptr);</span></a>
-<a name="30"><span class="lineNum">      30 </span><span class="lineCov">        552 :     return v;</span></a>
+<a name="28"><span class="lineNum">      28 </span><span class="lineCov">        553 :     juce::ValueTree v (IDs::PLUGIN);</span></a>
+<a name="29"><span class="lineNum">      29 </span><span class="lineCov">        553 :     v.setProperty (IDs::type, xmlTypeName, nullptr);</span></a>
+<a name="30"><span class="lineNum">      30 </span><span class="lineCov">        553 :     return v;</span></a>
 <a name="31"><span class="lineNum">      31 </span>            : }</a>
 <a name="32"><span class="lineNum">      32 </span>            : </a>
 <a name="33"><span class="lineNum">      33 </span>            : const char* LevelMeterPlugin::xmlTypeName = &quot;level&quot;;</a>
@@ -133,19 +133,19 @@
 <a name="71"><span class="lineNum">      71 </span>            :     }</a>
 <a name="72"><span class="lineNum">      72 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="73"><span class="lineNum">      73 </span>            : </a>
-<a name="74"><span class="lineNum">      74 </span><span class="lineCov">       4549 : void LevelMeterPlugin::timerCallback()</span></a>
+<a name="74"><span class="lineNum">      74 </span><span class="lineCov">       4545 : void LevelMeterPlugin::timerCallback()</span></a>
 <a name="75"><span class="lineNum">      75 </span>            : {</a>
-<a name="76"><span class="lineNum">      76 </span><span class="lineCov">       4549 :     if (controllerTrack &gt;= 0)</span></a>
+<a name="76"><span class="lineNum">      76 </span><span class="lineCov">       4545 :     if (controllerTrack &gt;= 0)</span></a>
 <a name="77"><span class="lineNum">      77 </span>            :     {</a>
-<a name="78"><span class="lineNum">      78 </span><span class="lineCov">       4549 :         auto&amp; ecm = engine.getExternalControllerManager();</span></a>
+<a name="78"><span class="lineNum">      78 </span><span class="lineCov">       4545 :         auto&amp; ecm = engine.getExternalControllerManager();</span></a>
 <a name="79"><span class="lineNum">      79 </span>            : </a>
-<a name="80"><span class="lineNum">      80 </span><span class="lineCov">       4549 :         if (ecm.isAttachedToEdit (edit))</span></a>
+<a name="80"><span class="lineNum">      80 </span><span class="lineCov">       4545 :         if (ecm.isAttachedToEdit (edit))</span></a>
 <a name="81"><span class="lineNum">      81 </span>            :         {</a>
 <a name="82"><span class="lineNum">      82 </span>            :             auto l = measurer.getLevelCache();</a>
 <a name="83"><span class="lineNum">      83 </span><span class="lineNoCov">          0 :             ecm.channelLevelChanged (controllerTrack, dbToGain (l.first), dbToGain (l.second));</span></a>
 <a name="84"><span class="lineNum">      84 </span>            :         }</a>
 <a name="85"><span class="lineNum">      85 </span>            :     }</a>
-<a name="86"><span class="lineNum">      86 </span><span class="lineCov">       4549 : }</span></a>
+<a name="86"><span class="lineNum">      86 </span><span class="lineCov">       4545 : }</span></a>
 <a name="87"><span class="lineNum">      87 </span>            : </a>
 <a name="88"><span class="lineNum">      88 </span><span class="lineNoCov">          0 : void LevelMeterPlugin::restorePluginStateFromValueTree (const juce::ValueTree&amp; v)</span></a>
 <a name="89"><span class="lineNum">      89 </span>            : {</a>

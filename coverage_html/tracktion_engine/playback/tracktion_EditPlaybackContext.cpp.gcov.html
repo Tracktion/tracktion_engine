@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">143</td>
+            <td class="headerCovTableEntry">145</td>
             <td class="headerCovTableEntry">445</td>
-            <td class="headerCovTableEntryLo">32.1 %</td>
+            <td class="headerCovTableEntryLo">32.6 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-09-06 11:18:34</td>
+            <td class="headerValue">2022-09-06 15:15:44</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">21</td>
+            <td class="headerCovTableEntry">23</td>
             <td class="headerCovTableEntry">69</td>
-            <td class="headerCovTableEntryLo">30.4 %</td>
+            <td class="headerCovTableEntryLo">33.3 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -1055,20 +1055,20 @@
 <a name="993"><span class="lineNum">     993 </span>            : //==============================================================================</a>
 <a name="994"><span class="lineNum">     994 </span>            : static int numHighPriorityPlayers = 0, numRealtimeDefeaters = 0;</a>
 <a name="995"><span class="lineNum">     995 </span>            : </a>
-<a name="996"><span class="lineNum">     996 </span><span class="lineCov">        168 : inline void updateProcessPriority (Engine&amp; engine)</span></a>
+<a name="996"><span class="lineNum">     996 </span><span class="lineCov">        170 : inline void updateProcessPriority (Engine&amp; engine)</span></a>
 <a name="997"><span class="lineNum">     997 </span>            : {</a>
 <a name="998"><span class="lineNum">     998 </span>            :     int level = 0;</a>
 <a name="999"><span class="lineNum">     999 </span>            : </a>
-<a name="1000"><span class="lineNum">    1000 </span><span class="lineCov">        168 :     if (numHighPriorityPlayers &gt; 0)</span></a>
+<a name="1000"><span class="lineNum">    1000 </span><span class="lineCov">        170 :     if (numHighPriorityPlayers &gt; 0)</span></a>
 <a name="1001"><span class="lineNum">    1001 </span><span class="lineCov">        168 :         level = numRealtimeDefeaters == 0 &amp;&amp; engine.getPropertyStorage().getProperty (SettingID::useRealtime, false) ? 2 : 1;</span></a>
 <a name="1002"><span class="lineNum">    1002 </span>            : </a>
-<a name="1003"><span class="lineNum">    1003 </span><span class="lineCov">        168 :     engine.getEngineBehaviour().setProcessPriority (level);</span></a>
-<a name="1004"><span class="lineNum">    1004 </span><span class="lineCov">        168 : }</span></a>
+<a name="1003"><span class="lineNum">    1003 </span><span class="lineCov">        170 :     engine.getEngineBehaviour().setProcessPriority (level);</span></a>
+<a name="1004"><span class="lineNum">    1004 </span><span class="lineCov">        170 : }</span></a>
 <a name="1005"><span class="lineNum">    1005 </span>            : </a>
 <a name="1006"><span class="lineNum">    1006 </span><span class="lineCov">         84 : EditPlaybackContext::ProcessPriorityBooster::ProcessPriorityBooster (Engine&amp; e) : engine (e)        { ++numHighPriorityPlayers; updateProcessPriority (engine); }</span></a>
 <a name="1007"><span class="lineNum">    1007 </span><span class="lineNoCov">          0 : EditPlaybackContext::ProcessPriorityBooster::~ProcessPriorityBooster()                              { --numHighPriorityPlayers; updateProcessPriority (engine); }</span></a>
-<a name="1008"><span class="lineNum">    1008 </span><span class="lineNoCov">          0 : EditPlaybackContext::RealtimePriorityDisabler::RealtimePriorityDisabler (Engine&amp; e) : engine (e)    { ++numRealtimeDefeaters; updateProcessPriority (engine); }</span></a>
-<a name="1009"><span class="lineNum">    1009 </span><span class="lineNoCov">          0 : EditPlaybackContext::RealtimePriorityDisabler::~RealtimePriorityDisabler()                          { --numRealtimeDefeaters; updateProcessPriority (engine); }</span></a>
+<a name="1008"><span class="lineNum">    1008 </span><span class="lineCov">          1 : EditPlaybackContext::RealtimePriorityDisabler::RealtimePriorityDisabler (Engine&amp; e) : engine (e)    { ++numRealtimeDefeaters; updateProcessPriority (engine); }</span></a>
+<a name="1009"><span class="lineNum">    1009 </span><span class="lineCov">          1 : EditPlaybackContext::RealtimePriorityDisabler::~RealtimePriorityDisabler()                          { --numRealtimeDefeaters; updateProcessPriority (engine); }</span></a>
 <a name="1010"><span class="lineNum">    1010 </span>            : </a>
 <a name="1011"><span class="lineNum">    1011 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
