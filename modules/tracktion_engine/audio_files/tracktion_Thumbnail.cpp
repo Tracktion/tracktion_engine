@@ -916,16 +916,18 @@ void TracktionThumbnail::getThumbnailMinMaxValues(int8_t* minValues, int8_t* max
         return;
 
     //channel interleaved implementation
-    for (int i = 0; i < numberOfThumbSamplesPerChannelToRead * numChannels;)
+    int j = 0;
+    for (int i = 0; i < numberOfThumbSamplesPerChannelToRead; i++)
     {
         for (int ch = 0; ch < numChannels; ch++)
         {
             auto minMaxValuesPtr = channels[ch]->getData(startThumbSampleIndex);
 
-            minValues[i + ch] = minMaxValuesPtr[i].getMinValue();
-            maxValues[i + ch] = minMaxValuesPtr[i].getMaxValue();
+            minValues[j + ch] = minMaxValuesPtr[i].getMinValue();
+            maxValues[j + ch] = minMaxValuesPtr[i].getMaxValue();
         }
-        i = i + numChannels;
+
+        j += numChannels;
     }
 
     //update thumbnail state
