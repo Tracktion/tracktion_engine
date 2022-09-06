@@ -187,6 +187,8 @@ struct TransportControl::TransportState : private juce::ValueTree::Listener
     TransportControl& transport;
 
 private:
+    bool isInsideRecordingCallback = false;
+
     void valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i) override
     {
         if (v == state)
@@ -228,10 +230,18 @@ private:
             }
             else if (i == IDs::recording)
             {
+                // This recursion check is to avoid the call to performRecord stopping
+                // playback which in turn stops recording as it is trying to be started
+                if (isInsideRecordingCallback)
+                    return;
+
                 recording.forceUpdateOfCachedValue();
 
                 if (recording)
+                {
+                    juce::ScopedValueSetter<bool> svs (isInsideRecordingCallback, true);
                     recording = transport.performRecord();
+                }
 
                 transport.startedOrStopped();
             }
