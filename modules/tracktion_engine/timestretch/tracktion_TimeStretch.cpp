@@ -183,10 +183,21 @@ private:
     {
         switch (mode)
         {
+            case TimeStretcher::elastiquePro:           return CElastiqueProV3If::kV3Pro;
             case TimeStretcher::elastiqueEfficient:     return CElastiqueProV3If::kV3Eff;
             case TimeStretcher::elastiqueMobile:        return CElastiqueProV3If::kV3mobile;
             case TimeStretcher::elastiqueMonophonic:    return CElastiqueProV3If::kV3Monophonic;
-            default:                                    return CElastiqueProV3If::kV3Pro;
+            case TimeStretcher::disabled:               [[ fallthrough ]];
+            case TimeStretcher::elastiqueTransient:     [[ fallthrough ]];
+            case TimeStretcher::elastiqueTonal:         [[ fallthrough ]];
+            case TimeStretcher::soundtouchNormal:       [[ fallthrough ]];
+            case TimeStretcher::soundtouchBetter:       [[ fallthrough ]];
+            case TimeStretcher::melodyne:               [[ fallthrough ]];
+            case TimeStretcher::rubberbandMelodic:      [[ fallthrough ]];
+            case TimeStretcher::rubberbandPercussive:   [[ fallthrough ]];
+            default:
+                jassertfalse;
+                return CElastiqueProV3If::kV3Pro;
         }
     }
 
