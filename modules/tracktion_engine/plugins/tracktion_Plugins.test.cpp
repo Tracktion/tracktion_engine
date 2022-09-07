@@ -241,7 +241,6 @@ public:
             auto volumeAndPan = dynamic_cast<VolumeAndPanPlugin*> (rackType->getPlugins().getFirst());
             auto volParam = volumeAndPan->volParam;
 
-            // These assertions were OK above after the modifier is added but fail after loading the edit again from file.
             expectWithinAbsoluteError (volParam->getCurrentBaseValue(),
                                        volParam->valueRange.convertFrom0to1 (0.0f),
                                        0.001f);
