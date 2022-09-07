@@ -226,6 +226,7 @@ namespace MidiHelpers
     {
         juce::MidiMessageSequence res;
 
+        jassert (! loopRange.isEmpty());
         sourceSequence.updateMatchedPairs();
 
         for (int i = 0; i < sourceSequence.getNumEvents(); ++i)
@@ -281,6 +282,7 @@ namespace MidiHelpers
                                                                      juce::Range<double> loopRange)
     {
         std::vector<juce::MidiMessageSequence> res;
+        jassert (! loopRange.isEmpty());
 
         for (auto& seq : sourceSequences)
             res.push_back (createLoopSection (seq, loopRange));
@@ -955,8 +957,9 @@ public:
     {
         // Ensure the correct sequence is cached
         setTime (editBeatPosition);
+
         generator->createMessagesForTime (destBuffer,
-                                          editBeatPosition,
+                                          editBeatPositionToSequenceBeatPosition (editBeatPosition),
                                           noteList,
                                           channelNumbers,
                                           clipLevel,
@@ -1007,6 +1010,14 @@ private:
     const EditBeatRange clipRange;
     const ClipBeatRange loopTimes;
     int loopIndex = 0;
+
+    SequenceBeatPosition editBeatPositionToSequenceBeatPosition (EditBeatPosition editBeatPosition) const
+    {
+        const ClipBeatPosition clipPos = editBeatPosition - clipRange.getStart();
+        const SequenceBeatPosition sequencePos = loopTimes.getStart() + std::fmod (clipPos, loopTimes.getLength());
+
+        return sequencePos;
+    }
 
     void setLoopIndex (int newLoopIndex)
     {
@@ -1090,12 +1101,14 @@ public:
                           float grooveStrength_)
         : sequences (std::move (sequencesToUse)),
           editRange (editRangeToUse),
-          loopRange (loopRangeToUse),
+          loopRange (loopRangeToUse.isEmpty() ? editRangeToUse.movedToStartAt (0_bp) : loopRangeToUse),
           offset (offsetToUse),
           quantisation (quantisation_),
           groove (groove_ != nullptr ? *groove_ : GrooveTemplate()),
           grooveStrength (grooveStrength_)
     {
+        // N.B. If loopRangeToUse is empty, we create a fake loop range the length of the
+        // edit range to ensure all the existing looping/wrapping logic works
     }
 
     void initialise (std::shared_ptr<ActiveNoteList> noteListToUse,
