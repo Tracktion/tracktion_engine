@@ -970,10 +970,18 @@ public:
     void setTime (EditBeatPosition editBeatPosition) override
     {
         const ClipBeatPosition clipPos = editBeatPosition - clipRange.getStart();
-        const SequenceBeatPosition sequencePos = loopTimes.getStart() + std::fmod (clipPos, loopTimes.getLength());
 
-        setLoopIndex (static_cast<int> (clipPos / loopTimes.getLength()));
-        generator->setTime (sequencePos);
+        if (loopTimes.isEmpty())
+        {
+            generator->setTime (clipPos);
+        }
+        else
+        {
+            const SequenceBeatPosition sequencePos = loopTimes.getStart() + std::fmod (clipPos, loopTimes.getLength());
+
+            setLoopIndex (static_cast<int> (clipPos / loopTimes.getLength()));
+            generator->setTime (sequencePos);
+        }
     }
 
     juce::MidiMessage getEvent() override
@@ -989,7 +997,7 @@ public:
     {
         generator->advance();
 
-        if (exhausted())
+        if (exhausted() && ! loopTimes.isEmpty())
         {
             setLoopIndex (loopIndex + 1);
             generator->setTime (0.0);
@@ -1014,6 +1022,10 @@ private:
     SequenceBeatPosition editBeatPositionToSequenceBeatPosition (EditBeatPosition editBeatPosition) const
     {
         const ClipBeatPosition clipPos = editBeatPosition - clipRange.getStart();
+
+        if (loopTimes.isEmpty())
+            return clipPos;
+
         const SequenceBeatPosition sequencePos = loopTimes.getStart() + std::fmod (clipPos, loopTimes.getLength());
 
         return sequencePos;
@@ -1101,14 +1113,12 @@ public:
                           float grooveStrength_)
         : sequences (std::move (sequencesToUse)),
           editRange (editRangeToUse),
-          loopRange (loopRangeToUse.isEmpty() ? editRangeToUse.movedToStartAt (0_bp) : loopRangeToUse),
+          loopRange (loopRangeToUse),
           offset (offsetToUse),
           quantisation (quantisation_),
           groove (groove_ != nullptr ? *groove_ : GrooveTemplate()),
           grooveStrength (grooveStrength_)
     {
-        // N.B. If loopRangeToUse is empty, we create a fake loop range the length of the
-        // edit range to ensure all the existing looping/wrapping logic works
     }
 
     void initialise (std::shared_ptr<ActiveNoteList> noteListToUse,
@@ -1122,7 +1132,8 @@ public:
         const EditBeatRange clipRangeRaw { editRange.getStart().inBeats(), editRange.getEnd().inBeats() };
         const ClipBeatRange loopRangeRaw { loopRange.getStart().inBeats(), loopRange.getEnd().inBeats() };
 
-        sequences = MidiHelpers::createLoopSection (std::move (sequences), loopRangeRaw);
+        if (! loopRangeRaw.isEmpty())
+            sequences = MidiHelpers::createLoopSection (std::move (sequences), loopRangeRaw);
 
         auto cachingGenerator = std::make_unique<CachingMidiEventGenerator> (std::move (sequences),
                                                                              std::move (quantisation), std::move (groove), grooveStrength);
@@ -1313,6 +1324,7 @@ LoopingMidiNode::LoopingMidiNode (std::vector<juce::MidiMessageSequence> sequenc
       shouldBeMutedDelegate (std::move (shouldBeMuted)),
       wasMute (liveClipLevel.isMute())
 {
+    jassert (! sequences.empty());
     jassert (channelNumbers.getStart() > 0 && channelNumbers.getEnd() <= 16);
 
     // Create this now but don't initialise it until we know if we have to
