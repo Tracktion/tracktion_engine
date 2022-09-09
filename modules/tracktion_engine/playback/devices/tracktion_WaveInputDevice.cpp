@@ -516,6 +516,10 @@ public:
                 std::forward<const juce::Array<AudioTrack*>>(p_TrackList),
                 FileName);
         }
+        ~RecordingContext()
+        {
+            engine.destroyFifoBundle(m_SampleID);
+        }
         // BEATCONNECT MODIFICATION END
 
         Engine& engine;
