@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-09-09 11:03:57</td>
+            <td class="headerValue">2022-09-09 15:12:59</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">21</td>
@@ -711,11 +711,11 @@
 <a name="649"><span class="lineNum">     649 </span><span class="lineNoCov">          0 :     engine.getPropertyStorage().setXmlProperty (getPluginListPropertyName(), *xml);</span></a>
 <a name="650"><span class="lineNum">     650 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="651"><span class="lineNum">     651 </span>            : </a>
-<a name="652"><span class="lineNum">     652 </span><span class="lineCov">       1695 : Plugin::Ptr PluginManager::createExistingPlugin (Edit&amp; ed, const juce::ValueTree&amp; v)</span></a>
+<a name="652"><span class="lineNum">     652 </span><span class="lineCov">       1711 : Plugin::Ptr PluginManager::createExistingPlugin (Edit&amp; ed, const juce::ValueTree&amp; v)</span></a>
 <a name="653"><span class="lineNum">     653 </span>            : {</a>
-<a name="654"><span class="lineNum">     654 </span><span class="lineCov">       1695 :     if (auto p = createPlugin (ed, v, false))</span></a>
+<a name="654"><span class="lineNum">     654 </span><span class="lineCov">       1711 :     if (auto p = createPlugin (ed, v, false))</span></a>
 <a name="655"><span class="lineNum">     655 </span>            :     {</a>
-<a name="656"><span class="lineNum">     656 </span><span class="lineCov">       1695 :         p-&gt;initialiseFully();</span></a>
+<a name="656"><span class="lineNum">     656 </span><span class="lineCov">       1711 :         p-&gt;initialiseFully();</span></a>
 <a name="657"><span class="lineNum">     657 </span>            :         return p;</a>
 <a name="658"><span class="lineNum">     658 </span>            :     }</a>
 <a name="659"><span class="lineNum">     659 </span>            : </a>
@@ -803,9 +803,9 @@
 <a name="741"><span class="lineNum">     741 </span><span class="lineNoCov">          0 :     return descs;</span></a>
 <a name="742"><span class="lineNum">     742 </span>            : }</a>
 <a name="743"><span class="lineNum">     743 </span>            : </a>
-<a name="744"><span class="lineNum">     744 </span><span class="lineCov">       2632 : bool PluginManager::areGUIsLockedByDefault()</span></a>
+<a name="744"><span class="lineNum">     744 </span><span class="lineCov">       2656 : bool PluginManager::areGUIsLockedByDefault()</span></a>
 <a name="745"><span class="lineNum">     745 </span>            : {</a>
-<a name="746"><span class="lineNum">     746 </span><span class="lineCov">       2632 :     return engine.getPropertyStorage().getProperty (SettingID::filterGui, true);</span></a>
+<a name="746"><span class="lineNum">     746 </span><span class="lineCov">       2656 :     return engine.getPropertyStorage().getProperty (SettingID::filterGui, true);</span></a>
 <a name="747"><span class="lineNum">     747 </span>            : }</a>
 <a name="748"><span class="lineNum">     748 </span>            : </a>
 <a name="749"><span class="lineNum">     749 </span><span class="lineNoCov">          0 : void PluginManager::setGUIsLockedByDefault (bool b)</span></a>
@@ -847,22 +847,22 @@
 <a name="785"><span class="lineNum">     785 </span><span class="lineNoCov">          0 :     engine.getPropertyStorage().setProperty (SettingID::useSeparateProcessForScanning, b);</span></a>
 <a name="786"><span class="lineNum">     786 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="787"><span class="lineNum">     787 </span>            : </a>
-<a name="788"><span class="lineNum">     788 </span><span class="lineCov">       1695 : Plugin::Ptr PluginManager::createPlugin (Edit&amp; ed, const juce::ValueTree&amp; v, bool isNew)</span></a>
+<a name="788"><span class="lineNum">     788 </span><span class="lineCov">       1711 : Plugin::Ptr PluginManager::createPlugin (Edit&amp; ed, const juce::ValueTree&amp; v, bool isNew)</span></a>
 <a name="789"><span class="lineNum">     789 </span>            : {</a>
 <a name="790"><span class="lineNum">     790 </span>            :     jassert (initialised); // must call PluginManager::initialise() before this!</a>
 <a name="791"><span class="lineNum">     791 </span>            : </a>
-<a name="792"><span class="lineNum">     792 </span><span class="lineCov">       3390 :     auto type = v[IDs::type].toString();</span></a>
+<a name="792"><span class="lineNum">     792 </span><span class="lineCov">       3422 :     auto type = v[IDs::type].toString();</span></a>
 <a name="793"><span class="lineNum">     793 </span>            :     PluginCreationInfo info (ed, v, isNew);</a>
 <a name="794"><span class="lineNum">     794 </span>            : </a>
-<a name="795"><span class="lineNum">     795 </span><span class="lineCov">       1695 :     if (type == ExternalPlugin::xmlTypeName)</span></a>
+<a name="795"><span class="lineNum">     795 </span><span class="lineCov">       1711 :     if (type == ExternalPlugin::xmlTypeName)</span></a>
 <a name="796"><span class="lineNum">     796 </span><span class="lineNoCov">          0 :         return new ExternalPlugin (info);</span></a>
 <a name="797"><span class="lineNum">     797 </span>            : </a>
-<a name="798"><span class="lineNum">     798 </span><span class="lineCov">       1695 :     if (type == RackInstance::xmlTypeName)</span></a>
+<a name="798"><span class="lineNum">     798 </span><span class="lineCov">       1711 :     if (type == RackInstance::xmlTypeName)</span></a>
 <a name="799"><span class="lineNum">     799 </span><span class="lineCov">        148 :         return new RackInstance (info);</span></a>
 <a name="800"><span class="lineNum">     800 </span>            : </a>
-<a name="801"><span class="lineNum">     801 </span><span class="lineCov">       3221 :     for (auto builtIn : builtInTypes)</span></a>
-<a name="802"><span class="lineNum">     802 </span><span class="lineCov">       3221 :         if (builtIn-&gt;type == type)</span></a>
-<a name="803"><span class="lineNum">     803 </span><span class="lineCov">       3242 :             if (auto af = builtIn-&gt;create (info))</span></a>
+<a name="801"><span class="lineNum">     801 </span><span class="lineCov">       3253 :     for (auto builtIn : builtInTypes)</span></a>
+<a name="802"><span class="lineNum">     802 </span><span class="lineCov">       3253 :         if (builtIn-&gt;type == type)</span></a>
+<a name="803"><span class="lineNum">     803 </span><span class="lineCov">       3274 :             if (auto af = builtIn-&gt;create (info))</span></a>
 <a name="804"><span class="lineNum">     804 </span>            :                 return af;</a>
 <a name="805"><span class="lineNum">     805 </span>            : </a>
 <a name="806"><span class="lineNum">     806 </span><span class="lineNoCov">          0 :     if (auto af = engine.getEngineBehaviour().createCustomPlugin (info))</span></a>
@@ -883,15 +883,15 @@
 <a name="821"><span class="lineNum">     821 </span>            : }</a>
 <a name="822"><span class="lineNum">     822 </span>            : </a>
 <a name="823"><span class="lineNum">     823 </span>            : //==============================================================================</a>
-<a name="824"><span class="lineNum">     824 </span><span class="lineCov">        263 : PluginCache::PluginCache (Edit&amp; ed) : edit (ed)</span></a>
+<a name="824"><span class="lineNum">     824 </span><span class="lineCov">        271 : PluginCache::PluginCache (Edit&amp; ed) : edit (ed)</span></a>
 <a name="825"><span class="lineNum">     825 </span>            : {</a>
-<a name="826"><span class="lineNum">     826 </span><span class="lineCov">        263 :     startTimer (1000);</span></a>
-<a name="827"><span class="lineNum">     827 </span><span class="lineCov">        263 : }</span></a>
+<a name="826"><span class="lineNum">     826 </span><span class="lineCov">        271 :     startTimer (1000);</span></a>
+<a name="827"><span class="lineNum">     827 </span><span class="lineCov">        271 : }</span></a>
 <a name="828"><span class="lineNum">     828 </span>            : </a>
-<a name="829"><span class="lineNum">     829 </span><span class="lineCov">        789 : PluginCache::~PluginCache()</span></a>
+<a name="829"><span class="lineNum">     829 </span><span class="lineCov">        813 : PluginCache::~PluginCache()</span></a>
 <a name="830"><span class="lineNum">     830 </span>            : {</a>
-<a name="831"><span class="lineNum">     831 </span><span class="lineCov">        263 :     activePlugins.clear();</span></a>
-<a name="832"><span class="lineNum">     832 </span><span class="lineCov">        526 : }</span></a>
+<a name="831"><span class="lineNum">     831 </span><span class="lineCov">        271 :     activePlugins.clear();</span></a>
+<a name="832"><span class="lineNum">     832 </span><span class="lineCov">        542 : }</span></a>
 <a name="833"><span class="lineNum">     833 </span>            : </a>
 <a name="834"><span class="lineNum">     834 </span><span class="lineCov">       1090 : Plugin::Ptr PluginCache::getPluginFor (EditItemID pluginID) const</span></a>
 <a name="835"><span class="lineNum">     835 </span>            : {</a>
@@ -907,15 +907,15 @@
 <a name="845"><span class="lineNum">     845 </span><span class="lineCov">         32 :     return {};</span></a>
 <a name="846"><span class="lineNum">     846 </span>            : }</a>
 <a name="847"><span class="lineNum">     847 </span>            : </a>
-<a name="848"><span class="lineNum">     848 </span><span class="lineCov">       6046 : Plugin::Ptr PluginCache::getPluginFor (const juce::ValueTree&amp; v) const</span></a>
+<a name="848"><span class="lineNum">     848 </span><span class="lineCov">       6110 : Plugin::Ptr PluginCache::getPluginFor (const juce::ValueTree&amp; v) const</span></a>
 <a name="849"><span class="lineNum">     849 </span>            : {</a>
-<a name="850"><span class="lineNum">     850 </span><span class="lineCov">       6046 :     const juce::ScopedLock sl (lock);</span></a>
+<a name="850"><span class="lineNum">     850 </span><span class="lineCov">       6110 :     const juce::ScopedLock sl (lock);</span></a>
 <a name="851"><span class="lineNum">     851 </span>            : </a>
-<a name="852"><span class="lineNum">     852 </span><span class="lineCov">     188748 :     for (auto p : activePlugins)</span></a>
-<a name="853"><span class="lineNum">     853 </span><span class="lineCov">     185111 :         if (p-&gt;state == v)</span></a>
+<a name="852"><span class="lineNum">     852 </span><span class="lineCov">     188844 :     for (auto p : activePlugins)</span></a>
+<a name="853"><span class="lineNum">     853 </span><span class="lineCov">     185175 :         if (p-&gt;state == v)</span></a>
 <a name="854"><span class="lineNum">     854 </span>            :             return *p;</a>
 <a name="855"><span class="lineNum">     855 </span>            : </a>
-<a name="856"><span class="lineNum">     856 </span><span class="lineCov">       3637 :     return {};</span></a>
+<a name="856"><span class="lineNum">     856 </span><span class="lineCov">       3669 :     return {};</span></a>
 <a name="857"><span class="lineNum">     857 </span>            : }</a>
 <a name="858"><span class="lineNum">     858 </span>            : </a>
 <a name="859"><span class="lineNum">     859 </span><span class="lineNoCov">          0 : Plugin::Ptr PluginCache::getPluginFor (juce::AudioProcessor&amp; ap) const</span></a>
@@ -929,19 +929,19 @@
 <a name="867"><span class="lineNum">     867 </span><span class="lineNoCov">          0 :     return {};</span></a>
 <a name="868"><span class="lineNum">     868 </span>            : }</a>
 <a name="869"><span class="lineNum">     869 </span>            : </a>
-<a name="870"><span class="lineNum">     870 </span><span class="lineCov">       4104 : Plugin::Ptr PluginCache::getOrCreatePluginFor (const juce::ValueTree&amp; v)</span></a>
+<a name="870"><span class="lineNum">     870 </span><span class="lineCov">       4152 : Plugin::Ptr PluginCache::getOrCreatePluginFor (const juce::ValueTree&amp; v)</span></a>
 <a name="871"><span class="lineNum">     871 </span>            : {</a>
-<a name="872"><span class="lineNum">     872 </span><span class="lineCov">       4104 :     const juce::ScopedLock sl (lock);</span></a>
+<a name="872"><span class="lineNum">     872 </span><span class="lineCov">       4152 :     const juce::ScopedLock sl (lock);</span></a>
 <a name="873"><span class="lineNum">     873 </span>            : </a>
-<a name="874"><span class="lineNum">     874 </span><span class="lineCov">       4104 :     if (auto f = getPluginFor (v))</span></a>
+<a name="874"><span class="lineNum">     874 </span><span class="lineCov">       4152 :     if (auto f = getPluginFor (v))</span></a>
 <a name="875"><span class="lineNum">     875 </span>            :         return f;</a>
 <a name="876"><span class="lineNum">     876 </span>            : </a>
-<a name="877"><span class="lineNum">     877 </span><span class="lineCov">       1695 :     if (auto f = edit.engine.getPluginManager().createExistingPlugin (edit, v))</span></a>
+<a name="877"><span class="lineNum">     877 </span><span class="lineCov">       1711 :     if (auto f = edit.engine.getPluginManager().createExistingPlugin (edit, v))</span></a>
 <a name="878"><span class="lineNum">     878 </span>            :     {</a>
 <a name="879"><span class="lineNum">     879 </span>            :         jassert (juce::MessageManager::getInstance()-&gt;currentThreadHasLockedMessageManager()</a>
 <a name="880"><span class="lineNum">     880 </span>            :                   || dynamic_cast&lt;ExternalPlugin*&gt; (f.get()) == nullptr);</a>
 <a name="881"><span class="lineNum">     881 </span>            : </a>
-<a name="882"><span class="lineNum">     882 </span><span class="lineCov">       3390 :         return addPluginToCache (f);</span></a>
+<a name="882"><span class="lineNum">     882 </span><span class="lineCov">       3422 :         return addPluginToCache (f);</span></a>
 <a name="883"><span class="lineNum">     883 </span>            :     }</a>
 <a name="884"><span class="lineNum">     884 </span>            : </a>
 <a name="885"><span class="lineNum">     885 </span><span class="lineNoCov">          0 :     return {};</span></a>
@@ -971,28 +971,28 @@
 <a name="909"><span class="lineNum">     909 </span><span class="lineCov">        247 :     return p;</span></a>
 <a name="910"><span class="lineNum">     910 </span>            : }</a>
 <a name="911"><span class="lineNum">     911 </span>            : </a>
-<a name="912"><span class="lineNum">     912 </span><span class="lineCov">       7734 : Plugin::Array PluginCache::getPlugins() const</span></a>
+<a name="912"><span class="lineNum">     912 </span><span class="lineCov">       7814 : Plugin::Array PluginCache::getPlugins() const</span></a>
 <a name="913"><span class="lineNum">     913 </span>            : {</a>
-<a name="914"><span class="lineNum">     914 </span><span class="lineCov">       7734 :     const juce::ScopedLock sl (lock);</span></a>
-<a name="915"><span class="lineNum">     915 </span><span class="lineCov">       7734 :     return activePlugins;</span></a>
+<a name="914"><span class="lineNum">     914 </span><span class="lineCov">       7814 :     const juce::ScopedLock sl (lock);</span></a>
+<a name="915"><span class="lineNum">     915 </span><span class="lineCov">       7814 :     return activePlugins;</span></a>
 <a name="916"><span class="lineNum">     916 </span>            : }</a>
 <a name="917"><span class="lineNum">     917 </span>            : </a>
-<a name="918"><span class="lineNum">     918 </span><span class="lineCov">       1942 : Plugin::Ptr PluginCache::addPluginToCache (Plugin::Ptr p)</span></a>
+<a name="918"><span class="lineNum">     918 </span><span class="lineCov">       1958 : Plugin::Ptr PluginCache::addPluginToCache (Plugin::Ptr p)</span></a>
 <a name="919"><span class="lineNum">     919 </span>            : {</a>
-<a name="920"><span class="lineNum">     920 </span><span class="lineCov">       1942 :     if (p == nullptr)</span></a>
+<a name="920"><span class="lineNum">     920 </span><span class="lineCov">       1958 :     if (p == nullptr)</span></a>
 <a name="921"><span class="lineNum">     921 </span>            :     {</a>
 <a name="922"><span class="lineNum">     922 </span>            :         jassertfalse;</a>
 <a name="923"><span class="lineNum">     923 </span><span class="lineNoCov">          0 :         return {};</span></a>
 <a name="924"><span class="lineNum">     924 </span>            :     }</a>
 <a name="925"><span class="lineNum">     925 </span>            : </a>
-<a name="926"><span class="lineNum">     926 </span><span class="lineCov">       1942 :     if (auto existing = getPluginFor (p-&gt;state))</span></a>
+<a name="926"><span class="lineNum">     926 </span><span class="lineCov">       1958 :     if (auto existing = getPluginFor (p-&gt;state))</span></a>
 <a name="927"><span class="lineNum">     927 </span>            :     {</a>
 <a name="928"><span class="lineNum">     928 </span>            :         jassertfalse;</a>
 <a name="929"><span class="lineNum">     929 </span>            :         return existing;</a>
 <a name="930"><span class="lineNum">     930 </span>            :     }</a>
 <a name="931"><span class="lineNum">     931 </span>            : </a>
 <a name="932"><span class="lineNum">     932 </span>            :     jassert (! activePlugins.contains (p));</a>
-<a name="933"><span class="lineNum">     933 </span><span class="lineCov">       1942 :     activePlugins.add (p);</span></a>
+<a name="933"><span class="lineNum">     933 </span><span class="lineCov">       1958 :     activePlugins.add (p);</span></a>
 <a name="934"><span class="lineNum">     934 </span>            : </a>
 <a name="935"><span class="lineNum">     935 </span>            :     return p;</a>
 <a name="936"><span class="lineNum">     936 </span>            : }</a>

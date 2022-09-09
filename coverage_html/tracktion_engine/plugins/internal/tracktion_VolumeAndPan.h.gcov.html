@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-09-09 11:03:57</td>
+            <td class="headerValue">2022-09-09 15:12:59</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
@@ -93,11 +93,11 @@
 <a name="31"><span class="lineNum">      31 </span>            : </a>
 <a name="32"><span class="lineNum">      32 </span>            :     //==============================================================================</a>
 <a name="33"><span class="lineNum">      33 </span>            :     float getVolumeDb() const;</a>
-<a name="34"><span class="lineNum">      34 </span><span class="lineCov">   26115600 :     float getSliderPos() const                              { return volParam-&gt;getCurrentValue(); }</span></a>
+<a name="34"><span class="lineNum">      34 </span><span class="lineCov">   26211700 :     float getSliderPos() const                              { return volParam-&gt;getCurrentValue(); }</span></a>
 <a name="35"><span class="lineNum">      35 </span>            :     void setVolumeDb (float vol);</a>
 <a name="36"><span class="lineNum">      36 </span>            :     void setSliderPos (float pos);</a>
 <a name="37"><span class="lineNum">      37 </span>            : </a>
-<a name="38"><span class="lineNum">      38 </span><span class="lineCov">   26115600 :     float getPan() const                                    { return panParam-&gt;getCurrentValue(); }</span></a>
+<a name="38"><span class="lineNum">      38 </span><span class="lineCov">   26211700 :     float getPan() const                                    { return panParam-&gt;getCurrentValue(); }</span></a>
 <a name="39"><span class="lineNum">      39 </span>            :     void setPan (float pan);</a>
 <a name="40"><span class="lineNum">      40 </span>            : </a>
 <a name="41"><span class="lineNum">      41 </span>            :     void setPanLaw (PanLaw newPanLaw)                       { panLaw = (int) newPanLaw; }</a>
@@ -121,7 +121,7 @@
 <a name="59"><span class="lineNum">      59 </span>            :     void initialiseWithoutStopping (const PluginInitialisationInfo&amp;) override;</a>
 <a name="60"><span class="lineNum">      60 </span>            :     void deinitialise() override;</a>
 <a name="61"><span class="lineNum">      61 </span>            :     void applyToBuffer (const PluginRenderContext&amp;) override;</a>
-<a name="62"><span class="lineNum">      62 </span><span class="lineCov">   24445600 :     int getNumOutputChannelsGivenInputs (int numInputs) override    { return juce::jmax (2, numInputs); }</span></a>
+<a name="62"><span class="lineNum">      62 </span><span class="lineCov">   24445900 :     int getNumOutputChannelsGivenInputs (int numInputs) override    { return juce::jmax (2, numInputs); }</span></a>
 <a name="63"><span class="lineNum">      63 </span><span class="lineNoCov">          0 :     bool canBeMoved() override                              { return ! isMasterVolume; }</span></a>
 <a name="64"><span class="lineNum">      64 </span>            : </a>
 <a name="65"><span class="lineNum">      65 </span>            :     void restorePluginStateFromValueTree (const juce::ValueTree&amp;) override;</a>
