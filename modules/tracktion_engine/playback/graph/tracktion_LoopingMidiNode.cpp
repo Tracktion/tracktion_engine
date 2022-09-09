@@ -1276,7 +1276,7 @@ public:
 
     bool hasSameContentAs (const GeneratorAndNoteList& o) const
     {
-        return editRange == o.editRange
+        return editRange.getStart() == o.editRange.getStart()
                 && loopRange == o.loopRange
                 && offset == o.offset
                 && quantisation == o.quantisation
