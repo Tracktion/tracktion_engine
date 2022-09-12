@@ -509,7 +509,7 @@ public:
             , diskSpaceChecker (p_Engine, p_File)
             , threadInitialiser(p_Engine.getWaveInputRecordingThread())
         {
-            const std::string FileName = p_File.getFileName().getCharPointer();
+            const std::string FileName = p_File.getFileName().toStdString();
             engine.createFifoBundle(
                 m_SampleID,
                 punchIn, 
