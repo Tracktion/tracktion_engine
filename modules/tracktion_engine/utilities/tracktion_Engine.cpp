@@ -272,8 +272,7 @@ Engine::FifoBundle::FifoBundle(const double p_PunchIn, const juce::Array<AudioTr
         if (nullptr != p)
         {
             const juce::String Temp1 = p->state.getProperty("uuid");
-            const std::string Temp2(Temp1.getCharPointer());
-            m_ListTracksID.push_back(Temp2);
+            m_ListTracksID.push_back(Temp1.toStdString());
         }
     }
 }
@@ -305,6 +304,12 @@ void Engine::createFifoBundle(
         p_PunchIn, 
         std::forward<const juce::Array<AudioTrack*>>(p_Tracks),
         p_FileName);
+}
+
+void Engine::destroyFifoBundle(const juce::Uuid& p_FifoID)
+{
+    jassert(p_FifoID != 0);
+    m_ListFifoBundle.erase(p_FifoID);
 }
 // BEATCONNECT MODIFICATION END
 

@@ -49,6 +49,7 @@ public:
     const std::map<juce::Uuid, std::unique_ptr<Engine::FifoBundle>>& getAudioFifo() const;
     void addBlockToAudioFifo(const juce::Uuid& p_FifoID, const juce::AudioBuffer<float>& p_NextBuffer);
     void createFifoBundle(const juce::Uuid& p_FifoID, const double p_PunchIn, const juce::Array<AudioTrack*>&& p_Tracks, const std::string& p_FileName);
+    void destroyFifoBundle(const juce::Uuid& p_FifoID);
     // BEATCONNECT MODIFICATION END
 
     TemporaryFileManager& getTemporaryFileManager() const;
