@@ -385,10 +385,11 @@ private:
                 {
                     EngineHelpers::removeAllClips (*EngineHelpers::getOrInsertAudioTrackAt (edit, 0));
 
-                    auto& dm = edit.engine.getDeviceManager();
-                    const auto start = edit.getTransport().getPosition();
+                    te::InputDeviceInstance::RecordingParameters params;
+                    params.punchRange   = { edit.getTransport().getPosition(), te::Edit::getMaximumEditTimeRange().getEnd() };
+                    params.sampleRate   = edit.engine.getDeviceManager().getSampleRate();
 
-                    if (auto error = instance->prepareToRecord (start, start, dm.getSampleRate(), dm.getBlockSize(), true); error.isNotEmpty())
+                    if (auto error = instance->prepareToRecord (params); error.isNotEmpty())
                         edit.engine.getUIBehaviour().showWarningMessage (error);
                     else
                         instance->startRecording();

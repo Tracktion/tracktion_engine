@@ -123,10 +123,14 @@ public:
     */
     virtual bool shouldTrackContentsBeMuted()   { return false; }
 
-    virtual juce::String prepareToRecord (TimePosition start, TimePosition punchIn,
-                                          double sampleRate, int blockSizeSamples,
-                                          bool isLivePunch) = 0;
+    /** The parameters used to configure a recording operation. */
+    struct RecordingParameters
+    {
+        TimeRange punchRange;       /**< The transport time range at which the recording should happen. */
+        double sampleRate = 0.0;    /**< The sample rate of the current audio device. */
+    };
 
+    virtual juce::String prepareToRecord (RecordingParameters) = 0;
     virtual bool startRecording() = 0;
     virtual bool isRecording() = 0;
     virtual void stop() = 0;

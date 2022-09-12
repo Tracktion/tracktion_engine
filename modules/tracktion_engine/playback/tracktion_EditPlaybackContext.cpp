@@ -548,21 +548,17 @@ void EditPlaybackContext::startPlaying (TimePosition start)
 
 void EditPlaybackContext::startRecording (TimePosition start, TimePosition punchIn)
 {
-    auto& dm = edit.engine.getDeviceManager();
-    auto sampleRate = dm.getSampleRate();
-    auto blockSize  = dm.getBlockSize();
-
     juce::String error;
 
     for (int i = waveInputs.size(); --i >= 0 && error.isEmpty();)
         if (auto wi = waveInputs.getUnchecked (i))
             if (wi->isRecordingActive())
-                error = wi->prepareToRecord (start, punchIn, sampleRate, blockSize, false);
+                error = wi->prepareToRecord (getDefaultRecordingParameters (*this, start, punchIn));
 
     for (int i = midiInputs.size(); --i >= 0 && error.isEmpty();)
         if (auto mi = midiInputs.getUnchecked (i))
             if (mi->isRecordingActive())
-                error = mi->prepareToRecord (start, punchIn, sampleRate, blockSize, false);
+                error = mi->prepareToRecord (getDefaultRecordingParameters (*this, start, punchIn));
 
     if (error.isNotEmpty())
     {

@@ -630,9 +630,9 @@ public:
     virtual void handleMMCMessage (const juce::MidiMessage&) {}
     virtual bool handleTimecodeMessage (const juce::MidiMessage&) { return false; }
 
-    juce::String prepareToRecord (TimePosition, TimePosition punchIn, double, int, bool) override
+    juce::String prepareToRecord (RecordingParameters params) override
     {
-        startTime = punchIn;
+        startTime = params.punchRange.getStart();
         recorded.clear();
         livePlayOver = context.transport.looping;
 

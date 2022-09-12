@@ -365,14 +365,12 @@ void InputDeviceInstance::prepareAndPunchRecord()
         if (! (isRecordingEnabled (*t) && edit.getTransport().isRecording()))
             return;
 
-        auto& dm = edit.engine.getDeviceManager();
-        const auto start = context.getPosition();
-        const double sampleRate = dm.getSampleRate();
-        const int blockSize = dm.getBlockSize();
+        // Punch in at the current play time don't punch out until recording is stopped
+        InputDeviceInstance::RecordingParameters params;
+        params.punchRange   = { context.getPosition(), Edit::getMaximumEditTimeRange().getEnd() };
+        params.sampleRate   = edit.engine.getDeviceManager().getSampleRate();
 
-        auto error = prepareToRecord (start, start, sampleRate, blockSize, true);
-
-        if (error.isNotEmpty())
+        if (const auto error = prepareToRecord (params); error.isNotEmpty())
             edit.engine.getUIBehaviour().showWarningMessage (error);
         else
             startRecording();
