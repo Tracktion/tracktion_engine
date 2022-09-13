@@ -10,11 +10,15 @@
 
 #ifdef _WIN32
  #include <intrin.h>
+#elif defined (__arm__) || defined (__arm64__)
+ // Use clang built-in
 #else
  #include <x86intrin.h>
 #endif
 
-#if __has_include(<emmintrin.h>)
+#if defined (__arm__) || defined (__arm64__)
+ // Use asm yield
+#elif __has_include(<emmintrin.h>)
  #include <emmintrin.h>
 #endif
 
@@ -24,7 +28,11 @@ namespace tracktion { inline namespace core
 /** Returns the CPU cycle count, useful for benchmarking. */
 inline std::uint64_t rdtsc()
 {
+   #if __has_builtin(__builtin_readcyclecounter)
+    return __builtin_readcyclecounter();
+   #else
     return __rdtsc();
+   #endif
 }
 
 /** Pauses the CPU for an instruction.
@@ -32,10 +40,12 @@ inline std::uint64_t rdtsc()
 */
 inline void pause()
 {
-   #if __has_include(<emmintrin.h>)
+   #if defined (__arm__) || defined (__arm64__)
+    __asm__ __volatile__ ("yield");
+   #elif __has_include(<emmintrin.h>)
     _mm_pause();
    #else
-    __asm__ __volatile__ ("yield");
+    static_assert (false, "Unknown platform");
    #endif
 }
 
