@@ -242,12 +242,12 @@
  #define TRACKTION_LOG_DEVICES 1
 #endif
 
-/** Config: TRACKTION_JUCE7
-    Enables compatibility with JUCE 7.
+/** Config: TRACKTION_JUCE6
+    Enables compatibility with JUCE 6.
     This is only tempoarary and will be removed in a future release.
  */
-#ifndef TRACKTION_JUCE7
- #define TRACKTION_JUCE7 0
+#ifndef TRACKTION_JUCE6
+ #define TRACKTION_JUCE6 0
 #endif
 
 //==============================================================================

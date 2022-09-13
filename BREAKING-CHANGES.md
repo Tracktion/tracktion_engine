@@ -2,6 +2,21 @@
 
 ## Develop
 
+
+### Change
+Changed the JUCE version TE is dependant on to JUCE 7.
+
+#### Possible Issues
+Building against JUCE 6 will no longer compile by default.
+
+#### Workaround
+During this transition period, you can define TRACKTION_JUCE6=1 from the module config options to build against JUCE 6. This will be removed in a future update so migration to JUCE 7 is recomended.
+
+#### Rationale
+This has been repeatedly asked for and maintains compatibility with the latest JUCE code.
+
+---
+
 ### Change
 Removed EngineBehaviour::getMaxNumMasterPlugins and static Edit constants.
 

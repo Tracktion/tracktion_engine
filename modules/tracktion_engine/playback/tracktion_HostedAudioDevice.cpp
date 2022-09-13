@@ -80,7 +80,14 @@ public:
 
     void processBlock (juce::AudioBuffer<float>& buffer)
     {
-       #if TRACKTION_JUCE7
+       #if TRACKTION_JUCE6
+        if (callback != nullptr)
+            callback->audioDeviceIOCallback (buffer.getArrayOfReadPointers(),
+                                             std::min (buffer.getNumChannels(), audioIf.parameters.inputChannels),
+                                             buffer.getArrayOfWritePointers(),
+                                             std::min (buffer.getNumChannels(), audioIf.parameters.outputChannels),
+                                             buffer.getNumSamples());
+       #else
         // audioDeviceIOCallbackWithContext must be used here instead of audioDeviceIOCallback
         // as that method now does nothing
         if (callback != nullptr)
@@ -90,13 +97,6 @@ public:
                                                         std::min (buffer.getNumChannels(), audioIf.parameters.outputChannels),
                                                         buffer.getNumSamples(),
                                                         {});
-       #else
-        if (callback != nullptr)
-            callback->audioDeviceIOCallback (buffer.getArrayOfReadPointers(),
-                                             std::min (buffer.getNumChannels(), audioIf.parameters.inputChannels),
-                                             buffer.getArrayOfWritePointers(),
-                                             std::min (buffer.getNumChannels(), audioIf.parameters.outputChannels),
-                                             buffer.getNumSamples());
        #endif
     }
 
