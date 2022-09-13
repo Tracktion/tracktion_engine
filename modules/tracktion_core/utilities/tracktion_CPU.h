@@ -28,7 +28,7 @@ namespace tracktion { inline namespace core
 /** Returns the CPU cycle count, useful for benchmarking. */
 inline std::uint64_t rdtsc()
 {
-   #if defined (__clang__) && __has_builtin(__builtin_readcyclecounter)
+   #if defined __has_builtin && __has_builtin(__builtin_readcyclecounter)
     return __builtin_readcyclecounter();
    #else
     return __rdtsc();
