@@ -1849,7 +1849,7 @@ bool WaveNodeRealTime::buildAudioReaderGraph()
 
     auto fileCacheReader = audioFile.engine->getAudioFileManager().cache.createReader (audioFile);
 
-    if (fileCacheReader == nullptr)
+    if (fileCacheReader == nullptr || fileCacheReader->getSampleRate() == 0.0)
         return false;
 
     std::unique_ptr<AudioReader> loopReader = std::make_unique<AudioFileCacheReader> (std::move (fileCacheReader), isOfflineRender ? 5s : 3ms,
