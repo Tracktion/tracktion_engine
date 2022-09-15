@@ -242,13 +242,6 @@
  #define TRACKTION_LOG_DEVICES 1
 #endif
 
-/** Config: TRACKTION_JUCE6
-    Enables compatibility with JUCE 6.
-    This is only tempoarary and will be removed in a future release.
- */
-#ifndef TRACKTION_JUCE6
- #define TRACKTION_JUCE6 0
-#endif
 
 //==============================================================================
 #ifndef TRACKTION_LOG_ENABLED
@@ -264,6 +257,10 @@
 #endif
 
 //==============================================================================
+#if JUCE_VERSION <= 6
+ #define TRACKTION_JUCE6 1
+#endif
+
 #define TRACKTION_ASSERT_MESSAGE_THREAD \
     jassert (juce::MessageManager::getInstance()->currentThreadHasLockedMessageManager());
 
