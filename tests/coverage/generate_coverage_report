@@ -44,5 +44,5 @@ cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release
 # # Generate coverage and html report
 rm -rf ${COVERAGE_FILE}
 rm -rf ${HTML_DIR}
-lcov --capture --directory "${CMAKE_BUILD_DIR}/" -exclude "*juce_*" -exclude "*3rd_Party*" -exclude "*3rd_party*" -exclude "/Applications*" -exclude "/usr*" -exclude "*examples*" --output-file "$COVERAGE_FILE"
+lcov --capture --directory "${CMAKE_BUILD_DIR}/" -exclude "tests/coverage/coverage.h" -exclude "*juce_*" -exclude "*3rd_Party*" -exclude "*3rd_party*" -exclude "/Applications*" -exclude "/usr*" -exclude "*examples*" --output-file "$COVERAGE_FILE"
 genhtml "$COVERAGE_FILE" --output-directory ${HTML_DIR}

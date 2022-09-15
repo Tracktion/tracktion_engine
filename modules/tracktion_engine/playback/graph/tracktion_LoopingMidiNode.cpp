@@ -226,6 +226,7 @@ namespace MidiHelpers
     {
         juce::MidiMessageSequence res;
 
+        jassert (! loopRange.isEmpty());
         sourceSequence.updateMatchedPairs();
 
         for (int i = 0; i < sourceSequence.getNumEvents(); ++i)
@@ -281,6 +282,7 @@ namespace MidiHelpers
                                                                      juce::Range<double> loopRange)
     {
         std::vector<juce::MidiMessageSequence> res;
+        jassert (! loopRange.isEmpty());
 
         for (auto& seq : sourceSequences)
             res.push_back (createLoopSection (seq, loopRange));
@@ -955,8 +957,9 @@ public:
     {
         // Ensure the correct sequence is cached
         setTime (editBeatPosition);
+
         generator->createMessagesForTime (destBuffer,
-                                          editBeatPosition,
+                                          editBeatPositionToSequenceBeatPosition (editBeatPosition),
                                           noteList,
                                           channelNumbers,
                                           clipLevel,
@@ -967,10 +970,18 @@ public:
     void setTime (EditBeatPosition editBeatPosition) override
     {
         const ClipBeatPosition clipPos = editBeatPosition - clipRange.getStart();
-        const SequenceBeatPosition sequencePos = loopTimes.getStart() + std::fmod (clipPos, loopTimes.getLength());
 
-        setLoopIndex (static_cast<int> (clipPos / loopTimes.getLength()));
-        generator->setTime (sequencePos);
+        if (loopTimes.isEmpty())
+        {
+            generator->setTime (clipPos);
+        }
+        else
+        {
+            const SequenceBeatPosition sequencePos = loopTimes.getStart() + std::fmod (clipPos, loopTimes.getLength());
+
+            setLoopIndex (static_cast<int> (clipPos / loopTimes.getLength()));
+            generator->setTime (sequencePos);
+        }
     }
 
     juce::MidiMessage getEvent() override
@@ -986,7 +997,7 @@ public:
     {
         generator->advance();
 
-        if (exhausted())
+        if (exhausted() && ! loopTimes.isEmpty())
         {
             setLoopIndex (loopIndex + 1);
             generator->setTime (0.0);
@@ -1007,6 +1018,18 @@ private:
     const EditBeatRange clipRange;
     const ClipBeatRange loopTimes;
     int loopIndex = 0;
+
+    SequenceBeatPosition editBeatPositionToSequenceBeatPosition (EditBeatPosition editBeatPosition) const
+    {
+        const ClipBeatPosition clipPos = editBeatPosition - clipRange.getStart();
+
+        if (loopTimes.isEmpty())
+            return clipPos;
+
+        const SequenceBeatPosition sequencePos = loopTimes.getStart() + std::fmod (clipPos, loopTimes.getLength());
+
+        return sequencePos;
+    }
 
     void setLoopIndex (int newLoopIndex)
     {
@@ -1109,7 +1132,8 @@ public:
         const EditBeatRange clipRangeRaw { editRange.getStart().inBeats(), editRange.getEnd().inBeats() };
         const ClipBeatRange loopRangeRaw { loopRange.getStart().inBeats(), loopRange.getEnd().inBeats() };
 
-        sequences = MidiHelpers::createLoopSection (std::move (sequences), loopRangeRaw);
+        if (! loopRangeRaw.isEmpty())
+            sequences = MidiHelpers::createLoopSection (std::move (sequences), loopRangeRaw);
 
         auto cachingGenerator = std::make_unique<CachingMidiEventGenerator> (std::move (sequences),
                                                                              std::move (quantisation), std::move (groove), grooveStrength);
@@ -1252,7 +1276,7 @@ public:
 
     bool hasSameContentAs (const GeneratorAndNoteList& o) const
     {
-        return editRange == o.editRange
+        return editRange.getStart() == o.editRange.getStart()
                 && loopRange == o.loopRange
                 && offset == o.offset
                 && quantisation == o.quantisation
@@ -1300,6 +1324,7 @@ LoopingMidiNode::LoopingMidiNode (std::vector<juce::MidiMessageSequence> sequenc
       shouldBeMutedDelegate (std::move (shouldBeMuted)),
       wasMute (liveClipLevel.isMute())
 {
+    jassert (! sequences.empty());
     jassert (channelNumbers.getStart() > 0 && channelNumbers.getEnd() <= 16);
 
     // Create this now but don't initialise it until we know if we have to

@@ -119,6 +119,26 @@ namespace test_utilities
        #endif
     }
 
+    /** Removes any non-note event messages from a sequence. */
+    static inline juce::MidiMessageSequence stripNonNoteOnOffMessages (juce::MidiMessageSequence seq)
+    {
+        for (int i = seq.getNumEvents(); --i >= 0;)
+            if (! seq.getEventPointer (i)->message.isNoteOnOrOff())
+                seq.deleteEvent (i, false);
+
+        return seq;
+    }
+
+    /** Removes any meta-event messages from a sequence. */
+    static inline juce::MidiMessageSequence stripMetaEvents (juce::MidiMessageSequence seq)
+    {
+        for (int i = seq.getNumEvents(); --i >= 0;)
+            if (! seq.getEventPointer (i)->message.isMetaEvent())
+                seq.deleteEvent (i, false);
+
+        return seq;
+    }
+
     /** Writes an audio buffer to a file. */
     static inline void writeToFile (juce::File file, choc::buffer::ChannelArrayView<float> block, double sampleRate)
     {
@@ -259,6 +279,14 @@ namespace test_utilities
         }
 
         ut.expect (sequencesTheSame, "MIDI sequence contents not equal");
+
+        if (! sequencesTheSame)
+        {
+            ut.logMessage ("Actual:");
+            logMidiMessageSequence (ut, actual);
+            ut.logMessage ("Expected:");
+            logMidiMessageSequence (ut, expected);
+        }
     }
 
     /** Compares a MidiBuffer and a MidiMessageSequence and expects them to be equal. */

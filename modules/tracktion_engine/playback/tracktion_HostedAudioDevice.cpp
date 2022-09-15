@@ -80,12 +80,24 @@ public:
 
     void processBlock (juce::AudioBuffer<float>& buffer)
     {
+       #if TRACKTION_JUCE7
+        // audioDeviceIOCallbackWithContext must be used here instead of audioDeviceIOCallback
+        // as that method now does nothing
+        if (callback != nullptr)
+            callback->audioDeviceIOCallbackWithContext (buffer.getArrayOfReadPointers(),
+                                                        std::min (buffer.getNumChannels(), audioIf.parameters.inputChannels),
+                                                        buffer.getArrayOfWritePointers(),
+                                                        std::min (buffer.getNumChannels(), audioIf.parameters.outputChannels),
+                                                        buffer.getNumSamples(),
+                                                        {});
+       #else
         if (callback != nullptr)
             callback->audioDeviceIOCallback (buffer.getArrayOfReadPointers(),
                                              std::min (buffer.getNumChannels(), audioIf.parameters.inputChannels),
                                              buffer.getArrayOfWritePointers(),
                                              std::min (buffer.getNumChannels(), audioIf.parameters.outputChannels),
                                              buffer.getNumSamples());
+       #endif
     }
 
     void settingsChanged()
@@ -191,13 +203,27 @@ public:
 
     void processBlock (juce::MidiBuffer& midi)
     {
+        // Process the messages via the base class to update the keyboard state
+        for (auto mm : midi)
+            MidiInputDevice::handleIncomingMidiMessage (nullptr, mm.getMessage());
+
+        // Pending messages will then be filled with the messages to process
+        const juce::ScopedLock sl (pendingMidiMessagesMutex);
+
         for (auto instance : instances)
-            if (auto* hostedInstance = dynamic_cast<HostedMidiInputDeviceInstance*> (instance))
-                hostedInstance->processBlock (midi);
+            if (auto hostedInstance = dynamic_cast<HostedMidiInputDeviceInstance*> (instance))
+                hostedInstance->processBlock (pendingMidiMessages);
+
+        pendingMidiMessages.clear();
     }
 
     using MidiInputDevice::handleIncomingMidiMessage;
-    void handleIncomingMidiMessage (const juce::MidiMessage&) override {}
+    void handleIncomingMidiMessage (const juce::MidiMessage& m) override
+    {
+        const juce::ScopedLock sl (pendingMidiMessagesMutex);
+        pendingMidiMessages.addEvent (m, 0);
+    }
+
     juce::String openDevice() override { return {}; }
     void closeDevice() override {}
 
@@ -211,29 +237,52 @@ private:
         {
         }
 
-        bool startRecording() override              { return false; }
+        bool startRecording() override
+        {
+            // We need to keep a list of tracks the are being recorded to
+            // here, since user may un-arm track to stop recording
+            activeTracks.clear();
+
+            for (auto destTrack : getTargetTracks())
+                if (isRecordingActive (*destTrack))
+                    activeTracks.add (destTrack);
+
+            if (! recording)
+            {
+                getHostedMidiInputDevice().masterTimeUpdate (startTime.inSeconds());
+                recording = true;
+            }
+
+            return recording;
+        }
 
         void processBlock (juce::MidiBuffer& midi)
         {
+            const auto globalStreamTime = edit.engine.getDeviceManager().getCurrentStreamTime();
+
             // N.B. This assumes that the number of samples processed per block is constant.
             // I.e. that there is no speed compensation set (which shouldn't be the case when
             // running as a plugin)
             for (auto mmm : midi)
             {
-                const auto referenceTime = tracktion::graph::sampleToTime (mmm.samplePosition, sampleRate);
+                const auto blockStreamTime = tracktion::graph::sampleToTime (mmm.samplePosition, sampleRate);
 
                 auto msg = mmm.getMessage();
-                msg.setTimeStamp (referenceTime);
+                msg.setTimeStamp (globalStreamTime + blockStreamTime);
                 handleIncomingMidiMessage (std::move (msg));
             }
         }
         
     private:
         const double sampleRate = context.getSampleRate();
+
+        HostedMidiInputDevice& getHostedMidiInputDevice() const   { return static_cast<HostedMidiInputDevice&> (owner); }
     };
     
     //==============================================================================
     HostedAudioDeviceInterface& audioIf;
+    juce::MidiBuffer pendingMidiMessages;
+    juce::CriticalSection pendingMidiMessagesMutex;
 };
 
 //==============================================================================

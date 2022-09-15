@@ -205,7 +205,17 @@ public:
 
     /** If this returns true, it means that newly inserted clips will automatically have a fade-in and fade-out of 3ms applied. */
     virtual bool autoAddClipEdgeFades()                                             { return false; }
-    
+
+    /** Determines the default properties of clips. */
+    struct ClipDefaults
+    {
+        bool useProxyFile = true;                                           ///< @see AudioClipBase::setUsesProxy
+        ResamplingQuality resamplingQuality = ResamplingQuality::lagrange;  ///< @see setResamplingQuality::setResamplingQuality
+    };
+
+    /** Returns the defaults to be applied to new clips. */
+    virtual ClipDefaults getClipDefaults()                                          { return {}; }
+
     struct ControlSurfaces
     {
         bool mackieMCU = true;

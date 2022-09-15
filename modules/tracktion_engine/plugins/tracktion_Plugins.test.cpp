@@ -170,6 +170,96 @@ public:
 
 static PDCTests pdcTests;
 
+
+//==============================================================================
+//==============================================================================
+class ModifiedParameterValuesTests  : public juce::UnitTest
+{
+public:
+    ModifiedParameterValuesTests()
+        : juce::UnitTest ("Modified Parameter Values", "tracktion_engine")
+    {
+    }
+
+    void runTest() override
+    {
+        auto& engine = *Engine::getEngines()[0];
+
+        const juce::TemporaryFile tempFile (".tracktionedit");
+        const auto editFile = tempFile.getFile();
+
+        const float macroParameterValue = 0.3f;
+        const float modifierValue = 0.5f;
+        const float modifierOffset = 0.2f;
+
+        // 1. create a new edit and add rack with a macro parameter
+        {
+            editFile.deleteFile();
+
+            auto edit = createEmptyEdit (engine, editFile);
+            auto rackType = edit->getRackList().addNewRack();
+            auto volumePlugin = edit->getPluginCache().createNewPlugin (VolumeAndPanPlugin::xmlTypeName, {});
+
+            // Add plugin to rack
+            rackType->addPlugin (volumePlugin, {}, true);
+
+            // Add macro parameter
+            const auto macroParameter = rackType->macroParameterList.createMacroParameter();
+            macroParameter->setNormalisedParameter (macroParameterValue, juce::NotificationType::sendNotification);
+
+            auto volumeAndPan = dynamic_cast<VolumeAndPanPlugin*> (volumePlugin.get());
+            auto volParam = volumeAndPan->volParam;
+            volParam->setNormalisedParameter (0.0f, juce::NotificationType::sendNotification);
+            volParam->addModifier (*macroParameter, modifierValue, modifierOffset, 0.5f);
+
+            // Run the dispatch loop so the ValueTree properties attached to the parameter are updated. (Otherwise the assertions below will fail)
+            // This happens implicitly in the real application.
+            juce::MessageManager::getInstance()->runDispatchLoopUntil (1000);
+
+            expectWithinAbsoluteError (volParam->getCurrentValue(),
+                                       0.35f,
+                                       0.001f);
+
+            expectWithinAbsoluteError (volParam->getCurrentBaseValue(),
+                                       volParam->valueRange.convertFrom0to1 (0.0f),
+                                       0.001f);
+            expectWithinAbsoluteError (volParam->getCurrentValue(),
+                                       volParam->valueRange.convertFrom0to1 (modifierOffset + modifierValue * macroParameterValue),
+                                       0.001f);
+            expectWithinAbsoluteError (volParam->getCurrentModifierValue(),
+                                       volParam->valueRange.convertFrom0to1 (modifierOffset + modifierValue * macroParameterValue) - volParam->getCurrentBaseValue(),
+                                       0.001f);
+
+            // volume="0.35" is saved in the plugin state xml
+            EditFileOperations (*edit).save (true, true, false);
+        }
+
+        // 2. Load previously saved edit and check the parameter value
+        {
+            auto edit = loadEditFromFile (engine, editFile);
+            auto rackType = edit->getRackList().getRackType (0);
+            auto volumeAndPan = dynamic_cast<VolumeAndPanPlugin*> (rackType->getPlugins().getFirst());
+            auto volParam = volumeAndPan->volParam;
+
+            expectWithinAbsoluteError (volParam->getCurrentBaseValue(),
+                                       volParam->valueRange.convertFrom0to1 (0.0f),
+                                       0.001f);
+            expectWithinAbsoluteError (volParam->getCurrentValue(),
+                                       volParam->valueRange.convertFrom0to1(modifierOffset + modifierValue * macroParameterValue),
+                                       0.001f);
+            expectWithinAbsoluteError (volParam->getCurrentModifierValue(),
+                                       volParam->valueRange.convertFrom0to1 (modifierOffset + modifierValue * macroParameterValue) - volParam->getCurrentBaseValue(),
+                                       0.001f);
+
+            expectWithinAbsoluteError (volParam->getCurrentValue(), 0.35f, 0.001f);
+        }
+    }
+
+private:
+};
+
+static ModifiedParameterValuesTests modifiedParameterValuesTests;
+
 #endif
 
 }} // namespace tracktion { inline namespace engine

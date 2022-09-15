@@ -26,10 +26,10 @@ struct Edit::UndoTransactionTimer   : private juce::Timer,
     {
         // Add the change listener asyncronously to avoid messages coming in
         // from the Edit initialisation phase
-        juce::MessageManager::callAsync ([editRef = Edit::WeakRef (&edit)]
+        juce::MessageManager::callAsync ([ref = juce::WeakReference<UndoTransactionTimer> (this)]
                                          {
-                                             if (auto ed = dynamic_cast<Edit*> (editRef.get()))
-                                                 ed->getUndoManager().addChangeListener (ed->undoTransactionTimer.get());
+                                             if (ref != nullptr)
+                                                 ref->edit.getUndoManager().addChangeListener (ref.get());
                                          });
     }
 
@@ -58,6 +58,7 @@ struct Edit::UndoTransactionTimer   : private juce::Timer,
 
     Edit& edit;
 
+    JUCE_DECLARE_WEAK_REFERENCEABLE (UndoTransactionTimer)
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (UndoTransactionTimer)
 };
 

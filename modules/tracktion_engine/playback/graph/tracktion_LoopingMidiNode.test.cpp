@@ -39,6 +39,8 @@ public:
 
             runStuckNotesTests (setup, true, 2);
             runStuckNotesTests (setup, false, 2);
+
+            runOffsetTests (setup);
         }
 
         runProgramChangeTests (false);
@@ -227,6 +229,33 @@ private:
         }
     }
 
+    void runOffsetTests (test_utilities::TestSetup ts)
+    {
+        beginTest ("MIDI clip with offset");
+
+        // - Create a MIDI clip at bar 2 of 1 bar
+        // - Add two notes, one beat each
+        // - Set the offset to 1.5 beats (so only half of one note should be visible)
+        // - Render the track which should only contain a single note
+
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
+        auto edit = Edit::createSingleTrackEdit (engine);
+        auto& tempoSeq = edit->tempoSequence;
+        auto mc = getAudioTracks (*edit)[0]->insertMIDIClip ({ tempoSeq.toTime (tempo::BarsAndBeats { 1 }),
+                                                               tempoSeq.toTime (tempo::BarsAndBeats { 2 }) },
+                                                             nullptr);
+        mc->setOffset (toDuration (tempoSeq.toTime (1.5_bp)));
+
+        auto& sequence = mc->getSequence();
+        sequence.addNote (49, 0_bp, 1_bd, 127, 0, nullptr);
+        sequence.addNote (50, 1_bp, 1_bd, 127, 0, nullptr);
+
+        auto seq = test_utilities::stripNonNoteOnOffMessages (renderMidiClip (*mc, ts, { 0_tp, mc->getPosition().getEnd() }));
+        expectEquals (seq.getNumEvents(), 2);
+
+        testMidiClip (*mc, ts);
+    }
+
     void testMidiClip (MidiClip& mc, test_utilities::TestSetup ts)
     {
         auto renderOpts = RenderOptions::forClipRender ({ &mc }, true);
@@ -248,7 +277,9 @@ private:
         params.destFile = t2.getFile();
         const auto seqWithoutProxyFile = Renderer::renderToFile ("non-proxy", params);
 
-        test_utilities::expectMidiMessageSequence (*this, getSeqFromFile (seqWithProxyFile), getSeqFromFile (seqWithProxyFile));
+        test_utilities::expectMidiMessageSequence (*this,
+                                                   test_utilities::stripMetaEvents (getSeqFromFile (seqWithoutProxyFile)),
+                                                   test_utilities::stripMetaEvents (getSeqFromFile (seqWithProxyFile)));
     }
 
     juce::MidiMessageSequence renderMidiClip (MidiClip& mc, test_utilities::TestSetup ts,

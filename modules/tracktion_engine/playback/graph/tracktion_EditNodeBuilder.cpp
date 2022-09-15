@@ -864,7 +864,7 @@ std::unique_ptr<tracktion::graph::Node> createLiveInputNodeForDevice (InputDevic
                 return makeNode<TrackMidiInputDeviceNode> (*midiDevice, makeNode<ReturnNode> (getMidiInputDeviceBusID (sourceTrack->itemID)), params.processState);
 
         if (HostedAudioDeviceInterface::isHostedMidiInputDevice (*midiDevice))
-            return makeNode<HostedMidiInputDeviceNode> (inputDeviceInstance, *midiDevice, midiDevice->getMPESourceID(), playHeadState);
+            return makeNode<HostedMidiInputDeviceNode> (inputDeviceInstance, *midiDevice, midiDevice->getMPESourceID(), playHeadState, params.processState);
 
         return makeNode<MidiInputDeviceNode> (inputDeviceInstance, *midiDevice, midiDevice->getMPESourceID(), playHeadState);
     }
