@@ -46,6 +46,9 @@ set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
     C_VISIBILITY_PRESET hidden
     CXX_VISIBILITY_PRESET hidden)
 
+set(SourceFiles
+    ../${CMAKE_PROJECT_NAME}.h)
+
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE ${SourceFiles})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX Source FILES ${SourceFiles})
 
