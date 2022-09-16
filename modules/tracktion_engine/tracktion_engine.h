@@ -257,7 +257,7 @@
 #endif
 
 //==============================================================================
-#if JUCE_VERSION <= 6
+#if JUCE_MAJOR_VERSION <= 6
  #define TRACKTION_JUCE6 1
 #endif
 
