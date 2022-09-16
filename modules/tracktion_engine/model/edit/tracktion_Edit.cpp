@@ -584,7 +584,7 @@ Edit::Edit (Options options)
 Edit::Edit (Engine& e, juce::ValueTree editState, EditRole role,
             LoadContext* sourceLoadContext, int numUndoLevelsToStore)
     : Edit ({ e, editState, ProjectItemID::fromProperty (editState, IDs::projectID),
-              role, sourceLoadContext, numUndoLevelsToStore })
+              role, sourceLoadContext, numUndoLevelsToStore, {}, {} })
 {
 }
 

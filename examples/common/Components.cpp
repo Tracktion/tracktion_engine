@@ -238,7 +238,7 @@ public:
 };
 
 //==============================================================================
-te::Plugin::Ptr showMenuAndCreatePlugin (te::Edit& edit)
+inline te::Plugin::Ptr showMenuAndCreatePlugin (te::Edit& edit)
 {
     if (auto tree = EngineHelpers::createPluginTree (edit.engine))
     {
