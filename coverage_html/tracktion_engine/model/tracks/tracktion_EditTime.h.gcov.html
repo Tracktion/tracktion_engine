@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-09-13 13:05:53</td>
+            <td class="headerValue">2022-09-16 14:05:21</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
@@ -161,15 +161,15 @@
 <a name="99"><span class="lineNum">      99 </span>            : */</a>
 <a name="100"><span class="lineNum">     100 </span>            : struct ClipPosition</a>
 <a name="101"><span class="lineNum">     101 </span>            : {</a>
-<a name="102"><span class="lineNum">     102 </span>            :     TimeRange time;         /**&lt; The TimeRange this ClipPosition occupies. */</a>
-<a name="103"><span class="lineNum">     103 </span>            :     TimeDuration offset;    /**&lt; The offset this ClipPosition has.</a>
-<a name="104"><span class="lineNum">     104 </span>            :                                  Offset is a bit unintuitive as the position this</a>
-<a name="105"><span class="lineNum">     105 </span>            :                                  relates to in the source material will depend on</a>
-<a name="106"><span class="lineNum">     106 </span>            :                                  lots of factors including looping and any time-stretching.</a>
-<a name="107"><span class="lineNum">     107 </span>            :                                  It can generally be thought of as an offset from</a>
-<a name="108"><span class="lineNum">     108 </span>            :                                  either the start of the file or the loop start position,</a>
-<a name="109"><span class="lineNum">     109 </span>            :                                  scaled by any time-stretching.</a>
-<a name="110"><span class="lineNum">     110 </span>            :                             */</a>
+<a name="102"><span class="lineNum">     102 </span>            :     TimeRange time;             /**&lt; The TimeRange this ClipPosition occupies. */</a>
+<a name="103"><span class="lineNum">     103 </span>            :     TimeDuration offset = {};   /**&lt; The offset this ClipPosition has.</a>
+<a name="104"><span class="lineNum">     104 </span>            :                                      Offset is a bit unintuitive as the position this</a>
+<a name="105"><span class="lineNum">     105 </span>            :                                      relates to in the source material will depend on</a>
+<a name="106"><span class="lineNum">     106 </span>            :                                      lots of factors including looping and any time-stretching.</a>
+<a name="107"><span class="lineNum">     107 </span>            :                                      It can generally be thought of as an offset from</a>
+<a name="108"><span class="lineNum">     108 </span>            :                                      either the start of the file or the loop start position,</a>
+<a name="109"><span class="lineNum">     109 </span>            :                                      scaled by any time-stretching.</a>
+<a name="110"><span class="lineNum">     110 </span>            :                                 */</a>
 <a name="111"><span class="lineNum">     111 </span>            : </a>
 <a name="112"><span class="lineNum">     112 </span>            :     /** Returns the start time. */</a>
 <a name="113"><span class="lineNum">     113 </span>            :     TimePosition getStart() const             { return time.getStart(); }</a>

@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">79</td>
+            <td class="headerCovTableEntry">104</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-09-13 13:05:53</td>
+            <td class="headerValue">2022-09-16 14:05:21</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -201,53 +201,53 @@
 <a name="139"><span class="lineNum">     139 </span>            : {</a>
 <a name="140"><span class="lineNum">     140 </span><span class="lineNoCov">          0 :     if (positionInfoLock.tryEnter())</span></a>
 <a name="141"><span class="lineNum">     141 </span>            :     {</a>
-<a name="142"><span class="lineNum">     142 </span>            :        #if TRACKTION_JUCE7</a>
-<a name="143"><span class="lineNum">     143 </span>            :         const auto pos = playhead.getPosition();</a>
-<a name="144"><span class="lineNum">     144 </span>            :         const bool sucess = pos.hasValue();</a>
-<a name="145"><span class="lineNum">     145 </span>            : </a>
-<a name="146"><span class="lineNum">     146 </span>            :         if (sucess)</a>
-<a name="147"><span class="lineNum">     147 </span>            :         {</a>
-<a name="148"><span class="lineNum">     148 </span>            :             positionInfo.resetToDefault();</a>
-<a name="149"><span class="lineNum">     149 </span>            : </a>
-<a name="150"><span class="lineNum">     150 </span>            :             if (const auto sig = pos-&gt;getTimeSignature())</a>
-<a name="151"><span class="lineNum">     151 </span>            :             {</a>
-<a name="152"><span class="lineNum">     152 </span>            :                 positionInfo.timeSigNumerator   = sig-&gt;numerator;</a>
-<a name="153"><span class="lineNum">     153 </span>            :                 positionInfo.timeSigDenominator = sig-&gt;denominator;</a>
-<a name="154"><span class="lineNum">     154 </span>            :             }</a>
-<a name="155"><span class="lineNum">     155 </span>            : </a>
-<a name="156"><span class="lineNum">     156 </span>            :             if (const auto loop = pos-&gt;getLoopPoints())</a>
-<a name="157"><span class="lineNum">     157 </span>            :             {</a>
-<a name="158"><span class="lineNum">     158 </span>            :                 positionInfo.ppqLoopStart     = loop-&gt;ppqStart;</a>
-<a name="159"><span class="lineNum">     159 </span>            :                 positionInfo.ppqLoopEnd       = loop-&gt;ppqEnd;</a>
-<a name="160"><span class="lineNum">     160 </span>            :             }</a>
-<a name="161"><span class="lineNum">     161 </span>            : </a>
-<a name="162"><span class="lineNum">     162 </span>            :             if (const auto frame = pos-&gt;getFrameRate())</a>
-<a name="163"><span class="lineNum">     163 </span>            :                 positionInfo.frameRate = *frame;</a>
-<a name="164"><span class="lineNum">     164 </span>            : </a>
-<a name="165"><span class="lineNum">     165 </span>            :             if (const auto timeInSeconds = pos-&gt;getTimeInSeconds())</a>
-<a name="166"><span class="lineNum">     166 </span>            :                 positionInfo.timeInSeconds = *timeInSeconds;</a>
-<a name="167"><span class="lineNum">     167 </span>            : </a>
-<a name="168"><span class="lineNum">     168 </span>            :             if (const auto lastBarStartPpq = pos-&gt;getPpqPositionOfLastBarStart())</a>
-<a name="169"><span class="lineNum">     169 </span>            :                 positionInfo.ppqPositionOfLastBarStart = *lastBarStartPpq;</a>
-<a name="170"><span class="lineNum">     170 </span>            : </a>
-<a name="171"><span class="lineNum">     171 </span>            :             if (const auto ppqPosition = pos-&gt;getPpqPosition())</a>
-<a name="172"><span class="lineNum">     172 </span>            :                 positionInfo.ppqPosition = *ppqPosition;</a>
-<a name="173"><span class="lineNum">     173 </span>            : </a>
-<a name="174"><span class="lineNum">     174 </span>            :             if (const auto originTime = pos-&gt;getEditOriginTime())</a>
-<a name="175"><span class="lineNum">     175 </span>            :                 positionInfo.editOriginTime = *originTime;</a>
-<a name="176"><span class="lineNum">     176 </span>            : </a>
-<a name="177"><span class="lineNum">     177 </span>            :             if (const auto bpm = pos-&gt;getBpm())</a>
-<a name="178"><span class="lineNum">     178 </span>            :                 positionInfo.bpm = *bpm;</a>
-<a name="179"><span class="lineNum">     179 </span>            : </a>
-<a name="180"><span class="lineNum">     180 </span>            :             if (const auto timeInSamples = pos-&gt;getTimeInSamples())</a>
-<a name="181"><span class="lineNum">     181 </span>            :                 positionInfo.timeInSamples = *timeInSamples;</a>
-<a name="182"><span class="lineNum">     182 </span>            : </a>
-<a name="183"><span class="lineNum">     183 </span>            :             positionInfo.isPlaying      = pos-&gt;getIsPlaying();</a>
-<a name="184"><span class="lineNum">     184 </span>            :             positionInfo.isRecording    = pos-&gt;getIsRecording();</a>
-<a name="185"><span class="lineNum">     185 </span>            :             positionInfo.isLooping      = pos-&gt;getIsLooping();</a>
-<a name="186"><span class="lineNum">     186 </span>            :         }</a>
-<a name="187"><span class="lineNum">     187 </span>            :        #else</a>
-<a name="188"><span class="lineNum">     188 </span><span class="lineNoCov">          0 :         const bool sucess = playhead.getCurrentPosition (positionInfo);</span></a>
+<a name="142"><span class="lineNum">     142 </span>            :        #if TRACKTION_JUCE6</a>
+<a name="143"><span class="lineNum">     143 </span>            :         const bool sucess = playhead.getCurrentPosition (positionInfo);</a>
+<a name="144"><span class="lineNum">     144 </span>            :        #else</a>
+<a name="145"><span class="lineNum">     145 </span><span class="lineNoCov">          0 :         const auto pos = playhead.getPosition();</span></a>
+<a name="146"><span class="lineNum">     146 </span>            :         const bool sucess = pos.hasValue();</a>
+<a name="147"><span class="lineNum">     147 </span>            : </a>
+<a name="148"><span class="lineNum">     148 </span><span class="lineNoCov">          0 :         if (sucess)</span></a>
+<a name="149"><span class="lineNum">     149 </span>            :         {</a>
+<a name="150"><span class="lineNum">     150 </span><span class="lineNoCov">          0 :             positionInfo.resetToDefault();</span></a>
+<a name="151"><span class="lineNum">     151 </span>            : </a>
+<a name="152"><span class="lineNum">     152 </span><span class="lineNoCov">          0 :             if (const auto sig = pos-&gt;getTimeSignature())</span></a>
+<a name="153"><span class="lineNum">     153 </span>            :             {</a>
+<a name="154"><span class="lineNum">     154 </span><span class="lineNoCov">          0 :                 positionInfo.timeSigNumerator   = sig-&gt;numerator;</span></a>
+<a name="155"><span class="lineNum">     155 </span><span class="lineNoCov">          0 :                 positionInfo.timeSigDenominator = sig-&gt;denominator;</span></a>
+<a name="156"><span class="lineNum">     156 </span>            :             }</a>
+<a name="157"><span class="lineNum">     157 </span>            : </a>
+<a name="158"><span class="lineNum">     158 </span><span class="lineNoCov">          0 :             if (const auto loop = pos-&gt;getLoopPoints())</span></a>
+<a name="159"><span class="lineNum">     159 </span>            :             {</a>
+<a name="160"><span class="lineNum">     160 </span><span class="lineNoCov">          0 :                 positionInfo.ppqLoopStart     = loop-&gt;ppqStart;</span></a>
+<a name="161"><span class="lineNum">     161 </span><span class="lineNoCov">          0 :                 positionInfo.ppqLoopEnd       = loop-&gt;ppqEnd;</span></a>
+<a name="162"><span class="lineNum">     162 </span>            :             }</a>
+<a name="163"><span class="lineNum">     163 </span>            : </a>
+<a name="164"><span class="lineNum">     164 </span><span class="lineNoCov">          0 :             if (const auto frame = pos-&gt;getFrameRate())</span></a>
+<a name="165"><span class="lineNum">     165 </span><span class="lineNoCov">          0 :                 positionInfo.frameRate = *frame;</span></a>
+<a name="166"><span class="lineNum">     166 </span>            : </a>
+<a name="167"><span class="lineNum">     167 </span><span class="lineNoCov">          0 :             if (const auto timeInSeconds = pos-&gt;getTimeInSeconds())</span></a>
+<a name="168"><span class="lineNum">     168 </span><span class="lineNoCov">          0 :                 positionInfo.timeInSeconds = *timeInSeconds;</span></a>
+<a name="169"><span class="lineNum">     169 </span>            : </a>
+<a name="170"><span class="lineNum">     170 </span><span class="lineNoCov">          0 :             if (const auto lastBarStartPpq = pos-&gt;getPpqPositionOfLastBarStart())</span></a>
+<a name="171"><span class="lineNum">     171 </span><span class="lineNoCov">          0 :                 positionInfo.ppqPositionOfLastBarStart = *lastBarStartPpq;</span></a>
+<a name="172"><span class="lineNum">     172 </span>            : </a>
+<a name="173"><span class="lineNum">     173 </span><span class="lineNoCov">          0 :             if (const auto ppqPosition = pos-&gt;getPpqPosition())</span></a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineNoCov">          0 :                 positionInfo.ppqPosition = *ppqPosition;</span></a>
+<a name="175"><span class="lineNum">     175 </span>            : </a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineNoCov">          0 :             if (const auto originTime = pos-&gt;getEditOriginTime())</span></a>
+<a name="177"><span class="lineNum">     177 </span><span class="lineNoCov">          0 :                 positionInfo.editOriginTime = *originTime;</span></a>
+<a name="178"><span class="lineNum">     178 </span>            : </a>
+<a name="179"><span class="lineNum">     179 </span><span class="lineNoCov">          0 :             if (const auto bpm = pos-&gt;getBpm())</span></a>
+<a name="180"><span class="lineNum">     180 </span><span class="lineNoCov">          0 :                 positionInfo.bpm = *bpm;</span></a>
+<a name="181"><span class="lineNum">     181 </span>            : </a>
+<a name="182"><span class="lineNum">     182 </span><span class="lineNoCov">          0 :             if (const auto timeInSamples = pos-&gt;getTimeInSamples())</span></a>
+<a name="183"><span class="lineNum">     183 </span><span class="lineNoCov">          0 :                 positionInfo.timeInSamples = *timeInSamples;</span></a>
+<a name="184"><span class="lineNum">     184 </span>            : </a>
+<a name="185"><span class="lineNum">     185 </span><span class="lineNoCov">          0 :             positionInfo.isPlaying      = pos-&gt;getIsPlaying();</span></a>
+<a name="186"><span class="lineNum">     186 </span><span class="lineNoCov">          0 :             positionInfo.isRecording    = pos-&gt;getIsRecording();</span></a>
+<a name="187"><span class="lineNum">     187 </span><span class="lineNoCov">          0 :             positionInfo.isLooping      = pos-&gt;getIsLooping();</span></a>
+<a name="188"><span class="lineNum">     188 </span>            :         }</a>
 <a name="189"><span class="lineNum">     189 </span>            :        #endif</a>
 <a name="190"><span class="lineNum">     190 </span>            : </a>
 <a name="191"><span class="lineNum">     191 </span>            :         positionInfoLock.exit();</a>

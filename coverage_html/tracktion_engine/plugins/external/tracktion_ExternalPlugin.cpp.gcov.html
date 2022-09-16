@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">4</td>
-            <td class="headerCovTableEntry">788</td>
+            <td class="headerCovTableEntry">782</td>
             <td class="headerCovTableEntryLo">0.5 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-09-13 13:05:53</td>
+            <td class="headerValue">2022-09-16 14:05:21</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
@@ -340,11 +340,11 @@
 <a name="278"><span class="lineNum">     278 </span>            :             time        = rc-&gt;editTime;</a>
 <a name="279"><span class="lineNum">     279 </span><span class="lineNoCov">          0 :             isPlaying   = rc-&gt;isPlaying;</span></a>
 <a name="280"><span class="lineNum">     280 </span>            : </a>
-<a name="281"><span class="lineNum">     281 </span>            :            #if TRACKTION_JUCE7</a>
-<a name="282"><span class="lineNum">     282 </span>            :             const auto loopTimeRange = plugin.edit.getTransport().getLoopRange();</a>
-<a name="283"><span class="lineNum">     283 </span>            :             loopStart.set (loopTimeRange.getStart());</a>
-<a name="284"><span class="lineNum">     284 </span>            :             loopEnd.set (loopTimeRange.getEnd());</a>
-<a name="285"><span class="lineNum">     285 </span>            :             currentPos.set (time);</a>
+<a name="281"><span class="lineNum">     281 </span>            :            #if ! TRACKTION_JUCE6</a>
+<a name="282"><span class="lineNum">     282 </span><span class="lineNoCov">          0 :             const auto loopTimeRange = plugin.edit.getTransport().getLoopRange();</span></a>
+<a name="283"><span class="lineNum">     283 </span><span class="lineNoCov">          0 :             loopStart.set (loopTimeRange.getStart());</span></a>
+<a name="284"><span class="lineNum">     284 </span><span class="lineNoCov">          0 :             loopEnd.set (loopTimeRange.getEnd());</span></a>
+<a name="285"><span class="lineNum">     285 </span><span class="lineNoCov">          0 :             currentPos.set (time);</span></a>
 <a name="286"><span class="lineNum">     286 </span>            :            #endif</a>
 <a name="287"><span class="lineNum">     287 </span>            :         }</a>
 <a name="288"><span class="lineNum">     288 </span>            :         else</a>
@@ -354,75 +354,75 @@
 <a name="292"><span class="lineNum">     292 </span>            :         }</a>
 <a name="293"><span class="lineNum">     293 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="294"><span class="lineNum">     294 </span>            : </a>
-<a name="295"><span class="lineNum">     295 </span>            :    #if TRACKTION_JUCE7</a>
-<a name="296"><span class="lineNum">     296 </span>            :     juce::Optional&lt;PositionInfo&gt; getPosition() const override</a>
+<a name="295"><span class="lineNum">     295 </span>            :    #if TRACKTION_JUCE6</a>
+<a name="296"><span class="lineNum">     296 </span>            :     bool getCurrentPosition (CurrentPositionInfo&amp; result) override</a>
 <a name="297"><span class="lineNum">     297 </span>            :     {</a>
-<a name="298"><span class="lineNum">     298 </span>            :         PositionInfo result;</a>
-<a name="299"><span class="lineNum">     299 </span>            : </a>
-<a name="300"><span class="lineNum">     300 </span>            :         result.setFrameRate (getFrameRate());</a>
-<a name="301"><span class="lineNum">     301 </span>            : </a>
-<a name="302"><span class="lineNum">     302 </span>            :         auto&amp; transport = plugin.edit.getTransport();</a>
-<a name="303"><span class="lineNum">     303 </span>            :         auto localTime = time.load();</a>
-<a name="304"><span class="lineNum">     304 </span>            : </a>
-<a name="305"><span class="lineNum">     305 </span>            :         result.setIsPlaying (isPlaying);</a>
-<a name="306"><span class="lineNum">     306 </span>            :         result.setIsRecording (transport.isRecording());</a>
-<a name="307"><span class="lineNum">     307 </span>            :         result.setEditOriginTime (transport.getTimeWhenStarted().inSeconds());</a>
-<a name="308"><span class="lineNum">     308 </span>            :         result.setIsLooping (transport.looping);</a>
-<a name="309"><span class="lineNum">     309 </span>            : </a>
-<a name="310"><span class="lineNum">     310 </span>            :         if (transport.looping)</a>
-<a name="311"><span class="lineNum">     311 </span>            :             result.setLoopPoints (juce::AudioPlayHead::LoopPoints ({ loopStart.getPPQTime(), loopEnd.getPPQTime() }));</a>
-<a name="312"><span class="lineNum">     312 </span>            : </a>
-<a name="313"><span class="lineNum">     313 </span>            :         result.setTimeInSeconds (localTime.inSeconds());</a>
-<a name="314"><span class="lineNum">     314 </span>            :         result.setTimeInSamples (toSamples (localTime, plugin.sampleRate));</a>
-<a name="315"><span class="lineNum">     315 </span>            : </a>
-<a name="316"><span class="lineNum">     316 </span>            :         const auto timeSig = currentPos.getTimeSignature();</a>
-<a name="317"><span class="lineNum">     317 </span>            :         result.setBpm (currentPos.getTempo());</a>
-<a name="318"><span class="lineNum">     318 </span>            :         result.setTimeSignature (juce::AudioPlayHead::TimeSignature ({ timeSig.numerator, timeSig.denominator }));</a>
-<a name="319"><span class="lineNum">     319 </span>            : </a>
-<a name="320"><span class="lineNum">     320 </span>            :         const auto ppqPositionOfLastBarStart = currentPos.getPPQTimeOfBarStart();</a>
-<a name="321"><span class="lineNum">     321 </span>            :         result.setPpqPositionOfLastBarStart (ppqPositionOfLastBarStart);</a>
-<a name="322"><span class="lineNum">     322 </span>            :         result.setPpqPosition (std::max (ppqPositionOfLastBarStart, currentPos.getPPQTime()));</a>
-<a name="323"><span class="lineNum">     323 </span>            : </a>
-<a name="324"><span class="lineNum">     324 </span>            :         return result;</a>
-<a name="325"><span class="lineNum">     325 </span>            :     }</a>
-<a name="326"><span class="lineNum">     326 </span>            :    #else</a>
-<a name="327"><span class="lineNum">     327 </span><span class="lineNoCov">          0 :     bool getCurrentPosition (CurrentPositionInfo&amp; result) override</span></a>
-<a name="328"><span class="lineNum">     328 </span>            :     {</a>
-<a name="329"><span class="lineNum">     329 </span>            :         zerostruct (result);</a>
-<a name="330"><span class="lineNum">     330 </span><span class="lineNoCov">          0 :         result.frameRate = getFrameRate();</span></a>
+<a name="298"><span class="lineNum">     298 </span>            :         zerostruct (result);</a>
+<a name="299"><span class="lineNum">     299 </span>            :         result.frameRate = getFrameRate();</a>
+<a name="300"><span class="lineNum">     300 </span>            : </a>
+<a name="301"><span class="lineNum">     301 </span>            :         auto&amp; transport = plugin.edit.getTransport();</a>
+<a name="302"><span class="lineNum">     302 </span>            :         auto localTime = time.load();</a>
+<a name="303"><span class="lineNum">     303 </span>            : </a>
+<a name="304"><span class="lineNum">     304 </span>            :         result.isPlaying        = isPlaying;</a>
+<a name="305"><span class="lineNum">     305 </span>            :         result.isRecording      = transport.isRecording();</a>
+<a name="306"><span class="lineNum">     306 </span>            :         result.editOriginTime   = transport.getTimeWhenStarted().inSeconds();</a>
+<a name="307"><span class="lineNum">     307 </span>            :         result.isLooping        = transport.looping;</a>
+<a name="308"><span class="lineNum">     308 </span>            : </a>
+<a name="309"><span class="lineNum">     309 </span>            :         if (result.isLooping)</a>
+<a name="310"><span class="lineNum">     310 </span>            :         {</a>
+<a name="311"><span class="lineNum">     311 </span>            :             const auto loopTimes = transport.getLoopRange();</a>
+<a name="312"><span class="lineNum">     312 </span>            :             loopStart.set (loopTimes.getStart());</a>
+<a name="313"><span class="lineNum">     313 </span>            :             result.ppqLoopStart = loopStart.getPPQTime();</a>
+<a name="314"><span class="lineNum">     314 </span>            : </a>
+<a name="315"><span class="lineNum">     315 </span>            :             loopEnd.set (loopTimes.getEnd());</a>
+<a name="316"><span class="lineNum">     316 </span>            :             result.ppqLoopEnd = loopEnd.getPPQTime();</a>
+<a name="317"><span class="lineNum">     317 </span>            :         }</a>
+<a name="318"><span class="lineNum">     318 </span>            : </a>
+<a name="319"><span class="lineNum">     319 </span>            :         result.timeInSamples    = (tracktion::toSamples (localTime, plugin.sampleRate));</a>
+<a name="320"><span class="lineNum">     320 </span>            :         result.timeInSeconds    = localTime.inSeconds();</a>
+<a name="321"><span class="lineNum">     321 </span>            : </a>
+<a name="322"><span class="lineNum">     322 </span>            :         currentPos.set (localTime);</a>
+<a name="323"><span class="lineNum">     323 </span>            :         const auto timeSig = currentPos.getTimeSignature();</a>
+<a name="324"><span class="lineNum">     324 </span>            :         result.bpm                  = currentPos.getTempo();</a>
+<a name="325"><span class="lineNum">     325 </span>            :         result.timeSigNumerator     = timeSig.numerator;</a>
+<a name="326"><span class="lineNum">     326 </span>            :         result.timeSigDenominator   = timeSig.denominator;</a>
+<a name="327"><span class="lineNum">     327 </span>            : </a>
+<a name="328"><span class="lineNum">     328 </span>            :         result.ppqPositionOfLastBarStart = currentPos.getPPQTimeOfBarStart();</a>
+<a name="329"><span class="lineNum">     329 </span>            :         result.ppqPosition = std::max (result.ppqPositionOfLastBarStart,</a>
+<a name="330"><span class="lineNum">     330 </span>            :                                        currentPos.getPPQTime());</a>
 <a name="331"><span class="lineNum">     331 </span>            : </a>
-<a name="332"><span class="lineNum">     332 </span><span class="lineNoCov">          0 :         auto&amp; transport = plugin.edit.getTransport();</span></a>
-<a name="333"><span class="lineNum">     333 </span>            :         auto localTime = time.load();</a>
-<a name="334"><span class="lineNum">     334 </span>            : </a>
-<a name="335"><span class="lineNum">     335 </span><span class="lineNoCov">          0 :         result.isPlaying        = isPlaying;</span></a>
-<a name="336"><span class="lineNum">     336 </span><span class="lineNoCov">          0 :         result.isRecording      = transport.isRecording();</span></a>
-<a name="337"><span class="lineNum">     337 </span><span class="lineNoCov">          0 :         result.editOriginTime   = transport.getTimeWhenStarted().inSeconds();</span></a>
-<a name="338"><span class="lineNum">     338 </span><span class="lineNoCov">          0 :         result.isLooping        = transport.looping;</span></a>
-<a name="339"><span class="lineNum">     339 </span>            : </a>
-<a name="340"><span class="lineNum">     340 </span><span class="lineNoCov">          0 :         if (result.isLooping)</span></a>
-<a name="341"><span class="lineNum">     341 </span>            :         {</a>
-<a name="342"><span class="lineNum">     342 </span><span class="lineNoCov">          0 :             const auto loopTimes = transport.getLoopRange();</span></a>
-<a name="343"><span class="lineNum">     343 </span><span class="lineNoCov">          0 :             loopStart.set (loopTimes.getStart());</span></a>
-<a name="344"><span class="lineNum">     344 </span><span class="lineNoCov">          0 :             result.ppqLoopStart = loopStart.getPPQTime();</span></a>
-<a name="345"><span class="lineNum">     345 </span>            : </a>
-<a name="346"><span class="lineNum">     346 </span><span class="lineNoCov">          0 :             loopEnd.set (loopTimes.getEnd());</span></a>
-<a name="347"><span class="lineNum">     347 </span><span class="lineNoCov">          0 :             result.ppqLoopEnd = loopEnd.getPPQTime();</span></a>
-<a name="348"><span class="lineNum">     348 </span>            :         }</a>
-<a name="349"><span class="lineNum">     349 </span>            : </a>
-<a name="350"><span class="lineNum">     350 </span><span class="lineNoCov">          0 :         result.timeInSamples    = (tracktion::toSamples (localTime, plugin.sampleRate));</span></a>
-<a name="351"><span class="lineNum">     351 </span><span class="lineNoCov">          0 :         result.timeInSeconds    = localTime.inSeconds();</span></a>
-<a name="352"><span class="lineNum">     352 </span>            : </a>
-<a name="353"><span class="lineNum">     353 </span><span class="lineNoCov">          0 :         currentPos.set (localTime);</span></a>
-<a name="354"><span class="lineNum">     354 </span><span class="lineNoCov">          0 :         const auto timeSig = currentPos.getTimeSignature();</span></a>
-<a name="355"><span class="lineNum">     355 </span><span class="lineNoCov">          0 :         result.bpm                  = currentPos.getTempo();</span></a>
-<a name="356"><span class="lineNum">     356 </span><span class="lineNoCov">          0 :         result.timeSigNumerator     = timeSig.numerator;</span></a>
-<a name="357"><span class="lineNum">     357 </span><span class="lineNoCov">          0 :         result.timeSigDenominator   = timeSig.denominator;</span></a>
+<a name="332"><span class="lineNum">     332 </span>            :         return true;</a>
+<a name="333"><span class="lineNum">     333 </span>            :     }</a>
+<a name="334"><span class="lineNum">     334 </span>            :    #else</a>
+<a name="335"><span class="lineNum">     335 </span><span class="lineNoCov">          0 :     juce::Optional&lt;PositionInfo&gt; getPosition() const override</span></a>
+<a name="336"><span class="lineNum">     336 </span>            :     {</a>
+<a name="337"><span class="lineNum">     337 </span><span class="lineNoCov">          0 :         PositionInfo result;</span></a>
+<a name="338"><span class="lineNum">     338 </span>            : </a>
+<a name="339"><span class="lineNum">     339 </span><span class="lineNoCov">          0 :         result.setFrameRate (getFrameRate());</span></a>
+<a name="340"><span class="lineNum">     340 </span>            : </a>
+<a name="341"><span class="lineNum">     341 </span><span class="lineNoCov">          0 :         auto&amp; transport = plugin.edit.getTransport();</span></a>
+<a name="342"><span class="lineNum">     342 </span>            :         auto localTime = time.load();</a>
+<a name="343"><span class="lineNum">     343 </span>            : </a>
+<a name="344"><span class="lineNum">     344 </span>            :         result.setIsPlaying (isPlaying);</a>
+<a name="345"><span class="lineNum">     345 </span><span class="lineNoCov">          0 :         result.setIsRecording (transport.isRecording());</span></a>
+<a name="346"><span class="lineNum">     346 </span><span class="lineNoCov">          0 :         result.setEditOriginTime (transport.getTimeWhenStarted().inSeconds());</span></a>
+<a name="347"><span class="lineNum">     347 </span><span class="lineNoCov">          0 :         result.setIsLooping (transport.looping);</span></a>
+<a name="348"><span class="lineNum">     348 </span>            : </a>
+<a name="349"><span class="lineNum">     349 </span><span class="lineNoCov">          0 :         if (transport.looping)</span></a>
+<a name="350"><span class="lineNum">     350 </span>            :             result.setLoopPoints (juce::AudioPlayHead::LoopPoints ({ loopStart.getPPQTime(), loopEnd.getPPQTime() }));</a>
+<a name="351"><span class="lineNum">     351 </span>            : </a>
+<a name="352"><span class="lineNum">     352 </span>            :         result.setTimeInSeconds (localTime.inSeconds());</a>
+<a name="353"><span class="lineNum">     353 </span><span class="lineNoCov">          0 :         result.setTimeInSamples (toSamples (localTime, plugin.sampleRate));</span></a>
+<a name="354"><span class="lineNum">     354 </span>            : </a>
+<a name="355"><span class="lineNum">     355 </span><span class="lineNoCov">          0 :         const auto timeSig = currentPos.getTimeSignature();</span></a>
+<a name="356"><span class="lineNum">     356 </span>            :         result.setBpm (currentPos.getTempo());</a>
+<a name="357"><span class="lineNum">     357 </span>            :         result.setTimeSignature (juce::AudioPlayHead::TimeSignature ({ timeSig.numerator, timeSig.denominator }));</a>
 <a name="358"><span class="lineNum">     358 </span>            : </a>
-<a name="359"><span class="lineNum">     359 </span><span class="lineNoCov">          0 :         result.ppqPositionOfLastBarStart = currentPos.getPPQTimeOfBarStart();</span></a>
-<a name="360"><span class="lineNum">     360 </span><span class="lineNoCov">          0 :         result.ppqPosition = std::max (result.ppqPositionOfLastBarStart,</span></a>
-<a name="361"><span class="lineNum">     361 </span><span class="lineNoCov">          0 :                                        currentPos.getPPQTime());</span></a>
+<a name="359"><span class="lineNum">     359 </span><span class="lineNoCov">          0 :         const auto ppqPositionOfLastBarStart = currentPos.getPPQTimeOfBarStart();</span></a>
+<a name="360"><span class="lineNum">     360 </span>            :         result.setPpqPositionOfLastBarStart (ppqPositionOfLastBarStart);</a>
+<a name="361"><span class="lineNum">     361 </span><span class="lineNoCov">          0 :         result.setPpqPosition (std::max (ppqPositionOfLastBarStart, currentPos.getPPQTime()));</span></a>
 <a name="362"><span class="lineNum">     362 </span>            : </a>
-<a name="363"><span class="lineNum">     363 </span><span class="lineNoCov">          0 :         return true;</span></a>
+<a name="363"><span class="lineNum">     363 </span><span class="lineNoCov">          0 :         return result;</span></a>
 <a name="364"><span class="lineNum">     364 </span>            :     }</a>
 <a name="365"><span class="lineNum">     365 </span>            :    #endif</a>
 <a name="366"><span class="lineNum">     366 </span>            : </a>
@@ -1323,7 +1323,7 @@
 <a name="1261"><span class="lineNum">    1261 </span>            :         // Reset MPE zone to match MIDI generated by clip</a>
 <a name="1262"><span class="lineNum">    1262 </span><span class="lineNoCov">          0 :         if (supportsMPE)</span></a>
 <a name="1263"><span class="lineNum">    1263 </span>            :         {</a>
-<a name="1264"><span class="lineNum">    1264 </span>            :             juce::MPEZoneLayout layout;</a>
+<a name="1264"><span class="lineNum">    1264 </span><span class="lineNoCov">          0 :             juce::MPEZoneLayout layout;</span></a>
 <a name="1265"><span class="lineNum">    1265 </span><span class="lineNoCov">          0 :             layout.setLowerZone (15);</span></a>
 <a name="1266"><span class="lineNum">    1266 </span>            : </a>
 <a name="1267"><span class="lineNum">    1267 </span><span class="lineNoCov">          0 :             auto layoutBuffer = juce::MPEMessages::setZoneLayout (layout);</span></a>
