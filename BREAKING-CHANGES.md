@@ -2,6 +2,21 @@
 
 ## Develop
 
+
+### Change
+Changed the JUCE version TE git submodules to JUCE 7.
+
+#### Possible Issues
+If your project uses the juce submodule and relies on JUCE 6 code, it may no longer compile.
+
+#### Workaround
+Legacy support for JUCE 6 will be removed in a future update so migration to JUCE 7 is recomended.
+
+#### Rationale
+This has been repeatedly asked for and maintains compatibility with the latest JUCE code.
+
+---
+
 ### Change
 Removed EngineBehaviour::getMaxNumMasterPlugins and static Edit constants.
 
