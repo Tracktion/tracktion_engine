@@ -89,16 +89,16 @@ public:
     /** Determines how the Edit will be created */
     struct Options
     {
-        Engine& engine;                                                     /**< The Engine to use. */
-        juce::ValueTree editState;                                          /**< The Edit state. @see createEmptyEdit */
-        ProjectItemID editProjectItemID;                                    /**< The editProjectItemID, must be valid. */
+        Engine& engine;                                                         /**< The Engine to use. */
+        juce::ValueTree editState;                                              /**< The Edit state. @see createEmptyEdit */
+        ProjectItemID editProjectItemID;                                        /**< The editProjectItemID, must be valid. */
 
-        EditRole role = forEditing;                                         /**< An optional role to open the Edit with. */
-        LoadContext* loadContext = nullptr;                                 /**< An optional context to be monitor for loading status. */
-        int numUndoLevelsToStore = Edit::getDefaultNumUndoLevels();         /**< The number of undo levels to use. */
+        EditRole role = forEditing;                                             /**< An optional role to open the Edit with. */
+        LoadContext* loadContext = nullptr;                                     /**< An optional context to be monitor for loading status. */
+        int numUndoLevelsToStore = Edit::getDefaultNumUndoLevels();             /**< The number of undo levels to use. */
 
-        std::function<juce::File()> editFileRetriever;                      /**< An optional editFileRetriever to use. */
-        std::function<juce::File (const juce::String&)> filePathResolver;   /**< An optional filePathResolver to use. */
+        std::function<juce::File()> editFileRetriever = {};                     /**< An optional editFileRetriever to use. */
+        std::function<juce::File (const juce::String&)> filePathResolver = {};  /**< An optional filePathResolver to use. */
     };
 
     /** Creates an Edit from a set of Options. */

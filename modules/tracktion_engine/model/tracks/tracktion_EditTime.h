@@ -99,15 +99,15 @@ BeatRange toBeats (EditTimeRange, const TempoSequence&);
 */
 struct ClipPosition
 {
-    TimeRange time;         /**< The TimeRange this ClipPosition occupies. */
-    TimeDuration offset;    /**< The offset this ClipPosition has.
-                                 Offset is a bit unintuitive as the position this
-                                 relates to in the source material will depend on
-                                 lots of factors including looping and any time-stretching.
-                                 It can generally be thought of as an offset from
-                                 either the start of the file or the loop start position,
-                                 scaled by any time-stretching.
-                            */
+    TimeRange time;             /**< The TimeRange this ClipPosition occupies. */
+    TimeDuration offset = {};   /**< The offset this ClipPosition has.
+                                     Offset is a bit unintuitive as the position this
+                                     relates to in the source material will depend on
+                                     lots of factors including looping and any time-stretching.
+                                     It can generally be thought of as an offset from
+                                     either the start of the file or the loop start position,
+                                     scaled by any time-stretching.
+                                */
 
     /** Returns the start time. */
     TimePosition getStart() const             { return time.getStart(); }
