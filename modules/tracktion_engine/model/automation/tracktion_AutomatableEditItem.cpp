@@ -44,8 +44,13 @@ int AutomatableEditItem::getNumAutomatableParameters() const
 AutomatableParameter::Ptr AutomatableEditItem::getAutomatableParameterByID (const juce::String& paramID) const
 {
     for (auto p : automatableParams)
+    {
+        DBG(p->paramID);
+        DBG(p->getCurrentValueAsString());
         if (p->paramID == paramID)
             return p;
+    }
+        
 
     return {};
 }
