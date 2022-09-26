@@ -68,9 +68,9 @@ EqualiserPlugin::EqualiserPlugin (PluginCreationInfo info) : Plugin (info)
     for (int i = 4; --i >= 0;)
         needToUpdateFilters[i] = true;
 
-    addAutomatableParameter (loFreq = new EQAutomatableParameter (*this, "Low-shelf freq", TRANS("Low-shelf freq"), *this, { minFreq, maxFreq }, 0, false, true, false));
-    addAutomatableParameter (loGain = new EQAutomatableParameter (*this, "Low-shelf gain", TRANS("Low-shelf gain"), *this, { minGain, maxGain }, 0, true, false, false));
-    addAutomatableParameter (loQ    = new EQAutomatableParameter (*this, "Low-shelf Q", TRANS("Low-shelf Q"), *this, { minQ, maxQ }, 0, false, false, true));
+    addAutomatableParameter (loFreq = new EQAutomatableParameter (*this, "Low-pass freq", TRANS("Low-shelf freq"), *this, { minFreq, maxFreq }, 0, false, true, false));
+    addAutomatableParameter (loGain = new EQAutomatableParameter (*this, "Low-pass gain", TRANS("Low-shelf gain"), *this, { minGain, maxGain }, 0, true, false, false));
+    addAutomatableParameter (loQ    = new EQAutomatableParameter (*this, "Low-pass Q", TRANS("Low-shelf Q"), *this, { minQ, maxQ }, 0, false, false, true));
 
     addAutomatableParameter (midFreq1 = new EQAutomatableParameter (*this, "Mid freq 1", TRANS("Mid freq 1"), *this, { minFreq, maxFreq }, 1, false, true, false));
     addAutomatableParameter (midGain1 = new EQAutomatableParameter (*this, "Mid gain 1", TRANS("Mid gain 1"), *this, { minGain, maxGain }, 1, true, false, false));
@@ -80,9 +80,9 @@ EqualiserPlugin::EqualiserPlugin (PluginCreationInfo info) : Plugin (info)
     addAutomatableParameter (midGain2 = new EQAutomatableParameter (*this, "Mid gain 2", TRANS("Mid gain 2"), *this, { minGain, maxGain }, 2, true, false, false));
     addAutomatableParameter (midQ2    = new EQAutomatableParameter (*this, "Mid Q 2", TRANS("Mid Q 2"), *this, { minQ, maxQ }, 2, false, false, true));
 
-    addAutomatableParameter (hiFreq = new EQAutomatableParameter (*this, "High-shelf freq", TRANS("High-shelf freq"), *this, { minFreq, maxFreq }, 3, false, true, false));
-    addAutomatableParameter (hiGain = new EQAutomatableParameter (*this, "High-shelf gain", TRANS("High-shelf gain"), *this, { minGain, maxGain }, 3, true, false, false));
-    addAutomatableParameter (hiQ    = new EQAutomatableParameter (*this, "High-shelf Q", TRANS("High-shelf Q"), *this, { minQ, maxQ }, 3, false, false, true));
+    addAutomatableParameter (hiFreq = new EQAutomatableParameter (*this, "High-pass freq", TRANS("High-shelf freq"), *this, { minFreq, maxFreq }, 3, false, true, false));
+    addAutomatableParameter (hiGain = new EQAutomatableParameter (*this, "High-pass gain", TRANS("High-shelf gain"), *this, { minGain, maxGain }, 3, true, false, false));
+    addAutomatableParameter (hiQ    = new EQAutomatableParameter (*this, "High-pass Q", TRANS("High-shelf Q"), *this, { minQ, maxQ }, 3, false, false, true));
 
     auto um = getUndoManager();
 
