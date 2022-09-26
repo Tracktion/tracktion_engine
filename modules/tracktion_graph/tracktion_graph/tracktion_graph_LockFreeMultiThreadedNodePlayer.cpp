@@ -221,8 +221,7 @@ inline void LockFreeMultiThreadedNodePlayer::pause()
 void LockFreeMultiThreadedNodePlayer::setNewCurrentNode (std::unique_ptr<Node> newRoot,
                                                          double sampleRateToUse, int blockSizeToUse)
 {
-    while (isUpdatingPreparedNode)
-        pause();
+    while (isUpdatingPreparedNode) { pause(); }
 
     const bool useAudioBufferPool = useMemoryPool;
     auto currentRoot = preparedNode.rootNode.get();
@@ -238,9 +237,17 @@ void LockFreeMultiThreadedNodePlayer::setNewCurrentNode (std::unique_ptr<Node> n
 
     pendingPreparedNode = nullptr;
     rootNode = newRoot.get();
+
+    while (isUpdatingPreparedNode) { pause(); }
     pendingPreparedNodeStorage.rootNode = std::move (newRoot);
+
+    while (isUpdatingPreparedNode) { pause(); }
     pendingPreparedNodeStorage.allNodes = std::move (newNodes);
+
+    while (isUpdatingPreparedNode) { pause(); }
     pendingPreparedNodeStorage.nodesReadyToBeProcessed = std::make_unique<LockFreeFifo<Node*>> ((int) pendingPreparedNodeStorage.allNodes.size());
+
+    while (isUpdatingPreparedNode) { pause(); }
     buildNodesOutputLists (pendingPreparedNodeStorage);
     
     if (useAudioBufferPool)
