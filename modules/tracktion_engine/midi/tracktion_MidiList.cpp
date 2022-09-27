@@ -717,12 +717,12 @@ BeatPosition MidiNote::getQuantisedEndBeat (const MidiClip* const c) const
 
 BeatDuration MidiNote::getQuantisedLengthBeats (const MidiClip& c) const
 {
-    return getQuantisedStartBeat (c) - getQuantisedEndBeat (c);
+    return getQuantisedEndBeat (c) - getQuantisedStartBeat (c);
 }
 
 BeatDuration MidiNote::getQuantisedLengthBeats (const MidiClip* const c) const
 {
-    return getQuantisedStartBeat (c) - getQuantisedEndBeat (c);
+    return getQuantisedEndBeat (c) - getQuantisedStartBeat (c);
 }
 
 //==============================================================================
