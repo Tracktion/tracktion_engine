@@ -91,8 +91,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ad0d5e0f6feb2c8fdf61afd2ad12bb99c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a075ae43183bdb3ebb264681689a41d34"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AudioFileCache_1_1Reader.html#a075ae43183bdb3ebb264681689a41d34">readSamples</a> (int numSamples, juce::AudioBuffer&lt; float &gt; &amp;destBuffer, const juce::AudioChannelSet &amp;destBufferChannels, int startOffsetInDestBuffer, const juce::AudioChannelSet &amp;sourceBufferChannels, int timeoutMs)</td></tr>
 <tr class="separator:a075ae43183bdb3ebb264681689a41d34"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a19534c406bb7c952c7eaf9cfba5c5350"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AudioFileCache_1_1Reader.html#a19534c406bb7c952c7eaf9cfba5c5350">readSamples</a> (int **destSamples, int numDestChannels, int startOffsetInDestBuffer, int numSamples, int timeoutMs)</td></tr>
-<tr class="separator:a19534c406bb7c952c7eaf9cfba5c5350"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74395cfd933242e3defb8563e7a47227"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AudioFileCache_1_1Reader.html#a74395cfd933242e3defb8563e7a47227">readSamples</a> (int *const *destSamples, int numDestChannels, int startOffsetInDestBuffer, int numSamples, int timeoutMs)</td></tr>
+<tr class="separator:a74395cfd933242e3defb8563e7a47227"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3898550678f95b75ce7d00242bb6381"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AudioFileCache_1_1Reader.html#ae3898550678f95b75ce7d00242bb6381">getRange</a> (int numSamples, float &amp;lmax, float &amp;lmin, float &amp;rmax, float &amp;rmin, int timeoutMs)</td></tr>
 <tr class="separator:ae3898550678f95b75ce7d00242bb6381"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad60fbb542d4badbfd2b77ac0529513f6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AudioFileCache_1_1Reader.html#ad60fbb542d4badbfd2b77ac0529513f6">setLoopRange</a> (<a class="el" href="namespacetracktion_1_1engine.html#a8944ee32cc6ed4eb531572d627f9538f">SampleRange</a>)</td></tr>
@@ -239,8 +239,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a19534c406bb7c952c7eaf9cfba5c5350"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a19534c406bb7c952c7eaf9cfba5c5350">&#9670;&nbsp;</a></span>readSamples() <span class="overload">[2/2]</span></h2>
+<a id="a74395cfd933242e3defb8563e7a47227"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74395cfd933242e3defb8563e7a47227">&#9670;&nbsp;</a></span>readSamples() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -248,7 +248,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">bool tracktion::engine::AudioFileCache::Reader::readSamples </td>
           <td>(</td>
-          <td class="paramtype">int **&#160;</td>
+          <td class="paramtype">int *const *&#160;</td>
           <td class="paramname"><em>destSamples</em>, </td>
         </tr>
         <tr>
@@ -411,7 +411,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 16 2022 14:16:07 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Sep 27 2022 16:07:05 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

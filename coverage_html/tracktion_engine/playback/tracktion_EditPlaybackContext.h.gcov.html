@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-09-16 14:34:00</td>
+            <td class="headerValue">2022-09-27 16:24:31</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -231,7 +231,7 @@
 <a name="169"><span class="lineNum">     169 </span>            :     std::atomic&lt;double&gt; audiblePlaybackTime { 0.0 };</a>
 <a name="170"><span class="lineNum">     170 </span>            : </a>
 <a name="171"><span class="lineNum">     171 </span>            :     void createNode();</a>
-<a name="172"><span class="lineNum">     172 </span>            :     void fillNextNodeBlock (float** allChannels, int numChannels, int numSamples);</a>
+<a name="172"><span class="lineNum">     172 </span>            :     void fillNextNodeBlock (float* const* allChannels, int numChannels, int numSamples);</a>
 <a name="173"><span class="lineNum">     173 </span>            : </a>
 <a name="174"><span class="lineNum">     174 </span><span class="lineCov">         84 :     JUCE_DECLARE_WEAK_REFERENCEABLE (EditPlaybackContext)</span></a>
 <a name="175"><span class="lineNum">     175 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EditPlaybackContext)</a>

@@ -58251,8 +58251,8 @@
       <type>bool</type>
       <name>readSamples</name>
       <anchorfile>classtracktion_1_1engine_1_1AudioFileCache_1_1Reader.html</anchorfile>
-      <anchor>a19534c406bb7c952c7eaf9cfba5c5350</anchor>
-      <arglist>(int **destSamples, int numDestChannels, int startOffsetInDestBuffer, int numSamples, int timeoutMs)</arglist>
+      <anchor>a74395cfd933242e3defb8563e7a47227</anchor>
+      <arglist>(int *const *destSamples, int numDestChannels, int startOffsetInDestBuffer, int numSamples, int timeoutMs)</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -65175,8 +65175,8 @@
       <type>void</type>
       <name>processSection</name>
       <anchorfile>classtracktion_1_1engine_1_1TempoDetect.html</anchorfile>
-      <anchor>abe62b9a1f2dd6ae0a259984a08bcaf60</anchor>
-      <arglist>(const float **const inputSamples, int numSamples)</arglist>
+      <anchor>a03ffac151b27b1443699578ef4f78f50</anchor>
+      <arglist>(const float *const *inputSamples, int numSamples)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static juce::Range&lt; float &gt;</type>
@@ -79477,8 +79477,8 @@
       <type>void</type>
       <name>consumeNextAudioBlock</name>
       <anchorfile>classtracktion_1_1engine_1_1WaveInputDevice.html</anchorfile>
-      <anchor>addb684bbc6701f2eb6484bc85d260f49</anchor>
-      <arglist>(const float **allChannels, int numChannels, int numSamples, double streamTime)</arglist>
+      <anchor>a91ce4248d1aa11c5973a097ca36608ad</anchor>
+      <arglist>(const float *const *allChannels, int numChannels, int numSamples, double streamTime)</arglist>
     </member>
     <member kind="function">
       <type>RetrospectiveRecordBuffer *</type>
@@ -85112,6 +85112,11 @@
     <subgroup>tracktion_engine-utilities</subgroup>
   </compound>
   <compound kind="group">
+    <name>tracktion_graph-tracktion_graph</name>
+    <title>tracktion_graph</title>
+    <filename>group__tracktion__graph-tracktion__graph.html</filename>
+  </compound>
+  <compound kind="group">
     <name>tracktion_graph</name>
     <title>tracktion_graph</title>
     <filename>group__tracktion__graph.html</filename>
@@ -85121,18 +85126,13 @@
     <subgroup>tracktion_graph-utilities</subgroup>
   </compound>
   <compound kind="group">
-    <name>tracktion_graph-tracktion_graph</name>
-    <title>tracktion_graph</title>
-    <filename>group__tracktion__graph-tracktion__graph.html</filename>
+    <name>tracktion_graph-utilities</name>
+    <title>utilities</title>
+    <filename>group__tracktion__graph-utilities.html</filename>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-utilities</name>
     <title>utilities</title>
     <filename>group__tracktion__engine-utilities.html</filename>
-  </compound>
-  <compound kind="group">
-    <name>tracktion_graph-utilities</name>
-    <title>utilities</title>
-    <filename>group__tracktion__graph-utilities.html</filename>
   </compound>
 </tagfile>

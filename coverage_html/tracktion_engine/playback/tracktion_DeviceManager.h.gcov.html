@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-09-16 14:34:00</td>
+            <td class="headerValue">2022-09-27 16:24:31</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -317,28 +317,29 @@
 <a name="255"><span class="lineNum">     255 </span>            : </a>
 <a name="256"><span class="lineNum">     256 </span>            :     void changeListenerCallback (juce::ChangeBroadcaster*) override;</a>
 <a name="257"><span class="lineNum">     257 </span>            : </a>
-<a name="258"><span class="lineNum">     258 </span>            :     void audioDeviceIOCallback (const float** inputChannelData, int totalNumInputChannels,</a>
-<a name="259"><span class="lineNum">     259 </span>            :                                 float** outputChannelData, int totalNumOutputChannels, int numSamples) override;</a>
-<a name="260"><span class="lineNum">     260 </span>            :     void audioDeviceAboutToStart (juce::AudioIODevice*) override;</a>
-<a name="261"><span class="lineNum">     261 </span>            :     void audioDeviceStopped() override;</a>
-<a name="262"><span class="lineNum">     262 </span>            : </a>
-<a name="263"><span class="lineNum">     263 </span>            :     void audioDeviceIOCallbackInternal (const float** inputChannelData, int numInputChannels,</a>
-<a name="264"><span class="lineNum">     264 </span>            :                                         float** outputChannelData, int totalNumOutputChannels,</a>
-<a name="265"><span class="lineNum">     265 </span>            :                                         int numSamples);</a>
-<a name="266"><span class="lineNum">     266 </span>            : </a>
-<a name="267"><span class="lineNum">     267 </span>            :     //==============================================================================</a>
-<a name="268"><span class="lineNum">     268 </span>            :     int maxBlockSize = 0;</a>
-<a name="269"><span class="lineNum">     269 </span>            :     int cpuReportingInterval = 1;</a>
-<a name="270"><span class="lineNum">     270 </span>            :     int cpuAvgCounter = 0;</a>
-<a name="271"><span class="lineNum">     271 </span>            :     int glitchCntr = 0;</a>
-<a name="272"><span class="lineNum">     272 </span>            :     float cpuAvg = 0;</a>
-<a name="273"><span class="lineNum">     273 </span>            :     float cpuMin = 0;</a>
-<a name="274"><span class="lineNum">     274 </span>            :     float cpuMax = 0;</a>
-<a name="275"><span class="lineNum">     275 </span>            : </a>
-<a name="276"><span class="lineNum">     276 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DeviceManager)</a>
-<a name="277"><span class="lineNum">     277 </span>            : };</a>
-<a name="278"><span class="lineNum">     278 </span>            : </a>
-<a name="279"><span class="lineNum">     279 </span>            : }} // namespace tracktion { inline namespace engine</a>
+<a name="258"><span class="lineNum">     258 </span>            :     void audioDeviceIOCallbackWithContext (const float* const* inputChannelData, int totalNumInputChannels,</a>
+<a name="259"><span class="lineNum">     259 </span>            :                                            float* const* outputChannelData, int totalNumOutputChannels, int numSamples,</a>
+<a name="260"><span class="lineNum">     260 </span>            :                                            const juce::AudioIODeviceCallbackContext&amp;) override;</a>
+<a name="261"><span class="lineNum">     261 </span>            :     void audioDeviceAboutToStart (juce::AudioIODevice*) override;</a>
+<a name="262"><span class="lineNum">     262 </span>            :     void audioDeviceStopped() override;</a>
+<a name="263"><span class="lineNum">     263 </span>            : </a>
+<a name="264"><span class="lineNum">     264 </span>            :     void audioDeviceIOCallbackInternal (const float* const* inputChannelData, int numInputChannels,</a>
+<a name="265"><span class="lineNum">     265 </span>            :                                         float* const* outputChannelData, int totalNumOutputChannels,</a>
+<a name="266"><span class="lineNum">     266 </span>            :                                         int numSamples);</a>
+<a name="267"><span class="lineNum">     267 </span>            : </a>
+<a name="268"><span class="lineNum">     268 </span>            :     //==============================================================================</a>
+<a name="269"><span class="lineNum">     269 </span>            :     int maxBlockSize = 0;</a>
+<a name="270"><span class="lineNum">     270 </span>            :     int cpuReportingInterval = 1;</a>
+<a name="271"><span class="lineNum">     271 </span>            :     int cpuAvgCounter = 0;</a>
+<a name="272"><span class="lineNum">     272 </span>            :     int glitchCntr = 0;</a>
+<a name="273"><span class="lineNum">     273 </span>            :     float cpuAvg = 0;</a>
+<a name="274"><span class="lineNum">     274 </span>            :     float cpuMin = 0;</a>
+<a name="275"><span class="lineNum">     275 </span>            :     float cpuMax = 0;</a>
+<a name="276"><span class="lineNum">     276 </span>            : </a>
+<a name="277"><span class="lineNum">     277 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DeviceManager)</a>
+<a name="278"><span class="lineNum">     278 </span>            : };</a>
+<a name="279"><span class="lineNum">     279 </span>            : </a>
+<a name="280"><span class="lineNum">     280 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

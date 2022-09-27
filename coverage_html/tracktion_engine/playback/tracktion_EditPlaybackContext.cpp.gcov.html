@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-09-16 14:34:00</td>
+            <td class="headerValue">2022-09-27 16:24:31</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">23</td>
@@ -286,7 +286,7 @@
 <a name="224"><span class="lineNum">     224 </span><span class="lineCov">         84 :          playHead.setPosition (tracktion::graph::timeToSample (currentPos, sampleRate));</span></a>
 <a name="225"><span class="lineNum">     225 </span><span class="lineCov">         84 :      }</span></a>
 <a name="226"><span class="lineNum">     226 </span>            :      </a>
-<a name="227"><span class="lineNum">     227 </span><span class="lineNoCov">          0 :      void process (float** allChannels, int numChannels, int destNumSamples)</span></a>
+<a name="227"><span class="lineNum">     227 </span><span class="lineNoCov">          0 :      void process (float* const* allChannels, int numChannels, int destNumSamples)</span></a>
 <a name="228"><span class="lineNum">     228 </span>            :      {</a>
 <a name="229"><span class="lineNum">     229 </span><span class="lineNoCov">          0 :          if (positionUpdatePending.exchange (false))</span></a>
 <a name="230"><span class="lineNum">     230 </span>            :          {</a>
@@ -779,7 +779,7 @@
 <a name="717"><span class="lineNum">     717 </span>            : }</a>
 <a name="718"><span class="lineNum">     718 </span>            : </a>
 <a name="719"><span class="lineNum">     719 </span>            : //==============================================================================</a>
-<a name="720"><span class="lineNum">     720 </span><span class="lineNoCov">          0 : void EditPlaybackContext::fillNextNodeBlock (float** allChannels, int numChannels, int numSamples)</span></a>
+<a name="720"><span class="lineNum">     720 </span><span class="lineNoCov">          0 : void EditPlaybackContext::fillNextNodeBlock (float* const* allChannels, int numChannels, int numSamples)</span></a>
 <a name="721"><span class="lineNum">     721 </span>            : {</a>
 <a name="722"><span class="lineNum">     722 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
 <a name="723"><span class="lineNum">     723 </span>            : </a>

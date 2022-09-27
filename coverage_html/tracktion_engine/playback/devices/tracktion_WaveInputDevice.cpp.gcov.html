@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-09-16 14:34:00</td>
+            <td class="headerValue">2022-09-27 16:24:31</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">18</td>
@@ -1062,7 +1062,7 @@
 <a name="1000"><span class="lineNum">    1000 </span><span class="lineNoCov">          0 :                 &amp;&amp; InputDeviceInstance::isLivePlayEnabled (t);</span></a>
 <a name="1001"><span class="lineNum">    1001 </span>            :     }</a>
 <a name="1002"><span class="lineNum">    1002 </span>            : </a>
-<a name="1003"><span class="lineNum">    1003 </span><span class="lineNoCov">          0 :     void copyIncomingDataIntoBuffer (const float** allChannels, int numChannels, int numSamples)</span></a>
+<a name="1003"><span class="lineNum">    1003 </span><span class="lineNoCov">          0 :     void copyIncomingDataIntoBuffer (const float* const* allChannels, int numChannels, int numSamples)</span></a>
 <a name="1004"><span class="lineNum">    1004 </span>            :     {</a>
 <a name="1005"><span class="lineNum">    1005 </span><span class="lineNoCov">          0 :         if (numChannels == 0)</span></a>
 <a name="1006"><span class="lineNum">    1006 </span>            :             return;</a>
@@ -1086,7 +1086,7 @@
 <a name="1024"><span class="lineNum">    1024 </span>            :         }</a>
 <a name="1025"><span class="lineNum">    1025 </span>            :     }</a>
 <a name="1026"><span class="lineNum">    1026 </span>            : </a>
-<a name="1027"><span class="lineNum">    1027 </span><span class="lineNoCov">          0 :     void acceptInputBuffer (const float** allChannels, int numChannels, int numSamples,</span></a>
+<a name="1027"><span class="lineNum">    1027 </span><span class="lineNoCov">          0 :     void acceptInputBuffer (const float* const* allChannels, int numChannels, int numSamples,</span></a>
 <a name="1028"><span class="lineNum">    1028 </span>            :                             double streamTime, LevelMeasurer* measurerToUpdate,</a>
 <a name="1029"><span class="lineNum">    1029 </span>            :                             RetrospectiveRecordBuffer* retrospectiveBuffer, bool addToRetrospective)</a>
 <a name="1030"><span class="lineNum">    1030 </span>            :     {</a>
@@ -1544,7 +1544,7 @@
 <a name="1482"><span class="lineNum">    1482 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1483"><span class="lineNum">    1483 </span>            : </a>
 <a name="1484"><span class="lineNum">    1484 </span>            : //==============================================================================</a>
-<a name="1485"><span class="lineNum">    1485 </span><span class="lineNoCov">          0 : void WaveInputDevice::consumeNextAudioBlock (const float** allChannels, int numChannels, int numSamples, double streamTime)</span></a>
+<a name="1485"><span class="lineNum">    1485 </span><span class="lineNoCov">          0 : void WaveInputDevice::consumeNextAudioBlock (const float* const* allChannels, int numChannels, int numSamples, double streamTime)</span></a>
 <a name="1486"><span class="lineNum">    1486 </span>            : {</a>
 <a name="1487"><span class="lineNum">    1487 </span><span class="lineNoCov">          0 :     if (enabled)</span></a>
 <a name="1488"><span class="lineNum">    1488 </span>            :     {</a>
