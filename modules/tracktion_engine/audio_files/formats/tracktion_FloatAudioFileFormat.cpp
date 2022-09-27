@@ -37,7 +37,7 @@ public:
         }
     }
 
-    bool readSamples (int** destSamples, int numDestChannels, int startOffsetInDestBuffer,
+    bool readSamples (int* const* destSamples, int numDestChannels, int startOffsetInDestBuffer,
                       juce::int64 startSampleInFile, int numSamples)
     {
         clearSamplesBeyondAvailableLength (destSamples, numDestChannels, startOffsetInDestBuffer,
@@ -163,7 +163,7 @@ public:
     {
     }
 
-    bool readSamples (int** destSamples, int numDestChannels, int startOffsetInDestBuffer,
+    bool readSamples (int* const* destSamples, int numDestChannels, int startOffsetInDestBuffer,
                       juce::int64 startSampleInFile, int numSamples) override
     {
         clearSamplesBeyondAvailableLength (destSamples, numDestChannels, startOffsetInDestBuffer,

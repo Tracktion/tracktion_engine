@@ -169,7 +169,7 @@ private:
     std::atomic<double> audiblePlaybackTime { 0.0 };
 
     void createNode();
-    void fillNextNodeBlock (float** allChannels, int numChannels, int numSamples);
+    void fillNextNodeBlock (float* const* allChannels, int numChannels, int numSamples);
 
     JUCE_DECLARE_WEAK_REFERENCEABLE (EditPlaybackContext)
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EditPlaybackContext)

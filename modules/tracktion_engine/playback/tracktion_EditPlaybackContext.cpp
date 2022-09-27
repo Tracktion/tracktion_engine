@@ -224,7 +224,7 @@ private:
          playHead.setPosition (tracktion::graph::timeToSample (currentPos, sampleRate));
      }
      
-     void process (float** allChannels, int numChannels, int destNumSamples)
+     void process (float* const* allChannels, int numChannels, int destNumSamples)
      {
          if (positionUpdatePending.exchange (false))
          {
@@ -717,7 +717,7 @@ juce::Array<InputDeviceInstance*> EditPlaybackContext::getAllInputs()
 }
 
 //==============================================================================
-void EditPlaybackContext::fillNextNodeBlock (float** allChannels, int numChannels, int numSamples)
+void EditPlaybackContext::fillNextNodeBlock (float* const* allChannels, int numChannels, int numSamples)
 {
     CRASH_TRACER
 

@@ -1000,7 +1000,7 @@ public:
                 && InputDeviceInstance::isLivePlayEnabled (t);
     }
 
-    void copyIncomingDataIntoBuffer (const float** allChannels, int numChannels, int numSamples)
+    void copyIncomingDataIntoBuffer (const float* const* allChannels, int numChannels, int numSamples)
     {
         if (numChannels == 0)
             return;
@@ -1024,7 +1024,7 @@ public:
         }
     }
 
-    void acceptInputBuffer (const float** allChannels, int numChannels, int numSamples,
+    void acceptInputBuffer (const float* const* allChannels, int numChannels, int numSamples,
                             double streamTime, LevelMeasurer* measurerToUpdate,
                             RetrospectiveRecordBuffer* retrospectiveBuffer, bool addToRetrospective)
     {
@@ -1482,7 +1482,7 @@ void WaveInputDevice::removeInstance (WaveInputDeviceInstance* i)
 }
 
 //==============================================================================
-void WaveInputDevice::consumeNextAudioBlock (const float** allChannels, int numChannels, int numSamples, double streamTime)
+void WaveInputDevice::consumeNextAudioBlock (const float* const* allChannels, int numChannels, int numSamples, double streamTime)
 {
     if (enabled)
     {

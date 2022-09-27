@@ -373,7 +373,7 @@ void EnvelopeFollowerModifier::processBlock (const juce::AudioBuffer<float>& ab)
 
     const int numChannels = ab.getNumChannels();
     const int numSamples = ab.getNumSamples();
-    const float** samples = ab.getArrayOfReadPointers();
+    const float* const* samples = ab.getArrayOfReadPointers();
     float envelope = 0.0f;
 
     AudioScratchBuffer scratch (1, numSamples);

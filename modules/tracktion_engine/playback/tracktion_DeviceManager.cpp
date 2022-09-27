@@ -1080,9 +1080,10 @@ double DeviceManager::getOutputLatencySeconds() const
     return outputLatencyTime;
 }
 
-void DeviceManager::audioDeviceIOCallback (const float** inputChannelData, int numInputChannels,
-                                           float** outputChannelData, int totalNumOutputChannels,
-                                           int numSamples)
+void DeviceManager::audioDeviceIOCallbackWithContext (const float* const* inputChannelData, int numInputChannels,
+                                                      float* const* outputChannelData, int totalNumOutputChannels,
+                                                      int numSamples,
+                                                      const juce::AudioIODeviceCallbackContext&)
 {
     // Some interfaces ask for blocks larger than the current buffer size so in
     // these cases we need to render the buffer in chunks
@@ -1116,8 +1117,8 @@ void DeviceManager::audioDeviceIOCallback (const float** inputChannelData, int n
     }
 }
 
-void DeviceManager::audioDeviceIOCallbackInternal (const float** inputChannelData, int numInputChannels,
-                                                   float** outputChannelData, int totalNumOutputChannels,
+void DeviceManager::audioDeviceIOCallbackInternal (const float* const* inputChannelData, int numInputChannels,
+                                                   float* const* outputChannelData, int totalNumOutputChannels,
                                                    int numSamples)
 {
     jassert (numSamples <= maxBlockSize);

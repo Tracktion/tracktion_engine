@@ -255,13 +255,14 @@ private:
 
     void changeListenerCallback (juce::ChangeBroadcaster*) override;
 
-    void audioDeviceIOCallback (const float** inputChannelData, int totalNumInputChannels,
-                                float** outputChannelData, int totalNumOutputChannels, int numSamples) override;
+    void audioDeviceIOCallbackWithContext (const float* const* inputChannelData, int totalNumInputChannels,
+                                           float* const* outputChannelData, int totalNumOutputChannels, int numSamples,
+                                           const juce::AudioIODeviceCallbackContext&) override;
     void audioDeviceAboutToStart (juce::AudioIODevice*) override;
     void audioDeviceStopped() override;
 
-    void audioDeviceIOCallbackInternal (const float** inputChannelData, int numInputChannels,
-                                        float** outputChannelData, int totalNumOutputChannels,
+    void audioDeviceIOCallbackInternal (const float* const* inputChannelData, int numInputChannels,
+                                        float* const* outputChannelData, int totalNumOutputChannels,
                                         int numSamples);
 
     //==============================================================================
