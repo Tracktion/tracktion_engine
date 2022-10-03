@@ -55,6 +55,7 @@ public:
 
     juce::CachedValue<int> busNumber;
     juce::CachedValue<float> gainLevel;
+    juce::CachedValue<bool> invertPhase;
 
     AutomatableParameter::Ptr gain;
 

@@ -16,6 +16,7 @@ AuxSendPlugin::AuxSendPlugin (PluginCreationInfo info) : Plugin (info)
     auto um = getUndoManager();
     busNumber.referTo (state, IDs::busNum, um);
     gainLevel.referTo (state, IDs::auxSendSliderPos, um, decibelsToVolumeFaderPosition (0.0f));
+    invertPhase.referTo (state, IDs::phase, um, false);
     lastVolumeBeforeMute.referTo (state, IDs::lastVolumeBeforeMuteDb, um, 0.0f);
 
     gain = addParam ("send level", TRANS("Send level"), { 0.0f, 1.0f },
@@ -160,8 +161,10 @@ void AuxSendPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
     juce::CachedValue<float>* cvsFloat[]  = { &gainLevel, nullptr };
     juce::CachedValue<int>* cvsInt[]      = { &busNumber, nullptr };
+    juce::CachedValue<bool>* cvsBool[]    = { &invertPhase, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
     copyPropertiesToNullTerminatedCachedValues (v, cvsInt);
+    copyPropertiesToNullTerminatedCachedValues (v, cvsBool);
 
     for (auto p : getAutomatableParameters())
         p->updateFromAttachedValue();
