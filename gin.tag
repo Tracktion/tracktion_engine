@@ -14462,6 +14462,13 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
+      <type>juce::CachedValue&lt; bool &gt;</type>
+      <name>invertPhase</name>
+      <anchorfile>classtracktion_1_1engine_1_1AuxSendPlugin.html</anchorfile>
+      <anchor>af1ddfab4cc5eea671479a63d7126b114</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
       <type>AutomatableParameter::Ptr</type>
       <name>gain</name>
       <anchorfile>classtracktion_1_1engine_1_1AuxSendPlugin.html</anchorfile>

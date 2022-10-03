@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-09-27 17:51:25</td>
+            <td class="headerValue">2022-10-03 15:53:37</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -117,21 +117,22 @@
 <a name="55"><span class="lineNum">      55 </span>            : </a>
 <a name="56"><span class="lineNum">      56 </span>            :     juce::CachedValue&lt;int&gt; busNumber;</a>
 <a name="57"><span class="lineNum">      57 </span>            :     juce::CachedValue&lt;float&gt; gainLevel;</a>
-<a name="58"><span class="lineNum">      58 </span>            : </a>
-<a name="59"><span class="lineNum">      59 </span>            :     AutomatableParameter::Ptr gain;</a>
-<a name="60"><span class="lineNum">      60 </span>            : </a>
-<a name="61"><span class="lineNum">      61 </span>            : private:</a>
-<a name="62"><span class="lineNum">      62 </span>            :     bool shouldProcess();</a>
-<a name="63"><span class="lineNum">      63 </span>            :     //==============================================================================</a>
-<a name="64"><span class="lineNum">      64 </span>            :     juce::CachedValue&lt;float&gt; lastVolumeBeforeMute;</a>
-<a name="65"><span class="lineNum">      65 </span>            :     float lastGain = 1.0f;</a>
-<a name="66"><span class="lineNum">      66 </span>            :     Track* ownerTrack = nullptr;</a>
-<a name="67"><span class="lineNum">      67 </span>            : </a>
-<a name="68"><span class="lineNum">      68 </span>            :     //==============================================================================</a>
-<a name="69"><span class="lineNum">      69 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AuxSendPlugin)</a>
-<a name="70"><span class="lineNum">      70 </span>            : };</a>
-<a name="71"><span class="lineNum">      71 </span>            : </a>
-<a name="72"><span class="lineNum">      72 </span>            : }} // namespace tracktion { inline namespace engine</a>
+<a name="58"><span class="lineNum">      58 </span>            :     juce::CachedValue&lt;bool&gt; invertPhase;</a>
+<a name="59"><span class="lineNum">      59 </span>            : </a>
+<a name="60"><span class="lineNum">      60 </span>            :     AutomatableParameter::Ptr gain;</a>
+<a name="61"><span class="lineNum">      61 </span>            : </a>
+<a name="62"><span class="lineNum">      62 </span>            : private:</a>
+<a name="63"><span class="lineNum">      63 </span>            :     bool shouldProcess();</a>
+<a name="64"><span class="lineNum">      64 </span>            :     //==============================================================================</a>
+<a name="65"><span class="lineNum">      65 </span>            :     juce::CachedValue&lt;float&gt; lastVolumeBeforeMute;</a>
+<a name="66"><span class="lineNum">      66 </span>            :     float lastGain = 1.0f;</a>
+<a name="67"><span class="lineNum">      67 </span>            :     Track* ownerTrack = nullptr;</a>
+<a name="68"><span class="lineNum">      68 </span>            : </a>
+<a name="69"><span class="lineNum">      69 </span>            :     //==============================================================================</a>
+<a name="70"><span class="lineNum">      70 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AuxSendPlugin)</a>
+<a name="71"><span class="lineNum">      71 </span>            : };</a>
+<a name="72"><span class="lineNum">      72 </span>            : </a>
+<a name="73"><span class="lineNum">      73 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

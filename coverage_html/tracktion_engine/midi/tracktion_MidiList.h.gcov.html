@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-09-27 17:51:25</td>
+            <td class="headerValue">2022-10-03 15:53:37</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">27</td>
@@ -287,9 +287,9 @@
 <a name="225"><span class="lineNum">     225 </span>            :             return {};</a>
 <a name="226"><span class="lineNum">     226 </span>            :         }</a>
 <a name="227"><span class="lineNum">     227 </span>            : </a>
-<a name="228"><span class="lineNum">     228 </span><span class="lineCov">   11021370 :         bool isSuitableType (const juce::ValueTree&amp; v) const override   { return EventDelegate&lt;EventType&gt;::isSuitableType (v); }</span></a>
-<a name="229"><span class="lineNum">     229 </span><span class="lineCov">    3673796 :         EventType* createNewObject (const juce::ValueTree&amp; v) override  { return new EventType (v); }</span></a>
-<a name="230"><span class="lineNum">     230 </span><span class="lineCov">    7347582 :         void deleteObject (EventType* m) override                       { delete m; }</span></a>
+<a name="228"><span class="lineNum">     228 </span><span class="lineCov">   11022240 :         bool isSuitableType (const juce::ValueTree&amp; v) const override   { return EventDelegate&lt;EventType&gt;::isSuitableType (v); }</span></a>
+<a name="229"><span class="lineNum">     229 </span><span class="lineCov">    3674076 :         EventType* createNewObject (const juce::ValueTree&amp; v) override  { return new EventType (v); }</span></a>
+<a name="230"><span class="lineNum">     230 </span><span class="lineCov">    7348162 :         void deleteObject (EventType* m) override                       { delete m; }</span></a>
 <a name="231"><span class="lineNum">     231 </span><span class="lineCov">       1128 :         void newObjectAdded (EventType*) override                       { triggerSort(); }</span></a>
 <a name="232"><span class="lineNum">     232 </span><span class="lineNoCov">          0 :         void objectRemoved (EventType* m) override                      { EventDelegate&lt;EventType&gt;::removeFromSelection (m); triggerSort(); }</span></a>
 <a name="233"><span class="lineNum">     233 </span><span class="lineNoCov">          0 :         void objectOrderChanged() override                              { triggerSort(); }</span></a>
