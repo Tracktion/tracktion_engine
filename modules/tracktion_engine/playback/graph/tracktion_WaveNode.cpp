@@ -147,6 +147,10 @@ public:
         const auto numFrames = static_cast<SampleCount> (destBuffer.getNumFrames());
 
         auto readPos = source->getPosition();
+
+        if (readPos >= loopStart + loopLength)
+            readPos -= loopLength;
+
         int numSamplesToDo = (int) numFrames;
         SampleCount startOffsetInDestBuffer = 0;
         bool allOk = true;
@@ -1062,7 +1066,7 @@ private:
             if (e <= loopRange.getStart())
                 return readBeatRange ({ s, loopRange.getEnd() }, destBuffer, editDuration, isContiguous, playbackSpeedRatio);
 
-            // Oterhwise range is split
+            // Otherwise range is split
             const BeatRange br1 (s, loopRange.getEnd());
             const BeatRange br2 (loopRange.getStart(), e);
             const auto prop1 = br1.getLength() / br.getLength();
@@ -1098,8 +1102,7 @@ private:
 
     static inline BeatPosition linearPositionToLoopPosition (BeatPosition position, BeatRange loopRange)
     {
-        const auto loopStart = loopRange.getStart();
-        return loopStart + BeatDuration::fromBeats (std::fmod ((position + toDuration (loopStart)).inBeats(), loopRange.getLength().inBeats()));
+        return loopRange.getStart() + BeatDuration::fromBeats (std::fmod (position.inBeats(), loopRange.getLength().inBeats()));
     }
 };
 
