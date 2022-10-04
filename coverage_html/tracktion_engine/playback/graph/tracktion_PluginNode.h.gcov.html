@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-10-03 17:22:12</td>
+            <td class="headerValue">2022-10-04 14:27:59</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -112,8 +112,8 @@
 <a name="50"><span class="lineNum">      50 </span><span class="lineCov">        178 :     Plugin&amp; getPlugin()                                 { return *plugin; }</span></a>
 <a name="51"><span class="lineNum">      51 </span>            :     </a>
 <a name="52"><span class="lineNum">      52 </span>            :     tracktion::graph::NodeProperties getNodeProperties() override;</a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineCov">     499894 :     std::vector&lt;Node*&gt; getDirectInputNodes() override   { return { input.get() }; }</span></a>
-<a name="54"><span class="lineNum">      54 </span><span class="lineCov">     523937 :     bool isReadyToProcess() override                    { return input-&gt;hasProcessed(); }</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">     491176 :     std::vector&lt;Node*&gt; getDirectInputNodes() override   { return { input.get() }; }</span></a>
+<a name="54"><span class="lineNum">      54 </span><span class="lineCov">     527377 :     bool isReadyToProcess() override                    { return input-&gt;hasProcessed(); }</span></a>
 <a name="55"><span class="lineNum">      55 </span>            :     void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&amp;) override;</a>
 <a name="56"><span class="lineNum">      56 </span>            :     void prefetchBlock (juce::Range&lt;int64_t&gt;) override;</a>
 <a name="57"><span class="lineNum">      57 </span>            :     void process (ProcessContext&amp;) override;</a>
@@ -140,7 +140,7 @@
 <a name="78"><span class="lineNum">      78 </span>            :     //==============================================================================</a>
 <a name="79"><span class="lineNum">      79 </span>            :     void initialisePlugin (double sampleRateToUse, int blockSizeToUse);</a>
 <a name="80"><span class="lineNum">      80 </span>            :     PluginRenderContext getPluginRenderContext (TimePosition, juce::AudioBuffer&lt;float&gt;&amp;);</a>
-<a name="81"><span class="lineNum">      81 </span>            :     void replaceLatencyProcessorIfPossible (Node*);</a>
+<a name="81"><span class="lineNum">      81 </span>            :     void replaceLatencyProcessorIfPossible (NodeGraph*);</a>
 <a name="82"><span class="lineNum">      82 </span>            : };</a>
 <a name="83"><span class="lineNum">      83 </span>            : </a>
 <a name="84"><span class="lineNum">      84 </span>            : }} // namespace tracktion { inline namespace engine</a>

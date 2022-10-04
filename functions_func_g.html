@@ -89,6 +89,7 @@ $(function() {
 , <a class="el" href="structtracktion_1_1engine_1_1AudioFadeCurve_1_1SCurve.html#a7b3417389116e0d8dad1bd18a53f0d87">tracktion::engine::AudioFadeCurve::SCurve</a>
 , <a class="el" href="classtracktion_1_1engine_1_1ConstrainedCachedValue.html#ac6b243750917bb8492dcee033036b430">tracktion::engine::ConstrainedCachedValue&lt; Type &gt;</a>
 , <a class="el" href="structtracktion_1_1engine_1_1SelectionManager_1_1Iterator.html#a36b5e63d9044e767b3b2b6150e98f826">tracktion::engine::SelectionManager::Iterator</a>
+, <a class="el" href="classtracktion_1_1graph_1_1LockFreeObject_1_1ScopedRealTimeAccess.html#a475c758bc1fde945d6ea5b9fb34fd962">tracktion::graph::LockFreeObject&lt; ObjectType &gt;::ScopedRealTimeAccess</a>
 </li>
 <li>get1BeatSnapType()
 : <a class="el" href="structtracktion_1_1engine_1_1TimecodeSnapType.html#a32bb3f564cf39c36d520cba2a07cee81">tracktion::engine::TimecodeSnapType</a>
@@ -2810,7 +2811,7 @@ $(function() {
 , <a class="el" href="classtracktion_1_1engine_1_1ExternalControllerManager.html#a76d1ba58e7c29e94d0576d7eb176cc81">tracktion::engine::ExternalControllerManager</a>
 </li>
 <li>getPluginFor()
-: <a class="el" href="classtracktion_1_1engine_1_1PluginCache.html#acca11fe34c4b8d9331fefee86389d45f">tracktion::engine::PluginCache</a>
+: <a class="el" href="classtracktion_1_1engine_1_1PluginCache.html#aad6d44f7f523c4bd8fec906cd68cbc55">tracktion::engine::PluginCache</a>
 </li>
 <li>getPluginForID()
 : <a class="el" href="classtracktion_1_1engine_1_1RackType.html#aa21a43d8ba827481b6cf50dc9847bd83">tracktion::engine::RackType</a>
@@ -3015,7 +3016,7 @@ $(function() {
 </li>
 <li>getProject()
 : <a class="el" href="classtracktion_1_1engine_1_1ProjectItem.html#a7648f073aa79e0f80ebe6a9e78e1db1f">tracktion::engine::ProjectItem</a>
-, <a class="el" href="classtracktion_1_1engine_1_1ProjectManager.html#aed10046e261658350892417cc1e76b9e">tracktion::engine::ProjectManager</a>
+, <a class="el" href="classtracktion_1_1engine_1_1ProjectManager.html#ab554dcb1aaf1b0b21f381900a2547ef4">tracktion::engine::ProjectManager</a>
 </li>
 <li>getProjectFile()
 : <a class="el" href="classtracktion_1_1engine_1_1Project.html#a24c5b70a41758a3a85f1be2a8a884f53">tracktion::engine::Project</a>
@@ -3028,7 +3029,7 @@ $(function() {
 , <a class="el" href="classtracktion_1_1engine_1_1ProjectItemID.html#aceaaa46d884074435e0069aac321b5d8">tracktion::engine::ProjectItemID</a>
 </li>
 <li>getProjectItem()
-: <a class="el" href="classtracktion_1_1engine_1_1ProjectManager.html#ab136d471a9f137e54a05f770c2e2d62b">tracktion::engine::ProjectManager</a>
+: <a class="el" href="classtracktion_1_1engine_1_1ProjectManager.html#a98d93351f506a4e9d05e5ed723647bb8">tracktion::engine::ProjectManager</a>
 </li>
 <li>getProjectItemAt()
 : <a class="el" href="classtracktion_1_1engine_1_1Project.html#a32c6efad9e3954532c5932681532d82b">tracktion::engine::Project</a>
@@ -3214,7 +3215,7 @@ $(function() {
 : <a class="el" href="classtracktion_1_1engine_1_1EditClip.html#a81e64e95b48f4ab6d332d4cb5580e685">tracktion::engine::EditClip</a>
 </li>
 <li>getRenderParameters()
-: <a class="el" href="classtracktion_1_1engine_1_1RenderOptions.html#aaaf9d556cb2c3aa3e98dfecd791545b5">tracktion::engine::RenderOptions</a>
+: <a class="el" href="classtracktion_1_1engine_1_1RenderOptions.html#ade753fd8dd2018ddd40318234039e66b">tracktion::engine::RenderOptions</a>
 </li>
 <li>getRenderProgress()
 : <a class="el" href="classtracktion_1_1engine_1_1CompManager.html#a3fb3b9d6a86f3c7cb29c3ca335ba2f22">tracktion::engine::CompManager</a>
@@ -3225,7 +3226,7 @@ $(function() {
 : <a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html#a3a18a65e4b01714920e02c33005100b7">tracktion::engine::AudioClipBase</a>
 </li>
 <li>getRescaledMarkPoints()
-: <a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html#a4ef2e24eca748b839885e0fc661e4b2c">tracktion::engine::AudioClipBase</a>
+: <a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html#ae21c7d7ee748ff93ebdd08773e9dce3f">tracktion::engine::AudioClipBase</a>
 , <a class="el" href="classtracktion_1_1engine_1_1Clip.html#abbb5bcc92a45d2500003211c4a9df48e">tracktion::engine::Clip</a>
 </li>
 <li>getResult()
@@ -3291,6 +3292,9 @@ $(function() {
 </li>
 <li>getScaleStrings()
 : <a class="el" href="classtracktion_1_1engine_1_1Scale.html#a130abed2298d922a660186ef477b5041">tracktion::engine::Scale</a>
+</li>
+<li>getScopedAccess()
+: <a class="el" href="classtracktion_1_1graph_1_1LockFreeObject.html#a7548ae1f43e2777d740f99fff16e1e88">tracktion::graph::LockFreeObject&lt; ObjectType &gt;</a>
 </li>
 <li>getScrubbingBlockLength()
 : <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html#a561c6fefbfe3cc2e662e11f8c1882251">tracktion::graph::PlayHead</a>
@@ -3746,7 +3750,7 @@ $(function() {
 , <a class="el" href="classtracktion_1_1engine_1_1TempoSequence.html#a7c3bb4a9b69340f36e5915f602f124e5">tracktion::engine::TempoSequence</a>
 </li>
 <li>getTempoAt()
-: <a class="el" href="classtracktion_1_1engine_1_1TempoSequence.html#a67bc0ee0253472b29f95ad662e26eeb0">tracktion::engine::TempoSequence</a>
+: <a class="el" href="classtracktion_1_1engine_1_1TempoSequence.html#aa545ce9fc0553fb9ac76adbd4f3ed44f">tracktion::engine::TempoSequence</a>
 </li>
 <li>getTempoAtBeat()
 : <a class="el" href="classtracktion_1_1engine_1_1TempoSequence.html#a8e7bc7cc581a93f0fb5a54651fa882fc">tracktion::engine::TempoSequence</a>
@@ -4197,7 +4201,7 @@ $(function() {
 : <a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#a1b1f7f1ca6dbe36fc9c64f15bdb92210">tracktion::engine::EditPlaybackContext</a>
 </li>
 <li>GrooveTemplate()
-: <a class="el" href="classtracktion_1_1engine_1_1GrooveTemplate.html#acc378cce62d15e48e9bf14549b63d6af">tracktion::engine::GrooveTemplate</a>
+: <a class="el" href="classtracktion_1_1engine_1_1GrooveTemplate.html#a89a005ec76d179c87d2d3a533373a34c">tracktion::engine::GrooveTemplate</a>
 </li>
 <li>GrooveTemplateManager()
 : <a class="el" href="classtracktion_1_1engine_1_1GrooveTemplateManager.html#ab033d72d07f26707f8c139383dd39d05">tracktion::engine::GrooveTemplateManager</a>
@@ -4209,7 +4213,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Oct 3 2022 17:05:07 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Oct 4 2022 14:11:02 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

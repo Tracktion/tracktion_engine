@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-10-03 17:22:12</td>
+            <td class="headerValue">2022-10-04 14:27:59</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">3</td>
@@ -93,8 +93,8 @@
 <a name="31"><span class="lineNum">      31 </span>            : </a>
 <a name="32"><span class="lineNum">      32 </span>            :     /** Creates an NodePlayer to process a Node. */</a>
 <a name="33"><span class="lineNum">      33 </span><span class="lineCov">         16 :     MultiThreadedNodePlayer (std::unique_ptr&lt;tracktion::graph::Node&gt; node,</span></a>
-<a name="34"><span class="lineNum">      34 </span>            :                          ProcessState&amp; processStateToUse,</a>
-<a name="35"><span class="lineNum">      35 </span>            :                          double sampleRate, int blockSize)</a>
+<a name="34"><span class="lineNum">      34 </span>            :                              ProcessState&amp; processStateToUse,</a>
+<a name="35"><span class="lineNum">      35 </span>            :                              double sampleRate, int blockSize)</a>
 <a name="36"><span class="lineNum">      36 </span><span class="lineCov">         16 :         : MultiThreadedNodePlayer (processStateToUse)</span></a>
 <a name="37"><span class="lineNum">      37 </span>            :     {</a>
 <a name="38"><span class="lineNum">      38 </span><span class="lineCov">         16 :         nodePlayer.setNode (std::move (node), sampleRate, blockSize);</span></a>

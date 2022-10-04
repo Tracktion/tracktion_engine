@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-10-03 17:22:12</td>
+            <td class="headerValue">2022-10-04 14:27:59</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">9</td>
@@ -242,7 +242,7 @@
 <a name="180"><span class="lineNum">     180 </span><span class="lineNoCov">          0 :     juce::String getSelectableDescription() override    { return TRANS(&quot;4OSC&quot;); }</span></a>
 <a name="181"><span class="lineNum">     181 </span><span class="lineNoCov">          0 :     bool needsConstantBufferSize() override             { return false; }</span></a>
 <a name="182"><span class="lineNum">     182 </span>            : </a>
-<a name="183"><span class="lineNum">     183 </span><span class="lineCov">         66 :     int getNumOutputChannelsGivenInputs (int numInputChannels) override { return juce::jmin (numInputChannels, 2); }</span></a>
+<a name="183"><span class="lineNum">     183 </span><span class="lineCov">         94 :     int getNumOutputChannelsGivenInputs (int numInputChannels) override { return juce::jmin (numInputChannels, 2); }</span></a>
 <a name="184"><span class="lineNum">     184 </span>            : </a>
 <a name="185"><span class="lineNum">     185 </span>            :     void initialise (const PluginInitialisationInfo&amp;) override;</a>
 <a name="186"><span class="lineNum">     186 </span>            :     void deinitialise() override;</a>
@@ -255,7 +255,7 @@
 <a name="193"><span class="lineNum">     193 </span><span class="lineNoCov">          0 :     bool takesMidiInput() override                      { return true; }</span></a>
 <a name="194"><span class="lineNum">     194 </span><span class="lineNoCov">          0 :     bool takesAudioInput() override                     { return false; }</span></a>
 <a name="195"><span class="lineNum">     195 </span><span class="lineNoCov">          0 :     bool isSynth() override                             { return true; }</span></a>
-<a name="196"><span class="lineNum">     196 </span><span class="lineCov">         66 :     bool producesAudioWhenNoAudioInput() override       { return true; }</span></a>
+<a name="196"><span class="lineNum">     196 </span><span class="lineCov">         94 :     bool producesAudioWhenNoAudioInput() override       { return true; }</span></a>
 <a name="197"><span class="lineNum">     197 </span><span class="lineCov">          4 :     double getTailLength() const override               { return ampRelease-&gt;getCurrentValue(); }</span></a>
 <a name="198"><span class="lineNum">     198 </span>            : </a>
 <a name="199"><span class="lineNum">     199 </span>            :     void restorePluginStateFromValueTree (const juce::ValueTree&amp;) override;</a>

@@ -80,6 +80,12 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1NodeBuffer.html">tracktion::graph::NodeBuffer</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Holds a view over some data and optionally some storage for that data.  <a href="structtracktion_1_1graph_1_1NodeBuffer.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1NodeAndID.html">tracktion::graph::NodeAndID</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A <a class="el" href="classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class.">Node</a> and its ID cached for quick lookup (without having to traverse the graph).  <a href="structtracktion_1_1graph_1_1NodeAndID.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1NodeGraph.html">tracktion::graph::NodeGraph</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Holds a graph in an order ready for processing and a sorted map for quick lookups.  <a href="structtracktion_1_1graph_1_1NodeGraph.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1PlaybackInitialisationInfo.html">tracktion::graph::PlaybackInitialisationInfo</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Passed into Nodes when they are being initialised, to give them useful contextual information that they may need.  <a href="structtracktion_1_1graph_1_1PlaybackInitialisationInfo.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -141,6 +147,15 @@ Functions</h2></td></tr>
 <tr class="memitem:afc2a8b4a5885756fefc95f2c81db5232"><td class="memTemplItemLeft" align="right" valign="top">std::unique_ptr&lt; Node &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph.html#afc2a8b4a5885756fefc95f2c81db5232">tracktion::graph::makeNode</a> (Args &amp;&amp;... args)</td></tr>
 <tr class="memdesc:afc2a8b4a5885756fefc95f2c81db5232"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a node of the given type and returns it as the base <a class="el" href="classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class.">Node</a> class.  <a href="namespacetracktion_1_1graph.html#afc2a8b4a5885756fefc95f2c81db5232">More...</a><br /></td></tr>
 <tr class="separator:afc2a8b4a5885756fefc95f2c81db5232"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a019ae7e8df5784887de4a9b90c9487"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph.html#a9a019ae7e8df5784887de4a9b90c9487">tracktion::graph::operator&lt;</a> (NodeAndID n1, NodeAndID n2)</td></tr>
+<tr class="memdesc:a9a019ae7e8df5784887de4a9b90c9487"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compares two NodeAndIDs.  <a href="namespacetracktion_1_1graph.html#a9a019ae7e8df5784887de4a9b90c9487">More...</a><br /></td></tr>
+<tr class="separator:a9a019ae7e8df5784887de4a9b90c9487"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75dd88b79b4ead64785c8e9be4a5ee9e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph.html#a75dd88b79b4ead64785c8e9be4a5ee9e">tracktion::graph::operator==</a> (NodeAndID n1, NodeAndID n2)</td></tr>
+<tr class="memdesc:a75dd88b79b4ead64785c8e9be4a5ee9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compares two NodeAndIDs.  <a href="namespacetracktion_1_1graph.html#a75dd88b79b4ead64785c8e9be4a5ee9e">More...</a><br /></td></tr>
+<tr class="separator:a75dd88b79b4ead64785c8e9be4a5ee9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affddc1ea5f169421b306a7af1799cb0c"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; NodeGraph &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph.html#affddc1ea5f169421b306a7af1799cb0c">tracktion::graph::createNodeGraph</a> (std::unique_ptr&lt; Node &gt;)</td></tr>
+<tr class="memdesc:affddc1ea5f169421b306a7af1799cb0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transforms a <a class="el" href="classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class.">Node</a> and then returns a <a class="el" href="structtracktion_1_1graph_1_1NodeGraph.html" title="Holds a graph in an order ready for processing and a sorted map for quick lookups.">NodeGraph</a> of it ready to be initialised.  <a href="namespacetracktion_1_1graph.html#affddc1ea5f169421b306a7af1799cb0c">More...</a><br /></td></tr>
+<tr class="separator:affddc1ea5f169421b306a7af1799cb0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a32023348ff2e4fef0dd312ffe050deec"><td class="memTemplParams" colspan="2">template&lt;typename Visitor &gt; </td></tr>
 <tr class="memitem:a32023348ff2e4fef0dd312ffe050deec"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph.html#a32023348ff2e4fef0dd312ffe050deec">tracktion::graph::visitNodes</a> (Node &amp;, Visitor &amp;&amp;, bool preordering)</td></tr>
 <tr class="memdesc:a32023348ff2e4fef0dd312ffe050deec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should call the visitor for any direct inputs to the node exactly once.  <a href="namespacetracktion_1_1graph.html#a32023348ff2e4fef0dd312ffe050deec">More...</a><br /></td></tr>
@@ -148,11 +163,13 @@ Functions</h2></td></tr>
 <tr class="memitem:a8616c2aebe687547f29be0af50553f50"><td class="memTemplParams" colspan="2">template&lt;typename Visitor &gt; </td></tr>
 <tr class="memitem:a8616c2aebe687547f29be0af50553f50"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph.html#a8616c2aebe687547f29be0af50553f50">tracktion::graph::visitNodesBFS</a> (Node &amp;node, Visitor &amp;&amp;visitor)</td></tr>
 <tr class="separator:a8616c2aebe687547f29be0af50553f50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca0fc95ac30e3afed7136e908c6d47ea"><td class="memItemLeft" align="right" valign="top">std::vector&lt; NodeAndID &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph.html#aca0fc95ac30e3afed7136e908c6d47ea">tracktion::graph::createNodeMap</a> (const std::vector&lt; Node * &gt; &amp;nodes)</td></tr>
+<tr class="separator:aca0fc95ac30e3afed7136e908c6d47ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Oct 3 2022 17:05:05 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Oct 4 2022 14:10:59 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

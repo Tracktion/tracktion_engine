@@ -93,9 +93,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a03738756d14797f8aaf61ccec59fb81a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1MultiThreadedNodePlayer.html#a03738756d14797f8aaf61ccec59fb81a">setNode</a> (std::unique_ptr&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> &gt; newNode, double sampleRateToUse, int blockSizeToUse)</td></tr>
 <tr class="memdesc:a03738756d14797f8aaf61ccec59fb81a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the <a class="el" href="classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class.">Node</a> to process with a new sample rate and block size.  <a href="classtracktion_1_1graph_1_1MultiThreadedNodePlayer.html#a03738756d14797f8aaf61ccec59fb81a">More...</a><br /></td></tr>
 <tr class="separator:a03738756d14797f8aaf61ccec59fb81a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abbf226f09931a8172192a7ebdd5cdb60"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1MultiThreadedNodePlayer.html#abbf226f09931a8172192a7ebdd5cdb60">prepareToPlay</a> (double sampleRateToUse, int blockSizeToUse, <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> *oldNode=nullptr)</td></tr>
-<tr class="memdesc:abbf226f09931a8172192a7ebdd5cdb60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prepares the current <a class="el" href="classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class.">Node</a> to be played.  <a href="classtracktion_1_1graph_1_1MultiThreadedNodePlayer.html#abbf226f09931a8172192a7ebdd5cdb60">More...</a><br /></td></tr>
-<tr class="separator:abbf226f09931a8172192a7ebdd5cdb60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5c0fee8714db1ab9828d1e6f89834b9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1MultiThreadedNodePlayer.html#ad5c0fee8714db1ab9828d1e6f89834b9">prepareToPlay</a> (double sampleRateToUse, int blockSizeToUse)</td></tr>
+<tr class="memdesc:ad5c0fee8714db1ab9828d1e6f89834b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prepares the current <a class="el" href="classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class.">Node</a> to be played.  <a href="classtracktion_1_1graph_1_1MultiThreadedNodePlayer.html#ad5c0fee8714db1ab9828d1e6f89834b9">More...</a><br /></td></tr>
+<tr class="separator:ad5c0fee8714db1ab9828d1e6f89834b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af03108939514cab809b2e1f95d4ca4b1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1MultiThreadedNodePlayer.html#af03108939514cab809b2e1f95d4ca4b1">getNode</a> ()</td></tr>
 <tr class="memdesc:af03108939514cab809b2e1f95d4ca4b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current <a class="el" href="classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class.">Node</a>.  <a href="classtracktion_1_1graph_1_1MultiThreadedNodePlayer.html#af03108939514cab809b2e1f95d4ca4b1">More...</a><br /></td></tr>
 <tr class="separator:af03108939514cab809b2e1f95d4ca4b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -235,8 +235,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="abbf226f09931a8172192a7ebdd5cdb60"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abbf226f09931a8172192a7ebdd5cdb60">&#9670;&nbsp;</a></span>prepareToPlay()</h2>
+<a id="ad5c0fee8714db1ab9828d1e6f89834b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5c0fee8714db1ab9828d1e6f89834b9">&#9670;&nbsp;</a></span>prepareToPlay()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -251,13 +251,7 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>blockSizeToUse</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> *&#160;</td>
-          <td class="paramname"><em>oldNode</em> = <code>nullptr</code>&#160;</td>
+          <td class="paramname"><em>blockSizeToUse</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -365,7 +359,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Oct 3 2022 17:05:07 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Oct 4 2022 14:11:01 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

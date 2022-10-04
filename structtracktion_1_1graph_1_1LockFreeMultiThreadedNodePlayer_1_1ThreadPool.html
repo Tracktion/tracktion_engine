@@ -120,6 +120,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a71e542763d8f39c41e01483597494162"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1LockFreeMultiThreadedNodePlayer_1_1ThreadPool.html#a71e542763d8f39c41e01483597494162">process</a> ()</td></tr>
 <tr class="memdesc:a71e542763d8f39c41e01483597494162"><td class="mdescLeft">&#160;</td><td class="mdescRight">Process the next chain of Nodes.  <a href="structtracktion_1_1graph_1_1LockFreeMultiThreadedNodePlayer_1_1ThreadPool.html#a71e542763d8f39c41e01483597494162">More...</a><br /></td></tr>
 <tr class="separator:a71e542763d8f39c41e01483597494162"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52152ca98087999f5fad25900775450d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1LockFreeMultiThreadedNodePlayer_1_1ThreadPool.html#a52152ca98087999f5fad25900775450d">setCurrentNode</a> (LockFreeMultiThreadedNodePlayer::PreparedNode *nodeInUse)</td></tr>
+<tr class="memdesc:a52152ca98087999f5fad25900775450d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the current PreparedNode in use.  <a href="structtracktion_1_1graph_1_1LockFreeMultiThreadedNodePlayer_1_1ThreadPool.html#a52152ca98087999f5fad25900775450d">More...</a><br /></td></tr>
+<tr class="separator:a52152ca98087999f5fad25900775450d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Base class for thread pools which can be customised to determine how cooperative threads should behave. </p>
@@ -399,7 +402,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Returns true if all the threads should exit. </p>
 
-<p class="reference">Referenced by <a class="el" href="structtracktion_1_1graph_1_1LockFreeMultiThreadedNodePlayer_1_1ThreadPool.html#a286e85f50a4c869f9f481b5cdb1edbb4">shouldWait()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="structtracktion_1_1graph_1_1LockFreeMultiThreadedNodePlayer_1_1ThreadPool.html#a52152ca98087999f5fad25900775450d">setCurrentNode()</a>, and <a class="el" href="structtracktion_1_1graph_1_1LockFreeMultiThreadedNodePlayer_1_1ThreadPool.html#a286e85f50a4c869f9f481b5cdb1edbb4">shouldWait()</a>.</p>
 
 </div>
 </div>
@@ -463,13 +466,36 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a52152ca98087999f5fad25900775450d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a52152ca98087999f5fad25900775450d">&#9670;&nbsp;</a></span>setCurrentNode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::graph::LockFreeMultiThreadedNodePlayer::ThreadPool::setCurrentNode </td>
+          <td>(</td>
+          <td class="paramtype">LockFreeMultiThreadedNodePlayer::PreparedNode *&#160;</td>
+          <td class="paramname"><em>nodeInUse</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets the current PreparedNode in use. </p>
+<p>This should live as long as the threads are running once set. </p>
+
+<p class="reference">References <a class="el" href="structtracktion_1_1graph_1_1LockFreeMultiThreadedNodePlayer_1_1ThreadPool.html#adc933e4a09862d0102921118c979868a">shouldExit()</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li><a class="el" href="tracktion__LockFreeMultiThreadedNodePlayer_8h.html">tracktion_LockFreeMultiThreadedNodePlayer.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Oct 3 2022 17:05:07 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Oct 4 2022 14:11:01 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

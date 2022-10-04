@@ -4373,6 +4373,15 @@
     <namespace>tracktion::graph</namespace>
   </compound>
   <compound kind="file">
+    <name>tracktion_LockFreeObject.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_graph/utilities/</path>
+    <filename>tracktion__LockFreeObject_8h.html</filename>
+    <class kind="class">tracktion::graph::LockFreeObject</class>
+    <class kind="class">tracktion::graph::LockFreeObject::ScopedRealTimeAccess</class>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::graph</namespace>
+  </compound>
+  <compound kind="file">
     <name>tracktion_LoopInfo.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/audio_files/</path>
     <filename>tracktion__LoopInfo_8h.html</filename>
@@ -5060,6 +5069,8 @@
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_graph/tracktion_graph/</path>
     <filename>tracktion__Node_8h.html</filename>
     <class kind="struct">tracktion::graph::NodeBuffer</class>
+    <class kind="struct">tracktion::graph::NodeAndID</class>
+    <class kind="struct">tracktion::graph::NodeGraph</class>
     <class kind="struct">tracktion::graph::PlaybackInitialisationInfo</class>
     <class kind="struct">tracktion::graph::NodeProperties</class>
     <class kind="struct">tracktion::graph::NodeOptimisations</class>
@@ -5110,6 +5121,27 @@
       <arglist>(Args &amp;&amp;... args)</arglist>
     </member>
     <member kind="function">
+      <type>bool</type>
+      <name>operator&lt;</name>
+      <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
+      <anchor>a9a019ae7e8df5784887de4a9b90c9487</anchor>
+      <arglist>(NodeAndID n1, NodeAndID n2)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
+      <anchor>a75dd88b79b4ead64785c8e9be4a5ee9e</anchor>
+      <arglist>(NodeAndID n1, NodeAndID n2)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::unique_ptr&lt; NodeGraph &gt;</type>
+      <name>createNodeGraph</name>
+      <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
+      <anchor>affddc1ea5f169421b306a7af1799cb0c</anchor>
+      <arglist>(std::unique_ptr&lt; Node &gt;)</arglist>
+    </member>
+    <member kind="function">
       <type>void</type>
       <name>visitNodes</name>
       <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
@@ -5122,6 +5154,13 @@
       <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
       <anchor>a8616c2aebe687547f29be0af50553f50</anchor>
       <arglist>(Node &amp;node, Visitor &amp;&amp;visitor)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; NodeAndID &gt;</type>
+      <name>createNodeMap</name>
+      <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
+      <anchor>aca0fc95ac30e3afed7136e908c6d47ea</anchor>
+      <arglist>(const std::vector&lt; Node * &gt; &amp;nodes)</arglist>
     </member>
   </compound>
   <compound kind="file">
@@ -6449,6 +6488,27 @@
       <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
       <anchor>a3bc6b60f6939dc57a9cc932a222749cb</anchor>
       <arglist>(RangeType timeInSeconds, double sampleRate)</arglist>
+    </member>
+    <member kind="function">
+      <type>NodeType *</type>
+      <name>findNode</name>
+      <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
+      <anchor>a2e7781d94eceb21ebd4a60276cfc9ba3</anchor>
+      <arglist>(NodeGraph &amp;nodeGraph, Predicate pred)</arglist>
+    </member>
+    <member kind="function">
+      <type>NodeType *</type>
+      <name>findNodeWithID</name>
+      <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
+      <anchor>a4b113f1d6413b4d9d2297ce1c4582cce</anchor>
+      <arglist>(NodeGraph &amp;nodeGraph, size_t nodeIDToLookFor)</arglist>
+    </member>
+    <member kind="function">
+      <type>NodeType *</type>
+      <name>findNodeWithIDIfNonZero</name>
+      <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
+      <anchor>a71cc05a34576c2310a79ebe2e66c1bd2</anchor>
+      <arglist>(NodeGraph *nodeGraph, size_t nodeIDToLookFor)</arglist>
     </member>
   </compound>
   <compound kind="file">
@@ -39595,6 +39655,142 @@
     </member>
   </compound>
   <compound kind="class">
+    <name>tracktion::graph::LockFreeObject</name>
+    <filename>classtracktion_1_1graph_1_1LockFreeObject.html</filename>
+    <templarg></templarg>
+    <class kind="class">tracktion::graph::LockFreeObject::ScopedRealTimeAccess</class>
+    <member kind="function">
+      <type></type>
+      <name>LockFreeObject</name>
+      <anchorfile>classtracktion_1_1graph_1_1LockFreeObject.html</anchorfile>
+      <anchor>a268a656b67001bb279907268c7e98dea</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>clear</name>
+      <anchorfile>classtracktion_1_1graph_1_1LockFreeObject.html</anchorfile>
+      <anchor>a0f2f1c2622ea143307478a1956470f43</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>pushNonRealTime</name>
+      <anchorfile>classtracktion_1_1graph_1_1LockFreeObject.html</anchorfile>
+      <anchor>aa857b152ecd75813e5c2c9d46b1a859a</anchor>
+      <arglist>(ObjectType &amp;&amp;newObj)</arglist>
+    </member>
+    <member kind="function">
+      <type>ObjectType *</type>
+      <name>retainRealTime</name>
+      <anchorfile>classtracktion_1_1graph_1_1LockFreeObject.html</anchorfile>
+      <anchor>a5f286e4d713b5133338226b7e846ab18</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>releaseRealTime</name>
+      <anchorfile>classtracktion_1_1graph_1_1LockFreeObject.html</anchorfile>
+      <anchor>af2a6a29e7231737e98ccda05115cd4ab</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>ScopedRealTimeAccess</type>
+      <name>getScopedAccess</name>
+      <anchorfile>classtracktion_1_1graph_1_1LockFreeObject.html</anchorfile>
+      <anchor>a7548ae1f43e2777d740f99fff16e1e88</anchor>
+      <arglist>()</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>LockFreeObject&lt; PreparedNode &gt;</name>
+    <filename>classtracktion_1_1graph_1_1LockFreeObject.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>LockFreeObject</name>
+      <anchorfile>classtracktion_1_1graph_1_1LockFreeObject.html</anchorfile>
+      <anchor>a268a656b67001bb279907268c7e98dea</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>clear</name>
+      <anchorfile>classtracktion_1_1graph_1_1LockFreeObject.html</anchorfile>
+      <anchor>a0f2f1c2622ea143307478a1956470f43</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>pushNonRealTime</name>
+      <anchorfile>classtracktion_1_1graph_1_1LockFreeObject.html</anchorfile>
+      <anchor>aa857b152ecd75813e5c2c9d46b1a859a</anchor>
+      <arglist>(PreparedNode &amp;&amp;newObj)</arglist>
+    </member>
+    <member kind="function">
+      <type>PreparedNode *</type>
+      <name>retainRealTime</name>
+      <anchorfile>classtracktion_1_1graph_1_1LockFreeObject.html</anchorfile>
+      <anchor>a5f286e4d713b5133338226b7e846ab18</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>releaseRealTime</name>
+      <anchorfile>classtracktion_1_1graph_1_1LockFreeObject.html</anchorfile>
+      <anchor>af2a6a29e7231737e98ccda05115cd4ab</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>ScopedRealTimeAccess</type>
+      <name>getScopedAccess</name>
+      <anchorfile>classtracktion_1_1graph_1_1LockFreeObject.html</anchorfile>
+      <anchor>a7548ae1f43e2777d740f99fff16e1e88</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>LockFreeObject</name>
+      <anchorfile>classtracktion_1_1graph_1_1LockFreeObject.html</anchorfile>
+      <anchor>a268a656b67001bb279907268c7e98dea</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>clear</name>
+      <anchorfile>classtracktion_1_1graph_1_1LockFreeObject.html</anchorfile>
+      <anchor>a0f2f1c2622ea143307478a1956470f43</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>pushNonRealTime</name>
+      <anchorfile>classtracktion_1_1graph_1_1LockFreeObject.html</anchorfile>
+      <anchor>aa857b152ecd75813e5c2c9d46b1a859a</anchor>
+      <arglist>(PreparedNode &amp;&amp;newObj)</arglist>
+    </member>
+    <member kind="function">
+      <type>PreparedNode *</type>
+      <name>retainRealTime</name>
+      <anchorfile>classtracktion_1_1graph_1_1LockFreeObject.html</anchorfile>
+      <anchor>a5f286e4d713b5133338226b7e846ab18</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>releaseRealTime</name>
+      <anchorfile>classtracktion_1_1graph_1_1LockFreeObject.html</anchorfile>
+      <anchor>af2a6a29e7231737e98ccda05115cd4ab</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>ScopedRealTimeAccess</type>
+      <name>getScopedAccess</name>
+      <anchorfile>classtracktion_1_1graph_1_1LockFreeObject.html</anchorfile>
+      <anchor>a7548ae1f43e2777d740f99fff16e1e88</anchor>
+      <arglist>()</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
     <name>tracktion::engine::LoopInfo</name>
     <filename>classtracktion_1_1engine_1_1LoopInfo.html</filename>
     <class kind="struct">tracktion::engine::LoopInfo::LoopPoint</class>
@@ -45123,6 +45319,46 @@
     </member>
   </compound>
   <compound kind="class">
+    <name>tracktion::graph::MidiNode</name>
+    <filename>classtracktion_1_1graph_1_1MidiNode.html</filename>
+    <base>tracktion::graph::Node</base>
+    <member kind="function">
+      <type></type>
+      <name>MidiNode</name>
+      <anchorfile>classtracktion_1_1graph_1_1MidiNode.html</anchorfile>
+      <anchor>a6e88c30572d426d0e9719ce01fb325fa</anchor>
+      <arglist>(juce::MidiMessageSequence sequenceToPlay)</arglist>
+    </member>
+    <member kind="function">
+      <type>NodeProperties</type>
+      <name>getNodeProperties</name>
+      <anchorfile>classtracktion_1_1graph_1_1MidiNode.html</anchorfile>
+      <anchor>ace3f0f37ab6e3f089300ed7a4627a3ba</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isReadyToProcess</name>
+      <anchorfile>classtracktion_1_1graph_1_1MidiNode.html</anchorfile>
+      <anchor>a564d8bf5327db1e3a3bf688ef504921a</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>prepareToPlay</name>
+      <anchorfile>classtracktion_1_1graph_1_1MidiNode.html</anchorfile>
+      <anchor>a3fea6f54bc51df5a878ca6c6c18ca242</anchor>
+      <arglist>(const PlaybackInitialisationInfo &amp;info) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>process</name>
+      <anchorfile>classtracktion_1_1graph_1_1MidiNode.html</anchorfile>
+      <anchor>af7d655bd40cc83ef49314560cbfbedaa</anchor>
+      <arglist>(ProcessContext &amp;pc) override</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
     <name>tracktion::engine::MidiNode</name>
     <filename>classtracktion_1_1engine_1_1MidiNode.html</filename>
     <base>tracktion::graph::Node</base>
@@ -45161,46 +45397,6 @@
       <anchorfile>classtracktion_1_1engine_1_1MidiNode.html</anchorfile>
       <anchor>a7869b47af836495adbd14cbecdbc83a2</anchor>
       <arglist>(ProcessContext &amp;) override</arglist>
-    </member>
-  </compound>
-  <compound kind="class">
-    <name>tracktion::graph::MidiNode</name>
-    <filename>classtracktion_1_1graph_1_1MidiNode.html</filename>
-    <base>tracktion::graph::Node</base>
-    <member kind="function">
-      <type></type>
-      <name>MidiNode</name>
-      <anchorfile>classtracktion_1_1graph_1_1MidiNode.html</anchorfile>
-      <anchor>a6e88c30572d426d0e9719ce01fb325fa</anchor>
-      <arglist>(juce::MidiMessageSequence sequenceToPlay)</arglist>
-    </member>
-    <member kind="function">
-      <type>NodeProperties</type>
-      <name>getNodeProperties</name>
-      <anchorfile>classtracktion_1_1graph_1_1MidiNode.html</anchorfile>
-      <anchor>ace3f0f37ab6e3f089300ed7a4627a3ba</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>isReadyToProcess</name>
-      <anchorfile>classtracktion_1_1graph_1_1MidiNode.html</anchorfile>
-      <anchor>a564d8bf5327db1e3a3bf688ef504921a</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>prepareToPlay</name>
-      <anchorfile>classtracktion_1_1graph_1_1MidiNode.html</anchorfile>
-      <anchor>a3fea6f54bc51df5a878ca6c6c18ca242</anchor>
-      <arglist>(const PlaybackInitialisationInfo &amp;info) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>process</name>
-      <anchorfile>classtracktion_1_1graph_1_1MidiNode.html</anchorfile>
-      <anchor>af7d655bd40cc83ef49314560cbfbedaa</anchor>
-      <arglist>(ProcessContext &amp;pc) override</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -47752,8 +47948,8 @@
       <type>void</type>
       <name>prepareToPlay</name>
       <anchorfile>classtracktion_1_1graph_1_1MultiThreadedNodePlayer.html</anchorfile>
-      <anchor>abbf226f09931a8172192a7ebdd5cdb60</anchor>
-      <arglist>(double sampleRateToUse, int blockSizeToUse, Node *oldNode=nullptr)</arglist>
+      <anchor>ad5c0fee8714db1ab9828d1e6f89834b9</anchor>
+      <arglist>(double sampleRateToUse, int blockSizeToUse)</arglist>
     </member>
     <member kind="function">
       <type>Node *</type>
@@ -48186,6 +48382,24 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>tracktion::graph::NodeAndID</name>
+    <filename>structtracktion_1_1graph_1_1NodeAndID.html</filename>
+    <member kind="variable">
+      <type>Node *</type>
+      <name>node</name>
+      <anchorfile>structtracktion_1_1graph_1_1NodeAndID.html</anchorfile>
+      <anchor>a397548d3e72305f4c228246d8c718aa2</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>size_t</type>
+      <name>id</name>
+      <anchorfile>structtracktion_1_1graph_1_1NodeAndID.html</anchorfile>
+      <anchor>a915a2a4b365a54c02d21e62e90a2c622</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>tracktion::graph::NodeBuffer</name>
     <filename>structtracktion_1_1graph_1_1NodeBuffer.html</filename>
     <member kind="variable">
@@ -48200,6 +48414,31 @@
       <name>data</name>
       <anchorfile>structtracktion_1_1graph_1_1NodeBuffer.html</anchorfile>
       <anchor>abf4abb116829c9b0c68e47ff907fccd9</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion::graph::NodeGraph</name>
+    <filename>structtracktion_1_1graph_1_1NodeGraph.html</filename>
+    <member kind="variable">
+      <type>std::unique_ptr&lt; Node &gt;</type>
+      <name>rootNode</name>
+      <anchorfile>structtracktion_1_1graph_1_1NodeGraph.html</anchorfile>
+      <anchor>add874bfc578e0dfeaf09140c110cc047</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::vector&lt; Node * &gt;</type>
+      <name>orderedNodes</name>
+      <anchorfile>structtracktion_1_1graph_1_1NodeGraph.html</anchorfile>
+      <anchor>a56bc9c14c9d88ba09d64830255b87868</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::vector&lt; NodeAndID &gt;</type>
+      <name>sortedNodes</name>
+      <anchorfile>structtracktion_1_1graph_1_1NodeGraph.html</anchorfile>
+      <anchor>a4e6f8e96d49545285acdd0c997e42820</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -48263,15 +48502,15 @@
       <type>void</type>
       <name>prepareToPlay</name>
       <anchorfile>classtracktion_1_1graph_1_1NodePlayer.html</anchorfile>
-      <anchor>ac1c5690fcd72a1d7248b2bb8d320857a</anchor>
-      <arglist>(double sampleRateToUse, int blockSizeToUse, Node *oldNode=nullptr)</arglist>
+      <anchor>ac0e6993eebc1d72dc0a4824652cd5972</anchor>
+      <arglist>(double sampleRateToUse, int blockSizeToUse)</arglist>
     </member>
     <member kind="function">
-      <type>std::vector&lt; Node * &gt;</type>
+      <type>std::unique_ptr&lt; NodeGraph &gt;</type>
       <name>prepareToPlay</name>
       <anchorfile>classtracktion_1_1graph_1_1NodePlayer.html</anchorfile>
-      <anchor>a2981d401cfa53e8eee4f4f9c718dba2a</anchor>
-      <arglist>(Node *node, Node *oldNode, double sampleRateToUse, int blockSizeToUse)</arglist>
+      <anchor>a90925996ea360db38ea345b3585410bb</anchor>
+      <arglist>(std::unique_ptr&lt; Node &gt; node, NodeGraph *oldGraph, double sampleRateToUse, int blockSizeToUse)</arglist>
     </member>
     <member kind="function">
       <type>int</type>
@@ -48291,22 +48530,22 @@
       <type>int</type>
       <name>processPostorderedNodes</name>
       <anchorfile>classtracktion_1_1graph_1_1NodePlayer.html</anchorfile>
-      <anchor>a1cddc2f43da7a56a68b28a461f3af25f</anchor>
-      <arglist>(Node &amp;rootNodeToProcess, const std::vector&lt; Node * &gt; &amp;nodes, const Node::ProcessContext &amp;pc)</arglist>
+      <anchor>a344f23b874c97be072eaaeac66305d1d</anchor>
+      <arglist>(NodeGraph &amp;graphToProcess, const Node::ProcessContext &amp;pc)</arglist>
     </member>
     <member kind="function" protection="protected">
       <type>int</type>
       <name>processWithPlayHeadState</name>
       <anchorfile>classtracktion_1_1graph_1_1NodePlayer.html</anchorfile>
-      <anchor>a0846d7ba348f38ba5645a9b0fd1ce41d</anchor>
-      <arglist>(PlayHeadState &amp;phs, Node &amp;rootNodeToProcess, const std::vector&lt; Node * &gt; &amp;nodes, const Node::ProcessContext &amp;pc)</arglist>
+      <anchor>a3918701803825590bdbf9659a3b8cec4</anchor>
+      <arglist>(PlayHeadState &amp;phs, NodeGraph &amp;graphToProcess, const Node::ProcessContext &amp;pc)</arglist>
     </member>
     <member kind="function" protection="protected" static="yes">
       <type>static int</type>
       <name>processPostorderedNodesSingleThreaded</name>
       <anchorfile>classtracktion_1_1graph_1_1NodePlayer.html</anchorfile>
-      <anchor>ac5c826bebf55af60bf80291915ad8b6c</anchor>
-      <arglist>(Node &amp;rootNode, const std::vector&lt; Node * &gt; &amp;allNodes, const Node::ProcessContext &amp;pc)</arglist>
+      <anchor>a16ac2a7199a000ff95a86a190e34be66</anchor>
+      <arglist>(NodeGraph &amp;nodeGraph, const Node::ProcessContext &amp;pc)</arglist>
     </member>
     <member kind="variable" protection="protected">
       <type>std::unique_ptr&lt; Node &gt;</type>
@@ -48316,17 +48555,17 @@
       <arglist></arglist>
     </member>
     <member kind="variable" protection="protected">
+      <type>std::unique_ptr&lt; NodeGraph &gt;</type>
+      <name>nodeGraph</name>
+      <anchorfile>classtracktion_1_1graph_1_1NodePlayer.html</anchorfile>
+      <anchor>a1f59bcbe70ae0482b12bd5bdeec06bc8</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
       <type>PlayHeadState *</type>
       <name>playHeadState</name>
       <anchorfile>classtracktion_1_1graph_1_1NodePlayer.html</anchorfile>
       <anchor>aba98a2cd3b55aac5027f1606661f5134</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>std::vector&lt; Node * &gt;</type>
-      <name>allNodes</name>
-      <anchorfile>classtracktion_1_1graph_1_1NodePlayer.html</anchorfile>
-      <anchor>aa93cdac7004cf7273c5267a08d71570e</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable" protection="protected">
@@ -50149,101 +50388,6 @@
     </member>
   </compound>
   <compound kind="struct">
-    <name>tracktion::engine::StepVolumeEffect::Pattern</name>
-    <filename>structtracktion_1_1engine_1_1StepVolumeEffect_1_1Pattern.html</filename>
-    <member kind="function">
-      <type></type>
-      <name>Pattern</name>
-      <anchorfile>structtracktion_1_1engine_1_1StepVolumeEffect_1_1Pattern.html</anchorfile>
-      <anchor>af76a752c7678ef02dbaa8e3ad89f88d4</anchor>
-      <arglist>(StepVolumeEffect &amp;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>Pattern</name>
-      <anchorfile>structtracktion_1_1engine_1_1StepVolumeEffect_1_1Pattern.html</anchorfile>
-      <anchor>a6f3254202e3363551b665ee3504e1581</anchor>
-      <arglist>(const Pattern &amp;other) noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>getNote</name>
-      <anchorfile>structtracktion_1_1engine_1_1StepVolumeEffect_1_1Pattern.html</anchorfile>
-      <anchor>a98d67d0630e1214fbf1a57964690ac90</anchor>
-      <arglist>(int index) const noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>setNote</name>
-      <anchorfile>structtracktion_1_1engine_1_1StepVolumeEffect_1_1Pattern.html</anchorfile>
-      <anchor>ab11b7cca85c294182bcab9aa2cca9598</anchor>
-      <arglist>(int index, bool value)</arglist>
-    </member>
-    <member kind="function">
-      <type>juce::BigInteger</type>
-      <name>getPattern</name>
-      <anchorfile>structtracktion_1_1engine_1_1StepVolumeEffect_1_1Pattern.html</anchorfile>
-      <anchor>a0fc6a940ab2068ac748fd8ddafc3165f</anchor>
-      <arglist>() const noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>setPattern</name>
-      <anchorfile>structtracktion_1_1engine_1_1StepVolumeEffect_1_1Pattern.html</anchorfile>
-      <anchor>a5cbc954b9d9daf38cfba186f74237f03</anchor>
-      <arglist>(const juce::BigInteger &amp;) noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>clear</name>
-      <anchorfile>structtracktion_1_1engine_1_1StepVolumeEffect_1_1Pattern.html</anchorfile>
-      <anchor>a85612836c85a3792eb723993aa6c6ca9</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>int</type>
-      <name>getNumNotes</name>
-      <anchorfile>structtracktion_1_1engine_1_1StepVolumeEffect_1_1Pattern.html</anchorfile>
-      <anchor>a323cdf1a5423acff9a73ad6e8ca50405</anchor>
-      <arglist>() const</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>shiftChannel</name>
-      <anchorfile>structtracktion_1_1engine_1_1StepVolumeEffect_1_1Pattern.html</anchorfile>
-      <anchor>af53a3d2e6fb7c429a7557b7c6d922e6d</anchor>
-      <arglist>(bool toTheRight)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>toggleAtInterval</name>
-      <anchorfile>structtracktion_1_1engine_1_1StepVolumeEffect_1_1Pattern.html</anchorfile>
-      <anchor>a84e10379c20d76cea45550aff800af7d</anchor>
-      <arglist>(int interval)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>randomiseChannel</name>
-      <anchorfile>structtracktion_1_1engine_1_1StepVolumeEffect_1_1Pattern.html</anchorfile>
-      <anchor>a795a2bb70593fbbafcd36bc0e9889e77</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="variable">
-      <type>StepVolumeEffect &amp;</type>
-      <name>effect</name>
-      <anchorfile>structtracktion_1_1engine_1_1StepVolumeEffect_1_1Pattern.html</anchorfile>
-      <anchor>a288b25062f924fef443c21946871c07f</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::ValueTree</type>
-      <name>state</name>
-      <anchorfile>structtracktion_1_1engine_1_1StepVolumeEffect_1_1Pattern.html</anchorfile>
-      <anchor>afdb760dfe1d6618fc42c388a8408726b</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
     <name>tracktion::engine::StepClip::Pattern</name>
     <filename>structtracktion_1_1engine_1_1StepClip_1_1Pattern.html</filename>
     <class kind="struct">tracktion::engine::StepClip::Pattern::CachedPattern</class>
@@ -50483,6 +50627,101 @@
       <name>state</name>
       <anchorfile>structtracktion_1_1engine_1_1StepClip_1_1Pattern.html</anchorfile>
       <anchor>abadbb8a49ac3f6c3beaf35fa598d001f</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::StepVolumeEffect::Pattern</name>
+    <filename>structtracktion_1_1engine_1_1StepVolumeEffect_1_1Pattern.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>Pattern</name>
+      <anchorfile>structtracktion_1_1engine_1_1StepVolumeEffect_1_1Pattern.html</anchorfile>
+      <anchor>af76a752c7678ef02dbaa8e3ad89f88d4</anchor>
+      <arglist>(StepVolumeEffect &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>Pattern</name>
+      <anchorfile>structtracktion_1_1engine_1_1StepVolumeEffect_1_1Pattern.html</anchorfile>
+      <anchor>a6f3254202e3363551b665ee3504e1581</anchor>
+      <arglist>(const Pattern &amp;other) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>getNote</name>
+      <anchorfile>structtracktion_1_1engine_1_1StepVolumeEffect_1_1Pattern.html</anchorfile>
+      <anchor>a98d67d0630e1214fbf1a57964690ac90</anchor>
+      <arglist>(int index) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setNote</name>
+      <anchorfile>structtracktion_1_1engine_1_1StepVolumeEffect_1_1Pattern.html</anchorfile>
+      <anchor>ab11b7cca85c294182bcab9aa2cca9598</anchor>
+      <arglist>(int index, bool value)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::BigInteger</type>
+      <name>getPattern</name>
+      <anchorfile>structtracktion_1_1engine_1_1StepVolumeEffect_1_1Pattern.html</anchorfile>
+      <anchor>a0fc6a940ab2068ac748fd8ddafc3165f</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setPattern</name>
+      <anchorfile>structtracktion_1_1engine_1_1StepVolumeEffect_1_1Pattern.html</anchorfile>
+      <anchor>a5cbc954b9d9daf38cfba186f74237f03</anchor>
+      <arglist>(const juce::BigInteger &amp;) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>clear</name>
+      <anchorfile>structtracktion_1_1engine_1_1StepVolumeEffect_1_1Pattern.html</anchorfile>
+      <anchor>a85612836c85a3792eb723993aa6c6ca9</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>getNumNotes</name>
+      <anchorfile>structtracktion_1_1engine_1_1StepVolumeEffect_1_1Pattern.html</anchorfile>
+      <anchor>a323cdf1a5423acff9a73ad6e8ca50405</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>shiftChannel</name>
+      <anchorfile>structtracktion_1_1engine_1_1StepVolumeEffect_1_1Pattern.html</anchorfile>
+      <anchor>af53a3d2e6fb7c429a7557b7c6d922e6d</anchor>
+      <arglist>(bool toTheRight)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>toggleAtInterval</name>
+      <anchorfile>structtracktion_1_1engine_1_1StepVolumeEffect_1_1Pattern.html</anchorfile>
+      <anchor>a84e10379c20d76cea45550aff800af7d</anchor>
+      <arglist>(int interval)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>randomiseChannel</name>
+      <anchorfile>structtracktion_1_1engine_1_1StepVolumeEffect_1_1Pattern.html</anchorfile>
+      <anchor>a795a2bb70593fbbafcd36bc0e9889e77</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="variable">
+      <type>StepVolumeEffect &amp;</type>
+      <name>effect</name>
+      <anchorfile>structtracktion_1_1engine_1_1StepVolumeEffect_1_1Pattern.html</anchorfile>
+      <anchor>a288b25062f924fef443c21946871c07f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::ValueTree</type>
+      <name>state</name>
+      <anchorfile>structtracktion_1_1engine_1_1StepVolumeEffect_1_1Pattern.html</anchorfile>
+      <anchor>afdb760dfe1d6618fc42c388a8408726b</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -51977,17 +52216,17 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>Node &amp;</type>
-      <name>rootNode</name>
+      <type>NodeGraph &amp;</type>
+      <name>nodeGraph</name>
       <anchorfile>structtracktion_1_1graph_1_1PlaybackInitialisationInfo.html</anchorfile>
-      <anchor>a250f330af99491b0681debd090988ff8</anchor>
+      <anchor>aa71244b58b1a39c74a71a1d28a524287</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>Node *</type>
-      <name>rootNodeToReplace</name>
+      <type>NodeGraph *</type>
+      <name>nodeGraphToReplace</name>
       <anchorfile>structtracktion_1_1graph_1_1PlaybackInitialisationInfo.html</anchorfile>
-      <anchor>a4033199c5a7b5f7d750e274f5855609e</anchor>
+      <anchor>a17b1aec4ebc8090a6a44b7347a18cc04</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -61174,6 +61413,31 @@
       <arglist></arglist>
     </member>
   </compound>
+  <compound kind="class">
+    <name>tracktion::graph::LockFreeObject::ScopedRealTimeAccess</name>
+    <filename>classtracktion_1_1graph_1_1LockFreeObject_1_1ScopedRealTimeAccess.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>ScopedRealTimeAccess</name>
+      <anchorfile>classtracktion_1_1graph_1_1LockFreeObject_1_1ScopedRealTimeAccess.html</anchorfile>
+      <anchor>ac956b70283ce80a81e7993afea67b5c2</anchor>
+      <arglist>(LockFreeObject &amp;lfo)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~ScopedRealTimeAccess</name>
+      <anchorfile>classtracktion_1_1graph_1_1LockFreeObject_1_1ScopedRealTimeAccess.html</anchorfile>
+      <anchor>a08f57d30b6cd27f3d0def350f4ab414e</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>ObjectType *</type>
+      <name>get</name>
+      <anchorfile>classtracktion_1_1graph_1_1LockFreeObject_1_1ScopedRealTimeAccess.html</anchorfile>
+      <anchor>a475c758bc1fde945d6ea5b9fb34fd962</anchor>
+      <arglist>() const</arglist>
+    </member>
+  </compound>
   <compound kind="struct">
     <name>tracktion::engine::Edit::ScopedRenderStatus</name>
     <filename>structtracktion_1_1engine_1_1Edit_1_1ScopedRenderStatus.html</filename>
@@ -63223,15 +63487,8 @@
       <type></type>
       <name>SimpleNodePlayer</name>
       <anchorfile>classtracktion_1_1graph_1_1SimpleNodePlayer.html</anchorfile>
-      <anchor>aa4739815c38c34654fec06f36e204966</anchor>
-      <arglist>(std::unique_ptr&lt; Node &gt; nodeToPlay)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>prepareToPlay</name>
-      <anchorfile>classtracktion_1_1graph_1_1SimpleNodePlayer.html</anchorfile>
-      <anchor>ab9773d9dec3d5132d301e23f81d61747</anchor>
-      <arglist>(double sampleRateToUse, int blockSizeToUse)</arglist>
+      <anchor>a21fd35def986ca78bec9fea2e0ebe183</anchor>
+      <arglist>(std::unique_ptr&lt; Node &gt; nodeToPlay, double sampleRateToUse, int blockSizeToUse)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -63931,6 +64188,31 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>tracktion::engine::Renderer::Statistics</name>
+    <filename>structtracktion_1_1engine_1_1Renderer_1_1Statistics.html</filename>
+    <member kind="variable">
+      <type>float</type>
+      <name>peak</name>
+      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Statistics.html</anchorfile>
+      <anchor>a003752a60ac98d489cdbe9304e8ea63d</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>average</name>
+      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Statistics.html</anchorfile>
+      <anchor>adb0fa2ac4b21c2e4c838d8d295788030</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>audioDuration</name>
+      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Statistics.html</anchorfile>
+      <anchor>afdd49b4f43da8fbfcf76a076c8fe25dc</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>tracktion::graph::PerformanceMeasurement::Statistics</name>
     <filename>structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html</filename>
     <member kind="function">
@@ -64015,31 +64297,6 @@
       <name>numRuns</name>
       <anchorfile>structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html</anchorfile>
       <anchor>a650d60f8b45be65687713b3115a0f996</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
-    <name>tracktion::engine::Renderer::Statistics</name>
-    <filename>structtracktion_1_1engine_1_1Renderer_1_1Statistics.html</filename>
-    <member kind="variable">
-      <type>float</type>
-      <name>peak</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Statistics.html</anchorfile>
-      <anchor>a003752a60ac98d489cdbe9304e8ea63d</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>float</type>
-      <name>average</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Statistics.html</anchorfile>
-      <anchor>adb0fa2ac4b21c2e4c838d8d295788030</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>float</type>
-      <name>audioDuration</name>
-      <anchorfile>structtracktion_1_1engine_1_1Renderer_1_1Statistics.html</anchorfile>
-      <anchor>afdd49b4f43da8fbfcf76a076c8fe25dc</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -66461,6 +66718,13 @@
       <anchorfile>structtracktion_1_1graph_1_1LockFreeMultiThreadedNodePlayer_1_1ThreadPool.html</anchorfile>
       <anchor>a71e542763d8f39c41e01483597494162</anchor>
       <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setCurrentNode</name>
+      <anchorfile>structtracktion_1_1graph_1_1LockFreeMultiThreadedNodePlayer_1_1ThreadPool.html</anchorfile>
+      <anchor>a52152ca98087999f5fad25900775450d</anchor>
+      <arglist>(LockFreeMultiThreadedNodePlayer::PreparedNode *nodeInUse)</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -79986,25 +80250,6 @@
     </member>
   </compound>
   <compound kind="struct">
-    <name>tracktion::engine::Plugin::WindowState</name>
-    <filename>structtracktion_1_1engine_1_1Plugin_1_1WindowState.html</filename>
-    <base>tracktion::engine::PluginWindowState</base>
-    <member kind="function">
-      <type></type>
-      <name>WindowState</name>
-      <anchorfile>structtracktion_1_1engine_1_1Plugin_1_1WindowState.html</anchorfile>
-      <anchor>a1291a8a07e6f1c2af0979b2b0419f1c8</anchor>
-      <arglist>(Plugin &amp;)</arglist>
-    </member>
-    <member kind="variable">
-      <type>Plugin &amp;</type>
-      <name>plugin</name>
-      <anchorfile>structtracktion_1_1engine_1_1Plugin_1_1WindowState.html</anchorfile>
-      <anchor>a3c3b085de35f422c79719353833e630a</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
     <name>tracktion::engine::RackType::WindowState</name>
     <filename>structtracktion_1_1engine_1_1RackType_1_1WindowState.html</filename>
     <base>tracktion::engine::PluginWindowState</base>
@@ -80027,6 +80272,25 @@
       <name>state</name>
       <anchorfile>structtracktion_1_1engine_1_1RackType_1_1WindowState.html</anchorfile>
       <anchor>a2dd9ed0ee683826b4e8a11d2eb9bb23e</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::Plugin::WindowState</name>
+    <filename>structtracktion_1_1engine_1_1Plugin_1_1WindowState.html</filename>
+    <base>tracktion::engine::PluginWindowState</base>
+    <member kind="function">
+      <type></type>
+      <name>WindowState</name>
+      <anchorfile>structtracktion_1_1engine_1_1Plugin_1_1WindowState.html</anchorfile>
+      <anchor>a1291a8a07e6f1c2af0979b2b0419f1c8</anchor>
+      <arglist>(Plugin &amp;)</arglist>
+    </member>
+    <member kind="variable">
+      <type>Plugin &amp;</type>
+      <name>plugin</name>
+      <anchorfile>structtracktion_1_1engine_1_1Plugin_1_1WindowState.html</anchorfile>
+      <anchor>a3c3b085de35f422c79719353833e630a</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -80317,6 +80581,7 @@
     <class kind="class">tracktion::engine::LiveMidiInjectingNode</class>
     <class kind="class">tracktion::engine::LiveMidiOutputNode</class>
     <class kind="class">tracktion::graph::LockFreeMultiThreadedNodePlayer</class>
+    <class kind="class">tracktion::graph::LockFreeObject</class>
     <class kind="class">tracktion::engine::LoopInfo</class>
     <class kind="class">tracktion::engine::LoopingMidiNode</class>
     <class kind="class">tracktion::engine::LowPassPlugin</class>
@@ -80369,7 +80634,9 @@
     <class kind="class">tracktion::engine::MultiVoiceOscillator</class>
     <class kind="struct">tracktion::engine::MuteAudioNode</class>
     <class kind="class">tracktion::graph::Node</class>
+    <class kind="struct">tracktion::graph::NodeAndID</class>
     <class kind="struct">tracktion::graph::NodeBuffer</class>
+    <class kind="struct">tracktion::graph::NodeGraph</class>
     <class kind="struct">tracktion::graph::NodeOptimisations</class>
     <class kind="class">tracktion::graph::NodePlayer</class>
     <class kind="struct">tracktion::graph::NodeProperties</class>
@@ -84795,10 +85062,13 @@
     <class kind="struct">tracktion::graph::LatencyProcessor</class>
     <class kind="class">tracktion::graph::LightweightSemaphore</class>
     <class kind="class">tracktion::graph::LockFreeMultiThreadedNodePlayer</class>
+    <class kind="class">tracktion::graph::LockFreeObject</class>
     <class kind="class">tracktion::graph::MidiNode</class>
     <class kind="class">tracktion::graph::MultiThreadedNodePlayer</class>
     <class kind="class">tracktion::graph::Node</class>
+    <class kind="struct">tracktion::graph::NodeAndID</class>
     <class kind="struct">tracktion::graph::NodeBuffer</class>
+    <class kind="struct">tracktion::graph::NodeGraph</class>
     <class kind="struct">tracktion::graph::NodeOptimisations</class>
     <class kind="class">tracktion::graph::NodePlayer</class>
     <class kind="struct">tracktion::graph::NodeProperties</class>
@@ -84870,6 +85140,27 @@
       <arglist>(Args &amp;&amp;... args)</arglist>
     </member>
     <member kind="function">
+      <type>bool</type>
+      <name>operator&lt;</name>
+      <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
+      <anchor>a9a019ae7e8df5784887de4a9b90c9487</anchor>
+      <arglist>(NodeAndID n1, NodeAndID n2)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
+      <anchor>a75dd88b79b4ead64785c8e9be4a5ee9e</anchor>
+      <arglist>(NodeAndID n1, NodeAndID n2)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::unique_ptr&lt; NodeGraph &gt;</type>
+      <name>createNodeGraph</name>
+      <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
+      <anchor>affddc1ea5f169421b306a7af1799cb0c</anchor>
+      <arglist>(std::unique_ptr&lt; Node &gt;)</arglist>
+    </member>
+    <member kind="function">
       <type>void</type>
       <name>visitNodes</name>
       <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
@@ -84882,6 +85173,13 @@
       <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
       <anchor>a8616c2aebe687547f29be0af50553f50</anchor>
       <arglist>(Node &amp;node, Visitor &amp;&amp;visitor)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; NodeAndID &gt;</type>
+      <name>createNodeMap</name>
+      <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
+      <anchor>aca0fc95ac30e3afed7136e908c6d47ea</anchor>
+      <arglist>(const std::vector&lt; Node * &gt; &amp;nodes)</arglist>
     </member>
     <member kind="function">
       <type>LockFreeMultiThreadedNodePlayer::ThreadPoolCreator</type>
@@ -84924,6 +85222,27 @@
       <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
       <anchor>a3bc6b60f6939dc57a9cc932a222749cb</anchor>
       <arglist>(RangeType timeInSeconds, double sampleRate)</arglist>
+    </member>
+    <member kind="function">
+      <type>NodeType *</type>
+      <name>findNode</name>
+      <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
+      <anchor>a2e7781d94eceb21ebd4a60276cfc9ba3</anchor>
+      <arglist>(NodeGraph &amp;nodeGraph, Predicate pred)</arglist>
+    </member>
+    <member kind="function">
+      <type>NodeType *</type>
+      <name>findNodeWithID</name>
+      <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
+      <anchor>a4b113f1d6413b4d9d2297ce1c4582cce</anchor>
+      <arglist>(NodeGraph &amp;nodeGraph, size_t nodeIDToLookFor)</arglist>
+    </member>
+    <member kind="function">
+      <type>NodeType *</type>
+      <name>findNodeWithIDIfNonZero</name>
+      <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
+      <anchor>a71cc05a34576c2310a79ebe2e66c1bd2</anchor>
+      <arglist>(NodeGraph *nodeGraph, size_t nodeIDToLookFor)</arglist>
     </member>
     <member kind="function">
       <type>juce::AudioBuffer&lt; float &gt;</type>
