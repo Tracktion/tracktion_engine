@@ -23,32 +23,27 @@ namespace tracktion { inline namespace graph
 class SimpleNodePlayer
 {
 public:
-    /** Creates a player to play a Node. */
-    SimpleNodePlayer (std::unique_ptr<Node> nodeToPlay)
-        : rootNode (std::move (nodeToPlay))
+    /** Creates a player to play a Node at a given sample rate and block size. */
+    SimpleNodePlayer (std::unique_ptr<Node> nodeToPlay,
+                      double sampleRateToUse, int blockSizeToUse)
     {
-        assert (rootNode);
+        assert (nodeToPlay);
+        graph = node_player_utils::prepareToPlay (std::move (nodeToPlay), nullptr, sampleRateToUse, blockSizeToUse);
     }
     
-    /** Prepares the Node to be played. */
-    void prepareToPlay (double sampleRateToUse, int blockSizeToUse)
-    {
-        orderedNodes = node_player_utils::prepareToPlay (rootNode.get(), nullptr, sampleRateToUse, blockSizeToUse);
-    }
-
     /** Processes a block of audio and MIDI data. */
     void process (const Node::ProcessContext& pc)
     {
         // Prepare all nodes for the next block
-        for (auto node : orderedNodes)
+        for (auto node : graph->orderedNodes)
             node->prepareForNextBlock (pc.referenceSampleRange);
         
         // Then process them all in sequence
-        for (auto node : orderedNodes)
+        for (auto node : graph->orderedNodes)
             node->process (pc.numSamples, pc.referenceSampleRange);
 
         // Finally copy the output from the root Node to our player buffers
-        auto output = rootNode->getProcessedOutput();
+        auto output = graph->rootNode->getProcessedOutput();
         auto numAudioChannels = std::min (output.audio.getNumChannels(),
                                           pc.buffers.audio.getNumChannels());
                 
@@ -60,8 +55,7 @@ public:
     }
     
 private:
-    std::unique_ptr<Node> rootNode;
-    std::vector<Node*> orderedNodes;
+    std::unique_ptr<NodeGraph> graph;
 };
 
 }}

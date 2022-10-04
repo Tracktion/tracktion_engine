@@ -55,25 +55,8 @@ void MidiNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo
 {
     sampleRate = info.sampleRate;
 
-    if (info.rootNodeToReplace != nullptr)
-    {
-        bool foundNodeToReplace = false;
-        const auto nodeIDToLookFor = getNodeProperties().nodeID;
-
-        visitNodes (info.rootNode, [&] (Node& n)
-                    {
-                        if (auto midiNode = dynamic_cast<MidiNode*> (&n))
-                        {
-                            if (midiNode->getNodeProperties().nodeID == nodeIDToLookFor)
-                            {
-                                midiSourceID = midiNode->midiSourceID;
-                                foundNodeToReplace = true;
-                            }
-                        }
-                    }, true);
-
-        shouldCreateMessagesForTime = ! foundNodeToReplace;
-    }
+    if (info.nodeGraphToReplace != nullptr)
+        shouldCreateMessagesForTime = findNodeWithID<MidiNode> (*info.nodeGraphToReplace, getNodeProperties().nodeID) == nullptr;
 }
 
 bool MidiNode::isReadyToProcess()

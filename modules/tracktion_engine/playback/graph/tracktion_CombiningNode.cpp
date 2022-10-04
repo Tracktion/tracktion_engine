@@ -222,14 +222,13 @@ void CombiningNode::prepareToPlay (const tracktion::graph::PlaybackInitialisatio
     }
 
     // Inspect the old graph to find clips that need to be killed
-    if (info.rootNodeToReplace != nullptr)
+    if (info.nodeGraphToReplace != nullptr)
     {
-        visitNodes (*info.rootNodeToReplace, [this, itemID = itemID] (Node& n)
-                    {
-                        if (auto combiningNode = dynamic_cast<CombiningNode*> (&n))
-                            if (combiningNode->itemID == itemID)
-                                queueNoteOffsForClipsNoLongerPresent (*combiningNode);
-                    }, true);
+        if (auto oldNode = findNode<CombiningNode> (*info.nodeGraphToReplace,
+                                                    [itemID = itemID] (auto& cn) { return cn.itemID == itemID; }))
+        {
+            queueNoteOffsForClipsNoLongerPresent (*oldNode);
+        }
     }
 }
 

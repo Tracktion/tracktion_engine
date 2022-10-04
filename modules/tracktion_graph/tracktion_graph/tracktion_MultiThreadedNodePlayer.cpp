@@ -212,14 +212,18 @@ void MultiThreadedNodePlayer::setNode (std::unique_ptr<Node> newNode)
 
 void MultiThreadedNodePlayer::setNode (std::unique_ptr<Node> newNode, double sampleRateToUse, int blockSizeToUse)
 {
-    auto currentRoot = currentNode.load (std::memory_order_acquire);
-    auto newNodes = prepareToPlay (newNode.get(), currentRoot, sampleRateToUse, blockSizeToUse);
-    setNewCurrentNode (std::move (newNode), newNodes);
+    setNewGraph (prepareToPlay (std::move (newNode), preparedNode ? preparedNode->graph.get() : nullptr,
+                                sampleRateToUse, blockSizeToUse));
 }
 
-void MultiThreadedNodePlayer::prepareToPlay (double sampleRateToUse, int blockSizeToUse, Node* oldNode)
+void MultiThreadedNodePlayer::prepareToPlay (double sampleRateToUse, int blockSizeToUse)
 {
-    preparedNode->allNodes = prepareToPlay (preparedNode->rootNode.get(), oldNode, sampleRateToUse, blockSizeToUse);
+    if (! preparedNode)
+        return;
+
+    // Don't pass in the old graph here as we're stealing the root from it
+    setNewGraph (prepareToPlay (std::move (preparedNode->graph->rootNode), nullptr,
+                                sampleRateToUse, blockSizeToUse));
 }
 
 int MultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
@@ -239,24 +243,24 @@ int MultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
     referenceSampleRange = pc.referenceSampleRange;
 
     // Prepare all the nodes to be played back
-    for (auto node : preparedNode->allNodes)
+    for (auto node : preparedNode->graph->orderedNodes)
         node->prepareForNextBlock (referenceSampleRange);
 
     if (numThreadsToUse.load (std::memory_order_acquire) == 0)
     {
-        for (auto node : preparedNode->allNodes)
+        for (auto node : preparedNode->graph->orderedNodes)
             node->process (numSamplesToProcess, referenceSampleRange);
     }
     else
     {
         // Reset the queue to be processed
-        jassert (preparedNode->playbackNodes.size() == preparedNode->allNodes.size());
+        jassert (preparedNode->playbackNodes.size() == preparedNode->graph->orderedNodes.size());
         resetProcessQueue();
 
         // Try to process Nodes until the root is ready
         for (;;)
         {
-            if (preparedNode->rootNode->hasProcessed())
+            if (preparedNode->graph->rootNode->hasProcessed())
                 break;
 
             if (! processNextFreeNode())
@@ -266,7 +270,7 @@ int MultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
 
     // Add output from graph to buffers
     {
-        auto output = preparedNode->rootNode->getProcessedOutput();
+        auto output = preparedNode->graph->rootNode->getProcessedOutput();
         auto numAudioChannels = std::min (output.audio.getNumChannels(), pc.buffers.audio.getNumChannels());
 
         if (numAudioChannels > 0)
@@ -294,14 +298,16 @@ void MultiThreadedNodePlayer::clearNode()
 
 //==============================================================================
 //==============================================================================
-std::vector<Node*> MultiThreadedNodePlayer::prepareToPlay (Node* node, Node* oldNode, double sampleRateToUse, int blockSizeToUse)
+std::unique_ptr<NodeGraph> MultiThreadedNodePlayer::prepareToPlay (std::unique_ptr<Node> node, NodeGraph* oldGraph,
+                                                                   double sampleRateToUse, int blockSizeToUse)
 {
     createThreads();
 
     sampleRate.store (sampleRateToUse, std::memory_order_release);
     blockSize = blockSizeToUse;
 
-    return node_player_utils::prepareToPlay (node, oldNode, sampleRateToUse, blockSizeToUse);
+    return node_player_utils::prepareToPlay (std::move (node), oldGraph,
+                                             sampleRateToUse, blockSizeToUse);
 }
 
 //==============================================================================
@@ -327,23 +333,21 @@ inline void MultiThreadedNodePlayer::pause()
 }
 
 //==============================================================================
-void MultiThreadedNodePlayer::setNewCurrentNode (std::unique_ptr<Node> newRoot, std::vector<Node*> newNodes)
+void MultiThreadedNodePlayer::setNewGraph (std::unique_ptr<NodeGraph> newGraph)
 {
     // Ensure the Nodes ready to be processed are at the front of the queue
-    std::stable_sort (newNodes.begin(), newNodes.end(),
+    std::stable_sort (newGraph->orderedNodes.begin(), newGraph->orderedNodes.end(),
                       [] (auto n1, auto n2)
                       {
                           return n1->isReadyToProcess() && ! n2->isReadyToProcess();
                       });
 
     auto newPreparedNode = std::make_unique<PreparedNode>();
-    newPreparedNode->rootNode = std::move (newRoot);
-    newPreparedNode->allNodes = std::move (newNodes);
-    newPreparedNode->nodesReadyToBeProcessed.reset (newPreparedNode->allNodes.size());
-    buildNodesOutputLists (newPreparedNode->allNodes, newPreparedNode->playbackNodes);
+    newPreparedNode->graph = std::move (newGraph);
+    newPreparedNode->nodesReadyToBeProcessed.reset (newPreparedNode->graph->orderedNodes.size());
+    buildNodesOutputLists (newPreparedNode->graph->orderedNodes, newPreparedNode->playbackNodes);
 
-    // Make the new Node visible to the getNode function
-    currentNode.store (newPreparedNode->rootNode.get(), std::memory_order_release);
+    currentPreparedNode = newPreparedNode.get();
 
     // Then swap the storage under the lock so the old Node isn't being processed whilst it is deleted
     const std::lock_guard<RealTimeSpinLock> lock (preparedNodeMutex);

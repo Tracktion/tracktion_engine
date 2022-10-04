@@ -31,8 +31,8 @@ public:
 
     /** Creates an NodePlayer to process a Node. */
     MultiThreadedNodePlayer (std::unique_ptr<tracktion::graph::Node> node,
-                         ProcessState& processStateToUse,
-                         double sampleRate, int blockSize)
+                             ProcessState& processStateToUse,
+                             double sampleRate, int blockSize)
         : MultiThreadedNodePlayer (processStateToUse)
     {
         nodePlayer.setNode (std::move (node), sampleRate, blockSize);

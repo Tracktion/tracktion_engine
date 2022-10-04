@@ -96,6 +96,43 @@ struct NodeBuffer
 };
 
 //==============================================================================
+/**
+    A Node and its ID cached for quick lookup (without having to traverse the graph).
+*/
+struct NodeAndID
+{
+    Node* node = nullptr;
+    size_t id = 0;
+};
+
+/** Compares two NodeAndIDs. */
+inline bool operator< (NodeAndID n1, NodeAndID n2)
+{
+    return n1.id < n2.id;
+}
+
+/** Compares two NodeAndIDs. */
+inline bool operator== (NodeAndID n1, NodeAndID n2)
+{
+    return n1.node == n2.node && n1.id == n2.id;
+}
+
+/**
+    Holds a graph in an order ready for processing and a sorted map for quick lookups.
+*/
+struct NodeGraph
+{
+    std::unique_ptr<Node> rootNode;
+    std::vector<Node*> orderedNodes;
+    std::vector<NodeAndID> sortedNodes;
+};
+
+
+/** Transforms a Node and then returns a NodeGraph of it ready to be initialised. */
+std::unique_ptr<NodeGraph> createNodeGraph (std::unique_ptr<Node>);
+
+
+//==============================================================================
 /** Passed into Nodes when they are being initialised, to give them useful
     contextual information that they may need
 */
@@ -103,8 +140,8 @@ struct PlaybackInitialisationInfo
 {
     double sampleRate;
     int blockSize;
-    Node& rootNode;
-    Node* rootNodeToReplace = nullptr;
+    NodeGraph& nodeGraph;
+    NodeGraph* nodeGraphToReplace = nullptr;
     std::function<NodeBuffer (choc::buffer::Size)> allocateAudioBuffer = nullptr;
     std::function<void (NodeBuffer&&)> deallocateAudioBuffer = nullptr;
 };
@@ -332,7 +369,7 @@ static inline std::vector<Node*> getNodes (Node&, VertexOrdering);
     repeatedly for Node until they all return false indicating no topological
     changes have been made.
 */
-static inline void transformNodes (Node& rootNode)
+static inline std::vector<Node*> transformNodes (Node& rootNode)
 {
     for (;;)
     {
@@ -345,7 +382,7 @@ static inline void transformNodes (Node& rootNode)
                 needToTransformAgain = true;
 
         if (! needToTransformAgain)
-            break;
+            return allNodes;
     }
 }
 
@@ -610,6 +647,39 @@ inline std::vector<Node*> getNodes (Node& node, VertexOrdering vertexOrdering)
        std::reverse (visitedNodes.begin(), visitedNodes.end());
     
     return visitedNodes;
+}
+
+inline std::vector<NodeAndID> createNodeMap (const std::vector<Node*>& nodes)
+{
+    std::vector<NodeAndID> nodeMap;
+
+    for (auto n : nodes)
+    {
+        nodeMap.push_back ({ n, n->getNodeProperties().nodeID });
+
+        for (auto internalNode : n->getInternalNodes())
+            nodeMap.push_back ({ internalNode, internalNode->getNodeProperties().nodeID });
+    }
+
+    std::sort (nodeMap.begin(), nodeMap.end());
+    nodeMap.erase (std::unique (nodeMap.begin(), nodeMap.end()),
+                   nodeMap.end());
+
+    return nodeMap;
+}
+
+inline std::unique_ptr<NodeGraph> createNodeGraph (std::unique_ptr<Node> rootNode)
+{
+    assert (rootNode != nullptr);
+    auto orderedNodes = transformNodes (*rootNode);
+    auto sortedNodes = createNodeMap (orderedNodes);
+
+    auto nodeGraph = std::make_unique<NodeGraph>();
+    nodeGraph->rootNode = std::move (rootNode);
+    nodeGraph->orderedNodes = std::move (orderedNodes);
+    nodeGraph->sortedNodes = std::move (sortedNodes);
+
+    return nodeGraph;
 }
 
 }}

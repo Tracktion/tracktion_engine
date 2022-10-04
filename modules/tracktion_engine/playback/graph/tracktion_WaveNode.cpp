@@ -1415,7 +1415,7 @@ void WaveNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo
     updateFileSampleRate();
 
     const int numChannelsToUse = std::max (channelsToUse.size(), reader != nullptr ? reader->getNumChannels() : 0);
-    replaceChannelStateIfPossible (info.rootNodeToReplace, numChannelsToUse);
+    replaceChannelStateIfPossible (info.nodeGraphToReplace, numChannelsToUse);
 
     if (! channelState)
     {
@@ -1493,28 +1493,13 @@ bool WaveNode::updateFileSampleRate()
     return true;
 }
 
-void WaveNode::replaceChannelStateIfPossible (Node* rootNodeToReplace, int numChannelsToUse)
+void WaveNode::replaceChannelStateIfPossible (NodeGraph* nodeGraphToReplace, int numChannelsToUse)
 {
-    if (rootNodeToReplace == nullptr)
-        return;
+    const auto nodeID = (size_t) editItemID.getRawID();
+    assert (getNodeProperties().nodeID == nodeID);
 
-    if (getNodeProperties().nodeID == 0)
-        return;
-
-    auto visitor = [this, numChannelsToUse] (Node& node)
-    {
-        if (auto other = dynamic_cast<WaveNode*> (&node))
-        {
-            replaceChannelStateIfPossible (*other, numChannelsToUse);
-        }
-        else
-        {
-            for (auto internalNode : node.getInternalNodes())
-                if (auto internalWaveNode = dynamic_cast<WaveNode*> (internalNode))
-                    replaceChannelStateIfPossible (*internalWaveNode, numChannelsToUse);
-        }
-    };
-    visitNodes (*rootNodeToReplace, visitor, true);
+    if (auto oldWaveNode = findNodeWithIDIfNonZero<WaveNode> (nodeGraphToReplace, nodeID))
+        replaceChannelStateIfPossible (*oldWaveNode, numChannelsToUse);
 }
 
 void WaveNode::replaceChannelStateIfPossible (WaveNode& other, int numChannelsToUse)
@@ -1817,7 +1802,7 @@ void WaveNodeRealTime::prepareToPlay (const tracktion::graph::PlaybackInitialisa
 {
     outputSampleRate = info.sampleRate;
 
-    replaceStateIfPossible (info.rootNodeToReplace);
+    replaceStateIfPossible (info.nodeGraphToReplace);
     buildAudioReaderGraph();
 }
 
@@ -1942,28 +1927,18 @@ bool WaveNodeRealTime::buildAudioReaderGraph()
     return true;
 }
 
-void WaveNodeRealTime::replaceStateIfPossible (Node* rootNodeToReplace)
+void WaveNodeRealTime::replaceStateIfPossible (NodeGraph* nodeGraphToReplace)
 {
-    if (rootNodeToReplace == nullptr)
+    if (nodeGraphToReplace == nullptr)
         return;
 
     if (stateHash == 0)
         return;
 
-    auto visitor = [this] (Node& node)
-    {
-        if (auto other = dynamic_cast<WaveNodeRealTime*> (&node))
-        {
-            replaceStateIfPossible (*other);
-        }
-        else
-        {
-            for (auto internalNode : node.getInternalNodes())
-                if (auto internalWaveNodeRealTime = dynamic_cast<WaveNodeRealTime*> (internalNode))
-                    replaceStateIfPossible (*internalWaveNodeRealTime);
-        }
-    };
-    visitNodes (*rootNodeToReplace, visitor, true);
+    assert (getNodeProperties().nodeID == (size_t) editItemID.getRawID());
+
+    if (auto oldWaveNode = findNodeWithID<WaveNodeRealTime> (*nodeGraphToReplace, (size_t) editItemID.getRawID()))
+        replaceStateIfPossible (*oldWaveNode);
 }
 
 void WaveNodeRealTime::replaceStateIfPossible (WaveNodeRealTime& other)

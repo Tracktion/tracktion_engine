@@ -1356,34 +1356,11 @@ void LoopingMidiNode::prepareToPlay (const tracktion::graph::PlaybackInitialisat
     std::shared_ptr<ActiveNoteList> activeNoteList;
     bool sendNoteOffEvents = false;
 
-    if (info.rootNodeToReplace != nullptr)
+    if (auto oldNode = findNodeWithIDIfNonZero<LoopingMidiNode> (info.nodeGraphToReplace, getNodeProperties().nodeID))
     {
-        const auto nodeIDToLookFor = getNodeProperties().nodeID;
-
-        visitNodes (*info.rootNodeToReplace, [&] (Node& n)
-                    {
-                        LoopingMidiNode* foundMidiNode = nullptr;
-
-                        if (auto midiNode = dynamic_cast<LoopingMidiNode*> (&n))
-                        {
-                            if (midiNode->getNodeProperties().nodeID == nodeIDToLookFor)
-                                foundMidiNode = midiNode;
-                        }
-                        else
-                        {
-                            for (auto internalNode : n.getInternalNodes())
-                                if (auto internalMidiNode = dynamic_cast<LoopingMidiNode*> (internalNode))
-                                    if (internalMidiNode->getNodeProperties().nodeID == nodeIDToLookFor)
-                                        foundMidiNode = internalMidiNode;
-                        }
-
-                        if (foundMidiNode != nullptr)
-                        {
-                            midiSourceID = foundMidiNode->midiSourceID;
-                            activeNoteList = foundMidiNode->generatorAndNoteList->getActiveNoteList();
-                            sendNoteOffEvents = ! generatorAndNoteList->hasSameContentAs (*foundMidiNode->generatorAndNoteList);
-                        }
-                    }, true);
+        midiSourceID = oldNode->midiSourceID;
+        activeNoteList = oldNode->generatorAndNoteList->getActiveNoteList();
+        sendNoteOffEvents = ! generatorAndNoteList->hasSameContentAs (*oldNode->generatorAndNoteList);
     }
 
     generatorAndNoteList->initialise (activeNoteList, sendNoteOffEvents);

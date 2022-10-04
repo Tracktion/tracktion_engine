@@ -148,7 +148,7 @@ namespace benchmark_utilities
         else
         {
             tracktion::graph::test_utilities::TestProcess<MultiThreadedNodePlayer> testContext (std::make_unique<MultiThreadedNodePlayer> (std::move (node), processState, opts.testSetup.sampleRate, opts.testSetup.blockSize),
-                                                                                               opts.testSetup, 2, opts.edit->getLength().inSeconds(), false);
+                                                                                                opts.testSetup, 2, opts.edit->getLength().inSeconds(), false);
             prepareRenderAndDestroy (ut, opts.editName, description, testContext, playHeadState, opts.isMultiThreaded);
         }
         

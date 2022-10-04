@@ -78,7 +78,7 @@ private:
     //==============================================================================
     void initialisePlugin (double sampleRateToUse, int blockSizeToUse);
     PluginRenderContext getPluginRenderContext (TimePosition, juce::AudioBuffer<float>&);
-    void replaceLatencyProcessorIfPossible (Node*);
+    void replaceLatencyProcessorIfPossible (NodeGraph*);
 };
 
 }} // namespace tracktion { inline namespace engine
