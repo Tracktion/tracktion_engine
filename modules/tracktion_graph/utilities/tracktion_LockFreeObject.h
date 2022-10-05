@@ -156,17 +156,6 @@ private:
     std::atomic<ObjectType*> pendingObject { nullptr };
     RealTimeSpinLock pushingObjectMutex, clearObjectsMutex;
     bool needToUnlockPushingObjectMutex = false, needToUnlockClearObjectsMutex = true;
-
-    static void pause()
-    {
-       #if __has_include(<emmintrin.h>)
-        _mm_pause();
-        _mm_pause();
-       #else
-        __asm__ __volatile__ ("yield");
-        __asm__ __volatile__ ("yield");
-       #endif
-    }
 };
 
 }} // namespace tracktion_engine
