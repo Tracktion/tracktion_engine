@@ -257,10 +257,6 @@
 #endif
 
 //==============================================================================
-#if JUCE_MAJOR_VERSION <= 6
- #define TRACKTION_JUCE6 1
-#endif
-
 #define TRACKTION_ASSERT_MESSAGE_THREAD \
     jassert (juce::MessageManager::getInstance()->currentThreadHasLockedMessageManager());
 

@@ -38,43 +38,6 @@ public:
         currentPos.set (time);
     }
 
-   #if TRACKTION_JUCE6
-    bool getCurrentPosition (CurrentPositionInfo& result) override
-    {
-        zerostruct (result);
-        result.frameRate = getFrameRate();
-
-        auto& transport = plugin.edit.getTransport();
-
-        result.isPlaying        = isPlaying;
-        result.isLooping        = isLooping;
-        result.isRecording      = transport.isRecording();
-        result.editOriginTime   = transport.getTimeWhenStarted().inSeconds();
-
-        if (result.isLooping)
-        {
-            loopStart.set (loopTimeRange.getStart());
-            result.ppqLoopStart = loopStart.getPPQTime();
-
-            loopEnd.set (loopTimeRange.getEnd());
-            result.ppqLoopEnd   = loopEnd.getPPQTime();
-        }
-
-        result.timeInSeconds    = time.inSeconds();
-        result.timeInSamples    = toSamples (time, plugin.getAudioPluginInstance()->getSampleRate());
-
-        currentPos.set (time);
-        const auto timeSig = currentPos.getTimeSignature();
-        result.bpm                  = currentPos.getTempo();
-        result.timeSigNumerator     = timeSig.numerator;
-        result.timeSigDenominator   = timeSig.denominator;
-
-        result.ppqPositionOfLastBarStart = currentPos.getPPQTimeOfBarStart();
-        result.ppqPosition = std::max (result.ppqPositionOfLastBarStart, currentPos.getPPQTime());
-
-        return true;
-    }
-   #else
     juce::Optional<PositionInfo> getPosition() const override
     {
         PositionInfo result;
@@ -104,7 +67,6 @@ public:
 
         return result;
     }
-   #endif
 
 private:
     ExternalPlugin& plugin;

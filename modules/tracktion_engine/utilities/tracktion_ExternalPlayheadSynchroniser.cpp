@@ -139,9 +139,6 @@ bool ExternalPlayheadSynchroniser::synchronise (juce::AudioPlayHead& playhead)
 {
     if (positionInfoLock.tryEnter())
     {
-       #if TRACKTION_JUCE6
-        const bool sucess = playhead.getCurrentPosition (positionInfo);
-       #else
         const auto pos = playhead.getPosition();
         const bool sucess = pos.hasValue();
 
@@ -186,7 +183,6 @@ bool ExternalPlayheadSynchroniser::synchronise (juce::AudioPlayHead& playhead)
             positionInfo.isRecording    = pos->getIsRecording();
             positionInfo.isLooping      = pos->getIsLooping();
         }
-       #endif
 
         positionInfoLock.exit();
 

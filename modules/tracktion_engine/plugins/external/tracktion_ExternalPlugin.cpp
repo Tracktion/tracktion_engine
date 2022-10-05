@@ -278,12 +278,10 @@ public:
             time        = rc->editTime;
             isPlaying   = rc->isPlaying;
 
-           #if ! TRACKTION_JUCE6
             const auto loopTimeRange = plugin.edit.getTransport().getLoopRange();
             loopStart.set (loopTimeRange.getStart());
             loopEnd.set (loopTimeRange.getEnd());
             currentPos.set (time);
-           #endif
         }
         else
         {
@@ -292,46 +290,6 @@ public:
         }
     }
 
-   #if TRACKTION_JUCE6
-    bool getCurrentPosition (CurrentPositionInfo& result) override
-    {
-        zerostruct (result);
-        result.frameRate = getFrameRate();
-
-        auto& transport = plugin.edit.getTransport();
-        auto localTime = time.load();
-
-        result.isPlaying        = isPlaying;
-        result.isRecording      = transport.isRecording();
-        result.editOriginTime   = transport.getTimeWhenStarted().inSeconds();
-        result.isLooping        = transport.looping;
-
-        if (result.isLooping)
-        {
-            const auto loopTimes = transport.getLoopRange();
-            loopStart.set (loopTimes.getStart());
-            result.ppqLoopStart = loopStart.getPPQTime();
-
-            loopEnd.set (loopTimes.getEnd());
-            result.ppqLoopEnd = loopEnd.getPPQTime();
-        }
-
-        result.timeInSamples    = (tracktion::toSamples (localTime, plugin.sampleRate));
-        result.timeInSeconds    = localTime.inSeconds();
-
-        currentPos.set (localTime);
-        const auto timeSig = currentPos.getTimeSignature();
-        result.bpm                  = currentPos.getTempo();
-        result.timeSigNumerator     = timeSig.numerator;
-        result.timeSigDenominator   = timeSig.denominator;
-
-        result.ppqPositionOfLastBarStart = currentPos.getPPQTimeOfBarStart();
-        result.ppqPosition = std::max (result.ppqPositionOfLastBarStart,
-                                       currentPos.getPPQTime());
-
-        return true;
-    }
-   #else
     juce::Optional<PositionInfo> getPosition() const override
     {
         PositionInfo result;
@@ -362,7 +320,6 @@ public:
 
         return result;
     }
-   #endif
 
 private:
     ExternalPlugin& plugin;

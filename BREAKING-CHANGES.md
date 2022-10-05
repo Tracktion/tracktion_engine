@@ -4,16 +4,17 @@
 
 
 ### Change
-Changed the JUCE version TE git submodules to JUCE 7.
+Changed the minimum version of JUCE supported to 7 on commit of October 22.
 
 #### Possible Issues
-If your project uses the juce submodule and relies on JUCE 6 code, it may no longer compile.
+If your project uses an eariler version of JUCE it may fail to compile.
 
 #### Workaround
-Legacy support for JUCE 6 will be removed in a future update so migration to JUCE 7 is recomended.
+Use the commit of JUCE pointed at in the modules/juce Git submodule. This is guaranteed to work.
 
 #### Rationale
-This has been repeatedly asked for and maintains compatibility with the latest JUCE code.
+There have been many breaking changes in JUCE recently and it is no longer feasible to support multiple versions.
+We aim to always be compatible with the tip of juce/develop in order to take advantage of the latest fixes and features.
 
 ---
 
