@@ -65,8 +65,11 @@ struct TimecodeSnapType
     // get a snap type that rounds things to 1 beat
     static TimecodeSnapType get1BeatSnapType();
 
-    TimecodeType type = TimecodeType::millisecs;
-    int level = 0;
+    //BC MODIFICATIONS START
+    TimecodeType type = TimecodeType::barsBeats;
+    int level = 8;
+    //BC MODIFICATIONS END
+    
 
 private:
     double getIntervalNonBarsBeats() const;
