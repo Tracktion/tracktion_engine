@@ -67,7 +67,7 @@ struct TimecodeSnapType
 
     //BC MODIFICATIONS START
     TimecodeType type = TimecodeType::barsBeats;
-    int level = 8;
+    int level = 7;
     //BC MODIFICATIONS END
     
 
