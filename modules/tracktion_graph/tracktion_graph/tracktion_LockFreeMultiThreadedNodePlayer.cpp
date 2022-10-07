@@ -74,7 +74,7 @@ void LockFreeMultiThreadedNodePlayer::prepareToPlay (double sampleRateToUse, int
     clearNode();
 
     // Don't pass in the old graph here as we're stealing the root from it
-    postNewGraph (prepareToPlay (std::move (currentGraph->rootNode), nullptr,
+    postNewGraph (prepareToPlay (currentGraph != nullptr ? std::move (currentGraph->rootNode) : std::unique_ptr<Node>(), nullptr,
                                  sampleRateToUse, blockSizeToUse,
                                  useMemoryPool ? currentAudioBufferPool : nullptr));
 }
