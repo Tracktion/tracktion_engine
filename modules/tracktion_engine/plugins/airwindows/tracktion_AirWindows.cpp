@@ -7,7 +7,7 @@
 */
 
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -259,8 +259,8 @@ void AirWindowsPlugin::processBlock (juce::AudioBuffer<float>& buffer)
 
         input.buffer.copyFrom (0, 0, buffer, 0, 0, samps);
 
-        impl->processReplacing (input.buffer.getArrayOfWritePointers(),
-                                output.buffer.getArrayOfWritePointers(),
+        impl->processReplacing ((float**)input.buffer.getArrayOfWritePointers(),
+                                (float**)output.buffer.getArrayOfWritePointers(),
                                 samps);
 
         buffer.copyFrom (0, 0, output.buffer, 0, 0, samps);
@@ -270,8 +270,8 @@ void AirWindowsPlugin::processBlock (juce::AudioBuffer<float>& buffer)
         AudioScratchBuffer output (numChans, samps);
         output.buffer.clear();
 
-        impl->processReplacing (buffer.getArrayOfWritePointers(),
-                                output.buffer.getArrayOfWritePointers(),
+        impl->processReplacing ((float**)buffer.getArrayOfWritePointers(),
+                                (float**)output.buffer.getArrayOfWritePointers(),
                                 samps);
 
         for (int i = 0; i < numChans; ++i)
@@ -1073,4 +1073,4 @@ AirWindowsuLawEncode::AirWindowsuLawEncode (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::ulawencode::uLawEncode> (&callback)) {}
 
 
-}
+}} // namespace tracktion { inline namespace engine

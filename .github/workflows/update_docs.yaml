@@ -29,6 +29,10 @@ jobs:
           cd doxygen
           make
 
+      - name: Copy benchmark html
+        run: |
+          cp -f docs/benchmarks.html doxygen/doc
+
       - name: Generate coverage report
         run: |
           sudo apt-get install lcov
@@ -36,13 +40,14 @@ jobs:
           rm -rf doxygen/doc/coverage_html
           mkdir -p doxygen/doc/coverage_html
           cp -r tests/coverage/build_linux/coverage_html doxygen/doc
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
         with:
           files: ./tests/coverage/build_linux/coverage.info
 
       - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@releases/v3
+        uses: JamesIves/github-pages-deploy-action@v4.3.3
         with:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           BRANCH: gh-pages 

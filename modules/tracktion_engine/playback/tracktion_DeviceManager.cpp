@@ -10,7 +10,7 @@
 
 juce::AudioDeviceManager* gDeviceManager = nullptr; // TODO
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 #if TRACKTION_LOG_DEVICES
@@ -79,6 +79,18 @@ static juce::StringArray getMidiDeviceNames (juce::Array<juce::MidiDeviceInfo> d
     deviceNames.appendNumbersToDuplicates (true, false);
     
     return deviceNames;
+}
+
+//==============================================================================
+TracktionEngineAudioDeviceManager::TracktionEngineAudioDeviceManager (Engine& e)
+    : engine (e)
+{
+}
+
+void TracktionEngineAudioDeviceManager::createAudioDeviceTypes (juce::OwnedArray<juce::AudioIODeviceType>& types)
+{
+    if (engine.getEngineBehaviour().addSystemAudioIODeviceTypes())
+        juce::AudioDeviceManager::createAudioDeviceTypes (types);
 }
 
 //==============================================================================
@@ -837,6 +849,11 @@ double DeviceManager::getBlockSizeMs() const
     return getBlockSize() * 1000.0 / getSampleRate();
 }
 
+TimeDuration DeviceManager::getBlockLength() const
+{
+    return TimeDuration::fromSamples (getBlockSize(), getSampleRate());
+}
+
 void DeviceManager::setDefaultWaveOutDevice (int index)
 {
     if (auto wod = getWaveOutDevice (index))
@@ -1063,9 +1080,10 @@ double DeviceManager::getOutputLatencySeconds() const
     return outputLatencyTime;
 }
 
-void DeviceManager::audioDeviceIOCallback (const float** inputChannelData, int numInputChannels,
-                                           float** outputChannelData, int totalNumOutputChannels,
-                                           int numSamples)
+void DeviceManager::audioDeviceIOCallbackWithContext (const float* const* inputChannelData, int numInputChannels,
+                                                      float* const* outputChannelData, int totalNumOutputChannels,
+                                                      int numSamples,
+                                                      const juce::AudioIODeviceCallbackContext&)
 {
     // Some interfaces ask for blocks larger than the current buffer size so in
     // these cases we need to render the buffer in chunks
@@ -1099,8 +1117,8 @@ void DeviceManager::audioDeviceIOCallback (const float** inputChannelData, int n
     }
 }
 
-void DeviceManager::audioDeviceIOCallbackInternal (const float** inputChannelData, int numInputChannels,
-                                                   float** outputChannelData, int totalNumOutputChannels,
+void DeviceManager::audioDeviceIOCallbackInternal (const float* const* inputChannelData, int numInputChannels,
+                                                   float* const* outputChannelData, int totalNumOutputChannels,
                                                    int numSamples)
 {
     jassert (numSamples <= maxBlockSize);
@@ -1126,7 +1144,7 @@ void DeviceManager::audioDeviceIOCallbackInternal (const float** inputChannelDat
         else
         {
             broadcastStreamTimeToMidiDevices (streamTime + outputLatencyTime);
-            EditTimeRange blockStreamTime;
+            juce::Range<double> blockStreamTime;
 
             {
                 SCOPED_REALTIME_CHECK
@@ -1230,6 +1248,8 @@ void DeviceManager::audioDeviceAboutToStart (juce::AudioIODevice* device)
     else
         cpuAvgCounter = cpuReportingInterval = 1;
 
+    jassert (currentSampleRate > 0.0);
+    
    #if JUCE_ANDROID
     steadyLoadContext.setSampleRate (device->getCurrentSampleRate());
    #endif
@@ -1306,4 +1326,4 @@ void DeviceManager::setGlobalOutputAudioProcessor (juce::AudioProcessor* newProc
             globalOutputAudioProcessor->prepareToPlay (currentSampleRate, audioIODevice->getCurrentBufferSizeSamples());
 }
 
-}
+}} // namespace tracktion { inline namespace engine

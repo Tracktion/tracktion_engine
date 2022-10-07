@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -59,14 +59,14 @@ public:
 
     //==============================================================================
     /** Performs the render operation on a background thread. */
-    RenderManager::Job::Ptr performBackgroundRender (Edit&, SelectionManager*, EditTimeRange timeRangeToRender);
+    RenderManager::Job::Ptr performBackgroundRender (Edit&, SelectionManager*, TimeRange timeRangeToRender);
 
     //==============================================================================
     /** Returns a hash representing the current set of render options. */
     HashCode getHash() const noexcept                        { return hash; }
 
     /** Returns a set of renderer parameters which can be used to describe a render operation. */
-    Renderer::Parameters getRenderParameters (Edit&, SelectionManager*, EditTimeRange markedRegion);
+    Renderer::Parameters getRenderParameters (Edit&, SelectionManager*, TimeRange markedRegion);
     Renderer::Parameters getRenderParameters (Edit&);
     Renderer::Parameters getRenderParameters (EditClip&);
     Renderer::Parameters getRenderParameters (MidiClip&);
@@ -75,13 +75,13 @@ public:
     juce::AudioFormat* getAudioFormat();
 
     /** Adds the given ProjectItem to the Edit using the render properties for positioning info. */
-    Clip::Ptr applyRenderToEdit (Edit&, ProjectItem::Ptr, EditTimeRange time, SelectionManager*) const;
+    Clip::Ptr applyRenderToEdit (Edit&, ProjectItem::Ptr, TimeRange time, SelectionManager*) const;
 
     //==============================================================================
     /** Creates a default RenderOptions object for a general purpose exporter. */
     static std::unique_ptr<RenderOptions> forGeneralExporter (Edit&);
-    static std::unique_ptr<RenderOptions> forTrackRender (juce::Array<Track*>& tracks, AddRenderOptions addOption);
-    static std::unique_ptr<RenderOptions> forClipRender (juce::Array<Clip*>& clips, bool midiNotes);
+    static std::unique_ptr<RenderOptions> forTrackRender (juce::Array<Track*> tracks, AddRenderOptions addOption);
+    static std::unique_ptr<RenderOptions> forClipRender (juce::Array<Clip*> clips, bool midiNotes);
     static std::unique_ptr<RenderOptions> forEditClip (Clip& editClip);
 
     //==============================================================================
@@ -143,7 +143,7 @@ public:
     void setMarkedRegion (bool onlyMarked)                      { markedRegion = onlyMarked; }
     void setIncludePlugins (bool includePlugins)                { usePlugins = includePlugins; }
     void setAddRenderOption (AddRenderOptions options)          { addRenderOptions = options; }
-    void setEndAllowance (double time)                          { endAllowance = time; }
+    void setEndAllowance (TimeDuration time)                    { endAllowance = time; }
     void setFilename (juce::String, bool canPromptToOverwriteExisting);
     void updateHash();
 
@@ -151,8 +151,8 @@ public:
     juce::StringArray getFormatTypes();
     juce::StringArray getAddRenderOptionText();
 
-    static double findEndAllowance (Edit&, juce::Array<EditItemID>* tracks, juce::Array<Clip*>*);
-    static bool isMarkedRegionBigEnough (EditTimeRange);
+    static TimeDuration findEndAllowance (Edit&, juce::Array<EditItemID>* tracks, juce::Array<Clip*>*);
+    static bool isMarkedRegionBigEnough (TimeRange);
 
     Engine& engine;
 
@@ -194,7 +194,7 @@ private:
     juce::Array<EditItemID> tracks;
     juce::File destFile;
     juce::Array<Clip*> allowedClips;
-    double endAllowance = 0;
+    TimeDuration endAllowance;
     HashCode hash = 0;
     bool uiNeedsRefresh = true;
 
@@ -207,28 +207,28 @@ private:
     juce::String getCurrentFileExtension();
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine
 
 namespace juce
 {
     template <>
-    struct VariantConverter<tracktion_engine::RenderOptions::RenderType>
+    struct VariantConverter<tracktion::engine::RenderOptions::RenderType>
     {
-        static tracktion_engine::RenderOptions::RenderType fromVar (const var& v)   { return (tracktion_engine::RenderOptions::RenderType) static_cast<int> (v); }
-        static var toVar (tracktion_engine::RenderOptions::RenderType v)            { return static_cast<int> (v); }
+        static tracktion::engine::RenderOptions::RenderType fromVar (const var& v)   { return (tracktion::engine::RenderOptions::RenderType) static_cast<int> (v); }
+        static var toVar (tracktion::engine::RenderOptions::RenderType v)            { return static_cast<int> (v); }
     };
 
     template <>
-    struct VariantConverter<tracktion_engine::RenderOptions::TargetFileFormat>
+    struct VariantConverter<tracktion::engine::RenderOptions::TargetFileFormat>
     {
-        static tracktion_engine::RenderOptions::TargetFileFormat fromVar (const var& v)   { return (tracktion_engine::RenderOptions::TargetFileFormat) static_cast<int> (v); }
-        static var toVar (tracktion_engine::RenderOptions::TargetFileFormat v)            { return static_cast<int> (v); }
+        static tracktion::engine::RenderOptions::TargetFileFormat fromVar (const var& v)   { return (tracktion::engine::RenderOptions::TargetFileFormat) static_cast<int> (v); }
+        static var toVar (tracktion::engine::RenderOptions::TargetFileFormat v)            { return static_cast<int> (v); }
     };
 
     template <>
-    struct VariantConverter<tracktion_engine::RenderOptions::AddRenderOptions>
+    struct VariantConverter<tracktion::engine::RenderOptions::AddRenderOptions>
     {
-        static tracktion_engine::RenderOptions::AddRenderOptions fromVar (const var& v)   { return (tracktion_engine::RenderOptions::AddRenderOptions) static_cast<int> (v); }
-        static var toVar (tracktion_engine::RenderOptions::AddRenderOptions v)            { return static_cast<int> (v); }
+        static tracktion::engine::RenderOptions::AddRenderOptions fromVar (const var& v)   { return (tracktion::engine::RenderOptions::AddRenderOptions) static_cast<int> (v); }
+        static var toVar (tracktion::engine::RenderOptions::AddRenderOptions v)            { return static_cast<int> (v); }
     };
 }

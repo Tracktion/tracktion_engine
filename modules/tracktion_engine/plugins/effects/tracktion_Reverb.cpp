@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 static constexpr float scalewet = 3;
@@ -179,4 +179,4 @@ float ReverbPlugin::getWidth()                  { return widthParam->getCurrentV
 void ReverbPlugin::setMode (float value)        { modeParam->setParameter (juce::jlimit (0.0f, 1.0f, value), juce::sendNotification); }
 float ReverbPlugin::getMode()                   { return modeParam->getCurrentValue(); }
 
-}
+}} // namespace tracktion { inline namespace engine

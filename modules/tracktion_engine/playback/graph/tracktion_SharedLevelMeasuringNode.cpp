@@ -9,7 +9,7 @@
 */
 
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 SharedLevelMeasuringNode::SharedLevelMeasuringNode (SharedLevelMeasurer::Ptr source, std::unique_ptr<Node> inputNode)
@@ -17,21 +17,21 @@ SharedLevelMeasuringNode::SharedLevelMeasuringNode (SharedLevelMeasurer::Ptr sou
 {
     jassert (levelMeasurer != nullptr);
 
-    setOptimisations ({ tracktion_graph::ClearBuffers::no,
-                        tracktion_graph::AllocateAudioBuffer::no });
+    setOptimisations ({ tracktion::graph::ClearBuffers::no,
+                        tracktion::graph::AllocateAudioBuffer::no });
 }
 
-std::vector<tracktion_graph::Node*> SharedLevelMeasuringNode::getDirectInputNodes()
+std::vector<tracktion::graph::Node*> SharedLevelMeasuringNode::getDirectInputNodes()
 {
     return { input.get() };
 }
 
-tracktion_graph::NodeProperties SharedLevelMeasuringNode::getNodeProperties()
+tracktion::graph::NodeProperties SharedLevelMeasuringNode::getNodeProperties()
 {
     return input->getNodeProperties();
 }
 
-void SharedLevelMeasuringNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
+void SharedLevelMeasuringNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
     sampleRate = info.sampleRate;
     levelMeasurer->setSize (2, info.blockSize);
@@ -44,7 +44,7 @@ bool SharedLevelMeasuringNode::isReadyToProcess()
 
 void SharedLevelMeasuringNode::prefetchBlock (juce::Range<int64_t> referenceSampleRange)
 {
-    levelMeasurer->startNextBlock (tracktion_graph::sampleToTime (referenceSampleRange.getStart(), sampleRate));
+    levelMeasurer->startNextBlock (tracktion::graph::sampleToTime (referenceSampleRange.getStart(), sampleRate));
 }
 
 void SharedLevelMeasuringNode::process (ProcessContext& pc)
@@ -58,8 +58,8 @@ void SharedLevelMeasuringNode::process (ProcessContext& pc)
     pc.buffers.midi.copyFrom (sourceBuffers.midi);
 
     // And pass audio to level measurer
-    auto buffer = tracktion_graph::toAudioBuffer (sourceBuffers.audio);
+    auto buffer = tracktion::graph::toAudioBuffer (sourceBuffers.audio);
     levelMeasurer->addBuffer (buffer, 0, buffer.getNumSamples());
 }
 
-}
+}} // namespace tracktion { inline namespace engine

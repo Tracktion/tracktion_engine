@@ -8,17 +8,17 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 struct StepModifier::StepModifierTimer : public ModifierTimer
 {
     StepModifierTimer (StepModifier& sm)
-        : modifier (sm), tempoSequence (sm.edit.tempoSequence)
+        : modifier (sm)
     {
     }
 
-    void updateStreamTime (double editTime, int numSamples) override
+    void updateStreamTime (TimePosition editTime, int numSamples) override
     {
         const double blockLength = numSamples / modifier.getSampleRate();
         modifier.setEditTime (editTime);
@@ -36,7 +36,7 @@ struct StepModifier::StepModifierTimer : public ModifierTimer
             ramp.setDuration (durationPerPattern);
 
             if (syncTypeThisBlock == ModifierCommon::transport)
-                ramp.setPosition (std::fmod ((float) editTime, durationPerPattern));
+                ramp.setPosition (std::fmod ((float) editTime.inSeconds(), durationPerPattern));
 
             const int step = static_cast<int> (std::floor (numStepsThisBlock * ramp.getProportion()));
             modifier.currentStep.store (step, std::memory_order_release);
@@ -46,14 +46,15 @@ struct StepModifier::StepModifierTimer : public ModifierTimer
         }
         else
         {
-            tempoSequence.setTime (editTime);
-            const auto currentTempo = tempoSequence.getCurrentTempo();
-            const double proportionOfBar = ModifierCommon::getBarFraction (rateTypeThisBlock);
+            tempoSequence.set (editTime);
+            const auto currentTempo = tempoSequence.getTempo();
+            const auto currentTimeSig = tempoSequence.getTimeSignature();
+            const auto proportionOfBar = ModifierCommon::getBarFraction (rateTypeThisBlock);
 
             if (syncTypeThisBlock == ModifierCommon::transport)
             {
-                const float editTimeInBeats = (float) (currentTempo.startBeatInEdit + (editTime - currentTempo.startTime) * currentTempo.beatsPerSecond);
-                const double bars = (editTimeInBeats / currentTempo.numerator) * rateThisBlock;
+                const auto editTimeInBeats = tempoSequence.getBeats().inBeats();
+                const auto bars = (editTimeInBeats / currentTimeSig.numerator) * rateThisBlock;
 
                 if (rateTypeThisBlock >= ModifierCommon::fourBars && rateTypeThisBlock <= ModifierCommon::sixtyFourthD)
                 {
@@ -64,9 +65,9 @@ struct StepModifier::StepModifierTimer : public ModifierTimer
             }
             else
             {
-                const double bpm = (currentTempo.bpm * rateThisBlock) / proportionOfBar;
+                const double bpm = (currentTempo * rateThisBlock) / proportionOfBar;
                 const double secondsPerBeat = 60.0 / bpm;
-                const float secondsPerStep = static_cast<float> (secondsPerBeat * currentTempo.numerator);
+                const float secondsPerStep = static_cast<float> (secondsPerBeat * currentTimeSig.numerator);
                 const float secondsPerPattern = (numStepsThisBlock * secondsPerStep);
                 ramp.setDuration (secondsPerPattern);
 
@@ -95,7 +96,7 @@ struct StepModifier::StepModifierTimer : public ModifierTimer
 
     StepModifier& modifier;
     Ramp ramp;
-    TempoSequencePosition tempoSequence;
+    tempo::Sequence::Position tempoSequence { createPosition (modifier.edit.tempoSequence) };
 };
 
 //==============================================================================
@@ -284,4 +285,4 @@ void StepModifier::valueTreePropertyChanged (juce::ValueTree& v, const juce::Ide
     ValueTreeAllEventListener::valueTreePropertyChanged (v, i);
 }
 
-}
+}} // namespace tracktion { inline namespace engine

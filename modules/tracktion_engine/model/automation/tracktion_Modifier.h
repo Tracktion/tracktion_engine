@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 /** Base class for objects which need to know about the global Edit time every block.
@@ -17,7 +17,7 @@ namespace tracktion_engine
 struct ModifierTimer
 {
     virtual ~ModifierTimer() = default;
-    virtual void updateStreamTime (double editTime, int numSamples) = 0;
+    virtual void updateStreamTime (TimePosition editTime, int numSamples) = 0;
 };
 
 //==============================================================================
@@ -96,24 +96,24 @@ struct Modifier : public AutomatableEditItem,
 
     //==============================================================================
     /** The max number of seconds of modifier value history that is stored. */
-    static constexpr double maxHistoryTime = 3.0;
+    static constexpr TimeDuration maxHistoryTime = TimeDuration::fromSeconds (3.0);
     
     /** Returns the edit time of the current value.
         @see getCurrentValue, getValueAt
         [[ audio_thread ]]
     */
-    double getCurrentTime() const;
+    TimePosition getCurrentTime() const;
 
     /** Returns the value of the at a given time in the past.
         [[ audio_thread ]]
     */
-    float getValueAt (double numSecondsBeforeNow) const;
+    float getValueAt (TimeDuration numSecondsBeforeNow) const;
 
     /** Returns a vector of previous sample values.
         N.B. you might not get back as many seconds as requested with numSecondsBeforeNow.
         [[ message_thread ]]
     */
-    std::vector<float> getValues (double numSecondsBeforeNow) const;
+    std::vector<float> getValues (TimeDuration numSecondsBeforeNow) const;
     
     //==============================================================================
     juce::ValueTree state;                  /**< Modifier internal state. */
@@ -127,11 +127,12 @@ struct Modifier : public AutomatableEditItem,
 
 protected:
     /** Subclasses can call this to update the edit time of the current value. */
-    void setEditTime (double newEditTime)                       { lastEditTime = newEditTime; }
+    void setEditTime (TimePosition newEditTime)                 { lastEditTime = newEditTime; }
     
 private:
     int initialiseCount = 0;
-    double sampleRate = 44100.0, lastEditTime = 0.0;
+    double sampleRate = 44100.0;
+    TimePosition lastEditTime;
     
     class ValueFifo;
     std::unique_ptr<ValueFifo> valueFifo, messageThreadValueFifo;
@@ -199,4 +200,4 @@ juce::ReferenceCountedArray<ModifierType> getModifiersOfType (const ModifierList
 /** Returns a Modifier if it can be found in the list. */
 Modifier::Ptr findModifierForID (ModifierList&, EditItemID);
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

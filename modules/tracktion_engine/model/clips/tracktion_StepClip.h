@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -88,8 +88,11 @@ public:
         int getNumNotes() const;
         void setNumNotes (int);
 
-        double getNoteLength() const; // e.g.: 16th note, calculated as 1.0 / 16.0
-        void setNoteLength (double);
+        /** Returns the length of one step as a fraction of a beat. */
+        BeatDuration getNoteLength() const;
+
+        /** Sets the length of one step as a fraction of a beat. */
+        void setNoteLength (BeatDuration);
 
         juce::Array<int> getVelocities (int channel) const;
         void setVelocities (int channel, const juce::Array<int>&);
@@ -220,14 +223,14 @@ public:
         @param[in] convertToSeconds Leave the timestamps in beats, or convert them to seconds while generating
         @param[in] instance         Specific pattern to generate, nullptr for the whole clip
     */
-    void generateMidiSequence (juce::MidiMessageSequence&,
+    void generateMidiSequence (juce::MidiMessageSequence& result,
                                bool convertToSeconds = true,
                                PatternInstance* instance = nullptr);
 
-    juce::Array<double> getBeatTimesOfPatternStarts() const;
+    juce::Array<BeatPosition> getBeatTimesOfPatternStarts() const;
 
-    double getStartBeatOf (PatternInstance*);
-    double getEndBeatOf (PatternInstance*);
+    BeatPosition getStartBeatOf (PatternInstance*);
+    BeatPosition getEndBeatOf (PatternInstance*);
 
     int getBeatsPerBar();
 
@@ -239,15 +242,7 @@ public:
     juce::Colour getDefaultColour() const override;
 
     bool isMidi() const override                        { return false; }
-    bool canLoop() const override                       { return false; }
-    bool isLooping() const override                     { return false; }
     bool beatBasedLooping() const override              { return true; }
-    void setNumberOfLoops (int) override                {}
-    void disableLooping() override                      {}
-    double getLoopStartBeats() const override           { return 0.0; }
-    double getLoopStart() const override                { return 0.0; }
-    double getLoopLengthBeats() const override          { return 0.0; }
-    double getLoopLength() const override               { return 0.0; }
     bool isMuted() const override                       { return level->mute; }
     void setMuted (bool m) override                     { level->mute = m; }
 
@@ -257,8 +252,8 @@ public:
 
 private:
     void generateMidiSequenceForChannels (juce::MidiMessageSequence&, bool convertToSeconds,
-                                          const Pattern&, double startBeat,
-                                          double clipStartBeat, double clipEndBeat, const TempoSequence&);
+                                          const Pattern&, BeatPosition startBeat,
+                                          BeatPosition clipStartBeat, BeatPosition clipEndBeat, const TempoSequence&);
 
     //==============================================================================
     struct ChannelList;
@@ -279,4 +274,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (StepClip)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

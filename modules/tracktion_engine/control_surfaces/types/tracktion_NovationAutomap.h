@@ -10,7 +10,7 @@
 
 #if TRACKTION_ENABLE_AUTOMAP
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 class AutoMap;
@@ -67,6 +67,6 @@ private:
     mutable juce::StringPairArray guids;
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine
 
 #endif

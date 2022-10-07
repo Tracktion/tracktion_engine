@@ -14,12 +14,12 @@
 #include "tracktion_FadeInOutAudioNode.h"
 
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 inline AudioNode* createTrackCompAudioNode (AudioNode* input,
-                                            const juce::Array<EditTimeRange>& muteTimes,
-                                            const juce::Array<EditTimeRange>& nonMuteTimes,
+                                            const juce::Array<legacy::EditTimeRange>& muteTimes,
+                                            const juce::Array<legacy::EditTimeRange>& nonMuteTimes,
                                             double crossfadeTime)
 {
     if (muteTimes.isEmpty())
@@ -41,10 +41,30 @@ inline AudioNode* createTrackCompAudioNode (AudioNode* input,
     return input;
 }
 
+inline AudioNode* createTrackCompAudioNode (AudioNode* input,
+                                            const juce::Array<TimeRange>& muteTimes,
+                                            const juce::Array<TimeRange>& nonMuteTimes,
+                                            TimeDuration crossfadeTime)
+{
+    juce::Array<legacy::EditTimeRange> muteEditTimes;
+    juce::Array<legacy::EditTimeRange> nonMuteEditTimes;
+
+    for (auto t : muteTimes)
+        muteEditTimes.add ({ t.getStart().inSeconds(), t.getEnd().inSeconds() });
+
+    for (auto t : nonMuteTimes)
+        nonMuteEditTimes.add ({ t.getStart().inSeconds(), t.getEnd().inSeconds() });
+
+    return createTrackCompAudioNode (input,
+                                     muteEditTimes,
+                                     nonMuteEditTimes,
+                                     crossfadeTime.inSeconds());
+}
+
 inline AudioNode* createAudioNode (TrackCompManager::TrackComp& trackComp, Track& t, AudioNode* input)
 {
     auto crossfadeTimeMs = trackComp.edit.engine.getPropertyStorage().getProperty (SettingID::compCrossfadeMs, 20.0);
-    auto crossfadeTime = static_cast<double> (crossfadeTimeMs) / 1000.0;
+    auto crossfadeTime = TimeDuration::fromSeconds (static_cast<double> (crossfadeTimeMs) / 1000.0);
     auto nonMuteTimes = trackComp.getNonMuteTimes (t, crossfadeTime);
     
     return createTrackCompAudioNode (input, TrackCompManager::TrackComp::getMuteTimes (nonMuteTimes),
@@ -52,4 +72,4 @@ inline AudioNode* createAudioNode (TrackCompManager::TrackComp& trackComp, Track
 }
 
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

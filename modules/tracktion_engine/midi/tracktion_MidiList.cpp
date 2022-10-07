@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 namespace
@@ -68,7 +68,7 @@ static void removeMidiEventFromSelection (Type* event)
 class MPEtoNoteExpression   : private juce::MPEInstrument::Listener
 {
 public:
-    MPEtoNoteExpression (MidiList& o, const TempoSequence* ts, juce::MPEZoneLayout layout, double editBeatOfListTimeZero, juce::UndoManager* um)
+    MPEtoNoteExpression (MidiList& o, const TempoSequence* ts, juce::MPEZoneLayout layout, BeatPosition editBeatOfListTimeZero, juce::UndoManager* um)
         : list (o), tempoSequence (ts), firstBeatNum (editBeatOfListTimeZero), undoManager (um)
     {
         mpeInstrument.setZoneLayout (layout);
@@ -77,8 +77,8 @@ public:
 
     void processMidiMessage (const juce::MidiMessage& message)
     {
-        currentEventBeat = tempoSequence != nullptr ? tempoSequence->timeToBeats (message.getTimeStamp()) - firstBeatNum
-                                                    : message.getTimeStamp();
+        currentEventBeat = tempoSequence != nullptr ? (tempoSequence->toBeats (TimePosition::fromSeconds (message.getTimeStamp())) - toDuration (firstBeatNum))
+                                                    : BeatPosition::fromBeats (message.getTimeStamp());
 
         mpeInstrument.processNextMidiEvent (message);
     }
@@ -86,13 +86,13 @@ public:
 private:
     MidiList& list;
     const TempoSequence* tempoSequence;
-    const double firstBeatNum;
+    const BeatPosition firstBeatNum;
     juce::UndoManager* undoManager;
     juce::MPEInstrument mpeInstrument;
 
     struct ActiveNote
     {
-        ActiveNote (juce::MPENote n, double beat)
+        ActiveNote (juce::MPENote n, BeatPosition beat)
             : startNote (n), startBeat (beat)
         {
             modulations.ensureStorageAllocated (50);
@@ -107,7 +107,7 @@ private:
 
         struct Modulation
         {
-            double beat;
+            BeatPosition beat;
             float value;
             ActiveNote::ChangeType type;
         };
@@ -117,16 +117,17 @@ private:
             for (const auto& mod : modulations)
                 if (mod.type == t)
                     return true;
+
             return false;
         }
 
         juce::MPENote startNote;
-        double startBeat = 0.0;
+        BeatPosition startBeat;
         juce::Array<Modulation> modulations;
     };
 
     juce::OwnedArray<ActiveNote> activeNotes;
-    double currentEventBeat = 0.0;
+    BeatPosition currentEventBeat;
 
     ActiveNote* getActiveNote (juce::MPENote note)
     {
@@ -137,12 +138,12 @@ private:
         return {};
     }
 
-    void addNoteToList (juce::MPENote note, double endBeat)
+    void addNoteToList (juce::MPENote note, BeatPosition endBeat)
     {
         if (auto an = getActiveNote (note))
         {
-            const double startBeat = an->startBeat;
-            auto n = list.addNote (an->startNote.initialNote, startBeat, endBeat - startBeat,
+            const auto startBeat = an->startBeat;
+            auto n = list.addNote (an->startNote.initialNote, startBeat, toDuration (endBeat - toDuration (startBeat)),
                                    note.noteOnVelocity.as7BitInt(), 0, undoManager);
             auto noteState = n->state;
 
@@ -165,8 +166,8 @@ private:
 
             // MPE spec requires a timbre before a note-on (though we send all dimensions, just to be sure)
             // and pressure & pitchbend immediately following.
-            MidiExpression::createAndAddExpressionToNote (noteState, IDs::PRESSURE, 0.0, pres, undoManager);
-            MidiExpression::createAndAddExpressionToNote (noteState, IDs::PITCHBEND, 0.0, bend, undoManager);
+            MidiExpression::createAndAddExpressionToNote (noteState, IDs::PRESSURE, BeatPosition(), pres, undoManager);
+            MidiExpression::createAndAddExpressionToNote (noteState, IDs::PITCHBEND, BeatPosition(), bend, undoManager);
 
             for (auto& mod : an->modulations)
             {
@@ -183,9 +184,9 @@ private:
                     return juce::Identifier();
                 };
 
-                const double relativeBeat = mod.beat - startBeat;
+                const auto relativeBeat = mod.beat - startBeat;
 
-                MidiExpression::createAndAddExpressionToNote (noteState, getType (mod.type), relativeBeat, mod.value, undoManager);
+                MidiExpression::createAndAddExpressionToNote (noteState, getType (mod.type), toPosition (relativeBeat), mod.value, undoManager);
             }
 
             activeNotes.removeObject (an);
@@ -271,7 +272,7 @@ namespace NoteHelpers
     }
 }
 
-void addMidiNoteOnExpressionToSequence (juce::MidiMessageSequence& seq, const juce::ValueTree& state, int midiChannel, double noteOnTime) noexcept
+inline void addMidiNoteOnExpressionToSequence (juce::MidiMessageSequence& seq, const juce::ValueTree& state, int midiChannel, double noteOnTime) noexcept
 {
     using namespace NoteHelpers;
     jassert (state.hasType (IDs::NOTE));
@@ -285,15 +286,20 @@ void addMidiNoteOnExpressionToSequence (juce::MidiMessageSequence& seq, const ju
     seq.addEvent (juce::MidiMessage (createTimbre (midiChannel, timbre), noteOnTime));
 }
 
-static void addMidiExpressionToSequence (juce::MidiMessageSequence& seq, const juce::ValueTree& state, const MidiClip& clip, int midiChannel, double notePlaybackBeat, double notePlaybackEndTime) noexcept
+static void addMidiExpressionToSequence (juce::MidiMessageSequence& seq, const juce::ValueTree& state,
+                                         const MidiClip& clip, MidiList::TimeBase tb, int midiChannel,
+                                         BeatPosition notePlaybackBeat, BeatPosition notePlaybackEndBeat) noexcept
 {
     using namespace NoteHelpers;
 
     auto& ts = clip.edit.tempoSequence;
-    auto time = ts.beatsToTime (notePlaybackBeat + static_cast<double> (state.getProperty (IDs::b)));
+    const auto beat = notePlaybackBeat + BeatDuration::fromBeats (static_cast<double> (state.getProperty (IDs::b)));
 
-    if (time > notePlaybackEndTime)
+    if (beat > notePlaybackEndBeat)
         return;
+
+    const auto time = tb == MidiList::TimeBase::beats ? beat.inBeats()
+                                                      : ts.toTime (beat).inSeconds();
 
     if (state.hasType (IDs::PITCHBEND))
         seq.addEvent (juce::MidiMessage (createPitchbend (midiChannel, state[IDs::v], 48.0f), time));
@@ -305,19 +311,24 @@ static void addMidiExpressionToSequence (juce::MidiMessageSequence& seq, const j
         jassertfalse;
 }
 
-static void addExpressiveNoteToSequence (juce::MidiMessageSequence& seq, const MidiClip& clip, const MidiNote& note, int midiChannel, const GrooveTemplate* grooveTemplate)
+static void addExpressiveNoteToSequence (juce::MidiMessageSequence& seq, const MidiClip& clip, MidiList::TimeBase tb, const MidiNote& note, int midiChannel, const GrooveTemplate* grooveTemplate)
 {
-    if (note.isMute() || note.getLengthBeats() <= 0.00001)
+    if (note.isMute() || note.getLengthBeats() <= BeatDuration::fromBeats (0.00001))
         return;
 
-    auto downTime = note.getPlaybackTime (MidiNote::startEdge, clip, grooveTemplate);
-    auto upTime   = note.getPlaybackTime (MidiNote::endEdge,   clip, grooveTemplate);
+    const auto downTime = tb == MidiList::TimeBase::beats ? note.getPlaybackBeats (MidiNote::startEdge, clip, grooveTemplate).inBeats()
+                                                          : note.getPlaybackTime (MidiNote::startEdge, clip, grooveTemplate).inSeconds();
+    const auto upTime   = tb == MidiList::TimeBase::beats ? note.getPlaybackBeats (MidiNote::endEdge,   clip, grooveTemplate).inBeats()
+                                                          : note.getPlaybackTime (MidiNote::endEdge,   clip, grooveTemplate).inSeconds();
 
     if (upTime < downTime || upTime <= 0.0)
         return;
 
     auto state = note.state;
-    auto noteStartBeat = clip.edit.tempoSequence.timeToBeats (downTime);
+    const auto noteStartBeat = tb == MidiList::TimeBase::beats ? BeatPosition::fromBeats (downTime)
+                                                               : clip.edit.tempoSequence.toBeats (TimePosition::fromSeconds (downTime));
+    const auto noteEndBeat = tb == MidiList::TimeBase::beats ? BeatPosition::fromBeats (upTime)
+                                                             : clip.edit.tempoSequence.toBeats (TimePosition::fromSeconds (upTime));
 
     // First add expression with defaults if not present
     addMidiNoteOnExpressionToSequence (seq, state, midiChannel, downTime);
@@ -329,7 +340,7 @@ static void addExpressiveNoteToSequence (juce::MidiMessageSequence& seq, const M
 
     // Then modulating expression
     for (auto v : state)
-        addMidiExpressionToSequence (seq, v, clip, midiChannel, noteStartBeat, upTime);
+        addMidiExpressionToSequence (seq, v, clip, tb, midiChannel, noteStartBeat, noteEndBeat);
 
     // Finally note-off
     const auto noteOffVelocity = state.hasProperty (IDs::lift) ? int (state[IDs::lift]) / 127.0f : 0.0f;
@@ -337,23 +348,42 @@ static void addExpressiveNoteToSequence (juce::MidiMessageSequence& seq, const M
 }
 
 //==============================================================================
-static void addToSequence (juce::MidiMessageSequence& seq, const MidiClip& clip,
+static void addToSequence (juce::MidiMessageSequence& seq, const MidiClip& clip, MidiList::TimeBase tb,
                            const MidiNote& note, int channelNumber, bool addNoteUp,
                            const GrooveTemplate* grooveTemplate)
 {
     jassert (channelNumber < 17); // SysEx?
 
-    if (note.isMute() || note.getLengthBeats() <= 0.00001)
+    if (note.isMute() || note.getLengthBeats() <= BeatDuration::fromBeats (0.00001))
         return;
 
-    double downTime = note.getPlaybackTime (MidiNote::startEdge, clip, grooveTemplate);
+    const auto downTime = [&]
+    {
+        switch (tb)
+        {
+            case MidiList::TimeBase::beatsRaw:  return note.getStartBeat().inBeats();
+            case MidiList::TimeBase::beats:     return note.getPlaybackBeats (MidiNote::startEdge, clip, grooveTemplate).inBeats();
+            case MidiList::TimeBase::seconds:   [[ fallthrough ]];
+            default:                            return note.getPlaybackTime (MidiNote::startEdge, clip, grooveTemplate).inSeconds();
+        }
+    }();
+
     auto velocity = (uint8_t) note.getVelocity();
     int noteNumber = note.getNoteNumber();
 
     if (addNoteUp)
     {
         // nudge the note-up backwards just a bit to make sure the ordering is correct
-        double upTime = note.getPlaybackTime (MidiNote::endEdge, clip, grooveTemplate);
+        const auto upTime = [&]
+        {
+            switch (tb)
+            {
+                case MidiList::TimeBase::beatsRaw:  return note.getEndBeat().inBeats();
+                case MidiList::TimeBase::beats:     return note.getPlaybackBeats (MidiNote::endEdge, clip, grooveTemplate).inBeats();
+                case MidiList::TimeBase::seconds:   [[ fallthrough ]];
+                default:                            return note.getPlaybackTime (MidiNote::endEdge, clip, grooveTemplate).inSeconds();
+            }
+        }();
 
         if (upTime > downTime && upTime > 0.0)
         {
@@ -367,12 +397,22 @@ static void addToSequence (juce::MidiMessageSequence& seq, const MidiClip& clip,
     }
 }
 
-static void addToSequence (juce::MidiMessageSequence& seq, const MidiClip& clip,
+static void addToSequence (juce::MidiMessageSequence& seq, const MidiClip& clip, MidiList::TimeBase tb,
                            const MidiControllerEvent& controller, int channelNumber)
 {
-    auto time = std::max (0.0, controller.getEditTime (clip) - clip.getPosition().getStart());
-    auto type = controller.getType();
-    auto value = controller.getControllerValue();
+    const auto time = [&]
+                      {
+                          switch (tb)
+                          {
+                              case MidiList::TimeBase::beatsRaw:  return controller.getBeatPosition().inBeats();
+                              case MidiList::TimeBase::beats:     return std::max (0_bp, controller.getEditBeats (clip) - toDuration (clip.getStartBeat())).inBeats();
+                              case MidiList::TimeBase::seconds:   [[ fallthrough ]];
+                              default:                            return std::max (0_tp, controller.getEditTime (clip) - toDuration (clip.getPosition().getStart())).inSeconds();
+                          }
+                      }();
+
+    const auto type = controller.getType();
+    const auto value = controller.getControllerValue();
 
     if (juce::isPositiveAndBelow (type, 128))
     {
@@ -412,9 +452,18 @@ static void addToSequence (juce::MidiMessageSequence& seq, const MidiClip& clip,
     }
 }
 
-static void addToSequence (juce::MidiMessageSequence& seq, const MidiClip& clip, const MidiSysexEvent& sysex)
+static void addToSequence (juce::MidiMessageSequence& seq, const MidiClip& clip, MidiList::TimeBase tb, const MidiSysexEvent& sysex)
 {
-    auto time = std::max (0.0, sysex.getEditTime (clip) - clip.getPosition().getStart());
+    const auto time = [&]
+                      {
+                          switch (tb)
+                          {
+                              case MidiList::TimeBase::beatsRaw:  return sysex.getBeatPosition().inBeats();
+                              case MidiList::TimeBase::beats:     return std::max (0_bp, sysex.getEditBeats (clip) - toDuration (clip.getStartBeat())).inBeats();
+                              case MidiList::TimeBase::seconds:   [[ fallthrough ]];
+                              default:                            return std::max (0_tp, sysex.getEditTime (clip) - toDuration (clip.getPosition().getStart())).inSeconds();
+                          }
+                      }();
     auto m = sysex.getMessage();
     m.setTimeStamp (time);
     seq.addEvent (m);
@@ -429,8 +478,8 @@ class MPEChannelAssigner
 public:
     //==========================================================================
     /** Constructor. */
-    MPEChannelAssigner (juce::MidiMessageSequence& s, const MidiClip& c, const GrooveTemplate* g)
-        : seq (s), clip (c), groove (g)
+    MPEChannelAssigner (juce::MidiMessageSequence& s, const MidiClip& c, MidiList::TimeBase tb, const GrooveTemplate* g)
+        : seq (s), clip (c), timeBase (tb), groove (g)
     {
         zoneLayout.setLowerZone (15);
         const auto mpeZone = zoneLayout.getLowerZone();
@@ -442,13 +491,16 @@ public:
 
     void addNote (MidiNote& note)
     {
-        clearNotesEndingBefore (note.getPlaybackTime (MidiNote::startEdge, clip, groove));
+        if (timeBase == MidiList::TimeBase::beats)
+            clearNotesEndingBefore (note.getPlaybackBeats (MidiNote::startEdge, clip, groove));
+        else
+            clearNotesEndingBefore (note.getPlaybackTime (MidiNote::startEdge, clip, groove));
 
         auto midiChannel = findMidiChannelForNewNote (note.getNoteNumber());
         midiChannels[midiChannel].notes.add (&note);
         midiChannels[midiChannel].lastNoteNumberPlayed = note.getNoteNumber();
 
-        addExpressiveNoteToSequence (seq, clip, note, zoneLayout.getLowerZone().getMasterChannel() + midiChannel, groove);
+        addExpressiveNoteToSequence (seq, clip, timeBase, note, zoneLayout.getLowerZone().getMasterChannel() + midiChannel, groove);
     }
 
 private:
@@ -478,7 +530,7 @@ private:
         return midiChannelEnd - midiChannelBegin;
     }
 
-    void clearNotesEndingBefore (double time)
+    void clearNotesEndingBefore (TimePosition time)
     {
         // Iterate the notes in reverse as they will be removed when stopped
         for (auto& midiChannel : midiChannels)
@@ -488,11 +540,26 @@ private:
                         stopNote (*n);
     }
 
+    void clearNotesEndingBefore (BeatPosition time)
+    {
+        // Iterate the notes in reverse as they will be removed when stopped
+        for (auto& midiChannel : midiChannels)
+            for (int i = midiChannel.notes.size(); --i >= 0;)
+                if (auto n = midiChannel.notes.getUnchecked (i))
+                    if (n->getPlaybackBeats (MidiNote::endEdge, clip, groove) < time)
+                        stopNote (*n);
+    }
+
     void stopNote (MidiNote& note)
     {
         for (int ch = midiChannelBegin; ch < midiChannelEnd; ++ch)
+        {
             if (midiChannels[ch].notes.contains (&note))
-                return midiChannels[ch].notes.removeFirstMatchingValue (&note);
+            {
+                midiChannels[ch].notes.removeFirstMatchingValue (&note);
+                return;
+            }
+        }
 
         jassertfalse;
     }
@@ -556,6 +623,7 @@ private:
     //==========================================================================
     juce::MidiMessageSequence& seq;
     const MidiClip& clip;
+    const MidiList::TimeBase timeBase;
     const GrooveTemplate* groove;
     juce::MPEZoneLayout zoneLayout;
     MidiChannel midiChannels[16];
@@ -563,21 +631,21 @@ private:
 };
 
 //==============================================================================
-static juce::ValueTree createNoteValueTree (int pitch, double beat, double length, int vel, int col)
+static juce::ValueTree createNoteValueTree (int pitch, BeatPosition beat, BeatDuration length, int vel, int col)
 {
     return createValueTree (IDs::NOTE,
                             IDs::p, pitch,
-                            IDs::b, beat,
-                            IDs::l, std::max (0.0, length),
+                            IDs::b, beat.inBeats(),
+                            IDs::l, std::max (0.0, length.inBeats()),
                             IDs::v, vel,
                             IDs::c, col);
 }
 
-juce::ValueTree MidiNote::createNote (const MidiNote& n, double newStart, double newLength)
+juce::ValueTree MidiNote::createNote (const MidiNote& n, BeatPosition newStart, BeatDuration newLength)
 {
     juce::ValueTree v (n.state.createCopy());
-    v.setProperty (IDs::b, newStart, nullptr);
-    v.setProperty (IDs::l, newLength, nullptr);
+    v.setProperty (IDs::b, newStart.inBeats(), nullptr);
+    v.setProperty (IDs::l, newLength.inBeats(), nullptr);
 
     return v;
 }
@@ -591,8 +659,8 @@ MidiNote::MidiNote (const juce::ValueTree& v)
 void MidiNote::updatePropertiesFromState()
 {
     noteNumber      = (uint8_t) juce::jlimit (0, 127, static_cast<int> (state.getProperty (IDs::p)));
-    startBeat       = static_cast<double> (state.getProperty (IDs::b));
-    lengthInBeats   = std::max (0.0, static_cast<double> (state.getProperty (IDs::l)));
+    startBeat       = BeatPosition::fromBeats (static_cast<double> (state.getProperty (IDs::b)));
+    lengthInBeats   = std::max (BeatDuration(), BeatDuration::fromBeats (static_cast<double> (state.getProperty (IDs::l))));
     velocity        = (uint8_t) juce::jlimit (0, 127, static_cast<int> (state.getProperty (IDs::v)));
     colour          = (uint8_t) juce::jlimit (0, 127, static_cast<int> (state.getProperty (IDs::c)));
     mute            = state.getProperty (IDs::m) ? 1 : 0;
@@ -619,13 +687,13 @@ struct MidiList::EventDelegate<MidiNote>
 };
 
 //==============================================================================
-double MidiNote::getQuantisedStartBeat (const MidiClip& c) const
+BeatPosition MidiNote::getQuantisedStartBeat (const MidiClip& c) const
 {
-    return c.getQuantisation().roundBeatToNearest (startBeat + c.getContentStartBeat())
-           - c.getContentStartBeat();
+    return c.getQuantisation().roundBeatToNearest (startBeat + toDuration (c.getContentStartBeat()))
+           - toDuration (c.getContentStartBeat());
 }
 
-double MidiNote::getQuantisedStartBeat (const MidiClip* const c) const
+BeatPosition MidiNote::getQuantisedStartBeat (const MidiClip* const c) const
 {
     if (c != nullptr)
         return getQuantisedStartBeat (*c);
@@ -633,13 +701,13 @@ double MidiNote::getQuantisedStartBeat (const MidiClip* const c) const
     return startBeat;
 }
 
-double MidiNote::getQuantisedEndBeat (const MidiClip& c) const
+BeatPosition MidiNote::getQuantisedEndBeat (const MidiClip& c) const
 {
-    return c.getQuantisation().roundBeatToNearest (startBeat + c.getContentStartBeat())
-            + lengthInBeats - c.getContentStartBeat();
+    return c.getQuantisation().roundBeatToNearest (startBeat + toDuration (c.getContentStartBeat()))
+            + lengthInBeats - toDuration (c.getContentStartBeat());
 }
 
-double MidiNote::getQuantisedEndBeat (const MidiClip* const c) const
+BeatPosition MidiNote::getQuantisedEndBeat (const MidiClip* const c) const
 {
     if (c != nullptr)
         return getQuantisedEndBeat (*c);
@@ -647,62 +715,62 @@ double MidiNote::getQuantisedEndBeat (const MidiClip* const c) const
     return startBeat + lengthInBeats;
 }
 
-double MidiNote::getQuantisedLengthBeats (const MidiClip& c) const
+BeatDuration MidiNote::getQuantisedLengthBeats (const MidiClip& c) const
 {
-    return getQuantisedStartBeat (c) - getQuantisedEndBeat (c);
+    return getQuantisedEndBeat (c) - getQuantisedStartBeat (c);
 }
 
-double MidiNote::getQuantisedLengthBeats (const MidiClip* const c) const
+BeatDuration MidiNote::getQuantisedLengthBeats (const MidiClip* const c) const
 {
-    return getQuantisedStartBeat (c) - getQuantisedEndBeat (c);
+    return getQuantisedEndBeat (c) - getQuantisedStartBeat (c);
 }
 
 //==============================================================================
-double MidiNote::getEditStartTime (const MidiClip& c) const
+TimePosition MidiNote::getEditStartTime (const MidiClip& c) const
 {
-    const double quantisedBeatInEdit = c.getQuantisation().roundBeatToNearest (startBeat + c.getContentStartBeat());
+    const auto quantisedBeatInEdit = c.getQuantisation().roundBeatToNearest (startBeat + toDuration (c.getContentStartBeat()));
 
-    return c.edit.tempoSequence.beatsToTime (quantisedBeatInEdit);
+    return c.edit.tempoSequence.toTime (quantisedBeatInEdit);
 }
 
-double MidiNote::getEditEndTime (const MidiClip& c) const
+TimePosition MidiNote::getEditEndTime (const MidiClip& c) const
 {
-    const double quantisedBeatInEdit = c.getQuantisation().roundBeatToNearest (startBeat + c.getContentStartBeat())
-                                         + lengthInBeats;
+    const auto quantisedBeatInEdit = c.getQuantisation().roundBeatToNearest (startBeat + toDuration (c.getContentStartBeat()))
+                                        + lengthInBeats;
 
-    return c.edit.tempoSequence.beatsToTime (quantisedBeatInEdit);
+    return c.edit.tempoSequence.toTime (quantisedBeatInEdit);
 }
 
-EditTimeRange MidiNote::getEditTimeRange (const MidiClip& c) const
+TimeRange MidiNote::getEditTimeRange (const MidiClip& c) const
 {
-    auto quantisedStartBeat = c.getQuantisation().roundBeatToNearest (startBeat - c.getLoopStartBeats() + c.getContentStartBeat());
+    const auto quantisedStartBeat = c.getQuantisation().roundBeatToNearest (startBeat - toDuration (c.getLoopStartBeats()) + toDuration (c.getContentStartBeat()));
 
-    return { c.edit.tempoSequence.beatsToTime (quantisedStartBeat),
-             c.edit.tempoSequence.beatsToTime (quantisedStartBeat + lengthInBeats) };
+    return { c.edit.tempoSequence.toTime (quantisedStartBeat),
+             c.edit.tempoSequence.toTime (quantisedStartBeat + lengthInBeats) };
 }
 
-double MidiNote::getLengthSeconds (const MidiClip& c) const
+TimeDuration MidiNote::getLengthSeconds (const MidiClip& c) const
 {
     return getEditTimeRange (c).getLength();
 }
 
 //==============================================================================
-void MidiNote::setStartAndLength (double newStartBeat, double newLengthInBeats, juce::UndoManager* undoManager)
+void MidiNote::setStartAndLength (BeatPosition newStartBeat, BeatDuration newLengthInBeats, juce::UndoManager* undoManager)
 {
-    newStartBeat = std::max (0.0, newStartBeat);
+    newStartBeat = std::max (BeatPosition(), newStartBeat);
 
-    if (newLengthInBeats <= 0.0)
-        newLengthInBeats = 1.0 / Edit::ticksPerQuarterNote;
+    if (newLengthInBeats <= BeatDuration())
+        newLengthInBeats = BeatDuration::fromBeats (1.0 / Edit::ticksPerQuarterNote);
 
     if (startBeat != newStartBeat)
     {
-        state.setProperty (IDs::b, newStartBeat, undoManager);
+        state.setProperty (IDs::b, newStartBeat.inBeats(), undoManager);
         startBeat = newStartBeat;
     }
 
     if (lengthInBeats != newLengthInBeats)
     {
-        state.setProperty (IDs::l, newLengthInBeats, undoManager);
+        state.setProperty (IDs::l, newLengthInBeats.inBeats(), undoManager);
         lengthInBeats = newLengthInBeats;
     }
 }
@@ -750,46 +818,61 @@ void MidiNote::setMute (bool shouldMute, juce::UndoManager* um)
 }
 
 //==============================================================================
-double MidiNote::getPlaybackTime (NoteEdge edge, const MidiClip& clip, const GrooveTemplate* const grooveTemplate) const
+TimePosition MidiNote::getPlaybackTime (NoteEdge edge, const MidiClip& clip, const GrooveTemplate* const grooveTemplate) const
 {
     auto pos = clip.getPosition();
 
     // nudge the note-up backwards just a bit to make sure the ordering is correct
     auto time = edge == startEdge ? getEditStartTime (clip)
-                                  : std::min (getEditEndTime (clip), pos.getEnd()) - 0.0001;
+                                  : std::min (getEditEndTime (clip), pos.getEnd()) - TimeDuration::fromSeconds (0.0001);
 
     if (grooveTemplate != nullptr)
         time = grooveTemplate->editTimeToGroovyTime (time, clip.getGrooveStrength(), clip.edit);
 
-    return time - pos.getStart();
+    return time - toDuration (pos.getStart());
+}
+
+BeatPosition MidiNote::getPlaybackBeats (NoteEdge edge, const MidiClip& clip, const GrooveTemplate* const grooveTemplate) const
+{
+    auto pos = clip.getPosition();
+
+    // nudge the note-up backwards just a bit to make sure the ordering is correct
+    auto time = edge == startEdge ? clip.getQuantisation().roundBeatToNearest (startBeat + toDuration (clip.getContentStartBeat()))
+                                  : std::min (clip.getQuantisation().roundBeatToNearest (startBeat + toDuration (clip.getContentStartBeat()))
+                                              + lengthInBeats, clip.edit.tempoSequence.toBeats (pos.getEnd())) - 0.00001_bd;
+
+    if (grooveTemplate != nullptr)
+        time = grooveTemplate->beatsTimeToGroovyTime (time, clip.getGrooveStrength());
+
+    return time - toDuration (clip.edit.tempoSequence.toBeats (pos.getStart()));
 }
 
 //==============================================================================
-juce::ValueTree MidiControllerEvent::createControllerEvent (const MidiControllerEvent& e, double newBeat)
+juce::ValueTree MidiControllerEvent::createControllerEvent (const MidiControllerEvent& e, BeatPosition beat)
 {
     juce::ValueTree v (e.state.createCopy());
-    v.setProperty (IDs::b, newBeat, nullptr);
+    v.setProperty (IDs::b, beat.inBeats(), nullptr);
     return v;
 }
 
-juce::ValueTree MidiControllerEvent::createControllerEvent (double time, int controllerType, int controllerValue)
+juce::ValueTree MidiControllerEvent::createControllerEvent (BeatPosition beat, int controllerType, int controllerValue)
 {
     return createValueTree (IDs::CONTROL,
-                            IDs::b,     time,
+                            IDs::b,     beat.inBeats(),
                             IDs::type,  controllerType,
                             IDs::val,   controllerValue);
 }
 
-juce::ValueTree MidiControllerEvent::createControllerEvent (double time, int controllerType, int controllerValue, int metadata)
+juce::ValueTree MidiControllerEvent::createControllerEvent (BeatPosition beat, int controllerType, int controllerValue, int metadata)
 {
-    auto v = createControllerEvent (time, controllerType, controllerValue);
+    auto v = createControllerEvent (beat, controllerType, controllerValue);
     v.setProperty (IDs::metadata, metadata, nullptr);
     return v;
 }
 
 MidiControllerEvent::MidiControllerEvent (const juce::ValueTree& v)
     : state (v),
-      beatNumber (double (v.getProperty (IDs::b))),
+      beatNumber (BeatPosition::fromBeats (static_cast<double> (v.getProperty (IDs::b)))),
       type (int (v.getProperty (IDs::type))),
       value (v.getProperty (IDs::val))
 {
@@ -798,7 +881,7 @@ MidiControllerEvent::MidiControllerEvent (const juce::ValueTree& v)
 
 void MidiControllerEvent::updatePropertiesFromState() noexcept
 {
-    beatNumber  = state.getProperty (IDs::b);
+    beatNumber  = BeatPosition::fromBeats (static_cast<double> (state.getProperty (IDs::b)));
     type        = state.getProperty (IDs::type);
     value       = state.getProperty (IDs::val);
     metadata    = state.getProperty (IDs::metadata);
@@ -844,12 +927,14 @@ juce::String MidiControllerEvent::getControllerTypeName (int type) noexcept
     return "(" + TRANS("Unnamed") + ")";
 }
 
-double MidiControllerEvent::getEditTime (const MidiClip& c) const
+BeatPosition MidiControllerEvent::getEditBeats (const MidiClip& c) const
 {
-    const double quantisedBeatInEdit = c.getQuantisation()
-                                        .roundBeatToNearest (beatNumber - c.getLoopStartBeats() + c.getContentStartBeat());
+    return c.getQuantisation().roundBeatToNearest (beatNumber - toDuration (c.getLoopStartBeats()) + toDuration (c.getContentStartBeat()));
+}
 
-    return c.edit.tempoSequence.beatsToTime (quantisedBeatInEdit);
+TimePosition MidiControllerEvent::getEditTime (const MidiClip& c) const
+{
+    return c.edit.tempoSequence.toTime (getEditBeats (c));
 }
 
 juce::String MidiControllerEvent::getLevelDescription (MidiClip* ownerClip) const
@@ -917,13 +1002,13 @@ void MidiControllerEvent::setMetadata (int m, juce::UndoManager* um)
     }
 }
 
-void MidiControllerEvent::setBeatPosition (double newBeatNumber, juce::UndoManager* um)
+void MidiControllerEvent::setBeatPosition (BeatPosition newBeatNumber, juce::UndoManager* um)
 {
-    newBeatNumber = std::max (0.0, newBeatNumber);
+    newBeatNumber = std::max (BeatPosition(), newBeatNumber);
 
     if (beatNumber != newBeatNumber)
     {
-        state.setProperty (IDs::b, newBeatNumber, um);
+        state.setProperty (IDs::b, newBeatNumber.inBeats(), um);
         beatNumber = newBeatNumber;
     }
 }
@@ -963,17 +1048,17 @@ static juce::String midiToHex (const juce::MidiMessage& m)
     return juce::String::toHexString (m.getRawData(), m.getRawDataSize(), 0);
 }
 
-juce::ValueTree MidiSysexEvent::createSysexEvent (const MidiSysexEvent& e, double time)
+juce::ValueTree MidiSysexEvent::createSysexEvent (const MidiSysexEvent& e, BeatPosition time)
 {
     juce::ValueTree v (e.state.createCopy());
-    v.setProperty (IDs::time, time, nullptr);
+    v.setProperty (IDs::time, time.inBeats(), nullptr);
     return v;
 }
 
-juce::ValueTree MidiSysexEvent::createSysexEvent (const juce::MidiMessage& m, double time)
+juce::ValueTree MidiSysexEvent::createSysexEvent (const juce::MidiMessage& m, BeatPosition time)
 {
     return createValueTree (IDs::SYSEX,
-                            IDs::time, time,
+                            IDs::time, time.inBeats(),
                             IDs::data, midiToHex (m));
 }
 
@@ -1028,11 +1113,14 @@ struct MidiList::EventDelegate<MidiSysexEvent>
     }
 };
 
-double MidiSysexEvent::getEditTime (const MidiClip& c) const
+TimePosition MidiSysexEvent::getEditTime (const MidiClip& c) const
 {
-    auto quantisedBeatInEdit = c.getQuantisation().roundBeatToNearest (message.getTimeStamp() - c.getLoopStartBeats() + c.getContentStartBeat());
+    return c.edit.tempoSequence.toTime (getEditBeats (c));
+}
 
-    return c.edit.tempoSequence.beatsToTime (quantisedBeatInEdit);
+BeatPosition MidiSysexEvent::getEditBeats (const MidiClip& c) const
+{
+    return c.getQuantisation().roundBeatToNearest (getBeatPosition() - toDuration (c.getLoopStartBeats()) + toDuration (c.getContentStartBeat()));
 }
 
 void MidiSysexEvent::setMessage (const juce::MidiMessage& m, juce::UndoManager* um)
@@ -1040,9 +1128,9 @@ void MidiSysexEvent::setMessage (const juce::MidiMessage& m, juce::UndoManager* 
     state.setProperty (IDs::data, midiToHex (m), um);
 }
 
-void MidiSysexEvent::setBeatPosition (double newBeatNumber, juce::UndoManager* um)
+void MidiSysexEvent::setBeatPosition (BeatPosition newBeatNumber, juce::UndoManager* um)
 {
-    state.setProperty (IDs::time, std::max (0.0, newBeatNumber), um);
+    state.setProperty (IDs::time, std::max (0.0, newBeatNumber.inBeats()), um);
 }
 
 //==============================================================================
@@ -1118,7 +1206,7 @@ template<typename EventType>
 const juce::Array<EventType*>& getEventsChecked (const juce::Array<EventType*>& events)
 {
    #if JUCE_DEBUG
-    double lastBeat = 0.0;
+    BeatPosition lastBeat;
 
     for (auto* e : events)
     {
@@ -1150,9 +1238,9 @@ const juce::Array<MidiSysexEvent*>& MidiList::getSysexEvents() const
 }
 
 //==============================================================================
-void MidiList::moveAllBeatPositions (double delta, juce::UndoManager* um)
+void MidiList::moveAllBeatPositions (BeatDuration delta, juce::UndoManager* um)
 {
-    if (delta != 0)
+    if (delta != BeatDuration())
     {
         for (auto e : getNotes())
             e->setStartAndLength (e->getStartBeat() + delta, e->getLengthBeats(), um);
@@ -1181,13 +1269,13 @@ void MidiList::rescale (double factor, juce::UndoManager* um)
     }
 }
 
-void MidiList::trimOutside (double start, double end, juce::UndoManager* um)
+void MidiList::trimOutside (BeatPosition start, BeatPosition end, juce::UndoManager* um)
 {
     juce::Array<juce::ValueTree> itemsToRemove;
 
     for (auto n : getNotes())
     {
-        if (n->getStartBeat() >= (end - 0.0001) || n->getEndBeat() <= (start + 0.0001))
+        if (n->getStartBeat() >= (end - BeatDuration::fromBeats (0.0001)) || n->getEndBeat() <= (start + BeatDuration::fromBeats (0.0001)))
         {
             itemsToRemove.add (n->state);
         }
@@ -1213,9 +1301,9 @@ void MidiList::trimOutside (double start, double end, juce::UndoManager* um)
 }
 
 //==============================================================================
-double MidiList::getFirstBeatNumber() const
+BeatPosition MidiList::getFirstBeatNumber() const
 {
-    double t = Edit::maximumLength;
+    auto t = BeatPosition::fromBeats (Edit::maximumLength);
 
     if (auto first = getNotes().getFirst())             t = std::min (t, first->getStartBeat());
     if (auto first = getControllerEvents().getFirst())  t = std::min (t, first->getBeatPosition());
@@ -1224,9 +1312,9 @@ double MidiList::getFirstBeatNumber() const
     return t;
 }
 
-double MidiList::getLastBeatNumber() const
+BeatPosition MidiList::getLastBeatNumber() const
 {
-    double t = 0.0;
+    BeatPosition t;
 
     if (auto last = getNotes().getLast())             t = std::max (t, last->getEndBeat());
     if (auto last = getControllerEvents().getLast())  t = std::max (t, last->getBeatPosition());
@@ -1268,7 +1356,7 @@ MidiNote* MidiList::addNote (const MidiNote& note, juce::UndoManager* um)
     return noteList->getEventFor (v);
 }
 
-MidiNote* MidiList::addNote (int pitch, double startBeat, double lengthInBeats,
+MidiNote* MidiList::addNote (int pitch, BeatPosition startBeat, BeatDuration lengthInBeats,
                              int velocity, int colourIndex, juce::UndoManager* um)
 {
     auto v = createNoteValueTree (pitch, startBeat, lengthInBeats, velocity, colourIndex);
@@ -1289,7 +1377,7 @@ void MidiList::removeAllNotes (juce::UndoManager* um)
 }
 
 //==============================================================================
-MidiControllerEvent* MidiList::getControllerEventAt (double beatNumber, int controllerType) const
+MidiControllerEvent* MidiList::getControllerEventAt (BeatPosition beatNumber, int controllerType) const
 {
     auto& controllerEvents = getControllerEvents();
 
@@ -1320,14 +1408,14 @@ MidiControllerEvent* MidiList::addControllerEvent (const MidiControllerEvent& ev
     return controllerList->getEventFor (v);
 }
 
-MidiControllerEvent* MidiList::addControllerEvent (double beat, int controllerType, int controllerValue, juce::UndoManager* um)
+MidiControllerEvent* MidiList::addControllerEvent (BeatPosition beat, int controllerType, int controllerValue, juce::UndoManager* um)
 {
     auto v = MidiControllerEvent::createControllerEvent (beat, controllerType, controllerValue);
     state.addChild (v, -1, um);
     return controllerList->getEventFor (v);
 }
 
-MidiControllerEvent* MidiList::addControllerEvent (double beat, int controllerType, int controllerValue, int metadata, juce::UndoManager* um)
+MidiControllerEvent* MidiList::addControllerEvent (BeatPosition beat, int controllerType, int controllerValue, int metadata, juce::UndoManager* um)
 {
     auto v = MidiControllerEvent::createControllerEvent (beat, controllerType, controllerValue, metadata);
     state.addChild (v, -1, um);
@@ -1346,9 +1434,9 @@ void MidiList::removeAllControllers (juce::UndoManager* um)
             state.removeChild (i, um);
 }
 
-void MidiList::setControllerValueAt (int controllerType, double beatNumber, int newValue, juce::UndoManager* um)
+void MidiList::setControllerValueAt (int controllerType, BeatPosition beatNumber, int newValue, juce::UndoManager* um)
 {
-    beatNumber = std::max (0.0, beatNumber);
+    beatNumber = std::max (BeatPosition(), beatNumber);
     auto& controllerEvents = getControllerEvents();
 
     for (int i = controllerEvents.size(); --i >= 0;) // N.B.: The order matters!
@@ -1364,18 +1452,18 @@ void MidiList::setControllerValueAt (int controllerType, double beatNumber, int 
     }
 }
 
-static int interpolate (int startValue, int rangeValues, double startBeat, double beat, double rangeBeats) noexcept
+static int interpolate (int startValue, int rangeValues, BeatPosition startBeat, BeatPosition beat, BeatDuration rangeBeats) noexcept
 {
-    return juce::roundToInt (startValue + (rangeValues * (beat - startBeat) / rangeBeats));
+    return juce::roundToInt (startValue + (rangeValues * (beat - startBeat).inBeats() / rangeBeats.inBeats()));
 }
 
 void MidiList::insertRepeatedControllerValue (int type, int startVal, int endVal,
-                                              juce::Range<double> beats, double intervalBeats, juce::UndoManager* um)
+                                              BeatRange beats, BeatDuration intervalBeats, juce::UndoManager* um)
 {
     auto rangeBeats = beats.getLength();
     auto rangeValues = endVal - startVal;
 
-    if (rangeBeats == 0.0)
+    if (rangeBeats == BeatDuration())
     {
         addControllerEvent (beats.getStart(), type, startVal, um);
         addControllerEvent (beats.getEnd(), type, endVal, um);
@@ -1384,29 +1472,29 @@ void MidiList::insertRepeatedControllerValue (int type, int startVal, int endVal
 
     auto maxNumSteps = std::max (2, type == MidiControllerEvent::pitchWheelType ? std::abs (rangeValues)
                                                                                 : std::abs (rangeValues) >> 7);
-    auto numSteps = juce::roundToInt (rangeBeats / intervalBeats);
+    auto numSteps = juce::roundToInt (rangeBeats.inBeats() / intervalBeats.inBeats());
     auto limitedNumSteps = juce::jlimit (2, maxNumSteps, numSteps);
 
     if (numSteps != limitedNumSteps)
     {
         numSteps = limitedNumSteps;
-        intervalBeats = rangeBeats / numSteps;
+        intervalBeats = BeatDuration::fromBeats (rangeBeats.inBeats() / numSteps);
     }
 
-    double beat = beats.getStart();
+    auto beat = beats.getStart();
 
     for (int i = 0; i < numSteps; ++i)
     {
         const int value = interpolate (startVal, rangeValues, beats.getStart(), beat, rangeBeats);
         addControllerEvent (beat, type, value, um);
-        beat += intervalBeats;
+        beat = beat + intervalBeats;
     }
 
     if (beat - intervalBeats < beats.getEnd())
         addControllerEvent (beats.getEnd(), type, endVal, um);
 }
 
-void MidiList::removeControllersBetween (int controllerType, double beatStart, double beatEnd, juce::UndoManager* um)
+void MidiList::removeControllersBetween (int controllerType, BeatPosition beatStart, BeatPosition beatEnd, juce::UndoManager* um)
 {
     juce::Array<juce::ValueTree> itemsToRemove;
 
@@ -1428,7 +1516,7 @@ MidiSysexEvent* MidiList::getSysexEventFor (const juce::ValueTree& v) const
     return {};
 }
 
-MidiSysexEvent& MidiList::addSysExEvent (const juce::MidiMessage& message, double beat, juce::UndoManager* um)
+MidiSysexEvent& MidiList::addSysExEvent (const juce::MidiMessage& message, BeatPosition beat, juce::UndoManager* um)
 {
     auto v = MidiSysexEvent::createSysexEvent (message, beat);
     state.addChild (v, -1, um);
@@ -1507,14 +1595,14 @@ bool MidiList::looksLikeMPEData (const juce::File& f)
 
 bool MidiList::readSeparateTracksFromFile (const juce::File& f,
                                            juce::OwnedArray<MidiList>& lists,
-                                           juce::Array<double>& tempoChangeBeatNumbers,
+                                           juce::Array<BeatPosition>& tempoChangeBeatNumbers,
                                            juce::Array<double>& bpms,
                                            juce::Array<int>& numerators,
                                            juce::Array<int>& denominators,
-                                           double& songLength,
+                                           BeatDuration& songLength,
                                            bool importAsNoteExpression)
 {
-    songLength = 0.0;
+    songLength = BeatDuration();
     juce::MidiFile midiFile;
 
     {
@@ -1568,7 +1656,7 @@ bool MidiList::readSeparateTracksFromFile (const juce::File& f,
             }
         }
 
-        tempoChangeBeatNumbers.add (tickLen * msg.getTimeStamp());
+        tempoChangeBeatNumbers.add (BeatPosition::fromBeats (tickLen * msg.getTimeStamp()));
         bpms.add (4.0 * 60.0 / (denom * secsPerQuarterNote));
         numerators.add (numer);
         denominators.add (denom);
@@ -1605,10 +1693,10 @@ bool MidiList::readSeparateTracksFromFile (const juce::File& f,
             destSequence.sort();
             destSequence.updateMatchedPairs();
 
-            songLength = std::max (songLength, destSequence.getStartTime() + destSequence.getEndTime());
+            songLength = std::max (songLength, BeatDuration::fromBeats (destSequence.getStartTime() + destSequence.getEndTime()));
 
             std::unique_ptr<MidiList> midiList (new MidiList());
-            midiList->importFromEditTimeSequenceWithNoteExpression (destSequence, nullptr, 0.0, nullptr);
+            midiList->importFromEditTimeSequenceWithNoteExpression (destSequence, nullptr, TimePosition(), nullptr);
 
             if (! midiList->isEmpty())
                 lists.add (midiList.release());
@@ -1643,11 +1731,11 @@ bool MidiList::readSeparateTracksFromFile (const juce::File& f,
                         channelSequence.sort();
                         channelSequence.updateMatchedPairs();
 
-                        songLength = std::max (songLength, channelSequence.getEndTime());
+                        songLength = std::max (songLength, BeatDuration::fromBeats (channelSequence.getEndTime()));
 
                         std::unique_ptr<MidiList> midiList (new MidiList());
                         midiList->setMidiChannel (midiChannel);
-                        midiList->importMidiSequence (channelSequence, nullptr, 0.0, nullptr);
+                        midiList->importMidiSequence (channelSequence, nullptr, TimePosition(), nullptr);
 
                         if (! midiList->isEmpty())
                             lists.add (midiList.release());
@@ -1662,18 +1750,18 @@ bool MidiList::readSeparateTracksFromFile (const juce::File& f,
 
 //==============================================================================
 void MidiList::importMidiSequence (const juce::MidiMessageSequence& sequence, Edit* edit,
-                                   double editTimeOfListTimeZero, juce::UndoManager* um)
+                                   TimePosition editTimeOfListTimeZero, juce::UndoManager* um)
 {
     auto ts = edit != nullptr ? &edit->tempoSequence : nullptr;
-    auto firstBeatNum = ts != nullptr ? ts->timeToBeats (editTimeOfListTimeZero) : 0.0;
+    auto firstBeatNum = ts != nullptr ? ts->toBeats (editTimeOfListTimeZero) : BeatPosition();
     const int channelNumber = getMidiChannel().getChannelNumber();
 
     for (int i = 0; i < sequence.getNumEvents(); ++i)
     {
         auto& m = sequence.getEventPointer (i)->message;
 
-        auto beatTime = ts != nullptr ? ts->timeToBeats (m.getTimeStamp()) - firstBeatNum
-                                      : m.getTimeStamp();
+        auto beatTime = ts != nullptr ? ts->toBeats (TimePosition::fromSeconds (m.getTimeStamp())) - toDuration (firstBeatNum)
+                                      : BeatPosition::fromBeats (m.getTimeStamp());
 
         if (m.isSysEx())
         {
@@ -1691,12 +1779,12 @@ void MidiList::importMidiSequence (const juce::MidiMessageSequence& sequence, Ed
 
             if (m.isNoteOn())
             {
-                const double keyUpTime = sequence.getTimeOfMatchingKeyUp (i);
+                const auto keyUpTime = TimePosition::fromSeconds (sequence.getTimeOfMatchingKeyUp (i));
 
                 addNote (m.getNoteNumber(),
                          beatTime,
-                         ts != nullptr ? ((ts->timeToBeats (keyUpTime) - firstBeatNum) - beatTime)
-                                       : (keyUpTime - beatTime),
+                         ts != nullptr ? ((ts->toBeats (keyUpTime) - firstBeatNum) - toDuration (beatTime))
+                                       : (BeatDuration::fromBeats (keyUpTime.inSeconds()) - toDuration (beatTime)),
                          m.getVelocity(), edit != nullptr ? edit->engine.getEngineBehaviour().getDefaultNoteColour() : 0, um);
             }
             else if (m.isAftertouch())
@@ -1731,10 +1819,10 @@ void MidiList::importMidiSequence (const juce::MidiMessageSequence& sequence, Ed
 }
 
 void MidiList::importFromEditTimeSequenceWithNoteExpression (const juce::MidiMessageSequence& sequence, Edit* edit,
-                                                             double editTimeOfListTimeZero, juce::UndoManager* um)
+                                                             TimePosition editTimeOfListTimeZero, juce::UndoManager* um)
 {
     auto ts = edit != nullptr ? &edit->tempoSequence : nullptr;
-    auto firstBeatNum = ts != nullptr ? ts->timeToBeats (editTimeOfListTimeZero) : 0.0;
+    auto firstBeatNum = ts != nullptr ? ts->toBeats (editTimeOfListTimeZero) : BeatPosition();
     const int channelNumber = getMidiChannel().getChannelNumber();
 
     juce::MPEZoneLayout layout;
@@ -1744,8 +1832,8 @@ void MidiList::importFromEditTimeSequenceWithNoteExpression (const juce::MidiMes
     for (int i = 0; i < sequence.getNumEvents(); ++i)
     {
         auto& m = sequence.getEventPointer (i)->message;
-        const double beatTime = ts != nullptr ? ts->timeToBeats (m.getTimeStamp()) - firstBeatNum
-                                              : m.getTimeStamp();
+        const auto beatTime = ts != nullptr ? ts->toBeats (TimePosition::fromSeconds (m.getTimeStamp())) - toDuration (firstBeatNum)
+                                            : BeatPosition::fromBeats (m.getTimeStamp());
 
         if (m.isSysEx())
         {
@@ -1797,12 +1885,12 @@ void MidiList::importFromEditTimeSequenceWithNoteExpression (const juce::MidiMes
 }
 
 //==============================================================================
-void MidiList::exportToPlaybackMidiSequence (juce::MidiMessageSequence& destSequence, MidiClip& clip, bool generateMPE) const
+juce::MidiMessageSequence MidiList::exportToPlaybackMidiSequence (MidiClip& clip, TimeBase tb, bool generateMPE) const
 {
-    destSequence = clip.edit.engine.getEngineBehaviour().createPlaybackMidiSequence (*this, clip, generateMPE);
+    return clip.edit.engine.getEngineBehaviour().createPlaybackMidiSequence (*this, clip, tb, generateMPE);
 }
 
-juce::MidiMessageSequence MidiList::createDefaultPlaybackMidiSequence (const MidiList& list, MidiClip& clip, bool generateMPE)
+juce::MidiMessageSequence MidiList::createDefaultPlaybackMidiSequence (const MidiList& list, MidiClip& clip, TimeBase timeBase, bool generateMPE)
 {
     juce::MidiMessageSequence destSequence;
     
@@ -1811,12 +1899,14 @@ juce::MidiMessageSequence MidiList::createDefaultPlaybackMidiSequence (const Mid
     auto channelNumber = list.getMidiChannel().getChannelNumber();
 
     // NB: allow extra space here in case the notes get quantised or nudged around later on..
-    const double overlapAllowance = 0.5;
-    auto firstNoteTime = ts.timeToBeats (clip.getPosition().getStart()) - midiStartBeat - overlapAllowance;
-    auto lastNoteTime  = ts.timeToBeats (clip.getPosition().getEnd())   - midiStartBeat + overlapAllowance;
+    const auto overlapAllowance = 0.5_bd;
+    auto firstNoteBeat = timeBase == TimeBase::beatsRaw ? list.getFirstBeatNumber() - overlapAllowance
+                                                        : toPosition (ts.toBeats (clip.getPosition().getStart()) - midiStartBeat - overlapAllowance);
+    auto lastNoteBeat  = timeBase == TimeBase::beatsRaw ? list.getLastBeatNumber() + overlapAllowance
+                                                        : toPosition (ts.toBeats (clip.getPosition().getEnd())   - midiStartBeat + overlapAllowance);
 
     auto& notes = list.getNotes();
-    auto numNotes = notes.size();
+    const auto numNotes = notes.size();
     auto selectedEvents = clip.getSelectedEvents();
 
     auto grooveTemplate = clip.edit.engine.getGrooveTemplateManager().getTemplateByName (clip.getGrooveTemplate());
@@ -1824,6 +1914,38 @@ juce::MidiMessageSequence MidiList::createDefaultPlaybackMidiSequence (const Mid
     if (grooveTemplate != nullptr && grooveTemplate->isEmpty())
         grooveTemplate = nullptr;
 
+    // Do controllers first in case they send and program or bank change messages
+    auto& controllerEvents = list.getControllerEvents();
+
+    {
+        // Add cumulative controller events that are off the start
+        juce::Array<int> doneControllers;
+
+        for (auto e : controllerEvents)
+        {
+            auto beat = e->getBeatPosition();
+
+            if (beat < firstNoteBeat)
+            {
+                if (! doneControllers.contains (e->getType()))
+                {
+                    addToSequence (destSequence, clip, timeBase, *e, channelNumber);
+                    doneControllers.add (e->getType());
+                }
+            }
+        }
+    }
+
+    // Add the real controller events:
+    for (auto e : controllerEvents)
+    {
+        auto beat = e->getBeatPosition();
+
+        if (beat >= firstNoteBeat && beat < lastNoteBeat)
+            addToSequence (destSequence, clip, timeBase, *e, channelNumber);
+    }
+
+    // Then the note events
     if (! generateMPE)
     {
         for (int i = 0; i < numNotes; ++i)
@@ -1836,7 +1958,7 @@ juce::MidiMessageSequence MidiList::createDefaultPlaybackMidiSequence (const Mid
             // check for subsequent overlaps
             auto thisNoteStart = note.getStartBeat();
 
-            if (thisNoteStart >= lastNoteTime)
+            if (thisNoteStart >= lastNoteBeat)
                 break;
 
             auto thisNoteEnd = note.getEndBeat();
@@ -1846,9 +1968,9 @@ juce::MidiMessageSequence MidiList::createDefaultPlaybackMidiSequence (const Mid
             for (int j = i + 1; j < numNotes; ++j)
             {
                 const auto& note2 = *notes.getUnchecked (j);
-                const double s = note2.getStartBeat();
+                const auto s = note2.getStartBeat();
 
-                if (s >= lastNoteTime || s >= thisNoteEnd)
+                if (s >= lastNoteBeat || s >= thisNoteEnd)
                     break;
 
                 if (note2.getNoteNumber() == noteNum)
@@ -1858,13 +1980,13 @@ juce::MidiMessageSequence MidiList::createDefaultPlaybackMidiSequence (const Mid
                 }
             }
 
-            if (thisNoteEnd > firstNoteTime)
-                addToSequence (destSequence, clip, note, channelNumber, useNoteUp, grooveTemplate);
+            if (thisNoteEnd > firstNoteBeat)
+                addToSequence (destSequence, clip, timeBase, note, channelNumber, useNoteUp, grooveTemplate);
         }
     }
     else
     {
-        MPEChannelAssigner assigner (destSequence, clip, grooveTemplate);
+        MPEChannelAssigner assigner (destSequence, clip, timeBase, grooveTemplate);
 
         for (auto note : notes)
         {
@@ -1875,46 +1997,16 @@ juce::MidiMessageSequence MidiList::createDefaultPlaybackMidiSequence (const Mid
         }
     }
 
-    auto& controllerEvents = list.getControllerEvents();
-
-    {
-        // Add cumulative controller events that are off the start
-        juce::Array<int> doneControllers;
-
-        for (auto e : controllerEvents)
-        {
-            auto beat = e->getBeatPosition();
-
-            if (beat < firstNoteTime)
-            {
-                if (! doneControllers.contains (e->getType()))
-                {
-                    addToSequence (destSequence, clip, *e, channelNumber);
-                    doneControllers.add (e->getType());
-                }
-            }
-        }
-    }
-
-    // Add the real controller events:
-    for (auto e : controllerEvents)
-    {
-        auto beat = e->getBeatPosition();
-
-        if (beat >= firstNoteTime && beat < lastNoteTime)
-            addToSequence (destSequence, clip, *e, channelNumber);
-    }
-
     // Add the SysEx events:
     for (auto e : list.getSysexEvents())
     {
         auto beat = e->getBeatPosition();
 
-        if (beat >= firstNoteTime && beat < lastNoteTime)
-            addToSequence (destSequence, clip, *e);
+        if (beat >= firstNoteBeat && beat < lastNoteBeat)
+            addToSequence (destSequence, clip, timeBase, *e);
     }
     
     return destSequence;
 }
 
-}
+}} // namespace tracktion { inline namespace engine

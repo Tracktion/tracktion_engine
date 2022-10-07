@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 namespace IDs
@@ -45,19 +45,19 @@ namespace IDs
 
 namespace TransportHelpers
 {
-    double snapTime (TransportControl& tc, double t, bool invertSnap)
+    inline TimePosition snapTime (TransportControl& tc, TimePosition t, bool invertSnap)
     {
         return (tc.snapToTimecode ^ invertSnap) ? tc.getSnapType().roundTimeNearest (t, tc.edit.tempoSequence)
                                                 : t;
     }
 
-    double snapTimeUp (TransportControl& tc, double t, bool invertSnap)
+    inline TimePosition snapTimeUp (TransportControl& tc, TimePosition t, bool invertSnap)
     {
         return (tc.snapToTimecode ^ invertSnap) ? tc.getSnapType().roundTimeUp (t, tc.edit.tempoSequence)
                                                 : t;
     }
 
-    double snapTimeDown (TransportControl& tc, double t, bool invertSnap)
+    inline TimePosition snapTimeDown (TransportControl& tc, TimePosition t, bool invertSnap)
     {
         return (tc.snapToTimecode ^ invertSnap) ? tc.getSnapType().roundTimeDown (t, tc.edit.tempoSequence)
                                                 : t;
@@ -93,7 +93,7 @@ struct TransportControl::TransportState : private juce::ValueTree::Listener
         endTime.referTo (transientState, IDs::endTime, um);
         userDragging.referTo (transientState, IDs::userDragging, um);
         lastUserDragTime.referTo (transientState, IDs::lastUserDragTime, um);
-        cursorPosAtPlayStart.referTo (transientState, IDs::cursorPosAtPlayStart, um, -1000);
+        cursorPosAtPlayStart.referTo (transientState, IDs::cursorPosAtPlayStart, um, -1000_tp);
         reallocationInhibitors.referTo (transientState, IDs::reallocationInhibitors, um);
         playbackContextAllocation.referTo (transientState, IDs::playbackContextAllocation, um);
 
@@ -122,7 +122,7 @@ struct TransportControl::TransportState : private juce::ValueTree::Listener
     }
 
     /** Updates the current video position, calling any listeners. */
-    void setVideoPosition (double time, bool forceJump)
+    void setVideoPosition (TimePosition time, bool forceJump)
     {
         forceVideoJump = forceJump;
         videoPosition = time;
@@ -157,10 +157,10 @@ struct TransportControl::TransportState : private juce::ValueTree::Listener
         playing = false;
     }
 
-    void updatePositionFromPlayhead (double newPosition)
+    void updatePositionFromPlayhead (TimePosition newPosition)
     {
         updatingFromPlayHead = true;
-        state.setProperty (IDs::position, newPosition, nullptr);
+        state.setProperty (IDs::position, newPosition.inSeconds(), nullptr);
         updatingFromPlayHead = false;
     }
 
@@ -179,13 +179,16 @@ struct TransportControl::TransportState : private juce::ValueTree::Listener
     juce::CachedValue<bool> discardRecordings, clearDevices, justSendMMCIfEnabled, canSendMMCStop,
                             invertReturnToStartPosSelection, allowRecordingIfNoInputsArmed, clearDevicesOnStop;
     juce::CachedValue<bool> userDragging, lastUserDragTime, forceVideoJump, rewindButtonDown, fastForwardButtonDown, updatingFromPlayHead;
-    juce::CachedValue<double> startTime, endTime, cursorPosAtPlayStart, videoPosition;
+    juce::CachedValue<TimePosition> startTime, endTime, cursorPosAtPlayStart;
+    juce::CachedValue<TimePosition> videoPosition;
     juce::CachedValue<int> reallocationInhibitors, playbackContextAllocation, nudgeLeftCount, nudgeRightCount;
 
     juce::ValueTree state, transientState { IDs::TRANSPORT };
     TransportControl& transport;
 
 private:
+    bool isInsideRecordingCallback = false;
+
     void valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i) override
     {
         if (v == state)
@@ -227,10 +230,18 @@ private:
             }
             else if (i == IDs::recording)
             {
+                // This recursion check is to avoid the call to performRecord stopping
+                // playback which in turn stops recording as it is trying to be started
+                if (isInsideRecordingCallback)
+                    return;
+
                 recording.forceUpdateOfCachedValue();
 
                 if (recording)
+                {
+                    juce::ScopedValueSetter<bool> svs (isInsideRecordingCallback, true);
                     recording = transport.performRecord();
+                }
 
                 transport.startedOrStopped();
             }
@@ -241,7 +252,7 @@ private:
             else if (i == IDs::videoPosition)
             {
                 videoPosition.forceUpdateOfCachedValue();
-                transport.listeners.call (&TransportControl::Listener::setVideoPosition, videoPosition, forceVideoJump);
+                transport.listeners.call (&TransportControl::Listener::setVideoPosition, videoPosition.get(), forceVideoJump);
             }
             else if (i == IDs::rewindButtonDown)
             {
@@ -275,13 +286,13 @@ private:
 //==============================================================================
 struct TransportControl::SectionPlayer  : private Timer
 {
-    SectionPlayer (TransportControl& tc, EditTimeRange sectionToPlay)
+    SectionPlayer (TransportControl& tc, TimeRange sectionToPlay)
         : transport (tc), section (sectionToPlay),
           originalTransportTime (tc.getCurrentPosition()),
           wasLooping (tc.looping)
     {
         jassert (! sectionToPlay.isEmpty());
-        transport.setCurrentPosition (sectionToPlay.getStart());
+        transport.setPosition (sectionToPlay.getStart());
         transport.looping = false;
         transport.play (false);
 
@@ -295,13 +306,13 @@ struct TransportControl::SectionPlayer  : private Timer
     }
 
     TransportControl& transport;
-    const EditTimeRange section;
+    const TimeRange section;
     const double originalTransportTime;
     const bool wasLooping;
 
     void timerCallback() override
     {
-        if (transport.getCurrentPosition() > section.getEnd())
+        if (transport.getPosition() > section.getEnd())
             transport.stop (false, false); // Will delete the SectionPlayer
     }
 };
@@ -437,14 +448,14 @@ private:
                 {
                     firstPress = false;
 
-                    double t = owner.position;
+                    auto t = owner.getPosition();
 
                     if (isRewind)
-                        t = TransportHelpers::snapTimeDown (owner, t - 1.0e-5, false);
+                        t = TransportHelpers::snapTimeDown (owner, t - 1.0e-5s, false);
                     else
-                        t = TransportHelpers::snapTimeUp (owner, t + 1.0e-5, false);
+                        t = TransportHelpers::snapTimeUp (owner, t + 1.0e-5s, false);
 
-                    owner.setCurrentPosition (t);
+                    owner.setPosition (t);
                 }
 
                 return;
@@ -467,7 +478,7 @@ struct TransportControl::PlayHeadWrapper
         : transport (t)
     {}
     
-    tracktion_graph::PlayHead* getNodePlayHead() const
+    tracktion::graph::PlayHead* getNodePlayHead() const
     {
         return transport.playbackContext ? transport.playbackContext->getNodePlayHead()
                                          : nullptr;
@@ -485,16 +496,16 @@ struct TransportControl::PlayHeadWrapper
             ph->play();
     }
 
-    void play (EditTimeRange timeRange, bool looped)
+    void play (TimeRange timeRange, bool looped)
     {
         if (auto ph = getNodePlayHead())
-            ph->play (timeToSample (timeRange, getSampleRate()), looped);
+            ph->play (tracktion::toSamples (timeRange, getSampleRate()), looped);
     }
     
-    void setRollInToLoop (double prerollStartTime)
+    void setRollInToLoop (TimePosition prerollStartTime)
     {
         if (auto ph = getNodePlayHead())
-            ph->setRollInToLoop (timeToSample (prerollStartTime, getSampleRate()));
+            ph->setRollInToLoop (tracktion::toSamples (prerollStartTime, getSampleRate()));
     }
     
     void stop()
@@ -512,7 +523,7 @@ struct TransportControl::PlayHeadWrapper
     }
 
     /** Returns the transport position to show in the UI, taking in to account any latency. */
-    double getLiveTransportPosition() const
+    TimePosition getLiveTransportPosition() const
     {
         if (getNodePlayHead() != nullptr && transport.playbackContext != nullptr && transport.playbackContext->isPlaybackGraphAllocated())
             return transport.playbackContext->getAudibleTimelineTime();
@@ -520,23 +531,23 @@ struct TransportControl::PlayHeadWrapper
         return getPosition();
     }
 
-    double getPosition() const
+    TimePosition getPosition() const
     {
         if (auto ph = getNodePlayHead())
-            return sampleToTime (ph->getPosition(), getSampleRate());
+            return TimePosition::fromSamples (ph->getPosition(), getSampleRate());
         
-        return 0.0;
+        return {};
     }
     
-    double getUnloopedPosition() const
+    TimePosition getUnloopedPosition() const
     {
         if (auto ph = getNodePlayHead())
-            return sampleToTime (ph->getUnloopedPosition(), getSampleRate());
+            return TimePosition::fromSamples (ph->getUnloopedPosition(), getSampleRate());
         
-        return 0.0;
+        return {};
     }
     
-    void setPosition (double newPos)
+    void setPosition (TimePosition newPos)
     {
         if (getNodePlayHead() != nullptr)
             transport.playbackContext->postPosition (newPos);
@@ -550,18 +561,18 @@ struct TransportControl::PlayHeadWrapper
         return false;
     }
     
-    EditTimeRange getLoopTimes() const
+    TimeRange getLoopTimes() const
     {
         if (auto ph = getNodePlayHead())
-            return sampleToTime (ph->getLoopRange(), getSampleRate());
+            return tracktion::timeRangeFromSamples (ph->getLoopRange(), getSampleRate());
         
         return {};
     }
     
-    void setLoopTimes (bool loop, EditTimeRange newRange)
+    void setLoopTimes (bool loop, TimeRange newRange)
     {
         if (auto ph = getNodePlayHead())
-            ph->setLoopRange (loop, timeToSample (newRange, getSampleRate()));
+            ph->setLoopRange (loop, tracktion::toSamples (newRange, getSampleRate()));
     }
     
     void setUserIsDragging (bool isDragging)
@@ -589,7 +600,7 @@ TransportControl::TransportControl (Edit& ed, const juce::ValueTree& v)
     loopPoint2.referTo (state, IDs::loopPoint2, um);
     snapToTimecode.referTo (state, IDs::snapToTimecode, um, true);
     looping.referTo (state, IDs::looping, um);
-    scrubInterval.referTo (state, IDs::scrubInterval, um, 0.1);
+    scrubInterval.referTo (state, IDs::scrubInterval, um, 0.1s);
 
     playHeadWrapper = std::make_unique<PlayHeadWrapper> (*this);
     transportState = std::make_unique<TransportState> (*this, state);
@@ -718,7 +729,7 @@ void TransportControl::ensureContextAllocated (bool alwaysReallocate)
     if (! edit.shouldPlay())
         return;
 
-    const double start = position;
+    const auto start = position.get();
 
     if (playbackContext == nullptr)
     {
@@ -789,7 +800,7 @@ void TransportControl::play (bool justSendMMCIfEnabled)
     transportState->play (justSendMMCIfEnabled);
 }
 
-void TransportControl::playSectionAndReset (EditTimeRange rangeToPlay)
+void TransportControl::playSectionAndReset (TimeRange rangeToPlay)
 {
     CRASH_TRACER
 
@@ -899,14 +910,14 @@ void TransportControl::syncToEdit (Edit* editToSyncTo, bool isPreview)
             auto& tempo   = tempoSequence.getTempoAt (position);
             auto& timeSig = tempoSequence.getTimeSigAt (position);
 
-            auto barsBeats = tempoSequence.timeToBarsBeats (targetContext->isLooping()
-                                                              ? targetContext->getLoopTimes().start
-                                                              : position);
+            auto barsBeats = tempoSequence.toBarsAndBeats (targetContext->isLooping()
+                                                            ? targetContext->getLoopTimes().getStart()
+                                                            : position);
 
-            auto previousBarTime = tempoSequence.barsBeatsToTime ({ barsBeats.bars, 0.0 });
+            auto previousBarTime = tempoSequence.toTime ({ barsBeats.bars, {} });
 
             auto syncInterval = isPreview ? targetContext->getLoopTimes().getLength()
-                                          : (60.0 / tempo.getBpm() * timeSig.numerator);
+                                          : TimeDuration::fromSeconds ((60.0 / tempo.getBpm() * timeSig.numerator));
 
             playbackContext->syncToContext (targetContext, previousBarTime, syncInterval);
         }
@@ -918,7 +929,7 @@ bool TransportControl::isRecording() const              { return transportState-
 bool TransportControl::isSafeRecording() const          { return isRecording() && transportState->safeRecording; }
 bool TransportControl::isStopping() const               { return isStopInProgress; }
 
-double TransportControl::getTimeWhenStarted() const   { return transportState->startTime; }
+TimePosition TransportControl::getTimeWhenStarted() const   { return transportState->startTime.get(); }
 
 //==============================================================================
 bool TransportControl::areAnyInputsRecording()
@@ -949,10 +960,10 @@ void TransportControl::timerCallback()
     if (isDelayedChangePending)
         editHasChanged();
 
-    if (isPlaying() && playHeadWrapper->getPosition() >= Edit::maximumLength)
+    if (isPlaying() && playHeadWrapper->getPosition() >= Edit::getMaximumEditEnd())
     {
         stop (false, false);
-        position = double (Edit::maximumLength);
+        position = Edit::getMaximumEditEnd();
         return;
     }
 
@@ -979,7 +990,7 @@ void TransportControl::timerCallback()
         if ((! transportState->userDragging)
              && juce::Time::getMillisecondCounter() - transportState->lastUserDragTime > 200)
         {
-            const double currentTime = playHeadWrapper->getLiveTransportPosition();
+            const auto currentTime = playHeadWrapper->getLiveTransportPosition();
             transportState->setVideoPosition (currentTime, false);
             transportState->updatePositionFromPlayhead (currentTime);
         }
@@ -991,7 +1002,7 @@ void TransportControl::timerCallback()
             if (looping)
             {
                 auto lr = getLoopRange();
-                lr.end = std::max (lr.end, lr.start + 0.001);
+                lr = lr.withEnd (std::max (lr.getEnd(), lr.getStart() + TimeDuration::fromSeconds (0.001)));
                 playHeadWrapper->setLoopTimes (true, lr);
             }
             else
@@ -1032,13 +1043,23 @@ void TransportControl::nudgeRight()
 //==============================================================================
 double TransportControl::getCurrentPosition() const
 {
-    return position;
+    return position.get().inSeconds();
+}
+
+TimePosition TransportControl::getPosition() const
+{
+    return position.get();
 }
 
 void TransportControl::setCurrentPosition (double newPos)
 {
     CRASH_TRACER
-    position = newPos;
+    setPosition (TimePosition::fromSeconds (newPos));
+}
+
+void TransportControl::setPosition (TimePosition t)
+{
+    position = t;
 }
 
 void TransportControl::setUserDragging (bool b)
@@ -1076,39 +1097,39 @@ bool TransportControl::isPositionUpdatingFromPlayhead() const
 }
 
 //==============================================================================
-void TransportControl::setLoopIn (double t)
+void TransportControl::setLoopIn (TimePosition t)
 {
-    setLoopPoint1 (std::max (std::max (loopPoint1.get(), loopPoint2.get()), std::max (0.0, t)));
-    setLoopPoint2 (std::max (0.0, t));
+    setLoopPoint1 (std::max (std::max (loopPoint1.get(), loopPoint2.get()), std::max (TimePosition(), t)));
+    setLoopPoint2 (std::max (TimePosition(), t));
 }
 
-void TransportControl::setLoopOut (double t)
+void TransportControl::setLoopOut (TimePosition t)
 {
-    setLoopPoint1 (std::min (std::min (loopPoint1.get(), loopPoint2.get()), std::max (0.0, t)));
-    setLoopPoint2 (std::max (0.0, t));
+    setLoopPoint1 (std::min (std::min (loopPoint1.get(), loopPoint2.get()), std::max (TimePosition(), t)));
+    setLoopPoint2 (std::max (TimePosition(), t));
 }
 
-void TransportControl::setLoopPoint1 (double t)
+void TransportControl::setLoopPoint1 (TimePosition t)
 {
-    loopPoint1 = juce::jlimit (0.0, edit.getLength() + Edit::maximumLength * 0.75, t);
+    loopPoint1 = juce::jlimit (0_tp, toPosition (edit.getLength() + Edit::getMaximumLength() * 0.75), t);
 }
 
-void TransportControl::setLoopPoint2 (double t)
+void TransportControl::setLoopPoint2 (TimePosition t)
 {
-    loopPoint2 = juce::jlimit (0.0, edit.getLength() + Edit::maximumLength * 0.75, t);
+    loopPoint2 = juce::jlimit (0_tp, toPosition (edit.getLength() + Edit::getMaximumLength() * 0.75), t);
 }
 
-void TransportControl::setLoopRange (EditTimeRange times)
+void TransportControl::setLoopRange (TimeRange times)
 {
-    auto maxEndTime = edit.getLength() + Edit::maximumLength * 0.75;
+    auto maxEndTime = toPosition (edit.getLength() + Edit::getMaximumLength() * 0.75);
 
-    loopPoint1 = juce::jlimit (0.0, maxEndTime, times.getStart());
-    loopPoint2 = juce::jlimit (0.0, maxEndTime, times.getEnd());
+    loopPoint1 = juce::jlimit (0_tp, maxEndTime, times.getStart());
+    loopPoint2 = juce::jlimit (0_tp, maxEndTime, times.getEnd());
 }
 
-EditTimeRange TransportControl::getLoopRange() const noexcept
+TimeRange TransportControl::getLoopRange() const noexcept
 {
-    return EditTimeRange::between (loopPoint1, loopPoint2);
+    return TimeRange::between (loopPoint1, loopPoint2);
 }
 
 void TransportControl::setSnapType (TimecodeSnapType newSnapType)
@@ -1138,7 +1159,7 @@ void TransportControl::startedOrStopped()
             CRASH_TRACER
             if (isPlaying())
             {
-                transportState->setVideoPosition (getCurrentPosition(), true);
+                transportState->setVideoPosition (getPosition(), true);
                 listeners.call (&Listener::startVideo);
 
                 if (wasRecording)
@@ -1178,7 +1199,7 @@ void TransportControl::sendMMCCommand (juce::MidiMessage::MidiMachineControlComm
     sendMMC (juce::MidiMessage::midiMachineControlCommand (command));
 }
 
-bool anyEnabledMidiOutDevicesSendingMMC (DeviceManager& dm)
+inline bool anyEnabledMidiOutDevicesSendingMMC (DeviceManager& dm)
 {
     for (int i = dm.getNumMidiOutDevices(); --i >= 0;)
         if (auto mo = dm.getMidiOutDevice (i))
@@ -1230,11 +1251,11 @@ void TransportControl::performPlay()
 
         if (looping)
         {
-            const double cursorPos = position;
+            const auto cursorPos = position.get();
             const auto loopRange = getLoopRange();
 
             if (cursorPos < loopRange.getStart()
-                || cursorPos > loopRange.getEnd() - 0.1)
+                || cursorPos > loopRange.getEnd() - 0.1s)
             {
                 position = loopRange.getStart();
             }
@@ -1242,7 +1263,7 @@ void TransportControl::performPlay()
             transportState->startTime = loopRange.getStart();
             transportState->endTime   = loopRange.getEnd();
 
-            if (transportState->endTime < transportState->startTime + 0.01)
+            if (transportState->endTime < transportState->startTime + 0.01s)
             {
                 engine.getUIBehaviour().showWarningMessage (TRANS("Can't play in loop mode unless the in/out markers are further apart"));
                 return;
@@ -1251,18 +1272,18 @@ void TransportControl::performPlay()
         else
         {
             transportState->startTime = position.get();
-            transportState->endTime   = double (Edit::maximumLength);
+            transportState->endTime   = Edit::getMaximumEditEnd();
         }
 
         if (edit.getAbletonLink().isConnected())
         {
-            double barLength = edit.tempoSequence.getTimeSig(0)->numerator;
-            double beatsUntilNextLinkCycle = edit.getAbletonLink().getBeatsUntilNextCycle (barLength);
+            const double barLength = edit.tempoSequence.getTimeSig(0)->numerator;
+            const double beatsUntilNextLinkCycle = edit.getAbletonLink().getBeatsUntilNextCycle (barLength);
 
-            double cyclePos = std::fmod (transportState->startTime, barLength);
-            double nextLinkCycle = edit.tempoSequence.beatsToTime (beatsUntilNextLinkCycle);
+            const double cyclePos = std::fmod (transportState->startTime.get().inSeconds(), barLength);
+            const double nextLinkCycle = edit.tempoSequence.toTime (BeatPosition::fromBeats (beatsUntilNextLinkCycle)).inSeconds();
 
-            transportState->startTime = (transportState->startTime - cyclePos) + (barLength - nextLinkCycle);
+            transportState->startTime = TimePosition::fromSeconds ((transportState->startTime.get().inSeconds() - cyclePos) + (barLength - nextLinkCycle));
         }
 
         transportState->recording = false;
@@ -1308,11 +1329,11 @@ bool TransportControl::performRecord()
         {
             const auto loopRange = getLoopRange();
             transportState->startTime   = position.get();
-            transportState->endTime     = double (Edit::maximumLength);
+            transportState->endTime     = Edit::getMaximumEditEnd();
 
             if (looping)
             {
-                if (loopRange.getLength() < 2.0)
+                if (loopRange.getLength() < 2.0s)
                 {
                     engine.getUIBehaviour().showWarningMessage (TRANS("To record in loop mode, the length of loop must be greater than 2 seconds."));
                     return false;
@@ -1328,33 +1349,36 @@ bool TransportControl::performRecord()
             }
             else if (edit.recordingPunchInOut)
             {
-                if (loopRange.getEnd() + 0.1 <= transportState->startTime)
-                    transportState->startTime = loopRange.getStart() - 1.0;
+                if ((loopRange.getEnd() + 0.1s) <= transportState->startTime)
+                    transportState->startTime = (loopRange.getStart() - 1.0s);
             }
             else
             {
-                if (std::abs (transportState->startTime) < 0.005)
-                    transportState->startTime = 0;
+                if (abs (transportState->startTime) < 0.005s)
+                    transportState->startTime = 0s;
             }
 
-            double prerollStart = transportState->startTime;
+            auto prerollStart = transportState->startTime.get();
             double numCountInBeats = edit.getNumCountInBeats();
+            const auto& ts = edit.tempoSequence;
 
             if (numCountInBeats > 0)
             {
-                double currentBeat = edit.tempoSequence.timeToBeats (transportState->startTime);
-                prerollStart = edit.tempoSequence.beatsToTime (currentBeat - (numCountInBeats + 0.5));
+                auto currentBeat = ts.toBeats (transportState->startTime);
+                prerollStart = ts.toTime (currentBeat - BeatDuration::fromBeats (numCountInBeats + 0.5));
+                // N.B. this +0.5 beats here specifies the behaviour further down when setting the click range.
+                // If this changes, that will also need to change.
             }
 
             if (edit.getAbletonLink().isConnected())
             {
-                double barLength = edit.tempoSequence.getTimeSig (0)->numerator;
+                double barLength = ts.getTimeSig (0)->numerator;
                 double beatsUntilNextLinkCycle = edit.getAbletonLink().getBeatsUntilNextCycle (barLength);
 
                 if (numCountInBeats > 0)
                     beatsUntilNextLinkCycle -= 0.5;
 
-                prerollStart -= edit.tempoSequence.beatsToTime (beatsUntilNextLinkCycle);
+                prerollStart = prerollStart - toDuration (ts.toTime (BeatPosition::fromBeats (beatsUntilNextLinkCycle)));
             }
 
             transportState->cursorPosAtPlayStart = position.get();
@@ -1369,20 +1393,20 @@ bool TransportControl::performRecord()
             if (playbackContext)
             {
                 if (edit.getNumCountInBeats() > 0)
-                    playHeadWrapper->setLoopTimes (true, { transportState->startTime, Edit::maximumLength });
+                    playHeadWrapper->setLoopTimes (true, { transportState->startTime.get(), Edit::getMaximumEditEnd() });
 
                 // if we're playing from near time = 0, roll back a fraction so we
                 // don't miss the first block - this won't be noticable further along
                 // in the edit.
-                if (prerollStart < 0.2)
-                    prerollStart -= 0.2;
+                if (prerollStart < 0.2s)
+                    prerollStart = prerollStart - 0.2s;
 
                 if (looping)
                 {
                     // The order of this is critical as the audio thread might jump in and reset the
                     // roll-in-to-loop status of the loop-range is not set first
                     auto lr = getLoopRange();
-                    lr.end = std::max (lr.end, lr.start + 0.001);
+                    lr = lr.withEnd (std::max (lr.getEnd(), lr.getStart() + 0.001s));
                     playHeadWrapper->setLoopTimes (true, lr);
                     playHeadWrapper->setRollInToLoop (prerollStart);
                     playHeadWrapper->play();
@@ -1391,20 +1415,30 @@ bool TransportControl::performRecord()
                 {
                     // Set the playhead loop times before preparing the context as this will be used by
                     // the RecordingContext to initialise itself
-                    playHeadWrapper->setLoopTimes (false, { prerollStart, transportState->endTime });
-                    playHeadWrapper->play ({ prerollStart, transportState->endTime }, false);
+                    playHeadWrapper->setLoopTimes (false, { prerollStart, transportState->endTime.get() });
+                    playHeadWrapper->play ({ prerollStart, transportState->endTime.get() }, false);
                 }
                 
                 playHeadWrapper->setPosition (prerollStart);
                 position = prerollStart;
 
                 // Prepare the recordings after the playhead has been setup to avoid synchronisation problems
-                playbackContext->prepareForRecording (prerollStart, transportState->startTime);
+                playbackContext->prepareForRecording (prerollStart, transportState->startTime.get());
 
                 if (edit.getNumCountInBeats() > 0)
-                    edit.setClickTrackRange ({ prerollStart, transportState->startTime });
+                {
+                    // As the pre-roll will be "num count in beats - 0.5" we have to add that back on before our calculation
+                    // We also roll back 0.5 beats the end time to avoid hearing a block that starts directly or just before a beat
+                    const auto clickStartBeat = ts.toBeats (prerollStart);
+                    const auto clickEndBeat = ts.toBeats (transportState->startTime.get());
+
+                    edit.setClickTrackRange (ts.toTime ({ BeatPosition::fromBeats (std::ceil (clickStartBeat.inBeats() + 0.5)),
+                                                          BeatPosition::fromBeats (std::ceil (clickEndBeat.inBeats())) - 0.5_bd }));
+                }
                 else
+                {
                     edit.setClickTrackRange ({});
+                }
                 
                 transportState->playing = true; // N.B. set these after the devices have been rebuilt and the playingFlag has been set
                 screenSaverDefeater = std::make_unique<ScreenSaverDefeater>();
@@ -1459,9 +1493,9 @@ void TransportControl::performStop()
         clearPlayingFlags();
         playHeadWrapper->stop();
         playbackContext->recordingFinished ({ transportState->startTime, recEndTime },
-                                              transportState->discardRecordings);
+                                            transportState->discardRecordings);
 
-        position = transportState->discardRecordings ? transportState->startTime
+        position = transportState->discardRecordings ? transportState->startTime.get()
                                                      : (looping ? recEndPos
                                                                 : recEndTime);
     }
@@ -1482,8 +1516,8 @@ void TransportControl::performStop()
     transportState->clearDevicesOnStop = false;
 
     if ((transportState->invertReturnToStartPosSelection ^ bool (engine.getPropertyStorage().getProperty (SettingID::resetCursorOnStop, false)))
-         && transportState->cursorPosAtPlayStart >= 0)
-        setCurrentPosition (transportState->cursorPosAtPlayStart);
+         && transportState->cursorPosAtPlayStart >= 0_tp)
+        setPosition (transportState->cursorPosAtPlayStart);
 
     if (transportState->canSendMMCStop)
         sendMMCCommand (juce::MidiMessage::mmc_stop);
@@ -1499,16 +1533,16 @@ void TransportControl::performPositionChange()
     if (isRecording())
         stop (false, false);
 
-    double newPos = state[IDs::position];
+    auto newPos = TimePosition::fromSeconds (static_cast<double> (state[IDs::position]));
 
     if (isPlaying() && looping)
     {
         auto range = getLoopRange();
-        newPos = juce::jlimit (range.start, range.end, newPos);
+        newPos = juce::jlimit (range.getStart(), range.getEnd(), newPos);
     }
     else
     {
-        newPos = juce::jlimit (0.0, Edit::maximumLength, newPos);
+        newPos = juce::jlimit (TimePosition(), Edit::getMaximumEditEnd(), newPos);
     }
 
     if (playbackContext != nullptr && isPlaying())
@@ -1525,7 +1559,7 @@ void TransportControl::performPositionChange()
 
     // MMC
     const double nudge = 0.05 / 96000.0;
-    const double mmcTime = std::max (0.0, newPos + edit.getTimecodeOffset()) + nudge;
+    const double mmcTime = std::max (0_tp, newPos + edit.getTimecodeOffset()).inSeconds() + nudge;
     const int framesPerSecond = edit.getTimecodeFormat().getFPS();
     const int frames  = ((int) (mmcTime * framesPerSecond)) % framesPerSecond;
     const int hours   = (int) (mmcTime * (1.0 / 3600.0));
@@ -1571,12 +1605,12 @@ void TransportControl::performNudgeRight()
 
 
 //==============================================================================
-static EditTimeRange getLimitsOfSelectedClips (Edit& edit, const SelectableList& items)
+static TimeRange getLimitsOfSelectedClips (Edit& edit, const SelectableList& items)
 {
     auto range = getTimeRangeForSelectedItems (items);
 
     if (range.isEmpty())
-        return { 0.0, edit.getLength() };
+        return { {}, edit.getLength() };
 
     return range;
 }
@@ -1584,31 +1618,31 @@ static EditTimeRange getLimitsOfSelectedClips (Edit& edit, const SelectableList&
 void toStart (TransportControl& tc, const SelectableList& items)
 {
     auto selectionStart = getLimitsOfSelectedClips (tc.edit, items).getStart();
-    tc.setCurrentPosition (tc.getCurrentPosition() < selectionStart + 0.001 ? 0.0 : selectionStart);
+    tc.setPosition (tc.getPosition() < selectionStart + 0.001s ? TimePosition() : selectionStart);
 }
 
 void toEnd (TransportControl& tc, const SelectableList& items)
 {
     auto selectionEnd = getLimitsOfSelectedClips (tc.edit, items).getEnd();
-    tc.setCurrentPosition (tc.getCurrentPosition() > selectionEnd - 0.001 ? tc.edit.getLength() : selectionEnd);
+    tc.setPosition (tc.getPosition() > selectionEnd - 0.001s ? toPosition (tc.edit.getLength()) : selectionEnd);
 }
 
-void tabBack (TransportControl& tc)     { tc.setCurrentPosition (tc.edit.getPreviousTimeOfInterest (tc.getCurrentPosition() - 0.001)); }
-void tabForward (TransportControl& tc)  { tc.setCurrentPosition (tc.edit.getNextTimeOfInterest     (tc.getCurrentPosition() + 0.001)); }
+void tabBack (TransportControl& tc)     { tc.setPosition (tc.edit.getPreviousTimeOfInterest (tc.getPosition() - 0.001s)); }
+void tabForward (TransportControl& tc)  { tc.setPosition (tc.edit.getNextTimeOfInterest     (tc.getPosition() + 0.001s)); }
 
-void markIn (TransportControl& tc)      { tc.setLoopIn  (tc.getCurrentPosition()); }
-void markOut (TransportControl& tc)     { tc.setLoopOut (tc.getCurrentPosition()); }
+void markIn (TransportControl& tc)      { tc.setLoopIn  (tc.getPosition()); }
+void markOut (TransportControl& tc)     { tc.setLoopOut (tc.getPosition()); }
 
 void scrub (TransportControl& tc, double units)
 {
     CRASH_TRACER
-    const double unitSize = tc.scrubInterval;
-    double timeToMove = units * unitSize;
-    double t = tc.getCurrentPosition() + timeToMove;
+    const auto unitSize = tc.scrubInterval.get();
+    auto timeToMove = unitSize * units;
+    auto t = tc.getPosition() + timeToMove;
 
     if (tc.snapToTimecode)
     {
-        if (timeToMove > 0)
+        if (timeToMove > 0s)
             t = TransportHelpers::snapTimeUp (tc, t, false);
         else
             t = TransportHelpers::snapTimeDown (tc, t, false);
@@ -1617,7 +1651,7 @@ void scrub (TransportControl& tc, double units)
     if (tc.isUserDragging() && tc.engine.getPropertyStorage().getProperty (SettingID::snapCursor, false))
         t = TransportHelpers::snapTimeDown (tc, t, false);
 
-    tc.setCurrentPosition (t);
+    tc.setPosition (t);
 }
 
 void freePlaybackContextIfNotRecording (TransportControl& tc)
@@ -1626,4 +1660,4 @@ void freePlaybackContextIfNotRecording (TransportControl& tc)
         tc.freePlaybackContext();
 }
 
-}
+}} // namespace tracktion { inline namespace engine

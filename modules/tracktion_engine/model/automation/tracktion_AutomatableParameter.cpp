@@ -8,12 +8,12 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 namespace AutomationScaleHelpers
 {
-    float getQuadraticBezierControlPoint (float y1, float y2, float curve) noexcept
+    inline float getQuadraticBezierControlPoint (float y1, float y2, float curve) noexcept
     {
         jassert (curve >= -0.5f && curve <= 0.5f);
 
@@ -35,7 +35,7 @@ namespace AutomationScaleHelpers
         return y;
     }
 
-    float getCurvedValue (float value, float start, float end, float curve) noexcept
+    inline float getCurvedValue (float value, float start, float end, float curve) noexcept
     {
         if (curve == 0.0f)
             return ((end - start) * value) + start;
@@ -44,7 +44,7 @@ namespace AutomationScaleHelpers
         return (float) AutomationCurve::getBezierXfromT (value, start, control, end);
     }
 
-    float mapValue (float inputVal, float offset, float value, float curve) noexcept
+    inline float mapValue (float inputVal, float offset, float value, float curve) noexcept
     {
         return inputVal < 0.0 ? offset - getCurvedValue (-inputVal, 0.0f, value, curve)
                               : offset + getCurvedValue (inputVal, 0.0f, value, curve);
@@ -67,18 +67,18 @@ struct AutomationSource  : public juce::ReferenceCountedObject
         This is called from the message thread and can be used for drawing etc. so
         shouldn't reposition the streams.
     */
-    virtual float getValueAt (double time) = 0;
+    virtual float getValueAt (TimePosition) = 0;
 
     /** Must return if the source is enabled at the given time.
         This is called from the message thread and can be used for drawing etc. so
         shouldn't reposition the streams.
     */
-    virtual bool isEnabledAt (double time) = 0;
+    virtual bool isEnabledAt (TimePosition) = 0;
 
     /** Should set the position of the source to a specific time in the Edit.
         This must be thread safe as it could be called from multiple threads.
     */
-    virtual void setPosition (double time) = 0;
+    virtual void setPosition (TimePosition) = 0;
 
     /** Should return true if the source is enabled at the current position. */
     virtual bool isEnabled() = 0;
@@ -119,10 +119,10 @@ struct ModifierAutomationSource : public AutomationModifierSource
     }
 
     // Modifiers will be updated at the start of each block so can't be repositioned
-    float getValueAt (double) override          { return getCurrentValue(); }
-    bool isEnabledAt (double) override          { return true; }
+    float getValueAt (TimePosition) override          { return getCurrentValue(); }
+    bool isEnabledAt (TimePosition) override          { return true; }
     
-    void setPosition (double newEditTime) override
+    void setPosition (TimePosition newEditTime) override
     {
         editTimeToReturn = newEditTime;
     }
@@ -139,14 +139,14 @@ struct ModifierAutomationSource : public AutomationModifierSource
         const auto currentTime = modifier->getCurrentTime();
         const auto deltaTime = currentTime - editTimeToReturn;
         
-        if (deltaTime > 0.0 && deltaTime < Modifier::maxHistoryTime)
+        if (deltaTime > TimeDuration() && deltaTime < Modifier::maxHistoryTime)
             baseValue = modifier->getValueAt (deltaTime);
         
         return AutomationScaleHelpers::mapValue (baseValue, assignment->offset, assignment->value, assignment->curve);
     }
 
     const Modifier::Ptr modifier;
-    double editTimeToReturn = 0.0;
+    TimePosition editTimeToReturn;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ModifierAutomationSource)
 };
@@ -199,7 +199,7 @@ public:
             if (! parameterStream)
                 parameter.updateToFollowCurve (lastTime);
 
-            lastTime = -1.0;
+            lastTime = TimePosition::fromSeconds (-1.0);
         }
 
         parameter.automatableEditElement.updateActiveParameters();
@@ -210,18 +210,18 @@ public:
         return automationActive.load (std::memory_order_relaxed);
     }
 
-    float getValueAt (double time) override
+    float getValueAt (TimePosition time) override
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
         return curve.getValueAt (time);
     }
 
-    bool isEnabledAt (double) override
+    bool isEnabledAt (TimePosition) override
     {
         return true;
     }
 
-    void setPosition (double time) override
+    void setPosition (TimePosition time) override
     {
         if (! parameter.getEdit().getAutomationRecordManager().isReadingAutomation())
             if (auto plugin = parameter.getPlugin())
@@ -253,7 +253,7 @@ private:
     juce::CriticalSection parameterStreamLock;
     std::unique_ptr<AutomationIterator> parameterStream;
     std::atomic<bool> automationActive { false };
-    std::atomic<double> lastTime { -1.0 };
+    std::atomic<TimePosition> lastTime { TimePosition::fromSeconds (-1.0) };
 
     static juce::ValueTree getState (AutomatableParameter& ap)
     {
@@ -292,19 +292,19 @@ struct MacroSource : public AutomationModifierSource
         return macro.get();
     }
 
-    float getValueAt (double time) override
+    float getValueAt (TimePosition time) override
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
         auto macroValue = macro->getCurve().getValueAt (time);
         return AutomationScaleHelpers::mapValue (macroValue, assignment->offset, assignment->value, assignment->curve);
     }
 
-    bool isEnabledAt (double) override
+    bool isEnabledAt (TimePosition) override
     {
         return true;
     }
 
-    void setPosition (double time) override
+    void setPosition (TimePosition time) override
     {
         const juce::ScopedLock sl (streamPositionLock);
         macro->updateFromAutomationSources (time);
@@ -769,7 +769,7 @@ void AutomatableParameter::updateStream()
     curveSource->updateInterpolatedPoints();
 }
 
-void AutomatableParameter::updateFromAutomationSources (double time)
+void AutomatableParameter::updateFromAutomationSources (TimePosition time)
 {
     if (updateParametersRecursionCheck)
         return;
@@ -1095,7 +1095,7 @@ AutomatableParameter::AutomationSourceList& AutomatableParameter::getAutomationS
     return *automationSourceList;
 }
 
-void AutomatableParameter::updateToFollowCurve (double time)
+void AutomatableParameter::updateToFollowCurve (TimePosition time)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
     float newModifierValue = 0.0f;
@@ -1222,17 +1222,17 @@ AutomationIterator::AutomationIterator (const AutomatableParameter& p)
 
     jassert (curve.getNumPoints() > 0);
 
-    const double timeDelta      = 1.0 / 100.0;
+    const auto timeDelta        = TimeDuration::fromSeconds (1.0 / 100.0);
     const double minValueDelta  = (p.getValueRange().getLength()) / 256.0;
 
     int curveIndex = 0;
     int lastCurveIndex = -1;
-    double t = 0.0;
+    TimePosition t;
     float lastValue = 1.0e10;
-    auto lastTime = curve.getPointTime (curve.getNumPoints() - 1) + 1.0;
-    double t1 = 0.0;
-    double t2 = curve.getPointTime (0);
-    float v1 = curve.getValueAt (0.0);
+    auto lastTime = curve.getPointTime (curve.getNumPoints() - 1) + TimeDuration::fromSeconds (1.0);
+    TimePosition t1;
+    auto t2 = curve.getPointTime (0);
+    float v1 = curve.getValueAt (TimePosition());
     float v2 = v1;
     float c  = 0;
     CurvePoint bp;
@@ -1279,16 +1279,16 @@ AutomationIterator::AutomationIterator (const AutomatableParameter& p)
             }
             else if (c >= -0.5 && c <= 0.5)
             {
-                v = AutomationCurve::getBezierYFromX (t, t1, v1, bp.time, bp.value, t2, v2);
+                v = AutomationCurve::getBezierYFromX (t.inSeconds(), t1.inSeconds(), v1, toTime (bp.time, p.getEdit().tempoSequence).inSeconds(), bp.value, t2.inSeconds(), v2);
             }
             else
             {
-                if (t >= t1 && t <= x1end)
+                if (t >= t1 && t <= TimePosition::fromSeconds (x1end))
                     v = v1;
-                else if (t >= x2end && t <= t2)
+                else if (t >= TimePosition::fromSeconds (x2end) && t <= t2)
                     v = v2;
                 else
-                    v = AutomationCurve::getBezierYFromX (t, x1end, y1end, bp.time, bp.value, x2end, y2end);
+                    v = AutomationCurve::getBezierYFromX (t.inSeconds(), x1end, y1end, toTime (bp.time, p.getEdit().tempoSequence).inSeconds(), bp.value, x2end, y2end);
             }
         }
 
@@ -1307,11 +1307,11 @@ AutomationIterator::AutomationIterator (const AutomatableParameter& p)
             lastCurveIndex = curveIndex;
         }
 
-        t += timeDelta;
+        t = t + timeDelta;
     }
 }
 
-void AutomationIterator::setPosition (double newTime) noexcept
+void AutomationIterator::setPosition (TimePosition newTime) noexcept
 {
     jassert (points.size() > 0);
 
@@ -1401,4 +1401,4 @@ void AutomationDragDropTarget::itemDropped (const SourceDetails& dragSourceDetai
     }
 }
 
-}
+}} // namespace tracktion { inline namespace engine

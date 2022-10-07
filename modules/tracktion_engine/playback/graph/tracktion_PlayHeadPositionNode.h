@@ -8,17 +8,17 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 /**
     A Node that calculates a position to show visually what time is currently being processed by the graph based on its internal latency.
 */
-class PlayHeadPositionNode final    : public tracktion_graph::Node,
+class PlayHeadPositionNode final    : public tracktion::graph::Node,
                                       public TracktionEngineNode
 {
 public:
-    PlayHeadPositionNode (ProcessState& processStateToUse, std::unique_ptr<tracktion_graph::Node> inputNode,
+    PlayHeadPositionNode (ProcessState& processStateToUse, std::unique_ptr<tracktion::graph::Node> inputNode,
                           std::atomic<double>& playHeadTimeToUpdate)
         : TracktionEngineNode (processStateToUse),
           input (std::move (inputNode)),
@@ -26,28 +26,28 @@ public:
     {
     }
     
-    tracktion_graph::NodeProperties getNodeProperties() override
+    tracktion::graph::NodeProperties getNodeProperties() override
     {
         auto props = input->getNodeProperties();
         
         constexpr size_t playHeadPositionNodeMagicHash = 0x706c617948656164;
         
         if (props.nodeID != 0)
-            tracktion_graph::hash_combine (props.nodeID, playHeadPositionNodeMagicHash);
+            hash_combine (props.nodeID, playHeadPositionNodeMagicHash);
 
         return props;
     }
     
-    std::vector<tracktion_graph::Node*> getDirectInputNodes() override  { return { input.get() }; }
+    std::vector<tracktion::graph::Node*> getDirectInputNodes() override  { return { input.get() }; }
     bool isReadyToProcess() override                                    { return input->hasProcessed(); }
         
-    void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info) override
+    void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info) override
     {
-        latencyNumSamples = info.rootNode.getNodeProperties().latencyNumSamples;
+        latencyNumSamples = info.nodeGraph.rootNode->getNodeProperties().latencyNumSamples;
         
         // Member variables have to be updated from the previous Node or if the graph gets
         // rebuilt during the countdown period, the playhead time will jump back
-        updateFromPreviousNode (info.rootNodeToReplace);
+        updateFromPreviousNode (info.nodeGraphToReplace);
     }
     
     void process (ProcessContext& pc) override
@@ -63,7 +63,7 @@ public:
     }
 
 private:
-    std::unique_ptr<tracktion_graph::Node> input;
+    std::unique_ptr<tracktion::graph::Node> input;
     std::atomic<double>& playHeadTime;
 
     int latencyNumSamples = 0;
@@ -103,35 +103,20 @@ private:
         }
 
         const int64_t timelinePosition = getPlayHead().referenceSamplePositionToTimelinePosition (referenceSamplePosition);
-        const double time = tracktion_graph::sampleToTime (timelinePosition, getSampleRate());
+        const double time = tracktion::graph::sampleToTime (timelinePosition, getSampleRate());
 
         playHeadTime = time;
         updateReferencePositionOnJump = false;
     }
 
-    void updateFromPreviousNode (Node* rootNodeToReplace)
+    void updateFromPreviousNode (NodeGraph* nodeGraphToReplace)
     {
-        if (rootNodeToReplace == nullptr)
-            return;
-        
-        auto nodeIDToLookFor = getNodeProperties().nodeID;
-        
-        if (nodeIDToLookFor == 0)
-            return;
-
-        auto visitor = [this, nodeIDToLookFor] (Node& node)
+        if (auto oldNode = findNodeWithIDIfNonZero<PlayHeadPositionNode> (nodeGraphToReplace, getNodeProperties().nodeID))
         {
-            if (auto other = dynamic_cast<PlayHeadPositionNode*> (&node))
-            {
-                if (other->getNodeProperties().nodeID == nodeIDToLookFor)
-                {
-                    state = other->state;
-                    updateReferencePositionOnJump = false;
-                }
-            }
-        };
-        visitNodes (*rootNodeToReplace, visitor, true);
+            state = oldNode->state;
+            updateReferencePositionOnJump = false;
+        }
     }
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

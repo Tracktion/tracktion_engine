@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 struct ParameterSetting
@@ -347,7 +347,7 @@ public:
     Edit* getEditIfOnEditScreen() const;
 
     //==============================================================================
-    /** These values need to be set by the subclass.. */
+    /** These values need to be set by the subclass. */
     juce::String deviceDescription;
 
     // The number of multiple similar devices can be connected to add additional tracks
@@ -432,4 +432,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ControlSurface)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

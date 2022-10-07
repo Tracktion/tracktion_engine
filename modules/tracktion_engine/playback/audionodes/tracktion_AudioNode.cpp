@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 AudioNode::AudioNode()
@@ -74,7 +74,7 @@ void AudioRenderContext::clearAudioBuffer() const noexcept
 void AudioRenderContext::addAntiDenormalisationNoise() const noexcept
 {
     if (destBuffer != nullptr)
-        tracktion_engine::addAntiDenormalisationNoise (*destBuffer, bufferStartSample, bufferNumSamples);
+        tracktion::engine::addAntiDenormalisationNoise (*destBuffer, bufferStartSample, bufferNumSamples);
 }
 
 void AudioRenderContext::clearMidiBuffer() const noexcept
@@ -151,4 +151,4 @@ void SingleInputAudioNode::renderAdding (const AudioRenderContext& rc)
     input->renderAdding (rc);
 }
 
-}
+}} // namespace tracktion { inline namespace engine

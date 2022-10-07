@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 class EditInputDevices  : private juce::ChangeListener,
@@ -23,8 +23,8 @@ public:
 
     bool isInputDeviceAssigned (const InputDevice&);
 
-    void clearAllInputs (const AudioTrack&);
-    void clearInputsOfDevice (const AudioTrack&, const InputDevice&);
+    void clearAllInputs (AudioTrack&);
+    void clearInputsOfDevice (AudioTrack&, const InputDevice&);
     InputDeviceInstance* getInputInstance (const AudioTrack&, int index) const;
     juce::Array<InputDeviceInstance*> getDevicesForTargetTrack (const AudioTrack&) const;
 
@@ -52,4 +52,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EditInputDevices)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

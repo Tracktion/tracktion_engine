@@ -8,12 +8,12 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
-double RenderOptions::findEndAllowance (Edit& edit,
-                                        juce::Array<EditItemID>* tracks,
-                                        juce::Array<Clip*>* clips)
+TimeDuration RenderOptions::findEndAllowance (Edit& edit,
+                                              juce::Array<EditItemID>* tracks,
+                                              juce::Array<Clip*>* clips)
 {
     auto allTracks = getAllTracks (edit);
     Plugin::Array plugins;
@@ -30,7 +30,7 @@ double RenderOptions::findEndAllowance (Edit& edit,
                 for (auto p : *pl)
                     plugins.addIfNotAlreadyThere (p);
 
-    double allowance = 0.0;
+    TimeDuration allowance;
 
     for (auto p : plugins)
     {
@@ -39,16 +39,16 @@ double RenderOptions::findEndAllowance (Edit& edit,
         if (tailLength == std::numeric_limits<double>::infinity())
             tailLength = 0.0;
 
-        allowance = std::max (allowance, tailLength);
+        allowance = std::max (allowance, TimeDuration::fromSeconds (tailLength));
     }
 
     return allowance;
 }
 
-static EditTimeRange findTimeFromClips (const juce::Array<Clip*>& clips, double endAllowance) noexcept
+static TimeRange findTimeFromClips (const juce::Array<Clip*>& clips, TimeDuration endAllowance) noexcept
 {
     auto time = findUnionOfEditTimeRanges (clips);
-    time.end += endAllowance;
+    time = time.withEnd (time.getEnd() + endAllowance);
     return time;
 }
 
@@ -186,7 +186,7 @@ void RenderOptions::saveToUserSettings()
 
 //==============================================================================
 RenderManager::Job::Ptr RenderOptions::performBackgroundRender (Edit& edit, SelectionManager* sm,
-                                                                EditTimeRange timeRangeToRender)
+                                                                TimeRange timeRangeToRender)
 {
     Renderer::Parameters p (edit);
 
@@ -211,7 +211,7 @@ RenderManager::Job::Ptr RenderOptions::performBackgroundRender (Edit& edit, Sele
         p.allowedClips = allowedClips;
 
     if (isTrackRender())
-        p.endAllowance = markedRegion ? 0.0 : 10.0;
+        p.endAllowance = markedRegion ? 0.0s : 10.0s;
 
     addAcidInfo (edit, p);
 
@@ -288,7 +288,7 @@ Renderer::Parameters RenderOptions::getRenderParameters (Edit& edit)
 }
 
 Renderer::Parameters RenderOptions::getRenderParameters (Edit& edit, SelectionManager* selectionManager,
-                                                         EditTimeRange markedRegionTime)
+                                                         TimeRange markedRegionTime)
 {
     Renderer::Parameters params (edit);
 
@@ -320,7 +320,7 @@ Renderer::Parameters RenderOptions::getRenderParameters (Edit& edit, SelectionMa
     if (markedRegion)
         params.time = markedRegionTime;
     else
-        params.time = { 0.0, edit.getLength() };
+        params.time = { TimePosition(), edit.getLength() };
 
     auto allTracks = getAllTracks (edit);
 
@@ -333,7 +333,7 @@ Renderer::Parameters RenderOptions::getRenderParameters (Edit& edit, SelectionMa
         if (isClipRender() || isMidiRender())
         {
             params.allowedClips = allowedClips;
-            params.endAllowance = usePlugins ? findEndAllowance (edit, &tracks, &allowedClips) : 0.0;
+            params.endAllowance = usePlugins ? findEndAllowance (edit, &tracks, &allowedClips) : 0.0s;
             params.time = params.time.getIntersectionWith (findTimeFromClips (params.allowedClips, params.endAllowance));
         }
     }
@@ -406,10 +406,10 @@ Renderer::Parameters RenderOptions::getRenderParameters (EditClip& clip)
 
     if (const EditSnapshot::Ptr snapshot = clip.getEditSnapshot())
     {
-        params.time = { 0.0, snapshot->getLength() };
+        params.time = { TimePosition(), snapshot->getLength() };
         params.tracksToDo.setRange (0, snapshot->getNumTracks(), true);
 
-        const bool markedBigEnough = snapshot->getMarkIn() < snapshot->getMarkOut() + 0.05;
+        const bool markedBigEnough = snapshot->getMarkIn() < snapshot->getMarkOut() + 0.05s;
 
         if (markedRegion && snapshot->areMarksActive() && markedBigEnough)
             params.time = { snapshot->getMarkIn(), snapshot->getMarkOut() };
@@ -476,7 +476,7 @@ juce::AudioFormat* RenderOptions::getAudioFormat()
 
 Clip::Ptr RenderOptions::applyRenderToEdit (Edit& edit,
                                             const ProjectItem::Ptr projectItem,
-                                            EditTimeRange time,
+                                            TimeRange time,
                                             SelectionManager* selectionManager) const
 {
     CRASH_TRACER
@@ -559,10 +559,10 @@ Clip::Ptr RenderOptions::applyRenderToEdit (Edit& edit,
             trackToUse->setName (TRANS("Rendered tracks"));
     }
 
-    auto startTime = reverseRender ? (time.getEnd() - projectItem->getLength())
+    auto startTime = reverseRender ? (time.getEnd() - TimeDuration::fromSeconds (projectItem->getLength()))
                                    : time.getStart();
 
-    const EditTimeRange insertPos (startTime, startTime + projectItem->getLength());
+    const TimeRange insertPos (startTime, startTime + TimeDuration::fromSeconds (projectItem->getLength()));
 
     auto newClipName = isTrackRender() ? TRANS("Rendered track")
                                        : TRANS("Rendered clip");
@@ -592,7 +592,7 @@ Clip::Ptr RenderOptions::applyRenderToEdit (Edit& edit,
             }
         }
 
-        newClip = trackToUse->insertWaveClip (newClipName, projectItem->getID(), { insertPos, 0.0 }, false);
+        newClip = trackToUse->insertWaveClip (newClipName, projectItem->getID(), { insertPos, {} }, false);
         if (auto ac = dynamic_cast<WaveAudioClip*> (newClip.get()))
         {
             // We only want to enable auto tempo is the rendered clip has tempo information
@@ -649,11 +649,12 @@ Clip::Ptr RenderOptions::applyRenderToEdit (Edit& edit,
 
     if (format == midi)
     {
-        if (auto* mc = dynamic_cast<MidiClip*> (newClip.get()))
+        if (auto mc = dynamic_cast<MidiClip*> (newClip.get()))
         {
             juce::OwnedArray<MidiList> lists;
-            double length = 0.0;
-            juce::Array<double> tempoChangeBeatNumbers, bpms;
+            BeatDuration length;
+            juce::Array<BeatPosition> tempoChangeBeatNumbers;
+            juce::Array<double> bpms;
             juce::Array<int> numerators, denominators;
 
             MidiList::readSeparateTracksFromFile (projectItem->getSourceFile(), lists, tempoChangeBeatNumbers,
@@ -692,7 +693,7 @@ void RenderOptions::setToDefault()
     qualityIndex             = 5;
     rmsLevelDb               = 0.0;
     peakLevelDb              = 0.0;
-    endAllowance             = 0.0;
+    endAllowance             = {};
 
     removeSilence            = false;
     normalise                = false;
@@ -740,7 +741,7 @@ std::unique_ptr<RenderOptions> RenderOptions::forGeneralExporter (Edit& edit)
     return ro;
 }
 
-std::unique_ptr<RenderOptions> RenderOptions::forTrackRender (juce::Array<Track*>& tracks,
+std::unique_ptr<RenderOptions> RenderOptions::forTrackRender (juce::Array<Track*> tracks,
                                                               AddRenderOptions addOption)
 {
     if (auto first = tracks.getFirst())
@@ -765,7 +766,7 @@ std::unique_ptr<RenderOptions> RenderOptions::forTrackRender (juce::Array<Track*
     return {};
 }
 
-std::unique_ptr<RenderOptions> RenderOptions::forClipRender (juce::Array<Clip*>& clips, bool midiNotes)
+std::unique_ptr<RenderOptions> RenderOptions::forClipRender (juce::Array<Clip*> clips, bool midiNotes)
 {
     if (auto first = clips.getFirst())
     {
@@ -806,7 +807,7 @@ std::unique_ptr<RenderOptions> RenderOptions::forClipRender (juce::Array<Clip*>&
 
         ro->stereo            = ! areAllClipsMono;
         ro->selectedClips     = false;
-        ro->endAllowance      = ro->usePlugins ? findEndAllowance (edit, &ro->tracks, &clips) : 0.0;
+        ro->endAllowance      = ro->usePlugins ? findEndAllowance (edit, &ro->tracks, &clips) : TimeDuration();
         ro->removeSilence     = midiNotes;
         ro->addRenderOptions  = nextTrack;
         ro->updateDefaultFilename (&edit);
@@ -1110,9 +1111,9 @@ juce::StringArray RenderOptions::getAddRenderOptionText()
 }
 
 //==============================================================================
-bool RenderOptions::isMarkedRegionBigEnough (EditTimeRange region)
+bool RenderOptions::isMarkedRegionBigEnough (TimeRange region)
 {
-    return region.getLength() > 0.05;
+    return region.getLength() > 0.05s;
 }
 
 juce::StringArray RenderOptions::getQualitiesList() const
@@ -1272,4 +1273,4 @@ juce::String RenderOptions::getCurrentFileExtension()
     return {};
 }
 
-}
+}} // namespace tracktion { inline namespace engine

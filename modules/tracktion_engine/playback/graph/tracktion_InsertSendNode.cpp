@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -16,19 +16,19 @@ namespace tracktion_engine
 InsertSendReturnDependencyNode::InsertSendReturnDependencyNode (std::unique_ptr<Node> inputNode, InsertPlugin& ip)
     : input (std::move (inputNode)), plugin (ip)
 {
-    setOptimisations ({ tracktion_graph::ClearBuffers::no,
-                        tracktion_graph::AllocateAudioBuffer::no });
+    setOptimisations ({ tracktion::graph::ClearBuffers::no,
+                        tracktion::graph::AllocateAudioBuffer::no });
 }
 
 //==============================================================================
-tracktion_graph::NodeProperties InsertSendReturnDependencyNode::getNodeProperties()
+tracktion::graph::NodeProperties InsertSendReturnDependencyNode::getNodeProperties()
 {
     return input->getNodeProperties();
 }
 
-std::vector<tracktion_graph::Node*> InsertSendReturnDependencyNode::getDirectInputNodes()
+std::vector<tracktion::graph::Node*> InsertSendReturnDependencyNode::getDirectInputNodes()
 {
-    std::vector<tracktion_graph::Node*> inputs { input.get() };
+    std::vector<tracktion::graph::Node*> inputs { input.get() };
     
     if (sendNode)
         inputs.push_back (sendNode);
@@ -46,7 +46,7 @@ bool InsertSendReturnDependencyNode::transform (Node& rootNode)
     
     bool foundSend = false, foundReturn = false;
     
-    for (auto n : getNodes (rootNode, tracktion_graph::VertexOrdering::postordering))
+    for (auto n : getNodes (rootNode, tracktion::graph::VertexOrdering::postordering))
     {
         if (! sendNode)
         {
@@ -76,7 +76,7 @@ bool InsertSendReturnDependencyNode::transform (Node& rootNode)
     return foundSend || foundReturn;
 }
 
-void InsertSendReturnDependencyNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&)
+void InsertSendReturnDependencyNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&)
 {
 }
 
@@ -103,9 +103,9 @@ InsertSendNode::InsertSendNode (InsertPlugin& ip)
 }
 
 //==============================================================================
-tracktion_graph::NodeProperties InsertSendNode::getNodeProperties()
+tracktion::graph::NodeProperties InsertSendNode::getNodeProperties()
 {
-    tracktion_graph::NodeProperties props;
+    tracktion::graph::NodeProperties props;
     props.hasAudio = owner.hasAudio();
     props.hasMidi = owner.hasMidi();
     props.numberOfChannels = props.hasAudio ? 2 : 0;
@@ -113,12 +113,12 @@ tracktion_graph::NodeProperties InsertSendNode::getNodeProperties()
     return props;
 }
 
-std::vector<tracktion_graph::Node*> InsertSendNode::getDirectInputNodes()
+std::vector<tracktion::graph::Node*> InsertSendNode::getDirectInputNodes()
 {
     return {};
 }
 
-void InsertSendNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&)
+void InsertSendNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&)
 {
 }
 
@@ -132,4 +132,4 @@ void InsertSendNode::process (ProcessContext& pc)
     owner.fillSendBuffer (&pc.buffers.audio, &pc.buffers.midi);
 }
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

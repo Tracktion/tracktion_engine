@@ -8,12 +8,12 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
 //==============================================================================
-TimeStretchingWaveNode::TimeStretchingWaveNode (AudioClipBase& clip, tracktion_graph::PlayHeadState& playHeadStateToUse)
+TimeStretchingWaveNode::TimeStretchingWaveNode (AudioClipBase& clip, tracktion::graph::PlayHeadState& playHeadStateToUse)
     : c (clip), playHeadState (playHeadStateToUse), clipPtr (clip),
       file (c.getAudioFile()),
       fileInfo (file.getInfo()),
@@ -50,20 +50,20 @@ TimeStretchingWaveNode::TimeStretchingWaveNode (AudioClipBase& clip, tracktion_g
 }
 
 //==============================================================================
-tracktion_graph::NodeProperties TimeStretchingWaveNode::getNodeProperties()
+tracktion::graph::NodeProperties TimeStretchingWaveNode::getNodeProperties()
 {
-    tracktion_graph::NodeProperties props;
+    tracktion::graph::NodeProperties props;
     props.hasAudio = true;
     props.numberOfChannels = fileInfo.numChannels;
     return props;
 }
 
-std::vector<tracktion_graph::Node*> TimeStretchingWaveNode::getDirectInputNodes()
+std::vector<tracktion::graph::Node*> TimeStretchingWaveNode::getDirectInputNodes()
 {
     return {};
 }
 
-void TimeStretchingWaveNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
+void TimeStretchingWaveNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
     CRASH_TRACER
 
@@ -102,7 +102,7 @@ void TimeStretchingWaveNode::process (ProcessContext& pc)
 {
     CRASH_TRACER
     const auto timelineRange = referenceSampleRangeToSplitTimelineRange (playHeadState.playHead, pc.referenceSampleRange).timelineRange1;
-    const auto editRange = tracktion_graph::sampleToTime (timelineRange, sampleRate);
+    const auto editRange = tracktion::graph::sampleToTime (timelineRange, sampleRate);
 
     if (timelineRange.isEmpty())
         return;
@@ -221,4 +221,4 @@ bool TimeStretchingWaveNode::fillNextBlock()
     return true;
 }
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

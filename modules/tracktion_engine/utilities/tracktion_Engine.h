@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 /**
@@ -18,13 +18,32 @@ namespace tracktion_engine
     customise how the engine behaves or pass nullptr to use the defaults.
     To get going quickly, just use the constructor that takes an application name,
     which uses default settings.
+
+    Typical declaration in your main component:
+    @code
+    private:
+        tracktion_engine::Engine engine { ProjectInfo::projectName}
+    @endcode
+
+    For Extended UI use:
+    @code
+    private:
+        tracktion_engine::Engine engine { ProjectInfo::projectName, std::make_unique<ExtendedUIBehaviour>(), nullptr };
+    @endcode
 */
 class Engine
 {
 public:
+    /** Constructs a default Engine with an application name. */
     Engine (juce::String applicationName);
+
+    /** Constructs an Engine with an application name and custom UIBehaviour and EngineBehaviour. */
     Engine (juce::String applicationName, std::unique_ptr<UIBehaviour>, std::unique_ptr<EngineBehaviour>);
+
+    /** Constructs an Engine with custom PropertyStorage, UIBehaviour and EngineBehaviour. */
     Engine (std::unique_ptr<PropertyStorage>, std::unique_ptr<UIBehaviour>, std::unique_ptr<EngineBehaviour>);
+
+    /** Destructor. */
     ~Engine();
 
     /** Returns the current version of Tracktion Engine. */
@@ -34,29 +53,30 @@ public:
     // Do not use in new projects
     static Engine& getInstance();
    #endif
+    /** Returns the list of currently active engines. */
     static juce::Array<Engine*> getEngines();
 
-    TemporaryFileManager& getTemporaryFileManager() const;
-    AudioFileFormatManager& getAudioFileFormatManager() const;
-    PropertyStorage& getPropertyStorage() const;
-    UIBehaviour& getUIBehaviour() const;
-    EngineBehaviour& getEngineBehaviour() const;
-    DeviceManager& getDeviceManager() const;
-    MidiProgramManager& getMidiProgramManager() const;
-    ExternalControllerManager& getExternalControllerManager() const;
-    RenderManager& getRenderManager() const;
-    BackgroundJobManager& getBackgroundJobs() const;
-    AudioFileManager& getAudioFileManager() const;
-    MidiLearnState& getMidiLearnState() const;
-    PluginManager& getPluginManager() const;
-    EditDeleter& getEditDeleter() const;
-    RecordingThumbnailManager& getRecordingThumbnailManager() const;
-    WaveInputRecordingThread& getWaveInputRecordingThread() const;
-    ActiveEdits& getActiveEdits() const noexcept;
-    GrooveTemplateManager& getGrooveTemplateManager();
-    CompFactory& getCompFactory() const;
-    WarpTimeFactory& getWarpTimeFactory() const;
-    ProjectManager& getProjectManager() const;
+    TemporaryFileManager& getTemporaryFileManager() const;              ///< Returns the TemporaryFileManager allowing to handle the default app and user temporary folders.
+    AudioFileFormatManager& getAudioFileFormatManager() const;          ///< Returns the AudioFileFormatManager that maintains a list of available audio file formats.
+    PropertyStorage& getPropertyStorage() const;                        ///< Returns the PropertyStorage user settings customisable XML file.
+    UIBehaviour& getUIBehaviour() const;                                ///< Returns the UIBehaviour class.
+    EngineBehaviour& getEngineBehaviour() const;                        ///< Returns the EngineBehaviour instance.
+    DeviceManager& getDeviceManager() const;                            ///< Returns the DeviceManager instance for handling audio / MIDI devices.
+    MidiProgramManager& getMidiProgramManager() const;                  ///< Returns the MidiProgramManager instance that handles MIDI banks, programs, sets or presets.
+    ExternalControllerManager& getExternalControllerManager() const;    ///< Returns the ExternalControllerManager instance.
+    RenderManager& getRenderManager() const;                            ///< Returns the RenderManager instance.
+    BackgroundJobManager& getBackgroundJobs() const;                    ///< Returns the BackgroundJobManager instance.
+    AudioFileManager& getAudioFileManager() const;                      ///< Returns the AudioFileManager instance.
+    MidiLearnState& getMidiLearnState() const;                          ///< Returns the MidiLearnState instance.
+    PluginManager& getPluginManager() const;                            ///< Returns the PluginManager instance.
+    EditDeleter& getEditDeleter() const;                                ///< Returns the EditDeleter instance.
+    RecordingThumbnailManager& getRecordingThumbnailManager() const;    ///< Returns the RecordingThumbnailManager instance.
+    WaveInputRecordingThread& getWaveInputRecordingThread() const;      ///< Returns the WaveInputRecordingThread instance.
+    ActiveEdits& getActiveEdits() const noexcept;                       ///< Returns the ActiveEdits instance.
+    GrooveTemplateManager& getGrooveTemplateManager();                  ///< Returns the GrooveTemplateManager instance.
+    CompFactory& getCompFactory() const;                                ///< Returns the CompFactory instance.
+    WarpTimeFactory& getWarpTimeFactory() const;                        ///< Returns the WarpTimeFactory instance.
+    ProjectManager& getProjectManager() const;                          ///< Returns the ProjectManager instance.
 
     using WeakRef = juce::WeakReference<Engine>;
 
@@ -96,4 +116,4 @@ private:
 // and will be removed in future.
 juce::PropertiesFile* getApplicationSettings();
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

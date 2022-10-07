@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -19,22 +19,22 @@ namespace tracktion_engine
     Note that this isn't designed to be a fully fledged Node, it doesn't deal
     with clip offsets, loops etc. It's only designed for previewing files.
 */
-class TimeStretchingWaveNode final : public tracktion_graph::Node
+class TimeStretchingWaveNode final : public tracktion::graph::Node
 {
 public:
-    TimeStretchingWaveNode (AudioClipBase&, tracktion_graph::PlayHeadState&);
+    TimeStretchingWaveNode (AudioClipBase&, tracktion::graph::PlayHeadState&);
 
     //==============================================================================
-    tracktion_graph::NodeProperties getNodeProperties() override;
+    tracktion::graph::NodeProperties getNodeProperties() override;
     std::vector<Node*> getDirectInputNodes() override;
-    void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override;
+    void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
     void process (ProcessContext&) override;
 
 private:
     //==============================================================================
     AudioClipBase& c;
-    tracktion_graph::PlayHeadState& playHeadState;
+    tracktion::graph::PlayHeadState& playHeadState;
     Clip::Ptr clipPtr;
 
     AudioFile file;
@@ -46,7 +46,7 @@ private:
     float speedRatio = 1.0f, pitchSemitones = 0;
     float timestetchSpeedRatio = 1.0f, timestetchSemitonesUp = 1.0f;
 
-    tracktion_graph::AudioFifo fifo;
+    tracktion::graph::AudioFifo fifo;
     int stretchBlockSize = 512;
 
     //==============================================================================
@@ -55,4 +55,4 @@ private:
     bool fillNextBlock();
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

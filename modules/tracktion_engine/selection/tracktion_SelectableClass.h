@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 /** Represents a type of object that can be selected.
@@ -146,4 +146,4 @@ public:
     virtual void resetPan (const SelectableList&) = 0;
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

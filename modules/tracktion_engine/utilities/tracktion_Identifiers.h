@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 namespace IDs
@@ -639,8 +639,10 @@ namespace IDs
     DECLARE_ID (postGain)
     DECLARE_ID (highPassMidiNoteNumber)
     DECLARE_ID (lowPassMidiNoteNumber)
+    DECLARE_ID (proxyAllowed)
+    DECLARE_ID (resamplingQuality)
 
     #undef DECLARE_ID
 }
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

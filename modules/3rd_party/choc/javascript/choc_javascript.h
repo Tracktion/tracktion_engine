@@ -19,6 +19,7 @@
 #ifndef CHOC_JAVASCRIPT_HEADER_INCLUDED
 #define CHOC_JAVASCRIPT_HEADER_INCLUDED
 
+#include <stdexcept>
 #include "../containers/choc_Value.h"
 #include "../text/choc_JSON.h"
 
@@ -28,9 +29,9 @@
 namespace choc::javascript
 {
     /// This is thrown by any javascript functions that need to report an error
-    struct Error
+    struct Error  : public std::runtime_error
     {
-        std::string message;
+        Error (const std::string& error) : std::runtime_error (error) {}
     };
 
     //==============================================================================
@@ -177,20 +178,7 @@ template <typename PrimitiveType>
 PrimitiveType ArgumentList::get (size_t index, PrimitiveType defaultValue) const
 {
     if (auto a = (*this)[index])
-    {
-        try
-        {
-            if constexpr (! std::is_same<const PrimitiveType, const std::string>::value)
-                if (a->isString())
-                    return choc::json::parseValue (a->getString()).get<PrimitiveType>();
-
-            return a->get<PrimitiveType>();
-        }
-        catch (choc::value::Error)
-        {}
-        catch (choc::json::ParseError)
-        {}
-    }
+        return a->getWithDefault<PrimitiveType> (defaultValue);
 
     return defaultValue;
 }
@@ -204,46 +192,39 @@ PrimitiveType ArgumentList::get (size_t index, PrimitiveType defaultValue) const
 /// macro to 1 in one of your compile units
 #if CHOC_JAVASCRIPT_IMPLEMENTATION
 
+#include "../platform/choc_Platform.h"
+
+#if CHOC_WINDOWS
+ #include <windows.h>
+#else
+ #include <cmath>
+ #include <climits>
+ #include <ctime>
+ #include <cstddef>
+ #include <cstdarg>
+ #include <cstring>
+ #include <ctime>
+#endif
+
+#include <csetjmp>
+
+#if CHOC_LINUX || CHOC_OSX
+ #include <sys/time.h>
+#endif
+
 namespace choc::javascript
 {
 
 namespace duktape
 {
-#if _MSC_VER
- #pragma warning(push)
- #pragma warning(disable : 4018 4127 4244 4505 4611 4702)
-#elif __clang__
- #pragma clang diagnostic push
- #pragma clang diagnostic ignored "-Wextra-semi"
- #pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
- #pragma clang diagnostic ignored "-Wswitch-enum"
- #pragma clang diagnostic ignored "-Wshorten-64-to-32"
- #if __clang_major__ > 10
-  #pragma clang diagnostic ignored "-Wc++98-compat-extra-semi"
-  #pragma clang diagnostic ignored "-Wimplicit-int-conversion"
-  #pragma clang diagnostic ignored "-Wimplicit-float-conversion"
- #else
-  #pragma clang diagnostic ignored "-Wconversion"
- #endif
-#elif __GNUC__
- #pragma GCC diagnostic push
- #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
- #pragma GCC diagnostic ignored "-Wsign-conversion"
- #pragma GCC diagnostic ignored "-Wconversion"
- #pragma GCC diagnostic ignored "-Wswitch-enum"
- #pragma GCC diagnostic ignored "-Wunused-variable"
- #pragma GCC diagnostic ignored "-Wredundant-decls"
-#endif
-
- #include "duktape/duktape.c"
-
-#if _MSC_VER
- #pragma warning (pop)
-#elif __clang__
- #pragma clang diagnostic pop
-#elif __GNUC__
- #pragma GCC diagnostic pop
-#endif
+ using std::signbit;
+ using std::fpclassify;
+ using std::isnan;
+ using std::isinf;
+ using std::isfinite;
+ #include "../platform/choc_DisableAllWarnings.h"
+ #include "duktape/duktape.c.inc"
+ #include "../platform/choc_ReenableAllWarnings.h"
 }
 
 //==============================================================================
@@ -265,13 +246,13 @@ struct Context::Pimpl
             duk_remove (context, duk_get_top_index (context));
     }
 
-    static void fatalError (void*, const char* message)    { throw Error { message }; }
+    static void fatalError (void*, const char* message)    { throw Error (message); }
 
     void throwError()
     {
         std::string message = duk_safe_to_string (context, -1);
         reset();
-        throw Error { message };
+        throw Error (message);
     }
 
     void evalString (std::string_view code)
@@ -293,7 +274,7 @@ struct Context::Pimpl
         evalString (functionName);
 
         if (! duk_is_function (context, -1))
-            throw Error { "No such function" };
+            throw Error ("No such function");
 
         duk_require_stack_top (context, (duktape::duk_idx_t) numArgs);
     }
@@ -360,8 +341,12 @@ struct Context::Pimpl
             auto objectIndex = duk_push_object (ctx);
 
             auto className = v.getObjectClassName();
-            duk_push_lstring (ctx, className.data(), className.length());
-            duk_put_prop_string (ctx, objectIndex, objectNameAttribute);
+
+            if (! className.empty())
+            {
+                duk_push_lstring (ctx, className.data(), className.length());
+                duk_put_prop_string (ctx, objectIndex, objectNameAttribute);
+            }
 
             v.visitObjectMembers ([&] (std::string_view name, const choc::value::ValueView& value)
             {
@@ -416,32 +401,31 @@ struct Context::Pimpl
                 }
 
                 if (duk_is_function (ctx, index) || duk_is_lightfunc (ctx, index))
+                    throw Error ("Cannot handle 'function' object type");
+
+                // Handle an object
+                duk_enum (ctx, index, DUK_ENUM_OWN_PROPERTIES_ONLY);
+
+                bool anyRemaining = duk_next (ctx, -1, 1);
+                std::string_view name;
+
+                // look for an object name attribute as the first field
+                if (anyRemaining
+                     && duk_get_type (ctx, -2) == static_cast<duktape::duk_int_t> (DUK_TYPE_STRING)
+                     && duk_to_string (ctx, -2) == std::string_view (objectNameAttribute))
                 {
-                    CHOC_ASSERT (false); // we don't currently handle function objects
-                    return {};
+                    name = duk_to_string (ctx, -1);
+                    duk_pop_2 (ctx);
+                    anyRemaining = duk_next (ctx, -1, 1);
                 }
 
-                // Handle a plain object - supports an object name attribute as the first field
-                choc::value::Value object = choc::value::createObject ("object");
-                bool firstField = true;
+                auto object = choc::value::createObject (name);
 
-                for (duk_enum (ctx, index, DUK_ENUM_OWN_PROPERTIES_ONLY);
-                     duk_next (ctx, -1, 1);
-                     duk_pop_2 (ctx))
+                while (anyRemaining)
                 {
-                    if (firstField)
-                    {
-                        firstField = false;
-
-                        if ((duk_get_type (ctx, -2) == static_cast<duktape::duk_int_t> (DUK_TYPE_STRING)
-                             && duk_to_string (ctx, -2) == std::string (objectNameAttribute)))
-                        {
-                            object = choc::value::createObject (duk_to_string (ctx, -1));
-                            continue;
-                        }
-                    }
-
                     object.addMember (duk_to_string (ctx, -2), readValue (ctx, -1));
+                    duk_pop_2 (ctx);
+                    anyRemaining = duk_next (ctx, -1, 1);
                 }
 
                 duk_pop (ctx);

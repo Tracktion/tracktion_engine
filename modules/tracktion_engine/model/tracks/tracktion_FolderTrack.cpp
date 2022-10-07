@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 FolderTrack::FolderTrack (Edit& ed, const juce::ValueTree& v)
@@ -215,7 +215,7 @@ bool FolderTrack::isSoloIsolate (bool includeIndirectSolo) const
     return false;
 }
 
-float FolderTrack::getVcaDb (double time)
+float FolderTrack::getVcaDb (TimePosition time)
 {
     if (auto ptr = vcaPlugin)
         if (ptr->isEnabled())
@@ -224,7 +224,7 @@ float FolderTrack::getVcaDb (double time)
     return 0.0f;
 }
 
-EditTimeRange FolderTrack::getClipExtendedBounds (Clip& c)
+TimeRange FolderTrack::getClipExtendedBounds (Clip& c)
 {
     if (c.isGrouped())
         if (auto cc = dynamic_cast<CollectionClip*> (c.getGroupParent()))
@@ -266,7 +266,7 @@ void FolderTrack::generateCollectionClips (SelectionManager& sm)
             {
                 if (cc->getNumClips() > 0)
                 {
-                    EditTimeRange totalRange;
+                    TimeRange totalRange;
                     bool first = true;
 
                     for (int j = cc->getNumClips(); --j >= 0;)
@@ -281,7 +281,7 @@ void FolderTrack::generateCollectionClips (SelectionManager& sm)
                         {
                             auto pos = c->getPosition();
 
-                            if (pos.getLength() > 0.000001)
+                            if (pos.getLength() > TimeDuration::fromSeconds (0.000001))
                             {
                                 if (first)
                                     totalRange = pos.time;
@@ -309,7 +309,7 @@ void FolderTrack::generateCollectionClips (SelectionManager& sm)
         // remove any that are already in a collection clip
         for (int i = clips.size(); --i >= 0;)
         {
-            auto c = clips.getUnchecked(i);
+            auto c = clips.getUnchecked (i);
 
             for (auto cc : collectionClips)
             {
@@ -326,11 +326,12 @@ void FolderTrack::generateCollectionClips (SelectionManager& sm)
 
         for (auto clip : clips)
         {
+            const auto tolerance = TimeDuration::fromSeconds (0.000001);
             auto bounds = getClipExtendedBounds (*clip);
 
-            if (bounds.getLength() > 0.000001)
+            if (bounds.getLength() > tolerance)
             {
-                if (colClip == nullptr || bounds.getStart() + 0.000001 >= colClip->getPosition().getEnd())
+                if (colClip == nullptr || bounds.getStart() + tolerance >= colClip->getPosition().getEnd())
                 {
                     colClip = new CollectionClip (*this);
                     colClip->range = bounds;
@@ -341,7 +342,7 @@ void FolderTrack::generateCollectionClips (SelectionManager& sm)
                 else
                 {
                     if (bounds.getEnd() > colClip->getPosition().getEnd())
-                        colClip->range.end = bounds.getEnd();
+                        colClip->range = TimeRange (colClip->range.getStart(), bounds.getEnd());
 
                     colClip->addClip (clip);
                 }
@@ -360,14 +361,14 @@ void FolderTrack::generateCollectionClips (SelectionManager& sm)
         {
             jassert (Selectable::isSelectableValid (cc));
 
-            EditTimeRange totalRange;
+            TimeRange totalRange;
             bool first = true;
 
-            for (auto* c : cc->getClips())
+            for (auto c : cc->getClips())
             {
                 auto bounds = getClipExtendedBounds (*c);
 
-                if (bounds.getLength() > 0.000001)
+                if (bounds.getLength() > TimeDuration::fromSeconds (0.000001))
                 {
                     if (first)
                         totalRange = bounds;
@@ -398,12 +399,12 @@ int FolderTrack::indexOfCollectionClip (CollectionClip* c) const
     return collectionClips.indexOf (c);
 }
 
-int FolderTrack::getIndexOfNextCollectionClipAt (double time)
+int FolderTrack::getIndexOfNextCollectionClipAt (TimePosition time)
 {
     return findIndexOfNextItemAt (collectionClips, time);
 }
 
-CollectionClip* FolderTrack::getNextCollectionClipAt (double time)
+CollectionClip* FolderTrack::getNextCollectionClipAt (TimePosition time)
 {
     return collectionClips[getIndexOfNextCollectionClipAt (time)].get();
 }
@@ -423,7 +424,7 @@ int FolderTrack::getNumTrackItems() const
     return getNumCollectionClips();
 }
 
-int FolderTrack::getIndexOfNextTrackItemAt (double time)
+int FolderTrack::getIndexOfNextTrackItemAt (TimePosition time)
 {
     return getIndexOfNextCollectionClipAt (time);
 }
@@ -433,7 +434,7 @@ TrackItem* FolderTrack::getTrackItem (int idx) const
     return getCollectionClip (idx);
 }
 
-TrackItem* FolderTrack::getNextTrackItemAt (double time)
+TrackItem* FolderTrack::getNextTrackItemAt (TimePosition time)
 {
     return getNextCollectionClipAt (time);
 }
@@ -518,4 +519,4 @@ void FolderTrack::valueTreeChildOrderChanged (juce::ValueTree& p, int oldIndex, 
     Track::valueTreeChildOrderChanged (p, oldIndex, newIndex);
 }
 
-}
+}} // namespace tracktion { inline namespace engine

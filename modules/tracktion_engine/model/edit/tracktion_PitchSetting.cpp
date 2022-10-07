@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 PitchSetting::PitchSetting (Edit& ed, const juce::ValueTree& v)
@@ -50,15 +50,15 @@ Track* PitchSetting::getTrack() const
 ClipPosition PitchSetting::getPosition() const
 {
     auto& ps = edit.pitchSequence;
-    auto s = edit.tempoSequence.beatsToTime (startBeat);
+    auto s = edit.tempoSequence.toTime (startBeat);
 
     if (auto nextPitch = ps.getPitch (ps.indexOfPitch (this) + 1))
-        return { { s, nextPitch->getPosition().getStart() }, 0 };
+        return { { s, nextPitch->getPosition().getStart() }, TimeDuration() };
 
-    return { { s, s + 1.0 }, 0 };
+    return { { s, s + TimeDuration::fromSeconds (1.0) }, TimeDuration() };
 }
 
-void PitchSetting::setStartBeat (double beat)
+void PitchSetting::setStartBeat (BeatPosition beat)
 {
     startBeat = beat;
     edit.pitchSequence.sortEvents();
@@ -83,4 +83,4 @@ void PitchSetting::removeFromEdit()
         p.removeChild (state, &edit.getUndoManager());
 }
 
-}
+}} // namespace tracktion { inline namespace engine

@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 class PhysicalMidiInputDevice  : public MidiInputDevice
@@ -48,6 +48,8 @@ protected:
     void closeDevice() override;
 
 private:
+    void handleIncomingMidiMessageInt (const juce::MidiMessage&);
+
     friend struct PhysicalMidiInputDeviceInstance;
     int deviceIndex = 0;
     std::unique_ptr<juce::MidiInput> inputDevice;
@@ -58,7 +60,9 @@ private:
 
     bool tryToSendTimecode (const juce::MidiMessage&);
 
+    ActiveNoteList activeNotes;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PhysicalMidiInputDevice)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

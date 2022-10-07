@@ -8,10 +8,10 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
-static void clearSetOfChannels (int** channels, int numChannels, int offset, int numSamples) noexcept
+static void clearSetOfChannels (int* const* channels, int numChannels, int offset, int numSamples) noexcept
 {
     for (int i = 0; i < numChannels; ++i)
         if (auto chan = (float*) channels[i])
@@ -343,7 +343,7 @@ public:
         JUCE_DECLARE_NON_COPYABLE (LockedReaderFinder)
     };
 
-    bool read (SampleCount startSample, int** destSamples, int numDestChannels,
+    bool read (SampleCount startSample, int* const* destSamples, int numDestChannels,
                int startOffsetInDestBuffer, int numSamples, int timeoutMs)
     {
         jassert (destSamples != nullptr);
@@ -904,7 +904,7 @@ bool AudioFileCache::Reader::readSamples (int numSamples,
     return false;
 }
 
-bool AudioFileCache::Reader::readSamples (int** destSamples, int numDestChannels,
+bool AudioFileCache::Reader::readSamples (int* const* destSamples, int numDestChannels,
                                           int startOffsetInDestBuffer, int numSamples, int timeoutMs)
 {
     jassert (numSamples < CachedFile::readAheadSamples); // this method fails unless broken down into chunks smaller than this
@@ -1032,7 +1032,7 @@ struct CacheAudioFormatReader  :  public juce::AudioFormatReader
         reader->getRange ((int) numSamples, highestLeft, lowestLeft, highestRight, lowestRight, -1);
     }
 
-    bool readSamples (int** destSamples, int numDestChannels,
+    bool readSamples (int* const* destSamples, int numDestChannels,
                       int startOffsetInDestBuffer, juce::int64 startSampleInFile,
                       int numSamples) override
     {
@@ -1046,4 +1046,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CacheAudioFormatReader)
 };
 
-}
+}} // namespace tracktion { inline namespace engine
