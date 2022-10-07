@@ -34,6 +34,9 @@ struct TimePosition
     /** Creates a position at a time of 0. */
     constexpr TimePosition() = default;
 
+    /** Creates a position from a time in seconds as a double. */
+    constexpr TimePosition(const double timeInSeconds) : seconds(timeInSeconds) {}
+
     /** Creates a copy of another TimePosition. */
     constexpr TimePosition (const TimePosition&) = default;
 

@@ -32,6 +32,13 @@ namespace tempo
         BeatDuration beats = {};    /**< The number of beats in the current bar. */
         int numerator = 0;          /**< The number of beats in the current bar. */
 
+        inline constexpr static BarsAndBeats fromBars (int numBars)
+        {
+            BarsAndBeats barsAndBeats;
+            barsAndBeats.bars = numBars;
+            return barsAndBeats;
+        }
+
         /** Returns the number bars elapsed. */
         double getTotalBars() const;
 
