@@ -210,7 +210,8 @@ inline PerformanceMeasurement::~PerformanceMeasurement()
 inline void PerformanceMeasurement::Statistics::clear() noexcept
 {
     meanSeconds = m2Seconds = maximumSeconds = minimumSeconds = totalSeconds = 0;
-    meanCycles = m2Cycles = maximumCycles = minimumCycles = totalCycles = 0;
+    meanCycles = m2Cycles = 0.0;
+    maximumCycles = minimumCycles = totalCycles = 0;
     numRuns = 0;
 }
 

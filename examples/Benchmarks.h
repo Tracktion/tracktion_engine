@@ -56,10 +56,10 @@ inline bool publishToBenchmarkAPI (juce::String apiKey, std::vector<BenchmarkRes
         fields->setProperty ("benchmark_duration_max",      r.maxSeconds);
         fields->setProperty ("benchmark_duration_mean",     r.meanSeconds);
         fields->setProperty ("benchmark_duration_variance", r.varianceSeconds);
-        fields->setProperty ("benchmark_cycles_total",      (int64_t) r.totalCycles);
-        fields->setProperty ("benchmark_cycles_min",        (int64_t) r.minCycles);
-        fields->setProperty ("benchmark_cycles_max",        (int64_t) r.maxCycles);
-        fields->setProperty ("benchmark_cycles_mean",       (int64_t) r.meanCycles);
+        fields->setProperty ("benchmark_cycles_total",      (juce::int64) r.totalCycles);
+        fields->setProperty ("benchmark_cycles_min",        (juce::int64) r.minCycles);
+        fields->setProperty ("benchmark_cycles_max",        (juce::int64) r.maxCycles);
+        fields->setProperty ("benchmark_cycles_mean",       (juce::int64) r.meanCycles);
         fields->setProperty ("benchmark_cycles_variance",   r.varianceCycles);
         fields->setProperty ("benchmark_time",              r.date.toISO8601 (true).trimCharactersAtEnd ("Z").quoted ('\''));
 
