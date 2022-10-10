@@ -8,6 +8,8 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#pragma once
+
 #ifdef _WIN32
  #include <intrin.h>
 #elif defined (__arm__) || defined (__arm64__)
