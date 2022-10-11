@@ -83,12 +83,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aeab93bc12b2d0ecfb827250f48ac03d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4aa6f3590790c75f2948eed61f1cc2d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#af4aa6f3590790c75f2948eed61f1cc2d">clear</a> () noexcept</td></tr>
 <tr class="separator:af4aa6f3590790c75f2948eed61f1cc2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8dd133d170dfbeb14e4b99ce22a8aaae"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#a8dd133d170dfbeb14e4b99ce22a8aaae">getVariance</a> () const</td></tr>
-<tr class="separator:a8dd133d170dfbeb14e4b99ce22a8aaae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac781adc5d06b1a274de28d8e75812431"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#ac781adc5d06b1a274de28d8e75812431">getVarianceSeconds</a> () const</td></tr>
+<tr class="separator:ac781adc5d06b1a274de28d8e75812431"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a936587d2aed775f42b3c45a1fc1644fb"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#a936587d2aed775f42b3c45a1fc1644fb">getVarianceCycles</a> () const</td></tr>
+<tr class="separator:a936587d2aed775f42b3c45a1fc1644fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0baa10a54b75704b983fc593c416d243"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#a0baa10a54b75704b983fc593c416d243">toString</a> () const</td></tr>
 <tr class="separator:a0baa10a54b75704b983fc593c416d243"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5a4358c84137ed3bb80d898501bc5bbc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#a5a4358c84137ed3bb80d898501bc5bbc">addResult</a> (double elapsed) noexcept</td></tr>
-<tr class="separator:a5a4358c84137ed3bb80d898501bc5bbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c263057b69a7baa7ece4a0f1e88b467"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#a6c263057b69a7baa7ece4a0f1e88b467">addResult</a> (double secondsElapsed, uint64_t cyclesElapsed) noexcept</td></tr>
+<tr class="separator:a6c263057b69a7baa7ece4a0f1e88b467"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -96,14 +98,24 @@ Public Attributes</h2></td></tr>
 <tr class="separator:aa70449e2ac88278c1b672a4cf34a77f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7f8fcfa4fa644fa9144b80fc782ae381"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#a7f8fcfa4fa644fa9144b80fc782ae381">meanSeconds</a> = 0.0</td></tr>
 <tr class="separator:a7f8fcfa4fa644fa9144b80fc782ae381"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a78ffeb7ba0bdef6bda7aabd81fdfb813"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#a78ffeb7ba0bdef6bda7aabd81fdfb813">m2</a> = 0.0</td></tr>
-<tr class="separator:a78ffeb7ba0bdef6bda7aabd81fdfb813"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4eb7918e235dd1656f2e3cb706107950"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#a4eb7918e235dd1656f2e3cb706107950">m2Seconds</a> = 0.0</td></tr>
+<tr class="separator:a4eb7918e235dd1656f2e3cb706107950"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a61e684553bd5714fad9bea0f6dfbc376"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#a61e684553bd5714fad9bea0f6dfbc376">maximumSeconds</a> = 0.0</td></tr>
 <tr class="separator:a61e684553bd5714fad9bea0f6dfbc376"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a43bbc0bf34966e9446aeaa5e11e96bca"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#a43bbc0bf34966e9446aeaa5e11e96bca">minimumSeconds</a> = 0.0</td></tr>
 <tr class="separator:a43bbc0bf34966e9446aeaa5e11e96bca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa9339545c2bda203956cef74775d0998"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#aa9339545c2bda203956cef74775d0998">totalSeconds</a> = 0.0</td></tr>
 <tr class="separator:aa9339545c2bda203956cef74775d0998"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b47f4bfa45474ffe694d0fe2e3b1d38"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#a4b47f4bfa45474ffe694d0fe2e3b1d38">meanCycles</a> = 0.0</td></tr>
+<tr class="separator:a4b47f4bfa45474ffe694d0fe2e3b1d38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa0ca8628524bf6a867f03aeb1bcb4ec5"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#aa0ca8628524bf6a867f03aeb1bcb4ec5">m2Cycles</a> = 0.0</td></tr>
+<tr class="separator:aa0ca8628524bf6a867f03aeb1bcb4ec5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32afd62b874492803897b93a88fe232a"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#a32afd62b874492803897b93a88fe232a">maximumCycles</a> = 0</td></tr>
+<tr class="separator:a32afd62b874492803897b93a88fe232a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a999072e8894232e956ce4735bb54b01d"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#a999072e8894232e956ce4735bb54b01d">minimumCycles</a> = 0</td></tr>
+<tr class="separator:a999072e8894232e956ce4735bb54b01d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4ef6129ae7e5466dd8716637261f821"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#ad4ef6129ae7e5466dd8716637261f821">totalCycles</a> = 0</td></tr>
+<tr class="separator:ad4ef6129ae7e5466dd8716637261f821"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a650d60f8b45be65687713b3115a0f996"><td class="memItemLeft" align="right" valign="top">int64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#a650d60f8b45be65687713b3115a0f996">numRuns</a> = 0</td></tr>
 <tr class="separator:a650d60f8b45be65687713b3115a0f996"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -159,20 +171,37 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#a78ffeb7ba0bdef6bda7aabd81fdfb813">m2</a>, <a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#a61e684553bd5714fad9bea0f6dfbc376">maximumSeconds</a>, <a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#a7f8fcfa4fa644fa9144b80fc782ae381">meanSeconds</a>, <a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#a43bbc0bf34966e9446aeaa5e11e96bca">minimumSeconds</a>, <a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#a650d60f8b45be65687713b3115a0f996">numRuns</a>, and <a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#aa9339545c2bda203956cef74775d0998">totalSeconds</a>.</p>
+<p class="reference">References <a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#aa0ca8628524bf6a867f03aeb1bcb4ec5">m2Cycles</a>, <a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#a4eb7918e235dd1656f2e3cb706107950">m2Seconds</a>, <a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#a32afd62b874492803897b93a88fe232a">maximumCycles</a>, <a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#a61e684553bd5714fad9bea0f6dfbc376">maximumSeconds</a>, <a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#a4b47f4bfa45474ffe694d0fe2e3b1d38">meanCycles</a>, <a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#a7f8fcfa4fa644fa9144b80fc782ae381">meanSeconds</a>, <a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#a999072e8894232e956ce4735bb54b01d">minimumCycles</a>, <a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#a43bbc0bf34966e9446aeaa5e11e96bca">minimumSeconds</a>, <a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#a650d60f8b45be65687713b3115a0f996">numRuns</a>, <a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#ad4ef6129ae7e5466dd8716637261f821">totalCycles</a>, and <a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#aa9339545c2bda203956cef74775d0998">totalSeconds</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classtracktion_1_1graph_1_1PerformanceMeasurement.html#a07156c13a79498ce80aa041a69d9371a">tracktion::graph::PerformanceMeasurement::getStatisticsAndReset()</a>.</p>
 
 </div>
 </div>
-<a id="a8dd133d170dfbeb14e4b99ce22a8aaae"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8dd133d170dfbeb14e4b99ce22a8aaae">&#9670;&nbsp;</a></span>getVariance()</h2>
+<a id="ac781adc5d06b1a274de28d8e75812431"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac781adc5d06b1a274de28d8e75812431">&#9670;&nbsp;</a></span>getVarianceSeconds()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double tracktion::graph::PerformanceMeasurement::Statistics::getVariance </td>
+          <td class="memname">double tracktion::graph::PerformanceMeasurement::Statistics::getVarianceSeconds </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a936587d2aed775f42b3c45a1fc1644fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a936587d2aed775f42b3c45a1fc1644fb">&#9670;&nbsp;</a></span>getVarianceCycles()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double tracktion::graph::PerformanceMeasurement::Statistics::getVarianceCycles </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -201,8 +230,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a5a4358c84137ed3bb80d898501bc5bbc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5a4358c84137ed3bb80d898501bc5bbc">&#9670;&nbsp;</a></span>addResult()</h2>
+<a id="a6c263057b69a7baa7ece4a0f1e88b467"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c263057b69a7baa7ece4a0f1e88b467">&#9670;&nbsp;</a></span>addResult()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -214,8 +243,18 @@ Public Attributes</h2></td></tr>
           <td class="memname">void tracktion::graph::PerformanceMeasurement::Statistics::addResult </td>
           <td>(</td>
           <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>elapsed</em></td><td>)</td>
+          <td class="paramname"><em>secondsElapsed</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">uint64_t&#160;</td>
+          <td class="paramname"><em>cyclesElapsed</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -262,14 +301,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a78ffeb7ba0bdef6bda7aabd81fdfb813"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a78ffeb7ba0bdef6bda7aabd81fdfb813">&#9670;&nbsp;</a></span>m2</h2>
+<a id="a4eb7918e235dd1656f2e3cb706107950"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4eb7918e235dd1656f2e3cb706107950">&#9670;&nbsp;</a></span>m2Seconds</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double tracktion::graph::PerformanceMeasurement::Statistics::m2 = 0.0</td>
+          <td class="memname">double tracktion::graph::PerformanceMeasurement::Statistics::m2Seconds = 0.0</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -326,6 +365,86 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a4b47f4bfa45474ffe694d0fe2e3b1d38"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b47f4bfa45474ffe694d0fe2e3b1d38">&#9670;&nbsp;</a></span>meanCycles</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double tracktion::graph::PerformanceMeasurement::Statistics::meanCycles = 0.0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#af4aa6f3590790c75f2948eed61f1cc2d">clear()</a>.</p>
+
+</div>
+</div>
+<a id="aa0ca8628524bf6a867f03aeb1bcb4ec5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa0ca8628524bf6a867f03aeb1bcb4ec5">&#9670;&nbsp;</a></span>m2Cycles</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double tracktion::graph::PerformanceMeasurement::Statistics::m2Cycles = 0.0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#af4aa6f3590790c75f2948eed61f1cc2d">clear()</a>.</p>
+
+</div>
+</div>
+<a id="a32afd62b874492803897b93a88fe232a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a32afd62b874492803897b93a88fe232a">&#9670;&nbsp;</a></span>maximumCycles</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t tracktion::graph::PerformanceMeasurement::Statistics::maximumCycles = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#af4aa6f3590790c75f2948eed61f1cc2d">clear()</a>.</p>
+
+</div>
+</div>
+<a id="a999072e8894232e956ce4735bb54b01d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a999072e8894232e956ce4735bb54b01d">&#9670;&nbsp;</a></span>minimumCycles</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t tracktion::graph::PerformanceMeasurement::Statistics::minimumCycles = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#af4aa6f3590790c75f2948eed61f1cc2d">clear()</a>.</p>
+
+</div>
+</div>
+<a id="ad4ef6129ae7e5466dd8716637261f821"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad4ef6129ae7e5466dd8716637261f821">&#9670;&nbsp;</a></span>totalCycles</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t tracktion::graph::PerformanceMeasurement::Statistics::totalCycles = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#af4aa6f3590790c75f2948eed61f1cc2d">clear()</a>.</p>
+
+</div>
+</div>
 <a id="a650d60f8b45be65687713b3115a0f996"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a650d60f8b45be65687713b3115a0f996">&#9670;&nbsp;</a></span>numRuns</h2>
 
@@ -348,7 +467,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Oct 7 2022 12:06:46 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Oct 11 2022 09:24:30 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

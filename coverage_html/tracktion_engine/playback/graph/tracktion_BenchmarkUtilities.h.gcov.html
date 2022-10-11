@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-10-07 12:24:55</td>
+            <td class="headerValue">2022-10-11 09:41:55</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">7</td>
@@ -149,8 +149,8 @@
 <a name="87"><span class="lineNum">      87 </span>            :             const auto sizeInBytes = tracktion::graph::test_utilities::getMemoryUsage (nodes);</a>
 <a name="88"><span class="lineNum">      88 </span>            : </a>
 <a name="89"><span class="lineNum">      89 </span><span class="lineCov">        144 :             BenchmarkResult bmr { createBenchmarkDescription (&quot;Node&quot;, (editName + &quot;: memory use&quot;).toStdString(), description.toStdString()) };</span></a>
-<a name="90"><span class="lineNum">      90 </span><span class="lineCov">         36 :             bmr.duration = static_cast&lt;double&gt; (sizeInBytes);</span></a>
-<a name="91"><span class="lineNum">      91 </span><span class="lineCov">        108 :             BenchmarkList::getInstance().addResult (bmr);</span></a>
+<a name="90"><span class="lineNum">      90 </span><span class="lineCov">         36 :             bmr.totalSeconds = static_cast&lt;double&gt; (sizeInBytes);</span></a>
+<a name="91"><span class="lineNum">      91 </span><span class="lineCov">         72 :             BenchmarkList::getInstance().addResult (bmr);</span></a>
 <a name="92"><span class="lineNum">      92 </span>            : </a>
 <a name="93"><span class="lineNum">      93 </span><span class="lineCov">         36 :             std::cout &lt;&lt; &quot;Num nodes: &quot; &lt;&lt; nodes.size() &lt;&lt; &quot;\n&quot;;</span></a>
 <a name="94"><span class="lineNum">      94 </span><span class="lineCov">         72 :             std::cout &lt;&lt; juce::File::descriptionOfSizeInBytes ((int64_t) sizeInBytes) &lt;&lt; &quot;\n&quot;;</span></a>

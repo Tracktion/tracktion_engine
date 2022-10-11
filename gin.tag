@@ -64231,9 +64231,16 @@
     </member>
     <member kind="function">
       <type>double</type>
-      <name>getVariance</name>
+      <name>getVarianceSeconds</name>
       <anchorfile>structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html</anchorfile>
-      <anchor>a8dd133d170dfbeb14e4b99ce22a8aaae</anchor>
+      <anchor>ac781adc5d06b1a274de28d8e75812431</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>double</type>
+      <name>getVarianceCycles</name>
+      <anchorfile>structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html</anchorfile>
+      <anchor>a936587d2aed775f42b3c45a1fc1644fb</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
@@ -64247,8 +64254,8 @@
       <type>void</type>
       <name>addResult</name>
       <anchorfile>structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html</anchorfile>
-      <anchor>a5a4358c84137ed3bb80d898501bc5bbc</anchor>
-      <arglist>(double elapsed) noexcept</arglist>
+      <anchor>a6c263057b69a7baa7ece4a0f1e88b467</anchor>
+      <arglist>(double secondsElapsed, uint64_t cyclesElapsed) noexcept</arglist>
     </member>
     <member kind="variable">
       <type>std::string</type>
@@ -64266,9 +64273,9 @@
     </member>
     <member kind="variable">
       <type>double</type>
-      <name>m2</name>
+      <name>m2Seconds</name>
       <anchorfile>structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html</anchorfile>
-      <anchor>a78ffeb7ba0bdef6bda7aabd81fdfb813</anchor>
+      <anchor>a4eb7918e235dd1656f2e3cb706107950</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -64290,6 +64297,41 @@
       <name>totalSeconds</name>
       <anchorfile>structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html</anchorfile>
       <anchor>aa9339545c2bda203956cef74775d0998</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>double</type>
+      <name>meanCycles</name>
+      <anchorfile>structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html</anchorfile>
+      <anchor>a4b47f4bfa45474ffe694d0fe2e3b1d38</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>double</type>
+      <name>m2Cycles</name>
+      <anchorfile>structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html</anchorfile>
+      <anchor>aa0ca8628524bf6a867f03aeb1bcb4ec5</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>uint64_t</type>
+      <name>maximumCycles</name>
+      <anchorfile>structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html</anchorfile>
+      <anchor>a32afd62b874492803897b93a88fe232a</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>uint64_t</type>
+      <name>minimumCycles</name>
+      <anchorfile>structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html</anchorfile>
+      <anchor>a999072e8894232e956ce4735bb54b01d</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>uint64_t</type>
+      <name>totalCycles</name>
+      <anchorfile>structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html</anchorfile>
+      <anchor>ad4ef6129ae7e5466dd8716637261f821</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">

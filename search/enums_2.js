@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['defaults_12815',['Defaults',['../classtracktion_1_1engine_1_1StepClip.html#a68c9bd0cbec768984073ace53bdefa1a',1,'tracktion::engine::StepClip']]],
-  ['devicetype_12816',['DeviceType',['../classtracktion_1_1engine_1_1InputDevice.html#ac142baad652904d37630d4e5c1142d8f',1,'tracktion::engine::InputDevice::DeviceType()'],['../classtracktion_1_1engine_1_1InsertPlugin.html#ad2fd3dac8def4611b0652e5570a064ac',1,'tracktion::engine::InsertPlugin::DeviceType()']]]
+  ['defaults_12827',['Defaults',['../classtracktion_1_1engine_1_1StepClip.html#a68c9bd0cbec768984073ace53bdefa1a',1,'tracktion::engine::StepClip']]],
+  ['devicetype_12828',['DeviceType',['../classtracktion_1_1engine_1_1InputDevice.html#ac142baad652904d37630d4e5c1142d8f',1,'tracktion::engine::InputDevice::DeviceType()'],['../classtracktion_1_1engine_1_1InsertPlugin.html#ad2fd3dac8def4611b0652e5570a064ac',1,'tracktion::engine::InsertPlugin::DeviceType()']]]
 ];
