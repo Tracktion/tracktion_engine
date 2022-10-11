@@ -774,6 +774,10 @@ struct TransportControl::ScreenSaverDefeater
 {
     ScreenSaverDefeater()
     {
+#if TRACKTION_FORCE_HEADLESS
+        return;
+#endif
+
         if (juce::Desktop::getInstance().isHeadless())
             return;
 
