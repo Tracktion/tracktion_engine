@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 AuxReturnPlugin::AuxReturnPlugin (PluginCreationInfo info)  : Plugin (info)
@@ -64,4 +64,4 @@ void AuxReturnPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
         p->updateFromAttachedValue();
 }
 
-}
+}} // namespace tracktion { inline namespace engine

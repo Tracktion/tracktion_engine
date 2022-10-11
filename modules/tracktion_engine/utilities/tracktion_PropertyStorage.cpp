@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 static juce::File getApplicationSettingsFile()
@@ -269,4 +269,4 @@ juce::File PropertyStorage::getDefaultLoadSaveDirectory (ProjectItem::Category)
     return juce::File::getSpecialLocation (juce::File::userDocumentsDirectory);
 }
 
-}
+}} // namespace tracktion { inline namespace engine

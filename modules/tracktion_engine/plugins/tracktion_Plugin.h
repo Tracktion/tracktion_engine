@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 struct PluginCreationInfo
@@ -34,7 +34,7 @@ struct PluginCreationInfo
 */
 struct PluginInitialisationInfo
 {
-    double startTime;
+    TimePosition startTime;
     double sampleRate;
     int blockSizeSamples;
 };
@@ -50,7 +50,7 @@ struct PluginRenderContext
                          const juce::AudioChannelSet& bufferChannels,
                          int bufferStart, int bufferSize,
                          MidiMessageArray* midiBuffer, double midiOffset,
-                         double editTime, bool playing, bool scrubbing, bool rendering,
+                         TimePosition editTime, bool playing, bool scrubbing, bool rendering,
                          bool allowBypassedProcessing) noexcept;
 
     /** Creates a copy of another PluginRenderContext. */
@@ -84,7 +84,7 @@ struct PluginRenderContext
     double midiBufferOffset = 0.0;
 
     /** The time in seconds that the start of this context represents. */
-    double editTime = 0.0;
+    TimePosition editTime;
 
     /** True if the the playhead is currently playing. */
     bool isPlaying = false;
@@ -199,7 +199,7 @@ public:
     virtual void applyToBuffer (const PluginRenderContext&) = 0;
 
     /** Called between successive rendering blocks. */
-    virtual void prepareForNextBlock (double /*editTime*/) {}
+    virtual void prepareForNextBlock (TimePosition /*editTime*/) {}
 
     // wrapper on applyTobuffer, called by the node
     void applyToBufferWithAutomation (const PluginRenderContext&);
@@ -418,4 +418,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Plugin)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

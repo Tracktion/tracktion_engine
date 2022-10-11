@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -20,10 +20,10 @@ namespace tracktion_engine
 struct WarpMarker
 {
     /** Creates an empty WarpMarker. */
-    WarpMarker() noexcept {}
+    WarpMarker() noexcept = default;
 
     /** Creates a WarpMarker with a source and warp time. */
-    WarpMarker (double s, double w)
+    WarpMarker (TimePosition s, TimePosition w)
         : sourceTime (s), warpTime (w) {}
 
     /** Loads a WarpMarker from a saved state. */
@@ -37,16 +37,16 @@ struct WarpMarker
     void updateFrom (const juce::ValueTree& v, const juce::Identifier& i)
     {
         if (i == IDs::sourceTime)
-            sourceTime = double (v.getProperty (IDs::sourceTime));
+            sourceTime = TimePosition::fromSeconds (double (v.getProperty (IDs::sourceTime)));
         else if (i == IDs::warpTime)
-            warpTime = double (v.getProperty (IDs::warpTime));
+            warpTime = TimePosition::fromSeconds (double (v.getProperty (IDs::warpTime)));
     }
 
     /** Returns a hash for this marker. */
     HashCode getHash() const noexcept;
 
     juce::ValueTree state;
-    double sourceTime = 0, warpTime = 0;
+    TimePosition sourceTime, warpTime;
 };
 
 
@@ -85,7 +85,7 @@ public:
     AudioFile getSourceFile() const;
     
     /** Returns the length of the source file. */
-    double getSourceLength() const;
+    TimeDuration getSourceLength() const;
 
     //==============================================================================
     /** Returns true if the end marker is being used as the end of the source material.
@@ -111,37 +111,37 @@ public:
     void removeAllMarkers();
     
     /** Moves a WarpMarker at a given index to a new time. */
-    double moveMarker (int index, double newWarpTime);
+    TimePosition moveMarker (int index, TimePosition newWarpTime);
 
     /** Sets the end time of the source material.
         Only functional if isWarpEndMarkerEnabled returns true.
     */
-    void setWarpEndMarkerTime (double endTime);
+    void setWarpEndMarkerTime (TimePosition endTime);
 
     //==============================================================================
     /** Time region can be longer than the clip and the returned array will loop over the clip to match the length */
-    juce::Array<EditTimeRange> getWarpTimeRegions (EditTimeRange overallTimeRegion) const;
+    juce::Array<TimeRange> getWarpTimeRegions (TimeRange overallTimeRegion) const;
     
     /** Returns an array of transient times that have been detected from the source file.
         The bool here will be false if the detection job hasn't finished running yet so call it again peridically
         until it is true.
     */
-    std::pair<bool, juce::Array<double>> getTransientTimes() const    { return transientTimes; }
+    std::pair<bool, juce::Array<TimePosition>> getTransientTimes() const    { return transientTimes; }
 
     /** Converts a warp time (i.e. a linear time) to the time in the source file after warping has been applied. */
-    double warpTimeToSourceTime (double warpTime) const;
+    TimePosition warpTimeToSourceTime (TimePosition warpTime) const;
 
     /** Converts a source time (i.e. time in the file) to a linear time after warping has been applied. */
-    double sourceTimeToWarpTime (double sourceTime) const;
+    TimePosition sourceTimeToWarpTime (TimePosition sourceTime) const;
 
     /** Returns the start time of the warped region (can be -ve) */
-    double getWarpedStart() const;
+    TimePosition getWarpedStart() const;
 
     /** Returns the endTime of the entire warped region */
-    double getWarpedEnd() const;
+    TimePosition getWarpedEnd() const;
 
     /** Sets position in warped region of the redered file end point */
-    double getWarpEndMarkerTime() const;
+    TimePosition getWarpEndMarkerTime() const;
 
     /** Returns a hash representing this warp list. */
     HashCode getHash() const;
@@ -200,7 +200,7 @@ private:
 
     std::unique_ptr<WarpMarkerList> markers;
     RenderManager::Job::Ptr transientDetectionJob;
-    std::pair<bool, juce::Array<double>> transientTimes { false, {} };
+    std::pair<bool, juce::Array<TimePosition>> transientTimes { false, {} };
     std::unique_ptr<Edit::LoadFinishedCallback<WarpTimeManager>> editLoadedCallback;
 
     juce::UndoManager* getUndoManager() const;
@@ -242,4 +242,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WarpTimeFactory)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

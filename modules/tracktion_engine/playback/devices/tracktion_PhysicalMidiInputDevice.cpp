@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 struct MidiTimecodeReader  : private juce::MessageListener,
@@ -26,7 +26,7 @@ struct MidiTimecodeReader  : private juce::MessageListener,
             m.getFullFrameParameters (hours, minutes, seconds, frames, midiTCType);
 
             lastTime = getTime();
-            correctedTime = lastTime - owner.edit.getTimecodeOffset();
+            correctedTime = lastTime - owner.edit.getTimecodeOffset().inSeconds();
 
             postMessage (new TCMessage (1)); // stop
             jumpPending = true;
@@ -62,9 +62,9 @@ struct MidiTimecodeReader  : private juce::MessageListener,
 
                     lastTime = getTime() + 2.0 / getFPS();
 
-                    correctedTime = lastTime - owner.edit.getTimecodeOffset();
+                    correctedTime = lastTime - owner.edit.getTimecodeOffset().inSeconds();
 
-                    const double drift = correctedTime - owner.context.getPosition();
+                    const double drift = correctedTime - owner.context.getPosition().inSeconds();
 
                     averageDrift = averageDrift * 0.9 + drift * 0.1;
                     ++averageDriftNumSamples;
@@ -73,7 +73,7 @@ struct MidiTimecodeReader  : private juce::MessageListener,
                     {
                         if (std::abs (drift) > 2.0)
                         {
-                            owner.context.postPosition (correctedTime);
+                            owner.context.postPosition (TimePosition::fromSeconds (correctedTime));
                             averageDrift = 0.0;
                             averageDriftNumSamples = 0;
                         }
@@ -271,7 +271,7 @@ struct PhysicalMidiInputDeviceInstance  : public MidiInputDeviceInstanceBase
         return timecodeReader->processMessage (message);
     }
 
-    juce::String prepareToRecord (double start, double punchIn, double sampleRate,
+    juce::String prepareToRecord (TimePosition start, TimePosition punchIn, double sampleRate,
                                   int blockSizeSamples, bool isLivePunch) override
     {
         MidiInputDeviceInstanceBase::prepareToRecord (start, punchIn, sampleRate, blockSizeSamples, isLivePunch);
@@ -294,7 +294,7 @@ struct PhysicalMidiInputDeviceInstance  : public MidiInputDeviceInstanceBase
         
         if (getPhysicalMidiInput().inputDevice != nullptr)
         {
-            getPhysicalMidiInput().masterTimeUpdate (startTime);
+            getPhysicalMidiInput().masterTimeUpdate (startTime.inSeconds());
             recording = true;
         }
 
@@ -415,6 +415,38 @@ bool PhysicalMidiInputDevice::tryToSendTimecode (const juce::MidiMessage& messag
 
 void PhysicalMidiInputDevice::handleIncomingMidiMessage (const juce::MidiMessage& m)
 {
+    if (m.isNoteOn())
+    {
+        if (activeNotes.isNoteActive (m.getChannel(), m.getNoteNumber()))
+        {
+            // If the note is on and we get another on, send the off before the on
+            handleIncomingMidiMessageInt (juce::MidiMessage::noteOff (m.getChannel(), m.getNoteNumber(), 0.0f));
+            handleIncomingMidiMessageInt (m);
+        }
+        else
+        {
+            // otherwise send the on and track its on
+            activeNotes.startNote (m.getChannel(), m.getNoteNumber());
+            handleIncomingMidiMessageInt (m);
+        }
+    }
+    else if (m.isNoteOff())
+    {
+        // Ignore all note offs unless the note was already on
+        if (activeNotes.isNoteActive (m.getChannel(), m.getNoteNumber()))
+        {
+            activeNotes.clearNote (m.getChannel(), m.getNoteNumber());
+            handleIncomingMidiMessageInt (m);
+        }
+    }
+    else
+    {
+        handleIncomingMidiMessageInt (m);
+    }
+}
+
+void PhysicalMidiInputDevice::handleIncomingMidiMessageInt (const juce::MidiMessage& m)
+{
     if (externalController != nullptr && externalController->wantsMessage (*this, m))
     {
         externalController->acceptMidiMessage (*this, m);
@@ -493,4 +525,4 @@ void PhysicalMidiInputDevice::setReadingControllerMessages (bool b)
     isTakingControllerMessages = b;
 }
 
-}
+}} // namespace tracktion { inline namespace engine

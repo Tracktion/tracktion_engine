@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 const char* GrooveTemplate::grooveXmlTag = "GROOVETEMPLATE";
@@ -46,6 +46,14 @@ GrooveTemplate::GrooveTemplate (const GrooveTemplate& other)
 
 GrooveTemplate::~GrooveTemplate()
 {
+}
+
+bool GrooveTemplate::operator== (const GrooveTemplate& o) const
+{
+    return latenesses == o.latenesses
+        && numNotes == o.numNotes
+        && notesPerBeat == o.notesPerBeat
+        && parameterized == o.parameterized;
 }
 
 bool GrooveTemplate::isParameterized() const
@@ -126,26 +134,26 @@ void GrooveTemplate::clearLatenesses()
     latenesses.clearQuick();
 }
 
-double GrooveTemplate::beatsTimeToGroovyTime (double beatsTime, float strength) const
+BeatPosition GrooveTemplate::beatsTimeToGroovyTime (BeatPosition beatsTime, float strength) const
 {
     auto activeStrength = parameterized ? strength : 1.0f;
 
-    const double beatNum    = std::floor (beatsTime * notesPerBeat);
-    const double offset     = notesPerBeat * (beatsTime - (beatNum / notesPerBeat));
+    const double beatNum    = std::floor (beatsTime.inBeats() * notesPerBeat);
+    const double offset     = notesPerBeat * (beatsTime.inBeats() - (beatNum / notesPerBeat));
     const int latenessIndex = juce::roundToInt (beatNum) % numNotes;
 
     const double lateness   = latenesses[latenessIndex] * activeStrength;
     const double t1         = (beatNum + 0.5f * lateness);
     const double t2minust1  = 1.0 + 0.5f * ((latenesses[(latenessIndex + 1) % numNotes] * activeStrength) - lateness);
 
-    return (t1 + offset * t2minust1) / notesPerBeat;
+    return BeatPosition::fromBeats ((t1 + offset * t2minust1) / notesPerBeat);
 }
 
-double GrooveTemplate::editTimeToGroovyTime (double editTime, float strength, Edit& edit) const
+TimePosition GrooveTemplate::editTimeToGroovyTime (TimePosition editTime, float strength, Edit& edit) const
 {
-    double beats = edit.tempoSequence.timeToBeats (editTime);
+    auto beats = edit.tempoSequence.toBeats (editTime);
     beats = beatsTimeToGroovyTime (beats, strength);
-    return edit.tempoSequence.beatsToTime (beats);
+    return edit.tempoSequence.toTime (beats);
 }
 
 bool GrooveTemplate::isEmpty() const
@@ -351,4 +359,4 @@ void GrooveTemplateManager::deleteTemplate (int index)
     TransportControl::restartAllTransports (engine, false);
 }
 
-}
+}} // namespace tracktion { inline namespace engine

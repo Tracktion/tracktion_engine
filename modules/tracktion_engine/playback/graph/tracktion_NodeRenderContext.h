@@ -10,7 +10,7 @@
 
 #pragma once
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -22,9 +22,9 @@ class NodeRenderContext
 public:
     /** Creates a context to render a Node. */
     NodeRenderContext (Renderer::RenderTask&, Renderer::Parameters&,
-                       std::unique_ptr<tracktion_graph::Node>,
-                       std::unique_ptr<tracktion_graph::PlayHead>,
-                       std::unique_ptr<tracktion_graph::PlayHeadState>,
+                       std::unique_ptr<tracktion::graph::Node>,
+                       std::unique_ptr<tracktion::graph::PlayHead>,
+                       std::unique_ptr<tracktion::graph::PlayHeadState>,
                        std::unique_ptr<ProcessState>,
                        juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* sourceToUpdate);
     
@@ -43,9 +43,9 @@ public:
     //==============================================================================
     /** Renders the MIDI of an Edit to a sequence. */
     static juce::String renderMidi (Renderer::RenderTask&, Renderer::Parameters&,
-                                    std::unique_ptr<tracktion_graph::Node>,
-                                    std::unique_ptr<tracktion_graph::PlayHead>,
-                                    std::unique_ptr<tracktion_graph::PlayHeadState>,
+                                    std::unique_ptr<tracktion::graph::Node>,
+                                    std::unique_ptr<tracktion::graph::PlayHead>,
+                                    std::unique_ptr<tracktion::graph::PlayHeadState>,
                                     std::unique_ptr<ProcessState>,
                                     std::atomic<float>& progressToUpdate);
 
@@ -78,8 +78,8 @@ private:
     Renderer::Parameters r, originalParams;
     bool needsToNormaliseAndTrim = false;
     
-    std::unique_ptr<tracktion_graph::PlayHead> playHead;
-    std::unique_ptr<tracktion_graph::PlayHeadState> playHeadState;
+    std::unique_ptr<tracktion::graph::PlayHead> playHead;
+    std::unique_ptr<tracktion::graph::PlayHeadState> playHeadState;
     std::unique_ptr<ProcessState> processState;
     std::unique_ptr<TracktionNodePlayer> nodePlayer;
     
@@ -93,7 +93,7 @@ private:
     MidiMessageArray midiBuffer;
 
     const float thresholdForStopping { dbToGain (-70.0f) };
-    double blockLength = 0;
+    TimeDuration blockLength;
     int numPreRenderBlocks = 0;
     int numLatencySamplesToDrop = 0;
     int realTimePerBlock = 0;
@@ -102,12 +102,12 @@ private:
     static const int sleepCounterMax = 100;
     int sleepCounter = 0;
 
-    std::unique_ptr<TempoSequencePosition> currentTempoPosition;
+    std::unique_ptr<tempo::Sequence::Position> currentTempoPosition;
     float peak = 0;
     double rmsTotal = 0;
     int64_t rmsNumSamps = 0;
     int precount = 0;
-    double streamTime = 0;
+    TimePosition streamTime;
 
     int64_t samplesTrimmed = 0;
     bool hasStartedSavingToFile = 0;
@@ -126,4 +126,4 @@ private:
     WriteResult writeAudioBlock (choc::buffer::ChannelArrayView<float>);
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

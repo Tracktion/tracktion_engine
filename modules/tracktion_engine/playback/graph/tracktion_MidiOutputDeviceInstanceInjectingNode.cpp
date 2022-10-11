@@ -8,20 +8,20 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
 //==============================================================================
 MidiOutputDeviceInstanceInjectingNode::MidiOutputDeviceInstanceInjectingNode (MidiOutputDeviceInstance& instance,
-                                                                              std::unique_ptr<tracktion_graph::Node> inputNode,
-                                                                              tracktion_graph::PlayHead& playHeadToUse)
+                                                                              std::unique_ptr<tracktion::graph::Node> inputNode,
+                                                                              tracktion::graph::PlayHead& playHeadToUse)
     : deviceInstance (instance), input (std::move (inputNode)), playHead (playHeadToUse)
 {
 }
 
 //==============================================================================
-tracktion_graph::NodeProperties MidiOutputDeviceInstanceInjectingNode::getNodeProperties()
+tracktion::graph::NodeProperties MidiOutputDeviceInstanceInjectingNode::getNodeProperties()
 {
     auto props = input->getNodeProperties();
     props.numberOfChannels = 0;
@@ -30,12 +30,12 @@ tracktion_graph::NodeProperties MidiOutputDeviceInstanceInjectingNode::getNodePr
     return props;
 }
 
-std::vector<tracktion_graph::Node*> MidiOutputDeviceInstanceInjectingNode::getDirectInputNodes()
+std::vector<tracktion::graph::Node*> MidiOutputDeviceInstanceInjectingNode::getDirectInputNodes()
 {
     return { input.get() };
 }
 
-void MidiOutputDeviceInstanceInjectingNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
+void MidiOutputDeviceInstanceInjectingNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
     sampleRate = info.sampleRate;
 }
@@ -54,7 +54,7 @@ void MidiOutputDeviceInstanceInjectingNode::process (ProcessContext& pc)
     
     const auto timelineSampleRange = referenceSampleRangeToSplitTimelineRange (playHead, pc.referenceSampleRange);
     assert (! timelineSampleRange.isSplit);
-    const auto editTimeRange = tracktion_graph::sampleToTime (timelineSampleRange.timelineRange1, sampleRate);
+    const auto editTimeRange = tracktion::timeRangeFromSamples (timelineSampleRange.timelineRange1, sampleRate);
 
     // Add MIDI clock for the current time to the device to be dispatched
     deviceInstance.addMidiClockMessagesToCurrentBlock (playHead.isPlaying(), playHead.isUserDragging(), editTimeRange);
@@ -66,4 +66,4 @@ void MidiOutputDeviceInstanceInjectingNode::process (ProcessContext& pc)
     deviceInstance.mergeInMidiMessages (sourceBuffers.midi, editTimeRange.getStart());
 }
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

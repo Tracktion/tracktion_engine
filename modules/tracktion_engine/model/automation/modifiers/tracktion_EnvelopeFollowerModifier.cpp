@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -373,7 +373,7 @@ void EnvelopeFollowerModifier::processBlock (const juce::AudioBuffer<float>& ab)
 
     const int numChannels = ab.getNumChannels();
     const int numSamples = ab.getNumSamples();
-    const float** samples = ab.getArrayOfReadPointers();
+    const float* const* samples = ab.getArrayOfReadPointers();
     float envelope = 0.0f;
 
     AudioScratchBuffer scratch (1, numSamples);
@@ -422,4 +422,4 @@ void EnvelopeFollowerModifier::valueTreeChanged()
         changedTimer.startTimerHz (30);
 }
 
-}
+}} // namespace tracktion { inline namespace engine

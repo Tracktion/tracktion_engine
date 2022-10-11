@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -145,20 +145,20 @@ public:
     ClipPosition getPosition() const override;
 
     /** Returns the beat number (with offset) at the given time */
-    double getContentBeatAtTime (double time) const;
+    BeatPosition getContentBeatAtTime (TimePosition time) const;
     /** Returns time of a beat number */
-    double getTimeOfContentBeat (double beat) const;
+    TimePosition getTimeOfContentBeat (BeatPosition beat) const;
 
     /** Returns the maximum lenght this clip can have. */
-    virtual double getMaximumLength()               { return Edit::maximumLength; }
+    virtual TimeDuration getMaximumLength()               { return toDuration (Edit::getMaximumEditEnd()); }
 
     /** Returns times for snapping to, relative to the Edit. Base class adds start and end time. */
-    virtual juce::Array<double> getInterestingTimes();
+    virtual juce::Array<TimePosition> getInterestingTimes();
 
     /** Returns the first marked time in the source file which can be used for
         syncronising newly added clips.
     */
-    double getSpottingPoint() const;
+    TimePosition getSpottingPoint() const;
 
     //==============================================================================
     /** Returns true if this clip is capable of looping. */
@@ -173,18 +173,23 @@ public:
     virtual void disableLooping()                   {}
 
     /** Returns the beat position of the loop start point. */
-    virtual double getLoopStartBeats() const        { return 0.0; }
+    virtual BeatPosition getLoopStartBeats() const          { return BeatPosition(); }
     /** Returns the start time of the loop start point. */
-    virtual double getLoopStart() const             { return 0.0; }
+    virtual TimePosition getLoopStart() const               { return TimePosition(); }
     /** Returns the length of loop in beats. */
-    virtual double getLoopLengthBeats() const       { return 0.0; }
+    virtual BeatDuration getLoopLengthBeats() const         { return BeatDuration(); }
     /** Returns the length of loop in seconds. */
-    virtual double getLoopLength() const            { return 0.0; }
+    virtual TimeDuration getLoopLength() const              { return TimeDuration(); }
+
+    /** Returns the loop range in seconds. */
+    TimeRange getLoopRange() const                          { return { getLoopStart(), getLoopLength() }; }
+    /** Returns the loop range in beats. */
+    BeatRange getLoopRangeBeats() const                     { return { getLoopStartBeats(), getLoopLengthBeats() }; }
 
     /** Sets the loop range the clip should use in seconds. */
-    virtual void setLoopRange (EditTimeRange newLoopRange)            { juce::ignoreUnused (newLoopRange); }
+    virtual void setLoopRange (TimeRange)                   {}
     /** Sets the loop range the clip should use in beats. */
-    virtual void setLoopRangeBeats (juce::Range<double> newBeatRange) { juce::ignoreUnused (newBeatRange); }
+    virtual void setLoopRangeBeats (BeatRange)              {}
 
     /** Returns true if the clip is muted. */
     virtual bool isMuted() const = 0;
@@ -212,27 +217,27 @@ public:
         @param preserveSync Whether the source material position should be kept static in relation to the Edit's timeline.
         @param keepLength   Whether the end should be moved to keep the same length.
     */
-    void setStart (double newStart, bool preserveSync, bool keepLength);
+    void setStart (TimePosition newStart, bool preserveSync, bool keepLength);
 
     /** Sets the length of the clip.
         @param newLength    The length in seconds
         @param preserveSync Whether the source material position should be kept static in relation to the Edit's timeline.
     */
-    void setLength (double newLength, bool preserveSync);
+    void setLength (TimeDuration newLength, bool preserveSync);
 
     /** Sets the end of the clip.
         @param newEnd       The end time in seconds
         @param preserveSync Whether the source material position should be kept static in relation to the Edit's timeline.
     */
-    void setEnd (double newEnd, bool preserveSync);
+    void setEnd (TimePosition newEnd, bool preserveSync);
 
     /** Sets the offset of the clip, i.e. how much the clip's content should be shifted within the clip boundary.
         @param newOffset    The offset in seconds
     */
-    void setOffset (double newOffset);
+    void setOffset (TimeDuration newOffset);
 
     /** Trims away any part of the clip that overlaps this region. */
-    void trimAwayOverlap (EditTimeRange editRangeToTrim);
+    void trimAwayOverlap (TimeRange editRangeToTrim);
 
     /** Removes this clip from the parent track. */
     void removeFromParentTrack();
@@ -253,7 +258,7 @@ public:
         @param pivotTimeInEdit  The time to keep fixed
         @param factor           The scale factor
     */
-    virtual void rescale (double pivotTimeInEdit, double factor);
+    virtual void rescale (TimePosition pivotTimeInEdit, double factor);
 
     //==============================================================================
     /** Returns true if the clip is part of a group. */
@@ -393,7 +398,9 @@ protected:
     bool cloneInProgress = false;
     juce::CachedValue<juce::String> clipName;
     ClipTrack* track = nullptr;
-    juce::CachedValue<double> clipStart, length, offset, speedRatio;
+    juce::CachedValue<TimePosition> clipStart;
+    juce::CachedValue<TimeDuration> length, offset;
+    juce::CachedValue<double> speedRatio;
     SourceFileReference sourceFileReference;
     juce::CachedValue<EditItemID> groupID;
     juce::CachedValue<juce::String> linkID;
@@ -412,7 +419,7 @@ protected:
     virtual void setTrack (ClipTrack*);
 
     /** Returns the mark points relative to the start of the clip, rescaled to the current speed. */
-    virtual juce::Array<double> getRescaledMarkPoints() const;
+    virtual juce::Array<TimePosition> getRescaledMarkPoints() const;
 
     /** @internal */
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
@@ -440,14 +447,14 @@ namespace ClipConstants
     const double speedRatioMax = 20.0;  /**< Maximum speed ratio. */
 }
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine
 
 namespace juce
 {
     template <>
-    struct VariantConverter<tracktion_engine::Clip::SyncType>
+    struct VariantConverter<tracktion::engine::Clip::SyncType>
     {
-        static tracktion_engine::Clip::SyncType fromVar (const var& v)   { return (tracktion_engine::Clip::SyncType) static_cast<int> (v); }
-        static var toVar (tracktion_engine::Clip::SyncType v)            { return static_cast<int> (v); }
+        static tracktion::engine::Clip::SyncType fromVar (const var& v)   { return (tracktion::engine::Clip::SyncType) static_cast<int> (v); }
+        static var toVar (tracktion::engine::Clip::SyncType v)            { return static_cast<int> (v); }
     };
 }

@@ -9,7 +9,7 @@
 */
 
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -304,4 +304,4 @@ void ImpulseResponsePlugin::valueTreePropertyChanged (juce::ValueTree& v, const 
     }
 }
 
-}
+}} // namespace tracktion { inline namespace engine

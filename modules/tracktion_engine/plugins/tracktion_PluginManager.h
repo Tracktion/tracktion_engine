@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 class PluginManager  : private juce::ChangeListener
@@ -59,7 +59,7 @@ public:
         virtual Plugin::Ptr create (PluginCreationInfo) = 0;
     };
 
-    void registerBuiltInType (BuiltInType* t)   { builtInTypes.add (t); }
+    void registerBuiltInType (std::unique_ptr<BuiltInType>);
 
     //==============================================================================
     template <typename Type>
@@ -70,7 +70,7 @@ public:
     };
 
     template <typename Type>
-    void createBuiltInType()  { registerBuiltInType (new BuiltInTypeBase<Type>()); }
+    void createBuiltInType()  { registerBuiltInType (std::make_unique<BuiltInTypeBase<Type>>()); }
 
     //==============================================================================
     /** Callback that is used to create plugin instances from a PluginDescription.
@@ -133,4 +133,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginCache)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

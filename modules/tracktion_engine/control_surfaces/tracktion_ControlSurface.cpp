@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 ParameterSetting::ParameterSetting() noexcept
@@ -407,7 +407,7 @@ void ControlSurface::userPressedCreateMarker()
     RETURN_IF_SAFE_RECORDING
 
     if (auto ed = getEditIfOnEditScreen())
-        ed->getMarkerManager().createMarker (-1, ed->getTransport().position, 0.0, externalControllerManager.getSelectionManager());
+        ed->getMarkerManager().createMarker (-1, ed->getTransport().getPosition(), {}, externalControllerManager.getSelectionManager());
 }
 
 void ControlSurface::userPressedNextMarker()       { performIfNotSafeRecording (&AppFunctions::moveToNextMarker); }
@@ -564,4 +564,4 @@ bool ControlSurface::pickedUp (ControlType type, int index, float value)
     return info.pickedUp;
 }
 
-}
+}} // namespace tracktion { inline namespace engine

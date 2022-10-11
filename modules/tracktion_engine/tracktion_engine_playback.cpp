@@ -10,6 +10,59 @@
 
 #if ! JUCE_PROJUCER_LIVE_BUILD
 
+
+#if TRACKTION_ENABLE_ABLETON_LINK
+ #include <juce_core/system/juce_TargetPlatform.h>
+
+ // Ableton Link has to be included here before ReWire as ReWire seems to mess with some Windows defs
+ #if (JUCE_WINDOWS || JUCE_MAC || JUCE_LINUX || JUCE_ANDROID)
+     #if JUCE_MAC
+      #define LINK_PLATFORM_MACOSX  1
+     #endif
+
+     #if JUCE_WINDOWS
+      #define LINK_PLATFORM_WINDOWS 1
+     #endif
+
+     #if JUCE_LINUX || JUCE_ANDROID
+      #define LINK_PLATFORM_LINUX 1
+     #endif
+
+     //==========================================================================
+     // To use Link on desktop and Android, grab the open source repo from github
+     // and add these folders to your project's header search paths:
+     // [relative path from project]/AbletonLink/include
+     // [relative path from project]/AbletonLink/modules/asio-standalone/asio/include
+     //
+     // If you're building on Android, you will also need the ifaddrs header and source
+     // from here: https://github.com/libpd/abl_link/tree/master/external/android-ifaddrs
+     // Add the folder they are in to your header search paths also.
+
+     #if JUCE_CLANG // TODO: Ignore conversion errors on Windows too
+      #pragma clang diagnostic push
+      #pragma clang diagnostic ignored "-Wconversion"
+      #pragma clang diagnostic ignored "-Wshadow"
+     #endif
+
+     #if JUCE_ANDROID
+      #include <ifaddrs.h>
+     #endif
+
+     #include <ableton/Link.hpp>
+     #include <ableton/link/HostTimeFilter.hpp>
+
+     #if JUCE_ANDROID
+      #include <ifaddrs.cpp>
+     #endif
+
+     #if JUCE_CLANG
+      #pragma clang diagnostic pop
+     #endif
+
+    #undef NOMINMAX
+#endif
+#endif
+
 #if TRACKTION_ENABLE_REWIRE
 extern "C"
 {
@@ -40,22 +93,74 @@ extern "C"
 
 #define JUCE_CORE_INCLUDE_JNI_HELPERS 1 // Required for Ableton Link on Android
 
+
+//==============================================================================
+//==============================================================================
 #if TRACKTION_UNIT_TESTS
- #include <tracktion_graph/tracktion_graph_TestConfig.h>
+ #include <tracktion_core/tracktion_TestConfig.h>
 #endif
 
 #include <tracktion_graph/tracktion_graph.h>
 
-#include <tracktion_graph/tracktion_graph/tracktion_graph_TestUtilities.h>
-#include <tracktion_graph/tracktion_graph/tracktion_graph_TestNodes.h>
+#include <tracktion_graph/tracktion_graph/tracktion_TestUtilities.h>
+#include <tracktion_graph/tracktion_graph/tracktion_TestNodes.h>
+#include <tracktion_graph/tracktion_graph/tracktion_PlayHead.h>
 
+//==============================================================================
+//==============================================================================
 #include "tracktion_engine.h"
 
+
+//==============================================================================
+//==============================================================================
+#if __has_include(<samplerate.h>)
+ #include <samplerate.h>
+#else
+
+#undef VERSION
+#define PACKAGE ""
+#define VERSION "0.1.9"
+#define CPU_CLIPS_NEGATIVE 0
+#define CPU_CLIPS_POSITIVE 0
+
+#include "../3rd_party/choc/platform/choc_DisableAllWarnings.h"
+
+#if __GNUC__
+ #pragma GCC diagnostic ignored "-Wpedantic"
+#endif
+
+extern "C"
+{
+    #include "../3rd_party/libsamplerate/samplerate.h"
+}
+
+#if TRACKTION_BUILD_LIBSAMPLERATE
+ extern "C"
+ {
+     #include "../3rd_party/libsamplerate/src_linear.c"
+     #include "../3rd_party/libsamplerate/src_sinc.c"
+     #include "../3rd_party/libsamplerate/src_zoh.c"
+     #include "../3rd_party/libsamplerate/samplerate.c"
+ }
+#endif //TRACKTION_BUILD_LIBSAMPLERATE
+
+#undef PACKAGE
+#undef VERSION
+#undef CPU_CLIPS_NEGATIVE
+#undef CPU_CLIPS_POSITIVE
+
+#include "../3rd_party/choc/platform/choc_ReenableAllWarnings.h"
+
+#endif //__has_include(<samplerate.h>)
+
+
+//==============================================================================
 #if JUCE_LINUX || JUCE_WINDOWS
  #include <cstdarg>
 #endif
 
 #include <thread>
+using namespace std::literals;
 
 #include "playback/tracktion_MPEStartTrimmer.h"
 
@@ -96,6 +201,10 @@ extern "C"
 
 #include "playback/graph/tracktion_LiveMidiOutputNode.h"
 #include "playback/graph/tracktion_LiveMidiOutputNode.cpp"
+
+#include "playback/graph/tracktion_LoopingMidiNode.h"
+#include "playback/graph/tracktion_LoopingMidiNode.cpp"
+#include "playback/graph/tracktion_LoopingMidiNode.test.cpp"
 
 #include "playback/graph/tracktion_MelodyneNode.h"
 #include "playback/graph/tracktion_MelodyneNode.cpp"
@@ -220,11 +329,11 @@ static inline void sprintf (char* dest, size_t maxLength, const char* format, ..
 
 #if TRACKTION_ENABLE_CONTROL_SURFACES
  #if TRACKTION_ENABLE_CONTROL_SURFACE_MACKIEC4
-  namespace tracktion_engine
+  namespace tracktion { inline namespace engine
   {
     #include "Mackie/C4Translator.h"
     #include "Mackie/C4Translator.cpp"
-  }
+  }} // namespace tracktion { inline namespace engine
  #endif
 
  #include "control_surfaces/types/tracktion_AlphaTrack.cpp"

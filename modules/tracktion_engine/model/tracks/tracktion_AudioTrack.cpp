@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -730,14 +730,14 @@ void AudioTrack::injectLiveMidiMessage (const juce::MidiMessage& m, MidiMessageA
     injectLiveMidiMessage ({ m, source });
 }
 
-bool AudioTrack::mergeInMidiSequence (const juce::MidiMessageSequence& original, double startTime,
+bool AudioTrack::mergeInMidiSequence (const juce::MidiMessageSequence& original, TimePosition startTime,
                                       MidiClip* mc, MidiList::NoteAutomationType automationType)
 {
     auto ms = original;
-    ms.addTimeToMessages (startTime);
+    ms.addTimeToMessages (startTime.inSeconds());
 
-    auto start = ms.getStartTime();
-    auto end = ms.getEndTime();
+    const auto start = TimePosition::fromSeconds (ms.getStartTime());
+    const auto end = TimePosition::fromSeconds (ms.getEndTime());
 
     if (mc == nullptr)
     {
@@ -758,10 +758,10 @@ bool AudioTrack::mergeInMidiSequence (const juce::MidiMessageSequence& original,
         auto pos = mc->getPosition();
 
         if (pos.getStart() > start)
-            mc->extendStart (std::max (0.0, start - 0.1));
+            mc->extendStart (std::max (TimePosition(), start - TimeDuration::fromSeconds (0.1)));
 
         if (pos.getEnd() < end)
-            mc->setEnd (end + 0.1, true);
+            mc->setEnd (end + TimeDuration::fromSeconds (0.1), true);
 
         mc->mergeInMidiSequence (ms, automationType);
         return true;
@@ -904,7 +904,7 @@ void AudioTrack::freezeTrack()
     r.audioFormat = edit.engine.getAudioFileFormatManager().getFrozenFileFormat();
     r.blockSizeForAudio = dm.getBlockSize();
     r.sampleRateForAudio = dm.getSampleRate();
-    r.time = { 0.0, getLengthIncludingInputTracks() };
+    r.time = { {}, getLengthIncludingInputTracks() };
     r.endAllowance = RenderOptions::findEndAllowance (edit, &trackIDs, nullptr);
     r.canRenderInMono = true;
     r.mustRenderInMono = false;
@@ -1073,4 +1073,4 @@ juce::Array<Track*> AudioTrack::findSidechainSourceTracks() const
     return srcTracks;
 }
 
-}
+}} // namespace tracktion { inline namespace engine

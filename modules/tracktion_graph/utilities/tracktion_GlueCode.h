@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_graph
+namespace tracktion { inline namespace graph
 {
 
 //==============================================================================
@@ -25,6 +25,13 @@ inline choc::buffer::BufferView<SampleType, choc::buffer::SeparateChannelLayout>
     return choc::buffer::createChannelArrayView (buffer.getArrayOfWritePointers(),
                                                  (choc::buffer::ChannelCount) buffer.getNumChannels(),
                                                  (choc::buffer::FrameCount) buffer.getNumSamples());
+}
+
+//==============================================================================
+/** Converts a choc::midi event to a juce::MidiMessage */
+inline juce::MidiMessage toMidiMessage (const choc::midi::Sequence::Event& e)
+{
+    return { e.message.data(), (int) e.message.length(), e.timeStamp };
 }
 
 //==============================================================================
@@ -150,4 +157,4 @@ static void copyIfNotAliased (DestBuffer&& dest, const SourceBuffer& source)
 
 }
 
-} // namespace tracktion_graph
+}} // namespace tracktion

@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 static constexpr int maxRackAudioChans = 64;
@@ -629,27 +629,28 @@ bool RackType::isConnectionLegal (EditItemID source, int sourcePin,
     return ! arePluginsConnectedIndirectly (dest, source);
 }
 
-void RackType::addConnection (EditItemID srcId, int sourcePin,
+bool RackType::addConnection (EditItemID srcId, int sourcePin,
                               EditItemID dstId, int destPin)
 {
-    if (isConnectionLegal (srcId, sourcePin, dstId, destPin))
-    {
-        for (auto rc : connectionList->objects)
-            if (rc->destID == dstId && rc->destPin == destPin
-                  && rc->sourceID == srcId && rc->sourcePin == sourcePin)
-                return;
+    if (! isConnectionLegal (srcId, sourcePin, dstId, destPin))
+        return false;
 
-        auto v = createValueTree (IDs::CONNECTION,
-                                  IDs::src, srcId,
-                                  IDs::dst, dstId,
-                                  IDs::srcPin, sourcePin,
-                                  IDs::dstPin, destPin);
+    for (auto rc : connectionList->objects)
+        if (rc->destID == dstId && rc->destPin == destPin
+              && rc->sourceID == srcId && rc->sourcePin == sourcePin)
+            return false;
 
-        state.addChild (v, -1, getUndoManager());
-    }
+    auto v = createValueTree (IDs::CONNECTION,
+                              IDs::src, srcId,
+                              IDs::dst, dstId,
+                              IDs::srcPin, sourcePin,
+                              IDs::dstPin, destPin);
+
+    state.addChild (v, -1, getUndoManager());
+    return true;
 }
 
-void RackType::removeConnection (EditItemID srcId, int sourcePin,
+bool RackType::removeConnection (EditItemID srcId, int sourcePin,
                                  EditItemID dstId, int destPin)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
@@ -662,10 +663,12 @@ void RackType::removeConnection (EditItemID srcId, int sourcePin,
                  && rc->destPin == destPin && rc->sourcePin == sourcePin)
             {
                 state.removeChild (rc->state, getUndoManager());
-                break;
+                return true;
             }
         }
     }
+
+    return false;
 }
 
 void RackType::checkConnections()
@@ -1057,7 +1060,7 @@ void RackType::deregisterInstance (RackInstance* instance)
     countInstancesInEdit();
 }
 
-void RackType::updateAutomatableParamPositions (double time)
+void RackType::updateAutomatableParamPositions (TimePosition time)
 {
     for (auto f : getPlugins())
         f->updateAutomatableParamPosition (time);
@@ -1435,4 +1438,4 @@ RackType::WindowState::WindowState (RackType& r, juce::ValueTree windowStateTree
     : PluginWindowState (r.edit), rack (r), state (std::move (windowStateTree))
 {}
 
-}
+}} // namespace tracktion { inline namespace engine

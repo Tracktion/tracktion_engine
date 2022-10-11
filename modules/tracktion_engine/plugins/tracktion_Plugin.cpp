@@ -8,14 +8,14 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 PluginRenderContext::PluginRenderContext (juce::AudioBuffer<float>* buffer,
                                           const juce::AudioChannelSet& bufferChannels,
                                           int bufferStart, int bufferSize,
                                           MidiMessageArray* midiBuffer, double midiOffset,
-                                          double editStartTime, bool playing, bool scrubbing, bool rendering,
+                                          TimePosition editStartTime, bool playing, bool scrubbing, bool rendering,
                                           bool shouldAllowBypassedProcessing) noexcept
     : destBuffer (buffer), destBufferChannels (bufferChannels),
       bufferStartSample (bufferStart), bufferNumSamples (bufferSize),
@@ -523,7 +523,6 @@ void Plugin::deleteFromParent()
 
 Track* Plugin::getOwnerTrack() const
 {
-    jassert (getReferenceCount() > 0);
     return getTrackContainingPlugin (edit, this);
 }
 
@@ -670,7 +669,7 @@ void Plugin::applyToBufferWithAutomation (const PluginRenderContext& pc)
             SCOPED_REALTIME_CHECK
             auto& tc = edit.getTransport();
             updateParameterStreams (tc.isPlayContextActive() && ! pc.isRendering
-                                        ? tc.getCurrentPosition()
+                                        ? tc.getPosition()
                                         : pc.editTime);
             applyToBuffer (pc);
         }
@@ -927,4 +926,4 @@ void Plugin::flushPluginStateToValueTree()
     }
 }
 
-}
+}} // namespace tracktion { inline namespace engine

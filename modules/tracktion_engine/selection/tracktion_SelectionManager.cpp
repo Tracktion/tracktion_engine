@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 struct SelectableUpdateTimer  : public juce::AsyncUpdater,
@@ -721,4 +721,4 @@ std::pair<Selectable*, SelectableClass*> SelectableList::getSelectableAndClass (
     return std::pair<Selectable*, SelectableClass*> (items[index], getSelectableClass (index));
 }
 
-}
+}} // namespace tracktion { inline namespace engine

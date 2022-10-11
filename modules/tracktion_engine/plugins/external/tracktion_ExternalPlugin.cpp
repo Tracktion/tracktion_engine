@@ -8,11 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#ifndef TRACKTION_FORCE_HEADLESS
-  #define TRACKTION_FORCE_HEADLESS 0
-#endif
-
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 static juce::String getDeprecatedPluginDescSuffix (const juce::PluginDescription& d)
@@ -198,10 +194,9 @@ struct AsyncPluginDeleter  : private juce::Timer,
         CRASH_TRACER_PLUGIN (plugins.getLast()->getName().toUTF8());
 
         const juce::ScopedValueSetter<bool> setter (recursive, true, false);
-#if !TRACKTION_FORCE_HEADLESS
+
         juce::Component modal;
         modal.enterModalState (false);
-#endif
 
         plugins.removeLast();
     }
@@ -222,10 +217,9 @@ void cleanUpDanglingPlugins()
     {
         for (int count = 400; --count > 0 && d->releaseNextDanglingPlugin();)
         {
-#if !TRACKTION_FORCE_HEADLESS
             juce::Component modal;
             modal.enterModalState (false);
-#endif
+
             juce::MessageManager::getInstance()->runDispatchLoopUntil (10);
         }
     }
@@ -243,7 +237,7 @@ struct ExtraVSTCallbacks  : public juce::VSTPluginFormat::ExtraFunctions
     juce::int64 getTempoAt (juce::int64 samplePos) override
     {
         auto sampleRate = edit.engine.getDeviceManager().getSampleRate();
-        return (juce::int64) (10000.0 * edit.tempoSequence.getTempoAt (samplePos / sampleRate).getBpm());
+        return (juce::int64) (10000.0 * edit.tempoSequence.getTempoAt (TimePosition::fromSamples (samplePos, sampleRate)).getBpm());
     }
 
     // returns 0: not supported, 1: off, 2:read, 3:write, 4:read/write
@@ -271,9 +265,6 @@ public:
     PluginPlayHead (ExternalPlugin& p)
         : plugin (p)
     {
-        currentPos = std::make_unique<TempoSequencePosition> (plugin.edit.tempoSequence);
-        loopStart  = std::make_unique<TempoSequencePosition> (plugin.edit.tempoSequence);
-        loopEnd    = std::make_unique<TempoSequencePosition> (plugin.edit.tempoSequence);
     }
 
     /** @warning Because some idiotic plugins call getCurrentPosition on the message thread, we can't keep a
@@ -286,60 +277,56 @@ public:
         {
             time        = rc->editTime;
             isPlaying   = rc->isPlaying;
+
+            const auto loopTimeRange = plugin.edit.getTransport().getLoopRange();
+            loopStart.set (loopTimeRange.getStart());
+            loopEnd.set (loopTimeRange.getEnd());
+            currentPos.set (time);
         }
         else
         {
-            time        = 0.0;
+            time        = TimePosition();
             isPlaying   = false;
         }
     }
 
-    bool getCurrentPosition (CurrentPositionInfo& result) override
+    juce::Optional<PositionInfo> getPosition() const override
     {
-        zerostruct (result);
-        result.frameRate = getFrameRate();
+        PositionInfo result;
 
-        if (currentPos == nullptr)
-            return false;
+        result.setFrameRate (getFrameRate());
 
         auto& transport = plugin.edit.getTransport();
-        double localTime = time;
+        auto localTime = time.load();
 
-        result.isPlaying        = isPlaying;
-        result.isRecording      = transport.isRecording();
-        result.editOriginTime   = transport.getTimeWhenStarted();
-        result.isLooping        = transport.looping;
+        result.setIsPlaying (isPlaying);
+        result.setIsRecording (transport.isRecording());
+        result.setEditOriginTime (transport.getTimeWhenStarted().inSeconds());
+        result.setIsLooping (transport.looping);
 
-        if (result.isLooping)
-        {
-            const auto loopTimes = transport.getLoopRange();
-            loopStart->setTime (loopTimes.start);
-            result.ppqLoopStart = loopStart->getPPQTime();
+        if (transport.looping)
+            result.setLoopPoints (juce::AudioPlayHead::LoopPoints ({ loopStart.getPPQTime(), loopEnd.getPPQTime() }));
 
-            loopEnd->setTime (loopTimes.end);
-            result.ppqLoopEnd = loopEnd->getPPQTime();
-        }
+        result.setTimeInSeconds (localTime.inSeconds());
+        result.setTimeInSamples (toSamples (localTime, plugin.sampleRate));
 
-        result.timeInSamples    = (int64_t) (localTime * plugin.sampleRate);
-        result.timeInSeconds    = localTime;
+        const auto timeSig = currentPos.getTimeSignature();
+        result.setBpm (currentPos.getTempo());
+        result.setTimeSignature (juce::AudioPlayHead::TimeSignature ({ timeSig.numerator, timeSig.denominator }));
 
-        currentPos->setTime (localTime);
-        auto& tempo = currentPos->getCurrentTempo();
-        result.bpm                  = tempo.bpm;
-        result.timeSigNumerator     = tempo.numerator;
-        result.timeSigDenominator   = tempo.denominator;
+        const auto ppqPositionOfLastBarStart = currentPos.getPPQTimeOfBarStart();
+        result.setPpqPositionOfLastBarStart (ppqPositionOfLastBarStart);
+        result.setPpqPosition (std::max (ppqPositionOfLastBarStart, currentPos.getPPQTime()));
 
-        result.ppqPositionOfLastBarStart = currentPos->getPPQTimeOfBarStart();
-        result.ppqPosition = std::max (result.ppqPositionOfLastBarStart,
-                                       currentPos->getPPQTime());
-
-        return true;
+        return result;
     }
 
 private:
     ExternalPlugin& plugin;
-    std::unique_ptr<TempoSequencePosition> currentPos, loopStart, loopEnd;
-    std::atomic<double> time { 0 };
+    tempo::Sequence::Position currentPos { createPosition (plugin.edit.tempoSequence) };
+    tempo::Sequence::Position loopStart { createPosition (plugin.edit.tempoSequence) };
+    tempo::Sequence::Position loopEnd { createPosition (plugin.edit.tempoSequence) };
+    std::atomic<TimePosition> time { TimePosition() };
     std::atomic<bool> isPlaying { false };
 
     AudioPlayHead::FrameRateType getFrameRate() const
@@ -1835,4 +1822,4 @@ float PluginWetDryAutomatableParam::stringToValue (const juce::String& s)
     return juce::Decibels::decibelsToGain (dbStringToDb (s));
 }
 
-}
+}} // namespace tracktion { inline namespace engine

@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 /** */
@@ -30,8 +30,8 @@ public:
     CollectionClip* getCollectionClip (Clip*) const;
     int getNumCollectionClips() const noexcept;
     int indexOfCollectionClip (CollectionClip*) const;
-    int getIndexOfNextCollectionClipAt (double time);
-    CollectionClip* getNextCollectionClipAt (double time);
+    int getIndexOfNextCollectionClipAt (TimePosition);
+    CollectionClip* getNextCollectionClipAt (TimePosition);
     bool contains (CollectionClip*) const;
     void addCollectionClip (CollectionClip*);
     void removeCollectionClip (CollectionClip*);
@@ -40,16 +40,16 @@ public:
     int getNumTrackItems() const override;
     TrackItem* getTrackItem (int idx) const override;
     int indexOfTrackItem (TrackItem*) const override;
-    int getIndexOfNextTrackItemAt (double time) override;
-    TrackItem* getNextTrackItemAt (double time) override;
+    int getIndexOfNextTrackItemAt (TimePosition) override;
+    TrackItem* getNextTrackItemAt (TimePosition) override;
 
     /** inserts space and moves everything up */
-    void insertSpaceIntoTrack (double time, double amountOfSpace) override;
+    void insertSpaceIntoTrack (TimePosition, TimeDuration) override;
 
     //==============================================================================
-    double getLength() const;
-    double getLengthIncludingInputTracks() const;
-    EditTimeRange getTotalRange() const;
+    TimeDuration getLength() const;
+    TimeDuration getLengthIncludingInputTracks() const;
+    TimeRange getTotalRange() const;
 
     //==============================================================================
     bool addClip (const Clip::Ptr& clip);
@@ -62,8 +62,8 @@ public:
                                bool deleteExistingClips,
                                bool allowSpottingAdjustment);
 
-    Clip* insertNewClip (TrackItem::Type, EditTimeRange position, SelectionManager* selectionManagerToSelectWith);
-    Clip* insertNewClip (TrackItem::Type, const juce::String& name, EditTimeRange position, SelectionManager* selectionManagerToSelectWith);
+    Clip* insertNewClip (TrackItem::Type, TimeRange position, SelectionManager* selectionManagerToSelectWith);
+    Clip* insertNewClip (TrackItem::Type, const juce::String& name, TimeRange position, SelectionManager* selectionManagerToSelectWith);
     Clip* insertNewClip (TrackItem::Type, const juce::String& name, ClipPosition position, SelectionManager* selectionManagerToSelectWith);
 
     juce::ReferenceCountedObjectPtr<WaveAudioClip> insertWaveClip (const juce::String& name, const juce::File& sourceFile,
@@ -72,26 +72,26 @@ public:
     juce::ReferenceCountedObjectPtr<WaveAudioClip> insertWaveClip (const juce::String& name, ProjectItemID sourceID,
                                                                    ClipPosition position, bool deleteExistingClips);
 
-    juce::ReferenceCountedObjectPtr<MidiClip> insertMIDIClip (EditTimeRange position,
+    juce::ReferenceCountedObjectPtr<MidiClip> insertMIDIClip (TimeRange position,
                                                               SelectionManager* selectionManagerToSelectWith);
 
-    juce::ReferenceCountedObjectPtr<MidiClip> insertMIDIClip (const juce::String& name, EditTimeRange position,
+    juce::ReferenceCountedObjectPtr<MidiClip> insertMIDIClip (const juce::String& name, TimeRange position,
                                                               SelectionManager* selectionManagerToSelectWith);
 
-    juce::ReferenceCountedObjectPtr<EditClip> insertEditClip (EditTimeRange position, ProjectItemID sourceID);
+    juce::ReferenceCountedObjectPtr<EditClip> insertEditClip (TimeRange position, ProjectItemID sourceID);
 
-    void deleteRegion (EditTimeRange range, SelectionManager*);
-    void deleteRegionOfClip (Clip::Ptr, EditTimeRange range, SelectionManager*);
+    void deleteRegion (TimeRange, SelectionManager*);
+    void deleteRegionOfClip (Clip::Ptr, TimeRange, SelectionManager*);
 
     /** breaks a clip into 2 bits */
-    Clip* splitClip (Clip&, double time);
+    Clip* splitClip (Clip&, TimePosition);
 
     /** split all clips at this time */
-    void splitAt (double time);
+    void splitAt (TimePosition);
 
     /** finds the next cut point */
-    double getNextTimeOfInterest (double afterThisTime);
-    double getPreviousTimeOfInterest (double beforeThisTime);
+    TimePosition getNextTimeOfInterest (TimePosition afterThisTime);
+    TimePosition getPreviousTimeOfInterest (TimePosition beforeThisTime);
 
     bool containsPlugin (const Plugin*) const override;
     Plugin::Array getAllPlugins() const override;
@@ -103,7 +103,7 @@ public:
 protected:
     friend class Clip;
 
-    juce::Array<double> findAllTimesOfInterest();
+    juce::Array<TimePosition> findAllTimesOfInterest();
 
     struct ClipList;
     friend struct ClipList;
@@ -121,4 +121,4 @@ protected:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ClipTrack)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

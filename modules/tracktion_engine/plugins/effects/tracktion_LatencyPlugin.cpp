@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 //==============================================================================
 //==============================================================================
@@ -181,7 +181,7 @@ void LatencyPlugin::applyToBuffer (const PluginRenderContext& rc)
     {
         const int numChannels = std::min (rc.destBuffer->getNumChannels(),
                                           juce::numElementsInArray (delayCompensator));
-        float** samples = rc.destBuffer->getArrayOfWritePointers();
+        float* const* samples = rc.destBuffer->getArrayOfWritePointers();
 
         for (int i = 0; i < numChannels; ++i)
         {
@@ -208,4 +208,4 @@ void LatencyPlugin::valueTreePropertyChanged (juce::ValueTree& v, const juce::Id
     Plugin::valueTreePropertyChanged (v, i);
 }
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

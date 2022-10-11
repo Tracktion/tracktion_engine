@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 #if TRACKTION_UNIT_TESTS
@@ -46,18 +46,18 @@ public:
 
                 for (auto t : { track1, track2 })
                 {
-                    auto clip = t->insertWaveClip ("sin", af.getFile(), {{ 0.0, af.getLength() }}, false);
-                    expectEquals (clip->getPosition().getStart(), 0.0);
-                    expectEquals (clip->getPosition().getEnd(), 1.0);
+                    auto clip = t->insertWaveClip ("sin", af.getFile(), {{ TimePosition(), TimePosition::fromSeconds (af.getLength()) }}, false);
+                    expectEquals (clip->getPosition().getStart(), TimePosition());
+                    expectEquals (clip->getPosition().getEnd(), TimePosition::fromSeconds (1.0));
                 }
             }
 
-            expectPeak (*edit, { 0.0, 1.0 }, { track1, track2 }, 2.0f);
+            expectPeak (*edit, { 0.0s, TimePosition (1.0s) }, { track1, track2 }, 2.0f);
 
             // Set end to 0.5s for volume off
-            track1->getClips()[0]->setPosition ({{ 0.0, 0.5 }});
-            expectPeak (*edit, { 0.0, 0.5 }, { track1, track2 }, 2.0f);
-            expectPeak (*edit, { 0.5, 1.0 }, { track1, track2 }, 1.0f);
+            track1->getClips()[0]->setPosition ({{ TimePosition(), TimePosition::fromSeconds (0.5) }});
+            expectPeak (*edit, { 0.0s, TimePosition (0.5s) }, { track1, track2 }, 2.0f);
+            expectPeak (*edit, { 0.5s, TimePosition (1.0s) }, { track1, track2 }, 1.0f);
 
             engine.getAudioFileManager().releaseAllFiles();
             edit->getTempDirectory (false).deleteRecursively();
@@ -78,20 +78,20 @@ public:
 
                 for (auto t : { track1 })
                 {
-                    auto clip = t->insertWaveClip ("sin", af.getFile(), {{ 0.0, af.getLength() }}, false);
-                    expectEquals (clip->getPosition().getStart(), 0.0);
-                    expectEquals (clip->getPosition().getEnd(), 1.0);
+                    auto clip = t->insertWaveClip ("sin", af.getFile(), {{ TimePosition(), TimePosition::fromSeconds (af.getLength()) }}, false);
+                    expectEquals (clip->getPosition().getStart(), TimePosition());
+                    expectEquals (clip->getPosition().getEnd(), TimePosition::fromSeconds (1.0));
                 }
             }
 
-            expectPeak (*edit, { 0.0, 1.0 }, { track1 }, 1.0f);
+            expectPeak (*edit, { 0.0s, TimePosition (1.0s) }, { track1 }, 1.0f);
 
             engine.getAudioFileManager().releaseAllFiles();
             edit->getTempDirectory (false).deleteRecursively();
         }
     }
 
-    void expectPeak (Edit& edit, EditTimeRange tr, juce::Array<Track*> tracks, float expectedPeak)
+    void expectPeak (Edit& edit, TimeRange tr, juce::Array<Track*> tracks, float expectedPeak)
     {
         auto blockSize = edit.engine.getDeviceManager().getBlockSize();
         auto stats = logStats (Renderer::measureStatistics ("PDC Tests", edit, tr, getTracksMask (tracks), blockSize));
@@ -170,6 +170,96 @@ public:
 
 static PDCTests pdcTests;
 
+
+//==============================================================================
+//==============================================================================
+class ModifiedParameterValuesTests  : public juce::UnitTest
+{
+public:
+    ModifiedParameterValuesTests()
+        : juce::UnitTest ("Modified Parameter Values", "tracktion_engine")
+    {
+    }
+
+    void runTest() override
+    {
+        auto& engine = *Engine::getEngines()[0];
+
+        const juce::TemporaryFile tempFile (".tracktionedit");
+        const auto editFile = tempFile.getFile();
+
+        const float macroParameterValue = 0.3f;
+        const float modifierValue = 0.5f;
+        const float modifierOffset = 0.2f;
+
+        // 1. create a new edit and add rack with a macro parameter
+        {
+            editFile.deleteFile();
+
+            auto edit = createEmptyEdit (engine, editFile);
+            auto rackType = edit->getRackList().addNewRack();
+            auto volumePlugin = edit->getPluginCache().createNewPlugin (VolumeAndPanPlugin::xmlTypeName, {});
+
+            // Add plugin to rack
+            rackType->addPlugin (volumePlugin, {}, true);
+
+            // Add macro parameter
+            const auto macroParameter = rackType->macroParameterList.createMacroParameter();
+            macroParameter->setNormalisedParameter (macroParameterValue, juce::NotificationType::sendNotification);
+
+            auto volumeAndPan = dynamic_cast<VolumeAndPanPlugin*> (volumePlugin.get());
+            auto volParam = volumeAndPan->volParam;
+            volParam->setNormalisedParameter (0.0f, juce::NotificationType::sendNotification);
+            volParam->addModifier (*macroParameter, modifierValue, modifierOffset, 0.5f);
+
+            // Run the dispatch loop so the ValueTree properties attached to the parameter are updated. (Otherwise the assertions below will fail)
+            // This happens implicitly in the real application.
+            juce::MessageManager::getInstance()->runDispatchLoopUntil (1000);
+
+            expectWithinAbsoluteError (volParam->getCurrentValue(),
+                                       0.35f,
+                                       0.001f);
+
+            expectWithinAbsoluteError (volParam->getCurrentBaseValue(),
+                                       volParam->valueRange.convertFrom0to1 (0.0f),
+                                       0.001f);
+            expectWithinAbsoluteError (volParam->getCurrentValue(),
+                                       volParam->valueRange.convertFrom0to1 (modifierOffset + modifierValue * macroParameterValue),
+                                       0.001f);
+            expectWithinAbsoluteError (volParam->getCurrentModifierValue(),
+                                       volParam->valueRange.convertFrom0to1 (modifierOffset + modifierValue * macroParameterValue) - volParam->getCurrentBaseValue(),
+                                       0.001f);
+
+            // volume="0.35" is saved in the plugin state xml
+            EditFileOperations (*edit).save (true, true, false);
+        }
+
+        // 2. Load previously saved edit and check the parameter value
+        {
+            auto edit = loadEditFromFile (engine, editFile);
+            auto rackType = edit->getRackList().getRackType (0);
+            auto volumeAndPan = dynamic_cast<VolumeAndPanPlugin*> (rackType->getPlugins().getFirst());
+            auto volParam = volumeAndPan->volParam;
+
+            expectWithinAbsoluteError (volParam->getCurrentBaseValue(),
+                                       volParam->valueRange.convertFrom0to1 (0.0f),
+                                       0.001f);
+            expectWithinAbsoluteError (volParam->getCurrentValue(),
+                                       volParam->valueRange.convertFrom0to1(modifierOffset + modifierValue * macroParameterValue),
+                                       0.001f);
+            expectWithinAbsoluteError (volParam->getCurrentModifierValue(),
+                                       volParam->valueRange.convertFrom0to1 (modifierOffset + modifierValue * macroParameterValue) - volParam->getCurrentBaseValue(),
+                                       0.001f);
+
+            expectWithinAbsoluteError (volParam->getCurrentValue(), 0.35f, 0.001f);
+        }
+    }
+
+private:
+};
+
+static ModifiedParameterValuesTests modifiedParameterValuesTests;
+
 #endif
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

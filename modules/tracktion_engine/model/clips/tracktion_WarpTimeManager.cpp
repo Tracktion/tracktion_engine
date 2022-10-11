@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 inline HashCode hashDouble (double d) noexcept
@@ -19,7 +19,7 @@ inline HashCode hashDouble (double d) noexcept
     return v.asInt;
 }
 
-HashCode WarpMarker::getHash() const noexcept    { return hashDouble (sourceTime) ^ hashDouble (warpTime); }
+HashCode WarpMarker::getHash() const noexcept    { return hashDouble (sourceTime.inSeconds()) ^ hashDouble (warpTime.inSeconds()); }
 
 template <typename FloatingPointType>
 struct Differentiator
@@ -62,7 +62,7 @@ struct TransientDetectionJob  : public RenderManager::Job
         return file == f && config.sensitivity == c.sensitivity;
     }
 
-    juce::Array<double> getTimes() const      { return transientTimes; }
+    juce::Array<TimePosition> getTimes() const      { return transientTimes; }
 
 protected:
     bool setUpRender() override        { return reader != nullptr && totalNumSamples > 0; }
@@ -73,13 +73,13 @@ protected:
         {
             auto trimTransients = [this]() -> bool
             {
-                const double minTime = 0.1;
-                double lastTime = transientTimes.getLast();
+                const auto minTime = 0.1s;
+                auto lastTime = transientTimes.getLast();
                 const int initialSize = transientTimes.size();
 
                 for (int i = transientTimes.size() - 1; --i >= 0;)
                 {
-                    const double t = transientTimes.getUnchecked (i);
+                    const auto t = transientTimes.getUnchecked (i);
 
                     if ((lastTime - t) < minTime)
                         transientTimes.remove (i);
@@ -141,7 +141,7 @@ private:
 
     AudioFileUtils::EnvelopeFollower envelopeFollower[3];
     Differentiator<float> differentiator;
-    juce::Array<double> transientTimes;
+    juce::Array<TimePosition> transientTimes;
 
     juce::Range<float> fileMinMax;
     float normaliseScale = -1.0f;
@@ -216,9 +216,9 @@ private:
         }
     }
 
-    double sampleToSeconds (SampleCount sample) const
+    TimePosition sampleToSeconds (SampleCount sample) const
     {
-        return sampleRate > 0.0 ? sample / sampleRate : 0.0;
+        return TimePosition::fromSeconds (sampleRate > 0.0 ? sample / sampleRate : 0.0);
     }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TransientDetectionJob)
@@ -232,12 +232,12 @@ WarpTimeManager::WarpTimeManager (AudioClipBase& c)
     auto markersTree = state.getOrCreateChildWithName (IDs::WARPMARKERS, &edit.getUndoManager());
     markers.reset (new WarpMarkerList (markersTree));
 
-    const double clipLen = AudioFile (c.edit.engine, clip->getOriginalFile()).getLength();
+    const auto clipLen = toPosition (TimeDuration::fromSeconds (AudioFile (c.edit.engine, clip->getOriginalFile()).getLength()));
 
     // If this is the first time that we've built the Manager
     if (markers->isEmpty())
     {
-        insertMarker (WarpMarker (0, 0));
+        insertMarker (WarpMarker());
         insertMarker (WarpMarker (clipLen, clipLen));
         setWarpEndMarkerTime (clipLen);
     }
@@ -275,11 +275,11 @@ void WarpTimeManager::setSourceFile (const AudioFile& af)
 
     if (markers->isEmpty())
     {
-        const double clipLen = sourceFile.getLength();
+        const auto clipLen = toPosition (TimeDuration::fromSeconds (sourceFile.getLength()));
 
         if (sourceFile.isValid())
         {
-            insertMarker (WarpMarker (0, 0));
+            insertMarker (WarpMarker());
             insertMarker (WarpMarker (clipLen, clipLen));
             setWarpEndMarkerTime (clipLen);
 
@@ -293,9 +293,9 @@ AudioFile WarpTimeManager::getSourceFile() const
     return clip != nullptr ? AudioFile (clip->edit.engine, clip->getOriginalFile()) : sourceFile;
 }
 
-double WarpTimeManager::getSourceLength() const
+TimeDuration WarpTimeManager::getSourceLength() const
 {
-    return getSourceFile().getLength();
+    return TimeDuration::fromSeconds (getSourceFile().getLength());
 }
 
 int WarpTimeManager::insertMarker (WarpMarker marker)
@@ -306,8 +306,8 @@ int WarpTimeManager::insertMarker (WarpMarker marker)
         index++;
 
     auto v = createValueTree (IDs::WARPMARKER,
-                              IDs::sourceTime, marker.sourceTime,
-                              IDs::warpTime, marker.warpTime);
+                              IDs::sourceTime, marker.sourceTime.inSeconds(),
+                              IDs::warpTime, marker.warpTime.inSeconds());
 
     markers->state.addChild (v, index, getUndoManager());
 
@@ -325,14 +325,14 @@ void WarpTimeManager::removeMarker (int index)
 void WarpTimeManager::removeAllMarkers()
 {
     markers->state.removeAllChildren (getUndoManager());
-    const double clipLen = getSourceLength();
+    const auto clipLen = toPosition (getSourceLength());
 
-    insertMarker (WarpMarker (0, 0));
+    insertMarker (WarpMarker());
     insertMarker (WarpMarker (clipLen, clipLen));
     setWarpEndMarkerTime (clipLen);
 }
 
-double WarpTimeManager::moveMarker (int index, double newWarpTime)
+TimePosition WarpTimeManager::moveMarker (int index, TimePosition newWarpTime)
 {
     CRASH_TRACER
     auto m = markers->state.getChild (index);
@@ -344,45 +344,45 @@ double WarpTimeManager::moveMarker (int index, double newWarpTime)
     {
         WarpMarker* a = markers->objects.getUnchecked (index - 1);
         WarpMarker* b = markers->objects.getUnchecked (index);
-        double srcLen = b->sourceTime - a->sourceTime;
+        auto srcLen = b->sourceTime - a->sourceTime;
         double stretchRatio = (newWarpTime - a->warpTime) / srcLen;
 
         if (stretchRatio < 0.10001)
-            newWarpTime = 0.10001 * srcLen + a->warpTime;
+            newWarpTime = a->warpTime + srcLen * 0.10001;
         else if (stretchRatio > 19.9999)
-            newWarpTime = 19.9999 * srcLen + a->warpTime;
+            newWarpTime = a->warpTime + srcLen * 19.9999;
     }
 
     if (index < markers->objects.size() - 1)
     {
         WarpMarker* a = markers->objects.getUnchecked (index);
         WarpMarker* b = markers->objects.getUnchecked (index + 1);
-        double srcLen = b->sourceTime - a->sourceTime;
+        auto srcLen = b->sourceTime - a->sourceTime;
         double stretchRatio = (b->warpTime - newWarpTime) / srcLen;
 
         if (stretchRatio < 0.10001)
-            newWarpTime = b->warpTime - 0.10001 * srcLen;
+            newWarpTime = b->warpTime - srcLen * 0.10001;
         else if (stretchRatio > 19.9999)
-            newWarpTime = b->warpTime - 19.9999 * srcLen;
+            newWarpTime = b->warpTime - srcLen * 19.9999;
     }
 
     if (endMarkersLimited && (index == 0 || (index == markers->objects.size() - 1)))
-        newWarpTime = juce::jlimit (0.0, getSourceLength(), newWarpTime);
+        newWarpTime = juce::jlimit (TimePosition(), toPosition (getSourceLength()), newWarpTime);
 
-    m.setProperty (IDs::warpTime, newWarpTime, getUndoManager());
+    m.setProperty (IDs::warpTime, newWarpTime.inSeconds(), getUndoManager());
 
     return newWarpTime;
 }
 
-void WarpTimeManager::setWarpEndMarkerTime (double endTime)
+void WarpTimeManager::setWarpEndMarkerTime (TimePosition endTime)
 {
-    if (endTime > 0.0)
-        state.setProperty (IDs::warpEndMarkerTime, endTime, &edit.getUndoManager());
+    if (endTime > 0.0s)
+        state.setProperty (IDs::warpEndMarkerTime, endTime.inSeconds(), &edit.getUndoManager());
 }
 
-juce::Array<EditTimeRange> WarpTimeManager::getWarpTimeRegions (const EditTimeRange overallTimeRegion) const
+juce::Array<TimeRange> WarpTimeManager::getWarpTimeRegions (const TimeRange overallTimeRegion) const
 {
-    juce::Array<EditTimeRange> visibleWarpRegions;
+    juce::Array<TimeRange> visibleWarpRegions;
     auto& markersArray = markers->objects;
 
     if (markersArray.isEmpty())
@@ -392,41 +392,38 @@ juce::Array<EditTimeRange> WarpTimeManager::getWarpTimeRegions (const EditTimeRa
     }
 
     auto timeRegion = overallTimeRegion;
-    double overallTime = 0.0;
+    TimeDuration overallTime;
     auto warpedClipLength = getWarpedEnd();
 
     // trim this region to the end of the clip content.
     if (timeRegion.getEnd() > warpedClipLength)
-        timeRegion.end = warpedClipLength;
+        timeRegion = timeRegion.withEnd (warpedClipLength);
 
     //set up the warp regions
-    EditTimeRange warpRegion (overallTimeRegion.getStart(), warpedClipLength);
+    TimeRange warpRegion (overallTimeRegion.getStart(), warpedClipLength);
 
     for (int markerIndex = 0; markerIndex <= markersArray.size(); markerIndex++)
     {
         if (markerIndex == markersArray.size()) // if we're on the last region
-            warpRegion.end = std::max (warpRegion.start, warpedClipLength);
+            warpRegion = warpRegion.withEnd (std::max (warpRegion.getStart(), warpedClipLength));
         else
-            warpRegion.end = std::max (warpRegion.start, markersArray.getUnchecked (markerIndex)->warpTime);
+            warpRegion = warpRegion.withEnd (std::max (warpRegion.getStart(), markersArray.getUnchecked (markerIndex)->warpTime));
 
         auto warpRegionConstrained = timeRegion.getIntersectionWith (warpRegion);
 
-        if (warpRegionConstrained.getLength() > 0) // don't add zero length regions
+        if (warpRegionConstrained.getLength() > 0s) // don't add zero length regions
         {
             visibleWarpRegions.add (warpRegionConstrained);
-            overallTime += warpRegionConstrained.getLength();
+            overallTime = overallTime + warpRegionConstrained.getLength();
         }
 
-        warpRegion.start = warpRegion.end;
+        warpRegion = warpRegion.withStart (warpRegion.getEnd());
     }
-
-    timeRegion.start = overallTimeRegion.start + overallTime;
-    timeRegion.end = overallTimeRegion.end;
 
     return visibleWarpRegions;
 }
 
-double WarpTimeManager::warpTimeToSourceTime (double warpTime) const
+TimePosition WarpTimeManager::warpTimeToSourceTime (TimePosition warpTime) const
 {
     auto& markersArray = markers->objects;
 
@@ -440,13 +437,13 @@ double WarpTimeManager::warpTimeToSourceTime (double warpTime) const
 
     if (warpTime <= first.warpTime) //below or on the 1st marker
     {
-        startMarker = WarpMarker (0, 0);
+        startMarker = {};
         endMarker = first;
     }
     else if (warpTime > last.warpTime) // after the last marker
     {
         startMarker = last;
-        auto sourceLen = clip->getSourceLength();
+        auto sourceLen = toPosition (clip->getSourceLength());
         endMarker = WarpMarker (sourceLen, sourceLen);
     }
     else
@@ -463,25 +460,25 @@ double WarpTimeManager::warpTimeToSourceTime (double warpTime) const
         endMarker = *markersArray.getUnchecked (index);
     }
 
-    const WarpMarker markerRanges (endMarker.sourceTime - startMarker.sourceTime,
-                                   endMarker.warpTime - startMarker.warpTime);
+    const WarpMarker markerRanges (toPosition (endMarker.sourceTime - startMarker.sourceTime),
+                                   toPosition (endMarker.warpTime - startMarker.warpTime));
 
-    double sourcePosition = 0.0;
+    TimePosition sourcePosition;
 
-    if (markerRanges.warpTime == 0.0)
+    if (markerRanges.warpTime == 0.0s)
     {
-        sourcePosition = 0.0;
+        sourcePosition = 0.0s;
     }
     else
     {
-        const double warpProportion = (warpTime - startMarker.warpTime) / markerRanges.warpTime;
-        sourcePosition = warpProportion * markerRanges.sourceTime + startMarker.sourceTime;
+        const double warpProportion = (warpTime - startMarker.warpTime) / toDuration (markerRanges.warpTime);
+        sourcePosition = (markerRanges.sourceTime * warpProportion) + toDuration (startMarker.sourceTime);
     }
 
     return sourcePosition;
 }
 
-double WarpTimeManager::sourceTimeToWarpTime (double sourceTime) const
+TimePosition WarpTimeManager::sourceTimeToWarpTime (TimePosition sourceTime) const
 {
     auto& markersArray = markers->objects;
 
@@ -501,28 +498,28 @@ double WarpTimeManager::sourceTimeToWarpTime (double sourceTime) const
                 break;
     }
 
-    EditTimeRange source (before == nullptr ? 0.0 : before->sourceTime,
-                          after == nullptr ? getSourceLength() : after->sourceTime);
+    TimeRange source (before == nullptr ? TimePosition() : before->sourceTime,
+                      after == nullptr ? toPosition (getSourceLength()) : after->sourceTime);
 
-    if (source.getLength() == 0.0)
+    if (source.getLength() == 0.0s)
         return sourceTime;
 
     auto prop = (sourceTime - source.getStart()) / source.getLength();
 
-    EditTimeRange warped (before == nullptr ? 0.0 : before->warpTime,
+    TimeRange warped (before == nullptr ? TimePosition() : before->warpTime,
                           after == nullptr ? getWarpedEnd() : after->warpTime);
 
-    return warped.getStart() + (prop * warped.getLength());
+    return warped.getStart() + (warped.getLength() * prop);
 }
 
-double WarpTimeManager::getWarpedStart() const
+TimePosition WarpTimeManager::getWarpedStart() const
 {
     jassert (markers->size() != 0);
 
     return markers->objects.getFirst()->warpTime;
 }
 
-double WarpTimeManager::getWarpedEnd() const
+TimePosition WarpTimeManager::getWarpedEnd() const
 {
     jassert (markers->size() != 0);
 
@@ -536,17 +533,17 @@ HashCode WarpTimeManager::getHash() const
     for (auto wm : markers->objects)
         h ^= wm->getHash();
 
-    h ^= hashDouble (getWarpEndMarkerTime());
+    h ^= hashDouble (getWarpEndMarkerTime().inSeconds());
 
     return h;
 }
 
-double WarpTimeManager::getWarpEndMarkerTime() const
+TimePosition WarpTimeManager::getWarpEndMarkerTime() const
 {
     if (isWarpEndMarkerEnabled())
-        return state.getProperty (IDs::warpEndMarkerTime, 0.0);
+        return TimePosition::fromSeconds (state.getProperty (IDs::warpEndMarkerTime, 0.0));
 
-    return getSourceLength();
+    return toPosition (getSourceLength());
 }
 
 void WarpTimeManager::editFinishedLoading()
@@ -610,4 +607,4 @@ void WarpTimeFactory::removeWarpTimeManager (WarpTimeManager& wtm)
     warpTimeManagers.removeAllInstancesOf (&wtm);
 }
 
-}
+}} // namespace tracktion { inline namespace engine

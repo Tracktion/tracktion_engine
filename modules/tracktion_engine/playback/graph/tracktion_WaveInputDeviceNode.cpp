@@ -9,7 +9,7 @@
 */
 
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 WaveInputDeviceNode::WaveInputDeviceNode (InputDeviceInstance& idi, WaveInputDevice& owner,
@@ -25,16 +25,16 @@ WaveInputDeviceNode::~WaveInputDeviceNode()
     instance.removeConsumer (this);
 }
 
-tracktion_graph::NodeProperties WaveInputDeviceNode::getNodeProperties()
+tracktion::graph::NodeProperties WaveInputDeviceNode::getNodeProperties()
 {
-    tracktion_graph::NodeProperties props;
+    tracktion::graph::NodeProperties props;
     props.hasAudio = true;
     props.numberOfChannels = destChannels.size();
 
     return props;
 }
 
-void WaveInputDeviceNode::prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo& info)
+void WaveInputDeviceNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
     auto numIncommingChannels = (waveInputDevice.isStereoPair()) ? 2u : 1u;
     audioFifo.setSize (numIncommingChannels, (uint32_t) info.blockSize * 8);
@@ -89,4 +89,4 @@ void WaveInputDeviceNode::acceptInputBuffer (choc::buffer::ChannelArrayView<floa
     audioFifo.write (newBlock);
 }
 
-}
+}} // namespace tracktion { inline namespace engine

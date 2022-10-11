@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 TrackMuteState::TrackMuteState (Track& t, bool muteForInputsWhenRecording, bool processMidiWhenMuted_)
@@ -80,27 +80,27 @@ size_t TrackMuteState::getItemID() const
 
 //==============================================================================
 //==============================================================================
-TrackMutingNode::TrackMutingNode (std::unique_ptr<TrackMuteState> muteState, std::unique_ptr<tracktion_graph::Node> inputNode,
+TrackMutingNode::TrackMutingNode (std::unique_ptr<TrackMuteState> muteState, std::unique_ptr<tracktion::graph::Node> inputNode,
                                   bool dontMuteIfTrackContentsShouldBeProcessed_)
     : trackMuteState (std::move (muteState)), input (std::move (inputNode)),
       dontMuteIfTrackContentsShouldBeProcessed (dontMuteIfTrackContentsShouldBeProcessed_)
 {
     assert (trackMuteState);
 
-    setOptimisations ({ tracktion_graph::ClearBuffers::no,
-                        tracktion_graph::AllocateAudioBuffer::yes });
+    setOptimisations ({ tracktion::graph::ClearBuffers::no,
+                        tracktion::graph::AllocateAudioBuffer::yes });
 }
 
 //==============================================================================
-tracktion_graph::NodeProperties TrackMutingNode::getNodeProperties()
+tracktion::graph::NodeProperties TrackMutingNode::getNodeProperties()
 {
     auto props = input->getNodeProperties();
-    tracktion_graph::hash_combine (props.nodeID, trackMuteState->getItemID());
+    hash_combine (props.nodeID, trackMuteState->getItemID());
 
     return props;
 }
 
-std::vector<tracktion_graph::Node*> TrackMutingNode::getDirectInputNodes()
+std::vector<tracktion::graph::Node*> TrackMutingNode::getDirectInputNodes()
 {
     return { input.get() };
 }
@@ -154,8 +154,8 @@ void TrackMutingNode::rampBlock (choc::buffer::ChannelArrayView<float> view, flo
     if (view.getNumChannels() == 0)
         return;
     
-    auto buffer = tracktion_graph::toAudioBuffer (view);
+    auto buffer = tracktion::graph::toAudioBuffer (view);
     buffer.applyGainRamp (0, buffer.getNumSamples(), start, end);
 }
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

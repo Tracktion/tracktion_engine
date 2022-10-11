@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 struct IndexedWord;
@@ -35,7 +35,7 @@ public:
 };
 
 //==============================================================================
-/** turns a keyword string into a search condition tree.. */
+/** Turns a keyword string into a search condition tree. */
 SearchOperation* createSearchForKeywords (const juce::String& keywords);
 
 //==============================================================================
@@ -54,4 +54,4 @@ protected:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SearchOperation)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

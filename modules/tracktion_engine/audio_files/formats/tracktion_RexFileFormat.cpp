@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 #if TRACKTION_ENABLE_REX
@@ -133,7 +133,7 @@ public:
         loadedOk = decompress (rexData.getData(), rexData.getSize());
     }
 
-    bool readSamples (int** destSamples, int numDestChannels, int startOffsetInDestBuffer,
+    bool readSamples (int* const* destSamples, int numDestChannels, int startOffsetInDestBuffer,
                       juce::int64 startSampleInFile, int numSamples) override
     {
         CRASH_TRACER
@@ -208,7 +208,7 @@ private:
 
             juce::AudioBuffer<float> sliceData (buffer.getNumChannels(), (int) slcInfo.fSampleLength);
 
-            if (! checkRexError (REX::REXRenderSlice (handle.handle, j, slcInfo.fSampleLength, sliceData.getArrayOfWritePointers())))
+            if (! checkRexError (REX::REXRenderSlice (handle.handle, j, slcInfo.fSampleLength, (float**)sliceData.getArrayOfWritePointers())))
                 return false;
 
             auto offset = (SampleCount) ((slcInfo.fPPQPos / 15360.0) / (info.fTempo / (1000.0 * 60.0)) * info.fSampleRate);
@@ -270,4 +270,5 @@ juce::String RexAudioFormat::getErrorLoadingDLL()
 
 #endif
 
-}
+
+}} // namespace tracktion { inline namespace engine

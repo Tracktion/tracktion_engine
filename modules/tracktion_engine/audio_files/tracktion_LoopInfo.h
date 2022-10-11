@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 /**
@@ -120,4 +120,4 @@ private:
     JUCE_LEAK_DETECTOR (LoopInfo)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

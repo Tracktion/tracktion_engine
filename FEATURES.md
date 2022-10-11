@@ -18,6 +18,7 @@ What Tracktion Engine doesn't provide is any kind of UI. You'll have to write co
     - WAV, AIFF, Flac, OGG, MP3, CAF and Rex file formats
     - Audio clips supporting the above file formats and loop start/end/offset
     - Time and pitch-stretching (provided via Elastique*, Rubber-band* or SoundTouch), conforming to dynamic tempo/key changes
+    - High quality sample rate conversion utilising libsamplerate
     - Clip time warping (Warp Time)
     - Speed ramp fade in/out
     - ACID and Apple Loop metadata
@@ -42,7 +43,8 @@ What Tracktion Engine doesn't provide is any kind of UI. You'll have to write co
     - MIDI pattern generation (bass, melody, chord and arp progressions)
     - MIDI input and output
     - Virtual MIDI inputs (combine multiple MIDI inputs)
-    - Sync to incoming MIDI clock and MTC
+    - Sync to incoming MIDI Time Code (MTC)
+    - Send outgoing MIDI Clock and MTC
     - MPE (exported from note-expression data)    
 - Plugins
     - Utility plugins: aux send/return, freeze point, inserts, level meter, ReWire, text, volume &pan

@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -142,7 +142,7 @@ public:
     /** Returns the start position in the file that the effect should apply to.
         In practice this is the loop start point.
     */
-    double getEffectsStartTime() const
+    TimePosition getEffectsStartTime() const
     {
         return getCachedClipProperties().effectsRange.getStart();
     }
@@ -150,7 +150,7 @@ public:
     /** Returns the length of the effect. This will be the effective length of the source file
         i.e. taking into account loop length and speed ratio.
     */
-    double getEffectsLength() const
+    TimeDuration getEffectsLength() const
     {
         return getCachedClipProperties().effectsRange.getLength();
     }
@@ -158,7 +158,7 @@ public:
     /** Returns the range of the file that the effect should apply to.
         In practice this is the loop start point and loop length.
     */
-    EditTimeRange getEffectsRange() const
+    TimeRange getEffectsRange() const
     {
         return getCachedClipProperties().effectsRange;
     }
@@ -266,16 +266,16 @@ private:
                 // need to find the tempo changes between the source start and  how long the result will be
                 auto info = AudioFile (c.edit.engine, c.getOriginalFile()).getInfo();
                 auto sourceTempo = c.getLoopInfo().getBpm (info);
-                speedRatio = c.edit.tempoSequence.getTempoAt (c.getPosition().time.start).getBpm() / sourceTempo;
+                speedRatio = c.edit.tempoSequence.getTempoAt (c.getPosition().time.getStart()).getBpm() / sourceTempo;
             }
 
             if (c.isLooping())
                 effectsRange = { c.getLoopStart(), c.getLoopStart() + c.getLoopLength() };
             else
-                effectsRange = { 0.0, c.getSourceLength() / speedRatio };
+                effectsRange = { TimePosition(), c.getSourceLength() / speedRatio };
         }
 
-        EditTimeRange effectsRange;
+        TimeRange effectsRange;
         double speedRatio = 1.0;
     };
 
@@ -374,12 +374,12 @@ struct FadeInOutEffect  : public ClipEffect
 {
     FadeInOutEffect (const juce::ValueTree&, ClipEffects&);
 
-    void setFadeIn (double);
-    void setFadeOut (double);
+    void setFadeIn (TimeDuration);
+    void setFadeOut (TimeDuration);
 
     juce::ReferenceCountedObjectPtr<ClipEffectRenderJob> createRenderJob (const AudioFile& sourceFile, double sourceLength) override;
 
-    juce::CachedValue<double> fadeIn, fadeOut;
+    juce::CachedValue<TimeDuration> fadeIn, fadeOut;
     juce::CachedValue<AudioFadeCurve::Type> fadeInType, fadeOutType;
 
 protected:
@@ -433,7 +433,8 @@ struct StepVolumeEffect  : public ClipEffect,
         JUCE_LEAK_DETECTOR (Pattern)
     };
 
-    juce::CachedValue<double> noteLength, crossfade;
+    juce::CachedValue<BeatDuration> noteLength;
+    juce::CachedValue<double> crossfade;
     juce::CachedValue<juce::String> pattern;
 
 protected:
@@ -607,4 +608,4 @@ struct InvertEffect  : public ClipEffect
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (InvertEffect)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

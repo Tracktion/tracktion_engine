@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 TimeSigSetting::TimeSigSetting (TempoSequence& ts, const juce::ValueTree& v)
@@ -68,9 +68,9 @@ ClipPosition TimeSigSetting::getPosition() const
     auto s = startTime;
 
     if (auto nextTimeSig = ownerSequence.getTimeSig (ownerSequence.indexOfTimeSig (this) + 1))
-        return { { s, nextTimeSig->startTime }, 0 };
+        return { { s, nextTimeSig->startTime }, TimeDuration() };
 
-    return { { s, s + 1.0 }, 0 };
+    return { { s, s + TimeDuration::fromSeconds (1.0) }, TimeDuration() };
 }
 
 juce::String TimeSigSetting::getName()
@@ -78,4 +78,4 @@ juce::String TimeSigSetting::getName()
     return getStringTimeSig();
 }
 
-}
+}} // namespace tracktion { inline namespace engine

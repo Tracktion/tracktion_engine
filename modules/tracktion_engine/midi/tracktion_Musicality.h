@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 class Chord
@@ -163,8 +163,8 @@ public:
     ~PatternGenerator() override;
 
     //==============================================================================
-    double getMinimumChordLength() const;
-    double getMaximumChordLength() const;
+    BeatDuration getMinimumChordLength() const;
+    BeatDuration getMaximumChordLength() const;
 
     void validateChordLengths();
 
@@ -182,7 +182,7 @@ public:
 
         juce::CachedValue<juce::String> chordName;  // Chord name is simplified, use getChordName() to get unsimplified
         juce::CachedValue<juce::String> pitches;    // A comma seperated list of pitches used for custom chords, otherwise empty
-        juce::CachedValue<double> lengthInBeats;
+        juce::CachedValue<BeatDuration> lengthInBeats;
         juce::CachedValue<int> octave, inversion;
 
         void setChordName (juce::String chord);
@@ -249,7 +249,8 @@ public:
     juce::CachedValue<Mode> mode;
     juce::CachedValue<Scale::ScaleType> scaleType;
     juce::CachedValue<bool> autoUpdate, arpUpDown, arpPlayRoot, allNotes, octaveUp, octaveDown, spread;
-    juce::CachedValue<float> arpPatternLength, melodyNoteLength, velocity, gate;
+    juce::CachedValue<float> arpPatternLength, velocity, gate;
+    juce::CachedValue<BeatDuration> melodyNoteLength;
     juce::CachedValue<juce::String> arpStyle;
     juce::CachedValue<int> scaleRoot, arpSteps, octave;
     juce::CachedValue<juce::int64> patternHash;
@@ -262,8 +263,8 @@ public:
 
     void generatePattern();
 
-    Scale getScaleAtBeat (double beat) const;
-    int getNoteAtBeat (double beat) const;
+    Scale getScaleAtBeat (BeatPosition) const;
+    int getNoteAtBeat (BeatPosition) const;
 
     bool getAutoUpdate();
     void setAutoUpdate (bool on);
@@ -271,7 +272,7 @@ public:
 
     void editFinishedLoading();
 
-    double getFlattenedChordProgression (juce::OwnedArray<ProgressionItem>& progression, bool globalTime = false);
+    BeatDuration getFlattenedChordProgression (juce::OwnedArray<ProgressionItem>& progression, bool globalTime = false);
 
 private:
     const int maxChords = 64;
@@ -280,11 +281,11 @@ private:
     std::unique_ptr<ProgressionList> progressionList;
 
     void valueTreeChanged() override {}
-    void valueTreePropertyChanged (juce::ValueTree& p, const juce::Identifier& c) override;
+    void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
 
-    ChordClip* getChordClipAt (double beat) const;
+    ChordClip* getChordClipAt (TimePosition) const;
 
-    MidiNote* addNote (MidiList& sequence, int pitch, double startBeat, double lengthInBeats,
+    MidiNote* addNote (MidiList& sequence, int pitch, BeatPosition startBeat, BeatDuration lengthInBeats,
                        int velocity, int colourIndex, juce::UndoManager*);
 
     void clearPattern();
@@ -324,29 +325,29 @@ struct KeyResult
 
 juce::Array<KeyResult> determineKeyOfNotes (const juce::Array<MidiNote*>& notes);
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine
 
 namespace juce
 {
     template <>
-    struct VariantConverter<tracktion_engine::Chord::ChordType>
+    struct VariantConverter<tracktion::engine::Chord::ChordType>
     {
-        static tracktion_engine::Chord::ChordType fromVar (const var& v)   { return (tracktion_engine::Chord::ChordType) static_cast<int> (v); }
-        static var toVar (tracktion_engine::Chord::ChordType v)            { return static_cast<int> (v); }
+        static tracktion::engine::Chord::ChordType fromVar (const var& v)   { return (tracktion::engine::Chord::ChordType) static_cast<int> (v); }
+        static var toVar (tracktion::engine::Chord::ChordType v)            { return static_cast<int> (v); }
     };
 
 
     template <>
-    struct VariantConverter<tracktion_engine::Scale::ScaleType>
+    struct VariantConverter<tracktion::engine::Scale::ScaleType>
     {
-        static tracktion_engine::Scale::ScaleType fromVar (const var& v)   { return (tracktion_engine::Scale::ScaleType) static_cast<int> (v); }
-        static var toVar (tracktion_engine::Scale::ScaleType v)            { return static_cast<int> (v); }
+        static tracktion::engine::Scale::ScaleType fromVar (const var& v)   { return (tracktion::engine::Scale::ScaleType) static_cast<int> (v); }
+        static var toVar (tracktion::engine::Scale::ScaleType v)            { return static_cast<int> (v); }
     };
 
     template <>
-    struct VariantConverter<tracktion_engine::PatternGenerator::Mode>
+    struct VariantConverter<tracktion::engine::PatternGenerator::Mode>
     {
-        static tracktion_engine::PatternGenerator::Mode fromVar (const var& v)   { return (tracktion_engine::PatternGenerator::Mode) static_cast<int> (v); }
-        static var toVar (tracktion_engine::PatternGenerator::Mode v)            { return static_cast<int> (v); }
+        static tracktion::engine::PatternGenerator::Mode fromVar (const var& v)   { return (tracktion::engine::PatternGenerator::Mode) static_cast<int> (v); }
+        static var toVar (tracktion::engine::PatternGenerator::Mode v)            { return static_cast<int> (v); }
     };
 }
