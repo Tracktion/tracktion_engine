@@ -24,7 +24,30 @@
       100% { transform: rotate(360deg); }
     }
   </style>
-  </head>
+</head>
+<script>
+  var startDate, endDate;
+
+  function updateStartEndDates()
+  {
+    const startDateValue = document.getElementById ("start_date").value;
+    const endDateValue = document.getElementById ("end_date").value;
+
+    if (startDateValue)
+    {
+      const startDateString = (new Date (startDateValue)).toISOString();
+      startDate = startDateString;
+    }
+
+    if (endDateValue)
+    {
+      const endDateString = (new Date (endDateValue)).toISOString();
+      endDate = endDateString;
+    }
+
+    return false;
+  }
+</script>
 <body onload="buildMenus()">
   <h1>Tracktion Benchmarks</h1>
 
@@ -39,6 +62,20 @@
 
   <label for="platforms_list">Platform:</label>
   <select id="platforms_list"></select>
+
+  <br/><br/>
+  <label for="start_date">Start Date:</label>
+  <input type="date" id="start_date" oninput="updateStartEndDates()"></input>
+
+  <label for="end_date">End Date:</label>
+  <input type="date" id="end_date" oninput="updateStartEndDates()"></input>
+
+  <label>Time
+    <input type="radio" checked="checked" name="time/cycles" id="time_results">
+  </label>
+  <label >Cycles
+    <input type="radio" name="time/cycles" id="cycles_results">
+  </label>
   
   <br/><br/>
   <input type="checkbox" id="show_total_button" name="total_name" checked oninput="updateGraphs();">
@@ -67,7 +104,6 @@
   <script>
     var getJSON = function (url, paramString, callback)
     {
-      console.log (paramString);
         var xhr = new XMLHttpRequest();
         xhr.open ('POST', url, true);
         xhr.setRequestHeader ("Content-Type", "application/x-www-form-urlencoded");
@@ -76,6 +112,7 @@
         xhr.onload = function()
         {
           var status = xhr.status;
+
           if (status === 200)
             callback (null, xhr.response);
           else
@@ -186,7 +223,7 @@
 
       if (showTotal)
       {
-        datasets.push ({ label: 'Duration', data: values.durations, lineTension: 0, backgroundColor: blue, borderColor: blue  });
+        datasets.push ({ label: cycles_results.checked ? 'Cycles' : 'Duration', data: values.durations, lineTension: 0, backgroundColor: blue, borderColor: blue  });
       }
 
       if (showMinMaxMean)
@@ -277,6 +314,8 @@
       if (nameToShow != "All")          filterString += '&benchmark_name=' + nameToShow;
       if (descriptionToShow != "All")   filterString += '&benchmark_description=' + descriptionToShow;
       if (platformToShow != "All")      filterString += '&benchmark_platform=' + platformToShow;
+      if (startDate)                    filterString += '&start_date=' + startDate;
+      if (endDate)                      filterString += '&end_date=' + endDate;
 
       document.getElementById ("loader").style.display = "block";
       getJSON ("https://appstats.tracktion.com/benchmarkapi.php", "request=fetch_results_grouped" + filterString, function (status, results)
@@ -285,6 +324,7 @@
           currentResults.clear();
           currentMax = Number.MIN_VALUE;
           currentMin = Number.MAX_VALUE;
+          const displayCycles = cycles_results.checked;
 
           results.forEach (result =>
                           {
@@ -295,11 +335,23 @@
                             values.platform     = result.benchmark_platform;
 
                             values.dateTimes  = result.benchmark_time;
-                            values.durations  = result.benchmark_duration;
-                            values.minimums   = result.benchmark_duration_min;
-                            values.maximums   = result.benchmark_duration_max;
-                            values.means      = result.benchmark_duration_mean;       
-                            values.variances  = result.benchmark_duration_variance;
+
+                            if (displayCycles)
+                            {
+                              values.durations  = result.benchmark_cycles_total;
+                              values.minimums   = result.benchmark_cycles_min;
+                              values.maximums   = result.benchmark_cycles_max;
+                              values.means      = result.benchmark_cycles_mean;       
+                              values.variances  = result.benchmark_cycles_variance;
+                            }
+                            else
+                            {
+                              values.durations  = result.benchmark_duration;
+                              values.minimums   = result.benchmark_duration_min;
+                              values.maximums   = result.benchmark_duration_max;
+                              values.means      = result.benchmark_duration_mean;       
+                              values.variances  = result.benchmark_duration_variance;
+                            }
 
                             currentMax = Math.max (currentMax, ...values.durations, ...values.maximums);
                             currentMin = Math.min (currentMin, ...values.durations, ...values.minimums);
