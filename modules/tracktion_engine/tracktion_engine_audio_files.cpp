@@ -16,7 +16,7 @@ extern "C"
     #define Button CarbonButton
     #define Component CarbonComponent
     #define MemoryBlock CarbonMemoryBlock
-    #include "REX/REX.c"
+    #include "REX/REX.h"
     #undef Button
     #undef Component
     #undef MemoryBlock

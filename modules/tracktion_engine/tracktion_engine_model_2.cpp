@@ -16,13 +16,13 @@
 
 #include <tracktion_graph/tracktion_graph.h>
 
+#include "utilities/tracktion_TestUtilities.h"
+
 #include "playback/graph/tracktion_TracktionEngineNode.h"
 #include "playback/graph/tracktion_TracktionNodePlayer.h"
 #include "playback/graph/tracktion_MultiThreadedNodePlayer.h"
 #include "playback/graph/tracktion_NodeRenderContext.h"
 #include "playback/graph/tracktion_EditNodeBuilder.h"
-
-using namespace juce;
 
 #include "model/tracks/tracktion_TrackUtils.cpp"
 #include "model/tracks/tracktion_Track.cpp"
@@ -56,6 +56,7 @@ using namespace juce;
 #include "model/export/tracktion_Exportable.cpp"
 #include "model/export/tracktion_ExportJob.cpp"
 #include "model/export/tracktion_Renderer.cpp"
+#include "model/export/tracktion_Renderer.test.cpp"
 #include "model/export/tracktion_RenderManager.cpp"
 #include "model/export/tracktion_ArchiveFile.cpp"
 #include "model/export/tracktion_RenderOptions.cpp"

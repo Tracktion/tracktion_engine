@@ -68,7 +68,7 @@ public:
         This should be the same until the clip changes as it is used to determine if
         the proxy needs regenerating.
     */
-    virtual juce::int64 getHash() const = 0;
+    virtual HashCode getHash() const = 0;
 
     /** Returns the WaveInfo for a clip.
         By default this just looks in the AudioSegmentList cache but subclasses can override
@@ -476,7 +476,7 @@ public:
     std::unique_ptr<ProxyRenderingInfo> createProxyRenderingInfo();
 
     /** Returns a hash identifying the proxy settings. */
-    juce::int64 getProxyHash();
+    HashCode getProxyHash();
 
     /** Triggers creation of a new proxy file if one is required. */
     void beginRenderingNewProxyIfNeeded();

@@ -91,7 +91,7 @@ Modifier::Modifier (Edit& e, const juce::ValueTree& v)
       state (v)
 {
     auto um = &edit.getUndoManager();
-    colour.referTo (state, IDs::colour, um, Colours::red.withHue (1.0f / 9.0f));
+    colour.referTo (state, IDs::colour, um, juce::Colours::red.withHue (1.0f / 9.0f));
     enabled.referTo (state, IDs::enabled, um, true);
 
     enabledParam = new DiscreteLabelledParameter ("enabled", TRANS("Enabled"), *this, { 0.0f, 1.0f },
@@ -220,7 +220,7 @@ std::vector<float> Modifier::getValues (double numSecondsBeforeNow) const
 }
 
 //==============================================================================
-ModifierList::ModifierList (Edit& e, const ValueTree& parentTree)
+ModifierList::ModifierList (Edit& e, const juce::ValueTree& parentTree)
     : ValueTreeObjectList<Modifier> (parentTree),
       edit (e), state (parent)
 {
@@ -240,12 +240,12 @@ bool ModifierList::isModifier (const juce::Identifier& i)
         || i == IDs::RANDOM || i == IDs::MIDITRACKER;
 }
 
-ReferenceCountedArray<Modifier> ModifierList::getModifiers() const
+juce::ReferenceCountedArray<Modifier> ModifierList::getModifiers() const
 {
     if (! edit.isLoading())
         TRACKTION_ASSERT_MESSAGE_THREAD
 
-    ReferenceCountedArray<Modifier> mods;
+    juce::ReferenceCountedArray<Modifier> mods;
 
     for (auto m : objects)
         mods.add (m);
@@ -254,7 +254,7 @@ ReferenceCountedArray<Modifier> ModifierList::getModifiers() const
 }
 
 //==============================================================================
-ReferenceCountedObjectPtr<Modifier> ModifierList::insertModifier (ValueTree v, int index, SelectionManager* sm)
+juce::ReferenceCountedObjectPtr<Modifier> ModifierList::insertModifier (juce::ValueTree v, int index, SelectionManager* sm)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
     jassert (isSuitableType (v));
@@ -290,7 +290,7 @@ bool ModifierList::isSuitableType (const juce::ValueTree& v) const
     return isModifier (v.getType());
 }
 
-Modifier* ModifierList::createNewObject (const ValueTree& v)
+Modifier* ModifierList::createNewObject (const juce::ValueTree& v)
 {
     CRASH_TRACER
     auto m = findModifierForID (edit, EditItemID::readOrCreateNewID (edit, v));

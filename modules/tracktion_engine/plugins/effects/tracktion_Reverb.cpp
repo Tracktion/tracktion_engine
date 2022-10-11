@@ -19,28 +19,28 @@ static constexpr float freezemode = 0.5f;
 ReverbPlugin::ReverbPlugin (PluginCreationInfo info) : Plugin (info)
 {
     roomSizeParam = addParam ("room size", TRANS("Room Size"), { 0.0f, 1.0f },
-                              [] (float value)     { return String (1 + (int) (10.0f * value)); },
-                              [] (const String& s) { return s.getFloatValue(); });
+                              [] (float value)           { return juce::String (1 + (int) (10.0f * value)); },
+                              [] (const juce::String& s) { return s.getFloatValue(); });
 
     dampParam     = addParam ("damping", TRANS("Damping"), { 0.0f, 1.0f },
-                              [] (float value)     { return String ((int) (100.0f * value)) + "%"; },
-                              [] (const String& s) { return s.getFloatValue(); });
+                              [] (float value)           { return juce::String ((int) (100.0f * value)) + "%"; },
+                              [] (const juce::String& s) { return s.getFloatValue(); });
 
     wetParam      = addParam ("wet level", TRANS("Wet Level"), { 0.0f, 1.0f },
-                              [] (float value)     { return gainToDbString (scalewet * value); },
-                              [] (const String& s) { return s.getFloatValue(); });
+                              [] (float value)           { return gainToDbString (scalewet * value); },
+                              [] (const juce::String& s) { return s.getFloatValue(); });
 
     dryParam      = addParam ("dry level", TRANS("Dry Level"), { 0.0f, 1.0f },
-                              [] (float value)     { return gainToDbString (scaledry * value); },
-                              [] (const String& s) { return s.getFloatValue(); });
+                              [] (float value)           { return gainToDbString (scaledry * value); },
+                              [] (const juce::String& s) { return s.getFloatValue(); });
 
     widthParam    = addParam ("width", TRANS("Width"), { 0.0f, 1.0f },
-                              [] (float value)     { return String ((int) (100.0f * value)) + "%"; },
-                              [] (const String& s) { return s.getFloatValue(); });
+                              [] (float value)           { return juce::String ((int) (100.0f * value)) + "%"; },
+                              [] (const juce::String& s) { return s.getFloatValue(); });
 
     modeParam     = addParam ("mode", TRANS("Freeze"), { 0.0f, 1.0f },
-                              [] (float value)     { return value >= freezemode ? TRANS("On") : TRANS("Off"); },
-                              [] (const String& s) { return s.getFloatValue(); });
+                              [] (float value)           { return value >= freezemode ? TRANS("On") : TRANS("Off"); },
+                              [] (const juce::String& s) { return s.getFloatValue(); });
 
     auto um = getUndoManager();
 
@@ -99,9 +99,10 @@ static bool isSilent (const float* data, int num) noexcept
     if (isNotSilent (data[0]) || isNotSilent (data[num / 2]))
         return false;
 
-    Range<float> range (FloatVectorOperations::findMinAndMax (data, num));
+    auto range = juce::FloatVectorOperations::findMinAndMax (data, num);
 
-    return ! (isNotSilent (range.getStart()) || isNotSilent (range.getEnd()));
+    return ! (isNotSilent (range.getStart())
+               || isNotSilent (range.getEnd()));
 }
 
 void ReverbPlugin::applyToBuffer (const PluginRenderContext& fc)
@@ -110,7 +111,7 @@ void ReverbPlugin::applyToBuffer (const PluginRenderContext& fc)
     {
         SCOPED_REALTIME_CHECK
 
-        Reverb::Parameters params;
+        juce::Reverb::Parameters params;
         params.roomSize   = roomSizeParam->getCurrentValue();
         params.damping    = dampParam->getCurrentValue();
         params.wetLevel   = wetParam->getCurrentValue();
@@ -153,29 +154,29 @@ void ReverbPlugin::applyToBuffer (const PluginRenderContext& fc)
 
 void ReverbPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    CachedValue<float>* cvsFloat[]  = { &roomSizeValue, &dampValue, &wetValue, &dryValue, &widthValue, &modeValue, nullptr };
+    juce::CachedValue<float>* cvsFloat[]  = { &roomSizeValue, &dampValue, &wetValue, &dryValue, &widthValue, &modeValue, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
 
     for (auto p : getAutomatableParameters())
         p->updateFromAttachedValue();
 }
 
-void ReverbPlugin::setRoomSize (float value)    { roomSizeParam->setParameter (jlimit (0.0f, 1.0f, value), sendNotification); }
+void ReverbPlugin::setRoomSize (float value)    { roomSizeParam->setParameter (juce::jlimit (0.0f, 1.0f, value), juce::sendNotification); }
 float ReverbPlugin::getRoomSize()               { return roomSizeParam->getCurrentValue(); }
 
-void ReverbPlugin::setDamp (float value)        { dampParam->setParameter (jlimit (0.0f, 1.0f, value), sendNotification); }
+void ReverbPlugin::setDamp (float value)        { dampParam->setParameter (juce::jlimit (0.0f, 1.0f, value), juce::sendNotification); }
 float ReverbPlugin::getDamp()                   { return dampParam->getCurrentValue(); }
 
-void ReverbPlugin::setWet (float value)         { wetParam->setParameter (jlimit (0.0f, 1.0f, value), sendNotification); }
+void ReverbPlugin::setWet (float value)         { wetParam->setParameter (juce::jlimit (0.0f, 1.0f, value), juce::sendNotification); }
 float ReverbPlugin::getWet()                    { return wetParam->getCurrentValue(); }
 
-void ReverbPlugin::setDry (float value)         { dryParam->setParameter (jlimit (0.0f, 1.0f, value), sendNotification); }
+void ReverbPlugin::setDry (float value)         { dryParam->setParameter (juce::jlimit (0.0f, 1.0f, value), juce::sendNotification); }
 float ReverbPlugin::getDry()                    { return dryParam->getCurrentValue(); }
 
-void ReverbPlugin::setWidth (float value)       { widthParam->setParameter (jlimit (0.0f, 1.0f, value), sendNotification); }
+void ReverbPlugin::setWidth (float value)       { widthParam->setParameter (juce::jlimit (0.0f, 1.0f, value), juce::sendNotification); }
 float ReverbPlugin::getWidth()                  { return widthParam->getCurrentValue(); }
 
-void ReverbPlugin::setMode (float value)        { modeParam->setParameter (jlimit (0.0f, 1.0f, value), sendNotification); }
+void ReverbPlugin::setMode (float value)        { modeParam->setParameter (juce::jlimit (0.0f, 1.0f, value), juce::sendNotification); }
 float ReverbPlugin::getMode()                   { return modeParam->getCurrentValue(); }
 
 }

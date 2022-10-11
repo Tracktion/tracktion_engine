@@ -95,7 +95,7 @@ public:
     const juce::Array<EditItemID>& getTracks() const                    { return trackIDs; }
     const juce::Array<ProjectItemID>& getEditClips() const              { return editClipIDs; }
     const juce::Array<ProjectItemID>& getClipsSourceIDs() const         { return clipSourceIDs; }
-    juce::int64 getHash() const                                         { return lastSaveTime.toMilliseconds(); }
+    HashCode getHash() const                                            { return lastSaveTime.toMilliseconds(); }
 
     //==============================================================================
     struct Listener

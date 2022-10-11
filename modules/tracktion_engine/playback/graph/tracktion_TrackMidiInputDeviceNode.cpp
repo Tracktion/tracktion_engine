@@ -12,13 +12,15 @@
 namespace tracktion_engine
 {
 
-TrackMidiInputDeviceNode::TrackMidiInputDeviceNode (MidiInputDevice& owner, std::unique_ptr<Node> inputNode)
-    : midiInputDevice (owner), input (std::move (inputNode)), copyInputsToOutputs (owner.isEndToEndEnabled())
+TrackMidiInputDeviceNode::TrackMidiInputDeviceNode (MidiInputDevice& owner, std::unique_ptr<Node> inputNode, ProcessState& ps)
+    : TracktionEngineNode (ps),
+      midiInputDevice (owner), input (std::move (inputNode)), copyInputsToOutputs (owner.isEndToEndEnabled())
 {
     jassert (midiInputDevice.isTrackDevice());
 
     setOptimisations ({ tracktion_graph::ClearBuffers::yes,
-                        tracktion_graph::AllocateAudioBuffer::no });
+                        copyInputsToOutputs ? tracktion_graph::AllocateAudioBuffer::no
+                                            : tracktion_graph::AllocateAudioBuffer::yes });
 }
 
 std::vector<tracktion_graph::Node*> TrackMidiInputDeviceNode::getDirectInputNodes()
@@ -53,10 +55,13 @@ void TrackMidiInputDeviceNode::process (ProcessContext& pc)
         setAudioOutput (input.get(), sourceBuffers.audio);
         pc.buffers.midi.copyFrom (sourceBuffers.midi);
     }
+    
+    const double midiStreamTime = tracktion_graph::sampleToTime (getReferenceSampleRange().getStart(), getSampleRate())
+                                   - midiInputDevice.getAdjustSecs();
 
     // And pass MIDI to device
     for (auto& m : sourceBuffers.midi)
-        midiInputDevice.handleIncomingMidiMessage (nullptr, juce::MidiMessage (m, juce::Time::getMillisecondCounterHiRes() * 0.001 + m.getTimeStamp()));
+        midiInputDevice.handleIncomingMidiMessage (nullptr, juce::MidiMessage (m, midiStreamTime + m.getTimeStamp()));
 }
 
 }

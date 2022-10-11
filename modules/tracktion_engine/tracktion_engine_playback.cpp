@@ -163,8 +163,6 @@ extern "C"
 #include "playback/graph/tracktion_MidiNode.test.cpp"
 #include "playback/graph/tracktion_RackBenchmarks.test.cpp"
 
-using namespace juce;
-
 #include "playback/tracktion_DeviceManager.cpp"
 #include "playback/tracktion_EditPlaybackContext.cpp"
 #include "playback/tracktion_EditInputDevices.cpp"
@@ -230,9 +228,12 @@ static inline void sprintf (char* dest, size_t maxLength, const char* format, ..
  #endif
 
  #include "control_surfaces/types/tracktion_AlphaTrack.cpp"
- #include "control_surfaces/types/tracktion_MackieC4.cpp"
+ #if TRACKTION_ENABLE_CONTROL_SURFACE_MACKIEC4
+  #include "control_surfaces/types/tracktion_MackieC4.cpp"
+ #endif
  #include "control_surfaces/types/tracktion_MackieMCU.cpp"
  #include "control_surfaces/types/tracktion_MackieXT.cpp"
+ #include "control_surfaces/types/tracktion_IconProG2.cpp"
  #include "control_surfaces/types/tracktion_NovationRemoteSl.cpp"
  #include "control_surfaces/types/tracktion_RemoteSLCompact.cpp"
  #include "control_surfaces/types/tracktion_Tranzport.cpp"

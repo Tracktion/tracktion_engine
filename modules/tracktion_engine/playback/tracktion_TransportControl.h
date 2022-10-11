@@ -328,12 +328,9 @@ public:
         /** Called when recording stops for a specific input instance.
             @param InputDeviceInstance  The device instance that just stopped.
             @param recordedClips        The clips resulting from the recording.
-            @param recordedRange        The time range of the recording. N.B. if the recording was looped,
-                                        this will be the unlooped end time.
         */
         virtual void recordingFinished (InputDeviceInstance&,
-                                        juce::ReferenceCountedArray<Clip> /*recordedClips*/,
-                                        EditTimeRange /*recordedRange*/)
+                                        juce::ReferenceCountedArray<Clip> /*recordedClips*/)
         {}
     };
 
@@ -355,7 +352,7 @@ public:
 
     //==============================================================================
     /** @internal */
-    void callRecordingFinishedListeners (InputDeviceInstance&, juce::ReferenceCountedArray<Clip> recordedClips, EditTimeRange recordedRange);
+    void callRecordingFinishedListeners (InputDeviceInstance&, juce::ReferenceCountedArray<Clip> recordedClips);
 
 private:
     //==============================================================================

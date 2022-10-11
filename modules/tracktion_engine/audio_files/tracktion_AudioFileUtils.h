@@ -28,14 +28,14 @@ struct AudioFileUtils
                                                      double sampleRate, unsigned int numChannels, int bitsPerSample,
                                                      const juce::StringPairArray& metadata, int quality);
 
-    static juce::Range<juce::int64> scanForNonZeroSamples (Engine&, const juce::File&, float maxZeroLevelDb);
+    static SampleRange scanForNonZeroSamples (Engine&, const juce::File&, float maxZeroLevelDb);
 
-    static juce::Range<juce::int64> copyNonSilentSectionToNewFile (Engine& e,
-                                                                   const juce::File& sourceFile,
-                                                                   const juce::File& destFile,
-                                                                   float maxZeroLevelDb);
+    static SampleRange copyNonSilentSectionToNewFile (Engine&,
+                                                      const juce::File& sourceFile,
+                                                      const juce::File& destFile,
+                                                      float maxZeroLevelDb);
 
-    static juce::Range<juce::int64> trimSilence (Engine& e, const juce::File&, float maxZeroLevelDb);
+    static SampleRange trimSilence (Engine&, const juce::File&, float maxZeroLevelDb);
 
     /** Reverses a file updating a progress value and checking the exit status of a given job. */
     static bool reverse (Engine&, const juce::File& source, const juce::File& destination,
@@ -43,21 +43,21 @@ struct AudioFileUtils
                          bool canCreateWavIntermediate = true);
 
     // returns length of file created, or -1
-    static juce::int64 copySectionToNewFile (Engine& e,
+    static SampleCount copySectionToNewFile (Engine& e,
                                              const juce::File& sourceFile,
                                              const juce::File& destFile,
-                                             const juce::Range<juce::int64>& range);
+                                             SampleRange range);
 
-    static juce::int64 copySectionToNewFile (Engine& e,
+    static SampleCount copySectionToNewFile (Engine& e,
                                              const juce::File& sourceFile,
                                              const juce::File& destFile,
                                              EditTimeRange range);
 
-    static void addBWAVStartToMetadata (juce::StringPairArray& metadata, juce::int64 time);
+    static void addBWAVStartToMetadata (juce::StringPairArray& metadata, SampleCount start);
 
-    static void applyBWAVStartTime (const juce::File&, juce::int64 time);
+    static void applyBWAVStartTime (const juce::File&, SampleCount start);
 
-    static juce::int64 getFileLengthSamples (Engine& e, const juce::File&);
+    static SampleCount getFileLengthSamples (Engine& e, const juce::File&);
 
     //==============================================================================
     template<class TargetFormat>
@@ -80,7 +80,7 @@ struct AudioFileUtils
             // may leave the position set elsewhere.
             juce::TemporaryFile tempFile;
 
-            if (auto out = std::unique_ptr<juce::FileOutputStream> (tempFile.getFile().createOutputStream()))
+            if (auto out = tempFile.getFile().createOutputStream())
             {
                 TargetFormat format;
 
@@ -116,11 +116,11 @@ struct AudioFileUtils
         {
             ForwardingInputStream (juce::InputStream& s)  : stream (s) {}
 
-            juce::int64 getTotalLength()        { return stream.getTotalLength(); }
-            bool isExhausted()                  { return stream.isExhausted(); }
-            int read (void* d, int sz)          { return stream.read (d, sz); }
-            juce::int64 getPosition()           { return stream.getPosition(); }
-            bool setPosition (juce::int64 pos)  { return stream.setPosition (pos); }
+            juce::int64 getTotalLength() override        { return stream.getTotalLength(); }
+            bool isExhausted() override                  { return stream.isExhausted(); }
+            int read (void* d, int sz) override          { return stream.read (d, sz); }
+            juce::int64 getPosition() override           { return stream.getPosition(); }
+            bool setPosition (juce::int64 pos) override  { return stream.setPosition (pos); }
 
             InputStream& stream;
         };

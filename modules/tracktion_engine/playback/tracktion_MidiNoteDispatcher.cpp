@@ -22,7 +22,7 @@ MidiNoteDispatcher::~MidiNoteDispatcher()
 
 void MidiNoteDispatcher::dispatchPendingMessagesForDevices (double editTime)
 {
-    ScopedLock s (deviceLock);
+    juce::ScopedLock s (deviceLock);
 
     for (auto state : devices)
         dispatchPendingMessages (*state, editTime);
@@ -30,9 +30,9 @@ void MidiNoteDispatcher::dispatchPendingMessagesForDevices (double editTime)
 
 void MidiNoteDispatcher::masterTimeUpdate (double editTime)
 {
-    const ScopedLock s (timeLock);
+    const juce::ScopedLock s (timeLock);
     masterTime = editTime;
-    hiResClockOfMasterTime = Time::getMillisecondCounterHiRes();
+    hiResClockOfMasterTime = juce::Time::getMillisecondCounterHiRes();
 }
 
 void MidiNoteDispatcher::prepareToPlay (double editTime)
@@ -42,8 +42,8 @@ void MidiNoteDispatcher::prepareToPlay (double editTime)
 
 double MidiNoteDispatcher::getCurrentTime() const
 {
-    const ScopedLock s (timeLock);
-    return masterTime + (Time::getMillisecondCounterHiRes() - hiResClockOfMasterTime) * 0.001;
+    const juce::ScopedLock s (timeLock);
+    return masterTime + (juce::Time::getMillisecondCounterHiRes() - hiResClockOfMasterTime) * 0.001;
 }
 
 void MidiNoteDispatcher::dispatchPendingMessages (DeviceState& state, double editTime)
@@ -57,10 +57,10 @@ void MidiNoteDispatcher::dispatchPendingMessages (DeviceState& state, double edi
         state.buffer.mergeFromAndClear (pendingBuffer);
 }
 
-void MidiNoteDispatcher::setMidiDeviceList (const OwnedArray<MidiOutputDeviceInstance>& newList)
+void MidiNoteDispatcher::setMidiDeviceList (const juce::OwnedArray<MidiOutputDeviceInstance>& newList)
 {
     CRASH_TRACER
-    OwnedArray<DeviceState> newDevices;
+    juce::OwnedArray<DeviceState> newDevices;
 
     for (auto d : newList)
         newDevices.add (new DeviceState (*d));
@@ -71,7 +71,7 @@ void MidiNoteDispatcher::setMidiDeviceList (const OwnedArray<MidiOutputDeviceIns
     bool startTimerFlag = false;
 
     {
-        const ScopedLock sl (deviceLock);
+        const juce::ScopedLock sl (deviceLock);
         newDevices.swapWith (devices);
         startTimerFlag = ! devices.isEmpty();
     }
@@ -85,14 +85,14 @@ void MidiNoteDispatcher::hiResTimerCallback()
     struct MessageToSend
     {
         MidiOutputDeviceInstance* device;
-        MidiMessage message;
+        juce::MidiMessage message;
     };
 
-    Array<MessageToSend> messagesToSend;
+    juce::Array<MessageToSend> messagesToSend;
     messagesToSend.ensureStorageAllocated (32);
 
     {
-        const ScopedLock sl (deviceLock);
+        const juce::ScopedLock sl (deviceLock);
 
         for (auto d : devices)
         {

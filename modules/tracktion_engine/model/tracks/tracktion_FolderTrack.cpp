@@ -11,7 +11,7 @@
 namespace tracktion_engine
 {
 
-FolderTrack::FolderTrack (Edit& ed, const ValueTree& v)
+FolderTrack::FolderTrack (Edit& ed, const juce::ValueTree& v)
     : Track (ed, v, 50, 13, 2000)
 {
     soloed.referTo (state, IDs::solo, nullptr);
@@ -44,9 +44,9 @@ bool FolderTrack::isFolderTrack() const
 
 void FolderTrack::sanityCheckName()
 {
-    const String n = Track::getName();
+    auto n = Track::getName();
 
-    auto checkName = [&n] (const String& type)
+    auto checkName = [&n] (const juce::String& type)
     {
         return ((n.startsWithIgnoreCase ("Folder ")
                  || n.startsWithIgnoreCase (TRANS(type) + " "))
@@ -60,7 +60,7 @@ void FolderTrack::sanityCheckName()
     }
 }
 
-String FolderTrack::getName()
+juce::String FolderTrack::getName()
 {
     auto n = Track::getName();
 
@@ -494,7 +494,7 @@ void FolderTrack::updatePlugins()
     volumePlugin = pluginList.findFirstPluginOfType<VolumeAndPanPlugin>();
 }
 
-void FolderTrack::valueTreeChildAdded (ValueTree& p, ValueTree& c)
+void FolderTrack::valueTreeChildAdded (juce::ValueTree& p, juce::ValueTree& c)
 {
     if (c.hasType (IDs::PLUGIN))
         pluginUpdater.triggerAsyncUpdate();
@@ -502,7 +502,7 @@ void FolderTrack::valueTreeChildAdded (ValueTree& p, ValueTree& c)
     Track::valueTreeChildAdded (p, c);
 }
 
-void FolderTrack::valueTreeChildRemoved (ValueTree& p, ValueTree& c, int index)
+void FolderTrack::valueTreeChildRemoved (juce::ValueTree& p, juce::ValueTree& c, int index)
 {
     if (c.hasType (IDs::PLUGIN))
         pluginUpdater.triggerAsyncUpdate();
@@ -510,7 +510,7 @@ void FolderTrack::valueTreeChildRemoved (ValueTree& p, ValueTree& c, int index)
     Track::valueTreeChildRemoved (p, c, index);
 }
 
-void FolderTrack::valueTreeChildOrderChanged (ValueTree& p, int oldIndex, int newIndex)
+void FolderTrack::valueTreeChildOrderChanged (juce::ValueTree& p, int oldIndex, int newIndex)
 {
     if (p.getChild (oldIndex).hasType (IDs::PLUGIN) || p.getChild (newIndex).hasType (IDs::PLUGIN))
         pluginUpdater.triggerAsyncUpdate();

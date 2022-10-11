@@ -35,11 +35,11 @@ RenderManager::Job::~Job()
     jassert (getReferenceCount() == 0);
 }
 
-ThreadPoolJob::JobStatus RenderManager::Job::runJob()
+juce::ThreadPoolJob::JobStatus RenderManager::Job::runJob()
 {
     CRASH_TRACER
 
-    FloatVectorOperations::disableDenormalisedNumberSupport();
+    juce::FloatVectorOperations::disableDenormalisedNumberSupport();
 
     if (! (isInitialised || shouldExit()))
     {
@@ -65,7 +65,7 @@ ThreadPoolJob::JobStatus RenderManager::Job::runJob()
                       });
 
 
-    const ScopedLock sl (finishedLock);
+    const juce::ScopedLock sl (finishedLock);
 
     if (! hasFinished)
         sendCompletionMessages (completedOk && (! shouldExit()));
@@ -77,7 +77,7 @@ void RenderManager::Job::cancelJob()
 {
     // We can't just signal the thread to stop as the completion messages wont get sent which
     // wont notify our listeners.
-    const ScopedLock sl (finishedLock);
+    const juce::ScopedLock sl (finishedLock);
     signalJobShouldExit();
 
     if (! hasFinished)
@@ -116,7 +116,7 @@ void RenderManager::Job::sendCompletionMessages (bool success)
     }
 }
 
-void RenderManager::Job::handleMessage (const Message& message)
+void RenderManager::Job::handleMessage (const juce::Message& message)
 {
     CRASH_TRACER
 
@@ -134,7 +134,7 @@ void RenderManager::Job::handleMessage (const Message& message)
         case UpdateMessage::cancelled:
             if (isRunning())
             {
-                const ScopedLock sl (messageLock);
+                const juce::ScopedLock sl (messageLock);
                 messagesToResend.addIfNotAlreadyThere (type);
                 startTimer (messageRetryTimeout);
             }
@@ -154,7 +154,7 @@ void RenderManager::Job::handleMessage (const Message& message)
 
 void RenderManager::Job::timerCallback()
 {
-    const ScopedLock sl (messageLock);
+    const juce::ScopedLock sl (messageLock);
 
     for (int i = messagesToResend.size(); --i >= 0;)
         postMessage (new UpdateMessage (messagesToResend.removeAndReturn (i)));
@@ -191,16 +191,16 @@ void RenderManager::cleanUp()
 }
 
 //==============================================================================
-AudioFile RenderManager::getAudioFileForHash (Engine& engine, const File& directory, int64 hash)
+AudioFile RenderManager::getAudioFileForHash (Engine& engine, const juce::File& directory, HashCode hash)
 {
-    return AudioFile (engine, directory.getChildFile (getFileRenderPrefix() + String (hash) + ".wav"));
+    return AudioFile (engine, directory.getChildFile (getFileRenderPrefix() + juce::String (hash) + ".wav"));
 }
 
-ReferenceCountedArray<RenderManager::Job> RenderManager::getRenderJobsWithoutCreating (const AudioFile& af)
+juce::ReferenceCountedArray<RenderManager::Job> RenderManager::getRenderJobsWithoutCreating (const AudioFile& af)
 {
-    ReferenceCountedArray<Job> js;
+    juce::ReferenceCountedArray<Job> js;
 
-    const ScopedLock sl (jobListLock);
+    const juce::ScopedLock sl (jobListLock);
 
     for (auto j : jobs)
         if (j != nullptr && j->proxy == af)
@@ -211,7 +211,7 @@ ReferenceCountedArray<RenderManager::Job> RenderManager::getRenderJobsWithoutCre
 
 int RenderManager::getNumJobs() noexcept
 {
-    const ScopedLock sl (jobListLock);
+    const juce::ScopedLock sl (jobListLock);
     return jobs.size();
 }
 
@@ -223,7 +223,7 @@ bool RenderManager::isProxyBeingGenerated (const AudioFile& proxyFile) noexcept
 
 float RenderManager::getProportionComplete (const AudioFile& proxyFile, float defaultVal) noexcept
 {
-    if (Job::Ptr j = findJob (proxyFile))
+    if (auto j = findJob (proxyFile))
         return j->progress;
 
     return defaultVal;
@@ -232,7 +232,7 @@ float RenderManager::getProportionComplete (const AudioFile& proxyFile, float de
 //==============================================================================
 RenderManager::Job::Ptr RenderManager::findJob (const AudioFile& af) noexcept
 {
-    const ScopedLock sl (jobListLock);
+    const juce::ScopedLock sl (jobListLock);
 
     for (auto j : jobs)
         if (j != nullptr && j->proxy == af)
@@ -243,19 +243,19 @@ RenderManager::Job::Ptr RenderManager::findJob (const AudioFile& af) noexcept
 
 void RenderManager::addJobInternal (Job* j) noexcept
 {
-    const ScopedLock sl (jobListLock);
+    const juce::ScopedLock sl (jobListLock);
     jobs.addIfNotAlreadyThere (j);
 }
 
 void RenderManager::removeJobInternal (Job* j) noexcept
 {
     {
-        const ScopedLock sl (jobListLock);
+        const juce::ScopedLock sl (jobListLock);
         jobs.removeAllInstancesOf (j);
     }
 
     {
-        const ScopedLock sl2 (deleteListLock);
+        const juce::ScopedLock sl2 (deleteListLock);
         danglingJobs.addIfNotAlreadyThere (j);
     }
 }
@@ -268,19 +268,19 @@ void RenderManager::addJobToPool (Job* j) noexcept
 void RenderManager::deleteJob (Job* j)
 {
     {
-        const ScopedLock sl (deleteListLock);
+        const juce::ScopedLock sl (deleteListLock);
         danglingJobs.removeAllInstancesOf (j);
         jobsToDelete.add (j);
         triggerAsyncUpdate();
     }
 
-    if (MessageManager::getInstance()->isThisTheMessageThread())
+    if (juce::MessageManager::getInstance()->isThisTheMessageThread())
         handleUpdateNowIfNeeded();
 }
 
 void RenderManager::handleAsyncUpdate()
 {
-    const ScopedLock sl (deleteListLock);
+    const juce::ScopedLock sl (deleteListLock);
     jobsToDelete.clear();
 }
 

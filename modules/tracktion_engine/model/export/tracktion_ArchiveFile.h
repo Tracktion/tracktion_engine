@@ -74,7 +74,7 @@ public:
         // length = length of the stored object
         // offset - offset from start of file of the stored object
         juce::String originalName, storedName;
-        juce::int64 offset = 0, length = 0;
+        int64_t offset = 0, length = 0;
         // extra names and values - for extra metadata
         juce::StringArray extraNames, extraValues;
 
@@ -84,7 +84,7 @@ public:
 private:
     Engine& engine;
     juce::File file;
-    juce::int64 indexOffset = 8;
+    int64_t indexOffset = 8;
     bool valid = false, needToWriteIndex;
 
     juce::OwnedArray<IndexEntry> entries;

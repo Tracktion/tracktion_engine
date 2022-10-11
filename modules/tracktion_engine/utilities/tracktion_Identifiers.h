@@ -588,6 +588,7 @@ namespace IDs
     DECLARE_ID (filterVelocity)
     DECLARE_ID (filterType)
     DECLARE_ID (filterSlope)
+    DECLARE_ID (filterQ)
     DECLARE_ID (waveShape)
     DECLARE_ID (tune)
     DECLARE_ID (fineTune)
@@ -632,6 +633,12 @@ namespace IDs
     DECLARE_ID (oscType)
     DECLARE_ID (bandLimit)
     DECLARE_ID (irFileData)
+    DECLARE_ID (normalise)
+    DECLARE_ID (trimSilence)
+    DECLARE_ID (preGain)
+    DECLARE_ID (postGain)
+    DECLARE_ID (highPassMidiNoteNumber)
+    DECLARE_ID (lowPassMidiNoteNumber)
 
     #undef DECLARE_ID
 }

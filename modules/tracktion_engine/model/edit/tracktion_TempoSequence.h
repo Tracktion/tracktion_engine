@@ -63,7 +63,7 @@ public:
     int indexOfTempo (const TempoSetting*) const;
 
     int countTemposInRegion (EditTimeRange range) const;
-    juce::int64 createHashForTemposInRange (EditTimeRange) const;
+    HashCode createHashForTemposInRange (EditTimeRange) const;
 
     /** inserts a tempo break that can be edited later. */
     TempoSetting::Ptr insertTempo (double time);
@@ -128,10 +128,10 @@ public:
         void swapWith (juce::Array<SectionDetails>& newTempos);
 
         /** Compare to cheaply determine if any changes have been made. */
-        juce::uint32 getChangeCount() const;
+        uint32_t getChangeCount() const;
 
     private:
-        juce::uint32 changeCounter = 0;
+        uint32_t changeCounter = 0;
         juce::Array<SectionDetails> tempos;
     };
 

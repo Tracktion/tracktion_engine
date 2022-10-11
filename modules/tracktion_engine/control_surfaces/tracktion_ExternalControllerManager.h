@@ -66,6 +66,7 @@ public:
     };
 
     bool createCustomController (const juce::String& name, Protocol);
+    ExternalController* addController (ControlSurface*);
     void deleteController (ExternalController*);
 
     //==============================================================================
@@ -79,7 +80,7 @@ public:
     void playStateChanged (bool isPlaying);
     void recordStateChanged (bool isRecording);
     void automationModeChanged (bool isReading, bool isWriting);
-    void channelLevelChanged (int channel, float level);
+    void channelLevelChanged (int channel, float l, float r);
     void masterLevelsChanged (float leftLevel, float rightLevel);
     void timecodeChanged (int barsOrHours, int beatsOrMinutes, int ticksOrSeconds,
                           int millisecs, bool isBarsBeats, bool isFrames);
@@ -107,6 +108,7 @@ public:
     void updateMarkers();
     void updateTrackRecordLights();
     void updatePunchLights();
+    void updateScrollLights();
     void updateUndoLights();
 
     int getNumChannelTracks() const;
@@ -114,16 +116,16 @@ public:
     int mapTrackNumToChannelNum (int channelNum) const;
 
     //==============================================================================
-    int getXTCount();
-    void setXTCount (int);
+    int getXTCount (const juce::String& controller);
+    void setXTCount (const juce::String& controller, int);
     void refreshXTOrder();
 
     //==============================================================================
     // these are called back by the controller to make the app respond
-    void userMovedFader (int channelNum, float newSliderPos);
-    void userMovedMasterFader (Edit*, float newLevel);
+    void userMovedFader (int channelNum, float newSliderPos, bool delta);
+    void userMovedMasterFader (Edit*, float newLevel, bool delta);
     void userMovedMasterPanPot (Edit*, float newLevel);
-    void userMovedPanPot (int channelNum, float newPan);
+    void userMovedPanPot (int channelNum, float newPan, bool delta);
     void userPressedSolo (int channelNum);
     void userPressedSoloIsolate (int channelNum);
     void userPressedMute (int channelNum, bool muteVolumeControl);
@@ -155,7 +157,7 @@ private:
 
     NovationAutomap* automap = nullptr;
 
-    juce::uint32 lastUpdate = 0;
+    uint32_t lastUpdate = 0;
     Edit* currentEdit = nullptr;
     SelectionManager* currentSelectionManager = nullptr;
 

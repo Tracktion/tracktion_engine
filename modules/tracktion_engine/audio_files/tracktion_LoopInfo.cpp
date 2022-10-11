@@ -17,7 +17,7 @@ LoopInfo::LoopInfo (Engine& e)
     initialiseMissingProps();
 }
 
-LoopInfo::LoopInfo (Engine& e, const File& f)
+LoopInfo::LoopInfo (Engine& e, const juce::File& f)
     : engine (e), state (IDs::LOOPINFO)
 {
     auto& formatManager = engine.getAudioFileFormatManager();
@@ -26,13 +26,13 @@ LoopInfo::LoopInfo (Engine& e, const File& f)
     {
         if (auto fin = f.createInputStream())
         {
-            const std::unique_ptr<AudioFormatReader> afr (af->createReaderFor (fin.release(), true));
+            const std::unique_ptr<juce::AudioFormatReader> afr (af->createReaderFor (fin.release(), true));
             init (afr.get(), af);
         }
     }
 }
 
-LoopInfo::LoopInfo (Engine& e, const AudioFormatReader* afr, const AudioFormat* af)
+LoopInfo::LoopInfo (Engine& e, const juce::AudioFormatReader* afr, const juce::AudioFormat* af)
     : engine (e), state (IDs::LOOPINFO)
 {
     init (afr, af);
@@ -94,8 +94,8 @@ double LoopInfo::getBeatsPerSecond (const AudioFileInfo& wi) const
     if (wi.sampleRate == 0.0)
         return 2.0;
 
-    int64 in  = getInMarker();
-    int64 out = getOutMarker();
+    auto in  = getInMarker();
+    auto out = getOutMarker();
 
     if (out == -1 || out > wi.lengthInSamples)
         out = wi.lengthInSamples;
@@ -103,7 +103,7 @@ double LoopInfo::getBeatsPerSecond (const AudioFileInfo& wi) const
     if (out <= 0)
         return 2.0;
 
-    const double length = (out - in) / wi.sampleRate;
+    auto length = (out - in) / wi.sampleRate;
 
     if (length <= 0)
         return 2.0;
@@ -128,11 +128,11 @@ int LoopInfo::getRootNote() const                  { return getProp<int> (IDs::r
 void LoopInfo::setRootNote (int note)              { setProp<int> (IDs::rootNote, note); }
 
 //==============================================================================
-juce::int64 LoopInfo::getInMarker() const          { return getProp<juce::int64> (IDs::inMarker); }
-juce::int64 LoopInfo::getOutMarker() const         { return getProp<juce::int64> (IDs::outMarker); }
+SampleCount LoopInfo::getInMarker() const          { return getProp<juce::int64> (IDs::inMarker); }
+SampleCount LoopInfo::getOutMarker() const         { return getProp<juce::int64> (IDs::outMarker); }
 
-void LoopInfo::setInMarker (juce::int64 in)        { setProp<juce::int64> (IDs::inMarker, in); }
-void LoopInfo::setOutMarker (juce::int64 out)      { setProp<juce::int64> (IDs::outMarker, out); }
+void LoopInfo::setInMarker (SampleCount in)        { setProp<juce::int64> (IDs::inMarker, in); }
+void LoopInfo::setOutMarker (SampleCount out)      { setProp<juce::int64> (IDs::outMarker, out); }
 
 //==============================================================================
 int LoopInfo::getNumLoopPoints() const
@@ -147,30 +147,31 @@ LoopInfo::LoopPoint LoopInfo::getLoopPoint (int idx) const
     auto lp = getLoopPoints().getChild (idx);
 
     if (lp.isValid())
-        return { lp.getProperty (IDs::value),
+        return { static_cast<juce::int64> (lp.getProperty (IDs::value)),
                  (LoopPointType) static_cast<int> (lp.getProperty (IDs::type)) };
 
     return {};
 }
 
-void LoopInfo::addLoopPoint (juce::int64 pos, LoopPointType type)
+void LoopInfo::addLoopPoint (SampleCount pos, LoopPointType type)
 {
     const juce::ScopedLock sl (lock);
     duplicateIfShared();
 
-    juce::ValueTree t (IDs::LOOPPOINT);
-    t.setProperty (IDs::value, pos, nullptr);
-    t.setProperty (IDs::type, (int) type, nullptr);
+    auto t = createValueTree (IDs::LOOPPOINT,
+                              IDs::value, (juce::int64) pos,
+                              IDs::type, (int) type);
+
     getOrCreateLoopPoints().addChild (t, -1, nullptr);
 }
 
-void LoopInfo::changeLoopPoint (int idx, juce::int64 pos, LoopPointType type)
+void LoopInfo::changeLoopPoint (int idx, SampleCount pos, LoopPointType type)
 {
     const juce::ScopedLock sl (lock);
     duplicateIfShared();
 
     auto lp = getLoopPoints().getChild (idx);
-    lp.setProperty (IDs::value, pos, um);
+    lp.setProperty (IDs::value, (juce::int64) pos, um);
     lp.setProperty (IDs::type, (int) type, um);
 }
 
@@ -282,30 +283,31 @@ void LoopInfo::duplicateIfShared()
     }
 }
 
-static bool isSameFormat (const AudioFormat* af1, const AudioFormat* af2)
+static bool isSameFormat (const juce::AudioFormat* af1, const juce::AudioFormat* af2)
 {
-    return af2 != nullptr && af1->getFormatName() == af2->getFormatName();
+    return af1 == af2 || (af1 != nullptr && af2 != nullptr
+                           && af1->getFormatName() == af2->getFormatName());
 }
 
-void LoopInfo::init (const AudioFormatReader* afr, const AudioFormat* af)
+void LoopInfo::init (const juce::AudioFormatReader* afr, const juce::AudioFormat* af)
 {
     if (afr == nullptr || af == nullptr)
         return;
 
     auto& formatManager = engine.getAudioFileFormatManager();
-    const ScopedLock sl (lock);
+    const juce::ScopedLock sl (lock);
 
    #if TRACKTION_ENABLE_REX
     if (isSameFormat (af, formatManager.getRexFormat()))
     {
-        setDenominator (afr->metadataValues [RexAudioFormat::rexDenominator].getIntValue());
-        setNumerator (afr->metadataValues [RexAudioFormat::rexDenominator].getIntValue());
-        const double bpm = afr->metadataValues [RexAudioFormat::rexTempo].getDoubleValue();
+        setDenominator (afr->metadataValues[RexAudioFormat::rexDenominator].getIntValue());
+        setNumerator (afr->metadataValues[RexAudioFormat::rexDenominator].getIntValue());
+        const double bpm = afr->metadataValues[RexAudioFormat::rexTempo].getDoubleValue();
         setProp (IDs::bpm, bpm);
         setProp (IDs::numBeats, bpm * ((afr->lengthInSamples / afr->sampleRate) / 60.0));
 
-        StringArray beatPoints;
-        beatPoints.addTokens (afr->metadataValues [RexAudioFormat::rexBeatPoints], ";", {});
+        juce::StringArray beatPoints;
+        beatPoints.addTokens (afr->metadataValues[RexAudioFormat::rexBeatPoints], ";", {});
         beatPoints.removeEmptyStrings();
 
         for (int i = 0; i < beatPoints.size(); ++i)
@@ -315,20 +317,20 @@ void LoopInfo::init (const AudioFormatReader* afr, const AudioFormat* af)
    #endif
     if (isSameFormat (af, formatManager.getAiffFormat()))
     {
-        const int rootNote = afr->metadataValues [AiffAudioFormat::appleRootSet] == "1"
-                                ? afr->metadataValues [AiffAudioFormat::appleRootNote].getIntValue() : -1;
+        const int rootNote = afr->metadataValues[juce::AiffAudioFormat::appleRootSet] == "1"
+                                ? afr->metadataValues[juce::AiffAudioFormat::appleRootNote].getIntValue() : -1;
 
         setRootNote (rootNote);
-        setProp (IDs::oneShot, afr->metadataValues [AiffAudioFormat::appleOneShot] == "1");
-        setDenominator (afr->metadataValues [AiffAudioFormat::appleDenominator].getIntValue());
-        setNumerator (afr->metadataValues [AiffAudioFormat::appleNumerator].getIntValue());
-        const double numBeats = afr->metadataValues [AiffAudioFormat::appleBeats].getDoubleValue();
+        setProp (IDs::oneShot, afr->metadataValues[juce::AiffAudioFormat::appleOneShot] == "1");
+        setDenominator (afr->metadataValues[juce::AiffAudioFormat::appleDenominator].getIntValue());
+        setNumerator (afr->metadataValues[juce::AiffAudioFormat::appleNumerator].getIntValue());
+        const double numBeats = afr->metadataValues[juce::AiffAudioFormat::appleBeats].getDoubleValue();
         setProp (IDs::numBeats, numBeats);
         setProp (IDs::bpm, (numBeats * 60.0) / (afr->lengthInSamples / afr->sampleRate));
 
-        StringArray t;
-        t.addTokens (afr->metadataValues [AiffAudioFormat::appleTag], ";", {});
-        t.add (afr->metadataValues [AiffAudioFormat::appleKey]);
+        juce::StringArray t;
+        t.addTokens (afr->metadataValues[juce::AiffAudioFormat::appleTag], ";", {});
+        t.add (afr->metadataValues[juce::AiffAudioFormat::appleKey]);
         t.removeEmptyStrings();
 
         for (int i = 0; i < t.size(); ++i)
@@ -336,41 +338,41 @@ void LoopInfo::init (const AudioFormatReader* afr, const AudioFormat* af)
     }
     else if (isSameFormat (af, formatManager.getWavFormat()))
     {
-        String s = afr->metadataValues [WavAudioFormat::tracktionLoopInfo];
+        auto s = afr->metadataValues[juce::WavAudioFormat::tracktionLoopInfo];
 
         if (s.isNotEmpty())
         {
-            if (auto n = std::unique_ptr<XmlElement> (XmlDocument::parse (s)))
-                copyFrom (ValueTree::fromXml (*n));
+            if (auto n = juce::parseXML (s))
+                copyFrom (juce::ValueTree::fromXml (*n));
         }
         else
         {
-            const int rootNote = afr->metadataValues [WavAudioFormat::acidRootSet] == "1"
-                                    ? afr->metadataValues [WavAudioFormat::acidRootNote].getIntValue() : -1;
-            const double numBeats = afr->metadataValues [WavAudioFormat::acidBeats].getDoubleValue();
+            const int rootNote = afr->metadataValues[juce::WavAudioFormat::acidRootSet] == "1"
+                                    ? afr->metadataValues[juce::WavAudioFormat::acidRootNote].getIntValue() : -1;
+            const double numBeats = afr->metadataValues[juce::WavAudioFormat::acidBeats].getDoubleValue();
 
             setRootNote (rootNote);
             setNumBeats (numBeats);
-            setProp (IDs::oneShot, afr->metadataValues [WavAudioFormat::acidOneShot] == "1");
-            setDenominator (afr->metadataValues [WavAudioFormat::acidDenominator].getIntValue());
-            setNumerator (afr->metadataValues [WavAudioFormat::acidNumerator].getIntValue());
-            setNumBeats (afr->metadataValues [WavAudioFormat::acidBeats].getDoubleValue());
+            setProp (IDs::oneShot, afr->metadataValues[juce::WavAudioFormat::acidOneShot] == "1");
+            setDenominator (afr->metadataValues[juce::WavAudioFormat::acidDenominator].getIntValue());
+            setNumerator (afr->metadataValues[juce::WavAudioFormat::acidNumerator].getIntValue());
+            setNumBeats (afr->metadataValues[juce::WavAudioFormat::acidBeats].getDoubleValue());
             setProp (IDs::bpm, (numBeats * 60.0) / (afr->lengthInSamples / afr->sampleRate));
         }
     }
     else if (isSameFormat (af, formatManager.getNativeAudioFormat()))
     {
-        String s = afr->metadataValues [WavAudioFormat::tracktionLoopInfo];
+        juce::String s = afr->metadataValues[juce::WavAudioFormat::tracktionLoopInfo];
 
         if (s.isNotEmpty())
         {
-            if (auto n = std::unique_ptr<XmlElement> (XmlDocument::parse (s)))
-                copyFrom (ValueTree::fromXml (*n));
+            if (auto n = juce::parseXML (s))
+                copyFrom (juce::ValueTree::fromXml (*n));
         }
         else
         {
-            const String tempoString = afr->metadataValues ["tempo"];
-            const double bpm = tempoString.getDoubleValue();
+            const juce::String tempoString = afr->metadataValues["tempo"];
+            auto bpm = tempoString.getDoubleValue();
 
             setProp (IDs::bpm, bpm);
 
@@ -380,7 +382,7 @@ void LoopInfo::init (const AudioFormatReader* afr, const AudioFormat* af)
                 setNumBeats ((fileDuration / 60.0) * bpm);
             }
 
-            const String beatCount = afr->metadataValues ["beat count"];
+            const juce::String beatCount = afr->metadataValues["beat count"];
 
             if (beatCount.isNotEmpty() && bpm == 0)
             {
@@ -391,7 +393,7 @@ void LoopInfo::init (const AudioFormatReader* afr, const AudioFormat* af)
                 setNumBeats (beats);
             }
 
-            const String timeSig (afr->metadataValues ["time signature"]);
+            const juce::String timeSig (afr->metadataValues["time signature"]);
 
             if (timeSig.isNotEmpty())
             {
@@ -399,7 +401,7 @@ void LoopInfo::init (const AudioFormatReader* afr, const AudioFormat* af)
                 setNumerator (timeSig.fromFirstOccurrenceOf ("/", false, false).getIntValue());
             }
 
-            const String keySig (afr->metadataValues ["key signature"]);
+            const juce::String keySig (afr->metadataValues["key signature"]);
 
             if (keySig.isNotEmpty())
             {
@@ -409,18 +411,19 @@ void LoopInfo::init (const AudioFormatReader* afr, const AudioFormat* af)
             }
         }
     }
-    else if (afr->metadataValues.containsKey (WavAudioFormat::acidBeats) || afr->metadataValues.containsKey (WavAudioFormat::acidNumerator))
+    else if (afr->metadataValues.containsKey (juce::WavAudioFormat::acidBeats)
+              || afr->metadataValues.containsKey (juce::WavAudioFormat::acidNumerator))
     {
-        const int rootNote = afr->metadataValues [WavAudioFormat::acidRootSet] == "1"
-                                ? afr->metadataValues [WavAudioFormat::acidRootNote].getIntValue() : -1;
-        const double numBeats = afr->metadataValues [WavAudioFormat::acidBeats].getDoubleValue();
+        const int rootNote = afr->metadataValues[juce::WavAudioFormat::acidRootSet] == "1"
+                                ? afr->metadataValues[juce::WavAudioFormat::acidRootNote].getIntValue() : -1;
+        const double numBeats = afr->metadataValues[juce::WavAudioFormat::acidBeats].getDoubleValue();
 
         setRootNote (rootNote);
         setNumBeats (numBeats);
-        setProp (IDs::oneShot, afr->metadataValues [WavAudioFormat::acidOneShot] == "1");
-        setDenominator (afr->metadataValues [WavAudioFormat::acidDenominator].getIntValue());
-        setNumerator (afr->metadataValues [WavAudioFormat::acidNumerator].getIntValue());
-        setNumBeats (afr->metadataValues [WavAudioFormat::acidBeats].getDoubleValue());
+        setProp (IDs::oneShot, afr->metadataValues[juce::WavAudioFormat::acidOneShot] == "1");
+        setDenominator (afr->metadataValues[juce::WavAudioFormat::acidDenominator].getIntValue());
+        setNumerator (afr->metadataValues[juce::WavAudioFormat::acidNumerator].getIntValue());
+        setNumBeats (afr->metadataValues[juce::WavAudioFormat::acidBeats].getDoubleValue());
         setProp (IDs::bpm, (numBeats * 60.0) / (afr->lengthInSamples / afr->sampleRate));
     }
 

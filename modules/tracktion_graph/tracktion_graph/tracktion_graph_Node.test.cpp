@@ -584,7 +584,7 @@ private:
 
             // Make a new sin node and switch that in to the test context
             node = makeSinNode();
-            expectEquals (juce::uint64 (node->getNodeProperties().nodeID), juce::uint64 (expectedNodeID));
+            expectEquals (uint64_t (node->getNodeProperties().nodeID), uint64_t (expectedNodeID));
             playerContext.setPlayer (std::make_unique<NodePlayer> (std::move (node)));
             const int secondHalfNumSamples = totalNumSamples - firstHalfNumSamples;
             playerContext.process (secondHalfNumSamples);
@@ -629,7 +629,7 @@ private:
             // Make a new sin node and switch that in to the test context
             node = makeSinNode();
             test_utilities::expectUniqueNodeIDs (*this, *node, false);
-            expectEquals (juce::uint64 (node->getNodeProperties().nodeID), juce::uint64 (expectedNodeID));
+            expectEquals (uint64_t (node->getNodeProperties().nodeID), uint64_t (expectedNodeID));
             playerContext.setNode (std::move (node));
             const int secondHalfNumSamples = totalNumSamples - firstHalfNumSamples;
             playerContext.process (secondHalfNumSamples);

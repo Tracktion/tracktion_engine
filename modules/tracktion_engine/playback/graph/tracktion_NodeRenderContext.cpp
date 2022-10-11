@@ -126,7 +126,6 @@ NodeRenderContext::NodeRenderContext (Renderer::RenderTask& owner_, Renderer::Pa
     peak = 0.0001f;
     rmsTotal = 0.0;
     rmsNumSamps = 0;
-    numNonZeroSamps = 0;
     streamTime = r.time.getStart();
 
     precount = numPreRenderBlocks;
@@ -156,7 +155,7 @@ NodeRenderContext::~NodeRenderContext()
     CRASH_TRACER
     r.resultMagnitude = owner.params.resultMagnitude = peak;
     r.resultRMS = owner.params.resultRMS = rmsNumSamps > 0 ? (float) (rmsTotal / rmsNumSamps) : 0.0f;
-    r.resultAudioDuration = owner.params.resultAudioDuration = float (numNonZeroSamps / owner.params.sampleRateForAudio);
+    r.resultAudioDuration = owner.params.resultAudioDuration = float (numSamplesWrittenToSource / owner.params.sampleRateForAudio);
 
     playHead->stop();
     Renderer::RenderTask::setAllPluginsRealtime (plugins, true);
@@ -343,19 +342,14 @@ NodeRenderContext::WriteResult NodeRenderContext::writeAudioBlock (choc::buffer:
         ++rmsNumSamps;
     }
 
-    for (int i = blockSizeSamples; --i >= 0;)
-        if (buffer.getMagnitude (i, 1) > 0.0001)
-            numNonZeroSamps++;
-
     if (! hasStartedSavingToFile)
         samplesTrimmed += blockSizeSamples;
 
     // Update thumbnail source
     if (sourceToUpdate != nullptr && blockSizeSamples > 0)
-    {
         sourceToUpdate->addBlock (numSamplesWrittenToSource, buffer, 0, blockSizeSamples);
-        numSamplesWrittenToSource += blockSizeSamples;
-    }
+
+    numSamplesWrittenToSource += blockSizeSamples;
 
     // And finally write to the file
     // NB buffer gets trashed by this call

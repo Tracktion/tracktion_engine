@@ -11,22 +11,22 @@
 namespace tracktion_engine
 {
 
-static File getApplicationSettingsFile()
+static juce::File getApplicationSettingsFile()
 {
     return Engine::getEngines()[0]->getPropertyStorage().getAppPrefsFolder().getChildFile ("Settings.xml");
 }
 
-static PropertiesFile::Options getSettingsOptions()
+static juce::PropertiesFile::Options getSettingsOptions()
 {
-    PropertiesFile::Options opts;
+    juce::PropertiesFile::Options opts;
     opts.millisecondsBeforeSaving = 2000;
-    opts.storageFormat = PropertiesFile::storeAsXML;
+    opts.storageFormat = juce::PropertiesFile::storeAsXML;
 
     return opts;
 }
 
-struct ApplicationSettings : public PropertiesFile,
-                             public DeletedAtShutdown
+struct ApplicationSettings : public juce::PropertiesFile,
+                             public juce::DeletedAtShutdown
 {
     ApplicationSettings() : PropertiesFile (getApplicationSettingsFile(), getSettingsOptions()) {}
     ~ApplicationSettings() { clearSingletonInstance(); }
@@ -34,7 +34,7 @@ struct ApplicationSettings : public PropertiesFile,
     JUCE_DECLARE_SINGLETON (ApplicationSettings, false)
 };
 
-PropertiesFile* getApplicationSettings()
+juce::PropertiesFile* getApplicationSettings()
 {
     return ApplicationSettings::getInstance();
 }
@@ -42,7 +42,7 @@ PropertiesFile* getApplicationSettings()
 JUCE_IMPLEMENT_SINGLETON (ApplicationSettings)
 
 //==============================================================================
-String PropertyStorage::settingToString (SettingID setting)
+juce::String PropertyStorage::settingToString (SettingID setting)
 {
     switch (setting)
     {
@@ -73,6 +73,8 @@ String PropertyStorage::settingToString (SettingID setting)
         case SettingID::defaultWaveInDevice:           return "defaultWaveInDevice";
         case SettingID::externControlIn:               return "externControlIn";
         case SettingID::externControlOut:              return "externControlOut";
+        case SettingID::externControlNum:              return "externControlNum";
+        case SettingID::externControlMain:             return "externControlMain";
         case SettingID::externControlShowSelection:    return "externControlShowSelection";
         case SettingID::externControlSelectionColour:  return "externControlSelectionColour";
         case SettingID::externControlEnable:           return "externControlEnable";
@@ -165,14 +167,14 @@ String PropertyStorage::settingToString (SettingID setting)
 }
 
 //==============================================================================
-File PropertyStorage::getAppCacheFolder()
+juce::File PropertyStorage::getAppCacheFolder()
 {
     return getAppPrefsFolder();
 }
 
-File PropertyStorage::getAppPrefsFolder()
+juce::File PropertyStorage::getAppPrefsFolder()
 {
-    auto f = File::getSpecialLocation (File::userApplicationDataDirectory).getChildFile (getApplicationName());
+    auto f = juce::File::getSpecialLocation (juce::File::userApplicationDataDirectory).getChildFile (getApplicationName());
 
     if (! f.isDirectory())
         f.createDirectory();
@@ -180,12 +182,12 @@ File PropertyStorage::getAppPrefsFolder()
     return f;
 }
 
-String PropertyStorage::getUserName()
+juce::String PropertyStorage::getUserName()
 {
-    return SystemStats::getFullUserName();
+    return juce::SystemStats::getFullUserName();
 }
 
-String PropertyStorage::getApplicationVersion()
+juce::String PropertyStorage::getApplicationVersion()
 {
     return "Unknown";
 }
@@ -197,22 +199,22 @@ void PropertyStorage::removeProperty (SettingID setting)
     as.removeValue (PropertyStorage::settingToString (setting));
 }
 
-var PropertyStorage::getProperty (SettingID setting, const var& defaultValue)
+juce::var PropertyStorage::getProperty (SettingID setting, const juce::var& defaultValue)
 {
     auto& as = *ApplicationSettings::getInstance();
     return as.getValue (PropertyStorage::settingToString (setting), defaultValue);
 }
 
-void PropertyStorage::setProperty (SettingID setting, const var& value)
+void PropertyStorage::setProperty (SettingID setting, const juce::var& value)
 {
     auto& as = *ApplicationSettings::getInstance();
     as.setValue (PropertyStorage::settingToString (setting), value);
 }
 
-std::unique_ptr<XmlElement> PropertyStorage::getXmlProperty (SettingID setting)
+std::unique_ptr<juce::XmlElement> PropertyStorage::getXmlProperty (SettingID setting)
 {
     auto& as = *ApplicationSettings::getInstance();
-    return std::unique_ptr<XmlElement> (as.getXmlValue (PropertyStorage::settingToString (setting)));
+    return std::unique_ptr<juce::XmlElement> (as.getXmlValue (PropertyStorage::settingToString (setting)));
 }
 
 void PropertyStorage::setXmlProperty (SettingID setting, const juce::XmlElement& xml)
@@ -222,49 +224,49 @@ void PropertyStorage::setXmlProperty (SettingID setting, const juce::XmlElement&
 }
 
 //==============================================================================
-void PropertyStorage::removePropertyItem (SettingID setting, StringRef item)
+void PropertyStorage::removePropertyItem (SettingID setting, juce::StringRef item)
 {
     auto& as = *ApplicationSettings::getInstance();
     as.removeValue (PropertyStorage::settingToString (setting) + "_" + item);
 }
 
-var PropertyStorage::getPropertyItem (SettingID setting, StringRef item, const var& defaultValue)
+juce::var PropertyStorage::getPropertyItem (SettingID setting, juce::StringRef item, const juce::var& defaultValue)
 {
     auto& as = *ApplicationSettings::getInstance();
     return as.getValue (PropertyStorage::settingToString (setting) + "_" + item, defaultValue);
 }
 
-void PropertyStorage::setPropertyItem (SettingID setting, StringRef item, const var& value)
+void PropertyStorage::setPropertyItem (SettingID setting, juce::StringRef item, const juce::var& value)
 {
     auto& as = *ApplicationSettings::getInstance();
     as.setValue (PropertyStorage::settingToString (setting) + "_" + item, value);
 }
 
-std::unique_ptr<XmlElement> PropertyStorage::getXmlPropertyItem (SettingID setting, StringRef item)
+std::unique_ptr<juce::XmlElement> PropertyStorage::getXmlPropertyItem (SettingID setting, juce::StringRef item)
 {
     auto& as = *ApplicationSettings::getInstance();
-    return std::unique_ptr<XmlElement> (as.getXmlValue (PropertyStorage::settingToString (setting) + "_" + item));
+    return std::unique_ptr<juce::XmlElement> (as.getXmlValue (PropertyStorage::settingToString (setting) + "_" + item));
 }
 
-void PropertyStorage::setXmlPropertyItem (SettingID setting, StringRef item, const juce::XmlElement& xml)
+void PropertyStorage::setXmlPropertyItem (SettingID setting, juce::StringRef item, const juce::XmlElement& xml)
 {
     auto& as = *ApplicationSettings::getInstance();
     as.setValue (PropertyStorage::settingToString (setting) + "_" + item, &xml);
 }
 
 //==============================================================================
-File PropertyStorage::getDefaultLoadSaveDirectory (juce::StringRef)
+juce::File PropertyStorage::getDefaultLoadSaveDirectory (juce::StringRef)
 {
-    return File::getSpecialLocation (File::userDocumentsDirectory);
+    return juce::File::getSpecialLocation (juce::File::userDocumentsDirectory);
 }
 
 void PropertyStorage::setDefaultLoadSaveDirectory (juce::StringRef, const juce::File&)
 {
 }
 
-File PropertyStorage::getDefaultLoadSaveDirectory (ProjectItem::Category)
+juce::File PropertyStorage::getDefaultLoadSaveDirectory (ProjectItem::Category)
 {
-    return File::getSpecialLocation (File::userDocumentsDirectory);
+    return juce::File::getSpecialLocation (juce::File::userDocumentsDirectory);
 }
 
 }

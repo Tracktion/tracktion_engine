@@ -168,6 +168,56 @@ namespace
         return true;
     }
 
+    juce::Array<Track*> addImplicitSubmixChildTracks (const juce::Array<Track*> originalTracks)
+    {
+        if (originalTracks.isEmpty())
+            return {};
+     
+        auto tracks = originalTracks;
+        
+        // Iterate all original tracks
+        // If any tracks are submix tracks, check if their parents are included or any of their children
+        // If not, add all children recusively
+        // Ensure there are no duplicates
+        for (auto track : originalTracks)
+        {
+            if (auto st = dynamic_cast<FolderTrack*> (track);
+                st != nullptr && st->isSubmixFolder())
+            {
+                bool shouldSkip = false;
+                
+                // First check for parents
+                for (auto potentialParent : originalTracks)
+                {
+                    if (track->isAChildOf (*potentialParent))
+                    {
+                        shouldSkip = true;
+                        break;
+                    }
+                }
+
+                // Then children
+                for (auto potentialChild : originalTracks)
+                {
+                    if (potentialChild->isAChildOf (*track))
+                    {
+                        shouldSkip = true;
+                        break;
+                    }
+                }
+                
+                if (shouldSkip)
+                    continue;
+
+                // Otherwise add all the children
+                for (auto childTrack : st->getAllSubTracks (true))
+                    tracks.addIfNotAlreadyThere (childTrack);
+            }
+        }
+    
+        return tracks;
+    }
+
 //==============================================================================
 //==============================================================================
 std::unique_ptr<tracktion_graph::Node> createNodeForTrack (Track&, const CreateNodeParams&);
@@ -178,7 +228,7 @@ std::unique_ptr<tracktion_graph::Node> createPluginNodeForList (PluginList&, con
 std::unique_ptr<tracktion_graph::Node> createPluginNodeForTrack (Track&, TrackMuteState&, std::unique_ptr<Node>,
                                                                  tracktion_graph::PlayHeadState&, const CreateNodeParams&);
 
-std::unique_ptr<tracktion_graph::Node> createLiveInputNodeForDevice (InputDeviceInstance&, tracktion_graph::PlayHeadState&);
+std::unique_ptr<tracktion_graph::Node> createLiveInputNodeForDevice (InputDeviceInstance&, tracktion_graph::PlayHeadState&, const CreateNodeParams&);
 
 
 //==============================================================================
@@ -564,13 +614,14 @@ std::unique_ptr<tracktion_graph::Node> createClipsNode (const juce::Array<Clip*>
     return std::make_unique<SummingNode> (std::move (nodes));
 }
 
-std::unique_ptr<tracktion_graph::Node> createLiveInputNodeForDevice (InputDeviceInstance& inputDeviceInstance, tracktion_graph::PlayHeadState& playHeadState)
+std::unique_ptr<tracktion_graph::Node> createLiveInputNodeForDevice (InputDeviceInstance& inputDeviceInstance, tracktion_graph::PlayHeadState& playHeadState,
+                                                                     const CreateNodeParams& params)
 {
     if (auto midiDevice = dynamic_cast<MidiInputDevice*> (&inputDeviceInstance.getInputDevice()))
     {
         if (midiDevice->isTrackDevice())
             if (auto sourceTrack = getTrackContainingTrackDevice (inputDeviceInstance.edit, *midiDevice))
-                return makeNode<TrackMidiInputDeviceNode> (*midiDevice, makeNode<ReturnNode> (getMidiInputDeviceBusID (sourceTrack->itemID)));
+                return makeNode<TrackMidiInputDeviceNode> (*midiDevice, makeNode<ReturnNode> (getMidiInputDeviceBusID (sourceTrack->itemID)), params.processState);
 
         if (HostedAudioDeviceInterface::isHostedMidiInputDevice (*midiDevice))
             return makeNode<HostedMidiInputDeviceNode> (inputDeviceInstance, *midiDevice, midiDevice->getMPESourceID(), playHeadState);
@@ -599,7 +650,7 @@ std::unique_ptr<tracktion_graph::Node> createLiveInputsNode (AudioTrack& track, 
         if (auto context = track.edit.getCurrentPlaybackContext())
             for (auto in : context->getAllInputs())
                 if ((in->isLivePlayEnabled (track) || in->getInputDevice().isTrackDevice()) && in->isOnTargetTrack (track))
-                    if (auto node = createLiveInputNodeForDevice (*in, playHeadState))
+                    if (auto node = createLiveInputNodeForDevice (*in, playHeadState, params))
                         nodes.push_back (std::move (node));
 
     if (nodes.empty())
@@ -1021,7 +1072,7 @@ std::unique_ptr<tracktion_graph::Node> createNodeForTrack (Track& track, const C
         if (t->isPartOfSubmix() && ! shouldRenderTrackInSubmix (*t, params))
             return {};
 
-        if (t->isFrozen (Track::groupFreeze))
+        if (! params.forRendering && t->isFrozen (Track::groupFreeze))
             return {};
 
         return createNodeForAudioTrack (*t, params);
@@ -1088,7 +1139,8 @@ std::unique_ptr<Node> createRackNode (std::unique_ptr<Node> input, RackTypeList&
 
 //==============================================================================
 std::unique_ptr<Node> createInsertSendNode (InsertPlugin& insert, OutputDevice& device,
-                                            tracktion_graph::PlayHeadState& playHeadState)
+                                            tracktion_graph::PlayHeadState& playHeadState,
+                                            const CreateNodeParams& params)
 {
     if (insert.outputDevice != device.getName())
         return {};
@@ -1100,7 +1152,7 @@ std::unique_ptr<Node> createInsertSendNode (InsertPlugin& insert, OutputDevice& 
         if (insert.getReturnDeviceType() != InsertPlugin::noDevice)
             for (auto i : insert.edit.getAllInputDevices())
                 if (i->owner.getName() == insert.inputDevice)
-                    return makeNode<InsertReturnNode> (insert, createLiveInputNodeForDevice (*i, playHeadState));
+                    return makeNode<InsertReturnNode> (insert, createLiveInputNodeForDevice (*i, playHeadState, params));
 
         return {};
     };
@@ -1130,8 +1182,13 @@ std::unique_ptr<tracktion_graph::Node> createGroupFreezeNodeForDevice (Edit& edi
 
             auto node = tracktion_graph::makeNode<WaveNode> (af, EditTimeRange (0.0, length),
                                                              0.0, EditTimeRange(), LiveClipLevel(),
-                                                             1.0, juce::AudioChannelSet::stereo(), juce::AudioChannelSet::stereo(),
-                                                             processState, EditItemID::fromRawID ((uint64_t) device.getName().hash()), false);
+                                                             1.0,
+                                                             juce::AudioChannelSet::stereo(),
+                                                             juce::AudioChannelSet::stereo(),
+                                                             processState,
+                                                             EditItemID::fromRawID ((uint64_t) device.getName().hash()),
+                                                             false);
+
             return makeNode<TrackMutingNode> (std::make_unique<TrackMuteState> (edit), std::move (node), false);
         }
     }
@@ -1234,7 +1291,7 @@ std::unique_ptr<tracktion_graph::Node> createNodeForEdit (EditPlaybackContext& e
                 if (! device->isEnabled())
                     continue;
                 
-                if (t->isFrozen (Track::groupFreeze))
+                if (! params.forRendering && t->isFrozen (Track::groupFreeze))
                 {
                     if (std::find (devicesWithFrozenNodes.begin(), devicesWithFrozenNodes.end(), device)
                         != devicesWithFrozenNodes.end())
@@ -1305,7 +1362,7 @@ std::unique_ptr<tracktion_graph::Node> createNodeForEdit (EditPlaybackContext& e
             if (ins->outputDevice != device->getName())
                 continue;
 
-            if (auto sendNode = createInsertSendNode (*ins, *device, playHeadState))
+            if (auto sendNode = createInsertSendNode (*ins, *device, playHeadState, params))
             {
                 sumNode->addInput (std::move (sendNode));
                 deviceIsBeingUsedAsInsert = true;
@@ -1347,10 +1404,14 @@ std::unique_ptr<tracktion_graph::Node> createNodeForEdit (EditPlaybackContext& e
     return finalNode;
 }
 
-std::unique_ptr<tracktion_graph::Node> createNodeForEdit (Edit& edit, const CreateNodeParams& params)
+std::unique_ptr<tracktion_graph::Node> createNodeForEdit (Edit& edit, const CreateNodeParams& originalParams)
 {
     std::vector<std::unique_ptr<tracktion_graph::Node>> trackNodes;
+    auto params = originalParams;
     auto& playHeadState = params.processState.playHeadState;
+    
+    if (params.implicitlyIncludeSubmixChildTracks && params.allowedTracks != nullptr)
+        *params.allowedTracks = addImplicitSubmixChildTracks (*params.allowedTracks);
 
     for (auto t : getAllTracks (edit))
     {

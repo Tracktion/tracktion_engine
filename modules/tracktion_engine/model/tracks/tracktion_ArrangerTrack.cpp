@@ -11,7 +11,7 @@
 namespace tracktion_engine
 {
 
-ArrangerTrack::ArrangerTrack (Edit& e, const ValueTree& v)
+ArrangerTrack::ArrangerTrack (Edit& e, const juce::ValueTree& v)
     : ClipTrack (e, v, 30, 13, 60)
 {
 }

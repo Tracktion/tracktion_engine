@@ -24,7 +24,7 @@ namespace tracktion_engine
 using namespace ReWire;
 
 //==============================================================================
-static String getReWireErrorMessage (ReWireError err)
+static juce::String getReWireErrorMessage (ReWireError err)
 {
     const char* e = "Unknown error";
 
@@ -68,7 +68,7 @@ static void logRewireError (ReWireError res)
         TRACKTION_LOG_ERROR (getReWireErrorMessage (res));
 }
 
-const uint32 inputEventBufferSize = 200;
+const uint32_t inputEventBufferSize = 200;
 
 //==============================================================================
 /**
@@ -81,7 +81,7 @@ const uint32 inputEventBufferSize = 200;
 class ReWireSystem::Device  : private Timer
 {
 public:
-    Device (Engine& e, TRWMDeviceHandle h, const String& name, int index)
+    Device (Engine& e, TRWMDeviceHandle h, const juce::String& name, int index)
       : engine (e),
         handle (h),
         deviceName (name),
@@ -91,7 +91,7 @@ public:
         CRASH_TRACER
         jassert (isReWireEnabled (engine));
 
-        zeromem (reWireToLocalChanMap, sizeof (reWireToLocalChanMap));
+        std::memset (reWireToLocalChanMap, 0, sizeof (reWireToLocalChanMap));
 
         ReWireDeviceInfo devInfo;
         ReWirePrepareDeviceInfo (&devInfo);
@@ -100,7 +100,7 @@ public:
         if (res == kReWireError_NoError)
         {
             for (int i = 0; i < devInfo.fChannelCount; ++i)
-                channelNames.add (CharPointer_UTF8 (devInfo.fChannelNames[i]));
+                channelNames.add (juce::CharPointer_UTF8 (devInfo.fChannelNames[i]));
         }
         else
         {
@@ -116,7 +116,7 @@ public:
 
         ReWireClearBitField (in.fRequestedChannelsBitField, kReWireAudioChannelCount);
 
-        outputEventBufferSize = (uint32) jmax (32, (int) devInfo.fMaxEventOutputBufferSize);
+        outputEventBufferSize = (uint32_t) std::max (32, (int) devInfo.fMaxEventOutputBufferSize);
         outputFromDeviceBuffer.calloc (outputEventBufferSize);
 
         ReWirePrepareDriveAudioOutputParams (&out, (ReWire_uint32_t) outputEventBufferSize, outputFromDeviceBuffer);
@@ -173,7 +173,7 @@ public:
         jassert (isReWireEnabled (engine));
         jassert (edit != nullptr);
 
-        const ScopedLock sl (lock);
+        const juce::ScopedLock sl (lock);
 
         buffer.clear();
         storedMessages.clear();
@@ -185,7 +185,7 @@ public:
         bufferSourceChannels.setBit (rightChanIndex);
         buffer.setSize (bufferSourceChannels.countNumberOfSetBits(), blockSize);
 
-        zeromem (reWireToLocalChanMap, sizeof (reWireToLocalChanMap));
+        std::memset (reWireToLocalChanMap, 0, sizeof (reWireToLocalChanMap));
         int localChan = 0;
 
         for (int i = 0; i < kReWireAudioChannelCount; ++i)
@@ -229,7 +229,7 @@ public:
             }
 
             // setup the output fields
-            outputEventBufferSize = (uint32) jmax (32, (int) devInfo.fMaxEventOutputBufferSize);
+            outputEventBufferSize = (uint32_t) std::max (32, (int) devInfo.fMaxEventOutputBufferSize);
             outputFromDeviceBuffer.calloc (outputEventBufferSize);
 
             ReWirePrepareDriveAudioOutputParams (&out, (ReWire_uint32_t) outputEventBufferSize, outputFromDeviceBuffer);
@@ -246,10 +246,10 @@ public:
                     const auto loopRange = transport->getLoopRange();
 
                     markPos.setTime (loopRange.getStart());
-                    rewireLoopStart = roundToInt (markPos.getPPQTime() * kReWirePPQ);
+                    rewireLoopStart = juce::roundToInt (markPos.getPPQTime() * kReWirePPQ);
 
                     markPos.setTime (loopRange.getEnd());
-                    rewireLoopEnd = roundToInt (markPos.getPPQTime() * kReWirePPQ);
+                    rewireLoopEnd = juce::roundToInt (markPos.getPPQTime() * kReWirePPQ);
 
                     rewireLooping = transport->looping;
                 }
@@ -284,7 +284,7 @@ public:
         inputToDeviceParams.fSignatureNumerator   = (t.numerator <= 0)   ? 4 : (ReWire_uint32_t) t.numerator;
         inputToDeviceParams.fSignatureDenominator = (t.denominator == 0) ? 4 : (ReWire_uint32_t) t.denominator;
 
-        inputToDeviceParams.fPPQ15360TickOfBatchStart = roundToInt (position.getPPQTime() * kReWirePPQ);
+        inputToDeviceParams.fPPQ15360TickOfBatchStart = juce::roundToInt (position.getPPQTime() * kReWirePPQ);
 
         pluginsServedThisFrame = 0;
     }
@@ -293,7 +293,7 @@ public:
                          int leftChannelIndex, int rightChannelIndex,
                          int bus, int channel)
     {
-        const ScopedLock sl (lock);
+        const juce::ScopedLock sl (lock);
 
         auto& in = inputToDeviceParams;
         auto& out = outputFromDeviceParams;
@@ -302,7 +302,9 @@ public:
         {
             fc.bufferForMidiMessages->sortByTimestamp();
 
-            auto num = jmin ((int) fc.bufferForMidiMessages->size(), (int) inputEventBufferSize);
+            auto num = std::min ((int) fc.bufferForMidiMessages->size(),
+                                 (int) inputEventBufferSize);
+
             auto* event = &in.fEventInBuffer.fEventBuffer [in.fEventInBuffer.fCount];
 
             for (int i = 0; i < num; ++i)
@@ -341,7 +343,7 @@ public:
                            [] (ReWireMIDIEvent* a, ReWireMIDIEvent* b) { return a->fRelativeSamplePos < b->fRelativeSamplePos; });
 
                 auto* event = &in.fEventInBuffer.fEventBuffer [in.fEventInBuffer.fCount];
-                const int num = jmin (storedMessages.size(), (int) inputEventBufferSize);
+                auto num = std::min (storedMessages.size(), (int) inputEventBufferSize);
 
                 for (int i = 1; i < num; ++i)
                 {
@@ -378,7 +380,7 @@ public:
             if (handle != nullptr)
                 RWMDriveAudio (handle, &in, &out);
 
-            lastDriveAudioTime = Time::getApproximateMillisecondCounter();
+            lastDriveAudioTime = juce::Time::getApproximateMillisecondCounter();
 
             in.fEventInBuffer.fCount = 0;
         }
@@ -409,18 +411,19 @@ public:
         if (fc.destBuffer != nullptr)
         {
             if (ReWireIsBitInBitFieldSet (out.fServedChannelsBitField, (unsigned short) leftChannelIndex))
-                FloatVectorOperations::copy (fc.destBuffer->getWritePointer (0, fc.bufferStartSample),
-                                             in.fAudioBuffers[leftChannelIndex],
-                                             fc.bufferNumSamples);
+                juce::FloatVectorOperations::copy (fc.destBuffer->getWritePointer (0, fc.bufferStartSample),
+                                                   in.fAudioBuffers[leftChannelIndex],
+                                                   fc.bufferNumSamples);
 
             if (ReWireIsBitInBitFieldSet (out.fServedChannelsBitField, (unsigned short) rightChannelIndex))
-                FloatVectorOperations::copy (fc.destBuffer->getWritePointer (1, fc.bufferStartSample),
-                                             in.fAudioBuffers[rightChannelIndex],
-                                             fc.bufferNumSamples);
+                juce::FloatVectorOperations::copy (fc.destBuffer->getWritePointer (1, fc.bufferStartSample),
+                                                   in.fAudioBuffers[rightChannelIndex],
+                                                   fc.bufferNumSamples);
         }
     }
 
-    void setupMidiEvent (ReWireMIDIEvent& e, int type, const MidiMessage& m, int numSamples, int bus, int channel) const
+    void setupMidiEvent (ReWireMIDIEvent& e, int type, const juce::MidiMessage& m,
+                         int numSamples, int bus, int channel) const
     {
         e.fMIDIEventType = (unsigned short) (0xf0 & type);
         e.fData1 = m.getRawData()[1];
@@ -430,7 +433,7 @@ public:
         if (e.fData2 == 0 && (e.fMIDIEventType & 0xf0) == 0x90)
             e.fMIDIEventType = 0x80;
 
-        e.fRelativeSamplePos = jlimit (0, numSamples - 1, roundToInt (m.getTimeStamp() * sampleRate));
+        e.fRelativeSamplePos = juce::jlimit (0, numSamples - 1, juce::roundToInt (m.getTimeStamp() * sampleRate));
         e.fEventTarget.fMIDIBusIndex = (unsigned short) bus;
         e.fEventTarget.fChannel = (unsigned short) channel;
     }
@@ -468,8 +471,8 @@ public:
             case kReWireRequestSignatureEvent:
                 {
                     auto theEvent = ReWireCastToRequestSignatureEvent (event);
-                    requestedTimeSigNum   = jmax (1, (int) theEvent->fSignatureNumerator);
-                    requestedTimeSigDenom = jmax (1, (int) theEvent->fSignatureDenominator);
+                    requestedTimeSigNum   = std::max (1, (int) theEvent->fSignatureNumerator);
+                    requestedTimeSigDenom = std::max (1, (int) theEvent->fSignatureDenominator);
                     timeSigRequest = true;
                 }
                 break;
@@ -513,8 +516,8 @@ public:
                 {
                     auto m = ReWireCastToMIDIEvent (event);
 
-                    bufferForMidiMessages->addMidiMessage (MidiMessage (m->fMIDIEventType | (0xf & m->fEventTarget.fChannel),
-                                                                        m->fData1, m->fData2),
+                    bufferForMidiMessages->addMidiMessage (juce::MidiMessage (m->fMIDIEventType | (0xf & m->fEventTarget.fChannel),
+                                                                              m->fData1, m->fData2),
                                                            0, midiSourceID);
                 }
                 break;
@@ -535,9 +538,9 @@ public:
 
             if (containerEdit != nullptr && containerEdit->tempoSequence.getNumTempos() == 1)
             {
-                containerEdit->tempoSequence.getTimeSig(0)->setStringTimeSig (String (requestedTimeSigNum)
+                containerEdit->tempoSequence.getTimeSig(0)->setStringTimeSig (juce::String (requestedTimeSigNum)
                                                                                + "/"
-                                                                               + String (requestedTimeSigDenom));
+                                                                               + juce::String (requestedTimeSigDenom));
             }
 
             timeSigRequest = false;
@@ -584,10 +587,10 @@ public:
                 TempoSequencePosition markPos (containerEdit->tempoSequence);
                 const auto loopRange = transport->getLoopRange();
                 markPos.setTime (loopRange.getStart());
-                rewireLoopStart = roundToInt (markPos.getPPQTime() * kReWirePPQ);
+                rewireLoopStart = juce::roundToInt (markPos.getPPQTime() * kReWirePPQ);
 
                 markPos.setTime (loopRange.getEnd());
-                rewireLoopEnd = roundToInt (markPos.getPPQTime() * kReWirePPQ);
+                rewireLoopEnd = juce::roundToInt (markPos.getPPQTime() * kReWirePPQ);
 
                 rewireLooping = transport->looping;
             }
@@ -624,17 +627,17 @@ public:
             requestedStop = false;
         }
 
-        if (Time::getApproximateMillisecondCounter() - lastDriveAudioTime > 400)
+        if (juce::Time::getApproximateMillisecondCounter() - lastDriveAudioTime > 400)
         {
             wasPlaying = false;
 
             ReWireDriveAudioInputParams& in = inputToDeviceParams;
             ReWireDriveAudioOutputParams& out = outputFromDeviceParams;
 
-            const ScopedLock sl (lock);
+            const juce::ScopedLock sl (lock);
 
             // might have been waiting for real callback, so check again..
-            if (Time::getApproximateMillisecondCounter() - lastDriveAudioTime > 400)
+            if (juce::Time::getApproximateMillisecondCounter() - lastDriveAudioTime > 400)
             {
                 CRASH_TRACER
 
@@ -662,8 +665,8 @@ public:
                     case kReWireRequestSignatureEvent:
                         {
                             auto theEvent = ReWireCastToRequestSignatureEvent (event);
-                            requestedTimeSigNum = jmax (1, (int) theEvent->fSignatureNumerator);
-                            requestedTimeSigDenom = jmax (1, (int) theEvent->fSignatureDenominator);
+                            requestedTimeSigNum   = std::max (1, (int) theEvent->fSignatureNumerator);
+                            requestedTimeSigDenom = std::max (1, (int) theEvent->fSignatureDenominator);
                             timeSigRequest = true;
                         }
                         break;
@@ -720,24 +723,24 @@ public:
 
     Engine& engine;
     TRWMDeviceHandle handle;
-    String deviceName;
-    StringArray channelNames;
+    juce::String deviceName;
+    juce::StringArray channelNames;
 
 private:
     const int deviceIndex;
     ReWireDriveAudioInputParams inputToDeviceParams;
     ReWireDriveAudioOutputParams outputFromDeviceParams;
     ReWireEvent inputToDeviceBuffer [inputEventBufferSize];
-    HeapBlock<ReWireEvent> outputFromDeviceBuffer;
-    uint32 outputEventBufferSize;
+    juce::HeapBlock<ReWireEvent> outputFromDeviceBuffer;
+    uint32_t outputEventBufferSize = 0;
     ReWireEventTarget eventTarget;
 
-    uint32 lastDriveAudioTime = 0;
+    uint32_t lastDriveAudioTime = 0;
     juce::AudioBuffer<float> buffer;
     short reWireToLocalChanMap[kReWireAudioChannelCount];
-    BigInteger bufferSourceChannels;
+    juce::BigInteger bufferSourceChannels;
 
-    OwnedArray<ReWireMIDIEvent> storedMessages;
+    juce::OwnedArray<ReWireMIDIEvent> storedMessages;
     MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
 
     int references = 0, pluginsServedThisFrame = 0;
@@ -758,7 +761,7 @@ private:
     bool requestedPlay = false;
     bool requestedStop = false;
 
-    CriticalSection lock;
+    juce::CriticalSection lock;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Device)
 };
@@ -802,7 +805,7 @@ ReWireSystem::ReWireSystem (Engine& e)  : engine (e)
 
                 if (res == kReWireError_NoError)
                 {
-                    deviceNames.add (CharPointer_UTF8 (devInfo.fName));
+                    deviceNames.add (juce::CharPointer_UTF8 (devInfo.fName));
                     devices.add (nullptr);
                 }
                 else
@@ -919,7 +922,7 @@ bool ReWireSystem::closeSystem()
     return false;
 }
 
-ReWireSystem::Device* ReWireSystem::openDevice (const String& devName, String& error)
+ReWireSystem::Device* ReWireSystem::openDevice (const juce::String& devName, juce::String& error)
 {
     CRASH_TRACER
     jassert (isOpen);
@@ -952,7 +955,7 @@ ReWireSystem::Device* ReWireSystem::openDevice (const String& devName, String& e
     return {};
 }
 
-ReWireSystem::Device* ReWireSystem::createDevice (int index, const String& devName, String& error)
+ReWireSystem::Device* ReWireSystem::createDevice (int index, const juce::String& devName, juce::String& error)
 {
     CRASH_TRACER
     TRWMDeviceHandle handle = nullptr;
@@ -1011,7 +1014,7 @@ bool ReWireSystem::tryToCloseAllOpenDevices()
         for (int j = 20; --j >= 0;)
         {
             RWMIdle();
-            Thread::sleep (10);
+            juce::Thread::sleep (10);
         }
     }
    #endif
@@ -1077,7 +1080,8 @@ juce::String ReWirePlugin::getName()
     return TRANS("ReWire Device");
 }
 
-void ReWirePlugin::getChannelNames (StringArray* ins, StringArray* outs)
+void ReWirePlugin::getChannelNames (juce::StringArray* ins,
+                                    juce::StringArray* outs)
 {
     getLeftRightChannelNames (ins);
 
@@ -1092,8 +1096,8 @@ void ReWirePlugin::initialise (const PluginInitialisationInfo& info)
 {
     if (device != nullptr)
     {
-        channelIndexL = jmax (0, device->channelNames.indexOf (currentChannelNameL.get()));
-        channelIndexR = jmax (0, device->channelNames.indexOf (currentChannelNameR.get()));
+        channelIndexL = std::max (0, device->channelNames.indexOf (currentChannelNameL.get()));
+        channelIndexR = std::max (0, device->channelNames.indexOf (currentChannelNameR.get()));
 
         device->prepareToPlay (info.sampleRate, info.blockSizeSamples,
                                channelIndexL, channelIndexR, &edit);
@@ -1132,7 +1136,7 @@ void ReWirePlugin::applyToBuffer (const PluginRenderContext& fc)
 }
 
 //==============================================================================
-juce::String ReWirePlugin::openDevice (const String& newDev)
+juce::String ReWirePlugin::openDevice (const juce::String& newDev)
 {
     CRASH_TRACER
     auto error = TRANS("ReWire is disabled");
@@ -1160,7 +1164,7 @@ juce::String ReWirePlugin::openDevice (const String& newDev)
                         currentChannelNameL = device->channelNames[0];
 
                     if (! device->channelNames.contains (currentChannelNameR.get()))
-                        currentChannelNameR = device->channelNames[jmin (1, device->channelNames.size() - 1)];
+                        currentChannelNameR = device->channelNames[std::min (1, device->channelNames.size() - 1)];
 
                     startTimer (2000);
                 }
@@ -1183,7 +1187,7 @@ juce::String ReWirePlugin::openDevice (const String& newDev)
 
 bool ReWirePlugin::updateBusesAndChannels()
 {
-    StringArray newBuses, newChannels;
+    juce::StringArray newBuses, newChannels;
     bool hasChanged = false;
 
     if (device != nullptr)
@@ -1211,12 +1215,12 @@ bool ReWirePlugin::updateBusesAndChannels()
 
                     if (err == kReWireError_NoError)
                     {
-                        String busName (CharPointer_UTF8 (eventBusInfo.fBusName));
+                        juce::String busName (juce::CharPointer_UTF8 (eventBusInfo.fBusName));
 
                         if (busName.trim().isEmpty())
                             busName = "(" + TRANS("Unnamed") + ")";
 
-                        newBuses.add (String (i + 1) + ". " + busName);
+                        newBuses.add (juce::String (i + 1) + ". " + busName);
                     }
                 }
             }
@@ -1249,8 +1253,8 @@ bool ReWirePlugin::updateBusesAndChannels()
 
                     if (err == kReWireError_NoError)
                     {
-                        const String chanName (CharPointer_UTF8 (eventChannelInfo.fChannelName));
-                        newChannels.add (String (j + 1) + ". " + chanName);
+                        juce::String chanName (juce::CharPointer_UTF8 (eventChannelInfo.fChannelName));
+                        newChannels.add (juce::String (j + 1) + ". " + chanName);
                     }
                 }
             }
@@ -1290,7 +1294,7 @@ void ReWirePlugin::openExternalUI()
     }
 }
 
-void ReWirePlugin::setLeftChannel (const String& channelName)
+void ReWirePlugin::setLeftChannel (const juce::String& channelName)
 {
     if (currentChannelNameL == channelName)
         return;
@@ -1301,7 +1305,7 @@ void ReWirePlugin::setLeftChannel (const String& channelName)
     TransportControl::restartAllTransports (engine, true);
 }
 
-void ReWirePlugin::setRightChannel (const String& channelName)
+void ReWirePlugin::setRightChannel (const juce::String& channelName)
 {
     if (currentChannelNameR == channelName)
         return;
@@ -1314,7 +1318,7 @@ void ReWirePlugin::setRightChannel (const String& channelName)
 
 void ReWirePlugin::setMidiBus (int busNum)
 {
-    unsigned short v = (unsigned short) (jmax (0, busNum));
+    unsigned short v = (unsigned short) (std::max (0, busNum));
 
     if (currentBus != v)
     {
@@ -1327,7 +1331,7 @@ void ReWirePlugin::setMidiBus (int busNum)
 
 void ReWirePlugin::setMidiChannel (int channel)
 {
-    unsigned short v = (unsigned short) (jmax (0, channel));
+    unsigned short v = (unsigned short) (std::max (0, channel));
 
     if (currentChannel != v)
     {
@@ -1336,7 +1340,7 @@ void ReWirePlugin::setMidiChannel (int channel)
     }
 }
 
-bool ReWirePlugin::hasNameForMidiNoteNumber (int note, int midiChannel, String& name)
+bool ReWirePlugin::hasNameForMidiNoteNumber (int note, int midiChannel, juce::String& name)
 {
     if (device != nullptr)
     {
@@ -1365,7 +1369,7 @@ void ReWirePlugin::timerCallback()
         propertiesChanged();
 }
 
-StringArray ReWirePlugin::getDeviceChannelNames() const
+juce::StringArray ReWirePlugin::getDeviceChannelNames() const
 {
     return device->channelNames;
 }

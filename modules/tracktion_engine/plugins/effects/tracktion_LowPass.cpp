@@ -19,8 +19,8 @@ LowPassPlugin::LowPassPlugin (PluginCreationInfo info) : Plugin (info)
     mode.referTo (state, IDs::mode, um, "lowpass");
 
     frequency = addParam ("frequency", TRANS("Frequency"), { 10.0f, 22000.0f },
-                          [] (float value)        { return String (roundToInt (value)) + " Hz"; },
-                          [] (const String& s)    { return s.getFloatValue(); });
+                          [] (float value)              { return juce::String (juce::roundToInt (value)) + " Hz"; },
+                          [] (const juce::String& s)    { return s.getFloatValue(); });
 
     frequency->attachToCurrentValue (frequencyValue);
 }
@@ -44,8 +44,8 @@ void LowPassPlugin::updateFilters()
         currentFilterFreq = newFreq;
         isCurrentlyLowPass = nowLowPass;
 
-        IIRCoefficients c = nowLowPass ? IIRCoefficients::makeLowPass  (sampleRate, newFreq)
-                                       : IIRCoefficients::makeHighPass (sampleRate, newFreq);
+        auto c = nowLowPass ? juce::IIRCoefficients::makeLowPass  (sampleRate, newFreq)
+                            : juce::IIRCoefficients::makeHighPass (sampleRate, newFreq);
 
         filter[0].setCoefficients (c);
         filter[1].setCoefficients (c);
@@ -77,7 +77,7 @@ void LowPassPlugin::applyToBuffer (const PluginRenderContext& fc)
 
         clearChannels (*fc.destBuffer, 2, -1, fc.bufferStartSample, fc.bufferNumSamples);
 
-        for (int i = jmin (2, fc.destBuffer->getNumChannels()); --i >= 0;)
+        for (int i = std::min (2, fc.destBuffer->getNumChannels()); --i >= 0;)
             filter[i].processSamples (fc.destBuffer->getWritePointer (i, fc.bufferStartSample), fc.bufferNumSamples);
 
         sanitiseValues (*fc.destBuffer, fc.bufferStartSample, fc.bufferNumSamples, 3.0f);

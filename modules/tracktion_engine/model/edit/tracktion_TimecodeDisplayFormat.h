@@ -162,7 +162,9 @@ struct TimecodeDisplayFormat
 */
 struct TimecodeDisplayIterator
 {
-    TimecodeDisplayIterator (const Edit&, double startTime, TimecodeSnapType minSnapTypeToUse, bool isTripletOverride);
+    TimecodeDisplayIterator (const Edit&, double startTime,
+                             TimecodeSnapType minSnapTypeToUse,
+                             bool isTripletOverride);
 
     /** returns the next time. */
     double next();

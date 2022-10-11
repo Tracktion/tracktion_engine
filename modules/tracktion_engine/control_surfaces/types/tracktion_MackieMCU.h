@@ -12,8 +12,8 @@ namespace tracktion_engine
 {
 
 class MackieMCU  : public ControlSurface,
-                   private juce::Timer,
-                   private juce::AsyncUpdater
+                   protected juce::Timer,
+                   protected juce::AsyncUpdater
 {
 public:
     MackieMCU (ExternalControllerManager&);
@@ -24,8 +24,8 @@ public:
     void updateMiscFeatures() override;
     void cpuTimerCallback();
     void auxTimerCallback();
-    void acceptMidiMessage (const juce::MidiMessage&) override;
-    void acceptMidiMessage (int deviceIdx, const juce::MidiMessage&);
+    void acceptMidiMessage (int, const juce::MidiMessage&) override;
+    virtual void acceptMidiMessageInt (int deviceIdx, const juce::MidiMessage&);
     void flip();
     void setAssignmentText (const juce::String&);
     void setDisplay (int devIdx, const char* topLine, const char* bottomLine);
@@ -47,7 +47,7 @@ public:
     void indicesChanged();
     void setSignalMetersEnabled (bool);
     void setSignalMetersEnabled (int dev, bool);
-    void setAssignmentMode (AssignmentMode);
+    virtual void setAssignmentMode (AssignmentMode);
     void moveFaderInt (int dev, int channelNum, float newSliderPos);
     void moveFader (int channelNum, float newSliderPos) override;
     void moveMasterLevelFader (float newLeftSliderPos, float newRightSliderPos) override;
@@ -71,7 +71,7 @@ public:
     void parameterChanged (int parameterNumber, const ParameterSetting&) override;
     void clearParameter (int parameterNumber) override;
     void faderBankChanged (int newStartChannelNumber, const juce::StringArray& trackNames) override;
-    void channelLevelChanged (int channel, float level) override;
+    void channelLevelChanged (int channel, float l, float r) override;
     void masterLevelsChanged (float leftLevel, float rightLevel) override;
     void updateTCDisplay (const char* newDigits);
     void timecodeChanged (int barsOrHours, int beatsOrMinutes, int ticksOrSeconds,
@@ -88,7 +88,7 @@ public:
     //==============================================================================
     void registerXT (MackieXT*);
     void unregisterXT (MackieXT*);
-    void sendMidiCommandToController (int devIdx, juce::uint8 byte1, juce::uint8 byte2, juce::uint8 byte3);
+    void sendMidiCommandToController (int devIdx, uint8_t byte1, uint8_t byte2, uint8_t byte3);
     void sendMidiCommandToController (int devIdx, const unsigned char* midiData, int numBytes);
     void setDeviceIndex (int idx)           { deviceIdx = idx; }
 
@@ -103,19 +103,19 @@ public:
         maxCharsOnDisplay = 128
     };
 
-private:
+protected:
     AssignmentMode assignmentMode = PanMode;
     float panPos[maxNumChannels];
     char timecodeDigits[9];
     bool lastSmpteBeatsSetting = false, isZooming = false, marker = false, nudge = false;
-    juce::uint8 lastChannelLevels[maxNumChannels];
+    uint8_t lastChannelLevels[maxNumChannels];
     bool recLight[maxNumChannels];
     bool isRecButtonDown = false, flipped = false, editFlip = false, cpuVisible = false, oneTouchRecord = false;
     int shiftKeysDown = 0;
     char currentDisplayChars[maxNumSurfaces][maxCharsOnDisplay];
     char newDisplayChars[maxNumSurfaces][maxCharsOnDisplay];
-    juce::uint32 lastRewindPress = 0;
-    juce::uint32 lastFaderPos[maxNumSurfaces][9];
+    uint32_t lastRewindPress = 0;
+    uint32_t lastFaderPos[maxNumSurfaces][9];
     float auxLevels[maxNumChannels];
     char auxBusNames[maxNumChannels][7];
     int lastStartChan = 0;

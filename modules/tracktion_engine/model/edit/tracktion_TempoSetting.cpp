@@ -11,7 +11,7 @@
 namespace tracktion_engine
 {
 
-TempoSetting::TempoSetting (TempoSequence& ts, const ValueTree& v)
+TempoSetting::TempoSetting (TempoSequence& ts, const juce::ValueTree& v)
     : ReferenceCountedObject(),
       ownerSequence (ts), state (v)
 {
@@ -26,13 +26,12 @@ TempoSetting::~TempoSetting()
 {
 }
 
-ValueTree TempoSetting::create (double beat, double newBPM, float curveVal)
+juce::ValueTree TempoSetting::create (double beat, double newBPM, float curveVal)
 {
-    ValueTree v (IDs::TEMPO);
-    v.setProperty (IDs::startBeat, beat, nullptr);
-    v.setProperty (IDs::bpm, newBPM, nullptr);
-    v.setProperty (IDs::curve, curveVal, nullptr);
-    return v;
+    return createValueTree (IDs::TEMPO,
+                            IDs::startBeat, beat,
+                            IDs::bpm, newBPM,
+                            IDs::curve, curveVal);
 }
 
 Edit& TempoSetting::getEdit() const
@@ -41,7 +40,7 @@ Edit& TempoSetting::getEdit() const
 }
 
 //==============================================================================
-String TempoSetting::getSelectableDescription()
+juce::String TempoSetting::getSelectableDescription()
 {
     return TRANS("Tempo");
 }
@@ -59,8 +58,8 @@ void TempoSetting::set (double newStartBeat, double newBPM, float newCurve, bool
     bpm.forceUpdateOfCachedValue();
     curve.forceUpdateOfCachedValue();
 
-    newBPM = jlimit (minBPM, maxBPM, newBPM);
-    newCurve = jlimit (-1.0f, 1.0f, newCurve);
+    newBPM   = juce::jlimit (minBPM, maxBPM, newBPM);
+    newCurve = juce::jlimit (-1.0f, 1.0f, newCurve);
 
     if (newBPM != bpm || startBeatNumber != newStartBeat || curve != newCurve)
     {
@@ -116,9 +115,11 @@ TimeSigSetting& TempoSetting::getMatchingTimeSig() const
     return ownerSequence.getTimeSigAtBeat (startBeatNumber);
 }
 
-int64 TempoSetting::getHash() const noexcept
+HashCode TempoSetting::getHash() const noexcept
 {
-    return (int64) (startBeatNumber * 128.0) ^ ((int64) (bpm * 1217.0) + (int64) (curve * 1023.0));
+    return static_cast<HashCode> (startBeatNumber * 128.0)
+            ^ (static_cast<HashCode> (bpm * 1217.0)
+                + static_cast<HashCode> (curve * 1023.0));
 }
 
 }

@@ -19,19 +19,19 @@ struct TracktionThumbnail::MinMaxValue
         values[1] = 0;
     }
 
-    inline void set (juce::int8 newMin, juce::int8 newMax) noexcept
+    inline void set (int8_t newMin, int8_t newMax) noexcept
     {
         values[0] = newMin;
         values[1] = newMax;
     }
 
-    inline juce::int8 getMinValue() const noexcept        { return values[0]; }
-    inline juce::int8 getMaxValue() const noexcept        { return values[1]; }
+    inline int8_t getMinValue() const noexcept        { return values[0]; }
+    inline int8_t getMaxValue() const noexcept        { return values[1]; }
 
     inline void setFloat (float newMin, float newMax) noexcept
     {
-        values[0] = (juce::int8) juce::jlimit (-128, 127, juce::roundToInt (newMin * 127.0f));
-        values[1] = (juce::int8) juce::jlimit (-128, 127, juce::roundToInt (newMax * 127.0f));
+        values[0] = (int8_t) juce::jlimit (-128, 127, juce::roundToInt (newMin * 127.0f));
+        values[1] = (int8_t) juce::jlimit (-128, 127, juce::roundToInt (newMax * 127.0f));
     }
 
     inline int getPeak() const noexcept
@@ -44,14 +44,14 @@ struct TracktionThumbnail::MinMaxValue
     inline void write (juce::OutputStream& output)   { output.write (values, 2); }
 
 private:
-    juce::int8 values[2];
+    int8_t values[2];
 };
 
 //==============================================================================
 class TracktionThumbnail::LevelDataSource   : public juce::TimeSliceClient
 {
 public:
-    LevelDataSource (TracktionThumbnail& thumb, juce::AudioFormatReader* newReader, juce::int64 hash)
+    LevelDataSource (TracktionThumbnail& thumb, juce::AudioFormatReader* newReader, HashCode hash)
         : hashCode (hash), owner (thumb), reader (newReader)
     {
     }
@@ -68,7 +68,7 @@ public:
 
     enum { timeBeforeDeletingReader = 3000 };
 
-    void initialise (juce::int64 samplesFinished)
+    void initialise (SampleCount samplesFinished)
     {
         const juce::ScopedLock sl (readerLock);
 
@@ -89,7 +89,7 @@ public:
         }
     }
 
-    void getLevels (juce::int64 startSample, int numSamples, juce::Array<float>& levels)
+    void getLevels (SampleCount startSample, int numSamples, juce::Array<float>& levels)
     {
         const juce::ScopedLock sl (readerLock);
 
@@ -164,22 +164,22 @@ public:
         return numSamplesFinished >= lengthInSamples;
     }
 
-    inline int sampleToThumbSample (juce::int64 originalSample) const noexcept
+    inline int sampleToThumbSample (SampleCount originalSample) const noexcept
     {
         return (int) (originalSample / owner.samplesPerThumbSample);
     }
 
-    juce::int64 lengthInSamples = 0, numSamplesFinished = 0;
+    SampleCount lengthInSamples = 0, numSamplesFinished = 0;
     double sampleRate = 0;
     unsigned int numChannels = 0;
-    juce::int64 hashCode = 0;
+    HashCode hashCode = 0;
 
 private:
     TracktionThumbnail& owner;
     std::unique_ptr<juce::InputSource> source;
     std::unique_ptr<juce::AudioFormatReader> reader;
     juce::CriticalSection readerLock;
-    juce::uint32 lastReaderUseTime = 0;
+    uint32_t lastReaderUseTime = 0;
 
     void createReader()
     {
@@ -194,7 +194,7 @@ private:
 
         if (! isFullyLoaded())
         {
-            auto numToDo = (int) std::min (256 * (juce::int64) owner.samplesPerThumbSample,
+            auto numToDo = (int) std::min (256 * (SampleCount) owner.samplesPerThumbSample,
                                            lengthInSamples - numSamplesFinished);
 
             if (numToDo > 0)
@@ -259,7 +259,7 @@ public:
         {
             endSample = std::min (endSample, data.size() - 1);
 
-            juce::int8 mx = -128, mn = 127;
+            int8_t mx = -128, mn = 127;
 
             while (startSample <= endSample)
             {
@@ -591,7 +591,8 @@ void TracktionThumbnail::clearChannelData()
     sendChangeMessage();
 }
 
-void TracktionThumbnail::reset (int newNumChannels, double newSampleRate, juce::int64 totalSamplesInSource)
+void TracktionThumbnail::reset (int newNumChannels, double newSampleRate,
+                                juce::int64 totalSamplesInSource)
 {
     clear();
 
@@ -685,7 +686,7 @@ bool TracktionThumbnail::setDataSource (LevelDataSource* newSource)
 
         totalSamples = source->lengthInSamples;
         sampleRate = source->sampleRate;
-        numChannels = (juce::int32) source->numChannels;
+        numChannels = (int) source->numChannels;
 
         createChannels (1 + (int) (totalSamples / samplesPerThumbSample));
     }
@@ -763,8 +764,8 @@ void TracktionThumbnail::setLevels (const MinMaxValue* const* values, int thumbI
     for (int i = std::min (numChans, channels.size()); --i >= 0;)
         channels.getUnchecked(i)->write (values[i], thumbIndex, numValues);
 
-    auto start = thumbIndex * (juce::int64) samplesPerThumbSample;
-    auto end = (thumbIndex + numValues) * (juce::int64) samplesPerThumbSample;
+    auto start = thumbIndex * static_cast<SampleCount> (samplesPerThumbSample);
+    auto end = (thumbIndex + numValues) * static_cast<SampleCount> (samplesPerThumbSample);
 
     if (numSamplesFinished >= start && end > numSamplesFinished)
         numSamplesFinished = end;
@@ -796,7 +797,7 @@ bool TracktionThumbnail::isFullyLoaded() const noexcept
 double TracktionThumbnail::getProportionComplete() const noexcept
 {
     const juce::ScopedLock sl (lock);
-    return juce::jlimit (0.0, 1.0, numSamplesFinished / (double) std::max ((juce::int64) 1, totalSamples));
+    return juce::jlimit (0.0, 1.0, numSamplesFinished / (double) std::max ((SampleCount) 1, totalSamples));
 }
 
 juce::int64 TracktionThumbnail::getNumSamplesFinished() const noexcept

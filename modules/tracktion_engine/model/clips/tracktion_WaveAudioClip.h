@@ -82,7 +82,7 @@ public:
     /** @internal */
     juce::File getOriginalFile() const override;
     /** @internal */
-    juce::int64 getHash() const override;
+    HashCode getHash() const override;
 
     /** @internal */
     void setLoopDefaults() override;

@@ -255,13 +255,13 @@ namespace NoteHelpers
 
     inline juce::MidiMessage createPressure (int midiChannel, float pressure) noexcept
     {
-        juce::uint8 midiPressure = juce::MidiMessage::floatValueToMidiByte (pressure);
+        auto midiPressure = juce::MidiMessage::floatValueToMidiByte (pressure);
         return juce::MidiMessage::channelPressureChange (midiChannel, midiPressure);
     }
 
     inline juce::MidiMessage createTimbre (int midiChannel, float timbre) noexcept
     {
-        juce::uint8 midiCcValue = juce::MidiMessage::floatValueToMidiByte (timbre);
+        auto midiCcValue = juce::MidiMessage::floatValueToMidiByte (timbre);
         return juce::MidiMessage::controllerEvent (midiChannel, 74, midiCcValue);
     }
 
@@ -347,7 +347,7 @@ static void addToSequence (juce::MidiMessageSequence& seq, const MidiClip& clip,
         return;
 
     double downTime = note.getPlaybackTime (MidiNote::startEdge, clip, grooveTemplate);
-    auto velocity = (juce::uint8) note.getVelocity();
+    auto velocity = (uint8_t) note.getVelocity();
     int noteNumber = note.getNoteNumber();
 
     if (addNoteUp)
@@ -565,13 +565,12 @@ private:
 //==============================================================================
 static juce::ValueTree createNoteValueTree (int pitch, double beat, double length, int vel, int col)
 {
-    juce::ValueTree v (IDs::NOTE);
-    v.setProperty (IDs::p, pitch, nullptr);
-    v.setProperty (IDs::b, beat, nullptr);
-    v.setProperty (IDs::l, std::max (0.0, length), nullptr);
-    v.setProperty (IDs::v, vel, nullptr);
-    v.setProperty (IDs::c, col, nullptr);
-    return v;
+    return createValueTree (IDs::NOTE,
+                            IDs::p, pitch,
+                            IDs::b, beat,
+                            IDs::l, std::max (0.0, length),
+                            IDs::v, vel,
+                            IDs::c, col);
 }
 
 juce::ValueTree MidiNote::createNote (const MidiNote& n, double newStart, double newLength)
@@ -591,11 +590,11 @@ MidiNote::MidiNote (const juce::ValueTree& v)
 
 void MidiNote::updatePropertiesFromState()
 {
-    noteNumber      = (juce::uint8) juce::jlimit (0, 127, static_cast<int> (state.getProperty (IDs::p)));
+    noteNumber      = (uint8_t) juce::jlimit (0, 127, static_cast<int> (state.getProperty (IDs::p)));
     startBeat       = static_cast<double> (state.getProperty (IDs::b));
     lengthInBeats   = std::max (0.0, static_cast<double> (state.getProperty (IDs::l)));
-    velocity        = (juce::uint8) juce::jlimit (0, 127, static_cast<int> (state.getProperty (IDs::v)));
-    colour          = (juce::uint8) juce::jlimit (0, 127, static_cast<int> (state.getProperty (IDs::c)));
+    velocity        = (uint8_t) juce::jlimit (0, 127, static_cast<int> (state.getProperty (IDs::v)));
+    colour          = (uint8_t) juce::jlimit (0, 127, static_cast<int> (state.getProperty (IDs::c)));
     mute            = state.getProperty (IDs::m) ? 1 : 0;
 }
 
@@ -715,7 +714,7 @@ void MidiNote::setNoteNumber (int newNoteNumber, juce::UndoManager* undoManager)
     if (getNoteNumber() != newNoteNumber)
     {
         state.setProperty (IDs::p, newNoteNumber, undoManager);
-        noteNumber = (juce::uint8) newNoteNumber;
+        noteNumber = (uint8_t) newNoteNumber;
     }
 }
 
@@ -726,7 +725,7 @@ void MidiNote::setVelocity (int newVelocity, juce::UndoManager* undoManager)
     if (getVelocity() != newVelocity)
     {
         state.setProperty (IDs::v, newVelocity, undoManager);
-        velocity = (juce::uint8) newVelocity;
+        velocity = (uint8_t) newVelocity;
     }
 }
 
@@ -737,7 +736,7 @@ void MidiNote::setColour (int newColourIndex, juce::UndoManager* um)
     if (getColour() != newColourIndex)
     {
         state.setProperty (IDs::c, newColourIndex, um);
-        colour = (juce::uint8) newColourIndex;
+        colour = (uint8_t) newColourIndex;
     }
 }
 
@@ -775,11 +774,10 @@ juce::ValueTree MidiControllerEvent::createControllerEvent (const MidiController
 
 juce::ValueTree MidiControllerEvent::createControllerEvent (double time, int controllerType, int controllerValue)
 {
-    juce::ValueTree v (IDs::CONTROL);
-    v.setProperty (IDs::b, time, nullptr);
-    v.setProperty (IDs::type, controllerType, nullptr);
-    v.setProperty (IDs::val, controllerValue, nullptr);
-    return v;
+    return createValueTree (IDs::CONTROL,
+                            IDs::b,     time,
+                            IDs::type,  controllerType,
+                            IDs::val,   controllerValue);
 }
 
 juce::ValueTree MidiControllerEvent::createControllerEvent (double time, int controllerType, int controllerValue, int metadata)
@@ -974,10 +972,9 @@ juce::ValueTree MidiSysexEvent::createSysexEvent (const MidiSysexEvent& e, doubl
 
 juce::ValueTree MidiSysexEvent::createSysexEvent (const juce::MidiMessage& m, double time)
 {
-    juce::ValueTree v (IDs::SYSEX);
-    v.setProperty (IDs::time, time, nullptr);
-    v.setProperty (IDs::data, midiToHex (m), nullptr);
-    return v;
+    return createValueTree (IDs::SYSEX,
+                            IDs::time, time,
+                            IDs::data, midiToHex (m));
 }
 
 MidiSysexEvent::MidiSysexEvent (const juce::ValueTree& v)  : state (v)
@@ -1051,15 +1048,12 @@ void MidiSysexEvent::setBeatPosition (double newBeatNumber, juce::UndoManager* u
 //==============================================================================
 juce::ValueTree MidiList::createMidiList()
 {
-    juce::ValueTree v (IDs::SEQUENCE);
-    v.setProperty (IDs::ver, 1, nullptr);
-    v.setProperty (IDs::channelNumber, MidiChannel (1), nullptr);
-
-    return v;
+    return createValueTree (IDs::SEQUENCE,
+                            IDs::ver, 1,
+                            IDs::channelNumber, MidiChannel (1));
 }
 
-MidiList::MidiList()
-    : state (IDs::SEQUENCE)
+MidiList::MidiList()  : state (IDs::SEQUENCE)
 {
     state.setProperty (IDs::ver, 1, nullptr);
     initialise (nullptr);
@@ -1637,7 +1631,7 @@ bool MidiList::readSeparateTracksFromFile (const juce::File& f,
                 for (int channel = 0; channel <= 16; ++channel)
                 {
                     juce::MidiMessageSequence channelSequence;
-                    MidiChannel midiChannel ((juce::uint8) std::max (1, channel));
+                    MidiChannel midiChannel ((uint8_t) std::max (1, channel));
 
                     if (channel == 0)
                         trackSequence.extractSysExMessages (channelSequence);
@@ -1649,7 +1643,7 @@ bool MidiList::readSeparateTracksFromFile (const juce::File& f,
                         channelSequence.sort();
                         channelSequence.updateMatchedPairs();
 
-                        songLength = std::max (songLength, channelSequence.getStartTime() + channelSequence.getEndTime());
+                        songLength = std::max (songLength, channelSequence.getEndTime());
 
                         std::unique_ptr<MidiList> midiList (new MidiList());
                         midiList->setMidiChannel (midiChannel);

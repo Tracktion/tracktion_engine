@@ -10,8 +10,7 @@
 
 #pragma once
 
-#if TRACKTION_GRAPH_PERFORMANCE_TESTS
-
+#if TRACKTION_BENCHMARKS
 
 #include "tracktion_BenchmarkUtilities.h"
 
@@ -27,7 +26,7 @@ class RackBenchmarks : public juce::UnitTest
 {
 public:
     RackBenchmarks()
-        : juce::UnitTest ("Rack Benchmarks", "tracktion_graph_performance")
+        : juce::UnitTest ("Rack Benchmarks", "tracktion_benchmarks")
     {
     }
     

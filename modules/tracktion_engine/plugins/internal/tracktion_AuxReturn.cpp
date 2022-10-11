@@ -23,24 +23,24 @@ AuxReturnPlugin::~AuxReturnPlugin()
 
 const char* AuxReturnPlugin::xmlTypeName = "auxreturn";
 
-String AuxReturnPlugin::getName()
+juce::String AuxReturnPlugin::getName()
 {
-    String nm (edit.getAuxBusName (busNumber));
+    auto nm = edit.getAuxBusName (busNumber);
 
     if (nm.isNotEmpty())
         return "R:" + nm;
 
-    return TRANS("Aux Return") + " #" + String (busNumber + 1);
+    return TRANS("Aux Return") + " #" + juce::String (busNumber + 1);
 }
 
-String AuxReturnPlugin::getShortName (int)
+juce::String AuxReturnPlugin::getShortName (int)
 {
-    String nm (edit.getAuxBusName (busNumber));
+    auto nm = edit.getAuxBusName (busNumber);
 
     if (nm.isNotEmpty())
         return "R:" + nm;
 
-    return "Ret:" + String (busNumber + 1);
+    return "Ret:" + juce::String (busNumber + 1);
 }
 
 void AuxReturnPlugin::initialise (const PluginInitialisationInfo&)
@@ -57,7 +57,7 @@ void AuxReturnPlugin::applyToBuffer (const PluginRenderContext&)
 
 void AuxReturnPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    CachedValue<int>* cvsInt[] = { &busNumber, nullptr };
+    juce::CachedValue<int>* cvsInt[] = { &busNumber, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsInt);
 
     for (auto p : getAutomatableParameters())

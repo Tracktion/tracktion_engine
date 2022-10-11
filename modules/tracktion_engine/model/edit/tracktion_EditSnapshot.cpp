@@ -50,14 +50,14 @@ private:
 //==============================================================================
 struct EditSnapshot::ListHolder
 {
-    SharedResourcePointer<EditSnapshotList> list;
+    juce::SharedResourcePointer<EditSnapshotList> list;
 };
 
 //==============================================================================
 EditSnapshot::Ptr EditSnapshot::getEditSnapshot (Engine& engine, ProjectItemID itemID)
 {
-    SharedResourcePointer<EditSnapshotList> list;
-    const ScopedLock sl (list->getLock());
+    juce::SharedResourcePointer<EditSnapshotList> list;
+    const juce::ScopedLock sl (list->getLock());
 
     if (itemID.isInvalid())
         return {};
@@ -84,7 +84,7 @@ EditSnapshot::~EditSnapshot()
     listHolder->list->removeSnapshot (*this);
 }
 
-void EditSnapshot::setState (ValueTree newState, double editLength)
+void EditSnapshot::setState (juce::ValueTree newState, double editLength)
 {
     if (state.getReferenceCount() == 1)
         state = std::move (newState);
@@ -124,7 +124,7 @@ void EditSnapshot::addSubTracksRecursively (const juce::XmlElement& parent, int&
         if (trackType == IDs::TRACK || trackType == IDs::MARKERTRACK)
         {
             if (trackName.isEmpty())
-                trackName = TRANS("Track") + " "  + String (audioTrackNameNumber);
+                trackName = TRANS("Track") + " "  + juce::String (audioTrackNameNumber);
 
             if (trackType == IDs::TRACK)
             {
@@ -156,13 +156,13 @@ void EditSnapshot::refreshFromXml (const juce::XmlElement& xml,
     // last significant change
     auto changeHexString = xml.getStringAttribute (IDs::lastSignificantChange);
     lastSaveTime = changeHexString.isEmpty() ? sourceFile.getLastModificationTime()
-                                             : Time (changeHexString.getHexValue64());
+                                             : juce::Time (changeHexString.getHexValue64());
 
     // marks
     if (auto viewState = xml.getChildByName (IDs::TRANSPORT))
     {
-        auto loopRange = Range<double>::between (viewState->getDoubleAttribute (IDs::loopPoint1),
-                                                 viewState->getDoubleAttribute (IDs::loopPoint2));
+        auto loopRange = juce::Range<double>::between (viewState->getDoubleAttribute (IDs::loopPoint1),
+                                                       viewState->getDoubleAttribute (IDs::loopPoint2));
         markIn = loopRange.getStart();
         markOut = loopRange.getEnd();
 
@@ -237,13 +237,13 @@ void EditSnapshot::refreshFromState()
     auto editLength = length;
     clear();
 
-    if (auto xml = std::unique_ptr<XmlElement> (state.createXml()))
+    if (auto xml = state.createXml())
         refreshFromXml (*xml, editName, editLength);
 }
 
 void EditSnapshot::clear()
 {
-    name = String();
+    name = {};
     numTracks = 0;
     numAudioTracks = 0;
     trackNames.clearQuick();
@@ -287,7 +287,7 @@ void EditSnapshot::addMarkers (const juce::XmlElement& track)
     {
         Marker m;
         m.name      = clip->getStringAttribute ("name", TRANS("unnamed"));
-        m.colour    = Colour::fromString (clip->getStringAttribute ("colour", TRANS("unnamed")));
+        m.colour    = juce::Colour::fromString (clip->getStringAttribute ("colour", TRANS("unnamed")));
         auto start  = clip->getDoubleAttribute ("start", 0.0);
         auto len    = clip->getDoubleAttribute ("length", 0.0);
         m.time      = { start, start + len };

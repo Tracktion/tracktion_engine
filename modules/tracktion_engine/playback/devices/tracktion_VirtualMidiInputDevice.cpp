@@ -42,10 +42,10 @@ struct VirtualMidiInputDeviceInstance  : public MidiInputDeviceInstanceBase
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VirtualMidiInputDeviceInstance)
 };
 
-Array<VirtualMidiInputDevice*, CriticalSection> virtualMidiDevices;
+juce::Array<VirtualMidiInputDevice*, juce::CriticalSection> virtualMidiDevices;
 
 //==============================================================================
-VirtualMidiInputDevice::VirtualMidiInputDevice (Engine& e, const String& deviceName, DeviceType devType)
+VirtualMidiInputDevice::VirtualMidiInputDevice (Engine& e, const juce::String& deviceName, DeviceType devType)
     : MidiInputDevice (e, devType == trackMidiDevice ? TRANS("Track MIDI Input")
                                                      : TRANS("Virtual MIDI Input"), deviceName),
       deviceType (devType)
@@ -74,7 +74,7 @@ InputDeviceInstance* VirtualMidiInputDevice::createInstance (EditPlaybackContext
     return new VirtualMidiInputDeviceInstance (*this, c);
 }
 
-String VirtualMidiInputDevice::openDevice()
+juce::String VirtualMidiInputDevice::openDevice()
 {
     return {};
 }
@@ -93,7 +93,7 @@ void VirtualMidiInputDevice::setEnabled (bool b)
 
 void VirtualMidiInputDevice::loadProps()
 {
-    const String propName = isTrackDevice() ? "TRACKTION_TRACK_DEVICE" : getName();
+    juce::String propName = isTrackDevice() ? "TRACKTION_TRACK_DEVICE" : getName();
 
     auto n = engine.getPropertyStorage().getXmlPropertyItem (SettingID::virtualmidiin, propName);
 
@@ -110,19 +110,19 @@ void VirtualMidiInputDevice::saveProps()
     n.setAttribute ("inputDevices", inputDevices.joinIntoString (";"));
     MidiInputDevice::saveProps (n);
 
-    const String propName = isTrackDevice() ? "TRACKTION_TRACK_DEVICE" : getName();
+    juce::String propName = isTrackDevice() ? "TRACKTION_TRACK_DEVICE" : getName();
 
     engine.getPropertyStorage().setXmlPropertyItem (SettingID::virtualmidiin, propName, n);
 }
 
-void VirtualMidiInputDevice::handleIncomingMidiMessage (const MidiMessage& m)
+void VirtualMidiInputDevice::handleIncomingMidiMessage (const juce::MidiMessage& m)
 {
     if (! (m.isActiveSense() || disallowedChannels [m.getChannel() - 1]))
     {
-        MidiMessage message (m);
+        juce::MidiMessage message (m);
 
         if (m.getTimeStamp() == 0 || ! engine.getEngineBehaviour().isMidiDriverUsedForIncommingMessageTiming())
-            message.setTimeStamp (Time::getMillisecondCounterHiRes() * 0.001);
+            message.setTimeStamp (juce::Time::getMillisecondCounterHiRes() * 0.001);
 
         message.addToTimeStamp (adjustSecs);
 
@@ -135,7 +135,7 @@ void VirtualMidiInputDevice::handleIncomingMidiMessage (const MidiMessage& m)
     }
 }
 
-void VirtualMidiInputDevice::handleMessageFromPhysicalDevice (MidiInputDevice* dev, const MidiMessage& m)
+void VirtualMidiInputDevice::handleMessageFromPhysicalDevice (MidiInputDevice* dev, const juce::MidiMessage& m)
 {
     if (inputDevices.contains (dev->getName()))
         handleIncomingMidiMessage (m);
@@ -149,7 +149,7 @@ void VirtualMidiInputDevice::broadcastMessageToAllVirtualDevices (MidiInputDevic
 
 void VirtualMidiInputDevice::refreshDeviceNames (Engine& e)
 {
-    String names;
+    juce::String names;
 
     for (auto d : virtualMidiDevices)
         names += d->getName() + ";";
@@ -157,7 +157,7 @@ void VirtualMidiInputDevice::refreshDeviceNames (Engine& e)
     e.getPropertyStorage().setProperty (SettingID::virtualmididevices, names);
 }
 
-String VirtualMidiInputDevice::getSelectableDescription()
+juce::String VirtualMidiInputDevice::getSelectableDescription()
 {
     if (getDeviceType() == trackMidiDevice)
         return getAlias() + " (" + getType() + ")";

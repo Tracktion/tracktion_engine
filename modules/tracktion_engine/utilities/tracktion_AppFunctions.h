@@ -26,8 +26,8 @@ namespace AppFunctions
 
     void goToStart();
     void goToEnd();
-    void markIn();
-    void markOut();
+    void markIn (bool forceAtCursor);
+    void markOut (bool forceAtCursor);
 
     void start();
     void stop();
@@ -57,8 +57,8 @@ namespace AppFunctions
     void scrollTracksRight();
 
     void toggleEndToEnd();
-    void saveEdit();
-    void saveEditAs();
+    bool saveEdit();
+    bool saveEditAs();
     void armOrDisarmAllInputs();
     void goToMarkIn();
     void goToMarkOut();
@@ -75,6 +75,7 @@ namespace AppFunctions
     void redo();
     void undo();
     void toggleScroll();
+    bool isScrolling();
     void stopRecordingAndDiscard();
     void stopRecordingAndRestart();
 
@@ -84,6 +85,12 @@ namespace AppFunctions
     void insertChord();
 
     void showHideVideo();
+    void showHideMixer (bool fs);
+    void showHideMidiEditor (bool fs);
+    void showHideTrackEditor (bool zoom);
+    void showHideBrowser();
+    void showHideActions();
+    void performUserAction (int);
 
     void showHideAllPanes();
     void split();

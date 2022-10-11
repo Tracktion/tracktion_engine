@@ -69,7 +69,7 @@ private:
     struct PerChannelState;
     juce::OwnedArray<PerChannelState> channelState;
 
-    juce::int64 editTimeToFileSample (double) const noexcept;
+    SampleCount editTimeToFileSample (double) const noexcept;
     bool updateFileSampleRate();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveAudioNode)

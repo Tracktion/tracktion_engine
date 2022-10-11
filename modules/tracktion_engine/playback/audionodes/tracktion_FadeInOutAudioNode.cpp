@@ -64,7 +64,7 @@ void FadeInOutAudioNode::renderSection (const AudioRenderContext& rc, EditTimeRa
         else
         {
             endSamp = rc.bufferNumSamples;
-            alpha2 = jmax (0.0, (editTime.getEnd() - fadeIn.getStart()) / fadeIn.getLength());
+            alpha2 = std::max (0.0, (editTime.getEnd() - fadeIn.getStart()) / fadeIn.getLength());
         }
 
         if (endSamp > startSamp)
@@ -108,8 +108,8 @@ void FadeInOutAudioNode::renderSection (const AudioRenderContext& rc, EditTimeRa
             AudioFadeCurve::applyCrossfadeSection (*rc.destBuffer,
                                                    rc.bufferStartSample + startSamp, endSamp - startSamp,
                                                    fadeOutType,
-                                                   jlimit (0.0f, 1.0f, (float) (1.0 - alpha1)),
-                                                   jlimit (0.0f, 1.0f, (float) (1.0 - alpha2)));
+                                                   juce::jlimit (0.0f, 1.0f, (float) (1.0 - alpha1)),
+                                                   juce::jlimit (0.0f, 1.0f, (float) (1.0 - alpha2)));
     }
 }
 

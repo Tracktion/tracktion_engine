@@ -17,13 +17,13 @@ struct ActiveNoteList
 
     void reset() noexcept
     {
-        juce::zeromem (activeChannels, sizeof (activeChannels));
+        std::memset (activeChannels, 0, sizeof (activeChannels));
     }
 
     bool isNoteActive (int channel, int note) const noexcept
     {
         return isValidIndex (channel, note)
-        && (activeChannels[note] & (1u << (channel - 1))) != 0;
+                && (activeChannels[note] & (1u << (channel - 1))) != 0;
     }
 
     void startNote (int channel, int note) noexcept

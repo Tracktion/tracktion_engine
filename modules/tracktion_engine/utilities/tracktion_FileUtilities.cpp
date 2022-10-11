@@ -11,12 +11,12 @@
 namespace tracktion_engine
 {
 
-File getNonExistentSiblingWithIncrementedNumberSuffix (const File& file, bool addHashSymbol)
+juce::File getNonExistentSiblingWithIncrementedNumberSuffix (const juce::File& file, bool addHashSymbol)
 {
     if (! file.existsAsFile())
         return file;
 
-    auto name = File::createLegalFileName (file.getFileNameWithoutExtension());
+    auto name = juce::File::createLegalFileName (file.getFileNameWithoutExtension());
 
     int drop = 0;
     bool foundDigit = false;
@@ -26,7 +26,7 @@ File getNonExistentSiblingWithIncrementedNumberSuffix (const File& file, bool ad
     {
         if (name[i] == '#' && foundDigit)
             foundHash = true;
-        else if (String ("0123456789").containsChar (name[i]))
+        else if (juce::String ("0123456789").containsChar (name[i]))
             foundDigit = true;
         else
             break;
@@ -38,13 +38,15 @@ File getNonExistentSiblingWithIncrementedNumberSuffix (const File& file, bool ad
     int number = inForm ? name.getTrailingIntValue() : 0;
     name = inForm ? name.dropLastCharacters(drop).trimEnd() : name;
 
-    File newFileName;
+    juce::File newFileName;
 
     do
     {
         number++;
 
-        String nameWithNumber = name + (addHashSymbol ? " #" : " ") + String (number) + file.getFileExtension();
+        auto nameWithNumber = name + (addHashSymbol ? " #" : " ")
+                                + juce::String (number) + file.getFileExtension();
+
         newFileName = file.getParentDirectory()
                           .getChildFile (nameWithNumber);
 
@@ -54,19 +56,19 @@ File getNonExistentSiblingWithIncrementedNumberSuffix (const File& file, bool ad
 }
 
 //==============================================================================
-bool isMidiFile (const File& f)             { return f.hasFileExtension ("mid;rmi;rmid;midi"); }
-bool isTracktionEditFile (const File& f)    { return f.hasFileExtension (editFileSuffix) || f.hasFileExtension (legacyEditFileSuffix); }
-bool isTracktionArchiveFile (const File& f) { return f.hasFileExtension (archiveFileSuffix); }
-bool isTracktionProjectFile (const File& f) { return f.hasFileExtension (projectFileSuffix); }
-bool isTracktionPresetFile (const File& f)  { return f.hasFileExtension (presetFileSuffix); }
+bool isMidiFile (const juce::File& f)             { return f.hasFileExtension ("mid;rmi;rmid;midi"); }
+bool isTracktionEditFile (const juce::File& f)    { return f.hasFileExtension (editFileSuffix) || f.hasFileExtension (legacyEditFileSuffix); }
+bool isTracktionArchiveFile (const juce::File& f) { return f.hasFileExtension (archiveFileSuffix); }
+bool isTracktionProjectFile (const juce::File& f) { return f.hasFileExtension (projectFileSuffix); }
+bool isTracktionPresetFile (const juce::File& f)  { return f.hasFileExtension (presetFileSuffix); }
 
 //==============================================================================
-FileDragList::Ptr FileDragList::getFromDrag (const DragAndDropTarget::SourceDetails& s)
+FileDragList::Ptr FileDragList::getFromDrag (const juce::DragAndDropTarget::SourceDetails& s)
 {
     return dynamic_cast<FileDragList*> (s.description.getObject());
 }
 
-var FileDragList::create (const Array<File>& files, PreferredLayout preferredLayout)
+juce::var FileDragList::create (const juce::Array<juce::File>& files, PreferredLayout preferredLayout)
 {
     FileDragList* l = new FileDragList();
     l->preferredLayout = preferredLayout;
@@ -74,9 +76,9 @@ var FileDragList::create (const Array<File>& files, PreferredLayout preferredLay
     return l;
 }
 
-var FileDragList::create (const File& file, PreferredLayout peferredLayout)
+juce::var FileDragList::create (const juce::File& file, PreferredLayout peferredLayout)
 {
-    Array<File> files;
+    juce::Array<juce::File> files;
     files.add (file);
     return create (files, peferredLayout);
 }

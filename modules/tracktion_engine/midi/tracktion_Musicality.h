@@ -295,7 +295,7 @@ private:
 
     void updateHash();
     void clearHash();
-    juce::int64 hashNotes (MidiList& sequence, int version);
+    HashCode hashNotes (MidiList&, int version);
 
     MidiClip* getMidiClip() const;
 

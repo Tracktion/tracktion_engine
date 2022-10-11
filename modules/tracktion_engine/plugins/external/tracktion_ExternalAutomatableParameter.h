@@ -132,7 +132,7 @@ public:
     void valueChangedByPlugin()
     {
         if (auto p = getParam())
-            setParameter (p->getValue(), sendNotification);
+            setParameter (p->getValue(), juce::sendNotification);
     }
 
     juce::String getParameterName() const override
@@ -147,7 +147,7 @@ public:
                 return name;
         }
 
-        return TRANS("Unnamed") + " " + String (parameterIndex + 1);
+        return TRANS("Unnamed") + " " + juce::String (parameterIndex + 1);
     }
 
     int getParameterIndex() const noexcept
@@ -279,7 +279,7 @@ private:
     const VSTXML::Param* param = nullptr;
     const VSTXML::ValueType* valueType = nullptr;
 
-    AudioPluginInstance* getPlugin() const noexcept
+    juce::AudioPluginInstance* getPlugin() const noexcept
     {
         jassert (plugin != nullptr);
         return static_cast<ExternalPlugin&> (*plugin).getAudioPluginInstance();
@@ -308,6 +308,9 @@ private:
 
     void parameterGestureChanged (int index, bool gestureIsStarting) override
     {
+        if (! juce::MessageManager::existsAndIsCurrentThread())
+            return;
+        
         if (parameterIndex == index)
         {
             if (gestureIsStarting)

@@ -19,7 +19,7 @@ inline int oddEven (int x)
 //==============================================================================
 static float sine (float phase)
 {
-    return std::sin (phase * 2 * MathConstants<float>::pi);
+    return std::sin (phase * 2 * juce::MathConstants<float>::pi);
 }
 
 static float triangle (float phase, float freq, double sampleRate)
@@ -28,7 +28,7 @@ static float triangle (float phase, float freq, double sampleRate)
     int k = 1;
     while (freq * k < sampleRate / 2)
     {
-        sum += std::pow (-1.0f, (k - 1.0f) / 2.0f) / (k * k) * std::sin (k * (phase * 2 * MathConstants<float>::pi));
+        sum += std::pow (-1.0f, (k - 1.0f) / 2.0f) / (k * k) * std::sin (k * (phase * 2 * juce::MathConstants<float>::pi));
         k += 2;
     }
     return float (8.0f / (juce::MathConstants<float>::pi * juce::MathConstants<float>::pi) * sum);
@@ -40,7 +40,7 @@ static float sawUp (float phase, float freq, double sampleRate)
     int k = 1;
     while (freq * k < sampleRate / 2)
     {
-        sum += oddEven (k) * std::sin (k * (phase * 2 * MathConstants<float>::pi)) / k;
+        sum += oddEven (k) * std::sin (k * (phase * 2 * juce::MathConstants<float>::pi)) / k;
         k++;
     }
     return float (-2.0f / juce::MathConstants<float>::pi * sum);
@@ -52,7 +52,7 @@ static float sawDown (float phase, float freq, double sampleRate)
     int k = 1;
     while (freq * k < sampleRate / 2)
     {
-        sum += oddEven (k) * std::sin (k * (phase * 2 * MathConstants<float>::pi)) / k;
+        sum += oddEven (k) * std::sin (k * (phase * 2 * juce::MathConstants<float>::pi)) / k;
         k++;
     }
     return float (2.0f / juce::MathConstants<float>::pi * sum);
@@ -61,7 +61,7 @@ static float sawDown (float phase, float freq, double sampleRate)
 //==============================================================================
 void Oscillator::start()
 {
-    static Random r;
+    static juce::Random r;
     phase = r.nextFloat();
 }
 
@@ -73,7 +73,7 @@ void Oscillator::setSampleRate (double sr)
         lookupTables = BandlimitedWaveLookupTables::getLookupTables (sampleRate);
 }
 
-void Oscillator::process (AudioSampleBuffer& buffer, int startSample, int numSamples)
+void Oscillator::process (juce::AudioBuffer<float>& buffer, int startSample, int numSamples)
 {
     if (lookupTables != nullptr)
     {
@@ -89,9 +89,9 @@ void Oscillator::process (AudioSampleBuffer& buffer, int startSample, int numSam
     }
 }
 
-void Oscillator::processSine (AudioSampleBuffer& buffer, int startSample, int numSamples)
+void Oscillator::processSine (juce::AudioBuffer<float>& buffer, int startSample, int numSamples)
 {
-    const float frequency = jmin (float (sampleRate) / 2.0f, 440.0f * std::pow (2.0f, (note - 69.0f) / 12.0f));
+    const float frequency = std::min (float (sampleRate) / 2.0f, 440.0f * std::pow (2.0f, (note - 69.0f) / 12.0f));
     const float period = 1.0f / float (frequency);
     const float periodInSamples = float (period * sampleRate);
     const float delta = 1.0f / periodInSamples;
@@ -111,7 +111,7 @@ void Oscillator::processSine (AudioSampleBuffer& buffer, int startSample, int nu
     }
 }
 
-void Oscillator::processNoise (AudioSampleBuffer& buffer, int startSample, int numSamples)
+void Oscillator::processNoise (juce::AudioBuffer<float>& buffer, int startSample, int numSamples)
 {
     auto* channels = buffer.getArrayOfWritePointers();
     const int numChannels = buffer.getNumChannels();
@@ -124,10 +124,10 @@ void Oscillator::processNoise (AudioSampleBuffer& buffer, int startSample, int n
     }
 }
 
-void Oscillator::processLookup (juce::AudioSampleBuffer& buffer, int startSample, int numSamples,
+void Oscillator::processLookup (juce::AudioBuffer<float>& buffer, int startSample, int numSamples,
                                 const juce::OwnedArray<juce::dsp::LookupTableTransform<float>>& tableSet)
 {
-    const float frequency = jmin (float (sampleRate) / 2.0f, 440.0f * std::pow (2.0f, (note - 69.0f) / 12.0f));
+    const float frequency = std::min (float (sampleRate) / 2.0f, 440.0f * std::pow (2.0f, (note - 69.0f) / 12.0f));
     const float period = 1.0f / float (frequency);
     const float periodInSamples = float (period * sampleRate);
     const float delta = 1.0f / periodInSamples;
@@ -135,7 +135,7 @@ void Oscillator::processLookup (juce::AudioSampleBuffer& buffer, int startSample
     auto* channels = buffer.getArrayOfWritePointers();
     const int numChannels = buffer.getNumChannels();
 
-    int tableIndex = jlimit (0, tableSet.size() - 1, int ((note - 0.5) / lookupTables->tablePerNumNotes));
+    int tableIndex = juce::jlimit (0, tableSet.size() - 1, int ((note - 0.5) / lookupTables->tablePerNumNotes));
 
     auto table = tableSet[tableIndex];
     jassert (table != nullptr);
@@ -155,9 +155,9 @@ void Oscillator::processLookup (juce::AudioSampleBuffer& buffer, int startSample
     }
 }
 
-void Oscillator::processSquare (juce::AudioSampleBuffer& buffer, int startSample, int numSamples)
+void Oscillator::processSquare (juce::AudioBuffer<float>& buffer, int startSample, int numSamples)
 {
-    const float frequency = jmin (float (sampleRate) / 2.0f, 440.0f * std::pow (2.0f, (note - 69.0f) / 12.0f));
+    const float frequency = std::min (float (sampleRate) / 2.0f, 440.0f * std::pow (2.0f, (note - 69.0f) / 12.0f));
     const float period = 1.0f / float (frequency);
     const float periodInSamples = float (period * sampleRate);
     const float delta = 1.0f / periodInSamples;
@@ -165,7 +165,7 @@ void Oscillator::processSquare (juce::AudioSampleBuffer& buffer, int startSample
     auto* channels = buffer.getArrayOfWritePointers();
     const int numChannels = buffer.getNumChannels();
 
-    int tableIndex = jlimit (0, lookupTables->sawUpFunctions.size() - 1, int ((note - 0.5) / lookupTables->tablePerNumNotes));
+    int tableIndex = juce::jlimit (0, lookupTables->sawUpFunctions.size() - 1, int ((note - 0.5) / lookupTables->tablePerNumNotes));
 
     auto saw1 = lookupTables->sawUpFunctions[tableIndex];
     auto saw2 = lookupTables->sawDownFunctions[tableIndex];
@@ -204,7 +204,7 @@ MultiVoiceOscillator::MultiVoiceOscillator (int maxVoices)
 
 void MultiVoiceOscillator::start()
 {
-    static Random r;
+    static juce::Random r;
 
     for (int i = 0; i < oscillators.size(); i += 2)
     {
@@ -262,7 +262,7 @@ void MultiVoiceOscillator::setSpread (float s)
     spread = s;
 }
 
-void MultiVoiceOscillator::process (juce::AudioSampleBuffer& buffer, int startSample, int numSamples)
+void MultiVoiceOscillator::process (juce::AudioBuffer<float>& buffer, int startSample, int numSamples)
 {
     if (voices == 1)
     {
@@ -277,7 +277,7 @@ void MultiVoiceOscillator::process (juce::AudioSampleBuffer& buffer, int startSa
             float* data = buffer.getWritePointer (left ? 0 : 1, startSample);
             float* dataPointers[] = {data};
 
-            juce::AudioSampleBuffer channelBuffer (dataPointers, 1, numSamples);
+            juce::AudioBuffer<float> channelBuffer (dataPointers, 1, numSamples);
 
             oscillators[i]->setGain (gain * panGain / voices);
             oscillators[i]->setNote (note);
@@ -289,7 +289,7 @@ void MultiVoiceOscillator::process (juce::AudioSampleBuffer& buffer, int startSa
         for (int i = 0; i < voices * 2; i++)
         {
             int voiceIndex = (i / 2);
-            float localPan = jlimit (-1.0f, 1.0f, ((voiceIndex % 2 == 0) ? 1 : -1) * spread);
+            float localPan = juce::jlimit (-1.0f, 1.0f, ((voiceIndex % 2 == 0) ? 1 : -1) * spread);
 
             float leftGain  = 1.0f - localPan;
             float rightGain = 1.0f + localPan;
@@ -302,7 +302,7 @@ void MultiVoiceOscillator::process (juce::AudioSampleBuffer& buffer, int startSa
             float* data = buffer.getWritePointer (left ? 0 : 1, startSample);
             float* dataPointers[] = {data};
 
-            juce::AudioSampleBuffer channelBuffer (dataPointers, 1, numSamples);
+            juce::AudioBuffer<float> channelBuffer (dataPointers, 1, numSamples);
 
             oscillators[i]->setGain (gain * panGain / voices);
             oscillators[i]->setNote (base + delta * (i / 2));
@@ -312,7 +312,7 @@ void MultiVoiceOscillator::process (juce::AudioSampleBuffer& buffer, int startSa
 }
 
 //==============================================================================
-static Array<BandlimitedWaveLookupTables*> tableCache;
+static juce::Array<BandlimitedWaveLookupTables*> tableCache;
 
 BandlimitedWaveLookupTables::Ptr BandlimitedWaveLookupTables::getLookupTables (double sampleRate)
 {
@@ -326,14 +326,14 @@ BandlimitedWaveLookupTables::Ptr BandlimitedWaveLookupTables::getLookupTables (d
 
 BandlimitedWaveLookupTables::BandlimitedWaveLookupTables (double sr, int tableSize)
     : sampleRate (sr),
-    sineFunction ([] (float in) { return sine (in); }, 0.0f, 1.0f, (size_t) tableSize)
+      sineFunction ([] (float in) { return sine (in); }, 0.0f, 1.0f, (size_t) tableSize)
 {
     auto getMidiNoteInHertz = [](float noteNumber)
     {
         return 440.0f * std::pow (2.0f, (noteNumber - 69) / 12.0f);
     };
 
-    Time start (Time::getCurrentTime());
+    auto start = juce::Time::getCurrentTime();
 
     for (float note = tablePerNumNotes + 0.5f; note < 127; note += tablePerNumNotes)
     {
@@ -349,8 +349,8 @@ BandlimitedWaveLookupTables::BandlimitedWaveLookupTables (double sr, int tableSi
                               { return sawDown (value, freq, sr); }, 0.0f, 1.0f, (size_t) tableSize));
     }
 
-    RelativeTime elapsed (Time::getCurrentTime() - start);
-    DBG ("Generating waves: " + String (elapsed.inMilliseconds()) + "ms");
+    auto elapsed = (juce::Time::getCurrentTime() - start);
+    DBG ("Generating waves: " + juce::String (elapsed.inMilliseconds()) + "ms");
 
     tableCache.add (this);
 }

@@ -31,14 +31,14 @@ struct CrashStackTracer::CrashTraceThreads
     void dump() const
     {
       #if TRACKTION_LOG_ENABLED
-        Array<Thread::ThreadID> threads;
+        juce::Array<juce::Thread::ThreadID> threads;
 
         for (int i = entries.size(); --i >= 0;)
             threads.addIfNotAlreadyThere (entries.getUnchecked (i)->threadID);
 
         for (int j = 0; j < threads.size(); ++j)
         {
-            TRACKTION_LOG ("Thread " + String (j) + ":");
+            TRACKTION_LOG ("Thread " + juce::String (j) + ":");
 
             auto thread = threads.getUnchecked(j);
             int n = 0;
@@ -50,11 +50,11 @@ struct CrashStackTracer::CrashTraceThreads
                 if (s.threadID == thread)
                 {
                     if (s.pluginName != nullptr)
-                        TRACKTION_LOG ("  ** Plugin crashed: " + String (s.pluginName));
+                        TRACKTION_LOG ("  ** Plugin crashed: " + juce::String (s.pluginName));
 
-                    TRACKTION_LOG ("  " + String (n++) + ": "
-                                    + File::createFileWithoutCheckingPath (s.file).getFileName()
-                                    + ":" + String (s.function) + ":" + String (s.line));
+                    TRACKTION_LOG ("  " + juce::String (n++) + ": "
+                                    + juce::File::createFileWithoutCheckingPath (s.file).getFileName()
+                                    + ":" + juce::String (s.function) + ":" + juce::String (s.line));
 
                 }
             }
@@ -62,9 +62,9 @@ struct CrashStackTracer::CrashTraceThreads
       #endif
     }
 
-    void dump (OutputStream& os, juce::Thread::ThreadID threadIDToDump) const
+    void dump (juce::OutputStream& os, juce::Thread::ThreadID threadIDToDump) const
     {
-        Array<Thread::ThreadID> threads;
+        juce::Array<juce::Thread::ThreadID> threads;
 
         for (int i = entries.size(); --i >= 0;)
         {
@@ -76,7 +76,7 @@ struct CrashStackTracer::CrashTraceThreads
 
         for (int j = 0; j < threads.size(); ++j)
         {
-            os.writeText ("Thread " + String (j) + ":\n", false, false, nullptr);
+            os.writeText ("Thread " + juce::String (j) + ":\n", false, false, nullptr);
 
             auto thread = threads.getUnchecked (j);
             int n = 0;
@@ -88,20 +88,20 @@ struct CrashStackTracer::CrashTraceThreads
                 if (s.threadID == thread)
                 {
                     if (s.pluginName != nullptr)
-                        os.writeText ("  ** Plugin crashed: " + String (s.pluginName) + "\n", false, false, nullptr);
+                        os.writeText ("  ** Plugin crashed: " + juce::String (s.pluginName) + "\n", false, false, nullptr);
 
-                    os.writeText ("  " + String (n++) + ": "
-                                   + File::createFileWithoutCheckingPath (s.file).getFileName()
-                                   + ":" + String (s.function) + ":" + String (s.line) + "\n", false, false, nullptr);
+                    os.writeText ("  " + juce::String (n++) + ": "
+                                   + juce::File::createFileWithoutCheckingPath (s.file).getFileName()
+                                   + ":" + juce::String (s.function) + ":" + juce::String (s.line) + "\n", false, false, nullptr);
 
                 }
             }
         }
     }
 
-    StringArray getCrashedPlugins() const
+    juce::StringArray getCrashedPlugins() const
     {
-        StringArray plugins;
+        juce::StringArray plugins;
 
         for (auto s : entries)
             if (s->pluginName != nullptr)
@@ -110,7 +110,7 @@ struct CrashStackTracer::CrashTraceThreads
         return plugins;
     }
 
-    String getCrashedPlugin (Thread::ThreadID thread)
+    juce::String getCrashedPlugin (juce::Thread::ThreadID thread)
     {
         for (int i = entries.size(); --i >= 0;)
         {
@@ -124,27 +124,27 @@ struct CrashStackTracer::CrashTraceThreads
         return {};
     }
 
-    String getCrashLocation (Thread::ThreadID thread)
+    juce::String getCrashLocation (juce::Thread::ThreadID thread)
     {
         for (int i = entries.size(); --i >= 0;)
         {
             auto& s = *entries.getUnchecked (i);
 
             if (s.threadID == thread)
-                return File::createFileWithoutCheckingPath (s.file).getFileName()
-                     + ":" + String (s.function) + ":" + String (s.line);
+                return juce::File::createFileWithoutCheckingPath (s.file).getFileName()
+                     + ":" + juce::String (s.function) + ":" + juce::String (s.line);
         }
 
         return "UnknownLocation";
     }
 
-    Array<CrashStackTracer*, CriticalSection, 100> entries;
+    juce::Array<CrashStackTracer*, juce::CriticalSection, 100> entries;
 };
 
 static CrashStackTracer::CrashTraceThreads crashStack;
 
 CrashStackTracer::CrashStackTracer (const char* f, const char* fn, int l, const char* plugin)
-    : file (f), function (fn), pluginName (plugin), line (l), threadID (Thread::getCurrentThreadId())
+    : file (f), function (fn), pluginName (plugin), line (l), threadID (juce::Thread::getCurrentThreadId())
 {
     crashStack.push (this);
 
@@ -158,7 +158,7 @@ CrashStackTracer::~CrashStackTracer()
     crashStack.pop (this);
 }
 
-StringArray CrashStackTracer::getCrashedPlugins()
+juce::StringArray CrashStackTracer::getCrashedPlugins()
 {
     return crashStack.getCrashedPlugins();
 }
@@ -166,11 +166,11 @@ StringArray CrashStackTracer::getCrashedPlugins()
 void CrashStackTracer::dump()
 {
     TRACKTION_LOG ("Crashed");
-    TRACKTION_LOG (newLine);
+    TRACKTION_LOG (juce::newLine);
     crashStack.dump();
 }
 
-void CrashStackTracer::dump (OutputStream& os)
+void CrashStackTracer::dump (juce::OutputStream& os)
 {
     dump (os, juce::Thread::ThreadID());
 }
@@ -178,22 +178,22 @@ void CrashStackTracer::dump (OutputStream& os)
 void CrashStackTracer::dump (juce::OutputStream& os, juce::Thread::ThreadID threadID)
 {
     os.writeText ("Crashed", false, false, nullptr);
-    os.writeText (newLine, false, false, nullptr);
+    os.writeText (juce::newLine, false, false, nullptr);
     crashStack.dump (os, threadID);
 }
 
-String CrashStackTracer::getCrashedPlugin (juce::Thread::ThreadID threadID)
+juce::String CrashStackTracer::getCrashedPlugin (juce::Thread::ThreadID threadID)
 {
     return crashStack.getCrashedPlugin (threadID);
 }
 
-String CrashStackTracer::getCrashLocation (Thread::ThreadID threadID)
+juce::String CrashStackTracer::getCrashLocation (juce::Thread::ThreadID threadID)
 {
     return crashStack.getCrashLocation (threadID);
 }
 
 //==============================================================================
-DeadMansPedalMessage::DeadMansPedalMessage (PropertyStorage& ps, const String& message)
+DeadMansPedalMessage::DeadMansPedalMessage (PropertyStorage& ps, const juce::String& message)
     : file (getDeadMansPedalFile (ps))
 {
     file.replaceWithText (message);
@@ -202,11 +202,11 @@ DeadMansPedalMessage::DeadMansPedalMessage (PropertyStorage& ps, const String& m
 DeadMansPedalMessage::~DeadMansPedalMessage()
 {
     auto success = file.deleteFile();
-    ignoreUnused (success);
+    juce::ignoreUnused (success);
     jassert (success);
 }
 
-String DeadMansPedalMessage::getAndClearLastMessage (PropertyStorage& propertyStorage)
+juce::String DeadMansPedalMessage::getAndClearLastMessage (PropertyStorage& propertyStorage)
 {
     auto file = getDeadMansPedalFile (propertyStorage);
     auto s = file.loadFileAsString();
@@ -220,7 +220,7 @@ String DeadMansPedalMessage::getAndClearLastMessage (PropertyStorage& propertySt
     return s;
 }
 
-File DeadMansPedalMessage::getDeadMansPedalFile (PropertyStorage& propertyStorage)
+juce::File DeadMansPedalMessage::getDeadMansPedalFile (PropertyStorage& propertyStorage)
 {
     auto folder = propertyStorage.getAppPrefsFolder();
     jassert (folder.exists() && folder.hasWriteAccess());

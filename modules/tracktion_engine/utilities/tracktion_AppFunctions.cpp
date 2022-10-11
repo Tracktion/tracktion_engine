@@ -15,13 +15,18 @@ namespace AppFunctions
 {
     UIBehaviour& getCurrentUIBehaviour()
     {
-        // TODO: RMR
-        return Engine::getEngines()[0]->getUIBehaviour();
+        auto e = Engine::getEngines()[0];
+        jassert (e != nullptr);
+        return e->getUIBehaviour();
     }
 
     Edit* getCurrentlyFocusedEdit()
     {
-        return getCurrentUIBehaviour().getCurrentlyFocusedEdit();
+        if (auto e = getCurrentUIBehaviour().getCurrentlyFocusedEdit())
+            return e;
+        
+        jassertfalse;
+        return nullptr;
     }
 
     TransportControl* getActiveTransport()
@@ -62,7 +67,7 @@ namespace AppFunctions
         return false;
     }
 
-    void nudgeSelected (const String& commandDesc)
+    void nudgeSelected (const juce::String& commandDesc)
     {
         getCurrentUIBehaviour().nudgeSelected (commandDesc);
     }
@@ -119,7 +124,7 @@ namespace AppFunctions
 
     void deleteSelected()
     {
-        if (! Component::isMouseButtonDownAnywhere())
+        if (! juce::Component::isMouseButtonDownAnywhere())
             if (auto sm = getCurrentUIBehaviour().getCurrentlyFocusedSelectionManager())
                 sm->deleteSelected();
     }
@@ -169,16 +174,16 @@ namespace AppFunctions
             toEnd (*transport, getSelectedItems());
     }
 
-    void markIn()
+    void markIn (bool forceAtCursor)
     {
         if (auto transport = getActiveTransport())
-            transport->setLoopIn  (getCurrentUIBehaviour().getEditingPosition (transport->edit));
+            transport->setLoopIn  (forceAtCursor ? transport->position : getCurrentUIBehaviour().getEditingPosition (transport->edit));
     }
 
-    void markOut()
+    void markOut (bool forceAtCursor)
     {
         if (auto transport = getActiveTransport())
-            transport->setLoopOut  (getCurrentUIBehaviour().getEditingPosition (transport->edit));
+            transport->setLoopOut  (forceAtCursor ? transport->position : getCurrentUIBehaviour().getEditingPosition (transport->edit));
     }
 
     void start()
@@ -190,7 +195,7 @@ namespace AppFunctions
     void stop()
     {
         if (auto transport = getActiveTransport())
-            transport->stop (false, false, true, ModifierKeys::getCurrentModifiersRealtime().isCtrlDown());
+            transport->stop (false, false, true, juce::ModifierKeys::getCurrentModifiersRealtime().isCtrlDown());
     }
 
     void startStopPlay()
@@ -307,16 +312,20 @@ namespace AppFunctions
             ed->playInStopEnabled = ! ed->playInStopEnabled;
     }
 
-    void saveEdit()
+    bool saveEdit()
     {
         if (auto ed = getCurrentlyFocusedEdit())
-            EditFileOperations (*ed).save (true, true, false);
+            return EditFileOperations (*ed).save (true, true, false);
+        
+        return false;
     }
 
-    void saveEditAs()
+    bool saveEditAs()
     {
         if (auto ed = getCurrentlyFocusedEdit())
-            EditFileOperations (*ed).saveAs();
+            return EditFileOperations (*ed).saveAs();
+
+        return false;
     }
 
     void armOrDisarmAllInputs()
@@ -412,6 +421,11 @@ namespace AppFunctions
     void toggleScroll()
     {
         getCurrentUIBehaviour().toggleScroll();
+    }
+
+    bool isScrolling()
+    {
+        return getCurrentUIBehaviour().isScrolling();
     }
 
     void stopRecordingAndDiscard()
@@ -511,9 +525,39 @@ namespace AppFunctions
         getCurrentUIBehaviour().showHideVideo();
     }
 
+    void showHideMixer (bool fs)
+    {
+        getCurrentUIBehaviour().showHideMixer (fs);
+    }
+
+    void showHideMidiEditor (bool fs)
+    {
+        getCurrentUIBehaviour().showHideMidiEditor (fs);
+    }
+
+    void showHideTrackEditor (bool zoom)
+    {
+        getCurrentUIBehaviour().showHideTrackEditor (zoom);
+    }
+
+    void showHideBrowser()
+    {
+        getCurrentUIBehaviour().showHideBrowser();
+    }
+
+    void showHideActions()
+    {
+        getCurrentUIBehaviour().showHideActions();
+    }
+
     void showHideAllPanes()
     {
         getCurrentUIBehaviour().showHideAllPanes();
+    }
+
+    void performUserAction (int a)
+    {
+        getCurrentUIBehaviour().performUserAction (a);
     }
 
     void split()

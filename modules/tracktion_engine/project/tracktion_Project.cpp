@@ -15,7 +15,7 @@ namespace tracktion_engine
 static const char* magicNumberV1 = "TP01";
 
 //==============================================================================
-Project::Project (Engine& e, ProjectManager& pm, const File& projectFile)
+Project::Project (Engine& e, ProjectManager& pm, const juce::File& projectFile)
    : engine (e), projectManager (pm), file (projectFile)
 {
     jassert (isTracktionProjectFile (file));
@@ -98,7 +98,7 @@ void Project::refreshProjectPropertiesFromFile()
         readProjectHeader (*in, false);
 }
 
-bool Project::readProjectHeader (InputStream& in, bool clearObjectInfo)
+bool Project::readProjectHeader (juce::InputStream& in, bool clearObjectInfo)
 {
     CRASH_TRACER
 
@@ -122,7 +122,7 @@ bool Project::readProjectHeader (InputStream& in, bool clearObjectInfo)
             auto propName = in.readString();
             auto size = in.readInt();
 
-            MemoryBlock mem ((size_t) size);
+            juce::MemoryBlock mem ((size_t) size);
             in.read (mem.getData(), size);
 
             properties.set (propName, mem.toString());
@@ -153,7 +153,7 @@ bool Project::loadProjectItem (ObjectInfo& o)
 void Project::loadAllProjectItems()
 {
     CRASH_TRACER
-    const ScopedLock sl (objectLock);
+    const juce::ScopedLock sl (objectLock);
 
     for (auto& o : objects)
         if (o.item == nullptr)
@@ -161,11 +161,11 @@ void Project::loadAllProjectItems()
                 break;
 }
 
-BufferedInputStream* Project::getInputStream()
+juce::BufferedInputStream* Project::getInputStream()
 {
     if (stream == nullptr && file.getSize() > 0)
         if (auto in = file.createInputStream())
-            stream.reset (new BufferedInputStream (in.release(), 16384, true));
+            stream = std::make_unique<juce::BufferedInputStream> (in.release(), 16384, true);
 
     return stream.get();
 }
@@ -184,13 +184,13 @@ bool Project::save()
         if (! hasChanged)
             return true;
 
-        const ScopedLock sl (objectLock);
+        const juce::ScopedLock sl (objectLock);
 
         loadAllProjectItems();
 
         auto tempFile = file.getParentDirectory().getNonexistentChildFile ("temp", ".tmp");
 
-        if (auto out = std::unique_ptr<FileOutputStream> (tempFile.createOutputStream()))
+        if (auto out = tempFile.createOutputStream())
         {
             saveTo (*out);
             out.reset();
@@ -203,7 +203,7 @@ bool Project::save()
             {
                 hasChanged = false;
 
-                DBG (Time::getCurrentTime().toString (false, true)
+                DBG (juce::Time::getCurrentTime().toString (false, true)
                         + " Saved: " + file.getFullPathName());
             }
             else
@@ -214,7 +214,7 @@ bool Project::save()
                 bool b = tempFile.deleteFile();
                 jassert (b); juce::ignoreUnused (b);
 
-                DBG (String ("!!couldn't save ") + file.getFullPathName());
+                DBG ("!!couldn't save " + file.getFullPathName());
             }
 
             lockFile();
@@ -228,7 +228,7 @@ bool Project::save()
 }
 
 //==============================================================================
-void Project::saveTo (FileOutputStream& out)
+void Project::saveTo (juce::FileOutputStream& out)
 {
     if (! isValid())
         return;
@@ -300,37 +300,38 @@ int Project::getProjectID() const
     return projectId;
 }
 
-String Project::getProjectProperty (const String& name) const
+juce::String Project::getProjectProperty (const juce::String& name) const
 {
-    const ScopedLock sl (propertyLock);
+    const juce::ScopedLock sl (propertyLock);
     return properties [name];
 }
 
-void Project::setProjectProperty (const String& name, const String& value)
+void Project::setProjectProperty (const juce::String& name, const juce::String& value)
 {
-    const ScopedLock sl (propertyLock);
+    const juce::ScopedLock sl (propertyLock);
     properties.set (name, value);
     changed();
 }
 
-String Project::getName() const
+juce::String Project::getName() const
 {
     return getProjectProperty ("name");
 }
 
-String Project::getDescription() const
+juce::String Project::getDescription() const
 {
     return getProjectProperty ("description");
 }
 
-void Project::setName (const String& newName)
+void Project::setName (const juce::String& newName)
 {
     if (getName() != newName)
     {
         setProjectProperty ("name", newName.substring (0, 64));
         engine.getUIBehaviour().updateAllProjectItemLists();
 
-        File dst = file.getParentDirectory().getChildFile(File::createLegalFileName(newName) + file.getFileExtension());
+        auto dst = file.getParentDirectory().getChildFile (juce::File::createLegalFileName (newName)
+                                                             + file.getFileExtension());
         stream = nullptr;
 
         unlockFile();
@@ -345,19 +346,19 @@ void Project::setName (const String& newName)
     }
 }
 
-void Project::setDescription (const String& newDesc)
+void Project::setDescription (const juce::String& newDesc)
 {
-    setProjectProperty ("description", String (newDesc).substring (0, 512));
+    setProjectProperty ("description", juce::String (newDesc).substring (0, 512));
 }
 
 void Project::createNewProjectId()
 {
-    int newID = Random::getSystemRandom().nextInt (9999999);
+    auto newID = juce::Random::getSystemRandom().nextInt (9999999);
 
     while (projectManager.getProject (newID))
     {
         jassertfalse;
-        newID = Random::getSystemRandom().nextInt (9999999);
+        newID = juce::Random::getSystemRandom().nextInt (9999999);
     }
 
     projectId = newID;
@@ -416,17 +417,17 @@ int Project::getNumProjectItems()
 
 ProjectItemID Project::getProjectItemID (int i)
 {
-    const ScopedLock sl (objectLock);
+    const juce::ScopedLock sl (objectLock);
 
-    if (isPositiveAndBelow (i, objects.size()))
+    if (juce::isPositiveAndBelow (i, objects.size()))
         return ProjectItemID (objects.getReference(i).itemID, projectId);
 
     return {};
 }
 
-Array<int> Project::getAllItemIDs() const
+juce::Array<int> Project::getAllItemIDs() const
 {
-    Array<int> a;
+    juce::Array<int> a;
 
     for (auto& o : objects)
         a.add (o.itemID);
@@ -436,9 +437,9 @@ Array<int> Project::getAllItemIDs() const
 
 juce::Array<ProjectItemID> Project::getAllProjectItemIDs() const
 {
-    Array<ProjectItemID> dest;
+    juce::Array<ProjectItemID> dest;
 
-    const ScopedLock sl (objectLock);
+    const juce::ScopedLock sl (objectLock);
 
     for (auto& o : objects)
         dest.add (ProjectItemID (o.itemID, projectId));
@@ -448,9 +449,9 @@ juce::Array<ProjectItemID> Project::getAllProjectItemIDs() const
 
 ProjectItem::Ptr Project::getProjectItemAt (int i)
 {
-    const ScopedLock sl (objectLock);
+    const juce::ScopedLock sl (objectLock);
 
-    if (isPositiveAndBelow (i, objects.size()))
+    if (juce::isPositiveAndBelow (i, objects.size()))
     {
         auto& o = objects.getReference(i);
 
@@ -465,9 +466,9 @@ ProjectItem::Ptr Project::getProjectItemAt (int i)
 
 juce::Array<ProjectItem::Ptr> Project::getAllProjectItems()
 {
-    Array<ProjectItem::Ptr> dest;
+    juce::Array<ProjectItem::Ptr> dest;
 
-    const ScopedLock sl (objectLock);
+    const juce::ScopedLock sl (objectLock);
 
     for (auto& o : objects)
     {
@@ -482,13 +483,13 @@ juce::Array<ProjectItem::Ptr> Project::getAllProjectItems()
 
 ProjectItem::Ptr Project::getProjectItemForID (ProjectItemID targetId)
 {
-    const ScopedLock sl (objectLock);
+    const juce::ScopedLock sl (objectLock);
     return getProjectItemAt (getIndexOf (targetId));
 }
 
-ProjectItem::Ptr Project::getProjectItemForFile (const File& fileToFind)
+ProjectItem::Ptr Project::getProjectItemForFile (const juce::File& fileToFind)
 {
-    const ScopedLock sl (objectLock);
+    const juce::ScopedLock sl (objectLock);
 
     for (auto& o : objects)
     {
@@ -505,7 +506,7 @@ ProjectItem::Ptr Project::getProjectItemForFile (const File& fileToFind)
 
 int Project::getIndexOf (ProjectItemID mo) const
 {
-    const ScopedLock sl (objectLock);
+    const juce::ScopedLock sl (objectLock);
 
     if (mo.getProjectID() == getProjectID())
     {
@@ -523,20 +524,20 @@ void Project::moveProjectItem (int indexToMoveFrom, int indexToMoveTo)
 {
     if (indexToMoveTo != indexToMoveFrom)
     {
-        const ScopedLock sl (objectLock);
+        const juce::ScopedLock sl (objectLock);
 
         if (indexToMoveFrom >= 0 && indexToMoveFrom < objects.size())
         {
-            objects.move (indexToMoveFrom, jlimit (0, objects.size(), indexToMoveTo));
+            objects.move (indexToMoveFrom, juce::jlimit (0, objects.size(), indexToMoveTo));
             changed();
         }
     }
 }
 
-ProjectItem::Ptr Project::createNewItem (const File& fileToReference,
-                                         const String& type,
-                                         const String& name,
-                                         const String& description,
+ProjectItem::Ptr Project::createNewItem (const juce::File& fileToReference,
+                                         const juce::String& type,
+                                         const juce::String& name,
+                                         const juce::String& description,
                                          const ProjectItem::Category cat,
                                          bool atTopOfList)
 {
@@ -555,7 +556,7 @@ ProjectItem::Ptr Project::createNewItem (const File& fileToReference,
         o.fileOffset = 0;
 
         {
-            const ScopedLock sl (objectLock);
+            const juce::ScopedLock sl (objectLock);
 
             if (atTopOfList)
                 objects.insert (0, o);
@@ -573,10 +574,10 @@ ProjectItem::Ptr Project::createNewItem (const File& fileToReference,
     return {};
 }
 
-ProjectItem::Ptr Project::quickAddProjectItem (const String& relPathName,
-                                               const String& type,
-                                               const String& name,
-                                               const String& description,
+ProjectItem::Ptr Project::quickAddProjectItem (const juce::String& relPathName,
+                                               const juce::String& type,
+                                               const juce::String& name,
+                                               const juce::String& description,
                                                const ProjectItem::Category cat,
                                                ProjectItemID newID)
 {
@@ -587,7 +588,7 @@ ProjectItem::Ptr Project::quickAddProjectItem (const String& relPathName,
     o.item->file = relPathName;
 
     {
-        const ScopedLock sl (objectLock);
+        const juce::ScopedLock sl (objectLock);
         objects.add (o);
     }
 
@@ -600,7 +601,7 @@ bool Project::removeProjectItem (ProjectItemID item, bool deleteSourceMaterial)
     if (isValid() && ! isReadOnly())
     {
         {
-            const ScopedLock sl (objectLock);
+            const juce::ScopedLock sl (objectLock);
 
             const int index = getIndexOf (item);
             jassert (index >= 0);
@@ -629,9 +630,9 @@ bool Project::removeProjectItem (ProjectItemID item, bool deleteSourceMaterial)
     return false;
 }
 
-File Project::getDirectoryForMedia (ProjectItem::Category category) const
+juce::File Project::getDirectoryForMedia (ProjectItem::Category category) const
 {
-    File dir = getDefaultDirectory();
+    auto dir = getDefaultDirectory();
 
     switch (category)
     {
@@ -654,7 +655,7 @@ File Project::getDirectoryForMedia (ProjectItem::Category category) const
     return dir;
 }
 
-File Project::getDefaultDirectory() const
+juce::File Project::getDefaultDirectory() const
 {
     return file.getParentDirectory();
 }
@@ -669,10 +670,10 @@ ProjectItem::Ptr Project::createNewEdit()
         {
             if (p->isEdit())
             {
-                const String nm (p->getName());
+                auto nm = p->getName();
 
                 if (nm.startsWithIgnoreCase (getName() + " Edit "))
-                    maxSuffix = jmax (maxSuffix, nm.getTrailingIntValue());
+                    maxSuffix = std::max (maxSuffix, nm.getTrailingIntValue());
             }
         }
     }
@@ -689,7 +690,7 @@ ProjectItem::Ptr Project::createNewEdit()
     return {};
 }
 
-void Project::searchFor (Array<ProjectItemID>& results, SearchOperation& searchOp)
+void Project::searchFor (juce::Array<ProjectItemID>& results, SearchOperation& searchOp)
 {
     save();
 
@@ -698,7 +699,7 @@ void Project::searchFor (Array<ProjectItemID>& results, SearchOperation& searchO
         ProjectSearchIndex psi (*this);
 
         {
-            const ScopedLock sl (objectLock);
+            const juce::ScopedLock sl (objectLock);
 
             if (auto in = getInputStream())
             {
@@ -711,7 +712,7 @@ void Project::searchFor (Array<ProjectItemID>& results, SearchOperation& searchO
     }
 }
 
-void Project::mergeArchiveContents (const File& archiveFile)
+void Project::mergeArchiveContents (const juce::File& archiveFile)
 {
     TracktionArchiveFile archive (engine, archiveFile);
 
@@ -722,7 +723,7 @@ void Project::mergeArchiveContents (const File& archiveFile)
     }
 
     bool wasAborted;
-    Array<File> newFiles;
+    juce::Array<juce::File> newFiles;
 
     if (archive.extractAllAsTask (getProjectFile().getParentDirectory(), true, newFiles, wasAborted))
     {
@@ -748,7 +749,7 @@ void Project::mergeArchiveContents (const File& archiveFile)
     }
 }
 
-void Project::mergeOtherProjectIntoThis (const File& f)
+void Project::mergeOtherProjectIntoThis (const juce::File& f)
 {
     ProjectManager::TempProject temp (projectManager, f, false);
 
@@ -777,9 +778,9 @@ void Project::mergeOtherProjectIntoThis (const File& f)
     }
 }
 
-Array<ProjectItemID> Project::findOrphanItems()
+juce::Array<ProjectItemID> Project::findOrphanItems()
 {
-    const ScopedLock sl (objectLock);
+    const juce::ScopedLock sl (objectLock);
 
     auto unreffed = getAllProjectItemIDs();
 
@@ -806,13 +807,13 @@ Array<ProjectItemID> Project::findOrphanItems()
     return unreffed;
 }
 
-String Project::getSelectableDescription()
+juce::String Project::getSelectableDescription()
 {
     return isReadOnly() ? TRANS("Read-Only Project")
                         : TRANS("Project");
 }
 
-bool Project::askAboutTempoDetect (const File& f, bool& shouldSetAutoTempo) const
+bool Project::askAboutTempoDetect (const juce::File& f, bool& shouldSetAutoTempo) const
 {
    #if JUCE_MODAL_LOOPS_PERMITTED
     NagMode im = (NagMode) static_cast<int> (engine.getPropertyStorage().getProperty (SettingID::autoTempoDetect, (int) nagAsk));
@@ -825,22 +826,23 @@ bool Project::askAboutTempoDetect (const File& f, bool& shouldSetAutoTempo) cons
     if (im == nagAutoNo)
         return false;
 
-    ToggleButton autoTempo (TRANS("Set tempo to match project"));
-    autoTempo.setToggleState (shouldSetAutoTempo, dontSendNotification);
+    juce::ToggleButton autoTempo (TRANS("Set tempo to match project"));
+    autoTempo.setToggleState (shouldSetAutoTempo, juce::dontSendNotification);
     autoTempo.setSize (200, 20);
 
-    ToggleButton dontAsk (TRANS("Remember my choice"));
+    juce::ToggleButton dontAsk (TRANS("Remember my choice"));
     dontAsk.setSize (200, 20);
 
-    const std::unique_ptr<AlertWindow> w (LookAndFeel::getDefaultLookAndFeel().createAlertWindow (TRANS("Detect Tempo?"),
-                                                                                                  TRANS("No tempo information was found in XZZX, would you like to detect it automatically?")
-                                                                                                    .replace ("XZZX", f.getFileNameWithoutExtension()),
-                                                                                                  {}, {}, {}, AlertWindow::QuestionIcon, 0, nullptr));
+    const std::unique_ptr<juce::AlertWindow> w (juce::LookAndFeel::getDefaultLookAndFeel()
+                                                  .createAlertWindow (TRANS("Detect Tempo?"),
+                                                                      TRANS("No tempo information was found in XZZX, would you like to detect it automatically?")
+                                                                        .replace ("XZZX", f.getFileNameWithoutExtension()),
+                                                                      {}, {}, {}, juce::AlertWindow::QuestionIcon, 0, nullptr));
 
     w->addCustomComponent (&autoTempo);
     w->addCustomComponent (&dontAsk);
-    w->addButton (TRANS("Yes"), 1, KeyPress (KeyPress::returnKey));
-    w->addButton (TRANS("No"), 0, KeyPress (KeyPress::escapeKey));
+    w->addButton (TRANS("Yes"), 1, juce::KeyPress (juce::KeyPress::returnKey));
+    w->addButton (TRANS("No"), 0, juce::KeyPress (juce::KeyPress::escapeKey));
 
     const int res = w->runModalLoop();
 
@@ -853,14 +855,13 @@ bool Project::askAboutTempoDetect (const File& f, bool& shouldSetAutoTempo) cons
     return res == 1;
    #else
     juce::ignoreUnused (f, shouldSetAutoTempo);
-
     return true;
    #endif
 }
 
 void Project::ensureFolderCreated (ProjectItem::Category c)
 {
-    File dir (getDirectoryForMedia (c));
+    auto dir = getDirectoryForMedia (c);
 
     if (! dir.isDirectory())
         dir.createDirectory();
@@ -878,12 +879,11 @@ void Project::createDefaultFolders()
 
 void Project::refreshFolderStructure()
 {
-    auto items = getAllProjectItemIDs();
     auto projDir = getProjectFile().getParentDirectory();
 
-    for (int i = 0; i < items.size(); ++i)
+    for (auto& item : getAllProjectItemIDs())
     {
-        if (auto mo = getProjectItemForID (items.getReference(i)))
+        if (auto mo = getProjectItemForID (item))
         {
             auto srcFile = mo->getSourceFile();
             auto dstDir = getDirectoryForMedia (mo->getCategory());
@@ -893,7 +893,7 @@ void Project::refreshFolderStructure()
 
             if (srcFile.isAChildOf (projDir))
             {
-                File dstFile = dstDir.getChildFile (srcFile.getFileName());
+                auto dstFile = dstDir.getChildFile (srcFile.getFileName());
 
                 if (srcFile.moveFileTo (dstFile))
                     mo->setSourceFile (dstFile);

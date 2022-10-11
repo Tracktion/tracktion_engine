@@ -54,7 +54,7 @@ public:
     void moveEvents (double deltaStart, double deltaLength, int deltaNote);
     void setNoteLengths (double newLength);
     void setVelocities (int newVelocity);
-    void changeColour (juce::uint8 newColour);
+    void changeColour (uint8_t newColour);
 
     void nudge (TimecodeSnapType, int leftRight, int upDown);
 

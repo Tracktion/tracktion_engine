@@ -149,7 +149,7 @@ public:
         then start a new job using getOrCreateRenderJob.
         You should always check this first, never start a new job unnecessarily.
     */
-    static AudioFile getAudioFileForHash (Engine&, const juce::File& directory, juce::int64 hash);
+    static AudioFile getAudioFileForHash (Engine&, const juce::File& directory, HashCode hash);
 
     /** This will return a Ptr to an existing render job for an audio file or nullptr if no job is in progress. */
     Job::Ptr getRenderJobWithoutCreating (const AudioFile& audioFile)       { return findJob (audioFile); }

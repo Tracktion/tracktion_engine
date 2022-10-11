@@ -13,7 +13,7 @@ namespace tracktion_engine
 
 struct DbTimePair
 {
-    juce::uint32 time = 0;
+    uint32_t time = 0;
     float dB = -100.0f;
 };
 
@@ -90,14 +90,15 @@ public:
     void addClient (Client&);
     void removeClient (Client&);
 
-    void setLevelCache (float dB) noexcept              { levelCache = dB; }
-    float getLevelCache() const noexcept                { return levelCache; }
+    void setLevelCache (float dBL, float dBR) noexcept      { levelCacheL = dBL; levelCacheR = dBR; }
+    std::pair<float, float> getLevelCache() const noexcept  { return { levelCacheL, levelCacheR }; }
 
 private:
     Mode mode = peakMode;
     int numActiveChannels = 1;
     bool showMidi = false;
-    float levelCache = -100.0f;
+    float levelCacheL = -100.0f;
+    float levelCacheR = -100.0f;
 
     juce::Array<Client*> clients;
     juce::CriticalSection clientsMutex;

@@ -11,6 +11,7 @@
 #pragma once
 
 #include "tracktion_EditNodeBuilder.h"
+#include "../../utilities/tracktion_Benchmark.h"
 
 namespace tracktion_engine
 {
@@ -70,6 +71,7 @@ namespace benchmark_utilities
                                   tracktion_graph::PlayHeadState& playHeadState,
                                   MultiThreaded isMultiThreaded)
     {
+        description += ", " + juce::String (testContext.getDescription());
         ut.beginTest (editName + " - preparing: " + description);
 
         if (isMultiThreaded == MultiThreaded::no)
@@ -80,20 +82,38 @@ namespace benchmark_utilities
         ut.expect (true);
 
         ut.beginTest (editName + " - memory use: " + description);
-        const auto nodes = tracktion_graph::getNodes (testContext.getNode(), tracktion_graph::VertexOrdering::postordering);
-        std::cout << "Num nodes: " << nodes.size() << "\n";
-        std::cout << juce::File::descriptionOfSizeInBytes ((int64_t) tracktion_graph::test_utilities::getMemoryUsage (nodes)) << "\n";
+        {
+            const auto nodes = tracktion_graph::getNodes (testContext.getNode(), tracktion_graph::VertexOrdering::postordering);
+            const auto sizeInBytes = tracktion_graph::test_utilities::getMemoryUsage (nodes);
+
+            BenchmarkResult bmr { createBenchmarkDescription ("Node", (editName + ": memory use").toStdString(), description.toStdString()) };
+            bmr.duration = static_cast<double> (sizeInBytes);
+            BenchmarkList::getInstance().addResult (bmr);
+
+            std::cout << "Num nodes: " << nodes.size() << "\n";
+            std::cout << juce::File::descriptionOfSizeInBytes ((int64_t) sizeInBytes) << "\n";
+        }
         ut.expect (true);
 
         ut.beginTest (editName + " - rendering: " + description);
         const StopwatchTimer sw;
         auto result = testContext.processAll();
+        const auto stats = testContext.getStatisticsAndReset();
+
+        BenchmarkList::getInstance().addResult (createBenchmarkResult (createBenchmarkDescription ("Node",
+                                                                                                   (editName + ": rendering").toStdString(),
+                                                                                                   description.toStdString()),
+                                                                       stats));
+
         std::cout << sw.getDescription() << "\n";
-        std::cout << testContext.getStatisticsAndReset().toString() << "\n";
+        std::cout << stats.toString() << "\n";
         ut.expect (true);
 
         ut.beginTest (editName + " - destroying: " + description);
-        result.reset();
+        {
+            ScopedBenchmark sb (createBenchmarkDescription ("Node", (editName + ": destroying").toStdString(), description.toStdString()));
+            result.reset();
+        }
         ut.expect (true);
     }
 
@@ -108,7 +128,9 @@ namespace benchmark_utilities
 
         //===
         ut.beginTest (opts.editName + " - building: " + description);
+        auto sb = std::make_unique<ScopedBenchmark> (createBenchmarkDescription ("Node", (opts.editName + ": building").toStdString(), description.toStdString()));
         auto node = createNode (*opts.edit, processState, opts.testSetup.sampleRate, opts.testSetup.blockSize);
+        sb.reset();
         ut.expect (node != nullptr);
 
         //===

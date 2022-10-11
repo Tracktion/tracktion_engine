@@ -120,7 +120,7 @@ protected:
 
     juce::CriticalSection noteLock;
     bool keysDown[128], keysUp[128];
-    juce::uint8 keyDownVelocities[128];
+    uint8_t keyDownVelocities[128];
     juce::SharedResourcePointer<MidiKeyChangeDispatcher> midiKeyChangeDispatcher;
 
     juce::CriticalSection instanceLock;

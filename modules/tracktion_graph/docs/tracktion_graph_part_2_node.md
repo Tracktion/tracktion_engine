@@ -116,7 +116,7 @@ We'll look at the virtual member functions first as the base class is an abstrac
 #### 2.1 `virtual std::vector<Node*> getDirectInputNodes() { return {}; }`  
 Because Nodes form a graph, they usually have some number of inputs. (Not all nodes have inputs however, some simply generate input and form the endpoints of the graph).
 
-If your node subclass has any inputs this method should return them. By doing this, the graph can be analysed to find all the nodes that need to be processed and optomised for things such as processing order.
+If your node subclass has any inputs this method should return them. By doing this, the graph can be analysed to find all the nodes that need to be processed and optimised for things such as processing order.
 
 Nodes should only be returned that are direct inputs to this node. I.e. it should not recursively call `getDirectInputNodes` for any inputs a node may have.
 

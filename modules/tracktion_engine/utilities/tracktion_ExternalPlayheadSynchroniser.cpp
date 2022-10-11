@@ -33,7 +33,7 @@ juce::AudioPlayHead::CurrentPositionInfo getCurrentPositionInfo (Edit& edit)
     info.editOriginTime = 0.0;
     info.ppqPosition = position.getPPQTime();
     info.ppqPositionOfLastBarStart = position.getPPQTimeOfBarStart();
-    info.frameRate = AudioPlayHead::fpsUnknown;
+    info.frameRate = juce::AudioPlayHead::fpsUnknown;
     info.isPlaying = transport.isPlaying();
     info.isRecording = transport.isRecording();
     info.isLooping = transport.looping;
@@ -41,7 +41,7 @@ juce::AudioPlayHead::CurrentPositionInfo getCurrentPositionInfo (Edit& edit)
     if (auto epc = transport.getCurrentPlaybackContext())
         info.isPlaying = epc->isPlaying();
 
-    info.timeInSamples = (int64) std::floor ((info.timeInSeconds * edit.engine.getDeviceManager().getSampleRate()) + 0.5);
+    info.timeInSamples = (int64_t) std::floor ((info.timeInSeconds * edit.engine.getDeviceManager().getSampleRate()) + 0.5);
 
     const auto loopRange = transport.getLoopRange();
     position.setTime (loopRange.getStart());
@@ -105,21 +105,21 @@ void synchroniseEditPosition (Edit& edit, const juce::AudioPlayHead::CurrentPosi
             || currentDetails.numerator != newNumerator
             || currentDetails.denominator != newDenominator)
         {
-            MessageManager::callAsync ([&edit, editRef = Edit::WeakRef (&edit),
-                                        newBpm, newNumerator, newDenominator]
-                                       {
-                                            if (! editRef)
-                                                return;
-                                            
-                                            // N.B. This assumes only a simple tempo sequence with a single point
-                                            auto& tempoSequence = edit.tempoSequence;
-                                            auto tempoSetting = tempoSequence.getTempo (0);
-                                            auto timeSigSetting = tempoSequence.getTimeSig (0);
+            juce::MessageManager::callAsync ([&edit, editRef = Edit::WeakRef (&edit),
+                                              newBpm, newNumerator, newDenominator]
+            {
+                 if (! editRef)
+                     return;
 
-                                            tempoSetting->setBpm (newBpm);
-                                            timeSigSetting->numerator = newNumerator;
-                                            timeSigSetting->denominator = newDenominator;
-                                       });
+                 // N.B. This assumes only a simple tempo sequence with a single point
+                 auto& tempoSequence = edit.tempoSequence;
+                 auto tempoSetting = tempoSequence.getTempo (0);
+                 auto timeSigSetting = tempoSequence.getTimeSig (0);
+
+                 tempoSetting->setBpm (newBpm);
+                 timeSigSetting->numerator = newNumerator;
+                 timeSigSetting->denominator = newDenominator;
+            });
         }
     }
 }

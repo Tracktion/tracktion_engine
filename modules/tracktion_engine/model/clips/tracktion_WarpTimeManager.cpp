@@ -11,16 +11,15 @@
 namespace tracktion_engine
 {
 
-inline int64 hashDouble (double d) noexcept
+inline HashCode hashDouble (double d) noexcept
 {
-    static_assert (sizeof (double) == sizeof (int64), "double and int64 different sizes");
-    union Val { double asDouble; int64 asInt; } v;
+    static_assert (sizeof (double) == sizeof (int64_t), "double and int64 different sizes");
+    union Val { double asDouble; int64_t asInt; } v;
     v.asDouble = d;
-
     return v.asInt;
 }
 
-int64 WarpMarker::getHash() const noexcept    { return hashDouble (sourceTime) ^ hashDouble (warpTime); }
+HashCode WarpMarker::getHash() const noexcept    { return hashDouble (sourceTime) ^ hashDouble (warpTime); }
 
 template <typename FloatingPointType>
 struct Differentiator
@@ -63,10 +62,10 @@ struct TransientDetectionJob  : public RenderManager::Job
         return file == f && config.sensitivity == c.sensitivity;
     }
 
-    Array<double> getTimes() const                  { return transientTimes; }
+    juce::Array<double> getTimes() const      { return transientTimes; }
 
 protected:
-    bool setUpRender() override                     { return reader != nullptr && totalNumSamples > 0; }
+    bool setUpRender() override        { return reader != nullptr && totalNumSamples > 0; }
 
     bool completeRender() override
     {
@@ -102,12 +101,12 @@ protected:
     bool renderNextBlock() override
     {
         CRASH_TRACER
-        const int64 numLeft = totalNumSamples - numSamplesRead;
-        const int numToDo = (int) jmin ((int64) 32768, numLeft);
+        auto numLeft = totalNumSamples - numSamplesRead;
+        auto numToDo = (int) std::min ((SampleCount) 32768, numLeft);
 
         AudioScratchBuffer scratch (numChannels, numToDo);
-        AudioChannelSet schannels = AudioChannelSet::canonicalChannelSet(numChannels);
-        reader->readSamples (numToDo, scratch.buffer, schannels, 0, AudioChannelSet::stereo(), 5000);
+        auto schannels = juce::AudioChannelSet::canonicalChannelSet(numChannels);
+        reader->readSamples (numToDo, scratch.buffer, schannels, 0, juce::AudioChannelSet::stereo(), 5000);
 
         if (findingNormaliseLevel)
             processNextNormaliseBuffer (scratch.buffer);
@@ -120,7 +119,8 @@ protected:
 
         if (findingNormaliseLevel && numSamplesRead >= totalNumSamples)
         {
-            const float peak = jmax (std::abs (fileMinMax.getStart()), std::abs (fileMinMax.getEnd()));
+            auto peak = std::max (std::abs (fileMinMax.getStart()),
+                                  std::abs (fileMinMax.getEnd()));
             normaliseScale = peak > 0.0f ? 1.0f / peak : 1.0f;
             reader->setReadPosition (0);
             numSamplesRead = 0;
@@ -134,18 +134,18 @@ private:
     AudioFile file;
     Config config;
 
-    int64 numSamplesRead = 0, totalNumSamples;
-    int numChannels;
+    SampleCount numSamplesRead = 0, totalNumSamples = 0;
+    int numChannels = 0;
     double sampleRate = 0;
     AudioFileCache::Reader::Ptr reader;
 
     AudioFileUtils::EnvelopeFollower envelopeFollower[3];
     Differentiator<float> differentiator;
-    Array<double> transientTimes;
+    juce::Array<double> transientTimes;
 
-    Range<float> fileMinMax;
+    juce::Range<float> fileMinMax;
     float normaliseScale = -1.0f;
-    const float thresh = Decibels::decibelsToGain (-25.0f);
+    const float thresh = juce::Decibels::decibelsToGain (-25.0f);
     int triggerTimer = 0;
     int countDownTimer = 0;
     bool findingNormaliseLevel = true;
@@ -172,7 +172,8 @@ private:
 
     void processNextNormaliseBuffer (const juce::AudioBuffer<float>& buffer)
     {
-        fileMinMax = fileMinMax.getUnionWith (FloatVectorOperations::findMinAndMax (buffer.getReadPointer (0), buffer.getNumSamples()));
+        fileMinMax = fileMinMax.getUnionWith (juce::FloatVectorOperations::findMinAndMax (buffer.getReadPointer (0),
+                                                                                          buffer.getNumSamples()));
     }
 
     void processNextBuffer (const juce::AudioBuffer<float>& buffer)
@@ -215,7 +216,7 @@ private:
         }
     }
 
-    double sampleToSeconds (int64 sample) const
+    double sampleToSeconds (SampleCount sample) const
     {
         return sampleRate > 0.0 ? sample / sampleRate : 0.0;
     }
@@ -246,7 +247,7 @@ WarpTimeManager::WarpTimeManager (AudioClipBase& c)
     edit.engine.getWarpTimeFactory().addWarpTimeManager (*this);
 }
 
-WarpTimeManager::WarpTimeManager (Edit& e, const AudioFile& f, ValueTree parentTree)
+WarpTimeManager::WarpTimeManager (Edit& e, const AudioFile& f, juce::ValueTree parentTree)
     : edit (e), sourceFile (f), endMarkerEnabled (false), endMarkersLimited (true)
 {
     state = parentTree.getOrCreateChildWithName (IDs::WARPTIME, &edit.getUndoManager());
@@ -304,9 +305,10 @@ int WarpTimeManager::insertMarker (WarpMarker marker)
     while (index < markers->objects.size() && markers->objects.getUnchecked (index)->warpTime < marker.warpTime)
         index++;
 
-    ValueTree v (IDs::WARPMARKER);
-    v.setProperty (IDs::sourceTime, marker.sourceTime, nullptr);
-    v.setProperty (IDs::warpTime, marker.warpTime, nullptr);
+    auto v = createValueTree (IDs::WARPMARKER,
+                              IDs::sourceTime, marker.sourceTime,
+                              IDs::warpTime, marker.warpTime);
+
     markers->state.addChild (v, index, getUndoManager());
 
     return index;
@@ -365,7 +367,7 @@ double WarpTimeManager::moveMarker (int index, double newWarpTime)
     }
 
     if (endMarkersLimited && (index == 0 || (index == markers->objects.size() - 1)))
-        newWarpTime = jlimit (0.0, getSourceLength(), newWarpTime);
+        newWarpTime = juce::jlimit (0.0, getSourceLength(), newWarpTime);
 
     m.setProperty (IDs::warpTime, newWarpTime, getUndoManager());
 
@@ -378,9 +380,9 @@ void WarpTimeManager::setWarpEndMarkerTime (double endTime)
         state.setProperty (IDs::warpEndMarkerTime, endTime, &edit.getUndoManager());
 }
 
-Array<EditTimeRange> WarpTimeManager::getWarpTimeRegions (const EditTimeRange overallTimeRegion) const
+juce::Array<EditTimeRange> WarpTimeManager::getWarpTimeRegions (const EditTimeRange overallTimeRegion) const
 {
-    Array<EditTimeRange> visibleWarpRegions;
+    juce::Array<EditTimeRange> visibleWarpRegions;
     auto& markersArray = markers->objects;
 
     if (markersArray.isEmpty())
@@ -403,9 +405,9 @@ Array<EditTimeRange> WarpTimeManager::getWarpTimeRegions (const EditTimeRange ov
     for (int markerIndex = 0; markerIndex <= markersArray.size(); markerIndex++)
     {
         if (markerIndex == markersArray.size()) // if we're on the last region
-            warpRegion.end = jmax (warpRegion.start, warpedClipLength);
+            warpRegion.end = std::max (warpRegion.start, warpedClipLength);
         else
-            warpRegion.end = jmax (warpRegion.start, markersArray.getUnchecked (markerIndex)->warpTime);
+            warpRegion.end = std::max (warpRegion.start, markersArray.getUnchecked (markerIndex)->warpTime);
 
         auto warpRegionConstrained = timeRegion.getIntersectionWith (warpRegion);
 
@@ -527,9 +529,9 @@ double WarpTimeManager::getWarpedEnd() const
     return markers->objects.getLast()->warpTime;
 }
 
-int64 WarpTimeManager::getHash() const
+HashCode WarpTimeManager::getHash() const
 {
-    int64 h = 0;
+    HashCode h = 0;
 
     for (auto wm : markers->objects)
         h ^= wm->getHash();
@@ -559,7 +561,7 @@ void WarpTimeManager::editFinishedLoading()
     editLoadedCallback = nullptr;
 }
 
-UndoManager* WarpTimeManager::getUndoManager() const
+juce::UndoManager* WarpTimeManager::getUndoManager() const
 {
     return &edit.getUndoManager();
 }
@@ -580,7 +582,7 @@ void WarpTimeManager::jobFinished (RenderManager::Job& job, bool /*completedOk*/
 WarpTimeManager::Ptr WarpTimeFactory::getWarpTimeManager (const Clip& clip)
 {
     {
-        const ScopedLock sl (warpTimeLock);
+        const juce::ScopedLock sl (warpTimeLock);
 
         for (auto c : warpTimeManagers)
             if (c->clip == &clip)
@@ -596,14 +598,14 @@ WarpTimeManager::Ptr WarpTimeFactory::getWarpTimeManager (const Clip& clip)
 
 void WarpTimeFactory::addWarpTimeManager (WarpTimeManager& wtm)
 {
-    const ScopedLock sl (warpTimeLock);
+    const juce::ScopedLock sl (warpTimeLock);
     jassert (! warpTimeManagers.contains (&wtm));
     warpTimeManagers.addIfNotAlreadyThere (&wtm);
 }
 
 void WarpTimeFactory::removeWarpTimeManager (WarpTimeManager& wtm)
 {
-    const ScopedLock sl (warpTimeLock);
+    const juce::ScopedLock sl (warpTimeLock);
     jassert (warpTimeManagers.contains (&wtm));
     warpTimeManagers.removeAllInstancesOf (&wtm);
 }

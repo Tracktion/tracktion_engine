@@ -37,7 +37,8 @@ void WaveAudioNode::getAudioNodeProperties (AudioNodeProperties& info)
 {
     info.hasAudio = true;
     info.hasMidi = false;
-    info.numberOfChannels = jlimit (1, std::max (channelsToUse.size(), 1), audioFile.getNumChannels());
+    info.numberOfChannels = juce::jlimit (1, std::max (channelsToUse.size(), 1),
+                                          audioFile.getNumChannels());
 }
 
 bool WaveAudioNode::purgeSubNodes (bool keepAudio, bool)
@@ -50,10 +51,10 @@ void WaveAudioNode::visitNodes (const VisitorFn& v)
     v (*this);
 }
 
-int64 WaveAudioNode::editTimeToFileSample (double editTime) const noexcept
+SampleCount WaveAudioNode::editTimeToFileSample (double editTime) const noexcept
 {
-    return (int64) ((editTime - (editPosition.getStart() - offset))
-                      * originalSpeedRatio * audioFileSampleRate + 0.5);
+    return static_cast<SampleCount> ((editTime - (editPosition.getStart() - offset))
+                                       * originalSpeedRatio * audioFileSampleRate + 0.5);
 }
 
 struct WaveAudioNode::PerChannelState
@@ -107,8 +108,8 @@ bool WaveAudioNode::updateFileSampleRate()
         if (audioFileSampleRate > 0)
         {
             if (! loopSection.isEmpty())
-                reader->setLoopRange (Range<int64> ((int64) (loopSection.getStart() * audioFileSampleRate),
-                                                    (int64) (loopSection.getEnd()   * audioFileSampleRate)));
+                reader->setLoopRange (SampleRange ((SampleCount) (loopSection.getStart() * audioFileSampleRate),
+                                                   (SampleCount) (loopSection.getEnd()   * audioFileSampleRate)));
 
             return true;
         }

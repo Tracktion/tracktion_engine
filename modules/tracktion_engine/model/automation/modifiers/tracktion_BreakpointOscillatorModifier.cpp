@@ -14,7 +14,9 @@ namespace tracktion_engine
 namespace BezierHelpers
 {
     template<typename Type>
-    static Point<Type> getQuadraticControlPoint (Point<Type> start, Point<Type> end, Type curve)
+    static juce::Point<Type> getQuadraticControlPoint (juce::Point<Type> start,
+                                                       juce::Point<Type> end,
+                                                       Type curve)
     {
         static_assert (std::is_floating_point<Type>::value, "");
         jassert (curve >= -0.5 && curve <= 0.5);
@@ -23,7 +25,7 @@ namespace BezierHelpers
         const Type y1 = start.y;
         const Type x2 = end.x;
         const Type y2 = end.y;
-        const Type c  = jlimit (-1.0f, 1.0f, curve * 2.0f);
+        const Type c  = juce::jlimit (-1.0f, 1.0f, curve * 2.0f);
 
         if (y2 > y1)
         {
@@ -87,7 +89,10 @@ namespace BezierHelpers
     }
 
     template<typename Type>
-    static Type getQuadraticYFromX (Type x, Point<Type> startPoint, Point<Type> controlPoint, Point<Type> endPoint)
+    static Type getQuadraticYFromX (Type x,
+                                    juce::Point<Type> startPoint,
+                                    juce::Point<Type> controlPoint,
+                                    juce::Point<Type> endPoint)
     {
         return getQuadraticYFromX (x, startPoint.x, startPoint.y, controlPoint.x, controlPoint.y, endPoint.x, endPoint.y);
     }
@@ -133,12 +138,13 @@ struct BreakpointOscillatorModifier::BreakpointOscillatorModifierTimer    : publ
 
             if (syncTypeThisBlock == transport)
             {
-                auto editTimeInBeats = (float) (currentTempo.startBeatInEdit + (editTime - currentTempo.startTime) * currentTempo.beatsPerSecond);
+                auto editTimeInBeats = (float) (currentTempo.startBeatInEdit
+                                                 + (editTime - currentTempo.startTime) * currentTempo.beatsPerSecond);
                 auto bars = (editTimeInBeats / currentTempo.numerator) * rateThisBlock;
 
                 if (rateTypeThisBlock >= fourBars && rateTypeThisBlock <= sixtyFourthD)
                 {
-                    auto virtualBars = jmax (0.0, bars / proportionOfBar);
+                    auto virtualBars = std::max (0.0, bars / proportionOfBar);
                     modifier.setPhase ((float) std::fmod (virtualBars, 1.0f));
                 }
             }
@@ -160,7 +166,7 @@ struct BreakpointOscillatorModifier::BreakpointOscillatorModifierTimer    : publ
 
     void resync (double duration)
     {
-        if (roundToInt (modifier.syncTypeParam->getCurrentValue()) == ModifierCommon::note)
+        if (juce::roundToInt (modifier.syncTypeParam->getCurrentValue()) == ModifierCommon::note)
         {
             ramp.setPosition (0.0f);
             modifier.setPhase (0.0f);
@@ -179,7 +185,7 @@ struct BreakpointOscillatorModifier::BreakpointOscillatorModifierTimer    : publ
 
 
 //==============================================================================
-BreakpointOscillatorModifier::BreakpointOscillatorModifier (Edit& e, const ValueTree& v)
+BreakpointOscillatorModifier::BreakpointOscillatorModifier (Edit& e, const juce::ValueTree& v)
     : Modifier (e, v)
 {
     auto um = &edit.getUndoManager();
@@ -204,8 +210,9 @@ BreakpointOscillatorModifier::BreakpointOscillatorModifier (Edit& e, const Value
     stageFourTime.referTo (state, IDs::stageFourTime, um, 1.0f);
     stageFourCurve.referTo (state, IDs::stageFourCurve, um, 0.0f);
 
-    auto addDiscreteParam = [this] (const String& paramID, const String& name, Range<float> valueRange, CachedValue<float>& val,
-                                    const StringArray& labels) -> AutomatableParameter*
+    auto addDiscreteParam = [this] (const juce::String& paramID, const juce::String& name,
+                                    juce::Range<float> valueRange, juce::CachedValue<float>& val,
+                                    const juce::StringArray& labels) -> AutomatableParameter*
     {
         auto* p = new DiscreteLabelledParameter (paramID, name, *this, valueRange, labels.size(), labels);
         addAutomatableParameter (p);
@@ -214,7 +221,9 @@ BreakpointOscillatorModifier::BreakpointOscillatorModifier (Edit& e, const Value
         return p;
     };
 
-    auto addParam = [this] (const String& paramID, const String& name, NormalisableRange<float> valueRange, float centreVal, CachedValue<float>& val, const String& suffix) -> AutomatableParameter*
+    auto addParam = [this] (const juce::String& paramID, const juce::String& name,
+                            juce::NormalisableRange<float> valueRange, float centreVal,
+                            juce::CachedValue<float>& val, const juce::String& suffix) -> AutomatableParameter*
     {
         valueRange.setSkewForCentre (centreVal);
         auto* p = new SuffixedParameter (paramID, name, *this, valueRange, suffix);
@@ -298,7 +307,7 @@ float BreakpointOscillatorModifier::getTotalTime() const
     return 1.0f;
 }
 
-AutomatableParameter::ModifierAssignment* BreakpointOscillatorModifier::createAssignment (const ValueTree& v)
+AutomatableParameter::ModifierAssignment* BreakpointOscillatorModifier::createAssignment (const juce::ValueTree& v)
 {
     return new Assignment (v, *this);
 }
@@ -339,7 +348,7 @@ BreakpointOscillatorModifier::Ptr BreakpointOscillatorModifier::Assignment::getM
 //==============================================================================
 BreakpointOscillatorModifier::Stage BreakpointOscillatorModifier::getStage (int index) const
 {
-    jassert (isPositiveAndNotGreaterThan (index, 4));
+    jassert (juce::isPositiveAndNotGreaterThan (index, 4));
     switch (index)
     {
         case 0: return { stageZeroValueParam.get() };
@@ -388,7 +397,10 @@ namespace BreakpointInterpolation
     }
 
     template<typename Type>
-    static Type quadraticInterpolate (Type x, Point<Type> startPoint, Point<Type> endPoint, Type curve)
+    static Type quadraticInterpolate (Type x,
+                                      juce::Point<Type> startPoint,
+                                      juce::Point<Type> endPoint,
+                                      Type curve)
     {
         auto cp = BezierHelpers::getQuadraticControlPoint (startPoint, endPoint, curve);
         return BezierHelpers::getQuadraticYFromX (x, startPoint, cp, endPoint);
@@ -406,7 +418,7 @@ void BreakpointOscillatorModifier::setPhase (float newPhase)
     // If bipolar, scale and shift
 
     using namespace BreakpointInterpolation;
-    jassert (isPositiveAndBelow (newPhase, 1.0f));
+    jassert (juce::isPositiveAndBelow (newPhase, 1.0f));
     currentPhase.store (newPhase, std::memory_order_release);
 
     const float totalTime = getTotalTime();

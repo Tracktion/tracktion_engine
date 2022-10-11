@@ -12,7 +12,7 @@ namespace tracktion_engine
 {
 
 static Engine* instance = nullptr;
-static Array<Engine*> engines;
+static juce::Array<Engine*> engines;
 
 Engine::Engine (std::unique_ptr<PropertyStorage> ps, std::unique_ptr<UIBehaviour> ub, std::unique_ptr<EngineBehaviour> eb)
 {
@@ -35,12 +35,12 @@ Engine::Engine (std::unique_ptr<PropertyStorage> ps, std::unique_ptr<UIBehaviour
     initialise();
 }
 
-Engine::Engine (String applicationName, std::unique_ptr<UIBehaviour> ub, std::unique_ptr<EngineBehaviour> eb)
+Engine::Engine (juce::String applicationName, std::unique_ptr<UIBehaviour> ub, std::unique_ptr<EngineBehaviour> eb)
     : Engine (std::make_unique<PropertyStorage> (applicationName), std::move (ub), std::move (eb))
 {
 }
 
-Engine::Engine (String applicationName)  : Engine (applicationName, nullptr, nullptr)
+Engine::Engine (juce::String applicationName)  : Engine (applicationName, nullptr, nullptr)
 {
 }
 
@@ -113,10 +113,10 @@ Engine::~Engine()
 
 juce::String Engine::getVersion()
 {
-    return "Tracktion Engine v1.1.0";
+    return "Tracktion Engine v1.2.0";
 }
 
-Array<Engine*> Engine::getEngines()
+juce::Array<Engine*> Engine::getEngines()
 {
     return engines;
 }
@@ -259,6 +259,11 @@ WarpTimeFactory& Engine::getWarpTimeFactory() const
         warpTimeFactory = std::make_unique<WarpTimeFactory>();
 
     return *warpTimeFactory;
+}
+
+bool EngineBehaviour::shouldLoadPlugin (ExternalPlugin& p)
+{
+    return p.edit.shouldLoadPlugins();
 }
 
 }

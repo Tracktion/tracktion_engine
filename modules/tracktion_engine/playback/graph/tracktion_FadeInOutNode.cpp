@@ -124,8 +124,14 @@ void FadeInOutNode::process (ProcessContext& pc)
                                                    (float) alpha2);
         }
     }
-    
-    if (timelineRange.intersects (fadeOutSampleRange) && fadeOutSampleRange.getLength() > 0)
+
+    const bool pastFadeOutTime = timelineRange.getEnd() >= fadeOutSampleRange.getEnd();
+
+    if (clearExtraSamples && pastFadeOutTime)
+    {
+        destAudioBlock.clear();
+    }
+    else if (timelineRange.intersects (fadeOutSampleRange) && fadeOutSampleRange.getLength() > 0)
     {
         double alpha1 = 0;
         auto startSamp = int (fadeOutSampleRange.getStart() - timelineRange.getStart());
@@ -139,7 +145,7 @@ void FadeInOutNode::process (ProcessContext& pc)
         uint32_t endSamp;
         double alpha2;
 
-        if (timelineRange.getEnd() >= fadeOutSampleRange.getEnd())
+        if (pastFadeOutTime)
         {
             endSamp = (uint32_t) (timelineRange.getEnd() - fadeOutSampleRange.getEnd());
             alpha2 = 1.0;
@@ -171,7 +177,9 @@ bool FadeInOutNode::renderingNeeded (const juce::Range<int64_t>& timelineSampleR
         return false;
 
     return fadeInSampleRange.intersects (timelineSampleRange)
-        || fadeOutSampleRange.intersects (timelineSampleRange);
+        || fadeOutSampleRange.intersects (timelineSampleRange)
+        || (clearExtraSamples && (timelineSampleRange.getStart() <= fadeInSampleRange.getStart()
+                                  || timelineSampleRange.getEnd() >= fadeOutSampleRange.getEnd()));
 }
 
 } // namespace tracktion_engine

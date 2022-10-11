@@ -16,7 +16,8 @@ namespace tracktion_engine
 */
 class ExternalController  : private juce::AsyncUpdater,
                             private SelectableListener,
-                            private AutomatableParameter::Listener
+                            private AutomatableParameter::Listener,
+                            private juce::Timer
 {
 public:
     //==============================================================================
@@ -28,14 +29,24 @@ public:
 
     bool needsMidiChannel() const               { return needsChannel; }
     bool needsMidiBackChannel() const           { return needsBackChannel; }
+
+    juce::String getDesiredMidiChannel() const;
+    juce::String getDesiredMidiBackChannel() const;
+
     bool needsOSCSocket() const                 { return needsOSC; }
 
-    juce::String getMidiInputDevice() const;
-    void setMidiInputDevice (const juce::String& nameOfMidiInput);
+    int getNumDevices() const;
+    void setNumDevices (int);
 
-    juce::String getBackChannelDevice() const;
-    void setBackChannelDevice (const juce::String& nameOfMidiOutput);
-    bool isUsingMidiOutputDevice (const MidiOutputDevice* d) const noexcept   { return d == outputDevice; }
+    int getMainDevice() const;
+    void setMainDevice (int);
+
+    juce::String getMidiInputDevice (int idx) const;
+    void setMidiInputDevice (int idx, const juce::String& nameOfMidiInput);
+
+    juce::String getBackChannelDevice (int idx) const;
+    void setBackChannelDevice (int idx, const juce::String& nameOfMidiOutput);
+    bool isUsingMidiOutputDevice (const MidiOutputDevice* d) const noexcept;
 
     int getOSCInputPort()                       { return oscInputPort; }
     void setOSCInputPort (int port);
@@ -69,7 +80,7 @@ public:
     void snapChanged (bool isOn);
     void loopChanged (bool isOn);
     void clickChanged (bool isOn);
-    void channelLevelChanged (int channel, float level);
+    void channelLevelChanged (int channel, float l, float r);
     void masterLevelsChanged (float leftLevel, float rightLevel);
     void timecodeChanged (int barsOrHours, int beatsOrMinutes, int ticksOrSeconds, int millisecs, bool isBarsBeats, bool isFrames);
     void trackSelected (int channel, bool isSelected);
@@ -91,6 +102,7 @@ public:
     void updateTrackSelectLights();
     void updateTrackRecordLights();
     void updatePunchLights();
+    void updateScrollLights();
     void updateUndoLights();
 
     int getNumFaderChannels() const noexcept;
@@ -105,8 +117,8 @@ public:
 
     //==============================================================================
     void handleAsyncUpdate() override;
-    void acceptMidiMessage (const juce::MidiMessage&);
-    bool wantsMessage (const juce::MidiMessage&);
+    void acceptMidiMessage (MidiInputDevice&, const juce::MidiMessage&);
+    bool wantsMessage (MidiInputDevice&, const juce::MidiMessage&);
     bool eatsAllMessages() const;
     bool canSetEatsAllMessages();
     void setEatsAllMessages (bool eatAll);
@@ -136,8 +148,8 @@ public:
 
     static juce::String shortenName (juce::String, int maxLen);
 
-    juce::String getInputDeviceName() const             { return inputDeviceName; }
-    juce::String getOutputDeviceName() const            { return outputDeviceName; }
+    juce::String getInputDeviceName (int idx) const     { return inputDeviceName[idx]; }
+    juce::String getOutputDeviceName (int idx) const    { return outputDeviceName[idx]; }
 
     juce::StringArray getMidiInputPorts() const;
     juce::StringArray getMidiOutputPorts() const;
@@ -147,12 +159,19 @@ public:
     Engine& engine;
 
 private:
+    void timerCallback() override;
+
+    static constexpr int maxDevices = 4;
     friend class ExternalControllerManager;
     friend class ControlSurface;
     friend class MackieC4;
     friend class MackieMCU;
 
-    juce::String inputDeviceName, outputDeviceName;
+    int numDevices = 1;
+    int mainDevice = 0;
+    juce::String inputDeviceName[maxDevices];
+    juce::String outputDeviceName[maxDevices];
+
     std::unique_ptr<ControlSurface> controlSurface;
     int oscInputPort, oscOutputPort;
     juce::String oscOutputAddr;
@@ -176,10 +195,16 @@ private:
     bool followsTrackSelection;
     bool processMidi = false, updateParams = false;
 
-    MidiOutputDevice* outputDevice = nullptr;
+    MidiInputDevice* inputDevices[maxDevices] = { nullptr };
+    MidiOutputDevice* outputDevices[maxDevices] = { nullptr };
 
-    juce::Array<juce::MidiMessage> pendingMidiMessages;
+    juce::Array<std::pair<int, juce::MidiMessage>> pendingMidiMessages;
     juce::CriticalSection incomingMidiLock;
+
+    int getMarkerBankOffset() const   { return startMarkerNumber; }
+    int getFaderBankOffset() const    { return channelStart;      }
+    int getAuxBankOffset() const      { return auxBank;           }
+    int getParamBankOffset() const    { return startParamNumber;  }
 
     void changeFaderBank (int delta, bool moveSelection);
     void changeParamBank (int delta);

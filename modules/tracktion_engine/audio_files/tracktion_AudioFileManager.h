@@ -40,11 +40,11 @@ public:
 
 private:
     struct KnownFile;
-    juce::HashMap<juce::int64, KnownFile*> knownFiles;
+    std::unordered_map<HashCode, std::unique_ptr<KnownFile>> knownFiles;
     juce::CriticalSection knownFilesLock;
 
     KnownFile& findOrCreateKnown (const AudioFile&);
-    void removeFile (juce::int64 hash);
+    void removeFile (HashCode);
     void clearFiles();
 
     juce::Array<AudioFile> filesToCheck;

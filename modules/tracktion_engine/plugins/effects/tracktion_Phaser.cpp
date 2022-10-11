@@ -30,7 +30,7 @@ const char* PhaserPlugin::xmlTypeName = "phaser";
 void PhaserPlugin::initialise (const PluginInitialisationInfo& info)
 {
     sampleRate = info.sampleRate;
-    zeromem (filterVals, sizeof (filterVals));
+    std::memset (filterVals, 0, sizeof (filterVals));
 
     const float delayMs = 100.0f;
     sweep = minSweep = (juce::MathConstants<double>::pi * delayMs) / sampleRate;
@@ -60,7 +60,7 @@ void PhaserPlugin::applyToBuffer (const PluginRenderContext& fc)
 
     clearChannels (*fc.destBuffer, 2, -1, fc.bufferStartSample, fc.bufferNumSamples);
 
-    for (int chan = jmin (2, fc.destBuffer->getNumChannels()); --chan >= 0;)
+    for (int chan = std::min (2, fc.destBuffer->getNumChannels()); --chan >= 0;)
     {
         float* b = fc.destBuffer->getWritePointer (chan, fc.bufferStartSample);
         swp = sweep;
@@ -110,14 +110,14 @@ void PhaserPlugin::applyToBuffer (const PluginRenderContext& fc)
     sweepFactor = swpFactor;
 }
 
-String PhaserPlugin::getSelectableDescription()
+juce::String PhaserPlugin::getSelectableDescription()
 {
     return TRANS("Phaser Plugin");
 }
 
 void PhaserPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    CachedValue<float>* cvsFloat[]  = { &depth, &rate, &feedbackGain, nullptr };
+    juce::CachedValue<float>* cvsFloat[]  = { &depth, &rate, &feedbackGain, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
 
     for (auto p : getAutomatableParameters())

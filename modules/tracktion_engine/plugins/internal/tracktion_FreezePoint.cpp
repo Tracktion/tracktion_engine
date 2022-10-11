@@ -90,10 +90,10 @@ FreezePointPlugin::ScopedTrackSoloIsolator::~ScopedTrackSoloIsolator()
 }
 
 //==============================================================================
-FreezePointPlugin::ScopedPluginDisabler::ScopedPluginDisabler (Track& t, Range<int> pluginsToDisable)
+FreezePointPlugin::ScopedPluginDisabler::ScopedPluginDisabler (Track& t, juce::Range<int> pluginsToDisable)
   : track (t)
 {
-    indexes = pluginsToDisable.getIntersectionWith (Range<int> (0, track.pluginList.size()));
+    indexes = pluginsToDisable.getIntersectionWith (juce::Range<int> (0, track.pluginList.size()));
 
     int i = 0;
 
@@ -163,11 +163,10 @@ FreezePointPlugin::~FreezePointPlugin()
     notifyListenersOfDeletion();
 }
 
-ValueTree FreezePointPlugin::create()
+juce::ValueTree FreezePointPlugin::create()
 {
-    ValueTree v (IDs::PLUGIN);
-    v.setProperty (IDs::type, xmlTypeName, nullptr);
-    return v;
+    return createValueTree (IDs::PLUGIN,
+                            IDs::type, xmlTypeName);
 }
 
 void FreezePointPlugin::initialiseFully()

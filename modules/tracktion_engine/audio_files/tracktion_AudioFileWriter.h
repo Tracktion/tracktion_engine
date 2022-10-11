@@ -50,7 +50,7 @@ public:
     bool appendBuffer (const int** buffer, int numSamples);
 
     /** Appends a block of samples to the file from an audio format reader. */
-    bool writeFromAudioReader (juce::AudioFormatReader&, juce::int64 startSample, juce::int64 numSamples);
+    bool writeFromAudioReader (juce::AudioFormatReader&, SampleCount startSample, SampleCount numSamples);
 
     /** Deletes the writer and releases the file handle. */
     void closeForWriting();

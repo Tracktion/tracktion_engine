@@ -13,10 +13,10 @@ namespace tracktion_engine
 
 namespace AlphaTrack
 {
-    static uint8 cmdInitNativeMode[] = { 0xf0, 0x00, 0x01, 0x40, 0x20, 0x01, 0x00, 0xf7 };
-    static uint8 cmdInquiry[]        = { 0xf0, 0x7e, 0x00, 0x06, 0x01, 0xf7 };
-    static uint8 rspInitAck[]        = { 0xf0, 0x7e, 0x00, 0x06, 0x02, 0x00, 0x01, 0x40, 0x20, 0x00, 0x01, 0x00 };
-    static uint8 cmdWrite[]          = { 0xf0, 0x00, 0x01, 0x40, 0x20, 0x00 };
+    static uint8_t cmdInitNativeMode[] = { 0xf0, 0x00, 0x01, 0x40, 0x20, 0x01, 0x00, 0xf7 };
+    static uint8_t cmdInquiry[]        = { 0xf0, 0x7e, 0x00, 0x06, 0x01, 0xf7 };
+    static uint8_t rspInitAck[]        = { 0xf0, 0x7e, 0x00, 0x06, 0x02, 0x00, 0x01, 0x40, 0x20, 0x00, 0x01, 0x00 };
+    static uint8_t cmdWrite[]          = { 0xf0, 0x00, 0x01, 0x40, 0x20, 0x00 };
 
     enum { TOUCH = 1, PARAM = 2 };
 }
@@ -53,7 +53,7 @@ AlphaTrackControlSurface::AlphaTrackControlSurface (ExternalControllerManager& e
     isLoopOn                        = false;
     physicalFaderPos                = -1;
 
-    zeromem (displayBuffer, sizeof (displayBuffer));
+    std::memset (displayBuffer, 0, sizeof (displayBuffer));
     memset (displayBuffer, '=', sizeof (displayBuffer) - 1);
 }
 
@@ -65,11 +65,11 @@ AlphaTrackControlSurface::~AlphaTrackControlSurface()
 void AlphaTrackControlSurface::initialiseDevice (bool)
 {
     CRASH_TRACER
-    sendMidiArray (AlphaTrack::cmdInitNativeMode);
-    sendMidiArray (AlphaTrack::cmdInquiry);
+    sendMidiArray (0, AlphaTrack::cmdInitNativeMode);
+    sendMidiArray (0, AlphaTrack::cmdInquiry);
 
-    displayPrint(0, 0, "                ");
-    displayPrint(1, 0, "                ");
+    displayPrint (0, 0, "                ");
+    displayPrint (1, 0, "                ");
 
     clearAllLeds();
 }
@@ -101,7 +101,7 @@ bool AlphaTrackControlSurface::isOnEditScreen() const
     return getEditIfOnEditScreen() != nullptr;
 }
 
-void AlphaTrackControlSurface::acceptMidiMessage (const MidiMessage& m)
+void AlphaTrackControlSurface::acceptMidiMessage (int, const juce::MidiMessage& m)
 {
     auto data = m.getRawData();
     auto datasize = m.getRawDataSize();
@@ -190,7 +190,7 @@ void AlphaTrackControlSurface::acceptMidiMessage (const MidiMessage& m)
                     if (shift)
                     {
                         if (! doKeyPress (alphaTrackF5, ! isOnEditScreen()))
-                            doKeyPress (KeyPress::F5Key);
+                            doKeyPress (juce::KeyPress::F5Key);
                     }
                     else
                     {
@@ -202,7 +202,7 @@ void AlphaTrackControlSurface::acceptMidiMessage (const MidiMessage& m)
                     if (shift)
                     {
                         if (! doKeyPress(alphaTrackF6, ! isOnEditScreen()))
-                            doKeyPress(KeyPress::F6Key);
+                            doKeyPress (juce::KeyPress::F6Key);
                     }
                     else
                     {
@@ -214,7 +214,7 @@ void AlphaTrackControlSurface::acceptMidiMessage (const MidiMessage& m)
                     if (shift)
                     {
                         if (! doKeyPress(alphaTrackF7, ! isOnEditScreen()))
-                            doKeyPress(KeyPress::F7Key);
+                            doKeyPress (juce::KeyPress::F7Key);
                     }
                     else
                     {
@@ -226,7 +226,7 @@ void AlphaTrackControlSurface::acceptMidiMessage (const MidiMessage& m)
                     if (shift)
                     {
                         if (! doKeyPress(alphaTrackF8, ! isOnEditScreen()))
-                            doKeyPress(KeyPress::F8Key);
+                            doKeyPress (juce::KeyPress::F8Key);
                     }
                     else
                     {
@@ -273,13 +273,10 @@ void AlphaTrackControlSurface::acceptMidiMessage (const MidiMessage& m)
                         userPressedRecEnable(0, false);
                     break;
                 case 0x67: // footswitch
-                {
-                    KeyPress key (alphaTrackFoot);
+                    if (auto focused = juce::Component::getCurrentlyFocusedComponent())
+                        focused->keyPressed (juce::KeyPress (alphaTrackFoot));
 
-                    if (auto focused = Component::getCurrentlyFocusedComponent())
-                        focused->keyPressed (key);
                     break;
-                }
                 case 0x78: // left encoder touch
                     touchParam(0);
                     break;
@@ -454,7 +451,7 @@ void AlphaTrackControlSurface::acceptMidiMessage (const MidiMessage& m)
 
             if (param)
             {
-                pos = jlimit (0.0f, 1.0f, float(fpos) / 0x3FF);
+                pos = juce::jlimit (0.0f, 1.0f, float(fpos) / 0x3FF);
                 param->midiControllerMoved (pos);
                 updateDisplay();
                 updateFlip();
@@ -490,6 +487,8 @@ void AlphaTrackControlSurface::acceptMidiMessage (const MidiMessage& m)
 
 void AlphaTrackControlSurface::moveFader(int channelNum, float newSliderPos)
 {
+    ControlSurface::moveFader (channelNum, newSliderPos);
+
     if (channelNum == 0)
         faderPos = newSliderPos;
 
@@ -501,40 +500,30 @@ void AlphaTrackControlSurface::moveFader(int channelNum, float newSliderPos)
 
 void AlphaTrackControlSurface::moveFaderInt (float newSliderPos)
 {
-    int newPos = roundToInt (newSliderPos * 0x3FF);
+    int newPos = juce::roundToInt (newSliderPos * 0x3FF);
 
     if (newPos != physicalFaderPos)
     {
-        uint8 data[3];
+        uint8_t data[3];
 
         data[0] = 0xe0;
-        data[1] = (uint8) (((unsigned int) newPos & 3) << 4);
-        data[2] = (uint8) (((unsigned int) newPos & 0x3F8) >> 3);
+        data[1] = (uint8_t) (((unsigned int) newPos & 3) << 4);
+        data[2] = (uint8_t) (((unsigned int) newPos & 0x3F8) >> 3);
 
-        sendMidiArray (data);
+        sendMidiArray (0, data);
         physicalFaderPos = newPos;
     }
 }
 
-void AlphaTrackControlSurface::moveMasterLevelFader (float, float)
-{
-}
-
 void AlphaTrackControlSurface::movePanPot (int channelNum, float newPan)
 {
+    ControlSurface::movePanPot (channelNum, newPan);
+    
     if (channelNum == 0)
         pan = newPan;
 
     if (mode == Pan)
         updateDisplay();
-}
-
-void AlphaTrackControlSurface::moveAux (int, const char*, float)
-{
-}
-
-void AlphaTrackControlSurface::clearAux (int)
-{
 }
 
 void AlphaTrackControlSurface::updateSoloAndMute (int, Track::MuteAndSoloLightState state, bool isBright)
@@ -546,10 +535,6 @@ void AlphaTrackControlSurface::updateSoloAndMute (int, Track::MuteAndSoloLightSt
 void AlphaTrackControlSurface::soloCountChanged (bool anySoloTracks)
 {
     setLed (0x73, anySoloTracks);
-}
-
-void AlphaTrackControlSurface::playStateChanged (bool)
-{
 }
 
 void AlphaTrackControlSurface::recordStateChanged (bool isRecording)
@@ -575,46 +560,22 @@ void AlphaTrackControlSurface::automationWriteModeChanged (bool isWriting_)
         updateDisplay();
 }
 
-void AlphaTrackControlSurface::faderBankChanged (int newStartChannelNumber, const StringArray& trackNames)
+void AlphaTrackControlSurface::faderBankChanged (int newStartChannelNumber, const juce::StringArray& trackNames)
 {
     currentTrack = newStartChannelNumber;
     trackName = trackNames[0];
 
     if ((newStartChannelNumber + 1) == trackName.getIntValue() && trackName.containsOnly("0123456789"))
-        trackName = TRANS("Track") + " " + String (newStartChannelNumber + 1);
+        trackName = TRANS("Track") + " " + juce::String (newStartChannelNumber + 1);
 
     trackName = trackName.retainCharacters ("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 ()! \"#$%&\'*+,-./:;<=>?@^_`{|}");
 
     updateDisplay();
 }
 
-void AlphaTrackControlSurface::channelLevelChanged (int, float)
-{
-}
-
-void AlphaTrackControlSurface::trackSelectionChanged (int, bool)
-{
-}
-
 void AlphaTrackControlSurface::trackRecordEnabled (int, bool isEnabled)
 {
     setLed (0x00, isEnabled);
-}
-
-void AlphaTrackControlSurface::masterLevelsChanged (float, float)
-{
-}
-
-void AlphaTrackControlSurface::timecodeChanged (int, int, int, int, bool, bool)
-{
-}
-
-void AlphaTrackControlSurface::clickOnOffChanged (bool)
-{
-}
-
-void AlphaTrackControlSurface::snapOnOffChanged (bool)
-{
 }
 
 void AlphaTrackControlSurface::loopOnOffChanged (bool isLoopOn_)
@@ -625,10 +586,6 @@ void AlphaTrackControlSurface::loopOnOffChanged (bool isLoopOn_)
         setLed (0x56, isLoopOn);
 }
 
-void AlphaTrackControlSurface::slaveOnOffChanged (bool)
-{
-}
-
 void AlphaTrackControlSurface::punchOnOffChanged (bool isPunching_)
 {
     isPunching = isPunching_;
@@ -637,53 +594,33 @@ void AlphaTrackControlSurface::punchOnOffChanged (bool isPunching_)
         setLed (0x56, isPunching);
 }
 
-void AlphaTrackControlSurface::parameterChanged (int, const ParameterSetting&)
-{
-}
-
-void AlphaTrackControlSurface::clearParameter (int)
-{
-}
-
-void AlphaTrackControlSurface::markerChanged (int, const MarkerSetting&)
-{
-}
-
-void AlphaTrackControlSurface::clearMarker (int)
-{
-}
-
-void AlphaTrackControlSurface::currentSelectionChanged (juce::String)
-{
-}
-
 void AlphaTrackControlSurface::displayPrint (int line, int x, const char* const text)
 {
     const size_t len = strlen (text);
-    HeapBlock<uint8> buffer (len + 8);
+    juce::HeapBlock<uint8_t> buffer (len + 8);
     memcpy (buffer, AlphaTrack::cmdWrite, sizeof (AlphaTrack::cmdWrite));
-    buffer [sizeof (AlphaTrack::cmdWrite)] = (uint8) (x + line * 16);
+    buffer [sizeof (AlphaTrack::cmdWrite)] = (uint8_t) (x + line * 16);
     memcpy (buffer + sizeof (AlphaTrack::cmdWrite) + 1, text, len);
     buffer [len + 8 - 1] = 0xf7;
-    sendMidiCommandToController (buffer, (int) len + 8);
+    sendMidiCommandToController (0, buffer, (int) len + 8);
 }
 
 void AlphaTrackControlSurface::setLed (int led, bool state)
 {
-    uint8 data[3];
+    uint8_t data[3];
     data[0] = 0x90;
-    data[1] = (uint8) led;
+    data[1] = (uint8_t) led;
     data[2] = state ? 0x7f : 0x00;
 
-    sendMidiArray (data);
+    sendMidiArray (0, data);
 }
 
-static String dbToString (double db, int chars)
+static juce::String dbToString (double db, int chars)
 {
     if (db >= -96.0f)
-        return String::formatted ("%+.1f", db).substring (0, chars);
+        return juce::String::formatted ("%+.1f", db).substring (0, chars);
 
-    return String ("-INF").substring (0, chars);
+    return juce::String ("-INF").substring (0, chars);
 }
 
 void AlphaTrackControlSurface::handleAsyncUpdate()
@@ -721,7 +658,7 @@ void AlphaTrackControlSurface::handleAsyncUpdate()
                     name = edit->getAuxBusName (bus);
 
                     if (name.isEmpty())
-                        name = "Send #" + String (bus + 1);
+                        name = "Send #" + juce::String (bus + 1);
                 }
 
                 if (dynamic_cast<VolumeAndPanPlugin*> (param->getPlugin()) != nullptr
@@ -760,13 +697,15 @@ void AlphaTrackControlSurface::handleAsyncUpdate()
                     if (auto send = dynamic_cast<AuxSendPlugin*> (f))
                     {
                         int bus = send->getBusNumber();
-                        String name = edit->getAuxBusName(bus);
+
+                        auto name = edit->getAuxBusName(bus);
+
                         if (name.isEmpty())
-                            name = "snd" + String (bus + 1);
+                            name = "snd" + juce::String (bus + 1);
 
                         name = ExternalController::shortenName (name, sendCnt == 2 ? 4 : 5);
 
-                        String val = dbToString (send->getGainDb(), sendCnt == 2 ? 4 : 5);
+                        auto val = dbToString (send->getGainDb(), sendCnt == 2 ? 4 : 5);
 
                         if (sendCnt == 2)
                         {
@@ -831,8 +770,8 @@ void AlphaTrackControlSurface::handleAsyncUpdate()
 
                         if (auto p = params[i + offset])
                         {
-                            String name = ExternalController::shortenName (p->getParameterShortName (i == 2 ? 4 : 5), i == 2 ? 4 : 5);
-                            String val  = p->getLabelForValue (p->getCurrentValue()).substring(0, i == 2 ? 4 : 5);
+                            auto name = ExternalController::shortenName (p->getParameterShortName (i == 2 ? 4 : 5), i == 2 ? 4 : 5);
+                            auto val  = p->getLabelForValue (p->getCurrentValue()).substring(0, i == 2 ? 4 : 5);
 
                             if (val.isEmpty())
                                 val = p->getCurrentValueAsString().substring(0, i == 2 ? 4 : 5);
@@ -1081,7 +1020,7 @@ void AlphaTrackControlSurface::turnParam (int paramIdx, int delta)
 
     if (param)
     {
-        pos = jlimit (0.0f, 1.0f, pos + delta / 75.0f);
+        pos = juce::jlimit (0.0f, 1.0f, pos + delta / 75.0f);
         param->midiControllerMoved (pos);
         updateDisplay();
     }
@@ -1135,11 +1074,11 @@ bool AlphaTrackControlSurface::isPluginSelected (Plugin* p)
 
 bool AlphaTrackControlSurface::doKeyPress (int key, bool force)
 {
-    KeyPress keyPress (key);
+    juce::KeyPress keyPress (key);
 
     if (auto acm = engine.getUIBehaviour().getApplicationCommandManager())
     {
-        const CommandID id = acm->getKeyMappings()->findCommandForKeyPress (keyPress);
+        auto id = acm->getKeyMappings()->findCommandForKeyPress (keyPress);
 
         if (id != 0)
         {
@@ -1150,7 +1089,7 @@ bool AlphaTrackControlSurface::doKeyPress (int key, bool force)
 
     if (force)
     {
-        if (auto focused = Component::getCurrentlyFocusedComponent())
+        if (auto focused = juce::Component::getCurrentlyFocusedComponent())
             focused->keyPressed (keyPress);
 
         return true;

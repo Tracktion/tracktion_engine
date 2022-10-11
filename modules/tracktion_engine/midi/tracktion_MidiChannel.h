@@ -22,13 +22,13 @@ struct MidiChannel
     MidiChannel& operator= (const MidiChannel&) = default;
 
     // Takes a number 1-16
-    explicit MidiChannel (int channelNumber1to16) noexcept  : channel ((juce::uint8) channelNumber1to16)
+    explicit MidiChannel (int channelNumber1to16) noexcept  : channel ((uint8_t) channelNumber1to16)
     {
         jassert (channelNumber1to16 > 0 && channelNumber1to16 <= 16);
     }
 
     explicit MidiChannel (const juce::var& storedChannel) noexcept
-        : channel ((juce::uint8) static_cast<int> (storedChannel))
+        : channel ((uint8_t) static_cast<int> (storedChannel))
     {
         if (! isValid())
             channel = 1;
@@ -38,7 +38,7 @@ struct MidiChannel
     {
         jassert (channel >= 0 && channel <= 16);
         MidiChannel m;
-        m.channel = (juce::uint8) channel;
+        m.channel = (uint8_t) channel;
         return m;
     }
 
@@ -53,7 +53,7 @@ struct MidiChannel
     operator juce::var() const                                  { return juce::var (getChannelNumber()); }
 
 private:
-    juce::uint8 channel = 0;
+    uint8_t channel = 0;
 };
 
 } // namespace tracktion_engine

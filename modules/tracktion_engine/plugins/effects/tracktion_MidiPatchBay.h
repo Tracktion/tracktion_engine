@@ -40,7 +40,7 @@ public:
     //==============================================================================
     struct Mappings
     {
-        char map[17];
+        char map[17] = {};
     };
 
     Mappings getMappings() const;

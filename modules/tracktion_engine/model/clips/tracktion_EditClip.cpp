@@ -69,15 +69,15 @@ void EditClip::cloneFrom (Clip* c)
 }
 
 //==============================================================================
-String EditClip::getSelectableDescription()
+juce::String EditClip::getSelectableDescription()
 {
     return TRANS("Edit Clip") + " - \"" + getName() + "\"";
 }
 
-File EditClip::getOriginalFile() const
+juce::File EditClip::getOriginalFile() const
 {
     jassert (editSnapshot == nullptr || editSnapshot->getFile() == sourceFileReference.getFile());
-    return editSnapshot != nullptr ? editSnapshot->getFile() : File();
+    return editSnapshot != nullptr ? editSnapshot->getFile() : juce::File();
 }
 
 void EditClip::setLoopDefaults()
@@ -123,7 +123,7 @@ void EditClip::renderComplete()
     AudioClipBase::renderComplete();
 }
 
-String EditClip::getRenderMessage()
+juce::String EditClip::getRenderMessage()
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
 
@@ -131,10 +131,10 @@ String EditClip::getRenderMessage()
         return {};
 
     auto numRenderingJobs = edit.engine.getRenderManager().getNumJobs();
-    String remainderMessage;
+    juce::String remainderMessage;
 
     if (numRenderingJobs > 0)
-        remainderMessage << " (" << String (numRenderingJobs) << " " << TRANS("remaining") << ")";
+        remainderMessage << " (" << juce::String (numRenderingJobs) << " " << TRANS("remaining") << ")";
 
     if (renderJob == nullptr)
         return TRANS("Rendering referenced Edits") + "..." + remainderMessage;
@@ -144,10 +144,10 @@ String EditClip::getRenderMessage()
     if (progress <= 0.0f)
         return TRANS("Rendering referenced Edits") + "..." + remainderMessage;
 
-    return TRANS("Rendering Edit: ") + String (roundToInt (progress * 100.0f)) + "%";
+    return TRANS("Rendering Edit: ") + juce::String (juce::roundToInt (progress * 100.0f)) + "%";
 }
 
-String EditClip::getClipMessage()
+juce::String EditClip::getClipMessage()
 {
     if (! sourceFileReference.getSourceProjectItemID().isValid())
         return TRANS("No source set");
@@ -167,7 +167,7 @@ void EditClip::sourceMediaChanged()
     if (sourceMediaReEntrancyCheck)
         return;
 
-    const ScopedValueSetter<bool> svs (sourceMediaReEntrancyCheck, true);
+    const juce::ScopedValueSetter<bool> svs (sourceMediaReEntrancyCheck, true);
 
     auto newID = sourceFileReference.getSourceProjectItemID();
 
@@ -232,7 +232,7 @@ bool EditClip::isUsingFile (const AudioFile& af)
     return false;
 }
 
-void EditClip::valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i)
+void EditClip::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i)
 {
     if (v == state && i == IDs::renderEnabled)
     {
@@ -271,26 +271,26 @@ void EditClip::updateWaveInfo()
     waveInfo.bitsPerSample      = renderOptions->getBitDepth();
     waveInfo.sampleRate         = renderOptions->getSampleRate();
     waveInfo.numChannels        = renderOptions->getStereo() ? 2 : 1;
-    waveInfo.lengthInSamples    = int64 (sourceLength * waveInfo.sampleRate);
+    waveInfo.lengthInSamples    = static_cast<SampleCount> (sourceLength * waveInfo.sampleRate);
 
     updateLoopInfoBasedOnSource (false);
 }
 
-int64 EditClip::generateHash()
+HashCode EditClip::generateHash()
 {
     CRASH_TRACER
 
     // Because edit clips can contain edit clips recursively we can't just rely
     // on the source edit time as a hash, we need to drill down retrieving any
     // nested EditClips and xor their source hash's.
-    juce::int64 editClipHash = 0;
+    HashCode editClipHash = 0;
 
     for (auto snapshot : referencedEdits)
         editClipHash ^= snapshot->getHash();
 
-    const juce::int64 newHash = editClipHash
-                                  ^ renderOptions->getHash()
-                                  ^ (int64) (getIsReversed() * 768);
+    HashCode newHash = editClipHash
+                         ^ renderOptions->getHash()
+                         ^ static_cast<HashCode> (getIsReversed() * 768);
 
     if (hash != newHash)
     {
@@ -314,7 +314,7 @@ void EditClip::updateReferencedEdits()
 {
     CRASH_TRACER
 
-    ReferenceCountedArray<EditSnapshot> current, added, removed;
+    juce::ReferenceCountedArray<EditSnapshot> current, added, removed;
 
     if (editSnapshot != nullptr)
         current = editSnapshot->getNestedEditObjects();

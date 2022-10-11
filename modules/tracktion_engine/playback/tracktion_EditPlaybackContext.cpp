@@ -59,7 +59,7 @@ struct EditPlaybackContext::ContextSyncroniser
         
         const auto sourceTimelineTime = tracktion_graph::sampleToTime (sourcePlayHead.getPosition(), sampleRate);
         const auto millisecondsSinceEpoch = std::chrono::duration_cast<std::chrono::milliseconds> (sourcePlayHead.getLastUserInteractionTime().time_since_epoch()).count();
-        const juce::Time sourceLastInteractionTime (static_cast<int64> (millisecondsSinceEpoch));
+        const juce::Time sourceLastInteractionTime (static_cast<int64_t> (millisecondsSinceEpoch));
 
         const auto destTimelineTime = tracktion_graph::sampleToTime (destPlayHead.getPosition(), sampleRate);
         const auto destLoopDuration = tracktion_graph::sampleToTime (destPlayHead.getLoopRange().getLength(), sampleRate);
@@ -109,7 +109,7 @@ private:
         
         if (! sourceIsPlaying || std::abs (lastSourceTimelineTime - sourceTimelineTime) > 0.2)
         {
-            const RelativeTime rt = Time::getCurrentTime() - sourceLastInteractionTime;
+            auto rt = juce::Time::getCurrentTime() - sourceLastInteractionTime;
 
             if (! sourceIsPlaying || rt.inSeconds() < 0.2)
             {
@@ -189,7 +189,7 @@ private:
 
      void setSpeedCompensation (double plusOrMinus)
      {
-         speedCompensation = jlimit (-10.0, 10.0, plusOrMinus);
+         speedCompensation = juce::jlimit (-10.0, 10.0, plusOrMinus);
      }
      
      void updateReferenceSampleRange (int numSamples)
@@ -269,7 +269,7 @@ private:
      ProcessState processState { playHeadState };
      
  private:
-     AudioBuffer<float> scratchAudioBuffer;
+     juce::AudioBuffer<float> scratchAudioBuffer;
      MidiMessageArray scratchMidiBuffer;
      TracktionNodePlayer player;
      const size_t maxNumThreads;
@@ -334,7 +334,7 @@ EditPlaybackContext::~EditPlaybackContext()
     edit.engine.getDeviceManager().removeContext (this);
 
     clearNodes();
-    midiDispatcher.setMidiDeviceList (OwnedArray<MidiOutputDeviceInstance>());
+    midiDispatcher.setMidiDeviceList (juce::OwnedArray<MidiOutputDeviceInstance>());
 }
 
 void EditPlaybackContext::releaseDeviceList()
@@ -342,9 +342,9 @@ void EditPlaybackContext::releaseDeviceList()
     TRACKTION_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
 
-    const ScopedValueSetter<bool> alocateSetter (isAllocated, isAllocated);
+    const juce::ScopedValueSetter<bool> alocateSetter (isAllocated, isAllocated);
     clearNodes();
-    midiDispatcher.setMidiDeviceList (OwnedArray<MidiOutputDeviceInstance>());
+    midiDispatcher.setMidiDeviceList (juce::OwnedArray<MidiOutputDeviceInstance>());
 
     // Clear the outputs before the inputs as the midi inputs will be referenced by the MidiDeviceInstanceBase::Consumer
     waveOutputs.clear();
@@ -530,7 +530,7 @@ void EditPlaybackContext::startRecording (double start, double punchIn)
     auto sampleRate = dm.getSampleRate();
     auto blockSize  = dm.getBlockSize();
 
-    String error;
+    juce::String error;
 
     for (int i = waveInputs.size(); --i >= 0 && error.isEmpty();)
         if (auto wi = waveInputs.getUnchecked (i))
@@ -622,7 +622,7 @@ Clip::Array EditPlaybackContext::stopRecording (InputDeviceInstance& in, EditTim
                                               transport.looping, loopRange,
                                               discardRecordings,
                                               findAppropriateSelectionManager (edit));
-    transport.callRecordingFinishedListeners (in, clips, recordedRange);
+    transport.callRecordingFinishedListeners (in, clips);
     
     return clips;
 }
@@ -639,7 +639,7 @@ Clip::Array EditPlaybackContext::recordingFinished (EditTimeRange recordedRange,
     return clips;
 }
 
-Result EditPlaybackContext::applyRetrospectiveRecord (Array<Clip*>* clips)
+juce::Result EditPlaybackContext::applyRetrospectiveRecord (juce::Array<Clip*>* clips)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
@@ -656,7 +656,7 @@ Result EditPlaybackContext::applyRetrospectiveRecord (Array<Clip*>* clips)
     }
 
     if (! inputAssigned)
-        return Result::fail (TRANS("Unable to perform retrospective record, no inputs are assigned to a track"));
+        return juce::Result::fail (TRANS("Unable to perform retrospective record, no inputs are assigned to a track"));
 
     InputDevice::setRetrospectiveLock (edit.engine, getAllInputs(), true);
 
@@ -676,14 +676,14 @@ Result EditPlaybackContext::applyRetrospectiveRecord (Array<Clip*>* clips)
     InputDevice::setRetrospectiveLock (edit.engine, getAllInputs(), false);
 
     if (! clipCreated)
-        return Result::fail (TRANS("Unable to perform retrospective record, all input buffers are empty"));
+        return juce::Result::fail (TRANS("Unable to perform retrospective record, all input buffers are empty"));
 
-    return Result::ok();
+    return juce::Result::ok();
 }
 
-Array<InputDeviceInstance*> EditPlaybackContext::getAllInputs()
+juce::Array<InputDeviceInstance*> EditPlaybackContext::getAllInputs()
 {
-    Array<InputDeviceInstance*> allInputs;
+    juce::Array<InputDeviceInstance*> allInputs;
     allInputs.addArray (waveInputs);
     allInputs.addArray (midiInputs);
 
@@ -734,7 +734,8 @@ void EditPlaybackContext::fillNextNodeBlock (float** allChannels, int numChannel
 
     const double editTime = tracktion_graph::sampleToTime (nodePlaybackContext->playHead.getPosition(), nodePlaybackContext->getSampleRate());
     edit.updateModifierTimers (editTime, numSamples);
-    
+    midiDispatcher.masterTimeUpdate (editTime);
+
     nodePlaybackContext->process (allChannels, numChannels, numSamples);
     
     // Dispatch any MIDI messages that have been injected in to the MidiOutputDeviceInstances by the Node
@@ -921,29 +922,29 @@ double EditPlaybackContext::globalStreamTimeToEditTimeUnlooped (double globalStr
     return tracktion_graph::sampleToTime (timelinePosition, sampleRate);
 }
 
-void EditPlaybackContext::resyncToGlobalStreamTime (juce::Range<double> globalStreamTime)
+void EditPlaybackContext::resyncToGlobalStreamTime (juce::Range<double> globalStreamTime, double sampleRate)
 {
     if (! nodePlaybackContext)
         return;
     
-    const double sampleRate = getSampleRate();
     const auto globalSampleRange = tracktion_graph::timeToSample (globalStreamTime, sampleRate);
     nodePlaybackContext->resyncToReferenceSampleRange (globalSampleRange);
 }
 
 void EditPlaybackContext::setThreadPoolStrategy (int type)
 {
-    type = jlimit (static_cast<int> (tracktion_graph::ThreadPoolStrategy::conditionVariable),
-                   static_cast<int> (tracktion_graph::ThreadPoolStrategy::lightweightSemHybrid),
-                   type);
+    type = juce::jlimit (static_cast<int> (tracktion_graph::ThreadPoolStrategy::conditionVariable),
+                         static_cast<int> (tracktion_graph::ThreadPoolStrategy::lightweightSemHybrid),
+                         type);
+
     EditPlaybackContextInternal::getThreadPoolStrategyType() = type;
 }
 
 int EditPlaybackContext::getThreadPoolStrategy()
 {
-    const int type = jlimit (static_cast<int> (tracktion_graph::ThreadPoolStrategy::conditionVariable),
-                             static_cast<int> (tracktion_graph::ThreadPoolStrategy::lightweightSemHybrid),
-                             EditPlaybackContextInternal::getThreadPoolStrategyType());
+    const int type = juce::jlimit (static_cast<int> (tracktion_graph::ThreadPoolStrategy::conditionVariable),
+                                   static_cast<int> (tracktion_graph::ThreadPoolStrategy::lightweightSemHybrid),
+                                   EditPlaybackContextInternal::getThreadPoolStrategyType());
     
     return type;
 }
@@ -954,7 +955,6 @@ void EditPlaybackContext::enablePooledMemory (bool enable)
 }
 
 //==============================================================================
-#if JUCE_WINDOWS
 static int numHighPriorityPlayers = 0, numRealtimeDefeaters = 0;
 
 void updateProcessPriority (Engine& engine)
@@ -971,14 +971,5 @@ EditPlaybackContext::ProcessPriorityBooster::ProcessPriorityBooster (Engine& e) 
 EditPlaybackContext::ProcessPriorityBooster::~ProcessPriorityBooster()                              { --numHighPriorityPlayers; updateProcessPriority (engine); }
 EditPlaybackContext::RealtimePriorityDisabler::RealtimePriorityDisabler (Engine& e) : engine (e)    { ++numRealtimeDefeaters; updateProcessPriority (engine); }
 EditPlaybackContext::RealtimePriorityDisabler::~RealtimePriorityDisabler()                          { --numRealtimeDefeaters; updateProcessPriority (engine); }
-
-#else
-
-EditPlaybackContext::ProcessPriorityBooster::ProcessPriorityBooster (Engine& e) : engine (e)        {}
-EditPlaybackContext::ProcessPriorityBooster::~ProcessPriorityBooster()                              {}
-EditPlaybackContext::RealtimePriorityDisabler::RealtimePriorityDisabler (Engine& e) : engine (e)    {}
-EditPlaybackContext::RealtimePriorityDisabler::~RealtimePriorityDisabler()                          {}
-
-#endif
 
 }

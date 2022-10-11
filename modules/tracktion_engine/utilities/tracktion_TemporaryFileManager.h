@@ -38,7 +38,7 @@ public:
     bool isDiskSpaceDangerouslyLow() const;
 
     /** */
-    juce::int64 getMaxSpaceAllowedForTempFiles() const;
+    int64_t getMaxSpaceAllowedForTempFiles() const;
 
     /** */
     int getMaxNumTempFiles() const;
@@ -66,13 +66,13 @@ public:
 
     //==============================================================================
     /** */
-    static AudioFile getFileForCachedClipRender (const AudioClipBase&, juce::int64 hash);
+    static AudioFile getFileForCachedClipRender (const AudioClipBase&, HashCode);
 
     /** */
-    static AudioFile getFileForCachedCompRender (const AudioClipBase& clip, juce::int64 takeHash);
+    static AudioFile getFileForCachedCompRender (const AudioClipBase&, HashCode);
 
     /** */
-    static AudioFile getFileForCachedFileRender (Edit&, juce::int64 hash);
+    static AudioFile getFileForCachedFileRender (Edit&, HashCode hash);
 
     /** */
     static juce::File getFreezeFileForDevice (Edit&, OutputDevice&);

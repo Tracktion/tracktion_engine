@@ -11,7 +11,7 @@
 namespace tracktion_engine
 {
 
-MacroParameter::Assignment::Assignment (const ValueTree& v, const MacroParameter& mp)
+MacroParameter::Assignment::Assignment (const juce::ValueTree& v, const MacroParameter& mp)
     : AutomatableParameter::ModifierAssignment (mp.edit, v),
       macroParamID (EditItemID::fromVar (mp.paramID))
 {
@@ -27,7 +27,7 @@ bool MacroParameter::Assignment::isForModifierSource (const AutomatableParameter
 }
 
 //==============================================================================
-MacroParameter::MacroParameter (AutomatableEditItem& automatable, Edit& e, const ValueTree& v)
+MacroParameter::MacroParameter (AutomatableEditItem& automatable, Edit& e, const juce::ValueTree& v)
     : AutomatableParameter (EditItemID::fromID (v).toString(),
                             EditItemID::fromID (v).toString(),
                             automatable, { 0.0f, 1.0f }),
@@ -78,7 +78,7 @@ MacroParameter::Ptr getMacroParameterForID (Edit& e, EditItemID pid)
 //==============================================================================
 struct MacroParameterList::List : public ValueTreeObjectList<MacroParameter>
 {
-    List (MacroParameterList& mpl, const ValueTree& v)
+    List (MacroParameterList& mpl, const juce::ValueTree& v)
         : ValueTreeObjectList<MacroParameter> (v),
           macroParameterList (mpl), edit (mpl.edit)
     {
@@ -91,14 +91,14 @@ struct MacroParameterList::List : public ValueTreeObjectList<MacroParameter>
         freeObjects();
     }
 
-    ReferenceCountedArray<MacroParameter> getMacroParameters() const
+    juce::ReferenceCountedArray<MacroParameter> getMacroParameters() const
     {
-        ReferenceCountedArray<MacroParameter> params;
+        juce::ReferenceCountedArray<MacroParameter> params;
         
         // This is verbose but directly returning macroParameters causes a
-        // crash in optomised gcc Linux builds, could be a compiler bug
+        // crash in optimised gcc Linux builds, could be a compiler bug
         {
-            const ScopedLock sl (macroParameters.getLock());
+            const juce::ScopedLock sl (macroParameters.getLock());
             params.ensureStorageAllocated (macroParameters.size());
             
             for (auto& p : macroParameters)
@@ -112,7 +112,7 @@ struct MacroParameterList::List : public ValueTreeObjectList<MacroParameter>
     Edit& edit;
 
 private:
-    ReferenceCountedArray<MacroParameter, CriticalSection> macroParameters;
+    juce::ReferenceCountedArray<MacroParameter, juce::CriticalSection> macroParameters;
 
     bool isSuitableType (const juce::ValueTree& v) const override
     {
@@ -149,7 +149,7 @@ private:
 
     void objectOrderChanged() override              { macroParameterList.sendChangeMessage(); }
 
-    void valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i) override
+    void valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i) override
     {
         if (v.hasType (IDs::MACROPARAMETER) && i == IDs::name)
             macroParameterList.rebuildParameterTree();
@@ -159,7 +159,7 @@ private:
 };
 
 //==============================================================================
-MacroParameterList::MacroParameterList (Edit& e, const ValueTree& v)
+MacroParameterList::MacroParameterList (Edit& e, const juce::ValueTree& v)
     : AutomatableEditItem (e, v),
       state (v)
 {
@@ -180,12 +180,12 @@ MacroParameter* MacroParameterList::createMacroParameter()
     TRACKTION_ASSERT_MESSAGE_THREAD
     auto* um = &edit.getUndoManager();
 
-    ValueTree v (IDs::MACROPARAMETER);
+    juce::ValueTree v (IDs::MACROPARAMETER);
     edit.createNewItemID().writeID (v, nullptr);
     state.addChild (v, -1, um);
 
     auto* mp = list->objects.getLast();
-    mp->macroName = TRANS("Macro") + " " + String (list->objects.size());
+    mp->macroName = TRANS("Macro") + " " + juce::String (list->objects.size());
     jassert (mp != nullptr);
     jassert (mp->state == v);
     sendChangeMessage();
@@ -232,7 +232,7 @@ void MacroParameterList::hideMacroParametersFromTracks() const
     }
 }
 
-ReferenceCountedArray<MacroParameter> MacroParameterList::getMacroParameters() const
+juce::ReferenceCountedArray<MacroParameter> MacroParameterList::getMacroParameters() const
 {
     return list->getMacroParameters();
 }
@@ -261,8 +261,8 @@ Plugin::Ptr getOwnerPlugin (MacroParameterList* mpl)
 }
 
 //==============================================================================
-MacroParameterElement::MacroParameterElement (Edit& e, const ValueTree& v)
-    : macroParameterList (e, ValueTree (v).getOrCreateChildWithName (IDs::MACROPARAMETERS, &e.getUndoManager()))
+MacroParameterElement::MacroParameterElement (Edit& e, const juce::ValueTree& v)
+    : macroParameterList (e, juce::ValueTree (v).getOrCreateChildWithName (IDs::MACROPARAMETERS, &e.getUndoManager()))
 {
 }
 

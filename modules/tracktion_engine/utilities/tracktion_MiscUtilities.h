@@ -123,6 +123,8 @@ inline bool almostEqual (FloatingPointType firstValue, FloatingPointType secondV
     return std::abs (firstValue - secondValue) < precision;
 }
 
+//==============================================================================
+using HashCode = int64_t;
 
 //==============================================================================
 //==============================================================================

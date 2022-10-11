@@ -28,8 +28,8 @@ public:
 
         using Ptr = juce::ReferenceCountedObjectPtr<Reader>;
 
-        void setReadPosition (juce::int64 pos) noexcept;
-        juce::int64 getReadPosition() const noexcept  { return readPos; }
+        void setReadPosition (SampleCount) noexcept;
+        SampleCount getReadPosition() const noexcept    { return readPos; }
 
         bool readSamples (int numSamples,
                           juce::AudioBuffer<float>& destBuffer,
@@ -49,7 +49,7 @@ public:
                        float& rmax, float& rmin,
                        int timeoutMs);
 
-        void setLoopRange (juce::Range<juce::int64> newRange);
+        void setLoopRange (SampleRange newRange);
 
         int getNumChannels() const noexcept;
         double getSampleRate() const noexcept;
@@ -59,7 +59,7 @@ public:
 
         AudioFileCache& cache;
         void* file;
-        std::atomic<juce::int64> readPos { 0 }, loopStart { 0 }, loopLength { 0 };
+        std::atomic<SampleCount> readPos { 0 }, loopStart { 0 }, loopLength { 0 };
         std::unique_ptr<juce::BufferingAudioReader> fallbackReader;
 
         Reader (AudioFileCache&, void*, juce::BufferingAudioReader* fallback);
@@ -70,10 +70,10 @@ public:
     Reader::Ptr createReader (const AudioFile&);
 
     //==============================================================================
-    void setCacheSizeSamples (juce::int64 samplesPerFile);
-    juce::int64 getCacheSizeSamples() const         { return cacheSizeSamples; }
+    void setCacheSizeSamples (SampleCount samplesPerFile);
+    SampleCount getCacheSizeSamples() const         { return cacheSizeSamples; }
 
-    juce::int64 getBytesInUse() const               { return totalBytesUsed; }
+    SampleCount getBytesInUse() const               { return totalBytesUsed; }
 
     bool hasCacheMissed (bool clearMissedFlag);
 
@@ -82,7 +82,7 @@ public:
 
 private:
     Engine& engine;
-    juce::int64 totalBytesUsed = 0, cacheSizeSamples = 0;
+    SampleCount totalBytesUsed = 0, cacheSizeSamples = 0;
     bool cacheMissed = false;
     std::atomic<double> cpuUsage { 0 };
 

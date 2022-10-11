@@ -13,7 +13,7 @@ namespace tracktion_engine
 
 //==============================================================================
 template <typename FloatType>
-static void getSumAndDiff (const AudioBuffer<FloatType>& buffer,
+static void getSumAndDiff (const juce::AudioBuffer<FloatType>& buffer,
                            FloatType& sum, FloatType& diff,
                            int startIndex, int numSamples)
 {
@@ -32,12 +32,12 @@ static void getSumAndDiff (const AudioBuffer<FloatType>& buffer,
         {
             auto mag = buffer.getMagnitude (i, startIndex, numSamples);
             s += mag;
-            lo = jmin (lo, mag);
-            hi = jmax (hi, mag);
+            lo = juce::jmin (lo, mag);
+            hi = juce::jmax (hi, mag);
         }
 
         sum = s / buffer.getNumChannels();
-        diff = jmax (FloatType(), hi - lo);
+        diff = juce::jmax (FloatType(), hi - lo);
     }
 }
 
@@ -143,13 +143,13 @@ void LevelMeasurer::Client::updateMidiLevel (DbTimePair newMidiLevel) noexcept
 //==============================================================================
 void LevelMeasurer::processBuffer (juce::AudioBuffer<float>& buffer, int start, int numSamples)
 {
-    const ScopedLock sl (clientsMutex);
+    const juce::ScopedLock sl (clientsMutex);
 
     if (clients.isEmpty())
         return;
 
-    auto numChans = jmin ((int) Client::maxNumChannels, buffer.getNumChannels());
-    auto now = Time::getApproximateMillisecondCounter();
+    auto numChans = std::min ((int) Client::maxNumChannels, buffer.getNumChannels());
+    auto now = juce::Time::getApproximateMillisecondCounter();
 
     if (mode == LevelMeasurer::peakMode)
     {
@@ -215,7 +215,7 @@ void LevelMeasurer::processBuffer (juce::AudioBuffer<float>& buffer, int start, 
 
 void LevelMeasurer::processMidi (MidiMessageArray& midiBuffer, const float*)
 {
-    const ScopedLock sl (clientsMutex);
+    const juce::ScopedLock sl (clientsMutex);
 
     if (clients.isEmpty() || ! showMidi)
         return;
@@ -224,9 +224,9 @@ void LevelMeasurer::processMidi (MidiMessageArray& midiBuffer, const float*)
 
     for (auto& m : midiBuffer)
         if (m.isNoteOn())
-            max = jmax (max, m.getFloatVelocity());
+            max = juce::jmax (max, m.getFloatVelocity());
 
-    auto now = Time::getApproximateMillisecondCounter();
+    auto now = juce::Time::getApproximateMillisecondCounter();
 
     for (auto c : clients)
         c->updateMidiLevel ({ now, gainToDb (max) });
@@ -234,12 +234,12 @@ void LevelMeasurer::processMidi (MidiMessageArray& midiBuffer, const float*)
 
 void LevelMeasurer::processMidiLevel (float level)
 {
-    const ScopedLock sl (clientsMutex);
+    const juce::ScopedLock sl (clientsMutex);
 
     if (clients.isEmpty() || ! showMidi)
         return;
 
-    auto now = Time::getApproximateMillisecondCounter();
+    auto now = juce::Time::getApproximateMillisecondCounter();
 
     for (auto c : clients)
         c->updateMidiLevel ({ now, gainToDb (level) });
@@ -247,7 +247,7 @@ void LevelMeasurer::processMidiLevel (float level)
 
 void LevelMeasurer::clearOverload()
 {
-    const ScopedLock sl (clientsMutex);
+    const juce::ScopedLock sl (clientsMutex);
 
     for (auto c : clients)
         c->setClearOverload (true);
@@ -255,7 +255,7 @@ void LevelMeasurer::clearOverload()
 
 void LevelMeasurer::clearPeak()
 {
-    const ScopedLock sl (clientsMutex);
+    const juce::ScopedLock sl (clientsMutex);
 
     for (auto c : clients)
         c->setClearPeak (true);
@@ -263,12 +263,13 @@ void LevelMeasurer::clearPeak()
 
 void LevelMeasurer::clear()
 {
-    const ScopedLock sl (clientsMutex);
+    const juce::ScopedLock sl (clientsMutex);
 
     for (auto c : clients)
         c->reset();
 
-    levelCache = -100.0f;
+    levelCacheL = -100.0f;
+    levelCacheR = -100.0f;
     numActiveChannels = 1;
 }
 
@@ -280,14 +281,14 @@ void LevelMeasurer::setMode (LevelMeasurer::Mode m)
 
 void LevelMeasurer::addClient (Client& c)
 {
-    const ScopedLock sl (clientsMutex);
+    const juce::ScopedLock sl (clientsMutex);
     jassert (! clients.contains (&c));
     clients.add (&c);
 }
 
 void LevelMeasurer::removeClient (Client& c)
 {
-    const ScopedLock sl (clientsMutex);
+    const juce::ScopedLock sl (clientsMutex);
     clients.removeFirstMatchingValue (&c);
 }
 

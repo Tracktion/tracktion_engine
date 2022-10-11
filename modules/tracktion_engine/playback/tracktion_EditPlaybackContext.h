@@ -68,10 +68,13 @@ public:
     static void setAddAntiDenormalisationNoise (Engine&, bool);
 
     //==============================================================================
-    // Only implemented on Windows
+    /**
+        Used to temporarily reduce the process priority if a long operation like a file save is taking place.
+        You shouldn't need to use this in normal use.
+    */
     struct RealtimePriorityDisabler
     {
-        RealtimePriorityDisabler (Engine& engine);
+        RealtimePriorityDisabler (Engine&);
         ~RealtimePriorityDisabler();
 
         Engine& engine;
@@ -99,7 +102,7 @@ public:
     
     double globalStreamTimeToEditTime (double) const;
     double globalStreamTimeToEditTimeUnlooped (double) const;
-    void resyncToGlobalStreamTime (juce::Range<double>);
+    void resyncToGlobalStreamTime (juce::Range<double>, double sampleRate);
 
     /** @internal. Will be removed in a future release. */
     tracktion_graph::PlayHead* getNodePlayHead() const;

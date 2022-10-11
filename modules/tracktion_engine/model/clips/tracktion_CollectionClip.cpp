@@ -93,7 +93,7 @@ void CollectionClip::updateStartAndEnd()
         range = findUnionOfEditTimeRanges (clips);
 }
 
-String CollectionClip::getName()
+juce::String CollectionClip::getName()
 {
     return TRANS("Collection Clip");
 }

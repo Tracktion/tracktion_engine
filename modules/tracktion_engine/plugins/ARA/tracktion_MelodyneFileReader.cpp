@@ -176,7 +176,7 @@ struct ARAClipPlayer  : private SelectableListener
         CRASH_TRACER
         TRACKTION_ASSERT_MESSAGE_THREAD
 
-        if (MessageManager::getInstance()->isThisTheMessageThread()
+        if (juce::MessageManager::getInstance()->isThisTheMessageThread()
             && getEdit().getTransport().isAllowedToReallocate())
         {
             contentUpdater = nullptr;
@@ -197,12 +197,12 @@ struct ARAClipPlayer  : private SelectableListener
     }
 
     //==============================================================================
-    MidiMessageSequence getAnalysedMIDISequence()
+    juce::MidiMessageSequence getAnalysedMIDISequence()
     {
         CRASH_TRACER
 
         const int midiChannel = 1;
-        MidiMessageSequence result;
+        juce::MidiMessageSequence result;
 
         if (auto doc = getDocument())
         {
@@ -221,10 +221,10 @@ struct ARAClipPlayer  : private SelectableListener
                     {
                         if (note->pitchNumber != kARAInvalidPitchNumber)
                         {
-                            result.addEvent (MidiMessage::noteOn  (midiChannel, note->pitchNumber, static_cast<float> (note->volume)),
+                            result.addEvent (juce::MidiMessage::noteOn  (midiChannel, note->pitchNumber, static_cast<float> (note->volume)),
                                              note->startPosition);
 
-                            result.addEvent (MidiMessage::noteOff (midiChannel, note->pitchNumber),
+                            result.addEvent (juce::MidiMessage::noteOff (midiChannel, note->pitchNumber),
                                              note->startPosition + note->noteDuration);
                         }
                     }
@@ -351,7 +351,7 @@ private:
 
     std::unique_ptr<MelodyneInstance> melodyneInstance;
     std::unique_ptr<PlaybackRegionAndSource> playbackRegionAndSource;
-    int64 currentHashCode = 0;
+    HashCode currentHashCode = 0;
 
     //==============================================================================
     struct ScopedDocumentEditor
@@ -401,7 +401,7 @@ private:
 
         playbackRegionAndSource = std::make_unique<PlaybackRegionAndSource> (*getDocument(), clip, *melodyneInstance->factory,
                                                                              *melodyneInstance->extensionInstance,
-                                                                             String::toHexString (currentHashCode),
+                                                                             juce::String::toHexString (currentHashCode),
                                                                              clipToClone != nullptr ? clipToClone->playbackRegionAndSource.get() : nullptr);
 
         if (oldTrack != nullptr)
@@ -423,9 +423,9 @@ private:
             contentAnalyserChecker = nullptr;
             modelUpdater = nullptr; // Can't be editing the document in any way while restoring
 
-            juce::int64 newHashCode = file.getHash()
-                                       ^ file.getFile().getLastModificationTime().toMilliseconds()
-                                       ^ (juce::int64) clip.itemID.getRawID();
+            HashCode newHashCode = file.getHash()
+                                    ^ file.getFile().getLastModificationTime().toMilliseconds()
+                                    ^ static_cast<HashCode> (clip.itemID.getRawID());
 
             if (currentHashCode != newHashCode)
             {
@@ -452,7 +452,7 @@ private:
     }
 
     //==============================================================================
-    struct ContentUpdater : public Timer
+    struct ContentUpdater  : public juce::Timer
     {
         ContentUpdater (ARAClipPlayer& p) : owner (p) { startTimer (100); }
 
@@ -475,7 +475,7 @@ private:
     std::unique_ptr<ContentUpdater> contentUpdater;
 
     //==============================================================================
-    struct ModelUpdater : private Timer
+    struct ModelUpdater  : private juce::Timer
     {
         ModelUpdater (ARADocument& d) : document (d) { startTimer (3000); }
 
@@ -576,7 +576,7 @@ void MelodyneFileReader::sourceClipChanged()
 }
 
 //==============================================================================
-MidiMessageSequence MelodyneFileReader::getAnalysedMIDISequence()
+juce::MidiMessageSequence MelodyneFileReader::getAnalysedMIDISequence()
 {
     if (player != nullptr)
         return player->getAnalysedMIDISequence();
@@ -683,7 +683,7 @@ ExternalPlugin* MelodyneFileReader::getPlugin()                     { return {};
 void MelodyneFileReader::showPluginWindow()                         {}
 void MelodyneFileReader::hidePluginWindow()                         {}
 bool MelodyneFileReader::isAnalysingContent()                       { return false; }
-MidiMessageSequence MelodyneFileReader::getAnalysedMIDISequence()   { return {}; }
+juce::MidiMessageSequence MelodyneFileReader::getAnalysedMIDISequence()   { return {}; }
 void MelodyneFileReader::sourceClipChanged()                        {}
 
 ARADocumentHolder::ARADocumentHolder (Edit& e, const juce::ValueTree&) : edit (e) { juce::ignoreUnused (edit); }

@@ -29,22 +29,33 @@ ExternalController::ExternalController (Engine& e, ControlSurface* c)  : engine 
     auxBank = cs.wantsAuxBanks ? 0 : -1;
     allowBankingOffEnd = cs.allowBankingOffEnd;
 
-    inputDeviceName  = storage.getPropertyItem (SettingID::externControlIn, getName());
-    outputDeviceName = storage.getPropertyItem (SettingID::externControlOut, getName());
+    numDevices = engine.getPropertyStorage().getPropertyItem (SettingID::externControlNum, getName(), 1);
+    mainDevice = engine.getPropertyStorage().getPropertyItem (SettingID::externControlMain, getName(), 0);
 
-    oscInputPort     = storage.getPropertyItem (SettingID::externOscInputPort, getName());
-    oscOutputPort    = storage.getPropertyItem (SettingID::externOscOutputPort, getName());
-    oscOutputAddr    = storage.getPropertyItem (SettingID::externOscOutputAddr, getName());
+    inputDeviceName[0]  = storage.getPropertyItem (SettingID::externControlIn, getName());
+    outputDeviceName[0] = storage.getPropertyItem (SettingID::externControlOut, getName());
 
-    showSelection    = storage.getPropertyItem (SettingID::externControlShowSelection, getName());
-    selectionColour  = Colour::fromString (storage.getPropertyItem (SettingID::externControlSelectionColour, getName(),
-                                                                    Colours::red.withHue (0.0f).withSaturation (0.7f).toString()).toString());
-    enabled          = storage.getPropertyItem (SettingID::externControlEnable, getName());
+    for (int i = 1; i < maxDevices; i++)
+    {
+        inputDeviceName[i]  = storage.getPropertyItem (SettingID::externControlIn, getName() + juce::String (i));
+        outputDeviceName[i] = storage.getPropertyItem (SettingID::externControlOut, getName() + juce::String (i));
+    }
+
+    oscInputPort        = storage.getPropertyItem (SettingID::externOscInputPort, getName());
+    oscOutputPort       = storage.getPropertyItem (SettingID::externOscOutputPort, getName());
+    oscOutputAddr       = storage.getPropertyItem (SettingID::externOscOutputAddr, getName());
+
+    showSelection       = storage.getPropertyItem (SettingID::externControlShowSelection, getName());
+    selectionColour     = juce::Colour::fromString (storage.getPropertyItem (SettingID::externControlSelectionColour, getName(),
+                                                                          juce::Colours::red.withHue (0.0f).withSaturation (0.7f).toString()).toString());
+    enabled             = storage.getPropertyItem (SettingID::externControlEnable, getName());
 
     midiInOutDevicesChanged();
     oscSettingsChanged();
 
     cs.initialiseDevice (isEnabled());
+    if (numDevices != 1)
+        cs.numExtendersChanged (numDevices - 1, mainDevice);
 
     updateDeviceState();
     changeParamBank (0);
@@ -83,6 +94,22 @@ juce::String ExternalController::getName() const
     return {};
 }
 
+juce::String ExternalController::getDesiredMidiChannel() const
+{
+    if (auto cs = controlSurface.get())
+        return cs->midiChannelName;
+
+    return {};
+}
+
+juce::String ExternalController::getDesiredMidiBackChannel() const
+{
+    if (auto cs = controlSurface.get())
+        return cs->midiBackChannelName;
+
+    return {};
+}
+
 Plugin* ExternalController::getCurrentPlugin() const
 {
     return dynamic_cast<Plugin*> (currentParamSource.get());
@@ -100,7 +127,7 @@ void ExternalController::currentEditChanged (Edit* edit)
 bool ExternalController::isEnabled() const
 {
     if (needsChannel)
-        return getMidiInputDevice().isNotEmpty();
+        return getMidiInputDevice (0).isNotEmpty();
 
     return enabled;
 }
@@ -120,33 +147,63 @@ void ExternalController::setEnabled (bool e)
     }
 }
 
-juce::String ExternalController::getMidiInputDevice() const
+int ExternalController::getNumDevices() const
 {
-    if (getMidiInputPorts().contains (inputDeviceName))
-        return inputDeviceName;
+    return numDevices;
+}
+
+void ExternalController::setNumDevices (int num)
+{
+    numDevices = juce::jlimit (1, maxDevices, num);
+    mainDevice = juce::jlimit (0, numDevices - 1, num);
+
+    controlSurface->numExtendersChanged (num - 1, mainDevice);
+
+    engine.getPropertyStorage().setPropertyItem (SettingID::externControlNum, getName(), num);
+}
+
+int ExternalController::getMainDevice() const
+{
+    return mainDevice;
+}
+
+void ExternalController::setMainDevice (int num)
+{
+    mainDevice = juce::jlimit (0, numDevices - 1, num);
+
+    controlSurface->numExtendersChanged (num - 1, mainDevice);
+
+    engine.getPropertyStorage().setPropertyItem (SettingID::externControlMain, getName(), mainDevice);
+}
+
+juce::String ExternalController::getMidiInputDevice (int idx) const
+{
+    if (getMidiInputPorts().contains (inputDeviceName[idx]))
+        return inputDeviceName[idx];
 
     return {};
 }
 
-void ExternalController::setMidiInputDevice (const String& nameOfMidiInput)
+void ExternalController::setMidiInputDevice (int idx, const juce::String& nameOfMidiInput)
 {
     CRASH_TRACER
 
     if (nameOfMidiInput.isNotEmpty())
         for (auto c : getExternalControllerManager().getControllers())
-            if (c != this && c->getMidiInputDevice() == nameOfMidiInput)
-                c->setMidiInputDevice ({});
+            for (int i = 0; i < maxDevices; i++)
+                if (c != this && c->getMidiInputDevice (idx) == nameOfMidiInput)
+                    c->setMidiInputDevice (idx, {});
 
-    inputDeviceName = nameOfMidiInput;
-    engine.getPropertyStorage().setPropertyItem (SettingID::externControlIn, getName(), inputDeviceName);
+    inputDeviceName[idx] = nameOfMidiInput;
+    engine.getPropertyStorage().setPropertyItem (SettingID::externControlIn, getName() + (idx > 0 ? juce::String (idx) : juce::String()), inputDeviceName[idx]);
 
     midiInOutDevicesChanged();
 }
 
-juce::String ExternalController::getBackChannelDevice() const
+juce::String ExternalController::getBackChannelDevice (int idx) const
 {
-    if (getMidiOutputPorts().contains (outputDeviceName))
-        return outputDeviceName;
+    if (getMidiOutputPorts().contains (outputDeviceName[idx]))
+        return outputDeviceName[idx];
 
     return {};
 }
@@ -157,20 +214,20 @@ void ExternalController::deleteController()
         getControlSurface().deleteController();
 }
 
-Range<int> ExternalController::getActiveChannels() const noexcept
+juce::Range<int> ExternalController::getActiveChannels() const noexcept
 {
-    return Range<int> (channelStart, channelStart + getNumFaderChannels());
+    return { channelStart, channelStart + getNumFaderChannels() };
 }
 
-Range<int> ExternalController::getActiveParams() const noexcept
+juce::Range<int> ExternalController::getActiveParams() const noexcept
 {
-    return Range<int> (startParamNumber, startParamNumber + getNumParameterControls());
+    return { startParamNumber, startParamNumber + getNumParameterControls() };
 }
 
 int ExternalController::getFaderIndexInActiveRegion (int i) const noexcept
 {
     i -= channelStart;
-    return isPositiveAndBelow (i, getNumFaderChannels()) ? i : -1;
+    return juce::isPositiveAndBelow (i, getNumFaderChannels()) ? i : -1;
 }
 
 int ExternalController::getNumFaderChannels() const noexcept
@@ -196,6 +253,9 @@ void ExternalController::midiInOutDevicesChanged()
 
     auto& dm = engine.getDeviceManager();
 
+    for (auto& i : inputDevices)
+        i = nullptr;
+
     for (int i = dm.getNumMidiInDevices(); --i >= 0;)
     {
         CRASH_TRACER
@@ -203,27 +263,48 @@ void ExternalController::midiInOutDevicesChanged()
 
         if (min != nullptr && min->isEnabled())
         {
-            if (min->getName().equalsIgnoreCase (inputDeviceName))
+            bool used = false;
+            for (int j = 0; j < numDevices; j++)
+            {
+                if (min->getName().equalsIgnoreCase (inputDeviceName[j]))
+                {
+                    inputDevices[j] = min;
+                    used = true;
+                }
+            }
+
+            if (used)
                 min->setExternalController (this);
             else
                 min->removeExternalController (this);
         }
     }
 
-    outputDevice = nullptr;
+    for (auto& o : outputDevices)
+        o = nullptr;
 
     for (int i = dm.getNumMidiOutDevices(); --i >= 0;)
     {
         CRASH_TRACER
-        auto mo = dm.getMidiOutDevice(i);
+        auto mo = dm.getMidiOutDevice (i);
 
-        if (mo != nullptr && mo->isEnabled() && mo->getName().equalsIgnoreCase (outputDeviceName))
+        for (int j = 0; j < numDevices; j++)
         {
-            outputDevice = mo;
-            mo->setSendControllerMidiClock (wantsClock);
+            if (mo != nullptr && mo->isEnabled() && mo->getName().equalsIgnoreCase (outputDeviceName[j]))
+            {
+                outputDevices[j] = mo;
+                mo->setSendControllerMidiClock (wantsClock);
+            }
         }
     }
 
+    startTimer (100);
+}
+
+void ExternalController::timerCallback()
+{
+    stopTimer();
+    
     CRASH_TRACER
     if (controlSurface != nullptr)
         getControlSurface().initialiseDevice (isEnabled());
@@ -247,21 +328,31 @@ void ExternalController::oscSettingsChanged()
     changeParamBank (0);
 }
 
-void ExternalController::setBackChannelDevice (const String& nameOfMidiOutput)
+void ExternalController::setBackChannelDevice (int idx, const juce::String& nameOfMidiOutput)
 {
     CRASH_TRACER
 
     if (nameOfMidiOutput.isNotEmpty())
     {
         for (auto c : getExternalControllerManager().getControllers())
-            if (c != this && c->getBackChannelDevice() == nameOfMidiOutput)
-                c->setBackChannelDevice ({});
+            for (int i = 0; i < maxDevices; i++)
+                if (c != this && c->getBackChannelDevice (i) == nameOfMidiOutput)
+                    c->setBackChannelDevice (i, {});
     }
 
-    outputDeviceName = nameOfMidiOutput;
-    engine.getPropertyStorage().setPropertyItem (SettingID::externControlOut, getName(), outputDeviceName);
+    outputDeviceName[idx] = nameOfMidiOutput;
+    engine.getPropertyStorage().setPropertyItem (SettingID::externControlOut, getName() + (idx > 0 ? juce::String (idx) : juce::String()), outputDeviceName[idx]);
 
     midiInOutDevicesChanged();
+}
+
+bool ExternalController::isUsingMidiOutputDevice (const MidiOutputDevice* d) const noexcept
+{
+    for (auto od : outputDevices)
+        if (od == d)
+            return true;
+    
+    return false;
 }
 
 void ExternalController::setOSCInputPort (int port)
@@ -288,7 +379,7 @@ void ExternalController::setOSCOutputAddress (const juce::String addr)
     oscSettingsChanged();
 }
 
-void ExternalController::setSelectionColour (Colour c)
+void ExternalController::setSelectionColour (juce::Colour c)
 {
     if (selectionColour != c)
     {
@@ -384,12 +475,12 @@ void ExternalController::clickChanged (bool isOn)
         getControlSurface().clickOnOffChanged (isOn);
 }
 
-void ExternalController::channelLevelChanged (int channelNum, float level)
+void ExternalController::channelLevelChanged (int channelNum, float l, float r)
 {
     int i = getFaderIndexInActiveRegion (channelNum);
 
     if (i >= 0)
-        getControlSurface().channelLevelChanged (i, level);
+        getControlSurface().channelLevelChanged (i, l, r);
 }
 
 void ExternalController::masterLevelsChanged (float leftLevel, float rightLevel)
@@ -443,8 +534,9 @@ void ExternalController::changePluginPreset (int delta)
 {
     if (auto ep = dynamic_cast<ExternalPlugin*> (getCurrentPlugin()))
         if (ep->getNumPrograms() > 1)
-            ep->setCurrentProgram (jlimit (0, ep->getNumPrograms() - 1,
-                                           ep->getCurrentProgram() + delta),
+            ep->setCurrentProgram (juce::jlimit (0,
+                                                 ep->getNumPrograms() - 1,
+                                                 ep->getCurrentProgram() + delta),
                                    true);
 }
 
@@ -469,21 +561,24 @@ void ExternalController::changeFaderBank (int delta, bool moveSelection)
         if (getEdit() != nullptr)
         {
             CRASH_TRACER
-            SortedSet<int> selectedChannels;
+            juce::SortedSet<int> selectedChannels;
 
             auto& ecm = getExternalControllerManager();
 
             for (int i = channelStart; i < (channelStart + getNumFaderChannels()); ++i)
                 selectedChannels.add(i);
 
-            channelStart = jmin (jlimit (0, 127, channelStart + delta),
-                                 jmax (0, ecm.getNumChannelTracks() - (allowBankingOffEnd ? 1 : getNumFaderChannels())));
+            channelStart = std::min (juce::jlimit (0, 127, channelStart + delta),
+                                     std::max (0, ecm.getNumChannelTracks()
+                                                    - (allowBankingOffEnd ? 1 : getNumFaderChannels())));
 
             for (int i = channelStart; i < (channelStart + getNumFaderChannels()); ++i)
+            {
                 if (selectedChannels.contains(i))
                     selectedChannels.removeValue(i);
                 else
                     selectedChannels.add(i);
+            }
 
             updateDeviceState();
 
@@ -547,7 +642,9 @@ void ExternalController::updateParamList()
 
             if (controlSurface != nullptr)
             {
-                startParamNumber = jlimit (0, jmax (0, possibleParams.size() - getControlSurface().numParameterControls), startParamNumber);
+                startParamNumber = juce::jlimit (0,
+                                                 std::max (0, possibleParams.size() - getControlSurface().numParameterControls),
+                                                 startParamNumber);
 
                 for (int i = 0; i < getControlSurface().numParameterControls && i + startParamNumber < possibleParams.size(); ++i)
                     currentParams.add (possibleParams[startParamNumber + i]);
@@ -623,8 +720,10 @@ void ExternalController::updateParameters()
                 if (pn.length() > cs.numCharactersForParameterLabels)
                     pn = shortenName (pn, 7);
 
-                pn.copyToUTF8 (param.label, (size_t) jmin (cs.numCharactersForParameterLabels, (int) sizeof (param.label) - 1));
-                param.value = jlimit (0.0f, 1.0f, p->valueRange.convertTo0to1 (p->getCurrentBaseValue()));
+                pn.copyToUTF8 (param.label, (size_t) std::min (cs.numCharactersForParameterLabels,
+                                                               (int) sizeof (param.label) - 1));
+
+                param.value = juce::jlimit (0.0f, 1.0f, p->valueRange.convertTo0to1 (p->getCurrentBaseValue()));
 
                 auto s = p->getLabelForValue (p->getCurrentBaseValue());
 
@@ -643,7 +742,7 @@ void ExternalController::updateParameters()
                     s = shortenName (s, 7);
 
                 if (s.length() < 6)
-                    s = String ("       ").substring (0, (7 - s.length()) / 2) + s;
+                    s = juce::String ("       ").substring (0, (7 - s.length()) / 2) + s;
 
                 s.copyToUTF8 (param.valueDescription, 6);
 
@@ -663,16 +762,16 @@ void ExternalController::updateParameters()
                     {
                         if (t != nullptr)
                             shortenName (t->getName(), 7)
-                                .copyToUTF8 (param.label, (size_t) jmin (cs.numCharactersForParameterLabels,
-                                                                         (int) sizeof (param.label) - 1));
+                                .copyToUTF8 (param.label, (size_t) std::min (cs.numCharactersForParameterLabels,
+                                                                             (int) sizeof (param.label) - 1));
 
                         cs.parameterChanged (i, param);
                     }
                     else if (startParamNumber + i == 1)
                     {
                         shortenName (plugin->getName(), 7)
-                            .copyToUTF8 (param.label, (size_t) jmin (cs.numCharactersForParameterLabels,
-                                                                     (int) sizeof (param.label) - 1));
+                            .copyToUTF8 (param.label, (size_t) std::min (cs.numCharactersForParameterLabels,
+                                                                         (int) sizeof (param.label) - 1));
 
                         cs.parameterChanged (i, param);
                     }
@@ -806,6 +905,12 @@ void ExternalController::updatePunchLights()
             cs->punchOnOffChanged (ed->recordingPunchInOut);
 }
 
+void ExternalController::updateScrollLights()
+{
+    if (auto cs = controlSurface.get())
+        cs->scrollOnOffChanged (AppFunctions::isScrolling());
+}
+
 void ExternalController::updateUndoLights()
 {
     if (auto ed = getEdit())
@@ -852,7 +957,7 @@ void ExternalController::updateDeviceState()
 
                         updateSoloAndMute (chan, t->getMuteAndSoloLightState(), true);
 
-                        channelLevelChanged (chan, 0.0f);
+                        channelLevelChanged (chan, 0.0f, 0.0f);
 
                         if (auto sm = ecm.getSelectionManager())
                             trackSelected (chan, sm->isSelected (t));
@@ -862,7 +967,7 @@ void ExternalController::updateDeviceState()
                         moveFader (chan, decibelsToVolumeFaderPosition (0.0f));
                         movePanPot (chan, 0.0f);
                         updateSoloAndMute (chan, {}, false);
-                        channelLevelChanged (chan, 0.0f);
+                        channelLevelChanged (chan, 0.0f, 0.0f);
                         trackSelected (chan, false);
                     }
                 }
@@ -881,18 +986,18 @@ void ExternalController::updateDeviceState()
                 moveMasterFaders (gainToVolumeFaderPosition (l),
                                   gainToVolumeFaderPosition (r));
 
-                StringArray trackNames;
+                juce::StringArray trackNames;
 
                 for (int i = 0; i < getNumFaderChannels(); ++i)
                 {
-                    String name;
+                    juce::String name;
 
                     if (auto track = ecm.getChannelTrack (i + channelStart))
                     {
-                        String trackName (track->getName());
+                        juce::String trackName (track->getName());
 
                         if (trackName.startsWithIgnoreCase (TRANS("Track") + " ") && trackName.length() > maxTrackNameChars)
-                            trackName = String (trackName.getTrailingIntValue());
+                            trackName = juce::String (trackName.getTrailingIntValue());
                         else if (trackName.length() > maxTrackNameChars)
                             trackName = shortenName (trackName, 7);
 
@@ -903,6 +1008,9 @@ void ExternalController::updateDeviceState()
                 }
 
                 cs.faderBankChanged (channelStart, trackNames);
+
+                if (cs.showingMarkers())
+                    ecm.updateMarkers();
             }
 
             if (auto tc = getTransport())
@@ -917,6 +1025,7 @@ void ExternalController::updateDeviceState()
                 snapChanged (tc->snapToTimecode);
                 loopChanged (tc->looping);
                 clickChanged (edit->clickTrackEnabled);
+                cs.scrollOnOffChanged (AppFunctions::isScrolling());
                 cs.punchOnOffChanged (edit->recordingPunchInOut);
                 cs.slaveOnOffChanged (edit->isTimecodeSyncEnabled());
 
@@ -972,18 +1081,29 @@ void ExternalController::auxSendLevelsChanged()
     }
 }
 
-void ExternalController::acceptMidiMessage (const MidiMessage& m)
+void ExternalController::acceptMidiMessage (MidiInputDevice& d, const juce::MidiMessage& m)
 {
     CRASH_TRACER
-    const ScopedLock sl (incomingMidiLock);
-    pendingMidiMessages.add (m);
+    const juce::ScopedLock sl (incomingMidiLock);
+
+    int idx = 0;
+    for (int i = 0; i < int (std::size (inputDevices)); i++)
+        if (inputDevices[i] == &d)
+            idx = i;
+
+    pendingMidiMessages.add ({idx, m});
     processMidi = true;
     triggerAsyncUpdate();
 }
 
-bool ExternalController::wantsMessage (const MidiMessage& m)
+bool ExternalController::wantsMessage (MidiInputDevice& d, const juce::MidiMessage& m)
 {
-    return controlSurface != nullptr && getControlSurface().wantsMessage (m);
+    int idx = 0;
+    for (int i = 0; i < int (std::size (inputDevices)); i++)
+        if (inputDevices[i] == &d)
+            idx = i;
+
+    return controlSurface != nullptr && getControlSurface().wantsMessage (idx, m);
 }
 
 bool ExternalController::eatsAllMessages() const
@@ -1007,16 +1127,16 @@ void ExternalController::handleAsyncUpdate()
         {
             CRASH_TRACER
 
-            juce::Array<juce::MidiMessage> messages;
+            juce::Array<std::pair<int, juce::MidiMessage>> messages;
             messages.ensureStorageAllocated (16);
 
             {
-                const ScopedLock sl (incomingMidiLock);
+                const juce::ScopedLock sl (incomingMidiLock);
                 messages.swapWith (pendingMidiMessages);
             }
 
             for (auto& m : messages)
-                getControlSurface().acceptMidiMessage (m);
+                getControlSurface().acceptMidiMessage (m.first, m.second);
         }
     }
 
@@ -1032,10 +1152,10 @@ juce::String ExternalController::getNoDeviceSelectedMessage()
     return "<" + TRANS("No Device Selected") + ">";
 }
 
-StringArray ExternalController::getMidiInputPorts() const
+juce::StringArray ExternalController::getMidiInputPorts() const
 {
     CRASH_TRACER
-    StringArray inputNames;
+    juce::StringArray inputNames;
     inputNames.add (getNoDeviceSelectedMessage());
 
     auto& dm = engine.getDeviceManager();
@@ -1048,10 +1168,10 @@ StringArray ExternalController::getMidiInputPorts() const
     return inputNames;
 }
 
-StringArray ExternalController::getMidiOutputPorts() const
+juce::StringArray ExternalController::getMidiOutputPorts() const
 {
     CRASH_TRACER
-    StringArray outputNames;
+    juce::StringArray outputNames;
     outputNames.add (getNoDeviceSelectedMessage());
     auto& dm = engine.getDeviceManager();
 
@@ -1072,7 +1192,7 @@ bool ExternalController::shouldTrackBeColoured (int channelNum)
             && isEnabled();
 }
 
-void ExternalController::getTrackColour (int channelNum, Colour& color)
+void ExternalController::getTrackColour (int channelNum, juce::Colour& color)
 {
     if (channelNum >= channelStart
          && channelNum < channelStart + getNumFaderChannels()
@@ -1096,7 +1216,7 @@ bool ExternalController::shouldPluginBeColoured (Plugin* p)
             && isEnabled();
 }
 
-void ExternalController::getPluginColour (Plugin* plugin, Colour& color)
+void ExternalController::getPluginColour (Plugin* plugin, juce::Colour& color)
 {
     if (shouldPluginBeColoured (plugin) && getShowSelectionColour() && isEnabled())
     {
@@ -1148,22 +1268,24 @@ void ExternalController::updateMarkers()
 
             if (allMarkers.size() > 0)
             {
-                startMarkerNumber = jlimit (0, jmax (0, allMarkers.size() - cs.numMarkers), startMarkerNumber);
+                startMarkerNumber = juce::jlimit (0,
+                                                  std::max (0, allMarkers.size() - cs.numMarkers),
+                                                  startMarkerNumber);
 
                 for (int i = 0; (i < cs.numMarkers) && (i + startMarkerNumber < allMarkers.size()); ++i)
                 {
                     if (auto mc = allMarkers.getObjectPointer (i + startMarkerNumber))
                     {
-                        String pn (mc->getName().replace ("marker", "mk", true));
+                        juce::String pn (mc->getName().replace ("marker", "mk", true));
 
                         if (pn.isEmpty())
-                            pn = String (mc->getMarkerID());
+                            pn = juce::String (mc->getMarkerID());
                         else if (pn.length() > cs.numCharactersForMarkerLabels)
                             pn = shortenName (pn, 7);
 
                         MarkerSetting ms;
-                        pn.copyToUTF8 (ms.label, (size_t) jmin (cs.numCharactersForMarkerLabels,
-                                                                (int) sizeof (ms.label) - 1));
+                        pn.copyToUTF8 (ms.label, (size_t) std::min (cs.numCharactersForMarkerLabels,
+                                                                    (int) sizeof (ms.label) - 1));
                         ms.number   = mc->getMarkerID();
                         ms.absolute = mc->isSyncAbsolute();
 
@@ -1183,14 +1305,14 @@ void ExternalController::changeAuxBank (int delta)
 {
     if (controlSurface != nullptr)
     {
-        auxBank = jlimit (-1, 7, auxBank + delta);
+        auxBank = juce::jlimit (-1, 7, auxBank + delta);
 
         getControlSurface().auxBankChanged (auxBank);
         auxSendLevelsChanged();
     }
 }
 
-juce::String ExternalController::shortenName (String s, int maxLen)
+juce::String ExternalController::shortenName (juce::String s, int maxLen)
 {
     if (s.length() < maxLen)
         return s;
@@ -1205,10 +1327,10 @@ juce::String ExternalController::shortenName (String s, int maxLen)
 
     for (int i = 0; i < s.length(); ++i)
     {
-        const bool isVowel = String ("aeiou").containsChar (s[i]);
+        const bool isVowel = juce::String ("aeiou").containsChar (s[i]);
 
         hasSeenConsonant = (hasSeenConsonant || ! isVowel)
-                             && ! CharacterFunctions::isWhitespace (s[i]);
+                             && ! juce::CharacterFunctions::isWhitespace (s[i]);
 
         if (! (hasSeenConsonant && isVowel))
             result += s[i];

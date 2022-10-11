@@ -438,7 +438,7 @@ void SelectedMidiEvents::setVelocities (int newVelocity)
         note->setVelocity (newVelocity, undoManager);
 }
 
-void SelectedMidiEvents::changeColour (juce::uint8 newColour)
+void SelectedMidiEvents::changeColour (uint8_t newColour)
 {
     auto undoManager = &getEdit().getUndoManager();
 

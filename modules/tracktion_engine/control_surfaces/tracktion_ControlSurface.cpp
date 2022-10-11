@@ -61,21 +61,27 @@ Edit* ControlSurface::getEditIfOnEditScreen() const
     return {};
 }
 
-void ControlSurface::sendMidiCommandToController (const void* midiData, int numBytes)
+void ControlSurface::sendMidiCommandToController (int idx, const void* midiData, int numBytes)
 {
-    sendMidiCommandToController (MidiMessage (midiData, numBytes));
+    sendMidiCommandToController (idx, juce::MidiMessage (midiData, numBytes));
 }
 
-void ControlSurface::sendMidiCommandToController (const MidiMessage& m)
+void ControlSurface::sendMidiCommandToController (int idx, const juce::MidiMessage& m)
 {
-    if (auto dev = owner->outputDevice)
-        dev->fireMessage (m);
+    if (owner != nullptr)
+        if (auto dev = owner->outputDevices[idx])
+            dev->fireMessage (m);
 }
 
 bool ControlSurface::isSafeRecording() const
 {
     return edit != nullptr && edit->getTransport().isSafeRecording();
 }
+
+int ControlSurface::getMarkerBankOffset() const { return owner->getMarkerBankOffset();  }
+int ControlSurface::getFaderBankOffset() const  { return owner->getFaderBankOffset();   }
+int ControlSurface::getAuxBankOffset() const    { return owner->getAuxBankOffset();     }
+int ControlSurface::getParamBankOffset() const  { return owner->getParamBankOffset();   }
 
 #define RETURN_IF_SAFE_RECORDING  if (isSafeRecording()) return;
 
@@ -85,16 +91,18 @@ void ControlSurface::performIfNotSafeRecording (const std::function<void()>& f)
     f();
 }
 
-void ControlSurface::userMovedFader (int channelNum, float newSliderPos)
+void ControlSurface::userMovedFader (int channelNum, float newSliderPos, bool delta)
 {
     RETURN_IF_SAFE_RECORDING
-    externalControllerManager.userMovedFader (owner->channelStart + channelNum, newSliderPos);
+    if (delta || pickedUp (ctrlFader, channelNum, newSliderPos))
+        externalControllerManager.userMovedFader (owner->channelStart + channelNum, newSliderPos, delta);
 }
 
-void ControlSurface::userMovedMasterLevelFader (float newLevel)
+void ControlSurface::userMovedMasterLevelFader (float newLevel, bool delta)
 {
     RETURN_IF_SAFE_RECORDING
-    externalControllerManager.userMovedMasterFader (getEdit(), newLevel);
+    if (delta || pickedUp (ctrlMasterFader, newLevel))
+        externalControllerManager.userMovedMasterFader (getEdit(), newLevel, delta);
 }
 
 void ControlSurface::userMovedMasterPanPot (float newLevel)
@@ -109,16 +117,18 @@ void ControlSurface::userMovedQuickParam (float newLevel)
     externalControllerManager.userMovedQuickParam(newLevel);
 }
 
-void ControlSurface::userMovedPanPot (int channelNum, float newPan)
+void ControlSurface::userMovedPanPot (int channelNum, float newPan, bool delta)
 {
     RETURN_IF_SAFE_RECORDING
-    externalControllerManager.userMovedPanPot (owner->channelStart + channelNum, newPan);
+    if (delta || pickedUp (ctrlPan, channelNum, newPan))
+        externalControllerManager.userMovedPanPot (owner->channelStart + channelNum, newPan, delta);
 }
 
 void ControlSurface::userMovedAux (int channelNum, float newPosition)
 {
     RETURN_IF_SAFE_RECORDING
-    externalControllerManager.userMovedAux (owner->channelStart + channelNum, owner->auxBank, newPosition);
+    if (pickedUp (ctrlAux, channelNum, newPosition))
+        externalControllerManager.userMovedAux (owner->channelStart + channelNum, owner->auxBank, newPosition);
 }
 
 void ControlSurface::userPressedAux (int channelNum)
@@ -189,21 +199,18 @@ void ControlSurface::userPressedRecEnable (int channelNum, bool enableEtoE)
     {
         channelNum += owner->channelStart;
 
-        if (externalControllerManager.getChannelTrack (channelNum) != nullptr)
+        if (auto track = externalControllerManager.getChannelTrack (channelNum))
         {
-            Array<InputDeviceInstance*> activeDev, inactiveDev;
+            juce::Array<InputDeviceInstance*> activeDev, inactiveDev;
 
             for (auto in : ed->getAllInputDevices())
             {
-                for (auto t : in->getTargetTracks())
+                if (in->isOnTargetTrack (*track))
                 {
-                    if (externalControllerManager.mapTrackNumToChannelNum (t->getIndexInEditTrackList()) == channelNum)
-                    {
-                        if (in->isRecordingActive (*t))
-                            activeDev.add (in);
-                        else
-                            inactiveDev.add (in);
-                    }
+                    if (in->isRecordingActive (*track))
+                        activeDev.add (in);
+                    else
+                        inactiveDev.add (in);
                 }
             }
 
@@ -220,14 +227,12 @@ void ControlSurface::userPressedRecEnable (int channelNum, bool enableEtoE)
                 if (activeDev.size() > 0)
                 {
                     for (auto dev : activeDev)
-                        for (auto t : dev->getTargetTracks())
-                            dev->setRecordingEnabled (*t, false);
+                        dev->setRecordingEnabled (*track, false);
                 }
                 else
                 {
                     for (auto dev : inactiveDev)
-                        for (auto t : dev->getTargetTracks())
-                            dev->setRecordingEnabled (*t, true);
+                        dev->setRecordingEnabled (*track, true);
                 }
 
                 if (activeDev.size() > 0 || inactiveDev.size() > 0)
@@ -239,9 +244,16 @@ void ControlSurface::userPressedRecEnable (int channelNum, bool enableEtoE)
 
 void ControlSurface::userPressedHome()         { performIfNotSafeRecording (&AppFunctions::goToStart); }
 void ControlSurface::userPressedEnd()          { performIfNotSafeRecording (&AppFunctions::goToEnd); }
-void ControlSurface::userPressedMarkIn()       { performIfNotSafeRecording (&AppFunctions::markIn); }
-void ControlSurface::userPressedMarkOut()      { performIfNotSafeRecording (&AppFunctions::markOut); }
-
+void ControlSurface::userPressedMarkIn()
+{
+    RETURN_IF_SAFE_RECORDING
+    AppFunctions::markIn (true);
+}
+void ControlSurface::userPressedMarkOut()
+{
+    RETURN_IF_SAFE_RECORDING
+    AppFunctions::markOut (true);
+}
 void ControlSurface::userPressedPlay()         { performIfNotSafeRecording (&AppFunctions::startStopPlay); }
 void ControlSurface::userPressedRecord()       { performIfNotSafeRecording (&AppFunctions::record); }
 
@@ -336,7 +348,8 @@ void ControlSurface::userMovedJogWheel (float amount)
 void ControlSurface::userMovedParameterControl (int parameter, float newValue)
 {
     RETURN_IF_SAFE_RECORDING
-    owner->userMovedParameterControl (parameter, newValue);
+    if (pickedUp (ctrlParam, parameter, newValue))
+        owner->userMovedParameterControl (parameter, newValue);
 }
 
 void ControlSurface::userPressedParameterControl (int paramNumber)
@@ -420,14 +433,135 @@ void ControlSurface::userPressedDelete (bool marked)
                                       : &AppFunctions::deleteSelected);
 }
 
-void ControlSurface::userPressedZoomFitToTracks()      { performIfNotSafeRecording (&AppFunctions::zoomToFitVertically); }
-void ControlSurface::userPressedInsertTempoChange()    { performIfNotSafeRecording (&AppFunctions::insertTempoChange); }
-void ControlSurface::userPressedInsertPitchChange()    { performIfNotSafeRecording (&AppFunctions::insertPitchChange); }
-void ControlSurface::userPressedInsertTimeSigChange()  { performIfNotSafeRecording (&AppFunctions::insertTimeSigChange); }
+void ControlSurface::userPressedZoomFitToTracks()       { performIfNotSafeRecording (&AppFunctions::zoomToFitVertically); }
+void ControlSurface::userPressedInsertTempoChange()     { performIfNotSafeRecording (&AppFunctions::insertTempoChange); }
+void ControlSurface::userPressedInsertPitchChange()     { performIfNotSafeRecording (&AppFunctions::insertPitchChange); }
+void ControlSurface::userPressedInsertTimeSigChange()   { performIfNotSafeRecording (&AppFunctions::insertTimeSigChange); }
 
-void ControlSurface::userToggledVideoWindow()          { performIfNotSafeRecording (&AppFunctions::showHideVideo); }
+void ControlSurface::userToggledVideoWindow()           { performIfNotSafeRecording (&AppFunctions::showHideVideo); }
+void ControlSurface::userToggledMixerWindow (bool fs)
+{
+    RETURN_IF_SAFE_RECORDING
+    AppFunctions::showHideMixer (fs);
+}
+void ControlSurface::userToggledMidiEditorWindow (bool fs)
+{
+    RETURN_IF_SAFE_RECORDING
+    AppFunctions::showHideMidiEditor (fs);
+}
+void ControlSurface::userToggledTrackEditorWindow (bool zoom)
+{
+    RETURN_IF_SAFE_RECORDING
+    AppFunctions::showHideTrackEditor (zoom);
+}
+void ControlSurface::userToggledBrowserWindow()         { performIfNotSafeRecording (&AppFunctions::showHideBrowser); }
+void ControlSurface::userToggledActionsWindow()         { performIfNotSafeRecording (&AppFunctions::showHideActions); }
+void ControlSurface::userPressedUserAction (int action)
+{
+    RETURN_IF_SAFE_RECORDING
+    AppFunctions::performUserAction (action);
+}
 
-void ControlSurface::redrawSelectedPlugin()            { owner->repaintParamSource(); }
-void ControlSurface::redrawSelectedTracks()            { owner->redrawTracks(); }
+void ControlSurface::redrawSelectedPlugin()             { owner->repaintParamSource(); }
+void ControlSurface::redrawSelectedTracks()             { owner->redrawTracks(); }
+
+bool ControlSurface::pickedUp (ControlType type, float value)
+{
+    return pickedUp (type, 0, value);
+}
+
+void ControlSurface::moveFader (int channelNum, float newSliderPos)
+{
+    if (! pickUpMode) return;
+
+    auto& info = pickUpMap[{ctrlFader, channelNum}];
+    info.lastOut = newSliderPos;
+
+    if (info.lastIn.has_value())
+        info.pickedUp = std::abs (info.lastOut - *info.lastIn) <= 1.0f / 127.0f;
+    else
+        info.pickedUp = false;
+}
+
+void ControlSurface::movePanPot (int channelNum, float newPan)
+{
+    if (! pickUpMode) return;
+
+    auto& info = pickUpMap[{ctrlPan, channelNum}];
+    info.lastOut = newPan;
+
+    if (info.lastIn.has_value())
+        info.pickedUp = std::abs (info.lastOut - *info.lastIn) <= 1.0f / 127.0f;
+    else
+        info.pickedUp = false;
+}
+
+void ControlSurface::moveAux (int channel, const char*, float newPos)
+{
+    if (! pickUpMode) return;
+
+    auto& info = pickUpMap[{ctrlAux, channel}];
+    info.lastOut = newPos;
+
+    if (info.lastIn.has_value())
+        info.pickedUp = std::abs (info.lastOut - *info.lastIn) <= 1.0f / 127.0f;
+    else
+        info.pickedUp = false;
+}
+
+void ControlSurface::moveMasterLevelFader (float newLeftSliderPos, float newRightSliderPos)
+{
+    if (! pickUpMode) return;
+
+    auto& info = pickUpMap[{ctrlMasterFader, 0}];
+    info.lastOut = (newLeftSliderPos + newRightSliderPos) / 2;
+
+    if (info.lastIn.has_value())
+        info.pickedUp = std::abs (info.lastOut - *info.lastIn) <= 1.0f / 127.0f;
+    else
+        info.pickedUp = false;
+}
+
+void ControlSurface::parameterChanged (int parameterNumber, const ParameterSetting& newValue)
+{
+    if (! pickUpMode) return;
+
+    auto& info = pickUpMap[{ctrlAux, parameterNumber}];
+    info.lastOut = newValue.value;
+
+    if (info.lastIn.has_value())
+        info.pickedUp = std::abs (info.lastOut - *info.lastIn) <= 1.0f / 127.0f;
+    else
+        info.pickedUp = false;
+}
+
+bool ControlSurface::pickedUp (ControlType type, int index, float value)
+{
+    if (! pickUpMode) return true;
+
+    bool crossed = false;
+
+    auto& info = pickUpMap[{type, index}];
+    if (! info.lastIn.has_value())
+    {
+        crossed = std::abs (value - info.lastOut) <= 1.0f / 127.0f;
+    }
+    else
+    {
+        auto v1 = value;
+        auto v2 = *info.lastIn;
+
+        if (v1 > v2)
+            std::swap (v1, v2);
+
+        crossed = (info.lastOut >= v1 && info.lastOut <= v2);
+    }
+
+    info.lastIn = value;
+    if (crossed)
+        info.pickedUp = true;
+
+    return info.pickedUp;
+}
 
 }

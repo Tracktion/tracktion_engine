@@ -33,7 +33,7 @@ private:
     //==============================================================================
     InputDeviceInstance& instance;
     WaveInputDevice& waveInputDevice;
-    juce::uint32 lastCallbackTime = 0;
+    uint32_t lastCallbackTime = 0;
     tracktion_graph::AudioFifo audioFifo { 1, 32 };
     const juce::AudioChannelSet destChannels;
 };

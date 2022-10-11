@@ -97,7 +97,7 @@ private:
 //==============================================================================
 namespace modifier
 {
-    inline StringArray getEnabledNames()
+    inline juce::StringArray getEnabledNames()
     {
         return { NEEDS_TRANS("Disabled"),
                  NEEDS_TRANS("Enabled") };
@@ -198,8 +198,11 @@ struct SuffixedParameter    : public AutomatableParameter
 
 //==============================================================================
 //==============================================================================
-static inline AutomatableParameter* createDiscreteParameter (AutomatableEditItem& item, const String& paramID, const String& name,
-                                                             Range<float> valueRange, CachedValue<float>& val, const StringArray& labels)
+static inline AutomatableParameter* createDiscreteParameter (AutomatableEditItem& item,
+                                                             const juce::String& paramID, const juce::String& name,
+                                                             juce::Range<float> valueRange,
+                                                             juce::CachedValue<float>& val,
+                                                             const juce::StringArray& labels)
 {
     auto p = new DiscreteLabelledParameter (paramID, name, item, valueRange, labels.size(), labels);
     p->attachToCurrentValue (val);
@@ -207,8 +210,11 @@ static inline AutomatableParameter* createDiscreteParameter (AutomatableEditItem
     return p;
 }
 
-static inline AutomatableParameter* createSuffixedParameter (AutomatableEditItem& item, const String& paramID, const String& name,
-                                                             NormalisableRange<float> valueRange, float centreVal, CachedValue<float>& val, const String& suffix)
+static inline AutomatableParameter* createSuffixedParameter (AutomatableEditItem& item,
+                                                             const juce::String& paramID, const juce::String& name,
+                                                             juce::NormalisableRange<float> valueRange, float centreVal,
+                                                             juce::CachedValue<float>& val,
+                                                             const juce::String& suffix)
 {
     valueRange.setSkewForCentre (centreVal);
     auto p = new SuffixedParameter (paramID, name, item, valueRange, suffix);

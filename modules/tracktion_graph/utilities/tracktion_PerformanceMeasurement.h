@@ -15,6 +15,9 @@
  #include <sys/kdebug_signpost.h>
 #endif
 
+namespace tracktion_graph
+{
+
 //==============================================================================
 //==============================================================================
 /**
@@ -28,7 +31,10 @@ struct ScopedSignpost
     {
         (void) index;
        #ifdef __APPLE__
+        #pragma clang diagnostic push
+        #pragma clang diagnostic ignored "-Wdeprecated"
         kdebug_signpost_start (index, 0, 0, 0, 0);
+        #pragma clang diagnostic pop
        #endif
     }
     
@@ -36,7 +42,10 @@ struct ScopedSignpost
     ~ScopedSignpost()
     {
        #ifdef __APPLE__
+        #pragma clang diagnostic push
+        #pragma clang diagnostic ignored "-Wdeprecated"
         kdebug_signpost_end (index, 0, 0, 0, 0);
+        #pragma clang diagnostic pop
        #endif
     }
     
@@ -76,7 +85,8 @@ public:
                                 printStatistics()
     */
     PerformanceMeasurement (const std::string& counterName,
-                            int runsPerPrintout = 100);
+                            int runsPerPrintout = 100,
+                            bool printOnDestruction = true);
 
     /** Destructor. */
     ~PerformanceMeasurement();
@@ -105,6 +115,7 @@ public:
         Statistics() noexcept = default;
 
         void clear() noexcept;
+        double getVariance() const;
         std::string toString() const;
 
         void addResult (double elapsed) noexcept;
@@ -118,6 +129,9 @@ public:
         int64_t numRuns = 0;
     };
 
+    /** Returns a copy of the current stats. */
+    Statistics getStatistics() const;
+
     /** Returns a copy of the current stats, and resets the internal counter. */
     Statistics getStatisticsAndReset();
 
@@ -125,6 +139,7 @@ private:
     //==============================================================================
     Statistics stats;
     int64_t runsPerPrint;
+    bool printOnDestruction;
     std::chrono::time_point<std::chrono::high_resolution_clock> startTime;
 };
 
@@ -168,15 +183,15 @@ public:
 //
 //==============================================================================
 
-inline PerformanceMeasurement::PerformanceMeasurement (const std::string& name, int runsPerPrintout)
-    : runsPerPrint (runsPerPrintout)
+inline PerformanceMeasurement::PerformanceMeasurement (const std::string& name, int runsPerPrintout, bool shouldPrintOnDestruction)
+    : runsPerPrint (runsPerPrintout), printOnDestruction (shouldPrintOnDestruction)
 {
     stats.name = name;
 }
 
 inline PerformanceMeasurement::~PerformanceMeasurement()
 {
-    if (stats.numRuns > 0)
+    if (printOnDestruction && stats.numRuns > 0)
         printStatistics();
 }
 
@@ -208,6 +223,11 @@ inline void PerformanceMeasurement::Statistics::addResult (double elapsed) noexc
     m2 += delta * delta2;
 }
 
+inline double PerformanceMeasurement::Statistics::getVariance() const
+{
+    return numRuns > 0 ? (m2 / (double) numRuns) : 0.0;
+}
+
 inline std::string PerformanceMeasurement::Statistics::toString() const
 {
     auto timeToString = [] (double secs)
@@ -216,12 +236,11 @@ inline std::string PerformanceMeasurement::Statistics::toString() const
                 + (secs < 0.01 ? " us" : " ms");
     };
 
-    const double variance = m2 / (double) numRuns;
     std::string s = "Performance count for \"" + name + "\" over " + std::to_string (numRuns) + " run(s)\n"
                     + "Mean = "     + timeToString (meanSeconds)
                     + ", min = "    + timeToString (minimumSeconds)
                     + ", max = "    + timeToString (maximumSeconds)
-                    + ", SD = "     + timeToString (std::sqrt (variance))
+                    + ", SD = "     + timeToString (std::sqrt (getVariance()))
                     + ", total = "  + timeToString (totalSeconds) + "\n";
 
     return s;
@@ -253,10 +272,17 @@ inline void PerformanceMeasurement::printStatistics()
     std::cout << (desc);
 }
 
+inline PerformanceMeasurement::Statistics PerformanceMeasurement::getStatistics() const
+{
+    return stats;
+}
+
 inline PerformanceMeasurement::Statistics PerformanceMeasurement::getStatisticsAndReset()
 {
     Statistics s (stats);
     stats.clear();
 
     return s;
+}
+
 }

@@ -11,7 +11,7 @@
 namespace tracktion_engine
 {
 
-WaveOutputDevice::WaveOutputDevice (Engine& e, const String& deviceName, const std::vector<ChannelIndex>& channels)
+WaveOutputDevice::WaveOutputDevice (Engine& e, const juce::String& deviceName, const std::vector<ChannelIndex>& channels)
     : OutputDevice (e, TRANS("Wave Audio Output"), deviceName),
       deviceChannels (channels),
       channelSet (createChannelSet (channels)),
@@ -44,7 +44,7 @@ void WaveOutputDevice::setEnabled (bool b)
     }
 }
 
-String WaveOutputDevice::openDevice()
+juce::String WaveOutputDevice::openDevice()
 {
     return {};
 }
@@ -115,7 +115,7 @@ void WaveOutputDeviceInstance::prepareToPlay (double, int blockSize)
 {
     outputBuffer.setSize (2, blockSize);
 
-    int ditherDepth = jlimit (16, 32, edit.engine.getDeviceManager().getBitDepth());
+    int ditherDepth = juce::jlimit (16, 32, edit.engine.getDeviceManager().getBitDepth());
 
     ditherers[0].reset (ditherDepth);
     ditherers[1].reset (ditherDepth);
@@ -141,7 +141,7 @@ void WaveOutputDevice::setStereoPair (bool stereo)
     auto& dm = engine.getDeviceManager();
     
     if (deviceChannels.size() == 2)
-        dm.setDeviceOutChannelStereo (jmax (getLeftChannel(), getRightChannel()), stereo);
+        dm.setDeviceOutChannelStereo (std::max (getLeftChannel(), getRightChannel()), stereo);
     else if (deviceChannels.size() == 1)
         dm.setDeviceOutChannelStereo (getLeftChannel(), stereo);
 }

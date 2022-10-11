@@ -19,12 +19,12 @@ EditItem::EditItem (EditItemID id, Edit& ed)
 //==============================================================================
 EditItemID EditItemID::fromVar (const juce::var& v)
 {
-    return fromRawID ((juce::uint64) static_cast<juce::int64> (v));
+    return fromRawID ((uint64_t) static_cast<juce::int64> (v));
 }
 
 EditItemID EditItemID::fromString (const juce::String& s)
 {
-    return fromRawID ((juce::uint64) s.getLargeIntValue());
+    return fromRawID ((uint64_t) s.getLargeIntValue());
 }
 
 EditItemID EditItemID::fromID (const juce::ValueTree& v)
@@ -34,10 +34,10 @@ EditItemID EditItemID::fromID (const juce::ValueTree& v)
 
 void EditItemID::writeID (juce::ValueTree& v, juce::UndoManager* um) const
 {
-    setProperty (v, IDs::id, um);
+    v.setProperty (IDs::id, *this, um);
 }
 
-EditItemID EditItemID::fromRawID (juce::uint64 raw)
+EditItemID EditItemID::fromRawID (uint64_t raw)
 {
     EditItemID i;
     i.itemID = raw;
@@ -46,7 +46,7 @@ EditItemID EditItemID::fromRawID (juce::uint64 raw)
 
 static inline bool isSorted (const std::vector<EditItemID>& ids)
 {
-    juce::uint64 last = 0;
+    uint64_t last = 0;
 
     for (auto id : ids)
     {
@@ -61,7 +61,7 @@ static inline bool isSorted (const std::vector<EditItemID>& ids)
     return true;
 }
 
-EditItemID EditItemID::findFirstIDNotIn (const std::vector<EditItemID>& existingIDs, juce::uint64 rawID)
+EditItemID EditItemID::findFirstIDNotIn (const std::vector<EditItemID>& existingIDs, uint64_t rawID)
 {
     jassert (isSorted (existingIDs)); // the vector must be sorted
 
@@ -110,7 +110,7 @@ void EditItemID::setXML (juce::XmlElement& xml, const char* attributeName) const
 
 juce::var EditItemID::toVar() const
 {
-    return juce::var ((juce::int64) itemID);
+    return juce::var (static_cast<juce::int64> (itemID));
 }
 
 juce::String EditItemID::toString() const
@@ -294,7 +294,7 @@ struct IDRemapping
 
                     if (newID != newIDsToApply.end())
                     {
-                        newID->second.setProperty (v, propName, um);
+                        v.setProperty (propName, newID->second, um);
                     }
                     else
                     {

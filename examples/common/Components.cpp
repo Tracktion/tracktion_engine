@@ -1189,7 +1189,12 @@ void EditComponent::buildTracks()
     {
         TrackComponent* c = nullptr;
         
-        if (t->isTempoTrack())
+        if (t->isMasterTrack())
+        {
+            if (editViewState.showMasterTrack)
+                c = new TrackComponent (editViewState, t);
+        }
+        else if (t->isTempoTrack())
         {
             if (editViewState.showGlobalTrack)
                 c = new TrackComponent (editViewState, t);

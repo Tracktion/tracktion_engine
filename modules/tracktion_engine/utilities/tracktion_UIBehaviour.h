@@ -109,8 +109,16 @@ public:
     virtual void showHideVideo()                                                    {}
     virtual void showHideInputs()                                                   {}
     virtual void showHideOutputs()                                                  {}
+    virtual void showHideMixer ([[maybe_unused]] bool fullscreen)                   {}
+    virtual void showHideMidiEditor ([[maybe_unused]] bool fullscreen)              {}
+    virtual void showHideTrackEditor ([[maybe_unused]] bool zoom)                   {}
+    virtual void showHideBrowser()                                                  {}
+    virtual void showHideActions()                                                  {}
     virtual void showHideAllPanes()                                                 {}
     virtual void toggleScroll()                                                     {}
+    virtual bool isScrolling()                                                      { return false; }
+    
+    virtual void performUserAction (int)                                            {}
 
     virtual void scrollTracksUp()                                                   {}
     virtual void scrollTracksDown()                                                 {}

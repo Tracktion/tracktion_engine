@@ -28,43 +28,47 @@ struct BeatDetect
         sensitivity = C_MIN + newSensitivity * (C_MAX - C_MIN);
     }
 
-    void audioProcess (const float** inputs, int numChans)
+    template <typename Buffer>
+    void audioProcess (const Buffer& buffer)
     {
         double blockEnergy = 0;
+        auto size = buffer.getSize();
 
-        for (int chan = numChans; --chan >= 0;)
+        for (decltype (size.numChannels) chan = 0; chan < size.numChannels; ++chan)
         {
-            const float* const c = inputs[chan];
+            auto d = buffer.getIterator (chan);
 
-            for (int i = 0; i < blockSize; ++i)
-                blockEnergy += static_cast<double> (c[i] * c[i]);
+            for (decltype (size.numFrames) i = 0; i < size.numFrames; ++i)
+            {
+                auto sample = static_cast<double> (*d);
+                blockEnergy += sample * sample;
+                ++d;
+            }
         }
 
         pushEnergy (blockEnergy);
     }
 
-    int getBlockSize()                      { return blockSize; }
-    int getNumBeats()                       { return beatBlocks.size(); }
-    juce::int64 getBeat (int idx) const     { return beatBlocks[idx] * static_cast<juce::int64> (blockSize); }
+    SampleCount getBlockSize() const                    { return blockSize; }
+    const juce::Array<SampleCount>& getBeats() const    { return beatSamples; }
 
 private:
-    enum { historyLength = 43 };
+    static constexpr int historyLength = 43;
     double energy[historyLength] = {};
-    int curBlock = 0;
-    int lastBlock = -2;
-    int blockSize = 0;
-    juce::Array<int> beatBlocks;
+    int curBlock = 0, lastBlock = -2;
+    SampleCount blockSize = 0;
+    juce::Array<SampleCount> beatSamples;
     double sensitivity = 0;
 
     void pushEnergy (double e)
     {
         if (curBlock < historyLength)
         {
-            energy [curBlock++] = e;
+            energy[curBlock++] = e;
 
             if (curBlock == historyLength)
             {
-                double ave = getAverageEnergy();
+                auto ave = getAverageEnergy();
 
                 for (int i = 0; i < historyLength; ++i)
                     if (energy[i] > sensitivity * ave)
@@ -85,19 +89,19 @@ private:
     void addBlock (int i)
     {
         if (i - 1 != lastBlock)
-            beatBlocks.add(i);
+            beatSamples.add (i * blockSize);
 
         lastBlock = i;
     }
 
     double getAverageEnergy() const noexcept
     {
-        double avEnergy = 0;
+        double total = 0;
 
-        for (int i = 0; i < historyLength; ++i)
-            avEnergy += energy[i];
+        for (auto e : energy)
+            total += e;
 
-        return avEnergy / historyLength;
+        return total / historyLength;
     }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BeatDetect)

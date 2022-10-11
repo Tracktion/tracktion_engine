@@ -31,7 +31,7 @@ public:
             bufferIndex = 0;
             buffer.malloc ((size_t) maxSize);
             maxBufferSize = maxSize;
-            bufferSize = jmin (bufferSize, maxBufferSize);
+            bufferSize = std::min (bufferSize, maxBufferSize);
         }
 
         clear();
@@ -52,7 +52,7 @@ public:
         if (newSize < bufferSize)
             bufferIndex = 0;
 
-        bufferSize = jmin (maxBufferSize, newSize);
+        bufferSize = std::min (maxBufferSize, newSize);
     }
 
     /** Gets the buffer size. */
@@ -118,7 +118,7 @@ public:
 
 private:
     //==============================================================================
-    HeapBlock<float> buffer;
+    juce::HeapBlock<float> buffer;
     int bufferIndex = 0, maxBufferSize = 0, bufferWritePos = 0;
     int bufferSize = 0, lastBufferSize = 0;
 
@@ -135,7 +135,7 @@ LatencyPlugin::LatencyPlugin (PluginCreationInfo info)
     delayCompensator[0] = std::make_unique<DelayRegister>();
     delayCompensator[1] = std::make_unique<DelayRegister>();
 
-    latencyTimeSeconds.setConstrainer ([] (float in) { return jlimit (0.0f, 5.0f, in); });
+    latencyTimeSeconds.setConstrainer ([] (float in) { return juce::jlimit (0.0f, 5.0f, in); });
     latencyTimeSeconds.referTo (state, IDs::time, getUndoManager(), 0.0f);
     applyLatency.referTo (state, IDs::apply, getUndoManager(), true);
 
@@ -157,13 +157,13 @@ void LatencyPlugin::initialise (const PluginInitialisationInfo&)
 
     const int maxDelaySamples = (int) std::ceil (5.0 * sampleRate);
 
-    for (int i = numElementsInArray (delayCompensator); --i >= 0;)
+    for (int i = juce::numElementsInArray (delayCompensator); --i >= 0;)
         delayCompensator[i]->setMaxSize (maxDelaySamples);
 }
 
 void LatencyPlugin::deinitialise()
 {
-    for (int i = numElementsInArray (delayCompensator); --i >= 0;)
+    for (int i = juce::numElementsInArray (delayCompensator); --i >= 0;)
         delayCompensator[i]->clear();
 }
 
@@ -175,11 +175,12 @@ void LatencyPlugin::applyToBuffer (const PluginRenderContext& rc)
     if (rc.destBuffer == nullptr)
         return;
 
-    const int delayCompensationSamples =  roundToInt (latencyTimeSeconds.get() * (float) sampleRate);
+    const int delayCompensationSamples =  juce::roundToInt (latencyTimeSeconds.get() * (float) sampleRate);
 
     if (delayCompensationSamples != 0)
     {
-        const int numChannels = jmin (rc.destBuffer->getNumChannels(), numElementsInArray (delayCompensator));
+        const int numChannels = std::min (rc.destBuffer->getNumChannels(),
+                                          juce::numElementsInArray (delayCompensator));
         float** samples = rc.destBuffer->getArrayOfWritePointers();
 
         for (int i = 0; i < numChannels; ++i)

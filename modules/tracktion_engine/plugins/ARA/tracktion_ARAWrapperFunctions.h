@@ -13,7 +13,7 @@ struct ArchivingFunctions
     static ARASize ARA_CALL getArchiveSize (ARAArchivingControllerHostRef,
                                             ARAArchiveReaderHostRef ref)
     {
-        if (auto m = (MemoryBlock*) ref)
+        if (auto m = (juce::MemoryBlock*) ref)
             return (ARASize) m->getSize();
 
         return 0;
@@ -26,11 +26,11 @@ struct ArchivingFunctions
     {
         CRASH_TRACER
 
-        if (auto m = (MemoryBlock*) ref)
+        if (auto m = (juce::MemoryBlock*) ref)
         {
             if ((pos + length) <= m->getSize())
             {
-                std::memcpy (buffer, addBytesToPointer (m->getData(), pos), length);
+                std::memcpy (buffer, juce::addBytesToPointer (m->getData(), pos), length);
                 return kARATrue;
             }
         }
@@ -44,8 +44,8 @@ struct ArchivingFunctions
                                                  const ARAByte buffer[])
     {
         CRASH_TRACER
-        if (auto m = (MemoryOutputStream*) ref)
-            if (m->setPosition ((int64) position) && m->write (buffer, length))
+        if (auto m = (juce::MemoryOutputStream*) ref)
+            if (m->setPosition ((int64_t) position) && m->write (buffer, length))
                 return kARATrue;
 
         return kARAFalse;
@@ -142,7 +142,7 @@ struct MusicalContextFunctions
         static const ARA::ARACircleOfFifthsIndex sharpNoteIndices[] = { 0, 7, 2, 9, 4, -1, 6, 1, 8, 3, 10, 5 };
         static const ARA::ARACircleOfFifthsIndex flatNoteIndices[] = { 0, -5, 2, -3, 4, -1, -6, 1, -4, 3, -2, 5 };
 
-        if (isPositiveAndBelow (note, 128))
+        if (juce::isPositiveAndBelow (note, 128))
         {
             return (useSharps ? sharpNoteIndices[note % 12]
                               : flatNoteIndices[note % 12]);

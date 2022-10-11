@@ -34,7 +34,7 @@ public:
 
     void touchFiles()
     {
-        juce::Array<juce::int64> readPoints;
+        juce::Array<SampleCount> readPoints;
         readPoints.ensureStorageAllocated (64);
 
         {
@@ -51,7 +51,7 @@ public:
                         if (readPos + readAheadSamples > r->loopStart + loopLength)
                             readPoints.addIfNotAlreadyThere (r->loopStart);
 
-                    readPoints.addIfNotAlreadyThere (std::max ((juce::int64) 0, readPos));
+                    readPoints.addIfNotAlreadyThere (std::max (SampleCount(), readPos));
                 }
             }
         }
@@ -69,13 +69,14 @@ public:
                 touchAllReaders ({ pos + distanceAhead, pos + distanceAhead + 8192 });
     }
 
-    void touchAllReaders (juce::Range<juce::int64> range) const
+    void touchAllReaders (SampleRange range) const
     {
         for (auto* r : readers)
         {
             if (r != nullptr)
             {
-                range = range.getIntersectionWith (r->getMappedSection());
+                auto section = r->getMappedSection();
+                range = range.getIntersectionWith (SampleRange (section.getStart(), section.getEnd()));
 
                 for (auto i = range.getStart(); i < range.getEnd(); i += 64)
                     r->touchSample (i);
@@ -100,7 +101,7 @@ public:
             {
                 if (failedToOpenFile
                      && juce::Time::getApproximateMillisecondCounter()
-                            < lastFailedOpenAttempt + 4000 + (juce::uint32) random.nextInt (3000))
+                            < lastFailedOpenAttempt + 4000 + (uint32_t) random.nextInt (3000))
                     return false;
 
                 const juce::ScopedWriteLock sl (readerLock);
@@ -185,8 +186,8 @@ public:
                     }
                     else
                     {
-                        auto pos = block * (juce::int64) blockSize;
-                        const juce::Range<juce::int64> range (pos, pos + blockSize);
+                        auto pos = block * (SampleCount) blockSize;
+                        SampleRange range (pos, pos + blockSize);
                         newReader = createNewReader (&range);
                     }
 
@@ -207,7 +208,7 @@ public:
 
             for (auto m : newReaders)
                 if (m != nullptr)
-                    totalBytesInUse -= static_cast<juce::int64> (m->getNumBytesUsed());
+                    totalBytesInUse -= static_cast<int64_t> (m->getNumBytesUsed());
 
             anythingChanged = true;
         }
@@ -232,17 +233,17 @@ public:
                  << " - " << readers[i]->getMappedSection().getEnd());
     }
 
-    juce::MemoryMappedAudioFormatReader* createNewReader (const juce::Range<juce::int64>* range)
+    juce::MemoryMappedAudioFormatReader* createNewReader (const SampleRange* range)
     {
         juce::AudioFormat* af;
         std::unique_ptr<juce::MemoryMappedAudioFormatReader> r (AudioFileUtils::createMemoryMappedReader (cache.engine, file.getFile(), af));
 
         if (r != nullptr
-             && (range != nullptr ? r->mapSectionOfFile (*range)
+             && (range != nullptr ? r->mapSectionOfFile (juce::Range<juce::int64> (range->getStart(), range->getEnd()))
                                   : r->mapEntireFile())
              && ! r->getMappedSection().isEmpty())
         {
-            totalBytesInUse += static_cast<juce::int64> (r->getNumBytesUsed());
+            totalBytesInUse += static_cast<int64_t> (r->getNumBytesUsed());
             failedToOpenFile = false;
 
             info = AudioFileInfo (file, r.get(), af);
@@ -283,9 +284,9 @@ public:
 
     struct LockedReaderFinder
     {
-        LockedReaderFinder (CachedFile& f, juce::int64 startSample, int timeoutMs)  : lock (f.readerLock)
+        LockedReaderFinder (CachedFile& f, SampleCount startSample, int timeoutMs)  : lock (f.readerLock)
         {
-            juce::uint32 startTime = 0;
+            uint32_t startTime = 0;
 
             for (;;)
             {
@@ -342,7 +343,7 @@ public:
         JUCE_DECLARE_NON_COPYABLE (LockedReaderFinder)
     };
 
-    bool read (juce::int64 startSample, int** destSamples, int numDestChannels,
+    bool read (SampleCount startSample, int** destSamples, int numDestChannels,
                int startOffsetInDestBuffer, int numSamples, int timeoutMs)
     {
         jassert (destSamples != nullptr);
@@ -384,7 +385,7 @@ public:
         return allDataRead;
     }
 
-    bool getRange (juce::int64 startSample, int numSamples,
+    bool getRange (SampleCount startSample, int numSamples,
                    float& lmax, float& lmin, float& rmax, float& rmin,
                    const int timeoutMs)
     {
@@ -443,8 +444,8 @@ public:
     AudioFile file;
     AudioFileInfo info;
 
-    std::atomic<juce::uint32> lastReadTime { juce::Time::getApproximateMillisecondCounter() };
-    juce::int64 totalBytesInUse = 0;
+    std::atomic<uint32_t> lastReadTime { juce::Time::getApproximateMillisecondCounter() };
+    int64_t totalBytesInUse = 0;
 
 private:
     juce::OwnedArray<juce::MemoryMappedAudioFormatReader> readers;
@@ -455,12 +456,12 @@ private:
 
     bool mapEntireFile = false;
     bool failedToOpenFile = false;
-    juce::uint32 lastFailedOpenAttempt = 0;
+    uint32_t lastFailedOpenAttempt = 0;
     juce::Random random;
     
     juce::ReadWriteLock clientListLock, readerLock;
 
-    juce::MemoryMappedAudioFormatReader* findReaderFor (juce::int64 sample) const
+    juce::MemoryMappedAudioFormatReader* findReaderFor (SampleCount sample) const
     {
         for (auto r : readers)
             if (r != nullptr && r->getMappedSection().contains (sample))
@@ -490,7 +491,7 @@ public:
     {
         juce::FloatVectorOperations::disableDenormalisedNumberSupport();
 
-        juce::uint32 lastOldFlePurge = 0;
+        uint32_t lastOldFlePurge = 0;
 
         while (! threadShouldExit())
         {
@@ -553,7 +554,7 @@ AudioFileCache::AudioFileCache (Engine& e)  : engine (e)
     const int defaultSize = 6 * 48000;
 
     // TODO: when we drop 32-bit support, delete the cache size and related code
-    setCacheSizeSamples (engine.getPropertyStorage().getProperty (SettingID::cacheSizeSamples, defaultSize));
+    setCacheSizeSamples (static_cast<juce::int64> (engine.getPropertyStorage().getProperty (SettingID::cacheSizeSamples, defaultSize)));
 }
 
 AudioFileCache::~AudioFileCache()
@@ -580,10 +581,10 @@ void AudioFileCache::stopThreads()
     refresherThread.reset();
 }
 
-void AudioFileCache::setCacheSizeSamples (juce::int64 samples)
+void AudioFileCache::setCacheSizeSamples (SampleCount samples)
 {
     CRASH_TRACER
-    samples = juce::jlimit ((juce::int64) 48000, (juce::int64) 48000 * 60, samples);
+    samples = juce::jlimit ((SampleCount) 48000, (SampleCount) 48000 * 60, samples);
 
     if (cacheSizeSamples != samples)
     {
@@ -695,7 +696,7 @@ bool AudioFileCache::serviceNextReader()
 
 void AudioFileCache::touchReaders()
 {
-    juce::int64 totalBytes = 0;
+    int64_t totalBytes = 0;
 
     const juce::ScopedReadLock sl (fileListLock);
 
@@ -763,7 +764,7 @@ AudioFileCache::Reader::~Reader()
 {
 }
 
-void AudioFileCache::Reader::setReadPosition (juce::int64 pos) noexcept
+void AudioFileCache::Reader::setReadPosition (SampleCount pos) noexcept
 {
     const auto localLoopStart = loopStart.load();
     const auto localLoopLength = loopLength.load();
@@ -788,7 +789,7 @@ double AudioFileCache::Reader::getSampleRate() const noexcept
                            : (int) fallbackReader->sampleRate;
 }
 
-void AudioFileCache::Reader::setLoopRange (juce::Range<juce::int64> newRange)
+void AudioFileCache::Reader::setLoopRange (SampleRange newRange)
 {
     loopStart  = newRange.getStart();
     loopLength = newRange.getLength();
@@ -912,7 +913,7 @@ bool AudioFileCache::Reader::readSamples (int** destSamples, int numDestChannels
 
     if (readPos < 0)
     {
-        auto silence = (int) std::min (-readPos, (juce::int64) numSamples);
+        auto silence = (int) std::min (-readPos, (SampleCount) numSamples);
 
         for (int i = numDestChannels; --i >= 0;)
             if (destSamples[i] != nullptr)
@@ -948,7 +949,7 @@ bool AudioFileCache::Reader::readSamples (int** destSamples, int numDestChannels
         {
             jassert (juce::isPositiveAndBelow (readPos.load() - loopStart.load(), loopLength.load()));
 
-            auto numToRead = (int) std::min ((juce::int64) numSamples, loopStart + loopLength - readPos);
+            auto numToRead = (int) std::min ((SampleCount) numSamples, loopStart + loopLength - readPos);
 
             if (auto cf = static_cast<CachedFile*> (file))
             {
@@ -1022,6 +1023,7 @@ struct CacheAudioFormatReader  :  public juce::AudioFormatReader
     }
 
     using juce::AudioFormatReader::readMaxLevels;
+
     void readMaxLevels (juce::int64 startSample, juce::int64 numSamples,
                         float& lowestLeft, float& highestLeft,
                         float& lowestRight, float& highestRight) override

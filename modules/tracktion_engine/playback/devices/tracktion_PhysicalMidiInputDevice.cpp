@@ -11,15 +11,15 @@
 namespace tracktion_engine
 {
 
-struct MidiTimecodeReader  : private MessageListener,
-                             private Timer
+struct MidiTimecodeReader  : private juce::MessageListener,
+                             private juce::Timer
 {
     MidiTimecodeReader (MidiInputDeviceInstanceBase& m)
         : owner (m), transport (m.edit.getTransport())
     {
     }
 
-    bool processMessage (const MidiMessage& m)
+    bool processMessage (const juce::MidiMessage& m)
     {
         if (m.isFullFrame())
         {
@@ -58,7 +58,7 @@ struct MidiTimecodeReader  : private MessageListener,
                 case 7:
                 {
                     hours = (hours & 0x0f) | ((value << 4) & 0x10);
-                    midiTCType = (MidiMessage::SmpteTimecodeType) (value >> 1);
+                    midiTCType = (juce::MidiMessage::SmpteTimecodeType) (value >> 1);
 
                     lastTime = getTime() + 2.0 / getFPS();
 
@@ -102,7 +102,7 @@ struct MidiTimecodeReader  : private MessageListener,
         return false;
     }
 
-    void handleMMCMessage (MidiMessage::MidiMachineControlCommand type)
+    void handleMMCMessage (juce::MidiMessage::MidiMachineControlCommand type)
     {
         auto m = new TCMessage (10);
         m->command = type;
@@ -124,7 +124,7 @@ private:
     TransportControl& transport;
 
     int hours = 0, minutes = 0, seconds = 0, frames = 0;
-    MidiMessage::SmpteTimecodeType midiTCType;
+    juce::MidiMessage::SmpteTimecodeType midiTCType;
     double lastTime = 0, correctedTime = 0, averageDrift = 0;
     int averageDriftNumSamples = 0;
     bool jumpPending = false;
@@ -142,16 +142,16 @@ private:
         }
     }
 
-    struct TCMessage  : public Message
+    struct TCMessage  : public juce::Message
     {
         TCMessage (int tp) : type (tp) {}
 
         int type = 0;
-        MidiMessage::MidiMachineControlCommand command;
+        juce::MidiMessage::MidiMachineControlCommand command;
         int data[4];
     };
 
-    void handleMessage (const Message& message) override
+    void handleMessage (const juce::Message& message) override
     {
         if (auto m = dynamic_cast<const TCMessage*> (&message))
         {
@@ -196,19 +196,19 @@ private:
         }
     }
 
-    void handleMMC (MidiMessage::MidiMachineControlCommand type)
+    void handleMMC (juce::MidiMessage::MidiMachineControlCommand type)
     {
         switch (type)
         {
-            case MidiMessage::mmc_stop:            transport.stop (false, false, false); break;
-            case MidiMessage::mmc_play:            transport.play (false);   break;
-            case MidiMessage::mmc_deferredplay:    transport.play (false);   break;
-            case MidiMessage::mmc_fastforward:     transport.nudgeRight();   break;
-            case MidiMessage::mmc_rewind:          transport.nudgeLeft();    break;
-            case MidiMessage::mmc_recordStart:     transport.record (false); break;
-            case MidiMessage::mmc_recordStop:      transport.stop (false, false, false); break;
+            case juce::MidiMessage::mmc_stop:            transport.stop (false, false, false); break;
+            case juce::MidiMessage::mmc_play:            transport.play (false);   break;
+            case juce::MidiMessage::mmc_deferredplay:    transport.play (false);   break;
+            case juce::MidiMessage::mmc_fastforward:     transport.nudgeRight();   break;
+            case juce::MidiMessage::mmc_rewind:          transport.nudgeLeft();    break;
+            case juce::MidiMessage::mmc_recordStart:     transport.record (false); break;
+            case juce::MidiMessage::mmc_recordStop:      transport.stop (false, false, false); break;
 
-            case MidiMessage::mmc_pause:
+            case juce::MidiMessage::mmc_pause:
                 if (transport.isPlaying())
                     transport.stop (false, false, false);
                 else
@@ -226,8 +226,8 @@ private:
 
     double getFPS() const noexcept
     {
-        if (midiTCType == MidiMessage::fps25) return 25.0;
-        if (midiTCType == MidiMessage::fps24) return 24.0;
+        if (midiTCType == juce::MidiMessage::fps25) return 25.0;
+        if (midiTCType == juce::MidiMessage::fps24) return 24.0;
         return 30.0;
     }
 
@@ -253,10 +253,10 @@ struct PhysicalMidiInputDeviceInstance  : public MidiInputDeviceInstanceBase
     PhysicalMidiInputDeviceInstance (PhysicalMidiInputDevice& d, EditPlaybackContext& c)
         : MidiInputDeviceInstanceBase (d, c)
     {
-        timecodeReader.reset (new MidiTimecodeReader (*this));
+        timecodeReader = std::make_unique<MidiTimecodeReader> (*this);
     }
 
-    void handleMMCMessage (const MidiMessage& message) override
+    void handleMMCMessage (const juce::MidiMessage& message) override
     {
         int hours, minutes, seconds, frames;
 
@@ -266,12 +266,13 @@ struct PhysicalMidiInputDeviceInstance  : public MidiInputDeviceInstanceBase
             timecodeReader->handleMMCMessage (message.getMidiMachineControlCommand());
     }
 
-    bool handleTimecodeMessage (const MidiMessage& message) override
+    bool handleTimecodeMessage (const juce::MidiMessage& message) override
     {
         return timecodeReader->processMessage (message);
     }
 
-    String prepareToRecord (double start, double punchIn, double sampleRate, int blockSizeSamples, bool isLivePunch) override
+    juce::String prepareToRecord (double start, double punchIn, double sampleRate,
+                                  int blockSizeSamples, bool isLivePunch) override
     {
         MidiInputDeviceInstanceBase::prepareToRecord (start, punchIn, sampleRate, blockSizeSamples, isLivePunch);
 
@@ -309,10 +310,12 @@ private:
 };
 
 //==============================================================================
-PhysicalMidiInputDevice::PhysicalMidiInputDevice (Engine& e, const String& deviceName, int deviceIndexToUse)
+PhysicalMidiInputDevice::PhysicalMidiInputDevice (Engine& e, const juce::String& deviceName, int deviceIndexToUse)
    : MidiInputDevice (e, TRANS("MIDI Input"), deviceName),
      deviceIndex (deviceIndexToUse)
 {
+    enabled = true;
+
     controllerParser.reset (new MidiControllerParser (e));
     loadProps();
 }
@@ -330,15 +333,15 @@ InputDeviceInstance* PhysicalMidiInputDevice::createInstance (EditPlaybackContex
     return new PhysicalMidiInputDeviceInstance (*this, c);
 }
 
-String PhysicalMidiInputDevice::openDevice()
+juce::String PhysicalMidiInputDevice::openDevice()
 {
-    zeromem (keysDown, sizeof (keysDown));
-    zeromem (keyDownVelocities, sizeof (keyDownVelocities));
+    std::memset (keysDown, 0, sizeof (keysDown));
+    std::memset (keyDownVelocities, 0, sizeof (keyDownVelocities));
 
     if (inputDevice == nullptr)
     {
         CRASH_TRACER
-        inputDevice = MidiInput::openDevice (MidiInput::getAvailableDevices()[deviceIndex].identifier, this);
+        inputDevice = juce::MidiInput::openDevice (juce::MidiInput::getAvailableDevices()[deviceIndex].identifier, this);
 
         if (inputDevice != nullptr)
         {
@@ -386,11 +389,11 @@ bool PhysicalMidiInputDevice::isAvailableToEdit() const
                              || ! externalController->eatsAllMessages());
 }
 
-bool PhysicalMidiInputDevice::tryToSendTimecode (const MidiMessage& message)
+bool PhysicalMidiInputDevice::tryToSendTimecode (const juce::MidiMessage& message)
 {
     if (isAcceptingMMC && message.isMidiMachineControlMessage())
     {
-        const ScopedLock sl (instanceLock);
+        const juce::ScopedLock sl (instanceLock);
 
         for (auto p : instances)
             p->handleMMCMessage (message);
@@ -400,7 +403,7 @@ bool PhysicalMidiInputDevice::tryToSendTimecode (const MidiMessage& message)
 
     if (isReadingMidiTimecode)
     {
-        const ScopedLock sl (instanceLock);
+        const juce::ScopedLock sl (instanceLock);
 
         for (auto p : instances)
             if (p->handleTimecodeMessage (message))
@@ -410,20 +413,20 @@ bool PhysicalMidiInputDevice::tryToSendTimecode (const MidiMessage& message)
     return false;
 }
 
-void PhysicalMidiInputDevice::handleIncomingMidiMessage (const MidiMessage& m)
+void PhysicalMidiInputDevice::handleIncomingMidiMessage (const juce::MidiMessage& m)
 {
-    if (externalController != nullptr && externalController->wantsMessage (m))
+    if (externalController != nullptr && externalController->wantsMessage (*this, m))
     {
-        externalController->acceptMidiMessage (m);
+        externalController->acceptMidiMessage (*this, m);
     }
     else
     {
         if (! (m.isActiveSense() || disallowedChannels[m.getChannel() - 1]))
         {
-            MidiMessage message (m);
+            auto message = m;
 
             if (m.getTimeStamp() == 0 || (! engine.getEngineBehaviour().isMidiDriverUsedForIncommingMessageTiming()))
-                message.setTimeStamp (Time::getMillisecondCounterHiRes() * 0.001);
+                message.setTimeStamp (juce::Time::getMillisecondCounterHiRes() * 0.001);
 
             message.addToTimeStamp (adjustSecs);
 

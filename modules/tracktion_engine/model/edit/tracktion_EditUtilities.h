@@ -59,7 +59,7 @@ int getTotalNumTracks (const Edit&);
 Track* findTrackForID (const Edit&, EditItemID);
 
 /** Returns the Tracks for the given IDs in the Edit. */
-juce::Array<Track*> findTracksForIDs (const Edit&, juce::Array<EditItemID>);
+juce::Array<Track*> findTracksForIDs (const Edit&, const juce::Array<EditItemID>&);
 
 /** Returns the Track with a given state if contained in the Edit. */
 Track* findTrackForState (const Edit&, const juce::ValueTree&);

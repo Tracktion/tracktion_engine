@@ -101,7 +101,7 @@ struct PitchShiftPlugin::Pimpl
             }
 
             if (fc.bufferForMidiMessages != nullptr)
-                fc.bufferForMidiMessages->addToNoteNumbers (roundToInt (semis));
+                fc.bufferForMidiMessages->addToNoteNumbers (juce::roundToInt (semis));
         }
     }
 
@@ -128,11 +128,11 @@ PitchShiftPlugin::PitchShiftPlugin (PluginCreationInfo info) : Plugin (info)
 
     semitones = addParam ("semitones up", TRANS("Semitones"),
                           { -PitchShiftPlugin::getMaximumSemitones(), PitchShiftPlugin::getMaximumSemitones() },
-                          [] (float value)      { return std::abs (value) < 0.01f ? "(" + TRANS("Original pitch") + ")"
-                                                                                  : getSemitonesAsString (value); },
-                          [] (const String& s)  { return jlimit (-PitchShiftPlugin::getMaximumSemitones(),
-                                                                 PitchShiftPlugin::getMaximumSemitones(),
-                                                                 s.getFloatValue()); });
+                          [] (float value)            { return std::abs (value) < 0.01f ? "(" + TRANS("Original pitch") + ")"
+                                                                                        : getSemitonesAsString (value); },
+                          [] (const juce::String& s)  { return juce::jlimit (-PitchShiftPlugin::getMaximumSemitones(),
+                                                                             PitchShiftPlugin::getMaximumSemitones(),
+                                                                             s.getFloatValue()); });
 
     semitonesValue.referTo (state, IDs::semitonesUp, um);
     mode.referTo (state, IDs::mode, um, (int) TimeStretcher::defaultMode);
@@ -153,11 +153,10 @@ PitchShiftPlugin::~PitchShiftPlugin()
     semitones->detachFromCurrentValue();
 }
 
-ValueTree PitchShiftPlugin::create()
+juce::ValueTree PitchShiftPlugin::create()
 {
-    ValueTree v (IDs::PLUGIN);
-    v.setProperty (IDs::type, xmlTypeName, nullptr);
-    return v;
+    return createValueTree (IDs::PLUGIN,
+                            IDs::type, xmlTypeName);
 }
 
 const char* PitchShiftPlugin::xmlTypeName = "pitchShifter";
@@ -185,15 +184,15 @@ double PitchShiftPlugin::getLatencySeconds()
     return pimpl->latencySeconds;
 }
 
-String PitchShiftPlugin::getSelectableDescription()
+juce::String PitchShiftPlugin::getSelectableDescription()
 {
     return TRANS("Pitch Shifter Plugin");
 }
 
 void PitchShiftPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    CachedValue<float>* cvsFloat[]  = { &semitonesValue, nullptr };
-    CachedValue<int>* cvsInt[]      = { &mode, nullptr };
+    juce::CachedValue<float>* cvsFloat[]  = { &semitonesValue, nullptr };
+    juce::CachedValue<int>* cvsInt[]      = { &mode, nullptr };
     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
     copyPropertiesToNullTerminatedCachedValues (v, cvsInt);
 

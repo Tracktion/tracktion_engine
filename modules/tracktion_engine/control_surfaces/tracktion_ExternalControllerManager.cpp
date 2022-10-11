@@ -11,8 +11,9 @@
 namespace tracktion_engine
 {
 
-struct ExternalControllerManager::EditTreeWatcher   : private ValueTree::Listener,
-                                                      private Timer
+struct ExternalControllerManager::EditTreeWatcher   : private juce::ValueTree::Listener,
+                                                      private juce::Timer,
+                                                      private juce::AsyncUpdater
 {
     EditTreeWatcher (ExternalControllerManager& o, Edit& e) : owner (o), edit (e)
     {
@@ -30,10 +31,10 @@ private:
     ExternalControllerManager& owner;
     Edit& edit;
 
-    Array<ValueTree, CriticalSection> pluginsToUpdate;
-    Atomic<int> updateAux;
+    juce::Array<juce::ValueTree, juce::CriticalSection> pluginsToUpdate;
+    juce::Atomic<int> updateAux;
 
-    void valueTreePropertyChanged (ValueTree& v, const juce::Identifier& i) override
+    void valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i) override
     {
         if (v.hasType (IDs::PLUGIN))
         {
@@ -42,17 +43,31 @@ private:
             else if (i == IDs::auxSendSliderPos && v.getProperty (IDs::type) == AuxSendPlugin::xmlTypeName)
                 updateAux.set (1);
         }
+        else if (v.hasType (IDs::MARKERCLIP))
+        {
+            triggerAsyncUpdate();
+        }
     }
 
-    void valueTreeChildAdded (ValueTree&, juce::ValueTree&) override        {}
-    void valueTreeChildRemoved (ValueTree&, juce::ValueTree&, int) override {}
-    void valueTreeChildOrderChanged (ValueTree&, int, int) override   {}
-    void valueTreeParentChanged (ValueTree&) override                 {}
+    void valueTreeChildAdded (juce::ValueTree&, juce::ValueTree& c) override
+    {
+        if (c.hasType (IDs::MARKERCLIP))
+            triggerAsyncUpdate();
+    }
+
+    void valueTreeChildRemoved (juce::ValueTree&, juce::ValueTree& c, int) override
+    {
+        if (c.hasType (IDs::MARKERCLIP))
+            triggerAsyncUpdate();
+    }
+
+    void valueTreeChildOrderChanged (juce::ValueTree&, int, int) override   {}
+    void valueTreeParentChanged (juce::ValueTree&) override                 {}
 
     void timerCallback() override
     {
         {
-            Array<ValueTree, CriticalSection> plugins;
+            juce::Array<juce::ValueTree, juce::CriticalSection> plugins;
             plugins.swapWith (pluginsToUpdate);
 
             for (int i = plugins.size(); --i >= 0;)
@@ -81,6 +96,11 @@ private:
         if (updateAux.compareAndSetBool (0, 1))
             owner.auxSendLevelsChanged();
     }
+
+    void handleAsyncUpdate() override
+    {
+        owner.updateMarkers();
+    }
 };
 
 //==============================================================================
@@ -103,26 +123,45 @@ void ExternalControllerManager::initialise()
     TRACKTION_LOG ("Creating Default Controllers...");
 
    #if TRACKTION_ENABLE_CONTROL_SURFACES
-    auto mcu = new MackieMCU (*this);
-    addNewController (mcu);
+    auto controllers = engine.getEngineBehaviour().getDesiredControlSurfaces();
 
-    for (int i = 0; i < getXTCount(); ++i)
-        addNewController (new MackieXT (*this, *mcu, i));
+    if (controllers.mackieMCU)
+    {
+        auto mcu = new MackieMCU (*this);
+        addNewController (mcu);
 
-    refreshXTOrder();
+        for (int i = 0; i < getXTCount (mcu->deviceDescription); ++i)
+            addNewController (new MackieXT (*this, *mcu, i));
 
-    addNewController (new MackieC4 (*this));
-    addNewController (new TranzportControlSurface (*this));
-    addNewController (new AlphaTrackControlSurface (*this));
-    addNewController (new NovationRemoteSl (*this));
+        refreshXTOrder();
+    }
+
+   #if TRACKTION_ENABLE_CONTROL_SURFACE_MACKIEC4
+    if (controllers.mackieC4)  addNewController (new MackieC4 (*this));
+   #endif
+
+    if (controllers.iconProG2)
+    {
+        auto icon = new IconProG2 (*this);
+        addNewController (icon);
+        for (int i = 0; i < getXTCount (icon->deviceDescription); ++i)
+            addNewController (new MackieXT (*this, *icon, i));
+    }
+
+    if (controllers.tranzport)  addNewController (new TranzportControlSurface (*this));
+    if (controllers.alphaTrack) addNewController (new AlphaTrackControlSurface (*this));
+    if (controllers.remoteSL)   addNewController (new NovationRemoteSl (*this));
 
    #if TRACKTION_ENABLE_AUTOMAP
-    automap = new NovationAutomap (*this);
-    addNewController (automap);
+    if (controllers.automap)
+    {
+        automap = new NovationAutomap (*this);
+        addNewController (automap);
+    }
    #endif
 
    #if JUCE_DEBUG
-    addNewController (new RemoteSLCompact (*this));
+    if (controllers.remoteSLCompact) addNewController (new RemoteSLCompact (*this));
    #endif
 
     // load the custom midi controllers
@@ -151,7 +190,10 @@ ExternalController* ExternalControllerManager::addNewController (ControlSurface*
 }
 
 #define FOR_EACH_DEVICE(x) \
-    for (ExternalController* device : devices) { device->x; }
+    for (auto device : devices) { device->x; }
+
+#define FOR_EACH_ACTIVE_DEVICE(x) \
+    for (auto device : devices) { if (device->isEnabled()) device->x; }
 
 void ExternalControllerManager::setCurrentEdit (Edit* newEdit, SelectionManager* newSM)
 {
@@ -182,7 +224,7 @@ void ExternalControllerManager::setCurrentEdit (Edit* newEdit, SelectionManager*
             currentSelectionManager->addChangeListener (this);
     }
 
-    FOR_EACH_DEVICE (currentEditChanged (currentEdit));
+    FOR_EACH_ACTIVE_DEVICE (currentEditChanged (currentEdit));
 }
 
 bool ExternalControllerManager::isAttachedToEdit (const Edit* ed) const noexcept
@@ -212,7 +254,7 @@ void ExternalControllerManager::detachFromSelectionManager (SelectionManager* sm
         setCurrentEdit (currentEdit, nullptr);
 }
 
-bool ExternalControllerManager::createCustomController (const String& name, Protocol protocol)
+bool ExternalControllerManager::createCustomController (const juce::String& name, Protocol protocol)
 {
     CRASH_TRACER
 
@@ -224,8 +266,8 @@ bool ExternalControllerManager::createCustomController (const String& name, Prot
         {
             if (device->needsOSCSocket())
             {
-                outPort = jmax (outPort, device->getOSCOutputPort() + 1);
-                inPort  = jmax (inPort, device->getOSCInputPort() + 1);
+                outPort = std::max (outPort, device->getOSCOutputPort() + 1);
+                inPort  = std::max (inPort,  device->getOSCInputPort() + 1);
             }
         }
     }
@@ -241,6 +283,37 @@ bool ExternalControllerManager::createCustomController (const String& name, Prot
 
     sendChangeMessage();
     return true;
+}
+
+ExternalController* ExternalControllerManager::addController (ControlSurface* c)
+{
+    CRASH_TRACER
+
+    int outPort = 9000, inPort = 8000;
+    // Find free UDP ports for OSC input and output
+    if (c->needsOSCSocket)
+    {
+        for (auto device : devices)
+        {
+            if (device->needsOSCSocket())
+            {
+                outPort = std::max (outPort, device->getOSCOutputPort() + 1);
+                inPort  = std::max (inPort,  device->getOSCInputPort() + 1);
+            }
+        }
+    }
+
+    if (auto ec = addNewController (c))
+    {
+        if (c->needsOSCSocket)
+        {
+            ec->setOSCOutputPort (outPort);
+            ec->setOSCInputPort (inPort);
+        }
+        sendChangeMessage();
+        return ec;
+    }
+    return nullptr;
 }
 
 void ExternalControllerManager::deleteController (ExternalController* c)
@@ -260,9 +333,9 @@ void ExternalControllerManager::deleteController (ExternalController* c)
     }
 }
 
-StringArray ExternalControllerManager::getAllControllerNames()
+juce::StringArray ExternalControllerManager::getAllControllerNames()
 {
-    StringArray s;
+    juce::StringArray s;
 
     for (auto ec : devices)
         s.add (ec->getName());
@@ -280,12 +353,13 @@ ExternalController* ExternalControllerManager::getActiveCustomController()
 }
 
 void ExternalControllerManager::midiInOutDevicesChanged()   { FOR_EACH_DEVICE (midiInOutDevicesChanged()); }
-void ExternalControllerManager::updateDeviceState()         { FOR_EACH_DEVICE (updateDeviceState()); }
-void ExternalControllerManager::updateParameters()          { FOR_EACH_DEVICE (updateParameters()); }
-void ExternalControllerManager::updateMarkers()             { FOR_EACH_DEVICE (updateMarkers()); }
-void ExternalControllerManager::updateTrackRecordLights()   { FOR_EACH_DEVICE (updateTrackRecordLights()); }
-void ExternalControllerManager::updatePunchLights()         { FOR_EACH_DEVICE (updatePunchLights()); }
-void ExternalControllerManager::updateUndoLights()          { FOR_EACH_DEVICE (updateUndoLights()); }
+void ExternalControllerManager::updateDeviceState()         { FOR_EACH_ACTIVE_DEVICE (updateDeviceState()); }
+void ExternalControllerManager::updateParameters()          { FOR_EACH_ACTIVE_DEVICE (updateParameters()); }
+void ExternalControllerManager::updateMarkers()             { FOR_EACH_ACTIVE_DEVICE (updateMarkers()); }
+void ExternalControllerManager::updateTrackRecordLights()   { FOR_EACH_ACTIVE_DEVICE (updateTrackRecordLights()); }
+void ExternalControllerManager::updatePunchLights()         { FOR_EACH_ACTIVE_DEVICE (updatePunchLights()); }
+void ExternalControllerManager::updateScrollLights()        { FOR_EACH_ACTIVE_DEVICE (updateScrollLights()); }
+void ExternalControllerManager::updateUndoLights()          { FOR_EACH_ACTIVE_DEVICE (updateUndoLights()); }
 
 void ExternalControllerManager::changeListenerCallback (ChangeBroadcaster* source)
 {
@@ -302,18 +376,19 @@ void ExternalControllerManager::changeListenerCallback (ChangeBroadcaster* sourc
 
         if (selectionManager.getNumObjectsSelected() == 1 && selectionManager.containsType<Plugin>())
         {
-            FOR_EACH_DEVICE (selectedPluginChanged());
+            FOR_EACH_ACTIVE_DEVICE (selectedPluginChanged());
         }
         else if (auto track = selectionManager.getFirstItemOfType<Track>())
         {
             int num = mapTrackNumToChannelNum (track->getIndexInEditTrackList());
 
             for (auto device : devices)
-                if (device->followsTrackSelection)
-                    if (num != -1 && num != device->channelStart)
-                        device->changeFaderBank (num - device->channelStart, false);
+                if (device->isEnabled())
+                    if (device->followsTrackSelection)
+                        if (num != -1 && num != device->channelStart)
+                            device->changeFaderBank (num - device->channelStart, false);
         }
-        FOR_EACH_DEVICE (updateTrackSelectLights());
+        FOR_EACH_ACTIVE_DEVICE (updateTrackSelectLights());
     }
 }
 
@@ -321,7 +396,7 @@ void ExternalControllerManager::updateAllDevices()
 {
     if (! isTimerRunning())
     {
-        auto now = Time::getMillisecondCounter();
+        auto now = juce::Time::getMillisecondCounter();
 
         if (now - lastUpdate > 250)
         {
@@ -343,7 +418,7 @@ void ExternalControllerManager::timerCallback()
     CRASH_TRACER
     stopTimer();
 
-    lastUpdate = Time::getMillisecondCounter();
+    lastUpdate = juce::Time::getMillisecondCounter();
 
     updateDeviceState();
     updateParameters();
@@ -389,7 +464,7 @@ void ExternalControllerManager::updateMuteSoloLights (bool onlyUpdateFlashingLig
                 if ((flags & (Track::soloFlashing | Track::muteFlashing)) != 0
                      || ! onlyUpdateFlashingLights)
                 {
-                    FOR_EACH_DEVICE (updateSoloAndMute (mappedChan, flags, isBright));
+                    FOR_EACH_ACTIVE_DEVICE (updateSoloAndMute (mappedChan, flags, isBright));
                 }
             }
 
@@ -397,7 +472,7 @@ void ExternalControllerManager::updateMuteSoloLights (bool onlyUpdateFlashingLig
             return true;
         });
 
-        FOR_EACH_DEVICE (soloCountChanged (blinkTimer->isBright && anySolo));
+        FOR_EACH_ACTIVE_DEVICE (soloCountChanged (blinkTimer->isBright && anySolo));
     }
 }
 
@@ -406,14 +481,14 @@ void ExternalControllerManager::moveFader (int channelNum, float newSliderPos)
 {
     auto chan = mapTrackNumToChannelNum (channelNum);
 
-    FOR_EACH_DEVICE (moveFader (chan, newSliderPos));
+    FOR_EACH_ACTIVE_DEVICE (moveFader (chan, newSliderPos));
 }
 
 void ExternalControllerManager::movePanPot (int channelNum, float newPan)
 {
     auto chan = mapTrackNumToChannelNum (channelNum);
 
-    FOR_EACH_DEVICE (movePanPot (chan, newPan));
+    FOR_EACH_ACTIVE_DEVICE (movePanPot (chan, newPan));
 }
 
 void ExternalControllerManager::updateVolumePlugin (VolumeAndPanPlugin& vp)
@@ -426,8 +501,11 @@ void ExternalControllerManager::updateVolumePlugin (VolumeAndPanPlugin& vp)
 
             for (auto c : devices)
             {
-                c->moveFader (chan, vp.getSliderPos());
-                c->movePanPot (chan, vp.getPan());
+                if (c->isEnabled())
+                {
+                    c->moveFader (chan, vp.getSliderPos());
+                    c->movePanPot (chan, vp.getPan());
+                }
             }
         }
     }
@@ -440,7 +518,7 @@ void ExternalControllerManager::updateVolumePlugin (VolumeAndPanPlugin& vp)
             left  = gainToVolumeFaderPosition (left);
             right = gainToVolumeFaderPosition (right);
 
-            FOR_EACH_DEVICE (moveMasterFaders (left, right));
+            FOR_EACH_ACTIVE_DEVICE (moveMasterFaders (left, right));
         }
     }
 }
@@ -457,8 +535,11 @@ void ExternalControllerManager::updateVCAPlugin (VCAPlugin& vca)
 
             for (auto c : devices)
             {
-                c->moveFader (chan, vca.getSliderPos());
-                c->movePanPot (chan, 0.0f);
+                if (c->isEnabled())
+                {
+                    c->moveFader (chan, vca.getSliderPos());
+                    c->movePanPot (chan, 0.0f);
+                }
             }
         }
     }
@@ -467,69 +548,69 @@ void ExternalControllerManager::updateVCAPlugin (VCAPlugin& vca)
 void ExternalControllerManager::moveMasterFaders (float newLeftPos, float newRightPos)
 {
     CRASH_TRACER
-    FOR_EACH_DEVICE (moveMasterFaders (newLeftPos, newRightPos));
+    FOR_EACH_ACTIVE_DEVICE (moveMasterFaders (newLeftPos, newRightPos));
 }
 
 void ExternalControllerManager::soloCountChanged (bool anySoloTracks)
 {
     CRASH_TRACER
-    FOR_EACH_DEVICE (soloCountChanged (anySoloTracks));
+    FOR_EACH_ACTIVE_DEVICE (soloCountChanged (anySoloTracks));
 }
 
 void ExternalControllerManager::playStateChanged (bool isPlaying)
 {
     CRASH_TRACER
-    FOR_EACH_DEVICE (playStateChanged (isPlaying));
+    FOR_EACH_ACTIVE_DEVICE (playStateChanged (isPlaying));
 }
 
 void ExternalControllerManager::recordStateChanged (bool isRecording)
 {
     CRASH_TRACER
-    FOR_EACH_DEVICE (recordStateChanged (isRecording));
+    FOR_EACH_ACTIVE_DEVICE (recordStateChanged (isRecording));
 }
 
 void ExternalControllerManager::automationModeChanged (bool isReading, bool isWriting)
 {
     CRASH_TRACER
-    FOR_EACH_DEVICE (automationModeChanged (isReading, isWriting));
+    FOR_EACH_ACTIVE_DEVICE (automationModeChanged (isReading, isWriting));
 }
 
-void ExternalControllerManager::channelLevelChanged (int channel, float level)
+void ExternalControllerManager::channelLevelChanged (int channel, float l, float r)
 {
     CRASH_TRACER
     const int cn = mapTrackNumToChannelNum (channel);
-    FOR_EACH_DEVICE (channelLevelChanged (cn, level));
+    FOR_EACH_ACTIVE_DEVICE (channelLevelChanged (cn, l, r));
 }
 
 void ExternalControllerManager::masterLevelsChanged (float leftLevel, float rightLevel)
 {
     CRASH_TRACER
-    FOR_EACH_DEVICE (masterLevelsChanged (leftLevel, rightLevel));
+    FOR_EACH_ACTIVE_DEVICE (masterLevelsChanged (leftLevel, rightLevel));
 }
 
 void ExternalControllerManager::timecodeChanged (int barsOrHours, int beatsOrMinutes, int ticksOrSeconds,
                                                  int millisecs, bool isBarsBeats, bool isFrames)
 {
     CRASH_TRACER
-    FOR_EACH_DEVICE (timecodeChanged (barsOrHours, beatsOrMinutes, ticksOrSeconds, millisecs, isBarsBeats, isFrames));
+    FOR_EACH_ACTIVE_DEVICE (timecodeChanged (barsOrHours, beatsOrMinutes, ticksOrSeconds, millisecs, isBarsBeats, isFrames));
 }
 
 void ExternalControllerManager::snapChanged (bool isOn)
 {
     CRASH_TRACER
-    FOR_EACH_DEVICE (snapChanged (isOn));
+    FOR_EACH_ACTIVE_DEVICE (snapChanged (isOn));
 }
 
 void ExternalControllerManager::loopChanged (bool isOn)
 {
     CRASH_TRACER
-    FOR_EACH_DEVICE (loopChanged (isOn));
+    FOR_EACH_ACTIVE_DEVICE (loopChanged (isOn));
 }
 
 void ExternalControllerManager::clickChanged (bool isOn)
 {
     CRASH_TRACER
-    FOR_EACH_DEVICE (clickChanged (isOn));
+    FOR_EACH_ACTIVE_DEVICE (clickChanged (isOn));
 }
 
 void ExternalControllerManager::editPositionChanged (Edit* ed, double newCursorPosition)
@@ -537,7 +618,7 @@ void ExternalControllerManager::editPositionChanged (Edit* ed, double newCursorP
     if (ed != nullptr)
     {
         CRASH_TRACER
-        String parts[4];
+        juce::String parts[4];
         ed->getTimecodeFormat().getPartStrings (TimecodeDuration::fromSecondsOnly (newCursorPosition),
                                                 ed->tempoSequence,
                                                 false, parts);
@@ -567,11 +648,11 @@ void ExternalControllerManager::editPositionChanged (Edit* ed, double newCursorP
 void ExternalControllerManager::auxSendLevelsChanged()
 {
     CRASH_TRACER
-    FOR_EACH_DEVICE (auxSendLevelsChanged());
+    FOR_EACH_ACTIVE_DEVICE (auxSendLevelsChanged());
 }
 
 //==============================================================================
-void ExternalControllerManager::userMovedFader (int channelNum, float newSliderPos)
+void ExternalControllerManager::userMovedFader (int channelNum, float newSliderPos, bool delta)
 {
     CRASH_TRACER
     auto track = getChannelTrack (channelNum);
@@ -579,7 +660,7 @@ void ExternalControllerManager::userMovedFader (int channelNum, float newSliderP
     if (auto at = dynamic_cast<AudioTrack*> (track))
     {
         if (auto vp = at->getVolumePlugin())
-            vp->setSliderPos (newSliderPos);
+            vp->setSliderPos (delta ? vp->getSliderPos() + newSliderPos : newSliderPos);
         else
             moveFader (mapTrackNumToChannelNum (channelNum), decibelsToVolumeFaderPosition (0.0f));
     }
@@ -587,18 +668,23 @@ void ExternalControllerManager::userMovedFader (int channelNum, float newSliderP
     if (auto ft = dynamic_cast<FolderTrack*> (track))
     {
         if (auto vca = ft->getVCAPlugin())
-            vca->setSliderPos (newSliderPos);
+            vca->setSliderPos (delta ? vca->getSliderPos() + delta : newSliderPos);
         else if (auto vp = ft->getVolumePlugin())
-            vp->setSliderPos (newSliderPos);
+            vp->setSliderPos (delta ? vp->getSliderPos() + delta : newSliderPos);
         else
             moveFader (mapTrackNumToChannelNum (channelNum), decibelsToVolumeFaderPosition (0.0f));
     }
 }
 
-void ExternalControllerManager::userMovedMasterFader (Edit* ed, float newLevel)
+void ExternalControllerManager::userMovedMasterFader (Edit* ed, float newLevel, bool delta)
 {
     if (ed != nullptr)
-        ed->setMasterVolumeSliderPos (newLevel);
+    {
+        if (delta)
+            ed->setMasterVolumeSliderPos (ed->getMasterSliderPosParameter()->getCurrentValue() + newLevel);
+        else
+            ed->setMasterVolumeSliderPos (newLevel);
+    }
 }
 
 void ExternalControllerManager::userMovedMasterPanPot (Edit* ed, float newLevel)
@@ -607,19 +693,19 @@ void ExternalControllerManager::userMovedMasterPanPot (Edit* ed, float newLevel)
         ed->setMasterPanPos (newLevel);
 }
 
-void ExternalControllerManager::userMovedPanPot (int channelNum, float newPan)
+void ExternalControllerManager::userMovedPanPot (int channelNum, float newPan, bool delta)
 {
     auto track = getChannelTrack (channelNum);
     
     if (auto t = dynamic_cast<AudioTrack*> (track))
     {
         if (auto vp = t->getVolumePlugin())
-            vp->setPan (newPan);
+            vp->setPan (delta ? vp->getPan() + newPan : newPan);
     }
     else if (auto ft = dynamic_cast<FolderTrack*> (track))
     {
         if (auto vp = ft->getVolumePlugin())
-            vp->setPan (newPan);
+            vp->setPan (delta ? vp->getPan() + newPan : newPan);
     }
 }
 
@@ -799,14 +885,14 @@ bool ExternalControllerManager::shouldTrackBeColoured (int channelNum)
     return false;
 }
 
-Colour ExternalControllerManager::getTrackColour (int channelNum)
+juce::Colour ExternalControllerManager::getTrackColour (int channelNum)
 {
-    Colour c;
+    juce::Colour c;
 
     if (! devices.isEmpty())
     {
         auto cn = mapTrackNumToChannelNum (channelNum);
-        FOR_EACH_DEVICE (getTrackColour (cn, c));
+        FOR_EACH_ACTIVE_DEVICE (getTrackColour (cn, c));
     }
 
     return c;
@@ -827,10 +913,10 @@ bool ExternalControllerManager::shouldPluginBeColoured (Plugin* plugin)
     return false;
 }
 
-Colour ExternalControllerManager::getPluginColour (Plugin* plugin)
+juce::Colour ExternalControllerManager::getPluginColour (Plugin* plugin)
 {
-    Colour c;
-    FOR_EACH_DEVICE (getPluginColour (plugin, c));
+    juce::Colour c;
+    FOR_EACH_ACTIVE_DEVICE (getPluginColour (plugin, c));
     return c;
 }
 
@@ -840,39 +926,46 @@ void ExternalControllerManager::repaintPlugin (Plugin& plugin)
         c->updateColour();
 }
 
-int ExternalControllerManager::getXTCount()
+int ExternalControllerManager::getXTCount (const juce::String& desc)
 {
-    return engine.getPropertyStorage().getProperty (SettingID::xtCount);
+    if (desc == "Mackie Control Universal")
+        return engine.getPropertyStorage().getProperty (SettingID::xtCount);
+    
+    return engine.getPropertyStorage().getPropertyItem (SettingID::xtCount, desc);
 }
 
-void ExternalControllerManager::setXTCount (int after)
+void ExternalControllerManager::setXTCount (const juce::String& desc, int after)
 {
     CRASH_TRACER
-    juce::ignoreUnused (after);
+    juce::ignoreUnused (desc, after);
 
    #if TRACKTION_ENABLE_CONTROL_SURFACES
-    if (auto first = devices.getFirst())
+    for (int devIdx = 0; devIdx < devices.size(); devIdx++)
     {
-        if (auto mcu = first->getControlSurfaceIfType<MackieMCU>())
+        auto device = devices[devIdx];
+        if (auto mcu = device->getControlSurfaceIfType<MackieMCU>(); mcu != nullptr && mcu->deviceDescription == desc)
         {
-            int before = getXTCount();
+            int before = getXTCount (desc);
             int diff = after - before;
 
             if (diff > 0)
             {
                 for (int i = 0; i < diff; ++i)
-                    devices.insert (before + i + 1, new ExternalController (engine, new MackieXT (*this, *mcu, before + i)));
+                    devices.insert (devIdx + before + i + 1, new ExternalController (engine, new MackieXT (*this, *mcu, before + i)));
             }
             else if (diff < 0)
             {
                 for (int i = 0; i < std::abs (diff); ++i)
-                    devices.remove (before - i);
+                    devices.remove (devIdx + before - i);
             }
 
-            engine.getPropertyStorage().setProperty (SettingID::xtCount, after);
-            refreshXTOrder();
-            sendChangeMessage();
+            if (desc == "Mackie Control Universal")
+                engine.getPropertyStorage().setProperty (SettingID::xtCount, after);
+            else
+                engine.getPropertyStorage().setPropertyItem (SettingID::xtCount, desc, after);
         }
+        refreshXTOrder();
+        sendChangeMessage();
     }
    #endif
 }
@@ -882,32 +975,32 @@ void ExternalControllerManager::refreshXTOrder()
     CRASH_TRACER
 
    #if TRACKTION_ENABLE_CONTROL_SURFACES
-    if (auto first = devices.getFirst())
+    for (auto device : devices)
     {
-        if (auto mcu = first->getControlSurfaceIfType<MackieMCU>())
+        if (auto mcu = device->getControlSurfaceIfType<MackieMCU>())
         {
-            MackieXT* xt [MackieMCU::maxNumSurfaces + 1] = {};
+            MackieXT* xt[MackieMCU::maxNumSurfaces - 1] = {};
 
-            for (int i = 1; i < MackieMCU::maxNumSurfaces; ++i)
-                xt[i - 1] = devices[i] ? devices[i]->getControlSurfaceIfType<MackieXT>() : nullptr;
+            int offset = devices.indexOf (device);
+            for (int i = 0; i < getXTCount (mcu->deviceDescription); ++i)
+                xt[i] = devices[offset + 1 + i] ? devices[offset + 1 + i]->getControlSurfaceIfType<MackieXT>() : nullptr;
 
-            StringArray indices;
-            indices.addTokens (engine.getPropertyStorage().getProperty (SettingID::xtIndices, "0 1 2 3").toString(), false);
+            juce::StringArray indices;
+            if (mcu->deviceDescription == "Mackie Control Universal")
+                indices.addTokens (engine.getPropertyStorage().getProperty (SettingID::xtIndices, "0 1 2 3").toString(), false);
+            else
+                indices.addTokens (engine.getPropertyStorage().getPropertyItem (SettingID::xtIndices, mcu->deviceDescription, "0 1 2 3").toString(), false);
 
             for (int i = indices.size(); --i >= 0;)
-                if (indices[i].getIntValue() > getXTCount())
+                if (indices[i].getIntValue() > getXTCount (mcu->deviceDescription))
                     indices.remove(i);
 
             mcu->setDeviceIndex (indices.indexOf ("0"));
 
-            if (xt[0]) xt[0]->setDeviceIndex (indices.indexOf ("1"));
-            if (xt[1]) xt[1]->setDeviceIndex (indices.indexOf ("2"));
-            if (xt[2]) xt[2]->setDeviceIndex (indices.indexOf ("3"));
+            if (xt[0] != nullptr) xt[0]->setDeviceIndex (indices.indexOf ("1"));
+            if (xt[1] != nullptr) xt[1]->setDeviceIndex (indices.indexOf ("2"));
+            if (xt[2] != nullptr) xt[2]->setDeviceIndex (indices.indexOf ("3"));
         }
-    }
-    else
-    {
-        jassertfalse;
     }
    #endif
 }

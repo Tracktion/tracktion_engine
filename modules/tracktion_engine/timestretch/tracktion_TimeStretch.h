@@ -41,7 +41,7 @@ public:
         melodyne = 5,                   /**< Melodyne, only used for clip timestretching. */
         elastiquePro = 6,               /**< Elastique Pro good all round (@see ElastiqueProOptions). */
         elastiqueEfficient = 7,         /**< Elastique lower quality and lower CPU usage. */
-        elastiqueMobile = 8,            /**< Elastique lower quality and lower CPU usage, optomised for mobile. */
+        elastiqueMobile = 8,            /**< Elastique lower quality and lower CPU usage, optimised for mobile. */
         elastiqueMonophonic = 9,        /**< Elastique which can sound better for monophonic sounds. */
         rubberbandMelodic = 10,         /**< RubberBand tailored to melodic sounds prioritising pitch accuracy. */
         rubberbandPercussive = 11,      /**< RubberBand tailored to percussive sounds prioritising transient accuracy. */

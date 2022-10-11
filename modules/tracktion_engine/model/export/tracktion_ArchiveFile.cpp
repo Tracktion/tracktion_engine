@@ -13,9 +13,9 @@ namespace tracktion_engine
 
 static bool isWorthConvertingToOgg (AudioFile& source, int quality)
 {
-    if (dynamic_cast<OggVorbisAudioFormat*> (source.getFormat()) != nullptr)
+    if (dynamic_cast<juce::OggVorbisAudioFormat*> (source.getFormat()) != nullptr)
     {
-        const int estimatedQuality = OggVorbisAudioFormat().estimateOggFileQuality (source.getFile());
+        auto estimatedQuality = juce::OggVorbisAudioFormat().estimateOggFileQuality (source.getFile());
 
         return estimatedQuality == 0
                 || quality < estimatedQuality; // if they're asking for a higher quality than the current one, no point in converting
@@ -25,7 +25,7 @@ static bool isWorthConvertingToOgg (AudioFile& source, int quality)
 }
 
 //==============================================================================
-TracktionArchiveFile::IndexEntry::IndexEntry (InputStream& in)
+TracktionArchiveFile::IndexEntry::IndexEntry (juce::InputStream& in)
 {
     offset = in.readInt();
     length = in.readInt();
@@ -45,7 +45,7 @@ TracktionArchiveFile::IndexEntry::IndexEntry (InputStream& in)
 
 TracktionArchiveFile::IndexEntry::~IndexEntry() {}
 
-void TracktionArchiveFile::IndexEntry::write (OutputStream& out)
+void TracktionArchiveFile::IndexEntry::write (juce::OutputStream& out)
 {
     out.writeInt (int (offset));
     out.writeInt (int (length));
@@ -63,7 +63,7 @@ void TracktionArchiveFile::IndexEntry::write (OutputStream& out)
 
 
 //==============================================================================
-TracktionArchiveFile::TracktionArchiveFile (Engine& e, const File& f)
+TracktionArchiveFile::TracktionArchiveFile (Engine& e, const juce::File& f)
     : engine (e), file (f)
 {
     readIndex();
@@ -76,10 +76,10 @@ TracktionArchiveFile::~TracktionArchiveFile()
 
 int TracktionArchiveFile::getMagicNumber()
 {
-    return (int) ByteOrder::littleEndianInt ("TKNA");
+    return (int) juce::ByteOrder::littleEndianInt ("TKNA");
 }
 
-File TracktionArchiveFile::getFile() const
+juce::File TracktionArchiveFile::getFile() const
 {
     return file;
 }
@@ -90,7 +90,7 @@ void TracktionArchiveFile::readIndex()
     needToWriteIndex = false;
     entries.clear();
 
-    FileInputStream in (file);
+    juce::FileInputStream in (file);
 
     if (in.openedOk())
     {
@@ -119,7 +119,7 @@ void TracktionArchiveFile::flush()
 {
     if (needToWriteIndex && valid)
     {
-        FileOutputStream out (file);
+        juce::FileOutputStream out (file);
 
         if (out.openedOk())
         {
@@ -147,7 +147,7 @@ int TracktionArchiveFile::getNumFiles() const
     return entries.size();
 }
 
-String TracktionArchiveFile::getOriginalFileName (int index) const
+juce::String TracktionArchiveFile::getOriginalFileName (int index) const
 {
     if (auto i = entries[index])
         return i->originalName.fromLastOccurrenceOf ("/", false, false);
@@ -155,7 +155,7 @@ String TracktionArchiveFile::getOriginalFileName (int index) const
     return {};
 }
 
-int TracktionArchiveFile::indexOfFile (const String& name) const
+int TracktionArchiveFile::indexOfFile (const juce::String& name) const
 {
     for (int i = entries.size(); --i >= 0;)
         if (getOriginalFileName(i).equalsIgnoreCase (name))
@@ -164,19 +164,20 @@ int TracktionArchiveFile::indexOfFile (const String& name) const
     return -1;
 }
 
-std::unique_ptr<InputStream> TracktionArchiveFile::createStoredInputStream (int index) const
+std::unique_ptr<juce::InputStream> TracktionArchiveFile::createStoredInputStream (int index) const
 {
     if (entries[index] != nullptr)
         if (auto f = file.createInputStream())
-            return std::make_unique<SubregionStream> (f.release(),
-                                                      entries[index]->offset,
-                                                      entries[index]->length,
-                                                      true);
+            return std::make_unique<juce::SubregionStream> (f.release(),
+                                                            entries[index]->offset,
+                                                            entries[index]->length,
+                                                            true);
 
     return {};
 }
 
-bool TracktionArchiveFile::extractFile (int index, const File& destDirectory, File& fileCreated, bool askBeforeOverwriting)
+bool TracktionArchiveFile::extractFile (int index, const juce::File& destDirectory,
+                                        juce::File& fileCreated, bool askBeforeOverwriting)
 {
     if (! destDirectory.createDirectory())
         return false;
@@ -213,19 +214,19 @@ bool TracktionArchiveFile::extractFile (int index, const File& destDirectory, Fi
     if (storedName != entries[index]->originalName)
     {
         if (storedName.endsWithIgnoreCase (".flac"))
-            return AudioFileUtils::readFromFormat<FlacAudioFormat> (engine, *source, destFile);
+            return AudioFileUtils::readFromFormat<juce::FlacAudioFormat> (engine, *source, destFile);
 
         if (storedName.endsWithIgnoreCase (".ogg"))
-            return AudioFileUtils::readFromFormat<OggVorbisAudioFormat> (engine, *source, destFile);
+            return AudioFileUtils::readFromFormat<juce::OggVorbisAudioFormat> (engine, *source, destFile);
 
         if (storedName.endsWithIgnoreCase (".gz"))
-            source = std::make_unique<GZIPDecompressorInputStream> (source.release(), true);
+            source = std::make_unique<juce::GZIPDecompressorInputStream> (source.release(), true);
         else
             jassertfalse;
     }
 
     {
-        FileOutputStream out (destFile);
+        juce::FileOutputStream out (destFile);
 
         if (! out.openedOk())
             return false;
@@ -236,14 +237,15 @@ bool TracktionArchiveFile::extractFile (int index, const File& destDirectory, Fi
     return true;
 }
 
-bool TracktionArchiveFile::extractAll (const File& destDirectory, Array<File>& filesCreated)
+bool TracktionArchiveFile::extractAll (const juce::File& destDirectory,
+                                       juce::Array<juce::File>& filesCreated)
 {
     if (! destDirectory.createDirectory())
         return false;
 
     for (int i = 0; i < entries.size(); ++i)
     {
-        File fileCreated;
+        juce::File fileCreated;
 
         if (! extractFile (i, destDirectory, fileCreated, false))
             return false;
@@ -255,12 +257,12 @@ bool TracktionArchiveFile::extractAll (const File& destDirectory, Array<File>& f
 }
 
 //==============================================================================
-class ExtractionTask : public ThreadPoolJobWithProgress
+class ExtractionTask  : public ThreadPoolJobWithProgress
 {
 public:
-    ExtractionTask (TracktionArchiveFile& archive_, const File& destDir_,
+    ExtractionTask (TracktionArchiveFile& archive_, const juce::File& destDir_,
                     bool warnAboutOverwrite_,
-                    Array<File>& filesCreated_,
+                    juce::Array<juce::File>& filesCreated_,
                     bool& wasAborted_)
         : ThreadPoolJobWithProgress (TRANS("Unpacking archive") + "..."),
           archive (archive_), destDir (destDir_),
@@ -274,7 +276,7 @@ public:
     JobStatus runJob()
     {
         CRASH_TRACER
-        FloatVectorOperations::disableDenormalisedNumberSupport();
+        juce::FloatVectorOperations::disableDenormalisedNumberSupport();
 
         if (! destDir.createDirectory())
             return jobHasFinished;
@@ -293,7 +295,7 @@ public:
 
             progress = i / (float) archive.getNumFiles();
 
-            File fileCreated;
+            juce::File fileCreated;
 
             if (! archive.extractFile (i, destDir, fileCreated, warnAboutOverwrite))
                 return jobHasFinished;
@@ -312,17 +314,17 @@ public:
     }
 
     TracktionArchiveFile& archive;
-    File destDir;
+    juce::File destDir;
     bool ok = false;
     bool& wasAborted;
     float progress = 0;
     bool warnAboutOverwrite = false;
-    Array<File>& filesCreated;
+    juce::Array<juce::File>& filesCreated;
 };
 
 //==============================================================================
-bool TracktionArchiveFile::extractAllAsTask (const File& destDirectory, bool warnAboutOverwrite,
-                                             Array<File>& filesCreated, bool& wasAborted)
+bool TracktionArchiveFile::extractAllAsTask (const juce::File& destDirectory, bool warnAboutOverwrite,
+                                             juce::Array<juce::File>& filesCreated, bool& wasAborted)
 {
     ExtractionTask task (*this, destDirectory, warnAboutOverwrite, filesCreated, wasAborted);
 
@@ -331,9 +333,10 @@ bool TracktionArchiveFile::extractAllAsTask (const File& destDirectory, bool war
     return task.ok;
 }
 
-bool TracktionArchiveFile::addFile (const File& f, const File& rootDirectory, CompressionType compression)
+bool TracktionArchiveFile::addFile (const juce::File& f, const juce::File& rootDirectory,
+                                    CompressionType compression)
 {
-    String name;
+    juce::String name;
 
     if (f.isAChildOf (rootDirectory))
         name = f.getRelativePathFrom (rootDirectory)
@@ -344,18 +347,19 @@ bool TracktionArchiveFile::addFile (const File& f, const File& rootDirectory, Co
     return addFile (f, name, compression);
 }
 
-bool TracktionArchiveFile::addFile (const File& f, const String& filenameToUse, CompressionType compression)
+bool TracktionArchiveFile::addFile (const juce::File& f, const juce::String& filenameToUse,
+                                    CompressionType compression)
 {
     // don't risk using ogg or flac on small audio files
     if (compression != CompressionType::none && f.getSize() <= 16 * 1024)
         compression = CompressionType::zip;
 
-    FileInputStream in (f);
+    juce::FileInputStream in (f);
     bool ok = false;
 
     if (in.openedOk())
     {
-        FileOutputStream out (file);
+        juce::FileOutputStream out (file);
 
         if (out.openedOk())
         {
@@ -398,7 +402,7 @@ bool TracktionArchiveFile::addFile (const File& f, const String& filenameToUse, 
                 {
                     entry->storedName = filenameRoot + ".gz";
 
-                    GZIPCompressorOutputStream deflater (&out, 9, false);
+                    juce::GZIPCompressorOutputStream deflater (&out, 9, false);
                     deflater.writeFromInputStream (in, -1);
                     break;
                 }
@@ -418,14 +422,15 @@ bool TracktionArchiveFile::addFile (const File& f, const String& filenameToUse, 
                             // FLAC can't do higher than 24 bits so just have to zip it instead..
                             entry->storedName = filenameRoot + ".gz";
 
-                            GZIPCompressorOutputStream deflater (&out, 9, false);
+                            juce::GZIPCompressorOutputStream deflater (&out, 9, false);
                             deflater.writeFromInputStream (in, -1);
                         }
                         else
                         {
                             entry->storedName = filenameRoot + ".flac";
 
-                            if (! AudioFileUtils::convertToFormat<FlacAudioFormat> (engine, f, out, 0, StringPairArray()))
+                            if (! AudioFileUtils::convertToFormat<juce::FlacAudioFormat> (engine, f, out, 0,
+                                                                                          juce::StringPairArray()))
                             {
                                 needToWriteIndex = true;
                                 TRACKTION_LOG_ERROR ("Failed to add file to archive flac: " + f.getFileName());
@@ -449,7 +454,7 @@ bool TracktionArchiveFile::addFile (const File& f, const String& filenameToUse, 
 
                     if (! isWorthConvertingToOgg (af, quality))
                     {
-                        FileInputStream fin (af.getFile());
+                        juce::FileInputStream fin (af.getFile());
 
                         if (! fin.openedOk())
                         {
@@ -460,7 +465,8 @@ bool TracktionArchiveFile::addFile (const File& f, const String& filenameToUse, 
 
                         out.writeFromInputStream (fin, -1);
                     }
-                    else if (! AudioFileUtils::convertToFormat<OggVorbisAudioFormat> (engine, f, out, quality, StringPairArray()))
+                    else if (! AudioFileUtils::convertToFormat<juce::OggVorbisAudioFormat> (engine, f, out, quality,
+                                                                                            juce::StringPairArray()))
                     {
                         needToWriteIndex = true;
                         TRACKTION_LOG_ERROR ("Failed to add file to archive ogg: " + f.getFileName());
@@ -482,7 +488,7 @@ bool TracktionArchiveFile::addFile (const File& f, const String& filenameToUse, 
 
             jassert (out.getPosition() > indexOffset);
 
-            entry->length = jmax (int64 (0), out.getPosition() - indexOffset);
+            entry->length = std::max (juce::int64(), out.getPosition() - indexOffset);
 
             jassert (indexOffset + entry->length < 2147483648);
 
@@ -505,7 +511,9 @@ bool TracktionArchiveFile::addFile (const File& f, const String& filenameToUse, 
     return ok;
 }
 
-void TracktionArchiveFile::addFileInfo (const String& filename, const String& itemName, const String& itemValue)
+void TracktionArchiveFile::addFileInfo (const juce::String& filename,
+                                        const juce::String& itemName,
+                                        const juce::String& itemValue)
 {
     auto i = indexOfFile (filename);
 
@@ -519,7 +527,7 @@ void TracktionArchiveFile::addFileInfo (const String& filename, const String& it
 
 int TracktionArchiveFile::getOggQuality (CompressionType c)
 {
-    auto numOptions = OggVorbisAudioFormat().getQualityOptions().size();
+    auto numOptions = juce::OggVorbisAudioFormat().getQualityOptions().size();
 
     if (c == CompressionType::lossyGoodQuality)     return numOptions - 1;
     if (c == CompressionType::lossyMediumQuality)   return numOptions / 2;
