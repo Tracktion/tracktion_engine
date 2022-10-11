@@ -87,7 +87,7 @@ namespace benchmark_utilities
             const auto sizeInBytes = tracktion::graph::test_utilities::getMemoryUsage (nodes);
 
             BenchmarkResult bmr { createBenchmarkDescription ("Node", (editName + ": memory use").toStdString(), description.toStdString()) };
-            bmr.duration = static_cast<double> (sizeInBytes);
+            bmr.totalSeconds = static_cast<double> (sizeInBytes);
             BenchmarkList::getInstance().addResult (bmr);
 
             std::cout << "Num nodes: " << nodes.size() << "\n";
