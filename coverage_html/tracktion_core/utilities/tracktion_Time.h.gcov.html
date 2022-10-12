@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-10-12 18:15:40</td>
+            <td class="headerValue">2022-10-12 18:18:38</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -371,7 +371,7 @@
 <a name="309"><span class="lineNum">     309 </span>            : struct BeatDuration</a>
 <a name="310"><span class="lineNum">     310 </span>            : {</a>
 <a name="311"><span class="lineNum">     311 </span>            :     /** Creates a position at a beat of 0. */</a>
-<a name="312"><span class="lineNum">     312 </span><span class="lineCov">    3723290 :     constexpr BeatDuration() = default;</span></a>
+<a name="312"><span class="lineNum">     312 </span><span class="lineCov">    3723310 :     constexpr BeatDuration() = default;</span></a>
 <a name="313"><span class="lineNum">     313 </span>            : </a>
 <a name="314"><span class="lineNum">     314 </span>            :     /** Creates a copy of another BeatDuration. */</a>
 <a name="315"><span class="lineNum">     315 </span>            :     constexpr BeatDuration (const BeatDuration&amp;) = default;</a>
@@ -519,7 +519,7 @@
 <a name="457"><span class="lineNum">     457 </span>            : template&lt;typename IntType&gt;</a>
 <a name="458"><span class="lineNum">     458 </span>            : inline constexpr TimePosition TimePosition::fromSamples (IntType samplePosition, double sampleRate)</a>
 <a name="459"><span class="lineNum">     459 </span>            : {</a>
-<a name="460"><span class="lineNum">     460 </span><span class="lineCov">   13288700 :     return TimePosition::fromSeconds (samplePosition / sampleRate);</span></a>
+<a name="460"><span class="lineNum">     460 </span><span class="lineCov">   13305800 :     return TimePosition::fromSeconds (samplePosition / sampleRate);</span></a>
 <a name="461"><span class="lineNum">     461 </span>            : }</a>
 <a name="462"><span class="lineNum">     462 </span>            : </a>
 <a name="463"><span class="lineNum">     463 </span>            : inline constexpr double TimePosition::inSeconds() const</a>
@@ -539,8 +539,8 @@
 <a name="477"><span class="lineNum">     477 </span>            : </a>
 <a name="478"><span class="lineNum">     478 </span>            : inline constexpr int64_t toSamples (TimePosition p, double sampleRate)</a>
 <a name="479"><span class="lineNum">     479 </span>            : {</a>
-<a name="480"><span class="lineNum">     480 </span><span class="lineCov">    6329480 :     return static_cast&lt;int64_t&gt; ((p.inSeconds() * sampleRate)</span></a>
-<a name="481"><span class="lineNum">     481 </span><span class="lineCov">    3543830 :                                  + (p.inSeconds() &gt;= 0.0 ? 0.5 : -0.5));</span></a>
+<a name="480"><span class="lineNum">     480 </span><span class="lineCov">    6330510 :     return static_cast&lt;int64_t&gt; ((p.inSeconds() * sampleRate)</span></a>
+<a name="481"><span class="lineNum">     481 </span><span class="lineCov">    3544260 :                                  + (p.inSeconds() &gt;= 0.0 ? 0.5 : -0.5));</span></a>
 <a name="482"><span class="lineNum">     482 </span>            : }</a>
 <a name="483"><span class="lineNum">     483 </span>            : </a>
 <a name="484"><span class="lineNum">     484 </span>            : inline TimePosition abs (TimePosition t)</a>
@@ -585,7 +585,7 @@
 <a name="523"><span class="lineNum">     523 </span>            : template&lt;typename IntType&gt;</a>
 <a name="524"><span class="lineNum">     524 </span>            : inline constexpr TimeDuration TimeDuration::fromSamples (IntType samplePosition, double sampleRate)</a>
 <a name="525"><span class="lineNum">     525 </span>            : {</a>
-<a name="526"><span class="lineNum">     526 </span><span class="lineCov">    4192100 :     return TimeDuration::fromSeconds (samplePosition / sampleRate);</span></a>
+<a name="526"><span class="lineNum">     526 </span><span class="lineCov">    4197820 :     return TimeDuration::fromSeconds (samplePosition / sampleRate);</span></a>
 <a name="527"><span class="lineNum">     527 </span>            : }</a>
 <a name="528"><span class="lineNum">     528 </span>            : </a>
 <a name="529"><span class="lineNum">     529 </span>            : inline constexpr double TimeDuration::inSeconds() const</a>
@@ -605,8 +605,8 @@
 <a name="543"><span class="lineNum">     543 </span>            : </a>
 <a name="544"><span class="lineNum">     544 </span>            : inline constexpr int64_t toSamples (TimeDuration p, double sampleRate)</a>
 <a name="545"><span class="lineNum">     545 </span>            : {</a>
-<a name="546"><span class="lineNum">     546 </span><span class="lineCov">     346378 :     return static_cast&lt;int64_t&gt; ((p.inSeconds() * sampleRate)</span></a>
-<a name="547"><span class="lineNum">     547 </span><span class="lineCov">     346378 :                                  + (p.inSeconds() &gt;= 0.0 ? 0.5 : -0.5));</span></a>
+<a name="546"><span class="lineNum">     546 </span><span class="lineCov">     348006 :     return static_cast&lt;int64_t&gt; ((p.inSeconds() * sampleRate)</span></a>
+<a name="547"><span class="lineNum">     547 </span><span class="lineCov">     348006 :                                  + (p.inSeconds() &gt;= 0.0 ? 0.5 : -0.5));</span></a>
 <a name="548"><span class="lineNum">     548 </span>            : }</a>
 <a name="549"><span class="lineNum">     549 </span>            : </a>
 <a name="550"><span class="lineNum">     550 </span>            : inline TimeDuration abs (TimeDuration t)</a>
@@ -635,12 +635,12 @@
 <a name="573"><span class="lineNum">     573 </span>            : </a>
 <a name="574"><span class="lineNum">     574 </span>            : inline constexpr TimePosition operator+ (const TimePosition&amp; t1, const TimeDuration&amp; t2)</a>
 <a name="575"><span class="lineNum">     575 </span>            : {</a>
-<a name="576"><span class="lineNum">     576 </span><span class="lineCov">   61008341 :     return TimePosition::fromSeconds (t1.inSeconds() + t2.inSeconds());</span></a>
+<a name="576"><span class="lineNum">     576 </span><span class="lineCov">   61025511 :     return TimePosition::fromSeconds (t1.inSeconds() + t2.inSeconds());</span></a>
 <a name="577"><span class="lineNum">     577 </span>            : }</a>
 <a name="578"><span class="lineNum">     578 </span>            : </a>
 <a name="579"><span class="lineNum">     579 </span>            : inline constexpr TimeDuration operator- (const TimePosition&amp; t1, const TimePosition&amp; t2)</a>
 <a name="580"><span class="lineNum">     580 </span>            : {</a>
-<a name="581"><span class="lineNum">     581 </span><span class="lineCov">   20657879 :     return TimeDuration::fromSeconds (t1.inSeconds() - t2.inSeconds());</span></a>
+<a name="581"><span class="lineNum">     581 </span><span class="lineCov">   20662701 :     return TimeDuration::fromSeconds (t1.inSeconds() - t2.inSeconds());</span></a>
 <a name="582"><span class="lineNum">     582 </span>            : }</a>
 <a name="583"><span class="lineNum">     583 </span>            : </a>
 <a name="584"><span class="lineNum">     584 </span>            : inline constexpr TimeDuration operator- (const TimeDuration&amp; t1, const TimeDuration&amp; t2)</a>
@@ -650,7 +650,7 @@
 <a name="588"><span class="lineNum">     588 </span>            : </a>
 <a name="589"><span class="lineNum">     589 </span>            : inline constexpr TimePosition operator- (const TimePosition&amp; t1, const TimeDuration&amp; t2)</a>
 <a name="590"><span class="lineNum">     590 </span>            : {</a>
-<a name="591"><span class="lineNum">     591 </span><span class="lineCov">   17424161 :     return TimePosition::fromSeconds (t1.inSeconds() - t2.inSeconds());</span></a>
+<a name="591"><span class="lineNum">     591 </span><span class="lineCov">   17428831 :     return TimePosition::fromSeconds (t1.inSeconds() - t2.inSeconds());</span></a>
 <a name="592"><span class="lineNum">     592 </span>            : }</a>
 <a name="593"><span class="lineNum">     593 </span>            : </a>
 <a name="594"><span class="lineNum">     594 </span>            : template&lt;typename Type&gt;</a>
@@ -679,7 +679,7 @@
 <a name="617"><span class="lineNum">     617 </span>            : </a>
 <a name="618"><span class="lineNum">     618 </span>            : inline constexpr TimePosition operator* (const TimePosition&amp; t, double ammount)</a>
 <a name="619"><span class="lineNum">     619 </span>            : {</a>
-<a name="620"><span class="lineNum">     620 </span><span class="lineCov">   27129700 :     return TimePosition::fromSeconds (t.inSeconds() * ammount);</span></a>
+<a name="620"><span class="lineNum">     620 </span><span class="lineCov">   27156000 :     return TimePosition::fromSeconds (t.inSeconds() * ammount);</span></a>
 <a name="621"><span class="lineNum">     621 </span>            : }</a>
 <a name="622"><span class="lineNum">     622 </span>            : </a>
 <a name="623"><span class="lineNum">     623 </span>            : inline constexpr TimePosition operator/ (const TimePosition&amp; t, double ammount)</a>
@@ -689,7 +689,7 @@
 <a name="627"><span class="lineNum">     627 </span>            : </a>
 <a name="628"><span class="lineNum">     628 </span>            : inline constexpr TimeDuration operator* (const TimeDuration&amp; t, double ammount)</a>
 <a name="629"><span class="lineNum">     629 </span>            : {</a>
-<a name="630"><span class="lineNum">     630 </span><span class="lineCov">     346162 :     return TimeDuration::fromSeconds (t.inSeconds() * ammount);</span></a>
+<a name="630"><span class="lineNum">     630 </span><span class="lineCov">     347790 :     return TimeDuration::fromSeconds (t.inSeconds() * ammount);</span></a>
 <a name="631"><span class="lineNum">     631 </span>            : }</a>
 <a name="632"><span class="lineNum">     632 </span>            : </a>
 <a name="633"><span class="lineNum">     633 </span>            : inline constexpr TimeDuration operator/ (const TimeDuration&amp; t, double ammount)</a>
@@ -704,7 +704,7 @@
 <a name="642"><span class="lineNum">     642 </span>            : </a>
 <a name="643"><span class="lineNum">     643 </span>            : inline constexpr double operator/ (const TimeDuration&amp; t1, const TimeDuration&amp; t2)</a>
 <a name="644"><span class="lineNum">     644 </span>            : {</a>
-<a name="645"><span class="lineNum">     645 </span><span class="lineCov">    3313370 :     return t1.inSeconds() / t2.inSeconds();</span></a>
+<a name="645"><span class="lineNum">     645 </span><span class="lineCov">    3315000 :     return t1.inSeconds() / t2.inSeconds();</span></a>
 <a name="646"><span class="lineNum">     646 </span>            : }</a>
 <a name="647"><span class="lineNum">     647 </span>            : </a>
 <a name="648"><span class="lineNum">     648 </span><span class="lineCov">       3331 : inline constexpr bool operator== (const TimePosition&amp; t1, const TimePosition&amp; t2)   { return t1.inSeconds() == t2.inSeconds(); }</span></a>
@@ -713,10 +713,10 @@
 <a name="651"><span class="lineNum">     651 </span><span class="lineCov">       3678 : inline constexpr bool operator== (const TimeDuration&amp; t1, const TimeDuration&amp; t2)   { return t1.inSeconds() == t2.inSeconds(); }</span></a>
 <a name="652"><span class="lineNum">     652 </span>            : inline constexpr bool operator!= (const TimeDuration&amp; t1, const TimeDuration&amp; t2)   { return ! (t1 == t2); }</a>
 <a name="653"><span class="lineNum">     653 </span>            : </a>
-<a name="654"><span class="lineNum">     654 </span><span class="lineCov">    1858118 : inline constexpr bool operator&lt;     (const TimePosition&amp; t1, const TimePosition&amp; t2)    { return t1.inSeconds() &lt; t2.inSeconds(); }</span></a>
+<a name="654"><span class="lineNum">     654 </span><span class="lineCov">    1858068 : inline constexpr bool operator&lt;     (const TimePosition&amp; t1, const TimePosition&amp; t2)    { return t1.inSeconds() &lt; t2.inSeconds(); }</span></a>
 <a name="655"><span class="lineNum">     655 </span><span class="lineCov">      17880 : inline constexpr bool operator&lt;=    (const TimePosition&amp; t1, const TimePosition&amp; t2)    { return t1.inSeconds() &lt;= t2.inSeconds(); }</span></a>
 <a name="656"><span class="lineNum">     656 </span><span class="lineCov">      64904 : inline constexpr bool operator&gt;     (const TimePosition&amp; t1, const TimePosition&amp; t2)    { return t1.inSeconds() &gt; t2.inSeconds(); }</span></a>
-<a name="657"><span class="lineNum">     657 </span><span class="lineCov">   16177196 : inline constexpr bool operator&gt;=    (const TimePosition&amp; t1, const TimePosition&amp; t2)    { return t1.inSeconds() &gt;= t2.inSeconds(); }</span></a>
+<a name="657"><span class="lineNum">     657 </span><span class="lineCov">   16176596 : inline constexpr bool operator&gt;=    (const TimePosition&amp; t1, const TimePosition&amp; t2)    { return t1.inSeconds() &gt;= t2.inSeconds(); }</span></a>
 <a name="658"><span class="lineNum">     658 </span>            : </a>
 <a name="659"><span class="lineNum">     659 </span><span class="lineCov">       2077 : inline constexpr bool operator&lt;     (const TimeDuration&amp; t1, const TimeDuration&amp; t2)    { return t1.inSeconds() &lt; t2.inSeconds(); }</span></a>
 <a name="660"><span class="lineNum">     660 </span><span class="lineNoCov">          0 : inline constexpr bool operator&lt;=    (const TimeDuration&amp; t1, const TimeDuration&amp; t2)    { return t1.inSeconds() &lt;= t2.inSeconds(); }</span></a>
@@ -822,22 +822,22 @@
 <a name="760"><span class="lineNum">     760 </span>            : //==============================================================================</a>
 <a name="761"><span class="lineNum">     761 </span>            : inline constexpr BeatDuration operator+ (const BeatDuration&amp; t1, const BeatDuration&amp; t2)</a>
 <a name="762"><span class="lineNum">     762 </span>            : {</a>
-<a name="763"><span class="lineNum">     763 </span><span class="lineCov">    3673848 :     return BeatDuration::fromBeats (t1.inBeats() + t2.inBeats());</span></a>
+<a name="763"><span class="lineNum">     763 </span><span class="lineCov">    3674278 :     return BeatDuration::fromBeats (t1.inBeats() + t2.inBeats());</span></a>
 <a name="764"><span class="lineNum">     764 </span>            : }</a>
 <a name="765"><span class="lineNum">     765 </span>            : </a>
 <a name="766"><span class="lineNum">     766 </span>            : inline constexpr BeatPosition operator+ (const BeatPosition&amp; t1, const BeatDuration&amp; t2)</a>
 <a name="767"><span class="lineNum">     767 </span>            : {</a>
-<a name="768"><span class="lineNum">     768 </span><span class="lineCov">   34129093 :     return BeatPosition::fromBeats (t1.inBeats() + t2.inBeats());</span></a>
+<a name="768"><span class="lineNum">     768 </span><span class="lineCov">   34128893 :     return BeatPosition::fromBeats (t1.inBeats() + t2.inBeats());</span></a>
 <a name="769"><span class="lineNum">     769 </span>            : }</a>
 <a name="770"><span class="lineNum">     770 </span>            : </a>
 <a name="771"><span class="lineNum">     771 </span>            : inline constexpr BeatDuration operator- (const BeatPosition&amp; t1, const BeatPosition&amp; t2)</a>
 <a name="772"><span class="lineNum">     772 </span>            : {</a>
-<a name="773"><span class="lineNum">     773 </span><span class="lineCov">    7864361 :     return BeatDuration::fromBeats (t1.inBeats() - t2.inBeats());</span></a>
+<a name="773"><span class="lineNum">     773 </span><span class="lineCov">    7864661 :     return BeatDuration::fromBeats (t1.inBeats() - t2.inBeats());</span></a>
 <a name="774"><span class="lineNum">     774 </span>            : }</a>
 <a name="775"><span class="lineNum">     775 </span>            : </a>
 <a name="776"><span class="lineNum">     776 </span>            : inline constexpr BeatDuration operator- (const BeatDuration&amp; t1, const BeatDuration&amp; t2)</a>
 <a name="777"><span class="lineNum">     777 </span>            : {</a>
-<a name="778"><span class="lineNum">     778 </span><span class="lineCov">       1043 :     return BeatDuration::fromBeats (t1.inBeats() - t2.inBeats());</span></a>
+<a name="778"><span class="lineNum">     778 </span><span class="lineCov">       1355 :     return BeatDuration::fromBeats (t1.inBeats() - t2.inBeats());</span></a>
 <a name="779"><span class="lineNum">     779 </span>            : }</a>
 <a name="780"><span class="lineNum">     780 </span>            : </a>
 <a name="781"><span class="lineNum">     781 </span>            : inline constexpr BeatPosition operator- (const BeatPosition&amp; t1, const BeatDuration&amp; t2)</a>
