@@ -195,8 +195,10 @@ struct AsyncPluginDeleter  : private juce::Timer,
 
         const juce::ScopedValueSetter<bool> setter (recursive, true, false);
 
+#if !TRACKTION_FORCE_HEADLESS
         juce::Component modal;
         modal.enterModalState (false);
+#endif
 
         plugins.removeLast();
     }
