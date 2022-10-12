@@ -112,6 +112,33 @@ static SemaphoreTests semaphoreTests;
 
 #if TRACKTION_BENCHMARKS
 
+//==============================================================================
+//==============================================================================
+class NoOpBenchmarks    : public juce::UnitTest
+{
+public:
+    NoOpBenchmarks()
+        : juce::UnitTest ("no_op", "tracktion_benchmarks") {}
+
+    //==============================================================================
+    void runTest() override
+    {
+        Benchmark benchmark (createBenchmarkDescription ("Time",
+                                                         "no_op",
+                                                         "no_op"));
+
+        for (int i = 0; i < 100'000; ++i)
+        {
+            benchmark.start();
+            benchmark.stop();
+        }
+    }
+};
+
+static NoOpBenchmarks noOpBenchmarks;
+
+//==============================================================================
+//==============================================================================
 class ChronoNowBenchmarks   : public juce::UnitTest
 {
 public:
@@ -134,7 +161,11 @@ public:
     }
 };
 
+static ChronoNowBenchmarks chronoNowBenchmarks;
 
+
+//==============================================================================
+//==============================================================================
 class ThreadSignallingBenchmarks    : public juce::UnitTest
 {
 public:
