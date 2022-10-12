@@ -332,7 +332,6 @@ private:
         std::atomic<int> numThreadsRunning { 0 };
         std::atomic<bool> threadShouldExit { false };
         juce::WaitableEvent event;
-        auto signalTime = std::chrono::steady_clock::now();
 
         // Start all the threads
         std::vector<std::thread> threads;
@@ -361,9 +360,6 @@ private:
 
         // Sleep for a few more ms to ensure they're all waiting
         std::this_thread::sleep_for (5ms);
-
-        // Signal all the threads
-        signalTime = std::chrono::steady_clock::now();
 
         for (int i = 0; i < 100'000; ++i)
         {
