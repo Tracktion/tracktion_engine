@@ -123,15 +123,15 @@ public:
     //==============================================================================
     void runTest() override
     {
-        Benchmark benchmark (createBenchmarkDescription ("Time",
-                                                         "no_op",
-                                                         "no_op"));
+        Benchmark benchmark (createBenchmarkDescription ("Time", "no_op", "no_op"));
 
         for (int i = 0; i < 100'000; ++i)
         {
             benchmark.start();
             benchmark.stop();
         }
+
+        BenchmarkList::getInstance().addResult (benchmark.getResult());
     }
 };
 
@@ -148,9 +148,7 @@ public:
     //==============================================================================
     void runTest() override
     {
-        Benchmark benchmark (createBenchmarkDescription ("Time",
-                                                         "steady_clock::now",
-                                                         "chrono::steady_clock::now"));
+        Benchmark benchmark (createBenchmarkDescription ("Time", "steady_clock::now", "chrono::steady_clock::now"));
 
         for (int i = 0; i < 100'000; ++i)
         {
@@ -158,6 +156,8 @@ public:
             [[ maybe_unused ]] volatile auto now = std::chrono::steady_clock::now();
             benchmark.stop();
         }
+
+        BenchmarkList::getInstance().addResult (benchmark.getResult());
     }
 };
 
