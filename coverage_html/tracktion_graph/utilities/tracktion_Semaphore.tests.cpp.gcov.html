@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-10-12 18:18:38</td>
+            <td class="headerValue">2022-10-12 22:54:12</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">24</td>
@@ -185,15 +185,15 @@
 <a name="123"><span class="lineNum">     123 </span>            :     //==============================================================================</a>
 <a name="124"><span class="lineNum">     124 </span><span class="lineCov">          1 :     void runTest() override</span></a>
 <a name="125"><span class="lineNum">     125 </span>            :     {</a>
-<a name="126"><span class="lineNum">     126 </span><span class="lineCov">          2 :         Benchmark benchmark (createBenchmarkDescription (&quot;Time&quot;,</span></a>
-<a name="127"><span class="lineNum">     127 </span>            :                                                          &quot;no_op&quot;,</a>
-<a name="128"><span class="lineNum">     128 </span><span class="lineCov">          1 :                                                          &quot;no_op&quot;));</span></a>
-<a name="129"><span class="lineNum">     129 </span>            : </a>
-<a name="130"><span class="lineNum">     130 </span><span class="lineCov">     100001 :         for (int i = 0; i &lt; 100'000; ++i)</span></a>
-<a name="131"><span class="lineNum">     131 </span>            :         {</a>
-<a name="132"><span class="lineNum">     132 </span>            :             benchmark.start();</a>
-<a name="133"><span class="lineNum">     133 </span>            :             benchmark.stop();</a>
-<a name="134"><span class="lineNum">     134 </span>            :         }</a>
+<a name="126"><span class="lineNum">     126 </span><span class="lineCov">          2 :         Benchmark benchmark (createBenchmarkDescription (&quot;Time&quot;, &quot;no_op&quot;, &quot;no_op&quot;));</span></a>
+<a name="127"><span class="lineNum">     127 </span>            : </a>
+<a name="128"><span class="lineNum">     128 </span><span class="lineCov">     100001 :         for (int i = 0; i &lt; 100'000; ++i)</span></a>
+<a name="129"><span class="lineNum">     129 </span>            :         {</a>
+<a name="130"><span class="lineNum">     130 </span>            :             benchmark.start();</a>
+<a name="131"><span class="lineNum">     131 </span>            :             benchmark.stop();</a>
+<a name="132"><span class="lineNum">     132 </span>            :         }</a>
+<a name="133"><span class="lineNum">     133 </span>            : </a>
+<a name="134"><span class="lineNum">     134 </span><span class="lineCov">          2 :         BenchmarkList::getInstance().addResult (benchmark.getResult());</span></a>
 <a name="135"><span class="lineNum">     135 </span><span class="lineCov">          1 :     }</span></a>
 <a name="136"><span class="lineNum">     136 </span>            : };</a>
 <a name="137"><span class="lineNum">     137 </span>            : </a>
@@ -210,16 +210,16 @@
 <a name="148"><span class="lineNum">     148 </span>            :     //==============================================================================</a>
 <a name="149"><span class="lineNum">     149 </span><span class="lineCov">          1 :     void runTest() override</span></a>
 <a name="150"><span class="lineNum">     150 </span>            :     {</a>
-<a name="151"><span class="lineNum">     151 </span><span class="lineCov">          4 :         Benchmark benchmark (createBenchmarkDescription (&quot;Time&quot;,</span></a>
-<a name="152"><span class="lineNum">     152 </span>            :                                                          &quot;steady_clock::now&quot;,</a>
-<a name="153"><span class="lineNum">     153 </span><span class="lineCov">          1 :                                                          &quot;chrono::steady_clock::now&quot;));</span></a>
-<a name="154"><span class="lineNum">     154 </span>            : </a>
-<a name="155"><span class="lineNum">     155 </span><span class="lineCov">     100001 :         for (int i = 0; i &lt; 100'000; ++i)</span></a>
-<a name="156"><span class="lineNum">     156 </span>            :         {</a>
-<a name="157"><span class="lineNum">     157 </span>            :             benchmark.start();</a>
-<a name="158"><span class="lineNum">     158 </span><span class="lineCov">     100000 :             [[ maybe_unused ]] volatile auto now = std::chrono::steady_clock::now();</span></a>
-<a name="159"><span class="lineNum">     159 </span>            :             benchmark.stop();</a>
-<a name="160"><span class="lineNum">     160 </span>            :         }</a>
+<a name="151"><span class="lineNum">     151 </span><span class="lineCov">          4 :         Benchmark benchmark (createBenchmarkDescription (&quot;Time&quot;, &quot;steady_clock::now&quot;, &quot;chrono::steady_clock::now&quot;));</span></a>
+<a name="152"><span class="lineNum">     152 </span>            : </a>
+<a name="153"><span class="lineNum">     153 </span><span class="lineCov">     100001 :         for (int i = 0; i &lt; 100'000; ++i)</span></a>
+<a name="154"><span class="lineNum">     154 </span>            :         {</a>
+<a name="155"><span class="lineNum">     155 </span>            :             benchmark.start();</a>
+<a name="156"><span class="lineNum">     156 </span><span class="lineCov">     100000 :             [[ maybe_unused ]] volatile auto now = std::chrono::steady_clock::now();</span></a>
+<a name="157"><span class="lineNum">     157 </span>            :             benchmark.stop();</a>
+<a name="158"><span class="lineNum">     158 </span>            :         }</a>
+<a name="159"><span class="lineNum">     159 </span>            : </a>
+<a name="160"><span class="lineNum">     160 </span><span class="lineCov">          2 :         BenchmarkList::getInstance().addResult (benchmark.getResult());</span></a>
 <a name="161"><span class="lineNum">     161 </span><span class="lineCov">          1 :     }</span></a>
 <a name="162"><span class="lineNum">     162 </span>            : };</a>
 <a name="163"><span class="lineNum">     163 </span>            : </a>
@@ -372,11 +372,11 @@
 <a name="310"><span class="lineNum">     310 </span>            : </a>
 <a name="311"><span class="lineNum">     311 </span><span class="lineCov">         22 :         for (int i = 0; i &lt; numThreads; ++i)</span></a>
 <a name="312"><span class="lineNum">     312 </span>            :         {</a>
-<a name="313"><span class="lineNum">     313 </span><span class="lineCov">    1843360 :             threads.emplace_back ([&amp;]</span></a>
+<a name="313"><span class="lineNum">     313 </span><span class="lineCov">    1857330 :             threads.emplace_back ([&amp;]</span></a>
 <a name="314"><span class="lineNum">     314 </span>            :                                   {</a>
 <a name="315"><span class="lineNum">     315 </span>            :                                       ++numThreadsRunning;</a>
 <a name="316"><span class="lineNum">     316 </span>            : </a>
-<a name="317"><span class="lineNum">     317 </span><span class="lineCov">    1843340 :                                       while (! threadShouldExit)</span></a>
+<a name="317"><span class="lineNum">     317 </span><span class="lineCov">    1857310 :                                       while (! threadShouldExit)</span></a>
 <a name="318"><span class="lineNum">     318 </span>            :                                           event.wait();</a>
 <a name="319"><span class="lineNum">     319 </span>            : </a>
 <a name="320"><span class="lineNum">     320 </span>            :                                       --numThreadsRunning;</a>
@@ -405,7 +405,7 @@
 <a name="343"><span class="lineNum">     343 </span>            :         // Wait for the threads to complete</a>
 <a name="344"><span class="lineNum">     344 </span>            :         threadShouldExit = true;</a>
 <a name="345"><span class="lineNum">     345 </span>            : </a>
-<a name="346"><span class="lineNum">     346 </span><span class="lineCov">     128870 :         while (numThreadsRunning &gt; 0)</span></a>
+<a name="346"><span class="lineNum">     346 </span><span class="lineCov">      35397 :         while (numThreadsRunning &gt; 0)</span></a>
 <a name="347"><span class="lineNum">     347 </span>            :             event.signal (numThreads);</a>
 <a name="348"><span class="lineNum">     348 </span>            : </a>
 <a name="349"><span class="lineNum">     349 </span><span class="lineCov">         22 :         for (auto&amp; t : threads)</span></a>
@@ -435,8 +435,8 @@
 <a name="373"><span class="lineNum">     373 </span>            :                                   {</a>
 <a name="374"><span class="lineNum">     374 </span><span class="lineCov">         10 :                                       ++numThreadsRunning;</span></a>
 <a name="375"><span class="lineNum">     375 </span>            : </a>
-<a name="376"><span class="lineNum">     376 </span><span class="lineCov">       7191 :                                       while (! threadShouldExit)</span></a>
-<a name="377"><span class="lineNum">     377 </span><span class="lineCov">       7181 :                                           event.wait();</span></a>
+<a name="376"><span class="lineNum">     376 </span><span class="lineCov">       6145 :                                       while (! threadShouldExit)</span></a>
+<a name="377"><span class="lineNum">     377 </span><span class="lineCov">       6135 :                                           event.wait();</span></a>
 <a name="378"><span class="lineNum">     378 </span>            : </a>
 <a name="379"><span class="lineNum">     379 </span>            :                                       --numThreadsRunning;</a>
 <a name="380"><span class="lineNum">     380 </span><span class="lineCov">         10 :                                   });</span></a>
@@ -464,8 +464,8 @@
 <a name="402"><span class="lineNum">     402 </span>            :         // Wait for the threads to complete</a>
 <a name="403"><span class="lineNum">     403 </span>            :         threadShouldExit = true;</a>
 <a name="404"><span class="lineNum">     404 </span>            : </a>
-<a name="405"><span class="lineNum">     405 </span><span class="lineCov">       2703 :         while (numThreadsRunning &gt; 0)</span></a>
-<a name="406"><span class="lineNum">     406 </span><span class="lineCov">       2702 :             event.signal();</span></a>
+<a name="405"><span class="lineNum">     405 </span><span class="lineCov">      66739 :         while (numThreadsRunning &gt; 0)</span></a>
+<a name="406"><span class="lineNum">     406 </span><span class="lineCov">      66738 :             event.signal();</span></a>
 <a name="407"><span class="lineNum">     407 </span>            : </a>
 <a name="408"><span class="lineNum">     408 </span><span class="lineCov">         11 :         for (auto&amp; t : threads)</span></a>
 <a name="409"><span class="lineNum">     409 </span><span class="lineCov">         10 :             t.join();</span></a>
