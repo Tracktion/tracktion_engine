@@ -112,6 +112,29 @@ static SemaphoreTests semaphoreTests;
 
 #if TRACKTION_BENCHMARKS
 
+class ChronoNowBenchmarks   : public juce::UnitTest
+{
+public:
+    ChronoNowBenchmarks()
+        : juce::UnitTest ("steady_clock::now", "tracktion_benchmarks") {}
+
+    //==============================================================================
+    void runTest() override
+    {
+        Benchmark benchmark (createBenchmarkDescription ("Time",
+                                                         "steady_clock::now",
+                                                         "chrono::steady_clock::now"));
+
+        for (int i = 0; i < 100'000; ++i)
+        {
+            benchmark.start();
+            [[ maybe_unused ]] volatile auto now = std::chrono::steady_clock::now();
+            benchmark.stop();
+        }
+    }
+};
+
+
 class ThreadSignallingBenchmarks    : public juce::UnitTest
 {
 public:
@@ -250,7 +273,6 @@ private:
         std::atomic<int> numThreadsRunning { 0 };
         std::atomic<bool> threadShouldExit { false };
         SemaphoreType event;
-        auto signalTime = std::chrono::steady_clock::now();
 
         // Start all the threads
         std::vector<std::thread> threads;
@@ -279,9 +301,6 @@ private:
 
         // Sleep for a few more ms to ensure they're all waiting
         std::this_thread::sleep_for (5ms);
-
-        // Signal all the threads
-        signalTime = std::chrono::steady_clock::now();
 
         for (int i = 0; i < 100'000; ++i)
         {
