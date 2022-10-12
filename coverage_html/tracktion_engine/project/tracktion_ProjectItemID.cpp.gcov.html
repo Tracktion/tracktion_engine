@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-10-12 16:32:34</td>
+            <td class="headerValue">2022-10-12 16:33:49</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">6</td>
@@ -81,16 +81,16 @@
 <a name="19"><span class="lineNum">      19 </span>            : </a>
 <a name="20"><span class="lineNum">      20 </span>            :     for (auto p = asString.getCharPointer();; ++p)</a>
 <a name="21"><span class="lineNum">      21 </span>            :     {</a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineCov">      43007 :         auto c = *p;</span></a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineCov">      43007 :         auto hex = juce::CharacterFunctions::getHexDigitValue (c);</span></a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineCov">      43018 :         auto c = *p;</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">      43018 :         auto hex = juce::CharacterFunctions::getHexDigitValue (c);</span></a>
 <a name="24"><span class="lineNum">      24 </span>            : </a>
-<a name="25"><span class="lineNum">      25 </span><span class="lineCov">      43007 :         if (c == 0)</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineCov">      43018 :         if (c == 0)</span></a>
 <a name="26"><span class="lineNum">      26 </span>            :         {</a>
 <a name="27"><span class="lineNum">      27 </span>            :             break; // End of string</a>
 <a name="28"><span class="lineNum">      28 </span>            :         }</a>
-<a name="29"><span class="lineNum">      29 </span><span class="lineCov">      22678 :         else if (hex &gt;= 0)</span></a>
+<a name="29"><span class="lineNum">      29 </span><span class="lineCov">      22689 :         else if (hex &gt;= 0)</span></a>
 <a name="30"><span class="lineNum">      30 </span>            :         {</a>
-<a name="31"><span class="lineNum">      31 </span><span class="lineCov">       2079 :             *number = ((*number) &lt;&lt; 4) | hex;</span></a>
+<a name="31"><span class="lineNum">      31 </span><span class="lineCov">       2090 :             *number = ((*number) &lt;&lt; 4) | hex;</span></a>
 <a name="32"><span class="lineNum">      32 </span>            :         }</a>
 <a name="33"><span class="lineNum">      33 </span><span class="lineCov">      20599 :         else if ((c == '/' || c == '_') &amp;&amp; number == &amp;pid)</span></a>
 <a name="34"><span class="lineNum">      34 </span>            :         {</a>
