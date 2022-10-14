@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -30,7 +30,7 @@ public:
     {
         Segment() = default;
 
-        EditTimeRange getRange() const;
+        TimeRange getRange() const;
         SampleRange getSampleRange() const;
 
         float getStretchRatio() const;
@@ -45,7 +45,8 @@ public:
         bool operator== (const Segment&) const;
         bool operator!= (const Segment&) const;
 
-        double start = 0, length = 0;
+        TimePosition start;
+        TimeDuration length;
         SampleCount startSample = 0, lengthSample = 0;
         float stretchRatio = 1.0f, transpose = 0;
         bool fadeIn = false, fadeOut = false;
@@ -54,10 +55,10 @@ public:
 
     const juce::Array<Segment>& getSegments() const         { return segments; }
 
-    double getStart() const;
-    double getEnd() const;
-    double getLength() const                                { return getEnd() - getStart(); }
-    double getCrossfadeLength() const                       { return crossfadeTime; }
+    TimePosition getStart() const;
+    TimePosition getEnd() const;
+    TimeDuration getLength() const                          { return getEnd() - getStart(); }
+    TimeDuration getCrossfadeLength() const                 { return crossfadeTime; }
 
     bool operator== (const AudioSegmentList&) const noexcept;
     bool operator!= (const AudioSegmentList&) const noexcept;
@@ -68,23 +69,23 @@ private:
     AudioSegmentList (AudioClipBase&, bool relativeTime, bool crossfade);
 
     void chopSegmentsForChords();
-    void chopSegment (Segment& seg, double at, int insertPos);
+    void chopSegment (Segment&, TimePosition at, int insertPos);
 
     AudioClipBase& clip;
     juce::Array<Segment> segments;
-    double crossfadeTime = 0;
+    TimeDuration crossfadeTime;
     bool relativeTime = true;
 
     void build (bool crossfade);
     void buildAutoTempo (bool crossfade);
     void buildNormal (bool crossfade);
-    float getPitchAt (double);
+    float getPitchAt (TimePosition);
     void removeExtraSegments();
     void crossFadeSegments();
     void mergeSegments (double sampleRate);
-    void initialiseSegment (Segment&, double startBeat, double endBeat, double sampleRate);
+    void initialiseSegment (Segment&, BeatPosition startBeat, BeatPosition endBeat, double sampleRate);
 
     juce::OwnedArray<PatternGenerator::ProgressionItem> progression;
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

@@ -13,7 +13,7 @@
 #include "tracktion_AudioNode.h"
 
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -77,7 +77,7 @@ public:
         if (! hasInitialised)
         {
             hasInitialised = true;
-            plugin->baseClassInitialise ({ info.startTime, info.sampleRate, info.blockSizeSamples });
+            plugin->baseClassInitialise ({ TimePosition::fromSeconds (info.startTime), info.sampleRate, info.blockSizeSamples });
             latencySeconds = plugin->getLatencySeconds();
 
             if (input != nullptr)
@@ -162,14 +162,14 @@ public:
             rc.addAntiDenormalisationNoise();
 
         if (! rc.isContiguousWithPreviousBlock())
-            plugin->updateParameterStreams (rc.getEditTime().editRange1.getStart());
+            plugin->updateParameterStreams (TimePosition::fromSeconds (rc.getEditTime().editRange1.getStart()));
 
         plugin->applyToBufferWithAutomation (createPluginRenderContext (rc));
     }
 
     void prepareForNextBlock (const AudioRenderContext& rc) override
     {
-        plugin->prepareForNextBlock (rc.getEditTime().editRange1.getStart());
+        plugin->prepareForNextBlock (TimePosition::fromSeconds (rc.getEditTime().editRange1.getStart()));
         input->prepareForNextBlock (rc);
     }
 
@@ -184,7 +184,7 @@ protected:
     {
         return { rc.destBuffer, rc.destBufferChannels, rc.bufferStartSample, rc.bufferNumSamples,
                  rc.bufferForMidiMessages, rc.midiBufferOffset,
-                 rc.getEditTime().editRange1.getStart(),
+                 TimePosition::fromSeconds (rc.getEditTime().editRange1.getStart()),
                  rc.playhead.isPlaying(), rc.playhead.isUserDragging(), rc.isRendering,
                  false };
     }
@@ -192,4 +192,4 @@ protected:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginAudioNode)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

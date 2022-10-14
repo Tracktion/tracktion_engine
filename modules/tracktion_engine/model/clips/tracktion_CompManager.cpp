@@ -14,7 +14,7 @@
 #include "../../playback/audionodes/tracktion_CombiningAudioNode.h"
 
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 struct CompManager::RenderTrigger   : public ValueTreeAllEventListener,
@@ -47,7 +47,7 @@ CompManager::CompManager (Clip& c, const juce::ValueTree& v)
 
     renderTrigger = std::make_unique<RenderTrigger> (*this);
 
-    lastOffset = clip.getPosition().getOffset();
+    lastOffset = clip.getPosition().getOffset().inSeconds();
     lastTimeRatio = getSourceTimeMultiplier();
 }
 
@@ -101,7 +101,7 @@ juce::ValueTree CompManager::findSectionAtTime (double time)
     return {};
 }
 
-int CompManager::findSectionWithEndTime (EditTimeRange timeRange, int takeIndex, bool& timeFoundAtStartOfSection) const
+int CompManager::findSectionWithEndTime (juce::Range<double> timeRange, int takeIndex, bool& timeFoundAtStartOfSection) const
 {
     auto activeTree = getActiveTakeTree();
     auto numSections = activeTree.getNumChildren();
@@ -134,7 +134,7 @@ int CompManager::findSectionWithEndTime (EditTimeRange timeRange, int takeIndex,
     return -1;
 }
 
-EditTimeRange CompManager::getSectionTimes (const juce::ValueTree& section) const
+juce::Range<double> CompManager::getSectionTimes (const juce::ValueTree& section) const
 {
     jassert (section.hasType (IDs::COMPSECTION));
 
@@ -173,11 +173,11 @@ juce::String CompManager::getTakeName (int index) const
 }
 
 //==============================================================================
-EditTimeRange CompManager::getCompRange() const
+juce::Range<double> CompManager::getCompRange() const
 {
     auto endTime = clip.isLooping() ? getLoopLength()
                                     : (getMaxCompLength() * getSourceTimeMultiplier());
-    return EditTimeRange (0.0, endTime) - getOffset();
+    return juce::Range<double> (0.0, endTime) - getOffset();
 }
 
 double CompManager::getSpeedRatio() const
@@ -286,7 +286,7 @@ void CompManager::moveSectionEndTime (juce::ValueTree& section, double newTime)
 
     if (currentEndTime != newTime)
     {
-        removeSectionsWithinRange (EditTimeRange::between (currentEndTime, newTime), section);
+        removeSectionsWithinRange (juce::Range<double>::between (currentEndTime, newTime), section);
         section.setProperty (IDs::endTime, newTime, getUndoManager());
     }
 }
@@ -362,7 +362,7 @@ void CompManager::removeSection (const juce::ValueTree& section)
     section.getParent().removeChild (section, getUndoManager());
 }
 
-void CompManager::removeSectionsWithinRange (EditTimeRange timeRange, const juce::ValueTree& sectionToKeep)
+void CompManager::removeSectionsWithinRange (juce::Range<double> timeRange, const juce::ValueTree& sectionToKeep)
 {
     auto takeTree = getActiveTakeTree();
     jassert (takeTree.hasType (IDs::TAKE) && isTakeComp (takeTree));
@@ -434,7 +434,7 @@ void CompManager::keepSectionsSortedAndInRange()
         {
             auto sectionTimes = getSectionTimes (takeTree.getChild (i));
 
-            if (! compRange.overlaps (sectionTimes)
+            if (! (sectionTimes.getStart() < compRange.getEnd() && compRange.getStart() < sectionTimes.getEnd())
                 || sectionTimes.getEnd() < compRange.getStart())
             {
                 takeTree.removeChild (i, getUndoManager());
@@ -505,13 +505,13 @@ void CompManager::refreshCachedTakeLengths()
     {
         // need to find the tempo changes between the source start and  how long the result will be
         const double sourceTempo = getSourceTempo();
-        const double sourceStart = clip.getPosition().getStart();
+        const double sourceStart = clip.getPosition().getStart().inSeconds();
         const double takeEnd = sourceStart + maxSourceLength - getOffset();
 
         auto& ts = clip.edit.tempoSequence;
-        auto& tempoSetting = ts.getTempoAt (sourceStart);
+        auto& tempoSetting = ts.getTempoAt (TimePosition::fromSeconds (sourceStart));
 
-        displayWarning = &tempoSetting != &ts.getTempoAt (takeEnd);
+        displayWarning = &tempoSetting != &ts.getTempoAt (TimePosition::fromSeconds (takeEnd));
         speedRatio = tempoSetting.getBpm() / sourceTempo;
     }
     else
@@ -778,8 +778,8 @@ double WaveCompManager::getTakeLength (int takeIndex) const
     return getSourceFileForTake (takeIndex).getInfo().getLengthInSeconds();
 }
 
-double WaveCompManager::getOffset() const       { return clip.getPosition().getOffset(); }
-double WaveCompManager::getLoopLength() const   { return clip.getLoopLength(); }
+double WaveCompManager::getOffset() const       { return clip.getPosition().getOffset().inSeconds(); }
+double WaveCompManager::getLoopLength() const   { return clip.getLoopLength().inSeconds(); }
 bool WaveCompManager::getAutoTempo()            { return clip.getAutoTempo(); }
 
 double WaveCompManager::getSourceTempo()
@@ -1014,7 +1014,7 @@ bool WaveCompManager::renderTake (CompRenderContext& context, AudioFileWriter& w
     // first build the audio graph of the comp
     CombiningAudioNode compNode;
     const int blockSize = 32768;
-    EditTimeRange takeRange (0.0, context.maxLength);
+    juce::Range<double> takeRange (0.0, context.maxLength);
     auto crossfadeLength = context.crossfadeLength;
     auto halfCrossfade = crossfadeLength / 2.0;
 
@@ -1041,8 +1041,8 @@ bool WaveCompManager::renderTake (CompRenderContext& context, AudioFileWriter& w
             AudioNode* node = new WaveAudioNode (takeFile, takeRange, 0.0, {}, {},
                                                  1.0, juce::AudioChannelSet::stereo());
 
-            auto segmentTimes = EditTimeRange (startTime, endTime).expanded (halfCrossfade) + offset;
-            EditTimeRange fadeIn, fadeOut;
+            auto segmentTimes = juce::Range<double> (startTime, endTime).expanded (halfCrossfade) + offset;
+            juce::Range<double> fadeIn, fadeOut;
 
             if (i != 0)
                 fadeIn = { segmentTimes.getStart(), segmentTimes.getStart() + crossfadeLength };
@@ -1347,17 +1347,17 @@ MidiList* MidiCompManager::getSequenceLooped (int index)
 HashCode MidiCompManager::getBaseTakeHash (int takeIndex) const
 {
     return takeIndex
-             ^ static_cast<HashCode> (clip.getLoopLengthBeats() * 153.0)
-             ^ static_cast<HashCode> (clip.getLoopStartBeats() * 264.0);
+             ^ static_cast<HashCode> (clip.getLoopLengthBeats().inBeats() * 153.0)
+             ^ static_cast<HashCode> (clip.getLoopStartBeats().inBeats() * 264.0);
 }
 
 double MidiCompManager::getTakeLength (int takeIndex) const
 {
     if (clip.isLooping())
-        return clip.getLoopLengthBeats();
+        return clip.getLoopLengthBeats().inBeats();
 
     if (auto ml = clip.getTakeSequence (takeIndex))
-        return ml->getLastBeatNumber();
+        return ml->getLastBeatNumber().inBeats();
 
     return 0.0;
 }
@@ -1450,20 +1450,20 @@ void MidiCompManager::createComp (const juce::ValueTree& takeTree)
 
         const auto numSegments = takeTree.getNumChildren();
         const auto numTakes = getNumTakes();
-        const auto loopStart = clip.getLoopStartBeats();
-        double startBeat = 0.0;
+        const auto loopStart = toDuration (clip.getLoopStartBeats());
+        BeatPosition startBeat;
 
         for (int i = 0; i < numSegments; ++i)
         {
             auto compSegment = takeTree.getChild (i);
             const auto takeIndex = static_cast<int> (compSegment.getProperty (IDs::takeIndex));
-            const auto endBeat = static_cast<double> (compSegment.getProperty (IDs::endTime));
+            const auto endBeat = BeatPosition::fromBeats (static_cast<double> (compSegment.getProperty (IDs::endTime)));
 
             if (juce::isPositiveAndBelow (takeIndex, numTakes))
             {
                 if (auto src = getSequenceLooped (takeIndex))
                 {
-                    const juce::Range<double> beats (startBeat, endBeat);
+                    const BeatRange beats (startBeat, endBeat);
 
                     for (auto n : src->getNotes())
                     {
@@ -1477,7 +1477,7 @@ void MidiCompManager::createComp (const juce::ValueTree& takeTree)
                         if (! newRange.isEmpty())
                         {
                             MidiNote newNote (n->state.createCopy());
-                            newRange += loopStart;
+                            newRange = newRange + loopStart;
                             newNote.setStartAndLength (newRange.getStart(), newRange.getLength(), nullptr);
                             dest->addNote (newNote, um);
                         }
@@ -1518,4 +1518,4 @@ void MidiCompManager::createComp (const juce::ValueTree& takeTree)
     }
 }
 
-}
+}} // namespace tracktion { inline namespace engine

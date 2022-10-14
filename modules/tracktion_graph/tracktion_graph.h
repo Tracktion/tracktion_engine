@@ -62,49 +62,56 @@
 //==============================================================================
 #include <cassert>
 #include <thread>
+#include <optional>
 
 //==============================================================================
 #if __has_include(<choc/audio/choc_SampleBuffers.h>)
  #include <choc/audio/choc_SampleBuffers.h>
- #include <choc/audio/choc_MIDI.h>
+ #include <choc/audio/choc_MIDISequence.h>
  #include <choc/audio/choc_MultipleReaderMultipleWriterFIFO.h>
+ #include <choc/containers/choc_NonAllocatingStableSort.h>
 #else
  #include "../3rd_party/choc/audio/choc_SampleBuffers.h"
- #include "../3rd_party/choc/audio/choc_MIDI.h"
+ #include "../3rd_party/choc/audio/choc_MIDISequence.h"
  #include "../3rd_party/choc/containers/choc_MultipleReaderMultipleWriterFIFO.h"
+ #include "../3rd_party/choc/containers/choc_NonAllocatingStableSort.h"
 #endif
 
 //==============================================================================
 #include <juce_audio_basics/juce_audio_basics.h>
+#include "../tracktion_core/tracktion_core.h"
 
 //==============================================================================
-#include "tracktion_graph/tracktion_graph_Utility.h"
+#include "utilities/tracktion_MidiMessageArray.h"
+namespace tracktion_engine = tracktion::engine;
+
+#include "tracktion_graph/tracktion_Node.h"
+#include "tracktion_graph/tracktion_Utility.h"
 
 #include "utilities/tracktion_AudioBufferPool.h"
 #include "utilities/tracktion_AudioBufferStack.h"
 #include "utilities/tracktion_GlueCode.h"
 #include "utilities/tracktion_AudioFifo.h"
-#include "utilities/tracktion_MidiMessageArray.h"
 #include "utilities/tracktion_PerformanceMeasurement.h"
 #include "utilities/tracktion_RealTimeSpinLock.h"
 #include "utilities/tracktion_Semaphore.h"
 #include "utilities/tracktion_Threads.h"
-#include "utilities/tracktion_graph_LatencyProcessor.h"
+#include "utilities/tracktion_LatencyProcessor.h"
+#include "utilities/tracktion_LockFreeObject.h"
 
-#include "tracktion_graph/tracktion_graph_PlayHead.h"
+#include "tracktion_graph/tracktion_PlayHead.h"
 
-#include "tracktion_graph/tracktion_graph_Node.h"
-#include "tracktion_graph/tracktion_graph_PlayHeadState.h"
+#include "tracktion_graph/tracktion_PlayHeadState.h"
 
-#include "tracktion_graph/players/tracktion_graph_NodePlayerUtilities.h"
+#include "tracktion_graph/players/tracktion_NodePlayerUtilities.h"
 
-#include "tracktion_graph/tracktion_graph_NodePlayer.h"
-#include "tracktion_graph/tracktion_graph_MultiThreadedNodePlayer.h"
-#include "tracktion_graph/tracktion_graph_LockFreeMultiThreadedNodePlayer.h"
-#include "tracktion_graph/tracktion_graph_NodePlayerThreadPools.h"
+#include "tracktion_graph/tracktion_NodePlayer.h"
+#include "tracktion_graph/tracktion_MultiThreadedNodePlayer.h"
+#include "tracktion_graph/tracktion_LockFreeMultiThreadedNodePlayer.h"
+#include "tracktion_graph/tracktion_NodePlayerThreadPools.h"
 
-#include "tracktion_graph/nodes/tracktion_graph_ConnectedNode.h"
-#include "tracktion_graph/nodes/tracktion_graph_LatencyNode.h"
-#include "tracktion_graph/nodes/tracktion_graph_SummingNode.h"
+#include "tracktion_graph/nodes/tracktion_ConnectedNode.h"
+#include "tracktion_graph/nodes/tracktion_LatencyNode.h"
+#include "tracktion_graph/nodes/tracktion_SummingNode.h"
 
-#include "tracktion_graph/players/tracktion_graph_SimpleNodePlayer.h"
+#include "tracktion_graph/players/tracktion_SimpleNodePlayer.h"

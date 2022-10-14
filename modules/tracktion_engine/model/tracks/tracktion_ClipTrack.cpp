@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 struct ClipTrack::ClipList  : public ValueTreeObjectList<Clip>,
@@ -84,7 +84,7 @@ struct ClipTrack::ClipList  : public ValueTreeObjectList<Clip>,
             clipTrack.changed();
             clipTrack.setFrozen (false, Track::groupFreeze);
 
-            if (! clipTrack.edit.isLoading())
+            if (! clipTrack.edit.isLoading() && ! clipTrack.edit.getUndoManager().isPerformingUndoRedo())
                 triggerAsyncUpdate();
 
             clipTrack.trackItemsDirty = true;
@@ -100,7 +100,9 @@ struct ClipTrack::ClipList  : public ValueTreeObjectList<Clip>,
         {
             if (id == IDs::start || id == IDs::length)
             {
-                triggerAsyncUpdate();
+                if (! clipTrack.edit.getUndoManager().isPerformingUndoRedo())
+                    triggerAsyncUpdate();
+
                 clipTrack.trackItemsDirty = true;
             }
         }
@@ -311,7 +313,8 @@ struct ClipTrack::CollectionClipList  : public juce::ValueTree::Listener
 ClipTrack::ClipTrack (Edit& ed, const juce::ValueTree& v, double defaultHeight, double minHeight, double maxHeight)
     : Track (ed, v, defaultHeight, minHeight, maxHeight)
 {
-    ClipList::sortClips (state, &edit.getUndoManager());
+    if (! edit.getUndoManager().isPerformingUndoRedo())
+        ClipList::sortClips (state, &edit.getUndoManager());
 
     collectionClipList.reset (new CollectionClipList (*this, state));
     clipList.reset (new ClipList (*this, state));
@@ -369,13 +372,13 @@ int ClipTrack::indexOfTrackItem (TrackItem* ti) const
     return trackItems.indexOf (ti);
 }
 
-int ClipTrack::getIndexOfNextTrackItemAt (double time)
+int ClipTrack::getIndexOfNextTrackItemAt (TimePosition time)
 {
     refreshTrackItems();
     return findIndexOfNextItemAt (trackItems, time);
 }
 
-TrackItem* ClipTrack::getNextTrackItemAt (double time)
+TrackItem* ClipTrack::getNextTrackItemAt (TimePosition time)
 {
     refreshTrackItems();
     return trackItems[getIndexOfNextTrackItemAt (time)];
@@ -412,12 +415,12 @@ int ClipTrack::indexOfCollectionClip (CollectionClip* cc) const
     return collectionClipList->collectionClips.indexOf (cc);
 }
 
-int ClipTrack::getIndexOfNextCollectionClipAt (double time)
+int ClipTrack::getIndexOfNextCollectionClipAt (TimePosition time)
 {
     return findIndexOfNextItemAt (collectionClipList->collectionClips, time);
 }
 
-CollectionClip* ClipTrack::getNextCollectionClipAt (double time)
+CollectionClip* ClipTrack::getNextCollectionClipAt (TimePosition time)
 {
     return collectionClipList->collectionClips [getIndexOfNextCollectionClipAt (time)].get();
 }
@@ -442,12 +445,12 @@ Clip* ClipTrack::findClipForID (EditItemID id) const
     return {};
 }
 
-double ClipTrack::getLength() const
+TimeDuration ClipTrack::getLength() const
 {
-    return getTotalRange().getEnd();
+    return toDuration (getTotalRange().getEnd());
 }
 
-double ClipTrack::getLengthIncludingInputTracks() const
+TimeDuration ClipTrack::getLengthIncludingInputTracks() const
 {
     auto l = getLength();
 
@@ -458,7 +461,7 @@ double ClipTrack::getLengthIncludingInputTracks() const
     return l;
 }
 
-EditTimeRange ClipTrack::getTotalRange() const
+TimeRange ClipTrack::getTotalRange() const
 {
     return findUnionOfEditTimeRanges (clipList->objects);
 }
@@ -511,9 +514,9 @@ static void updateClipState (juce::ValueTree& state, const juce::String& name,
 {
     addValueTreeProperties (state,
                             IDs::name, name,
-                            IDs::start, position.getStart(),
-                            IDs::length, position.getLength(),
-                            IDs::offset, position.getOffset());
+                            IDs::start, position.getStart().inSeconds(),
+                            IDs::length, position.getLength().inSeconds(),
+                            IDs::offset, position.getOffset().inSeconds());
 
     itemID.writeID (state, nullptr);
 }
@@ -533,9 +536,11 @@ Clip* ClipTrack::insertClipWithState (juce::ValueTree clipState)
     jassert (clipState.isValid());
     jassert (! clipState.getParent().isValid());
 
+    auto& engineBehaviour = edit.engine.getEngineBehaviour();
+
     if (clipState.hasType (IDs::MIDICLIP))
     {
-        setPropertyIfMissing (clipState, IDs::sync, edit.engine.getEngineBehaviour().areMidiClipsRemappedWhenTempoChanges()
+        setPropertyIfMissing (clipState, IDs::sync, engineBehaviour.areMidiClipsRemappedWhenTempoChanges()
                                                        ? Clip::syncBarsBeats : Clip::syncAbsolute, nullptr);
     }
     else if (clipState.hasType (IDs::AUDIOCLIP) || clipState.hasType (IDs::EDITCLIP))
@@ -559,11 +564,11 @@ Clip* ClipTrack::insertClipWithState (juce::ValueTree clipState)
 
                     auto& ts = edit.tempoSequence;
 
-                    auto startBeat = ts.timeToBeats (clipState[IDs::start]);
-                    auto endBeat   = startBeat + loopInfo.getNumBeats();
-                    auto newLength = ts.beatsToTime (endBeat) - ts.beatsToTime (startBeat);
+                    auto startBeat = ts.toBeats (TimePosition::fromSeconds (static_cast<double> (clipState[IDs::start])));
+                    auto endBeat   = startBeat + BeatDuration::fromBeats (loopInfo.getNumBeats());
+                    auto newLength = ts.toTime (endBeat) - ts.toTime (startBeat);
 
-                    clipState.setProperty (IDs::length, newLength, nullptr);
+                    clipState.setProperty (IDs::length, newLength.inSeconds(), nullptr);
                 }
 
                 auto loopSate = loopInfo.state;
@@ -603,9 +608,19 @@ Clip* ClipTrack::insertClipWithState (juce::ValueTree clipState)
                 }
 
                 if (auto acb = dynamic_cast<AudioClipBase*> (newClip.get()))
+                {
                     if (edit.engine.getEngineBehaviour().autoAddClipEdgeFades())
                         if (! (clipState.hasProperty (IDs::fadeIn) && clipState.hasProperty (IDs::fadeOut)))
                             acb->applyEdgeFades();
+
+                    const auto defaults = edit.engine.getEngineBehaviour().getClipDefaults();
+
+                    if (! clipState.hasProperty (IDs::proxyAllowed))
+                        acb->setUsesProxy (defaults.useProxyFile);
+
+                    if (! clipState.hasProperty (IDs::resamplingQuality))
+                        acb->setResamplingQuality (defaults.resamplingQuality);
+                }
             }
 
             return newClip.get();
@@ -625,11 +640,11 @@ Clip* ClipTrack::insertClipWithState (const juce::ValueTree& stateToUse, const j
 {
     CRASH_TRACER
 
-    if (position.getStart() >= Edit::maximumLength)
+    if (position.getStart() >= Edit::getMaximumEditEnd())
         return {};
 
-    if (position.time.end > Edit::maximumLength)
-        position.time.end = Edit::maximumLength;
+    if (position.time.getEnd() > Edit::getMaximumEditEnd())
+        position.time.getEnd() = Edit::getMaximumEditEnd();
 
     setFrozen (false, groupFreeze);
 
@@ -654,7 +669,7 @@ Clip* ClipTrack::insertClipWithState (const juce::ValueTree& stateToUse, const j
     if (auto newClip = insertClipWithState (newState))
     {
         if (allowSpottingAdjustment)
-            newClip->setStart (std::max (0.0, newClip->getPosition().getStart() - newClip->getSpottingPoint()), false, false);
+            newClip->setStart (std::max (TimePosition(), newClip->getPosition().getStart() - toDuration (newClip->getSpottingPoint())), false, false);
 
         return newClip;
     }
@@ -715,7 +730,7 @@ WaveAudioClip::Ptr ClipTrack::insertWaveClip (const juce::String& name, ProjectI
     return {};
 }
 
-MidiClip::Ptr ClipTrack::insertMIDIClip (const juce::String& name, EditTimeRange position, SelectionManager* sm)
+MidiClip::Ptr ClipTrack::insertMIDIClip (const juce::String& name, TimeRange position, SelectionManager* sm)
 {
     if (auto t = dynamic_cast<AudioTrack*> (this))
         if (! containsAnyMIDIClips())
@@ -732,20 +747,20 @@ MidiClip::Ptr ClipTrack::insertMIDIClip (const juce::String& name, EditTimeRange
     return {};
 }
 
-MidiClip::Ptr ClipTrack::insertMIDIClip (EditTimeRange position, SelectionManager* sm)
+MidiClip::Ptr ClipTrack::insertMIDIClip (TimeRange position, SelectionManager* sm)
 {
     return insertMIDIClip (TrackItem::getSuggestedNameForNewItem (TrackItem::Type::midi), position, sm);
 }
 
-EditClip::Ptr ClipTrack::insertEditClip (EditTimeRange position, ProjectItemID sourceID)
+EditClip::Ptr ClipTrack::insertEditClip (TimeRange position, ProjectItemID sourceID)
 {
     CRASH_TRACER
 
     auto name = TrackItem::getSuggestedNameForNewItem (TrackItem::Type::edit);
-    auto newState = createNewClipState (name, TrackItem::Type::edit, edit.createNewItemID(), { position, 0.0 });
+    auto newState = createNewClipState (name, TrackItem::Type::edit, edit.createNewItemID(), { position, TimeDuration() });
     newState.setProperty (IDs::source, sourceID.toString(), nullptr);
 
-    if (auto c = insertClipWithState (newState, name, TrackItem::Type::edit, { position, 0.0 }, false, false))
+    if (auto c = insertClipWithState (newState, name, TrackItem::Type::edit, { position, TimeDuration() }, false, false))
     {
         if (auto ec = dynamic_cast<EditClip*> (c))
             return *ec;
@@ -756,7 +771,7 @@ EditClip::Ptr ClipTrack::insertEditClip (EditTimeRange position, ProjectItemID s
     return {};
 }
 
-void ClipTrack::deleteRegion (EditTimeRange range, SelectionManager* sm)
+void ClipTrack::deleteRegion (TimeRange range, SelectionManager* sm)
 {
     CRASH_TRACER
     setFrozen (false, groupFreeze);
@@ -773,7 +788,7 @@ void ClipTrack::deleteRegion (EditTimeRange range, SelectionManager* sm)
         deleteRegionOfClip (clipsToDo.getUnchecked (i), range, sm);
 }
 
-void ClipTrack::deleteRegionOfClip (Clip::Ptr c, EditTimeRange range, SelectionManager* sm)
+void ClipTrack::deleteRegionOfClip (Clip::Ptr c, TimeRange range, SelectionManager* sm)
 {
     jassert (c != nullptr);
 
@@ -805,9 +820,9 @@ void ClipTrack::deleteRegionOfClip (Clip::Ptr c, EditTimeRange range, SelectionM
     }
 }
 
-Clip* ClipTrack::insertNewClip (TrackItem::Type type, const juce::String& name, EditTimeRange pos, SelectionManager* sm)
+Clip* ClipTrack::insertNewClip (TrackItem::Type type, const juce::String& name, TimeRange pos, SelectionManager* sm)
 {
-    return insertNewClip (type, name, { pos, 0.0 }, sm);
+    return insertNewClip (type, name, { pos, TimeDuration() }, sm);
 }
 
 Clip* ClipTrack::insertNewClip (TrackItem::Type type, const juce::String& name, ClipPosition position, SelectionManager* sm)
@@ -828,7 +843,7 @@ Clip* ClipTrack::insertNewClip (TrackItem::Type type, const juce::String& name, 
     return {};
 }
 
-Clip* ClipTrack::insertNewClip (TrackItem::Type type, EditTimeRange pos, SelectionManager* sm)
+Clip* ClipTrack::insertNewClip (TrackItem::Type type, TimeRange pos, SelectionManager* sm)
 {
     return insertNewClip (type, TrackItem::getSuggestedNameForNewItem (type), pos, sm);
 }
@@ -861,13 +876,13 @@ inline juce::String incrementLastDigit (const juce::String& in)
             + juce::String (in.getTrailingIntValue() + 1);
 }
 
-Clip* ClipTrack::splitClip (Clip& clip, const double time)
+Clip* ClipTrack::splitClip (Clip& clip, const TimePosition time)
 {
     CRASH_TRACER
     setFrozen (false, groupFreeze);
 
     if (clipList->objects.contains (&clip)
-         && clip.getPosition().time.reduced (0.001).contains (time)
+         && clip.getPosition().time.reduced (TimeDuration::fromSeconds (0.001)).contains (time)
          && ! clip.isGrouped())
     {
         auto newClipState = clip.state.createCopy();
@@ -877,10 +892,10 @@ Clip* ClipTrack::splitClip (Clip& clip, const double time)
         {
             // special case for waveaudio clips that may have fade in/out
             if (auto acb = dynamic_cast<AudioClipBase*> (newClip))
-                acb->setFadeIn (0.0);
+                acb->setFadeIn ({});
 
             if (auto acb = dynamic_cast<AudioClipBase*> (&clip))
-                acb->setFadeOut (0.0);
+                acb->setFadeOut ({});
 
             // need to do this after setting the fades, so the fades don't
             // get mucked around with..
@@ -904,15 +919,15 @@ Clip* ClipTrack::splitClip (Clip& clip, const double time)
             }
 
             // fiddle with offsets for looped clips
-            if (newClip->getLoopLengthBeats() > 0)
+            if (newClip->getLoopLengthBeats() > BeatDuration())
             {
-                auto extra = juce::roundToInt (std::floor (newClip->getOffsetInBeats()
-                                                            / newClip->getLoopLengthBeats() + 0.00001));
+                auto extra = juce::roundToInt (std::floor ((newClip->getOffsetInBeats()
+                                                            / newClip->getLoopLengthBeats()) + 0.00001));
 
                 if (extra != 0)
                 {
                     auto newOffsetBeats = newClip->getOffsetInBeats() - (newClip->getLoopLengthBeats() * extra);
-                    auto offset = newOffsetBeats / edit.tempoSequence.getBeatsPerSecondAt (newClip->getPosition().getStart());
+                    auto offset = TimeDuration::fromSeconds (newOffsetBeats.inBeats() / edit.tempoSequence.getBeatsPerSecondAt (newClip->getPosition().getStart()));
 
                     newClip->setOffset (offset);
                 }
@@ -925,7 +940,7 @@ Clip* ClipTrack::splitClip (Clip& clip, const double time)
     return {};
 }
 
-void ClipTrack::splitAt (double time)
+void ClipTrack::splitAt (TimePosition time)
 {
     CRASH_TRACER
     // make a copied list first, as they'll get moved out-of-order..
@@ -939,7 +954,7 @@ void ClipTrack::splitAt (double time)
         splitClip (*c, time);
 }
 
-void ClipTrack::insertSpaceIntoTrack (double time, double amountOfSpace)
+void ClipTrack::insertSpaceIntoTrack (TimePosition time, TimeDuration amountOfSpace)
 {
     CRASH_TRACER
     Track::insertSpaceIntoTrack (time, amountOfSpace);
@@ -963,9 +978,9 @@ void ClipTrack::insertSpaceIntoTrack (double time, double amountOfSpace)
             c->setStart (c->getPosition().getStart() + amountOfSpace, false, true);
 }
 
-juce::Array<double> ClipTrack::findAllTimesOfInterest()
+juce::Array<TimePosition> ClipTrack::findAllTimesOfInterest()
 {
-    juce::Array<double> cuts;
+    juce::Array<TimePosition> cuts;
 
     for (auto& o : clipList->objects)
         cuts.addArray (o->getInterestingTimes());
@@ -974,27 +989,27 @@ juce::Array<double> ClipTrack::findAllTimesOfInterest()
     return cuts;
 }
 
-double ClipTrack::getNextTimeOfInterest (double t)
+TimePosition ClipTrack::getNextTimeOfInterest (TimePosition t)
 {
-    if (t < 0)
-        return 0;
+    if (t < TimePosition())
+        return TimePosition();
 
     for (auto c : findAllTimesOfInterest())
-        if (c > t + 0.0001)
+        if (c > t + TimeDuration::fromSeconds (0.0001))
             return c;
 
-    return getLength();
+    return toPosition (getLength());
 }
 
-double ClipTrack::getPreviousTimeOfInterest (double t)
+TimePosition ClipTrack::getPreviousTimeOfInterest (TimePosition t)
 {
-    if (t < 0.0)
+    if (t < TimePosition())
         return {};
 
     auto cuts = findAllTimesOfInterest();
 
     for (int i = cuts.size(); --i >= 0;)
-        if (cuts.getUnchecked (i) < t - 0.0001)
+        if (cuts.getUnchecked (i) < t - TimeDuration::fromSeconds (0.0001))
             return cuts.getUnchecked (i);
 
     return {};
@@ -1041,4 +1056,4 @@ bool ClipTrack::areAnyClipsUsingFile (const AudioFile& af)
     return false;
 }
 
-}
+}} // namespace tracktion { inline namespace engine

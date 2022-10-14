@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 AutomatableEditItem::AutomatableEditItem (Edit& ed, const juce::ValueTree& v)
@@ -115,7 +115,7 @@ juce::ReferenceCountedArray<AutomatableParameter> AutomatableEditItem::getFlatte
 }
 
 //==============================================================================
-void AutomatableEditItem::setAutomatableParamPosition (double time)
+void AutomatableEditItem::setAutomatableParamPosition (TimePosition time)
 {
     if (setIfDifferent (lastTime, time))
         if (edit.getAutomationRecordManager().isReadingAutomation())
@@ -127,14 +127,14 @@ bool AutomatableEditItem::isBeingActivelyPlayed() const
     return juce::Time::getApproximateMillisecondCounter() < (unsigned int) (systemTimeOfLastPlayedBlock + 150);
 }
 
-void AutomatableEditItem::updateAutomatableParamPosition (double time)
+void AutomatableEditItem::updateAutomatableParamPosition (TimePosition time)
 {
     for (auto p : automatableParams)
         if (p->isAutomationActive())
             p->updateToFollowCurve (time);
 }
 
-void AutomatableEditItem::updateParameterStreams (double time)
+void AutomatableEditItem::updateParameterStreams (TimePosition time)
 {
     const juce::ScopedLock sl (activeParameterLock);
 
@@ -207,7 +207,7 @@ void AutomatableEditItem::updateActiveParameters()
     activeParameters.swapWith (nowActiveParams);
     automationActive.store (! activeParameters.isEmpty(), std::memory_order_relaxed);
 
-    lastTime = -1.0;
+    lastTime = TimePosition::fromSeconds (-1.0);
 }
 
 void AutomatableEditItem::saveChangedParametersToState()
@@ -277,4 +277,4 @@ void AutomatableEditItem::removeParameterListChangeListener (ParameterListChange
         parameterChangeListeners->listeners.remove (l);
 }
 
-}
+}} // namespace tracktion { inline namespace engine

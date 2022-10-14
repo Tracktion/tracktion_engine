@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 struct TracktionThumbnail::MinMaxValue
@@ -340,7 +340,7 @@ public:
     }
 
     void drawChannel (juce::Graphics& g, juce::Rectangle<int> area, bool useHighRes,
-                      EditTimeRange time, int channelNum, float verticalZoomFactor,
+                      juce::Range<double> time, int channelNum, float verticalZoomFactor,
                       double rate, int numChans, int sampsPerThumbSample,
                       LevelDataSource* levelData, const juce::OwnedArray<ThumbData>& chans)
     {
@@ -429,7 +429,7 @@ private:
     int numChannelsCached = 0, numSamplesCached = 0;
     bool cacheNeedsRefilling = true;
 
-    bool refillCache (int numSamples, EditTimeRange time,
+    bool refillCache (int numSamples, juce::Range<double> time,
                       double rate, int numChans, int sampsPerThumbSample,
                       LevelDataSource* levelData, const juce::OwnedArray<ThumbData>& chans)
     {
@@ -838,26 +838,32 @@ void TracktionThumbnail::getApproximateMinMax (double startTime, double endTime,
 
 void TracktionThumbnail::drawChannel (juce::Graphics& g, const juce::Rectangle<int>& area, double start, double end, int channel, float zoom)
 {
-    drawChannel (g, area, true, { start, end }, channel, zoom);
+    drawChannel (g, area, true,
+                 { TimePosition::fromSeconds (start), TimePosition::fromSeconds (end) },
+                 channel, zoom);
 }
 
 void TracktionThumbnail::drawChannels (juce::Graphics& g, const juce::Rectangle<int>& area, double start, double end, float zoom)
 {
-    drawChannels (g, area, true, { start, end }, zoom);
+    drawChannels (g, area, true,
+                  { TimePosition::fromSeconds (start), TimePosition::fromSeconds (end) },
+                  zoom);
 }
 
 void TracktionThumbnail::drawChannel (juce::Graphics& g, juce::Rectangle<int> area, bool useHighRes,
-                                      EditTimeRange time, int channelNum, float verticalZoomFactor)
+                                      TimeRange time, int channelNum, float verticalZoomFactor)
 {
     const juce::ScopedLock sl2 (sourceLock);
     const juce::ScopedLock sl (lock);
 
-    window->drawChannel (g, area, useHighRes, time, channelNum, verticalZoomFactor,
+    window->drawChannel (g, area, useHighRes,
+                         { time.getStart().inSeconds(), time.getEnd().inSeconds() },
+                         channelNum, verticalZoomFactor,
                          sampleRate, numChannels, samplesPerThumbSample, source.get(), channels);
 }
 
 void TracktionThumbnail::drawChannels (juce::Graphics& g, juce::Rectangle<int> area, bool useHighRes,
-                                       EditTimeRange time, float verticalZoomFactor)
+                                       TimeRange time, float verticalZoomFactor)
 {
     for (int i = 0; i < numChannels; ++i)
     {
@@ -869,4 +875,4 @@ void TracktionThumbnail::drawChannels (juce::Graphics& g, juce::Rectangle<int> a
     }
 }
 
-}
+}} // namespace tracktion { inline namespace engine

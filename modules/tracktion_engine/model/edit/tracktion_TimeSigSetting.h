@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
@@ -26,7 +26,7 @@ public:
 
     //==============================================================================
     ClipPosition getPosition() const override;
-    double getStartBeat() const                     { return startBeatNumber; }
+    BeatPosition getStartBeat() const                     { return startBeatNumber; }
 
     //==============================================================================
     // time sig in the form "4/4"
@@ -46,12 +46,12 @@ public:
     juce::ValueTree state;
     TempoSequence& ownerSequence;
 
-    juce::CachedValue<double> startBeatNumber;
+    juce::CachedValue<BeatPosition> startBeatNumber;
     juce::CachedValue<int> numerator, denominator;
     juce::CachedValue<bool> triplets;
 
-    double startTime = 0; // (updated by TempoSequence)
-    double endTime = 0;
+    TimePosition startTime; // (updated by TempoSequence)
+    TimePosition endTime;
 
 private:
     void valueTreeChanged() override { changed(); }
@@ -59,4 +59,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TimeSigSetting)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

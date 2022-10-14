@@ -38,7 +38,7 @@
  #pragma warning (pop)
 #endif
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //=============================================================================
@@ -1118,6 +1118,6 @@ bool NovationAutomap::showingMarkers()                              { return fal
 bool NovationAutomap::showingTracks()                               { return true; }
 bool NovationAutomap::isPluginSelected (Plugin*)                    { return false; }
 
-}
+}} // namespace tracktion { inline namespace engine
 
 #endif

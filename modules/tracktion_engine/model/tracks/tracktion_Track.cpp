@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 Track::Track (Edit& ed, const juce::ValueTree& v, double defaultHeight, double minHeight, double maxHeight)
@@ -429,7 +429,7 @@ bool Track::isAChildOf (const Track& t) const
     return false;
 }
 
-void Track::insertSpaceIntoTrack (double time, double amountOfSpace)
+void Track::insertSpaceIntoTrack (TimePosition time, TimeDuration amountOfSpace)
 {
     // shift up any automation curves too..
     for (auto p : pluginList)
@@ -599,4 +599,4 @@ void Track::valueTreeParentChanged (juce::ValueTree& v)
         updateCachedParent();
 }
 
-}
+}} // namespace tracktion { inline namespace engine

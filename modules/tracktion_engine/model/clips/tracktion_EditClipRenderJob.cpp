@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 RenderManager::Job::Ptr EditRenderJob::getOrCreateRenderJob (Engine& e, Renderer::Parameters& params,
@@ -287,9 +287,9 @@ bool EditRenderJob::RenderPass::initialise()
         auto tracksToDo = toTrackArray (*r.edit, r.tracksToDo);
 
         // Initialise playhead and continuity
-        auto playHead = std::make_unique<tracktion_graph::PlayHead>();
-        auto playHeadState = std::make_unique<tracktion_graph::PlayHeadState> (*playHead);
-        auto processState = std::make_unique<ProcessState> (*playHeadState);
+        auto playHead = std::make_unique<tracktion::graph::PlayHead>();
+        auto playHeadState = std::make_unique<tracktion::graph::PlayHeadState> (*playHead);
+        auto processState = std::make_unique<ProcessState> (*playHeadState, r.edit->tempoSequence);
 
         CreateNodeParams cnp { *processState };
         cnp.sampleRate = r.sampleRateForAudio;
@@ -302,7 +302,7 @@ bool EditRenderJob::RenderPass::initialise()
         cnp.addAntiDenormalisationNoise = r.addAntiDenormalisationNoise;
         cnp.includeBypassedPlugins = false;
 
-        std::unique_ptr<tracktion_graph::Node> node;
+        std::unique_ptr<tracktion::graph::Node> node;
         callBlocking ([this, &node, &cnp] { node = createNodeForEdit (*r.edit, cnp); });
 
         if (node)
@@ -413,7 +413,7 @@ bool EditRenderJob::generateSilence (const juce::File& fileToWriteTo)
         return false;
 
     os.release();
-    auto numToDo = (SampleCount) (params.time.getLength() * params.sampleRateForAudio);
+    auto numToDo = (SampleCount) tracktion::toSamples (params.time.getLength(), params.sampleRateForAudio);
     auto blockSize = std::min (4096, (int) numToDo);
     SampleCount numDone = 0;
 
@@ -438,4 +438,4 @@ bool EditRenderJob::generateSilence (const juce::File& fileToWriteTo)
     return true;
 }
 
-}
+}} // namespace tracktion { inline namespace engine

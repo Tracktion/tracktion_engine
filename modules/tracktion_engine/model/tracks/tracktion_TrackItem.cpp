@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 TrackItem::TrackItem (Edit& ed, EditItemID id, Type t)
@@ -127,13 +127,13 @@ EditItemID TrackItem::getTrackID() const
     return {};
 }
 
-double TrackItem::getStartBeat() const         { return edit.tempoSequence.timeToBeats (getPosition().getStart()); }
-double TrackItem::getContentStartBeat() const  { return edit.tempoSequence.timeToBeats (getPosition().getStartOfSource()); }
-double TrackItem::getLengthInBeats() const     { return getEndBeat() - getStartBeat(); }
-double TrackItem::getOffsetInBeats() const     { return getPosition().getOffset() * edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart()); }
+BeatPosition TrackItem::getStartBeat() const         { return edit.tempoSequence.toBeats (getPosition().getStart()); }
+BeatPosition TrackItem::getContentStartBeat() const  { return edit.tempoSequence.toBeats (getPosition().getStartOfSource()); }
+BeatDuration TrackItem::getLengthInBeats() const     { return getEndBeat() - getStartBeat(); }
+BeatDuration TrackItem::getOffsetInBeats() const     { return BeatDuration::fromBeats (getPosition().getOffset().inSeconds() * edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart())); }
 
-double TrackItem::getEndBeat() const                         { return edit.tempoSequence.timeToBeats (getPosition().getEnd()); }
-double TrackItem::getTimeOfRelativeBeat (double beat) const  { return edit.tempoSequence.beatsToTime (getStartBeat() + beat); }
-double TrackItem::getBeatOfRelativeTime (double t) const     { return edit.tempoSequence.timeToBeats (getPosition().getStart() + t); }
+BeatPosition TrackItem::getEndBeat() const                              { return edit.tempoSequence.toBeats (getPosition().getEnd()); }
+TimePosition TrackItem::getTimeOfRelativeBeat (BeatDuration b) const    { return edit.tempoSequence.toTime (getStartBeat() + b); }
+BeatPosition TrackItem::getBeatOfRelativeTime (TimeDuration t) const    { return edit.tempoSequence.toBeats (getPosition().getStart() + t); }
 
-}
+}} // namespace tracktion { inline namespace engine

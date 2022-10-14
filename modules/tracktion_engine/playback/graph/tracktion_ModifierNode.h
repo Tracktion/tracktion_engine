@@ -10,7 +10,7 @@
 
 #pragma once
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 class TrackMuteState;
@@ -18,7 +18,7 @@ class TrackMuteState;
 /**
     Node for processing a Modifier.
 */
-class ModifierNode final    : public tracktion_graph::Node
+class ModifierNode final    : public tracktion::graph::Node
 {
 public:
     //==============================================================================
@@ -29,17 +29,17 @@ public:
      
     */
     ModifierNode (std::unique_ptr<Node> input,
-                  tracktion_engine::Modifier::Ptr,
+                  tracktion::engine::Modifier::Ptr,
                   double sampleRateToUse, int blockSizeToUse,
                   const TrackMuteState*,
-                  tracktion_graph::PlayHeadState&, bool rendering);
+                  tracktion::graph::PlayHeadState&, bool rendering);
 
     /** Creates a ModifierNode to process a plugin on in a Rack with an InputProvider.
         @param InputProvider            The InputProvider to provide inputs and a PluginRenderContext
      
     */
     ModifierNode (std::unique_ptr<Node> input,
-                  tracktion_engine::Modifier::Ptr,
+                  tracktion::engine::Modifier::Ptr,
                   double sampleRateToUse, int blockSizeToUse,
                   std::shared_ptr<InputProvider>);
 
@@ -50,30 +50,30 @@ public:
     Modifier& getModifier()                             { return *modifier; }
 
     //==============================================================================
-    tracktion_graph::NodeProperties getNodeProperties() override;
+    tracktion::graph::NodeProperties getNodeProperties() override;
     std::vector<Node*> getDirectInputNodes() override   { return { input.get() }; }
     bool isReadyToProcess() override                    { return input->hasProcessed(); }
-    void prepareToPlay (const tracktion_graph::PlaybackInitialisationInfo&) override;
+    void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     void process (ProcessContext&) override;
     
 private:
     //==============================================================================
     std::unique_ptr<Node> input;
-    tracktion_engine::Modifier::Ptr modifier;
+    tracktion::engine::Modifier::Ptr modifier;
     std::shared_ptr<InputProvider> audioRenderContextProvider;
     
     const TrackMuteState* trackMuteState = nullptr;
-    tracktion_graph::PlayHeadState* playHeadState = nullptr;
+    tracktion::graph::PlayHeadState* playHeadState = nullptr;
     bool isRendering = false;
     
     bool isInitialised = false;
     double sampleRate = 44100.0;
-    tracktion_engine::MidiMessageArray midiMessageArray;
-    double automationAdjustmentTime = 0.0;
+    tracktion::engine::MidiMessageArray midiMessageArray;
+    TimeDuration automationAdjustmentTime;
 
     //==============================================================================
     void initialiseModifier (double sampleRateToUse, int blockSizeToUse);
     PluginRenderContext getPluginRenderContext (int64_t, juce::AudioBuffer<float>&);
 };
 
-}
+}} // namespace tracktion { inline namespace engine

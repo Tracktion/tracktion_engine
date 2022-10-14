@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 /** */
@@ -125,7 +125,7 @@ public:
 
         @returns False if there's no existing clips in the places it needs them.
     */
-    bool mergeInMidiSequence (const juce::MidiMessageSequence&, double startTime,
+    bool mergeInMidiSequence (const juce::MidiMessageSequence&, TimePosition startTime,
                               MidiClip*, MidiList::NoteAutomationType);
 
     void playGuideNote (int note, MidiChannel midiChannel, int velocity,
@@ -236,4 +236,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioTrack)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

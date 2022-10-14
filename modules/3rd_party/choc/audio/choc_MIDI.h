@@ -178,7 +178,7 @@ struct Message
     /// Returns the size of the message in bytes.
     size_t length() const;
     /// Returns the size of the message in bytes.
-    uint8_t size() const;
+    size_t size() const;
     /// Returns a byte from the message
     uint8_t operator[] (size_t index) const;
     /// Returns a pointer to the raw message data.
@@ -266,16 +266,19 @@ inline ShortMessage::ShortMessage (const void* sourceData, size_t numBytes)
 
 inline uint8_t ShortMessage::length() const
 {
-    constexpr uint8_t groupLengths[] = { 3, 3, 3, 3, 2, 2, 3 };
-    constexpr uint8_t lastGroupLengths[] = { 1, 2, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+    constexpr uint32_t mainGroupLengths = (3u << 0) | (3u << 2) | (3u << 4) | (3u << 6)
+                                        | (2u << 8) | (2u << 10) | (3u << 12);
+
+    constexpr uint32_t lastGroupLengths = (1u <<  0) | (2u <<  2) | (3u <<  4) | (2u <<  6)
+                                        | (1u <<  8) | (1u << 10) | (1u << 12) | (1u << 14)
+                                        | (1u << 16) | (1u << 18) | (1u << 20) | (1u << 22)
+                                        | (1u << 24) | (1u << 26) | (1u << 28) | (1u << 30);
 
     auto firstByte = data[0];
-    auto group = (firstByte >> 4) & 7;
+    auto group = static_cast<uint8_t> ((firstByte >> 4) & 7);
 
-    if (group < 7)    return groupLengths[group];
-    if (group == 7)   return lastGroupLengths[firstByte & 0xf];
-
-    return 0;
+    return static_cast<uint8_t> ((group != 7u ? (mainGroupLengths >> (2u * group))
+                                              : (lastGroupLengths >> (2u * (firstByte & 15u)))) & 3u);
 }
 
 inline uint8_t ShortMessage::size() const   { return length(); }
@@ -391,12 +394,13 @@ inline void Message::appendData (const void* data, size_t size)    { content.app
 
 inline bool Message::empty() const           { return content.empty(); }
 inline size_t Message::length() const        { return content.length(); }
+inline size_t Message::size() const          { return content.length(); }
 inline const uint8_t* Message::data() const  { return reinterpret_cast<const uint8_t*> (content.data()); }
 
 inline uint8_t Message::operator[] (size_t i) const { CHOC_ASSERT (i < content.length()); return static_cast<uint8_t> (content[i]); }
 
-static constexpr char sysexStartByte      = -16; // 0xf0
-static constexpr char metaEventStartByte  = -1;  // 0xff
+static constexpr uint8_t sysexStartByte      = 0xf0;
+static constexpr uint8_t metaEventStartByte  = 0xff;
 
 inline bool Message::isShortMessage() const
 {
@@ -405,13 +409,13 @@ inline bool Message::isShortMessage() const
     if (len == 0 || len > 3)
         return false;
 
-    auto firstByte = content[0];
+    auto firstByte = static_cast<uint8_t> (content[0]);
     return firstByte != sysexStartByte && firstByte != metaEventStartByte;
 }
 
-inline bool Message::isSysex() const                         { return content.length() > 1 && content[0] == sysexStartByte; }
-inline bool Message::isMetaEvent() const                     { return content.length() > 2 && content[0] == metaEventStartByte; }
-inline bool Message::isMetaEventOfType (uint8_t type) const  { return content.length() > 2 && content[1] == (char) type && content[0] == metaEventStartByte; }
+inline bool Message::isSysex() const                         { return content.length() > 1 && static_cast<uint8_t> (content[0]) == sysexStartByte; }
+inline bool Message::isMetaEvent() const                     { return content.length() > 2 && static_cast<uint8_t> (content[0]) == metaEventStartByte; }
+inline bool Message::isMetaEventOfType (uint8_t type) const  { return content.length() > 2 && static_cast<uint8_t> (content[1]) == type && static_cast<uint8_t> (content[0]) == metaEventStartByte; }
 
 inline ShortMessage Message::getShortMessage() const
 {

@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 struct MidiExpression
@@ -37,7 +37,7 @@ struct MidiExpression
     }
 
     static juce::ValueTree createAndAddExpressionToNote (juce::ValueTree& noteState, const juce::Identifier& expressionType,
-                                                         double beat, float value, juce::UndoManager* um)
+                                                         BeatPosition beat, float value, juce::UndoManager* um)
     {
         jassert (noteState.hasType (IDs::NOTE));
         jassert (isExpression (expressionType));
@@ -64,12 +64,12 @@ struct MidiExpression
     }
 
     /** Returns the beat position relative to the note's start. */
-    double getBeatPosition() const noexcept     { return state[IDs::b]; }
+    BeatPosition getBeatPosition() const noexcept     { return BeatPosition::fromBeats (static_cast<double> (state[IDs::b])); }
 
     /** Sets the beat position. */
-    void setBeatPosition (double newBeat, juce::UndoManager* um)
+    void setBeatPosition (BeatPosition newBeat, juce::UndoManager* um)
     {
-        state.setProperty (IDs::b, newBeat, um);
+        state.setProperty (IDs::b, newBeat.inBeats(), um);
     }
 
     /** Returns the value of the expression.
@@ -89,4 +89,4 @@ struct MidiExpression
     juce::ValueTree state;
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

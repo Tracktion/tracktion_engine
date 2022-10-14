@@ -11,6 +11,8 @@ The aim of Tracktion Engine is to provide a high level data model and set of cla
 
 Take a look at the [features document](FEATURES.md) for the full range of features.
 
+If you are converting a Tracktion Engine v1 or earlier project to v2, read through the [Engine 2.0 Transition document](docs/Engine_2.0_Transition.md) for a list of design and breaking changes (as well as new functionality).
+
 ##### Supported Platforms
 - macOS
 - Windows
@@ -28,7 +30,14 @@ $ git clone --recurse-submodules https://github.com/Tracktion/tracktion_engine.g
 ```
 
 ## Examples
-Example projects are located in `/examples`. These are provided as JUCE PIPs, and CMakeLists.txt files to build them using CMake. You will need CMake installed to generate the examples.
+Example projects are located in `/examples`.
+There are two main example projects, `DemoRunner` and `EngineInPluginDemo`. In each of these folder is a CMakeLists.txt file you can use to build them (or run the `build` script mentioned below).
+
+`DemoRunner` contains a number of app examples showcasing various Engine functionality.
+`EngineInPluginDemo` builds a plugin which contains Tracktion Engine and syncs the host timeline to the Edit's timeline.
+
+Additionally there are `Benchmark` an `TestRunner` apps used by CI to test Engine functionality and performance.
+
 To generate all the examples for the running platform use the script in `/tests`.
 These are bash scripts so if you're on Windows you can use the `Git Bash` shell that comes with Git to run the following.
 ```
@@ -38,9 +47,6 @@ $ ./generate_examples
 `generate_examples` will generate the IDE project files for you. Alternatively you can run the `build` script to build the examples as well, ready to run.
 
 Once the example projects have been generated or built you can find them in `examples/example_name/build`.
-Start with the `PitchAndTimeDemo` or `StepSequencerDemo` to see some basic apps in action.
-
-*If you want to build the Projucer app from JUCE you can load each of the PIP examples directly to generate the IDE files. You'll have to manually specify C++17 as the C++ standard however as this isn't currently possible via the PIP format.*
 
 ## Tutorials
 Once you're ready to dive in to the code, open the IDE files and have a read through the tutorials in `/tutorials`. You can view these on GitHub [here](/tutorials) to see the rendered Markdown.
@@ -50,7 +56,7 @@ We are still in the process of fleshing out Doxygen formatted comments but the D
 
 ## Benchmarks
 We're in the process of creating a portal to view and examine our benchmarks. This is really for our own internal use but might be of interest to some people:
-https://tracktion.github.io/tracktion_benchmarks
+https://tracktion.github.io/tracktion_engine/benchmarks.html
 
 ## Contributing
 Tracktion Engine is provided in JUCE module format, for bug reports and features requests, please visit the [JUCE Forum and post using the Tracktion Engine category](https://forum.juce.com/c/tracktion-engine) -

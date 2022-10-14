@@ -10,7 +10,7 @@
 
 #pragma once
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 class TrackMuteState;
@@ -40,15 +40,15 @@ struct EditNodeBuilder
     /** If set, this will be called to give an opportunity to add an additional final
         node which could be used to add copy-protection noise or similar.
     */
-    static std::function<std::unique_ptr<tracktion_graph::Node> (std::unique_ptr<tracktion_graph::Node>)> insertOptionalLastStageNode;
+    static std::function<std::unique_ptr<graph::Node> (std::unique_ptr<tracktion::graph::Node>)> insertOptionalLastStageNode;
 };
 
 //==============================================================================
 /** Creates a Node to play back an Edit with live inputs and outputs. */
-std::unique_ptr<tracktion_graph::Node> createNodeForEdit (EditPlaybackContext&, std::atomic<double>& audibleTimeToUpdate, const CreateNodeParams&);
+std::unique_ptr<tracktion::graph::Node> createNodeForEdit (EditPlaybackContext&, std::atomic<double>& audibleTimeToUpdate, const CreateNodeParams&);
 
 /** Creates a Node to render an Edit. */
-std::unique_ptr<tracktion_graph::Node> createNodeForEdit (Edit&, const CreateNodeParams&);
+std::unique_ptr<tracktion::graph::Node> createNodeForEdit (Edit&, const CreateNodeParams&);
 
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

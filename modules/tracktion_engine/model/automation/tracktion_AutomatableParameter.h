@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 class AutomatableParameter   : public juce::ReferenceCountedObject,
@@ -81,7 +81,7 @@ public:
     // should be called to change a parameter when a user is actively moving it
     void setParameter (float value, juce::NotificationType);
     void setNormalisedParameter (float value, juce::NotificationType);
-    void updateToFollowCurve (double time);
+    void updateToFollowCurve (TimePosition);
 
     /** Call to indicate this parameter is about to be changed. */
     void parameterChangeGestureBegin();
@@ -163,7 +163,7 @@ public:
     void updateStream();
 
     /** Updates the parameter and modifier values from its current automation sources. */
-    void updateFromAutomationSources (double);
+    void updateFromAutomationSources (TimePosition);
 
     //==============================================================================
     virtual bool isParameterActive() const                          { return true; }
@@ -398,13 +398,13 @@ struct AutomationIterator
 
     bool isEmpty() const noexcept               { return points.size() <= 1; }
 
-    void setPosition (double newTime) noexcept;
+    void setPosition (TimePosition) noexcept;
     float getCurrentValue() noexcept            { return currentValue; }
 
 private:
     struct AutoPoint
     {
-        double time;
+        TimePosition time;
         float value;
     };
 
@@ -415,4 +415,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AutomationIterator)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

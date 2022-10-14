@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 /**
@@ -60,8 +60,8 @@ public:
     bool isEmpty() const noexcept                                   { return state.getNumChildren() == 0; }
 
     void clear (juce::UndoManager*);
-    void trimOutside (double firstBeat, double lastBeat, juce::UndoManager*);
-    void moveAllBeatPositions (double deltaBeats, juce::UndoManager*);
+    void trimOutside (BeatPosition firstBeat, BeatPosition lastBeat, juce::UndoManager*);
+    void moveAllBeatPositions (BeatDuration deltaBeats, juce::UndoManager*);
     void rescale (double factor, juce::UndoManager*);
 
     //==============================================================================
@@ -72,12 +72,13 @@ public:
     juce::Range<int> getNoteNumberRange() const;
 
     /** Beat number of first event in the list */
-    double getFirstBeatNumber() const;
+    BeatPosition getFirstBeatNumber() const;
+
     /** Beat number of last event in the list */
-    double getLastBeatNumber() const;
+    BeatPosition getLastBeatNumber() const;
 
     MidiNote* addNote (const MidiNote&, juce::UndoManager*);
-    MidiNote* addNote (int pitch, double startBeat, double lengthInBeats, int velocity, int colourIndex, juce::UndoManager*);
+    MidiNote* addNote (int pitch, BeatPosition startBeat, BeatDuration lengthInBeats, int velocity, int colourIndex, juce::UndoManager*);
     void removeNote (MidiNote&, juce::UndoManager*);
     void removeAllNotes (juce::UndoManager*);
 
@@ -85,11 +86,11 @@ public:
     int getNumControllerEvents() const                              { return getControllerEvents().size(); }
 
     MidiControllerEvent* getControllerEvent (int index) const       { return getControllerEvents()[index]; }
-    MidiControllerEvent* getControllerEventAt (double beatNumber, int controllerType) const;
+    MidiControllerEvent* getControllerEventAt (BeatPosition, int controllerType) const;
 
     MidiControllerEvent* addControllerEvent (const MidiControllerEvent&, juce::UndoManager*);
-    MidiControllerEvent* addControllerEvent (double beat, int controllerType, int controllerValue, juce::UndoManager*);
-    MidiControllerEvent* addControllerEvent (double beat, int controllerType, int controllerValue, int metadata, juce::UndoManager*);
+    MidiControllerEvent* addControllerEvent (BeatPosition, int controllerType, int controllerValue, juce::UndoManager*);
+    MidiControllerEvent* addControllerEvent (BeatPosition, int controllerType, int controllerValue, int metadata, juce::UndoManager*);
 
     void removeControllerEvent (MidiControllerEvent&, juce::UndoManager*);
     void removeAllControllers (juce::UndoManager*);
@@ -97,13 +98,13 @@ public:
     /** True if there are any controller events of this type */
     bool containsController (int controllerType) const;
 
-    void setControllerValueAt (int controllerType, double beatNumber, int newValue, juce::UndoManager*);
-    void removeControllersBetween (int controllerType, double beatNumberStart, double beatNumberEnd, juce::UndoManager*);
+    void setControllerValueAt (int controllerType, BeatPosition beatNumber, int newValue, juce::UndoManager*);
+    void removeControllersBetween (int controllerType, BeatPosition beatNumberStart, BeatPosition beatNumberEnd, juce::UndoManager*);
 
     /** Adds controller values over a specified time, at an even interval */
     void insertRepeatedControllerValue (int type, int startVal, int endVal,
-                                        juce::Range<double> rangeBeats,
-                                        double intervalBeats, juce::UndoManager*);
+                                        BeatRange rangeBeats,
+                                        BeatDuration intervalBeats, juce::UndoManager*);
 
     //==============================================================================
     int getNumSysExEvents() const                                   { return getSysexEvents().size(); }
@@ -112,7 +113,7 @@ public:
     MidiSysexEvent* getSysexEventUnchecked (int index) const        { return getSysexEvents().getUnchecked (index); }
     MidiSysexEvent* getSysexEventFor (const juce::ValueTree&) const;
 
-    MidiSysexEvent& addSysExEvent (const juce::MidiMessage&, double beatNumber, juce::UndoManager*);
+    MidiSysexEvent& addSysExEvent (const juce::MidiMessage&, BeatPosition, juce::UndoManager*);
 
     void removeSysExEvent (const MidiSysexEvent&, juce::UndoManager*);
     void removeAllSysexes (juce::UndoManager*);
@@ -122,17 +123,30 @@ public:
         If an Edit is provided, it'll be used to convert the timestamps from possible seconds to beats
     */
     void importMidiSequence (const juce::MidiMessageSequence&, Edit*,
-                             double editTimeOfListTimeZero, juce::UndoManager*);
+                             TimePosition editTimeOfListTimeZero, juce::UndoManager*);
 
     /** Adds the contents of a MidiSequence to this list assigning MPE expression changes to EXP expression. */
     void importFromEditTimeSequenceWithNoteExpression (const juce::MidiMessageSequence&, Edit*,
-                                                       double editTimeOfListTimeZero, juce::UndoManager*);
+                                                       TimePosition editTimeOfListTimeZero, juce::UndoManager*);
 
-    // Add equivalent events to the sequence, for playback
-    void exportToPlaybackMidiSequence (juce::MidiMessageSequence&, MidiClip&, bool generateMPE) const;
+    /** Determines MIDI event timing. */
+    enum class TimeBase
+    {
+        seconds,    /** Event times will be in seconds relative to the Edit timeline. */
+        beats,      /** Event times will be in beats relative to the Edit timeline. */
+        beatsRaw    /** Event times will be in beats with no quantisation or groove. */
+    };
+
+    /** Creates a juce::MidiMessageSequence from the list in order to be played back
+        The sequence will be in terms of edit time, either in seconds or beats
+        @param MidiClip     The clip boundries to use and the groove template if the clip contains one
+        @param TimeBase     The format the exported MIDI event times will be in
+        @param generateMPE  Whether the sequence should create MPE or standard MIDI
+    */
+    juce::MidiMessageSequence exportToPlaybackMidiSequence (MidiClip&, TimeBase, bool generateMPE) const;
 
     /** Creates the default MIDI playback sequence. */
-    static juce::MidiMessageSequence createDefaultPlaybackMidiSequence (const MidiList&, MidiClip&, bool generateMPE);
+    static juce::MidiMessageSequence createDefaultPlaybackMidiSequence (const MidiList&, MidiClip&, TimeBase, bool generateMPE);
 
     //==============================================================================
     static bool looksLikeMPEData (const juce::File&);
@@ -145,11 +159,11 @@ public:
 
     static bool readSeparateTracksFromFile (const juce::File&,
                                             juce::OwnedArray<MidiList>& lists,
-                                            juce::Array<double>& tempoChangeBeatNumbers,
+                                            juce::Array<BeatPosition>& tempoChangeBeatNumbers,
                                             juce::Array<double>& bpms,
                                             juce::Array<int>& numerators,
                                             juce::Array<int>& denominators,
-                                            double& songLength,
+                                            BeatDuration& songLength,
                                             bool importAsNoteExpression);
 
     //==============================================================================
@@ -262,4 +276,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiList)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

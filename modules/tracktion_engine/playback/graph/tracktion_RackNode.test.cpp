@@ -8,12 +8,12 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 #if GRAPH_UNIT_TESTS_RACKNODE
 
-using namespace tracktion_graph;
+using namespace tracktion::graph;
 
 //==============================================================================
 //==============================================================================
@@ -27,13 +27,12 @@ public:
     
     void runTest() override
     {
-        using namespace tracktion_engine;
-        auto& engine = *tracktion_engine::Engine::getEngines()[0];
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
         engine.getPluginManager().createBuiltInType<ToneGeneratorPlugin>();
         engine.getPluginManager().createBuiltInType<LatencyPlugin>();
                 
-        runAllTests<tracktion_graph::NodePlayer>();
-        runAllTests<tracktion_graph::LockFreeMultiThreadedNodePlayer>();
+        runAllTests<tracktion::graph::NodePlayer>();
+        runAllTests<tracktion::graph::LockFreeMultiThreadedNodePlayer>();
     }
     
     template<typename NodePlayerType>
@@ -64,7 +63,7 @@ private:
     template<typename NodePlayerType>
     void runRackTests (test_utilities::TestSetup testSetup)
     {
-        auto& engine = *tracktion_engine::Engine::getEngines()[0];
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
         
         beginTest ("Unconnected Rack");
         {
@@ -88,11 +87,13 @@ private:
 
             // Process Rack
             {
-                auto inputProvider = std::make_shared<InputProvider>();
-                auto rackNode = RackNodeBuilder::createRackNode (RackNodeBuilder::Algorithm::connectedNode, *rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
+                graph::PlayHead ph;
+                PlayHeadState phs (ph);
+                ProcessState ps (phs);
+                auto rackNode = RackNodeBuilder::createRackNode (*rack, testSetup.sampleRate, testSetup.blockSize, makeNode<SilentNode> (2), ps, true);
                 test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
 
-                auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), inputProvider, true, testSetup.sampleRate, testSetup.blockSize);
+                auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), testSetup.sampleRate, testSetup.blockSize);
 
                 auto testContext = createTestContext (std::move (rackProcessor), testSetup, 2, 5.0);
                 test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 0.0f, 0.0f);
@@ -120,11 +121,13 @@ private:
 
             // Process Rack
             {
-                auto inputProvider = std::make_shared<InputProvider>();
-                auto rackNode = RackNodeBuilder::createRackNode (RackNodeBuilder::Algorithm::connectedNode, *rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
+                graph::PlayHead ph;
+                PlayHeadState phs (ph);
+                ProcessState ps (phs);
+                auto rackNode = RackNodeBuilder::createRackNode (*rack, testSetup.sampleRate, testSetup.blockSize, makeNode<SilentNode> (2), ps, true);
                 test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
 
-                auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), inputProvider, true, testSetup.sampleRate, testSetup.blockSize);
+                auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), testSetup.sampleRate, testSetup.blockSize);
 
                 auto testContext = createTestContext (std::move (rackProcessor), testSetup, 2, 5.0);
                 test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 1.0f, 0.707f);
@@ -148,11 +151,13 @@ private:
 
             // Process Rack
             {
-                auto inputProvider = std::make_shared<InputProvider>();
-                auto rackNode = RackNodeBuilder::createRackNode (RackNodeBuilder::Algorithm::connectedNode, *rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
+                graph::PlayHead ph;
+                PlayHeadState phs (ph);
+                ProcessState ps (phs);
+                auto rackNode = RackNodeBuilder::createRackNode (*rack, testSetup.sampleRate, testSetup.blockSize, makeNode<SilentNode> (2), ps, true);
                 test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
 
-                auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), inputProvider, true, testSetup.sampleRate, testSetup.blockSize);
+                auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), testSetup.sampleRate, testSetup.blockSize);
 
                 auto testContext = createTestContext (std::move (rackProcessor), testSetup, 1, 5.0);
                 test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 1.0f, 0.707f);
@@ -186,11 +191,13 @@ private:
 
             // Process Rack
             {
-                auto inputProvider = std::make_shared<InputProvider> (2);
-                auto rackNode = RackNodeBuilder::createRackNode (RackNodeBuilder::Algorithm::connectedNode, *rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
+                graph::PlayHead ph;
+                PlayHeadState phs (ph);
+                ProcessState ps (phs);
+                auto rackNode = RackNodeBuilder::createRackNode (*rack, testSetup.sampleRate, testSetup.blockSize, makeNode<SilentNode> (2), ps, true);
                 test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
 
-                auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), inputProvider, true, testSetup.sampleRate, testSetup.blockSize);
+                auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), testSetup.sampleRate, testSetup.blockSize);
 
                 auto testContext = createTestContext (std::move (rackProcessor), testSetup, 4, 5.0);
 
@@ -233,11 +240,13 @@ private:
             
             // Process Rack
             {
-                auto inputProvider = std::make_shared<InputProvider>();
-                auto rackNode = RackNodeBuilder::createRackNode (RackNodeBuilder::Algorithm::connectedNode, *rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
+                graph::PlayHead ph;
+                PlayHeadState phs (ph);
+                ProcessState ps (phs);
+                auto rackNode = RackNodeBuilder::createRackNode (*rack, testSetup.sampleRate, testSetup.blockSize, makeNode<SilentNode> (2), ps, true);
                 test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
 
-                auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), inputProvider, true, testSetup.sampleRate, testSetup.blockSize);
+                auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), testSetup.sampleRate, testSetup.blockSize);
                                         
                 auto testContext = createTestContext (std::move (rackProcessor), testSetup, 2, 5.0);
                 test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 1.0f, 0.707f);
@@ -288,11 +297,13 @@ private:
             
             // Process Rack
             {
-                auto inputProvider = std::make_shared<InputProvider>();
-                auto rackNode = RackNodeBuilder::createRackNode (RackNodeBuilder::Algorithm::connectedNode, *rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
+                graph::PlayHead ph;
+                PlayHeadState phs (ph);
+                ProcessState ps (phs);
+                auto rackNode = RackNodeBuilder::createRackNode (*rack, testSetup.sampleRate, testSetup.blockSize, makeNode<SilentNode> (2), ps, true);
                 test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
 
-                auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), inputProvider, true, testSetup.sampleRate, testSetup.blockSize);
+                auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), testSetup.sampleRate, testSetup.blockSize);
                                         
                 auto testContext = createTestContext (std::move (rackProcessor), testSetup, 2, 5.0);
                 const int latencyNumSamples = juce::roundToInt (latencyTimeInSeconds * testSetup.sampleRate);
@@ -327,11 +338,13 @@ private:
             
             // Process Rack
             {
-                auto inputProvider = std::make_shared<InputProvider>();
-                auto rackNode = RackNodeBuilder::createRackNode (RackNodeBuilder::Algorithm::connectedNode, *rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
+                graph::PlayHead ph;
+                PlayHeadState phs (ph);
+                ProcessState ps (phs);
+                auto rackNode = RackNodeBuilder::createRackNode (*rack, testSetup.sampleRate, testSetup.blockSize, makeNode<SilentNode> (2), ps, true);
                 test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
 
-                auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), inputProvider, true, testSetup.sampleRate, testSetup.blockSize);
+                auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), testSetup.sampleRate, testSetup.blockSize);
                                         
                 auto testContext = createTestContext (std::move (rackProcessor), testSetup, 2, 5.0);
                 test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 1.0f, 0.707f);
@@ -345,7 +358,6 @@ private:
     template<typename NodePlayerType>
     void runRackAudioInputTests (test_utilities::TestSetup testSetup)
     {
-        using namespace tracktion_engine;
         auto& engine = *Engine::getEngines()[0];
         
         // These tests won't work with random block sizes as the test inputs are just static
@@ -377,15 +389,18 @@ private:
                 // Fill inputs with sin data
                 {
                     test_utilities::fillBufferWithSinData (inputBuffer);
-                    tracktion_engine::MidiMessageArray midi;
+                    tracktion::engine::MidiMessageArray midi;
                     inputProvider->setInputs ({ inputBuffer, midi });
                 }
 
                 // Process Rack
                 {
-                    auto rackNode = RackNodeBuilder::createRackNode (RackNodeBuilder::Algorithm::connectedNode, *rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
+                    graph::PlayHead ph;
+                    PlayHeadState phs (ph);
+                    ProcessState ps (phs);
+                    auto rackNode = RackNodeBuilder::createRackNode (*rack, testSetup.sampleRate, testSetup.blockSize, makeNode<InputNode> (inputProvider), ps, true);
                     test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
-                    auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), inputProvider, false, testSetup.sampleRate, testSetup.blockSize);
+                    auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), testSetup.sampleRate, testSetup.blockSize);
                     auto testContext = createTestContext (std::move (rackProcessor), testSetup, 4, 5.0);
 
                     for (int c : { 0, 1, 2, 3 })
@@ -413,9 +428,12 @@ private:
 
                     // Process Rack
                     {
-                        auto rackNode = RackNodeBuilder::createRackNode (RackNodeBuilder::Algorithm::connectedNode, *rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
+                        graph::PlayHead ph;
+                        PlayHeadState phs (ph);
+                        ProcessState ps (phs);
+                        auto rackNode = RackNodeBuilder::createRackNode (*rack, testSetup.sampleRate, testSetup.blockSize, makeNode<InputNode> (inputProvider), ps, true);
                         test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
-                        auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), inputProvider, false, testSetup.sampleRate, testSetup.blockSize);
+                        auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), testSetup.sampleRate, testSetup.blockSize);
                         auto testContext = createTestContext (std::move (rackProcessor), testSetup, 4, 5.0);
 
                         for (int c : { 0, 1, 2, 3 })
@@ -425,12 +443,15 @@ private:
                     // Set the num audio inputs to be 1 channel and the Rack shouldn't crash
                     {
                         inputProvider->numChannels = 1;
-                        tracktion_engine::MidiMessageArray midi;
+                        tracktion::engine::MidiMessageArray midi;
                         inputProvider->setInputs ({ inputBuffer, midi });
 
-                        auto rackNode = RackNodeBuilder::createRackNode (RackNodeBuilder::Algorithm::connectedNode, *rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
+                        graph::PlayHead ph;
+                        PlayHeadState phs (ph);
+                        ProcessState ps (phs);
+                        auto rackNode = RackNodeBuilder::createRackNode (*rack, testSetup.sampleRate, testSetup.blockSize, makeNode<InputNode> (inputProvider), ps, true);
                         test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
-                        auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), inputProvider, false, testSetup.sampleRate, testSetup.blockSize);
+                        auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), testSetup.sampleRate, testSetup.blockSize);
                         auto testContext = createTestContext (std::move (rackProcessor), testSetup, 4, 5.0);
 
                         // Channel 0 should be a sin from 0.5s, silent before
@@ -468,15 +489,18 @@ private:
                 // Fill inputs with sin data
                 {
                     test_utilities::fillBufferWithSinData (inputBuffer);
-                    tracktion_engine::MidiMessageArray midi;
+                    tracktion::engine::MidiMessageArray midi;
                     inputProvider->setInputs ({ inputBuffer, midi });
                 }
 
                 // Process Rack
                 {
-                    auto rackNode = RackNodeBuilder::createRackNode (RackNodeBuilder::Algorithm::connectedNode, *rack, testSetup.sampleRate, testSetup.blockSize, inputProvider);
+                    graph::PlayHead ph;
+                    PlayHeadState phs (ph);
+                    ProcessState ps (phs);
+                    auto rackNode = RackNodeBuilder::createRackNode (*rack, testSetup.sampleRate, testSetup.blockSize, makeNode<InputNode> (inputProvider), ps, true);
                     test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
-                    auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), inputProvider, false, testSetup.sampleRate, testSetup.blockSize);
+                    auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), testSetup.sampleRate, testSetup.blockSize);
                     auto testContext = createTestContext (std::move (rackProcessor), testSetup, 2, 5.0);
 
                     // Channel 0 should be a sin, channel 1 silent
@@ -493,7 +517,6 @@ private:
     template<typename NodePlayerType>
     void runRackModifiertests (test_utilities::TestSetup ts)
     {
-        using namespace tracktion_engine;
         auto& engine = *Engine::getEngines()[0];
         
         beginTest ("LFO Modifier Rack");
@@ -521,18 +544,20 @@ private:
             
             tonePlugin->levelParam->addModifier (*modifier, -1.0f);
             
-            edit->updateModifierTimers (0.0, 0);
-            tonePlugin->levelParam->updateToFollowCurve (0.0); // Force an update of the param value for testing
+            edit->updateModifierTimers ({}, 0);
+            tonePlugin->levelParam->updateToFollowCurve ({}); // Force an update of the param value for testing
             expectWithinAbsoluteError (lfoModifier->getCurrentValue(), 0.5f, 0.001f);
             expectWithinAbsoluteError (tonePlugin->levelParam->getCurrentValue(), 0.5f, 0.001f);
 
             // Process Rack
             {
-                auto inputProvider = std::make_shared<InputProvider>();
-                auto rackNode = RackNodeBuilder::createRackNode (RackNodeBuilder::Algorithm::connectedNode, *rack, ts.sampleRate, ts.blockSize, inputProvider);
+                graph::PlayHead ph;
+                PlayHeadState phs (ph);
+                ProcessState ps (phs);
+                auto rackNode = RackNodeBuilder::createRackNode (*rack, ts.sampleRate, ts.blockSize, makeNode<SilentNode> (2), ps, true);
                 test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
 
-                auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), inputProvider, true, ts.sampleRate, ts.blockSize);
+                auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), ts.sampleRate, ts.blockSize);
                                         
                 auto testContext = createTestContext (std::move (rackProcessor), ts, 2, 5.0);
                 test_utilities::expectAudioBuffer (*this, testContext->buffer, 0, 0.5f, 0.353f);
@@ -579,9 +604,9 @@ private:
             // This value should modify the volume to -6dB
             volPlugin->volParam->addModifier (*modifier, -0.193f);
             
-            edit->updateModifierTimers (0.0, 0);
+            edit->updateModifierTimers ({}, 0);
             volPlugin->updateActiveParameters();
-            volPlugin->volParam->updateToFollowCurve (0.0); // Force an update of the param value for testing
+            volPlugin->volParam->updateToFollowCurve ({}); // Force an update of the param value for testing
 
             // Process Rack
             {
@@ -592,14 +617,17 @@ private:
                 // Fill inputs with sin data
                 {
                     test_utilities::fillBufferWithSinData (inputBuffer);
-                    tracktion_engine::MidiMessageArray midi;
+                    tracktion::engine::MidiMessageArray midi;
                     inputProvider->setInputs ({ inputBuffer, midi });
                 }
 
-                auto rackNode = RackNodeBuilder::createRackNode (RackNodeBuilder::Algorithm::connectedNode, *rack, ts.sampleRate, ts.blockSize, inputProvider);
+                graph::PlayHead ph;
+                PlayHeadState phs (ph);
+                ProcessState ps (phs);
+                auto rackNode = RackNodeBuilder::createRackNode (*rack, ts.sampleRate, ts.blockSize, makeNode<InputNode> (inputProvider), ps, true);
                 test_utilities::expectUniqueNodeIDs (*this, *rackNode, true);
 
-                auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), inputProvider, false, ts.sampleRate, ts.blockSize);
+                auto rackProcessor = std::make_unique<RackNodePlayer<NodePlayerType>> (std::move (rackNode), ts.sampleRate, ts.blockSize);
                                         
                 auto testContext = createTestContext (std::move (rackProcessor), ts, 2, 5.0);
 
@@ -625,4 +653,4 @@ static RackNodeTests rackNodeTests;
 
 #endif //TRACKTION_UNIT_TESTS
 
-}
+}} // namespace tracktion { inline namespace engine

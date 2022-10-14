@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 /**
@@ -151,7 +151,7 @@ private:
 struct TrackSection
 {
     Track* track = nullptr; /**< The Track this section refers to. */
-    EditTimeRange range;    /**< The time range this section refers to. */
+    TimeRange range;        /**< The time range this section refers to. */
 
     /** Merges an overlapping TrackItem track/time range with this section.
         @returns true if this item was from the same track and overlapping time
@@ -161,7 +161,7 @@ struct TrackSection
     bool merge (const TrackItem& c)
     {
         if (c.getTrack() == track
-             && c.getEditTimeRange().overlaps (range.expanded (0.0001)))
+             && c.getEditTimeRange().overlaps (range.expanded (TimeDuration::fromSeconds (0.0001))))
         {
             range = range.getUnionWith (c.getEditTimeRange());
             return true;
@@ -216,7 +216,7 @@ struct TrackAutomationSection
     /** Construts a section for a given TrackItem. */
     TrackAutomationSection (TrackItem&);
 
-    EditTimeRange position; /** The time range of the automation section. */
+    TimeRange position;     /** The time range of the automation section. */
     Track::Ptr src,         /** The source Track. */
                dst;         /** The destination Track. */
 
@@ -242,7 +242,7 @@ struct TrackAutomationSection
 /** Moves a set of automation optionally applying an offset and copying the
     automation (rather than moving it).
 */
-void moveAutomation (const juce::Array<TrackAutomationSection>&, double offset, bool copy);
+void moveAutomation (const juce::Array<TrackAutomationSection>&, TimeDuration offset, bool copy);
 
 
 //==============================================================================
@@ -250,11 +250,11 @@ void moveAutomation (const juce::Array<TrackAutomationSection>&, double offset, 
     Returns the index of the next item after the given time.
 */
 template <typename ArrayType>
-int findIndexOfNextItemAt (const ArrayType& items, double time)
+int findIndexOfNextItemAt (const ArrayType& items, TimePosition time)
 {
     for (int i = items.size(); --i >= 0;)
     {
-        auto pos = items.getUnchecked(i)->getPosition().time;
+        auto pos = items.getUnchecked (i)->getPosition().time;
 
         if (pos.getStart() < time)
         {
@@ -272,9 +272,9 @@ int findIndexOfNextItemAt (const ArrayType& items, double time)
     Returns the the time range that covers all the given TrackItems.
 */
 template <typename ArrayType>
-EditTimeRange findUnionOfEditTimeRanges (const ArrayType& items)
+TimeRange findUnionOfEditTimeRanges (const ArrayType& items)
 {
-    EditTimeRange total;
+    TimeRange total;
     bool first = true;
 
     for (auto& item : items)
@@ -295,4 +295,4 @@ EditTimeRange findUnionOfEditTimeRanges (const ArrayType& items)
     return total;
 }
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

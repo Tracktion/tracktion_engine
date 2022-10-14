@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 AutomationRecordManager::AutomationRecordManager (Edit& ed)
@@ -63,14 +63,14 @@ void AutomationRecordManager::setWritingAutomation (bool b)
     }
 }
 
-double AutomationRecordManager::getGlideSeconds (Engine& e) 
+TimeDuration AutomationRecordManager::getGlideSeconds (Engine& e)
 {
-    return e.getPropertyStorage().getProperty (SettingID::glideLength);;
+    return TimeDuration::fromSeconds (static_cast<double> (e.getPropertyStorage().getProperty (SettingID::glideLength)));
 }
 
-void AutomationRecordManager::setGlideSeconds (Engine& e, double secs)
+void AutomationRecordManager::setGlideSeconds (Engine& e, TimeDuration secs)
 {
-    e.getPropertyStorage().setProperty (SettingID::glideLength, secs);
+    e.getPropertyStorage().setProperty (SettingID::glideLength, secs.inSeconds());
 }
 
 void AutomationRecordManager::changeListenerCallback (ChangeBroadcaster* source)
@@ -118,7 +118,7 @@ void AutomationRecordManager::punchOut (bool toEnd)
 
     if (recordedParams.size() > 0)
     {
-        auto endTime = edit.getTransport().getCurrentPosition();
+        auto endTime = edit.getTransport().getPosition();
 
         // If the punch out was triggered by a position change, we want to make
         // sure the playhead position is used as the end time
@@ -132,7 +132,7 @@ void AutomationRecordManager::punchOut (bool toEnd)
         for (auto param : recordedParams)
         {
             if (toEnd)
-                endTime = std::max (endTime, param->parameter.getCurve().getLength() + 1.0);
+                endTime = std::max (endTime, toPosition (param->parameter.getCurve().getLength()) + TimeDuration::fromSeconds (1.0));
 
             applyChangesToParameter (param, endTime, toEnd);
             param->parameter.resetRecordingStatus();
@@ -143,7 +143,7 @@ void AutomationRecordManager::punchOut (bool toEnd)
     }
 }
 
-void AutomationRecordManager::applyChangesToParameter (AutomationParamData* parameter, double end, bool toEnd)
+void AutomationRecordManager::applyChangesToParameter (AutomationParamData* parameter, TimePosition end, bool toEnd)
 {
     CRASH_TRACER
     juce::OwnedArray<AutomationCurve> newCurves;
@@ -156,7 +156,7 @@ void AutomationRecordManager::applyChangesToParameter (AutomationParamData* para
         {
             auto& change = parameter->changes.getReference (i);
 
-            if (i > 0 && change.time < parameter->changes.getReference (i - 1).time - 0.1)
+            if (i > 0 && change.time < parameter->changes.getReference (i - 1).time - TimeDuration::fromSeconds (0.1))
             {
                 // gone back to the start - must be looping, so add this to the list and carry on..
                 if (curve->getNumPoints() > 0)
@@ -183,7 +183,7 @@ void AutomationRecordManager::applyChangesToParameter (AutomationParamData* para
                 if (std::abs (oldVal - newVal) > (parameter->parameter.getValueRange().getLength() * 0.21f))
                 {
                     if (i == 0)
-                        curve->addPoint (change.time - 0.000001, oldVal, 0.0f);
+                        curve->addPoint (change.time - TimeDuration::fromSeconds (0.000001), oldVal, 0.0f);
                     else
                         curve->addPoint (change.time, oldVal, 0.0f);
                 }
@@ -216,12 +216,12 @@ void AutomationRecordManager::applyChangesToParameter (AutomationParamData* para
                 parameter->parameter.setParameter (parameter->originalValue, juce::sendNotification);
 
             auto& c = parameter->parameter.getCurve();
-            EditTimeRange curveRange (juce::Range<double> (startTime, endTime + glideLength));
+            TimeRange curveRange (startTime, endTime + glideLength);
             c.mergeOtherCurve (curve, curveRange,
                                startTime, glideLength, false, toEnd);
 
             if (engine.getPropertyStorage().getProperty (SettingID::simplifyAfterRecording, true))
-                c.simplify (curveRange.expanded (0.001), 0.01, 0.002f);
+                c.simplify (curveRange.expanded (TimeDuration::fromSeconds (0.001)), 0.01, 0.002f);
         }
     }
 }
@@ -245,7 +245,7 @@ void AutomationRecordManager::postFirstAutomationChange (AutomatableParameter& p
     recordedParams.add (entry.release());
 }
 
-void AutomationRecordManager::postAutomationChange (AutomatableParameter& param, double time, float value)
+void AutomationRecordManager::postAutomationChange (AutomatableParameter& param, TimePosition time, float value)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
     const juce::ScopedLock sl (lock);
@@ -269,4 +269,4 @@ void AutomationRecordManager::parameterBeingDeleted (AutomatableParameter& param
             recordedParams.remove (i);
 }
 
-}
+}} // namespace tracktion { inline namespace engine

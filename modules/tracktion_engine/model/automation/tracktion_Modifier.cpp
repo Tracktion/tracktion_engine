@@ -8,19 +8,19 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
 class Modifier::ValueFifo
 {
 public:
-    ValueFifo (double newSampleRate, double maxNumSecondsToStore)
+    ValueFifo (double newSampleRate, TimeDuration maxNumSecondsToStore)
         : sampleRate (newSampleRate)
     {
         jassert (sampleRate > 0.0);
         
-        const auto numSamplesToStore = (size_t) tracktion_graph::timeToSample (maxNumSecondsToStore, newSampleRate);
+        const auto numSamplesToStore = (size_t) tracktion::toSamples (maxNumSecondsToStore, newSampleRate);
         values = std::vector<float> (numSamplesToStore, 0.0f);
     }
     
@@ -43,9 +43,9 @@ public:
         lastValue = value;
     }
     
-    [[nodiscard]] float getValueAt (double numSeconds) const
+    [[nodiscard]] float getValueAt (TimeDuration numSeconds) const
     {
-        const size_t sampleDelta = (size_t) tracktion_graph::timeToSample (numSeconds, sampleRate);
+        const size_t sampleDelta = (size_t) tracktion::toSamples (numSeconds, sampleRate);
         
         if (sampleDelta > values.size())
             return {};
@@ -56,12 +56,12 @@ public:
         return values[valueIndex];
     }
     
-    [[nodiscard]] std::vector<float> getValues (double numSecondsBeforeNow) const
+    [[nodiscard]] std::vector<float> getValues (TimeDuration numSecondsBeforeNow) const
     {
         std::vector<float> v;
         
         const auto numValues = std::min (values.size(),
-                                         (size_t) tracktion_graph::timeToSample (numSecondsBeforeNow, sampleRate));
+                                         (size_t) tracktion::toSamples (numSecondsBeforeNow, sampleRate));
         v.reserve (numValues);
 
         int index = (int) headIndex;
@@ -139,11 +139,11 @@ void Modifier::baseClassInitialise (double newSampleRate, int blockSizeSamples)
         CRASH_TRACER
         initialise (sampleRate, blockSizeSamples);
 
-        const double numSecondsToStore = maxHistoryTime;
+        const auto numSecondsToStore = maxHistoryTime;
         valueFifo = std::make_unique<ValueFifo> (sampleRate, numSecondsToStore);
         messageThreadValueFifo = std::make_unique<ValueFifo> (sampleRate, numSecondsToStore);
         
-        const int numSamples = (int) tracktion_graph::timeToSample (numSecondsToStore, sampleRate);
+        const int numSamples = (int) tracktion::toSamples (numSecondsToStore, sampleRate);
         const int numBlocks = (numSamples / blockSizeSamples) * 2;
         valueFifoQueue.reset ((size_t) numBlocks);
     }
@@ -186,12 +186,12 @@ void Modifier::baseClassApplyToBuffer (const PluginRenderContext& prc)
 }
 
 //==============================================================================
-double Modifier::getCurrentTime() const
+TimePosition Modifier::getCurrentTime() const
 {
     return lastEditTime;
 }
 
-float Modifier::getValueAt (double numSecondsBeforeNow) const
+float Modifier::getValueAt (TimeDuration numSecondsBeforeNow) const
 {
     if (valueFifo)
         return valueFifo->getValueAt (numSecondsBeforeNow);
@@ -199,7 +199,7 @@ float Modifier::getValueAt (double numSecondsBeforeNow) const
     return {};
 }
 
-std::vector<float> Modifier::getValues (double numSecondsBeforeNow) const
+std::vector<float> Modifier::getValues (TimeDuration numSecondsBeforeNow) const
 {
     if (! messageThreadValueFifo)
         return {};
@@ -333,4 +333,4 @@ Modifier::Ptr findModifierForID (ModifierList& ml, EditItemID modifierID)
     return {};
 }
 
-}
+}} // namespace tracktion { inline namespace engine

@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 EditClip::EditClip (const juce::ValueTree& v, EditItemID clipID, ClipTrack& targetTrack, ProjectItemID sourceEditID)
@@ -95,7 +95,7 @@ bool EditClip::needsRender() const
     if (! renderEnabled || editSnapshot == nullptr)
         return false;
 
-    return editSnapshot->getLength() > 0.0;
+    return editSnapshot->getLength() > 0.0s;
 }
 
 RenderManager::Job::Ptr EditClip::getRenderJob (const AudioFile& destFile)
@@ -265,8 +265,8 @@ void EditClip::updateWaveInfo()
 {
     // If the edit is empty this will cause the AudioSegmentList structure to have undefined content.
     // need to find a way around this, maybe just use a default length of 5s so silence is generated
-    jassert ((! needsRender()) || getSourceLength() > 0.0);
-    const double sourceLength = getSourceLength() == 0.0 ? 5.0 : getSourceLength();
+    jassert ((! needsRender()) || getSourceLength() > 0s);
+    const auto sourceLength = getSourceLength() == 0s ? 5.0 : getSourceLength().inSeconds();
 
     waveInfo.bitsPerSample      = renderOptions->getBitDepth();
     waveInfo.sampleRate         = renderOptions->getSampleRate();
@@ -365,7 +365,7 @@ void EditClip::updateLoopInfoBasedOnSource (bool updateLength)
 
     if (tempo > 0.0)
     {
-        clipNumBeats = (tempo * getSourceLength()) / 60.0;
+        clipNumBeats = (tempo * getSourceLength().inSeconds()) / 60.0;
         loopInfo.setNumBeats (clipNumBeats);
         loopInfo.setBpm (tempo, waveInfo);
         // need to set num beats or the tempo will get messed up
@@ -388,7 +388,7 @@ void EditClip::updateLoopInfoBasedOnSource (bool updateLength)
     }
 
     if (loopInfo.getNumBeats() == 0)
-        loopInfo.setNumBeats (length * (ts.getTempoAt (clipPos.getStart()).getBpm() / 60.0));
+        loopInfo.setNumBeats (length.get().inSeconds() * (ts.getTempoAt (clipPos.getStart()).getBpm() / 60.0));
 
     // also need to adjust clip length
     if (updateLength)
@@ -406,7 +406,7 @@ void EditClip::updateLoopInfoBasedOnSource (bool updateLength)
             {
                 auto bpmRatio = tempo / editBpm;
                 jassert (bpmRatio > 0.1 && bpmRatio < 10.0); // sensible?
-                auto newLength = bpmRatio * getSourceLength();
+                auto newLength = getSourceLength() * bpmRatio;
                 setLength (newLength, true);
             }
 
@@ -435,4 +435,4 @@ void EditClip::editChanged (EditSnapshot&)
     generateHash();
 }
 
-}
+}} // namespace tracktion { inline namespace engine

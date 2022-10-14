@@ -13,8 +13,17 @@
 #include "tracktion_engine.h"
 
 #if TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE
- // If you get a build error here you'll need to add the Elastique SDK to your header search path!
- #include "elastique_pro/incl/elastiqueProV3API.h"
+ #ifdef __GNUC__
+  #pragma GCC diagnostic push
+  #pragma GCC diagnostic ignored "-Wextra-semi"
+ #endif
+
+  // If you get a build error here you'll need to add the Elastique SDK to your header search path!
+  #include "elastique_pro/incl/elastiqueProV3API.h"
+
+ #ifdef __GNUC__
+  #pragma GCC diagnostic pop
+ #endif
 #endif
 
 #ifdef __clang__
@@ -31,6 +40,8 @@
   #pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
  #endif
  #pragma clang diagnostic ignored "-Wextra-semi"
+ #pragma clang diagnostic ignored "-Wextra-semi"
+ #pragma clang diagnostic ignored "-Wmissing-prototypes"
 #endif
 
 #ifdef __GNUC__
@@ -55,7 +66,7 @@
 #include "timestretch/tracktion_TimeStretch.cpp"
 #include "timestretch/tracktion_TimeStretch.test.cpp"
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
     #include "3rd_party/soundtouch/source/SoundTouch/BPMDetect.cpp"
     #undef max
@@ -77,7 +88,7 @@ namespace tracktion_engine
     #include "3rd_party/soundtouch/source/SoundTouch/sse_optimized.cpp"
     #include "3rd_party/soundtouch/source/SoundTouch/TDStretch.cpp"
    #endif
-}
+}} // namespace tracktion { inline namespace engine
 
 #ifdef JUCE_MSVC
  #pragma warning (pop)

@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 /**
@@ -121,7 +121,7 @@ public:
     void reset();
     
     /** Sets the timestretch speed ratio and semitones pitch shift.
-        @param speedRatio   The ratio for timestretched speed. 1 = no stretching, 2 = twice as fast, 0.5 = half as fast etc.
+        @param speedRatio   The ratio for timestretched speed. 1 = no stretching, 2 = half as fast, 0.5 = twice as fast etc.
         @param semitones    The number of semitones to adjust the pitch by 0 = not shift, 12 = up one oct, -12 = down one oct etc.
     */
     bool setSpeedAndPitch (float speedRatio, float semitones);
@@ -175,21 +175,21 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TimeStretcher)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine
 
 namespace juce
 {
     template <>
-    struct VariantConverter<tracktion_engine::TimeStretcher::Mode>
+    struct VariantConverter<tracktion::engine::TimeStretcher::Mode>
     {
-        static tracktion_engine::TimeStretcher::Mode fromVar (const var& v)   { return (tracktion_engine::TimeStretcher::Mode) static_cast<int> (v); }
-        static var toVar (tracktion_engine::TimeStretcher::Mode v)            { return static_cast<int> (v); }
+        static tracktion::engine::TimeStretcher::Mode fromVar (const var& v)   { return (tracktion::engine::TimeStretcher::Mode) static_cast<int> (v); }
+        static var toVar (tracktion::engine::TimeStretcher::Mode v)            { return static_cast<int> (v); }
     };
 
     template <>
-    struct VariantConverter<tracktion_engine::TimeStretcher::ElastiqueProOptions>
+    struct VariantConverter<tracktion::engine::TimeStretcher::ElastiqueProOptions>
     {
-        static tracktion_engine::TimeStretcher::ElastiqueProOptions fromVar (const var& v) { return tracktion_engine::TimeStretcher::ElastiqueProOptions (v.toString()); }
-        static var toVar (const tracktion_engine::TimeStretcher::ElastiqueProOptions& v)   { return v.toString(); }
+        static tracktion::engine::TimeStretcher::ElastiqueProOptions fromVar (const var& v) { return tracktion::engine::TimeStretcher::ElastiqueProOptions (v.toString()); }
+        static var toVar (const tracktion::engine::TimeStretcher::ElastiqueProOptions& v)   { return v.toString(); }
     };
 }

@@ -47,10 +47,19 @@ set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
     CXX_VISIBILITY_PRESET hidden)
 
 set(SourceFiles
-    ${CMAKE_PROJECT_NAME}.cpp)
+    ${CMAKE_PROJECT_NAME}.cpp
+    ../${CMAKE_PROJECT_NAME}.h)
 
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE ${SourceFiles})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX Source FILES ${SourceFiles})
+
+message(${CMAKE_CURRENT_SOURCE_DIR})
+file(GLOB_RECURSE LibraryFiles CONFIGURE_DEPENDS
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../modules/3rd_party/choc/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../modules/3rd_party/choc/*.h)
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/../../modules/3rd_party PREFIX Libraries FILES ${LibraryFiles})
+
+add_library(Source ${ModuleFiles} ${SourceFiles} ${LibraryFiles})
 
 if (DEFINED ENV{VST2_SDK_DIR})
     target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
@@ -73,6 +82,7 @@ target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
     TRACKTION_LOG_DEVICES=0)
 
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
+    tracktion::tracktion_core
     tracktion::tracktion_engine
     tracktion::tracktion_graph
     juce::juce_audio_devices

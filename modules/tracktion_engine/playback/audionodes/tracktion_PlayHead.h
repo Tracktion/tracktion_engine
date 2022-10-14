@@ -8,7 +8,9 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+#include "tracktion_EditTimeRange.h"
+
+namespace tracktion { inline namespace engine
 {
 
 class PlayHead
@@ -25,7 +27,7 @@ public:
         overridePosition (newTime);
     }
 
-    void play (EditTimeRange rangeToPlay, bool looped)
+    void play (legacy::EditTimeRange rangeToPlay, bool looped)
     {
         const juce::ScopedLock sl (lock);
 
@@ -45,7 +47,7 @@ public:
     }
 
     // takes the play time directly from the engine's time - for recording, where it needs to be fixed
-    void playLockedToEngine (EditTimeRange rangeToPlay)
+    void playLockedToEngine (legacy::EditTimeRange rangeToPlay)
     {
         const juce::ScopedLock sl (lock);
 
@@ -76,13 +78,13 @@ public:
     //==============================================================================
     struct EditTimeWindow
     {
-        EditTimeWindow (EditTimeRange range1)
+        EditTimeWindow (legacy::EditTimeRange range1)
             : editRange1 (range1), isSplit (false) {}
 
-        EditTimeWindow (EditTimeRange range1, EditTimeRange range2)
+        EditTimeWindow (legacy::EditTimeRange range1, legacy::EditTimeRange range2)
             : editRange1 (range1), editRange2 (range2), isSplit (true) {}
 
-        EditTimeRange editRange1, editRange2;
+        legacy::EditTimeRange editRange1, editRange2;
         bool isSplit;
     };
 
@@ -105,7 +107,7 @@ public:
         return playoutSyncTime + (streamTime - streamSyncTime) * speed;
     }
 
-    static double linearTimeToLoopTime (double time, EditTimeRange loop)
+    static double linearTimeToLoopTime (double time, legacy::EditTimeRange loop)
     {
         return linearTimeToLoopTime (time, loop.start, loop.getLength());
     }
@@ -115,7 +117,7 @@ public:
         return loopStart + std::fmod (time - loopStart, loopLen);
     }
 
-    EditTimeWindow streamTimeToEditWindow (EditTimeRange streamTime) const
+    EditTimeWindow streamTimeToEditWindow (legacy::EditTimeRange streamTime) const
     {
         constexpr double errorMargin = 0.000001;
 
@@ -194,9 +196,9 @@ public:
     bool isLooping() const noexcept                     { return looping.load (std::memory_order_relaxed); }
     bool isRollingIntoLoop() const noexcept             { return rollInToLoop.load (std::memory_order_relaxed); }
 
-    EditTimeRange getLoopTimes() const noexcept         { const juce::ScopedLock sl (lock); return playRange; }
+    legacy::EditTimeRange getLoopTimes() const noexcept { const juce::ScopedLock sl (lock); return playRange; }
 
-    void setLoopTimes (bool loop, EditTimeRange times)
+    void setLoopTimes (bool loop, legacy::EditTimeRange times)
     {
         if (looping != loop || (loop && times != getLoopTimes()))
         {
@@ -234,7 +236,7 @@ public:
 private:
     std::atomic<double> speed { 0 };
     double streamSyncTime = 0, playoutSyncTime = 0;
-    EditTimeRange playRange;
+    legacy::EditTimeRange playRange;
     double lastStreamTime = 0, lastStreamTimeEnd = 0;
     juce::Time userInteractionTime;
     juce::CriticalSection lock;
@@ -248,4 +250,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PlayHead)
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine

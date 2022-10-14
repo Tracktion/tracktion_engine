@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 struct VirtualMidiInputDeviceInstance  : public MidiInputDeviceInstanceBase
@@ -30,7 +30,7 @@ struct VirtualMidiInputDeviceInstance  : public MidiInputDeviceInstanceBase
 
         if (! recording)
         {
-            getVirtualMidiInput().masterTimeUpdate (startTime);
+            getVirtualMidiInput().masterTimeUpdate (startTime.inSeconds());
             recording = true;
         }
 
@@ -165,4 +165,4 @@ juce::String VirtualMidiInputDevice::getSelectableDescription()
     return MidiInputDevice::getSelectableDescription();
 }
 
-}
+}} // namespace tracktion { inline namespace engine

@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion_engine
+namespace tracktion { inline namespace engine
 {
 
 class IconProG2  : public MackieMCU
@@ -31,4 +31,4 @@ public:
     void setAssignmentMode (AssignmentMode newMode) override;
 };
 
-} // namespace tracktion_engine
+}} // namespace tracktion { inline namespace engine
