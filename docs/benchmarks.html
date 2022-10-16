@@ -370,6 +370,25 @@
       showVariances     = show_variance_button.checked;
       normalise         = normalise_button.checked;
 
+      currentMax = Number.MIN_VALUE;
+      currentMin = Number.MAX_VALUE;
+
+      console.log (currentResults);
+      currentResults.forEach (result =>
+                             {
+                               if (showTotal)
+                               {
+                                 currentMax = Math.max (currentMax, ...result.durations);
+                                 currentMin = Math.min (currentMin, ...result.durations);
+                               }
+
+                               if (showMinMaxMean)
+                               {
+                                 currentMax = Math.max (currentMax, ...result.maximums);
+                                 currentMin = Math.min (currentMin, ...result.minimums);
+                               }
+                             });
+
       charts.innerHTML = "";
       
       if (currentResults.size == 0)

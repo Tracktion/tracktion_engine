@@ -884,7 +884,10 @@ public:
 
         // Create the cached sequence (without allocating)
         currentSequence.events.clear();
-        MidiHelpers::addSequence (currentSequence, sequences[currentSequenceIndex], offsetBeats);
+
+        if (currentSequenceIndex < sequences.size())
+            MidiHelpers::addSequence (currentSequence, sequences[currentSequenceIndex], offsetBeats);
+        
         jassert (std::is_sorted (currentSequence.begin(), currentSequence.end()));
         MidiHelpers::createNoteOffMap (noteOffMap, currentSequence);
         MidiHelpers::applyQuantisationToSequence (quantisation, false, currentSequence, noteOffMap);

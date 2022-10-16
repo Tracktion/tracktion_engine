@@ -12,13 +12,13 @@
 
 #ifdef _WIN32
  #include <intrin.h>
-#elif defined (__arm__) || defined (__arm64__)
+#elif defined (__arm__) || defined (__arm64__) || defined (__aarch64__)
  // Use clang built-in
 #else
  #include <x86intrin.h>
 #endif
 
-#if defined (__arm__) || defined (__arm64__)
+#if defined (__arm__) || defined (__arm64__) || defined (__aarch64__)
  // Use asm yield
 #elif __has_include(<emmintrin.h>)
  #include <emmintrin.h>
@@ -46,7 +46,7 @@ inline std::uint64_t rdtsc()
 */
 inline void pause()
 {
-   #if defined (__arm__) || defined (__arm64__)
+   #if defined (__arm__) || defined (__arm64__) || defined (__aarch64__)
     __asm__ __volatile__ ("yield");
    #elif __has_include(<emmintrin.h>)
     _mm_pause();
