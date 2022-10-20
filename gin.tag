@@ -32877,6 +32877,13 @@
       <arglist>()</arglist>
     </member>
     <member kind="function">
+      <type>juce::String</type>
+      <name>getLoadError</name>
+      <anchorfile>classtracktion_1_1engine_1_1ExternalPlugin.html</anchorfile>
+      <anchor>a400c73590596748a19c33c1f0de07856</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
       <type>void</type>
       <name>flushPluginStateToValueTree</name>
       <anchorfile>classtracktion_1_1engine_1_1ExternalPlugin.html</anchorfile>
