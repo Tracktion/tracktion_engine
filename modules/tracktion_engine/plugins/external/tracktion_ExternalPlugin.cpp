@@ -219,8 +219,10 @@ void cleanUpDanglingPlugins()
     {
         for (int count = 400; --count > 0 && d->releaseNextDanglingPlugin();)
         {
+        #if !TRACKTION_FORCE_HEADLESS
             juce::Component modal;
             modal.enterModalState (false);
+        #endif
 
             juce::MessageManager::getInstance()->runDispatchLoopUntil (10);
         }
