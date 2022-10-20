@@ -36,6 +36,8 @@ public:
     void initialiseFully() override;
     void forceFullReinitialise();
 
+    juce::String getLoadError();
+
     static const char* xmlTypeName;
 
     void flushPluginStateToValueTree() override;
@@ -125,7 +127,7 @@ public:
 private:
     //==============================================================================
     juce::CriticalSection lock;
-    juce::String debugName, identiferString;
+    juce::String debugName, identiferString, loadError;
 
     struct ProcessorChangedManager;
     std::unique_ptr<juce::AudioPluginInstance> pluginInstance;

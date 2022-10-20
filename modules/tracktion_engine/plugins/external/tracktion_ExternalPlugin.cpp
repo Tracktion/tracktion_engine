@@ -556,6 +556,17 @@ juce::ValueTree ExternalPlugin::create (Engine& e, const juce::PluginDescription
     return v;
 }
 
+juce::String ExternalPlugin::getLoadError()
+{
+    if (pluginInstance != nullptr)
+        return {};
+
+    if (loadError.isEmpty())
+        return TRANS("ERROR! - This plugin couldn't be loaded!");
+
+    return loadError;
+}
+
 const char* ExternalPlugin::xmlTypeName = "vst";
 
 void ExternalPlugin::initialiseFully()
@@ -818,12 +829,12 @@ void ExternalPlugin::doFullInitialisation()
                 return;
 
             CRASH_TRACER_PLUGIN (getDebugName());
-            juce::String error;
+            loadError = {};
 
-            callBlocking ([this, &error, &foundDesc]
+            callBlocking ([this, &foundDesc]
             {
                 CRASH_TRACER_PLUGIN (getDebugName());
-                error = createPluginInstance (*foundDesc);
+                loadError = createPluginInstance (*foundDesc);
             });
 
             if (pluginInstance != nullptr)
@@ -842,7 +853,7 @@ void ExternalPlugin::doFullInitialisation()
             }
             else
             {
-                TRACKTION_LOG_ERROR (error);
+                TRACKTION_LOG_ERROR (loadError);
             }
         }
     }
