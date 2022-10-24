@@ -134,6 +134,13 @@ public:
     */
     std::function<juce::File (const juce::String&)> filePathResolver;
 
+    // BEATCONNECT MODIFICATION START
+    /*
+        If set, should return the File object containing the path to the BeatConnect data folder.
+    */
+    std::function<juce::File&()> bcDataFolder;
+    // BEATCONNECT MODIFICATION END
+
     /** Sets the ProjectItemID of the Edit, this is also stored in the state. */
     void setProjectItemID (ProjectItemID);
 

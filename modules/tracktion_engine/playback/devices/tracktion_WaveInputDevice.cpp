@@ -322,19 +322,37 @@ public:
                 if (proj->isReadOnly())
                     return TRANS("The current project is read-only, so new clips can't be recorded into it!");
 
-            auto format = getFormatToUse();
-            juce::File recordedFile;
-
-            auto res = getRecordingFile (recordedFile, *format);
-
-            if (! res.wasOk())
-                return res.getErrorMessage();
+            // BEATCONNECT MODIFICATION START
+            //  auto format = getFormatToUse();
+            //  juce::File recordedFile;
+            //  
+            //  auto res = getRecordingFile (recordedFile, *format);
+            //  
+            //  if (! res.wasOk())
+            //      return res.getErrorMessage();
+            // BEATCONNECT MODIFICATION END
 
             // BEATCONNECT MODIFICATION START
-            //  jassert(state.hasType("INPUTDEVICE"));
-            //  juce::String SampleID = state.getProperty("uuid");
-            //  jassert(!SampleID.isEmpty());
-            auto rc = std::make_unique<RecordingContext> (edit.engine, recordedFile, punchIn, getTargetTracks());
+            auto format = getFormatToUse();
+            juce::File recordedFile;
+            if (nullptr != edit.bcDataFolder)
+            {
+                juce::Uuid fileName;
+                recordedFile = juce::File(
+                    edit.bcDataFolder().getFullPathName() +
+                    "\\" +
+                    fileName.toString() +
+                    format->getFileExtensions()[0]);
+            }
+            else
+            {
+                // Default tracktion code.
+                auto res = getRecordingFile(recordedFile, *format);
+                if (!res.wasOk())
+                    return res.getErrorMessage();
+            }
+
+            auto rc = std::make_unique<RecordingContext>(edit.engine, recordedFile, punchIn, getTargetTracks());
             // BEATCONNECT MODIFICATION END
 
             rc->sampleRate = sr;
