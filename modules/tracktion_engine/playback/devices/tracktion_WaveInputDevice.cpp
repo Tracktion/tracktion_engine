@@ -335,15 +335,8 @@ public:
             // BEATCONNECT MODIFICATION START
             auto format = getFormatToUse();
             juce::File recordedFile;
-            if (nullptr != edit.bcDataFolder)
-            {
-                juce::Uuid fileName;
-                recordedFile = juce::File(
-                    edit.bcDataFolder().getFullPathName() +
-                    "\\" +
-                    fileName.toString() +
-                    format->getFileExtensions()[0]);
-            }
+            if (nullptr != edit.bcGenerateAudioFilePath)
+                recordedFile = edit.bcGenerateAudioFilePath();
             else
             {
                 // Default tracktion code.

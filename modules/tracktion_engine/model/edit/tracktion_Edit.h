@@ -138,7 +138,7 @@ public:
     /*
         If set, should return the File object containing the path to the BeatConnect data folder.
     */
-    std::function<juce::File&()> bcDataFolder;
+    std::function<juce::File()> bcGenerateAudioFilePath;
     // BEATCONNECT MODIFICATION END
 
     /** Sets the ProjectItemID of the Edit, this is also stored in the state. */
