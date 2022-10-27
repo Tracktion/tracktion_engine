@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-10-20 08:23:00</td>
+            <td class="headerValue">2022-10-27 17:42:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">155</td>
@@ -88,7 +88,7 @@
 <a name="26"><span class="lineNum">      26 </span>            : template &lt;typename T&gt;</a>
 <a name="27"><span class="lineNum">      27 </span>            : static bool setIfDifferent (T&amp; val, T newVal) noexcept</a>
 <a name="28"><span class="lineNum">      28 </span>            : {</a>
-<a name="29"><span class="lineNum">      29 </span><span class="lineCov">      76858 :     if (val == newVal)</span></a>
+<a name="29"><span class="lineNum">      29 </span><span class="lineCov">      77112 :     if (val == newVal)</span></a>
 <a name="30"><span class="lineNum">      30 </span>            :         return false;</a>
 <a name="31"><span class="lineNum">      31 </span>            : </a>
 <a name="32"><span class="lineNum">      32 </span><span class="lineCov">        251 :     val = newVal;</span></a>
@@ -249,7 +249,7 @@
 <a name="187"><span class="lineNum">     187 </span>            :         }</a>
 <a name="188"><span class="lineNum">     188 </span><span class="lineCov">      15950 :     }</span></a>
 <a name="189"><span class="lineNum">     189 </span>            : </a>
-<a name="190"><span class="lineNum">     190 </span><span class="lineCov">      41702 :     void valueTreePropertyChanged (juce::ValueTree&amp;, const juce::Identifier&amp;) override {}</span></a>
+<a name="190"><span class="lineNum">     190 </span><span class="lineCov">      41699 :     void valueTreePropertyChanged (juce::ValueTree&amp;, const juce::Identifier&amp;) override {}</span></a>
 <a name="191"><span class="lineNum">     191 </span><span class="lineCov">      41917 :     void valueTreeParentChanged (juce::ValueTree&amp;) override {}</span></a>
 <a name="192"><span class="lineNum">     192 </span>            : </a>
 <a name="193"><span class="lineNum">     193 </span><span class="lineNoCov">          0 :     void valueTreeRedirected (juce::ValueTree&amp;) override { jassertfalse; } // may need to add handling if this is hit</span></a>
@@ -293,394 +293,395 @@
 <a name="231"><span class="lineNum">     231 </span>            :     {</a>
 <a name="232"><span class="lineNum">     232 </span><span class="lineCov">      10246 :         int index1 = parent.indexOf (first-&gt;state);</span></a>
 <a name="233"><span class="lineNum">     233 </span><span class="lineCov">      10246 :         int index2 = parent.indexOf (second-&gt;state);</span></a>
-<a name="234"><span class="lineNum">     234 </span><span class="lineCov">       5123 :         return index1 - index2;</span></a>
-<a name="235"><span class="lineNum">     235 </span>            :     }</a>
-<a name="236"><span class="lineNum">     236 </span>            : </a>
-<a name="237"><span class="lineNum">     237 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ValueTreeObjectList)</a>
-<a name="238"><span class="lineNum">     238 </span>            : };</a>
-<a name="239"><span class="lineNum">     239 </span>            : </a>
-<a name="240"><span class="lineNum">     240 </span>            : //==============================================================================</a>
-<a name="241"><span class="lineNum">     241 </span>            : template&lt;typename ObjectType&gt;</a>
-<a name="242"><span class="lineNum">     242 </span>            : struct SortedValueTreeObjectList    : protected ValueTreeObjectList&lt;ObjectType&gt;</a>
-<a name="243"><span class="lineNum">     243 </span>            : {</a>
-<a name="244"><span class="lineNum">     244 </span>            :     SortedValueTreeObjectList (const juce::ValueTree&amp; v)</a>
-<a name="245"><span class="lineNum">     245 </span>            :         : ValueTreeObjectList&lt;ObjectType&gt; (v)</a>
-<a name="246"><span class="lineNum">     246 </span>            :     {</a>
-<a name="247"><span class="lineNum">     247 </span>            :     }</a>
-<a name="248"><span class="lineNum">     248 </span>            : </a>
-<a name="249"><span class="lineNum">     249 </span>            :     /** Must sort the given array. */</a>
-<a name="250"><span class="lineNum">     250 </span>            :     virtual void sortObjects (juce::Array&lt;ObjectType*&gt;&amp; objectsToBeSorted) const = 0;</a>
-<a name="251"><span class="lineNum">     251 </span>            : </a>
-<a name="252"><span class="lineNum">     252 </span>            :     /** Should return true if the given Identifier is used to sort the tree.</a>
-<a name="253"><span class="lineNum">     253 </span>            :         This will be called when one of the items properties changes so this should</a>
-<a name="254"><span class="lineNum">     254 </span>            :         return true if that property means the objects should now be in a different order.</a>
-<a name="255"><span class="lineNum">     255 </span>            :     */</a>
-<a name="256"><span class="lineNum">     256 </span>            :     virtual bool isSortableProperty (juce::ValueTree&amp;, const juce::Identifier&amp;) = 0;</a>
-<a name="257"><span class="lineNum">     257 </span>            : </a>
-<a name="258"><span class="lineNum">     258 </span>            :     /** Should return true if the objects are in a sorted order.</a>
-<a name="259"><span class="lineNum">     259 </span>            :         This might look at a property of the objects (i.e. a start time) to determine their order.</a>
-<a name="260"><span class="lineNum">     260 </span>            :     */</a>
-<a name="261"><span class="lineNum">     261 </span>            :     virtual bool objectsAreSorted (const ObjectType&amp; first, const ObjectType&amp; second) = 0;</a>
-<a name="262"><span class="lineNum">     262 </span>            : </a>
-<a name="263"><span class="lineNum">     263 </span>            :     //==============================================================================</a>
-<a name="264"><span class="lineNum">     264 </span>            :     /** Returns the object for a given state. */</a>
-<a name="265"><span class="lineNum">     265 </span>            :     const juce::Array&lt;ObjectType*&gt;&amp; getSortedObjects() const</a>
-<a name="266"><span class="lineNum">     266 </span>            :     {</a>
-<a name="267"><span class="lineNum">     267 </span>            :         TRACKTION_ASSERT_MESSAGE_THREAD</a>
-<a name="268"><span class="lineNum">     268 </span>            :         jassert (! insidePropertyChangedMethod);</a>
-<a name="269"><span class="lineNum">     269 </span>            : </a>
-<a name="270"><span class="lineNum">     270 </span>            :         if (setIfDifferent (needsSorting, false))</a>
-<a name="271"><span class="lineNum">     271 </span>            :         {</a>
-<a name="272"><span class="lineNum">     272 </span>            :             sortedObjects = ValueTreeObjectList&lt;ObjectType&gt;::objects;</a>
-<a name="273"><span class="lineNum">     273 </span>            :             sortObjects (sortedObjects);</a>
-<a name="274"><span class="lineNum">     274 </span>            :         }</a>
-<a name="275"><span class="lineNum">     275 </span>            : </a>
-<a name="276"><span class="lineNum">     276 </span>            :         return sortedObjects;</a>
-<a name="277"><span class="lineNum">     277 </span>            :     }</a>
-<a name="278"><span class="lineNum">     278 </span>            : </a>
-<a name="279"><span class="lineNum">     279 </span>            :     //==============================================================================</a>
-<a name="280"><span class="lineNum">     280 </span>            :     // Make sure you call the base class implementation of these methods if you override them.</a>
-<a name="281"><span class="lineNum">     281 </span>            :     void newObjectAdded (ObjectType* o) override                    { triggerSortIfNeeded (o, -1); }</a>
-<a name="282"><span class="lineNum">     282 </span>            :     void objectOrderChanged() override                              { triggerSort(); }</a>
-<a name="283"><span class="lineNum">     283 </span>            : </a>
-<a name="284"><span class="lineNum">     284 </span>            :     void valueTreePropertyChanged (juce::ValueTree&amp; v, const juce::Identifier&amp; id) override</a>
-<a name="285"><span class="lineNum">     285 </span>            :     {</a>
-<a name="286"><span class="lineNum">     286 </span>            :         const juce::ScopedValueSetter&lt;bool&gt; svs (insidePropertyChangedMethod, true);</a>
-<a name="287"><span class="lineNum">     287 </span>            : </a>
-<a name="288"><span class="lineNum">     288 </span>            :         if (! (this-&gt;isChildTree (v) &amp;&amp; isSortableProperty (v, id)))</a>
-<a name="289"><span class="lineNum">     289 </span>            :             return;</a>
-<a name="290"><span class="lineNum">     290 </span>            : </a>
-<a name="291"><span class="lineNum">     291 </span>            :         const int objectIndex = getSortedIndex (v);</a>
-<a name="292"><span class="lineNum">     292 </span>            :         triggerSortIfNeeded (sortedObjects.getUnchecked (objectIndex), objectIndex);</a>
-<a name="293"><span class="lineNum">     293 </span>            :     }</a>
-<a name="294"><span class="lineNum">     294 </span>            : </a>
-<a name="295"><span class="lineNum">     295 </span>            : private:</a>
-<a name="296"><span class="lineNum">     296 </span>            :     mutable bool needsSorting = true;</a>
-<a name="297"><span class="lineNum">     297 </span>            :     mutable juce::Array&lt;ObjectType*&gt; sortedObjects;</a>
-<a name="298"><span class="lineNum">     298 </span>            :     bool insidePropertyChangedMethod = false;</a>
-<a name="299"><span class="lineNum">     299 </span>            : </a>
-<a name="300"><span class="lineNum">     300 </span>            :     int getSortedIndex (const juce::ValueTree&amp; v) const noexcept</a>
-<a name="301"><span class="lineNum">     301 </span>            :     {</a>
-<a name="302"><span class="lineNum">     302 </span>            :         for (int i = sortedObjects.size(); --i &gt;= 0;)</a>
-<a name="303"><span class="lineNum">     303 </span>            :             if (sortedObjects.getUnchecked (i)-&gt;state == v)</a>
-<a name="304"><span class="lineNum">     304 </span>            :                 return i;</a>
-<a name="305"><span class="lineNum">     305 </span>            : </a>
-<a name="306"><span class="lineNum">     306 </span>            :         return -1;</a>
-<a name="307"><span class="lineNum">     307 </span>            :     }</a>
-<a name="308"><span class="lineNum">     308 </span>            : </a>
-<a name="309"><span class="lineNum">     309 </span>            :     void triggerSort() const</a>
-<a name="310"><span class="lineNum">     310 </span>            :     {</a>
-<a name="311"><span class="lineNum">     311 </span>            :         TRACKTION_ASSERT_MESSAGE_THREAD</a>
-<a name="312"><span class="lineNum">     312 </span>            :         needsSorting = true;</a>
-<a name="313"><span class="lineNum">     313 </span>            :     }</a>
-<a name="314"><span class="lineNum">     314 </span>            : </a>
-<a name="315"><span class="lineNum">     315 </span>            :     void triggerSortIfNeeded (ObjectType* o, int objectIndex)</a>
-<a name="316"><span class="lineNum">     316 </span>            :     {</a>
-<a name="317"><span class="lineNum">     317 </span>            :         if (needsSorting)</a>
-<a name="318"><span class="lineNum">     318 </span>            :             return;</a>
-<a name="319"><span class="lineNum">     319 </span>            : </a>
-<a name="320"><span class="lineNum">     320 </span>            :         if (objectIndex &lt; 0)</a>
-<a name="321"><span class="lineNum">     321 </span>            :             return triggerSort();</a>
-<a name="322"><span class="lineNum">     322 </span>            : </a>
-<a name="323"><span class="lineNum">     323 </span>            :         jassert (o != nullptr);</a>
-<a name="324"><span class="lineNum">     324 </span>            : </a>
-<a name="325"><span class="lineNum">     325 </span>            :         if (objectIndex &gt; 0</a>
-<a name="326"><span class="lineNum">     326 </span>            :             &amp;&amp; (! objectsAreSorted (*sortedObjects.getUnchecked (objectIndex - 1), *o)))</a>
-<a name="327"><span class="lineNum">     327 </span>            :                 return triggerSort();</a>
-<a name="328"><span class="lineNum">     328 </span>            : </a>
-<a name="329"><span class="lineNum">     329 </span>            :         if (objectIndex &lt; (sortedObjects.size() - 1)</a>
-<a name="330"><span class="lineNum">     330 </span>            :             &amp;&amp; (! objectsAreSorted (*o, *sortedObjects.getUnchecked (objectIndex + 1))))</a>
-<a name="331"><span class="lineNum">     331 </span>            :                 return triggerSort();</a>
-<a name="332"><span class="lineNum">     332 </span>            :     }</a>
-<a name="333"><span class="lineNum">     333 </span>            : </a>
-<a name="334"><span class="lineNum">     334 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SortedValueTreeObjectList)</a>
-<a name="335"><span class="lineNum">     335 </span>            : };</a>
-<a name="336"><span class="lineNum">     336 </span>            : </a>
-<a name="337"><span class="lineNum">     337 </span>            : //==============================================================================</a>
-<a name="338"><span class="lineNum">     338 </span>            : /** Returns the object for a given state if it exists. */</a>
-<a name="339"><span class="lineNum">     339 </span>            : template&lt;typename ObjectType&gt;</a>
-<a name="340"><span class="lineNum">     340 </span>            : static ObjectType* getObjectFor (const ValueTreeObjectList&lt;ObjectType&gt;&amp; objectList, const juce::ValueTree&amp; v)</a>
-<a name="341"><span class="lineNum">     341 </span>            : {</a>
-<a name="342"><span class="lineNum">     342 </span>            :     for (auto* o : objectList.objects)</a>
-<a name="343"><span class="lineNum">     343 </span>            :         if (o-&gt;state == v)</a>
-<a name="344"><span class="lineNum">     344 </span>            :             return o;</a>
-<a name="345"><span class="lineNum">     345 </span>            : </a>
-<a name="346"><span class="lineNum">     346 </span>            :     return {};</a>
-<a name="347"><span class="lineNum">     347 </span>            : }</a>
-<a name="348"><span class="lineNum">     348 </span>            : </a>
-<a name="349"><span class="lineNum">     349 </span>            : //==============================================================================</a>
-<a name="350"><span class="lineNum">     350 </span>            : // Easy way to get one callback for all value tree change events</a>
-<a name="351"><span class="lineNum">     351 </span><span class="lineCov">       3642 : struct ValueTreeAllEventListener  : public juce::ValueTree::Listener</span></a>
-<a name="352"><span class="lineNum">     352 </span>            : {</a>
-<a name="353"><span class="lineNum">     353 </span>            :     virtual void valueTreeChanged() = 0;</a>
-<a name="354"><span class="lineNum">     354 </span>            : </a>
-<a name="355"><span class="lineNum">     355 </span>            :     //==============================================================================</a>
-<a name="356"><span class="lineNum">     356 </span><span class="lineCov">      36437 :     void valueTreePropertyChanged (juce::ValueTree&amp;, const juce::Identifier&amp;) override  { valueTreeChanged(); }</span></a>
-<a name="357"><span class="lineNum">     357 </span><span class="lineCov">      20550 :     void valueTreeChildAdded (juce::ValueTree&amp;, juce::ValueTree&amp;) override              { valueTreeChanged(); }</span></a>
-<a name="358"><span class="lineNum">     358 </span><span class="lineCov">      10276 :     void valueTreeChildRemoved (juce::ValueTree&amp;, juce::ValueTree&amp;, int) override       { valueTreeChanged(); }</span></a>
-<a name="359"><span class="lineNum">     359 </span><span class="lineCov">        206 :     void valueTreeChildOrderChanged (juce::ValueTree&amp;, int, int) override               { valueTreeChanged(); }</span></a>
-<a name="360"><span class="lineNum">     360 </span><span class="lineCov">       1220 :     void valueTreeParentChanged (juce::ValueTree&amp;) override                             { valueTreeChanged(); }</span></a>
-<a name="361"><span class="lineNum">     361 </span><span class="lineNoCov">          0 :     void valueTreeRedirected (juce::ValueTree&amp;) override                                { valueTreeChanged(); }</span></a>
-<a name="362"><span class="lineNum">     362 </span>            : };</a>
-<a name="363"><span class="lineNum">     363 </span>            : </a>
-<a name="364"><span class="lineNum">     364 </span>            : template&lt;typename Type&gt;</a>
-<a name="365"><span class="lineNum">     365 </span>            : struct ValueTreeComparator</a>
-<a name="366"><span class="lineNum">     366 </span>            : {</a>
-<a name="367"><span class="lineNum">     367 </span>            : public:</a>
-<a name="368"><span class="lineNum">     368 </span>            :     ValueTreeComparator (const juce::Identifier&amp; attributeToSort_, bool forwards)</a>
-<a name="369"><span class="lineNum">     369 </span>            :         : attributeToSort (attributeToSort_), direction (forwards ? 1 : -1)</a>
-<a name="370"><span class="lineNum">     370 </span>            :     {}</a>
-<a name="371"><span class="lineNum">     371 </span>            : </a>
-<a name="372"><span class="lineNum">     372 </span>            :     inline int compareElements (const juce::ValueTree&amp; first, const juce::ValueTree&amp; second) const</a>
-<a name="373"><span class="lineNum">     373 </span>            :     {</a>
-<a name="374"><span class="lineNum">     374 </span>            :         const int result = (Type (first[attributeToSort]) &gt; Type (second[attributeToSort])) ? 1 : -1;</a>
-<a name="375"><span class="lineNum">     375 </span>            : </a>
-<a name="376"><span class="lineNum">     376 </span>            :         return direction * result;</a>
-<a name="377"><span class="lineNum">     377 </span>            :     }</a>
-<a name="378"><span class="lineNum">     378 </span>            : </a>
-<a name="379"><span class="lineNum">     379 </span>            : private:</a>
-<a name="380"><span class="lineNum">     380 </span>            :     const juce::Identifier attributeToSort;</a>
-<a name="381"><span class="lineNum">     381 </span>            :     const int direction;</a>
-<a name="382"><span class="lineNum">     382 </span>            : </a>
-<a name="383"><span class="lineNum">     383 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ValueTreeComparator)</a>
-<a name="384"><span class="lineNum">     384 </span>            : };</a>
-<a name="385"><span class="lineNum">     385 </span>            : </a>
-<a name="386"><span class="lineNum">     386 </span>            : template&lt;&gt;</a>
-<a name="387"><span class="lineNum">     387 </span>            : inline int ValueTreeComparator&lt;juce::String&gt;::compareElements (const juce::ValueTree&amp; first, const juce::ValueTree&amp; second) const</a>
-<a name="388"><span class="lineNum">     388 </span>            : {</a>
-<a name="389"><span class="lineNum">     389 </span>            :     const int result = first[attributeToSort].toString().compareNatural (second[attributeToSort].toString());</a>
-<a name="390"><span class="lineNum">     390 </span>            : </a>
-<a name="391"><span class="lineNum">     391 </span>            :     return direction * result;</a>
-<a name="392"><span class="lineNum">     392 </span>            : }</a>
-<a name="393"><span class="lineNum">     393 </span>            : </a>
-<a name="394"><span class="lineNum">     394 </span>            : //==============================================================================</a>
-<a name="395"><span class="lineNum">     395 </span>            : /**</a>
-<a name="396"><span class="lineNum">     396 </span>            :     Holds a ValueTree as a ReferenceCountedObject.</a>
-<a name="397"><span class="lineNum">     397 </span>            : </a>
-<a name="398"><span class="lineNum">     398 </span>            :     This is somewhat obfuscated but makes it easy to transfer ValueTrees as var objects</a>
-<a name="399"><span class="lineNum">     399 </span>            :     such as when using them as DragAndDropTarget::SourceDetails::description members.</a>
-<a name="400"><span class="lineNum">     400 </span>            : */</a>
-<a name="401"><span class="lineNum">     401 </span>            : class ReferenceCountedValueTree  : public juce::ReferenceCountedObject</a>
-<a name="402"><span class="lineNum">     402 </span>            : {</a>
-<a name="403"><span class="lineNum">     403 </span>            : public:</a>
-<a name="404"><span class="lineNum">     404 </span>            :     /** Creates a ReferenceCountedValueTree for a given ValueTree. */</a>
-<a name="405"><span class="lineNum">     405 </span>            :     ReferenceCountedValueTree (const juce::ValueTree&amp; treeToReference) noexcept</a>
-<a name="406"><span class="lineNum">     406 </span>            :         : tree (treeToReference)</a>
-<a name="407"><span class="lineNum">     407 </span>            :     {}</a>
-<a name="408"><span class="lineNum">     408 </span>            : </a>
-<a name="409"><span class="lineNum">     409 </span>            :     /** Destructor. */</a>
-<a name="410"><span class="lineNum">     410 </span><span class="lineNoCov">          0 :     ~ReferenceCountedValueTree() {}</span></a>
-<a name="411"><span class="lineNum">     411 </span>            : </a>
-<a name="412"><span class="lineNum">     412 </span>            :     /** Sets the ValueTree being held. */</a>
-<a name="413"><span class="lineNum">     413 </span>            :     void setValueTree (juce::ValueTree newTree)   { tree = newTree; }</a>
-<a name="414"><span class="lineNum">     414 </span>            : </a>
-<a name="415"><span class="lineNum">     415 </span>            :     /** Returns the ValueTree being held. */</a>
-<a name="416"><span class="lineNum">     416 </span>            :     juce::ValueTree getValueTree() noexcept       { return tree; }</a>
-<a name="417"><span class="lineNum">     417 </span>            : </a>
-<a name="418"><span class="lineNum">     418 </span>            :     using Ptr = juce::ReferenceCountedObjectPtr&lt;ReferenceCountedValueTree&gt;;</a>
-<a name="419"><span class="lineNum">     419 </span>            : </a>
-<a name="420"><span class="lineNum">     420 </span>            :     /** Provides a simple way of getting the tree from a var object which</a>
-<a name="421"><span class="lineNum">     421 </span>            :         is a ReferencedCountedValueTree.</a>
-<a name="422"><span class="lineNum">     422 </span>            :     */</a>
-<a name="423"><span class="lineNum">     423 </span>            :     static juce::ValueTree getTreeFromObject (const juce::var&amp; treeObject) noexcept</a>
-<a name="424"><span class="lineNum">     424 </span>            :     {</a>
-<a name="425"><span class="lineNum">     425 </span>            :         if (auto refTree = dynamic_cast&lt;ReferenceCountedValueTree*&gt; (treeObject.getObject()))</a>
-<a name="426"><span class="lineNum">     426 </span>            :             return refTree-&gt;getValueTree();</a>
-<a name="427"><span class="lineNum">     427 </span>            : </a>
-<a name="428"><span class="lineNum">     428 </span>            :         return {};</a>
-<a name="429"><span class="lineNum">     429 </span>            :     }</a>
-<a name="430"><span class="lineNum">     430 </span>            : </a>
-<a name="431"><span class="lineNum">     431 </span>            : private:</a>
-<a name="432"><span class="lineNum">     432 </span>            :     juce::ValueTree tree;</a>
-<a name="433"><span class="lineNum">     433 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ReferenceCountedValueTree)</a>
-<a name="434"><span class="lineNum">     434 </span>            : };</a>
-<a name="435"><span class="lineNum">     435 </span>            : </a>
-<a name="436"><span class="lineNum">     436 </span>            : //==============================================================================</a>
-<a name="437"><span class="lineNum">     437 </span>            : /** Attempts to load a ValueTree from a file. */</a>
-<a name="438"><span class="lineNum">     438 </span><span class="lineNoCov">          0 : static inline juce::ValueTree loadValueTree (const juce::File&amp; file, bool asXml)</span></a>
-<a name="439"><span class="lineNum">     439 </span>            : {</a>
-<a name="440"><span class="lineNum">     440 </span><span class="lineNoCov">          0 :     if (asXml)</span></a>
-<a name="441"><span class="lineNum">     441 </span>            :     {</a>
-<a name="442"><span class="lineNum">     442 </span><span class="lineNoCov">          0 :         if (auto xml = juce::parseXML (file))</span></a>
-<a name="443"><span class="lineNum">     443 </span><span class="lineNoCov">          0 :             return juce::ValueTree::fromXml (*xml);</span></a>
-<a name="444"><span class="lineNum">     444 </span>            :     }</a>
-<a name="445"><span class="lineNum">     445 </span>            :     else</a>
-<a name="446"><span class="lineNum">     446 </span>            :     {</a>
-<a name="447"><span class="lineNum">     447 </span><span class="lineNoCov">          0 :         juce::FileInputStream is (file);</span></a>
-<a name="448"><span class="lineNum">     448 </span>            : </a>
-<a name="449"><span class="lineNum">     449 </span><span class="lineNoCov">          0 :         if (is.openedOk())</span></a>
-<a name="450"><span class="lineNum">     450 </span><span class="lineNoCov">          0 :             return juce::ValueTree::readFromStream (is);</span></a>
-<a name="451"><span class="lineNum">     451 </span>            :     }</a>
-<a name="452"><span class="lineNum">     452 </span>            : </a>
-<a name="453"><span class="lineNum">     453 </span><span class="lineNoCov">          0 :     return {};</span></a>
-<a name="454"><span class="lineNum">     454 </span>            : }</a>
-<a name="455"><span class="lineNum">     455 </span>            : </a>
-<a name="456"><span class="lineNum">     456 </span>            : /** Saves a ValueTree to a File. */</a>
-<a name="457"><span class="lineNum">     457 </span>            : static inline bool saveValueTree (const juce::File&amp; file, const juce::ValueTree&amp; v, bool asXml)</a>
-<a name="458"><span class="lineNum">     458 </span>            : {</a>
-<a name="459"><span class="lineNum">     459 </span>            :     const juce::TemporaryFile temp (file);</a>
-<a name="460"><span class="lineNum">     460 </span>            : </a>
-<a name="461"><span class="lineNum">     461 </span>            :     {</a>
-<a name="462"><span class="lineNum">     462 </span>            :         juce::FileOutputStream os (temp.getFile());</a>
-<a name="463"><span class="lineNum">     463 </span>            : </a>
-<a name="464"><span class="lineNum">     464 </span>            :         if (! os.getStatus().wasOk())</a>
-<a name="465"><span class="lineNum">     465 </span>            :             return false;</a>
-<a name="466"><span class="lineNum">     466 </span>            : </a>
-<a name="467"><span class="lineNum">     467 </span>            :         if (asXml)</a>
-<a name="468"><span class="lineNum">     468 </span>            :         {</a>
-<a name="469"><span class="lineNum">     469 </span>            :             if (auto xml = v.createXml())</a>
-<a name="470"><span class="lineNum">     470 </span>            :                 xml-&gt;writeTo (os);</a>
-<a name="471"><span class="lineNum">     471 </span>            :         }</a>
-<a name="472"><span class="lineNum">     472 </span>            :         else</a>
-<a name="473"><span class="lineNum">     473 </span>            :         {</a>
-<a name="474"><span class="lineNum">     474 </span>            :             v.writeToStream (os);</a>
-<a name="475"><span class="lineNum">     475 </span>            :         }</a>
-<a name="476"><span class="lineNum">     476 </span>            :     }</a>
-<a name="477"><span class="lineNum">     477 </span>            : </a>
-<a name="478"><span class="lineNum">     478 </span>            :     if (temp.getFile().existsAsFile())</a>
-<a name="479"><span class="lineNum">     479 </span>            :         return temp.overwriteTargetFileWithTemporary();</a>
-<a name="480"><span class="lineNum">     480 </span>            : </a>
-<a name="481"><span class="lineNum">     481 </span>            :     return false;</a>
-<a name="482"><span class="lineNum">     482 </span>            : }</a>
-<a name="483"><span class="lineNum">     483 </span>            : </a>
-<a name="484"><span class="lineNum">     484 </span><span class="lineCov">      60341 : static inline void setPropertyIfMissing (juce::ValueTree&amp; v, const juce::Identifier&amp; id,</span></a>
-<a name="485"><span class="lineNum">     485 </span>            :                                          const juce::var&amp; value, juce::UndoManager* um)</a>
-<a name="486"><span class="lineNum">     486 </span>            : {</a>
-<a name="487"><span class="lineNum">     487 </span><span class="lineCov">      60341 :     if (! v.hasProperty (id))</span></a>
-<a name="488"><span class="lineNum">     488 </span><span class="lineCov">       7125 :         v.setProperty (id, value, um);</span></a>
-<a name="489"><span class="lineNum">     489 </span><span class="lineCov">      60341 : }</span></a>
-<a name="490"><span class="lineNum">     490 </span>            : </a>
-<a name="491"><span class="lineNum">     491 </span>            : /** Creates a deep copy of another ValueTree in an undoable way, maintaining the destination's parent. */</a>
-<a name="492"><span class="lineNum">     492 </span><span class="lineCov">      20848 : static inline juce::ValueTree copyValueTree (juce::ValueTree&amp; dest, const juce::ValueTree&amp; src, juce::UndoManager* um)</span></a>
-<a name="493"><span class="lineNum">     493 </span>            : {</a>
-<a name="494"><span class="lineNum">     494 </span><span class="lineCov">      20848 :     if (! dest.getParent().isValid())</span></a>
-<a name="495"><span class="lineNum">     495 </span>            :     {</a>
-<a name="496"><span class="lineNum">     496 </span><span class="lineCov">      20848 :         dest = src.createCopy();</span></a>
-<a name="497"><span class="lineNum">     497 </span>            :     }</a>
-<a name="498"><span class="lineNum">     498 </span>            :     else</a>
-<a name="499"><span class="lineNum">     499 </span>            :     {</a>
-<a name="500"><span class="lineNum">     500 </span><span class="lineNoCov">          0 :         dest.copyPropertiesFrom (src, um);</span></a>
-<a name="501"><span class="lineNum">     501 </span><span class="lineNoCov">          0 :         dest.removeAllChildren (um);</span></a>
-<a name="502"><span class="lineNum">     502 </span>            : </a>
-<a name="503"><span class="lineNum">     503 </span><span class="lineNoCov">          0 :         for (int i = 0; i &lt; src.getNumChildren(); ++i)</span></a>
-<a name="504"><span class="lineNum">     504 </span><span class="lineNoCov">          0 :             dest.addChild (src.getChild (i).createCopy(), i, um);</span></a>
-<a name="505"><span class="lineNum">     505 </span>            :     }</a>
-<a name="506"><span class="lineNum">     506 </span>            : </a>
-<a name="507"><span class="lineNum">     507 </span><span class="lineCov">      20848 :     return dest;</span></a>
-<a name="508"><span class="lineNum">     508 </span>            : }</a>
-<a name="509"><span class="lineNum">     509 </span>            : </a>
-<a name="510"><span class="lineNum">     510 </span>            : template &lt;typename Predicate&gt;</a>
-<a name="511"><span class="lineNum">     511 </span>            : static inline void copyValueTreeProperties (juce::ValueTree&amp; dest, const juce::ValueTree&amp; src,</a>
-<a name="512"><span class="lineNum">     512 </span>            :                                             juce::UndoManager* um, Predicate&amp;&amp; shouldCopyProperty)</a>
-<a name="513"><span class="lineNum">     513 </span>            : {</a>
-<a name="514"><span class="lineNum">     514 </span>            :     for (int i = 0; i &lt; src.getNumProperties(); ++i)</a>
-<a name="515"><span class="lineNum">     515 </span>            :     {</a>
-<a name="516"><span class="lineNum">     516 </span>            :         auto name = src.getPropertyName (i);</a>
-<a name="517"><span class="lineNum">     517 </span>            : </a>
-<a name="518"><span class="lineNum">     518 </span>            :         if (shouldCopyProperty (name))</a>
-<a name="519"><span class="lineNum">     519 </span>            :             dest.setProperty (name, src.getProperty (name), um);</a>
-<a name="520"><span class="lineNum">     520 </span>            :     }</a>
-<a name="521"><span class="lineNum">     521 </span>            : }</a>
-<a name="522"><span class="lineNum">     522 </span>            : </a>
-<a name="523"><span class="lineNum">     523 </span>            : static inline juce::ValueTree getChildWithPropertyRecursively (const juce::ValueTree&amp; p,</a>
-<a name="524"><span class="lineNum">     524 </span>            :                                                                const juce::Identifier&amp; propertyName,</a>
-<a name="525"><span class="lineNum">     525 </span>            :                                                                const juce::var&amp; propertyValue)</a>
-<a name="526"><span class="lineNum">     526 </span>            : {</a>
-<a name="527"><span class="lineNum">     527 </span>            :     const int numChildren = p.getNumChildren();</a>
-<a name="528"><span class="lineNum">     528 </span>            : </a>
-<a name="529"><span class="lineNum">     529 </span>            :     for (int i = 0; i &lt; numChildren; ++i)</a>
-<a name="530"><span class="lineNum">     530 </span>            :     {</a>
-<a name="531"><span class="lineNum">     531 </span>            :         auto c = p.getChild (i);</a>
-<a name="532"><span class="lineNum">     532 </span>            : </a>
-<a name="533"><span class="lineNum">     533 </span>            :         if (c.getProperty (propertyName) == propertyValue)</a>
-<a name="534"><span class="lineNum">     534 </span>            :             return c;</a>
-<a name="535"><span class="lineNum">     535 </span>            : </a>
-<a name="536"><span class="lineNum">     536 </span>            :         c = getChildWithPropertyRecursively (c, propertyName, propertyValue);</a>
-<a name="537"><span class="lineNum">     537 </span>            : </a>
-<a name="538"><span class="lineNum">     538 </span>            :         if (c.isValid())</a>
-<a name="539"><span class="lineNum">     539 </span>            :             return c;</a>
-<a name="540"><span class="lineNum">     540 </span>            :     }</a>
-<a name="541"><span class="lineNum">     541 </span>            : </a>
-<a name="542"><span class="lineNum">     542 </span>            :     return {};</a>
-<a name="543"><span class="lineNum">     543 </span>            : }</a>
-<a name="544"><span class="lineNum">     544 </span>            : </a>
-<a name="545"><span class="lineNum">     545 </span>            : /** Iterates the params array and copies and properties that are present in the ValueTree. */</a>
-<a name="546"><span class="lineNum">     546 </span>            : template&lt;typename ValueType&gt;</a>
-<a name="547"><span class="lineNum">     547 </span><span class="lineCov">         35 : static void copyPropertiesToNullTerminatedCachedValues (const juce::ValueTree&amp; v, juce::CachedValue&lt;ValueType&gt;** params)</span></a>
-<a name="548"><span class="lineNum">     548 </span>            : {</a>
-<a name="549"><span class="lineNum">     549 </span><span class="lineCov">         35 :     if (params == nullptr)</span></a>
-<a name="550"><span class="lineNum">     550 </span>            :     {</a>
-<a name="551"><span class="lineNum">     551 </span>            :         jassertfalse;</a>
-<a name="552"><span class="lineNum">     552 </span>            :         return;</a>
-<a name="553"><span class="lineNum">     553 </span>            :     }</a>
-<a name="554"><span class="lineNum">     554 </span>            : </a>
-<a name="555"><span class="lineNum">     555 </span>            :     for (;;)</a>
-<a name="556"><span class="lineNum">     556 </span>            :     {</a>
-<a name="557"><span class="lineNum">     557 </span><span class="lineCov">        169 :         if (juce::CachedValue&lt;ValueType&gt;* cv = *params++)</span></a>
-<a name="558"><span class="lineNum">     558 </span>            :         {</a>
-<a name="559"><span class="lineNum">     559 </span>            :             const juce::Identifier&amp; prop = cv-&gt;getPropertyID();</a>
-<a name="560"><span class="lineNum">     560 </span>            : </a>
-<a name="561"><span class="lineNum">     561 </span><span class="lineCov">        134 :             if (v.hasProperty (prop))</span></a>
-<a name="562"><span class="lineNum">     562 </span><span class="lineCov">         40 :                 *cv = ValueType (v.getProperty (prop));</span></a>
-<a name="563"><span class="lineNum">     563 </span>            :             else</a>
-<a name="564"><span class="lineNum">     564 </span>            :                 cv-&gt;resetToDefault();</a>
-<a name="565"><span class="lineNum">     565 </span>            :         }</a>
-<a name="566"><span class="lineNum">     566 </span>            :         else</a>
-<a name="567"><span class="lineNum">     567 </span>            :         {</a>
-<a name="568"><span class="lineNum">     568 </span>            :             break;</a>
-<a name="569"><span class="lineNum">     569 </span>            :         }</a>
-<a name="570"><span class="lineNum">     570 </span>            :     }</a>
-<a name="571"><span class="lineNum">     571 </span>            : }</a>
-<a name="572"><span class="lineNum">     572 </span>            : </a>
-<a name="573"><span class="lineNum">     573 </span>            : /** Strips out any invalid trees from the array. */</a>
-<a name="574"><span class="lineNum">     574 </span>            : inline juce::Array&lt;juce::ValueTree&gt;&amp; removeInvalidValueTrees (juce::Array&lt;juce::ValueTree&gt;&amp; trees)</a>
-<a name="575"><span class="lineNum">     575 </span>            : {</a>
-<a name="576"><span class="lineNum">     576 </span>            :     for (int i = trees.size(); --i &gt;= 0;)</a>
-<a name="577"><span class="lineNum">     577 </span>            :         if (! trees.getReference (i).isValid())</a>
-<a name="578"><span class="lineNum">     578 </span>            :             trees.remove (i);</a>
-<a name="579"><span class="lineNum">     579 </span>            : </a>
-<a name="580"><span class="lineNum">     580 </span>            :     return trees;</a>
-<a name="581"><span class="lineNum">     581 </span>            : }</a>
-<a name="582"><span class="lineNum">     582 </span>            : </a>
-<a name="583"><span class="lineNum">     583 </span>            : /** Returns a new array with any trees without the given type removed. */</a>
-<a name="584"><span class="lineNum">     584 </span>            : inline juce::Array&lt;juce::ValueTree&gt; getTreesOfType (const juce::Array&lt;juce::ValueTree&gt;&amp; trees,</a>
-<a name="585"><span class="lineNum">     585 </span>            :                                                     const juce::Identifier&amp; type)</a>
-<a name="586"><span class="lineNum">     586 </span>            : {</a>
-<a name="587"><span class="lineNum">     587 </span>            :     juce::Array&lt;juce::ValueTree&gt; newTrees;</a>
-<a name="588"><span class="lineNum">     588 </span>            : </a>
-<a name="589"><span class="lineNum">     589 </span>            :     for (const auto&amp; v : trees)</a>
-<a name="590"><span class="lineNum">     590 </span>            :         if (v.hasType (type))</a>
-<a name="591"><span class="lineNum">     591 </span>            :             newTrees.add (v);</a>
-<a name="592"><span class="lineNum">     592 </span>            : </a>
-<a name="593"><span class="lineNum">     593 </span>            :     return newTrees;</a>
-<a name="594"><span class="lineNum">     594 </span>            : }</a>
-<a name="595"><span class="lineNum">     595 </span>            : </a>
-<a name="596"><span class="lineNum">     596 </span>            : inline void getChildTreesRecursive (juce::Array&lt;juce::ValueTree&gt;&amp; result,</a>
-<a name="597"><span class="lineNum">     597 </span>            :                                     const juce::ValueTree&amp; tree)</a>
-<a name="598"><span class="lineNum">     598 </span>            : {</a>
-<a name="599"><span class="lineNum">     599 </span>            :     for (auto child : tree)</a>
-<a name="600"><span class="lineNum">     600 </span>            :     {</a>
-<a name="601"><span class="lineNum">     601 </span>            :         result.add (child);</a>
-<a name="602"><span class="lineNum">     602 </span>            :         getChildTreesRecursive (result, child);</a>
-<a name="603"><span class="lineNum">     603 </span>            :     }</a>
-<a name="604"><span class="lineNum">     604 </span>            : }</a>
-<a name="605"><span class="lineNum">     605 </span>            : </a>
-<a name="606"><span class="lineNum">     606 </span>            : inline void renamePropertyRecursive (juce::ValueTree&amp; tree,</a>
-<a name="607"><span class="lineNum">     607 </span>            :                                      const juce::Identifier&amp; oldName,</a>
-<a name="608"><span class="lineNum">     608 </span>            :                                      const juce::Identifier&amp; newName,</a>
-<a name="609"><span class="lineNum">     609 </span>            :                                      juce::UndoManager* um)</a>
-<a name="610"><span class="lineNum">     610 </span>            : {</a>
-<a name="611"><span class="lineNum">     611 </span>            :     if (auto oldProp = tree.getPropertyPointer (oldName))</a>
-<a name="612"><span class="lineNum">     612 </span>            :     {</a>
-<a name="613"><span class="lineNum">     613 </span>            :         tree.setProperty (newName, *oldProp, um);</a>
-<a name="614"><span class="lineNum">     614 </span>            :         tree.removeProperty (oldName, um);</a>
-<a name="615"><span class="lineNum">     615 </span>            :     }</a>
-<a name="616"><span class="lineNum">     616 </span>            : </a>
-<a name="617"><span class="lineNum">     617 </span>            :     for (auto child : tree)</a>
-<a name="618"><span class="lineNum">     618 </span>            :         renamePropertyRecursive (child, oldName, newName, um);</a>
-<a name="619"><span class="lineNum">     619 </span>            : }</a>
-<a name="620"><span class="lineNum">     620 </span>            : </a>
-<a name="621"><span class="lineNum">     621 </span>            : }} // namespace tracktion { inline namespace engine</a>
+<a name="234"><span class="lineNum">     234 </span>            :         jassert (index1 &gt;= 0 &amp;&amp; index2 &gt;= 0);</a>
+<a name="235"><span class="lineNum">     235 </span><span class="lineCov">       5123 :         return index1 - index2;</span></a>
+<a name="236"><span class="lineNum">     236 </span>            :     }</a>
+<a name="237"><span class="lineNum">     237 </span>            : </a>
+<a name="238"><span class="lineNum">     238 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ValueTreeObjectList)</a>
+<a name="239"><span class="lineNum">     239 </span>            : };</a>
+<a name="240"><span class="lineNum">     240 </span>            : </a>
+<a name="241"><span class="lineNum">     241 </span>            : //==============================================================================</a>
+<a name="242"><span class="lineNum">     242 </span>            : template&lt;typename ObjectType&gt;</a>
+<a name="243"><span class="lineNum">     243 </span>            : struct SortedValueTreeObjectList    : protected ValueTreeObjectList&lt;ObjectType&gt;</a>
+<a name="244"><span class="lineNum">     244 </span>            : {</a>
+<a name="245"><span class="lineNum">     245 </span>            :     SortedValueTreeObjectList (const juce::ValueTree&amp; v)</a>
+<a name="246"><span class="lineNum">     246 </span>            :         : ValueTreeObjectList&lt;ObjectType&gt; (v)</a>
+<a name="247"><span class="lineNum">     247 </span>            :     {</a>
+<a name="248"><span class="lineNum">     248 </span>            :     }</a>
+<a name="249"><span class="lineNum">     249 </span>            : </a>
+<a name="250"><span class="lineNum">     250 </span>            :     /** Must sort the given array. */</a>
+<a name="251"><span class="lineNum">     251 </span>            :     virtual void sortObjects (juce::Array&lt;ObjectType*&gt;&amp; objectsToBeSorted) const = 0;</a>
+<a name="252"><span class="lineNum">     252 </span>            : </a>
+<a name="253"><span class="lineNum">     253 </span>            :     /** Should return true if the given Identifier is used to sort the tree.</a>
+<a name="254"><span class="lineNum">     254 </span>            :         This will be called when one of the items properties changes so this should</a>
+<a name="255"><span class="lineNum">     255 </span>            :         return true if that property means the objects should now be in a different order.</a>
+<a name="256"><span class="lineNum">     256 </span>            :     */</a>
+<a name="257"><span class="lineNum">     257 </span>            :     virtual bool isSortableProperty (juce::ValueTree&amp;, const juce::Identifier&amp;) = 0;</a>
+<a name="258"><span class="lineNum">     258 </span>            : </a>
+<a name="259"><span class="lineNum">     259 </span>            :     /** Should return true if the objects are in a sorted order.</a>
+<a name="260"><span class="lineNum">     260 </span>            :         This might look at a property of the objects (i.e. a start time) to determine their order.</a>
+<a name="261"><span class="lineNum">     261 </span>            :     */</a>
+<a name="262"><span class="lineNum">     262 </span>            :     virtual bool objectsAreSorted (const ObjectType&amp; first, const ObjectType&amp; second) = 0;</a>
+<a name="263"><span class="lineNum">     263 </span>            : </a>
+<a name="264"><span class="lineNum">     264 </span>            :     //==============================================================================</a>
+<a name="265"><span class="lineNum">     265 </span>            :     /** Returns the object for a given state. */</a>
+<a name="266"><span class="lineNum">     266 </span>            :     const juce::Array&lt;ObjectType*&gt;&amp; getSortedObjects() const</a>
+<a name="267"><span class="lineNum">     267 </span>            :     {</a>
+<a name="268"><span class="lineNum">     268 </span>            :         TRACKTION_ASSERT_MESSAGE_THREAD</a>
+<a name="269"><span class="lineNum">     269 </span>            :         jassert (! insidePropertyChangedMethod);</a>
+<a name="270"><span class="lineNum">     270 </span>            : </a>
+<a name="271"><span class="lineNum">     271 </span>            :         if (setIfDifferent (needsSorting, false))</a>
+<a name="272"><span class="lineNum">     272 </span>            :         {</a>
+<a name="273"><span class="lineNum">     273 </span>            :             sortedObjects = ValueTreeObjectList&lt;ObjectType&gt;::objects;</a>
+<a name="274"><span class="lineNum">     274 </span>            :             sortObjects (sortedObjects);</a>
+<a name="275"><span class="lineNum">     275 </span>            :         }</a>
+<a name="276"><span class="lineNum">     276 </span>            : </a>
+<a name="277"><span class="lineNum">     277 </span>            :         return sortedObjects;</a>
+<a name="278"><span class="lineNum">     278 </span>            :     }</a>
+<a name="279"><span class="lineNum">     279 </span>            : </a>
+<a name="280"><span class="lineNum">     280 </span>            :     //==============================================================================</a>
+<a name="281"><span class="lineNum">     281 </span>            :     // Make sure you call the base class implementation of these methods if you override them.</a>
+<a name="282"><span class="lineNum">     282 </span>            :     void newObjectAdded (ObjectType* o) override                    { triggerSortIfNeeded (o, -1); }</a>
+<a name="283"><span class="lineNum">     283 </span>            :     void objectOrderChanged() override                              { triggerSort(); }</a>
+<a name="284"><span class="lineNum">     284 </span>            : </a>
+<a name="285"><span class="lineNum">     285 </span>            :     void valueTreePropertyChanged (juce::ValueTree&amp; v, const juce::Identifier&amp; id) override</a>
+<a name="286"><span class="lineNum">     286 </span>            :     {</a>
+<a name="287"><span class="lineNum">     287 </span>            :         const juce::ScopedValueSetter&lt;bool&gt; svs (insidePropertyChangedMethod, true);</a>
+<a name="288"><span class="lineNum">     288 </span>            : </a>
+<a name="289"><span class="lineNum">     289 </span>            :         if (! (this-&gt;isChildTree (v) &amp;&amp; isSortableProperty (v, id)))</a>
+<a name="290"><span class="lineNum">     290 </span>            :             return;</a>
+<a name="291"><span class="lineNum">     291 </span>            : </a>
+<a name="292"><span class="lineNum">     292 </span>            :         const int objectIndex = getSortedIndex (v);</a>
+<a name="293"><span class="lineNum">     293 </span>            :         triggerSortIfNeeded (sortedObjects.getUnchecked (objectIndex), objectIndex);</a>
+<a name="294"><span class="lineNum">     294 </span>            :     }</a>
+<a name="295"><span class="lineNum">     295 </span>            : </a>
+<a name="296"><span class="lineNum">     296 </span>            : private:</a>
+<a name="297"><span class="lineNum">     297 </span>            :     mutable bool needsSorting = true;</a>
+<a name="298"><span class="lineNum">     298 </span>            :     mutable juce::Array&lt;ObjectType*&gt; sortedObjects;</a>
+<a name="299"><span class="lineNum">     299 </span>            :     bool insidePropertyChangedMethod = false;</a>
+<a name="300"><span class="lineNum">     300 </span>            : </a>
+<a name="301"><span class="lineNum">     301 </span>            :     int getSortedIndex (const juce::ValueTree&amp; v) const noexcept</a>
+<a name="302"><span class="lineNum">     302 </span>            :     {</a>
+<a name="303"><span class="lineNum">     303 </span>            :         for (int i = sortedObjects.size(); --i &gt;= 0;)</a>
+<a name="304"><span class="lineNum">     304 </span>            :             if (sortedObjects.getUnchecked (i)-&gt;state == v)</a>
+<a name="305"><span class="lineNum">     305 </span>            :                 return i;</a>
+<a name="306"><span class="lineNum">     306 </span>            : </a>
+<a name="307"><span class="lineNum">     307 </span>            :         return -1;</a>
+<a name="308"><span class="lineNum">     308 </span>            :     }</a>
+<a name="309"><span class="lineNum">     309 </span>            : </a>
+<a name="310"><span class="lineNum">     310 </span>            :     void triggerSort() const</a>
+<a name="311"><span class="lineNum">     311 </span>            :     {</a>
+<a name="312"><span class="lineNum">     312 </span>            :         TRACKTION_ASSERT_MESSAGE_THREAD</a>
+<a name="313"><span class="lineNum">     313 </span>            :         needsSorting = true;</a>
+<a name="314"><span class="lineNum">     314 </span>            :     }</a>
+<a name="315"><span class="lineNum">     315 </span>            : </a>
+<a name="316"><span class="lineNum">     316 </span>            :     void triggerSortIfNeeded (ObjectType* o, int objectIndex)</a>
+<a name="317"><span class="lineNum">     317 </span>            :     {</a>
+<a name="318"><span class="lineNum">     318 </span>            :         if (needsSorting)</a>
+<a name="319"><span class="lineNum">     319 </span>            :             return;</a>
+<a name="320"><span class="lineNum">     320 </span>            : </a>
+<a name="321"><span class="lineNum">     321 </span>            :         if (objectIndex &lt; 0)</a>
+<a name="322"><span class="lineNum">     322 </span>            :             return triggerSort();</a>
+<a name="323"><span class="lineNum">     323 </span>            : </a>
+<a name="324"><span class="lineNum">     324 </span>            :         jassert (o != nullptr);</a>
+<a name="325"><span class="lineNum">     325 </span>            : </a>
+<a name="326"><span class="lineNum">     326 </span>            :         if (objectIndex &gt; 0</a>
+<a name="327"><span class="lineNum">     327 </span>            :             &amp;&amp; (! objectsAreSorted (*sortedObjects.getUnchecked (objectIndex - 1), *o)))</a>
+<a name="328"><span class="lineNum">     328 </span>            :                 return triggerSort();</a>
+<a name="329"><span class="lineNum">     329 </span>            : </a>
+<a name="330"><span class="lineNum">     330 </span>            :         if (objectIndex &lt; (sortedObjects.size() - 1)</a>
+<a name="331"><span class="lineNum">     331 </span>            :             &amp;&amp; (! objectsAreSorted (*o, *sortedObjects.getUnchecked (objectIndex + 1))))</a>
+<a name="332"><span class="lineNum">     332 </span>            :                 return triggerSort();</a>
+<a name="333"><span class="lineNum">     333 </span>            :     }</a>
+<a name="334"><span class="lineNum">     334 </span>            : </a>
+<a name="335"><span class="lineNum">     335 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SortedValueTreeObjectList)</a>
+<a name="336"><span class="lineNum">     336 </span>            : };</a>
+<a name="337"><span class="lineNum">     337 </span>            : </a>
+<a name="338"><span class="lineNum">     338 </span>            : //==============================================================================</a>
+<a name="339"><span class="lineNum">     339 </span>            : /** Returns the object for a given state if it exists. */</a>
+<a name="340"><span class="lineNum">     340 </span>            : template&lt;typename ObjectType&gt;</a>
+<a name="341"><span class="lineNum">     341 </span>            : static ObjectType* getObjectFor (const ValueTreeObjectList&lt;ObjectType&gt;&amp; objectList, const juce::ValueTree&amp; v)</a>
+<a name="342"><span class="lineNum">     342 </span>            : {</a>
+<a name="343"><span class="lineNum">     343 </span>            :     for (auto* o : objectList.objects)</a>
+<a name="344"><span class="lineNum">     344 </span>            :         if (o-&gt;state == v)</a>
+<a name="345"><span class="lineNum">     345 </span>            :             return o;</a>
+<a name="346"><span class="lineNum">     346 </span>            : </a>
+<a name="347"><span class="lineNum">     347 </span>            :     return {};</a>
+<a name="348"><span class="lineNum">     348 </span>            : }</a>
+<a name="349"><span class="lineNum">     349 </span>            : </a>
+<a name="350"><span class="lineNum">     350 </span>            : //==============================================================================</a>
+<a name="351"><span class="lineNum">     351 </span>            : // Easy way to get one callback for all value tree change events</a>
+<a name="352"><span class="lineNum">     352 </span><span class="lineCov">       3642 : struct ValueTreeAllEventListener  : public juce::ValueTree::Listener</span></a>
+<a name="353"><span class="lineNum">     353 </span>            : {</a>
+<a name="354"><span class="lineNum">     354 </span>            :     virtual void valueTreeChanged() = 0;</a>
+<a name="355"><span class="lineNum">     355 </span>            : </a>
+<a name="356"><span class="lineNum">     356 </span>            :     //==============================================================================</a>
+<a name="357"><span class="lineNum">     357 </span><span class="lineCov">      36437 :     void valueTreePropertyChanged (juce::ValueTree&amp;, const juce::Identifier&amp;) override  { valueTreeChanged(); }</span></a>
+<a name="358"><span class="lineNum">     358 </span><span class="lineCov">      20550 :     void valueTreeChildAdded (juce::ValueTree&amp;, juce::ValueTree&amp;) override              { valueTreeChanged(); }</span></a>
+<a name="359"><span class="lineNum">     359 </span><span class="lineCov">      10276 :     void valueTreeChildRemoved (juce::ValueTree&amp;, juce::ValueTree&amp;, int) override       { valueTreeChanged(); }</span></a>
+<a name="360"><span class="lineNum">     360 </span><span class="lineCov">        206 :     void valueTreeChildOrderChanged (juce::ValueTree&amp;, int, int) override               { valueTreeChanged(); }</span></a>
+<a name="361"><span class="lineNum">     361 </span><span class="lineCov">       1220 :     void valueTreeParentChanged (juce::ValueTree&amp;) override                             { valueTreeChanged(); }</span></a>
+<a name="362"><span class="lineNum">     362 </span><span class="lineNoCov">          0 :     void valueTreeRedirected (juce::ValueTree&amp;) override                                { valueTreeChanged(); }</span></a>
+<a name="363"><span class="lineNum">     363 </span>            : };</a>
+<a name="364"><span class="lineNum">     364 </span>            : </a>
+<a name="365"><span class="lineNum">     365 </span>            : template&lt;typename Type&gt;</a>
+<a name="366"><span class="lineNum">     366 </span>            : struct ValueTreeComparator</a>
+<a name="367"><span class="lineNum">     367 </span>            : {</a>
+<a name="368"><span class="lineNum">     368 </span>            : public:</a>
+<a name="369"><span class="lineNum">     369 </span>            :     ValueTreeComparator (const juce::Identifier&amp; attributeToSort_, bool forwards)</a>
+<a name="370"><span class="lineNum">     370 </span>            :         : attributeToSort (attributeToSort_), direction (forwards ? 1 : -1)</a>
+<a name="371"><span class="lineNum">     371 </span>            :     {}</a>
+<a name="372"><span class="lineNum">     372 </span>            : </a>
+<a name="373"><span class="lineNum">     373 </span>            :     inline int compareElements (const juce::ValueTree&amp; first, const juce::ValueTree&amp; second) const</a>
+<a name="374"><span class="lineNum">     374 </span>            :     {</a>
+<a name="375"><span class="lineNum">     375 </span>            :         const int result = (Type (first[attributeToSort]) &gt; Type (second[attributeToSort])) ? 1 : -1;</a>
+<a name="376"><span class="lineNum">     376 </span>            : </a>
+<a name="377"><span class="lineNum">     377 </span>            :         return direction * result;</a>
+<a name="378"><span class="lineNum">     378 </span>            :     }</a>
+<a name="379"><span class="lineNum">     379 </span>            : </a>
+<a name="380"><span class="lineNum">     380 </span>            : private:</a>
+<a name="381"><span class="lineNum">     381 </span>            :     const juce::Identifier attributeToSort;</a>
+<a name="382"><span class="lineNum">     382 </span>            :     const int direction;</a>
+<a name="383"><span class="lineNum">     383 </span>            : </a>
+<a name="384"><span class="lineNum">     384 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ValueTreeComparator)</a>
+<a name="385"><span class="lineNum">     385 </span>            : };</a>
+<a name="386"><span class="lineNum">     386 </span>            : </a>
+<a name="387"><span class="lineNum">     387 </span>            : template&lt;&gt;</a>
+<a name="388"><span class="lineNum">     388 </span>            : inline int ValueTreeComparator&lt;juce::String&gt;::compareElements (const juce::ValueTree&amp; first, const juce::ValueTree&amp; second) const</a>
+<a name="389"><span class="lineNum">     389 </span>            : {</a>
+<a name="390"><span class="lineNum">     390 </span>            :     const int result = first[attributeToSort].toString().compareNatural (second[attributeToSort].toString());</a>
+<a name="391"><span class="lineNum">     391 </span>            : </a>
+<a name="392"><span class="lineNum">     392 </span>            :     return direction * result;</a>
+<a name="393"><span class="lineNum">     393 </span>            : }</a>
+<a name="394"><span class="lineNum">     394 </span>            : </a>
+<a name="395"><span class="lineNum">     395 </span>            : //==============================================================================</a>
+<a name="396"><span class="lineNum">     396 </span>            : /**</a>
+<a name="397"><span class="lineNum">     397 </span>            :     Holds a ValueTree as a ReferenceCountedObject.</a>
+<a name="398"><span class="lineNum">     398 </span>            : </a>
+<a name="399"><span class="lineNum">     399 </span>            :     This is somewhat obfuscated but makes it easy to transfer ValueTrees as var objects</a>
+<a name="400"><span class="lineNum">     400 </span>            :     such as when using them as DragAndDropTarget::SourceDetails::description members.</a>
+<a name="401"><span class="lineNum">     401 </span>            : */</a>
+<a name="402"><span class="lineNum">     402 </span>            : class ReferenceCountedValueTree  : public juce::ReferenceCountedObject</a>
+<a name="403"><span class="lineNum">     403 </span>            : {</a>
+<a name="404"><span class="lineNum">     404 </span>            : public:</a>
+<a name="405"><span class="lineNum">     405 </span>            :     /** Creates a ReferenceCountedValueTree for a given ValueTree. */</a>
+<a name="406"><span class="lineNum">     406 </span>            :     ReferenceCountedValueTree (const juce::ValueTree&amp; treeToReference) noexcept</a>
+<a name="407"><span class="lineNum">     407 </span>            :         : tree (treeToReference)</a>
+<a name="408"><span class="lineNum">     408 </span>            :     {}</a>
+<a name="409"><span class="lineNum">     409 </span>            : </a>
+<a name="410"><span class="lineNum">     410 </span>            :     /** Destructor. */</a>
+<a name="411"><span class="lineNum">     411 </span><span class="lineNoCov">          0 :     ~ReferenceCountedValueTree() {}</span></a>
+<a name="412"><span class="lineNum">     412 </span>            : </a>
+<a name="413"><span class="lineNum">     413 </span>            :     /** Sets the ValueTree being held. */</a>
+<a name="414"><span class="lineNum">     414 </span>            :     void setValueTree (juce::ValueTree newTree)   { tree = newTree; }</a>
+<a name="415"><span class="lineNum">     415 </span>            : </a>
+<a name="416"><span class="lineNum">     416 </span>            :     /** Returns the ValueTree being held. */</a>
+<a name="417"><span class="lineNum">     417 </span>            :     juce::ValueTree getValueTree() noexcept       { return tree; }</a>
+<a name="418"><span class="lineNum">     418 </span>            : </a>
+<a name="419"><span class="lineNum">     419 </span>            :     using Ptr = juce::ReferenceCountedObjectPtr&lt;ReferenceCountedValueTree&gt;;</a>
+<a name="420"><span class="lineNum">     420 </span>            : </a>
+<a name="421"><span class="lineNum">     421 </span>            :     /** Provides a simple way of getting the tree from a var object which</a>
+<a name="422"><span class="lineNum">     422 </span>            :         is a ReferencedCountedValueTree.</a>
+<a name="423"><span class="lineNum">     423 </span>            :     */</a>
+<a name="424"><span class="lineNum">     424 </span>            :     static juce::ValueTree getTreeFromObject (const juce::var&amp; treeObject) noexcept</a>
+<a name="425"><span class="lineNum">     425 </span>            :     {</a>
+<a name="426"><span class="lineNum">     426 </span>            :         if (auto refTree = dynamic_cast&lt;ReferenceCountedValueTree*&gt; (treeObject.getObject()))</a>
+<a name="427"><span class="lineNum">     427 </span>            :             return refTree-&gt;getValueTree();</a>
+<a name="428"><span class="lineNum">     428 </span>            : </a>
+<a name="429"><span class="lineNum">     429 </span>            :         return {};</a>
+<a name="430"><span class="lineNum">     430 </span>            :     }</a>
+<a name="431"><span class="lineNum">     431 </span>            : </a>
+<a name="432"><span class="lineNum">     432 </span>            : private:</a>
+<a name="433"><span class="lineNum">     433 </span>            :     juce::ValueTree tree;</a>
+<a name="434"><span class="lineNum">     434 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ReferenceCountedValueTree)</a>
+<a name="435"><span class="lineNum">     435 </span>            : };</a>
+<a name="436"><span class="lineNum">     436 </span>            : </a>
+<a name="437"><span class="lineNum">     437 </span>            : //==============================================================================</a>
+<a name="438"><span class="lineNum">     438 </span>            : /** Attempts to load a ValueTree from a file. */</a>
+<a name="439"><span class="lineNum">     439 </span><span class="lineNoCov">          0 : static inline juce::ValueTree loadValueTree (const juce::File&amp; file, bool asXml)</span></a>
+<a name="440"><span class="lineNum">     440 </span>            : {</a>
+<a name="441"><span class="lineNum">     441 </span><span class="lineNoCov">          0 :     if (asXml)</span></a>
+<a name="442"><span class="lineNum">     442 </span>            :     {</a>
+<a name="443"><span class="lineNum">     443 </span><span class="lineNoCov">          0 :         if (auto xml = juce::parseXML (file))</span></a>
+<a name="444"><span class="lineNum">     444 </span><span class="lineNoCov">          0 :             return juce::ValueTree::fromXml (*xml);</span></a>
+<a name="445"><span class="lineNum">     445 </span>            :     }</a>
+<a name="446"><span class="lineNum">     446 </span>            :     else</a>
+<a name="447"><span class="lineNum">     447 </span>            :     {</a>
+<a name="448"><span class="lineNum">     448 </span><span class="lineNoCov">          0 :         juce::FileInputStream is (file);</span></a>
+<a name="449"><span class="lineNum">     449 </span>            : </a>
+<a name="450"><span class="lineNum">     450 </span><span class="lineNoCov">          0 :         if (is.openedOk())</span></a>
+<a name="451"><span class="lineNum">     451 </span><span class="lineNoCov">          0 :             return juce::ValueTree::readFromStream (is);</span></a>
+<a name="452"><span class="lineNum">     452 </span>            :     }</a>
+<a name="453"><span class="lineNum">     453 </span>            : </a>
+<a name="454"><span class="lineNum">     454 </span><span class="lineNoCov">          0 :     return {};</span></a>
+<a name="455"><span class="lineNum">     455 </span>            : }</a>
+<a name="456"><span class="lineNum">     456 </span>            : </a>
+<a name="457"><span class="lineNum">     457 </span>            : /** Saves a ValueTree to a File. */</a>
+<a name="458"><span class="lineNum">     458 </span>            : static inline bool saveValueTree (const juce::File&amp; file, const juce::ValueTree&amp; v, bool asXml)</a>
+<a name="459"><span class="lineNum">     459 </span>            : {</a>
+<a name="460"><span class="lineNum">     460 </span>            :     const juce::TemporaryFile temp (file);</a>
+<a name="461"><span class="lineNum">     461 </span>            : </a>
+<a name="462"><span class="lineNum">     462 </span>            :     {</a>
+<a name="463"><span class="lineNum">     463 </span>            :         juce::FileOutputStream os (temp.getFile());</a>
+<a name="464"><span class="lineNum">     464 </span>            : </a>
+<a name="465"><span class="lineNum">     465 </span>            :         if (! os.getStatus().wasOk())</a>
+<a name="466"><span class="lineNum">     466 </span>            :             return false;</a>
+<a name="467"><span class="lineNum">     467 </span>            : </a>
+<a name="468"><span class="lineNum">     468 </span>            :         if (asXml)</a>
+<a name="469"><span class="lineNum">     469 </span>            :         {</a>
+<a name="470"><span class="lineNum">     470 </span>            :             if (auto xml = v.createXml())</a>
+<a name="471"><span class="lineNum">     471 </span>            :                 xml-&gt;writeTo (os);</a>
+<a name="472"><span class="lineNum">     472 </span>            :         }</a>
+<a name="473"><span class="lineNum">     473 </span>            :         else</a>
+<a name="474"><span class="lineNum">     474 </span>            :         {</a>
+<a name="475"><span class="lineNum">     475 </span>            :             v.writeToStream (os);</a>
+<a name="476"><span class="lineNum">     476 </span>            :         }</a>
+<a name="477"><span class="lineNum">     477 </span>            :     }</a>
+<a name="478"><span class="lineNum">     478 </span>            : </a>
+<a name="479"><span class="lineNum">     479 </span>            :     if (temp.getFile().existsAsFile())</a>
+<a name="480"><span class="lineNum">     480 </span>            :         return temp.overwriteTargetFileWithTemporary();</a>
+<a name="481"><span class="lineNum">     481 </span>            : </a>
+<a name="482"><span class="lineNum">     482 </span>            :     return false;</a>
+<a name="483"><span class="lineNum">     483 </span>            : }</a>
+<a name="484"><span class="lineNum">     484 </span>            : </a>
+<a name="485"><span class="lineNum">     485 </span><span class="lineCov">      60341 : static inline void setPropertyIfMissing (juce::ValueTree&amp; v, const juce::Identifier&amp; id,</span></a>
+<a name="486"><span class="lineNum">     486 </span>            :                                          const juce::var&amp; value, juce::UndoManager* um)</a>
+<a name="487"><span class="lineNum">     487 </span>            : {</a>
+<a name="488"><span class="lineNum">     488 </span><span class="lineCov">      60341 :     if (! v.hasProperty (id))</span></a>
+<a name="489"><span class="lineNum">     489 </span><span class="lineCov">       7125 :         v.setProperty (id, value, um);</span></a>
+<a name="490"><span class="lineNum">     490 </span><span class="lineCov">      60341 : }</span></a>
+<a name="491"><span class="lineNum">     491 </span>            : </a>
+<a name="492"><span class="lineNum">     492 </span>            : /** Creates a deep copy of another ValueTree in an undoable way, maintaining the destination's parent. */</a>
+<a name="493"><span class="lineNum">     493 </span><span class="lineCov">      20841 : static inline juce::ValueTree copyValueTree (juce::ValueTree&amp; dest, const juce::ValueTree&amp; src, juce::UndoManager* um)</span></a>
+<a name="494"><span class="lineNum">     494 </span>            : {</a>
+<a name="495"><span class="lineNum">     495 </span><span class="lineCov">      20841 :     if (! dest.getParent().isValid())</span></a>
+<a name="496"><span class="lineNum">     496 </span>            :     {</a>
+<a name="497"><span class="lineNum">     497 </span><span class="lineCov">      20841 :         dest = src.createCopy();</span></a>
+<a name="498"><span class="lineNum">     498 </span>            :     }</a>
+<a name="499"><span class="lineNum">     499 </span>            :     else</a>
+<a name="500"><span class="lineNum">     500 </span>            :     {</a>
+<a name="501"><span class="lineNum">     501 </span><span class="lineNoCov">          0 :         dest.copyPropertiesFrom (src, um);</span></a>
+<a name="502"><span class="lineNum">     502 </span><span class="lineNoCov">          0 :         dest.removeAllChildren (um);</span></a>
+<a name="503"><span class="lineNum">     503 </span>            : </a>
+<a name="504"><span class="lineNum">     504 </span><span class="lineNoCov">          0 :         for (int i = 0; i &lt; src.getNumChildren(); ++i)</span></a>
+<a name="505"><span class="lineNum">     505 </span><span class="lineNoCov">          0 :             dest.addChild (src.getChild (i).createCopy(), i, um);</span></a>
+<a name="506"><span class="lineNum">     506 </span>            :     }</a>
+<a name="507"><span class="lineNum">     507 </span>            : </a>
+<a name="508"><span class="lineNum">     508 </span><span class="lineCov">      20841 :     return dest;</span></a>
+<a name="509"><span class="lineNum">     509 </span>            : }</a>
+<a name="510"><span class="lineNum">     510 </span>            : </a>
+<a name="511"><span class="lineNum">     511 </span>            : template &lt;typename Predicate&gt;</a>
+<a name="512"><span class="lineNum">     512 </span>            : static inline void copyValueTreeProperties (juce::ValueTree&amp; dest, const juce::ValueTree&amp; src,</a>
+<a name="513"><span class="lineNum">     513 </span>            :                                             juce::UndoManager* um, Predicate&amp;&amp; shouldCopyProperty)</a>
+<a name="514"><span class="lineNum">     514 </span>            : {</a>
+<a name="515"><span class="lineNum">     515 </span>            :     for (int i = 0; i &lt; src.getNumProperties(); ++i)</a>
+<a name="516"><span class="lineNum">     516 </span>            :     {</a>
+<a name="517"><span class="lineNum">     517 </span>            :         auto name = src.getPropertyName (i);</a>
+<a name="518"><span class="lineNum">     518 </span>            : </a>
+<a name="519"><span class="lineNum">     519 </span>            :         if (shouldCopyProperty (name))</a>
+<a name="520"><span class="lineNum">     520 </span>            :             dest.setProperty (name, src.getProperty (name), um);</a>
+<a name="521"><span class="lineNum">     521 </span>            :     }</a>
+<a name="522"><span class="lineNum">     522 </span>            : }</a>
+<a name="523"><span class="lineNum">     523 </span>            : </a>
+<a name="524"><span class="lineNum">     524 </span>            : static inline juce::ValueTree getChildWithPropertyRecursively (const juce::ValueTree&amp; p,</a>
+<a name="525"><span class="lineNum">     525 </span>            :                                                                const juce::Identifier&amp; propertyName,</a>
+<a name="526"><span class="lineNum">     526 </span>            :                                                                const juce::var&amp; propertyValue)</a>
+<a name="527"><span class="lineNum">     527 </span>            : {</a>
+<a name="528"><span class="lineNum">     528 </span>            :     const int numChildren = p.getNumChildren();</a>
+<a name="529"><span class="lineNum">     529 </span>            : </a>
+<a name="530"><span class="lineNum">     530 </span>            :     for (int i = 0; i &lt; numChildren; ++i)</a>
+<a name="531"><span class="lineNum">     531 </span>            :     {</a>
+<a name="532"><span class="lineNum">     532 </span>            :         auto c = p.getChild (i);</a>
+<a name="533"><span class="lineNum">     533 </span>            : </a>
+<a name="534"><span class="lineNum">     534 </span>            :         if (c.getProperty (propertyName) == propertyValue)</a>
+<a name="535"><span class="lineNum">     535 </span>            :             return c;</a>
+<a name="536"><span class="lineNum">     536 </span>            : </a>
+<a name="537"><span class="lineNum">     537 </span>            :         c = getChildWithPropertyRecursively (c, propertyName, propertyValue);</a>
+<a name="538"><span class="lineNum">     538 </span>            : </a>
+<a name="539"><span class="lineNum">     539 </span>            :         if (c.isValid())</a>
+<a name="540"><span class="lineNum">     540 </span>            :             return c;</a>
+<a name="541"><span class="lineNum">     541 </span>            :     }</a>
+<a name="542"><span class="lineNum">     542 </span>            : </a>
+<a name="543"><span class="lineNum">     543 </span>            :     return {};</a>
+<a name="544"><span class="lineNum">     544 </span>            : }</a>
+<a name="545"><span class="lineNum">     545 </span>            : </a>
+<a name="546"><span class="lineNum">     546 </span>            : /** Iterates the params array and copies and properties that are present in the ValueTree. */</a>
+<a name="547"><span class="lineNum">     547 </span>            : template&lt;typename ValueType&gt;</a>
+<a name="548"><span class="lineNum">     548 </span><span class="lineCov">         35 : static void copyPropertiesToNullTerminatedCachedValues (const juce::ValueTree&amp; v, juce::CachedValue&lt;ValueType&gt;** params)</span></a>
+<a name="549"><span class="lineNum">     549 </span>            : {</a>
+<a name="550"><span class="lineNum">     550 </span><span class="lineCov">         35 :     if (params == nullptr)</span></a>
+<a name="551"><span class="lineNum">     551 </span>            :     {</a>
+<a name="552"><span class="lineNum">     552 </span>            :         jassertfalse;</a>
+<a name="553"><span class="lineNum">     553 </span>            :         return;</a>
+<a name="554"><span class="lineNum">     554 </span>            :     }</a>
+<a name="555"><span class="lineNum">     555 </span>            : </a>
+<a name="556"><span class="lineNum">     556 </span>            :     for (;;)</a>
+<a name="557"><span class="lineNum">     557 </span>            :     {</a>
+<a name="558"><span class="lineNum">     558 </span><span class="lineCov">        169 :         if (juce::CachedValue&lt;ValueType&gt;* cv = *params++)</span></a>
+<a name="559"><span class="lineNum">     559 </span>            :         {</a>
+<a name="560"><span class="lineNum">     560 </span>            :             const juce::Identifier&amp; prop = cv-&gt;getPropertyID();</a>
+<a name="561"><span class="lineNum">     561 </span>            : </a>
+<a name="562"><span class="lineNum">     562 </span><span class="lineCov">        134 :             if (v.hasProperty (prop))</span></a>
+<a name="563"><span class="lineNum">     563 </span><span class="lineCov">         40 :                 *cv = ValueType (v.getProperty (prop));</span></a>
+<a name="564"><span class="lineNum">     564 </span>            :             else</a>
+<a name="565"><span class="lineNum">     565 </span>            :                 cv-&gt;resetToDefault();</a>
+<a name="566"><span class="lineNum">     566 </span>            :         }</a>
+<a name="567"><span class="lineNum">     567 </span>            :         else</a>
+<a name="568"><span class="lineNum">     568 </span>            :         {</a>
+<a name="569"><span class="lineNum">     569 </span>            :             break;</a>
+<a name="570"><span class="lineNum">     570 </span>            :         }</a>
+<a name="571"><span class="lineNum">     571 </span>            :     }</a>
+<a name="572"><span class="lineNum">     572 </span>            : }</a>
+<a name="573"><span class="lineNum">     573 </span>            : </a>
+<a name="574"><span class="lineNum">     574 </span>            : /** Strips out any invalid trees from the array. */</a>
+<a name="575"><span class="lineNum">     575 </span>            : inline juce::Array&lt;juce::ValueTree&gt;&amp; removeInvalidValueTrees (juce::Array&lt;juce::ValueTree&gt;&amp; trees)</a>
+<a name="576"><span class="lineNum">     576 </span>            : {</a>
+<a name="577"><span class="lineNum">     577 </span>            :     for (int i = trees.size(); --i &gt;= 0;)</a>
+<a name="578"><span class="lineNum">     578 </span>            :         if (! trees.getReference (i).isValid())</a>
+<a name="579"><span class="lineNum">     579 </span>            :             trees.remove (i);</a>
+<a name="580"><span class="lineNum">     580 </span>            : </a>
+<a name="581"><span class="lineNum">     581 </span>            :     return trees;</a>
+<a name="582"><span class="lineNum">     582 </span>            : }</a>
+<a name="583"><span class="lineNum">     583 </span>            : </a>
+<a name="584"><span class="lineNum">     584 </span>            : /** Returns a new array with any trees without the given type removed. */</a>
+<a name="585"><span class="lineNum">     585 </span>            : inline juce::Array&lt;juce::ValueTree&gt; getTreesOfType (const juce::Array&lt;juce::ValueTree&gt;&amp; trees,</a>
+<a name="586"><span class="lineNum">     586 </span>            :                                                     const juce::Identifier&amp; type)</a>
+<a name="587"><span class="lineNum">     587 </span>            : {</a>
+<a name="588"><span class="lineNum">     588 </span>            :     juce::Array&lt;juce::ValueTree&gt; newTrees;</a>
+<a name="589"><span class="lineNum">     589 </span>            : </a>
+<a name="590"><span class="lineNum">     590 </span>            :     for (const auto&amp; v : trees)</a>
+<a name="591"><span class="lineNum">     591 </span>            :         if (v.hasType (type))</a>
+<a name="592"><span class="lineNum">     592 </span>            :             newTrees.add (v);</a>
+<a name="593"><span class="lineNum">     593 </span>            : </a>
+<a name="594"><span class="lineNum">     594 </span>            :     return newTrees;</a>
+<a name="595"><span class="lineNum">     595 </span>            : }</a>
+<a name="596"><span class="lineNum">     596 </span>            : </a>
+<a name="597"><span class="lineNum">     597 </span>            : inline void getChildTreesRecursive (juce::Array&lt;juce::ValueTree&gt;&amp; result,</a>
+<a name="598"><span class="lineNum">     598 </span>            :                                     const juce::ValueTree&amp; tree)</a>
+<a name="599"><span class="lineNum">     599 </span>            : {</a>
+<a name="600"><span class="lineNum">     600 </span>            :     for (auto child : tree)</a>
+<a name="601"><span class="lineNum">     601 </span>            :     {</a>
+<a name="602"><span class="lineNum">     602 </span>            :         result.add (child);</a>
+<a name="603"><span class="lineNum">     603 </span>            :         getChildTreesRecursive (result, child);</a>
+<a name="604"><span class="lineNum">     604 </span>            :     }</a>
+<a name="605"><span class="lineNum">     605 </span>            : }</a>
+<a name="606"><span class="lineNum">     606 </span>            : </a>
+<a name="607"><span class="lineNum">     607 </span>            : inline void renamePropertyRecursive (juce::ValueTree&amp; tree,</a>
+<a name="608"><span class="lineNum">     608 </span>            :                                      const juce::Identifier&amp; oldName,</a>
+<a name="609"><span class="lineNum">     609 </span>            :                                      const juce::Identifier&amp; newName,</a>
+<a name="610"><span class="lineNum">     610 </span>            :                                      juce::UndoManager* um)</a>
+<a name="611"><span class="lineNum">     611 </span>            : {</a>
+<a name="612"><span class="lineNum">     612 </span>            :     if (auto oldProp = tree.getPropertyPointer (oldName))</a>
+<a name="613"><span class="lineNum">     613 </span>            :     {</a>
+<a name="614"><span class="lineNum">     614 </span>            :         tree.setProperty (newName, *oldProp, um);</a>
+<a name="615"><span class="lineNum">     615 </span>            :         tree.removeProperty (oldName, um);</a>
+<a name="616"><span class="lineNum">     616 </span>            :     }</a>
+<a name="617"><span class="lineNum">     617 </span>            : </a>
+<a name="618"><span class="lineNum">     618 </span>            :     for (auto child : tree)</a>
+<a name="619"><span class="lineNum">     619 </span>            :         renamePropertyRecursive (child, oldName, newName, um);</a>
+<a name="620"><span class="lineNum">     620 </span>            : }</a>
+<a name="621"><span class="lineNum">     621 </span>            : </a>
+<a name="622"><span class="lineNum">     622 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

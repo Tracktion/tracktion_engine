@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-10-20 08:23:00</td>
+            <td class="headerValue">2022-10-27 17:42:45</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">44</td>
@@ -523,41 +523,41 @@
 <a name="461"><span class="lineNum">     461 </span>            :         {</a>
 <a name="462"><span class="lineNum">     462 </span>            :             for (;;)</a>
 <a name="463"><span class="lineNum">     463 </span>            :             {</a>
-<a name="464"><span class="lineNum">     464 </span><span class="lineCov">    3261858 :                 const ScopedPerformanceMeasurement spm (performanceMeasurement);</span></a>
+<a name="464"><span class="lineNum">     464 </span><span class="lineCov">    3271984 :                 const ScopedPerformanceMeasurement spm (performanceMeasurement);</span></a>
 <a name="465"><span class="lineNum">     465 </span>            :                 </a>
-<a name="466"><span class="lineNum">     466 </span><span class="lineCov">    4719280 :                 auto maxNumThisTime = testSetup.randomiseBlockSizes ? std::min (testSetup.random.nextInt ({ 1, testSetup.blockSize }), numSamplesToDo)</span></a>
+<a name="466"><span class="lineNum">     466 </span><span class="lineCov">    4729406 :                 auto maxNumThisTime = testSetup.randomiseBlockSizes ? std::min (testSetup.random.nextInt ({ 1, testSetup.blockSize }), numSamplesToDo)</span></a>
 <a name="467"><span class="lineNum">     467 </span><span class="lineCov">    1457151 :                                                                     : std::min (testSetup.blockSize, numSamplesToDo);</span></a>
-<a name="468"><span class="lineNum">     468 </span><span class="lineCov">    3261858 :                 auto numThisTime = std::min (maxNumSamples, maxNumThisTime);</span></a>
-<a name="469"><span class="lineNum">     469 </span><span class="lineCov">    3261858 :                 midi.clear();</span></a>
+<a name="468"><span class="lineNum">     468 </span><span class="lineCov">    3271984 :                 auto numThisTime = std::min (maxNumSamples, maxNumThisTime);</span></a>
+<a name="469"><span class="lineNum">     469 </span><span class="lineCov">    3271984 :                 midi.clear();</span></a>
 <a name="470"><span class="lineNum">     470 </span>            : </a>
-<a name="471"><span class="lineNum">     471 </span><span class="lineCov">    3261858 :                 auto subSectionView = buffer.getStart ((choc::buffer::FrameCount) numThisTime);</span></a>
-<a name="472"><span class="lineNum">     472 </span><span class="lineCov">    3261858 :                 subSectionView.clear();</span></a>
+<a name="471"><span class="lineNum">     471 </span><span class="lineCov">    3271984 :                 auto subSectionView = buffer.getStart ((choc::buffer::FrameCount) numThisTime);</span></a>
+<a name="472"><span class="lineNum">     472 </span><span class="lineCov">    3271984 :                 subSectionView.clear();</span></a>
 <a name="473"><span class="lineNum">     473 </span>            : </a>
-<a name="474"><span class="lineNum">     474 </span><span class="lineCov">    3261858 :                 const auto referenceSampleRange = juce::Range&lt;int64_t&gt;::withStartAndLength ((int64_t) numSamplesDone, (int64_t) numThisTime);</span></a>
+<a name="474"><span class="lineNum">     474 </span><span class="lineCov">    3271984 :                 const auto referenceSampleRange = juce::Range&lt;int64_t&gt;::withStartAndLength ((int64_t) numSamplesDone, (int64_t) numThisTime);</span></a>
 <a name="475"><span class="lineNum">     475 </span>            : </a>
-<a name="476"><span class="lineNum">     476 </span><span class="lineCov">    3261858 :                 if (playHead)</span></a>
-<a name="477"><span class="lineNum">     477 </span><span class="lineCov">     614332 :                     playHead-&gt;setReferenceSampleRange (referenceSampleRange);</span></a>
+<a name="476"><span class="lineNum">     476 </span><span class="lineCov">    3271984 :                 if (playHead)</span></a>
+<a name="477"><span class="lineNum">     477 </span><span class="lineCov">     614978 :                     playHead-&gt;setReferenceSampleRange (referenceSampleRange);</span></a>
 <a name="478"><span class="lineNum">     478 </span>            : </a>
-<a name="479"><span class="lineNum">     479 </span><span class="lineCov">    3261858 :                 numProcessMisses += player-&gt;process ({ (choc::buffer::FrameCount) numThisTime, referenceSampleRange, { subSectionView, midi } });</span></a>
+<a name="479"><span class="lineNum">     479 </span><span class="lineCov">    3271984 :                 numProcessMisses += player-&gt;process ({ (choc::buffer::FrameCount) numThisTime, referenceSampleRange, { subSectionView, midi } });</span></a>
 <a name="480"><span class="lineNum">     480 </span>            : </a>
-<a name="481"><span class="lineNum">     481 </span><span class="lineCov">    3261858 :                 if (writer)</span></a>
+<a name="481"><span class="lineNum">     481 </span><span class="lineCov">    3271984 :                 if (writer)</span></a>
 <a name="482"><span class="lineNum">     482 </span>            :                 {</a>
-<a name="483"><span class="lineNum">     483 </span><span class="lineCov">    2649594 :                     auto audioBuffer = tracktion::graph::toAudioBuffer (subSectionView);</span></a>
-<a name="484"><span class="lineNum">     484 </span><span class="lineCov">    2649594 :                     writer-&gt;writeFromAudioSampleBuffer (audioBuffer, 0, audioBuffer.getNumSamples());</span></a>
+<a name="483"><span class="lineNum">     483 </span><span class="lineCov">    2659074 :                     auto audioBuffer = tracktion::graph::toAudioBuffer (subSectionView);</span></a>
+<a name="484"><span class="lineNum">     484 </span><span class="lineCov">    2659074 :                     writer-&gt;writeFromAudioSampleBuffer (audioBuffer, 0, audioBuffer.getNumSamples());</span></a>
 <a name="485"><span class="lineNum">     485 </span>            :                 }</a>
 <a name="486"><span class="lineNum">     486 </span>            : </a>
 <a name="487"><span class="lineNum">     487 </span>            :                 // Copy MIDI to buffer</a>
-<a name="488"><span class="lineNum">     488 </span><span class="lineCov">    3262798 :                 for (const auto&amp; m : midi)</span></a>
+<a name="488"><span class="lineNum">     488 </span><span class="lineCov">    3272924 :                 for (const auto&amp; m : midi)</span></a>
 <a name="489"><span class="lineNum">     489 </span>            :                 {</a>
 <a name="490"><span class="lineNum">     490 </span><span class="lineCov">        936 :                     const int sampleNumber = (int) std::floor (m.getTimeStamp() * testSetup.sampleRate);</span></a>
 <a name="491"><span class="lineNum">     491 </span><span class="lineCov">        936 :                     context-&gt;midi.addEvent (m, numSamplesDone + sampleNumber);</span></a>
 <a name="492"><span class="lineNum">     492 </span>            :                 }</a>
 <a name="493"><span class="lineNum">     493 </span>            : </a>
-<a name="494"><span class="lineNum">     494 </span><span class="lineCov">    3261858 :                 numSamplesToDo -= numThisTime;</span></a>
-<a name="495"><span class="lineNum">     495 </span><span class="lineCov">    3261858 :                 numSamplesDone += numThisTime;</span></a>
-<a name="496"><span class="lineNum">     496 </span><span class="lineCov">    3261858 :                 maxNumSamples -=  numThisTime;</span></a>
+<a name="494"><span class="lineNum">     494 </span><span class="lineCov">    3271984 :                 numSamplesToDo -= numThisTime;</span></a>
+<a name="495"><span class="lineNum">     495 </span><span class="lineCov">    3271984 :                 numSamplesDone += numThisTime;</span></a>
+<a name="496"><span class="lineNum">     496 </span><span class="lineCov">    3271984 :                 maxNumSamples -=  numThisTime;</span></a>
 <a name="497"><span class="lineNum">     497 </span>            : </a>
-<a name="498"><span class="lineNum">     498 </span><span class="lineCov">    3261858 :                 if (maxNumSamples &lt;= 0)</span></a>
+<a name="498"><span class="lineNum">     498 </span><span class="lineCov">    3271984 :                 if (maxNumSamples &lt;= 0)</span></a>
 <a name="499"><span class="lineNum">     499 </span>            :                     break;</a>
 <a name="500"><span class="lineNum">     500 </span>            :             }</a>
 <a name="501"><span class="lineNum">     501 </span>            : </a>
