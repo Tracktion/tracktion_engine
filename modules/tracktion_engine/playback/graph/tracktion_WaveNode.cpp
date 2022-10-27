@@ -423,8 +423,9 @@ public:
         // Read data in to temp buffer
         auto scratchView = scratchBuffer.getView();
 
+        // If the reader fails, we can't bail out or SRC will hang so just give it an empty buffer
         if (! source->readSamples (scratchView))
-            return 0;
+            scratchView.clear();
 
         // Interleave
         choc::buffer::copy (interleavedInputScratchBuffer, scratchBuffer);
