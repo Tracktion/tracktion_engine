@@ -262,9 +262,8 @@ WarpTimeFactory& Engine::getWarpTimeFactory() const
 }
 
 // BEATCONNECT MODIFICATION START
-Engine::FifoBundle::FifoBundle(const double p_PunchIn, const juce::Array<AudioTrack*>&& p_Tracks, const std::string& p_FileName)
+Engine::FifoBundle::FifoBundle(const double p_PunchIn, const juce::Array<AudioTrack*>&& p_Tracks)
 : m_PunchIn(p_PunchIn)
-, m_FileName(p_FileName)
 {
     for (const auto const p : p_Tracks)
     {
@@ -296,14 +295,12 @@ void Engine::addBlockToAudioFifo(const juce::Uuid& p_FifoID, const juce::AudioBu
 void Engine::createFifoBundle(
     const juce::Uuid& p_FifoID, 
     const double p_PunchIn, 
-    const juce::Array<AudioTrack*>&& p_Tracks,
-    const std::string& p_FileName)
+    const juce::Array<AudioTrack*>&& p_Tracks)
 {
     jassert(p_FifoID != 0);
     m_ListFifoBundle[p_FifoID] = std::make_unique<FifoBundle>(
         p_PunchIn, 
-        std::forward<const juce::Array<AudioTrack*>>(p_Tracks),
-        p_FileName);
+        std::forward<const juce::Array<AudioTrack*>>(p_Tracks));
 }
 
 void Engine::destroyFifoBundle(const juce::Uuid& p_FifoID)

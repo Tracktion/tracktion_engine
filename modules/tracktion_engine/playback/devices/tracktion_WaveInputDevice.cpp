@@ -520,12 +520,12 @@ public:
             , diskSpaceChecker (p_Engine, p_File)
             , threadInitialiser(p_Engine.getWaveInputRecordingThread())
         {
-            const std::string FileName = p_File.getFileName().toStdString();
+            m_SampleID = p_File.getFileNameWithoutExtension();
+
             engine.createFifoBundle(
                 m_SampleID,
                 punchIn, 
-                std::forward<const juce::Array<AudioTrack*>>(p_TrackList),
-                FileName);
+                std::forward<const juce::Array<AudioTrack*>>(p_TrackList));
         }
         ~RecordingContext()
         {
