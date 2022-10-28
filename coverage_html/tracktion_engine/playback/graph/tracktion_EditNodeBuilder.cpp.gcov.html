@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-10-27 22:30:48</td>
+            <td class="headerValue">2022-10-28 02:25:58</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">31</td>
@@ -721,7 +721,7 @@
 <a name="659"><span class="lineNum">     659 </span>            :                                       clip.getLiveClipLevel(),</a>
 <a name="660"><span class="lineNum">     660 </span>            :                                       params.processState,</a>
 <a name="661"><span class="lineNum">     661 </span>            :                                       clip.itemID,</a>
-<a name="662"><span class="lineNum">     662 </span><span class="lineCov">    2427420 :                                       [&amp;trackMuteState]</span></a>
+<a name="662"><span class="lineNum">     662 </span><span class="lineCov">    2427460 :                                       [&amp;trackMuteState]</span></a>
 <a name="663"><span class="lineNum">     663 </span>            :                                       {</a>
 <a name="664"><span class="lineNum">     664 </span>            :                                           if (! trackMuteState.shouldTrackBeAudible())</a>
 <a name="665"><span class="lineNum">     665 </span><span class="lineNoCov">          0 :                                               return ! trackMuteState.shouldTrackMidiBeProcessed();</span></a>
@@ -1068,7 +1068,7 @@
 <a name="1006"><span class="lineNum">    1006 </span>            :     node = makeNode&lt;RackInstanceNode&gt; (std::move (node), std::move (returnChannelMap));</a>
 <a name="1007"><span class="lineNum">    1007 </span>            : </a>
 <a name="1008"><span class="lineNum">    1008 </span>            :     return makeNode&lt;RackReturnNode&gt; (std::move (node),</a>
-<a name="1009"><span class="lineNum">    1009 </span><span class="lineCov">   17050400 :                                      [wetGain = rackInstance.wetGain] { return wetGain-&gt;getCurrentValue(); },</span></a>
+<a name="1009"><span class="lineNum">    1009 </span><span class="lineCov">   16833700 :                                      [wetGain = rackInstance.wetGain] { return wetGain-&gt;getCurrentValue(); },</span></a>
 <a name="1010"><span class="lineNum">    1010 </span>            :                                      inputNode,</a>
 <a name="1011"><span class="lineNum">    1011 </span><span class="lineCov">       1588 :                                      [dryGain = rackInstance.dryGain] { return dryGain-&gt;getCurrentValue(); });</span></a>
 <a name="1012"><span class="lineNum">    1012 </span>            : }</a>
