@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-01 17:43:08</td>
+            <td class="headerValue">2022-11-01 19:29:10</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -115,13 +115,13 @@
 <a name="53"><span class="lineNum">      53 </span>            : {</a>
 <a name="54"><span class="lineNum">      54 </span>            : public:</a>
 <a name="55"><span class="lineNum">      55 </span>            :     AudioFile() = delete;</a>
-<a name="56"><span class="lineNum">      56 </span><span class="lineCov">       3390 :     inline AudioFile (Engine&amp; e) noexcept : engine (&amp;e) {}</span></a>
+<a name="56"><span class="lineNum">      56 </span><span class="lineCov">       3391 :     inline AudioFile (Engine&amp; e) noexcept : engine (&amp;e) {}</span></a>
 <a name="57"><span class="lineNum">      57 </span>            :     explicit AudioFile (Engine&amp;, const juce::File&amp;) noexcept;</a>
 <a name="58"><span class="lineNum">      58 </span>            :     AudioFile (const AudioFile&amp;) noexcept;</a>
 <a name="59"><span class="lineNum">      59 </span>            :     AudioFile&amp; operator= (const AudioFile&amp;) noexcept;</a>
 <a name="60"><span class="lineNum">      60 </span>            :     ~AudioFile();</a>
 <a name="61"><span class="lineNum">      61 </span>            : </a>
-<a name="62"><span class="lineNum">      62 </span><span class="lineCov">       8832 :     const juce::File&amp; getFile() const noexcept  { return file; }</span></a>
+<a name="62"><span class="lineNum">      62 </span><span class="lineCov">       8834 :     const juce::File&amp; getFile() const noexcept  { return file; }</span></a>
 <a name="63"><span class="lineNum">      63 </span>            :     HashCode getHash() const noexcept           { return hash; }</a>
 <a name="64"><span class="lineNum">      64 </span>            :     juce::String getHashString() const          { return juce::String::toHexString (hash); }</a>
 <a name="65"><span class="lineNum">      65 </span>            : </a>

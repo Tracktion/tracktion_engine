@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">204</td>
+            <td class="headerCovTableEntry">203</td>
             <td class="headerCovTableEntry">397</td>
-            <td class="headerCovTableEntryLo">51.4 %</td>
+            <td class="headerCovTableEntryLo">51.1 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-01 17:43:08</td>
+            <td class="headerValue">2022-11-01 19:29:10</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">45</td>
@@ -75,37 +75,37 @@
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : static inline HashCode getAudioFileHash (const juce::File&amp; file) noexcept</a>
 <a name="15"><span class="lineNum">      15 </span>            : {</a>
-<a name="16"><span class="lineNum">      16 </span><span class="lineCov">      17390 :     return file.getFullPathName().hashCode64();</span></a>
+<a name="16"><span class="lineNum">      16 </span><span class="lineCov">      17386 :     return file.getFullPathName().hashCode64();</span></a>
 <a name="17"><span class="lineNum">      17 </span>            : }</a>
 <a name="18"><span class="lineNum">      18 </span>            : </a>
 <a name="19"><span class="lineNum">      19 </span>            : //==============================================================================</a>
-<a name="20"><span class="lineNum">      20 </span><span class="lineCov">      17390 : AudioFile::AudioFile (Engine&amp; e, const juce::File&amp; f) noexcept</span></a>
-<a name="21"><span class="lineNum">      21 </span><span class="lineCov">      17391 :     : engine (&amp;e), file (f), hash (getAudioFileHash (f))</span></a>
+<a name="20"><span class="lineNum">      20 </span><span class="lineCov">      17386 : AudioFile::AudioFile (Engine&amp; e, const juce::File&amp; f) noexcept</span></a>
+<a name="21"><span class="lineNum">      21 </span><span class="lineCov">      17387 :     : engine (&amp;e), file (f), hash (getAudioFileHash (f))</span></a>
 <a name="22"><span class="lineNum">      22 </span>            : {</a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineCov">      17389 : }</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">      17385 : }</span></a>
 <a name="24"><span class="lineNum">      24 </span>            : </a>
-<a name="25"><span class="lineNum">      25 </span><span class="lineCov">      12387 : AudioFile::AudioFile (const AudioFile&amp; other) noexcept</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineCov">      12386 : AudioFile::AudioFile (const AudioFile&amp; other) noexcept</span></a>
 <a name="26"><span class="lineNum">      26 </span><span class="lineCov">      12304 :     : engine (other.engine), file (other.file), hash (other.hash)</span></a>
 <a name="27"><span class="lineNum">      27 </span>            : {</a>
-<a name="28"><span class="lineNum">      28 </span><span class="lineCov">      10538 : }</span></a>
+<a name="28"><span class="lineNum">      28 </span><span class="lineCov">      10536 : }</span></a>
 <a name="29"><span class="lineNum">      29 </span>            : </a>
 <a name="30"><span class="lineNum">      30 </span><span class="lineCov">         15 : AudioFile&amp; AudioFile::operator= (const AudioFile&amp; other) noexcept</span></a>
 <a name="31"><span class="lineNum">      31 </span>            : {</a>
-<a name="32"><span class="lineNum">      32 </span><span class="lineCov">         18 :     file = other.file;</span></a>
-<a name="33"><span class="lineNum">      33 </span><span class="lineCov">          3 :     hash = other.hash;</span></a>
+<a name="32"><span class="lineNum">      32 </span><span class="lineCov">         19 :     file = other.file;</span></a>
+<a name="33"><span class="lineNum">      33 </span><span class="lineCov">          4 :     hash = other.hash;</span></a>
 <a name="34"><span class="lineNum">      34 </span><span class="lineCov">         15 :     return *this;</span></a>
 <a name="35"><span class="lineNum">      35 </span>            : }</a>
 <a name="36"><span class="lineNum">      36 </span>            : </a>
-<a name="37"><span class="lineNum">      37 </span><span class="lineCov">      31318 : AudioFile::~AudioFile() {}</span></a>
+<a name="37"><span class="lineNum">      37 </span><span class="lineCov">      31313 : AudioFile::~AudioFile() {}</span></a>
 <a name="38"><span class="lineNum">      38 </span>            : </a>
-<a name="39"><span class="lineNum">      39 </span><span class="lineCov">      15700 : AudioFileInfo AudioFile::getInfo() const</span></a>
+<a name="39"><span class="lineNum">      39 </span><span class="lineCov">      15697 : AudioFileInfo AudioFile::getInfo() const</span></a>
 <a name="40"><span class="lineNum">      40 </span>            : {</a>
-<a name="41"><span class="lineNum">      41 </span><span class="lineCov">      31400 :     CRASH_TRACER</span></a>
+<a name="41"><span class="lineNum">      41 </span><span class="lineCov">      31394 :     CRASH_TRACER</span></a>
 <a name="42"><span class="lineNum">      42 </span>            : </a>
-<a name="43"><span class="lineNum">      43 </span><span class="lineCov">      31400 :     if (file == juce::File())</span></a>
+<a name="43"><span class="lineNum">      43 </span><span class="lineCov">      31394 :     if (file == juce::File())</span></a>
 <a name="44"><span class="lineNum">      44 </span><span class="lineNoCov">          0 :         return AudioFileInfo (*engine);</span></a>
 <a name="45"><span class="lineNum">      45 </span>            : </a>
-<a name="46"><span class="lineNum">      46 </span><span class="lineCov">      15700 :     return engine-&gt;getAudioFileManager().getInfo (*this);</span></a>
+<a name="46"><span class="lineNum">      46 </span><span class="lineCov">      15697 :     return engine-&gt;getAudioFileManager().getInfo (*this);</span></a>
 <a name="47"><span class="lineNum">      47 </span>            : }</a>
 <a name="48"><span class="lineNum">      48 </span>            : </a>
 <a name="49"><span class="lineNum">      49 </span><span class="lineNoCov">          0 : juce::String AudioFileInfo::getLongDescription() const</span></a>
@@ -407,12 +407,12 @@
 <a name="345"><span class="lineNum">     345 </span>            : {</a>
 <a name="346"><span class="lineNum">     346 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="347"><span class="lineNum">     347 </span>            : </a>
-<a name="348"><span class="lineNum">     348 </span><span class="lineCov">       3526 : AudioFileInfo::AudioFileInfo (const AudioFile&amp; file, juce::AudioFormatReader* reader, juce::AudioFormat* f)</span></a>
-<a name="349"><span class="lineNum">     349 </span><span class="lineCov">       3526 :     : engine (file.engine), hashCode (file.getHash()), format (f),</span></a>
-<a name="350"><span class="lineNum">     350 </span><span class="lineCov">       3526 :       fileModificationTime (file.getFile().getLastModificationTime()),</span></a>
-<a name="351"><span class="lineNum">     351 </span><span class="lineCov">       7052 :       loopInfo (*file.engine, reader, f)</span></a>
+<a name="348"><span class="lineNum">     348 </span><span class="lineCov">       3527 : AudioFileInfo::AudioFileInfo (const AudioFile&amp; file, juce::AudioFormatReader* reader, juce::AudioFormat* f)</span></a>
+<a name="349"><span class="lineNum">     349 </span><span class="lineCov">       3527 :     : engine (file.engine), hashCode (file.getHash()), format (f),</span></a>
+<a name="350"><span class="lineNum">     350 </span><span class="lineCov">       3527 :       fileModificationTime (file.getFile().getLastModificationTime()),</span></a>
+<a name="351"><span class="lineNum">     351 </span><span class="lineCov">       7054 :       loopInfo (*file.engine, reader, f)</span></a>
 <a name="352"><span class="lineNum">     352 </span>            : {</a>
-<a name="353"><span class="lineNum">     353 </span><span class="lineCov">       3526 :     if (reader != nullptr)</span></a>
+<a name="353"><span class="lineNum">     353 </span><span class="lineCov">       3527 :     if (reader != nullptr)</span></a>
 <a name="354"><span class="lineNum">     354 </span>            :     {</a>
 <a name="355"><span class="lineNum">     355 </span><span class="lineCov">       3523 :         wasParsedOk     = true;</span></a>
 <a name="356"><span class="lineNum">     356 </span><span class="lineCov">       3523 :         sampleRate      = reader-&gt;sampleRate;</span></a>
@@ -427,28 +427,28 @@
 <a name="365"><span class="lineNum">     365 </span>            :     }</a>
 <a name="366"><span class="lineNum">     366 </span>            :     else</a>
 <a name="367"><span class="lineNum">     367 </span>            :     {</a>
-<a name="368"><span class="lineNum">     368 </span><span class="lineCov">          3 :         wasParsedOk = false;</span></a>
-<a name="369"><span class="lineNum">     369 </span><span class="lineCov">          3 :         format = nullptr;</span></a>
-<a name="370"><span class="lineNum">     370 </span><span class="lineCov">          3 :         sampleRate = 0;</span></a>
-<a name="371"><span class="lineNum">     371 </span><span class="lineCov">          3 :         lengthInSamples = 0;</span></a>
-<a name="372"><span class="lineNum">     372 </span><span class="lineCov">          3 :         numChannels = 0;</span></a>
-<a name="373"><span class="lineNum">     373 </span><span class="lineCov">          3 :         bitsPerSample = 0;</span></a>
-<a name="374"><span class="lineNum">     374 </span><span class="lineCov">          3 :         isFloatingPoint = false;</span></a>
-<a name="375"><span class="lineNum">     375 </span><span class="lineCov">          3 :         needsCachedProxy = false;</span></a>
+<a name="368"><span class="lineNum">     368 </span><span class="lineCov">          4 :         wasParsedOk = false;</span></a>
+<a name="369"><span class="lineNum">     369 </span><span class="lineCov">          4 :         format = nullptr;</span></a>
+<a name="370"><span class="lineNum">     370 </span><span class="lineCov">          4 :         sampleRate = 0;</span></a>
+<a name="371"><span class="lineNum">     371 </span><span class="lineCov">          4 :         lengthInSamples = 0;</span></a>
+<a name="372"><span class="lineNum">     372 </span><span class="lineCov">          4 :         numChannels = 0;</span></a>
+<a name="373"><span class="lineNum">     373 </span><span class="lineCov">          4 :         bitsPerSample = 0;</span></a>
+<a name="374"><span class="lineNum">     374 </span><span class="lineCov">          4 :         isFloatingPoint = false;</span></a>
+<a name="375"><span class="lineNum">     375 </span><span class="lineCov">          4 :         needsCachedProxy = false;</span></a>
 <a name="376"><span class="lineNum">     376 </span>            :     }</a>
-<a name="377"><span class="lineNum">     377 </span><span class="lineCov">       3526 : }</span></a>
+<a name="377"><span class="lineNum">     377 </span><span class="lineCov">       3527 : }</span></a>
 <a name="378"><span class="lineNum">     378 </span>            : </a>
-<a name="379"><span class="lineNum">     379 </span><span class="lineCov">       1766 : AudioFileInfo AudioFileInfo::parse (const AudioFile&amp; file)</span></a>
+<a name="379"><span class="lineNum">     379 </span><span class="lineCov">       1767 : AudioFileInfo AudioFileInfo::parse (const AudioFile&amp; file)</span></a>
 <a name="380"><span class="lineNum">     380 </span>            : {</a>
-<a name="381"><span class="lineNum">     381 </span><span class="lineCov">       1766 :     if (! file.isNull())</span></a>
+<a name="381"><span class="lineNum">     381 </span><span class="lineCov">       1767 :     if (! file.isNull())</span></a>
 <a name="382"><span class="lineNum">     382 </span>            :     {</a>
-<a name="383"><span class="lineNum">     383 </span><span class="lineCov">       1766 :         juce::AudioFormat* format = nullptr;</span></a>
+<a name="383"><span class="lineNum">     383 </span><span class="lineCov">       1767 :         juce::AudioFormat* format = nullptr;</span></a>
 <a name="384"><span class="lineNum">     384 </span>            : </a>
-<a name="385"><span class="lineNum">     385 </span><span class="lineCov">       1766 :         if (auto reader = std::unique_ptr&lt;juce::AudioFormatReader&gt; (AudioFileUtils::createReaderFindingFormat (*file.engine, file.getFile(), format)))</span></a>
+<a name="385"><span class="lineNum">     385 </span><span class="lineCov">       1767 :         if (auto reader = std::unique_ptr&lt;juce::AudioFormatReader&gt; (AudioFileUtils::createReaderFindingFormat (*file.engine, file.getFile(), format)))</span></a>
 <a name="386"><span class="lineNum">     386 </span><span class="lineCov">       1763 :             return AudioFileInfo (file, reader.get(), format);</span></a>
 <a name="387"><span class="lineNum">     387 </span>            :     }</a>
 <a name="388"><span class="lineNum">     388 </span>            : </a>
-<a name="389"><span class="lineNum">     389 </span><span class="lineCov">          3 :     return AudioFileInfo (file, nullptr, nullptr);</span></a>
+<a name="389"><span class="lineNum">     389 </span><span class="lineCov">          4 :     return AudioFileInfo (file, nullptr, nullptr);</span></a>
 <a name="390"><span class="lineNum">     390 </span>            : }</a>
 <a name="391"><span class="lineNum">     391 </span>            : </a>
 <a name="392"><span class="lineNum">     392 </span>            : //==============================================================================</a>
@@ -684,13 +684,13 @@
 <a name="622"><span class="lineNum">     622 </span><span class="lineCov">          1 :     clearFiles();</span></a>
 <a name="623"><span class="lineNum">     623 </span><span class="lineCov">          2 : }</span></a>
 <a name="624"><span class="lineNum">     624 </span>            : </a>
-<a name="625"><span class="lineNum">     625 </span><span class="lineCov">      15700 : AudioFileManager::KnownFile&amp; AudioFileManager::findOrCreateKnown (const AudioFile&amp; f)</span></a>
+<a name="625"><span class="lineNum">     625 </span><span class="lineCov">      15697 : AudioFileManager::KnownFile&amp; AudioFileManager::findOrCreateKnown (const AudioFile&amp; f)</span></a>
 <a name="626"><span class="lineNum">     626 </span>            : {</a>
-<a name="627"><span class="lineNum">     627 </span><span class="lineCov">      15700 :     auto hash = f.getHash();</span></a>
+<a name="627"><span class="lineNum">     627 </span><span class="lineCov">      15697 :     auto hash = f.getHash();</span></a>
 <a name="628"><span class="lineNum">     628 </span>            :     auto kf = knownFiles.find (hash);</a>
 <a name="629"><span class="lineNum">     629 </span>            : </a>
-<a name="630"><span class="lineNum">     630 </span><span class="lineCov">      15700 :     if (kf != knownFiles.end())</span></a>
-<a name="631"><span class="lineNum">     631 </span><span class="lineCov">      13937 :         return *kf-&gt;second.get();</span></a>
+<a name="630"><span class="lineNum">     630 </span><span class="lineCov">      15697 :     if (kf != knownFiles.end())</span></a>
+<a name="631"><span class="lineNum">     631 </span><span class="lineCov">      13934 :         return *kf-&gt;second.get();</span></a>
 <a name="632"><span class="lineNum">     632 </span>            : </a>
 <a name="633"><span class="lineNum">     633 </span><span class="lineCov">       3526 :     knownFiles[hash] = std::make_unique&lt;KnownFile&gt; (f);</span></a>
 <a name="634"><span class="lineNum">     634 </span><span class="lineCov">       1763 :     return *knownFiles[hash].get();</span></a>
@@ -718,45 +718,45 @@
 <a name="656"><span class="lineNum">     656 </span><span class="lineNoCov">          0 :     return AudioFile (engine, engine.getProjectManager().findSourceFile (sourceID));</span></a>
 <a name="657"><span class="lineNum">     657 </span>            : }</a>
 <a name="658"><span class="lineNum">     658 </span>            : </a>
-<a name="659"><span class="lineNum">     659 </span><span class="lineCov">      15700 : AudioFileInfo AudioFileManager::getInfo (const AudioFile&amp; file)</span></a>
+<a name="659"><span class="lineNum">     659 </span><span class="lineCov">      15697 : AudioFileInfo AudioFileManager::getInfo (const AudioFile&amp; file)</span></a>
 <a name="660"><span class="lineNum">     660 </span>            : {</a>
-<a name="661"><span class="lineNum">     661 </span><span class="lineCov">      15700 :     const juce::ScopedLock sl (knownFilesLock);</span></a>
-<a name="662"><span class="lineNum">     662 </span><span class="lineCov">      31400 :     return findOrCreateKnown (file).info;</span></a>
+<a name="661"><span class="lineNum">     661 </span><span class="lineCov">      15697 :     const juce::ScopedLock sl (knownFilesLock);</span></a>
+<a name="662"><span class="lineNum">     662 </span><span class="lineCov">      31394 :     return findOrCreateKnown (file).info;</span></a>
 <a name="663"><span class="lineNum">     663 </span>            : }</a>
 <a name="664"><span class="lineNum">     664 </span>            : </a>
-<a name="665"><span class="lineNum">     665 </span><span class="lineCov">          3 : bool AudioFileManager::checkFileTime (KnownFile&amp; f)</span></a>
+<a name="665"><span class="lineNum">     665 </span><span class="lineCov">          4 : bool AudioFileManager::checkFileTime (KnownFile&amp; f)</span></a>
 <a name="666"><span class="lineNum">     666 </span>            : {</a>
-<a name="667"><span class="lineNum">     667 </span><span class="lineCov">          3 :     if (! f.info.wasParsedOk</span></a>
-<a name="668"><span class="lineNum">     668 </span><span class="lineCov">          3 :         || f.info.fileModificationTime != f.file.getFile().getLastModificationTime())</span></a>
+<a name="667"><span class="lineNum">     667 </span><span class="lineCov">          4 :     if (! f.info.wasParsedOk</span></a>
+<a name="668"><span class="lineNum">     668 </span><span class="lineCov">          4 :         || f.info.fileModificationTime != f.file.getFile().getLastModificationTime())</span></a>
 <a name="669"><span class="lineNum">     669 </span>            :     {</a>
-<a name="670"><span class="lineNum">     670 </span><span class="lineCov">          3 :         f.info = AudioFileInfo::parse (f.file);</span></a>
-<a name="671"><span class="lineNum">     671 </span><span class="lineCov">          3 :         return true;</span></a>
+<a name="670"><span class="lineNum">     670 </span><span class="lineCov">          4 :         f.info = AudioFileInfo::parse (f.file);</span></a>
+<a name="671"><span class="lineNum">     671 </span><span class="lineCov">          4 :         return true;</span></a>
 <a name="672"><span class="lineNum">     672 </span>            :     }</a>
 <a name="673"><span class="lineNum">     673 </span>            : </a>
 <a name="674"><span class="lineNum">     674 </span>            :     return false;</a>
 <a name="675"><span class="lineNum">     675 </span>            : }</a>
 <a name="676"><span class="lineNum">     676 </span>            : </a>
-<a name="677"><span class="lineNum">     677 </span><span class="lineCov">        165 : void AudioFileManager::checkFileForChanges (const AudioFile&amp; file)</span></a>
+<a name="677"><span class="lineNum">     677 </span><span class="lineCov">        166 : void AudioFileManager::checkFileForChanges (const AudioFile&amp; file)</span></a>
 <a name="678"><span class="lineNum">     678 </span>            : {</a>
-<a name="679"><span class="lineNum">     679 </span><span class="lineCov">        330 :     CRASH_TRACER</span></a>
+<a name="679"><span class="lineNum">     679 </span><span class="lineCov">        332 :     CRASH_TRACER</span></a>
 <a name="680"><span class="lineNum">     680 </span>            : </a>
 <a name="681"><span class="lineNum">     681 </span>            :     bool changed = false;</a>
 <a name="682"><span class="lineNum">     682 </span>            : </a>
 <a name="683"><span class="lineNum">     683 </span>            :     {</a>
-<a name="684"><span class="lineNum">     684 </span><span class="lineCov">        165 :         const juce::ScopedLock sl (knownFilesLock);</span></a>
+<a name="684"><span class="lineNum">     684 </span><span class="lineCov">        166 :         const juce::ScopedLock sl (knownFilesLock);</span></a>
 <a name="685"><span class="lineNum">     685 </span>            : </a>
-<a name="686"><span class="lineNum">     686 </span><span class="lineCov">        165 :         auto f = knownFiles.find (file.getHash());</span></a>
+<a name="686"><span class="lineNum">     686 </span><span class="lineCov">        166 :         auto f = knownFiles.find (file.getHash());</span></a>
 <a name="687"><span class="lineNum">     687 </span>            : </a>
-<a name="688"><span class="lineNum">     688 </span><span class="lineCov">        165 :         if (f != knownFiles.end())</span></a>
-<a name="689"><span class="lineNum">     689 </span><span class="lineCov">          3 :             changed = checkFileTime (*f-&gt;second);</span></a>
+<a name="688"><span class="lineNum">     688 </span><span class="lineCov">        166 :         if (f != knownFiles.end())</span></a>
+<a name="689"><span class="lineNum">     689 </span><span class="lineCov">          4 :             changed = checkFileTime (*f-&gt;second);</span></a>
 <a name="690"><span class="lineNum">     690 </span>            :     }</a>
 <a name="691"><span class="lineNum">     691 </span>            : </a>
-<a name="692"><span class="lineNum">     692 </span><span class="lineCov">        165 :     if (changed)</span></a>
+<a name="692"><span class="lineNum">     692 </span><span class="lineCov">        166 :     if (changed)</span></a>
 <a name="693"><span class="lineNum">     693 </span>            :     {</a>
-<a name="694"><span class="lineNum">     694 </span><span class="lineCov">          3 :         releaseFile (file);</span></a>
-<a name="695"><span class="lineNum">     695 </span><span class="lineCov">          3 :         callListenersOnMessageThread (file);</span></a>
+<a name="694"><span class="lineNum">     694 </span><span class="lineCov">          4 :         releaseFile (file);</span></a>
+<a name="695"><span class="lineNum">     695 </span><span class="lineCov">          4 :         callListenersOnMessageThread (file);</span></a>
 <a name="696"><span class="lineNum">     696 </span>            :     }</a>
-<a name="697"><span class="lineNum">     697 </span><span class="lineCov">        165 : }</span></a>
+<a name="697"><span class="lineNum">     697 </span><span class="lineCov">        166 : }</span></a>
 <a name="698"><span class="lineNum">     698 </span>            : </a>
 <a name="699"><span class="lineNum">     699 </span><span class="lineNoCov">          0 : void AudioFileManager::checkFilesForChanges()</span></a>
 <a name="700"><span class="lineNum">     700 </span>            : {</a>
@@ -789,42 +789,42 @@
 <a name="727"><span class="lineNum">     727 </span><span class="lineNoCov">          0 :         t-&gt;releaseFile();</span></a>
 <a name="728"><span class="lineNum">     728 </span><span class="lineCov">        164 : }</span></a>
 <a name="729"><span class="lineNum">     729 </span>            : </a>
-<a name="730"><span class="lineNum">     730 </span><span class="lineCov">        251 : void AudioFileManager::releaseFile (const AudioFile&amp; file)</span></a>
+<a name="730"><span class="lineNum">     730 </span><span class="lineCov">        252 : void AudioFileManager::releaseFile (const AudioFile&amp; file)</span></a>
 <a name="731"><span class="lineNum">     731 </span>            : {</a>
-<a name="732"><span class="lineNum">     732 </span><span class="lineCov">        251 :     cache.releaseFile (file);</span></a>
+<a name="732"><span class="lineNum">     732 </span><span class="lineCov">        252 :     cache.releaseFile (file);</span></a>
 <a name="733"><span class="lineNum">     733 </span>            : </a>
-<a name="734"><span class="lineNum">     734 </span><span class="lineCov">        251 :     const juce::ScopedLock sl (activeThumbnailLock);</span></a>
+<a name="734"><span class="lineNum">     734 </span><span class="lineCov">        252 :     const juce::ScopedLock sl (activeThumbnailLock);</span></a>
 <a name="735"><span class="lineNum">     735 </span>            : </a>
-<a name="736"><span class="lineNum">     736 </span><span class="lineCov">        251 :     for (auto t : activeThumbnails)</span></a>
+<a name="736"><span class="lineNum">     736 </span><span class="lineCov">        252 :     for (auto t : activeThumbnails)</span></a>
 <a name="737"><span class="lineNum">     737 </span><span class="lineNoCov">          0 :         if (t-&gt;file == file)</span></a>
 <a name="738"><span class="lineNum">     738 </span><span class="lineNoCov">          0 :             t-&gt;releaseFile();</span></a>
-<a name="739"><span class="lineNum">     739 </span><span class="lineCov">        251 : }</span></a>
+<a name="739"><span class="lineNum">     739 </span><span class="lineCov">        252 : }</span></a>
 <a name="740"><span class="lineNum">     740 </span>            : </a>
-<a name="741"><span class="lineNum">     741 </span><span class="lineCov">          3 : void AudioFileManager::callListeners (const AudioFile&amp; file)</span></a>
+<a name="741"><span class="lineNum">     741 </span><span class="lineCov">          4 : void AudioFileManager::callListeners (const AudioFile&amp; file)</span></a>
 <a name="742"><span class="lineNum">     742 </span>            : {</a>
-<a name="743"><span class="lineNum">     743 </span><span class="lineCov">          6 :     CRASH_TRACER</span></a>
+<a name="743"><span class="lineNum">     743 </span><span class="lineCov">          8 :     CRASH_TRACER</span></a>
 <a name="744"><span class="lineNum">     744 </span>            :     TRACKTION_ASSERT_MESSAGE_THREAD</a>
 <a name="745"><span class="lineNum">     745 </span>            : </a>
-<a name="746"><span class="lineNum">     746 </span><span class="lineCov">          3 :     thumbnailCache-&gt;removeThumb (file.getHash());</span></a>
+<a name="746"><span class="lineNum">     746 </span><span class="lineCov">          4 :     thumbnailCache-&gt;removeThumb (file.getHash());</span></a>
 <a name="747"><span class="lineNum">     747 </span>            : </a>
-<a name="748"><span class="lineNum">     748 </span><span class="lineCov">          3 :     const juce::ScopedLock sl (activeThumbnailLock);</span></a>
+<a name="748"><span class="lineNum">     748 </span><span class="lineCov">          4 :     const juce::ScopedLock sl (activeThumbnailLock);</span></a>
 <a name="749"><span class="lineNum">     749 </span>            : </a>
-<a name="750"><span class="lineNum">     750 </span><span class="lineCov">          3 :     for (auto t : activeThumbnails)</span></a>
+<a name="750"><span class="lineNum">     750 </span><span class="lineCov">          4 :     for (auto t : activeThumbnails)</span></a>
 <a name="751"><span class="lineNum">     751 </span><span class="lineNoCov">          0 :         if (t-&gt;file == file)</span></a>
 <a name="752"><span class="lineNum">     752 </span><span class="lineNoCov">          0 :             t-&gt;audioFileChanged();</span></a>
-<a name="753"><span class="lineNum">     753 </span><span class="lineCov">          3 : }</span></a>
+<a name="753"><span class="lineNum">     753 </span><span class="lineCov">          4 : }</span></a>
 <a name="754"><span class="lineNum">     754 </span>            : </a>
-<a name="755"><span class="lineNum">     755 </span><span class="lineCov">          3 : void AudioFileManager::callListenersOnMessageThread (const AudioFile&amp; file)</span></a>
+<a name="755"><span class="lineNum">     755 </span><span class="lineCov">          4 : void AudioFileManager::callListenersOnMessageThread (const AudioFile&amp; file)</span></a>
 <a name="756"><span class="lineNum">     756 </span>            : {</a>
-<a name="757"><span class="lineNum">     757 </span><span class="lineCov">          3 :     if (juce::MessageManager::existsAndIsCurrentThread())</span></a>
-<a name="758"><span class="lineNum">     758 </span><span class="lineCov">          3 :         callListeners (file);</span></a>
+<a name="757"><span class="lineNum">     757 </span><span class="lineCov">          4 :     if (juce::MessageManager::existsAndIsCurrentThread())</span></a>
+<a name="758"><span class="lineNum">     758 </span><span class="lineCov">          4 :         callListeners (file);</span></a>
 <a name="759"><span class="lineNum">     759 </span>            :     else</a>
 <a name="760"><span class="lineNum">     760 </span><span class="lineNoCov">          0 :         juce::MessageManager::callAsync ([file, eng = Engine::WeakRef (&amp;engine)]</span></a>
 <a name="761"><span class="lineNum">     761 </span>            :                                          {</a>
 <a name="762"><span class="lineNum">     762 </span><span class="lineNoCov">          0 :                                              if (eng != nullptr)</span></a>
 <a name="763"><span class="lineNum">     763 </span><span class="lineNoCov">          0 :                                                  eng-&gt;getAudioFileManager().callListeners (file);</span></a>
 <a name="764"><span class="lineNum">     764 </span><span class="lineNoCov">          0 :                                          });</span></a>
-<a name="765"><span class="lineNum">     765 </span><span class="lineCov">          3 : }</span></a>
+<a name="765"><span class="lineNum">     765 </span><span class="lineCov">          4 : }</span></a>
 <a name="766"><span class="lineNum">     766 </span>            : </a>
 <a name="767"><span class="lineNum">     767 </span><span class="lineNoCov">          0 : void AudioFileManager::forceFileUpdate (const AudioFile&amp; file)</span></a>
 <a name="768"><span class="lineNum">     768 </span>            : {</a>
@@ -862,23 +862,23 @@
 <a name="800"><span class="lineNum">     800 </span><span class="lineCov">          4 :     triggerAsyncUpdate();</span></a>
 <a name="801"><span class="lineNum">     801 </span><span class="lineCov">          4 : }</span></a>
 <a name="802"><span class="lineNum">     802 </span>            : </a>
-<a name="803"><span class="lineNum">     803 </span><span class="lineCov">          3 : void AudioFileManager::handleAsyncUpdate()</span></a>
+<a name="803"><span class="lineNum">     803 </span><span class="lineCov">          4 : void AudioFileManager::handleAsyncUpdate()</span></a>
 <a name="804"><span class="lineNum">     804 </span>            : {</a>
-<a name="805"><span class="lineNum">     805 </span><span class="lineCov">          6 :     CRASH_TRACER</span></a>
-<a name="806"><span class="lineNum">     806 </span><span class="lineCov">          3 :     AudioFile fileToCheck (engine);</span></a>
+<a name="805"><span class="lineNum">     805 </span><span class="lineCov">          8 :     CRASH_TRACER</span></a>
+<a name="806"><span class="lineNum">     806 </span><span class="lineCov">          4 :     AudioFile fileToCheck (engine);</span></a>
 <a name="807"><span class="lineNum">     807 </span>            : </a>
 <a name="808"><span class="lineNum">     808 </span>            :     {</a>
-<a name="809"><span class="lineNum">     809 </span><span class="lineCov">          3 :         const juce::ScopedLock sl (knownFilesLock);</span></a>
-<a name="810"><span class="lineNum">     810 </span><span class="lineCov">          3 :         fileToCheck = filesToCheck.getUnchecked (filesToCheck.size() - 1);</span></a>
-<a name="811"><span class="lineNum">     811 </span><span class="lineCov">          3 :         filesToCheck.removeLast();</span></a>
+<a name="809"><span class="lineNum">     809 </span><span class="lineCov">          4 :         const juce::ScopedLock sl (knownFilesLock);</span></a>
+<a name="810"><span class="lineNum">     810 </span><span class="lineCov">          4 :         fileToCheck = filesToCheck.getUnchecked (filesToCheck.size() - 1);</span></a>
+<a name="811"><span class="lineNum">     811 </span><span class="lineCov">          4 :         filesToCheck.removeLast();</span></a>
 <a name="812"><span class="lineNum">     812 </span>            : </a>
-<a name="813"><span class="lineNum">     813 </span><span class="lineCov">          3 :         if (filesToCheck.size() &gt; 0)</span></a>
-<a name="814"><span class="lineNum">     814 </span><span class="lineCov">          1 :             triggerAsyncUpdate();</span></a>
+<a name="813"><span class="lineNum">     813 </span><span class="lineCov">          4 :         if (filesToCheck.size() &gt; 0)</span></a>
+<a name="814"><span class="lineNum">     814 </span><span class="lineNoCov">          0 :             triggerAsyncUpdate();</span></a>
 <a name="815"><span class="lineNum">     815 </span>            :     }</a>
 <a name="816"><span class="lineNum">     816 </span>            : </a>
-<a name="817"><span class="lineNum">     817 </span><span class="lineCov">          3 :     if (! fileToCheck.isNull())</span></a>
-<a name="818"><span class="lineNum">     818 </span><span class="lineCov">          3 :         checkFileForChanges (fileToCheck);</span></a>
-<a name="819"><span class="lineNum">     819 </span><span class="lineCov">          3 : }</span></a>
+<a name="817"><span class="lineNum">     817 </span><span class="lineCov">          4 :     if (! fileToCheck.isNull())</span></a>
+<a name="818"><span class="lineNum">     818 </span><span class="lineCov">          4 :         checkFileForChanges (fileToCheck);</span></a>
+<a name="819"><span class="lineNum">     819 </span><span class="lineCov">          4 : }</span></a>
 <a name="820"><span class="lineNum">     820 </span>            : </a>
 <a name="821"><span class="lineNum">     821 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
