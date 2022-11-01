@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-01 10:56:49</td>
+            <td class="headerValue">2022-11-01 17:43:08</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
@@ -138,11 +138,11 @@
 <a name="76"><span class="lineNum">      76 </span>            :         This must be matched with a corresponding call to releaseRealTime(). To Ensure this,</a>
 <a name="77"><span class="lineNum">      77 </span>            :         use the ScopedRealTimeAccess helper class.</a>
 <a name="78"><span class="lineNum">      78 </span>            :     */</a>
-<a name="79"><span class="lineNum">      79 </span><span class="lineCov">    4582730 :     ObjectType* retainRealTime()</span></a>
+<a name="79"><span class="lineNum">      79 </span><span class="lineCov">    4574000 :     ObjectType* retainRealTime()</span></a>
 <a name="80"><span class="lineNum">      80 </span>            :     {</a>
-<a name="81"><span class="lineNum">      81 </span><span class="lineCov">    4582730 :         if (clearObjectsMutex.try_lock())</span></a>
+<a name="81"><span class="lineNum">      81 </span><span class="lineCov">    4574000 :         if (clearObjectsMutex.try_lock())</span></a>
 <a name="82"><span class="lineNum">      82 </span>            :         {</a>
-<a name="83"><span class="lineNum">      83 </span><span class="lineCov">    4582730 :             needToUnlockClearObjectsMutex = true;</span></a>
+<a name="83"><span class="lineNum">      83 </span><span class="lineCov">    4574000 :             needToUnlockClearObjectsMutex = true;</span></a>
 <a name="84"><span class="lineNum">      84 </span>            :         }</a>
 <a name="85"><span class="lineNum">      85 </span>            :         else</a>
 <a name="86"><span class="lineNum">      86 </span>            :         {</a>
@@ -151,12 +151,12 @@
 <a name="89"><span class="lineNum">      89 </span>            :         }</a>
 <a name="90"><span class="lineNum">      90 </span>            : </a>
 <a name="91"><span class="lineNum">      91 </span>            :         // If we get the lock, we can update</a>
-<a name="92"><span class="lineNum">      92 </span><span class="lineCov">    4582730 :         if (pushingObjectMutex.try_lock())</span></a>
+<a name="92"><span class="lineNum">      92 </span><span class="lineCov">    4574000 :         if (pushingObjectMutex.try_lock())</span></a>
 <a name="93"><span class="lineNum">      93 </span>            :         {</a>
-<a name="94"><span class="lineNum">      94 </span><span class="lineCov">    4582730 :             needToUnlockPushingObjectMutex = true;</span></a>
+<a name="94"><span class="lineNum">      94 </span><span class="lineCov">    4574000 :             needToUnlockPushingObjectMutex = true;</span></a>
 <a name="95"><span class="lineNum">      95 </span>            : </a>
 <a name="96"><span class="lineNum">      96 </span>            :             // Move any penidng object in to the main objectStorage</a>
-<a name="97"><span class="lineNum">      97 </span><span class="lineCov">    4582730 :             if (auto newObject = pendingObject.exchange (nullptr))</span></a>
+<a name="97"><span class="lineNum">      97 </span><span class="lineCov">    4574000 :             if (auto newObject = pendingObject.exchange (nullptr))</span></a>
 <a name="98"><span class="lineNum">      98 </span><span class="lineCov">        885 :                 std::swap (objectStorage, *newObject);</span></a>
 <a name="99"><span class="lineNum">      99 </span>            :         }</a>
 <a name="100"><span class="lineNum">     100 </span>            :         else</a>
@@ -165,18 +165,18 @@
 <a name="103"><span class="lineNum">     103 </span>            :         }</a>
 <a name="104"><span class="lineNum">     104 </span>            : </a>
 <a name="105"><span class="lineNum">     105 </span>            :         // Then return the main stored object</a>
-<a name="106"><span class="lineNum">     106 </span><span class="lineCov">    4582730 :         return &amp;objectStorage;</span></a>
+<a name="106"><span class="lineNum">     106 </span><span class="lineCov">    4574000 :         return &amp;objectStorage;</span></a>
 <a name="107"><span class="lineNum">     107 </span>            :     }</a>
 <a name="108"><span class="lineNum">     108 </span>            : </a>
 <a name="109"><span class="lineNum">     109 </span>            :     /** Releases the use of the object from a previous call to retainRealTime. */</a>
-<a name="110"><span class="lineNum">     110 </span><span class="lineCov">    4582730 :     void releaseRealTime()</span></a>
+<a name="110"><span class="lineNum">     110 </span><span class="lineCov">    4574000 :     void releaseRealTime()</span></a>
 <a name="111"><span class="lineNum">     111 </span>            :     {</a>
-<a name="112"><span class="lineNum">     112 </span><span class="lineCov">    4582730 :         if (needToUnlockClearObjectsMutex)</span></a>
+<a name="112"><span class="lineNum">     112 </span><span class="lineCov">    4574000 :         if (needToUnlockClearObjectsMutex)</span></a>
 <a name="113"><span class="lineNum">     113 </span>            :             clearObjectsMutex.unlock();</a>
 <a name="114"><span class="lineNum">     114 </span>            : </a>
-<a name="115"><span class="lineNum">     115 </span><span class="lineCov">    4582730 :         if (needToUnlockPushingObjectMutex)</span></a>
+<a name="115"><span class="lineNum">     115 </span><span class="lineCov">    4574000 :         if (needToUnlockPushingObjectMutex)</span></a>
 <a name="116"><span class="lineNum">     116 </span>            :             pushingObjectMutex.unlock();</a>
-<a name="117"><span class="lineNum">     117 </span><span class="lineCov">    4582730 :     }</span></a>
+<a name="117"><span class="lineNum">     117 </span><span class="lineCov">    4574000 :     }</span></a>
 <a name="118"><span class="lineNum">     118 </span>            : </a>
 <a name="119"><span class="lineNum">     119 </span>            :     //==============================================================================</a>
 <a name="120"><span class="lineNum">     120 </span>            :     /**</a>
@@ -187,13 +187,13 @@
 <a name="125"><span class="lineNum">     125 </span>            :     public:</a>
 <a name="126"><span class="lineNum">     126 </span>            :         /** Retains real time access to an object. */</a>
 <a name="127"><span class="lineNum">     127 </span>            :         ScopedRealTimeAccess (LockFreeObject&amp; lfo)</a>
-<a name="128"><span class="lineNum">     128 </span><span class="lineCov">    4582730 :             : lockFreeObject (lfo)</span></a>
+<a name="128"><span class="lineNum">     128 </span><span class="lineCov">    4574000 :             : lockFreeObject (lfo)</span></a>
 <a name="129"><span class="lineNum">     129 </span>            :         {}</a>
 <a name="130"><span class="lineNum">     130 </span>            : </a>
 <a name="131"><span class="lineNum">     131 </span>            :         /** Releases real time access to the object. */</a>
 <a name="132"><span class="lineNum">     132 </span>            :         ~ScopedRealTimeAccess()</a>
 <a name="133"><span class="lineNum">     133 </span>            :         {</a>
-<a name="134"><span class="lineNum">     134 </span><span class="lineCov">    4582730 :             lockFreeObject.releaseRealTime();</span></a>
+<a name="134"><span class="lineNum">     134 </span><span class="lineCov">    4574000 :             lockFreeObject.releaseRealTime();</span></a>
 <a name="135"><span class="lineNum">     135 </span>            :         }</a>
 <a name="136"><span class="lineNum">     136 </span>            : </a>
 <a name="137"><span class="lineNum">     137 </span>            :         /** Returns a pointer to the object if access was obtained. */</a>
