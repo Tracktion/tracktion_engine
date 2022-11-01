@@ -165,16 +165,16 @@ struct std::hash<juce::MidiMessageSequence>
 {
     size_t operator() (const juce::MidiMessageSequence& sequence) const noexcept
     {
-        size_t hash = 0;
+        size_t seed = 0;
 
         for (auto meh : sequence)
         {
             auto& me = meh->message;
-            tracktion::hash_combine (hash, me.getTimeStamp());
-            tracktion::hash_range (hash, me.getRawData(), me.getRawData() + me.getRawDataSize());
+            tracktion::hash_combine (seed, me.getTimeStamp());
+            tracktion::hash_range (seed, me.getRawData(), me.getRawData() + me.getRawDataSize());
         }
 
-        return hash;
+        return seed;
     }
 };
 
