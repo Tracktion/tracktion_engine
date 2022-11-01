@@ -416,6 +416,18 @@ public:
             expectEquals (1_bp / 2_bd,  0.5);
             expectEquals (1_bd / 2_bd,  0.5);
         }
+
+        beginTest ("Time hashing");
+        {
+            const auto hash1 = std::hash<BeatPosition>() (4_bp);
+            const auto hash2 = std::hash<BeatPosition>() (8_bp);
+            const auto hash3 = std::hash<BeatPosition>() (12_bp);
+            const auto hash4 = std::hash<BeatPosition>() (16_bp);
+
+            expectNotEquals (hash1, hash2);
+            expectNotEquals (hash2, hash3);
+            expectNotEquals (hash3, hash4);
+        }
     }
 };
 

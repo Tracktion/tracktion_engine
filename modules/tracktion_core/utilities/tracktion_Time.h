@@ -837,3 +837,42 @@ inline juce::String& operator<< (juce::String& s, BeatDuration d)  { return s <<
 inline juce::String& operator<< (juce::String& s, BeatPosition p)  { return s << juce::String (p.inBeats()); }
 
 }} // namespace tracktion
+
+
+//==============================================================================
+//==============================================================================
+template<>
+struct std::hash<tracktion::TimePosition>
+{
+    std::size_t operator()(const tracktion::TimePosition t) const noexcept
+    {
+        return std::hash<double>{} (t.inSeconds());
+    }
+};
+
+template<>
+struct std::hash<tracktion::TimeDuration>
+{
+    std::size_t operator()(const tracktion::TimeDuration t) const noexcept
+    {
+        return std::hash<double>{} (t.inSeconds());
+    }
+};
+
+template<>
+struct std::hash<tracktion::BeatPosition>
+{
+    std::size_t operator()(const tracktion::BeatPosition t) const noexcept
+    {
+        return std::hash<double>{} (t.inBeats());
+    }
+};
+
+template<>
+struct std::hash<tracktion::BeatDuration>
+{
+    std::size_t operator()(const tracktion::BeatDuration t) const noexcept
+    {
+        return std::hash<double>{} (t.inBeats());
+    }
+};

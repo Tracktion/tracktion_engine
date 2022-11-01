@@ -364,7 +364,8 @@ struct std::hash<tracktion::TimeRange>
     {
         std::size_t h1 = std::hash<double>{} (tr.getStart().inSeconds());
         std::size_t h2 = std::hash<double>{} (tr.getEnd().inSeconds());
-        return h1 ^ (h2 << 1); // or use boost::hash_combine
+
+        return tracktion::hash (h1, h2);
     }
 };
 
@@ -375,6 +376,7 @@ struct std::hash<tracktion::BeatRange>
     {
         std::size_t h1 = std::hash<double>{} (tr.getStart().inBeats());
         std::size_t h2 = std::hash<double>{} (tr.getEnd().inBeats());
-        return h1 ^ (h2 << 1); // or use boost::hash_combine
+
+        return tracktion::hash (h1, h2);
     }
 };
