@@ -1734,7 +1734,7 @@ void WaveInputRecordingThread::prepareToStart()
     flushAndStop();
     sleep (2);
     jassert (! isThreadRunning());
-    startThread (5);
+    startThread (juce::Thread::Priority::normal);
 }
 
 void WaveInputRecordingThread::flushAndStop()

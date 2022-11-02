@@ -601,10 +601,10 @@ void AudioFileCache::setCacheSizeSamples (SampleCount samples)
         }
 
         mapperThread.reset (new MapperThread (*this));
-        mapperThread->startThread (5);
+        mapperThread->startThread (juce::Thread::Priority::normal);
 
         refresherThread.reset (new RefresherThread (*this));
-        refresherThread->startThread (6);
+        refresherThread->startThread (juce::Thread::Priority::high);
     }
 }
 
@@ -734,7 +734,7 @@ AudioFileCache::Reader::Ptr AudioFileCache::createReader (const AudioFile& file)
 
     if (auto reader = AudioFileUtils::createReaderFor (engine, file.getFile()))
     {
-        backgroundReaderThread.startThread (4);
+        backgroundReaderThread.startThread (juce::Thread::Priority::low);
 
         return new Reader (*this, nullptr, new juce::BufferingAudioReader (reader, backgroundReaderThread,
                                                                            48000 * 5));
