@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-02 15:45:56</td>
+            <td class="headerValue">2022-11-02 16:07:54</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">18</td>
@@ -1796,7 +1796,7 @@
 <a name="1734"><span class="lineNum">    1734 </span><span class="lineNoCov">          0 :     flushAndStop();</span></a>
 <a name="1735"><span class="lineNum">    1735 </span><span class="lineNoCov">          0 :     sleep (2);</span></a>
 <a name="1736"><span class="lineNum">    1736 </span>            :     jassert (! isThreadRunning());</a>
-<a name="1737"><span class="lineNum">    1737 </span><span class="lineNoCov">          0 :     startThread (5);</span></a>
+<a name="1737"><span class="lineNum">    1737 </span><span class="lineNoCov">          0 :     startThread (juce::Thread::Priority::normal);</span></a>
 <a name="1738"><span class="lineNum">    1738 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1739"><span class="lineNum">    1739 </span>            : </a>
 <a name="1740"><span class="lineNum">    1740 </span><span class="lineCov">          1 : void WaveInputRecordingThread::flushAndStop()</span></a>
