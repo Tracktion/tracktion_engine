@@ -548,10 +548,13 @@ void Track::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier
                                                      if (trackRef != nullptr)
                                                          SelectionManager::refreshAllPropertyPanelsShowing (*trackRef);
                                                  });
+
+            triggerAsyncUpdate();
         }
         else if (i == IDs::colour)
         {
             changed();
+            triggerAsyncUpdate();
         }
         else if (i == IDs::imageIdOrData)
         {
@@ -597,6 +600,11 @@ void Track::valueTreeParentChanged (juce::ValueTree& v)
 {
     if (v == state)
         updateCachedParent();
+}
+
+void Track::handleAsyncUpdate()
+{
+    pluginList.updateTrackProperties();
 }
 
 }} // namespace tracktion { inline namespace engine

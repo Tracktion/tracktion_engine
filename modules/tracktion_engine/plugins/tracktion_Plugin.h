@@ -165,7 +165,7 @@ public:
 
         The sample rate and the average block size - although the blocks
         won't always be the same, and may be bigger.
-        
+
         Don't call this directly or the initialise count will become out of sync.
         @see baseClassInitialise
     */
@@ -185,6 +185,9 @@ public:
 
     /** Should reset synth voices, tails, clear delay buffers, etc. */
     virtual void reset();
+
+    /** Track name or colour has changed. */
+    virtual void trackPropertiesChanged()                    {}
 
     //==============================================================================
     /** Process the next block of data.

@@ -19,7 +19,8 @@ class Track   : public EditItem,
                 public Selectable,
                 public juce::ReferenceCountedObject,
                 public MacroParameterElement,
-                protected juce::ValueTree::Listener
+                protected juce::ValueTree::Listener,
+                protected juce::AsyncUpdater
 {
 public:
     /** Creates a track with a given state. */
@@ -404,6 +405,8 @@ protected:
     void valueTreeChildOrderChanged (juce::ValueTree&, int, int) override {}
     /** @internal */
     void valueTreeParentChanged (juce::ValueTree&) override;
+    /** @internal */
+    void handleAsyncUpdate() override;
 
     /** Returns whether this Track should be audible.
         Subclasses can override for custom behaviour.

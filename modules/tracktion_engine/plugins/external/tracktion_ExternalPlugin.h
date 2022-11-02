@@ -77,6 +77,7 @@ public:
     bool noTail() override;
     double getTailLength() const override;
     bool needsConstantBufferSize() override { return false; }
+    void trackPropertiesChanged() override;
 
     juce::AudioProcessor* getWrappedAudioProcessor() const override     { return pluginInstance.get(); }
     void deleteFromParent() override;

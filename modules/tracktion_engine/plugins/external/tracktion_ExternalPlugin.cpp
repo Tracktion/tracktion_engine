@@ -859,6 +859,23 @@ void ExternalPlugin::doFullInitialisation()
     }
 }
 
+void ExternalPlugin::trackPropertiesChanged()
+{
+    juce::MessageManager::callAsync ([this, pluginRef = getWeakRef()]
+    {
+        if (pluginRef == nullptr)
+            return;
+
+        if (auto t = getOwnerTrack(); t != nullptr && pluginInstance != nullptr)
+        {
+            auto n = t->getName();
+            auto c = t->getColour();
+
+            pluginInstance->updateTrackProperties ({n, c});
+        }
+    });
+}
+
 //==============================================================================
 ExternalPlugin::~ExternalPlugin()
 {
