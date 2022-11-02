@@ -3153,8 +3153,8 @@
       <type>std::unique_ptr&lt; Edit &gt;</type>
       <name>loadEditFromFile</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ac4fac090e45b967ad5ad6fc853821250</anchor>
-      <arglist>(Engine &amp;, const juce::File &amp;)</arglist>
+      <anchor>a95b6b590757519cdeff59b32bb32a71a</anchor>
+      <arglist>(Engine &amp;, const juce::File &amp;, Edit::EditRole role=Edit::forEditing)</arglist>
     </member>
     <member kind="function">
       <type>std::unique_ptr&lt; Edit &gt;</type>
@@ -56078,6 +56078,13 @@
       <anchor>a003998b6c298960ef26ebaf9e4dd5a4f</anchor>
       <arglist>() noexcept</arglist>
     </member>
+    <member kind="variable">
+      <type>Engine &amp;</type>
+      <name>engine</name>
+      <anchorfile>classtracktion_1_1engine_1_1ProjectItem.html</anchorfile>
+      <anchor>ad0ef7e248548d5b51ddba2872ec915a9</anchor>
+      <arglist></arglist>
+    </member>
     <member kind="friend" protection="private">
       <type>friend class</type>
       <name>ProjectManager</name>
@@ -81626,8 +81633,8 @@
       <type>std::unique_ptr&lt; Edit &gt;</type>
       <name>loadEditFromFile</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ac4fac090e45b967ad5ad6fc853821250</anchor>
-      <arglist>(Engine &amp;, const juce::File &amp;)</arglist>
+      <anchor>a95b6b590757519cdeff59b32bb32a71a</anchor>
+      <arglist>(Engine &amp;, const juce::File &amp;, Edit::EditRole role=Edit::forEditing)</arglist>
     </member>
     <member kind="function">
       <type>std::unique_ptr&lt; Edit &gt;</type>

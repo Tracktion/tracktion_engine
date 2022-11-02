@@ -1247,9 +1247,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a92172060d5623ea1950e31e5879815da"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1Modifier.html#a3c429dca0b5b58a52e65de9cd96afa4c">Modifier::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a92172060d5623ea1950e31e5879815da">findModifierForID</a> (<a class="el" href="classtracktion_1_1engine_1_1ModifierList.html">ModifierList</a> &amp;, <a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a>)</td></tr>
 <tr class="memdesc:a92172060d5623ea1950e31e5879815da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a <a class="el" href="structtracktion_1_1engine_1_1Modifier.html" title="Bass class for parameter Modifiers.">Modifier</a> if it can be found in the list.  <a href="namespacetracktion_1_1engine.html#a92172060d5623ea1950e31e5879815da">More...</a><br /></td></tr>
 <tr class="separator:a92172060d5623ea1950e31e5879815da"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac4fac090e45b967ad5ad6fc853821250"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#ac4fac090e45b967ad5ad6fc853821250">loadEditFromFile</a> (<a class="el" href="classtracktion_1_1engine_1_1Engine.html">Engine</a> &amp;, const juce::File &amp;)</td></tr>
-<tr class="memdesc:ac4fac090e45b967ad5ad6fc853821250"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads an edit from file, ready for playback / editing.  <a href="namespacetracktion_1_1engine.html#ac4fac090e45b967ad5ad6fc853821250">More...</a><br /></td></tr>
-<tr class="separator:ac4fac090e45b967ad5ad6fc853821250"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95b6b590757519cdeff59b32bb32a71a"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a95b6b590757519cdeff59b32bb32a71a">loadEditFromFile</a> (<a class="el" href="classtracktion_1_1engine_1_1Engine.html">Engine</a> &amp;, const juce::File &amp;, <a class="el" href="classtracktion_1_1engine_1_1Edit.html#a474ef5984345c5b32ffa52ecff59321a">Edit::EditRole</a> role=<a class="el" href="classtracktion_1_1engine_1_1Edit.html#a474ef5984345c5b32ffa52ecff59321aaaaff7f83b31d8adaed273b6a8dd7f92d">Edit::forEditing</a>)</td></tr>
+<tr class="memdesc:a95b6b590757519cdeff59b32bb32a71a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads an edit from file, ready for playback / editing.  <a href="namespacetracktion_1_1engine.html#a95b6b590757519cdeff59b32bb32a71a">More...</a><br /></td></tr>
+<tr class="separator:a95b6b590757519cdeff59b32bb32a71a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aae825708f9508e570bc14043e71b4f0f"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#aae825708f9508e570bc14043e71b4f0f">createEmptyEdit</a> (<a class="el" href="classtracktion_1_1engine_1_1Engine.html">Engine</a> &amp;, const juce::File &amp;)</td></tr>
 <tr class="memdesc:aae825708f9508e570bc14043e71b4f0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new edit for a file, ready for playback / editing.  <a href="namespacetracktion_1_1engine.html#aae825708f9508e570bc14043e71b4f0f">More...</a><br /></td></tr>
 <tr class="separator:aae825708f9508e570bc14043e71b4f0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -2802,8 +2802,8 @@ template&lt;typename ModifierType &gt; </div>
 
 </div>
 </div>
-<a id="ac4fac090e45b967ad5ad6fc853821250"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac4fac090e45b967ad5ad6fc853821250">&#9670;&nbsp;</a></span>loadEditFromFile() <span class="overload">[1/2]</span></h2>
+<a id="a95b6b590757519cdeff59b32bb32a71a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a95b6b590757519cdeff59b32bb32a71a">&#9670;&nbsp;</a></span>loadEditFromFile() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2818,7 +2818,13 @@ template&lt;typename ModifierType &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const juce::File &amp;&#160;</td>
-          <td class="paramname">&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1Edit.html#a474ef5984345c5b32ffa52ecff59321a">Edit::EditRole</a>&#160;</td>
+          <td class="paramname"><em>role</em> = <code><a class="el" href="classtracktion_1_1engine_1_1Edit.html#a474ef5984345c5b32ffa52ecff59321aaaaff7f83b31d8adaed273b6a8dd7f92d">Edit::forEditing</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -12139,7 +12145,7 @@ template&lt;typename... Properties&gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Nov 1 2022 19:11:46 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Nov 2 2022 13:22:47 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

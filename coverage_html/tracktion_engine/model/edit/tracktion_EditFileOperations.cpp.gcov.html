@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-01 19:29:10</td>
+            <td class="headerValue">2022-11-02 13:38:42</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">23</td>
@@ -526,28 +526,28 @@
 <a name="464"><span class="lineNum">     464 </span><span class="lineCov">        269 :     return state;</span></a>
 <a name="465"><span class="lineNum">     465 </span>            : }</a>
 <a name="466"><span class="lineNum">     466 </span>            : </a>
-<a name="467"><span class="lineNum">     467 </span><span class="lineCov">          1 : std::unique_ptr&lt;Edit&gt; loadEditFromFile (Engine&amp; engine, const juce::File&amp; editFile)</span></a>
+<a name="467"><span class="lineNum">     467 </span><span class="lineCov">          1 : std::unique_ptr&lt;Edit&gt; loadEditFromFile (Engine&amp; engine, const juce::File&amp; editFile, Edit::EditRole role)</span></a>
 <a name="468"><span class="lineNum">     468 </span>            : {</a>
-<a name="469"><span class="lineNum">     469 </span><span class="lineCov">          2 :     auto editState = loadEditFromFile (engine, editFile, {});</span></a>
+<a name="469"><span class="lineNum">     469 </span><span class="lineCov">          2 :     auto editState = loadEditFromFile (engine, editFile, ProjectItemID{});</span></a>
 <a name="470"><span class="lineNum">     470 </span><span class="lineCov">          1 :     auto id = ProjectItemID::fromProperty (editState, IDs::projectID);</span></a>
 <a name="471"><span class="lineNum">     471 </span>            :     </a>
 <a name="472"><span class="lineNum">     472 </span><span class="lineCov">          1 :     if (! id.isValid())</span></a>
 <a name="473"><span class="lineNum">     473 </span><span class="lineCov">          1 :         id = ProjectItemID::createNewID (0);</span></a>
-<a name="474"><span class="lineNum">     474 </span>            :     </a>
+<a name="474"><span class="lineNum">     474 </span>            : </a>
 <a name="475"><span class="lineNum">     475 </span><span class="lineCov">          1 :     Edit::Options options =</span></a>
 <a name="476"><span class="lineNum">     476 </span>            :     {</a>
 <a name="477"><span class="lineNum">     477 </span>            :         engine,</a>
 <a name="478"><span class="lineNum">     478 </span>            :         editState,</a>
 <a name="479"><span class="lineNum">     479 </span>            :         id,</a>
-<a name="480"><span class="lineNum">     480 </span>            :         </a>
-<a name="481"><span class="lineNum">     481 </span>            :         Edit::forEditing,</a>
+<a name="480"><span class="lineNum">     480 </span>            : </a>
+<a name="481"><span class="lineNum">     481 </span>            :         role,</a>
 <a name="482"><span class="lineNum">     482 </span>            :         nullptr,</a>
 <a name="483"><span class="lineNum">     483 </span>            :         Edit::getDefaultNumUndoLevels(),</a>
-<a name="484"><span class="lineNum">     484 </span>            :         </a>
+<a name="484"><span class="lineNum">     484 </span>            : </a>
 <a name="485"><span class="lineNum">     485 </span><span class="lineNoCov">          0 :         [editFile] { return editFile; },</span></a>
 <a name="486"><span class="lineNum">     486 </span>            :         {}</a>
 <a name="487"><span class="lineNum">     487 </span><span class="lineCov">          2 :     };</span></a>
-<a name="488"><span class="lineNum">     488 </span>            :     </a>
+<a name="488"><span class="lineNum">     488 </span>            : </a>
 <a name="489"><span class="lineNum">     489 </span><span class="lineCov">          2 :     return std::make_unique&lt;Edit&gt; (options);</span></a>
 <a name="490"><span class="lineNum">     490 </span>            : }</a>
 <a name="491"><span class="lineNum">     491 </span>            : </a>
