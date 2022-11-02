@@ -33101,6 +33101,13 @@
       <arglist>() override</arglist>
     </member>
     <member kind="function">
+      <type>void</type>
+      <name>trackPropertiesChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ExternalPlugin.html</anchorfile>
+      <anchor>a9c29d0e077b775f504c62093a2153908</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
       <type>juce::AudioProcessor *</type>
       <name>getWrappedAudioProcessor</name>
       <anchorfile>classtracktion_1_1engine_1_1ExternalPlugin.html</anchorfile>
@@ -53065,6 +53072,13 @@
       <anchor>aaaf83c9e5c82417adabbff0894edb3fa</anchor>
       <arglist>()</arglist>
     </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>trackPropertiesChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1Plugin.html</anchorfile>
+      <anchor>ace54006a96b21d81ee07df00fd1c7e2a</anchor>
+      <arglist>()</arglist>
+    </member>
     <member kind="function" virtualness="pure">
       <type>virtual void</type>
       <name>applyToBuffer</name>
@@ -54229,6 +54243,13 @@
       <anchorfile>classtracktion_1_1engine_1_1PluginList.html</anchorfile>
       <anchor>a23bb768d942acb61f3d939da952b6e44</anchor>
       <arglist>(Track *, Clip *)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>updateTrackProperties</name>
+      <anchorfile>classtracktion_1_1engine_1_1PluginList.html</anchorfile>
+      <anchor>a543da48b456987b65f1bbb33a87d56a0</anchor>
+      <arglist>()</arglist>
     </member>
     <member kind="function">
       <type>Plugin **</type>
@@ -68940,6 +68961,13 @@
       <anchorfile>classtracktion_1_1engine_1_1Track.html</anchorfile>
       <anchor>afa7ce8dd6239569c6db0e655a267ddb2</anchor>
       <arglist>(juce::ValueTree &amp;) override</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>handleAsyncUpdate</name>
+      <anchorfile>classtracktion_1_1engine_1_1Track.html</anchorfile>
+      <anchor>ae6cd67d6d1c0965d3a3e007d61770328</anchor>
+      <arglist>() override</arglist>
     </member>
     <member kind="function" protection="protected" virtualness="virtual">
       <type>virtual bool</type>

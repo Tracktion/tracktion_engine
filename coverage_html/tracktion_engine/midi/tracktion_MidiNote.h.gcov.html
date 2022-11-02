@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-02 16:07:54</td>
+            <td class="headerValue">2022-11-02 17:23:13</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -73,7 +73,7 @@
 <a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
-<a name="14"><span class="lineNum">      14 </span><span class="lineCov">    3674030 : class MidiNote</span></a>
+<a name="14"><span class="lineNum">      14 </span><span class="lineCov">    3673570 : class MidiNote</span></a>
 <a name="15"><span class="lineNum">      15 </span>            : {</a>
 <a name="16"><span class="lineNum">      16 </span>            : public:</a>
 <a name="17"><span class="lineNum">      17 </span>            :     enum NoteEdge</a>
@@ -122,10 +122,10 @@
 <a name="60"><span class="lineNum">      60 </span>            : </a>
 <a name="61"><span class="lineNum">      61 </span>            :     void setStartAndLength (BeatPosition newStartBeat, BeatDuration newLengthInBeats, juce::UndoManager*);</a>
 <a name="62"><span class="lineNum">      62 </span>            : </a>
-<a name="63"><span class="lineNum">      63 </span><span class="lineCov">    5509850 :     int getNoteNumber() const noexcept              { return (int) noteNumber; }</span></a>
+<a name="63"><span class="lineNum">      63 </span><span class="lineCov">    5509510 :     int getNoteNumber() const noexcept              { return (int) noteNumber; }</span></a>
 <a name="64"><span class="lineNum">      64 </span>            :     void setNoteNumber (int newNoteNumber, juce::UndoManager*);</a>
 <a name="65"><span class="lineNum">      65 </span>            : </a>
-<a name="66"><span class="lineNum">      66 </span><span class="lineCov">    5509850 :     int getVelocity() const noexcept                { return (int) velocity; }</span></a>
+<a name="66"><span class="lineNum">      66 </span><span class="lineCov">    5509510 :     int getVelocity() const noexcept                { return (int) velocity; }</span></a>
 <a name="67"><span class="lineNum">      67 </span>            :     void setVelocity (int newVelocity, juce::UndoManager*);</a>
 <a name="68"><span class="lineNum">      68 </span>            : </a>
 <a name="69"><span class="lineNum">      69 </span><span class="lineNoCov">          0 :     int getColour() const noexcept                  { return (int) colour; }</span></a>

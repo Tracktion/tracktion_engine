@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-02 16:07:54</td>
+            <td class="headerValue">2022-11-02 17:23:13</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">22</td>
@@ -388,14 +388,14 @@
 <a name="326"><span class="lineNum">     326 </span><span class="lineCov">        271 :         startTimer (500);</span></a>
 <a name="327"><span class="lineNum">     327 </span>            :     }</a>
 <a name="328"><span class="lineNum">     328 </span>            : </a>
-<a name="329"><span class="lineNum">     329 </span><span class="lineCov">         98 :     void timerCallback() override</span></a>
+<a name="329"><span class="lineNum">     329 </span><span class="lineCov">         95 :     void timerCallback() override</span></a>
 <a name="330"><span class="lineNum">     330 </span>            :     {</a>
-<a name="331"><span class="lineNum">     331 </span><span class="lineCov">         98 :         if (owner.edit.isLoading())</span></a>
+<a name="331"><span class="lineNum">     331 </span><span class="lineCov">         95 :         if (owner.edit.isLoading())</span></a>
 <a name="332"><span class="lineNum">     332 </span>            :             return;</a>
 <a name="333"><span class="lineNum">     333 </span>            : </a>
-<a name="334"><span class="lineNum">     334 </span><span class="lineCov">         98 :         bool active = juce::Process::isForegroundProcess();</span></a>
+<a name="334"><span class="lineNum">     334 </span><span class="lineCov">         95 :         bool active = juce::Process::isForegroundProcess();</span></a>
 <a name="335"><span class="lineNum">     335 </span>            : </a>
-<a name="336"><span class="lineNum">     336 </span><span class="lineCov">         98 :         if (active &amp;&amp; forcePurge)</span></a>
+<a name="336"><span class="lineNum">     336 </span><span class="lineCov">         95 :         if (active &amp;&amp; forcePurge)</span></a>
 <a name="337"><span class="lineNum">     337 </span>            :         {</a>
 <a name="338"><span class="lineNum">     338 </span><span class="lineNoCov">          0 :             hasBeenDeactivated = true;</span></a>
 <a name="339"><span class="lineNum">     339 </span>            :             active = false;</a>
@@ -409,8 +409,8 @@
 <a name="347"><span class="lineNum">     347 </span><span class="lineNoCov">          0 :             return SmartThumbnail::areThumbnailsFullyLoaded (owner.engine);</span></a>
 <a name="348"><span class="lineNum">     348 </span>            :         };</a>
 <a name="349"><span class="lineNum">     349 </span>            : </a>
-<a name="350"><span class="lineNum">     350 </span><span class="lineCov">         98 :         if (active != hasBeenDeactivated</span></a>
-<a name="351"><span class="lineNum">     351 </span><span class="lineCov">         98 :             &amp;&amp; canPurge())</span></a>
+<a name="350"><span class="lineNum">     350 </span><span class="lineCov">         95 :         if (active != hasBeenDeactivated</span></a>
+<a name="351"><span class="lineNum">     351 </span><span class="lineCov">         95 :             &amp;&amp; canPurge())</span></a>
 <a name="352"><span class="lineNum">     352 </span>            :         {</a>
 <a name="353"><span class="lineNum">     353 </span><span class="lineNoCov">          0 :             hasBeenDeactivated = active;</span></a>
 <a name="354"><span class="lineNum">     354 </span>            : </a>
@@ -696,9 +696,9 @@
 <a name="634"><span class="lineNum">     634 </span><span class="lineCov">        188 :     return controls;</span></a>
 <a name="635"><span class="lineNum">     635 </span>            : }</a>
 <a name="636"><span class="lineNum">     636 </span>            : </a>
-<a name="637"><span class="lineNum">     637 </span><span class="lineCov">       1198 : int TransportControl::getNumPlayingTransports (Engine&amp; engine)</span></a>
+<a name="637"><span class="lineNum">     637 </span><span class="lineCov">       1073 : int TransportControl::getNumPlayingTransports (Engine&amp; engine)</span></a>
 <a name="638"><span class="lineNum">     638 </span>            : {</a>
-<a name="639"><span class="lineNum">     639 </span><span class="lineCov">       1198 :     return engine.getActiveEdits().numTransportsPlaying;</span></a>
+<a name="639"><span class="lineNum">     639 </span><span class="lineCov">       1073 :     return engine.getActiveEdits().numTransportsPlaying;</span></a>
 <a name="640"><span class="lineNum">     640 </span>            : }</a>
 <a name="641"><span class="lineNum">     641 </span>            : </a>
 <a name="642"><span class="lineNum">     642 </span><span class="lineCov">        188 : void TransportControl::stopAllTransports (Engine&amp; engine, bool discardRecordings, bool clearDevices)</span></a>
@@ -1012,12 +1012,12 @@
 <a name="950"><span class="lineNum">     950 </span><span class="lineCov">        355 : }</span></a>
 <a name="951"><span class="lineNum">     951 </span>            : </a>
 <a name="952"><span class="lineNum">     952 </span>            : //==============================================================================</a>
-<a name="953"><span class="lineNum">     953 </span><span class="lineCov">       2632 : void TransportControl::timerCallback()</span></a>
+<a name="953"><span class="lineNum">     953 </span><span class="lineCov">       2603 : void TransportControl::timerCallback()</span></a>
 <a name="954"><span class="lineNum">     954 </span>            : {</a>
-<a name="955"><span class="lineNum">     955 </span><span class="lineCov">       2632 :     CRASH_TRACER</span></a>
+<a name="955"><span class="lineNum">     955 </span><span class="lineCov">       2603 :     CRASH_TRACER</span></a>
 <a name="956"><span class="lineNum">     956 </span>            : </a>
-<a name="957"><span class="lineNum">     957 </span><span class="lineCov">       2632 :     if (playbackContext == nullptr)</span></a>
-<a name="958"><span class="lineNum">     958 </span><span class="lineCov">       2632 :         return;</span></a>
+<a name="957"><span class="lineNum">     957 </span><span class="lineCov">       2603 :     if (playbackContext == nullptr)</span></a>
+<a name="958"><span class="lineNum">     958 </span><span class="lineCov">       2603 :         return;</span></a>
 <a name="959"><span class="lineNum">     959 </span>            : </a>
 <a name="960"><span class="lineNum">     960 </span><span class="lineNoCov">          0 :     if (isDelayedChangePending)</span></a>
 <a name="961"><span class="lineNum">     961 </span><span class="lineNoCov">          0 :         editHasChanged();</span></a>

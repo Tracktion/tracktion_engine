@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-02 16:07:54</td>
+            <td class="headerValue">2022-11-02 17:23:13</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
@@ -270,7 +270,7 @@
 <a name="208"><span class="lineNum">     208 </span>            : }</a>
 <a name="209"><span class="lineNum">     209 </span>            : </a>
 <a name="210"><span class="lineNum">     210 </span>            : template&lt;typename PositionType&gt;</a>
-<a name="211"><span class="lineNum">     211 </span><span class="lineCov">   14747004 : inline RangeType&lt;PositionType&gt;::RangeType (Position s, Position e)</span></a>
+<a name="211"><span class="lineNum">     211 </span><span class="lineCov">   14745704 : inline RangeType&lt;PositionType&gt;::RangeType (Position s, Position e)</span></a>
 <a name="212"><span class="lineNum">     212 </span><span class="lineCov">       3747 :     : start (s), end (e)</span></a>
 <a name="213"><span class="lineNum">     213 </span>            : {</a>
 <a name="214"><span class="lineNum">     214 </span>            :     checkInvariants();</a>
@@ -307,7 +307,7 @@
 <a name="245"><span class="lineNum">     245 </span><span class="lineNoCov">          0 : template&lt;typename PositionType&gt; inline bool RangeType&lt;PositionType&gt;::contains (const RangeType&amp; other) const                  { return other.start &gt;= start &amp;&amp; other.end &lt;= end; }</span></a>
 <a name="246"><span class="lineNum">     246 </span><span class="lineCov">       3102 : template&lt;typename PositionType&gt; inline bool RangeType&lt;PositionType&gt;::intersects (const RangeType&amp; other) const                { return other.start &lt; end &amp;&amp; start &lt; other.end; }</span></a>
 <a name="247"><span class="lineNum">     247 </span>            : </a>
-<a name="248"><span class="lineNum">     248 </span><span class="lineCov">    3517364 : template&lt;typename PositionType&gt; inline bool RangeType&lt;PositionType&gt;::contains (Position time) const                           { return time &gt;= start &amp;&amp; time &lt; end; }</span></a>
+<a name="248"><span class="lineNum">     248 </span><span class="lineCov">    3516444 : template&lt;typename PositionType&gt; inline bool RangeType&lt;PositionType&gt;::contains (Position time) const                           { return time &gt;= start &amp;&amp; time &lt; end; }</span></a>
 <a name="249"><span class="lineNum">     249 </span><span class="lineCov">     512256 : template&lt;typename PositionType&gt; inline bool RangeType&lt;PositionType&gt;::containsInclusive (Position time) const                  { return time &gt;= start &amp;&amp; time &lt;= end; }</span></a>
 <a name="250"><span class="lineNum">     250 </span>            : </a>
 <a name="251"><span class="lineNum">     251 </span>            : template&lt;typename PositionType&gt;</a>

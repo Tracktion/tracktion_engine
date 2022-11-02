@@ -194,6 +194,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a98f5101f5905df7719d9ca472a14305c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1765f010004f375c2a3b9258934a3cfb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalPlugin.html#a1765f010004f375c2a3b9258934a3cfb">needsConstantBufferSize</a> () override</td></tr>
 <tr class="separator:a1765f010004f375c2a3b9258934a3cfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c29d0e077b775f504c62093a2153908"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalPlugin.html#a9c29d0e077b775f504c62093a2153908">trackPropertiesChanged</a> () override</td></tr>
+<tr class="memdesc:a9c29d0e077b775f504c62093a2153908"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classtracktion_1_1engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a> name or colour has changed.  <a href="classtracktion_1_1engine_1_1ExternalPlugin.html#a9c29d0e077b775f504c62093a2153908">More...</a><br /></td></tr>
+<tr class="separator:a9c29d0e077b775f504c62093a2153908"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae80976936cc6ab077ef22c114fabc2d7"><td class="memItemLeft" align="right" valign="top">juce::AudioProcessor *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalPlugin.html#ae80976936cc6ab077ef22c114fabc2d7">getWrappedAudioProcessor</a> () const override</td></tr>
 <tr class="separator:ae80976936cc6ab077ef22c114fabc2d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a220a02fa5298c73d0cacb60fc3f122af"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ExternalPlugin.html#a220a02fa5298c73d0cacb60fc3f122af">deleteFromParent</a> () override</td></tr>
@@ -1739,6 +1742,35 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a9c29d0e077b775f504c62093a2153908"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c29d0e077b775f504c62093a2153908">&#9670;&nbsp;</a></span>trackPropertiesChanged()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::ExternalPlugin::trackPropertiesChanged </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="classtracktion_1_1engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a> name or colour has changed. </p>
+
+<p>Reimplemented from <a class="el" href="classtracktion_1_1engine_1_1Plugin.html#ace54006a96b21d81ee07df00fd1c7e2a">tracktion::engine::Plugin</a>.</p>
+
+</div>
+</div>
 <a id="ae80976936cc6ab077ef22c114fabc2d7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae80976936cc6ab077ef22c114fabc2d7">&#9670;&nbsp;</a></span>getWrappedAudioProcessor()</h2>
 
@@ -2369,7 +2401,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Nov 2 2022 15:50:54 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Nov 2 2022 17:07:27 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

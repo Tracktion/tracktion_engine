@@ -1,12 +1,12 @@
 var searchData=
 [
-  ['scaletype_12864',['ScaleType',['../classtracktion_1_1engine_1_1Scale.html#a52437d60f63fb74c47254de4751aec0e',1,'tracktion::engine::Scale']]],
-  ['setnamemode_12865',['SetNameMode',['../classtracktion_1_1engine_1_1ProjectItem.html#adc684adf3e111a2244fb8c0f0a9f38f5',1,'tracktion::engine::ProjectItem']]],
-  ['settingid_12866',['SettingID',['../namespacetracktion_1_1engine.html#aef0092bdbd8a28c3968f7f81912f815e',1,'tracktion::SettingID()'],['../namespacetracktion_1_1engine.html#aef0092bdbd8a28c3968f7f81912f815e',1,'tracktion::engine::SettingID()']]],
-  ['srcchannels_12867',['SrcChannels',['../structtracktion_1_1engine_1_1MakeMonoEffect.html#ac18d60d1750340975f985c76013ec13e',1,'tracktion::engine::MakeMonoEffect']]],
-  ['state_12868',['State',['../classtracktion_1_1engine_1_1LinEnvelope.html#ae5add9a31285d6c029daeca514a46438',1,'tracktion::engine::LinEnvelope']]],
-  ['steps_12869',['Steps',['../classtracktion_1_1engine_1_1Scale.html#a440c2752d50115f83ba28784b4e317e5',1,'tracktion::engine::Scale']]],
-  ['syncpitch_12870',['SyncPitch',['../classtracktion_1_1engine_1_1WaveNodeRealTime.html#af292642e27cb2347fb2b23363ac68eec',1,'tracktion::engine::WaveNodeRealTime']]],
-  ['synctempo_12871',['SyncTempo',['../classtracktion_1_1engine_1_1WaveNodeRealTime.html#a83ad7c0014cb30ab5b7e76554cdad3c9',1,'tracktion::engine::WaveNodeRealTime']]],
-  ['synctype_12872',['SyncType',['../classtracktion_1_1engine_1_1Clip.html#af0cfff3f282a7f6b1b92dc5ae61c97b7',1,'tracktion::engine::Clip::SyncType()'],['../namespacetracktion_1_1engine_1_1ModifierCommon.html#a4dcd9d7ff08bc5c648d14f9b798e6276',1,'tracktion::engine::ModifierCommon::SyncType()']]]
+  ['scaletype_12868',['ScaleType',['../classtracktion_1_1engine_1_1Scale.html#a52437d60f63fb74c47254de4751aec0e',1,'tracktion::engine::Scale']]],
+  ['setnamemode_12869',['SetNameMode',['../classtracktion_1_1engine_1_1ProjectItem.html#adc684adf3e111a2244fb8c0f0a9f38f5',1,'tracktion::engine::ProjectItem']]],
+  ['settingid_12870',['SettingID',['../namespacetracktion_1_1engine.html#aef0092bdbd8a28c3968f7f81912f815e',1,'tracktion::SettingID()'],['../namespacetracktion_1_1engine.html#aef0092bdbd8a28c3968f7f81912f815e',1,'tracktion::engine::SettingID()']]],
+  ['srcchannels_12871',['SrcChannels',['../structtracktion_1_1engine_1_1MakeMonoEffect.html#ac18d60d1750340975f985c76013ec13e',1,'tracktion::engine::MakeMonoEffect']]],
+  ['state_12872',['State',['../classtracktion_1_1engine_1_1LinEnvelope.html#ae5add9a31285d6c029daeca514a46438',1,'tracktion::engine::LinEnvelope']]],
+  ['steps_12873',['Steps',['../classtracktion_1_1engine_1_1Scale.html#a440c2752d50115f83ba28784b4e317e5',1,'tracktion::engine::Scale']]],
+  ['syncpitch_12874',['SyncPitch',['../classtracktion_1_1engine_1_1WaveNodeRealTime.html#af292642e27cb2347fb2b23363ac68eec',1,'tracktion::engine::WaveNodeRealTime']]],
+  ['synctempo_12875',['SyncTempo',['../classtracktion_1_1engine_1_1WaveNodeRealTime.html#a83ad7c0014cb30ab5b7e76554cdad3c9',1,'tracktion::engine::WaveNodeRealTime']]],
+  ['synctype_12876',['SyncType',['../classtracktion_1_1engine_1_1Clip.html#af0cfff3f282a7f6b1b92dc5ae61c97b7',1,'tracktion::engine::Clip::SyncType()'],['../namespacetracktion_1_1engine_1_1ModifierCommon.html#a4dcd9d7ff08bc5c648d14f9b798e6276',1,'tracktion::engine::ModifierCommon::SyncType()']]]
 ];

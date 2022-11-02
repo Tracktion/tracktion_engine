@@ -167,6 +167,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aaaf83c9e5c82417adabbff0894edb3fa"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Plugin.html#aaaf83c9e5c82417adabbff0894edb3fa">reset</a> ()</td></tr>
 <tr class="memdesc:aaaf83c9e5c82417adabbff0894edb3fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should reset synth voices, tails, clear delay buffers, etc.  <a href="classtracktion_1_1engine_1_1Plugin.html#aaaf83c9e5c82417adabbff0894edb3fa">More...</a><br /></td></tr>
 <tr class="separator:aaaf83c9e5c82417adabbff0894edb3fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace54006a96b21d81ee07df00fd1c7e2a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Plugin.html#ace54006a96b21d81ee07df00fd1c7e2a">trackPropertiesChanged</a> ()</td></tr>
+<tr class="memdesc:ace54006a96b21d81ee07df00fd1c7e2a"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classtracktion_1_1engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a> name or colour has changed.  <a href="classtracktion_1_1engine_1_1Plugin.html#ace54006a96b21d81ee07df00fd1c7e2a">More...</a><br /></td></tr>
+<tr class="separator:ace54006a96b21d81ee07df00fd1c7e2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae9d54a5aa397ea5dd6924a69e93976ee"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Plugin.html#ae9d54a5aa397ea5dd6924a69e93976ee">applyToBuffer</a> (const <a class="el" href="structtracktion_1_1engine_1_1PluginRenderContext.html">PluginRenderContext</a> &amp;)=0</td></tr>
 <tr class="memdesc:ae9d54a5aa397ea5dd6924a69e93976ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Process the next block of data.  <a href="classtracktion_1_1engine_1_1Plugin.html#ae9d54a5aa397ea5dd6924a69e93976ee">More...</a><br /></td></tr>
 <tr class="separator:ae9d54a5aa397ea5dd6924a69e93976ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1183,6 +1186,35 @@ Protected Attributes</h2></td></tr>
 <p>Should reset synth voices, tails, clear delay buffers, etc. </p>
 
 <p>Reimplemented in <a class="el" href="classtracktion_1_1engine_1_1FourOscPlugin.html#afc3cf486960aa1c49d141e9194d934d4">tracktion::engine::FourOscPlugin</a>, <a class="el" href="classtracktion_1_1engine_1_1ImpulseResponsePlugin.html#affa42e7df1b2d8e637799d8b45f76ad8">tracktion::engine::ImpulseResponsePlugin</a>, <a class="el" href="classtracktion_1_1engine_1_1DelayPlugin.html#af66562c12416511afb8e138cf33f370a">tracktion::engine::DelayPlugin</a>, <a class="el" href="classtracktion_1_1engine_1_1ExternalPlugin.html#a82debd74978128a81c1322e4221d6db8">tracktion::engine::ExternalPlugin</a>, and <a class="el" href="classtracktion_1_1engine_1_1ReverbPlugin.html#a6a531bcfd917ece29679b084332f0b50">tracktion::engine::ReverbPlugin</a>.</p>
+
+</div>
+</div>
+<a id="ace54006a96b21d81ee07df00fd1c7e2a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ace54006a96b21d81ee07df00fd1c7e2a">&#9670;&nbsp;</a></span>trackPropertiesChanged()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void tracktion::engine::Plugin::trackPropertiesChanged </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="classtracktion_1_1engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a> name or colour has changed. </p>
+
+<p>Reimplemented in <a class="el" href="classtracktion_1_1engine_1_1ExternalPlugin.html#a9c29d0e077b775f504c62093a2153908">tracktion::engine::ExternalPlugin</a>.</p>
 
 </div>
 </div>
@@ -3439,7 +3471,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Nov 2 2022 15:50:55 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Nov 2 2022 17:07:27 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>
