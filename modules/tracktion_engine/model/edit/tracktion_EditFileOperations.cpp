@@ -464,28 +464,28 @@ juce::ValueTree loadEditFromFile (Engine& e, const juce::File& f, ProjectItemID 
     return state;
 }
 
-std::unique_ptr<Edit> loadEditFromFile (Engine& engine, const juce::File& editFile)
+std::unique_ptr<Edit> loadEditFromFile (Engine& engine, const juce::File& editFile, Edit::EditRole role)
 {
-    auto editState = loadEditFromFile (engine, editFile, {});
+    auto editState = loadEditFromFile (engine, editFile, ProjectItemID{});
     auto id = ProjectItemID::fromProperty (editState, IDs::projectID);
     
     if (! id.isValid())
         id = ProjectItemID::createNewID (0);
-    
+
     Edit::Options options =
     {
         engine,
         editState,
         id,
-        
-        Edit::forEditing,
+
+        role,
         nullptr,
         Edit::getDefaultNumUndoLevels(),
-        
+
         [editFile] { return editFile; },
         {}
     };
-    
+
     return std::make_unique<Edit> (options);
 }
 

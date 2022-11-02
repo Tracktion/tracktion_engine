@@ -50,7 +50,7 @@ private:
 
 //==============================================================================
 /** Loads an edit from file, ready for playback / editing */
-std::unique_ptr<Edit> loadEditFromFile (Engine&, const juce::File&);
+std::unique_ptr<Edit> loadEditFromFile (Engine&, const juce::File&, Edit::EditRole role = Edit::forEditing);
 
 /** Creates a new edit for a file, ready for playback / editing */
 std::unique_ptr<Edit> createEmptyEdit (Engine&, const juce::File&);

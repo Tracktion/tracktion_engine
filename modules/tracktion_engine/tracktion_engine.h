@@ -484,7 +484,6 @@ namespace tracktion { inline namespace engine
 #include "plugins/effects/tracktion_Equaliser.h"
 
 #include "model/edit/tracktion_EditSnapshot.h"
-#include "model/edit/tracktion_EditFileOperations.h"
 #include "model/edit/tracktion_EditInsertPoint.h"
 #include "model/tracks/tracktion_TrackItem.h"
 #include "model/tracks/tracktion_Track.h"
@@ -495,6 +494,7 @@ namespace tracktion { inline namespace engine
 #include "model/edit/tracktion_PitchSetting.h"
 #include "model/edit/tracktion_PitchSequence.h"
 #include "model/edit/tracktion_Edit.h"
+#include "model/edit/tracktion_EditFileOperations.h"
 
 #include "playback/tracktion_TransportControl.h"
 #include "playback/tracktion_AbletonLink.h"
