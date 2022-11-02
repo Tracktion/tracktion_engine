@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-02 13:38:42</td>
+            <td class="headerValue">2022-11-02 15:45:56</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -304,127 +304,127 @@
 <a name="242"><span class="lineNum">     242 </span>            : </a>
 <a name="243"><span class="lineNum">     243 </span>            :     //==============================================================================</a>
 <a name="244"><span class="lineNum">     244 </span>            :     // transport</a>
-<a name="245"><span class="lineNum">     245 </span>            :     void play (float val, int param);</a>
-<a name="246"><span class="lineNum">     246 </span>            :     void stop (float val, int param);</a>
-<a name="247"><span class="lineNum">     247 </span>            :     void record (float val, int param);</a>
-<a name="248"><span class="lineNum">     248 </span>            :     void home (float val, int param);</a>
-<a name="249"><span class="lineNum">     249 </span>            :     void end (float val, int param);</a>
-<a name="250"><span class="lineNum">     250 </span>            :     void rewind (float val, int param);</a>
-<a name="251"><span class="lineNum">     251 </span>            :     void fastForward (float val, int param);</a>
-<a name="252"><span class="lineNum">     252 </span>            :     void markIn (float val, int param);</a>
-<a name="253"><span class="lineNum">     253 </span>            :     void markOut (float val, int param);</a>
-<a name="254"><span class="lineNum">     254 </span>            :     void automationReading (float val, int param);</a>
-<a name="255"><span class="lineNum">     255 </span>            :     void automationWriting (float val, int param);</a>
-<a name="256"><span class="lineNum">     256 </span>            :     void addMarker (float val, int param);</a>
-<a name="257"><span class="lineNum">     257 </span>            :     void prevMarker (float val, int param);</a>
-<a name="258"><span class="lineNum">     258 </span>            :     void nextMarker (float val, int param);</a>
-<a name="259"><span class="lineNum">     259 </span>            :     void nudgeLeft (float val, int param);</a>
-<a name="260"><span class="lineNum">     260 </span>            :     void nudgeRight (float val, int param);</a>
-<a name="261"><span class="lineNum">     261 </span>            :     void abort (float val, int param);</a>
-<a name="262"><span class="lineNum">     262 </span>            :     void abortRestart (float val, int param);</a>
-<a name="263"><span class="lineNum">     263 </span>            :     void jog (float val, int param);</a>
-<a name="264"><span class="lineNum">     264 </span>            :     void jumpToMarkIn (float val, int param);</a>
-<a name="265"><span class="lineNum">     265 </span>            :     void jumpToMarkOut (float val, int param);</a>
-<a name="266"><span class="lineNum">     266 </span>            :     void clearAllSolo (float val, int param);</a>
+<a name="245"><span class="lineNum">     245 </span>            :     virtual void play (float val, int param);</a>
+<a name="246"><span class="lineNum">     246 </span>            :     virtual void stop (float val, int param);</a>
+<a name="247"><span class="lineNum">     247 </span>            :     virtual void record (float val, int param);</a>
+<a name="248"><span class="lineNum">     248 </span>            :     virtual void home (float val, int param);</a>
+<a name="249"><span class="lineNum">     249 </span>            :     virtual void end (float val, int param);</a>
+<a name="250"><span class="lineNum">     250 </span>            :     virtual void rewind (float val, int param);</a>
+<a name="251"><span class="lineNum">     251 </span>            :     virtual void fastForward (float val, int param);</a>
+<a name="252"><span class="lineNum">     252 </span>            :     virtual void markIn (float val, int param);</a>
+<a name="253"><span class="lineNum">     253 </span>            :     virtual void markOut (float val, int param);</a>
+<a name="254"><span class="lineNum">     254 </span>            :     virtual void automationReading (float val, int param);</a>
+<a name="255"><span class="lineNum">     255 </span>            :     virtual void automationWriting (float val, int param);</a>
+<a name="256"><span class="lineNum">     256 </span>            :     virtual void addMarker (float val, int param);</a>
+<a name="257"><span class="lineNum">     257 </span>            :     virtual void prevMarker (float val, int param);</a>
+<a name="258"><span class="lineNum">     258 </span>            :     virtual void nextMarker (float val, int param);</a>
+<a name="259"><span class="lineNum">     259 </span>            :     virtual void nudgeLeft (float val, int param);</a>
+<a name="260"><span class="lineNum">     260 </span>            :     virtual void nudgeRight (float val, int param);</a>
+<a name="261"><span class="lineNum">     261 </span>            :     virtual void abort (float val, int param);</a>
+<a name="262"><span class="lineNum">     262 </span>            :     virtual void abortRestart (float val, int param);</a>
+<a name="263"><span class="lineNum">     263 </span>            :     virtual void jog (float val, int param);</a>
+<a name="264"><span class="lineNum">     264 </span>            :     virtual void jumpToMarkIn (float val, int param);</a>
+<a name="265"><span class="lineNum">     265 </span>            :     virtual void jumpToMarkOut (float val, int param);</a>
+<a name="266"><span class="lineNum">     266 </span>            :     virtual void clearAllSolo (float val, int param);</a>
 <a name="267"><span class="lineNum">     267 </span>            : </a>
 <a name="268"><span class="lineNum">     268 </span>            :     // options</a>
-<a name="269"><span class="lineNum">     269 </span>            :     void toggleBeatsSecondsMode (float val, int param);</a>
-<a name="270"><span class="lineNum">     270 </span>            :     void toggleLoop (float val, int param);</a>
-<a name="271"><span class="lineNum">     271 </span>            :     void togglePunch (float val, int param);</a>
-<a name="272"><span class="lineNum">     272 </span>            :     void toggleClick (float val, int param);</a>
-<a name="273"><span class="lineNum">     273 </span>            :     void toggleSnap (float val, int param);</a>
-<a name="274"><span class="lineNum">     274 </span>            :     void toggleSlave (float val, int param);</a>
-<a name="275"><span class="lineNum">     275 </span>            :     void toggleEtoE (float val, int param);</a>
-<a name="276"><span class="lineNum">     276 </span>            :     void toggleScroll (float val, int param);</a>
-<a name="277"><span class="lineNum">     277 </span>            :     void toggleAllArm (float val, int param);</a>
+<a name="269"><span class="lineNum">     269 </span>            :     virtual void toggleBeatsSecondsMode (float val, int param);</a>
+<a name="270"><span class="lineNum">     270 </span>            :     virtual void toggleLoop (float val, int param);</a>
+<a name="271"><span class="lineNum">     271 </span>            :     virtual void togglePunch (float val, int param);</a>
+<a name="272"><span class="lineNum">     272 </span>            :     virtual void toggleClick (float val, int param);</a>
+<a name="273"><span class="lineNum">     273 </span>            :     virtual void toggleSnap (float val, int param);</a>
+<a name="274"><span class="lineNum">     274 </span>            :     virtual void toggleSlave (float val, int param);</a>
+<a name="275"><span class="lineNum">     275 </span>            :     virtual void toggleEtoE (float val, int param);</a>
+<a name="276"><span class="lineNum">     276 </span>            :     virtual void toggleScroll (float val, int param);</a>
+<a name="277"><span class="lineNum">     277 </span>            :     virtual void toggleAllArm (float val, int param);</a>
 <a name="278"><span class="lineNum">     278 </span>            : </a>
 <a name="279"><span class="lineNum">     279 </span>            :     // plugins</a>
-<a name="280"><span class="lineNum">     280 </span>            :     void masterVolume (float val, int param);</a>
-<a name="281"><span class="lineNum">     281 </span>            :     void masterPan (float val, int param);</a>
-<a name="282"><span class="lineNum">     282 </span>            :     void quickParam (float val, int param);</a>
-<a name="283"><span class="lineNum">     283 </span>            :     void paramTrack (float val, int param);</a>
+<a name="280"><span class="lineNum">     280 </span>            :     virtual void masterVolume (float val, int param);</a>
+<a name="281"><span class="lineNum">     281 </span>            :     virtual void masterPan (float val, int param);</a>
+<a name="282"><span class="lineNum">     282 </span>            :     virtual void quickParam (float val, int param);</a>
+<a name="283"><span class="lineNum">     283 </span>            :     virtual void paramTrack (float val, int param);</a>
 <a name="284"><span class="lineNum">     284 </span>            : </a>
 <a name="285"><span class="lineNum">     285 </span>            :     // track</a>
-<a name="286"><span class="lineNum">     286 </span>            :     void volTrack (float val, int param);</a>
-<a name="287"><span class="lineNum">     287 </span>            :     void panTrack (float val, int param);</a>
-<a name="288"><span class="lineNum">     288 </span>            :     void muteTrack (float val, int param);</a>
-<a name="289"><span class="lineNum">     289 </span>            :     void soloTrack (float val, int param);</a>
-<a name="290"><span class="lineNum">     290 </span>            :     void armTrack (float val, int param);</a>
-<a name="291"><span class="lineNum">     291 </span>            :     void selectTrack (float val, int param);</a>
-<a name="292"><span class="lineNum">     292 </span>            :     void auxTrack (float val, int param);</a>
+<a name="286"><span class="lineNum">     286 </span>            :     virtual void volTrack (float val, int param);</a>
+<a name="287"><span class="lineNum">     287 </span>            :     virtual void panTrack (float val, int param);</a>
+<a name="288"><span class="lineNum">     288 </span>            :     virtual void muteTrack (float val, int param);</a>
+<a name="289"><span class="lineNum">     289 </span>            :     virtual void soloTrack (float val, int param);</a>
+<a name="290"><span class="lineNum">     290 </span>            :     virtual void armTrack (float val, int param);</a>
+<a name="291"><span class="lineNum">     291 </span>            :     virtual void selectTrack (float val, int param);</a>
+<a name="292"><span class="lineNum">     292 </span>            :     virtual void auxTrack (float val, int param);</a>
 <a name="293"><span class="lineNum">     293 </span>            : </a>
 <a name="294"><span class="lineNum">     294 </span>            :     // navigation</a>
-<a name="295"><span class="lineNum">     295 </span>            :     void zoomIn (float val, int param);</a>
-<a name="296"><span class="lineNum">     296 </span>            :     void zoomOut (float val, int param);</a>
-<a name="297"><span class="lineNum">     297 </span>            :     void scrollTracksUp (float val, int param);</a>
-<a name="298"><span class="lineNum">     298 </span>            :     void scrollTracksDown (float val, int param);</a>
-<a name="299"><span class="lineNum">     299 </span>            :     void scrollTracksLeft (float val, int param);</a>
-<a name="300"><span class="lineNum">     300 </span>            :     void scrollTracksRight (float val, int param);</a>
-<a name="301"><span class="lineNum">     301 </span>            :     void zoomTracksIn (float val, int param);</a>
-<a name="302"><span class="lineNum">     302 </span>            :     void zoomTracksOut (float val, int param);</a>
-<a name="303"><span class="lineNum">     303 </span>            :     void toggleSelectionMode (float val, int param);</a>
-<a name="304"><span class="lineNum">     304 </span>            :     void selectLeft (float val, int param);</a>
-<a name="305"><span class="lineNum">     305 </span>            :     void selectRight (float val, int param);</a>
-<a name="306"><span class="lineNum">     306 </span>            :     void selectUp (float val, int param);</a>
-<a name="307"><span class="lineNum">     307 </span>            :     void selectDown (float val, int param);</a>
-<a name="308"><span class="lineNum">     308 </span>            :     void selectClipInTrack (float val, int param);</a>
-<a name="309"><span class="lineNum">     309 </span>            :     void selectFilterInTrack (float val, int param);</a>
+<a name="295"><span class="lineNum">     295 </span>            :     virtual void zoomIn (float val, int param);</a>
+<a name="296"><span class="lineNum">     296 </span>            :     virtual void zoomOut (float val, int param);</a>
+<a name="297"><span class="lineNum">     297 </span>            :     virtual void scrollTracksUp (float val, int param);</a>
+<a name="298"><span class="lineNum">     298 </span>            :     virtual void scrollTracksDown (float val, int param);</a>
+<a name="299"><span class="lineNum">     299 </span>            :     virtual void scrollTracksLeft (float val, int param);</a>
+<a name="300"><span class="lineNum">     300 </span>            :     virtual void scrollTracksRight (float val, int param);</a>
+<a name="301"><span class="lineNum">     301 </span>            :     virtual void zoomTracksIn (float val, int param);</a>
+<a name="302"><span class="lineNum">     302 </span>            :     virtual void zoomTracksOut (float val, int param);</a>
+<a name="303"><span class="lineNum">     303 </span>            :     virtual void toggleSelectionMode (float val, int param);</a>
+<a name="304"><span class="lineNum">     304 </span>            :     virtual void selectLeft (float val, int param);</a>
+<a name="305"><span class="lineNum">     305 </span>            :     virtual void selectRight (float val, int param);</a>
+<a name="306"><span class="lineNum">     306 </span>            :     virtual void selectUp (float val, int param);</a>
+<a name="307"><span class="lineNum">     307 </span>            :     virtual void selectDown (float val, int param);</a>
+<a name="308"><span class="lineNum">     308 </span>            :     virtual void selectClipInTrack (float val, int param);</a>
+<a name="309"><span class="lineNum">     309 </span>            :     virtual void selectFilterInTrack (float val, int param);</a>
 <a name="310"><span class="lineNum">     310 </span>            : </a>
 <a name="311"><span class="lineNum">     311 </span>            :     // bank</a>
-<a name="312"><span class="lineNum">     312 </span>            :     void faderBankLeft    (float val, int param);</a>
-<a name="313"><span class="lineNum">     313 </span>            :     void faderBankLeft1   (float val, int param);</a>
-<a name="314"><span class="lineNum">     314 </span>            :     void faderBankLeft4   (float val, int param);</a>
-<a name="315"><span class="lineNum">     315 </span>            :     void faderBankLeft8   (float val, int param);</a>
-<a name="316"><span class="lineNum">     316 </span>            :     void faderBankLeft16  (float val, int param);</a>
-<a name="317"><span class="lineNum">     317 </span>            :     void faderBankRight   (float val, int param);</a>
-<a name="318"><span class="lineNum">     318 </span>            :     void faderBankRight1  (float val, int param);</a>
-<a name="319"><span class="lineNum">     319 </span>            :     void faderBankRight4  (float val, int param);</a>
-<a name="320"><span class="lineNum">     320 </span>            :     void faderBankRight8  (float val, int param);</a>
-<a name="321"><span class="lineNum">     321 </span>            :     void faderBankRight16 (float val, int param);</a>
+<a name="312"><span class="lineNum">     312 </span>            :     virtual void faderBankLeft    (float val, int param);</a>
+<a name="313"><span class="lineNum">     313 </span>            :     virtual void faderBankLeft1   (float val, int param);</a>
+<a name="314"><span class="lineNum">     314 </span>            :     virtual void faderBankLeft4   (float val, int param);</a>
+<a name="315"><span class="lineNum">     315 </span>            :     virtual void faderBankLeft8   (float val, int param);</a>
+<a name="316"><span class="lineNum">     316 </span>            :     virtual void faderBankLeft16  (float val, int param);</a>
+<a name="317"><span class="lineNum">     317 </span>            :     virtual void faderBankRight   (float val, int param);</a>
+<a name="318"><span class="lineNum">     318 </span>            :     virtual void faderBankRight1  (float val, int param);</a>
+<a name="319"><span class="lineNum">     319 </span>            :     virtual void faderBankRight4  (float val, int param);</a>
+<a name="320"><span class="lineNum">     320 </span>            :     virtual void faderBankRight8  (float val, int param);</a>
+<a name="321"><span class="lineNum">     321 </span>            :     virtual void faderBankRight16 (float val, int param);</a>
 <a name="322"><span class="lineNum">     322 </span>            : </a>
-<a name="323"><span class="lineNum">     323 </span>            :     void paramBankLeft    (float val, int param);</a>
-<a name="324"><span class="lineNum">     324 </span>            :     void paramBankLeft1   (float val, int param);</a>
-<a name="325"><span class="lineNum">     325 </span>            :     void paramBankLeft4   (float val, int param);</a>
-<a name="326"><span class="lineNum">     326 </span>            :     void paramBankLeft8   (float val, int param);</a>
-<a name="327"><span class="lineNum">     327 </span>            :     void paramBankLeft16  (float val, int param);</a>
-<a name="328"><span class="lineNum">     328 </span>            :     void paramBankLeft24  (float val, int param);</a>
-<a name="329"><span class="lineNum">     329 </span>            :     void paramBankRight   (float val, int param);</a>
-<a name="330"><span class="lineNum">     330 </span>            :     void paramBankRight1  (float val, int param);</a>
-<a name="331"><span class="lineNum">     331 </span>            :     void paramBankRight4  (float val, int param);</a>
-<a name="332"><span class="lineNum">     332 </span>            :     void paramBankRight8  (float val, int param);</a>
-<a name="333"><span class="lineNum">     333 </span>            :     void paramBankRight16 (float val, int param);</a>
-<a name="334"><span class="lineNum">     334 </span>            :     void paramBankRight24 (float val, int param);</a>
+<a name="323"><span class="lineNum">     323 </span>            :     virtual void paramBankLeft    (float val, int param);</a>
+<a name="324"><span class="lineNum">     324 </span>            :     virtual void paramBankLeft1   (float val, int param);</a>
+<a name="325"><span class="lineNum">     325 </span>            :     virtual void paramBankLeft4   (float val, int param);</a>
+<a name="326"><span class="lineNum">     326 </span>            :     virtual void paramBankLeft8   (float val, int param);</a>
+<a name="327"><span class="lineNum">     327 </span>            :     virtual void paramBankLeft16  (float val, int param);</a>
+<a name="328"><span class="lineNum">     328 </span>            :     virtual void paramBankLeft24  (float val, int param);</a>
+<a name="329"><span class="lineNum">     329 </span>            :     virtual void paramBankRight   (float val, int param);</a>
+<a name="330"><span class="lineNum">     330 </span>            :     virtual void paramBankRight1  (float val, int param);</a>
+<a name="331"><span class="lineNum">     331 </span>            :     virtual void paramBankRight4  (float val, int param);</a>
+<a name="332"><span class="lineNum">     332 </span>            :     virtual void paramBankRight8  (float val, int param);</a>
+<a name="333"><span class="lineNum">     333 </span>            :     virtual void paramBankRight16 (float val, int param);</a>
+<a name="334"><span class="lineNum">     334 </span>            :     virtual void paramBankRight24 (float val, int param);</a>
 <a name="335"><span class="lineNum">     335 </span>            : </a>
 <a name="336"><span class="lineNum">     336 </span>            :     // User functions</a>
-<a name="337"><span class="lineNum">     337 </span>            :     void userFunction1    (float val, int param);</a>
-<a name="338"><span class="lineNum">     338 </span>            :     void userFunction2    (float val, int param);</a>
-<a name="339"><span class="lineNum">     339 </span>            :     void userFunction3    (float val, int param);</a>
-<a name="340"><span class="lineNum">     340 </span>            :     void userFunction4    (float val, int param);</a>
-<a name="341"><span class="lineNum">     341 </span>            :     void userFunction5    (float val, int param);</a>
-<a name="342"><span class="lineNum">     342 </span>            :     void userFunction6    (float val, int param);</a>
-<a name="343"><span class="lineNum">     343 </span>            :     void userFunction7    (float val, int param);</a>
-<a name="344"><span class="lineNum">     344 </span>            :     void userFunction8    (float val, int param);</a>
-<a name="345"><span class="lineNum">     345 </span>            :     void userFunction9    (float val, int param);</a>
-<a name="346"><span class="lineNum">     346 </span>            :     void userFunction10   (float val, int param);</a>
-<a name="347"><span class="lineNum">     347 </span>            :     void userFunction11   (float val, int param);</a>
-<a name="348"><span class="lineNum">     348 </span>            :     void userFunction12   (float val, int param);</a>
-<a name="349"><span class="lineNum">     349 </span>            :     void userFunction13   (float val, int param);</a>
-<a name="350"><span class="lineNum">     350 </span>            :     void userFunction14   (float val, int param);</a>
-<a name="351"><span class="lineNum">     351 </span>            :     void userFunction15   (float val, int param);</a>
-<a name="352"><span class="lineNum">     352 </span>            :     void userFunction16   (float val, int param);</a>
-<a name="353"><span class="lineNum">     353 </span>            :     void userFunction17   (float val, int param);</a>
-<a name="354"><span class="lineNum">     354 </span>            :     void userFunction18   (float val, int param);</a>
-<a name="355"><span class="lineNum">     355 </span>            :     void userFunction19   (float val, int param);</a>
-<a name="356"><span class="lineNum">     356 </span>            :     void userFunction20   (float val, int param);</a>
+<a name="337"><span class="lineNum">     337 </span>            :     virtual void userFunction1    (float val, int param);</a>
+<a name="338"><span class="lineNum">     338 </span>            :     virtual void userFunction2    (float val, int param);</a>
+<a name="339"><span class="lineNum">     339 </span>            :     virtual void userFunction3    (float val, int param);</a>
+<a name="340"><span class="lineNum">     340 </span>            :     virtual void userFunction4    (float val, int param);</a>
+<a name="341"><span class="lineNum">     341 </span>            :     virtual void userFunction5    (float val, int param);</a>
+<a name="342"><span class="lineNum">     342 </span>            :     virtual void userFunction6    (float val, int param);</a>
+<a name="343"><span class="lineNum">     343 </span>            :     virtual void userFunction7    (float val, int param);</a>
+<a name="344"><span class="lineNum">     344 </span>            :     virtual void userFunction8    (float val, int param);</a>
+<a name="345"><span class="lineNum">     345 </span>            :     virtual void userFunction9    (float val, int param);</a>
+<a name="346"><span class="lineNum">     346 </span>            :     virtual void userFunction10   (float val, int param);</a>
+<a name="347"><span class="lineNum">     347 </span>            :     virtual void userFunction11   (float val, int param);</a>
+<a name="348"><span class="lineNum">     348 </span>            :     virtual void userFunction12   (float val, int param);</a>
+<a name="349"><span class="lineNum">     349 </span>            :     virtual void userFunction13   (float val, int param);</a>
+<a name="350"><span class="lineNum">     350 </span>            :     virtual void userFunction14   (float val, int param);</a>
+<a name="351"><span class="lineNum">     351 </span>            :     virtual void userFunction15   (float val, int param);</a>
+<a name="352"><span class="lineNum">     352 </span>            :     virtual void userFunction16   (float val, int param);</a>
+<a name="353"><span class="lineNum">     353 </span>            :     virtual void userFunction17   (float val, int param);</a>
+<a name="354"><span class="lineNum">     354 </span>            :     virtual void userFunction18   (float val, int param);</a>
+<a name="355"><span class="lineNum">     355 </span>            :     virtual void userFunction19   (float val, int param);</a>
+<a name="356"><span class="lineNum">     356 </span>            :     virtual void userFunction20   (float val, int param);</a>
 <a name="357"><span class="lineNum">     357 </span>            : </a>
 <a name="358"><span class="lineNum">     358 </span><span class="lineNoCov">          0 :     void null (float, int) {} // null action for outgoing only actions</span></a>
 <a name="359"><span class="lineNum">     359 </span>            : </a>
-<a name="360"><span class="lineNum">     360 </span>            :     void loadFunctions();</a>
+<a name="360"><span class="lineNum">     360 </span>            :     virtual void loadFunctions();</a>
 <a name="361"><span class="lineNum">     361 </span>            : </a>
-<a name="362"><span class="lineNum">     362 </span>            :     juce::XmlElement* createXml();</a>
-<a name="363"><span class="lineNum">     363 </span>            :     void importSettings (const juce::File&amp;);</a>
-<a name="364"><span class="lineNum">     364 </span>            :     void importSettings (const juce::String&amp;);</a>
-<a name="365"><span class="lineNum">     365 </span>            :     void exportSettings (const juce::File&amp;);</a>
+<a name="362"><span class="lineNum">     362 </span>            :     virtual juce::XmlElement* createXml();</a>
+<a name="363"><span class="lineNum">     363 </span>            :     virtual void importSettings (const juce::File&amp;);</a>
+<a name="364"><span class="lineNum">     364 </span>            :     virtual void importSettings (const juce::String&amp;);</a>
+<a name="365"><span class="lineNum">     365 </span>            :     virtual void exportSettings (const juce::File&amp;);</a>
 <a name="366"><span class="lineNum">     366 </span>            : </a>
 <a name="367"><span class="lineNum">     367 </span>            :     int getPacketsIn()  { return packetsIn; }</a>
 <a name="368"><span class="lineNum">     368 </span>            :     int getPacketsOut() { return packetsOut; }</a>
@@ -510,44 +510,43 @@
 <a name="448"><span class="lineNum">     448 </span>            :     juce::SharedResourcePointer&lt;CustomControlSurfaceManager&gt; manager;</a>
 <a name="449"><span class="lineNum">     449 </span>            : </a>
 <a name="450"><span class="lineNum">     450 </span>            :     //==============================================================================</a>
-<a name="451"><span class="lineNum">     451 </span>            :     void oscMessageReceived (const juce::OSCMessage&amp;) override;</a>
-<a name="452"><span class="lineNum">     452 </span>            :     void oscBundleReceived (const juce::OSCBundle&amp;) override;</a>
+<a name="451"><span class="lineNum">     451 </span>            :     virtual void oscMessageReceived (const juce::OSCMessage&amp;) override;</a>
+<a name="452"><span class="lineNum">     452 </span>            :     virtual void oscBundleReceived (const juce::OSCBundle&amp;) override;</a>
 <a name="453"><span class="lineNum">     453 </span>            : </a>
 <a name="454"><span class="lineNum">     454 </span>            :     bool isTextAction (ActionID);</a>
 <a name="455"><span class="lineNum">     455 </span>            : </a>
 <a name="456"><span class="lineNum">     456 </span>            :     //==============================================================================</a>
-<a name="457"><span class="lineNum">     457 </span>            :     void addFunction (juce::PopupMenu&amp;, juce::SortedSet&lt;int&gt;&amp; commandSet, const juce::String&amp; group, const juce::String&amp; name, ActionID id, ActionFunction);</a>
-<a name="458"><span class="lineNum">     458 </span>            :     void addTrackFunction (juce::PopupMenu&amp;, const juce::String&amp; group, const juce::String&amp; name, ActionID id, ActionFunction);</a>
-<a name="459"><span class="lineNum">     459 </span>            :     void addPluginFunction (juce::PopupMenu&amp;, const juce::String&amp; group, const juce::String&amp; name, ActionID id, ActionFunction);</a>
-<a name="460"><span class="lineNum">     460 </span>            :     void createContextMenu (juce::PopupMenu&amp;);</a>
-<a name="461"><span class="lineNum">     461 </span>            :     void addAllCommandItem (juce::PopupMenu&amp;);</a>
-<a name="462"><span class="lineNum">     462 </span>            : </a>
-<a name="463"><span class="lineNum">     463 </span>            :     void sendCommandToControllerForActionID (int actionID, bool);</a>
-<a name="464"><span class="lineNum">     464 </span>            :     void sendCommandToControllerForActionID (int actionID, float value);</a>
-<a name="465"><span class="lineNum">     465 </span>            :     void sendCommandToControllerForActionID (int actionID, juce::String);</a>
-<a name="466"><span class="lineNum">     466 </span>            : </a>
-<a name="467"><span class="lineNum">     467 </span>            :     juce::String controllerIDToString (int id, int channelid) const;</a>
-<a name="468"><span class="lineNum">     468 </span>            :     juce::String noteIDToString (int note, int channelid) const;</a>
-<a name="469"><span class="lineNum">     469 </span>            :     juce::String getFunctionName (int id) const;</a>
-<a name="470"><span class="lineNum">     470 </span>            : </a>
-<a name="471"><span class="lineNum">     471 </span>            :     void init();</a>
-<a name="472"><span class="lineNum">     472 </span>            :     bool loadFromXml (const juce::XmlElement&amp;);</a>
-<a name="473"><span class="lineNum">     473 </span>            :     void clearCommandGroups();</a>
-<a name="474"><span class="lineNum">     474 </span>            : </a>
-<a name="475"><span class="lineNum">     475 </span>            :     bool isPendingEventAssignable();</a>
-<a name="476"><span class="lineNum">     476 </span>            :     void updateOrCreateMappingForID (int id, juce::String addr, int channel, int noteNum, int controllerID);</a>
-<a name="477"><span class="lineNum">     477 </span>            :     void addMappingSetsForID (ActionID, juce::Array&lt;MappingSet&gt;&amp; mappingSet);</a>
-<a name="478"><span class="lineNum">     478 </span>            : </a>
-<a name="479"><span class="lineNum">     479 </span>            :     void handleAsyncUpdate() override;</a>
-<a name="480"><span class="lineNum">     480 </span>            :     void recreateOSCSockets();</a>
-<a name="481"><span class="lineNum">     481 </span>            : </a>
-<a name="482"><span class="lineNum">     482 </span>            :     bool shouldActOnValue (float v);</a>
-<a name="483"><span class="lineNum">     483 </span>            : </a>
-<a name="484"><span class="lineNum">     484 </span>            :     //==============================================================================</a>
-<a name="485"><span class="lineNum">     485 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CustomControlSurface)</a>
-<a name="486"><span class="lineNum">     486 </span>            : };</a>
-<a name="487"><span class="lineNum">     487 </span>            : </a>
-<a name="488"><span class="lineNum">     488 </span>            : }} // namespace tracktion { inline namespace engine</a>
+<a name="457"><span class="lineNum">     457 </span>            :     virtual void addFunction (juce::PopupMenu&amp;, juce::SortedSet&lt;int&gt;&amp; commandSet, const juce::String&amp; group, const juce::String&amp; name, ActionID id, ActionFunction);</a>
+<a name="458"><span class="lineNum">     458 </span>            :     virtual void addTrackFunction (juce::PopupMenu&amp;, const juce::String&amp; group, const juce::String&amp; name, ActionID id, ActionFunction);</a>
+<a name="459"><span class="lineNum">     459 </span>            :     virtual void addPluginFunction (juce::PopupMenu&amp;, const juce::String&amp; group, const juce::String&amp; name, ActionID id, ActionFunction);</a>
+<a name="460"><span class="lineNum">     460 </span>            :     virtual void addAllCommandItem (juce::PopupMenu&amp;);</a>
+<a name="461"><span class="lineNum">     461 </span>            : </a>
+<a name="462"><span class="lineNum">     462 </span>            :     virtual void sendCommandToControllerForActionID (int actionID, bool);</a>
+<a name="463"><span class="lineNum">     463 </span>            :     virtual void sendCommandToControllerForActionID (int actionID, float value);</a>
+<a name="464"><span class="lineNum">     464 </span>            :     virtual void sendCommandToControllerForActionID (int actionID, juce::String);</a>
+<a name="465"><span class="lineNum">     465 </span>            : </a>
+<a name="466"><span class="lineNum">     466 </span>            :     virtual juce::String controllerIDToString (int id, int channelid) const;</a>
+<a name="467"><span class="lineNum">     467 </span>            :     virtual juce::String noteIDToString (int note, int channelid) const;</a>
+<a name="468"><span class="lineNum">     468 </span>            :     virtual juce::String getFunctionName (int id) const;</a>
+<a name="469"><span class="lineNum">     469 </span>            : </a>
+<a name="470"><span class="lineNum">     470 </span>            :     virtual void init();</a>
+<a name="471"><span class="lineNum">     471 </span>            :     virtual bool loadFromXml (const juce::XmlElement&amp;);</a>
+<a name="472"><span class="lineNum">     472 </span>            :     virtual void clearCommandGroups();</a>
+<a name="473"><span class="lineNum">     473 </span>            : </a>
+<a name="474"><span class="lineNum">     474 </span>            :     virtual bool isPendingEventAssignable();</a>
+<a name="475"><span class="lineNum">     475 </span>            :     virtual void updateOrCreateMappingForID (int id, juce::String addr, int channel, int noteNum, int controllerID);</a>
+<a name="476"><span class="lineNum">     476 </span>            :     virtual void addMappingSetsForID (ActionID, juce::Array&lt;MappingSet&gt;&amp; mappingSet);</a>
+<a name="477"><span class="lineNum">     477 </span>            : </a>
+<a name="478"><span class="lineNum">     478 </span>            :     virtual void handleAsyncUpdate() override;</a>
+<a name="479"><span class="lineNum">     479 </span>            :     virtual void recreateOSCSockets();</a>
+<a name="480"><span class="lineNum">     480 </span>            : </a>
+<a name="481"><span class="lineNum">     481 </span>            :     virtual bool shouldActOnValue (float v);</a>
+<a name="482"><span class="lineNum">     482 </span>            : </a>
+<a name="483"><span class="lineNum">     483 </span>            :     //==============================================================================</a>
+<a name="484"><span class="lineNum">     484 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CustomControlSurface)</a>
+<a name="485"><span class="lineNum">     485 </span>            : };</a>
+<a name="486"><span class="lineNum">     486 </span>            : </a>
+<a name="487"><span class="lineNum">     487 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

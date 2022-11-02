@@ -8,7 +8,7 @@ var searchData=
   ['quarter_3984',['quarter',['../namespacetracktion_1_1engine_1_1ModifierCommon.html#a8196f0dce2231f21fcd54b02462ddacba63aae0f7c2d6df0bc4ed85c7cb899c89',1,'tracktion::engine::ModifierCommon']]],
   ['quarterd_3985',['quarterD',['../namespacetracktion_1_1engine_1_1ModifierCommon.html#a8196f0dce2231f21fcd54b02462ddacbad780c5d052494129144f256fab005a27',1,'tracktion::engine::ModifierCommon']]],
   ['quartert_3986',['quarterT',['../namespacetracktion_1_1engine_1_1ModifierCommon.html#a8196f0dce2231f21fcd54b02462ddacbae0581745fe2aaf6a32e6b93076e09468',1,'tracktion::engine::ModifierCommon']]],
-  ['quickparam_3987',['quickParam',['../classtracktion_1_1engine_1_1CustomControlSurface.html#a0fe8ca867398100221323833847cb2b1',1,'tracktion::engine::CustomControlSurface']]],
+  ['quickparam_3987',['quickParam',['../classtracktion_1_1engine_1_1CustomControlSurface.html#ab59518438a21be1921e10be4bd3e9a8f',1,'tracktion::engine::CustomControlSurface']]],
   ['quickparamid_3988',['quickParamId',['../classtracktion_1_1engine_1_1CustomControlSurface.html#a616409a4913a2ad7dd074e25b022a5cdabf9fb55f26344ec0a262de6f73803317',1,'tracktion::engine::CustomControlSurface']]],
   ['quickparamname_3989',['quickParamName',['../classtracktion_1_1engine_1_1Plugin.html#a544b24c1d1d814b5ef2289b256ec9f47',1,'tracktion::engine::Plugin']]]
 ];

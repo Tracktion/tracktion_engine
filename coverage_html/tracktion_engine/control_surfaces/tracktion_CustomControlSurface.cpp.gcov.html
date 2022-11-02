@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">9</td>
-            <td class="headerCovTableEntry">891</td>
+            <td class="headerCovTableEntry">902</td>
             <td class="headerCovTableEntryLo">1.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-02 13:38:42</td>
+            <td class="headerValue">2022-11-02 15:45:56</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -790,27 +790,27 @@
 <a name="728"><span class="lineNum">     728 </span>            : </a>
 <a name="729"><span class="lineNum">     729 </span><span class="lineNoCov">          0 : void CustomControlSurface::soloCountChanged (bool anySolo)</span></a>
 <a name="730"><span class="lineNum">     730 </span>            : {</a>
-<a name="731"><span class="lineNum">     731 </span>            :     sendCommandToControllerForActionID (clearAllSoloId, anySolo);</a>
+<a name="731"><span class="lineNum">     731 </span><span class="lineNoCov">          0 :     sendCommandToControllerForActionID (clearAllSoloId, anySolo);</span></a>
 <a name="732"><span class="lineNum">     732 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="733"><span class="lineNum">     733 </span>            : </a>
 <a name="734"><span class="lineNum">     734 </span><span class="lineNoCov">          0 : void CustomControlSurface::playStateChanged (bool isPlaying)</span></a>
 <a name="735"><span class="lineNum">     735 </span>            : {</a>
-<a name="736"><span class="lineNum">     736 </span>            :     sendCommandToControllerForActionID (playId, isPlaying);</a>
+<a name="736"><span class="lineNum">     736 </span><span class="lineNoCov">          0 :     sendCommandToControllerForActionID (playId, isPlaying);</span></a>
 <a name="737"><span class="lineNum">     737 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="738"><span class="lineNum">     738 </span>            : </a>
 <a name="739"><span class="lineNum">     739 </span><span class="lineNoCov">          0 : void CustomControlSurface::recordStateChanged (bool isRecording)</span></a>
 <a name="740"><span class="lineNum">     740 </span>            : {</a>
-<a name="741"><span class="lineNum">     741 </span>            :     sendCommandToControllerForActionID (recordId, isRecording);</a>
+<a name="741"><span class="lineNum">     741 </span><span class="lineNoCov">          0 :     sendCommandToControllerForActionID (recordId, isRecording);</span></a>
 <a name="742"><span class="lineNum">     742 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="743"><span class="lineNum">     743 </span>            : </a>
 <a name="744"><span class="lineNum">     744 </span><span class="lineNoCov">          0 : void CustomControlSurface::automationReadModeChanged (bool isReading)</span></a>
 <a name="745"><span class="lineNum">     745 </span>            : {</a>
-<a name="746"><span class="lineNum">     746 </span>            :     sendCommandToControllerForActionID (automationReadId, isReading);</a>
+<a name="746"><span class="lineNum">     746 </span><span class="lineNoCov">          0 :     sendCommandToControllerForActionID (automationReadId, isReading);</span></a>
 <a name="747"><span class="lineNum">     747 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="748"><span class="lineNum">     748 </span>            : </a>
 <a name="749"><span class="lineNum">     749 </span><span class="lineNoCov">          0 : void CustomControlSurface::automationWriteModeChanged (bool isWriting)</span></a>
 <a name="750"><span class="lineNum">     750 </span>            : {</a>
-<a name="751"><span class="lineNum">     751 </span>            :     sendCommandToControllerForActionID (automationRecordId, isWriting);</a>
+<a name="751"><span class="lineNum">     751 </span><span class="lineNoCov">          0 :     sendCommandToControllerForActionID (automationRecordId, isWriting);</span></a>
 <a name="752"><span class="lineNum">     752 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="753"><span class="lineNum">     753 </span>            : </a>
 <a name="754"><span class="lineNum">     754 </span><span class="lineNoCov">          0 : void CustomControlSurface::faderBankChanged (int newStartChannelNumber, const juce::StringArray&amp; trackNames)</span></a>
@@ -857,32 +857,32 @@
 <a name="795"><span class="lineNum">     795 </span>            : </a>
 <a name="796"><span class="lineNum">     796 </span><span class="lineNoCov">          0 : void CustomControlSurface::clickOnOffChanged (bool enabled)</span></a>
 <a name="797"><span class="lineNum">     797 </span>            : {</a>
-<a name="798"><span class="lineNum">     798 </span>            :     sendCommandToControllerForActionID (toggleClickId, enabled);</a>
+<a name="798"><span class="lineNum">     798 </span><span class="lineNoCov">          0 :     sendCommandToControllerForActionID (toggleClickId, enabled);</span></a>
 <a name="799"><span class="lineNum">     799 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="800"><span class="lineNum">     800 </span>            : </a>
 <a name="801"><span class="lineNum">     801 </span><span class="lineNoCov">          0 : void CustomControlSurface::snapOnOffChanged (bool enabled)</span></a>
 <a name="802"><span class="lineNum">     802 </span>            : {</a>
-<a name="803"><span class="lineNum">     803 </span>            :     sendCommandToControllerForActionID (toggleSnapId, enabled);</a>
+<a name="803"><span class="lineNum">     803 </span><span class="lineNoCov">          0 :     sendCommandToControllerForActionID (toggleSnapId, enabled);</span></a>
 <a name="804"><span class="lineNum">     804 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="805"><span class="lineNum">     805 </span>            : </a>
 <a name="806"><span class="lineNum">     806 </span><span class="lineNoCov">          0 : void CustomControlSurface::loopOnOffChanged (bool enabled)</span></a>
 <a name="807"><span class="lineNum">     807 </span>            : {</a>
-<a name="808"><span class="lineNum">     808 </span>            :     sendCommandToControllerForActionID (toggleLoopId, enabled);</a>
+<a name="808"><span class="lineNum">     808 </span><span class="lineNoCov">          0 :     sendCommandToControllerForActionID (toggleLoopId, enabled);</span></a>
 <a name="809"><span class="lineNum">     809 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="810"><span class="lineNum">     810 </span>            : </a>
 <a name="811"><span class="lineNum">     811 </span><span class="lineNoCov">          0 : void CustomControlSurface::slaveOnOffChanged (bool enabled)</span></a>
 <a name="812"><span class="lineNum">     812 </span>            : {</a>
-<a name="813"><span class="lineNum">     813 </span>            :     sendCommandToControllerForActionID (toggleSlaveId, enabled);</a>
+<a name="813"><span class="lineNum">     813 </span><span class="lineNoCov">          0 :     sendCommandToControllerForActionID (toggleSlaveId, enabled);</span></a>
 <a name="814"><span class="lineNum">     814 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="815"><span class="lineNum">     815 </span>            : </a>
 <a name="816"><span class="lineNum">     816 </span><span class="lineNoCov">          0 : void CustomControlSurface::punchOnOffChanged (bool enabled)</span></a>
 <a name="817"><span class="lineNum">     817 </span>            : {</a>
-<a name="818"><span class="lineNum">     818 </span>            :     sendCommandToControllerForActionID (togglePunchId, enabled);</a>
+<a name="818"><span class="lineNum">     818 </span><span class="lineNoCov">          0 :     sendCommandToControllerForActionID (togglePunchId, enabled);</span></a>
 <a name="819"><span class="lineNum">     819 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="820"><span class="lineNum">     820 </span>            : </a>
 <a name="821"><span class="lineNum">     821 </span><span class="lineNoCov">          0 : void CustomControlSurface::scrollOnOffChanged (bool enabled)</span></a>
 <a name="822"><span class="lineNum">     822 </span>            : {</a>
-<a name="823"><span class="lineNum">     823 </span>            :     sendCommandToControllerForActionID (toggleScrollId, enabled);</a>
+<a name="823"><span class="lineNum">     823 </span><span class="lineNoCov">          0 :     sendCommandToControllerForActionID (toggleScrollId, enabled);</span></a>
 <a name="824"><span class="lineNum">     824 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="825"><span class="lineNum">     825 </span>            : </a>
 <a name="826"><span class="lineNum">     826 </span><span class="lineNoCov">          0 : void CustomControlSurface::parameterChanged (int paramIndex, const ParameterSetting&amp; setting)</span></a>

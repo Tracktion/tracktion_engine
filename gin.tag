@@ -24489,697 +24489,697 @@
       <anchor>a287b510e01453b505ee98b7d3b53abd7</anchor>
       <arglist>(int) const</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>play</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a0f9b340eb9e5e8d101ca5db082e628b0</anchor>
+      <anchor>a21c7e8133c296c4b3193242240a1d799</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>stop</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>ab414ed0c7da892b6cfdf346acd86acdb</anchor>
+      <anchor>aaf60f3a56a8e6279872099ae734d515f</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>record</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a333c13581bf7738f86a4e7661e204ab7</anchor>
+      <anchor>ab5dbe9363fbb03f016225a9ce0f1db59</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>home</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>aaf42a16fd827be52f8426d1de755023d</anchor>
+      <anchor>ab0d9f329797a4ed2d7957d1f7a5bbaa7</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>end</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a7ee0466ef802863c60a550de9027d879</anchor>
+      <anchor>a6d41f05298e97378223079138104e8ae</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>rewind</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a63d38c98090609045985e9e22f005232</anchor>
+      <anchor>ad7fbc419d3f53ddfe2b5e09d36858a6d</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>fastForward</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>ace4243345bb515411693b68389edc2ce</anchor>
+      <anchor>acfc632b6657698f2f81c8480c99aba91</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>markIn</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>af4786548c7602546594b93dde9a427fe</anchor>
+      <anchor>aba57be981f85576698d945595eda62c1</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>markOut</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a8f7259810bfe40a075f5231d5f7b1ec8</anchor>
+      <anchor>adcf23e4091c52a1a6bbaa35d78b5a141</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>automationReading</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>ac632e6fe8cff5e8a63ee890ef44e4406</anchor>
+      <anchor>abdca3862216530e327c87580f51a44fa</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>automationWriting</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>af6cce5daf0ffe4e89f996fbecb5e8f5f</anchor>
+      <anchor>a5e50e454f56e3d0476f16941d1f50176</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>addMarker</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>ab8ec75e13776a027a4915766fa511042</anchor>
+      <anchor>a32888fa6bc2ca6cd82da5d4c83d103de</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>prevMarker</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a5cfabd3329accaed6535228b925544bc</anchor>
+      <anchor>a9789778b6e75d7e0e83d21eda79f19d9</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>nextMarker</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>afd4ee80a63e394da37ccbcc724e2b552</anchor>
+      <anchor>aa883a102d0e2acea603e6fa6850b7f85</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>nudgeLeft</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>ab7a18eb04eefb9798d352065186cacad</anchor>
+      <anchor>a42d729134bbf8e419010a37408feb792</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>nudgeRight</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>ac08c7acba0720cf73647bbfac5ee17dd</anchor>
+      <anchor>a95a20c3ab201cbe9f503761871c2e006</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>abort</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>aee6b493dcb392815245511dd3a7029d1</anchor>
+      <anchor>a39fce77e4136b731b9c44109c0d4795b</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>abortRestart</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a989e1d82ec33caa5f107652533057f67</anchor>
+      <anchor>a99474db8ff7b692cf723319a2a14dccd</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>jog</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>abd3a0d7111181b9e49e5d2d7922e2fc9</anchor>
+      <anchor>a542f1c3bc8e60409972f58266199df23</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>jumpToMarkIn</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a99871719f34115bfa521bcdcd5cde77e</anchor>
+      <anchor>a45c0b0821d7915cab873ae35b4819098</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>jumpToMarkOut</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a0920b41ad726b8f210fb0dd14a8c2af8</anchor>
+      <anchor>a6b12133c5c73bfc741c376b5860f2d3f</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>clearAllSolo</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a4eab4d240413fd1ee34eab77ef4b6417</anchor>
+      <anchor>aab118b066efb6734267d1fc940eb4439</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>toggleBeatsSecondsMode</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>aff30aee3bf21aff7eb8e851b37913ab4</anchor>
+      <anchor>a14f5bc7d2f32a5c6cb0b93005118afd5</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>toggleLoop</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a71dccf114174925b63724c2aa7f94238</anchor>
+      <anchor>a0b989b5a8c2994f721aa36b5fd271b69</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>togglePunch</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>af70ca767559135f8dea709dd72d9cc89</anchor>
+      <anchor>af2c5a10629655cb1749b46541f8253fa</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>toggleClick</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a9abc78f49116064fda6fbc5da9f5ae23</anchor>
+      <anchor>aecefc992a6203af812b05fae57d863e2</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>toggleSnap</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a6146d4432684468b14b8a5feb8f07856</anchor>
+      <anchor>a5bf72c98cea7851380ff4e34b0831108</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>toggleSlave</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>ab7c81a8d56544c1cfb96186b1bd21cd2</anchor>
+      <anchor>a297de6b08b50aec94b0ad6a48917cc37</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>toggleEtoE</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>aa68a4812a1f4e85281993e5a34bcd826</anchor>
+      <anchor>a8607777eb480075bfa160db10fefac27</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>toggleScroll</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a693f6a38665f4c60ab0409ba5041d930</anchor>
+      <anchor>ab955117e135c6b03fa683c6d14eb74a4</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>toggleAllArm</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a63241f85854044fc01fc627cfc15f961</anchor>
+      <anchor>ae4f836f3bb0e9db429b0fa532c9da655</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>masterVolume</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a0103610a6ae51a787915a8d47e731ee5</anchor>
+      <anchor>a38523f55e831b73f3300b1345c5cdfaa</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>masterPan</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a14e1ed66317d7559a13e490a79c212d8</anchor>
+      <anchor>a94d9e00661e01ee8a5f33c600fa63f3f</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>quickParam</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a0fe8ca867398100221323833847cb2b1</anchor>
+      <anchor>ab59518438a21be1921e10be4bd3e9a8f</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>paramTrack</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a86d7591d208334a6f223fea6b87f581b</anchor>
+      <anchor>af7afc0f2009718f36b5fa4e4e7529996</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>volTrack</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a20ad741efd75c6e53c31784668059c8b</anchor>
+      <anchor>aeb41d6f97e7c424f8e49a20c43db76f2</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>panTrack</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a33a54d671b75b6373b24250be199f7c2</anchor>
+      <anchor>a92c9cd76fa13e2eb45cb8f3ff3be8cd3</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>muteTrack</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a22394f766b7135f04cc6cdd5259c1065</anchor>
+      <anchor>a316c811850e098c3ec5c2d3a20603719</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>soloTrack</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a43dd9916e042cbe44d2e7f58395daac7</anchor>
+      <anchor>a4505361d5626cf402cec834b1d6ff4f1</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>armTrack</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>aaa172bb0c61a64ba3cf759796cec3420</anchor>
+      <anchor>a7adc3cf594b3a9391e936257af2080d0</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>selectTrack</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>ab2a00b64e417cc02bd0d8580cc34d098</anchor>
+      <anchor>acfd6f6dfa580ec2cf3114f4e5ade4afa</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>auxTrack</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a698e0160f6ee5bf58965f6aff13c91eb</anchor>
+      <anchor>a23a2549e919e50cba5ef4128489a64a4</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>zoomIn</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a1e30115770fffe111c892f35740256dc</anchor>
+      <anchor>a64ffbf622d66be5a472db951313c4a58</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>zoomOut</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>af2310be1d3fc70e0f6b8cd31dfa312e4</anchor>
+      <anchor>a7c8e6679925e6b21d4267a4b166e5c6e</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>scrollTracksUp</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a82a969fa5a23816442aa64e71c75518e</anchor>
+      <anchor>ab4fe8f48ebd431554018a79f22ca2611</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>scrollTracksDown</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a01f120836c7eeaba1c3a11c46b889c1e</anchor>
+      <anchor>a06ce41ca702a3296306d0ff6610dbea9</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>scrollTracksLeft</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>ab05322ca7def76740f8591b5dc71ed07</anchor>
+      <anchor>a3dc9633574f65cb54885a10557ad98fe</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>scrollTracksRight</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a2d1681ac3d5291a63068b713f3f02251</anchor>
+      <anchor>a2179ee75f0f7f4f49b36e5d87f2e95e5</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>zoomTracksIn</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>aae11817cd8aa424bcddde43b97ed7b76</anchor>
+      <anchor>ab80654bf211aec53b4ffc8a5a7fde1cc</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>zoomTracksOut</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a94e046d5f30dcc969bf5fb3f7a950187</anchor>
+      <anchor>a9b94d00caf5ba83feb4171489d323d48</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>toggleSelectionMode</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a384433329bd6eff43aff692bdc4abb03</anchor>
+      <anchor>ae19523a96aab6250d04c30da1bbc057e</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>selectLeft</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a942de11de707e0544e5a4f5c076940f5</anchor>
+      <anchor>a71af43b1ba1cfc1cf4f9c6a1c49fc6c0</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>selectRight</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a38af382fc321374bf4a5396e2ba8d05a</anchor>
+      <anchor>a26b6d91393e7514611233470da0c4b8d</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>selectUp</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a24aee0c430c657f4fa7f145b7ffb1597</anchor>
+      <anchor>a766657d49f2c0a90b2214e6fef882cd9</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>selectDown</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a3b3ca648305e345db0c9a72f7073c7e0</anchor>
+      <anchor>a04dbcce54b4d831b2c94263c91702f44</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>selectClipInTrack</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>ab71c89d6651bb1358af638bbd3a20aa8</anchor>
+      <anchor>a38bce914e4f9155480686a2134f84f4a</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>selectFilterInTrack</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a1222dc4f1138154840e9af5e8f860a1f</anchor>
+      <anchor>aac944fca635d6cd05f7f1ce26a344642</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>faderBankLeft</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>ac582ad9851955e722b8ef63e7e9cab1a</anchor>
+      <anchor>a3dfebe266baa7b58053cd6dc482eda4d</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>faderBankLeft1</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a8b8a933a1d265daf938fcaf50777e837</anchor>
+      <anchor>a35a180db90ecae86e5e7db687257e009</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>faderBankLeft4</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>aad1fc21b6deb628cab9b1e3c428310be</anchor>
+      <anchor>a27272eb4ee4e50e9d811f730e7a24969</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>faderBankLeft8</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>ae310230a04f79a50d69f44ce34d32f96</anchor>
+      <anchor>a8e33f55006c5922ca92d36b4c8503ac6</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>faderBankLeft16</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a66e5a11e6a6241155ba9220334afa81a</anchor>
+      <anchor>ad9683cffc1208079b7db05fa11e38d5d</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>faderBankRight</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>aaa4601a005f13bc0d7b2f43bb2c5fcb4</anchor>
+      <anchor>aeb12904704ca70cb102d67c3e8ab2235</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>faderBankRight1</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a01146cfab2b8e2112bd9acae1727b7d1</anchor>
+      <anchor>aa82c75361be51b1c9b6daa13b8a370b2</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>faderBankRight4</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>afd5acc3442336b11f42d0bcf0aaea51e</anchor>
+      <anchor>a2aa73ac00856e97babd62d33a3b63201</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>faderBankRight8</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>aad120d5dde9f08850d1961907bdc7b7c</anchor>
+      <anchor>ad13c2cfb6b0b8e6cc4e2e224ccfb3cfe</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>faderBankRight16</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a1d5de44f870adfacab41f0f6033e6d26</anchor>
+      <anchor>af184a7f8213bbf073c3f34fcfcd19435</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>paramBankLeft</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a12000ec01755d8d6caeb314440977160</anchor>
+      <anchor>aae8e995e95b8d10de4c084043025ce38</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>paramBankLeft1</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>af4de2eb449adadd7a59186edf6be2301</anchor>
+      <anchor>a60aba678fc40561fcb2d16e379219686</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>paramBankLeft4</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a9eb8cdfcf3f03ad7dc8c51b924753f4a</anchor>
+      <anchor>a8a01d20a36ff39077daf6ecd2ad3bdd8</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>paramBankLeft8</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a8ecc770e048745da080d94cb34c113f3</anchor>
+      <anchor>a5fa7481a5afd8fc0ac19c9e19bf47407</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>paramBankLeft16</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a1a7c7f9c6309d5af8403b5bc34d3f942</anchor>
+      <anchor>a8a3ae053bdf8b7beeb19340ee1a75ae4</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>paramBankLeft24</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>ad8336865dd47bc1a6122cf34d10d5066</anchor>
+      <anchor>a7e1c64c86435ef336a4db14c9e223eb3</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>paramBankRight</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a48711767bb1a4a26e3b58e978da774c7</anchor>
+      <anchor>a2b98467d0d41fc7d1f2b74e8161273bd</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>paramBankRight1</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a74486d5e0d3b879389370fe10855e57c</anchor>
+      <anchor>a65e72329e3da0d6a4979a613ecf31a96</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>paramBankRight4</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a3146b7dc98e6959199e0f72223e10965</anchor>
+      <anchor>a712f7f09abafcc201cf2ef19b135c3d3</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>paramBankRight8</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a2dace8ee24a72db81cafde3c106c1bdf</anchor>
+      <anchor>a674340da2b64805167bc74fda8e28340</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>paramBankRight16</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a852f75159c338da2dc3c7836f06943c3</anchor>
+      <anchor>adc044ed9d733563b3a39d3e906fd0778</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>paramBankRight24</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>adbfa0b6ac96d21866a8b3a83900bf661</anchor>
+      <anchor>ab18c8e7f15b7f9349a0cd57192703bcd</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>userFunction1</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a6a30da4c4e6457a8bde2622d83a6c3ed</anchor>
+      <anchor>a76735d1fd133a0dbbb87ecc9f73d5e99</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>userFunction2</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>afbb68df8d547c8c8750ffea243dec500</anchor>
+      <anchor>a29e4f67ad36eab36862734da3f517a18</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>userFunction3</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a859c2be4cdac3c781c318955f9e955a6</anchor>
+      <anchor>afea43529baf5f2d1de4742e11e6eee52</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>userFunction4</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a69c56604daee1d9d315fa49eb9fa9965</anchor>
+      <anchor>ab7a2c3164220374ca9408de90f5947a6</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>userFunction5</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a1444accf6501bf7e240aaa4b21692baf</anchor>
+      <anchor>acec82ac1b4651070314975dbaa07e161</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>userFunction6</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a0bea65090242f91b5bf13e7fd1d69cf5</anchor>
+      <anchor>a5aa389f15b254921a2e4c48aaa01ea8b</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>userFunction7</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a3c81ae91843bde8b6c181fbcb1523627</anchor>
+      <anchor>a92484540e404d3172cc90aea52e411cb</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>userFunction8</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a19991a781589cd6711a3bc84dd3bda87</anchor>
+      <anchor>aba0a2bedf3a55552def9cd9f55001873</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>userFunction9</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a51c6b7d6477b6be398ac3215cabffe58</anchor>
+      <anchor>a01b14dc5449aeae61c437ee06a32af93</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>userFunction10</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>ac86f9bb3eb8f0664755748ce3191d526</anchor>
+      <anchor>a3029eba442f0b7e88c6fe3d0f4366cca</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>userFunction11</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>ae7b0aceb5eca39f125ed8dc9e3e93f54</anchor>
+      <anchor>a36d6c8cc0f421c3c80ce4074f256cb0e</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>userFunction12</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>af4e5260df4e1d1102210221c9945c4d3</anchor>
+      <anchor>a616bef40cffb3f67f9c7359a984b8af6</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>userFunction13</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>abf80cae858dd3d1af830acf503f04f4e</anchor>
+      <anchor>ad5059a06b12ce0d40df400d4945a3d06</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>userFunction14</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a1f9a8f7dd4bcb81099fbd630f8d51f8f</anchor>
+      <anchor>ab4c6d1a1a21ed0215a5ac9815a4edd17</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>userFunction15</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a54b331f96ccf16250226af635c40fdde</anchor>
+      <anchor>a62f97ac0135bb3c2e186b6a3777adc9f</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>userFunction16</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>ac0e2c96f0761fa4ef5cf8912fa498914</anchor>
+      <anchor>a7a5a73aafbc9c746dce7876b7dc8a608</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>userFunction17</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a6a2cee2a8ee6efae8680208c711e65f7</anchor>
+      <anchor>a2cacd2e052f0632a85fbef5ad934aff4</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>userFunction18</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a31596edfec9ef5c71debfb9b8c8956e7</anchor>
+      <anchor>a0964367d996c149d1e750d1b02b6003f</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>userFunction19</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a1a71934abdb80c1224dfe61d96002e6a</anchor>
+      <anchor>aac21939c7768b23caa6c22a772a7c192</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>userFunction20</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a4f8ed6eb998242aa2195c091acdffaee</anchor>
+      <anchor>a430086fc770619867fe4ba45531a6dad</anchor>
       <arglist>(float val, int param)</arglist>
     </member>
     <member kind="function">
@@ -25189,39 +25189,39 @@
       <anchor>a32a21022f1967be16c06fd2d060c35a1</anchor>
       <arglist>(float, int)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>loadFunctions</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a8a3447b2901502d1a4a7aee4ee3ea667</anchor>
+      <anchor>aff1e0e76b366a4ed9d13c8ca4c0980f5</anchor>
       <arglist>()</arglist>
     </member>
-    <member kind="function">
-      <type>juce::XmlElement *</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual juce::XmlElement *</type>
       <name>createXml</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a3c2b675e8a0bba35ac2c4f6caf15e21b</anchor>
+      <anchor>a166b2e9e640437b6e5c80c75c6d27f3a</anchor>
       <arglist>()</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>importSettings</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a1dacc714a33bf7ab4635c0c23f6ba94b</anchor>
+      <anchor>a4e388b5e91a19f9af72db93ce4b7c277</anchor>
       <arglist>(const juce::File &amp;)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>importSettings</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>ac3627c1d8371addf1d1e4fe1ffe2f766</anchor>
+      <anchor>a231a84e47d672f7b0b329e013e77f374</anchor>
       <arglist>(const juce::String &amp;)</arglist>
     </member>
-    <member kind="function">
-      <type>void</type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>exportSettings</name>
       <anchorfile>classtracktion_1_1engine_1_1CustomControlSurface.html</anchorfile>
-      <anchor>a403a3e64b064eae83f633fdac58887af</anchor>
+      <anchor>a352b73cc900fecadba787f05271c52d7</anchor>
       <arglist>(const juce::File &amp;)</arglist>
     </member>
     <member kind="function">
