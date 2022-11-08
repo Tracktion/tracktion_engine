@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-02 17:23:13</td>
+            <td class="headerValue">2022-11-08 14:21:42</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">11</td>
@@ -112,7 +112,7 @@
 <a name="50"><span class="lineNum">      50 </span>            :                          const juce::AudioChannelSet&amp; bufferChannels,</a>
 <a name="51"><span class="lineNum">      51 </span>            :                          int bufferStart, int bufferSize,</a>
 <a name="52"><span class="lineNum">      52 </span>            :                          MidiMessageArray* midiBuffer, double midiOffset,</a>
-<a name="53"><span class="lineNum">      53 </span>            :                          TimePosition editTime, bool playing, bool scrubbing, bool rendering,</a>
+<a name="53"><span class="lineNum">      53 </span>            :                          TimeRange editTime, bool playing, bool scrubbing, bool rendering,</a>
 <a name="54"><span class="lineNum">      54 </span>            :                          bool allowBypassedProcessing) noexcept;</a>
 <a name="55"><span class="lineNum">      55 </span>            : </a>
 <a name="56"><span class="lineNum">      56 </span>            :     /** Creates a copy of another PluginRenderContext. */</a>
@@ -145,8 +145,8 @@
 <a name="83"><span class="lineNum">      83 </span>            :     /** A time offset to add to the timestamp of any events in the MIDI buffer. */</a>
 <a name="84"><span class="lineNum">      84 </span>            :     double midiBufferOffset = 0.0;</a>
 <a name="85"><span class="lineNum">      85 </span>            : </a>
-<a name="86"><span class="lineNum">      86 </span>            :     /** The time in seconds that the start of this context represents. */</a>
-<a name="87"><span class="lineNum">      87 </span>            :     TimePosition editTime;</a>
+<a name="86"><span class="lineNum">      86 </span>            :     /** The edit time range this context represents. */</a>
+<a name="87"><span class="lineNum">      87 </span>            :     TimeRange editTime;</a>
 <a name="88"><span class="lineNum">      88 </span>            : </a>
 <a name="89"><span class="lineNum">      89 </span>            :     /** True if the the playhead is currently playing. */</a>
 <a name="90"><span class="lineNum">      90 </span>            :     bool isPlaying = false;</a>
@@ -211,7 +211,7 @@
 <a name="149"><span class="lineNum">     149 </span>            :     //==============================================================================</a>
 <a name="150"><span class="lineNum">     150 </span>            :     /** Enable/disable the plugin.  */</a>
 <a name="151"><span class="lineNum">     151 </span>            :     virtual void setEnabled (bool);</a>
-<a name="152"><span class="lineNum">     152 </span><span class="lineCov">   57294520 :     bool isEnabled() const noexcept                         { return enabled; }</span></a>
+<a name="152"><span class="lineNum">     152 </span><span class="lineCov">   57180820 :     bool isEnabled() const noexcept                         { return enabled; }</span></a>
 <a name="153"><span class="lineNum">     153 </span>            : </a>
 <a name="154"><span class="lineNum">     154 </span>            :     /** This is a bit different to being enabled as when frozen a plugin can't be interacted with. */</a>
 <a name="155"><span class="lineNum">     155 </span>            :     void setFrozen (bool shouldBeFrozen);</a>
@@ -264,7 +264,7 @@
 <a name="202"><span class="lineNum">     202 </span>            :     virtual void applyToBuffer (const PluginRenderContext&amp;) = 0;</a>
 <a name="203"><span class="lineNum">     203 </span>            : </a>
 <a name="204"><span class="lineNum">     204 </span>            :     /** Called between successive rendering blocks. */</a>
-<a name="205"><span class="lineNum">     205 </span><span class="lineCov">   27381200 :     virtual void prepareForNextBlock (TimePosition /*editTime*/) {}</span></a>
+<a name="205"><span class="lineNum">     205 </span><span class="lineCov">   27380000 :     virtual void prepareForNextBlock (TimePosition /*editTime*/) {}</span></a>
 <a name="206"><span class="lineNum">     206 </span>            : </a>
 <a name="207"><span class="lineNum">     207 </span>            :     // wrapper on applyTobuffer, called by the node</a>
 <a name="208"><span class="lineNum">     208 </span>            :     void applyToBufferWithAutomation (const PluginRenderContext&amp;);</a>

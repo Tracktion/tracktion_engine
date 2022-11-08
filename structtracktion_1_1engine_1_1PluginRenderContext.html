@@ -79,8 +79,8 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a7125393bb8bff3c14c15c8fde087d522"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1PluginRenderContext.html#a7125393bb8bff3c14c15c8fde087d522">PluginRenderContext</a> (juce::AudioBuffer&lt; float &gt; *buffer, const juce::AudioChannelSet &amp;bufferChannels, int bufferStart, int bufferSize, <a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html">MidiMessageArray</a> *midiBuffer, double midiOffset, TimePosition <a class="el" href="structtracktion_1_1engine_1_1PluginRenderContext.html#a92b011d9b869980c2cd8baf4f3f455a5">editTime</a>, bool playing, bool scrubbing, bool rendering, bool <a class="el" href="structtracktion_1_1engine_1_1PluginRenderContext.html#a9d25409e64b24de963bd8fbb29e3571c">allowBypassedProcessing</a>) noexcept</td></tr>
-<tr class="separator:a7125393bb8bff3c14c15c8fde087d522"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e49cd908e161c26241d6ff02098a688"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1PluginRenderContext.html#a2e49cd908e161c26241d6ff02098a688">PluginRenderContext</a> (juce::AudioBuffer&lt; float &gt; *buffer, const juce::AudioChannelSet &amp;bufferChannels, int bufferStart, int bufferSize, <a class="el" href="structtracktion_1_1engine_1_1MidiMessageArray.html">MidiMessageArray</a> *midiBuffer, double midiOffset, TimeRange <a class="el" href="structtracktion_1_1engine_1_1PluginRenderContext.html#ae135ea11a3bb11bdf8063094eb8463d0">editTime</a>, bool playing, bool scrubbing, bool rendering, bool <a class="el" href="structtracktion_1_1engine_1_1PluginRenderContext.html#a9d25409e64b24de963bd8fbb29e3571c">allowBypassedProcessing</a>) noexcept</td></tr>
+<tr class="separator:a2e49cd908e161c26241d6ff02098a688"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad90ee33f049bcb74e264b5e0e2a1bfe7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1PluginRenderContext.html#ad90ee33f049bcb74e264b5e0e2a1bfe7">PluginRenderContext</a> (const <a class="el" href="structtracktion_1_1engine_1_1PluginRenderContext.html">PluginRenderContext</a> &amp;)=default</td></tr>
 <tr class="memdesc:ad90ee33f049bcb74e264b5e0e2a1bfe7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a copy of another <a class="el" href="structtracktion_1_1engine_1_1PluginRenderContext.html" title="The context passed to plugin render methods to provide it with buffers to fill.">PluginRenderContext</a>.  <a href="structtracktion_1_1engine_1_1PluginRenderContext.html#ad90ee33f049bcb74e264b5e0e2a1bfe7">More...</a><br /></td></tr>
 <tr class="separator:ad90ee33f049bcb74e264b5e0e2a1bfe7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -112,9 +112,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a81523f751a35f998fb1bd2654d230465"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1PluginRenderContext.html#a81523f751a35f998fb1bd2654d230465">midiBufferOffset</a> = 0.0</td></tr>
 <tr class="memdesc:a81523f751a35f998fb1bd2654d230465"><td class="mdescLeft">&#160;</td><td class="mdescRight">A time offset to add to the timestamp of any events in the MIDI buffer.  <a href="structtracktion_1_1engine_1_1PluginRenderContext.html#a81523f751a35f998fb1bd2654d230465">More...</a><br /></td></tr>
 <tr class="separator:a81523f751a35f998fb1bd2654d230465"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a92b011d9b869980c2cd8baf4f3f455a5"><td class="memItemLeft" align="right" valign="top">TimePosition&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1PluginRenderContext.html#a92b011d9b869980c2cd8baf4f3f455a5">editTime</a></td></tr>
-<tr class="memdesc:a92b011d9b869980c2cd8baf4f3f455a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">The time in seconds that the start of this context represents.  <a href="structtracktion_1_1engine_1_1PluginRenderContext.html#a92b011d9b869980c2cd8baf4f3f455a5">More...</a><br /></td></tr>
-<tr class="separator:a92b011d9b869980c2cd8baf4f3f455a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae135ea11a3bb11bdf8063094eb8463d0"><td class="memItemLeft" align="right" valign="top">TimeRange&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1PluginRenderContext.html#ae135ea11a3bb11bdf8063094eb8463d0">editTime</a></td></tr>
+<tr class="memdesc:ae135ea11a3bb11bdf8063094eb8463d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">The edit time range this context represents.  <a href="structtracktion_1_1engine_1_1PluginRenderContext.html#ae135ea11a3bb11bdf8063094eb8463d0">More...</a><br /></td></tr>
+<tr class="separator:ae135ea11a3bb11bdf8063094eb8463d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abe0f09667a873def2e29baef955ba460"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1PluginRenderContext.html#abe0f09667a873def2e29baef955ba460">isPlaying</a> = false</td></tr>
 <tr class="memdesc:abe0f09667a873def2e29baef955ba460"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if the the playhead is currently playing.  <a href="structtracktion_1_1engine_1_1PluginRenderContext.html#abe0f09667a873def2e29baef955ba460">More...</a><br /></td></tr>
 <tr class="separator:abe0f09667a873def2e29baef955ba460"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -131,8 +131,8 @@ Public Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The context passed to plugin render methods to provide it with buffers to fill. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a7125393bb8bff3c14c15c8fde087d522"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7125393bb8bff3c14c15c8fde087d522">&#9670;&nbsp;</a></span>PluginRenderContext() <span class="overload">[1/3]</span></h2>
+<a id="a2e49cd908e161c26241d6ff02098a688"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e49cd908e161c26241d6ff02098a688">&#9670;&nbsp;</a></span>PluginRenderContext() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -179,7 +179,7 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">TimePosition&#160;</td>
+          <td class="paramtype">TimeRange&#160;</td>
           <td class="paramname"><em>editTime</em>, </td>
         </tr>
         <tr>
@@ -429,19 +429,19 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a92b011d9b869980c2cd8baf4f3f455a5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a92b011d9b869980c2cd8baf4f3f455a5">&#9670;&nbsp;</a></span>editTime</h2>
+<a id="ae135ea11a3bb11bdf8063094eb8463d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae135ea11a3bb11bdf8063094eb8463d0">&#9670;&nbsp;</a></span>editTime</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">TimePosition tracktion::engine::PluginRenderContext::editTime</td>
+          <td class="memname">TimeRange tracktion::engine::PluginRenderContext::editTime</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>The time in seconds that the start of this context represents. </p>
+<p>The edit time range this context represents. </p>
 
 </div>
 </div>
@@ -516,7 +516,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Nov 2 2022 17:07:27 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Nov 8 2022 14:05:55 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

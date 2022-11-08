@@ -54621,8 +54621,8 @@
       <type></type>
       <name>PluginRenderContext</name>
       <anchorfile>structtracktion_1_1engine_1_1PluginRenderContext.html</anchorfile>
-      <anchor>a7125393bb8bff3c14c15c8fde087d522</anchor>
-      <arglist>(juce::AudioBuffer&lt; float &gt; *buffer, const juce::AudioChannelSet &amp;bufferChannels, int bufferStart, int bufferSize, MidiMessageArray *midiBuffer, double midiOffset, TimePosition editTime, bool playing, bool scrubbing, bool rendering, bool allowBypassedProcessing) noexcept</arglist>
+      <anchor>a2e49cd908e161c26241d6ff02098a688</anchor>
+      <arglist>(juce::AudioBuffer&lt; float &gt; *buffer, const juce::AudioChannelSet &amp;bufferChannels, int bufferStart, int bufferSize, MidiMessageArray *midiBuffer, double midiOffset, TimeRange editTime, bool playing, bool scrubbing, bool rendering, bool allowBypassedProcessing) noexcept</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -54695,10 +54695,10 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>TimePosition</type>
+      <type>TimeRange</type>
       <name>editTime</name>
       <anchorfile>structtracktion_1_1engine_1_1PluginRenderContext.html</anchorfile>
-      <anchor>a92b011d9b869980c2cd8baf4f3f455a5</anchor>
+      <anchor>ae135ea11a3bb11bdf8063094eb8463d0</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -57612,8 +57612,8 @@
       <type>int</type>
       <name>process</name>
       <anchorfile>classtracktion_1_1engine_1_1RackNodePlayer.html</anchorfile>
-      <anchor>ad0bbb27d481f9343e0ba1a6daf3c4184</anchor>
-      <arglist>(const tracktion::graph::Node::ProcessContext &amp;pc, TimePosition editTime, bool isPlaying, bool isScrubbing, bool isRendering)</arglist>
+      <anchor>a8b7bfdb3dfef1d858a922c7bbc3d62aa</anchor>
+      <arglist>(const tracktion::graph::Node::ProcessContext &amp;pc, TimeRange editTime, bool isPlaying, bool isScrubbing, bool isRendering)</arglist>
     </member>
   </compound>
   <compound kind="class">

@@ -92,9 +92,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af24cb649b89471b8d163b2a91e1594dd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1RackNodePlayer.html#af24cb649b89471b8d163b2a91e1594dd">process</a> (const <a class="el" href="structtracktion_1_1graph_1_1Node_1_1ProcessContext.html">tracktion::graph::Node::ProcessContext</a> &amp;pc)</td></tr>
 <tr class="memdesc:af24cb649b89471b8d163b2a91e1594dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes a block of audio and MIDI data.  <a href="classtracktion_1_1engine_1_1RackNodePlayer.html#af24cb649b89471b8d163b2a91e1594dd">More...</a><br /></td></tr>
 <tr class="separator:af24cb649b89471b8d163b2a91e1594dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad0bbb27d481f9343e0ba1a6daf3c4184"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1RackNodePlayer.html#ad0bbb27d481f9343e0ba1a6daf3c4184">process</a> (const <a class="el" href="structtracktion_1_1graph_1_1Node_1_1ProcessContext.html">tracktion::graph::Node::ProcessContext</a> &amp;pc, TimePosition editTime, bool isPlaying, bool isScrubbing, bool isRendering)</td></tr>
-<tr class="memdesc:ad0bbb27d481f9343e0ba1a6daf3c4184"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes a block of audio and MIDI data with a given <a class="el" href="classtracktion_1_1engine_1_1PlayHead.html">PlayHead</a> and <a class="el" href="structtracktion_1_1engine_1_1EditTimeRange.html" title="Represents a time range in an Edit stored as either time or beats.">EditTimeRange</a>.  <a href="classtracktion_1_1engine_1_1RackNodePlayer.html#ad0bbb27d481f9343e0ba1a6daf3c4184">More...</a><br /></td></tr>
-<tr class="separator:ad0bbb27d481f9343e0ba1a6daf3c4184"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b7bfdb3dfef1d858a922c7bbc3d62aa"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1RackNodePlayer.html#a8b7bfdb3dfef1d858a922c7bbc3d62aa">process</a> (const <a class="el" href="structtracktion_1_1graph_1_1Node_1_1ProcessContext.html">tracktion::graph::Node::ProcessContext</a> &amp;pc, TimeRange editTime, bool isPlaying, bool isScrubbing, bool isRendering)</td></tr>
+<tr class="memdesc:a8b7bfdb3dfef1d858a922c7bbc3d62aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes a block of audio and MIDI data with a given <a class="el" href="classtracktion_1_1engine_1_1PlayHead.html">PlayHead</a> and <a class="el" href="structtracktion_1_1engine_1_1EditTimeRange.html" title="Represents a time range in an Edit stored as either time or beats.">EditTimeRange</a>.  <a href="classtracktion_1_1engine_1_1RackNodePlayer.html#a8b7bfdb3dfef1d858a922c7bbc3d62aa">More...</a><br /></td></tr>
+<tr class="separator:a8b7bfdb3dfef1d858a922c7bbc3d62aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;typename NodePlayerType&gt;<br />
@@ -238,8 +238,8 @@ template&lt;typename NodePlayerType &gt; </div>
 
 </div>
 </div>
-<a id="ad0bbb27d481f9343e0ba1a6daf3c4184"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad0bbb27d481f9343e0ba1a6daf3c4184">&#9670;&nbsp;</a></span>process() <span class="overload">[2/2]</span></h2>
+<a id="a8b7bfdb3dfef1d858a922c7bbc3d62aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b7bfdb3dfef1d858a922c7bbc3d62aa">&#9670;&nbsp;</a></span>process() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -255,7 +255,7 @@ template&lt;typename NodePlayerType &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">TimePosition&#160;</td>
+          <td class="paramtype">TimeRange&#160;</td>
           <td class="paramname"><em>editTime</em>, </td>
         </tr>
         <tr>
@@ -295,7 +295,7 @@ template&lt;typename NodePlayerType &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Nov 2 2022 17:07:27 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Nov 8 2022 14:05:55 for TracktionEngine by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

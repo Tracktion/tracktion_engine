@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-02 17:23:13</td>
+            <td class="headerValue">2022-11-08 14:21:42</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -140,9 +140,9 @@
 <a name="78"><span class="lineNum">      78 </span>            : template&lt;typename SampleType&gt;</a>
 <a name="79"><span class="lineNum">      79 </span>            : inline choc::buffer::BufferView&lt;SampleType, choc::buffer::SeparateChannelLayout&gt; toBufferView (juce::AudioBuffer&lt;SampleType&gt;&amp; buffer)</a>
 <a name="80"><span class="lineNum">      80 </span>            : {</a>
-<a name="81"><span class="lineNum">      81 </span><span class="lineCov">     330578 :     return choc::buffer::createChannelArrayView (buffer.getArrayOfWritePointers(),</span></a>
+<a name="81"><span class="lineNum">      81 </span><span class="lineCov">     330236 :     return choc::buffer::createChannelArrayView (buffer.getArrayOfWritePointers(),</span></a>
 <a name="82"><span class="lineNum">      82 </span><span class="lineNoCov">          0 :                                                  (choc::buffer::ChannelCount) buffer.getNumChannels(),</span></a>
-<a name="83"><span class="lineNum">      83 </span><span class="lineCov">     330578 :                                                  (choc::buffer::FrameCount) buffer.getNumSamples());</span></a>
+<a name="83"><span class="lineNum">      83 </span><span class="lineCov">     330236 :                                                  (choc::buffer::FrameCount) buffer.getNumSamples());</span></a>
 <a name="84"><span class="lineNum">      84 </span>            : }</a>
 <a name="85"><span class="lineNum">      85 </span>            : </a>
 <a name="86"><span class="lineNum">      86 </span>            : //==============================================================================</a>
