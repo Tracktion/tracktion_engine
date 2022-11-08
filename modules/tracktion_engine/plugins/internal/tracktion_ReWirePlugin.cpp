@@ -441,7 +441,7 @@ public:
 
     bool isPlaying (const PluginRenderContext& fc, ReWireDriveAudioInputParams& in)
     {
-        const auto playheadOutputTime = fc.editTime;
+        const auto playheadOutputTime = fc.editTime.getStart();
 
         if ((fc.isPlaying && playheadOutputTime >= 0s) || fc.isRendering)
         {

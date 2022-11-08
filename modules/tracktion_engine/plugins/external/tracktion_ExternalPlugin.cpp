@@ -275,7 +275,7 @@ public:
     {
         if (rc != nullptr)
         {
-            time        = rc->editTime;
+            time        = rc->editTime.getStart();
             isPlaying   = rc->isPlaying;
 
             const auto loopTimeRange = plugin.edit.getTransport().getLoopRange();

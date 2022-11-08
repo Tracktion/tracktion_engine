@@ -195,7 +195,9 @@ void PluginNode::process (ProcessContext& pc)
         
         // Process the plugin
         if (shouldProcessPlugin)
-            plugin->applyToBufferWithAutomation (getPluginRenderContext (blockTimeRange.getStart() + toDuration (subBlockTimeRange.getStart()), outputAudioBuffer));
+            plugin->applyToBufferWithAutomation (getPluginRenderContext ({ blockTimeRange.getStart() + toDuration (subBlockTimeRange.getStart()),
+                                                                           blockTimeRange.getStart() + toDuration (subBlockTimeRange.getEnd()) },
+                                                                         outputAudioBuffer));
 
         // Then copy the buffers to the outputs
         if (subBlockNum == 0)
@@ -245,7 +247,7 @@ void PluginNode::initialisePlugin (double sampleRateToUse, int blockSizeToUse)
     latencyNumSamples = juce::roundToInt (plugin->getLatencySeconds() * sampleRate);
 }
 
-PluginRenderContext PluginNode::getPluginRenderContext (TimePosition editTime, juce::AudioBuffer<float>& destBuffer)
+PluginRenderContext PluginNode::getPluginRenderContext (TimeRange editTime, juce::AudioBuffer<float>& destBuffer)
 {
     return { &destBuffer,
              juce::AudioChannelSet::canonicalChannelSet (destBuffer.getNumChannels()),

@@ -77,7 +77,7 @@ private:
 
     //==============================================================================
     void initialisePlugin (double sampleRateToUse, int blockSizeToUse);
-    PluginRenderContext getPluginRenderContext (TimePosition, juce::AudioBuffer<float>&);
+    PluginRenderContext getPluginRenderContext (TimeRange, juce::AudioBuffer<float>&);
     void replaceLatencyProcessorIfPossible (NodeGraph*);
 };
 

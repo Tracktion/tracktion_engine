@@ -319,12 +319,12 @@ void EnvelopeFollowerModifier::deinitialise()
 
 void EnvelopeFollowerModifier::applyToBuffer (const PluginRenderContext& pc)
 {
-    setEditTime (pc.editTime);
+    setEditTime (pc.editTime.getStart());
     
     if (pc.destBuffer == nullptr)
         return;
 
-    updateParameterStreams (pc.editTime);
+    updateParameterStreams (pc.editTime.getStart());
 
     juce::AudioBuffer<float> ab (pc.destBuffer->getArrayOfWritePointers(),
                            pc.destBuffer->getNumChannels(),

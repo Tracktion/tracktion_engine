@@ -43,6 +43,10 @@ using BeatRange = RangeType<BeatPosition>;
 /** Creates a TimeRange from a range of samples. */
 [[ nodiscard ]] TimeRange timeRangeFromSamples (juce::Range<int64_t> sampleRange, double sampleRate);
 
+/** Creates a TimeRange from a range of seconds. */
+template<typename SourceRangeType>
+[[ nodiscard ]] TimeRange timeRangeFromSeconds (SourceRangeType);
+
 //==============================================================================
 //==============================================================================
 /**
@@ -205,6 +209,13 @@ inline TimeRange timeRangeFromSamples (juce::Range<int64_t> r, double sampleRate
 {
     return { TimePosition::fromSamples (r.getStart(), sampleRate),
              TimePosition::fromSamples (r.getEnd(), sampleRate) };
+}
+
+template<typename SourceRangeType>
+inline TimeRange timeRangeFromSeconds (SourceRangeType r)
+{
+    return { TimePosition::fromSeconds (r.getStart()),
+             TimePosition::fromSeconds (r.getEnd()) };
 }
 
 template<typename PositionType>

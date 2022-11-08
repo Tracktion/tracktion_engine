@@ -50,7 +50,7 @@ struct PluginRenderContext
                          const juce::AudioChannelSet& bufferChannels,
                          int bufferStart, int bufferSize,
                          MidiMessageArray* midiBuffer, double midiOffset,
-                         TimePosition editTime, bool playing, bool scrubbing, bool rendering,
+                         TimeRange editTime, bool playing, bool scrubbing, bool rendering,
                          bool allowBypassedProcessing) noexcept;
 
     /** Creates a copy of another PluginRenderContext. */
@@ -83,8 +83,8 @@ struct PluginRenderContext
     /** A time offset to add to the timestamp of any events in the MIDI buffer. */
     double midiBufferOffset = 0.0;
 
-    /** The time in seconds that the start of this context represents. */
-    TimePosition editTime;
+    /** The edit time range this context represents. */
+    TimeRange editTime;
 
     /** True if the the playhead is currently playing. */
     bool isPlaying = false;
