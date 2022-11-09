@@ -3650,6 +3650,13 @@
       <arglist>(const Edit &amp;, const juce::ValueTree &amp;)</arglist>
     </member>
     <member kind="function">
+      <type>Plugin::Ptr</type>
+      <name>findPluginForID</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a8548c91b6648c728aa54b714b7f66b1a</anchor>
+      <arglist>(const Edit &amp;, EditItemID)</arglist>
+    </member>
+    <member kind="function">
       <type>Track *</type>
       <name>getTrackContainingPlugin</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
@@ -81964,6 +81971,13 @@
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
       <anchor>a6d007b1f094b948fc258ffb1851de950</anchor>
       <arglist>(const Edit &amp;, const juce::ValueTree &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>Plugin::Ptr</type>
+      <name>findPluginForID</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a8548c91b6648c728aa54b714b7f66b1a</anchor>
+      <arglist>(const Edit &amp;, EditItemID)</arglist>
     </member>
     <member kind="function">
       <type>Track *</type>
