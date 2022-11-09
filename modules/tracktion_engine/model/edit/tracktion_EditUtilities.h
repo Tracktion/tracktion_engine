@@ -171,6 +171,9 @@ Plugin::Array getAllPlugins (const Edit&, bool includeMasterVolume);
 /** Returns the plugin with given state. */
 Plugin::Ptr findPluginForState (const Edit&, const juce::ValueTree&);
 
+/** Returns the plugin with given EditItemID. */
+Plugin::Ptr findPluginForID (const Edit&, EditItemID);
+
 /** Returns the track for the track which the plugin is located on. */
 Track* getTrackContainingPlugin (const Edit&, const Plugin*);
 
