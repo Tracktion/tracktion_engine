@@ -1185,16 +1185,7 @@ private:
                 isNewRecordedCopy = false;
             }
         }
-        inMidiTimer = false;
-
-        ////stop callback (edit is updated with recorded midi elsewhere in tracktion at this point)        
-        //if (!recording)
-        //{
-        //    stopTimer();
-        //    //clear RECORDINGMIDICLIP state nodes at this point
-        //    for (const auto& track : getTargetTracks())
-        //        track->state.removeChild(track->state.getChildWithName("RECORDINGMIDICLIP"), nullptr);
-        //}  
+        inMidiTimer = false; 
     }
     /*BEATCONNECT MODIFICATION END*/
 
