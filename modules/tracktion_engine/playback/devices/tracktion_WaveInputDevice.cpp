@@ -334,17 +334,7 @@ public:
 
             // BEATCONNECT MODIFICATION START
             auto format = getFormatToUse();
-            juce::File recordedFile;
-            if (nullptr != edit.bcGenerateAudioFilePath)
-                recordedFile = edit.bcGenerateAudioFilePath();
-            else
-            {
-                // Default tracktion code.
-                auto res = getRecordingFile(recordedFile, *format);
-                if (!res.wasOk())
-                    return res.getErrorMessage();
-            }
-
+            juce::File recordedFile = edit.editFileRetriever();
             auto rc = std::make_unique<RecordingContext>(edit.engine, recordedFile, punchIn, getTargetTracks());
             // BEATCONNECT MODIFICATION END
 
