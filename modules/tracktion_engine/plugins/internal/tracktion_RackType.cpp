@@ -918,7 +918,7 @@ int RackType::addInput (int index, const juce::String& name)
 {
     int numNames = getInputNames().size();
 
-    if (numNames < maxRackAudioChans)
+    if (numNames <= maxRackAudioChans)
     {
         if (index >= 0)
         {
@@ -946,7 +946,7 @@ int RackType::addOutput (int index, const juce::String& name)
 {
     int numNames = getOutputNames().size();
 
-    if (numNames < maxRackAudioChans)
+    if (numNames <= maxRackAudioChans)
     {
         if (index >= 0)
         {
