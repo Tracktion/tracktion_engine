@@ -1177,9 +1177,13 @@ private:
                                 sequence.setProperty(ml.state.getPropertyName(i), ml.state.getProperty(ml.state.getPropertyName(i)), nullptr);
                             recordingMidiClip.appendChild(sequence, nullptr);
                         }
-                            
+                        
+                        jassert(sequence.isValid());
                         for (int i = 0; i < ml.state.getNumChildren(); ++i)
-                            sequence.addChild(ml.state.getChild(i), i, nullptr);
+                            sequence.addChild(ml.state.getChild(i).createCopy(), i, nullptr);
+
+                        DBG(sequence.toXmlString());
+                            
                     }
                 }
                 isNewRecordedCopy = false;
