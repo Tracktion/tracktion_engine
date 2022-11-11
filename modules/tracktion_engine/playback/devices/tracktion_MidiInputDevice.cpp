@@ -1180,10 +1180,7 @@ private:
                         
                         jassert(sequence.isValid());
                         for (int i = 0; i < ml.state.getNumChildren(); ++i)
-                            sequence.addChild(ml.state.getChild(i).createCopy(), i, nullptr);
-
-                        DBG(sequence.toXmlString());
-                            
+                            sequence.addChild(ml.state.getChild(i).createCopy(), i, nullptr);                            
                     }
                 }
                 isNewRecordedCopy = false;
