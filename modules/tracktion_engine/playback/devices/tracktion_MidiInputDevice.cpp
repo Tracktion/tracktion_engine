@@ -643,11 +643,23 @@ public:
     {
         recording = false;
         livePlayOver = false;
+        //BEATCONNECT MODIFICATION START
+        stopTimer();
+        //clear RECORDINGMIDICLIP state nodes at this point
+        for (const auto& track : getTargetTracks())
+            track->state.removeChild(track->state.getChildWithName("RECORDINGMIDICLIP"), nullptr);
+        //BEATCONNECT MODIFICATION END
     }
 
     void recordWasCancelled() override
     {
         recording = false;
+        //BEATCONNECT MODIFICATION START
+        stopTimer();
+        //clear RECORDINGMIDICLIP state nodes at this point
+        for (const auto& track : getTargetTracks())
+            track->state.removeChild(track->state.getChildWithName("RECORDINGMIDICLIP"), nullptr);
+        //BEATCONNECT MODIFICATION END
     }
 
     double getPunchInTime() override
@@ -1152,24 +1164,29 @@ private:
                     if (recordingMidiClip.isValid())
                     {
                         // see if there is a sequence with the associated channelNumber
-                        auto sequence = recordingMidiClip.getChildWithProperty("channelNumber", channelToApply);
-                        recordingMidiClip.removeChild(sequence, nullptr);
-                        recordingMidiClip.addChild(ml.state, -1, nullptr);
+                        juce::ValueTree sequence;
+                        sequence = recordingMidiClip.getChildWithProperty("channelNumber", channelToApply);
+                        if (sequence.isValid())
+                        {
+                            sequence.removeAllChildren(nullptr);
+                        }                            
+                        else
+                        {
+                            sequence = juce::ValueTree(ml.state.getType());
+                            for (int i = 0; i < ml.state.getNumProperties(); ++i)
+                                sequence.setProperty(ml.state.getPropertyName(i), ml.state.getProperty(ml.state.getPropertyName(i)), nullptr);
+                            recordingMidiClip.appendChild(sequence, nullptr);
+                        }
+                        
+                        jassert(sequence.isValid());
+                        for (int i = 0; i < ml.state.getNumChildren(); ++i)
+                            sequence.addChild(ml.state.getChild(i).createCopy(), i, nullptr);                            
                     }
                 }
                 isNewRecordedCopy = false;
             }
         }
-        inMidiTimer = false;
-
-        //stop callback (edit is updated with recorded midi elsewhere in tracktion at this point)        
-        if (!recording)
-        {
-            stopTimer();
-            //clear RECORDINGMIDICLIP state nodes at this point
-            for (const auto& track : getTargetTracks())
-                track->state.removeChild(track->state.getChildWithName("RECORDINGMIDICLIP"), nullptr);
-        }  
+        inMidiTimer = false; 
     }
     /*BEATCONNECT MODIFICATION END*/
 
