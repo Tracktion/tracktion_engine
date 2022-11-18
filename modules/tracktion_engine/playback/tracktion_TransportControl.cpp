@@ -175,7 +175,7 @@ struct TransportControl::TransportState : private juce::ValueTree::Listener
     }
 
     //==============================================================================
-    juce::CachedValue<bool> playing, recording, safeRecording;
+    juce::CachedValue<AtomicWrapper<bool>> playing, recording, safeRecording;
     juce::CachedValue<bool> discardRecordings, clearDevices, justSendMMCIfEnabled, canSendMMCStop,
                             invertReturnToStartPosSelection, allowRecordingIfNoInputsArmed, clearDevicesOnStop;
     juce::CachedValue<bool> userDragging, lastUserDragTime, forceVideoJump, rewindButtonDown, fastForwardButtonDown, updatingFromPlayHead;
@@ -221,7 +221,7 @@ private:
             {
                 playing.forceUpdateOfCachedValue();
 
-                if (playing)
+                if (playing.get())
                     transport.performPlay();
                 else
                     transport.performStop();
@@ -237,7 +237,7 @@ private:
 
                 recording.forceUpdateOfCachedValue();
 
-                if (recording)
+                if (recording.get())
                 {
                     juce::ScopedValueSetter<bool> svs (isInsideRecordingCallback, true);
                     recording = transport.performRecord();
@@ -932,9 +932,9 @@ void TransportControl::syncToEdit (Edit* editToSyncTo, bool isPreview)
     }
 }
 
-bool TransportControl::isPlaying() const                { return transportState->playing; }
-bool TransportControl::isRecording() const              { return transportState->recording; }
-bool TransportControl::isSafeRecording() const          { return isRecording() && transportState->safeRecording; }
+bool TransportControl::isPlaying() const                { return transportState->playing.get(); }
+bool TransportControl::isRecording() const              { return transportState->recording.get(); }
+bool TransportControl::isSafeRecording() const          { return isRecording() && transportState->safeRecording.get(); }
 bool TransportControl::isStopping() const               { return isStopInProgress; }
 
 TimePosition TransportControl::getTimeWhenStarted() const   { return transportState->startTime.get(); }
@@ -1464,7 +1464,7 @@ bool TransportControl::performRecord()
     if (! transportState->justSendMMCIfEnabled)
         sendMMCCommand (juce::MidiMessage::mmc_recordStart);
 
-    if (transportState->safeRecording)
+    if (transportState->safeRecording.get())
         engine.getUIBehaviour().showSafeRecordDialog (*this);
 
     return true;

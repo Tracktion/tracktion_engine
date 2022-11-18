@@ -37,6 +37,7 @@ struct AtomicWrapper
     return value.load() != other.value.load();
   }
 
+  operator juce::var() const noexcept  { return value.load(); }
   operator Type() const noexcept { return value.load(); }
 
   std::atomic<Type> value { Type() };
