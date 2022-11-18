@@ -8,6 +8,46 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+
+template<typename Type>
+struct AtomicWrapper
+{
+  AtomicWrapper() = default;
+
+  template<typename OtherType>
+  AtomicWrapper (const OtherType& other)
+  {
+    value.store (other);
+  }
+
+  AtomicWrapper (const AtomicWrapper& other)
+  {
+    value.store (other.value);
+  }
+
+  AtomicWrapper& operator= (const AtomicWrapper& other) noexcept
+  {
+    value.store (other.value);
+    return *this;
+  }
+
+  bool operator== (const AtomicWrapper& other) const noexcept
+  {
+    return value.load() == other.value.load();
+  }
+
+  bool operator!= (const AtomicWrapper& other) const noexcept
+  {
+    return value.load() != other.value.load();
+  }
+
+  operator juce::var() const noexcept  { return value.load(); }
+  operator Type() const noexcept { return value.load(); }
+
+  std::atomic<Type> value { Type() };
+};
+
+
 namespace tracktion { inline namespace engine
 {
 
@@ -149,16 +189,16 @@ public:
     //==============================================================================
     /** Enable/disable the plugin.  */
     virtual void setEnabled (bool);
-    bool isEnabled() const noexcept                         { return enabled; }
+    bool isEnabled() const noexcept                         { return enabled.get(); }
 
     /** This is a bit different to being enabled as when frozen a plugin can't be interacted with. */
     void setFrozen (bool shouldBeFrozen);
-    bool isFrozen() const noexcept                          { return frozen; }
+    bool isFrozen() const noexcept                          { return frozen.get(); }
 
     /** Enable/Disable processing. If processing is disabled, plugin should minimize memory usage
         and release any resources possilbe */
     void setProcessingEnabled (bool p)                      { processing = p; }
-    bool isProcessingEnabled() const noexcept               { return processing; }
+    bool isProcessingEnabled() const noexcept               { return processing.get(); }
 
     //==============================================================================
     /** Gives the plugin a chance to set itself up before being played.
@@ -377,7 +417,7 @@ public:
 
 protected:
     //==============================================================================
-    juce::CachedValue<bool> enabled, frozen, processing;
+    juce::CachedValue<AtomicWrapper<bool>> enabled, frozen, processing;
     juce::CachedValue<juce::String> quickParamName;
     juce::CachedValue<EditItemID> masterPluginID, sidechainSourceID;
 

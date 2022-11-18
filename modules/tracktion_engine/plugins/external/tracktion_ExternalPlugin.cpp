@@ -793,7 +793,7 @@ void ExternalPlugin::processingChanged()
 {
     Plugin::processingChanged();
 
-    if (processing)
+    if (processing.get())
     {
         if (pluginInstance == nullptr)
             forceFullReinitialise();
@@ -816,7 +816,7 @@ void ExternalPlugin::doFullInitialisation()
         identiferString = createIdentifierString (desc);
         updateDebugName();
 
-        if (processing && pluginInstance == nullptr && engine.getEngineBehaviour().shouldLoadPlugin (*this))
+        if (processing.get() && pluginInstance == nullptr && engine.getEngineBehaviour().shouldLoadPlugin (*this))
         {
             if (isDisabled())
                 return;

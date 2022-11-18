@@ -423,7 +423,7 @@ void Plugin::setEnabled (bool b)
 {
     enabled = (b || ! canBeDisabled());
     
-    if (! enabled)
+    if (! enabled.get())
         cpuUsageMs = 0.0;
 }
 
@@ -431,7 +431,7 @@ void Plugin::setFrozen (bool shouldBeFrozen)
 {
     frozen = shouldBeFrozen;
 
-    if (frozen)
+    if (frozen.get())
         cpuUsageMs = 0.0;
 }
 
@@ -908,7 +908,7 @@ void Plugin::hideWindowForShutdown()
 
 void Plugin::processingChanged()
 {
-    if (! processing)
+    if (! processing.get())
         windowState->hideWindowForShutdown();
 }
 
