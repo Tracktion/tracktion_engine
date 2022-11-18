@@ -46,3 +46,4 @@
 #include "utilities/tracktion_Tempo.h"
 #include "utilities/tracktion_Time.h"
 #include "utilities/tracktion_TimeRange.h"
+#include "utilities/tracktion_AtomicWrapper.h"
