@@ -17,7 +17,7 @@ namespace tracktion { inline namespace engine
 struct ClipLevel
 {
     juce::CachedValue<float> dbGain, pan;
-    juce::CachedValue<bool> mute;
+    juce::CachedValue<AtomicWrapper<bool>> mute;
 };
 
 //==============================================================================

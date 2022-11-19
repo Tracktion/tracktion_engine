@@ -97,7 +97,7 @@ public:
     bool isSendingBankChanges() const noexcept      { return sendBankChange; }
     void setSendingBankChanges (bool sendBank);
 
-    bool isMuted() const override                   { return level->mute; }
+    bool isMuted() const override                   { return level->mute.get(); }
     void setMuted (bool m) override                 { level->mute = m; }
 
     LiveClipLevel getLiveClipLevel();

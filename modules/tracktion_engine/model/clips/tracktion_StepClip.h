@@ -243,7 +243,7 @@ public:
 
     bool isMidi() const override                        { return false; }
     bool beatBasedLooping() const override              { return true; }
-    bool isMuted() const override                       { return level->mute; }
+    bool isMuted() const override                       { return level->mute.get(); }
     void setMuted (bool m) override                     { level->mute = m; }
 
     LiveClipLevel getLiveClipLevel();

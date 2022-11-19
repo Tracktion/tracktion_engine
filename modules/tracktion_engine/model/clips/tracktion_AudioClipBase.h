@@ -136,7 +136,7 @@ public:
     /** @internal */
     void setMuted (bool shouldBeMuted) override         { level->mute = shouldBeMuted; }
     /** @internal */
-    bool isMuted() const override                       { return level->mute; }
+    bool isMuted() const override                       { return level->mute.get(); }
 
     /** Returns a LiveClipLevel which can be used to read the gain, pan and mute statuses. */
     LiveClipLevel getLiveClipLevel();
