@@ -106,6 +106,8 @@ public:
 
                 const juce::ScopedWriteLock sl (readerLock);
 
+                // TODO(Jamie): So... we're hitting a race condition here because we don't have the `fileListLock`.
+                //              But... we can't get access to it because this function is static, or something like that.
                 if (auto r = createNewReader (nullptr))
                 {
                     readers.add (r);
