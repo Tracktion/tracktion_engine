@@ -769,12 +769,12 @@ bool AutomatableParameter::isAutomationActive() const
     return curveSource->isActive() || getAutomationSourceList().isActive();
 }
 
-float AutomatableParameter::getDefaultValue() const
+std::optional<float> AutomatableParameter::getDefaultValue() const
 {
     if (attachedValue != nullptr)
         return attachedValue->getDefault();
 
-    return 0.0f;
+    return {};
 }
 
 void AutomatableParameter::updateStream()
