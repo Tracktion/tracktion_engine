@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">151</td>
+            <td class="headerCovTableEntry">152</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-24 13:28:05</td>
+            <td class="headerValue">2022-11-24 17:08:07</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -125,12 +125,12 @@
 <a name="63"><span class="lineNum">      63 </span><span class="lineNoCov">          0 :             p-&gt;removeListener (this);</span></a>
 <a name="64"><span class="lineNum">      64 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="65"><span class="lineNum">      65 </span>            : </a>
-<a name="66"><span class="lineNum">      66 </span><span class="lineNoCov">          0 :     float getDefaultValue() const override</span></a>
+<a name="66"><span class="lineNum">      66 </span><span class="lineNoCov">          0 :     std::optional&lt;float&gt; getDefaultValue() const override</span></a>
 <a name="67"><span class="lineNum">      67 </span>            :     {</a>
 <a name="68"><span class="lineNum">      68 </span><span class="lineNoCov">          0 :         if (auto p = getParam())</span></a>
 <a name="69"><span class="lineNum">      69 </span><span class="lineNoCov">          0 :             return p-&gt;getDefaultValue();</span></a>
 <a name="70"><span class="lineNum">      70 </span>            : </a>
-<a name="71"><span class="lineNum">      71 </span>            :         return 0.0f;</a>
+<a name="71"><span class="lineNum">      71 </span><span class="lineNoCov">          0 :         return {};</span></a>
 <a name="72"><span class="lineNum">      72 </span>            :     }</a>
 <a name="73"><span class="lineNum">      73 </span>            : </a>
 <a name="74"><span class="lineNum">      74 </span><span class="lineNoCov">          0 :     void parameterChanged (float newValue, bool byAutomation) override</span></a>

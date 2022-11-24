@@ -13029,10 +13029,10 @@
       <arglist>(float) const</arglist>
     </member>
     <member kind="function" virtualness="virtual">
-      <type>virtual float</type>
+      <type>virtual std::optional&lt; float &gt;</type>
       <name>getDefaultValue</name>
       <anchorfile>classtracktion_1_1engine_1_1AutomatableParameter.html</anchorfile>
-      <anchor>ace94a1d252a0406946c372c7388ce383</anchor>
+      <anchor>a35f62b37f4b18644357e34e81eb51da5</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function" virtualness="virtual">
@@ -31364,10 +31364,10 @@
       <arglist>()</arglist>
     </member>
     <member kind="function">
-      <type>float</type>
+      <type>std::optional&lt; float &gt;</type>
       <name>getDefaultValue</name>
       <anchorfile>classtracktion_1_1engine_1_1ExternalAutomatableParameter.html</anchorfile>
-      <anchor>a55ecb666908f9fdbdf9ab2bb8914ce18</anchor>
+      <anchor>a6fb4c3df02cadf165ced9e80d9885d30</anchor>
       <arglist>() const override</arglist>
     </member>
     <member kind="function">
