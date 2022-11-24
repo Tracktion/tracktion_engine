@@ -113,7 +113,7 @@ Engine::~Engine()
 
 juce::String Engine::getVersion()
 {
-    return "Tracktion Engine v1.2.0";
+    return "Tracktion Engine v2.0.0";
 }
 
 juce::Array<Engine*> Engine::getEngines()
