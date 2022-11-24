@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">1</td>
-            <td class="headerCovTableEntry">55</td>
+            <td class="headerCovTableEntry">57</td>
             <td class="headerCovTableEntryLo">1.8 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -120,7 +120,7 @@
 <a name="58"><span class="lineNum">      58 </span>            : </a>
 <a name="59"><span class="lineNum">      59 </span><span class="lineNoCov">          0 :     virtual bool isMidi() const                 { return false; }</span></a>
 <a name="60"><span class="lineNum">      60 </span>            : </a>
-<a name="61"><span class="lineNum">      61 </span>            :     bool isEndToEndEnabled() const              { return endToEndEnabled; }</a>
+<a name="61"><span class="lineNum">      61 </span><span class="lineNoCov">          0 :     bool isEndToEndEnabled() const              { return endToEndEnabled; }</span></a>
 <a name="62"><span class="lineNum">      62 </span>            :     virtual void flipEndToEnd() = 0;</a>
 <a name="63"><span class="lineNum">      63 </span>            : </a>
 <a name="64"><span class="lineNum">      64 </span>            :     /** Creates an instance to use for a given playback context. */</a>
@@ -156,7 +156,7 @@
 <a name="94"><span class="lineNum">      94 </span>            :     InputDeviceInstance (InputDevice&amp;, EditPlaybackContext&amp;);</a>
 <a name="95"><span class="lineNum">      95 </span>            :     ~InputDeviceInstance() override;</a>
 <a name="96"><span class="lineNum">      96 </span>            : </a>
-<a name="97"><span class="lineNum">      97 </span>            :     InputDevice&amp; getInputDevice() noexcept      { return owner; }</a>
+<a name="97"><span class="lineNum">      97 </span><span class="lineNoCov">          0 :     InputDevice&amp; getInputDevice() noexcept      { return owner; }</span></a>
 <a name="98"><span class="lineNum">      98 </span>            : </a>
 <a name="99"><span class="lineNum">      99 </span>            :     juce::Array&lt;AudioTrack*&gt; getTargetTracks() const;</a>
 <a name="100"><span class="lineNum">     100 </span>            :     juce::Array&lt;int&gt; getTargetIndexes() const;</a>

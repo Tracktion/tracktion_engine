@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">53</td>
-            <td class="headerCovTableEntry">184</td>
-            <td class="headerCovTableEntryLo">28.8 %</td>
+            <td class="headerCovTableEntry">185</td>
+            <td class="headerCovTableEntryLo">28.6 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">10</td>
@@ -161,7 +161,7 @@
 <a name="99"><span class="lineNum">      99 </span><span class="lineCov">         74 :     leftInputGoesTo.referTo (state, IDs::leftTo, um, 1);</span></a>
 <a name="100"><span class="lineNum">     100 </span><span class="lineCov">         74 :     rightInputGoesTo.referTo (state, IDs::rightTo, um, 2);</span></a>
 <a name="101"><span class="lineNum">     101 </span><span class="lineCov">         74 :     leftOutputComesFrom.referTo (state, IDs::leftFrom, um, 1);</span></a>
-<a name="102"><span class="lineNum">     102 </span><span class="lineCov">         74 :     rightOutputComesFrom.referTo (state, IDs::rightFrom, um, 2);</span></a>
+<a name="102"><span class="lineNum">     102 </span><span class="lineCov">        148 :     rightOutputComesFrom.referTo (state, IDs::rightFrom, um, 2);</span></a>
 <a name="103"><span class="lineNum">     103 </span>            : </a>
 <a name="104"><span class="lineNum">     104 </span><span class="lineCov">         74 :     dryGain-&gt;attachToCurrentValue (dryValue);</span></a>
 <a name="105"><span class="lineNum">     105 </span><span class="lineCov">         74 :     wetGain-&gt;attachToCurrentValue (wetValue);</span></a>
@@ -171,7 +171,7 @@
 <a name="109"><span class="lineNum">     109 </span><span class="lineCov">         74 :     rightOutDb-&gt;attachToCurrentValue (rightOutValue);</span></a>
 <a name="110"><span class="lineNum">     110 </span><span class="lineCov">         74 : }</span></a>
 <a name="111"><span class="lineNum">     111 </span>            : </a>
-<a name="112"><span class="lineNum">     112 </span><span class="lineCov">        222 : RackInstance::~RackInstance()</span></a>
+<a name="112"><span class="lineNum">     112 </span><span class="lineCov">        148 : RackInstance::~RackInstance()</span></a>
 <a name="113"><span class="lineNum">     113 </span>            : {</a>
 <a name="114"><span class="lineNum">     114 </span><span class="lineCov">         74 :     notifyListenersOfDeletion();</span></a>
 <a name="115"><span class="lineNum">     115 </span>            : </a>
@@ -181,7 +181,7 @@
 <a name="119"><span class="lineNum">     119 </span><span class="lineCov">         74 :     rightInDb-&gt;detachFromCurrentValue();</span></a>
 <a name="120"><span class="lineNum">     120 </span><span class="lineCov">         74 :     leftOutDb-&gt;detachFromCurrentValue();</span></a>
 <a name="121"><span class="lineNum">     121 </span><span class="lineCov">         74 :     rightOutDb-&gt;detachFromCurrentValue();</span></a>
-<a name="122"><span class="lineNum">     122 </span><span class="lineCov">        148 : }</span></a>
+<a name="122"><span class="lineNum">     122 </span><span class="lineCov">        222 : }</span></a>
 <a name="123"><span class="lineNum">     123 </span>            : </a>
 <a name="124"><span class="lineNum">     124 </span><span class="lineCov">          2 : juce::ValueTree RackInstance::create (RackType&amp; type)</span></a>
 <a name="125"><span class="lineNum">     125 </span>            : {</a>
@@ -202,7 +202,7 @@
 <a name="140"><span class="lineNum">     140 </span>            : </a>
 <a name="141"><span class="lineNum">     141 </span><span class="lineNoCov">          0 : juce::String RackInstance::getName()</span></a>
 <a name="142"><span class="lineNum">     142 </span>            : {</a>
-<a name="143"><span class="lineNum">     143 </span><span class="lineNoCov">          0 :     return type != nullptr ? type-&gt;rackName</span></a>
+<a name="143"><span class="lineNum">     143 </span>            :     return type != nullptr ? type-&gt;rackName</a>
 <a name="144"><span class="lineNum">     144 </span><span class="lineNoCov">          0 :                            : TRANS(&quot;Rack type missing!&quot;);</span></a>
 <a name="145"><span class="lineNum">     145 </span>            : }</a>
 <a name="146"><span class="lineNum">     146 </span>            : </a>
@@ -215,7 +215,7 @@
 <a name="153"><span class="lineNum">     153 </span>            : </a>
 <a name="154"><span class="lineNum">     154 </span>            :         struct PluginIndexAndPos</a>
 <a name="155"><span class="lineNum">     155 </span>            :         {</a>
-<a name="156"><span class="lineNum">     156 </span>            :             bool operator&lt; (const PluginIndexAndPos&amp; other) const     { return x &lt; other.x; }</a>
+<a name="156"><span class="lineNum">     156 </span><span class="lineNoCov">          0 :             bool operator&lt; (const PluginIndexAndPos&amp; other) const     { return x &lt; other.x; }</span></a>
 <a name="157"><span class="lineNum">     157 </span>            : </a>
 <a name="158"><span class="lineNum">     158 </span>            :             float x = 0.0f;</a>
 <a name="159"><span class="lineNum">     159 </span>            :             Plugin* plugin = nullptr;</a>
@@ -247,12 +247,12 @@
 <a name="185"><span class="lineNum">     185 </span><span class="lineNoCov">          0 :                     EditItemID::remapIDs (newState, nullptr, edit);</span></a>
 <a name="186"><span class="lineNum">     186 </span>            :                     jassert (EditItemID::fromID (newState) != EditItemID::fromID (srcPlugin-&gt;state));</a>
 <a name="187"><span class="lineNum">     187 </span><span class="lineNoCov">          0 :                     pluginState = newState;</span></a>
-<a name="188"><span class="lineNum">     188 </span>            :                 }</a>
+<a name="188"><span class="lineNum">     188 </span><span class="lineNoCov">          0 :                 }</span></a>
 <a name="189"><span class="lineNum">     189 </span>            : </a>
 <a name="190"><span class="lineNum">     190 </span><span class="lineNoCov">          0 :                 if (auto p = list-&gt;insertPlugin (pluginState, index))</span></a>
 <a name="191"><span class="lineNum">     191 </span><span class="lineNoCov">          0 :                     if (sm != nullptr)</span></a>
 <a name="192"><span class="lineNum">     192 </span><span class="lineNoCov">          0 :                         sm-&gt;selectOnly (*p);</span></a>
-<a name="193"><span class="lineNum">     193 </span>            :             }</a>
+<a name="193"><span class="lineNum">     193 </span><span class="lineNoCov">          0 :             }</span></a>
 <a name="194"><span class="lineNum">     194 </span>            : </a>
 <a name="195"><span class="lineNum">     195 </span><span class="lineNoCov">          0 :             deleteFromParent();</span></a>
 <a name="196"><span class="lineNum">     196 </span>            : </a>
@@ -359,7 +359,7 @@
 <a name="297"><span class="lineNum">     297 </span>            : </a>
 <a name="298"><span class="lineNum">     298 </span><span class="lineNoCov">          0 : void RackInstance::initialiseWithoutStopping (const PluginInitialisationInfo&amp;)</span></a>
 <a name="299"><span class="lineNum">     299 </span>            : {</a>
-<a name="300"><span class="lineNum">     300 </span><span class="lineNoCov">          0 :     const float wet = wetGain-&gt;getCurrentValue();</span></a>
+<a name="300"><span class="lineNum">     300 </span>            :     const float wet = wetGain-&gt;getCurrentValue();</a>
 <a name="301"><span class="lineNum">     301 </span><span class="lineNoCov">          0 :     lastLeftIn   = dbToGain (leftInDb-&gt;getCurrentValue());</span></a>
 <a name="302"><span class="lineNum">     302 </span><span class="lineNoCov">          0 :     lastRightIn  = dbToGain (linkInputs ? leftInDb-&gt;getCurrentValue() : rightInDb-&gt;getCurrentValue());</span></a>
 <a name="303"><span class="lineNum">     303 </span><span class="lineNoCov">          0 :     lastLeftOut  = wet * dbToGain (leftOutDb-&gt;getCurrentValue());</span></a>

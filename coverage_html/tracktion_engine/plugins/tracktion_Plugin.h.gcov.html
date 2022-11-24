@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">15</td>
-            <td class="headerCovTableEntry">34</td>
-            <td class="headerCovTableEntryLo">44.1 %</td>
+            <td class="headerCovTableEntry">32</td>
+            <td class="headerCovTableEntryLo">46.9 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">11</td>
@@ -211,16 +211,16 @@
 <a name="149"><span class="lineNum">     149 </span>            :     //==============================================================================</a>
 <a name="150"><span class="lineNum">     150 </span>            :     /** Enable/disable the plugin.  */</a>
 <a name="151"><span class="lineNum">     151 </span>            :     virtual void setEnabled (bool);</a>
-<a name="152"><span class="lineNum">     152 </span><span class="lineCov">   57377100 :     bool isEnabled() const noexcept                         { return enabled; }</span></a>
+<a name="152"><span class="lineNum">     152 </span>            :     bool isEnabled() const noexcept                         { return enabled; }</a>
 <a name="153"><span class="lineNum">     153 </span>            : </a>
 <a name="154"><span class="lineNum">     154 </span>            :     /** This is a bit different to being enabled as when frozen a plugin can't be interacted with. */</a>
 <a name="155"><span class="lineNum">     155 </span>            :     void setFrozen (bool shouldBeFrozen);</a>
-<a name="156"><span class="lineNum">     156 </span><span class="lineNoCov">          0 :     bool isFrozen() const noexcept                          { return frozen; }</span></a>
+<a name="156"><span class="lineNum">     156 </span>            :     bool isFrozen() const noexcept                          { return frozen; }</a>
 <a name="157"><span class="lineNum">     157 </span>            : </a>
 <a name="158"><span class="lineNum">     158 </span>            :     /** Enable/Disable processing. If processing is disabled, plugin should minimize memory usage</a>
 <a name="159"><span class="lineNum">     159 </span>            :         and release any resources possilbe */</a>
 <a name="160"><span class="lineNum">     160 </span><span class="lineNoCov">          0 :     void setProcessingEnabled (bool p)                      { processing = p; }</span></a>
-<a name="161"><span class="lineNum">     161 </span><span class="lineNoCov">          0 :     bool isProcessingEnabled() const noexcept               { return processing; }</span></a>
+<a name="161"><span class="lineNum">     161 </span>            :     bool isProcessingEnabled() const noexcept               { return processing; }</a>
 <a name="162"><span class="lineNum">     162 </span>            : </a>
 <a name="163"><span class="lineNum">     163 </span>            :     //==============================================================================</a>
 <a name="164"><span class="lineNum">     164 </span>            :     /** Gives the plugin a chance to set itself up before being played.</a>
@@ -264,7 +264,7 @@
 <a name="202"><span class="lineNum">     202 </span>            :     virtual void applyToBuffer (const PluginRenderContext&amp;) = 0;</a>
 <a name="203"><span class="lineNum">     203 </span>            : </a>
 <a name="204"><span class="lineNum">     204 </span>            :     /** Called between successive rendering blocks. */</a>
-<a name="205"><span class="lineNum">     205 </span><span class="lineCov">   27376800 :     virtual void prepareForNextBlock (TimePosition /*editTime*/) {}</span></a>
+<a name="205"><span class="lineNum">     205 </span><span class="lineCov">   27381300 :     virtual void prepareForNextBlock (TimePosition /*editTime*/) {}</span></a>
 <a name="206"><span class="lineNum">     206 </span>            : </a>
 <a name="207"><span class="lineNum">     207 </span>            :     // wrapper on applyTobuffer, called by the node</a>
 <a name="208"><span class="lineNum">     208 </span>            :     void applyToBufferWithAutomation (const PluginRenderContext&amp;);</a>
@@ -281,7 +281,7 @@
 <a name="219"><span class="lineNum">     219 </span>            :     */</a>
 <a name="220"><span class="lineNum">     220 </span>            :     virtual int getNumOutputChannelsGivenInputs (int numInputChannels);</a>
 <a name="221"><span class="lineNum">     221 </span>            : </a>
-<a name="222"><span class="lineNum">     222 </span><span class="lineCov">   15933500 :     virtual bool producesAudioWhenNoAudioInput()        { return isAutomationNeeded(); }</span></a>
+<a name="222"><span class="lineNum">     222 </span><span class="lineCov">   15933534 :     virtual bool producesAudioWhenNoAudioInput()        { return isAutomationNeeded(); }</span></a>
 <a name="223"><span class="lineNum">     223 </span><span class="lineNoCov">          0 :     virtual bool noTail()                               { return true; }</span></a>
 <a name="224"><span class="lineNum">     224 </span>            : </a>
 <a name="225"><span class="lineNum">     225 </span>            :     virtual void getChannelNames (juce::StringArray* ins, juce::StringArray* outs);</a>
@@ -397,7 +397,7 @@
 <a name="335"><span class="lineNum">     335 </span>            :     //==============================================================================</a>
 <a name="336"><span class="lineNum">     336 </span>            :     // setting a master plugin whose settings will be mirrored</a>
 <a name="337"><span class="lineNum">     337 </span>            :     bool setPluginToMirror (const Plugin::Ptr&amp;); // fails if type is wrong</a>
-<a name="338"><span class="lineNum">     338 </span><span class="lineCov">        377 :     virtual void updateFromMirroredPluginIfNeeded (Plugin&amp;) {}</span></a>
+<a name="338"><span class="lineNum">     338 </span><span class="lineCov">        373 :     virtual void updateFromMirroredPluginIfNeeded (Plugin&amp;) {}</span></a>
 <a name="339"><span class="lineNum">     339 </span>            :     Plugin::Ptr getMirroredPlugin() const;</a>
 <a name="340"><span class="lineNum">     340 </span>            : </a>
 <a name="341"><span class="lineNum">     341 </span>            :     //==============================================================================</a>
@@ -409,7 +409,7 @@
 <a name="347"><span class="lineNum">     347 </span>            :     };</a>
 <a name="348"><span class="lineNum">     348 </span>            : </a>
 <a name="349"><span class="lineNum">     349 </span>            :     //==============================================================================</a>
-<a name="350"><span class="lineNum">     350 </span>            :     bool baseClassNeedsInitialising() const noexcept        { return initialiseCount == 0; }</a>
+<a name="350"><span class="lineNum">     350 </span><span class="lineCov">       5454 :     bool baseClassNeedsInitialising() const noexcept        { return initialiseCount == 0; }</span></a>
 <a name="351"><span class="lineNum">     351 </span>            :     void baseClassInitialise (const PluginInitialisationInfo&amp;);</a>
 <a name="352"><span class="lineNum">     352 </span>            :     void baseClassDeinitialise();</a>
 <a name="353"><span class="lineNum">     353 </span>            : </a>

@@ -31,17 +31,17 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">54</td>
             <td class="headerCovTableEntry">58</td>
-            <td class="headerCovTableEntryHi">93.1 %</td>
+            <td class="headerCovTableEntry">62</td>
+            <td class="headerCovTableEntryHi">93.5 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">10</td>
-            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntry">11</td>
+            <td class="headerCovTableEntry">11</td>
             <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
@@ -127,13 +127,13 @@
 <a name="65"><span class="lineNum">      65 </span>            :                   |___|</a>
 <a name="66"><span class="lineNum">      66 </span>            :         */</a>
 <a name="67"><span class="lineNum">      67 </span>            :         </a>
-<a name="68"><span class="lineNum">      68 </span>            :         auto d = makeNode&lt;SinNode&gt; (1.0f);</a>
+<a name="68"><span class="lineNum">      68 </span><span class="lineCov">          1 :         auto d = makeNode&lt;SinNode&gt; (1.0f);</span></a>
 <a name="69"><span class="lineNum">      69 </span>            :         auto D = d.get();</a>
 <a name="70"><span class="lineNum">      70 </span><span class="lineCov">          2 :         auto f = makeNode&lt;ReturnNode&gt; (makeNode&lt;SinNode&gt; (2.0f), 1);</span></a>
 <a name="71"><span class="lineNum">      71 </span>            :         auto F = f.get();</a>
-<a name="72"><span class="lineNum">      72 </span>            :         auto g = makeNode&lt;SinNode&gt; (3.0f);</a>
+<a name="72"><span class="lineNum">      72 </span><span class="lineCov">          1 :         auto g = makeNode&lt;SinNode&gt; (3.0f);</span></a>
 <a name="73"><span class="lineNum">      73 </span>            :         auto G = g.get();</a>
-<a name="74"><span class="lineNum">      74 </span>            :         auto c = makeNode&lt;SinkNode&gt; (std::move (g));</a>
+<a name="74"><span class="lineNum">      74 </span><span class="lineCov">          1 :         auto c = makeNode&lt;SinkNode&gt; (std::move (g));</span></a>
 <a name="75"><span class="lineNum">      75 </span>            :         auto C = c.get();</a>
 <a name="76"><span class="lineNum">      76 </span><span class="lineCov">          1 :         auto e = makeNode&lt;SendNode&gt; (makeNode&lt;SinNode&gt; (4.0f), 1);</span></a>
 <a name="77"><span class="lineNum">      77 </span>            :         auto E = e.get();</a>
@@ -152,12 +152,12 @@
 <a name="90"><span class="lineNum">      90 </span>            :         </a>
 <a name="91"><span class="lineNum">      91 </span><span class="lineCov">          7 :         auto trimEndNodes = [&amp;] (std::vector&lt;Node*&gt; nodes)</span></a>
 <a name="92"><span class="lineNum">      92 </span>            :         {</a>
-<a name="93"><span class="lineNum">      93 </span>            :             nodes.erase (std::remove_if (nodes.begin(), nodes.end(),</a>
-<a name="94"><span class="lineNum">      94 </span><span class="lineCov">         77 :                                          [&amp;] (auto n) { return std::find (allNodes.begin(), allNodes.end(), n) == allNodes.end(); }),</span></a>
+<a name="93"><span class="lineNum">      93 </span><span class="lineCov">          7 :             nodes.erase (std::remove_if (nodes.begin(), nodes.end(),</span></a>
+<a name="94"><span class="lineNum">      94 </span><span class="lineCov">         70 :                                          [&amp;] (auto n) { return std::find (allNodes.begin(), allNodes.end(), n) == allNodes.end(); }),</span></a>
 <a name="95"><span class="lineNum">      95 </span>            :                          nodes.end());</a>
 <a name="96"><span class="lineNum">      96 </span>            : </a>
 <a name="97"><span class="lineNum">      97 </span><span class="lineCov">          7 :             return nodes;</span></a>
-<a name="98"><span class="lineNum">      98 </span>            :         };</a>
+<a name="98"><span class="lineNum">      98 </span><span class="lineCov">          1 :         };</span></a>
 <a name="99"><span class="lineNum">      99 </span>            : </a>
 <a name="100"><span class="lineNum">     100 </span><span class="lineCov">          1 :         beginTest (&quot;Basic visting&quot;);</span></a>
 <a name="101"><span class="lineNum">     101 </span>            :         {</a>
@@ -208,7 +208,7 @@
 <a name="146"><span class="lineNum">     146 </span><span class="lineCov">          3 :             expectNodeOrder (allNodes, trimEndNodes (getNodes (*A, VertexOrdering::bfsReversePreordering)),</span></a>
 <a name="147"><span class="lineNum">     147 </span>            :                              { G, F, D, E, C, B, A });</a>
 <a name="148"><span class="lineNum">     148 </span>            :         }</a>
-<a name="149"><span class="lineNum">     149 </span><span class="lineCov">          1 :     }</span></a>
+<a name="149"><span class="lineNum">     149 </span><span class="lineCov">          2 :     }</span></a>
 <a name="150"><span class="lineNum">     150 </span>            :     </a>
 <a name="151"><span class="lineNum">     151 </span><span class="lineCov">         15 :     static std::string getNodeLetter (const std::vector&lt;Node*&gt;&amp; nodes, Node* node)</span></a>
 <a name="152"><span class="lineNum">     152 </span>            :     {</a>
@@ -224,7 +224,7 @@
 <a name="162"><span class="lineNum">     162 </span>            :                           const std::vector&lt;Node*&gt;&amp; actual, const std::vector&lt;Node*&gt;&amp; expected)</a>
 <a name="163"><span class="lineNum">     163 </span>            :     {</a>
 <a name="164"><span class="lineNum">     164 </span>            :         jassert (actual.size() == expected.size());</a>
-<a name="165"><span class="lineNum">     165 </span><span class="lineCov">          9 :         auto areEqual = std::equal (actual.begin(), actual.end(), expected.begin(), expected.end());</span></a>
+<a name="165"><span class="lineNum">     165 </span>            :         auto areEqual = std::equal (actual.begin(), actual.end(), expected.begin(), expected.end());</a>
 <a name="166"><span class="lineNum">     166 </span><span class="lineCov">          9 :         expect (areEqual, &quot;Node order not equal&quot;);</span></a>
 <a name="167"><span class="lineNum">     167 </span>            :         </a>
 <a name="168"><span class="lineNum">     168 </span><span class="lineCov">          9 :         if (! areEqual)</span></a>

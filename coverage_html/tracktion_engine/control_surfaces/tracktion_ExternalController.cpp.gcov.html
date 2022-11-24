@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">703</td>
+            <td class="headerCovTableEntry">720</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -183,7 +183,7 @@
 <a name="121"><span class="lineNum">     121 </span>            :     {</a>
 <a name="122"><span class="lineNum">     122 </span><span class="lineNoCov">          0 :         CRASH_TRACER</span></a>
 <a name="123"><span class="lineNum">     123 </span><span class="lineNoCov">          0 :         getControlSurface().currentEditChanged (edit);</span></a>
-<a name="124"><span class="lineNum">     124 </span>            :     }</a>
+<a name="124"><span class="lineNum">     124 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="125"><span class="lineNum">     125 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="126"><span class="lineNum">     126 </span>            : </a>
 <a name="127"><span class="lineNum">     127 </span><span class="lineNoCov">          0 : bool ExternalController::isEnabled() const</span></a>
@@ -206,7 +206,7 @@
 <a name="144"><span class="lineNum">     144 </span><span class="lineNoCov">          0 :         getControlSurface().initialiseDevice (isEnabled());</span></a>
 <a name="145"><span class="lineNum">     145 </span><span class="lineNoCov">          0 :         updateDeviceState();</span></a>
 <a name="146"><span class="lineNum">     146 </span><span class="lineNoCov">          0 :         changeParamBank (0);</span></a>
-<a name="147"><span class="lineNum">     147 </span>            :     }</a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="148"><span class="lineNum">     148 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="149"><span class="lineNum">     149 </span>            : </a>
 <a name="150"><span class="lineNum">     150 </span><span class="lineNoCov">          0 : int ExternalController::getNumDevices() const</span></a>
@@ -340,7 +340,7 @@
 <a name="278"><span class="lineNum">     278 </span>            :             else</a>
 <a name="279"><span class="lineNum">     279 </span>            :                 min-&gt;removeExternalController (this);</a>
 <a name="280"><span class="lineNum">     280 </span>            :         }</a>
-<a name="281"><span class="lineNum">     281 </span>            :     }</a>
+<a name="281"><span class="lineNum">     281 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="282"><span class="lineNum">     282 </span>            : </a>
 <a name="283"><span class="lineNum">     283 </span><span class="lineNoCov">          0 :     for (auto&amp; o : outputDevices)</span></a>
 <a name="284"><span class="lineNum">     284 </span><span class="lineNoCov">          0 :         o = nullptr;</span></a>
@@ -358,7 +358,7 @@
 <a name="296"><span class="lineNum">     296 </span><span class="lineNoCov">          0 :                 mo-&gt;setSendControllerMidiClock (wantsClock);</span></a>
 <a name="297"><span class="lineNum">     297 </span>            :             }</a>
 <a name="298"><span class="lineNum">     298 </span>            :         }</a>
-<a name="299"><span class="lineNum">     299 </span>            :     }</a>
+<a name="299"><span class="lineNum">     299 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="300"><span class="lineNum">     300 </span>            : </a>
 <a name="301"><span class="lineNum">     301 </span><span class="lineNoCov">          0 :     startTimer (100);</span></a>
 <a name="302"><span class="lineNum">     302 </span>            : }</a>
@@ -388,7 +388,7 @@
 <a name="326"><span class="lineNum">     326 </span>            : </a>
 <a name="327"><span class="lineNum">     327 </span><span class="lineNoCov">          0 :     updateDeviceState();</span></a>
 <a name="328"><span class="lineNum">     328 </span><span class="lineNoCov">          0 :     changeParamBank (0);</span></a>
-<a name="329"><span class="lineNum">     329 </span>            : }</a>
+<a name="329"><span class="lineNum">     329 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="330"><span class="lineNum">     330 </span>            : </a>
 <a name="331"><span class="lineNum">     331 </span><span class="lineNoCov">          0 : void ExternalController::setBackChannelDevice (int idx, const juce::String&amp; nameOfMidiOutput)</span></a>
 <a name="332"><span class="lineNum">     332 </span>            : {</a>
@@ -560,7 +560,7 @@
 <a name="498"><span class="lineNum">     498 </span>            : {</a>
 <a name="499"><span class="lineNum">     499 </span><span class="lineNoCov">          0 :     if (controlSurface != nullptr)</span></a>
 <a name="500"><span class="lineNum">     500 </span><span class="lineNoCov">          0 :         getControlSurface().timecodeChanged (barsOrHours, beatsOrMinutes, ticksOrSeconds,</span></a>
-<a name="501"><span class="lineNum">     501 </span><span class="lineNoCov">          0 :                                              millisecs, isBarsBeats, isFrames);</span></a>
+<a name="501"><span class="lineNum">     501 </span>            :                                              millisecs, isBarsBeats, isFrames);</a>
 <a name="502"><span class="lineNum">     502 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="503"><span class="lineNum">     503 </span>            : </a>
 <a name="504"><span class="lineNum">     504 </span><span class="lineNoCov">          0 : void ExternalController::trackSelected (int channelNum, bool isSelected)</span></a>
@@ -655,7 +655,7 @@
 <a name="593"><span class="lineNum">     593 </span><span class="lineNoCov">          0 :                         if (! sm-&gt;isSelected (t) || sm-&gt;getNumObjectsSelected() != 1)</span></a>
 <a name="594"><span class="lineNum">     594 </span><span class="lineNoCov">          0 :                             sm-&gt;selectOnly (t);</span></a>
 <a name="595"><span class="lineNum">     595 </span>            :             }</a>
-<a name="596"><span class="lineNum">     596 </span>            :         }</a>
+<a name="596"><span class="lineNum">     596 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="597"><span class="lineNum">     597 </span>            :     }</a>
 <a name="598"><span class="lineNum">     598 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="599"><span class="lineNum">     599 </span>            : </a>
@@ -667,7 +667,7 @@
 <a name="605"><span class="lineNum">     605 </span><span class="lineNoCov">          0 :         startParamNumber += delta;</span></a>
 <a name="606"><span class="lineNum">     606 </span><span class="lineNoCov">          0 :         updateParamList();</span></a>
 <a name="607"><span class="lineNum">     607 </span><span class="lineNoCov">          0 :         updateParameters();</span></a>
-<a name="608"><span class="lineNum">     608 </span>            :     }</a>
+<a name="608"><span class="lineNum">     608 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="609"><span class="lineNum">     609 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="610"><span class="lineNum">     610 </span>            : </a>
 <a name="611"><span class="lineNum">     611 </span><span class="lineNoCov">          0 : void ExternalController::updateParamList()</span></a>
@@ -740,7 +740,7 @@
 <a name="678"><span class="lineNum">     678 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
 <a name="679"><span class="lineNum">     679 </span>            : </a>
 <a name="680"><span class="lineNum">     680 </span><span class="lineNoCov">          0 :     if (controlSurface == nullptr || ! isEnabled())</span></a>
-<a name="681"><span class="lineNum">     681 </span><span class="lineNoCov">          0 :         return;</span></a>
+<a name="681"><span class="lineNum">     681 </span>            :         return;</a>
 <a name="682"><span class="lineNum">     682 </span>            : </a>
 <a name="683"><span class="lineNum">     683 </span>            :     auto&amp; cs = getControlSurface();</a>
 <a name="684"><span class="lineNum">     684 </span>            : </a>
@@ -809,7 +809,7 @@
 <a name="747"><span class="lineNum">     747 </span><span class="lineNoCov">          0 :                 s.copyToUTF8 (param.valueDescription, 6);</span></a>
 <a name="748"><span class="lineNum">     748 </span>            : </a>
 <a name="749"><span class="lineNum">     749 </span><span class="lineNoCov">          0 :                 cs.parameterChanged (i, param);</span></a>
-<a name="750"><span class="lineNum">     750 </span>            :             }</a>
+<a name="750"><span class="lineNum">     750 </span><span class="lineNoCov">          0 :             }</span></a>
 <a name="751"><span class="lineNum">     751 </span>            :             else</a>
 <a name="752"><span class="lineNum">     752 </span>            :             {</a>
 <a name="753"><span class="lineNum">     753 </span><span class="lineNoCov">          0 :                 param.label[0] = 0;</span></a>
@@ -852,7 +852,7 @@
 <a name="790"><span class="lineNum">     790 </span>            : </a>
 <a name="791"><span class="lineNum">     791 </span><span class="lineNoCov">          0 :     for (int i = numAvailableParams; i &lt; cs.numParameterControls; ++i)</span></a>
 <a name="792"><span class="lineNum">     792 </span><span class="lineNoCov">          0 :         cs.clearParameter (i);</span></a>
-<a name="793"><span class="lineNum">     793 </span>            : }</a>
+<a name="793"><span class="lineNum">     793 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="794"><span class="lineNum">     794 </span>            : </a>
 <a name="795"><span class="lineNum">     795 </span><span class="lineNoCov">          0 : void ExternalController::selectedPluginChanged()</span></a>
 <a name="796"><span class="lineNum">     796 </span>            : {</a>
@@ -878,7 +878,7 @@
 <a name="816"><span class="lineNum">     816 </span><span class="lineNoCov">          0 :             getControlSurface().currentSelectionChanged (pluginName);</span></a>
 <a name="817"><span class="lineNum">     817 </span><span class="lineNoCov">          0 :             updateParameters();</span></a>
 <a name="818"><span class="lineNum">     818 </span><span class="lineNoCov">          0 :             updateTrackSelectLights();</span></a>
-<a name="819"><span class="lineNum">     819 </span>            :         }</a>
+<a name="819"><span class="lineNum">     819 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="820"><span class="lineNum">     820 </span>            :     }</a>
 <a name="821"><span class="lineNum">     821 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="822"><span class="lineNum">     822 </span>            : </a>
@@ -1035,7 +1035,7 @@
 <a name="973"><span class="lineNum">     973 </span>            :                 }</a>
 <a name="974"><span class="lineNum">     974 </span>            : </a>
 <a name="975"><span class="lineNum">     975 </span><span class="lineNoCov">          0 :                 soloCountChanged (anySoloTracks);</span></a>
-<a name="976"><span class="lineNum">     976 </span>            :             }</a>
+<a name="976"><span class="lineNum">     976 </span><span class="lineNoCov">          0 :             }</span></a>
 <a name="977"><span class="lineNum">     977 </span>            : </a>
 <a name="978"><span class="lineNum">     978 </span>            :             {</a>
 <a name="979"><span class="lineNum">     979 </span><span class="lineNoCov">          0 :                 CRASH_TRACER</span></a>
@@ -1064,16 +1064,16 @@
 <a name="1002"><span class="lineNum">    1002 </span><span class="lineNoCov">          0 :                             trackName = shortenName (trackName, 7);</span></a>
 <a name="1003"><span class="lineNum">    1003 </span>            : </a>
 <a name="1004"><span class="lineNum">    1004 </span><span class="lineNoCov">          0 :                         name = trackName.substring (0, maxTrackNameChars);</span></a>
-<a name="1005"><span class="lineNum">    1005 </span>            :                     }</a>
+<a name="1005"><span class="lineNum">    1005 </span><span class="lineNoCov">          0 :                     }</span></a>
 <a name="1006"><span class="lineNum">    1006 </span>            : </a>
 <a name="1007"><span class="lineNum">    1007 </span><span class="lineNoCov">          0 :                     trackNames.add (name);</span></a>
-<a name="1008"><span class="lineNum">    1008 </span>            :                 }</a>
+<a name="1008"><span class="lineNum">    1008 </span><span class="lineNoCov">          0 :                 }</span></a>
 <a name="1009"><span class="lineNum">    1009 </span>            : </a>
 <a name="1010"><span class="lineNum">    1010 </span><span class="lineNoCov">          0 :                 cs.faderBankChanged (channelStart, trackNames);</span></a>
 <a name="1011"><span class="lineNum">    1011 </span>            : </a>
 <a name="1012"><span class="lineNum">    1012 </span><span class="lineNoCov">          0 :                 if (cs.showingMarkers())</span></a>
 <a name="1013"><span class="lineNum">    1013 </span><span class="lineNoCov">          0 :                     ecm.updateMarkers();</span></a>
-<a name="1014"><span class="lineNum">    1014 </span>            :             }</a>
+<a name="1014"><span class="lineNum">    1014 </span><span class="lineNoCov">          0 :             }</span></a>
 <a name="1015"><span class="lineNum">    1015 </span>            : </a>
 <a name="1016"><span class="lineNum">    1016 </span><span class="lineNoCov">          0 :             if (auto tc = getTransport())</span></a>
 <a name="1017"><span class="lineNum">    1017 </span>            :             {</a>
@@ -1082,7 +1082,7 @@
 <a name="1020"><span class="lineNum">    1020 </span><span class="lineNoCov">          0 :                 recordStateChanged (tc-&gt;isRecording());</span></a>
 <a name="1021"><span class="lineNum">    1021 </span>            : </a>
 <a name="1022"><span class="lineNum">    1022 </span><span class="lineNoCov">          0 :                 automationModeChanged (edit-&gt;getAutomationRecordManager().isReadingAutomation(),</span></a>
-<a name="1023"><span class="lineNum">    1023 </span><span class="lineNoCov">          0 :                                        edit-&gt;getAutomationRecordManager().isWritingAutomation());</span></a>
+<a name="1023"><span class="lineNum">    1023 </span>            :                                        edit-&gt;getAutomationRecordManager().isWritingAutomation());</a>
 <a name="1024"><span class="lineNum">    1024 </span>            : </a>
 <a name="1025"><span class="lineNum">    1025 </span><span class="lineNoCov">          0 :                 snapChanged (tc-&gt;snapToTimecode);</span></a>
 <a name="1026"><span class="lineNum">    1026 </span><span class="lineNoCov">          0 :                 loopChanged (tc-&gt;looping);</span></a>
@@ -1098,7 +1098,7 @@
 <a name="1036"><span class="lineNum">    1036 </span><span class="lineNoCov">          0 :                 auxSendLevelsChanged();</span></a>
 <a name="1037"><span class="lineNum">    1037 </span>            : </a>
 <a name="1038"><span class="lineNum">    1038 </span><span class="lineNoCov">          0 :                 cs.updateMiscFeatures();</span></a>
-<a name="1039"><span class="lineNum">    1039 </span>            :             }</a>
+<a name="1039"><span class="lineNum">    1039 </span><span class="lineNoCov">          0 :             }</span></a>
 <a name="1040"><span class="lineNum">    1040 </span>            :             else</a>
 <a name="1041"><span class="lineNum">    1041 </span>            :             {</a>
 <a name="1042"><span class="lineNum">    1042 </span>            :                 jassertfalse;</a>
@@ -1128,8 +1128,8 @@
 <a name="1066"><span class="lineNum">    1066 </span><span class="lineNoCov">          0 :                         nm = shortenName (nm, 7);</span></a>
 <a name="1067"><span class="lineNum">    1067 </span>            : </a>
 <a name="1068"><span class="lineNum">    1068 </span><span class="lineNoCov">          0 :                     cs.moveAux (chan - channelStart, nm.toRawUTF8(),</span></a>
-<a name="1069"><span class="lineNum">    1069 </span><span class="lineNoCov">          0 :                                 decibelsToVolumeFaderPosition (aux-&gt;getGainDb()));</span></a>
-<a name="1070"><span class="lineNum">    1070 </span>            :                 }</a>
+<a name="1069"><span class="lineNum">    1069 </span>            :                                 decibelsToVolumeFaderPosition (aux-&gt;getGainDb()));</a>
+<a name="1070"><span class="lineNum">    1070 </span><span class="lineNoCov">          0 :                 }</span></a>
 <a name="1071"><span class="lineNum">    1071 </span>            :                 else</a>
 <a name="1072"><span class="lineNum">    1072 </span>            :                 {</a>
 <a name="1073"><span class="lineNum">    1073 </span><span class="lineNoCov">          0 :                     cs.clearAux (chan - channelStart);</span></a>
@@ -1199,7 +1199,7 @@
 <a name="1137"><span class="lineNum">    1137 </span>            : </a>
 <a name="1138"><span class="lineNum">    1138 </span><span class="lineNoCov">          0 :             for (auto&amp; m : messages)</span></a>
 <a name="1139"><span class="lineNum">    1139 </span><span class="lineNoCov">          0 :                 getControlSurface().acceptMidiMessage (m.first, m.second);</span></a>
-<a name="1140"><span class="lineNum">    1140 </span>            :         }</a>
+<a name="1140"><span class="lineNum">    1140 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="1141"><span class="lineNum">    1141 </span>            :     }</a>
 <a name="1142"><span class="lineNum">    1142 </span>            : </a>
 <a name="1143"><span class="lineNum">    1143 </span><span class="lineNoCov">          0 :     if (updateParams)</span></a>
@@ -1228,7 +1228,7 @@
 <a name="1166"><span class="lineNum">    1166 </span><span class="lineNoCov">          0 :                 inputNames.add (m-&gt;getName());</span></a>
 <a name="1167"><span class="lineNum">    1167 </span>            : </a>
 <a name="1168"><span class="lineNum">    1168 </span><span class="lineNoCov">          0 :     return inputNames;</span></a>
-<a name="1169"><span class="lineNum">    1169 </span>            : }</a>
+<a name="1169"><span class="lineNum">    1169 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1170"><span class="lineNum">    1170 </span>            : </a>
 <a name="1171"><span class="lineNum">    1171 </span><span class="lineNoCov">          0 : juce::StringArray ExternalController::getMidiOutputPorts() const</span></a>
 <a name="1172"><span class="lineNum">    1172 </span>            : {</a>
@@ -1243,7 +1243,7 @@
 <a name="1181"><span class="lineNum">    1181 </span><span class="lineNoCov">          0 :                 outputNames.add(m-&gt;getName());</span></a>
 <a name="1182"><span class="lineNum">    1182 </span>            : </a>
 <a name="1183"><span class="lineNum">    1183 </span><span class="lineNoCov">          0 :     return outputNames;</span></a>
-<a name="1184"><span class="lineNum">    1184 </span>            : }</a>
+<a name="1184"><span class="lineNum">    1184 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1185"><span class="lineNum">    1185 </span>            : </a>
 <a name="1186"><span class="lineNum">    1186 </span><span class="lineNoCov">          0 : bool ExternalController::shouldTrackBeColoured (int channelNum)</span></a>
 <a name="1187"><span class="lineNum">    1187 </span>            : {</a>
@@ -1353,7 +1353,7 @@
 <a name="1291"><span class="lineNum">    1291 </span>            : </a>
 <a name="1292"><span class="lineNum">    1292 </span><span class="lineNoCov">          0 :                         cs.markerChanged (i, ms);</span></a>
 <a name="1293"><span class="lineNum">    1293 </span><span class="lineNoCov">          0 :                         numMarkersUsed = i + 1;</span></a>
-<a name="1294"><span class="lineNum">    1294 </span>            :                     }</a>
+<a name="1294"><span class="lineNum">    1294 </span><span class="lineNoCov">          0 :                     }</span></a>
 <a name="1295"><span class="lineNum">    1295 </span>            :                 }</a>
 <a name="1296"><span class="lineNum">    1296 </span>            :             }</a>
 <a name="1297"><span class="lineNum">    1297 </span>            :         }</a>
@@ -1399,7 +1399,7 @@
 <a name="1337"><span class="lineNum">    1337 </span>            :     }</a>
 <a name="1338"><span class="lineNum">    1338 </span>            : </a>
 <a name="1339"><span class="lineNum">    1339 </span><span class="lineNoCov">          0 :     return result.substring (0, maxLen);</span></a>
-<a name="1340"><span class="lineNum">    1340 </span>            : }</a>
+<a name="1340"><span class="lineNum">    1340 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1341"><span class="lineNum">    1341 </span>            : </a>
 <a name="1342"><span class="lineNum">    1342 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>

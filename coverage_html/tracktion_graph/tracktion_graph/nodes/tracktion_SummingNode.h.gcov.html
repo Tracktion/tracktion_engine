@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">94</td>
-            <td class="headerCovTableEntry">129</td>
-            <td class="headerCovTableEntryLo">72.9 %</td>
+            <td class="headerCovTableEntry">92</td>
+            <td class="headerCovTableEntry">124</td>
+            <td class="headerCovTableEntryLo">74.2 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">15</td>
@@ -81,7 +81,7 @@
 <a name="19"><span class="lineNum">      19 </span>            :     An Node which sums together the multiple inputs adding additional latency</a>
 <a name="20"><span class="lineNum">      20 </span>            :     to provide a coherent output.</a>
 <a name="21"><span class="lineNum">      21 </span>            : */</a>
-<a name="22"><span class="lineNum">      22 </span>            : class SummingNode final : public Node</a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineCov">        338 : class SummingNode final : public Node</span></a>
 <a name="23"><span class="lineNum">      23 </span>            : {</a>
 <a name="24"><span class="lineNum">      24 </span>            : public:</a>
 <a name="25"><span class="lineNum">      25 </span><span class="lineCov">        688 :     SummingNode() = default;</span></a>
@@ -128,34 +128,34 @@
 <a name="66"><span class="lineNum">      66 </span>            :     }</a>
 <a name="67"><span class="lineNum">      67 </span>            :     </a>
 <a name="68"><span class="lineNum">      68 </span>            :     //==============================================================================</a>
-<a name="69"><span class="lineNum">      69 </span><span class="lineCov">   17875000 :     NodeProperties getNodeProperties() override</span></a>
+<a name="69"><span class="lineNum">      69 </span><span class="lineCov">   17874965 :     NodeProperties getNodeProperties() override</span></a>
 <a name="70"><span class="lineNum">      70 </span>            :     {</a>
-<a name="71"><span class="lineNum">      71 </span><span class="lineCov">   17875000 :         NodeProperties props;</span></a>
+<a name="71"><span class="lineNum">      71 </span><span class="lineCov">   17874965 :         NodeProperties props;</span></a>
 <a name="72"><span class="lineNum">      72 </span>            :         props.hasAudio = false;</a>
 <a name="73"><span class="lineNum">      73 </span>            :         props.hasMidi = false;</a>
 <a name="74"><span class="lineNum">      74 </span>            :         props.numberOfChannels = 0;</a>
 <a name="75"><span class="lineNum">      75 </span>            : </a>
-<a name="76"><span class="lineNum">      76 </span><span class="lineCov">  166516000 :         for (auto&amp; node : nodes)</span></a>
+<a name="76"><span class="lineNum">      76 </span><span class="lineCov">  166516344 :         for (auto&amp; node : nodes)</span></a>
 <a name="77"><span class="lineNum">      77 </span>            :         {</a>
-<a name="78"><span class="lineNum">      78 </span><span class="lineCov">  148641000 :             auto nodeProps = node-&gt;getNodeProperties();</span></a>
-<a name="79"><span class="lineNum">      79 </span><span class="lineCov">  148641000 :             props.hasAudio = props.hasAudio || nodeProps.hasAudio;</span></a>
-<a name="80"><span class="lineNum">      80 </span><span class="lineCov">  148644000 :             props.hasMidi = props.hasMidi || nodeProps.hasMidi;</span></a>
-<a name="81"><span class="lineNum">      81 </span><span class="lineCov">  148641000 :             props.numberOfChannels = std::max (props.numberOfChannels, nodeProps.numberOfChannels);</span></a>
-<a name="82"><span class="lineNum">      82 </span><span class="lineCov">  148641000 :             props.latencyNumSamples = std::max (props.latencyNumSamples, nodeProps.latencyNumSamples);</span></a>
-<a name="83"><span class="lineNum">      83 </span><span class="lineCov">  148641000 :             hash_combine (props.nodeID, nodeProps.nodeID);</span></a>
+<a name="78"><span class="lineNum">      78 </span><span class="lineCov">  148641379 :             auto nodeProps = node-&gt;getNodeProperties();</span></a>
+<a name="79"><span class="lineNum">      79 </span><span class="lineCov">  148641379 :             props.hasAudio = props.hasAudio || nodeProps.hasAudio;</span></a>
+<a name="80"><span class="lineNum">      80 </span><span class="lineCov">  148643683 :             props.hasMidi = props.hasMidi || nodeProps.hasMidi;</span></a>
+<a name="81"><span class="lineNum">      81 </span><span class="lineCov">  148641379 :             props.numberOfChannels = std::max (props.numberOfChannels, nodeProps.numberOfChannels);</span></a>
+<a name="82"><span class="lineNum">      82 </span><span class="lineCov">  148641379 :             props.latencyNumSamples = std::max (props.latencyNumSamples, nodeProps.latencyNumSamples);</span></a>
+<a name="83"><span class="lineNum">      83 </span>            :             hash_combine (props.nodeID, nodeProps.nodeID);</a>
 <a name="84"><span class="lineNum">      84 </span>            :         }</a>
 <a name="85"><span class="lineNum">      85 </span>            : </a>
-<a name="86"><span class="lineNum">      86 </span><span class="lineCov">   17875000 :         return props;</span></a>
+<a name="86"><span class="lineNum">      86 </span><span class="lineCov">   17874965 :         return props;</span></a>
 <a name="87"><span class="lineNum">      87 </span>            :     }</a>
 <a name="88"><span class="lineNum">      88 </span>            :     </a>
-<a name="89"><span class="lineNum">      89 </span><span class="lineCov">     367749 :     std::vector&lt;Node*&gt; getDirectInputNodes() override</span></a>
+<a name="89"><span class="lineNum">      89 </span><span class="lineCov">     373749 :     std::vector&lt;Node*&gt; getDirectInputNodes() override</span></a>
 <a name="90"><span class="lineNum">      90 </span>            :     {</a>
 <a name="91"><span class="lineNum">      91 </span>            :         std::vector&lt;Node*&gt; inputNodes;</a>
 <a name="92"><span class="lineNum">      92 </span>            :         </a>
-<a name="93"><span class="lineNum">      93 </span><span class="lineCov">    1199800 :         for (auto&amp; node : nodes)</span></a>
-<a name="94"><span class="lineNum">      94 </span><span class="lineCov">     832051 :             inputNodes.push_back (node);</span></a>
+<a name="93"><span class="lineNum">      93 </span><span class="lineCov">    1211800 :         for (auto&amp; node : nodes)</span></a>
+<a name="94"><span class="lineNum">      94 </span><span class="lineCov">     838051 :             inputNodes.push_back (node);</span></a>
 <a name="95"><span class="lineNum">      95 </span>            : </a>
-<a name="96"><span class="lineNum">      96 </span><span class="lineCov">     367749 :         return inputNodes;</span></a>
+<a name="96"><span class="lineNum">      96 </span><span class="lineCov">     373749 :         return inputNodes;</span></a>
 <a name="97"><span class="lineNum">      97 </span>            :     }</a>
 <a name="98"><span class="lineNum">      98 </span>            :     </a>
 <a name="99"><span class="lineNum">      99 </span><span class="lineCov">       5483 :     bool transform (Node&amp;) override</span></a>
@@ -175,22 +175,22 @@
 <a name="113"><span class="lineNum">     113 </span><span class="lineNoCov">          0 :                                        (choc::buffer::FrameCount) info.blockSize });</span></a>
 <a name="114"><span class="lineNum">     114 </span><span class="lineCov">       5132 :     }</span></a>
 <a name="115"><span class="lineNum">     115 </span>            : </a>
-<a name="116"><span class="lineNum">     116 </span><span class="lineCov">     802737 :     bool isReadyToProcess() override</span></a>
+<a name="116"><span class="lineNum">     116 </span><span class="lineCov">     806349 :     bool isReadyToProcess() override</span></a>
 <a name="117"><span class="lineNum">     117 </span>            :     {</a>
-<a name="118"><span class="lineNum">     118 </span><span class="lineCov">    2453430 :         for (auto&amp; node : nodes)</span></a>
-<a name="119"><span class="lineNum">     119 </span><span class="lineCov">    1683100 :             if (! node-&gt;hasProcessed())</span></a>
+<a name="118"><span class="lineNum">     118 </span><span class="lineCov">    2464779 :         for (auto&amp; node : nodes)</span></a>
+<a name="119"><span class="lineNum">     119 </span><span class="lineCov">    1690845 :             if (! node-&gt;hasProcessed())</span></a>
 <a name="120"><span class="lineNum">     120 </span>            :                 return false;</a>
 <a name="121"><span class="lineNum">     121 </span>            :         </a>
 <a name="122"><span class="lineNum">     122 </span>            :         return true;</a>
 <a name="123"><span class="lineNum">     123 </span>            :     }</a>
 <a name="124"><span class="lineNum">     124 </span>            :     </a>
-<a name="125"><span class="lineNum">     125 </span><span class="lineCov">   25017200 :     void process (ProcessContext&amp; pc) override</span></a>
+<a name="125"><span class="lineNum">     125 </span><span class="lineCov">   24817528 :     void process (ProcessContext&amp; pc) override</span></a>
 <a name="126"><span class="lineNum">     126 </span>            :     {</a>
-<a name="127"><span class="lineNum">     127 </span><span class="lineCov">   25017200 :         if (useDoublePrecision)</span></a>
+<a name="127"><span class="lineNum">     127 </span><span class="lineCov">   24817528 :         if (useDoublePrecision)</span></a>
 <a name="128"><span class="lineNum">     128 </span><span class="lineNoCov">          0 :             processDoublePrecision (pc);</span></a>
 <a name="129"><span class="lineNum">     129 </span>            :         else</a>
-<a name="130"><span class="lineNum">     130 </span><span class="lineCov">   25017200 :             processSinglePrecision (pc);</span></a>
-<a name="131"><span class="lineNum">     131 </span><span class="lineCov">   25182200 :     }</span></a>
+<a name="130"><span class="lineNum">     130 </span><span class="lineCov">   24817528 :             processSinglePrecision (pc);</span></a>
+<a name="131"><span class="lineNum">     131 </span><span class="lineCov">   25067081 :     }</span></a>
 <a name="132"><span class="lineNum">     132 </span>            : </a>
 <a name="133"><span class="lineNum">     133 </span>            : private:</a>
 <a name="134"><span class="lineNum">     134 </span>            :     //==============================================================================</a>
@@ -204,8 +204,8 @@
 <a name="142"><span class="lineNum">     142 </span>            :     {</a>
 <a name="143"><span class="lineNum">     143 </span><span class="lineNoCov">          0 :         std::sort (messages.begin(), messages.end(), [] (const juce::MidiMessage&amp; a, const juce::MidiMessage&amp; b)</span></a>
 <a name="144"><span class="lineNum">     144 </span>            :         {</a>
-<a name="145"><span class="lineNum">     145 </span><span class="lineNoCov">          0 :             auto t1 = a.getTimeStamp();</span></a>
-<a name="146"><span class="lineNum">     146 </span><span class="lineNoCov">          0 :             auto t2 = b.getTimeStamp();</span></a>
+<a name="145"><span class="lineNum">     145 </span>            :             auto t1 = a.getTimeStamp();</a>
+<a name="146"><span class="lineNum">     146 </span>            :             auto t2 = b.getTimeStamp();</a>
 <a name="147"><span class="lineNum">     147 </span>            : </a>
 <a name="148"><span class="lineNum">     148 </span><span class="lineNoCov">          0 :             if (t1 == t2)</span></a>
 <a name="149"><span class="lineNum">     149 </span>            :             {</a>
@@ -217,35 +217,35 @@
 <a name="155"><span class="lineNum">     155 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="156"><span class="lineNum">     156 </span>            : </a>
 <a name="157"><span class="lineNum">     157 </span>            :     //==============================================================================</a>
-<a name="158"><span class="lineNum">     158 </span><span class="lineCov">   25018400 :     void processSinglePrecision (const ProcessContext&amp; pc)</span></a>
+<a name="158"><span class="lineNum">     158 </span><span class="lineCov">   24816225 :     void processSinglePrecision (const ProcessContext&amp; pc)</span></a>
 <a name="159"><span class="lineNum">     159 </span>            :     {</a>
-<a name="160"><span class="lineNum">     160 </span><span class="lineCov">   25018400 :         const auto numChannels = pc.buffers.audio.getNumChannels();</span></a>
+<a name="160"><span class="lineNum">     160 </span>            :         const auto numChannels = pc.buffers.audio.getNumChannels();</a>
 <a name="161"><span class="lineNum">     161 </span>            : </a>
-<a name="162"><span class="lineNum">     162 </span><span class="lineCov">   25018400 :         int nodesWithMidi = pc.buffers.midi.isEmpty() ? 0 : 1;</span></a>
+<a name="162"><span class="lineNum">     162 </span><span class="lineCov">   24816225 :         int nodesWithMidi = pc.buffers.midi.isEmpty() ? 0 : 1;</span></a>
 <a name="163"><span class="lineNum">     163 </span>            : </a>
 <a name="164"><span class="lineNum">     164 </span>            :         // Get each of the inputs and add them to dest</a>
-<a name="165"><span class="lineNum">     165 </span><span class="lineCov">  107348000 :         for (auto&amp; node : nodes)</span></a>
+<a name="165"><span class="lineNum">     165 </span><span class="lineCov">  107104232 :         for (auto&amp; node : nodes)</span></a>
 <a name="166"><span class="lineNum">     166 </span>            :         {</a>
-<a name="167"><span class="lineNum">     167 </span><span class="lineCov">   82167500 :             auto inputFromNode = node-&gt;getProcessedOutput();</span></a>
+<a name="167"><span class="lineNum">     167 </span><span class="lineCov">   82029770 :             auto inputFromNode = node-&gt;getProcessedOutput();</span></a>
 <a name="168"><span class="lineNum">     168 </span>            :             </a>
-<a name="169"><span class="lineNum">     169 </span><span class="lineCov">   82167500 :             if (auto numChannelsToAdd = std::min (inputFromNode.audio.getNumChannels(), numChannels))</span></a>
-<a name="170"><span class="lineNum">     170 </span><span class="lineCov">   51346200 :                 add (pc.buffers.audio.getFirstChannels (numChannelsToAdd),</span></a>
-<a name="171"><span class="lineNum">     171 </span><span class="lineCov">   51036600 :                      inputFromNode.audio.getFirstChannels (numChannelsToAdd));</span></a>
+<a name="169"><span class="lineNum">     169 </span><span class="lineCov">   82029770 :             if (auto numChannelsToAdd = std::min (inputFromNode.audio.getNumChannels(), numChannels))</span></a>
+<a name="170"><span class="lineNum">     170 </span><span class="lineCov">   50426153 :                 add (pc.buffers.audio.getFirstChannels (numChannelsToAdd),</span></a>
+<a name="171"><span class="lineNum">     171 </span><span class="lineCov">   50883675 :                      inputFromNode.audio.getFirstChannels (numChannelsToAdd));</span></a>
 <a name="172"><span class="lineNum">     172 </span>            : </a>
-<a name="173"><span class="lineNum">     173 </span><span class="lineCov">   81857900 :             if (inputFromNode.midi.isNotEmpty())</span></a>
-<a name="174"><span class="lineNum">     174 </span><span class="lineCov">       4926 :                 nodesWithMidi++;</span></a>
+<a name="173"><span class="lineNum">     173 </span><span class="lineCov">   82487292 :             if (inputFromNode.midi.isNotEmpty())</span></a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineCov">       4366 :                 nodesWithMidi++;</span></a>
 <a name="175"><span class="lineNum">     175 </span>            : </a>
-<a name="176"><span class="lineNum">     176 </span><span class="lineCov">   81857900 :             pc.buffers.midi.mergeFrom (inputFromNode.midi);</span></a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineCov">   82487292 :             pc.buffers.midi.mergeFrom (inputFromNode.midi);</span></a>
 <a name="177"><span class="lineNum">     177 </span>            :         }</a>
 <a name="178"><span class="lineNum">     178 </span>            : </a>
-<a name="179"><span class="lineNum">     179 </span><span class="lineCov">   25181000 :         if (nodesWithMidi &gt; 1)</span></a>
+<a name="179"><span class="lineNum">     179 </span><span class="lineCov">   25074462 :         if (nodesWithMidi &gt; 1)</span></a>
 <a name="180"><span class="lineNum">     180 </span><span class="lineNoCov">          0 :             sortByTimestampUnstable (pc.buffers.midi);</span></a>
-<a name="181"><span class="lineNum">     181 </span><span class="lineCov">   25181000 :     }</span></a>
+<a name="181"><span class="lineNum">     181 </span><span class="lineCov">   25074462 :     }</span></a>
 <a name="182"><span class="lineNum">     182 </span>            : </a>
 <a name="183"><span class="lineNum">     183 </span><span class="lineNoCov">          0 :     void processDoublePrecision (const ProcessContext&amp; pc)</span></a>
 <a name="184"><span class="lineNum">     184 </span>            :     {</a>
 <a name="185"><span class="lineNum">     185 </span><span class="lineNoCov">          0 :         const auto numChannels = pc.buffers.audio.getNumChannels();</span></a>
-<a name="186"><span class="lineNum">     186 </span><span class="lineNoCov">          0 :         auto doubleView = tempDoubleBuffer.getView().getStart (pc.buffers.audio.getNumFrames());</span></a>
+<a name="186"><span class="lineNum">     186 </span>            :         auto doubleView = tempDoubleBuffer.getView().getStart (pc.buffers.audio.getNumFrames());</a>
 <a name="187"><span class="lineNum">     187 </span><span class="lineNoCov">          0 :         doubleView.clear();</span></a>
 <a name="188"><span class="lineNum">     188 </span>            : </a>
 <a name="189"><span class="lineNum">     189 </span><span class="lineNoCov">          0 :         int nodesWithMidi = pc.buffers.midi.isEmpty() ? 0 : 1;</span></a>
@@ -279,7 +279,7 @@
 <a name="217"><span class="lineNum">     217 </span>            :     {</a>
 <a name="218"><span class="lineNum">     218 </span>            :         bool hasChanged = false;</a>
 <a name="219"><span class="lineNum">     219 </span>            :         </a>
-<a name="220"><span class="lineNum">     220 </span><span class="lineCov">       5483 :         std::vector&lt;std::unique_ptr&lt;Node&gt;&gt; ownedNodesToAdd;</span></a>
+<a name="220"><span class="lineNum">     220 </span>            :         std::vector&lt;std::unique_ptr&lt;Node&gt;&gt; ownedNodesToAdd;</a>
 <a name="221"><span class="lineNum">     221 </span>            :         std::vector&lt;Node*&gt; nodesToAdd, nodesToErase;</a>
 <a name="222"><span class="lineNum">     222 </span>            : </a>
 <a name="223"><span class="lineNum">     223 </span><span class="lineCov">      18042 :         for (auto&amp; n : ownedNodes)</span></a>
@@ -303,22 +303,22 @@
 <a name="241"><span class="lineNum">     241 </span><span class="lineCov">       5483 :         for (auto&amp; n : nodesToAdd)</span></a>
 <a name="242"><span class="lineNum">     242 </span><span class="lineNoCov">          0 :             nodes.push_back (std::move (n));</span></a>
 <a name="243"><span class="lineNum">     243 </span>            : </a>
-<a name="244"><span class="lineNum">     244 </span>            :         ownedNodes.erase (std::remove_if (ownedNodes.begin(), ownedNodes.end(),</a>
-<a name="245"><span class="lineNum">     245 </span><span class="lineCov">      18042 :                                           [&amp;] (auto&amp; n) { return std::find (nodesToErase.begin(), nodesToErase.end(), n.get()) != nodesToErase.end(); }),</span></a>
-<a name="246"><span class="lineNum">     246 </span><span class="lineCov">       5483 :                           ownedNodes.end());</span></a>
+<a name="244"><span class="lineNum">     244 </span><span class="lineCov">       5483 :         ownedNodes.erase (std::remove_if (ownedNodes.begin(), ownedNodes.end(),</span></a>
+<a name="245"><span class="lineNum">     245 </span><span class="lineCov">      12559 :                                           [&amp;] (auto&amp; n) { return std::find (nodesToErase.begin(), nodesToErase.end(), n.get()) != nodesToErase.end(); }),</span></a>
+<a name="246"><span class="lineNum">     246 </span>            :                           ownedNodes.end());</a>
 <a name="247"><span class="lineNum">     247 </span>            : </a>
-<a name="248"><span class="lineNum">     248 </span>            :         nodes.erase (std::remove_if (nodes.begin(), nodes.end(),</a>
-<a name="249"><span class="lineNum">     249 </span><span class="lineCov">      25178 :                                      [&amp;] (auto&amp; n) { return std::find (nodesToErase.begin(), nodesToErase.end(), n) != nodesToErase.end(); }),</span></a>
-<a name="250"><span class="lineNum">     250 </span><span class="lineCov">       5483 :                      nodes.end());</span></a>
+<a name="248"><span class="lineNum">     248 </span><span class="lineCov">       5483 :         nodes.erase (std::remove_if (nodes.begin(), nodes.end(),</span></a>
+<a name="249"><span class="lineNum">     249 </span><span class="lineCov">      19695 :                                      [&amp;] (auto&amp; n) { return std::find (nodesToErase.begin(), nodesToErase.end(), n) != nodesToErase.end(); }),</span></a>
+<a name="250"><span class="lineNum">     250 </span>            :                      nodes.end());</a>
 <a name="251"><span class="lineNum">     251 </span>            : </a>
 <a name="252"><span class="lineNum">     252 </span><span class="lineCov">       5483 :         return hasChanged;</span></a>
-<a name="253"><span class="lineNum">     253 </span>            :     }</a>
+<a name="253"><span class="lineNum">     253 </span><span class="lineCov">       5483 :     }</span></a>
 <a name="254"><span class="lineNum">     254 </span>            :     </a>
 <a name="255"><span class="lineNum">     255 </span><span class="lineCov">       5483 :     bool createLatencyNodes()</span></a>
 <a name="256"><span class="lineNum">     256 </span>            :     {</a>
 <a name="257"><span class="lineNum">     257 </span>            :         bool topologyChanged = false;</a>
 <a name="258"><span class="lineNum">     258 </span><span class="lineCov">       5483 :         const int maxLatency = getNodeProperties().latencyNumSamples;</span></a>
-<a name="259"><span class="lineNum">     259 </span><span class="lineCov">       5483 :         std::vector&lt;std::unique_ptr&lt;Node&gt;&gt; ownedNodesToAdd;</span></a>
+<a name="259"><span class="lineNum">     259 </span>            :         std::vector&lt;std::unique_ptr&lt;Node&gt;&gt; ownedNodesToAdd;</a>
 <a name="260"><span class="lineNum">     260 </span>            : </a>
 <a name="261"><span class="lineNum">     261 </span><span class="lineCov">      25178 :         for (auto&amp; node : nodes)</span></a>
 <a name="262"><span class="lineNum">     262 </span>            :         {</a>
@@ -358,29 +358,29 @@
 <a name="296"><span class="lineNum">     296 </span><span class="lineCov">         72 :             ownedNodes.push_back (std::move (newNode));</span></a>
 <a name="297"><span class="lineNum">     297 </span>            :         }</a>
 <a name="298"><span class="lineNum">     298 </span>            : </a>
-<a name="299"><span class="lineNum">     299 </span>            :         nodes.erase (std::remove_if (nodes.begin(), nodes.end(),</a>
-<a name="300"><span class="lineNum">     300 </span><span class="lineCov">       5483 :                                      [] (auto&amp; n) { return n == nullptr; }),</span></a>
-<a name="301"><span class="lineNum">     301 </span><span class="lineCov">       5483 :                      nodes.end());</span></a>
+<a name="299"><span class="lineNum">     299 </span><span class="lineCov">       5483 :         nodes.erase (std::remove_if (nodes.begin(), nodes.end(),</span></a>
+<a name="300"><span class="lineNum">     300 </span><span class="lineCov">      12088 :                                      [] (auto&amp; n) { return n == nullptr; }),</span></a>
+<a name="301"><span class="lineNum">     301 </span>            :                      nodes.end());</a>
 <a name="302"><span class="lineNum">     302 </span>            : </a>
-<a name="303"><span class="lineNum">     303 </span>            :         ownedNodes.erase (std::remove_if (ownedNodes.begin(), ownedNodes.end(),</a>
-<a name="304"><span class="lineNum">     304 </span><span class="lineCov">       5483 :                                           [] (auto&amp; n) { return n == nullptr; }),</span></a>
-<a name="305"><span class="lineNum">     305 </span><span class="lineCov">       5483 :                           ownedNodes.end());</span></a>
+<a name="303"><span class="lineNum">     303 </span><span class="lineCov">       5483 :         ownedNodes.erase (std::remove_if (ownedNodes.begin(), ownedNodes.end(),</span></a>
+<a name="304"><span class="lineNum">     304 </span>            :                                           [] (auto&amp; n) { return n == nullptr; }),</a>
+<a name="305"><span class="lineNum">     305 </span>            :                           ownedNodes.end());</a>
 <a name="306"><span class="lineNum">     306 </span>            :         </a>
 <a name="307"><span class="lineNum">     307 </span><span class="lineCov">       5483 :         return topologyChanged;</span></a>
-<a name="308"><span class="lineNum">     308 </span>            :     }</a>
+<a name="308"><span class="lineNum">     308 </span><span class="lineCov">       5483 :     }</span></a>
 <a name="309"><span class="lineNum">     309 </span>            : };</a>
 <a name="310"><span class="lineNum">     310 </span>            : </a>
 <a name="311"><span class="lineNum">     311 </span>            : </a>
 <a name="312"><span class="lineNum">     312 </span>            : /** Creates a SummingNode from a number of Nodes. */</a>
 <a name="313"><span class="lineNum">     313 </span><span class="lineCov">         72 : static inline std::unique_ptr&lt;SummingNode&gt; makeSummingNode (std::initializer_list&lt;Node*&gt; nodes)</span></a>
 <a name="314"><span class="lineNum">     314 </span>            : {</a>
-<a name="315"><span class="lineNum">     315 </span><span class="lineCov">         72 :     std::vector&lt;std::unique_ptr&lt;Node&gt;&gt; nodeVector;</span></a>
+<a name="315"><span class="lineNum">     315 </span>            :     std::vector&lt;std::unique_ptr&lt;Node&gt;&gt; nodeVector;</a>
 <a name="316"><span class="lineNum">     316 </span>            :     </a>
 <a name="317"><span class="lineNum">     317 </span><span class="lineCov">        232 :     for (auto node : nodes)</span></a>
 <a name="318"><span class="lineNum">     318 </span><span class="lineCov">        160 :         nodeVector.push_back (std::unique_ptr&lt;Node&gt; (node));</span></a>
 <a name="319"><span class="lineNum">     319 </span>            :         </a>
 <a name="320"><span class="lineNum">     320 </span><span class="lineCov">        144 :     return std::make_unique&lt;SummingNode&gt; (std::move (nodeVector));</span></a>
-<a name="321"><span class="lineNum">     321 </span>            : }</a>
+<a name="321"><span class="lineNum">     321 </span><span class="lineCov">         72 : }</span></a>
 <a name="322"><span class="lineNum">     322 </span>            : </a>
 <a name="323"><span class="lineNum">     323 </span>            : }}</a>
 </pre>

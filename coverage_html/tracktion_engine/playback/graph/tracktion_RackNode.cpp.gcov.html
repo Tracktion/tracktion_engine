@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">11</td>
@@ -115,7 +115,7 @@
 <a name="53"><span class="lineNum">      53 </span>            :     {</a>
 <a name="54"><span class="lineNum">      54 </span>            :         auto inputs = input-&gt;getProcessedOutput();</a>
 <a name="55"><span class="lineNum">      55 </span>            :         tracktion::graph::sanityCheckView (inputs.audio);</a>
-<a name="56"><span class="lineNum">      56 </span><span class="lineNoCov">          0 :         inputProvider-&gt;setInputs (inputs);</span></a>
+<a name="56"><span class="lineNum">      56 </span>            :         inputProvider-&gt;setInputs (inputs);</a>
 <a name="57"><span class="lineNum">      57 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="58"><span class="lineNum">      58 </span>            :     </a>
 <a name="59"><span class="lineNum">      59 </span>            : private:</a>
@@ -126,7 +126,7 @@
 <a name="64"><span class="lineNum">      64 </span>            : </a>
 <a name="65"><span class="lineNum">      65 </span>            : //==============================================================================</a>
 <a name="66"><span class="lineNum">      66 </span>            : //==============================================================================</a>
-<a name="67"><span class="lineNum">      67 </span>            : class InputNode final   : public tracktion::graph::Node</a>
+<a name="67"><span class="lineNum">      67 </span><span class="lineNoCov">          0 : class InputNode final   : public tracktion::graph::Node</span></a>
 <a name="68"><span class="lineNum">      68 </span>            : {</a>
 <a name="69"><span class="lineNum">      69 </span>            : public:</a>
 <a name="70"><span class="lineNum">      70 </span>            :     InputNode (std::shared_ptr&lt;InputProvider&gt; inputProviderToUse,</a>
@@ -140,7 +140,7 @@
 <a name="78"><span class="lineNum">      78 </span><span class="lineCov">         48 :     InputNode (std::shared_ptr&lt;InputProvider&gt; inputProviderToUse)</span></a>
 <a name="79"><span class="lineNum">      79 </span><span class="lineCov">         48 :         : inputProvider (std::move (inputProviderToUse)),</span></a>
 <a name="80"><span class="lineNum">      80 </span><span class="lineCov">         48 :           numChannels ((int) (inputProvider-&gt;numChannels &gt; 0 ? inputProvider-&gt;numChannels</span></a>
-<a name="81"><span class="lineNum">      81 </span><span class="lineCov">         40 :                                                              : inputProvider-&gt;audio.getNumChannels())),</span></a>
+<a name="81"><span class="lineNum">      81 </span>            :                                                              : inputProvider-&gt;audio.getNumChannels())),</a>
 <a name="82"><span class="lineNum">      82 </span><span class="lineCov">         96 :           hasMidi (true)</span></a>
 <a name="83"><span class="lineNum">      83 </span>            :     {</a>
 <a name="84"><span class="lineNum">      84 </span><span class="lineCov">         48 :     }</span></a>
@@ -169,46 +169,46 @@
 <a name="107"><span class="lineNum">     107 </span><span class="lineCov">        656 :         if (nodeDependancy)</span></a>
 <a name="108"><span class="lineNum">     108 </span><span class="lineNoCov">          0 :             return { nodeDependancy };</span></a>
 <a name="109"><span class="lineNum">     109 </span>            :         </a>
-<a name="110"><span class="lineNum">     110 </span>            :         return {};</a>
+<a name="110"><span class="lineNum">     110 </span><span class="lineCov">        656 :         return {};</span></a>
 <a name="111"><span class="lineNum">     111 </span>            :     }</a>
 <a name="112"><span class="lineNum">     112 </span>            :     </a>
-<a name="113"><span class="lineNum">     113 </span><span class="lineCov">      85942 :     bool isReadyToProcess() override</span></a>
+<a name="113"><span class="lineNum">     113 </span><span class="lineCov">      86114 :     bool isReadyToProcess() override</span></a>
 <a name="114"><span class="lineNum">     114 </span>            :     {</a>
-<a name="115"><span class="lineNum">     115 </span><span class="lineCov">      85942 :         return nodeDependancy ? nodeDependancy-&gt;hasProcessed()</span></a>
-<a name="116"><span class="lineNum">     116 </span><span class="lineCov">      85942 :                               : true;</span></a>
+<a name="115"><span class="lineNum">     115 </span><span class="lineCov">      86114 :         return nodeDependancy ? nodeDependancy-&gt;hasProcessed()</span></a>
+<a name="116"><span class="lineNum">     116 </span><span class="lineCov">      86114 :                               : true;</span></a>
 <a name="117"><span class="lineNum">     117 </span>            :     }</a>
 <a name="118"><span class="lineNum">     118 </span>            :     </a>
 <a name="119"><span class="lineNum">     119 </span><span class="lineCov">         96 :     void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&amp;) override</span></a>
 <a name="120"><span class="lineNum">     120 </span>            :     {</a>
 <a name="121"><span class="lineNum">     121 </span><span class="lineCov">         96 :     }</span></a>
 <a name="122"><span class="lineNum">     122 </span>            :     </a>
-<a name="123"><span class="lineNum">     123 </span><span class="lineCov">     171884 :     void process (ProcessContext&amp; pc) override</span></a>
+<a name="123"><span class="lineNum">     123 </span><span class="lineCov">     172228 :     void process (ProcessContext&amp; pc) override</span></a>
 <a name="124"><span class="lineNum">     124 </span>            :     {</a>
 <a name="125"><span class="lineNum">     125 </span>            :         auto inputBuffers = inputProvider-&gt;getInputs();</a>
 <a name="126"><span class="lineNum">     126 </span>            :         tracktion::graph::sanityCheckView (inputBuffers.audio);</a>
 <a name="127"><span class="lineNum">     127 </span>            : </a>
-<a name="128"><span class="lineNum">     128 </span><span class="lineCov">     171884 :         if (numChannels &gt; 0)</span></a>
+<a name="128"><span class="lineNum">     128 </span><span class="lineCov">     172228 :         if (numChannels &gt; 0)</span></a>
 <a name="129"><span class="lineNum">     129 </span>            :         {</a>
 <a name="130"><span class="lineNum">     130 </span>            :             auto&amp; outputBuffers = pc.buffers;</a>
 <a name="131"><span class="lineNum">     131 </span>            :             </a>
 <a name="132"><span class="lineNum">     132 </span>            :             // The InputProvider may have less channels than this Node requires so only take the number available</a>
-<a name="133"><span class="lineNum">     133 </span><span class="lineCov">     343768 :             auto numInputChannelsToCopy = std::min (inputBuffers.audio.getNumChannels(),</span></a>
-<a name="134"><span class="lineNum">     134 </span><span class="lineCov">     171884 :                                                     outputBuffers.audio.getNumChannels());</span></a>
+<a name="133"><span class="lineNum">     133 </span><span class="lineCov">     344456 :             auto numInputChannelsToCopy = std::min (inputBuffers.audio.getNumChannels(),</span></a>
+<a name="134"><span class="lineNum">     134 </span><span class="lineCov">     172228 :                                                     outputBuffers.audio.getNumChannels());</span></a>
 <a name="135"><span class="lineNum">     135 </span>            :             </a>
-<a name="136"><span class="lineNum">     136 </span><span class="lineCov">     171884 :             if (numInputChannelsToCopy &gt; 0)</span></a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineCov">     172228 :             if (numInputChannelsToCopy &gt; 0)</span></a>
 <a name="137"><span class="lineNum">     137 </span>            :             {</a>
 <a name="138"><span class="lineNum">     138 </span>            :                 // For testing purposes, the last block might be smaller than the InputProvider</a>
 <a name="139"><span class="lineNum">     139 </span>            :                 // so we'll just take the number of samples required</a>
 <a name="140"><span class="lineNum">     140 </span>            :                 jassert (inputBuffers.audio.getNumFrames() &gt;= outputBuffers.audio.getNumFrames());</a>
 <a name="141"><span class="lineNum">     141 </span>            : </a>
-<a name="142"><span class="lineNum">     142 </span><span class="lineCov">     171884 :                 add (outputBuffers.audio.getFirstChannels (numInputChannelsToCopy),</span></a>
-<a name="143"><span class="lineNum">     143 </span><span class="lineCov">     171884 :                      inputBuffers.audio.getFirstChannels (numInputChannelsToCopy).getStart (outputBuffers.audio.getNumFrames()));</span></a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineCov">     172228 :                 add (outputBuffers.audio.getFirstChannels (numInputChannelsToCopy),</span></a>
+<a name="143"><span class="lineNum">     143 </span><span class="lineCov">     172228 :                      inputBuffers.audio.getFirstChannels (numInputChannelsToCopy).getStart (outputBuffers.audio.getNumFrames()));</span></a>
 <a name="144"><span class="lineNum">     144 </span>            :             }</a>
 <a name="145"><span class="lineNum">     145 </span>            :         }</a>
 <a name="146"><span class="lineNum">     146 </span>            :         </a>
-<a name="147"><span class="lineNum">     147 </span><span class="lineCov">     171884 :         if (hasMidi)</span></a>
-<a name="148"><span class="lineNum">     148 </span><span class="lineCov">     171884 :             pc.buffers.midi = inputBuffers.midi;</span></a>
-<a name="149"><span class="lineNum">     149 </span><span class="lineCov">     171884 :     }</span></a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineCov">     172228 :         if (hasMidi)</span></a>
+<a name="148"><span class="lineNum">     148 </span><span class="lineCov">     172228 :             pc.buffers.midi = inputBuffers.midi;</span></a>
+<a name="149"><span class="lineNum">     149 </span><span class="lineCov">     172228 :     }</span></a>
 <a name="150"><span class="lineNum">     150 </span>            :     </a>
 <a name="151"><span class="lineNum">     151 </span>            : private:</a>
 <a name="152"><span class="lineNum">     152 </span>            :     std::shared_ptr&lt;InputProvider&gt; inputProvider;</a>
@@ -425,12 +425,12 @@
 <a name="363"><span class="lineNum">     363 </span><span class="lineNoCov">          0 :             sourcesDestsDone.push_back (sourceDest);</span></a>
 <a name="364"><span class="lineNum">     364 </span>            :         }</a>
 <a name="365"><span class="lineNum">     365 </span>            : </a>
-<a name="366"><span class="lineNum">     366 </span>            :         connections.erase (std::remove_if (connections.begin(), connections.end(),</a>
-<a name="367"><span class="lineNum">     367 </span><span class="lineCov">         32 :                                            [] (auto c) { return c.empty(); }),</span></a>
+<a name="366"><span class="lineNum">     366 </span><span class="lineCov">         32 :         connections.erase (std::remove_if (connections.begin(), connections.end(),</span></a>
+<a name="367"><span class="lineNum">     367 </span>            :                                            [] (auto c) { return c.empty(); }),</a>
 <a name="368"><span class="lineNum">     368 </span>            :                            connections.end());</a>
 <a name="369"><span class="lineNum">     369 </span>            :         </a>
 <a name="370"><span class="lineNum">     370 </span><span class="lineCov">         32 :         return connections;</span></a>
-<a name="371"><span class="lineNum">     371 </span>            :     }</a>
+<a name="371"><span class="lineNum">     371 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="372"><span class="lineNum">     372 </span>            : </a>
 <a name="373"><span class="lineNum">     373 </span>            :     static inline std::vector&lt;std::vector&lt;RackConnectionData&gt;&gt; getConnectionsTo (RackType&amp; rack, EditItemID destID)</a>
 <a name="374"><span class="lineNum">     374 </span>            :     {</a>
@@ -458,12 +458,12 @@
 <a name="396"><span class="lineNum">     396 </span>            :         </a>
 <a name="397"><span class="lineNum">     397 </span>            :         jassert (inputNode);</a>
 <a name="398"><span class="lineNum">     398 </span>            : </a>
-<a name="399"><span class="lineNum">     399 </span><span class="lineCov">       2364 :         for (auto plugin : rack.getPlugins())</span></a>
+<a name="399"><span class="lineNum">     399 </span><span class="lineCov">       2008 :         for (auto plugin : rack.getPlugins())</span></a>
 <a name="400"><span class="lineNum">     400 </span><span class="lineCov">       3304 :             itemNodes[plugin-&gt;itemID] = makeNode&lt;PluginNode&gt; (makeNode&lt;ConnectedNode&gt; ((size_t) plugin-&gt;itemID.getRawID()),</span></a>
-<a name="401"><span class="lineNum">     401 </span><span class="lineNoCov">          0 :                                                               plugin, sampleRate, blockSize, nullptr,</span></a>
+<a name="401"><span class="lineNum">     401 </span><span class="lineCov">       3304 :                                                               plugin, sampleRate, blockSize, nullptr,</span></a>
 <a name="402"><span class="lineNum">     402 </span><span class="lineCov">       3304 :                                                               processState, isRendering, true, -1);</span></a>
 <a name="403"><span class="lineNum">     403 </span>            : </a>
-<a name="404"><span class="lineNum">     404 </span><span class="lineCov">        744 :         for (auto m : rack.getModifierList().getModifiers())</span></a>
+<a name="404"><span class="lineNum">     404 </span><span class="lineCov">        388 :         for (auto m : rack.getModifierList().getModifiers())</span></a>
 <a name="405"><span class="lineNum">     405 </span><span class="lineCov">         64 :             itemNodes[m-&gt;itemID] = makeNode&lt;ModifierNode&gt; (makeNode&lt;ConnectedNode&gt; ((size_t) m-&gt;itemID.getRawID()),</span></a>
 <a name="406"><span class="lineNum">     406 </span><span class="lineCov">         64 :                                                            m, sampleRate, blockSize, nullptr,</span></a>
 <a name="407"><span class="lineNum">     407 </span>            :                                                            processState.playHeadState, isRendering);</a>
@@ -472,12 +472,12 @@
 <a name="410"><span class="lineNum">     410 </span><span class="lineCov">        356 :         auto outputNode = std::make_unique&lt;ConnectedNode&gt;();</span></a>
 <a name="411"><span class="lineNum">     411 </span>            : </a>
 <a name="412"><span class="lineNum">     412 </span>            :         // Iterate all the connections and make Node connections between them</a>
-<a name="413"><span class="lineNum">     413 </span><span class="lineCov">      10672 :         for (const auto&amp; connection : rack.getConnections())</span></a>
+<a name="413"><span class="lineNum">     413 </span><span class="lineCov">      10316 :         for (const auto&amp; connection : rack.getConnections())</span></a>
 <a name="414"><span class="lineNum">     414 </span>            :         {</a>
 <a name="415"><span class="lineNum">     415 </span><span class="lineCov">       9960 :             const EditItemID sourceID = connection-&gt;sourceID;</span></a>
 <a name="416"><span class="lineNum">     416 </span><span class="lineCov">       9960 :             const EditItemID destID = connection-&gt;destID;</span></a>
-<a name="417"><span class="lineNum">     417 </span><span class="lineCov">       9960 :             const int sourcePin = connection-&gt;sourcePin;</span></a>
-<a name="418"><span class="lineNum">     418 </span><span class="lineCov">       9960 :             const int destPin = connection-&gt;destPin;</span></a>
+<a name="417"><span class="lineNum">     417 </span>            :             const int sourcePin = connection-&gt;sourcePin;</a>
+<a name="418"><span class="lineNum">     418 </span>            :             const int destPin = connection-&gt;destPin;</a>
 <a name="419"><span class="lineNum">     419 </span>            :             </a>
 <a name="420"><span class="lineNum">     420 </span><span class="lineCov">       9960 :             if (sourceID.isInvalid() &amp;&amp; destID.isInvalid())</span></a>
 <a name="421"><span class="lineNum">     421 </span>            :             {</a>
@@ -558,14 +558,14 @@
 <a name="496"><span class="lineNum">     496 </span><span class="lineCov">         32 :                 if (getConnectionsFrom (rack, modifierNode-&gt;getModifier().itemID).empty())</span></a>
 <a name="497"><span class="lineNum">     497 </span><span class="lineCov">         64 :                     finalOutput-&gt;addInput (makeNode&lt;ForwardingNode&gt; (node.second));</span></a>
 <a name="498"><span class="lineNum">     498 </span>            :         </a>
-<a name="499"><span class="lineNum">     499 </span><span class="lineCov">        388 :         if (finalOutput-&gt;getDirectInputNodes().size() &gt; 0)</span></a>
+<a name="499"><span class="lineNum">     499 </span><span class="lineCov">        712 :         if (finalOutput-&gt;getDirectInputNodes().size() &gt; 0)</span></a>
 <a name="500"><span class="lineNum">     500 </span>            :         {</a>
 <a name="501"><span class="lineNum">     501 </span><span class="lineCov">         64 :             finalOutput-&gt;addInput (std::move (outputNode));</span></a>
 <a name="502"><span class="lineNum">     502 </span>            :             return finalOutput;</a>
 <a name="503"><span class="lineNum">     503 </span>            :         }</a>
 <a name="504"><span class="lineNum">     504 </span>            :         </a>
 <a name="505"><span class="lineNum">     505 </span>            :         return outputNode;</a>
-<a name="506"><span class="lineNum">     506 </span>            :     }</a>
+<a name="506"><span class="lineNum">     506 </span><span class="lineCov">        356 :     }</span></a>
 <a name="507"><span class="lineNum">     507 </span>            : </a>
 <a name="508"><span class="lineNum">     508 </span>            :     //==============================================================================</a>
 <a name="509"><span class="lineNum">     509 </span><span class="lineCov">        356 :     std::unique_ptr&lt;tracktion::graph::Node&gt; createRackNode (tracktion::engine::RackType&amp; rackType,</span></a>

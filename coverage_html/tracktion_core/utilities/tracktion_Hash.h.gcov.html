@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">10</td>
-            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntry">8</td>
+            <td class="headerCovTableEntry">8</td>
             <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">2</td>
-            <td class="headerCovTableEntry">2</td>
-            <td class="headerCovTableEntryHi">100.0 %</td>
+            <td class="headerCovTableEntry">5</td>
+            <td class="headerCovTableEntry">7</td>
+            <td class="headerCovTableEntryLo">71.4 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -115,10 +115,10 @@
 <a name="53"><span class="lineNum">      53 </span>            : //==============================================================================</a>
 <a name="54"><span class="lineNum">      54 </span>            : /** Hashes a type with a given seed, modifying the seed. */</a>
 <a name="55"><span class="lineNum">      55 </span>            : template&lt;typename T&gt;</a>
-<a name="56"><span class="lineNum">      56 </span><span class="lineCov">        132 : void hash_combine (size_t&amp; seed, const T&amp; v)</span></a>
+<a name="56"><span class="lineNum">      56 </span><span class="lineCov">       6191 : void hash_combine (size_t&amp; seed, const T&amp; v)</span></a>
 <a name="57"><span class="lineNum">      57 </span>            : {</a>
-<a name="58"><span class="lineNum">      58 </span><span class="lineCov">  258390136 :     seed ^= std::hash&lt;T&gt;()(v) + 0x9e3779b9 + (seed &lt;&lt; 6) + (seed &gt;&gt; 2);</span></a>
-<a name="59"><span class="lineNum">      59 </span><span class="lineCov">  180648640 : }</span></a>
+<a name="58"><span class="lineNum">      58 </span><span class="lineCov">  258398299 :     seed ^= std::hash&lt;T&gt;()(v) + 0x9e3779b9 + (seed &lt;&lt; 6) + (seed &gt;&gt; 2);</span></a>
+<a name="59"><span class="lineNum">      59 </span><span class="lineCov">  180654832 : }</span></a>
 <a name="60"><span class="lineNum">      60 </span>            : </a>
 <a name="61"><span class="lineNum">      61 </span>            : /** Hashes a range with a default seed and returns the new hash value. */</a>
 <a name="62"><span class="lineNum">      62 </span>            : template&lt;typename It&gt;</a>
@@ -136,15 +136,15 @@
 <a name="74"><span class="lineNum">      74 </span>            : template&lt;typename It&gt;</a>
 <a name="75"><span class="lineNum">      75 </span>            : void hash_range (std::size_t&amp; seed, It first, It last)</a>
 <a name="76"><span class="lineNum">      76 </span>            : {</a>
-<a name="77"><span class="lineNum">      77 </span><span class="lineCov">       2688 :     for (; first != last; ++first)</span></a>
-<a name="78"><span class="lineNum">      78 </span><span class="lineCov">       2016 :         hash_combine (seed, *first);</span></a>
+<a name="77"><span class="lineNum">      77 </span><span class="lineCov">       2496 :     for (; first != last; ++first)</span></a>
+<a name="78"><span class="lineNum">      78 </span>            :         hash_combine (seed, *first);</a>
 <a name="79"><span class="lineNum">      79 </span>            : }</a>
 <a name="80"><span class="lineNum">      80 </span>            : </a>
 <a name="81"><span class="lineNum">      81 </span>            : /** Hashes a container with a default seed and returns the hash value. */</a>
 <a name="82"><span class="lineNum">      82 </span>            : template&lt;typename Container&gt;</a>
 <a name="83"><span class="lineNum">      83 </span>            : std::size_t hash_range (const Container&amp; container)</a>
 <a name="84"><span class="lineNum">      84 </span>            : {</a>
-<a name="85"><span class="lineNum">      85 </span><span class="lineCov">         48 :     return hash_range (container.begin(), container.end());</span></a>
+<a name="85"><span class="lineNum">      85 </span>            :     return hash_range (container.begin(), container.end());</a>
 <a name="86"><span class="lineNum">      86 </span>            : }</a>
 <a name="87"><span class="lineNum">      87 </span>            : </a>
 <a name="88"><span class="lineNum">      88 </span>            : /** Hashes a type with a given seed and returns the new hash value. */</a>

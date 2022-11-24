@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">56</td>
-            <td class="headerCovTableEntry">173</td>
-            <td class="headerCovTableEntryLo">32.4 %</td>
+            <td class="headerCovTableEntry">58</td>
+            <td class="headerCovTableEntry">177</td>
+            <td class="headerCovTableEntryLo">32.8 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">14</td>
-            <td class="headerCovTableEntry">32</td>
-            <td class="headerCovTableEntryLo">43.8 %</td>
+            <td class="headerCovTableEntry">31</td>
+            <td class="headerCovTableEntryLo">45.2 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -80,7 +80,7 @@
 <a name="18"><span class="lineNum">      18 </span>            : </a>
 <a name="19"><span class="lineNum">      19 </span><span class="lineNoCov">          0 : TemporaryFileManager::~TemporaryFileManager()</span></a>
 <a name="20"><span class="lineNum">      20 </span>            : {</a>
-<a name="21"><span class="lineNum">      21 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="21"><span class="lineNum">      21 </span><span class="lineCov">          1 : }</span></a>
 <a name="22"><span class="lineNum">      22 </span>            : </a>
 <a name="23"><span class="lineNum">      23 </span><span class="lineCov">          2 : static juce::File getDefaultTempFolder (Engine&amp; engine)</span></a>
 <a name="24"><span class="lineNum">      24 </span>            : {</a>
@@ -112,7 +112,7 @@
 <a name="50"><span class="lineNum">      50 </span><span class="lineNoCov">          0 :         updateDir();</span></a>
 <a name="51"><span class="lineNum">      51 </span>            : </a>
 <a name="52"><span class="lineNum">      52 </span>            :         jassert (newFile == tempDir);</a>
-<a name="53"><span class="lineNum">      53 </span>            :     }</a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="54"><span class="lineNum">      54 </span>            : </a>
 <a name="55"><span class="lineNum">      55 </span><span class="lineNoCov">          0 :     return wasTempFolderSuccessfullyCreated();</span></a>
 <a name="56"><span class="lineNum">      56 </span>            : }</a>
@@ -126,7 +126,7 @@
 <a name="64"><span class="lineNum">      64 </span><span class="lineCov">          1 : void TemporaryFileManager::updateDir()</span></a>
 <a name="65"><span class="lineNum">      65 </span>            : {</a>
 <a name="66"><span class="lineNum">      66 </span><span class="lineCov">          1 :     auto defaultDir = getDefaultTempFolder (engine);</span></a>
-<a name="67"><span class="lineNum">      67 </span><span class="lineCov">          3 :     auto userFolder = engine.getPropertyStorage().getProperty (SettingID::tempDirectory).toString().trim();</span></a>
+<a name="67"><span class="lineNum">      67 </span><span class="lineCov">          2 :     auto userFolder = engine.getPropertyStorage().getProperty (SettingID::tempDirectory).toString().trim();</span></a>
 <a name="68"><span class="lineNum">      68 </span>            : </a>
 <a name="69"><span class="lineNum">      69 </span><span class="lineCov">          1 :     if (userFolder.isEmpty())</span></a>
 <a name="70"><span class="lineNum">      70 </span><span class="lineCov">          1 :         ressetToDefaultLocation();</span></a>
@@ -138,7 +138,7 @@
 <a name="76"><span class="lineNum">      76 </span><span class="lineNoCov">          0 :         tempDir = defaultDir;</span></a>
 <a name="77"><span class="lineNum">      77 </span><span class="lineNoCov">          0 :         engine.getPropertyStorage().removeProperty (SettingID::tempDirectory);</span></a>
 <a name="78"><span class="lineNum">      78 </span>            :     }</a>
-<a name="79"><span class="lineNum">      79 </span><span class="lineCov">          1 : }</span></a>
+<a name="79"><span class="lineNum">      79 </span><span class="lineCov">          2 : }</span></a>
 <a name="80"><span class="lineNum">      80 </span>            : </a>
 <a name="81"><span class="lineNum">      81 </span>            : //==============================================================================</a>
 <a name="82"><span class="lineNum">      82 </span><span class="lineCov">          1 : bool TemporaryFileManager::wasTempFolderSuccessfullyCreated() const</span></a>
@@ -179,14 +179,14 @@
 <a name="117"><span class="lineNum">     117 </span><span class="lineNoCov">          0 :     auto daysOld = (juce::Time::getCurrentTime() - f.getLastAccessTime()).inDays();</span></a>
 <a name="118"><span class="lineNum">     118 </span>            : </a>
 <a name="119"><span class="lineNum">     119 </span><span class="lineNoCov">          0 :     return daysOld &gt; 60.0 || (spaceIsShort &amp;&amp; daysOld &gt; 1.0);</span></a>
-<a name="120"><span class="lineNum">     120 </span>            : }</a>
+<a name="120"><span class="lineNum">     120 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="121"><span class="lineNum">     121 </span>            : </a>
 <a name="122"><span class="lineNum">     122 </span><span class="lineCov">          1 : static void deleteEditPreviewsNotInUse (Engine&amp; engine, juce::Array&lt;juce::File&gt;&amp; files)</span></a>
 <a name="123"><span class="lineNum">     123 </span>            : {</a>
 <a name="124"><span class="lineNum">     124 </span>            :     auto&amp; pm = engine.getProjectManager();</a>
 <a name="125"><span class="lineNum">     125 </span><span class="lineCov">          1 :     juce::StringArray ids;</span></a>
 <a name="126"><span class="lineNum">     126 </span>            : </a>
-<a name="127"><span class="lineNum">     127 </span><span class="lineCov">          2 :     for (auto&amp; p : pm.getAllProjects (pm.folders))</span></a>
+<a name="127"><span class="lineNum">     127 </span><span class="lineCov">          1 :     for (auto&amp; p : pm.getAllProjects (pm.folders))</span></a>
 <a name="128"><span class="lineNum">     128 </span><span class="lineNoCov">          0 :         for (auto&amp; itemID : p-&gt;getAllProjectItemIDs())</span></a>
 <a name="129"><span class="lineNum">     129 </span><span class="lineNoCov">          0 :             ids.add (itemID.toStringSuitableForFilename());</span></a>
 <a name="130"><span class="lineNum">     130 </span>            : </a>
@@ -195,13 +195,13 @@
 <a name="133"><span class="lineNum">     133 </span><span class="lineNoCov">          0 :         auto fileName = files.getUnchecked (i).getFileNameWithoutExtension();</span></a>
 <a name="134"><span class="lineNum">     134 </span>            : </a>
 <a name="135"><span class="lineNum">     135 </span><span class="lineNoCov">          0 :         if (! fileName.startsWith (&quot;preview_&quot;))</span></a>
-<a name="136"><span class="lineNum">     136 </span><span class="lineNoCov">          0 :             continue;</span></a>
+<a name="136"><span class="lineNum">     136 </span>            :             continue;</a>
 <a name="137"><span class="lineNum">     137 </span>            : </a>
 <a name="138"><span class="lineNum">     138 </span><span class="lineNoCov">          0 :         auto itemID = fileName.fromFirstOccurrenceOf (&quot;preview_&quot;, false, false);</span></a>
 <a name="139"><span class="lineNum">     139 </span>            : </a>
 <a name="140"><span class="lineNum">     140 </span><span class="lineNoCov">          0 :         if (itemID.isNotEmpty() &amp;&amp; ! ids.contains (itemID))</span></a>
 <a name="141"><span class="lineNum">     141 </span><span class="lineNoCov">          0 :             files.removeAndReturn (i).deleteFile();</span></a>
-<a name="142"><span class="lineNum">     142 </span>            :     }</a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="143"><span class="lineNum">     143 </span><span class="lineCov">          1 : }</span></a>
 <a name="144"><span class="lineNum">     144 </span>            : </a>
 <a name="145"><span class="lineNum">     145 </span><span class="lineCov">          1 : void TemporaryFileManager::cleanUp()</span></a>
@@ -219,7 +219,7 @@
 <a name="157"><span class="lineNum">     157 </span><span class="lineNoCov">          0 :         totalBytes += f.getSize();</span></a>
 <a name="158"><span class="lineNum">     158 </span>            : </a>
 <a name="159"><span class="lineNum">     159 </span>            :     std::sort (tempFiles.begin(), tempFiles.end(),</a>
-<a name="160"><span class="lineNum">     160 </span><span class="lineNoCov">          0 :                [] (const juce::File&amp; first, const juce::File&amp; second) -&gt; bool</span></a>
+<a name="160"><span class="lineNum">     160 </span>            :                [] (const juce::File&amp; first, const juce::File&amp; second) -&gt; bool</a>
 <a name="161"><span class="lineNum">     161 </span>            :                {</a>
 <a name="162"><span class="lineNum">     162 </span><span class="lineNoCov">          0 :                    return first.getLastAccessTime().toMilliseconds() &lt; second.getLastAccessTime().toMilliseconds();</span></a>
 <a name="163"><span class="lineNum">     163 </span>            :                });</a>
@@ -238,9 +238,9 @@
 <a name="176"><span class="lineNum">     176 </span>            :         }</a>
 <a name="177"><span class="lineNum">     177 </span>            :     }</a>
 <a name="178"><span class="lineNum">     178 </span>            : </a>
-<a name="179"><span class="lineNum">     179 </span><span class="lineCov">          4 :     for (auto entry : juce::RangedDirectoryIterator (getTempDirectory(), false, &quot;edit_*&quot;, juce::File::findDirectories))</span></a>
+<a name="179"><span class="lineNum">     179 </span><span class="lineCov">          2 :     for (auto entry : juce::RangedDirectoryIterator (getTempDirectory(), false, &quot;edit_*&quot;, juce::File::findDirectories))</span></a>
 <a name="180"><span class="lineNum">     180 </span><span class="lineCov">          1 :         if (entry.getFile().getNumberOfChildFiles (juce::File::findFilesAndDirectories) == 0)</span></a>
-<a name="181"><span class="lineNum">     181 </span><span class="lineCov">          2 :             entry.getFile().deleteRecursively();</span></a>
+<a name="181"><span class="lineNum">     181 </span><span class="lineCov">          3 :             entry.getFile().deleteRecursively();</span></a>
 <a name="182"><span class="lineNum">     182 </span><span class="lineCov">          1 : }</span></a>
 <a name="183"><span class="lineNum">     183 </span>            : </a>
 <a name="184"><span class="lineNum">     184 </span><span class="lineNoCov">          0 : juce::File TemporaryFileManager::getTempFile (const juce::String&amp; filename) const</span></a>
@@ -306,7 +306,7 @@
 <a name="244"><span class="lineNum">     244 </span>            : </a>
 <a name="245"><span class="lineNum">     245 </span><span class="lineNoCov">          0 :     return fileName.fromLastOccurrenceOf (getDeviceFreezePrefix (edit), false, false)</span></a>
 <a name="246"><span class="lineNum">     246 </span><span class="lineNoCov">          0 :                    .upToFirstOccurrenceOf (&quot;.&quot;, false, false);</span></a>
-<a name="247"><span class="lineNum">     247 </span>            : }</a>
+<a name="247"><span class="lineNum">     247 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="248"><span class="lineNum">     248 </span>            : </a>
 <a name="249"><span class="lineNum">     249 </span><span class="lineCov">          4 : juce::File TemporaryFileManager::getFreezeFileForTrack (const AudioTrack&amp; track)</span></a>
 <a name="250"><span class="lineNum">     250 </span>            : {</a>
@@ -358,7 +358,7 @@
 <a name="296"><span class="lineNum">     296 </span><span class="lineNoCov">          0 :                     reasonsForDeletion.add (&quot;Unknown&quot;);</span></a>
 <a name="297"><span class="lineNum">     297 </span>            :             }</a>
 <a name="298"><span class="lineNum">     298 </span>            :         }</a>
-<a name="299"><span class="lineNum">     299 </span>            :     }</a>
+<a name="299"><span class="lineNum">     299 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="300"><span class="lineNum">     300 </span>            : </a>
 <a name="301"><span class="lineNum">     301 </span><span class="lineNoCov">          0 :     for (int i = filesToDelete.size(); --i &gt;= 0;)</span></a>
 <a name="302"><span class="lineNum">     302 </span>            :     {</a>
@@ -384,7 +384,7 @@
 <a name="322"><span class="lineNum">     322 </span>            :     CRASH_TRACER</a>
 <a name="323"><span class="lineNum">     323 </span><span class="lineCov">        271 :     juce::Array&lt;juce::File&gt; filesToDelete;</span></a>
 <a name="324"><span class="lineNum">     324 </span>            : </a>
-<a name="325"><span class="lineNum">     325 </span><span class="lineCov">        813 :     for (auto entry : juce::RangedDirectoryIterator (edit.getTempDirectory (false), false, &quot;*&quot;))</span></a>
+<a name="325"><span class="lineNum">     325 </span><span class="lineCov">        542 :     for (auto entry : juce::RangedDirectoryIterator (edit.getTempDirectory (false), false, &quot;*&quot;))</span></a>
 <a name="326"><span class="lineNum">     326 </span>            :     {</a>
 <a name="327"><span class="lineNum">     327 </span><span class="lineNoCov">          0 :         auto name = entry.getFile().getFileName();</span></a>
 <a name="328"><span class="lineNum">     328 </span><span class="lineNoCov">          0 :         auto itemID = getEditItemIDFromFilename (name);</span></a>
@@ -422,7 +422,7 @@
 <a name="360"><span class="lineNum">     360 </span><span class="lineNoCov">          0 :             if (! edit.areAnyClipsUsingFile (AudioFile (edit.engine, entry.getFile())))</span></a>
 <a name="361"><span class="lineNum">     361 </span><span class="lineNoCov">          0 :                 filesToDelete.add (entry.getFile());</span></a>
 <a name="362"><span class="lineNum">     362 </span>            :         }</a>
-<a name="363"><span class="lineNum">     363 </span>            :     }</a>
+<a name="363"><span class="lineNum">     363 </span><span class="lineCov">        271 :     }</span></a>
 <a name="364"><span class="lineNum">     364 </span>            : </a>
 <a name="365"><span class="lineNum">     365 </span><span class="lineCov">        271 :     for (auto&amp; f : filesToDelete)</span></a>
 <a name="366"><span class="lineNum">     366 </span>            :     {</a>

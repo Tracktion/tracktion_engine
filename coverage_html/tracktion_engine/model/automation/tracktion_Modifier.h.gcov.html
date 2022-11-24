@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">5</td>
-            <td class="headerCovTableEntry">13</td>
-            <td class="headerCovTableEntryLo">38.5 %</td>
+            <td class="headerCovTableEntry">7</td>
+            <td class="headerCovTableEntry">15</td>
+            <td class="headerCovTableEntryLo">46.7 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
@@ -148,7 +148,7 @@
 <a name="86"><span class="lineNum">      86 </span>            : </a>
 <a name="87"><span class="lineNum">      87 </span>            :     //==============================================================================</a>
 <a name="88"><span class="lineNum">      88 </span>            :     /** Returns true if the Modifier needs initialising. */</a>
-<a name="89"><span class="lineNum">      89 </span>            :     bool baseClassNeedsInitialising() const noexcept            { return initialiseCount == 0; }</a>
+<a name="89"><span class="lineNum">      89 </span><span class="lineCov">         32 :     bool baseClassNeedsInitialising() const noexcept            { return initialiseCount == 0; }</span></a>
 <a name="90"><span class="lineNum">      90 </span>            :     /** Initialises the Modifier. */</a>
 <a name="91"><span class="lineNum">      91 </span>            :     void baseClassInitialise (double sampleRate, int blockSizeSamples);</a>
 <a name="92"><span class="lineNum">      92 </span>            :     /** Deinitialises the Modifier. */</a>
@@ -185,11 +185,11 @@
 <a name="123"><span class="lineNum">     123 </span>            :     AutomatableParameter::Ptr enabledParam; /**&lt; Parameter to change the enabled state. */</a>
 <a name="124"><span class="lineNum">     124 </span>            : </a>
 <a name="125"><span class="lineNum">     125 </span>            :     /** Returns the sample rate the Modifier has been initialised with. */</a>
-<a name="126"><span class="lineNum">     126 </span>            :     double getSampleRate() const                                { return sampleRate; }</a>
+<a name="126"><span class="lineNum">     126 </span><span class="lineCov">         32 :     double getSampleRate() const                                { return sampleRate; }</span></a>
 <a name="127"><span class="lineNum">     127 </span>            : </a>
 <a name="128"><span class="lineNum">     128 </span>            : protected:</a>
 <a name="129"><span class="lineNum">     129 </span>            :     /** Subclasses can call this to update the edit time of the current value. */</a>
-<a name="130"><span class="lineNum">     130 </span><span class="lineCov">      73380 :     void setEditTime (TimePosition newEditTime)                 { lastEditTime = newEditTime; }</span></a>
+<a name="130"><span class="lineNum">     130 </span><span class="lineCov">      73724 :     void setEditTime (TimePosition newEditTime)                 { lastEditTime = newEditTime; }</span></a>
 <a name="131"><span class="lineNum">     131 </span>            :     </a>
 <a name="132"><span class="lineNum">     132 </span>            : private:</a>
 <a name="133"><span class="lineNum">     133 </span>            :     int initialiseCount = 0;</a>

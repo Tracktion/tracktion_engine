@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">36</td>
-            <td class="headerCovTableEntry">47</td>
-            <td class="headerCovTableEntryMed">76.6 %</td>
+            <td class="headerCovTableEntry">39</td>
+            <td class="headerCovTableEntry">50</td>
+            <td class="headerCovTableEntryMed">78.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">5</td>
@@ -82,10 +82,10 @@
 <a name="20"><span class="lineNum">      20 </span><span class="lineCov">          6 :                               bool clearSamplesOutsideFade)</span></a>
 <a name="21"><span class="lineNum">      21 </span>            :     : TracktionEngineNode (ps),</a>
 <a name="22"><span class="lineNum">      22 </span>            :       input (std::move (inputNode)),</a>
-<a name="23"><span class="lineNum">      23 </span>            :       fadeIn (in),</a>
-<a name="24"><span class="lineNum">      24 </span>            :       fadeOut (out),</a>
-<a name="25"><span class="lineNum">      25 </span>            :       fadeInType (fadeInType_),</a>
-<a name="26"><span class="lineNum">      26 </span>            :       fadeOutType (fadeOutType_),</a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">          6 :       fadeIn (in),</span></a>
+<a name="24"><span class="lineNum">      24 </span><span class="lineCov">          6 :       fadeOut (out),</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineCov">          6 :       fadeInType (fadeInType_),</span></a>
+<a name="26"><span class="lineNum">      26 </span><span class="lineCov">          6 :       fadeOutType (fadeOutType_),</span></a>
 <a name="27"><span class="lineNum">      27 </span><span class="lineCov">          6 :       clearExtraSamples (clearSamplesOutsideFade)</span></a>
 <a name="28"><span class="lineNum">      28 </span>            : {</a>
 <a name="29"><span class="lineNum">      29 </span>            :     jassert (! (fadeIn.isEmpty() &amp;&amp; fadeOut.isEmpty()));</a>
@@ -115,7 +115,7 @@
 <a name="53"><span class="lineNum">      53 </span>            : </a>
 <a name="54"><span class="lineNum">      54 </span><span class="lineCov">       3102 : void FadeInOutNode::process (ProcessContext&amp; pc)</span></a>
 <a name="55"><span class="lineNum">      55 </span>            : {</a>
-<a name="56"><span class="lineNum">      56 </span><span class="lineCov">       3102 :     const auto editTimeRange = getEditTimeRange();</span></a>
+<a name="56"><span class="lineNum">      56 </span>            :     const auto editTimeRange = getEditTimeRange();</a>
 <a name="57"><span class="lineNum">      57 </span>            : </a>
 <a name="58"><span class="lineNum">      58 </span>            :     auto sourceBuffers = input-&gt;getProcessedOutput();</a>
 <a name="59"><span class="lineNum">      59 </span><span class="lineCov">       3102 :     auto destAudioBlock = pc.buffers.audio;</span></a>

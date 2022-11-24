@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">142</td>
+            <td class="headerCovTableEntry">146</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -103,10 +103,10 @@
 <a name="41"><span class="lineNum">      41 </span><span class="lineNoCov">          0 :             info.startSample = 0;</span></a>
 <a name="42"><span class="lineNum">      42 </span><span class="lineNoCov">          0 :             info.numSamples = targetLength;</span></a>
 <a name="43"><span class="lineNum">      43 </span><span class="lineNoCov">          0 :             resamplerSource.getNextAudioBlock (info);</span></a>
-<a name="44"><span class="lineNum">      44 </span>            :         }</a>
+<a name="44"><span class="lineNum">      44 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="45"><span class="lineNum">      45 </span>            : </a>
 <a name="46"><span class="lineNum">      46 </span><span class="lineNoCov">          0 :         return buf;</span></a>
-<a name="47"><span class="lineNum">      47 </span>            :     }</a>
+<a name="47"><span class="lineNum">      47 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="48"><span class="lineNum">      48 </span>            : </a>
 <a name="49"><span class="lineNum">      49 </span><span class="lineNoCov">          0 :     juce::AudioBuffer&lt;float&gt; loadWavDataIntoMemory (const juce::File&amp; file, double targetSampleRate)</span></a>
 <a name="50"><span class="lineNum">      50 </span>            :     {</a>
@@ -114,7 +114,7 @@
 <a name="52"><span class="lineNum">      52 </span><span class="lineNoCov">          0 :         file.loadFileAsData (mb);</span></a>
 <a name="53"><span class="lineNum">      53 </span>            : </a>
 <a name="54"><span class="lineNum">      54 </span><span class="lineNoCov">          0 :         return loadWavDataIntoMemory (mb.getData(), mb.getSize(), targetSampleRate);</span></a>
-<a name="55"><span class="lineNum">      55 </span>            :     }</a>
+<a name="55"><span class="lineNum">      55 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="56"><span class="lineNum">      56 </span>            : }</a>
 <a name="57"><span class="lineNum">      57 </span>            : </a>
 <a name="58"><span class="lineNum">      58 </span>            : </a>
@@ -195,7 +195,7 @@
 <a name="133"><span class="lineNum">     133 </span>            :         return;</a>
 <a name="134"><span class="lineNum">     134 </span>            : </a>
 <a name="135"><span class="lineNum">     135 </span><span class="lineNoCov">          0 :     auto gain = edit.getClickTrackVolume();</span></a>
-<a name="136"><span class="lineNum">     136 </span><span class="lineNoCov">          0 :     const bool emphasis = edit.clickTrackEmphasiseBars;</span></a>
+<a name="136"><span class="lineNum">     136 </span>            :     const bool emphasis = edit.clickTrackEmphasiseBars;</a>
 <a name="137"><span class="lineNum">     137 </span>            : </a>
 <a name="138"><span class="lineNum">     138 </span><span class="lineNoCov">          0 :     while (editTime.getStart() &gt; beatTimes[currentBeat])</span></a>
 <a name="139"><span class="lineNum">     139 </span><span class="lineNoCov">          0 :         ++currentBeat;</span></a>
@@ -268,8 +268,8 @@
 <a name="206"><span class="lineNum">     206 </span>            : //==============================================================================</a>
 <a name="207"><span class="lineNum">     207 </span>            : //==============================================================================</a>
 <a name="208"><span class="lineNum">     208 </span><span class="lineNoCov">          0 : ClickNode::ClickNode (Edit&amp; e, int numAudioChannels, bool isMidi, tracktion::graph::PlayHead&amp; playHeadToUse)</span></a>
-<a name="209"><span class="lineNum">     209 </span>            :     : edit (e), playHead (playHeadToUse),</a>
-<a name="210"><span class="lineNum">     210 </span>            :       clickGenerator (edit, isMidi, Edit::getMaximumEditEnd()),</a>
+<a name="209"><span class="lineNum">     209 </span><span class="lineNoCov">          0 :     : edit (e), playHead (playHeadToUse),</span></a>
+<a name="210"><span class="lineNum">     210 </span><span class="lineNoCov">          0 :       clickGenerator (edit, isMidi, Edit::getMaximumEditEnd()),</span></a>
 <a name="211"><span class="lineNum">     211 </span><span class="lineNoCov">          0 :       numChannels (numAudioChannels), generateMidi (isMidi)</span></a>
 <a name="212"><span class="lineNum">     212 </span>            : {</a>
 <a name="213"><span class="lineNum">     213 </span><span class="lineNoCov">          0 : }</span></a>

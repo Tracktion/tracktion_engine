@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">5</td>
+            <td class="headerCovTableEntry">7</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -101,7 +101,7 @@
 <a name="39"><span class="lineNum">      39 </span>            :     void updateMidiTC (Edit*);</a>
 <a name="40"><span class="lineNum">      40 </span>            : </a>
 <a name="41"><span class="lineNum">      41 </span>            :     void setSendingMMC (bool);</a>
-<a name="42"><span class="lineNum">      42 </span>            :     bool isSendingMMC() const noexcept                  { return sendingMMC;    }</a>
+<a name="42"><span class="lineNum">      42 </span><span class="lineNoCov">          0 :     bool isSendingMMC() const noexcept                  { return sendingMMC;    }</span></a>
 <a name="43"><span class="lineNum">      43 </span>            :     bool isSendingClock() const noexcept                { return sendMidiClock; }</a>
 <a name="44"><span class="lineNum">      44 </span>            :     void setSendingClock (bool);</a>
 <a name="45"><span class="lineNum">      45 </span>            : </a>
@@ -195,7 +195,7 @@
 <a name="133"><span class="lineNum">     133 </span>            :     bool start();</a>
 <a name="134"><span class="lineNum">     134 </span>            :     void stop();</a>
 <a name="135"><span class="lineNum">     135 </span>            : </a>
-<a name="136"><span class="lineNum">     136 </span>            :     MidiOutputDevice&amp; getMidiOutput() const noexcept     { return static_cast&lt;MidiOutputDevice&amp;&gt; (owner); }</a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineNoCov">          0 :     MidiOutputDevice&amp; getMidiOutput() const noexcept     { return static_cast&lt;MidiOutputDevice&amp;&gt; (owner); }</span></a>
 <a name="137"><span class="lineNum">     137 </span>            : </a>
 <a name="138"><span class="lineNum">     138 </span>            :     void mergeInMidiMessages (const MidiMessageArray&amp;, TimePosition editTime);</a>
 <a name="139"><span class="lineNum">     139 </span>            :     void addMidiClockMessagesToCurrentBlock (bool isPlaying, bool isDragging, TimeRange streamTime);</a>

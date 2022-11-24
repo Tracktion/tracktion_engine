@@ -32,16 +32,16 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">24</td>
+            <td class="headerCovTableEntry">30</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">20</td>
+            <td class="headerCovTableEntry">21</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
@@ -111,13 +111,13 @@
 <a name="49"><span class="lineNum">      49 </span><span class="lineNoCov">          0 :     virtual juce::ValueTree pasteComp (const juce::ValueTree&amp; /*compTree*/) { return {}; }</span></a>
 <a name="50"><span class="lineNum">      50 </span>            : </a>
 <a name="51"><span class="lineNum">      51 </span>            :     //==============================================================================</a>
-<a name="52"><span class="lineNum">      52 </span>            :     Clip&amp; getClip() const noexcept                      { return clip; }</a>
+<a name="52"><span class="lineNum">      52 </span><span class="lineNoCov">          0 :     Clip&amp; getClip() const noexcept                      { return clip; }</span></a>
 <a name="53"><span class="lineNum">      53 </span>            : </a>
 <a name="54"><span class="lineNum">      54 </span>            :     /** Sets a component to be updated during render processes. */</a>
 <a name="55"><span class="lineNum">      55 </span><span class="lineNoCov">          0 :     virtual void setStripToUpdate (juce::Component*)    {}</span></a>
 <a name="56"><span class="lineNum">      56 </span>            : </a>
 <a name="57"><span class="lineNum">      57 </span>            :     /** Returns true if the source should display a warning about using multi-tempo changes. */</a>
-<a name="58"><span class="lineNum">      58 </span>            :     bool shouldDisplayWarning() const noexcept          { return displayWarning; }</a>
+<a name="58"><span class="lineNum">      58 </span><span class="lineNoCov">          0 :     bool shouldDisplayWarning() const noexcept          { return displayWarning; }</span></a>
 <a name="59"><span class="lineNum">      59 </span>            : </a>
 <a name="60"><span class="lineNum">      60 </span>            :     //==============================================================================</a>
 <a name="61"><span class="lineNum">      61 </span>            :     /** Returns the section at the given index of a given take. */</a>
@@ -164,7 +164,7 @@
 <a name="102"><span class="lineNum">     102 </span><span class="lineNoCov">          0 :     bool isTakeComp (int takeIndex) const               { return isTakeComp (takesTree.getChild (takeIndex)); }</span></a>
 <a name="103"><span class="lineNum">     103 </span>            : </a>
 <a name="104"><span class="lineNum">     104 </span>            :     /** Returns true if the given take is a comp. */</a>
-<a name="105"><span class="lineNum">     105 </span>            :     bool isTakeComp (const juce::ValueTree&amp; takeTree) const   { return bool (takeTree.getProperty (IDs::isComp, false)); }</a>
+<a name="105"><span class="lineNum">     105 </span><span class="lineNoCov">          0 :     bool isTakeComp (const juce::ValueTree&amp; takeTree) const   { return bool (takeTree.getProperty (IDs::isComp, false)); }</span></a>
 <a name="106"><span class="lineNum">     106 </span>            : </a>
 <a name="107"><span class="lineNum">     107 </span>            :     /** Returns true if the current take is a comp. */</a>
 <a name="108"><span class="lineNum">     108 </span><span class="lineNoCov">          0 :     bool isCurrentTakeComp() const                      { return isTakeComp (getActiveTakeIndex()); }</span></a>
@@ -179,7 +179,7 @@
 <a name="117"><span class="lineNum">     117 </span>            :     virtual juce::ValueTree addNewComp() = 0;</a>
 <a name="118"><span class="lineNum">     118 </span>            : </a>
 <a name="119"><span class="lineNum">     119 </span>            :     /** Returns the maximum length that a comp can be. This is effectively the length of the longest take. */</a>
-<a name="120"><span class="lineNum">     120 </span>            :     double getMaxCompLength() const                 { return maxCompLength; }</a>
+<a name="120"><span class="lineNum">     120 </span><span class="lineNoCov">          0 :     double getMaxCompLength() const                 { return maxCompLength; }</span></a>
 <a name="121"><span class="lineNum">     121 </span>            : </a>
 <a name="122"><span class="lineNum">     122 </span>            :     /** Returns the time range available for comping i.e. taking into account any offset or looped regions. */</a>
 <a name="123"><span class="lineNum">     123 </span>            :     juce::Range&lt;double&gt; getCompRange() const;</a>
@@ -190,7 +190,7 @@
 <a name="128"><span class="lineNum">     128 </span>            :     double getSpeedRatio() const;</a>
 <a name="129"><span class="lineNum">     129 </span>            : </a>
 <a name="130"><span class="lineNum">     130 </span>            :     /** Returns the current time multiplier in use by the source, either the speed ratio or auto tempo ratio. */</a>
-<a name="131"><span class="lineNum">     131 </span>            :     double getSourceTimeMultiplier() const          { return effectiveTimeMultiplier; }</a>
+<a name="131"><span class="lineNum">     131 </span><span class="lineNoCov">          0 :     double getSourceTimeMultiplier() const          { return effectiveTimeMultiplier; }</span></a>
 <a name="132"><span class="lineNum">     132 </span>            : </a>
 <a name="133"><span class="lineNum">     133 </span>            :     /** Returns a hash code representing a take. This can be used to check if a comp has changed</a>
 <a name="134"><span class="lineNum">     134 </span>            :         since it was last generated.</a>
@@ -285,7 +285,7 @@
 <a name="223"><span class="lineNum">     223 </span>            : {</a>
 <a name="224"><span class="lineNum">     224 </span>            : public:</a>
 <a name="225"><span class="lineNum">     225 </span><span class="lineNoCov">          0 :     CompFactory() = default;</span></a>
-<a name="226"><span class="lineNum">     226 </span>            :     ~CompFactory() { jassert (comps.isEmpty()); }</a>
+<a name="226"><span class="lineNum">     226 </span><span class="lineNoCov">          0 :     ~CompFactory() { jassert (comps.isEmpty()); }</span></a>
 <a name="227"><span class="lineNum">     227 </span>            : </a>
 <a name="228"><span class="lineNum">     228 </span>            :     CompManager::Ptr getCompManager (Clip&amp;);</a>
 <a name="229"><span class="lineNum">     229 </span>            : </a>

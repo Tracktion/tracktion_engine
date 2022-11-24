@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">9</td>
-            <td class="headerCovTableEntry">21</td>
-            <td class="headerCovTableEntryLo">42.9 %</td>
+            <td class="headerCovTableEntry">20</td>
+            <td class="headerCovTableEntryLo">45.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">3</td>
@@ -95,7 +95,7 @@
 <a name="33"><span class="lineNum">      33 </span>            :     MidiList&amp; getSequenceLooped();</a>
 <a name="34"><span class="lineNum">      34 </span>            :     std::unique_ptr&lt;MidiList&gt; createSequenceLooped (MidiList&amp; sourceSequence);</a>
 <a name="35"><span class="lineNum">      35 </span>            : </a>
-<a name="36"><span class="lineNum">      36 </span>            :     const SelectedMidiEvents* getSelectedEvents() const             { return selectedEvents; }</a>
+<a name="36"><span class="lineNum">      36 </span><span class="lineCov">        291 :     const SelectedMidiEvents* getSelectedEvents() const             { return selectedEvents; }</span></a>
 <a name="37"><span class="lineNum">      37 </span>            : </a>
 <a name="38"><span class="lineNum">      38 </span>            :     //==============================================================================</a>
 <a name="39"><span class="lineNum">      39 </span>            :     /** Can be used to disable proxy sequence generation for this clip.</a>
@@ -105,14 +105,14 @@
 <a name="43"><span class="lineNum">      43 </span><span class="lineCov">         96 :     void setUsesProxy (bool canUseProxy) noexcept   { proxyAllowed = canUseProxy; }</span></a>
 <a name="44"><span class="lineNum">      44 </span>            : </a>
 <a name="45"><span class="lineNum">      45 </span>            :     /** Retuns true if this clip can use a proxy sequence. */</a>
-<a name="46"><span class="lineNum">      46 </span><span class="lineCov">         72 :     bool canUseProxy() const noexcept               { return proxyAllowed; }</span></a>
+<a name="46"><span class="lineNum">      46 </span><span class="lineCov">         40 :     bool canUseProxy() const noexcept               { return proxyAllowed; }</span></a>
 <a name="47"><span class="lineNum">      47 </span>            : </a>
 <a name="48"><span class="lineNum">      48 </span>            :     //==============================================================================</a>
 <a name="49"><span class="lineNum">      49 </span>            :     void scaleVerticallyToFit();</a>
 <a name="50"><span class="lineNum">      50 </span>            : </a>
 <a name="51"><span class="lineNum">      51 </span>            :     bool hasValidSequence() const noexcept                          { return channelSequence.size() &gt; 0; }</a>
 <a name="52"><span class="lineNum">      52 </span>            : </a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineNoCov">          0 :     MidiChannel getMidiChannel() const                              { return hasValidSequence() ? getSequence().getMidiChannel() : MidiChannel(); }</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">        282 :     MidiChannel getMidiChannel() const                              { return hasValidSequence() ? getSequence().getMidiChannel() : MidiChannel(); }</span></a>
 <a name="54"><span class="lineNum">      54 </span><span class="lineNoCov">          0 :     void setMidiChannel (MidiChannel newChannel)                    { getSequence().setMidiChannel (newChannel); }</span></a>
 <a name="55"><span class="lineNum">      55 </span>            : </a>
 <a name="56"><span class="lineNum">      56 </span>            :     /** Sets whether the clip should send MPE MIDI rather than single channel. */</a>
@@ -131,7 +131,7 @@
 <a name="69"><span class="lineNum">      69 </span>            : </a>
 <a name="70"><span class="lineNum">      70 </span>            :     bool usesGrooveStrength() const;</a>
 <a name="71"><span class="lineNum">      71 </span>            : </a>
-<a name="72"><span class="lineNum">      72 </span><span class="lineCov">        640 :     float getGrooveStrength() const                                 { return grooveStrength; }</span></a>
+<a name="72"><span class="lineNum">      72 </span>            :     float getGrooveStrength() const                                 { return grooveStrength; }</a>
 <a name="73"><span class="lineNum">      73 </span><span class="lineCov">          8 :     void setGrooveStrength (float g)                                { grooveStrength = juce::jlimit (0.0f, 1.0f, g); }</span></a>
 <a name="74"><span class="lineNum">      74 </span>            : </a>
 <a name="75"><span class="lineNum">      75 </span>            :     //==============================================================================</a>
@@ -156,7 +156,7 @@
 <a name="94"><span class="lineNum">      94 </span>            :     float getVolumeDb() const                       { return level-&gt;dbGain; }</a>
 <a name="95"><span class="lineNum">      95 </span>            :     void setVolumeDb (float v)                      { level-&gt;dbGain = juce::jlimit (-100.0f, 0.0f, v); }</a>
 <a name="96"><span class="lineNum">      96 </span>            : </a>
-<a name="97"><span class="lineNum">      97 </span><span class="lineCov">          6 :     bool isSendingBankChanges() const noexcept      { return sendBankChange; }</span></a>
+<a name="97"><span class="lineNum">      97 </span>            :     bool isSendingBankChanges() const noexcept      { return sendBankChange; }</a>
 <a name="98"><span class="lineNum">      98 </span>            :     void setSendingBankChanges (bool sendBank);</a>
 <a name="99"><span class="lineNum">      99 </span>            : </a>
 <a name="100"><span class="lineNum">     100 </span><span class="lineNoCov">          0 :     bool isMuted() const override                   { return level-&gt;mute; }</span></a>

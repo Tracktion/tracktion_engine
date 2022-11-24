@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">6</td>
@@ -301,12 +301,12 @@
 <a name="239"><span class="lineNum">     239 </span><span class="lineCov">      22854 :     juce::Array&lt;TrackType*&gt; result;</span></a>
 <a name="240"><span class="lineNum">     240 </span>            :     result.ensureStorageAllocated (32);</a>
 <a name="241"><span class="lineNum">     241 </span>            : </a>
-<a name="242"><span class="lineNum">     242 </span><span class="lineCov">    1148675 :     edit.visitAllTracks ([&amp;] (Track&amp; t)</span></a>
+<a name="242"><span class="lineNum">     242 </span><span class="lineCov">    1148673 :     edit.visitAllTracks ([&amp;] (Track&amp; t)</span></a>
 <a name="243"><span class="lineNum">     243 </span>            :                          {</a>
-<a name="244"><span class="lineNum">     244 </span><span class="lineCov">    1543604 :                              if (auto type = dynamic_cast&lt;TrackType*&gt; (&amp;t))</span></a>
+<a name="244"><span class="lineNum">     244 </span><span class="lineCov">    1543602 :                              if (auto type = dynamic_cast&lt;TrackType*&gt; (&amp;t))</span></a>
 <a name="245"><span class="lineNum">     245 </span>            :                                  result.add (type);</a>
 <a name="246"><span class="lineNum">     246 </span>            : </a>
-<a name="247"><span class="lineNum">     247 </span><span class="lineCov">    1543604 :                              return true;</span></a>
+<a name="247"><span class="lineNum">     247 </span><span class="lineCov">    1543602 :                              return true;</span></a>
 <a name="248"><span class="lineNum">     248 </span>            :                          }, recursive);</a>
 <a name="249"><span class="lineNum">     249 </span>            : </a>
 <a name="250"><span class="lineNum">     250 </span><span class="lineCov">      22854 :     return result;</span></a>

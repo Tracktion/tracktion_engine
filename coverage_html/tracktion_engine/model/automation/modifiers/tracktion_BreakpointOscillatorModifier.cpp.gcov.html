@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">196</td>
+            <td class="headerCovTableEntry">193</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -195,7 +195,7 @@
 <a name="133"><span class="lineNum">     133 </span>            :         else</a>
 <a name="134"><span class="lineNum">     134 </span>            :         {</a>
 <a name="135"><span class="lineNum">     135 </span><span class="lineNoCov">          0 :             tempoSequence.set (editTime);</span></a>
-<a name="136"><span class="lineNum">     136 </span><span class="lineNoCov">          0 :             const auto currentTempo = tempoSequence.getTempo();</span></a>
+<a name="136"><span class="lineNum">     136 </span>            :             const auto currentTempo = tempoSequence.getTempo();</a>
 <a name="137"><span class="lineNum">     137 </span>            :             const auto currentTimeSig = tempoSequence.getTimeSignature();</a>
 <a name="138"><span class="lineNum">     138 </span>            :             const auto proportionOfBar = ModifierCommon::getBarFraction (rateTypeThisBlock);</a>
 <a name="139"><span class="lineNum">     139 </span>            : </a>
@@ -230,7 +230,7 @@
 <a name="168"><span class="lineNum">     168 </span>            :     {</a>
 <a name="169"><span class="lineNum">     169 </span><span class="lineNoCov">          0 :         if (juce::roundToInt (modifier.syncTypeParam-&gt;getCurrentValue()) == ModifierCommon::note)</span></a>
 <a name="170"><span class="lineNum">     170 </span>            :         {</a>
-<a name="171"><span class="lineNum">     171 </span><span class="lineNoCov">          0 :             ramp.setPosition (0.0f);</span></a>
+<a name="171"><span class="lineNum">     171 </span>            :             ramp.setPosition (0.0f);</a>
 <a name="172"><span class="lineNum">     172 </span><span class="lineNoCov">          0 :             modifier.setPhase (0.0f);</span></a>
 <a name="173"><span class="lineNum">     173 </span>            : </a>
 <a name="174"><span class="lineNum">     174 </span>            :             // Move the ramp on for the next block</a>
@@ -424,7 +424,7 @@
 <a name="362"><span class="lineNum">     362 </span>            : </a>
 <a name="363"><span class="lineNum">     363 </span><span class="lineNoCov">          0 : std::array&lt;BreakpointOscillatorModifier::Section, 5&gt; BreakpointOscillatorModifier::getAllSections() const</span></a>
 <a name="364"><span class="lineNum">     364 </span>            : {</a>
-<a name="365"><span class="lineNum">     365 </span><span class="lineNoCov">          0 :     auto getVal = [] (auto&amp; p) -&gt; float { return p-&gt;getCurrentValue(); };</span></a>
+<a name="365"><span class="lineNum">     365 </span>            :     auto getVal = [] (auto&amp; p) -&gt; float { return p-&gt;getCurrentValue(); };</a>
 <a name="366"><span class="lineNum">     366 </span>            : </a>
 <a name="367"><span class="lineNum">     367 </span>            :     return {{</a>
 <a name="368"><span class="lineNum">     368 </span>            :         { getVal (stageZeroValueParam),  0.0f,                            0.0f },</a>

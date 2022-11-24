@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">94</td>
+            <td class="headerCovTableEntry">98</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -80,11 +80,11 @@
 <a name="18"><span class="lineNum">      18 </span>            :                               LiveClipLevel level,</a>
 <a name="19"><span class="lineNum">      19 </span>            :                               double speed,</a>
 <a name="20"><span class="lineNum">      20 </span><span class="lineNoCov">          0 :                               const juce::AudioChannelSet&amp; channelSetToUse)</span></a>
-<a name="21"><span class="lineNum">      21 </span>            :    : editPosition (editTime),</a>
+<a name="21"><span class="lineNum">      21 </span><span class="lineNoCov">          0 :    : editPosition (editTime),</span></a>
 <a name="22"><span class="lineNum">      22 </span><span class="lineNoCov">          0 :      loopSection (loop.getStart() * speed, loop.getEnd() * speed),</span></a>
-<a name="23"><span class="lineNum">      23 </span>            :      offset (off),</a>
-<a name="24"><span class="lineNum">      24 </span>            :      originalSpeedRatio (speed),</a>
-<a name="25"><span class="lineNum">      25 </span>            :      audioFile (af),</a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineNoCov">          0 :      offset (off),</span></a>
+<a name="24"><span class="lineNum">      24 </span><span class="lineNoCov">          0 :      originalSpeedRatio (speed),</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineNoCov">          0 :      audioFile (af),</span></a>
 <a name="26"><span class="lineNum">      26 </span>            :      clipLevel (level),</a>
 <a name="27"><span class="lineNum">      27 </span><span class="lineNoCov">          0 :      channelsToUse (channelSetToUse)</span></a>
 <a name="28"><span class="lineNum">      28 </span>            : {</a>
@@ -214,7 +214,7 @@
 <a name="152"><span class="lineNum">     152 </span>            :         return;</a>
 <a name="153"><span class="lineNum">     153 </span>            : </a>
 <a name="154"><span class="lineNum">     154 </span>            :     const auto fileStart       = editTimeToFileSample (editTime.getStart());</a>
-<a name="155"><span class="lineNum">     155 </span><span class="lineNoCov">          0 :     const auto fileEnd         = editTimeToFileSample (editTime.getEnd());</span></a>
+<a name="155"><span class="lineNum">     155 </span>            :     const auto fileEnd         = editTimeToFileSample (editTime.getEnd());</a>
 <a name="156"><span class="lineNum">     156 </span><span class="lineNoCov">          0 :     const auto numFileSamples  = (int) (fileEnd - fileStart);</span></a>
 <a name="157"><span class="lineNum">     157 </span>            : </a>
 <a name="158"><span class="lineNum">     158 </span><span class="lineNoCov">          0 :     localReader-&gt;setReadPosition (fileStart);</span></a>
@@ -288,7 +288,7 @@
 <a name="226"><span class="lineNum">     226 </span>            :             }</a>
 <a name="227"><span class="lineNum">     227 </span>            :         }</a>
 <a name="228"><span class="lineNum">     228 </span>            :     }</a>
-<a name="229"><span class="lineNum">     229 </span>            : }</a>
+<a name="229"><span class="lineNum">     229 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="230"><span class="lineNum">     230 </span>            : </a>
 <a name="231"><span class="lineNum">     231 </span><span class="lineNoCov">          0 : void WaveAudioNode::prepareForNextBlock (const AudioRenderContext&amp; rc)</span></a>
 <a name="232"><span class="lineNum">     232 </span>            : {</a>

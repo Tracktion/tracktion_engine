@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -247,7 +247,7 @@
 <a name="185"><span class="lineNum">     185 </span>            :     void setSnapType (TimecodeSnapType);</a>
 <a name="186"><span class="lineNum">     186 </span>            :     </a>
 <a name="187"><span class="lineNum">     187 </span>            :     /** Returns the current snap type. */</a>
-<a name="188"><span class="lineNum">     188 </span>            :     TimecodeSnapType getSnapType() const noexcept               { return currentSnapType; }</a>
+<a name="188"><span class="lineNum">     188 </span><span class="lineNoCov">          0 :     TimecodeSnapType getSnapType() const noexcept               { return currentSnapType; }</span></a>
 <a name="189"><span class="lineNum">     189 </span>            : </a>
 <a name="190"><span class="lineNum">     190 </span>            :     //==============================================================================</a>
 <a name="191"><span class="lineNum">     191 </span>            :     /** Returns the active EditPlaybackContext if this Edit is attached to the DeviceManager for playback. */</a>
@@ -339,7 +339,7 @@
 <a name="277"><span class="lineNum">     277 </span>            :         </a>
 <a name="278"><span class="lineNum">     278 </span>            :         /** Allocated the Edit if it was allocated on construction. */</a>
 <a name="279"><span class="lineNum">     279 </span><span class="lineNoCov">          0 :         ~ScopedContextAllocator()</span></a>
-<a name="280"><span class="lineNum">     280 </span><span class="lineNoCov">          0 :         {</span></a>
+<a name="280"><span class="lineNum">     280 </span>            :         {</a>
 <a name="281"><span class="lineNum">     281 </span><span class="lineNoCov">          0 :             if (wasAllocated)</span></a>
 <a name="282"><span class="lineNum">     282 </span><span class="lineNoCov">          0 :                 tc.ensureContextAllocated();</span></a>
 <a name="283"><span class="lineNum">     283 </span><span class="lineNoCov">          0 :         }</span></a>

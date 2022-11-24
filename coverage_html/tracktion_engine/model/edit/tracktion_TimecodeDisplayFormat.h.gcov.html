@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">2</td>
-            <td class="headerCovTableEntry">16</td>
-            <td class="headerCovTableEntryLo">12.5 %</td>
+            <td class="headerCovTableEntry">18</td>
+            <td class="headerCovTableEntryLo">11.1 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -117,7 +117,7 @@
 <a name="55"><span class="lineNum">      55 </span>            :     TimePosition roundTimeUp (TimePosition, const TempoSequence&amp;, bool tripletsOverride) const;</a>
 <a name="56"><span class="lineNum">      56 </span>            : </a>
 <a name="57"><span class="lineNum">      57 </span>            :     //==============================================================================</a>
-<a name="58"><span class="lineNum">      58 </span>            :     int getLevel() const noexcept                   { return level; }</a>
+<a name="58"><span class="lineNum">      58 </span><span class="lineNoCov">          0 :     int getLevel() const noexcept                   { return level; }</span></a>
 <a name="59"><span class="lineNum">      59 </span>            :     int getOneBarLevel() const noexcept;</a>
 <a name="60"><span class="lineNum">      60 </span>            : </a>
 <a name="61"><span class="lineNum">      61 </span>            :     // find the maximum snap level for which this time can be considered 'on an interval'</a>
@@ -172,7 +172,7 @@
 <a name="110"><span class="lineNum">     110 </span><span class="lineNoCov">          0 :     TimecodeDisplayFormat (TimecodeType t) noexcept  : type (t) {}</span></a>
 <a name="111"><span class="lineNum">     111 </span>            : </a>
 <a name="112"><span class="lineNum">     112 </span>            :     bool operator== (const TimecodeDisplayFormat&amp; other) const      { return type == other.type; }</a>
-<a name="113"><span class="lineNum">     113 </span>            :     bool operator!= (const TimecodeDisplayFormat&amp; other) const      { return type != other.type; }</a>
+<a name="113"><span class="lineNum">     113 </span><span class="lineNoCov">          0 :     bool operator!= (const TimecodeDisplayFormat&amp; other) const      { return type != other.type; }</span></a>
 <a name="114"><span class="lineNum">     114 </span>            : </a>
 <a name="115"><span class="lineNum">     115 </span>            :     //==============================================================================</a>
 <a name="116"><span class="lineNum">     116 </span>            :     bool isBarsBeats() const;</a>

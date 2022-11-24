@@ -31,17 +31,17 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">7</td>
-            <td class="headerCovTableEntryLo">0.0 %</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">16</td>
+            <td class="headerCovTableEntryLo">6.2 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntry">4</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
@@ -473,19 +473,19 @@
 <a name="411"><span class="lineNum">     411 </span>            :     //==============================================================================</a>
 <a name="412"><span class="lineNum">     412 </span><span class="lineNoCov">          0 :     struct RPNParser</span></a>
 <a name="413"><span class="lineNum">     413 </span>            :     {</a>
-<a name="414"><span class="lineNum">     414 </span>            :         void parseControllerMessage (const juce::MidiMessage&amp; m, int&amp; paramID,</a>
+<a name="414"><span class="lineNum">     414 </span><span class="lineNoCov">          0 :         void parseControllerMessage (const juce::MidiMessage&amp; m, int&amp; paramID,</span></a>
 <a name="415"><span class="lineNum">     415 </span>            :                                      int&amp; chan, int&amp; val) noexcept</a>
 <a name="416"><span class="lineNum">     416 </span>            :         {</a>
 <a name="417"><span class="lineNum">     417 </span>            :             jassert (m.isController());</a>
 <a name="418"><span class="lineNum">     418 </span>            : </a>
-<a name="419"><span class="lineNum">     419 </span>            :             const int number = m.getControllerNumber();</a>
-<a name="420"><span class="lineNum">     420 </span>            :             const int value = m.getControllerValue();</a>
+<a name="419"><span class="lineNum">     419 </span><span class="lineNoCov">          0 :             const int number = m.getControllerNumber();</span></a>
+<a name="420"><span class="lineNum">     420 </span><span class="lineNoCov">          0 :             const int value = m.getControllerValue();</span></a>
 <a name="421"><span class="lineNum">     421 </span>            : </a>
-<a name="422"><span class="lineNum">     422 </span>            :             lastParamNumber = 0x10000 + number;</a>
-<a name="423"><span class="lineNum">     423 </span>            :             paramID = lastParamNumber;</a>
-<a name="424"><span class="lineNum">     424 </span>            :             chan = m.getChannel();</a>
-<a name="425"><span class="lineNum">     425 </span>            :             val = value;</a>
-<a name="426"><span class="lineNum">     426 </span>            :         }</a>
+<a name="422"><span class="lineNum">     422 </span><span class="lineNoCov">          0 :             lastParamNumber = 0x10000 + number;</span></a>
+<a name="423"><span class="lineNum">     423 </span><span class="lineNoCov">          0 :             paramID = lastParamNumber;</span></a>
+<a name="424"><span class="lineNum">     424 </span><span class="lineNoCov">          0 :             chan = m.getChannel();</span></a>
+<a name="425"><span class="lineNum">     425 </span><span class="lineNoCov">          0 :             val = value;</span></a>
+<a name="426"><span class="lineNum">     426 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="427"><span class="lineNum">     427 </span>            : </a>
 <a name="428"><span class="lineNum">     428 </span>            :         int lastParamNumber = 0;</a>
 <a name="429"><span class="lineNum">     429 </span>            :         int lastRPNCoarse = 0;</a>
@@ -498,7 +498,7 @@
 <a name="436"><span class="lineNum">     436 </span>            :     RPNParser rpnParser;</a>
 <a name="437"><span class="lineNum">     437 </span>            : </a>
 <a name="438"><span class="lineNum">     438 </span>            :     //==============================================================================</a>
-<a name="439"><span class="lineNum">     439 </span>            :     struct CustomControlSurfaceManager</a>
+<a name="439"><span class="lineNum">     439 </span><span class="lineCov">          1 :     struct CustomControlSurfaceManager</span></a>
 <a name="440"><span class="lineNum">     440 </span>            :     {</a>
 <a name="441"><span class="lineNum">     441 </span>            :         void registerSurface (CustomControlSurface*);</a>
 <a name="442"><span class="lineNum">     442 </span>            :         void unregisterSurface (CustomControlSurface*);</a>

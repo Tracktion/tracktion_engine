@@ -372,33 +372,33 @@
 <!-- Node24 -->
 <g id="node24" class="node">
 <title>Node24</title>
-<g id="a_node24"><a xlink:href="classtracktion_1_1engine_1_1TimedMutingNode.html" target="_top" xlink:title="A Node that mutes its input at specific time ranges.">
-<polygon fill="none" stroke="black" points="214,-888 214,-918 321,-918 321,-888 214,-888"/>
-<text text-anchor="start" x="222" y="-906" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
-<text text-anchor="middle" x="267.5" y="-895" font-family="Helvetica,sans-Serif" font-size="10.00">TimedMutingNode</text>
+<g id="a_node24"><a xlink:href="classtracktion_1_1engine_1_1TimeStretchingWaveNode.html" target="_top" xlink:title="Node that reads from a file node and timestretches its output.">
+<polygon fill="none" stroke="black" points="196,-888 196,-918 339,-918 339,-888 196,-888"/>
+<text text-anchor="start" x="204" y="-906" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
+<text text-anchor="middle" x="267.5" y="-895" font-family="Helvetica,sans-Serif" font-size="10.00">TimeStretchingWaveNode</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node24 -->
 <g id="edge23" class="edge">
 <title>Node1&#45;&gt;Node24</title>
-<path fill="none" stroke="midnightblue" d="M135.38,-918.5C161.29,-915.44 190.02,-912.04 213.96,-909.21"/>
+<path fill="none" stroke="midnightblue" d="M135.34,-918.51C154.98,-916.18 176.24,-913.67 195.82,-911.36"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="134.75,-915.05 125.23,-919.7 135.58,-922 134.75,-915.05"/>
 </g>
 <!-- Node25 -->
 <g id="node25" class="node">
 <title>Node25</title>
-<g id="a_node25"><a xlink:href="classtracktion_1_1engine_1_1TimeStretchingWaveNode.html" target="_top" xlink:title="Node that reads from a file node and timestretches its output.">
-<polygon fill="none" stroke="black" points="196,-839 196,-869 339,-869 339,-839 196,-839"/>
-<text text-anchor="start" x="204" y="-857" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
-<text text-anchor="middle" x="267.5" y="-846" font-family="Helvetica,sans-Serif" font-size="10.00">TimeStretchingWaveNode</text>
+<g id="a_node25"><a xlink:href="classtracktion_1_1engine_1_1TimedMutingNode.html" target="_top" xlink:title="A Node that mutes its input at specific time ranges.">
+<polygon fill="none" stroke="black" points="214,-839 214,-869 321,-869 321,-839 214,-839"/>
+<text text-anchor="start" x="222" y="-857" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
+<text text-anchor="middle" x="267.5" y="-846" font-family="Helvetica,sans-Serif" font-size="10.00">TimedMutingNode</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node25 -->
 <g id="edge24" class="edge">
 <title>Node1&#45;&gt;Node25</title>
-<path fill="none" stroke="midnightblue" d="M88.67,-912.65C107.97,-902.13 135.52,-888.16 161,-879 172.07,-875.02 184.02,-871.49 195.77,-868.44"/>
+<path fill="none" stroke="midnightblue" d="M88.67,-912.65C107.97,-902.13 135.52,-888.16 161,-879 177.83,-872.95 196.69,-867.95 213.77,-864.05"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="86.96,-909.59 79.91,-917.49 90.35,-915.72 86.96,-909.59"/>
 </g>
 <!-- Node26 -->
@@ -666,31 +666,31 @@
 <!-- Node44 -->
 <g id="node44" class="node">
 <title>Node44</title>
-<g id="a_node44"><a xlink:href="classtracktion_1_1graph_1_1SinkNode.html" target="_top" xlink:title="Blocks audio and MIDI input from reaching the outputs.">
-<polygon fill="none" stroke="black" points="194.5,-76.5 194.5,-95.5 340.5,-95.5 340.5,-76.5 194.5,-76.5"/>
-<text text-anchor="middle" x="267.5" y="-83.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::graph::SinkNode</text>
+<g id="a_node44"><a xlink:href="classtracktion_1_1graph_1_1SinNode.html" target="_top" xlink:title=" ">
+<polygon fill="none" stroke="black" points="197.5,-76.5 197.5,-95.5 337.5,-95.5 337.5,-76.5 197.5,-76.5"/>
+<text text-anchor="middle" x="267.5" y="-83.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::graph::SinNode</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node44 -->
 <g id="edge43" class="edge">
 <title>Node1&#45;&gt;Node44</title>
-<path fill="none" stroke="midnightblue" d="M64.46,-907.21C70.41,-787.69 104.03,-165.5 161,-105 169.93,-95.52 181.87,-89.8 194.49,-86.49"/>
+<path fill="none" stroke="midnightblue" d="M64.46,-907.21C70.41,-787.69 104.03,-165.5 161,-105 170.63,-94.77 183.76,-88.92 197.48,-85.76"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="60.95,-907.27 63.95,-917.43 67.94,-907.62 60.95,-907.27"/>
 </g>
 <!-- Node45 -->
 <g id="node45" class="node">
 <title>Node45</title>
-<g id="a_node45"><a xlink:href="classtracktion_1_1graph_1_1SinNode.html" target="_top" xlink:title=" ">
-<polygon fill="none" stroke="black" points="197.5,-38.5 197.5,-57.5 337.5,-57.5 337.5,-38.5 197.5,-38.5"/>
-<text text-anchor="middle" x="267.5" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::graph::SinNode</text>
+<g id="a_node45"><a xlink:href="classtracktion_1_1graph_1_1SinkNode.html" target="_top" xlink:title="Blocks audio and MIDI input from reaching the outputs.">
+<polygon fill="none" stroke="black" points="194.5,-38.5 194.5,-57.5 340.5,-57.5 340.5,-38.5 194.5,-38.5"/>
+<text text-anchor="middle" x="267.5" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::graph::SinkNode</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node45 -->
 <g id="edge44" class="edge">
 <title>Node1&#45;&gt;Node45</title>
-<path fill="none" stroke="midnightblue" d="M64.36,-907.06C69.81,-783.96 101.48,-130.54 161,-67 170.61,-56.75 183.72,-50.89 197.44,-47.72"/>
+<path fill="none" stroke="midnightblue" d="M64.36,-907.06C69.81,-783.96 101.48,-130.54 161,-67 169.91,-57.49 181.83,-51.76 194.45,-48.46"/>
 <polygon fill="midnightblue" stroke="midnightblue" points="60.85,-907.14 63.91,-917.28 67.84,-907.44 60.85,-907.14"/>
 </g>
 <!-- Node46 -->

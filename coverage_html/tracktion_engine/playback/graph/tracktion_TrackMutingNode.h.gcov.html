@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">1</td>
-            <td class="headerCovTableEntry">1</td>
-            <td class="headerCovTableEntryHi">100.0 %</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntryLo">66.7 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
@@ -76,7 +76,7 @@
 <a name="14"><span class="lineNum">      14 </span>            : /**</a>
 <a name="15"><span class="lineNum">      15 </span>            :     Holds the state of a Track and if its contents/plugins should be played or not.</a>
 <a name="16"><span class="lineNum">      16 </span>            : */</a>
-<a name="17"><span class="lineNum">      17 </span>            : class TrackMuteState</a>
+<a name="17"><span class="lineNum">      17 </span><span class="lineCov">       4892 : class TrackMuteState</span></a>
 <a name="18"><span class="lineNum">      18 </span>            : {</a>
 <a name="19"><span class="lineNum">      19 </span>            : public:</a>
 <a name="20"><span class="lineNum">      20 </span>            :     /** Creates a TrackMuteState for a Track. */</a>
@@ -133,7 +133,7 @@
 <a name="71"><span class="lineNum">      71 </span>            :     A Node that handles muting/soloing of its input node, according to</a>
 <a name="72"><span class="lineNum">      72 </span>            :     the audibility of a track.</a>
 <a name="73"><span class="lineNum">      73 </span>            : */</a>
-<a name="74"><span class="lineNum">      74 </span>            : class TrackMutingNode final : public tracktion::graph::Node</a>
+<a name="74"><span class="lineNum">      74 </span><span class="lineNoCov">          0 : class TrackMutingNode final : public tracktion::graph::Node</span></a>
 <a name="75"><span class="lineNum">      75 </span>            : {</a>
 <a name="76"><span class="lineNum">      76 </span>            : public:</a>
 <a name="77"><span class="lineNum">      77 </span>            :     TrackMutingNode (std::unique_ptr&lt;TrackMuteState&gt;, std::unique_ptr&lt;tracktion::graph::Node&gt; input,</a>

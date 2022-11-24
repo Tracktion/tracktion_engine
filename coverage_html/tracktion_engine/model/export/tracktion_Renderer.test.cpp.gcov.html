@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">41</td>
-            <td class="headerCovTableEntry">41</td>
+            <td class="headerCovTableEntry">43</td>
+            <td class="headerCovTableEntry">43</td>
             <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -99,8 +99,8 @@
 <a name="37"><span class="lineNum">      37 </span>            :             static auto organPatch = &quot;&lt;PLUGIN type=\&quot;4osc\&quot; id=\&quot;1069\&quot; enabled=\&quot;1\&quot; filterType=\&quot;1\&quot; presetName=\&quot;4OSC: Organ\&quot; filterFreq=\&quot;127.0\&quot; ampAttack=\&quot;0.60000002384185791016\&quot; ampDecay=\&quot;10.0\&quot; ampSustain=\&quot;100.0\&quot; ampRelease=\&quot;0.40000000596046447754\&quot; waveShape1=\&quot;4\&quot; tune2=\&quot;-24.0\&quot; waveShape2=\&quot;4\&quot;&gt; &lt;MODMATRIX/&gt; &lt;/PLUGIN&gt;&quot;;</a>
 <a name="38"><span class="lineNum">      38 </span>            : </a>
 <a name="39"><span class="lineNum">      39 </span><span class="lineCov">          2 :             if (auto e = juce::parseXML (organPatch))</span></a>
-<a name="40"><span class="lineNum">      40 </span><span class="lineCov">          2 :                 if (auto v = juce::ValueTree::fromXml (*e); v.isValid())</span></a>
-<a name="41"><span class="lineNum">      41 </span><span class="lineCov">          1 :                     synth-&gt;restorePluginStateFromValueTree (v);</span></a>
+<a name="40"><span class="lineNum">      40 </span><span class="lineCov">          1 :                 if (auto v = juce::ValueTree::fromXml (*e); v.isValid())</span></a>
+<a name="41"><span class="lineNum">      41 </span><span class="lineCov">          2 :                     synth-&gt;restorePluginStateFromValueTree (v);</span></a>
 <a name="42"><span class="lineNum">      42 </span>            : </a>
 <a name="43"><span class="lineNum">      43 </span><span class="lineCov">          1 :             const auto tailLength = synth-&gt;getTailLength();</span></a>
 <a name="44"><span class="lineNum">      44 </span><span class="lineCov">          1 :             expectGreaterThan (tailLength, 0.0);</span></a>
@@ -130,7 +130,7 @@
 <a name="68"><span class="lineNum">      68 </span><span class="lineCov">          1 :                 engine.getAudioFileManager().releaseAllFiles();</span></a>
 <a name="69"><span class="lineNum">      69 </span><span class="lineCov">          1 :                 edit-&gt;getTempDirectory (false).deleteRecursively();</span></a>
 <a name="70"><span class="lineNum">      70 </span><span class="lineCov">          1 :                 expect (! freezeFile.getFile().exists());</span></a>
-<a name="71"><span class="lineNum">      71 </span>            :             }</a>
+<a name="71"><span class="lineNum">      71 </span><span class="lineCov">          1 :             }</span></a>
 <a name="72"><span class="lineNum">      72 </span>            : </a>
 <a name="73"><span class="lineNum">      73 </span>            :             {</a>
 <a name="74"><span class="lineNum">      74 </span><span class="lineCov">          1 :                 track-&gt;setFrozen (false, AudioTrack::individualFreeze);</span></a>
@@ -150,7 +150,7 @@
 <a name="88"><span class="lineNum">      88 </span><span class="lineCov">          1 :                 engine.getAudioFileManager().releaseAllFiles();</span></a>
 <a name="89"><span class="lineNum">      89 </span><span class="lineCov">          1 :                 edit-&gt;getTempDirectory (false).deleteRecursively();</span></a>
 <a name="90"><span class="lineNum">      90 </span><span class="lineCov">          1 :                 expect (! freezeFile.getFile().exists());</span></a>
-<a name="91"><span class="lineNum">      91 </span>            :             }</a>
+<a name="91"><span class="lineNum">      91 </span><span class="lineCov">          1 :             }</span></a>
 <a name="92"><span class="lineNum">      92 </span>            :         }</a>
 <a name="93"><span class="lineNum">      93 </span><span class="lineCov">          1 :     }</span></a>
 <a name="94"><span class="lineNum">      94 </span>            : };</a>

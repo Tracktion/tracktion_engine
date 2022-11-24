@@ -22,8 +22,8 @@
 <area shape="rect" id="node21" href="$classtracktion_1_1engine_1_1RackReturnNode.html" title="Sends an input Node to a Rack bus handling the channel mapping and channel gain levels." alt="" coords="292,1247,432,1288"/>
 <area shape="rect" id="node22" href="$classtracktion_1_1engine_1_1SharedLevelMeasuringNode.html" title="Applies a SharedLevelMeter to the audio passing through this node." alt="" coords="260,1312,464,1353"/>
 <area shape="rect" id="node23" href="$classtracktion_1_1engine_1_1SpeedRampWaveNode.html" title="An Node that plays back a wave file." alt="" coords="277,1377,447,1419"/>
-<area shape="rect" id="node24" href="$classtracktion_1_1engine_1_1TimedMutingNode.html" title="A Node that mutes its input at specific time ranges." alt="" coords="291,1443,433,1484"/>
-<area shape="rect" id="node25" href="$classtracktion_1_1engine_1_1TimeStretchingWaveNode.html" title="Node that reads from a file node and timestretches its output." alt="" coords="267,1508,457,1549"/>
+<area shape="rect" id="node24" href="$classtracktion_1_1engine_1_1TimeStretchingWaveNode.html" title="Node that reads from a file node and timestretches its output." alt="" coords="267,1443,457,1484"/>
+<area shape="rect" id="node25" href="$classtracktion_1_1engine_1_1TimedMutingNode.html" title="A Node that mutes its input at specific time ranges." alt="" coords="291,1508,433,1549"/>
 <area shape="rect" id="node26" href="$classtracktion_1_1engine_1_1TrackMidiInputDeviceNode.html" title="A Node that takes MIDI from the output of a track and sends it to its corresponding InputDevice." alt="" coords="264,1573,460,1615"/>
 <area shape="rect" id="node27" href="$classtracktion_1_1engine_1_1TrackMutingNode.html" title="A Node that handles muting/soloing of its input node, according to the audibility of a track." alt="" coords="292,1639,432,1680"/>
 <area shape="rect" id="node28" href="$classtracktion_1_1engine_1_1TrackWaveInputDeviceNode.html" title="A Node that takes audio from the output of a track and sends it to its corresponding InputDevice." alt="" coords="260,1704,464,1745"/>
@@ -41,8 +41,8 @@
 <area shape="rect" id="node40" href="$classtracktion_1_1graph_1_1ReturnNode.html" title=" " alt="" coords="257,2387,467,2414"/>
 <area shape="rect" id="node41" href="$classtracktion_1_1graph_1_1SendNode.html" title=" " alt="" coords="263,2438,461,2465"/>
 <area shape="rect" id="node43" href="$classtracktion_1_1graph_1_1SilentNode.html" title="Just a simple audio node that doesn&#39;t take any input so can be used as a stub." alt="" coords="260,2489,464,2515"/>
-<area shape="rect" id="node44" href="$classtracktion_1_1graph_1_1SinkNode.html" title="Blocks audio and MIDI input from reaching the outputs." alt="" coords="265,2539,459,2566"/>
-<area shape="rect" id="node45" href="$classtracktion_1_1graph_1_1SinNode.html" title=" " alt="" coords="269,2590,455,2617"/>
+<area shape="rect" id="node44" href="$classtracktion_1_1graph_1_1SinNode.html" title=" " alt="" coords="269,2539,455,2566"/>
+<area shape="rect" id="node45" href="$classtracktion_1_1graph_1_1SinkNode.html" title="Blocks audio and MIDI input from reaching the outputs." alt="" coords="265,2590,459,2617"/>
 <area shape="rect" id="node46" href="$classtracktion_1_1graph_1_1SummingNode.html" title="An Node which sums together the multiple inputs adding additional latency to provide a coherent outpu..." alt="" coords="247,2641,477,2667"/>
 <area shape="rect" id="node42" href="$classtracktion_1_1engine_1_1AuxSendNode.html" title="Node for an aux send." alt="" coords="552,2431,692,2472"/>
 </map>

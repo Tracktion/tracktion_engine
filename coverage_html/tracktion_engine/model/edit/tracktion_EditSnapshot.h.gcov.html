@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">1</td>
-            <td class="headerCovTableEntry">8</td>
-            <td class="headerCovTableEntryLo">12.5 %</td>
+            <td class="headerCovTableEntry">16</td>
+            <td class="headerCovTableEntryLo">6.2 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -97,7 +97,7 @@
 <a name="35"><span class="lineNum">      35 </span>            :     ~EditSnapshot();</a>
 <a name="36"><span class="lineNum">      36 </span>            : </a>
 <a name="37"><span class="lineNum">      37 </span>            :     /** Returns the ProjectItemID. */</a>
-<a name="38"><span class="lineNum">      38 </span>            :     ProjectItemID getID() const noexcept                { return itemID; }</a>
+<a name="38"><span class="lineNum">      38 </span><span class="lineNoCov">          0 :     ProjectItemID getID() const noexcept                { return itemID; }</span></a>
 <a name="39"><span class="lineNum">      39 </span>            : </a>
 <a name="40"><span class="lineNum">      40 </span>            :     /** Returns the File if this was created from one. */</a>
 <a name="41"><span class="lineNum">      41 </span><span class="lineNoCov">          0 :     juce::File getFile() const                          { return sourceFile; }</span></a>
@@ -132,7 +132,7 @@
 <a name="70"><span class="lineNum">      70 </span>            :     //==============================================================================</a>
 <a name="71"><span class="lineNum">      71 </span>            :     // Set of cached properties of the last saved state</a>
 <a name="72"><span class="lineNum">      72 </span>            :     juce::String getName() const                                        { return name; }</a>
-<a name="73"><span class="lineNum">      73 </span>            :     int getNumTracks() const                                            { return numTracks; }</a>
+<a name="73"><span class="lineNum">      73 </span><span class="lineNoCov">          0 :     int getNumTracks() const                                            { return numTracks; }</span></a>
 <a name="74"><span class="lineNum">      74 </span>            :     int getNumAudioTracks() const                                       { return numAudioTracks; }</a>
 <a name="75"><span class="lineNum">      75 </span>            :     int getIndexOfTrackID (EditItemID trackID) const                    { return trackIDs.indexOf (trackID); }</a>
 <a name="76"><span class="lineNum">      76 </span>            :     juce::String getTrackName (int index) const                         { return trackNames[index]; }</a>
@@ -144,20 +144,20 @@
 <a name="82"><span class="lineNum">      82 </span>            :     int audioToGlobalTrackIndex (int audioIndex) const;</a>
 <a name="83"><span class="lineNum">      83 </span>            : </a>
 <a name="84"><span class="lineNum">      84 </span><span class="lineNoCov">          0 :     TimeDuration getLength() const                                       { return TimeDuration::fromSeconds (length); }</span></a>
-<a name="85"><span class="lineNum">      85 </span>            :     TimePosition getMarkIn() const                                       { return TimePosition::fromSeconds (markIn); }</a>
-<a name="86"><span class="lineNum">      86 </span>            :     TimePosition getMarkOut() const                                      { return TimePosition::fromSeconds (markOut); }</a>
-<a name="87"><span class="lineNum">      87 </span>            :     bool areMarksActive() const                                          { return marksActive; }</a>
+<a name="85"><span class="lineNum">      85 </span><span class="lineNoCov">          0 :     TimePosition getMarkIn() const                                       { return TimePosition::fromSeconds (markIn); }</span></a>
+<a name="86"><span class="lineNum">      86 </span><span class="lineNoCov">          0 :     TimePosition getMarkOut() const                                      { return TimePosition::fromSeconds (markOut); }</span></a>
+<a name="87"><span class="lineNum">      87 </span><span class="lineNoCov">          0 :     bool areMarksActive() const                                          { return marksActive; }</span></a>
 <a name="88"><span class="lineNum">      88 </span>            : </a>
-<a name="89"><span class="lineNum">      89 </span>            :     double getTempo() const                                             { return tempo; }</a>
-<a name="90"><span class="lineNum">      90 </span>            :     int getTimeSigNumerator() const                                     { return timeSigNumerator; }</a>
-<a name="91"><span class="lineNum">      91 </span>            :     int getTimeSigDenominator() const                                   { return timeSigDenominator; }</a>
-<a name="92"><span class="lineNum">      92 </span>            :     int getPitch() const                                                { return pitch; }</a>
+<a name="89"><span class="lineNum">      89 </span><span class="lineNoCov">          0 :     double getTempo() const                                             { return tempo; }</span></a>
+<a name="90"><span class="lineNum">      90 </span><span class="lineNoCov">          0 :     int getTimeSigNumerator() const                                     { return timeSigNumerator; }</span></a>
+<a name="91"><span class="lineNum">      91 </span><span class="lineNoCov">          0 :     int getTimeSigDenominator() const                                   { return timeSigDenominator; }</span></a>
+<a name="92"><span class="lineNum">      92 </span><span class="lineNoCov">          0 :     int getPitch() const                                                { return pitch; }</span></a>
 <a name="93"><span class="lineNum">      93 </span>            : </a>
 <a name="94"><span class="lineNum">      94 </span>            :     const juce::Array&lt;Marker&gt;&amp; getMarkers() const                       { return markers; }</a>
 <a name="95"><span class="lineNum">      95 </span><span class="lineNoCov">          0 :     const juce::Array&lt;EditItemID&gt;&amp; getTracks() const                    { return trackIDs; }</span></a>
 <a name="96"><span class="lineNum">      96 </span>            :     const juce::Array&lt;ProjectItemID&gt;&amp; getEditClips() const              { return editClipIDs; }</a>
 <a name="97"><span class="lineNum">      97 </span>            :     const juce::Array&lt;ProjectItemID&gt;&amp; getClipsSourceIDs() const         { return clipSourceIDs; }</a>
-<a name="98"><span class="lineNum">      98 </span><span class="lineNoCov">          0 :     HashCode getHash() const                                            { return lastSaveTime.toMilliseconds(); }</span></a>
+<a name="98"><span class="lineNum">      98 </span>            :     HashCode getHash() const                                            { return lastSaveTime.toMilliseconds(); }</a>
 <a name="99"><span class="lineNum">      99 </span>            : </a>
 <a name="100"><span class="lineNum">     100 </span>            :     //==============================================================================</a>
 <a name="101"><span class="lineNum">     101 </span>            :     struct Listener</a>

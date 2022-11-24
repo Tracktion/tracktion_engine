@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">381</td>
+            <td class="headerCovTableEntry">385</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -87,8 +87,8 @@
 <a name="25"><span class="lineNum">      25 </span><span class="lineNoCov">          0 :         values[1] = newMax;</span></a>
 <a name="26"><span class="lineNum">      26 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="27"><span class="lineNum">      27 </span>            : </a>
-<a name="28"><span class="lineNum">      28 </span>            :     inline int8_t getMinValue() const noexcept        { return values[0]; }</a>
-<a name="29"><span class="lineNum">      29 </span>            :     inline int8_t getMaxValue() const noexcept        { return values[1]; }</a>
+<a name="28"><span class="lineNum">      28 </span><span class="lineNoCov">          0 :     inline int8_t getMinValue() const noexcept        { return values[0]; }</span></a>
+<a name="29"><span class="lineNum">      29 </span><span class="lineNoCov">          0 :     inline int8_t getMaxValue() const noexcept        { return values[1]; }</span></a>
 <a name="30"><span class="lineNum">      30 </span>            : </a>
 <a name="31"><span class="lineNum">      31 </span>            :     inline void setFloat (float newMin, float newMax) noexcept</a>
 <a name="32"><span class="lineNum">      32 </span>            :     {</a>
@@ -275,7 +275,7 @@
 <a name="213"><span class="lineNum">     213 </span>            :                     float lowestLeft, highestLeft, lowestRight, highestRight;</a>
 <a name="214"><span class="lineNum">     214 </span>            : </a>
 <a name="215"><span class="lineNum">     215 </span><span class="lineNoCov">          0 :                     reader-&gt;readMaxLevels ((firstThumbIndex + i) * owner.samplesPerThumbSample, owner.samplesPerThumbSample,</span></a>
-<a name="216"><span class="lineNum">     216 </span><span class="lineNoCov">          0 :                                            lowestLeft, highestLeft, lowestRight, highestRight);</span></a>
+<a name="216"><span class="lineNum">     216 </span>            :                                            lowestLeft, highestLeft, lowestRight, highestRight);</a>
 <a name="217"><span class="lineNum">     217 </span>            : </a>
 <a name="218"><span class="lineNum">     218 </span><span class="lineNoCov">          0 :                     levels[0][i].setFloat (lowestLeft, highestLeft);</span></a>
 <a name="219"><span class="lineNum">     219 </span><span class="lineNoCov">          0 :                     levels[1][i].setFloat (lowestRight, highestRight);</span></a>
@@ -327,8 +327,8 @@
 <a name="265"><span class="lineNum">     265 </span>            :             {</a>
 <a name="266"><span class="lineNum">     266 </span>            :                 const MinMaxValue&amp; v = data.getReference (startSample);</a>
 <a name="267"><span class="lineNum">     267 </span>            : </a>
-<a name="268"><span class="lineNum">     268 </span><span class="lineNoCov">          0 :                 if (v.getMinValue() &lt; mn)  mn = v.getMinValue();</span></a>
-<a name="269"><span class="lineNum">     269 </span><span class="lineNoCov">          0 :                     if (v.getMaxValue() &gt; mx)  mx = v.getMaxValue();</span></a>
+<a name="268"><span class="lineNum">     268 </span>            :                 if (v.getMinValue() &lt; mn)  mn = v.getMinValue();</a>
+<a name="269"><span class="lineNum">     269 </span>            :                     if (v.getMaxValue() &gt; mx)  mx = v.getMaxValue();</a>
 <a name="270"><span class="lineNum">     270 </span>            : </a>
 <a name="271"><span class="lineNum">     271 </span><span class="lineNoCov">          0 :                         ++startSample;</span></a>
 <a name="272"><span class="lineNum">     272 </span>            :             }</a>
@@ -391,7 +391,7 @@
 <a name="329"><span class="lineNum">     329 </span>            : };</a>
 <a name="330"><span class="lineNum">     330 </span>            : </a>
 <a name="331"><span class="lineNum">     331 </span>            : //==============================================================================</a>
-<a name="332"><span class="lineNum">     332 </span>            : class TracktionThumbnail::CachedWindow</a>
+<a name="332"><span class="lineNum">     332 </span><span class="lineNoCov">          0 : class TracktionThumbnail::CachedWindow</span></a>
 <a name="333"><span class="lineNum">     333 </span>            : {</a>
 <a name="334"><span class="lineNum">     334 </span>            : public:</a>
 <a name="335"><span class="lineNum">     335 </span><span class="lineNoCov">          0 :     CachedWindow() {}</span></a>
@@ -462,7 +462,7 @@
 <a name="400"><span class="lineNum">     400 </span>            : </a>
 <a name="401"><span class="lineNum">     401 </span><span class="lineNoCov">          0 :                     p.closeSubPath();</span></a>
 <a name="402"><span class="lineNum">     402 </span><span class="lineNoCov">          0 :                     g.fillPath (p);</span></a>
-<a name="403"><span class="lineNum">     403 </span>            :                 }</a>
+<a name="403"><span class="lineNum">     403 </span><span class="lineNoCov">          0 :                 }</span></a>
 <a name="404"><span class="lineNum">     404 </span>            :                 else</a>
 <a name="405"><span class="lineNum">     405 </span>            :                 {</a>
 <a name="406"><span class="lineNum">     406 </span><span class="lineNoCov">          0 :                     juce::RectangleList&lt;float&gt; waveform;</span></a>
@@ -567,7 +567,7 @@
 <a name="505"><span class="lineNum">     505 </span>            :             }</a>
 <a name="506"><span class="lineNum">     506 </span>            : </a>
 <a name="507"><span class="lineNum">     507 </span><span class="lineNoCov">          0 :             numSamplesCached = i;</span></a>
-<a name="508"><span class="lineNum">     508 </span>            :         }</a>
+<a name="508"><span class="lineNum">     508 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="509"><span class="lineNum">     509 </span>            :         else</a>
 <a name="510"><span class="lineNum">     510 </span>            :         {</a>
 <a name="511"><span class="lineNum">     511 </span>            :             jassert (chans.size() == numChannelsCached);</a>
@@ -619,8 +619,8 @@
 <a name="557"><span class="lineNum">     557 </span><span class="lineNoCov">          0 : TracktionThumbnail::TracktionThumbnail (int originalSamplesPerThumbnailSample,</span></a>
 <a name="558"><span class="lineNum">     558 </span>            :                                         juce::AudioFormatManager&amp; formatManager,</a>
 <a name="559"><span class="lineNum">     559 </span><span class="lineNoCov">          0 :                                         juce::AudioThumbnailCache&amp; cacheToUse)</span></a>
-<a name="560"><span class="lineNum">     560 </span>            :     : formatManagerToUse (formatManager),</a>
-<a name="561"><span class="lineNum">     561 </span>            :       cache (cacheToUse),</a>
+<a name="560"><span class="lineNum">     560 </span><span class="lineNoCov">          0 :     : formatManagerToUse (formatManager),</span></a>
+<a name="561"><span class="lineNum">     561 </span><span class="lineNoCov">          0 :       cache (cacheToUse),</span></a>
 <a name="562"><span class="lineNum">     562 </span><span class="lineNoCov">          0 :       window (new CachedWindow()),</span></a>
 <a name="563"><span class="lineNum">     563 </span><span class="lineNoCov">          0 :       samplesPerThumbSample (originalSamplesPerThumbnailSample)</span></a>
 <a name="564"><span class="lineNum">     564 </span>            : {</a>
@@ -698,7 +698,7 @@
 <a name="636"><span class="lineNum">     636 </span>            :             channels.getUnchecked(chan)-&gt;getData(i)-&gt;read (input);</a>
 <a name="637"><span class="lineNum">     637 </span>            : </a>
 <a name="638"><span class="lineNum">     638 </span>            :     return true;</a>
-<a name="639"><span class="lineNum">     639 </span>            : }</a>
+<a name="639"><span class="lineNum">     639 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="640"><span class="lineNum">     640 </span>            : </a>
 <a name="641"><span class="lineNum">     641 </span><span class="lineNoCov">          0 : void TracktionThumbnail::saveTo (juce::OutputStream&amp; output) const</span></a>
 <a name="642"><span class="lineNum">     642 </span>            : {</a>
@@ -803,7 +803,7 @@
 <a name="741"><span class="lineNum">     741 </span>            : </a>
 <a name="742"><span class="lineNum">     742 </span><span class="lineNoCov">          0 :         for (int chan = 0; chan &lt; numChans; ++chan)</span></a>
 <a name="743"><span class="lineNum">     743 </span>            :         {</a>
-<a name="744"><span class="lineNum">     744 </span><span class="lineNoCov">          0 :             const float* const sourceData = incoming.getReadPointer (chan, startOffsetInBuffer);</span></a>
+<a name="744"><span class="lineNum">     744 </span>            :             const float* const sourceData = incoming.getReadPointer (chan, startOffsetInBuffer);</a>
 <a name="745"><span class="lineNum">     745 </span><span class="lineNoCov">          0 :             auto* dest = thumbData + numToDo * chan;</span></a>
 <a name="746"><span class="lineNum">     746 </span><span class="lineNoCov">          0 :             thumbChannels[chan] = dest;</span></a>
 <a name="747"><span class="lineNum">     747 </span>            : </a>

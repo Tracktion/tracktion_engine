@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">77</td>
-            <td class="headerCovTableEntry">184</td>
-            <td class="headerCovTableEntryLo">41.8 %</td>
+            <td class="headerCovTableEntry">78</td>
+            <td class="headerCovTableEntry">189</td>
+            <td class="headerCovTableEntryLo">41.3 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">8</td>
@@ -80,7 +80,7 @@
 <a name="18"><span class="lineNum">      18 </span>            :                             Plugin&amp; owner, juce::Range&lt;float&gt; valueRangeToUse, int paramNumberToUse,</a>
 <a name="19"><span class="lineNum">      19 </span>            :                             bool isGain_, bool isFreq_, bool isQ_)</a>
 <a name="20"><span class="lineNum">      20 </span><span class="lineCov">         12 :         : AutomatableParameter (xmlTag, name, owner, valueRangeToUse),</span></a>
-<a name="21"><span class="lineNum">      21 </span>            :           equaliser (p), paramNumber (paramNumberToUse),</a>
+<a name="21"><span class="lineNum">      21 </span><span class="lineCov">         12 :           equaliser (p), paramNumber (paramNumberToUse),</span></a>
 <a name="22"><span class="lineNum">      22 </span><span class="lineCov">         12 :           isGain (isGain_), isFreq (isFreq_), isQ (isQ_)</span></a>
 <a name="23"><span class="lineNum">      23 </span>            :     {</a>
 <a name="24"><span class="lineNum">      24 </span><span class="lineCov">         12 :     }</span></a>
@@ -183,7 +183,7 @@
 <a name="121"><span class="lineNum">     121 </span><span class="lineCov">          1 :     hiQ-&gt;attachToCurrentValue (hiQValue);</span></a>
 <a name="122"><span class="lineNum">     122 </span><span class="lineCov">          1 : }</span></a>
 <a name="123"><span class="lineNum">     123 </span>            : </a>
-<a name="124"><span class="lineNum">     124 </span><span class="lineCov">         11 : EqualiserPlugin::~EqualiserPlugin()</span></a>
+<a name="124"><span class="lineNum">     124 </span><span class="lineCov">         13 : EqualiserPlugin::~EqualiserPlugin()</span></a>
 <a name="125"><span class="lineNum">     125 </span>            : {</a>
 <a name="126"><span class="lineNum">     126 </span><span class="lineCov">          1 :     notifyListenersOfDeletion();</span></a>
 <a name="127"><span class="lineNum">     127 </span>            : </a>
@@ -202,7 +202,7 @@
 <a name="140"><span class="lineNum">     140 </span><span class="lineCov">          1 :     hiFreq-&gt;detachFromCurrentValue();</span></a>
 <a name="141"><span class="lineNum">     141 </span><span class="lineCov">          1 :     hiGain-&gt;detachFromCurrentValue();</span></a>
 <a name="142"><span class="lineNum">     142 </span><span class="lineCov">          1 :     hiQ-&gt;detachFromCurrentValue();</span></a>
-<a name="143"><span class="lineNum">     143 </span><span class="lineCov">          2 : }</span></a>
+<a name="143"><span class="lineNum">     143 </span><span class="lineCov">         15 : }</span></a>
 <a name="144"><span class="lineNum">     144 </span>            : </a>
 <a name="145"><span class="lineNum">     145 </span><span class="lineNoCov">          0 : juce::String EqualiserPlugin::getTooltip()</span></a>
 <a name="146"><span class="lineNum">     146 </span>            : {</a>
@@ -240,7 +240,7 @@
 <a name="178"><span class="lineNum">     178 </span><span class="lineCov">          1 :     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);</span></a>
 <a name="179"><span class="lineNum">     179 </span><span class="lineCov">          1 :     copyPropertiesToNullTerminatedCachedValues (v, cvsBool);</span></a>
 <a name="180"><span class="lineNum">     180 </span>            : </a>
-<a name="181"><span class="lineNum">     181 </span><span class="lineCov">         14 :     for (auto p : getAutomatableParameters())</span></a>
+<a name="181"><span class="lineNum">     181 </span><span class="lineCov">         13 :     for (auto p : getAutomatableParameters())</span></a>
 <a name="182"><span class="lineNum">     182 </span><span class="lineCov">         12 :         p-&gt;updateFromAttachedValue();</span></a>
 <a name="183"><span class="lineNum">     183 </span><span class="lineCov">          1 : }</span></a>
 <a name="184"><span class="lineNum">     184 </span>            : </a>
@@ -268,7 +268,7 @@
 <a name="206"><span class="lineNum">     206 </span>            : </a>
 <a name="207"><span class="lineNum">     207 </span><span class="lineNoCov">          0 :         for (int i = EQ_CHANS; --i &gt;= 0;)</span></a>
 <a name="208"><span class="lineNum">     208 </span><span class="lineNoCov">          0 :             low[i].setCoefficients (c);</span></a>
-<a name="209"><span class="lineNum">     209 </span>            :     }</a>
+<a name="209"><span class="lineNum">     209 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="210"><span class="lineNum">     210 </span>            : </a>
 <a name="211"><span class="lineNum">     211 </span><span class="lineNoCov">          0 :     if (needToUpdateFilters[1])</span></a>
 <a name="212"><span class="lineNum">     212 </span>            :     {</a>
@@ -279,7 +279,7 @@
 <a name="217"><span class="lineNum">     217 </span>            : </a>
 <a name="218"><span class="lineNum">     218 </span><span class="lineNoCov">          0 :         for (int i = EQ_CHANS; --i &gt;= 0;)</span></a>
 <a name="219"><span class="lineNum">     219 </span><span class="lineNoCov">          0 :             mid1[i].setCoefficients (c);</span></a>
-<a name="220"><span class="lineNum">     220 </span>            :     }</a>
+<a name="220"><span class="lineNum">     220 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="221"><span class="lineNum">     221 </span>            : </a>
 <a name="222"><span class="lineNum">     222 </span><span class="lineNoCov">          0 :     if (needToUpdateFilters[2])</span></a>
 <a name="223"><span class="lineNum">     223 </span>            :     {</a>
@@ -290,7 +290,7 @@
 <a name="228"><span class="lineNum">     228 </span>            : </a>
 <a name="229"><span class="lineNum">     229 </span><span class="lineNoCov">          0 :         for (int i = EQ_CHANS; --i &gt;= 0;)</span></a>
 <a name="230"><span class="lineNum">     230 </span><span class="lineNoCov">          0 :             mid2[i].setCoefficients (c);</span></a>
-<a name="231"><span class="lineNum">     231 </span>            :     }</a>
+<a name="231"><span class="lineNum">     231 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="232"><span class="lineNum">     232 </span>            : </a>
 <a name="233"><span class="lineNum">     233 </span><span class="lineNoCov">          0 :     if (needToUpdateFilters[3])</span></a>
 <a name="234"><span class="lineNum">     234 </span>            :     {</a>
@@ -301,7 +301,7 @@
 <a name="239"><span class="lineNum">     239 </span>            : </a>
 <a name="240"><span class="lineNum">     240 </span><span class="lineNoCov">          0 :         for (int i = EQ_CHANS; --i &gt;= 0;)</span></a>
 <a name="241"><span class="lineNum">     241 </span><span class="lineNoCov">          0 :             high[i].setCoefficients (c);</span></a>
-<a name="242"><span class="lineNum">     242 </span>            :     }</a>
+<a name="242"><span class="lineNum">     242 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="243"><span class="lineNum">     243 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="244"><span class="lineNum">     244 </span>            : </a>
 <a name="245"><span class="lineNum">     245 </span><span class="lineNoCov">          0 : void EqualiserPlugin::initialise (const PluginInitialisationInfo&amp;)</span></a>

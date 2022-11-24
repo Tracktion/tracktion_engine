@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">9</td>
-            <td class="headerCovTableEntry">902</td>
-            <td class="headerCovTableEntryLo">1.0 %</td>
+            <td class="headerCovTableEntry">8</td>
+            <td class="headerCovTableEntry">916</td>
+            <td class="headerCovTableEntryLo">0.9 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -85,7 +85,7 @@
 <a name="23"><span class="lineNum">      23 </span>            : </a>
 <a name="24"><span class="lineNum">      24 </span><span class="lineCov">          1 : void CustomControlSurface::CustomControlSurfaceManager::saveAllSettings (Engine&amp; e)</span></a>
 <a name="25"><span class="lineNum">      25 </span>            : {</a>
-<a name="26"><span class="lineNum">      26 </span><span class="lineCov">          2 :     juce::XmlElement root (&quot;MIDICUSTOMCONTROLSURFACES&quot;);</span></a>
+<a name="26"><span class="lineNum">      26 </span><span class="lineCov">          1 :     juce::XmlElement root (&quot;MIDICUSTOMCONTROLSURFACES&quot;);</span></a>
 <a name="27"><span class="lineNum">      27 </span>            : </a>
 <a name="28"><span class="lineNum">      28 </span><span class="lineCov">          1 :     for (auto s : surfaces)</span></a>
 <a name="29"><span class="lineNum">      29 </span><span class="lineNoCov">          0 :         root.addChildElement (s-&gt;createXml());</span></a>
@@ -125,7 +125,7 @@
 <a name="63"><span class="lineNum">      63 </span>            : </a>
 <a name="64"><span class="lineNum">      64 </span><span class="lineNoCov">          0 : void CustomControlSurface::init()</span></a>
 <a name="65"><span class="lineNum">      65 </span>            : {</a>
-<a name="66"><span class="lineNum">      66 </span><span class="lineNoCov">          0 :     manager-&gt;registerSurface (this);</span></a>
+<a name="66"><span class="lineNum">      66 </span>            :     manager-&gt;registerSurface (this);</a>
 <a name="67"><span class="lineNum">      67 </span>            : </a>
 <a name="68"><span class="lineNum">      68 </span><span class="lineNoCov">          0 :     if (protocol == ExternalControllerManager::osc)</span></a>
 <a name="69"><span class="lineNum">      69 </span>            :     {</a>
@@ -153,7 +153,7 @@
 <a name="91"><span class="lineNum">      91 </span>            : </a>
 <a name="92"><span class="lineNum">      92 </span><span class="lineNoCov">          0 : CustomControlSurface::~CustomControlSurface()</span></a>
 <a name="93"><span class="lineNum">      93 </span>            : {</a>
-<a name="94"><span class="lineNum">      94 </span><span class="lineNoCov">          0 :     manager-&gt;unregisterSurface (this);</span></a>
+<a name="94"><span class="lineNum">      94 </span>            :     manager-&gt;unregisterSurface (this);</a>
 <a name="95"><span class="lineNum">      95 </span><span class="lineNoCov">          0 :     clearCommandGroups();</span></a>
 <a name="96"><span class="lineNum">      96 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="97"><span class="lineNum">      97 </span>            : </a>
@@ -205,7 +205,7 @@
 <a name="143"><span class="lineNum">     143 </span><span class="lineNoCov">          0 :     if (owner == nullptr)</span></a>
 <a name="144"><span class="lineNum">     144 </span><span class="lineNoCov">          0 :         return;</span></a>
 <a name="145"><span class="lineNum">     145 </span>            : </a>
-<a name="146"><span class="lineNum">     146 </span><span class="lineNoCov">          0 :     auto selectionColour = owner-&gt;getSelectionColour();</span></a>
+<a name="146"><span class="lineNum">     146 </span>            :     auto selectionColour = owner-&gt;getSelectionColour();</a>
 <a name="147"><span class="lineNum">     147 </span>            : </a>
 <a name="148"><span class="lineNum">     148 </span><span class="lineNoCov">          0 :     for (int i = mappings.size(); --i &gt;= 0;)</span></a>
 <a name="149"><span class="lineNum">     149 </span>            :     {</a>
@@ -237,7 +237,7 @@
 <a name="175"><span class="lineNum">     175 </span><span class="lineNoCov">          0 :             return ccs-&gt;getFunctionName (id);</span></a>
 <a name="176"><span class="lineNum">     176 </span>            : </a>
 <a name="177"><span class="lineNum">     177 </span><span class="lineNoCov">          0 :     return {};</span></a>
-<a name="178"><span class="lineNum">     178 </span>            : }</a>
+<a name="178"><span class="lineNum">     178 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="179"><span class="lineNum">     179 </span>            : </a>
 <a name="180"><span class="lineNum">     180 </span><span class="lineNoCov">          0 : juce::Array&lt;ControlSurface*&gt; CustomControlSurface::getCustomSurfaces (ExternalControllerManager&amp; ecm)</span></a>
 <a name="181"><span class="lineNum">     181 </span>            : {</a>
@@ -327,7 +327,7 @@
 <a name="265"><span class="lineNum">     265 </span><span class="lineNoCov">          0 :         loadFromXml (*xml);</span></a>
 <a name="266"><span class="lineNum">     266 </span><span class="lineNoCov">          0 :         loadFunctions();</span></a>
 <a name="267"><span class="lineNum">     267 </span>            :         ok = true;</a>
-<a name="268"><span class="lineNum">     268 </span>            :     }</a>
+<a name="268"><span class="lineNum">     268 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="269"><span class="lineNum">     269 </span>            : </a>
 <a name="270"><span class="lineNum">     270 </span><span class="lineNoCov">          0 :     manager-&gt;saveAllSettings (engine);</span></a>
 <a name="271"><span class="lineNum">     271 </span>            : </a>
@@ -407,7 +407,7 @@
 <a name="345"><span class="lineNum">     345 </span>            : </a>
 <a name="346"><span class="lineNum">     346 </span><span class="lineCov">          1 : void CustomControlSurface::saveAllSettings (Engine&amp; e)</span></a>
 <a name="347"><span class="lineNum">     347 </span>            : {</a>
-<a name="348"><span class="lineNum">     348 </span><span class="lineCov">          1 :     juce::SharedResourcePointer&lt;CustomControlSurfaceManager&gt; manager;</span></a>
+<a name="348"><span class="lineNum">     348 </span>            :     juce::SharedResourcePointer&lt;CustomControlSurfaceManager&gt; manager;</a>
 <a name="349"><span class="lineNum">     349 </span><span class="lineCov">          1 :     manager-&gt;saveAllSettings (e);</span></a>
 <a name="350"><span class="lineNum">     350 </span><span class="lineCov">          1 : }</span></a>
 <a name="351"><span class="lineNum">     351 </span>            : </a>
@@ -501,11 +501,11 @@
 <a name="439"><span class="lineNum">     439 </span>            : </a>
 <a name="440"><span class="lineNum">     440 </span><span class="lineNoCov">          0 :                             if (oscSender-&gt;send (mo))</span></a>
 <a name="441"><span class="lineNum">     441 </span><span class="lineNoCov">          0 :                                 packetsOut++;</span></a>
-<a name="442"><span class="lineNum">     442 </span>            :                         }</a>
+<a name="442"><span class="lineNum">     442 </span><span class="lineNoCov">          0 :                         }</span></a>
 <a name="443"><span class="lineNum">     443 </span><span class="lineNoCov">          0 :                         catch ([[maybe_unused]] juce::OSCException&amp; err)</span></a>
 <a name="444"><span class="lineNum">     444 </span>            :                         {</a>
 <a name="445"><span class="lineNum">     445 </span>            :                             DBG(&quot;OSC Error: &quot; + err.description);</a>
-<a name="446"><span class="lineNum">     446 </span>            :                         }</a>
+<a name="446"><span class="lineNum">     446 </span><span class="lineNoCov">          0 :                         }</span></a>
 <a name="447"><span class="lineNum">     447 </span>            :                     }</a>
 <a name="448"><span class="lineNum">     448 </span>            : </a>
 <a name="449"><span class="lineNum">     449 </span>            :                     oscLastValue.erase (itr);</a>
@@ -542,7 +542,7 @@
 <a name="480"><span class="lineNum">     480 </span>            :                 }</a>
 <a name="481"><span class="lineNum">     481 </span>            :             }</a>
 <a name="482"><span class="lineNum">     482 </span>            :         }</a>
-<a name="483"><span class="lineNum">     483 </span>            :     }</a>
+<a name="483"><span class="lineNum">     483 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="484"><span class="lineNum">     484 </span>            : }</a>
 <a name="485"><span class="lineNum">     485 </span>            : </a>
 <a name="486"><span class="lineNum">     486 </span><span class="lineNoCov">          0 : void CustomControlSurface::oscBundleReceived (const juce::OSCBundle&amp; b)</span></a>
@@ -705,7 +705,7 @@
 <a name="643"><span class="lineNum">     643 </span><span class="lineNoCov">          0 :             const MidiLearnState::ScopedChangeCaller changeCaller (engine.getMidiLearnState(), MidiLearnState::added);</span></a>
 <a name="644"><span class="lineNum">     644 </span><span class="lineNoCov">          0 :             updateOrCreateMappingForID (ed-&gt;getParameterChangeHandler().getPendingActionFunctionId (true),</span></a>
 <a name="645"><span class="lineNum">     645 </span><span class="lineNoCov">          0 :                                         lastControllerAddr, lastControllerChannel, lastControllerNote, lastControllerID);</span></a>
-<a name="646"><span class="lineNum">     646 </span>            :         }</a>
+<a name="646"><span class="lineNum">     646 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="647"><span class="lineNum">     647 </span>            :         else</a>
 <a name="648"><span class="lineNum">     648 </span>            :         {</a>
 <a name="649"><span class="lineNum">     649 </span><span class="lineNoCov">          0 :             for (auto mapping : mappings)</span></a>
@@ -822,7 +822,7 @@
 <a name="760"><span class="lineNum">     760 </span><span class="lineNoCov">          0 :         sendCommandToControllerForActionID (nameTrackId + idx, name);</span></a>
 <a name="761"><span class="lineNum">     761 </span><span class="lineNoCov">          0 :         sendCommandToControllerForActionID (numberTrackId + idx, juce::String (newStartChannelNumber + idx + 1));</span></a>
 <a name="762"><span class="lineNum">     762 </span><span class="lineNoCov">          0 :         idx++;</span></a>
-<a name="763"><span class="lineNum">     763 </span>            :     }</a>
+<a name="763"><span class="lineNum">     763 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="764"><span class="lineNum">     764 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="765"><span class="lineNum">     765 </span>            : </a>
 <a name="766"><span class="lineNum">     766 </span><span class="lineNoCov">          0 : void CustomControlSurface::channelLevelChanged (int, float, float) {}</span></a>
@@ -919,7 +919,7 @@
 <a name="857"><span class="lineNum">     857 </span>            : </a>
 <a name="858"><span class="lineNum">     858 </span><span class="lineNoCov">          0 : void CustomControlSurface::deleteController()</span></a>
 <a name="859"><span class="lineNum">     859 </span>            : {</a>
-<a name="860"><span class="lineNum">     860 </span><span class="lineNoCov">          0 :     manager-&gt;unregisterSurface (this);</span></a>
+<a name="860"><span class="lineNum">     860 </span>            :     manager-&gt;unregisterSurface (this);</a>
 <a name="861"><span class="lineNum">     861 </span><span class="lineNoCov">          0 :     manager-&gt;saveAllSettings (engine);</span></a>
 <a name="862"><span class="lineNum">     862 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="863"><span class="lineNum">     863 </span>            : </a>
@@ -954,11 +954,11 @@
 <a name="892"><span class="lineNum">     892 </span>            : </a>
 <a name="893"><span class="lineNum">     893 </span><span class="lineNoCov">          0 :                             if (oscSender-&gt;send (m))</span></a>
 <a name="894"><span class="lineNum">     894 </span><span class="lineNoCov">          0 :                                 packetsOut++;</span></a>
-<a name="895"><span class="lineNum">     895 </span>            :                         }</a>
+<a name="895"><span class="lineNum">     895 </span><span class="lineNoCov">          0 :                         }</span></a>
 <a name="896"><span class="lineNum">     896 </span><span class="lineNoCov">          0 :                         catch ([[maybe_unused]] juce::OSCException&amp; err)</span></a>
 <a name="897"><span class="lineNum">     897 </span>            :                         {</a>
 <a name="898"><span class="lineNum">     898 </span>            :                             DBG(&quot;OSC Error: &quot; + err.description);</a>
-<a name="899"><span class="lineNum">     899 </span>            :                         }</a>
+<a name="899"><span class="lineNum">     899 </span><span class="lineNoCov">          0 :                         }</span></a>
 <a name="900"><span class="lineNum">     900 </span>            :                     }</a>
 <a name="901"><span class="lineNum">     901 </span>            :                 }</a>
 <a name="902"><span class="lineNum">     902 </span>            :                 else</a>
@@ -978,7 +978,7 @@
 <a name="916"><span class="lineNum">     916 </span><span class="lineNoCov">          0 :                     sendMidiCommandToController (0, juce::MidiMessage::controllerEvent (midiChannel, midiController,</span></a>
 <a name="917"><span class="lineNum">     917 </span><span class="lineNoCov">          0 :                                                                                      juce::MidiMessage::floatValueToMidiByte (value)));</span></a>
 <a name="918"><span class="lineNum">     918 </span>            :             }</a>
-<a name="919"><span class="lineNum">     919 </span>            :         }</a>
+<a name="919"><span class="lineNum">     919 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="920"><span class="lineNum">     920 </span>            :     }</a>
 <a name="921"><span class="lineNum">     921 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="922"><span class="lineNum">     922 </span>            : </a>
@@ -1001,14 +1001,14 @@
 <a name="939"><span class="lineNum">     939 </span>            : </a>
 <a name="940"><span class="lineNum">     940 </span><span class="lineNoCov">          0 :                         if (oscSender-&gt;send (m))</span></a>
 <a name="941"><span class="lineNum">     941 </span><span class="lineNoCov">          0 :                             packetsOut++;</span></a>
-<a name="942"><span class="lineNum">     942 </span>            :                     }</a>
+<a name="942"><span class="lineNum">     942 </span><span class="lineNoCov">          0 :                     }</span></a>
 <a name="943"><span class="lineNum">     943 </span><span class="lineNoCov">          0 :                     catch ([[maybe_unused]] juce::OSCException&amp; err)</span></a>
 <a name="944"><span class="lineNum">     944 </span>            :                     {</a>
 <a name="945"><span class="lineNum">     945 </span>            :                         DBG(&quot;OSC Error: &quot; + err.description);</a>
-<a name="946"><span class="lineNum">     946 </span>            :                     }</a>
+<a name="946"><span class="lineNum">     946 </span><span class="lineNoCov">          0 :                     }</span></a>
 <a name="947"><span class="lineNum">     947 </span>            :                 }</a>
 <a name="948"><span class="lineNum">     948 </span>            :             }</a>
-<a name="949"><span class="lineNum">     949 </span>            :         }</a>
+<a name="949"><span class="lineNum">     949 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="950"><span class="lineNum">     950 </span>            :     }</a>
 <a name="951"><span class="lineNum">     951 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="952"><span class="lineNum">     952 </span>            : </a>
@@ -1085,7 +1085,7 @@
 <a name="1023"><span class="lineNum">    1023 </span><span class="lineNoCov">          0 :         auto opts = juce::PopupMenu::Options().withTargetComponent (underMouse)</span></a>
 <a name="1024"><span class="lineNum">    1024 </span><span class="lineNoCov">          0 :                                               .withTargetScreenArea ({ int (pt.x), int (pt.y), 1, 1 });</span></a>
 <a name="1025"><span class="lineNum">    1025 </span><span class="lineNoCov">          0 :         r = contextMenu.showMenu (opts);</span></a>
-<a name="1026"><span class="lineNum">    1026 </span>            :     }</a>
+<a name="1026"><span class="lineNum">    1026 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="1027"><span class="lineNum">    1027 </span>            :     else</a>
 <a name="1028"><span class="lineNum">    1028 </span>            :     {</a>
 <a name="1029"><span class="lineNum">    1029 </span><span class="lineNoCov">          0 :         r = contextMenu.show();</span></a>
@@ -1181,7 +1181,7 @@
 <a name="1119"><span class="lineNum">    1119 </span><span class="lineNoCov">          0 :     auto channel = juce::String::formatted (&quot; [%d]&quot;, channelid);</span></a>
 <a name="1120"><span class="lineNum">    1120 </span>            : </a>
 <a name="1121"><span class="lineNum">    1121 </span><span class="lineNoCov">          0 :     return text + channel;</span></a>
-<a name="1122"><span class="lineNum">    1122 </span>            : }</a>
+<a name="1122"><span class="lineNum">    1122 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1123"><span class="lineNum">    1123 </span>            : </a>
 <a name="1124"><span class="lineNum">    1124 </span><span class="lineNoCov">          0 : juce::String CustomControlSurface::controllerIDToString (int id, int channelid) const</span></a>
 <a name="1125"><span class="lineNum">    1125 </span>            : {</a>
@@ -1204,10 +1204,10 @@
 <a name="1142"><span class="lineNum">    1142 </span><span class="lineNoCov">          0 :             name = &quot; (&quot; + name + &quot;)&quot;;</span></a>
 <a name="1143"><span class="lineNum">    1143 </span>            : </a>
 <a name="1144"><span class="lineNum">    1144 </span><span class="lineNoCov">          0 :         return TRANS(&quot;Controller&quot;) + &quot; #&quot; + juce::String (id &amp; 0x7f) + name + channel;</span></a>
-<a name="1145"><span class="lineNum">    1145 </span>            :     }</a>
+<a name="1145"><span class="lineNum">    1145 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="1146"><span class="lineNum">    1146 </span>            : </a>
 <a name="1147"><span class="lineNum">    1147 </span><span class="lineNoCov">          0 :     return {};</span></a>
-<a name="1148"><span class="lineNum">    1148 </span>            : }</a>
+<a name="1148"><span class="lineNum">    1148 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1149"><span class="lineNum">    1149 </span>            : </a>
 <a name="1150"><span class="lineNum">    1150 </span><span class="lineNoCov">          0 : juce::String CustomControlSurface::getFunctionName (int id) const</span></a>
 <a name="1151"><span class="lineNum">    1151 </span>            : {</a>
@@ -1500,7 +1500,7 @@
 <a name="1438"><span class="lineNum">    1438 </span>            : </a>
 <a name="1439"><span class="lineNum">    1439 </span><span class="lineNoCov">          0 :     menu.addSubMenu(name, subMenu);</span></a>
 <a name="1440"><span class="lineNum">    1440 </span><span class="lineNoCov">          0 :     commandGroups[nextCmdGroupIndex++] = subMenuSet;</span></a>
-<a name="1441"><span class="lineNum">    1441 </span>            : }</a>
+<a name="1441"><span class="lineNum">    1441 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1442"><span class="lineNum">    1442 </span>            : </a>
 <a name="1443"><span class="lineNum">    1443 </span><span class="lineNoCov">          0 : void CustomControlSurface::addTrackFunction (juce::PopupMenu&amp; menu,</span></a>
 <a name="1444"><span class="lineNum">    1444 </span>            :                                              const juce::String&amp; group, const juce::String&amp; name,</a>
@@ -1533,7 +1533,7 @@
 <a name="1471"><span class="lineNum">    1471 </span>            : </a>
 <a name="1472"><span class="lineNum">    1472 </span><span class="lineNoCov">          0 :     menu.addSubMenu(name, subMenu);</span></a>
 <a name="1473"><span class="lineNum">    1473 </span><span class="lineNoCov">          0 :     commandGroups[nextCmdGroupIndex++] = subMenuSet;</span></a>
-<a name="1474"><span class="lineNum">    1474 </span>            : }</a>
+<a name="1474"><span class="lineNum">    1474 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1475"><span class="lineNum">    1475 </span>            : </a>
 <a name="1476"><span class="lineNum">    1476 </span><span class="lineNoCov">          0 : bool CustomControlSurface::shouldActOnValue (float val)</span></a>
 <a name="1477"><span class="lineNum">    1477 </span>            : {</a>

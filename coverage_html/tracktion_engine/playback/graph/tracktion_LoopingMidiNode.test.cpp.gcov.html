@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">157</td>
-            <td class="headerCovTableEntry">160</td>
+            <td class="headerCovTableEntry">158</td>
+            <td class="headerCovTableEntry">161</td>
             <td class="headerCovTableEntryHi">98.1 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">9</td>
@@ -87,7 +87,7 @@
 <a name="25"><span class="lineNum">      25 </span>            :     </a>
 <a name="26"><span class="lineNum">      26 </span><span class="lineCov">          1 :     void runTest() override</span></a>
 <a name="27"><span class="lineNum">      27 </span>            :     {</a>
-<a name="28"><span class="lineNum">      28 </span><span class="lineCov">         10 :         for (auto setup : tracktion::graph::test_utilities::getTestSetups (*this))</span></a>
+<a name="28"><span class="lineNum">      28 </span><span class="lineCov">          9 :         for (auto setup : tracktion::graph::test_utilities::getTestSetups (*this))</span></a>
 <a name="29"><span class="lineNum">      29 </span>            :         {</a>
 <a name="30"><span class="lineNum">      30 </span><span class="lineCov">         16 :             logMessage (juce::String (&quot;Test setup: sample rate SR, block size BS, random blocks RND&quot;)</span></a>
 <a name="31"><span class="lineNum">      31 </span><span class="lineCov">         16 :                         .replace (&quot;SR&quot;, juce::String (setup.sampleRate))</span></a>
@@ -142,7 +142,7 @@
 <a name="80"><span class="lineNum">      80 </span>            : </a>
 <a name="81"><span class="lineNum">      81 </span>            :         // Quantised sequence</a>
 <a name="82"><span class="lineNum">      82 </span><span class="lineCov">          8 :         beginTest (&quot;Quantised sequence&quot;);</span></a>
-<a name="83"><span class="lineNum">      83 </span><span class="lineCov">         16 :         QuantisationType quantisation;</span></a>
+<a name="83"><span class="lineNum">      83 </span><span class="lineCov">          8 :         QuantisationType quantisation;</span></a>
 <a name="84"><span class="lineNum">      84 </span><span class="lineCov">         16 :         quantisation.setType (&quot;1/16&quot;);</span></a>
 <a name="85"><span class="lineNum">      85 </span><span class="lineCov">          8 :         mc-&gt;setQuantisation (quantisation);</span></a>
 <a name="86"><span class="lineNum">      86 </span><span class="lineCov">          8 :         testMidiClip (*mc, ts);</span></a>
@@ -152,9 +152,9 @@
 <a name="90"><span class="lineNum">      90 </span><span class="lineCov">          8 :         auto&amp; gtm = engine.getGrooveTemplateManager();</span></a>
 <a name="91"><span class="lineNum">      91 </span><span class="lineCov">          8 :         expect (gtm.getNumTemplates() &gt; 0);</span></a>
 <a name="92"><span class="lineNum">      92 </span><span class="lineCov">         16 :         mc-&gt;setGrooveTemplate (gtm.getTemplateName (0));</span></a>
-<a name="93"><span class="lineNum">      93 </span><span class="lineCov">          8 :         mc-&gt;setGrooveStrength (1.0f);</span></a>
+<a name="93"><span class="lineNum">      93 </span>            :         mc-&gt;setGrooveStrength (1.0f);</a>
 <a name="94"><span class="lineNum">      94 </span><span class="lineCov">          8 :         testMidiClip (*mc, ts);</span></a>
-<a name="95"><span class="lineNum">      95 </span><span class="lineCov">          8 :     }</span></a>
+<a name="95"><span class="lineNum">      95 </span><span class="lineCov">         16 :     }</span></a>
 <a name="96"><span class="lineNum">      96 </span>            : </a>
 <a name="97"><span class="lineNum">      97 </span><span class="lineCov">         32 :     void runStuckNotesTests (test_utilities::TestSetup ts, bool usesProxy, int numLoopIterations)</span></a>
 <a name="98"><span class="lineNum">      98 </span>            :     {</a>
@@ -178,7 +178,7 @@
 <a name="116"><span class="lineNum">     116 </span><span class="lineCov">         32 :         if (numLoopIterations &gt; 0)</span></a>
 <a name="117"><span class="lineNum">     117 </span><span class="lineCov">         32 :             mc-&gt;setNumberOfLoops (numLoopIterations);</span></a>
 <a name="118"><span class="lineNum">     118 </span>            : </a>
-<a name="119"><span class="lineNum">     119 </span><span class="lineCov">         32 :         std::vector&lt;juce::MidiMessage&gt; noteEvents;</span></a>
+<a name="119"><span class="lineNum">     119 </span>            :         std::vector&lt;juce::MidiMessage&gt; noteEvents;</a>
 <a name="120"><span class="lineNum">     120 </span><span class="lineCov">         32 :         const auto renderedSequence = renderMidiClip (*mc, ts, { 0_tp, 100_tp });</span></a>
 <a name="121"><span class="lineNum">     121 </span>            : </a>
 <a name="122"><span class="lineNum">     122 </span><span class="lineCov">        896 :         for (auto meh : renderedSequence)</span></a>
@@ -200,7 +200,7 @@
 <a name="138"><span class="lineNum">     138 </span>            : </a>
 <a name="139"><span class="lineNum">     139 </span>            :         // Check the last note ends before the end of the clip</a>
 <a name="140"><span class="lineNum">     140 </span><span class="lineCov">         32 :         expectLessOrEqual (noteEvents.back().getTimeStamp(), mc-&gt;getPosition().getEnd().inSeconds());</span></a>
-<a name="141"><span class="lineNum">     141 </span><span class="lineCov">         32 :     }</span></a>
+<a name="141"><span class="lineNum">     141 </span><span class="lineCov">         64 :     }</span></a>
 <a name="142"><span class="lineNum">     142 </span>            : </a>
 <a name="143"><span class="lineNum">     143 </span><span class="lineCov">          2 :     void runProgramChangeTests (bool sendBankSelect)</span></a>
 <a name="144"><span class="lineNum">     144 </span>            :     {</a>
@@ -287,7 +287,7 @@
 <a name="225"><span class="lineNum">     225 </span><span class="lineCov">          6 :                 expectEquals (importedList.getNotes().size(), sequence.getNotes().size());</span></a>
 <a name="226"><span class="lineNum">     226 </span><span class="lineCov">          9 :                 expectEquals (importedList.getControllerEvents().size(), sequence.getControllerEvents().size() + (sendBankSelect ? 2 : 0));</span></a>
 <a name="227"><span class="lineNum">     227 </span><span class="lineCov">          6 :                 expectEquals (importedList.getSysexEvents().size(), sequence.getSysexEvents().size());</span></a>
-<a name="228"><span class="lineNum">     228 </span>            :             }</a>
+<a name="228"><span class="lineNum">     228 </span><span class="lineCov">          6 :             }</span></a>
 <a name="229"><span class="lineNum">     229 </span>            :         }</a>
 <a name="230"><span class="lineNum">     230 </span><span class="lineCov">          2 :     }</span></a>
 <a name="231"><span class="lineNum">     231 </span>            : </a>
@@ -303,7 +303,7 @@
 <a name="241"><span class="lineNum">     241 </span><span class="lineCov">          8 :         auto&amp; engine = *tracktion::engine::Engine::getEngines()[0];</span></a>
 <a name="242"><span class="lineNum">     242 </span><span class="lineCov">          8 :         auto edit = Edit::createSingleTrackEdit (engine);</span></a>
 <a name="243"><span class="lineNum">     243 </span><span class="lineCov">          8 :         auto&amp; tempoSeq = edit-&gt;tempoSequence;</span></a>
-<a name="244"><span class="lineNum">     244 </span><span class="lineCov">          8 :         auto mc = getAudioTracks (*edit)[0]-&gt;insertMIDIClip ({ tempoSeq.toTime (tempo::BarsAndBeats { 1 }),</span></a>
+<a name="244"><span class="lineNum">     244 </span><span class="lineCov">         16 :         auto mc = getAudioTracks (*edit)[0]-&gt;insertMIDIClip ({ tempoSeq.toTime (tempo::BarsAndBeats { 1 }),</span></a>
 <a name="245"><span class="lineNum">     245 </span>            :                                                                tempoSeq.toTime (tempo::BarsAndBeats { 2 }) },</a>
 <a name="246"><span class="lineNum">     246 </span><span class="lineCov">          8 :                                                              nullptr);</span></a>
 <a name="247"><span class="lineNum">     247 </span><span class="lineCov">          8 :         mc-&gt;setOffset (toDuration (tempoSeq.toTime (1.5_bp)));</span></a>
@@ -323,11 +323,11 @@
 <a name="261"><span class="lineNum">     261 </span><span class="lineCov">         32 :         auto renderOpts = RenderOptions::forClipRender ({ &amp;mc }, true);</span></a>
 <a name="262"><span class="lineNum">     262 </span><span class="lineCov">         32 :         renderOpts-&gt;setFormat (RenderOptions::midi);</span></a>
 <a name="263"><span class="lineNum">     263 </span><span class="lineCov">         32 :         renderOpts-&gt;setIncludePlugins (false);</span></a>
-<a name="264"><span class="lineNum">     264 </span><span class="lineCov">         64 :         auto params = renderOpts-&gt;getRenderParameters (mc);</span></a>
+<a name="264"><span class="lineNum">     264 </span><span class="lineCov">         32 :         auto params = renderOpts-&gt;getRenderParameters (mc);</span></a>
 <a name="265"><span class="lineNum">     265 </span><span class="lineCov">         32 :         params.sampleRateForAudio = ts.sampleRate;</span></a>
 <a name="266"><span class="lineNum">     266 </span><span class="lineCov">         32 :         params.blockSizeForAudio = ts.blockSize;</span></a>
 <a name="267"><span class="lineNum">     267 </span>            : </a>
-<a name="268"><span class="lineNum">     268 </span><span class="lineCov">        128 :         juce::TemporaryFile t1, t2;</span></a>
+<a name="268"><span class="lineNum">     268 </span><span class="lineCov">         96 :         juce::TemporaryFile t1, t2;</span></a>
 <a name="269"><span class="lineNum">     269 </span>            : </a>
 <a name="270"><span class="lineNum">     270 </span>            :         mc.setUsesProxy (true);</a>
 <a name="271"><span class="lineNum">     271 </span><span class="lineCov">         32 :         expect (mc.canUseProxy());</span></a>
@@ -342,7 +342,7 @@
 <a name="280"><span class="lineNum">     280 </span><span class="lineCov">         32 :         test_utilities::expectMidiMessageSequence (*this,</span></a>
 <a name="281"><span class="lineNum">     281 </span><span class="lineCov">         64 :                                                    test_utilities::stripMetaEvents (getSeqFromFile (seqWithoutProxyFile)),</span></a>
 <a name="282"><span class="lineNum">     282 </span><span class="lineCov">         64 :                                                    test_utilities::stripMetaEvents (getSeqFromFile (seqWithProxyFile)));</span></a>
-<a name="283"><span class="lineNum">     283 </span><span class="lineCov">         32 :     }</span></a>
+<a name="283"><span class="lineNum">     283 </span><span class="lineCov">         64 :     }</span></a>
 <a name="284"><span class="lineNum">     284 </span>            : </a>
 <a name="285"><span class="lineNum">     285 </span><span class="lineCov">         40 :     juce::MidiMessageSequence renderMidiClip (MidiClip&amp; mc, test_utilities::TestSetup ts,</span></a>
 <a name="286"><span class="lineNum">     286 </span>            :                                               TimeRange rangeToRender)</a>
@@ -350,28 +350,28 @@
 <a name="288"><span class="lineNum">     288 </span><span class="lineCov">         40 :         auto renderOpts = RenderOptions::forClipRender ({ &amp;mc }, true);</span></a>
 <a name="289"><span class="lineNum">     289 </span><span class="lineCov">         40 :         renderOpts-&gt;setFormat (RenderOptions::midi);</span></a>
 <a name="290"><span class="lineNum">     290 </span><span class="lineCov">         40 :         renderOpts-&gt;setIncludePlugins (false);</span></a>
-<a name="291"><span class="lineNum">     291 </span><span class="lineCov">         80 :         auto params = renderOpts-&gt;getRenderParameters (mc);</span></a>
+<a name="291"><span class="lineNum">     291 </span><span class="lineCov">         40 :         auto params = renderOpts-&gt;getRenderParameters (mc);</span></a>
 <a name="292"><span class="lineNum">     292 </span><span class="lineCov">         40 :         params.sampleRateForAudio = ts.sampleRate;</span></a>
 <a name="293"><span class="lineNum">     293 </span><span class="lineCov">         40 :         params.blockSizeForAudio = ts.blockSize;</span></a>
 <a name="294"><span class="lineNum">     294 </span><span class="lineCov">         40 :         params.time = rangeToRender;</span></a>
 <a name="295"><span class="lineNum">     295 </span>            : </a>
-<a name="296"><span class="lineNum">     296 </span><span class="lineCov">         80 :         juce::TemporaryFile t1;</span></a>
+<a name="296"><span class="lineNum">     296 </span><span class="lineCov">         40 :         juce::TemporaryFile t1;</span></a>
 <a name="297"><span class="lineNum">     297 </span><span class="lineCov">         40 :         params.destFile = t1.getFile();</span></a>
 <a name="298"><span class="lineNum">     298 </span><span class="lineCov">         40 :         const auto seqFile = Renderer::renderToFile (&quot;proxy&quot;, params);</span></a>
 <a name="299"><span class="lineNum">     299 </span>            : </a>
 <a name="300"><span class="lineNum">     300 </span><span class="lineCov">        120 :         return getSeqFromFile (seqFile);</span></a>
-<a name="301"><span class="lineNum">     301 </span>            :     }</a>
+<a name="301"><span class="lineNum">     301 </span><span class="lineCov">         40 :     }</span></a>
 <a name="302"><span class="lineNum">     302 </span>            : </a>
 <a name="303"><span class="lineNum">     303 </span><span class="lineCov">        104 :     static juce::MidiMessageSequence getSeqFromFile (juce::File f)</span></a>
 <a name="304"><span class="lineNum">     304 </span>            :     {</a>
 <a name="305"><span class="lineNum">     305 </span><span class="lineCov">        104 :         juce::MidiFile midiFile;</span></a>
 <a name="306"><span class="lineNum">     306 </span>            : </a>
 <a name="307"><span class="lineNum">     307 </span>            :         {</a>
-<a name="308"><span class="lineNum">     308 </span><span class="lineCov">        208 :             juce::FileInputStream in (f);</span></a>
+<a name="308"><span class="lineNum">     308 </span><span class="lineCov">        104 :             juce::FileInputStream in (f);</span></a>
 <a name="309"><span class="lineNum">     309 </span>            : </a>
 <a name="310"><span class="lineNum">     310 </span><span class="lineCov">        104 :             if (! in.openedOk() || ! midiFile.readFrom (in))</span></a>
 <a name="311"><span class="lineNum">     311 </span><span class="lineNoCov">          0 :                 return {};</span></a>
-<a name="312"><span class="lineNum">     312 </span>            :         }</a>
+<a name="312"><span class="lineNum">     312 </span><span class="lineCov">        104 :         }</span></a>
 <a name="313"><span class="lineNum">     313 </span>            : </a>
 <a name="314"><span class="lineNum">     314 </span><span class="lineCov">        104 :         midiFile.convertTimestampTicksToSeconds();</span></a>
 <a name="315"><span class="lineNum">     315 </span>            : </a>

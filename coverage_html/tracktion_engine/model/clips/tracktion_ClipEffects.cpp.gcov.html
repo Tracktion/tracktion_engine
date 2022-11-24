@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">785</td>
+            <td class="headerCovTableEntry">811</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -115,13 +115,13 @@
 <a name="53"><span class="lineNum">      53 </span><span class="lineNoCov">          0 :                     const auto p = ac.getPoint (i);</span></a>
 <a name="54"><span class="lineNum">      54 </span><span class="lineNoCov">          0 :                     auto pointH = juce::String (p.time.inSeconds()) + juce::String (p.value) + juce::String (p.curve);</span></a>
 <a name="55"><span class="lineNum">      55 </span><span class="lineNoCov">          0 :                     h = (juce::String (h) + pointH).hashCode64();</span></a>
-<a name="56"><span class="lineNum">      56 </span>            :                 }</a>
+<a name="56"><span class="lineNum">      56 </span><span class="lineNoCov">          0 :                 }</span></a>
 <a name="57"><span class="lineNum">      57 </span>            :             }</a>
 <a name="58"><span class="lineNum">      58 </span>            :         }</a>
 <a name="59"><span class="lineNum">      59 </span>            :     }</a>
 <a name="60"><span class="lineNum">      60 </span>            : </a>
 <a name="61"><span class="lineNum">      61 </span><span class="lineNoCov">          0 :     return h;</span></a>
-<a name="62"><span class="lineNum">      62 </span>            : }</a>
+<a name="62"><span class="lineNum">      62 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="63"><span class="lineNum">      63 </span>            : </a>
 <a name="64"><span class="lineNum">      64 </span>            : //==============================================================================</a>
 <a name="65"><span class="lineNum">      65 </span>            : struct ClipEffects::ClipPropertyWatcher  : private juce::ValueTree::Listener,</a>
@@ -212,7 +212,7 @@
 <a name="150"><span class="lineNum">     150 </span><span class="lineNoCov">          0 :         if (s == &quot;filter&quot;)              return ClipEffect::EffectType::filter;</span></a>
 <a name="151"><span class="lineNum">     151 </span>            : </a>
 <a name="152"><span class="lineNum">     152 </span>            :         return ClipEffect::EffectType::none;</a>
-<a name="153"><span class="lineNum">     153 </span>            :     }</a>
+<a name="153"><span class="lineNum">     153 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="154"><span class="lineNum">     154 </span>            : </a>
 <a name="155"><span class="lineNum">     155 </span><span class="lineNoCov">          0 :     static var toVar (const tracktion::engine::ClipEffect::EffectType&amp; t)</span></a>
 <a name="156"><span class="lineNum">     156 </span>            :     {</a>
@@ -314,7 +314,7 @@
 <a name="252"><span class="lineNum">     252 </span>            : </a>
 <a name="253"><span class="lineNum">     253 </span><span class="lineNoCov">          0 :             if (parent.isValid())</span></a>
 <a name="254"><span class="lineNum">     254 </span><span class="lineNoCov">          0 :                 parent.addChild (v, index, &amp;undoManager);</span></a>
-<a name="255"><span class="lineNum">     255 </span>            :         }</a>
+<a name="255"><span class="lineNum">     255 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="256"><span class="lineNum">     256 </span><span class="lineNoCov">          0 :         else if (parent.getNumChildren() == 0)</span></a>
 <a name="257"><span class="lineNum">     257 </span>            :         {</a>
 <a name="258"><span class="lineNum">     258 </span><span class="lineNoCov">          0 :             auto state = parent.getParent();</span></a>
@@ -324,7 +324,7 @@
 <a name="262"><span class="lineNum">     262 </span><span class="lineNoCov">          0 :                 state.removeChild (parent, &amp;undoManager);</span></a>
 <a name="263"><span class="lineNum">     263 </span><span class="lineNoCov">          0 :                 state.removeProperty (IDs::effectsVisible, &amp;undoManager);</span></a>
 <a name="264"><span class="lineNum">     264 </span>            :             }</a>
-<a name="265"><span class="lineNum">     265 </span>            :         }</a>
+<a name="265"><span class="lineNum">     265 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="266"><span class="lineNum">     266 </span>            :     }</a>
 <a name="267"><span class="lineNum">     267 </span>            :     else</a>
 <a name="268"><span class="lineNum">     268 </span>            :     {</a>
@@ -391,7 +391,7 @@
 <a name="329"><span class="lineNum">     329 </span>            : </a>
 <a name="330"><span class="lineNum">     330 </span>            :     jassert (hash != 0);</a>
 <a name="331"><span class="lineNum">     331 </span><span class="lineNoCov">          0 :     return hash;</span></a>
-<a name="332"><span class="lineNum">     332 </span>            : }</a>
+<a name="332"><span class="lineNum">     332 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="333"><span class="lineNum">     333 </span>            : </a>
 <a name="334"><span class="lineNum">     334 </span><span class="lineNoCov">          0 : AudioFile ClipEffect::getSourceFile() const</span></a>
 <a name="335"><span class="lineNum">     335 </span>            : {</a>
@@ -454,13 +454,13 @@
 <a name="392"><span class="lineNum">     392 </span><span class="lineNoCov">          0 :         CRASH_TRACER</span></a>
 <a name="393"><span class="lineNum">     393 </span><span class="lineNoCov">          0 :         callBlocking ([this] { createAndPrepareRenderContext(); });</span></a>
 <a name="394"><span class="lineNum">     394 </span><span class="lineNoCov">          0 :         return true;</span></a>
-<a name="395"><span class="lineNum">     395 </span>            :     }</a>
+<a name="395"><span class="lineNum">     395 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="396"><span class="lineNum">     396 </span>            : </a>
 <a name="397"><span class="lineNum">     397 </span><span class="lineNoCov">          0 :     bool renderNextBlock() override</span></a>
 <a name="398"><span class="lineNum">     398 </span>            :     {</a>
 <a name="399"><span class="lineNum">     399 </span><span class="lineNoCov">          0 :         CRASH_TRACER</span></a>
 <a name="400"><span class="lineNum">     400 </span><span class="lineNoCov">          0 :         return renderContext-&gt;render (*node, progress) == juce::ThreadPoolJob::jobHasFinished;</span></a>
-<a name="401"><span class="lineNum">     401 </span>            :     }</a>
+<a name="401"><span class="lineNum">     401 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="402"><span class="lineNum">     402 </span>            : </a>
 <a name="403"><span class="lineNum">     403 </span><span class="lineNoCov">          0 :     bool completeRender() override</span></a>
 <a name="404"><span class="lineNum">     404 </span>            :     {</a>
@@ -580,7 +580,7 @@
 <a name="518"><span class="lineNum">     518 </span>            :             }</a>
 <a name="519"><span class="lineNum">     519 </span>            : </a>
 <a name="520"><span class="lineNum">     520 </span>            :             return juce::ThreadPoolJob::jobNeedsRunningAgain;</a>
-<a name="521"><span class="lineNum">     521 </span>            :         }</a>
+<a name="521"><span class="lineNum">     521 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="522"><span class="lineNum">     522 </span>            : </a>
 <a name="523"><span class="lineNum">     523 </span>            :         const SampleCount blockSize;</a>
 <a name="524"><span class="lineNum">     524 </span>            :         int numPreBlocks = 0;</a>
@@ -658,7 +658,7 @@
 <a name="596"><span class="lineNum">     596 </span><span class="lineNoCov">          0 :                                            sourceInfo.metadata, 0));</span></a>
 <a name="597"><span class="lineNum">     597 </span>            : </a>
 <a name="598"><span class="lineNum">     598 </span><span class="lineNoCov">          0 :         return writer-&gt;isOpen();</span></a>
-<a name="599"><span class="lineNum">     599 </span>            :     }</a>
+<a name="599"><span class="lineNum">     599 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="600"><span class="lineNum">     600 </span>            : </a>
 <a name="601"><span class="lineNum">     601 </span><span class="lineNoCov">          0 :     bool completeRender() override</span></a>
 <a name="602"><span class="lineNum">     602 </span>            :     {</a>
@@ -667,7 +667,7 @@
 <a name="605"><span class="lineNum">     605 </span>            :         writer = nullptr;</a>
 <a name="606"><span class="lineNum">     606 </span>            : </a>
 <a name="607"><span class="lineNum">     607 </span><span class="lineNoCov">          0 :         return true;</span></a>
-<a name="608"><span class="lineNum">     608 </span>            :     }</a>
+<a name="608"><span class="lineNum">     608 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="609"><span class="lineNum">     609 </span>            : </a>
 <a name="610"><span class="lineNum">     610 </span>            : protected:</a>
 <a name="611"><span class="lineNum">     611 </span>            :     std::unique_ptr&lt;juce::AudioFormatReader&gt; reader;</a>
@@ -720,7 +720,7 @@
 <a name="658"><span class="lineNum">     658 </span><span class="lineNoCov">          0 :         source.getFile().copyFileTo (destination.getFile());</span></a>
 <a name="659"><span class="lineNum">     659 </span>            :         jassertfalse;</a>
 <a name="660"><span class="lineNum">     660 </span>            :         return true;</a>
-<a name="661"><span class="lineNum">     661 </span>            :     }</a>
+<a name="661"><span class="lineNum">     661 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="662"><span class="lineNum">     662 </span>            : </a>
 <a name="663"><span class="lineNum">     663 </span>            : private:</a>
 <a name="664"><span class="lineNum">     664 </span>            :     std::unique_ptr&lt;AudioClipBase::ProxyRenderingInfo&gt; proxyInfo;</a>
@@ -758,7 +758,7 @@
 <a name="696"><span class="lineNum">     696 </span>            : </a>
 <a name="697"><span class="lineNum">     697 </span><span class="lineNoCov">          0 :     return new AudioNodeRenderJob (edit.engine, new PluginAudioNode (plugin, n, false),</span></a>
 <a name="698"><span class="lineNum">     698 </span><span class="lineNoCov">          0 :                                    getDestinationFile(), sourceFile, 128);</span></a>
-<a name="699"><span class="lineNum">     699 </span>            : }</a>
+<a name="699"><span class="lineNum">     699 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="700"><span class="lineNum">     700 </span>            : </a>
 <a name="701"><span class="lineNum">     701 </span><span class="lineNoCov">          0 : bool VolumeEffect::hasProperties()</span></a>
 <a name="702"><span class="lineNum">     702 </span>            : {</a>
@@ -800,7 +800,7 @@
 <a name="738"><span class="lineNum">     738 </span><span class="lineNoCov">          0 :     if (juce::Component::isMouseButtonDownAnywhere())</span></a>
 <a name="739"><span class="lineNum">     739 </span>            :         return;</a>
 <a name="740"><span class="lineNum">     740 </span>            : </a>
-<a name="741"><span class="lineNum">     741 </span><span class="lineNoCov">          0 :     inhibitor = nullptr;</span></a>
+<a name="741"><span class="lineNum">     741 </span>            :     inhibitor = nullptr;</a>
 <a name="742"><span class="lineNum">     742 </span><span class="lineNoCov">          0 :     stopTimer();</span></a>
 <a name="743"><span class="lineNum">     743 </span>            : }</a>
 <a name="744"><span class="lineNum">     744 </span>            : </a>
@@ -910,7 +910,7 @@
 <a name="848"><span class="lineNum">     848 </span><span class="lineNoCov">          0 :                                        legacy::EditTimeRange (effectRange.getEnd().inSeconds(), sourceLength) });</span></a>
 <a name="849"><span class="lineNum">     849 </span>            : </a>
 <a name="850"><span class="lineNum">     850 </span><span class="lineNoCov">          0 :     return new AudioNodeRenderJob (edit.engine, n, destFile, sourceFile, blockSize);</span></a>
-<a name="851"><span class="lineNum">     851 </span>            : }</a>
+<a name="851"><span class="lineNum">     851 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="852"><span class="lineNum">     852 </span>            : </a>
 <a name="853"><span class="lineNum">     853 </span><span class="lineNoCov">          0 : HashCode FadeInOutEffect::getIndividualHash() const</span></a>
 <a name="854"><span class="lineNum">     854 </span>            : {</a>
@@ -973,7 +973,7 @@
 <a name="911"><span class="lineNum">     911 </span><span class="lineNoCov">          0 :     auto speedRatio = clipEffects.getSpeedRatioEstimate();</span></a>
 <a name="912"><span class="lineNum">     912 </span><span class="lineNoCov">          0 :     auto effectRange = clipEffects.getEffectsRange();</span></a>
 <a name="913"><span class="lineNum">     913 </span>            : </a>
-<a name="914"><span class="lineNum">     914 </span><span class="lineNoCov">          0 :     auto fade = crossfade.get();</span></a>
+<a name="914"><span class="lineNum">     914 </span>            :     auto fade = crossfade.get();</a>
 <a name="915"><span class="lineNum">     915 </span><span class="lineNoCov">          0 :     auto halfCrossfade = TimeDuration::fromSeconds (fade / 2.0);</span></a>
 <a name="916"><span class="lineNum">     916 </span><span class="lineNoCov">          0 :     juce::Array&lt;TimeRange&gt; nonMuteTimes;</span></a>
 <a name="917"><span class="lineNum">     917 </span>            : </a>
@@ -1011,7 +1011,7 @@
 <a name="949"><span class="lineNum">     949 </span>            :         }</a>
 <a name="950"><span class="lineNum">     950 </span>            : </a>
 <a name="951"><span class="lineNum">     951 </span>            :         // Strip adjacent times</a>
-<a name="952"><span class="lineNum">     952 </span><span class="lineNoCov">          0 :         auto lastTime = nonMuteTimes.getLast();</span></a>
+<a name="952"><span class="lineNum">     952 </span>            :         auto lastTime = nonMuteTimes.getLast();</a>
 <a name="953"><span class="lineNum">     953 </span>            : </a>
 <a name="954"><span class="lineNum">     954 </span><span class="lineNoCov">          0 :         for (int i = nonMuteTimes.size() - 1; --i &gt;= 0;)</span></a>
 <a name="955"><span class="lineNum">     955 </span>            :         {</a>
@@ -1038,7 +1038,7 @@
 <a name="976"><span class="lineNum">     976 </span>            :                                               nonMuteTimes, TimeDuration::fromSeconds (fade));</a>
 <a name="977"><span class="lineNum">     977 </span>            : </a>
 <a name="978"><span class="lineNum">     978 </span><span class="lineNoCov">          0 :     return new AudioNodeRenderJob (edit.engine, compNode, destFile, sourceFile);</span></a>
-<a name="979"><span class="lineNum">     979 </span>            : }</a>
+<a name="979"><span class="lineNum">     979 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="980"><span class="lineNum">     980 </span>            : </a>
 <a name="981"><span class="lineNum">     981 </span><span class="lineNoCov">          0 : bool StepVolumeEffect::hasProperties()</span></a>
 <a name="982"><span class="lineNum">     982 </span>            : {</a>
@@ -1181,7 +1181,7 @@
 <a name="1119"><span class="lineNum">    1119 </span>            :     // may not be initialized yet</a>
 <a name="1120"><span class="lineNum">    1120 </span><span class="lineNoCov">          0 :     return new AudioNodeRenderJob (edit.engine, new PluginAudioNode (plugin, n, false),</span></a>
 <a name="1121"><span class="lineNum">    1121 </span><span class="lineNoCov">          0 :                                    getDestinationFile(), sourceFile, 512, 1.0);</span></a>
-<a name="1122"><span class="lineNum">    1122 </span>            : }</a>
+<a name="1122"><span class="lineNum">    1122 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1123"><span class="lineNum">    1123 </span>            : </a>
 <a name="1124"><span class="lineNum">    1124 </span><span class="lineNoCov">          0 : bool PitchShiftEffect::hasProperties()</span></a>
 <a name="1125"><span class="lineNum">    1125 </span>            : {</a>
@@ -1224,7 +1224,7 @@
 <a name="1162"><span class="lineNum">    1162 </span><span class="lineNoCov">          0 :     if (juce::Component::isMouseButtonDownAnywhere())</span></a>
 <a name="1163"><span class="lineNum">    1163 </span>            :         return;</a>
 <a name="1164"><span class="lineNum">    1164 </span>            : </a>
-<a name="1165"><span class="lineNum">    1165 </span><span class="lineNoCov">          0 :     inhibitor = nullptr;</span></a>
+<a name="1165"><span class="lineNum">    1165 </span>            :     inhibitor = nullptr;</a>
 <a name="1166"><span class="lineNum">    1166 </span><span class="lineNoCov">          0 :     stopTimer();</span></a>
 <a name="1167"><span class="lineNum">    1167 </span>            : }</a>
 <a name="1168"><span class="lineNum">    1168 </span>            : </a>
@@ -1243,7 +1243,7 @@
 <a name="1181"><span class="lineNum">    1181 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
 <a name="1182"><span class="lineNum">    1182 </span><span class="lineNoCov">          0 :     return new WarpTimeEffectRenderJob (edit.engine, getDestinationFile(), sourceFile,</span></a>
 <a name="1183"><span class="lineNum">    1183 </span><span class="lineNoCov">          0 :                                         sourceLength, *warpTimeManager, getClip());</span></a>
-<a name="1184"><span class="lineNum">    1184 </span>            : }</a>
+<a name="1184"><span class="lineNum">    1184 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1185"><span class="lineNum">    1185 </span>            : </a>
 <a name="1186"><span class="lineNum">    1186 </span><span class="lineNoCov">          0 : HashCode WarpTimeEffect::getIndividualHash() const</span></a>
 <a name="1187"><span class="lineNum">    1187 </span>            : {</a>
@@ -1402,7 +1402,7 @@
 <a name="1340"><span class="lineNum">    1340 </span><span class="lineNoCov">          0 :         pluginUnloadInhibitor-&gt;increaseForJob (30 * 1000, job);</span></a>
 <a name="1341"><span class="lineNum">    1341 </span>            : </a>
 <a name="1342"><span class="lineNum">    1342 </span><span class="lineNoCov">          0 :     return job;</span></a>
-<a name="1343"><span class="lineNum">    1343 </span>            : }</a>
+<a name="1343"><span class="lineNum">    1343 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1344"><span class="lineNum">    1344 </span>            : </a>
 <a name="1345"><span class="lineNum">    1345 </span><span class="lineNoCov">          0 : void PluginEffect::flushStateToValueTree()</span></a>
 <a name="1346"><span class="lineNum">    1346 </span>            : {</a>
@@ -1443,7 +1443,7 @@
 <a name="1381"><span class="lineNum">    1381 </span><span class="lineNoCov">          0 : void PluginEffect::valueTreePropertyChanged (juce::ValueTree&amp; v, const juce::Identifier&amp; i)</span></a>
 <a name="1382"><span class="lineNum">    1382 </span>            : {</a>
 <a name="1383"><span class="lineNum">    1383 </span>            :     // This is the automation writing back the AttachedValue so we need to ignore it</a>
-<a name="1384"><span class="lineNum">    1384 </span><span class="lineNoCov">          0 :     if (plugin != nullptr</span></a>
+<a name="1384"><span class="lineNum">    1384 </span>            :     if (plugin != nullptr</a>
 <a name="1385"><span class="lineNum">    1385 </span><span class="lineNoCov">          0 :         &amp;&amp; v == plugin-&gt;state</span></a>
 <a name="1386"><span class="lineNum">    1386 </span><span class="lineNoCov">          0 :         &amp;&amp; plugin-&gt;isAutomationNeeded())</span></a>
 <a name="1387"><span class="lineNum">    1387 </span>            :         return;</a>
@@ -1464,7 +1464,7 @@
 <a name="1402"><span class="lineNum">    1402 </span><span class="lineNoCov">          0 :     if (juce::Component::isMouseButtonDownAnywhere())</span></a>
 <a name="1403"><span class="lineNum">    1403 </span>            :         return;</a>
 <a name="1404"><span class="lineNum">    1404 </span>            : </a>
-<a name="1405"><span class="lineNum">    1405 </span><span class="lineNoCov">          0 :     inhibitor = nullptr;</span></a>
+<a name="1405"><span class="lineNum">    1405 </span>            :     inhibitor = nullptr;</a>
 <a name="1406"><span class="lineNum">    1406 </span><span class="lineNoCov">          0 :     stopTimer();</span></a>
 <a name="1407"><span class="lineNum">    1407 </span>            : }</a>
 <a name="1408"><span class="lineNum">    1408 </span>            : </a>
@@ -1513,7 +1513,7 @@
 <a name="1451"><span class="lineNum">    1451 </span><span class="lineNoCov">          0 :         progress = float (position) / float (sourceLengthSamples);</span></a>
 <a name="1452"><span class="lineNum">    1452 </span>            : </a>
 <a name="1453"><span class="lineNum">    1453 </span><span class="lineNoCov">          0 :         return position &gt;= sourceLengthSamples;</span></a>
-<a name="1454"><span class="lineNum">    1454 </span>            :     }</a>
+<a name="1454"><span class="lineNum">    1454 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="1455"><span class="lineNum">    1455 </span>            : </a>
 <a name="1456"><span class="lineNum">    1456 </span>            :     const double maxGain = 1.0;</a>
 <a name="1457"><span class="lineNum">    1457 </span>            : </a>
@@ -1539,7 +1539,7 @@
 <a name="1477"><span class="lineNum">    1477 </span>            : </a>
 <a name="1478"><span class="lineNum">    1478 </span><span class="lineNoCov">          0 :     return new NormaliseRenderJob (edit.engine, getDestinationFile(),</span></a>
 <a name="1479"><span class="lineNum">    1479 </span><span class="lineNoCov">          0 :                                    sourceFile, sourceLength, maxLevelDB.get());</span></a>
-<a name="1480"><span class="lineNum">    1480 </span>            : }</a>
+<a name="1480"><span class="lineNum">    1480 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1481"><span class="lineNum">    1481 </span>            : </a>
 <a name="1482"><span class="lineNum">    1482 </span><span class="lineNoCov">          0 : bool NormaliseEffect::hasProperties()</span></a>
 <a name="1483"><span class="lineNum">    1483 </span>            : {</a>
@@ -1585,7 +1585,7 @@
 <a name="1523"><span class="lineNum">    1523 </span><span class="lineNoCov">          0 :                                            sourceInfo.metadata, 0));</span></a>
 <a name="1524"><span class="lineNum">    1524 </span>            : </a>
 <a name="1525"><span class="lineNum">    1525 </span><span class="lineNoCov">          0 :         return writer-&gt;isOpen();</span></a>
-<a name="1526"><span class="lineNum">    1526 </span>            :     }</a>
+<a name="1526"><span class="lineNum">    1526 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="1527"><span class="lineNum">    1527 </span>            : </a>
 <a name="1528"><span class="lineNum">    1528 </span><span class="lineNoCov">          0 :     bool renderNextBlock() override</span></a>
 <a name="1529"><span class="lineNum">    1529 </span>            :     {</a>
@@ -1622,13 +1622,13 @@
 <a name="1560"><span class="lineNum">    1560 </span>            :             }</a>
 <a name="1561"><span class="lineNum">    1561 </span>            : </a>
 <a name="1562"><span class="lineNum">    1562 </span><span class="lineNoCov">          0 :             writer-&gt;appendBuffer (output.buffer, todo);</span></a>
-<a name="1563"><span class="lineNum">    1563 </span>            :         }</a>
+<a name="1563"><span class="lineNum">    1563 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="1564"><span class="lineNum">    1564 </span>            : </a>
 <a name="1565"><span class="lineNum">    1565 </span><span class="lineNoCov">          0 :         position += todo;</span></a>
 <a name="1566"><span class="lineNum">    1566 </span><span class="lineNoCov">          0 :         progress = float(position) / float(sourceLengthSamples);</span></a>
 <a name="1567"><span class="lineNum">    1567 </span>            : </a>
 <a name="1568"><span class="lineNum">    1568 </span><span class="lineNoCov">          0 :         return position &gt;= sourceLengthSamples;</span></a>
-<a name="1569"><span class="lineNum">    1569 </span>            :     }</a>
+<a name="1569"><span class="lineNum">    1569 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="1570"><span class="lineNum">    1570 </span>            : </a>
 <a name="1571"><span class="lineNum">    1571 </span>            :     const SrcChannels srcChannels;</a>
 <a name="1572"><span class="lineNum">    1572 </span>            : };</a>
@@ -1650,7 +1650,7 @@
 <a name="1588"><span class="lineNum">    1588 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
 <a name="1589"><span class="lineNum">    1589 </span><span class="lineNoCov">          0 :     return new MakeMonoRenderJob (edit.engine, getDestinationFile(), sourceFile,</span></a>
 <a name="1590"><span class="lineNum">    1590 </span><span class="lineNoCov">          0 :                                   sourceLength, (SrcChannels) channels.get());</span></a>
-<a name="1591"><span class="lineNum">    1591 </span>            : }</a>
+<a name="1591"><span class="lineNum">    1591 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1592"><span class="lineNum">    1592 </span>            : </a>
 <a name="1593"><span class="lineNum">    1593 </span><span class="lineNoCov">          0 : bool MakeMonoEffect::hasProperties()</span></a>
 <a name="1594"><span class="lineNum">    1594 </span>            : {</a>
@@ -1690,7 +1690,7 @@
 <a name="1628"><span class="lineNum">    1628 </span><span class="lineNoCov">          0 :         progress = float(position) / float(sourceLengthSamples);</span></a>
 <a name="1629"><span class="lineNum">    1629 </span>            : </a>
 <a name="1630"><span class="lineNum">    1630 </span><span class="lineNoCov">          0 :         return position &gt;= sourceLengthSamples;</span></a>
-<a name="1631"><span class="lineNum">    1631 </span>            :     }</a>
+<a name="1631"><span class="lineNum">    1631 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="1632"><span class="lineNum">    1632 </span>            : };</a>
 <a name="1633"><span class="lineNum">    1633 </span>            : </a>
 <a name="1634"><span class="lineNum">    1634 </span><span class="lineNoCov">          0 : ReverseEffect::ReverseEffect (const juce::ValueTree&amp; v, ClipEffects&amp; o)</span></a>
@@ -1703,7 +1703,7 @@
 <a name="1641"><span class="lineNum">    1641 </span>            : {</a>
 <a name="1642"><span class="lineNum">    1642 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
 <a name="1643"><span class="lineNum">    1643 </span><span class="lineNoCov">          0 :     return new ReverseRenderJob (edit.engine, getDestinationFile(), sourceFile, sourceLength);</span></a>
-<a name="1644"><span class="lineNum">    1644 </span>            : }</a>
+<a name="1644"><span class="lineNum">    1644 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1645"><span class="lineNum">    1645 </span>            : </a>
 <a name="1646"><span class="lineNum">    1646 </span>            : //==============================================================================</a>
 <a name="1647"><span class="lineNum">    1647 </span>            : struct InvertEffect::InvertRenderJob : public BlockBasedRenderJob</a>
@@ -1728,7 +1728,7 @@
 <a name="1666"><span class="lineNum">    1666 </span><span class="lineNoCov">          0 :         progress = float (position) / float (sourceLengthSamples);</span></a>
 <a name="1667"><span class="lineNum">    1667 </span>            : </a>
 <a name="1668"><span class="lineNum">    1668 </span><span class="lineNoCov">          0 :         return position &gt;= sourceLengthSamples;</span></a>
-<a name="1669"><span class="lineNum">    1669 </span>            :     }</a>
+<a name="1669"><span class="lineNum">    1669 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="1670"><span class="lineNum">    1670 </span>            : };</a>
 <a name="1671"><span class="lineNum">    1671 </span>            : </a>
 <a name="1672"><span class="lineNum">    1672 </span><span class="lineNoCov">          0 : InvertEffect::InvertEffect (const juce::ValueTree&amp; v, ClipEffects&amp; o)</span></a>
@@ -1741,7 +1741,7 @@
 <a name="1679"><span class="lineNum">    1679 </span>            : {</a>
 <a name="1680"><span class="lineNum">    1680 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
 <a name="1681"><span class="lineNum">    1681 </span><span class="lineNoCov">          0 :     return new InvertRenderJob (edit.engine, getDestinationFile(), sourceFile, sourceLength);</span></a>
-<a name="1682"><span class="lineNum">    1682 </span>            : }</a>
+<a name="1682"><span class="lineNum">    1682 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1683"><span class="lineNum">    1683 </span>            : </a>
 <a name="1684"><span class="lineNum">    1684 </span>            : //==============================================================================</a>
 <a name="1685"><span class="lineNum">    1685 </span><span class="lineNoCov">          0 : ClipEffect* ClipEffect::create (const juce::ValueTree&amp; v, ClipEffects&amp; ce)</span></a>
@@ -1770,7 +1770,7 @@
 <a name="1708"><span class="lineNum">    1708 </span><span class="lineNoCov">          0 :     AggregateJob (Engine&amp; e, const AudioFile&amp; destFile, const AudioFile&amp; source,</span></a>
 <a name="1709"><span class="lineNum">    1709 </span>            :                   juce::ReferenceCountedArray&lt;ClipEffect::ClipEffectRenderJob&gt; j)</a>
 <a name="1710"><span class="lineNum">    1710 </span><span class="lineNoCov">          0 :         : Job (e, destFile),</span></a>
-<a name="1711"><span class="lineNum">    1711 </span>            :           sourceFile (source), lastFile (source.getFile()),</a>
+<a name="1711"><span class="lineNum">    1711 </span><span class="lineNoCov">          0 :           sourceFile (source), lastFile (source.getFile()),</span></a>
 <a name="1712"><span class="lineNum">    1712 </span><span class="lineNoCov">          0 :           jobs (std::move (j)), originalNumTasks (jobs.size())</span></a>
 <a name="1713"><span class="lineNum">    1713 </span>            :     {</a>
 <a name="1714"><span class="lineNum">    1714 </span><span class="lineNoCov">          0 :     }</span></a>
@@ -1824,7 +1824,7 @@
 <a name="1762"><span class="lineNum">    1762 </span><span class="lineNoCov">          0 :         progress = (numJobsCompleted * jobShare) + (jobShare * (currentJob != nullptr ? currentJob-&gt;progress.load() : 0.0f));</span></a>
 <a name="1763"><span class="lineNum">    1763 </span>            : </a>
 <a name="1764"><span class="lineNum">    1764 </span><span class="lineNoCov">          0 :         return currentJob == nullptr &amp;&amp; jobs.isEmpty();</span></a>
-<a name="1765"><span class="lineNum">    1765 </span>            :     }</a>
+<a name="1765"><span class="lineNum">    1765 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="1766"><span class="lineNum">    1766 </span>            : </a>
 <a name="1767"><span class="lineNum">    1767 </span><span class="lineNoCov">          0 :     bool completeRender() override</span></a>
 <a name="1768"><span class="lineNum">    1768 </span>            :     {</a>
@@ -1864,12 +1864,12 @@
 <a name="1802"><span class="lineNum">    1802 </span><span class="lineNoCov">          0 :             inputFile = j-&gt;destination;</span></a>
 <a name="1803"><span class="lineNum">    1803 </span>            :             jobs.add (j);</a>
 <a name="1804"><span class="lineNum">    1804 </span>            :         }</a>
-<a name="1805"><span class="lineNum">    1805 </span>            :     }</a>
+<a name="1805"><span class="lineNum">    1805 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="1806"><span class="lineNum">    1806 </span>            : </a>
 <a name="1807"><span class="lineNum">    1807 </span><span class="lineNoCov">          0 :     AudioFile firstFile (jobs.isEmpty() ? inputFile : jobs.getFirst()-&gt;source);</span></a>
 <a name="1808"><span class="lineNum">    1808 </span>            : </a>
 <a name="1809"><span class="lineNum">    1809 </span><span class="lineNoCov">          0 :     return new AggregateJob (clip.edit.engine, destFile, firstFile, std::move (jobs));</span></a>
-<a name="1810"><span class="lineNum">    1810 </span>            : }</a>
+<a name="1810"><span class="lineNum">    1810 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1811"><span class="lineNum">    1811 </span>            : </a>
 <a name="1812"><span class="lineNum">    1812 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>

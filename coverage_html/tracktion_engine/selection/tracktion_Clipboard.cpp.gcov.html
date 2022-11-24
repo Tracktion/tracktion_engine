@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">175</td>
-            <td class="headerCovTableEntry">797</td>
-            <td class="headerCovTableEntryLo">22.0 %</td>
+            <td class="headerCovTableEntry">177</td>
+            <td class="headerCovTableEntry">807</td>
+            <td class="headerCovTableEntryLo">21.9 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">17</td>
@@ -211,7 +211,7 @@
 <a name="149"><span class="lineNum">     149 </span>            : </a>
 <a name="150"><span class="lineNum">     150 </span><span class="lineNoCov">          0 :                 auto&amp; origTimeSig = tempoSequence.getTimeSigAt (insertTime);</span></a>
 <a name="151"><span class="lineNum">     151 </span>            : </a>
-<a name="152"><span class="lineNum">     152 </span><span class="lineNoCov">          0 :                 if (origTimeSig.denominator != denominators.getUnchecked (i)</span></a>
+<a name="152"><span class="lineNum">     152 </span>            :                 if (origTimeSig.denominator != denominators.getUnchecked (i)</a>
 <a name="153"><span class="lineNum">     153 </span><span class="lineNoCov">          0 :                      || origTimeSig.numerator != numerators.getUnchecked (i))</span></a>
 <a name="154"><span class="lineNum">     154 </span>            :                 {</a>
 <a name="155"><span class="lineNum">     155 </span><span class="lineNoCov">          0 :                     if (auto timeSig = tempoSequence.insertTimeSig (insertTime))</span></a>
@@ -260,7 +260,7 @@
 <a name="198"><span class="lineNum">     198 </span>            :             {</a>
 <a name="199"><span class="lineNum">     199 </span>            :                 break;</a>
 <a name="200"><span class="lineNum">     200 </span>            :             }</a>
-<a name="201"><span class="lineNum">     201 </span>            :         }</a>
+<a name="201"><span class="lineNum">     201 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="202"><span class="lineNum">     202 </span>            :     }</a>
 <a name="203"><span class="lineNum">     203 </span>            : </a>
 <a name="204"><span class="lineNum">     204 </span><span class="lineNoCov">          0 :     return newClipEndTime;</span></a>
@@ -338,7 +338,7 @@
 <a name="276"><span class="lineNum">     276 </span>            :             options.separateTracks = false;</a>
 <a name="277"><span class="lineNum">     277 </span>            :             options.snapBWavsToOriginalTime = false;</a>
 <a name="278"><span class="lineNum">     278 </span>            :            #endif</a>
-<a name="279"><span class="lineNum">     279 </span>            :         }</a>
+<a name="279"><span class="lineNum">     279 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="280"><span class="lineNum">     280 </span>            :         else</a>
 <a name="281"><span class="lineNum">     281 </span>            :         {</a>
 <a name="282"><span class="lineNum">     282 </span><span class="lineNoCov">          0 :             options.separateTracks = ! ui.showOkCancelAlertBox (TRANS(&quot;Add multiple files&quot;),</span></a>
@@ -418,7 +418,7 @@
 <a name="356"><span class="lineNum">     356 </span>            :                 {</a>
 <a name="357"><span class="lineNum">     357 </span><span class="lineNoCov">          0 :                     if (sourceItem-&gt;isMidi())</span></a>
 <a name="358"><span class="lineNum">     358 </span>            :                     {</a>
-<a name="359"><span class="lineNum">     359 </span>            :                         newClipEndTime = pasteMIDIFileIntoEdit (options.edit, file, targetTrackIndex, startTime,</a>
+<a name="359"><span class="lineNum">     359 </span><span class="lineNoCov">          0 :                         newClipEndTime = pasteMIDIFileIntoEdit (options.edit, file, targetTrackIndex, startTime,</span></a>
 <a name="360"><span class="lineNum">     360 </span><span class="lineNoCov">          0 :                                                                 pastingOptions.shouldImportTempoChangesFromMIDI);</span></a>
 <a name="361"><span class="lineNum">     361 </span>            :                     }</a>
 <a name="362"><span class="lineNum">     362 </span><span class="lineNoCov">          0 :                     else if (sourceItem-&gt;isWave())</span></a>
@@ -661,7 +661,7 @@
 <a name="599"><span class="lineNum">     599 </span>            : </a>
 <a name="600"><span class="lineNum">     600 </span><span class="lineNoCov">          0 :                     std::sort (section.points.begin(), section.points.end());</span></a>
 <a name="601"><span class="lineNum">     601 </span><span class="lineNoCov">          0 :                     automationCurves.push_back (std::move (section));</span></a>
-<a name="602"><span class="lineNum">     602 </span>            :                 }</a>
+<a name="602"><span class="lineNum">     602 </span><span class="lineNoCov">          0 :                 }</span></a>
 <a name="603"><span class="lineNum">     603 </span>            :             }</a>
 <a name="604"><span class="lineNum">     604 </span>            :         }</a>
 <a name="605"><span class="lineNum">     605 </span>            :     }</a>
@@ -684,7 +684,7 @@
 <a name="622"><span class="lineNum">     622 </span>            :     else</a>
 <a name="623"><span class="lineNum">     623 </span>            :     {</a>
 <a name="624"><span class="lineNum">     624 </span><span class="lineCov">       5000 :         start  = TimePosition::fromSeconds (static_cast&lt;double&gt; (state.getProperty (IDs::start)))</span></a>
-<a name="625"><span class="lineNum">     625 </span><span class="lineCov">       5000 :                     + TimeDuration::fromSeconds (startOffset.inSeconds());</span></a>
+<a name="625"><span class="lineNum">     625 </span>            :                     + TimeDuration::fromSeconds (startOffset.inSeconds());</a>
 <a name="626"><span class="lineNum">     626 </span><span class="lineCov">       5000 :         length = TimeDuration::fromSeconds (static_cast&lt;double&gt; (state.getProperty (IDs::length)));</span></a>
 <a name="627"><span class="lineNum">     627 </span><span class="lineCov">       5000 :         offset = TimePosition::fromSeconds (static_cast&lt;double&gt; (state.getProperty (IDs::offset)));</span></a>
 <a name="628"><span class="lineNum">     628 </span>            :     }</a>
@@ -734,7 +734,7 @@
 <a name="672"><span class="lineNum">     672 </span>            :     }</a>
 <a name="673"><span class="lineNum">     673 </span>            : </a>
 <a name="674"><span class="lineNum">     674 </span>            :     return false;</a>
-<a name="675"><span class="lineNum">     675 </span>            : }</a>
+<a name="675"><span class="lineNum">     675 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="676"><span class="lineNum">     676 </span>            : </a>
 <a name="677"><span class="lineNum">     677 </span><span class="lineCov">          1 : bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions&amp; options) const</span></a>
 <a name="678"><span class="lineNum">     678 </span>            : {</a>
@@ -762,7 +762,7 @@
 <a name="700"><span class="lineNum">     700 </span>            : </a>
 <a name="701"><span class="lineNum">     701 </span><span class="lineCov">       5001 :     for (auto&amp; clip : clips)</span></a>
 <a name="702"><span class="lineNum">     702 </span>            :     {</a>
-<a name="703"><span class="lineNum">     703 </span><span class="lineCov">      10000 :         auto newClipState = clip.state.createCopy();</span></a>
+<a name="703"><span class="lineNum">     703 </span><span class="lineCov">       5000 :         auto newClipState = clip.state.createCopy();</span></a>
 <a name="704"><span class="lineNum">     704 </span><span class="lineCov">       5000 :         EditItemID::remapIDs (newClipState, nullptr, options.edit, &amp;remappedIDs);</span></a>
 <a name="705"><span class="lineNum">     705 </span><span class="lineCov">       5000 :         fixClipTimes (newClipState, clip, options.edit.tempoSequence, options.startTime);</span></a>
 <a name="706"><span class="lineNum">     706 </span>            : </a>
@@ -811,7 +811,7 @@
 <a name="749"><span class="lineNum">     749 </span>            :                 jassertfalse;</a>
 <a name="750"><span class="lineNum">     750 </span>            :             }</a>
 <a name="751"><span class="lineNum">     751 </span>            :         }</a>
-<a name="752"><span class="lineNum">     752 </span>            :     }</a>
+<a name="752"><span class="lineNum">     752 </span><span class="lineCov">       5000 :     }</span></a>
 <a name="753"><span class="lineNum">     753 </span>            : </a>
 <a name="754"><span class="lineNum">     754 </span><span class="lineCov">          1 :     for (auto&amp; curve : automationCurves)</span></a>
 <a name="755"><span class="lineNum">     755 </span>            :     {</a>
@@ -968,7 +968,7 @@
 <a name="906"><span class="lineNum">     906 </span><span class="lineNoCov">          0 :         if (targetTrack != nullptr)</span></a>
 <a name="907"><span class="lineNum">     907 </span><span class="lineNoCov">          0 :             parentTrack = targetTrack-&gt;getParentTrack();</span></a>
 <a name="908"><span class="lineNum">     908 </span>            : </a>
-<a name="909"><span class="lineNum">     909 </span><span class="lineNoCov">          0 :         precedingTrack = targetTrack;</span></a>
+<a name="909"><span class="lineNum">     909 </span>            :         precedingTrack = targetTrack;</a>
 <a name="910"><span class="lineNum">     910 </span>            : </a>
 <a name="911"><span class="lineNum">     911 </span><span class="lineNoCov">          0 :         if (auto newTrack = options.edit.insertTrack (TrackInsertPoint (parentTrack.get(),</span></a>
 <a name="912"><span class="lineNum">     912 </span>            :                                                                         precedingTrack.get()),</a>
@@ -978,13 +978,13 @@
 <a name="916"><span class="lineNum">     916 </span>            :             newTracks.add (newTrack);</a>
 <a name="917"><span class="lineNum">     917 </span>            : </a>
 <a name="918"><span class="lineNum">     918 </span><span class="lineNoCov">          0 :             if (parentTrack == nullptr)</span></a>
-<a name="919"><span class="lineNum">     919 </span><span class="lineNoCov">          0 :                 targetTrack = newTrack;</span></a>
+<a name="919"><span class="lineNum">     919 </span>            :                 targetTrack = newTrack;</a>
 <a name="920"><span class="lineNum">     920 </span>            :         }</a>
 <a name="921"><span class="lineNum">     921 </span>            :         else</a>
 <a name="922"><span class="lineNum">     922 </span>            :         {</a>
 <a name="923"><span class="lineNum">     923 </span>            :             break;</a>
 <a name="924"><span class="lineNum">     924 </span>            :         }</a>
-<a name="925"><span class="lineNum">     925 </span>            :     }</a>
+<a name="925"><span class="lineNum">     925 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="926"><span class="lineNum">     926 </span>            : </a>
 <a name="927"><span class="lineNum">     927 </span>            :     // Find any parameters on the Track that have modifier assignments</a>
 <a name="928"><span class="lineNum">     928 </span>            :     // Check to see if they're assigned to the old modifier IDs</a>
@@ -1043,7 +1043,7 @@
 <a name="981"><span class="lineNum">     981 </span>            :     bool pointAtStart = false;</a>
 <a name="982"><span class="lineNum">     982 </span>            :     bool pointAtEnd   = false;</a>
 <a name="983"><span class="lineNum">     983 </span>            : </a>
-<a name="984"><span class="lineNum">     984 </span><span class="lineCov">         10 :     for (auto t : ts.getTempos())</span></a>
+<a name="984"><span class="lineNum">     984 </span><span class="lineCov">          8 :     for (auto t : ts.getTempos())</span></a>
 <a name="985"><span class="lineNum">     985 </span>            :     {</a>
 <a name="986"><span class="lineNum">     986 </span><span class="lineCov">          6 :         if (t-&gt;startBeatNumber == startBeat) pointAtStart = true;</span></a>
 <a name="987"><span class="lineNum">     987 </span><span class="lineCov">          6 :         if (t-&gt;startBeatNumber == endBeat)   pointAtEnd   = true;</span></a>
@@ -1055,10 +1055,10 @@
 <a name="993"><span class="lineNum">     993 </span>            :     }</a>
 <a name="994"><span class="lineNum">     994 </span>            : </a>
 <a name="995"><span class="lineNum">     995 </span><span class="lineCov">          2 :     if (! pointAtStart)</span></a>
-<a name="996"><span class="lineNum">     996 </span>            :         changes.insert (changes.begin(),</a>
+<a name="996"><span class="lineNum">     996 </span><span class="lineCov">          2 :         changes.insert (changes.begin(),</span></a>
 <a name="997"><span class="lineNum">     997 </span>            :                         { BeatPosition(),</a>
 <a name="998"><span class="lineNum">     998 </span><span class="lineCov">          2 :                           ts.getBpmAt (ts.toTime (startBeat)),</span></a>
-<a name="999"><span class="lineNum">     999 </span><span class="lineCov">          4 :                           ts.getTempoAt (BeatPosition::fromBeats (juce::roundToInt (startBeat.inBeats()))).getCurve() });</span></a>
+<a name="999"><span class="lineNum">     999 </span><span class="lineCov">          2 :                           ts.getTempoAt (BeatPosition::fromBeats (juce::roundToInt (startBeat.inBeats()))).getCurve() });</span></a>
 <a name="1000"><span class="lineNum">    1000 </span>            : </a>
 <a name="1001"><span class="lineNum">    1001 </span><span class="lineCov">          2 :     if (! pointAtEnd)</span></a>
 <a name="1002"><span class="lineNum">    1002 </span><span class="lineCov">          2 :         changes.push_back ({ toPosition (endBeat - startBeat),</span></a>
@@ -1066,7 +1066,7 @@
 <a name="1004"><span class="lineNum">    1004 </span><span class="lineCov">          2 :                              ts.getTempoAt (BeatPosition::fromBeats (juce::roundToInt (endBeat.inBeats()))).getCurve() });</span></a>
 <a name="1005"><span class="lineNum">    1005 </span><span class="lineCov">          2 : }</span></a>
 <a name="1006"><span class="lineNum">    1006 </span>            : </a>
-<a name="1007"><span class="lineNum">    1007 </span><span class="lineCov">          2 : Clipboard::TempoChanges::~TempoChanges() {}</span></a>
+<a name="1007"><span class="lineNum">    1007 </span><span class="lineCov">          4 : Clipboard::TempoChanges::~TempoChanges() {}</span></a>
 <a name="1008"><span class="lineNum">    1008 </span>            : </a>
 <a name="1009"><span class="lineNum">    1009 </span><span class="lineNoCov">          0 : bool Clipboard::TempoChanges::pasteIntoEdit (const EditPastingOptions&amp; options) const</span></a>
 <a name="1010"><span class="lineNum">    1010 </span>            : {</a>
@@ -1091,10 +1091,10 @@
 <a name="1029"><span class="lineNum">    1029 </span>            : </a>
 <a name="1030"><span class="lineNum">    1030 </span><span class="lineCov">          2 :     double finalBPM = ts.getBpmAt (ts.toTime (endBeat));</span></a>
 <a name="1031"><span class="lineNum">    1031 </span><span class="lineCov">          2 :     ts.removeTemposBetween (ts.toTime ({ startBeat, endBeat }), false);</span></a>
-<a name="1032"><span class="lineNum">    1032 </span><span class="lineCov">          2 :     ts.insertTempo (ts.toTime (startBeat));</span></a>
+<a name="1032"><span class="lineNum">    1032 </span><span class="lineCov">          4 :     ts.insertTempo (ts.toTime (startBeat));</span></a>
 <a name="1033"><span class="lineNum">    1033 </span>            : </a>
 <a name="1034"><span class="lineNum">    1034 </span><span class="lineCov">          6 :     for (auto&amp; tc : changes)</span></a>
-<a name="1035"><span class="lineNum">    1035 </span><span class="lineCov">          4 :         ts.insertTempo (BeatPosition::fromBeats (juce::roundToInt ((tc.beat.inBeats() / lengthInBeats.inBeats()) * (endBeat - startBeat).inBeats() + startBeat.inBeats())),</span></a>
+<a name="1035"><span class="lineNum">    1035 </span><span class="lineCov">          8 :         ts.insertTempo (BeatPosition::fromBeats (juce::roundToInt ((tc.beat.inBeats() / lengthInBeats.inBeats()) * (endBeat - startBeat).inBeats() + startBeat.inBeats())),</span></a>
 <a name="1036"><span class="lineNum">    1036 </span><span class="lineCov">          4 :                         tc.bpm, tc.curve);</span></a>
 <a name="1037"><span class="lineNum">    1037 </span>            : </a>
 <a name="1038"><span class="lineNum">    1038 </span><span class="lineCov">          2 :     ts.insertTempo (ts.toTime (endBeat));</span></a>
@@ -1113,7 +1113,7 @@
 <a name="1051"><span class="lineNum">    1051 </span>            : </a>
 <a name="1052"><span class="lineNum">    1052 </span><span class="lineCov">          2 :     snap.remapEdit (ts.edit);</span></a>
 <a name="1053"><span class="lineNum">    1053 </span>            :     return true;</a>
-<a name="1054"><span class="lineNum">    1054 </span>            : }</a>
+<a name="1054"><span class="lineNum">    1054 </span><span class="lineCov">          2 : }</span></a>
 <a name="1055"><span class="lineNum">    1055 </span>            : </a>
 <a name="1056"><span class="lineNum">    1056 </span>            : //==============================================================================</a>
 <a name="1057"><span class="lineNum">    1057 </span>            : //==============================================================================</a>
@@ -1492,7 +1492,7 @@
 <a name="1430"><span class="lineNum">    1430 </span><span class="lineNoCov">          0 :     auto um = &amp;clip.edit.getUndoManager();</span></a>
 <a name="1431"><span class="lineNum">    1431 </span><span class="lineNoCov">          0 :     juce::Array&lt;MidiControllerEvent*&gt; eventsAdded;</span></a>
 <a name="1432"><span class="lineNum">    1432 </span>            : </a>
-<a name="1433"><span class="lineNum">    1433 </span><span class="lineNoCov">          0 :     std::vector&lt;juce::ValueTree&gt; itemsToRemove;</span></a>
+<a name="1433"><span class="lineNum">    1433 </span>            :     std::vector&lt;juce::ValueTree&gt; itemsToRemove;</a>
 <a name="1434"><span class="lineNum">    1434 </span>            : </a>
 <a name="1435"><span class="lineNum">    1435 </span><span class="lineNoCov">          0 :     for (auto evt : sequence.getControllerEvents())</span></a>
 <a name="1436"><span class="lineNum">    1436 </span><span class="lineNoCov">          0 :         if (controllerTypes.contains (evt-&gt;getType()) &amp;&amp; evt-&gt;getBeatPosition() &gt;= beatRange.getStart() + deltaBeats &amp;&amp; evt-&gt;getBeatPosition() &lt;= beatRange.getEnd() + deltaBeats)</span></a>
@@ -1510,7 +1510,7 @@
 <a name="1448"><span class="lineNum">    1448 </span>            :     }</a>
 <a name="1449"><span class="lineNum">    1449 </span>            : </a>
 <a name="1450"><span class="lineNum">    1450 </span>            :     return eventsAdded;</a>
-<a name="1451"><span class="lineNum">    1451 </span>            : }</a>
+<a name="1451"><span class="lineNum">    1451 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1452"><span class="lineNum">    1452 </span>            : </a>
 <a name="1453"><span class="lineNum">    1453 </span><span class="lineNoCov">          0 : bool Clipboard::MIDIEvents::pasteIntoEdit (const EditPastingOptions&amp;) const</span></a>
 <a name="1454"><span class="lineNum">    1454 </span>            : {</a>
@@ -1692,7 +1692,7 @@
 <a name="1630"><span class="lineNum">    1630 </span><span class="lineNoCov">          0 :         auto reassignedRackType = typeState.createCopy();</span></a>
 <a name="1631"><span class="lineNum">    1631 </span><span class="lineNoCov">          0 :         EditItemID::remapIDs (reassignedRackType, nullptr, edit, &amp;reassignedIDs);</span></a>
 <a name="1632"><span class="lineNum">    1632 </span><span class="lineNoCov">          0 :         edit.getRackList().addRackTypeFrom (reassignedRackType);</span></a>
-<a name="1633"><span class="lineNum">    1633 </span>            :     }</a>
+<a name="1633"><span class="lineNum">    1633 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="1634"><span class="lineNum">    1634 </span>            :     </a>
 <a name="1635"><span class="lineNum">    1635 </span><span class="lineNoCov">          0 :     return reassignedIDs;</span></a>
 <a name="1636"><span class="lineNum">    1636 </span>            : }</a>
@@ -1759,10 +1759,10 @@
 <a name="1697"><span class="lineNum">    1697 </span>            :                 }</a>
 <a name="1698"><span class="lineNum">    1698 </span>            :             }</a>
 <a name="1699"><span class="lineNum">    1699 </span>            :         }</a>
-<a name="1700"><span class="lineNum">    1700 </span>            :     }</a>
+<a name="1700"><span class="lineNum">    1700 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="1701"><span class="lineNum">    1701 </span>            : </a>
 <a name="1702"><span class="lineNum">    1702 </span><span class="lineNoCov">          0 :     return anyPasted;</span></a>
-<a name="1703"><span class="lineNum">    1703 </span>            : }</a>
+<a name="1703"><span class="lineNum">    1703 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1704"><span class="lineNum">    1704 </span>            : </a>
 <a name="1705"><span class="lineNum">    1705 </span>            : //==============================================================================</a>
 <a name="1706"><span class="lineNum">    1706 </span>            : //==============================================================================</a>
@@ -1807,7 +1807,7 @@
 <a name="1745"><span class="lineNum">    1745 </span>            :                         {</a>
 <a name="1746"><span class="lineNum">    1746 </span><span class="lineNoCov">          0 :                             EditItemID::remapIDs (m, nullptr, options.edit);</span></a>
 <a name="1747"><span class="lineNum">    1747 </span><span class="lineNoCov">          0 :                             t-&gt;getModifierList().insertModifier (m, i + 1, options.selectionManager);</span></a>
-<a name="1748"><span class="lineNum">    1748 </span>            :                         }</a>
+<a name="1748"><span class="lineNum">    1748 </span><span class="lineNoCov">          0 :                         }</span></a>
 <a name="1749"><span class="lineNum">    1749 </span>            : </a>
 <a name="1750"><span class="lineNum">    1750 </span>            :                         return true;</a>
 <a name="1751"><span class="lineNum">    1751 </span>            :                     }</a>
@@ -1822,7 +1822,7 @@
 <a name="1760"><span class="lineNum">    1760 </span>            :         {</a>
 <a name="1761"><span class="lineNum">    1761 </span><span class="lineNoCov">          0 :             EditItemID::remapIDs (m, nullptr, options.edit);</span></a>
 <a name="1762"><span class="lineNum">    1762 </span><span class="lineNoCov">          0 :             options.startTrack-&gt;getModifierList().insertModifier (m, -1, options.selectionManager);</span></a>
-<a name="1763"><span class="lineNum">    1763 </span>            :         }</a>
+<a name="1763"><span class="lineNum">    1763 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="1764"><span class="lineNum">    1764 </span>            : </a>
 <a name="1765"><span class="lineNum">    1765 </span><span class="lineNoCov">          0 :         return true;</span></a>
 <a name="1766"><span class="lineNum">    1766 </span>            :     }</a>

@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">300</td>
+            <td class="headerCovTableEntry">301</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
@@ -476,7 +476,7 @@
 <a name="414"><span class="lineNum">     414 </span>            : </a>
 <a name="415"><span class="lineNum">     415 </span><span class="lineNoCov">          0 :         auto s = juce::String::formatted (&quot;%d|%d|%03d&quot;, bars, beats, (int) (fraction.inBeats() * Edit::ticksPerQuarterNote));</span></a>
 <a name="416"><span class="lineNum">     416 </span><span class="lineNoCov">          0 :         return time &lt; 0s ? (&quot;-&quot; + s) : s;</span></a>
-<a name="417"><span class="lineNum">     417 </span>            :     }</a>
+<a name="417"><span class="lineNum">     417 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="418"><span class="lineNum">     418 </span>            : </a>
 <a name="419"><span class="lineNum">     419 </span><span class="lineNoCov">          0 :     return TimecodeDisplayFormat::toFullTimecode (time, getSubSecondDivisions());</span></a>
 <a name="420"><span class="lineNum">     420 </span>            : }</a>
@@ -650,7 +650,7 @@
 <a name="588"><span class="lineNum">     588 </span>            :     {</a>
 <a name="589"><span class="lineNum">     589 </span><span class="lineNoCov">          0 :         if (time.beats.has_value())</span></a>
 <a name="590"><span class="lineNum">     590 </span>            :         {</a>
-<a name="591"><span class="lineNum">     591 </span><span class="lineNoCov">          0 :             auto t = (*time.beats).inBeats();</span></a>
+<a name="591"><span class="lineNum">     591 </span>            :             auto t = (*time.beats).inBeats();</a>
 <a name="592"><span class="lineNum">     592 </span>            : </a>
 <a name="593"><span class="lineNum">     593 </span><span class="lineNoCov">          0 :             auto bars  = int (t / time.beatsPerBar);</span></a>
 <a name="594"><span class="lineNum">     594 </span><span class="lineNoCov">          0 :             auto beats = t - (bars * time.beatsPerBar);</span></a>
@@ -732,7 +732,7 @@
 <a name="670"><span class="lineNum">     670 </span><span class="lineNoCov">          0 :                                            juce::roundToInt (absSecs * subSecondDivisions) % subSecondDivisions);</span></a>
 <a name="671"><span class="lineNum">     671 </span>            : </a>
 <a name="672"><span class="lineNum">     672 </span><span class="lineNoCov">          0 :     return result;</span></a>
-<a name="673"><span class="lineNum">     673 </span>            : }</a>
+<a name="673"><span class="lineNum">     673 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="674"><span class="lineNum">     674 </span>            : </a>
 <a name="675"><span class="lineNum">     675 </span>            : //==============================================================================</a>
 <a name="676"><span class="lineNum">     676 </span><span class="lineNoCov">          0 : TimecodeSnapType TimecodeDisplayFormat::getBestSnapType (const TempoSetting&amp; tempo,</span></a>
@@ -746,7 +746,7 @@
 <a name="684"><span class="lineNum">     684 </span>            : </a>
 <a name="685"><span class="lineNum">     685 </span><span class="lineNoCov">          0 :     for (int i = 0; i &lt; numSnapTypes; ++i)</span></a>
 <a name="686"><span class="lineNum">     686 </span>            :     {</a>
-<a name="687"><span class="lineNum">     687 </span><span class="lineNoCov">          0 :         TimecodeSnapType snap (type, i);</span></a>
+<a name="687"><span class="lineNum">     687 </span>            :         TimecodeSnapType snap (type, i);</a>
 <a name="688"><span class="lineNum">     688 </span><span class="lineNoCov">          0 :         auto res = snap.getApproxIntervalTime (tempo, isTripletOverride);</span></a>
 <a name="689"><span class="lineNum">     689 </span>            :         auto t = res / onScreenTimePerPixel.inSeconds();</a>
 <a name="690"><span class="lineNum">     690 </span>            : </a>
@@ -772,7 +772,7 @@
 <a name="710"><span class="lineNum">     710 </span><span class="lineNoCov">          0 : TimecodeDisplayIterator::TimecodeDisplayIterator (const Edit&amp; edit, TimePosition startTime,</span></a>
 <a name="711"><span class="lineNum">     711 </span><span class="lineNoCov">          0 :                                                   TimecodeSnapType minSnapTypeToUse, bool to)</span></a>
 <a name="712"><span class="lineNum">     712 </span><span class="lineNoCov">          0 :     : sequence (edit.tempoSequence),</span></a>
-<a name="713"><span class="lineNum">     713 </span>            :       minSnapType (minSnapTypeToUse),</a>
+<a name="713"><span class="lineNum">     713 </span><span class="lineNoCov">          0 :       minSnapType (minSnapTypeToUse),</span></a>
 <a name="714"><span class="lineNum">     714 </span><span class="lineNoCov">          0 :       time (minSnapType.roundTimeDown (startTime, sequence)),</span></a>
 <a name="715"><span class="lineNum">     715 </span><span class="lineNoCov">          0 :       isTripletOverride (to)</span></a>
 <a name="716"><span class="lineNum">     716 </span>            : {</a>

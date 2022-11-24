@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">75</td>
-            <td class="headerCovTableEntry">116</td>
-            <td class="headerCovTableEntryLo">64.7 %</td>
+            <td class="headerCovTableEntry">76</td>
+            <td class="headerCovTableEntry">117</td>
+            <td class="headerCovTableEntryLo">65.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">21</td>
@@ -102,10 +102,10 @@
 <a name="40"><span class="lineNum">      40 </span><span class="lineCov">          2 :     attachToCurrentValue (value);</span></a>
 <a name="41"><span class="lineNum">      41 </span><span class="lineCov">          2 : }</span></a>
 <a name="42"><span class="lineNum">      42 </span>            : </a>
-<a name="43"><span class="lineNum">      43 </span><span class="lineCov">          6 : MacroParameter::~MacroParameter()</span></a>
+<a name="43"><span class="lineNum">      43 </span><span class="lineCov">          4 : MacroParameter::~MacroParameter()</span></a>
 <a name="44"><span class="lineNum">      44 </span>            : {</a>
 <a name="45"><span class="lineNum">      45 </span><span class="lineCov">          2 :     detachFromCurrentValue();</span></a>
-<a name="46"><span class="lineNum">      46 </span><span class="lineCov">          4 : }</span></a>
+<a name="46"><span class="lineNum">      46 </span><span class="lineCov">          6 : }</span></a>
 <a name="47"><span class="lineNum">      47 </span>            : </a>
 <a name="48"><span class="lineNum">      48 </span><span class="lineNoCov">          0 : void MacroParameter::initialise()</span></a>
 <a name="49"><span class="lineNum">      49 </span>            : {</a>
@@ -121,7 +121,7 @@
 <a name="59"><span class="lineNum">      59 </span>            :     TRACKTION_ASSERT_MESSAGE_THREAD</a>
 <a name="60"><span class="lineNum">      60 </span><span class="lineCov">          1 :     auto cursorPos = edit.getTransport().getPosition();</span></a>
 <a name="61"><span class="lineNum">      61 </span>            : </a>
-<a name="62"><span class="lineNum">      62 </span><span class="lineCov">          2 :     for (auto ap : getAllParametersBeingModifiedBy (edit, *this))</span></a>
+<a name="62"><span class="lineNum">      62 </span><span class="lineCov">          1 :     for (auto ap : getAllParametersBeingModifiedBy (edit, *this))</span></a>
 <a name="63"><span class="lineNum">      63 </span><span class="lineNoCov">          0 :         if (! ap-&gt;automatableEditElement.isBeingActivelyPlayed())</span></a>
 <a name="64"><span class="lineNum">      64 </span><span class="lineNoCov">          0 :             ap-&gt;updateFromAutomationSources (cursorPos);</span></a>
 <a name="65"><span class="lineNum">      65 </span>            : }</a>
@@ -232,7 +232,7 @@
 <a name="170"><span class="lineNum">     170 </span><span class="lineCov">       4886 :     restoreChangedParametersFromState();</span></a>
 <a name="171"><span class="lineNum">     171 </span><span class="lineCov">       4886 : }</span></a>
 <a name="172"><span class="lineNum">     172 </span>            : </a>
-<a name="173"><span class="lineNum">     173 </span><span class="lineCov">       9772 : MacroParameterList::~MacroParameterList()</span></a>
+<a name="173"><span class="lineNum">     173 </span><span class="lineCov">       4886 : MacroParameterList::~MacroParameterList()</span></a>
 <a name="174"><span class="lineNum">     174 </span>            : {</a>
 <a name="175"><span class="lineNum">     175 </span>            :     TRACKTION_ASSERT_MESSAGE_THREAD</a>
 <a name="176"><span class="lineNum">     176 </span><span class="lineCov">       4886 : }</span></a>
@@ -242,18 +242,18 @@
 <a name="180"><span class="lineNum">     180 </span>            :     TRACKTION_ASSERT_MESSAGE_THREAD</a>
 <a name="181"><span class="lineNum">     181 </span><span class="lineCov">          1 :     auto* um = &amp;edit.getUndoManager();</span></a>
 <a name="182"><span class="lineNum">     182 </span>            : </a>
-<a name="183"><span class="lineNum">     183 </span><span class="lineCov">          2 :     juce::ValueTree v (IDs::MACROPARAMETER);</span></a>
+<a name="183"><span class="lineNum">     183 </span><span class="lineCov">          1 :     juce::ValueTree v (IDs::MACROPARAMETER);</span></a>
 <a name="184"><span class="lineNum">     184 </span><span class="lineCov">          1 :     edit.createNewItemID().writeID (v, nullptr);</span></a>
 <a name="185"><span class="lineNum">     185 </span><span class="lineCov">          1 :     state.addChild (v, -1, um);</span></a>
 <a name="186"><span class="lineNum">     186 </span>            : </a>
 <a name="187"><span class="lineNum">     187 </span>            :     auto* mp = list-&gt;objects.getLast();</a>
-<a name="188"><span class="lineNum">     188 </span><span class="lineCov">          1 :     mp-&gt;macroName = TRANS(&quot;Macro&quot;) + &quot; &quot; + juce::String (list-&gt;objects.size());</span></a>
+<a name="188"><span class="lineNum">     188 </span><span class="lineCov">          2 :     mp-&gt;macroName = TRANS(&quot;Macro&quot;) + &quot; &quot; + juce::String (list-&gt;objects.size());</span></a>
 <a name="189"><span class="lineNum">     189 </span>            :     jassert (mp != nullptr);</a>
 <a name="190"><span class="lineNum">     190 </span>            :     jassert (mp-&gt;state == v);</a>
 <a name="191"><span class="lineNum">     191 </span><span class="lineCov">          1 :     sendChangeMessage();</span></a>
 <a name="192"><span class="lineNum">     192 </span>            : </a>
 <a name="193"><span class="lineNum">     193 </span><span class="lineCov">          1 :     return mp;</span></a>
-<a name="194"><span class="lineNum">     194 </span>            : }</a>
+<a name="194"><span class="lineNum">     194 </span><span class="lineCov">          1 : }</span></a>
 <a name="195"><span class="lineNum">     195 </span>            : </a>
 <a name="196"><span class="lineNum">     196 </span><span class="lineNoCov">          0 : void MacroParameterList::removeMacroParameter (MacroParameter&amp; mp)</span></a>
 <a name="197"><span class="lineNum">     197 </span>            : {</a>

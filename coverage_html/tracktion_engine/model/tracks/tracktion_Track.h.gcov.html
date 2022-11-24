@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">22</td>
-            <td class="headerCovTableEntry">35</td>
-            <td class="headerCovTableEntryLo">62.9 %</td>
+            <td class="headerCovTableEntry">34</td>
+            <td class="headerCovTableEntryLo">64.7 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">20</td>
@@ -286,10 +286,10 @@
 <a name="224"><span class="lineNum">     224 </span>            :     juce::ValueTree getParentTrackTree() const;</a>
 <a name="225"><span class="lineNum">     225 </span>            : </a>
 <a name="226"><span class="lineNum">     226 </span>            :     /** Returns the parent Track if this is a nested track. */</a>
-<a name="227"><span class="lineNum">     227 </span><span class="lineCov">   15047685 :     Track* getParentTrack() const                               { return dynamic_cast&lt;Track*&gt; (cachedParentTrack.get()); }</span></a>
+<a name="227"><span class="lineNum">     227 </span><span class="lineCov">   15053105 :     Track* getParentTrack() const                               { return dynamic_cast&lt;Track*&gt; (cachedParentTrack.get()); }</span></a>
 <a name="228"><span class="lineNum">     228 </span>            : </a>
 <a name="229"><span class="lineNum">     229 </span>            :     /** Returns the parent FolderTrack if this is nested in one. */</a>
-<a name="230"><span class="lineNum">     230 </span><span class="lineCov">   15039339 :     FolderTrack* getParentFolderTrack() const                   { return getParentTrack() != nullptr ? cachedParentFolderTrack : nullptr; }</span></a>
+<a name="230"><span class="lineNum">     230 </span><span class="lineCov">   15044772 :     FolderTrack* getParentFolderTrack() const                   { return getParentTrack() != nullptr ? cachedParentFolderTrack : nullptr; }</span></a>
 <a name="231"><span class="lineNum">     231 </span>            : </a>
 <a name="232"><span class="lineNum">     232 </span>            :     /** Tests whether this is a child of a given Track. */</a>
 <a name="233"><span class="lineNum">     233 </span>            :     bool isAChildOf (const Track&amp; possibleParent) const;</a>
@@ -414,7 +414,7 @@
 <a name="352"><span class="lineNum">     352 </span><span class="lineNoCov">          0 :     void setColour (juce::Colour newColour)                 { colour = newColour; }</span></a>
 <a name="353"><span class="lineNum">     353 </span>            : </a>
 <a name="354"><span class="lineNum">     354 </span>            :     /** Returns the the of this. */</a>
-<a name="355"><span class="lineNum">     355 </span><span class="lineNoCov">          0 :     juce::Colour getColour() const                          { return colour; }</span></a>
+<a name="355"><span class="lineNum">     355 </span>            :     juce::Colour getColour() const                          { return colour; }</a>
 <a name="356"><span class="lineNum">     356 </span>            : </a>
 <a name="357"><span class="lineNum">     357 </span>            :     //==============================================================================</a>
 <a name="358"><span class="lineNum">     358 </span>            :     /** Tests whether this Track can show an image.</a>

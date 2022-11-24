@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">107</td>
-            <td class="headerCovTableEntry">191</td>
-            <td class="headerCovTableEntryLo">56.0 %</td>
+            <td class="headerCovTableEntry">111</td>
+            <td class="headerCovTableEntry">197</td>
+            <td class="headerCovTableEntryLo">56.3 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">28</td>
@@ -172,7 +172,7 @@
 <a name="110"><span class="lineNum">     110 </span>            : </a>
 <a name="111"><span class="lineNum">     111 </span><span class="lineCov">       2150 : juce::var EditItemID::toVar() const</span></a>
 <a name="112"><span class="lineNum">     112 </span>            : {</a>
-<a name="113"><span class="lineNum">     113 </span><span class="lineCov">      17291 :     return juce::var (static_cast&lt;juce::int64&gt; (itemID));</span></a>
+<a name="113"><span class="lineNum">     113 </span><span class="lineCov">      27884 :     return juce::var (static_cast&lt;juce::int64&gt; (itemID));</span></a>
 <a name="114"><span class="lineNum">     114 </span>            : }</a>
 <a name="115"><span class="lineNum">     115 </span>            : </a>
 <a name="116"><span class="lineNum">     116 </span><span class="lineCov">       1693 : juce::String EditItemID::toString() const</span></a>
@@ -191,7 +191,7 @@
 <a name="129"><span class="lineNum">     129 </span><span class="lineCov">       7549 :     juce::ValueTree localTree (v);</span></a>
 <a name="130"><span class="lineNum">     130 </span><span class="lineCov">       7549 :     i.writeID (localTree, nullptr);</span></a>
 <a name="131"><span class="lineNum">     131 </span><span class="lineCov">       7549 :     return i;</span></a>
-<a name="132"><span class="lineNum">     132 </span>            : }</a>
+<a name="132"><span class="lineNum">     132 </span><span class="lineCov">       7549 : }</span></a>
 <a name="133"><span class="lineNum">     133 </span>            : </a>
 <a name="134"><span class="lineNum">     134 </span><span class="lineCov">         72 : juce::Array&lt;EditItemID&gt; EditItemID::parseStringList (const juce::String&amp; list)</span></a>
 <a name="135"><span class="lineNum">     135 </span>            : {</a>
@@ -232,11 +232,11 @@
 <a name="170"><span class="lineNum">     170 </span>            : </a>
 <a name="171"><span class="lineNum">     171 </span><span class="lineCov">     100782 :     static bool isIDReference (const juce::Identifier&amp; parentType, juce::StringRef att)</span></a>
 <a name="172"><span class="lineNum">     172 </span>            :     {</a>
-<a name="173"><span class="lineNum">     173 </span><span class="lineCov">     907038 :         for (auto p : { IDs::currentAutoParamPluginID, IDs::currentAutoParamTag,</span></a>
+<a name="173"><span class="lineNum">     173 </span><span class="lineCov">    1007820 :         for (auto p : { IDs::currentAutoParamPluginID, IDs::currentAutoParamTag,</span></a>
 <a name="174"><span class="lineNum">     174 </span>            :                         IDs::targetTrack, IDs::sourceTrack, IDs::src, IDs::dst,</a>
-<a name="175"><span class="lineNum">     175 </span><span class="lineCov">    2821900 :                         IDs::pluginID, IDs::rackType, IDs::paramID })</span></a>
+<a name="175"><span class="lineNum">     175 </span><span class="lineCov">    2015640 :                         IDs::pluginID, IDs::rackType, IDs::paramID })</span></a>
 <a name="176"><span class="lineNum">     176 </span><span class="lineCov">     907038 :             if (p == att)</span></a>
-<a name="177"><span class="lineNum">     177 </span><span class="lineNoCov">          0 :                 return true;</span></a>
+<a name="177"><span class="lineNum">     177 </span><span class="lineCov">    1914858 :                 return true;</span></a>
 <a name="178"><span class="lineNum">     178 </span>            : </a>
 <a name="179"><span class="lineNum">     179 </span><span class="lineCov">     100782 :         if (att == IDs::source &amp;&amp; ! Clip::isClipState (parentType))</span></a>
 <a name="180"><span class="lineNum">     180 </span>            :             return true;</a>
@@ -279,7 +279,7 @@
 <a name="217"><span class="lineNum">     217 </span>            :     {</a>
 <a name="218"><span class="lineNum">     218 </span><span class="lineCov">     165236 :         for (int i = 0; i &lt; v.getNumProperties(); ++i)</span></a>
 <a name="219"><span class="lineNum">     219 </span>            :         {</a>
-<a name="220"><span class="lineNum">     220 </span><span class="lineCov">     241544 :             auto propName = v.getPropertyName (i);</span></a>
+<a name="220"><span class="lineNum">     220 </span><span class="lineCov">     120772 :             auto propName = v.getPropertyName (i);</span></a>
 <a name="221"><span class="lineNum">     221 </span>            : </a>
 <a name="222"><span class="lineNum">     222 </span><span class="lineCov">     120772 :             if (isIDDeclaration (propName))</span></a>
 <a name="223"><span class="lineNum">     223 </span><span class="lineCov">      11184 :                 visitor (v.getProperty (propName));</span></a>
@@ -304,7 +304,7 @@
 <a name="242"><span class="lineNum">     242 </span><span class="lineNoCov">          0 :                 if (newID != newIDsToApply.end())</span></a>
 <a name="243"><span class="lineNum">     243 </span><span class="lineNoCov">          0 :                     newItemIDs.add (newID-&gt;second);</span></a>
 <a name="244"><span class="lineNum">     244 </span>            :             }</a>
-<a name="245"><span class="lineNum">     245 </span>            :         }</a>
+<a name="245"><span class="lineNum">     245 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="246"><span class="lineNum">     246 </span>            : </a>
 <a name="247"><span class="lineNum">     247 </span><span class="lineNoCov">          0 :         return EditItemID::listToString (newItemIDs);</span></a>
 <a name="248"><span class="lineNum">     248 </span>            :     }</a>
@@ -326,7 +326,7 @@
 <a name="264"><span class="lineNum">     264 </span><span class="lineNoCov">          0 :                     if (newID != newIDsToApply.end())</span></a>
 <a name="265"><span class="lineNum">     265 </span><span class="lineNoCov">          0 :                         xml.setAttribute (attName, newID-&gt;second.toString());</span></a>
 <a name="266"><span class="lineNum">     266 </span>            :                 }</a>
-<a name="267"><span class="lineNum">     267 </span>            :             }</a>
+<a name="267"><span class="lineNum">     267 </span><span class="lineNoCov">          0 :             }</span></a>
 <a name="268"><span class="lineNum">     268 </span><span class="lineNoCov">          0 :             else if (isIDList (attName))</span></a>
 <a name="269"><span class="lineNum">     269 </span>            :             {</a>
 <a name="270"><span class="lineNum">     270 </span><span class="lineNoCov">          0 :                 xml.setAttribute (attName, remapIDList (xml.getAttributeValue (i), newIDsToApply));</span></a>
@@ -334,7 +334,7 @@
 <a name="272"><span class="lineNum">     272 </span>            : </a>
 <a name="273"><span class="lineNum">     273 </span><span class="lineNoCov">          0 :             if (EditItemID::applyNewIDsToExternalXML != nullptr)</span></a>
 <a name="274"><span class="lineNum">     274 </span>            :                 EditItemID::applyNewIDsToExternalXML (xml, attName, newIDsToApply);</a>
-<a name="275"><span class="lineNum">     275 </span>            :         }</a>
+<a name="275"><span class="lineNum">     275 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="276"><span class="lineNum">     276 </span>            : </a>
 <a name="277"><span class="lineNum">     277 </span><span class="lineNoCov">          0 :         for (auto e : xml.getChildIterator())</span></a>
 <a name="278"><span class="lineNum">     278 </span><span class="lineNoCov">          0 :             applyNewIDs (*e, newIDsToApply);</span></a>
@@ -344,11 +344,11 @@
 <a name="282"><span class="lineNum">     282 </span>            :     {</a>
 <a name="283"><span class="lineNum">     283 </span><span class="lineCov">     152361 :         for (int i = 0; i &lt; v.getNumProperties(); ++i)</span></a>
 <a name="284"><span class="lineNum">     284 </span>            :         {</a>
-<a name="285"><span class="lineNum">     285 </span><span class="lineCov">     222750 :             auto propName = v.getPropertyName (i);</span></a>
+<a name="285"><span class="lineNum">     285 </span><span class="lineCov">     111375 :             auto propName = v.getPropertyName (i);</span></a>
 <a name="286"><span class="lineNum">     286 </span>            : </a>
 <a name="287"><span class="lineNum">     287 </span><span class="lineCov">     111375 :             if (isIDRefOrDecl (v, propName))</span></a>
 <a name="288"><span class="lineNum">     288 </span>            :             {</a>
-<a name="289"><span class="lineNum">     289 </span><span class="lineCov">      21186 :                 auto oldID = v.getProperty (propName).toString();</span></a>
+<a name="289"><span class="lineNum">     289 </span><span class="lineCov">      10593 :                 auto oldID = v.getProperty (propName).toString();</span></a>
 <a name="290"><span class="lineNum">     290 </span>            : </a>
 <a name="291"><span class="lineNum">     291 </span><span class="lineCov">      10593 :                 if (oldID.isNotEmpty())</span></a>
 <a name="292"><span class="lineNum">     292 </span>            :                 {</a>
@@ -363,7 +363,7 @@
 <a name="301"><span class="lineNum">     301 </span>            :                         DBG (&quot;Dangling ID found: &quot; &lt;&lt; oldID);</a>
 <a name="302"><span class="lineNum">     302 </span>            :                     }</a>
 <a name="303"><span class="lineNum">     303 </span>            :                 }</a>
-<a name="304"><span class="lineNum">     304 </span>            :             }</a>
+<a name="304"><span class="lineNum">     304 </span><span class="lineCov">      10593 :             }</span></a>
 <a name="305"><span class="lineNum">     305 </span><span class="lineCov">     100782 :             else if (isIDList (propName))</span></a>
 <a name="306"><span class="lineNum">     306 </span>            :             {</a>
 <a name="307"><span class="lineNum">     307 </span><span class="lineNoCov">          0 :                 v.setProperty (propName, remapIDList (v.getProperty (propName), newIDsToApply), um);</span></a>
@@ -371,7 +371,7 @@
 <a name="309"><span class="lineNum">     309 </span>            : </a>
 <a name="310"><span class="lineNum">     310 </span><span class="lineCov">     111375 :             if (EditItemID::applyNewIDsToExternalValueTree)</span></a>
 <a name="311"><span class="lineNum">     311 </span><span class="lineNoCov">          0 :                 EditItemID::applyNewIDsToExternalValueTree (v, propName, newIDsToApply, um);</span></a>
-<a name="312"><span class="lineNum">     312 </span>            :         }</a>
+<a name="312"><span class="lineNum">     312 </span><span class="lineCov">     111375 :         }</span></a>
 <a name="313"><span class="lineNum">     313 </span>            : </a>
 <a name="314"><span class="lineNum">     314 </span><span class="lineCov">      76824 :         for (auto child : v)</span></a>
 <a name="315"><span class="lineNum">     315 </span><span class="lineCov">      35838 :             applyNewIDs (child, newIDsToApply, um);</span></a>
@@ -455,7 +455,7 @@
 <a name="393"><span class="lineNum">     393 </span>            : </a>
 <a name="394"><span class="lineNum">     394 </span><span class="lineCov">       5148 :     IDRemapping::visitAllIDDecls (v, [&amp;] (const juce::var&amp; oldID)</span></a>
 <a name="395"><span class="lineNum">     395 </span>            :     {</a>
-<a name="396"><span class="lineNum">     396 </span><span class="lineCov">      21186 :         auto oldIDString = oldID.toString();</span></a>
+<a name="396"><span class="lineNum">     396 </span><span class="lineCov">      10593 :         auto oldIDString = oldID.toString();</span></a>
 <a name="397"><span class="lineNum">     397 </span>            : </a>
 <a name="398"><span class="lineNum">     398 </span><span class="lineCov">      10593 :         if (oldIDString.isNotEmpty())</span></a>
 <a name="399"><span class="lineNum">     399 </span>            :         {</a>
@@ -473,7 +473,7 @@
 <a name="411"><span class="lineNum">     411 </span><span class="lineCov">       5148 :     IDRemapping::addItemsToReturnedMap (newIDs, remappedIDs);</span></a>
 <a name="412"><span class="lineNum">     412 </span><span class="lineCov">       5148 : }</span></a>
 <a name="413"><span class="lineNum">     413 </span>            : </a>
-<a name="414"><span class="lineNum">     414 </span><span class="lineCov">       5148 : struct MultipleNewIDGenerator</span></a>
+<a name="414"><span class="lineNum">     414 </span><span class="lineCov">      10296 : struct MultipleNewIDGenerator</span></a>
 <a name="415"><span class="lineNum">     415 </span>            : {</a>
 <a name="416"><span class="lineNum">     416 </span><span class="lineCov">       5148 :     MultipleNewIDGenerator (Edit&amp; ed, EditItemID::IDMap* remappedIDs)  : edit (ed)</span></a>
 <a name="417"><span class="lineNum">     417 </span>            :     {</a>

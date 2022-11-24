@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">35</td>
-            <td class="headerCovTableEntry">39</td>
-            <td class="headerCovTableEntryMed">89.7 %</td>
+            <td class="headerCovTableEntry">38</td>
+            <td class="headerCovTableEntry">42</td>
+            <td class="headerCovTableEntryHi">90.5 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">13</td>
@@ -130,7 +130,7 @@
 <a name="68"><span class="lineNum">      68 </span>            :     /** Returns the current value of the property. If the property does not exist,</a>
 <a name="69"><span class="lineNum">      69 </span>            :         returns the fallback default value.</a>
 <a name="70"><span class="lineNum">      70 </span>            :     */</a>
-<a name="71"><span class="lineNum">      71 </span>            :     Type get() const noexcept                        { return cachedValue; }</a>
+<a name="71"><span class="lineNum">      71 </span><span class="lineCov">     122979 :     Type get() const noexcept                        { return cachedValue; }</span></a>
 <a name="72"><span class="lineNum">      72 </span>            : </a>
 <a name="73"><span class="lineNum">      73 </span>            :     /** Dereference operator. Provides direct access to the property.  */</a>
 <a name="74"><span class="lineNum">      74 </span>            :     Type&amp; operator*() noexcept                       { return cachedValue; }</a>
@@ -162,7 +162,7 @@
 <a name="100"><span class="lineNum">     100 </span>            :     bool isUsingDefault() const;</a>
 <a name="101"><span class="lineNum">     101 </span>            : </a>
 <a name="102"><span class="lineNum">     102 </span>            :     /** Returns the current fallback default value. */</a>
-<a name="103"><span class="lineNum">     103 </span>            :     Type getDefault() const                          { return defaultValue; }</a>
+<a name="103"><span class="lineNum">     103 </span><span class="lineCov">          2 :     Type getDefault() const                          { return defaultValue; }</span></a>
 <a name="104"><span class="lineNum">     104 </span>            : </a>
 <a name="105"><span class="lineNum">     105 </span>            :     //==============================================================================</a>
 <a name="106"><span class="lineNum">     106 </span>            :     /** Sets the property. This will actually modify the property in the referenced ValueTree. */</a>
@@ -280,7 +280,7 @@
 <a name="218"><span class="lineNum">     218 </span>            : inline ConstrainedCachedValue&lt;Type&gt;&amp; ConstrainedCachedValue&lt;Type&gt;::operator= (const Type&amp; newValue)</a>
 <a name="219"><span class="lineNum">     219 </span>            : {</a>
 <a name="220"><span class="lineNum">     220 </span><span class="lineCov">         32 :     setValue (newValue, undoManager);</span></a>
-<a name="221"><span class="lineNum">     221 </span>            :     return *this;</a>
+<a name="221"><span class="lineNum">     221 </span><span class="lineCov">         32 :     return *this;</span></a>
 <a name="222"><span class="lineNum">     222 </span>            : }</a>
 <a name="223"><span class="lineNum">     223 </span>            : </a>
 <a name="224"><span class="lineNum">     224 </span>            : template &lt;typename Type&gt;</a>

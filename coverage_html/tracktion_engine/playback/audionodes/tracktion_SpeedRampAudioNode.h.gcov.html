@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">190</td>
+            <td class="headerCovTableEntry">185</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -182,7 +182,7 @@
 <a name="120"><span class="lineNum">     120 </span>            :             return;</a>
 <a name="121"><span class="lineNum">     121 </span>            : </a>
 <a name="122"><span class="lineNum">     122 </span>            :         auto fileStart = editTimeToFileSample (editTime.getStart());</a>
-<a name="123"><span class="lineNum">     123 </span><span class="lineNoCov">          0 :         auto fileEnd   = editTimeToFileSample (editTime.getEnd());</span></a>
+<a name="123"><span class="lineNum">     123 </span>            :         auto fileEnd   = editTimeToFileSample (editTime.getEnd());</a>
 <a name="124"><span class="lineNum">     124 </span>            : </a>
 <a name="125"><span class="lineNum">     125 </span>            :         int preRead            = 5;</a>
 <a name="126"><span class="lineNum">     126 </span><span class="lineNoCov">          0 :         auto fileReadStart     = static_cast&lt;SampleCount&gt; (std::ceil (fileStart)) - preRead;</span></a>
@@ -233,7 +233,7 @@
 <a name="171"><span class="lineNum">     171 </span><span class="lineNoCov">          0 :         for (int channel = rc.destBuffer-&gt;getNumChannels(); --channel &gt;= 0;)</span></a>
 <a name="172"><span class="lineNum">     172 </span>            :         {</a>
 <a name="173"><span class="lineNum">     173 </span><span class="lineNoCov">          0 :             const int srcChan = juce::jmin (channel, scratchBuffer.buffer.getNumChannels() - 1);</span></a>
-<a name="174"><span class="lineNum">     174 </span><span class="lineNoCov">          0 :             const float* const src = scratchBuffer.buffer.getReadPointer (srcChan);</span></a>
+<a name="174"><span class="lineNum">     174 </span>            :             const float* const src = scratchBuffer.buffer.getReadPointer (srcChan);</a>
 <a name="175"><span class="lineNum">     175 </span>            :             float dest[5 + 2];</a>
 <a name="176"><span class="lineNum">     176 </span><span class="lineNoCov">          0 :             const float gain = gains[channel &amp; 1];</span></a>
 <a name="177"><span class="lineNum">     177 </span>            : </a>
@@ -249,7 +249,7 @@
 <a name="187"><span class="lineNum">     187 </span><span class="lineNoCov">          0 :             for (int channel = rc.destBuffer-&gt;getNumChannels(); --channel &gt;= 0;)</span></a>
 <a name="188"><span class="lineNum">     188 </span>            :             {</a>
 <a name="189"><span class="lineNum">     189 </span><span class="lineNoCov">          0 :                 const int srcChan = juce::jmin (channel, scratchBuffer.buffer.getNumChannels() - 1);</span></a>
-<a name="190"><span class="lineNum">     190 </span><span class="lineNoCov">          0 :                 const float* const src = scratchBuffer.buffer.getReadPointer (srcChan, preRead);</span></a>
+<a name="190"><span class="lineNum">     190 </span>            :                 const float* const src = scratchBuffer.buffer.getReadPointer (srcChan, preRead);</a>
 <a name="191"><span class="lineNum">     191 </span><span class="lineNoCov">          0 :                 float* const dest = rc.destBuffer-&gt;getWritePointer (channel, rc.bufferStartSample);</span></a>
 <a name="192"><span class="lineNum">     192 </span>            : </a>
 <a name="193"><span class="lineNum">     193 </span><span class="lineNoCov">          0 :                 resampler[channel].processAdding (ratio, src, dest, rc.bufferNumSamples, gains[channel &amp; 1]);</span></a>
@@ -268,7 +268,7 @@
 <a name="206"><span class="lineNum">     206 </span><span class="lineNoCov">          0 :                 lastSample[channel] = dest[rc.bufferNumSamples - 1];</span></a>
 <a name="207"><span class="lineNum">     207 </span>            :             }</a>
 <a name="208"><span class="lineNum">     208 </span>            :         }</a>
-<a name="209"><span class="lineNum">     209 </span>            :     }</a>
+<a name="209"><span class="lineNum">     209 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="210"><span class="lineNum">     210 </span>            : </a>
 <a name="211"><span class="lineNum">     211 </span>            :     Engine&amp; engine;</a>
 <a name="212"><span class="lineNum">     212 </span>            : </a>
@@ -334,8 +334,8 @@
 <a name="272"><span class="lineNum">     272 </span>            :                         AudioFadeCurve::Type fadeInType_,</a>
 <a name="273"><span class="lineNum">     273 </span>            :                         AudioFadeCurve::Type fadeOutType_)</a>
 <a name="274"><span class="lineNum">     274 </span><span class="lineNoCov">          0 :         : SingleInputAudioNode (source),</span></a>
-<a name="275"><span class="lineNum">     275 </span>            :           fadeIn (in), fadeOut (out),</a>
-<a name="276"><span class="lineNum">     276 </span>            :           fadeInType (fadeInType_),</a>
+<a name="275"><span class="lineNum">     275 </span><span class="lineNoCov">          0 :           fadeIn (in), fadeOut (out),</span></a>
+<a name="276"><span class="lineNum">     276 </span><span class="lineNoCov">          0 :           fadeInType (fadeInType_),</span></a>
 <a name="277"><span class="lineNum">     277 </span><span class="lineNoCov">          0 :           fadeOutType (fadeOutType_)</span></a>
 <a name="278"><span class="lineNum">     278 </span>            :     {</a>
 <a name="279"><span class="lineNum">     279 </span>            :         jassert (! (fadeIn.isEmpty() &amp;&amp; fadeOut.isEmpty()));</a>
@@ -381,7 +381,7 @@
 <a name="319"><span class="lineNum">     319 </span>            : </a>
 <a name="320"><span class="lineNum">     320 </span><span class="lineNoCov">          0 :                 numSamples -= rc2.bufferNumSamples;</span></a>
 <a name="321"><span class="lineNum">     321 </span><span class="lineNoCov">          0 :                 startSample += rc2.bufferNumSamples;</span></a>
-<a name="322"><span class="lineNum">     322 </span><span class="lineNoCov">          0 :                 streamTime.start = rc2.streamTime.getEnd();</span></a>
+<a name="322"><span class="lineNum">     322 </span>            :                 streamTime.start = rc2.streamTime.getEnd();</a>
 <a name="323"><span class="lineNum">     323 </span>            :             }</a>
 <a name="324"><span class="lineNum">     324 </span>            : </a>
 <a name="325"><span class="lineNum">     325 </span>            :             {</a>
@@ -420,13 +420,13 @@
 <a name="358"><span class="lineNum">     358 </span><span class="lineNoCov">          0 :         auto editTime = rc.getEditTime();</span></a>
 <a name="359"><span class="lineNum">     359 </span>            : </a>
 <a name="360"><span class="lineNum">     360 </span><span class="lineNoCov">          0 :         if (editTime.isSplit)</span></a>
-<a name="361"><span class="lineNum">     361 </span><span class="lineNoCov">          0 :             return fadeIn.overlaps (editTime.editRange1)</span></a>
+<a name="361"><span class="lineNum">     361 </span>            :             return fadeIn.overlaps (editTime.editRange1)</a>
 <a name="362"><span class="lineNum">     362 </span>            :                     || fadeIn.overlaps (editTime.editRange2)</a>
-<a name="363"><span class="lineNum">     363 </span><span class="lineNoCov">          0 :                     || fadeOut.overlaps (editTime.editRange1)</span></a>
+<a name="363"><span class="lineNum">     363 </span>            :                     || fadeOut.overlaps (editTime.editRange1)</a>
 <a name="364"><span class="lineNum">     364 </span>            :                     || fadeOut.overlaps (editTime.editRange2);</a>
 <a name="365"><span class="lineNum">     365 </span>            : </a>
-<a name="366"><span class="lineNum">     366 </span><span class="lineNoCov">          0 :         return fadeIn.overlaps (editTime.editRange1)</span></a>
-<a name="367"><span class="lineNum">     367 </span><span class="lineNoCov">          0 :                 || fadeOut.overlaps (editTime.editRange1);</span></a>
+<a name="366"><span class="lineNum">     366 </span>            :         return fadeIn.overlaps (editTime.editRange1)</a>
+<a name="367"><span class="lineNum">     367 </span>            :                 || fadeOut.overlaps (editTime.editRange1);</a>
 <a name="368"><span class="lineNum">     368 </span>            :     }</a>
 <a name="369"><span class="lineNum">     369 </span>            : </a>
 <a name="370"><span class="lineNum">     370 </span><span class="lineNoCov">          0 :     void renderRampSection (const AudioRenderContext&amp; rc, legacy::EditTimeRange editTime,</span></a>

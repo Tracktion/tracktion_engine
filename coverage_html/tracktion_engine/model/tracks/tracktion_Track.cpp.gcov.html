@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">186</td>
-            <td class="headerCovTableEntry">295</td>
-            <td class="headerCovTableEntryLo">63.1 %</td>
+            <td class="headerCovTableEntry">191</td>
+            <td class="headerCovTableEntry">301</td>
+            <td class="headerCovTableEntryLo">63.5 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">33</td>
@@ -76,10 +76,10 @@
 <a name="14"><span class="lineNum">      14 </span><span class="lineCov">       2214 : Track::Track (Edit&amp; ed, const juce::ValueTree&amp; v, double defaultHeight, double minHeight, double maxHeight)</span></a>
 <a name="15"><span class="lineNum">      15 </span>            :     : EditItem (EditItemID::readOrCreateNewID (ed, v), ed),</a>
 <a name="16"><span class="lineNum">      16 </span>            :       MacroParameterElement (ed, v), // TODO: @Dave - this dumps an XML element in every track, including tempo, marker, etc - is that needed?</a>
-<a name="17"><span class="lineNum">      17 </span>            :       defaultTrackHeight (defaultHeight),</a>
-<a name="18"><span class="lineNum">      18 </span>            :       minTrackHeight (minHeight),</a>
-<a name="19"><span class="lineNum">      19 </span>            :       maxTrackHeight (maxHeight),</a>
-<a name="20"><span class="lineNum">      20 </span>            :       state (v),</a>
+<a name="17"><span class="lineNum">      17 </span><span class="lineCov">       2214 :       defaultTrackHeight (defaultHeight),</span></a>
+<a name="18"><span class="lineNum">      18 </span><span class="lineCov">       2214 :       minTrackHeight (minHeight),</span></a>
+<a name="19"><span class="lineNum">      19 </span><span class="lineCov">       2214 :       maxTrackHeight (maxHeight),</span></a>
+<a name="20"><span class="lineNum">      20 </span><span class="lineCov">       2214 :       state (v),</span></a>
 <a name="21"><span class="lineNum">      21 </span><span class="lineCov">       6642 :       pluginList (ed)</span></a>
 <a name="22"><span class="lineNum">      22 </span>            : {</a>
 <a name="23"><span class="lineNum">      23 </span><span class="lineCov">       2214 :     edit.trackCache.addItem (*this);</span></a>
@@ -99,7 +99,7 @@
 <a name="37"><span class="lineNum">      37 </span><span class="lineCov">       2214 :     state.addListener (this);</span></a>
 <a name="38"><span class="lineNum">      38 </span><span class="lineCov">       2214 : }</span></a>
 <a name="39"><span class="lineNum">      39 </span>            : </a>
-<a name="40"><span class="lineNum">      40 </span><span class="lineCov">       6642 : Track::~Track()</span></a>
+<a name="40"><span class="lineNum">      40 </span><span class="lineCov">       2214 : Track::~Track()</span></a>
 <a name="41"><span class="lineNum">      41 </span>            : {</a>
 <a name="42"><span class="lineNum">      42 </span><span class="lineCov">       2214 :     edit.trackCache.removeItem (*this);</span></a>
 <a name="43"><span class="lineNum">      43 </span><span class="lineCov">       2214 :     cachedParentFolderTrack = nullptr;</span></a>
@@ -108,17 +108,17 @@
 <a name="46"><span class="lineNum">      46 </span>            : </a>
 <a name="47"><span class="lineNum">      47 </span><span class="lineCov">       2214 :     pluginList.releaseObjects();</span></a>
 <a name="48"><span class="lineNum">      48 </span>            :     currentAutoParam = {};</a>
-<a name="49"><span class="lineNum">      49 </span><span class="lineCov">       2214 : }</span></a>
+<a name="49"><span class="lineNum">      49 </span><span class="lineCov">       6642 : }</span></a>
 <a name="50"><span class="lineNum">      50 </span>            : </a>
 <a name="51"><span class="lineNum">      51 </span><span class="lineCov">          1 : void Track::flushStateToValueTree()</span></a>
 <a name="52"><span class="lineNum">      52 </span>            : {</a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineCov">          4 :     for (auto p : getAllPlugins())</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">          3 :     for (auto p : getAllPlugins())</span></a>
 <a name="54"><span class="lineNum">      54 </span><span class="lineCov">          2 :         p-&gt;flushPluginStateToValueTree();</span></a>
 <a name="55"><span class="lineNum">      55 </span><span class="lineCov">          1 : }</span></a>
 <a name="56"><span class="lineNum">      56 </span>            : </a>
 <a name="57"><span class="lineNum">      57 </span><span class="lineCov">       2669 : void Track::initialise()</span></a>
 <a name="58"><span class="lineNum">      58 </span>            : {</a>
-<a name="59"><span class="lineNum">      59 </span><span class="lineCov">       5338 :     CRASH_TRACER</span></a>
+<a name="59"><span class="lineNum">      59 </span><span class="lineCov">       2669 :     CRASH_TRACER</span></a>
 <a name="60"><span class="lineNum">      60 </span>            : </a>
 <a name="61"><span class="lineNum">      61 </span><span class="lineCov">       2669 :     auto um = &amp;edit.getUndoManager();</span></a>
 <a name="62"><span class="lineNum">      62 </span>            : </a>
@@ -143,7 +143,7 @@
 <a name="81"><span class="lineNum">      81 </span>            : </a>
 <a name="82"><span class="lineNum">      82 </span><span class="lineCov">        276 : void Track::setName (const juce::String&amp; n)</span></a>
 <a name="83"><span class="lineNum">      83 </span>            : {</a>
-<a name="84"><span class="lineNum">      84 </span><span class="lineCov">        552 :     auto newName = n.substring (0, 64);</span></a>
+<a name="84"><span class="lineNum">      84 </span><span class="lineCov">        276 :     auto newName = n.substring (0, 64);</span></a>
 <a name="85"><span class="lineNum">      85 </span>            : </a>
 <a name="86"><span class="lineNum">      86 </span><span class="lineCov">        276 :     if (trackName != newName)</span></a>
 <a name="87"><span class="lineNum">      87 </span><span class="lineCov">        268 :         trackName = newName;</span></a>
@@ -235,7 +235,7 @@
 <a name="173"><span class="lineNum">     173 </span>            :     auto index = tracks.indexOf (const_cast&lt;Track*&gt; (this));</a>
 <a name="174"><span class="lineNum">     174 </span>            :     jassert (index &gt;= 0);</a>
 <a name="175"><span class="lineNum">     175 </span>            : </a>
-<a name="176"><span class="lineNum">     176 </span><span class="lineCov">      10000 :     return tracks[index + delta];</span></a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineCov">       5000 :     return tracks[index + delta];</span></a>
 <a name="177"><span class="lineNum">     177 </span>            : }</a>
 <a name="178"><span class="lineNum">     178 </span>            : </a>
 <a name="179"><span class="lineNum">     179 </span>            : //==============================================================================</a>
@@ -274,7 +274,7 @@
 <a name="212"><span class="lineNum">     212 </span>            : </a>
 <a name="213"><span class="lineNum">     213 </span><span class="lineCov">     195854 : bool Track::isPartOfSubmix() const</span></a>
 <a name="214"><span class="lineNum">     214 </span>            : {</a>
-<a name="215"><span class="lineNum">     215 </span><span class="lineCov">     661176 :     for (auto p = getParentFolderTrack(); p != nullptr; p = p-&gt;getParentFolderTrack())</span></a>
+<a name="215"><span class="lineNum">     215 </span><span class="lineCov">     952312 :     for (auto p = getParentFolderTrack(); p != nullptr; p = p-&gt;getParentFolderTrack())</span></a>
 <a name="216"><span class="lineNum">     216 </span><span class="lineCov">     465642 :         if (p-&gt;isSubmixFolder())</span></a>
 <a name="217"><span class="lineNum">     217 </span>            :             return true;</a>
 <a name="218"><span class="lineNum">     218 </span>            : </a>
@@ -332,7 +332,7 @@
 <a name="270"><span class="lineNum">     270 </span><span class="lineCov">       1900 :     auto plugins = getAllPlugins();</span></a>
 <a name="271"><span class="lineNum">     271 </span>            :     destArray.addArray (plugins);</a>
 <a name="272"><span class="lineNum">     272 </span>            : </a>
-<a name="273"><span class="lineNum">     273 </span><span class="lineCov">       3800 :     for (auto m : modifierList-&gt;getModifiers())</span></a>
+<a name="273"><span class="lineNum">     273 </span><span class="lineCov">       1900 :     for (auto m : modifierList-&gt;getModifiers())</span></a>
 <a name="274"><span class="lineNum">     274 </span><span class="lineNoCov">          0 :         if (auto aei = dynamic_cast&lt;AutomatableEditItem*&gt; (m))</span></a>
 <a name="275"><span class="lineNum">     275 </span>            :             destArray.add (aei);</a>
 <a name="276"><span class="lineNum">     276 </span>            : </a>
@@ -347,10 +347,10 @@
 <a name="285"><span class="lineNum">     285 </span><span class="lineCov">      22722 :     return pluginList.getPlugins();</span></a>
 <a name="286"><span class="lineNum">     286 </span>            : }</a>
 <a name="287"><span class="lineNum">     287 </span>            : </a>
-<a name="288"><span class="lineNum">     288 </span><span class="lineCov">        202 : void Track::sendMirrorUpdateToAllPlugins (Plugin&amp; p) const</span></a>
+<a name="288"><span class="lineNum">     288 </span><span class="lineCov">        198 : void Track::sendMirrorUpdateToAllPlugins (Plugin&amp; p) const</span></a>
 <a name="289"><span class="lineNum">     289 </span>            : {</a>
-<a name="290"><span class="lineNum">     290 </span><span class="lineCov">        202 :     pluginList.sendMirrorUpdateToAllPlugins (p);</span></a>
-<a name="291"><span class="lineNum">     291 </span><span class="lineCov">        202 : }</span></a>
+<a name="290"><span class="lineNum">     290 </span><span class="lineCov">        198 :     pluginList.sendMirrorUpdateToAllPlugins (p);</span></a>
+<a name="291"><span class="lineNum">     291 </span><span class="lineCov">        198 : }</span></a>
 <a name="292"><span class="lineNum">     292 </span>            : </a>
 <a name="293"><span class="lineNum">     293 </span><span class="lineNoCov">          0 : void Track::flipAllPluginsEnablement()</span></a>
 <a name="294"><span class="lineNum">     294 </span>            : {</a>
@@ -367,7 +367,7 @@
 <a name="305"><span class="lineNum">     305 </span>            :                 return true;</a>
 <a name="306"><span class="lineNum">     306 </span>            : </a>
 <a name="307"><span class="lineNum">     307 </span>            :         return false;</a>
-<a name="308"><span class="lineNum">     308 </span>            :     };</a>
+<a name="308"><span class="lineNum">     308 </span><span class="lineNoCov">          0 :     };</span></a>
 <a name="309"><span class="lineNum">     309 </span>            : </a>
 <a name="310"><span class="lineNum">     310 </span><span class="lineNoCov">          0 :     const bool enable = ! areAnyOn (pluginList);</span></a>
 <a name="311"><span class="lineNum">     311 </span>            : </a>
@@ -381,7 +381,7 @@
 <a name="319"><span class="lineNum">     319 </span>            : {</a>
 <a name="320"><span class="lineNum">     320 </span><span class="lineCov">       3107 :     juce::Array&lt;AutomatableParameter*&gt; params;</span></a>
 <a name="321"><span class="lineNum">     321 </span>            : </a>
-<a name="322"><span class="lineNum">     322 </span><span class="lineCov">       7932 :     for (auto p : getAllPlugins())</span></a>
+<a name="322"><span class="lineNum">     322 </span><span class="lineCov">       4825 :     for (auto p : getAllPlugins())</span></a>
 <a name="323"><span class="lineNum">     323 </span>            :     {</a>
 <a name="324"><span class="lineNum">     324 </span><span class="lineCov">       4140 :         for (int j = 0; j &lt; p-&gt;getNumAutomatableParameters(); ++j)</span></a>
 <a name="325"><span class="lineNum">     325 </span><span class="lineCov">       2422 :             params.add (p-&gt;getAutomatableParameter (j).get());</span></a>
@@ -389,7 +389,7 @@
 <a name="327"><span class="lineNum">     327 </span><span class="lineCov">       3436 :         params.addArray (p-&gt;macroParameterList.getMacroParameters());</span></a>
 <a name="328"><span class="lineNum">     328 </span>            :     }</a>
 <a name="329"><span class="lineNum">     329 </span>            : </a>
-<a name="330"><span class="lineNum">     330 </span><span class="lineCov">       6214 :     for (auto m : modifierList-&gt;getModifiers())</span></a>
+<a name="330"><span class="lineNum">     330 </span><span class="lineCov">       3107 :     for (auto m : modifierList-&gt;getModifiers())</span></a>
 <a name="331"><span class="lineNum">     331 </span><span class="lineNoCov">          0 :         params.addArray (m-&gt;getAutomatableParameters());</span></a>
 <a name="332"><span class="lineNum">     332 </span>            : </a>
 <a name="333"><span class="lineNum">     333 </span><span class="lineCov">       3107 :     return params;</span></a>
@@ -440,7 +440,7 @@
 <a name="378"><span class="lineNum">     378 </span><span class="lineCov">       2206 :     currentAutoParamPlugin.forceUpdateOfCachedValue();</span></a>
 <a name="379"><span class="lineNum">     379 </span><span class="lineCov">       2206 :     currentAutoParamID.forceUpdateOfCachedValue();</span></a>
 <a name="380"><span class="lineNum">     380 </span>            : </a>
-<a name="381"><span class="lineNum">     381 </span><span class="lineCov">       2206 :     auto newParam = findAutomatableParam (edit, currentAutoParamPlugin.get(), currentAutoParamID.get()).get();</span></a>
+<a name="381"><span class="lineNum">     381 </span><span class="lineCov">       4412 :     auto newParam = findAutomatableParam (edit, currentAutoParamPlugin.get(), currentAutoParamID.get()).get();</span></a>
 <a name="382"><span class="lineNum">     382 </span>            : </a>
 <a name="383"><span class="lineNum">     383 </span><span class="lineCov">       2206 :     if (currentAutoParam != newParam)</span></a>
 <a name="384"><span class="lineNum">     384 </span>            :     {</a>
@@ -474,13 +474,13 @@
 <a name="412"><span class="lineNum">     412 </span>            : </a>
 <a name="413"><span class="lineNum">     413 </span><span class="lineCov">       4402 : juce::ValueTree Track::getParentTrackTree() const</span></a>
 <a name="414"><span class="lineNum">     414 </span>            : {</a>
-<a name="415"><span class="lineNum">     415 </span><span class="lineCov">       8804 :     auto parent = state.getParent();</span></a>
+<a name="415"><span class="lineNum">     415 </span><span class="lineCov">       4402 :     auto parent = state.getParent();</span></a>
 <a name="416"><span class="lineNum">     416 </span>            : </a>
 <a name="417"><span class="lineNum">     417 </span><span class="lineCov">       4402 :     if (TrackList::isTrack (parent))</span></a>
 <a name="418"><span class="lineNum">     418 </span><span class="lineCov">        187 :         return parent;</span></a>
 <a name="419"><span class="lineNum">     419 </span>            : </a>
 <a name="420"><span class="lineNum">     420 </span><span class="lineCov">       4215 :     return {};</span></a>
-<a name="421"><span class="lineNum">     421 </span>            : }</a>
+<a name="421"><span class="lineNum">     421 </span><span class="lineCov">       4402 : }</span></a>
 <a name="422"><span class="lineNum">     422 </span>            : </a>
 <a name="423"><span class="lineNum">     423 </span><span class="lineCov">        570 : bool Track::isAChildOf (const Track&amp; t) const</span></a>
 <a name="424"><span class="lineNum">     424 </span>            : {</a>
@@ -521,7 +521,7 @@
 <a name="459"><span class="lineNum">     459 </span>            : </a>
 <a name="460"><span class="lineNum">     460 </span><span class="lineCov">       2677 : void Track::updateTrackList()</span></a>
 <a name="461"><span class="lineNum">     461 </span>            : {</a>
-<a name="462"><span class="lineNum">     462 </span><span class="lineCov">       5354 :     CRASH_TRACER</span></a>
+<a name="462"><span class="lineNum">     462 </span><span class="lineCov">       2677 :     CRASH_TRACER</span></a>
 <a name="463"><span class="lineNum">     463 </span>            : </a>
 <a name="464"><span class="lineNum">     464 </span><span class="lineCov">       2677 :     if (TrackList::hasAnySubTracks (state))</span></a>
 <a name="465"><span class="lineNum">     465 </span>            :     {</a>
@@ -538,7 +538,7 @@
 <a name="476"><span class="lineNum">     476 </span>            : </a>
 <a name="477"><span class="lineNum">     477 </span><span class="lineCov">       4402 : void Track::updateCachedParent()</span></a>
 <a name="478"><span class="lineNum">     478 </span>            : {</a>
-<a name="479"><span class="lineNum">     479 </span><span class="lineCov">       8804 :     CRASH_TRACER</span></a>
+<a name="479"><span class="lineNum">     479 </span><span class="lineCov">       4402 :     CRASH_TRACER</span></a>
 <a name="480"><span class="lineNum">     480 </span><span class="lineCov">       4402 :     auto parent = getParentTrackTree();</span></a>
 <a name="481"><span class="lineNum">     481 </span>            : </a>
 <a name="482"><span class="lineNum">     482 </span><span class="lineCov">       4402 :     if (parent.isValid())</span></a>
@@ -644,12 +644,12 @@
 <a name="582"><span class="lineNum">     582 </span>            :     }</a>
 <a name="583"><span class="lineNum">     583 </span><span class="lineCov">      36925 : }</span></a>
 <a name="584"><span class="lineNum">     584 </span>            : </a>
-<a name="585"><span class="lineNum">     585 </span><span class="lineCov">      21844 : void Track::valueTreeChildAdded (juce::ValueTree&amp; p, juce::ValueTree&amp; c)</span></a>
+<a name="585"><span class="lineNum">     585 </span><span class="lineCov">      21828 : void Track::valueTreeChildAdded (juce::ValueTree&amp; p, juce::ValueTree&amp; c)</span></a>
 <a name="586"><span class="lineNum">     586 </span>            : {</a>
-<a name="587"><span class="lineNum">     587 </span><span class="lineCov">      21844 :     if (p == state)</span></a>
+<a name="587"><span class="lineNum">     587 </span><span class="lineCov">      21828 :     if (p == state)</span></a>
 <a name="588"><span class="lineNum">     588 </span><span class="lineCov">      10301 :         if (TrackList::isTrack (c))</span></a>
 <a name="589"><span class="lineNum">     589 </span><span class="lineCov">          8 :             updateTrackList();</span></a>
-<a name="590"><span class="lineNum">     590 </span><span class="lineCov">      21844 : }</span></a>
+<a name="590"><span class="lineNum">     590 </span><span class="lineCov">      21828 : }</span></a>
 <a name="591"><span class="lineNum">     591 </span>            : </a>
 <a name="592"><span class="lineNum">     592 </span><span class="lineCov">      10300 : void Track::valueTreeChildRemoved (juce::ValueTree&amp; p, juce::ValueTree&amp; c, int)</span></a>
 <a name="593"><span class="lineNum">     593 </span>            : {</a>

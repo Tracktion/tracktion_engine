@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">25</td>
-            <td class="headerCovTableEntry">162</td>
-            <td class="headerCovTableEntryLo">15.4 %</td>
+            <td class="headerCovTableEntry">24</td>
+            <td class="headerCovTableEntry">167</td>
+            <td class="headerCovTableEntryLo">14.4 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">5</td>
@@ -129,7 +129,7 @@
 <a name="67"><span class="lineNum">      67 </span>            :     {</a>
 <a name="68"><span class="lineNum">      68 </span><span class="lineCov">          4 :         if (auto writer = format-&gt;createWriterFor (out.get(), sampleRate,</span></a>
 <a name="69"><span class="lineNum">      69 </span>            :                                                    numChannels, bitsPerSample,</a>
-<a name="70"><span class="lineNum">      70 </span><span class="lineCov">          4 :                                                    metadata, quality))</span></a>
+<a name="70"><span class="lineNum">      70 </span>            :                                                    metadata, quality))</a>
 <a name="71"><span class="lineNum">      71 </span>            :         {</a>
 <a name="72"><span class="lineNum">      72 </span>            :             out.release();</a>
 <a name="73"><span class="lineNum">      73 </span><span class="lineCov">          4 :             return writer;</span></a>
@@ -313,7 +313,7 @@
 <a name="251"><span class="lineNum">     251 </span><span class="lineNoCov">          0 :         if (! range.isEmpty())</span></a>
 <a name="252"><span class="lineNum">     252 </span><span class="lineNoCov">          0 :             if (tempFile.overwriteTargetFileWithTemporary())</span></a>
 <a name="253"><span class="lineNum">     253 </span><span class="lineNoCov">          0 :                 return range;</span></a>
-<a name="254"><span class="lineNum">     254 </span>            :     }</a>
+<a name="254"><span class="lineNum">     254 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="255"><span class="lineNum">     255 </span>            : </a>
 <a name="256"><span class="lineNum">     256 </span><span class="lineNoCov">          0 :     return {};</span></a>
 <a name="257"><span class="lineNum">     257 </span>            : }</a>
@@ -343,7 +343,7 @@
 <a name="281"><span class="lineNum">     281 </span>            :         }</a>
 <a name="282"><span class="lineNum">     282 </span>            : </a>
 <a name="283"><span class="lineNum">     283 </span><span class="lineNoCov">          0 :         return reverse (engine, tempFile.getFile(), destination, progress, job, false);</span></a>
-<a name="284"><span class="lineNum">     284 </span>            :     }</a>
+<a name="284"><span class="lineNum">     284 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="285"><span class="lineNum">     285 </span>            : </a>
 <a name="286"><span class="lineNum">     286 </span>            :     // need to strip AIFF metadata to write to wav files</a>
 <a name="287"><span class="lineNum">     287 </span><span class="lineNoCov">          0 :     if (reader-&gt;metadataValues.getValue (&quot;MetaDataSource&quot;, &quot;None&quot;) == &quot;AIFF&quot;)</span></a>
@@ -415,7 +415,7 @@
 <a name="353"><span class="lineNum">     353 </span>            :     }</a>
 <a name="354"><span class="lineNum">     354 </span>            : </a>
 <a name="355"><span class="lineNum">     355 </span>            :     return false;</a>
-<a name="356"><span class="lineNum">     356 </span>            : }</a>
+<a name="356"><span class="lineNum">     356 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="357"><span class="lineNum">     357 </span>            : </a>
 <a name="358"><span class="lineNum">     358 </span><span class="lineCov">         80 : void AudioFileUtils::addBWAVStartToMetadata (juce::StringPairArray&amp; metadata, SampleCount time)</span></a>
 <a name="359"><span class="lineNum">     359 </span>            : {</a>
@@ -442,7 +442,7 @@
 <a name="380"><span class="lineNum">     380 </span>            : </a>
 <a name="381"><span class="lineNum">     381 </span><span class="lineNoCov">          0 :     std::unique_ptr&lt;juce::AudioFormatReader&gt; reader (afm.createReaderFor (file));</span></a>
 <a name="382"><span class="lineNum">     382 </span><span class="lineNoCov">          0 :     return reader != nullptr;</span></a>
-<a name="383"><span class="lineNum">     383 </span>            : }</a>
+<a name="383"><span class="lineNum">     383 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="384"><span class="lineNum">     384 </span>            : </a>
 <a name="385"><span class="lineNum">     385 </span><span class="lineNoCov">          0 : void AudioFileUtils::applyBWAVStartTime (const juce::File&amp; file, SampleCount time)</span></a>
 <a name="386"><span class="lineNum">     386 </span>            : {</a>
@@ -468,7 +468,7 @@
 <a name="406"><span class="lineNum">     406 </span><span class="lineNoCov">          0 :                         pos = i + 8;</span></a>
 <a name="407"><span class="lineNum">     407 </span>            :                 }</a>
 <a name="408"><span class="lineNum">     408 </span>            :             }</a>
-<a name="409"><span class="lineNum">     409 </span>            :         }</a>
+<a name="409"><span class="lineNum">     409 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="410"><span class="lineNum">     410 </span>            : </a>
 <a name="411"><span class="lineNum">     411 </span><span class="lineNoCov">          0 :         if (pos &gt; 0)</span></a>
 <a name="412"><span class="lineNum">     412 </span>            :         {</a>
@@ -483,7 +483,7 @@
 <a name="421"><span class="lineNum">     421 </span><span class="lineNoCov">          0 :                 fo.writeInt ((int) (uint32_t) (time &amp; 0xffffffff));</span></a>
 <a name="422"><span class="lineNum">     422 </span><span class="lineNoCov">          0 :                 fo.writeInt ((int) (uint32_t) (time &gt;&gt; 32));</span></a>
 <a name="423"><span class="lineNum">     423 </span>            :             }</a>
-<a name="424"><span class="lineNum">     424 </span>            :         }</a>
+<a name="424"><span class="lineNum">     424 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="425"><span class="lineNum">     425 </span>            :     }</a>
 <a name="426"><span class="lineNum">     426 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="427"><span class="lineNum">     427 </span>            : </a>

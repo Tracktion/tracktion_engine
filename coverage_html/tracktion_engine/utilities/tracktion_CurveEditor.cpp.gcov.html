@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">3</td>
-            <td class="headerCovTableEntry">384</td>
+            <td class="headerCovTableEntry">386</td>
             <td class="headerCovTableEntryLo">0.8 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
@@ -143,8 +143,8 @@
 <a name="81"><span class="lineNum">      81 </span>            : //==============================================================================</a>
 <a name="82"><span class="lineNum">      82 </span><span class="lineNoCov">          0 : CurveEditor::CurveEditor (Edit&amp; e, SelectionManager&amp; sm)</span></a>
 <a name="83"><span class="lineNum">      83 </span>            :     : MouseHoverDetector (200),</a>
-<a name="84"><span class="lineNum">      84 </span>            :       edit (e),</a>
-<a name="85"><span class="lineNum">      85 </span>            :       undoManager (edit.getUndoManager()),</a>
+<a name="84"><span class="lineNum">      84 </span><span class="lineNoCov">          0 :       edit (e),</span></a>
+<a name="85"><span class="lineNum">      85 </span><span class="lineNoCov">          0 :       undoManager (edit.getUndoManager()),</span></a>
 <a name="86"><span class="lineNum">      86 </span><span class="lineNoCov">          0 :       selectionManager (sm)</span></a>
 <a name="87"><span class="lineNum">      87 </span>            : {</a>
 <a name="88"><span class="lineNum">      88 </span><span class="lineNoCov">          0 :     setAlwaysOnTop (true);</span></a>
@@ -199,7 +199,7 @@
 <a name="137"><span class="lineNum">     137 </span><span class="lineNoCov">          0 :         g.setColour (getDefaultLineColour());</span></a>
 <a name="138"><span class="lineNum">     138 </span><span class="lineNoCov">          0 :         g.drawText (text, tx, 0, tw + 6, 16,</span></a>
 <a name="139"><span class="lineNum">     139 </span>            :                     juce::Justification::centred, true);</a>
-<a name="140"><span class="lineNum">     140 </span>            :     }</a>
+<a name="140"><span class="lineNum">     140 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="141"><span class="lineNum">     141 </span>            : </a>
 <a name="142"><span class="lineNum">     142 </span>            :     // draw the line to the first point, or all the way across if there are no points</a>
 <a name="143"><span class="lineNum">     143 </span><span class="lineNoCov">          0 :     const int start = std::max (0, nextIndexAfter (leftTime) - 1);</span></a>
@@ -259,7 +259,7 @@
 <a name="197"><span class="lineNum">     197 </span>            : </a>
 <a name="198"><span class="lineNum">     198 </span><span class="lineNoCov">          0 :         g.setColour (getCurrentLineColour());</span></a>
 <a name="199"><span class="lineNum">     199 </span><span class="lineNoCov">          0 :         g.strokePath (curvePath, juce::PathStrokeType (lineThickness));</span></a>
-<a name="200"><span class="lineNum">     200 </span>            :     }</a>
+<a name="200"><span class="lineNum">     200 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="201"><span class="lineNum">     201 </span>            : </a>
 <a name="202"><span class="lineNum">     202 </span>            :     // draw the points along the line - the points, the add point and the curve point</a>
 <a name="203"><span class="lineNum">     203 </span><span class="lineNoCov">          0 :     const bool anySelected = areAnyPointsSelected();</span></a>
@@ -530,7 +530,7 @@
 <a name="468"><span class="lineNum">     468 </span><span class="lineNoCov">          0 :                                                getPointValue (i),</span></a>
 <a name="469"><span class="lineNum">     469 </span><span class="lineNoCov">          0 :                                                i == pointBeingMoved</span></a>
 <a name="470"><span class="lineNum">     470 </span><span class="lineNoCov">          0 :                                                  &amp;&amp; e.mods.testFlags (juce::ModifierKeys::commandModifier</span></a>
-<a name="471"><span class="lineNum">     471 </span><span class="lineNoCov">          0 :                                                                        | juce::ModifierKeys::ctrlModifier));</span></a>
+<a name="471"><span class="lineNum">     471 </span>            :                                                                        | juce::ModifierKeys::ctrlModifier));</a>
 <a name="472"><span class="lineNum">     472 </span>            : </a>
 <a name="473"><span class="lineNum">     473 </span><span class="lineNoCov">          0 :                     if (firstPoint)</span></a>
 <a name="474"><span class="lineNum">     474 </span>            :                     {</a>
@@ -556,8 +556,8 @@
 <a name="494"><span class="lineNum">     494 </span>            :             }</a>
 <a name="495"><span class="lineNum">     495 </span>            : </a>
 <a name="496"><span class="lineNum">     496 </span><span class="lineNoCov">          0 :             pointUnderMouse = movePoint (pointBeingMoved, newTime, newValue,</span></a>
-<a name="497"><span class="lineNum">     497 </span><span class="lineNoCov">          0 :                                          e.mods.testFlags (juce::ModifierKeys::commandModifier</span></a>
-<a name="498"><span class="lineNum">     498 </span><span class="lineNoCov">          0 :                                                             | juce::ModifierKeys::ctrlModifier));</span></a>
+<a name="497"><span class="lineNum">     497 </span>            :                                          e.mods.testFlags (juce::ModifierKeys::commandModifier</a>
+<a name="498"><span class="lineNum">     498 </span>            :                                                             | juce::ModifierKeys::ctrlModifier));</a>
 <a name="499"><span class="lineNum">     499 </span>            :         }</a>
 <a name="500"><span class="lineNum">     500 </span>            : </a>
 <a name="501"><span class="lineNum">     501 </span><span class="lineNoCov">          0 :         showBubbleForPointUnderMouse();</span></a>
@@ -644,7 +644,7 @@
 <a name="582"><span class="lineNum">     582 </span><span class="lineNoCov">          0 :             p-&gt;deselect();</span></a>
 <a name="583"><span class="lineNum">     583 </span>            : </a>
 <a name="584"><span class="lineNum">     584 </span><span class="lineNoCov">          0 :         removePoint (pointUnderMouse);</span></a>
-<a name="585"><span class="lineNum">     585 </span>            :     }</a>
+<a name="585"><span class="lineNum">     585 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="586"><span class="lineNum">     586 </span><span class="lineNoCov">          0 :     else if (pointUnderMouse &lt; 0)</span></a>
 <a name="587"><span class="lineNum">     587 </span>            :     {</a>
 <a name="588"><span class="lineNum">     588 </span><span class="lineNoCov">          0 :         auto t = snapTime (xToTime (e.position.x), e.mods);</span></a>

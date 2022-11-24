@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">75</td>
-            <td class="headerCovTableEntry">75</td>
+            <td class="headerCovTableEntry">77</td>
+            <td class="headerCovTableEntry">77</td>
             <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">7</td>
@@ -118,7 +118,7 @@
 <a name="56"><span class="lineNum">      56 </span>            :         {</a>
 <a name="57"><span class="lineNum">      57 </span><span class="lineCov">          1 :             opts.isMultiThreaded = MultiThreaded::yes;</span></a>
 <a name="58"><span class="lineNum">      58 </span>            : </a>
-<a name="59"><span class="lineNum">      59 </span><span class="lineCov">          8 :             for (auto strategy : test_utilities::getThreadPoolStrategies())</span></a>
+<a name="59"><span class="lineNum">      59 </span><span class="lineCov">          7 :             for (auto strategy : test_utilities::getThreadPoolStrategies())</span></a>
 <a name="60"><span class="lineNum">      60 </span>            :             {</a>
 <a name="61"><span class="lineNum">      61 </span><span class="lineCov">          6 :                 opts.poolType = strategy;</span></a>
 <a name="62"><span class="lineNum">      62 </span>            : </a>
@@ -163,7 +163,7 @@
 <a name="101"><span class="lineNum">     101 </span>            :         using namespace test_utilities;</a>
 <a name="102"><span class="lineNum">     102 </span><span class="lineCov">         14 :         auto&amp; engine = *tracktion::engine::Engine::getEngines()[0];</span></a>
 <a name="103"><span class="lineNum">     103 </span><span class="lineCov">         28 :         const auto description = benchmark_utilities::getDescription (opts)</span></a>
-<a name="104"><span class="lineNum">     104 </span><span class="lineCov">         63 :                                     + juce::String (useSingleFile ? &quot;, single file&quot; : &quot;, multiple files&quot;);</span></a>
+<a name="104"><span class="lineNum">     104 </span><span class="lineCov">         49 :                                     + juce::String (useSingleFile ? &quot;, single file&quot; : &quot;, multiple files&quot;);</span></a>
 <a name="105"><span class="lineNum">     105 </span>            :         </a>
 <a name="106"><span class="lineNum">     106 </span>            :         tracktion::graph::PlayHead playHead;</a>
 <a name="107"><span class="lineNum">     107 </span>            :         tracktion::graph::PlayHeadState playHeadState { playHead };</a>
@@ -180,7 +180,7 @@
 <a name="118"><span class="lineNum">     118 </span><span class="lineCov">         21 :         expect (useSingleFile || (context.files.size() == totalNumFiles));</span></a>
 <a name="119"><span class="lineNum">     119 </span><span class="lineCov">         14 :         expectWithinAbsoluteError (context.edit-&gt;getLength().inSeconds(), durationInSeconds, 0.01);</span></a>
 <a name="120"><span class="lineNum">     120 </span>            : </a>
-<a name="121"><span class="lineNum">     121 </span><span class="lineCov">         28 :         renderEdit (*this, opts);</span></a>
+<a name="121"><span class="lineNum">     121 </span><span class="lineCov">         14 :         renderEdit (*this, opts);</span></a>
 <a name="122"><span class="lineNum">     122 </span><span class="lineCov">         14 :     }</span></a>
 <a name="123"><span class="lineNum">     123 </span>            :     </a>
 <a name="124"><span class="lineNum">     124 </span>            :     //==============================================================================</a>
@@ -194,14 +194,14 @@
 <a name="132"><span class="lineNum">     132 </span><span class="lineCov">         14 :     static EditTestContext createTestContext (Engine&amp; engine, int numTracks, int numFilesPerTrack, double durationOfFile, double sampleRate, juce::Random&amp; r, bool useSingleFile)</span></a>
 <a name="133"><span class="lineNum">     133 </span>            :     {</a>
 <a name="134"><span class="lineNum">     134 </span><span class="lineCov">         14 :         auto edit = Edit::createSingleTrackEdit (engine);</span></a>
-<a name="135"><span class="lineNum">     135 </span><span class="lineCov">         14 :         std::vector&lt;std::unique_ptr&lt;juce::TemporaryFile&gt;&gt; files;</span></a>
+<a name="135"><span class="lineNum">     135 </span>            :         std::vector&lt;std::unique_ptr&lt;juce::TemporaryFile&gt;&gt; files;</a>
 <a name="136"><span class="lineNum">     136 </span>            : </a>
 <a name="137"><span class="lineNum">     137 </span><span class="lineCov">         14 :         edit-&gt;ensureNumberOfAudioTracks (numTracks);</span></a>
 <a name="138"><span class="lineNum">     138 </span>            :         </a>
 <a name="139"><span class="lineNum">     139 </span><span class="lineCov">         14 :         if (useSingleFile)</span></a>
 <a name="140"><span class="lineNum">     140 </span><span class="lineCov">         14 :             files.push_back (tracktion::graph::test_utilities::getSinFile&lt;juce::WavAudioFormat&gt; (sampleRate, durationOfFile, 2, 220.0f));</span></a>
 <a name="141"><span class="lineNum">     141 </span>            : </a>
-<a name="142"><span class="lineNum">     142 </span><span class="lineCov">        308 :         for (auto t : getAudioTracks (*edit))</span></a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineCov">        294 :         for (auto t : getAudioTracks (*edit))</span></a>
 <a name="143"><span class="lineNum">     143 </span>            :         {</a>
 <a name="144"><span class="lineNum">     144 </span><span class="lineCov">       3640 :             for (int i = 0; i &lt; numFilesPerTrack; ++i)</span></a>
 <a name="145"><span class="lineNum">     145 </span>            :             {</a>
@@ -210,18 +210,18 @@
 <a name="148"><span class="lineNum">     148 </span><span class="lineCov">       1680 :                     const float frequency = (float) r.nextInt ({ 110, 880 });</span></a>
 <a name="149"><span class="lineNum">     149 </span><span class="lineCov">       1680 :                     auto file = tracktion::graph::test_utilities::getSinFile&lt;juce::WavAudioFormat&gt; (sampleRate, durationOfFile, 2, frequency);</span></a>
 <a name="150"><span class="lineNum">     150 </span>            :                     files.push_back (std::move (file));</a>
-<a name="151"><span class="lineNum">     151 </span>            :                 }</a>
+<a name="151"><span class="lineNum">     151 </span><span class="lineCov">       1680 :                 }</span></a>
 <a name="152"><span class="lineNum">     152 </span>            : </a>
 <a name="153"><span class="lineNum">     153 </span>            :                 auto&amp; file = files.back();</a>
 <a name="154"><span class="lineNum">     154 </span><span class="lineCov">       3360 :                 const auto timeRange = TimeRange (TimePosition::fromSeconds (durationOfFile) * i, TimeDuration::fromSeconds (durationOfFile));</span></a>
-<a name="155"><span class="lineNum">     155 </span><span class="lineCov">       3360 :                 auto waveClip = t-&gt;insertWaveClip (file-&gt;getFile().getFileName(), file-&gt;getFile(),</span></a>
+<a name="155"><span class="lineNum">     155 </span><span class="lineCov">       6720 :                 auto waveClip = t-&gt;insertWaveClip (file-&gt;getFile().getFileName(), file-&gt;getFile(),</span></a>
 <a name="156"><span class="lineNum">     156 </span><span class="lineCov">       3360 :                                                    {{ timeRange }}, false);</span></a>
 <a name="157"><span class="lineNum">     157 </span><span class="lineCov">       3360 :                 waveClip-&gt;setGainDB (gainToDb (1.0f / numTracks));</span></a>
 <a name="158"><span class="lineNum">     158 </span>            :             }</a>
 <a name="159"><span class="lineNum">     159 </span>            :         }</a>
 <a name="160"><span class="lineNum">     160 </span>            :                 </a>
 <a name="161"><span class="lineNum">     161 </span><span class="lineCov">         14 :         return { std::move (edit), std::move (files) };</span></a>
-<a name="162"><span class="lineNum">     162 </span>            :     }</a>
+<a name="162"><span class="lineNum">     162 </span><span class="lineCov">         14 :     }</span></a>
 <a name="163"><span class="lineNum">     163 </span>            : };</a>
 <a name="164"><span class="lineNum">     164 </span>            : </a>
 <a name="165"><span class="lineNum">     165 </span>            : static WaveNodeBenchmarks waveNodeBenchmarks;</a>
@@ -266,7 +266,7 @@
 <a name="204"><span class="lineNum">     204 </span>            :         const auto durationOfFile = 30s;</a>
 <a name="205"><span class="lineNum">     205 </span><span class="lineCov">          4 :         auto sinFile = getSinFile&lt;juce::WavAudioFormat&gt; (fileSampleRate, 30.0, 2, 220.0f);</span></a>
 <a name="206"><span class="lineNum">     206 </span>            :         const auto timeRange = TimeRange (0s, TimePosition (durationOfFile));</a>
-<a name="207"><span class="lineNum">     207 </span><span class="lineCov">          4 :         auto waveClip = t-&gt;insertWaveClip (sinFile-&gt;getFile().getFileName(), sinFile-&gt;getFile(),</span></a>
+<a name="207"><span class="lineNum">     207 </span><span class="lineCov">          8 :         auto waveClip = t-&gt;insertWaveClip (sinFile-&gt;getFile().getFileName(), sinFile-&gt;getFile(),</span></a>
 <a name="208"><span class="lineNum">     208 </span><span class="lineCov">          4 :                                            {{ timeRange }}, false);</span></a>
 <a name="209"><span class="lineNum">     209 </span><span class="lineCov">          4 :         waveClip-&gt;setUsesProxy (false);</span></a>
 <a name="210"><span class="lineNum">     210 </span><span class="lineCov">          4 :         waveClip-&gt;setResamplingQuality (quality);</span></a>
@@ -275,14 +275,14 @@
 <a name="213"><span class="lineNum">     213 </span>            : </a>
 <a name="214"><span class="lineNum">     214 </span>            :         {</a>
 <a name="215"><span class="lineNum">     215 </span><span class="lineCov">         16 :             ScopedBenchmark sb (createBenchmarkDescription (&quot;Resampling&quot;, &quot;WaveNode quality&quot;, &quot;30s sin wave, 96KHz to 44.1Khz, &quot; + qualityName.toStdString()));</span></a>
-<a name="216"><span class="lineNum">     216 </span>            :             results = Renderer::measureStatistics (&quot;Rendering resampling&quot;,</a>
+<a name="216"><span class="lineNum">     216 </span><span class="lineCov">          4 :             results = Renderer::measureStatistics (&quot;Rendering resampling&quot;,</span></a>
 <a name="217"><span class="lineNum">     217 </span>            :                                                    *edit, timeRange,</a>
 <a name="218"><span class="lineNum">     218 </span><span class="lineCov">          8 :                                                    toBitSet ({ t }),</span></a>
-<a name="219"><span class="lineNum">     219 </span><span class="lineCov">          4 :                                                    256, playbackSampleRate);</span></a>
-<a name="220"><span class="lineNum">     220 </span>            :         }</a>
+<a name="219"><span class="lineNum">     219 </span>            :                                                    256, playbackSampleRate);</a>
+<a name="220"><span class="lineNum">     220 </span><span class="lineCov">          4 :         }</span></a>
 <a name="221"><span class="lineNum">     221 </span>            : </a>
 <a name="222"><span class="lineNum">     222 </span><span class="lineCov">          4 :         expectWithinAbsoluteError (results.peak, 1.0f, 0.001f);</span></a>
-<a name="223"><span class="lineNum">     223 </span><span class="lineCov">          4 :     }</span></a>
+<a name="223"><span class="lineNum">     223 </span><span class="lineCov">          8 :     }</span></a>
 <a name="224"><span class="lineNum">     224 </span>            : };</a>
 <a name="225"><span class="lineNum">     225 </span>            : </a>
 <a name="226"><span class="lineNum">     226 </span>            : static ResamplingBenchmarks resamplingBenchmarks;</a>

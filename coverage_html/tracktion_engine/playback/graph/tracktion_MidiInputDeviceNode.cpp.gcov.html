@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">100</td>
+            <td class="headerCovTableEntry">99</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -75,9 +75,9 @@
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span><span class="lineNoCov">          0 : MidiInputDeviceNode::MidiInputDeviceNode (InputDeviceInstance&amp; idi, MidiInputDevice&amp; owner, MidiMessageArray::MPESourceID msi,</span></a>
 <a name="15"><span class="lineNum">      15 </span><span class="lineNoCov">          0 :                                           tracktion::graph::PlayHeadState&amp; phs)</span></a>
-<a name="16"><span class="lineNum">      16 </span>            :     : instance (idi),</a>
-<a name="17"><span class="lineNum">      17 </span>            :       midiInputDevice (owner),</a>
-<a name="18"><span class="lineNum">      18 </span>            :       midiSourceID (msi),</a>
+<a name="16"><span class="lineNum">      16 </span><span class="lineNoCov">          0 :     : instance (idi),</span></a>
+<a name="17"><span class="lineNum">      17 </span><span class="lineNoCov">          0 :       midiInputDevice (owner),</span></a>
+<a name="18"><span class="lineNum">      18 </span><span class="lineNoCov">          0 :       midiSourceID (msi),</span></a>
 <a name="19"><span class="lineNum">      19 </span><span class="lineNoCov">          0 :       playHeadState (phs)</span></a>
 <a name="20"><span class="lineNum">      20 </span>            : {</a>
 <a name="21"><span class="lineNum">      21 </span><span class="lineNoCov">          0 :     for (int i = 256; --i &gt;= 0;)</span></a>
@@ -107,7 +107,7 @@
 <a name="45"><span class="lineNum">      45 </span><span class="lineNoCov">          0 :         const juce::ScopedLock sl (bufferLock);</span></a>
 <a name="46"><span class="lineNum">      46 </span>            : </a>
 <a name="47"><span class="lineNum">      47 </span><span class="lineNoCov">          0 :         auto channelToUse = midiInputDevice.getChannelToUse();</span></a>
-<a name="48"><span class="lineNum">      48 </span><span class="lineNoCov">          0 :         auto programToUse = midiInputDevice.getProgramToUse();</span></a>
+<a name="48"><span class="lineNum">      48 </span>            :         auto programToUse = midiInputDevice.getProgramToUse();</a>
 <a name="49"><span class="lineNum">      49 </span>            : </a>
 <a name="50"><span class="lineNum">      50 </span><span class="lineNoCov">          0 :         if (channelToUse.isValid() &amp;&amp; programToUse &gt; 0)</span></a>
 <a name="51"><span class="lineNum">      51 </span><span class="lineNoCov">          0 :             handleIncomingMidiMessage (juce::MidiMessage::programChange (channelToUse.getChannelNumber(), programToUse - 1));</span></a>
@@ -181,7 +181,7 @@
 <a name="119"><span class="lineNum">     119 </span>            : </a>
 <a name="120"><span class="lineNum">     120 </span><span class="lineNoCov">          0 :         const juce::ScopedLock sl (liveInputLock);</span></a>
 <a name="121"><span class="lineNum">     121 </span><span class="lineNoCov">          0 :         liveRecordedMessages.addMidiMessage (newMess, sourceTime.inSeconds(), midiSourceID);</span></a>
-<a name="122"><span class="lineNum">     122 </span>            :     }</a>
+<a name="122"><span class="lineNum">     122 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="123"><span class="lineNum">     123 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="124"><span class="lineNum">     124 </span>            : </a>
 <a name="125"><span class="lineNum">     125 </span><span class="lineNoCov">          0 : void MidiInputDeviceNode::processSection (ProcessContext&amp; pc, juce::Range&lt;int64_t&gt; timelineRange)</span></a>
@@ -210,13 +210,13 @@
 <a name="148"><span class="lineNum">     148 </span><span class="lineNoCov">          0 :     if (int num = juce::jmin (numMessages, incomingMessages.size()))</span></a>
 <a name="149"><span class="lineNum">     149 </span>            :     {</a>
 <a name="150"><span class="lineNum">     150 </span>            :         // not quite right as the first event won't be at the start of the buffer, but near enough for live stuff</a>
-<a name="151"><span class="lineNum">     151 </span><span class="lineNoCov">          0 :         auto timeAdjust = incomingMessages.getUnchecked (0)-&gt;getTimeStamp();</span></a>
+<a name="151"><span class="lineNum">     151 </span>            :         auto timeAdjust = incomingMessages.getUnchecked (0)-&gt;getTimeStamp();</a>
 <a name="152"><span class="lineNum">     152 </span>            : </a>
 <a name="153"><span class="lineNum">     153 </span><span class="lineNoCov">          0 :         for (int i = 0; i &lt; num; ++i)</span></a>
 <a name="154"><span class="lineNum">     154 </span>            :         {</a>
 <a name="155"><span class="lineNum">     155 </span>            :             auto m = incomingMessages.getUnchecked (i);</a>
 <a name="156"><span class="lineNum">     156 </span><span class="lineNoCov">          0 :             destMidi.addMidiMessage (*m,</span></a>
-<a name="157"><span class="lineNum">     157 </span><span class="lineNoCov">          0 :                                      juce::jlimit (0.0, juce::jmax (0.0, editTime.getLength()), m-&gt;getTimeStamp() - timeAdjust),</span></a>
+<a name="157"><span class="lineNum">     157 </span>            :                                      juce::jlimit (0.0, juce::jmax (0.0, editTime.getLength()), m-&gt;getTimeStamp() - timeAdjust),</a>
 <a name="158"><span class="lineNum">     158 </span><span class="lineNoCov">          0 :                                      midiSourceID);</span></a>
 <a name="159"><span class="lineNum">     159 </span>            :         }</a>
 <a name="160"><span class="lineNum">     160 </span>            :     }</a>
@@ -241,7 +241,7 @@
 <a name="179"><span class="lineNum">     179 </span><span class="lineNoCov">          0 :         for (int i = 0; i &lt; numLiveMessagesToPlay; ++i)</span></a>
 <a name="180"><span class="lineNum">     180 </span>            :         {</a>
 <a name="181"><span class="lineNum">     181 </span>            :             auto&amp; m = liveRecordedMessages[i];</a>
-<a name="182"><span class="lineNum">     182 </span><span class="lineNoCov">          0 :             auto t = m.getTimeStamp();</span></a>
+<a name="182"><span class="lineNum">     182 </span>            :             auto t = m.getTimeStamp();</a>
 <a name="183"><span class="lineNum">     183 </span>            : </a>
 <a name="184"><span class="lineNum">     184 </span>            :             if (editTime.contains (t))</a>
 <a name="185"><span class="lineNum">     185 </span><span class="lineNoCov">          0 :                 destMidi.add (m, t - editTime.getStart());</span></a>
@@ -252,7 +252,7 @@
 <a name="190"><span class="lineNum">     190 </span><span class="lineNoCov">          0 : void MidiInputDeviceNode::createProgramChanges (MidiMessageArray&amp; bufferForMidiMessages)</span></a>
 <a name="191"><span class="lineNum">     191 </span>            : {</a>
 <a name="192"><span class="lineNum">     192 </span><span class="lineNoCov">          0 :     auto channelToUse = midiInputDevice.getChannelToUse();</span></a>
-<a name="193"><span class="lineNum">     193 </span><span class="lineNoCov">          0 :     auto programToUse = midiInputDevice.getProgramToUse();</span></a>
+<a name="193"><span class="lineNum">     193 </span>            :     auto programToUse = midiInputDevice.getProgramToUse();</a>
 <a name="194"><span class="lineNum">     194 </span>            : </a>
 <a name="195"><span class="lineNum">     195 </span><span class="lineNoCov">          0 :     if (programToUse &gt; 0 &amp;&amp; channelToUse.isValid())</span></a>
 <a name="196"><span class="lineNum">     196 </span><span class="lineNoCov">          0 :         bufferForMidiMessages.addMidiMessage (juce::MidiMessage::programChange (channelToUse.getChannelNumber(), programToUse - 1),</span></a>

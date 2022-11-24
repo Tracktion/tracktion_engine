@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">145</td>
-            <td class="headerCovTableEntry">445</td>
-            <td class="headerCovTableEntryLo">32.6 %</td>
+            <td class="headerCovTableEntry">447</td>
+            <td class="headerCovTableEntryLo">32.4 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">23</td>
@@ -124,10 +124,10 @@
 <a name="62"><span class="lineNum">      62 </span><span class="lineNoCov">          0 :         const juce::Time sourceLastInteractionTime (static_cast&lt;int64_t&gt; (millisecondsSinceEpoch));</span></a>
 <a name="63"><span class="lineNum">      63 </span>            : </a>
 <a name="64"><span class="lineNum">      64 </span><span class="lineNoCov">          0 :         const auto destTimelineTime = TimePosition::fromSamples (destPlayHead.getPosition(), sampleRate);</span></a>
-<a name="65"><span class="lineNum">      65 </span><span class="lineNoCov">          0 :         const auto destLoopDuration = TimeDuration::fromSamples (destPlayHead.getLoopRange().getLength(), sampleRate);</span></a>
+<a name="65"><span class="lineNum">      65 </span>            :         const auto destLoopDuration = TimeDuration::fromSamples (destPlayHead.getLoopRange().getLength(), sampleRate);</a>
 <a name="66"><span class="lineNum">      66 </span>            : </a>
-<a name="67"><span class="lineNum">      67 </span>            :         return getSyncAction (sourceTimelineTime, sourcePlayHead.isPlaying(), sourceLastInteractionTime,</a>
-<a name="68"><span class="lineNum">      68 </span><span class="lineNoCov">          0 :                               destTimelineTime, destPlayHead.isLooping(), destLoopDuration);</span></a>
+<a name="67"><span class="lineNum">      67 </span><span class="lineNoCov">          0 :         return getSyncAction (sourceTimelineTime, sourcePlayHead.isPlaying(), sourceLastInteractionTime,</span></a>
+<a name="68"><span class="lineNum">      68 </span>            :                               destTimelineTime, destPlayHead.isLooping(), destLoopDuration);</a>
 <a name="69"><span class="lineNum">      69 </span>            :     }</a>
 <a name="70"><span class="lineNum">      70 </span>            :     </a>
 <a name="71"><span class="lineNum">      71 </span>            :     void reset (TimePosition previousBarTime_, TimeDuration syncInterval_)</a>
@@ -189,7 +189,7 @@
 <a name="127"><span class="lineNum">     127 </span>            : </a>
 <a name="128"><span class="lineNum">     128 </span><span class="lineNoCov">          0 :                 return { SyncAction::rollInToLoop, toPosition (newTimelineTime) };</span></a>
 <a name="129"><span class="lineNum">     129 </span>            :             }</a>
-<a name="130"><span class="lineNum">     130 </span>            :         }</a>
+<a name="130"><span class="lineNum">     130 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="131"><span class="lineNum">     131 </span>            : </a>
 <a name="132"><span class="lineNum">     132 </span><span class="lineNoCov">          0 :         return { SyncAction::none, {} };</span></a>
 <a name="133"><span class="lineNum">     133 </span>            :     }</a>
@@ -202,8 +202,8 @@
 <a name="140"><span class="lineNum">     140 </span>            :  {</a>
 <a name="141"><span class="lineNum">     141 </span><span class="lineCov">         84 :      NodePlaybackContext (const TempoSequence&amp; ts, size_t numThreads, size_t maxNumThreadsToUse)</span></a>
 <a name="142"><span class="lineNum">     142 </span><span class="lineCov">         84 :         : tempoSequence (ts),</span></a>
-<a name="143"><span class="lineNum">     143 </span><span class="lineNoCov">          0 :           player (processState, getPoolCreatorFunction (static_cast&lt;tracktion::graph::ThreadPoolStrategy&gt; (getThreadPoolStrategy()))),</span></a>
-<a name="144"><span class="lineNum">     144 </span><span class="lineCov">        252 :           maxNumThreads (maxNumThreadsToUse)</span></a>
+<a name="143"><span class="lineNum">     143 </span><span class="lineCov">         84 :           player (processState, getPoolCreatorFunction (static_cast&lt;tracktion::graph::ThreadPoolStrategy&gt; (getThreadPoolStrategy()))),</span></a>
+<a name="144"><span class="lineNum">     144 </span><span class="lineCov">        168 :           maxNumThreads (maxNumThreadsToUse)</span></a>
 <a name="145"><span class="lineNum">     145 </span>            :      {</a>
 <a name="146"><span class="lineNum">     146 </span><span class="lineCov">         84 :          setNumThreads (numThreads);</span></a>
 <a name="147"><span class="lineNum">     147 </span><span class="lineCov">         84 :          player.enablePooledMemoryAllocations (EditPlaybackContextInternal::getPooledMemoryFlag());</span></a>
@@ -211,7 +211,7 @@
 <a name="149"><span class="lineNum">     149 </span>            :      </a>
 <a name="150"><span class="lineNum">     150 </span><span class="lineCov">        253 :      void setNumThreads (size_t numThreads)</span></a>
 <a name="151"><span class="lineNum">     151 </span>            :      {</a>
-<a name="152"><span class="lineNum">     152 </span><span class="lineCov">        506 :          CRASH_TRACER</span></a>
+<a name="152"><span class="lineNum">     152 </span><span class="lineCov">        253 :          CRASH_TRACER</span></a>
 <a name="153"><span class="lineNum">     153 </span><span class="lineCov">        337 :          player.setNumThreads (std::min (numThreads, maxNumThreads));</span></a>
 <a name="154"><span class="lineNum">     154 </span><span class="lineCov">        253 :      }</span></a>
 <a name="155"><span class="lineNum">     155 </span>            :      </a>
@@ -233,12 +233,12 @@
 <a name="171"><span class="lineNum">     171 </span>            :      </a>
 <a name="172"><span class="lineNum">     172 </span>            :      int getLatencySamples() const</a>
 <a name="173"><span class="lineNum">     173 </span>            :      {</a>
-<a name="174"><span class="lineNum">     174 </span>            :          return latencySamples;</a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineNoCov">          0 :          return latencySamples;</span></a>
 <a name="175"><span class="lineNum">     175 </span>            :      }</a>
 <a name="176"><span class="lineNum">     176 </span>            :      </a>
 <a name="177"><span class="lineNum">     177 </span><span class="lineNoCov">          0 :      void postPosition (TimePosition newPosition)</span></a>
 <a name="178"><span class="lineNum">     178 </span>            :      {</a>
-<a name="179"><span class="lineNum">     179 </span><span class="lineNoCov">          0 :          pendingPosition.store (newPosition.inSeconds(), std::memory_order_release);</span></a>
+<a name="179"><span class="lineNum">     179 </span>            :          pendingPosition.store (newPosition.inSeconds(), std::memory_order_release);</a>
 <a name="180"><span class="lineNum">     180 </span>            :          pendingRollInToLoop.store (false, std::memory_order_release);</a>
 <a name="181"><span class="lineNum">     181 </span>            :          positionUpdatePending = true;</a>
 <a name="182"><span class="lineNum">     182 </span><span class="lineNoCov">          0 :      }</span></a>
@@ -280,8 +280,8 @@
 <a name="218"><span class="lineNum">     218 </span>            :      {</a>
 <a name="219"><span class="lineNum">     219 </span>            :          const double sampleRate = getSampleRate();</a>
 <a name="220"><span class="lineNum">     220 </span><span class="lineCov">         84 :          const auto currentPos = tracktion::graph::sampleToTime (playHead.getPosition(), sampleRate);</span></a>
-<a name="221"><span class="lineNum">     221 </span><span class="lineCov">        168 :          referenceStreamRange = juce::Range&lt;double&gt; (static_cast&lt;double&gt; (newReferenceSampleRange.getStart()),</span></a>
-<a name="222"><span class="lineNum">     222 </span><span class="lineCov">         84 :                                                      static_cast&lt;double&gt; (newReferenceSampleRange.getEnd()));</span></a>
+<a name="221"><span class="lineNum">     221 </span><span class="lineCov">         84 :          referenceStreamRange = juce::Range&lt;double&gt; (static_cast&lt;double&gt; (newReferenceSampleRange.getStart()),</span></a>
+<a name="222"><span class="lineNum">     222 </span>            :                                                      static_cast&lt;double&gt; (newReferenceSampleRange.getEnd()));</a>
 <a name="223"><span class="lineNum">     223 </span><span class="lineCov">         84 :          playHead.setReferenceSampleRange (getReferenceSampleRange());</span></a>
 <a name="224"><span class="lineNum">     224 </span><span class="lineCov">         84 :          playHead.setPosition (tracktion::graph::timeToSample (currentPos, sampleRate));</span></a>
 <a name="225"><span class="lineNum">     225 </span><span class="lineCov">         84 :      }</span></a>
@@ -319,17 +319,17 @@
 <a name="257"><span class="lineNum">     257 </span>            :              </a>
 <a name="258"><span class="lineNum">     258 </span><span class="lineNoCov">          0 :              for (int channel = 0; channel &lt; numChannels; ++channel)</span></a>
 <a name="259"><span class="lineNum">     259 </span>            :              {</a>
-<a name="260"><span class="lineNum">     260 </span><span class="lineNoCov">          0 :                  const auto src = scratchAudioBuffer.getReadPointer (channel);</span></a>
+<a name="260"><span class="lineNum">     260 </span>            :                  const auto src = scratchAudioBuffer.getReadPointer (channel);</a>
 <a name="261"><span class="lineNum">     261 </span><span class="lineNoCov">          0 :                  const auto dest = allChannels[channel];</span></a>
 <a name="262"><span class="lineNum">     262 </span>            : </a>
-<a name="263"><span class="lineNum">     263 </span><span class="lineNoCov">          0 :                  interpolators[(size_t) channel]-&gt;processAdding (ratio, src, dest, destNumSamples, 1.0f);</span></a>
-<a name="264"><span class="lineNum">     264 </span><span class="lineNoCov">          0 :              }</span></a>
-<a name="265"><span class="lineNum">     265 </span>            :          }</a>
+<a name="263"><span class="lineNum">     263 </span>            :                  interpolators[(size_t) channel]-&gt;processAdding (ratio, src, dest, destNumSamples, 1.0f);</a>
+<a name="264"><span class="lineNum">     264 </span>            :              }</a>
+<a name="265"><span class="lineNum">     265 </span><span class="lineNoCov">          0 :          }</span></a>
 <a name="266"><span class="lineNum">     266 </span>            :          else</a>
 <a name="267"><span class="lineNum">     267 </span>            :          {</a>
-<a name="268"><span class="lineNum">     268 </span>            :              auto audioView = choc::buffer::createChannelArrayView (allChannels,</a>
+<a name="268"><span class="lineNum">     268 </span><span class="lineNoCov">          0 :              auto audioView = choc::buffer::createChannelArrayView (allChannels,</span></a>
 <a name="269"><span class="lineNum">     269 </span>            :                                                                     (choc::buffer::ChannelCount) numChannels,</a>
-<a name="270"><span class="lineNum">     270 </span><span class="lineNoCov">          0 :                                                                     numSamplesToProcess);</span></a>
+<a name="270"><span class="lineNum">     270 </span>            :                                                                     numSamplesToProcess);</a>
 <a name="271"><span class="lineNum">     271 </span><span class="lineNoCov">          0 :              tracktion::graph::Node::ProcessContext pc { numSamplesToProcess, referenceSampleRange, { audioView, scratchMidiBuffer } };</span></a>
 <a name="272"><span class="lineNum">     272 </span><span class="lineNoCov">          0 :              player.process (pc);</span></a>
 <a name="273"><span class="lineNum">     273 </span>            :          }</a>
@@ -402,9 +402,9 @@
 <a name="340"><span class="lineNum">     340 </span>            : </a>
 <a name="341"><span class="lineNum">     341 </span><span class="lineCov">         84 :     if (edit.shouldPlay())</span></a>
 <a name="342"><span class="lineNum">     342 </span>            :     {</a>
-<a name="343"><span class="lineNum">     343 </span><span class="lineCov">        168 :         nodePlaybackContext = std::make_unique&lt;NodePlaybackContext&gt; (edit.tempoSequence,</span></a>
+<a name="343"><span class="lineNum">     343 </span><span class="lineCov">         84 :         nodePlaybackContext = std::make_unique&lt;NodePlaybackContext&gt; (edit.tempoSequence,</span></a>
 <a name="344"><span class="lineNum">     344 </span><span class="lineCov">         84 :                                                                      edit.engine.getEngineBehaviour().getNumberOfCPUsToUseForAudio(),</span></a>
-<a name="345"><span class="lineNum">     345 </span><span class="lineCov">         84 :                                                                      size_t (edit.getIsPreviewEdit() ? 0 : juce::SystemStats::getNumCpus() - 1));</span></a>
+<a name="345"><span class="lineNum">     345 </span><span class="lineCov">        168 :                                                                      size_t (edit.getIsPreviewEdit() ? 0 : juce::SystemStats::getNumCpus() - 1));</span></a>
 <a name="346"><span class="lineNum">     346 </span>            :         contextSyncroniser = std::make_unique&lt;ContextSyncroniser&gt;();</a>
 <a name="347"><span class="lineNum">     347 </span>            : </a>
 <a name="348"><span class="lineNum">     348 </span>            :         // This ensures the referenceSampleRange of the new context has been synced</a>
@@ -414,17 +414,17 @@
 <a name="352"><span class="lineNum">     352 </span><span class="lineCov">         84 :     rebuildDeviceList();</span></a>
 <a name="353"><span class="lineNum">     353 </span><span class="lineCov">         84 : }</span></a>
 <a name="354"><span class="lineNum">     354 </span>            : </a>
-<a name="355"><span class="lineNum">     355 </span><span class="lineCov">        168 : EditPlaybackContext::~EditPlaybackContext()</span></a>
+<a name="355"><span class="lineNum">     355 </span><span class="lineCov">         84 : EditPlaybackContext::~EditPlaybackContext()</span></a>
 <a name="356"><span class="lineNum">     356 </span>            : {</a>
 <a name="357"><span class="lineNum">     357 </span>            :     TRACKTION_ASSERT_MESSAGE_THREAD</a>
 <a name="358"><span class="lineNum">     358 </span><span class="lineCov">         84 :     releaseDeviceList();</span></a>
 <a name="359"><span class="lineNum">     359 </span><span class="lineCov">         84 :     edit.engine.getDeviceManager().removeContext (this);</span></a>
-<a name="360"><span class="lineNum">     360 </span><span class="lineCov">         84 : }</span></a>
+<a name="360"><span class="lineNum">     360 </span><span class="lineCov">        252 : }</span></a>
 <a name="361"><span class="lineNum">     361 </span>            : </a>
 <a name="362"><span class="lineNum">     362 </span><span class="lineCov">         84 : void EditPlaybackContext::releaseDeviceList()</span></a>
 <a name="363"><span class="lineNum">     363 </span>            : {</a>
 <a name="364"><span class="lineNum">     364 </span>            :     TRACKTION_ASSERT_MESSAGE_THREAD</a>
-<a name="365"><span class="lineNum">     365 </span><span class="lineCov">        168 :     CRASH_TRACER</span></a>
+<a name="365"><span class="lineNum">     365 </span><span class="lineCov">         84 :     CRASH_TRACER</span></a>
 <a name="366"><span class="lineNum">     366 </span>            : </a>
 <a name="367"><span class="lineNum">     367 </span><span class="lineCov">         84 :     const juce::ScopedValueSetter&lt;bool&gt; alocateSetter (isAllocated, isAllocated);</span></a>
 <a name="368"><span class="lineNum">     368 </span><span class="lineCov">         84 :     clearNodes();</span></a>
@@ -440,7 +440,7 @@
 <a name="378"><span class="lineNum">     378 </span><span class="lineCov">         84 : void EditPlaybackContext::rebuildDeviceList()</span></a>
 <a name="379"><span class="lineNum">     379 </span>            : {</a>
 <a name="380"><span class="lineNum">     380 </span>            :     TRACKTION_ASSERT_MESSAGE_THREAD</a>
-<a name="381"><span class="lineNum">     381 </span><span class="lineCov">        168 :     CRASH_TRACER</span></a>
+<a name="381"><span class="lineNum">     381 </span><span class="lineCov">         84 :     CRASH_TRACER</span></a>
 <a name="382"><span class="lineNum">     382 </span>            : </a>
 <a name="383"><span class="lineNum">     383 </span>            :     jassert (waveInputs.isEmpty() &amp;&amp; midiInputs.isEmpty()</a>
 <a name="384"><span class="lineNum">     384 </span>            :               &amp;&amp; midiOutputs.isEmpty() &amp;&amp; waveOutputs.isEmpty());</a>
@@ -463,7 +463,7 @@
 <a name="401"><span class="lineNum">     401 </span><span class="lineNoCov">          0 :         if (wi-&gt;isEnabled() &amp;&amp; wi-&gt;isAvailableToEdit())</span></a>
 <a name="402"><span class="lineNum">     402 </span><span class="lineNoCov">          0 :             waveInputs.add (wi-&gt;createInstance (*this));</span></a>
 <a name="403"><span class="lineNum">     403 </span>            : </a>
-<a name="404"><span class="lineNum">     404 </span><span class="lineCov">        323 :     for (auto* at : getAudioTracks (edit))</span></a>
+<a name="404"><span class="lineNum">     404 </span><span class="lineCov">        239 :     for (auto* at : getAudioTracks (edit))</span></a>
 <a name="405"><span class="lineNum">     405 </span>            :     {</a>
 <a name="406"><span class="lineNum">     406 </span>            :         auto&amp; twid = at-&gt;getWaveInputDevice();</a>
 <a name="407"><span class="lineNum">     407 </span>            :         auto&amp; tmid = at-&gt;getMidiInputDevice();</a>
@@ -513,7 +513,7 @@
 <a name="451"><span class="lineNum">     451 </span>            : </a>
 <a name="452"><span class="lineNum">     452 </span><span class="lineCov">         84 : void EditPlaybackContext::clearNodes()</span></a>
 <a name="453"><span class="lineNum">     453 </span>            : {</a>
-<a name="454"><span class="lineNum">     454 </span><span class="lineCov">        168 :     CRASH_TRACER</span></a>
+<a name="454"><span class="lineNum">     454 </span><span class="lineCov">         84 :     CRASH_TRACER</span></a>
 <a name="455"><span class="lineNum">     455 </span>            : </a>
 <a name="456"><span class="lineNum">     456 </span><span class="lineCov">         84 :     for (auto mo : midiOutputs)</span></a>
 <a name="457"><span class="lineNum">     457 </span>            :         mo-&gt;stop();</a>
@@ -539,7 +539,7 @@
 <a name="477"><span class="lineNum">     477 </span>            : </a>
 <a name="478"><span class="lineNum">     478 </span><span class="lineCov">         85 : void EditPlaybackContext::createNode()</span></a>
 <a name="479"><span class="lineNum">     479 </span>            : {</a>
-<a name="480"><span class="lineNum">     480 </span><span class="lineCov">        170 :     CRASH_TRACER</span></a>
+<a name="480"><span class="lineNum">     480 </span><span class="lineCov">         85 :     CRASH_TRACER</span></a>
 <a name="481"><span class="lineNum">     481 </span>            :     // Reset this until it's updated by the play graph</a>
 <a name="482"><span class="lineNum">     482 </span><span class="lineCov">         85 :     audiblePlaybackTime = transport.getCurrentPosition();</span></a>
 <a name="483"><span class="lineNum">     483 </span>            :     </a>
@@ -553,14 +553,14 @@
 <a name="491"><span class="lineNum">     491 </span><span class="lineCov">         85 :     if (cnp.sampleRate &lt;= 0.0 || cnp.blockSize &lt;= 0)</span></a>
 <a name="492"><span class="lineNum">     492 </span>            :     {</a>
 <a name="493"><span class="lineNum">     493 </span><span class="lineNoCov">          0 :         clearNodes();</span></a>
-<a name="494"><span class="lineNum">     494 </span><span class="lineNoCov">          0 :         return;</span></a>
+<a name="494"><span class="lineNum">     494 </span>            :         return;</a>
 <a name="495"><span class="lineNum">     495 </span>            :     }</a>
 <a name="496"><span class="lineNum">     496 </span>            :     </a>
 <a name="497"><span class="lineNum">     497 </span><span class="lineCov">         85 :     cnp.includeBypassedPlugins = ! edit.engine.getEngineBehaviour().shouldBypassedPluginsBeRemovedFromPlaybackGraph();</span></a>
 <a name="498"><span class="lineNum">     498 </span><span class="lineCov">         85 :     auto editNode = createNodeForEdit (*this, audiblePlaybackTime, cnp);</span></a>
 <a name="499"><span class="lineNum">     499 </span>            : </a>
 <a name="500"><span class="lineNum">     500 </span><span class="lineCov">         85 :     const auto&amp; tempoSequence = edit.tempoSequence.getInternalSequence();</span></a>
-<a name="501"><span class="lineNum">     501 </span><span class="lineCov">         85 :     const bool hasTempoChanged = tempoSequence.hash() != lastTempoSequence.hash();</span></a>
+<a name="501"><span class="lineNum">     501 </span>            :     const bool hasTempoChanged = tempoSequence.hash() != lastTempoSequence.hash();</a>
 <a name="502"><span class="lineNum">     502 </span>            : </a>
 <a name="503"><span class="lineNum">     503 </span><span class="lineCov">         85 :     nodePlaybackContext-&gt;setNode (std::move (editNode), cnp.sampleRate, cnp.blockSize);</span></a>
 <a name="504"><span class="lineNum">     504 </span><span class="lineCov">         85 :     updateNumCPUs();</span></a>
@@ -578,7 +578,7 @@
 <a name="516"><span class="lineNum">     516 </span>            : </a>
 <a name="517"><span class="lineNum">     517 </span><span class="lineCov">         85 :     if (hasTempoChanged)</span></a>
 <a name="518"><span class="lineNum">     518 </span>            :         lastTempoSequence = tempoSequence;</a>
-<a name="519"><span class="lineNum">     519 </span>            : }</a>
+<a name="519"><span class="lineNum">     519 </span><span class="lineCov">         85 : }</span></a>
 <a name="520"><span class="lineNum">     520 </span>            : </a>
 <a name="521"><span class="lineNum">     521 </span><span class="lineNoCov">          0 : void EditPlaybackContext::createPlayAudioNodes (TimePosition startTime)</span></a>
 <a name="522"><span class="lineNum">     522 </span>            : {</a>
@@ -706,14 +706,14 @@
 <a name="644"><span class="lineNum">     644 </span><span class="lineNoCov">          0 :     const auto loopRange = transport.getLoopRange();</span></a>
 <a name="645"><span class="lineNum">     645 </span><span class="lineNoCov">          0 :     in.stop();</span></a>
 <a name="646"><span class="lineNum">     646 </span>            : </a>
-<a name="647"><span class="lineNum">     647 </span>            :     auto clips = in.applyLastRecordingToEdit (recordedRange,</a>
+<a name="647"><span class="lineNum">     647 </span><span class="lineNoCov">          0 :     auto clips = in.applyLastRecordingToEdit (recordedRange,</span></a>
 <a name="648"><span class="lineNum">     648 </span><span class="lineNoCov">          0 :                                               transport.looping, loopRange,</span></a>
 <a name="649"><span class="lineNum">     649 </span>            :                                               discardRecordings,</a>
 <a name="650"><span class="lineNum">     650 </span><span class="lineNoCov">          0 :                                               findAppropriateSelectionManager (edit));</span></a>
 <a name="651"><span class="lineNum">     651 </span><span class="lineNoCov">          0 :     transport.callRecordingFinishedListeners (in, clips);</span></a>
 <a name="652"><span class="lineNum">     652 </span>            :     </a>
 <a name="653"><span class="lineNum">     653 </span><span class="lineNoCov">          0 :     return clips;</span></a>
-<a name="654"><span class="lineNum">     654 </span>            : }</a>
+<a name="654"><span class="lineNum">     654 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="655"><span class="lineNum">     655 </span>            : </a>
 <a name="656"><span class="lineNum">     656 </span><span class="lineNoCov">          0 : Clip::Array EditPlaybackContext::recordingFinished (TimeRange recordedRange, bool discardRecordings)</span></a>
 <a name="657"><span class="lineNum">     657 </span>            : {</a>
@@ -725,7 +725,7 @@
 <a name="663"><span class="lineNum">     663 </span><span class="lineNoCov">          0 :         clips.addArray (stopRecording (*in, recordedRange, discardRecordings));</span></a>
 <a name="664"><span class="lineNum">     664 </span>            : </a>
 <a name="665"><span class="lineNum">     665 </span><span class="lineNoCov">          0 :     return clips;</span></a>
-<a name="666"><span class="lineNum">     666 </span>            : }</a>
+<a name="666"><span class="lineNum">     666 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="667"><span class="lineNum">     667 </span>            : </a>
 <a name="668"><span class="lineNum">     668 </span><span class="lineNoCov">          0 : juce::Result EditPlaybackContext::applyRetrospectiveRecord (juce::Array&lt;Clip*&gt;* clips)</span></a>
 <a name="669"><span class="lineNum">     669 </span>            : {</a>
@@ -767,7 +767,7 @@
 <a name="705"><span class="lineNum">     705 </span><span class="lineNoCov">          0 :         return juce::Result::fail (TRANS(&quot;Unable to perform retrospective record, all input buffers are empty&quot;));</span></a>
 <a name="706"><span class="lineNum">     706 </span>            : </a>
 <a name="707"><span class="lineNum">     707 </span>            :     return juce::Result::ok();</a>
-<a name="708"><span class="lineNum">     708 </span>            : }</a>
+<a name="708"><span class="lineNum">     708 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="709"><span class="lineNum">     709 </span>            : </a>
 <a name="710"><span class="lineNum">     710 </span><span class="lineNoCov">          0 : juce::Array&lt;InputDeviceInstance*&gt; EditPlaybackContext::getAllInputs()</span></a>
 <a name="711"><span class="lineNum">     711 </span>            : {</a>
@@ -784,7 +784,7 @@
 <a name="722"><span class="lineNum">     722 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
 <a name="723"><span class="lineNum">     723 </span>            : </a>
 <a name="724"><span class="lineNum">     724 </span><span class="lineNoCov">          0 :     if (edit.isRendering())</span></a>
-<a name="725"><span class="lineNum">     725 </span><span class="lineNoCov">          0 :         return;</span></a>
+<a name="725"><span class="lineNum">     725 </span>            :         return;</a>
 <a name="726"><span class="lineNum">     726 </span>            : </a>
 <a name="727"><span class="lineNum">     727 </span>            :     SCOPED_REALTIME_CHECK</a>
 <a name="728"><span class="lineNum">     728 </span><span class="lineNoCov">          0 :     if (! nodePlaybackContext)</span></a>
@@ -797,7 +797,7 @@
 <a name="735"><span class="lineNum">     735 </span>            :     {</a>
 <a name="736"><span class="lineNum">     736 </span>            :         jassert (contextSyncroniser);</a>
 <a name="737"><span class="lineNum">     737 </span>            :         jassert (nodeContextToSyncTo-&gt;getNodePlayHead() != nullptr);</a>
-<a name="738"><span class="lineNum">     738 </span>            :         const auto[action, newTimelineTime] = contextSyncroniser-&gt;getSyncAction (*nodeContextToSyncTo-&gt;getNodePlayHead(),</a>
+<a name="738"><span class="lineNum">     738 </span><span class="lineNoCov">          0 :         const auto[action, newTimelineTime] = contextSyncroniser-&gt;getSyncAction (*nodeContextToSyncTo-&gt;getNodePlayHead(),</span></a>
 <a name="739"><span class="lineNum">     739 </span><span class="lineNoCov">          0 :                                                                                  nodePlaybackContext-&gt;playHead,</span></a>
 <a name="740"><span class="lineNum">     740 </span><span class="lineNoCov">          0 :                                                                                  nodeContextToSyncTo-&gt;getSampleRate());</span></a>
 <a name="741"><span class="lineNum">     741 </span>            :         </a>
@@ -832,7 +832,7 @@
 <a name="770"><span class="lineNum">     770 </span>            :     </a>
 <a name="771"><span class="lineNum">     771 </span>            :     // Dispatch any MIDI messages that have been injected in to the MidiOutputDeviceInstances by the Node</a>
 <a name="772"><span class="lineNum">     772 </span><span class="lineNoCov">          0 :     midiDispatcher.dispatchPendingMessagesForDevices (editTime);</span></a>
-<a name="773"><span class="lineNum">     773 </span>            : }</a>
+<a name="773"><span class="lineNum">     773 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="774"><span class="lineNum">     774 </span>            : </a>
 <a name="775"><span class="lineNum">     775 </span><span class="lineNoCov">          0 : InputDeviceInstance* EditPlaybackContext::getInputFor (InputDevice* d) const</span></a>
 <a name="776"><span class="lineNum">     776 </span>            : {</a>
@@ -926,13 +926,13 @@
 <a name="864"><span class="lineNum">     864 </span>            : </a>
 <a name="865"><span class="lineNum">     865 </span><span class="lineNoCov">          0 : TimePosition EditPlaybackContext::getPosition() const</span></a>
 <a name="866"><span class="lineNum">     866 </span>            : {</a>
-<a name="867"><span class="lineNum">     867 </span>            :     return TimePosition::fromSamples (nodePlaybackContext-&gt;playHead.getPosition(),</a>
+<a name="867"><span class="lineNum">     867 </span><span class="lineNoCov">          0 :     return TimePosition::fromSamples (nodePlaybackContext-&gt;playHead.getPosition(),</span></a>
 <a name="868"><span class="lineNum">     868 </span><span class="lineNoCov">          0 :                                       nodePlaybackContext-&gt;getSampleRate());</span></a>
 <a name="869"><span class="lineNum">     869 </span>            : }</a>
 <a name="870"><span class="lineNum">     870 </span>            : </a>
 <a name="871"><span class="lineNum">     871 </span><span class="lineNoCov">          0 : TimePosition EditPlaybackContext::getUnloopedPosition() const</span></a>
 <a name="872"><span class="lineNum">     872 </span>            : {</a>
-<a name="873"><span class="lineNum">     873 </span>            :     return TimePosition::fromSamples (nodePlaybackContext-&gt;playHead.getUnloopedPosition(),</a>
+<a name="873"><span class="lineNum">     873 </span><span class="lineNoCov">          0 :     return TimePosition::fromSamples (nodePlaybackContext-&gt;playHead.getUnloopedPosition(),</span></a>
 <a name="874"><span class="lineNum">     874 </span><span class="lineNoCov">          0 :                                       nodePlaybackContext-&gt;getSampleRate());</span></a>
 <a name="875"><span class="lineNum">     875 </span>            : }</a>
 <a name="876"><span class="lineNum">     876 </span>            : </a>
@@ -1025,7 +1025,7 @@
 <a name="963"><span class="lineNum">     963 </span><span class="lineCov">         84 :     if (! nodePlaybackContext)</span></a>
 <a name="964"><span class="lineNum">     964 </span><span class="lineNoCov">          0 :         return;</span></a>
 <a name="965"><span class="lineNum">     965 </span>            :     </a>
-<a name="966"><span class="lineNum">     966 </span><span class="lineCov">         84 :     const auto globalSampleRange = tracktion::graph::timeToSample (globalStreamTime, sampleRate);</span></a>
+<a name="966"><span class="lineNum">     966 </span>            :     const auto globalSampleRange = tracktion::graph::timeToSample (globalStreamTime, sampleRate);</a>
 <a name="967"><span class="lineNum">     967 </span><span class="lineCov">         84 :     nodePlaybackContext-&gt;resyncToReferenceSampleRange (globalSampleRange);</span></a>
 <a name="968"><span class="lineNum">     968 </span>            : }</a>
 <a name="969"><span class="lineNum">     969 </span>            : </a>
@@ -1066,7 +1066,7 @@
 <a name="1004"><span class="lineNum">    1004 </span><span class="lineCov">        170 : }</span></a>
 <a name="1005"><span class="lineNum">    1005 </span>            : </a>
 <a name="1006"><span class="lineNum">    1006 </span><span class="lineCov">         84 : EditPlaybackContext::ProcessPriorityBooster::ProcessPriorityBooster (Engine&amp; e) : engine (e)        { ++numHighPriorityPlayers; updateProcessPriority (engine); }</span></a>
-<a name="1007"><span class="lineNum">    1007 </span><span class="lineNoCov">          0 : EditPlaybackContext::ProcessPriorityBooster::~ProcessPriorityBooster()                              { --numHighPriorityPlayers; updateProcessPriority (engine); }</span></a>
+<a name="1007"><span class="lineNum">    1007 </span><span class="lineCov">         84 : EditPlaybackContext::ProcessPriorityBooster::~ProcessPriorityBooster()                              { --numHighPriorityPlayers; updateProcessPriority (engine); }</span></a>
 <a name="1008"><span class="lineNum">    1008 </span><span class="lineCov">          1 : EditPlaybackContext::RealtimePriorityDisabler::RealtimePriorityDisabler (Engine&amp; e) : engine (e)    { ++numRealtimeDefeaters; updateProcessPriority (engine); }</span></a>
 <a name="1009"><span class="lineNum">    1009 </span><span class="lineCov">          1 : EditPlaybackContext::RealtimePriorityDisabler::~RealtimePriorityDisabler()                          { --numRealtimeDefeaters; updateProcessPriority (engine); }</span></a>
 <a name="1010"><span class="lineNum">    1010 </span>            : </a>

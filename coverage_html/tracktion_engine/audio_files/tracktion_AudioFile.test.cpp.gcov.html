@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">26</td>
-            <td class="headerCovTableEntry">26</td>
+            <td class="headerCovTableEntry">29</td>
+            <td class="headerCovTableEntry">29</td>
             <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">3</td>
@@ -103,8 +103,8 @@
 <a name="41"><span class="lineNum">      41 </span>            : </a>
 <a name="42"><span class="lineNum">      42 </span><span class="lineCov">          1 :         auto&amp; engine = *Engine::getEngines().getFirst();</span></a>
 <a name="43"><span class="lineNum">      43 </span>            : </a>
-<a name="44"><span class="lineNum">      44 </span><span class="lineCov">          2 :         juce::WavAudioFormat format;</span></a>
-<a name="45"><span class="lineNum">      45 </span><span class="lineCov">          3 :         juce::TemporaryFile tempFile (format.getFileExtensions()[0]);</span></a>
+<a name="44"><span class="lineNum">      44 </span><span class="lineCov">          1 :         juce::WavAudioFormat format;</span></a>
+<a name="45"><span class="lineNum">      45 </span><span class="lineCov">          2 :         juce::TemporaryFile tempFile (format.getFileExtensions()[0]);</span></a>
 <a name="46"><span class="lineNum">      46 </span>            :         </a>
 <a name="47"><span class="lineNum">      47 </span>            :         AudioFile audioFile (engine, tempFile.getFile());</a>
 <a name="48"><span class="lineNum">      48 </span>            :         const int numChannels = 2;</a>
@@ -116,14 +116,14 @@
 <a name="54"><span class="lineNum">      54 </span><span class="lineCov">          1 :             auto info = audioFile.getInfo();</span></a>
 <a name="55"><span class="lineNum">      55 </span><span class="lineCov">          1 :             expectEquals (info.sampleRate, 0.0);</span></a>
 <a name="56"><span class="lineNum">      56 </span><span class="lineCov">          1 :             expectEquals&lt;SampleCount&gt; (info.lengthInSamples, 0);</span></a>
-<a name="57"><span class="lineNum">      57 </span><span class="lineCov">          1 :             expectEquals (info.getLengthInSeconds(), 0.0);</span></a>
-<a name="58"><span class="lineNum">      58 </span>            :         }</a>
+<a name="57"><span class="lineNum">      57 </span><span class="lineCov">          2 :             expectEquals (info.getLengthInSeconds(), 0.0);</span></a>
+<a name="58"><span class="lineNum">      58 </span><span class="lineCov">          1 :         }</span></a>
 <a name="59"><span class="lineNum">      59 </span>            : </a>
 <a name="60"><span class="lineNum">      60 </span>            :         // Write 1s silence</a>
 <a name="61"><span class="lineNum">      61 </span>            :         {</a>
 <a name="62"><span class="lineNum">      62 </span>            :             const auto numSamplesToWrite = static_cast&lt;int&gt; (sampleRate);</a>
 <a name="63"><span class="lineNum">      63 </span>            : </a>
-<a name="64"><span class="lineNum">      64 </span><span class="lineCov">          2 :             AudioFileWriter writer (audioFile, &amp;format, numChannels, sampleRate, bitDepth, {}, 0);</span></a>
+<a name="64"><span class="lineNum">      64 </span><span class="lineCov">          1 :             AudioFileWriter writer (audioFile, &amp;format, numChannels, sampleRate, bitDepth, {}, 0);</span></a>
 <a name="65"><span class="lineNum">      65 </span><span class="lineCov">          2 :             expect (writer.isOpen());</span></a>
 <a name="66"><span class="lineNum">      66 </span>            :             </a>
 <a name="67"><span class="lineNum">      67 </span><span class="lineCov">          1 :             if (writer.isOpen())</span></a>
@@ -132,7 +132,7 @@
 <a name="70"><span class="lineNum">      70 </span><span class="lineCov">          1 :                 buffer.clear();</span></a>
 <a name="71"><span class="lineNum">      71 </span><span class="lineCov">          1 :                 writer.appendBuffer (buffer, buffer.getNumSamples());</span></a>
 <a name="72"><span class="lineNum">      72 </span>            :             }</a>
-<a name="73"><span class="lineNum">      73 </span>            :         }</a>
+<a name="73"><span class="lineNum">      73 </span><span class="lineCov">          1 :         }</span></a>
 <a name="74"><span class="lineNum">      74 </span>            : </a>
 <a name="75"><span class="lineNum">      75 </span>            :         // Check file is now valid</a>
 <a name="76"><span class="lineNum">      76 </span>            :         {</a>
@@ -140,7 +140,7 @@
 <a name="78"><span class="lineNum">      78 </span><span class="lineCov">          1 :             expectEquals (info.sampleRate, sampleRate);</span></a>
 <a name="79"><span class="lineNum">      79 </span><span class="lineCov">          1 :             expectEquals (info.lengthInSamples, static_cast&lt;SampleCount&gt; (sampleRate));</span></a>
 <a name="80"><span class="lineNum">      80 </span><span class="lineCov">          2 :             expectEquals (info.getLengthInSeconds(), 1.0);</span></a>
-<a name="81"><span class="lineNum">      81 </span>            :         }</a>
+<a name="81"><span class="lineNum">      81 </span><span class="lineCov">          1 :         }</span></a>
 <a name="82"><span class="lineNum">      82 </span><span class="lineCov">          1 :     }</span></a>
 <a name="83"><span class="lineNum">      83 </span>            : };</a>
 <a name="84"><span class="lineNum">      84 </span>            : </a>

@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">70</td>
+            <td class="headerCovTableEntry">74</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -75,9 +75,9 @@
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span><span class="lineNoCov">          0 : WaveOutputDevice::WaveOutputDevice (Engine&amp; e, const juce::String&amp; deviceName, const std::vector&lt;ChannelIndex&gt;&amp; channels)</span></a>
 <a name="15"><span class="lineNum">      15 </span><span class="lineNoCov">          0 :     : OutputDevice (e, TRANS(&quot;Wave Audio Output&quot;), deviceName),</span></a>
-<a name="16"><span class="lineNum">      16 </span>            :       deviceChannels (channels),</a>
-<a name="17"><span class="lineNum">      17 </span>            :       channelSet (createChannelSet (channels)),</a>
-<a name="18"><span class="lineNum">      18 </span>            :       ditheringEnabled (false),</a>
+<a name="16"><span class="lineNum">      16 </span><span class="lineNoCov">          0 :       deviceChannels (channels),</span></a>
+<a name="17"><span class="lineNum">      17 </span><span class="lineNoCov">          0 :       channelSet (createChannelSet (channels)),</span></a>
+<a name="18"><span class="lineNum">      18 </span><span class="lineNoCov">          0 :       ditheringEnabled (false),</span></a>
 <a name="19"><span class="lineNum">      19 </span><span class="lineNoCov">          0 :       leftRightReversed (false)</span></a>
 <a name="20"><span class="lineNum">      20 </span>            : {</a>
 <a name="21"><span class="lineNum">      21 </span><span class="lineNoCov">          0 :     loadProps();</span></a>
@@ -125,7 +125,7 @@
 <a name="63"><span class="lineNum">      63 </span>            :     {</a>
 <a name="64"><span class="lineNum">      64 </span><span class="lineNoCov">          0 :         ditheringEnabled = n-&gt;getBoolAttribute (&quot;dithering&quot;, ditheringEnabled);</span></a>
 <a name="65"><span class="lineNum">      65 </span><span class="lineNoCov">          0 :         leftRightReversed = n-&gt;getBoolAttribute (&quot;reversed&quot;, leftRightReversed);</span></a>
-<a name="66"><span class="lineNum">      66 </span>            :     }</a>
+<a name="66"><span class="lineNum">      66 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="67"><span class="lineNum">      67 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="68"><span class="lineNum">      68 </span>            : </a>
 <a name="69"><span class="lineNum">      69 </span><span class="lineNoCov">          0 : void WaveOutputDevice::saveProps()</span></a>

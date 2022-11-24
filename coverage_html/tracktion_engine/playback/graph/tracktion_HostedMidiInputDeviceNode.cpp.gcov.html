@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -76,7 +76,7 @@
 <a name="14"><span class="lineNum">      14 </span><span class="lineNoCov">          0 : HostedMidiInputDeviceNode::HostedMidiInputDeviceNode (InputDeviceInstance&amp; idi, MidiInputDevice&amp;, MidiMessageArray::MPESourceID msi,</span></a>
 <a name="15"><span class="lineNum">      15 </span><span class="lineNoCov">          0 :                                                       tracktion::graph::PlayHeadState&amp;, tracktion::ProcessState&amp; ps)</span></a>
 <a name="16"><span class="lineNum">      16 </span>            :     : TracktionEngineNode (ps),</a>
-<a name="17"><span class="lineNum">      17 </span>            :       instance (idi),</a>
+<a name="17"><span class="lineNum">      17 </span><span class="lineNoCov">          0 :       instance (idi),</span></a>
 <a name="18"><span class="lineNum">      18 </span><span class="lineNoCov">          0 :       midiSourceID (msi)</span></a>
 <a name="19"><span class="lineNum">      19 </span>            : {</a>
 <a name="20"><span class="lineNum">      20 </span><span class="lineNoCov">          0 : }</span></a>
@@ -115,7 +115,7 @@
 <a name="53"><span class="lineNum">      53 </span><span class="lineNoCov">          0 :     const std::lock_guard&lt;tracktion::graph::RealTimeSpinLock&gt; lock (bufferMutex);</span></a>
 <a name="54"><span class="lineNum">      54 </span>            : </a>
 <a name="55"><span class="lineNum">      55 </span><span class="lineNoCov">          0 :     for (auto m : incomingMessages)</span></a>
-<a name="56"><span class="lineNum">      56 </span><span class="lineNoCov">          0 :         if (localTimeRange.contains (m.getTimeStamp()))</span></a>
+<a name="56"><span class="lineNum">      56 </span>            :         if (localTimeRange.contains (m.getTimeStamp()))</a>
 <a name="57"><span class="lineNum">      57 </span>            :             destMidi.add (m);</a>
 <a name="58"><span class="lineNum">      58 </span>            :     </a>
 <a name="59"><span class="lineNum">      59 </span>            :     // Subtract time from messages and trim any negative</a>

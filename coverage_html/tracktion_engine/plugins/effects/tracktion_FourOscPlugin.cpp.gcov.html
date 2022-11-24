@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">627</td>
-            <td class="headerCovTableEntry">930</td>
-            <td class="headerCovTableEntryLo">67.4 %</td>
+            <td class="headerCovTableEntry">626</td>
+            <td class="headerCovTableEntry">928</td>
+            <td class="headerCovTableEntryLo">67.5 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">45</td>
@@ -182,7 +182,7 @@
 <a name="120"><span class="lineNum">     120 </span>            : public:</a>
 <a name="121"><span class="lineNum">     121 </span><span class="lineNoCov">          0 :     void process (juce::AudioBuffer&lt;float&gt;&amp; buffer, int numSamples)</span></a>
 <a name="122"><span class="lineNum">     122 </span>            :     {</a>
-<a name="123"><span class="lineNum">     123 </span><span class="lineNoCov">          0 :         float* lOut = buffer.getWritePointer (0);</span></a>
+<a name="123"><span class="lineNum">     123 </span>            :         float* lOut = buffer.getWritePointer (0);</a>
 <a name="124"><span class="lineNum">     124 </span>            :         float* rOut = buffer.getWritePointer (1);</a>
 <a name="125"><span class="lineNum">     125 </span>            : </a>
 <a name="126"><span class="lineNum">     126 </span><span class="lineNoCov">          0 :         AudioScratchBuffer scratchBuffer (buffer);</span></a>
@@ -242,7 +242,7 @@
 <a name="180"><span class="lineNum">     180 </span>            : };</a>
 <a name="181"><span class="lineNum">     181 </span>            : </a>
 <a name="182"><span class="lineNum">     182 </span>            : //==============================================================================</a>
-<a name="183"><span class="lineNum">     183 </span>            : class FOChorus</a>
+<a name="183"><span class="lineNum">     183 </span><span class="lineCov">          1 : class FOChorus</span></a>
 <a name="184"><span class="lineNum">     184 </span>            : {</a>
 <a name="185"><span class="lineNum">     185 </span>            : public:</a>
 <a name="186"><span class="lineNum">     186 </span><span class="lineNoCov">          0 :     void process (juce::AudioBuffer&lt;float&gt;&amp; buffer, int numSamples)</span></a>
@@ -266,7 +266,7 @@
 <a name="204"><span class="lineNum">     204 </span>            : </a>
 <a name="205"><span class="lineNum">     205 </span><span class="lineNoCov">          0 :         for (int chan = buffer.getNumChannels(); --chan &gt;= 0;)</span></a>
 <a name="206"><span class="lineNum">     206 </span>            :         {</a>
-<a name="207"><span class="lineNum">     207 </span><span class="lineNoCov">          0 :             float* const d = buffer.getWritePointer (chan, 0);</span></a>
+<a name="207"><span class="lineNum">     207 </span>            :             float* const d = buffer.getWritePointer (chan, 0);</a>
 <a name="208"><span class="lineNum">     208 </span><span class="lineNoCov">          0 :             float* const buf = (float*) delayBuffer.buffers[chan].getData();</span></a>
 <a name="209"><span class="lineNum">     209 </span>            : </a>
 <a name="210"><span class="lineNum">     210 </span><span class="lineNoCov">          0 :             ph = phase;</span></a>
@@ -346,7 +346,7 @@
 <a name="284"><span class="lineNum">     284 </span>            : public:</a>
 <a name="285"><span class="lineNum">     285 </span><span class="lineCov">        192 :     FourOscVoice (FourOscPlugin&amp; s) : synth (s)</span></a>
 <a name="286"><span class="lineNum">     286 </span>            :     {</a>
-<a name="287"><span class="lineNum">     287 </span><span class="lineCov">       2240 :         for (auto p : synth.getAutomatableParameters())</span></a>
+<a name="287"><span class="lineNum">     287 </span><span class="lineCov">       2208 :         for (auto p : synth.getAutomatableParameters())</span></a>
 <a name="288"><span class="lineNum">     288 </span><span class="lineCov">       2176 :             smoothers[p] = {};</span></a>
 <a name="289"><span class="lineNum">     289 </span><span class="lineCov">         32 :     }</span></a>
 <a name="290"><span class="lineNum">     290 </span>            : </a>
@@ -403,7 +403,7 @@
 <a name="341"><span class="lineNum">     341 </span><span class="lineCov">         10 :             for (auto&amp; o : oscillators)</span></a>
 <a name="342"><span class="lineNum">     342 </span><span class="lineCov">          8 :                 o.start();</span></a>
 <a name="343"><span class="lineNum">     343 </span>            : </a>
-<a name="344"><span class="lineNum">     344 </span><span class="lineCov">          2 :             filterFrequencySmoother.snapToValue();</span></a>
+<a name="344"><span class="lineNum">     344 </span>            :             filterFrequencySmoother.snapToValue();</a>
 <a name="345"><span class="lineNum">     345 </span>            : </a>
 <a name="346"><span class="lineNum">     346 </span><span class="lineCov">          2 :             firstBlock = true;</span></a>
 <a name="347"><span class="lineNum">     347 </span>            :         }</a>
@@ -413,7 +413,7 @@
 <a name="351"><span class="lineNum">     351 </span>            :     {</a>
 <a name="352"><span class="lineNum">     352 </span><span class="lineCov">       2978 :         if (allowTailOff)</span></a>
 <a name="353"><span class="lineNum">     353 </span>            :         {</a>
-<a name="354"><span class="lineNum">     354 </span><span class="lineCov">       2882 :             ampAdsr.noteOff();</span></a>
+<a name="354"><span class="lineNum">     354 </span>            :             ampAdsr.noteOff();</a>
 <a name="355"><span class="lineNum">     355 </span>            :             filterAdsr.noteOff();</a>
 <a name="356"><span class="lineNum">     356 </span>            :             modAdsr1.noteOff();</a>
 <a name="357"><span class="lineNum">     357 </span>            :             modAdsr2.noteOff();</a>
@@ -470,7 +470,7 @@
 <a name="408"><span class="lineNum">     408 </span>            : </a>
 <a name="409"><span class="lineNum">     409 </span><span class="lineCov">       3856 :         if (firstBlock)</span></a>
 <a name="410"><span class="lineNum">     410 </span>            :         {</a>
-<a name="411"><span class="lineNum">     411 </span><span class="lineCov">          2 :             filterFrequencySmoother.snapToValue();</span></a>
+<a name="411"><span class="lineNum">     411 </span>            :             filterFrequencySmoother.snapToValue();</a>
 <a name="412"><span class="lineNum">     412 </span><span class="lineCov">          2 :             firstBlock = false;</span></a>
 <a name="413"><span class="lineNum">     413 </span>            :         }</a>
 <a name="414"><span class="lineNum">     414 </span>            : </a>
@@ -486,7 +486,7 @@
 <a name="424"><span class="lineNum">     424 </span>            :         // Apply velocity</a>
 <a name="425"><span class="lineNum">     425 </span><span class="lineCov">      11568 :         float velocityGain = velocityToGain (currentlyPlayingNote.noteOnVelocity.asUnsignedFloat(), paramValue (synth.ampVelocity) / 100.0f);</span></a>
 <a name="426"><span class="lineNum">     426 </span>            :         velocityGain = juce::jlimit (0.0f, 1.0f, velocityGain);</a>
-<a name="427"><span class="lineNum">     427 </span><span class="lineCov">       3856 :         renderBuffer.applyGain (velocityGain);</span></a>
+<a name="427"><span class="lineNum">     427 </span>            :         renderBuffer.applyGain (velocityGain);</a>
 <a name="428"><span class="lineNum">     428 </span>            : </a>
 <a name="429"><span class="lineNum">     429 </span>            :         // Apply filter</a>
 <a name="430"><span class="lineNum">     430 </span><span class="lineCov">       3856 :         if (synth.filterTypeValue != 0)</span></a>
@@ -496,7 +496,7 @@
 <a name="434"><span class="lineNum">     434 </span>            : </a>
 <a name="435"><span class="lineNum">     435 </span><span class="lineCov">       3856 :             if (synth.filterSlopeValue == 24)</span></a>
 <a name="436"><span class="lineNum">     436 </span>            :             {</a>
-<a name="437"><span class="lineNum">     437 </span><span class="lineNoCov">          0 :                 clip (renderBuffer.getWritePointer (0), numSamples);</span></a>
+<a name="437"><span class="lineNum">     437 </span>            :                 clip (renderBuffer.getWritePointer (0), numSamples);</a>
 <a name="438"><span class="lineNum">     438 </span>            :                 clip (renderBuffer.getWritePointer (1), numSamples);</a>
 <a name="439"><span class="lineNum">     439 </span>            : </a>
 <a name="440"><span class="lineNum">     440 </span><span class="lineNoCov">          0 :                 filterL2.processSamples (renderBuffer.getWritePointer (0), numSamples);</span></a>
@@ -616,7 +616,7 @@
 <a name="554"><span class="lineNum">     554 </span>            :             0,</a>
 <a name="555"><span class="lineNum">     555 </span>            :             0,</a>
 <a name="556"><span class="lineNum">     556 </span><span class="lineCov">       3858 :             paramValue (synth.lfoParams[0]-&gt;depth),</span></a>
-<a name="557"><span class="lineNum">     557 </span><span class="lineCov">       7716 :             (SimpleLFO::WaveShape) synth.lfoParams[0]-&gt;waveShapeValue.get(),</span></a>
+<a name="557"><span class="lineNum">     557 </span><span class="lineCov">       3858 :             (SimpleLFO::WaveShape) synth.lfoParams[0]-&gt;waveShapeValue.get(),</span></a>
 <a name="558"><span class="lineNum">     558 </span>            :             0.5f</a>
 <a name="559"><span class="lineNum">     559 </span>            :         });</a>
 <a name="560"><span class="lineNum">     560 </span>            : </a>
@@ -631,7 +631,7 @@
 <a name="569"><span class="lineNum">     569 </span>            :             0,</a>
 <a name="570"><span class="lineNum">     570 </span>            :             0,</a>
 <a name="571"><span class="lineNum">     571 </span><span class="lineCov">       7716 :             paramValue (synth.lfoParams[1]-&gt;depth) / 2,</span></a>
-<a name="572"><span class="lineNum">     572 </span><span class="lineCov">       7716 :             (SimpleLFO::WaveShape) synth.lfoParams[1]-&gt;waveShapeValue.get(),</span></a>
+<a name="572"><span class="lineNum">     572 </span><span class="lineCov">       3858 :             (SimpleLFO::WaveShape) synth.lfoParams[1]-&gt;waveShapeValue.get(),</span></a>
 <a name="573"><span class="lineNum">     573 </span>            :             0.5f</a>
 <a name="574"><span class="lineNum">     574 </span>            :         });</a>
 <a name="575"><span class="lineNum">     575 </span>            : </a>
@@ -655,7 +655,7 @@
 <a name="593"><span class="lineNum">     593 </span>            :         });</a>
 <a name="594"><span class="lineNum">     594 </span>            : </a>
 <a name="595"><span class="lineNum">     595 </span><span class="lineCov">       3858 :         int type = synth.filterTypeValue;</span></a>
-<a name="596"><span class="lineNum">     596 </span><span class="lineCov">       3858 :         float filterEnv = filterAdsr.getEnvelopeValue();</span></a>
+<a name="596"><span class="lineNum">     596 </span>            :         float filterEnv = filterAdsr.getEnvelopeValue();</a>
 <a name="597"><span class="lineNum">     597 </span><span class="lineCov">       3858 :         float filterSens = paramValue (synth.filterVelocity) / 100.0f;</span></a>
 <a name="598"><span class="lineNum">     598 </span><span class="lineCov">       3858 :         filterSens = currentlyPlayingNote.noteOnVelocity.asUnsignedFloat() * filterSens + 1.0f - filterSens;</span></a>
 <a name="599"><span class="lineNum">     599 </span><span class="lineCov">       3858 :         filterEnv *= filterSens;</span></a>
@@ -687,7 +687,7 @@
 <a name="625"><span class="lineNum">     625 </span>            : </a>
 <a name="626"><span class="lineNum">     626 </span><span class="lineCov">       3858 :         if (type != 0)</span></a>
 <a name="627"><span class="lineNum">     627 </span>            :         {</a>
-<a name="628"><span class="lineNum">     628 </span><span class="lineCov">       7716 :             juce::IIRCoefficients coefs1, coefs2;</span></a>
+<a name="628"><span class="lineNum">     628 </span><span class="lineCov">       3858 :             juce::IIRCoefficients coefs1, coefs2;</span></a>
 <a name="629"><span class="lineNum">     629 </span>            : </a>
 <a name="630"><span class="lineNum">     630 </span><span class="lineCov">       3858 :             if (type == 1)</span></a>
 <a name="631"><span class="lineNum">     631 </span>            :             {</a>
@@ -715,7 +715,7 @@
 <a name="653"><span class="lineNum">     653 </span>            : </a>
 <a name="654"><span class="lineNum">     654 </span><span class="lineCov">       3858 :             filterL2.setCoefficients (coefs2);</span></a>
 <a name="655"><span class="lineNum">     655 </span><span class="lineCov">       3858 :             filterR2.setCoefficients (coefs2);</span></a>
-<a name="656"><span class="lineNum">     656 </span>            :         }</a>
+<a name="656"><span class="lineNum">     656 </span><span class="lineCov">       3858 :         }</span></a>
 <a name="657"><span class="lineNum">     657 </span>            : </a>
 <a name="658"><span class="lineNum">     658 </span>            :         // Oscillators</a>
 <a name="659"><span class="lineNum">     659 </span><span class="lineCov">       3858 :         double activeNoteSmoothed = activeNote.getNextValue();</span></a>
@@ -907,7 +907,7 @@
 <a name="845"><span class="lineNum">     845 </span>            : </a>
 <a name="846"><span class="lineNum">     846 </span><span class="lineNoCov">          0 : void FourOscPlugin::LFOParams::detach()</span></a>
 <a name="847"><span class="lineNum">     847 </span>            : {</a>
-<a name="848"><span class="lineNum">     848 </span><span class="lineNoCov">          0 :     depth-&gt;detachFromCurrentValue();</span></a>
+<a name="848"><span class="lineNum">     848 </span><span class="lineCov">          2 :     depth-&gt;detachFromCurrentValue();</span></a>
 <a name="849"><span class="lineNum">     849 </span><span class="lineCov">          2 :     rate-&gt;detachFromCurrentValue();</span></a>
 <a name="850"><span class="lineNum">     850 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="851"><span class="lineNum">     851 </span>            : </a>
@@ -965,8 +965,8 @@
 <a name="903"><span class="lineNum">     903 </span>            : </a>
 <a name="904"><span class="lineNum">     904 </span>            :     setVoiceStealingEnabled (true);</a>
 <a name="905"><span class="lineNum">     905 </span>            : </a>
-<a name="906"><span class="lineNum">     906 </span><span class="lineCov">          1 :     delay  = std::make_unique&lt;FODelay&gt;();</span></a>
-<a name="907"><span class="lineNum">     907 </span><span class="lineCov">          2 :     chorus = std::make_unique&lt;FOChorus&gt;();</span></a>
+<a name="906"><span class="lineNum">     906 </span><span class="lineCov">          2 :     delay  = std::make_unique&lt;FODelay&gt;();</span></a>
+<a name="907"><span class="lineNum">     907 </span><span class="lineCov">          1 :     chorus = std::make_unique&lt;FOChorus&gt;();</span></a>
 <a name="908"><span class="lineNum">     908 </span>            : </a>
 <a name="909"><span class="lineNum">     909 </span><span class="lineCov">          5 :     for (int i = 0; i &lt; 4; i++) oscParams.add (new OscParams (*this, i + 1));</span></a>
 <a name="910"><span class="lineNum">     910 </span><span class="lineCov">          3 :     for (int i = 0; i &lt; 2; i++) lfoParams.add (new LFOParams (*this, i + 1));</span></a>
@@ -1026,7 +1026,7 @@
 <a name="964"><span class="lineNum">     964 </span><span class="lineCov">          1 :     filterVelocity-&gt;attachToCurrentValue (filterVelocityValue);</span></a>
 <a name="965"><span class="lineNum">     965 </span>            : </a>
 <a name="966"><span class="lineNum">     966 </span>            :     // Build the mod matrix before we add any global params</a>
-<a name="967"><span class="lineNum">     967 </span><span class="lineCov">         56 :     for (auto p : getAutomatableParameters())</span></a>
+<a name="967"><span class="lineNum">     967 </span><span class="lineCov">         55 :     for (auto p : getAutomatableParameters())</span></a>
 <a name="968"><span class="lineNum">     968 </span><span class="lineCov">         54 :         modMatrix[p] = ModAssign();</span></a>
 <a name="969"><span class="lineNum">     969 </span>            : </a>
 <a name="970"><span class="lineNum">     970 </span>            :     // Effects: Distortion</a>
@@ -1109,7 +1109,7 @@
 <a name="1047"><span class="lineNum">    1047 </span><span class="lineCov">          3 :     for (auto e : modEnvParams)</span></a>
 <a name="1048"><span class="lineNum">    1048 </span><span class="lineCov">          2 :         e-&gt;attach();</span></a>
 <a name="1049"><span class="lineNum">    1049 </span>            : </a>
-<a name="1050"><span class="lineNum">    1050 </span><span class="lineCov">         70 :     for (auto p : getAutomatableParameters())</span></a>
+<a name="1050"><span class="lineNum">    1050 </span><span class="lineCov">         69 :     for (auto p : getAutomatableParameters())</span></a>
 <a name="1051"><span class="lineNum">    1051 </span><span class="lineCov">         68 :         smoothers[p] = {};</span></a>
 <a name="1052"><span class="lineNum">    1052 </span>            : </a>
 <a name="1053"><span class="lineNum">    1053 </span>            :     // Setup text functions</a>
@@ -1121,7 +1121,7 @@
 <a name="1059"><span class="lineNum">    1059 </span><span class="lineCov">          1 :     loadModMatrix();</span></a>
 <a name="1060"><span class="lineNum">    1060 </span><span class="lineCov">          1 : }</span></a>
 <a name="1061"><span class="lineNum">    1061 </span>            : </a>
-<a name="1062"><span class="lineNum">    1062 </span><span class="lineCov">         10 : FourOscPlugin::~FourOscPlugin()</span></a>
+<a name="1062"><span class="lineNum">    1062 </span><span class="lineCov">          2 : FourOscPlugin::~FourOscPlugin()</span></a>
 <a name="1063"><span class="lineNum">    1063 </span>            : {</a>
 <a name="1064"><span class="lineNum">    1064 </span><span class="lineCov">          1 :     notifyListenersOfDeletion();</span></a>
 <a name="1065"><span class="lineNum">    1065 </span>            : </a>
@@ -1177,7 +1177,7 @@
 <a name="1115"><span class="lineNum">    1115 </span>            :     // Voices</a>
 <a name="1116"><span class="lineNum">    1116 </span><span class="lineCov">          1 :     legato-&gt;detachFromCurrentValue();</span></a>
 <a name="1117"><span class="lineNum">    1117 </span><span class="lineCov">          1 :     masterLevel-&gt;detachFromCurrentValue();</span></a>
-<a name="1118"><span class="lineNum">    1118 </span><span class="lineCov">          2 : }</span></a>
+<a name="1118"><span class="lineNum">    1118 </span><span class="lineCov">         10 : }</span></a>
 <a name="1119"><span class="lineNum">    1119 </span>            : </a>
 <a name="1120"><span class="lineNum">    1120 </span>            : const char* FourOscPlugin::xmlTypeName = &quot;4osc&quot;;</a>
 <a name="1121"><span class="lineNum">    1121 </span>            : </a>
@@ -1194,14 +1194,14 @@
 <a name="1132"><span class="lineNum">    1132 </span><span class="lineCov">          1 : void FourOscPlugin::setupTextFunctions()</span></a>
 <a name="1133"><span class="lineNum">    1133 </span>            : {</a>
 <a name="1134"><span class="lineNum">    1134 </span>            :     // Add a default function that does number of decimal places nicely and adds a labels</a>
-<a name="1135"><span class="lineNum">    1135 </span><span class="lineCov">         70 :     for (auto p : getAutomatableParameters())</span></a>
+<a name="1135"><span class="lineNum">    1135 </span><span class="lineCov">         69 :     for (auto p : getAutomatableParameters())</span></a>
 <a name="1136"><span class="lineNum">    1136 </span>            :     {</a>
 <a name="1137"><span class="lineNum">    1137 </span><span class="lineCov">         68 :         juce::String label;</span></a>
 <a name="1138"><span class="lineNum">    1138 </span><span class="lineCov">         68 :         auto itr = labels.find (p-&gt;paramID);</span></a>
 <a name="1139"><span class="lineNum">    1139 </span><span class="lineCov">         68 :         if (itr != labels.end())</span></a>
 <a name="1140"><span class="lineNum">    1140 </span><span class="lineCov">         27 :             label = itr-&gt;second;</span></a>
 <a name="1141"><span class="lineNum">    1141 </span>            : </a>
-<a name="1142"><span class="lineNum">    1142 </span><span class="lineCov">        272 :         auto basicValueToTextFunction = [label] (float value)</span></a>
+<a name="1142"><span class="lineNum">    1142 </span><span class="lineCov">        204 :         auto basicValueToTextFunction = [label] (float value)</span></a>
 <a name="1143"><span class="lineNum">    1143 </span>            :         {</a>
 <a name="1144"><span class="lineNum">    1144 </span><span class="lineNoCov">          0 :             juce::String text;</span></a>
 <a name="1145"><span class="lineNum">    1145 </span>            :             float v = std::abs (value);</a>
@@ -1221,7 +1221,7 @@
 <a name="1159"><span class="lineNum">    1159 </span><span class="lineCov">         68 :         };</span></a>
 <a name="1160"><span class="lineNum">    1160 </span>            : </a>
 <a name="1161"><span class="lineNum">    1161 </span><span class="lineCov">         68 :         p-&gt;valueToStringFunction = basicValueToTextFunction;</span></a>
-<a name="1162"><span class="lineNum">    1162 </span>            :     }</a>
+<a name="1162"><span class="lineNum">    1162 </span><span class="lineCov">         68 :     }</span></a>
 <a name="1163"><span class="lineNum">    1163 </span>            : </a>
 <a name="1164"><span class="lineNum">    1164 </span><span class="lineNoCov">          0 :     auto timeValueToTextFunction = [] (float value)</span></a>
 <a name="1165"><span class="lineNum">    1165 </span>            :     {</a>
@@ -1369,11 +1369,11 @@
 <a name="1307"><span class="lineNum">    1307 </span>            :         {</a>
 <a name="1308"><span class="lineNum">    1308 </span><span class="lineCov">          1 :             if ((bool) state[IDs::mpe])</span></a>
 <a name="1309"><span class="lineNum">    1309 </span>            :             {</a>
-<a name="1310"><span class="lineNum">    1310 </span><span class="lineNoCov">          0 :                 juce::MPEZoneLayout zones;</span></a>
+<a name="1310"><span class="lineNum">    1310 </span>            :                 juce::MPEZoneLayout zones;</a>
 <a name="1311"><span class="lineNum">    1311 </span><span class="lineNoCov">          0 :                 zones.setLowerZone (15);</span></a>
 <a name="1312"><span class="lineNum">    1312 </span><span class="lineNoCov">          0 :                 instrument.setZoneLayout (zones);</span></a>
 <a name="1313"><span class="lineNum">    1313 </span><span class="lineNoCov">          0 :                 setPitchbendTrackingMode (juce::MPEInstrument::lastNotePlayedOnChannel);</span></a>
-<a name="1314"><span class="lineNum">    1314 </span>            :             }</a>
+<a name="1314"><span class="lineNum">    1314 </span><span class="lineNoCov">          0 :             }</span></a>
 <a name="1315"><span class="lineNum">    1315 </span>            :             else</a>
 <a name="1316"><span class="lineNum">    1316 </span>            :             {</a>
 <a name="1317"><span class="lineNum">    1317 </span><span class="lineCov">          1 :                 instrument.enableLegacyMode();</span></a>
@@ -1424,9 +1424,9 @@
 <a name="1362"><span class="lineNum">    1362 </span><span class="lineCov">      14688 :             itr.second.depths[s] = -1000.0f;</span></a>
 <a name="1363"><span class="lineNum">    1363 </span>            : </a>
 <a name="1364"><span class="lineNum">    1364 </span>            :     // Read modulation from state ValueTree</a>
-<a name="1365"><span class="lineNum">    1365 </span><span class="lineCov">          3 :     auto mm = state.getChildWithName (IDs::MODMATRIX);</span></a>
+<a name="1365"><span class="lineNum">    1365 </span><span class="lineCov">          2 :     auto mm = state.getChildWithName (IDs::MODMATRIX);</span></a>
 <a name="1366"><span class="lineNum">    1366 </span><span class="lineCov">          2 :     if (! mm.isValid())</span></a>
-<a name="1367"><span class="lineNum">    1367 </span><span class="lineCov">          1 :         return;</span></a>
+<a name="1367"><span class="lineNum">    1367 </span>            :         return;</a>
 <a name="1368"><span class="lineNum">    1368 </span>            : </a>
 <a name="1369"><span class="lineNum">    1369 </span><span class="lineCov">          1 :     for (auto mmi : mm)</span></a>
 <a name="1370"><span class="lineNum">    1370 </span>            :     {</a>
@@ -1445,12 +1445,12 @@
 <a name="1383"><span class="lineNum">    1383 </span>            :                     jassertfalse;</a>
 <a name="1384"><span class="lineNum">    1384 </span>            :             }</a>
 <a name="1385"><span class="lineNum">    1385 </span>            :         }</a>
-<a name="1386"><span class="lineNum">    1386 </span>            :     }</a>
+<a name="1386"><span class="lineNum">    1386 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="1387"><span class="lineNum">    1387 </span>            : </a>
 <a name="1388"><span class="lineNum">    1388 </span>            :     // Update cached lookup info</a>
 <a name="1389"><span class="lineNum">    1389 </span><span class="lineCov">         55 :     for (auto&amp; itr : modMatrix)</span></a>
 <a name="1390"><span class="lineNum">    1390 </span>            :         itr.second.updateCachedInfo();</a>
-<a name="1391"><span class="lineNum">    1391 </span>            : }</a>
+<a name="1391"><span class="lineNum">    1391 </span><span class="lineCov">          2 : }</span></a>
 <a name="1392"><span class="lineNum">    1392 </span>            : </a>
 <a name="1393"><span class="lineNum">    1393 </span><span class="lineNoCov">          0 : void FourOscPlugin::flushPluginStateToValueTree()</span></a>
 <a name="1394"><span class="lineNum">    1394 </span>            : {</a>
@@ -1476,7 +1476,7 @@
 <a name="1414"><span class="lineNum">    1414 </span><span class="lineNoCov">          0 :                 mmi.setProperty (IDs::modDepth, itr.second.depths[s], um);</span></a>
 <a name="1415"><span class="lineNum">    1415 </span>            : </a>
 <a name="1416"><span class="lineNum">    1416 </span><span class="lineNoCov">          0 :                 mm.addChild (mmi, -1, um);</span></a>
-<a name="1417"><span class="lineNum">    1417 </span>            :             }</a>
+<a name="1417"><span class="lineNum">    1417 </span><span class="lineNoCov">          0 :             }</span></a>
 <a name="1418"><span class="lineNum">    1418 </span>            :         }</a>
 <a name="1419"><span class="lineNum">    1419 </span>            :     }</a>
 <a name="1420"><span class="lineNum">    1420 </span>            : </a>
@@ -1536,7 +1536,7 @@
 <a name="1474"><span class="lineNum">    1474 </span>            :         {</a>
 <a name="1475"><span class="lineNum">    1475 </span><span class="lineCov">       5264 :             int thisBlock = std::min (32, todo);</span></a>
 <a name="1476"><span class="lineNum">    1476 </span>            : </a>
-<a name="1477"><span class="lineNum">    1477 </span><span class="lineCov">      10528 :             AudioScratchBuffer workBuffer (2, thisBlock);</span></a>
+<a name="1477"><span class="lineNum">    1477 </span><span class="lineCov">       5264 :             AudioScratchBuffer workBuffer (2, thisBlock);</span></a>
 <a name="1478"><span class="lineNum">    1478 </span><span class="lineCov">       5264 :             workBuffer.buffer.clear();</span></a>
 <a name="1479"><span class="lineNum">    1479 </span>            : </a>
 <a name="1480"><span class="lineNum">    1480 </span><span class="lineCov">       5264 :             juce::MidiBuffer midi;</span></a>
@@ -1566,7 +1566,7 @@
 <a name="1504"><span class="lineNum">    1504 </span>            : </a>
 <a name="1505"><span class="lineNum">    1505 </span><span class="lineCov">       5264 :             todo -= thisBlock;</span></a>
 <a name="1506"><span class="lineNum">    1506 </span><span class="lineCov">       5264 :             pos += thisBlock;</span></a>
-<a name="1507"><span class="lineNum">    1507 </span>            :         }</a>
+<a name="1507"><span class="lineNum">    1507 </span><span class="lineCov">       5264 :         }</span></a>
 <a name="1508"><span class="lineNum">    1508 </span>            : </a>
 <a name="1509"><span class="lineNum">    1509 </span><span class="lineCov">        658 :         for (int ch = 2; ch &lt; fc.destBuffer-&gt;getNumChannels(); ch++)</span></a>
 <a name="1510"><span class="lineNum">    1510 </span><span class="lineNoCov">          0 :             fc.destBuffer-&gt;clear (ch, fc.bufferStartSample, fc.bufferNumSamples);</span></a>
@@ -1585,7 +1585,7 @@
 <a name="1523"><span class="lineNum">    1523 </span>            : </a>
 <a name="1524"><span class="lineNum">    1524 </span><span class="lineCov">       5264 : void FourOscPlugin::applyEffects (juce::AudioBuffer&lt;float&gt;&amp; buffer)</span></a>
 <a name="1525"><span class="lineNum">    1525 </span>            : {</a>
-<a name="1526"><span class="lineNum">    1526 </span><span class="lineCov">       5264 :     int numSamples = buffer.getNumSamples();</span></a>
+<a name="1526"><span class="lineNum">    1526 </span>            :     int numSamples = buffer.getNumSamples();</a>
 <a name="1527"><span class="lineNum">    1527 </span>            : </a>
 <a name="1528"><span class="lineNum">    1528 </span>            :     // Apply Distortion</a>
 <a name="1529"><span class="lineNum">    1529 </span><span class="lineCov">       5264 :     if (distortionOnValue)</span></a>
@@ -1609,7 +1609,7 @@
 <a name="1547"><span class="lineNum">    1547 </span><span class="lineNoCov">          0 :         reverb.processStereo (buffer.getWritePointer (0), buffer.getWritePointer (1), numSamples);</span></a>
 <a name="1548"><span class="lineNum">    1548 </span>            : </a>
 <a name="1549"><span class="lineNum">    1549 </span>            :     // Apply master level</a>
-<a name="1550"><span class="lineNum">    1550 </span><span class="lineCov">      10528 :     buffer.applyGain (juce::Decibels::decibelsToGain (paramValue (masterLevel)));</span></a>
+<a name="1550"><span class="lineNum">    1550 </span><span class="lineCov">       5264 :     buffer.applyGain (juce::Decibels::decibelsToGain (paramValue (masterLevel)));</span></a>
 <a name="1551"><span class="lineNum">    1551 </span><span class="lineCov">       5264 : }</span></a>
 <a name="1552"><span class="lineNum">    1552 </span>            : </a>
 <a name="1553"><span class="lineNum">    1553 </span><span class="lineCov">       5264 : void FourOscPlugin::updateParams (juce::AudioBuffer&lt;float&gt;&amp; buffer)</span></a>
@@ -1671,7 +1671,7 @@
 <a name="1609"><span class="lineNum">    1609 </span><span class="lineCov">          3 :     for (auto p : modEnvParams)</span></a>
 <a name="1610"><span class="lineNum">    1610 </span>            :         p-&gt;restorePluginStateFromValueTree (v);</a>
 <a name="1611"><span class="lineNum">    1611 </span>            : </a>
-<a name="1612"><span class="lineNum">    1612 </span><span class="lineCov">          2 :     auto mm = state.getChildWithName (IDs::MODMATRIX);</span></a>
+<a name="1612"><span class="lineNum">    1612 </span><span class="lineCov">          1 :     auto mm = state.getChildWithName (IDs::MODMATRIX);</span></a>
 <a name="1613"><span class="lineNum">    1613 </span><span class="lineCov">          1 :     if (mm.isValid())</span></a>
 <a name="1614"><span class="lineNum">    1614 </span><span class="lineNoCov">          0 :         state.removeChild (mm, um);</span></a>
 <a name="1615"><span class="lineNum">    1615 </span>            : </a>
@@ -1682,7 +1682,7 @@
 <a name="1620"><span class="lineNum">    1620 </span>            : </a>
 <a name="1621"><span class="lineNum">    1621 </span><span class="lineCov">          1 :     valueTreePropertyChanged (state, IDs::voiceMode);</span></a>
 <a name="1622"><span class="lineNum">    1622 </span>            : </a>
-<a name="1623"><span class="lineNum">    1623 </span><span class="lineCov">         70 :     for (auto p : getAutomatableParameters())</span></a>
+<a name="1623"><span class="lineNum">    1623 </span><span class="lineCov">         69 :     for (auto p : getAutomatableParameters())</span></a>
 <a name="1624"><span class="lineNum">    1624 </span><span class="lineCov">         68 :         p-&gt;updateFromAttachedValue();</span></a>
 <a name="1625"><span class="lineNum">    1625 </span><span class="lineCov">          1 : }</span></a>
 <a name="1626"><span class="lineNum">    1626 </span>            : </a>
@@ -1713,7 +1713,7 @@
 <a name="1651"><span class="lineNum">    1651 </span><span class="lineNoCov">          0 :                     return prefix;</span></a>
 <a name="1652"><span class="lineNum">    1652 </span>            : </a>
 <a name="1653"><span class="lineNum">    1653 </span><span class="lineNoCov">          0 :                 return prefix + &quot; &quot; + name;</span></a>
-<a name="1654"><span class="lineNum">    1654 </span>            :             }</a>
+<a name="1654"><span class="lineNum">    1654 </span><span class="lineNoCov">          0 :             }</span></a>
 <a name="1655"><span class="lineNum">    1655 </span>            : </a>
 <a name="1656"><span class="lineNum">    1656 </span>            :             jassertfalse;</a>
 <a name="1657"><span class="lineNum">    1657 </span><span class="lineNoCov">          0 :             return {};</span></a>

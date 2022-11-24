@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">146</td>
+            <td class="headerCovTableEntry">142</td>
             <td class="headerCovTableEntry">416</td>
-            <td class="headerCovTableEntryLo">35.1 %</td>
+            <td class="headerCovTableEntryLo">34.1 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">19</td>
+            <td class="headerCovTableEntry">18</td>
             <td class="headerCovTableEntry">47</td>
-            <td class="headerCovTableEntryLo">40.4 %</td>
+            <td class="headerCovTableEntryLo">38.3 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -85,7 +85,7 @@
 <a name="23"><span class="lineNum">      23 </span><span class="lineCov">         42 :     const auto&amp; sysex = sourceSequence.getSysexEvents();</span></a>
 <a name="24"><span class="lineNum">      24 </span><span class="lineCov">         42 :     const auto&amp; controllers = sourceSequence.getControllerEvents();</span></a>
 <a name="25"><span class="lineNum">      25 </span>            : </a>
-<a name="26"><span class="lineNum">      26 </span><span class="lineCov">         84 :     auto v = MidiList::createMidiList();</span></a>
+<a name="26"><span class="lineNum">      26 </span><span class="lineCov">         42 :     auto v = MidiList::createMidiList();</span></a>
 <a name="27"><span class="lineNum">      27 </span>            : </a>
 <a name="28"><span class="lineNum">      28 </span><span class="lineCov">      43386 :     for (int i = 0; i &lt; loopTimes; ++i)</span></a>
 <a name="29"><span class="lineNum">      29 </span>            :     {</a>
@@ -93,22 +93,22 @@
 <a name="31"><span class="lineNum">      31 </span><span class="lineCov">      43344 :         const auto nextLoopPos = loopLengthBeats * (i + 1);</span></a>
 <a name="32"><span class="lineNum">      32 </span>            : </a>
 <a name="33"><span class="lineNum">      33 </span>            :         // add the midi notes</a>
-<a name="34"><span class="lineNum">      34 </span><span class="lineCov">    3716980 :         for (auto note : notes)</span></a>
+<a name="34"><span class="lineNum">      34 </span><span class="lineCov">    3716736 :         for (auto note : notes)</span></a>
 <a name="35"><span class="lineNum">      35 </span>            :         {</a>
 <a name="36"><span class="lineNum">      36 </span>            :             auto start  = (note-&gt;getStartBeat() - loopStartBeats) + loopPos;</a>
 <a name="37"><span class="lineNum">      37 </span>            :             auto length = note-&gt;getLengthBeats();</a>
 <a name="38"><span class="lineNum">      38 </span>            : </a>
-<a name="39"><span class="lineNum">      39 </span><span class="lineCov">    3673630 :             if (start &lt; loopPos)</span></a>
+<a name="39"><span class="lineNum">      39 </span><span class="lineCov">    3673392 :             if (start &lt; loopPos)</span></a>
 <a name="40"><span class="lineNum">      40 </span>            :             {</a>
 <a name="41"><span class="lineNum">      41 </span>            :                 length = length - (loopPos - start);</a>
 <a name="42"><span class="lineNum">      42 </span>            :                 start  = start + (loopPos - start);</a>
 <a name="43"><span class="lineNum">      43 </span>            :             }</a>
 <a name="44"><span class="lineNum">      44 </span>            : </a>
-<a name="45"><span class="lineNum">      45 </span><span class="lineCov">    3673630 :             if (start + length &gt; nextLoopPos)</span></a>
+<a name="45"><span class="lineNum">      45 </span><span class="lineCov">    3673392 :             if (start + length &gt; nextLoopPos)</span></a>
 <a name="46"><span class="lineNum">      46 </span>            :                 length = length - ((start + length) - nextLoopPos);</a>
 <a name="47"><span class="lineNum">      47 </span>            : </a>
-<a name="48"><span class="lineNum">      48 </span><span class="lineCov">    3673630 :             if (start &gt;= loopPos &amp;&amp; start &lt; nextLoopPos &amp;&amp; length &gt; BeatDuration())</span></a>
-<a name="49"><span class="lineNum">      49 </span><span class="lineCov">    3673150 :                 v.addChild (MidiNote::createNote (*note, toPosition (start), length), -1, nullptr);</span></a>
+<a name="48"><span class="lineNum">      48 </span><span class="lineCov">    3673392 :             if (start &gt;= loopPos &amp;&amp; start &lt; nextLoopPos &amp;&amp; length &gt; BeatDuration())</span></a>
+<a name="49"><span class="lineNum">      49 </span><span class="lineCov">    3673032 :                 v.addChild (MidiNote::createNote (*note, toPosition (start), length), -1, nullptr);</span></a>
 <a name="50"><span class="lineNum">      50 </span>            :         }</a>
 <a name="51"><span class="lineNum">      51 </span>            : </a>
 <a name="52"><span class="lineNum">      52 </span>            :         // add the sysex</a>
@@ -134,7 +134,7 @@
 <a name="72"><span class="lineNum">      72 </span><span class="lineCov">         42 :     destSequence-&gt;setMidiChannel (sourceSequence.getMidiChannel());</span></a>
 <a name="73"><span class="lineNum">      73 </span>            : </a>
 <a name="74"><span class="lineNum">      74 </span><span class="lineCov">         42 :     return destSequence;</span></a>
-<a name="75"><span class="lineNum">      75 </span>            : }</a>
+<a name="75"><span class="lineNum">      75 </span><span class="lineCov">         42 : }</span></a>
 <a name="76"><span class="lineNum">      76 </span>            : </a>
 <a name="77"><span class="lineNum">      77 </span>            : static std::unique_ptr&lt;MidiList&gt; createLoopRangeDefinesSubsequentRepetitionsSequence (MidiClip&amp; clip, MidiList&amp; sourceSequence)</a>
 <a name="78"><span class="lineNum">      78 </span>            : {</a>
@@ -167,7 +167,7 @@
 <a name="105"><span class="lineNum">     105 </span><span class="lineCov">      40120 :     proxyAllowed.referTo (state, IDs::proxyAllowed, um, true);</span></a>
 <a name="106"><span class="lineNum">     106 </span>            :     currentTake.referTo (state, IDs::currentTake, um);</a>
 <a name="107"><span class="lineNum">     107 </span>            : </a>
-<a name="108"><span class="lineNum">     108 </span><span class="lineCov">      40120 :     auto grooveTree = state.getOrCreateChildWithName (IDs::GROOVE, um);</span></a>
+<a name="108"><span class="lineNum">     108 </span><span class="lineCov">      20060 :     auto grooveTree = state.getOrCreateChildWithName (IDs::GROOVE, um);</span></a>
 <a name="109"><span class="lineNum">     109 </span><span class="lineCov">      40120 :     grooveTemplate.referTo (grooveTree, IDs::current, um, {});</span></a>
 <a name="110"><span class="lineNum">     110 </span>            : </a>
 <a name="111"><span class="lineNum">     111 </span><span class="lineCov">      20060 :     const int loopType = edit.engine.getEngineBehaviour().getDefaultLoopedSequenceType();</span></a>
@@ -176,16 +176,16 @@
 <a name="114"><span class="lineNum">     114 </span>            :     jassert (loopType == int (LoopedSequenceType::loopRangeDefinesAllRepetitions)</a>
 <a name="115"><span class="lineNum">     115 </span>            :              || loopType == int (LoopedSequenceType::loopRangeDefinesSubsequentRepetitions));</a>
 <a name="116"><span class="lineNum">     116 </span>            : </a>
-<a name="117"><span class="lineNum">     117 </span><span class="lineCov">      40120 :     auto pgen = state.getChildWithName (IDs::PATTERNGENERATOR);</span></a>
+<a name="117"><span class="lineNum">     117 </span><span class="lineCov">      20060 :     auto pgen = state.getChildWithName (IDs::PATTERNGENERATOR);</span></a>
 <a name="118"><span class="lineNum">     118 </span>            : </a>
 <a name="119"><span class="lineNum">     119 </span><span class="lineCov">      20060 :     if (pgen.isValid())</span></a>
 <a name="120"><span class="lineNum">     120 </span><span class="lineNoCov">          0 :         patternGenerator.reset (new PatternGenerator (*this, pgen));</span></a>
 <a name="121"><span class="lineNum">     121 </span><span class="lineCov">      20060 : }</span></a>
 <a name="122"><span class="lineNum">     122 </span>            : </a>
-<a name="123"><span class="lineNum">     123 </span><span class="lineCov">      80240 : MidiClip::~MidiClip()</span></a>
+<a name="123"><span class="lineNum">     123 </span><span class="lineCov">      40120 : MidiClip::~MidiClip()</span></a>
 <a name="124"><span class="lineNum">     124 </span>            : {</a>
 <a name="125"><span class="lineNum">     125 </span><span class="lineCov">      20060 :     notifyListenersOfDeletion();</span></a>
-<a name="126"><span class="lineNum">     126 </span><span class="lineCov">      40120 : }</span></a>
+<a name="126"><span class="lineNum">     126 </span><span class="lineCov">      80240 : }</span></a>
 <a name="127"><span class="lineNum">     127 </span>            : </a>
 <a name="128"><span class="lineNum">     128 </span>            : //==============================================================================</a>
 <a name="129"><span class="lineNum">     129 </span><span class="lineCov">      20060 : void MidiClip::initialise()</span></a>
@@ -204,10 +204,10 @@
 <a name="142"><span class="lineNum">     142 </span><span class="lineNoCov">          0 :             auto sequence = takesTree.getChild (i);</span></a>
 <a name="143"><span class="lineNum">     143 </span>            : </a>
 <a name="144"><span class="lineNum">     144 </span><span class="lineNoCov">          0 :             if (! sequence.isValid())</span></a>
-<a name="145"><span class="lineNum">     145 </span><span class="lineNoCov">          0 :                 continue;</span></a>
+<a name="145"><span class="lineNum">     145 </span>            :                 continue;</a>
 <a name="146"><span class="lineNum">     146 </span>            : </a>
 <a name="147"><span class="lineNum">     147 </span><span class="lineNoCov">          0 :             channelSequence.add (new MidiList (sequence, um));</span></a>
-<a name="148"><span class="lineNum">     148 </span>            :         }</a>
+<a name="148"><span class="lineNum">     148 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="149"><span class="lineNum">     149 </span>            : </a>
 <a name="150"><span class="lineNum">     150 </span><span class="lineNoCov">          0 :         if (state.getChildWithName (IDs::COMPS).isValid())</span></a>
 <a name="151"><span class="lineNum">     151 </span><span class="lineNoCov">          0 :             callBlocking ([this] { getCompManager(); });</span></a>
@@ -222,7 +222,7 @@
 <a name="160"><span class="lineNum">     160 </span><span class="lineCov">         61 :             state.addChild (MidiList::createMidiList(), -1, um);</span></a>
 <a name="161"><span class="lineNum">     161 </span>            : </a>
 <a name="162"><span class="lineNum">     162 </span><span class="lineCov">      20060 :         currentTake = 0;</span></a>
-<a name="163"><span class="lineNum">     163 </span>            :     }</a>
+<a name="163"><span class="lineNum">     163 </span><span class="lineCov">      20060 :     }</span></a>
 <a name="164"><span class="lineNum">     164 </span>            : </a>
 <a name="165"><span class="lineNum">     165 </span><span class="lineCov">      20060 :     if (grooveTemplate.get().isNotEmpty())</span></a>
 <a name="166"><span class="lineNum">     166 </span>            :     {</a>
@@ -238,8 +238,8 @@
 <a name="176"><span class="lineNum">     176 </span>            : </a>
 <a name="177"><span class="lineNum">     177 </span><span class="lineNoCov">          0 :             if (! gt.isEmpty())</span></a>
 <a name="178"><span class="lineNum">     178 </span><span class="lineNoCov">          0 :                 edit.engine.getGrooveTemplateManager().updateTemplate (-1, gt);</span></a>
-<a name="179"><span class="lineNum">     179 </span>            :         }</a>
-<a name="180"><span class="lineNum">     180 </span>            :     }</a>
+<a name="179"><span class="lineNum">     179 </span><span class="lineNoCov">          0 :         }</span></a>
+<a name="180"><span class="lineNum">     180 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="181"><span class="lineNum">     181 </span>            : </a>
 <a name="182"><span class="lineNum">     182 </span><span class="lineCov">      20060 :     speedRatio = 1.0; // not used in MIDI clips</span></a>
 <a name="183"><span class="lineNum">     183 </span><span class="lineCov">      20060 : }</span></a>
@@ -323,7 +323,7 @@
 <a name="261"><span class="lineNum">     261 </span>            : </a>
 <a name="262"><span class="lineNum">     262 </span><span class="lineCov">        238 : MidiList&amp; MidiClip::getSequenceLooped()</span></a>
 <a name="263"><span class="lineNum">     263 </span>            : {</a>
-<a name="264"><span class="lineNum">     264 </span><span class="lineCov">        476 :     CRASH_TRACER</span></a>
+<a name="264"><span class="lineNum">     264 </span><span class="lineCov">        238 :     CRASH_TRACER</span></a>
 <a name="265"><span class="lineNum">     265 </span>            :     TRACKTION_ASSERT_MESSAGE_THREAD</a>
 <a name="266"><span class="lineNum">     266 </span>            : </a>
 <a name="267"><span class="lineNum">     267 </span><span class="lineCov">        238 :     if (! isLooping())</span></a>
@@ -333,13 +333,13 @@
 <a name="271"><span class="lineNum">     271 </span><span class="lineCov">         82 :         cachedLoopedSequence = createSequenceLooped (getSequence());</span></a>
 <a name="272"><span class="lineNum">     272 </span>            : </a>
 <a name="273"><span class="lineNum">     273 </span><span class="lineCov">         44 :     return *cachedLoopedSequence;</span></a>
-<a name="274"><span class="lineNum">     274 </span>            : }</a>
+<a name="274"><span class="lineNum">     274 </span><span class="lineCov">        238 : }</span></a>
 <a name="275"><span class="lineNum">     275 </span>            : </a>
 <a name="276"><span class="lineNum">     276 </span><span class="lineCov">         42 : std::unique_ptr&lt;MidiList&gt; MidiClip::createSequenceLooped (MidiList&amp; sourceSequence)</span></a>
 <a name="277"><span class="lineNum">     277 </span>            : {</a>
 <a name="278"><span class="lineNum">     278 </span><span class="lineCov">         42 :     switch (loopedSequenceType)</span></a>
 <a name="279"><span class="lineNum">     279 </span>            :     {</a>
-<a name="280"><span class="lineNum">     280 </span>            :         case LoopedSequenceType::loopRangeDefinesSubsequentRepetitions:</a>
+<a name="280"><span class="lineNum">     280 </span><span class="lineNoCov">          0 :         case LoopedSequenceType::loopRangeDefinesSubsequentRepetitions:</span></a>
 <a name="281"><span class="lineNum">     281 </span>            :             return createLoopRangeDefinesSubsequentRepetitionsSequence (*this, sourceSequence);</a>
 <a name="282"><span class="lineNum">     282 </span>            : </a>
 <a name="283"><span class="lineNum">     283 </span><span class="lineCov">         42 :         case LoopedSequenceType::loopRangeDefinesAllRepetitions:</span></a>
@@ -416,7 +416,7 @@
 <a name="354"><span class="lineNum">     354 </span>            :         {</a>
 <a name="355"><span class="lineNum">     355 </span><span class="lineNoCov">          0 :             if (*lastInSequence == note)</span></a>
 <a name="356"><span class="lineNum">     356 </span>            :             {</a>
-<a name="357"><span class="lineNum">     357 </span><span class="lineNoCov">          0 :                 const auto separation = maxEndBeat - noteStartBeat;</span></a>
+<a name="357"><span class="lineNum">     357 </span>            :                 const auto separation = maxEndBeat - noteStartBeat;</a>
 <a name="358"><span class="lineNum">     358 </span><span class="lineNoCov">          0 :                 note.setStartAndLength (note.getStartBeat(), separation, &amp;um);</span></a>
 <a name="359"><span class="lineNum">     359 </span>            :                 return;</a>
 <a name="360"><span class="lineNum">     360 </span>            :             }</a>
@@ -460,7 +460,7 @@
 <a name="398"><span class="lineNum">     398 </span><span class="lineNoCov">          0 :         midiCompManager-&gt;initialise();</span></a>
 <a name="399"><span class="lineNum">     399 </span>            :     }</a>
 <a name="400"><span class="lineNum">     400 </span>            : </a>
-<a name="401"><span class="lineNum">     401 </span><span class="lineNoCov">          0 :     return *midiCompManager;</span></a>
+<a name="401"><span class="lineNum">     401 </span>            :     return *midiCompManager;</a>
 <a name="402"><span class="lineNum">     402 </span>            : }</a>
 <a name="403"><span class="lineNum">     403 </span>            : </a>
 <a name="404"><span class="lineNum">     404 </span><span class="lineNoCov">          0 : void MidiClip::scaleVerticallyToFit()</span></a>
@@ -499,7 +499,7 @@
 <a name="437"><span class="lineNum">     437 </span><span class="lineNoCov">          0 :             seq.getParent().removeChild (seq, um);</span></a>
 <a name="438"><span class="lineNum">     438 </span><span class="lineNoCov">          0 :             takesTree.addChild (seq, -1, um);</span></a>
 <a name="439"><span class="lineNum">     439 </span>            :         }</a>
-<a name="440"><span class="lineNum">     440 </span>            :     }</a>
+<a name="440"><span class="lineNum">     440 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="441"><span class="lineNum">     441 </span>            : </a>
 <a name="442"><span class="lineNum">     442 </span><span class="lineNoCov">          0 :     auto seq = MidiList::createMidiList();</span></a>
 <a name="443"><span class="lineNum">     443 </span><span class="lineNoCov">          0 :     takesTree.addChild (seq, -1, um);</span></a>
@@ -542,7 +542,7 @@
 <a name="480"><span class="lineNum">     480 </span>            :         {</a>
 <a name="481"><span class="lineNum">     481 </span><span class="lineNoCov">          0 :             auto t = takes.getChild (i);</span></a>
 <a name="482"><span class="lineNum">     482 </span><span class="lineNoCov">          0 :             t.getParent().removeChild (t, um);</span></a>
-<a name="483"><span class="lineNum">     483 </span>            :         }</a>
+<a name="483"><span class="lineNum">     483 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="484"><span class="lineNum">     484 </span>            : </a>
 <a name="485"><span class="lineNum">     485 </span><span class="lineNoCov">          0 :         auto exisiting = state.getChildWithName (IDs::SEQUENCE);</span></a>
 <a name="486"><span class="lineNum">     486 </span>            :         jassert (! exisiting.isValid());</a>
@@ -566,7 +566,7 @@
 <a name="504"><span class="lineNum">     504 </span><span class="lineNoCov">          0 :         state.removeChild (state.getChildWithName (IDs::COMPS), um);</span></a>
 <a name="505"><span class="lineNum">     505 </span>            : </a>
 <a name="506"><span class="lineNum">     506 </span><span class="lineNoCov">          0 :         Selectable::changed();</span></a>
-<a name="507"><span class="lineNum">     507 </span>            :     }</a>
+<a name="507"><span class="lineNum">     507 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="508"><span class="lineNum">     508 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="509"><span class="lineNum">     509 </span>            : </a>
 <a name="510"><span class="lineNum">     510 </span><span class="lineNoCov">          0 : int MidiClip::getNumTakes (bool includeComps)</span></a>
@@ -646,7 +646,7 @@
 <a name="584"><span class="lineNum">     584 </span><span class="lineNoCov">          0 :         auto clipNode = state.createCopy();</span></a>
 <a name="585"><span class="lineNum">     585 </span>            : </a>
 <a name="586"><span class="lineNum">     586 </span><span class="lineNoCov">          0 :         if (! clipNode.isValid())</span></a>
-<a name="587"><span class="lineNum">     587 </span><span class="lineNoCov">          0 :             return newClips;</span></a>
+<a name="587"><span class="lineNum">     587 </span>            :             return newClips;</a>
 <a name="588"><span class="lineNum">     588 </span>            : </a>
 <a name="589"><span class="lineNum">     589 </span><span class="lineNoCov">          0 :         clipNode.removeChild (clipNode.getChildWithName (IDs::TAKES), nullptr);</span></a>
 <a name="590"><span class="lineNum">     590 </span><span class="lineNoCov">          0 :         clipNode.removeChild (clipNode.getChildWithName (IDs::COMPS), nullptr);</span></a>
@@ -685,10 +685,10 @@
 <a name="623"><span class="lineNum">     623 </span>            : </a>
 <a name="624"><span class="lineNum">     624 </span><span class="lineNoCov">          0 :         if (shouldBeShowingTakes)</span></a>
 <a name="625"><span class="lineNum">     625 </span><span class="lineNoCov">          0 :             Clip::setShowingTakes (true);</span></a>
-<a name="626"><span class="lineNum">     626 </span>            :     }</a>
+<a name="626"><span class="lineNum">     626 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="627"><span class="lineNum">     627 </span>            : </a>
 <a name="628"><span class="lineNum">     628 </span>            :     return newClips;</a>
-<a name="629"><span class="lineNum">     629 </span>            : }</a>
+<a name="629"><span class="lineNum">     629 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="630"><span class="lineNum">     630 </span>            : </a>
 <a name="631"><span class="lineNum">     631 </span>            : //==============================================================================</a>
 <a name="632"><span class="lineNum">     632 </span><span class="lineNoCov">          0 : void MidiClip::mergeInMidiSequence (juce::MidiMessageSequence&amp; ms,</span></a>
@@ -822,14 +822,14 @@
 <a name="760"><span class="lineNum">     760 </span><span class="lineCov">         50 :                 if (auto parent = track-&gt;getParentFolderTrack())</span></a>
 <a name="761"><span class="lineNum">     761 </span><span class="lineNoCov">          0 :                     parent-&gt;setDirtyClips();</span></a>
 <a name="762"><span class="lineNum">     762 </span>            : </a>
-<a name="763"><span class="lineNum">     763 </span><span class="lineCov">         50 :             clearCachedLoopSequence();</span></a>
+<a name="763"><span class="lineNum">     763 </span>            :             clearCachedLoopSequence();</a>
 <a name="764"><span class="lineNum">     764 </span>            :         }</a>
 <a name="765"><span class="lineNum">     765 </span><span class="lineCov">        554 :         else if (id == IDs::volDb || id == IDs::mpeMode</span></a>
 <a name="766"><span class="lineNum">     766 </span><span class="lineCov">        554 :                  || id == IDs::loopStartBeats || id == IDs::loopLengthBeats</span></a>
 <a name="767"><span class="lineNum">     767 </span><span class="lineCov">        456 :                  || id == IDs::loopedSequenceType</span></a>
 <a name="768"><span class="lineNum">     768 </span><span class="lineCov">       1010 :                  || id == IDs::grooveStrength)</span></a>
 <a name="769"><span class="lineNum">     769 </span>            :         {</a>
-<a name="770"><span class="lineNum">     770 </span><span class="lineCov">        106 :             clearCachedLoopSequence();</span></a>
+<a name="770"><span class="lineNum">     770 </span>            :             clearCachedLoopSequence();</a>
 <a name="771"><span class="lineNum">     771 </span>            :         }</a>
 <a name="772"><span class="lineNum">     772 </span><span class="lineCov">        448 :         else if (id == IDs::currentTake)</span></a>
 <a name="773"><span class="lineNum">     773 </span>            :         {</a>
@@ -839,12 +839,12 @@
 <a name="777"><span class="lineNum">     777 </span><span class="lineNoCov">          0 :                 if (sm-&gt;isSelected (getSelectedEvents()))</span></a>
 <a name="778"><span class="lineNum">     778 </span><span class="lineNoCov">          0 :                     sm-&gt;deselectAll();</span></a>
 <a name="779"><span class="lineNum">     779 </span>            : </a>
-<a name="780"><span class="lineNum">     780 </span><span class="lineCov">         61 :             clearCachedLoopSequence();</span></a>
+<a name="780"><span class="lineNum">     780 </span>            :             clearCachedLoopSequence();</a>
 <a name="781"><span class="lineNum">     781 </span>            :         }</a>
 <a name="782"><span class="lineNum">     782 </span>            :         else</a>
 <a name="783"><span class="lineNum">     783 </span>            :         {</a>
 <a name="784"><span class="lineNum">     784 </span><span class="lineCov">        387 :             if (id == IDs::length || id == IDs::offset)</span></a>
-<a name="785"><span class="lineNum">     785 </span><span class="lineCov">         67 :                 clearCachedLoopSequence();</span></a>
+<a name="785"><span class="lineNum">     785 </span>            :                 clearCachedLoopSequence();</a>
 <a name="786"><span class="lineNum">     786 </span>            : </a>
 <a name="787"><span class="lineNum">     787 </span><span class="lineCov">        387 :             Clip::valueTreePropertyChanged (tree, id);</span></a>
 <a name="788"><span class="lineNum">     788 </span>            :         }</a>
@@ -856,7 +856,7 @@
 <a name="794"><span class="lineNum">     794 </span><span class="lineCov">         10 :              || (tree.hasType (IDs::SEQUENCE) &amp;&amp; id == IDs::channelNumber)</span></a>
 <a name="795"><span class="lineNum">     795 </span><span class="lineCov">         34 :              || (tree.hasType (IDs::GROOVE) &amp;&amp; id == IDs::current))</span></a>
 <a name="796"><span class="lineNum">     796 </span>            :     {</a>
-<a name="797"><span class="lineNum">     797 </span><span class="lineCov">         26 :         clearCachedLoopSequence();</span></a>
+<a name="797"><span class="lineNum">     797 </span>            :         clearCachedLoopSequence();</a>
 <a name="798"><span class="lineNum">     798 </span>            :     }</a>
 <a name="799"><span class="lineNum">     799 </span>            :     else</a>
 <a name="800"><span class="lineNum">     800 </span>            :     {</a>
@@ -864,22 +864,22 @@
 <a name="802"><span class="lineNum">     802 </span>            :     }</a>
 <a name="803"><span class="lineNum">     803 </span><span class="lineCov">        630 : }</span></a>
 <a name="804"><span class="lineNum">     804 </span>            : </a>
-<a name="805"><span class="lineNum">     805 </span><span class="lineCov">        665 : void MidiClip::valueTreeChildAdded (juce::ValueTree&amp; p, juce::ValueTree&amp; c)</span></a>
+<a name="805"><span class="lineNum">     805 </span><span class="lineCov">        649 : void MidiClip::valueTreeChildAdded (juce::ValueTree&amp; p, juce::ValueTree&amp; c)</span></a>
 <a name="806"><span class="lineNum">     806 </span>            : {</a>
-<a name="807"><span class="lineNum">     807 </span><span class="lineCov">        665 :     if (p.hasType (IDs::SEQUENCE))</span></a>
-<a name="808"><span class="lineNum">     808 </span><span class="lineCov">        482 :         clearCachedLoopSequence();</span></a>
+<a name="807"><span class="lineNum">     807 </span><span class="lineCov">        649 :     if (p.hasType (IDs::SEQUENCE))</span></a>
+<a name="808"><span class="lineNum">     808 </span>            :         clearCachedLoopSequence();</a>
 <a name="809"><span class="lineNum">     809 </span><span class="lineCov">        305 :     else if ((p == state || p.getParent() == state) &amp;&amp; c.hasType (IDs::SEQUENCE))</span></a>
 <a name="810"><span class="lineNum">     810 </span><span class="lineCov">        122 :         channelSequence.add (new MidiList (c, getUndoManager()));</span></a>
 <a name="811"><span class="lineNum">     811 </span>            : </a>
-<a name="812"><span class="lineNum">     812 </span><span class="lineCov">        665 :     if (c.hasType (IDs::PATTERNGENERATOR))</span></a>
+<a name="812"><span class="lineNum">     812 </span><span class="lineCov">        649 :     if (c.hasType (IDs::PATTERNGENERATOR))</span></a>
 <a name="813"><span class="lineNum">     813 </span><span class="lineNoCov">          0 :         patternGenerator.reset (new PatternGenerator (*this, c));</span></a>
-<a name="814"><span class="lineNum">     814 </span><span class="lineCov">        665 : }</span></a>
+<a name="814"><span class="lineNum">     814 </span><span class="lineCov">        649 : }</span></a>
 <a name="815"><span class="lineNum">     815 </span>            : </a>
 <a name="816"><span class="lineNum">     816 </span><span class="lineNoCov">          0 : void MidiClip::valueTreeChildRemoved (juce::ValueTree&amp; p, juce::ValueTree&amp; c, int)</span></a>
 <a name="817"><span class="lineNum">     817 </span>            : {</a>
 <a name="818"><span class="lineNum">     818 </span><span class="lineNoCov">          0 :     if (p.hasType (IDs::SEQUENCE))</span></a>
 <a name="819"><span class="lineNum">     819 </span>            :     {</a>
-<a name="820"><span class="lineNum">     820 </span><span class="lineNoCov">          0 :         clearCachedLoopSequence();</span></a>
+<a name="820"><span class="lineNum">     820 </span>            :         clearCachedLoopSequence();</a>
 <a name="821"><span class="lineNum">     821 </span>            :     }</a>
 <a name="822"><span class="lineNum">     822 </span><span class="lineNoCov">          0 :     else if ((p == state || p.getParent() == state) &amp;&amp; c.hasType (IDs::SEQUENCE))</span></a>
 <a name="823"><span class="lineNum">     823 </span>            :     {</a>
@@ -891,7 +891,7 @@
 <a name="829"><span class="lineNum">     829 </span><span class="lineNoCov">          0 :     else if (p == state &amp;&amp; c.hasType (IDs::COMPS))</span></a>
 <a name="830"><span class="lineNum">     830 </span>            :     {</a>
 <a name="831"><span class="lineNum">     831 </span>            :         midiCompManager = nullptr;</a>
-<a name="832"><span class="lineNum">     832 </span><span class="lineNoCov">          0 :         clearCachedLoopSequence();</span></a>
+<a name="832"><span class="lineNum">     832 </span>            :         clearCachedLoopSequence();</a>
 <a name="833"><span class="lineNum">     833 </span>            :     }</a>
 <a name="834"><span class="lineNum">     834 </span><span class="lineNoCov">          0 :     else if (p == state &amp;&amp; c.hasType (IDs::PATTERNGENERATOR))</span></a>
 <a name="835"><span class="lineNum">     835 </span>            :     {</a>
@@ -899,11 +899,11 @@
 <a name="837"><span class="lineNum">     837 </span>            :     }</a>
 <a name="838"><span class="lineNum">     838 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="839"><span class="lineNum">     839 </span>            : </a>
-<a name="840"><span class="lineNum">     840 </span><span class="lineCov">        792 : void MidiClip::clearCachedLoopSequence()</span></a>
+<a name="840"><span class="lineNum">     840 </span><span class="lineNoCov">          0 : void MidiClip::clearCachedLoopSequence()</span></a>
 <a name="841"><span class="lineNum">     841 </span>            : {</a>
 <a name="842"><span class="lineNum">     842 </span>            :     cachedLoopedSequence = nullptr;</a>
-<a name="843"><span class="lineNum">     843 </span><span class="lineCov">        792 :     changed();</span></a>
-<a name="844"><span class="lineNum">     844 </span><span class="lineCov">        792 : }</span></a>
+<a name="843"><span class="lineNum">     843 </span><span class="lineCov">        776 :     changed();</span></a>
+<a name="844"><span class="lineNum">     844 </span><span class="lineCov">        776 : }</span></a>
 <a name="845"><span class="lineNum">     845 </span>            : </a>
 <a name="846"><span class="lineNum">     846 </span>            : //==============================================================================</a>
 <a name="847"><span class="lineNum">     847 </span><span class="lineNoCov">          0 : PatternGenerator* MidiClip::getPatternGenerator()</span></a>

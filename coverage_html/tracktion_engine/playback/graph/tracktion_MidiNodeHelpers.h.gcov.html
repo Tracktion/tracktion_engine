@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
@@ -130,7 +130,7 @@
 <a name="68"><span class="lineNum">      68 </span>            : </a>
 <a name="69"><span class="lineNum">      69 </span>            :                                 // give these a tiny offset to make sure they're played after the controller updates</a>
 <a name="70"><span class="lineNum">      70 </span><span class="lineNoCov">          0 :                                 destBuffer.addMidiMessage (m, 0.0001, midiSourceID);</span></a>
-<a name="71"><span class="lineNum">      71 </span>            :                             }</a>
+<a name="71"><span class="lineNum">      71 </span><span class="lineNoCov">          0 :                             }</span></a>
 <a name="72"><span class="lineNum">      72 </span>            :                         }</a>
 <a name="73"><span class="lineNum">      73 </span>            :                     }</a>
 <a name="74"><span class="lineNum">      74 </span>            :                 }</a>
@@ -152,7 +152,7 @@
 <a name="90"><span class="lineNum">      90 </span>            :                 {</a>
 <a name="91"><span class="lineNum">      91 </span><span class="lineNoCov">          0 :                     activeChannels |= (1 &lt;&lt; meh-&gt;message.getChannel());</span></a>
 <a name="92"><span class="lineNum">      92 </span>            : </a>
-<a name="93"><span class="lineNum">      93 </span><span class="lineNoCov">          0 :                     if (meh-&gt;message.getTimeStamp() &lt; time</span></a>
+<a name="93"><span class="lineNum">      93 </span>            :                     if (meh-&gt;message.getTimeStamp() &lt; time</a>
 <a name="94"><span class="lineNum">      94 </span><span class="lineNoCov">          0 :                          &amp;&amp; meh-&gt;noteOffObject != nullptr</span></a>
 <a name="95"><span class="lineNum">      95 </span><span class="lineNoCov">          0 :                          &amp;&amp; meh-&gt;noteOffObject-&gt;message.getTimeStamp() &gt;= time)</span></a>
 <a name="96"><span class="lineNum">      96 </span><span class="lineNoCov">          0 :                         destination.addMidiMessage (meh-&gt;noteOffObject-&gt;message, midiTimeOffset, midiSourceID);</span></a>

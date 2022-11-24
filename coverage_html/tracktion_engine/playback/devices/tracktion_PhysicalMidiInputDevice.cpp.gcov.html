@@ -32,16 +32,16 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">237</td>
+            <td class="headerCovTableEntry">246</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">31</td>
+            <td class="headerCovTableEntry">32</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
@@ -280,11 +280,11 @@
 <a name="218"><span class="lineNum">     218 </span>            :         }</a>
 <a name="219"><span class="lineNum">     219 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="220"><span class="lineNum">     220 </span>            : </a>
-<a name="221"><span class="lineNum">     221 </span>            :     void handleMMCGoto (int hours_, int minutes_, int seconds_, int frames_)</a>
+<a name="221"><span class="lineNum">     221 </span><span class="lineNoCov">          0 :     void handleMMCGoto (int hours_, int minutes_, int seconds_, int frames_)</span></a>
 <a name="222"><span class="lineNum">     222 </span>            :     {</a>
-<a name="223"><span class="lineNum">     223 </span>            :         const int fps = owner.edit.getTimecodeFormat().getFPS();</a>
-<a name="224"><span class="lineNum">     224 </span>            :         transport.setCurrentPosition (hours_ * 3600 + minutes_ * 60 + seconds_ + (1.0 / double (fps) * frames_));</a>
-<a name="225"><span class="lineNum">     225 </span>            :     }</a>
+<a name="223"><span class="lineNum">     223 </span><span class="lineNoCov">          0 :         const int fps = owner.edit.getTimecodeFormat().getFPS();</span></a>
+<a name="224"><span class="lineNum">     224 </span><span class="lineNoCov">          0 :         transport.setCurrentPosition (hours_ * 3600 + minutes_ * 60 + seconds_ + (1.0 / double (fps) * frames_));</span></a>
+<a name="225"><span class="lineNum">     225 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="226"><span class="lineNum">     226 </span>            : </a>
 <a name="227"><span class="lineNum">     227 </span>            :     double getFPS() const noexcept</a>
 <a name="228"><span class="lineNum">     228 </span>            :     {</a>
@@ -363,7 +363,7 @@
 <a name="301"><span class="lineNum">     301 </span><span class="lineNoCov">          0 :         return recording;</span></a>
 <a name="302"><span class="lineNum">     302 </span>            :     }</a>
 <a name="303"><span class="lineNum">     303 </span>            : </a>
-<a name="304"><span class="lineNum">     304 </span>            :     PhysicalMidiInputDevice&amp; getPhysicalMidiInput() const   { return static_cast&lt;PhysicalMidiInputDevice&amp;&gt; (owner); }</a>
+<a name="304"><span class="lineNum">     304 </span><span class="lineNoCov">          0 :     PhysicalMidiInputDevice&amp; getPhysicalMidiInput() const   { return static_cast&lt;PhysicalMidiInputDevice&amp;&gt; (owner); }</span></a>
 <a name="305"><span class="lineNum">     305 </span>            : </a>
 <a name="306"><span class="lineNum">     306 </span>            :     std::unique_ptr&lt;MidiTimecodeReader&gt; timecodeReader;</a>
 <a name="307"><span class="lineNum">     307 </span>            : </a>
@@ -410,7 +410,7 @@
 <a name="348"><span class="lineNum">     348 </span><span class="lineNoCov">          0 :             TRACKTION_LOG (&quot;opening MIDI in device: &quot; + getName());</span></a>
 <a name="349"><span class="lineNum">     349 </span><span class="lineNoCov">          0 :             inputDevice-&gt;start();</span></a>
 <a name="350"><span class="lineNum">     350 </span>            :         }</a>
-<a name="351"><span class="lineNum">     351 </span>            :     }</a>
+<a name="351"><span class="lineNum">     351 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="352"><span class="lineNum">     352 </span>            : </a>
 <a name="353"><span class="lineNum">     353 </span><span class="lineNoCov">          0 :     if (inputDevice != nullptr)</span></a>
 <a name="354"><span class="lineNum">     354 </span><span class="lineNoCov">          0 :         return {};</span></a>
@@ -428,7 +428,7 @@
 <a name="366"><span class="lineNum">     366 </span><span class="lineNoCov">          0 :         CRASH_TRACER</span></a>
 <a name="367"><span class="lineNum">     367 </span><span class="lineNoCov">          0 :         TRACKTION_LOG (&quot;Closing MIDI in device: &quot; + getName());</span></a>
 <a name="368"><span class="lineNum">     368 </span>            :         inputDevice = nullptr;</a>
-<a name="369"><span class="lineNum">     369 </span>            :     }</a>
+<a name="369"><span class="lineNum">     369 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="370"><span class="lineNum">     370 </span>            : </a>
 <a name="371"><span class="lineNum">     371 </span><span class="lineNoCov">          0 :     saveProps();</span></a>
 <a name="372"><span class="lineNum">     372 </span><span class="lineNoCov">          0 : }</span></a>
@@ -536,7 +536,7 @@
 <a name="474"><span class="lineNum">     474 </span>            : </a>
 <a name="475"><span class="lineNum">     475 </span><span class="lineNoCov">          0 :                 sendMessageToInstances (message);</span></a>
 <a name="476"><span class="lineNum">     476 </span>            :             }</a>
-<a name="477"><span class="lineNum">     477 </span>            :         }</a>
+<a name="477"><span class="lineNum">     477 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="478"><span class="lineNum">     478 </span>            : </a>
 <a name="479"><span class="lineNum">     479 </span><span class="lineNoCov">          0 :         VirtualMidiInputDevice::broadcastMessageToAllVirtualDevices (this, m);</span></a>
 <a name="480"><span class="lineNum">     480 </span>            :     }</a>
@@ -565,7 +565,7 @@
 <a name="503"><span class="lineNum">     503 </span><span class="lineNoCov">          0 :     MidiInputDevice::saveProps (n);</span></a>
 <a name="504"><span class="lineNum">     504 </span>            : </a>
 <a name="505"><span class="lineNum">     505 </span><span class="lineNoCov">          0 :     engine.getPropertyStorage().setXmlPropertyItem (SettingID::midiin, getName(), n);</span></a>
-<a name="506"><span class="lineNum">     506 </span>            : }</a>
+<a name="506"><span class="lineNum">     506 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="507"><span class="lineNum">     507 </span>            : </a>
 <a name="508"><span class="lineNum">     508 </span><span class="lineNoCov">          0 : void PhysicalMidiInputDevice::setReadingMidiTimecode (bool b)</span></a>
 <a name="509"><span class="lineNum">     509 </span>            : {</a>

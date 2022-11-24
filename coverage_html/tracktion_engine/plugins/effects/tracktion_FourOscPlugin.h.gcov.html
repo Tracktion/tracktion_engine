@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">65</td>
-            <td class="headerCovTableEntry">84</td>
-            <td class="headerCovTableEntryMed">77.4 %</td>
+            <td class="headerCovTableEntry">66</td>
+            <td class="headerCovTableEntry">85</td>
+            <td class="headerCovTableEntryMed">77.6 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">9</td>
@@ -82,7 +82,7 @@
 <a name="20"><span class="lineNum">      20 </span>            : {</a>
 <a name="21"><span class="lineNum">      21 </span>            : public:</a>
 <a name="22"><span class="lineNum">      22 </span><span class="lineCov">       4552 :     void reset (double sr, double time)     { delta = 1.0f / T (sr * time); }</span></a>
-<a name="23"><span class="lineNum">      23 </span>            :     T getCurrentValue()                     { return currentValue; }</a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">     279342 :     T getCurrentValue()                     { return currentValue; }</span></a>
 <a name="24"><span class="lineNum">      24 </span><span class="lineCov">     279342 :     void setValue (T v)                     { targetValue = v; }</span></a>
 <a name="25"><span class="lineNum">      25 </span><span class="lineCov">        226 :     void snapToValue()                      { currentValue = targetValue; }</span></a>
 <a name="26"><span class="lineNum">      26 </span>            : </a>
@@ -229,7 +229,7 @@
 <a name="167"><span class="lineNum">     167 </span>            :     ~FourOscPlugin() override;</a>
 <a name="168"><span class="lineNum">     168 </span>            : </a>
 <a name="169"><span class="lineNum">     169 </span>            :     bool isMono() const                                 { return voiceModeValue.get() == 0; }</a>
-<a name="170"><span class="lineNum">     170 </span><span class="lineNoCov">          0 :     bool isLegato() const                               { return voiceModeValue.get() == 1; }</span></a>
+<a name="170"><span class="lineNum">     170 </span>            :     bool isLegato() const                               { return voiceModeValue.get() == 1; }</a>
 <a name="171"><span class="lineNum">     171 </span>            :     bool isPoly() const                                 { return voiceModeValue.get() == 2; }</a>
 <a name="172"><span class="lineNum">     172 </span>            : </a>
 <a name="173"><span class="lineNum">     173 </span>            :     //==============================================================================</a>
@@ -260,7 +260,7 @@
 <a name="198"><span class="lineNum">     198 </span>            : </a>
 <a name="199"><span class="lineNum">     199 </span>            :     void restorePluginStateFromValueTree (const juce::ValueTree&amp;) override;</a>
 <a name="200"><span class="lineNum">     200 </span>            : </a>
-<a name="201"><span class="lineNum">     201 </span>            :     float getCurrentTempo()                             { return currentTempo; }</a>
+<a name="201"><span class="lineNum">     201 </span><span class="lineNoCov">          0 :     float getCurrentTempo()                             { return currentTempo; }</span></a>
 <a name="202"><span class="lineNum">     202 </span>            : </a>
 <a name="203"><span class="lineNum">     203 </span>            : private:</a>
 <a name="204"><span class="lineNum">     204 </span>            :     std::unordered_map&lt;juce::String, juce::String&gt; labels;</a>
@@ -400,9 +400,9 @@
 <a name="338"><span class="lineNum">     338 </span>            :     {</a>
 <a name="339"><span class="lineNum">     339 </span>            :     public:</a>
 <a name="340"><span class="lineNum">     340 </span>            :         ModAssign()</a>
-<a name="341"><span class="lineNum">     341 </span><span class="lineCov">         54 :         {</span></a>
-<a name="342"><span class="lineNum">     342 </span><span class="lineCov">       7398 :             for (auto&amp; d : depths)</span></a>
-<a name="343"><span class="lineNum">     343 </span><span class="lineCov">       7344 :                 d = -1000.0f;</span></a>
+<a name="341"><span class="lineNum">     341 </span><span class="lineCov">        108 :         {</span></a>
+<a name="342"><span class="lineNum">     342 </span><span class="lineCov">      14796 :             for (auto&amp; d : depths)</span></a>
+<a name="343"><span class="lineNum">     343 </span><span class="lineCov">      14688 :                 d = -1000.0f;</span></a>
 <a name="344"><span class="lineNum">     344 </span>            :         }</a>
 <a name="345"><span class="lineNum">     345 </span>            : </a>
 <a name="346"><span class="lineNum">     346 </span>            :         inline void updateCachedInfo()</a>

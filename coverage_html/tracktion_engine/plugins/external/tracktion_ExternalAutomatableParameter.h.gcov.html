@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">148</td>
+            <td class="headerCovTableEntry">151</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -207,14 +207,14 @@
 <a name="145"><span class="lineNum">     145 </span><span class="lineNoCov">          0 :             auto name = p-&gt;getName (1024);</span></a>
 <a name="146"><span class="lineNum">     146 </span><span class="lineNoCov">          0 :             if (name.isNotEmpty())</span></a>
 <a name="147"><span class="lineNum">     147 </span><span class="lineNoCov">          0 :                 return name;</span></a>
-<a name="148"><span class="lineNum">     148 </span>            :         }</a>
+<a name="148"><span class="lineNum">     148 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="149"><span class="lineNum">     149 </span>            : </a>
 <a name="150"><span class="lineNum">     150 </span><span class="lineNoCov">          0 :         return TRANS(&quot;Unnamed&quot;) + &quot; &quot; + juce::String (parameterIndex + 1);</span></a>
 <a name="151"><span class="lineNum">     151 </span>            :     }</a>
 <a name="152"><span class="lineNum">     152 </span>            : </a>
 <a name="153"><span class="lineNum">     153 </span>            :     int getParameterIndex() const noexcept</a>
 <a name="154"><span class="lineNum">     154 </span>            :     {</a>
-<a name="155"><span class="lineNum">     155 </span>            :         return parameterIndex;</a>
+<a name="155"><span class="lineNum">     155 </span><span class="lineNoCov">          0 :         return parameterIndex;</span></a>
 <a name="156"><span class="lineNum">     156 </span>            :     }</a>
 <a name="157"><span class="lineNum">     157 </span>            : </a>
 <a name="158"><span class="lineNum">     158 </span><span class="lineNoCov">          0 :     juce::String getParameterShortName (int suggestedLength) const override</span></a>
@@ -344,7 +344,7 @@
 <a name="282"><span class="lineNum">     282 </span>            :     juce::AudioPluginInstance* getPlugin() const noexcept</a>
 <a name="283"><span class="lineNum">     283 </span>            :     {</a>
 <a name="284"><span class="lineNum">     284 </span>            :         jassert (plugin != nullptr);</a>
-<a name="285"><span class="lineNum">     285 </span>            :         return static_cast&lt;ExternalPlugin&amp;&gt; (*plugin).getAudioPluginInstance();</a>
+<a name="285"><span class="lineNum">     285 </span><span class="lineNoCov">          0 :         return static_cast&lt;ExternalPlugin&amp;&gt; (*plugin).getAudioPluginInstance();</span></a>
 <a name="286"><span class="lineNum">     286 </span>            :     }</a>
 <a name="287"><span class="lineNum">     287 </span>            : </a>
 <a name="288"><span class="lineNum">     288 </span><span class="lineNoCov">          0 :     juce::AudioProcessorParameter* getParam() const noexcept</span></a>

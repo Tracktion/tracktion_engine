@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">19</td>
-            <td class="headerCovTableEntry">74</td>
-            <td class="headerCovTableEntryLo">25.7 %</td>
+            <td class="headerCovTableEntry">76</td>
+            <td class="headerCovTableEntryLo">25.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">5</td>
@@ -99,7 +99,7 @@
 <a name="37"><span class="lineNum">      37 </span><span class="lineNoCov">          0 :         return recording;</span></a>
 <a name="38"><span class="lineNum">      38 </span>            :     }</a>
 <a name="39"><span class="lineNum">      39 </span>            : </a>
-<a name="40"><span class="lineNum">      40 </span>            :     VirtualMidiInputDevice&amp; getVirtualMidiInput() const   { return static_cast&lt;VirtualMidiInputDevice&amp;&gt; (owner); }</a>
+<a name="40"><span class="lineNum">      40 </span><span class="lineNoCov">          0 :     VirtualMidiInputDevice&amp; getVirtualMidiInput() const   { return static_cast&lt;VirtualMidiInputDevice&amp;&gt; (owner); }</span></a>
 <a name="41"><span class="lineNum">      41 </span>            : </a>
 <a name="42"><span class="lineNum">      42 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VirtualMidiInputDeviceInstance)</a>
 <a name="43"><span class="lineNum">      43 </span>            : };</a>
@@ -155,7 +155,7 @@
 <a name="93"><span class="lineNum">      93 </span>            : </a>
 <a name="94"><span class="lineNum">      94 </span><span class="lineCov">        839 : void VirtualMidiInputDevice::loadProps()</span></a>
 <a name="95"><span class="lineNum">      95 </span>            : {</a>
-<a name="96"><span class="lineNum">      96 </span><span class="lineCov">       2517 :     juce::String propName = isTrackDevice() ? &quot;TRACKTION_TRACK_DEVICE&quot; : getName();</span></a>
+<a name="96"><span class="lineNum">      96 </span><span class="lineCov">       1678 :     juce::String propName = isTrackDevice() ? &quot;TRACKTION_TRACK_DEVICE&quot; : getName();</span></a>
 <a name="97"><span class="lineNum">      97 </span>            : </a>
 <a name="98"><span class="lineNum">      98 </span><span class="lineCov">        839 :     auto n = engine.getPropertyStorage().getXmlPropertyItem (SettingID::virtualmidiin, propName);</span></a>
 <a name="99"><span class="lineNum">      99 </span>            : </a>
@@ -194,7 +194,7 @@
 <a name="132"><span class="lineNum">     132 </span><span class="lineNoCov">          0 :         sendNoteOnToMidiKeyListeners (message);</span></a>
 <a name="133"><span class="lineNum">     133 </span>            : </a>
 <a name="134"><span class="lineNum">     134 </span><span class="lineNoCov">          0 :         sendMessageToInstances (message);</span></a>
-<a name="135"><span class="lineNum">     135 </span>            :     }</a>
+<a name="135"><span class="lineNum">     135 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="136"><span class="lineNum">     136 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="137"><span class="lineNum">     137 </span>            : </a>
 <a name="138"><span class="lineNum">     138 </span><span class="lineNoCov">          0 : void VirtualMidiInputDevice::handleMessageFromPhysicalDevice (MidiInputDevice* dev, const juce::MidiMessage&amp; m)</span></a>

@@ -32,17 +32,17 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">40</td>
-            <td class="headerCovTableEntry">97</td>
-            <td class="headerCovTableEntryLo">41.2 %</td>
+            <td class="headerCovTableEntry">95</td>
+            <td class="headerCovTableEntryLo">42.1 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
-            <td class="headerCovTableEntry">24</td>
-            <td class="headerCovTableEntryLo">16.7 %</td>
+            <td class="headerCovTableEntry">23</td>
+            <td class="headerCovTableEntryLo">17.4 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -121,7 +121,7 @@
 <a name="59"><span class="lineNum">      59 </span><span class="lineCov">          1 :     modeParam-&gt;attachToCurrentValue (modeValue);</span></a>
 <a name="60"><span class="lineNum">      60 </span><span class="lineCov">          1 : }</span></a>
 <a name="61"><span class="lineNum">      61 </span>            : </a>
-<a name="62"><span class="lineNum">      62 </span><span class="lineCov">          3 : ReverbPlugin::~ReverbPlugin()</span></a>
+<a name="62"><span class="lineNum">      62 </span><span class="lineCov">          2 : ReverbPlugin::~ReverbPlugin()</span></a>
 <a name="63"><span class="lineNum">      63 </span>            : {</a>
 <a name="64"><span class="lineNum">      64 </span><span class="lineCov">          1 :     notifyListenersOfDeletion();</span></a>
 <a name="65"><span class="lineNum">      65 </span>            : </a>
@@ -131,7 +131,7 @@
 <a name="69"><span class="lineNum">      69 </span><span class="lineCov">          1 :     dryParam-&gt;detachFromCurrentValue();</span></a>
 <a name="70"><span class="lineNum">      70 </span><span class="lineCov">          1 :     widthParam-&gt;detachFromCurrentValue();</span></a>
 <a name="71"><span class="lineNum">      71 </span><span class="lineCov">          1 :     modeParam-&gt;detachFromCurrentValue();</span></a>
-<a name="72"><span class="lineNum">      72 </span><span class="lineCov">          2 : }</span></a>
+<a name="72"><span class="lineNum">      72 </span><span class="lineCov">          3 : }</span></a>
 <a name="73"><span class="lineNum">      73 </span>            : </a>
 <a name="74"><span class="lineNum">      74 </span>            : const char* ReverbPlugin::xmlTypeName = &quot;reverb&quot;;</a>
 <a name="75"><span class="lineNum">      75 </span>            : </a>
@@ -163,8 +163,8 @@
 <a name="101"><span class="lineNum">     101 </span>            : </a>
 <a name="102"><span class="lineNum">     102 </span><span class="lineNoCov">          0 :     auto range = juce::FloatVectorOperations::findMinAndMax (data, num);</span></a>
 <a name="103"><span class="lineNum">     103 </span>            : </a>
-<a name="104"><span class="lineNum">     104 </span><span class="lineNoCov">          0 :     return ! (isNotSilent (range.getStart())</span></a>
-<a name="105"><span class="lineNum">     105 </span><span class="lineNoCov">          0 :                || isNotSilent (range.getEnd()));</span></a>
+<a name="104"><span class="lineNum">     104 </span>            :     return ! (isNotSilent (range.getStart())</a>
+<a name="105"><span class="lineNum">     105 </span>            :                || isNotSilent (range.getEnd()));</a>
 <a name="106"><span class="lineNum">     106 </span>            : }</a>
 <a name="107"><span class="lineNum">     107 </span>            : </a>
 <a name="108"><span class="lineNum">     108 </span><span class="lineNoCov">          0 : void ReverbPlugin::applyToBuffer (const PluginRenderContext&amp; fc)</span></a>
@@ -219,7 +219,7 @@
 <a name="157"><span class="lineNum">     157 </span><span class="lineCov">          1 :     juce::CachedValue&lt;float&gt;* cvsFloat[]  = { &amp;roomSizeValue, &amp;dampValue, &amp;wetValue, &amp;dryValue, &amp;widthValue, &amp;modeValue, nullptr };</span></a>
 <a name="158"><span class="lineNum">     158 </span><span class="lineCov">          1 :     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);</span></a>
 <a name="159"><span class="lineNum">     159 </span>            : </a>
-<a name="160"><span class="lineNum">     160 </span><span class="lineCov">          8 :     for (auto p : getAutomatableParameters())</span></a>
+<a name="160"><span class="lineNum">     160 </span><span class="lineCov">          7 :     for (auto p : getAutomatableParameters())</span></a>
 <a name="161"><span class="lineNum">     161 </span><span class="lineCov">          6 :         p-&gt;updateFromAttachedValue();</span></a>
 <a name="162"><span class="lineNum">     162 </span><span class="lineCov">          1 : }</span></a>
 <a name="163"><span class="lineNum">     163 </span>            : </a>

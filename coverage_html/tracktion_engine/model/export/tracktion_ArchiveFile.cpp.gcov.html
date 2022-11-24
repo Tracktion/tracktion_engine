@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">240</td>
+            <td class="headerCovTableEntry">254</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -196,7 +196,7 @@
 <a name="134"><span class="lineNum">     134 </span>            :         }</a>
 <a name="135"><span class="lineNum">     135 </span>            : </a>
 <a name="136"><span class="lineNum">     136 </span><span class="lineNoCov">          0 :         needToWriteIndex = false;</span></a>
-<a name="137"><span class="lineNum">     137 </span>            :     }</a>
+<a name="137"><span class="lineNum">     137 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="138"><span class="lineNum">     138 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="139"><span class="lineNum">     139 </span>            : </a>
 <a name="140"><span class="lineNum">     140 </span><span class="lineNoCov">          0 : bool TracktionArchiveFile::isValidArchive() const</span></a>
@@ -231,9 +231,9 @@
 <a name="169"><span class="lineNum">     169 </span><span class="lineNoCov">          0 :     if (entries[index] != nullptr)</span></a>
 <a name="170"><span class="lineNum">     170 </span><span class="lineNoCov">          0 :         if (auto f = file.createInputStream())</span></a>
 <a name="171"><span class="lineNum">     171 </span><span class="lineNoCov">          0 :             return std::make_unique&lt;juce::SubregionStream&gt; (f.release(),</span></a>
-<a name="172"><span class="lineNum">     172 </span>            :                                                             entries[index]-&gt;offset,</a>
-<a name="173"><span class="lineNum">     173 </span>            :                                                             entries[index]-&gt;length,</a>
-<a name="174"><span class="lineNum">     174 </span>            :                                                             true);</a>
+<a name="172"><span class="lineNum">     172 </span><span class="lineNoCov">          0 :                                                             entries[index]-&gt;offset,</span></a>
+<a name="173"><span class="lineNum">     173 </span><span class="lineNoCov">          0 :                                                             entries[index]-&gt;length,</span></a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineNoCov">          0 :                                                             true);</span></a>
 <a name="175"><span class="lineNum">     175 </span>            : </a>
 <a name="176"><span class="lineNum">     176 </span>            :     return {};</a>
 <a name="177"><span class="lineNum">     177 </span>            : }</a>
@@ -291,13 +291,13 @@
 <a name="229"><span class="lineNum">     229 </span><span class="lineNoCov">          0 :         juce::FileOutputStream out (destFile);</span></a>
 <a name="230"><span class="lineNum">     230 </span>            : </a>
 <a name="231"><span class="lineNum">     231 </span><span class="lineNoCov">          0 :         if (! out.openedOk())</span></a>
-<a name="232"><span class="lineNum">     232 </span><span class="lineNoCov">          0 :             return false;</span></a>
+<a name="232"><span class="lineNum">     232 </span>            :             return false;</a>
 <a name="233"><span class="lineNum">     233 </span>            : </a>
 <a name="234"><span class="lineNum">     234 </span><span class="lineNoCov">          0 :         out.writeFromInputStream (*source, -1);</span></a>
-<a name="235"><span class="lineNum">     235 </span>            :     }</a>
+<a name="235"><span class="lineNum">     235 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="236"><span class="lineNum">     236 </span>            : </a>
 <a name="237"><span class="lineNum">     237 </span><span class="lineNoCov">          0 :     return true;</span></a>
-<a name="238"><span class="lineNum">     238 </span>            : }</a>
+<a name="238"><span class="lineNum">     238 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="239"><span class="lineNum">     239 </span>            : </a>
 <a name="240"><span class="lineNum">     240 </span><span class="lineNoCov">          0 : bool TracktionArchiveFile::extractAll (const juce::File&amp; destDirectory,</span></a>
 <a name="241"><span class="lineNum">     241 </span>            :                                        juce::Array&lt;juce::File&gt;&amp; filesCreated)</a>
@@ -327,9 +327,9 @@
 <a name="265"><span class="lineNum">     265 </span>            :                     juce::Array&lt;juce::File&gt;&amp; filesCreated_,</a>
 <a name="266"><span class="lineNum">     266 </span>            :                     bool&amp; wasAborted_)</a>
 <a name="267"><span class="lineNum">     267 </span><span class="lineNoCov">          0 :         : ThreadPoolJobWithProgress (TRANS(&quot;Unpacking archive&quot;) + &quot;...&quot;),</span></a>
-<a name="268"><span class="lineNum">     268 </span>            :           archive (archive_), destDir (destDir_),</a>
-<a name="269"><span class="lineNum">     269 </span>            :           wasAborted (wasAborted_),</a>
-<a name="270"><span class="lineNum">     270 </span>            :           warnAboutOverwrite (warnAboutOverwrite_),</a>
+<a name="268"><span class="lineNum">     268 </span><span class="lineNoCov">          0 :           archive (archive_), destDir (destDir_),</span></a>
+<a name="269"><span class="lineNum">     269 </span><span class="lineNoCov">          0 :           wasAborted (wasAborted_),</span></a>
+<a name="270"><span class="lineNum">     270 </span><span class="lineNoCov">          0 :           warnAboutOverwrite (warnAboutOverwrite_),</span></a>
 <a name="271"><span class="lineNum">     271 </span><span class="lineNoCov">          0 :           filesCreated (filesCreated_)</span></a>
 <a name="272"><span class="lineNum">     272 </span>            :     {</a>
 <a name="273"><span class="lineNum">     273 </span><span class="lineNoCov">          0 :         wasAborted = false;</span></a>
@@ -368,7 +368,7 @@
 <a name="306"><span class="lineNum">     306 </span>            : </a>
 <a name="307"><span class="lineNum">     307 </span><span class="lineNoCov">          0 :         ok = true;</span></a>
 <a name="308"><span class="lineNum">     308 </span><span class="lineNoCov">          0 :         return jobHasFinished;</span></a>
-<a name="309"><span class="lineNum">     309 </span>            :     }</a>
+<a name="309"><span class="lineNum">     309 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="310"><span class="lineNum">     310 </span>            : </a>
 <a name="311"><span class="lineNum">     311 </span><span class="lineNoCov">          0 :     float getCurrentTaskProgress()</span></a>
 <a name="312"><span class="lineNum">     312 </span>            :     {</a>
@@ -407,7 +407,7 @@
 <a name="345"><span class="lineNum">     345 </span><span class="lineNoCov">          0 :         name = f.getFileName();</span></a>
 <a name="346"><span class="lineNum">     346 </span>            : </a>
 <a name="347"><span class="lineNum">     347 </span><span class="lineNoCov">          0 :     return addFile (f, name, compression);</span></a>
-<a name="348"><span class="lineNum">     348 </span>            : }</a>
+<a name="348"><span class="lineNum">     348 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="349"><span class="lineNum">     349 </span>            : </a>
 <a name="350"><span class="lineNum">     350 </span><span class="lineNoCov">          0 : bool TracktionArchiveFile::addFile (const juce::File&amp; f, const juce::String&amp; filenameToUse,</span></a>
 <a name="351"><span class="lineNum">     351 </span>            :                                     CompressionType compression)</a>
@@ -467,7 +467,7 @@
 <a name="405"><span class="lineNum">     405 </span><span class="lineNoCov">          0 :                     juce::GZIPCompressorOutputStream deflater (&amp;out, 9, false);</span></a>
 <a name="406"><span class="lineNum">     406 </span><span class="lineNoCov">          0 :                     deflater.writeFromInputStream (in, -1);</span></a>
 <a name="407"><span class="lineNum">     407 </span>            :                     break;</a>
-<a name="408"><span class="lineNum">     408 </span>            :                 }</a>
+<a name="408"><span class="lineNum">     408 </span><span class="lineNoCov">          0 :                 }</span></a>
 <a name="409"><span class="lineNum">     409 </span>            : </a>
 <a name="410"><span class="lineNum">     410 </span><span class="lineNoCov">          0 :                 case CompressionType::lossless:</span></a>
 <a name="411"><span class="lineNum">     411 </span>            :                 {</a>
@@ -486,7 +486,7 @@
 <a name="424"><span class="lineNum">     424 </span>            : </a>
 <a name="425"><span class="lineNum">     425 </span><span class="lineNoCov">          0 :                             juce::GZIPCompressorOutputStream deflater (&amp;out, 9, false);</span></a>
 <a name="426"><span class="lineNum">     426 </span><span class="lineNoCov">          0 :                             deflater.writeFromInputStream (in, -1);</span></a>
-<a name="427"><span class="lineNum">     427 </span>            :                         }</a>
+<a name="427"><span class="lineNum">     427 </span><span class="lineNoCov">          0 :                         }</span></a>
 <a name="428"><span class="lineNum">     428 </span>            :                         else</a>
 <a name="429"><span class="lineNum">     429 </span>            :                         {</a>
 <a name="430"><span class="lineNum">     430 </span><span class="lineNoCov">          0 :                             entry-&gt;storedName = filenameRoot + &quot;.flac&quot;;</span></a>
@@ -496,13 +496,13 @@
 <a name="434"><span class="lineNum">     434 </span>            :                             {</a>
 <a name="435"><span class="lineNum">     435 </span><span class="lineNoCov">          0 :                                 needToWriteIndex = true;</span></a>
 <a name="436"><span class="lineNum">     436 </span><span class="lineNoCov">          0 :                                 TRACKTION_LOG_ERROR (&quot;Failed to add file to archive flac: &quot; + f.getFileName());</span></a>
-<a name="437"><span class="lineNum">     437 </span><span class="lineNoCov">          0 :                                 return false;</span></a>
+<a name="437"><span class="lineNum">     437 </span>            :                                 return false;</a>
 <a name="438"><span class="lineNum">     438 </span>            :                             }</a>
 <a name="439"><span class="lineNum">     439 </span>            :                         }</a>
 <a name="440"><span class="lineNum">     440 </span>            :                     }</a>
 <a name="441"><span class="lineNum">     441 </span>            : </a>
-<a name="442"><span class="lineNum">     442 </span><span class="lineNoCov">          0 :                     break;</span></a>
-<a name="443"><span class="lineNum">     443 </span>            :                 }</a>
+<a name="442"><span class="lineNum">     442 </span>            :                     break;</a>
+<a name="443"><span class="lineNum">     443 </span><span class="lineNoCov">          0 :                 }</span></a>
 <a name="444"><span class="lineNum">     444 </span>            : </a>
 <a name="445"><span class="lineNum">     445 </span><span class="lineNoCov">          0 :                 case CompressionType::lossyGoodQuality:</span></a>
 <a name="446"><span class="lineNum">     446 </span>            :                 case CompressionType::lossyMediumQuality:</a>
@@ -522,11 +522,11 @@
 <a name="460"><span class="lineNum">     460 </span>            :                         {</a>
 <a name="461"><span class="lineNum">     461 </span><span class="lineNoCov">          0 :                             needToWriteIndex = true;</span></a>
 <a name="462"><span class="lineNum">     462 </span><span class="lineNoCov">          0 :                             TRACKTION_LOG_ERROR (&quot;Failed to add file to archive: &quot; + f.getFileName());</span></a>
-<a name="463"><span class="lineNum">     463 </span><span class="lineNoCov">          0 :                             return false;</span></a>
+<a name="463"><span class="lineNum">     463 </span>            :                             return false;</a>
 <a name="464"><span class="lineNum">     464 </span>            :                         }</a>
 <a name="465"><span class="lineNum">     465 </span>            : </a>
 <a name="466"><span class="lineNum">     466 </span><span class="lineNoCov">          0 :                         out.writeFromInputStream (fin, -1);</span></a>
-<a name="467"><span class="lineNum">     467 </span>            :                     }</a>
+<a name="467"><span class="lineNum">     467 </span><span class="lineNoCov">          0 :                     }</span></a>
 <a name="468"><span class="lineNum">     468 </span><span class="lineNoCov">          0 :                     else if (! AudioFileUtils::convertToFormat&lt;juce::OggVorbisAudioFormat&gt; (engine, f, out, quality,</span></a>
 <a name="469"><span class="lineNum">     469 </span><span class="lineNoCov">          0 :                                                                                             juce::StringPairArray()))</span></a>
 <a name="470"><span class="lineNum">     470 </span>            :                     {</a>
@@ -535,8 +535,8 @@
 <a name="473"><span class="lineNum">     473 </span><span class="lineNoCov">          0 :                         return false;</span></a>
 <a name="474"><span class="lineNum">     474 </span>            :                     }</a>
 <a name="475"><span class="lineNum">     475 </span>            : </a>
-<a name="476"><span class="lineNum">     476 </span><span class="lineNoCov">          0 :                     break;</span></a>
-<a name="477"><span class="lineNum">     477 </span>            :                 }</a>
+<a name="476"><span class="lineNum">     476 </span>            :                     break;</a>
+<a name="477"><span class="lineNum">     477 </span><span class="lineNoCov">          0 :                 }</span></a>
 <a name="478"><span class="lineNum">     478 </span>            : </a>
 <a name="479"><span class="lineNum">     479 </span><span class="lineNoCov">          0 :                 default:</span></a>
 <a name="480"><span class="lineNum">     480 </span>            :                 {</a>
@@ -567,11 +567,11 @@
 <a name="505"><span class="lineNum">     505 </span>            :             ok = true;</a>
 <a name="506"><span class="lineNum">     506 </span>            : </a>
 <a name="507"><span class="lineNum">     507 </span><span class="lineNoCov">          0 :             entries.add (entry.release());</span></a>
-<a name="508"><span class="lineNum">     508 </span>            :         }</a>
-<a name="509"><span class="lineNum">     509 </span>            :     }</a>
+<a name="508"><span class="lineNum">     508 </span><span class="lineNoCov">          0 :         }</span></a>
+<a name="509"><span class="lineNum">     509 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="510"><span class="lineNum">     510 </span>            : </a>
 <a name="511"><span class="lineNum">     511 </span>            :     return ok;</a>
-<a name="512"><span class="lineNum">     512 </span>            : }</a>
+<a name="512"><span class="lineNum">     512 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="513"><span class="lineNum">     513 </span>            : </a>
 <a name="514"><span class="lineNum">     514 </span><span class="lineNoCov">          0 : void TracktionArchiveFile::addFileInfo (const juce::String&amp; filename,</span></a>
 <a name="515"><span class="lineNum">     515 </span>            :                                         const juce::String&amp; itemName,</a>

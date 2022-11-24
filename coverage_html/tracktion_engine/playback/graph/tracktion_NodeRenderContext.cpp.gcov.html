@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">162</td>
-            <td class="headerCovTableEntry">204</td>
-            <td class="headerCovTableEntryMed">79.4 %</td>
+            <td class="headerCovTableEntry">169</td>
+            <td class="headerCovTableEntry">211</td>
+            <td class="headerCovTableEntryMed">80.1 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">8</td>
@@ -81,7 +81,7 @@
 <a name="19"><span class="lineNum">      19 </span>            :     {</a>
 <a name="20"><span class="lineNum">      20 </span><span class="lineCov">         80 :         Plugin::Array plugins, insideRacks;</span></a>
 <a name="21"><span class="lineNum">      21 </span>            : </a>
-<a name="22"><span class="lineNum">      22 </span><span class="lineCov">       1241 :         for (auto n : getNodes (node, VertexOrdering::preordering))</span></a>
+<a name="22"><span class="lineNum">      22 </span><span class="lineCov">       1161 :         for (auto n : getNodes (node, VertexOrdering::preordering))</span></a>
 <a name="23"><span class="lineNum">      23 </span><span class="lineCov">       1081 :             if (auto pluginNode = dynamic_cast&lt;PluginNode*&gt; (n))</span></a>
 <a name="24"><span class="lineNum">      24 </span><span class="lineCov">        178 :                 plugins.add (&amp;pluginNode-&gt;getPlugin());</span></a>
 <a name="25"><span class="lineNum">      25 </span>            : </a>
@@ -104,16 +104,16 @@
 <a name="42"><span class="lineNum">      42 </span>            :                                       std::unique_ptr&lt;tracktion::graph::PlayHeadState&gt; playHeadState_,</a>
 <a name="43"><span class="lineNum">      43 </span>            :                                       std::unique_ptr&lt;ProcessState&gt; processState_,</a>
 <a name="44"><span class="lineNum">      44 </span><span class="lineCov">         84 :                                       juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* sourceToUpdate_)</span></a>
-<a name="45"><span class="lineNum">      45 </span>            :     : owner (owner_),</a>
-<a name="46"><span class="lineNum">      46 </span>            :       r (p), originalParams (p),</a>
+<a name="45"><span class="lineNum">      45 </span><span class="lineCov">         84 :     : owner (owner_),</span></a>
+<a name="46"><span class="lineNum">      46 </span><span class="lineCov">         84 :       r (p), originalParams (p),</span></a>
 <a name="47"><span class="lineNum">      47 </span>            :       playHead (std::move (playHead_)),</a>
 <a name="48"><span class="lineNum">      48 </span>            :       playHeadState (std::move (playHeadState_)),</a>
 <a name="49"><span class="lineNum">      49 </span>            :       processState (std::move (processState_)),</a>
 <a name="50"><span class="lineNum">      50 </span>            :       status (juce::Result::ok()),</a>
-<a name="51"><span class="lineNum">      51 </span>            :       ditherers (256, r.bitDepth),</a>
-<a name="52"><span class="lineNum">      52 </span><span class="lineCov">         84 :       sourceToUpdate (sourceToUpdate_)</span></a>
+<a name="51"><span class="lineNum">      51 </span><span class="lineCov">         84 :       ditherers (256, r.bitDepth),</span></a>
+<a name="52"><span class="lineNum">      52 </span><span class="lineCov">        168 :       sourceToUpdate (sourceToUpdate_)</span></a>
 <a name="53"><span class="lineNum">      53 </span>            : {</a>
-<a name="54"><span class="lineNum">      54 </span><span class="lineCov">        164 :     CRASH_TRACER</span></a>
+<a name="54"><span class="lineNum">      54 </span><span class="lineCov">         84 :     CRASH_TRACER</span></a>
 <a name="55"><span class="lineNum">      55 </span>            :     TRACKTION_ASSERT_MESSAGE_THREAD</a>
 <a name="56"><span class="lineNum">      56 </span>            :     jassert (r.engine != nullptr);</a>
 <a name="57"><span class="lineNum">      57 </span>            :     jassert (r.edit != nullptr);</a>
@@ -164,8 +164,8 @@
 <a name="102"><span class="lineNum">     102 </span><span class="lineCov">         80 :     AudioFileUtils::addBWAVStartToMetadata (r.metadata, toSamples (r.time.getStart(), r.sampleRateForAudio));</span></a>
 <a name="103"><span class="lineNum">     103 </span>            : </a>
 <a name="104"><span class="lineNum">     104 </span><span class="lineCov">        160 :     writer = std::make_unique&lt;AudioFileWriter&gt; (AudioFile (*originalParams.engine, r.destFile),</span></a>
-<a name="105"><span class="lineNum">     105 </span>            :                                                 r.audioFormat, numOutputChans, r.sampleRateForAudio,</a>
-<a name="106"><span class="lineNum">     106 </span>            :                                                 r.bitDepth, r.metadata, r.quality);</a>
+<a name="105"><span class="lineNum">     105 </span><span class="lineCov">         80 :                                                 r.audioFormat, numOutputChans, r.sampleRateForAudio,</span></a>
+<a name="106"><span class="lineNum">     106 </span><span class="lineCov">         80 :                                                 r.bitDepth, r.metadata, r.quality);</span></a>
 <a name="107"><span class="lineNum">     107 </span>            : </a>
 <a name="108"><span class="lineNum">     108 </span><span class="lineCov">        160 :     if (r.destFile != juce::File() &amp;&amp; ! writer-&gt;isOpen())</span></a>
 <a name="109"><span class="lineNum">     109 </span>            :     {</a>
@@ -210,11 +210,11 @@
 <a name="148"><span class="lineNum">     148 </span>            : </a>
 <a name="149"><span class="lineNum">     149 </span><span class="lineCov">         80 :     if (sourceToUpdate != nullptr)</span></a>
 <a name="150"><span class="lineNum">     150 </span><span class="lineNoCov">          0 :         sourceToUpdate-&gt;reset (numOutputChans, r.sampleRateForAudio, samplesToWrite);</span></a>
-<a name="151"><span class="lineNum">     151 </span>            : }</a>
+<a name="151"><span class="lineNum">     151 </span><span class="lineCov">         84 : }</span></a>
 <a name="152"><span class="lineNum">     152 </span>            : </a>
 <a name="153"><span class="lineNum">     153 </span><span class="lineCov">         84 : NodeRenderContext::~NodeRenderContext()</span></a>
 <a name="154"><span class="lineNum">     154 </span>            : {</a>
-<a name="155"><span class="lineNum">     155 </span><span class="lineCov">        168 :     CRASH_TRACER</span></a>
+<a name="155"><span class="lineNum">     155 </span><span class="lineCov">         84 :     CRASH_TRACER</span></a>
 <a name="156"><span class="lineNum">     156 </span><span class="lineCov">         84 :     r.resultMagnitude = owner.params.resultMagnitude = peak;</span></a>
 <a name="157"><span class="lineNum">     157 </span><span class="lineCov">         84 :     r.resultRMS = owner.params.resultRMS = rmsNumSamps &gt; 0 ? (float) (rmsTotal / rmsNumSamps) : 0.0f;</span></a>
 <a name="158"><span class="lineNum">     158 </span><span class="lineCov">         84 :     r.resultAudioDuration = owner.params.resultAudioDuration = float (numSamplesWrittenToSource / owner.params.sampleRateForAudio);</span></a>
@@ -225,24 +225,24 @@
 <a name="163"><span class="lineNum">     163 </span><span class="lineCov">         84 :     if (writer != nullptr)</span></a>
 <a name="164"><span class="lineNum">     164 </span><span class="lineCov">         80 :         writer-&gt;closeForWriting();</span></a>
 <a name="165"><span class="lineNum">     165 </span>            : </a>
-<a name="166"><span class="lineNum">     166 </span><span class="lineCov">         84 :     callBlocking ([this] { nodePlayer.reset(); });</span></a>
+<a name="166"><span class="lineNum">     166 </span><span class="lineCov">        168 :     callBlocking ([this] { nodePlayer.reset(); });</span></a>
 <a name="167"><span class="lineNum">     167 </span>            : </a>
 <a name="168"><span class="lineNum">     168 </span><span class="lineCov">         84 :     if (needsToNormaliseAndTrim)</span></a>
 <a name="169"><span class="lineNum">     169 </span><span class="lineNoCov">          0 :         owner.performNormalisingAndTrimming (originalParams, r);</span></a>
-<a name="170"><span class="lineNum">     170 </span><span class="lineCov">         84 : }</span></a>
+<a name="170"><span class="lineNum">     170 </span><span class="lineCov">        168 : }</span></a>
 <a name="171"><span class="lineNum">     171 </span>            : </a>
-<a name="172"><span class="lineNum">     172 </span><span class="lineCov">     113813 : bool NodeRenderContext::renderNextBlock (std::atomic&lt;float&gt;&amp; progressToUpdate)</span></a>
+<a name="172"><span class="lineNum">     172 </span><span class="lineCov">     119813 : bool NodeRenderContext::renderNextBlock (std::atomic&lt;float&gt;&amp; progressToUpdate)</span></a>
 <a name="173"><span class="lineNum">     173 </span>            : {</a>
-<a name="174"><span class="lineNum">     174 </span><span class="lineCov">     227626 :     CRASH_TRACER</span></a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineCov">     119813 :     CRASH_TRACER</span></a>
 <a name="175"><span class="lineNum">     175 </span>            :     jassert (! r.edit-&gt;getTransport().isPlayContextActive());</a>
 <a name="176"><span class="lineNum">     176 </span>            : </a>
-<a name="177"><span class="lineNum">     177 </span><span class="lineCov">     113813 :     if (--sleepCounter &lt;= 0)</span></a>
+<a name="177"><span class="lineNum">     177 </span><span class="lineCov">     119813 :     if (--sleepCounter &lt;= 0)</span></a>
 <a name="178"><span class="lineNum">     178 </span>            :     {</a>
-<a name="179"><span class="lineNum">     179 </span><span class="lineCov">       1139 :         sleepCounter = sleepCounterMax;</span></a>
-<a name="180"><span class="lineNum">     180 </span><span class="lineCov">       1139 :         juce::Thread::sleep (1);</span></a>
+<a name="179"><span class="lineNum">     179 </span><span class="lineCov">       1199 :         sleepCounter = sleepCounterMax;</span></a>
+<a name="180"><span class="lineNum">     180 </span><span class="lineCov">       1199 :         juce::Thread::sleep (1);</span></a>
 <a name="181"><span class="lineNum">     181 </span>            :     }</a>
 <a name="182"><span class="lineNum">     182 </span>            : </a>
-<a name="183"><span class="lineNum">     183 </span><span class="lineCov">     113813 :     if (owner.shouldExit())</span></a>
+<a name="183"><span class="lineNum">     183 </span><span class="lineCov">     119813 :     if (owner.shouldExit())</span></a>
 <a name="184"><span class="lineNum">     184 </span>            :     {</a>
 <a name="185"><span class="lineNum">     185 </span><span class="lineNoCov">          0 :         writer-&gt;closeForWriting();</span></a>
 <a name="186"><span class="lineNum">     186 </span><span class="lineNoCov">          0 :         r.destFile.deleteFile();</span></a>
@@ -255,15 +255,15 @@
 <a name="193"><span class="lineNum">     193 </span>            : </a>
 <a name="194"><span class="lineNum">     194 </span>            :     auto blockEnd = streamTime + blockLength;</a>
 <a name="195"><span class="lineNum">     195 </span>            : </a>
-<a name="196"><span class="lineNum">     196 </span><span class="lineCov">     113813 :     if (precount &gt; 0)</span></a>
-<a name="197"><span class="lineNum">     197 </span><span class="lineCov">      55869 :         blockEnd = juce::jmin (r.time.getStart(), blockEnd);</span></a>
+<a name="196"><span class="lineNum">     196 </span><span class="lineCov">     119813 :     if (precount &gt; 0)</span></a>
+<a name="197"><span class="lineNum">     197 </span><span class="lineCov">      61869 :         blockEnd = juce::jmin (r.time.getStart(), blockEnd);</span></a>
 <a name="198"><span class="lineNum">     198 </span>            : </a>
-<a name="199"><span class="lineNum">     199 </span><span class="lineCov">     113813 :     if (precount &gt; numPreRenderBlocks / 2)</span></a>
-<a name="200"><span class="lineNum">     200 </span><span class="lineCov">     104815 :         playHead-&gt;setPosition (toSamples (streamTime, r.sampleRateForAudio));</span></a>
+<a name="199"><span class="lineNum">     199 </span><span class="lineCov">     119813 :     if (precount &gt; numPreRenderBlocks / 2)</span></a>
+<a name="200"><span class="lineNum">     200 </span><span class="lineCov">     116815 :         playHead-&gt;setPosition (toSamples (streamTime, r.sampleRateForAudio));</span></a>
 <a name="201"><span class="lineNum">     201 </span><span class="lineCov">      61384 :     else if (precount == numPreRenderBlocks / 2)</span></a>
 <a name="202"><span class="lineNum">     202 </span><span class="lineCov">        159 :         playHead-&gt;playSyncedToRange ({ toSamples (streamTime, r.sampleRateForAudio), std::numeric_limits&lt;int64_t&gt;::max() });</span></a>
 <a name="203"><span class="lineNum">     203 </span>            : </a>
-<a name="204"><span class="lineNum">     204 </span><span class="lineCov">     113813 :     if (precount == 0)</span></a>
+<a name="204"><span class="lineNum">     204 </span><span class="lineCov">     119813 :     if (precount == 0)</span></a>
 <a name="205"><span class="lineNum">     205 </span>            :     {</a>
 <a name="206"><span class="lineNum">     206 </span><span class="lineCov">         80 :         streamTime = r.time.getStart();</span></a>
 <a name="207"><span class="lineNum">     207 </span>            :         blockEnd = streamTime + blockLength;</a>
@@ -272,7 +272,7 @@
 <a name="210"><span class="lineNum">     210 </span><span class="lineCov">        160 :         playHeadState-&gt;update (toSamples (TimeRange (streamTime, blockEnd), r.sampleRateForAudio));</span></a>
 <a name="211"><span class="lineNum">     211 </span>            :     }</a>
 <a name="212"><span class="lineNum">     212 </span>            : </a>
-<a name="213"><span class="lineNum">     213 </span><span class="lineCov">     113813 :     if (r.realTimeRender)</span></a>
+<a name="213"><span class="lineNum">     213 </span><span class="lineCov">     119813 :     if (r.realTimeRender)</span></a>
 <a name="214"><span class="lineNum">     214 </span>            :     {</a>
 <a name="215"><span class="lineNum">     215 </span><span class="lineNoCov">          0 :         auto timeNow = juce::Time::getMillisecondCounterHiRes();</span></a>
 <a name="216"><span class="lineNum">     216 </span><span class="lineNoCov">          0 :         auto timeToWait = (int) (realTimePerBlock - (timeNow - lastTime));</span></a>
@@ -282,41 +282,41 @@
 <a name="220"><span class="lineNum">     220 </span><span class="lineNoCov">          0 :             juce::Thread::sleep (timeToWait);</span></a>
 <a name="221"><span class="lineNum">     221 </span>            :     }</a>
 <a name="222"><span class="lineNum">     222 </span>            : </a>
-<a name="223"><span class="lineNum">     223 </span><span class="lineCov">     113813 :     currentTempoPosition-&gt;set (streamTime);</span></a>
+<a name="223"><span class="lineNum">     223 </span><span class="lineCov">     119813 :     currentTempoPosition-&gt;set (streamTime);</span></a>
 <a name="224"><span class="lineNum">     224 </span>            : </a>
-<a name="225"><span class="lineNum">     225 </span><span class="lineCov">     113813 :     resetFP();</span></a>
+<a name="225"><span class="lineNum">     225 </span><span class="lineCov">     119813 :     resetFP();</span></a>
 <a name="226"><span class="lineNum">     226 </span>            : </a>
 <a name="227"><span class="lineNum">     227 </span>            :     const TimeRange streamTimeRange (streamTime, blockEnd);</a>
-<a name="228"><span class="lineNum">     228 </span><span class="lineCov">     113813 :     const auto referenceSampleRange = juce::Range&lt;int64_t&gt;::withStartAndLength (toSamples (streamTimeRange.getStart(), originalParams.sampleRateForAudio), r.blockSizeForAudio);</span></a>
+<a name="228"><span class="lineNum">     228 </span><span class="lineCov">     119813 :     const auto referenceSampleRange = juce::Range&lt;int64_t&gt;::withStartAndLength (toSamples (streamTimeRange.getStart(), originalParams.sampleRateForAudio), r.blockSizeForAudio);</span></a>
 <a name="229"><span class="lineNum">     229 </span>            : </a>
 <a name="230"><span class="lineNum">     230 </span>            :     // Update modifier timers</a>
-<a name="231"><span class="lineNum">     231 </span><span class="lineCov">     113813 :     r.edit-&gt;updateModifierTimers (streamTime, r.blockSizeForAudio);</span></a>
+<a name="231"><span class="lineNum">     231 </span><span class="lineCov">     119813 :     r.edit-&gt;updateModifierTimers (streamTime, r.blockSizeForAudio);</span></a>
 <a name="232"><span class="lineNum">     232 </span>            : </a>
 <a name="233"><span class="lineNum">     233 </span>            :     // Wait for any nodes to render their sources or proxies</a>
-<a name="234"><span class="lineNum">     234 </span><span class="lineCov">     113813 :     auto leafNodesReady = [this, referenceSampleRange]</span></a>
+<a name="234"><span class="lineNum">     234 </span><span class="lineCov">     119813 :     auto leafNodesReady = [this, referenceSampleRange]</span></a>
 <a name="235"><span class="lineNum">     235 </span>            :     {</a>
-<a name="236"><span class="lineNum">     236 </span><span class="lineCov">     987451 :         for (auto node : getNodes (*nodePlayer-&gt;getNode(), VertexOrdering::postordering))</span></a>
+<a name="236"><span class="lineNum">     236 </span><span class="lineCov">     879638 :         for (auto node : getNodes (*nodePlayer-&gt;getNode(), VertexOrdering::postordering))</span></a>
 <a name="237"><span class="lineNum">     237 </span>            :         {</a>
 <a name="238"><span class="lineNum">     238 </span>            :             // Call prepare for next block here to ensure isReadyToProcess internals are updated</a>
-<a name="239"><span class="lineNum">     239 </span><span class="lineCov">     808734 :             node-&gt;prepareForNextBlock (referenceSampleRange);</span></a>
+<a name="239"><span class="lineNum">     239 </span><span class="lineCov">     814734 :             node-&gt;prepareForNextBlock (referenceSampleRange);</span></a>
 <a name="240"><span class="lineNum">     240 </span>            :          </a>
-<a name="241"><span class="lineNum">     241 </span><span class="lineCov">    1617470 :             if (node-&gt;getDirectInputNodes().empty() &amp;&amp; ! node-&gt;isReadyToProcess())</span></a>
+<a name="241"><span class="lineNum">     241 </span><span class="lineCov">    1629468 :             if (node-&gt;getDirectInputNodes().empty() &amp;&amp; ! node-&gt;isReadyToProcess())</span></a>
 <a name="242"><span class="lineNum">     242 </span>            :                 return false;</a>
 <a name="243"><span class="lineNum">     243 </span>            :         }</a>
 <a name="244"><span class="lineNum">     244 </span>            :         </a>
 <a name="245"><span class="lineNum">     245 </span><span class="lineCov">      64904 :         return true;</span></a>
-<a name="246"><span class="lineNum">     246 </span><span class="lineCov">     113813 :     }();</span></a>
+<a name="246"><span class="lineNum">     246 </span><span class="lineCov">     119813 :     }();</span></a>
 <a name="247"><span class="lineNum">     247 </span>            :     </a>
-<a name="248"><span class="lineNum">     248 </span><span class="lineCov">     113813 :     while (! (leafNodesReady || owner.shouldExit()))</span></a>
+<a name="248"><span class="lineNum">     248 </span><span class="lineCov">     119813 :     while (! (leafNodesReady || owner.shouldExit()))</span></a>
 <a name="249"><span class="lineNum">     249 </span>            :         return false;</a>
 <a name="250"><span class="lineNum">     250 </span>            : </a>
 <a name="251"><span class="lineNum">     251 </span><span class="lineCov">      64904 :     juce::AudioBuffer&lt;float&gt; renderingBuffer (numOutputChans, r.blockSizeForAudio + 256);</span></a>
 <a name="252"><span class="lineNum">     252 </span><span class="lineCov">      64904 :     renderingBuffer.clear();</span></a>
 <a name="253"><span class="lineNum">     253 </span><span class="lineCov">      64904 :     midiBuffer.clear();</span></a>
 <a name="254"><span class="lineNum">     254 </span>            : </a>
-<a name="255"><span class="lineNum">     255 </span>            :     auto destView = choc::buffer::createChannelArrayView (renderingBuffer.getArrayOfWritePointers(),</a>
-<a name="256"><span class="lineNum">     256 </span><span class="lineCov">      64904 :                                                           (choc::buffer::ChannelCount) renderingBuffer.getNumChannels(),</span></a>
-<a name="257"><span class="lineNum">     257 </span><span class="lineCov">      64904 :                                                           (choc::buffer::FrameCount) referenceSampleRange.getLength());</span></a>
+<a name="255"><span class="lineNum">     255 </span><span class="lineCov">      64904 :     auto destView = choc::buffer::createChannelArrayView (renderingBuffer.getArrayOfWritePointers(),</span></a>
+<a name="256"><span class="lineNum">     256 </span>            :                                                           (choc::buffer::ChannelCount) renderingBuffer.getNumChannels(),</a>
+<a name="257"><span class="lineNum">     257 </span>            :                                                           (choc::buffer::FrameCount) referenceSampleRange.getLength());</a>
 <a name="258"><span class="lineNum">     258 </span>            : </a>
 <a name="259"><span class="lineNum">     259 </span><span class="lineCov">      64904 :     nodePlayer-&gt;process ({ (choc::buffer::FrameCount) referenceSampleRange.getLength(), referenceSampleRange, { destView, midiBuffer} });</span></a>
 <a name="260"><span class="lineNum">     260 </span>            : </a>
@@ -377,12 +377,12 @@
 <a name="315"><span class="lineNum">     315 </span><span class="lineCov">      64824 :     streamTime = blockEnd;</span></a>
 <a name="316"><span class="lineNum">     316 </span>            : </a>
 <a name="317"><span class="lineNum">     317 </span><span class="lineCov">      64824 :     return false;</span></a>
-<a name="318"><span class="lineNum">     318 </span>            : }</a>
+<a name="318"><span class="lineNum">     318 </span><span class="lineCov">     119813 : }</span></a>
 <a name="319"><span class="lineNum">     319 </span>            : </a>
 <a name="320"><span class="lineNum">     320 </span>            : //==============================================================================</a>
 <a name="321"><span class="lineNum">     321 </span><span class="lineCov">      57866 : NodeRenderContext::WriteResult NodeRenderContext::writeAudioBlock (choc::buffer::ChannelArrayView&lt;float&gt; block)</span></a>
 <a name="322"><span class="lineNum">     322 </span>            : {</a>
-<a name="323"><span class="lineNum">     323 </span><span class="lineCov">     115732 :     CRASH_TRACER</span></a>
+<a name="323"><span class="lineNum">     323 </span><span class="lineCov">      57866 :     CRASH_TRACER</span></a>
 <a name="324"><span class="lineNum">     324 </span>            :     // Prepare buffer to use</a>
 <a name="325"><span class="lineNum">     325 </span><span class="lineCov">      57866 :     auto blockSizeSamples = (int) block.getNumFrames();</span></a>
 <a name="326"><span class="lineNum">     326 </span>            :     </a>
@@ -421,7 +421,7 @@
 <a name="359"><span class="lineNum">     359 </span><span class="lineNoCov">          0 :         return WriteResult::failed;</span></a>
 <a name="360"><span class="lineNum">     360 </span>            :     </a>
 <a name="361"><span class="lineNum">     361 </span>            :     return WriteResult::succeeded;</a>
-<a name="362"><span class="lineNum">     362 </span>            : }</a>
+<a name="362"><span class="lineNum">     362 </span><span class="lineCov">      57866 : }</span></a>
 <a name="363"><span class="lineNum">     363 </span>            : </a>
 <a name="364"><span class="lineNum">     364 </span>            : //==============================================================================</a>
 <a name="365"><span class="lineNum">     365 </span><span class="lineCov">        104 : juce::String NodeRenderContext::renderMidi (Renderer::RenderTask&amp; owner,</span></a>
@@ -451,7 +451,7 @@
 <a name="389"><span class="lineNum">     389 </span><span class="lineCov">        104 :     playHeadState-&gt;update (toSamples ({ streamTime, streamTime + blockLength }, sampleRate));</span></a>
 <a name="390"><span class="lineNum">     390 </span>            : </a>
 <a name="391"><span class="lineNum">     391 </span>            :     // Wait for any nodes to render their sources or proxies</a>
-<a name="392"><span class="lineNum">     392 </span><span class="lineCov">        104 :     auto leafNodesReady = [nodes = getNodes (*nodePlayer-&gt;getNode(), VertexOrdering::postordering)]</span></a>
+<a name="392"><span class="lineNum">     392 </span><span class="lineCov">        208 :     auto leafNodesReady = [nodes = getNodes (*nodePlayer-&gt;getNode(), VertexOrdering::postordering)]</span></a>
 <a name="393"><span class="lineNum">     393 </span>            :     {</a>
 <a name="394"><span class="lineNum">     394 </span><span class="lineCov">        832 :         for (auto node : nodes)</span></a>
 <a name="395"><span class="lineNum">     395 </span><span class="lineCov">       1456 :             if (node-&gt;getDirectInputNodes().empty() &amp;&amp; ! node-&gt;isReadyToProcess())</span></a>
@@ -477,42 +477,42 @@
 <a name="415"><span class="lineNum">     415 </span>            : </a>
 <a name="416"><span class="lineNum">     416 </span>            :     for (;;)</a>
 <a name="417"><span class="lineNum">     417 </span>            :     {</a>
-<a name="418"><span class="lineNum">     418 </span><span class="lineCov">    2896290 :         if (owner.shouldExit())</span></a>
+<a name="418"><span class="lineNum">     418 </span><span class="lineCov">    2896288 :         if (owner.shouldExit())</span></a>
 <a name="419"><span class="lineNum">     419 </span><span class="lineNoCov">          0 :             return TRANS(&quot;Render cancelled&quot;);</span></a>
 <a name="420"><span class="lineNum">     420 </span>            : </a>
-<a name="421"><span class="lineNum">     421 </span><span class="lineCov">    2896290 :         if (streamTime &gt; r.time.getEnd())</span></a>
+<a name="421"><span class="lineNum">     421 </span><span class="lineCov">    2896288 :         if (streamTime &gt; r.time.getEnd())</span></a>
 <a name="422"><span class="lineNum">     422 </span>            :             break;</a>
 <a name="423"><span class="lineNum">     423 </span>            : </a>
 <a name="424"><span class="lineNum">     424 </span>            :         auto blockEnd = streamTime + blockLength;</a>
 <a name="425"><span class="lineNum">     425 </span>            :         const TimeRange streamTimeRange (streamTime, blockEnd);</a>
 <a name="426"><span class="lineNum">     426 </span>            :         </a>
 <a name="427"><span class="lineNum">     427 </span>            :         // Update modifier timers</a>
-<a name="428"><span class="lineNum">     428 </span><span class="lineCov">    2896180 :         r.edit-&gt;updateModifierTimers (streamTime, samplesPerBlock);</span></a>
+<a name="428"><span class="lineNum">     428 </span><span class="lineCov">    2896184 :         r.edit-&gt;updateModifierTimers (streamTime, samplesPerBlock);</span></a>
 <a name="429"><span class="lineNum">     429 </span>            :         </a>
 <a name="430"><span class="lineNum">     430 </span>            :         // Then once eveything is ready, render the block</a>
-<a name="431"><span class="lineNum">     431 </span><span class="lineCov">    2896180 :         currentTempoPosition.set (streamTime);</span></a>
+<a name="431"><span class="lineNum">     431 </span><span class="lineCov">    2896184 :         currentTempoPosition.set (streamTime);</span></a>
 <a name="432"><span class="lineNum">     432 </span>            : </a>
-<a name="433"><span class="lineNum">     433 </span><span class="lineCov">    2896180 :         renderingBuffer.clear();</span></a>
+<a name="433"><span class="lineNum">     433 </span><span class="lineCov">    2896184 :         renderingBuffer.clear();</span></a>
 <a name="434"><span class="lineNum">     434 </span>            :         blockMidiBuffer.clear();</a>
-<a name="435"><span class="lineNum">     435 </span><span class="lineCov">    2896180 :         const auto referenceSampleRange = toSamples (streamTimeRange, sampleRate);</span></a>
-<a name="436"><span class="lineNum">     436 </span>            :         auto destView = choc::buffer::createChannelArrayView (renderingBuffer.getArrayOfWritePointers(),</a>
-<a name="437"><span class="lineNum">     437 </span><span class="lineCov">    2896180 :                                                               (choc::buffer::ChannelCount) renderingBuffer.getNumChannels(), (choc::buffer::FrameCount) referenceSampleRange.getLength());</span></a>
+<a name="435"><span class="lineNum">     435 </span><span class="lineCov">    2896184 :         const auto referenceSampleRange = toSamples (streamTimeRange, sampleRate);</span></a>
+<a name="436"><span class="lineNum">     436 </span><span class="lineCov">    2896184 :         auto destView = choc::buffer::createChannelArrayView (renderingBuffer.getArrayOfWritePointers(),</span></a>
+<a name="437"><span class="lineNum">     437 </span>            :                                                               (choc::buffer::ChannelCount) renderingBuffer.getNumChannels(), (choc::buffer::FrameCount) referenceSampleRange.getLength());</a>
 <a name="438"><span class="lineNum">     438 </span>            : </a>
-<a name="439"><span class="lineNum">     439 </span><span class="lineCov">    2896180 :         nodePlayer-&gt;process ({ (choc::buffer::FrameCount) referenceSampleRange.getLength(), referenceSampleRange, { destView, blockMidiBuffer} });</span></a>
+<a name="439"><span class="lineNum">     439 </span><span class="lineCov">    2896184 :         nodePlayer-&gt;process ({ (choc::buffer::FrameCount) referenceSampleRange.getLength(), referenceSampleRange, { destView, blockMidiBuffer} });</span></a>
 <a name="440"><span class="lineNum">     440 </span>            : </a>
 <a name="441"><span class="lineNum">     441 </span>            :         // Set MIDI messages to beats and update final sequence</a>
-<a name="442"><span class="lineNum">     442 </span><span class="lineCov">    2900870 :         for (auto&amp; m : blockMidiBuffer)</span></a>
+<a name="442"><span class="lineNum">     442 </span><span class="lineCov">    2900392 :         for (auto&amp; m : blockMidiBuffer)</span></a>
 <a name="443"><span class="lineNum">     443 </span>            :         {</a>
 <a name="444"><span class="lineNum">     444 </span>            :             tempo::Sequence::Position eventPos (currentTempoPosition);</a>
-<a name="445"><span class="lineNum">     445 </span><span class="lineCov">       4688 :             eventPos.set (TimePosition::fromSeconds (m.getTimeStamp()) + (streamTime - r.time.getStart()));</span></a>
+<a name="445"><span class="lineNum">     445 </span><span class="lineCov">       4208 :             eventPos.set (TimePosition::fromSeconds (m.getTimeStamp()) + (streamTime - r.time.getStart()));</span></a>
 <a name="446"><span class="lineNum">     446 </span>            : </a>
-<a name="447"><span class="lineNum">     447 </span><span class="lineCov">       4688 :             outputSequence.addEvent (juce::MidiMessage (m, Edit::ticksPerQuarterNote * eventPos.getPPQTime()));</span></a>
+<a name="447"><span class="lineNum">     447 </span><span class="lineCov">       4208 :             outputSequence.addEvent (juce::MidiMessage (m, Edit::ticksPerQuarterNote * eventPos.getPPQTime()));</span></a>
 <a name="448"><span class="lineNum">     448 </span>            :         }</a>
 <a name="449"><span class="lineNum">     449 </span>            : </a>
 <a name="450"><span class="lineNum">     450 </span>            :         streamTime = blockEnd;</a>
 <a name="451"><span class="lineNum">     451 </span>            : </a>
-<a name="452"><span class="lineNum">     452 </span><span class="lineCov">    2896180 :         progress = juce::jlimit (0.0f, 1.0f, (float) ((streamTime - r.time.getStart()) / r.time.getLength()));</span></a>
-<a name="453"><span class="lineNum">     453 </span><span class="lineCov">    2896180 :     }</span></a>
+<a name="452"><span class="lineNum">     452 </span><span class="lineCov">    2896184 :         progress = juce::jlimit (0.0f, 1.0f, (float) ((streamTime - r.time.getStart()) / r.time.getLength()));</span></a>
+<a name="453"><span class="lineNum">     453 </span><span class="lineCov">    2896184 :     }</span></a>
 <a name="454"><span class="lineNum">     454 </span>            :     </a>
 <a name="455"><span class="lineNum">     455 </span><span class="lineCov">        104 :     playHead-&gt;stop();</span></a>
 <a name="456"><span class="lineNum">     456 </span>            :     </a>

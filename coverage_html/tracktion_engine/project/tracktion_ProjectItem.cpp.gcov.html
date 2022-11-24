@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">375</td>
+            <td class="headerCovTableEntry">394</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -75,7 +75,7 @@
 <a name="13"><span class="lineNum">      13 </span>            : </a>
 <a name="14"><span class="lineNum">      14 </span>            : static const char* slashEscapeSeq = &quot;[[slash]]&quot;;</a>
 <a name="15"><span class="lineNum">      15 </span>            : </a>
-<a name="16"><span class="lineNum">      16 </span>            : struct StringMap</a>
+<a name="16"><span class="lineNum">      16 </span><span class="lineNoCov">          0 : struct StringMap</span></a>
 <a name="17"><span class="lineNum">      17 </span>            : {</a>
 <a name="18"><span class="lineNum">      18 </span><span class="lineNoCov">          0 :     StringMap() {}</span></a>
 <a name="19"><span class="lineNum">      19 </span>            : </a>
@@ -89,7 +89,7 @@
 <a name="27"><span class="lineNum">      27 </span>            :     {</a>
 <a name="28"><span class="lineNum">      28 </span><span class="lineNoCov">          0 :         keys = other.keys;</span></a>
 <a name="29"><span class="lineNum">      29 </span><span class="lineNoCov">          0 :         values = other.values;</span></a>
-<a name="30"><span class="lineNum">      30 </span>            :         return *this;</a>
+<a name="30"><span class="lineNum">      30 </span><span class="lineNoCov">          0 :         return *this;</span></a>
 <a name="31"><span class="lineNum">      31 </span>            :     }</a>
 <a name="32"><span class="lineNum">      32 </span>            : </a>
 <a name="33"><span class="lineNum">      33 </span>            :     //==============================================================================</a>
@@ -205,7 +205,7 @@
 <a name="143"><span class="lineNum">     143 </span>            :         }</a>
 <a name="144"><span class="lineNum">     144 </span>            : </a>
 <a name="145"><span class="lineNum">     145 </span><span class="lineNoCov">          0 :         return s;</span></a>
-<a name="146"><span class="lineNum">     146 </span>            :     }</a>
+<a name="146"><span class="lineNum">     146 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="147"><span class="lineNum">     147 </span>            : </a>
 <a name="148"><span class="lineNum">     148 </span><span class="lineNoCov">          0 :     static StringMap recreateFromString (const juce::String&amp; stringVersion)</span></a>
 <a name="149"><span class="lineNum">     149 </span>            :     {</a>
@@ -257,7 +257,7 @@
 <a name="195"><span class="lineNum">     195 </span>            :                 break;</a>
 <a name="196"><span class="lineNum">     196 </span>            : </a>
 <a name="197"><span class="lineNum">     197 </span><span class="lineNoCov">          0 :             n += len + 1;</span></a>
-<a name="198"><span class="lineNum">     198 </span>            :         }</a>
+<a name="198"><span class="lineNum">     198 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="199"><span class="lineNum">     199 </span>            : </a>
 <a name="200"><span class="lineNum">     200 </span><span class="lineNoCov">          0 :         return sm;</span></a>
 <a name="201"><span class="lineNum">     201 </span>            :     }</a>
@@ -276,12 +276,12 @@
 <a name="214"><span class="lineNum">     214 </span><span class="lineNoCov">          0 :                           double length_, ProjectItemID id)</span></a>
 <a name="215"><span class="lineNum">     215 </span>            :    : Selectable(),</a>
 <a name="216"><span class="lineNum">     216 </span>            :      ReferenceCountedObject(),</a>
-<a name="217"><span class="lineNum">     217 </span>            :      engine (e),</a>
-<a name="218"><span class="lineNum">     218 </span>            :      itemID (id),</a>
-<a name="219"><span class="lineNum">     219 </span>            :      type (type_),</a>
-<a name="220"><span class="lineNum">     220 </span>            :      objectName (name_),</a>
-<a name="221"><span class="lineNum">     221 </span>            :      description (desc_),</a>
-<a name="222"><span class="lineNum">     222 </span>            :      file (file_),</a>
+<a name="217"><span class="lineNum">     217 </span><span class="lineNoCov">          0 :      engine (e),</span></a>
+<a name="218"><span class="lineNum">     218 </span><span class="lineNoCov">          0 :      itemID (id),</span></a>
+<a name="219"><span class="lineNum">     219 </span><span class="lineNoCov">          0 :      type (type_),</span></a>
+<a name="220"><span class="lineNum">     220 </span><span class="lineNoCov">          0 :      objectName (name_),</span></a>
+<a name="221"><span class="lineNum">     221 </span><span class="lineNoCov">          0 :      description (desc_),</span></a>
+<a name="222"><span class="lineNum">     222 </span><span class="lineNoCov">          0 :      file (file_),</span></a>
 <a name="223"><span class="lineNum">     223 </span><span class="lineNoCov">          0 :      length (length_)</span></a>
 <a name="224"><span class="lineNum">     224 </span>            : {</a>
 <a name="225"><span class="lineNum">     225 </span><span class="lineNoCov">          0 :     setCategory (category_);</span></a>
@@ -295,7 +295,7 @@
 <a name="233"><span class="lineNum">     233 </span><span class="lineNoCov">          0 :         mo &lt;&lt; byte;</span></a>
 <a name="234"><span class="lineNum">     234 </span>            : </a>
 <a name="235"><span class="lineNum">     235 </span><span class="lineNoCov">          0 :     return mo.toString();</span></a>
-<a name="236"><span class="lineNum">     236 </span>            : }</a>
+<a name="236"><span class="lineNum">     236 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="237"><span class="lineNum">     237 </span>            : </a>
 <a name="238"><span class="lineNum">     238 </span><span class="lineNoCov">          0 : ProjectItem::ProjectItem (Engine&amp; e, ProjectItemID id, juce::InputStream* in)</span></a>
 <a name="239"><span class="lineNum">     239 </span><span class="lineNoCov">          0 :    : engine (e), itemID (id)</span></a>
@@ -364,9 +364,9 @@
 <a name="302"><span class="lineNum">     302 </span><span class="lineNoCov">          0 :             localName = localName.replaceCharacter ('\\', '/');</span></a>
 <a name="303"><span class="lineNum">     303 </span>            :        #endif</a>
 <a name="304"><span class="lineNum">     304 </span>            : </a>
-<a name="305"><span class="lineNum">     305 </span><span class="lineNoCov">          0 :         auto projectDir = pp-&gt;getDefaultDirectory();</span></a>
+<a name="305"><span class="lineNum">     305 </span>            :         auto projectDir = pp-&gt;getDefaultDirectory();</a>
 <a name="306"><span class="lineNum">     306 </span><span class="lineNoCov">          0 :         return projectDir.getChildFile (localName);</span></a>
-<a name="307"><span class="lineNum">     307 </span>            :     }</a>
+<a name="307"><span class="lineNum">     307 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="308"><span class="lineNum">     308 </span>            : </a>
 <a name="309"><span class="lineNum">     309 </span>            :     jassertfalse;</a>
 <a name="310"><span class="lineNum">     310 </span><span class="lineNoCov">          0 :     return {};</span></a>
@@ -650,7 +650,7 @@
 <a name="588"><span class="lineNum">     588 </span>            :     }</a>
 <a name="589"><span class="lineNum">     589 </span>            : </a>
 <a name="590"><span class="lineNum">     590 </span><span class="lineNoCov">          0 :     return marks;</span></a>
-<a name="591"><span class="lineNum">     591 </span>            : }</a>
+<a name="591"><span class="lineNum">     591 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="592"><span class="lineNum">     592 </span>            : </a>
 <a name="593"><span class="lineNum">     593 </span><span class="lineNoCov">          0 : void ProjectItem::setMarkedPoints (const juce::Array&lt;TimePosition&gt;&amp; points)</span></a>
 <a name="594"><span class="lineNum">     594 </span>            : {</a>
@@ -667,7 +667,7 @@
 <a name="605"><span class="lineNum">     605 </span>            : </a>
 <a name="606"><span class="lineNum">     606 </span>            :             // stop the ui getting chuggy when moving points</a>
 <a name="607"><span class="lineNum">     607 </span><span class="lineNoCov">          0 :             pp-&gt;cancelAnyPendingUpdates();</span></a>
-<a name="608"><span class="lineNum">     608 </span>            :         }</a>
+<a name="608"><span class="lineNum">     608 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="609"><span class="lineNum">     609 </span>            :     }</a>
 <a name="610"><span class="lineNum">     610 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="611"><span class="lineNum">     611 </span>            : </a>
@@ -690,11 +690,11 @@
 <a name="628"><span class="lineNum">     628 </span><span class="lineNoCov">          0 :                                                           TRANS(&quot;Create New&quot;)))</span></a>
 <a name="629"><span class="lineNum">     629 </span>            :         {</a>
 <a name="630"><span class="lineNum">     630 </span><span class="lineNoCov">          0 :             setSourceFile (newFile);</span></a>
-<a name="631"><span class="lineNum">     631 </span><span class="lineNoCov">          0 :             return true;</span></a>
+<a name="631"><span class="lineNum">     631 </span>            :             return true;</a>
 <a name="632"><span class="lineNum">     632 </span>            :         }</a>
 <a name="633"><span class="lineNum">     633 </span>            : </a>
 <a name="634"><span class="lineNum">     634 </span><span class="lineNoCov">          0 :         newFile.copyFileTo (newFile.getNonexistentSibling());</span></a>
-<a name="635"><span class="lineNum">     635 </span>            :     }</a>
+<a name="635"><span class="lineNum">     635 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="636"><span class="lineNum">     636 </span>            : </a>
 <a name="637"><span class="lineNum">     637 </span><span class="lineNoCov">          0 :     if (f.existsAsFile() &amp;&amp; f != newFile)</span></a>
 <a name="638"><span class="lineNum">     638 </span>            :     {</a>
@@ -756,7 +756,7 @@
 <a name="694"><span class="lineNum">     694 </span>            : </a>
 <a name="695"><span class="lineNum">     695 </span><span class="lineNoCov">          0 :             len = mf.getLastTimestamp();</span></a>
 <a name="696"><span class="lineNum">     696 </span>            :         }</a>
-<a name="697"><span class="lineNum">     697 </span>            :     }</a>
+<a name="697"><span class="lineNum">     697 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="698"><span class="lineNum">     698 </span>            :     else if (isEdit())</a>
 <a name="699"><span class="lineNum">     699 </span>            :     {</a>
 <a name="700"><span class="lineNum">     700 </span>            :         // don't do this - too slow..</a>
@@ -829,8 +829,8 @@
 <a name="767"><span class="lineNum">     767 </span><span class="lineNoCov">          0 :             info &lt;&lt; &quot;  modified: &quot; &lt;&lt; f.getLastModificationTime().toString (true, true);</span></a>
 <a name="768"><span class="lineNum">     768 </span>            : </a>
 <a name="769"><span class="lineNum">     769 </span><span class="lineNoCov">          0 :             TRACKTION_LOG_ERROR (info);</span></a>
-<a name="770"><span class="lineNum">     770 </span>            :         }</a>
-<a name="771"><span class="lineNum">     771 </span>            :     }</a>
+<a name="770"><span class="lineNum">     770 </span><span class="lineNoCov">          0 :         }</span></a>
+<a name="771"><span class="lineNum">     771 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="772"><span class="lineNum">     772 </span>            : </a>
 <a name="773"><span class="lineNum">     773 </span><span class="lineNoCov">          0 :     return ok;</span></a>
 <a name="774"><span class="lineNum">     774 </span>            : }</a>
@@ -863,7 +863,7 @@
 <a name="801"><span class="lineNum">     801 </span>            :         }</a>
 <a name="802"><span class="lineNum">     802 </span>            : </a>
 <a name="803"><span class="lineNum">     803 </span><span class="lineNoCov">          0 :         EditFileOperations (ed).save (false, true, false);</span></a>
-<a name="804"><span class="lineNum">     804 </span>            :     }</a>
+<a name="804"><span class="lineNum">     804 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="805"><span class="lineNum">     805 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="806"><span class="lineNum">     806 </span>            : </a>
 <a name="807"><span class="lineNum">     807 </span>            : </a>
@@ -927,7 +927,7 @@
 <a name="865"><span class="lineNum">     865 </span>            :         {</a>
 <a name="866"><span class="lineNum">     866 </span><span class="lineNoCov">          0 :             return pp-&gt;createNewItem (newFile, getType(), newName, description, getCategory(), true);</span></a>
 <a name="867"><span class="lineNum">     867 </span>            :         }</a>
-<a name="868"><span class="lineNum">     868 </span>            :     }</a>
+<a name="868"><span class="lineNum">     868 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="869"><span class="lineNum">     869 </span>            : </a>
 <a name="870"><span class="lineNum">     870 </span><span class="lineNoCov">          0 :     return {};</span></a>
 <a name="871"><span class="lineNum">     871 </span>            : }</a>
@@ -935,7 +935,7 @@
 <a name="873"><span class="lineNum">     873 </span>            : //==============================================================================</a>
 <a name="874"><span class="lineNum">     874 </span><span class="lineNoCov">          0 : static void tokenise (const juce::String&amp; s, juce::StringArray&amp; toks)</span></a>
 <a name="875"><span class="lineNum">     875 </span>            : {</a>
-<a name="876"><span class="lineNum">     876 </span>            :     auto t = s.getCharPointer();</a>
+<a name="876"><span class="lineNum">     876 </span><span class="lineNoCov">          0 :     auto t = s.getCharPointer();</span></a>
 <a name="877"><span class="lineNum">     877 </span>            :     auto start = t;</a>
 <a name="878"><span class="lineNum">     878 </span>            : </a>
 <a name="879"><span class="lineNum">     879 </span><span class="lineNoCov">          0 :     while (! t.isEmpty())</span></a>

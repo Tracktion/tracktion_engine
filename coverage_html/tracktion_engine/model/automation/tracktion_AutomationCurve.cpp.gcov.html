@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">22</td>
-            <td class="headerCovTableEntry">408</td>
-            <td class="headerCovTableEntryLo">5.4 %</td>
+            <td class="headerCovTableEntry">21</td>
+            <td class="headerCovTableEntry">411</td>
+            <td class="headerCovTableEntryLo">5.1 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">6</td>
@@ -142,7 +142,7 @@
 <a name="80"><span class="lineNum">      80 </span><span class="lineNoCov">          0 :     return AutomationPoint (TimePosition::fromSeconds (static_cast&lt;double&gt; (child.getProperty (IDs::t))),</span></a>
 <a name="81"><span class="lineNum">      81 </span><span class="lineNoCov">          0 :                             child.getProperty (IDs::v),</span></a>
 <a name="82"><span class="lineNum">      82 </span><span class="lineNoCov">          0 :                             child.getProperty (IDs::c));</span></a>
-<a name="83"><span class="lineNum">      83 </span>            : }</a>
+<a name="83"><span class="lineNum">      83 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="84"><span class="lineNum">      84 </span>            : </a>
 <a name="85"><span class="lineNum">      85 </span><span class="lineNoCov">          0 : TimePosition AutomationCurve::getPointTime (int index) const noexcept</span></a>
 <a name="86"><span class="lineNum">      86 </span>            : {</a>
@@ -194,7 +194,7 @@
 <a name="132"><span class="lineNum">     132 </span>            :     jassert (getOwnerParameter() != nullptr);</a>
 <a name="133"><span class="lineNum">     133 </span>            : </a>
 <a name="134"><span class="lineNum">     134 </span><span class="lineCov">         14 :     const auto index = nextIndexAfter (timePos);</span></a>
-<a name="135"><span class="lineNum">     135 </span><span class="lineCov">         14 :     const auto time = timePos.inSeconds();</span></a>
+<a name="135"><span class="lineNum">     135 </span>            :     const auto time = timePos.inSeconds();</a>
 <a name="136"><span class="lineNum">     136 </span>            : </a>
 <a name="137"><span class="lineNum">     137 </span><span class="lineCov">         14 :     if (index &lt;= 0)</span></a>
 <a name="138"><span class="lineNum">     138 </span><span class="lineCov">         14 :         return getPointValue (0);</span></a>
@@ -238,7 +238,7 @@
 <a name="176"><span class="lineNum">     176 </span>            : </a>
 <a name="177"><span class="lineNum">     177 </span><span class="lineNoCov">          0 :     auto bezierPoint = getBezierPoint (index - 1);</span></a>
 <a name="178"><span class="lineNum">     178 </span><span class="lineNoCov">          0 :     return getBezierYFromX (time, x1, y1, toTime (bezierPoint.time, getOwnerParameter()-&gt;getEdit().tempoSequence).inSeconds(), bezierPoint.value, x2, y2);</span></a>
-<a name="179"><span class="lineNum">     179 </span>            : }</a>
+<a name="179"><span class="lineNum">     179 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="180"><span class="lineNum">     180 </span>            : </a>
 <a name="181"><span class="lineNum">     181 </span><span class="lineNoCov">          0 : static double getDistanceFromLine (double&amp; x, double&amp; y,</span></a>
 <a name="182"><span class="lineNum">     182 </span>            :                                    double x1, double y1,</a>
@@ -314,7 +314,7 @@
 <a name="252"><span class="lineNum">     252 </span>            :                 bestValue = y;</a>
 <a name="253"><span class="lineNum">     253 </span>            :                 nextIndex = i + 1;</a>
 <a name="254"><span class="lineNum">     254 </span>            :             }</a>
-<a name="255"><span class="lineNum">     255 </span>            :         }</a>
+<a name="255"><span class="lineNum">     255 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="256"><span class="lineNum">     256 </span>            : </a>
 <a name="257"><span class="lineNum">     257 </span><span class="lineNoCov">          0 :         t = bestTime;</span></a>
 <a name="258"><span class="lineNum">     258 </span><span class="lineNoCov">          0 :         v = (float) bestValue;</span></a>
@@ -447,7 +447,7 @@
 <a name="385"><span class="lineNum">     385 </span>            : </a>
 <a name="386"><span class="lineNum">     386 </span><span class="lineNoCov">          0 :         v.setProperty (IDs::t, newTime.inSeconds(), getUndoManager());</span></a>
 <a name="387"><span class="lineNum">     387 </span><span class="lineNoCov">          0 :         v.setProperty (IDs::v, newValue, getUndoManager());</span></a>
-<a name="388"><span class="lineNum">     388 </span>            :     }</a>
+<a name="388"><span class="lineNum">     388 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="389"><span class="lineNum">     389 </span>            :     else</a>
 <a name="390"><span class="lineNum">     390 </span>            :     {</a>
 <a name="391"><span class="lineNum">     391 </span>            :         jassertfalse;</a>
@@ -474,7 +474,7 @@
 <a name="412"><span class="lineNum">     412 </span>            : </a>
 <a name="413"><span class="lineNum">     413 </span>            :         if (range.contains (t))</a>
 <a name="414"><span class="lineNum">     414 </span><span class="lineNoCov">          0 :             results.add (AutomationPoint (t, v.getProperty (IDs::v), v.getProperty (IDs::c)));</span></a>
-<a name="415"><span class="lineNum">     415 </span>            :     }</a>
+<a name="415"><span class="lineNum">     415 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="416"><span class="lineNum">     416 </span>            : </a>
 <a name="417"><span class="lineNum">     417 </span><span class="lineNoCov">          0 :     return results;</span></a>
 <a name="418"><span class="lineNum">     418 </span>            : }</a>
@@ -596,7 +596,7 @@
 <a name="534"><span class="lineNum">     534 </span>            :                                        bool leaveOpenAtStart,</a>
 <a name="535"><span class="lineNum">     535 </span>            :                                        bool leaveOpenEnded)</a>
 <a name="536"><span class="lineNum">     536 </span>            : {</a>
-<a name="537"><span class="lineNum">     537 </span><span class="lineNoCov">          0 :     auto sourceEndTime = sourceStartTime + destRange.getLength();</span></a>
+<a name="537"><span class="lineNum">     537 </span>            :     auto sourceEndTime = sourceStartTime + destRange.getLength();</a>
 <a name="538"><span class="lineNum">     538 </span><span class="lineNoCov">          0 :     auto dstValueAtStart = getValueAt (destRange.getStart());</span></a>
 <a name="539"><span class="lineNum">     539 </span><span class="lineNoCov">          0 :     auto dstValueAtEnd   = getValueAt (destRange.getEnd());</span></a>
 <a name="540"><span class="lineNum">     540 </span>            : </a>

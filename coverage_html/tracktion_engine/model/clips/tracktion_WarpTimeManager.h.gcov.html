@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">35</td>
+            <td class="headerCovTableEntry">37</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -153,7 +153,7 @@
 <a name="91"><span class="lineNum">      91 </span>            :     /** Returns true if the end marker is being used as the end of the source material.</a>
 <a name="92"><span class="lineNum">      92 </span>            :         @see setWarpEndMarkerTime</a>
 <a name="93"><span class="lineNum">      93 </span>            :     */</a>
-<a name="94"><span class="lineNum">      94 </span>            :     bool isWarpEndMarkerEnabled() const noexcept                { return endMarkerEnabled; }</a>
+<a name="94"><span class="lineNum">      94 </span><span class="lineNoCov">          0 :     bool isWarpEndMarkerEnabled() const noexcept                { return endMarkerEnabled; }</span></a>
 <a name="95"><span class="lineNum">      95 </span>            : </a>
 <a name="96"><span class="lineNum">      96 </span>            :     /** Returns true if the markers are limited to the end of the source length.</a>
 <a name="97"><span class="lineNum">      97 </span>            :         @see getSourceLength</a>
@@ -284,7 +284,7 @@
 <a name="222"><span class="lineNum">     222 </span><span class="lineNoCov">          0 :     WarpTimeFactory() = default;</span></a>
 <a name="223"><span class="lineNum">     223 </span>            :     </a>
 <a name="224"><span class="lineNum">     224 </span>            :     /** Destructor. */</a>
-<a name="225"><span class="lineNum">     225 </span>            :     ~WarpTimeFactory()  { jassert (warpTimeManagers.isEmpty()); }</a>
+<a name="225"><span class="lineNum">     225 </span><span class="lineNoCov">          0 :     ~WarpTimeFactory()  { jassert (warpTimeManagers.isEmpty()); }</span></a>
 <a name="226"><span class="lineNum">     226 </span>            : </a>
 <a name="227"><span class="lineNum">     227 </span>            :     /** Returns a WarpTimeManager for a given clip.</a>
 <a name="228"><span class="lineNum">     228 </span>            :         If there are any existing references to a WarpTimeManager for this clip</a>

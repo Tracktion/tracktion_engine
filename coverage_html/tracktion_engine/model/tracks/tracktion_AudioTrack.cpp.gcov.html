@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">245</td>
-            <td class="headerCovTableEntry">502</td>
-            <td class="headerCovTableEntryLo">48.8 %</td>
+            <td class="headerCovTableEntry">246</td>
+            <td class="headerCovTableEntry">505</td>
+            <td class="headerCovTableEntryLo">48.7 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">40</td>
@@ -130,10 +130,10 @@
 <a name="68"><span class="lineNum">      68 </span>            :         return true;</a>
 <a name="69"><span class="lineNum">      69 </span>            :     }</a>
 <a name="70"><span class="lineNum">      70 </span>            : </a>
-<a name="71"><span class="lineNum">      71 </span><span class="lineCov">      68057 :     void valueTreeChanged() override</span></a>
+<a name="71"><span class="lineNum">      71 </span><span class="lineCov">      68041 :     void valueTreeChanged() override</span></a>
 <a name="72"><span class="lineNum">      72 </span>            :     {</a>
 <a name="73"><span class="lineNum">      73 </span>            :         markAndUpdate (updateFreeze);</a>
-<a name="74"><span class="lineNum">      74 </span><span class="lineCov">      68057 :     }</span></a>
+<a name="74"><span class="lineNum">      74 </span><span class="lineCov">      68041 :     }</span></a>
 <a name="75"><span class="lineNum">      75 </span>            : </a>
 <a name="76"><span class="lineNum">      76 </span><span class="lineCov">        275 :     void handleAsyncUpdate() override</span></a>
 <a name="77"><span class="lineNum">      77 </span>            :     {</a>
@@ -177,11 +177,11 @@
 <a name="115"><span class="lineNum">     115 </span><span class="lineCov">       4195 :     callBlocking ([this, &amp;channels]</span></a>
 <a name="116"><span class="lineNum">     116 </span>            :     {</a>
 <a name="117"><span class="lineNum">     117 </span><span class="lineCov">       1678 :         waveInputDevice = std::make_unique&lt;WaveInputDevice&gt; (edit.engine, itemID.toString(),</span></a>
-<a name="118"><span class="lineNum">     118 </span><span class="lineCov">       1678 :                                                              TRANS(&quot;Track Wave Input&quot;), channels,</span></a>
-<a name="119"><span class="lineNum">     119 </span>            :                                                              InputDevice::trackWaveDevice);</a>
+<a name="118"><span class="lineNum">     118 </span><span class="lineCov">        839 :                                                              TRANS(&quot;Track Wave Input&quot;), channels,</span></a>
+<a name="119"><span class="lineNum">     119 </span><span class="lineCov">        839 :                                                              InputDevice::trackWaveDevice);</span></a>
 <a name="120"><span class="lineNum">     120 </span>            : </a>
 <a name="121"><span class="lineNum">     121 </span><span class="lineCov">       1678 :         midiInputDevice = std::make_unique&lt;VirtualMidiInputDevice&gt; (edit.engine, itemID.toString(),</span></a>
-<a name="122"><span class="lineNum">     122 </span>            :                                                                     InputDevice::trackMidiDevice);</a>
+<a name="122"><span class="lineNum">     122 </span><span class="lineCov">        839 :                                                                     InputDevice::trackMidiDevice);</span></a>
 <a name="123"><span class="lineNum">     123 </span>            : </a>
 <a name="124"><span class="lineNum">     124 </span><span class="lineCov">        839 :         auto&amp; eid = edit.getEditInputDevices();</span></a>
 <a name="125"><span class="lineNum">     125 </span><span class="lineCov">        839 :         waveInputDevice-&gt;setEnabled (eid.isInputDeviceAssigned (*waveInputDevice));</span></a>
@@ -205,7 +205,7 @@
 <a name="143"><span class="lineNum">     143 </span><span class="lineCov">         41 :                              });</span></a>
 <a name="144"><span class="lineNum">     144 </span><span class="lineCov">        839 : }</span></a>
 <a name="145"><span class="lineNum">     145 </span>            : </a>
-<a name="146"><span class="lineNum">     146 </span><span class="lineCov">       4195 : AudioTrack::~AudioTrack()</span></a>
+<a name="146"><span class="lineNum">     146 </span><span class="lineCov">       1678 : AudioTrack::~AudioTrack()</span></a>
 <a name="147"><span class="lineNum">     147 </span>            : {</a>
 <a name="148"><span class="lineNum">     148 </span><span class="lineCov">        839 :     const bool clearWave = waveInputDevice != nullptr &amp;&amp; waveInputDevice-&gt;isEnabled();</span></a>
 <a name="149"><span class="lineNum">     149 </span><span class="lineCov">        839 :     const bool clearMidi = midiInputDevice != nullptr &amp;&amp; midiInputDevice-&gt;isEnabled();</span></a>
@@ -222,11 +222,11 @@
 <a name="160"><span class="lineNum">     160 </span>            :     }</a>
 <a name="161"><span class="lineNum">     161 </span>            : </a>
 <a name="162"><span class="lineNum">     162 </span><span class="lineCov">        839 :     notifyListenersOfDeletion();</span></a>
-<a name="163"><span class="lineNum">     163 </span><span class="lineCov">       1678 : }</span></a>
+<a name="163"><span class="lineNum">     163 </span><span class="lineCov">       3356 : }</span></a>
 <a name="164"><span class="lineNum">     164 </span>            : </a>
 <a name="165"><span class="lineNum">     165 </span><span class="lineCov">       1294 : void AudioTrack::initialise()</span></a>
 <a name="166"><span class="lineNum">     166 </span>            : {</a>
-<a name="167"><span class="lineNum">     167 </span><span class="lineCov">       2588 :     CRASH_TRACER</span></a>
+<a name="167"><span class="lineNum">     167 </span><span class="lineCov">       1294 :     CRASH_TRACER</span></a>
 <a name="168"><span class="lineNum">     168 </span>            : </a>
 <a name="169"><span class="lineNum">     169 </span><span class="lineCov">       1294 :     ClipTrack::initialise();</span></a>
 <a name="170"><span class="lineNum">     170 </span>            : </a>
@@ -238,7 +238,7 @@
 <a name="176"><span class="lineNum">     176 </span>            : </a>
 <a name="177"><span class="lineNum">     177 </span><span class="lineCov">        507 : void AudioTrack::sanityCheckName()</span></a>
 <a name="178"><span class="lineNum">     178 </span>            : {</a>
-<a name="179"><span class="lineNum">     179 </span><span class="lineCov">        507 :     auto n = ClipTrack::getName();</span></a>
+<a name="179"><span class="lineNum">     179 </span>            :     auto n = ClipTrack::getName();</a>
 <a name="180"><span class="lineNum">     180 </span>            : </a>
 <a name="181"><span class="lineNum">     181 </span><span class="lineCov">        507 :     if ((n.startsWithIgnoreCase (&quot;Track &quot;)</span></a>
 <a name="182"><span class="lineNum">     182 </span><span class="lineCov">       1014 :           || n.startsWithIgnoreCase (TRANS(&quot;Track&quot;) + &quot; &quot;))</span></a>
@@ -251,7 +251,7 @@
 <a name="189"><span class="lineNum">     189 </span>            : </a>
 <a name="190"><span class="lineNum">     190 </span>            :     // We need to update the alias here as it's the first time the name will be returned correctly upon track creation</a>
 <a name="191"><span class="lineNum">     191 </span>            :     // We also won't get a property change if the track order etc. changes as it will just be empty</a>
-<a name="192"><span class="lineNum">     192 </span><span class="lineCov">       1014 :     auto devName = getName();</span></a>
+<a name="192"><span class="lineNum">     192 </span><span class="lineCov">        507 :     auto devName = getName();</span></a>
 <a name="193"><span class="lineNum">     193 </span>            : </a>
 <a name="194"><span class="lineNum">     194 </span><span class="lineCov">        507 :     if (waveInputDevice != nullptr) waveInputDevice-&gt;setAlias (devName);</span></a>
 <a name="195"><span class="lineNum">     195 </span><span class="lineCov">        507 :     if (midiInputDevice != nullptr) midiInputDevice-&gt;setAlias (devName);</span></a>
@@ -265,7 +265,7 @@
 <a name="203"><span class="lineNum">     203 </span><span class="lineCov">        429 :         n &lt;&lt; TRANS(&quot;Track&quot;) &lt;&lt; ' ' &lt;&lt; getAudioTrackNumber();</span></a>
 <a name="204"><span class="lineNum">     204 </span>            : </a>
 <a name="205"><span class="lineNum">     205 </span><span class="lineCov">        509 :     return n;</span></a>
-<a name="206"><span class="lineNum">     206 </span>            : }</a>
+<a name="206"><span class="lineNum">     206 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="207"><span class="lineNum">     207 </span>            : </a>
 <a name="208"><span class="lineNum">     208 </span><span class="lineCov">      13563 : int AudioTrack::getAudioTrackNumber() noexcept</span></a>
 <a name="209"><span class="lineNum">     209 </span>            : {</a>
@@ -321,19 +321,19 @@
 <a name="259"><span class="lineNum">     259 </span>            :     return midiChannel == 10 ? TRANS(juce::MidiMessage::getRhythmInstrumentName (note))</a>
 <a name="260"><span class="lineNum">     260 </span>            :                              : juce::MidiMessage::getMidiNoteName (note, preferSharp, true,</a>
 <a name="261"><span class="lineNum">     261 </span><span class="lineNoCov">          0 :                                                                    edit.engine.getEngineBehaviour().getMiddleCOctave());</span></a>
-<a name="262"><span class="lineNum">     262 </span>            : }</a>
+<a name="262"><span class="lineNum">     262 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="263"><span class="lineNum">     263 </span>            : </a>
 <a name="264"><span class="lineNum">     264 </span><span class="lineCov">        839 : void AudioTrack::updateMidiNoteMapCache()</span></a>
 <a name="265"><span class="lineNum">     265 </span>            : {</a>
 <a name="266"><span class="lineNum">     266 </span><span class="lineCov">        839 :     midiNoteMapCache.clear();</span></a>
 <a name="267"><span class="lineNum">     267 </span>            : </a>
-<a name="268"><span class="lineNum">     268 </span><span class="lineCov">        839 :     auto m = midiNoteMap.get();</span></a>
+<a name="268"><span class="lineNum">     268 </span>            :     auto m = midiNoteMap.get();</a>
 <a name="269"><span class="lineNum">     269 </span>            : </a>
 <a name="270"><span class="lineNum">     270 </span><span class="lineCov">        839 :     auto lines = juce::StringArray::fromLines (m);</span></a>
 <a name="271"><span class="lineNum">     271 </span><span class="lineCov">        839 :     for (auto l : lines)</span></a>
 <a name="272"><span class="lineNum">     272 </span>            :     {</a>
 <a name="273"><span class="lineNum">     273 </span><span class="lineNoCov">          0 :         if (l.startsWith (&quot;//&quot;))</span></a>
-<a name="274"><span class="lineNum">     274 </span><span class="lineNoCov">          0 :             continue;</span></a>
+<a name="274"><span class="lineNum">     274 </span>            :             continue;</a>
 <a name="275"><span class="lineNum">     275 </span>            : </a>
 <a name="276"><span class="lineNum">     276 </span>            :         int digits = 0;</a>
 <a name="277"><span class="lineNum">     277 </span><span class="lineNoCov">          0 :         for (int i = 0; i &lt; l.length(); i++)</span></a>
@@ -348,7 +348,7 @@
 <a name="286"><span class="lineNum">     286 </span>            : </a>
 <a name="287"><span class="lineNum">     287 </span><span class="lineNoCov">          0 :         if (digits &gt; 0)</span></a>
 <a name="288"><span class="lineNum">     288 </span><span class="lineNoCov">          0 :             midiNoteMapCache[l.substring (0, digits).getIntValue()] = l.substring (digits).trim();</span></a>
-<a name="289"><span class="lineNum">     289 </span>            :     }</a>
+<a name="289"><span class="lineNum">     289 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="290"><span class="lineNum">     290 </span><span class="lineCov">        839 : }</span></a>
 <a name="291"><span class="lineNum">     291 </span>            : </a>
 <a name="292"><span class="lineNum">     292 </span><span class="lineNoCov">          0 : bool AudioTrack::areMidiPatchesZeroBased() const</span></a>
@@ -384,7 +384,7 @@
 <a name="322"><span class="lineNum">     322 </span><span class="lineNoCov">          0 :         return midiDevice-&gt;getBankName (bank);</span></a>
 <a name="323"><span class="lineNum">     323 </span>            : </a>
 <a name="324"><span class="lineNum">     324 </span><span class="lineNoCov">          0 :     return edit.engine.getMidiProgramManager().getBankName (0, bank);</span></a>
-<a name="325"><span class="lineNum">     325 </span>            : }</a>
+<a name="325"><span class="lineNum">     325 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="326"><span class="lineNum">     326 </span>            : </a>
 <a name="327"><span class="lineNum">     327 </span><span class="lineCov">          3 : int AudioTrack::getIdForBank (int bank) const</span></a>
 <a name="328"><span class="lineNum">     328 </span>            : {</a>
@@ -417,7 +417,7 @@
 <a name="355"><span class="lineNum">     355 </span><span class="lineNoCov">          0 :         return midiDevice-&gt;getProgramName (programNumber, bank);</span></a>
 <a name="356"><span class="lineNum">     356 </span>            : </a>
 <a name="357"><span class="lineNum">     357 </span><span class="lineNoCov">          0 :     return TRANS(juce::MidiMessage::getGMInstrumentName (programNumber));</span></a>
-<a name="358"><span class="lineNum">     358 </span>            : }</a>
+<a name="358"><span class="lineNum">     358 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="359"><span class="lineNum">     359 </span>            : </a>
 <a name="360"><span class="lineNum">     360 </span>            : //==============================================================================</a>
 <a name="361"><span class="lineNum">     361 </span><span class="lineCov">         86 : void AudioTrack::setMute (bool b)           { muted = b; }</span></a>
@@ -449,7 +449,7 @@
 <a name="387"><span class="lineNum">     387 </span><span class="lineCov">       1841 :     if (includeIndirectSolo)</span></a>
 <a name="388"><span class="lineNum">     388 </span>            :     {</a>
 <a name="389"><span class="lineNum">     389 </span>            :         // If any of the parent tracks are soloed, this needs to be indirectly soloed</a>
-<a name="390"><span class="lineNum">     390 </span><span class="lineCov">       3324 :         for (auto p = getParentFolderTrack(); p != nullptr; p = p-&gt;getParentFolderTrack())</span></a>
+<a name="390"><span class="lineNum">     390 </span><span class="lineCov">       3726 :         for (auto p = getParentFolderTrack(); p != nullptr; p = p-&gt;getParentFolderTrack())</span></a>
 <a name="391"><span class="lineNum">     391 </span><span class="lineCov">        672 :             if (p-&gt;isSolo (false))</span></a>
 <a name="392"><span class="lineNum">     392 </span>            :                 return true;</a>
 <a name="393"><span class="lineNum">     393 </span>            : </a>
@@ -483,7 +483,7 @@
 <a name="421"><span class="lineNum">     421 </span>            : </a>
 <a name="422"><span class="lineNum">     422 </span><span class="lineCov">        144 : static bool isInputTrackSolo (const Track&amp; track)</span></a>
 <a name="423"><span class="lineNum">     423 </span>            : {</a>
-<a name="424"><span class="lineNum">     424 </span><span class="lineCov">        288 :     for (auto t : track.getInputTracks())</span></a>
+<a name="424"><span class="lineNum">     424 </span><span class="lineCov">        144 :     for (auto t : track.getInputTracks())</span></a>
 <a name="425"><span class="lineNum">     425 </span><span class="lineCov">         28 :         if (t-&gt;isSolo (true))</span></a>
 <a name="426"><span class="lineNum">     426 </span>            :             return true;</a>
 <a name="427"><span class="lineNum">     427 </span>            : </a>
@@ -669,7 +669,7 @@
 <a name="607"><span class="lineNum">     607 </span><span class="lineNoCov">          0 : void AudioTrack::turnOffGuideNotes (MidiChannel midiChannel)</span></a>
 <a name="608"><span class="lineNum">     608 </span>            : {</a>
 <a name="609"><span class="lineNum">     609 </span>            :     jassert (midiChannel.isValid()); //SysEx?</a>
-<a name="610"><span class="lineNum">     610 </span><span class="lineNoCov">          0 :     auto channel = midiChannel.getChannelNumber();</span></a>
+<a name="610"><span class="lineNum">     610 </span>            :     auto channel = midiChannel.getChannelNumber();</a>
 <a name="611"><span class="lineNum">     611 </span>            : </a>
 <a name="612"><span class="lineNum">     612 </span><span class="lineNoCov">          0 :     for (auto note : currentlyPlayingGuideNotes)</span></a>
 <a name="613"><span class="lineNum">     613 </span><span class="lineNoCov">          0 :         injectLiveMidiMessage (juce::MidiMessage::noteOff (channel, note),</span></a>
@@ -734,7 +734,7 @@
 <a name="672"><span class="lineNum">     672 </span>            :             </a>
 <a name="673"><span class="lineNum">     673 </span><span class="lineNoCov">          0 :             waveInputDevice-&gt;setAlias (devName);</span></a>
 <a name="674"><span class="lineNum">     674 </span><span class="lineNoCov">          0 :             midiInputDevice-&gt;setAlias (devName);</span></a>
-<a name="675"><span class="lineNum">     675 </span>            :         }</a>
+<a name="675"><span class="lineNum">     675 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="676"><span class="lineNum">     676 </span><span class="lineCov">       1226 :         else if (i == IDs::midiNoteMap)</span></a>
 <a name="677"><span class="lineNum">     677 </span>            :         {</a>
 <a name="678"><span class="lineNum">     678 </span><span class="lineNoCov">          0 :             updateMidiNoteMapCache();</span></a>
@@ -836,11 +836,11 @@
 <a name="774"><span class="lineNum">     774 </span>            : {</a>
 <a name="775"><span class="lineNum">     775 </span><span class="lineCov">        146 :     juce::Array&lt;Track*&gt; inputTracks;</span></a>
 <a name="776"><span class="lineNum">     776 </span>            : </a>
-<a name="777"><span class="lineNum">     777 </span><span class="lineCov">        583 :     for (auto track : getAudioTracks (edit))</span></a>
+<a name="777"><span class="lineNum">     777 </span><span class="lineCov">        437 :     for (auto track : getAudioTracks (edit))</span></a>
 <a name="778"><span class="lineNum">     778 </span><span class="lineCov">        291 :         if (! track-&gt;isPartOfSubmix() &amp;&amp; track != this &amp;&amp; track-&gt;getOutput().feedsInto (this))</span></a>
 <a name="779"><span class="lineNum">     779 </span><span class="lineCov">         29 :             inputTracks.add (track);</span></a>
 <a name="780"><span class="lineNum">     780 </span>            : </a>
-<a name="781"><span class="lineNum">     781 </span><span class="lineCov">        420 :     for (auto track : getTracksOfType&lt;FolderTrack&gt; (edit, true))</span></a>
+<a name="781"><span class="lineNum">     781 </span><span class="lineCov">        274 :     for (auto track : getTracksOfType&lt;FolderTrack&gt; (edit, true))</span></a>
 <a name="782"><span class="lineNum">     782 </span><span class="lineCov">        128 :         if (! track-&gt;isPartOfSubmix() &amp;&amp; track-&gt;getOutput() != nullptr &amp;&amp; track-&gt;getOutput()-&gt;feedsInto (this))</span></a>
 <a name="783"><span class="lineNum">     783 </span><span class="lineNoCov">          0 :             inputTracks.add (track);</span></a>
 <a name="784"><span class="lineNum">     784 </span>            : </a>
@@ -874,16 +874,16 @@
 <a name="812"><span class="lineNum">     812 </span><span class="lineCov">       1637 :                           : (t == groupFreeze ? frozen : frozenIndividually);</span></a>
 <a name="813"><span class="lineNum">     813 </span>            : }</a>
 <a name="814"><span class="lineNum">     814 </span>            : </a>
-<a name="815"><span class="lineNum">     815 </span><span class="lineCov">      53882 : void AudioTrack::setFrozen (bool b, FreezeType type)</span></a>
+<a name="815"><span class="lineNum">     815 </span><span class="lineCov">      53866 : void AudioTrack::setFrozen (bool b, FreezeType type)</span></a>
 <a name="816"><span class="lineNum">     816 </span>            : {</a>
-<a name="817"><span class="lineNum">     817 </span><span class="lineCov">      53882 :     if (type == individualFreeze)</span></a>
+<a name="817"><span class="lineNum">     817 </span><span class="lineCov">      53866 :     if (type == individualFreeze)</span></a>
 <a name="818"><span class="lineNum">     818 </span>            :     {</a>
 <a name="819"><span class="lineNum">     819 </span><span class="lineCov">          3 :         if (frozenIndividually != b)</span></a>
 <a name="820"><span class="lineNum">     820 </span>            :         {</a>
 <a name="821"><span class="lineNum">     821 </span><span class="lineCov">          3 :             if (b &amp;&amp; getOutput().getDestinationTrack() != nullptr)</span></a>
 <a name="822"><span class="lineNum">     822 </span>            :             {</a>
 <a name="823"><span class="lineNum">     823 </span><span class="lineNoCov">          0 :                 edit.engine.getUIBehaviour().showWarningMessage (TRANS(&quot;Tracks which output to another track can't themselves be frozen; &quot;</span></a>
-<a name="824"><span class="lineNum">     824 </span><span class="lineNoCov">          0 :                                                                        &quot;instead, you should freeze the track they input into.&quot;));</span></a>
+<a name="824"><span class="lineNum">     824 </span>            :                                                                        &quot;instead, you should freeze the track they input into.&quot;));</a>
 <a name="825"><span class="lineNum">     825 </span>            :             }</a>
 <a name="826"><span class="lineNum">     826 </span>            :             else</a>
 <a name="827"><span class="lineNum">     827 </span>            :             {</a>
@@ -893,7 +893,7 @@
 <a name="831"><span class="lineNum">     831 </span>            :     }</a>
 <a name="832"><span class="lineNum">     832 </span>            :     else</a>
 <a name="833"><span class="lineNum">     833 </span>            :     {</a>
-<a name="834"><span class="lineNum">     834 </span><span class="lineCov">      53879 :         if (frozen != b)</span></a>
+<a name="834"><span class="lineNum">     834 </span><span class="lineCov">      53863 :         if (frozen != b)</span></a>
 <a name="835"><span class="lineNum">     835 </span>            :         {</a>
 <a name="836"><span class="lineNum">     836 </span><span class="lineNoCov">          0 :             if (! edit.isLoading())</span></a>
 <a name="837"><span class="lineNum">     837 </span>            :             {</a>
@@ -903,12 +903,12 @@
 <a name="841"><span class="lineNum">     841 </span><span class="lineNoCov">          0 :                         return folder-&gt;isSubmixFolder();</span></a>
 <a name="842"><span class="lineNum">     842 </span>            :                         </a>
 <a name="843"><span class="lineNum">     843 </span>            :                     return false;</a>
-<a name="844"><span class="lineNum">     844 </span>            :                 };</a>
+<a name="844"><span class="lineNum">     844 </span><span class="lineNoCov">          0 :                 };</span></a>
 <a name="845"><span class="lineNum">     845 </span>            :                 </a>
 <a name="846"><span class="lineNum">     846 </span><span class="lineNoCov">          0 :                 if (b &amp;&amp; (getOutput().getDestinationTrack() != nullptr || outputsToSubmixTrack()))</span></a>
 <a name="847"><span class="lineNum">     847 </span>            :                 {</a>
 <a name="848"><span class="lineNum">     848 </span><span class="lineNoCov">          0 :                     edit.engine.getUIBehaviour().showWarningMessage (TRANS(&quot;Tracks which output to another track can't themselves be frozen; &quot;</span></a>
-<a name="849"><span class="lineNum">     849 </span><span class="lineNoCov">          0 :                                                                            &quot;instead, you should freeze the track they input into.&quot;));</span></a>
+<a name="849"><span class="lineNum">     849 </span>            :                                                                            &quot;instead, you should freeze the track they input into.&quot;));</a>
 <a name="850"><span class="lineNum">     850 </span>            :                 }</a>
 <a name="851"><span class="lineNum">     851 </span>            :                 else</a>
 <a name="852"><span class="lineNum">     852 </span>            :                 {</a>
@@ -917,7 +917,7 @@
 <a name="855"><span class="lineNum">     855 </span>            :             }</a>
 <a name="856"><span class="lineNum">     856 </span>            :         }</a>
 <a name="857"><span class="lineNum">     857 </span>            :     }</a>
-<a name="858"><span class="lineNum">     858 </span><span class="lineCov">      53882 : }</span></a>
+<a name="858"><span class="lineNum">     858 </span><span class="lineCov">      53866 : }</span></a>
 <a name="859"><span class="lineNum">     859 </span>            : </a>
 <a name="860"><span class="lineNum">     860 </span><span class="lineCov">       1227 : bool AudioTrack::canContainPlugin (Plugin* p) const</span></a>
 <a name="861"><span class="lineNum">     861 </span>            : {</a>
@@ -936,13 +936,13 @@
 <a name="874"><span class="lineNum">     874 </span>            : {</a>
 <a name="875"><span class="lineNum">     875 </span><span class="lineCov">          2 :     insertFreezePointIfRequired();</span></a>
 <a name="876"><span class="lineNum">     876 </span>            :     const FreezePointPlugin::ScopedPluginDisabler spd (*this, juce::Range&lt;int&gt; (getIndexOfFreezePoint(),</a>
-<a name="877"><span class="lineNum">     877 </span><span class="lineCov">          4 :                                                                                 pluginList.size()));</span></a>
+<a name="877"><span class="lineNum">     877 </span><span class="lineCov">          2 :                                                                                 pluginList.size()));</span></a>
 <a name="878"><span class="lineNum">     878 </span>            : </a>
 <a name="879"><span class="lineNum">     879 </span><span class="lineCov">          2 :     auto&amp; dm = edit.engine.getDeviceManager();</span></a>
 <a name="880"><span class="lineNum">     880 </span>            : </a>
 <a name="881"><span class="lineNum">     881 </span><span class="lineCov">          2 :     const bool shouldBeMuted = isMuted (true);</span></a>
 <a name="882"><span class="lineNum">     882 </span><span class="lineCov">          2 :     setMute (false);</span></a>
-<a name="883"><span class="lineNum">     883 </span><span class="lineCov">          4 :     const FreezePointPlugin::ScopedTrackUnsoloer stu (edit);</span></a>
+<a name="883"><span class="lineNum">     883 </span><span class="lineCov">          2 :     const FreezePointPlugin::ScopedTrackUnsoloer stu (edit);</span></a>
 <a name="884"><span class="lineNum">     884 </span>            : </a>
 <a name="885"><span class="lineNum">     885 </span><span class="lineCov">          2 :     juce::BigInteger trackNum;</span></a>
 <a name="886"><span class="lineNum">     886 </span><span class="lineCov">          2 :     trackNum.setBit (getIndexInEditTrackList());</span></a>
@@ -952,7 +952,7 @@
 <a name="890"><span class="lineNum">     890 </span><span class="lineCov">          2 :     juce::Array&lt;EditItemID&gt; trackIDs { itemID };</span></a>
 <a name="891"><span class="lineNum">     891 </span>            :     juce::Array&lt;Clip*&gt; clips (getClips());</a>
 <a name="892"><span class="lineNum">     892 </span>            : </a>
-<a name="893"><span class="lineNum">     893 </span><span class="lineCov">          5 :     for (auto inputTrack : getInputTracks())</span></a>
+<a name="893"><span class="lineNum">     893 </span><span class="lineCov">          3 :     for (auto inputTrack : getInputTracks())</span></a>
 <a name="894"><span class="lineNum">     894 </span>            :     {</a>
 <a name="895"><span class="lineNum">     895 </span><span class="lineCov">          1 :         trackIDs.addIfNotAlreadyThere (inputTrack-&gt;itemID);</span></a>
 <a name="896"><span class="lineNum">     896 </span>            : </a>
@@ -960,7 +960,7 @@
 <a name="898"><span class="lineNum">     898 </span>            :             clips.addArray (ct-&gt;getClips());</a>
 <a name="899"><span class="lineNum">     899 </span>            :     }</a>
 <a name="900"><span class="lineNum">     900 </span>            : </a>
-<a name="901"><span class="lineNum">     901 </span><span class="lineCov">          4 :     Renderer::Parameters r (edit);</span></a>
+<a name="901"><span class="lineNum">     901 </span><span class="lineCov">          2 :     Renderer::Parameters r (edit);</span></a>
 <a name="902"><span class="lineNum">     902 </span><span class="lineCov">          2 :     r.tracksToDo = trackNum;</span></a>
 <a name="903"><span class="lineNum">     903 </span><span class="lineCov">          2 :     r.destFile = freezeFile;</span></a>
 <a name="904"><span class="lineNum">     904 </span><span class="lineCov">          2 :     r.audioFormat = edit.engine.getAudioFileFormatManager().getFrozenFileFormat();</span></a>
@@ -975,11 +975,11 @@
 <a name="913"><span class="lineNum">     913 </span><span class="lineCov">          2 :     r.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (edit.engine);</span></a>
 <a name="914"><span class="lineNum">     914 </span><span class="lineCov">          2 :     r.category = ProjectItem::Category::frozen;</span></a>
 <a name="915"><span class="lineNum">     915 </span>            : </a>
-<a name="916"><span class="lineNum">     916 </span><span class="lineCov">          4 :     const Edit::ScopedRenderStatus srs (edit, true);</span></a>
+<a name="916"><span class="lineNum">     916 </span><span class="lineCov">          2 :     const Edit::ScopedRenderStatus srs (edit, true);</span></a>
 <a name="917"><span class="lineNum">     917 </span><span class="lineCov">          2 :     const auto desc = TRANS(&quot;Creating track freeze for \&quot;XDVX\&quot;&quot;)</span></a>
-<a name="918"><span class="lineNum">     918 </span><span class="lineCov">          6 :                         .replace (&quot;XDVX&quot;, getName()) + &quot;...&quot;;</span></a>
+<a name="918"><span class="lineNum">     918 </span><span class="lineCov">          4 :                         .replace (&quot;XDVX&quot;, getName()) + &quot;...&quot;;</span></a>
 <a name="919"><span class="lineNum">     919 </span>            :     </a>
-<a name="920"><span class="lineNum">     920 </span><span class="lineCov">          2 :     if (r.engine-&gt;getProjectManager().getProject (edit) != nullptr)</span></a>
+<a name="920"><span class="lineNum">     920 </span><span class="lineCov">          4 :     if (r.engine-&gt;getProjectManager().getProject (edit) != nullptr)</span></a>
 <a name="921"><span class="lineNum">     921 </span><span class="lineNoCov">          0 :         Renderer::renderToProjectItem (desc, r);</span></a>
 <a name="922"><span class="lineNum">     922 </span>            :     else</a>
 <a name="923"><span class="lineNum">     923 </span><span class="lineCov">          4 :         Renderer::renderToFile (desc, r);</span></a>
@@ -991,11 +991,11 @@
 <a name="929"><span class="lineNum">     929 </span>            :     {</a>
 <a name="930"><span class="lineNum">     930 </span><span class="lineNoCov">          0 :         edit.engine.getUIBehaviour().showWarningMessage (TRANS(&quot;Nothing to freeze&quot;));</span></a>
 <a name="931"><span class="lineNum">     931 </span><span class="lineNoCov">          0 :         setFrozen (false, individualFreeze);</span></a>
-<a name="932"><span class="lineNum">     932 </span><span class="lineNoCov">          0 :         return;</span></a>
+<a name="932"><span class="lineNum">     932 </span>            :         return;</a>
 <a name="933"><span class="lineNum">     933 </span>            :     }</a>
 <a name="934"><span class="lineNum">     934 </span>            : </a>
 <a name="935"><span class="lineNum">     935 </span><span class="lineCov">          2 :     changed();</span></a>
-<a name="936"><span class="lineNum">     936 </span>            : }</a>
+<a name="936"><span class="lineNum">     936 </span><span class="lineCov">          4 : }</span></a>
 <a name="937"><span class="lineNum">     937 </span>            : </a>
 <a name="938"><span class="lineNum">     938 </span><span class="lineCov">          7 : int AudioTrack::getIndexOfFreezePoint()</span></a>
 <a name="939"><span class="lineNum">     939 </span>            : {</a>
@@ -1112,7 +1112,7 @@
 <a name="1050"><span class="lineNum">    1050 </span>            : </a>
 <a name="1051"><span class="lineNum">    1051 </span><span class="lineCov">       4852 : bool AudioTrack::isSidechainSource() const</span></a>
 <a name="1052"><span class="lineNum">    1052 </span>            : {</a>
-<a name="1053"><span class="lineNum">    1053 </span><span class="lineCov">     730276 :     for (auto p : edit.getPluginCache().getPlugins())</span></a>
+<a name="1053"><span class="lineNum">    1053 </span><span class="lineCov">     725424 :     for (auto p : edit.getPluginCache().getPlugins())</span></a>
 <a name="1054"><span class="lineNum">    1054 </span><span class="lineCov">     720572 :         if (p-&gt;getSidechainSourceID() == itemID)</span></a>
 <a name="1055"><span class="lineNum">    1055 </span>            :             return true;</a>
 <a name="1056"><span class="lineNum">    1056 </span>            : </a>

@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">112</td>
-            <td class="headerCovTableEntry">112</td>
+            <td class="headerCovTableEntry">114</td>
+            <td class="headerCovTableEntry">114</td>
             <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">10</td>
@@ -102,7 +102,7 @@
 <a name="40"><span class="lineNum">      40 </span>            :             </a>
 <a name="41"><span class="lineNum">      41 </span>            :             // Add sin file</a>
 <a name="42"><span class="lineNum">      42 </span>            :             {</a>
-<a name="43"><span class="lineNum">      43 </span><span class="lineCov">          2 :                 AudioFile af (engine, sinFile-&gt;getFile());</span></a>
+<a name="43"><span class="lineNum">      43 </span><span class="lineCov">          1 :                 AudioFile af (engine, sinFile-&gt;getFile());</span></a>
 <a name="44"><span class="lineNum">      44 </span><span class="lineCov">          1 :                 expect (af.isValid());</span></a>
 <a name="45"><span class="lineNum">      45 </span><span class="lineCov">          1 :                 expect (af.getLength() == 1.0);</span></a>
 <a name="46"><span class="lineNum">      46 </span>            : </a>
@@ -112,7 +112,7 @@
 <a name="50"><span class="lineNum">      50 </span><span class="lineCov">          2 :                     expectEquals (clip-&gt;getPosition().getStart(), TimePosition());</span></a>
 <a name="51"><span class="lineNum">      51 </span><span class="lineCov">          2 :                     expectEquals (clip-&gt;getPosition().getEnd(), TimePosition::fromSeconds (1.0));</span></a>
 <a name="52"><span class="lineNum">      52 </span>            :                 }</a>
-<a name="53"><span class="lineNum">      53 </span>            :             }</a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">          1 :             }</span></a>
 <a name="54"><span class="lineNum">      54 </span>            : </a>
 <a name="55"><span class="lineNum">      55 </span><span class="lineCov">          1 :             expectPeak (*edit, { 0.0s, TimePosition (1.0s) }, { track1, track2 }, 2.0f);</span></a>
 <a name="56"><span class="lineNum">      56 </span>            : </a>
@@ -134,7 +134,7 @@
 <a name="72"><span class="lineNum">      72 </span>            : </a>
 <a name="73"><span class="lineNum">      73 </span>            :             // Add sin file</a>
 <a name="74"><span class="lineNum">      74 </span>            :             {</a>
-<a name="75"><span class="lineNum">      75 </span><span class="lineCov">          2 :                 AudioFile af (engine, sinFile96Ogg-&gt;getFile());</span></a>
+<a name="75"><span class="lineNum">      75 </span><span class="lineCov">          1 :                 AudioFile af (engine, sinFile96Ogg-&gt;getFile());</span></a>
 <a name="76"><span class="lineNum">      76 </span><span class="lineCov">          1 :                 expect (af.isValid());</span></a>
 <a name="77"><span class="lineNum">      77 </span><span class="lineCov">          1 :                 expect (af.getLength() == 1.0);</span></a>
 <a name="78"><span class="lineNum">      78 </span>            : </a>
@@ -144,13 +144,13 @@
 <a name="82"><span class="lineNum">      82 </span><span class="lineCov">          1 :                     expectEquals (clip-&gt;getPosition().getStart(), TimePosition());</span></a>
 <a name="83"><span class="lineNum">      83 </span><span class="lineCov">          1 :                     expectEquals (clip-&gt;getPosition().getEnd(), TimePosition::fromSeconds (1.0));</span></a>
 <a name="84"><span class="lineNum">      84 </span>            :                 }</a>
-<a name="85"><span class="lineNum">      85 </span>            :             }</a>
+<a name="85"><span class="lineNum">      85 </span><span class="lineCov">          1 :             }</span></a>
 <a name="86"><span class="lineNum">      86 </span>            : </a>
 <a name="87"><span class="lineNum">      87 </span><span class="lineCov">          1 :             expectPeak (*edit, { 0.0s, TimePosition (1.0s) }, { track1 }, 1.0f);</span></a>
 <a name="88"><span class="lineNum">      88 </span>            : </a>
 <a name="89"><span class="lineNum">      89 </span><span class="lineCov">          1 :             engine.getAudioFileManager().releaseAllFiles();</span></a>
 <a name="90"><span class="lineNum">      90 </span><span class="lineCov">          2 :             edit-&gt;getTempDirectory (false).deleteRecursively();</span></a>
-<a name="91"><span class="lineNum">      91 </span>            :         }</a>
+<a name="91"><span class="lineNum">      91 </span><span class="lineCov">          1 :         }</span></a>
 <a name="92"><span class="lineNum">      92 </span><span class="lineCov">          1 :     }</span></a>
 <a name="93"><span class="lineNum">      93 </span>            : </a>
 <a name="94"><span class="lineNum">      94 </span><span class="lineCov">          4 :     void expectPeak (Edit&amp; edit, TimeRange tr, juce::Array&lt;Track*&gt; tracks, float expectedPeak)</span></a>
@@ -197,18 +197,18 @@
 <a name="135"><span class="lineNum">     135 </span>            :     {</a>
 <a name="136"><span class="lineNum">     136 </span>            :         // Create a 1s sin buffer</a>
 <a name="137"><span class="lineNum">     137 </span><span class="lineCov">          2 :         juce::AudioBuffer&lt;float&gt; buffer (1, (int) sampleRate);</span></a>
-<a name="138"><span class="lineNum">     138 </span><span class="lineCov">          6 :         juce::dsp::Oscillator&lt;float&gt; osc ([] (float in) { return std::sin (in); });</span></a>
+<a name="138"><span class="lineNum">     138 </span><span class="lineCov">          4 :         juce::dsp::Oscillator&lt;float&gt; osc ([] (float in) { return std::sin (in); });</span></a>
 <a name="139"><span class="lineNum">     139 </span>            :         osc.setFrequency (220.0);</a>
 <a name="140"><span class="lineNum">     140 </span><span class="lineCov">          2 :         osc.prepare ({ double (sampleRate), uint32_t (sampleRate), 1 });</span></a>
 <a name="141"><span class="lineNum">     141 </span>            : </a>
-<a name="142"><span class="lineNum">     142 </span><span class="lineCov">          2 :         float* samples = buffer.getWritePointer (0);</span></a>
-<a name="143"><span class="lineNum">     143 </span><span class="lineCov">          2 :         int numSamples = buffer.getNumSamples();</span></a>
+<a name="142"><span class="lineNum">     142 </span>            :         float* samples = buffer.getWritePointer (0);</a>
+<a name="143"><span class="lineNum">     143 </span>            :         int numSamples = buffer.getNumSamples();</a>
 <a name="144"><span class="lineNum">     144 </span>            : </a>
 <a name="145"><span class="lineNum">     145 </span><span class="lineCov">     140102 :         for (int i = 0; i &lt; numSamples; ++i)</span></a>
 <a name="146"><span class="lineNum">     146 </span><span class="lineCov">     140100 :             samples[i] = osc.processSample (0.0);</span></a>
 <a name="147"><span class="lineNum">     147 </span>            : </a>
 <a name="148"><span class="lineNum">     148 </span>            :         // Then write it to a temp file</a>
-<a name="149"><span class="lineNum">     149 </span><span class="lineCov">          4 :         AudioFormatType format;</span></a>
+<a name="149"><span class="lineNum">     149 </span><span class="lineCov">          2 :         AudioFormatType format;</span></a>
 <a name="150"><span class="lineNum">     150 </span><span class="lineCov">          4 :         auto f = std::make_unique&lt;juce::TemporaryFile&gt; (format.getFileExtensions()[0]);</span></a>
 <a name="151"><span class="lineNum">     151 </span>            :         </a>
 <a name="152"><span class="lineNum">     152 </span><span class="lineCov">          2 :         if (auto fileStream = f-&gt;getFile().createOutputStream())</span></a>
@@ -227,7 +227,7 @@
 <a name="165"><span class="lineNum">     165 </span>            :         }</a>
 <a name="166"><span class="lineNum">     166 </span>            : </a>
 <a name="167"><span class="lineNum">     167 </span><span class="lineCov">          2 :         return f;</span></a>
-<a name="168"><span class="lineNum">     168 </span>            :     }</a>
+<a name="168"><span class="lineNum">     168 </span><span class="lineCov">          2 :     }</span></a>
 <a name="169"><span class="lineNum">     169 </span>            : };</a>
 <a name="170"><span class="lineNum">     170 </span>            : </a>
 <a name="171"><span class="lineNum">     171 </span>            : static PDCTests pdcTests;</a>
@@ -247,7 +247,7 @@
 <a name="185"><span class="lineNum">     185 </span>            :     {</a>
 <a name="186"><span class="lineNum">     186 </span><span class="lineCov">          1 :         auto&amp; engine = *Engine::getEngines()[0];</span></a>
 <a name="187"><span class="lineNum">     187 </span>            : </a>
-<a name="188"><span class="lineNum">     188 </span><span class="lineCov">          2 :         const juce::TemporaryFile tempFile (&quot;.tracktionedit&quot;);</span></a>
+<a name="188"><span class="lineNum">     188 </span><span class="lineCov">          1 :         const juce::TemporaryFile tempFile (&quot;.tracktionedit&quot;);</span></a>
 <a name="189"><span class="lineNum">     189 </span><span class="lineCov">          1 :         const auto editFile = tempFile.getFile();</span></a>
 <a name="190"><span class="lineNum">     190 </span>            : </a>
 <a name="191"><span class="lineNum">     191 </span>            :         const float macroParameterValue = 0.3f;</a>
@@ -313,7 +313,7 @@
 <a name="251"><span class="lineNum">     251 </span><span class="lineCov">          1 :                                        volParam-&gt;valueRange.convertFrom0to1 (modifierOffset + modifierValue * macroParameterValue) - volParam-&gt;getCurrentBaseValue(),</span></a>
 <a name="252"><span class="lineNum">     252 </span>            :                                        0.001f);</a>
 <a name="253"><span class="lineNum">     253 </span>            : </a>
-<a name="254"><span class="lineNum">     254 </span><span class="lineCov">          2 :             expectWithinAbsoluteError (volParam-&gt;getCurrentValue(), 0.35f, 0.001f);</span></a>
+<a name="254"><span class="lineNum">     254 </span><span class="lineCov">          1 :             expectWithinAbsoluteError (volParam-&gt;getCurrentValue(), 0.35f, 0.001f);</span></a>
 <a name="255"><span class="lineNum">     255 </span>            :         }</a>
 <a name="256"><span class="lineNum">     256 </span><span class="lineCov">          1 :     }</span></a>
 <a name="257"><span class="lineNum">     257 </span>            : </a>

@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">122</td>
-            <td class="headerCovTableEntry">223</td>
-            <td class="headerCovTableEntryLo">54.7 %</td>
+            <td class="headerCovTableEntry">131</td>
+            <td class="headerCovTableEntry">238</td>
+            <td class="headerCovTableEntryLo">55.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">23</td>
-            <td class="headerCovTableEntry">30</td>
-            <td class="headerCovTableEntryMed">76.7 %</td>
+            <td class="headerCovTableEntry">31</td>
+            <td class="headerCovTableEntryLo">74.2 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -99,7 +99,7 @@
 <a name="37"><span class="lineNum">      37 </span><span class="lineCov">          2 :         waiter.signal();</span></a>
 <a name="38"><span class="lineNum">      38 </span><span class="lineCov">          2 :         startThread();</span></a>
 <a name="39"><span class="lineNum">      39 </span>            : </a>
-<a name="40"><span class="lineNum">      40 </span><span class="lineCov">          2 :         while (! pending.isEmpty())</span></a>
+<a name="40"><span class="lineNum">      40 </span><span class="lineCov">          4 :         while (! pending.isEmpty())</span></a>
 <a name="41"><span class="lineNum">      41 </span><span class="lineNoCov">          0 :             Thread::sleep (50);</span></a>
 <a name="42"><span class="lineNum">      42 </span><span class="lineCov">          2 :     }</span></a>
 <a name="43"><span class="lineNum">      43 </span>            : </a>
@@ -115,19 +115,19 @@
 <a name="53"><span class="lineNum">      53 </span>            :         }</a>
 <a name="54"><span class="lineNum">      54 </span><span class="lineCov">          1 :     }</span></a>
 <a name="55"><span class="lineNum">      55 </span>            : </a>
-<a name="56"><span class="lineNum">      56 </span>            :     void writeToFile (std::pair&lt;juce::ValueTree, juce::File&gt; item)</a>
+<a name="56"><span class="lineNum">      56 </span><span class="lineNoCov">          0 :     void writeToFile (std::pair&lt;juce::ValueTree, juce::File&gt; item)</span></a>
 <a name="57"><span class="lineNum">      57 </span>            :     {</a>
-<a name="58"><span class="lineNum">      58 </span>            :         item.second.deleteFile();</a>
-<a name="59"><span class="lineNum">      59 </span>            :         juce::FileOutputStream os (item.second);</a>
-<a name="60"><span class="lineNum">      60 </span>            :         item.first.writeToStream (os);</a>
-<a name="61"><span class="lineNum">      61 </span>            :     }</a>
+<a name="58"><span class="lineNum">      58 </span><span class="lineNoCov">          0 :         item.second.deleteFile();</span></a>
+<a name="59"><span class="lineNum">      59 </span><span class="lineNoCov">          0 :         juce::FileOutputStream os (item.second);</span></a>
+<a name="60"><span class="lineNum">      60 </span><span class="lineNoCov">          0 :         item.first.writeToStream (os);</span></a>
+<a name="61"><span class="lineNum">      61 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="62"><span class="lineNum">      62 </span>            : </a>
 <a name="63"><span class="lineNum">      63 </span>            :     juce::Array&lt;std::pair&lt;juce::ValueTree, juce::File&gt;, juce::CriticalSection&gt; pending;</a>
 <a name="64"><span class="lineNum">      64 </span>            :     juce::WaitableEvent waiter;</a>
 <a name="65"><span class="lineNum">      65 </span>            : };</a>
 <a name="66"><span class="lineNum">      66 </span>            : </a>
 <a name="67"><span class="lineNum">      67 </span>            : //==============================================================================</a>
-<a name="68"><span class="lineNum">      68 </span>            : struct SharedEditFileDataCache</a>
+<a name="68"><span class="lineNum">      68 </span><span class="lineCov">          1 : struct SharedEditFileDataCache</span></a>
 <a name="69"><span class="lineNum">      69 </span>            : {</a>
 <a name="70"><span class="lineNum">      70 </span>            :     struct Data</a>
 <a name="71"><span class="lineNum">      71 </span>            :     {</a>
@@ -138,7 +138,7 @@
 <a name="76"><span class="lineNum">      76 </span><span class="lineCov">          1 :         }</span></a>
 <a name="77"><span class="lineNum">      77 </span>            : </a>
 <a name="78"><span class="lineNum">      78 </span><span class="lineCov">          1 :         ~Data()</span></a>
-<a name="79"><span class="lineNum">      79 </span><span class="lineCov">          1 :         {</span></a>
+<a name="79"><span class="lineNum">      79 </span>            :         {</a>
 <a name="80"><span class="lineNum">      80 </span>            :             jassert (Selectable::isSelectableValid (&amp;edit));</a>
 <a name="81"><span class="lineNum">      81 </span>            : </a>
 <a name="82"><span class="lineNum">      82 </span>            :             // If we managed to shutdown cleanly (i.e. without crashing) then delete the temp file</a>
@@ -177,9 +177,9 @@
 <a name="115"><span class="lineNum">     115 </span>            : </a>
 <a name="116"><span class="lineNum">     116 </span><span class="lineCov">          1 :     void cleanUp()</span></a>
 <a name="117"><span class="lineNum">     117 </span>            :     {</a>
-<a name="118"><span class="lineNum">     118 </span>            :         sharedData.erase (std::remove_if (sharedData.begin(), sharedData.end(),</a>
-<a name="119"><span class="lineNum">     119 </span><span class="lineCov">          1 :                                           [] (auto&amp; ptr) { return ptr.use_count() == 1; }),</span></a>
-<a name="120"><span class="lineNum">     120 </span><span class="lineCov">          1 :                           sharedData.end());</span></a>
+<a name="118"><span class="lineNum">     118 </span><span class="lineCov">          1 :         sharedData.erase (std::remove_if (sharedData.begin(), sharedData.end(),</span></a>
+<a name="119"><span class="lineNum">     119 </span>            :                                           [] (auto&amp; ptr) { return ptr.use_count() == 1; }),</a>
+<a name="120"><span class="lineNum">     120 </span>            :                           sharedData.end());</a>
 <a name="121"><span class="lineNum">     121 </span><span class="lineCov">          1 :     }</span></a>
 <a name="122"><span class="lineNum">     122 </span>            : </a>
 <a name="123"><span class="lineNum">     123 </span>            : private:</a>
@@ -197,10 +197,10 @@
 <a name="135"><span class="lineNum">     135 </span><span class="lineCov">          1 :     }</span></a>
 <a name="136"><span class="lineNum">     136 </span>            : </a>
 <a name="137"><span class="lineNum">     137 </span><span class="lineCov">          1 :     ~SharedDataPimpl()</span></a>
-<a name="138"><span class="lineNum">     138 </span><span class="lineCov">          2 :     {</span></a>
+<a name="138"><span class="lineNum">     138 </span>            :     {</a>
 <a name="139"><span class="lineNum">     139 </span>            :         data.reset(); // Make sure this is reset before calling cleanUp</a>
 <a name="140"><span class="lineNum">     140 </span><span class="lineCov">          1 :         cache-&gt;cleanUp();</span></a>
-<a name="141"><span class="lineNum">     141 </span><span class="lineCov">          1 :     }</span></a>
+<a name="141"><span class="lineNum">     141 </span><span class="lineCov">          2 :     }</span></a>
 <a name="142"><span class="lineNum">     142 </span>            : </a>
 <a name="143"><span class="lineNum">     143 </span>            :     void writeValueTreeToDisk (juce::ValueTree&amp;&amp; v, const juce::File&amp; f)</a>
 <a name="144"><span class="lineNum">     144 </span>            :     {</a>
@@ -222,7 +222,7 @@
 <a name="160"><span class="lineNum">     160 </span>            : {</a>
 <a name="161"><span class="lineNum">     161 </span><span class="lineCov">          1 : }</span></a>
 <a name="162"><span class="lineNum">     162 </span>            : </a>
-<a name="163"><span class="lineNum">     163 </span><span class="lineCov">          2 : EditFileOperations::~EditFileOperations()</span></a>
+<a name="163"><span class="lineNum">     163 </span><span class="lineCov">          1 : EditFileOperations::~EditFileOperations()</span></a>
 <a name="164"><span class="lineNum">     164 </span>            : {</a>
 <a name="165"><span class="lineNum">     165 </span><span class="lineCov">          1 : }</span></a>
 <a name="166"><span class="lineNum">     166 </span>            : </a>
@@ -233,16 +233,16 @@
 <a name="171"><span class="lineNum">     171 </span>            : </a>
 <a name="172"><span class="lineNum">     172 </span><span class="lineCov">          1 : bool EditFileOperations::writeToFile (const juce::File&amp; file, bool writeQuickBinaryVersion)</span></a>
 <a name="173"><span class="lineNum">     173 </span>            : {</a>
-<a name="174"><span class="lineNum">     174 </span><span class="lineCov">          2 :     CRASH_TRACER</span></a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineCov">          1 :     CRASH_TRACER</span></a>
 <a name="175"><span class="lineNum">     175 </span>            :     bool ok = false;</a>
-<a name="176"><span class="lineNum">     176 </span>            :     std::unique_ptr&lt;ScopedWaitCursor&gt; waitCursor;</a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineCov">          1 :     std::unique_ptr&lt;ScopedWaitCursor&gt; waitCursor;</span></a>
 <a name="177"><span class="lineNum">     177 </span>            :     </a>
 <a name="178"><span class="lineNum">     178 </span><span class="lineCov">          1 :     if (! writeQuickBinaryVersion)</span></a>
 <a name="179"><span class="lineNum">     179 </span>            :     {</a>
-<a name="180"><span class="lineNum">     180 </span><span class="lineCov">          2 :         EditPlaybackContext::RealtimePriorityDisabler realtimeDisabler (edit.engine);</span></a>
-<a name="181"><span class="lineNum">     181 </span><span class="lineCov">          1 :         waitCursor = std::make_unique&lt;ScopedWaitCursor&gt;();</span></a>
+<a name="180"><span class="lineNum">     180 </span><span class="lineCov">          1 :         EditPlaybackContext::RealtimePriorityDisabler realtimeDisabler (edit.engine);</span></a>
+<a name="181"><span class="lineNum">     181 </span><span class="lineCov">          2 :         waitCursor = std::make_unique&lt;ScopedWaitCursor&gt;();</span></a>
 <a name="182"><span class="lineNum">     182 </span><span class="lineCov">          1 :         sharedDataPimpl-&gt;editFileWriter-&gt;flushAllFiles();</span></a>
-<a name="183"><span class="lineNum">     183 </span>            :     }</a>
+<a name="183"><span class="lineNum">     183 </span><span class="lineCov">          1 :     }</span></a>
 <a name="184"><span class="lineNum">     184 </span>            : </a>
 <a name="185"><span class="lineNum">     185 </span><span class="lineCov">          1 :     if (file.hasWriteAccess() &amp;&amp; ! file.isDirectory())</span></a>
 <a name="186"><span class="lineNum">     186 </span>            :     {</a>
@@ -268,7 +268,7 @@
 <a name="206"><span class="lineNum">     206 </span><span class="lineCov">          1 :         timeOfLastSave = juce::Time::getCurrentTime();</span></a>
 <a name="207"><span class="lineNum">     207 </span>            : </a>
 <a name="208"><span class="lineNum">     208 </span><span class="lineCov">          1 :     return ok;</span></a>
-<a name="209"><span class="lineNum">     209 </span>            : }</a>
+<a name="209"><span class="lineNum">     209 </span><span class="lineCov">          1 : }</span></a>
 <a name="210"><span class="lineNum">     210 </span>            : </a>
 <a name="211"><span class="lineNum">     211 </span><span class="lineNoCov">          0 : static bool editSaveError (Edit&amp; edit, const juce::File&amp; file, bool warnOfFailure)</span></a>
 <a name="212"><span class="lineNum">     212 </span>            : {</a>
@@ -286,7 +286,7 @@
 <a name="224"><span class="lineNum">     224 </span>            : </a>
 <a name="225"><span class="lineNum">     225 </span><span class="lineNoCov">          0 :         return edit.engine.getUIBehaviour().showOkCancelAlertBox (TRANS(&quot;Save edit&quot;), s,</span></a>
 <a name="226"><span class="lineNum">     226 </span><span class="lineNoCov">          0 :                                                                   TRANS(&quot;Carry on anyway&quot;));</span></a>
-<a name="227"><span class="lineNum">     227 </span>            :     }</a>
+<a name="227"><span class="lineNum">     227 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="228"><span class="lineNum">     228 </span>            : </a>
 <a name="229"><span class="lineNum">     229 </span>            :     return false;</a>
 <a name="230"><span class="lineNum">     230 </span>            : }</a>
@@ -295,14 +295,14 @@
 <a name="233"><span class="lineNum">     233 </span>            :                                bool forceSaveEvenIfNotModified,</a>
 <a name="234"><span class="lineNum">     234 </span>            :                                bool offerToDiscardChanges)</a>
 <a name="235"><span class="lineNum">     235 </span>            : {</a>
-<a name="236"><span class="lineNum">     236 </span><span class="lineCov">          2 :     CRASH_TRACER</span></a>
+<a name="236"><span class="lineNum">     236 </span><span class="lineCov">          1 :     CRASH_TRACER</span></a>
 <a name="237"><span class="lineNum">     237 </span><span class="lineCov">          1 :     auto editFile = getEditFile();</span></a>
 <a name="238"><span class="lineNum">     238 </span>            : </a>
 <a name="239"><span class="lineNum">     239 </span><span class="lineCov">          2 :     if (editFile == juce::File())</span></a>
 <a name="240"><span class="lineNum">     240 </span>            :         return false;</a>
 <a name="241"><span class="lineNum">     241 </span>            : </a>
 <a name="242"><span class="lineNum">     242 </span><span class="lineCov">          1 :     CustomControlSurface::saveAllSettings (edit.engine);</span></a>
-<a name="243"><span class="lineNum">     243 </span><span class="lineCov">          2 :     auto controllerMappings = state.getOrCreateChildWithName (IDs::CONTROLLERMAPPINGS, nullptr);</span></a>
+<a name="243"><span class="lineNum">     243 </span><span class="lineCov">          1 :     auto controllerMappings = state.getOrCreateChildWithName (IDs::CONTROLLERMAPPINGS, nullptr);</span></a>
 <a name="244"><span class="lineNum">     244 </span><span class="lineCov">          1 :     edit.getParameterControlMappings().saveTo (controllerMappings);</span></a>
 <a name="245"><span class="lineNum">     245 </span>            : </a>
 <a name="246"><span class="lineNum">     246 </span><span class="lineCov">          1 :     auto tempFile = getTempVersionFile();</span></a>
@@ -347,7 +347,7 @@
 <a name="285"><span class="lineNum">     285 </span>            : </a>
 <a name="286"><span class="lineNum">     286 </span><span class="lineCov">          1 :     edit.resetChangedStatus();</span></a>
 <a name="287"><span class="lineNum">     287 </span>            :     return true;</a>
-<a name="288"><span class="lineNum">     288 </span>            : }</a>
+<a name="288"><span class="lineNum">     288 </span><span class="lineCov">          2 : }</span></a>
 <a name="289"><span class="lineNum">     289 </span>            : </a>
 <a name="290"><span class="lineNum">     290 </span><span class="lineNoCov">          0 : bool EditFileOperations::saveAs()</span></a>
 <a name="291"><span class="lineNum">     291 </span>            : {</a>
@@ -364,7 +364,7 @@
 <a name="302"><span class="lineNum">     302 </span>            :    #endif</a>
 <a name="303"><span class="lineNum">     303 </span>            : </a>
 <a name="304"><span class="lineNum">     304 </span>            :     return false;</a>
-<a name="305"><span class="lineNum">     305 </span>            : }</a>
+<a name="305"><span class="lineNum">     305 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="306"><span class="lineNum">     306 </span>            : </a>
 <a name="307"><span class="lineNum">     307 </span><span class="lineNoCov">          0 : bool EditFileOperations::saveAs (const juce::File&amp; f, bool forceOverwriteExisting)</span></a>
 <a name="308"><span class="lineNum">     308 </span>            : {</a>
@@ -396,7 +396,7 @@
 <a name="334"><span class="lineNum">     334 </span>            :                 {</a>
 <a name="335"><span class="lineNum">     335 </span><span class="lineNoCov">          0 :                     auto oldTempFile = getTempVersionFile();</span></a>
 <a name="336"><span class="lineNum">     336 </span>            : </a>
-<a name="337"><span class="lineNum">     337 </span><span class="lineNoCov">          0 :                     newItem-&gt;copyAllPropertiesFrom (*item);</span></a>
+<a name="337"><span class="lineNum">     337 </span>            :                     newItem-&gt;copyAllPropertiesFrom (*item);</a>
 <a name="338"><span class="lineNum">     338 </span><span class="lineNoCov">          0 :                     newItem-&gt;setName (f.getFileNameWithoutExtension(), ProjectItem::SetNameMode::forceNoRename);</span></a>
 <a name="339"><span class="lineNum">     339 </span>            : </a>
 <a name="340"><span class="lineNum">     340 </span>            :                     jassert (edit.getProjectItemID() != newItem-&gt;getID());</a>
@@ -442,7 +442,7 @@
 <a name="380"><span class="lineNum">     380 </span><span class="lineNoCov">          0 :         edit.engine.getEngineBehaviour().editHasBeenSaved (edit, f);</span></a>
 <a name="381"><span class="lineNum">     381 </span>            : </a>
 <a name="382"><span class="lineNum">     382 </span><span class="lineNoCov">          0 :         return true;</span></a>
-<a name="383"><span class="lineNum">     383 </span>            :     }</a>
+<a name="383"><span class="lineNum">     383 </span><span class="lineNoCov">          0 :     }</span></a>
 <a name="384"><span class="lineNum">     384 </span>            : </a>
 <a name="385"><span class="lineNum">     385 </span>            :     jassertfalse;</a>
 <a name="386"><span class="lineNum">     386 </span><span class="lineNoCov">          0 :     return false;</span></a>
@@ -450,13 +450,13 @@
 <a name="388"><span class="lineNum">     388 </span>            : </a>
 <a name="389"><span class="lineNum">     389 </span><span class="lineCov">          1 : bool EditFileOperations::saveTempVersion (bool forceSaveEvenIfUnchanged)</span></a>
 <a name="390"><span class="lineNum">     390 </span>            : {</a>
-<a name="391"><span class="lineNum">     391 </span><span class="lineCov">          2 :     CRASH_TRACER</span></a>
+<a name="391"><span class="lineNum">     391 </span><span class="lineCov">          1 :     CRASH_TRACER</span></a>
 <a name="392"><span class="lineNum">     392 </span>            : </a>
 <a name="393"><span class="lineNum">     393 </span><span class="lineCov">          1 :     if (! (forceSaveEvenIfUnchanged || edit.hasChangedSinceSaved()))</span></a>
 <a name="394"><span class="lineNum">     394 </span>            :         return true;</a>
 <a name="395"><span class="lineNum">     395 </span>            : </a>
 <a name="396"><span class="lineNum">     396 </span><span class="lineCov">          2 :     return writeToFile (getTempVersionFile(), ! forceSaveEvenIfUnchanged);</span></a>
-<a name="397"><span class="lineNum">     397 </span>            : }</a>
+<a name="397"><span class="lineNum">     397 </span><span class="lineCov">          1 : }</span></a>
 <a name="398"><span class="lineNum">     398 </span>            : </a>
 <a name="399"><span class="lineNum">     399 </span><span class="lineCov">          2 : juce::File EditFileOperations::getTempVersionOfEditFile (const juce::File&amp; f)</span></a>
 <a name="400"><span class="lineNum">     400 </span>            : {</a>
@@ -491,14 +491,14 @@
 <a name="429"><span class="lineNum">     429 </span>            : </a>
 <a name="430"><span class="lineNum">     430 </span><span class="lineCov">        269 : juce::ValueTree loadEditFromFile (Engine&amp; e, const juce::File&amp; f, ProjectItemID itemID)</span></a>
 <a name="431"><span class="lineNum">     431 </span>            : {</a>
-<a name="432"><span class="lineNum">     432 </span><span class="lineCov">        538 :     CRASH_TRACER</span></a>
-<a name="433"><span class="lineNum">     433 </span><span class="lineCov">        538 :     juce::ValueTree state;</span></a>
+<a name="432"><span class="lineNum">     432 </span><span class="lineCov">        269 :     CRASH_TRACER</span></a>
+<a name="433"><span class="lineNum">     433 </span><span class="lineCov">        269 :     juce::ValueTree state;</span></a>
 <a name="434"><span class="lineNum">     434 </span>            : </a>
 <a name="435"><span class="lineNum">     435 </span><span class="lineCov">        269 :     if (auto xml = juce::parseXML (f))</span></a>
 <a name="436"><span class="lineNum">     436 </span>            :     {</a>
 <a name="437"><span class="lineNum">     437 </span><span class="lineCov">          1 :         updateLegacyEdit (*xml);</span></a>
 <a name="438"><span class="lineNum">     438 </span><span class="lineCov">          1 :         state = juce::ValueTree::fromXml (*xml);</span></a>
-<a name="439"><span class="lineNum">     439 </span>            :     }</a>
+<a name="439"><span class="lineNum">     439 </span><span class="lineCov">        269 :     }</span></a>
 <a name="440"><span class="lineNum">     440 </span>            : </a>
 <a name="441"><span class="lineNum">     441 </span><span class="lineCov">        269 :     if (! state.isValid())</span></a>
 <a name="442"><span class="lineNum">     442 </span>            :     {</a>
@@ -508,7 +508,7 @@
 <a name="446"><span class="lineNum">     446 </span><span class="lineNoCov">          0 :                 state = updateLegacyEdit (state);</span></a>
 <a name="447"><span class="lineNum">     447 </span>            :             else</a>
 <a name="448"><span class="lineNum">     448 </span><span class="lineNoCov">          0 :                 state = {};</span></a>
-<a name="449"><span class="lineNum">     449 </span>            :         }</a>
+<a name="449"><span class="lineNum">     449 </span><span class="lineCov">        268 :         }</span></a>
 <a name="450"><span class="lineNum">     450 </span>            :     }</a>
 <a name="451"><span class="lineNum">     451 </span>            : </a>
 <a name="452"><span class="lineNum">     452 </span><span class="lineCov">        269 :     if (! state.isValid())</span></a>
@@ -524,11 +524,11 @@
 <a name="462"><span class="lineNum">     462 </span><span class="lineCov">        269 :     state.setProperty (IDs::projectID, itemID.toString(), nullptr);</span></a>
 <a name="463"><span class="lineNum">     463 </span>            : </a>
 <a name="464"><span class="lineNum">     464 </span><span class="lineCov">        269 :     return state;</span></a>
-<a name="465"><span class="lineNum">     465 </span>            : }</a>
+<a name="465"><span class="lineNum">     465 </span><span class="lineCov">        269 : }</span></a>
 <a name="466"><span class="lineNum">     466 </span>            : </a>
 <a name="467"><span class="lineNum">     467 </span><span class="lineCov">          1 : std::unique_ptr&lt;Edit&gt; loadEditFromFile (Engine&amp; engine, const juce::File&amp; editFile, Edit::EditRole role)</span></a>
 <a name="468"><span class="lineNum">     468 </span>            : {</a>
-<a name="469"><span class="lineNum">     469 </span><span class="lineCov">          2 :     auto editState = loadEditFromFile (engine, editFile, ProjectItemID{});</span></a>
+<a name="469"><span class="lineNum">     469 </span><span class="lineCov">          1 :     auto editState = loadEditFromFile (engine, editFile, ProjectItemID{});</span></a>
 <a name="470"><span class="lineNum">     470 </span><span class="lineCov">          1 :     auto id = ProjectItemID::fromProperty (editState, IDs::projectID);</span></a>
 <a name="471"><span class="lineNum">     471 </span>            :     </a>
 <a name="472"><span class="lineNum">     472 </span><span class="lineCov">          1 :     if (! id.isValid())</span></a>
@@ -544,12 +544,12 @@
 <a name="482"><span class="lineNum">     482 </span>            :         nullptr,</a>
 <a name="483"><span class="lineNum">     483 </span>            :         Edit::getDefaultNumUndoLevels(),</a>
 <a name="484"><span class="lineNum">     484 </span>            : </a>
-<a name="485"><span class="lineNum">     485 </span><span class="lineNoCov">          0 :         [editFile] { return editFile; },</span></a>
+<a name="485"><span class="lineNum">     485 </span><span class="lineCov">          4 :         [editFile] { return editFile; },</span></a>
 <a name="486"><span class="lineNum">     486 </span>            :         {}</a>
 <a name="487"><span class="lineNum">     487 </span><span class="lineCov">          2 :     };</span></a>
 <a name="488"><span class="lineNum">     488 </span>            : </a>
 <a name="489"><span class="lineNum">     489 </span><span class="lineCov">          2 :     return std::make_unique&lt;Edit&gt; (options);</span></a>
-<a name="490"><span class="lineNum">     490 </span>            : }</a>
+<a name="490"><span class="lineNum">     490 </span><span class="lineCov">          1 : }</span></a>
 <a name="491"><span class="lineNum">     491 </span>            : </a>
 <a name="492"><span class="lineNum">     492 </span><span class="lineCov">          1 : std::unique_ptr&lt;Edit&gt; createEmptyEdit (Engine&amp; engine, const juce::File&amp; editFile)</span></a>
 <a name="493"><span class="lineNum">     493 </span>            : {</a>
@@ -564,12 +564,12 @@
 <a name="502"><span class="lineNum">     502 </span>            :         nullptr,</a>
 <a name="503"><span class="lineNum">     503 </span>            :         Edit::getDefaultNumUndoLevels(),</a>
 <a name="504"><span class="lineNum">     504 </span>            :         </a>
-<a name="505"><span class="lineNum">     505 </span><span class="lineCov">          3 :         [editFile] { return editFile; },</span></a>
+<a name="505"><span class="lineNum">     505 </span><span class="lineCov">          7 :         [editFile] { return editFile; },</span></a>
 <a name="506"><span class="lineNum">     506 </span>            :         {}</a>
 <a name="507"><span class="lineNum">     507 </span><span class="lineCov">          3 :     };</span></a>
 <a name="508"><span class="lineNum">     508 </span>            :     </a>
 <a name="509"><span class="lineNum">     509 </span><span class="lineCov">          2 :     return std::make_unique&lt;Edit&gt; (options);</span></a>
-<a name="510"><span class="lineNum">     510 </span>            : }</a>
+<a name="510"><span class="lineNum">     510 </span><span class="lineCov">          1 : }</span></a>
 <a name="511"><span class="lineNum">     511 </span>            : </a>
 <a name="512"><span class="lineNum">     512 </span><span class="lineCov">        267 : juce::ValueTree createEmptyEdit (Engine&amp; e)</span></a>
 <a name="513"><span class="lineNum">     513 </span>            : {</a>

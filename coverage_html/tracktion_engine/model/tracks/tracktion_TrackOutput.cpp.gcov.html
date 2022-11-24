@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">60</td>
-            <td class="headerCovTableEntry">161</td>
-            <td class="headerCovTableEntryLo">37.3 %</td>
+            <td class="headerCovTableEntry">162</td>
+            <td class="headerCovTableEntryLo">37.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">13</td>
@@ -78,7 +78,7 @@
 <a name="16"><span class="lineNum">      16 </span>            : {</a>
 <a name="17"><span class="lineNum">      17 </span><span class="lineCov">        839 :     auto um = &amp;t.edit.getUndoManager();</span></a>
 <a name="18"><span class="lineNum">      18 </span><span class="lineCov">        839 :     state = t.state.getOrCreateChildWithName (IDs::OUTPUTDEVICES, um);</span></a>
-<a name="19"><span class="lineNum">      19 </span><span class="lineCov">       1678 :     auto devicesTree = state.getOrCreateChildWithName (IDs::DEVICE, um);</span></a>
+<a name="19"><span class="lineNum">      19 </span><span class="lineCov">        839 :     auto devicesTree = state.getOrCreateChildWithName (IDs::DEVICE, um);</span></a>
 <a name="20"><span class="lineNum">      20 </span><span class="lineCov">        839 :     outputDevice.referTo (devicesTree, IDs::name, um);</span></a>
 <a name="21"><span class="lineNum">      21 </span>            : </a>
 <a name="22"><span class="lineNum">      22 </span><span class="lineCov">        839 :     state.addListener (this);</span></a>
@@ -120,7 +120,7 @@
 <a name="58"><span class="lineNum">      58 </span>            :     {</a>
 <a name="59"><span class="lineNum">      59 </span><span class="lineCov">        199 :         auto trackNum = outputDevice.get().upToFirstOccurrenceOf (&quot;(&quot;, false, false).trim().getTrailingIntValue();</span></a>
 <a name="60"><span class="lineNum">      60 </span>            : </a>
-<a name="61"><span class="lineNum">      61 </span><span class="lineCov">       9942 :         for (auto at : getAudioTracks (owner.edit))</span></a>
+<a name="61"><span class="lineNum">      61 </span><span class="lineCov">       9743 :         for (auto at : getAudioTracks (owner.edit))</span></a>
 <a name="62"><span class="lineNum">      62 </span>            :         {</a>
 <a name="63"><span class="lineNum">      63 </span><span class="lineCov">       9679 :             if (at-&gt;getAudioTrackNumber() == trackNum)</span></a>
 <a name="64"><span class="lineNum">      64 </span>            :             {</a>
@@ -168,8 +168,8 @@
 <a name="106"><span class="lineNum">     106 </span><span class="lineNoCov">          0 :                            &amp;&amp; outputDevice.get().equalsIgnoreCase (DeviceManager::getDefaultAudioOutDeviceName (false));</span></a>
 <a name="107"><span class="lineNum">     107 </span>            : </a>
 <a name="108"><span class="lineNum">     108 </span><span class="lineNoCov">          0 :                 if (b1 || b2)</span></a>
-<a name="109"><span class="lineNum">     109 </span><span class="lineNoCov">          0 :                     return true;</span></a>
-<a name="110"><span class="lineNum">     110 </span>            :             }</a>
+<a name="109"><span class="lineNum">     109 </span>            :                     return true;</a>
+<a name="110"><span class="lineNum">     110 </span><span class="lineNoCov">          0 :             }</span></a>
 <a name="111"><span class="lineNum">     111 </span>            :         }</a>
 <a name="112"><span class="lineNum">     112 </span>            : </a>
 <a name="113"><span class="lineNum">     113 </span><span class="lineNoCov">          0 :         if (auto defaultMIDI = dm.getDefaultMidiOutDevice())</span></a>
@@ -182,8 +182,8 @@
 <a name="120"><span class="lineNum">     120 </span><span class="lineNoCov">          0 :                        &amp;&amp; outputDevice.get().equalsIgnoreCase (defMidiName))</span></a>
 <a name="121"><span class="lineNum">     121 </span><span class="lineNoCov">          0 :                      || (deviceName.equalsIgnoreCase (defMidiName)</span></a>
 <a name="122"><span class="lineNum">     122 </span><span class="lineNoCov">          0 :                            &amp;&amp; outputDevice.get().equalsIgnoreCase (DeviceManager::getDefaultMidiOutDeviceName (false))))</span></a>
-<a name="123"><span class="lineNum">     123 </span><span class="lineNoCov">          0 :                     return true;</span></a>
-<a name="124"><span class="lineNum">     124 </span>            :             }</a>
+<a name="123"><span class="lineNum">     123 </span>            :                     return true;</a>
+<a name="124"><span class="lineNum">     124 </span><span class="lineNoCov">          0 :             }</span></a>
 <a name="125"><span class="lineNum">     125 </span>            :         }</a>
 <a name="126"><span class="lineNum">     126 </span>            :     }</a>
 <a name="127"><span class="lineNum">     127 </span>            : </a>
@@ -372,7 +372,7 @@
 <a name="310"><span class="lineNum">     310 </span>            : </a>
 <a name="311"><span class="lineNum">     311 </span><span class="lineNoCov">          0 :             s.add (trackName);</span></a>
 <a name="312"><span class="lineNum">     312 </span><span class="lineNoCov">          0 :             a.add (trackName);</span></a>
-<a name="313"><span class="lineNum">     313 </span>            :         }</a>
+<a name="313"><span class="lineNum">     313 </span><span class="lineNoCov">          0 :         }</span></a>
 <a name="314"><span class="lineNum">     314 </span>            :     }</a>
 <a name="315"><span class="lineNum">     315 </span>            : }</a>
 <a name="316"><span class="lineNum">     316 </span>            : </a>

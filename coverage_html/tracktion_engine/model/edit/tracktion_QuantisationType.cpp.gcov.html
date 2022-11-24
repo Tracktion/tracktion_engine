@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">57</td>
-            <td class="headerCovTableEntry">115</td>
-            <td class="headerCovTableEntryLo">49.6 %</td>
+            <td class="headerCovTableEntry">58</td>
+            <td class="headerCovTableEntry">116</td>
+            <td class="headerCovTableEntryLo">50.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">14</td>
@@ -116,7 +116,7 @@
 <a name="54"><span class="lineNum">      54 </span><span class="lineCov">      41111 : }</span></a>
 <a name="55"><span class="lineNum">      55 </span>            : </a>
 <a name="56"><span class="lineNum">      56 </span><span class="lineCov">        144 : QuantisationType::QuantisationType (const QuantisationType&amp; other)</span></a>
-<a name="57"><span class="lineNum">      57 </span>            :     : state (other.state.createCopy()),</a>
+<a name="57"><span class="lineNum">      57 </span><span class="lineCov">        144 :     : state (other.state.createCopy()),</span></a>
 <a name="58"><span class="lineNum">      58 </span><span class="lineCov">        144 :       typeIndex (other.typeIndex),</span></a>
 <a name="59"><span class="lineNum">      59 </span><span class="lineCov">        288 :       fractionOfBeat (other.fractionOfBeat)</span></a>
 <a name="60"><span class="lineNum">      60 </span>            : {</a>
@@ -126,7 +126,7 @@
 <a name="64"><span class="lineNum">      64 </span><span class="lineCov">          8 : QuantisationType&amp; QuantisationType::operator= (const QuantisationType&amp; other)</span></a>
 <a name="65"><span class="lineNum">      65 </span>            : {</a>
 <a name="66"><span class="lineNum">      66 </span><span class="lineCov">          8 :     proportion     = other.proportion.get();</span></a>
-<a name="67"><span class="lineNum">      67 </span><span class="lineCov">          8 :     typeName       = other.typeName.get();</span></a>
+<a name="67"><span class="lineNum">      67 </span><span class="lineCov">         16 :     typeName       = other.typeName.get();</span></a>
 <a name="68"><span class="lineNum">      68 </span><span class="lineCov">          8 :     typeIndex      = other.typeIndex;</span></a>
 <a name="69"><span class="lineNum">      69 </span><span class="lineCov">          8 :     fractionOfBeat = other.fractionOfBeat;</span></a>
 <a name="70"><span class="lineNum">      70 </span>            : </a>
@@ -135,7 +135,7 @@
 <a name="73"><span class="lineNum">      73 </span>            : </a>
 <a name="74"><span class="lineNum">      74 </span><span class="lineNoCov">          0 : bool QuantisationType::operator== (const QuantisationType&amp; o) const</span></a>
 <a name="75"><span class="lineNum">      75 </span>            : {</a>
-<a name="76"><span class="lineNum">      76 </span><span class="lineNoCov">          0 :     return proportion == o.proportion</span></a>
+<a name="76"><span class="lineNum">      76 </span>            :     return proportion == o.proportion</a>
 <a name="77"><span class="lineNum">      77 </span><span class="lineNoCov">          0 :         &amp;&amp; typeIndex == o.typeIndex</span></a>
 <a name="78"><span class="lineNum">      78 </span><span class="lineNoCov">          0 :         &amp;&amp; fractionOfBeat == o.fractionOfBeat</span></a>
 <a name="79"><span class="lineNum">      79 </span><span class="lineNoCov">          0 :         &amp;&amp; quantiseNoteOffs == o.quantiseNoteOffs;</span></a>
@@ -157,14 +157,14 @@
 <a name="95"><span class="lineNum">      95 </span><span class="lineCov">      21067 :     auto typeNameToIndex = [] (const juce::String&amp; newTypeName) -&gt; int</span></a>
 <a name="96"><span class="lineNum">      96 </span>            :     {</a>
 <a name="97"><span class="lineNum">      97 </span>            :         int newType = 0;</a>
-<a name="98"><span class="lineNum">      98 </span><span class="lineCov">      42134 :         auto targetFraction = newTypeName.retainCharacters (&quot;0123456789/&quot;);</span></a>
+<a name="98"><span class="lineNum">      98 </span><span class="lineCov">      21067 :         auto targetFraction = newTypeName.retainCharacters (&quot;0123456789/&quot;);</span></a>
 <a name="99"><span class="lineNum">      99 </span>            : </a>
 <a name="100"><span class="lineNum">     100 </span><span class="lineCov">     273615 :         for (int i = juce::numElementsInArray (quantisationTypes); --i &gt;= 0;)</span></a>
 <a name="101"><span class="lineNum">     101 </span><span class="lineCov">     273615 :             if (targetFraction == juce::String (quantisationTypes[i].name).retainCharacters (&quot;0123456789/&quot;))</span></a>
 <a name="102"><span class="lineNum">     102 </span><span class="lineCov">      21067 :                 return i;</span></a>
 <a name="103"><span class="lineNum">     103 </span>            : </a>
 <a name="104"><span class="lineNum">     104 </span>            :         return newType;</a>
-<a name="105"><span class="lineNum">     105 </span>            :     };</a>
+<a name="105"><span class="lineNum">     105 </span><span class="lineCov">      21067 :     };</span></a>
 <a name="106"><span class="lineNum">     106 </span>            : </a>
 <a name="107"><span class="lineNum">     107 </span><span class="lineCov">      21067 :     typeIndex = typeNameToIndex (typeName);</span></a>
 <a name="108"><span class="lineNum">     108 </span>            :     updateFraction();</a>
@@ -222,20 +222,20 @@
 <a name="160"><span class="lineNum">     160 </span><span class="lineNoCov">          0 :     return roundTo (time, 1.0 - 1.0e-10, edit);</span></a>
 <a name="161"><span class="lineNum">     161 </span>            : }</a>
 <a name="162"><span class="lineNum">     162 </span>            : </a>
-<a name="163"><span class="lineNum">     163 </span><span class="lineCov">    7347200 : BeatPosition QuantisationType::roundToBeat (BeatPosition beatNumber, double adjustment) const</span></a>
+<a name="163"><span class="lineNum">     163 </span><span class="lineCov">    7346864 : BeatPosition QuantisationType::roundToBeat (BeatPosition beatNumber, double adjustment) const</span></a>
 <a name="164"><span class="lineNum">     164 </span>            : {</a>
-<a name="165"><span class="lineNum">     165 </span><span class="lineCov">    7347200 :     if (typeIndex == 0)</span></a>
-<a name="166"><span class="lineNum">     166 </span><span class="lineCov">    7345150 :         return beatNumber;</span></a>
+<a name="165"><span class="lineNum">     165 </span><span class="lineCov">    7346864 :     if (typeIndex == 0)</span></a>
+<a name="166"><span class="lineNum">     166 </span><span class="lineCov">    7345072 :         return beatNumber;</span></a>
 <a name="167"><span class="lineNum">     167 </span>            : </a>
-<a name="168"><span class="lineNum">     168 </span><span class="lineCov">       2048 :     const double beats = fractionOfBeat * floor (beatNumber.inBeats() / fractionOfBeat + adjustment);</span></a>
+<a name="168"><span class="lineNum">     168 </span><span class="lineCov">       1792 :     const double beats = fractionOfBeat * floor (beatNumber.inBeats() / fractionOfBeat + adjustment);</span></a>
 <a name="169"><span class="lineNum">     169 </span>            : </a>
-<a name="170"><span class="lineNum">     170 </span><span class="lineCov">       2048 :     return BeatPosition::fromBeats (proportion == 1.0 ? beats</span></a>
-<a name="171"><span class="lineNum">     171 </span><span class="lineCov">       2048 :                                                       : beatNumber.inBeats() + proportion * (beats - beatNumber.inBeats()));</span></a>
+<a name="170"><span class="lineNum">     170 </span><span class="lineCov">       1792 :     return BeatPosition::fromBeats (proportion == 1.0 ? beats</span></a>
+<a name="171"><span class="lineNum">     171 </span><span class="lineNoCov">          0 :                                                       : beatNumber.inBeats() + proportion * (beats - beatNumber.inBeats()));</span></a>
 <a name="172"><span class="lineNum">     172 </span>            : }</a>
 <a name="173"><span class="lineNum">     173 </span>            : </a>
-<a name="174"><span class="lineNum">     174 </span><span class="lineCov">    7347200 : BeatPosition QuantisationType::roundBeatToNearest (BeatPosition beatNumber) const</span></a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineCov">    7346864 : BeatPosition QuantisationType::roundBeatToNearest (BeatPosition beatNumber) const</span></a>
 <a name="175"><span class="lineNum">     175 </span>            : {</a>
-<a name="176"><span class="lineNum">     176 </span><span class="lineCov">    7347200 :     return roundToBeat (beatNumber, 0.5);</span></a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineCov">    7346864 :     return roundToBeat (beatNumber, 0.5);</span></a>
 <a name="177"><span class="lineNum">     177 </span>            : }</a>
 <a name="178"><span class="lineNum">     178 </span>            : </a>
 <a name="179"><span class="lineNum">     179 </span><span class="lineNoCov">          0 : BeatPosition QuantisationType::roundBeatUp (BeatPosition beatNumber) const</span></a>

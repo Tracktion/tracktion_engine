@@ -31,17 +31,17 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">24</td>
-            <td class="headerCovTableEntry">24</td>
+            <td class="headerCovTableEntry">19</td>
+            <td class="headerCovTableEntry">19</td>
             <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">4</td>
-            <td class="headerCovTableEntry">4</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">2</td>
             <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
@@ -178,7 +178,7 @@
 <a name="116"><span class="lineNum">     116 </span>            :     /** Returns the length. */</a>
 <a name="117"><span class="lineNum">     117 </span>            :     TimeDuration getLength() const            { return time.getLength(); }</a>
 <a name="118"><span class="lineNum">     118 </span>            :     /** Returns the offset. */</a>
-<a name="119"><span class="lineNum">     119 </span>            :     TimeDuration getOffset() const            { return offset; }</a>
+<a name="119"><span class="lineNum">     119 </span><span class="lineCov">      10421 :     TimeDuration getOffset() const            { return offset; }</span></a>
 <a name="120"><span class="lineNum">     120 </span>            :     /** Returns what would be the the start of the source material in the timeline. */</a>
 <a name="121"><span class="lineNum">     121 </span>            :     TimePosition getStartOfSource() const     { return time.getStart() - offset; }</a>
 <a name="122"><span class="lineNum">     122 </span>            : </a>
@@ -274,30 +274,30 @@
 <a name="212"><span class="lineNum">     212 </span>            : }</a>
 <a name="213"><span class="lineNum">     213 </span>            : </a>
 <a name="214"><span class="lineNum">     214 </span>            : //==============================================================================</a>
-<a name="215"><span class="lineNum">     215 </span><span class="lineCov">          1 : inline EditTimeRange::EditTimeRange (TimeRange r)</span></a>
+<a name="215"><span class="lineNum">     215 </span>            : inline EditTimeRange::EditTimeRange (TimeRange r)</a>
 <a name="216"><span class="lineNum">     216 </span>            :     : range (r)</a>
 <a name="217"><span class="lineNum">     217 </span>            : {</a>
 <a name="218"><span class="lineNum">     218 </span>            : }</a>
 <a name="219"><span class="lineNum">     219 </span>            : </a>
-<a name="220"><span class="lineNum">     220 </span><span class="lineCov">          1 : inline EditTimeRange::EditTimeRange (BeatRange r)</span></a>
+<a name="220"><span class="lineNum">     220 </span>            : inline EditTimeRange::EditTimeRange (BeatRange r)</a>
 <a name="221"><span class="lineNum">     221 </span>            :     : range (r)</a>
 <a name="222"><span class="lineNum">     222 </span>            : {</a>
 <a name="223"><span class="lineNum">     223 </span>            : }</a>
 <a name="224"><span class="lineNum">     224 </span>            : </a>
 <a name="225"><span class="lineNum">     225 </span>            : //==============================================================================</a>
-<a name="226"><span class="lineNum">     226 </span><span class="lineCov">          2 : inline TimeRange toTime (EditTimeRange r, const TempoSequence&amp; ts)</span></a>
+<a name="226"><span class="lineNum">     226 </span>            : inline TimeRange toTime (EditTimeRange r, const TempoSequence&amp; ts)</a>
 <a name="227"><span class="lineNum">     227 </span>            : {</a>
 <a name="228"><span class="lineNum">     228 </span>            :     // N.B. std::get unavailable prior to macOS 10.14</a>
 <a name="229"><span class="lineNum">     229 </span>            :     if (const auto tr = std::get_if&lt;TimeRange&gt; (&amp;r.range))</a>
-<a name="230"><span class="lineNum">     230 </span><span class="lineCov">          1 :         return *tr;</span></a>
+<a name="230"><span class="lineNum">     230 </span>            :         return *tr;</a>
 <a name="231"><span class="lineNum">     231 </span>            : </a>
 <a name="232"><span class="lineNum">     232 </span><span class="lineCov">          1 :     return tracktion::engine::toTime (*std::get_if&lt;BeatRange&gt; (&amp;r.range), ts);</span></a>
 <a name="233"><span class="lineNum">     233 </span>            : }</a>
 <a name="234"><span class="lineNum">     234 </span>            : </a>
-<a name="235"><span class="lineNum">     235 </span><span class="lineCov">          2 : inline BeatRange toBeats (EditTimeRange r, const TempoSequence&amp; ts)</span></a>
+<a name="235"><span class="lineNum">     235 </span>            : inline BeatRange toBeats (EditTimeRange r, const TempoSequence&amp; ts)</a>
 <a name="236"><span class="lineNum">     236 </span>            : {</a>
 <a name="237"><span class="lineNum">     237 </span>            :     if (const auto br = std::get_if&lt;BeatRange&gt; (&amp;r.range))</a>
-<a name="238"><span class="lineNum">     238 </span><span class="lineCov">          1 :         return *br;</span></a>
+<a name="238"><span class="lineNum">     238 </span>            :         return *br;</a>
 <a name="239"><span class="lineNum">     239 </span>            : </a>
 <a name="240"><span class="lineNum">     240 </span><span class="lineCov">          1 :     return tracktion::engine::toBeats (*std::get_if&lt;TimeRange&gt; (&amp;r.range), ts);</span></a>
 <a name="241"><span class="lineNum">     241 </span>            : }</a>

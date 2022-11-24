@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">20</td>
-            <td class="headerCovTableEntry">57</td>
-            <td class="headerCovTableEntryLo">35.1 %</td>
+            <td class="headerCovTableEntry">55</td>
+            <td class="headerCovTableEntryLo">36.4 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
@@ -121,7 +121,7 @@
 <a name="59"><span class="lineNum">      59 </span>            : </a>
 <a name="60"><span class="lineNum">      60 </span><span class="lineCov">        168 : void MidiNoteDispatcher::setMidiDeviceList (const juce::OwnedArray&lt;MidiOutputDeviceInstance&gt;&amp; newList)</span></a>
 <a name="61"><span class="lineNum">      61 </span>            : {</a>
-<a name="62"><span class="lineNum">      62 </span><span class="lineCov">        336 :     CRASH_TRACER</span></a>
+<a name="62"><span class="lineNum">      62 </span><span class="lineCov">        168 :     CRASH_TRACER</span></a>
 <a name="63"><span class="lineNum">      63 </span><span class="lineCov">        168 :     juce::OwnedArray&lt;DeviceState&gt; newDevices;</span></a>
 <a name="64"><span class="lineNum">      64 </span>            : </a>
 <a name="65"><span class="lineNum">      65 </span><span class="lineCov">        168 :     for (auto d : newList)</span></a>
@@ -160,7 +160,7 @@
 <a name="98"><span class="lineNum">      98 </span>            :         {</a>
 <a name="99"><span class="lineNum">      99 </span><span class="lineNoCov">          0 :             auto&amp; device = d-&gt;device;</span></a>
 <a name="100"><span class="lineNum">     100 </span>            :             auto&amp; buffer = d-&gt;buffer;</a>
-<a name="101"><span class="lineNum">     101 </span><span class="lineNoCov">          0 :             auto&amp; midiOut = device.getMidiOutput();</span></a>
+<a name="101"><span class="lineNum">     101 </span>            :             auto&amp; midiOut = device.getMidiOutput();</a>
 <a name="102"><span class="lineNum">     102 </span>            : </a>
 <a name="103"><span class="lineNum">     103 </span><span class="lineNoCov">          0 :             if (buffer.isAllNotesOff)</span></a>
 <a name="104"><span class="lineNum">     104 </span>            :             {</a>
@@ -173,7 +173,7 @@
 <a name="111"><span class="lineNum">     111 </span>            :                 {</a>
 <a name="112"><span class="lineNum">     112 </span>            :                     auto&amp; message = buffer[0];</a>
 <a name="113"><span class="lineNum">     113 </span>            : </a>
-<a name="114"><span class="lineNum">     114 </span><span class="lineNoCov">          0 :                     auto noteTime = TimePosition::fromSeconds (message.getTimeStamp());</span></a>
+<a name="114"><span class="lineNum">     114 </span>            :                     auto noteTime = TimePosition::fromSeconds (message.getTimeStamp());</a>
 <a name="115"><span class="lineNum">     115 </span><span class="lineNoCov">          0 :                     auto currentTime = getCurrentTime();</span></a>
 <a name="116"><span class="lineNum">     116 </span>            : </a>
 <a name="117"><span class="lineNum">     117 </span><span class="lineNoCov">          0 :                     if (noteTime &gt; currentTime + TimeDuration::fromSeconds (0.25))</span></a>

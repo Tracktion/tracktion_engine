@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">16</td>
-            <td class="headerCovTableEntry">21</td>
-            <td class="headerCovTableEntryMed">76.2 %</td>
+            <td class="headerCovTableEntry">14</td>
+            <td class="headerCovTableEntry">17</td>
+            <td class="headerCovTableEntryMed">82.4 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">3</td>
-            <td class="headerCovTableEntry">7</td>
-            <td class="headerCovTableEntryLo">42.9 %</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">5</td>
+            <td class="headerCovTableEntryLo">20.0 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -207,16 +207,16 @@
 <a name="145"><span class="lineNum">     145 </span>            :     EditRole getEditRole() const noexcept   { return editRole; }</a>
 <a name="146"><span class="lineNum">     146 </span>            :     </a>
 <a name="147"><span class="lineNum">     147 </span>            :     /** Returns true if this Edit should be played back (or false if it was just opened for inspection). */</a>
-<a name="148"><span class="lineNum">     148 </span><span class="lineCov">        992 :     bool shouldPlay() const noexcept        { return (editRole &amp; playDisabled) == 0; }</span></a>
+<a name="148"><span class="lineNum">     148 </span><span class="lineCov">        994 :     bool shouldPlay() const noexcept        { return (editRole &amp; playDisabled) == 0; }</span></a>
 <a name="149"><span class="lineNum">     149 </span>            : </a>
 <a name="150"><span class="lineNum">     150 </span>            :     /** Returns true if this Edit can render proxy files. */</a>
-<a name="151"><span class="lineNum">     151 </span><span class="lineCov">      47183 :     bool canRenderProxies() const noexcept  { return (editRole &amp; proxiesDisabled) == 0; }</span></a>
+<a name="151"><span class="lineNum">     151 </span><span class="lineCov">      47187 :     bool canRenderProxies() const noexcept  { return (editRole &amp; proxiesDisabled) == 0; }</span></a>
 <a name="152"><span class="lineNum">     152 </span>            : </a>
 <a name="153"><span class="lineNum">     153 </span>            :     /** Returns true if this Edit can load Plugin[s]. */</a>
 <a name="154"><span class="lineNum">     154 </span><span class="lineCov">        406 :     bool shouldLoadPlugins() const noexcept { return (editRole &amp; pluginsDisabled) == 0; }</span></a>
 <a name="155"><span class="lineNum">     155 </span>            : </a>
 <a name="156"><span class="lineNum">     156 </span>            :     /** Returns true if this Edit is a temporary Edit for previewing files/clips etc. */</a>
-<a name="157"><span class="lineNum">     157 </span>            :     bool getIsPreviewEdit() const noexcept  { return isPreviewEdit; }</a>
+<a name="157"><span class="lineNum">     157 </span><span class="lineCov">         84 :     bool getIsPreviewEdit() const noexcept  { return isPreviewEdit; }</span></a>
 <a name="158"><span class="lineNum">     158 </span>            : </a>
 <a name="159"><span class="lineNum">     159 </span>            :     //==============================================================================</a>
 <a name="160"><span class="lineNum">     160 </span>            :     /** The maximum length an Edit can be. */</a>
@@ -598,10 +598,10 @@
 <a name="536"><span class="lineNum">     536 </span>            :     /** Returns the master volume AutomatableParameter.</a>
 <a name="537"><span class="lineNum">     537 </span>            :         N.B. this is in slider position, not dB</a>
 <a name="538"><span class="lineNum">     538 </span>            :     */</a>
-<a name="539"><span class="lineNum">     539 </span><span class="lineCov">        543 :     AutomatableParameter::Ptr getMasterSliderPosParameter() const       { jassert (masterVolumePlugin != nullptr); return masterVolumePlugin-&gt;volParam; }</span></a>
+<a name="539"><span class="lineNum">     539 </span>            :     AutomatableParameter::Ptr getMasterSliderPosParameter() const       { jassert (masterVolumePlugin != nullptr); return masterVolumePlugin-&gt;volParam; }</a>
 <a name="540"><span class="lineNum">     540 </span>            : </a>
 <a name="541"><span class="lineNum">     541 </span>            :     /** Returns the master pan AutomatableParameter. */</a>
-<a name="542"><span class="lineNum">     542 </span><span class="lineCov">        543 :     AutomatableParameter::Ptr getMasterPanParameter() const             { jassert (masterVolumePlugin != nullptr); return masterVolumePlugin-&gt;panParam; }</span></a>
+<a name="542"><span class="lineNum">     542 </span>            :     AutomatableParameter::Ptr getMasterPanParameter() const             { jassert (masterVolumePlugin != nullptr); return masterVolumePlugin-&gt;panParam; }</a>
 <a name="543"><span class="lineNum">     543 </span>            : </a>
 <a name="544"><span class="lineNum">     544 </span>            :     /** Sets the master volume level.</a>
 <a name="545"><span class="lineNum">     545 </span>            :         N.B. this is in slider position, not dB</a>
@@ -651,7 +651,7 @@
 <a name="589"><span class="lineNum">     589 </span>            :     void enableTimecodeSync (bool);</a>
 <a name="590"><span class="lineNum">     590 </span>            : </a>
 <a name="591"><span class="lineNum">     591 </span>            :     /** Returns true if syncing to MIDI timecode is enabled. */</a>
-<a name="592"><span class="lineNum">     592 </span><span class="lineNoCov">          0 :     bool isTimecodeSyncEnabled() const noexcept             { return midiTimecodeSourceDeviceEnabled; }</span></a>
+<a name="592"><span class="lineNum">     592 </span>            :     bool isTimecodeSyncEnabled() const noexcept             { return midiTimecodeSourceDeviceEnabled; }</a>
 <a name="593"><span class="lineNum">     593 </span>            : </a>
 <a name="594"><span class="lineNum">     594 </span>            :     /** Returns the offset to apply to MIDI timecode. */</a>
 <a name="595"><span class="lineNum">     595 </span>            :     TimeDuration getTimecodeOffset() const noexcept         { return timecodeOffset; }</a>
@@ -691,7 +691,7 @@
 <a name="629"><span class="lineNum">     629 </span>            :     TimeRange getClickTrackRange() const noexcept;</a>
 <a name="630"><span class="lineNum">     630 </span>            : </a>
 <a name="631"><span class="lineNum">     631 </span>            :     /** Returns the click track volume. */</a>
-<a name="632"><span class="lineNum">     632 </span><span class="lineNoCov">          0 :     float getClickTrackVolume() const noexcept              { return juce::jlimit (0.2f, 1.0f, clickTrackGain.get()); }</span></a>
+<a name="632"><span class="lineNum">     632 </span>            :     float getClickTrackVolume() const noexcept              { return juce::jlimit (0.2f, 1.0f, clickTrackGain.get()); }</a>
 <a name="633"><span class="lineNum">     633 </span>            : </a>
 <a name="634"><span class="lineNum">     634 </span>            :     /** Returns the name of the device being used as the click track output. */</a>
 <a name="635"><span class="lineNum">     635 </span>            :     juce::String getClickTrackDevice() const;</a>
@@ -984,7 +984,7 @@
 <a name="922"><span class="lineNum">     922 </span>            : </a>
 <a name="923"><span class="lineNum">     923 </span>            : //==============================================================================</a>
 <a name="924"><span class="lineNum">     924 </span>            : /** Deferred Edit object deleter. @see Engine::getEditDeleter() */</a>
-<a name="925"><span class="lineNum">     925 </span><span class="lineCov">          1 : struct EditDeleter  : private juce::AsyncUpdater</span></a>
+<a name="925"><span class="lineNum">     925 </span>            : struct EditDeleter  : private juce::AsyncUpdater</a>
 <a name="926"><span class="lineNum">     926 </span>            : {</a>
 <a name="927"><span class="lineNum">     927 </span>            :     ~EditDeleter() override;</a>
 <a name="928"><span class="lineNum">     928 </span>            : </a>

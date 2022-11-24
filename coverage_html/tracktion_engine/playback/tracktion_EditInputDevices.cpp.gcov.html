@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">46</td>
-            <td class="headerCovTableEntry">121</td>
-            <td class="headerCovTableEntryLo">38.0 %</td>
+            <td class="headerCovTableEntry">47</td>
+            <td class="headerCovTableEntry">122</td>
+            <td class="headerCovTableEntryLo">38.5 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">10</td>
@@ -114,7 +114,7 @@
 <a name="52"><span class="lineNum">      52 </span>            : {</a>
 <a name="53"><span class="lineNum">      53 </span><span class="lineCov">       2194 :     for (const auto&amp; v : state)</span></a>
 <a name="54"><span class="lineNum">      54 </span><span class="lineCov">        516 :         if (isForDevice (v, d))</span></a>
-<a name="55"><span class="lineNum">      55 </span><span class="lineNoCov">          0 :             return true;</span></a>
+<a name="55"><span class="lineNum">      55 </span><span class="lineCov">        516 :             return true;</span></a>
 <a name="56"><span class="lineNum">      56 </span>            : </a>
 <a name="57"><span class="lineNum">      57 </span><span class="lineCov">       1678 :     return false;</span></a>
 <a name="58"><span class="lineNum">      58 </span>            : }</a>
@@ -189,7 +189,7 @@
 <a name="127"><span class="lineNum">     127 </span>            : </a>
 <a name="128"><span class="lineNum">     128 </span><span class="lineNoCov">          0 :     state.addChild (v, -1, nullptr);</span></a>
 <a name="129"><span class="lineNum">     129 </span><span class="lineNoCov">          0 :     return v;</span></a>
-<a name="130"><span class="lineNum">     130 </span>            : }</a>
+<a name="130"><span class="lineNum">     130 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="131"><span class="lineNum">     131 </span>            : </a>
 <a name="132"><span class="lineNum">     132 </span>            : //==============================================================================</a>
 <a name="133"><span class="lineNum">     133 </span><span class="lineCov">        271 : void EditInputDevices::removeNonExistantInputDeviceStates()</span></a>
@@ -201,7 +201,7 @@
 <a name="139"><span class="lineNum">     139 </span>            : </a>
 <a name="140"><span class="lineNum">     140 </span><span class="lineCov">        271 :     if (! edit.isLoading())</span></a>
 <a name="141"><span class="lineNum">     141 </span>            :     {</a>
-<a name="142"><span class="lineNum">     142 </span><span class="lineCov">       1381 :         for (auto* at : getAudioTracks (edit))</span></a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineCov">       1110 :         for (auto* at : getAudioTracks (edit))</span></a>
 <a name="143"><span class="lineNum">     143 </span>            :         {</a>
 <a name="144"><span class="lineNum">     144 </span><span class="lineCov">        839 :             if (auto* wid = &amp;at-&gt;getWaveInputDevice())</span></a>
 <a name="145"><span class="lineNum">     145 </span><span class="lineCov">        839 :                 if (wid-&gt;isEnabled())</span></a>
@@ -213,7 +213,7 @@
 <a name="151"><span class="lineNum">     151 </span>            :         }</a>
 <a name="152"><span class="lineNum">     152 </span>            :     }</a>
 <a name="153"><span class="lineNum">     153 </span>            : </a>
-<a name="154"><span class="lineNum">     154 </span><span class="lineCov">          3 :     auto isDevicePresent = [devices] (const juce::ValueTree&amp; v)</span></a>
+<a name="154"><span class="lineNum">     154 </span><span class="lineCov">        274 :     auto isDevicePresent = [devices] (const juce::ValueTree&amp; v)</span></a>
 <a name="155"><span class="lineNum">     155 </span>            :     {</a>
 <a name="156"><span class="lineNum">     156 </span><span class="lineCov">          3 :         for (auto* d : devices)</span></a>
 <a name="157"><span class="lineNum">     157 </span><span class="lineNoCov">          0 :             if (isForDevice (v, *d))</span></a>
@@ -282,12 +282,12 @@
 <a name="220"><span class="lineNum">     220 </span><span class="lineCov">          3 :     return v.hasProperty (IDs::sourceTrack);</span></a>
 <a name="221"><span class="lineNum">     221 </span>            : }</a>
 <a name="222"><span class="lineNum">     222 </span>            : </a>
-<a name="223"><span class="lineNum">     223 </span><span class="lineCov">      31524 : void EditInputDevices::valueTreeChildAdded (juce::ValueTree&amp; p, juce::ValueTree&amp; c)</span></a>
+<a name="223"><span class="lineNum">     223 </span><span class="lineCov">      31508 : void EditInputDevices::valueTreeChildAdded (juce::ValueTree&amp; p, juce::ValueTree&amp; c)</span></a>
 <a name="224"><span class="lineNum">     224 </span>            : {</a>
-<a name="225"><span class="lineNum">     225 </span><span class="lineCov">      31524 :     if (p == state)</span></a>
+<a name="225"><span class="lineNum">     225 </span><span class="lineCov">      31508 :     if (p == state)</span></a>
 <a name="226"><span class="lineNum">     226 </span><span class="lineNoCov">          0 :         if (c.hasType (IDs::INPUTDEVICE) &amp;&amp; isTrackDevice (c))</span></a>
 <a name="227"><span class="lineNum">     227 </span><span class="lineNoCov">          0 :             addTrackDeviceInstanceToContext (c);</span></a>
-<a name="228"><span class="lineNum">     228 </span><span class="lineCov">      31524 : }</span></a>
+<a name="228"><span class="lineNum">     228 </span><span class="lineCov">      31508 : }</span></a>
 <a name="229"><span class="lineNum">     229 </span>            : </a>
 <a name="230"><span class="lineNum">     230 </span><span class="lineCov">      10689 : void EditInputDevices::valueTreeChildRemoved (juce::ValueTree&amp; p, juce::ValueTree&amp; c, int)</span></a>
 <a name="231"><span class="lineNum">     231 </span>            : {</a>

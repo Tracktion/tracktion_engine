@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">45</td>
-            <td class="headerCovTableEntry">117</td>
-            <td class="headerCovTableEntryLo">38.5 %</td>
+            <td class="headerCovTableEntry">114</td>
+            <td class="headerCovTableEntryLo">39.5 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-11-20 01:39:19</td>
+            <td class="headerValue">2022-11-24 13:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">5</td>
@@ -102,16 +102,16 @@
 <a name="40"><span class="lineNum">      40 </span>            : </a>
 <a name="41"><span class="lineNum">      41 </span>            :     auto um = getUndoManager();</a>
 <a name="42"><span class="lineNum">      42 </span>            : </a>
-<a name="43"><span class="lineNum">      43 </span><span class="lineCov">          1 :     thresholdValue.referTo (state, IDs::threshold, um, dbToGain (-6.0f));</span></a>
+<a name="43"><span class="lineNum">      43 </span><span class="lineCov">          2 :     thresholdValue.referTo (state, IDs::threshold, um, dbToGain (-6.0f));</span></a>
 <a name="44"><span class="lineNum">      44 </span><span class="lineCov">          1 :     thresholdGain-&gt;attachToCurrentValue (thresholdValue);</span></a>
 <a name="45"><span class="lineNum">      45 </span>            : </a>
-<a name="46"><span class="lineNum">      46 </span><span class="lineCov">          1 :     ratioValue.referTo (state, IDs::ratio, um, 0.5f);</span></a>
+<a name="46"><span class="lineNum">      46 </span><span class="lineCov">          2 :     ratioValue.referTo (state, IDs::ratio, um, 0.5f);</span></a>
 <a name="47"><span class="lineNum">      47 </span><span class="lineCov">          1 :     ratio-&gt;attachToCurrentValue (ratioValue);</span></a>
 <a name="48"><span class="lineNum">      48 </span>            : </a>
-<a name="49"><span class="lineNum">      49 </span><span class="lineCov">          1 :     attackValue.referTo (state, IDs::attack, um, 100.0f);</span></a>
+<a name="49"><span class="lineNum">      49 </span><span class="lineCov">          2 :     attackValue.referTo (state, IDs::attack, um, 100.0f);</span></a>
 <a name="50"><span class="lineNum">      50 </span><span class="lineCov">          1 :     attackMs-&gt;attachToCurrentValue (attackValue);</span></a>
 <a name="51"><span class="lineNum">      51 </span>            : </a>
-<a name="52"><span class="lineNum">      52 </span><span class="lineCov">          1 :     releaseValue.referTo (state, IDs::release, um, 100.0f);</span></a>
+<a name="52"><span class="lineNum">      52 </span><span class="lineCov">          2 :     releaseValue.referTo (state, IDs::release, um, 100.0f);</span></a>
 <a name="53"><span class="lineNum">      53 </span><span class="lineCov">          1 :     releaseMs-&gt;attachToCurrentValue (releaseValue);</span></a>
 <a name="54"><span class="lineNum">      54 </span>            : </a>
 <a name="55"><span class="lineNum">      55 </span>            :     outputValue.referTo (state, IDs::outputDb, um);</a>
@@ -169,9 +169,9 @@
 <a name="107"><span class="lineNum">     107 </span><span class="lineNoCov">          0 :     const double attackFactor = std::pow (10.0, logThreshold / (attackMs-&gt;getCurrentValue() * sampleRate / 1000.0));</span></a>
 <a name="108"><span class="lineNum">     108 </span><span class="lineNoCov">          0 :     const double releaseFactor = std::pow (10.0, logThreshold / (releaseMs-&gt;getCurrentValue() * sampleRate / 1000.0));</span></a>
 <a name="109"><span class="lineNum">     109 </span><span class="lineNoCov">          0 :     const float outputGain = dbToGain (outputDb-&gt;getCurrentValue());</span></a>
-<a name="110"><span class="lineNum">     110 </span><span class="lineNoCov">          0 :     const float thresh = thresholdGain-&gt;getCurrentValue();</span></a>
-<a name="111"><span class="lineNum">     111 </span><span class="lineNoCov">          0 :     const float rat = ratio-&gt;getCurrentValue();</span></a>
-<a name="112"><span class="lineNum">     112 </span><span class="lineNoCov">          0 :     const bool useSidechain = useSidechainTrigger.get();</span></a>
+<a name="110"><span class="lineNum">     110 </span>            :     const float thresh = thresholdGain-&gt;getCurrentValue();</a>
+<a name="111"><span class="lineNum">     111 </span>            :     const float rat = ratio-&gt;getCurrentValue();</a>
+<a name="112"><span class="lineNum">     112 </span>            :     const bool useSidechain = useSidechainTrigger.get();</a>
 <a name="113"><span class="lineNum">     113 </span><span class="lineNoCov">          0 :     const float sidechainGain = dbToGain (sidechainDb-&gt;getCurrentValue());</span></a>
 <a name="114"><span class="lineNum">     114 </span>            : </a>
 <a name="115"><span class="lineNum">     115 </span><span class="lineNoCov">          0 :     float* b1 = fc.destBuffer-&gt;getWritePointer (0, fc.bufferStartSample);</span></a>
@@ -280,7 +280,7 @@
 <a name="218"><span class="lineNum">     218 </span><span class="lineCov">          1 :     copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);</span></a>
 <a name="219"><span class="lineNum">     219 </span><span class="lineCov">          1 :     copyPropertiesToNullTerminatedCachedValues (v, cvsBool);</span></a>
 <a name="220"><span class="lineNum">     220 </span>            : </a>
-<a name="221"><span class="lineNum">     221 </span><span class="lineCov">          8 :     for (auto p : getAutomatableParameters())</span></a>
+<a name="221"><span class="lineNum">     221 </span><span class="lineCov">          7 :     for (auto p : getAutomatableParameters())</span></a>
 <a name="222"><span class="lineNum">     222 </span><span class="lineCov">          6 :         p-&gt;updateFromAttachedValue();</span></a>
 <a name="223"><span class="lineNum">     223 </span><span class="lineCov">          1 : }</span></a>
 <a name="224"><span class="lineNum">     224 </span>            : </a>
