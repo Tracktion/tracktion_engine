@@ -116,6 +116,7 @@ public:
         Edit& edit;
         juce::ValueTree state;
         juce::CachedValue<float> value, offset, curve;
+        juce::CachedValue<float> inputLimitStart, inputLimitEnd;
     };
 
     /** Creates an assignment for a given source.

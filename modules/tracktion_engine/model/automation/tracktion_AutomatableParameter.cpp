@@ -49,6 +49,12 @@ namespace AutomationScaleHelpers
         return inputVal < 0.0 ? offset - getCurvedValue (-inputVal, 0.0f, value, curve)
                               : offset + getCurvedValue (inputVal, 0.0f, value, curve);
     }
+
+    inline float limitInputValue (float inputVal, juce::Range<float> inputRange)
+    {
+        jassert (juce::isPositiveAndNotGreaterThan (inputVal, 1.0f));
+        return inputRange.clipValue (inputVal);
+    }
 }
 
 //==============================================================================
@@ -296,7 +302,9 @@ struct MacroSource : public AutomationModifierSource
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
         auto macroValue = macro->getCurve().getValueAt (time);
-        return AutomationScaleHelpers::mapValue (macroValue, assignment->offset, assignment->value, assignment->curve);
+        const auto range = juce::Range<float>::between (assignment->inputLimitStart.get(), assignment->inputLimitEnd.get());
+        return AutomationScaleHelpers::mapValue (AutomationScaleHelpers::limitInputValue (macroValue, range),
+                                                 assignment->offset, assignment->value, assignment->curve);
     }
 
     bool isEnabledAt (TimePosition) override
@@ -310,7 +318,9 @@ struct MacroSource : public AutomationModifierSource
         macro->updateFromAutomationSources (time);
         auto macroValue = macro->getCurrentValue();
 
-        currentValue.store (AutomationScaleHelpers::mapValue (macroValue, assignment->offset, assignment->value, assignment->curve),
+        const auto range = juce::Range<float>::between (assignment->inputLimitStart.get(), assignment->inputLimitEnd.get());
+        currentValue.store (AutomationScaleHelpers::mapValue (AutomationScaleHelpers::limitInputValue (macroValue, range),
+                                                              assignment->offset, assignment->value, assignment->curve),
                             std::memory_order_release);
     }
 
@@ -669,6 +679,9 @@ AutomatableParameter::ModifierAssignment::ModifierAssignment (Edit& e, const juc
     offset.referTo (state, IDs::offset, um);
     value.referTo (state, IDs::value, um);
     curve.referTo (state, IDs::curve, um);
+
+    inputLimitStart.referTo (state, IDs::start, um, 0.0f);
+    inputLimitEnd.referTo (state, IDs::end, um, 1.0f);
 }
 
 AutomatableParameter::ModifierAssignment::Ptr AutomatableParameter::addModifier (ModifierSource& source, float value, float offset, float curve)
