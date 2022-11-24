@@ -696,6 +696,11 @@ bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions& options) const
         EditItemID::remapIDs (newClipState, nullptr, options.edit, &remappedIDs);
         fixClipTimes (newClipState, clip, options.edit.tempoSequence, options.startTime);
 
+        //BEATCONNECT MODIFICATION START
+        //need to remove the current BC uuid of the clip or else there will be duplicate uuids
+        newClipState.removeProperty("uuid", nullptr);
+        //BEATCONNECT MODIFICATION END
+
         if (newClipState.hasType (IDs::MARKERCLIP))
         {
             if (auto markerTrack = options.edit.getMarkerTrack())
