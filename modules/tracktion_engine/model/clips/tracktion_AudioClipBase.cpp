@@ -213,7 +213,7 @@ AudioClipBase::AudioClipBase (const juce::ValueTree& v, EditItemID id, Type t, C
 
     fadeInType.referTo (state, IDs::fadeInType, um, AudioFadeCurve::linear);
     fadeOutType.referTo (state, IDs::fadeOutType, um, AudioFadeCurve::linear);
-    autoCrossfade.referTo (state, IDs::autoCrossfade, um);
+    autoCrossfade.referTo (state, IDs::autoCrossfade, um, /*BEATCONNECT MODIFICATION START*/ true /*BEATCONNECT MODIFICAITON END*/);
 
     fadeInBehaviour.referTo (state, IDs::fadeInBehaviour, um, gainFade);
     fadeOutBehaviour.referTo (state, IDs::fadeOutBehaviour, um, gainFade);
