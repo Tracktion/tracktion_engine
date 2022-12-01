@@ -335,6 +335,13 @@ inline void MultiThreadedNodePlayer::pause()
 //==============================================================================
 void MultiThreadedNodePlayer::setNewGraph (std::unique_ptr<NodeGraph> newGraph)
 {
+    if (! newGraph)
+    {
+        currentPreparedNode = {};
+        preparedNode = {};
+        return;
+    }
+    
     // Ensure the Nodes ready to be processed are at the front of the queue
     std::stable_sort (newGraph->orderedNodes.begin(), newGraph->orderedNodes.end(),
                       [] (auto n1, auto n2)
