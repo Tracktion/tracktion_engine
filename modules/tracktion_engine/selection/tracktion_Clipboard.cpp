@@ -779,8 +779,10 @@ bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions& options) const
     if (itemsAdded.isEmpty())
         return false;
 
-    if (auto sm = options.selectionManager)
-        sm->select (itemsAdded);
+    //BEATCONNECT MODIFICATION START
+    //if (auto sm = options.selectionManager)
+    //    sm->select (itemsAdded);
+    //BEATCONNECT MODIFICATION END
 
     if (options.setTransportToEnd && ! options.edit.getTransport().isPlaying())
         options.edit.getTransport().setCurrentPosition (getTimeRangeForSelectedItems (itemsAdded).getEnd());
