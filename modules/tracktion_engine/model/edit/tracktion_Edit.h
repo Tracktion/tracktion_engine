@@ -134,6 +134,10 @@ public:
     */
     std::function<juce::File (const juce::String&)> filePathResolver;
 
+    // BEATCONNECT MODIFICATION START
+    std::function<juce::File()> recordFileRetriever;
+    // BEATCONNECT MODIFICATION END
+
     /** Sets the ProjectItemID of the Edit, this is also stored in the state. */
     void setProjectItemID (ProjectItemID);
 

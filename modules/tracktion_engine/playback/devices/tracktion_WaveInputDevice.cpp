@@ -334,7 +334,7 @@ public:
 
             // BEATCONNECT MODIFICATION START
             auto format = getFormatToUse();
-            juce::File recordedFile = edit.editFileRetriever();
+            juce::File recordedFile = edit.recordFileRetriever();
             auto rc = std::make_unique<RecordingContext>(edit.engine, recordedFile, punchIn, getTargetTracks());
             // BEATCONNECT MODIFICATION END
 
