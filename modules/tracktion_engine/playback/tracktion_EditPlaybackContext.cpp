@@ -174,11 +174,30 @@ private:
          return latencySamples;
      }
      
-     void postPosition (TimePosition newPosition)
+     void postPosition (TimePosition positionToJumpTo, std::optional<TimePosition> whenToJump)
      {
-         pendingPosition.store (newPosition.inSeconds(), std::memory_order_release);
+         pendingPosition.store (positionToJumpTo.inSeconds(), std::memory_order_release);
+
+         if (whenToJump)
+         {
+             pendingPositionJumpTime.store (whenToJump->inSeconds(), std::memory_order_release);
+             pendingPositionJumpTimeValid.store (true, std::memory_order_release);
+         }
+         else
+         {
+             pendingPositionJumpTimeValid.store (false, std::memory_order_release);
+         }
+
          pendingRollInToLoop.store (false, std::memory_order_release);
          positionUpdatePending = true;
+     }
+
+     std::optional<TimePosition> getPendingPositionChange() const
+     {
+         if (! positionUpdatePending.load (std::memory_order_relaxed))
+             return {};
+
+         return TimePosition::fromSeconds (pendingPosition.load (std::memory_order_relaxed));
      }
 
      void postRollInToLoop (double newPosition)
@@ -226,17 +245,58 @@ private:
      
      void process (float* const* allChannels, int numChannels, int destNumSamples)
      {
-         if (positionUpdatePending.exchange (false))
+         const auto referenceSampleRange = getReferenceSampleRange();
+         const double sampleRate = getSampleRate();
+
+         if (positionUpdatePending.load (std::memory_order_acquire))
          {
-             const auto samplePos = timeToSample (pendingPosition.load (std::memory_order_acquire), getSampleRate());
-             
-             if (pendingRollInToLoop.load (std::memory_order_acquire))
-                 playHead.setRollInToLoop (samplePos);
-             else
-                 playHead.setPosition (samplePos);
+             bool shouldPerformPositionChange = true;
+
+             if (pendingPositionJumpTimeValid)
+             {
+                 const auto currentTimeSeconds = sampleToTime (juce::Range<int64_t>::withStartAndLength (playHead.getPosition(), referenceSampleRange.getLength()), sampleRate);
+                 const auto jumpTimeSeconds = pendingPositionJumpTime.load (std::memory_order_acquire);
+
+                 // Check if loop end time is in this block and if it is, cancel the jump
+                 const bool loopEndIsInThisBlock = playHead.isLooping()
+                    && currentTimeSeconds.contains (sampleToTime (playHead.getLoopRange().getEnd(), sampleRate));
+
+                 if (loopEndIsInThisBlock)
+                 {
+                     pendingPositionJumpTimeValid = false;
+                     pendingPositionJumpTime = 0.0;
+
+                     pendingPosition = 0.0;
+                     positionUpdatePending = false;
+
+                     shouldPerformPositionChange = false;
+                 }
+
+                 if (currentTimeSeconds.contains (jumpTimeSeconds))
+                 {
+                     pendingPositionJumpTimeValid = false;
+                     pendingPositionJumpTime = 0.0;
+                 }
+                 else
+                 {
+                     shouldPerformPositionChange = false;
+                 }
+             }
+
+             if (shouldPerformPositionChange)
+             {
+                 if (positionUpdatePending.exchange (false))
+                 {
+                     const auto samplePos = timeToSample (pendingPosition.load (std::memory_order_acquire), sampleRate);
+
+                     if (pendingRollInToLoop.load (std::memory_order_acquire))
+                         playHead.setRollInToLoop (samplePos);
+                     else
+                         playHead.setPosition (samplePos);
+                 }
+             }
          }
 
-         const auto referenceSampleRange = getReferenceSampleRange();
          scratchMidiBuffer.clear();
 
          if (isUsingInterpolator || destNumSamples != (int) numSamplesToProcess)
@@ -292,8 +352,8 @@ private:
      int latencySamples = 0;
      choc::buffer::FrameCount numSamplesToProcess = 0;
      juce::Range<double> referenceStreamRange;
-     std::atomic<double> pendingPosition { 0.0 };
-     std::atomic<bool> positionUpdatePending { false }, pendingRollInToLoop { false };
+     std::atomic<double> pendingPosition { 0.0 }, pendingPositionJumpTime { 0.0 };
+     std::atomic<bool> positionUpdatePending { false }, pendingRollInToLoop { false }, pendingPositionJumpTimeValid { false };
      double speedCompensation = 0.0, blockLengthScaleFactor = 1.0;
      std::vector<std::unique_ptr<juce::LagrangeInterpolator>> interpolators;
      bool isUsingInterpolator = false;
@@ -916,10 +976,23 @@ void EditPlaybackContext::setTempoAdjustment (double plusOrMinusProportion)
         nodePlaybackContext->setTempoAdjustment (plusOrMinusProportion);
 }
 
-void EditPlaybackContext::postPosition (TimePosition newPosition)
+void EditPlaybackContext::postPosition (TimePosition positionToJumpTo, std::optional<TimePosition> whenToJump)
 {
     if (nodePlaybackContext)
-        nodePlaybackContext->postPosition (newPosition);
+    {
+        if (whenToJump && *whenToJump == positionToJumpTo)
+            nodePlaybackContext->postPosition (positionToJumpTo, {});
+        else
+            nodePlaybackContext->postPosition (positionToJumpTo, whenToJump);
+    }
+}
+
+std::optional<TimePosition> EditPlaybackContext::getPendingPositionChange() const
+{
+    if (nodePlaybackContext)
+        return nodePlaybackContext->getPendingPositionChange();
+
+    return {};
 }
 
 void EditPlaybackContext::play()
