@@ -64,17 +64,17 @@ jobs:
             g++ -v
           fi
 
-          if [[ ${{ matrix.asan }} == "true" ]]; then
+          if [[ ${{ matrix.asan }} ]]; then
             export ENABLE_ASAN=1
             export DISABLE_BUILD=1
           fi
 
-          if [[ ${{ matrix.tsan }} == "true" ]]; then
+          if [[ ${{ matrix.tsan }}  ]]; then
             export ENABLE_TSAN=1
             export DISABLE_BUILD=1
           fi
 
-          if [[ ${{ matrix.static_analyser }} == "true" ]]; then
+          if [[ ${{ matrix.static_analyser }} ]]; then
             export ENABLE_STATIC_ANALYSER=1
             export DISABLE_BUILD=1
           fi
