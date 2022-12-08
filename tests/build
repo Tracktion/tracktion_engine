@@ -169,7 +169,7 @@ function buildExample()
 
         if [ "$ENABLE_STATIC_ANALYSER" == "1" ]; then
             echo INFO: Running static analyser: ${APP_FILE}
-            xcodebuild analyze -quiet -configuration Release LLVM_LTO=NO
+            xcodebuild analyze -quiet -target "$PROJECT_NAME" -configuration Release LLVM_LTO=NO
         fi
     else
         echo INFO: Platform not mac: ${APP_FILE}
