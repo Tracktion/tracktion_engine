@@ -17,6 +17,18 @@ jobs:
           - name: macOS
             os: macos-latest
             platform: mac
+          - name: macOS ASan
+            os: macos-latest
+            platform: mac
+            asan: true
+          - name: macOS TSan
+            os: macos-latest
+            platform: mac
+            tsan: true
+          - name: macOS Static Analyser
+            os: macos-latest
+            platform: mac
+            static_analyser: true
           - name: Windows
             os: windows-latest
             platform: windows
@@ -50,6 +62,21 @@ jobs:
             export CXX=/usr/bin/g++-11
             gcc -v
             g++ -v
+          fi
+
+          if [[ {{ $matrix.asan }} == "true" ]]
+            export ENABLE_ASAN=1
+            export DISABLE_BUILD=1
+          fi
+
+          if [[ {{ $matrix.tsan }} == "true" ]]
+            export ENABLE_TSAN=1
+            export DISABLE_BUILD=1
+          fi
+
+          if [[ {{ $matrix.static_analyser }} == "true" ]]
+            export ENABLE_STATIC_ANALYSER=1
+            export DISABLE_BUILD=1
           fi
 
           if [[ ${{ github.event_name }} == 'schedule' ]]; then
