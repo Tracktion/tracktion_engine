@@ -155,7 +155,7 @@ jobs:
   # Upload test results
   deploy:
     if: always()
-    needs: build
+    needs: build_and_test
     runs-on: ubuntu-latest
     steps:
       - name: Get Artifacts
