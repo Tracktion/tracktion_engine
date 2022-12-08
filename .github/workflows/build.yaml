@@ -67,17 +67,17 @@ jobs:
             g++ -v
           fi
 
-          if [[ "$ENABLE_ASAN" == 1 ]]; then
+          if [[ "$ENABLE_ASAN" == "true" ]]; then
             export ENABLE_ASAN=1
             export DISABLE_BUILD=1
           fi
 
-          if [[ "$ENABLE_TSAN" == 1 ]]; then
+          if [[ "$ENABLE_TSAN" == "true" ]]; then
             export ENABLE_TSAN=1
             export DISABLE_BUILD=1
           fi
 
-          if [[ "$ENABLE_STATIC_ANALYSER" == 1 ]]; then
+          if [[ "$ENABLE_STATIC_ANALYSER" == "true" ]]; then
             export ENABLE_STATIC_ANALYSER=1
             export DISABLE_BUILD=1
           fi
