@@ -119,7 +119,7 @@ function buildExample()
     echo CMAKE_GENERATOR: "$CMAKE_GENERATOR"    
     
     # Capture named function arguments
-    local global RUN_EXAMPLE ENABLE_ASAN ENABLE_TSAN ENABLE_STATIC_ANALYSER RUN_ARGS ${@}
+    local global RUN_EXAMPLE ENABLE_ASAN ENABLE_TSAN RUN_ARGS ${@}
     echo DISABLE_BUILD: $DISABLE_BUILD
     echo RUN_EXAMPLE: $RUN_EXAMPLE
     echo ENABLE_ASAN: "$ENABLE_ASAN"
@@ -179,9 +179,9 @@ function buildExample()
 
 
 # First build and test these examples
-buildExample "TestRunner" RUN_EXAMPLE=1
-buildExample "Benchmarks" RUN_EXAMPLE=1 ENABLE_ASAN=0 ENABLE_TSAN=0 ENABLE_STATIC_ANALYSER=0
+buildExample "TestRunner" RUN_EXAMPLE=1 ENABLE_ASAN=$ENABLE_ASAN ENABLE_TSAN=$ENABLE_TSAN
+buildExample "Benchmarks" RUN_EXAMPLE=1 ENABLE_ASAN=0 ENABLE_TSAN=0
 
 # Then just build these examples (don't build with tooling as they won't be run)
-buildExample "DemoRunner" ENABLE_ASAN=0 ENABLE_TSAN=0 ENABLE_STATIC_ANALYSER=0
-buildExample "EngineInPluginDemo" ENABLE_ASAN=0 ENABLE_TSAN=0 ENABLE_STATIC_ANALYSER=0
+buildExample "DemoRunner" ENABLE_ASAN=0 ENABLE_TSAN=0
+buildExample "EngineInPluginDemo" ENABLE_ASAN=0 ENABLE_TSAN=0
