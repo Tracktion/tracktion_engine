@@ -134,13 +134,18 @@ function buildExample()
     cd "$EXAMPLE_DIR"
     pwd
 
-    # Generate build files
-    cmake -B "$CMAKE_BUILD_DIR" $CMAKE_GENERATOR $CMAKE_PLATFORM_ARGS
+    function generateBuildFiles()
+    {
+        echo INFO: Generating build files: ${APP_FILE}
+        cmake -B "$CMAKE_BUILD_DIR" $CMAKE_GENERATOR $CMAKE_PLATFORM_ARGS
+    }
 
     # Conditionally build and run project
     if [ "$DISABLE_BUILD" == "1" ]; then
         echo INFO: Not building example: ${APP_FILE}
     else
+        generateBuildFiles
+
         cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release
 
         if [ "$RUN_EXAMPLE" == "1" ]; then
@@ -156,18 +161,24 @@ function buildExample()
         cd "$CMAKE_BUILD_DIR"
 
         if [ "$ENABLE_ASAN" == "1" ]; then
+            generateBuildFiles
+
             echo INFO: Running with Asan: ${APP_FILE}
             cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release -- -enableAddressSanitizer YES LLVM_LTO=NO GCC_PREPROCESSOR_DEFINITIONS='$GCC_PREPROCESSOR_DEFINITIONS GRAPH_UNIT_TESTS_QUICK_VALIDATE=1'
             ${APP_FILE} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}_asan.xml"
         fi
 
         if [ "$ENABLE_TSAN" == "1" ]; then
+            generateBuildFiles
+
             echo INFO: Running with Tsan: ${APP_FILE}
             cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release -- -enableThreadSanitizer YES LLVM_LTO=NO GCC_PREPROCESSOR_DEFINITIONS='$GCC_PREPROCESSOR_DEFINITIONS GRAPH_UNIT_TESTS_QUICK_VALIDATE=1'
             ${APP_FILE} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}_tsan.xml"
         fi
 
         if [ "$ENABLE_STATIC_ANALYSER" == "1" ]; then
+            generateBuildFiles
+
             echo INFO: Running static analyser: ${APP_FILE}
             xcodebuild analyze -quiet -target "$PROJECT_NAME" -configuration Release LLVM_LTO=NO
         fi
