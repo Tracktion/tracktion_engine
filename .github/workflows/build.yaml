@@ -55,6 +55,9 @@ jobs:
         shell: bash
         env:
           BM_API_KEY: ${{ secrets.BM_API_KEY }}
+          ENABLE_ASAN: ${{ matrix.asan }}
+          ENABLE_TSAN: ${{ matrix.tsan }}
+          ENABLE_STATIC_ANALYSER: ${{ matrix.static_analyser }}
         run: |
           if [[ "$OSTYPE" == "linux-gnu" ]]; then
             export DISABLE_VALGRIND=1
@@ -64,18 +67,15 @@ jobs:
             g++ -v
           fi
 
-          if [[ ${{ matrix.asan }} ]]; then
-            export ENABLE_ASAN=1
+          if [[ "$ENABLE_ASAN" == 1 ]]; then
             export DISABLE_BUILD=1
           fi
 
-          if [[ ${{ matrix.tsan }}  ]]; then
-            export ENABLE_TSAN=1
+          if [[ "$ENABLE_TSAN" == 1 ]]; then
             export DISABLE_BUILD=1
           fi
 
-          if [[ ${{ matrix.static_analyser }} ]]; then
-            export ENABLE_STATIC_ANALYSER=1
+          if [[ "$ENABLE_STATIC_ANALYSER" == 1 ]]; then
             export DISABLE_BUILD=1
           fi
 
