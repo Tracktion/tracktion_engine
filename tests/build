@@ -8,8 +8,10 @@
 # selectively disable behaviour by setting the following 
 # enviroment variables:
 # 
-# DISABLE_BUILD:    Set to 1 to disable building
-# DISABLE_TOOLS:    Set to 1 to disable Tsan and Asan builds
+# DISABLE_BUILD:            Set to 1 to disable building (used for generating IDE files)
+# ENABLE_ASAN:              Set to 1 to enable ASan builds
+# ENABLE_TSAN:              Set to 1 to enable TSan builds
+# ENABLE_STATIC_ANALYSER:   Set to 1 to enable Static Analyser builds
 # 
 #========================================================
 
@@ -45,7 +47,9 @@ echo "\n=========================================="
 echo PLATFORM: "$PLATFORM"
 echo ROOT: "$ROOT"
 echo DISABLE_BUILD: "$DISABLE_BUILD"
-echo DISABLE_TOOLS: "$DISABLE_TOOLS"
+echo ENABLE_ASAN: "$ENABLE_ASAN"
+echo ENABLE_TSAN: "$ENABLE_TSAN"
+echo ENABLE_STATIC_ANALYSER: "$ENABLE_STATIC_ANALYSER"
 
 
 #============================================================
@@ -115,10 +119,12 @@ function buildExample()
     echo CMAKE_GENERATOR: "$CMAKE_GENERATOR"    
     
     # Capture named function arguments
-    local global RUN_EXAMPLE RUN_ARGS ${@}
+    local global RUN_EXAMPLE ENABLE_ASAN ENABLE_TSAN RUN_ARGS ${@}
     echo DISABLE_BUILD: $DISABLE_BUILD
     echo RUN_EXAMPLE: $RUN_EXAMPLE
-    echo DISABLE_TOOLS: $DISABLE_TOOLS
+    echo ENABLE_ASAN: "$ENABLE_ASAN"
+    echo ENABLE_TSAN: "$ENABLE_TSAN"
+    echo ENABLE_STATIC_ANALYSER: "$ENABLE_STATIC_ANALYSER"
     echo RUN_ARGS: $RUN_ARGS
 
     #============================================================
@@ -128,52 +134,64 @@ function buildExample()
     cd "$EXAMPLE_DIR"
     pwd
 
-    # Generate build files
-    cmake -B "$CMAKE_BUILD_DIR" $CMAKE_GENERATOR $CMAKE_PLATFORM_ARGS
+    function generateBuildFiles()
+    {
+        echo INFO: Generating build files: ${APP_FILE}
+        cmake -B "$CMAKE_BUILD_DIR" $CMAKE_GENERATOR $CMAKE_PLATFORM_ARGS
+    }
 
+    # Conditionally build and run project
     if [ "$DISABLE_BUILD" == "1" ]; then
         echo INFO: Not building example: ${APP_FILE}
     else
-        # Build project
+        generateBuildFiles
+
         cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release
 
         if [ "$RUN_EXAMPLE" == "1" ]; then
             echo INFO: Running example: ${APP_FILE}
             ${APP_FILE} ${RUN_ARGS} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}.xml"
-
-            if [ "$DISABLE_TOOLS" == "1" ]; then
-                echo INFO: Not building with tools tools: ${APP_FILE}
-                echo DISABLE_TOOLS: $DISABLE_TOOLS
-            else
-                if [ "$PLATFORM" = "mac" ]; then
-                    cd "$CMAKE_BUILD_DIR"
-
-                    echo INFO: Running with Asan: ${APP_FILE}
-                    cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release -- -enableAddressSanitizer YES LLVM_LTO=NO GCC_PREPROCESSOR_DEFINITIONS='$GCC_PREPROCESSOR_DEFINITIONS GRAPH_UNIT_TESTS_QUICK_VALIDATE=1'
-                    ${APP_FILE} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}_asan.xml"
-
-                    echo INFO: Running with Tsan: ${APP_FILE}
-                    cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release -- -enableThreadSanitizer YES LLVM_LTO=NO GCC_PREPROCESSOR_DEFINITIONS='$GCC_PREPROCESSOR_DEFINITIONS GRAPH_UNIT_TESTS_QUICK_VALIDATE=1'
-                    ${APP_FILE} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}_tsan.xml"
-
-                    echo INFO: Running static analyser: ${APP_FILE}
-                    xcodebuild analyze -quiet -configuration Release LLVM_LTO=NO
-                else
-                    echo INFO: Platform not mac: ${APP_FILE}
-                    echo PLATFORM: "$PLATFORM"
-                fi
-            fi
         else
             echo INFO: Not running example: ${APP_FILE}
         fi
+    fi
+
+    # Conditionally build and run tooled projects
+    if [ "$PLATFORM" = "mac" ]; then
+        if [ "$ENABLE_ASAN" == "1" ]; then
+            generateBuildFiles
+
+            echo INFO: Running with Asan: ${APP_FILE}
+            cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release -- -enableAddressSanitizer YES LLVM_LTO=NO GCC_PREPROCESSOR_DEFINITIONS='$GCC_PREPROCESSOR_DEFINITIONS GRAPH_UNIT_TESTS_QUICK_VALIDATE=1'
+            ${APP_FILE} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}_asan.xml"
+        fi
+
+        if [ "$ENABLE_TSAN" == "1" ]; then
+            generateBuildFiles
+
+            echo INFO: Running with Tsan: ${APP_FILE}
+            cmake --build "$CMAKE_BUILD_DIR" --target "$PROJECT_NAME" --config Release -- -enableThreadSanitizer YES LLVM_LTO=NO GCC_PREPROCESSOR_DEFINITIONS='$GCC_PREPROCESSOR_DEFINITIONS GRAPH_UNIT_TESTS_QUICK_VALIDATE=1'
+            ${APP_FILE} --junit-xml-file "$ROOT/bin/test_results/TEST-${APP_NAME}_tsan.xml"
+        fi
+
+        if [ "$ENABLE_STATIC_ANALYSER" == "1" ]; then
+            generateBuildFiles
+            cd "$CMAKE_BUILD_DIR"
+
+            echo INFO: Running static analyser: ${APP_FILE}
+            xcodebuild analyze -quiet -target "$PROJECT_NAME" -configuration Release LLVM_LTO=NO
+        fi
+    else
+        echo INFO: Platform not mac: ${APP_FILE}
+        echo PLATFORM: "$PLATFORM"
     fi
 }
 
 
 # First build and test these examples
-buildExample "TestRunner" RUN_EXAMPLE=1
-buildExample "Benchmarks" RUN_EXAMPLE=1 DISABLE_TOOLS=1
+buildExample "TestRunner" RUN_EXAMPLE=1 ENABLE_ASAN=$ENABLE_ASAN ENABLE_TSAN=$ENABLE_TSAN
+buildExample "Benchmarks" RUN_EXAMPLE=1 ENABLE_ASAN=0 ENABLE_TSAN=0
 
 # Then just build these examples (don't build with tooling as they won't be run)
-buildExample "DemoRunner" DISABLE_TOOLS=1
-buildExample "EngineInPluginDemo" DISABLE_TOOLS=1
+buildExample "DemoRunner" ENABLE_ASAN=0 ENABLE_TSAN=0
+buildExample "EngineInPluginDemo" ENABLE_ASAN=0 ENABLE_TSAN=0
