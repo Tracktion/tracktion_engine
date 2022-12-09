@@ -63,6 +63,7 @@ jobs:
           path: ./bin/test_results/**/TEST-*.xml
 
   build_and_test_tooled:
+    if: github.event_name == 'schedule'
     strategy:
       fail-fast: false
       matrix:
@@ -114,6 +115,7 @@ jobs:
           ./tests/build
 
   static_analysis:
+    if: github.event_name == 'schedule'
     strategy:
       fail-fast: false
       matrix:
