@@ -998,7 +998,7 @@ void MidiControllerEvent::setMetadata (int m, juce::UndoManager* um)
     if (metadata != m)
     {
         state.setProperty (IDs::metadata, m, um);
-        m = metadata;
+        metadata = m;
     }
 }
 
