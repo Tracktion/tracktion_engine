@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-12-09 12:58:28</td>
+            <td class="headerValue">2022-12-09 13:00:16</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -122,11 +122,11 @@
 <a name="60"><span class="lineNum">      60 </span>            :     ~AudioFile();</a>
 <a name="61"><span class="lineNum">      61 </span>            : </a>
 <a name="62"><span class="lineNum">      62 </span><span class="lineCov">       8832 :     const juce::File&amp; getFile() const noexcept  { return file; }</span></a>
-<a name="63"><span class="lineNum">      63 </span><span class="lineCov">    1126506 :     HashCode getHash() const noexcept           { return hash; }</span></a>
+<a name="63"><span class="lineNum">      63 </span><span class="lineCov">    1126417 :     HashCode getHash() const noexcept           { return hash; }</span></a>
 <a name="64"><span class="lineNum">      64 </span>            :     juce::String getHashString() const          { return juce::String::toHexString (hash); }</a>
 <a name="65"><span class="lineNum">      65 </span>            : </a>
-<a name="66"><span class="lineNum">      66 </span><span class="lineCov">       1632 :     inline bool operator== (const AudioFile&amp; other) const noexcept      { return hash == other.hash; }</span></a>
-<a name="67"><span class="lineNum">      67 </span><span class="lineCov">         50 :     inline bool operator!= (const AudioFile&amp; other) const noexcept      { return hash != other.hash; }</span></a>
+<a name="66"><span class="lineNum">      66 </span><span class="lineCov">       1554 :     inline bool operator== (const AudioFile&amp; other) const noexcept      { return hash == other.hash; }</span></a>
+<a name="67"><span class="lineNum">      67 </span><span class="lineCov">         51 :     inline bool operator!= (const AudioFile&amp; other) const noexcept      { return hash != other.hash; }</span></a>
 <a name="68"><span class="lineNum">      68 </span>            : </a>
 <a name="69"><span class="lineNum">      69 </span>            :     bool deleteFile() const;</a>
 <a name="70"><span class="lineNum">      70 </span>            :     static bool deleteFiles (Engine&amp;, const juce::Array&lt;juce::File&gt;&amp; files);</a>
@@ -134,7 +134,7 @@
 <a name="72"><span class="lineNum">      72 </span>            :     bool moveToTrash() const;</a>
 <a name="73"><span class="lineNum">      73 </span>            : </a>
 <a name="74"><span class="lineNum">      74 </span>            :     //==============================================================================</a>
-<a name="75"><span class="lineNum">      75 </span><span class="lineCov">   39687313 :     bool isNull() const noexcept                { return hash == 0; }</span></a>
+<a name="75"><span class="lineNum">      75 </span><span class="lineCov">   39686104 :     bool isNull() const noexcept                { return hash == 0; }</span></a>
 <a name="76"><span class="lineNum">      76 </span>            :     bool isValid() const;</a>
 <a name="77"><span class="lineNum">      77 </span>            : </a>
 <a name="78"><span class="lineNum">      78 </span>            :     AudioFileInfo getInfo() const;</a>

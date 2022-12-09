@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-12-09 12:58:28</td>
+            <td class="headerValue">2022-12-09 13:00:16</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">27</td>
@@ -233,7 +233,7 @@
 <a name="171"><span class="lineNum">     171 </span>            :     static void sortMidiEventsByTime (juce::Array&lt;Type&gt;&amp; notes)</a>
 <a name="172"><span class="lineNum">     172 </span>            :     {</a>
 <a name="173"><span class="lineNum">     173 </span>            :         std::sort (notes.begin(), notes.end(),</a>
-<a name="174"><span class="lineNum">     174 </span><span class="lineCov">   49575353 :                    [] (const Type&amp; a, const Type&amp; b) { return a-&gt;getBeatPosition() &lt; b-&gt;getBeatPosition(); });</span></a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineCov">   49574633 :                    [] (const Type&amp; a, const Type&amp; b) { return a-&gt;getBeatPosition() &lt; b-&gt;getBeatPosition(); });</span></a>
 <a name="175"><span class="lineNum">     175 </span><span class="lineCov">        321 :     }</span></a>
 <a name="176"><span class="lineNum">     176 </span>            : </a>
 <a name="177"><span class="lineNum">     177 </span>            :     template &lt;typename Type&gt;</a>
@@ -287,9 +287,9 @@
 <a name="225"><span class="lineNum">     225 </span>            :             return {};</a>
 <a name="226"><span class="lineNum">     226 </span>            :         }</a>
 <a name="227"><span class="lineNum">     227 </span>            : </a>
-<a name="228"><span class="lineNum">     228 </span><span class="lineCov">   11021880 :         bool isSuitableType (const juce::ValueTree&amp; v) const override   { return EventDelegate&lt;EventType&gt;::isSuitableType (v); }</span></a>
-<a name="229"><span class="lineNum">     229 </span><span class="lineCov">    3673960 :         EventType* createNewObject (const juce::ValueTree&amp; v) override  { return new EventType (v); }</span></a>
-<a name="230"><span class="lineNum">     230 </span><span class="lineCov">    7347920 :         void deleteObject (EventType* m) override                       { delete m; }</span></a>
+<a name="228"><span class="lineNum">     228 </span><span class="lineCov">   11021376 :         bool isSuitableType (const juce::ValueTree&amp; v) const override   { return EventDelegate&lt;EventType&gt;::isSuitableType (v); }</span></a>
+<a name="229"><span class="lineNum">     229 </span><span class="lineCov">    3673792 :         EventType* createNewObject (const juce::ValueTree&amp; v) override  { return new EventType (v); }</span></a>
+<a name="230"><span class="lineNum">     230 </span><span class="lineCov">    7347584 :         void deleteObject (EventType* m) override                       { delete m; }</span></a>
 <a name="231"><span class="lineNum">     231 </span><span class="lineCov">       1128 :         void newObjectAdded (EventType*) override                       { triggerSort(); }</span></a>
 <a name="232"><span class="lineNum">     232 </span><span class="lineNoCov">          0 :         void objectRemoved (EventType* m) override                      { EventDelegate&lt;EventType&gt;::removeFromSelection (m); triggerSort(); }</span></a>
 <a name="233"><span class="lineNum">     233 </span><span class="lineNoCov">          0 :         void objectOrderChanged() override                              { triggerSort(); }</span></a>
