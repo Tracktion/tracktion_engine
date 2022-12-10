@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">7</td>
-            <td class="headerCovTableEntry">15</td>
-            <td class="headerCovTableEntryLo">46.7 %</td>
+            <td class="headerCovTableEntry">6</td>
+            <td class="headerCovTableEntry">14</td>
+            <td class="headerCovTableEntryLo">42.9 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-12-10 11:38:55</td>
+            <td class="headerValue">2022-12-10 12:30:34</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
@@ -185,16 +185,16 @@
 <a name="123"><span class="lineNum">     123 </span>            :     AutomatableParameter::Ptr enabledParam; /**&lt; Parameter to change the enabled state. */</a>
 <a name="124"><span class="lineNum">     124 </span>            : </a>
 <a name="125"><span class="lineNum">     125 </span>            :     /** Returns the sample rate the Modifier has been initialised with. */</a>
-<a name="126"><span class="lineNum">     126 </span><span class="lineCov">         32 :     double getSampleRate() const                                { return sampleRate; }</span></a>
+<a name="126"><span class="lineNum">     126 </span><span class="lineCov">         48 :     double getSampleRate() const                                { return sampleRate; }</span></a>
 <a name="127"><span class="lineNum">     127 </span>            : </a>
 <a name="128"><span class="lineNum">     128 </span>            : protected:</a>
 <a name="129"><span class="lineNum">     129 </span>            :     /** Subclasses can call this to update the edit time of the current value. */</a>
-<a name="130"><span class="lineNum">     130 </span><span class="lineCov">      73410 :     void setEditTime (TimePosition newEditTime)                 { lastEditTime = newEditTime; }</span></a>
+<a name="130"><span class="lineNum">     130 </span>            :     void setEditTime (TimePosition newEditTime)                 { lastEditTime = newEditTime; }</a>
 <a name="131"><span class="lineNum">     131 </span>            :     </a>
 <a name="132"><span class="lineNum">     132 </span>            : private:</a>
 <a name="133"><span class="lineNum">     133 </span>            :     int initialiseCount = 0;</a>
 <a name="134"><span class="lineNum">     134 </span>            :     double sampleRate = 44100.0;</a>
-<a name="135"><span class="lineNum">     135 </span>            :     TimePosition lastEditTime;</a>
+<a name="135"><span class="lineNum">     135 </span>            :     std::atomic&lt;TimePosition&gt; lastEditTime { TimePosition() };</a>
 <a name="136"><span class="lineNum">     136 </span>            :     </a>
 <a name="137"><span class="lineNum">     137 </span>            :     class ValueFifo;</a>
 <a name="138"><span class="lineNum">     138 </span>            :     std::unique_ptr&lt;ValueFifo&gt; valueFifo, messageThreadValueFifo;</a>

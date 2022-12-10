@@ -1,9 +1,9 @@
 var searchData=
 [
-  ['oldeditconversion_6914',['OldEditConversion',['../structtracktion_1_1engine_1_1OldEditConversion.html',1,'tracktion::engine::OldEditConversion'],['../structtracktion_1_1engine_1_1OldEditConversion.html',1,'tracktion::OldEditConversion']]],
-  ['options_6915',['Options',['../structtracktion_1_1engine_1_1Edit_1_1Options.html',1,'tracktion::engine::Edit']]],
-  ['oscillator_6916',['Oscillator',['../classtracktion_1_1engine_1_1Oscillator.html',1,'tracktion::engine::Oscillator'],['../classtracktion_1_1engine_1_1Oscillator.html',1,'tracktion::Oscillator']]],
-  ['oscparams_6917',['OscParams',['../structtracktion_1_1engine_1_1FourOscPlugin_1_1OscParams.html',1,'tracktion::engine::FourOscPlugin']]],
-  ['outputdevice_6918',['OutputDevice',['../classtracktion_1_1engine_1_1OutputDevice.html',1,'tracktion::engine::OutputDevice'],['../classtracktion_1_1engine_1_1OutputDevice.html',1,'tracktion::OutputDevice']]],
-  ['outputdeviceinstance_6919',['OutputDeviceInstance',['../classtracktion_1_1engine_1_1OutputDeviceInstance.html',1,'tracktion::engine::OutputDeviceInstance'],['../classtracktion_1_1engine_1_1OutputDeviceInstance.html',1,'tracktion::OutputDeviceInstance']]]
+  ['oldeditconversion_6920',['OldEditConversion',['../structtracktion_1_1engine_1_1OldEditConversion.html',1,'tracktion::engine::OldEditConversion'],['../structtracktion_1_1engine_1_1OldEditConversion.html',1,'tracktion::OldEditConversion']]],
+  ['options_6921',['Options',['../structtracktion_1_1engine_1_1Edit_1_1Options.html',1,'tracktion::engine::Edit']]],
+  ['oscillator_6922',['Oscillator',['../classtracktion_1_1engine_1_1Oscillator.html',1,'tracktion::engine::Oscillator'],['../classtracktion_1_1engine_1_1Oscillator.html',1,'tracktion::Oscillator']]],
+  ['oscparams_6923',['OscParams',['../structtracktion_1_1engine_1_1FourOscPlugin_1_1OscParams.html',1,'tracktion::engine::FourOscPlugin']]],
+  ['outputdevice_6924',['OutputDevice',['../classtracktion_1_1engine_1_1OutputDevice.html',1,'tracktion::engine::OutputDevice'],['../classtracktion_1_1engine_1_1OutputDevice.html',1,'tracktion::OutputDevice']]],
+  ['outputdeviceinstance_6925',['OutputDeviceInstance',['../classtracktion_1_1engine_1_1OutputDeviceInstance.html',1,'tracktion::engine::OutputDeviceInstance'],['../classtracktion_1_1engine_1_1OutputDeviceInstance.html',1,'tracktion::OutputDeviceInstance']]]
 ];

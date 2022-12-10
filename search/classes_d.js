@@ -1,14 +1,14 @@
 var searchData=
 [
-  ['node_6903',['Node',['../classtracktion_1_1graph_1_1Node.html',1,'tracktion::graph::Node'],['../classtracktion_1_1graph_1_1Node.html',1,'tracktion::Node']]],
-  ['nodeandid_6904',['NodeAndID',['../structtracktion_1_1graph_1_1NodeAndID.html',1,'tracktion::graph::NodeAndID'],['../structtracktion_1_1graph_1_1NodeAndID.html',1,'tracktion::NodeAndID']]],
-  ['nodebuffer_6905',['NodeBuffer',['../structtracktion_1_1graph_1_1NodeBuffer.html',1,'tracktion::graph::NodeBuffer'],['../structtracktion_1_1graph_1_1NodeBuffer.html',1,'tracktion::NodeBuffer']]],
-  ['nodegraph_6906',['NodeGraph',['../structtracktion_1_1graph_1_1NodeGraph.html',1,'tracktion::graph::NodeGraph'],['../structtracktion_1_1graph_1_1NodeGraph.html',1,'tracktion::NodeGraph']]],
-  ['nodeoptimisations_6907',['NodeOptimisations',['../structtracktion_1_1graph_1_1NodeOptimisations.html',1,'tracktion::graph::NodeOptimisations'],['../structtracktion_1_1graph_1_1NodeOptimisations.html',1,'tracktion::NodeOptimisations']]],
-  ['nodeplayer_6908',['NodePlayer',['../classtracktion_1_1graph_1_1NodePlayer.html',1,'tracktion::graph::NodePlayer'],['../classtracktion_1_1graph_1_1NodePlayer.html',1,'tracktion::NodePlayer']]],
-  ['nodeproperties_6909',['NodeProperties',['../structtracktion_1_1graph_1_1NodeProperties.html',1,'tracktion::graph::NodeProperties'],['../structtracktion_1_1graph_1_1NodeProperties.html',1,'tracktion::NodeProperties']]],
-  ['nodereader_6910',['NodeReader',['../classNodeReader.html',1,'']]],
-  ['noderendercontext_6911',['NodeRenderContext',['../classtracktion_1_1engine_1_1NodeRenderContext.html',1,'tracktion::engine::NodeRenderContext'],['../classtracktion_1_1engine_1_1NodeRenderContext.html',1,'tracktion::NodeRenderContext']]],
-  ['normaliseeffect_6912',['NormaliseEffect',['../structtracktion_1_1engine_1_1NormaliseEffect.html',1,'tracktion::engine::NormaliseEffect'],['../structtracktion_1_1engine_1_1NormaliseEffect.html',1,'tracktion::NormaliseEffect']]],
-  ['novationremotesl_6913',['NovationRemoteSl',['../classtracktion_1_1engine_1_1NovationRemoteSl.html',1,'tracktion::engine::NovationRemoteSl'],['../classtracktion_1_1engine_1_1NovationRemoteSl.html',1,'tracktion::NovationRemoteSl']]]
+  ['node_6909',['Node',['../classtracktion_1_1graph_1_1Node.html',1,'tracktion::graph::Node'],['../classtracktion_1_1graph_1_1Node.html',1,'tracktion::Node']]],
+  ['nodeandid_6910',['NodeAndID',['../structtracktion_1_1graph_1_1NodeAndID.html',1,'tracktion::graph::NodeAndID'],['../structtracktion_1_1graph_1_1NodeAndID.html',1,'tracktion::NodeAndID']]],
+  ['nodebuffer_6911',['NodeBuffer',['../structtracktion_1_1graph_1_1NodeBuffer.html',1,'tracktion::graph::NodeBuffer'],['../structtracktion_1_1graph_1_1NodeBuffer.html',1,'tracktion::NodeBuffer']]],
+  ['nodegraph_6912',['NodeGraph',['../structtracktion_1_1graph_1_1NodeGraph.html',1,'tracktion::graph::NodeGraph'],['../structtracktion_1_1graph_1_1NodeGraph.html',1,'tracktion::NodeGraph']]],
+  ['nodeoptimisations_6913',['NodeOptimisations',['../structtracktion_1_1graph_1_1NodeOptimisations.html',1,'tracktion::graph::NodeOptimisations'],['../structtracktion_1_1graph_1_1NodeOptimisations.html',1,'tracktion::NodeOptimisations']]],
+  ['nodeplayer_6914',['NodePlayer',['../classtracktion_1_1graph_1_1NodePlayer.html',1,'tracktion::graph::NodePlayer'],['../classtracktion_1_1graph_1_1NodePlayer.html',1,'tracktion::NodePlayer']]],
+  ['nodeproperties_6915',['NodeProperties',['../structtracktion_1_1graph_1_1NodeProperties.html',1,'tracktion::graph::NodeProperties'],['../structtracktion_1_1graph_1_1NodeProperties.html',1,'tracktion::NodeProperties']]],
+  ['nodereader_6916',['NodeReader',['../classNodeReader.html',1,'']]],
+  ['noderendercontext_6917',['NodeRenderContext',['../classtracktion_1_1engine_1_1NodeRenderContext.html',1,'tracktion::engine::NodeRenderContext'],['../classtracktion_1_1engine_1_1NodeRenderContext.html',1,'tracktion::NodeRenderContext']]],
+  ['normaliseeffect_6918',['NormaliseEffect',['../structtracktion_1_1engine_1_1NormaliseEffect.html',1,'tracktion::engine::NormaliseEffect'],['../structtracktion_1_1engine_1_1NormaliseEffect.html',1,'tracktion::NormaliseEffect']]],
+  ['novationremotesl_6919',['NovationRemoteSl',['../classtracktion_1_1engine_1_1NovationRemoteSl.html',1,'tracktion::engine::NovationRemoteSl'],['../classtracktion_1_1engine_1_1NovationRemoteSl.html',1,'tracktion::NovationRemoteSl']]]
 ];
