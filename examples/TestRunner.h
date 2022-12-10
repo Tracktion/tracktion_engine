@@ -93,6 +93,9 @@ struct CoutLogger : public Logger
 {
     void logMessage (const String& message) override
     {
+        static tracktion::RealTimeSpinLock mutex;
+
+        const std::scoped_lock lock (mutex);
         std::cout << message << "\n";
     }
 };
