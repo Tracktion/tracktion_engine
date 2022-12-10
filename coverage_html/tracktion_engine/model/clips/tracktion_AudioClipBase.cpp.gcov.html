@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-12-09 13:00:16</td>
+            <td class="headerValue">2022-12-10 11:38:55</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">45</td>
@@ -1126,7 +1126,7 @@
 <a name="1064"><span class="lineNum">    1064 </span>            : </a>
 <a name="1065"><span class="lineNum">    1065 </span><span class="lineCov">       3451 : bool AudioClipBase::isUsingMelodyne() const</span></a>
 <a name="1066"><span class="lineNum">    1066 </span>            : {</a>
-<a name="1067"><span class="lineNum">    1067 </span><span class="lineCov">      17385 :     return TimeStretcher::isMelodyne (timeStretchMode);</span></a>
+<a name="1067"><span class="lineNum">    1067 </span><span class="lineCov">      17394 :     return TimeStretcher::isMelodyne (timeStretchMode);</span></a>
 <a name="1068"><span class="lineNum">    1068 </span>            : }</a>
 <a name="1069"><span class="lineNum">    1069 </span>            : </a>
 <a name="1070"><span class="lineNum">    1070 </span><span class="lineNoCov">          0 : void AudioClipBase::loadMelodyneState()</span></a>
@@ -1897,17 +1897,17 @@
 <a name="1835"><span class="lineNum">    1835 </span><span class="lineCov">       3391 :     stopTimer();</span></a>
 <a name="1836"><span class="lineNum">    1836 </span><span class="lineCov">       3391 : }</span></a>
 <a name="1837"><span class="lineNum">    1837 </span>            : </a>
-<a name="1838"><span class="lineNum">    1838 </span><span class="lineCov">      10461 : bool AudioClipBase::usesTimeStretchedProxy() const</span></a>
+<a name="1838"><span class="lineNum">    1838 </span><span class="lineCov">      10467 : bool AudioClipBase::usesTimeStretchedProxy() const</span></a>
 <a name="1839"><span class="lineNum">    1839 </span>            : {</a>
 <a name="1840"><span class="lineNum">    1840 </span>            :    #if TRACKTION_ENABLE_REALTIME_TIMESTRETCHING</a>
-<a name="1841"><span class="lineNum">    1841 </span><span class="lineCov">      10461 :     if (! proxyAllowed)</span></a>
+<a name="1841"><span class="lineNum">    1841 </span><span class="lineCov">      10467 :     if (! proxyAllowed)</span></a>
 <a name="1842"><span class="lineNum">    1842 </span>            :         return false;</a>
 <a name="1843"><span class="lineNum">    1843 </span>            :    #endif</a>
 <a name="1844"><span class="lineNum">    1844 </span>            : </a>
-<a name="1845"><span class="lineNum">    1845 </span><span class="lineCov">      10457 :     return getAutoTempo() || getAutoPitch()</span></a>
-<a name="1846"><span class="lineNum">    1846 </span><span class="lineCov">      10457 :            || getPitchChange() != 0.0f</span></a>
-<a name="1847"><span class="lineNum">    1847 </span><span class="lineCov">      10457 :            || isUsingMelodyne()</span></a>
-<a name="1848"><span class="lineNum">    1848 </span><span class="lineCov">      20914 :            || (std::abs (getSpeedRatio() - 1.0) &gt; 0.00001</span></a>
+<a name="1845"><span class="lineNum">    1845 </span><span class="lineCov">      10463 :     return getAutoTempo() || getAutoPitch()</span></a>
+<a name="1846"><span class="lineNum">    1846 </span><span class="lineCov">      10463 :            || getPitchChange() != 0.0f</span></a>
+<a name="1847"><span class="lineNum">    1847 </span><span class="lineCov">      10463 :            || isUsingMelodyne()</span></a>
+<a name="1848"><span class="lineNum">    1848 </span><span class="lineCov">      20926 :            || (std::abs (getSpeedRatio() - 1.0) &gt; 0.00001</span></a>
 <a name="1849"><span class="lineNum">    1849 </span><span class="lineNoCov">          0 :                &amp;&amp; TimeStretcher::canProcessFor (timeStretchMode));</span></a>
 <a name="1850"><span class="lineNum">    1850 </span>            : }</a>
 <a name="1851"><span class="lineNum">    1851 </span>            : </a>
@@ -2181,21 +2181,21 @@
 <a name="2119"><span class="lineNum">    2119 </span>            :     return true;</a>
 <a name="2120"><span class="lineNum">    2120 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="2121"><span class="lineNum">    2121 </span>            : </a>
-<a name="2122"><span class="lineNum">    2122 </span><span class="lineCov">       6928 : AudioFile AudioClipBase::getPlaybackFile()</span></a>
+<a name="2122"><span class="lineNum">    2122 </span><span class="lineCov">       6931 : AudioFile AudioClipBase::getPlaybackFile()</span></a>
 <a name="2123"><span class="lineNum">    2123 </span>            : {</a>
 <a name="2124"><span class="lineNum">    2124 </span>            :     // this needs to return the same file right from the first call, if it's a rendered file then obviously it won't exist but we need to return it anyway</a>
-<a name="2125"><span class="lineNum">    2125 </span><span class="lineCov">       6928 :     const AudioFile af (getAudioFile());</span></a>
+<a name="2125"><span class="lineNum">    2125 </span><span class="lineCov">       6931 :     const AudioFile af (getAudioFile());</span></a>
 <a name="2126"><span class="lineNum">    2126 </span>            : </a>
-<a name="2127"><span class="lineNum">    2127 </span><span class="lineCov">       6920 :     if (canUseProxy() &amp;&amp; ! af.isNull())</span></a>
+<a name="2127"><span class="lineNum">    2127 </span><span class="lineCov">       6923 :     if (canUseProxy() &amp;&amp; ! af.isNull())</span></a>
 <a name="2128"><span class="lineNum">    2128 </span>            :     {</a>
-<a name="2129"><span class="lineNum">    2129 </span><span class="lineCov">       6920 :         const bool timestretched = usesTimeStretchedProxy();</span></a>
+<a name="2129"><span class="lineNum">    2129 </span><span class="lineCov">       6923 :         const bool timestretched = usesTimeStretchedProxy();</span></a>
 <a name="2130"><span class="lineNum">    2130 </span>            : </a>
-<a name="2131"><span class="lineNum">    2131 </span><span class="lineCov">       6920 :         if (timestretched || af.getInfo().needsCachedProxy)</span></a>
+<a name="2131"><span class="lineNum">    2131 </span><span class="lineCov">       6923 :         if (timestretched || af.getInfo().needsCachedProxy)</span></a>
 <a name="2132"><span class="lineNum">    2132 </span><span class="lineCov">          4 :             return getProxyFileToCreate (timestretched);</span></a>
 <a name="2133"><span class="lineNum">    2133 </span>            :     }</a>
 <a name="2134"><span class="lineNum">    2134 </span>            : </a>
-<a name="2135"><span class="lineNum">    2135 </span><span class="lineCov">       6924 :     return af;</span></a>
-<a name="2136"><span class="lineNum">    2136 </span><span class="lineCov">       6928 : }</span></a>
+<a name="2135"><span class="lineNum">    2135 </span><span class="lineCov">       6927 :     return af;</span></a>
+<a name="2136"><span class="lineNum">    2136 </span><span class="lineCov">       6931 : }</span></a>
 <a name="2137"><span class="lineNum">    2137 </span>            : </a>
 <a name="2138"><span class="lineNum">    2138 </span><span class="lineNoCov">          0 : AudioFileInfo AudioClipBase::getWaveInfo()</span></a>
 <a name="2139"><span class="lineNum">    2139 </span>            : {</a>
@@ -2242,28 +2242,28 @@
 <a name="2180"><span class="lineNum">    2180 </span><span class="lineCov">       3451 : void AudioClipBase::beginRenderingNewProxyIfNeeded()</span></a>
 <a name="2181"><span class="lineNum">    2181 </span>            : {</a>
 <a name="2182"><span class="lineNum">    2182 </span>            :     if (! canUseProxy())</a>
-<a name="2183"><span class="lineNum">    2183 </span><span class="lineCov">       3382 :         return;</span></a>
+<a name="2183"><span class="lineNum">    2183 </span><span class="lineCov">       3379 :         return;</span></a>
 <a name="2184"><span class="lineNum">    2184 </span>            :     </a>
 <a name="2185"><span class="lineNum">    2185 </span><span class="lineCov">       3447 :     if (isTimerRunning())</span></a>
 <a name="2186"><span class="lineNum">    2186 </span>            :     {</a>
-<a name="2187"><span class="lineNum">    2187 </span><span class="lineCov">       3378 :         startTimer (1);</span></a>
-<a name="2188"><span class="lineNum">    2188 </span><span class="lineCov">       3378 :         return;</span></a>
+<a name="2187"><span class="lineNum">    2187 </span><span class="lineCov">       3375 :         startTimer (1);</span></a>
+<a name="2188"><span class="lineNum">    2188 </span><span class="lineCov">       3375 :         return;</span></a>
 <a name="2189"><span class="lineNum">    2189 </span>            :     }</a>
 <a name="2190"><span class="lineNum">    2190 </span>            :     </a>
-<a name="2191"><span class="lineNum">    2191 </span><span class="lineCov">         69 :     const AudioFile playFile (getPlaybackFile());</span></a>
+<a name="2191"><span class="lineNum">    2191 </span><span class="lineCov">         72 :     const AudioFile playFile (getPlaybackFile());</span></a>
 <a name="2192"><span class="lineNum">    2192 </span>            : </a>
-<a name="2193"><span class="lineNum">    2193 </span><span class="lineCov">         69 :     if (playFile.isNull())</span></a>
+<a name="2193"><span class="lineNum">    2193 </span><span class="lineCov">         72 :     if (playFile.isNull())</span></a>
 <a name="2194"><span class="lineNum">    2194 </span>            :         return;</a>
 <a name="2195"><span class="lineNum">    2195 </span>            : </a>
-<a name="2196"><span class="lineNum">    2196 </span><span class="lineCov">         69 :     auto original = getAudioFile();</span></a>
+<a name="2196"><span class="lineNum">    2196 </span><span class="lineCov">         72 :     auto original = getAudioFile();</span></a>
 <a name="2197"><span class="lineNum">    2197 </span>            : </a>
 <a name="2198"><span class="lineNum">    2198 </span><span class="lineNoCov">          0 :     if (shouldAttemptRender() &amp;&amp; ! original.isValid())</span></a>
 <a name="2199"><span class="lineNum">    2199 </span><span class="lineNoCov">          0 :         createNewProxyAsync();</span></a>
 <a name="2200"><span class="lineNum">    2200 </span>            : </a>
-<a name="2201"><span class="lineNum">    2201 </span><span class="lineCov">         69 :     if (usesTimeStretchedProxy() || original.getInfo().needsCachedProxy)</span></a>
+<a name="2201"><span class="lineNum">    2201 </span><span class="lineCov">         72 :     if (usesTimeStretchedProxy() || original.getInfo().needsCachedProxy)</span></a>
 <a name="2202"><span class="lineNum">    2202 </span><span class="lineCov">          1 :         if (playFile.getSampleRate() &lt;= 0.0)</span></a>
 <a name="2203"><span class="lineNum">    2203 </span><span class="lineCov">          1 :             createNewProxyAsync();</span></a>
-<a name="2204"><span class="lineNum">    2204 </span><span class="lineCov">         69 : }</span></a>
+<a name="2204"><span class="lineNum">    2204 </span><span class="lineCov">         72 : }</span></a>
 <a name="2205"><span class="lineNum">    2205 </span>            : </a>
 <a name="2206"><span class="lineNum">    2206 </span>            : //==============================================================================</a>
 <a name="2207"><span class="lineNum">    2207 </span><span class="lineNoCov">          0 : void AudioClipBase::jobFinished (RenderManager::Job&amp; job, bool completedOk)</span></a>
