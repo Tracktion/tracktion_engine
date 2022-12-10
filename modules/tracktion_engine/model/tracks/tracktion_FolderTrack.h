@@ -86,6 +86,7 @@ private:
     juce::CachedValue<bool> muted, soloed, soloIsolated;
     bool dirtyClips = true;
 
+    std::mutex pluginMutex;
     juce::ReferenceCountedObjectPtr<VCAPlugin> vcaPlugin;
     juce::ReferenceCountedObjectPtr<VolumeAndPanPlugin> volumePlugin;
     AsyncCaller pluginUpdater;

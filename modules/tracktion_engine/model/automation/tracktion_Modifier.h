@@ -132,7 +132,7 @@ protected:
 private:
     int initialiseCount = 0;
     double sampleRate = 44100.0;
-    TimePosition lastEditTime;
+    std::atomic<TimePosition> lastEditTime { TimePosition() };
     
     class ValueFifo;
     std::unique_ptr<ValueFifo> valueFifo, messageThreadValueFifo;

@@ -217,6 +217,8 @@ bool FolderTrack::isSoloIsolate (bool includeIndirectSolo) const
 
 float FolderTrack::getVcaDb (TimePosition time)
 {
+    const std::scoped_lock sl (pluginMutex);
+
     if (auto ptr = vcaPlugin)
         if (ptr->isEnabled())
             return ptr->updateAutomationStreamAndGetVolumeDb (time);
@@ -491,6 +493,7 @@ void FolderTrack::setSoloIsolate (bool b)   { soloIsolated = b; }
 
 void FolderTrack::updatePlugins()
 {
+    const std::scoped_lock sl (pluginMutex);
     vcaPlugin = pluginList.findFirstPluginOfType<VCAPlugin>();
     volumePlugin = pluginList.findFirstPluginOfType<VolumeAndPanPlugin>();
 }
