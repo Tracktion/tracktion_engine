@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-12-10 12:30:34</td>
+            <td class="headerValue">2022-12-11 01:18:11</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">118</td>
@@ -334,19 +334,19 @@
 <a name="272"><span class="lineNum">     272 </span>            :         }</a>
 <a name="273"><span class="lineNum">     273 </span><span class="lineCov">      43445 :     }</span></a>
 <a name="274"><span class="lineNum">     274 </span>            : </a>
-<a name="275"><span class="lineNum">     275 </span><span class="lineCov">      36364 :     void valueTreeChildAdded (juce::ValueTree&amp; p, juce::ValueTree&amp; c) override</span></a>
+<a name="275"><span class="lineNum">     275 </span><span class="lineCov">      36356 :     void valueTreeChildAdded (juce::ValueTree&amp; p, juce::ValueTree&amp; c) override</span></a>
 <a name="276"><span class="lineNum">     276 </span>            :     {</a>
-<a name="277"><span class="lineNum">     277 </span><span class="lineCov">      36364 :         childAddedOrRemoved (p, c);</span></a>
-<a name="278"><span class="lineNum">     278 </span><span class="lineCov">      36364 :     }</span></a>
+<a name="277"><span class="lineNum">     277 </span><span class="lineCov">      36356 :         childAddedOrRemoved (p, c);</span></a>
+<a name="278"><span class="lineNum">     278 </span><span class="lineCov">      36356 :     }</span></a>
 <a name="279"><span class="lineNum">     279 </span>            : </a>
 <a name="280"><span class="lineNum">     280 </span><span class="lineCov">      10689 :     void valueTreeChildRemoved (juce::ValueTree&amp; p, juce::ValueTree&amp; c, int) override</span></a>
 <a name="281"><span class="lineNum">     281 </span>            :     {</a>
 <a name="282"><span class="lineNum">     282 </span><span class="lineCov">      10689 :         childAddedOrRemoved (p, c);</span></a>
 <a name="283"><span class="lineNum">     283 </span><span class="lineCov">      10689 :     }</span></a>
 <a name="284"><span class="lineNum">     284 </span>            : </a>
-<a name="285"><span class="lineNum">     285 </span><span class="lineCov">      47053 :     void childAddedOrRemoved (juce::ValueTree&amp; p, juce::ValueTree&amp; c)</span></a>
+<a name="285"><span class="lineNum">     285 </span><span class="lineCov">      47045 :     void childAddedOrRemoved (juce::ValueTree&amp; p, juce::ValueTree&amp; c)</span></a>
 <a name="286"><span class="lineNum">     286 </span>            :     {</a>
-<a name="287"><span class="lineNum">     287 </span><span class="lineCov">      47053 :         if (c.hasType (IDs::NOTE)</span></a>
+<a name="287"><span class="lineNum">     287 </span><span class="lineCov">      47045 :         if (c.hasType (IDs::NOTE)</span></a>
 <a name="288"><span class="lineNum">     288 </span><span class="lineCov">      46565 :              || c.hasType (IDs::CONTROL)</span></a>
 <a name="289"><span class="lineNum">     289 </span><span class="lineCov">      46555 :              || c.hasType (IDs::SYSEX)</span></a>
 <a name="290"><span class="lineNum">     290 </span><span class="lineCov">      46555 :              || c.hasType (IDs::PLUGIN)</span></a>
@@ -366,7 +366,7 @@
 <a name="304"><span class="lineNum">     304 </span><span class="lineCov">      40775 :              || c.hasType (IDs::RANDOM)</span></a>
 <a name="305"><span class="lineNum">     305 </span><span class="lineCov">      40775 :              || c.hasType (IDs::MIDITRACKER)</span></a>
 <a name="306"><span class="lineNum">     306 </span><span class="lineCov">      40775 :              || p.hasType (IDs::LOOPINFO)</span></a>
-<a name="307"><span class="lineNum">     307 </span><span class="lineCov">      87828 :              || p.hasType (IDs::PATTERN))</span></a>
+<a name="307"><span class="lineNum">     307 </span><span class="lineCov">      87820 :              || p.hasType (IDs::PATTERN))</span></a>
 <a name="308"><span class="lineNum">     308 </span>            :         {</a>
 <a name="309"><span class="lineNum">     309 </span>            :             restart();</a>
 <a name="310"><span class="lineNum">     310 </span>            :         }</a>
@@ -397,7 +397,7 @@
 <a name="335"><span class="lineNum">     335 </span>            :         {</a>
 <a name="336"><span class="lineNum">     336 </span>            :             restart();</a>
 <a name="337"><span class="lineNum">     337 </span>            :         }</a>
-<a name="338"><span class="lineNum">     338 </span><span class="lineCov">      47053 :     }</span></a>
+<a name="338"><span class="lineNum">     338 </span><span class="lineCov">      47045 :     }</span></a>
 <a name="339"><span class="lineNum">     339 </span>            : </a>
 <a name="340"><span class="lineNum">     340 </span><span class="lineCov">      18978 :     void valueTreeChildOrderChanged (juce::ValueTree&amp;, int, int) override {}</span></a>
 <a name="341"><span class="lineNum">     341 </span><span class="lineNoCov">          0 :     void valueTreeParentChanged (juce::ValueTree&amp;) override {}</span></a>
@@ -416,7 +416,7 @@
 <a name="354"><span class="lineNum">     354 </span>            : </a>
 <a name="355"><span class="lineNum">     355 </span>            :     void restart()</a>
 <a name="356"><span class="lineNum">     356 </span>            :     {</a>
-<a name="357"><span class="lineNum">     357 </span><span class="lineCov">      27681 :         edit.restartPlayback();</span></a>
+<a name="357"><span class="lineNum">     357 </span><span class="lineCov">      27673 :         edit.restartPlayback();</span></a>
 <a name="358"><span class="lineNum">     358 </span>            :     }</a>
 <a name="359"><span class="lineNum">     359 </span>            : </a>
 <a name="360"><span class="lineNum">     360 </span><span class="lineCov">        627 :     void updateTrackStatusesAsync()</span></a>
@@ -1119,10 +1119,10 @@
 <a name="1057"><span class="lineNum">    1057 </span>            : </a>
 <a name="1058"><span class="lineNum">    1058 </span><span class="lineCov">       7042 : void Edit::restartPlayback()</span></a>
 <a name="1059"><span class="lineNum">    1059 </span>            : {</a>
-<a name="1060"><span class="lineNum">    1060 </span><span class="lineCov">      34738 :     shouldRestartPlayback = true;</span></a>
+<a name="1060"><span class="lineNum">    1060 </span><span class="lineCov">      34730 :     shouldRestartPlayback = true;</span></a>
 <a name="1061"><span class="lineNum">    1061 </span>            : </a>
-<a name="1062"><span class="lineNum">    1062 </span><span class="lineCov">      34738 :     if (! isTimerRunning())</span></a>
-<a name="1063"><span class="lineNum">    1063 </span><span class="lineCov">        403 :         startTimer (1);</span></a>
+<a name="1062"><span class="lineNum">    1062 </span><span class="lineCov">      34730 :     if (! isTimerRunning())</span></a>
+<a name="1063"><span class="lineNum">    1063 </span><span class="lineCov">        404 :         startTimer (1);</span></a>
 <a name="1064"><span class="lineNum">    1064 </span><span class="lineCov">       7042 : }</span></a>
 <a name="1065"><span class="lineNum">    1065 </span>            : </a>
 <a name="1066"><span class="lineNum">    1066 </span><span class="lineNoCov">          0 : EditPlaybackContext* Edit::getCurrentPlaybackContext() const</span></a>
@@ -1663,20 +1663,20 @@
 <a name="1601"><span class="lineNum">    1601 </span><span class="lineCov">          2 :         timerCallback();</span></a>
 <a name="1602"><span class="lineNum">    1602 </span><span class="lineCov">          2 : }</span></a>
 <a name="1603"><span class="lineNum">    1603 </span>            : </a>
-<a name="1604"><span class="lineNum">    1604 </span><span class="lineCov">        199 : void Edit::timerCallback()</span></a>
+<a name="1604"><span class="lineNum">    1604 </span><span class="lineCov">        200 : void Edit::timerCallback()</span></a>
 <a name="1605"><span class="lineNum">    1605 </span>            : {</a>
-<a name="1606"><span class="lineNum">    1606 </span><span class="lineCov">        199 :     if (! isFullyConstructed.load (std::memory_order_relaxed))</span></a>
+<a name="1606"><span class="lineNum">    1606 </span><span class="lineCov">        200 :     if (! isFullyConstructed.load (std::memory_order_relaxed))</span></a>
 <a name="1607"><span class="lineNum">    1607 </span>            :         return;</a>
 <a name="1608"><span class="lineNum">    1608 </span>            : </a>
-<a name="1609"><span class="lineNum">    1609 </span><span class="lineCov">        199 :     if (shouldRestartPlayback &amp;&amp; shouldPlay())</span></a>
+<a name="1609"><span class="lineNum">    1609 </span><span class="lineCov">        200 :     if (shouldRestartPlayback &amp;&amp; shouldPlay())</span></a>
 <a name="1610"><span class="lineNum">    1610 </span>            :     {</a>
-<a name="1611"><span class="lineNum">    1611 </span><span class="lineCov">        199 :         shouldRestartPlayback = false;</span></a>
-<a name="1612"><span class="lineNum">    1612 </span><span class="lineCov">        199 :         parameterControlMappings-&gt;checkForDeletedParams();</span></a>
+<a name="1611"><span class="lineNum">    1611 </span><span class="lineCov">        200 :         shouldRestartPlayback = false;</span></a>
+<a name="1612"><span class="lineNum">    1612 </span><span class="lineCov">        200 :         parameterControlMappings-&gt;checkForDeletedParams();</span></a>
 <a name="1613"><span class="lineNum">    1613 </span>            : </a>
-<a name="1614"><span class="lineNum">    1614 </span><span class="lineCov">        199 :         getTransport().editHasChanged();</span></a>
+<a name="1614"><span class="lineNum">    1614 </span><span class="lineCov">        200 :         getTransport().editHasChanged();</span></a>
 <a name="1615"><span class="lineNum">    1615 </span>            :     }</a>
 <a name="1616"><span class="lineNum">    1616 </span>            : </a>
-<a name="1617"><span class="lineNum">    1617 </span><span class="lineCov">        199 :     stopTimer();</span></a>
+<a name="1617"><span class="lineNum">    1617 </span><span class="lineCov">        200 :     stopTimer();</span></a>
 <a name="1618"><span class="lineNum">    1618 </span>            : }</a>
 <a name="1619"><span class="lineNum">    1619 </span>            : </a>
 <a name="1620"><span class="lineNum">    1620 </span>            : //==============================================================================</a>
@@ -2090,13 +2090,13 @@
 <a name="2028"><span class="lineNum">    2028 </span><span class="lineCov">         16 :     modifierTimers.removeFirstMatchingValue (&amp;mt);</span></a>
 <a name="2029"><span class="lineNum">    2029 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="2030"><span class="lineNum">    2030 </span>            : </a>
-<a name="2031"><span class="lineNum">    2031 </span><span class="lineCov">    3011429 : void Edit::updateModifierTimers (TimePosition editTime, int numSamples) const</span></a>
+<a name="2031"><span class="lineNum">    2031 </span><span class="lineCov">    3011829 : void Edit::updateModifierTimers (TimePosition editTime, int numSamples) const</span></a>
 <a name="2032"><span class="lineNum">    2032 </span>            : {</a>
 <a name="2033"><span class="lineNum">    2033 </span>            :     const juce::ScopedLock sl (modifierTimers.getLock());</a>
 <a name="2034"><span class="lineNum">    2034 </span>            : </a>
-<a name="2035"><span class="lineNum">    2035 </span><span class="lineCov">    3011445 :     for (auto mt : modifierTimers)</span></a>
+<a name="2035"><span class="lineNum">    2035 </span><span class="lineCov">    3011845 :     for (auto mt : modifierTimers)</span></a>
 <a name="2036"><span class="lineNum">    2036 </span><span class="lineCov">         16 :         mt-&gt;updateStreamTime (editTime, numSamples);</span></a>
-<a name="2037"><span class="lineNum">    2037 </span><span class="lineCov">    3011429 : }</span></a>
+<a name="2037"><span class="lineNum">    2037 </span><span class="lineCov">    3011829 : }</span></a>
 <a name="2038"><span class="lineNum">    2038 </span>            : </a>
 <a name="2039"><span class="lineNum">    2039 </span>            : //==============================================================================</a>
 <a name="2040"><span class="lineNum">    2040 </span><span class="lineNoCov">          0 : void Edit::setLowLatencyMonitoring (bool enabled, const juce::Array&lt;EditItemID&gt;&amp; plugins)</span></a>
