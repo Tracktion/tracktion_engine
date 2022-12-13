@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-12-11 01:18:11</td>
+            <td class="headerValue">2022-12-13 11:21:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
@@ -116,7 +116,7 @@
 <a name="54"><span class="lineNum">      54 </span>            :     virtual TimeDuration getSourceLength() const = 0;</a>
 <a name="55"><span class="lineNum">      55 </span>            : </a>
 <a name="56"><span class="lineNum">      56 </span>            :     /** Returns the file used to play back the source and will get proxied etc. */</a>
-<a name="57"><span class="lineNum">      57 </span><span class="lineCov">      13863 :     virtual AudioFile getAudioFile() const  { return AudioFile (edit.engine, getCurrentSourceFile()); }</span></a>
+<a name="57"><span class="lineNum">      57 </span><span class="lineCov">      13867 :     virtual AudioFile getAudioFile() const  { return AudioFile (edit.engine, getCurrentSourceFile()); }</span></a>
 <a name="58"><span class="lineNum">      58 </span>            : </a>
 <a name="59"><span class="lineNum">      59 </span>            :     /** Returns the current AudioFile being used by the Clip, either the</a>
 <a name="60"><span class="lineNum">      60 </span>            :         original source or a proxy.</a>
@@ -184,21 +184,21 @@
 <a name="122"><span class="lineNum">     122 </span>            :     /** Sets the gain of the clip in dB. */</a>
 <a name="123"><span class="lineNum">     123 </span>            :     void setGainDB (float dB);</a>
 <a name="124"><span class="lineNum">     124 </span>            :     /** Returns the gain of the clip in dB. */</a>
-<a name="125"><span class="lineNum">     125 </span>            :     float getGainDB() const noexcept                    { return level-&gt;dbGain; }</a>
+<a name="125"><span class="lineNum">     125 </span>            :     float getGainDB() const noexcept                    { return level-&gt;dbGain.get(); }</a>
 <a name="126"><span class="lineNum">     126 </span>            :     /** Returns the gain of the clip. */</a>
-<a name="127"><span class="lineNum">     127 </span>            :     float getGain() const noexcept                      { return dbToGain (level-&gt;dbGain); }</a>
+<a name="127"><span class="lineNum">     127 </span>            :     float getGain() const noexcept                      { return dbToGain (level-&gt;dbGain.get()); }</a>
 <a name="128"><span class="lineNum">     128 </span>            : </a>
 <a name="129"><span class="lineNum">     129 </span>            :     /** Sets the pan of the clip.</a>
 <a name="130"><span class="lineNum">     130 </span>            :         @param pan -1 = full left, 0 = centre, 1 = full right</a>
 <a name="131"><span class="lineNum">     131 </span>            :     */</a>
 <a name="132"><span class="lineNum">     132 </span>            :     void setPan (float pan);</a>
 <a name="133"><span class="lineNum">     133 </span>            :     /** Returns the pan of the clip from -1 to 1 @see setPan. */</a>
-<a name="134"><span class="lineNum">     134 </span>            :     float getPan() const noexcept                       { return level-&gt;pan; }</a>
+<a name="134"><span class="lineNum">     134 </span>            :     float getPan() const noexcept                       { return level-&gt;pan.get(); }</a>
 <a name="135"><span class="lineNum">     135 </span>            : </a>
 <a name="136"><span class="lineNum">     136 </span>            :     /** @internal */</a>
 <a name="137"><span class="lineNum">     137 </span><span class="lineNoCov">          0 :     void setMuted (bool shouldBeMuted) override         { level-&gt;mute = shouldBeMuted; }</span></a>
 <a name="138"><span class="lineNum">     138 </span>            :     /** @internal */</a>
-<a name="139"><span class="lineNum">     139 </span><span class="lineNoCov">          0 :     bool isMuted() const override                       { return level-&gt;mute; }</span></a>
+<a name="139"><span class="lineNum">     139 </span><span class="lineNoCov">          0 :     bool isMuted() const override                       { return level-&gt;mute.get(); }</span></a>
 <a name="140"><span class="lineNum">     140 </span>            : </a>
 <a name="141"><span class="lineNum">     141 </span>            :     /** Returns a LiveClipLevel which can be used to read the gain, pan and mute statuses. */</a>
 <a name="142"><span class="lineNum">     142 </span>            :     LiveClipLevel getLiveClipLevel();</a>
@@ -527,7 +527,7 @@
 <a name="465"><span class="lineNum">     465 </span>            :     void setUsesProxy (bool canUseProxy) noexcept;</a>
 <a name="466"><span class="lineNum">     466 </span>            :     </a>
 <a name="467"><span class="lineNum">     467 </span>            :     /** Retuns true if this clip can use a proxy file. */</a>
-<a name="468"><span class="lineNum">     468 </span><span class="lineCov">      47209 :     bool canUseProxy() const noexcept               { return proxyAllowed &amp;&amp; edit.canRenderProxies(); }</span></a>
+<a name="468"><span class="lineNum">     468 </span><span class="lineCov">      47211 :     bool canUseProxy() const noexcept               { return proxyAllowed &amp;&amp; edit.canRenderProxies(); }</span></a>
 <a name="469"><span class="lineNum">     469 </span>            : </a>
 <a name="470"><span class="lineNum">     470 </span>            :     /** Retuns true if this clip use a proxy file due to timestretching.</a>
 <a name="471"><span class="lineNum">     471 </span>            :         This can be because auto-tempo, auto-pitch or a pitch change has been set.</a>
@@ -746,7 +746,7 @@
 <a name="684"><span class="lineNum">     684 </span>            :         process.This will in turn call getRenderJob on a background thead.</a>
 <a name="685"><span class="lineNum">     685 </span>            :     */</a>
 <a name="686"><span class="lineNum">     686 </span>            :     void renderSource();</a>
-<a name="687"><span class="lineNum">     687 </span><span class="lineCov">       3480 :     bool shouldAttemptRender() const    { return (! lastRenderJobFailed) &amp;&amp; needsRender(); }</span></a>
+<a name="687"><span class="lineNum">     687 </span><span class="lineCov">       3482 :     bool shouldAttemptRender() const    { return (! lastRenderJobFailed) &amp;&amp; needsRender(); }</span></a>
 <a name="688"><span class="lineNum">     688 </span>            : </a>
 <a name="689"><span class="lineNum">     689 </span>            :     void clearCachedAudioSegmentList();</a>
 <a name="690"><span class="lineNum">     690 </span>            : </a>

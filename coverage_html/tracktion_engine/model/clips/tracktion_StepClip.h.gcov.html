@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-12-11 01:18:11</td>
+            <td class="headerValue">2022-12-13 11:21:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -274,7 +274,7 @@
 <a name="212"><span class="lineNum">     212 </span>            :     juce::Array&lt;Pattern&gt; getPatterns();</a>
 <a name="213"><span class="lineNum">     213 </span>            : </a>
 <a name="214"><span class="lineNum">     214 </span>            :     //==============================================================================</a>
-<a name="215"><span class="lineNum">     215 </span>            :     float getVolumeDb() const                       { return level-&gt;dbGain; }</a>
+<a name="215"><span class="lineNum">     215 </span>            :     float getVolumeDb() const                       { return level-&gt;dbGain.get(); }</a>
 <a name="216"><span class="lineNum">     216 </span>            :     void setVolumeDb (float v)                      { level-&gt;dbGain = juce::jlimit (-100.0f, 0.0f, v); }</a>
 <a name="217"><span class="lineNum">     217 </span>            : </a>
 <a name="218"><span class="lineNum">     218 </span>            :     //==============================================================================</a>
@@ -305,7 +305,7 @@
 <a name="243"><span class="lineNum">     243 </span>            : </a>
 <a name="244"><span class="lineNum">     244 </span><span class="lineNoCov">          0 :     bool isMidi() const override                        { return false; }</span></a>
 <a name="245"><span class="lineNum">     245 </span><span class="lineNoCov">          0 :     bool beatBasedLooping() const override              { return true; }</span></a>
-<a name="246"><span class="lineNum">     246 </span><span class="lineNoCov">          0 :     bool isMuted() const override                       { return level-&gt;mute; }</span></a>
+<a name="246"><span class="lineNum">     246 </span><span class="lineNoCov">          0 :     bool isMuted() const override                       { return level-&gt;mute.get(); }</span></a>
 <a name="247"><span class="lineNum">     247 </span><span class="lineNoCov">          0 :     void setMuted (bool m) override                     { level-&gt;mute = m; }</span></a>
 <a name="248"><span class="lineNum">     248 </span>            : </a>
 <a name="249"><span class="lineNum">     249 </span>            :     LiveClipLevel getLiveClipLevel();</a>

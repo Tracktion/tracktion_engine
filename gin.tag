@@ -1972,6 +1972,15 @@
     </member>
   </compound>
   <compound kind="file">
+    <name>tracktion_AtomicWrapper.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
+    <filename>tracktion__AtomicWrapper_8h.html</filename>
+    <class kind="struct">tracktion::engine::DummyConstrainer</class>
+    <class kind="struct">tracktion::engine::AtomicWrapper</class>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::engine</namespace>
+  </compound>
+  <compound kind="file">
     <name>tracktion_AudioBufferPool.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_graph/utilities/</path>
     <filename>tracktion__AudioBufferPool_8h.html</filename>
@@ -8385,6 +8394,68 @@
       <anchorfile>structtracktion_1_1engine_1_1AsyncFunctionCaller.html</anchorfile>
       <anchor>a8325c5b9dad09d750b6191254480a321</anchor>
       <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::AtomicWrapper</name>
+    <filename>structtracktion_1_1engine_1_1AtomicWrapper.html</filename>
+    <templarg></templarg>
+    <templarg></templarg>
+    <member kind="function">
+      <type></type>
+      <name>AtomicWrapper</name>
+      <anchorfile>structtracktion_1_1engine_1_1AtomicWrapper.html</anchorfile>
+      <anchor>a9fd5e06fe6bba701eee0b4e615d9cca8</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>AtomicWrapper</name>
+      <anchorfile>structtracktion_1_1engine_1_1AtomicWrapper.html</anchorfile>
+      <anchor>abff00cc88fb6e20dcb8f87002e90ce4e</anchor>
+      <arglist>(const OtherType &amp;other)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>AtomicWrapper</name>
+      <anchorfile>structtracktion_1_1engine_1_1AtomicWrapper.html</anchorfile>
+      <anchor>acacb592a580691f2bd55dad5f5581295</anchor>
+      <arglist>(const AtomicWrapper &amp;other)</arglist>
+    </member>
+    <member kind="function">
+      <type>AtomicWrapper &amp;</type>
+      <name>operator=</name>
+      <anchorfile>structtracktion_1_1engine_1_1AtomicWrapper.html</anchorfile>
+      <anchor>a98a3d98e226892f499875494c2668c1f</anchor>
+      <arglist>(const AtomicWrapper &amp;other) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>structtracktion_1_1engine_1_1AtomicWrapper.html</anchorfile>
+      <anchor>a6aaf022dd53538bdacd9caa3e21ec25f</anchor>
+      <arglist>(const AtomicWrapper &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>structtracktion_1_1engine_1_1AtomicWrapper.html</anchorfile>
+      <anchor>a89586c70ac2231af84d26c02514eebe7</anchor>
+      <arglist>(const AtomicWrapper &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>operator juce::var</name>
+      <anchorfile>structtracktion_1_1engine_1_1AtomicWrapper.html</anchorfile>
+      <anchor>acb3356acf94e5a10bb80f7dccb3757b2</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>operator Type</name>
+      <anchorfile>structtracktion_1_1engine_1_1AtomicWrapper.html</anchorfile>
+      <anchor>a2dfd04f5b7e2288001868fa6514a5c7f</anchor>
+      <arglist>() const noexcept</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -18059,24 +18130,24 @@
     <name>tracktion::engine::ClipLevel</name>
     <filename>structtracktion_1_1engine_1_1ClipLevel.html</filename>
     <member kind="variable">
-      <type>juce::CachedValue&lt; float &gt;</type>
+      <type>juce::CachedValue&lt; AtomicWrapper&lt; float &gt; &gt;</type>
       <name>dbGain</name>
       <anchorfile>structtracktion_1_1engine_1_1ClipLevel.html</anchorfile>
-      <anchor>a1b8000e3d3f703c1224d212247798bb2</anchor>
+      <anchor>a31c74c2abe9e7dcc10f401f457f3c192</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>juce::CachedValue&lt; float &gt;</type>
+      <type>juce::CachedValue&lt; AtomicWrapper&lt; float &gt; &gt;</type>
       <name>pan</name>
       <anchorfile>structtracktion_1_1engine_1_1ClipLevel.html</anchorfile>
-      <anchor>a3f57ac80ab4788dd0a0f68d3fe29d1df</anchor>
+      <anchor>a54c597eee290f5ad6c959c362db37e2a</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>juce::CachedValue&lt; bool &gt;</type>
+      <type>juce::CachedValue&lt; AtomicWrapper&lt; bool &gt; &gt;</type>
       <name>mute</name>
       <anchorfile>structtracktion_1_1engine_1_1ClipLevel.html</anchorfile>
-      <anchor>a9eea99fb0a14e9bbaf7605ceb0af5aa4</anchor>
+      <anchor>a8571b059e17cc163bca9e0d38bea7b33</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -26239,6 +26310,18 @@
       <anchorfile>structtracktion_1_1engine_1_1Ditherer.html</anchorfile>
       <anchor>a0a6b04662c31abbfb90d44e33252f339</anchor>
       <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::DummyConstrainer</name>
+    <filename>structtracktion_1_1engine_1_1DummyConstrainer.html</filename>
+    <templarg></templarg>
+    <member kind="function" static="yes">
+      <type>static Type</type>
+      <name>constrain</name>
+      <anchorfile>structtracktion_1_1engine_1_1DummyConstrainer.html</anchorfile>
+      <anchor>a241f290d17c0878135b34030be0bcc41</anchor>
+      <arglist>(const Type &amp;v)</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -78912,6 +78995,8 @@
     <class kind="class">tracktion::LambdaTimer</class>
     <class kind="class">tracktion::MessageThreadCallback</class>
     <class kind="struct">tracktion::BlockingFunction</class>
+    <class kind="struct">tracktion::DummyConstrainer</class>
+    <class kind="struct">tracktion::AtomicWrapper</class>
     <class kind="struct">tracktion::AudioFadeCurve</class>
     <class kind="class">tracktion::AudioScratchBuffer</class>
     <class kind="class">tracktion::AudioMidiFifo</class>
@@ -79319,6 +79404,8 @@
     <class kind="class">tracktion::engine::LambdaTimer</class>
     <class kind="class">tracktion::engine::MessageThreadCallback</class>
     <class kind="struct">tracktion::engine::BlockingFunction</class>
+    <class kind="struct">tracktion::engine::DummyConstrainer</class>
+    <class kind="struct">tracktion::engine::AtomicWrapper</class>
     <class kind="struct">tracktion::engine::AudioFadeCurve</class>
     <class kind="class">tracktion::engine::AudioScratchBuffer</class>
     <class kind="class">tracktion::engine::AudioMidiFifo</class>
