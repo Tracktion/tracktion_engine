@@ -168,10 +168,10 @@ private:
         
         beginTest ("rpallocator multi-thread");
         {
-            // Create 100 threads
+            // Create 20 threads
             // Randomly push or pop ints in to a vector
             
-            constexpr int numThreads = 100;
+            constexpr int numThreads = 20;
             std::vector<std::thread> pool;
             std::atomic<bool> shouldExit { false };
 

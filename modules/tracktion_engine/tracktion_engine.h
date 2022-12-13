@@ -392,6 +392,7 @@ namespace tracktion { inline namespace engine
 
 //==============================================================================
 #include "utilities/tracktion_AppFunctions.h"
+#include "utilities/tracktion_AtomicWrapper.h"
 #include "utilities/tracktion_Identifiers.h"
 #include "utilities/tracktion_ValueTreeUtilities.h"
 #include "utilities/tracktion_CrashTracer.h"

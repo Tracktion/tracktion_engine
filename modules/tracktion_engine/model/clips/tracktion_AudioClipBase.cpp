@@ -247,7 +247,7 @@ AudioClipBase::AudioClipBase (const juce::ValueTree& v, EditItemID id, Type t, C
     isReversed.referTo (state, IDs::isReversed, um);
     autoDetectBeats.referTo (state, IDs::autoDetectBeats, um);
 
-    level->pan = juce::jlimit (-1.0f, 1.0f, level->pan.get());
+    level->pan = juce::jlimit (-1.0f, 1.0f, static_cast<float> (level->pan.get()));
     checkFadeLengthsForOverrun();
 
     clipEffectsVisible.referTo (state, IDs::effectsVisible, nullptr);
