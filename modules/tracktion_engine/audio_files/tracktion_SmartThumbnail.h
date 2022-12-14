@@ -25,10 +25,19 @@ public:
     //==============================================================================
     /** Creates a SmartThumbnail for an AudioFile which will automatically repaint a
         Component as it it loaded.
-        You can optionally supply and Edit to use its temporary directory for the
+        You can optionally supply an Edit to use its temporary directory for the
         thumbnail file storage.
     */
-    SmartThumbnail (Engine& e, const AudioFile&, juce::Component& componentToRepaint, Edit*);
+    SmartThumbnail (Engine&, const AudioFile&, juce::Component& componentToRepaint, Edit*);
+
+    /** Creates a SmartThumbnail for an AudioFile which will automatically repaint a
+        Component as it it loaded.
+        You can optionally supply an Edit to use its temporary directory for the
+        thumbnail file storage.
+        @param thumbnailToUse   The thumbnail instance to use if you want custom thumbs
+    */
+    SmartThumbnail (Engine&, const AudioFile&, juce::Component& componentToRepaint, Edit*,
+                    std::unique_ptr<juce::AudioThumbnailBase> thumbnailToUse);
 
     /** Destructor. */
     ~SmartThumbnail() override;
@@ -109,7 +118,7 @@ public:
 
 private:
     //==============================================================================
-    TracktionThumbnail thumbnail;
+    std::unique_ptr<juce::AudioThumbnailBase> thumbnail;
     juce::Component& component;
     bool wasGeneratingProxy = false;
     std::atomic<bool> thumbnailIsInvalid { true };

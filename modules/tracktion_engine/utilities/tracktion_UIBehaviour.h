@@ -59,6 +59,15 @@ public:
     /** Called when a new track is created from some kind of user action i.e. not from an Edit load. */
     virtual void newTrackCreated (Track&) {}
 
+    /** Must create an AudioThumnail for displaying, usually in a SmartThumbnail. */
+    virtual std::unique_ptr<juce::AudioThumbnailBase> createAudioThumbnail (int sourceSamplesPerThumbnailSample,
+                                                                            juce::AudioFormatManager& formatManagerToUse,
+                                                                            juce::AudioThumbnailCache& cacheToUse)
+    {
+        return std::make_unique<juce::AudioThumbnail> (sourceSamplesPerThumbnailSample,
+                                                       formatManagerToUse, cacheToUse);
+    }
+
     //==============================================================================
     /** Should display a dismissable alert window. N.B. this should be non-blocking. */
     virtual void showWarningAlert (const juce::String& title, const juce::String& message);

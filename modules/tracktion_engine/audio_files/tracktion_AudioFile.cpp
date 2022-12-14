@@ -479,13 +479,21 @@ enum { initialTimerDelay = 10 };
 bool SmartThumbnail::enabled = true;
 
 SmartThumbnail::SmartThumbnail (Engine& e, const AudioFile& f, juce::Component& componentToRepaint, Edit* ed)
+    : SmartThumbnail (e, f, componentToRepaint, ed,
+                      e.getUIBehaviour().createAudioThumbnail (256,
+                                                               e.getAudioFileFormatManager().readFormatManager,
+                                                               e.getAudioFileManager().getAudioThumbnailCache()))
+{
+}
+
+SmartThumbnail::SmartThumbnail (Engine& e, const AudioFile& f, juce::Component& componentToRepaint, Edit* ed,
+                                std::unique_ptr<juce::AudioThumbnailBase> thumbnailToUse)
     : file (f), engine (e), edit (ed),
-      thumbnail (256,
-                 engine.getAudioFileFormatManager().readFormatManager,
-                 engine.getAudioFileManager().getAudioThumbnailCache()),
+      thumbnail (std::move (thumbnailToUse)),
       component (componentToRepaint)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
+    assert (thumbnail && "thumbnail must be valid!");
     startTimer (initialTimerDelay);
     engine.getAudioFileManager().activeThumbnails.add (this);
 }
@@ -495,7 +503,7 @@ SmartThumbnail::~SmartThumbnail()
     TRACKTION_ASSERT_MESSAGE_THREAD
 
     engine.getAudioFileManager().activeThumbnails.removeAllInstancesOf (this);
-    thumbnail.clear();
+    thumbnail->clear();
 }
 
 bool SmartThumbnail::areThumbnailsFullyLoaded (Engine& engine)
@@ -524,13 +532,17 @@ void SmartThumbnail::setNewFile (const AudioFile& newFile)
 void SmartThumbnail::drawChannel (juce::Graphics& g, juce::Rectangle<int> r, bool useHighRes,
                                   TimeRange time, int channelNum, float verticalZoomFactor)
 {
-    thumbnail.drawChannel (g, r, useHighRes, time, channelNum, verticalZoomFactor);
+    thumbnail->drawChannel (g, r,
+                            time.getStart().inSeconds(), time.getEnd().inSeconds(),
+                            channelNum, verticalZoomFactor);
 }
 
 void SmartThumbnail::drawChannels (juce::Graphics& g, juce::Rectangle<int> r, bool useHighRes,
                                    TimeRange time, float verticalZoomFactor)
 {
-    thumbnail.drawChannels (g, r, useHighRes, time, verticalZoomFactor);
+    thumbnail->drawChannels (g, r,
+                             time.getStart().inSeconds(), time.getEnd().inSeconds(),
+                             verticalZoomFactor);
 }
 
 double SmartThumbnail::getProportionComplete() const noexcept
@@ -579,7 +591,7 @@ void SmartThumbnail::audioFileChanged()
 
     wasGeneratingProxy = proxyGen.isProxyBeingGenerated (file);
 
-    thumbnail.releaseResources();
+    clear();
 
     if (file.getFile().exists())
         createThumbnailReader();
@@ -594,37 +606,37 @@ void SmartThumbnail::audioFileChanged()
 //==============================================================================
 void SmartThumbnail::clear()
 {
-    thumbnail.clear();
+    thumbnail->clear();
 }
 
 bool SmartThumbnail::setSource (juce::InputSource* source)
 {
-    return thumbnail.setSource (source);
+    return thumbnail->setSource (source);
 }
 
 void SmartThumbnail::setReader (juce::AudioFormatReader* reader, juce::int64 hashCode)
 {
-    thumbnail.setReader (reader, hashCode);
+    thumbnail->setReader (reader, hashCode);
 }
 
 bool SmartThumbnail::loadFrom (juce::InputStream& stream)
 {
-    return thumbnail.loadFrom (stream);
+    return thumbnail->loadFrom (stream);
 }
 
 void SmartThumbnail::saveTo (juce::OutputStream& stream) const
 {
-    thumbnail.saveTo (stream);
+    thumbnail->saveTo (stream);
 }
 
 int SmartThumbnail::getNumChannels() const noexcept
 {
-    return thumbnail.getNumChannels();
+    return thumbnail->getNumChannels();
 }
 
 double SmartThumbnail::getTotalLength() const noexcept
 {
-    return thumbnail.getTotalLength();
+    return thumbnail->getTotalLength();
 }
 
 void SmartThumbnail::drawChannel (juce::Graphics& g,
@@ -634,11 +646,11 @@ void SmartThumbnail::drawChannel (juce::Graphics& g,
                                   int channelNum,
                                   float verticalZoomFactor)
 {
-    thumbnail.drawChannel (g, r,
-                           startTimeSeconds,
-                           endTimeSeconds,
-                           channelNum,
-                           verticalZoomFactor);
+    thumbnail->drawChannel (g, r,
+                            startTimeSeconds,
+                            endTimeSeconds,
+                            channelNum,
+                            verticalZoomFactor);
 }
 
 void SmartThumbnail::drawChannels (juce::Graphics& g,
@@ -647,49 +659,49 @@ void SmartThumbnail::drawChannels (juce::Graphics& g,
                                    double endTimeSeconds,
                                    float verticalZoomFactor)
 {
-    thumbnail.drawChannels (g, r,
-                            startTimeSeconds,
-                            endTimeSeconds,
-                            verticalZoomFactor);
+    thumbnail->drawChannels (g, r,
+                             startTimeSeconds,
+                             endTimeSeconds,
+                             verticalZoomFactor);
 }
 
 bool SmartThumbnail::isFullyLoaded() const noexcept
 {
-    return thumbnail.isFullyLoaded();
+    return thumbnail->isFullyLoaded();
 }
 
 juce::int64 SmartThumbnail::getNumSamplesFinished() const noexcept
 {
-    return thumbnail.getNumSamplesFinished();
+    return thumbnail->getNumSamplesFinished();
 }
 
 float SmartThumbnail::getApproximatePeak() const
 {
-    return thumbnail.getApproximatePeak();
+    return thumbnail->getApproximatePeak();
 }
 
 void SmartThumbnail::getApproximateMinMax (double startTime, double endTime, int channelIndex,
                                            float& minValue, float& maxValue) const noexcept
 {
-    thumbnail.getApproximateMinMax (startTime, endTime, channelIndex,
-                                    minValue, maxValue);
+    thumbnail->getApproximateMinMax (startTime, endTime, channelIndex,
+                                     minValue, maxValue);
 }
 
 juce::int64 SmartThumbnail::getHashCode() const
 {
-    return thumbnail.getHashCode();
+    return thumbnail->getHashCode();
 }
 
 void SmartThumbnail::reset (int numChannels, double sampleRate, juce::int64 totalSamplesInSource)
 {
-    thumbnail.reset (numChannels, sampleRate, totalSamplesInSource);
+    thumbnail->reset (numChannels, sampleRate, totalSamplesInSource);
 }
 
 void SmartThumbnail::addBlock (juce::int64 sampleNumberInSource, const juce::AudioBuffer<float>& buffer,
                                int startOffsetInBuffer, int numSamples)
 {
-    thumbnail.addBlock (sampleNumberInSource, buffer,
-                        startOffsetInBuffer, numSamples);
+    thumbnail->addBlock (sampleNumberInSource, buffer,
+                         startOffsetInBuffer, numSamples);
 }
 
 //==============================================================================
