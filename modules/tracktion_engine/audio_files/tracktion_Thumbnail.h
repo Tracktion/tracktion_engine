@@ -51,11 +51,18 @@ public:
     void getApproximateMinMax (double startTime, double endTime, int channelIndex,
                                float& minValue, float& maxValue) const noexcept override;
 
+    //==============================================================================
     void drawChannel (juce::Graphics&, juce::Rectangle<int> area, bool useHighRes,
                       TimeRange time, int channelNum, float verticalZoomFactor);
 
     void drawChannels (juce::Graphics&, juce::Rectangle<int> area, bool useHighRes,
                        TimeRange time, float verticalZoomFactor);
+
+    //==============================================================================
+    void drawChannel (juce::Graphics&, const juce::Rectangle<int>& area, double startTime,
+                      double endTime, int channelNum, float verticalZoomFactor) override;
+    void drawChannels (juce::Graphics&, const juce::Rectangle<int>& area, double startTimeSeconds,
+                       double endTimeSeconds, float verticalZoomFactor) override;
 
 private:
     //==============================================================================
@@ -79,11 +86,6 @@ private:
 
     bool setDataSource (LevelDataSource*);
     void setLevels (const MinMaxValue* const* values, int thumbIndex, int numChans, int numValues);
-
-    void drawChannel (juce::Graphics&, const juce::Rectangle<int>& area, double startTime,
-                      double endTime, int channelNum, float verticalZoomFactor) override;
-    void drawChannels (juce::Graphics&, const juce::Rectangle<int>& area, double startTimeSeconds,
-                       double endTimeSeconds, float verticalZoomFactor) override;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TracktionThumbnail)
 };

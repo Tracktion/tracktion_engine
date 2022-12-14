@@ -18,7 +18,7 @@ namespace tracktion { inline namespace engine
     Additionally, if this file is a wav proxy file that's being generated, you can
     use this to find out about its progress.
 */
-class SmartThumbnail   : public TracktionThumbnail,
+class SmartThumbnail   : public juce::AudioThumbnailBase,
                          private juce::Timer
 {
 public:
@@ -53,6 +53,50 @@ public:
     bool isOutOfDate() const noexcept           { return thumbnailIsInvalid; }
 
     //==============================================================================
+    /** Draws one of the channels, optionally using a hi-res algorithm. */
+    void drawChannel (juce::Graphics&, juce::Rectangle<int>, bool useHighRes,
+                      TimeRange, int channelNum, float verticalZoomFactor);
+
+    /** Draws all of the channels, optionally using a hi-res algorithm. */
+    void drawChannels (juce::Graphics&, juce::Rectangle<int>, bool useHighRes,
+                       TimeRange, float verticalZoomFactor);
+
+    /** Returns the proportion of the thumbnail that has been generated. */
+    double getProportionComplete() const noexcept;
+
+    //==============================================================================
+    /** @internal. */
+    void clear() override;
+    /** @internal. */
+    bool setSource (juce::InputSource*) override;
+    /** @internal. */
+    void setReader (juce::AudioFormatReader*, juce::int64 hashCode) override;
+    /** @internal. */
+    bool loadFrom (juce::InputStream&) override;
+    /** @internal. */
+    void saveTo (juce::OutputStream&) const override;
+    /** @internal. */
+    int getNumChannels() const noexcept override;
+    /** @internal. */
+    double getTotalLength() const noexcept override;
+    /** @internal. */
+    bool isFullyLoaded() const noexcept override;
+    /** @internal. */
+    juce::int64 getNumSamplesFinished() const noexcept override;
+    /** @internal. */
+    float getApproximatePeak() const override;
+    /** @internal. */
+    void getApproximateMinMax (double startTime, double endTime, int channelIndex,
+                               float& minValue, float& maxValue) const noexcept override;
+    /** @internal. */
+    juce::int64 getHashCode() const override;
+    /** @internal. */
+    void reset (int numChannels, double sampleRate, juce::int64 totalSamplesInSource) override;
+    /** @internal. */
+    void addBlock (juce::int64 sampleNumberInSource, const juce::AudioBuffer<float>&,
+                   int startOffsetInBuffer, int numSamples) override;
+
+    //==============================================================================
     /** @internal */
     void audioFileChanged();
     /** @internal */
@@ -65,6 +109,7 @@ public:
 
 private:
     //==============================================================================
+    TracktionThumbnail thumbnail;
     juce::Component& component;
     bool wasGeneratingProxy = false;
     std::atomic<bool> thumbnailIsInvalid { true };
@@ -75,6 +120,20 @@ private:
     void createThumbnailReader();
 
     static bool enabled;
+
+    /** @internal. */
+    void drawChannel (juce::Graphics&,
+                      const juce::Rectangle<int>&,
+                      double startTimeSeconds,
+                      double endTimeSeconds,
+                      int channelNum,
+                      float verticalZoomFactor) override;
+    /** @internal. */
+    void drawChannels (juce::Graphics&,
+                       const juce::Rectangle<int>&,
+                       double startTimeSeconds,
+                       double endTimeSeconds,
+                       float verticalZoomFactor) override;
 
     JUCE_DECLARE_WEAK_REFERENCEABLE(SmartThumbnail)
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SmartThumbnail)
