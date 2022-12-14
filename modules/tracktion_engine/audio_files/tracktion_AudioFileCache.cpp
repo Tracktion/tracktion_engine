@@ -445,7 +445,7 @@ public:
     AudioFileInfo info;
 
     std::atomic<uint32_t> lastReadTime { juce::Time::getApproximateMillisecondCounter() };
-    int64_t totalBytesInUse = 0;
+    std::atomic<int64_t> totalBytesInUse { 0 };
 
 private:
     juce::OwnedArray<juce::MemoryMappedAudioFormatReader> readers;
@@ -455,7 +455,7 @@ private:
     juce::Array<int> currentBlocks;
 
     bool mapEntireFile = false;
-    bool failedToOpenFile = false;
+    std::atomic<bool> failedToOpenFile { false };
     uint32_t lastFailedOpenAttempt = 0;
     juce::Random random;
     
