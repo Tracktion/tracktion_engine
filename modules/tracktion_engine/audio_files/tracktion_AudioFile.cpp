@@ -529,7 +529,7 @@ void SmartThumbnail::setNewFile (const AudioFile& newFile)
 }
 
 //==============================================================================
-void SmartThumbnail::drawChannel (juce::Graphics& g, juce::Rectangle<int> r, bool useHighRes,
+void SmartThumbnail::drawChannel (juce::Graphics& g, juce::Rectangle<int> r,
                                   TimeRange time, int channelNum, float verticalZoomFactor)
 {
     thumbnail->drawChannel (g, r,
@@ -537,7 +537,7 @@ void SmartThumbnail::drawChannel (juce::Graphics& g, juce::Rectangle<int> r, boo
                             channelNum, verticalZoomFactor);
 }
 
-void SmartThumbnail::drawChannels (juce::Graphics& g, juce::Rectangle<int> r, bool useHighRes,
+void SmartThumbnail::drawChannels (juce::Graphics& g, juce::Rectangle<int> r,
                                    TimeRange time, float verticalZoomFactor)
 {
     thumbnail->drawChannels (g, r,

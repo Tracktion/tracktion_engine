@@ -20,6 +20,11 @@ public:
 
     ~TracktionThumbnail() override;
 
+    //==============================================================================
+    /** Toggles higher quality thumbnail drawing. */
+    static void enableHiResWaveforms (bool);
+
+    //==============================================================================
     void clear() override;
     void clearChannelData();
 
@@ -52,10 +57,10 @@ public:
                                float& minValue, float& maxValue) const noexcept override;
 
     //==============================================================================
-    void drawChannel (juce::Graphics&, juce::Rectangle<int> area, bool useHighRes,
+    void drawChannel (juce::Graphics&, juce::Rectangle<int> area,
                       TimeRange time, int channelNum, float verticalZoomFactor);
 
-    void drawChannels (juce::Graphics&, juce::Rectangle<int> area, bool useHighRes,
+    void drawChannels (juce::Graphics&, juce::Rectangle<int> area,
                        TimeRange time, float verticalZoomFactor);
 
     //==============================================================================
@@ -83,6 +88,8 @@ private:
     int numChannels = 0;
     double sampleRate = 0;
     juce::CriticalSection lock, sourceLock;
+
+    static inline bool useHiResDrawing = false;
 
     bool setDataSource (LevelDataSource*);
     void setLevels (const MinMaxValue* const* values, int thumbIndex, int numChans, int numValues);

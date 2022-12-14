@@ -569,6 +569,11 @@ TracktionThumbnail::~TracktionThumbnail()
     clear();
 }
 
+void TracktionThumbnail::enableHiResWaveforms (bool enable)
+{
+    useHiResDrawing = enable;
+}
+
 void TracktionThumbnail::clear()
 {
     {
@@ -838,31 +843,31 @@ void TracktionThumbnail::getApproximateMinMax (double startTime, double endTime,
 
 void TracktionThumbnail::drawChannel (juce::Graphics& g, const juce::Rectangle<int>& area, double start, double end, int channel, float zoom)
 {
-    drawChannel (g, area, true,
+    drawChannel (g, area,
                  { TimePosition::fromSeconds (start), TimePosition::fromSeconds (end) },
                  channel, zoom);
 }
 
 void TracktionThumbnail::drawChannels (juce::Graphics& g, const juce::Rectangle<int>& area, double start, double end, float zoom)
 {
-    drawChannels (g, area, true,
+    drawChannels (g, area,
                   { TimePosition::fromSeconds (start), TimePosition::fromSeconds (end) },
                   zoom);
 }
 
-void TracktionThumbnail::drawChannel (juce::Graphics& g, juce::Rectangle<int> area, bool useHighRes,
+void TracktionThumbnail::drawChannel (juce::Graphics& g, juce::Rectangle<int> area,
                                       TimeRange time, int channelNum, float verticalZoomFactor)
 {
     const juce::ScopedLock sl2 (sourceLock);
     const juce::ScopedLock sl (lock);
 
-    window->drawChannel (g, area, useHighRes,
+    window->drawChannel (g, area, useHiResDrawing,
                          { time.getStart().inSeconds(), time.getEnd().inSeconds() },
                          channelNum, verticalZoomFactor,
                          sampleRate, numChannels, samplesPerThumbSample, source.get(), channels);
 }
 
-void TracktionThumbnail::drawChannels (juce::Graphics& g, juce::Rectangle<int> area, bool useHighRes,
+void TracktionThumbnail::drawChannels (juce::Graphics& g, juce::Rectangle<int> area,
                                        TimeRange time, float verticalZoomFactor)
 {
     for (int i = 0; i < numChannels; ++i)
@@ -870,7 +875,7 @@ void TracktionThumbnail::drawChannels (juce::Graphics& g, juce::Rectangle<int> a
         auto y1 = juce::roundToInt ((i * area.getHeight()) / numChannels);
         auto y2 = juce::roundToInt (((i + 1) * area.getHeight()) / numChannels);
 
-        drawChannel (g, { area.getX(), area.getY() + y1, area.getWidth(), y2 - y1 }, useHighRes,
+        drawChannel (g, { area.getX(), area.getY() + y1, area.getWidth(), y2 - y1 },
                      time, i, verticalZoomFactor);
     }
 }

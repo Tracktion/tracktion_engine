@@ -63,11 +63,11 @@ public:
 
     //==============================================================================
     /** Draws one of the channels, optionally using a hi-res algorithm. */
-    void drawChannel (juce::Graphics&, juce::Rectangle<int>, bool useHighRes,
+    void drawChannel (juce::Graphics&, juce::Rectangle<int>,
                       TimeRange, int channelNum, float verticalZoomFactor);
 
     /** Draws all of the channels, optionally using a hi-res algorithm. */
-    void drawChannels (juce::Graphics&, juce::Rectangle<int>, bool useHighRes,
+    void drawChannels (juce::Graphics&, juce::Rectangle<int>,
                        TimeRange, float verticalZoomFactor);
 
     /** Returns the proportion of the thumbnail that has been generated. */
