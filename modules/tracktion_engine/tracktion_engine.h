@@ -513,7 +513,6 @@ namespace tracktion { inline namespace engine
 #include "utilities/tracktion_Pitch.h"
 
 #include "audio_files/tracktion_AudioFileCache.h"
-#include "audio_files/tracktion_Thumbnail.h"
 #include "audio_files/tracktion_SmartThumbnail.h"
 #include "audio_files/tracktion_AudioProxyGenerator.h"
 #include "audio_files/tracktion_AudioFileManager.h"

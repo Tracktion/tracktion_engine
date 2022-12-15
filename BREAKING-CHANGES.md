@@ -4,6 +4,21 @@
 
 
 ### Change
+Removed the TracktionThumbnail class.
+
+#### Possible Issues
+If you were using the default thumbnails of Tracktion Engine, these will now be juce::AudioThumbnails and so won't be anti-aliased and appear more jagged.
+
+#### Workaround
+Take a copy of the TracktionThumbnail class from the history and add it to your own project.
+Override the new `UIBehaviour::createAudioThumbnail` function to return instances of it to get back the old behaviour.
+
+#### Rationale
+TracktionThumbnail never really should have been included in the Engine. We needed a way to support multiple thumbnail types in Waveform and in doing so broke all the dependancies on TracktionThumbnail so it seemed cleaner to remove it completely. It's simple to get back the old behaviour but also means it's now a lot easier to use your own thumbnail classes if desired.
+
+---
+
+### Change
 Changed the minimum version of JUCE supported to 7 on commit of October 22.
 
 #### Possible Issues
