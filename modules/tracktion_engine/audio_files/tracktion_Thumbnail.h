@@ -23,6 +23,7 @@ public:
     //==============================================================================
     /** Toggles higher quality thumbnail drawing. */
     static void enableHiResWaveforms (bool);
+    static bool areHiResWaveformsEnabled();
 
     //==============================================================================
     void clear() override;

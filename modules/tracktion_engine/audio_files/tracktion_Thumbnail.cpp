@@ -574,6 +574,11 @@ void TracktionThumbnail::enableHiResWaveforms (bool enable)
     useHiResDrawing = enable;
 }
 
+bool TracktionThumbnail::areHiResWaveformsEnabled()
+{
+    return useHiResDrawing;
+}
+
 void TracktionThumbnail::clear()
 {
     {

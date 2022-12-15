@@ -575,7 +575,14 @@ void SmartThumbnail::createThumbnailReader()
 
     if (enabled)
     {
-        setReader (AudioFileUtils::createReaderFor (engine, file.getFile()), file.getHash());
+        // This hashing takes in to account the type of the thumb to avoid clashes if
+        // you're using different types for different displays
+        size_t hash = (size_t) file.getHash();
+        auto& thumbRef = *thumbnail; // Work around a clang warning
+        const auto thumbType = typeid (thumbRef).name();
+        hash_combine (hash, thumbType);
+
+        setReader (AudioFileUtils::createReaderFor (engine, file.getFile()), (juce::int64) hash);
         thumbnailIsInvalid = false;
     }
     else
