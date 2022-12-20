@@ -59,6 +59,7 @@ private:
     friend class TracktionThumbnailCache;
     friend class SmartThumbnail;
     std::unique_ptr<juce::AudioThumbnailCache> thumbnailCache;
+    std::set<size_t> thumbnailTypeHashes;
     std::unordered_map<const juce::AudioThumbnailBase*, SmartThumbnail*> thumbnailMap;
     juce::Array<SmartThumbnail*> activeThumbnails;
     juce::CriticalSection activeThumbnailLock;

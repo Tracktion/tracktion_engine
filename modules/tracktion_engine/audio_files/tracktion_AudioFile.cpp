@@ -507,6 +507,11 @@ SmartThumbnail::SmartThumbnail (Engine& e, const AudioFile& f, juce::Component& 
     startTimer (initialTimerDelay);
     engine.getAudioFileManager().activeThumbnails.add (this);
     engine.getAudioFileManager().thumbnailMap[thumbnail.get()] = this;
+
+    // Ensure the AudioFileManager knows about this type of thumbnail
+    auto& thumbRef = *thumbnail; // Work around a clang warning
+    const auto thumbTypeHashCode = typeid (thumbRef).hash_code();
+    engine.getAudioFileManager().thumbnailTypeHashes.insert (thumbTypeHashCode);
 }
 
 SmartThumbnail::~SmartThumbnail()
@@ -589,12 +594,12 @@ void SmartThumbnail::createThumbnailReader()
     {
         // This hashing takes in to account the type of the thumb to avoid clashes if
         // you're using different types for different displays
-        size_t hash = (size_t) file.getHash();
+        // N.B. if this changes, AudioFileManager::callListeners will also need to be updated
         auto& thumbRef = *thumbnail; // Work around a clang warning
-        const std::string thumbType = typeid (thumbRef).name();
-        hash_combine (hash, thumbType);
+        const auto thumbTypeHashCode = typeid (thumbRef).hash_code();
+        const auto hashCode = static_cast<juce::int64> (hash ((size_t) file.getHash(), thumbTypeHashCode));
 
-        setReader (AudioFileUtils::createReaderFor (engine, file.getFile()), (juce::int64) hash);
+        setReader (AudioFileUtils::createReaderFor (engine, file.getFile()), hashCode);
         thumbnailIsInvalid = false;
     }
     else
@@ -903,7 +908,11 @@ void AudioFileManager::callListeners (const AudioFile& file)
     CRASH_TRACER
     TRACKTION_ASSERT_MESSAGE_THREAD
 
-    thumbnailCache->removeThumb (file.getHash());
+    for (auto h : thumbnailTypeHashes)
+    {
+        const auto hashCode = hash ((size_t) file.getHash(), h);
+        thumbnailCache->removeThumb (static_cast<juce::int64> (hashCode));
+    }
 
     const juce::ScopedLock sl (activeThumbnailLock);
 
