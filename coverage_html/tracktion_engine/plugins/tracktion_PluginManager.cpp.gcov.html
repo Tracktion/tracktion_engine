@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-12-20 14:34:42</td>
+            <td class="headerValue">2022-12-20 20:06:24</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">21</td>
@@ -997,18 +997,18 @@
 <a name="935"><span class="lineNum">     935 </span>            :     return p;</a>
 <a name="936"><span class="lineNum">     936 </span>            : }</a>
 <a name="937"><span class="lineNum">     937 </span>            : </a>
-<a name="938"><span class="lineNum">     938 </span><span class="lineCov">         59 : void PluginCache::timerCallback()</span></a>
+<a name="938"><span class="lineNum">     938 </span><span class="lineCov">         54 : void PluginCache::timerCallback()</span></a>
 <a name="939"><span class="lineNum">     939 </span>            : {</a>
-<a name="940"><span class="lineNum">     940 </span><span class="lineCov">         59 :     Plugin::Array toDelete;</span></a>
+<a name="940"><span class="lineNum">     940 </span><span class="lineCov">         54 :     Plugin::Array toDelete;</span></a>
 <a name="941"><span class="lineNum">     941 </span>            : </a>
 <a name="942"><span class="lineNum">     942 </span>            :     {</a>
-<a name="943"><span class="lineNum">     943 </span><span class="lineCov">         59 :         const juce::ScopedLock sl (lock);</span></a>
+<a name="943"><span class="lineNum">     943 </span><span class="lineCov">         54 :         const juce::ScopedLock sl (lock);</span></a>
 <a name="944"><span class="lineNum">     944 </span>            : </a>
-<a name="945"><span class="lineNum">     945 </span><span class="lineCov">        333 :         for (int i = activePlugins.size(); --i &gt;= 0;)</span></a>
+<a name="945"><span class="lineNum">     945 </span><span class="lineCov">        316 :         for (int i = activePlugins.size(); --i &gt;= 0;)</span></a>
 <a name="946"><span class="lineNum">     946 </span>            :         {</a>
-<a name="947"><span class="lineNum">     947 </span><span class="lineCov">        274 :             if (auto f = activePlugins.getObjectPointer (i))</span></a>
+<a name="947"><span class="lineNum">     947 </span><span class="lineCov">        262 :             if (auto f = activePlugins.getObjectPointer (i))</span></a>
 <a name="948"><span class="lineNum">     948 </span>            :             {</a>
-<a name="949"><span class="lineNum">     949 </span><span class="lineCov">        274 :                 if (f-&gt;getReferenceCount() == 1)</span></a>
+<a name="949"><span class="lineNum">     949 </span><span class="lineCov">        262 :                 if (f-&gt;getReferenceCount() == 1)</span></a>
 <a name="950"><span class="lineNum">     950 </span>            :                 {</a>
 <a name="951"><span class="lineNum">     951 </span><span class="lineCov">          1 :                     toDelete.add (f);</span></a>
 <a name="952"><span class="lineNum">     952 </span><span class="lineCov">          1 :                     activePlugins.remove (i);</span></a>
@@ -1016,7 +1016,7 @@
 <a name="954"><span class="lineNum">     954 </span>            :             }</a>
 <a name="955"><span class="lineNum">     955 </span>            :         }</a>
 <a name="956"><span class="lineNum">     956 </span>            :     }</a>
-<a name="957"><span class="lineNum">     957 </span><span class="lineCov">         59 : }</span></a>
+<a name="957"><span class="lineNum">     957 </span><span class="lineCov">         54 : }</span></a>
 <a name="958"><span class="lineNum">     958 </span>            : </a>
 <a name="959"><span class="lineNum">     959 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>

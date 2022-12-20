@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-12-20 14:34:42</td>
+            <td class="headerValue">2022-12-20 20:06:24</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">24</td>
@@ -275,10 +275,10 @@
 <a name="213"><span class="lineNum">     213 </span>            :         // Wait until all the threads have started and are waiting on the event</a>
 <a name="214"><span class="lineNum">     214 </span>            :         for (;;)</a>
 <a name="215"><span class="lineNum">     215 </span>            :         {</a>
-<a name="216"><span class="lineNum">     216 </span><span class="lineCov">          7 :             if (numThreadsRunning == numThreads)</span></a>
+<a name="216"><span class="lineNum">     216 </span><span class="lineCov">          4 :             if (numThreadsRunning == numThreads)</span></a>
 <a name="217"><span class="lineNum">     217 </span>            :                 break;</a>
 <a name="218"><span class="lineNum">     218 </span>            : </a>
-<a name="219"><span class="lineNum">     219 </span><span class="lineCov">          5 :             std::this_thread::sleep_for (1ms);</span></a>
+<a name="219"><span class="lineNum">     219 </span><span class="lineCov">          2 :             std::this_thread::sleep_for (1ms);</span></a>
 <a name="220"><span class="lineNum">     220 </span>            :         }</a>
 <a name="221"><span class="lineNum">     221 </span>            : </a>
 <a name="222"><span class="lineNum">     222 </span>            :         // Sleep for a few more ms to ensure they're all waiting</a>
@@ -372,11 +372,11 @@
 <a name="310"><span class="lineNum">     310 </span>            : </a>
 <a name="311"><span class="lineNum">     311 </span><span class="lineCov">         22 :         for (int i = 0; i &lt; numThreads; ++i)</span></a>
 <a name="312"><span class="lineNum">     312 </span>            :         {</a>
-<a name="313"><span class="lineNum">     313 </span><span class="lineCov">    1943888 :             threads.emplace_back ([&amp;]</span></a>
+<a name="313"><span class="lineNum">     313 </span><span class="lineCov">    1944109 :             threads.emplace_back ([&amp;]</span></a>
 <a name="314"><span class="lineNum">     314 </span>            :                                   {</a>
 <a name="315"><span class="lineNum">     315 </span>            :                                       ++numThreadsRunning;</a>
 <a name="316"><span class="lineNum">     316 </span>            : </a>
-<a name="317"><span class="lineNum">     317 </span><span class="lineCov">    1943868 :                                       while (! threadShouldExit)</span></a>
+<a name="317"><span class="lineNum">     317 </span><span class="lineCov">    1944089 :                                       while (! threadShouldExit)</span></a>
 <a name="318"><span class="lineNum">     318 </span>            :                                           event.wait();</a>
 <a name="319"><span class="lineNum">     319 </span>            : </a>
 <a name="320"><span class="lineNum">     320 </span>            :                                       --numThreadsRunning;</a>
@@ -405,7 +405,7 @@
 <a name="343"><span class="lineNum">     343 </span>            :         // Wait for the threads to complete</a>
 <a name="344"><span class="lineNum">     344 </span>            :         threadShouldExit = true;</a>
 <a name="345"><span class="lineNum">     345 </span>            : </a>
-<a name="346"><span class="lineNum">     346 </span><span class="lineCov">     304826 :         while (numThreadsRunning &gt; 0)</span></a>
+<a name="346"><span class="lineNum">     346 </span><span class="lineCov">      34860 :         while (numThreadsRunning &gt; 0)</span></a>
 <a name="347"><span class="lineNum">     347 </span>            :             event.signal (numThreads);</a>
 <a name="348"><span class="lineNum">     348 </span>            : </a>
 <a name="349"><span class="lineNum">     349 </span><span class="lineCov">         22 :         for (auto&amp; t : threads)</span></a>
@@ -435,8 +435,8 @@
 <a name="373"><span class="lineNum">     373 </span>            :                                   {</a>
 <a name="374"><span class="lineNum">     374 </span><span class="lineCov">         10 :                                       ++numThreadsRunning;</span></a>
 <a name="375"><span class="lineNum">     375 </span>            : </a>
-<a name="376"><span class="lineNum">     376 </span><span class="lineCov">       3061 :                                       while (! threadShouldExit)</span></a>
-<a name="377"><span class="lineNum">     377 </span><span class="lineCov">       3051 :                                           event.wait();</span></a>
+<a name="376"><span class="lineNum">     376 </span><span class="lineCov">       7758 :                                       while (! threadShouldExit)</span></a>
+<a name="377"><span class="lineNum">     377 </span><span class="lineCov">       7748 :                                           event.wait();</span></a>
 <a name="378"><span class="lineNum">     378 </span>            : </a>
 <a name="379"><span class="lineNum">     379 </span>            :                                       --numThreadsRunning;</a>
 <a name="380"><span class="lineNum">     380 </span><span class="lineCov">         10 :                                   });</span></a>
@@ -464,8 +464,8 @@
 <a name="402"><span class="lineNum">     402 </span>            :         // Wait for the threads to complete</a>
 <a name="403"><span class="lineNum">     403 </span>            :         threadShouldExit = true;</a>
 <a name="404"><span class="lineNum">     404 </span>            : </a>
-<a name="405"><span class="lineNum">     405 </span><span class="lineCov">        348 :         while (numThreadsRunning &gt; 0)</span></a>
-<a name="406"><span class="lineNum">     406 </span><span class="lineCov">        347 :             event.signal();</span></a>
+<a name="405"><span class="lineNum">     405 </span><span class="lineCov">       3310 :         while (numThreadsRunning &gt; 0)</span></a>
+<a name="406"><span class="lineNum">     406 </span><span class="lineCov">       3309 :             event.signal();</span></a>
 <a name="407"><span class="lineNum">     407 </span>            : </a>
 <a name="408"><span class="lineNum">     408 </span><span class="lineCov">         11 :         for (auto&amp; t : threads)</span></a>
 <a name="409"><span class="lineNum">     409 </span><span class="lineCov">         10 :             t.join();</span></a>

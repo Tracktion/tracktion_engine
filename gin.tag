@@ -11052,6 +11052,13 @@
     </member>
     <member kind="friend" protection="private">
       <type>friend class</type>
+      <name>TracktionThumbnailCache</name>
+      <anchorfile>classtracktion_1_1engine_1_1AudioFileManager.html</anchorfile>
+      <anchor>aa6cecf210977bf49716b69ce51e10026</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="friend" protection="private">
+      <type>friend class</type>
       <name>SmartThumbnail</name>
       <anchorfile>classtracktion_1_1engine_1_1AudioFileManager.html</anchorfile>
       <anchor>a165e166aa555079606df673362725cc4</anchor>

@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">207</td>
-            <td class="headerCovTableEntry">466</td>
-            <td class="headerCovTableEntryLo">44.4 %</td>
+            <td class="headerCovTableEntry">208</td>
+            <td class="headerCovTableEntry">473</td>
+            <td class="headerCovTableEntryLo">44.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-12-20 14:34:42</td>
+            <td class="headerValue">2022-12-20 20:06:24</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">45</td>
-            <td class="headerCovTableEntry">105</td>
-            <td class="headerCovTableEntryLo">42.9 %</td>
+            <td class="headerCovTableEntry">106</td>
+            <td class="headerCovTableEntryLo">42.5 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -84,19 +84,19 @@
 <a name="22"><span class="lineNum">      22 </span>            : {</a>
 <a name="23"><span class="lineNum">      23 </span><span class="lineCov">      17389 : }</span></a>
 <a name="24"><span class="lineNum">      24 </span>            : </a>
-<a name="25"><span class="lineNum">      25 </span><span class="lineCov">      12388 : AudioFile::AudioFile (const AudioFile&amp; other) noexcept</span></a>
-<a name="26"><span class="lineNum">      26 </span><span class="lineCov">      12306 :     : engine (other.engine), file (other.file), hash (other.hash)</span></a>
+<a name="25"><span class="lineNum">      25 </span><span class="lineCov">      12387 : AudioFile::AudioFile (const AudioFile&amp; other) noexcept</span></a>
+<a name="26"><span class="lineNum">      26 </span><span class="lineCov">      12304 :     : engine (other.engine), file (other.file), hash (other.hash)</span></a>
 <a name="27"><span class="lineNum">      27 </span>            : {</a>
 <a name="28"><span class="lineNum">      28 </span><span class="lineCov">      10538 : }</span></a>
 <a name="29"><span class="lineNum">      29 </span>            : </a>
 <a name="30"><span class="lineNum">      30 </span><span class="lineCov">         15 : AudioFile&amp; AudioFile::operator= (const AudioFile&amp; other) noexcept</span></a>
 <a name="31"><span class="lineNum">      31 </span>            : {</a>
-<a name="32"><span class="lineNum">      32 </span><span class="lineCov">         19 :     file = other.file;</span></a>
-<a name="33"><span class="lineNum">      33 </span><span class="lineCov">          4 :     hash = other.hash;</span></a>
+<a name="32"><span class="lineNum">      32 </span><span class="lineCov">         18 :     file = other.file;</span></a>
+<a name="33"><span class="lineNum">      33 </span><span class="lineCov">          3 :     hash = other.hash;</span></a>
 <a name="34"><span class="lineNum">      34 </span><span class="lineCov">         15 :     return *this;</span></a>
 <a name="35"><span class="lineNum">      35 </span>            : }</a>
 <a name="36"><span class="lineNum">      36 </span>            : </a>
-<a name="37"><span class="lineNum">      37 </span><span class="lineCov">      31319 : AudioFile::~AudioFile() {}</span></a>
+<a name="37"><span class="lineNum">      37 </span><span class="lineCov">      31318 : AudioFile::~AudioFile() {}</span></a>
 <a name="38"><span class="lineNum">      38 </span>            : </a>
 <a name="39"><span class="lineNum">      39 </span><span class="lineCov">      15700 : AudioFileInfo AudioFile::getInfo() const</span></a>
 <a name="40"><span class="lineNum">      40 </span>            : {</a>
@@ -407,12 +407,12 @@
 <a name="345"><span class="lineNum">     345 </span>            : {</a>
 <a name="346"><span class="lineNum">     346 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="347"><span class="lineNum">     347 </span>            : </a>
-<a name="348"><span class="lineNum">     348 </span><span class="lineCov">       3527 : AudioFileInfo::AudioFileInfo (const AudioFile&amp; file, juce::AudioFormatReader* reader, juce::AudioFormat* f)</span></a>
-<a name="349"><span class="lineNum">     349 </span><span class="lineCov">       3527 :     : engine (file.engine), hashCode (file.getHash()), format (f),</span></a>
-<a name="350"><span class="lineNum">     350 </span><span class="lineCov">       3527 :       fileModificationTime (file.getFile().getLastModificationTime()),</span></a>
-<a name="351"><span class="lineNum">     351 </span><span class="lineCov">       7054 :       loopInfo (*file.engine, reader, f)</span></a>
+<a name="348"><span class="lineNum">     348 </span><span class="lineCov">       3526 : AudioFileInfo::AudioFileInfo (const AudioFile&amp; file, juce::AudioFormatReader* reader, juce::AudioFormat* f)</span></a>
+<a name="349"><span class="lineNum">     349 </span><span class="lineCov">       3526 :     : engine (file.engine), hashCode (file.getHash()), format (f),</span></a>
+<a name="350"><span class="lineNum">     350 </span><span class="lineCov">       3526 :       fileModificationTime (file.getFile().getLastModificationTime()),</span></a>
+<a name="351"><span class="lineNum">     351 </span><span class="lineCov">       7052 :       loopInfo (*file.engine, reader, f)</span></a>
 <a name="352"><span class="lineNum">     352 </span>            : {</a>
-<a name="353"><span class="lineNum">     353 </span><span class="lineCov">       3527 :     if (reader != nullptr)</span></a>
+<a name="353"><span class="lineNum">     353 </span><span class="lineCov">       3526 :     if (reader != nullptr)</span></a>
 <a name="354"><span class="lineNum">     354 </span>            :     {</a>
 <a name="355"><span class="lineNum">     355 </span><span class="lineCov">       3523 :         wasParsedOk     = true;</span></a>
 <a name="356"><span class="lineNum">     356 </span><span class="lineCov">       3523 :         sampleRate      = reader-&gt;sampleRate;</span></a>
@@ -427,28 +427,28 @@
 <a name="365"><span class="lineNum">     365 </span>            :     }</a>
 <a name="366"><span class="lineNum">     366 </span>            :     else</a>
 <a name="367"><span class="lineNum">     367 </span>            :     {</a>
-<a name="368"><span class="lineNum">     368 </span><span class="lineCov">          4 :         wasParsedOk = false;</span></a>
-<a name="369"><span class="lineNum">     369 </span><span class="lineCov">          4 :         format = nullptr;</span></a>
-<a name="370"><span class="lineNum">     370 </span><span class="lineCov">          4 :         sampleRate = 0;</span></a>
-<a name="371"><span class="lineNum">     371 </span><span class="lineCov">          4 :         lengthInSamples = 0;</span></a>
-<a name="372"><span class="lineNum">     372 </span><span class="lineCov">          4 :         numChannels = 0;</span></a>
-<a name="373"><span class="lineNum">     373 </span><span class="lineCov">          4 :         bitsPerSample = 0;</span></a>
-<a name="374"><span class="lineNum">     374 </span><span class="lineCov">          4 :         isFloatingPoint = false;</span></a>
-<a name="375"><span class="lineNum">     375 </span><span class="lineCov">          4 :         needsCachedProxy = false;</span></a>
+<a name="368"><span class="lineNum">     368 </span><span class="lineCov">          3 :         wasParsedOk = false;</span></a>
+<a name="369"><span class="lineNum">     369 </span><span class="lineCov">          3 :         format = nullptr;</span></a>
+<a name="370"><span class="lineNum">     370 </span><span class="lineCov">          3 :         sampleRate = 0;</span></a>
+<a name="371"><span class="lineNum">     371 </span><span class="lineCov">          3 :         lengthInSamples = 0;</span></a>
+<a name="372"><span class="lineNum">     372 </span><span class="lineCov">          3 :         numChannels = 0;</span></a>
+<a name="373"><span class="lineNum">     373 </span><span class="lineCov">          3 :         bitsPerSample = 0;</span></a>
+<a name="374"><span class="lineNum">     374 </span><span class="lineCov">          3 :         isFloatingPoint = false;</span></a>
+<a name="375"><span class="lineNum">     375 </span><span class="lineCov">          3 :         needsCachedProxy = false;</span></a>
 <a name="376"><span class="lineNum">     376 </span>            :     }</a>
-<a name="377"><span class="lineNum">     377 </span><span class="lineCov">       3527 : }</span></a>
+<a name="377"><span class="lineNum">     377 </span><span class="lineCov">       3526 : }</span></a>
 <a name="378"><span class="lineNum">     378 </span>            : </a>
-<a name="379"><span class="lineNum">     379 </span><span class="lineCov">       1767 : AudioFileInfo AudioFileInfo::parse (const AudioFile&amp; file)</span></a>
+<a name="379"><span class="lineNum">     379 </span><span class="lineCov">       1766 : AudioFileInfo AudioFileInfo::parse (const AudioFile&amp; file)</span></a>
 <a name="380"><span class="lineNum">     380 </span>            : {</a>
-<a name="381"><span class="lineNum">     381 </span><span class="lineCov">       1767 :     if (! file.isNull())</span></a>
+<a name="381"><span class="lineNum">     381 </span><span class="lineCov">       1766 :     if (! file.isNull())</span></a>
 <a name="382"><span class="lineNum">     382 </span>            :     {</a>
-<a name="383"><span class="lineNum">     383 </span><span class="lineCov">       1767 :         juce::AudioFormat* format = nullptr;</span></a>
+<a name="383"><span class="lineNum">     383 </span><span class="lineCov">       1766 :         juce::AudioFormat* format = nullptr;</span></a>
 <a name="384"><span class="lineNum">     384 </span>            : </a>
-<a name="385"><span class="lineNum">     385 </span><span class="lineCov">       1767 :         if (auto reader = std::unique_ptr&lt;juce::AudioFormatReader&gt; (AudioFileUtils::createReaderFindingFormat (*file.engine, file.getFile(), format)))</span></a>
+<a name="385"><span class="lineNum">     385 </span><span class="lineCov">       1766 :         if (auto reader = std::unique_ptr&lt;juce::AudioFormatReader&gt; (AudioFileUtils::createReaderFindingFormat (*file.engine, file.getFile(), format)))</span></a>
 <a name="386"><span class="lineNum">     386 </span><span class="lineCov">       1763 :             return AudioFileInfo (file, reader.get(), format);</span></a>
 <a name="387"><span class="lineNum">     387 </span>            :     }</a>
 <a name="388"><span class="lineNum">     388 </span>            : </a>
-<a name="389"><span class="lineNum">     389 </span><span class="lineCov">          4 :     return AudioFileInfo (file, nullptr, nullptr);</span></a>
+<a name="389"><span class="lineNum">     389 </span><span class="lineCov">          3 :     return AudioFileInfo (file, nullptr, nullptr);</span></a>
 <a name="390"><span class="lineNum">     390 </span>            : }</a>
 <a name="391"><span class="lineNum">     391 </span>            : </a>
 <a name="392"><span class="lineNum">     392 </span>            : //==============================================================================</a>
@@ -468,7 +468,7 @@
 <a name="406"><span class="lineNum">     406 </span><span class="lineNoCov">          0 :     void saveNewlyFinishedThumbnail (const juce::AudioThumbnailBase&amp; thumb, juce::int64 hash) override</span></a>
 <a name="407"><span class="lineNum">     407 </span>            :     {</a>
 <a name="408"><span class="lineNum">     408 </span><span class="lineNoCov">          0 :         CRASH_TRACER</span></a>
-<a name="409"><span class="lineNum">     409 </span><span class="lineNoCov">          0 :         auto st = dynamic_cast&lt;const SmartThumbnail*&gt; (&amp;thumb);</span></a>
+<a name="409"><span class="lineNum">     409 </span><span class="lineNoCov">          0 :         auto st = getActiveSmartThumbnail (thumb);</span></a>
 <a name="410"><span class="lineNum">     410 </span><span class="lineNoCov">          0 :         auto thumbFile = getThumbFile (st, hash);</span></a>
 <a name="411"><span class="lineNum">     411 </span>            : </a>
 <a name="412"><span class="lineNum">     412 </span><span class="lineNoCov">          0 :         if (thumbFile.deleteFile())</span></a>
@@ -487,7 +487,7 @@
 <a name="425"><span class="lineNum">     425 </span><span class="lineNoCov">          0 :     bool loadNewThumb (juce::AudioThumbnailBase&amp; thumb, juce::int64 hash) override</span></a>
 <a name="426"><span class="lineNum">     426 </span>            :     {</a>
 <a name="427"><span class="lineNum">     427 </span><span class="lineNoCov">          0 :         CRASH_TRACER</span></a>
-<a name="428"><span class="lineNum">     428 </span><span class="lineNoCov">          0 :         auto st = dynamic_cast&lt;const SmartThumbnail*&gt; (&amp;thumb);</span></a>
+<a name="428"><span class="lineNum">     428 </span><span class="lineNoCov">          0 :         auto st = getActiveSmartThumbnail (thumb);</span></a>
 <a name="429"><span class="lineNum">     429 </span><span class="lineNoCov">          0 :         auto thumbFile = getThumbFile (st, hash);</span></a>
 <a name="430"><span class="lineNum">     430 </span>            : </a>
 <a name="431"><span class="lineNum">     431 </span><span class="lineNoCov">          0 :         if (st != nullptr</span></a>
@@ -513,522 +513,534 @@
 <a name="451"><span class="lineNum">     451 </span><span class="lineNoCov">          0 :         return engine.getTemporaryFileManager().getThumbnailsFolder();</span></a>
 <a name="452"><span class="lineNum">     452 </span>            :     }</a>
 <a name="453"><span class="lineNum">     453 </span>            : </a>
-<a name="454"><span class="lineNum">     454 </span><span class="lineNoCov">          0 :     juce::File getThumbFile (const SmartThumbnail* st, HashCode hash) const</span></a>
+<a name="454"><span class="lineNum">     454 </span><span class="lineNoCov">          0 :     SmartThumbnail* getActiveSmartThumbnail (const juce::AudioThumbnailBase&amp; thumb)</span></a>
 <a name="455"><span class="lineNum">     455 </span>            :     {</a>
-<a name="456"><span class="lineNum">     456 </span><span class="lineNoCov">          0 :         auto thumbFolder = getThumbFolder (st != nullptr ? st-&gt;edit : nullptr);</span></a>
+<a name="456"><span class="lineNum">     456 </span><span class="lineNoCov">          0 :         auto&amp; map = engine.getAudioFileManager().thumbnailMap;</span></a>
 <a name="457"><span class="lineNum">     457 </span>            : </a>
-<a name="458"><span class="lineNum">     458 </span><span class="lineNoCov">          0 :         return thumbFolder.getChildFile (&quot;thumbnail_&quot; + juce::String::toHexString (hash) + &quot;.thumb&quot;);</span></a>
-<a name="459"><span class="lineNum">     459 </span>            :     }</a>
-<a name="460"><span class="lineNum">     460 </span>            : };</a>
-<a name="461"><span class="lineNum">     461 </span>            : </a>
-<a name="462"><span class="lineNum">     462 </span>            : //==============================================================================</a>
-<a name="463"><span class="lineNum">     463 </span><span class="lineCov">       3526 : struct AudioFileManager::KnownFile</span></a>
-<a name="464"><span class="lineNum">     464 </span>            : {</a>
-<a name="465"><span class="lineNum">     465 </span><span class="lineCov">       1763 :     KnownFile (const AudioFile&amp; f)</span></a>
-<a name="466"><span class="lineNum">     466 </span><span class="lineCov">       1763 :         : file (f), info (AudioFileInfo::parse (file))</span></a>
-<a name="467"><span class="lineNum">     467 </span>            :     {</a>
-<a name="468"><span class="lineNum">     468 </span><span class="lineCov">       1763 :     }</span></a>
-<a name="469"><span class="lineNum">     469 </span>            : </a>
-<a name="470"><span class="lineNum">     470 </span>            :     AudioFile file;</a>
-<a name="471"><span class="lineNum">     471 </span>            :     AudioFileInfo info;</a>
-<a name="472"><span class="lineNum">     472 </span>            : </a>
-<a name="473"><span class="lineNum">     473 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (KnownFile)</a>
-<a name="474"><span class="lineNum">     474 </span>            : };</a>
-<a name="475"><span class="lineNum">     475 </span>            : </a>
-<a name="476"><span class="lineNum">     476 </span>            : //==============================================================================</a>
-<a name="477"><span class="lineNum">     477 </span>            : enum { initialTimerDelay = 10 };</a>
-<a name="478"><span class="lineNum">     478 </span>            : </a>
-<a name="479"><span class="lineNum">     479 </span>            : bool SmartThumbnail::enabled = true;</a>
-<a name="480"><span class="lineNum">     480 </span>            : </a>
-<a name="481"><span class="lineNum">     481 </span><span class="lineNoCov">          0 : SmartThumbnail::SmartThumbnail (Engine&amp; e, const AudioFile&amp; f, juce::Component&amp; componentToRepaint, Edit* ed)</span></a>
-<a name="482"><span class="lineNum">     482 </span>            :     : SmartThumbnail (e, f, componentToRepaint, ed,</a>
-<a name="483"><span class="lineNum">     483 </span><span class="lineNoCov">          0 :                       e.getUIBehaviour().createAudioThumbnail (256,</span></a>
-<a name="484"><span class="lineNum">     484 </span><span class="lineNoCov">          0 :                                                                e.getAudioFileFormatManager().readFormatManager,</span></a>
-<a name="485"><span class="lineNum">     485 </span><span class="lineNoCov">          0 :                                                                e.getAudioFileManager().getAudioThumbnailCache()))</span></a>
-<a name="486"><span class="lineNum">     486 </span>            : {</a>
-<a name="487"><span class="lineNum">     487 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="458"><span class="lineNum">     458 </span><span class="lineNoCov">          0 :         if (auto found = map.find (&amp;thumb); found != map.end())</span></a>
+<a name="459"><span class="lineNum">     459 </span><span class="lineNoCov">          0 :             return found-&gt;second;</span></a>
+<a name="460"><span class="lineNum">     460 </span>            : </a>
+<a name="461"><span class="lineNum">     461 </span>            :         return nullptr;</a>
+<a name="462"><span class="lineNum">     462 </span>            :     }</a>
+<a name="463"><span class="lineNum">     463 </span>            : </a>
+<a name="464"><span class="lineNum">     464 </span><span class="lineNoCov">          0 :     juce::File getThumbFile (const SmartThumbnail* st, HashCode hash) const</span></a>
+<a name="465"><span class="lineNum">     465 </span>            :     {</a>
+<a name="466"><span class="lineNum">     466 </span><span class="lineNoCov">          0 :         auto thumbFolder = getThumbFolder (st != nullptr ? st-&gt;edit : nullptr);</span></a>
+<a name="467"><span class="lineNum">     467 </span>            : </a>
+<a name="468"><span class="lineNum">     468 </span><span class="lineNoCov">          0 :         return thumbFolder.getChildFile (&quot;thumbnail_&quot; + juce::String::toHexString (hash) + &quot;.thumb&quot;);</span></a>
+<a name="469"><span class="lineNum">     469 </span>            :     }</a>
+<a name="470"><span class="lineNum">     470 </span>            : };</a>
+<a name="471"><span class="lineNum">     471 </span>            : </a>
+<a name="472"><span class="lineNum">     472 </span>            : //==============================================================================</a>
+<a name="473"><span class="lineNum">     473 </span><span class="lineCov">       3526 : struct AudioFileManager::KnownFile</span></a>
+<a name="474"><span class="lineNum">     474 </span>            : {</a>
+<a name="475"><span class="lineNum">     475 </span><span class="lineCov">       1763 :     KnownFile (const AudioFile&amp; f)</span></a>
+<a name="476"><span class="lineNum">     476 </span><span class="lineCov">       1763 :         : file (f), info (AudioFileInfo::parse (file))</span></a>
+<a name="477"><span class="lineNum">     477 </span>            :     {</a>
+<a name="478"><span class="lineNum">     478 </span><span class="lineCov">       1763 :     }</span></a>
+<a name="479"><span class="lineNum">     479 </span>            : </a>
+<a name="480"><span class="lineNum">     480 </span>            :     AudioFile file;</a>
+<a name="481"><span class="lineNum">     481 </span>            :     AudioFileInfo info;</a>
+<a name="482"><span class="lineNum">     482 </span>            : </a>
+<a name="483"><span class="lineNum">     483 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (KnownFile)</a>
+<a name="484"><span class="lineNum">     484 </span>            : };</a>
+<a name="485"><span class="lineNum">     485 </span>            : </a>
+<a name="486"><span class="lineNum">     486 </span>            : //==============================================================================</a>
+<a name="487"><span class="lineNum">     487 </span>            : enum { initialTimerDelay = 10 };</a>
 <a name="488"><span class="lineNum">     488 </span>            : </a>
-<a name="489"><span class="lineNum">     489 </span><span class="lineNoCov">          0 : SmartThumbnail::SmartThumbnail (Engine&amp; e, const AudioFile&amp; f, juce::Component&amp; componentToRepaint, Edit* ed,</span></a>
-<a name="490"><span class="lineNum">     490 </span><span class="lineNoCov">          0 :                                 std::unique_ptr&lt;juce::AudioThumbnailBase&gt; thumbnailToUse)</span></a>
-<a name="491"><span class="lineNum">     491 </span><span class="lineNoCov">          0 :     : file (f), engine (e), edit (ed),</span></a>
-<a name="492"><span class="lineNum">     492 </span>            :       thumbnail (std::move (thumbnailToUse)),</a>
-<a name="493"><span class="lineNum">     493 </span><span class="lineNoCov">          0 :       component (componentToRepaint)</span></a>
-<a name="494"><span class="lineNum">     494 </span>            : {</a>
-<a name="495"><span class="lineNum">     495 </span>            :     TRACKTION_ASSERT_MESSAGE_THREAD</a>
-<a name="496"><span class="lineNum">     496 </span>            :     assert (thumbnail &amp;&amp; &quot;thumbnail must be valid!&quot;);</a>
-<a name="497"><span class="lineNum">     497 </span><span class="lineNoCov">          0 :     startTimer (initialTimerDelay);</span></a>
-<a name="498"><span class="lineNum">     498 </span><span class="lineNoCov">          0 :     engine.getAudioFileManager().activeThumbnails.add (this);</span></a>
-<a name="499"><span class="lineNum">     499 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="500"><span class="lineNum">     500 </span>            : </a>
-<a name="501"><span class="lineNum">     501 </span><span class="lineNoCov">          0 : SmartThumbnail::~SmartThumbnail()</span></a>
-<a name="502"><span class="lineNum">     502 </span>            : {</a>
-<a name="503"><span class="lineNum">     503 </span>            :     TRACKTION_ASSERT_MESSAGE_THREAD</a>
-<a name="504"><span class="lineNum">     504 </span>            : </a>
-<a name="505"><span class="lineNum">     505 </span><span class="lineNoCov">          0 :     engine.getAudioFileManager().activeThumbnails.removeAllInstancesOf (this);</span></a>
-<a name="506"><span class="lineNum">     506 </span><span class="lineNoCov">          0 :     thumbnail-&gt;clear();</span></a>
-<a name="507"><span class="lineNum">     507 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="508"><span class="lineNum">     508 </span>            : </a>
-<a name="509"><span class="lineNum">     509 </span><span class="lineNoCov">          0 : bool SmartThumbnail::areThumbnailsFullyLoaded (Engine&amp; engine)</span></a>
-<a name="510"><span class="lineNum">     510 </span>            : {</a>
-<a name="511"><span class="lineNum">     511 </span>            :     TRACKTION_ASSERT_MESSAGE_THREAD</a>
-<a name="512"><span class="lineNum">     512 </span>            : </a>
-<a name="513"><span class="lineNum">     513 </span><span class="lineNoCov">          0 :     for (auto thumb : engine.getAudioFileManager().activeThumbnails)</span></a>
-<a name="514"><span class="lineNum">     514 </span><span class="lineNoCov">          0 :         if (! thumb-&gt;isFullyLoaded())</span></a>
-<a name="515"><span class="lineNum">     515 </span>            :             return false;</a>
-<a name="516"><span class="lineNum">     516 </span>            :     </a>
-<a name="517"><span class="lineNum">     517 </span>            :     return true;</a>
-<a name="518"><span class="lineNum">     518 </span>            : }</a>
-<a name="519"><span class="lineNum">     519 </span>            : </a>
-<a name="520"><span class="lineNum">     520 </span><span class="lineNoCov">          0 : void SmartThumbnail::setNewFile (const AudioFile&amp; newFile)</span></a>
-<a name="521"><span class="lineNum">     521 </span>            : {</a>
-<a name="522"><span class="lineNum">     522 </span><span class="lineNoCov">          0 :     if (file != newFile)</span></a>
-<a name="523"><span class="lineNum">     523 </span>            :     {</a>
-<a name="524"><span class="lineNum">     524 </span>            :         file = newFile;</a>
-<a name="525"><span class="lineNum">     525 </span>            : </a>
-<a name="526"><span class="lineNum">     526 </span><span class="lineNoCov">          0 :         audioFileChanged();</span></a>
-<a name="527"><span class="lineNum">     527 </span><span class="lineNoCov">          0 :         component.repaint();</span></a>
-<a name="528"><span class="lineNum">     528 </span>            :     }</a>
-<a name="529"><span class="lineNum">     529 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="530"><span class="lineNum">     530 </span>            : </a>
-<a name="531"><span class="lineNum">     531 </span>            : //==============================================================================</a>
-<a name="532"><span class="lineNum">     532 </span><span class="lineNoCov">          0 : void SmartThumbnail::drawChannel (juce::Graphics&amp; g, juce::Rectangle&lt;int&gt; r,</span></a>
-<a name="533"><span class="lineNum">     533 </span>            :                                   TimeRange time, int channelNum, float verticalZoomFactor)</a>
-<a name="534"><span class="lineNum">     534 </span>            : {</a>
-<a name="535"><span class="lineNum">     535 </span><span class="lineNoCov">          0 :     thumbnail-&gt;drawChannel (g, r,</span></a>
-<a name="536"><span class="lineNum">     536 </span>            :                             time.getStart().inSeconds(), time.getEnd().inSeconds(),</a>
-<a name="537"><span class="lineNum">     537 </span>            :                             channelNum, verticalZoomFactor);</a>
-<a name="538"><span class="lineNum">     538 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="539"><span class="lineNum">     539 </span>            : </a>
-<a name="540"><span class="lineNum">     540 </span><span class="lineNoCov">          0 : void SmartThumbnail::drawChannels (juce::Graphics&amp; g, juce::Rectangle&lt;int&gt; r,</span></a>
-<a name="541"><span class="lineNum">     541 </span>            :                                    TimeRange time, float verticalZoomFactor)</a>
-<a name="542"><span class="lineNum">     542 </span>            : {</a>
-<a name="543"><span class="lineNum">     543 </span><span class="lineNoCov">          0 :     thumbnail-&gt;drawChannels (g, r,</span></a>
-<a name="544"><span class="lineNum">     544 </span>            :                              time.getStart().inSeconds(), time.getEnd().inSeconds(),</a>
-<a name="545"><span class="lineNum">     545 </span>            :                              verticalZoomFactor);</a>
-<a name="546"><span class="lineNum">     546 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="547"><span class="lineNum">     547 </span>            : </a>
-<a name="548"><span class="lineNum">     548 </span><span class="lineNoCov">          0 : double SmartThumbnail::getProportionComplete() const noexcept</span></a>
-<a name="549"><span class="lineNum">     549 </span>            : {</a>
-<a name="550"><span class="lineNum">     550 </span><span class="lineNoCov">          0 :     if (auto sampleRate = file.getSampleRate(); sampleRate &gt; 0)</span></a>
-<a name="551"><span class="lineNum">     551 </span>            :     {</a>
-<a name="552"><span class="lineNum">     552 </span><span class="lineNoCov">          0 :         const auto totalSamples = toSamples (TimePosition::fromSeconds (getTotalLength()), sampleRate);</span></a>
-<a name="553"><span class="lineNum">     553 </span><span class="lineNoCov">          0 :         return juce::jlimit (0.0, 1.0, getNumSamplesFinished() / (double) std::max ((SampleCount) 1, totalSamples));</span></a>
-<a name="554"><span class="lineNum">     554 </span>            :     }</a>
-<a name="555"><span class="lineNum">     555 </span>            : </a>
-<a name="556"><span class="lineNum">     556 </span>            :     return 0.0;</a>
-<a name="557"><span class="lineNum">     557 </span>            : }</a>
-<a name="558"><span class="lineNum">     558 </span>            : </a>
-<a name="559"><span class="lineNum">     559 </span>            : //==============================================================================</a>
-<a name="560"><span class="lineNum">     560 </span><span class="lineNoCov">          0 : void SmartThumbnail::releaseFile()</span></a>
+<a name="489"><span class="lineNum">     489 </span>            : bool SmartThumbnail::enabled = true;</a>
+<a name="490"><span class="lineNum">     490 </span>            : </a>
+<a name="491"><span class="lineNum">     491 </span><span class="lineNoCov">          0 : SmartThumbnail::SmartThumbnail (Engine&amp; e, const AudioFile&amp; f, juce::Component&amp; componentToRepaint, Edit* ed)</span></a>
+<a name="492"><span class="lineNum">     492 </span>            :     : SmartThumbnail (e, f, componentToRepaint, ed,</a>
+<a name="493"><span class="lineNum">     493 </span><span class="lineNoCov">          0 :                       e.getUIBehaviour().createAudioThumbnail (256,</span></a>
+<a name="494"><span class="lineNum">     494 </span><span class="lineNoCov">          0 :                                                                e.getAudioFileFormatManager().readFormatManager,</span></a>
+<a name="495"><span class="lineNum">     495 </span><span class="lineNoCov">          0 :                                                                e.getAudioFileManager().getAudioThumbnailCache()))</span></a>
+<a name="496"><span class="lineNum">     496 </span>            : {</a>
+<a name="497"><span class="lineNum">     497 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="498"><span class="lineNum">     498 </span>            : </a>
+<a name="499"><span class="lineNum">     499 </span><span class="lineNoCov">          0 : SmartThumbnail::SmartThumbnail (Engine&amp; e, const AudioFile&amp; f, juce::Component&amp; componentToRepaint, Edit* ed,</span></a>
+<a name="500"><span class="lineNum">     500 </span><span class="lineNoCov">          0 :                                 std::unique_ptr&lt;juce::AudioThumbnailBase&gt; thumbnailToUse)</span></a>
+<a name="501"><span class="lineNum">     501 </span><span class="lineNoCov">          0 :     : file (f), engine (e), edit (ed),</span></a>
+<a name="502"><span class="lineNum">     502 </span>            :       thumbnail (std::move (thumbnailToUse)),</a>
+<a name="503"><span class="lineNum">     503 </span><span class="lineNoCov">          0 :       component (componentToRepaint)</span></a>
+<a name="504"><span class="lineNum">     504 </span>            : {</a>
+<a name="505"><span class="lineNum">     505 </span>            :     TRACKTION_ASSERT_MESSAGE_THREAD</a>
+<a name="506"><span class="lineNum">     506 </span>            :     assert (thumbnail &amp;&amp; &quot;thumbnail must be valid!&quot;);</a>
+<a name="507"><span class="lineNum">     507 </span><span class="lineNoCov">          0 :     startTimer (initialTimerDelay);</span></a>
+<a name="508"><span class="lineNum">     508 </span><span class="lineNoCov">          0 :     engine.getAudioFileManager().activeThumbnails.add (this);</span></a>
+<a name="509"><span class="lineNum">     509 </span><span class="lineNoCov">          0 :     engine.getAudioFileManager().thumbnailMap[thumbnail.get()] = this;</span></a>
+<a name="510"><span class="lineNum">     510 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="511"><span class="lineNum">     511 </span>            : </a>
+<a name="512"><span class="lineNum">     512 </span><span class="lineNoCov">          0 : SmartThumbnail::~SmartThumbnail()</span></a>
+<a name="513"><span class="lineNum">     513 </span>            : {</a>
+<a name="514"><span class="lineNum">     514 </span>            :     TRACKTION_ASSERT_MESSAGE_THREAD</a>
+<a name="515"><span class="lineNum">     515 </span>            : </a>
+<a name="516"><span class="lineNum">     516 </span><span class="lineNoCov">          0 :     engine.getAudioFileManager().thumbnailMap.erase (thumbnail.get());</span></a>
+<a name="517"><span class="lineNum">     517 </span><span class="lineNoCov">          0 :     engine.getAudioFileManager().activeThumbnails.removeAllInstancesOf (this);</span></a>
+<a name="518"><span class="lineNum">     518 </span><span class="lineNoCov">          0 :     thumbnail-&gt;clear();</span></a>
+<a name="519"><span class="lineNum">     519 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="520"><span class="lineNum">     520 </span>            : </a>
+<a name="521"><span class="lineNum">     521 </span><span class="lineNoCov">          0 : bool SmartThumbnail::areThumbnailsFullyLoaded (Engine&amp; engine)</span></a>
+<a name="522"><span class="lineNum">     522 </span>            : {</a>
+<a name="523"><span class="lineNum">     523 </span>            :     TRACKTION_ASSERT_MESSAGE_THREAD</a>
+<a name="524"><span class="lineNum">     524 </span>            : </a>
+<a name="525"><span class="lineNum">     525 </span><span class="lineNoCov">          0 :     for (auto thumb : engine.getAudioFileManager().activeThumbnails)</span></a>
+<a name="526"><span class="lineNum">     526 </span><span class="lineNoCov">          0 :         if (! thumb-&gt;isFullyLoaded())</span></a>
+<a name="527"><span class="lineNum">     527 </span>            :             return false;</a>
+<a name="528"><span class="lineNum">     528 </span>            :     </a>
+<a name="529"><span class="lineNum">     529 </span>            :     return true;</a>
+<a name="530"><span class="lineNum">     530 </span>            : }</a>
+<a name="531"><span class="lineNum">     531 </span>            : </a>
+<a name="532"><span class="lineNum">     532 </span><span class="lineNoCov">          0 : void SmartThumbnail::setNewFile (const AudioFile&amp; newFile)</span></a>
+<a name="533"><span class="lineNum">     533 </span>            : {</a>
+<a name="534"><span class="lineNum">     534 </span><span class="lineNoCov">          0 :     if (file != newFile)</span></a>
+<a name="535"><span class="lineNum">     535 </span>            :     {</a>
+<a name="536"><span class="lineNum">     536 </span>            :         file = newFile;</a>
+<a name="537"><span class="lineNum">     537 </span>            : </a>
+<a name="538"><span class="lineNum">     538 </span><span class="lineNoCov">          0 :         audioFileChanged();</span></a>
+<a name="539"><span class="lineNum">     539 </span><span class="lineNoCov">          0 :         component.repaint();</span></a>
+<a name="540"><span class="lineNum">     540 </span>            :     }</a>
+<a name="541"><span class="lineNum">     541 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="542"><span class="lineNum">     542 </span>            : </a>
+<a name="543"><span class="lineNum">     543 </span>            : //==============================================================================</a>
+<a name="544"><span class="lineNum">     544 </span><span class="lineNoCov">          0 : void SmartThumbnail::drawChannel (juce::Graphics&amp; g, juce::Rectangle&lt;int&gt; r,</span></a>
+<a name="545"><span class="lineNum">     545 </span>            :                                   TimeRange time, int channelNum, float verticalZoomFactor)</a>
+<a name="546"><span class="lineNum">     546 </span>            : {</a>
+<a name="547"><span class="lineNum">     547 </span><span class="lineNoCov">          0 :     thumbnail-&gt;drawChannel (g, r,</span></a>
+<a name="548"><span class="lineNum">     548 </span>            :                             time.getStart().inSeconds(), time.getEnd().inSeconds(),</a>
+<a name="549"><span class="lineNum">     549 </span>            :                             channelNum, verticalZoomFactor);</a>
+<a name="550"><span class="lineNum">     550 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="551"><span class="lineNum">     551 </span>            : </a>
+<a name="552"><span class="lineNum">     552 </span><span class="lineNoCov">          0 : void SmartThumbnail::drawChannels (juce::Graphics&amp; g, juce::Rectangle&lt;int&gt; r,</span></a>
+<a name="553"><span class="lineNum">     553 </span>            :                                    TimeRange time, float verticalZoomFactor)</a>
+<a name="554"><span class="lineNum">     554 </span>            : {</a>
+<a name="555"><span class="lineNum">     555 </span><span class="lineNoCov">          0 :     thumbnail-&gt;drawChannels (g, r,</span></a>
+<a name="556"><span class="lineNum">     556 </span>            :                              time.getStart().inSeconds(), time.getEnd().inSeconds(),</a>
+<a name="557"><span class="lineNum">     557 </span>            :                              verticalZoomFactor);</a>
+<a name="558"><span class="lineNum">     558 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="559"><span class="lineNum">     559 </span>            : </a>
+<a name="560"><span class="lineNum">     560 </span><span class="lineNoCov">          0 : double SmartThumbnail::getProportionComplete() const noexcept</span></a>
 <a name="561"><span class="lineNum">     561 </span>            : {</a>
-<a name="562"><span class="lineNum">     562 </span><span class="lineNoCov">          0 :     clear();</span></a>
-<a name="563"><span class="lineNum">     563 </span>            :     thumbnailIsInvalid = true;</a>
-<a name="564"><span class="lineNum">     564 </span><span class="lineNoCov">          0 :     juce::MessageManager::callAsync ([ref = juce::WeakReference&lt;SmartThumbnail&gt; (this), this]() mutable</span></a>
-<a name="565"><span class="lineNum">     565 </span>            :                                      {</a>
-<a name="566"><span class="lineNum">     566 </span><span class="lineNoCov">          0 :                                          if (ref != nullptr)</span></a>
-<a name="567"><span class="lineNum">     567 </span><span class="lineNoCov">          0 :                                              startTimer (400);</span></a>
-<a name="568"><span class="lineNum">     568 </span>            :                                      });</a>
-<a name="569"><span class="lineNum">     569 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="562"><span class="lineNum">     562 </span><span class="lineNoCov">          0 :     if (auto sampleRate = file.getSampleRate(); sampleRate &gt; 0)</span></a>
+<a name="563"><span class="lineNum">     563 </span>            :     {</a>
+<a name="564"><span class="lineNum">     564 </span><span class="lineNoCov">          0 :         const auto totalSamples = toSamples (TimePosition::fromSeconds (getTotalLength()), sampleRate);</span></a>
+<a name="565"><span class="lineNum">     565 </span><span class="lineNoCov">          0 :         return juce::jlimit (0.0, 1.0, getNumSamplesFinished() / (double) std::max ((SampleCount) 1, totalSamples));</span></a>
+<a name="566"><span class="lineNum">     566 </span>            :     }</a>
+<a name="567"><span class="lineNum">     567 </span>            : </a>
+<a name="568"><span class="lineNum">     568 </span>            :     return 0.0;</a>
+<a name="569"><span class="lineNum">     569 </span>            : }</a>
 <a name="570"><span class="lineNum">     570 </span>            : </a>
-<a name="571"><span class="lineNum">     571 </span><span class="lineNoCov">          0 : void SmartThumbnail::createThumbnailReader()</span></a>
-<a name="572"><span class="lineNum">     572 </span>            : {</a>
-<a name="573"><span class="lineNum">     573 </span>            :     // this breaks thumbnails in 64-bit mode</a>
-<a name="574"><span class="lineNum">     574 </span>            :     // setReader (new CacheAudioFormatReader (file), file.getHash());</a>
-<a name="575"><span class="lineNum">     575 </span>            : </a>
-<a name="576"><span class="lineNum">     576 </span><span class="lineNoCov">          0 :     if (enabled)</span></a>
-<a name="577"><span class="lineNum">     577 </span>            :     {</a>
-<a name="578"><span class="lineNum">     578 </span>            :         // This hashing takes in to account the type of the thumb to avoid clashes if</a>
-<a name="579"><span class="lineNum">     579 </span>            :         // you're using different types for different displays</a>
-<a name="580"><span class="lineNum">     580 </span><span class="lineNoCov">          0 :         size_t hash = (size_t) file.getHash();</span></a>
-<a name="581"><span class="lineNum">     581 </span>            :         auto&amp; thumbRef = *thumbnail; // Work around a clang warning</a>
-<a name="582"><span class="lineNum">     582 </span><span class="lineNoCov">          0 :         const auto thumbType = typeid (thumbRef).name();</span></a>
-<a name="583"><span class="lineNum">     583 </span>            :         hash_combine (hash, thumbType);</a>
-<a name="584"><span class="lineNum">     584 </span>            : </a>
-<a name="585"><span class="lineNum">     585 </span><span class="lineNoCov">          0 :         setReader (AudioFileUtils::createReaderFor (engine, file.getFile()), (juce::int64) hash);</span></a>
-<a name="586"><span class="lineNum">     586 </span>            :         thumbnailIsInvalid = false;</a>
-<a name="587"><span class="lineNum">     587 </span>            :     }</a>
-<a name="588"><span class="lineNum">     588 </span>            :     else</a>
+<a name="571"><span class="lineNum">     571 </span>            : //==============================================================================</a>
+<a name="572"><span class="lineNum">     572 </span><span class="lineNoCov">          0 : void SmartThumbnail::releaseFile()</span></a>
+<a name="573"><span class="lineNum">     573 </span>            : {</a>
+<a name="574"><span class="lineNum">     574 </span><span class="lineNoCov">          0 :     clear();</span></a>
+<a name="575"><span class="lineNum">     575 </span>            :     thumbnailIsInvalid = true;</a>
+<a name="576"><span class="lineNum">     576 </span><span class="lineNoCov">          0 :     juce::MessageManager::callAsync ([ref = juce::WeakReference&lt;SmartThumbnail&gt; (this), this]() mutable</span></a>
+<a name="577"><span class="lineNum">     577 </span>            :                                      {</a>
+<a name="578"><span class="lineNum">     578 </span><span class="lineNoCov">          0 :                                          if (ref != nullptr)</span></a>
+<a name="579"><span class="lineNum">     579 </span><span class="lineNoCov">          0 :                                              startTimer (400);</span></a>
+<a name="580"><span class="lineNum">     580 </span>            :                                      });</a>
+<a name="581"><span class="lineNum">     581 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="582"><span class="lineNum">     582 </span>            : </a>
+<a name="583"><span class="lineNum">     583 </span><span class="lineNoCov">          0 : void SmartThumbnail::createThumbnailReader()</span></a>
+<a name="584"><span class="lineNum">     584 </span>            : {</a>
+<a name="585"><span class="lineNum">     585 </span>            :     // this breaks thumbnails in 64-bit mode</a>
+<a name="586"><span class="lineNum">     586 </span>            :     // setReader (new CacheAudioFormatReader (file), file.getHash());</a>
+<a name="587"><span class="lineNum">     587 </span>            : </a>
+<a name="588"><span class="lineNum">     588 </span><span class="lineNoCov">          0 :     if (enabled)</span></a>
 <a name="589"><span class="lineNum">     589 </span>            :     {</a>
-<a name="590"><span class="lineNum">     590 </span>            :         thumbnailIsInvalid = true;</a>
-<a name="591"><span class="lineNum">     591 </span>            :     }</a>
-<a name="592"><span class="lineNum">     592 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="593"><span class="lineNum">     593 </span>            : </a>
-<a name="594"><span class="lineNum">     594 </span><span class="lineNoCov">          0 : void SmartThumbnail::audioFileChanged()</span></a>
-<a name="595"><span class="lineNum">     595 </span>            : {</a>
-<a name="596"><span class="lineNum">     596 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
-<a name="597"><span class="lineNum">     597 </span><span class="lineNoCov">          0 :     auto&amp; proxyGen = engine.getAudioFileManager().proxyGenerator;</span></a>
-<a name="598"><span class="lineNum">     598 </span>            : </a>
-<a name="599"><span class="lineNum">     599 </span><span class="lineNoCov">          0 :     wasGeneratingProxy = proxyGen.isProxyBeingGenerated (file);</span></a>
-<a name="600"><span class="lineNum">     600 </span>            : </a>
-<a name="601"><span class="lineNum">     601 </span><span class="lineNoCov">          0 :     clear();</span></a>
-<a name="602"><span class="lineNum">     602 </span>            : </a>
-<a name="603"><span class="lineNum">     603 </span><span class="lineNoCov">          0 :     if (file.getFile().exists())</span></a>
-<a name="604"><span class="lineNum">     604 </span><span class="lineNoCov">          0 :         createThumbnailReader();</span></a>
-<a name="605"><span class="lineNum">     605 </span>            :     else</a>
-<a name="606"><span class="lineNum">     606 </span>            :         thumbnailIsInvalid = true;</a>
-<a name="607"><span class="lineNum">     607 </span>            : </a>
-<a name="608"><span class="lineNum">     608 </span><span class="lineNoCov">          0 :     lastProgress = 0.0f;</span></a>
-<a name="609"><span class="lineNum">     609 </span><span class="lineNoCov">          0 :     component.repaint();</span></a>
-<a name="610"><span class="lineNum">     610 </span><span class="lineNoCov">          0 :     startTimer (200);</span></a>
-<a name="611"><span class="lineNum">     611 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="590"><span class="lineNum">     590 </span>            :         // This hashing takes in to account the type of the thumb to avoid clashes if</a>
+<a name="591"><span class="lineNum">     591 </span>            :         // you're using different types for different displays</a>
+<a name="592"><span class="lineNum">     592 </span><span class="lineNoCov">          0 :         size_t hash = (size_t) file.getHash();</span></a>
+<a name="593"><span class="lineNum">     593 </span>            :         auto&amp; thumbRef = *thumbnail; // Work around a clang warning</a>
+<a name="594"><span class="lineNum">     594 </span><span class="lineNoCov">          0 :         const std::string thumbType = typeid (thumbRef).name();</span></a>
+<a name="595"><span class="lineNum">     595 </span><span class="lineNoCov">          0 :         hash_combine (hash, thumbType);</span></a>
+<a name="596"><span class="lineNum">     596 </span>            : </a>
+<a name="597"><span class="lineNum">     597 </span><span class="lineNoCov">          0 :         setReader (AudioFileUtils::createReaderFor (engine, file.getFile()), (juce::int64) hash);</span></a>
+<a name="598"><span class="lineNum">     598 </span>            :         thumbnailIsInvalid = false;</a>
+<a name="599"><span class="lineNum">     599 </span>            :     }</a>
+<a name="600"><span class="lineNum">     600 </span>            :     else</a>
+<a name="601"><span class="lineNum">     601 </span>            :     {</a>
+<a name="602"><span class="lineNum">     602 </span>            :         thumbnailIsInvalid = true;</a>
+<a name="603"><span class="lineNum">     603 </span>            :     }</a>
+<a name="604"><span class="lineNum">     604 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="605"><span class="lineNum">     605 </span>            : </a>
+<a name="606"><span class="lineNum">     606 </span><span class="lineNoCov">          0 : void SmartThumbnail::audioFileChanged()</span></a>
+<a name="607"><span class="lineNum">     607 </span>            : {</a>
+<a name="608"><span class="lineNum">     608 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
+<a name="609"><span class="lineNum">     609 </span><span class="lineNoCov">          0 :     auto&amp; proxyGen = engine.getAudioFileManager().proxyGenerator;</span></a>
+<a name="610"><span class="lineNum">     610 </span>            : </a>
+<a name="611"><span class="lineNum">     611 </span><span class="lineNoCov">          0 :     wasGeneratingProxy = proxyGen.isProxyBeingGenerated (file);</span></a>
 <a name="612"><span class="lineNum">     612 </span>            : </a>
-<a name="613"><span class="lineNum">     613 </span>            : //==============================================================================</a>
-<a name="614"><span class="lineNum">     614 </span><span class="lineNoCov">          0 : void SmartThumbnail::clear()</span></a>
-<a name="615"><span class="lineNum">     615 </span>            : {</a>
-<a name="616"><span class="lineNum">     616 </span><span class="lineNoCov">          0 :     thumbnail-&gt;clear();</span></a>
-<a name="617"><span class="lineNum">     617 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="618"><span class="lineNum">     618 </span>            : </a>
-<a name="619"><span class="lineNum">     619 </span><span class="lineNoCov">          0 : bool SmartThumbnail::setSource (juce::InputSource* source)</span></a>
-<a name="620"><span class="lineNum">     620 </span>            : {</a>
-<a name="621"><span class="lineNum">     621 </span><span class="lineNoCov">          0 :     return thumbnail-&gt;setSource (source);</span></a>
-<a name="622"><span class="lineNum">     622 </span>            : }</a>
-<a name="623"><span class="lineNum">     623 </span>            : </a>
-<a name="624"><span class="lineNum">     624 </span><span class="lineNoCov">          0 : void SmartThumbnail::setReader (juce::AudioFormatReader* reader, juce::int64 hashCode)</span></a>
-<a name="625"><span class="lineNum">     625 </span>            : {</a>
-<a name="626"><span class="lineNum">     626 </span><span class="lineNoCov">          0 :     thumbnail-&gt;setReader (reader, hashCode);</span></a>
-<a name="627"><span class="lineNum">     627 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="628"><span class="lineNum">     628 </span>            : </a>
-<a name="629"><span class="lineNum">     629 </span><span class="lineNoCov">          0 : bool SmartThumbnail::loadFrom (juce::InputStream&amp; stream)</span></a>
-<a name="630"><span class="lineNum">     630 </span>            : {</a>
-<a name="631"><span class="lineNum">     631 </span><span class="lineNoCov">          0 :     return thumbnail-&gt;loadFrom (stream);</span></a>
-<a name="632"><span class="lineNum">     632 </span>            : }</a>
-<a name="633"><span class="lineNum">     633 </span>            : </a>
-<a name="634"><span class="lineNum">     634 </span><span class="lineNoCov">          0 : void SmartThumbnail::saveTo (juce::OutputStream&amp; stream) const</span></a>
-<a name="635"><span class="lineNum">     635 </span>            : {</a>
-<a name="636"><span class="lineNum">     636 </span><span class="lineNoCov">          0 :     thumbnail-&gt;saveTo (stream);</span></a>
-<a name="637"><span class="lineNum">     637 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="638"><span class="lineNum">     638 </span>            : </a>
-<a name="639"><span class="lineNum">     639 </span><span class="lineNoCov">          0 : int SmartThumbnail::getNumChannels() const noexcept</span></a>
-<a name="640"><span class="lineNum">     640 </span>            : {</a>
-<a name="641"><span class="lineNum">     641 </span><span class="lineNoCov">          0 :     return thumbnail-&gt;getNumChannels();</span></a>
-<a name="642"><span class="lineNum">     642 </span>            : }</a>
-<a name="643"><span class="lineNum">     643 </span>            : </a>
-<a name="644"><span class="lineNum">     644 </span><span class="lineNoCov">          0 : double SmartThumbnail::getTotalLength() const noexcept</span></a>
-<a name="645"><span class="lineNum">     645 </span>            : {</a>
-<a name="646"><span class="lineNum">     646 </span><span class="lineNoCov">          0 :     return thumbnail-&gt;getTotalLength();</span></a>
-<a name="647"><span class="lineNum">     647 </span>            : }</a>
-<a name="648"><span class="lineNum">     648 </span>            : </a>
-<a name="649"><span class="lineNum">     649 </span><span class="lineNoCov">          0 : void SmartThumbnail::drawChannel (juce::Graphics&amp; g,</span></a>
-<a name="650"><span class="lineNum">     650 </span>            :                                   const juce::Rectangle&lt;int&gt;&amp; r,</a>
-<a name="651"><span class="lineNum">     651 </span>            :                                   double startTimeSeconds,</a>
-<a name="652"><span class="lineNum">     652 </span>            :                                   double endTimeSeconds,</a>
-<a name="653"><span class="lineNum">     653 </span>            :                                   int channelNum,</a>
-<a name="654"><span class="lineNum">     654 </span>            :                                   float verticalZoomFactor)</a>
-<a name="655"><span class="lineNum">     655 </span>            : {</a>
-<a name="656"><span class="lineNum">     656 </span><span class="lineNoCov">          0 :     thumbnail-&gt;drawChannel (g, r,</span></a>
-<a name="657"><span class="lineNum">     657 </span>            :                             startTimeSeconds,</a>
-<a name="658"><span class="lineNum">     658 </span>            :                             endTimeSeconds,</a>
-<a name="659"><span class="lineNum">     659 </span>            :                             channelNum,</a>
-<a name="660"><span class="lineNum">     660 </span>            :                             verticalZoomFactor);</a>
-<a name="661"><span class="lineNum">     661 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="662"><span class="lineNum">     662 </span>            : </a>
-<a name="663"><span class="lineNum">     663 </span><span class="lineNoCov">          0 : void SmartThumbnail::drawChannels (juce::Graphics&amp; g,</span></a>
-<a name="664"><span class="lineNum">     664 </span>            :                                    const juce::Rectangle&lt;int&gt;&amp; r,</a>
-<a name="665"><span class="lineNum">     665 </span>            :                                    double startTimeSeconds,</a>
-<a name="666"><span class="lineNum">     666 </span>            :                                    double endTimeSeconds,</a>
-<a name="667"><span class="lineNum">     667 </span>            :                                    float verticalZoomFactor)</a>
-<a name="668"><span class="lineNum">     668 </span>            : {</a>
-<a name="669"><span class="lineNum">     669 </span><span class="lineNoCov">          0 :     thumbnail-&gt;drawChannels (g, r,</span></a>
-<a name="670"><span class="lineNum">     670 </span>            :                              startTimeSeconds,</a>
-<a name="671"><span class="lineNum">     671 </span>            :                              endTimeSeconds,</a>
-<a name="672"><span class="lineNum">     672 </span>            :                              verticalZoomFactor);</a>
+<a name="613"><span class="lineNum">     613 </span><span class="lineNoCov">          0 :     clear();</span></a>
+<a name="614"><span class="lineNum">     614 </span>            : </a>
+<a name="615"><span class="lineNum">     615 </span><span class="lineNoCov">          0 :     if (file.getFile().exists())</span></a>
+<a name="616"><span class="lineNum">     616 </span><span class="lineNoCov">          0 :         createThumbnailReader();</span></a>
+<a name="617"><span class="lineNum">     617 </span>            :     else</a>
+<a name="618"><span class="lineNum">     618 </span>            :         thumbnailIsInvalid = true;</a>
+<a name="619"><span class="lineNum">     619 </span>            : </a>
+<a name="620"><span class="lineNum">     620 </span><span class="lineNoCov">          0 :     lastProgress = 0.0f;</span></a>
+<a name="621"><span class="lineNum">     621 </span><span class="lineNoCov">          0 :     component.repaint();</span></a>
+<a name="622"><span class="lineNum">     622 </span><span class="lineNoCov">          0 :     startTimer (200);</span></a>
+<a name="623"><span class="lineNum">     623 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="624"><span class="lineNum">     624 </span>            : </a>
+<a name="625"><span class="lineNum">     625 </span>            : //==============================================================================</a>
+<a name="626"><span class="lineNum">     626 </span><span class="lineNoCov">          0 : void SmartThumbnail::clear()</span></a>
+<a name="627"><span class="lineNum">     627 </span>            : {</a>
+<a name="628"><span class="lineNum">     628 </span><span class="lineNoCov">          0 :     thumbnail-&gt;clear();</span></a>
+<a name="629"><span class="lineNum">     629 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="630"><span class="lineNum">     630 </span>            : </a>
+<a name="631"><span class="lineNum">     631 </span><span class="lineNoCov">          0 : bool SmartThumbnail::setSource (juce::InputSource* source)</span></a>
+<a name="632"><span class="lineNum">     632 </span>            : {</a>
+<a name="633"><span class="lineNum">     633 </span><span class="lineNoCov">          0 :     return thumbnail-&gt;setSource (source);</span></a>
+<a name="634"><span class="lineNum">     634 </span>            : }</a>
+<a name="635"><span class="lineNum">     635 </span>            : </a>
+<a name="636"><span class="lineNum">     636 </span><span class="lineNoCov">          0 : void SmartThumbnail::setReader (juce::AudioFormatReader* reader, juce::int64 hashCode)</span></a>
+<a name="637"><span class="lineNum">     637 </span>            : {</a>
+<a name="638"><span class="lineNum">     638 </span><span class="lineNoCov">          0 :     thumbnail-&gt;setReader (reader, hashCode);</span></a>
+<a name="639"><span class="lineNum">     639 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="640"><span class="lineNum">     640 </span>            : </a>
+<a name="641"><span class="lineNum">     641 </span><span class="lineNoCov">          0 : bool SmartThumbnail::loadFrom (juce::InputStream&amp; stream)</span></a>
+<a name="642"><span class="lineNum">     642 </span>            : {</a>
+<a name="643"><span class="lineNum">     643 </span><span class="lineNoCov">          0 :     return thumbnail-&gt;loadFrom (stream);</span></a>
+<a name="644"><span class="lineNum">     644 </span>            : }</a>
+<a name="645"><span class="lineNum">     645 </span>            : </a>
+<a name="646"><span class="lineNum">     646 </span><span class="lineNoCov">          0 : void SmartThumbnail::saveTo (juce::OutputStream&amp; stream) const</span></a>
+<a name="647"><span class="lineNum">     647 </span>            : {</a>
+<a name="648"><span class="lineNum">     648 </span><span class="lineNoCov">          0 :     thumbnail-&gt;saveTo (stream);</span></a>
+<a name="649"><span class="lineNum">     649 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="650"><span class="lineNum">     650 </span>            : </a>
+<a name="651"><span class="lineNum">     651 </span><span class="lineNoCov">          0 : int SmartThumbnail::getNumChannels() const noexcept</span></a>
+<a name="652"><span class="lineNum">     652 </span>            : {</a>
+<a name="653"><span class="lineNum">     653 </span><span class="lineNoCov">          0 :     return thumbnail-&gt;getNumChannels();</span></a>
+<a name="654"><span class="lineNum">     654 </span>            : }</a>
+<a name="655"><span class="lineNum">     655 </span>            : </a>
+<a name="656"><span class="lineNum">     656 </span><span class="lineNoCov">          0 : double SmartThumbnail::getTotalLength() const noexcept</span></a>
+<a name="657"><span class="lineNum">     657 </span>            : {</a>
+<a name="658"><span class="lineNum">     658 </span><span class="lineNoCov">          0 :     return thumbnail-&gt;getTotalLength();</span></a>
+<a name="659"><span class="lineNum">     659 </span>            : }</a>
+<a name="660"><span class="lineNum">     660 </span>            : </a>
+<a name="661"><span class="lineNum">     661 </span><span class="lineNoCov">          0 : void SmartThumbnail::drawChannel (juce::Graphics&amp; g,</span></a>
+<a name="662"><span class="lineNum">     662 </span>            :                                   const juce::Rectangle&lt;int&gt;&amp; r,</a>
+<a name="663"><span class="lineNum">     663 </span>            :                                   double startTimeSeconds,</a>
+<a name="664"><span class="lineNum">     664 </span>            :                                   double endTimeSeconds,</a>
+<a name="665"><span class="lineNum">     665 </span>            :                                   int channelNum,</a>
+<a name="666"><span class="lineNum">     666 </span>            :                                   float verticalZoomFactor)</a>
+<a name="667"><span class="lineNum">     667 </span>            : {</a>
+<a name="668"><span class="lineNum">     668 </span><span class="lineNoCov">          0 :     thumbnail-&gt;drawChannel (g, r,</span></a>
+<a name="669"><span class="lineNum">     669 </span>            :                             startTimeSeconds,</a>
+<a name="670"><span class="lineNum">     670 </span>            :                             endTimeSeconds,</a>
+<a name="671"><span class="lineNum">     671 </span>            :                             channelNum,</a>
+<a name="672"><span class="lineNum">     672 </span>            :                             verticalZoomFactor);</a>
 <a name="673"><span class="lineNum">     673 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="674"><span class="lineNum">     674 </span>            : </a>
-<a name="675"><span class="lineNum">     675 </span><span class="lineNoCov">          0 : bool SmartThumbnail::isFullyLoaded() const noexcept</span></a>
-<a name="676"><span class="lineNum">     676 </span>            : {</a>
-<a name="677"><span class="lineNum">     677 </span><span class="lineNoCov">          0 :     return thumbnail-&gt;isFullyLoaded();</span></a>
-<a name="678"><span class="lineNum">     678 </span>            : }</a>
-<a name="679"><span class="lineNum">     679 </span>            : </a>
-<a name="680"><span class="lineNum">     680 </span><span class="lineNoCov">          0 : juce::int64 SmartThumbnail::getNumSamplesFinished() const noexcept</span></a>
-<a name="681"><span class="lineNum">     681 </span>            : {</a>
-<a name="682"><span class="lineNum">     682 </span><span class="lineNoCov">          0 :     return thumbnail-&gt;getNumSamplesFinished();</span></a>
-<a name="683"><span class="lineNum">     683 </span>            : }</a>
-<a name="684"><span class="lineNum">     684 </span>            : </a>
-<a name="685"><span class="lineNum">     685 </span><span class="lineNoCov">          0 : float SmartThumbnail::getApproximatePeak() const</span></a>
-<a name="686"><span class="lineNum">     686 </span>            : {</a>
-<a name="687"><span class="lineNum">     687 </span><span class="lineNoCov">          0 :     return thumbnail-&gt;getApproximatePeak();</span></a>
-<a name="688"><span class="lineNum">     688 </span>            : }</a>
-<a name="689"><span class="lineNum">     689 </span>            : </a>
-<a name="690"><span class="lineNum">     690 </span><span class="lineNoCov">          0 : void SmartThumbnail::getApproximateMinMax (double startTime, double endTime, int channelIndex,</span></a>
-<a name="691"><span class="lineNum">     691 </span>            :                                            float&amp; minValue, float&amp; maxValue) const noexcept</a>
-<a name="692"><span class="lineNum">     692 </span>            : {</a>
-<a name="693"><span class="lineNum">     693 </span><span class="lineNoCov">          0 :     thumbnail-&gt;getApproximateMinMax (startTime, endTime, channelIndex,</span></a>
-<a name="694"><span class="lineNum">     694 </span>            :                                      minValue, maxValue);</a>
-<a name="695"><span class="lineNum">     695 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="675"><span class="lineNum">     675 </span><span class="lineNoCov">          0 : void SmartThumbnail::drawChannels (juce::Graphics&amp; g,</span></a>
+<a name="676"><span class="lineNum">     676 </span>            :                                    const juce::Rectangle&lt;int&gt;&amp; r,</a>
+<a name="677"><span class="lineNum">     677 </span>            :                                    double startTimeSeconds,</a>
+<a name="678"><span class="lineNum">     678 </span>            :                                    double endTimeSeconds,</a>
+<a name="679"><span class="lineNum">     679 </span>            :                                    float verticalZoomFactor)</a>
+<a name="680"><span class="lineNum">     680 </span>            : {</a>
+<a name="681"><span class="lineNum">     681 </span><span class="lineNoCov">          0 :     thumbnail-&gt;drawChannels (g, r,</span></a>
+<a name="682"><span class="lineNum">     682 </span>            :                              startTimeSeconds,</a>
+<a name="683"><span class="lineNum">     683 </span>            :                              endTimeSeconds,</a>
+<a name="684"><span class="lineNum">     684 </span>            :                              verticalZoomFactor);</a>
+<a name="685"><span class="lineNum">     685 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="686"><span class="lineNum">     686 </span>            : </a>
+<a name="687"><span class="lineNum">     687 </span><span class="lineNoCov">          0 : bool SmartThumbnail::isFullyLoaded() const noexcept</span></a>
+<a name="688"><span class="lineNum">     688 </span>            : {</a>
+<a name="689"><span class="lineNum">     689 </span><span class="lineNoCov">          0 :     return thumbnail-&gt;isFullyLoaded();</span></a>
+<a name="690"><span class="lineNum">     690 </span>            : }</a>
+<a name="691"><span class="lineNum">     691 </span>            : </a>
+<a name="692"><span class="lineNum">     692 </span><span class="lineNoCov">          0 : juce::int64 SmartThumbnail::getNumSamplesFinished() const noexcept</span></a>
+<a name="693"><span class="lineNum">     693 </span>            : {</a>
+<a name="694"><span class="lineNum">     694 </span><span class="lineNoCov">          0 :     return thumbnail-&gt;getNumSamplesFinished();</span></a>
+<a name="695"><span class="lineNum">     695 </span>            : }</a>
 <a name="696"><span class="lineNum">     696 </span>            : </a>
-<a name="697"><span class="lineNum">     697 </span><span class="lineNoCov">          0 : juce::int64 SmartThumbnail::getHashCode() const</span></a>
+<a name="697"><span class="lineNum">     697 </span><span class="lineNoCov">          0 : float SmartThumbnail::getApproximatePeak() const</span></a>
 <a name="698"><span class="lineNum">     698 </span>            : {</a>
-<a name="699"><span class="lineNum">     699 </span><span class="lineNoCov">          0 :     return thumbnail-&gt;getHashCode();</span></a>
+<a name="699"><span class="lineNum">     699 </span><span class="lineNoCov">          0 :     return thumbnail-&gt;getApproximatePeak();</span></a>
 <a name="700"><span class="lineNum">     700 </span>            : }</a>
 <a name="701"><span class="lineNum">     701 </span>            : </a>
-<a name="702"><span class="lineNum">     702 </span><span class="lineNoCov">          0 : void SmartThumbnail::reset (int numChannels, double sampleRate, juce::int64 totalSamplesInSource)</span></a>
-<a name="703"><span class="lineNum">     703 </span>            : {</a>
-<a name="704"><span class="lineNum">     704 </span><span class="lineNoCov">          0 :     thumbnail-&gt;reset (numChannels, sampleRate, totalSamplesInSource);</span></a>
-<a name="705"><span class="lineNum">     705 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="706"><span class="lineNum">     706 </span>            : </a>
-<a name="707"><span class="lineNum">     707 </span><span class="lineNoCov">          0 : void SmartThumbnail::addBlock (juce::int64 sampleNumberInSource, const juce::AudioBuffer&lt;float&gt;&amp; buffer,</span></a>
-<a name="708"><span class="lineNum">     708 </span>            :                                int startOffsetInBuffer, int numSamples)</a>
-<a name="709"><span class="lineNum">     709 </span>            : {</a>
-<a name="710"><span class="lineNum">     710 </span><span class="lineNoCov">          0 :     thumbnail-&gt;addBlock (sampleNumberInSource, buffer,</span></a>
-<a name="711"><span class="lineNum">     711 </span>            :                          startOffsetInBuffer, numSamples);</a>
-<a name="712"><span class="lineNum">     712 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="702"><span class="lineNum">     702 </span><span class="lineNoCov">          0 : void SmartThumbnail::getApproximateMinMax (double startTime, double endTime, int channelIndex,</span></a>
+<a name="703"><span class="lineNum">     703 </span>            :                                            float&amp; minValue, float&amp; maxValue) const noexcept</a>
+<a name="704"><span class="lineNum">     704 </span>            : {</a>
+<a name="705"><span class="lineNum">     705 </span><span class="lineNoCov">          0 :     thumbnail-&gt;getApproximateMinMax (startTime, endTime, channelIndex,</span></a>
+<a name="706"><span class="lineNum">     706 </span>            :                                      minValue, maxValue);</a>
+<a name="707"><span class="lineNum">     707 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="708"><span class="lineNum">     708 </span>            : </a>
+<a name="709"><span class="lineNum">     709 </span><span class="lineNoCov">          0 : juce::int64 SmartThumbnail::getHashCode() const</span></a>
+<a name="710"><span class="lineNum">     710 </span>            : {</a>
+<a name="711"><span class="lineNum">     711 </span><span class="lineNoCov">          0 :     return thumbnail-&gt;getHashCode();</span></a>
+<a name="712"><span class="lineNum">     712 </span>            : }</a>
 <a name="713"><span class="lineNum">     713 </span>            : </a>
-<a name="714"><span class="lineNum">     714 </span>            : //==============================================================================</a>
-<a name="715"><span class="lineNum">     715 </span><span class="lineNoCov">          0 : void SmartThumbnail::timerCallback()</span></a>
-<a name="716"><span class="lineNum">     716 </span>            : {</a>
-<a name="717"><span class="lineNum">     717 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
+<a name="714"><span class="lineNum">     714 </span><span class="lineNoCov">          0 : void SmartThumbnail::reset (int numChannels, double sampleRate, juce::int64 totalSamplesInSource)</span></a>
+<a name="715"><span class="lineNum">     715 </span>            : {</a>
+<a name="716"><span class="lineNum">     716 </span><span class="lineNoCov">          0 :     thumbnail-&gt;reset (numChannels, sampleRate, totalSamplesInSource);</span></a>
+<a name="717"><span class="lineNum">     717 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="718"><span class="lineNum">     718 </span>            : </a>
-<a name="719"><span class="lineNum">     719 </span><span class="lineNoCov">          0 :     auto&amp; afm = engine.getAudioFileManager();</span></a>
-<a name="720"><span class="lineNum">     720 </span><span class="lineNoCov">          0 :     auto&amp; proxyGen = afm.proxyGenerator;</span></a>
-<a name="721"><span class="lineNum">     721 </span>            : </a>
-<a name="722"><span class="lineNum">     722 </span><span class="lineNoCov">          0 :     if (getTimerInterval() == initialTimerDelay)</span></a>
-<a name="723"><span class="lineNum">     723 </span><span class="lineNoCov">          0 :         audioFileChanged();</span></a>
-<a name="724"><span class="lineNum">     724 </span>            : </a>
-<a name="725"><span class="lineNum">     725 </span><span class="lineNoCov">          0 :     const bool isGeneratingNow = proxyGen.isProxyBeingGenerated (file);</span></a>
-<a name="726"><span class="lineNum">     726 </span>            : </a>
-<a name="727"><span class="lineNum">     727 </span><span class="lineNoCov">          0 :     if (wasGeneratingProxy != isGeneratingNow || (thumbnailIsInvalid &amp;&amp; file.getFile().exists()))</span></a>
-<a name="728"><span class="lineNum">     728 </span>            :     {</a>
-<a name="729"><span class="lineNum">     729 </span><span class="lineNoCov">          0 :         wasGeneratingProxy = isGeneratingNow;</span></a>
+<a name="719"><span class="lineNum">     719 </span><span class="lineNoCov">          0 : void SmartThumbnail::addBlock (juce::int64 sampleNumberInSource, const juce::AudioBuffer&lt;float&gt;&amp; buffer,</span></a>
+<a name="720"><span class="lineNum">     720 </span>            :                                int startOffsetInBuffer, int numSamples)</a>
+<a name="721"><span class="lineNum">     721 </span>            : {</a>
+<a name="722"><span class="lineNum">     722 </span><span class="lineNoCov">          0 :     thumbnail-&gt;addBlock (sampleNumberInSource, buffer,</span></a>
+<a name="723"><span class="lineNum">     723 </span>            :                          startOffsetInBuffer, numSamples);</a>
+<a name="724"><span class="lineNum">     724 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="725"><span class="lineNum">     725 </span>            : </a>
+<a name="726"><span class="lineNum">     726 </span>            : //==============================================================================</a>
+<a name="727"><span class="lineNum">     727 </span><span class="lineNoCov">          0 : void SmartThumbnail::timerCallback()</span></a>
+<a name="728"><span class="lineNum">     728 </span>            : {</a>
+<a name="729"><span class="lineNum">     729 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
 <a name="730"><span class="lineNum">     730 </span>            : </a>
-<a name="731"><span class="lineNum">     731 </span><span class="lineNoCov">          0 :         if (! isGeneratingNow)</span></a>
-<a name="732"><span class="lineNum">     732 </span>            :         {</a>
-<a name="733"><span class="lineNum">     733 </span><span class="lineNoCov">          0 :             afm.checkFileForChanges (file);</span></a>
-<a name="734"><span class="lineNum">     734 </span><span class="lineNoCov">          0 :             createThumbnailReader();</span></a>
-<a name="735"><span class="lineNum">     735 </span>            :         }</a>
-<a name="736"><span class="lineNum">     736 </span>            :         else</a>
-<a name="737"><span class="lineNum">     737 </span>            :         {</a>
-<a name="738"><span class="lineNum">     738 </span>            :             thumbnailIsInvalid = true;</a>
-<a name="739"><span class="lineNum">     739 </span>            :         }</a>
-<a name="740"><span class="lineNum">     740 </span>            : </a>
-<a name="741"><span class="lineNum">     741 </span><span class="lineNoCov">          0 :         component.repaint();</span></a>
-<a name="742"><span class="lineNum">     742 </span>            :     }</a>
-<a name="743"><span class="lineNum">     743 </span>            : </a>
-<a name="744"><span class="lineNum">     744 </span><span class="lineNoCov">          0 :     if (isGeneratingNow || ! isFullyLoaded())</span></a>
-<a name="745"><span class="lineNum">     745 </span>            :     {</a>
-<a name="746"><span class="lineNum">     746 </span><span class="lineNoCov">          0 :         float progress = isGeneratingNow ? proxyGen.getProportionComplete (file)</span></a>
-<a name="747"><span class="lineNum">     747 </span><span class="lineNoCov">          0 :                                          : (float) getProportionComplete();</span></a>
-<a name="748"><span class="lineNum">     748 </span>            : </a>
-<a name="749"><span class="lineNum">     749 </span><span class="lineNoCov">          0 :         if (lastProgress != progress)</span></a>
-<a name="750"><span class="lineNum">     750 </span>            :         {</a>
-<a name="751"><span class="lineNum">     751 </span><span class="lineNoCov">          0 :             lastProgress = progress;</span></a>
-<a name="752"><span class="lineNum">     752 </span><span class="lineNoCov">          0 :             component.repaint();</span></a>
-<a name="753"><span class="lineNum">     753 </span>            :         }</a>
+<a name="731"><span class="lineNum">     731 </span><span class="lineNoCov">          0 :     auto&amp; afm = engine.getAudioFileManager();</span></a>
+<a name="732"><span class="lineNum">     732 </span><span class="lineNoCov">          0 :     auto&amp; proxyGen = afm.proxyGenerator;</span></a>
+<a name="733"><span class="lineNum">     733 </span>            : </a>
+<a name="734"><span class="lineNum">     734 </span><span class="lineNoCov">          0 :     if (getTimerInterval() == initialTimerDelay)</span></a>
+<a name="735"><span class="lineNum">     735 </span><span class="lineNoCov">          0 :         audioFileChanged();</span></a>
+<a name="736"><span class="lineNum">     736 </span>            : </a>
+<a name="737"><span class="lineNum">     737 </span><span class="lineNoCov">          0 :     const bool isGeneratingNow = proxyGen.isProxyBeingGenerated (file);</span></a>
+<a name="738"><span class="lineNum">     738 </span>            : </a>
+<a name="739"><span class="lineNum">     739 </span><span class="lineNoCov">          0 :     if (wasGeneratingProxy != isGeneratingNow || (thumbnailIsInvalid &amp;&amp; file.getFile().exists()))</span></a>
+<a name="740"><span class="lineNum">     740 </span>            :     {</a>
+<a name="741"><span class="lineNum">     741 </span><span class="lineNoCov">          0 :         wasGeneratingProxy = isGeneratingNow;</span></a>
+<a name="742"><span class="lineNum">     742 </span>            : </a>
+<a name="743"><span class="lineNum">     743 </span><span class="lineNoCov">          0 :         if (! isGeneratingNow)</span></a>
+<a name="744"><span class="lineNum">     744 </span>            :         {</a>
+<a name="745"><span class="lineNum">     745 </span><span class="lineNoCov">          0 :             afm.checkFileForChanges (file);</span></a>
+<a name="746"><span class="lineNum">     746 </span><span class="lineNoCov">          0 :             createThumbnailReader();</span></a>
+<a name="747"><span class="lineNum">     747 </span>            :         }</a>
+<a name="748"><span class="lineNum">     748 </span>            :         else</a>
+<a name="749"><span class="lineNum">     749 </span>            :         {</a>
+<a name="750"><span class="lineNum">     750 </span>            :             thumbnailIsInvalid = true;</a>
+<a name="751"><span class="lineNum">     751 </span>            :         }</a>
+<a name="752"><span class="lineNum">     752 </span>            : </a>
+<a name="753"><span class="lineNum">     753 </span><span class="lineNoCov">          0 :         component.repaint();</span></a>
 <a name="754"><span class="lineNum">     754 </span>            :     }</a>
-<a name="755"><span class="lineNum">     755 </span><span class="lineNoCov">          0 :     else if (! thumbnailIsInvalid || ! file.getFile().exists())</span></a>
-<a name="756"><span class="lineNum">     756 </span>            :     {</a>
-<a name="757"><span class="lineNum">     757 </span><span class="lineNoCov">          0 :         component.repaint();</span></a>
-<a name="758"><span class="lineNum">     758 </span><span class="lineNoCov">          0 :         stopTimer();</span></a>
-<a name="759"><span class="lineNum">     759 </span>            :     }</a>
-<a name="760"><span class="lineNum">     760 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="761"><span class="lineNum">     761 </span>            : </a>
-<a name="762"><span class="lineNum">     762 </span>            : //==============================================================================</a>
-<a name="763"><span class="lineNum">     763 </span><span class="lineCov">          1 : AudioFileManager::AudioFileManager (Engine&amp; e)</span></a>
-<a name="764"><span class="lineNum">     764 </span><span class="lineCov">          2 :     : engine (e), cache (e), thumbnailCache (new TracktionThumbnailCache (e))</span></a>
-<a name="765"><span class="lineNum">     765 </span>            : {</a>
-<a name="766"><span class="lineNum">     766 </span><span class="lineCov">          1 : }</span></a>
-<a name="767"><span class="lineNum">     767 </span>            : </a>
-<a name="768"><span class="lineNum">     768 </span><span class="lineCov">          2 : AudioFileManager::~AudioFileManager()</span></a>
-<a name="769"><span class="lineNum">     769 </span>            : {</a>
-<a name="770"><span class="lineNum">     770 </span><span class="lineCov">          1 :     clearFiles();</span></a>
-<a name="771"><span class="lineNum">     771 </span><span class="lineCov">          4 : }</span></a>
-<a name="772"><span class="lineNum">     772 </span>            : </a>
-<a name="773"><span class="lineNum">     773 </span><span class="lineCov">      15700 : AudioFileManager::KnownFile&amp; AudioFileManager::findOrCreateKnown (const AudioFile&amp; f)</span></a>
-<a name="774"><span class="lineNum">     774 </span>            : {</a>
-<a name="775"><span class="lineNum">     775 </span><span class="lineCov">      15700 :     auto hash = f.getHash();</span></a>
-<a name="776"><span class="lineNum">     776 </span>            :     auto kf = knownFiles.find (hash);</a>
-<a name="777"><span class="lineNum">     777 </span>            : </a>
-<a name="778"><span class="lineNum">     778 </span><span class="lineCov">      15700 :     if (kf != knownFiles.end())</span></a>
-<a name="779"><span class="lineNum">     779 </span><span class="lineCov">      13937 :         return *kf-&gt;second.get();</span></a>
-<a name="780"><span class="lineNum">     780 </span>            : </a>
-<a name="781"><span class="lineNum">     781 </span><span class="lineCov">       3526 :     knownFiles[hash] = std::make_unique&lt;KnownFile&gt; (f);</span></a>
-<a name="782"><span class="lineNum">     782 </span><span class="lineCov">       1763 :     return *knownFiles[hash].get();</span></a>
-<a name="783"><span class="lineNum">     783 </span>            : }</a>
+<a name="755"><span class="lineNum">     755 </span>            : </a>
+<a name="756"><span class="lineNum">     756 </span><span class="lineNoCov">          0 :     if (isGeneratingNow || ! isFullyLoaded())</span></a>
+<a name="757"><span class="lineNum">     757 </span>            :     {</a>
+<a name="758"><span class="lineNum">     758 </span><span class="lineNoCov">          0 :         float progress = isGeneratingNow ? proxyGen.getProportionComplete (file)</span></a>
+<a name="759"><span class="lineNum">     759 </span><span class="lineNoCov">          0 :                                          : (float) getProportionComplete();</span></a>
+<a name="760"><span class="lineNum">     760 </span>            : </a>
+<a name="761"><span class="lineNum">     761 </span><span class="lineNoCov">          0 :         if (lastProgress != progress)</span></a>
+<a name="762"><span class="lineNum">     762 </span>            :         {</a>
+<a name="763"><span class="lineNum">     763 </span><span class="lineNoCov">          0 :             lastProgress = progress;</span></a>
+<a name="764"><span class="lineNum">     764 </span><span class="lineNoCov">          0 :             component.repaint();</span></a>
+<a name="765"><span class="lineNum">     765 </span>            :         }</a>
+<a name="766"><span class="lineNum">     766 </span>            :     }</a>
+<a name="767"><span class="lineNum">     767 </span><span class="lineNoCov">          0 :     else if (! thumbnailIsInvalid || ! file.getFile().exists())</span></a>
+<a name="768"><span class="lineNum">     768 </span>            :     {</a>
+<a name="769"><span class="lineNum">     769 </span><span class="lineNoCov">          0 :         component.repaint();</span></a>
+<a name="770"><span class="lineNum">     770 </span><span class="lineNoCov">          0 :         stopTimer();</span></a>
+<a name="771"><span class="lineNum">     771 </span>            :     }</a>
+<a name="772"><span class="lineNum">     772 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="773"><span class="lineNum">     773 </span>            : </a>
+<a name="774"><span class="lineNum">     774 </span>            : //==============================================================================</a>
+<a name="775"><span class="lineNum">     775 </span><span class="lineCov">          1 : AudioFileManager::AudioFileManager (Engine&amp; e)</span></a>
+<a name="776"><span class="lineNum">     776 </span><span class="lineCov">          2 :     : engine (e), cache (e), thumbnailCache (new TracktionThumbnailCache (e))</span></a>
+<a name="777"><span class="lineNum">     777 </span>            : {</a>
+<a name="778"><span class="lineNum">     778 </span><span class="lineCov">          1 : }</span></a>
+<a name="779"><span class="lineNum">     779 </span>            : </a>
+<a name="780"><span class="lineNum">     780 </span><span class="lineCov">          2 : AudioFileManager::~AudioFileManager()</span></a>
+<a name="781"><span class="lineNum">     781 </span>            : {</a>
+<a name="782"><span class="lineNum">     782 </span><span class="lineCov">          1 :     clearFiles();</span></a>
+<a name="783"><span class="lineNum">     783 </span><span class="lineCov">          4 : }</span></a>
 <a name="784"><span class="lineNum">     784 </span>            : </a>
-<a name="785"><span class="lineNum">     785 </span><span class="lineCov">          1 : void AudioFileManager::clearFiles()</span></a>
+<a name="785"><span class="lineNum">     785 </span><span class="lineCov">      15700 : AudioFileManager::KnownFile&amp; AudioFileManager::findOrCreateKnown (const AudioFile&amp; f)</span></a>
 <a name="786"><span class="lineNum">     786 </span>            : {</a>
-<a name="787"><span class="lineNum">     787 </span><span class="lineCov">          1 :     CRASH_TRACER</span></a>
-<a name="788"><span class="lineNum">     788 </span><span class="lineCov">          1 :     const juce::ScopedLock sl (knownFilesLock);</span></a>
-<a name="789"><span class="lineNum">     789 </span>            :     knownFiles.clear();</a>
-<a name="790"><span class="lineNum">     790 </span><span class="lineCov">          1 : }</span></a>
-<a name="791"><span class="lineNum">     791 </span>            : </a>
-<a name="792"><span class="lineNum">     792 </span><span class="lineNoCov">          0 : void AudioFileManager::removeFile (HashCode hash)</span></a>
-<a name="793"><span class="lineNum">     793 </span>            : {</a>
-<a name="794"><span class="lineNum">     794 </span><span class="lineNoCov">          0 :     const juce::ScopedLock sl (knownFilesLock);</span></a>
-<a name="795"><span class="lineNum">     795 </span>            : </a>
-<a name="796"><span class="lineNum">     796 </span>            :     auto f = knownFiles.find (hash);</a>
-<a name="797"><span class="lineNum">     797 </span>            : </a>
-<a name="798"><span class="lineNum">     798 </span><span class="lineNoCov">          0 :     if (f != knownFiles.end())</span></a>
-<a name="799"><span class="lineNum">     799 </span>            :         knownFiles.erase (f);</a>
-<a name="800"><span class="lineNum">     800 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="801"><span class="lineNum">     801 </span>            : </a>
-<a name="802"><span class="lineNum">     802 </span><span class="lineNoCov">          0 : AudioFile AudioFileManager::getAudioFile (ProjectItemID sourceID)</span></a>
-<a name="803"><span class="lineNum">     803 </span>            : {</a>
-<a name="804"><span class="lineNum">     804 </span><span class="lineNoCov">          0 :     return AudioFile (engine, engine.getProjectManager().findSourceFile (sourceID));</span></a>
-<a name="805"><span class="lineNum">     805 </span>            : }</a>
-<a name="806"><span class="lineNum">     806 </span>            : </a>
-<a name="807"><span class="lineNum">     807 </span><span class="lineCov">      15700 : AudioFileInfo AudioFileManager::getInfo (const AudioFile&amp; file)</span></a>
-<a name="808"><span class="lineNum">     808 </span>            : {</a>
-<a name="809"><span class="lineNum">     809 </span><span class="lineCov">      15700 :     const juce::ScopedLock sl (knownFilesLock);</span></a>
-<a name="810"><span class="lineNum">     810 </span><span class="lineCov">      31400 :     return findOrCreateKnown (file).info;</span></a>
-<a name="811"><span class="lineNum">     811 </span>            : }</a>
-<a name="812"><span class="lineNum">     812 </span>            : </a>
-<a name="813"><span class="lineNum">     813 </span><span class="lineCov">          4 : bool AudioFileManager::checkFileTime (KnownFile&amp; f)</span></a>
-<a name="814"><span class="lineNum">     814 </span>            : {</a>
-<a name="815"><span class="lineNum">     815 </span><span class="lineCov">          4 :     if (! f.info.wasParsedOk</span></a>
-<a name="816"><span class="lineNum">     816 </span><span class="lineCov">          4 :         || f.info.fileModificationTime != f.file.getFile().getLastModificationTime())</span></a>
-<a name="817"><span class="lineNum">     817 </span>            :     {</a>
-<a name="818"><span class="lineNum">     818 </span><span class="lineCov">          4 :         f.info = AudioFileInfo::parse (f.file);</span></a>
-<a name="819"><span class="lineNum">     819 </span><span class="lineCov">          4 :         return true;</span></a>
-<a name="820"><span class="lineNum">     820 </span>            :     }</a>
-<a name="821"><span class="lineNum">     821 </span>            : </a>
-<a name="822"><span class="lineNum">     822 </span>            :     return false;</a>
+<a name="787"><span class="lineNum">     787 </span><span class="lineCov">      15700 :     auto hash = f.getHash();</span></a>
+<a name="788"><span class="lineNum">     788 </span>            :     auto kf = knownFiles.find (hash);</a>
+<a name="789"><span class="lineNum">     789 </span>            : </a>
+<a name="790"><span class="lineNum">     790 </span><span class="lineCov">      15700 :     if (kf != knownFiles.end())</span></a>
+<a name="791"><span class="lineNum">     791 </span><span class="lineCov">      13937 :         return *kf-&gt;second.get();</span></a>
+<a name="792"><span class="lineNum">     792 </span>            : </a>
+<a name="793"><span class="lineNum">     793 </span><span class="lineCov">       3526 :     knownFiles[hash] = std::make_unique&lt;KnownFile&gt; (f);</span></a>
+<a name="794"><span class="lineNum">     794 </span><span class="lineCov">       1763 :     return *knownFiles[hash].get();</span></a>
+<a name="795"><span class="lineNum">     795 </span>            : }</a>
+<a name="796"><span class="lineNum">     796 </span>            : </a>
+<a name="797"><span class="lineNum">     797 </span><span class="lineCov">          1 : void AudioFileManager::clearFiles()</span></a>
+<a name="798"><span class="lineNum">     798 </span>            : {</a>
+<a name="799"><span class="lineNum">     799 </span><span class="lineCov">          1 :     CRASH_TRACER</span></a>
+<a name="800"><span class="lineNum">     800 </span><span class="lineCov">          1 :     const juce::ScopedLock sl (knownFilesLock);</span></a>
+<a name="801"><span class="lineNum">     801 </span>            :     knownFiles.clear();</a>
+<a name="802"><span class="lineNum">     802 </span><span class="lineCov">          1 : }</span></a>
+<a name="803"><span class="lineNum">     803 </span>            : </a>
+<a name="804"><span class="lineNum">     804 </span><span class="lineNoCov">          0 : void AudioFileManager::removeFile (HashCode hash)</span></a>
+<a name="805"><span class="lineNum">     805 </span>            : {</a>
+<a name="806"><span class="lineNum">     806 </span><span class="lineNoCov">          0 :     const juce::ScopedLock sl (knownFilesLock);</span></a>
+<a name="807"><span class="lineNum">     807 </span>            : </a>
+<a name="808"><span class="lineNum">     808 </span>            :     auto f = knownFiles.find (hash);</a>
+<a name="809"><span class="lineNum">     809 </span>            : </a>
+<a name="810"><span class="lineNum">     810 </span><span class="lineNoCov">          0 :     if (f != knownFiles.end())</span></a>
+<a name="811"><span class="lineNum">     811 </span>            :         knownFiles.erase (f);</a>
+<a name="812"><span class="lineNum">     812 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="813"><span class="lineNum">     813 </span>            : </a>
+<a name="814"><span class="lineNum">     814 </span><span class="lineNoCov">          0 : AudioFile AudioFileManager::getAudioFile (ProjectItemID sourceID)</span></a>
+<a name="815"><span class="lineNum">     815 </span>            : {</a>
+<a name="816"><span class="lineNum">     816 </span><span class="lineNoCov">          0 :     return AudioFile (engine, engine.getProjectManager().findSourceFile (sourceID));</span></a>
+<a name="817"><span class="lineNum">     817 </span>            : }</a>
+<a name="818"><span class="lineNum">     818 </span>            : </a>
+<a name="819"><span class="lineNum">     819 </span><span class="lineCov">      15700 : AudioFileInfo AudioFileManager::getInfo (const AudioFile&amp; file)</span></a>
+<a name="820"><span class="lineNum">     820 </span>            : {</a>
+<a name="821"><span class="lineNum">     821 </span><span class="lineCov">      15700 :     const juce::ScopedLock sl (knownFilesLock);</span></a>
+<a name="822"><span class="lineNum">     822 </span><span class="lineCov">      31400 :     return findOrCreateKnown (file).info;</span></a>
 <a name="823"><span class="lineNum">     823 </span>            : }</a>
 <a name="824"><span class="lineNum">     824 </span>            : </a>
-<a name="825"><span class="lineNum">     825 </span><span class="lineCov">        166 : void AudioFileManager::checkFileForChanges (const AudioFile&amp; file)</span></a>
+<a name="825"><span class="lineNum">     825 </span><span class="lineCov">          3 : bool AudioFileManager::checkFileTime (KnownFile&amp; f)</span></a>
 <a name="826"><span class="lineNum">     826 </span>            : {</a>
-<a name="827"><span class="lineNum">     827 </span><span class="lineCov">        166 :     CRASH_TRACER</span></a>
-<a name="828"><span class="lineNum">     828 </span>            : </a>
-<a name="829"><span class="lineNum">     829 </span>            :     bool changed = false;</a>
-<a name="830"><span class="lineNum">     830 </span>            : </a>
-<a name="831"><span class="lineNum">     831 </span>            :     {</a>
-<a name="832"><span class="lineNum">     832 </span><span class="lineCov">        166 :         const juce::ScopedLock sl (knownFilesLock);</span></a>
+<a name="827"><span class="lineNum">     827 </span><span class="lineCov">          3 :     if (! f.info.wasParsedOk</span></a>
+<a name="828"><span class="lineNum">     828 </span><span class="lineCov">          3 :         || f.info.fileModificationTime != f.file.getFile().getLastModificationTime())</span></a>
+<a name="829"><span class="lineNum">     829 </span>            :     {</a>
+<a name="830"><span class="lineNum">     830 </span><span class="lineCov">          3 :         f.info = AudioFileInfo::parse (f.file);</span></a>
+<a name="831"><span class="lineNum">     831 </span><span class="lineCov">          3 :         return true;</span></a>
+<a name="832"><span class="lineNum">     832 </span>            :     }</a>
 <a name="833"><span class="lineNum">     833 </span>            : </a>
-<a name="834"><span class="lineNum">     834 </span><span class="lineCov">        166 :         auto f = knownFiles.find (file.getHash());</span></a>
-<a name="835"><span class="lineNum">     835 </span>            : </a>
-<a name="836"><span class="lineNum">     836 </span><span class="lineCov">        166 :         if (f != knownFiles.end())</span></a>
-<a name="837"><span class="lineNum">     837 </span><span class="lineCov">          4 :             changed = checkFileTime (*f-&gt;second);</span></a>
-<a name="838"><span class="lineNum">     838 </span>            :     }</a>
-<a name="839"><span class="lineNum">     839 </span>            : </a>
-<a name="840"><span class="lineNum">     840 </span><span class="lineCov">        166 :     if (changed)</span></a>
-<a name="841"><span class="lineNum">     841 </span>            :     {</a>
-<a name="842"><span class="lineNum">     842 </span><span class="lineCov">          4 :         releaseFile (file);</span></a>
-<a name="843"><span class="lineNum">     843 </span><span class="lineCov">          4 :         callListenersOnMessageThread (file);</span></a>
-<a name="844"><span class="lineNum">     844 </span>            :     }</a>
-<a name="845"><span class="lineNum">     845 </span><span class="lineCov">        166 : }</span></a>
-<a name="846"><span class="lineNum">     846 </span>            : </a>
-<a name="847"><span class="lineNum">     847 </span><span class="lineNoCov">          0 : void AudioFileManager::checkFilesForChanges()</span></a>
-<a name="848"><span class="lineNum">     848 </span>            : {</a>
-<a name="849"><span class="lineNum">     849 </span>            :     TRACKTION_ASSERT_MESSAGE_THREAD</a>
-<a name="850"><span class="lineNum">     850 </span>            : </a>
-<a name="851"><span class="lineNum">     851 </span><span class="lineNoCov">          0 :     juce::Array&lt;AudioFile&gt; changedFiles;</span></a>
-<a name="852"><span class="lineNum">     852 </span>            : </a>
+<a name="834"><span class="lineNum">     834 </span>            :     return false;</a>
+<a name="835"><span class="lineNum">     835 </span>            : }</a>
+<a name="836"><span class="lineNum">     836 </span>            : </a>
+<a name="837"><span class="lineNum">     837 </span><span class="lineCov">        165 : void AudioFileManager::checkFileForChanges (const AudioFile&amp; file)</span></a>
+<a name="838"><span class="lineNum">     838 </span>            : {</a>
+<a name="839"><span class="lineNum">     839 </span><span class="lineCov">        165 :     CRASH_TRACER</span></a>
+<a name="840"><span class="lineNum">     840 </span>            : </a>
+<a name="841"><span class="lineNum">     841 </span>            :     bool changed = false;</a>
+<a name="842"><span class="lineNum">     842 </span>            : </a>
+<a name="843"><span class="lineNum">     843 </span>            :     {</a>
+<a name="844"><span class="lineNum">     844 </span><span class="lineCov">        165 :         const juce::ScopedLock sl (knownFilesLock);</span></a>
+<a name="845"><span class="lineNum">     845 </span>            : </a>
+<a name="846"><span class="lineNum">     846 </span><span class="lineCov">        165 :         auto f = knownFiles.find (file.getHash());</span></a>
+<a name="847"><span class="lineNum">     847 </span>            : </a>
+<a name="848"><span class="lineNum">     848 </span><span class="lineCov">        165 :         if (f != knownFiles.end())</span></a>
+<a name="849"><span class="lineNum">     849 </span><span class="lineCov">          3 :             changed = checkFileTime (*f-&gt;second);</span></a>
+<a name="850"><span class="lineNum">     850 </span>            :     }</a>
+<a name="851"><span class="lineNum">     851 </span>            : </a>
+<a name="852"><span class="lineNum">     852 </span><span class="lineCov">        165 :     if (changed)</span></a>
 <a name="853"><span class="lineNum">     853 </span>            :     {</a>
-<a name="854"><span class="lineNum">     854 </span><span class="lineNoCov">          0 :         const juce::ScopedLock sl (knownFilesLock);</span></a>
-<a name="855"><span class="lineNum">     855 </span>            : </a>
-<a name="856"><span class="lineNum">     856 </span><span class="lineNoCov">          0 :         for (auto&amp; f : knownFiles)</span></a>
-<a name="857"><span class="lineNum">     857 </span><span class="lineNoCov">          0 :             if (checkFileTime (*f.second))</span></a>
-<a name="858"><span class="lineNum">     858 </span><span class="lineNoCov">          0 :                 changedFiles.add (f.second-&gt;file);</span></a>
-<a name="859"><span class="lineNum">     859 </span>            :     }</a>
-<a name="860"><span class="lineNum">     860 </span>            : </a>
-<a name="861"><span class="lineNum">     861 </span><span class="lineNoCov">          0 :     for (auto&amp; f : changedFiles)</span></a>
-<a name="862"><span class="lineNum">     862 </span>            :     {</a>
-<a name="863"><span class="lineNum">     863 </span><span class="lineNoCov">          0 :         releaseFile (f);</span></a>
-<a name="864"><span class="lineNum">     864 </span><span class="lineNoCov">          0 :         callListeners (f);</span></a>
-<a name="865"><span class="lineNum">     865 </span>            :     }</a>
-<a name="866"><span class="lineNum">     866 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="854"><span class="lineNum">     854 </span><span class="lineCov">          3 :         releaseFile (file);</span></a>
+<a name="855"><span class="lineNum">     855 </span><span class="lineCov">          3 :         callListenersOnMessageThread (file);</span></a>
+<a name="856"><span class="lineNum">     856 </span>            :     }</a>
+<a name="857"><span class="lineNum">     857 </span><span class="lineCov">        165 : }</span></a>
+<a name="858"><span class="lineNum">     858 </span>            : </a>
+<a name="859"><span class="lineNum">     859 </span><span class="lineNoCov">          0 : void AudioFileManager::checkFilesForChanges()</span></a>
+<a name="860"><span class="lineNum">     860 </span>            : {</a>
+<a name="861"><span class="lineNum">     861 </span>            :     TRACKTION_ASSERT_MESSAGE_THREAD</a>
+<a name="862"><span class="lineNum">     862 </span>            : </a>
+<a name="863"><span class="lineNum">     863 </span><span class="lineNoCov">          0 :     juce::Array&lt;AudioFile&gt; changedFiles;</span></a>
+<a name="864"><span class="lineNum">     864 </span>            : </a>
+<a name="865"><span class="lineNum">     865 </span>            :     {</a>
+<a name="866"><span class="lineNum">     866 </span><span class="lineNoCov">          0 :         const juce::ScopedLock sl (knownFilesLock);</span></a>
 <a name="867"><span class="lineNum">     867 </span>            : </a>
-<a name="868"><span class="lineNum">     868 </span><span class="lineCov">        164 : void AudioFileManager::releaseAllFiles()</span></a>
-<a name="869"><span class="lineNum">     869 </span>            : {</a>
-<a name="870"><span class="lineNum">     870 </span><span class="lineCov">        164 :     cache.releaseAllFiles();</span></a>
-<a name="871"><span class="lineNum">     871 </span>            : </a>
-<a name="872"><span class="lineNum">     872 </span><span class="lineCov">        164 :     const juce::ScopedLock sl (activeThumbnailLock);</span></a>
-<a name="873"><span class="lineNum">     873 </span>            : </a>
-<a name="874"><span class="lineNum">     874 </span><span class="lineCov">        164 :     for (auto t : activeThumbnails)</span></a>
-<a name="875"><span class="lineNum">     875 </span><span class="lineNoCov">          0 :         t-&gt;releaseFile();</span></a>
-<a name="876"><span class="lineNum">     876 </span><span class="lineCov">        164 : }</span></a>
-<a name="877"><span class="lineNum">     877 </span>            : </a>
-<a name="878"><span class="lineNum">     878 </span><span class="lineCov">        252 : void AudioFileManager::releaseFile (const AudioFile&amp; file)</span></a>
-<a name="879"><span class="lineNum">     879 </span>            : {</a>
-<a name="880"><span class="lineNum">     880 </span><span class="lineCov">        252 :     cache.releaseFile (file);</span></a>
-<a name="881"><span class="lineNum">     881 </span>            : </a>
-<a name="882"><span class="lineNum">     882 </span><span class="lineCov">        252 :     const juce::ScopedLock sl (activeThumbnailLock);</span></a>
+<a name="868"><span class="lineNum">     868 </span><span class="lineNoCov">          0 :         for (auto&amp; f : knownFiles)</span></a>
+<a name="869"><span class="lineNum">     869 </span><span class="lineNoCov">          0 :             if (checkFileTime (*f.second))</span></a>
+<a name="870"><span class="lineNum">     870 </span><span class="lineNoCov">          0 :                 changedFiles.add (f.second-&gt;file);</span></a>
+<a name="871"><span class="lineNum">     871 </span>            :     }</a>
+<a name="872"><span class="lineNum">     872 </span>            : </a>
+<a name="873"><span class="lineNum">     873 </span><span class="lineNoCov">          0 :     for (auto&amp; f : changedFiles)</span></a>
+<a name="874"><span class="lineNum">     874 </span>            :     {</a>
+<a name="875"><span class="lineNum">     875 </span><span class="lineNoCov">          0 :         releaseFile (f);</span></a>
+<a name="876"><span class="lineNum">     876 </span><span class="lineNoCov">          0 :         callListeners (f);</span></a>
+<a name="877"><span class="lineNum">     877 </span>            :     }</a>
+<a name="878"><span class="lineNum">     878 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="879"><span class="lineNum">     879 </span>            : </a>
+<a name="880"><span class="lineNum">     880 </span><span class="lineCov">        164 : void AudioFileManager::releaseAllFiles()</span></a>
+<a name="881"><span class="lineNum">     881 </span>            : {</a>
+<a name="882"><span class="lineNum">     882 </span><span class="lineCov">        164 :     cache.releaseAllFiles();</span></a>
 <a name="883"><span class="lineNum">     883 </span>            : </a>
-<a name="884"><span class="lineNum">     884 </span><span class="lineCov">        252 :     for (auto t : activeThumbnails)</span></a>
-<a name="885"><span class="lineNum">     885 </span><span class="lineNoCov">          0 :         if (t-&gt;file == file)</span></a>
-<a name="886"><span class="lineNum">     886 </span><span class="lineNoCov">          0 :             t-&gt;releaseFile();</span></a>
-<a name="887"><span class="lineNum">     887 </span><span class="lineCov">        252 : }</span></a>
-<a name="888"><span class="lineNum">     888 </span>            : </a>
-<a name="889"><span class="lineNum">     889 </span><span class="lineCov">          4 : void AudioFileManager::callListeners (const AudioFile&amp; file)</span></a>
-<a name="890"><span class="lineNum">     890 </span>            : {</a>
-<a name="891"><span class="lineNum">     891 </span><span class="lineCov">          4 :     CRASH_TRACER</span></a>
-<a name="892"><span class="lineNum">     892 </span>            :     TRACKTION_ASSERT_MESSAGE_THREAD</a>
+<a name="884"><span class="lineNum">     884 </span><span class="lineCov">        164 :     const juce::ScopedLock sl (activeThumbnailLock);</span></a>
+<a name="885"><span class="lineNum">     885 </span>            : </a>
+<a name="886"><span class="lineNum">     886 </span><span class="lineCov">        164 :     for (auto t : activeThumbnails)</span></a>
+<a name="887"><span class="lineNum">     887 </span><span class="lineNoCov">          0 :         t-&gt;releaseFile();</span></a>
+<a name="888"><span class="lineNum">     888 </span><span class="lineCov">        164 : }</span></a>
+<a name="889"><span class="lineNum">     889 </span>            : </a>
+<a name="890"><span class="lineNum">     890 </span><span class="lineCov">        251 : void AudioFileManager::releaseFile (const AudioFile&amp; file)</span></a>
+<a name="891"><span class="lineNum">     891 </span>            : {</a>
+<a name="892"><span class="lineNum">     892 </span><span class="lineCov">        251 :     cache.releaseFile (file);</span></a>
 <a name="893"><span class="lineNum">     893 </span>            : </a>
-<a name="894"><span class="lineNum">     894 </span><span class="lineCov">          4 :     thumbnailCache-&gt;removeThumb (file.getHash());</span></a>
+<a name="894"><span class="lineNum">     894 </span><span class="lineCov">        251 :     const juce::ScopedLock sl (activeThumbnailLock);</span></a>
 <a name="895"><span class="lineNum">     895 </span>            : </a>
-<a name="896"><span class="lineNum">     896 </span><span class="lineCov">          4 :     const juce::ScopedLock sl (activeThumbnailLock);</span></a>
-<a name="897"><span class="lineNum">     897 </span>            : </a>
-<a name="898"><span class="lineNum">     898 </span><span class="lineCov">          4 :     for (auto t : activeThumbnails)</span></a>
-<a name="899"><span class="lineNum">     899 </span><span class="lineNoCov">          0 :         if (t-&gt;file == file)</span></a>
-<a name="900"><span class="lineNum">     900 </span><span class="lineNoCov">          0 :             t-&gt;audioFileChanged();</span></a>
-<a name="901"><span class="lineNum">     901 </span><span class="lineCov">          4 : }</span></a>
-<a name="902"><span class="lineNum">     902 </span>            : </a>
-<a name="903"><span class="lineNum">     903 </span><span class="lineCov">          4 : void AudioFileManager::callListenersOnMessageThread (const AudioFile&amp; file)</span></a>
-<a name="904"><span class="lineNum">     904 </span>            : {</a>
-<a name="905"><span class="lineNum">     905 </span><span class="lineCov">          4 :     if (juce::MessageManager::existsAndIsCurrentThread())</span></a>
-<a name="906"><span class="lineNum">     906 </span><span class="lineCov">          4 :         callListeners (file);</span></a>
-<a name="907"><span class="lineNum">     907 </span>            :     else</a>
-<a name="908"><span class="lineNum">     908 </span><span class="lineNoCov">          0 :         juce::MessageManager::callAsync ([file, eng = Engine::WeakRef (&amp;engine)]</span></a>
-<a name="909"><span class="lineNum">     909 </span>            :                                          {</a>
-<a name="910"><span class="lineNum">     910 </span><span class="lineNoCov">          0 :                                              if (eng != nullptr)</span></a>
-<a name="911"><span class="lineNum">     911 </span><span class="lineNoCov">          0 :                                                  eng-&gt;getAudioFileManager().callListeners (file);</span></a>
-<a name="912"><span class="lineNum">     912 </span><span class="lineNoCov">          0 :                                          });</span></a>
-<a name="913"><span class="lineNum">     913 </span><span class="lineCov">          4 : }</span></a>
+<a name="896"><span class="lineNum">     896 </span><span class="lineCov">        251 :     for (auto t : activeThumbnails)</span></a>
+<a name="897"><span class="lineNum">     897 </span><span class="lineNoCov">          0 :         if (t-&gt;file == file)</span></a>
+<a name="898"><span class="lineNum">     898 </span><span class="lineNoCov">          0 :             t-&gt;releaseFile();</span></a>
+<a name="899"><span class="lineNum">     899 </span><span class="lineCov">        251 : }</span></a>
+<a name="900"><span class="lineNum">     900 </span>            : </a>
+<a name="901"><span class="lineNum">     901 </span><span class="lineCov">          3 : void AudioFileManager::callListeners (const AudioFile&amp; file)</span></a>
+<a name="902"><span class="lineNum">     902 </span>            : {</a>
+<a name="903"><span class="lineNum">     903 </span><span class="lineCov">          3 :     CRASH_TRACER</span></a>
+<a name="904"><span class="lineNum">     904 </span>            :     TRACKTION_ASSERT_MESSAGE_THREAD</a>
+<a name="905"><span class="lineNum">     905 </span>            : </a>
+<a name="906"><span class="lineNum">     906 </span><span class="lineCov">          3 :     thumbnailCache-&gt;removeThumb (file.getHash());</span></a>
+<a name="907"><span class="lineNum">     907 </span>            : </a>
+<a name="908"><span class="lineNum">     908 </span><span class="lineCov">          3 :     const juce::ScopedLock sl (activeThumbnailLock);</span></a>
+<a name="909"><span class="lineNum">     909 </span>            : </a>
+<a name="910"><span class="lineNum">     910 </span><span class="lineCov">          3 :     for (auto t : activeThumbnails)</span></a>
+<a name="911"><span class="lineNum">     911 </span><span class="lineNoCov">          0 :         if (t-&gt;file == file)</span></a>
+<a name="912"><span class="lineNum">     912 </span><span class="lineNoCov">          0 :             t-&gt;audioFileChanged();</span></a>
+<a name="913"><span class="lineNum">     913 </span><span class="lineCov">          3 : }</span></a>
 <a name="914"><span class="lineNum">     914 </span>            : </a>
-<a name="915"><span class="lineNum">     915 </span><span class="lineNoCov">          0 : void AudioFileManager::forceFileUpdate (const AudioFile&amp; file)</span></a>
+<a name="915"><span class="lineNum">     915 </span><span class="lineCov">          3 : void AudioFileManager::callListenersOnMessageThread (const AudioFile&amp; file)</span></a>
 <a name="916"><span class="lineNum">     916 </span>            : {</a>
-<a name="917"><span class="lineNum">     917 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
-<a name="918"><span class="lineNum">     918 </span>            :     TRACKTION_ASSERT_MESSAGE_THREAD</a>
-<a name="919"><span class="lineNum">     919 </span>            : </a>
-<a name="920"><span class="lineNum">     920 </span>            :     // this doesn't check for file time and is used when files are changed rapidly such as when recording</a>
-<a name="921"><span class="lineNum">     921 </span><span class="lineNoCov">          0 :     const juce::ScopedLock sl (knownFilesLock);</span></a>
-<a name="922"><span class="lineNum">     922 </span>            : </a>
-<a name="923"><span class="lineNum">     923 </span><span class="lineNoCov">          0 :     auto f = knownFiles.find (file.getHash());</span></a>
-<a name="924"><span class="lineNum">     924 </span>            : </a>
-<a name="925"><span class="lineNum">     925 </span><span class="lineNoCov">          0 :     if (f != knownFiles.end())</span></a>
-<a name="926"><span class="lineNum">     926 </span>            :     {</a>
-<a name="927"><span class="lineNum">     927 </span><span class="lineNoCov">          0 :         f-&gt;second-&gt;info = AudioFileInfo::parse (f-&gt;second-&gt;file);</span></a>
-<a name="928"><span class="lineNum">     928 </span><span class="lineNoCov">          0 :         releaseFile (file);</span></a>
-<a name="929"><span class="lineNum">     929 </span><span class="lineNoCov">          0 :         callListeners (file);</span></a>
-<a name="930"><span class="lineNum">     930 </span>            :     }</a>
-<a name="931"><span class="lineNum">     931 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="932"><span class="lineNum">     932 </span>            : </a>
-<a name="933"><span class="lineNum">     933 </span><span class="lineCov">          1 : void AudioFileManager::validateFile (const AudioFile&amp; file, bool updateInfo)</span></a>
-<a name="934"><span class="lineNum">     934 </span>            : {</a>
-<a name="935"><span class="lineNum">     935 </span><span class="lineCov">          1 :     if (updateInfo)</span></a>
-<a name="936"><span class="lineNum">     936 </span>            :     {</a>
-<a name="937"><span class="lineNum">     937 </span><span class="lineNoCov">          0 :         getInfo (file);</span></a>
-<a name="938"><span class="lineNum">     938 </span><span class="lineNoCov">          0 :         forceFileUpdate (file);</span></a>
-<a name="939"><span class="lineNum">     939 </span>            :     }</a>
-<a name="940"><span class="lineNum">     940 </span>            : </a>
-<a name="941"><span class="lineNum">     941 </span><span class="lineCov">          1 :     cache.validateFile (file);</span></a>
-<a name="942"><span class="lineNum">     942 </span><span class="lineCov">          1 : }</span></a>
-<a name="943"><span class="lineNum">     943 </span>            : </a>
-<a name="944"><span class="lineNum">     944 </span><span class="lineCov">          4 : void AudioFileManager::checkFileForChangesAsync (const AudioFile&amp; file)</span></a>
-<a name="945"><span class="lineNum">     945 </span>            : {</a>
-<a name="946"><span class="lineNum">     946 </span><span class="lineCov">          4 :     const juce::ScopedLock sl (knownFilesLock);</span></a>
-<a name="947"><span class="lineNum">     947 </span><span class="lineCov">          4 :     filesToCheck.addIfNotAlreadyThere (file);</span></a>
-<a name="948"><span class="lineNum">     948 </span><span class="lineCov">          4 :     triggerAsyncUpdate();</span></a>
-<a name="949"><span class="lineNum">     949 </span><span class="lineCov">          4 : }</span></a>
-<a name="950"><span class="lineNum">     950 </span>            : </a>
-<a name="951"><span class="lineNum">     951 </span><span class="lineCov">          4 : void AudioFileManager::handleAsyncUpdate()</span></a>
-<a name="952"><span class="lineNum">     952 </span>            : {</a>
-<a name="953"><span class="lineNum">     953 </span><span class="lineCov">          4 :     CRASH_TRACER</span></a>
-<a name="954"><span class="lineNum">     954 </span><span class="lineCov">          4 :     AudioFile fileToCheck (engine);</span></a>
+<a name="917"><span class="lineNum">     917 </span><span class="lineCov">          3 :     if (juce::MessageManager::existsAndIsCurrentThread())</span></a>
+<a name="918"><span class="lineNum">     918 </span><span class="lineCov">          3 :         callListeners (file);</span></a>
+<a name="919"><span class="lineNum">     919 </span>            :     else</a>
+<a name="920"><span class="lineNum">     920 </span><span class="lineNoCov">          0 :         juce::MessageManager::callAsync ([file, eng = Engine::WeakRef (&amp;engine)]</span></a>
+<a name="921"><span class="lineNum">     921 </span>            :                                          {</a>
+<a name="922"><span class="lineNum">     922 </span><span class="lineNoCov">          0 :                                              if (eng != nullptr)</span></a>
+<a name="923"><span class="lineNum">     923 </span><span class="lineNoCov">          0 :                                                  eng-&gt;getAudioFileManager().callListeners (file);</span></a>
+<a name="924"><span class="lineNum">     924 </span><span class="lineNoCov">          0 :                                          });</span></a>
+<a name="925"><span class="lineNum">     925 </span><span class="lineCov">          3 : }</span></a>
+<a name="926"><span class="lineNum">     926 </span>            : </a>
+<a name="927"><span class="lineNum">     927 </span><span class="lineNoCov">          0 : void AudioFileManager::forceFileUpdate (const AudioFile&amp; file)</span></a>
+<a name="928"><span class="lineNum">     928 </span>            : {</a>
+<a name="929"><span class="lineNum">     929 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
+<a name="930"><span class="lineNum">     930 </span>            :     TRACKTION_ASSERT_MESSAGE_THREAD</a>
+<a name="931"><span class="lineNum">     931 </span>            : </a>
+<a name="932"><span class="lineNum">     932 </span>            :     // this doesn't check for file time and is used when files are changed rapidly such as when recording</a>
+<a name="933"><span class="lineNum">     933 </span><span class="lineNoCov">          0 :     const juce::ScopedLock sl (knownFilesLock);</span></a>
+<a name="934"><span class="lineNum">     934 </span>            : </a>
+<a name="935"><span class="lineNum">     935 </span><span class="lineNoCov">          0 :     auto f = knownFiles.find (file.getHash());</span></a>
+<a name="936"><span class="lineNum">     936 </span>            : </a>
+<a name="937"><span class="lineNum">     937 </span><span class="lineNoCov">          0 :     if (f != knownFiles.end())</span></a>
+<a name="938"><span class="lineNum">     938 </span>            :     {</a>
+<a name="939"><span class="lineNum">     939 </span><span class="lineNoCov">          0 :         f-&gt;second-&gt;info = AudioFileInfo::parse (f-&gt;second-&gt;file);</span></a>
+<a name="940"><span class="lineNum">     940 </span><span class="lineNoCov">          0 :         releaseFile (file);</span></a>
+<a name="941"><span class="lineNum">     941 </span><span class="lineNoCov">          0 :         callListeners (file);</span></a>
+<a name="942"><span class="lineNum">     942 </span>            :     }</a>
+<a name="943"><span class="lineNum">     943 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="944"><span class="lineNum">     944 </span>            : </a>
+<a name="945"><span class="lineNum">     945 </span><span class="lineCov">          1 : void AudioFileManager::validateFile (const AudioFile&amp; file, bool updateInfo)</span></a>
+<a name="946"><span class="lineNum">     946 </span>            : {</a>
+<a name="947"><span class="lineNum">     947 </span><span class="lineCov">          1 :     if (updateInfo)</span></a>
+<a name="948"><span class="lineNum">     948 </span>            :     {</a>
+<a name="949"><span class="lineNum">     949 </span><span class="lineNoCov">          0 :         getInfo (file);</span></a>
+<a name="950"><span class="lineNum">     950 </span><span class="lineNoCov">          0 :         forceFileUpdate (file);</span></a>
+<a name="951"><span class="lineNum">     951 </span>            :     }</a>
+<a name="952"><span class="lineNum">     952 </span>            : </a>
+<a name="953"><span class="lineNum">     953 </span><span class="lineCov">          1 :     cache.validateFile (file);</span></a>
+<a name="954"><span class="lineNum">     954 </span><span class="lineCov">          1 : }</span></a>
 <a name="955"><span class="lineNum">     955 </span>            : </a>
-<a name="956"><span class="lineNum">     956 </span>            :     {</a>
-<a name="957"><span class="lineNum">     957 </span><span class="lineCov">          4 :         const juce::ScopedLock sl (knownFilesLock);</span></a>
-<a name="958"><span class="lineNum">     958 </span><span class="lineCov">          4 :         fileToCheck = filesToCheck.getUnchecked (filesToCheck.size() - 1);</span></a>
-<a name="959"><span class="lineNum">     959 </span><span class="lineCov">          4 :         filesToCheck.removeLast();</span></a>
-<a name="960"><span class="lineNum">     960 </span>            : </a>
-<a name="961"><span class="lineNum">     961 </span><span class="lineCov">          4 :         if (filesToCheck.size() &gt; 0)</span></a>
-<a name="962"><span class="lineNum">     962 </span><span class="lineNoCov">          0 :             triggerAsyncUpdate();</span></a>
-<a name="963"><span class="lineNum">     963 </span>            :     }</a>
-<a name="964"><span class="lineNum">     964 </span>            : </a>
-<a name="965"><span class="lineNum">     965 </span><span class="lineCov">          4 :     if (! fileToCheck.isNull())</span></a>
-<a name="966"><span class="lineNum">     966 </span><span class="lineCov">          4 :         checkFileForChanges (fileToCheck);</span></a>
-<a name="967"><span class="lineNum">     967 </span><span class="lineCov">          4 : }</span></a>
-<a name="968"><span class="lineNum">     968 </span>            : </a>
-<a name="969"><span class="lineNum">     969 </span>            : }} // namespace tracktion { inline namespace engine</a>
+<a name="956"><span class="lineNum">     956 </span><span class="lineCov">          4 : void AudioFileManager::checkFileForChangesAsync (const AudioFile&amp; file)</span></a>
+<a name="957"><span class="lineNum">     957 </span>            : {</a>
+<a name="958"><span class="lineNum">     958 </span><span class="lineCov">          4 :     const juce::ScopedLock sl (knownFilesLock);</span></a>
+<a name="959"><span class="lineNum">     959 </span><span class="lineCov">          4 :     filesToCheck.addIfNotAlreadyThere (file);</span></a>
+<a name="960"><span class="lineNum">     960 </span><span class="lineCov">          4 :     triggerAsyncUpdate();</span></a>
+<a name="961"><span class="lineNum">     961 </span><span class="lineCov">          4 : }</span></a>
+<a name="962"><span class="lineNum">     962 </span>            : </a>
+<a name="963"><span class="lineNum">     963 </span><span class="lineCov">          3 : void AudioFileManager::handleAsyncUpdate()</span></a>
+<a name="964"><span class="lineNum">     964 </span>            : {</a>
+<a name="965"><span class="lineNum">     965 </span><span class="lineCov">          3 :     CRASH_TRACER</span></a>
+<a name="966"><span class="lineNum">     966 </span><span class="lineCov">          3 :     AudioFile fileToCheck (engine);</span></a>
+<a name="967"><span class="lineNum">     967 </span>            : </a>
+<a name="968"><span class="lineNum">     968 </span>            :     {</a>
+<a name="969"><span class="lineNum">     969 </span><span class="lineCov">          3 :         const juce::ScopedLock sl (knownFilesLock);</span></a>
+<a name="970"><span class="lineNum">     970 </span><span class="lineCov">          3 :         fileToCheck = filesToCheck.getUnchecked (filesToCheck.size() - 1);</span></a>
+<a name="971"><span class="lineNum">     971 </span><span class="lineCov">          3 :         filesToCheck.removeLast();</span></a>
+<a name="972"><span class="lineNum">     972 </span>            : </a>
+<a name="973"><span class="lineNum">     973 </span><span class="lineCov">          3 :         if (filesToCheck.size() &gt; 0)</span></a>
+<a name="974"><span class="lineNum">     974 </span><span class="lineCov">          1 :             triggerAsyncUpdate();</span></a>
+<a name="975"><span class="lineNum">     975 </span>            :     }</a>
+<a name="976"><span class="lineNum">     976 </span>            : </a>
+<a name="977"><span class="lineNum">     977 </span><span class="lineCov">          3 :     if (! fileToCheck.isNull())</span></a>
+<a name="978"><span class="lineNum">     978 </span><span class="lineCov">          3 :         checkFileForChanges (fileToCheck);</span></a>
+<a name="979"><span class="lineNum">     979 </span><span class="lineCov">          3 : }</span></a>
+<a name="980"><span class="lineNum">     980 </span>            : </a>
+<a name="981"><span class="lineNum">     981 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>
