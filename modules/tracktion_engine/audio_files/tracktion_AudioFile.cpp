@@ -406,7 +406,7 @@ public:
     void saveNewlyFinishedThumbnail (const juce::AudioThumbnailBase& thumb, juce::int64 hash) override
     {
         CRASH_TRACER
-        auto st = dynamic_cast<const SmartThumbnail*> (&thumb);
+        auto st = getActiveSmartThumbnail (thumb);
         auto thumbFile = getThumbFile (st, hash);
 
         if (thumbFile.deleteFile())
@@ -425,7 +425,7 @@ public:
     bool loadNewThumb (juce::AudioThumbnailBase& thumb, juce::int64 hash) override
     {
         CRASH_TRACER
-        auto st = dynamic_cast<const SmartThumbnail*> (&thumb);
+        auto st = getActiveSmartThumbnail (thumb);
         auto thumbFile = getThumbFile (st, hash);
 
         if (st != nullptr
@@ -449,6 +449,16 @@ private:
             return edit->getTempDirectory (false);
 
         return engine.getTemporaryFileManager().getThumbnailsFolder();
+    }
+
+    SmartThumbnail* getActiveSmartThumbnail (const juce::AudioThumbnailBase& thumb)
+    {
+        auto& map = engine.getAudioFileManager().thumbnailMap;
+
+        if (auto found = map.find (&thumb); found != map.end())
+            return found->second;
+
+        return nullptr;
     }
 
     juce::File getThumbFile (const SmartThumbnail* st, HashCode hash) const
@@ -496,12 +506,14 @@ SmartThumbnail::SmartThumbnail (Engine& e, const AudioFile& f, juce::Component& 
     assert (thumbnail && "thumbnail must be valid!");
     startTimer (initialTimerDelay);
     engine.getAudioFileManager().activeThumbnails.add (this);
+    engine.getAudioFileManager().thumbnailMap[thumbnail.get()] = this;
 }
 
 SmartThumbnail::~SmartThumbnail()
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
 
+    engine.getAudioFileManager().thumbnailMap.erase (thumbnail.get());
     engine.getAudioFileManager().activeThumbnails.removeAllInstancesOf (this);
     thumbnail->clear();
 }
@@ -579,7 +591,7 @@ void SmartThumbnail::createThumbnailReader()
         // you're using different types for different displays
         size_t hash = (size_t) file.getHash();
         auto& thumbRef = *thumbnail; // Work around a clang warning
-        const auto thumbType = typeid (thumbRef).name();
+        const std::string thumbType = typeid (thumbRef).name();
         hash_combine (hash, thumbType);
 
         setReader (AudioFileUtils::createReaderFor (engine, file.getFile()), (juce::int64) hash);
