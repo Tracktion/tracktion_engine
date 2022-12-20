@@ -479,11 +479,21 @@ enum { initialTimerDelay = 10 };
 bool SmartThumbnail::enabled = true;
 
 SmartThumbnail::SmartThumbnail (Engine& e, const AudioFile& f, juce::Component& componentToRepaint, Edit* ed)
-    : TracktionThumbnail (256, e.getAudioFileFormatManager().readFormatManager,
-                          e.getAudioFileManager().getAudioThumbnailCache()),
-      file (f), engine (e), edit (ed), component (componentToRepaint)
+    : SmartThumbnail (e, f, componentToRepaint, ed,
+                      e.getUIBehaviour().createAudioThumbnail (256,
+                                                               e.getAudioFileFormatManager().readFormatManager,
+                                                               e.getAudioFileManager().getAudioThumbnailCache()))
+{
+}
+
+SmartThumbnail::SmartThumbnail (Engine& e, const AudioFile& f, juce::Component& componentToRepaint, Edit* ed,
+                                std::unique_ptr<juce::AudioThumbnailBase> thumbnailToUse)
+    : file (f), engine (e), edit (ed),
+      thumbnail (std::move (thumbnailToUse)),
+      component (componentToRepaint)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
+    assert (thumbnail && "thumbnail must be valid!");
     startTimer (initialTimerDelay);
     engine.getAudioFileManager().activeThumbnails.add (this);
 }
@@ -493,7 +503,7 @@ SmartThumbnail::~SmartThumbnail()
     TRACKTION_ASSERT_MESSAGE_THREAD
 
     engine.getAudioFileManager().activeThumbnails.removeAllInstancesOf (this);
-    clear();
+    thumbnail->clear();
 }
 
 bool SmartThumbnail::areThumbnailsFullyLoaded (Engine& engine)
@@ -518,6 +528,35 @@ void SmartThumbnail::setNewFile (const AudioFile& newFile)
     }
 }
 
+//==============================================================================
+void SmartThumbnail::drawChannel (juce::Graphics& g, juce::Rectangle<int> r,
+                                  TimeRange time, int channelNum, float verticalZoomFactor)
+{
+    thumbnail->drawChannel (g, r,
+                            time.getStart().inSeconds(), time.getEnd().inSeconds(),
+                            channelNum, verticalZoomFactor);
+}
+
+void SmartThumbnail::drawChannels (juce::Graphics& g, juce::Rectangle<int> r,
+                                   TimeRange time, float verticalZoomFactor)
+{
+    thumbnail->drawChannels (g, r,
+                             time.getStart().inSeconds(), time.getEnd().inSeconds(),
+                             verticalZoomFactor);
+}
+
+double SmartThumbnail::getProportionComplete() const noexcept
+{
+    if (auto sampleRate = file.getSampleRate(); sampleRate > 0)
+    {
+        const auto totalSamples = toSamples (TimePosition::fromSeconds (getTotalLength()), sampleRate);
+        return juce::jlimit (0.0, 1.0, getNumSamplesFinished() / (double) std::max ((SampleCount) 1, totalSamples));
+    }
+
+    return 0.0;
+}
+
+//==============================================================================
 void SmartThumbnail::releaseFile()
 {
     clear();
@@ -536,7 +575,14 @@ void SmartThumbnail::createThumbnailReader()
 
     if (enabled)
     {
-        setReader (AudioFileUtils::createReaderFor (engine, file.getFile()), file.getHash());
+        // This hashing takes in to account the type of the thumb to avoid clashes if
+        // you're using different types for different displays
+        size_t hash = (size_t) file.getHash();
+        auto& thumbRef = *thumbnail; // Work around a clang warning
+        const auto thumbType = typeid (thumbRef).name();
+        hash_combine (hash, thumbType);
+
+        setReader (AudioFileUtils::createReaderFor (engine, file.getFile()), (juce::int64) hash);
         thumbnailIsInvalid = false;
     }
     else
@@ -552,7 +598,7 @@ void SmartThumbnail::audioFileChanged()
 
     wasGeneratingProxy = proxyGen.isProxyBeingGenerated (file);
 
-    releaseResources();
+    clear();
 
     if (file.getFile().exists())
         createThumbnailReader();
@@ -564,6 +610,108 @@ void SmartThumbnail::audioFileChanged()
     startTimer (200);
 }
 
+//==============================================================================
+void SmartThumbnail::clear()
+{
+    thumbnail->clear();
+}
+
+bool SmartThumbnail::setSource (juce::InputSource* source)
+{
+    return thumbnail->setSource (source);
+}
+
+void SmartThumbnail::setReader (juce::AudioFormatReader* reader, juce::int64 hashCode)
+{
+    thumbnail->setReader (reader, hashCode);
+}
+
+bool SmartThumbnail::loadFrom (juce::InputStream& stream)
+{
+    return thumbnail->loadFrom (stream);
+}
+
+void SmartThumbnail::saveTo (juce::OutputStream& stream) const
+{
+    thumbnail->saveTo (stream);
+}
+
+int SmartThumbnail::getNumChannels() const noexcept
+{
+    return thumbnail->getNumChannels();
+}
+
+double SmartThumbnail::getTotalLength() const noexcept
+{
+    return thumbnail->getTotalLength();
+}
+
+void SmartThumbnail::drawChannel (juce::Graphics& g,
+                                  const juce::Rectangle<int>& r,
+                                  double startTimeSeconds,
+                                  double endTimeSeconds,
+                                  int channelNum,
+                                  float verticalZoomFactor)
+{
+    thumbnail->drawChannel (g, r,
+                            startTimeSeconds,
+                            endTimeSeconds,
+                            channelNum,
+                            verticalZoomFactor);
+}
+
+void SmartThumbnail::drawChannels (juce::Graphics& g,
+                                   const juce::Rectangle<int>& r,
+                                   double startTimeSeconds,
+                                   double endTimeSeconds,
+                                   float verticalZoomFactor)
+{
+    thumbnail->drawChannels (g, r,
+                             startTimeSeconds,
+                             endTimeSeconds,
+                             verticalZoomFactor);
+}
+
+bool SmartThumbnail::isFullyLoaded() const noexcept
+{
+    return thumbnail->isFullyLoaded();
+}
+
+juce::int64 SmartThumbnail::getNumSamplesFinished() const noexcept
+{
+    return thumbnail->getNumSamplesFinished();
+}
+
+float SmartThumbnail::getApproximatePeak() const
+{
+    return thumbnail->getApproximatePeak();
+}
+
+void SmartThumbnail::getApproximateMinMax (double startTime, double endTime, int channelIndex,
+                                           float& minValue, float& maxValue) const noexcept
+{
+    thumbnail->getApproximateMinMax (startTime, endTime, channelIndex,
+                                     minValue, maxValue);
+}
+
+juce::int64 SmartThumbnail::getHashCode() const
+{
+    return thumbnail->getHashCode();
+}
+
+void SmartThumbnail::reset (int numChannels, double sampleRate, juce::int64 totalSamplesInSource)
+{
+    thumbnail->reset (numChannels, sampleRate, totalSamplesInSource);
+}
+
+void SmartThumbnail::addBlock (juce::int64 sampleNumberInSource, const juce::AudioBuffer<float>& buffer,
+                               int startOffsetInBuffer, int numSamples)
+{
+    thumbnail->addBlock (sampleNumberInSource, buffer,
+                         startOffsetInBuffer, numSamples);
+}
+
+//==============================================================================
 void SmartThumbnail::timerCallback()
 {
     CRASH_TRACER
