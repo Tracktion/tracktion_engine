@@ -6153,14 +6153,6 @@
     </member>
   </compound>
   <compound kind="file">
-    <name>tracktion_Thumbnail.h</name>
-    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/audio_files/</path>
-    <filename>tracktion__Thumbnail_8h.html</filename>
-    <class kind="class">tracktion::engine::TracktionThumbnail</class>
-    <namespace>tracktion</namespace>
-    <namespace>tracktion::engine</namespace>
-  </compound>
-  <compound kind="file">
     <name>tracktion_TimecodeDisplayFormat.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/model/edit/</path>
     <filename>tracktion__TimecodeDisplayFormat_8h.html</filename>
@@ -63776,13 +63768,19 @@
   <compound kind="class">
     <name>tracktion::engine::SmartThumbnail</name>
     <filename>classtracktion_1_1engine_1_1SmartThumbnail.html</filename>
-    <base>tracktion::engine::TracktionThumbnail</base>
     <member kind="function">
       <type></type>
       <name>SmartThumbnail</name>
       <anchorfile>classtracktion_1_1engine_1_1SmartThumbnail.html</anchorfile>
-      <anchor>a204fffbc39a6aa2c1cc2b360f04c5fd6</anchor>
-      <arglist>(Engine &amp;e, const AudioFile &amp;, juce::Component &amp;componentToRepaint, Edit *)</arglist>
+      <anchor>af00770572db138daf58c7fdab7dac83f</anchor>
+      <arglist>(Engine &amp;, const AudioFile &amp;, juce::Component &amp;componentToRepaint, Edit *)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SmartThumbnail</name>
+      <anchorfile>classtracktion_1_1engine_1_1SmartThumbnail.html</anchorfile>
+      <anchor>ad393daab1099deb152368465e679fe86</anchor>
+      <arglist>(Engine &amp;, const AudioFile &amp;, juce::Component &amp;componentToRepaint, Edit *, std::unique_ptr&lt; juce::AudioThumbnailBase &gt; thumbnailToUse)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -63818,6 +63816,125 @@
       <anchorfile>classtracktion_1_1engine_1_1SmartThumbnail.html</anchorfile>
       <anchor>af3804d2b1056b6c59136d5170ef8bf1c</anchor>
       <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>drawChannel</name>
+      <anchorfile>classtracktion_1_1engine_1_1SmartThumbnail.html</anchorfile>
+      <anchor>a8d35b3d40f1c5ee4b27dcd8b9e2064d4</anchor>
+      <arglist>(juce::Graphics &amp;, juce::Rectangle&lt; int &gt;, TimeRange, int channelNum, float verticalZoomFactor)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>drawChannels</name>
+      <anchorfile>classtracktion_1_1engine_1_1SmartThumbnail.html</anchorfile>
+      <anchor>a727bec1058147aa81853c7bf187b6e2f</anchor>
+      <arglist>(juce::Graphics &amp;, juce::Rectangle&lt; int &gt;, TimeRange, float verticalZoomFactor)</arglist>
+    </member>
+    <member kind="function">
+      <type>double</type>
+      <name>getProportionComplete</name>
+      <anchorfile>classtracktion_1_1engine_1_1SmartThumbnail.html</anchorfile>
+      <anchor>a040100da9115a070bfbb7ff15b71a40c</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>clear</name>
+      <anchorfile>classtracktion_1_1engine_1_1SmartThumbnail.html</anchorfile>
+      <anchor>a57268c02016d0a5b215bef8939f03226</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>setSource</name>
+      <anchorfile>classtracktion_1_1engine_1_1SmartThumbnail.html</anchorfile>
+      <anchor>a7435251efbf5c42b3cbc421348cb08d9</anchor>
+      <arglist>(juce::InputSource *) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setReader</name>
+      <anchorfile>classtracktion_1_1engine_1_1SmartThumbnail.html</anchorfile>
+      <anchor>a45c14eaaa93fdf6d78e3b567463f02a7</anchor>
+      <arglist>(juce::AudioFormatReader *, juce::int64 hashCode) override</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>loadFrom</name>
+      <anchorfile>classtracktion_1_1engine_1_1SmartThumbnail.html</anchorfile>
+      <anchor>ab35fbb3df6c7d1f9c472f5c1410e46c6</anchor>
+      <arglist>(juce::InputStream &amp;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>saveTo</name>
+      <anchorfile>classtracktion_1_1engine_1_1SmartThumbnail.html</anchorfile>
+      <anchor>a4d67a8e21ade89f6390e8a9a8053668b</anchor>
+      <arglist>(juce::OutputStream &amp;) const override</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>getNumChannels</name>
+      <anchorfile>classtracktion_1_1engine_1_1SmartThumbnail.html</anchorfile>
+      <anchor>a9c34068f92ef9c123a33e6882b733467</anchor>
+      <arglist>() const noexcept override</arglist>
+    </member>
+    <member kind="function">
+      <type>double</type>
+      <name>getTotalLength</name>
+      <anchorfile>classtracktion_1_1engine_1_1SmartThumbnail.html</anchorfile>
+      <anchor>af60737654d09f6f7a71558246e52777e</anchor>
+      <arglist>() const noexcept override</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isFullyLoaded</name>
+      <anchorfile>classtracktion_1_1engine_1_1SmartThumbnail.html</anchorfile>
+      <anchor>a10bc47b287b4063870a06e44308ee843</anchor>
+      <arglist>() const noexcept override</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::int64</type>
+      <name>getNumSamplesFinished</name>
+      <anchorfile>classtracktion_1_1engine_1_1SmartThumbnail.html</anchorfile>
+      <anchor>a7322d73efebb80f65605cd6978767df9</anchor>
+      <arglist>() const noexcept override</arglist>
+    </member>
+    <member kind="function">
+      <type>float</type>
+      <name>getApproximatePeak</name>
+      <anchorfile>classtracktion_1_1engine_1_1SmartThumbnail.html</anchorfile>
+      <anchor>a20893b6f6a0e06b4b9ce3dd705402cfe</anchor>
+      <arglist>() const override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>getApproximateMinMax</name>
+      <anchorfile>classtracktion_1_1engine_1_1SmartThumbnail.html</anchorfile>
+      <anchor>a5821a75dcc52b7ea8a303493ca29af96</anchor>
+      <arglist>(double startTime, double endTime, int channelIndex, float &amp;minValue, float &amp;maxValue) const noexcept override</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::int64</type>
+      <name>getHashCode</name>
+      <anchorfile>classtracktion_1_1engine_1_1SmartThumbnail.html</anchorfile>
+      <anchor>a8dad67885cac1d1cc0437b31bbfdbc28</anchor>
+      <arglist>() const override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>reset</name>
+      <anchorfile>classtracktion_1_1engine_1_1SmartThumbnail.html</anchorfile>
+      <anchor>af25035d08afd2b193f10f8a8cffec49f</anchor>
+      <arglist>(int numChannels, double sampleRate, juce::int64 totalSamplesInSource) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>addBlock</name>
+      <anchorfile>classtracktion_1_1engine_1_1SmartThumbnail.html</anchorfile>
+      <anchor>a441312ad8b985c147bb36bd32a69832a</anchor>
+      <arglist>(juce::int64 sampleNumberInSource, const juce::AudioBuffer&lt; float &gt; &amp;, int startOffsetInBuffer, int numSamples) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -66935,10 +67052,10 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>TracktionThumbnail</type>
+      <type>const std::unique_ptr&lt; juce::AudioThumbnailBase &gt;</type>
       <name>thumb</name>
       <anchorfile>structtracktion_1_1engine_1_1RecordingThumbnailManager_1_1Thumbnail.html</anchorfile>
-      <anchor>a682268eef164206532b65c765a0901ff</anchor>
+      <anchor>a9e859e9d129ef65b468cb3337ac78ca4</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -70608,164 +70725,6 @@
     </member>
   </compound>
   <compound kind="class">
-    <name>tracktion::engine::TracktionThumbnail</name>
-    <filename>classtracktion_1_1engine_1_1TracktionThumbnail.html</filename>
-    <member kind="function">
-      <type></type>
-      <name>TracktionThumbnail</name>
-      <anchorfile>classtracktion_1_1engine_1_1TracktionThumbnail.html</anchorfile>
-      <anchor>a90671dc7054151e7bcce948b285571d4</anchor>
-      <arglist>(int originalSamplesPerThumbnailSample, juce::AudioFormatManager &amp;formatManager, juce::AudioThumbnailCache &amp;cacheToUse)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>~TracktionThumbnail</name>
-      <anchorfile>classtracktion_1_1engine_1_1TracktionThumbnail.html</anchorfile>
-      <anchor>ac13eeac5df2bc75fc15dc1bb56d79dad</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>clear</name>
-      <anchorfile>classtracktion_1_1engine_1_1TracktionThumbnail.html</anchorfile>
-      <anchor>a262a52d44553eed1bf184c0a2fcd342c</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>clearChannelData</name>
-      <anchorfile>classtracktion_1_1engine_1_1TracktionThumbnail.html</anchorfile>
-      <anchor>a3acc5364ecaf96810f39631f82c4bcab</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>reset</name>
-      <anchorfile>classtracktion_1_1engine_1_1TracktionThumbnail.html</anchorfile>
-      <anchor>a3649a9c56e1697c2addee838c4a77530</anchor>
-      <arglist>(int newNumChannels, double newSampleRate, juce::int64 totalSamplesInSource=0) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>createChannels</name>
-      <anchorfile>classtracktion_1_1engine_1_1TracktionThumbnail.html</anchorfile>
-      <anchor>aedb87d5c6aa60fa2178533351e3f105a</anchor>
-      <arglist>(int length)</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>loadFrom</name>
-      <anchorfile>classtracktion_1_1engine_1_1TracktionThumbnail.html</anchorfile>
-      <anchor>a5491a5275c8a770a0fb3c5bc1fb08cf8</anchor>
-      <arglist>(juce::InputStream &amp;rawInput) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>saveTo</name>
-      <anchorfile>classtracktion_1_1engine_1_1TracktionThumbnail.html</anchorfile>
-      <anchor>ae1efe4b24777bca85dfdc681bca9d993</anchor>
-      <arglist>(juce::OutputStream &amp;output) const override</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>setSource</name>
-      <anchorfile>classtracktion_1_1engine_1_1TracktionThumbnail.html</anchorfile>
-      <anchor>aadac7494c1cb4b7cd02cf088563c65b4</anchor>
-      <arglist>(juce::InputSource *) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>setReader</name>
-      <anchorfile>classtracktion_1_1engine_1_1TracktionThumbnail.html</anchorfile>
-      <anchor>a65363fb9a26f819de6eed6e24f31e6ba</anchor>
-      <arglist>(juce::AudioFormatReader *, juce::int64) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>releaseResources</name>
-      <anchorfile>classtracktion_1_1engine_1_1TracktionThumbnail.html</anchorfile>
-      <anchor>a93c2eac5942ab3131c736055dd5de721</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>juce::int64</type>
-      <name>getHashCode</name>
-      <anchorfile>classtracktion_1_1engine_1_1TracktionThumbnail.html</anchorfile>
-      <anchor>a67d6911510ea47637bf7eb0d56850d9e</anchor>
-      <arglist>() const override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>addBlock</name>
-      <anchorfile>classtracktion_1_1engine_1_1TracktionThumbnail.html</anchorfile>
-      <anchor>aa795dff61daec580219e741c7b66b41b</anchor>
-      <arglist>(juce::int64 startSample, const juce::AudioBuffer&lt; float &gt; &amp;incoming, int startOffsetInBuffer, int numSamples) override</arglist>
-    </member>
-    <member kind="function">
-      <type>int</type>
-      <name>getNumChannels</name>
-      <anchorfile>classtracktion_1_1engine_1_1TracktionThumbnail.html</anchorfile>
-      <anchor>a438bbbfd69c585d987d6714314a5769e</anchor>
-      <arglist>() const noexcept override</arglist>
-    </member>
-    <member kind="function">
-      <type>double</type>
-      <name>getTotalLength</name>
-      <anchorfile>classtracktion_1_1engine_1_1TracktionThumbnail.html</anchorfile>
-      <anchor>a137e4eb4df0ca3433dd374e180df9004</anchor>
-      <arglist>() const noexcept override</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>isFullyLoaded</name>
-      <anchorfile>classtracktion_1_1engine_1_1TracktionThumbnail.html</anchorfile>
-      <anchor>aafd39a5dba191b61bd798e6a5358b24e</anchor>
-      <arglist>() const noexcept override</arglist>
-    </member>
-    <member kind="function">
-      <type>double</type>
-      <name>getProportionComplete</name>
-      <anchorfile>classtracktion_1_1engine_1_1TracktionThumbnail.html</anchorfile>
-      <anchor>a15b8e3abcb5b18d1ee89eb17bd419d88</anchor>
-      <arglist>() const noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>juce::int64</type>
-      <name>getNumSamplesFinished</name>
-      <anchorfile>classtracktion_1_1engine_1_1TracktionThumbnail.html</anchorfile>
-      <anchor>af0ad34df572da3defac5f61c7fedf5b0</anchor>
-      <arglist>() const noexcept override</arglist>
-    </member>
-    <member kind="function">
-      <type>float</type>
-      <name>getApproximatePeak</name>
-      <anchorfile>classtracktion_1_1engine_1_1TracktionThumbnail.html</anchorfile>
-      <anchor>a02064bbe13e0357417b19424a12e6114</anchor>
-      <arglist>() const override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>getApproximateMinMax</name>
-      <anchorfile>classtracktion_1_1engine_1_1TracktionThumbnail.html</anchorfile>
-      <anchor>a328f2065cad4f3759932d662f4012a81</anchor>
-      <arglist>(double startTime, double endTime, int channelIndex, float &amp;minValue, float &amp;maxValue) const noexcept override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>drawChannel</name>
-      <anchorfile>classtracktion_1_1engine_1_1TracktionThumbnail.html</anchorfile>
-      <anchor>ab622e77a26a78b9bebb483ce4ba3544c</anchor>
-      <arglist>(juce::Graphics &amp;, juce::Rectangle&lt; int &gt; area, bool useHighRes, TimeRange time, int channelNum, float verticalZoomFactor)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>drawChannels</name>
-      <anchorfile>classtracktion_1_1engine_1_1TracktionThumbnail.html</anchorfile>
-      <anchor>a7afb632948d1509a1533f545ccbe4112</anchor>
-      <arglist>(juce::Graphics &amp;, juce::Rectangle&lt; int &gt; area, bool useHighRes, TimeRange time, float verticalZoomFactor)</arglist>
-    </member>
-  </compound>
-  <compound kind="class">
     <name>tracktion::engine::TrackWaveInputDeviceNode</name>
     <filename>classtracktion_1_1engine_1_1TrackWaveInputDeviceNode.html</filename>
     <base>tracktion::graph::Node</base>
@@ -71577,6 +71536,13 @@
       <anchorfile>classtracktion_1_1engine_1_1UIBehaviour.html</anchorfile>
       <anchor>a394479ea2130ef8ba7b70224742f6c70</anchor>
       <arglist>(Track &amp;)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual std::unique_ptr&lt; juce::AudioThumbnailBase &gt;</type>
+      <name>createAudioThumbnail</name>
+      <anchorfile>classtracktion_1_1engine_1_1UIBehaviour.html</anchorfile>
+      <anchor>a25e6d49da8982572f10ecac4b2cde176</anchor>
+      <arglist>(int sourceSamplesPerThumbnailSample, juce::AudioFormatManager &amp;formatManagerToUse, juce::AudioThumbnailCache &amp;cacheToUse)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
@@ -78694,7 +78660,6 @@
     <class kind="class">tracktion::LoopInfo</class>
     <class kind="class">tracktion::RecordingThumbnailManager</class>
     <class kind="class">tracktion::SmartThumbnail</class>
-    <class kind="class">tracktion::TracktionThumbnail</class>
     <class kind="struct">tracktion::ParameterSetting</class>
     <class kind="struct">tracktion::MarkerSetting</class>
     <class kind="class">tracktion::ControlSurface</class>
@@ -79103,7 +79068,6 @@
     <class kind="class">tracktion::engine::LoopInfo</class>
     <class kind="class">tracktion::engine::RecordingThumbnailManager</class>
     <class kind="class">tracktion::engine::SmartThumbnail</class>
-    <class kind="class">tracktion::engine::TracktionThumbnail</class>
     <class kind="struct">tracktion::engine::ParameterSetting</class>
     <class kind="struct">tracktion::engine::MarkerSetting</class>
     <class kind="class">tracktion::engine::ControlSurface</class>

@@ -126,6 +126,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a394479ea2130ef8ba7b70224742f6c70"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1UIBehaviour.html#a394479ea2130ef8ba7b70224742f6c70">newTrackCreated</a> (<a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;)</td></tr>
 <tr class="memdesc:a394479ea2130ef8ba7b70224742f6c70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when a new track is created from some kind of user action i.e.  <a href="classtracktion_1_1engine_1_1UIBehaviour.html#a394479ea2130ef8ba7b70224742f6c70">More...</a><br /></td></tr>
 <tr class="separator:a394479ea2130ef8ba7b70224742f6c70"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25e6d49da8982572f10ecac4b2cde176"><td class="memItemLeft" align="right" valign="top">virtual std::unique_ptr&lt; juce::AudioThumbnailBase &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1UIBehaviour.html#a25e6d49da8982572f10ecac4b2cde176">createAudioThumbnail</a> (int sourceSamplesPerThumbnailSample, juce::AudioFormatManager &amp;formatManagerToUse, juce::AudioThumbnailCache &amp;cacheToUse)</td></tr>
+<tr class="memdesc:a25e6d49da8982572f10ecac4b2cde176"><td class="mdescLeft">&#160;</td><td class="mdescRight">Must create an AudioThumnail for displaying, usually in a <a class="el" href="classtracktion_1_1engine_1_1SmartThumbnail.html" title="SmartThumnail automatically tracks changes to an AudioFile and will update its cache if the file chan...">SmartThumbnail</a>.  <a href="classtracktion_1_1engine_1_1UIBehaviour.html#a25e6d49da8982572f10ecac4b2cde176">More...</a><br /></td></tr>
+<tr class="separator:a25e6d49da8982572f10ecac4b2cde176"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b57fd6b5798647d9b9022fafd89391e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1UIBehaviour.html#a3b57fd6b5798647d9b9022fafd89391e">showWarningAlert</a> (const juce::String &amp;title, const juce::String &amp;message)</td></tr>
 <tr class="memdesc:a3b57fd6b5798647d9b9022fafd89391e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should display a dismissable alert window.  <a href="classtracktion_1_1engine_1_1UIBehaviour.html#a3b57fd6b5798647d9b9022fafd89391e">More...</a><br /></td></tr>
 <tr class="separator:a3b57fd6b5798647d9b9022fafd89391e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -824,6 +827,50 @@ Public Member Functions</h2></td></tr>
 
 <p>Called when a new track is created from some kind of user action i.e. </p>
 <p>not from an <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> load. </p>
+
+</div>
+</div>
+<a id="a25e6d49da8982572f10ecac4b2cde176"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a25e6d49da8982572f10ecac4b2cde176">&#9670;&nbsp;</a></span>createAudioThumbnail()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual std::unique_ptr&lt;juce::AudioThumbnailBase&gt; tracktion::engine::UIBehaviour::createAudioThumbnail </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>sourceSamplesPerThumbnailSample</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">juce::AudioFormatManager &amp;&#160;</td>
+          <td class="paramname"><em>formatManagerToUse</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">juce::AudioThumbnailCache &amp;&#160;</td>
+          <td class="paramname"><em>cacheToUse</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Must create an AudioThumnail for displaying, usually in a <a class="el" href="classtracktion_1_1engine_1_1SmartThumbnail.html" title="SmartThumnail automatically tracks changes to an AudioFile and will update its cache if the file chan...">SmartThumbnail</a>. </p>
 
 </div>
 </div>
@@ -2136,7 +2183,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Dec 14 2022 11:26:54 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Dec 20 2022 14:10:48 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

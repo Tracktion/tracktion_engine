@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-12-14 11:48:58</td>
+            <td class="headerValue">2022-12-20 14:34:42</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">24</td>
@@ -277,13 +277,13 @@
 <a name="215"><span class="lineNum">     215 </span>            :     return false;</a>
 <a name="216"><span class="lineNum">     216 </span>            : }</a>
 <a name="217"><span class="lineNum">     217 </span>            : </a>
-<a name="218"><span class="lineNum">     218 </span><span class="lineCov">    3829347 : float FolderTrack::getVcaDb (TimePosition time)</span></a>
+<a name="218"><span class="lineNum">     218 </span><span class="lineCov">    3829331 : float FolderTrack::getVcaDb (TimePosition time)</span></a>
 <a name="219"><span class="lineNum">     219 </span>            : {</a>
-<a name="220"><span class="lineNum">     220 </span><span class="lineCov">    3829347 :     const std::scoped_lock sl (pluginMutex);</span></a>
+<a name="220"><span class="lineNum">     220 </span><span class="lineCov">    3829331 :     const std::scoped_lock sl (pluginMutex);</span></a>
 <a name="221"><span class="lineNum">     221 </span>            : </a>
-<a name="222"><span class="lineNum">     222 </span><span class="lineCov">    3829367 :     if (auto ptr = vcaPlugin)</span></a>
-<a name="223"><span class="lineNum">     223 </span><span class="lineCov">    3810007 :         if (ptr-&gt;isEnabled())</span></a>
-<a name="224"><span class="lineNum">     224 </span><span class="lineCov">    3810009 :             return ptr-&gt;updateAutomationStreamAndGetVolumeDb (time);</span></a>
+<a name="222"><span class="lineNum">     222 </span><span class="lineCov">    3829355 :     if (auto ptr = vcaPlugin)</span></a>
+<a name="223"><span class="lineNum">     223 </span><span class="lineCov">    3809995 :         if (ptr-&gt;isEnabled())</span></a>
+<a name="224"><span class="lineNum">     224 </span><span class="lineCov">    3809997 :             return ptr-&gt;updateAutomationStreamAndGetVolumeDb (time);</span></a>
 <a name="225"><span class="lineNum">     225 </span>            : </a>
 <a name="226"><span class="lineNum">     226 </span><span class="lineCov">      19360 :     return 0.0f;</span></a>
 <a name="227"><span class="lineNum">     227 </span>            : }</a>

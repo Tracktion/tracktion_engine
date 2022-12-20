@@ -73,18 +73,26 @@ $(function() {
 <div class="title">tracktion::engine::RecordingThumbnailManager Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Holds a pool of Thumbnails that are populated whilst recording.  
+ <a href="classtracktion_1_1engine_1_1RecordingThumbnailManager.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1RecordingThumbnailManager_1_1Thumbnail.html">Thumbnail</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A thumbnail represeting a recording file.  <a href="structtracktion_1_1engine_1_1RecordingThumbnailManager_1_1Thumbnail.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a471b53c1cb92b6421c19d1509427342e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1RecordingThumbnailManager_1_1Thumbnail.html#a2f202eefa8c6f733d05e7998073f1bb9">Thumbnail::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1RecordingThumbnailManager.html#a471b53c1cb92b6421c19d1509427342e">getThumbnailFor</a> (const juce::File &amp;f)</td></tr>
+<tr class="memdesc:a471b53c1cb92b6421c19d1509427342e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="structtracktion_1_1engine_1_1RecordingThumbnailManager_1_1Thumbnail.html" title="A thumbnail represeting a recording file.">Thumbnail</a> for a given audio file.  <a href="classtracktion_1_1engine_1_1RecordingThumbnailManager.html#a471b53c1cb92b6421c19d1509427342e">More...</a><br /></td></tr>
 <tr class="separator:a471b53c1cb92b6421c19d1509427342e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Holds a pool of Thumbnails that are populated whilst recording. </p>
+<p>These can then be used to draw visual waveforms during the recoridng process. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a471b53c1cb92b6421c19d1509427342e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a471b53c1cb92b6421c19d1509427342e">&#9670;&nbsp;</a></span>getThumbnailFor()</h2>
 
@@ -101,6 +109,9 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns the <a class="el" href="structtracktion_1_1engine_1_1RecordingThumbnailManager_1_1Thumbnail.html" title="A thumbnail represeting a recording file.">Thumbnail</a> for a given audio file. </p>
+<p>The engine will update this so you should only use it for drawing. </p>
+
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
@@ -109,7 +120,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Dec 14 2022 11:26:53 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Dec 20 2022 14:10:45 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
