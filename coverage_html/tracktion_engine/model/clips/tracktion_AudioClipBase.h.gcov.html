@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-12-20 20:06:24</td>
+            <td class="headerValue">2022-12-20 23:27:37</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
@@ -116,7 +116,7 @@
 <a name="54"><span class="lineNum">      54 </span>            :     virtual TimeDuration getSourceLength() const = 0;</a>
 <a name="55"><span class="lineNum">      55 </span>            : </a>
 <a name="56"><span class="lineNum">      56 </span>            :     /** Returns the file used to play back the source and will get proxied etc. */</a>
-<a name="57"><span class="lineNum">      57 </span><span class="lineCov">      13861 :     virtual AudioFile getAudioFile() const  { return AudioFile (edit.engine, getCurrentSourceFile()); }</span></a>
+<a name="57"><span class="lineNum">      57 </span><span class="lineCov">      13855 :     virtual AudioFile getAudioFile() const  { return AudioFile (edit.engine, getCurrentSourceFile()); }</span></a>
 <a name="58"><span class="lineNum">      58 </span>            : </a>
 <a name="59"><span class="lineNum">      59 </span>            :     /** Returns the current AudioFile being used by the Clip, either the</a>
 <a name="60"><span class="lineNum">      60 </span>            :         original source or a proxy.</a>
@@ -527,7 +527,7 @@
 <a name="465"><span class="lineNum">     465 </span>            :     void setUsesProxy (bool canUseProxy) noexcept;</a>
 <a name="466"><span class="lineNum">     466 </span>            :     </a>
 <a name="467"><span class="lineNum">     467 </span>            :     /** Retuns true if this clip can use a proxy file. */</a>
-<a name="468"><span class="lineNum">     468 </span><span class="lineCov">      47207 :     bool canUseProxy() const noexcept               { return proxyAllowed &amp;&amp; edit.canRenderProxies(); }</span></a>
+<a name="468"><span class="lineNum">     468 </span><span class="lineCov">      47204 :     bool canUseProxy() const noexcept               { return proxyAllowed &amp;&amp; edit.canRenderProxies(); }</span></a>
 <a name="469"><span class="lineNum">     469 </span>            : </a>
 <a name="470"><span class="lineNum">     470 </span>            :     /** Retuns true if this clip use a proxy file due to timestretching.</a>
 <a name="471"><span class="lineNum">     471 </span>            :         This can be because auto-tempo, auto-pitch or a pitch change has been set.</a>
@@ -746,7 +746,7 @@
 <a name="684"><span class="lineNum">     684 </span>            :         process.This will in turn call getRenderJob on a background thead.</a>
 <a name="685"><span class="lineNum">     685 </span>            :     */</a>
 <a name="686"><span class="lineNum">     686 </span>            :     void renderSource();</a>
-<a name="687"><span class="lineNum">     687 </span><span class="lineCov">       3479 :     bool shouldAttemptRender() const    { return (! lastRenderJobFailed) &amp;&amp; needsRender(); }</span></a>
+<a name="687"><span class="lineNum">     687 </span><span class="lineCov">       3476 :     bool shouldAttemptRender() const    { return (! lastRenderJobFailed) &amp;&amp; needsRender(); }</span></a>
 <a name="688"><span class="lineNum">     688 </span>            : </a>
 <a name="689"><span class="lineNum">     689 </span>            :     void clearCachedAudioSegmentList();</a>
 <a name="690"><span class="lineNum">     690 </span>            : </a>
