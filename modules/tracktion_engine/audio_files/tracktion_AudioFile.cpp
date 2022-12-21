@@ -510,7 +510,7 @@ SmartThumbnail::SmartThumbnail (Engine& e, const AudioFile& f, juce::Component& 
 
     // Ensure the AudioFileManager knows about this type of thumbnail
     auto& thumbRef = *thumbnail; // Work around a clang warning
-    const auto thumbTypeHashCode = typeid (thumbRef).hash_code();
+    const auto thumbTypeHashCode = std::hash<std::string>{} (typeid (thumbRef).name());
     engine.getAudioFileManager().thumbnailTypeHashes.insert (thumbTypeHashCode);
 }
 
@@ -596,7 +596,7 @@ void SmartThumbnail::createThumbnailReader()
         // you're using different types for different displays
         // N.B. if this changes, AudioFileManager::callListeners will also need to be updated
         auto& thumbRef = *thumbnail; // Work around a clang warning
-        const auto thumbTypeHashCode = typeid (thumbRef).hash_code();
+        const auto thumbTypeHashCode = std::hash<std::string>{} (typeid (thumbRef).name());
         const auto hashCode = static_cast<juce::int64> (hash ((size_t) file.getHash(), thumbTypeHashCode));
 
         setReader (AudioFileUtils::createReaderFor (engine, file.getFile()), hashCode);
