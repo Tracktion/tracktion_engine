@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-12-20 23:27:37</td>
+            <td class="headerValue">2022-12-21 13:53:57</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">8</td>
@@ -169,9 +169,9 @@
 <a name="107"><span class="lineNum">     107 </span>            : </a>
 <a name="108"><span class="lineNum">     108 </span><span class="lineNoCov">          0 : void LevelMeasurer::Client::setOverload (int channel, bool hasOverloaded) noexcept</span></a>
 <a name="109"><span class="lineNum">     109 </span>            : {</a>
-<a name="110"><span class="lineNum">     110 </span><span class="lineCov">       1968 :     juce::SpinLock::ScopedLockType sl (mutex);</span></a>
-<a name="111"><span class="lineNum">     111 </span><span class="lineCov">       1968 :     overload[channel] = hasOverloaded;</span></a>
-<a name="112"><span class="lineNum">     112 </span><span class="lineCov">       1968 : }</span></a>
+<a name="110"><span class="lineNum">     110 </span><span class="lineCov">       2002 :     juce::SpinLock::ScopedLockType sl (mutex);</span></a>
+<a name="111"><span class="lineNum">     111 </span><span class="lineCov">       2002 :     overload[channel] = hasOverloaded;</span></a>
+<a name="112"><span class="lineNum">     112 </span><span class="lineCov">       2002 : }</span></a>
 <a name="113"><span class="lineNum">     113 </span>            : </a>
 <a name="114"><span class="lineNum">     114 </span><span class="lineNoCov">          0 : void LevelMeasurer::Client::setClearOverload (bool clear) noexcept</span></a>
 <a name="115"><span class="lineNum">     115 </span>            : {</a>
@@ -203,11 +203,11 @@
 <a name="141"><span class="lineNum">     141 </span>            : </a>
 <a name="142"><span class="lineNum">     142 </span>            : </a>
 <a name="143"><span class="lineNum">     143 </span>            : //==============================================================================</a>
-<a name="144"><span class="lineNum">     144 </span><span class="lineCov">   12460959 : void LevelMeasurer::processBuffer (juce::AudioBuffer&lt;float&gt;&amp; buffer, int start, int numSamples)</span></a>
+<a name="144"><span class="lineNum">     144 </span><span class="lineCov">   12427190 : void LevelMeasurer::processBuffer (juce::AudioBuffer&lt;float&gt;&amp; buffer, int start, int numSamples)</span></a>
 <a name="145"><span class="lineNum">     145 </span>            : {</a>
-<a name="146"><span class="lineNum">     146 </span><span class="lineCov">   12460959 :     const juce::ScopedLock sl (clientsMutex);</span></a>
+<a name="146"><span class="lineNum">     146 </span><span class="lineCov">   12427190 :     const juce::ScopedLock sl (clientsMutex);</span></a>
 <a name="147"><span class="lineNum">     147 </span>            : </a>
-<a name="148"><span class="lineNum">     148 </span><span class="lineCov">   12467036 :     if (clients.isEmpty())</span></a>
+<a name="148"><span class="lineNum">     148 </span><span class="lineCov">   12441672 :     if (clients.isEmpty())</span></a>
 <a name="149"><span class="lineNum">     149 </span>            :         return;</a>
 <a name="150"><span class="lineNum">     150 </span>            : </a>
 <a name="151"><span class="lineNum">     151 </span><span class="lineCov">       5264 :     auto numChans = std::min ((int) Client::maxNumChannels, buffer.getNumChannels());</span></a>
@@ -275,11 +275,11 @@
 <a name="213"><span class="lineNum">     213 </span>            :     }</a>
 <a name="214"><span class="lineNum">     214 </span>            : }</a>
 <a name="215"><span class="lineNum">     215 </span>            : </a>
-<a name="216"><span class="lineNum">     216 </span><span class="lineCov">   12460356 : void LevelMeasurer::processMidi (MidiMessageArray&amp; midiBuffer, const float*)</span></a>
+<a name="216"><span class="lineNum">     216 </span><span class="lineCov">   12438824 : void LevelMeasurer::processMidi (MidiMessageArray&amp; midiBuffer, const float*)</span></a>
 <a name="217"><span class="lineNum">     217 </span>            : {</a>
-<a name="218"><span class="lineNum">     218 </span><span class="lineCov">   12460356 :     const juce::ScopedLock sl (clientsMutex);</span></a>
+<a name="218"><span class="lineNum">     218 </span><span class="lineCov">   12438824 :     const juce::ScopedLock sl (clientsMutex);</span></a>
 <a name="219"><span class="lineNum">     219 </span>            : </a>
-<a name="220"><span class="lineNum">     220 </span><span class="lineCov">   12460862 :     if (clients.isEmpty() || ! showMidi)</span></a>
+<a name="220"><span class="lineNum">     220 </span><span class="lineCov">   12448281 :     if (clients.isEmpty() || ! showMidi)</span></a>
 <a name="221"><span class="lineNum">     221 </span>            :         return;</a>
 <a name="222"><span class="lineNum">     222 </span>            : </a>
 <a name="223"><span class="lineNum">     223 </span>            :     float max = 0.0f;</a>
@@ -356,7 +356,7 @@
 <a name="294"><span class="lineNum">     294 </span>            : </a>
 <a name="295"><span class="lineNum">     295 </span><span class="lineCov">        783 : void LevelMeasurer::setShowMidi (bool show)</span></a>
 <a name="296"><span class="lineNum">     296 </span>            : {</a>
-<a name="297"><span class="lineNum">     297 </span><span class="lineCov">   12461515 :     showMidi = show;</span></a>
+<a name="297"><span class="lineNum">     297 </span><span class="lineCov">   12441312 :     showMidi = show;</span></a>
 <a name="298"><span class="lineNum">     298 </span><span class="lineCov">        783 : }</span></a>
 <a name="299"><span class="lineNum">     299 </span>            : </a>
 <a name="300"><span class="lineNum">     300 </span>            : //==============================================================================</a>
