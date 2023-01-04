@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-01-04 11:55:50</td>
+            <td class="headerValue">2023-01-04 12:59:46</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">9</td>
@@ -108,13 +108,13 @@
 <a name="46"><span class="lineNum">      46 </span>            :     /** Sets the size of delay in samples. */</a>
 <a name="47"><span class="lineNum">      47 </span>            :     void setSize (int newSize)</a>
 <a name="48"><span class="lineNum">      48 </span>            :     {</a>
-<a name="49"><span class="lineNum">      49 </span><span class="lineCov">     245452 :         lastBufferSize = bufferSize;</span></a>
+<a name="49"><span class="lineNum">      49 </span><span class="lineCov">     246252 :         lastBufferSize = bufferSize;</span></a>
 <a name="50"><span class="lineNum">      50 </span>            :         jassert (newSize &lt; maxBufferSize);</a>
 <a name="51"><span class="lineNum">      51 </span>            : </a>
-<a name="52"><span class="lineNum">      52 </span><span class="lineCov">     245452 :         if (newSize &lt; bufferSize)</span></a>
+<a name="52"><span class="lineNum">      52 </span><span class="lineCov">     246252 :         if (newSize &lt; bufferSize)</span></a>
 <a name="53"><span class="lineNum">      53 </span><span class="lineNoCov">          0 :             bufferIndex = 0;</span></a>
 <a name="54"><span class="lineNum">      54 </span>            : </a>
-<a name="55"><span class="lineNum">      55 </span><span class="lineCov">     245452 :         bufferSize = std::min (maxBufferSize, newSize);</span></a>
+<a name="55"><span class="lineNum">      55 </span><span class="lineCov">     246252 :         bufferSize = std::min (maxBufferSize, newSize);</span></a>
 <a name="56"><span class="lineNum">      56 </span>            :     }</a>
 <a name="57"><span class="lineNum">      57 </span>            : </a>
 <a name="58"><span class="lineNum">      58 </span>            :     /** Gets the buffer size. */</a>
@@ -124,9 +124,9 @@
 <a name="62"><span class="lineNum">      62 </span>            :     }</a>
 <a name="63"><span class="lineNum">      63 </span>            : </a>
 <a name="64"><span class="lineNum">      64 </span>            :     /** Processes a number of samples, replacing the contents with delayed samples. */</a>
-<a name="65"><span class="lineNum">      65 </span><span class="lineCov">     245452 :     void processSamples (float* samples, int numSamples)</span></a>
+<a name="65"><span class="lineNum">      65 </span><span class="lineCov">     246252 :     void processSamples (float* samples, int numSamples)</span></a>
 <a name="66"><span class="lineNum">      66 </span>            :     {</a>
-<a name="67"><span class="lineNum">      67 </span><span class="lineCov">   22661452 :         for (int i = 0; i &lt; numSamples; ++i)</span></a>
+<a name="67"><span class="lineNum">      67 </span><span class="lineCov">   22662252 :         for (int i = 0; i &lt; numSamples; ++i)</span></a>
 <a name="68"><span class="lineNum">      68 </span>            :         {</a>
 <a name="69"><span class="lineNum">      69 </span><span class="lineCov">   22416000 :             ++bufferWritePos;</span></a>
 <a name="70"><span class="lineNum">      70 </span><span class="lineCov">   22416000 :             bufferWritePos = bufferWritePos % maxBufferSize;</span></a>
@@ -139,7 +139,7 @@
 <a name="77"><span class="lineNum">      77 </span>            : </a>
 <a name="78"><span class="lineNum">      78 </span><span class="lineCov">   22416000 :             samples[i] = buffer[bufferReadPos];</span></a>
 <a name="79"><span class="lineNum">      79 </span>            :         }</a>
-<a name="80"><span class="lineNum">      80 </span><span class="lineCov">     245452 :     }</span></a>
+<a name="80"><span class="lineNum">      80 </span><span class="lineCov">     246252 :     }</span></a>
 <a name="81"><span class="lineNum">      81 </span>            : </a>
 <a name="82"><span class="lineNum">      82 </span>            :     /** Processes a number of samples, crossfading the current and last read positions to avoid glitches. */</a>
 <a name="83"><span class="lineNum">      83 </span>            :     void processSamplesSmoothed (float* samples, int numSamples)</a>
@@ -229,26 +229,26 @@
 <a name="167"><span class="lineNum">     167 </span><span class="lineCov">         64 :         delayCompensator[i]-&gt;clear();</span></a>
 <a name="168"><span class="lineNum">     168 </span><span class="lineCov">         32 : }</span></a>
 <a name="169"><span class="lineNum">     169 </span>            : </a>
-<a name="170"><span class="lineNum">     170 </span><span class="lineCov">     122726 : void LatencyPlugin::applyToBuffer (const PluginRenderContext&amp; rc)</span></a>
+<a name="170"><span class="lineNum">     170 </span><span class="lineCov">     123126 : void LatencyPlugin::applyToBuffer (const PluginRenderContext&amp; rc)</span></a>
 <a name="171"><span class="lineNum">     171 </span>            : {</a>
-<a name="172"><span class="lineNum">     172 </span><span class="lineCov">     122726 :     if (! applyLatency.get())</span></a>
+<a name="172"><span class="lineNum">     172 </span><span class="lineCov">     123126 :     if (! applyLatency.get())</span></a>
 <a name="173"><span class="lineNum">     173 </span>            :         return;</a>
 <a name="174"><span class="lineNum">     174 </span>            : </a>
-<a name="175"><span class="lineNum">     175 </span><span class="lineCov">     122726 :     if (rc.destBuffer == nullptr)</span></a>
+<a name="175"><span class="lineNum">     175 </span><span class="lineCov">     123126 :     if (rc.destBuffer == nullptr)</span></a>
 <a name="176"><span class="lineNum">     176 </span>            :         return;</a>
 <a name="177"><span class="lineNum">     177 </span>            : </a>
-<a name="178"><span class="lineNum">     178 </span><span class="lineCov">     122726 :     const int delayCompensationSamples =  juce::roundToInt (latencyTimeSeconds.get() * (float) sampleRate);</span></a>
+<a name="178"><span class="lineNum">     178 </span><span class="lineCov">     123126 :     const int delayCompensationSamples =  juce::roundToInt (latencyTimeSeconds.get() * (float) sampleRate);</span></a>
 <a name="179"><span class="lineNum">     179 </span>            : </a>
-<a name="180"><span class="lineNum">     180 </span><span class="lineCov">     122726 :     if (delayCompensationSamples != 0)</span></a>
+<a name="180"><span class="lineNum">     180 </span><span class="lineCov">     123126 :     if (delayCompensationSamples != 0)</span></a>
 <a name="181"><span class="lineNum">     181 </span>            :     {</a>
-<a name="182"><span class="lineNum">     182 </span><span class="lineCov">     122726 :         const int numChannels = std::min (rc.destBuffer-&gt;getNumChannels(),</span></a>
-<a name="183"><span class="lineNum">     183 </span><span class="lineCov">     122726 :                                           juce::numElementsInArray (delayCompensator));</span></a>
+<a name="182"><span class="lineNum">     182 </span><span class="lineCov">     123126 :         const int numChannels = std::min (rc.destBuffer-&gt;getNumChannels(),</span></a>
+<a name="183"><span class="lineNum">     183 </span><span class="lineCov">     123126 :                                           juce::numElementsInArray (delayCompensator));</span></a>
 <a name="184"><span class="lineNum">     184 </span>            :         float* const* samples = rc.destBuffer-&gt;getArrayOfWritePointers();</a>
 <a name="185"><span class="lineNum">     185 </span>            : </a>
-<a name="186"><span class="lineNum">     186 </span><span class="lineCov">     368178 :         for (int i = 0; i &lt; numChannels; ++i)</span></a>
+<a name="186"><span class="lineNum">     186 </span><span class="lineCov">     369378 :         for (int i = 0; i &lt; numChannels; ++i)</span></a>
 <a name="187"><span class="lineNum">     187 </span>            :         {</a>
-<a name="188"><span class="lineNum">     188 </span><span class="lineCov">     245452 :             delayCompensator[i]-&gt;setSize (delayCompensationSamples);</span></a>
-<a name="189"><span class="lineNum">     189 </span><span class="lineCov">     245452 :             delayCompensator[i]-&gt;processSamples (samples[i] + rc.bufferStartSample, rc.bufferNumSamples);</span></a>
+<a name="188"><span class="lineNum">     188 </span><span class="lineCov">     246252 :             delayCompensator[i]-&gt;setSize (delayCompensationSamples);</span></a>
+<a name="189"><span class="lineNum">     189 </span><span class="lineCov">     246252 :             delayCompensator[i]-&gt;processSamples (samples[i] + rc.bufferStartSample, rc.bufferNumSamples);</span></a>
 <a name="190"><span class="lineNum">     190 </span>            :         }</a>
 <a name="191"><span class="lineNum">     191 </span>            :     }</a>
 <a name="192"><span class="lineNum">     192 </span>            : }</a>
