@@ -232,7 +232,7 @@ public:
     virtual ControlSurfaces getDesiredControlSurfaces()                             { return {}; }
 
     /** Restore a custom control surface from custom XML */
-    virtual ControlSurface* getCustomControlSurfaceForXML (ExternalControllerManager&, const juce::XmlElement& xml)
+    virtual ControlSurface* getCustomControlSurfaceForXML (ExternalControllerManager&, const juce::XmlElement&)
     {
         return nullptr;
     }
