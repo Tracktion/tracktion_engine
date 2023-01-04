@@ -119,7 +119,7 @@ private:
     AudioFile original;
     std::unique_ptr<AudioClipBase::ProxyRenderingInfo> proxyInfo;
 
-    bool render()
+    bool render() override
     {
         CRASH_TRACER
 
