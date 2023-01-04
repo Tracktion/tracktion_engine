@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-01-04 20:16:53</td>
+            <td class="headerValue">2023-01-04 20:18:36</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">21</td>
@@ -1004,11 +1004,11 @@
 <a name="942"><span class="lineNum">     942 </span>            :     {</a>
 <a name="943"><span class="lineNum">     943 </span><span class="lineCov">         54 :         const juce::ScopedLock sl (lock);</span></a>
 <a name="944"><span class="lineNum">     944 </span>            : </a>
-<a name="945"><span class="lineNum">     945 </span><span class="lineCov">        317 :         for (int i = activePlugins.size(); --i &gt;= 0;)</span></a>
+<a name="945"><span class="lineNum">     945 </span><span class="lineCov">        316 :         for (int i = activePlugins.size(); --i &gt;= 0;)</span></a>
 <a name="946"><span class="lineNum">     946 </span>            :         {</a>
-<a name="947"><span class="lineNum">     947 </span><span class="lineCov">        263 :             if (auto f = activePlugins.getObjectPointer (i))</span></a>
+<a name="947"><span class="lineNum">     947 </span><span class="lineCov">        262 :             if (auto f = activePlugins.getObjectPointer (i))</span></a>
 <a name="948"><span class="lineNum">     948 </span>            :             {</a>
-<a name="949"><span class="lineNum">     949 </span><span class="lineCov">        263 :                 if (f-&gt;getReferenceCount() == 1)</span></a>
+<a name="949"><span class="lineNum">     949 </span><span class="lineCov">        262 :                 if (f-&gt;getReferenceCount() == 1)</span></a>
 <a name="950"><span class="lineNum">     950 </span>            :                 {</a>
 <a name="951"><span class="lineNum">     951 </span><span class="lineCov">          1 :                     toDelete.add (f);</span></a>
 <a name="952"><span class="lineNum">     952 </span><span class="lineCov">          1 :                     activePlugins.remove (i);</span></a>
