@@ -30546,6 +30546,13 @@
       <anchor>a91b4473992ad5fd88cce3e3a4e5b9822</anchor>
       <arglist>()</arglist>
     </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual ControlSurface *</type>
+      <name>getCustomControlSurfaceForXML</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>a6bfaee0f0367be6a6e98115f0f2ef32a</anchor>
+      <arglist>(ExternalControllerManager &amp;, const juce::XmlElement &amp;)</arglist>
+    </member>
   </compound>
   <compound kind="struct">
     <name>tracktion::engine::VSTXML::Entry</name>
