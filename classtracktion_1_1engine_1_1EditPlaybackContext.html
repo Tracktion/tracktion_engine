@@ -154,8 +154,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9fcb656cfc10b68627755acf0d4e7761"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#a9fcb656cfc10b68627755acf0d4e7761">setTempoAdjustment</a> (double plusOrMinusProportion)</td></tr>
 <tr class="memdesc:a9fcb656cfc10b68627755acf0d4e7761"><td class="mdescLeft">&#160;</td><td class="mdescRight">This will increase/decrease playback speed by changing the tempo, maintaining pitch where possible.  <a href="classtracktion_1_1engine_1_1EditPlaybackContext.html#a9fcb656cfc10b68627755acf0d4e7761">More...</a><br /></td></tr>
 <tr class="separator:a9fcb656cfc10b68627755acf0d4e7761"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae3f478ab43be279dbb42af8cfe4e252f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#ae3f478ab43be279dbb42af8cfe4e252f">postPosition</a> (TimePosition)</td></tr>
-<tr class="separator:ae3f478ab43be279dbb42af8cfe4e252f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a439ffc56cc49030828de8eeb238a76ba"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#a439ffc56cc49030828de8eeb238a76ba">postPosition</a> (TimePosition positionToJumpTo, std::optional&lt; TimePosition &gt; whenToJump={})</td></tr>
+<tr class="memdesc:a439ffc56cc49030828de8eeb238a76ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Posts a transport position change.  <a href="classtracktion_1_1engine_1_1EditPlaybackContext.html#a439ffc56cc49030828de8eeb238a76ba">More...</a><br /></td></tr>
+<tr class="separator:a439ffc56cc49030828de8eeb238a76ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2d21517909d3d1f61cf8080c50329f9"><td class="memItemLeft" align="right" valign="top">std::optional&lt; TimePosition &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#ac2d21517909d3d1f61cf8080c50329f9">getPendingPositionChange</a> () const</td></tr>
+<tr class="memdesc:ac2d21517909d3d1f61cf8080c50329f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pending position change if there is one.  <a href="classtracktion_1_1engine_1_1EditPlaybackContext.html#ac2d21517909d3d1f61cf8080c50329f9">More...</a><br /></td></tr>
+<tr class="separator:ac2d21517909d3d1f61cf8080c50329f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6dbb645295a059e229cc6e77670248b9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#a6dbb645295a059e229cc6e77670248b9">play</a> ()</td></tr>
 <tr class="separator:a6dbb645295a059e229cc6e77670248b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa762fe1a3089087538b0becab48d49c0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html#aa762fe1a3089087538b0becab48d49c0">stop</a> ()</td></tr>
@@ -863,8 +867,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ae3f478ab43be279dbb42af8cfe4e252f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae3f478ab43be279dbb42af8cfe4e252f">&#9670;&nbsp;</a></span>postPosition()</h2>
+<a id="a439ffc56cc49030828de8eeb238a76ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a439ffc56cc49030828de8eeb238a76ba">&#9670;&nbsp;</a></span>postPosition()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -873,11 +877,54 @@ Public Attributes</h2></td></tr>
           <td class="memname">void tracktion::engine::EditPlaybackContext::postPosition </td>
           <td>(</td>
           <td class="paramtype">TimePosition&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramname"><em>positionToJumpTo</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">std::optional&lt; TimePosition &gt;&#160;</td>
+          <td class="paramname"><em>whenToJump</em> = <code>{}</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Posts a transport position change. </p>
+<p>Using the second parameter it's possible to delay position changes in order to quantise them to some musical sense. Pending changes will be cancelled automatically if:</p><ul>
+<li>The transport is stopped</li>
+<li>The playhead reaches the end of a loop position</li>
+<li>The playhead passes the jump position</li>
+</ul>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">positionToJumpTo</td><td>The position to jump to </td></tr>
+    <tr><td class="paramname">whenToJump</td><td>The position the playhead should be at when performing the jump </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ac2d21517909d3d1f61cf8080c50329f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac2d21517909d3d1f61cf8080c50329f9">&#9670;&nbsp;</a></span>getPendingPositionChange()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt;TimePosition&gt; tracktion::engine::EditPlaybackContext::getPendingPositionChange </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns a pending position change if there is one. </p>
 
 </div>
 </div>
@@ -1141,7 +1188,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jan 4 2023 12:40:59 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Wed Jan 4 2023 18:59:24 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

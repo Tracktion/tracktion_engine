@@ -29051,8 +29051,15 @@
       <type>void</type>
       <name>postPosition</name>
       <anchorfile>classtracktion_1_1engine_1_1EditPlaybackContext.html</anchorfile>
-      <anchor>ae3f478ab43be279dbb42af8cfe4e252f</anchor>
-      <arglist>(TimePosition)</arglist>
+      <anchor>a439ffc56cc49030828de8eeb238a76ba</anchor>
+      <arglist>(TimePosition positionToJumpTo, std::optional&lt; TimePosition &gt; whenToJump={})</arglist>
+    </member>
+    <member kind="function">
+      <type>std::optional&lt; TimePosition &gt;</type>
+      <name>getPendingPositionChange</name>
+      <anchorfile>classtracktion_1_1engine_1_1EditPlaybackContext.html</anchorfile>
+      <anchor>ac2d21517909d3d1f61cf8080c50329f9</anchor>
+      <arglist>() const</arglist>
     </member>
     <member kind="function">
       <type>void</type>
