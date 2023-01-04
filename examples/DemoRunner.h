@@ -95,6 +95,7 @@ struct DemoTypeBase
 // Include demo files to register them
 #include "demos/AbletonLinkDemo.h"
 #include "demos/DistortionEffectDemo.h"
+#include "demos/GlobalQuantiseDemo.h"
 #include "demos/IRPluginDemo.h"
 #include "demos/MidiRecordingDemo.h"
 #include "demos/PatternGeneratorDemo.h"
