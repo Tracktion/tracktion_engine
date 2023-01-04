@@ -109,6 +109,11 @@ public:
             proxyInfo = acb.createProxyRenderingInfo();
     }
 
+    ~ProxyGeneratorJob() override
+    {
+        prepareForJobDeletion();
+    }
+
 private:
     Engine& engine;
     AudioFile original;
