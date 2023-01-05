@@ -265,6 +265,12 @@ bool Renderer::RenderTask::renderAudio (Renderer::Parameters& r)
                                                                                            std::move (processState),
                                                                                            sourceToUpdate); });
 
+        if (! nodeRenderContext)
+        {
+            errorMessage = NEEDS_TRANS("Quit message or timeout occurred during render initialisation");
+            return true;
+        }
+
         if (! nodeRenderContext->getStatus().wasOk())
         {
             errorMessage = nodeRenderContext->getStatus().getErrorMessage();
