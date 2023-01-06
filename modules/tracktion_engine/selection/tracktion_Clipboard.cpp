@@ -646,6 +646,7 @@ static void fixClipTimes (juce::ValueTree& state, const Clipboard::Clips::ClipIn
 static bool pastePointsToCurve (const std::vector<AutomationCurve::AutomationPoint>& points, juce::Range<float> valueRange, AutomationCurve& targetCurve, TimeRange targetRange)
 {
     AutomationCurve newCurve;
+    newCurve.setOwnerParameter (targetCurve.getOwnerParameter());
     auto dstRange = targetCurve.getValueLimits();
     jassert (! dstRange.isEmpty());
 
@@ -660,14 +661,14 @@ static bool pastePointsToCurve (const std::vector<AutomationCurve::AutomationPoi
         newCurve.addPoint (p.time, p.value, p.curve);
     }
 
-    if (newCurve.getLength() > TimeDuration())
+    if (newCurve.getLength() > 0_td)
     {
         if (targetRange.isEmpty())
             targetRange = targetRange.withLength (newCurve.getLength());
         else
-            newCurve.rescaleAllTimes (targetRange.getLength().inSeconds() / newCurve.getLength().inSeconds());
+            newCurve.rescaleAllTimes (targetRange.getLength() / newCurve.getLength());
 
-        targetCurve.mergeOtherCurve (newCurve, targetRange, TimePosition(), TimeDuration(), false, false);
+        targetCurve.mergeOtherCurve (newCurve, targetRange, 0_tp, 0_td, false, false);
         return true;
     }
 
