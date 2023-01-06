@@ -421,11 +421,12 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
     struct RenderContext
     {
         RenderContext (const AudioFile& destination, const AudioFile& source,
-                       SampleCount blockSizeToUse, double prerollTimeS)
+                       int numDestChannels, SampleCount blockSizeToUse, double prerollTimeS)
             : blockSize (blockSizeToUse)
         {
             CRASH_TRACER
             jassert (source.isValid());
+            jassert (numDestChannels > 0);
             streamRange = { 0.0, source.getLength() };
             jassert (! streamRange.isEmpty());
 
@@ -441,7 +442,7 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
                 sourceInfo.metadata.clear();
 
             writer.reset (new AudioFileWriter (tempFile, destination.engine->getAudioFileFormatManager().getWavFormat(),
-                                               sourceInfo.numChannels, sourceInfo.sampleRate,
+                                               numDestChannels, sourceInfo.sampleRate,
                                                std::max (16, sourceInfo.bitsPerSample),
                                                sourceInfo.metadata, 0));
 
@@ -537,11 +538,11 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
 
     void createAndPrepareRenderContext()
     {
-        renderContext.reset (new RenderContext (destination, source, blockSize, prerollTime));
-
         {
             AudioNodeProperties props;
             node->getAudioNodeProperties (props);
+
+            renderContext.reset (new RenderContext (destination, source, props.numberOfChannels, blockSize, prerollTime));
         }
 
         {
