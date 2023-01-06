@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">96</td>
-            <td class="headerCovTableEntry">236</td>
-            <td class="headerCovTableEntryLo">40.7 %</td>
+            <td class="headerCovTableEntry">238</td>
+            <td class="headerCovTableEntryLo">40.3 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-01-06 14:34:56</td>
+            <td class="headerValue">2023-01-06 17:43:01</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">21</td>
@@ -181,24 +181,24 @@
 <a name="119"><span class="lineNum">     119 </span><span class="lineCov">        588 :         visitAllTopLevel (f);</span></a>
 <a name="120"><span class="lineNum">     120 </span><span class="lineCov">      31321 : }</span></a>
 <a name="121"><span class="lineNum">     121 </span>            : </a>
-<a name="122"><span class="lineNum">     122 </span><span class="lineCov">     248367 : bool TrackList::isMovableTrack (const juce::ValueTree&amp; v) noexcept</span></a>
+<a name="122"><span class="lineNum">     122 </span><span class="lineCov">     248364 : bool TrackList::isMovableTrack (const juce::ValueTree&amp; v) noexcept</span></a>
 <a name="123"><span class="lineNum">     123 </span>            : {</a>
-<a name="124"><span class="lineNum">     124 </span><span class="lineCov">     248367 :     return v.hasType (IDs::TRACK) || v.hasType (IDs::FOLDERTRACK) || v.hasType (IDs::AUTOMATIONTRACK);</span></a>
+<a name="124"><span class="lineNum">     124 </span><span class="lineCov">     248364 :     return v.hasType (IDs::TRACK) || v.hasType (IDs::FOLDERTRACK) || v.hasType (IDs::AUTOMATIONTRACK);</span></a>
 <a name="125"><span class="lineNum">     125 </span>            : }</a>
 <a name="126"><span class="lineNum">     126 </span>            : </a>
-<a name="127"><span class="lineNum">     127 </span><span class="lineCov">     184179 : bool TrackList::isArrangerTrack (const juce::ValueTree&amp; v) noexcept { return v.hasType (IDs::ARRANGERTRACK); }</span></a>
-<a name="128"><span class="lineNum">     128 </span><span class="lineCov">     192257 : bool TrackList::isChordTrack (const juce::ValueTree&amp; v) noexcept    { return v.hasType (IDs::CHORDTRACK); }</span></a>
+<a name="127"><span class="lineNum">     127 </span><span class="lineCov">     184176 : bool TrackList::isArrangerTrack (const juce::ValueTree&amp; v) noexcept { return v.hasType (IDs::ARRANGERTRACK); }</span></a>
+<a name="128"><span class="lineNum">     128 </span><span class="lineCov">     192254 : bool TrackList::isChordTrack (const juce::ValueTree&amp; v) noexcept    { return v.hasType (IDs::CHORDTRACK); }</span></a>
 <a name="129"><span class="lineNum">     129 </span><span class="lineCov">      58702 : bool TrackList::isMarkerTrack (const juce::ValueTree&amp; v) noexcept   { return v.hasType (IDs::MARKERTRACK); }</span></a>
-<a name="130"><span class="lineNum">     130 </span><span class="lineCov">     187229 : bool TrackList::isTempoTrack (const juce::ValueTree&amp; v) noexcept    { return v.hasType (IDs::TEMPOTRACK); }</span></a>
-<a name="131"><span class="lineNum">     131 </span><span class="lineCov">     191879 : bool TrackList::isMasterTrack (const juce::ValueTree&amp; v) noexcept   { return v.hasType (IDs::MASTERTRACK); }</span></a>
+<a name="130"><span class="lineNum">     130 </span><span class="lineCov">     187226 : bool TrackList::isTempoTrack (const juce::ValueTree&amp; v) noexcept    { return v.hasType (IDs::TEMPOTRACK); }</span></a>
+<a name="131"><span class="lineNum">     131 </span><span class="lineCov">     191876 : bool TrackList::isMasterTrack (const juce::ValueTree&amp; v) noexcept   { return v.hasType (IDs::MASTERTRACK); }</span></a>
 <a name="132"><span class="lineNum">     132 </span>            : </a>
-<a name="133"><span class="lineNum">     133 </span><span class="lineCov">     133456 : bool TrackList::isFixedTrack (const juce::ValueTree&amp; v) noexcept</span></a>
+<a name="133"><span class="lineNum">     133 </span><span class="lineCov">     133453 : bool TrackList::isFixedTrack (const juce::ValueTree&amp; v) noexcept</span></a>
 <a name="134"><span class="lineNum">     134 </span>            : {</a>
-<a name="135"><span class="lineNum">     135 </span><span class="lineCov">     525754 :     return isMarkerTrack (v) || isTempoTrack (v) || isChordTrack (v) || isArrangerTrack (v) || isMasterTrack (v)</span></a>
-<a name="136"><span class="lineNum">     136 </span><span class="lineCov">     266105 :         || (v.hasType (IDs::AUTOMATIONTRACK) &amp;&amp; isMasterTrack (v.getParent()));</span></a>
+<a name="135"><span class="lineNum">     135 </span><span class="lineCov">     525742 :     return isMarkerTrack (v) || isTempoTrack (v) || isChordTrack (v) || isArrangerTrack (v) || isMasterTrack (v)</span></a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineCov">     266099 :         || (v.hasType (IDs::AUTOMATIONTRACK) &amp;&amp; isMasterTrack (v.getParent()));</span></a>
 <a name="137"><span class="lineNum">     137 </span>            : }</a>
 <a name="138"><span class="lineNum">     138 </span>            : </a>
-<a name="139"><span class="lineNum">     139 </span><span class="lineCov">     150451 : bool TrackList::isTrack (const juce::ValueTree&amp; v) noexcept         { return isMovableTrack (v) || isFixedTrack (v); }</span></a>
+<a name="139"><span class="lineNum">     139 </span><span class="lineCov">     150448 : bool TrackList::isTrack (const juce::ValueTree&amp; v) noexcept         { return isMovableTrack (v) || isFixedTrack (v); }</span></a>
 <a name="140"><span class="lineNum">     140 </span>            : </a>
 <a name="141"><span class="lineNum">     141 </span><span class="lineCov">        148 : bool TrackList::isTrack (const juce::Identifier&amp; i) noexcept</span></a>
 <a name="142"><span class="lineNum">     142 </span>            : {</a>
@@ -414,165 +414,168 @@
 <a name="352"><span class="lineNum">     352 </span>            :                 {</a>
 <a name="353"><span class="lineNum">     353 </span><span class="lineNoCov">          0 :                     TrackAutomationSection::ActiveParameters ap;</span></a>
 <a name="354"><span class="lineNum">     354 </span>            :                     ap.param = param;</a>
-<a name="355"><span class="lineNum">     355 </span><span class="lineNoCov">          0 :                     ap.curve = param-&gt;getCurve();</span></a>
-<a name="356"><span class="lineNum">     356 </span>            :                     section.activeParameters.add (ap);</a>
-<a name="357"><span class="lineNum">     357 </span>            :                 }</a>
-<a name="358"><span class="lineNum">     358 </span>            :             }</a>
-<a name="359"><span class="lineNum">     359 </span>            :         }</a>
-<a name="360"><span class="lineNum">     360 </span>            : </a>
-<a name="361"><span class="lineNum">     361 </span><span class="lineNoCov">          0 :         for (auto&amp; ap : section.activeParameters)</span></a>
-<a name="362"><span class="lineNum">     362 </span><span class="lineNoCov">          0 :             ap.curve.state = ap.curve.state.createCopy();</span></a>
-<a name="363"><span class="lineNum">     363 </span>            :     }</a>
-<a name="364"><span class="lineNum">     364 </span>            : </a>
-<a name="365"><span class="lineNum">     365 </span>            :     // delete all the old curves</a>
-<a name="366"><span class="lineNum">     366 </span><span class="lineNoCov">          0 :     if (! copy)</span></a>
-<a name="367"><span class="lineNum">     367 </span>            :     {</a>
-<a name="368"><span class="lineNum">     368 </span><span class="lineNoCov">          0 :         for (auto&amp; section : sections)</span></a>
-<a name="369"><span class="lineNum">     369 </span>            :         {</a>
-<a name="370"><span class="lineNum">     370 </span><span class="lineNoCov">          0 :             auto sectionTime = section.position;</span></a>
-<a name="371"><span class="lineNum">     371 </span>            : </a>
-<a name="372"><span class="lineNum">     372 </span><span class="lineNoCov">          0 :             for (auto&amp;&amp; activeParam : section.activeParameters)</span></a>
-<a name="373"><span class="lineNum">     373 </span>            :             {</a>
-<a name="374"><span class="lineNum">     374 </span>            :                 auto param = activeParam.param;</a>
-<a name="375"><span class="lineNum">     375 </span><span class="lineNoCov">          0 :                 auto&amp; curve = param-&gt;getCurve();</span></a>
-<a name="376"><span class="lineNum">     376 </span>            :                 constexpr auto tolerance = TimeDuration::fromSeconds (0.0001);</a>
-<a name="377"><span class="lineNum">     377 </span>            : </a>
-<a name="378"><span class="lineNum">     378 </span><span class="lineNoCov">          0 :                 auto startValue = curve.getValueAt (sectionTime.getStart() - tolerance);</span></a>
-<a name="379"><span class="lineNum">     379 </span><span class="lineNoCov">          0 :                 auto endValue   = curve.getValueAt (sectionTime.getEnd()   + tolerance);</span></a>
+<a name="355"><span class="lineNum">     355 </span><span class="lineNoCov">          0 :                     ap.curve.setState (param-&gt;getCurve().state);</span></a>
+<a name="356"><span class="lineNum">     356 </span><span class="lineNoCov">          0 :                     ap.curve.setParentState (param-&gt;getCurve().parentState);</span></a>
+<a name="357"><span class="lineNum">     357 </span><span class="lineNoCov">          0 :                     ap.curve.setOwnerParameter (param-&gt;getCurve().getOwnerParameter());</span></a>
+<a name="358"><span class="lineNum">     358 </span>            :                     </a>
+<a name="359"><span class="lineNum">     359 </span>            :                     section.activeParameters.add (ap);</a>
+<a name="360"><span class="lineNum">     360 </span>            :                 }</a>
+<a name="361"><span class="lineNum">     361 </span>            :             }</a>
+<a name="362"><span class="lineNum">     362 </span>            :         }</a>
+<a name="363"><span class="lineNum">     363 </span>            : </a>
+<a name="364"><span class="lineNum">     364 </span><span class="lineNoCov">          0 :         for (auto&amp; ap : section.activeParameters)</span></a>
+<a name="365"><span class="lineNum">     365 </span><span class="lineNoCov">          0 :             ap.curve.state = ap.curve.state.createCopy();</span></a>
+<a name="366"><span class="lineNum">     366 </span>            :     }</a>
+<a name="367"><span class="lineNum">     367 </span>            : </a>
+<a name="368"><span class="lineNum">     368 </span>            :     // delete all the old curves</a>
+<a name="369"><span class="lineNum">     369 </span><span class="lineNoCov">          0 :     if (! copy)</span></a>
+<a name="370"><span class="lineNum">     370 </span>            :     {</a>
+<a name="371"><span class="lineNum">     371 </span><span class="lineNoCov">          0 :         for (auto&amp; section : sections)</span></a>
+<a name="372"><span class="lineNum">     372 </span>            :         {</a>
+<a name="373"><span class="lineNum">     373 </span><span class="lineNoCov">          0 :             auto sectionTime = section.position;</span></a>
+<a name="374"><span class="lineNum">     374 </span>            : </a>
+<a name="375"><span class="lineNum">     375 </span><span class="lineNoCov">          0 :             for (auto&amp;&amp; activeParam : section.activeParameters)</span></a>
+<a name="376"><span class="lineNum">     376 </span>            :             {</a>
+<a name="377"><span class="lineNum">     377 </span>            :                 auto param = activeParam.param;</a>
+<a name="378"><span class="lineNum">     378 </span><span class="lineNoCov">          0 :                 auto&amp; curve = param-&gt;getCurve();</span></a>
+<a name="379"><span class="lineNum">     379 </span>            :                 constexpr auto tolerance = TimeDuration::fromSeconds (0.0001);</a>
 <a name="380"><span class="lineNum">     380 </span>            : </a>
-<a name="381"><span class="lineNum">     381 </span><span class="lineNoCov">          0 :                 auto idx = curve.indexBefore (sectionTime.getEnd() + tolerance);</span></a>
-<a name="382"><span class="lineNum">     382 </span><span class="lineNoCov">          0 :                 auto endCurve = (idx == -1) ? 0.0f : curve.getPointCurve(idx);</span></a>
+<a name="381"><span class="lineNum">     381 </span><span class="lineNoCov">          0 :                 auto startValue = curve.getValueAt (sectionTime.getStart() - tolerance);</span></a>
+<a name="382"><span class="lineNum">     382 </span><span class="lineNoCov">          0 :                 auto endValue   = curve.getValueAt (sectionTime.getEnd()   + tolerance);</span></a>
 <a name="383"><span class="lineNum">     383 </span>            : </a>
-<a name="384"><span class="lineNum">     384 </span><span class="lineNoCov">          0 :                 curve.removePointsInRegion (sectionTime.expanded (tolerance));</span></a>
-<a name="385"><span class="lineNum">     385 </span>            : </a>
-<a name="386"><span class="lineNum">     386 </span><span class="lineNoCov">          0 :                 if (std::abs (startValue - endValue) &lt; 0.0001f)</span></a>
-<a name="387"><span class="lineNum">     387 </span>            :                 {</a>
-<a name="388"><span class="lineNum">     388 </span><span class="lineNoCov">          0 :                     curve.addPoint (sectionTime.getStart(), startValue, 0.0f);</span></a>
-<a name="389"><span class="lineNum">     389 </span><span class="lineNoCov">          0 :                     curve.addPoint (sectionTime.getEnd(), endValue, endCurve);</span></a>
-<a name="390"><span class="lineNum">     390 </span>            :                 }</a>
-<a name="391"><span class="lineNum">     391 </span><span class="lineNoCov">          0 :                 else if (startValue &gt; endValue)</span></a>
-<a name="392"><span class="lineNum">     392 </span>            :                 {</a>
-<a name="393"><span class="lineNum">     393 </span><span class="lineNoCov">          0 :                     curve.addPoint (sectionTime.getStart(), startValue, 0.0f);</span></a>
-<a name="394"><span class="lineNum">     394 </span><span class="lineNoCov">          0 :                     curve.addPoint (sectionTime.getStart(), endValue, 0.0f);</span></a>
-<a name="395"><span class="lineNum">     395 </span><span class="lineNoCov">          0 :                     curve.addPoint (sectionTime.getEnd(), endValue, endCurve);</span></a>
-<a name="396"><span class="lineNum">     396 </span>            :                 }</a>
-<a name="397"><span class="lineNum">     397 </span>            :                 else</a>
-<a name="398"><span class="lineNum">     398 </span>            :                 {</a>
-<a name="399"><span class="lineNum">     399 </span><span class="lineNoCov">          0 :                     curve.addPoint (sectionTime.getStart(), startValue, 0.0f);</span></a>
-<a name="400"><span class="lineNum">     400 </span><span class="lineNoCov">          0 :                     curve.addPoint (sectionTime.getEnd(), startValue, 0.0f);</span></a>
-<a name="401"><span class="lineNum">     401 </span><span class="lineNoCov">          0 :                     curve.addPoint (sectionTime.getEnd(), endValue, endCurve);</span></a>
-<a name="402"><span class="lineNum">     402 </span>            :                 }</a>
-<a name="403"><span class="lineNum">     403 </span>            : </a>
-<a name="404"><span class="lineNum">     404 </span><span class="lineNoCov">          0 :                 curve.removeRedundantPoints (sectionTime.expanded (tolerance));</span></a>
-<a name="405"><span class="lineNum">     405 </span>            :             }</a>
-<a name="406"><span class="lineNum">     406 </span>            :         }</a>
-<a name="407"><span class="lineNum">     407 </span>            :     }</a>
-<a name="408"><span class="lineNum">     408 </span>            : </a>
-<a name="409"><span class="lineNum">     409 </span>            :     // recreate the curves</a>
-<a name="410"><span class="lineNum">     410 </span><span class="lineNoCov">          0 :     for (auto&amp; section : sections)</span></a>
-<a name="411"><span class="lineNum">     411 </span>            :     {</a>
-<a name="412"><span class="lineNum">     412 </span><span class="lineNoCov">          0 :         for (auto&amp; activeParam : section.activeParameters)</span></a>
-<a name="413"><span class="lineNum">     413 </span>            :         {</a>
-<a name="414"><span class="lineNum">     414 </span><span class="lineNoCov">          0 :             auto sectionTime = section.position;</span></a>
-<a name="415"><span class="lineNum">     415 </span>            : </a>
-<a name="416"><span class="lineNum">     416 </span><span class="lineNoCov">          0 :             if (auto dstCurve = (section.src == section.dst) ? &amp;activeParam.param-&gt;getCurve()</span></a>
-<a name="417"><span class="lineNum">     417 </span><span class="lineNoCov">          0 :                                                              : getDestCurve (*section.dst, activeParam.param))</span></a>
-<a name="418"><span class="lineNum">     418 </span>            :             {</a>
-<a name="419"><span class="lineNum">     419 </span>            :                 constexpr auto errorMargin = TimeDuration::fromSeconds (0.0001);</a>
-<a name="420"><span class="lineNum">     420 </span>            : </a>
-<a name="421"><span class="lineNum">     421 </span>            :                 auto start    = sectionTime.getStart();</a>
-<a name="422"><span class="lineNum">     422 </span>            :                 auto end      = sectionTime.getEnd();</a>
-<a name="423"><span class="lineNum">     423 </span>            :                 auto newStart = start + offset;</a>
-<a name="424"><span class="lineNum">     424 </span>            :                 auto newEnd   = end   + offset;</a>
-<a name="425"><span class="lineNum">     425 </span>            : </a>
-<a name="426"><span class="lineNum">     426 </span><span class="lineNoCov">          0 :                 auto&amp; srcCurve = activeParam.curve;</span></a>
-<a name="427"><span class="lineNum">     427 </span>            : </a>
-<a name="428"><span class="lineNum">     428 </span><span class="lineNoCov">          0 :                 auto idx1 = srcCurve.indexBefore (newEnd + errorMargin);</span></a>
-<a name="429"><span class="lineNum">     429 </span><span class="lineNoCov">          0 :                 auto endCurve = idx1 &lt; 0 ? 0 : srcCurve.getPointCurve (idx1);</span></a>
+<a name="384"><span class="lineNum">     384 </span><span class="lineNoCov">          0 :                 auto idx = curve.indexBefore (sectionTime.getEnd() + tolerance);</span></a>
+<a name="385"><span class="lineNum">     385 </span><span class="lineNoCov">          0 :                 auto endCurve = (idx == -1) ? 0.0f : curve.getPointCurve(idx);</span></a>
+<a name="386"><span class="lineNum">     386 </span>            : </a>
+<a name="387"><span class="lineNum">     387 </span><span class="lineNoCov">          0 :                 curve.removePointsInRegion (sectionTime.expanded (tolerance));</span></a>
+<a name="388"><span class="lineNum">     388 </span>            : </a>
+<a name="389"><span class="lineNum">     389 </span><span class="lineNoCov">          0 :                 if (std::abs (startValue - endValue) &lt; 0.0001f)</span></a>
+<a name="390"><span class="lineNum">     390 </span>            :                 {</a>
+<a name="391"><span class="lineNum">     391 </span><span class="lineNoCov">          0 :                     curve.addPoint (sectionTime.getStart(), startValue, 0.0f);</span></a>
+<a name="392"><span class="lineNum">     392 </span><span class="lineNoCov">          0 :                     curve.addPoint (sectionTime.getEnd(), endValue, endCurve);</span></a>
+<a name="393"><span class="lineNum">     393 </span>            :                 }</a>
+<a name="394"><span class="lineNum">     394 </span><span class="lineNoCov">          0 :                 else if (startValue &gt; endValue)</span></a>
+<a name="395"><span class="lineNum">     395 </span>            :                 {</a>
+<a name="396"><span class="lineNum">     396 </span><span class="lineNoCov">          0 :                     curve.addPoint (sectionTime.getStart(), startValue, 0.0f);</span></a>
+<a name="397"><span class="lineNum">     397 </span><span class="lineNoCov">          0 :                     curve.addPoint (sectionTime.getStart(), endValue, 0.0f);</span></a>
+<a name="398"><span class="lineNum">     398 </span><span class="lineNoCov">          0 :                     curve.addPoint (sectionTime.getEnd(), endValue, endCurve);</span></a>
+<a name="399"><span class="lineNum">     399 </span>            :                 }</a>
+<a name="400"><span class="lineNum">     400 </span>            :                 else</a>
+<a name="401"><span class="lineNum">     401 </span>            :                 {</a>
+<a name="402"><span class="lineNum">     402 </span><span class="lineNoCov">          0 :                     curve.addPoint (sectionTime.getStart(), startValue, 0.0f);</span></a>
+<a name="403"><span class="lineNum">     403 </span><span class="lineNoCov">          0 :                     curve.addPoint (sectionTime.getEnd(), startValue, 0.0f);</span></a>
+<a name="404"><span class="lineNum">     404 </span><span class="lineNoCov">          0 :                     curve.addPoint (sectionTime.getEnd(), endValue, endCurve);</span></a>
+<a name="405"><span class="lineNum">     405 </span>            :                 }</a>
+<a name="406"><span class="lineNum">     406 </span>            : </a>
+<a name="407"><span class="lineNum">     407 </span><span class="lineNoCov">          0 :                 curve.removeRedundantPoints (sectionTime.expanded (tolerance));</span></a>
+<a name="408"><span class="lineNum">     408 </span>            :             }</a>
+<a name="409"><span class="lineNum">     409 </span>            :         }</a>
+<a name="410"><span class="lineNum">     410 </span>            :     }</a>
+<a name="411"><span class="lineNum">     411 </span>            : </a>
+<a name="412"><span class="lineNum">     412 </span>            :     // recreate the curves</a>
+<a name="413"><span class="lineNum">     413 </span><span class="lineNoCov">          0 :     for (auto&amp; section : sections)</span></a>
+<a name="414"><span class="lineNum">     414 </span>            :     {</a>
+<a name="415"><span class="lineNum">     415 </span><span class="lineNoCov">          0 :         for (auto&amp; activeParam : section.activeParameters)</span></a>
+<a name="416"><span class="lineNum">     416 </span>            :         {</a>
+<a name="417"><span class="lineNum">     417 </span><span class="lineNoCov">          0 :             auto sectionTime = section.position;</span></a>
+<a name="418"><span class="lineNum">     418 </span>            : </a>
+<a name="419"><span class="lineNum">     419 </span><span class="lineNoCov">          0 :             if (auto dstCurve = (section.src == section.dst) ? &amp;activeParam.param-&gt;getCurve()</span></a>
+<a name="420"><span class="lineNum">     420 </span><span class="lineNoCov">          0 :                                                              : getDestCurve (*section.dst, activeParam.param))</span></a>
+<a name="421"><span class="lineNum">     421 </span>            :             {</a>
+<a name="422"><span class="lineNum">     422 </span>            :                 constexpr auto errorMargin = TimeDuration::fromSeconds (0.0001);</a>
+<a name="423"><span class="lineNum">     423 </span>            : </a>
+<a name="424"><span class="lineNum">     424 </span>            :                 auto start    = sectionTime.getStart();</a>
+<a name="425"><span class="lineNum">     425 </span>            :                 auto end      = sectionTime.getEnd();</a>
+<a name="426"><span class="lineNum">     426 </span>            :                 auto newStart = start + offset;</a>
+<a name="427"><span class="lineNum">     427 </span>            :                 auto newEnd   = end   + offset;</a>
+<a name="428"><span class="lineNum">     428 </span>            : </a>
+<a name="429"><span class="lineNum">     429 </span><span class="lineNoCov">          0 :                 auto&amp; srcCurve = activeParam.curve;</span></a>
 <a name="430"><span class="lineNum">     430 </span>            : </a>
-<a name="431"><span class="lineNum">     431 </span><span class="lineNoCov">          0 :                 auto idx2 = srcCurve.indexBefore (start - errorMargin);</span></a>
-<a name="432"><span class="lineNum">     432 </span><span class="lineNoCov">          0 :                 auto startCurve = idx2 &lt; 0 ? 0 : srcCurve.getPointCurve (idx2);</span></a>
+<a name="431"><span class="lineNum">     431 </span><span class="lineNoCov">          0 :                 auto idx1 = srcCurve.indexBefore (newEnd + errorMargin);</span></a>
+<a name="432"><span class="lineNum">     432 </span><span class="lineNoCov">          0 :                 auto endCurve = idx1 &lt; 0 ? 0 : srcCurve.getPointCurve (idx1);</span></a>
 <a name="433"><span class="lineNum">     433 </span>            : </a>
-<a name="434"><span class="lineNum">     434 </span><span class="lineNoCov">          0 :                 auto srcStartVal = srcCurve.getValueAt (start - errorMargin);</span></a>
-<a name="435"><span class="lineNum">     435 </span><span class="lineNoCov">          0 :                 auto srcEndVal   = srcCurve.getValueAt (end   + errorMargin);</span></a>
+<a name="434"><span class="lineNum">     434 </span><span class="lineNoCov">          0 :                 auto idx2 = srcCurve.indexBefore (start - errorMargin);</span></a>
+<a name="435"><span class="lineNum">     435 </span><span class="lineNoCov">          0 :                 auto startCurve = idx2 &lt; 0 ? 0 : srcCurve.getPointCurve (idx2);</span></a>
 <a name="436"><span class="lineNum">     436 </span>            : </a>
-<a name="437"><span class="lineNum">     437 </span><span class="lineNoCov">          0 :                 auto dstStartVal = dstCurve-&gt;getValueAt (newStart - errorMargin);</span></a>
-<a name="438"><span class="lineNum">     438 </span><span class="lineNoCov">          0 :                 auto dstEndVal   = dstCurve-&gt;getValueAt (newEnd   + errorMargin);</span></a>
+<a name="437"><span class="lineNum">     437 </span><span class="lineNoCov">          0 :                 auto srcStartVal = srcCurve.getValueAt (start - errorMargin);</span></a>
+<a name="438"><span class="lineNum">     438 </span><span class="lineNoCov">          0 :                 auto srcEndVal   = srcCurve.getValueAt (end   + errorMargin);</span></a>
 <a name="439"><span class="lineNum">     439 </span>            : </a>
-<a name="440"><span class="lineNum">     440 </span>            :                 TimeRange totalRegionWithMargin  (newStart - errorMargin, newEnd   + errorMargin);</a>
-<a name="441"><span class="lineNum">     441 </span>            :                 TimeRange startWithMargin        (newStart - errorMargin, newStart + errorMargin);</a>
-<a name="442"><span class="lineNum">     442 </span>            :                 TimeRange endWithMargin          (newEnd   - errorMargin, newEnd   + errorMargin);</a>
-<a name="443"><span class="lineNum">     443 </span>            : </a>
-<a name="444"><span class="lineNum">     444 </span><span class="lineNoCov">          0 :                 juce::Array&lt;AutomationCurve::AutomationPoint&gt; origPoints;</span></a>
-<a name="445"><span class="lineNum">     445 </span>            : </a>
-<a name="446"><span class="lineNum">     446 </span><span class="lineNoCov">          0 :                 for (int i = 0; i &lt; srcCurve.getNumPoints(); ++i)</span></a>
-<a name="447"><span class="lineNum">     447 </span>            :                 {</a>
-<a name="448"><span class="lineNum">     448 </span><span class="lineNoCov">          0 :                     auto pt = srcCurve.getPoint (i);</span></a>
-<a name="449"><span class="lineNum">     449 </span>            : </a>
-<a name="450"><span class="lineNum">     450 </span><span class="lineNoCov">          0 :                     if (pt.time &gt;= start - errorMargin &amp;&amp; pt.time &lt;= sectionTime.getEnd() + errorMargin)</span></a>
-<a name="451"><span class="lineNum">     451 </span>            :                         origPoints.add (pt);</a>
-<a name="452"><span class="lineNum">     452 </span>            :                 }</a>
-<a name="453"><span class="lineNum">     453 </span>            : </a>
-<a name="454"><span class="lineNum">     454 </span><span class="lineNoCov">          0 :                 dstCurve-&gt;removePointsInRegion (totalRegionWithMargin);</span></a>
-<a name="455"><span class="lineNum">     455 </span>            : </a>
-<a name="456"><span class="lineNum">     456 </span><span class="lineNoCov">          0 :                 for (const auto&amp; pt : origPoints)</span></a>
-<a name="457"><span class="lineNum">     457 </span><span class="lineNoCov">          0 :                     dstCurve-&gt;addPoint (pt.time + offset, pt.value, pt.curve);</span></a>
+<a name="440"><span class="lineNum">     440 </span><span class="lineNoCov">          0 :                 auto dstStartVal = dstCurve-&gt;getValueAt (newStart - errorMargin);</span></a>
+<a name="441"><span class="lineNum">     441 </span><span class="lineNoCov">          0 :                 auto dstEndVal   = dstCurve-&gt;getValueAt (newEnd   + errorMargin);</span></a>
+<a name="442"><span class="lineNum">     442 </span>            : </a>
+<a name="443"><span class="lineNum">     443 </span>            :                 TimeRange totalRegionWithMargin  (newStart - errorMargin, newEnd   + errorMargin);</a>
+<a name="444"><span class="lineNum">     444 </span>            :                 TimeRange startWithMargin        (newStart - errorMargin, newStart + errorMargin);</a>
+<a name="445"><span class="lineNum">     445 </span>            :                 TimeRange endWithMargin          (newEnd   - errorMargin, newEnd   + errorMargin);</a>
+<a name="446"><span class="lineNum">     446 </span>            : </a>
+<a name="447"><span class="lineNum">     447 </span><span class="lineNoCov">          0 :                 juce::Array&lt;AutomationCurve::AutomationPoint&gt; origPoints;</span></a>
+<a name="448"><span class="lineNum">     448 </span>            : </a>
+<a name="449"><span class="lineNum">     449 </span><span class="lineNoCov">          0 :                 for (int i = 0; i &lt; srcCurve.getNumPoints(); ++i)</span></a>
+<a name="450"><span class="lineNum">     450 </span>            :                 {</a>
+<a name="451"><span class="lineNum">     451 </span><span class="lineNoCov">          0 :                     auto pt = srcCurve.getPoint (i);</span></a>
+<a name="452"><span class="lineNum">     452 </span>            : </a>
+<a name="453"><span class="lineNum">     453 </span><span class="lineNoCov">          0 :                     if (pt.time &gt;= start - errorMargin &amp;&amp; pt.time &lt;= sectionTime.getEnd() + errorMargin)</span></a>
+<a name="454"><span class="lineNum">     454 </span>            :                         origPoints.add (pt);</a>
+<a name="455"><span class="lineNum">     455 </span>            :                 }</a>
+<a name="456"><span class="lineNum">     456 </span>            : </a>
+<a name="457"><span class="lineNum">     457 </span><span class="lineNoCov">          0 :                 dstCurve-&gt;removePointsInRegion (totalRegionWithMargin);</span></a>
 <a name="458"><span class="lineNum">     458 </span>            : </a>
-<a name="459"><span class="lineNum">     459 </span><span class="lineNoCov">          0 :                 auto startPoints = dstCurve-&gt;getPointsInRegion (startWithMargin);</span></a>
-<a name="460"><span class="lineNum">     460 </span><span class="lineNoCov">          0 :                 auto endPoints   = dstCurve-&gt;getPointsInRegion (endWithMargin);</span></a>
+<a name="459"><span class="lineNum">     459 </span><span class="lineNoCov">          0 :                 for (const auto&amp; pt : origPoints)</span></a>
+<a name="460"><span class="lineNum">     460 </span><span class="lineNoCov">          0 :                     dstCurve-&gt;addPoint (pt.time + offset, pt.value, pt.curve);</span></a>
 <a name="461"><span class="lineNum">     461 </span>            : </a>
-<a name="462"><span class="lineNum">     462 </span><span class="lineNoCov">          0 :                 dstCurve-&gt;removePointsInRegion (startWithMargin);</span></a>
-<a name="463"><span class="lineNum">     463 </span><span class="lineNoCov">          0 :                 dstCurve-&gt;removePointsInRegion (endWithMargin);</span></a>
+<a name="462"><span class="lineNum">     462 </span><span class="lineNoCov">          0 :                 auto startPoints = dstCurve-&gt;getPointsInRegion (startWithMargin);</span></a>
+<a name="463"><span class="lineNum">     463 </span><span class="lineNoCov">          0 :                 auto endPoints   = dstCurve-&gt;getPointsInRegion (endWithMargin);</span></a>
 <a name="464"><span class="lineNum">     464 </span>            : </a>
-<a name="465"><span class="lineNum">     465 </span><span class="lineNoCov">          0 :                 dstCurve-&gt;addPoint (newStart, dstStartVal, startCurve);</span></a>
-<a name="466"><span class="lineNum">     466 </span><span class="lineNoCov">          0 :                 dstCurve-&gt;addPoint (newStart, srcStartVal, startCurve);</span></a>
+<a name="465"><span class="lineNum">     465 </span><span class="lineNoCov">          0 :                 dstCurve-&gt;removePointsInRegion (startWithMargin);</span></a>
+<a name="466"><span class="lineNum">     466 </span><span class="lineNoCov">          0 :                 dstCurve-&gt;removePointsInRegion (endWithMargin);</span></a>
 <a name="467"><span class="lineNum">     467 </span>            : </a>
-<a name="468"><span class="lineNum">     468 </span><span class="lineNoCov">          0 :                 for (auto&amp; point : startPoints)</span></a>
-<a name="469"><span class="lineNum">     469 </span><span class="lineNoCov">          0 :                     dstCurve-&gt;addPoint (newStart, point.value, point.curve);</span></a>
+<a name="468"><span class="lineNum">     468 </span><span class="lineNoCov">          0 :                 dstCurve-&gt;addPoint (newStart, dstStartVal, startCurve);</span></a>
+<a name="469"><span class="lineNum">     469 </span><span class="lineNoCov">          0 :                 dstCurve-&gt;addPoint (newStart, srcStartVal, startCurve);</span></a>
 <a name="470"><span class="lineNum">     470 </span>            : </a>
-<a name="471"><span class="lineNum">     471 </span><span class="lineNoCov">          0 :                 for (auto&amp; point : endPoints)</span></a>
-<a name="472"><span class="lineNum">     472 </span><span class="lineNoCov">          0 :                     dstCurve-&gt;addPoint (newEnd, point.value, point.curve);</span></a>
+<a name="471"><span class="lineNum">     471 </span><span class="lineNoCov">          0 :                 for (auto&amp; point : startPoints)</span></a>
+<a name="472"><span class="lineNum">     472 </span><span class="lineNoCov">          0 :                     dstCurve-&gt;addPoint (newStart, point.value, point.curve);</span></a>
 <a name="473"><span class="lineNum">     473 </span>            : </a>
-<a name="474"><span class="lineNum">     474 </span><span class="lineNoCov">          0 :                 dstCurve-&gt;addPoint (newEnd, srcEndVal, endCurve);</span></a>
-<a name="475"><span class="lineNum">     475 </span><span class="lineNoCov">          0 :                 dstCurve-&gt;addPoint (newEnd, dstEndVal, endCurve);</span></a>
+<a name="474"><span class="lineNum">     474 </span><span class="lineNoCov">          0 :                 for (auto&amp; point : endPoints)</span></a>
+<a name="475"><span class="lineNum">     475 </span><span class="lineNoCov">          0 :                     dstCurve-&gt;addPoint (newEnd, point.value, point.curve);</span></a>
 <a name="476"><span class="lineNum">     476 </span>            : </a>
-<a name="477"><span class="lineNum">     477 </span><span class="lineNoCov">          0 :                 dstCurve-&gt;removeRedundantPoints (totalRegionWithMargin);</span></a>
-<a name="478"><span class="lineNum">     478 </span>            :             }</a>
-<a name="479"><span class="lineNum">     479 </span>            :         }</a>
-<a name="480"><span class="lineNum">     480 </span>            :     }</a>
-<a name="481"><span class="lineNum">     481 </span>            : </a>
-<a name="482"><span class="lineNum">     482 </span>            :     // activate the automation curves on the new tracks</a>
-<a name="483"><span class="lineNum">     483 </span><span class="lineNoCov">          0 :     juce::Array&lt;Track*&gt; src, dst;</span></a>
+<a name="477"><span class="lineNum">     477 </span><span class="lineNoCov">          0 :                 dstCurve-&gt;addPoint (newEnd, srcEndVal, endCurve);</span></a>
+<a name="478"><span class="lineNum">     478 </span><span class="lineNoCov">          0 :                 dstCurve-&gt;addPoint (newEnd, dstEndVal, endCurve);</span></a>
+<a name="479"><span class="lineNum">     479 </span>            : </a>
+<a name="480"><span class="lineNum">     480 </span><span class="lineNoCov">          0 :                 dstCurve-&gt;removeRedundantPoints (totalRegionWithMargin);</span></a>
+<a name="481"><span class="lineNum">     481 </span>            :             }</a>
+<a name="482"><span class="lineNum">     482 </span>            :         }</a>
+<a name="483"><span class="lineNum">     483 </span>            :     }</a>
 <a name="484"><span class="lineNum">     484 </span>            : </a>
-<a name="485"><span class="lineNum">     485 </span><span class="lineNoCov">          0 :     for (auto&amp; section : sections)</span></a>
-<a name="486"><span class="lineNum">     486 </span>            :     {</a>
-<a name="487"><span class="lineNum">     487 </span><span class="lineNoCov">          0 :         if (section.src != section.dst)</span></a>
-<a name="488"><span class="lineNum">     488 </span>            :         {</a>
-<a name="489"><span class="lineNum">     489 </span><span class="lineNoCov">          0 :             if (! src.contains (section.src.get()))</span></a>
-<a name="490"><span class="lineNum">     490 </span>            :             {</a>
-<a name="491"><span class="lineNum">     491 </span><span class="lineNoCov">          0 :                 src.add (section.src.get());</span></a>
-<a name="492"><span class="lineNum">     492 </span><span class="lineNoCov">          0 :                 dst.add (section.dst.get());</span></a>
-<a name="493"><span class="lineNum">     493 </span>            :             }</a>
-<a name="494"><span class="lineNum">     494 </span>            :         }</a>
-<a name="495"><span class="lineNum">     495 </span>            :     }</a>
-<a name="496"><span class="lineNum">     496 </span>            : </a>
-<a name="497"><span class="lineNum">     497 </span><span class="lineNoCov">          0 :     for (int i = 0; i &lt; src.size(); ++i)</span></a>
-<a name="498"><span class="lineNum">     498 </span>            :     {</a>
-<a name="499"><span class="lineNum">     499 </span><span class="lineNoCov">          0 :         if (auto ap = src.getUnchecked (i)-&gt;getCurrentlyShownAutoParam())</span></a>
-<a name="500"><span class="lineNum">     500 </span>            :         {</a>
-<a name="501"><span class="lineNum">     501 </span><span class="lineNoCov">          0 :             for (auto p : dst.getUnchecked (i)-&gt;getAllAutomatableParams())</span></a>
-<a name="502"><span class="lineNum">     502 </span>            :             {</a>
-<a name="503"><span class="lineNum">     503 </span><span class="lineNoCov">          0 :                 if (p-&gt;getPluginAndParamName() == ap-&gt;getPluginAndParamName())</span></a>
-<a name="504"><span class="lineNum">     504 </span>            :                 {</a>
-<a name="505"><span class="lineNum">     505 </span><span class="lineNoCov">          0 :                     dst.getUnchecked (i)-&gt;setCurrentlyShownAutoParam (p);</span></a>
-<a name="506"><span class="lineNum">     506 </span><span class="lineNoCov">          0 :                     break;</span></a>
-<a name="507"><span class="lineNum">     507 </span>            :                 }</a>
-<a name="508"><span class="lineNum">     508 </span>            :             }</a>
-<a name="509"><span class="lineNum">     509 </span>            :         }</a>
-<a name="510"><span class="lineNum">     510 </span>            :     }</a>
-<a name="511"><span class="lineNum">     511 </span>            : }</a>
-<a name="512"><span class="lineNum">     512 </span>            : </a>
-<a name="513"><span class="lineNum">     513 </span>            : }} // namespace tracktion { inline namespace engine</a>
+<a name="485"><span class="lineNum">     485 </span>            :     // activate the automation curves on the new tracks</a>
+<a name="486"><span class="lineNum">     486 </span><span class="lineNoCov">          0 :     juce::Array&lt;Track*&gt; src, dst;</span></a>
+<a name="487"><span class="lineNum">     487 </span>            : </a>
+<a name="488"><span class="lineNum">     488 </span><span class="lineNoCov">          0 :     for (auto&amp; section : sections)</span></a>
+<a name="489"><span class="lineNum">     489 </span>            :     {</a>
+<a name="490"><span class="lineNum">     490 </span><span class="lineNoCov">          0 :         if (section.src != section.dst)</span></a>
+<a name="491"><span class="lineNum">     491 </span>            :         {</a>
+<a name="492"><span class="lineNum">     492 </span><span class="lineNoCov">          0 :             if (! src.contains (section.src.get()))</span></a>
+<a name="493"><span class="lineNum">     493 </span>            :             {</a>
+<a name="494"><span class="lineNum">     494 </span><span class="lineNoCov">          0 :                 src.add (section.src.get());</span></a>
+<a name="495"><span class="lineNum">     495 </span><span class="lineNoCov">          0 :                 dst.add (section.dst.get());</span></a>
+<a name="496"><span class="lineNum">     496 </span>            :             }</a>
+<a name="497"><span class="lineNum">     497 </span>            :         }</a>
+<a name="498"><span class="lineNum">     498 </span>            :     }</a>
+<a name="499"><span class="lineNum">     499 </span>            : </a>
+<a name="500"><span class="lineNum">     500 </span><span class="lineNoCov">          0 :     for (int i = 0; i &lt; src.size(); ++i)</span></a>
+<a name="501"><span class="lineNum">     501 </span>            :     {</a>
+<a name="502"><span class="lineNum">     502 </span><span class="lineNoCov">          0 :         if (auto ap = src.getUnchecked (i)-&gt;getCurrentlyShownAutoParam())</span></a>
+<a name="503"><span class="lineNum">     503 </span>            :         {</a>
+<a name="504"><span class="lineNum">     504 </span><span class="lineNoCov">          0 :             for (auto p : dst.getUnchecked (i)-&gt;getAllAutomatableParams())</span></a>
+<a name="505"><span class="lineNum">     505 </span>            :             {</a>
+<a name="506"><span class="lineNum">     506 </span><span class="lineNoCov">          0 :                 if (p-&gt;getPluginAndParamName() == ap-&gt;getPluginAndParamName())</span></a>
+<a name="507"><span class="lineNum">     507 </span>            :                 {</a>
+<a name="508"><span class="lineNum">     508 </span><span class="lineNoCov">          0 :                     dst.getUnchecked (i)-&gt;setCurrentlyShownAutoParam (p);</span></a>
+<a name="509"><span class="lineNum">     509 </span><span class="lineNoCov">          0 :                     break;</span></a>
+<a name="510"><span class="lineNum">     510 </span>            :                 }</a>
+<a name="511"><span class="lineNum">     511 </span>            :             }</a>
+<a name="512"><span class="lineNum">     512 </span>            :         }</a>
+<a name="513"><span class="lineNum">     513 </span>            :     }</a>
+<a name="514"><span class="lineNum">     514 </span>            : }</a>
+<a name="515"><span class="lineNum">     515 </span>            : </a>
+<a name="516"><span class="lineNum">     516 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

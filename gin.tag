@@ -13497,13 +13497,6 @@
       <arglist>(const AutomationCurve &amp;)</arglist>
     </member>
     <member kind="function">
-      <type>AutomationCurve &amp;</type>
-      <name>operator=</name>
-      <anchorfile>classtracktion_1_1engine_1_1AutomationCurve.html</anchorfile>
-      <anchor>a95a6fb6f511b558c3c8203df0b687fa7</anchor>
-      <arglist>(const AutomationCurve &amp;)</arglist>
-    </member>
-    <member kind="function">
       <type></type>
       <name>~AutomationCurve</name>
       <anchorfile>classtracktion_1_1engine_1_1AutomationCurve.html</anchorfile>
