@@ -864,6 +864,22 @@ Clip* ClipTrack::splitClip (Clip& clip, const double time)
         auto newClipState = clip.state.createCopy();
         edit.createNewItemID().writeID (newClipState, nullptr);
 
+        //BEATCONNECT MODIFICATION START
+        //remove uuids
+        std::function<void(juce::ValueTree&)> removeUUID = [&](juce::ValueTree node) -> void
+        {
+            node.removeProperty("uuid", nullptr);
+
+            for (int i = 0; i < node.getNumChildren(); ++i)
+                removeUUID(node.getChild(i));
+        };
+
+        removeUUID(newClipState);
+
+        //remove thumbnail metadata
+        newClipState.removeChild(newClipState.getChildWithName("AudioClipInfoMetaData"), nullptr);
+        //BEATCONNECT MODIFICATION END
+
         if (auto newClip = insertClipWithState (newClipState))
         {
             // special case for waveaudio clips that may have fade in/out
