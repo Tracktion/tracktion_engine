@@ -157,12 +157,11 @@ Clip::Ptr Clip::createClipForState (const juce::ValueTree& v, ClipTrack& targetT
 
     Clip::Ptr c = edit.clipCache.findItem (newClipID);
     jassert (c == nullptr || &c->edit == &edit);
-    jassert (c == nullptr || c->getTrack() == &targetTrack); // If this is hit it means two clips share the same ID!
 
     if (c == nullptr)
     {
         c = createNewClipObject (v, newClipID, targetTrack);
-        jassert (c->getTrack() == &targetTrack);
+        jassert (c->getTrack() == &targetTrack); // If this is hit it means two clips share the same ID!
 
         if (c != nullptr)
         {
