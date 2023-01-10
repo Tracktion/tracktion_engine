@@ -1648,6 +1648,11 @@ bool ExternalPlugin::setBusesLayout (juce::AudioProcessor::BusesLayout layout)
 
         jassert (baseClassNeedsInitialising());
 
+        // We need to release resources before changing the bus layout
+        // prepareToPlay will be called when the above ScopedRenderStatus goes out of scope
+        pluginInstance->releaseResources();
+        isInstancePrepared = false;
+
         if (pluginInstance->setBusesLayout (layout))
         {
             if (! edit.isLoading())
@@ -1675,6 +1680,11 @@ bool ExternalPlugin::setBusLayout (juce::AudioChannelSet set, bool isInput, int 
 
             if (! baseClassNeedsInitialising())
                 srs = std::make_unique<Edit::ScopedRenderStatus> (edit, true);
+
+            // We need to release resources before changing the bus layout
+            // prepareToPlay will be called when the above ScopedRenderStatus goes out of scope
+            pluginInstance->releaseResources();
+            isInstancePrepared = false;
 
             jassert (baseClassNeedsInitialising());
 
