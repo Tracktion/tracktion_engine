@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">4</td>
-            <td class="headerCovTableEntry">840</td>
+            <td class="headerCovTableEntry">844</td>
             <td class="headerCovTableEntryLo">0.5 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-01-10 12:42:07</td>
+            <td class="headerValue">2023-01-10 13:20:55</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
@@ -1710,209 +1710,219 @@
 <a name="1648"><span class="lineNum">    1648 </span>            : </a>
 <a name="1649"><span class="lineNum">    1649 </span>            :         jassert (baseClassNeedsInitialising());</a>
 <a name="1650"><span class="lineNum">    1650 </span>            : </a>
-<a name="1651"><span class="lineNum">    1651 </span><span class="lineNoCov">          0 :         if (pluginInstance-&gt;setBusesLayout (layout))</span></a>
-<a name="1652"><span class="lineNum">    1652 </span>            :         {</a>
-<a name="1653"><span class="lineNum">    1653 </span><span class="lineNoCov">          0 :             if (! edit.isLoading())</span></a>
-<a name="1654"><span class="lineNum">    1654 </span>            :             {</a>
-<a name="1655"><span class="lineNum">    1655 </span><span class="lineNoCov">          0 :                 if (auto r = getOwnerRackType())</span></a>
-<a name="1656"><span class="lineNum">    1656 </span><span class="lineNoCov">          0 :                     r-&gt;checkConnections();</span></a>
-<a name="1657"><span class="lineNum">    1657 </span>            : </a>
-<a name="1658"><span class="lineNum">    1658 </span><span class="lineNoCov">          0 :                 flushBusesLayoutToValueTree();</span></a>
-<a name="1659"><span class="lineNum">    1659 </span>            :             }</a>
-<a name="1660"><span class="lineNum">    1660 </span>            : </a>
-<a name="1661"><span class="lineNum">    1661 </span>            :             return true;</a>
-<a name="1662"><span class="lineNum">    1662 </span>            :         }</a>
-<a name="1663"><span class="lineNum">    1663 </span><span class="lineNoCov">          0 :     }</span></a>
-<a name="1664"><span class="lineNum">    1664 </span>            : </a>
-<a name="1665"><span class="lineNum">    1665 </span>            :     return false;</a>
-<a name="1666"><span class="lineNum">    1666 </span>            : }</a>
-<a name="1667"><span class="lineNum">    1667 </span>            : </a>
-<a name="1668"><span class="lineNum">    1668 </span><span class="lineNoCov">          0 : bool ExternalPlugin::setBusLayout (juce::AudioChannelSet set, bool isInput, int busIndex)</span></a>
-<a name="1669"><span class="lineNum">    1669 </span>            : {</a>
-<a name="1670"><span class="lineNum">    1670 </span><span class="lineNoCov">          0 :     if (pluginInstance != nullptr)</span></a>
-<a name="1671"><span class="lineNum">    1671 </span>            :     {</a>
-<a name="1672"><span class="lineNum">    1672 </span><span class="lineNoCov">          0 :         if (auto bus = pluginInstance-&gt;getBus (isInput, busIndex))</span></a>
-<a name="1673"><span class="lineNum">    1673 </span>            :         {</a>
-<a name="1674"><span class="lineNum">    1674 </span><span class="lineNoCov">          0 :             std::unique_ptr&lt;Edit::ScopedRenderStatus&gt; srs;</span></a>
-<a name="1675"><span class="lineNum">    1675 </span>            : </a>
-<a name="1676"><span class="lineNum">    1676 </span><span class="lineNoCov">          0 :             if (! baseClassNeedsInitialising())</span></a>
-<a name="1677"><span class="lineNum">    1677 </span><span class="lineNoCov">          0 :                 srs = std::make_unique&lt;Edit::ScopedRenderStatus&gt; (edit, true);</span></a>
-<a name="1678"><span class="lineNum">    1678 </span>            : </a>
-<a name="1679"><span class="lineNum">    1679 </span>            :             jassert (baseClassNeedsInitialising());</a>
+<a name="1651"><span class="lineNum">    1651 </span>            :         // We need to release resources before changing the bus layout</a>
+<a name="1652"><span class="lineNum">    1652 </span>            :         // prepareToPlay will be called when the above ScopedRenderStatus goes out of scope</a>
+<a name="1653"><span class="lineNum">    1653 </span><span class="lineNoCov">          0 :         pluginInstance-&gt;releaseResources();</span></a>
+<a name="1654"><span class="lineNum">    1654 </span><span class="lineNoCov">          0 :         isInstancePrepared = false;</span></a>
+<a name="1655"><span class="lineNum">    1655 </span>            : </a>
+<a name="1656"><span class="lineNum">    1656 </span><span class="lineNoCov">          0 :         if (pluginInstance-&gt;setBusesLayout (layout))</span></a>
+<a name="1657"><span class="lineNum">    1657 </span>            :         {</a>
+<a name="1658"><span class="lineNum">    1658 </span><span class="lineNoCov">          0 :             if (! edit.isLoading())</span></a>
+<a name="1659"><span class="lineNum">    1659 </span>            :             {</a>
+<a name="1660"><span class="lineNum">    1660 </span><span class="lineNoCov">          0 :                 if (auto r = getOwnerRackType())</span></a>
+<a name="1661"><span class="lineNum">    1661 </span><span class="lineNoCov">          0 :                     r-&gt;checkConnections();</span></a>
+<a name="1662"><span class="lineNum">    1662 </span>            : </a>
+<a name="1663"><span class="lineNum">    1663 </span><span class="lineNoCov">          0 :                 flushBusesLayoutToValueTree();</span></a>
+<a name="1664"><span class="lineNum">    1664 </span>            :             }</a>
+<a name="1665"><span class="lineNum">    1665 </span>            : </a>
+<a name="1666"><span class="lineNum">    1666 </span>            :             return true;</a>
+<a name="1667"><span class="lineNum">    1667 </span>            :         }</a>
+<a name="1668"><span class="lineNum">    1668 </span><span class="lineNoCov">          0 :     }</span></a>
+<a name="1669"><span class="lineNum">    1669 </span>            : </a>
+<a name="1670"><span class="lineNum">    1670 </span>            :     return false;</a>
+<a name="1671"><span class="lineNum">    1671 </span>            : }</a>
+<a name="1672"><span class="lineNum">    1672 </span>            : </a>
+<a name="1673"><span class="lineNum">    1673 </span><span class="lineNoCov">          0 : bool ExternalPlugin::setBusLayout (juce::AudioChannelSet set, bool isInput, int busIndex)</span></a>
+<a name="1674"><span class="lineNum">    1674 </span>            : {</a>
+<a name="1675"><span class="lineNum">    1675 </span><span class="lineNoCov">          0 :     if (pluginInstance != nullptr)</span></a>
+<a name="1676"><span class="lineNum">    1676 </span>            :     {</a>
+<a name="1677"><span class="lineNum">    1677 </span><span class="lineNoCov">          0 :         if (auto bus = pluginInstance-&gt;getBus (isInput, busIndex))</span></a>
+<a name="1678"><span class="lineNum">    1678 </span>            :         {</a>
+<a name="1679"><span class="lineNum">    1679 </span><span class="lineNoCov">          0 :             std::unique_ptr&lt;Edit::ScopedRenderStatus&gt; srs;</span></a>
 <a name="1680"><span class="lineNum">    1680 </span>            : </a>
-<a name="1681"><span class="lineNum">    1681 </span><span class="lineNoCov">          0 :             if (bus-&gt;setCurrentLayout (set))</span></a>
-<a name="1682"><span class="lineNum">    1682 </span>            :             {</a>
-<a name="1683"><span class="lineNum">    1683 </span><span class="lineNoCov">          0 :                 if (! edit.isLoading())</span></a>
-<a name="1684"><span class="lineNum">    1684 </span>            :                 {</a>
-<a name="1685"><span class="lineNum">    1685 </span><span class="lineNoCov">          0 :                     if (auto r = getOwnerRackType())</span></a>
-<a name="1686"><span class="lineNum">    1686 </span><span class="lineNoCov">          0 :                         r-&gt;checkConnections();</span></a>
-<a name="1687"><span class="lineNum">    1687 </span>            : </a>
-<a name="1688"><span class="lineNum">    1688 </span><span class="lineNoCov">          0 :                     flushBusesLayoutToValueTree();</span></a>
-<a name="1689"><span class="lineNum">    1689 </span>            :                 }</a>
+<a name="1681"><span class="lineNum">    1681 </span><span class="lineNoCov">          0 :             if (! baseClassNeedsInitialising())</span></a>
+<a name="1682"><span class="lineNum">    1682 </span><span class="lineNoCov">          0 :                 srs = std::make_unique&lt;Edit::ScopedRenderStatus&gt; (edit, true);</span></a>
+<a name="1683"><span class="lineNum">    1683 </span>            : </a>
+<a name="1684"><span class="lineNum">    1684 </span>            :             // We need to release resources before changing the bus layout</a>
+<a name="1685"><span class="lineNum">    1685 </span>            :             // prepareToPlay will be called when the above ScopedRenderStatus goes out of scope</a>
+<a name="1686"><span class="lineNum">    1686 </span><span class="lineNoCov">          0 :             pluginInstance-&gt;releaseResources();</span></a>
+<a name="1687"><span class="lineNum">    1687 </span><span class="lineNoCov">          0 :             isInstancePrepared = false;</span></a>
+<a name="1688"><span class="lineNum">    1688 </span>            : </a>
+<a name="1689"><span class="lineNum">    1689 </span>            :             jassert (baseClassNeedsInitialising());</a>
 <a name="1690"><span class="lineNum">    1690 </span>            : </a>
-<a name="1691"><span class="lineNum">    1691 </span>            :                 return true;</a>
-<a name="1692"><span class="lineNum">    1692 </span>            :             }</a>
-<a name="1693"><span class="lineNum">    1693 </span><span class="lineNoCov">          0 :         }</span></a>
-<a name="1694"><span class="lineNum">    1694 </span>            :     }</a>
-<a name="1695"><span class="lineNum">    1695 </span>            : </a>
-<a name="1696"><span class="lineNum">    1696 </span>            :     return false;</a>
-<a name="1697"><span class="lineNum">    1697 </span>            : }</a>
-<a name="1698"><span class="lineNum">    1698 </span>            : </a>
-<a name="1699"><span class="lineNum">    1699 </span>            : //==============================================================================</a>
-<a name="1700"><span class="lineNum">    1700 </span><span class="lineNoCov">          0 : juce::String ExternalPlugin::createPluginInstance (const juce::PluginDescription&amp; description)</span></a>
-<a name="1701"><span class="lineNum">    1701 </span>            : {</a>
-<a name="1702"><span class="lineNum">    1702 </span>            :     jassert (! pluginInstance); // This should have already been deleted!</a>
-<a name="1703"><span class="lineNum">    1703 </span>            : </a>
-<a name="1704"><span class="lineNum">    1704 </span><span class="lineNoCov">          0 :     auto&amp; dm = engine.getDeviceManager();</span></a>
+<a name="1691"><span class="lineNum">    1691 </span><span class="lineNoCov">          0 :             if (bus-&gt;setCurrentLayout (set))</span></a>
+<a name="1692"><span class="lineNum">    1692 </span>            :             {</a>
+<a name="1693"><span class="lineNum">    1693 </span><span class="lineNoCov">          0 :                 if (! edit.isLoading())</span></a>
+<a name="1694"><span class="lineNum">    1694 </span>            :                 {</a>
+<a name="1695"><span class="lineNum">    1695 </span><span class="lineNoCov">          0 :                     if (auto r = getOwnerRackType())</span></a>
+<a name="1696"><span class="lineNum">    1696 </span><span class="lineNoCov">          0 :                         r-&gt;checkConnections();</span></a>
+<a name="1697"><span class="lineNum">    1697 </span>            : </a>
+<a name="1698"><span class="lineNum">    1698 </span><span class="lineNoCov">          0 :                     flushBusesLayoutToValueTree();</span></a>
+<a name="1699"><span class="lineNum">    1699 </span>            :                 }</a>
+<a name="1700"><span class="lineNum">    1700 </span>            : </a>
+<a name="1701"><span class="lineNum">    1701 </span>            :                 return true;</a>
+<a name="1702"><span class="lineNum">    1702 </span>            :             }</a>
+<a name="1703"><span class="lineNum">    1703 </span><span class="lineNoCov">          0 :         }</span></a>
+<a name="1704"><span class="lineNum">    1704 </span>            :     }</a>
 <a name="1705"><span class="lineNum">    1705 </span>            : </a>
-<a name="1706"><span class="lineNum">    1706 </span><span class="lineNoCov">          0 :     juce::String error;</span></a>
-<a name="1707"><span class="lineNum">    1707 </span><span class="lineNoCov">          0 :     pluginInstance = engine.getPluginManager().createPluginInstance (description, dm.getSampleRate(), dm.getBlockSize(), error);</span></a>
+<a name="1706"><span class="lineNum">    1706 </span>            :     return false;</a>
+<a name="1707"><span class="lineNum">    1707 </span>            : }</a>
 <a name="1708"><span class="lineNum">    1708 </span>            : </a>
-<a name="1709"><span class="lineNum">    1709 </span><span class="lineNoCov">          0 :     if (pluginInstance != nullptr)</span></a>
-<a name="1710"><span class="lineNum">    1710 </span>            :     {</a>
-<a name="1711"><span class="lineNum">    1711 </span><span class="lineNoCov">          0 :         pluginInstance-&gt;enableAllBuses();</span></a>
-<a name="1712"><span class="lineNum">    1712 </span><span class="lineNoCov">          0 :         processorChangedManager = std::make_unique&lt;ProcessorChangedManager&gt; (*this);</span></a>
-<a name="1713"><span class="lineNum">    1713 </span>            :     }</a>
-<a name="1714"><span class="lineNum">    1714 </span>            : </a>
-<a name="1715"><span class="lineNum">    1715 </span><span class="lineNoCov">          0 :     return error;</span></a>
-<a name="1716"><span class="lineNum">    1716 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="1717"><span class="lineNum">    1717 </span>            : </a>
-<a name="1718"><span class="lineNum">    1718 </span><span class="lineNoCov">          0 : void ExternalPlugin::deletePluginInstance()</span></a>
-<a name="1719"><span class="lineNum">    1719 </span>            : {</a>
-<a name="1720"><span class="lineNum">    1720 </span>            :     processorChangedManager.reset();</a>
-<a name="1721"><span class="lineNum">    1721 </span><span class="lineNoCov">          0 :     AsyncPluginDeleter::getInstance()-&gt;deletePlugin (pluginInstance.release());</span></a>
-<a name="1722"><span class="lineNum">    1722 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="1723"><span class="lineNum">    1723 </span>            : </a>
-<a name="1724"><span class="lineNum">    1724 </span>            : //==============================================================================</a>
-<a name="1725"><span class="lineNum">    1725 </span><span class="lineNoCov">          0 : void ExternalPlugin::buildParameterTree() const</span></a>
-<a name="1726"><span class="lineNum">    1726 </span>            : {</a>
-<a name="1727"><span class="lineNum">    1727 </span><span class="lineNoCov">          0 :     auto&amp; paramTree = getParameterTree();</span></a>
-<a name="1728"><span class="lineNum">    1728 </span>            : </a>
-<a name="1729"><span class="lineNum">    1729 </span><span class="lineNoCov">          0 :     if (paramTree.rootNode-&gt;subNodes.size() &gt; 0)</span></a>
-<a name="1730"><span class="lineNum">    1730 </span><span class="lineNoCov">          0 :         return;</span></a>
-<a name="1731"><span class="lineNum">    1731 </span>            : </a>
-<a name="1732"><span class="lineNum">    1732 </span><span class="lineNoCov">          0 :     CRASH_TRACER_PLUGIN (getDebugName());</span></a>
-<a name="1733"><span class="lineNum">    1733 </span><span class="lineNoCov">          0 :     paramTree.rootNode-&gt;addSubNode (new AutomatableParameterTree::TreeNode (getAutomatableParameter (0)));</span></a>
-<a name="1734"><span class="lineNum">    1734 </span><span class="lineNoCov">          0 :     paramTree.rootNode-&gt;addSubNode (new AutomatableParameterTree::TreeNode (getAutomatableParameter (1)));</span></a>
-<a name="1735"><span class="lineNum">    1735 </span>            : </a>
-<a name="1736"><span class="lineNum">    1736 </span><span class="lineNoCov">          0 :     juce::SortedSet&lt;int&gt; paramsInTree;</span></a>
-<a name="1737"><span class="lineNum">    1737 </span>            : </a>
-<a name="1738"><span class="lineNum">    1738 </span><span class="lineNoCov">          0 :     if (vstXML)</span></a>
-<a name="1739"><span class="lineNum">    1739 </span>            :     {</a>
-<a name="1740"><span class="lineNum">    1740 </span><span class="lineNoCov">          0 :         for (int i = 0; i &lt; vstXML-&gt;paramTree.size(); ++i)</span></a>
-<a name="1741"><span class="lineNum">    1741 </span>            :         {</a>
-<a name="1742"><span class="lineNum">    1742 </span><span class="lineNoCov">          0 :             if (auto param = dynamic_cast&lt;const VSTXML::Param*&gt; (vstXML-&gt;paramTree[i]))</span></a>
-<a name="1743"><span class="lineNum">    1743 </span>            :             {</a>
-<a name="1744"><span class="lineNum">    1744 </span><span class="lineNoCov">          0 :                 if (auto externalParameter = autoParamForParamNumbers[param-&gt;paramID])</span></a>
-<a name="1745"><span class="lineNum">    1745 </span>            :                 {</a>
-<a name="1746"><span class="lineNum">    1746 </span><span class="lineNoCov">          0 :                     paramTree.rootNode-&gt;addSubNode (new AutomatableParameterTree::TreeNode (externalParameter));</span></a>
-<a name="1747"><span class="lineNum">    1747 </span><span class="lineNoCov">          0 :                     paramsInTree.add (param-&gt;paramID);</span></a>
-<a name="1748"><span class="lineNum">    1748 </span>            :                 }</a>
-<a name="1749"><span class="lineNum">    1749 </span>            :             }</a>
-<a name="1750"><span class="lineNum">    1750 </span>            : </a>
-<a name="1751"><span class="lineNum">    1751 </span><span class="lineNoCov">          0 :             if (auto group = dynamic_cast&lt;const VSTXML::Group*&gt; (vstXML-&gt;paramTree[i]))</span></a>
-<a name="1752"><span class="lineNum">    1752 </span>            :             {</a>
-<a name="1753"><span class="lineNum">    1753 </span><span class="lineNoCov">          0 :                 auto treeNode = new AutomatableParameterTree::TreeNode (group-&gt;name);</span></a>
-<a name="1754"><span class="lineNum">    1754 </span>            :                 paramTree.rootNode-&gt;addSubNode (treeNode);</a>
-<a name="1755"><span class="lineNum">    1755 </span><span class="lineNoCov">          0 :                 buildParameterTree (group, treeNode, paramsInTree);</span></a>
-<a name="1756"><span class="lineNum">    1756 </span>            :             }</a>
-<a name="1757"><span class="lineNum">    1757 </span>            :         }</a>
-<a name="1758"><span class="lineNum">    1758 </span>            :     }</a>
-<a name="1759"><span class="lineNum">    1759 </span>            : </a>
-<a name="1760"><span class="lineNum">    1760 </span><span class="lineNoCov">          0 :     for (int i = 0; i &lt; getNumAutomatableParameters(); ++i)</span></a>
-<a name="1761"><span class="lineNum">    1761 </span><span class="lineNoCov">          0 :         if (auto vstParam = dynamic_cast&lt;ExternalAutomatableParameter*&gt; (getAutomatableParameter (i).get()))</span></a>
-<a name="1762"><span class="lineNum">    1762 </span><span class="lineNoCov">          0 :             if (! paramsInTree.contains (vstParam-&gt;getParameterIndex()))</span></a>
-<a name="1763"><span class="lineNum">    1763 </span><span class="lineNoCov">          0 :                 paramTree.rootNode-&gt;addSubNode (new AutomatableParameterTree::TreeNode (autoParamForParamNumbers [vstParam-&gt;getParameterIndex()]));</span></a>
-<a name="1764"><span class="lineNum">    1764 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="1765"><span class="lineNum">    1765 </span>            : </a>
-<a name="1766"><span class="lineNum">    1766 </span><span class="lineNoCov">          0 : void ExternalPlugin::buildParameterTree (const VSTXML::Group* group,</span></a>
-<a name="1767"><span class="lineNum">    1767 </span>            :                                          AutomatableParameterTree::TreeNode* treeNode,</a>
-<a name="1768"><span class="lineNum">    1768 </span>            :                                          juce::SortedSet&lt;int&gt;&amp; paramsInTree) const</a>
-<a name="1769"><span class="lineNum">    1769 </span>            : {</a>
-<a name="1770"><span class="lineNum">    1770 </span><span class="lineNoCov">          0 :     for (int i = 0; i &lt; group-&gt;paramTree.size(); ++i)</span></a>
-<a name="1771"><span class="lineNum">    1771 </span>            :     {</a>
-<a name="1772"><span class="lineNum">    1772 </span><span class="lineNoCov">          0 :         if (auto param = dynamic_cast&lt;const VSTXML::Param*&gt; (group-&gt;paramTree[i]))</span></a>
-<a name="1773"><span class="lineNum">    1773 </span>            :         {</a>
-<a name="1774"><span class="lineNum">    1774 </span><span class="lineNoCov">          0 :             if (auto externalParameter = autoParamForParamNumbers[param-&gt;paramID])</span></a>
-<a name="1775"><span class="lineNum">    1775 </span>            :             {</a>
-<a name="1776"><span class="lineNum">    1776 </span><span class="lineNoCov">          0 :                 treeNode-&gt;addSubNode (new AutomatableParameterTree::TreeNode (externalParameter));</span></a>
-<a name="1777"><span class="lineNum">    1777 </span><span class="lineNoCov">          0 :                 paramsInTree.add (param-&gt;paramID);</span></a>
-<a name="1778"><span class="lineNum">    1778 </span>            :             }</a>
-<a name="1779"><span class="lineNum">    1779 </span>            :         }</a>
-<a name="1780"><span class="lineNum">    1780 </span>            : </a>
-<a name="1781"><span class="lineNum">    1781 </span><span class="lineNoCov">          0 :         if (auto subGroup = dynamic_cast&lt;const VSTXML::Group*&gt; (group-&gt;paramTree[i]))</span></a>
-<a name="1782"><span class="lineNum">    1782 </span>            :         {</a>
-<a name="1783"><span class="lineNum">    1783 </span><span class="lineNoCov">          0 :             auto subTreeNode = new AutomatableParameterTree::TreeNode (subGroup-&gt;name);</span></a>
-<a name="1784"><span class="lineNum">    1784 </span>            :             treeNode-&gt;addSubNode (subTreeNode);</a>
-<a name="1785"><span class="lineNum">    1785 </span><span class="lineNoCov">          0 :             buildParameterTree (subGroup, subTreeNode, paramsInTree);</span></a>
-<a name="1786"><span class="lineNum">    1786 </span>            :         }</a>
-<a name="1787"><span class="lineNum">    1787 </span>            :     }</a>
-<a name="1788"><span class="lineNum">    1788 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="1789"><span class="lineNum">    1789 </span>            : </a>
-<a name="1790"><span class="lineNum">    1790 </span><span class="lineNoCov">          0 : void ExternalPlugin::deleteFromParent()</span></a>
-<a name="1791"><span class="lineNum">    1791 </span>            : {</a>
-<a name="1792"><span class="lineNum">    1792 </span><span class="lineNoCov">          0 :     CRASH_TRACER_PLUGIN (getDebugName());</span></a>
-<a name="1793"><span class="lineNum">    1793 </span><span class="lineNoCov">          0 :     Plugin::deleteFromParent();</span></a>
-<a name="1794"><span class="lineNum">    1794 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="1795"><span class="lineNum">    1795 </span>            : </a>
-<a name="1796"><span class="lineNum">    1796 </span><span class="lineNoCov">          0 : juce::AudioPluginInstance* ExternalPlugin::getAudioPluginInstance() const</span></a>
-<a name="1797"><span class="lineNum">    1797 </span>            : {</a>
-<a name="1798"><span class="lineNum">    1798 </span><span class="lineNoCov">          0 :     return pluginInstance.get();</span></a>
-<a name="1799"><span class="lineNum">    1799 </span>            : }</a>
-<a name="1800"><span class="lineNum">    1800 </span>            : </a>
-<a name="1801"><span class="lineNum">    1801 </span><span class="lineNoCov">          0 : void ExternalPlugin::valueTreePropertyChanged (juce::ValueTree&amp; v, const juce::Identifier&amp; id)</span></a>
-<a name="1802"><span class="lineNum">    1802 </span>            : {</a>
-<a name="1803"><span class="lineNum">    1803 </span><span class="lineNoCov">          0 :     if (v == state &amp;&amp; id == IDs::layout)</span></a>
-<a name="1804"><span class="lineNum">    1804 </span>            :     {</a>
-<a name="1805"><span class="lineNum">    1805 </span><span class="lineNoCov">          0 :         if (isFlushingLayoutToState)</span></a>
-<a name="1806"><span class="lineNum">    1806 </span>            :             return;</a>
-<a name="1807"><span class="lineNum">    1807 </span>            : </a>
-<a name="1808"><span class="lineNum">    1808 </span><span class="lineNoCov">          0 :         if (auto ap = getAudioPluginInstance())</span></a>
-<a name="1809"><span class="lineNum">    1809 </span>            :         {</a>
-<a name="1810"><span class="lineNum">    1810 </span><span class="lineNoCov">          0 :             auto stateLayout = readBusesLayout (v.getProperty(IDs::layout), *ap);</span></a>
-<a name="1811"><span class="lineNum">    1811 </span>            : </a>
-<a name="1812"><span class="lineNum">    1812 </span><span class="lineNoCov">          0 :             if (stateLayout != ap-&gt;getBusesLayout())</span></a>
-<a name="1813"><span class="lineNum">    1813 </span><span class="lineNoCov">          0 :                 setBusesLayout (stateLayout);</span></a>
-<a name="1814"><span class="lineNum">    1814 </span><span class="lineNoCov">          0 :         }</span></a>
-<a name="1815"><span class="lineNum">    1815 </span>            :     }</a>
-<a name="1816"><span class="lineNum">    1816 </span>            :     else</a>
-<a name="1817"><span class="lineNum">    1817 </span>            :     {</a>
-<a name="1818"><span class="lineNum">    1818 </span><span class="lineNoCov">          0 :         Plugin::valueTreePropertyChanged (v, id);</span></a>
-<a name="1819"><span class="lineNum">    1819 </span>            :     }</a>
-<a name="1820"><span class="lineNum">    1820 </span>            : }</a>
+<a name="1709"><span class="lineNum">    1709 </span>            : //==============================================================================</a>
+<a name="1710"><span class="lineNum">    1710 </span><span class="lineNoCov">          0 : juce::String ExternalPlugin::createPluginInstance (const juce::PluginDescription&amp; description)</span></a>
+<a name="1711"><span class="lineNum">    1711 </span>            : {</a>
+<a name="1712"><span class="lineNum">    1712 </span>            :     jassert (! pluginInstance); // This should have already been deleted!</a>
+<a name="1713"><span class="lineNum">    1713 </span>            : </a>
+<a name="1714"><span class="lineNum">    1714 </span><span class="lineNoCov">          0 :     auto&amp; dm = engine.getDeviceManager();</span></a>
+<a name="1715"><span class="lineNum">    1715 </span>            : </a>
+<a name="1716"><span class="lineNum">    1716 </span><span class="lineNoCov">          0 :     juce::String error;</span></a>
+<a name="1717"><span class="lineNum">    1717 </span><span class="lineNoCov">          0 :     pluginInstance = engine.getPluginManager().createPluginInstance (description, dm.getSampleRate(), dm.getBlockSize(), error);</span></a>
+<a name="1718"><span class="lineNum">    1718 </span>            : </a>
+<a name="1719"><span class="lineNum">    1719 </span><span class="lineNoCov">          0 :     if (pluginInstance != nullptr)</span></a>
+<a name="1720"><span class="lineNum">    1720 </span>            :     {</a>
+<a name="1721"><span class="lineNum">    1721 </span><span class="lineNoCov">          0 :         pluginInstance-&gt;enableAllBuses();</span></a>
+<a name="1722"><span class="lineNum">    1722 </span><span class="lineNoCov">          0 :         processorChangedManager = std::make_unique&lt;ProcessorChangedManager&gt; (*this);</span></a>
+<a name="1723"><span class="lineNum">    1723 </span>            :     }</a>
+<a name="1724"><span class="lineNum">    1724 </span>            : </a>
+<a name="1725"><span class="lineNum">    1725 </span><span class="lineNoCov">          0 :     return error;</span></a>
+<a name="1726"><span class="lineNum">    1726 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1727"><span class="lineNum">    1727 </span>            : </a>
+<a name="1728"><span class="lineNum">    1728 </span><span class="lineNoCov">          0 : void ExternalPlugin::deletePluginInstance()</span></a>
+<a name="1729"><span class="lineNum">    1729 </span>            : {</a>
+<a name="1730"><span class="lineNum">    1730 </span>            :     processorChangedManager.reset();</a>
+<a name="1731"><span class="lineNum">    1731 </span><span class="lineNoCov">          0 :     AsyncPluginDeleter::getInstance()-&gt;deletePlugin (pluginInstance.release());</span></a>
+<a name="1732"><span class="lineNum">    1732 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1733"><span class="lineNum">    1733 </span>            : </a>
+<a name="1734"><span class="lineNum">    1734 </span>            : //==============================================================================</a>
+<a name="1735"><span class="lineNum">    1735 </span><span class="lineNoCov">          0 : void ExternalPlugin::buildParameterTree() const</span></a>
+<a name="1736"><span class="lineNum">    1736 </span>            : {</a>
+<a name="1737"><span class="lineNum">    1737 </span><span class="lineNoCov">          0 :     auto&amp; paramTree = getParameterTree();</span></a>
+<a name="1738"><span class="lineNum">    1738 </span>            : </a>
+<a name="1739"><span class="lineNum">    1739 </span><span class="lineNoCov">          0 :     if (paramTree.rootNode-&gt;subNodes.size() &gt; 0)</span></a>
+<a name="1740"><span class="lineNum">    1740 </span><span class="lineNoCov">          0 :         return;</span></a>
+<a name="1741"><span class="lineNum">    1741 </span>            : </a>
+<a name="1742"><span class="lineNum">    1742 </span><span class="lineNoCov">          0 :     CRASH_TRACER_PLUGIN (getDebugName());</span></a>
+<a name="1743"><span class="lineNum">    1743 </span><span class="lineNoCov">          0 :     paramTree.rootNode-&gt;addSubNode (new AutomatableParameterTree::TreeNode (getAutomatableParameter (0)));</span></a>
+<a name="1744"><span class="lineNum">    1744 </span><span class="lineNoCov">          0 :     paramTree.rootNode-&gt;addSubNode (new AutomatableParameterTree::TreeNode (getAutomatableParameter (1)));</span></a>
+<a name="1745"><span class="lineNum">    1745 </span>            : </a>
+<a name="1746"><span class="lineNum">    1746 </span><span class="lineNoCov">          0 :     juce::SortedSet&lt;int&gt; paramsInTree;</span></a>
+<a name="1747"><span class="lineNum">    1747 </span>            : </a>
+<a name="1748"><span class="lineNum">    1748 </span><span class="lineNoCov">          0 :     if (vstXML)</span></a>
+<a name="1749"><span class="lineNum">    1749 </span>            :     {</a>
+<a name="1750"><span class="lineNum">    1750 </span><span class="lineNoCov">          0 :         for (int i = 0; i &lt; vstXML-&gt;paramTree.size(); ++i)</span></a>
+<a name="1751"><span class="lineNum">    1751 </span>            :         {</a>
+<a name="1752"><span class="lineNum">    1752 </span><span class="lineNoCov">          0 :             if (auto param = dynamic_cast&lt;const VSTXML::Param*&gt; (vstXML-&gt;paramTree[i]))</span></a>
+<a name="1753"><span class="lineNum">    1753 </span>            :             {</a>
+<a name="1754"><span class="lineNum">    1754 </span><span class="lineNoCov">          0 :                 if (auto externalParameter = autoParamForParamNumbers[param-&gt;paramID])</span></a>
+<a name="1755"><span class="lineNum">    1755 </span>            :                 {</a>
+<a name="1756"><span class="lineNum">    1756 </span><span class="lineNoCov">          0 :                     paramTree.rootNode-&gt;addSubNode (new AutomatableParameterTree::TreeNode (externalParameter));</span></a>
+<a name="1757"><span class="lineNum">    1757 </span><span class="lineNoCov">          0 :                     paramsInTree.add (param-&gt;paramID);</span></a>
+<a name="1758"><span class="lineNum">    1758 </span>            :                 }</a>
+<a name="1759"><span class="lineNum">    1759 </span>            :             }</a>
+<a name="1760"><span class="lineNum">    1760 </span>            : </a>
+<a name="1761"><span class="lineNum">    1761 </span><span class="lineNoCov">          0 :             if (auto group = dynamic_cast&lt;const VSTXML::Group*&gt; (vstXML-&gt;paramTree[i]))</span></a>
+<a name="1762"><span class="lineNum">    1762 </span>            :             {</a>
+<a name="1763"><span class="lineNum">    1763 </span><span class="lineNoCov">          0 :                 auto treeNode = new AutomatableParameterTree::TreeNode (group-&gt;name);</span></a>
+<a name="1764"><span class="lineNum">    1764 </span>            :                 paramTree.rootNode-&gt;addSubNode (treeNode);</a>
+<a name="1765"><span class="lineNum">    1765 </span><span class="lineNoCov">          0 :                 buildParameterTree (group, treeNode, paramsInTree);</span></a>
+<a name="1766"><span class="lineNum">    1766 </span>            :             }</a>
+<a name="1767"><span class="lineNum">    1767 </span>            :         }</a>
+<a name="1768"><span class="lineNum">    1768 </span>            :     }</a>
+<a name="1769"><span class="lineNum">    1769 </span>            : </a>
+<a name="1770"><span class="lineNum">    1770 </span><span class="lineNoCov">          0 :     for (int i = 0; i &lt; getNumAutomatableParameters(); ++i)</span></a>
+<a name="1771"><span class="lineNum">    1771 </span><span class="lineNoCov">          0 :         if (auto vstParam = dynamic_cast&lt;ExternalAutomatableParameter*&gt; (getAutomatableParameter (i).get()))</span></a>
+<a name="1772"><span class="lineNum">    1772 </span><span class="lineNoCov">          0 :             if (! paramsInTree.contains (vstParam-&gt;getParameterIndex()))</span></a>
+<a name="1773"><span class="lineNum">    1773 </span><span class="lineNoCov">          0 :                 paramTree.rootNode-&gt;addSubNode (new AutomatableParameterTree::TreeNode (autoParamForParamNumbers [vstParam-&gt;getParameterIndex()]));</span></a>
+<a name="1774"><span class="lineNum">    1774 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1775"><span class="lineNum">    1775 </span>            : </a>
+<a name="1776"><span class="lineNum">    1776 </span><span class="lineNoCov">          0 : void ExternalPlugin::buildParameterTree (const VSTXML::Group* group,</span></a>
+<a name="1777"><span class="lineNum">    1777 </span>            :                                          AutomatableParameterTree::TreeNode* treeNode,</a>
+<a name="1778"><span class="lineNum">    1778 </span>            :                                          juce::SortedSet&lt;int&gt;&amp; paramsInTree) const</a>
+<a name="1779"><span class="lineNum">    1779 </span>            : {</a>
+<a name="1780"><span class="lineNum">    1780 </span><span class="lineNoCov">          0 :     for (int i = 0; i &lt; group-&gt;paramTree.size(); ++i)</span></a>
+<a name="1781"><span class="lineNum">    1781 </span>            :     {</a>
+<a name="1782"><span class="lineNum">    1782 </span><span class="lineNoCov">          0 :         if (auto param = dynamic_cast&lt;const VSTXML::Param*&gt; (group-&gt;paramTree[i]))</span></a>
+<a name="1783"><span class="lineNum">    1783 </span>            :         {</a>
+<a name="1784"><span class="lineNum">    1784 </span><span class="lineNoCov">          0 :             if (auto externalParameter = autoParamForParamNumbers[param-&gt;paramID])</span></a>
+<a name="1785"><span class="lineNum">    1785 </span>            :             {</a>
+<a name="1786"><span class="lineNum">    1786 </span><span class="lineNoCov">          0 :                 treeNode-&gt;addSubNode (new AutomatableParameterTree::TreeNode (externalParameter));</span></a>
+<a name="1787"><span class="lineNum">    1787 </span><span class="lineNoCov">          0 :                 paramsInTree.add (param-&gt;paramID);</span></a>
+<a name="1788"><span class="lineNum">    1788 </span>            :             }</a>
+<a name="1789"><span class="lineNum">    1789 </span>            :         }</a>
+<a name="1790"><span class="lineNum">    1790 </span>            : </a>
+<a name="1791"><span class="lineNum">    1791 </span><span class="lineNoCov">          0 :         if (auto subGroup = dynamic_cast&lt;const VSTXML::Group*&gt; (group-&gt;paramTree[i]))</span></a>
+<a name="1792"><span class="lineNum">    1792 </span>            :         {</a>
+<a name="1793"><span class="lineNum">    1793 </span><span class="lineNoCov">          0 :             auto subTreeNode = new AutomatableParameterTree::TreeNode (subGroup-&gt;name);</span></a>
+<a name="1794"><span class="lineNum">    1794 </span>            :             treeNode-&gt;addSubNode (subTreeNode);</a>
+<a name="1795"><span class="lineNum">    1795 </span><span class="lineNoCov">          0 :             buildParameterTree (subGroup, subTreeNode, paramsInTree);</span></a>
+<a name="1796"><span class="lineNum">    1796 </span>            :         }</a>
+<a name="1797"><span class="lineNum">    1797 </span>            :     }</a>
+<a name="1798"><span class="lineNum">    1798 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1799"><span class="lineNum">    1799 </span>            : </a>
+<a name="1800"><span class="lineNum">    1800 </span><span class="lineNoCov">          0 : void ExternalPlugin::deleteFromParent()</span></a>
+<a name="1801"><span class="lineNum">    1801 </span>            : {</a>
+<a name="1802"><span class="lineNum">    1802 </span><span class="lineNoCov">          0 :     CRASH_TRACER_PLUGIN (getDebugName());</span></a>
+<a name="1803"><span class="lineNum">    1803 </span><span class="lineNoCov">          0 :     Plugin::deleteFromParent();</span></a>
+<a name="1804"><span class="lineNum">    1804 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1805"><span class="lineNum">    1805 </span>            : </a>
+<a name="1806"><span class="lineNum">    1806 </span><span class="lineNoCov">          0 : juce::AudioPluginInstance* ExternalPlugin::getAudioPluginInstance() const</span></a>
+<a name="1807"><span class="lineNum">    1807 </span>            : {</a>
+<a name="1808"><span class="lineNum">    1808 </span><span class="lineNoCov">          0 :     return pluginInstance.get();</span></a>
+<a name="1809"><span class="lineNum">    1809 </span>            : }</a>
+<a name="1810"><span class="lineNum">    1810 </span>            : </a>
+<a name="1811"><span class="lineNum">    1811 </span><span class="lineNoCov">          0 : void ExternalPlugin::valueTreePropertyChanged (juce::ValueTree&amp; v, const juce::Identifier&amp; id)</span></a>
+<a name="1812"><span class="lineNum">    1812 </span>            : {</a>
+<a name="1813"><span class="lineNum">    1813 </span><span class="lineNoCov">          0 :     if (v == state &amp;&amp; id == IDs::layout)</span></a>
+<a name="1814"><span class="lineNum">    1814 </span>            :     {</a>
+<a name="1815"><span class="lineNum">    1815 </span><span class="lineNoCov">          0 :         if (isFlushingLayoutToState)</span></a>
+<a name="1816"><span class="lineNum">    1816 </span>            :             return;</a>
+<a name="1817"><span class="lineNum">    1817 </span>            : </a>
+<a name="1818"><span class="lineNum">    1818 </span><span class="lineNoCov">          0 :         if (auto ap = getAudioPluginInstance())</span></a>
+<a name="1819"><span class="lineNum">    1819 </span>            :         {</a>
+<a name="1820"><span class="lineNum">    1820 </span><span class="lineNoCov">          0 :             auto stateLayout = readBusesLayout (v.getProperty(IDs::layout), *ap);</span></a>
 <a name="1821"><span class="lineNum">    1821 </span>            : </a>
-<a name="1822"><span class="lineNum">    1822 </span><span class="lineNoCov">          0 : juce::Array&lt;Exportable::ReferencedItem&gt; ExternalPlugin::getReferencedItems()</span></a>
-<a name="1823"><span class="lineNum">    1823 </span>            : {</a>
-<a name="1824"><span class="lineNum">    1824 </span><span class="lineNoCov">          0 :     return engine.getEngineBehaviour().getReferencedItems (*this);</span></a>
-<a name="1825"><span class="lineNum">    1825 </span>            : }</a>
-<a name="1826"><span class="lineNum">    1826 </span>            : </a>
-<a name="1827"><span class="lineNum">    1827 </span><span class="lineNoCov">          0 : void ExternalPlugin::reassignReferencedItem (const ReferencedItem&amp; itm, ProjectItemID newID, double newStartTime)</span></a>
-<a name="1828"><span class="lineNum">    1828 </span>            : {</a>
-<a name="1829"><span class="lineNum">    1829 </span><span class="lineNoCov">          0 :     engine.getEngineBehaviour().reassignReferencedItem (*this, itm, newID, newStartTime);</span></a>
-<a name="1830"><span class="lineNum">    1830 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1822"><span class="lineNum">    1822 </span><span class="lineNoCov">          0 :             if (stateLayout != ap-&gt;getBusesLayout())</span></a>
+<a name="1823"><span class="lineNum">    1823 </span><span class="lineNoCov">          0 :                 setBusesLayout (stateLayout);</span></a>
+<a name="1824"><span class="lineNum">    1824 </span><span class="lineNoCov">          0 :         }</span></a>
+<a name="1825"><span class="lineNum">    1825 </span>            :     }</a>
+<a name="1826"><span class="lineNum">    1826 </span>            :     else</a>
+<a name="1827"><span class="lineNum">    1827 </span>            :     {</a>
+<a name="1828"><span class="lineNum">    1828 </span><span class="lineNoCov">          0 :         Plugin::valueTreePropertyChanged (v, id);</span></a>
+<a name="1829"><span class="lineNum">    1829 </span>            :     }</a>
+<a name="1830"><span class="lineNum">    1830 </span>            : }</a>
 <a name="1831"><span class="lineNum">    1831 </span>            : </a>
-<a name="1832"><span class="lineNum">    1832 </span>            : //==============================================================================</a>
-<a name="1833"><span class="lineNum">    1833 </span><span class="lineNoCov">          0 : PluginWetDryAutomatableParam::PluginWetDryAutomatableParam (const juce::String&amp; xmlTag, const juce::String&amp; name, Plugin&amp; owner)</span></a>
-<a name="1834"><span class="lineNum">    1834 </span><span class="lineNoCov">          0 :     : AutomatableParameter (xmlTag, name, owner, { 0.0f, 1.0f })</span></a>
-<a name="1835"><span class="lineNum">    1835 </span>            : {</a>
-<a name="1836"><span class="lineNum">    1836 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="1837"><span class="lineNum">    1837 </span>            : </a>
-<a name="1838"><span class="lineNum">    1838 </span><span class="lineNoCov">          0 : PluginWetDryAutomatableParam::~PluginWetDryAutomatableParam()</span></a>
-<a name="1839"><span class="lineNum">    1839 </span>            : {</a>
-<a name="1840"><span class="lineNum">    1840 </span><span class="lineNoCov">          0 :     notifyListenersOfDeletion();</span></a>
-<a name="1841"><span class="lineNum">    1841 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="1842"><span class="lineNum">    1842 </span>            : </a>
-<a name="1843"><span class="lineNum">    1843 </span><span class="lineNoCov">          0 : juce::String PluginWetDryAutomatableParam::valueToString (float value)</span></a>
-<a name="1844"><span class="lineNum">    1844 </span>            : {</a>
-<a name="1845"><span class="lineNum">    1845 </span><span class="lineNoCov">          0 :     return juce::Decibels::toString (juce::Decibels::gainToDecibels (value), 1);</span></a>
-<a name="1846"><span class="lineNum">    1846 </span>            : }</a>
+<a name="1832"><span class="lineNum">    1832 </span><span class="lineNoCov">          0 : juce::Array&lt;Exportable::ReferencedItem&gt; ExternalPlugin::getReferencedItems()</span></a>
+<a name="1833"><span class="lineNum">    1833 </span>            : {</a>
+<a name="1834"><span class="lineNum">    1834 </span><span class="lineNoCov">          0 :     return engine.getEngineBehaviour().getReferencedItems (*this);</span></a>
+<a name="1835"><span class="lineNum">    1835 </span>            : }</a>
+<a name="1836"><span class="lineNum">    1836 </span>            : </a>
+<a name="1837"><span class="lineNum">    1837 </span><span class="lineNoCov">          0 : void ExternalPlugin::reassignReferencedItem (const ReferencedItem&amp; itm, ProjectItemID newID, double newStartTime)</span></a>
+<a name="1838"><span class="lineNum">    1838 </span>            : {</a>
+<a name="1839"><span class="lineNum">    1839 </span><span class="lineNoCov">          0 :     engine.getEngineBehaviour().reassignReferencedItem (*this, itm, newID, newStartTime);</span></a>
+<a name="1840"><span class="lineNum">    1840 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1841"><span class="lineNum">    1841 </span>            : </a>
+<a name="1842"><span class="lineNum">    1842 </span>            : //==============================================================================</a>
+<a name="1843"><span class="lineNum">    1843 </span><span class="lineNoCov">          0 : PluginWetDryAutomatableParam::PluginWetDryAutomatableParam (const juce::String&amp; xmlTag, const juce::String&amp; name, Plugin&amp; owner)</span></a>
+<a name="1844"><span class="lineNum">    1844 </span><span class="lineNoCov">          0 :     : AutomatableParameter (xmlTag, name, owner, { 0.0f, 1.0f })</span></a>
+<a name="1845"><span class="lineNum">    1845 </span>            : {</a>
+<a name="1846"><span class="lineNum">    1846 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1847"><span class="lineNum">    1847 </span>            : </a>
-<a name="1848"><span class="lineNum">    1848 </span><span class="lineNoCov">          0 : float PluginWetDryAutomatableParam::stringToValue (const juce::String&amp; s)</span></a>
+<a name="1848"><span class="lineNum">    1848 </span><span class="lineNoCov">          0 : PluginWetDryAutomatableParam::~PluginWetDryAutomatableParam()</span></a>
 <a name="1849"><span class="lineNum">    1849 </span>            : {</a>
-<a name="1850"><span class="lineNum">    1850 </span><span class="lineNoCov">          0 :     return juce::Decibels::decibelsToGain (dbStringToDb (s));</span></a>
-<a name="1851"><span class="lineNum">    1851 </span>            : }</a>
+<a name="1850"><span class="lineNum">    1850 </span><span class="lineNoCov">          0 :     notifyListenersOfDeletion();</span></a>
+<a name="1851"><span class="lineNum">    1851 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1852"><span class="lineNum">    1852 </span>            : </a>
-<a name="1853"><span class="lineNum">    1853 </span>            : }} // namespace tracktion { inline namespace engine</a>
+<a name="1853"><span class="lineNum">    1853 </span><span class="lineNoCov">          0 : juce::String PluginWetDryAutomatableParam::valueToString (float value)</span></a>
+<a name="1854"><span class="lineNum">    1854 </span>            : {</a>
+<a name="1855"><span class="lineNum">    1855 </span><span class="lineNoCov">          0 :     return juce::Decibels::toString (juce::Decibels::gainToDecibels (value), 1);</span></a>
+<a name="1856"><span class="lineNum">    1856 </span>            : }</a>
+<a name="1857"><span class="lineNum">    1857 </span>            : </a>
+<a name="1858"><span class="lineNum">    1858 </span><span class="lineNoCov">          0 : float PluginWetDryAutomatableParam::stringToValue (const juce::String&amp; s)</span></a>
+<a name="1859"><span class="lineNum">    1859 </span>            : {</a>
+<a name="1860"><span class="lineNum">    1860 </span><span class="lineNoCov">          0 :     return juce::Decibels::decibelsToGain (dbStringToDb (s));</span></a>
+<a name="1861"><span class="lineNum">    1861 </span>            : }</a>
+<a name="1862"><span class="lineNum">    1862 </span>            : </a>
+<a name="1863"><span class="lineNum">    1863 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>
