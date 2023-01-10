@@ -19,7 +19,7 @@
 
   ID:               tracktion_engine
   vendor:           Tracktion Corporation
-  version:          2.0.0
+  version:          2.1.0
   name:             The Tracktion audio engine
   description:      Classes for manipulating and playing Tracktion projects
   website:          http://www.tracktion.com
