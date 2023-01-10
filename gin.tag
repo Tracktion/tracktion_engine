@@ -47546,16 +47546,16 @@
     </member>
     <member kind="variable">
       <type>juce::CachedValue&lt; float &gt;</type>
-      <name>inputLimitStart</name>
+      <name>inputStart</name>
       <anchorfile>structtracktion_1_1engine_1_1AutomatableParameter_1_1ModifierAssignment.html</anchorfile>
-      <anchor>ae2ac683eb0da61249294b81ae4f3fea1</anchor>
+      <anchor>a7d8d055d9b1f0ae2bcbf383a6b29f7de</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
       <type>juce::CachedValue&lt; float &gt;</type>
-      <name>inputLimitEnd</name>
+      <name>inputEnd</name>
       <anchorfile>structtracktion_1_1engine_1_1AutomatableParameter_1_1ModifierAssignment.html</anchorfile>
-      <anchor>a8663b9bd2baf94ed41798686fa6a2e8f</anchor>
+      <anchor>aff60cd4c7be5ff006b47d5bc432c10c2</anchor>
       <arglist></arglist>
     </member>
   </compound>
