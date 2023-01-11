@@ -183,7 +183,7 @@ private:
     const juce::AudioChannelSet channelsToUse, destChannels;
     float pitchChangeSemitones = 0.0;
     double outputSampleRate = 44100.0;
-    bool isFirstBlock = true;
+    bool isFirstBlock = false;
 
     size_t stateHash = 0;
     ResamplerReader* resamplerReader = nullptr;
