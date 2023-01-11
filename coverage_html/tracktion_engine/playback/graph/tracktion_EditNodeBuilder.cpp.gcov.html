@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-01-10 13:20:55</td>
+            <td class="headerValue">2023-01-11 12:29:04</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">37</td>
@@ -204,7 +204,7 @@
 <a name="142"><span class="lineNum">     142 </span>            :     juce::Array&lt;RackInstance*&gt; getEnabledInstancesForRack (RackType&amp; type)</a>
 <a name="143"><span class="lineNum">     143 </span>            :     {</a>
 <a name="144"><span class="lineNum">     144 </span><span class="lineCov">        180 :         auto instances = getInstancesForRack (type);</span></a>
-<a name="145"><span class="lineNum">     145 </span><span class="lineCov">        180 :         instances.removeIf ([] (auto instance) { return ! instance-&gt;isEnabled(); });</span></a>
+<a name="145"><span class="lineNum">     145 </span><span class="lineCov">       1768 :         instances.removeIf ([] (auto instance) { return ! instance-&gt;isEnabled(); });</span></a>
 <a name="146"><span class="lineNum">     146 </span>            :         </a>
 <a name="147"><span class="lineNum">     147 </span>            :         return instances;</a>
 <a name="148"><span class="lineNum">     148 </span>            :     }</a>
@@ -721,7 +721,7 @@
 <a name="659"><span class="lineNum">     659 </span><span class="lineCov">        468 :                                       clip.getLiveClipLevel(),</span></a>
 <a name="660"><span class="lineNum">     660 </span>            :                                       params.processState,</a>
 <a name="661"><span class="lineNum">     661 </span><span class="lineCov">        234 :                                       clip.itemID,</span></a>
-<a name="662"><span class="lineNum">     662 </span><span class="lineCov">    2427456 :                                       [&amp;trackMuteState]</span></a>
+<a name="662"><span class="lineNum">     662 </span><span class="lineCov">    2427443 :                                       [&amp;trackMuteState]</span></a>
 <a name="663"><span class="lineNum">     663 </span>            :                                       {</a>
 <a name="664"><span class="lineNum">     664 </span>            :                                           if (! trackMuteState.shouldTrackBeAudible())</a>
 <a name="665"><span class="lineNum">     665 </span><span class="lineNoCov">          0 :                                               return ! trackMuteState.shouldTrackMidiBeProcessed();</span></a>
@@ -1030,11 +1030,11 @@
 <a name="968"><span class="lineNum">     968 </span>            :     </a>
 <a name="969"><span class="lineNum">     969 </span><span class="lineCov">       1848 :     node = createSidechainInputNodeForPlugin (plugin, std::move (node));</span></a>
 <a name="970"><span class="lineNum">     970 </span><span class="lineCov">        924 :     node = tracktion::graph::makeNode&lt;PluginNode&gt; (std::move (node),</span></a>
-<a name="971"><span class="lineNum">     971 </span>            :                                                   plugin,</a>
-<a name="972"><span class="lineNum">     972 </span><span class="lineCov">        924 :                                                   params.sampleRate, params.blockSize,</span></a>
-<a name="973"><span class="lineNum">     973 </span>            :                                                   trackMuteState, params.processState,</a>
-<a name="974"><span class="lineNum">     974 </span><span class="lineCov">        924 :                                                   params.forRendering, params.includeBypassedPlugins,</span></a>
-<a name="975"><span class="lineNum">     975 </span>            :                                                   maxNumChannels);</a>
+<a name="971"><span class="lineNum">     971 </span>            :                                                    plugin,</a>
+<a name="972"><span class="lineNum">     972 </span><span class="lineCov">        924 :                                                    params.sampleRate, params.blockSize,</span></a>
+<a name="973"><span class="lineNum">     973 </span>            :                                                    trackMuteState, params.processState,</a>
+<a name="974"><span class="lineNum">     974 </span><span class="lineCov">        924 :                                                    params.forRendering, params.includeBypassedPlugins,</span></a>
+<a name="975"><span class="lineNum">     975 </span>            :                                                    maxNumChannels);</a>
 <a name="976"><span class="lineNum">     976 </span>            : </a>
 <a name="977"><span class="lineNum">     977 </span>            :     return node;</a>
 <a name="978"><span class="lineNum">     978 </span>            : }</a>

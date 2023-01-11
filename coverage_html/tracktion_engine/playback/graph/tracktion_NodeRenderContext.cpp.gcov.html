@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-01-10 13:20:55</td>
+            <td class="headerValue">2023-01-11 12:29:04</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">8</td>
@@ -231,18 +231,18 @@
 <a name="169"><span class="lineNum">     169 </span><span class="lineNoCov">          0 :         owner.performNormalisingAndTrimming (originalParams, r);</span></a>
 <a name="170"><span class="lineNum">     170 </span><span class="lineCov">        168 : }</span></a>
 <a name="171"><span class="lineNum">     171 </span>            : </a>
-<a name="172"><span class="lineNum">     172 </span><span class="lineCov">     119713 : bool NodeRenderContext::renderNextBlock (std::atomic&lt;float&gt;&amp; progressToUpdate)</span></a>
+<a name="172"><span class="lineNum">     172 </span><span class="lineCov">     120213 : bool NodeRenderContext::renderNextBlock (std::atomic&lt;float&gt;&amp; progressToUpdate)</span></a>
 <a name="173"><span class="lineNum">     173 </span>            : {</a>
-<a name="174"><span class="lineNum">     174 </span><span class="lineCov">     119713 :     CRASH_TRACER</span></a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineCov">     120213 :     CRASH_TRACER</span></a>
 <a name="175"><span class="lineNum">     175 </span>            :     jassert (! r.edit-&gt;getTransport().isPlayContextActive());</a>
 <a name="176"><span class="lineNum">     176 </span>            : </a>
-<a name="177"><span class="lineNum">     177 </span><span class="lineCov">     119713 :     if (--sleepCounter &lt;= 0)</span></a>
+<a name="177"><span class="lineNum">     177 </span><span class="lineCov">     120213 :     if (--sleepCounter &lt;= 0)</span></a>
 <a name="178"><span class="lineNum">     178 </span>            :     {</a>
-<a name="179"><span class="lineNum">     179 </span><span class="lineCov">       1198 :         sleepCounter = sleepCounterMax;</span></a>
-<a name="180"><span class="lineNum">     180 </span><span class="lineCov">       1198 :         juce::Thread::sleep (1);</span></a>
+<a name="179"><span class="lineNum">     179 </span><span class="lineCov">       1203 :         sleepCounter = sleepCounterMax;</span></a>
+<a name="180"><span class="lineNum">     180 </span><span class="lineCov">       1203 :         juce::Thread::sleep (1);</span></a>
 <a name="181"><span class="lineNum">     181 </span>            :     }</a>
 <a name="182"><span class="lineNum">     182 </span>            : </a>
-<a name="183"><span class="lineNum">     183 </span><span class="lineCov">     119713 :     if (owner.shouldExit())</span></a>
+<a name="183"><span class="lineNum">     183 </span><span class="lineCov">     120213 :     if (owner.shouldExit())</span></a>
 <a name="184"><span class="lineNum">     184 </span>            :     {</a>
 <a name="185"><span class="lineNum">     185 </span><span class="lineNoCov">          0 :         writer-&gt;closeForWriting();</span></a>
 <a name="186"><span class="lineNum">     186 </span><span class="lineNoCov">          0 :         r.destFile.deleteFile();</span></a>
@@ -255,15 +255,15 @@
 <a name="193"><span class="lineNum">     193 </span>            : </a>
 <a name="194"><span class="lineNum">     194 </span>            :     auto blockEnd = streamTime + blockLength;</a>
 <a name="195"><span class="lineNum">     195 </span>            : </a>
-<a name="196"><span class="lineNum">     196 </span><span class="lineCov">     119713 :     if (precount &gt; 0)</span></a>
-<a name="197"><span class="lineNum">     197 </span><span class="lineCov">      61769 :         blockEnd = juce::jmin (r.time.getStart(), blockEnd);</span></a>
+<a name="196"><span class="lineNum">     196 </span><span class="lineCov">     120213 :     if (precount &gt; 0)</span></a>
+<a name="197"><span class="lineNum">     197 </span><span class="lineCov">      62269 :         blockEnd = juce::jmin (r.time.getStart(), blockEnd);</span></a>
 <a name="198"><span class="lineNum">     198 </span>            : </a>
-<a name="199"><span class="lineNum">     199 </span><span class="lineCov">     119713 :     if (precount &gt; numPreRenderBlocks / 2)</span></a>
-<a name="200"><span class="lineNum">     200 </span><span class="lineCov">     116615 :         playHead-&gt;setPosition (toSamples (streamTime, r.sampleRateForAudio));</span></a>
+<a name="199"><span class="lineNum">     199 </span><span class="lineCov">     120213 :     if (precount &gt; numPreRenderBlocks / 2)</span></a>
+<a name="200"><span class="lineNum">     200 </span><span class="lineCov">     117615 :         playHead-&gt;setPosition (toSamples (streamTime, r.sampleRateForAudio));</span></a>
 <a name="201"><span class="lineNum">     201 </span><span class="lineCov">      61384 :     else if (precount == numPreRenderBlocks / 2)</span></a>
 <a name="202"><span class="lineNum">     202 </span><span class="lineCov">        159 :         playHead-&gt;playSyncedToRange ({ toSamples (streamTime, r.sampleRateForAudio), std::numeric_limits&lt;int64_t&gt;::max() });</span></a>
 <a name="203"><span class="lineNum">     203 </span>            : </a>
-<a name="204"><span class="lineNum">     204 </span><span class="lineCov">     119713 :     if (precount == 0)</span></a>
+<a name="204"><span class="lineNum">     204 </span><span class="lineCov">     120213 :     if (precount == 0)</span></a>
 <a name="205"><span class="lineNum">     205 </span>            :     {</a>
 <a name="206"><span class="lineNum">     206 </span><span class="lineCov">         80 :         streamTime = r.time.getStart();</span></a>
 <a name="207"><span class="lineNum">     207 </span>            :         blockEnd = streamTime + blockLength;</a>
@@ -272,7 +272,7 @@
 <a name="210"><span class="lineNum">     210 </span><span class="lineCov">        160 :         playHeadState-&gt;update (toSamples (TimeRange (streamTime, blockEnd), r.sampleRateForAudio));</span></a>
 <a name="211"><span class="lineNum">     211 </span>            :     }</a>
 <a name="212"><span class="lineNum">     212 </span>            : </a>
-<a name="213"><span class="lineNum">     213 </span><span class="lineCov">     119713 :     if (r.realTimeRender)</span></a>
+<a name="213"><span class="lineNum">     213 </span><span class="lineCov">     120213 :     if (r.realTimeRender)</span></a>
 <a name="214"><span class="lineNum">     214 </span>            :     {</a>
 <a name="215"><span class="lineNum">     215 </span><span class="lineNoCov">          0 :         auto timeNow = juce::Time::getMillisecondCounterHiRes();</span></a>
 <a name="216"><span class="lineNum">     216 </span><span class="lineNoCov">          0 :         auto timeToWait = (int) (realTimePerBlock - (timeNow - lastTime));</span></a>
@@ -282,32 +282,32 @@
 <a name="220"><span class="lineNum">     220 </span><span class="lineNoCov">          0 :             juce::Thread::sleep (timeToWait);</span></a>
 <a name="221"><span class="lineNum">     221 </span>            :     }</a>
 <a name="222"><span class="lineNum">     222 </span>            : </a>
-<a name="223"><span class="lineNum">     223 </span><span class="lineCov">     119713 :     currentTempoPosition-&gt;set (streamTime);</span></a>
+<a name="223"><span class="lineNum">     223 </span><span class="lineCov">     120213 :     currentTempoPosition-&gt;set (streamTime);</span></a>
 <a name="224"><span class="lineNum">     224 </span>            : </a>
-<a name="225"><span class="lineNum">     225 </span><span class="lineCov">     119713 :     resetFP();</span></a>
+<a name="225"><span class="lineNum">     225 </span><span class="lineCov">     120213 :     resetFP();</span></a>
 <a name="226"><span class="lineNum">     226 </span>            : </a>
 <a name="227"><span class="lineNum">     227 </span>            :     const TimeRange streamTimeRange (streamTime, blockEnd);</a>
-<a name="228"><span class="lineNum">     228 </span><span class="lineCov">     119713 :     const auto referenceSampleRange = juce::Range&lt;int64_t&gt;::withStartAndLength (toSamples (streamTimeRange.getStart(), originalParams.sampleRateForAudio), r.blockSizeForAudio);</span></a>
+<a name="228"><span class="lineNum">     228 </span><span class="lineCov">     120213 :     const auto referenceSampleRange = juce::Range&lt;int64_t&gt;::withStartAndLength (toSamples (streamTimeRange.getStart(), originalParams.sampleRateForAudio), r.blockSizeForAudio);</span></a>
 <a name="229"><span class="lineNum">     229 </span>            : </a>
 <a name="230"><span class="lineNum">     230 </span>            :     // Update modifier timers</a>
-<a name="231"><span class="lineNum">     231 </span><span class="lineCov">     119713 :     r.edit-&gt;updateModifierTimers (streamTime, r.blockSizeForAudio);</span></a>
+<a name="231"><span class="lineNum">     231 </span><span class="lineCov">     120213 :     r.edit-&gt;updateModifierTimers (streamTime, r.blockSizeForAudio);</span></a>
 <a name="232"><span class="lineNum">     232 </span>            : </a>
 <a name="233"><span class="lineNum">     233 </span>            :     // Wait for any nodes to render their sources or proxies</a>
-<a name="234"><span class="lineNum">     234 </span><span class="lineCov">     119713 :     auto leafNodesReady = [this, referenceSampleRange]</span></a>
+<a name="234"><span class="lineNum">     234 </span><span class="lineCov">     120213 :     auto leafNodesReady = [this, referenceSampleRange]</span></a>
 <a name="235"><span class="lineNum">     235 </span>            :     {</a>
-<a name="236"><span class="lineNum">     236 </span><span class="lineCov">     879538 :         for (auto node : getNodes (*nodePlayer-&gt;getNode(), VertexOrdering::postordering))</span></a>
+<a name="236"><span class="lineNum">     236 </span><span class="lineCov">     880038 :         for (auto node : getNodes (*nodePlayer-&gt;getNode(), VertexOrdering::postordering))</span></a>
 <a name="237"><span class="lineNum">     237 </span>            :         {</a>
 <a name="238"><span class="lineNum">     238 </span>            :             // Call prepare for next block here to ensure isReadyToProcess internals are updated</a>
-<a name="239"><span class="lineNum">     239 </span><span class="lineCov">     814634 :             node-&gt;prepareForNextBlock (referenceSampleRange);</span></a>
+<a name="239"><span class="lineNum">     239 </span><span class="lineCov">     815134 :             node-&gt;prepareForNextBlock (referenceSampleRange);</span></a>
 <a name="240"><span class="lineNum">     240 </span>            :          </a>
-<a name="241"><span class="lineNum">     241 </span><span class="lineCov">    1629268 :             if (node-&gt;getDirectInputNodes().empty() &amp;&amp; ! node-&gt;isReadyToProcess())</span></a>
+<a name="241"><span class="lineNum">     241 </span><span class="lineCov">    1630268 :             if (node-&gt;getDirectInputNodes().empty() &amp;&amp; ! node-&gt;isReadyToProcess())</span></a>
 <a name="242"><span class="lineNum">     242 </span>            :                 return false;</a>
 <a name="243"><span class="lineNum">     243 </span>            :         }</a>
 <a name="244"><span class="lineNum">     244 </span>            :         </a>
 <a name="245"><span class="lineNum">     245 </span><span class="lineCov">      64904 :         return true;</span></a>
-<a name="246"><span class="lineNum">     246 </span><span class="lineCov">     119713 :     }();</span></a>
+<a name="246"><span class="lineNum">     246 </span><span class="lineCov">     120213 :     }();</span></a>
 <a name="247"><span class="lineNum">     247 </span>            :     </a>
-<a name="248"><span class="lineNum">     248 </span><span class="lineCov">     119713 :     while (! (leafNodesReady || owner.shouldExit()))</span></a>
+<a name="248"><span class="lineNum">     248 </span><span class="lineCov">     120213 :     while (! (leafNodesReady || owner.shouldExit()))</span></a>
 <a name="249"><span class="lineNum">     249 </span>            :         return false;</a>
 <a name="250"><span class="lineNum">     250 </span>            : </a>
 <a name="251"><span class="lineNum">     251 </span><span class="lineCov">      64904 :     juce::AudioBuffer&lt;float&gt; renderingBuffer (numOutputChans, r.blockSizeForAudio + 256);</span></a>
@@ -377,7 +377,7 @@
 <a name="315"><span class="lineNum">     315 </span><span class="lineCov">      64824 :     streamTime = blockEnd;</span></a>
 <a name="316"><span class="lineNum">     316 </span>            : </a>
 <a name="317"><span class="lineNum">     317 </span><span class="lineCov">      64824 :     return false;</span></a>
-<a name="318"><span class="lineNum">     318 </span><span class="lineCov">     119713 : }</span></a>
+<a name="318"><span class="lineNum">     318 </span><span class="lineCov">     120213 : }</span></a>
 <a name="319"><span class="lineNum">     319 </span>            : </a>
 <a name="320"><span class="lineNum">     320 </span>            : //==============================================================================</a>
 <a name="321"><span class="lineNum">     321 </span><span class="lineCov">      57866 : NodeRenderContext::WriteResult NodeRenderContext::writeAudioBlock (choc::buffer::ChannelArrayView&lt;float&gt; block)</span></a>
@@ -501,12 +501,12 @@
 <a name="439"><span class="lineNum">     439 </span><span class="lineCov">    2896184 :         nodePlayer-&gt;process ({ (choc::buffer::FrameCount) referenceSampleRange.getLength(), referenceSampleRange, { destView, blockMidiBuffer} });</span></a>
 <a name="440"><span class="lineNum">     440 </span>            : </a>
 <a name="441"><span class="lineNum">     441 </span>            :         // Set MIDI messages to beats and update final sequence</a>
-<a name="442"><span class="lineNum">     442 </span><span class="lineCov">    2901032 :         for (auto&amp; m : blockMidiBuffer)</span></a>
+<a name="442"><span class="lineNum">     442 </span><span class="lineCov">    2900528 :         for (auto&amp; m : blockMidiBuffer)</span></a>
 <a name="443"><span class="lineNum">     443 </span>            :         {</a>
 <a name="444"><span class="lineNum">     444 </span>            :             tempo::Sequence::Position eventPos (currentTempoPosition);</a>
-<a name="445"><span class="lineNum">     445 </span><span class="lineCov">       4848 :             eventPos.set (TimePosition::fromSeconds (m.getTimeStamp()) + (streamTime - r.time.getStart()));</span></a>
+<a name="445"><span class="lineNum">     445 </span><span class="lineCov">       4344 :             eventPos.set (TimePosition::fromSeconds (m.getTimeStamp()) + (streamTime - r.time.getStart()));</span></a>
 <a name="446"><span class="lineNum">     446 </span>            : </a>
-<a name="447"><span class="lineNum">     447 </span><span class="lineCov">       4848 :             outputSequence.addEvent (juce::MidiMessage (m, Edit::ticksPerQuarterNote * eventPos.getPPQTime()));</span></a>
+<a name="447"><span class="lineNum">     447 </span><span class="lineCov">       4344 :             outputSequence.addEvent (juce::MidiMessage (m, Edit::ticksPerQuarterNote * eventPos.getPPQTime()));</span></a>
 <a name="448"><span class="lineNum">     448 </span>            :         }</a>
 <a name="449"><span class="lineNum">     449 </span>            : </a>
 <a name="450"><span class="lineNum">     450 </span>            :         streamTime = blockEnd;</a>

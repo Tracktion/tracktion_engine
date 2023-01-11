@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">15</td>
-            <td class="headerCovTableEntry">32</td>
-            <td class="headerCovTableEntryLo">46.9 %</td>
+            <td class="headerCovTableEntry">16</td>
+            <td class="headerCovTableEntry">33</td>
+            <td class="headerCovTableEntryLo">48.5 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-01-10 13:20:55</td>
+            <td class="headerValue">2023-01-11 12:29:04</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">11</td>
-            <td class="headerCovTableEntry">26</td>
-            <td class="headerCovTableEntryLo">42.3 %</td>
+            <td class="headerCovTableEntry">12</td>
+            <td class="headerCovTableEntry">27</td>
+            <td class="headerCovTableEntryLo">44.4 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -211,7 +211,7 @@
 <a name="149"><span class="lineNum">     149 </span>            :     //==============================================================================</a>
 <a name="150"><span class="lineNum">     150 </span>            :     /** Enable/disable the plugin.  */</a>
 <a name="151"><span class="lineNum">     151 </span>            :     virtual void setEnabled (bool);</a>
-<a name="152"><span class="lineNum">     152 </span>            :     bool isEnabled() const noexcept                         { return enabled; }</a>
+<a name="152"><span class="lineNum">     152 </span><span class="lineCov">   56758004 :     bool isEnabled() const noexcept                         { return enabled.get(); }</span></a>
 <a name="153"><span class="lineNum">     153 </span>            : </a>
 <a name="154"><span class="lineNum">     154 </span>            :     /** This is a bit different to being enabled as when frozen a plugin can't be interacted with. */</a>
 <a name="155"><span class="lineNum">     155 </span>            :     void setFrozen (bool shouldBeFrozen);</a>
@@ -264,7 +264,7 @@
 <a name="202"><span class="lineNum">     202 </span>            :     virtual void applyToBuffer (const PluginRenderContext&amp;) = 0;</a>
 <a name="203"><span class="lineNum">     203 </span>            : </a>
 <a name="204"><span class="lineNum">     204 </span>            :     /** Called between successive rendering blocks. */</a>
-<a name="205"><span class="lineNum">     205 </span><span class="lineCov">   27382418 :     virtual void prepareForNextBlock (TimePosition /*editTime*/) {}</span></a>
+<a name="205"><span class="lineNum">     205 </span><span class="lineCov">   27384082 :     virtual void prepareForNextBlock (TimePosition /*editTime*/) {}</span></a>
 <a name="206"><span class="lineNum">     206 </span>            : </a>
 <a name="207"><span class="lineNum">     207 </span>            :     // wrapper on applyTobuffer, called by the node</a>
 <a name="208"><span class="lineNum">     208 </span>            :     void applyToBufferWithAutomation (const PluginRenderContext&amp;);</a>
@@ -397,7 +397,7 @@
 <a name="335"><span class="lineNum">     335 </span>            :     //==============================================================================</a>
 <a name="336"><span class="lineNum">     336 </span>            :     // setting a master plugin whose settings will be mirrored</a>
 <a name="337"><span class="lineNum">     337 </span>            :     bool setPluginToMirror (const Plugin::Ptr&amp;); // fails if type is wrong</a>
-<a name="338"><span class="lineNum">     338 </span><span class="lineCov">        377 :     virtual void updateFromMirroredPluginIfNeeded (Plugin&amp;) {}</span></a>
+<a name="338"><span class="lineNum">     338 </span><span class="lineCov">        369 :     virtual void updateFromMirroredPluginIfNeeded (Plugin&amp;) {}</span></a>
 <a name="339"><span class="lineNum">     339 </span>            :     Plugin::Ptr getMirroredPlugin() const;</a>
 <a name="340"><span class="lineNum">     340 </span>            : </a>
 <a name="341"><span class="lineNum">     341 </span>            :     //==============================================================================</a>
@@ -442,48 +442,49 @@
 <a name="380"><span class="lineNum">     380 </span>            : </a>
 <a name="381"><span class="lineNum">     381 </span>            : protected:</a>
 <a name="382"><span class="lineNum">     382 </span>            :     //==============================================================================</a>
-<a name="383"><span class="lineNum">     383 </span>            :     juce::CachedValue&lt;bool&gt; enabled, frozen, processing;</a>
-<a name="384"><span class="lineNum">     384 </span>            :     juce::CachedValue&lt;juce::String&gt; quickParamName;</a>
-<a name="385"><span class="lineNum">     385 </span>            :     juce::CachedValue&lt;EditItemID&gt; masterPluginID, sidechainSourceID;</a>
-<a name="386"><span class="lineNum">     386 </span>            : </a>
-<a name="387"><span class="lineNum">     387 </span>            :     double sampleRate = 44100.0;</a>
-<a name="388"><span class="lineNum">     388 </span>            :     int blockSizeSamples = 512;</a>
-<a name="389"><span class="lineNum">     389 </span>            : </a>
-<a name="390"><span class="lineNum">     390 </span>            :     void valueTreePropertyChanged (juce::ValueTree&amp;, const juce::Identifier&amp;) override;</a>
-<a name="391"><span class="lineNum">     391 </span>            :     void valueTreeChanged() override;</a>
-<a name="392"><span class="lineNum">     392 </span>            : </a>
-<a name="393"><span class="lineNum">     393 </span>            :     void valueTreeChildAdded (juce::ValueTree&amp;, juce::ValueTree&amp;) override;</a>
-<a name="394"><span class="lineNum">     394 </span>            :     void valueTreeChildRemoved (juce::ValueTree&amp;, juce::ValueTree&amp;, int) override;</a>
-<a name="395"><span class="lineNum">     395 </span>            :     void valueTreeParentChanged (juce::ValueTree&amp;) override;</a>
-<a name="396"><span class="lineNum">     396 </span>            : </a>
-<a name="397"><span class="lineNum">     397 </span>            :     virtual void processingChanged();</a>
-<a name="398"><span class="lineNum">     398 </span>            : </a>
-<a name="399"><span class="lineNum">     399 </span>            :     //==============================================================================</a>
-<a name="400"><span class="lineNum">     400 </span>            :     AutomatableParameter* addParam (const juce::String&amp; paramID, const juce::String&amp; name, juce::NormalisableRange&lt;float&gt; valueRange);</a>
-<a name="401"><span class="lineNum">     401 </span>            :     AutomatableParameter* addParam (const juce::String&amp; paramID, const juce::String&amp; name, juce::NormalisableRange&lt;float&gt; valueRange,</a>
-<a name="402"><span class="lineNum">     402 </span>            :                                     std::function&lt;juce::String(float)&gt; valueToStringFunction,</a>
-<a name="403"><span class="lineNum">     403 </span>            :                                     std::function&lt;float(const juce::String&amp;)&gt; stringToValueFunction);</a>
-<a name="404"><span class="lineNum">     404 </span>            : </a>
-<a name="405"><span class="lineNum">     405 </span>            :     //==============================================================================</a>
-<a name="406"><span class="lineNum">     406 </span>            :     static void getLeftRightChannelNames (juce::StringArray* ins, juce::StringArray* outs);</a>
-<a name="407"><span class="lineNum">     407 </span>            :     static void getLeftRightChannelNames (juce::StringArray* chans);</a>
-<a name="408"><span class="lineNum">     408 </span>            : </a>
-<a name="409"><span class="lineNum">     409 </span>            : private:</a>
-<a name="410"><span class="lineNum">     410 </span>            :     mutable AutomatableParameter::Ptr quickControlParameter;</a>
-<a name="411"><span class="lineNum">     411 </span>            : </a>
-<a name="412"><span class="lineNum">     412 </span>            :     int initialiseCount = 0;</a>
-<a name="413"><span class="lineNum">     413 </span>            :     double timeToCpuScale = 0;</a>
-<a name="414"><span class="lineNum">     414 </span>            :     std::atomic&lt;double&gt; cpuUsageMs { 0 };</a>
-<a name="415"><span class="lineNum">     415 </span>            :     std::atomic&lt;bool&gt; isClipEffect { false };</a>
-<a name="416"><span class="lineNum">     416 </span>            : </a>
-<a name="417"><span class="lineNum">     417 </span>            :     juce::ValueTree getConnectionsTree();</a>
-<a name="418"><span class="lineNum">     418 </span>            :     struct WireList;</a>
-<a name="419"><span class="lineNum">     419 </span>            :     std::unique_ptr&lt;WireList&gt; sidechainWireList;</a>
-<a name="420"><span class="lineNum">     420 </span>            : </a>
-<a name="421"><span class="lineNum">     421 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Plugin)</a>
-<a name="422"><span class="lineNum">     422 </span>            : };</a>
-<a name="423"><span class="lineNum">     423 </span>            : </a>
-<a name="424"><span class="lineNum">     424 </span>            : }} // namespace tracktion { inline namespace engine</a>
+<a name="383"><span class="lineNum">     383 </span>            :     juce::CachedValue&lt;AtomicWrapper&lt;bool&gt;&gt; enabled;</a>
+<a name="384"><span class="lineNum">     384 </span>            :     juce::CachedValue&lt;bool&gt; frozen, processing;</a>
+<a name="385"><span class="lineNum">     385 </span>            :     juce::CachedValue&lt;juce::String&gt; quickParamName;</a>
+<a name="386"><span class="lineNum">     386 </span>            :     juce::CachedValue&lt;EditItemID&gt; masterPluginID, sidechainSourceID;</a>
+<a name="387"><span class="lineNum">     387 </span>            : </a>
+<a name="388"><span class="lineNum">     388 </span>            :     double sampleRate = 44100.0;</a>
+<a name="389"><span class="lineNum">     389 </span>            :     int blockSizeSamples = 512;</a>
+<a name="390"><span class="lineNum">     390 </span>            : </a>
+<a name="391"><span class="lineNum">     391 </span>            :     void valueTreePropertyChanged (juce::ValueTree&amp;, const juce::Identifier&amp;) override;</a>
+<a name="392"><span class="lineNum">     392 </span>            :     void valueTreeChanged() override;</a>
+<a name="393"><span class="lineNum">     393 </span>            : </a>
+<a name="394"><span class="lineNum">     394 </span>            :     void valueTreeChildAdded (juce::ValueTree&amp;, juce::ValueTree&amp;) override;</a>
+<a name="395"><span class="lineNum">     395 </span>            :     void valueTreeChildRemoved (juce::ValueTree&amp;, juce::ValueTree&amp;, int) override;</a>
+<a name="396"><span class="lineNum">     396 </span>            :     void valueTreeParentChanged (juce::ValueTree&amp;) override;</a>
+<a name="397"><span class="lineNum">     397 </span>            : </a>
+<a name="398"><span class="lineNum">     398 </span>            :     virtual void processingChanged();</a>
+<a name="399"><span class="lineNum">     399 </span>            : </a>
+<a name="400"><span class="lineNum">     400 </span>            :     //==============================================================================</a>
+<a name="401"><span class="lineNum">     401 </span>            :     AutomatableParameter* addParam (const juce::String&amp; paramID, const juce::String&amp; name, juce::NormalisableRange&lt;float&gt; valueRange);</a>
+<a name="402"><span class="lineNum">     402 </span>            :     AutomatableParameter* addParam (const juce::String&amp; paramID, const juce::String&amp; name, juce::NormalisableRange&lt;float&gt; valueRange,</a>
+<a name="403"><span class="lineNum">     403 </span>            :                                     std::function&lt;juce::String(float)&gt; valueToStringFunction,</a>
+<a name="404"><span class="lineNum">     404 </span>            :                                     std::function&lt;float(const juce::String&amp;)&gt; stringToValueFunction);</a>
+<a name="405"><span class="lineNum">     405 </span>            : </a>
+<a name="406"><span class="lineNum">     406 </span>            :     //==============================================================================</a>
+<a name="407"><span class="lineNum">     407 </span>            :     static void getLeftRightChannelNames (juce::StringArray* ins, juce::StringArray* outs);</a>
+<a name="408"><span class="lineNum">     408 </span>            :     static void getLeftRightChannelNames (juce::StringArray* chans);</a>
+<a name="409"><span class="lineNum">     409 </span>            : </a>
+<a name="410"><span class="lineNum">     410 </span>            : private:</a>
+<a name="411"><span class="lineNum">     411 </span>            :     mutable AutomatableParameter::Ptr quickControlParameter;</a>
+<a name="412"><span class="lineNum">     412 </span>            : </a>
+<a name="413"><span class="lineNum">     413 </span>            :     int initialiseCount = 0;</a>
+<a name="414"><span class="lineNum">     414 </span>            :     double timeToCpuScale = 0;</a>
+<a name="415"><span class="lineNum">     415 </span>            :     std::atomic&lt;double&gt; cpuUsageMs { 0 };</a>
+<a name="416"><span class="lineNum">     416 </span>            :     std::atomic&lt;bool&gt; isClipEffect { false };</a>
+<a name="417"><span class="lineNum">     417 </span>            : </a>
+<a name="418"><span class="lineNum">     418 </span>            :     juce::ValueTree getConnectionsTree();</a>
+<a name="419"><span class="lineNum">     419 </span>            :     struct WireList;</a>
+<a name="420"><span class="lineNum">     420 </span>            :     std::unique_ptr&lt;WireList&gt; sidechainWireList;</a>
+<a name="421"><span class="lineNum">     421 </span>            : </a>
+<a name="422"><span class="lineNum">     422 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Plugin)</a>
+<a name="423"><span class="lineNum">     423 </span>            : };</a>
+<a name="424"><span class="lineNum">     424 </span>            : </a>
+<a name="425"><span class="lineNum">     425 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

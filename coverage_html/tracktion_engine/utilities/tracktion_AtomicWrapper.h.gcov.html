@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">12</td>
             <td class="headerCovTableEntry">13</td>
-            <td class="headerCovTableEntryHi">92.3 %</td>
+            <td class="headerCovTableEntry">13</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-01-10 13:20:55</td>
+            <td class="headerValue">2023-01-11 12:29:04</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">6</td>
             <td class="headerCovTableEntry">9</td>
-            <td class="headerCovTableEntryLo">66.7 %</td>
+            <td class="headerCovTableEntry">9</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -106,22 +106,22 @@
 <a name="44"><span class="lineNum">      44 </span>            : </a>
 <a name="45"><span class="lineNum">      45 </span>            :     /** Constructs a copy of another wrapper type. */</a>
 <a name="46"><span class="lineNum">      46 </span>            :     template&lt;typename OtherType&gt;</a>
-<a name="47"><span class="lineNum">      47 </span><span class="lineCov">       6747 :     AtomicWrapper (const OtherType&amp; other)</span></a>
+<a name="47"><span class="lineNum">      47 </span><span class="lineCov">       8980 :     AtomicWrapper (const OtherType&amp; other)</span></a>
 <a name="48"><span class="lineNum">      48 </span>            :     {</a>
-<a name="49"><span class="lineNum">      49 </span><span class="lineCov">       6747 :         value.store (Constrainer::constrain (other));</span></a>
-<a name="50"><span class="lineNum">      50 </span><span class="lineCov">       6747 :     }</span></a>
+<a name="49"><span class="lineNum">      49 </span><span class="lineCov">       8992 :         value.store (Constrainer::constrain (other));</span></a>
+<a name="50"><span class="lineNum">      50 </span><span class="lineCov">       8980 :     }</span></a>
 <a name="51"><span class="lineNum">      51 </span>            : </a>
 <a name="52"><span class="lineNum">      52 </span>            :     /** Constructs a copy of another AtomicWrapper. */</a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineCov">   18718840 :     AtomicWrapper (const AtomicWrapper&amp; other)</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">   75348813 :     AtomicWrapper (const AtomicWrapper&amp; other)</span></a>
 <a name="54"><span class="lineNum">      54 </span>            :     {</a>
-<a name="55"><span class="lineNum">      55 </span><span class="lineCov">    7223931 :         value.store (other.value);</span></a>
-<a name="56"><span class="lineNum">      56 </span><span class="lineCov">   18718840 :     }</span></a>
+<a name="55"><span class="lineNum">      55 </span><span class="lineCov">   63854246 :         value.store (other.value);</span></a>
+<a name="56"><span class="lineNum">      56 </span><span class="lineCov">   75348813 :     }</span></a>
 <a name="57"><span class="lineNum">      57 </span>            : </a>
 <a name="58"><span class="lineNum">      58 </span>            :     /** Assigns another AtomicWrapper's underlying value to this one atomically. */</a>
-<a name="59"><span class="lineNum">      59 </span><span class="lineCov">     114106 :     AtomicWrapper&amp; operator= (const AtomicWrapper&amp; other) noexcept</span></a>
+<a name="59"><span class="lineNum">      59 </span><span class="lineCov">     121854 :     AtomicWrapper&amp; operator= (const AtomicWrapper&amp; other) noexcept</span></a>
 <a name="60"><span class="lineNum">      60 </span>            :     {</a>
-<a name="61"><span class="lineNum">      61 </span><span class="lineCov">      46944 :         value.store (other.value);</span></a>
-<a name="62"><span class="lineNum">      62 </span><span class="lineCov">     114106 :         return *this;</span></a>
+<a name="61"><span class="lineNum">      61 </span><span class="lineCov">      54692 :         value.store (other.value);</span></a>
+<a name="62"><span class="lineNum">      62 </span><span class="lineCov">     121854 :         return *this;</span></a>
 <a name="63"><span class="lineNum">      63 </span>            :     }</a>
 <a name="64"><span class="lineNum">      64 </span>            : </a>
 <a name="65"><span class="lineNum">      65 </span>            :     /** Compares the unerlaying value of another wrapper with this one. */</a>
@@ -131,16 +131,16 @@
 <a name="69"><span class="lineNum">      69 </span>            :     }</a>
 <a name="70"><span class="lineNum">      70 </span>            : </a>
 <a name="71"><span class="lineNum">      71 </span>            :     /** Compares the unerlaying value of another wrapper with this one. */</a>
-<a name="72"><span class="lineNum">      72 </span><span class="lineCov">       6747 :     bool operator!= (const AtomicWrapper&amp; other) const noexcept</span></a>
+<a name="72"><span class="lineNum">      72 </span><span class="lineCov">       8400 :     bool operator!= (const AtomicWrapper&amp; other) const noexcept</span></a>
 <a name="73"><span class="lineNum">      73 </span>            :     {</a>
-<a name="74"><span class="lineNum">      74 </span><span class="lineCov">       6747 :         return value.load() != other.value.load();</span></a>
+<a name="74"><span class="lineNum">      74 </span><span class="lineCov">       8400 :         return value.load() != other.value.load();</span></a>
 <a name="75"><span class="lineNum">      75 </span>            :     }</a>
 <a name="76"><span class="lineNum">      76 </span>            : </a>
 <a name="77"><span class="lineNum">      77 </span>            :     //==============================================================================</a>
 <a name="78"><span class="lineNum">      78 </span>            :     /** Returns the underlying value as a var. */</a>
-<a name="79"><span class="lineNum">      79 </span><span class="lineNoCov">          0 :     operator juce::var() const noexcept</span></a>
+<a name="79"><span class="lineNum">      79 </span><span class="lineCov">       1645 :     operator juce::var() const noexcept</span></a>
 <a name="80"><span class="lineNum">      80 </span>            :     {</a>
-<a name="81"><span class="lineNum">      81 </span><span class="lineCov">       6747 :         return Constrainer::constrain (value.load());</span></a>
+<a name="81"><span class="lineNum">      81 </span><span class="lineCov">       8392 :         return Constrainer::constrain (value.load());</span></a>
 <a name="82"><span class="lineNum">      82 </span>            :     }</a>
 <a name="83"><span class="lineNum">      83 </span>            : </a>
 <a name="84"><span class="lineNum">      84 </span>            :     /** Returns the underlying value. */</a>

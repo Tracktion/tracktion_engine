@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-01-10 13:20:55</td>
+            <td class="headerValue">2023-01-11 12:29:04</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">5</td>
@@ -175,8 +175,8 @@
 <a name="113"><span class="lineNum">     113 </span>            : </a>
 <a name="114"><span class="lineNum">     114 </span>            :     AudioFifo inputFifo { 2, 2000 }, outputFifo { 2, 2000 };</a>
 <a name="115"><span class="lineNum">     115 </span>            : </a>
-<a name="116"><span class="lineNum">     116 </span>            :     double latencySeconds = 0.0;</a>
-<a name="117"><span class="lineNum">     117 </span>            :     int latencySamples = 0;</a>
+<a name="116"><span class="lineNum">     116 </span>            :     int latencySamples = 8192;</a>
+<a name="117"><span class="lineNum">     117 </span>            :     double latencySeconds = latencySamples / 44100.0;</a>
 <a name="118"><span class="lineNum">     118 </span>            : </a>
 <a name="119"><span class="lineNum">     119 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Pimpl)</a>
 <a name="120"><span class="lineNum">     120 </span>            : };</a>

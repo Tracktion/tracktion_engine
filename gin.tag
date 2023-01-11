@@ -53685,10 +53685,10 @@
       <arglist>(juce::StringArray *chans)</arglist>
     </member>
     <member kind="variable" protection="protected">
-      <type>juce::CachedValue&lt; bool &gt;</type>
+      <type>juce::CachedValue&lt; AtomicWrapper&lt; bool &gt; &gt;</type>
       <name>enabled</name>
       <anchorfile>classtracktion_1_1engine_1_1Plugin.html</anchorfile>
-      <anchor>adcf08f412beea6d15a734fb5c0ce07f0</anchor>
+      <anchor>a852d0cb3e6a4e2db4759d1fc53baeb73</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable" protection="protected">
