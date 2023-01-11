@@ -216,7 +216,19 @@ private:
      {
          blockLengthScaleFactor = 1.0 + std::clamp (plusOrMinusProportion, -0.5, 0.5);
      }
-     
+
+     void checkForTempoSequenceChanges()
+     {
+         const auto& internalSequence = tempoSequence.getInternalSequence();
+
+         if (internalSequence.hash() == tempoState.hash)
+             return;
+
+         const auto lastPositionRemapped = internalSequence.toTime (tempoState.lastBeatPosition);
+         const auto lastSampleRemapped = toSamples (lastPositionRemapped, getSampleRate());
+         playHead.overridePosition (lastSampleRemapped);
+     }
+
      void updateReferenceSampleRange (int numSamples)
      {
          if (speedCompensation != 0.0)
@@ -231,6 +243,9 @@ private:
          playHead.setReferenceSampleRange (getReferenceSampleRange());
          numSamplesToProcess = static_cast<choc::buffer::FrameCount> (numSamples);
          processState.setPlaybackSpeedRatio (blockLengthScaleFactor);
+
+         // This needs to be called after the playhead reference range has been set above
+         checkForTempoSequenceChanges();
      }
      
      void resyncToReferenceSampleRange (juce::Range<int64_t> newReferenceSampleRange)
@@ -331,6 +346,9 @@ private:
              tracktion::graph::Node::ProcessContext pc { numSamplesToProcess, referenceSampleRange, { audioView, scratchMidiBuffer } };
              player.process (pc);
          }
+
+         tempoState = { tempoSequence.getInternalSequence().hash(),
+                        processState.editBeatRange.getEnd() };
      }
      
      double getSampleRate() const
@@ -357,6 +375,14 @@ private:
      double speedCompensation = 0.0, blockLengthScaleFactor = 1.0;
      std::vector<std::unique_ptr<juce::LagrangeInterpolator>> interpolators;
      bool isUsingInterpolator = false;
+
+     struct TempoState
+     {
+         size_t hash = 0;
+         BeatPosition lastBeatPosition;
+     };
+
+     TempoState tempoState;
 
      juce::Range<int64_t> getReferenceSampleRange() const
      {
@@ -557,25 +583,8 @@ void EditPlaybackContext::createNode()
     cnp.includeBypassedPlugins = ! edit.engine.getEngineBehaviour().shouldBypassedPluginsBeRemovedFromPlaybackGraph();
     auto editNode = createNodeForEdit (*this, audiblePlaybackTime, cnp);
 
-    const auto& tempoSequence = edit.tempoSequence.getInternalSequence();
-    const bool hasTempoChanged = tempoSequence.hash() != lastTempoSequence.hash();
-
     nodePlaybackContext->setNode (std::move (editNode), cnp.sampleRate, cnp.blockSize);
     updateNumCPUs();
-
-    if (hasTempoChanged)
-    {
-        const auto sampleRate = cnp.sampleRate;
-        const auto lastTime = TimePosition::fromSamples (nodePlaybackContext->playHead.getPosition(), sampleRate);
-        const auto lastBeats = lastTempoSequence.toBeats (lastTime);
-        const auto lastPositionRemapped = tempoSequence.toTime (lastBeats);
-
-        const auto lastSampleRemapped = toSamples (lastPositionRemapped, sampleRate);
-        nodePlaybackContext->playHead.overridePosition (lastSampleRemapped);
-    }
-
-    if (hasTempoChanged)
-        lastTempoSequence = tempoSequence;
 }
 
 void EditPlaybackContext::createPlayAudioNodes (TimePosition startTime)
