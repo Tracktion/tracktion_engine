@@ -968,11 +968,11 @@ std::unique_ptr<tracktion::graph::Node> createNodeForPlugin (Plugin& plugin, con
     
     node = createSidechainInputNodeForPlugin (plugin, std::move (node));
     node = tracktion::graph::makeNode<PluginNode> (std::move (node),
-                                                  plugin,
-                                                  params.sampleRate, params.blockSize,
-                                                  trackMuteState, params.processState,
-                                                  params.forRendering, params.includeBypassedPlugins,
-                                                  maxNumChannels);
+                                                   plugin,
+                                                   params.sampleRate, params.blockSize,
+                                                   trackMuteState, params.processState,
+                                                   params.forRendering, params.includeBypassedPlugins,
+                                                   maxNumChannels);
 
     return node;
 }
