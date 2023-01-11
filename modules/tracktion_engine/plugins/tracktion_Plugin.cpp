@@ -423,7 +423,7 @@ void Plugin::setEnabled (bool b)
 {
     enabled = (b || ! canBeDisabled());
     
-    if (! enabled)
+    if (! enabled.get())
         cpuUsageMs = 0.0;
 }
 

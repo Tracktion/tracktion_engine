@@ -149,7 +149,7 @@ public:
     //==============================================================================
     /** Enable/disable the plugin.  */
     virtual void setEnabled (bool);
-    bool isEnabled() const noexcept                         { return enabled; }
+    bool isEnabled() const noexcept                         { return enabled.get(); }
 
     /** This is a bit different to being enabled as when frozen a plugin can't be interacted with. */
     void setFrozen (bool shouldBeFrozen);
@@ -380,7 +380,8 @@ public:
 
 protected:
     //==============================================================================
-    juce::CachedValue<bool> enabled, frozen, processing;
+    juce::CachedValue<AtomicWrapper<bool>> enabled;
+    juce::CachedValue<bool> frozen, processing;
     juce::CachedValue<juce::String> quickParamName;
     juce::CachedValue<EditItemID> masterPluginID, sidechainSourceID;
 
