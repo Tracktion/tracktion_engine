@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">367</td>
-            <td class="headerCovTableEntry">703</td>
-            <td class="headerCovTableEntryLo">52.2 %</td>
+            <td class="headerCovTableEntry">369</td>
+            <td class="headerCovTableEntry">708</td>
+            <td class="headerCovTableEntryLo">52.1 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-01-11 12:34:22</td>
+            <td class="headerValue">2023-01-12 11:40:27</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">70</td>
@@ -139,7 +139,7 @@
 <a name="77"><span class="lineNum">      77 </span><span class="lineCov">        235 :     void newObjectAdded (PluginInfo*) override                                          { sendChange(); }</span></a>
 <a name="78"><span class="lineNum">      78 </span><span class="lineNoCov">          0 :     void objectRemoved (PluginInfo*) override                                           { sendChange(); }</span></a>
 <a name="79"><span class="lineNum">      79 </span><span class="lineNoCov">          0 :     void objectOrderChanged() override                                                  { sendChange(); }</span></a>
-<a name="80"><span class="lineNum">      80 </span><span class="lineCov">        248 :     void valueTreePropertyChanged (juce::ValueTree&amp;, const juce::Identifier&amp;) override  { sendChange(); }</span></a>
+<a name="80"><span class="lineNum">      80 </span><span class="lineCov">        411 :     void valueTreePropertyChanged (juce::ValueTree&amp;, const juce::Identifier&amp;) override  { sendChange(); }</span></a>
 <a name="81"><span class="lineNum">      81 </span>            : </a>
 <a name="82"><span class="lineNum">      82 </span>            :     void sendChange()</a>
 <a name="83"><span class="lineNum">      83 </span>            :     {</a>
@@ -188,7 +188,7 @@
 <a name="126"><span class="lineNum">     126 </span><span class="lineCov">       1074 :     void newObjectAdded (RackConnection*) override                                      { sendChange(); }</span></a>
 <a name="127"><span class="lineNum">     127 </span><span class="lineCov">         16 :     void objectRemoved (RackConnection*) override                                       { sendChange(); }</span></a>
 <a name="128"><span class="lineNum">     128 </span><span class="lineNoCov">          0 :     void objectOrderChanged() override                                                  { sendChange(); }</span></a>
-<a name="129"><span class="lineNum">     129 </span><span class="lineCov">        247 :     void valueTreePropertyChanged (juce::ValueTree&amp;, const juce::Identifier&amp;) override  { sendChange(); }</span></a>
+<a name="129"><span class="lineNum">     129 </span><span class="lineCov">        410 :     void valueTreePropertyChanged (juce::ValueTree&amp;, const juce::Identifier&amp;) override  { sendChange(); }</span></a>
 <a name="130"><span class="lineNum">     130 </span>            : </a>
 <a name="131"><span class="lineNum">     131 </span>            :     void sendChange()</a>
 <a name="132"><span class="lineNum">     132 </span>            :     {</a>
@@ -235,7 +235,7 @@
 <a name="173"><span class="lineNum">     173 </span><span class="lineNoCov">          0 :     void newObjectAdded (WindowState*) override                                         {}</span></a>
 <a name="174"><span class="lineNum">     174 </span><span class="lineNoCov">          0 :     void objectRemoved (WindowState*) override                                          {}</span></a>
 <a name="175"><span class="lineNum">     175 </span><span class="lineNoCov">          0 :     void objectOrderChanged() override                                                  {}</span></a>
-<a name="176"><span class="lineNum">     176 </span><span class="lineCov">        411 :     void valueTreePropertyChanged (juce::ValueTree&amp;, const juce::Identifier&amp;) override  {}</span></a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineCov">        574 :     void valueTreePropertyChanged (juce::ValueTree&amp;, const juce::Identifier&amp;) override  {}</span></a>
 <a name="177"><span class="lineNum">     177 </span>            : </a>
 <a name="178"><span class="lineNum">     178 </span>            :     RackType&amp; type;</a>
 <a name="179"><span class="lineNum">     179 </span>            : </a>
@@ -531,9 +531,9 @@
 <a name="469"><span class="lineNum">     469 </span>            : {</a>
 <a name="470"><span class="lineNum">     470 </span><span class="lineCov">       3771 :     juce::Array&lt;Plugin*&gt; list;</span></a>
 <a name="471"><span class="lineNum">     471 </span>            : </a>
-<a name="472"><span class="lineNum">     472 </span><span class="lineCov">       8952 :     for (auto i : pluginList-&gt;objects)</span></a>
-<a name="473"><span class="lineNum">     473 </span><span class="lineCov">       5181 :         if (i-&gt;plugin != nullptr)</span></a>
-<a name="474"><span class="lineNum">     474 </span><span class="lineCov">       5181 :             list.add (i-&gt;plugin.get());</span></a>
+<a name="472"><span class="lineNum">     472 </span><span class="lineCov">       8980 :     for (auto i : pluginList-&gt;objects)</span></a>
+<a name="473"><span class="lineNum">     473 </span><span class="lineCov">       5209 :         if (i-&gt;plugin != nullptr)</span></a>
+<a name="474"><span class="lineNum">     474 </span><span class="lineCov">       5209 :             list.add (i-&gt;plugin.get());</span></a>
 <a name="475"><span class="lineNum">     475 </span>            : </a>
 <a name="476"><span class="lineNum">     476 </span><span class="lineCov">       3771 :     return list;</span></a>
 <a name="477"><span class="lineNum">     477 </span>            : }</a>
@@ -1098,8 +1098,8 @@
 <a name="1036"><span class="lineNum">    1036 </span>            : </a>
 <a name="1037"><span class="lineNum">    1037 </span><span class="lineCov">       2435 :     numberOfInstancesInEdit = 0;</span></a>
 <a name="1038"><span class="lineNum">    1038 </span>            : </a>
-<a name="1039"><span class="lineNum">    1039 </span><span class="lineCov">       9933 :     for (auto p : getAllPlugins (edit, false))</span></a>
-<a name="1040"><span class="lineNum">    1040 </span><span class="lineCov">       7498 :         if (auto rf = dynamic_cast&lt;RackInstance*&gt; (p))</span></a>
+<a name="1039"><span class="lineNum">    1039 </span><span class="lineCov">       9961 :     for (auto p : getAllPlugins (edit, false))</span></a>
+<a name="1040"><span class="lineNum">    1040 </span><span class="lineCov">       7526 :         if (auto rf = dynamic_cast&lt;RackInstance*&gt; (p))</span></a>
 <a name="1041"><span class="lineNum">    1041 </span><span class="lineNoCov">          0 :             if (rf-&gt;type.get() == this)</span></a>
 <a name="1042"><span class="lineNum">    1042 </span><span class="lineNoCov">          0 :                 ++numberOfInstancesInEdit;</span></a>
 <a name="1043"><span class="lineNum">    1043 </span><span class="lineCov">       2435 : }</span></a>
@@ -1280,7 +1280,7 @@
 <a name="1218"><span class="lineNum">    1218 </span><span class="lineCov">        163 :     void newObjectAdded (RackType*) override                                            { sendChange(); }</span></a>
 <a name="1219"><span class="lineNum">    1219 </span><span class="lineNoCov">          0 :     void objectRemoved (RackType*) override                                             { sendChange(); }</span></a>
 <a name="1220"><span class="lineNum">    1220 </span><span class="lineNoCov">          0 :     void objectOrderChanged() override                                                  { sendChange(); }</span></a>
-<a name="1221"><span class="lineNum">    1221 </span><span class="lineCov">        574 :     void valueTreePropertyChanged (juce::ValueTree&amp;, const juce::Identifier&amp;) override  { sendChange(); }</span></a>
+<a name="1221"><span class="lineNum">    1221 </span><span class="lineCov">        737 :     void valueTreePropertyChanged (juce::ValueTree&amp;, const juce::Identifier&amp;) override  { sendChange(); }</span></a>
 <a name="1222"><span class="lineNum">    1222 </span>            : </a>
 <a name="1223"><span class="lineNum">    1223 </span>            :     void sendChange()</a>
 <a name="1224"><span class="lineNum">    1224 </span>            :     {</a>
@@ -1391,116 +1391,124 @@
 <a name="1329"><span class="lineNum">    1329 </span>            : </a>
 <a name="1330"><span class="lineNum">    1330 </span><span class="lineCov">        163 :     auto p = getRackTypeForID (newID);</span></a>
 <a name="1331"><span class="lineNum">    1331 </span>            :     jassert (p != nullptr);</a>
-<a name="1332"><span class="lineNum">    1332 </span><span class="lineCov">        163 :     return p;</span></a>
-<a name="1333"><span class="lineNum">    1333 </span><span class="lineCov">        163 : }</span></a>
-<a name="1334"><span class="lineNum">    1334 </span>            : </a>
-<a name="1335"><span class="lineNum">    1335 </span><span class="lineNoCov">          0 : RackType::Ptr RackTypeList::addRackTypeFrom (const juce::ValueTree&amp; rackType)</span></a>
-<a name="1336"><span class="lineNum">    1336 </span>            : {</a>
-<a name="1337"><span class="lineNum">    1337 </span><span class="lineNoCov">          0 :     if (! rackType.hasType (IDs::RACK))</span></a>
-<a name="1338"><span class="lineNum">    1338 </span><span class="lineNoCov">          0 :         return {};</span></a>
-<a name="1339"><span class="lineNum">    1339 </span>            : </a>
-<a name="1340"><span class="lineNum">    1340 </span><span class="lineNoCov">          0 :     auto typeID = EditItemID::fromID (rackType);</span></a>
-<a name="1341"><span class="lineNum">    1341 </span>            : </a>
-<a name="1342"><span class="lineNum">    1342 </span><span class="lineNoCov">          0 :     if (typeID.isInvalid())</span></a>
-<a name="1343"><span class="lineNum">    1343 </span><span class="lineNoCov">          0 :         return {};</span></a>
-<a name="1344"><span class="lineNum">    1344 </span>            : </a>
-<a name="1345"><span class="lineNum">    1345 </span><span class="lineNoCov">          0 :     auto type = getRackTypeForID (typeID);</span></a>
-<a name="1346"><span class="lineNum">    1346 </span>            : </a>
-<a name="1347"><span class="lineNum">    1347 </span><span class="lineNoCov">          0 :     if (type == nullptr)</span></a>
-<a name="1348"><span class="lineNum">    1348 </span>            :     {</a>
-<a name="1349"><span class="lineNum">    1349 </span><span class="lineNoCov">          0 :         if (rackType.isValid())</span></a>
-<a name="1350"><span class="lineNum">    1350 </span>            :         {</a>
-<a name="1351"><span class="lineNum">    1351 </span><span class="lineNoCov">          0 :             state.addChild (rackType.createCopy(), -1, &amp;edit.getUndoManager());</span></a>
-<a name="1352"><span class="lineNum">    1352 </span>            : </a>
-<a name="1353"><span class="lineNum">    1353 </span><span class="lineNoCov">          0 :             type = getRackTypeForID (typeID);</span></a>
-<a name="1354"><span class="lineNum">    1354 </span>            :             jassert (type != nullptr);</a>
-<a name="1355"><span class="lineNum">    1355 </span>            :         }</a>
-<a name="1356"><span class="lineNum">    1356 </span>            :     }</a>
-<a name="1357"><span class="lineNum">    1357 </span>            : </a>
-<a name="1358"><span class="lineNum">    1358 </span>            :     return type;</a>
-<a name="1359"><span class="lineNum">    1359 </span>            : }</a>
-<a name="1360"><span class="lineNum">    1360 </span>            : </a>
-<a name="1361"><span class="lineNum">    1361 </span><span class="lineNoCov">          0 : void RackTypeList::importRackFiles (const juce::Array&lt;juce::File&gt;&amp; files)</span></a>
-<a name="1362"><span class="lineNum">    1362 </span>            : {</a>
-<a name="1363"><span class="lineNum">    1363 </span>            :     int oldNumRacks = size();</a>
-<a name="1364"><span class="lineNum">    1364 </span>            : </a>
-<a name="1365"><span class="lineNum">    1365 </span><span class="lineNoCov">          0 :     for (auto&amp; f : files)</span></a>
-<a name="1366"><span class="lineNum">    1366 </span><span class="lineNoCov">          0 :         if (auto xml = juce::parseXML (f))</span></a>
-<a name="1367"><span class="lineNum">    1367 </span><span class="lineNoCov">          0 :             addRackTypeFrom (juce::ValueTree::fromXml (*xml));</span></a>
+<a name="1332"><span class="lineNum">    1332 </span>            : </a>
+<a name="1333"><span class="lineNum">    1333 </span><span class="lineCov">        163 :     if (edit.engine.getEngineBehaviour().arePluginsRemappedWhenTempoChanges())</span></a>
+<a name="1334"><span class="lineNum">    1334 </span><span class="lineCov">        326 :         p-&gt;macroParameterList.remapOnTempoChange = true;</span></a>
+<a name="1335"><span class="lineNum">    1335 </span>            : </a>
+<a name="1336"><span class="lineNum">    1336 </span><span class="lineCov">        163 :     return p;</span></a>
+<a name="1337"><span class="lineNum">    1337 </span><span class="lineCov">        163 : }</span></a>
+<a name="1338"><span class="lineNum">    1338 </span>            : </a>
+<a name="1339"><span class="lineNum">    1339 </span><span class="lineNoCov">          0 : RackType::Ptr RackTypeList::addRackTypeFrom (const juce::ValueTree&amp; rackType)</span></a>
+<a name="1340"><span class="lineNum">    1340 </span>            : {</a>
+<a name="1341"><span class="lineNum">    1341 </span><span class="lineNoCov">          0 :     if (! rackType.hasType (IDs::RACK))</span></a>
+<a name="1342"><span class="lineNum">    1342 </span><span class="lineNoCov">          0 :         return {};</span></a>
+<a name="1343"><span class="lineNum">    1343 </span>            : </a>
+<a name="1344"><span class="lineNum">    1344 </span><span class="lineNoCov">          0 :     auto typeID = EditItemID::fromID (rackType);</span></a>
+<a name="1345"><span class="lineNum">    1345 </span>            : </a>
+<a name="1346"><span class="lineNum">    1346 </span><span class="lineNoCov">          0 :     if (typeID.isInvalid())</span></a>
+<a name="1347"><span class="lineNum">    1347 </span><span class="lineNoCov">          0 :         return {};</span></a>
+<a name="1348"><span class="lineNum">    1348 </span>            : </a>
+<a name="1349"><span class="lineNum">    1349 </span><span class="lineNoCov">          0 :     auto type = getRackTypeForID (typeID);</span></a>
+<a name="1350"><span class="lineNum">    1350 </span>            : </a>
+<a name="1351"><span class="lineNum">    1351 </span><span class="lineNoCov">          0 :     if (type == nullptr)</span></a>
+<a name="1352"><span class="lineNum">    1352 </span>            :     {</a>
+<a name="1353"><span class="lineNum">    1353 </span><span class="lineNoCov">          0 :         if (rackType.isValid())</span></a>
+<a name="1354"><span class="lineNum">    1354 </span>            :         {</a>
+<a name="1355"><span class="lineNum">    1355 </span><span class="lineNoCov">          0 :             state.addChild (rackType.createCopy(), -1, &amp;edit.getUndoManager());</span></a>
+<a name="1356"><span class="lineNum">    1356 </span>            : </a>
+<a name="1357"><span class="lineNum">    1357 </span><span class="lineNoCov">          0 :             type = getRackTypeForID (typeID);</span></a>
+<a name="1358"><span class="lineNum">    1358 </span>            :             jassert (type != nullptr);</a>
+<a name="1359"><span class="lineNum">    1359 </span>            : </a>
+<a name="1360"><span class="lineNum">    1360 </span><span class="lineNoCov">          0 :             if (! type-&gt;macroParameterList.state.hasProperty (IDs::remapOnTempoChange))</span></a>
+<a name="1361"><span class="lineNum">    1361 </span><span class="lineNoCov">          0 :                 if (edit.engine.getEngineBehaviour().arePluginsRemappedWhenTempoChanges())</span></a>
+<a name="1362"><span class="lineNum">    1362 </span><span class="lineNoCov">          0 :                     type-&gt;macroParameterList.remapOnTempoChange = true;</span></a>
+<a name="1363"><span class="lineNum">    1363 </span>            :         }</a>
+<a name="1364"><span class="lineNum">    1364 </span>            :     }</a>
+<a name="1365"><span class="lineNum">    1365 </span>            : </a>
+<a name="1366"><span class="lineNum">    1366 </span>            :     return type;</a>
+<a name="1367"><span class="lineNum">    1367 </span>            : }</a>
 <a name="1368"><span class="lineNum">    1368 </span>            : </a>
-<a name="1369"><span class="lineNum">    1369 </span><span class="lineNoCov">          0 :     if (oldNumRacks &lt; size())</span></a>
-<a name="1370"><span class="lineNum">    1370 </span><span class="lineNoCov">          0 :         edit.engine.getUIBehaviour().showWarningMessage (TRANS(&quot;Rack types added!&quot;));</span></a>
-<a name="1371"><span class="lineNum">    1371 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1369"><span class="lineNum">    1369 </span><span class="lineNoCov">          0 : void RackTypeList::importRackFiles (const juce::Array&lt;juce::File&gt;&amp; files)</span></a>
+<a name="1370"><span class="lineNum">    1370 </span>            : {</a>
+<a name="1371"><span class="lineNum">    1371 </span>            :     int oldNumRacks = size();</a>
 <a name="1372"><span class="lineNum">    1372 </span>            : </a>
-<a name="1373"><span class="lineNum">    1373 </span>            : //==============================================================================</a>
-<a name="1374"><span class="lineNum">    1374 </span><span class="lineCov">       2435 : void RackType::triggerUpdate()</span></a>
-<a name="1375"><span class="lineNum">    1375 </span>            : {</a>
-<a name="1376"><span class="lineNum">    1376 </span><span class="lineCov">       2435 :     CRASH_TRACER</span></a>
-<a name="1377"><span class="lineNum">    1377 </span>            : </a>
-<a name="1378"><span class="lineNum">    1378 </span><span class="lineCov">       2435 :     if (edit.isLoading())</span></a>
-<a name="1379"><span class="lineNum">    1379 </span>            :         return;</a>
+<a name="1373"><span class="lineNum">    1373 </span><span class="lineNoCov">          0 :     for (auto&amp; f : files)</span></a>
+<a name="1374"><span class="lineNum">    1374 </span><span class="lineNoCov">          0 :         if (auto xml = juce::parseXML (f))</span></a>
+<a name="1375"><span class="lineNum">    1375 </span><span class="lineNoCov">          0 :             addRackTypeFrom (juce::ValueTree::fromXml (*xml));</span></a>
+<a name="1376"><span class="lineNum">    1376 </span>            : </a>
+<a name="1377"><span class="lineNum">    1377 </span><span class="lineNoCov">          0 :     if (oldNumRacks &lt; size())</span></a>
+<a name="1378"><span class="lineNum">    1378 </span><span class="lineNoCov">          0 :         edit.engine.getUIBehaviour().showWarningMessage (TRANS(&quot;Rack types added!&quot;));</span></a>
+<a name="1379"><span class="lineNum">    1379 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="1380"><span class="lineNum">    1380 </span>            : </a>
-<a name="1381"><span class="lineNum">    1381 </span><span class="lineCov">       2435 :     countInstancesInEdit();</span></a>
-<a name="1382"><span class="lineNum">    1382 </span>            :     </a>
-<a name="1383"><span class="lineNum">    1383 </span><span class="lineCov">       2435 :     edit.restartPlayback();</span></a>
-<a name="1384"><span class="lineNum">    1384 </span><span class="lineCov">       2435 : }</span></a>
+<a name="1381"><span class="lineNum">    1381 </span>            : //==============================================================================</a>
+<a name="1382"><span class="lineNum">    1382 </span><span class="lineCov">       2435 : void RackType::triggerUpdate()</span></a>
+<a name="1383"><span class="lineNum">    1383 </span>            : {</a>
+<a name="1384"><span class="lineNum">    1384 </span><span class="lineCov">       2435 :     CRASH_TRACER</span></a>
 <a name="1385"><span class="lineNum">    1385 </span>            : </a>
-<a name="1386"><span class="lineNum">    1386 </span><span class="lineNoCov">          0 : void RackType::updateRenderContext()</span></a>
-<a name="1387"><span class="lineNum">    1387 </span>            : {</a>
-<a name="1388"><span class="lineNum">    1388 </span><span class="lineNoCov">          0 :     if (edit.isLoading())</span></a>
-<a name="1389"><span class="lineNum">    1389 </span>            :         TRACKTION_ASSERT_MESSAGE_THREAD</a>
-<a name="1390"><span class="lineNum">    1390 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="1391"><span class="lineNum">    1391 </span>            : </a>
-<a name="1392"><span class="lineNum">    1392 </span>            : //==============================================================================</a>
-<a name="1393"><span class="lineNum">    1393 </span><span class="lineCov">       1864 : void RackType::valueTreeChildAdded (juce::ValueTree&amp;, juce::ValueTree&amp;)</span></a>
-<a name="1394"><span class="lineNum">    1394 </span>            : {</a>
-<a name="1395"><span class="lineNum">    1395 </span><span class="lineCov">       1864 :     triggerUpdate();</span></a>
-<a name="1396"><span class="lineNum">    1396 </span><span class="lineCov">       1864 : }</span></a>
-<a name="1397"><span class="lineNum">    1397 </span>            : </a>
-<a name="1398"><span class="lineNum">    1398 </span><span class="lineCov">        408 : void RackType::valueTreeChildRemoved (juce::ValueTree&amp;, juce::ValueTree&amp;, int)</span></a>
-<a name="1399"><span class="lineNum">    1399 </span>            : {</a>
-<a name="1400"><span class="lineNum">    1400 </span><span class="lineCov">        408 :     triggerUpdate();</span></a>
-<a name="1401"><span class="lineNum">    1401 </span><span class="lineCov">        408 : }</span></a>
-<a name="1402"><span class="lineNum">    1402 </span>            : </a>
-<a name="1403"><span class="lineNum">    1403 </span><span class="lineNoCov">          0 : void RackType::valueTreeChildOrderChanged (juce::ValueTree&amp;, int, int)   {}</span></a>
-<a name="1404"><span class="lineNum">    1404 </span><span class="lineNoCov">          0 : void RackType::valueTreeRedirected (juce::ValueTree&amp;)                    { triggerUpdate(); }</span></a>
+<a name="1386"><span class="lineNum">    1386 </span><span class="lineCov">       2435 :     if (edit.isLoading())</span></a>
+<a name="1387"><span class="lineNum">    1387 </span>            :         return;</a>
+<a name="1388"><span class="lineNum">    1388 </span>            : </a>
+<a name="1389"><span class="lineNum">    1389 </span><span class="lineCov">       2435 :     countInstancesInEdit();</span></a>
+<a name="1390"><span class="lineNum">    1390 </span>            :     </a>
+<a name="1391"><span class="lineNum">    1391 </span><span class="lineCov">       2435 :     edit.restartPlayback();</span></a>
+<a name="1392"><span class="lineNum">    1392 </span><span class="lineCov">       2435 : }</span></a>
+<a name="1393"><span class="lineNum">    1393 </span>            : </a>
+<a name="1394"><span class="lineNum">    1394 </span><span class="lineNoCov">          0 : void RackType::updateRenderContext()</span></a>
+<a name="1395"><span class="lineNum">    1395 </span>            : {</a>
+<a name="1396"><span class="lineNum">    1396 </span><span class="lineNoCov">          0 :     if (edit.isLoading())</span></a>
+<a name="1397"><span class="lineNum">    1397 </span>            :         TRACKTION_ASSERT_MESSAGE_THREAD</a>
+<a name="1398"><span class="lineNum">    1398 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="1399"><span class="lineNum">    1399 </span>            : </a>
+<a name="1400"><span class="lineNum">    1400 </span>            : //==============================================================================</a>
+<a name="1401"><span class="lineNum">    1401 </span><span class="lineCov">       1864 : void RackType::valueTreeChildAdded (juce::ValueTree&amp;, juce::ValueTree&amp;)</span></a>
+<a name="1402"><span class="lineNum">    1402 </span>            : {</a>
+<a name="1403"><span class="lineNum">    1403 </span><span class="lineCov">       1864 :     triggerUpdate();</span></a>
+<a name="1404"><span class="lineNum">    1404 </span><span class="lineCov">       1864 : }</span></a>
 <a name="1405"><span class="lineNum">    1405 </span>            : </a>
-<a name="1406"><span class="lineNum">    1406 </span><span class="lineCov">        163 : void RackType::valueTreeParentChanged (juce::ValueTree&amp;)</span></a>
+<a name="1406"><span class="lineNum">    1406 </span><span class="lineCov">        408 : void RackType::valueTreeChildRemoved (juce::ValueTree&amp;, juce::ValueTree&amp;, int)</span></a>
 <a name="1407"><span class="lineNum">    1407 </span>            : {</a>
-<a name="1408"><span class="lineNum">    1408 </span><span class="lineCov">        163 :     if (! state.getParent().isValid())</span></a>
-<a name="1409"><span class="lineNum">    1409 </span><span class="lineNoCov">          0 :         hideWindowForShutdown();</span></a>
+<a name="1408"><span class="lineNum">    1408 </span><span class="lineCov">        408 :     triggerUpdate();</span></a>
+<a name="1409"><span class="lineNum">    1409 </span><span class="lineCov">        408 : }</span></a>
 <a name="1410"><span class="lineNum">    1410 </span>            : </a>
-<a name="1411"><span class="lineNum">    1411 </span><span class="lineCov">        163 :     triggerUpdate();</span></a>
-<a name="1412"><span class="lineNum">    1412 </span><span class="lineCov">        163 : }</span></a>
+<a name="1411"><span class="lineNum">    1411 </span><span class="lineNoCov">          0 : void RackType::valueTreeChildOrderChanged (juce::ValueTree&amp;, int, int)   {}</span></a>
+<a name="1412"><span class="lineNum">    1412 </span><span class="lineNoCov">          0 : void RackType::valueTreeRedirected (juce::ValueTree&amp;)                    { triggerUpdate(); }</span></a>
 <a name="1413"><span class="lineNum">    1413 </span>            : </a>
-<a name="1414"><span class="lineNum">    1414 </span><span class="lineCov">        247 : void RackType::valueTreePropertyChanged (juce::ValueTree&amp; v, const juce::Identifier&amp; ident)</span></a>
+<a name="1414"><span class="lineNum">    1414 </span><span class="lineCov">        163 : void RackType::valueTreeParentChanged (juce::ValueTree&amp;)</span></a>
 <a name="1415"><span class="lineNum">    1415 </span>            : {</a>
-<a name="1416"><span class="lineNum">    1416 </span><span class="lineCov">        247 :     if (v.hasType (IDs::PLUGININSTANCE) || v.hasType (IDs::CONNECTION))</span></a>
-<a name="1417"><span class="lineNum">    1417 </span><span class="lineNoCov">          0 :         if (ident != IDs::x &amp;&amp; ident != IDs::y &amp;&amp; ident != IDs::windowLocked &amp;&amp; ident != IDs::windowPos)</span></a>
-<a name="1418"><span class="lineNum">    1418 </span><span class="lineNoCov">          0 :             triggerUpdate();</span></a>
-<a name="1419"><span class="lineNum">    1419 </span>            : </a>
-<a name="1420"><span class="lineNum">    1420 </span><span class="lineCov">        247 :     if (v == state &amp;&amp; ident == IDs::name)</span></a>
-<a name="1421"><span class="lineNum">    1421 </span>            :     {</a>
-<a name="1422"><span class="lineNum">    1422 </span><span class="lineCov">         98 :         rackName.forceUpdateOfCachedValue();</span></a>
-<a name="1423"><span class="lineNum">    1423 </span>            : </a>
-<a name="1424"><span class="lineNum">    1424 </span><span class="lineCov">        390 :         for (auto af : getAllPlugins (edit, false))</span></a>
-<a name="1425"><span class="lineNum">    1425 </span><span class="lineCov">        292 :             if (auto rf = dynamic_cast&lt;RackInstance*&gt; (af))</span></a>
-<a name="1426"><span class="lineNum">    1426 </span><span class="lineNoCov">          0 :                 if (rf-&gt;type.get() == this)</span></a>
-<a name="1427"><span class="lineNum">    1427 </span><span class="lineNoCov">          0 :                     rf-&gt;changed();</span></a>
-<a name="1428"><span class="lineNum">    1428 </span>            : </a>
-<a name="1429"><span class="lineNum">    1429 </span><span class="lineCov">         98 :         changed();</span></a>
-<a name="1430"><span class="lineNum">    1430 </span>            :     }</a>
+<a name="1416"><span class="lineNum">    1416 </span><span class="lineCov">        163 :     if (! state.getParent().isValid())</span></a>
+<a name="1417"><span class="lineNum">    1417 </span><span class="lineNoCov">          0 :         hideWindowForShutdown();</span></a>
+<a name="1418"><span class="lineNum">    1418 </span>            : </a>
+<a name="1419"><span class="lineNum">    1419 </span><span class="lineCov">        163 :     triggerUpdate();</span></a>
+<a name="1420"><span class="lineNum">    1420 </span><span class="lineCov">        163 : }</span></a>
+<a name="1421"><span class="lineNum">    1421 </span>            : </a>
+<a name="1422"><span class="lineNum">    1422 </span><span class="lineCov">        410 : void RackType::valueTreePropertyChanged (juce::ValueTree&amp; v, const juce::Identifier&amp; ident)</span></a>
+<a name="1423"><span class="lineNum">    1423 </span>            : {</a>
+<a name="1424"><span class="lineNum">    1424 </span><span class="lineCov">        410 :     if (v.hasType (IDs::PLUGININSTANCE) || v.hasType (IDs::CONNECTION))</span></a>
+<a name="1425"><span class="lineNum">    1425 </span><span class="lineNoCov">          0 :         if (ident != IDs::x &amp;&amp; ident != IDs::y &amp;&amp; ident != IDs::windowLocked &amp;&amp; ident != IDs::windowPos)</span></a>
+<a name="1426"><span class="lineNum">    1426 </span><span class="lineNoCov">          0 :             triggerUpdate();</span></a>
+<a name="1427"><span class="lineNum">    1427 </span>            : </a>
+<a name="1428"><span class="lineNum">    1428 </span><span class="lineCov">        410 :     if (v == state &amp;&amp; ident == IDs::name)</span></a>
+<a name="1429"><span class="lineNum">    1429 </span>            :     {</a>
+<a name="1430"><span class="lineNum">    1430 </span><span class="lineCov">         98 :         rackName.forceUpdateOfCachedValue();</span></a>
 <a name="1431"><span class="lineNum">    1431 </span>            : </a>
-<a name="1432"><span class="lineNum">    1432 </span><span class="lineCov">        247 :     if (v == state &amp;&amp; ident == IDs::id)</span></a>
-<a name="1433"><span class="lineNum">    1433 </span>            :         jassertfalse;</a>
-<a name="1434"><span class="lineNum">    1434 </span><span class="lineCov">        247 : }</span></a>
-<a name="1435"><span class="lineNum">    1435 </span>            : </a>
-<a name="1436"><span class="lineNum">    1436 </span>            : //==============================================================================</a>
-<a name="1437"><span class="lineNum">    1437 </span><span class="lineCov">        180 : RackType::WindowState::WindowState (RackType&amp; r, juce::ValueTree windowStateTree)</span></a>
-<a name="1438"><span class="lineNum">    1438 </span><span class="lineCov">        180 :     : PluginWindowState (r.edit), rack (r), state (std::move (windowStateTree))</span></a>
-<a name="1439"><span class="lineNum">    1439 </span><span class="lineNoCov">          0 : {}</span></a>
-<a name="1440"><span class="lineNum">    1440 </span>            : </a>
-<a name="1441"><span class="lineNum">    1441 </span>            : }} // namespace tracktion { inline namespace engine</a>
+<a name="1432"><span class="lineNum">    1432 </span><span class="lineCov">        390 :         for (auto af : getAllPlugins (edit, false))</span></a>
+<a name="1433"><span class="lineNum">    1433 </span><span class="lineCov">        292 :             if (auto rf = dynamic_cast&lt;RackInstance*&gt; (af))</span></a>
+<a name="1434"><span class="lineNum">    1434 </span><span class="lineNoCov">          0 :                 if (rf-&gt;type.get() == this)</span></a>
+<a name="1435"><span class="lineNum">    1435 </span><span class="lineNoCov">          0 :                     rf-&gt;changed();</span></a>
+<a name="1436"><span class="lineNum">    1436 </span>            : </a>
+<a name="1437"><span class="lineNum">    1437 </span><span class="lineCov">         98 :         changed();</span></a>
+<a name="1438"><span class="lineNum">    1438 </span>            :     }</a>
+<a name="1439"><span class="lineNum">    1439 </span>            : </a>
+<a name="1440"><span class="lineNum">    1440 </span><span class="lineCov">        410 :     if (v == state &amp;&amp; ident == IDs::id)</span></a>
+<a name="1441"><span class="lineNum">    1441 </span>            :         jassertfalse;</a>
+<a name="1442"><span class="lineNum">    1442 </span><span class="lineCov">        410 : }</span></a>
+<a name="1443"><span class="lineNum">    1443 </span>            : </a>
+<a name="1444"><span class="lineNum">    1444 </span>            : //==============================================================================</a>
+<a name="1445"><span class="lineNum">    1445 </span><span class="lineCov">        180 : RackType::WindowState::WindowState (RackType&amp; r, juce::ValueTree windowStateTree)</span></a>
+<a name="1446"><span class="lineNum">    1446 </span><span class="lineCov">        180 :     : PluginWindowState (r.edit), rack (r), state (std::move (windowStateTree))</span></a>
+<a name="1447"><span class="lineNum">    1447 </span><span class="lineNoCov">          0 : {}</span></a>
+<a name="1448"><span class="lineNum">    1448 </span>            : </a>
+<a name="1449"><span class="lineNum">    1449 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

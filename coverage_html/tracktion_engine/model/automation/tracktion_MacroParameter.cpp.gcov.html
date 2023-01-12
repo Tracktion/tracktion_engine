@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-01-11 12:34:22</td>
+            <td class="headerValue">2023-01-12 11:40:27</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">21</td>
@@ -211,13 +211,13 @@
 <a name="149"><span class="lineNum">     149 </span>            : </a>
 <a name="150"><span class="lineNum">     150 </span><span class="lineNoCov">          0 :     void objectOrderChanged() override              { macroParameterList.sendChangeMessage(); }</span></a>
 <a name="151"><span class="lineNum">     151 </span>            : </a>
-<a name="152"><span class="lineNum">     152 </span><span class="lineCov">          2 :     void valueTreePropertyChanged (juce::ValueTree&amp; v, const juce::Identifier&amp; i) override</span></a>
+<a name="152"><span class="lineNum">     152 </span><span class="lineCov">        165 :     void valueTreePropertyChanged (juce::ValueTree&amp; v, const juce::Identifier&amp; i) override</span></a>
 <a name="153"><span class="lineNum">     153 </span>            :     {</a>
-<a name="154"><span class="lineNum">     154 </span><span class="lineCov">          2 :         if (v.hasType (IDs::MACROPARAMETER) &amp;&amp; i == IDs::name)</span></a>
+<a name="154"><span class="lineNum">     154 </span><span class="lineCov">        165 :         if (v.hasType (IDs::MACROPARAMETER) &amp;&amp; i == IDs::name)</span></a>
 <a name="155"><span class="lineNum">     155 </span><span class="lineCov">          1 :             macroParameterList.rebuildParameterTree();</span></a>
 <a name="156"><span class="lineNum">     156 </span>            : </a>
 <a name="157"><span class="lineNum">     157 </span>            :         ValueTreeObjectList&lt;MacroParameter&gt;::valueTreePropertyChanged (v, i);</a>
-<a name="158"><span class="lineNum">     158 </span><span class="lineCov">          2 :     }</span></a>
+<a name="158"><span class="lineNum">     158 </span><span class="lineCov">        165 :     }</span></a>
 <a name="159"><span class="lineNum">     159 </span>            : };</a>
 <a name="160"><span class="lineNum">     160 </span>            : </a>
 <a name="161"><span class="lineNum">     161 </span>            : //==============================================================================</a>
@@ -246,7 +246,7 @@
 <a name="184"><span class="lineNum">     184 </span><span class="lineCov">          1 :     edit.createNewItemID().writeID (v, nullptr);</span></a>
 <a name="185"><span class="lineNum">     185 </span><span class="lineCov">          1 :     state.addChild (v, -1, um);</span></a>
 <a name="186"><span class="lineNum">     186 </span>            : </a>
-<a name="187"><span class="lineNum">     187 </span>            :     auto* mp = list-&gt;objects.getLast();</a>
+<a name="187"><span class="lineNum">     187 </span>            :     auto mp = list-&gt;objects.getLast();</a>
 <a name="188"><span class="lineNum">     188 </span><span class="lineCov">          2 :     mp-&gt;macroName = TRANS(&quot;Macro&quot;) + &quot; &quot; + juce::String (list-&gt;objects.size());</span></a>
 <a name="189"><span class="lineNum">     189 </span>            :     jassert (mp != nullptr);</a>
 <a name="190"><span class="lineNum">     190 </span>            :     jassert (mp-&gt;state == v);</a>
