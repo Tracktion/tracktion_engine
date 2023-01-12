@@ -320,6 +320,12 @@ public:
     */
     void setAutoPitch (bool shouldUseAutoPitch)         { autoPitch = shouldUseAutoPitch; }
 
+    /** Returns a multiplier that has been applied to the clips tempo */
+    double getTempoRatio() const                        { return tempoRatio; }
+
+    /** Applies a multiplier clips tempo */
+    void setTempoRatio (double r);
+
     /** Returns true if auto-pitch has been set. */
     bool getAutoPitch() const                           { return autoPitch; }
 
@@ -633,6 +639,7 @@ protected:
     juce::CachedValue<float> beatSensitivity;
     juce::CachedValue<TimeStretcher::Mode> timeStretchMode;
     juce::CachedValue<bool> autoPitch, autoTempo, isReversed, autoDetectBeats, warpTime, clipEffectsVisible;
+    juce::CachedValue<double> tempoRatio;
     juce::CachedValue<AutoPitchMode> autoPitchMode;
 
     mutable WarpTimeManager::Ptr warpTimeManager;

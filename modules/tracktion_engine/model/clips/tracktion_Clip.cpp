@@ -411,14 +411,18 @@ void Clip::rescale (TimePosition pivotTimeInEdit, double factor)
         bool canRescale = false;
 
         if (auto acb = dynamic_cast<AudioClipBase*> (this))
-            canRescale = ! acb->getAutoTempo();
+            canRescale = true;
         else if (type == Type::midi || type == Type::step)
             canRescale = true;
 
         if (canRescale)
         {
             setPosition (pos.rescaled (pivotTimeInEdit, factor));
-            setSpeedRatio (speedRatio / factor);
+
+            if (auto acb = dynamic_cast<AudioClipBase*> (this); acb != nullptr && acb->getAutoTempo())
+                acb->setTempoRatio (acb->getTempoRatio() / factor);
+            else
+                setSpeedRatio (speedRatio / factor);
         }
     }
 }

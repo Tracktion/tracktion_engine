@@ -354,6 +354,7 @@ namespace IDs
     DECLARE_ID (autoPitch)
     DECLARE_ID (autoPitchMode)
     DECLARE_ID (autoTempo)
+    DECLARE_ID (tempoRatio)
     DECLARE_ID (warpTime)
     DECLARE_ID (isReversed)
     DECLARE_ID (transpose)

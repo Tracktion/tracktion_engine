@@ -572,7 +572,7 @@ void AudioSegmentList::buildAutoTempo (bool crossfade)
 
         auto loopStartBeat = clip.getLoopStartBeats() + offsetBeat;
 
-        auto offsetTime   = TimePosition::fromSeconds (loopStartBeat.inBeats() / li.getBeatsPerSecond (wi));
+        auto offsetTime   = TimePosition::fromSeconds (loopStartBeat.inBeats() / (li.getBeatsPerSecond (wi) / clip.getTempoRatio()));
         auto offsetSample = tracktion::toSamples (offsetTime, wi.sampleRate) + range.getStart();
 
         auto syncSamplesSubset = trimInitialSyncSamples (syncSamples, offsetSample);
@@ -618,7 +618,7 @@ void AudioSegmentList::buildAutoTempo (bool crossfade)
 
         loopStartBeat = clip.getLoopStartBeats();
 
-        offsetTime   = TimePosition::fromSeconds (loopStartBeat.inBeats() / li.getBeatsPerSecond (wi));
+        offsetTime   = TimePosition::fromSeconds (loopStartBeat.inBeats() / (li.getBeatsPerSecond (wi) / clip.getTempoRatio()));
         offsetSample = tracktion::toSamples (offsetTime, wi.sampleRate);
 
         syncSamplesSubset = trimInitialSyncSamples (syncSamples, offsetSample);
@@ -637,7 +637,7 @@ void AudioSegmentList::buildAutoTempo (bool crossfade)
                                                                         : (syncSamplesSubset[i + 1]) - seg.startSample);
 
                 auto startBeat = beatPos;
-                beatPos = beatPos + BeatDuration::fromBeats ((seg.lengthSample / wi.sampleRate) * li.getBeatsPerSecond (wi));
+                beatPos = beatPos + BeatDuration::fromBeats ((seg.lengthSample / wi.sampleRate) * (li.getBeatsPerSecond (wi) / clip.getTempoRatio()));
                 auto endBeat = beatPos;
 
                 initialiseSegment (seg, clipStartBeat + toDuration (startBeat), clipStartBeat + toDuration (endBeat), wi.sampleRate);
@@ -670,7 +670,7 @@ void AudioSegmentList::buildAutoTempo (bool crossfade)
     }
     else
     {
-        auto offsetTime = TimeDuration::fromSeconds (clip.getOffsetInBeats().inBeats() / li.getBeatsPerSecond (wi));
+        auto offsetTime = TimeDuration::fromSeconds (clip.getOffsetInBeats().inBeats() / (li.getBeatsPerSecond (wi) / clip.getTempoRatio()));
         auto offsetSample = tracktion::toSamples (offsetTime, wi.sampleRate) + range.getStart();
         BeatPosition beatPos;
 
@@ -685,7 +685,7 @@ void AudioSegmentList::buildAutoTempo (bool crossfade)
                                                               : (syncSamples[i + 1]) - seg.startSample);
 
             auto startBeat = beatPos;
-            beatPos = beatPos + BeatDuration::fromBeats ((seg.lengthSample / wi.sampleRate) * li.getBeatsPerSecond (wi));
+            beatPos = beatPos + BeatDuration::fromBeats ((seg.lengthSample / wi.sampleRate) * (li.getBeatsPerSecond (wi) / clip.getTempoRatio()));
             auto endBeat = beatPos;
 
             initialiseSegment (seg, clipStartBeat + toDuration (startBeat), clipStartBeat + toDuration (endBeat), wi.sampleRate);

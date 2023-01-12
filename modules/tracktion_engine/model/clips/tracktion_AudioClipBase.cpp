@@ -248,6 +248,7 @@ AudioClipBase::AudioClipBase (const juce::ValueTree& v, EditItemID id, Type t, C
     autoPitch.referTo (state, IDs::autoPitch, um);
     autoPitchMode.referTo (state, IDs::autoPitchMode, um);
     autoTempo.referTo (state, IDs::autoTempo, um);
+    tempoRatio.referTo (state, IDs::tempoRatio, um, 1.0);
     warpTime.referTo (state, IDs::warpTime, um);
     isReversed.referTo (state, IDs::isReversed, um);
     autoDetectBeats.referTo (state, IDs::autoDetectBeats, um);
@@ -613,7 +614,7 @@ void AudioClipBase::reverseLoopPoints()
     if (beatBased)
     {
         auto bps = edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart());
-        ratio = bps / std::max (1.0, loopInfo.getBeatsPerSecond (wi));
+        ratio = bps / std::max (1.0, loopInfo.getBeatsPerSecond (wi) / getTempoRatio());
     }
 
     jassert (ratio >= 0.1);
@@ -1065,6 +1066,16 @@ void AudioClipBase::setSpeedRatio (double r)
         Clip::setSpeedRatio (r);
         setLoopRange ({ newLoopStart, newLoopStart + newLoopLen });
     }
+}
+
+void AudioClipBase::setTempoRatio (double r)
+{
+    auto factor = getTempoRatio() / r;
+    auto newLoopStart = getLoopStart() * factor;
+    auto newLoopLen   = getLoopLength() * factor;
+
+    tempoRatio = r;
+    setLoopRange ({ newLoopStart, newLoopStart + newLoopLen });
 }
 
 bool AudioClipBase::isUsingMelodyne() const
@@ -1721,7 +1732,7 @@ void AudioClipBase::getRescaledMarkPoints (juce::Array<TimePosition>& times, juc
             auto afi = getAudioFile().getInfo();
 
             for (int i = 0; i < beats.size(); ++i)
-                beats.set (i, beats[i] * loopInfo.getBeatsPerSecond (afi));
+                beats.set (i, beats[i] * loopInfo.getBeatsPerSecond (afi) / getTempoRatio());
 
             if (isLooping())
             {
@@ -2300,7 +2311,7 @@ void AudioClipBase::valueTreePropertyChanged (juce::ValueTree& tree, const juce:
             || id == IDs::loopStart || id == IDs::loopLength
             || id == IDs::loopStartBeats || id == IDs::loopLengthBeats
             || id == IDs::transpose || id == IDs::pitchChange
-            || id == IDs::elastiqueMode || id == IDs::autoPitch
+            || id == IDs::elastiqueMode || id == IDs::autoPitch || id == IDs::tempoRatio
             || id == IDs::elastiqueOptions || id == IDs::warpTime
             || id == IDs::effectsVisible || id == IDs::autoPitchMode)
         {
