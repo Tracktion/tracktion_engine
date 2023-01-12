@@ -197,6 +197,10 @@ ClipTrack* findFirstClipTrackFromSelection (const SelectableList& items)
 
     for (auto& t : clipTracks)
     {
+        //BEATCONNECT MODIFICATION START
+        if (t == nullptr)
+            continue;
+        //BEATCONNECT MODIFICATION END
         auto index = t->getIndexInEditTrackList();
 
         if (index < firstIndex)
