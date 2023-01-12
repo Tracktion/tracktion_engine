@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">11</td>
-            <td class="headerCovTableEntry">94</td>
-            <td class="headerCovTableEntryLo">11.7 %</td>
+            <td class="headerCovTableEntry">120</td>
+            <td class="headerCovTableEntry">169</td>
+            <td class="headerCovTableEntryLo">71.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-01-12 11:40:27</td>
+            <td class="headerValue">2023-01-12 18:02:28</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">3</td>
-            <td class="headerCovTableEntry">29</td>
-            <td class="headerCovTableEntryLo">10.3 %</td>
+            <td class="headerCovTableEntry">23</td>
+            <td class="headerCovTableEntry">39</td>
+            <td class="headerCovTableEntryLo">59.0 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -138,7 +138,7 @@
 <a name="76"><span class="lineNum">      76 </span>            : }</a>
 <a name="77"><span class="lineNum">      77 </span>            : </a>
 <a name="78"><span class="lineNum">      78 </span>            : //==============================================================================</a>
-<a name="79"><span class="lineNum">      79 </span>            : struct TimeStretcher::Stretcher</a>
+<a name="79"><span class="lineNum">      79 </span><span class="lineCov">         89 : struct TimeStretcher::Stretcher</span></a>
 <a name="80"><span class="lineNum">      80 </span>            : {</a>
 <a name="81"><span class="lineNum">      81 </span>            :     virtual ~Stretcher() {}</a>
 <a name="82"><span class="lineNum">      82 </span>            : </a>
@@ -276,134 +276,134 @@
 <a name="214"><span class="lineNum">     214 </span>            : struct SoundTouchStretcher  : public TimeStretcher::Stretcher,</a>
 <a name="215"><span class="lineNum">     215 </span>            :                               private soundtouch::SoundTouch</a>
 <a name="216"><span class="lineNum">     216 </span>            : {</a>
-<a name="217"><span class="lineNum">     217 </span>            :     SoundTouchStretcher (double sourceSampleRate, int samplesPerBlock,</a>
+<a name="217"><span class="lineNum">     217 </span><span class="lineCov">         89 :     SoundTouchStretcher (double sourceSampleRate, int samplesPerBlock,</span></a>
 <a name="218"><span class="lineNum">     218 </span>            :                          int chans, bool betterQuality)</a>
-<a name="219"><span class="lineNum">     219 </span>            :         : numChannels (chans), samplesPerOutputBuffer (samplesPerBlock)</a>
+<a name="219"><span class="lineNum">     219 </span><span class="lineCov">         89 :         : numChannels (chans), samplesPerOutputBuffer (samplesPerBlock)</span></a>
 <a name="220"><span class="lineNum">     220 </span>            :     {</a>
-<a name="221"><span class="lineNum">     221 </span>            :         CRASH_TRACER</a>
-<a name="222"><span class="lineNum">     222 </span>            :         setChannels (static_cast&lt;unsigned int&gt; (numChannels));</a>
-<a name="223"><span class="lineNum">     223 </span>            :         setSampleRate (static_cast&lt;unsigned int&gt; (sourceSampleRate));</a>
+<a name="221"><span class="lineNum">     221 </span><span class="lineCov">         89 :         CRASH_TRACER</span></a>
+<a name="222"><span class="lineNum">     222 </span><span class="lineCov">         89 :         setChannels (static_cast&lt;unsigned int&gt; (numChannels));</span></a>
+<a name="223"><span class="lineNum">     223 </span><span class="lineCov">         89 :         setSampleRate (static_cast&lt;unsigned int&gt; (sourceSampleRate));</span></a>
 <a name="224"><span class="lineNum">     224 </span>            : </a>
-<a name="225"><span class="lineNum">     225 </span>            :         if (betterQuality)</a>
+<a name="225"><span class="lineNum">     225 </span><span class="lineCov">         89 :         if (betterQuality)</span></a>
 <a name="226"><span class="lineNum">     226 </span>            :         {</a>
-<a name="227"><span class="lineNum">     227 </span>            :             setSetting (SETTING_USE_AA_FILTER, 1);</a>
-<a name="228"><span class="lineNum">     228 </span>            :             setSetting (SETTING_AA_FILTER_LENGTH, 64);</a>
-<a name="229"><span class="lineNum">     229 </span>            :             setSetting (SETTING_USE_QUICKSEEK, 0);</a>
-<a name="230"><span class="lineNum">     230 </span>            :             setSetting (SETTING_SEQUENCE_MS, 60);</a>
-<a name="231"><span class="lineNum">     231 </span>            :             setSetting (SETTING_SEEKWINDOW_MS, 25);</a>
+<a name="227"><span class="lineNum">     227 </span><span class="lineCov">         89 :             setSetting (SETTING_USE_AA_FILTER, 1);</span></a>
+<a name="228"><span class="lineNum">     228 </span><span class="lineCov">         89 :             setSetting (SETTING_AA_FILTER_LENGTH, 64);</span></a>
+<a name="229"><span class="lineNum">     229 </span><span class="lineCov">         89 :             setSetting (SETTING_USE_QUICKSEEK, 0);</span></a>
+<a name="230"><span class="lineNum">     230 </span><span class="lineCov">         89 :             setSetting (SETTING_SEQUENCE_MS, 60);</span></a>
+<a name="231"><span class="lineNum">     231 </span><span class="lineCov">         89 :             setSetting (SETTING_SEEKWINDOW_MS, 25);</span></a>
 <a name="232"><span class="lineNum">     232 </span>            :         }</a>
-<a name="233"><span class="lineNum">     233 </span>            :     }</a>
+<a name="233"><span class="lineNum">     233 </span><span class="lineCov">         89 :     }</span></a>
 <a name="234"><span class="lineNum">     234 </span>            : </a>
-<a name="235"><span class="lineNum">     235 </span>            :     bool isOk() const override      { return true; }</a>
-<a name="236"><span class="lineNum">     236 </span>            :     void reset() override           { clear(); }</a>
+<a name="235"><span class="lineNum">     235 </span><span class="lineCov">         89 :     bool isOk() const override      { return true; }</span></a>
+<a name="236"><span class="lineNum">     236 </span><span class="lineCov">       1328 :     void reset() override           { clear(); }</span></a>
 <a name="237"><span class="lineNum">     237 </span>            : </a>
-<a name="238"><span class="lineNum">     238 </span>            :     bool setSpeedAndPitch (float speedRatio, float semitonesUp) override</a>
+<a name="238"><span class="lineNum">     238 </span><span class="lineCov">       1337 :     bool setSpeedAndPitch (float speedRatio, float semitonesUp) override</span></a>
 <a name="239"><span class="lineNum">     239 </span>            :     {</a>
-<a name="240"><span class="lineNum">     240 </span>            :         setTempo (1.0f / speedRatio);</a>
-<a name="241"><span class="lineNum">     241 </span>            :         setPitchSemiTones (semitonesUp);</a>
-<a name="242"><span class="lineNum">     242 </span>            :         inputOutputSampleRatio = getInputOutputSampleRatio();</a>
+<a name="240"><span class="lineNum">     240 </span><span class="lineCov">       1337 :         setTempo (1.0f / speedRatio);</span></a>
+<a name="241"><span class="lineNum">     241 </span><span class="lineCov">       1337 :         setPitchSemiTones (semitonesUp);</span></a>
+<a name="242"><span class="lineNum">     242 </span><span class="lineCov">       1337 :         inputOutputSampleRatio = getInputOutputSampleRatio();</span></a>
 <a name="243"><span class="lineNum">     243 </span>            :         </a>
-<a name="244"><span class="lineNum">     244 </span>            :         return true;</a>
+<a name="244"><span class="lineNum">     244 </span><span class="lineCov">       1337 :         return true;</span></a>
 <a name="245"><span class="lineNum">     245 </span>            :     }</a>
 <a name="246"><span class="lineNum">     246 </span>            : </a>
-<a name="247"><span class="lineNum">     247 </span>            :     int getFramesNeeded() const override</a>
+<a name="247"><span class="lineNum">     247 </span><span class="lineCov">      48790 :     int getFramesNeeded() const override</span></a>
 <a name="248"><span class="lineNum">     248 </span>            :     {</a>
-<a name="249"><span class="lineNum">     249 </span>            :         const int numAvailable = (int) numSamples();</a>
-<a name="250"><span class="lineNum">     250 </span>            :         const int numRequiredForOneBlock = juce::roundToInt (samplesPerOutputBuffer * inputOutputSampleRatio);</a>
+<a name="249"><span class="lineNum">     249 </span><span class="lineCov">      48790 :         const int numAvailable = (int) numSamples();</span></a>
+<a name="250"><span class="lineNum">     250 </span><span class="lineCov">      48790 :         const int numRequiredForOneBlock = juce::roundToInt (samplesPerOutputBuffer * inputOutputSampleRatio);</span></a>
 <a name="251"><span class="lineNum">     251 </span>            :         </a>
-<a name="252"><span class="lineNum">     252 </span>            :         return std::max (0, numRequiredForOneBlock - numAvailable);</a>
+<a name="252"><span class="lineNum">     252 </span><span class="lineCov">      48790 :         return std::max (0, numRequiredForOneBlock - numAvailable);</span></a>
 <a name="253"><span class="lineNum">     253 </span>            :     }</a>
 <a name="254"><span class="lineNum">     254 </span>            : </a>
-<a name="255"><span class="lineNum">     255 </span>            :     int getMaxFramesNeeded() const override</a>
+<a name="255"><span class="lineNum">     255 </span><span class="lineCov">        160 :     int getMaxFramesNeeded() const override</span></a>
 <a name="256"><span class="lineNum">     256 </span>            :     {</a>
 <a name="257"><span class="lineNum">     257 </span>            :         // This was derived by experimentation</a>
-<a name="258"><span class="lineNum">     258 </span>            :         return 8192;</a>
+<a name="258"><span class="lineNum">     258 </span><span class="lineCov">        160 :         return 8192;</span></a>
 <a name="259"><span class="lineNum">     259 </span>            :     }</a>
 <a name="260"><span class="lineNum">     260 </span>            : </a>
-<a name="261"><span class="lineNum">     261 </span>            :     int processData (const float* const* inChannels, int numSamples, float* const* outChannels) override</a>
+<a name="261"><span class="lineNum">     261 </span><span class="lineCov">      48790 :     int processData (const float* const* inChannels, int numSamples, float* const* outChannels) override</span></a>
 <a name="262"><span class="lineNum">     262 </span>            :     {</a>
-<a name="263"><span class="lineNum">     263 </span>            :         CRASH_TRACER</a>
+<a name="263"><span class="lineNum">     263 </span><span class="lineCov">      48790 :         CRASH_TRACER</span></a>
 <a name="264"><span class="lineNum">     264 </span>            :         jassert (numSamples &lt;= getFramesNeeded());</a>
-<a name="265"><span class="lineNum">     265 </span>            :         writeInput (inChannels, numSamples);</a>
+<a name="265"><span class="lineNum">     265 </span><span class="lineCov">      48790 :         writeInput (inChannels, numSamples);</span></a>
 <a name="266"><span class="lineNum">     266 </span>            : </a>
-<a name="267"><span class="lineNum">     267 </span>            :         const int numAvailable = (int) soundtouch::SoundTouch::numSamples();</a>
+<a name="267"><span class="lineNum">     267 </span><span class="lineCov">      48790 :         const int numAvailable = (int) soundtouch::SoundTouch::numSamples();</span></a>
 <a name="268"><span class="lineNum">     268 </span>            :         jassert (numAvailable &gt;= 0);</a>
 <a name="269"><span class="lineNum">     269 </span>            :         </a>
-<a name="270"><span class="lineNum">     270 </span>            :         const int numToRead = std::min (numAvailable, samplesPerOutputBuffer);</a>
+<a name="270"><span class="lineNum">     270 </span><span class="lineCov">      48790 :         const int numToRead = std::min (numAvailable, samplesPerOutputBuffer);</span></a>
 <a name="271"><span class="lineNum">     271 </span>            :         </a>
-<a name="272"><span class="lineNum">     272 </span>            :         if (numToRead &gt; 0)</a>
-<a name="273"><span class="lineNum">     273 </span>            :             return readOutput (outChannels, 0, numToRead);</a>
+<a name="272"><span class="lineNum">     272 </span><span class="lineCov">      48790 :         if (numToRead &gt; 0)</span></a>
+<a name="273"><span class="lineNum">     273 </span><span class="lineCov">      28540 :             return readOutput (outChannels, 0, numToRead);</span></a>
 <a name="274"><span class="lineNum">     274 </span>            : </a>
 <a name="275"><span class="lineNum">     275 </span>            :         return 0;</a>
-<a name="276"><span class="lineNum">     276 </span>            :     }</a>
+<a name="276"><span class="lineNum">     276 </span><span class="lineCov">      48790 :     }</span></a>
 <a name="277"><span class="lineNum">     277 </span>            : </a>
-<a name="278"><span class="lineNum">     278 </span>            :     int flush (float* const* outChannels) override</a>
+<a name="278"><span class="lineNum">     278 </span><span class="lineCov">         78 :     int flush (float* const* outChannels) override</span></a>
 <a name="279"><span class="lineNum">     279 </span>            :     {</a>
-<a name="280"><span class="lineNum">     280 </span>            :         CRASH_TRACER</a>
-<a name="281"><span class="lineNum">     281 </span>            :         if (! hasDoneFinalBlock)</a>
+<a name="280"><span class="lineNum">     280 </span><span class="lineCov">         78 :         CRASH_TRACER</span></a>
+<a name="281"><span class="lineNum">     281 </span><span class="lineCov">         78 :         if (! hasDoneFinalBlock)</span></a>
 <a name="282"><span class="lineNum">     282 </span>            :         {</a>
-<a name="283"><span class="lineNum">     283 </span>            :             soundtouch::SoundTouch::flush();</a>
-<a name="284"><span class="lineNum">     284 </span>            :             hasDoneFinalBlock = true;</a>
+<a name="283"><span class="lineNum">     283 </span><span class="lineCov">          9 :             soundtouch::SoundTouch::flush();</span></a>
+<a name="284"><span class="lineNum">     284 </span><span class="lineCov">          9 :             hasDoneFinalBlock = true;</span></a>
 <a name="285"><span class="lineNum">     285 </span>            :         }</a>
 <a name="286"><span class="lineNum">     286 </span>            : </a>
-<a name="287"><span class="lineNum">     287 </span>            :         const int numAvailable = (int) numSamples();</a>
-<a name="288"><span class="lineNum">     288 </span>            :         const int numToRead = std::min (numAvailable, samplesPerOutputBuffer);</a>
+<a name="287"><span class="lineNum">     287 </span><span class="lineCov">         78 :         const int numAvailable = (int) numSamples();</span></a>
+<a name="288"><span class="lineNum">     288 </span><span class="lineCov">         78 :         const int numToRead = std::min (numAvailable, samplesPerOutputBuffer);</span></a>
 <a name="289"><span class="lineNum">     289 </span>            :         </a>
-<a name="290"><span class="lineNum">     290 </span>            :         return readOutput (outChannels, 0, numToRead);</a>
-<a name="291"><span class="lineNum">     291 </span>            :     }</a>
+<a name="290"><span class="lineNum">     290 </span><span class="lineCov">        156 :         return readOutput (outChannels, 0, numToRead);</span></a>
+<a name="291"><span class="lineNum">     291 </span><span class="lineCov">         78 :     }</span></a>
 <a name="292"><span class="lineNum">     292 </span>            : </a>
 <a name="293"><span class="lineNum">     293 </span>            : private:</a>
 <a name="294"><span class="lineNum">     294 </span>            :     int numChannels = 0, samplesPerOutputBuffer = 0;</a>
 <a name="295"><span class="lineNum">     295 </span>            :     bool hasDoneFinalBlock = false;</a>
 <a name="296"><span class="lineNum">     296 </span>            :     double inputOutputSampleRatio = 1.0;</a>
 <a name="297"><span class="lineNum">     297 </span>            :     </a>
-<a name="298"><span class="lineNum">     298 </span>            :     int readOutput (float* const* outChannels, int offset, int numNeeded)</a>
+<a name="298"><span class="lineNum">     298 </span><span class="lineCov">      28618 :     int readOutput (float* const* outChannels, int offset, int numNeeded)</span></a>
 <a name="299"><span class="lineNum">     299 </span>            :     {</a>
-<a name="300"><span class="lineNum">     300 </span>            :         float* interleaved = ptrBegin();</a>
-<a name="301"><span class="lineNum">     301 </span>            :         auto num = std::min (numNeeded, (int) numSamples());</a>
+<a name="300"><span class="lineNum">     300 </span><span class="lineCov">      28618 :         float* interleaved = ptrBegin();</span></a>
+<a name="301"><span class="lineNum">     301 </span><span class="lineCov">      28618 :         auto num = std::min (numNeeded, (int) numSamples());</span></a>
 <a name="302"><span class="lineNum">     302 </span>            : </a>
-<a name="303"><span class="lineNum">     303 </span>            :         for (int chan = 0; chan &lt; numChannels; ++chan)</a>
+<a name="303"><span class="lineNum">     303 </span><span class="lineCov">      58284 :         for (int chan = 0; chan &lt; numChannels; ++chan)</span></a>
 <a name="304"><span class="lineNum">     304 </span>            :         {</a>
-<a name="305"><span class="lineNum">     305 </span>            :             const float* src = interleaved + chan;</a>
-<a name="306"><span class="lineNum">     306 </span>            :             float* dest = outChannels[chan] + offset;</a>
+<a name="305"><span class="lineNum">     305 </span><span class="lineCov">      29666 :             const float* src = interleaved + chan;</span></a>
+<a name="306"><span class="lineNum">     306 </span><span class="lineCov">      29666 :             float* dest = outChannels[chan] + offset;</span></a>
 <a name="307"><span class="lineNum">     307 </span>            : </a>
-<a name="308"><span class="lineNum">     308 </span>            :             for (int i = 0; i &lt; num; ++i)</a>
+<a name="308"><span class="lineNum">     308 </span><span class="lineCov">   26272990 :             for (int i = 0; i &lt; num; ++i)</span></a>
 <a name="309"><span class="lineNum">     309 </span>            :             {</a>
-<a name="310"><span class="lineNum">     310 </span>            :                 dest[i] = *src;</a>
-<a name="311"><span class="lineNum">     311 </span>            :                 src += numChannels;</a>
+<a name="310"><span class="lineNum">     310 </span><span class="lineCov">   26243324 :                 dest[i] = *src;</span></a>
+<a name="311"><span class="lineNum">     311 </span><span class="lineCov">   26243324 :                 src += numChannels;</span></a>
 <a name="312"><span class="lineNum">     312 </span>            :             }</a>
 <a name="313"><span class="lineNum">     313 </span>            :         }</a>
 <a name="314"><span class="lineNum">     314 </span>            : </a>
-<a name="315"><span class="lineNum">     315 </span>            :         receiveSamples (static_cast&lt;unsigned int&gt; (num));</a>
-<a name="316"><span class="lineNum">     316 </span>            :         return num;</a>
+<a name="315"><span class="lineNum">     315 </span><span class="lineCov">      28618 :         receiveSamples (static_cast&lt;unsigned int&gt; (num));</span></a>
+<a name="316"><span class="lineNum">     316 </span><span class="lineCov">      28618 :         return num;</span></a>
 <a name="317"><span class="lineNum">     317 </span>            :     }</a>
 <a name="318"><span class="lineNum">     318 </span>            : </a>
-<a name="319"><span class="lineNum">     319 </span>            :     void writeInput (const float* const* inChannels, int numSamples)</a>
+<a name="319"><span class="lineNum">     319 </span><span class="lineCov">      48790 :     void writeInput (const float* const* inChannels, int numSamples)</span></a>
 <a name="320"><span class="lineNum">     320 </span>            :     {</a>
-<a name="321"><span class="lineNum">     321 </span>            :         if (numChannels &gt; 1)</a>
+<a name="321"><span class="lineNum">     321 </span><span class="lineCov">      48790 :         if (numChannels &gt; 1)</span></a>
 <a name="322"><span class="lineNum">     322 </span>            :         {</a>
-<a name="323"><span class="lineNum">     323 </span>            :             AudioScratchBuffer scratch (1, numSamples * numChannels);</a>
-<a name="324"><span class="lineNum">     324 </span>            :             float* interleaved = scratch.buffer.getWritePointer(0);</a>
+<a name="323"><span class="lineNum">     323 </span><span class="lineCov">       1580 :             AudioScratchBuffer scratch (1, numSamples * numChannels);</span></a>
+<a name="324"><span class="lineNum">     324 </span><span class="lineCov">       1580 :             float* interleaved = scratch.buffer.getWritePointer(0);</span></a>
 <a name="325"><span class="lineNum">     325 </span>            : </a>
-<a name="326"><span class="lineNum">     326 </span>            :             for (int chan = 0; chan &lt; numChannels; ++chan)</a>
+<a name="326"><span class="lineNum">     326 </span><span class="lineCov">       4740 :             for (int chan = 0; chan &lt; numChannels; ++chan)</span></a>
 <a name="327"><span class="lineNum">     327 </span>            :             {</a>
-<a name="328"><span class="lineNum">     328 </span>            :                 float* dest = interleaved + chan;</a>
-<a name="329"><span class="lineNum">     329 </span>            :                 const float* src = inChannels[chan];</a>
+<a name="328"><span class="lineNum">     328 </span><span class="lineCov">       3160 :                 float* dest = interleaved + chan;</span></a>
+<a name="329"><span class="lineNum">     329 </span><span class="lineCov">       3160 :                 const float* src = inChannels[chan];</span></a>
 <a name="330"><span class="lineNum">     330 </span>            : </a>
-<a name="331"><span class="lineNum">     331 </span>            :                 for (int i = 0; i &lt; numSamples; ++i)</a>
+<a name="331"><span class="lineNum">     331 </span><span class="lineCov">     796960 :                 for (int i = 0; i &lt; numSamples; ++i)</span></a>
 <a name="332"><span class="lineNum">     332 </span>            :                 {</a>
-<a name="333"><span class="lineNum">     333 </span>            :                     *dest = src[i];</a>
-<a name="334"><span class="lineNum">     334 </span>            :                     dest += numChannels;</a>
+<a name="333"><span class="lineNum">     333 </span><span class="lineCov">     793800 :                     *dest = src[i];</span></a>
+<a name="334"><span class="lineNum">     334 </span><span class="lineCov">     793800 :                     dest += numChannels;</span></a>
 <a name="335"><span class="lineNum">     335 </span>            :                 }</a>
 <a name="336"><span class="lineNum">     336 </span>            :             }</a>
 <a name="337"><span class="lineNum">     337 </span>            : </a>
-<a name="338"><span class="lineNum">     338 </span>            :             putSamples (interleaved, static_cast&lt;unsigned int&gt; (numSamples));</a>
-<a name="339"><span class="lineNum">     339 </span>            :         }</a>
+<a name="338"><span class="lineNum">     338 </span><span class="lineCov">       1580 :             putSamples (interleaved, static_cast&lt;unsigned int&gt; (numSamples));</span></a>
+<a name="339"><span class="lineNum">     339 </span><span class="lineCov">       1580 :         }</span></a>
 <a name="340"><span class="lineNum">     340 </span>            :         else</a>
 <a name="341"><span class="lineNum">     341 </span>            :         {</a>
-<a name="342"><span class="lineNum">     342 </span>            :             putSamples (inChannels[0], static_cast&lt;unsigned int&gt; (numSamples));</a>
+<a name="342"><span class="lineNum">     342 </span><span class="lineCov">      47210 :             putSamples (inChannels[0], static_cast&lt;unsigned int&gt; (numSamples));</span></a>
 <a name="343"><span class="lineNum">     343 </span>            :         }</a>
-<a name="344"><span class="lineNum">     344 </span>            :     }</a>
+<a name="344"><span class="lineNum">     344 </span><span class="lineCov">      48790 :     }</span></a>
 <a name="345"><span class="lineNum">     345 </span>            : </a>
 <a name="346"><span class="lineNum">     346 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SoundTouchStretcher)</a>
 <a name="347"><span class="lineNum">     347 </span>            : };</a>
@@ -598,8 +598,8 @@
 <a name="536"><span class="lineNum">     536 </span>            : #endif // TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND</a>
 <a name="537"><span class="lineNum">     537 </span>            : </a>
 <a name="538"><span class="lineNum">     538 </span>            : //==============================================================================</a>
-<a name="539"><span class="lineNum">     539 </span><span class="lineNoCov">          0 : TimeStretcher::TimeStretcher() {}</span></a>
-<a name="540"><span class="lineNum">     540 </span><span class="lineNoCov">          0 : TimeStretcher::~TimeStretcher() {}</span></a>
+<a name="539"><span class="lineNum">     539 </span><span class="lineCov">          9 : TimeStretcher::TimeStretcher() {}</span></a>
+<a name="540"><span class="lineNum">     540 </span><span class="lineCov">         80 : TimeStretcher::~TimeStretcher() {}</span></a>
 <a name="541"><span class="lineNum">     541 </span>            : </a>
 <a name="542"><span class="lineNum">     542 </span><span class="lineNoCov">          0 : static juce::String getMelodyne()             { return &quot;Melodyne&quot;; }</span></a>
 <a name="543"><span class="lineNum">     543 </span><span class="lineNoCov">          0 : static juce::String getElastiquePro()         { return &quot;Elastique (&quot; + TRANS(&quot;Pro&quot;) + &quot;)&quot;; }</span></a>
@@ -607,7 +607,7 @@
 <a name="545"><span class="lineNum">     545 </span><span class="lineNoCov">          0 : static juce::String getElastiqueMobile()      { return &quot;Elastique (&quot; + TRANS(&quot;Mobile&quot;) + &quot;)&quot;; }</span></a>
 <a name="546"><span class="lineNum">     546 </span><span class="lineNoCov">          0 : static juce::String getElastiqueMono()        { return &quot;Elastique (&quot; + TRANS(&quot;Monophonic&quot;) + &quot;)&quot;; }</span></a>
 <a name="547"><span class="lineNum">     547 </span><span class="lineNoCov">          0 : static juce::String getSoundTouchNormal()     { return &quot;SoundTouch (&quot; + TRANS(&quot;Normal&quot;) + &quot;)&quot;; }</span></a>
-<a name="548"><span class="lineNum">     548 </span><span class="lineNoCov">          0 : static juce::String getSoundTouchBetter()     { return &quot;SoundTouch (&quot; + TRANS(&quot;Better&quot;) + &quot;)&quot;; }</span></a>
+<a name="548"><span class="lineNum">     548 </span><span class="lineCov">          2 : static juce::String getSoundTouchBetter()     { return &quot;SoundTouch (&quot; + TRANS(&quot;Better&quot;) + &quot;)&quot;; }</span></a>
 <a name="549"><span class="lineNum">     549 </span><span class="lineNoCov">          0 : static juce::String getRubberBandMelodic()    { return &quot;RubberBand (&quot; + TRANS(&quot;Melodic&quot;) + &quot;)&quot;; }</span></a>
 <a name="550"><span class="lineNum">     550 </span><span class="lineNoCov">          0 : static juce::String getRubberBandPercussive() { return &quot;RubberBand (&quot; + TRANS(&quot;Percussive&quot;) + &quot;)&quot;; }</span></a>
 <a name="551"><span class="lineNum">     551 </span>            : </a>
@@ -633,9 +633,9 @@
 <a name="571"><span class="lineNum">     571 </span>            :        #endif</a>
 <a name="572"><span class="lineNum">     572 </span>            :             return defaultMode;</a>
 <a name="573"><span class="lineNum">     573 </span>            :        #if TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH</a>
-<a name="574"><span class="lineNum">     574 </span>            :         case soundtouchNormal:</a>
+<a name="574"><span class="lineNum">     574 </span><span class="lineNoCov">          0 :         case soundtouchNormal:</span></a>
 <a name="575"><span class="lineNum">     575 </span>            :         case soundtouchBetter:</a>
-<a name="576"><span class="lineNum">     576 </span>            :             return m;</a>
+<a name="576"><span class="lineNum">     576 </span><span class="lineNoCov">          0 :             return m;</span></a>
 <a name="577"><span class="lineNum">     577 </span>            :        #endif</a>
 <a name="578"><span class="lineNum">     578 </span>            :        #if TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE</a>
 <a name="579"><span class="lineNum">     579 </span>            :         case elastiquePro:</a>
@@ -668,8 +668,8 @@
 <a name="606"><span class="lineNum">     606 </span>            :    #endif</a>
 <a name="607"><span class="lineNum">     607 </span>            : </a>
 <a name="608"><span class="lineNum">     608 </span>            :    #if TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH</a>
-<a name="609"><span class="lineNum">     609 </span>            :     s.add (getSoundTouchNormal());</a>
-<a name="610"><span class="lineNum">     610 </span>            :     s.add (getSoundTouchBetter());</a>
+<a name="609"><span class="lineNum">     609 </span><span class="lineNoCov">          0 :     s.add (getSoundTouchNormal());</span></a>
+<a name="610"><span class="lineNum">     610 </span><span class="lineNoCov">          0 :     s.add (getSoundTouchBetter());</span></a>
 <a name="611"><span class="lineNum">     611 </span>            :    #endif</a>
 <a name="612"><span class="lineNum">     612 </span>            :     </a>
 <a name="613"><span class="lineNum">     613 </span>            :    #if TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND</a>
@@ -702,8 +702,8 @@
 <a name="640"><span class="lineNum">     640 </span>            :    #endif</a>
 <a name="641"><span class="lineNum">     641 </span>            : </a>
 <a name="642"><span class="lineNum">     642 </span>            :    #if TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH</a>
-<a name="643"><span class="lineNum">     643 </span>            :     if (name == getSoundTouchNormal())      return soundtouchNormal;</a>
-<a name="644"><span class="lineNum">     644 </span>            :     if (name == getSoundTouchBetter())      return soundtouchBetter;</a>
+<a name="643"><span class="lineNum">     643 </span><span class="lineNoCov">          0 :     if (name == getSoundTouchNormal())      return soundtouchNormal;</span></a>
+<a name="644"><span class="lineNum">     644 </span><span class="lineNoCov">          0 :     if (name == getSoundTouchBetter())      return soundtouchBetter;</span></a>
 <a name="645"><span class="lineNum">     645 </span>            :    #endif</a>
 <a name="646"><span class="lineNum">     646 </span>            : </a>
 <a name="647"><span class="lineNum">     647 </span>            :    #if TRACKTION_ENABLE_ARA</a>
@@ -711,19 +711,19 @@
 <a name="649"><span class="lineNum">     649 </span>            :    #endif</a>
 <a name="650"><span class="lineNum">     650 </span>            : </a>
 <a name="651"><span class="lineNum">     651 </span><span class="lineNoCov">          0 :     return getPossibleModes (e, false).contains (name) ? defaultMode</span></a>
-<a name="652"><span class="lineNum">     652 </span><span class="lineNoCov">          0 :                                                        : disabled;</span></a>
+<a name="652"><span class="lineNum">     652 </span>            :                                                        : disabled;</a>
 <a name="653"><span class="lineNum">     653 </span>            : }</a>
 <a name="654"><span class="lineNum">     654 </span>            : </a>
-<a name="655"><span class="lineNum">     655 </span><span class="lineNoCov">          0 : juce::String TimeStretcher::getNameOfMode (const Mode mode)</span></a>
+<a name="655"><span class="lineNum">     655 </span><span class="lineCov">          2 : juce::String TimeStretcher::getNameOfMode (const Mode mode)</span></a>
 <a name="656"><span class="lineNum">     656 </span>            : {</a>
-<a name="657"><span class="lineNum">     657 </span><span class="lineNoCov">          0 :     switch (mode)</span></a>
+<a name="657"><span class="lineNum">     657 </span><span class="lineCov">          2 :     switch (mode)</span></a>
 <a name="658"><span class="lineNum">     658 </span>            :     {</a>
 <a name="659"><span class="lineNum">     659 </span><span class="lineNoCov">          0 :         case elastiquePro:          return getElastiquePro();</span></a>
 <a name="660"><span class="lineNum">     660 </span><span class="lineNoCov">          0 :         case elastiqueEfficient:    return getElastiqueEfficeint();</span></a>
 <a name="661"><span class="lineNum">     661 </span><span class="lineNoCov">          0 :         case elastiqueMobile:       return getElastiqueMobile();</span></a>
 <a name="662"><span class="lineNum">     662 </span><span class="lineNoCov">          0 :         case elastiqueMonophonic:   return getElastiqueMono();</span></a>
 <a name="663"><span class="lineNum">     663 </span><span class="lineNoCov">          0 :         case soundtouchNormal:      return getSoundTouchNormal();</span></a>
-<a name="664"><span class="lineNum">     664 </span><span class="lineNoCov">          0 :         case soundtouchBetter:      return getSoundTouchBetter();</span></a>
+<a name="664"><span class="lineNum">     664 </span><span class="lineCov">          2 :         case soundtouchBetter:      return getSoundTouchBetter();</span></a>
 <a name="665"><span class="lineNum">     665 </span><span class="lineNoCov">          0 :         case rubberbandMelodic:     return getRubberBandMelodic();</span></a>
 <a name="666"><span class="lineNum">     666 </span><span class="lineNoCov">          0 :         case rubberbandPercussive:  return getRubberBandPercussive();</span></a>
 <a name="667"><span class="lineNum">     667 </span><span class="lineNoCov">          0 :         case melodyne:              return getMelodyne();</span></a>
@@ -751,19 +751,19 @@
 <a name="689"><span class="lineNum">     689 </span><span class="lineNoCov">          0 :     return stretcher != nullptr;</span></a>
 <a name="690"><span class="lineNum">     690 </span>            : }</a>
 <a name="691"><span class="lineNum">     691 </span>            : </a>
-<a name="692"><span class="lineNum">     692 </span><span class="lineNoCov">          0 : void TimeStretcher::initialise (double sourceSampleRate, int samplesPerBlock,</span></a>
+<a name="692"><span class="lineNum">     692 </span><span class="lineCov">         89 : void TimeStretcher::initialise (double sourceSampleRate, int samplesPerBlock,</span></a>
 <a name="693"><span class="lineNum">     693 </span>            :                                 int numChannels, Mode mode, ElastiqueProOptions options, bool realtime)</a>
 <a name="694"><span class="lineNum">     694 </span>            : {</a>
 <a name="695"><span class="lineNum">     695 </span>            :     juce::ignoreUnused (sourceSampleRate, numChannels, mode, options, realtime);</a>
 <a name="696"><span class="lineNum">     696 </span>            :     jassert (! isMelodyne (mode));</a>
 <a name="697"><span class="lineNum">     697 </span>            : </a>
-<a name="698"><span class="lineNum">     698 </span><span class="lineNoCov">          0 :     samplesPerBlockRequested = samplesPerBlock;</span></a>
+<a name="698"><span class="lineNum">     698 </span><span class="lineCov">         89 :     samplesPerBlockRequested = samplesPerBlock;</span></a>
 <a name="699"><span class="lineNum">     699 </span>            : </a>
-<a name="700"><span class="lineNum">     700 </span><span class="lineNoCov">          0 :     CRASH_TRACER</span></a>
+<a name="700"><span class="lineNum">     700 </span><span class="lineCov">         89 :     CRASH_TRACER</span></a>
 <a name="701"><span class="lineNum">     701 </span>            :     jassert (stretcher == nullptr);</a>
 <a name="702"><span class="lineNum">     702 </span>            : </a>
 <a name="703"><span class="lineNum">     703 </span>            :    #if TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE || TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND || TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH</a>
-<a name="704"><span class="lineNum">     704 </span>            :     switch (mode)</a>
+<a name="704"><span class="lineNum">     704 </span><span class="lineCov">         89 :     switch (mode)</span></a>
 <a name="705"><span class="lineNum">     705 </span>            :     {</a>
 <a name="706"><span class="lineNum">     706 </span>            :        #if TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE</a>
 <a name="707"><span class="lineNum">     707 </span>            :         case elastiquePro:</a>
@@ -786,7 +786,7 @@
 <a name="724"><span class="lineNum">     724 </span>            :         case soundtouchBetter:</a>
 <a name="725"><span class="lineNum">     725 </span>            :             juce::ignoreUnused (options, realtime);</a>
 <a name="726"><span class="lineNum">     726 </span>            :             stretcher.reset (new SoundTouchStretcher (sourceSampleRate, samplesPerBlock, numChannels,</a>
-<a name="727"><span class="lineNum">     727 </span>            :                                                       mode == soundtouchBetter));</a>
+<a name="727"><span class="lineNum">     727 </span><span class="lineCov">         89 :                                                       mode == soundtouchBetter));</span></a>
 <a name="728"><span class="lineNum">     728 </span>            :             break;</a>
 <a name="729"><span class="lineNum">     729 </span>            :        #else</a>
 <a name="730"><span class="lineNum">     730 </span>            :         case soundtouchNormal:      [[fallthrough]];</a>
@@ -816,77 +816,77 @@
 <a name="754"><span class="lineNum">     754 </span>            :     }</a>
 <a name="755"><span class="lineNum">     755 </span>            :    #endif</a>
 <a name="756"><span class="lineNum">     756 </span>            : </a>
-<a name="757"><span class="lineNum">     757 </span><span class="lineNoCov">          0 :     if (stretcher != nullptr)</span></a>
-<a name="758"><span class="lineNum">     758 </span><span class="lineNoCov">          0 :         if (! stretcher-&gt;isOk())</span></a>
+<a name="757"><span class="lineNum">     757 </span><span class="lineCov">         89 :     if (stretcher != nullptr)</span></a>
+<a name="758"><span class="lineNum">     758 </span><span class="lineCov">         89 :         if (! stretcher-&gt;isOk())</span></a>
 <a name="759"><span class="lineNum">     759 </span>            :             stretcher.reset();</a>
-<a name="760"><span class="lineNum">     760 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="760"><span class="lineNum">     760 </span><span class="lineCov">         89 : }</span></a>
 <a name="761"><span class="lineNum">     761 </span>            : </a>
 <a name="762"><span class="lineNum">     762 </span><span class="lineNoCov">          0 : bool TimeStretcher::canProcessFor (const Mode mode)</span></a>
 <a name="763"><span class="lineNum">     763 </span>            : {</a>
 <a name="764"><span class="lineNum">     764 </span><span class="lineNoCov">          0 :     return mode != TimeStretcher::disabled;</span></a>
 <a name="765"><span class="lineNum">     765 </span>            : }</a>
 <a name="766"><span class="lineNum">     766 </span>            : </a>
-<a name="767"><span class="lineNum">     767 </span><span class="lineNoCov">          0 : void TimeStretcher::reset()</span></a>
+<a name="767"><span class="lineNum">     767 </span><span class="lineCov">       1328 : void TimeStretcher::reset()</span></a>
 <a name="768"><span class="lineNum">     768 </span>            : {</a>
-<a name="769"><span class="lineNum">     769 </span><span class="lineNoCov">          0 :     if (stretcher != nullptr)</span></a>
-<a name="770"><span class="lineNum">     770 </span><span class="lineNoCov">          0 :         stretcher-&gt;reset();</span></a>
-<a name="771"><span class="lineNum">     771 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="769"><span class="lineNum">     769 </span><span class="lineCov">       1328 :     if (stretcher != nullptr)</span></a>
+<a name="770"><span class="lineNum">     770 </span><span class="lineCov">       1328 :         stretcher-&gt;reset();</span></a>
+<a name="771"><span class="lineNum">     771 </span><span class="lineCov">       1328 : }</span></a>
 <a name="772"><span class="lineNum">     772 </span>            : </a>
-<a name="773"><span class="lineNum">     773 </span><span class="lineNoCov">          0 : bool TimeStretcher::setSpeedAndPitch (float speedRatio, float semitonesUp)</span></a>
+<a name="773"><span class="lineNum">     773 </span><span class="lineCov">       1328 : bool TimeStretcher::setSpeedAndPitch (float speedRatio, float semitonesUp)</span></a>
 <a name="774"><span class="lineNum">     774 </span>            : {</a>
-<a name="775"><span class="lineNum">     775 </span><span class="lineNoCov">          0 :     if (stretcher != nullptr)</span></a>
-<a name="776"><span class="lineNum">     776 </span><span class="lineNoCov">          0 :         return stretcher-&gt;setSpeedAndPitch (speedRatio, semitonesUp);</span></a>
+<a name="775"><span class="lineNum">     775 </span><span class="lineCov">       1337 :     if (stretcher != nullptr)</span></a>
+<a name="776"><span class="lineNum">     776 </span><span class="lineCov">       1337 :         return stretcher-&gt;setSpeedAndPitch (speedRatio, semitonesUp);</span></a>
 <a name="777"><span class="lineNum">     777 </span>            : </a>
 <a name="778"><span class="lineNum">     778 </span>            :     return false;</a>
 <a name="779"><span class="lineNum">     779 </span>            : }</a>
 <a name="780"><span class="lineNum">     780 </span>            : </a>
-<a name="781"><span class="lineNum">     781 </span><span class="lineNoCov">          0 : int TimeStretcher::getFramesNeeded() const</span></a>
+<a name="781"><span class="lineNum">     781 </span><span class="lineCov">      47210 : int TimeStretcher::getFramesNeeded() const</span></a>
 <a name="782"><span class="lineNum">     782 </span>            : {</a>
-<a name="783"><span class="lineNum">     783 </span><span class="lineNoCov">          0 :     if (stretcher != nullptr)</span></a>
-<a name="784"><span class="lineNum">     784 </span><span class="lineNoCov">          0 :         return stretcher-&gt;getFramesNeeded();</span></a>
+<a name="783"><span class="lineNum">     783 </span><span class="lineCov">      48790 :     if (stretcher != nullptr)</span></a>
+<a name="784"><span class="lineNum">     784 </span><span class="lineCov">      48790 :         return stretcher-&gt;getFramesNeeded();</span></a>
 <a name="785"><span class="lineNum">     785 </span>            : </a>
 <a name="786"><span class="lineNum">     786 </span>            :     return 0;</a>
 <a name="787"><span class="lineNum">     787 </span>            : }</a>
 <a name="788"><span class="lineNum">     788 </span>            : </a>
-<a name="789"><span class="lineNum">     789 </span><span class="lineNoCov">          0 : int TimeStretcher::getMaxFramesNeeded() const</span></a>
+<a name="789"><span class="lineNum">     789 </span><span class="lineCov">        160 : int TimeStretcher::getMaxFramesNeeded() const</span></a>
 <a name="790"><span class="lineNum">     790 </span>            : {</a>
-<a name="791"><span class="lineNum">     791 </span><span class="lineNoCov">          0 :     if (stretcher != nullptr)</span></a>
-<a name="792"><span class="lineNum">     792 </span><span class="lineNoCov">          0 :         return stretcher-&gt;getMaxFramesNeeded();</span></a>
+<a name="791"><span class="lineNum">     791 </span><span class="lineCov">        160 :     if (stretcher != nullptr)</span></a>
+<a name="792"><span class="lineNum">     792 </span><span class="lineCov">        160 :         return stretcher-&gt;getMaxFramesNeeded();</span></a>
 <a name="793"><span class="lineNum">     793 </span>            : </a>
 <a name="794"><span class="lineNum">     794 </span>            :     return 0;</a>
 <a name="795"><span class="lineNum">     795 </span>            : }</a>
 <a name="796"><span class="lineNum">     796 </span>            : </a>
 <a name="797"><span class="lineNum">     797 </span><span class="lineNoCov">          0 : int TimeStretcher::processData (const float* const* inChannels, int numSamples, float* const* outChannels)</span></a>
 <a name="798"><span class="lineNum">     798 </span>            : {</a>
-<a name="799"><span class="lineNum">     799 </span><span class="lineNoCov">          0 :     if (stretcher != nullptr)</span></a>
-<a name="800"><span class="lineNum">     800 </span><span class="lineNoCov">          0 :         return stretcher-&gt;processData (inChannels, numSamples, outChannels);</span></a>
+<a name="799"><span class="lineNum">     799 </span><span class="lineCov">       1580 :     if (stretcher != nullptr)</span></a>
+<a name="800"><span class="lineNum">     800 </span><span class="lineCov">       1580 :         return stretcher-&gt;processData (inChannels, numSamples, outChannels);</span></a>
 <a name="801"><span class="lineNum">     801 </span>            : </a>
 <a name="802"><span class="lineNum">     802 </span>            :     return 0;</a>
 <a name="803"><span class="lineNum">     803 </span>            : }</a>
 <a name="804"><span class="lineNum">     804 </span>            : </a>
-<a name="805"><span class="lineNum">     805 </span><span class="lineNoCov">          0 : int TimeStretcher::processData (AudioFifo&amp; inFifo, int numSamples, AudioFifo&amp; outFifo)</span></a>
+<a name="805"><span class="lineNum">     805 </span><span class="lineCov">      47210 : int TimeStretcher::processData (AudioFifo&amp; inFifo, int numSamples, AudioFifo&amp; outFifo)</span></a>
 <a name="806"><span class="lineNum">     806 </span>            : {</a>
-<a name="807"><span class="lineNum">     807 </span><span class="lineNoCov">          0 :     if (stretcher == nullptr)</span></a>
+<a name="807"><span class="lineNum">     807 </span><span class="lineCov">      47210 :     if (stretcher == nullptr)</span></a>
 <a name="808"><span class="lineNum">     808 </span>            :         return 0;</a>
 <a name="809"><span class="lineNum">     809 </span>            :     </a>
 <a name="810"><span class="lineNum">     810 </span>            :     jassert (numSamples == stretcher-&gt;getFramesNeeded());</a>
-<a name="811"><span class="lineNum">     811 </span><span class="lineNoCov">          0 :     AudioScratchBuffer inBuffer (inFifo.getNumChannels(), numSamples);</span></a>
-<a name="812"><span class="lineNum">     812 </span><span class="lineNoCov">          0 :     AudioScratchBuffer outBuffer (outFifo.getNumChannels(), samplesPerBlockRequested);</span></a>
+<a name="811"><span class="lineNum">     811 </span><span class="lineCov">      47210 :     AudioScratchBuffer inBuffer (inFifo.getNumChannels(), numSamples);</span></a>
+<a name="812"><span class="lineNum">     812 </span><span class="lineCov">      47210 :     AudioScratchBuffer outBuffer (outFifo.getNumChannels(), samplesPerBlockRequested);</span></a>
 <a name="813"><span class="lineNum">     813 </span>            : </a>
-<a name="814"><span class="lineNum">     814 </span><span class="lineNoCov">          0 :     auto inChannels = inBuffer.buffer.getArrayOfReadPointers();</span></a>
-<a name="815"><span class="lineNum">     815 </span><span class="lineNoCov">          0 :     auto outChannels = outBuffer.buffer.getArrayOfWritePointers();</span></a>
+<a name="814"><span class="lineNum">     814 </span><span class="lineCov">      47210 :     auto inChannels = inBuffer.buffer.getArrayOfReadPointers();</span></a>
+<a name="815"><span class="lineNum">     815 </span><span class="lineCov">      47210 :     auto outChannels = outBuffer.buffer.getArrayOfWritePointers();</span></a>
 <a name="816"><span class="lineNum">     816 </span>            : </a>
-<a name="817"><span class="lineNum">     817 </span><span class="lineNoCov">          0 :     inFifo.read (inBuffer.buffer, 0, numSamples);</span></a>
-<a name="818"><span class="lineNum">     818 </span><span class="lineNoCov">          0 :     const int numOutputFrames = stretcher-&gt;processData (inChannels, numSamples, outChannels);</span></a>
-<a name="819"><span class="lineNum">     819 </span><span class="lineNoCov">          0 :     outFifo.write (outBuffer.buffer, 0, numOutputFrames);</span></a>
+<a name="817"><span class="lineNum">     817 </span><span class="lineCov">      47210 :     inFifo.read (inBuffer.buffer, 0, numSamples);</span></a>
+<a name="818"><span class="lineNum">     818 </span><span class="lineCov">      47210 :     const int numOutputFrames = stretcher-&gt;processData (inChannels, numSamples, outChannels);</span></a>
+<a name="819"><span class="lineNum">     819 </span><span class="lineCov">      47210 :     outFifo.write (outBuffer.buffer, 0, numOutputFrames);</span></a>
 <a name="820"><span class="lineNum">     820 </span>            : </a>
 <a name="821"><span class="lineNum">     821 </span>            :     return numOutputFrames;</a>
-<a name="822"><span class="lineNum">     822 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="822"><span class="lineNum">     822 </span><span class="lineCov">      47210 : }</span></a>
 <a name="823"><span class="lineNum">     823 </span>            : </a>
 <a name="824"><span class="lineNum">     824 </span><span class="lineNoCov">          0 : int TimeStretcher::flush (float* const* outChannels)</span></a>
 <a name="825"><span class="lineNum">     825 </span>            : {</a>
-<a name="826"><span class="lineNum">     826 </span><span class="lineNoCov">          0 :     if (stretcher != nullptr)</span></a>
-<a name="827"><span class="lineNum">     827 </span><span class="lineNoCov">          0 :         return stretcher-&gt;flush (outChannels);</span></a>
+<a name="826"><span class="lineNum">     826 </span><span class="lineCov">         78 :     if (stretcher != nullptr)</span></a>
+<a name="827"><span class="lineNum">     827 </span><span class="lineCov">         78 :         return stretcher-&gt;flush (outChannels);</span></a>
 <a name="828"><span class="lineNum">     828 </span>            :     </a>
 <a name="829"><span class="lineNum">     829 </span>            :     return 0;</a>
 <a name="830"><span class="lineNum">     830 </span>            : }</a>
