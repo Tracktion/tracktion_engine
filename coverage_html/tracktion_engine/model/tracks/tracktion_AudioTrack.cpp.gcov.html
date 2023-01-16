@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-01-14 23:55:41</td>
+            <td class="headerValue">2023-01-16 17:18:46</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">40</td>
@@ -130,10 +130,10 @@
 <a name="68"><span class="lineNum">      68 </span>            :         return true;</a>
 <a name="69"><span class="lineNum">      69 </span>            :     }</a>
 <a name="70"><span class="lineNum">      70 </span>            : </a>
-<a name="71"><span class="lineNum">      71 </span><span class="lineCov">      68049 :     void valueTreeChanged() override</span></a>
+<a name="71"><span class="lineNum">      71 </span><span class="lineCov">      68057 :     void valueTreeChanged() override</span></a>
 <a name="72"><span class="lineNum">      72 </span>            :     {</a>
 <a name="73"><span class="lineNum">      73 </span>            :         markAndUpdate (updateFreeze);</a>
-<a name="74"><span class="lineNum">      74 </span><span class="lineCov">      68049 :     }</span></a>
+<a name="74"><span class="lineNum">      74 </span><span class="lineCov">      68057 :     }</span></a>
 <a name="75"><span class="lineNum">      75 </span>            : </a>
 <a name="76"><span class="lineNum">      76 </span><span class="lineCov">        275 :     void handleAsyncUpdate() override</span></a>
 <a name="77"><span class="lineNum">      77 </span>            :     {</a>
@@ -874,9 +874,9 @@
 <a name="812"><span class="lineNum">     812 </span><span class="lineCov">       1637 :                           : (t == groupFreeze ? frozen : frozenIndividually);</span></a>
 <a name="813"><span class="lineNum">     813 </span>            : }</a>
 <a name="814"><span class="lineNum">     814 </span>            : </a>
-<a name="815"><span class="lineNum">     815 </span><span class="lineCov">      53874 : void AudioTrack::setFrozen (bool b, FreezeType type)</span></a>
+<a name="815"><span class="lineNum">     815 </span><span class="lineCov">      53882 : void AudioTrack::setFrozen (bool b, FreezeType type)</span></a>
 <a name="816"><span class="lineNum">     816 </span>            : {</a>
-<a name="817"><span class="lineNum">     817 </span><span class="lineCov">      53874 :     if (type == individualFreeze)</span></a>
+<a name="817"><span class="lineNum">     817 </span><span class="lineCov">      53882 :     if (type == individualFreeze)</span></a>
 <a name="818"><span class="lineNum">     818 </span>            :     {</a>
 <a name="819"><span class="lineNum">     819 </span><span class="lineCov">          3 :         if (frozenIndividually != b)</span></a>
 <a name="820"><span class="lineNum">     820 </span>            :         {</a>
@@ -893,7 +893,7 @@
 <a name="831"><span class="lineNum">     831 </span>            :     }</a>
 <a name="832"><span class="lineNum">     832 </span>            :     else</a>
 <a name="833"><span class="lineNum">     833 </span>            :     {</a>
-<a name="834"><span class="lineNum">     834 </span><span class="lineCov">      53871 :         if (frozen != b)</span></a>
+<a name="834"><span class="lineNum">     834 </span><span class="lineCov">      53879 :         if (frozen != b)</span></a>
 <a name="835"><span class="lineNum">     835 </span>            :         {</a>
 <a name="836"><span class="lineNum">     836 </span><span class="lineNoCov">          0 :             if (! edit.isLoading())</span></a>
 <a name="837"><span class="lineNum">     837 </span>            :             {</a>
@@ -917,7 +917,7 @@
 <a name="855"><span class="lineNum">     855 </span>            :             }</a>
 <a name="856"><span class="lineNum">     856 </span>            :         }</a>
 <a name="857"><span class="lineNum">     857 </span>            :     }</a>
-<a name="858"><span class="lineNum">     858 </span><span class="lineCov">      53874 : }</span></a>
+<a name="858"><span class="lineNum">     858 </span><span class="lineCov">      53882 : }</span></a>
 <a name="859"><span class="lineNum">     859 </span>            : </a>
 <a name="860"><span class="lineNum">     860 </span><span class="lineCov">       1227 : bool AudioTrack::canContainPlugin (Plugin* p) const</span></a>
 <a name="861"><span class="lineNum">     861 </span>            : {</a>

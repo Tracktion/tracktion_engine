@@ -44558,6 +44558,20 @@
       <arglist>() const noexcept</arglist>
     </member>
     <member kind="function">
+      <type>juce::String</type>
+      <name>getImportedFileName</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiList.html</anchorfile>
+      <anchor>a9212abd246d99e89f4c85ed17f7116d2</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setImportedFileName</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiList.html</anchorfile>
+      <anchor>a4faf0484ae8d23d07da7463dca844340</anchor>
+      <arglist>(const juce::String &amp;n)</arglist>
+    </member>
+    <member kind="function">
       <type>bool</type>
       <name>isEmpty</name>
       <anchorfile>classtracktion_1_1engine_1_1MidiList.html</anchorfile>
