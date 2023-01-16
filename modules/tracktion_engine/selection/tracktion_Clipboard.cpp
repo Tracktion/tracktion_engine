@@ -696,6 +696,13 @@ bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions& options) const
         EditItemID::remapIDs (newClipState, nullptr, options.edit, &remappedIDs);
         fixClipTimes (newClipState, clip, options.edit.tempoSequence, options.startTime);
 
+        //BEATCONNECT MODIFICATION START
+        auto isDragging = newClipState.getProperty("isDragging");
+        if (!isDragging.isVoid())
+            if (isDragging)
+                newClipState.setProperty("isDragging", false, nullptr);
+        //BEATCONNECT MODIFICATION END
+
         if (newClipState.hasType (IDs::MARKERCLIP))
         {
             if (auto markerTrack = options.edit.getMarkerTrack())
@@ -773,10 +780,8 @@ bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions& options) const
     if (itemsAdded.isEmpty())
         return false;
 
-    //BEATCONNECT MODIFICATION START
-    //if (auto sm = options.selectionManager)
-    //    sm->select (itemsAdded);
-    //BEATCONNECT MODIFICATION END
+    if (auto sm = options.selectionManager)
+        sm->select (itemsAdded);
 
     if (options.setTransportToEnd && ! options.edit.getTransport().isPlaying())
         options.edit.getTransport().setCurrentPosition (getTimeRangeForSelectedItems (itemsAdded).getEnd());
