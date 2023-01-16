@@ -865,16 +865,16 @@ Clip* ClipTrack::splitClip (Clip& clip, const double time)
         edit.createNewItemID().writeID (newClipState, nullptr);
 
         //BEATCONNECT MODIFICATION START
-        //remove uuids
-        std::function<void(juce::ValueTree&)> removeUUID = [&](juce::ValueTree node) -> void
+         //remove uuids
+        auto removeUUID = [&](juce::ValueTree node, auto&& removeUUID) -> void
         {
             node.removeProperty("uuid", nullptr);
 
             for (int i = 0; i < node.getNumChildren(); ++i)
-                removeUUID(node.getChild(i));
+                removeUUID(node.getChild(i), removeUUID);
         };
 
-        removeUUID(newClipState);
+        removeUUID(newClipState, removeUUID);
 
         //remove thumbnail metadata
         newClipState.removeChild(newClipState.getChildWithName("AudioClipInfoMetaData"), nullptr);
