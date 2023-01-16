@@ -184,7 +184,11 @@ static TimePosition pasteMIDIFileIntoEdit (Edit& edit, const juce::File& midiFil
             {
                 const auto timeRange = tempoSequence.toTime ({ startBeat, endBeat });
 
-                if (auto newClip = at->insertClipWithState (clipState, list->getImportedMidiTrackName(), TrackItem::Type::midi,
+                auto clipName = list->getImportedMidiTrackName();
+                if (auto fn = list->getImportedFileName(); fn.isNotEmpty())
+                    clipName += " - " + fn;
+
+                if (auto newClip = at->insertClipWithState (clipState, clipName, TrackItem::Type::midi,
                                                             { timeRange, 0_td }, false, false))
                 {
                     if (importAsNoteExpression)
