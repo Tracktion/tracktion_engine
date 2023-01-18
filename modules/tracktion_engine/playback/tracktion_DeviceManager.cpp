@@ -114,6 +114,10 @@ struct DeviceManager::WaveDeviceList
             channelNames.set (1, name.replace ("123", "2"));
         }
 
+        // TEST
+        channelNames.add("Relay");
+        // TEST
+
         auto isDeviceEnabled = [this, isInput] (int index)
         {
             return isInput ? dm.isDeviceInEnabled (index) : dm.isDeviceOutEnabled (index);
@@ -121,6 +125,15 @@ struct DeviceManager::WaveDeviceList
 
         for (int i = 0; i < channelNames.size(); ++i)
         {
+            // TEST
+            if (channelNames[i] == "Relay")
+            {
+                descriptions.push_back(WaveDeviceDescription(channelNames[i], i, i + 1, isDeviceEnabled(i) || isDeviceEnabled(i + 1)));
+                ++i;
+                continue;
+            }
+            // TEST
+
             const bool canBeStereo = i < channelNames.size() - 1;
             
             if (canBeStereo && (isInput ? dm.isDeviceInChannelStereo (i) : dm.isDeviceOutChannelStereo (i)))

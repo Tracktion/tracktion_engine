@@ -1068,6 +1068,75 @@ public:
                 juce::FloatVectorOperations::copy (inputBuffer.getWritePointer (inputIndex),
                                                    allChannels[ci.indexInDevice], numSamples);
             }
+            // TEST
+            else if (wi.getIsRelay())
+            {
+                // DBG("Need Realy Processing : " << allChannels[0][20]);
+
+                // Can't hear shit.
+                // inputBuffer.setSize(1, numSamples);
+                // for (int ch = 0; ch < 1; ch++)
+                // {
+                //     for (int sam = 0; sam < numSamples; sam++)
+                //         inputBuffer.getArrayOfWritePointers()[ch][sam] = 0.00457764 + 0.0005;
+                // }
+
+                // Can't hear shit.
+                //  inputBuffer.setSize(numChannels, numSamples);
+                //  for (int ch = 0; ch < numChannels; ch++)
+                //  {
+                //      for (int sam = 0; sam < numSamples; sam++)
+                //          inputBuffer.getArrayOfWritePointers()[ch][sam] = -0.56523f;
+                //  }
+
+                // Can't hear shit.
+                // inputBuffer.setSize(1, numSamples);
+                // for (int sam = 0; sam < numSamples; sam++)
+                //     inputBuffer.getArrayOfWritePointers()[0][sam] = 0.00457764;
+
+                // Can't hear shit.
+                //  inputBuffer.setSize(1, 30);
+                //  int sam = 0;
+                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = -0.00183105   ;
+                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = -0.00289917   ;
+                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = 0.00686646    ;
+                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = 0.00192261    ;
+                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = -0.000518799  ;
+                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = 0.00384521    ;
+                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = -0.000152588  ;
+                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = -0.00143433   ;
+                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = 0.00344849    ;
+                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = -0.00518799   ;
+                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = -0.00811768   ;
+                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = 0.00335693    ;
+                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = -0.0039978    ;
+                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = -0.00405884   ;
+                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = 0.00439453    ;
+                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = 0.00213623    ;
+                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = 0.00320435    ;
+                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = -0.00442505   ;
+                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = -0.000671387  ;
+                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = -0.00088501   ;
+                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = -0.000671387  ;
+                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = 0.00469971    ;
+                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = 0.00650024    ;
+                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = -0.00256348   ;
+                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = 0.000946045   ;
+                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = 0.000793457   ;
+                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = -0.00637817   ;
+                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = -0.00463867   ;
+                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = 0.00436401    ;
+                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = -0.00350952   ;
+
+                // Can hear.
+                // inputBuffer.setSize(2, numSamples);
+                // juce::FloatVectorOperations::copy(inputBuffer.getWritePointer(0), allChannels[0], numSamples);
+                // juce::FloatVectorOperations::copy(inputBuffer.getWritePointer(1), allChannels[0], numSamples);
+
+                if (nullptr != edit.engine.getDeviceManager().realyBufferProcessor)
+                    edit.engine.getDeviceManager().realyBufferProcessor(inputBuffer);
+            }
+            // TEST
             else
             {
                 jassertfalse; // Is an input device getting created with more channels than the total number of device channels?
@@ -1227,6 +1296,10 @@ WaveInputDevice::WaveInputDevice (Engine& e, const juce::String& deviceName, con
       deviceType (t),
       channelSet (createChannelSet (channels))
 {
+    // TEST
+    isRelay = (deviceName == "Relay");
+    // TEST
+
     loadProps();
 }
 
@@ -1366,6 +1439,13 @@ juce::String WaveInputDevice::getSelectableDescription()
 
     return InputDevice::getSelectableDescription();
 }
+
+// TEST
+bool WaveInputDevice::getIsRelay() const
+{
+    return isRelay;
+}
+// TEST
 
 bool WaveInputDevice::isStereoPair() const
 {

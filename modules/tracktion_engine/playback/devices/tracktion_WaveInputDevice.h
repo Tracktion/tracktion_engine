@@ -71,6 +71,10 @@ public:
     //==============================================================================
     juce::String getSelectableDescription() override;
 
+    // TEST
+    bool getIsRelay() const;
+    // TEST
+
 protected:
     juce::String openDevice();
     void closeDevice();
@@ -90,6 +94,10 @@ private:
     float recordTriggerDb = 0;
     double recordAdjustMs = 0;
     std::unique_ptr<RetrospectiveRecordBuffer> retrospectiveBuffer;
+
+    // TEST
+    bool isRelay = false;
+    // TEST
 
     void loadProps();
     void saveProps();

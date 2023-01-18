@@ -182,6 +182,10 @@ public:
 
     Engine& engine;
 
+    // TEST
+    std::function<void(juce::AudioBuffer<float>&)> realyBufferProcessor;
+    // TEST
+
 private:
     struct WaveDeviceList;
     struct ContextDeviceClearer;
