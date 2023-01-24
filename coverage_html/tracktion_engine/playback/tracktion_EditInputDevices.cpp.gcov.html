@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-01-16 17:18:46</td>
+            <td class="headerValue">2023-01-24 12:32:29</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">10</td>
@@ -282,12 +282,12 @@
 <a name="220"><span class="lineNum">     220 </span><span class="lineCov">          3 :     return v.hasProperty (IDs::sourceTrack);</span></a>
 <a name="221"><span class="lineNum">     221 </span>            : }</a>
 <a name="222"><span class="lineNum">     222 </span>            : </a>
-<a name="223"><span class="lineNum">     223 </span><span class="lineCov">      31524 : void EditInputDevices::valueTreeChildAdded (juce::ValueTree&amp; p, juce::ValueTree&amp; c)</span></a>
+<a name="223"><span class="lineNum">     223 </span><span class="lineCov">      31532 : void EditInputDevices::valueTreeChildAdded (juce::ValueTree&amp; p, juce::ValueTree&amp; c)</span></a>
 <a name="224"><span class="lineNum">     224 </span>            : {</a>
-<a name="225"><span class="lineNum">     225 </span><span class="lineCov">      31524 :     if (p == state)</span></a>
+<a name="225"><span class="lineNum">     225 </span><span class="lineCov">      31532 :     if (p == state)</span></a>
 <a name="226"><span class="lineNum">     226 </span><span class="lineNoCov">          0 :         if (c.hasType (IDs::INPUTDEVICE) &amp;&amp; isTrackDevice (c))</span></a>
 <a name="227"><span class="lineNum">     227 </span><span class="lineNoCov">          0 :             addTrackDeviceInstanceToContext (c);</span></a>
-<a name="228"><span class="lineNum">     228 </span><span class="lineCov">      31524 : }</span></a>
+<a name="228"><span class="lineNum">     228 </span><span class="lineCov">      31532 : }</span></a>
 <a name="229"><span class="lineNum">     229 </span>            : </a>
 <a name="230"><span class="lineNum">     230 </span><span class="lineCov">      10689 : void EditInputDevices::valueTreeChildRemoved (juce::ValueTree&amp; p, juce::ValueTree&amp; c, int)</span></a>
 <a name="231"><span class="lineNum">     231 </span>            : {</a>
