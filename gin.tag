@@ -5658,6 +5658,14 @@
     <namespace>tracktion</namespace>
     <namespace>tracktion::graph</namespace>
     <namespace>tracktion::engine</namespace>
+    <namespace>tracktion::engine::render_utils</namespace>
+    <member kind="function">
+      <type>std::unique_ptr&lt; Renderer::RenderTask &gt;</type>
+      <name>createRenderTask</name>
+      <anchorfile>namespacetracktion_1_1engine_1_1render__utils.html</anchorfile>
+      <anchor>aaf443c9af74d539996ee548d6b2291a5</anchor>
+      <arglist>(Renderer::Parameters r, juce::String desc, std::atomic&lt; float &gt; *progressToUpdate, juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver *thumbnail)</arglist>
+    </member>
   </compound>
   <compound kind="file">
     <name>tracktion_RenderManager.h</name>
@@ -78672,6 +78680,7 @@
     <namespace>tracktion::node_player_utils</namespace>
     <namespace>tracktion::PredefinedWavetable</namespace>
     <namespace>tracktion::RackNodeBuilder</namespace>
+    <namespace>tracktion::render_utils</namespace>
     <namespace>tracktion::test_utilities</namespace>
     <namespace>tracktion::TracktionBinaryData</namespace>
     <class kind="class">tracktion::FloatAudioFormat</class>
@@ -79081,6 +79090,7 @@
     <namespace>tracktion::engine::ModifierCommon</namespace>
     <namespace>tracktion::engine::PredefinedWavetable</namespace>
     <namespace>tracktion::engine::RackNodeBuilder</namespace>
+    <namespace>tracktion::engine::render_utils</namespace>
     <namespace>tracktion::engine::TracktionBinaryData</namespace>
     <class kind="class">tracktion::engine::FloatAudioFormat</class>
     <class kind="class">tracktion::engine::LAMEManager</class>
@@ -83166,6 +83176,17 @@
       <anchorfile>namespacetracktion_1_1engine_1_1RackNodeBuilder.html</anchorfile>
       <anchor>a04a7a746c4e0509e07c8a5f17420a113</anchor>
       <arglist>(tracktion::engine::RackType &amp;, double sampleRate, int blockSize, std::unique_ptr&lt; tracktion::graph::Node &gt;, ProcessState &amp;, bool isRendering)</arglist>
+    </member>
+  </compound>
+  <compound kind="namespace">
+    <name>tracktion::engine::render_utils</name>
+    <filename>namespacetracktion_1_1engine_1_1render__utils.html</filename>
+    <member kind="function">
+      <type>std::unique_ptr&lt; Renderer::RenderTask &gt;</type>
+      <name>createRenderTask</name>
+      <anchorfile>namespacetracktion_1_1engine_1_1render__utils.html</anchorfile>
+      <anchor>aaf443c9af74d539996ee548d6b2291a5</anchor>
+      <arglist>(Renderer::Parameters r, juce::String desc, std::atomic&lt; float &gt; *progressToUpdate, juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver *thumbnail)</arglist>
     </member>
   </compound>
   <compound kind="namespace">
