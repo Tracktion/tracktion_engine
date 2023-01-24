@@ -700,7 +700,7 @@ bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions& options) const
         auto isDragging = newClipState.getProperty("isDragging");
         if (!isDragging.isVoid())
             if (isDragging)
-                newClipState.setProperty("isDragging", false, nullptr);
+                newClipState.setProperty("draggingPreviousUUID", clip.state.getProperty("uuid"), nullptr);
         //BEATCONNECT MODIFICATION END
 
         if (newClipState.hasType (IDs::MARKERCLIP))
