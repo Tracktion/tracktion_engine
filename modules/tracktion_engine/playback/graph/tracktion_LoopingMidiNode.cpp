@@ -255,6 +255,11 @@ namespace MidiHelpers
                     if (noteRange.getEnd() > loopRange.getEnd())
                         noteRange = noteRange.withEnd (loopRange.getEnd());
 
+                    // If the size of the note ends up as 0 don't add it.
+                    // This can confuse some synths
+                    if (noteRange.isEmpty())
+                        continue;
+
                     res.addEvent ({ meh->message, noteRange.getStart() });
                     res.addEvent ({ meh->noteOffObject->message, noteRange.getEnd() });
                 }
