@@ -1057,6 +1057,18 @@ public:
             return;
 
         auto& wi = getWaveInput();
+
+        // TEST
+        if (wi.getIsRelay() && wi.isEnabled())
+        {
+            inputBuffer.clear();
+            if (nullptr != edit.engine.getDeviceManager().realyBufferProcessor)
+                edit.engine.getDeviceManager().realyBufferProcessor(inputBuffer);
+
+            return;
+        }
+        // TEST
+
         auto& channelSet = wi.getChannelSet();
         inputBuffer.setSize (channelSet.size(), numSamples);
 
@@ -1068,75 +1080,6 @@ public:
                 juce::FloatVectorOperations::copy (inputBuffer.getWritePointer (inputIndex),
                                                    allChannels[ci.indexInDevice], numSamples);
             }
-            // TEST
-            else if (wi.getIsRelay())
-            {
-                // DBG("Need Realy Processing : " << allChannels[0][20]);
-
-                // Can't hear shit.
-                // inputBuffer.setSize(1, numSamples);
-                // for (int ch = 0; ch < 1; ch++)
-                // {
-                //     for (int sam = 0; sam < numSamples; sam++)
-                //         inputBuffer.getArrayOfWritePointers()[ch][sam] = 0.00457764 + 0.0005;
-                // }
-
-                // Can't hear shit.
-                //  inputBuffer.setSize(numChannels, numSamples);
-                //  for (int ch = 0; ch < numChannels; ch++)
-                //  {
-                //      for (int sam = 0; sam < numSamples; sam++)
-                //          inputBuffer.getArrayOfWritePointers()[ch][sam] = -0.56523f;
-                //  }
-
-                // Can't hear shit.
-                // inputBuffer.setSize(1, numSamples);
-                // for (int sam = 0; sam < numSamples; sam++)
-                //     inputBuffer.getArrayOfWritePointers()[0][sam] = 0.00457764;
-
-                // Can't hear shit.
-                //  inputBuffer.setSize(1, 30);
-                //  int sam = 0;
-                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = -0.00183105   ;
-                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = -0.00289917   ;
-                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = 0.00686646    ;
-                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = 0.00192261    ;
-                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = -0.000518799  ;
-                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = 0.00384521    ;
-                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = -0.000152588  ;
-                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = -0.00143433   ;
-                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = 0.00344849    ;
-                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = -0.00518799   ;
-                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = -0.00811768   ;
-                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = 0.00335693    ;
-                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = -0.0039978    ;
-                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = -0.00405884   ;
-                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = 0.00439453    ;
-                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = 0.00213623    ;
-                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = 0.00320435    ;
-                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = -0.00442505   ;
-                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = -0.000671387  ;
-                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = -0.00088501   ;
-                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = -0.000671387  ;
-                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = 0.00469971    ;
-                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = 0.00650024    ;
-                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = -0.00256348   ;
-                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = 0.000946045   ;
-                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = 0.000793457   ;
-                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = -0.00637817   ;
-                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = -0.00463867   ;
-                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = 0.00436401    ;
-                //  inputBuffer.getArrayOfWritePointers()[0][sam++] = -0.00350952   ;
-
-                // Can hear.
-                // inputBuffer.setSize(2, numSamples);
-                // juce::FloatVectorOperations::copy(inputBuffer.getWritePointer(0), allChannels[0], numSamples);
-                // juce::FloatVectorOperations::copy(inputBuffer.getWritePointer(1), allChannels[0], numSamples);
-
-                if (nullptr != edit.engine.getDeviceManager().realyBufferProcessor)
-                    edit.engine.getDeviceManager().realyBufferProcessor(inputBuffer);
-            }
-            // TEST
             else
             {
                 jassertfalse; // Is an input device getting created with more channels than the total number of device channels?
@@ -1151,34 +1094,44 @@ public:
         CRASH_TRACER
         copyIncomingDataIntoBuffer (allChannels, numChannels, numSamples);
 
-        auto inputGainDb = getWaveInput().inputGainDb;
-
-        if (inputGainDb > 0.01f || inputGainDb < -0.01f)
-            inputBuffer.applyGain (0, numSamples, dbToGain (inputGainDb));
-
-        if (measurerToUpdate != nullptr)
-            measurerToUpdate->processBuffer (inputBuffer, 0, numSamples);
-
-        if (retrospectiveBuffer != nullptr)
+        // TEST
+        auto& wi = getWaveInput();
+        if (!wi.getIsRelay())
         {
-            if (addToRetrospective)
+        // TEST
+
+            auto inputGainDb = getWaveInput().inputGainDb;
+
+            if (inputGainDb > 0.01f || inputGainDb < -0.01f)
+                inputBuffer.applyGain(0, numSamples, dbToGain(inputGainDb));
+
+            if (measurerToUpdate != nullptr)
+                measurerToUpdate->processBuffer(inputBuffer, 0, numSamples);
+
+            if (retrospectiveBuffer != nullptr)
             {
-                retrospectiveBuffer->updateSizeIfNeeded (inputBuffer.getNumChannels(),
-                                                         edit.engine.getDeviceManager().getSampleRate());
-                retrospectiveBuffer->processBuffer (streamTime, inputBuffer, numSamples);
+                if (addToRetrospective)
+                {
+                    retrospectiveBuffer->updateSizeIfNeeded(inputBuffer.getNumChannels(),
+                        edit.engine.getDeviceManager().getSampleRate());
+                    retrospectiveBuffer->processBuffer(streamTime, inputBuffer, numSamples);
+                }
+
+                retrospectiveBuffer->syncToEdit(edit, context, streamTime, numSamples);
             }
 
-            retrospectiveBuffer->syncToEdit (edit, context, streamTime, numSamples);
-        }
+            {
+                const juce::ScopedLock sl (consumerLock);
 
-        {
-            const juce::ScopedLock sl (consumerLock);
+                for (auto n : consumers)
+                    n->acceptInputBuffer (choc::buffer::createChannelArrayView (inputBuffer.getArrayOfWritePointers(),
+                                                                                (choc::buffer::ChannelCount) inputBuffer.getNumChannels(),
+                                                                                (choc::buffer::FrameCount) numSamples));
+            }
 
-            for (auto n : consumers)
-                n->acceptInputBuffer (choc::buffer::createChannelArrayView (inputBuffer.getArrayOfWritePointers(),
-                                                                            (choc::buffer::ChannelCount) inputBuffer.getNumChannels(),
-                                                                            (choc::buffer::FrameCount) numSamples));
+        // TEST
         }
+        // TEST
 
         const juce::ScopedLock sl (contextLock);
 

@@ -115,7 +115,8 @@ struct DeviceManager::WaveDeviceList
         }
 
         // TEST
-        channelNames.add("Relay");
+        if(isInput)
+            channelNames.add("Relay");
         // TEST
 
         auto isDeviceEnabled = [this, isInput] (int index)
