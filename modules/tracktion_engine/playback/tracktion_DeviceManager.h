@@ -182,9 +182,11 @@ public:
 
     Engine& engine;
 
-    // TEST
+    // BEATCONNECT MODIFICATION START (RELAY)
     std::function<void(juce::AudioBuffer<float>&)> realyBufferProcessor;
-    // TEST
+    bool m_EnableRealy = false;
+    void enableRelay(bool p_Enable);
+    // BEATCONNECT MODIFICATION END (RELAY)
 
 private:
     struct WaveDeviceList;

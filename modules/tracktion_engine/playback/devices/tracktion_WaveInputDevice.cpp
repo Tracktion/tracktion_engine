@@ -1058,16 +1058,18 @@ public:
 
         auto& wi = getWaveInput();
 
-        // TEST
+        // BEATCONNECT MODIFICATION START (RELAY)
         if (wi.getIsRelay() && wi.isEnabled())
         {
-            inputBuffer.clear();
+            // Reset the size to 0.
+            // realyBufferProcessor with set the correct size.
+            inputBuffer.setSize(inputBuffer.getNumChannels(), 0, false, true);
             if (nullptr != edit.engine.getDeviceManager().realyBufferProcessor)
                 edit.engine.getDeviceManager().realyBufferProcessor(inputBuffer);
 
             return;
         }
-        // TEST
+        // BEATCONNECT MODIFICATION END (RELAY)
 
         auto& channelSet = wi.getChannelSet();
         inputBuffer.setSize (channelSet.size(), numSamples);
@@ -1094,11 +1096,20 @@ public:
         CRASH_TRACER
         copyIncomingDataIntoBuffer (allChannels, numChannels, numSamples);
 
-        // TEST
+        // BEATCONNECT MODIFICATION START (RELAY)
         auto& wi = getWaveInput();
-        if (!wi.getIsRelay())
+        if (wi.getIsRelay())
         {
-        // TEST
+            // This could be the case where the read index catches up the the write.
+            // In this case, won't don't want to do anything.
+            if (inputBuffer.getNumSamples() == 0)
+                return;
+
+            numSamples = inputBuffer.getNumSamples();
+        }
+        else
+        {
+        // BEATCONNECT MODIFICATION END (RELAY)
 
             auto inputGainDb = getWaveInput().inputGainDb;
 
@@ -1129,9 +1140,9 @@ public:
                                                                                 (choc::buffer::FrameCount) numSamples));
             }
 
-        // TEST
+        // BEATCONNECT MODIFICATION START (RELAY)
         }
-        // TEST
+        // BEATCONNECT MODIFICATION END (RELAY)
 
         const juce::ScopedLock sl (contextLock);
 
@@ -1242,6 +1253,9 @@ protected:
 };
 
 //==============================================================================
+
+const juce::String WaveInputDevice::g_Relay = "Relay";
+
 WaveInputDevice::WaveInputDevice (Engine& e, const juce::String& deviceName, const juce::String& devType,
                                   const std::vector<ChannelIndex>& channels, DeviceType t)
     : InputDevice (e, devType, deviceName),
@@ -1249,9 +1263,9 @@ WaveInputDevice::WaveInputDevice (Engine& e, const juce::String& deviceName, con
       deviceType (t),
       channelSet (createChannelSet (channels))
 {
-    // TEST
-    isRelay = (deviceName == "Relay");
-    // TEST
+    // BEATCONNECT MODIFICATION START (RELAY)
+    isRelay = (deviceName == g_Relay);
+    // BEATCONNECT MODIFICATION END (RELAY)
 
     loadProps();
 }
@@ -1393,12 +1407,12 @@ juce::String WaveInputDevice::getSelectableDescription()
     return InputDevice::getSelectableDescription();
 }
 
-// TEST
+// BEATCONNECT MODIFICATION START (RELAY)
 bool WaveInputDevice::getIsRelay() const
 {
     return isRelay;
 }
-// TEST
+// BEATCONNECT MODIFICATION END (RELAY)
 
 bool WaveInputDevice::isStereoPair() const
 {
