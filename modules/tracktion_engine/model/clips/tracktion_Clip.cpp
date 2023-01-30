@@ -89,7 +89,8 @@ bool Clip::isClipState (const juce::ValueTree& v)
 bool Clip::isClipState (const juce::Identifier& i)
 {
     return i == IDs::AUDIOCLIP || i == IDs::MIDICLIP || i == IDs::MARKERCLIP
-        || i == IDs::STEPCLIP || i == IDs::CHORDCLIP || i == IDs::ARRANGERCLIP || i == IDs::EDITCLIP;
+        || i == IDs::STEPCLIP || i == IDs::CHORDCLIP || i == IDs::ARRANGERCLIP
+        || i == IDs::EDITCLIP || i == IDs::CONTAINERCLIP;
 }
 
 //==============================================================================
@@ -141,6 +142,7 @@ static Clip::Ptr createNewClipObject (const juce::ValueTree& v, EditItemID newCl
     if (type == IDs::STEPCLIP)      return new StepClip (v, newClipID, targetTrack);
     if (type == IDs::CHORDCLIP)     return new ChordClip (v, newClipID, targetTrack);
     if (type == IDs::ARRANGERCLIP)  return new ArrangerClip (v, newClipID, targetTrack);
+    if (type == IDs::CONTAINERCLIP) return new ContainerClip (v, newClipID, targetTrack);
     if (type == IDs::EDITCLIP)      return createNewEditClip (v, newClipID, targetTrack);
 
     jassertfalse;
@@ -216,6 +218,15 @@ void Clip::setName (const juce::String& newName)
 }
 
 //==============================================================================
+void Clip::setOwner (ClipOwner* co)
+{
+    //ddd Update this
+    if (auto ct = dynamic_cast<ClipTrack*> (co))
+        setTrack (ct);
+    else if (co == nullptr)
+        setTrack (nullptr);
+}
+
 void Clip::setTrack (ClipTrack* t)
 {
     if (track != t)
@@ -344,7 +355,7 @@ TimePosition Clip::getSpottingPoint() const
 
     auto pos = getPosition();
 
-    return juce::jlimit (TimePosition(), toPosition (pos.time.getLength()),
+    return juce::jlimit (0_tp, toPosition (pos.time.getLength()),
                          marks.getFirst() - pos.offset);
 }
 

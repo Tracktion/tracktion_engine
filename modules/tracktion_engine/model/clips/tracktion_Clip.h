@@ -389,6 +389,9 @@ public:
     juce::ValueTree state;                      /**< The ValueTree of the Clip state. */
     juce::CachedValue<juce::Colour> colour;     /**< The colour property. */
 
+    /** @internal */
+    virtual void setOwner (ClipOwner*);
+
 protected:
     friend class Track;
     friend class ClipTrack;

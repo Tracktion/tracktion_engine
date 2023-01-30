@@ -11,158 +11,158 @@
 namespace tracktion { inline namespace engine
 {
 
-struct ClipTrack::ClipList  : public ValueTreeObjectList<Clip>,
-                              private juce::AsyncUpdater
-{
-    ClipList (ClipTrack& ct, const juce::ValueTree& parentTree)
-        : ValueTreeObjectList<Clip> (parentTree),
-          clipTrack (ct)
-    {
-        rebuildObjects();
-
-        editLoadedCallback.reset (new Edit::LoadFinishedCallback<ClipList> (*this, ct.edit));
-        clipTrack.trackItemsDirty = true;
-    }
-
-    ~ClipList() override
-    {
-        for (auto c : objects)
-            c->setTrack (nullptr);
-
-        freeObjects();
-    }
-
-    Clip::Ptr getClipForTree (const juce::ValueTree& v) const
-    {
-        for (auto c : objects)
-            if (c->state == v)
-                return c;
-
-        return {};
-    }
-
-    bool isSuitableType (const juce::ValueTree& v) const override
-    {
-        return Clip::isClipState (v);
-    }
-
-    Clip* createNewObject (const juce::ValueTree& v) override
-    {
-        if (auto newClip = Clip::createClipForState (v, clipTrack))
-        {
-            if (newClip->isGrouped())
-                clipTrack.refreshCollectionClips (*newClip);
-
-            clipTrack.trackItemsDirty = true;
-            newClip->incReferenceCount();
-
-            return newClip.get();
-        }
-
-        jassertfalse;
-        return {};
-    }
-
-    void deleteObject (Clip* c) override
-    {
-        jassert (c != nullptr);
-        if (c == nullptr)
-            return;
-
-        clipTrack.trackItemsDirty = true;
-        c->decReferenceCount();
-    }
-
-    void newObjectAdded (Clip* c) override      { objectAddedOrRemoved (c); }
-    void objectRemoved (Clip* c) override       { objectAddedOrRemoved (c); }
-    void objectOrderChanged() override          { objectAddedOrRemoved (nullptr); }
-
-    void objectAddedOrRemoved (Clip* c)
-    {
-        if (c == nullptr || c->type != TrackItem::Type::unknown)
-        {
-            clipTrack.changed();
-            clipTrack.setFrozen (false, Track::groupFreeze);
-
-            if (! clipTrack.edit.isLoading() && ! clipTrack.edit.getUndoManager().isPerformingUndoRedo())
-                triggerAsyncUpdate();
-
-            clipTrack.trackItemsDirty = true;
-        }
-    }
-
-    ClipTrack& clipTrack;
-    std::unique_ptr<Edit::LoadFinishedCallback<ClipList>> editLoadedCallback;
-
-    void valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& id) override
-    {
-        if (Clip::isClipState (v))
-        {
-            if (id == IDs::start || id == IDs::length)
-            {
-                if (! clipTrack.edit.getUndoManager().isPerformingUndoRedo())
-                    triggerAsyncUpdate();
-
-                clipTrack.trackItemsDirty = true;
-            }
-        }
-    }
-
-    void handleAsyncUpdate() override
-    {
-        sortClips (clipTrack.state, &clipTrack.edit.getUndoManager());
-    }
-
-    static void sortClips (juce::ValueTree& state, juce::UndoManager* um)
-    {
-        struct Sorter
-        {
-            static int getPriority (const juce::Identifier& i)
-            {
-                if (i == IDs::AUTOMATIONTRACK)  return 0;
-                if (Clip::isClipState (i))      return 1;
-                if (i == IDs::PLUGIN)           return 2;
-                if (i == IDs::OUTPUTDEVICES)    return 3;
-                if (i == IDs::LFOS)             return 4;
-
-                return -1;
-            }
-
-            int compareElements (const juce::ValueTree& first, const juce::ValueTree& second) const noexcept
-            {
-                auto priority = getPriority (first.getType()) - getPriority (second.getType());
-
-                if (priority != 0)
-                    return priority;
-
-                if (Clip::isClipState (first) && Clip::isClipState (second))
-                {
-                    double t1 = first[IDs::start];
-                    double t2 = second[IDs::start];
-                    return t1 < t2 ? -1 : (t2 < t1 ? 1 : 0);
-                }
-
-                return 0;
-            }
-        };
-
-        Sorter clipSorter;
-        state.sort (clipSorter, um, true);
-    }
-
-    void editFinishedLoading()
-    {
-        editLoadedCallback = nullptr;
-
-        for (auto c : objects)
-            if (auto acb = dynamic_cast<AudioClipBase*> (c))
-                acb->updateAutoCrossfadesAsync (false);
-
-        clipTrack.trackItemsDirty = true;
-    }
-
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ClipList)
-};
+//dddstruct ClipTrack::ClipList  : public ValueTreeObjectList<Clip>,
+//                              private juce::AsyncUpdater
+//{
+//    ClipList (ClipTrack& ct, const juce::ValueTree& parentTree)
+//        : ValueTreeObjectList<Clip> (parentTree),
+//          clipTrack (ct)
+//    {
+//        rebuildObjects();
+//
+//        editLoadedCallback.reset (new Edit::LoadFinishedCallback<ClipList> (*this, ct.edit));
+//        clipTrack.trackItemsDirty = true;
+//    }
+//
+//    ~ClipList() override
+//    {
+//        for (auto c : objects)
+//            c->setTrack (nullptr);
+//
+//        freeObjects();
+//    }
+//
+//    Clip::Ptr getClipForTree (const juce::ValueTree& v) const
+//    {
+//        for (auto c : objects)
+//            if (c->state == v)
+//                return c;
+//
+//        return {};
+//    }
+//
+//    bool isSuitableType (const juce::ValueTree& v) const override
+//    {
+//        return Clip::isClipState (v);
+//    }
+//
+//    Clip* createNewObject (const juce::ValueTree& v) override
+//    {
+//        if (auto newClip = Clip::createClipForState (v, clipTrack))
+//        {
+//            if (newClip->isGrouped())
+//                clipTrack.refreshCollectionClips (*newClip);
+//
+//            clipTrack.trackItemsDirty = true;
+//            newClip->incReferenceCount();
+//
+//            return newClip.get();
+//        }
+//
+//        jassertfalse;
+//        return {};
+//    }
+//
+//    void deleteObject (Clip* c) override
+//    {
+//        jassert (c != nullptr);
+//        if (c == nullptr)
+//            return;
+//
+//        clipTrack.trackItemsDirty = true;
+//        c->decReferenceCount();
+//    }
+//
+//    void newObjectAdded (Clip* c) override      { objectAddedOrRemoved (c); }
+//    void objectRemoved (Clip* c) override       { objectAddedOrRemoved (c); }
+//    void objectOrderChanged() override          { objectAddedOrRemoved (nullptr); }
+//
+//    void objectAddedOrRemoved (Clip* c)
+//    {
+//        if (c == nullptr || c->type != TrackItem::Type::unknown)
+//        {
+//            clipTrack.changed();
+//            clipTrack.setFrozen (false, Track::groupFreeze);
+//
+//            if (! clipTrack.edit.isLoading() && ! clipTrack.edit.getUndoManager().isPerformingUndoRedo())
+//                triggerAsyncUpdate();
+//
+//            clipTrack.trackItemsDirty = true;
+//        }
+//    }
+//
+//    ClipTrack& clipTrack;
+//    std::unique_ptr<Edit::LoadFinishedCallback<ClipList>> editLoadedCallback;
+//
+//    void valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& id) override
+//    {
+//        if (Clip::isClipState (v))
+//        {
+//            if (id == IDs::start || id == IDs::length)
+//            {
+//                if (! clipTrack.edit.getUndoManager().isPerformingUndoRedo())
+//                    triggerAsyncUpdate();
+//
+//                clipTrack.trackItemsDirty = true;
+//            }
+//        }
+//    }
+//
+//    void handleAsyncUpdate() override
+//    {
+//        sortClips (clipTrack.state, &clipTrack.edit.getUndoManager());
+//    }
+//
+//    static void sortClips (juce::ValueTree& state, juce::UndoManager* um)
+//    {
+//        struct Sorter
+//        {
+//            static int getPriority (const juce::Identifier& i)
+//            {
+//                if (i == IDs::AUTOMATIONTRACK)  return 0;
+//                if (Clip::isClipState (i))      return 1;
+//                if (i == IDs::PLUGIN)           return 2;
+//                if (i == IDs::OUTPUTDEVICES)    return 3;
+//                if (i == IDs::LFOS)             return 4;
+//
+//                return -1;
+//            }
+//
+//            int compareElements (const juce::ValueTree& first, const juce::ValueTree& second) const noexcept
+//            {
+//                auto priority = getPriority (first.getType()) - getPriority (second.getType());
+//
+//                if (priority != 0)
+//                    return priority;
+//
+//                if (Clip::isClipState (first) && Clip::isClipState (second))
+//                {
+//                    double t1 = first[IDs::start];
+//                    double t2 = second[IDs::start];
+//                    return t1 < t2 ? -1 : (t2 < t1 ? 1 : 0);
+//                }
+//
+//                return 0;
+//            }
+//        };
+//
+//        Sorter clipSorter;
+//        state.sort (clipSorter, um, true);
+//    }
+//
+//    void editFinishedLoading()
+//    {
+//        editLoadedCallback = nullptr;
+//
+//        for (auto c : objects)
+//            if (auto acb = dynamic_cast<AudioClipBase*> (c))
+//                acb->updateAutoCrossfadesAsync (false);
+//
+//        clipTrack.trackItemsDirty = true;
+//    }
+//
+//    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ClipList)
+//};
 
 //==============================================================================
 struct ClipTrack::CollectionClipList  : public juce::ValueTree::Listener
@@ -313,22 +313,24 @@ struct ClipTrack::CollectionClipList  : public juce::ValueTree::Listener
 ClipTrack::ClipTrack (Edit& ed, const juce::ValueTree& v, double defaultHeight, double minHeight, double maxHeight)
     : Track (ed, v, defaultHeight, minHeight, maxHeight)
 {
-    if (! edit.getUndoManager().isPerformingUndoRedo())
-        ClipList::sortClips (state, &edit.getUndoManager());
-
     collectionClipList.reset (new CollectionClipList (*this, state));
-    clipList.reset (new ClipList (*this, state));
 }
 
 ClipTrack::~ClipTrack()
 {
 }
 
+void ClipTrack::initialise()
+{
+    initialiseClipOwner (edit, state);
+    Track::initialise();
+}
+
 void ClipTrack::flushStateToValueTree()
 {
     Track::flushStateToValueTree();
 
-    for (auto c : clipList->objects)
+    for (auto c : getClips())
         c->flushStateToValueTree();
 }
 
@@ -342,9 +344,9 @@ void ClipTrack::refreshTrackItems() const
         trackItemsDirty = false;
 
         trackItems.clear();
-        trackItems.ensureStorageAllocated (clipList->objects.size());
+        trackItems.ensureStorageAllocated (getClips().size());
 
-        for (auto clip : clipList->objects)
+        for (auto clip : getClips())
             trackItems.add (clip);
 
         for (auto cc : collectionClipList->collectionClips)
@@ -385,10 +387,10 @@ TrackItem* ClipTrack::getNextTrackItemAt (TimePosition time)
 }
 
 //==============================================================================
-void ClipTrack::refreshCollectionClips (Clip& newClip)
-{
-    collectionClipList->clipCreated (newClip);
-}
+//dddvoid ClipTrack::refreshCollectionClips (Clip& newClip)
+//{
+//    collectionClipList->clipCreated (newClip);
+//}
 
 CollectionClip* ClipTrack::getCollectionClip (int index)  const noexcept
 {
@@ -431,14 +433,14 @@ bool ClipTrack::contains (CollectionClip* cc) const
 }
 
 //==============================================================================
-const juce::Array<Clip*>& ClipTrack::getClips() const noexcept
-{
-    return clipList->objects;
-}
+//dddconst juce::Array<Clip*>& ClipTrack::getClips() const noexcept
+//{
+//    return clipList->objects;
+//}
 
 Clip* ClipTrack::findClipForID (EditItemID id) const
 {
-    for (auto* c : clipList->objects)
+    for (auto c : getClips())
         if (c->itemID == id)
             return c;
 
@@ -463,7 +465,7 @@ TimeDuration ClipTrack::getLengthIncludingInputTracks() const
 
 TimeRange ClipTrack::getTotalRange() const
 {
-    return findUnionOfEditTimeRanges (clipList->objects);
+    return findUnionOfEditTimeRanges (getClips());
 }
 
 bool ClipTrack::addClip (const Clip::Ptr& clip)
@@ -472,7 +474,7 @@ bool ClipTrack::addClip (const Clip::Ptr& clip)
 
     if (clip != nullptr)
     {
-        if (clipList->objects.size() < edit.engine.getEngineBehaviour().getEditLimits().maxClipsInTrack)
+        if (getClips().size() < edit.engine.getEngineBehaviour().getEditLimits().maxClipsInTrack)
         {
             jassert (findClipForID (clip->itemID) == nullptr);
 
@@ -532,107 +534,108 @@ static juce::ValueTree createNewClipState (const juce::String& name, TrackItem::
 //==============================================================================
 Clip* ClipTrack::insertClipWithState (juce::ValueTree clipState)
 {
-    CRASH_TRACER
-    jassert (clipState.isValid());
-    jassert (! clipState.getParent().isValid());
-
-    auto& engineBehaviour = edit.engine.getEngineBehaviour();
-
-    if (clipState.hasType (IDs::MIDICLIP))
-    {
-        setPropertyIfMissing (clipState, IDs::sync, engineBehaviour.areMidiClipsRemappedWhenTempoChanges()
-                                                       ? Clip::syncBarsBeats : Clip::syncAbsolute, nullptr);
-    }
-    else if (clipState.hasType (IDs::AUDIOCLIP) || clipState.hasType (IDs::EDITCLIP))
-    {
-        if (! clipState.getChildWithName (IDs::LOOPINFO).isValid())
-        {
-            auto sourceFile = SourceFileReference::findFileFromString (edit, clipState[IDs::source]);
-
-            if (sourceFile.exists())
-            {
-                auto loopInfo = AudioFile (edit.engine, sourceFile).getInfo().loopInfo;
-
-                if (loopInfo.getRootNote() != -1)
-                    clipState.setProperty (IDs::autoPitch, true, nullptr);
-
-                if (loopInfo.isLoopable())
-                {
-                    clipState.setProperty (IDs::autoTempo, true, nullptr);
-                    clipState.setProperty (IDs::stretchMode, true, nullptr);
-                    clipState.setProperty (IDs::elastiqueMode, (int) TimeStretcher::elastiquePro, nullptr);
-
-                    auto& ts = edit.tempoSequence;
-
-                    auto startBeat = ts.toBeats (TimePosition::fromSeconds (static_cast<double> (clipState[IDs::start])));
-                    auto endBeat   = startBeat + BeatDuration::fromBeats (loopInfo.getNumBeats());
-                    auto newLength = ts.toTime (endBeat) - ts.toTime (startBeat);
-
-                    clipState.setProperty (IDs::length, newLength.inSeconds(), nullptr);
-                }
-
-                auto loopSate = loopInfo.state;
-
-                if (loopSate.getNumProperties() > 0 || loopSate.getNumChildren() > 0)
-                    clipState.addChild (loopSate.createCopy(), -1, nullptr);
-            }
-        }
-
-        if (! clipState.hasProperty (IDs::sync))
-        {
-            if (clipState.getProperty (IDs::autoTempo))
-                clipState.setProperty (IDs::sync, (int) edit.engine.getEngineBehaviour().areAutoTempoClipsRemappedWhenTempoChanges()
-                                                           ? Clip::syncBarsBeats : Clip::syncAbsolute, nullptr);
-            else
-                clipState.setProperty (IDs::sync, (int) edit.engine.getEngineBehaviour().areAudioClipsRemappedWhenTempoChanges()
-                                                           ? Clip::syncBarsBeats : Clip::syncAbsolute, nullptr);
-        }
-
-        if (! clipState.hasProperty (IDs::autoCrossfade))
-            if (edit.engine.getPropertyStorage().getProperty (SettingID::xFade, 0))
-                clipState.setProperty (IDs::autoCrossfade, true, nullptr);
-    }
-
-    if (clipList->objects.size() < edit.engine.getEngineBehaviour().getEditLimits().maxClipsInTrack)
-    {
-        state.addChild (clipState, -1, &edit.getUndoManager());
-
-        if (auto newClip = clipList->getClipForTree (clipState))
-        {
-            if (auto at = dynamic_cast<AudioTrack*> (this))
-            {
-                if (newClip->getColour() == newClip->getDefaultColour())
-                {
-                    float hue = ((at->getAudioTrackNumber() - 1) % 9) / 9.0f;
-                    newClip->setColour (newClip->getDefaultColour().withHue (hue));
-                }
-
-                if (auto acb = dynamic_cast<AudioClipBase*> (newClip.get()))
-                {
-                    if (edit.engine.getEngineBehaviour().autoAddClipEdgeFades())
-                        if (! (clipState.hasProperty (IDs::fadeIn) && clipState.hasProperty (IDs::fadeOut)))
-                            acb->applyEdgeFades();
-
-                    const auto defaults = edit.engine.getEngineBehaviour().getClipDefaults();
-
-                    if (! clipState.hasProperty (IDs::proxyAllowed))
-                        acb->setUsesProxy (defaults.useProxyFile);
-
-                    if (! clipState.hasProperty (IDs::resamplingQuality))
-                        acb->setResamplingQuality (defaults.resamplingQuality);
-                }
-            }
-
-            return newClip.get();
-        }
-    }
-    else
-    {
-        edit.engine.getUIBehaviour().showWarningMessage (TRANS("Can't add any more clips to this track!"));
-    }
-
-    jassertfalse;
-    return {};
+    return tracktion::engine::insertClipWithState (*this, clipState);
+//ddd    CRASH_TRACER
+//    jassert (clipState.isValid());
+//    jassert (! clipState.getParent().isValid());
+//
+//    auto& engineBehaviour = edit.engine.getEngineBehaviour();
+//
+//    if (clipState.hasType (IDs::MIDICLIP))
+//    {
+//        setPropertyIfMissing (clipState, IDs::sync, engineBehaviour.areMidiClipsRemappedWhenTempoChanges()
+//                                                       ? Clip::syncBarsBeats : Clip::syncAbsolute, nullptr);
+//    }
+//    else if (clipState.hasType (IDs::AUDIOCLIP) || clipState.hasType (IDs::EDITCLIP))
+//    {
+//        if (! clipState.getChildWithName (IDs::LOOPINFO).isValid())
+//        {
+//            auto sourceFile = SourceFileReference::findFileFromString (edit, clipState[IDs::source]);
+//
+//            if (sourceFile.exists())
+//            {
+//                auto loopInfo = AudioFile (edit.engine, sourceFile).getInfo().loopInfo;
+//
+//                if (loopInfo.getRootNote() != -1)
+//                    clipState.setProperty (IDs::autoPitch, true, nullptr);
+//
+//                if (loopInfo.isLoopable())
+//                {
+//                    clipState.setProperty (IDs::autoTempo, true, nullptr);
+//                    clipState.setProperty (IDs::stretchMode, true, nullptr);
+//                    clipState.setProperty (IDs::elastiqueMode, (int) TimeStretcher::elastiquePro, nullptr);
+//
+//                    auto& ts = edit.tempoSequence;
+//
+//                    auto startBeat = ts.toBeats (TimePosition::fromSeconds (static_cast<double> (clipState[IDs::start])));
+//                    auto endBeat   = startBeat + BeatDuration::fromBeats (loopInfo.getNumBeats());
+//                    auto newLength = ts.toTime (endBeat) - ts.toTime (startBeat);
+//
+//                    clipState.setProperty (IDs::length, newLength.inSeconds(), nullptr);
+//                }
+//
+//                auto loopSate = loopInfo.state;
+//
+//                if (loopSate.getNumProperties() > 0 || loopSate.getNumChildren() > 0)
+//                    clipState.addChild (loopSate.createCopy(), -1, nullptr);
+//            }
+//        }
+//
+//        if (! clipState.hasProperty (IDs::sync))
+//        {
+//            if (clipState.getProperty (IDs::autoTempo))
+//                clipState.setProperty (IDs::sync, (int) edit.engine.getEngineBehaviour().areAutoTempoClipsRemappedWhenTempoChanges()
+//                                                           ? Clip::syncBarsBeats : Clip::syncAbsolute, nullptr);
+//            else
+//                clipState.setProperty (IDs::sync, (int) edit.engine.getEngineBehaviour().areAudioClipsRemappedWhenTempoChanges()
+//                                                           ? Clip::syncBarsBeats : Clip::syncAbsolute, nullptr);
+//        }
+//
+//        if (! clipState.hasProperty (IDs::autoCrossfade))
+//            if (edit.engine.getPropertyStorage().getProperty (SettingID::xFade, 0))
+//                clipState.setProperty (IDs::autoCrossfade, true, nullptr);
+//    }
+//
+//    if (clipList->objects.size() < edit.engine.getEngineBehaviour().getEditLimits().maxClipsInTrack)
+//    {
+//        state.addChild (clipState, -1, &edit.getUndoManager());
+//
+//        if (auto newClip = clipList->getClipForTree (clipState))
+//        {
+//            if (auto at = dynamic_cast<AudioTrack*> (this))
+//            {
+//                if (newClip->getColour() == newClip->getDefaultColour())
+//                {
+//                    float hue = ((at->getAudioTrackNumber() - 1) % 9) / 9.0f;
+//                    newClip->setColour (newClip->getDefaultColour().withHue (hue));
+//                }
+//
+//                if (auto acb = dynamic_cast<AudioClipBase*> (newClip.get()))
+//                {
+//                    if (edit.engine.getEngineBehaviour().autoAddClipEdgeFades())
+//                        if (! (clipState.hasProperty (IDs::fadeIn) && clipState.hasProperty (IDs::fadeOut)))
+//                            acb->applyEdgeFades();
+//
+//                    const auto defaults = edit.engine.getEngineBehaviour().getClipDefaults();
+//
+//                    if (! clipState.hasProperty (IDs::proxyAllowed))
+//                        acb->setUsesProxy (defaults.useProxyFile);
+//
+//                    if (! clipState.hasProperty (IDs::resamplingQuality))
+//                        acb->setResamplingQuality (defaults.resamplingQuality);
+//                }
+//            }
+//
+//            return newClip.get();
+//        }
+//    }
+//    else
+//    {
+//        edit.engine.getUIBehaviour().showWarningMessage (TRANS("Can't add any more clips to this track!"));
+//    }
+//
+//    jassertfalse;
+//    return {};
 }
 
 Clip* ClipTrack::insertClipWithState (const juce::ValueTree& stateToUse, const juce::String& name, TrackItem::Type type,
@@ -850,11 +853,58 @@ Clip* ClipTrack::insertNewClip (TrackItem::Type type, TimeRange pos, SelectionMa
 
 bool ClipTrack::containsAnyMIDIClips() const
 {
-    for (auto& c : clipList->objects)
+    for (auto& c : getClips())
         if (c->isMidi())
             return true;
 
     return false;
+}
+
+juce::ValueTree& ClipTrack::getClipOwnerState()
+{
+    return state;
+}
+
+Selectable* ClipTrack::getClipOwnerSelectable()
+{
+    return this;
+}
+
+Edit& ClipTrack::getClipOwnerEdit()
+{
+    return edit;
+}
+
+void ClipTrack::clipCreated (Clip& c)
+{
+    if (c.isGrouped())
+        collectionClipList->clipCreated (c);
+
+    trackItemsDirty = true;
+}
+
+void ClipTrack::clipDeleted (Clip&)
+{
+    trackItemsDirty = true;
+}
+
+void ClipTrack::clipAddedOrRemoved()
+{
+    changed();
+    setFrozen (false, Track::groupFreeze);
+    trackItemsDirty = true;
+}
+
+void ClipTrack::clipOrderChanged()
+{
+    changed();
+    setFrozen (false, Track::groupFreeze);
+    trackItemsDirty = true;
+}
+
+void ClipTrack::clipPositionChanged()
+{
+    trackItemsDirty = true;
 }
 
 inline juce::String incrementLastDigit (const juce::String& in)
@@ -881,7 +931,7 @@ Clip* ClipTrack::splitClip (Clip& clip, const TimePosition time)
     CRASH_TRACER
     setFrozen (false, groupFreeze);
 
-    if (clipList->objects.contains (&clip)
+    if (getClips().contains (&clip)
          && clip.getPosition().time.reduced (TimeDuration::fromSeconds (0.001)).contains (time)
          && ! clip.isGrouped())
     {
@@ -946,7 +996,7 @@ void ClipTrack::splitAt (TimePosition time)
     // make a copied list first, as they'll get moved out-of-order..
     Clip::Array clipsToDo;
 
-    for (auto c : *clipList)
+    for (auto c : getClips())
         if (c->getPosition().time.contains (time))
             clipsToDo.add (c);
 
@@ -982,7 +1032,7 @@ juce::Array<TimePosition> ClipTrack::findAllTimesOfInterest()
 {
     juce::Array<TimePosition> cuts;
 
-    for (auto& o : clipList->objects)
+    for (auto& o : getClips())
         cuts.addArray (o->getInterestingTimes());
 
     cuts.sort();
@@ -1020,7 +1070,7 @@ bool ClipTrack::containsPlugin (const Plugin* plugin) const
     if (pluginList.contains (plugin))
         return true;
 
-    for (auto c : clipList->objects)
+    for (auto c : getClips())
         if (auto plugins = c->getPluginList())
             if (plugins->contains (plugin))
                 return true;
@@ -1032,7 +1082,7 @@ Plugin::Array ClipTrack::getAllPlugins() const
 {
     auto destArray = Track::getAllPlugins();
 
-    for (auto c : clipList->objects)
+    for (auto c : getClips())
         destArray.addArray (c->getAllPlugins());
 
     return destArray;
@@ -1042,13 +1092,13 @@ void ClipTrack::sendMirrorUpdateToAllPlugins (Plugin& p) const
 {
     pluginList.sendMirrorUpdateToAllPlugins (p);
 
-    for (auto c : clipList->objects)
+    for (auto c : getClips())
         c->sendMirrorUpdateToAllPlugins (p);
 }
 
 bool ClipTrack::areAnyClipsUsingFile (const AudioFile& af)
 {
-    for (auto c : clipList->objects)
+    for (auto c : getClips())
         if (auto acb = dynamic_cast<AudioClipBase*> (c))
             if (acb->isUsingFile (af))
                 return true;

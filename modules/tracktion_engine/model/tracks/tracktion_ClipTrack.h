@@ -12,20 +12,23 @@ namespace tracktion { inline namespace engine
 {
 
 /** */
-class ClipTrack   : public Track
+class ClipTrack   : public Track,
+                    public ClipOwner
 {
 public:
     ClipTrack (Edit&, const juce::ValueTree&, double defaultHeight, double minHeight, double maxHeight);
     ~ClipTrack() override;
 
+    /** @internal */
+    void initialise() override;
+    /** @internal */
     void flushStateToValueTree() override;
 
     //==============================================================================
-    const juce::Array<Clip*>& getClips() const noexcept;
+//ddd    const juce::Array<Clip*>& getClips() const noexcept;
     Clip* findClipForID (EditItemID) const override;
 
     //==============================================================================
-    void refreshCollectionClips (Clip& newClip);
     CollectionClip* getCollectionClip (int index) const noexcept;
     CollectionClip* getCollectionClip (Clip*) const;
     int getNumCollectionClips() const noexcept;
@@ -52,7 +55,7 @@ public:
     TimeRange getTotalRange() const;
 
     //==============================================================================
-    bool addClip (const Clip::Ptr& clip);
+    bool addClip (const Clip::Ptr&);
 
     Clip* insertClipWithState (juce::ValueTree);
 
@@ -100,14 +103,27 @@ public:
     bool areAnyClipsUsingFile (const AudioFile&);
     bool containsAnyMIDIClips() const;
 
+    /** @internal */
+    juce::ValueTree& getClipOwnerState() override;
+    /** @internal */
+    Selectable* getClipOwnerSelectable() override;
+    /** @internal */
+    Edit& getClipOwnerEdit() override;
+    /** @internal */
+    void clipCreated (Clip&) override;
+    /** @internal */
+    void clipDeleted (Clip&) override;
+    /** @internal */
+    void clipAddedOrRemoved() override;
+    /** @internal */
+    void clipOrderChanged() override;
+    /** @internal */
+    void clipPositionChanged() override;
+
 protected:
     friend class Clip;
 
     juce::Array<TimePosition> findAllTimesOfInterest();
-
-    struct ClipList;
-    friend struct ClipList;
-    std::unique_ptr<ClipList> clipList;
 
     struct CollectionClipList;
     friend struct CollectionClipList;

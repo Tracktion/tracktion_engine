@@ -281,6 +281,7 @@ namespace tracktion { inline namespace engine
     class Edit;
     class Track;
     class Clip;
+    class ClipOwner;
     class Plugin;
     struct AudioRenderContext;
     struct PluginRenderContext;
@@ -317,6 +318,7 @@ namespace tracktion { inline namespace engine
     struct ARADocumentHolder;
     class ClipEffects;
     class WaveAudioClip;
+    class ContainerClip;
     class CollectionClip;
     class MidiClip;
     class EditClip;
@@ -538,6 +540,7 @@ namespace tracktion { inline namespace engine
 #include "playback/devices/tracktion_OutputDevice.h"
 
 #include "model/tracks/tracktion_TrackOutput.h"
+#include "model/clips/tracktion_ClipOwner.h"
 #include "model/tracks/tracktion_ClipTrack.h"
 #include "model/tracks/tracktion_AudioTrack.h"
 
@@ -558,6 +561,7 @@ namespace tracktion { inline namespace engine
 #include "model/clips/tracktion_ChordClip.h"
 #include "model/clips/tracktion_ClipEffects.h"
 #include "model/clips/tracktion_CollectionClip.h"
+#include "model/clips/tracktion_ContainerClip.h"
 #include "model/clips/tracktion_MarkerClip.h"
 #include "model/clips/tracktion_MidiClip.h"
 #include "model/clips/tracktion_ReverseRenderJob.h"

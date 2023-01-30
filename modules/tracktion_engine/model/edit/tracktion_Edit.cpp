@@ -348,7 +348,8 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
              || v.hasType (IDs::MIDICLIP)
              || v.hasType (IDs::STEPCLIP)
              || v.hasType (IDs::EDITCLIP)
-             || v.hasType (IDs::CHORDCLIP))
+             || v.hasType (IDs::CHORDCLIP)
+             || v.hasType (IDs::CONTAINERCLIP))
             restart();
     }
 

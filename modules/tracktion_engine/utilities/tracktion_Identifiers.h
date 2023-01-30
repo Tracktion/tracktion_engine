@@ -629,6 +629,7 @@ namespace IDs
     DECLARE_ID (chorusMix)
     DECLARE_ID (ARRANGERTRACK)
     DECLARE_ID (ARRANGERCLIP)
+    DECLARE_ID (CONTAINERCLIP)
     DECLARE_ID (apply)
     DECLARE_ID (oscType)
     DECLARE_ID (bandLimit)
