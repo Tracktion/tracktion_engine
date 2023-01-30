@@ -154,10 +154,6 @@ private:
     juce::OwnedArray<WaveOutputDeviceInstance> waveOutputs;
     juce::OwnedArray<MidiOutputDeviceInstance> midiOutputs;
 
-    tempo::Sequence lastTempoSequence { {{ BeatPosition(), 120.0, 0.0f }},
-                                        {{ BeatPosition(), 4, 4, false }},
-                                        tempo::LengthOfOneBeat::dependsOnTimeSignature };
-
     void releaseDeviceList();
     void rebuildDeviceList();
 

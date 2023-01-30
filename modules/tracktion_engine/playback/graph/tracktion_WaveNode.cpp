@@ -596,7 +596,7 @@ public:
 
     void setPosition (SampleCount t) override
     {
-        if (std::abs (t - getReadPosition()) <= 1)
+        if (std::abs (t - getReadPosition()) <= 2)
             return;
 
         readPosition = (double) t;
@@ -1697,9 +1697,12 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
     // This won't work with invalid or non-existent files!
     jassert (! audioFile.isNull());
 
-    hash_combine (stateHash, editPositionTime);
-    hash_combine (stateHash, loopSectionTime);
-    hash_combine (stateHash, offsetTime.inSeconds());
+    auto removeRoundingError = [] (auto d) { return static_cast<float> (d.inSeconds()); };
+    hash_combine (stateHash, removeRoundingError (editPositionTime.getStart()));
+    hash_combine (stateHash, removeRoundingError (editPositionTime.getEnd()));
+    hash_combine (stateHash, removeRoundingError (loopSectionTime.getStart()));
+    hash_combine (stateHash, removeRoundingError (loopSectionTime.getEnd()));
+    hash_combine (stateHash, removeRoundingError (offsetTime));
     hash_combine (stateHash, speedRatio);
     hash_combine (stateHash, editItemID.getRawID());
     hash_combine (stateHash, channelsToUse.size());
@@ -1764,9 +1767,12 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
     // This won't work with invalid or non-existent files!
     jassert (! audioFile.isNull());
 
-    hash_combine (stateHash, editPositionBeats);
-    hash_combine (stateHash, loopSectionBeats);
-    hash_combine (stateHash, offsetBeats.inBeats());
+    auto removeRoundingError = [] (auto d) { return static_cast<float> (d.inBeats()); };
+    hash_combine (stateHash, removeRoundingError (editPositionBeats.getStart()));
+    hash_combine (stateHash, removeRoundingError (editPositionBeats.getEnd()));
+    hash_combine (stateHash, removeRoundingError (loopSectionBeats.getStart()));
+    hash_combine (stateHash, removeRoundingError (loopSectionBeats.getEnd()));
+    hash_combine (stateHash, removeRoundingError (offsetBeats));
     hash_combine (stateHash, editItemID.getRawID());
     hash_combine (stateHash, channelsToUse.size());
     hash_combine (stateHash, destChannels.size());
