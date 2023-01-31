@@ -122,6 +122,11 @@ public:
     /** @internal */
     void reassignReferencedItem (const ReferencedItem&, ProjectItemID newID, double newStartTime) override;
 
+    /** @internal */
+    void flushStateToValueTree() override;
+    /** @internal */
+    void pitchTempoTrackChanged() override;
+
 private:
     //==============================================================================
     juce::ValueTree clipListState;

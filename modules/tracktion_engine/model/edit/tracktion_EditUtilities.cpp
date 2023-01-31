@@ -623,12 +623,9 @@ bool containsClip (const Edit& edit, Clip* clip)
                                       if (t.indexOfTrackItem (clip) >= 0)
                                           return true;
 
-                                      //ddd Improve this locic with some more concise functions
-                                      if (auto ct = dynamic_cast<ClipTrack*> (&t))
-                                          for (auto c : ct->getClips())
-                                              if (auto cc = dynamic_cast<ContainerClip*> (c))
-                                                  if (cc->getClips().contains (clip))
-                                                      return true;
+                                      for (auto cc : getTrackItemsOfType<ContainerClip> (t))
+                                          if (cc->getClips().contains (clip))
+                                              return true;
 
                                       return false;
                                   }) != nullptr;

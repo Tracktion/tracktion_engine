@@ -126,6 +126,11 @@ Clip* split (Clip&, TimePosition);
 /** Returns true if the clip owner contains any MIDI clips. */
 [[ nodiscard ]] bool containsAnyMIDIClips (const ClipOwner&);
 
+/** Returns the subclips of the given type. */
+template<typename ClipType>
+[[ nodiscard ]] juce::Array<ClipType*> getClipsOfType (const ClipOwner&);
+
+
 //==============================================================================
 //==============================================================================
 /** Returns true if this is an AudioTrack. */
@@ -183,5 +188,27 @@ bool createsOutput (ClipOwner&);
 /** Returns true if this track can show automation. @see AudioTrack, FolderTrack, AutomationTrack */
 bool wantsAutomation (ClipOwner&);
 
+//==============================================================================
+//        _        _           _  _
+//     __| |  ___ | |_   __ _ (_)| | ___
+//    / _` | / _ \| __| / _` || || |/ __|
+//   | (_| ||  __/| |_ | (_| || || |\__ \ _  _  _
+//    \__,_| \___| \__| \__,_||_||_||___/(_)(_)(_)
+//
+//   Code beyond this point is implementation detail...
+//
+//==============================================================================
+
+template<typename ClipType>
+inline juce::Array<ClipType*> getClipsOfType (const ClipOwner& parent)
+{
+    juce::Array<ClipType*> clips;
+
+    for (auto clip : parent.getClips())
+        if (auto typedClip = dynamic_cast<ClipType*> (clip))
+            clips.add (typedClip);
+
+    return clips;
+}
 
 }} // namespace tracktion { inline namespace engine

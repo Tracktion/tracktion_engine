@@ -166,6 +166,22 @@ void ContainerClip::reassignReferencedItem (const ReferencedItem& item,
     }
 }
 
+void ContainerClip::flushStateToValueTree()
+{
+    for (auto c : getClips())
+        c->flushStateToValueTree();
+
+    AudioClipBase::flushStateToValueTree();
+}
+
+void ContainerClip::pitchTempoTrackChanged()
+{
+    for (auto c : getClips())
+        c->pitchTempoTrackChanged();
+
+    AudioClipBase::pitchTempoTrackChanged();
+}
+
 //==============================================================================
 void ContainerClip::addTake (ProjectItemID id)
 {
