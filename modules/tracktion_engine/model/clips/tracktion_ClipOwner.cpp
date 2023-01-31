@@ -63,7 +63,6 @@ struct ClipOwner::ClipList : public ValueTreeObjectList<Clip>,
         if (c == nullptr)
             return;
 
-        clipOwner.clipDeleted (*c);
         c->decReferenceCount();
     }
 

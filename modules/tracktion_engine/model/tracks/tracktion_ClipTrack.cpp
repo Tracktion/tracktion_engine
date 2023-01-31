@@ -883,11 +883,6 @@ void ClipTrack::clipCreated (Clip& c)
     trackItemsDirty = true;
 }
 
-void ClipTrack::clipDeleted (Clip&)
-{
-    trackItemsDirty = true;
-}
-
 void ClipTrack::clipAddedOrRemoved()
 {
     changed();

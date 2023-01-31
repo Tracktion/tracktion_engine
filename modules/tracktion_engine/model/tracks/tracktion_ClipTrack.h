@@ -112,8 +112,6 @@ public:
     /** @internal */
     void clipCreated (Clip&) override;
     /** @internal */
-    void clipDeleted (Clip&) override;
-    /** @internal */
     void clipAddedOrRemoved() override;
     /** @internal */
     void clipOrderChanged() override;

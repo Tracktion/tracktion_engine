@@ -45,9 +45,6 @@ protected:
     /** Called when a clip is created which could be during Edit load. */
     virtual void clipCreated (Clip&) = 0;
 
-    /** Called when a clip is deleted which could be during Edit destruction or track deletion etc. */
-    virtual void clipDeleted (Clip&) = 0;
-
     /** Called when a clip is added or removed.
         This is subtly different to the created/deleted callback as it will only
         get called whilst the Edit is in normal operation.

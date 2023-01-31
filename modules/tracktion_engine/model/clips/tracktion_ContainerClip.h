@@ -142,7 +142,6 @@ private:
     void valueTreeChildOrderChanged (juce::ValueTree&, int, int) override;
 
     void clipCreated (Clip&) override;
-    void clipDeleted (Clip&) override;
     void clipAddedOrRemoved() override;
     void clipOrderChanged() override;
     void clipPositionChanged() override;

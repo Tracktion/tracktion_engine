@@ -609,11 +609,6 @@ void ContainerClip::clipCreated (Clip&)
     //ddd
 }
 
-void ContainerClip::clipDeleted (Clip&)
-{
-    //ddd
-}
-
 void ContainerClip::clipAddedOrRemoved()
 {
     //ddd
