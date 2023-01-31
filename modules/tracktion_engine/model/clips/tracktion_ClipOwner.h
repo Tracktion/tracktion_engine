@@ -101,6 +101,15 @@ juce::ReferenceCountedObjectPtr<WaveAudioClip> insertWaveClip (ClipOwner&, const
 juce::ReferenceCountedObjectPtr<WaveAudioClip> insertWaveClip (ClipOwner&, const juce::String& name, ProjectItemID sourceID,
                                                                ClipPosition, bool deleteExistingClips);
 
+/** Inserts a new MidiClip into the ClipOwner's clip list. */
+juce::ReferenceCountedObjectPtr<MidiClip> insertMIDIClip (ClipOwner&, const juce::String& name, TimeRange);
+
+/** Inserts a new MidiClip into the ClipOwner's clip list. */
+juce::ReferenceCountedObjectPtr<MidiClip> insertMIDIClip (ClipOwner&, TimeRange);
+
+/** Inserts a new EditClip into the ClipOwner's clip list. */
+juce::ReferenceCountedObjectPtr<EditClip> insertEditClip (ClipOwner&, TimeRange, ProjectItemID);
+
 //==============================================================================
 /** Removes a region of a ClipOwner and returns any newly created clips. */
 juce::Array<Clip*> deleteRegion (ClipOwner&, TimeRange);
@@ -108,9 +117,14 @@ juce::Array<Clip*> deleteRegion (ClipOwner&, TimeRange);
 /** Removes a region of a clip and returns any newly created clips. */
 juce::Array<Clip*> deleteRegion (Clip&, TimeRange);
 
+/** Splits the given clp owner at the time and returns any newly created clips. */
+juce::Array<Clip*> split (ClipOwner&, TimePosition);
+
 /** Splits the given clip at the time and returns the newly created clip. */
 Clip* split (Clip&, TimePosition);
 
+/** Returns true if the clip owner contains any MIDI clips. */
+[[ nodiscard ]] bool containsAnyMIDIClips (const ClipOwner&);
 
 //==============================================================================
 //==============================================================================

@@ -467,6 +467,47 @@ WaveAudioClip::Ptr insertWaveClip (ClipOwner& parent, const juce::String& name, 
     return {};
 }
 
+MidiClip::Ptr insertMIDIClip (ClipOwner& parent, const juce::String& name, TimeRange position)
+{
+    if (auto t = dynamic_cast<AudioTrack*> (&parent))
+        if (! t->containsAnyMIDIClips())
+            t->setVerticalScaleToDefault();
+
+    if (auto c = insertNewClip (parent, TrackItem::Type::midi, name, position))
+    {
+        if (auto mc = dynamic_cast<MidiClip*> (c))
+            return *mc;
+
+        jassertfalse;
+    }
+
+    return {};
+}
+
+MidiClip::Ptr insertMIDIClip (ClipOwner& parent, TimeRange position)
+{
+    return insertMIDIClip (parent, TrackItem::getSuggestedNameForNewItem (TrackItem::Type::midi), position);
+}
+
+EditClip::Ptr insertEditClip (ClipOwner& parent, TimeRange position, ProjectItemID sourceID)
+{
+    CRASH_TRACER
+
+    auto name = TrackItem::getSuggestedNameForNewItem (TrackItem::Type::edit);
+    auto newState = clip_owner::createNewClipState (name, TrackItem::Type::edit, parent.getClipOwnerEdit().createNewItemID(), { position, TimeDuration() });
+    newState.setProperty (IDs::source, sourceID.toString(), nullptr);
+
+    if (auto c = insertClipWithState (parent, newState, name, TrackItem::Type::edit, { position, 0_td }, false, false))
+    {
+        if (auto ec = dynamic_cast<EditClip*> (c))
+            return *ec;
+
+        jassertfalse;
+    }
+
+    return {};
+}
+
 //==============================================================================
 juce::Array<Clip*> deleteRegion (ClipOwner& parent, TimeRange range)
 {
@@ -524,6 +565,24 @@ juce::Array<Clip*> deleteRegion (Clip& c, TimeRange range)
     {
         c.trimAwayOverlap (range);
     }
+
+    return newClips;
+}
+
+juce::Array<Clip*> split (ClipOwner& parent, TimePosition time)
+{
+    CRASH_TRACER
+    juce::Array<Clip*> newClips;
+
+    // Make a copied list first, as they'll get moved out-of-order..
+    Clip::Array clipsToDo;
+
+    for (auto c : parent.getClips())
+        if (c->getPosition().time.contains (time))
+            clipsToDo.add (c);
+
+    for (auto c : clipsToDo)
+        newClips.add (split (*c, time));
 
     return newClips;
 }
@@ -597,6 +656,15 @@ Clip* split (Clip& clip, const TimePosition time)
     }
 
     return {};
+}
+
+bool containsAnyMIDIClips (const ClipOwner& co)
+{
+    for (auto& c : co.getClips())
+        if (c->isMidi())
+            return true;
+
+    return false;
 }
 
 

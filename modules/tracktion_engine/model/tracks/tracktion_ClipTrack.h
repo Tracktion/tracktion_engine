@@ -25,7 +25,6 @@ public:
     void flushStateToValueTree() override;
 
     //==============================================================================
-//ddd    const juce::Array<Clip*>& getClips() const noexcept;
     Clip* findClipForID (EditItemID) const override;
 
     //==============================================================================
