@@ -18,7 +18,7 @@ class ChordClip   : public Clip,
                     private juce::AsyncUpdater
 {
 public:
-    ChordClip (const juce::ValueTree&, EditItemID, ClipTrack& targetTrack);
+    ChordClip (const juce::ValueTree&, EditItemID, ClipOwner& targetParent);
     ~ChordClip() override;
 
     juce::String getSelectableDescription() override;

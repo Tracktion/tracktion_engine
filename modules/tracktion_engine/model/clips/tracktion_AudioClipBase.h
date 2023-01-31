@@ -35,7 +35,7 @@ class AudioClipBase    : public Clip,
 public:
     //==============================================================================
     /** Creates a basic AudioClip. */
-    AudioClipBase (const juce::ValueTree&, EditItemID, Type, ClipTrack&);
+    AudioClipBase (const juce::ValueTree&, EditItemID, Type, ClipOwner&);
 
     /** Destructor. */
     ~AudioClipBase() override;

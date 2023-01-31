@@ -11,8 +11,8 @@
 namespace tracktion { inline namespace engine
 {
 
-ContainerClip::ContainerClip (const juce::ValueTree& v, EditItemID clipID, ClipTrack& ct)
-    : AudioClipBase (v, clipID, Type::wave, ct)
+ContainerClip::ContainerClip (const juce::ValueTree& v, EditItemID clipID, ClipOwner& targetParent)
+    : AudioClipBase (v, clipID, Type::wave, targetParent)
 {
 }
 

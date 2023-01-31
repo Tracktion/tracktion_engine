@@ -197,11 +197,11 @@ private:
 };
 
 //==============================================================================
-AudioClipBase::AudioClipBase (const juce::ValueTree& v, EditItemID id, Type t, ClipTrack& targetTrack)
-    : Clip (v, targetTrack, id, t),
+AudioClipBase::AudioClipBase (const juce::ValueTree& v, EditItemID id, Type t, ClipOwner& targetParent)
+    : Clip (v, targetParent, id, t),
       loopInfo (edit.engine, state.getOrCreateChildWithName (IDs::LOOPINFO, getUndoManager()), getUndoManager()),
-      pluginList (targetTrack.edit),
-      lastProxy (targetTrack.edit.engine)
+      pluginList (edit),
+      lastProxy (edit.engine)
 {
     auto um = getUndoManager();
 

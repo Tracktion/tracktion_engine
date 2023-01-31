@@ -21,7 +21,7 @@ class EditClip    : public AudioClipBase,
 {
 public:
     //==============================================================================
-    EditClip (const juce::ValueTree&, EditItemID, ClipTrack&, ProjectItemID sourceEdit);
+    EditClip (const juce::ValueTree&, EditItemID, ClipOwner&, ProjectItemID sourceEdit);
     ~EditClip() override;
 
     using Ptr = juce::ReferenceCountedObjectPtr<EditClip>;

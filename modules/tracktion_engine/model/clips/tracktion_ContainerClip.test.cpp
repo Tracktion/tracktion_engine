@@ -59,6 +59,9 @@ private:
             expect (cc->getClips().contains (clip1.get()));
             expect (cc->getClips().contains (clip2.get()));
 
+            expect (containsClip (*edit, clip1.get()));
+            expect (containsClip (*edit, clip2.get()));
+
 //ddd            expectPeak (*this, *edit, { 0_tp, 1_tp }, {}, 0.0f);
 //            expectPeak (*this, *edit, { 1_tp, 2_tp }, {}, 1.0f);
 //            expectPeak (*this, *edit, { 2_tp, 3_tp }, {}, 2.0f);

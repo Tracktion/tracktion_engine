@@ -81,8 +81,8 @@ static std::unique_ptr<MidiList> createLoopRangeDefinesSubsequentRepetitionsSequ
 }
 
 //==============================================================================
-MidiClip::MidiClip (const juce::ValueTree& v, EditItemID id, ClipTrack& targetTrack)
-    : Clip (v, targetTrack, id, Type::midi)
+MidiClip::MidiClip (const juce::ValueTree& v, EditItemID id, ClipOwner& targetParent)
+    : Clip (v, targetParent, id, Type::midi)
 {
     auto um = getUndoManager();
 

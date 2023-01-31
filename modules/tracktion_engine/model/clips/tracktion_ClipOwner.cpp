@@ -42,15 +42,12 @@ struct ClipOwner::ClipList : public ValueTreeObjectList<Clip>,
 
     Clip* createNewObject (const juce::ValueTree& v) override
     {
-        if (auto clipTrack = dynamic_cast<ClipTrack*> (clipOwner.getClipOwnerSelectable()))
+        if (auto newClip = Clip::createClipForState (v, clipOwner))
         {
-            if (auto newClip = Clip::createClipForState (v, *clipTrack))
-            {
-                clipOwner.clipCreated (*newClip);
-                newClip->incReferenceCount();
+            clipOwner.clipCreated (*newClip);
+            newClip->incReferenceCount();
 
-                return newClip.get();
-            }
+            return newClip.get();
         }
 
         jassertfalse;

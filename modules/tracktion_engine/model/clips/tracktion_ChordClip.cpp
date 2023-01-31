@@ -11,8 +11,8 @@
 namespace tracktion { inline namespace engine
 {
 
-ChordClip::ChordClip (const juce::ValueTree& v, EditItemID id, ClipTrack& targetTrack)
-    : Clip (v, targetTrack, id, Type::chord)
+ChordClip::ChordClip (const juce::ValueTree& v, EditItemID id, ClipOwner& targetParent)
+    : Clip (v, targetParent, id, Type::chord)
 {
     if (clipName.get().isEmpty())
         clipName = TRANS("Chord");

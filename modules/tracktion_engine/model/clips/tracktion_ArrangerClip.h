@@ -17,7 +17,7 @@ namespace tracktion { inline namespace engine
 class ArrangerClip  : public Clip
 {
 public:
-    ArrangerClip (const juce::ValueTree&, EditItemID, ClipTrack& targetTrack);
+    ArrangerClip (const juce::ValueTree&, EditItemID, ClipOwner& targetParent);
     ~ArrangerClip() override;
 
     using Ptr = juce::ReferenceCountedObjectPtr<ArrangerClip>;

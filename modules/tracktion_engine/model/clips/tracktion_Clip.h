@@ -71,10 +71,10 @@ class Clip   : public TrackItem,
 public:
     //==============================================================================
     /** Creates a clip of a given type from a ValueTree state.
-        Clip's have to have a parent ClipTrack and unique EditItemID @see Edit::createNewItemID
-        You would usually create a clip using ClipTrack::insertNewClip
+        Clip's have to have a parent ClipOwner and unique EditItemID @see Edit::createNewItemID
+        You would usually create a clip using ClipOwner::insertNewClip
     */
-    Clip (const juce::ValueTree&, ClipTrack&, EditItemID, Type);
+    Clip (const juce::ValueTree&, ClipOwner&, EditItemID, Type);
     
     /** Destructor. */
     ~Clip() override;
@@ -94,7 +94,7 @@ public:
     /** Creates a clip for a given ValueTree representation.
         This may return a previously-existing clip with the same ID.
     */
-    static Ptr createClipForState (const juce::ValueTree&, ClipTrack& targetTrack);
+    static Ptr createClipForState (const juce::ValueTree&, ClipOwner& targetParent);
 
     /** Can be overridden to ensure any state (e.g. clip plugins) is flushed to the ValueTree ready for saving. */
     virtual void flushStateToValueTree();

@@ -22,8 +22,8 @@ class ContainerClip  : public AudioClipBase,
                        public ClipOwner
 {
 public:
-    /** Creates a ContainerClip from a given state. @see ClipTrack::insertWaveClip. */
-    ContainerClip (const juce::ValueTree&, EditItemID, ClipTrack&);
+    /** Creates a ContainerClip from a given state. @see ClipOwner::insertWaveClip. */
+    ContainerClip (const juce::ValueTree&, EditItemID, ClipOwner&);
     
     /** Destructor. */
     ~ContainerClip() override;

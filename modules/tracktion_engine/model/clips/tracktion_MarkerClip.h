@@ -17,7 +17,7 @@ namespace tracktion { inline namespace engine
 class MarkerClip   : public Clip
 {
 public:
-    MarkerClip (const juce::ValueTree&, EditItemID, ClipTrack& targetTrack);
+    MarkerClip (const juce::ValueTree&, EditItemID, ClipOwner& targetParent);
     ~MarkerClip() override;
 
     int getMarkerID()                                               { return markerID; }

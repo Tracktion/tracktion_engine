@@ -617,7 +617,21 @@ Clip* findClipForState (const Edit& edit, const juce::ValueTree& v)
 
 bool containsClip (const Edit& edit, Clip* clip)
 {
-    return findTrackForPredicate (edit, [clip] (Track& t) { return t.indexOfTrackItem (clip) >= 0; }) != nullptr;
+    return findTrackForPredicate (edit,
+                                  [clip] (Track& t)
+                                  {
+                                      if (t.indexOfTrackItem (clip) >= 0)
+                                          return true;
+
+                                      //ddd Improve this locic with some more concise functions
+                                      if (auto ct = dynamic_cast<ClipTrack*> (&t))
+                                          for (auto c : ct->getClips())
+                                              if (auto cc = dynamic_cast<ContainerClip*> (c))
+                                                  if (cc->getClips().contains (clip))
+                                                      return true;
+
+                                      return false;
+                                  }) != nullptr;
 }
 
 void visitAllTrackItems (const Edit& edit, std::function<bool (TrackItem&)> f)
