@@ -8,28 +8,13 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#if TRACKTION_UNIT_TESTS
+#if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_CLIPS
 
 #include "../../../tracktion_graph/tracktion_graph/tracktion_TestUtilities.h"
 #include "../../utilities/tracktion_TestUtilities.h"
 
 namespace tracktion { inline namespace engine
 {
-
-//dddinline std::unique_ptr<juce::TemporaryFile> render (Edit& edit)
-//{
-//    std::unique_ptr<juce::TemporaryFile> destFile;
-//    Renderer::renderToFile ({}, destFile.getFile(), edit, { 0s, edit.getLength() }, {});
-//
-//    return destFile;
-//}
-//
-//inline void expectPeak (juce::UnitTest& ut, Engine& engine, juce::File file, TimeRange tr, float expectedPeak)
-//{
-//    std::unique_ptr reader = engine.getAudioFileFormatManager().createReaderFor (file);
-//    auto stats = logStats (ut, Renderer::measureStatistics ("Tests", edit, tr, toBitSet (tracks), blockSize));
-//    ut.expect (juce::isWithin (stats.peak, expectedPeak, 0.001f), juce::String ("Expected peak: ") + juce::String (expectedPeak, 4));
-//}
 
 //==============================================================================
 //==============================================================================
@@ -64,11 +49,17 @@ private:
 
         beginTest ("Container Clip");
         {
-            [[ maybe_unused ]] auto cc = audioTrack->insertNewClip (TrackItem::Type::container, { 0_tp, 5_tp }, nullptr);
-//ddd            cc->insertWaveClip ({}, sinFile, { 1s, 3s }, false);
-//            cc->insertWaveClip ({}, sinFile, { 2s, 4s }, false);
-//
-//            expectPeak (*this, *edit, { 0_tp, 1_tp }, {}, 0.0f);
+            auto cc = dynamic_cast<ContainerClip*> (insertNewClip (*audioTrack, TrackItem::Type::container, { 0_tp, 5_tp }));
+            expect (cc != nullptr);
+            auto clip1 = insertWaveClip (*cc, {}, sinFile->getFile(), {{ 1_tp, 3_tp }}, false);
+            auto clip2 = insertWaveClip (*cc, {}, sinFile->getFile(), {{ 2_tp, 4_tp }}, false);
+
+            expect (clip1 != nullptr);
+            expect (clip2 != nullptr);
+            expect (cc->getClips().contains (clip1.get()));
+            expect (cc->getClips().contains (clip2.get()));
+
+//ddd            expectPeak (*this, *edit, { 0_tp, 1_tp }, {}, 0.0f);
 //            expectPeak (*this, *edit, { 1_tp, 2_tp }, {}, 1.0f);
 //            expectPeak (*this, *edit, { 2_tp, 3_tp }, {}, 2.0f);
 //            expectPeak (*this, *edit, { 3_tp, 4_tp }, {}, 1.0f);
@@ -81,4 +72,4 @@ static ContainerClipTests containerClipTests;
 
 }} // namespace tracktion { inline namespace engine
 
-#endif //TRACKTION_UNIT_TESTS
+#endif //TRACKTION_UNIT_TESTS_CLIPS

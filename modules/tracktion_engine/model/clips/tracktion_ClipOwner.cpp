@@ -199,6 +199,49 @@ Clip* findClipForID (ClipOwner& co, EditItemID id)
     return {};
 }
 
+//==============================================================================
+namespace clip_owner
+{
+    inline void updateClipState (juce::ValueTree& state, const juce::String& name,
+                                 EditItemID itemID, ClipPosition position)
+    {
+        addValueTreeProperties (state,
+                                IDs::name, name,
+                                IDs::start, position.getStart().inSeconds(),
+                                IDs::length, position.getLength().inSeconds(),
+                                IDs::offset, position.getOffset().inSeconds());
+
+        itemID.writeID (state, nullptr);
+    }
+
+    inline juce::ValueTree createNewClipState (const juce::String& name, TrackItem::Type type,
+                                               EditItemID itemID, ClipPosition position)
+    {
+        juce::ValueTree state (TrackItem::clipTypeToXMLType (type));
+        updateClipState (state, name, itemID, position);
+        return state;
+    }
+
+    inline juce::String incrementLastDigit (const juce::String& in)
+    {
+        int digitCount = 0;
+
+        for (int i = in.length(); --i >= 0;)
+        {
+            if (juce::CharacterFunctions::isDigit (in[i]))
+                digitCount++;
+            else
+                break;
+        }
+
+        if (digitCount == 0)
+            return in + " 2";
+
+        return in.dropLastCharacters (digitCount)
+                + juce::String (in.getTrailingIntValue() + 1);
+    }
+}
+
 Clip* insertClipWithState (ClipOwner& clipOwner, juce::ValueTree clipState)
 {
     CRASH_TRACER
@@ -302,6 +345,257 @@ Clip* insertClipWithState (ClipOwner& clipOwner, juce::ValueTree clipState)
     }
 
     jassertfalse;
+    return {};
+}
+
+Clip* insertClipWithState (ClipOwner& parent,
+                           const juce::ValueTree& stateToUse, const juce::String& name, TrackItem::Type type,
+                           ClipPosition position, bool deleteExistingClips, bool allowSpottingAdjustment)
+{
+    CRASH_TRACER
+    auto& edit = parent.getClipOwnerEdit();
+
+    if (position.getStart() >= Edit::getMaximumEditEnd())
+        return {};
+
+    if (position.time.getEnd() > Edit::getMaximumEditEnd())
+        position.time.getEnd() = Edit::getMaximumEditEnd();
+
+    if (auto track = dynamic_cast<Track*> (&parent))
+        track->setFrozen (false, Track::groupFreeze);
+
+    if (deleteExistingClips)
+        deleteRegion (parent, position.time);
+
+    auto newClipID = edit.createNewItemID();
+
+    juce::ValueTree newState;
+
+    if (stateToUse.isValid())
+    {
+        jassert (stateToUse.hasType (TrackItem::clipTypeToXMLType (type)));
+        newState = stateToUse;
+        clip_owner::updateClipState (newState, name, newClipID, position);
+    }
+    else
+    {
+        newState = clip_owner::createNewClipState (name, type, newClipID, position);
+    }
+
+    if (auto newClip = insertClipWithState (parent, newState))
+    {
+        if (allowSpottingAdjustment)
+            newClip->setStart (std::max (0_tp, newClip->getPosition().getStart() - toDuration (newClip->getSpottingPoint())), false, false);
+
+        return newClip;
+    }
+
+    return {};
+}
+
+Clip* insertNewClip (ClipOwner& parent, TrackItem::Type type, const juce::String& name, TimeRange pos)
+{
+    return insertNewClip (parent, type, name, { pos, 0_td });
+}
+
+Clip* insertNewClip (ClipOwner& parent, TrackItem::Type type, TimeRange pos)
+{
+    return insertNewClip (parent, type, TrackItem::getSuggestedNameForNewItem (type), pos);
+}
+
+Clip* insertNewClip (ClipOwner& parent, TrackItem::Type type, const juce::String& name, ClipPosition position)
+{
+    CRASH_TRACER
+
+    if (auto newClip = insertClipWithState (parent, {}, name, type, position, false, false))
+        return newClip;
+
+    return {};
+}
+
+juce::ReferenceCountedObjectPtr<WaveAudioClip> insertWaveClip (ClipOwner& parent, const juce::String& name, const juce::File& sourceFile,
+                                                               ClipPosition position, bool deleteExistingClips)
+{
+    auto& edit = parent.getClipOwnerEdit();
+
+    if (auto proj = edit.engine.getProjectManager().getProject (edit))
+    {
+        if (auto source = proj->createNewItem (sourceFile, ProjectItem::waveItemType(),
+                                               name, {}, ProjectItem::Category::imported, true))
+            return insertWaveClip (parent, name, source->getID(), position, deleteExistingClips);
+
+        jassertfalse;
+        return {};
+    }
+
+    // Insert with a relative path if possible, otherwise an absolute
+    {
+        auto newState = clip_owner::createNewClipState (name, TrackItem::Type::wave, edit.createNewItemID(), position);
+        const bool useRelativePath = edit.filePathResolver && edit.editFileRetriever && edit.editFileRetriever().existsAsFile();
+        newState.setProperty (IDs::source, SourceFileReference::findPathFromFile (edit, sourceFile, useRelativePath), nullptr);
+
+        if (auto c = insertClipWithState (parent, newState, name, TrackItem::Type::wave, position, deleteExistingClips, false))
+        {
+            if (auto wc = dynamic_cast<WaveAudioClip*> (c))
+                return *wc;
+
+            jassertfalse;
+        }
+    }
+
+    jassertfalse;
+    return {};
+}
+
+WaveAudioClip::Ptr insertWaveClip (ClipOwner& parent, const juce::String& name, ProjectItemID sourceID,
+                                   ClipPosition position, bool deleteExistingClips)
+{
+    CRASH_TRACER
+    auto& edit = parent.getClipOwnerEdit();
+
+    auto newState = clip_owner::createNewClipState (name, TrackItem::Type::wave, edit.createNewItemID(), position);
+    newState.setProperty (IDs::source, sourceID.toString(), nullptr);
+
+    if (auto c = insertClipWithState (parent, newState, name, TrackItem::Type::wave, position, deleteExistingClips, false))
+    {
+        if (auto wc = dynamic_cast<WaveAudioClip*> (c))
+            return *wc;
+
+        jassertfalse;
+    }
+
+    return {};
+}
+
+//==============================================================================
+juce::Array<Clip*> deleteRegion (ClipOwner& parent, TimeRange range)
+{
+    juce::Array<Clip*> newClips;
+
+    CRASH_TRACER
+    if (auto track = dynamic_cast<Track*> (&parent))
+    {
+        track->setFrozen (false, Track::groupFreeze);
+        track->setFrozen (false, Track::individualFreeze);
+    }
+
+    // make a copied list first, as they'll get moved out-of-order..
+    Clip::Array clipsToDo;
+
+    for (auto c : parent.getClips())
+        if (c->getPosition().time.overlaps (range))
+            clipsToDo.add (c);
+
+    for (int i = clipsToDo.size(); --i >= 0;)
+        newClips.addArray (deleteRegion (*clipsToDo.getUnchecked (i), range));
+
+    return newClips;
+}
+
+juce::Array<Clip*> deleteRegion (Clip& c, TimeRange range)
+{
+    juce::Array<Clip*> newClips;
+
+    CRASH_TRACER
+    if (auto track = dynamic_cast<Track*> (c.getParent()))
+    {
+        track->setFrozen (false, Track::groupFreeze);
+        track->setFrozen (false, Track::individualFreeze);
+    }
+
+    auto pos = c.getPosition();
+
+    if (range.contains (pos.time))
+    {
+        c.removeFromParent();
+    }
+    else if (pos.getStart() < range.getStart() && pos.getEnd() > range.getEnd())
+    {
+        if (auto newClip = split (c, range.getStart()))
+        {
+            newClip->setStart (range.getEnd(), true, false);
+            c.setEnd (range.getStart(), true);
+            c.deselect();
+
+            newClips.add (newClip);
+        }
+    }
+    else
+    {
+        c.trimAwayOverlap (range);
+    }
+
+    return newClips;
+}
+
+Clip* split (Clip& clip, const TimePosition time)
+{
+    CRASH_TRACER
+    auto parent = clip.getParent();
+
+    if (parent == nullptr)
+        return {};
+
+    auto& edit = clip.edit;
+
+    if (auto track = dynamic_cast<Track*> (parent))
+        track->setFrozen (false, Track::groupFreeze);
+
+    if (clip.getPosition().time.reduced (0.001s).contains (time)
+         && ! clip.isGrouped())
+    {
+        auto newClipState = clip.state.createCopy();
+        edit.createNewItemID().writeID (newClipState, nullptr);
+
+        if (auto newClip = insertClipWithState (*parent, newClipState))
+        {
+            // special case for waveaudio clips that may have fade in/out
+            if (auto acb = dynamic_cast<AudioClipBase*> (newClip))
+                acb->setFadeIn ({});
+
+            if (auto acb = dynamic_cast<AudioClipBase*> (&clip))
+                acb->setFadeOut ({});
+
+            // need to do this after setting the fades, so the fades don't
+            // get mucked around with..
+            const bool isChord = dynamic_cast<ChordClip*> (&clip) != nullptr;
+            newClip->setStart (time, ! isChord, false);
+            clip.setEnd (time, true);
+
+            // special case for marker clips, set the marker number
+            if (auto mc1 = dynamic_cast<MarkerClip*> (&clip))
+            {
+                if (auto mc2 = dynamic_cast<MarkerClip*> (newClip))
+                {
+                    auto id = edit.getMarkerManager().getNextUniqueID (mc1->getMarkerID());
+                    mc2->setMarkerID (id);
+
+                    if (mc1->getName() == (TRANS("Marker") + " " + juce::String (mc1->getMarkerID())))
+                        mc2->setName (TRANS("Marker") + " " + juce::String (id));
+                    else
+                        mc2->setName (clip_owner::incrementLastDigit (mc1->getName()));
+                }
+            }
+
+            // fiddle with offsets for looped clips
+            if (newClip->getLoopLengthBeats() > BeatDuration())
+            {
+                auto extra = juce::roundToInt (std::floor ((newClip->getOffsetInBeats()
+                                                            / newClip->getLoopLengthBeats()) + 0.00001));
+
+                if (extra != 0)
+                {
+                    auto newOffsetBeats = newClip->getOffsetInBeats() - (newClip->getLoopLengthBeats() * extra);
+                    auto offset = TimeDuration::fromSeconds (newOffsetBeats.inBeats() / edit.tempoSequence.getBeatsPerSecondAt (newClip->getPosition().getStart()));
+
+                    newClip->setOffset (offset);
+                }
+            }
+
+            return newClip;
+        }
+    }
+
     return {};
 }
 

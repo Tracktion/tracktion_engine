@@ -71,8 +71,46 @@ Clip* findClipForState (ClipOwner&, const juce::ValueTree&);
 /** Returns a clip with the given ID if the ClipOwner contains it. */
 Clip* findClipForID (ClipOwner&, EditItemID);
 
-/** Inserts a clip with the given state in to the ClipOwner's clip list*/
+
+//==============================================================================
+//==============================================================================
+/** Inserts a clip with the given state in to the ClipOwner's clip list. */
 Clip* insertClipWithState (ClipOwner&, juce::ValueTree);
+
+/** Inserts a clip with the given state in to the ClipOwner's clip list. */
+Clip* insertClipWithState (ClipOwner&,
+                           const juce::ValueTree& stateToUse, const juce::String& name, TrackItem::Type,
+                           ClipPosition, bool deleteExistingClips, bool allowSpottingAdjustment);
+
+//==============================================================================
+/** Inserts a new clip with the given type and a default name. */
+Clip* insertNewClip (ClipOwner&, TrackItem::Type, TimeRange);
+
+/** Inserts a new clip with the given type and name. */
+Clip* insertNewClip (ClipOwner&, TrackItem::Type, const juce::String& name, TimeRange);
+
+/** Inserts a new clip with the given type and name. */
+Clip* insertNewClip (ClipOwner&, TrackItem::Type, const juce::String& name, ClipPosition);
+
+//==============================================================================
+/** Inserts a new WaveAudioClip into the ClipOwner's clip list. */
+juce::ReferenceCountedObjectPtr<WaveAudioClip> insertWaveClip (ClipOwner&, const juce::String& name, const juce::File& sourceFile,
+                                                               ClipPosition, bool deleteExistingClips);
+
+/** Inserts a new WaveAudioClip into the ClipOwner's clip list. */
+juce::ReferenceCountedObjectPtr<WaveAudioClip> insertWaveClip (ClipOwner&, const juce::String& name, ProjectItemID sourceID,
+                                                               ClipPosition, bool deleteExistingClips);
+
+//==============================================================================
+/** Removes a region of a ClipOwner and returns any newly created clips. */
+juce::Array<Clip*> deleteRegion (ClipOwner&, TimeRange);
+
+/** Removes a region of a clip and returns any newly created clips. */
+juce::Array<Clip*> deleteRegion (Clip&, TimeRange);
+
+/** Splits the given clip at the time and returns the newly created clip. */
+Clip* split (Clip&, TimePosition);
+
 
 //==============================================================================
 //==============================================================================
