@@ -54,15 +54,10 @@ juce::Colour ChordClip::getDefaultColour() const
     return juce::Colours::red.withHue (1.0f / 9.0f);
 }
 
-void ChordClip::setTrack (ClipTrack* ct)
-{
-    Clip::setTrack (ct);
-}
-
 //==============================================================================
-bool ChordClip::canGoOnTrack (Track& t)
+bool ChordClip::canBeAddedTo (ClipOwner& co)
 {
-    return t.isChordTrack();
+    return isChordTrack (co);
 }
 
 void ChordClip::valueTreeChildAdded (juce::ValueTree&, juce::ValueTree& c)

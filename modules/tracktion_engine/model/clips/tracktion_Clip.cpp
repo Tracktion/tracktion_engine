@@ -14,7 +14,7 @@ namespace tracktion { inline namespace engine
 //==============================================================================
 Clip::Clip (const juce::ValueTree& v, ClipTrack& targetTrack, EditItemID id, Type t)
     : TrackItem (targetTrack.edit, id, t),
-      state (v), track (&targetTrack),
+      state (v), parent (&targetTrack),
       sourceFileReference (edit, state, IDs::source)
 {
     jassert (isClipState (state));
@@ -52,7 +52,7 @@ Clip::~Clip()
 
 void Clip::initialise()
 {
-    jassert (track != nullptr);
+    jassert (parent != nullptr);
 
     const juce::ScopedValueSetter<bool> initialiser (isInitialised, false, true);
 
@@ -64,7 +64,7 @@ void Clip::initialise()
 
     Selectable::changed(); // call superclass so not to mark the edit as altered
 
-    if (track != nullptr)
+    if (auto track = getTrack())
     {
         if (auto f = track->getParentFolderTrack())
             f->setDirtyClips();
@@ -218,34 +218,35 @@ void Clip::setName (const juce::String& newName)
 }
 
 //==============================================================================
-void Clip::setOwner (ClipOwner* co)
+void Clip::setParent (ClipOwner* newParent)
 {
-    //ddd Update this
-    if (auto ct = dynamic_cast<ClipTrack*> (co))
-        setTrack (ct);
-    else if (co == nullptr)
-        setTrack (nullptr);
+    if (parent == newParent)
+        return;
+
+    if (auto track = getTrack())
+        if (auto f = track->getParentFolderTrack())
+            f->setDirtyClips();
+
+    parent = newParent;
+
+    if (auto track = getTrack())
+        if (auto f = track->getParentFolderTrack())
+            f->setDirtyClips();
 }
 
-void Clip::setTrack (ClipTrack* t)
+ClipOwner* Clip::getParent() const
 {
-    if (track != t)
-    {
-        if (track != nullptr)
-            if (auto f = track->getParentFolderTrack())
-                f->setDirtyClips();
+    return parent;
+}
 
-        track = t;
-
-        if (track != nullptr)
-            if (auto f = track->getParentFolderTrack())
-                f->setDirtyClips();
-    }
+ClipTrack* Clip::getClipTrack() const
+{
+    return dynamic_cast<ClipTrack*> (parent);
 }
 
 Track* Clip::getTrack() const
 {
-    return track;
+    return dynamic_cast<Track*> (parent);
 }
 
 //==============================================================================
@@ -253,7 +254,7 @@ void Clip::changed()
 {
     Selectable::changed();
 
-    if (track != nullptr)
+    if (auto track = getTrack())
         track->setFrozen (false, Track::groupFreeze);
 
     if (! cloneInProgress && isLinked() && ! edit.isLoading())
@@ -372,19 +373,19 @@ void Clip::trimAwayOverlap (TimeRange r)
     }
 }
 
-void Clip::removeFromParentTrack()
+void Clip::removeFromParent()
 {
     if (state.getParent().isValid())
         state.getParent().removeChild (state, getUndoManager());
 }
 
-bool Clip::moveToTrack (Track& newTrack)
+bool Clip::moveTo (ClipOwner& newParent)
 {
-    if (auto to = dynamic_cast<ClipTrack*> (&newTrack))
+    if (auto to = dynamic_cast<ClipTrack*> (&newParent))
     {
-        if (canGoOnTrack (*to))
+        if (canBeAddedTo (*to))
         {
-            if (track != to)
+            if (parent != to)
             {
                 if (! to->isFrozen (Track::anyFreeze))
                 {
@@ -460,7 +461,7 @@ void Clip::valueTreePropertyChanged (juce::ValueTree& tree, const juce::Identifi
     {
         if (id == IDs::start || id == IDs::length || id == IDs::offset)
         {
-            if (track != nullptr)
+            if (auto track = getTrack())
             {
                 if (auto f = track->getParentFolderTrack())
                     f->setDirtyClips();
@@ -496,18 +497,20 @@ void Clip::valueTreePropertyChanged (juce::ValueTree& tree, const juce::Identifi
 void Clip::valueTreeParentChanged (juce::ValueTree& v)
 {
     if (v == state)
-        updateParentTrack();
+        updateParent();
 }
 
-void Clip::updateParentTrack()
+void Clip::updateParent()
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
-    auto parent = state.getParent();
+    auto parentState = state.getParent();
 
-    if (TrackList::isTrack (parent))
-        setTrack (dynamic_cast<ClipTrack*> (findTrackForID (edit, EditItemID::fromID (parent))));
+    if (TrackList::isTrack (parentState))
+        setParent (dynamic_cast<ClipTrack*> (findTrackForID (edit, EditItemID::fromID (parentState))));
+    if (xmlTagToType (parentState.getType()) == Type::container)
+        setParent (dynamic_cast<ContainerClip*> (findClipForID (edit, EditItemID::fromID (parentState))));
     else
-        setTrack ({});
+        setParent ({});
 }
 
 //==============================================================================

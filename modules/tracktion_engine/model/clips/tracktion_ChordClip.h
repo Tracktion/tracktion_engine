@@ -22,8 +22,7 @@ public:
     ~ChordClip() override;
 
     juce::String getSelectableDescription() override;
-    void setTrack (ClipTrack*) override;
-    bool canGoOnTrack (Track&) override;
+    bool canBeAddedTo (ClipOwner&) override;
     juce::Colour getColour() const override;
     juce::Colour getDefaultColour() const override;
     void initialise() override;

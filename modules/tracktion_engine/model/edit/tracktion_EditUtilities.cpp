@@ -259,7 +259,7 @@ void deleteRegionOfClip (Clip& c, TimeRange timeRangeToDelete)
 
         if (timeRangeToDelete.contains (clipTimeRange))
         {
-            c.removeFromParentTrack();
+            c.removeFromParent();
         }
         else if (clipTimeRange.getStart() < timeRangeToDelete.getStart() && clipTimeRange.getEnd() > timeRangeToDelete.getEnd())
         {
@@ -418,7 +418,7 @@ void deleteRegionOfTracks (Edit& edit, TimeRange rangeToDelete, bool onlySelecte
                     clipsToRemove.add (c);
 
             for (auto c : clipsToRemove)
-                c->removeFromParentTrack();
+                c->removeFromParent();
 
             if (closeGap == CloseGap::yes)
             {
@@ -723,7 +723,7 @@ juce::Result mergeMidiClips (juce::Array<MidiClip*> clips)
                 newClip->getSequence().addFrom (destinationList, &track->edit.getUndoManager());
 
                 for (int i = clips.size(); --i >= 0;)
-                    clips.getUnchecked (i)->removeFromParentTrack();
+                    clips.getUnchecked (i)->removeFromParent();
             }
 
             return juce::Result::ok();

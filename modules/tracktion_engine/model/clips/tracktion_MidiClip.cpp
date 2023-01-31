@@ -652,9 +652,9 @@ void MidiClip::mergeInMidiSequence (juce::MidiMessageSequence& ms,
 }
 
 //==============================================================================
-bool MidiClip::canGoOnTrack (Track& t)
+bool MidiClip::canBeAddedTo (ClipOwner& co)
 {
-    return t.canContainMIDI();
+    return canContainMIDI (co);
 }
 
 AudioTrack* MidiClip::getAudioTrack() const
@@ -754,9 +754,9 @@ void MidiClip::valueTreePropertyChanged (juce::ValueTree& tree, const juce::Iden
     {
         if (id == IDs::mute)
         {
-            jassert (track != nullptr); // Should have been set by now..
+            jassert (parent != nullptr); // Should have been set by now..
 
-            if (track != nullptr)
+            if (auto track = getTrack())
                 if (auto parent = track->getParentFolderTrack())
                     parent->setDirtyClips();
 

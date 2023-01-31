@@ -37,9 +37,9 @@ juce::Colour ArrangerClip::getDefaultColour() const
 }
 
 //==============================================================================
-bool ArrangerClip::canGoOnTrack (Track& t)
+bool ArrangerClip::canBeAddedTo (ClipOwner& co)
 {
-    return t.isArrangerTrack();
+    return isArrangerTrack (co);
 }
 
 void ArrangerClip::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i)

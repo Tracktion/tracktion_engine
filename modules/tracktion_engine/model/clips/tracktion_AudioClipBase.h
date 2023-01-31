@@ -566,9 +566,9 @@ public:
 
     //==============================================================================
     /** @internal */
-    void setTrack (ClipTrack*) override;
+    void setParent (ClipOwner*) override;
     /** @internal */
-    bool canGoOnTrack (Track&) override;
+    bool canBeAddedTo (ClipOwner&) override;
     /** @internal */
     void changed() override;
 

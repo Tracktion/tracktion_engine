@@ -378,16 +378,16 @@ PatternGenerator* AudioClipBase::getPatternGenerator()
 }
 
 //==============================================================================
-void AudioClipBase::setTrack (ClipTrack* t)
+void AudioClipBase::setParent (ClipOwner* co)
 {
-    Clip::setTrack (t);
+    Clip::setParent (co);
 
-    pluginList.setTrackAndClip (track != nullptr ? getTrack() : nullptr, this);
+    pluginList.setTrackAndClip (nullptr, this);
 }
 
-bool AudioClipBase::canGoOnTrack (Track& t)
+bool AudioClipBase::canBeAddedTo (ClipOwner& co)
 {
-    return t.canContainAudio();
+    return canContainAudio (co);
 }
 
 void AudioClipBase::changed()
@@ -2330,8 +2330,9 @@ void AudioClipBase::valueTreePropertyChanged (juce::ValueTree& tree, const juce:
 
             if (id == IDs::mute)
             {
-                if (auto f = track->getParentFolderTrack())
-                    f->setDirtyClips();
+                if (auto track = getTrack())
+                    if (auto f = track->getParentFolderTrack())
+                        f->setDirtyClips();
             }
             else if (id == IDs::autoCrossfade)
             {
@@ -2379,9 +2380,9 @@ void AudioClipBase::valueTreePropertyChanged (juce::ValueTree& tree, const juce:
     }
 }
 
-void AudioClipBase::valueTreeChildAdded (juce::ValueTree& parent, juce::ValueTree& child)
+void AudioClipBase::valueTreeChildAdded (juce::ValueTree& parentState, juce::ValueTree& child)
 {
-    if (parent == state)
+    if (parentState == state)
     {
         if (child.hasType (IDs::PLUGIN))
             Selectable::changed();
@@ -2390,19 +2391,19 @@ void AudioClipBase::valueTreeChildAdded (juce::ValueTree& parent, juce::ValueTre
         else if (child.hasType (IDs::PATTERNGENERATOR))
             patternGenerator.reset (new PatternGenerator (*this, child));
     }
-    else if (parent.hasType (IDs::LOOPINFO) || child.hasType (IDs::WARPMARKER))
+    else if (parentState.hasType (IDs::LOOPINFO) || child.hasType (IDs::WARPMARKER))
     {
         changed();
     }
     else
     {
-        Clip::valueTreeChildAdded (parent, child);
+        Clip::valueTreeChildAdded (parentState, child);
     }
 }
 
-void AudioClipBase::valueTreeChildRemoved (juce::ValueTree& parent, juce::ValueTree& child, int oldIndex)
+void AudioClipBase::valueTreeChildRemoved (juce::ValueTree& parentState, juce::ValueTree& child, int oldIndex)
 {
-    if (parent == state)
+    if (parentState == state)
     {
         if (child.hasType (IDs::PLUGIN))
             Selectable::changed();
@@ -2411,19 +2412,19 @@ void AudioClipBase::valueTreeChildRemoved (juce::ValueTree& parent, juce::ValueT
         else if (child.hasType (IDs::PATTERNGENERATOR))
             patternGenerator = nullptr;
     }
-    else if (parent.hasType (IDs::LOOPINFO) || child.hasType (IDs::WARPMARKER))
+    else if (parentState.hasType (IDs::LOOPINFO) || child.hasType (IDs::WARPMARKER))
     {
         changed();
     }
     else
     {
-        Clip::valueTreeChildRemoved (parent, child, oldIndex);
+        Clip::valueTreeChildRemoved (parentState, child, oldIndex);
     }
 }
 
-void AudioClipBase::valueTreeChildOrderChanged (juce::ValueTree& parent, int oldIndex, int newIndex)
+void AudioClipBase::valueTreeChildOrderChanged (juce::ValueTree& parentState, int oldIndex, int newIndex)
 {
-    Clip::valueTreeChildOrderChanged (parent, oldIndex, newIndex);
+    Clip::valueTreeChildOrderChanged (parentState, oldIndex, newIndex);
 }
 
 void AudioClipBase::valueTreeParentChanged (juce::ValueTree& child)

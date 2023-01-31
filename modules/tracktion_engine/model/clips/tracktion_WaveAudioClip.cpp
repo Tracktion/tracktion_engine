@@ -247,9 +247,9 @@ void WaveAudioClip::invalidateCurrentTake() noexcept
     currentTakeIndex = takeIndexNeedsUpdating;
 }
 
-void WaveAudioClip::invalidateCurrentTake (const juce::ValueTree& parent) noexcept
+void WaveAudioClip::invalidateCurrentTake (const juce::ValueTree& parentState) noexcept
 {
-    if (parent.hasType (IDs::TAKES))
+    if (parentState.hasType (IDs::TAKES))
         invalidateCurrentTake();
 }
 

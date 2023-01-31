@@ -117,9 +117,10 @@ public:
     void setName (const juce::String& newName);
 
     /** Returns true if this is a MidiClip. */
-    virtual bool isMidi() const = 0;
-    /** Tests whether this clip can go on the given track. */
-    virtual bool canGoOnTrack (Track&) = 0;
+    [[ nodiscard ]] virtual bool isMidi() const = 0;
+
+    /** Tests whether this clip can go on the given parent. */
+    [[ nodiscard ]] virtual bool canBeAddedTo (ClipOwner&) = 0;
 
     //==============================================================================
     /** True if it references a source file - i.e. audio clips do, midi doesn't. */
@@ -239,13 +240,13 @@ public:
     /** Trims away any part of the clip that overlaps this region. */
     void trimAwayOverlap (TimeRange editRangeToTrim);
 
-    /** Removes this clip from the parent track. */
-    void removeFromParentTrack();
+    /** Removes this clip from the parent track or container clip. */
+    void removeFromParent();
 
-    /** Moves the clip to a new Track (if possible).
+    /** Moves the clip to a new parent (if possible).
         @returns true if the clip could be moved.
     */
-    bool moveToTrack (Track&);
+    bool moveTo (ClipOwner&);
 
     //==============================================================================
     /** Returns the speed ratio i.e. how quickly the clip plays back. */
@@ -281,9 +282,11 @@ public:
     juce::String getLinkGroupID() const             { return linkID; }
 
     //==============================================================================
-    /** Returns the parent ClipTrack this clip is on. */
-    ClipTrack* getClipTrack() const                 { return track; }
-    /** Returns the parent Track this clip is on. */
+    /** Returns the parent ClipOwner this clip is on. */
+    ClipOwner* getParent() const;
+    /** Returns the parent ClipTrack this clip is on (if any). */
+    ClipTrack* getClipTrack() const;
+    /** Returns the parent Track this clip is on (if any). */
     Track* getTrack() const override;
 
     //==============================================================================
@@ -389,8 +392,10 @@ public:
     juce::ValueTree state;                      /**< The ValueTree of the Clip state. */
     juce::CachedValue<juce::Colour> colour;     /**< The colour property. */
 
-    /** @internal */
-    virtual void setOwner (ClipOwner*);
+    /** @internal.
+        Not intended for public use!
+    */
+    virtual void setParent (ClipOwner*);
 
 protected:
     friend class Track;
@@ -400,7 +405,7 @@ protected:
     bool isInitialised = false;
     bool cloneInProgress = false;
     juce::CachedValue<juce::String> clipName;
-    ClipTrack* track = nullptr;
+    ClipOwner* parent = nullptr;
     juce::CachedValue<TimePosition> clipStart;
     juce::CachedValue<TimeDuration> length, offset;
     juce::CachedValue<double> speedRatio;
@@ -418,25 +423,16 @@ protected:
     /** Sets a new source file for this clip. */
     void setCurrentSourceFile (const juce::File&);
 
-    /** Moves this clip to a new ClipTrack. */
-    virtual void setTrack (ClipTrack*);
-
     /** Returns the mark points relative to the start of the clip, rescaled to the current speed. */
     virtual juce::Array<TimePosition> getRescaledMarkPoints() const;
 
     /** @internal */
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
     /** @internal */
-    void valueTreeChildAdded (juce::ValueTree&, juce::ValueTree&) override {}
-    /** @internal */
-    void valueTreeChildRemoved (juce::ValueTree&, juce::ValueTree&, int) override {}
-    /** @internal */
-    void valueTreeChildOrderChanged (juce::ValueTree&, int, int) override {}
-    /** @internal */
     void valueTreeParentChanged (juce::ValueTree&) override;
 
 private:
-    void updateParentTrack();
+    void updateParent();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Clip)
 };

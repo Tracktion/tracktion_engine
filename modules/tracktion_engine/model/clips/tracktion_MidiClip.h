@@ -106,7 +106,7 @@ public:
     void initialise() override;
     bool isMidi() const override                    { return true; }
     void rescale (TimePosition pivotTimeInEdit, double factor) override;
-    bool canGoOnTrack (Track&) override;
+    bool canBeAddedTo (ClipOwner&) override;
     juce::String getSelectableDescription() override;
     juce::Colour getDefaultColour() const override;
 

@@ -18,7 +18,8 @@ namespace tracktion { inline namespace engine
     This makes it possible to group, move, add effects etc. to a number of clips
     easily.
 */
-class ContainerClip  : public AudioClipBase
+class ContainerClip  : public AudioClipBase,
+                       public ClipOwner
 {
 public:
     /** Creates a ContainerClip from a given state. @see ClipTrack::insertWaveClip. */
@@ -48,6 +49,14 @@ public:
 
     /** Returns the WaveCompManager for this clip. */
     WaveCompManager& getCompManager();
+
+    //==============================================================================
+    /** @internal */
+    juce::ValueTree& getClipOwnerState() override;
+    /** @internal */
+    Selectable* getClipOwnerSelectable() override;
+    /** @internal */
+    Edit& getClipOwnerEdit() override;
 
     //==============================================================================
     /** @internal */
@@ -115,6 +124,8 @@ public:
 
 private:
     //==============================================================================
+    juce::ValueTree clipListState;
+
     mutable TimeDuration sourceLength;
     WaveCompManager::Ptr compManager;
 
@@ -129,6 +140,12 @@ private:
     void valueTreeChildAdded (juce::ValueTree&, juce::ValueTree&) override;
     void valueTreeChildRemoved (juce::ValueTree&, juce::ValueTree&, int) override;
     void valueTreeChildOrderChanged (juce::ValueTree&, int, int) override;
+
+    void clipCreated (Clip&) override;
+    void clipDeleted (Clip&) override;
+    void clipAddedOrRemoved() override;
+    void clipOrderChanged() override;
+    void clipPositionChanged() override;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ContainerClip)

@@ -24,6 +24,9 @@ ContainerClip::~ContainerClip()
 //==============================================================================
 void ContainerClip::initialise()
 {
+    clipListState = state.getOrCreateChildWithName (IDs::CLIPLIST, getUndoManager());
+    initialiseClipOwner (edit, clipListState);
+
     AudioClipBase::initialise();
 
     if (getTakesTree().isValid())
@@ -247,9 +250,9 @@ void ContainerClip::invalidateCurrentTake() noexcept
     currentTakeIndex = takeIndexNeedsUpdating;
 }
 
-void ContainerClip::invalidateCurrentTake (const juce::ValueTree& parent) noexcept
+void ContainerClip::invalidateCurrentTake (const juce::ValueTree& parentState) noexcept
 {
-    if (parent.hasType (IDs::TAKES))
+    if (parentState.hasType (IDs::TAKES))
         invalidateCurrentTake();
 }
 
@@ -525,6 +528,22 @@ WaveCompManager& ContainerClip::getCompManager()
 }
 
 //==============================================================================
+juce::ValueTree& ContainerClip::getClipOwnerState()
+{
+    return clipListState;
+}
+
+Selectable* ContainerClip::getClipOwnerSelectable()
+{
+    return this;
+}
+
+Edit& ContainerClip::getClipOwnerEdit()
+{
+    return edit;
+}
+
+//==============================================================================
 RenderManager::Job::Ptr ContainerClip::getRenderJob (const AudioFile& destFile)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
@@ -584,5 +603,31 @@ bool ContainerClip::isUsingFile (const AudioFile& af)
 
     return false;
 }
+
+void ContainerClip::clipCreated (Clip&)
+{
+    //ddd
+}
+
+void ContainerClip::clipDeleted (Clip&)
+{
+    //ddd
+}
+
+void ContainerClip::clipAddedOrRemoved()
+{
+    //ddd
+}
+
+void ContainerClip::clipOrderChanged()
+{
+    //ddd
+}
+
+void ContainerClip::clipPositionChanged()
+{
+    //ddd
+}
+
 
 }} // namespace tracktion { inline namespace engine

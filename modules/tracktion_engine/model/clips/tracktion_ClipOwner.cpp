@@ -29,7 +29,7 @@ struct ClipOwner::ClipList : public ValueTreeObjectList<Clip>,
         for (auto c : objects)
         {
             c->flushStateToValueTree();
-            c->setOwner (nullptr);
+            c->setParent (nullptr);
         }
 
         freeObjects();
@@ -307,5 +307,35 @@ Clip* insertClipWithState (ClipOwner& clipOwner, juce::ValueTree clipState)
 }
 
 
+//==============================================================================
+//==============================================================================
+bool isAudioTrack (ClipOwner& co)                           { return dynamic_cast<AudioTrack*> (&co) != nullptr; }
+bool isAutomationTrack (ClipOwner& co)                      { return dynamic_cast<AutomationTrack*> (&co) != nullptr; }
+bool isFolderTrack (ClipOwner& co)                          { return dynamic_cast<FolderTrack*> (&co) != nullptr; }
+bool isMarkerTrack (ClipOwner& co)                          { return dynamic_cast<MarkerTrack*> (&co) != nullptr; }
+bool isTempoTrack (ClipOwner& co)                           { return dynamic_cast<TempoTrack*> (&co) != nullptr; }
+bool isChordTrack (ClipOwner& co)                           { return dynamic_cast<ChordTrack*> (&co) != nullptr; }
+bool isArrangerTrack (ClipOwner& co)                        { return dynamic_cast<ArrangerTrack*> (&co) != nullptr; }
+bool isMasterTrack (ClipOwner& co)                          { return dynamic_cast<MasterTrack*> (&co) != nullptr; }
+
+//==============================================================================
+bool canContainMarkers (ClipOwner& co)                      { return isMarkerTrack (co); }
+bool canContainMIDI (ClipOwner& co)                         { return isAudioTrack (co); }
+bool canContainAudio (ClipOwner& co)                        { return isAudioTrack (co); }
+bool canContainEditClips (ClipOwner& co)                    { return isAudioTrack (co); }
+bool canContainPlugins (ClipOwner& co)                      { return isAudioTrack (co) || isFolderTrack (co) || isMasterTrack (co); }
+bool isMovable (ClipOwner& co)                              { return isAudioTrack (co) || isFolderTrack (co); }
+bool acceptsInput (ClipOwner& co)                           { return isAudioTrack (co); }
+bool createsOutput (ClipOwner& co)                          { return isAudioTrack (co); }
+bool wantsAutomation (ClipOwner& co)                        { return ! (isMarkerTrack (co) || isChordTrack (co) || isArrangerTrack (co));  }
+
+bool isOnTop (ClipOwner& co)
+{
+    if (auto tack = dynamic_cast<Track*> (&co))
+        return isMarkerTrack (co) || isTempoTrack (co) || isChordTrack (co) || isArrangerTrack (co) || isMasterTrack (co)
+            || (isAutomationTrack (co) && tack->getParentTrack() != nullptr && tack->getParentTrack()->isMasterTrack());
+
+    return false;
+}
 
 }} // namespace tracktion { inline namespace engine

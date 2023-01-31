@@ -642,6 +642,7 @@ namespace IDs
     DECLARE_ID (lowPassMidiNoteNumber)
     DECLARE_ID (proxyAllowed)
     DECLARE_ID (resamplingQuality)
+    DECLARE_ID (CLIPLIST)
 
     #undef DECLARE_ID
 }

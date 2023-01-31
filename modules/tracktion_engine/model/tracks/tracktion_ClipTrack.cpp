@@ -803,7 +803,7 @@ void ClipTrack::deleteRegionOfClip (Clip::Ptr c, TimeRange range, SelectionManag
 
     if (range.contains (pos.time))
     {
-        c->removeFromParentTrack();
+        c->removeFromParent();
     }
     else if (pos.getStart() < range.getStart() && pos.getEnd() > range.getEnd())
     {

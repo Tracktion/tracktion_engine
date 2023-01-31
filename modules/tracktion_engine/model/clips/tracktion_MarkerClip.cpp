@@ -55,9 +55,9 @@ void MarkerClip::setMarkerID (int newID)
 }
 
 //==============================================================================
-bool MarkerClip::canGoOnTrack (Track& t)
+bool MarkerClip::canBeAddedTo (ClipOwner& co)
 {
-    return t.isMarkerTrack();
+    return isMarkerTrack (co);
 }
 
 void MarkerClip::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i)

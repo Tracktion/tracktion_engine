@@ -77,5 +77,62 @@ Clip* findClipForID (ClipOwner&, EditItemID);
 /** Inserts a clip with the given state in to the ClipOwner's clip list*/
 Clip* insertClipWithState (ClipOwner&, juce::ValueTree);
 
+//==============================================================================
+//==============================================================================
+/** Returns true if this is an AudioTrack. */
+bool isAudioTrack (ClipOwner&);
+
+/** Returns true if this is an AutomationTrack. */
+bool isAutomationTrack (ClipOwner&);
+
+/** Returns true if this is a FolderTrack. */
+bool isFolderTrack (ClipOwner&);
+
+/** Returns true if this is a MarkerTrack. */
+bool isMarkerTrack (ClipOwner&);
+
+/** Returns true if this is a TempoTrack. */
+bool isTempoTrack (ClipOwner&);
+
+/** Returns true if this is a ChordTrack. */
+bool isChordTrack (ClipOwner&);
+
+/** Returns true if this is an ArrangerTrack. */
+bool isArrangerTrack (ClipOwner&);
+
+/** Returns true if this is a MasterTrack. */
+bool isMasterTrack (ClipOwner&);
+
+//==============================================================================
+/** Returns true if this Track can contain MarkerClip[s]. */
+bool canContainMarkers (ClipOwner&);
+
+/** Returns true if this Track can contain MidiClip[s]. */
+bool canContainMIDI (ClipOwner&);
+
+/** Returns true if this Track can contain WaveAudioClip[s]. */
+bool canContainAudio (ClipOwner&);
+
+/** Returns true if this Track can contain EditClip[s]. */
+bool canContainEditClips (ClipOwner&);
+
+/** Returns true if this Track can contain Plugin[s]. */
+bool canContainPlugins (ClipOwner&);
+
+/** Returns true if this Track is movable. @see AudioTrack, FolderTrack */
+bool isMovable (ClipOwner&);
+
+/** Returns true if this a global Track and should be on top of others. @see MarkerTrack, TempoTrack */
+bool isOnTop (ClipOwner&);
+
+/** Returns true if this track can have inputs assigned to it. @see AudioTrack */
+bool acceptsInput (ClipOwner&);
+
+/** Returns true if this track creates audible output. @see AudioTrack */
+bool createsOutput (ClipOwner&);
+
+/** Returns true if this track can show automation. @see AudioTrack, FolderTrack, AutomationTrack */
+bool wantsAutomation (ClipOwner&);
+
 
 }} // namespace tracktion { inline namespace engine

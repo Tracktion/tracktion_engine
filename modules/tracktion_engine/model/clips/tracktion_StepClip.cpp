@@ -199,9 +199,9 @@ void StepClip::valueTreeChildOrderChanged (juce::ValueTree& p, int o, int n)
 }
 
 //==============================================================================
-bool StepClip::canGoOnTrack (Track& t)
+bool StepClip::canBeAddedTo (ClipOwner& co)
 {
-    return t.canContainMIDI();
+    return canContainMIDI (co);
 }
 
 juce::String StepClip::getSelectableDescription()

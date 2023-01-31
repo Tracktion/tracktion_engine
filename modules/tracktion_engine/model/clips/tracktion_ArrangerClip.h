@@ -23,7 +23,7 @@ public:
     using Ptr = juce::ReferenceCountedObjectPtr<ArrangerClip>;
 
     juce::String getSelectableDescription() override;
-    bool canGoOnTrack (Track&) override;
+    bool canBeAddedTo (ClipOwner&) override;
     juce::Colour getDefaultColour() const override;
     void initialise() override;
 
