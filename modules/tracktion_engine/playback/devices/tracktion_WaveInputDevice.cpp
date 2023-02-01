@@ -1062,10 +1062,15 @@ public:
         if (wi.getIsRelay() && wi.isEnabled())
         {
             // Reset the size to 0.
-            // realyBufferProcessor with set the correct size.
+            // realyBufferProcessor will set the correct size.
             inputBuffer.setSize(inputBuffer.getNumChannels(), 0, false, true);
-            if (nullptr != edit.engine.getDeviceManager().realyBufferProcessor)
-                edit.engine.getDeviceManager().realyBufferProcessor(inputBuffer);
+
+            // relayBufferProcessor is a shared resource.
+            // This callback function will be set to nullptr when the Relay disconnects or the application is closed.
+            std::unique_lock<std::mutex> lock(edit.engine.getDeviceManager().m_muRelayCallback);
+
+            if (nullptr != edit.engine.getDeviceManager().relayBufferProcessor)
+                edit.engine.getDeviceManager().relayBufferProcessor(inputBuffer);
 
             return;
         }

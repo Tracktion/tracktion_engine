@@ -183,7 +183,8 @@ public:
     Engine& engine;
 
     // BEATCONNECT MODIFICATION START (RELAY)
-    std::function<void(juce::AudioBuffer<float>&)> realyBufferProcessor;
+    std::function<void(juce::AudioBuffer<float>&)> relayBufferProcessor;
+    std::mutex m_muRelayCallback;
     bool m_EnableRealy = false;
     void enableRelay(bool p_Enable);
     // BEATCONNECT MODIFICATION END (RELAY)
