@@ -130,6 +130,10 @@ Clip* split (Clip&, TimePosition);
 template<typename ClipType>
 [[ nodiscard ]] juce::Array<ClipType*> getClipsOfType (const ClipOwner&);
 
+/** Returns the subclips of the given type, if any clips contain other clips, this will also return those. */
+template<typename ClipType>
+[[ nodiscard ]] juce::Array<ClipType*> getClipsOfTypeRecursive (const ClipOwner&);
+
 
 //==============================================================================
 //==============================================================================
@@ -209,6 +213,20 @@ inline juce::Array<ClipType*> getClipsOfType (const ClipOwner& parent)
             clips.add (typedClip);
 
     return clips;
+}
+
+template<typename ClipType>
+inline juce::Array<ClipType*> getClipsOfTypeRecursive (const ClipOwner& parent)
+{
+    juce::Array<ClipType*> results;
+
+    results.addArray (getClipsOfType<ClipType> (parent));
+
+    for (auto clip : parent.getClips())
+        if (auto clipOwner = dynamic_cast<ClipOwner*> (clip))
+            results.addArray (getClipsOfTypeRecursive<ClipType> (*clipOwner));
+
+    return results;
 }
 
 }} // namespace tracktion { inline namespace engine

@@ -54,13 +54,34 @@ private:
             auto clip1 = insertWaveClip (*cc, {}, sinFile->getFile(), {{ 1_tp, 3_tp }}, false);
             auto clip2 = insertWaveClip (*cc, {}, sinFile->getFile(), {{ 2_tp, 4_tp }}, false);
 
+            expectEquals (cc->getSourceLength(), 4_td);
+            expectNotEquals (cc->getHash(), static_cast<HashCode> (0));
+
             expect (clip1 != nullptr);
             expect (clip2 != nullptr);
+
             expect (cc->getClips().contains (clip1.get()));
             expect (cc->getClips().contains (clip2.get()));
 
+            expectEquals (getClipsOfTypeRecursive<Clip> (*audioTrack).size(), 3);
+            expect (getClipsOfTypeRecursive<Clip> (*audioTrack).contains (cc));
+            expect (getClipsOfTypeRecursive<Clip> (*audioTrack).contains (clip1.get()));
+            expect (getClipsOfTypeRecursive<Clip> (*audioTrack).contains (clip2.get()));
+
+            expectEquals (getClipsOfTypeRecursive<WaveAudioClip> (*audioTrack).size(), 2);
+            expect (getClipsOfTypeRecursive<WaveAudioClip> (*audioTrack).contains (clip1.get()));
+            expect (getClipsOfTypeRecursive<WaveAudioClip> (*audioTrack).contains (clip2.get()));
+
             expect (containsClip (*edit, clip1.get()));
             expect (containsClip (*edit, clip2.get()));
+
+            expect (getClipsOfType<WaveAudioClip> (*cc).contains (clip1.get()));
+            expect (getClipsOfType<WaveAudioClip> (*cc).contains (clip2.get()));
+
+            const auto exportables = Exportable::addAllExportables (*edit);
+            expect (exportables.contains (cc));
+            expect (exportables.contains (clip1.get()));
+            expect (exportables.contains (clip2.get()));
 
 //ddd            expectPeak (*this, *edit, { 0_tp, 1_tp }, {}, 0.0f);
 //            expectPeak (*this, *edit, { 1_tp, 2_tp }, {}, 1.0f);
@@ -68,6 +89,10 @@ private:
 //            expectPeak (*this, *edit, { 3_tp, 4_tp }, {}, 1.0f);
 //            expectPeak (*this, *edit, { 4_tp, 5_tp }, {}, 0.0f);
         }
+
+        // Crossfading of clips
+        // Adjusting tempo of Edit, check child clips also update
+        // Looping of CollectionClip
     }
 };
 

@@ -31,26 +31,6 @@ public:
     using Ptr = juce::ReferenceCountedObjectPtr<ContainerClip>;
 
     //==============================================================================
-    /** Adds a new take with the ProjectItemID as the source. */
-    void addTake (ProjectItemID);
-    
-    /** Adds a new take with the given file as the source. */
-    void addTake (const juce::File&);
-
-    /** Deletes all but the current takes.
-        @param deleteSourceFiles    If true, also deletes the source files
-    */
-    void deleteAllUnusedTakes (bool deleteSourceFiles);
-
-    /** Deletes all but the current takes but shows a confirmation dialog first.
-        @param deleteSourceFiles    If true, also deletes the source files
-    */
-    void deleteAllUnusedTakesConfirmingWithUser (bool deleteSourceFiles);
-
-    /** Returns the WaveCompManager for this clip. */
-    WaveCompManager& getCompManager();
-
-    //==============================================================================
     /** @internal */
     juce::ValueTree& getClipOwnerState() override;
     /** @internal */
@@ -60,14 +40,7 @@ public:
 
     //==============================================================================
     /** @internal */
-    bool needsRender() const override;
-    /** @internal */
-    RenderManager::Job::Ptr getRenderJob (const AudioFile& destFile) override;
-    /** @internal */
-    juce::String getRenderMessage() override;
-    /** @internal */
-    void renderComplete() override;
-
+    juce::File getOriginalFile() const override                 { return {}; }
     /** @internal */
     bool isUsingFile (const AudioFile&) override;
 
@@ -80,19 +53,11 @@ public:
     //==============================================================================
     /** @internal */
     juce::String getSelectableDescription() override;
-
     /** @internal */
-    bool isMidi() const override                                { return false; }
-    /** @internal */
-    bool usesSourceFile() override                              { return true; }
+    bool isMidi() const override;
 
     /** @internal */
     TimeDuration getSourceLength() const override;
-    /** @internal */
-    void sourceMediaChanged() override;
-
-    /** @internal */
-    juce::File getOriginalFile() const override;
     /** @internal */
     HashCode getHash() const override;
 
@@ -101,28 +66,6 @@ public:
 
     //==============================================================================
     /** @internal */
-    juce::StringArray getTakeDescriptions() const override;
-    /** @internal */
-    bool hasAnyTakes() const override                           { return getTakesTree().getNumChildren() > 0; }
-    /** @internal */
-    int getNumTakes (bool includeComps) override;
-    /** @internal */
-    juce::Array<ProjectItemID> getTakes() const override;
-    /** @internal */
-    void clearTakes() override;
-    /** @internal */
-    int getCurrentTake() const override;
-    /** @internal */
-    void setCurrentTake (int takeIndex) override;
-    /** @internal */
-    bool isCurrentTakeComp() override;
-    /** @internal */
-    Clip::Array unpackTakes (bool toNewTracks) override;
-
-    /** @internal */
-    void reassignReferencedItem (const ReferencedItem&, ProjectItemID newID, double newStartTime) override;
-
-    /** @internal */
     void flushStateToValueTree() override;
     /** @internal */
     void pitchTempoTrackChanged() override;
@@ -130,21 +73,6 @@ public:
 private:
     //==============================================================================
     juce::ValueTree clipListState;
-
-    mutable TimeDuration sourceLength;
-    WaveCompManager::Ptr compManager;
-
-    static constexpr int takeIndexNeedsUpdating = -2;
-    mutable int currentTakeIndex = takeIndexNeedsUpdating;
-
-    juce::ValueTree getTakesTree() const                        { return state.getChildWithName (IDs::TAKES); }
-    void invalidateCurrentTake() noexcept;
-    void invalidateCurrentTake (const juce::ValueTree&) noexcept;
-
-    void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
-    void valueTreeChildAdded (juce::ValueTree&, juce::ValueTree&) override;
-    void valueTreeChildRemoved (juce::ValueTree&, juce::ValueTree&, int) override;
-    void valueTreeChildOrderChanged (juce::ValueTree&, int, int) override;
 
     void clipCreated (Clip&) override;
     void clipAddedOrRemoved() override;
