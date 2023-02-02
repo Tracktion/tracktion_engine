@@ -47,48 +47,67 @@ private:
         auto audioTrack = getAudioTracks (*edit)[0];
         auto sinFile = getSinFile<juce::WavAudioFormat> (44100.0, 2.0);
 
-        beginTest ("Container Clip");
-        {
-            auto cc = dynamic_cast<ContainerClip*> (insertNewClip (*audioTrack, TrackItem::Type::container, { 0_tp, 5_tp }));
-            expect (cc != nullptr);
-            auto clip1 = insertWaveClip (*cc, {}, sinFile->getFile(), {{ 1_tp, 3_tp }}, false);
-            auto clip2 = insertWaveClip (*cc, {}, sinFile->getFile(), {{ 2_tp, 4_tp }}, false);
+        beginTest ("Child clips");
+        auto cc = dynamic_cast<ContainerClip*> (insertNewClip (*audioTrack, TrackItem::Type::container, { 0_tp, 5_tp }));
+        expect (cc != nullptr);
+        auto clip1 = insertWaveClip (*cc, {}, sinFile->getFile(), {{ 1_tp, 3_tp }}, false);
+        auto clip2 = insertWaveClip (*cc, {}, sinFile->getFile(), {{ 2_tp, 4_tp }}, false);
 
-            expectEquals (cc->getSourceLength(), 4_td);
-            expectNotEquals (cc->getHash(), static_cast<HashCode> (0));
+        expectEquals (cc->getSourceLength(), 4_td);
+        expectNotEquals (cc->getHash(), static_cast<HashCode> (0));
 
-            expect (clip1 != nullptr);
-            expect (clip2 != nullptr);
+        expect (clip1 != nullptr);
+        expect (clip2 != nullptr);
 
-            expect (cc->getClips().contains (clip1.get()));
-            expect (cc->getClips().contains (clip2.get()));
+        expect (cc->getClips().contains (clip1.get()));
+        expect (cc->getClips().contains (clip2.get()));
 
-            expectEquals (getClipsOfTypeRecursive<Clip> (*audioTrack).size(), 3);
-            expect (getClipsOfTypeRecursive<Clip> (*audioTrack).contains (cc));
-            expect (getClipsOfTypeRecursive<Clip> (*audioTrack).contains (clip1.get()));
-            expect (getClipsOfTypeRecursive<Clip> (*audioTrack).contains (clip2.get()));
+        expectEquals (getClipsOfTypeRecursive<Clip> (*audioTrack).size(), 3);
+        expect (getClipsOfTypeRecursive<Clip> (*audioTrack).contains (cc));
+        expect (getClipsOfTypeRecursive<Clip> (*audioTrack).contains (clip1.get()));
+        expect (getClipsOfTypeRecursive<Clip> (*audioTrack).contains (clip2.get()));
 
-            expectEquals (getClipsOfTypeRecursive<WaveAudioClip> (*audioTrack).size(), 2);
-            expect (getClipsOfTypeRecursive<WaveAudioClip> (*audioTrack).contains (clip1.get()));
-            expect (getClipsOfTypeRecursive<WaveAudioClip> (*audioTrack).contains (clip2.get()));
+        expectEquals (getClipsOfTypeRecursive<WaveAudioClip> (*audioTrack).size(), 2);
+        expect (getClipsOfTypeRecursive<WaveAudioClip> (*audioTrack).contains (clip1.get()));
+        expect (getClipsOfTypeRecursive<WaveAudioClip> (*audioTrack).contains (clip2.get()));
 
-            expect (containsClip (*edit, clip1.get()));
-            expect (containsClip (*edit, clip2.get()));
+        expect (containsClip (*edit, clip1.get()));
+        expect (containsClip (*edit, clip2.get()));
 
-            expect (getClipsOfType<WaveAudioClip> (*cc).contains (clip1.get()));
-            expect (getClipsOfType<WaveAudioClip> (*cc).contains (clip2.get()));
+        expect (getClipsOfType<WaveAudioClip> (*cc).contains (clip1.get()));
+        expect (getClipsOfType<WaveAudioClip> (*cc).contains (clip2.get()));
 
-            const auto exportables = Exportable::addAllExportables (*edit);
-            expect (exportables.contains (cc));
-            expect (exportables.contains (clip1.get()));
-            expect (exportables.contains (clip2.get()));
+        const auto exportables = Exportable::addAllExportables (*edit);
+        expect (exportables.contains (cc));
+        expect (exportables.contains (clip1.get()));
+        expect (exportables.contains (clip2.get()));
 
-//ddd            expectPeak (*this, *edit, { 0_tp, 1_tp }, {}, 0.0f);
-//            expectPeak (*this, *edit, { 1_tp, 2_tp }, {}, 1.0f);
-//            expectPeak (*this, *edit, { 2_tp, 3_tp }, {}, 2.0f);
-//            expectPeak (*this, *edit, { 3_tp, 4_tp }, {}, 1.0f);
-//            expectPeak (*this, *edit, { 4_tp, 5_tp }, {}, 0.0f);
-        }
+        beginTest ("Multiple child clips");
+        expectPeak (*this, *edit, { 0_tp, 1_tp }, { audioTrack }, 0.0f);
+        expectPeak (*this, *edit, { 1_tp, 2_tp }, { audioTrack }, 1.0f);
+        expectPeak (*this, *edit, { 2_tp, 3_tp }, { audioTrack }, 2.0f);
+        expectPeak (*this, *edit, { 3_tp, 4_tp }, { audioTrack }, 1.0f);
+        expectPeak (*this, *edit, { 4_tp, 5_tp }, { audioTrack }, 0.0f);
+
+        beginTest ("Clip at non-zero time");
+        // Move container clip along by 10s
+        cc->setStart (10s, false, true);
+
+        expectPeak (*this, *edit, { 10_tp, 11_tp }, { audioTrack }, 0.0f);
+        expectPeak (*this, *edit, { 11_tp, 12_tp }, { audioTrack }, 1.0f);
+        expectPeak (*this, *edit, { 12_tp, 13_tp }, { audioTrack }, 2.0f);
+        expectPeak (*this, *edit, { 13_tp, 14_tp }, { audioTrack }, 1.0f);
+        expectPeak (*this, *edit, { 14_tp, 15_tp }, { audioTrack }, 0.0f);
+
+        beginTest ("Clip offset");
+        // Set container clip offset of 1s
+        cc->setOffset (1s);
+
+        expectPeak (*this, *edit, { 9_tp, 10_tp }, { audioTrack }, 0.0f);
+        expectPeak (*this, *edit, { 10_tp, 11_tp }, { audioTrack }, 1.0f);
+        expectPeak (*this, *edit, { 11_tp, 12_tp }, { audioTrack }, 2.0f);
+        expectPeak (*this, *edit, { 12_tp, 13_tp }, { audioTrack }, 1.0f);
+        expectPeak (*this, *edit, { 13_tp, 14_tp }, { audioTrack }, 0.0f);
 
         // Crossfading of clips
         // Adjusting tempo of Edit, check child clips also update

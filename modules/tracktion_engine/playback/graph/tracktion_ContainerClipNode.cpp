@@ -1,0 +1,138 @@
+/*
+    ,--.                     ,--.     ,--.  ,--.
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
+    |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
+    `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
+
+    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+*/
+
+namespace tracktion { inline namespace engine
+{
+
+//==============================================================================
+//==============================================================================
+ContainerClipNode::ContainerClipNode (ProcessState& editProcessState,
+                                      EditItemID clipID,
+                                      ClipPosition pos,
+                                      TimeRange loopTimeRange,
+                                      std::unique_ptr<Node> inputNode)
+    : TracktionEngineNode (editProcessState),
+      containerClipID (clipID),
+      clipPosition (pos),
+      loopRange (loopTimeRange),
+      input (std::move (inputNode))
+{
+    assert (input);
+    setOptimisations ({ tracktion::graph::ClearBuffers::no,
+                        tracktion::graph::AllocateAudioBuffer::yes });
+
+    // Calculated from hashing a string view of "ContainerClipNode"
+    const auto hashSalt = 9088803362895930667;
+    hash_combine (nodeProperties.nodeID, hashSalt);
+    hash_combine (nodeProperties.nodeID, containerClipID.getRawID());
+}
+
+//==============================================================================
+tracktion::graph::NodeProperties ContainerClipNode::getNodeProperties()
+{
+    return nodeProperties;
+}
+
+std::vector<tracktion::graph::Node*> ContainerClipNode::getDirectInputNodes()
+{
+    return {};
+}
+
+std::vector<Node*> ContainerClipNode::getInternalNodes()
+{
+    return { input.get() };
+}
+
+void ContainerClipNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
+{
+    if (info.nodeGraphToReplace != nullptr)
+        if (auto oldNode = findNodeWithID<ContainerClipNode> (*info.nodeGraphToReplace, getNodeProperties().nodeID))
+            playerContext = oldNode->playerContext;
+
+    if (playerContext)
+        return;
+
+    playerContext = std::make_shared<PlayerContext>();
+
+    // We need to create our own Tempo::Position as we'll apply an offset so it stays in sync with the Edit's tempo sequence
+    // Make sure we do this before we overrwite the default ProcessState
+    if (auto editTempoPosition = getProcessState().tempoPosition.get())
+        playerContext->processState.tempoPosition = std::make_unique<tempo::Sequence::Position> (*editTempoPosition);
+
+    // Set the ProcessState used for all the child nodes so they use the local time, not the Edit time
+    visitNodes (*input,
+                [localProcessState = &playerContext->processState] (auto& node)
+                {
+                     if (auto ten = dynamic_cast<TracktionEngineNode*> (&node))
+                         ten->setProcessState (*localProcessState);
+
+                     for (auto internalNode : node.getInternalNodes())
+                         if (auto ten = dynamic_cast<TracktionEngineNode*> (internalNode))
+                             ten->setProcessState (*localProcessState);
+                }, true);
+
+    playerContext->player.setNumThreads (0);
+    playerContext->player.setNode (std::move (input),
+                                   info.sampleRate, info.blockSize);
+}
+
+bool ContainerClipNode::isReadyToProcess()
+{
+    return true;
+}
+
+void ContainerClipNode::process (ProcessContext& pc)
+{
+    // Set playHead loop range using loopRange
+    // Find ref offset from clip time
+    // If playhead position was overriden, pass this on to the PlayHeadState
+    // Process buffer
+    // Add an offset to ProcessState so the tempo positions can be synced up
+
+    auto& player = playerContext->player;
+    const auto sampleRate = getSampleRate();
+
+    auto& editPlayHead = getPlayHead();
+    auto& editPlayHeadState = getPlayHeadState();
+    auto& localPlayHead = playerContext->playHead;
+
+    // Syncronise positions
+    const auto playheadOffset = toSamples (clipPosition.getStartOfSource(), sampleRate);
+    const auto localReferenceSampleRange = pc.referenceSampleRange - playheadOffset;
+    playerContext->processState.setPlaybackSpeedRatio (getPlaybackSpeedRatio());
+    playerContext->processState.update (sampleRate, localReferenceSampleRange, ProcessState::UpdateContinuityFlags::no);
+
+    if (! editPlayHeadState.isContiguousWithPreviousBlock())
+        localPlayHead.setPosition (editPlayHead.getPosition() - playheadOffset);
+
+    // Syncronise playing state
+    if (editPlayHead.isStopped() && ! localPlayHead.isStopped())
+        localPlayHead.stop();
+
+    if (editPlayHead.isPlaying() && ! localPlayHead.isPlaying())
+    {
+        if (loopRange.isEmpty())
+        {
+            localPlayHead.setPosition (editPlayHead.getPosition() - playheadOffset);
+            localPlayHead.play();
+        }
+        else
+        {
+            localPlayHead.play (toSamples (loopRange, getSampleRate()), true);
+        }
+    }
+
+    // Process
+    ProcessContext localPC { pc.numSamples, localReferenceSampleRange,
+                             { pc.buffers.audio, pc.buffers.midi } };
+    player.process (localPC);
+}
+
+}} // namespace tracktion { inline namespace engine

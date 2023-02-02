@@ -139,22 +139,18 @@ bool ContainerClip::isUsingFile (const AudioFile& af)
 
 void ContainerClip::clipCreated (Clip&)
 {
-    //ddd
 }
 
 void ContainerClip::clipAddedOrRemoved()
 {
-    //ddd
 }
 
 void ContainerClip::clipOrderChanged()
 {
-    //ddd
 }
 
 void ContainerClip::clipPositionChanged()
 {
-    //ddd
 }
 
 

@@ -464,6 +464,11 @@ bool Renderer::renderToFile (const juce::String& taskDescription,
     return outputFile.existsAsFile();
 }
 
+bool Renderer::renderToFile (Edit& edit, const juce::File& f)
+{
+    return renderToFile ({}, f, edit, { 0_tp, edit.getLength() }, toBitSet (getAllTracks (edit)));
+}
+
 juce::File Renderer::renderToFile (const juce::String& taskDescription, const Parameters& r)
 {
     CRASH_TRACER

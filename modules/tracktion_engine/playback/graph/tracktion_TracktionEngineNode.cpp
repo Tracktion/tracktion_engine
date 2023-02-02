@@ -62,37 +62,42 @@ void ProcessState::setPlaybackSpeedRatio (double newRatio)
 //==============================================================================
 //==============================================================================
 TracktionEngineNode::TracktionEngineNode (ProcessState& ps)
-    : processState (ps)
+    : processState (&ps)
 {
 }
 
 tempo::Key TracktionEngineNode::getKey() const
 {
-    if (processState.tempoPosition)
-        return processState.tempoPosition->getKey();
+    if (processState->tempoPosition)
+        return processState->tempoPosition->getKey();
 
     return {};
 }
 
 double TracktionEngineNode::getPlaybackSpeedRatio() const
 {
-    return processState.playbackSpeedRatio;
+    return processState->playbackSpeedRatio;
 }
 
 std::optional<TimePosition> TracktionEngineNode::getTimeOfNextChange() const
 {
-    if (processState.tempoPosition)
-        return processState.tempoPosition->getTimeOfNextChange();
+    if (processState->tempoPosition)
+        return processState->tempoPosition->getTimeOfNextChange();
 
     return {};
 }
 
 std::optional<BeatPosition> TracktionEngineNode::getBeatOfNextChange() const
 {
-    if (processState.tempoPosition)
-        return processState.tempoPosition->getBeatOfNextChange();
+    if (processState->tempoPosition)
+        return processState->tempoPosition->getBeatOfNextChange();
 
     return {};
+}
+
+void TracktionEngineNode::setProcessState (ProcessState& newProcessState)
+{
+    processState = &newProcessState;
 }
 
 }} // namespace tracktion { inline namespace engine
