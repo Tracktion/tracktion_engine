@@ -138,7 +138,7 @@ namespace EngineHelpers
         auto clips = track.getClips();
 
         for (int i = clips.size(); --i >= 0;)
-            clips.getUnchecked (i)->removeFromParentTrack();
+            clips.getUnchecked (i)->removeFromParent();
     }
     
     inline te::AudioTrack* getOrInsertAudioTrackAt (te::Edit& edit, int index)

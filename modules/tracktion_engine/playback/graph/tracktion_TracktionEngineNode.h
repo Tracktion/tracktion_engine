@@ -105,15 +105,15 @@ public:
     tracktion::graph::PlayHead& getPlayHead()                { return getPlayHeadState().playHead; }
 
     /** Returns the ProcessState in use. */
-    ProcessState& getProcessState()                          { return *processState; }    
+    ProcessState& getProcessState()                          { return *processState; }
 
     //==============================================================================
     /** @internal */
     void setProcessState (ProcessState&);
 
-protected:
+private:
     //==============================================================================
-    ProcessState* processState; // Must never be nullptr //ddd make this private
+    ProcessState* processState; // Must never be nullptr
 };
 
 }} // namespace tracktion { inline namespace engine
