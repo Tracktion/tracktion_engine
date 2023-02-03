@@ -12,7 +12,7 @@ namespace tracktion { inline namespace engine
 {
 
 ContainerClip::ContainerClip (const juce::ValueTree& v, EditItemID clipID, ClipOwner& targetParent)
-    : AudioClipBase (v, clipID, Type::wave, targetParent)
+    : AudioClipBase (v, clipID, Type::container, targetParent)
 {
 }
 
@@ -90,6 +90,21 @@ void ContainerClip::setLoopDefaults()
 
     if (loopInfo.getNumBeats() == 0.0)
         loopInfo.setNumBeats (getSourceLength().inSeconds() * (ts.getTempoAt (pos.getStart()).getBpm() / 60.0));
+}
+
+void ContainerClip::setLoopRangeBeats (BeatRange newRangeBeats)
+{
+    const auto newStartBeat  = juce::jmax (0_bp, newRangeBeats.getStart());
+    const auto newLengthBeat = juce::jmax (0_bd, newRangeBeats.getLength());
+
+    if (loopStartBeats != newStartBeat || loopLengthBeats != newLengthBeat)
+    {
+        Clip::setSpeedRatio (1.0);
+        setAutoTempo (true);
+
+        loopStartBeats  = newStartBeat;
+        loopLengthBeats = newLengthBeat;
+    }
 }
 
 void ContainerClip::flushStateToValueTree()

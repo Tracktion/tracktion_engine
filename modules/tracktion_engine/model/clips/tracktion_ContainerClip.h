@@ -63,6 +63,8 @@ public:
 
     /** @internal */
     void setLoopDefaults() override;
+    /** @internal */
+    void setLoopRangeBeats (BeatRange) override;
 
     //==============================================================================
     /** @internal */

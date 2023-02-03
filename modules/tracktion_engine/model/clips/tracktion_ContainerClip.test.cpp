@@ -51,7 +51,11 @@ private:
         auto clip2 = insertWaveClip (*cc, {}, sinFile2->getFile(), {{ 2_tp, 4_tp }}, false);
 
         // Use WaveNodeRealTime for one of the clips so we're testing both
+        clip1->setUsesProxy (false);
         clip2->setUsesProxy (false);
+
+        clip1->setAutoTempo (true);
+        clip2->setAutoTempo (true);
 
         expectEquals (cc->getSourceLength(), 4_td);
         expectNotEquals (cc->getHash(), static_cast<HashCode> (0));
@@ -105,6 +109,7 @@ private:
         {
             // Move container clip along by 10s
             cc->setStart (10s, false, true);
+            expectEquals (cc->getPosition().getEnd(), 15_tp);
 
             auto res = renderToAudioBuffer (*edit);
             expectPeak (*this, res, { 10_tp, 11_tp }, 0.5f);
@@ -132,6 +137,7 @@ private:
         {
             cc->setLoopRange ({ 0_tp, 5_tp });
             cc->setLength (10_td, true);
+            expectEquals (cc->getPosition().getEnd(), 20_tp);
 
             auto res = renderToAudioBuffer (*edit);
 
@@ -184,7 +190,59 @@ private:
             expectPeak (*this, res, { 19_tp, 20_tp }, 0.5f);
         }
 
-        // Adjusting tempo of Edit, check child clips also update
+        beginTest ("Edit remapping");
+        {
+            // Remove the fades as there's aren't remapped
+            clip1->setAutoCrossfade (false);
+            clip2->setAutoCrossfade (false);
+
+            // Auto tempo so the loops are remapped
+            cc->setAutoTempo (true);
+            cc->setLoopRange (cc->getLoopRange()); // This converts the looping to beat based but I'm not sure this should have to happen...
+            expect (cc->beatBasedLooping());
+
+            // Set the tempo to 120, all the times should be halved
+            auto& ts = edit->tempoSequence;
+
+            expectEquals (ts.getTempos()[0]->getBpm(), 60.0);
+            expect (cc->getSyncType() == Clip::syncBarsBeats);
+            expect (clip1->getSyncType() == Clip::syncBarsBeats);
+            expect (clip2->getSyncType() == Clip::syncBarsBeats);
+
+            ts.getTempos()[0]->setBpm (120.0);
+            expectEquals (ts.getTempos()[0]->getBpm(), 120.0);
+
+            expectEquals (cc->getPosition().getStart(), 5_tp);
+            expectEquals (cc->getPosition().getEnd(), 10_tp);
+            expectEquals (cc->getPosition().offset, 0.5_td);
+
+            expectEquals (clip1->getPosition().getStart(), 0_tp);
+            expectEquals (clip1->getPosition().getEnd(), 1.5_tp);
+
+            expectEquals (clip2->getPosition().getStart(), 1_tp);
+            expectEquals (clip2->getPosition().getEnd(), 2_tp);
+
+            expectEquals (cc->getLoopRange().getLength(), 2.5_td);
+
+            auto res = renderToAudioBuffer (*edit);
+
+            // First loop (clipped by offset)
+            expectPeak (*this, res, { 4.5_tp, 5_tp }, 0.0f);
+            expectPeak (*this, res, { 5_tp, 5.5_tp }, 0.5f);
+            expectPeak (*this, res, { 5.5_tp, 6_tp }, 0.821f); // I think there's some phase cancellation happening so the peak is not 1.0f
+            expectPeak (*this, res, { 6_tp, 6.5_tp }, 0.5f);
+            expectPeak (*this, res, { 6.5_tp, 7_tp }, 0.0f);
+
+            // Second loop
+            expectPeak (*this, res, { 7_tp, 7.5_tp }, 0.5f);
+            expectPeak (*this, res, { 7.5_tp, 8_tp }, 0.5f);
+            expectPeak (*this, res, { 8_tp, 8.5_tp }, 0.762f); // I think there's some phase cancellation happening so the peak is not 1.0f
+            expectPeak (*this, res, { 8.5_tp, 9_tp }, 0.5f);
+            expectPeak (*this, res, { 9_tp, 9.5_tp }, 0.0f);
+
+            // Third loop
+            expectPeak (*this, res, { 9.5_tp, 10_tp }, 0.5f);
+        }
     }
 };
 

@@ -703,14 +703,23 @@ void EditTimecodeRemapperSnapshot::savePreChangeState (Edit& ed)
     {
         for (auto& c : t->getClips())
         {
-            auto pos = c->getPosition();
+            auto addClip = [this, &tempoSequence] (auto clip)
+            {
+                auto pos = clip->getPosition();
 
-            ClipPos cp;
-            cp.clip = c;
-            cp.startBeat        = tempoSequence.toBeats (pos.getStart());
-            cp.endBeat          = tempoSequence.toBeats (pos.getEnd());
-            cp.contentStartBeat = toDuration (tempoSequence.toBeats (pos.getStartOfSource()));
-            clips.add (cp);
+                ClipPos cp;
+                cp.clip = clip;
+                cp.startBeat        = tempoSequence.toBeats (pos.getStart());
+                cp.endBeat          = tempoSequence.toBeats (pos.getEnd());
+                cp.contentStartBeat = toDuration (tempoSequence.toBeats (pos.getStartOfSource()));
+                clips.add (cp);
+            };
+
+            addClip (c);
+
+            if (auto cc = dynamic_cast<ClipOwner*> (c))
+                for (auto childClip : cc->getClips())
+                    addClip (childClip);
         }
     }
 
