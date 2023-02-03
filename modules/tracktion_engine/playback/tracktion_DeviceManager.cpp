@@ -129,7 +129,7 @@ struct DeviceManager::WaveDeviceList
             // BEATCONNECT MODIFICATION START (RELAY)
             if (channelNames[i] == WaveInputDevice::g_Relay)
             {
-                descriptions.push_back(WaveDeviceDescription(channelNames[i], i, i + 1, isDeviceEnabled(i) || isDeviceEnabled(i + 1)));
+                descriptions.push_back(WaveDeviceDescription(channelNames[i], i, i + 1, true));
                 ++i;
                 continue;
             }
