@@ -588,6 +588,15 @@ Clip* findClipForID (const Edit& edit, EditItemID clipID)
                                           return false;
                                       }
 
+                                      for (auto cc : getTrackItemsOfType<ContainerClip> (t))
+                                      {
+                                          if (auto c = findClipForID (*cc, clipID))
+                                          {
+                                              result = c;
+                                              return false;
+                                          }
+                                      }
+
                                       return true;
                                   });
 
@@ -643,6 +652,11 @@ void visitAllTrackItems (const Edit& edit, std::function<bool (TrackItem&)> f)
                                               if (! f (*ti))
                                                   return false;
                                       }
+
+                                      for (auto cc : getTrackItemsOfType<ContainerClip> (t))
+                                          for (auto c : cc->getClips())
+                                              if (! f (*c))
+                                                  return false;
 
                                       return true;
                                   });

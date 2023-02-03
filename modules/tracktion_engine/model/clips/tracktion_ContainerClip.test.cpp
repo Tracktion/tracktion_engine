@@ -59,6 +59,15 @@ private:
         expect (clip1 != nullptr);
         expect (clip2 != nullptr);
 
+        expect (clip1->getParent() == cc);
+        expect (clip2->getParent() == cc);
+
+        expect (findClipForState (*edit, clip1->state) != nullptr);
+        expect (findClipForState (*edit, clip2->state) != nullptr);
+
+        expect (findClipForID (*edit, clip1->itemID) != nullptr);
+        expect (findClipForID (*edit, clip2->itemID) != nullptr);
+
         expect (cc->getClips().contains (clip1.get()));
         expect (cc->getClips().contains (clip2.get()));
 
@@ -144,7 +153,37 @@ private:
             expectPeak (*this, res, { 19_tp, 20_tp }, 0.5f);
         }
 
-        // Crossfading of clips
+        beginTest ("Cross-fading contained clips");
+        {
+            // If the contained clips faded linearly where they overlap, the overall magnitue should be 0.5
+            clip1->setAutoCrossfade (true);
+            clip2->setAutoCrossfade (true);
+
+            expectEquals (clip1->getFadeOut(), 1_td);
+            expectEquals (clip2->getFadeIn(), 1_td);
+
+            auto res = renderToAudioBuffer (*edit);
+
+            expectPeak (*this, res, { 0_tp, 20_tp }, 0.5f);
+
+            // First loop (clipped by offset)
+            expectPeak (*this, res, { 9_tp, 10_tp }, 0.0f);
+            expectPeak (*this, res, { 10_tp, 11_tp }, 0.5f);
+            expectPeak (*this, res, { 11_tp, 12_tp }, 0.5f);
+            expectPeak (*this, res, { 12_tp, 13_tp }, 0.5f);
+            expectPeak (*this, res, { 13_tp, 14_tp }, 0.0f);
+
+            // Second loop
+            expectPeak (*this, res, { 14_tp, 15_tp }, 0.5f);
+            expectPeak (*this, res, { 15_tp, 16_tp }, 0.5f);
+            expectPeak (*this, res, { 16_tp, 17_tp }, 0.5f);
+            expectPeak (*this, res, { 17_tp, 18_tp }, 0.5f);
+            expectPeak (*this, res, { 18_tp, 19_tp }, 0.0f);
+
+            // Third loop
+            expectPeak (*this, res, { 19_tp, 20_tp }, 0.5f);
+        }
+
         // Adjusting tempo of Edit, check child clips also update
     }
 };

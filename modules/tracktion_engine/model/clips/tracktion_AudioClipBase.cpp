@@ -535,6 +535,8 @@ bool AudioClipBase::setFadeOut (TimeDuration out)
 
 TimeDuration AudioClipBase::getFadeIn() const
 {
+    asyncFunctionCaller.handleUpdateNowIfNeeded();
+
     if (autoCrossfade && getOverlappingClip (ClipDirection::previous) != nullptr)
         return autoFadeIn;
 
@@ -548,6 +550,8 @@ TimeDuration AudioClipBase::getFadeIn() const
 
 TimeDuration AudioClipBase::getFadeOut() const
 {
+    asyncFunctionCaller.handleUpdateNowIfNeeded();
+
     if (autoCrossfade && getOverlappingClip (ClipDirection::next) != nullptr)
         return autoFadeOut;
 
@@ -693,16 +697,16 @@ AudioClipBase* AudioClipBase::getOverlappingClip (ClipDirection direction) const
 {
     CRASH_TRACER
 
-    if (auto ct = getClipTrack())
+    if (auto ct = getParent())
     {
-        auto clips = ct->getClips();
+        const auto& clips = ct->getClips();
         auto ourIndex = clips.indexOf (const_cast<AudioClipBase*> (this));
 
         if (direction == ClipDirection::next)
         {
             for (int i = ourIndex + 1; i < clips.size(); ++i)
                 if (auto c = dynamic_cast<AudioClipBase*> (clips[i]))
-                    if (getPosition().time.contains (c->getPosition().getStart() + TimeDuration::fromSeconds (0.001))
+                    if (getPosition().time.contains (c->getPosition().getStart() + 0.001s)
                          && ! getPosition().time.contains (c->getPosition().getEnd()))
                         return c;
         }
@@ -710,7 +714,7 @@ AudioClipBase* AudioClipBase::getOverlappingClip (ClipDirection direction) const
         {
             for (int i = ourIndex; --i >= 0;)
                 if (auto c = dynamic_cast<AudioClipBase*> (clips[i]))
-                    if (getPosition().time.contains (c->getPosition().getEnd() - TimeDuration::fromSeconds (0.001))
+                    if (getPosition().time.contains (c->getPosition().getEnd() - 0.001s)
                          && ! getPosition().time.contains (c->getPosition().getStart()))
                         return c;
         }

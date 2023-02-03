@@ -508,8 +508,8 @@ void Clip::updateParent()
 
     if (TrackList::isTrack (parentState))
         setParent (dynamic_cast<ClipTrack*> (findTrackForID (edit, EditItemID::fromID (parentState))));
-    else if (parentState.hasType (IDs::CLIPLIST))
-        setParent (dynamic_cast<ContainerClip*> (findClipForID (edit, EditItemID::fromID (parentState))));
+    else if (parentState.hasType (IDs::CLIPLIST) && parentState.getParent().hasType (IDs::CONTAINERCLIP))
+        setParent (dynamic_cast<ContainerClip*> (findClipForID (edit, EditItemID::fromID (parentState.getParent()))));
     else
         setParent ({});
 }

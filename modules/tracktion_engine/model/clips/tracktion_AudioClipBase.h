@@ -638,7 +638,7 @@ protected:
     mutable WarpTimeManager::Ptr warpTimeManager;
     mutable std::unique_ptr<AudioSegmentList> audioSegmentList;
     std::unique_ptr<ClipEffects> clipEffects;
-    AsyncFunctionCaller asyncFunctionCaller;
+    mutable AsyncFunctionCaller asyncFunctionCaller;
 
     juce::AudioChannelSet activeChannels;
     void updateLeftRightChannelActivenessFlags();
