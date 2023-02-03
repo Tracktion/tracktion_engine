@@ -44,7 +44,7 @@ private:
         auto sinFile1 = getSinFile<juce::WavAudioFormat> (44100.0, 3.0, 1, 220.0f);
         auto sinFile2 = getSinFile<juce::WavAudioFormat> (44100.0, 2.0, 1, 220.0f);
 
-        beginTest ("Child clips");
+        beginTest ("Adding child clips");
         auto cc = dynamic_cast<ContainerClip*> (insertNewClip (*audioTrack, TrackItem::Type::container, { 0_tp, 5_tp }));
         expect (cc != nullptr);
         auto clip1 = insertWaveClip (*cc, {}, sinFile1->getFile(), {{ 0_tp, 3_tp }}, false);
@@ -57,43 +57,63 @@ private:
         clip1->setAutoTempo (true);
         clip2->setAutoTempo (true);
 
-        expectEquals (cc->getSourceLength(), 4_td);
-        expectNotEquals (cc->getHash(), static_cast<HashCode> (0));
+        beginTest ("Clip properties");
+        {
+            expectEquals (cc->getSourceLength(), 4_td);
+            expectNotEquals (cc->getHash(), static_cast<HashCode> (0));
 
-        expect (clip1 != nullptr);
-        expect (clip2 != nullptr);
+            expect (clip1 != nullptr);
+            expect (clip2 != nullptr);
 
-        expect (clip1->getParent() == cc);
-        expect (clip2->getParent() == cc);
+            expect (clip1->getParent() == cc);
+            expect (clip2->getParent() == cc);
 
-        expect (findClipForState (*edit, clip1->state) != nullptr);
-        expect (findClipForState (*edit, clip2->state) != nullptr);
+            expect (findClipForState (*edit, clip1->state) != nullptr);
+            expect (findClipForState (*edit, clip2->state) != nullptr);
 
-        expect (findClipForID (*edit, clip1->itemID) != nullptr);
-        expect (findClipForID (*edit, clip2->itemID) != nullptr);
+            expect (findClipForID (*edit, clip1->itemID) != nullptr);
+            expect (findClipForID (*edit, clip2->itemID) != nullptr);
 
-        expect (cc->getClips().contains (clip1.get()));
-        expect (cc->getClips().contains (clip2.get()));
+            expect (cc->getClips().contains (clip1.get()));
+            expect (cc->getClips().contains (clip2.get()));
 
-        expectEquals (getClipsOfTypeRecursive<Clip> (*audioTrack).size(), 3);
-        expect (getClipsOfTypeRecursive<Clip> (*audioTrack).contains (cc));
-        expect (getClipsOfTypeRecursive<Clip> (*audioTrack).contains (clip1.get()));
-        expect (getClipsOfTypeRecursive<Clip> (*audioTrack).contains (clip2.get()));
+            expectEquals (getClipsOfTypeRecursive<Clip> (*audioTrack).size(), 3);
+            expect (getClipsOfTypeRecursive<Clip> (*audioTrack).contains (cc));
+            expect (getClipsOfTypeRecursive<Clip> (*audioTrack).contains (clip1.get()));
+            expect (getClipsOfTypeRecursive<Clip> (*audioTrack).contains (clip2.get()));
 
-        expectEquals (getClipsOfTypeRecursive<WaveAudioClip> (*audioTrack).size(), 2);
-        expect (getClipsOfTypeRecursive<WaveAudioClip> (*audioTrack).contains (clip1.get()));
-        expect (getClipsOfTypeRecursive<WaveAudioClip> (*audioTrack).contains (clip2.get()));
+            expectEquals (getClipsOfTypeRecursive<WaveAudioClip> (*audioTrack).size(), 2);
+            expect (getClipsOfTypeRecursive<WaveAudioClip> (*audioTrack).contains (clip1.get()));
+            expect (getClipsOfTypeRecursive<WaveAudioClip> (*audioTrack).contains (clip2.get()));
 
-        expect (containsClip (*edit, clip1.get()));
-        expect (containsClip (*edit, clip2.get()));
+            expect (containsClip (*edit, clip1.get()));
+            expect (containsClip (*edit, clip2.get()));
 
-        expect (getClipsOfType<WaveAudioClip> (*cc).contains (clip1.get()));
-        expect (getClipsOfType<WaveAudioClip> (*cc).contains (clip2.get()));
+            expect (getClipsOfType<WaveAudioClip> (*cc).contains (clip1.get()));
+            expect (getClipsOfType<WaveAudioClip> (*cc).contains (clip2.get()));
 
-        const auto exportables = Exportable::addAllExportables (*edit);
-        expect (exportables.contains (cc));
-        expect (exportables.contains (clip1.get()));
-        expect (exportables.contains (clip2.get()));
+            const auto exportables = Exportable::addAllExportables (*edit);
+            expect (exportables.contains (cc));
+            expect (exportables.contains (clip1.get()));
+            expect (exportables.contains (clip2.get()));
+
+            // Plugins
+            {
+                auto ccVolPlug = dynamic_cast<VolumeAndPanPlugin*> (cc->getPluginList()->insertPlugin (VolumeAndPanPlugin::create(), 0).get());
+                auto clip1VolPlug = dynamic_cast<VolumeAndPanPlugin*> (clip1->getPluginList()->insertPlugin (VolumeAndPanPlugin::create(), 0).get());
+                auto clip2VolPlug = dynamic_cast<VolumeAndPanPlugin*> (clip2->getPluginList()->insertPlugin (VolumeAndPanPlugin::create(), 0).get());
+
+                auto autoItems = getAllAutomatableEditItems (*edit);
+                expect (autoItems.contains (ccVolPlug));
+                expect (autoItems.contains (clip1VolPlug));
+                expect (autoItems.contains (clip2VolPlug));
+
+                auto allParams = edit->getAllAutomatableParams (true);
+                expect (allParams.contains (ccVolPlug->volParam.get()));
+                expect (allParams.contains (clip1VolPlug->volParam.get()));
+                expect (allParams.contains (clip2VolPlug->volParam.get()));
+            }
+        }
 
         beginTest ("Multiple child clips");
         {

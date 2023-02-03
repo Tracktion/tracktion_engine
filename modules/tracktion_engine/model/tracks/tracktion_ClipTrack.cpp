@@ -600,7 +600,13 @@ Plugin::Array ClipTrack::getAllPlugins() const
     auto destArray = Track::getAllPlugins();
 
     for (auto c : getClips())
+    {
         destArray.addArray (c->getAllPlugins());
+
+        if (auto containerClip = dynamic_cast<ContainerClip*> (c))
+            for (auto childClip : containerClip->getClips())
+                destArray.addArray (childClip->getAllPlugins());
+    }
 
     return destArray;
 }
