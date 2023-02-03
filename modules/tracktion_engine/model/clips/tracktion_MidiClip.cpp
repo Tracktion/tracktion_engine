@@ -757,8 +757,8 @@ void MidiClip::valueTreePropertyChanged (juce::ValueTree& tree, const juce::Iden
             jassert (parent != nullptr); // Should have been set by now..
 
             if (auto track = getTrack())
-                if (auto parent = track->getParentFolderTrack())
-                    parent->setDirtyClips();
+                if (auto p = track->getParentFolderTrack())
+                    p->setDirtyClips();
 
             clearCachedLoopSequence();
         }

@@ -35,8 +35,8 @@ void ContainerClip::cloneFrom (Clip* c)
     if (auto other = dynamic_cast<ContainerClip*> (c))
     {
         AudioClipBase::cloneFrom (other);
-        auto clipList = state.getChildWithName (IDs::CLIPLIST);
-        copyValueTree (clipList, other->state.getChildWithName (IDs::CLIPLIST), nullptr);
+        auto list = state.getChildWithName (IDs::CLIPLIST);
+        copyValueTree (list, other->state.getChildWithName (IDs::CLIPLIST), nullptr);
 
         Selectable::changed();
     }
@@ -59,12 +59,12 @@ bool ContainerClip::isMidi() const
 
 TimeDuration ContainerClip::getSourceLength() const
 {
-    auto length = getLoopRange().getLength();
+    auto l = getLoopRange().getLength();
 
     for (auto c : getClips())
-        length = std::max (length, toDuration (c->getPosition().getEnd()));
+        l = std::max (l, toDuration (c->getPosition().getEnd()));
 
-    return length;
+    return l;
 }
 
 HashCode ContainerClip::getHash() const
