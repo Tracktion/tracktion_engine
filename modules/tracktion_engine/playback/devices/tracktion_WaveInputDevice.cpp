@@ -1136,18 +1136,18 @@ public:
                 retrospectiveBuffer->syncToEdit(edit, context, streamTime, numSamples);
             }
 
-            {
-                const juce::ScopedLock sl (consumerLock);
-
-                for (auto n : consumers)
-                    n->acceptInputBuffer (choc::buffer::createChannelArrayView (inputBuffer.getArrayOfWritePointers(),
-                                                                                (choc::buffer::ChannelCount) inputBuffer.getNumChannels(),
-                                                                                (choc::buffer::FrameCount) numSamples));
-            }
-
         // BEATCONNECT MODIFICATION START (RELAY)
         }
         // BEATCONNECT MODIFICATION END (RELAY)
+
+        {
+            const juce::ScopedLock sl(consumerLock);
+
+            for (auto n : consumers)
+                n->acceptInputBuffer(choc::buffer::createChannelArrayView(inputBuffer.getArrayOfWritePointers(),
+                    (choc::buffer::ChannelCount)inputBuffer.getNumChannels(),
+                    (choc::buffer::FrameCount)numSamples));
+        }
 
         const juce::ScopedLock sl (contextLock);
 
