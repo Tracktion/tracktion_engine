@@ -52,6 +52,8 @@ std::vector<Node*> ContainerClipNode::getInternalNodes()
 
 void ContainerClipNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
+    editPositionInSamples = tracktion::toSamples ({ clipPosition.getStart(), clipPosition.getEnd() }, info.sampleRate);
+
     if (info.nodeGraphToReplace != nullptr)
         if (auto oldNode = findNodeWithID<ContainerClipNode> (*info.nodeGraphToReplace, getNodeProperties().nodeID))
             playerContext = oldNode->playerContext;
@@ -90,6 +92,13 @@ bool ContainerClipNode::isReadyToProcess()
 
 void ContainerClipNode::process (ProcessContext& pc)
 {
+    const auto sectionEditTimeRange = getEditTimeRange();
+    const auto sectionEditSampleRange = getTimelineSampleRange();
+
+    if (sectionEditTimeRange.getEnd() <= clipPosition.getStart()
+        || sectionEditTimeRange.getStart() >= clipPosition.getEnd())
+       return;
+
     // Set playHead loop range using loopRange
     // Find ref offset from clip time
     // If playhead position was overriden, pass this on to the PlayHeadState
@@ -107,7 +116,9 @@ void ContainerClipNode::process (ProcessContext& pc)
     const auto playheadOffset = toSamples (clipPosition.getStartOfSource(), sampleRate);
     const auto localReferenceSampleRange = pc.referenceSampleRange - playheadOffset;
     playerContext->processState.setPlaybackSpeedRatio (getPlaybackSpeedRatio());
-    playerContext->processState.update (sampleRate, localReferenceSampleRange, ProcessState::UpdateContinuityFlags::no);
+
+    // Updated the PlayHead so the position/play setting below is in sync
+    playerContext->playHead.setReferenceSampleRange (localReferenceSampleRange);
 
     if (! editPlayHeadState.isContiguousWithPreviousBlock())
         localPlayHead.setPosition (editPlayHead.getPosition() - playheadOffset);
@@ -120,12 +131,13 @@ void ContainerClipNode::process (ProcessContext& pc)
     {
         if (loopRange.isEmpty())
         {
-            localPlayHead.setPosition (editPlayHead.getPosition() - playheadOffset);
             localPlayHead.play();
+            localPlayHead.setPosition (editPlayHead.getPosition() - playheadOffset);
         }
         else
         {
             localPlayHead.play (toSamples (loopRange, getSampleRate()), true);
+            localPlayHead.setPosition (editPlayHead.getPosition() - playheadOffset);
         }
     }
 
@@ -133,6 +145,19 @@ void ContainerClipNode::process (ProcessContext& pc)
     ProcessContext localPC { pc.numSamples, localReferenceSampleRange,
                              { pc.buffers.audio, pc.buffers.midi } };
     player.process (localPC);
+
+    // Silence any samples before or after our edit time range
+    {
+        const auto destBuffer = pc.buffers.audio;
+        auto numSamplesToClearAtStart = std::min (editPositionInSamples.getStart() - sectionEditSampleRange.getStart(), (SampleCount) destBuffer.getNumFrames());
+        auto numSamplesToClearAtEnd = std::min (sectionEditSampleRange.getEnd() - editPositionInSamples.getEnd(), (SampleCount) destBuffer.getNumFrames());
+
+        if (numSamplesToClearAtStart > 0)
+            destBuffer.getStart ((choc::buffer::FrameCount) numSamplesToClearAtStart).clear();
+
+        if (numSamplesToClearAtEnd > 0)
+            destBuffer.getEnd ((choc::buffer::FrameCount) numSamplesToClearAtEnd).clear();
+    }
 }
 
 }} // namespace tracktion { inline namespace engine

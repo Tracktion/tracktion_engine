@@ -317,7 +317,7 @@ void Clip::setEnd (TimePosition newEnd, bool preserveSync)
 void Clip::setOffset (TimeDuration newOffset)
 {
     auto pos = getPosition();
-    pos.offset = juce::jmax (TimeDuration(), newOffset);
+    pos.offset = juce::jmax (0_td, newOffset);
     setPosition (pos);
 }
 

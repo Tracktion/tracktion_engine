@@ -36,22 +36,22 @@ private:
         using namespace tracktion::graph::test_utilities;
         using namespace tracktion::engine::test_utilities;
 
-        // Create an empty edit
-        // Create a container clip
-        // Add two audio clips
-        // Render output and expect content contains the two clips with audio level double when overlapped
-
         auto& engine = *Engine::getEngines()[0];
         Clipboard clipboard;
-        auto edit = Edit::createSingleTrackEdit (engine);
+        auto edit = createTestEdit (engine);
         auto audioTrack = getAudioTracks (*edit)[0];
-        auto sinFile = getSinFile<juce::WavAudioFormat> (44100.0, 2.0);
+        audioTrack->getVolumePlugin()->setVolumeDb (juce::Decibels::gainToDecibels (0.5f));
+        auto sinFile1 = getSinFile<juce::WavAudioFormat> (44100.0, 3.0, 1, 220.0f);
+        auto sinFile2 = getSinFile<juce::WavAudioFormat> (44100.0, 2.0, 1, 220.0f);
 
         beginTest ("Child clips");
         auto cc = dynamic_cast<ContainerClip*> (insertNewClip (*audioTrack, TrackItem::Type::container, { 0_tp, 5_tp }));
         expect (cc != nullptr);
-        auto clip1 = insertWaveClip (*cc, {}, sinFile->getFile(), {{ 1_tp, 3_tp }}, false);
-        auto clip2 = insertWaveClip (*cc, {}, sinFile->getFile(), {{ 2_tp, 4_tp }}, false);
+        auto clip1 = insertWaveClip (*cc, {}, sinFile1->getFile(), {{ 0_tp, 3_tp }}, false);
+        auto clip2 = insertWaveClip (*cc, {}, sinFile2->getFile(), {{ 2_tp, 4_tp }}, false);
+
+        // Use WaveNodeRealTime for one of the clips so we're testing both
+        clip2->setUsesProxy (false);
 
         expectEquals (cc->getSourceLength(), 4_td);
         expectNotEquals (cc->getHash(), static_cast<HashCode> (0));
@@ -83,35 +83,69 @@ private:
         expect (exportables.contains (clip2.get()));
 
         beginTest ("Multiple child clips");
-        expectPeak (*this, *edit, { 0_tp, 1_tp }, { audioTrack }, 0.0f);
-        expectPeak (*this, *edit, { 1_tp, 2_tp }, { audioTrack }, 1.0f);
-        expectPeak (*this, *edit, { 2_tp, 3_tp }, { audioTrack }, 2.0f);
-        expectPeak (*this, *edit, { 3_tp, 4_tp }, { audioTrack }, 1.0f);
-        expectPeak (*this, *edit, { 4_tp, 5_tp }, { audioTrack }, 0.0f);
+        {
+            auto res = renderToAudioBuffer (*edit);
+            expectPeak (*this, res, { 0_tp, 1_tp }, 0.5f);
+            expectPeak (*this, res, { 1_tp, 2_tp }, 0.5f);
+            expectPeak (*this, res, { 2_tp, 3_tp }, 1.0f);
+            expectPeak (*this, res, { 3_tp, 4_tp }, 0.5f);
+            expectPeak (*this, res, { 4_tp, 5_tp }, 0.0f);
+        }
 
         beginTest ("Clip at non-zero time");
-        // Move container clip along by 10s
-        cc->setStart (10s, false, true);
+        {
+            // Move container clip along by 10s
+            cc->setStart (10s, false, true);
 
-        expectPeak (*this, *edit, { 10_tp, 11_tp }, { audioTrack }, 0.0f);
-        expectPeak (*this, *edit, { 11_tp, 12_tp }, { audioTrack }, 1.0f);
-        expectPeak (*this, *edit, { 12_tp, 13_tp }, { audioTrack }, 2.0f);
-        expectPeak (*this, *edit, { 13_tp, 14_tp }, { audioTrack }, 1.0f);
-        expectPeak (*this, *edit, { 14_tp, 15_tp }, { audioTrack }, 0.0f);
+            auto res = renderToAudioBuffer (*edit);
+            expectPeak (*this, res, { 10_tp, 11_tp }, 0.5f);
+            expectPeak (*this, res, { 11_tp, 12_tp }, 0.5f);
+            expectPeak (*this, res, { 12_tp, 13_tp }, 1.0f);
+            expectPeak (*this, res, { 13_tp, 14_tp }, 0.5f);
+            expectPeak (*this, res, { 14_tp, 15_tp }, 0.0f);
+        }
 
         beginTest ("Clip offset");
-        // Set container clip offset of 1s
-        cc->setOffset (1s);
+        {
+            // Set container clip offset of 1s
+            cc->setOffset (1s);
+            expect (cc->getPosition().time == TimeRange (10_tp, 15_tp));
 
-        expectPeak (*this, *edit, { 9_tp, 10_tp }, { audioTrack }, 0.0f);
-        expectPeak (*this, *edit, { 10_tp, 11_tp }, { audioTrack }, 1.0f);
-        expectPeak (*this, *edit, { 11_tp, 12_tp }, { audioTrack }, 2.0f);
-        expectPeak (*this, *edit, { 12_tp, 13_tp }, { audioTrack }, 1.0f);
-        expectPeak (*this, *edit, { 13_tp, 14_tp }, { audioTrack }, 0.0f);
+            auto res = renderToAudioBuffer (*edit);
+            expectPeak (*this, res, { 9_tp, 10_tp }, 0.0f);
+            expectPeak (*this, res, { 10_tp, 11_tp }, 0.5f);
+            expectPeak (*this, res, { 11_tp, 12_tp }, 1.0f);
+            expectPeak (*this, res, { 12_tp, 13_tp }, 0.5f);
+            expectPeak (*this, res, { 13_tp, 14_tp }, 0.0f);
+        }
+
+        beginTest ("Looping");
+        {
+            cc->setLoopRange ({ 0_tp, 5_tp });
+            cc->setLength (10_td, true);
+
+            auto res = renderToAudioBuffer (*edit);
+
+            // First loop (clipped by offset)
+            expectPeak (*this, res, { 9_tp, 10_tp }, 0.0f);
+            expectPeak (*this, res, { 10_tp, 11_tp }, 0.5f);
+            expectPeak (*this, res, { 11_tp, 12_tp }, 1.0f);
+            expectPeak (*this, res, { 12_tp, 13_tp }, 0.5f);
+            expectPeak (*this, res, { 13_tp, 14_tp }, 0.0f);
+
+            // Second loop
+            expectPeak (*this, res, { 14_tp, 15_tp }, 0.5f);
+            expectPeak (*this, res, { 15_tp, 16_tp }, 0.5f);
+            expectPeak (*this, res, { 16_tp, 17_tp }, 1.0f);
+            expectPeak (*this, res, { 17_tp, 18_tp }, 0.5f);
+            expectPeak (*this, res, { 18_tp, 19_tp }, 0.0f);
+
+            // Third loop
+            expectPeak (*this, res, { 19_tp, 20_tp }, 0.5f);
+        }
 
         // Crossfading of clips
         // Adjusting tempo of Edit, check child clips also update
-        // Looping of CollectionClip
     }
 };
 

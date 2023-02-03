@@ -146,11 +146,11 @@ public:
     ClipPosition getPosition() const override;
 
     /** Returns the beat number (with offset) at the given time */
-    BeatPosition getContentBeatAtTime (TimePosition time) const;
+    BeatPosition getContentBeatAtTime (TimePosition) const;
     /** Returns time of a beat number */
-    TimePosition getTimeOfContentBeat (BeatPosition beat) const;
+    TimePosition getTimeOfContentBeat (BeatPosition) const;
 
-    /** Returns the maximum lenght this clip can have. */
+    /** Returns the maximum length this clip can have. */
     virtual TimeDuration getMaximumLength()               { return toDuration (Edit::getMaximumEditEnd()); }
 
     /** Returns times for snapping to, relative to the Edit. Base class adds start and end time. */
