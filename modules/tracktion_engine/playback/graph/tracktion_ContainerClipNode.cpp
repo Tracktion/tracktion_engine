@@ -141,6 +141,9 @@ void ContainerClipNode::process (ProcessContext& pc)
         }
     }
 
+    if (auto pos = getProcessState().getPositionOverride())
+        localPlayHead.overridePosition (*pos);
+
     // Process
     ProcessContext localPC { pc.numSamples, localReferenceSampleRange,
                              { pc.buffers.audio, pc.buffers.midi } };

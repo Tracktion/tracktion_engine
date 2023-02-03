@@ -29,7 +29,20 @@ void ProcessState::update (double newSampleRate, juce::Range<int64_t> newReferen
     playHeadState.playHead.setReferenceSampleRange (newReferenceSampleRange);
 
     if (updateContinuityFlags == UpdateContinuityFlags::yes)
+    {
+        if (pendingPositionOverride)
+        {
+            playHeadState.playHead.overridePosition (*pendingPositionOverride);
+            pendingPositionOverride = {};
+            positionHasBeenOverriden = true;
+        }
+        else
+        {
+            positionHasBeenOverriden = false;
+        }
+
         playHeadState.update (newReferenceSampleRange);
+    }
 
     sampleRate = newSampleRate;
     numSamples = (int) newReferenceSampleRange.getLength();
@@ -58,6 +71,18 @@ void ProcessState::setPlaybackSpeedRatio (double newRatio)
     playbackSpeedRatio = newRatio;
 }
 
+void ProcessState::overridePosition (int64_t newPosition)
+{
+    pendingPositionOverride = newPosition;
+}
+
+std::optional<int64_t> ProcessState::getPositionOverride() const
+{
+    if (positionHasBeenOverriden)
+        return playHeadState.playHead.getPosition();
+
+    return {};
+}
 
 //==============================================================================
 //==============================================================================
