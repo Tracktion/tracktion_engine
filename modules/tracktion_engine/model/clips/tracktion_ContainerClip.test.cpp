@@ -125,6 +125,24 @@ private:
             expectPeak (*this, res, { 4_tp, 5_tp }, 0.0f);
         }
 
+        beginTest ("Container clip plugins");
+        {
+            // Set the volume of the contained clips to 0.5
+            clip1->getPluginList()->findFirstPluginOfType<VolumeAndPanPlugin>()->setVolumeDb (-6.0f);
+            clip2->getPluginList()->findFirstPluginOfType<VolumeAndPanPlugin>()->setVolumeDb (-6.0f);
+
+            // Then the volume of the parent clip to 2.0
+            cc->getPluginList()->findFirstPluginOfType<VolumeAndPanPlugin>()->setVolumeDb (6.0f);
+
+            auto res = renderToAudioBuffer (*edit);
+
+            expectPeak (*this, res, { 0_tp, 1_tp }, 0.5f);
+            expectPeak (*this, res, { 1_tp, 2_tp }, 0.5f);
+            expectPeak (*this, res, { 2_tp, 3_tp }, 1.0f);
+            expectPeak (*this, res, { 3_tp, 4_tp }, 0.5f);
+            expectPeak (*this, res, { 4_tp, 5_tp }, 0.0f);
+        }
+
         beginTest ("Clip at non-zero time");
         {
             // Move container clip along by 10s
@@ -262,6 +280,26 @@ private:
 
             // Third loop
             expectPeak (*this, res, { 9.5_tp, 10_tp }, 0.5f);
+        }
+
+        beginTest ("Container clip fade");
+        {
+            edit->tempoSequence.getTempos()[0]->setBpm (60.0);
+
+            // Just a single sin wave at 0.5
+            cc->setLoopRange ({ 0_tp, 1_tp });
+            cc->setLength (5s, true);
+            cc->setStart (0s, false, true);
+
+            cc->setFadeIn (2s);
+            cc->setFadeOut (2s);
+
+            auto res = renderToAudioBuffer (*edit);
+
+            // We're only looping the first clip now so full peak in the middle will be 0.5
+            expectPeak (*this, res, { 0_tp, 1_tp }, 0.25f);
+            expectPeak (*this, res, { 2_tp, 4_tp }, 0.5f);
+            expectPeak (*this, res, { 4_tp, 5_tp }, 0.25f);
         }
     }
 };

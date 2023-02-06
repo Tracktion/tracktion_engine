@@ -719,10 +719,25 @@ std::unique_ptr<tracktion::graph::Node> createNodeForContainerClip (ContainerCli
     // Combiner clip and the contained clips need their own, local PlayHeadState.
     // This also needs to persist across graph rebuilds to maintain continuity.
     // Once the ContainerClipNode has been initialised it will update it's children with its own ProcessState
-    return makeNode<ContainerClipNode> (params.processState,
-                                        clip.itemID,
-                                        clip.getPosition(), clip.getLoopRange(),
-                                        createNodeForClips (clip.itemID, clips, trackMuteState, params));
+    auto node = makeNode<ContainerClipNode> (params.processState,
+                                             clip.itemID,
+                                             clip.getPosition(), clip.getLoopRange(),
+                                             createNodeForClips (clip.itemID, clips, trackMuteState, params));
+
+    // Plugins
+    if (params.includePlugins)
+    {
+        if (auto pluginList = clip.getPluginList())
+        {
+            for (auto p : *pluginList)
+                p->initialiseFully();
+
+            node = createPluginNodeForList (*pluginList, nullptr, std::move (node), params.processState.playHeadState, params);
+        }
+    }
+
+    // Create FadeInOutNode
+    return createFadeNodeForClip (clip, std::move (node), params);
 }
 
 std::unique_ptr<tracktion::graph::Node> createNodeForClip (Clip& clip, const TrackMuteState& trackMuteState, const CreateNodeParams& params)
