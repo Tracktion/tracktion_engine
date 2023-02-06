@@ -53,6 +53,7 @@ std::vector<Node*> ContainerClipNode::getInternalNodes()
 void ContainerClipNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
     editPositionInSamples = tracktion::toSamples ({ clipPosition.getStart(), clipPosition.getEnd() }, info.sampleRate);
+    loopRangeSamples = tracktion::toSamples (loopRange, info.sampleRate);
 
     if (info.nodeGraphToReplace != nullptr)
         if (auto oldNode = findNodeWithID<ContainerClipNode> (*info.nodeGraphToReplace, getNodeProperties().nodeID))
@@ -122,6 +123,9 @@ void ContainerClipNode::process (ProcessContext& pc)
 
     if (! editPlayHeadState.isContiguousWithPreviousBlock())
         localPlayHead.setPosition (editPlayHead.getPosition() - playheadOffset);
+
+    if (! loopRangeSamples.isEmpty() && localPlayHead.getLoopRange() != loopRangeSamples)
+        localPlayHead.setLoopRange (true, loopRangeSamples);
 
     // Syncronise playing state
     if (editPlayHead.isStopped() && ! localPlayHead.isStopped())

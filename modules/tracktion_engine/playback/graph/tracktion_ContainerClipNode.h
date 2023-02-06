@@ -54,6 +54,7 @@ private:
 
     std::shared_ptr<PlayerContext> playerContext;
     juce::Range<int64_t> editPositionInSamples;
+    juce::Range<int64_t> loopRangeSamples;
 };
 
 }} // namespace tracktion { inline namespace engine
