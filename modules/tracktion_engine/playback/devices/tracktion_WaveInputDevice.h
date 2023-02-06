@@ -19,6 +19,11 @@ namespace tracktion_engine
 class WaveInputDevice   : public InputDevice
 {
 public:
+
+    // BEATCONNECT MODIFICATION START (RELAY)
+    static const juce::String g_Relay;
+    // BEATCONNECT MODIFICATION END (RELAY)
+
     //==============================================================================
     WaveInputDevice (Engine&, const juce::String& name, const juce::String& type,
                      const std::vector<ChannelIndex>&, DeviceType);
@@ -71,6 +76,10 @@ public:
     //==============================================================================
     juce::String getSelectableDescription() override;
 
+    // BEATCONNECT MODIFICATION START (RELAY)
+    bool getIsRelay() const;
+    // BEATCONNECT MODIFICATION END (RELAY)
+
 protected:
     juce::String openDevice();
     void closeDevice();
@@ -90,6 +99,10 @@ private:
     float recordTriggerDb = 0;
     double recordAdjustMs = 0;
     std::unique_ptr<RetrospectiveRecordBuffer> retrospectiveBuffer;
+
+    // BEATCONNECT MODIFICATION START (RELAY)
+    bool isRelay = false;
+    // BEATCONNECT MODIFICATION END (RELAY)
 
     void loadProps();
     void saveProps();

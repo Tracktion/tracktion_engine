@@ -114,6 +114,11 @@ struct DeviceManager::WaveDeviceList
             channelNames.set (1, name.replace ("123", "2"));
         }
 
+        // BEATCONNECT MODIFICATION START (RELAY)
+        if(isInput && dm.m_EnableRealy)
+            channelNames.add(WaveInputDevice::g_Relay);
+        // BEATCONNECT MODIFICATION END (RELAY)
+
         auto isDeviceEnabled = [this, isInput] (int index)
         {
             return isInput ? dm.isDeviceInEnabled (index) : dm.isDeviceOutEnabled (index);
@@ -121,6 +126,15 @@ struct DeviceManager::WaveDeviceList
 
         for (int i = 0; i < channelNames.size(); ++i)
         {
+            // BEATCONNECT MODIFICATION START (RELAY)
+            if (channelNames[i] == WaveInputDevice::g_Relay)
+            {
+                descriptions.push_back(WaveDeviceDescription(channelNames[i], i, i + 1, true));
+                ++i;
+                continue;
+            }
+            // BEATCONNECT MODIFICATION END (RELAY)
+
             const bool canBeStereo = i < channelNames.size() - 1;
             
             if (canBeStereo && (isInput ? dm.isDeviceInChannelStereo (i) : dm.isDeviceOutChannelStereo (i)))
@@ -594,12 +608,11 @@ void DeviceManager::rebuildWaveDeviceList()
 
     for (const auto& d : lastWaveDeviceList->inputs)
     {
-        auto wi = new WaveInputDevice (engine, d.name, TRANS("Wave Audio Input"), d.channels, InputDevice::waveDevice);
+        auto wi = new WaveInputDevice(engine, d.name, TRANS("Wave Audio Input"), d.channels, InputDevice::waveDevice);
         wi->enabled = d.enabled;
-        waveInputs.add (wi);
+        waveInputs.add(wi);
 
-        TRACKTION_LOG_DEVICE ("Wave In: " + wi->getName() + (wi->isEnabled() ? " (enabled): " : ": ")
-                              + createDescriptionOfChannels (wi->deviceChannels));
+        TRACKTION_LOG_DEVICE("Wave In: " + wi->getName() + (wi->isEnabled() ? " (enabled): " : ": ") + createDescriptionOfChannels(wi->deviceChannels));
     }
 
     for (auto wi : waveInputs)
@@ -1305,5 +1318,13 @@ void DeviceManager::setGlobalOutputAudioProcessor (juce::AudioProcessor* newProc
         if (auto* audioIODevice = deviceManager.getCurrentAudioDevice())
             globalOutputAudioProcessor->prepareToPlay (currentSampleRate, audioIODevice->getCurrentBufferSizeSamples());
 }
+
+// BEATCONNECT MODIFICATION START (RELAY)
+void DeviceManager::enableRelay(bool p_Enable)
+{
+    m_EnableRealy = p_Enable;
+    rebuildWaveDeviceList();
+}
+// BEATCONNECT MODIFICATION END (RELAY)
 
 }
