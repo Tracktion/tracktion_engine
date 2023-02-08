@@ -299,6 +299,11 @@ struct Thumbnail    : public Component
         addChildComponent (pendingCursorAt);
     }
 
+    void start()
+    {
+        cursorUpdater.startTimerHz (25);
+    }
+
     void setFile (const te::AudioFile& file)
     {
         smartThumbnail.setNewFile (file);
@@ -356,9 +361,6 @@ struct Thumbnail    : public Component
         if (e.mouseWasDraggedSinceMouseDown())
             return;
 
-        if (! quantisationNumBars)
-            return;
-
         if (auto epc = transport.edit.getCurrentPlaybackContext())
         {
             auto& ts = transport.edit.tempoSequence;
@@ -367,8 +369,17 @@ struct Thumbnail    : public Component
             //  1. Quantise the position to jump to
             //  2. Quantise the time to jump to it
             const float proportion = e.position.x / getWidth();
-            const auto positionToJumpTo = roundToNearest (toPosition (transport.getLoopRange().getLength()) * proportion, ts, *quantisationNumBars);
-            positionToJumpAt = roundUp (epc->getPosition(), ts, *quantisationNumBars);
+            auto positionToJumpTo = toPosition (transport.getLoopRange().getLength()) * proportion;
+
+            if (quantisationNumBars)
+            {
+                positionToJumpTo = roundToNearest (toPosition (transport.getLoopRange().getLength()) * proportion, ts, *quantisationNumBars);
+                positionToJumpAt = roundUp (epc->getPosition(), ts, *quantisationNumBars);
+            }
+            else
+            {
+                positionToJumpAt = {};
+            }
 
             epc->postPosition (positionToJumpTo, positionToJumpAt);
         }
@@ -379,7 +390,7 @@ private:
     te::SmartThumbnail smartThumbnail { transport.engine, te::AudioFile (transport.engine), *this, nullptr };
     DrawableRectangle cursor, pendingCursorTo, pendingCursorAt;
     te::LambdaTimer cursorUpdater;
-    std::optional<int> quantisationNumBars = 0;
+    std::optional<int> quantisationNumBars;
     std::optional<te::TimePosition> positionToJumpAt;
 
     static te::TimePosition roundTo (te::TimePosition pos, const te::TempoSequence& ts, int quantisationNumBars, double adjustment)
