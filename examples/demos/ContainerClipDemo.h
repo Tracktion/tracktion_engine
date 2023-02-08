@@ -172,10 +172,6 @@ private:
         {
             const auto loopRange = clip.getLoopRange();
             const auto loopTime = loopIn ? loopRange.getStart() : loopRange.getEnd();
-
-            if (loopIn)
-                DBG(loopTime.inSeconds());
-
             return static_cast<float> (loopTime.inSeconds() / getSecondsPerPixel());
         }
 
