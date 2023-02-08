@@ -32,12 +32,12 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">246</td>
+            <td class="headerCovTableEntry">223</td>
             <td class="headerCovTableEntryLo">0.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-01-30 17:03:24</td>
+            <td class="headerValue">2023-02-08 14:10:59</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -458,120 +458,77 @@
 <a name="396"><span class="lineNum">     396 </span><span class="lineNoCov">          0 :         parameters.sampleRate = sampleRate;</span></a>
 <a name="397"><span class="lineNum">     397 </span><span class="lineNoCov">          0 :         parameters.blockSize  = blockSize;</span></a>
 <a name="398"><span class="lineNum">     398 </span>            : </a>
-<a name="399"><span class="lineNum">     399 </span><span class="lineNoCov">          0 :         if (! parameters.fixedBlockSize)</span></a>
-<a name="400"><span class="lineNum">     400 </span>            :         {</a>
-<a name="401"><span class="lineNum">     401 </span><span class="lineNoCov">          0 :             inputFifo.setSize (maxChannels, blockSize * 4);</span></a>
-<a name="402"><span class="lineNum">     402 </span><span class="lineNoCov">          0 :             outputFifo.setSize (maxChannels, blockSize * 4);</span></a>
+<a name="399"><span class="lineNum">     399 </span><span class="lineNoCov">          0 :         if (deviceType != nullptr)</span></a>
+<a name="400"><span class="lineNum">     400 </span><span class="lineNoCov">          0 :             deviceType-&gt;settingsChanged();</span></a>
+<a name="401"><span class="lineNum">     401 </span>            :     }</a>
+<a name="402"><span class="lineNum">     402 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="403"><span class="lineNum">     403 </span>            : </a>
-<a name="404"><span class="lineNum">     404 </span><span class="lineNoCov">          0 :             outputFifo.writeSilence (blockSize);</span></a>
-<a name="405"><span class="lineNum">     405 </span>            :         }</a>
-<a name="406"><span class="lineNum">     406 </span>            : </a>
-<a name="407"><span class="lineNum">     407 </span><span class="lineNoCov">          0 :         if (deviceType != nullptr)</span></a>
-<a name="408"><span class="lineNum">     408 </span><span class="lineNoCov">          0 :             deviceType-&gt;settingsChanged();</span></a>
-<a name="409"><span class="lineNum">     409 </span>            :     }</a>
-<a name="410"><span class="lineNum">     410 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="404"><span class="lineNum">     404 </span><span class="lineNoCov">          0 : void HostedAudioDeviceInterface::processBlock (juce::AudioBuffer&lt;float&gt;&amp; buffer, juce::MidiBuffer&amp; midi)</span></a>
+<a name="405"><span class="lineNum">     405 </span>            : {</a>
+<a name="406"><span class="lineNum">     406 </span><span class="lineNoCov">          0 :     for (auto input : midiInputs)</span></a>
+<a name="407"><span class="lineNum">     407 </span><span class="lineNoCov">          0 :         if (auto hostedInput = dynamic_cast&lt;HostedMidiInputDevice*&gt; (input))</span></a>
+<a name="408"><span class="lineNum">     408 </span><span class="lineNoCov">          0 :             hostedInput-&gt;processBlock (midi);</span></a>
+<a name="409"><span class="lineNum">     409 </span>            : </a>
+<a name="410"><span class="lineNum">     410 </span><span class="lineNoCov">          0 :     midi.clear();</span></a>
 <a name="411"><span class="lineNum">     411 </span>            : </a>
-<a name="412"><span class="lineNum">     412 </span><span class="lineNoCov">          0 : void HostedAudioDeviceInterface::processBlock (juce::AudioBuffer&lt;float&gt;&amp; buffer, juce::MidiBuffer&amp; midi)</span></a>
-<a name="413"><span class="lineNum">     413 </span>            : {</a>
-<a name="414"><span class="lineNum">     414 </span><span class="lineNoCov">          0 :     if (parameters.fixedBlockSize)</span></a>
-<a name="415"><span class="lineNum">     415 </span>            :     {</a>
-<a name="416"><span class="lineNum">     416 </span>            :         jassert (buffer.getNumSamples() == parameters.blockSize);</a>
-<a name="417"><span class="lineNum">     417 </span>            : </a>
-<a name="418"><span class="lineNum">     418 </span><span class="lineNoCov">          0 :         for (auto input : midiInputs)</span></a>
-<a name="419"><span class="lineNum">     419 </span><span class="lineNoCov">          0 :             if (auto hostedInput = dynamic_cast&lt;HostedMidiInputDevice*&gt; (input))</span></a>
-<a name="420"><span class="lineNum">     420 </span><span class="lineNoCov">          0 :                 hostedInput-&gt;processBlock (midi);</span></a>
-<a name="421"><span class="lineNum">     421 </span>            : </a>
-<a name="422"><span class="lineNum">     422 </span><span class="lineNoCov">          0 :         midi.clear();</span></a>
-<a name="423"><span class="lineNum">     423 </span>            : </a>
-<a name="424"><span class="lineNum">     424 </span><span class="lineNoCov">          0 :         if (deviceType != nullptr)</span></a>
-<a name="425"><span class="lineNum">     425 </span>            :             deviceType-&gt;processBlock (buffer);</a>
-<a name="426"><span class="lineNum">     426 </span>            : </a>
-<a name="427"><span class="lineNum">     427 </span><span class="lineNoCov">          0 :         for (auto output : midiOutputs)</span></a>
-<a name="428"><span class="lineNum">     428 </span><span class="lineNoCov">          0 :             if (auto hostedOutput = dynamic_cast&lt;HostedMidiOutputDevice*&gt; (output))</span></a>
-<a name="429"><span class="lineNum">     429 </span><span class="lineNoCov">          0 :                 hostedOutput-&gt;processBlock (midi);</span></a>
-<a name="430"><span class="lineNum">     430 </span>            :     }</a>
-<a name="431"><span class="lineNum">     431 </span>            :     else</a>
-<a name="432"><span class="lineNum">     432 </span>            :     {</a>
-<a name="433"><span class="lineNum">     433 </span><span class="lineNoCov">          0 :         inputFifo.writeAudioAndMidi (buffer, midi);</span></a>
-<a name="434"><span class="lineNum">     434 </span><span class="lineNoCov">          0 :         midi.clear();</span></a>
-<a name="435"><span class="lineNum">     435 </span>            : </a>
-<a name="436"><span class="lineNum">     436 </span><span class="lineNoCov">          0 :         while (inputFifo.getNumSamplesAvailable() &gt;= parameters.blockSize)</span></a>
-<a name="437"><span class="lineNum">     437 </span>            :         {</a>
-<a name="438"><span class="lineNum">     438 </span><span class="lineNoCov">          0 :             juce::MidiBuffer scratchMidi;</span></a>
-<a name="439"><span class="lineNum">     439 </span><span class="lineNoCov">          0 :             AudioScratchBuffer scratch (buffer.getNumChannels(), parameters.blockSize);</span></a>
-<a name="440"><span class="lineNum">     440 </span>            : </a>
-<a name="441"><span class="lineNum">     441 </span><span class="lineNoCov">          0 :             inputFifo.readAudioAndMidi (scratch.buffer, scratchMidi);</span></a>
-<a name="442"><span class="lineNum">     442 </span>            : </a>
-<a name="443"><span class="lineNum">     443 </span><span class="lineNoCov">          0 :             for (auto input : midiInputs)</span></a>
-<a name="444"><span class="lineNum">     444 </span><span class="lineNoCov">          0 :                 if (auto hostedInput = dynamic_cast&lt;HostedMidiInputDevice*&gt; (input))</span></a>
-<a name="445"><span class="lineNum">     445 </span><span class="lineNoCov">          0 :                     hostedInput-&gt;processBlock (scratchMidi);</span></a>
-<a name="446"><span class="lineNum">     446 </span>            : </a>
-<a name="447"><span class="lineNum">     447 </span><span class="lineNoCov">          0 :             if (deviceType != nullptr)</span></a>
-<a name="448"><span class="lineNum">     448 </span><span class="lineNoCov">          0 :                 deviceType-&gt;processBlock (scratch.buffer);</span></a>
-<a name="449"><span class="lineNum">     449 </span>            : </a>
-<a name="450"><span class="lineNum">     450 </span><span class="lineNoCov">          0 :             scratchMidi.clear();</span></a>
+<a name="412"><span class="lineNum">     412 </span><span class="lineNoCov">          0 :     if (deviceType != nullptr)</span></a>
+<a name="413"><span class="lineNum">     413 </span>            :         deviceType-&gt;processBlock (buffer);</a>
+<a name="414"><span class="lineNum">     414 </span>            : </a>
+<a name="415"><span class="lineNum">     415 </span><span class="lineNoCov">          0 :     for (auto output : midiOutputs)</span></a>
+<a name="416"><span class="lineNum">     416 </span><span class="lineNoCov">          0 :         if (auto hostedOutput = dynamic_cast&lt;HostedMidiOutputDevice*&gt; (output))</span></a>
+<a name="417"><span class="lineNum">     417 </span><span class="lineNoCov">          0 :             hostedOutput-&gt;processBlock (midi);</span></a>
+<a name="418"><span class="lineNum">     418 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="419"><span class="lineNum">     419 </span>            : </a>
+<a name="420"><span class="lineNum">     420 </span><span class="lineNoCov">          0 : bool HostedAudioDeviceInterface::isHostedMidiInputDevice (const MidiInputDevice&amp; d)</span></a>
+<a name="421"><span class="lineNum">     421 </span>            : {</a>
+<a name="422"><span class="lineNum">     422 </span><span class="lineNoCov">          0 :     return dynamic_cast&lt;const HostedMidiInputDevice*&gt; (&amp;d) != nullptr;</span></a>
+<a name="423"><span class="lineNum">     423 </span>            : }</a>
+<a name="424"><span class="lineNum">     424 </span>            : </a>
+<a name="425"><span class="lineNum">     425 </span><span class="lineNoCov">          0 : juce::StringArray HostedAudioDeviceInterface::getInputChannelNames()</span></a>
+<a name="426"><span class="lineNum">     426 </span>            : {</a>
+<a name="427"><span class="lineNum">     427 </span><span class="lineNoCov">          0 :     juce::StringArray res;</span></a>
+<a name="428"><span class="lineNum">     428 </span>            : </a>
+<a name="429"><span class="lineNum">     429 </span><span class="lineNoCov">          0 :     for (int i = 0; i &lt; parameters.inputChannels; i++)</span></a>
+<a name="430"><span class="lineNum">     430 </span>            :     {</a>
+<a name="431"><span class="lineNum">     431 </span><span class="lineNoCov">          0 :         if (i &lt; parameters.inputNames.size())</span></a>
+<a name="432"><span class="lineNum">     432 </span><span class="lineNoCov">          0 :             res.add (parameters.inputNames[i]);</span></a>
+<a name="433"><span class="lineNum">     433 </span>            :         else</a>
+<a name="434"><span class="lineNum">     434 </span><span class="lineNoCov">          0 :             res.add (juce::String (i + 1));</span></a>
+<a name="435"><span class="lineNum">     435 </span>            :     }</a>
+<a name="436"><span class="lineNum">     436 </span>            : </a>
+<a name="437"><span class="lineNum">     437 </span><span class="lineNoCov">          0 :     return res;</span></a>
+<a name="438"><span class="lineNum">     438 </span>            : }</a>
+<a name="439"><span class="lineNum">     439 </span>            : </a>
+<a name="440"><span class="lineNum">     440 </span><span class="lineNoCov">          0 : juce::StringArray HostedAudioDeviceInterface::getOutputChannelNames()</span></a>
+<a name="441"><span class="lineNum">     441 </span>            : {</a>
+<a name="442"><span class="lineNum">     442 </span><span class="lineNoCov">          0 :     juce::StringArray res;</span></a>
+<a name="443"><span class="lineNum">     443 </span>            : </a>
+<a name="444"><span class="lineNum">     444 </span><span class="lineNoCov">          0 :     for (int i = 0; i &lt; parameters.outputChannels; i++)</span></a>
+<a name="445"><span class="lineNum">     445 </span>            :     {</a>
+<a name="446"><span class="lineNum">     446 </span><span class="lineNoCov">          0 :         if (i &lt; parameters.outputNames.size())</span></a>
+<a name="447"><span class="lineNum">     447 </span><span class="lineNoCov">          0 :             res.add (parameters.outputNames[i]);</span></a>
+<a name="448"><span class="lineNum">     448 </span>            :         else</a>
+<a name="449"><span class="lineNum">     449 </span><span class="lineNoCov">          0 :             res.add (juce::String (i + 1));</span></a>
+<a name="450"><span class="lineNum">     450 </span>            :     }</a>
 <a name="451"><span class="lineNum">     451 </span>            : </a>
-<a name="452"><span class="lineNum">     452 </span><span class="lineNoCov">          0 :             for (auto output : midiOutputs)</span></a>
-<a name="453"><span class="lineNum">     453 </span><span class="lineNoCov">          0 :                 if (auto hostedOutput = dynamic_cast&lt;HostedMidiOutputDevice*&gt; (output))</span></a>
-<a name="454"><span class="lineNum">     454 </span><span class="lineNoCov">          0 :                     hostedOutput-&gt;processBlock (scratchMidi);</span></a>
-<a name="455"><span class="lineNum">     455 </span>            : </a>
-<a name="456"><span class="lineNum">     456 </span><span class="lineNoCov">          0 :             outputFifo.writeAudioAndMidi (scratch.buffer, scratchMidi);</span></a>
-<a name="457"><span class="lineNum">     457 </span><span class="lineNoCov">          0 :         }</span></a>
-<a name="458"><span class="lineNum">     458 </span>            : </a>
-<a name="459"><span class="lineNum">     459 </span><span class="lineNoCov">          0 :         outputFifo.readAudioAndMidi (buffer, midi);</span></a>
-<a name="460"><span class="lineNum">     460 </span>            :     }</a>
-<a name="461"><span class="lineNum">     461 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="462"><span class="lineNum">     462 </span>            : </a>
-<a name="463"><span class="lineNum">     463 </span><span class="lineNoCov">          0 : bool HostedAudioDeviceInterface::isHostedMidiInputDevice (const MidiInputDevice&amp; d)</span></a>
-<a name="464"><span class="lineNum">     464 </span>            : {</a>
-<a name="465"><span class="lineNum">     465 </span><span class="lineNoCov">          0 :     return dynamic_cast&lt;const HostedMidiInputDevice*&gt; (&amp;d) != nullptr;</span></a>
-<a name="466"><span class="lineNum">     466 </span>            : }</a>
-<a name="467"><span class="lineNum">     467 </span>            : </a>
-<a name="468"><span class="lineNum">     468 </span><span class="lineNoCov">          0 : juce::StringArray HostedAudioDeviceInterface::getInputChannelNames()</span></a>
-<a name="469"><span class="lineNum">     469 </span>            : {</a>
-<a name="470"><span class="lineNum">     470 </span><span class="lineNoCov">          0 :     juce::StringArray res;</span></a>
-<a name="471"><span class="lineNum">     471 </span>            : </a>
-<a name="472"><span class="lineNum">     472 </span><span class="lineNoCov">          0 :     for (int i = 0; i &lt; parameters.inputChannels; i++)</span></a>
-<a name="473"><span class="lineNum">     473 </span>            :     {</a>
-<a name="474"><span class="lineNum">     474 </span><span class="lineNoCov">          0 :         if (i &lt; parameters.inputNames.size())</span></a>
-<a name="475"><span class="lineNum">     475 </span><span class="lineNoCov">          0 :             res.add (parameters.inputNames[i]);</span></a>
-<a name="476"><span class="lineNum">     476 </span>            :         else</a>
-<a name="477"><span class="lineNum">     477 </span><span class="lineNoCov">          0 :             res.add (juce::String (i + 1));</span></a>
-<a name="478"><span class="lineNum">     478 </span>            :     }</a>
-<a name="479"><span class="lineNum">     479 </span>            : </a>
-<a name="480"><span class="lineNum">     480 </span><span class="lineNoCov">          0 :     return res;</span></a>
-<a name="481"><span class="lineNum">     481 </span>            : }</a>
-<a name="482"><span class="lineNum">     482 </span>            : </a>
-<a name="483"><span class="lineNum">     483 </span><span class="lineNoCov">          0 : juce::StringArray HostedAudioDeviceInterface::getOutputChannelNames()</span></a>
-<a name="484"><span class="lineNum">     484 </span>            : {</a>
-<a name="485"><span class="lineNum">     485 </span><span class="lineNoCov">          0 :     juce::StringArray res;</span></a>
-<a name="486"><span class="lineNum">     486 </span>            : </a>
-<a name="487"><span class="lineNum">     487 </span><span class="lineNoCov">          0 :     for (int i = 0; i &lt; parameters.outputChannels; i++)</span></a>
-<a name="488"><span class="lineNum">     488 </span>            :     {</a>
-<a name="489"><span class="lineNum">     489 </span><span class="lineNoCov">          0 :         if (i &lt; parameters.outputNames.size())</span></a>
-<a name="490"><span class="lineNum">     490 </span><span class="lineNoCov">          0 :             res.add (parameters.outputNames[i]);</span></a>
-<a name="491"><span class="lineNum">     491 </span>            :         else</a>
-<a name="492"><span class="lineNum">     492 </span><span class="lineNoCov">          0 :             res.add (juce::String (i + 1));</span></a>
-<a name="493"><span class="lineNum">     493 </span>            :     }</a>
-<a name="494"><span class="lineNum">     494 </span>            : </a>
-<a name="495"><span class="lineNum">     495 </span><span class="lineNoCov">          0 :     return res;</span></a>
-<a name="496"><span class="lineNum">     496 </span>            : }</a>
-<a name="497"><span class="lineNum">     497 </span>            : </a>
-<a name="498"><span class="lineNum">     498 </span><span class="lineNoCov">          0 : MidiOutputDevice* HostedAudioDeviceInterface::createMidiOutput()</span></a>
-<a name="499"><span class="lineNum">     499 </span>            : {</a>
-<a name="500"><span class="lineNum">     500 </span><span class="lineNoCov">          0 :     auto device = new HostedMidiOutputDevice (*this);</span></a>
-<a name="501"><span class="lineNum">     501 </span><span class="lineNoCov">          0 :     midiOutputs.add (device);</span></a>
-<a name="502"><span class="lineNum">     502 </span><span class="lineNoCov">          0 :     return device;</span></a>
-<a name="503"><span class="lineNum">     503 </span>            : }</a>
-<a name="504"><span class="lineNum">     504 </span>            : </a>
-<a name="505"><span class="lineNum">     505 </span><span class="lineNoCov">          0 : MidiInputDevice* HostedAudioDeviceInterface::createMidiInput()</span></a>
-<a name="506"><span class="lineNum">     506 </span>            : {</a>
-<a name="507"><span class="lineNum">     507 </span><span class="lineNoCov">          0 :     auto device = new HostedMidiInputDevice (*this);</span></a>
-<a name="508"><span class="lineNum">     508 </span><span class="lineNoCov">          0 :     midiInputs.add (device);</span></a>
-<a name="509"><span class="lineNum">     509 </span><span class="lineNoCov">          0 :     return device;</span></a>
-<a name="510"><span class="lineNum">     510 </span>            : }</a>
-<a name="511"><span class="lineNum">     511 </span>            : </a>
-<a name="512"><span class="lineNum">     512 </span>            : }} // namespace tracktion { inline namespace engine</a>
+<a name="452"><span class="lineNum">     452 </span><span class="lineNoCov">          0 :     return res;</span></a>
+<a name="453"><span class="lineNum">     453 </span>            : }</a>
+<a name="454"><span class="lineNum">     454 </span>            : </a>
+<a name="455"><span class="lineNum">     455 </span><span class="lineNoCov">          0 : MidiOutputDevice* HostedAudioDeviceInterface::createMidiOutput()</span></a>
+<a name="456"><span class="lineNum">     456 </span>            : {</a>
+<a name="457"><span class="lineNum">     457 </span><span class="lineNoCov">          0 :     auto device = new HostedMidiOutputDevice (*this);</span></a>
+<a name="458"><span class="lineNum">     458 </span><span class="lineNoCov">          0 :     midiOutputs.add (device);</span></a>
+<a name="459"><span class="lineNum">     459 </span><span class="lineNoCov">          0 :     return device;</span></a>
+<a name="460"><span class="lineNum">     460 </span>            : }</a>
+<a name="461"><span class="lineNum">     461 </span>            : </a>
+<a name="462"><span class="lineNum">     462 </span><span class="lineNoCov">          0 : MidiInputDevice* HostedAudioDeviceInterface::createMidiInput()</span></a>
+<a name="463"><span class="lineNum">     463 </span>            : {</a>
+<a name="464"><span class="lineNum">     464 </span><span class="lineNoCov">          0 :     auto device = new HostedMidiInputDevice (*this);</span></a>
+<a name="465"><span class="lineNum">     465 </span><span class="lineNoCov">          0 :     midiInputs.add (device);</span></a>
+<a name="466"><span class="lineNum">     466 </span><span class="lineNoCov">          0 :     return device;</span></a>
+<a name="467"><span class="lineNum">     467 </span>            : }</a>
+<a name="468"><span class="lineNum">     468 </span>            : </a>
+<a name="469"><span class="lineNum">     469 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

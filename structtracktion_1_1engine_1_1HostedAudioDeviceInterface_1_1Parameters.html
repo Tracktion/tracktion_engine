@@ -93,9 +93,6 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a28d44d5d9fb1850e0e9679ea81313c73"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html#a28d44d5d9fb1850e0e9679ea81313c73">outputChannels</a> = 2</td></tr>
 <tr class="memdesc:a28d44d5d9fb1850e0e9679ea81313c73"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of audio output channels.  <a href="structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html#a28d44d5d9fb1850e0e9679ea81313c73">More...</a><br /></td></tr>
 <tr class="separator:a28d44d5d9fb1850e0e9679ea81313c73"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8b11776d06f44adf6a91e845be2fd74"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html#ae8b11776d06f44adf6a91e845be2fd74">fixedBlockSize</a> = false</td></tr>
-<tr class="memdesc:ae8b11776d06f44adf6a91e845be2fd74"><td class="mdescLeft">&#160;</td><td class="mdescRight">If the size of the audio buffer passed to processBlock will be fixed or not.  <a href="structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html#ae8b11776d06f44adf6a91e845be2fd74">More...</a><br /></td></tr>
-<tr class="separator:ae8b11776d06f44adf6a91e845be2fd74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab87998d992d56dbb1b2fc7bf3207e82c"><td class="memItemLeft" align="right" valign="top">juce::StringArray&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html#ab87998d992d56dbb1b2fc7bf3207e82c">inputNames</a></td></tr>
 <tr class="memdesc:ab87998d992d56dbb1b2fc7bf3207e82c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Names of your audio channels.  <a href="structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html#ab87998d992d56dbb1b2fc7bf3207e82c">More...</a><br /></td></tr>
 <tr class="separator:ab87998d992d56dbb1b2fc7bf3207e82c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -187,23 +184,6 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ae8b11776d06f44adf6a91e845be2fd74"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae8b11776d06f44adf6a91e845be2fd74">&#9670;&nbsp;</a></span>fixedBlockSize</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool tracktion::engine::HostedAudioDeviceInterface::Parameters::fixedBlockSize = false</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>If the size of the audio buffer passed to processBlock will be fixed or not. </p>
-<p>If you are creating a plugin, this should be false, and your plguin will have one block of latency. If you are handling the audio device callback yourself, this can be true. </p>
-
-</div>
-</div>
 <a id="ab87998d992d56dbb1b2fc7bf3207e82c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab87998d992d56dbb1b2fc7bf3207e82c">&#9670;&nbsp;</a></span>inputNames</h2>
 
@@ -241,7 +221,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jan 30 2023 16:43:50 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Wed Feb 8 2023 13:54:54 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

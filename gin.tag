@@ -49907,13 +49907,6 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>bool</type>
-      <name>fixedBlockSize</name>
-      <anchorfile>structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
-      <anchor>ae8b11776d06f44adf6a91e845be2fd74</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
       <type>juce::StringArray</type>
       <name>inputNames</name>
       <anchorfile>structtracktion_1_1engine_1_1HostedAudioDeviceInterface_1_1Parameters.html</anchorfile>
