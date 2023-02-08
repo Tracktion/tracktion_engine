@@ -113,43 +113,37 @@ void ContainerClipNode::process (ProcessContext& pc)
     auto& editPlayHeadState = getPlayHeadState();
     auto& localPlayHead = playerContext->playHead;
 
-    // Syncronise positions
-    const auto playheadOffset = toSamples (clipPosition.getStartOfSource(), sampleRate);
-    const auto localReferenceSampleRange = pc.referenceSampleRange - playheadOffset;
-    playerContext->processState.setPlaybackSpeedRatio (getPlaybackSpeedRatio());
-
     // Updated the PlayHead so the position/play setting below is in sync
-    playerContext->playHead.setReferenceSampleRange (localReferenceSampleRange);
-
-    if (! editPlayHeadState.isContiguousWithPreviousBlock())
-        localPlayHead.setPosition (editPlayHead.getPosition() - playheadOffset);
+    localPlayHead.setReferenceSampleRange (pc.referenceSampleRange);
 
     if (! loopRangeSamples.isEmpty() && localPlayHead.getLoopRange() != loopRangeSamples)
         localPlayHead.setLoopRange (true, loopRangeSamples);
+
+    // Syncronise positions
+    const auto playheadOffset = toSamples (clipPosition.getStartOfSource(), sampleRate);
+    playerContext->processState.setPlaybackSpeedRatio (getPlaybackSpeedRatio());
+
+    int64_t newPosition = editPlayHead.getPosition() - playheadOffset + loopRangeSamples.getStart();
+
+    if (localPlayHead.isLooping())
+        newPosition = localPlayHead.linearPositionToLoopPosition (newPosition, localPlayHead.getLoopRange());
+
+    if (editPlayHeadState.isContiguousWithPreviousBlock())
+        localPlayHead.overridePosition (newPosition);
+    else
+        localPlayHead.setPosition (newPosition);
 
     // Syncronise playing state
     if (editPlayHead.isStopped() && ! localPlayHead.isStopped())
         localPlayHead.stop();
 
     if (editPlayHead.isPlaying() && ! localPlayHead.isPlaying())
-    {
-        if (loopRange.isEmpty())
-        {
-            localPlayHead.play();
-            localPlayHead.setPosition (editPlayHead.getPosition() - playheadOffset);
-        }
-        else
-        {
-            localPlayHead.play (toSamples (loopRange, getSampleRate()), true);
-            localPlayHead.setPosition (editPlayHead.getPosition() - playheadOffset);
-        }
-    }
+        localPlayHead.play();
 
-    if (auto pos = getProcessState().getPositionOverride())
-        localPlayHead.overridePosition (*pos);
+    assert (! localPlayHead.isLooping() || localPlayHead.getLoopRange().contains (localPlayHead.getPosition()));
 
     // Process
-    ProcessContext localPC { pc.numSamples, localReferenceSampleRange,
+    ProcessContext localPC { pc.numSamples, pc.referenceSampleRange,
                              { pc.buffers.audio, pc.buffers.midi } };
     player.process (localPC);
 

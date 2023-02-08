@@ -74,13 +74,20 @@ Clip* findClipForID (ClipOwner&, EditItemID);
 
 //==============================================================================
 //==============================================================================
+/** Determines behaviour for overwriting clips. */
+enum class DeleteExistingClips
+{
+    no, /*<< Don't remove existing clips. */
+    yes /*<< Replace existing clips with new ones. */
+};
+
 /** Inserts a clip with the given state in to the ClipOwner's clip list. */
 Clip* insertClipWithState (ClipOwner&, juce::ValueTree);
 
 /** Inserts a clip with the given state in to the ClipOwner's clip list. */
 Clip* insertClipWithState (ClipOwner&,
                            const juce::ValueTree& stateToUse, const juce::String& name, TrackItem::Type,
-                           ClipPosition, bool deleteExistingClips, bool allowSpottingAdjustment);
+                           ClipPosition, DeleteExistingClips, bool allowSpottingAdjustment);
 
 //==============================================================================
 /** Inserts a new clip with the given type and a default name. */
@@ -95,11 +102,11 @@ Clip* insertNewClip (ClipOwner&, TrackItem::Type, const juce::String& name, Clip
 //==============================================================================
 /** Inserts a new WaveAudioClip into the ClipOwner's clip list. */
 juce::ReferenceCountedObjectPtr<WaveAudioClip> insertWaveClip (ClipOwner&, const juce::String& name, const juce::File& sourceFile,
-                                                               ClipPosition, bool deleteExistingClips);
+                                                               ClipPosition, DeleteExistingClips);
 
 /** Inserts a new WaveAudioClip into the ClipOwner's clip list. */
 juce::ReferenceCountedObjectPtr<WaveAudioClip> insertWaveClip (ClipOwner&, const juce::String& name, ProjectItemID sourceID,
-                                                               ClipPosition, bool deleteExistingClips);
+                                                               ClipPosition, DeleteExistingClips);
 
 /** Inserts a new MidiClip into the ClipOwner's clip list. */
 juce::ReferenceCountedObjectPtr<MidiClip> insertMIDIClip (ClipOwner&, const juce::String& name, TimeRange);

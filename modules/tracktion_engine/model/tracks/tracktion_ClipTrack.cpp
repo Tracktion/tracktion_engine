@@ -357,19 +357,19 @@ Clip* ClipTrack::insertClipWithState (const juce::ValueTree& stateToUse, const j
                                       ClipPosition position, bool deleteExistingClips, bool allowSpottingAdjustment)
 {
     return engine::insertClipWithState (*this, stateToUse, name, type,
-                                        position, deleteExistingClips, allowSpottingAdjustment);
+                                        position, deleteExistingClips ? DeleteExistingClips::yes : DeleteExistingClips::no, allowSpottingAdjustment);
 }
 
 WaveAudioClip::Ptr ClipTrack::insertWaveClip (const juce::String& name, const juce::File& sourceFile,
                                               ClipPosition position, bool deleteExistingClips)
 {
-    return engine::insertWaveClip (*this, name, sourceFile, position, deleteExistingClips);
+    return engine::insertWaveClip (*this, name, sourceFile, position, deleteExistingClips ? DeleteExistingClips::yes : DeleteExistingClips::no);
 }
 
 WaveAudioClip::Ptr ClipTrack::insertWaveClip (const juce::String& name, ProjectItemID sourceID,
                                               ClipPosition position, bool deleteExistingClips)
 {
-    return engine::insertWaveClip (*this, name, sourceID, position, deleteExistingClips);
+    return engine::insertWaveClip (*this, name, sourceID, position, deleteExistingClips ? DeleteExistingClips::yes : DeleteExistingClips::no);
 }
 
 MidiClip::Ptr ClipTrack::insertMIDIClip (const juce::String& name, TimeRange position, SelectionManager* sm)

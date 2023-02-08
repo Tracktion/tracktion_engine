@@ -347,7 +347,7 @@ Clip* insertClipWithState (ClipOwner& clipOwner, juce::ValueTree clipState)
 
 Clip* insertClipWithState (ClipOwner& parent,
                            const juce::ValueTree& stateToUse, const juce::String& name, TrackItem::Type type,
-                           ClipPosition position, bool deleteExistingClips, bool allowSpottingAdjustment)
+                           ClipPosition position, DeleteExistingClips deleteExistingClips, bool allowSpottingAdjustment)
 {
     CRASH_TRACER
     auto& edit = parent.getClipOwnerEdit();
@@ -361,7 +361,7 @@ Clip* insertClipWithState (ClipOwner& parent,
     if (auto track = dynamic_cast<Track*> (&parent))
         track->setFrozen (false, Track::groupFreeze);
 
-    if (deleteExistingClips)
+    if (deleteExistingClips == DeleteExistingClips::yes)
         deleteRegion (parent, position.time);
 
     auto newClipID = edit.createNewItemID();
@@ -404,14 +404,14 @@ Clip* insertNewClip (ClipOwner& parent, TrackItem::Type type, const juce::String
 {
     CRASH_TRACER
 
-    if (auto newClip = insertClipWithState (parent, {}, name, type, position, false, false))
+    if (auto newClip = insertClipWithState (parent, {}, name, type, position, DeleteExistingClips::no, false))
         return newClip;
 
     return {};
 }
 
 juce::ReferenceCountedObjectPtr<WaveAudioClip> insertWaveClip (ClipOwner& parent, const juce::String& name, const juce::File& sourceFile,
-                                                               ClipPosition position, bool deleteExistingClips)
+                                                               ClipPosition position, DeleteExistingClips deleteExistingClips)
 {
     auto& edit = parent.getClipOwnerEdit();
 
@@ -445,7 +445,7 @@ juce::ReferenceCountedObjectPtr<WaveAudioClip> insertWaveClip (ClipOwner& parent
 }
 
 WaveAudioClip::Ptr insertWaveClip (ClipOwner& parent, const juce::String& name, ProjectItemID sourceID,
-                                   ClipPosition position, bool deleteExistingClips)
+                                   ClipPosition position, DeleteExistingClips deleteExistingClips)
 {
     CRASH_TRACER
     auto& edit = parent.getClipOwnerEdit();
@@ -494,7 +494,7 @@ EditClip::Ptr insertEditClip (ClipOwner& parent, TimeRange position, ProjectItem
     auto newState = clip_owner::createNewClipState (name, TrackItem::Type::edit, parent.getClipOwnerEdit().createNewItemID(), { position, TimeDuration() });
     newState.setProperty (IDs::source, sourceID.toString(), nullptr);
 
-    if (auto c = insertClipWithState (parent, newState, name, TrackItem::Type::edit, { position, 0_td }, false, false))
+    if (auto c = insertClipWithState (parent, newState, name, TrackItem::Type::edit, { position, 0_td }, DeleteExistingClips::no, false))
     {
         if (auto ec = dynamic_cast<EditClip*> (c))
             return *ec;

@@ -47,8 +47,8 @@ private:
         beginTest ("Adding child clips");
         auto cc = dynamic_cast<ContainerClip*> (insertNewClip (*audioTrack, TrackItem::Type::container, { 0_tp, 5_tp }));
         expect (cc != nullptr);
-        auto clip1 = insertWaveClip (*cc, {}, sinFile1->getFile(), {{ 0_tp, 3_tp }}, false);
-        auto clip2 = insertWaveClip (*cc, {}, sinFile2->getFile(), {{ 2_tp, 4_tp }}, false);
+        auto clip1 = insertWaveClip (*cc, {}, sinFile1->getFile(), {{ 0_tp, 3_tp }}, DeleteExistingClips::no);
+        auto clip2 = insertWaveClip (*cc, {}, sinFile2->getFile(), {{ 2_tp, 4_tp }}, DeleteExistingClips::no);
 
         // Use WaveNodeRealTime for one of the clips so we're testing both
         clip1->setUsesProxy (false);

@@ -129,6 +129,12 @@ struct ClipPosition
     ClipPosition rescaled (TimePosition anchorTime, double factor) const;
 };
 
+/** Creates a ClipPosition from either a time or beat range. */
+ClipPosition createClipPosition (const TempoSequence&, TimeRange, TimeDuration offset = {});
+
+/** Creates a ClipPosition from either a time or beat range. */
+ClipPosition createClipPosition (const TempoSequence&, BeatRange, BeatDuration offset = {});
+
 
 //==============================================================================
 //==============================================================================

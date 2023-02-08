@@ -1987,7 +1987,6 @@ void WaveNodeRealTime::processSection (ProcessContext& pc)
             || sectionEditBeats.getStart() >= editPositionBeats.getEnd()))
       return;
 
-
     auto destBuffer = pc.buffers.audio;
     const auto numFrames = destBuffer.getNumFrames();
     const auto numChannels = destBuffer.getNumChannels();
