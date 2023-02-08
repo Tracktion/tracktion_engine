@@ -48,7 +48,7 @@ set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
 
 set(SourceFiles
     ${CMAKE_PROJECT_NAME}.cpp
-    ../${CMAKE_PROJECT_NAME}.h)
+    ${CMAKE_PROJECT_NAME}.h)
 
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE ${SourceFiles})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX Source FILES ${SourceFiles})

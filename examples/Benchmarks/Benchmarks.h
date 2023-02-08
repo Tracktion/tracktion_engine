@@ -27,7 +27,7 @@
 
 #pragma once
 
-#include "common/tracktion_graph_Dev.h"
+#include "../common/tracktion_graph_Dev.h"
 
 
 //==============================================================================

@@ -10,8 +10,8 @@
 
 #pragma once
 
-#include "common/Utilities.h"
-#include "common/PlaybackDemoAudio.h"
+#include "../common/Utilities.h"
+#include "../common/PlaybackDemoAudio.h"
 
 using namespace tracktion::literals;
 using namespace std::literals;
