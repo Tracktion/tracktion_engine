@@ -48,12 +48,6 @@ public:
         /** Number of audio output channels */
         int outputChannels = 2;
 
-        /** If the size of the audio buffer passed to processBlock will be fixed or not.
-            If you are creating a plugin, this should be false, and your plguin will have
-            one block of latency. If you are handling the audio device callback yourself,
-            this can be true. */
-        bool fixedBlockSize = false;
-
         /** Names of your audio channels. If left empty, names will automatically be generated */
         juce::StringArray inputNames, outputNames;
     };
@@ -63,9 +57,7 @@ public:
     // Call each time the sample rate or block size changes
     void prepareToPlay (double sampleRate, int blockSize);
 
-    // Pass audio and midi buffers to the engine. If fixedBlockSize == true
-    // then the buffer must have the same number of samples as specified in
-    // the last call to prepareToPlay.
+    // Pass audio and midi buffers to the engine
     void processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer&);
 
     /** Returns true if the MidiInput device is a HostedMidiInputDevice. */
@@ -92,7 +84,6 @@ private:
     juce::Array<MidiInputDevice*> midiInputs;
 
     int maxChannels = 0;
-    AudioMidiFifo inputFifo, outputFifo;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HostedAudioDeviceInterface)
 };
