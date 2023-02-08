@@ -36,12 +36,12 @@ else()
     MESSAGE(STATUS "Not building with VST2")
 endif()
 
-juce_add_pip (../${CMAKE_PROJECT_NAME}.h)
+juce_add_pip (${CMAKE_PROJECT_NAME}.h)
 
 juce_generate_juce_header(${CMAKE_PROJECT_NAME})
 
 juce_add_binary_data (EDMDemoSong
-    SOURCES ../Resources/edm_song.ogg)
+    SOURCES resources/edm_song.ogg)
 
 target_compile_features(${CMAKE_PROJECT_NAME} PRIVATE cxx_std_17)
 
@@ -50,18 +50,18 @@ set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
     CXX_VISIBILITY_PRESET hidden)
 
 set(SourceFiles
-    ../${CMAKE_PROJECT_NAME}.h
-    ../demos/AbletonLinkDemo.h
-    ../demos/DistortionEffectDemo.h
-    ../demos/GlobalQuantiseDemo.h
-    ../demos/IRPluginDemo.h
-    ../demos/MidiRecordingDemo.h
-    ../demos/PatternGeneratorDemo.h
-    ../demos/PitchAndTimeDemo.h
-    ../demos/PlaybackDemo.h
-    ../demos/PluginDemo.h
-    ../demos/RecordingDemo.h
-    ../demos/StepSequencerDemo.h)
+    ${CMAKE_PROJECT_NAME}.h
+    demos/AbletonLinkDemo.h
+    demos/DistortionEffectDemo.h
+    demos/GlobalQuantiseDemo.h
+    demos/IRPluginDemo.h
+    demos/MidiRecordingDemo.h
+    demos/PatternGeneratorDemo.h
+    demos/PitchAndTimeDemo.h
+    demos/PlaybackDemo.h
+    demos/PluginDemo.h
+    demos/RecordingDemo.h
+    demos/StepSequencerDemo.h)
 
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE ${SourceFiles})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/.. PREFIX Source FILES ${SourceFiles})
