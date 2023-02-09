@@ -649,7 +649,7 @@ void AudioClipBase::reverseLoopPoints()
     {
         // reverse offset
         auto sourceEnd = toPosition (getSourceLength() / ratio);
-        auto newOffset = sourceEnd - (toPosition (getPosition().getLength()) - getPosition().getOffset());
+        auto newOffset = sourceEnd - toPosition (getPosition().getLength()) - getPosition().getOffset();
         setOffset (newOffset);
     }
 
