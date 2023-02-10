@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-02-09 11:24:55</td>
+            <td class="headerValue">2023-02-10 11:29:34</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">16</td>
@@ -197,32 +197,32 @@
 <a name="135"><span class="lineNum">     135 </span>            :     latenesses.clearQuick();</a>
 <a name="136"><span class="lineNum">     136 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="137"><span class="lineNum">     137 </span>            : </a>
-<a name="138"><span class="lineNum">     138 </span><span class="lineCov">       1664 : BeatPosition GrooveTemplate::beatsTimeToGroovyTime (BeatPosition beatsTime, float strength) const</span></a>
+<a name="138"><span class="lineNum">     138 </span><span class="lineCov">       1680 : BeatPosition GrooveTemplate::beatsTimeToGroovyTime (BeatPosition beatsTime, float strength) const</span></a>
 <a name="139"><span class="lineNum">     139 </span>            : {</a>
-<a name="140"><span class="lineNum">     140 </span><span class="lineCov">       1664 :     auto activeStrength = parameterized ? strength : 1.0f;</span></a>
+<a name="140"><span class="lineNum">     140 </span><span class="lineCov">       1680 :     auto activeStrength = parameterized ? strength : 1.0f;</span></a>
 <a name="141"><span class="lineNum">     141 </span>            : </a>
-<a name="142"><span class="lineNum">     142 </span><span class="lineCov">       1664 :     const double beatNum    = std::floor (beatsTime.inBeats() * notesPerBeat);</span></a>
-<a name="143"><span class="lineNum">     143 </span><span class="lineCov">       1664 :     const double offset     = notesPerBeat * (beatsTime.inBeats() - (beatNum / notesPerBeat));</span></a>
-<a name="144"><span class="lineNum">     144 </span><span class="lineCov">       1664 :     const int latenessIndex = juce::roundToInt (beatNum) % numNotes;</span></a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineCov">       1680 :     const double beatNum    = std::floor (beatsTime.inBeats() * notesPerBeat);</span></a>
+<a name="143"><span class="lineNum">     143 </span><span class="lineCov">       1680 :     const double offset     = notesPerBeat * (beatsTime.inBeats() - (beatNum / notesPerBeat));</span></a>
+<a name="144"><span class="lineNum">     144 </span><span class="lineCov">       1680 :     const int latenessIndex = juce::roundToInt (beatNum) % numNotes;</span></a>
 <a name="145"><span class="lineNum">     145 </span>            : </a>
-<a name="146"><span class="lineNum">     146 </span><span class="lineCov">       1664 :     const double lateness   = latenesses[latenessIndex] * activeStrength;</span></a>
-<a name="147"><span class="lineNum">     147 </span><span class="lineCov">       1664 :     const double t1         = (beatNum + 0.5f * lateness);</span></a>
-<a name="148"><span class="lineNum">     148 </span><span class="lineCov">       1664 :     const double t2minust1  = 1.0 + 0.5f * ((latenesses[(latenessIndex + 1) % numNotes] * activeStrength) - lateness);</span></a>
+<a name="146"><span class="lineNum">     146 </span><span class="lineCov">       1680 :     const double lateness   = latenesses[latenessIndex] * activeStrength;</span></a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineCov">       1680 :     const double t1         = (beatNum + 0.5f * lateness);</span></a>
+<a name="148"><span class="lineNum">     148 </span><span class="lineCov">       1680 :     const double t2minust1  = 1.0 + 0.5f * ((latenesses[(latenessIndex + 1) % numNotes] * activeStrength) - lateness);</span></a>
 <a name="149"><span class="lineNum">     149 </span>            : </a>
-<a name="150"><span class="lineNum">     150 </span><span class="lineCov">       1664 :     return BeatPosition::fromBeats ((t1 + offset * t2minust1) / notesPerBeat);</span></a>
+<a name="150"><span class="lineNum">     150 </span><span class="lineCov">       1680 :     return BeatPosition::fromBeats ((t1 + offset * t2minust1) / notesPerBeat);</span></a>
 <a name="151"><span class="lineNum">     151 </span>            : }</a>
 <a name="152"><span class="lineNum">     152 </span>            : </a>
-<a name="153"><span class="lineNum">     153 </span><span class="lineCov">        800 : TimePosition GrooveTemplate::editTimeToGroovyTime (TimePosition editTime, float strength, Edit&amp; edit) const</span></a>
+<a name="153"><span class="lineNum">     153 </span><span class="lineCov">        784 : TimePosition GrooveTemplate::editTimeToGroovyTime (TimePosition editTime, float strength, Edit&amp; edit) const</span></a>
 <a name="154"><span class="lineNum">     154 </span>            : {</a>
-<a name="155"><span class="lineNum">     155 </span><span class="lineCov">        800 :     auto beats = edit.tempoSequence.toBeats (editTime);</span></a>
-<a name="156"><span class="lineNum">     156 </span><span class="lineCov">        800 :     beats = beatsTimeToGroovyTime (beats, strength);</span></a>
-<a name="157"><span class="lineNum">     157 </span><span class="lineCov">        800 :     return edit.tempoSequence.toTime (beats);</span></a>
+<a name="155"><span class="lineNum">     155 </span><span class="lineCov">        784 :     auto beats = edit.tempoSequence.toBeats (editTime);</span></a>
+<a name="156"><span class="lineNum">     156 </span><span class="lineCov">        784 :     beats = beatsTimeToGroovyTime (beats, strength);</span></a>
+<a name="157"><span class="lineNum">     157 </span><span class="lineCov">        784 :     return edit.tempoSequence.toTime (beats);</span></a>
 <a name="158"><span class="lineNum">     158 </span>            : }</a>
 <a name="159"><span class="lineNum">     159 </span>            : </a>
-<a name="160"><span class="lineNum">     160 </span><span class="lineCov">        192 : bool GrooveTemplate::isEmpty() const</span></a>
+<a name="160"><span class="lineNum">     160 </span><span class="lineCov">        240 : bool GrooveTemplate::isEmpty() const</span></a>
 <a name="161"><span class="lineNum">     161 </span>            : {</a>
-<a name="162"><span class="lineNum">     162 </span><span class="lineCov">        192 :     for (int i = latenesses.size(); --i &gt;= 0;)</span></a>
-<a name="163"><span class="lineNum">     163 </span><span class="lineCov">         64 :         if (latenesses.getUnchecked (i) != 0.0f)</span></a>
+<a name="162"><span class="lineNum">     162 </span><span class="lineCov">        240 :     for (int i = latenesses.size(); --i &gt;= 0;)</span></a>
+<a name="163"><span class="lineNum">     163 </span><span class="lineCov">         80 :         if (latenesses.getUnchecked (i) != 0.0f)</span></a>
 <a name="164"><span class="lineNum">     164 </span>            :             return false;</a>
 <a name="165"><span class="lineNum">     165 </span>            : </a>
 <a name="166"><span class="lineNum">     166 </span>            :     return true;</a>
