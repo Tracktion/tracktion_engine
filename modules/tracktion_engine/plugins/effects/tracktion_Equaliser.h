@@ -25,7 +25,7 @@ public:
     static const char* getPluginName()              { return NEEDS_TRANS("4-Band Equaliser"); }
     static const char* xmlTypeName;
 
-    juce::String getName() override                 { return TRANS("4-Band Equaliser"); }
+    juce::String getName() const override                 { return TRANS("4-Band Equaliser"); }
     juce::String getPluginType() override           { return xmlTypeName; }
     juce::String getShortName (int) override        { return "EQ"; }
     juce::String getTooltip() override;

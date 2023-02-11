@@ -38,7 +38,7 @@ public:
     static const char* getPluginName()                  { return NEEDS_TRANS("Patch Bay"); }
     static const char* xmlTypeName;
 
-    juce::String getName() override                     { return TRANS("Patch Bay Plugin"); }
+    juce::String getName() const override               { return TRANS("Patch Bay Plugin"); }
     juce::String getPluginType() override               { return xmlTypeName; }
     juce::String getShortName (int) override            { return TRANS("Patch"); }
     juce::String getSelectableDescription() override    { return TRANS("Patch Bay Plugin"); }

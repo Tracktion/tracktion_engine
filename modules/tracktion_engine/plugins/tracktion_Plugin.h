@@ -134,7 +134,7 @@ public:
 
     //==============================================================================
     /** The name of the type, e.g. "Compressor" */
-    virtual juce::String getName() override = 0;
+    virtual juce::String getName() const override = 0;
     virtual juce::String getPluginType() = 0;
 
     virtual juce::String getVendor()                              { return "Tracktion"; }

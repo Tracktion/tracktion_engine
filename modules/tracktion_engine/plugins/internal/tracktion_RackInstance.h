@@ -22,7 +22,7 @@ public:
     //==============================================================================
     static const char* xmlTypeName;
 
-    juce::String getName() override;
+    juce::String getName() const override;
     juce::String getPluginType() override               { return xmlTypeName; }
     juce::String getTooltip() override;
 

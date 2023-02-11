@@ -28,7 +28,7 @@ juce::String AutomationTrack::getSelectableDescription()
     return TRANS("Automation") + (n.isEmpty() ? juce::String() : " - \"" + getName() + "\"");
 }
 
-juce::String AutomationTrack::getName()
+juce::String AutomationTrack::getName() const
 {
     if (auto ap = getCurrentlyShownAutoParam())
         return ap->getFullName();

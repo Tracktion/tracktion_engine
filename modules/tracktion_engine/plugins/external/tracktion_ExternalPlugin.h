@@ -64,7 +64,7 @@ public:
     bool isVST() const noexcept             { return desc.pluginFormatName == "VST"; }
     bool isVST3() const noexcept            { return desc.pluginFormatName == "VST3"; }
     bool isAU() const noexcept              { return desc.pluginFormatName == "AudioUnit"; }
-    juce::String getName() override         { return desc.name; }
+    juce::String getName() const override   { return desc.name; }
     juce::String getVendor() override       { return desc.manufacturerName; }
     juce::String getTooltip() override      { return getName() + "$vstfilter"; }
     juce::String getPluginType() override   { return xmlTypeName; }

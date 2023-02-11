@@ -31,7 +31,7 @@ PitchSetting::~PitchSetting()
     notifyListenersOfDeletion();
 }
 
-juce::String PitchSetting::getName()
+juce::String PitchSetting::getName() const
 {
     return juce::MidiMessage::getMidiNoteName (pitch, accidentalsSharp, false,
                                                edit.engine.getEngineBehaviour().getMiddleCOctave());

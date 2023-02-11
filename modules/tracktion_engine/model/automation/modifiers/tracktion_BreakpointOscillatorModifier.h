@@ -24,7 +24,7 @@ public:
 
     using Modifier::initialise;
     void initialise() override;
-    juce::String getName() override                     { return TRANS("Breakpoint Modifier"); }
+    juce::String getName() const override               { return TRANS("Breakpoint Modifier"); }
 
     //==============================================================================
     /** Returns the current value of the modifier.  */

@@ -112,7 +112,7 @@ public:
 
     //==============================================================================
     /** Returns the name of the clip. */
-    virtual juce::String getName() override             { return clipName; }
+    virtual juce::String getName() const override       { return clipName; }
     /** Sets a new name for a clip. */
     void setName (const juce::String& newName);
 
@@ -123,7 +123,7 @@ public:
 
     //==============================================================================
     /** True if it references a source file - i.e. audio clips do, midi doesn't. */
-    virtual bool usesSourceFile()                       { return false; }
+    virtual bool usesSourceFile() const                 { return false; }
 
     /** Returns the SourceFileReference of the Clip. */
     SourceFileReference& getSourceFileReference()       { return sourceFileReference; }

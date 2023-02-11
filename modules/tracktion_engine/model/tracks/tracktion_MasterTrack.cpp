@@ -29,7 +29,7 @@ MasterTrack::~MasterTrack()
 }
 
 bool MasterTrack::isMasterTrack() const               { return true; }
-juce::String MasterTrack::getName()                   { return TRANS("Master"); }
+juce::String MasterTrack::getName() const             { return TRANS("Master"); }
 juce::String MasterTrack::getSelectableDescription()  { return TRANS("Master Track"); }
 bool MasterTrack::canContainPlugin (Plugin* p) const  { return p->canBeAddedToMaster(); }
 

@@ -21,7 +21,7 @@ public:
     static const char* getPluginName()                  { return NEEDS_TRANS("Low/High-Pass Filter"); }
     static const char* xmlTypeName;
 
-    juce::String getName() override                     { return "LPF/HPF"; }
+    juce::String getName() const override               { return "LPF/HPF"; }
     juce::String getPluginType() override               { return xmlTypeName; }
     juce::String getShortName (int) override            { return "HP/LP"; }
     juce::String getSelectableDescription() override    { return TRANS("Low/High-Pass Filter"); }

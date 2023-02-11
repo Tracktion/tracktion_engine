@@ -2124,7 +2124,7 @@ bool AudioClipBase::ProxyRenderingInfo::render (Engine& engine, const AudioFile&
     return true;
 }
 
-AudioFile AudioClipBase::getPlaybackFile()
+AudioFile AudioClipBase::getPlaybackFile() 
 {
     // this needs to return the same file right from the first call, if it's a rendered file then obviously it won't exist but we need to return it anyway
     const AudioFile af (getAudioFile());
@@ -2160,7 +2160,7 @@ HashCode AudioClipBase::getProxyHash()
 
     HashCode hash = getHash()
                      ^ static_cast<HashCode> (timeStretchMode.get())
-                     ^ elastiqueProOptions->toString().hashCode64()
+                     ^ elastiqueProOptions.get().toString().hashCode64()
                      ^ (7342847 * static_cast<HashCode> (pitchChange * 199.0))
                      ^ static_cast<HashCode> (clipPos.getLength().inSeconds() * 10005.0)
                      ^ static_cast<HashCode> (clipPos.getOffset().inSeconds() * 9997.0)

@@ -51,7 +51,7 @@ bool AuxSendPlugin::shouldProcess()
 
 const char* AuxSendPlugin::xmlTypeName = "auxsend";
 
-juce::String AuxSendPlugin::getName()
+juce::String AuxSendPlugin::getName() const
 {
     juce::String nm (edit.getAuxBusName (busNumber));
 

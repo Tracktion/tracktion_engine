@@ -29,11 +29,11 @@ public:
 
     //==============================================================================
     // This isn't an index - it starts from 1
-    int getAudioTrackNumber() noexcept;
+    int getAudioTrackNumber() const noexcept;
 
     /** checks whether the name is 'track n' and if so, makes sure the number is right */
     void sanityCheckName() override;
-    juce::String getName() override;
+    juce::String getName() const override;
 
     bool canContainPlugin (Plugin*) const override;
     bool processAudioNodesWhileMuted() const override       { return edit.engine.getEngineBehaviour().shouldProcessMutedTracks() || isSidechainSource(); }

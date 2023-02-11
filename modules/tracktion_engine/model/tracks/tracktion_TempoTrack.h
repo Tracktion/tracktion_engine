@@ -29,7 +29,7 @@ public:
     /** @internal */
     bool isTempoTrack() const override;
     /** @internal */
-    juce::String getName() override;
+    juce::String getName() const override;
     /** @internal */
     juce::String getSelectableDescription() override;
 

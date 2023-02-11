@@ -73,7 +73,7 @@ public:
 
     juce::ReferenceCountedArray<MacroParameter> getMacroParameters() const;
 
-    juce::String getName() override     { return {}; }
+    juce::String getName() const override     { return {}; }
     Track* getTrack() const;
 
     //==============================================================================

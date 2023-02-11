@@ -27,7 +27,7 @@ public:
     static const char* getPluginName()      { return NEEDS_TRANS("MIDI Modifier"); }
     static const char* xmlTypeName;
 
-    juce::String getName() override;
+    juce::String getName() const override;
     juce::String getPluginType() override;
     juce::String getShortName (int) override;
     void initialise (const PluginInitialisationInfo&) override;
