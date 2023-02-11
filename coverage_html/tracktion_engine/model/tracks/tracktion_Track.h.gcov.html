@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-02-10 11:29:34</td>
+            <td class="headerValue">2023-02-11 19:47:12</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">20</td>
@@ -117,7 +117,7 @@
 <a name="55"><span class="lineNum">      55 </span>            : </a>
 <a name="56"><span class="lineNum">      56 </span>            :     //==============================================================================</a>
 <a name="57"><span class="lineNum">      57 </span>            :     /** Returns the name of the Track. */</a>
-<a name="58"><span class="lineNum">      58 </span><span class="lineNoCov">          0 :     juce::String getName() override                             { return trackName; }</span></a>
+<a name="58"><span class="lineNum">      58 </span><span class="lineNoCov">          0 :     juce::String getName() const override                       { return trackName; }</span></a>
 <a name="59"><span class="lineNum">      59 </span>            : </a>
 <a name="60"><span class="lineNum">      60 </span>            :     /** Sets the name of the Track. */</a>
 <a name="61"><span class="lineNum">      61 </span>            :     void setName (const juce::String&amp;);</a>
@@ -133,7 +133,7 @@
 <a name="71"><span class="lineNum">      71 </span>            : </a>
 <a name="72"><span class="lineNum">      72 </span>            :     //==============================================================================</a>
 <a name="73"><span class="lineNum">      73 </span>            :     /** Returns true if this is an AudioTrack. */</a>
-<a name="74"><span class="lineNum">      74 </span><span class="lineCov">       2750 :     virtual bool isAudioTrack() const                           { return false; }</span></a>
+<a name="74"><span class="lineNum">      74 </span><span class="lineCov">     138369 :     virtual bool isAudioTrack() const                           { return false; }</span></a>
 <a name="75"><span class="lineNum">      75 </span>            : </a>
 <a name="76"><span class="lineNum">      76 </span>            :     /** Returns true if this is an AutomationTrack. */</a>
 <a name="77"><span class="lineNum">      77 </span><span class="lineNoCov">          0 :     virtual bool isAutomationTrack() const                      { return false; }</span></a>
@@ -286,10 +286,10 @@
 <a name="224"><span class="lineNum">     224 </span>            :     juce::ValueTree getParentTrackTree() const;</a>
 <a name="225"><span class="lineNum">     225 </span>            : </a>
 <a name="226"><span class="lineNum">     226 </span>            :     /** Returns the parent Track if this is a nested track. */</a>
-<a name="227"><span class="lineNum">     227 </span><span class="lineCov">   15060542 :     Track* getParentTrack() const                               { return dynamic_cast&lt;Track*&gt; (cachedParentTrack.get()); }</span></a>
+<a name="227"><span class="lineNum">     227 </span><span class="lineCov">   15054788 :     Track* getParentTrack() const                               { return dynamic_cast&lt;Track*&gt; (cachedParentTrack.get()); }</span></a>
 <a name="228"><span class="lineNum">     228 </span>            : </a>
 <a name="229"><span class="lineNum">     229 </span>            :     /** Returns the parent FolderTrack if this is nested in one. */</a>
-<a name="230"><span class="lineNum">     230 </span><span class="lineCov">   15052141 :     FolderTrack* getParentFolderTrack() const                   { return getParentTrack() != nullptr ? cachedParentFolderTrack : nullptr; }</span></a>
+<a name="230"><span class="lineNum">     230 </span><span class="lineCov">   15046297 :     FolderTrack* getParentFolderTrack() const                   { return getParentTrack() != nullptr ? cachedParentFolderTrack : nullptr; }</span></a>
 <a name="231"><span class="lineNum">     231 </span>            : </a>
 <a name="232"><span class="lineNum">     232 </span>            :     /** Tests whether this is a child of a given Track. */</a>
 <a name="233"><span class="lineNum">     233 </span>            :     bool isAChildOf (const Track&amp; possibleParent) const;</a>

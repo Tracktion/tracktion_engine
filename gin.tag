@@ -8037,8 +8037,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1ArrangerTrack.html</anchorfile>
-      <anchor>ac77b89a288cabe5c80404a70408df6c0</anchor>
-      <arglist>() override</arglist>
+      <anchor>a708330dadb91a1ccb8c0f12791462f42</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -12053,8 +12053,8 @@
       <type>int</type>
       <name>getAudioTrackNumber</name>
       <anchorfile>classtracktion_1_1engine_1_1AudioTrack.html</anchorfile>
-      <anchor>a31a5665d366a4780aaac21607f457c48</anchor>
-      <arglist>() noexcept</arglist>
+      <anchor>a6fae13c7fdf219dbf87aae38a356444f</anchor>
+      <arglist>() const noexcept</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -12067,8 +12067,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1AudioTrack.html</anchorfile>
-      <anchor>a7f8fda16cf55fe76049ff014d8e57103</anchor>
-      <arglist>() override</arglist>
+      <anchor>a8c3596278ac2fb200b909301097de0e8</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -14231,8 +14231,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1AutomationTrack.html</anchorfile>
-      <anchor>a0e44bd91cf6c2fe227ef6cb53af4e347</anchor>
-      <arglist>() override</arglist>
+      <anchor>a3052139d3a8ffe5db16766a0ebf3e5ab</anchor>
+      <arglist>() const override</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -14257,8 +14257,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1AuxReturnPlugin.html</anchorfile>
-      <anchor>a09019fca6d88bc8ad7f4d19a131ef9f8</anchor>
-      <arglist>() override</arglist>
+      <anchor>a58504debce65511f3c949f70e3e0ad16</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -14470,8 +14470,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1AuxSendPlugin.html</anchorfile>
-      <anchor>ae50e65cbe2cc8f2903c1ebcb9206ddc5</anchor>
-      <arglist>() override</arglist>
+      <anchor>ac923ae981b25eded72ebf0a9d5d48eec</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -15032,8 +15032,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1BreakpointOscillatorModifier.html</anchorfile>
-      <anchor>aa4fa94118448b3ec33336e3cdbe74cf3</anchor>
-      <arglist>() override</arglist>
+      <anchor>a7f7cb8876389beac30c6adfdf148d970</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>float</type>
@@ -16393,8 +16393,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1ChorusPlugin.html</anchorfile>
-      <anchor>a8beac7fb2b82185a89640da29e69d7f3</anchor>
-      <arglist>() override</arglist>
+      <anchor>ac123ccb72e247249db52b6732480a717</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -16812,8 +16812,8 @@
       <type>virtual juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
-      <anchor>a76bca0a8a21dd4f29356c17c8e4afa36</anchor>
-      <arglist>() override</arglist>
+      <anchor>a2555c0941c528c2ced5c62bcb1ec4484</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -16840,8 +16840,8 @@
       <type>virtual bool</type>
       <name>usesSourceFile</name>
       <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
-      <anchor>a18663c2d6334e8059d8b319c193b6c45</anchor>
-      <arglist>()</arglist>
+      <anchor>a756f5a8136b751a9edcd0e0992852de7</anchor>
+      <arglist>() const</arglist>
     </member>
     <member kind="function">
       <type>SourceFileReference &amp;</type>
@@ -18765,8 +18765,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1CollectionClip.html</anchorfile>
-      <anchor>a57dd3b137cae52f2c8025291764667fd</anchor>
-      <arglist>() override</arglist>
+      <anchor>aa0957b52377a9178e4c1c99351499609</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>ClipPosition</type>
@@ -19591,8 +19591,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1CompressorPlugin.html</anchorfile>
-      <anchor>a891486eaf3dda5ca96105e0aeb84d8d8</anchor>
-      <arglist>() override</arglist>
+      <anchor>ae94b8163487f660afc8e225a57fbe718</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -25470,8 +25470,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1DelayPlugin.html</anchorfile>
-      <anchor>ab018dc0f88bf70c785404bf0735bb974</anchor>
-      <arglist>() override</arglist>
+      <anchor>a0ca9b8a3aa389ba98d52f66f8f47e60a</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -27828,8 +27828,8 @@
       <type>bool</type>
       <name>usesSourceFile</name>
       <anchorfile>classtracktion_1_1engine_1_1EditClip.html</anchorfile>
-      <anchor>aaee92682b380b380876e9533e143711d</anchor>
-      <arglist>() override</arglist>
+      <anchor>a4d3adaacb0dafa9c14d39360a7b57eb3</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -28205,8 +28205,8 @@
       <type>virtual juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1EditItem.html</anchorfile>
-      <anchor>af61321caec12095b5bc30108b57f7675</anchor>
-      <arglist>()=0</arglist>
+      <anchor>ac58f795c563b2aafe5d57853cf39a098</anchor>
+      <arglist>() const =0</arglist>
     </member>
     <member kind="variable">
       <type>Edit &amp;</type>
@@ -30650,8 +30650,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1EnvelopeFollowerModifier.html</anchorfile>
-      <anchor>a5f3e857871212fb41ba8395c21dac96e</anchor>
-      <arglist>() override</arglist>
+      <anchor>afea4c00dfac142337d15a58a4421b83b</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>float</type>
@@ -30879,8 +30879,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1EqualiserPlugin.html</anchorfile>
-      <anchor>a6c1bdadbff72ed14806aa4a97550b801</anchor>
-      <arglist>() override</arglist>
+      <anchor>a83ac19d6aee3e1712fa41caaa3e82104</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -33117,8 +33117,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1ExternalPlugin.html</anchorfile>
-      <anchor>adbecf95b292dfc77c1514f7e7c264219</anchor>
-      <arglist>() override</arglist>
+      <anchor>ac145364f08c1b2ac430756c117a574eb</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -33778,15 +33778,15 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1FolderTrack.html</anchorfile>
-      <anchor>a61aadbde10102c49f2af781191c1cab6</anchor>
-      <arglist>() override</arglist>
+      <anchor>a2085c5b2275056b88575a35b2bc5d233</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>int</type>
       <name>getFolderTrackNumber</name>
       <anchorfile>classtracktion_1_1engine_1_1FolderTrack.html</anchorfile>
-      <anchor>aa2f3036e37d2bd771d51e467b564e71e</anchor>
-      <arglist>() noexcept</arglist>
+      <anchor>a764d880bcebaa7e53054c69f83ebba8e</anchor>
+      <arglist>() const noexcept</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -34238,8 +34238,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1FourOscPlugin.html</anchorfile>
-      <anchor>a27268824bbebdf156d2b19816317bbd0</anchor>
-      <arglist>() override</arglist>
+      <anchor>ab4909853cd061e7cf7b17376a3dbfcc1</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -35011,8 +35011,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1FreezePointPlugin.html</anchorfile>
-      <anchor>ad318ddf3d56b9a7ae93f37a715961f58</anchor>
-      <arglist>() override</arglist>
+      <anchor>a5184e7cf5014ee0bbf7b94bcaa6b61a3</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -35854,8 +35854,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1ImpulseResponsePlugin.html</anchorfile>
-      <anchor>aa90965f46809abb1d0ebc3c501dbede7</anchor>
-      <arglist>() override</arglist>
+      <anchor>a50b0d3453a76d3c563ee51b27494de86</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -36912,8 +36912,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1InsertPlugin.html</anchorfile>
-      <anchor>a06e4e56de7842cd98fddf9a0613167b2</anchor>
-      <arglist>() override</arglist>
+      <anchor>a675daf0e602b026432525bf86be3b06c</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -37781,8 +37781,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1LatencyPlugin.html</anchorfile>
-      <anchor>adb96ec187365b4506600a34f8356580d</anchor>
-      <arglist>() override</arglist>
+      <anchor>a7c1ccbd47ae2bad3e7135b5e06db2909</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -38240,8 +38240,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1LevelMeterPlugin.html</anchorfile>
-      <anchor>a1f2a681ef6a83a56dabf7b0f67e0c051</anchor>
-      <arglist>() override</arglist>
+      <anchor>aca45be6bbfccb75cee44e5f4ecc3e781</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -38572,8 +38572,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1LFOModifier.html</anchorfile>
-      <anchor>a39764954e13faae4f235243640e63f53</anchor>
-      <arglist>() override</arglist>
+      <anchor>ae867a4e73b12da5ef721c751d3bc7f51</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>float</type>
@@ -40225,8 +40225,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1LowPassPlugin.html</anchorfile>
-      <anchor>ab43472263ba482c5e7fbd7724ae1037a</anchor>
-      <arglist>() override</arglist>
+      <anchor>a8a7a54251d9e0894272ef0134710c863</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -41584,8 +41584,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1MacroParameterList.html</anchorfile>
-      <anchor>a6795fc35ad81787bc1c573a2093abafe</anchor>
-      <arglist>() override</arglist>
+      <anchor>a9b5063bcd028b4b57192271a6de898f7</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>Track *</type>
@@ -42147,8 +42147,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1MarkerTrack.html</anchorfile>
-      <anchor>a4f5906fd8fba0eb84ca6ba2ee1c5ff3f</anchor>
-      <arglist>() override</arglist>
+      <anchor>aa11af0bcbb070f62af69259c33651009</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -42201,8 +42201,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1MasterTrack.html</anchorfile>
-      <anchor>a83e3a4670085068d6fd59384a5e9ad63</anchor>
-      <arglist>() override</arglist>
+      <anchor>a91dbf0192a8ae6ee057bfe2dbbd58d2a</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -45255,8 +45255,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1MidiModifierPlugin.html</anchorfile>
-      <anchor>a1d022b87df6d9009a6f9236c14cf40aa</anchor>
-      <arglist>() override</arglist>
+      <anchor>aa5288ca563a411d68bfc0208ef6a50ed</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -46383,8 +46383,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1MidiPatchBayPlugin.html</anchorfile>
-      <anchor>a5d8bab6f882fccce0a04d268d10619f9</anchor>
-      <arglist>() override</arglist>
+      <anchor>a7c094935e48d396275921db78d4f41d9</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -46991,8 +46991,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1MIDITrackerModifier.html</anchorfile>
-      <anchor>affd81fa17ae0dc67ac3cc4de34787bad</anchor>
-      <arglist>() override</arglist>
+      <anchor>ae52b04ec06a037dae32b7dd2b36cd4bb</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>float</type>
@@ -50366,8 +50366,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1PatchBayPlugin.html</anchorfile>
-      <anchor>affc5866bfc2edc77936c5041cf5e9cf4</anchor>
-      <arglist>() override</arglist>
+      <anchor>aed441ae74896fd9a6ccb7ead7505de8b</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -51408,8 +51408,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1PhaserPlugin.html</anchorfile>
-      <anchor>a393c109c53aec57f59b6eb345dab9834</anchor>
-      <arglist>() override</arglist>
+      <anchor>a2eb27f70bc380441ecd5fa49b2d2ec65</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -51978,8 +51978,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1PitchSetting.html</anchorfile>
-      <anchor>aec98a93a338162d6b3e67f446385fe0b</anchor>
-      <arglist>() override</arglist>
+      <anchor>ac25da7ca1a6cebfc91dd938feb10bf81</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>Track *</type>
@@ -52142,8 +52142,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1PitchShiftPlugin.html</anchorfile>
-      <anchor>a55e9b12f00364674be0101d4aad3331b</anchor>
-      <arglist>() override</arglist>
+      <anchor>ab0069b94cf7f71372130a2581b4b3e73</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -53024,8 +53024,8 @@
       <type>virtual juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1Plugin.html</anchorfile>
-      <anchor>a309bea0914d0c478ab5d7a16b3573cbf</anchor>
-      <arglist>() override=0</arglist>
+      <anchor>a28c7e39156aee6001d012571eb9e30ca</anchor>
+      <arglist>() const override=0</arglist>
     </member>
     <member kind="function" virtualness="pure">
       <type>virtual juce::String</type>
@@ -57214,8 +57214,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1RackInstance.html</anchorfile>
-      <anchor>a461e739f2d1d11d4771da94008e0ffcf</anchor>
-      <arglist>() override</arglist>
+      <anchor>acbf0b42973991a2d9c61194bf3420c44</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -58297,8 +58297,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1RandomModifier.html</anchorfile>
-      <anchor>a17d1b7109eb85651e82b8a961e5b264c</anchor>
-      <arglist>() override</arglist>
+      <anchor>a35d4aec2caa92d29cd011ed6ec8794e1</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>float</type>
@@ -60176,8 +60176,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1ReverbPlugin.html</anchorfile>
-      <anchor>a990bd3efda280a340f67a99d350ef51b</anchor>
-      <arglist>() override</arglist>
+      <anchor>a90be9b07c3a9e475502c1f60558e9f93</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -60654,8 +60654,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1SamplerPlugin.html</anchorfile>
-      <anchor>a0213ebd6592323fc17018d2871b585ae</anchor>
-      <arglist>() override</arglist>
+      <anchor>ae4be46565b1fb2e0d1c35d92b2fda048</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -65043,8 +65043,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1StepModifier.html</anchorfile>
-      <anchor>a1b18e1c59599c2259a6a332630455a26</anchor>
-      <arglist>() override</arglist>
+      <anchor>a766d40d37fc09c2377f2c7d3b71e227e</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>float</type>
@@ -66539,8 +66539,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1TempoTrack.html</anchorfile>
-      <anchor>a7881c4b3d9acbd8d8b262174fc3118fc</anchor>
-      <arglist>() override</arglist>
+      <anchor>a714a48ad68afd57b3a1e1cec1b208c50</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -66785,8 +66785,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1TextPlugin.html</anchorfile>
-      <anchor>a5b3fb9e4c73910e41bfb5f1a41c8e605</anchor>
-      <arglist>() override</arglist>
+      <anchor>ad0d36d8a17585c5cb586185d5a76383c</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -67744,8 +67744,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1TimeSigSetting.html</anchorfile>
-      <anchor>a326645d7c912f8663cbaa4d3b1767a06</anchor>
-      <arglist>() override</arglist>
+      <anchor>ad8a2e2e1218d2ce2dd78fffc81f9999b</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -68180,8 +68180,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1ToneGeneratorPlugin.html</anchorfile>
-      <anchor>a02a326a1baef4db92df730bd9ef3e36b</anchor>
-      <arglist>() override</arglist>
+      <anchor>a360f7a13cf9608ecadeb01e7bc72e4fa</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -68507,8 +68507,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1Track.html</anchorfile>
-      <anchor>a752732a9e8092a454caa133b01a944d3</anchor>
-      <arglist>() override</arglist>
+      <anchor>a9ca7e65e0974008ee0607083ebb8ceb2</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -76158,8 +76158,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1VCAPlugin.html</anchorfile>
-      <anchor>a8955a67b3a57078974454bdd07ed14a1</anchor>
-      <arglist>() override</arglist>
+      <anchor>a52f10cad65e21bd6a28b91dac5419e38</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -76545,8 +76545,8 @@
       <type>juce::String</type>
       <name>getName</name>
       <anchorfile>classtracktion_1_1engine_1_1VolumeAndPanPlugin.html</anchorfile>
-      <anchor>ada65517bcea9a24ef8d0d70fb9875324</anchor>
-      <arglist>() override</arglist>
+      <anchor>aa0b1b59faa101c063d21e3b2d7867a24</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -77374,8 +77374,8 @@
       <type>bool</type>
       <name>usesSourceFile</name>
       <anchorfile>classtracktion_1_1engine_1_1WaveAudioClip.html</anchorfile>
-      <anchor>ade638db8d7aec4a43ceb7fe4cdd8fb59</anchor>
-      <arglist>() override</arglist>
+      <anchor>a4c16255d149ecba1cbf2a4e6197ca0f1</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>TimeDuration</type>

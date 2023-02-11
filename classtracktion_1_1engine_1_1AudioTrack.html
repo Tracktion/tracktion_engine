@@ -136,13 +136,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad5748c2f1bc8157e34513518b023f88d"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html#ad5748c2f1bc8157e34513518b023f88d">getSelectableDescription</a> () override</td></tr>
 <tr class="memdesc:ad5748c2f1bc8157e34513518b023f88d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subclasses must return a description of what they are.  <a href="classtracktion_1_1engine_1_1AudioTrack.html#ad5748c2f1bc8157e34513518b023f88d">More...</a><br /></td></tr>
 <tr class="separator:ad5748c2f1bc8157e34513518b023f88d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a31a5665d366a4780aaac21607f457c48"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html#a31a5665d366a4780aaac21607f457c48">getAudioTrackNumber</a> () noexcept</td></tr>
-<tr class="separator:a31a5665d366a4780aaac21607f457c48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6fae13c7fdf219dbf87aae38a356444f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html#a6fae13c7fdf219dbf87aae38a356444f">getAudioTrackNumber</a> () const noexcept</td></tr>
+<tr class="separator:a6fae13c7fdf219dbf87aae38a356444f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4e0678b07c0857bb6d85bfe7c86190c8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html#a4e0678b07c0857bb6d85bfe7c86190c8">sanityCheckName</a> () override</td></tr>
 <tr class="memdesc:a4e0678b07c0857bb6d85bfe7c86190c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">checks whether the name is 'track n' and if so, makes sure the number is right  <a href="classtracktion_1_1engine_1_1AudioTrack.html#a4e0678b07c0857bb6d85bfe7c86190c8">More...</a><br /></td></tr>
 <tr class="separator:a4e0678b07c0857bb6d85bfe7c86190c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7f8fda16cf55fe76049ff014d8e57103"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html#a7f8fda16cf55fe76049ff014d8e57103">getName</a> () override</td></tr>
-<tr class="separator:a7f8fda16cf55fe76049ff014d8e57103"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c3596278ac2fb200b909301097de0e8"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html#a8c3596278ac2fb200b909301097de0e8">getName</a> () const override</td></tr>
+<tr class="separator:a8c3596278ac2fb200b909301097de0e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a126f994223a9ee8108e052a1232d778d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html#a126f994223a9ee8108e052a1232d778d">canContainPlugin</a> (<a class="el" href="classtracktion_1_1engine_1_1Plugin.html">Plugin</a> *) const override</td></tr>
 <tr class="memdesc:a126f994223a9ee8108e052a1232d778d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this track can contain a specific <a class="el" href="classtracktion_1_1engine_1_1Plugin.html">Plugin</a>.  <a href="classtracktion_1_1engine_1_1AudioTrack.html#a126f994223a9ee8108e052a1232d778d">More...</a><br /></td></tr>
 <tr class="separator:a126f994223a9ee8108e052a1232d778d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -394,9 +394,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af9221a8a31aadd2156c0ea20d741c6ef inherit pub_methods_classtracktion_1_1engine_1_1Track"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Track.html#af9221a8a31aadd2156c0ea20d741c6ef">refreshCurrentAutoParam</a> ()</td></tr>
 <tr class="memdesc:af9221a8a31aadd2156c0ea20d741c6ef inherit pub_methods_classtracktion_1_1engine_1_1Track"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the current parameter bases on the set <a class="el" href="namespacetracktion_1_1engine_1_1IDs.html">IDs</a>.  <a href="classtracktion_1_1engine_1_1Track.html#af9221a8a31aadd2156c0ea20d741c6ef">More...</a><br /></td></tr>
 <tr class="separator:af9221a8a31aadd2156c0ea20d741c6ef inherit pub_methods_classtracktion_1_1engine_1_1Track"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a752732a9e8092a454caa133b01a944d3 inherit pub_methods_classtracktion_1_1engine_1_1Track"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Track.html#a752732a9e8092a454caa133b01a944d3">getName</a> () override</td></tr>
-<tr class="memdesc:a752732a9e8092a454caa133b01a944d3 inherit pub_methods_classtracktion_1_1engine_1_1Track"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the name of the <a class="el" href="classtracktion_1_1engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a>.  <a href="classtracktion_1_1engine_1_1Track.html#a752732a9e8092a454caa133b01a944d3">More...</a><br /></td></tr>
-<tr class="separator:a752732a9e8092a454caa133b01a944d3 inherit pub_methods_classtracktion_1_1engine_1_1Track"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ca7e65e0974008ee0607083ebb8ceb2 inherit pub_methods_classtracktion_1_1engine_1_1Track"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Track.html#a9ca7e65e0974008ee0607083ebb8ceb2">getName</a> () const override</td></tr>
+<tr class="memdesc:a9ca7e65e0974008ee0607083ebb8ceb2 inherit pub_methods_classtracktion_1_1engine_1_1Track"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the name of the <a class="el" href="classtracktion_1_1engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a>.  <a href="classtracktion_1_1engine_1_1Track.html#a9ca7e65e0974008ee0607083ebb8ceb2">More...</a><br /></td></tr>
+<tr class="separator:a9ca7e65e0974008ee0607083ebb8ceb2 inherit pub_methods_classtracktion_1_1engine_1_1Track"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a28d33175031d85c5516a29e1e91c54af inherit pub_methods_classtracktion_1_1engine_1_1Track"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Track.html#a28d33175031d85c5516a29e1e91c54af">setName</a> (const juce::String &amp;)</td></tr>
 <tr class="memdesc:a28d33175031d85c5516a29e1e91c54af inherit pub_methods_classtracktion_1_1engine_1_1Track"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the name of the <a class="el" href="classtracktion_1_1engine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a>.  <a href="classtracktion_1_1engine_1_1Track.html#a28d33175031d85c5516a29e1e91c54af">More...</a><br /></td></tr>
 <tr class="separator:a28d33175031d85c5516a29e1e91c54af inherit pub_methods_classtracktion_1_1engine_1_1Track"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -847,12 +847,12 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classtracktion_1_1engine_1_1Selectable.html#ad70a5dbab32c6f9ceec471c59854e6ba">tracktion::engine::Selectable</a>.</p>
 
-<p class="reference">References <a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html#a7f8fda16cf55fe76049ff014d8e57103">getName()</a>.</p>
+<p class="reference">References <a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html#a8c3596278ac2fb200b909301097de0e8">getName()</a>.</p>
 
 </div>
 </div>
-<a id="a31a5665d366a4780aaac21607f457c48"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a31a5665d366a4780aaac21607f457c48">&#9670;&nbsp;</a></span>getAudioTrackNumber()</h2>
+<a id="a6fae13c7fdf219dbf87aae38a356444f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6fae13c7fdf219dbf87aae38a356444f">&#9670;&nbsp;</a></span>getAudioTrackNumber()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -864,7 +864,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">int tracktion::engine::AudioTrack::getAudioTrackNumber </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -905,8 +905,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a7f8fda16cf55fe76049ff014d8e57103"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7f8fda16cf55fe76049ff014d8e57103">&#9670;&nbsp;</a></span>getName()</h2>
+<a id="a8c3596278ac2fb200b909301097de0e8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8c3596278ac2fb200b909301097de0e8">&#9670;&nbsp;</a></span>getName()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -918,7 +918,7 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">juce::String tracktion::engine::AudioTrack::getName </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -928,7 +928,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classtracktion_1_1engine_1_1EditItem.html#af61321caec12095b5bc30108b57f7675">tracktion::engine::EditItem</a>.</p>
+<p>Implements <a class="el" href="classtracktion_1_1engine_1_1EditItem.html#ac58f795c563b2aafe5d57853cf39a098">tracktion::engine::EditItem</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html#ad5748c2f1bc8157e34513518b023f88d">getSelectableDescription()</a>.</p>
 
@@ -2393,7 +2393,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Feb 10 2023 11:13:09 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Sat Feb 11 2023 19:28:28 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
