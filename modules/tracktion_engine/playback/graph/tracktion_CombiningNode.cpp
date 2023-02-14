@@ -150,6 +150,7 @@ void CombiningNode::addInput (std::unique_ptr<Node> input, TimeRange time)
     nodeProperties.numberOfChannels = std::max (nodeProperties.numberOfChannels, props.numberOfChannels);
     nodeProperties.latencyNumSamples = std::max (nodeProperties.latencyNumSamples, props.latencyNumSamples);
     hash_combine (nodeProperties.nodeID, props.nodeID);
+    hash_combine (nodeProperties.nodeID, time);
 
     int i;
     for (i = 0; i < inputs.size(); ++i)

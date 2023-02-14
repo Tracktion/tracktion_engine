@@ -32,6 +32,7 @@ ContainerClipNode::ContainerClipNode (ProcessState& editProcessState,
     const auto hashSalt = 9088803362895930667;
     hash_combine (nodeProperties.nodeID, hashSalt);
     hash_combine (nodeProperties.nodeID, containerClipID.getRawID());
+    hash_combine (nodeProperties.nodeID, input->getNodeProperties().nodeID);
 }
 
 //==============================================================================
