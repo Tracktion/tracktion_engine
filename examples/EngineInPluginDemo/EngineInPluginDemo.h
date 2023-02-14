@@ -387,7 +387,6 @@ private:
 
                     te::InputDeviceInstance::RecordingParameters params;
                     params.punchRange   = { edit.getTransport().getPosition(), te::Edit::getMaximumEditTimeRange().getEnd() };
-                    params.sampleRate   = edit.engine.getDeviceManager().getSampleRate();
 
                     if (auto error = instance->prepareToRecord (params); error.isNotEmpty())
                         edit.engine.getUIBehaviour().showWarningMessage (error);
