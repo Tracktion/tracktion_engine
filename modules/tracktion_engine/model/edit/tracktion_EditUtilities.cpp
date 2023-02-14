@@ -981,4 +981,34 @@ juce::Array<MacroParameterElement*> getAllMacroParameterElements (const Edit& ed
     return elements;
 }
 
+InputDeviceInstance::RecordingParameters getDefaultRecordingParameters (const EditPlaybackContext& context,
+                                                                        TimePosition playStart,
+                                                                        TimePosition punchIn)
+{
+    InputDeviceInstance::RecordingParameters params;
+
+    const auto& edit = context.edit;
+
+    params.punchRange   = { punchIn, Edit::getMaximumEditTimeRange().getEnd() };
+
+    if (edit.recordingPunchInOut)
+    {
+        const auto loopRange = context.transport.getLoopRange();
+        params.punchRange = params.punchRange.withStart (std::max (params.punchRange.getStart(), loopRange.getStart() - 0.5s));
+
+        if (edit.getNumCountInBeats() > 0 && context.getLoopTimes().getStart() > loopRange.getStart())
+            params.punchRange = params.punchRange.withStart (context.getLoopTimes().getStart());
+
+        // Ignore punch out if we start recording very close to the end of the punch markers
+        if (playStart < loopRange.getEnd() - 0.5s)
+            params.punchRange = params.punchRange.withEnd (loopRange.getEnd());
+    }
+    else if (context.isLooping())
+    {
+        params.punchRange = params.punchRange.withStart (context.getLoopTimes().getStart());
+    }
+
+    return params;
+}
+
 }} // namespace tracktion { inline namespace engine

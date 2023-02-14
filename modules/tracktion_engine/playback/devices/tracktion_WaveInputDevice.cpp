@@ -307,8 +307,7 @@ public:
         return juce::Result::ok();
     }
 
-    juce::String prepareToRecord (TimePosition playStart, TimePosition punchIn, double sr,
-                                  int /*blockSizeSamples*/, bool isLivePunch) override
+    juce::String prepareToRecord (RecordingParameters params) override
     {
         CRASH_TRACER
 
@@ -331,66 +330,52 @@ public:
                 return res.getErrorMessage();
 
             auto rc = std::make_unique<RecordingContext> (edit.engine, recordedFile);
-            rc->sampleRate = sr;
+            rc->sampleRate = edit.engine.getDeviceManager().getSampleRate();
 
             juce::StringPairArray metadata;
-            AudioFileUtils::addBWAVStartToMetadata (metadata, (SampleCount) tracktion::toSamples (playStart, sr));
+            AudioFileUtils::addBWAVStartToMetadata (metadata, (SampleCount) tracktion::toSamples (params.punchRange.getStart(), rc->sampleRate));
             auto& wi = getWaveInput();
 
             rc->fileWriter.reset (new AudioFileWriter (AudioFile (edit.engine, recordedFile), format,
                                                        wi.isStereoPair() ? 2 : 1,
-                                                       sr, wi.bitDepth, metadata, 0));
+                                                       rc->sampleRate, wi.bitDepth, metadata, 0));
 
             if (rc->fileWriter->isOpen())
             {
                 CRASH_TRACER
-                auto endRecTime = punchIn + Edit::getMaximumEditTimeRange().getLength();
-                auto punchInTime = punchIn;
-
                 rc->firstRecCallback = true;
                 muteTrackNow = false;
 
                 const auto adjustSeconds = wi.getAdjustmentSeconds();
-                rc->adjustSamples = (int) tracktion::toSamples (adjustSeconds, sr);
+                rc->adjustSamples = (int) tracktion::toSamples (adjustSeconds, rc->sampleRate);
                 rc->adjustSamples += context.getLatencySamples();
 
-                if (! isLivePunch)
+                if (edit.recordingPunchInOut)
                 {
-                    rc->recordingWithPunch = edit.recordingPunchInOut;
+                    rc->recordingWithPunch = true;
 
-                    if (rc->recordingWithPunch)
+                    auto loopRange = context.transport.getLoopRange();
+                    auto muteStart = std::max (params.punchRange.getStart(), loopRange.getStart());
+                    auto muteEnd   = params.punchRange.getEnd();
+
+                    if (params.punchRange.getStart() < loopRange.getEnd() - 0.5s)
                     {
-                        auto loopRange = context.transport.getLoopRange();
-                        punchInTime    = std::max (punchInTime, loopRange.getStart() - 0.5s);
-                        auto muteStart = std::max (punchInTime, loopRange.getStart());
-                        auto muteEnd   = endRecTime;
-
-                        if (edit.getNumCountInBeats() > 0 && context.getLoopTimes().getStart() > loopRange.getStart())
-                            punchInTime = context.getLoopTimes().getStart();
-
-                        if (playStart < loopRange.getEnd() - 0.5s)
-                        {
-                            endRecTime = loopRange.getEnd() + adjustSeconds + 0.8s;
-                            muteEnd    = loopRange.getEnd();
-                        }
-
-                        rc->muteTimes = { muteStart, muteEnd };
+                        params.punchRange = params.punchRange.withEnd (params.punchRange.getEnd() + adjustSeconds + 0.8s);
+                        muteEnd = loopRange.getEnd();
                     }
-                    else if (context.isLooping())
-                    {
-                        punchInTime = context.getLoopTimes().getStart();
-                    }
+
+                    rc->muteTimes = { muteStart, muteEnd };
                 }
 
-                rc->punchTimes = { punchInTime, endRecTime };
+                rc->punchTimes = params.punchRange;
                 rc->hasHitThreshold = (wi.recordTriggerDb <= -50.0f);
 
                 if (edit.engine.getUIBehaviour().shouldGenerateLiveWaveformsWhenRecording())
                 {
                     if ((rc->thumbnail = edit.engine.getRecordingThumbnailManager().getThumbnailFor (recordedFile)))
                     {
-                        rc->thumbnail->reset (wi.isStereoPair() ? 2 : 1, sr);
-                        rc->thumbnail->punchInTime = punchInTime;
+                        rc->thumbnail->reset (wi.isStereoPair() ? 2 : 1, rc->sampleRate);
+                        rc->thumbnail->punchInTime = params.punchRange.getStart();
                     }
                 }
 
@@ -409,6 +394,109 @@ public:
 
         return error;
     }
+
+//ddd    juce::String prepareToRecord (TimePosition playStart, TimePosition punchIn, double sr,
+//                                  int /*blockSizeSamples*/, bool isLivePunch) override
+//    {
+//        CRASH_TRACER
+//
+//        juce::String error;
+//
+//        JUCE_TRY
+//        {
+//            closeFileWriter();
+//
+//            if (auto proj = owner.engine.getProjectManager().getProject (edit))
+//                if (proj->isReadOnly())
+//                    return TRANS("The current project is read-only, so new clips can't be recorded into it!");
+//
+//            auto format = getFormatToUse();
+//            juce::File recordedFile;
+//
+//            auto res = getRecordingFile (recordedFile, *format);
+//
+//            if (! res.wasOk())
+//                return res.getErrorMessage();
+//
+//            auto rc = std::make_unique<RecordingContext> (edit.engine, recordedFile);
+//            rc->sampleRate = sr;
+//
+//            juce::StringPairArray metadata;
+//            AudioFileUtils::addBWAVStartToMetadata (metadata, (SampleCount) tracktion::toSamples (playStart, sr));
+//            auto& wi = getWaveInput();
+//
+//            rc->fileWriter.reset (new AudioFileWriter (AudioFile (edit.engine, recordedFile), format,
+//                                                       wi.isStereoPair() ? 2 : 1,
+//                                                       sr, wi.bitDepth, metadata, 0));
+//
+//            if (rc->fileWriter->isOpen())
+//            {
+//                CRASH_TRACER
+//                auto endRecTime = punchIn + Edit::getMaximumEditTimeRange().getLength();
+//                auto punchInTime = punchIn;
+//
+//                rc->firstRecCallback = true;
+//                muteTrackNow = false;
+//
+//                const auto adjustSeconds = wi.getAdjustmentSeconds();
+//                rc->adjustSamples = (int) tracktion::toSamples (adjustSeconds, sr);
+//                rc->adjustSamples += context.getLatencySamples();
+//
+//                if (! isLivePunch)
+//                {
+//                    rc->recordingWithPunch = edit.recordingPunchInOut;
+//
+//                    if (rc->recordingWithPunch)
+//                    {
+//                        auto loopRange = context.transport.getLoopRange();
+//                        punchInTime    = std::max (punchInTime, loopRange.getStart() - 0.5s);
+//                        auto muteStart = std::max (punchInTime, loopRange.getStart());
+//                        auto muteEnd   = endRecTime;
+//
+//                        if (edit.getNumCountInBeats() > 0 && context.getLoopTimes().getStart() > loopRange.getStart())
+//                            punchInTime = context.getLoopTimes().getStart();
+//
+//                        if (playStart < loopRange.getEnd() - 0.5s)
+//                        {
+//                            endRecTime = loopRange.getEnd() + adjustSeconds + 0.8s;
+//                            muteEnd    = loopRange.getEnd();
+//                        }
+//
+//                        rc->muteTimes = { muteStart, muteEnd };
+//                    }
+//                    else if (context.isLooping())
+//                    {
+//                        punchInTime = context.getLoopTimes().getStart();
+//                    }
+//                }
+//
+//                rc->punchTimes = { punchInTime, endRecTime };
+//                rc->hasHitThreshold = (wi.recordTriggerDb <= -50.0f);
+//
+//                if (edit.engine.getUIBehaviour().shouldGenerateLiveWaveformsWhenRecording())
+//                {
+//                    if ((rc->thumbnail = edit.engine.getRecordingThumbnailManager().getThumbnailFor (recordedFile)))
+//                    {
+//                        rc->thumbnail->reset (wi.isStereoPair() ? 2 : 1, sr);
+//                        rc->thumbnail->punchInTime = punchInTime;
+//                    }
+//                }
+//
+//                const juce::ScopedLock sl (contextLock);
+//                recordingContext = std::move (rc);
+//            }
+//            else
+//            {
+//                TRACKTION_LOG_ERROR ("Record fail: couldn't write to file: " + recordedFile.getFullPathName());
+//
+//                return TRANS("Couldn't record!") + "\n\n"
+//                        + TRANS("Couldn't create the file: XZZX").replace ("XZZX", recordedFile.getFullPathName());
+//            }
+//        }
+//        JUCE_CATCH_EXCEPTION
+//
+//        return error;
+//    }
 
     bool startRecording() override
     {
