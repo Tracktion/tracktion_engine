@@ -70,21 +70,27 @@ void ContainerClipNode::prepareToPlay (const tracktion::graph::PlaybackInitialis
         // Make sure we do this before we overrwite the default ProcessState
         if (auto editTempoPosition = getProcessState().tempoPosition.get())
             playerContext->processState.tempoPosition = std::make_unique<tempo::Sequence::Position> (*editTempoPosition);
-
-        // Set the ProcessState used for all the child nodes so they use the local time, not the Edit time
-        visitNodes (*input,
-                    [localProcessState = &playerContext->processState] (auto& node)
-                    {
-            if (auto ten = dynamic_cast<TracktionEngineNode*> (&node))
-                ten->setProcessState (*localProcessState);
-
-            for (auto internalNode : node.getInternalNodes())
-                if (auto ten = dynamic_cast<TracktionEngineNode*> (internalNode))
-                    ten->setProcessState (*localProcessState);
-        }, true);
-
-        playerContext->player.setNumThreads (0);
     }
+
+    if (! input)
+    {
+        assert (playerContext->player.getSampleRate() == info.sampleRate);
+        return;
+    }
+
+    // Set the ProcessState used for all the child nodes so they use the local time, not the Edit time
+    visitNodes (*input,
+                [localProcessState = &playerContext->processState] (auto& node)
+                {
+                    if (auto ten = dynamic_cast<TracktionEngineNode*> (&node))
+                        ten->setProcessState (*localProcessState);
+
+                    for (auto internalNode : node.getInternalNodes())
+                        if (auto ten = dynamic_cast<TracktionEngineNode*> (internalNode))
+                            ten->setProcessState (*localProcessState);
+                }, true);
+
+                playerContext->player.setNumThreads (0);
 
     playerContext->player.setNode (std::move (input),
                                    info.sampleRate, info.blockSize);
