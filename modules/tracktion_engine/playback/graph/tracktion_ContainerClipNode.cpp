@@ -27,17 +27,19 @@ ContainerClipNode::ContainerClipNode (ProcessState& editProcessState,
     assert (input);
     setOptimisations ({ tracktion::graph::ClearBuffers::no,
                         tracktion::graph::AllocateAudioBuffer::yes });
-
-    // Calculated from hashing a string view of "ContainerClipNode"
-    const auto hashSalt = 9088803362895930667;
-    hash_combine (nodeProperties.nodeID, hashSalt);
-    hash_combine (nodeProperties.nodeID, containerClipID.getRawID());
-    hash_combine (nodeProperties.nodeID, input->getNodeProperties().nodeID);
 }
 
 //==============================================================================
 tracktion::graph::NodeProperties ContainerClipNode::getNodeProperties()
 {
+    // Reset the NodeID as we need to be findable between graph loads to keep the same internal NodePlayer
+    nodeProperties.nodeID = 0;
+
+    // Calculated from hashing a string view of "ContainerClipNode"
+    const auto hashSalt = 9088803362895930667;
+    hash_combine (nodeProperties.nodeID, hashSalt);
+    hash_combine (nodeProperties.nodeID, containerClipID.getRawID());
+
     return nodeProperties;
 }
 
@@ -60,29 +62,30 @@ void ContainerClipNode::prepareToPlay (const tracktion::graph::PlaybackInitialis
         if (auto oldNode = findNodeWithID<ContainerClipNode> (*info.nodeGraphToReplace, getNodeProperties().nodeID))
             playerContext = oldNode->playerContext;
 
-    if (playerContext)
-        return;
+    if (! playerContext)
+    {
+        playerContext = std::make_shared<PlayerContext>();
 
-    playerContext = std::make_shared<PlayerContext>();
+        // We need to create our own Tempo::Position as we'll apply an offset so it stays in sync with the Edit's tempo sequence
+        // Make sure we do this before we overrwite the default ProcessState
+        if (auto editTempoPosition = getProcessState().tempoPosition.get())
+            playerContext->processState.tempoPosition = std::make_unique<tempo::Sequence::Position> (*editTempoPosition);
 
-    // We need to create our own Tempo::Position as we'll apply an offset so it stays in sync with the Edit's tempo sequence
-    // Make sure we do this before we overrwite the default ProcessState
-    if (auto editTempoPosition = getProcessState().tempoPosition.get())
-        playerContext->processState.tempoPosition = std::make_unique<tempo::Sequence::Position> (*editTempoPosition);
+        // Set the ProcessState used for all the child nodes so they use the local time, not the Edit time
+        visitNodes (*input,
+                    [localProcessState = &playerContext->processState] (auto& node)
+                    {
+            if (auto ten = dynamic_cast<TracktionEngineNode*> (&node))
+                ten->setProcessState (*localProcessState);
 
-    // Set the ProcessState used for all the child nodes so they use the local time, not the Edit time
-    visitNodes (*input,
-                [localProcessState = &playerContext->processState] (auto& node)
-                {
-                     if (auto ten = dynamic_cast<TracktionEngineNode*> (&node))
-                         ten->setProcessState (*localProcessState);
+            for (auto internalNode : node.getInternalNodes())
+                if (auto ten = dynamic_cast<TracktionEngineNode*> (internalNode))
+                    ten->setProcessState (*localProcessState);
+        }, true);
 
-                     for (auto internalNode : node.getInternalNodes())
-                         if (auto ten = dynamic_cast<TracktionEngineNode*> (internalNode))
-                             ten->setProcessState (*localProcessState);
-                }, true);
+        playerContext->player.setNumThreads (0);
+    }
 
-    playerContext->player.setNumThreads (0);
     playerContext->player.setNode (std::move (input),
                                    info.sampleRate, info.blockSize);
 }
