@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-02-14 10:30:57</td>
+            <td class="headerValue">2023-02-14 11:41:59</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">16</td>
@@ -164,22 +164,22 @@
 <a name="102"><span class="lineNum">     102 </span>            :     /** Sets the attack time. */</a>
 <a name="103"><span class="lineNum">     103 </span>            :     void setAttackTime (float attackMs)</a>
 <a name="104"><span class="lineNum">     104 </span>            :     {</a>
-<a name="105"><span class="lineNum">     105 </span><span class="lineCov">      74062 :         attackTimeMs = attackMs;</span></a>
-<a name="106"><span class="lineNum">     106 </span><span class="lineCov">      74062 :         attackCoeff = getDelta (attackTimeMs);</span></a>
+<a name="105"><span class="lineNum">     105 </span><span class="lineCov">      73940 :         attackTimeMs = attackMs;</span></a>
+<a name="106"><span class="lineNum">     106 </span><span class="lineCov">      73940 :         attackCoeff = getDelta (attackTimeMs);</span></a>
 <a name="107"><span class="lineNum">     107 </span>            :     }</a>
 <a name="108"><span class="lineNum">     108 </span>            : </a>
 <a name="109"><span class="lineNum">     109 </span>            :     /** Sets the hold time. */</a>
 <a name="110"><span class="lineNum">     110 </span>            :     void setHoldTime (float holdMs)</a>
 <a name="111"><span class="lineNum">     111 </span>            :     {</a>
-<a name="112"><span class="lineNum">     112 </span><span class="lineCov">      74062 :         holdTimeMs = holdMs;</span></a>
-<a name="113"><span class="lineNum">     113 </span><span class="lineCov">      74062 :         holdSamples = (int) msToSamples (holdMs, sampleRate);</span></a>
+<a name="112"><span class="lineNum">     112 </span><span class="lineCov">      73940 :         holdTimeMs = holdMs;</span></a>
+<a name="113"><span class="lineNum">     113 </span><span class="lineCov">      73940 :         holdSamples = (int) msToSamples (holdMs, sampleRate);</span></a>
 <a name="114"><span class="lineNum">     114 </span>            :     }</a>
 <a name="115"><span class="lineNum">     115 </span>            : </a>
 <a name="116"><span class="lineNum">     116 </span>            :     /** Sets the release time. */</a>
 <a name="117"><span class="lineNum">     117 </span>            :     void setReleaseTime (float releaseMs)</a>
 <a name="118"><span class="lineNum">     118 </span>            :     {</a>
-<a name="119"><span class="lineNum">     119 </span><span class="lineCov">      74062 :         releaseTimeMs = releaseMs;</span></a>
-<a name="120"><span class="lineNum">     120 </span><span class="lineCov">      74062 :         releaseCoeff = getDelta (releaseTimeMs);</span></a>
+<a name="119"><span class="lineNum">     119 </span><span class="lineCov">      73940 :         releaseTimeMs = releaseMs;</span></a>
+<a name="120"><span class="lineNum">     120 </span><span class="lineCov">      73940 :         releaseCoeff = getDelta (releaseTimeMs);</span></a>
 <a name="121"><span class="lineNum">     121 </span>            :     }</a>
 <a name="122"><span class="lineNum">     122 </span>            : </a>
 <a name="123"><span class="lineNum">     123 </span>            :     /** Sets the detection mode to use. */</a>
@@ -230,16 +230,16 @@
 <a name="168"><span class="lineNum">     168 </span>            : </a>
 <a name="169"><span class="lineNum">     169 </span><span class="lineCov">    5604000 :         if (input &gt; envelope)</span></a>
 <a name="170"><span class="lineNum">     170 </span>            :         {</a>
-<a name="171"><span class="lineNum">     171 </span><span class="lineCov">     215316 :             envelope = attackCoeff * (envelope - input) + input;</span></a>
-<a name="172"><span class="lineNum">     172 </span><span class="lineCov">     215316 :             holdSamplesLeft = holdSamples;</span></a>
+<a name="171"><span class="lineNum">     171 </span><span class="lineCov">     214878 :             envelope = attackCoeff * (envelope - input) + input;</span></a>
+<a name="172"><span class="lineNum">     172 </span><span class="lineCov">     214878 :             holdSamplesLeft = holdSamples;</span></a>
 <a name="173"><span class="lineNum">     173 </span>            :         }</a>
-<a name="174"><span class="lineNum">     174 </span><span class="lineCov">    5388684 :         else if (holdSamplesLeft &gt; 0)</span></a>
+<a name="174"><span class="lineNum">     174 </span><span class="lineCov">    5389122 :         else if (holdSamplesLeft &gt; 0)</span></a>
 <a name="175"><span class="lineNum">     175 </span>            :         {</a>
 <a name="176"><span class="lineNum">     176 </span><span class="lineNoCov">          0 :             --holdSamplesLeft;</span></a>
 <a name="177"><span class="lineNum">     177 </span>            :         }</a>
 <a name="178"><span class="lineNum">     178 </span>            :         else</a>
 <a name="179"><span class="lineNum">     179 </span>            :         {</a>
-<a name="180"><span class="lineNum">     180 </span><span class="lineCov">    5388684 :             envelope = releaseCoeff * (envelope - input) + input;</span></a>
+<a name="180"><span class="lineNum">     180 </span><span class="lineCov">    5389122 :             envelope = releaseCoeff * (envelope - input) + input;</span></a>
 <a name="181"><span class="lineNum">     181 </span>            :         }</a>
 <a name="182"><span class="lineNum">     182 </span>            : </a>
 <a name="183"><span class="lineNum">     183 </span>            :         jassert (! std::isnan (envelope));</a>
@@ -265,12 +265,12 @@
 <a name="203"><span class="lineNum">     203 </span>            : </a>
 <a name="204"><span class="lineNum">     204 </span>            :     inline float getDelta (float timeMs)</a>
 <a name="205"><span class="lineNum">     205 </span>            :     {</a>
-<a name="206"><span class="lineNum">     206 </span><span class="lineCov">      74062 :         return std::exp (timeConstant / (timeMs * sampleRate * 0.001f));</span></a>
+<a name="206"><span class="lineNum">     206 </span><span class="lineCov">      73940 :         return std::exp (timeConstant / (timeMs * sampleRate * 0.001f));</span></a>
 <a name="207"><span class="lineNum">     207 </span>            :     }</a>
 <a name="208"><span class="lineNum">     208 </span>            : </a>
 <a name="209"><span class="lineNum">     209 </span>            :     inline double msToSamples (double numMiliseconds, double sr)</a>
 <a name="210"><span class="lineNum">     210 </span>            :     {</a>
-<a name="211"><span class="lineNum">     211 </span><span class="lineCov">      74062 :         return numMiliseconds * 0.001 * sr;</span></a>
+<a name="211"><span class="lineNum">     211 </span><span class="lineCov">      73940 :         return numMiliseconds * 0.001 * sr;</span></a>
 <a name="212"><span class="lineNum">     212 </span>            :     }</a>
 <a name="213"><span class="lineNum">     213 </span>            : </a>
 <a name="214"><span class="lineNum">     214 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EnvelopeFollower)</a>
@@ -353,9 +353,9 @@
 <a name="291"><span class="lineNum">     291 </span><span class="lineCov">         48 : }</span></a>
 <a name="292"><span class="lineNum">     292 </span>            : </a>
 <a name="293"><span class="lineNum">     293 </span>            : //==============================================================================</a>
-<a name="294"><span class="lineNum">     294 </span><span class="lineCov">     231148 : float EnvelopeFollowerModifier::getCurrentValue()</span></a>
+<a name="294"><span class="lineNum">     294 </span><span class="lineCov">     230712 : float EnvelopeFollowerModifier::getCurrentValue()</span></a>
 <a name="295"><span class="lineNum">     295 </span>            : {</a>
-<a name="296"><span class="lineNum">     296 </span><span class="lineCov">     231148 :     return (getEnvelopeValue() * depthParam-&gt;getCurrentValue()) + offsetParam-&gt;getCurrentValue();</span></a>
+<a name="296"><span class="lineNum">     296 </span><span class="lineCov">     230712 :     return (getEnvelopeValue() * depthParam-&gt;getCurrentValue()) + offsetParam-&gt;getCurrentValue();</span></a>
 <a name="297"><span class="lineNum">     297 </span>            : }</a>
 <a name="298"><span class="lineNum">     298 </span>            : </a>
 <a name="299"><span class="lineNum">     299 </span><span class="lineCov">         16 : AutomatableParameter::ModifierAssignment* EnvelopeFollowerModifier::createAssignment (const juce::ValueTree&amp; v)</span></a>
@@ -379,20 +379,20 @@
 <a name="317"><span class="lineNum">     317 </span>            :     reset();</a>
 <a name="318"><span class="lineNum">     318 </span><span class="lineCov">         16 : }</span></a>
 <a name="319"><span class="lineNum">     319 </span>            : </a>
-<a name="320"><span class="lineNum">     320 </span><span class="lineCov">      74062 : void EnvelopeFollowerModifier::applyToBuffer (const PluginRenderContext&amp; pc)</span></a>
+<a name="320"><span class="lineNum">     320 </span><span class="lineCov">      73940 : void EnvelopeFollowerModifier::applyToBuffer (const PluginRenderContext&amp; pc)</span></a>
 <a name="321"><span class="lineNum">     321 </span>            : {</a>
 <a name="322"><span class="lineNum">     322 </span>            :     setEditTime (pc.editTime.getStart());</a>
 <a name="323"><span class="lineNum">     323 </span>            :     </a>
-<a name="324"><span class="lineNum">     324 </span><span class="lineCov">      74062 :     if (pc.destBuffer == nullptr)</span></a>
+<a name="324"><span class="lineNum">     324 </span><span class="lineCov">      73940 :     if (pc.destBuffer == nullptr)</span></a>
 <a name="325"><span class="lineNum">     325 </span><span class="lineNoCov">          0 :         return;</span></a>
 <a name="326"><span class="lineNum">     326 </span>            : </a>
-<a name="327"><span class="lineNum">     327 </span><span class="lineCov">      74062 :     updateParameterStreams (pc.editTime.getStart());</span></a>
+<a name="327"><span class="lineNum">     327 </span><span class="lineCov">      73940 :     updateParameterStreams (pc.editTime.getStart());</span></a>
 <a name="328"><span class="lineNum">     328 </span>            : </a>
 <a name="329"><span class="lineNum">     329 </span>            :     juce::AudioBuffer&lt;float&gt; ab (pc.destBuffer-&gt;getArrayOfWritePointers(),</a>
-<a name="330"><span class="lineNum">     330 </span><span class="lineCov">      74062 :                            pc.destBuffer-&gt;getNumChannels(),</span></a>
-<a name="331"><span class="lineNum">     331 </span><span class="lineCov">      74062 :                            pc.bufferStartSample,</span></a>
-<a name="332"><span class="lineNum">     332 </span><span class="lineCov">      74062 :                            pc.bufferNumSamples);</span></a>
-<a name="333"><span class="lineNum">     333 </span><span class="lineCov">      74062 :     processBlock (ab);</span></a>
+<a name="330"><span class="lineNum">     330 </span><span class="lineCov">      73940 :                            pc.destBuffer-&gt;getNumChannels(),</span></a>
+<a name="331"><span class="lineNum">     331 </span><span class="lineCov">      73940 :                            pc.bufferStartSample,</span></a>
+<a name="332"><span class="lineNum">     332 </span><span class="lineCov">      73940 :                            pc.bufferNumSamples);</span></a>
+<a name="333"><span class="lineNum">     333 </span><span class="lineCov">      73940 :     processBlock (ab);</span></a>
 <a name="334"><span class="lineNum">     334 </span>            : }</a>
 <a name="335"><span class="lineNum">     335 </span>            : </a>
 <a name="336"><span class="lineNum">     336 </span>            : //==============================================================================</a>
@@ -424,7 +424,7 @@
 <a name="362"><span class="lineNum">     362 </span><span class="lineCov">         16 :     envelopeFollower-&gt;setSampleRate ((float) newSampleRate);</span></a>
 <a name="363"><span class="lineNum">     363 </span><span class="lineNoCov">          0 : }</span></a>
 <a name="364"><span class="lineNum">     364 </span>            : </a>
-<a name="365"><span class="lineNum">     365 </span><span class="lineCov">      74062 : void EnvelopeFollowerModifier::processBlock (const juce::AudioBuffer&lt;float&gt;&amp; ab)</span></a>
+<a name="365"><span class="lineNum">     365 </span><span class="lineCov">      73940 : void EnvelopeFollowerModifier::processBlock (const juce::AudioBuffer&lt;float&gt;&amp; ab)</span></a>
 <a name="366"><span class="lineNum">     366 </span>            : {</a>
 <a name="367"><span class="lineNum">     367 </span>            :     envelopeFollower-&gt;setAttackTime (attackParam-&gt;getCurrentValue());</a>
 <a name="368"><span class="lineNum">     368 </span>            :     envelopeFollower-&gt;setHoldTime (holdParam-&gt;getCurrentValue());</a>
@@ -438,16 +438,16 @@
 <a name="376"><span class="lineNum">     376 </span>            :     const float* const* samples = ab.getArrayOfReadPointers();</a>
 <a name="377"><span class="lineNum">     377 </span>            :     float envelope = 0.0f;</a>
 <a name="378"><span class="lineNum">     378 </span>            : </a>
-<a name="379"><span class="lineNum">     379 </span><span class="lineCov">      74062 :     AudioScratchBuffer scratch (1, numSamples);</span></a>
-<a name="380"><span class="lineNum">     380 </span><span class="lineCov">      74062 :     float* scratchData = scratch.buffer.getWritePointer (0);</span></a>
+<a name="379"><span class="lineNum">     379 </span><span class="lineCov">      73940 :     AudioScratchBuffer scratch (1, numSamples);</span></a>
+<a name="380"><span class="lineNum">     380 </span><span class="lineCov">      73940 :     float* scratchData = scratch.buffer.getWritePointer (0);</span></a>
 <a name="381"><span class="lineNum">     381 </span>            : </a>
 <a name="382"><span class="lineNum">     382 </span>            :     // Find max of all channels</a>
-<a name="383"><span class="lineNum">     383 </span><span class="lineCov">    5678062 :     for (int i = 0; i &lt; numSamples; ++i)</span></a>
+<a name="383"><span class="lineNum">     383 </span><span class="lineCov">    5677940 :     for (int i = 0; i &lt; numSamples; ++i)</span></a>
 <a name="384"><span class="lineNum">     384 </span>            :     {</a>
 <a name="385"><span class="lineNum">     385 </span><span class="lineCov">    5604000 :         float sample = 0.0f;</span></a>
 <a name="386"><span class="lineNum">     386 </span>            : </a>
 <a name="387"><span class="lineNum">     387 </span><span class="lineCov">   16812000 :         for (int c = 0; c &lt; numChannels; ++c)</span></a>
-<a name="388"><span class="lineNum">     388 </span><span class="lineCov">   16737938 :             sample = std::max (sample, std::abs (samples[c][i]));</span></a>
+<a name="388"><span class="lineNum">     388 </span><span class="lineCov">   16738060 :             sample = std::max (sample, std::abs (samples[c][i]));</span></a>
 <a name="389"><span class="lineNum">     389 </span>            : </a>
 <a name="390"><span class="lineNum">     390 </span><span class="lineCov">    5604000 :         scratchData[i] = sample * gainVal;</span></a>
 <a name="391"><span class="lineNum">     391 </span>            :     }</a>
@@ -459,19 +459,19 @@
 <a name="397"><span class="lineNum">     397 </span>            :     if (setIfDifferent (currentHighPassFrequency, highPassFrequencyParam-&gt;getCurrentValue()))</a>
 <a name="398"><span class="lineNum">     398 </span><span class="lineCov">         16 :         highPassFilter.setCoefficients (juce::IIRCoefficients::makeHighPass (getSampleRate(), currentHighPassFrequency));</span></a>
 <a name="399"><span class="lineNum">     399 </span>            : </a>
-<a name="400"><span class="lineNum">     400 </span><span class="lineCov">      74062 :     if (lowPass)</span></a>
+<a name="400"><span class="lineNum">     400 </span><span class="lineCov">      73940 :     if (lowPass)</span></a>
 <a name="401"><span class="lineNum">     401 </span><span class="lineNoCov">          0 :         lowPassFilter.processSamples (scratchData, numSamples);</span></a>
 <a name="402"><span class="lineNum">     402 </span>            : </a>
-<a name="403"><span class="lineNum">     403 </span><span class="lineCov">      74062 :     if (highPass)</span></a>
+<a name="403"><span class="lineNum">     403 </span><span class="lineCov">      73940 :     if (highPass)</span></a>
 <a name="404"><span class="lineNum">     404 </span><span class="lineNoCov">          0 :         highPassFilter.processSamples (scratchData, numSamples);</span></a>
 <a name="405"><span class="lineNum">     405 </span>            : </a>
 <a name="406"><span class="lineNum">     406 </span>            :     // Process envelope</a>
-<a name="407"><span class="lineNum">     407 </span><span class="lineCov">    5678062 :     for (int i = 0; i &lt; numSamples; ++i)</span></a>
+<a name="407"><span class="lineNum">     407 </span><span class="lineCov">    5677940 :     for (int i = 0; i &lt; numSamples; ++i)</span></a>
 <a name="408"><span class="lineNum">     408 </span><span class="lineCov">    5604000 :         envelope = envelopeFollower-&gt;processSingleSample (scratchData[i]);</span></a>
 <a name="409"><span class="lineNum">     409 </span>            : </a>
 <a name="410"><span class="lineNum">     410 </span>            :     jassert (! std::isnan (envelope));</a>
 <a name="411"><span class="lineNum">     411 </span>            :     envelopeValue.store (envelope, std::memory_order_release);</a>
-<a name="412"><span class="lineNum">     412 </span><span class="lineCov">      74062 : }</span></a>
+<a name="412"><span class="lineNum">     412 </span><span class="lineCov">      73940 : }</span></a>
 <a name="413"><span class="lineNum">     413 </span>            : </a>
 <a name="414"><span class="lineNum">     414 </span><span class="lineNoCov">          0 : void EnvelopeFollowerModifier::reset()</span></a>
 <a name="415"><span class="lineNum">     415 </span>            : {</a>

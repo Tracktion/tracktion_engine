@@ -90,6 +90,9 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1MidiInputDeviceDestination.html">MidiInputDeviceDestination</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1RecordingParameters.html">RecordingParameters</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The parameters used to configure a recording operation.  <a href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1RecordingParameters.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1VirtualMidiInputDeviceDestination.html">VirtualMidiInputDeviceDestination</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1WaveInputDeviceDestination.html">WaveInputDeviceDestination</a></td></tr>
@@ -136,8 +139,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4dee1d21cbbf1ddc6dde3ac3f6471d90"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a4dee1d21cbbf1ddc6dde3ac3f6471d90">shouldTrackContentsBeMuted</a> ()</td></tr>
 <tr class="memdesc:a4dee1d21cbbf1ddc6dde3ac3f6471d90"><td class="mdescLeft">&#160;</td><td class="mdescRight">should return true if this input is currently actively recording into a track and it wants the existing track contents to be muted.  <a href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a4dee1d21cbbf1ddc6dde3ac3f6471d90">More...</a><br /></td></tr>
 <tr class="separator:a4dee1d21cbbf1ddc6dde3ac3f6471d90"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae78cbfa4ed9e9b5fcffb3cababfbd2f0"><td class="memItemLeft" align="right" valign="top">virtual juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#ae78cbfa4ed9e9b5fcffb3cababfbd2f0">prepareToRecord</a> (TimePosition start, TimePosition punchIn, double sampleRate, int blockSizeSamples, bool isLivePunch)=0</td></tr>
-<tr class="separator:ae78cbfa4ed9e9b5fcffb3cababfbd2f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1605232ab90b347dcc683a0b5044861"><td class="memItemLeft" align="right" valign="top">virtual juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#aa1605232ab90b347dcc683a0b5044861">prepareToRecord</a> (<a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1RecordingParameters.html">RecordingParameters</a>)=0</td></tr>
+<tr class="separator:aa1605232ab90b347dcc683a0b5044861"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec5cfcfc1b89963db7b83231a97da922"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#aec5cfcfc1b89963db7b83231a97da922">startRecording</a> ()=0</td></tr>
 <tr class="separator:aec5cfcfc1b89963db7b83231a97da922"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f4357f2c884cae68ecc5c1f8b8d6a79"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#a6f4357f2c884cae68ecc5c1f8b8d6a79">isRecording</a> ()=0</td></tr>
@@ -654,8 +657,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ae78cbfa4ed9e9b5fcffb3cababfbd2f0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae78cbfa4ed9e9b5fcffb3cababfbd2f0">&#9670;&nbsp;</a></span>prepareToRecord()</h2>
+<a id="aa1605232ab90b347dcc683a0b5044861"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1605232ab90b347dcc683a0b5044861">&#9670;&nbsp;</a></span>prepareToRecord()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -666,37 +669,9 @@ Protected Attributes</h2></td></tr>
         <tr>
           <td class="memname">virtual juce::String tracktion::engine::InputDeviceInstance::prepareToRecord </td>
           <td>(</td>
-          <td class="paramtype">TimePosition&#160;</td>
-          <td class="paramname"><em>start</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1RecordingParameters.html">RecordingParameters</a>&#160;</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
-          <td class="paramtype">TimePosition&#160;</td>
-          <td class="paramname"><em>punchIn</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>sampleRate</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>blockSizeSamples</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>isLivePunch</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -1355,7 +1330,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 14 2023 10:14:58 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Feb 14 2023 11:24:31 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

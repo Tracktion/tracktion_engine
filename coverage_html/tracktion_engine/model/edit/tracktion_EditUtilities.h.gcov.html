@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-02-14 10:30:57</td>
+            <td class="headerValue">2023-02-14 11:41:59</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">6</td>
@@ -294,37 +294,50 @@
 <a name="232"><span class="lineNum">     232 </span>            : </a>
 <a name="233"><span class="lineNum">     233 </span>            : </a>
 <a name="234"><span class="lineNum">     234 </span>            : //==============================================================================</a>
-<a name="235"><span class="lineNum">     235 </span>            : /** @internal */</a>
-<a name="236"><span class="lineNum">     236 </span>            : template&lt;typename TrackType&gt;</a>
-<a name="237"><span class="lineNum">     237 </span><span class="lineCov">       9291 : inline juce::Array&lt;TrackType*&gt; getTracksOfType (const Edit&amp; edit, bool recursive)</span></a>
-<a name="238"><span class="lineNum">     238 </span>            : {</a>
-<a name="239"><span class="lineNum">     239 </span><span class="lineCov">       9291 :     juce::Array&lt;TrackType*&gt; result;</span></a>
-<a name="240"><span class="lineNum">     240 </span>            :     result.ensureStorageAllocated (32);</a>
-<a name="241"><span class="lineNum">     241 </span>            : </a>
-<a name="242"><span class="lineNum">     242 </span><span class="lineCov">     225069 :     edit.visitAllTracks ([&amp;] (Track&amp; t)</span></a>
-<a name="243"><span class="lineNum">     243 </span>            :                          {</a>
-<a name="244"><span class="lineNum">     244 </span><span class="lineCov">     450648 :                              if (auto type = dynamic_cast&lt;TrackType*&gt; (&amp;t))</span></a>
-<a name="245"><span class="lineNum">     245 </span>            :                                  result.add (type);</a>
+<a name="235"><span class="lineNum">     235 </span>            : // Inputs/recording</a>
+<a name="236"><span class="lineNum">     236 </span>            : //==============================================================================</a>
+<a name="237"><span class="lineNum">     237 </span>            : /** Returns the default set of recording parameters.</a>
+<a name="238"><span class="lineNum">     238 </span>            :     This behaviour may not be desirable in which case it might make more sense</a>
+<a name="239"><span class="lineNum">     239 </span>            :     to just construct your own RecordingParameters and pass them to</a>
+<a name="240"><span class="lineNum">     240 </span>            :     InputDeviceInstance::prepareToRecord.</a>
+<a name="241"><span class="lineNum">     241 </span>            : */</a>
+<a name="242"><span class="lineNum">     242 </span>            : InputDeviceInstance::RecordingParameters getDefaultRecordingParameters (const EditPlaybackContext&amp;,</a>
+<a name="243"><span class="lineNum">     243 </span>            :                                                                         TimePosition playStart,</a>
+<a name="244"><span class="lineNum">     244 </span>            :                                                                         TimePosition punchIn);</a>
+<a name="245"><span class="lineNum">     245 </span>            : </a>
 <a name="246"><span class="lineNum">     246 </span>            : </a>
-<a name="247"><span class="lineNum">     247 </span><span class="lineCov">     450648 :                              return true;</span></a>
-<a name="248"><span class="lineNum">     248 </span>            :                          }, recursive);</a>
-<a name="249"><span class="lineNum">     249 </span>            : </a>
-<a name="250"><span class="lineNum">     250 </span><span class="lineCov">       9291 :     return result;</span></a>
-<a name="251"><span class="lineNum">     251 </span>            : }</a>
-<a name="252"><span class="lineNum">     252 </span>            : </a>
-<a name="253"><span class="lineNum">     253 </span>            : /** @internal */</a>
-<a name="254"><span class="lineNum">     254 </span>            : template&lt;typename ModifierType&gt;</a>
-<a name="255"><span class="lineNum">     255 </span><span class="lineNoCov">          0 : inline typename ModifierType::Ptr findModifierTypeForID (const Edit&amp; edit, EditItemID id)</span></a>
-<a name="256"><span class="lineNum">     256 </span>            : {</a>
-<a name="257"><span class="lineNum">     257 </span><span class="lineNoCov">          0 :     for (auto modifier : getAllModifiers (edit))</span></a>
-<a name="258"><span class="lineNum">     258 </span><span class="lineNoCov">          0 :         if (modifier-&gt;itemID == id)</span></a>
-<a name="259"><span class="lineNum">     259 </span><span class="lineNoCov">          0 :             if (auto asType = dynamic_cast&lt;ModifierType*&gt; (modifier))</span></a>
-<a name="260"><span class="lineNum">     260 </span>            :                 return typename ModifierType::Ptr (asType);</a>
-<a name="261"><span class="lineNum">     261 </span>            : </a>
-<a name="262"><span class="lineNum">     262 </span><span class="lineNoCov">          0 :     return {};</span></a>
-<a name="263"><span class="lineNum">     263 </span>            : }</a>
-<a name="264"><span class="lineNum">     264 </span>            : </a>
-<a name="265"><span class="lineNum">     265 </span>            : }} // namespace tracktion { inline namespace engine</a>
+<a name="247"><span class="lineNum">     247 </span>            : //==============================================================================</a>
+<a name="248"><span class="lineNum">     248 </span>            : /** @internal */</a>
+<a name="249"><span class="lineNum">     249 </span>            : template&lt;typename TrackType&gt;</a>
+<a name="250"><span class="lineNum">     250 </span><span class="lineCov">       9291 : inline juce::Array&lt;TrackType*&gt; getTracksOfType (const Edit&amp; edit, bool recursive)</span></a>
+<a name="251"><span class="lineNum">     251 </span>            : {</a>
+<a name="252"><span class="lineNum">     252 </span><span class="lineCov">       9291 :     juce::Array&lt;TrackType*&gt; result;</span></a>
+<a name="253"><span class="lineNum">     253 </span>            :     result.ensureStorageAllocated (32);</a>
+<a name="254"><span class="lineNum">     254 </span>            : </a>
+<a name="255"><span class="lineNum">     255 </span><span class="lineCov">     225069 :     edit.visitAllTracks ([&amp;] (Track&amp; t)</span></a>
+<a name="256"><span class="lineNum">     256 </span>            :                          {</a>
+<a name="257"><span class="lineNum">     257 </span><span class="lineCov">     450648 :                              if (auto type = dynamic_cast&lt;TrackType*&gt; (&amp;t))</span></a>
+<a name="258"><span class="lineNum">     258 </span>            :                                  result.add (type);</a>
+<a name="259"><span class="lineNum">     259 </span>            : </a>
+<a name="260"><span class="lineNum">     260 </span><span class="lineCov">     450648 :                              return true;</span></a>
+<a name="261"><span class="lineNum">     261 </span>            :                          }, recursive);</a>
+<a name="262"><span class="lineNum">     262 </span>            : </a>
+<a name="263"><span class="lineNum">     263 </span><span class="lineCov">       9291 :     return result;</span></a>
+<a name="264"><span class="lineNum">     264 </span>            : }</a>
+<a name="265"><span class="lineNum">     265 </span>            : </a>
+<a name="266"><span class="lineNum">     266 </span>            : /** @internal */</a>
+<a name="267"><span class="lineNum">     267 </span>            : template&lt;typename ModifierType&gt;</a>
+<a name="268"><span class="lineNum">     268 </span><span class="lineNoCov">          0 : inline typename ModifierType::Ptr findModifierTypeForID (const Edit&amp; edit, EditItemID id)</span></a>
+<a name="269"><span class="lineNum">     269 </span>            : {</a>
+<a name="270"><span class="lineNum">     270 </span><span class="lineNoCov">          0 :     for (auto modifier : getAllModifiers (edit))</span></a>
+<a name="271"><span class="lineNum">     271 </span><span class="lineNoCov">          0 :         if (modifier-&gt;itemID == id)</span></a>
+<a name="272"><span class="lineNum">     272 </span><span class="lineNoCov">          0 :             if (auto asType = dynamic_cast&lt;ModifierType*&gt; (modifier))</span></a>
+<a name="273"><span class="lineNum">     273 </span>            :                 return typename ModifierType::Ptr (asType);</a>
+<a name="274"><span class="lineNum">     274 </span>            : </a>
+<a name="275"><span class="lineNum">     275 </span><span class="lineNoCov">          0 :     return {};</span></a>
+<a name="276"><span class="lineNum">     276 </span>            : }</a>
+<a name="277"><span class="lineNum">     277 </span>            : </a>
+<a name="278"><span class="lineNum">     278 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

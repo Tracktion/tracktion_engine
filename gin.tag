@@ -3763,6 +3763,13 @@
       <anchor>ac5c6acfd3b9bffb885bbf237a6cb8e91</anchor>
       <arglist>(const Edit &amp;)</arglist>
     </member>
+    <member kind="function">
+      <type>InputDeviceInstance::RecordingParameters</type>
+      <name>getDefaultRecordingParameters</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ac03348f3bb8498dad4e90b3ec3ef0546</anchor>
+      <arglist>(const EditPlaybackContext &amp;, TimePosition playStart, TimePosition punchIn)</arglist>
+    </member>
   </compound>
   <compound kind="file">
     <name>tracktion_Engine.h</name>
@@ -4253,6 +4260,7 @@
     <filename>tracktion__InputDevice_8h.html</filename>
     <class kind="class">tracktion::engine::InputDevice</class>
     <class kind="class">tracktion::engine::InputDeviceInstance</class>
+    <class kind="struct">tracktion::engine::InputDeviceInstance::RecordingParameters</class>
     <class kind="struct">tracktion::engine::InputDeviceInstance::InputDeviceDestination</class>
     <class kind="struct">tracktion::engine::InputDeviceInstance::WaveInputDeviceDestination</class>
     <class kind="struct">tracktion::engine::InputDeviceInstance::MidiInputDeviceDestination</class>
@@ -36462,6 +36470,7 @@
     <class kind="struct">tracktion::engine::InputDeviceInstance::InputDeviceDestination</class>
     <class kind="struct">tracktion::engine::InputDeviceInstance::InputDeviceDestinationList</class>
     <class kind="struct">tracktion::engine::InputDeviceInstance::MidiInputDeviceDestination</class>
+    <class kind="struct">tracktion::engine::InputDeviceInstance::RecordingParameters</class>
     <class kind="struct">tracktion::engine::InputDeviceInstance::VirtualMidiInputDeviceDestination</class>
     <class kind="struct">tracktion::engine::InputDeviceInstance::WaveInputDeviceDestination</class>
     <member kind="function">
@@ -36601,8 +36610,8 @@
       <type>virtual juce::String</type>
       <name>prepareToRecord</name>
       <anchorfile>classtracktion_1_1engine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>ae78cbfa4ed9e9b5fcffb3cababfbd2f0</anchor>
-      <arglist>(TimePosition start, TimePosition punchIn, double sampleRate, int blockSizeSamples, bool isLivePunch)=0</arglist>
+      <anchor>aa1605232ab90b347dcc683a0b5044861</anchor>
+      <arglist>(RecordingParameters)=0</arglist>
     </member>
     <member kind="function" virtualness="pure">
       <type>virtual bool</type>
@@ -58699,6 +58708,17 @@
       <arglist>() noexcept</arglist>
     </member>
   </compound>
+  <compound kind="struct">
+    <name>tracktion::engine::InputDeviceInstance::RecordingParameters</name>
+    <filename>structtracktion_1_1engine_1_1InputDeviceInstance_1_1RecordingParameters.html</filename>
+    <member kind="variable">
+      <type>TimeRange</type>
+      <name>punchRange</name>
+      <anchorfile>structtracktion_1_1engine_1_1InputDeviceInstance_1_1RecordingParameters.html</anchorfile>
+      <anchor>aa98d7194fe2f1ae97db537e12d610305</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
   <compound kind="class">
     <name>tracktion::engine::RecordingThumbnailManager</name>
     <filename>classtracktion_1_1engine_1_1RecordingThumbnailManager.html</filename>
@@ -80202,6 +80222,13 @@
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
       <anchor>ac5c6acfd3b9bffb885bbf237a6cb8e91</anchor>
       <arglist>(const Edit &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>InputDeviceInstance::RecordingParameters</type>
+      <name>getDefaultRecordingParameters</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ac03348f3bb8498dad4e90b3ec3ef0546</anchor>
+      <arglist>(const EditPlaybackContext &amp;, TimePosition playStart, TimePosition punchIn)</arglist>
     </member>
     <member kind="function">
       <type>bool</type>

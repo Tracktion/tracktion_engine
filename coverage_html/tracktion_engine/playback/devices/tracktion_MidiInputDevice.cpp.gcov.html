@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-02-14 10:30:57</td>
+            <td class="headerValue">2023-02-14 11:41:59</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">4</td>
@@ -692,9 +692,9 @@
 <a name="630"><span class="lineNum">     630 </span><span class="lineNoCov">          0 :     virtual void handleMMCMessage (const juce::MidiMessage&amp;) {}</span></a>
 <a name="631"><span class="lineNum">     631 </span><span class="lineNoCov">          0 :     virtual bool handleTimecodeMessage (const juce::MidiMessage&amp;) { return false; }</span></a>
 <a name="632"><span class="lineNum">     632 </span>            : </a>
-<a name="633"><span class="lineNum">     633 </span><span class="lineNoCov">          0 :     juce::String prepareToRecord (TimePosition, TimePosition punchIn, double, int, bool) override</span></a>
+<a name="633"><span class="lineNum">     633 </span><span class="lineNoCov">          0 :     juce::String prepareToRecord (RecordingParameters params) override</span></a>
 <a name="634"><span class="lineNum">     634 </span>            :     {</a>
-<a name="635"><span class="lineNum">     635 </span><span class="lineNoCov">          0 :         startTime = punchIn;</span></a>
+<a name="635"><span class="lineNum">     635 </span><span class="lineNoCov">          0 :         startTime = params.punchRange.getStart();</span></a>
 <a name="636"><span class="lineNum">     636 </span><span class="lineNoCov">          0 :         recorded.clear();</span></a>
 <a name="637"><span class="lineNum">     637 </span><span class="lineNoCov">          0 :         livePlayOver = context.transport.looping;</span></a>
 <a name="638"><span class="lineNum">     638 </span>            : </a>

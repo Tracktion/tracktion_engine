@@ -1433,6 +1433,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ac5c6acfd3b9bffb885bbf237a6cb8e91"><td class="memItemLeft" align="right" valign="top">juce::Array&lt; <a class="el" href="classtracktion_1_1engine_1_1MacroParameterElement.html">MacroParameterElement</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#ac5c6acfd3b9bffb885bbf237a6cb8e91">getAllMacroParameterElements</a> (const <a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &amp;)</td></tr>
 <tr class="memdesc:ac5c6acfd3b9bffb885bbf237a6cb8e91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns all the <a class="el" href="classtracktion_1_1engine_1_1MacroParameterElement.html" title="Base class for elements which can contain macro parameters.">MacroParameterElement</a> in an <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>.  <a href="namespacetracktion_1_1engine.html#ac5c6acfd3b9bffb885bbf237a6cb8e91">More...</a><br /></td></tr>
 <tr class="separator:ac5c6acfd3b9bffb885bbf237a6cb8e91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac03348f3bb8498dad4e90b3ec3ef0546"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1RecordingParameters.html">InputDeviceInstance::RecordingParameters</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#ac03348f3bb8498dad4e90b3ec3ef0546">getDefaultRecordingParameters</a> (const <a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html">EditPlaybackContext</a> &amp;, TimePosition playStart, TimePosition punchIn)</td></tr>
+<tr class="memdesc:ac03348f3bb8498dad4e90b3ec3ef0546"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the default set of recording parameters.  <a href="namespacetracktion_1_1engine.html#ac03348f3bb8498dad4e90b3ec3ef0546">More...</a><br /></td></tr>
+<tr class="separator:ac03348f3bb8498dad4e90b3ec3ef0546"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a09a6841a3e10b92f78ed1b26ecc861e0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a09a6841a3e10b92f78ed1b26ecc861e0">operator&lt;</a> (const <a class="el" href="classtracktion_1_1engine_1_1PitchSetting.html">PitchSetting</a> &amp;p1, const <a class="el" href="classtracktion_1_1engine_1_1PitchSetting.html">PitchSetting</a> &amp;p2) noexcept</td></tr>
 <tr class="separator:a09a6841a3e10b92f78ed1b26ecc861e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a564f980e2aa5935966c9c451de04fe57"><td class="memItemLeft" align="right" valign="top">tempo::Sequence::Position&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a564f980e2aa5935966c9c451de04fe57">createPosition</a> (const <a class="el" href="classtracktion_1_1engine_1_1TempoSequence.html">TempoSequence</a> &amp;)</td></tr>
@@ -4346,6 +4349,43 @@ template&lt;typename ModifierType &gt; </div>
 </div><div class="memdoc">
 
 <p>Returns all the <a class="el" href="classtracktion_1_1engine_1_1MacroParameterElement.html" title="Base class for elements which can contain macro parameters.">MacroParameterElement</a> in an <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>. </p>
+
+</div>
+</div>
+<a id="ac03348f3bb8498dad4e90b3ec3ef0546"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac03348f3bb8498dad4e90b3ec3ef0546">&#9670;&nbsp;</a></span>getDefaultRecordingParameters()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1RecordingParameters.html">InputDeviceInstance::RecordingParameters</a> tracktion::engine::getDefaultRecordingParameters </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classtracktion_1_1engine_1_1EditPlaybackContext.html">EditPlaybackContext</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TimePosition&#160;</td>
+          <td class="paramname"><em>playStart</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TimePosition&#160;</td>
+          <td class="paramname"><em>punchIn</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the default set of recording parameters. </p>
+<p>This behaviour may not be desirable in which case it might make more sense to just construct your own RecordingParameters and pass them to <a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html#aa1605232ab90b347dcc683a0b5044861">InputDeviceInstance::prepareToRecord</a>. </p>
 
 </div>
 </div>
@@ -12123,7 +12163,7 @@ template&lt;typename... Properties&gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 14 2023 10:14:57 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Feb 14 2023 11:24:30 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
