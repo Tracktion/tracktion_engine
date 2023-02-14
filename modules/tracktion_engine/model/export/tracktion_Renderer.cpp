@@ -20,9 +20,9 @@ void Renderer::turnOffAllPlugins (Edit& edit)
 
 namespace render_utils
 {
-    inline std::unique_ptr<Renderer::RenderTask> createRenderTask (Renderer::Parameters r, juce::String desc,
-                                                                   std::atomic<float>* progressToUpdate,
-                                                                   juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* thumbnail)
+    std::unique_ptr<Renderer::RenderTask> createRenderTask (Renderer::Parameters r, juce::String desc,
+                                                            std::atomic<float>* progressToUpdate,
+                                                            juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* thumbnail)
     {
         auto tracksToDo = toTrackArray (*r.edit, r.tracksToDo);
         
@@ -265,6 +265,12 @@ bool Renderer::RenderTask::renderAudio (Renderer::Parameters& r)
                                                                                            std::move (processState),
                                                                                            sourceToUpdate); });
 
+        if (! nodeRenderContext)
+        {
+            errorMessage = NEEDS_TRANS("Quit message or timeout occurred during render initialisation");
+            return true;
+        }
+
         if (! nodeRenderContext->getStatus().wasOk())
         {
             errorMessage = nodeRenderContext->getStatus().getErrorMessage();
@@ -309,7 +315,7 @@ void Renderer::RenderTask::flushAllPlugins (const Plugin::Array& plugins,
 
                     ep->applyToBuffer (PluginRenderContext (&buffer, channels, 0, samplesPerBlock,
                                                             nullptr, 0.0,
-                                                            TimePosition(), false, false, true, true));
+                                                            TimeRange(), false, false, true, true));
 
                     if (isAudioDataAlmostSilent (buffer.getReadPointer (0), samplesPerBlock))
                         break;

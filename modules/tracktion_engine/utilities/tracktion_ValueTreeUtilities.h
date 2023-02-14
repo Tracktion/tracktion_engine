@@ -231,6 +231,7 @@ public:
     {
         int index1 = parent.indexOf (first->state);
         int index2 = parent.indexOf (second->state);
+        jassert (index1 >= 0 && index2 >= 0);
         return index1 - index2;
     }
 

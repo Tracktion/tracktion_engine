@@ -62,6 +62,7 @@
 //==============================================================================
 #include <cassert>
 #include <thread>
+#include <optional>
 
 //==============================================================================
 #if __has_include(<choc/audio/choc_SampleBuffers.h>)
@@ -84,6 +85,7 @@
 #include "utilities/tracktion_MidiMessageArray.h"
 namespace tracktion_engine = tracktion::engine;
 
+#include "tracktion_graph/tracktion_Node.h"
 #include "tracktion_graph/tracktion_Utility.h"
 
 #include "utilities/tracktion_AudioBufferPool.h"
@@ -95,10 +97,10 @@ namespace tracktion_engine = tracktion::engine;
 #include "utilities/tracktion_Semaphore.h"
 #include "utilities/tracktion_Threads.h"
 #include "utilities/tracktion_LatencyProcessor.h"
+#include "utilities/tracktion_LockFreeObject.h"
 
 #include "tracktion_graph/tracktion_PlayHead.h"
 
-#include "tracktion_graph/tracktion_Node.h"
 #include "tracktion_graph/tracktion_PlayHeadState.h"
 
 #include "tracktion_graph/players/tracktion_NodePlayerUtilities.h"

@@ -918,7 +918,7 @@ int RackType::addInput (int index, const juce::String& name)
 {
     int numNames = getInputNames().size();
 
-    if (numNames < maxRackAudioChans)
+    if (numNames <= maxRackAudioChans)
     {
         if (index >= 0)
         {
@@ -946,7 +946,7 @@ int RackType::addOutput (int index, const juce::String& name)
 {
     int numNames = getOutputNames().size();
 
-    if (numNames < maxRackAudioChans)
+    if (numNames <= maxRackAudioChans)
     {
         if (index >= 0)
         {
@@ -1329,6 +1329,10 @@ RackType::Ptr RackTypeList::addNewRack()
 
     auto p = getRackTypeForID (newID);
     jassert (p != nullptr);
+
+    if (edit.engine.getEngineBehaviour().arePluginsRemappedWhenTempoChanges())
+        p->macroParameterList.remapOnTempoChange = true;
+
     return p;
 }
 
@@ -1352,6 +1356,10 @@ RackType::Ptr RackTypeList::addRackTypeFrom (const juce::ValueTree& rackType)
 
             type = getRackTypeForID (typeID);
             jassert (type != nullptr);
+
+            if (! type->macroParameterList.state.hasProperty (IDs::remapOnTempoChange))
+                if (edit.engine.getEngineBehaviour().arePluginsRemappedWhenTempoChanges())
+                    type->macroParameterList.remapOnTempoChange = true;
         }
     }
 

@@ -43,6 +43,10 @@ using BeatRange = RangeType<BeatPosition>;
 /** Creates a TimeRange from a range of samples. */
 [[ nodiscard ]] TimeRange timeRangeFromSamples (juce::Range<int64_t> sampleRange, double sampleRate);
 
+/** Creates a TimeRange from a range of seconds. */
+template<typename SourceRangeType>
+[[ nodiscard ]] TimeRange timeRangeFromSeconds (SourceRangeType);
+
 //==============================================================================
 //==============================================================================
 /**
@@ -207,6 +211,13 @@ inline TimeRange timeRangeFromSamples (juce::Range<int64_t> r, double sampleRate
              TimePosition::fromSamples (r.getEnd(), sampleRate) };
 }
 
+template<typename SourceRangeType>
+inline TimeRange timeRangeFromSeconds (SourceRangeType r)
+{
+    return { TimePosition::fromSeconds (r.getStart()),
+             TimePosition::fromSeconds (r.getEnd()) };
+}
+
 template<typename PositionType>
 inline RangeType<PositionType>::RangeType (Position s, Position e)
     : start (s), end (e)
@@ -364,7 +375,8 @@ struct std::hash<tracktion::TimeRange>
     {
         std::size_t h1 = std::hash<double>{} (tr.getStart().inSeconds());
         std::size_t h2 = std::hash<double>{} (tr.getEnd().inSeconds());
-        return h1 ^ (h2 << 1); // or use boost::hash_combine
+
+        return tracktion::hash (h1, h2);
     }
 };
 
@@ -375,6 +387,7 @@ struct std::hash<tracktion::BeatRange>
     {
         std::size_t h1 = std::hash<double>{} (tr.getStart().inBeats());
         std::size_t h2 = std::hash<double>{} (tr.getEnd().inBeats());
-        return h1 ^ (h2 << 1); // or use boost::hash_combine
+
+        return tracktion::hash (h1, h2);
     }
 };

@@ -29,6 +29,7 @@ public:
     void releaseObjects();
 
     void setTrackAndClip (Track*, Clip*);
+    void updateTrackProperties();
 
     //==============================================================================
     Plugin** begin() const;

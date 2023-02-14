@@ -41,7 +41,7 @@ public:
     {
         initialisePlugin();
         
-        const int latencyAtRoot = info.rootNode.getNodeProperties().latencyNumSamples;
+        const int latencyAtRoot = info.nodeGraph.rootNode->getNodeProperties().latencyNumSamples;
         const int latencyAtInput = input->getNodeProperties().latencyNumSamples;
 
         const int numSamplesLatencyToIntroduce = latencyAtRoot - latencyAtInput;

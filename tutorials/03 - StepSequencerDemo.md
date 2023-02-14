@@ -7,7 +7,7 @@ The idea here is to use Tracktion Engine's `StepClip` to manage a step sequence 
 
 
 ## StepSequencerDemo.h
-If you open the StepSequencerDemo.h file you'll see it's a JUCE PIP. You can use the Projucer to create a project to build the PIP or use the script in `/tests` to generate one automatically.
+Use the script in `/tests` to generate the `DemoRunner` example project then open the `StepSequencerDemo.h` file.
 
 Near the top of the file you'll see the `StepEditor` class. This is the main step entry editor. The workings of this are a bit out of scope for this tutorial but the code is there for you to browse. The main idea is that it maps an XY pixel position to the the `StepClip`'s channel and note index. Clicking and dragging then either turns cells on or off depending on the initial value of the cell that was clicked.
 

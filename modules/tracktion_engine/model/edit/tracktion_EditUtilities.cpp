@@ -786,6 +786,15 @@ Plugin::Ptr findPluginForState (const Edit& edit, const juce::ValueTree& v)
     return {};
 }
 
+Plugin::Ptr findPluginForID (const Edit& edit, EditItemID id)
+{
+    for (auto p : getAllPlugins (edit, true))
+        if (p->itemID == id)
+            return p;
+
+    return {};
+}
+
 Track* getTrackContainingPlugin (const Edit& edit, const Plugin* p)
 {
     return findTrackForPredicate (edit, [p] (Track& t) { return t.containsPlugin (p); });
@@ -979,10 +988,8 @@ InputDeviceInstance::RecordingParameters getDefaultRecordingParameters (const Ed
     InputDeviceInstance::RecordingParameters params;
 
     const auto& edit = context.edit;
-    const auto& dm = edit.engine.getDeviceManager();
 
     params.punchRange   = { punchIn, Edit::getMaximumEditTimeRange().getEnd() };
-    params.sampleRate   = dm.getSampleRate();
 
     if (edit.recordingPunchInOut)
     {

@@ -49,6 +49,17 @@ namespace AutomationScaleHelpers
         return inputVal < 0.0 ? offset - getCurvedValue (-inputVal, 0.0f, value, curve)
                               : offset + getCurvedValue (inputVal, 0.0f, value, curve);
     }
+
+    /** Remaps an input value from a given input range to 0-1. */
+    inline float remapInputValue (float inputVal, juce::Range<float> inputRange)
+    {
+        jassert (juce::isPositiveAndNotGreaterThan (inputVal, 1.0f));
+        auto remappedValue = juce::jmap (inputRange.clipValue (inputVal),
+                                         inputRange.getStart(), inputRange.getEnd(),
+                                         0.0f, 1.0f);
+        jassert (juce::isPositiveAndNotGreaterThan (remappedValue, 1.0f));
+        return remappedValue;
+    }
 }
 
 //==============================================================================
@@ -296,7 +307,9 @@ struct MacroSource : public AutomationModifierSource
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
         auto macroValue = macro->getCurve().getValueAt (time);
-        return AutomationScaleHelpers::mapValue (macroValue, assignment->offset, assignment->value, assignment->curve);
+        const auto range = juce::Range<float>::between (assignment->inputStart.get(), assignment->inputEnd.get());
+        return AutomationScaleHelpers::mapValue (AutomationScaleHelpers::remapInputValue (macroValue, range),
+                                                 assignment->offset, assignment->value, assignment->curve);
     }
 
     bool isEnabledAt (TimePosition) override
@@ -310,7 +323,9 @@ struct MacroSource : public AutomationModifierSource
         macro->updateFromAutomationSources (time);
         auto macroValue = macro->getCurrentValue();
 
-        currentValue.store (AutomationScaleHelpers::mapValue (macroValue, assignment->offset, assignment->value, assignment->curve),
+        const auto range = juce::Range<float>::between (assignment->inputStart.get(), assignment->inputEnd.get());
+        currentValue.store (AutomationScaleHelpers::mapValue (AutomationScaleHelpers::remapInputValue (macroValue, range),
+                                                              assignment->offset, assignment->value, assignment->curve),
                             std::memory_order_release);
     }
 
@@ -669,6 +684,9 @@ AutomatableParameter::ModifierAssignment::ModifierAssignment (Edit& e, const juc
     offset.referTo (state, IDs::offset, um);
     value.referTo (state, IDs::value, um);
     curve.referTo (state, IDs::curve, um);
+
+    inputStart.referTo (state, IDs::start, um, 0.0f);
+    inputEnd.referTo (state, IDs::end, um, 1.0f);
 }
 
 AutomatableParameter::ModifierAssignment::Ptr AutomatableParameter::addModifier (ModifierSource& source, float value, float offset, float curve)
@@ -756,12 +774,12 @@ bool AutomatableParameter::isAutomationActive() const
     return curveSource->isActive() || getAutomationSourceList().isActive();
 }
 
-float AutomatableParameter::getDefaultValue() const
+std::optional<float> AutomatableParameter::getDefaultValue() const
 {
     if (attachedValue != nullptr)
         return attachedValue->getDefault();
 
-    return 0.0f;
+    return {};
 }
 
 void AutomatableParameter::updateStream()

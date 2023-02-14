@@ -129,7 +129,7 @@ bool ImpulseResponsePlugin::loadImpulseResponse (juce::AudioBuffer<float>&& buff
 
 
 //==============================================================================
-juce::String ImpulseResponsePlugin::getName()                   { return getPluginName(); }
+juce::String ImpulseResponsePlugin::getName() const             { return getPluginName(); }
 juce::String ImpulseResponsePlugin::getShortName (int)          { return "IR"; }
 juce::String ImpulseResponsePlugin::getPluginType()             { return xmlTypeName; }
 bool ImpulseResponsePlugin::needsConstantBufferSize()           { return false; }

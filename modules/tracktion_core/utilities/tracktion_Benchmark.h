@@ -39,8 +39,9 @@ inline BenchmarkDescription createBenchmarkDescription (std::string category, st
 struct BenchmarkResult
 {
     BenchmarkDescription description;   /**< The BenchmarkDescription. */
-    double duration = 0.0, mean = 0.0, min = 0.0, max = 0.0, variance = 0.0;
-    int64_t ticksPerSecond = (int64_t) juce::Time::getHighResolutionTicksPerSecond();
+    double totalSeconds = 0.0, meanSeconds = 0.0, minSeconds = 0.0, maxSeconds = 0.0, varianceSeconds = 0.0;
+    uint64_t totalCycles = 0, meanCycles = 0, minCycles = 0, maxCycles = 0;
+    double varianceCycles = 0.0;
     juce::Time date { juce::Time::getCurrentTime() };
 };
 
@@ -49,8 +50,8 @@ inline BenchmarkResult createBenchmarkResult (BenchmarkDescription description,
                                               const tracktion::graph::PerformanceMeasurement::Statistics& stats)
 {
     return { description,
-             stats.totalSeconds, stats.meanSeconds, stats.minimumSeconds, stats.maximumSeconds,
-             stats.getVariance(), (int64_t) juce::Time::getHighResolutionTicksPerSecond() };
+             stats.totalSeconds, stats.meanSeconds, stats.minimumSeconds, stats.maximumSeconds, stats.getVarianceSeconds(),
+             stats.totalCycles, (uint64_t) stats.meanCycles, stats.minimumCycles, stats.maximumCycles, stats.getVarianceCycles() };
 }
 
 //==============================================================================
@@ -92,7 +93,6 @@ public:
 private:
     BenchmarkDescription description;
     tracktion::graph::PerformanceMeasurement measurement { {}, -1, false };
-    const int64_t ticksPerSecond { (int64_t) juce::Time::getHighResolutionTicksPerSecond() };
 };
 
 //==============================================================================

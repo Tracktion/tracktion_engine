@@ -33,24 +33,26 @@ namespace node_player_utils
     }
 
     /** Prepares a specific Node to be played and returns all the Nodes. */
-    static std::vector<Node*> prepareToPlay (Node* node, Node* oldNode, double sampleRate, int blockSize,
-                                             std::function<NodeBuffer (choc::buffer::Size)> allocateAudioBuffer = nullptr,
-                                             std::function<void (NodeBuffer&&)> deallocateAudioBuffer = nullptr)
+    static std::unique_ptr<NodeGraph> prepareToPlay (std::unique_ptr<Node> node, NodeGraph* oldGraph,
+                                                     double sampleRate, int blockSize,
+                                                     std::function<NodeBuffer (choc::buffer::Size)> allocateAudioBuffer = nullptr,
+                                                     std::function<void (NodeBuffer&&)> deallocateAudioBuffer = nullptr)
     {
         if (node == nullptr)
             return {};
         
         // First give the Nodes a chance to transform
-        transformNodes (*node);
-        
-        // Next, initialise all the nodes, this will call prepareToPlay on them and also
-        // give them a chance to do things like balance latency
-        const PlaybackInitialisationInfo info { sampleRate, blockSize, *node, oldNode,
+        auto nodeGraph = createNodeGraph (std::move (node));
+
+        // Next, initialise all the nodes, this will call prepareToPlay on them
+        const PlaybackInitialisationInfo info { sampleRate, blockSize,
+                                                *nodeGraph, oldGraph,
                                                 allocateAudioBuffer, deallocateAudioBuffer };
-        visitNodes (*node, [&] (Node& n) { n.initialise (info); }, false);
-        
-        // Then find all the nodes as it might have changed after initialisation
-        return tracktion::graph::getNodes (*node, tracktion::graph::VertexOrdering::postordering);
+
+        for (auto n : nodeGraph->orderedNodes)
+            n->initialise (info);
+
+        return nodeGraph;
     }
 
     inline void reserveAudioBufferPool (Node* rootNode, const std::vector<Node*>& allNodes,
@@ -81,7 +83,7 @@ namespace node_player_utils
                 ++numLeafNodes;
         }
         
-        const size_t numBuffersRequired = std::min (allNodes.size(), 1 + numThreads);
+        const size_t numBuffersRequired = std::max ((size_t) 2, std::min (allNodes.size(), 1 + numThreads));
         audioBufferPool.reserve (numBuffersRequired, choc::buffer::Size::create (maxNumChannels, blockSize));
     }
 }

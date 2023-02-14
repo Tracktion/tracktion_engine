@@ -181,7 +181,7 @@ void LatencyPlugin::applyToBuffer (const PluginRenderContext& rc)
     {
         const int numChannels = std::min (rc.destBuffer->getNumChannels(),
                                           juce::numElementsInArray (delayCompensator));
-        float** samples = rc.destBuffer->getArrayOfWritePointers();
+        float* const* samples = rc.destBuffer->getArrayOfWritePointers();
 
         for (int i = 0; i < numChannels; ++i)
         {

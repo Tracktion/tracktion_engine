@@ -49,7 +49,7 @@ public:
     //==============================================================================
     static const char* xmlTypeName;
 
-    juce::String getName() override                         { return TRANS("Volume & Pan Plugin"); }
+    juce::String getName() const override                   { return TRANS("Volume & Pan Plugin"); }
     juce::String getPluginType() override                   { return xmlTypeName; }
     juce::String getShortName (int) override                { return "VolPan"; }
     juce::String getSelectableDescription() override        { return getName(); }

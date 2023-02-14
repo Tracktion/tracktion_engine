@@ -24,7 +24,7 @@ public:
 
     using Modifier::initialise;
     void initialise() override;
-    juce::String getName() override                     { return TRANS("LFO Modifier"); }
+    juce::String getName() const override               { return TRANS("LFO Modifier"); }
 
     //==============================================================================
     /** Returns the current value of the LFO.

@@ -275,15 +275,13 @@ public:
     {
         if (rc != nullptr)
         {
-            time        = rc->editTime;
+            time        = rc->editTime.getStart();
             isPlaying   = rc->isPlaying;
 
-           #if TRACKTION_JUCE7
             const auto loopTimeRange = plugin.edit.getTransport().getLoopRange();
             loopStart.set (loopTimeRange.getStart());
             loopEnd.set (loopTimeRange.getEnd());
             currentPos.set (time);
-           #endif
         }
         else
         {
@@ -292,7 +290,6 @@ public:
         }
     }
 
-   #if TRACKTION_JUCE7
     juce::Optional<PositionInfo> getPosition() const override
     {
         PositionInfo result;
@@ -323,46 +320,6 @@ public:
 
         return result;
     }
-   #else
-    bool getCurrentPosition (CurrentPositionInfo& result) override
-    {
-        zerostruct (result);
-        result.frameRate = getFrameRate();
-
-        auto& transport = plugin.edit.getTransport();
-        auto localTime = time.load();
-
-        result.isPlaying        = isPlaying;
-        result.isRecording      = transport.isRecording();
-        result.editOriginTime   = transport.getTimeWhenStarted().inSeconds();
-        result.isLooping        = transport.looping;
-
-        if (result.isLooping)
-        {
-            const auto loopTimes = transport.getLoopRange();
-            loopStart.set (loopTimes.getStart());
-            result.ppqLoopStart = loopStart.getPPQTime();
-
-            loopEnd.set (loopTimes.getEnd());
-            result.ppqLoopEnd = loopEnd.getPPQTime();
-        }
-
-        result.timeInSamples    = (tracktion::toSamples (localTime, plugin.sampleRate));
-        result.timeInSeconds    = localTime.inSeconds();
-
-        currentPos.set (localTime);
-        const auto timeSig = currentPos.getTimeSignature();
-        result.bpm                  = currentPos.getTempo();
-        result.timeSigNumerator     = timeSig.numerator;
-        result.timeSigDenominator   = timeSig.denominator;
-
-        result.ppqPositionOfLastBarStart = currentPos.getPPQTimeOfBarStart();
-        result.ppqPosition = std::max (result.ppqPositionOfLastBarStart,
-                                       currentPos.getPPQTime());
-
-        return true;
-    }
-   #endif
 
 private:
     ExternalPlugin& plugin;
@@ -597,6 +554,17 @@ juce::ValueTree ExternalPlugin::create (Engine& e, const juce::PluginDescription
         v.setProperty (IDs::windowLocked, true, nullptr);
 
     return v;
+}
+
+juce::String ExternalPlugin::getLoadError()
+{
+    if (pluginInstance != nullptr)
+        return {};
+
+    if (loadError.isEmpty())
+        return TRANS("ERROR! - This plugin couldn't be loaded!");
+
+    return loadError;
 }
 
 const char* ExternalPlugin::xmlTypeName = "vst";
@@ -861,12 +829,12 @@ void ExternalPlugin::doFullInitialisation()
                 return;
 
             CRASH_TRACER_PLUGIN (getDebugName());
-            juce::String error;
+            loadError = {};
 
-            callBlocking ([this, &error, &foundDesc]
+            callBlocking ([this, &foundDesc]
             {
                 CRASH_TRACER_PLUGIN (getDebugName());
-                error = createPluginInstance (*foundDesc);
+                loadError = createPluginInstance (*foundDesc);
             });
 
             if (pluginInstance != nullptr)
@@ -885,10 +853,27 @@ void ExternalPlugin::doFullInitialisation()
             }
             else
             {
-                TRACKTION_LOG_ERROR (error);
+                TRACKTION_LOG_ERROR (loadError);
             }
         }
     }
+}
+
+void ExternalPlugin::trackPropertiesChanged()
+{
+    juce::MessageManager::callAsync ([this, pluginRef = getWeakRef()]
+    {
+        if (pluginRef == nullptr)
+            return;
+
+        if (auto t = getOwnerTrack(); t != nullptr && pluginInstance != nullptr)
+        {
+            auto n = t->getName();
+            auto c = t->getColour();
+
+            pluginInstance->updateTrackProperties ({n, c});
+        }
+    });
 }
 
 //==============================================================================
@@ -1663,6 +1648,11 @@ bool ExternalPlugin::setBusesLayout (juce::AudioProcessor::BusesLayout layout)
 
         jassert (baseClassNeedsInitialising());
 
+        // We need to release resources before changing the bus layout
+        // prepareToPlay will be called when the above ScopedRenderStatus goes out of scope
+        pluginInstance->releaseResources();
+        isInstancePrepared = false;
+
         if (pluginInstance->setBusesLayout (layout))
         {
             if (! edit.isLoading())
@@ -1690,6 +1680,11 @@ bool ExternalPlugin::setBusLayout (juce::AudioChannelSet set, bool isInput, int 
 
             if (! baseClassNeedsInitialising())
                 srs = std::make_unique<Edit::ScopedRenderStatus> (edit, true);
+
+            // We need to release resources before changing the bus layout
+            // prepareToPlay will be called when the above ScopedRenderStatus goes out of scope
+            pluginInstance->releaseResources();
+            isInstancePrepared = false;
 
             jassert (baseClassNeedsInitialising());
 

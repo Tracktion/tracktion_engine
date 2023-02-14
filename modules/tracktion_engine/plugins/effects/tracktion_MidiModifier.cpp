@@ -34,7 +34,7 @@ MidiModifierPlugin::~MidiModifierPlugin()
 
 const char* MidiModifierPlugin::xmlTypeName ("midiModifier");
 
-juce::String MidiModifierPlugin::getName()                                         { return TRANS("MIDI Modifier"); }
+juce::String MidiModifierPlugin::getName() const                                   { return TRANS("MIDI Modifier"); }
 juce::String MidiModifierPlugin::getPluginType()                                   { return xmlTypeName; }
 juce::String MidiModifierPlugin::getShortName (int)                                { return TRANS("MIDI Modifier"); }
 void MidiModifierPlugin::initialise (const PluginInitialisationInfo&)              {}

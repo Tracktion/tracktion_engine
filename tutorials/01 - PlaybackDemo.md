@@ -18,7 +18,7 @@ The `Edit` is the container for a playable arrangement. It holds tracks, tempo s
 
 
 ## PlaybackDemo.h
-If you open the PlaybackDemo.h file you'll see it's a JUCE PIP. You can use the Projucer to create a project to build the PIP or use the script in `/tests` to generate one automatically.
+Use the script in `/tests` to generate the `DemoRunner` example project then open the `PlaybackDemo.h` file.
 
 ### PlaybackDemo Class
 You'll notice that the `PlaybackDemo` class inherits from `Component` so it can be displayed on the screen, and also `ChangeListener`. This is so we can be notified of changes to the playback state.

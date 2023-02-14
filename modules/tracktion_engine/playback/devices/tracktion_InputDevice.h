@@ -127,7 +127,6 @@ public:
     struct RecordingParameters
     {
         TimeRange punchRange;       /**< The transport time range at which the recording should happen. */
-        double sampleRate = 0.0;    /**< The sample rate of the current audio device. */
     };
 
     virtual juce::String prepareToRecord (RecordingParameters) = 0;

@@ -24,7 +24,11 @@ AuxSendNode::AuxSendNode (std::unique_ptr<Node> inputNode, int busIDToUse,
                         && ! trackMuteState->shouldTrackContentsBeProcessed())
                        return 0.0f;
 
-                    return volumeFaderPositionToGain (sourceSendPlugin.gain->getCurrentValue());
+                    auto gain = volumeFaderPositionToGain (sourceSendPlugin.gain->getCurrentValue());
+                    if (sourceSendPlugin.invertPhase)
+                        gain *= -1.0f;
+
+                    return gain;
                }),
       playHeadState (phs),
       pluginPtr (sourceSendPlugin),

@@ -81,12 +81,12 @@ private:
         auto A = a.get();
         
         // Prepare the topology
-        transformNodes (*A);
+        auto nodeGraph = createNodeGraph (std::move (a));
         
         std::vector<Node*> allNodes { A, B, C, D, E, F, G };
 
         for (auto n : allNodes)
-            n->initialise ({ 44100.0, 512, *a });
+            n->initialise ({ 44100.0, 512, *nodeGraph });
         
         auto trimEndNodes = [&] (std::vector<Node*> nodes)
         {

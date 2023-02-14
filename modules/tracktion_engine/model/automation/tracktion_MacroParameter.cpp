@@ -184,7 +184,7 @@ MacroParameter* MacroParameterList::createMacroParameter()
     edit.createNewItemID().writeID (v, nullptr);
     state.addChild (v, -1, um);
 
-    auto* mp = list->objects.getLast();
+    auto mp = list->objects.getLast();
     mp->macroName = TRANS("Macro") + " " + juce::String (list->objects.size());
     jassert (mp != nullptr);
     jassert (mp->state == v);

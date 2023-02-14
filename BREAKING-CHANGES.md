@@ -2,6 +2,51 @@
 
 ## Develop
 
+
+### Change
+Removed the fixed buffer size requirement in HostedAudioDeviceInterface for using the Engine inside a plugin.
+
+#### Possible Issues
+You may need to fix code which set the value of this member.
+
+#### Workaround
+None.
+
+#### Rationale
+With the audio playback rewite it's no longer required to have a fixed block size so we don't need to add a block of latency when using the Engine inside a plugin.
+
+---
+
+### Change
+Removed the TracktionThumbnail class.
+
+#### Possible Issues
+If you were using the default thumbnails of Tracktion Engine, these will now be juce::AudioThumbnails and so won't be anti-aliased and appear more jagged.
+
+#### Workaround
+Take a copy of the TracktionThumbnail class from the history and add it to your own project.
+Override the new `UIBehaviour::createAudioThumbnail` function to return instances of it to get back the old behaviour.
+
+#### Rationale
+TracktionThumbnail never really should have been included in the Engine. We needed a way to support multiple thumbnail types in Waveform and in doing so broke all the dependancies on TracktionThumbnail so it seemed cleaner to remove it completely. It's simple to get back the old behaviour but also means it's now a lot easier to use your own thumbnail classes if desired.
+
+---
+
+### Change
+Changed the minimum version of JUCE supported to 7 on commit of October 22.
+
+#### Possible Issues
+If your project uses an eariler version of JUCE it may fail to compile.
+
+#### Workaround
+Use the commit of JUCE pointed at in the modules/juce Git submodule. This is guaranteed to work.
+
+#### Rationale
+There have been many breaking changes in JUCE recently and it is no longer feasible to support multiple versions.
+We aim to always be compatible with the tip of juce/develop in order to take advantage of the latest fixes and features.
+
+---
+
 ### Change
 Removed EngineBehaviour::getMaxNumMasterPlugins and static Edit constants.
 

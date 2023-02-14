@@ -34,7 +34,7 @@ public:
     static const char* getPluginName()              { return NEEDS_TRANS("Aux Send"); }
     static const char* xmlTypeName;
 
-    juce::String getName() override;
+    juce::String getName() const override;
     juce::String getShortName (int suggestedMaxLength) override;
     juce::String getPluginType() override           { return xmlTypeName; }
 
@@ -55,6 +55,7 @@ public:
 
     juce::CachedValue<int> busNumber;
     juce::CachedValue<float> gainLevel;
+    juce::CachedValue<bool> invertPhase;
 
     AutomatableParameter::Ptr gain;
 

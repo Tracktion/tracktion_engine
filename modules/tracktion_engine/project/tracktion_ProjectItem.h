@@ -167,11 +167,12 @@ public:
     */
     juce::StringArray getSearchTokens() const;
 
+    Engine& engine; /**< The Engine instance this belongs to. */
+
 private:
     friend class ProjectManager;
     friend class Project;
 
-    Engine& engine;
     ProjectItemID itemID;
     juce::String type, objectName, description, file;
     double length = 0;

@@ -28,9 +28,9 @@ namespace tempo
     /** Represents a number of bars and then beats in that bar. */
     struct BarsAndBeats
     {
-        int bars = 0;       /**< The number of whole bars. */
-        BeatDuration beats; /**< The number of beats in the current bar. */
-        int numerator = 0;  /**< The number of beats in the current bar. */
+        int bars = 0;               /**< The number of whole bars. */
+        BeatDuration beats = {};    /**< The number of beats in the current bar. */
+        int numerator = 0;          /**< The number of beats in the current bar. */
 
         /** Returns the number bars elapsed. */
         double getTotalBars() const;
@@ -325,7 +325,7 @@ namespace tempo
 namespace tempo
 {
 
-inline double BarsAndBeats::getTotalBars() const                { return bars + (numerator * beats.inBeats()); }
+inline double BarsAndBeats::getTotalBars() const                { return bars + (beats.inBeats() / numerator); }
 inline int BarsAndBeats::getWholeBeats() const                  { return (int) std::floor (beats.inBeats()); }
 inline BeatDuration BarsAndBeats::getFractionalBeats() const    { return BeatDuration::fromBeats (beats.inBeats() - std::floor (beats.inBeats())); }
 

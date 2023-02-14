@@ -89,7 +89,7 @@ InsertPlugin::~InsertPlugin()
 //==============================================================================
 const char* InsertPlugin::xmlTypeName ("insert");
 
-juce::String InsertPlugin::getName()                                         { return name.get().isNotEmpty() ? name : TRANS("Insert Plugin"); }
+juce::String InsertPlugin::getName() const                                   { return name.get().isNotEmpty() ? name : TRANS("Insert Plugin"); }
 juce::String InsertPlugin::getPluginType()                                   { return xmlTypeName; }
 juce::String InsertPlugin::getShortName (int)                                { return TRANS("Insert"); }
 double InsertPlugin::getLatencySeconds()                                     { return latencySeconds; }

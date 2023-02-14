@@ -106,13 +106,13 @@ public:
         This should be used when processing ExternalPlugins or they will crash when getting the playhead info.
     */
     int process (const tracktion::graph::Node::ProcessContext& pc,
-                 TimePosition editTime, bool isPlaying, bool isScrubbing, bool isRendering)
+                 TimeRange editTime, bool isPlaying, bool isScrubbing, bool isRendering)
     {
         // The internal nodes won't be interested in the top level audio/midi inputs
         // They should only be referencing this for time and continuity
         tracktion::engine::PluginRenderContext rc (nullptr, juce::AudioChannelSet(), 0, 0,
-                                                  nullptr, 0.0,
-                                                  editTime, isPlaying, isScrubbing, isRendering, true);
+                                                   nullptr, 0.0,
+                                                   editTime, isPlaying, isScrubbing, isRendering, true);
 
         return nodePlayer.process (pc);
     }

@@ -200,4 +200,11 @@ public:
     };
 };
 
+namespace render_utils
+{
+std::unique_ptr<Renderer::RenderTask> createRenderTask (Renderer::Parameters r, juce::String desc,
+                                                        std::atomic<float>* progressToUpdate,
+                                                        juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* thumbnail);
+}
+
 }} // namespace tracktion { inline namespace engine

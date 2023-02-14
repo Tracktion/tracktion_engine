@@ -38,7 +38,7 @@ public:
                           const juce::AudioChannelSet& sourceBufferChannels,
                           int timeoutMs);
 
-        bool readSamples (int** destSamples,
+        bool readSamples (int* const* destSamples,
                           int numDestChannels,
                           int startOffsetInDestBuffer,
                           int numSamples,

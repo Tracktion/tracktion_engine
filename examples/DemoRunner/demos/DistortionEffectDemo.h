@@ -39,7 +39,7 @@ public:
         gainParam->detachFromCurrentValue();
     }
 
-    juce::String getName() override                                     { return getPluginName(); }
+    juce::String getName() const override                               { return getPluginName(); }
     juce::String getPluginType() override                               { return xmlTypeName; }
     bool needsConstantBufferSize() override                             { return false; }
     juce::String getSelectableDescription() override                    { return getName(); }
@@ -129,7 +129,7 @@ private:
 /** Binds an te::AutomatableParameter to a juce::Slider so changes in either are
     reflected across the other.
 */
-void bindSliderToParameter (juce::Slider& s, AutomatableParameter& p)
+inline void bindSliderToParameter (juce::Slider& s, AutomatableParameter& p)
 {
     const auto v = p.valueRange;
     const auto range = NormalisableRange<double> (static_cast<double> (v.start),

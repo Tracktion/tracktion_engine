@@ -50,7 +50,7 @@ public:
     static const char* getPluginName()                  { return NEEDS_TRANS("Sampler"); }
     static const char* xmlTypeName;
 
-    juce::String getName() override                     { return TRANS("Sampler"); }
+    juce::String getName() const override               { return TRANS("Sampler"); }
     juce::String getPluginType() override               { return xmlTypeName; }
     juce::String getShortName (int) override            { return "Smplr"; }
     juce::String getSelectableDescription() override    { return TRANS("Sampler"); }

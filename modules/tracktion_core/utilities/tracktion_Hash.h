@@ -51,14 +51,17 @@ namespace tracktion { inline namespace core
 
 //==============================================================================
 //==============================================================================
+/** Hashes a type with a given seed, modifying the seed. */
 template<typename T>
 void hash_combine (size_t& seed, const T& v)
 {
+    static_assert (! std::is_pointer_v<T>, "Using a pointer here is almost certainly incorrect as it will change on each run");
     seed ^= std::hash<T>()(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
 }
 
+/** Hashes a range with a default seed and returns the new hash value. */
 template<typename It>
-std::size_t hash_range (It first, It last)
+[[ nodiscard ]] std::size_t hash_range (It first, It last)
 {
     size_t seed = 0;
 
@@ -68,6 +71,7 @@ std::size_t hash_range (It first, It last)
     return seed;
 }
 
+/** Hashes a range with a given seed, modifying the seed. */
 template<typename It>
 void hash_range (std::size_t& seed, It first, It last)
 {
@@ -75,9 +79,16 @@ void hash_range (std::size_t& seed, It first, It last)
         hash_combine (seed, *first);
 }
 
+/** Hashes a container with a default seed and returns the hash value. */
+template<typename Container>
+[[ nodiscard ]] std::size_t hash_range (const Container& container)
+{
+    return hash_range (container.begin(), container.end());
+}
+
 /** Hashes a type with a given seed and returns the new hash value. */
 template<typename T>
-size_t hash (size_t seed, const T& v)
+[[ nodiscard ]] size_t hash (size_t seed, const T& v)
 {
     hash_combine (seed, v);
     return seed;

@@ -114,7 +114,7 @@ void ModifierNode::process (ProcessContext& pc)
 
     // Process the plugin
     if (shouldProcess)
-        modifier->baseClassApplyToBuffer (getPluginRenderContext (pc.referenceSampleRange.getStart(), outputAudioBuffer));
+        modifier->baseClassApplyToBuffer (getPluginRenderContext (pc.referenceSampleRange, outputAudioBuffer));
     
     // Then copy the buffers to the outputs
     outputBuffers.midi.copyFrom (midiMessageArray);
@@ -128,7 +128,7 @@ void ModifierNode::initialiseModifier (double sampleRateToUse, int blockSizeToUs
     isInitialised = true;
 }
 
-PluginRenderContext ModifierNode::getPluginRenderContext (int64_t referenceSamplePosition, juce::AudioBuffer<float>& destBuffer)
+PluginRenderContext ModifierNode::getPluginRenderContext (juce::Range<int64_t> referenceSampleRange, juce::AudioBuffer<float>& destBuffer)
 {
     if (audioRenderContextProvider != nullptr)
     {
@@ -144,12 +144,15 @@ PluginRenderContext ModifierNode::getPluginRenderContext (int64_t referenceSampl
 
     jassert (playHeadState != nullptr);
     auto& playHead = playHeadState->playHead;
+
+    const auto timelineRange = referenceSampleRangeToSplitTimelineRange (playHead, referenceSampleRange);
+    jassert (! timelineRange.isSplit);
     
     return { &destBuffer,
              juce::AudioChannelSet::canonicalChannelSet (destBuffer.getNumChannels()),
              0, destBuffer.getNumSamples(),
              &midiMessageArray, 0.0,
-             TimePosition::fromSamples (playHead.referenceSamplePositionToTimelinePosition (referenceSamplePosition), sampleRate) + automationAdjustmentTime,
+             timeRangeFromSamples (timelineRange.timelineRange1, sampleRate) + automationAdjustmentTime,
              playHead.isPlaying(), playHead.isUserDragging(), isRendering, false };
 }
 

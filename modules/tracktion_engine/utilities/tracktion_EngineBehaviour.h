@@ -229,8 +229,13 @@ public:
     };
     
     /** Return the control surfaces you want enabled in the engine */
-    
     virtual ControlSurfaces getDesiredControlSurfaces()                             { return {}; }
+
+    /** Restore a custom control surface from custom XML */
+    virtual ControlSurface* getCustomControlSurfaceForXML (ExternalControllerManager&, const juce::XmlElement&)
+    {
+        return nullptr;
+    }
 };
 
 }} // namespace tracktion { inline namespace engine

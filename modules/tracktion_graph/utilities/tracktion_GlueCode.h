@@ -158,3 +158,32 @@ static void copyIfNotAliased (DestBuffer&& dest, const SourceBuffer& source)
 }
 
 }} // namespace tracktion
+
+#ifndef DOXYGEN
+template<>
+struct std::hash<juce::MidiMessageSequence>
+{
+    size_t operator() (const juce::MidiMessageSequence& sequence) const noexcept
+    {
+        size_t seed = 0;
+
+        for (auto meh : sequence)
+        {
+            auto& me = meh->message;
+            tracktion::hash_combine (seed, me.getTimeStamp());
+            tracktion::hash_range (seed, me.getRawData(), me.getRawData() + me.getRawDataSize());
+        }
+
+        return seed;
+    }
+};
+
+template<>
+struct std::hash<std::vector<juce::MidiMessageSequence>>
+{
+    size_t operator() (const std::vector<juce::MidiMessageSequence>& sequences) const noexcept
+    {
+        return tracktion::hash_range (sequences);
+    }
+};
+#endif

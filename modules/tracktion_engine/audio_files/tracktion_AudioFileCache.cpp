@@ -11,7 +11,7 @@
 namespace tracktion { inline namespace engine
 {
 
-static void clearSetOfChannels (int** channels, int numChannels, int offset, int numSamples) noexcept
+static void clearSetOfChannels (int* const* channels, int numChannels, int offset, int numSamples) noexcept
 {
     for (int i = 0; i < numChannels; ++i)
         if (auto chan = (float*) channels[i])
@@ -343,7 +343,7 @@ public:
         JUCE_DECLARE_NON_COPYABLE (LockedReaderFinder)
     };
 
-    bool read (SampleCount startSample, int** destSamples, int numDestChannels,
+    bool read (SampleCount startSample, int* const* destSamples, int numDestChannels,
                int startOffsetInDestBuffer, int numSamples, int timeoutMs)
     {
         jassert (destSamples != nullptr);
@@ -445,7 +445,7 @@ public:
     AudioFileInfo info;
 
     std::atomic<uint32_t> lastReadTime { juce::Time::getApproximateMillisecondCounter() };
-    int64_t totalBytesInUse = 0;
+    std::atomic<int64_t> totalBytesInUse { 0 };
 
 private:
     juce::OwnedArray<juce::MemoryMappedAudioFormatReader> readers;
@@ -455,7 +455,7 @@ private:
     juce::Array<int> currentBlocks;
 
     bool mapEntireFile = false;
-    bool failedToOpenFile = false;
+    std::atomic<bool> failedToOpenFile { false };
     uint32_t lastFailedOpenAttempt = 0;
     juce::Random random;
     
@@ -601,10 +601,10 @@ void AudioFileCache::setCacheSizeSamples (SampleCount samples)
         }
 
         mapperThread.reset (new MapperThread (*this));
-        mapperThread->startThread (5);
+        mapperThread->startThread (juce::Thread::Priority::normal);
 
         refresherThread.reset (new RefresherThread (*this));
-        refresherThread->startThread (6);
+        refresherThread->startThread (juce::Thread::Priority::high);
     }
 }
 
@@ -734,7 +734,7 @@ AudioFileCache::Reader::Ptr AudioFileCache::createReader (const AudioFile& file)
 
     if (auto reader = AudioFileUtils::createReaderFor (engine, file.getFile()))
     {
-        backgroundReaderThread.startThread (4);
+        backgroundReaderThread.startThread (juce::Thread::Priority::low);
 
         return new Reader (*this, nullptr, new juce::BufferingAudioReader (reader, backgroundReaderThread,
                                                                            48000 * 5));
@@ -904,7 +904,7 @@ bool AudioFileCache::Reader::readSamples (int numSamples,
     return false;
 }
 
-bool AudioFileCache::Reader::readSamples (int** destSamples, int numDestChannels,
+bool AudioFileCache::Reader::readSamples (int* const* destSamples, int numDestChannels,
                                           int startOffsetInDestBuffer, int numSamples, int timeoutMs)
 {
     jassert (numSamples < CachedFile::readAheadSamples); // this method fails unless broken down into chunks smaller than this
@@ -1032,7 +1032,7 @@ struct CacheAudioFormatReader  :  public juce::AudioFormatReader
         reader->getRange ((int) numSamples, highestLeft, lowestLeft, highestRight, lowestRight, -1);
     }
 
-    bool readSamples (int** destSamples, int numDestChannels,
+    bool readSamples (int* const* destSamples, int numDestChannels,
                       int startOffsetInDestBuffer, juce::int64 startSampleInFile,
                       int numSamples) override
     {

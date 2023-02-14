@@ -95,7 +95,7 @@ public:
     /** Every EditItem has an ID which is unique within the edit. */
     const EditItemID itemID;
 
-    virtual juce::String getName() = 0;
+    virtual juce::String getName() const = 0;
 
 private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EditItem)

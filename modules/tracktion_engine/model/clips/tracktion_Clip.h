@@ -16,8 +16,8 @@ namespace tracktion { inline namespace engine
 */
 struct ClipLevel
 {
-    juce::CachedValue<float> dbGain, pan;
-    juce::CachedValue<bool> mute;
+    juce::CachedValue<AtomicWrapper<float>> dbGain, pan;
+    juce::CachedValue<AtomicWrapper<bool>> mute;
 };
 
 //==============================================================================
@@ -34,10 +34,10 @@ struct LiveClipLevel
         : levels (std::move (l)) {}
 
     /** Returns the clip's absolute gain. */
-    float getGain() const noexcept              { return levels ? dbToGain (levels->dbGain) : 1.0f; }
+    float getGain() const noexcept              { return levels ? dbToGain (levels->dbGain.get()) : 1.0f; }
 
     /** Returns the clip's pan from -1.0 to 1.0. */
-    float getPan() const noexcept               { return levels ? levels->pan.get() : 0.0f; }
+    float getPan() const noexcept               { return levels ? static_cast<float> (levels->pan.get()) : 0.0f; }
 
     /** Returns true if the clip is muted. */
     bool isMute() const noexcept                { return levels && levels->mute.get(); }
@@ -112,7 +112,7 @@ public:
 
     //==============================================================================
     /** Returns the name of the clip. */
-    virtual juce::String getName() override             { return clipName; }
+    virtual juce::String getName() const override       { return clipName; }
     /** Sets a new name for a clip. */
     void setName (const juce::String& newName);
 
@@ -123,7 +123,7 @@ public:
 
     //==============================================================================
     /** True if it references a source file - i.e. audio clips do, midi doesn't. */
-    virtual bool usesSourceFile()                       { return false; }
+    virtual bool usesSourceFile() const                 { return false; }
 
     /** Returns the SourceFileReference of the Clip. */
     SourceFileReference& getSourceFileReference()       { return sourceFileReference; }

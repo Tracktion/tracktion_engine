@@ -147,6 +147,10 @@ public:
         const auto numFrames = static_cast<SampleCount> (destBuffer.getNumFrames());
 
         auto readPos = source->getPosition();
+
+        if (readPos >= loopStart + loopLength)
+            readPos -= loopLength;
+
         int numSamplesToDo = (int) numFrames;
         SampleCount startOffsetInDestBuffer = 0;
         bool allOk = true;
@@ -419,8 +423,9 @@ public:
         // Read data in to temp buffer
         auto scratchView = scratchBuffer.getView();
 
+        // If the reader fails, we can't bail out or SRC will hang so just give it an empty buffer
         if (! source->readSamples (scratchView))
-            return 0;
+            scratchView.clear();
 
         // Interleave
         choc::buffer::copy (interleavedInputScratchBuffer, scratchBuffer);
@@ -591,7 +596,7 @@ public:
 
     void setPosition (SampleCount t) override
     {
-        if (std::abs (t - getReadPosition()) <= 1)
+        if (std::abs (t - getReadPosition()) <= 2)
             return;
 
         readPosition = (double) t;
@@ -1062,7 +1067,7 @@ private:
             if (e <= loopRange.getStart())
                 return readBeatRange ({ s, loopRange.getEnd() }, destBuffer, editDuration, isContiguous, playbackSpeedRatio);
 
-            // Oterhwise range is split
+            // Otherwise range is split
             const BeatRange br1 (s, loopRange.getEnd());
             const BeatRange br2 (loopRange.getStart(), e);
             const auto prop1 = br1.getLength() / br.getLength();
@@ -1098,8 +1103,7 @@ private:
 
     static inline BeatPosition linearPositionToLoopPosition (BeatPosition position, BeatRange loopRange)
     {
-        const auto loopStart = loopRange.getStart();
-        return loopStart + BeatDuration::fromBeats (std::fmod ((position + toDuration (loopStart)).inBeats(), loopRange.getLength().inBeats()));
+        return loopRange.getStart() + BeatDuration::fromBeats (std::fmod (position.inBeats(), loopRange.getLength().inBeats()));
     }
 };
 
@@ -1412,7 +1416,7 @@ void WaveNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo
     updateFileSampleRate();
 
     const int numChannelsToUse = std::max (channelsToUse.size(), reader != nullptr ? reader->getNumChannels() : 0);
-    replaceChannelStateIfPossible (info.rootNodeToReplace, numChannelsToUse);
+    replaceChannelStateIfPossible (info.nodeGraphToReplace, numChannelsToUse);
 
     if (! channelState)
     {
@@ -1490,28 +1494,13 @@ bool WaveNode::updateFileSampleRate()
     return true;
 }
 
-void WaveNode::replaceChannelStateIfPossible (Node* rootNodeToReplace, int numChannelsToUse)
+void WaveNode::replaceChannelStateIfPossible (NodeGraph* nodeGraphToReplace, int numChannelsToUse)
 {
-    if (rootNodeToReplace == nullptr)
-        return;
+    const auto nodeID = (size_t) editItemID.getRawID();
+    assert (getNodeProperties().nodeID == nodeID);
 
-    if (getNodeProperties().nodeID == 0)
-        return;
-
-    auto visitor = [this, numChannelsToUse] (Node& node)
-    {
-        if (auto other = dynamic_cast<WaveNode*> (&node))
-        {
-            replaceChannelStateIfPossible (*other, numChannelsToUse);
-        }
-        else
-        {
-            for (auto internalNode : node.getInternalNodes())
-                if (auto internalWaveNode = dynamic_cast<WaveNode*> (internalNode))
-                    replaceChannelStateIfPossible (*internalWaveNode, numChannelsToUse);
-        }
-    };
-    visitNodes (*rootNodeToReplace, visitor, true);
+    if (auto oldWaveNode = findNodeWithIDIfNonZero<WaveNode> (nodeGraphToReplace, nodeID))
+        replaceChannelStateIfPossible (*oldWaveNode, numChannelsToUse);
 }
 
 void WaveNode::replaceChannelStateIfPossible (WaveNode& other, int numChannelsToUse)
@@ -1708,9 +1697,12 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
     // This won't work with invalid or non-existent files!
     jassert (! audioFile.isNull());
 
-    hash_combine (stateHash, editPositionTime);
-    hash_combine (stateHash, loopSectionTime);
-    hash_combine (stateHash, offsetTime.inSeconds());
+    auto removeRoundingError = [] (auto d) { return static_cast<float> (d.inSeconds()); };
+    hash_combine (stateHash, removeRoundingError (editPositionTime.getStart()));
+    hash_combine (stateHash, removeRoundingError (editPositionTime.getEnd()));
+    hash_combine (stateHash, removeRoundingError (loopSectionTime.getStart()));
+    hash_combine (stateHash, removeRoundingError (loopSectionTime.getEnd()));
+    hash_combine (stateHash, removeRoundingError (offsetTime));
     hash_combine (stateHash, speedRatio);
     hash_combine (stateHash, editItemID.getRawID());
     hash_combine (stateHash, channelsToUse.size());
@@ -1775,9 +1767,12 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
     // This won't work with invalid or non-existent files!
     jassert (! audioFile.isNull());
 
-    hash_combine (stateHash, editPositionBeats);
-    hash_combine (stateHash, loopSectionBeats);
-    hash_combine (stateHash, offsetBeats.inBeats());
+    auto removeRoundingError = [] (auto d) { return static_cast<float> (d.inBeats()); };
+    hash_combine (stateHash, removeRoundingError (editPositionBeats.getStart()));
+    hash_combine (stateHash, removeRoundingError (editPositionBeats.getEnd()));
+    hash_combine (stateHash, removeRoundingError (loopSectionBeats.getStart()));
+    hash_combine (stateHash, removeRoundingError (loopSectionBeats.getEnd()));
+    hash_combine (stateHash, removeRoundingError (offsetBeats));
     hash_combine (stateHash, editItemID.getRawID());
     hash_combine (stateHash, channelsToUse.size());
     hash_combine (stateHash, destChannels.size());
@@ -1814,7 +1809,7 @@ void WaveNodeRealTime::prepareToPlay (const tracktion::graph::PlaybackInitialisa
 {
     outputSampleRate = info.sampleRate;
 
-    replaceStateIfPossible (info.rootNodeToReplace);
+    replaceStateIfPossible (info.nodeGraphToReplace);
     buildAudioReaderGraph();
 }
 
@@ -1849,7 +1844,7 @@ bool WaveNodeRealTime::buildAudioReaderGraph()
 
     auto fileCacheReader = audioFile.engine->getAudioFileManager().cache.createReader (audioFile);
 
-    if (fileCacheReader == nullptr)
+    if (fileCacheReader == nullptr || fileCacheReader->getSampleRate() == 0.0)
         return false;
 
     std::unique_ptr<AudioReader> loopReader = std::make_unique<AudioFileCacheReader> (std::move (fileCacheReader), isOfflineRender ? 5s : 3ms,
@@ -1939,28 +1934,18 @@ bool WaveNodeRealTime::buildAudioReaderGraph()
     return true;
 }
 
-void WaveNodeRealTime::replaceStateIfPossible (Node* rootNodeToReplace)
+void WaveNodeRealTime::replaceStateIfPossible (NodeGraph* nodeGraphToReplace)
 {
-    if (rootNodeToReplace == nullptr)
+    if (nodeGraphToReplace == nullptr)
         return;
 
     if (stateHash == 0)
         return;
 
-    auto visitor = [this] (Node& node)
-    {
-        if (auto other = dynamic_cast<WaveNodeRealTime*> (&node))
-        {
-            replaceStateIfPossible (*other);
-        }
-        else
-        {
-            for (auto internalNode : node.getInternalNodes())
-                if (auto internalWaveNodeRealTime = dynamic_cast<WaveNodeRealTime*> (internalNode))
-                    replaceStateIfPossible (*internalWaveNodeRealTime);
-        }
-    };
-    visitNodes (*rootNodeToReplace, visitor, true);
+    assert (getNodeProperties().nodeID == (size_t) editItemID.getRawID());
+
+    if (auto oldWaveNode = findNodeWithID<WaveNodeRealTime> (*nodeGraphToReplace, (size_t) editItemID.getRawID()))
+        replaceStateIfPossible (*oldWaveNode);
 }
 
 void WaveNodeRealTime::replaceStateIfPossible (WaveNodeRealTime& other)

@@ -71,7 +71,7 @@ public:
     void prepareToPlay (const PlaybackInitialisationInfo& info) override
     {
         latencyProcessor->prepareToPlay (info.sampleRate, info.blockSize, getNodeProperties().numberOfChannels);
-        replaceLatencyProcessorIfPossible (info.rootNodeToReplace);
+        replaceLatencyProcessorIfPossible (info.nodeGraphToReplace);
     }
     
     void process (ProcessContext& pc) override
@@ -95,28 +95,19 @@ private:
     Node* input = nullptr;
     std::shared_ptr<LatencyProcessor> latencyProcessor { std::make_shared<LatencyProcessor>() };
     
-    void replaceLatencyProcessorIfPossible (Node* rootNodeToReplace)
+    void replaceLatencyProcessorIfPossible (NodeGraph* nodeGraphToReplace)
     {
-        if (rootNodeToReplace == nullptr)
+        if (nodeGraphToReplace == nullptr)
             return;
         
-        auto nodeIDToLookFor = getNodeProperties().nodeID;
+        const auto nodeIDToLookFor = getNodeProperties().nodeID;
         
         if (nodeIDToLookFor == 0)
             return;
 
-        auto visitor = [this, nodeIDToLookFor] (Node& node)
-        {
-            if (auto other = dynamic_cast<LatencyNode*> (&node))
-            {
-                if (other->getNodeProperties().nodeID == nodeIDToLookFor
-                    && latencyProcessor->hasSameConfigurationAs (*other->latencyProcessor))
-                {
-                    latencyProcessor = other->latencyProcessor;
-                }
-            }
-        };
-        visitNodes (*rootNodeToReplace, visitor, true);
+        if (auto oldNode = findNodeWithID<LatencyNode> (*nodeGraphToReplace, nodeIDToLookFor))
+            if (latencyProcessor->hasSameConfigurationAs (*oldNode->latencyProcessor))
+                latencyProcessor = oldNode->latencyProcessor;
     }
 };
 

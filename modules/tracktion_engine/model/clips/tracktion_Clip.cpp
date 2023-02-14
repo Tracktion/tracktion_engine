@@ -18,6 +18,7 @@ Clip::Clip (const juce::ValueTree& v, ClipTrack& targetTrack, EditItemID id, Typ
       sourceFileReference (edit, state, IDs::source)
 {
     jassert (isClipState (state));
+    jassert (getTrack() == &targetTrack);
     edit.clipCache.addItem (*this);
 
     auto um = getUndoManager();
@@ -160,6 +161,7 @@ Clip::Ptr Clip::createClipForState (const juce::ValueTree& v, ClipTrack& targetT
     if (c == nullptr)
     {
         c = createNewClipObject (v, newClipID, targetTrack);
+        jassert (c->getTrack() == &targetTrack); // If this is hit it means two clips share the same ID!
 
         if (c != nullptr)
         {

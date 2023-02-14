@@ -102,7 +102,7 @@ juce::StringArray MIDITrackerModifier::getMidiInputNames()
 
 void MIDITrackerModifier::applyToBuffer (const PluginRenderContext& pc)
 {
-    setEditTime (pc.editTime);
+    setEditTime (pc.editTime.getStart());
     
     if (pc.bufferForMidiMessages != nullptr)
         for (auto& m : *pc.bufferForMidiMessages)

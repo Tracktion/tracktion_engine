@@ -196,7 +196,7 @@ void VolumeAndPanPlugin::applyToBuffer (const PluginRenderContext& fc)
         {
             const int numChansIn = fc.destBuffer->getNumChannels();
             const float vcaPosDelta = vcaTrack != nullptr
-                                    ? decibelsToVolumeFaderPosition (getParentVcaDb (*vcaTrack, fc.editTime))
+                                    ? decibelsToVolumeFaderPosition (getParentVcaDb (*vcaTrack, fc.editTime.getStart()))
                                         - decibelsToVolumeFaderPosition (0.0f)
                                     : 0.0f;
 

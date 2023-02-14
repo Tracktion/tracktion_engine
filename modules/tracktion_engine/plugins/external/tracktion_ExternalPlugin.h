@@ -36,6 +36,8 @@ public:
     void initialiseFully() override;
     void forceFullReinitialise();
 
+    juce::String getLoadError();
+
     static const char* xmlTypeName;
 
     void flushPluginStateToValueTree() override;
@@ -62,7 +64,7 @@ public:
     bool isVST() const noexcept             { return desc.pluginFormatName == "VST"; }
     bool isVST3() const noexcept            { return desc.pluginFormatName == "VST3"; }
     bool isAU() const noexcept              { return desc.pluginFormatName == "AudioUnit"; }
-    juce::String getName() override         { return desc.name; }
+    juce::String getName() const override   { return desc.name; }
     juce::String getVendor() override       { return desc.manufacturerName; }
     juce::String getTooltip() override      { return getName() + "$vstfilter"; }
     juce::String getPluginType() override   { return xmlTypeName; }
@@ -75,6 +77,7 @@ public:
     bool noTail() override;
     double getTailLength() const override;
     bool needsConstantBufferSize() override { return false; }
+    void trackPropertiesChanged() override;
 
     juce::AudioProcessor* getWrappedAudioProcessor() const override     { return pluginInstance.get(); }
     void deleteFromParent() override;
@@ -125,7 +128,7 @@ public:
 private:
     //==============================================================================
     juce::CriticalSection lock;
-    juce::String debugName, identiferString;
+    juce::String debugName, identiferString, loadError;
 
     struct ProcessorChangedManager;
     std::unique_ptr<juce::AudioPluginInstance> pluginInstance;

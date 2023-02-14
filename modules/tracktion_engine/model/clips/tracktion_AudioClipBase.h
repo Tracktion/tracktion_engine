@@ -122,21 +122,21 @@ public:
     /** Sets the gain of the clip in dB. */
     void setGainDB (float dB);
     /** Returns the gain of the clip in dB. */
-    float getGainDB() const noexcept                    { return level->dbGain; }
+    float getGainDB() const noexcept                    { return level->dbGain.get(); }
     /** Returns the gain of the clip. */
-    float getGain() const noexcept                      { return dbToGain (level->dbGain); }
+    float getGain() const noexcept                      { return dbToGain (level->dbGain.get()); }
 
     /** Sets the pan of the clip.
         @param pan -1 = full left, 0 = centre, 1 = full right
     */
     void setPan (float pan);
     /** Returns the pan of the clip from -1 to 1 @see setPan. */
-    float getPan() const noexcept                       { return level->pan; }
+    float getPan() const noexcept                       { return level->pan.get(); }
 
     /** @internal */
     void setMuted (bool shouldBeMuted) override         { level->mute = shouldBeMuted; }
     /** @internal */
-    bool isMuted() const override                       { return level->mute; }
+    bool isMuted() const override                       { return level->mute.get(); }
 
     /** Returns a LiveClipLevel which can be used to read the gain, pan and mute statuses. */
     LiveClipLevel getLiveClipLevel();

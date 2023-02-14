@@ -31,6 +31,7 @@ public:
         
         runTests<TimeRange> ("TimeRange");
         runTests<BeatRange> ("BeatRange");
+        runHashingTests();
     }
 
     template<typename Type>
@@ -99,6 +100,25 @@ public:
                         == RangeType (fromRaw<PT> (1.0), fromRaw<DT> (1.0)));
                 expect (RangeType::emptyRange (fromRaw<PT> (1.0))
                         == RangeType (fromRaw<PT> (1.0), fromRaw<DT> (0.0)));
+            }
+        }
+    }
+
+    void runHashingTests()
+    {
+        beginTest ("TimeRange hashing");
+        {
+            {
+                const auto hash1 = std::hash<BeatRange>() (BeatRange (8_bp, 16_bp));
+                const auto hash2 = std::hash<BeatRange>() (BeatRange (4_bp, 12_bp));
+                expectNotEquals (hash1, hash2);
+            }
+
+            {
+                std::size_t hash1 = 0, hash2 = 0;
+                hash_combine (hash1, BeatRange (8_bp, 16_bp));
+                hash_combine (hash2, BeatRange (4_bp, 12_bp));
+                expectNotEquals (hash1, hash2);
             }
         }
     }

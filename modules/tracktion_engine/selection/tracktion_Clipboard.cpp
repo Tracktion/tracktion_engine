@@ -184,7 +184,11 @@ static TimePosition pasteMIDIFileIntoEdit (Edit& edit, const juce::File& midiFil
             {
                 const auto timeRange = tempoSequence.toTime ({ startBeat, endBeat });
 
-                if (auto newClip = at->insertClipWithState (clipState, list->getImportedMidiTrackName(), TrackItem::Type::midi,
+                auto clipName = list->getImportedMidiTrackName();
+                if (auto fn = list->getImportedFileName(); fn.isNotEmpty())
+                    clipName += " - " + fn;
+
+                if (auto newClip = at->insertClipWithState (clipState, clipName, TrackItem::Type::midi,
                                                             { timeRange, 0_td }, false, false))
                 {
                     if (importAsNoteExpression)
@@ -646,6 +650,7 @@ static void fixClipTimes (juce::ValueTree& state, const Clipboard::Clips::ClipIn
 static bool pastePointsToCurve (const std::vector<AutomationCurve::AutomationPoint>& points, juce::Range<float> valueRange, AutomationCurve& targetCurve, TimeRange targetRange)
 {
     AutomationCurve newCurve;
+    newCurve.setOwnerParameter (targetCurve.getOwnerParameter());
     auto dstRange = targetCurve.getValueLimits();
     jassert (! dstRange.isEmpty());
 
@@ -660,14 +665,14 @@ static bool pastePointsToCurve (const std::vector<AutomationCurve::AutomationPoi
         newCurve.addPoint (p.time, p.value, p.curve);
     }
 
-    if (newCurve.getLength() > TimeDuration())
+    if (newCurve.getLength() > 0_td)
     {
         if (targetRange.isEmpty())
             targetRange = targetRange.withLength (newCurve.getLength());
         else
-            newCurve.rescaleAllTimes (targetRange.getLength().inSeconds() / newCurve.getLength().inSeconds());
+            newCurve.rescaleAllTimes (targetRange.getLength() / newCurve.getLength());
 
-        targetCurve.mergeOtherCurve (newCurve, targetRange, TimePosition(), TimeDuration(), false, false);
+        targetCurve.mergeOtherCurve (newCurve, targetRange, 0_tp, 0_td, false, false);
         return true;
     }
 

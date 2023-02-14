@@ -73,7 +73,7 @@ private:
 
     //==============================================================================
     void initialiseModifier (double sampleRateToUse, int blockSizeToUse);
-    PluginRenderContext getPluginRenderContext (int64_t, juce::AudioBuffer<float>&);
+    PluginRenderContext getPluginRenderContext (juce::Range<int64_t>, juce::AudioBuffer<float>&);
 };
 
 }} // namespace tracktion { inline namespace engine

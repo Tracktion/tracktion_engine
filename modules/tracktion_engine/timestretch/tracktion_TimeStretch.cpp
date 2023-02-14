@@ -101,6 +101,7 @@ struct ElastiqueStretcher  : public TimeStretcher::Stretcher
           samplesPerOutputBuffer (samplesPerBlock)
     {
         CRASH_TRACER
+        jassert (sourceSampleRate > 0.0);
         int res = CElastiqueProV3If::CreateInstance (elastique, samplesPerBlock, numChannels, (float) sourceSampleRate,
                                                      getElastiqueMode (mode), minFactor);
         jassert (res == 0); juce::ignoreUnused (res);

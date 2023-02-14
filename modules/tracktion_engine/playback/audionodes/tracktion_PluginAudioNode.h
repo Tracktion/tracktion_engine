@@ -184,7 +184,7 @@ protected:
     {
         return { rc.destBuffer, rc.destBufferChannels, rc.bufferStartSample, rc.bufferNumSamples,
                  rc.bufferForMidiMessages, rc.midiBufferOffset,
-                 TimePosition::fromSeconds (rc.getEditTime().editRange1.getStart()),
+                 timeRangeFromSeconds (rc.getEditTime().editRange1),
                  rc.playhead.isPlaying(), rc.playhead.isUserDragging(), rc.isRendering,
                  false };
     }

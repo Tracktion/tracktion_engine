@@ -42,6 +42,7 @@ GrooveTemplate::GrooveTemplate (const GrooveTemplate& other)
     numNotes = other.numNotes;
     notesPerBeat = other.notesPerBeat;
     name = other.name;
+    parameterized = other.parameterized;
 }
 
 GrooveTemplate::~GrooveTemplate()

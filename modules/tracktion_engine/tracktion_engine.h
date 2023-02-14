@@ -19,7 +19,7 @@
 
   ID:               tracktion_engine
   vendor:           Tracktion Corporation
-  version:          1.2.0
+  version:          2.1.0
   name:             The Tracktion audio engine
   description:      Classes for manipulating and playing Tracktion projects
   website:          http://www.tracktion.com
@@ -242,13 +242,6 @@
  #define TRACKTION_LOG_DEVICES 1
 #endif
 
-/** Config: TRACKTION_JUCE7
-    Enables compatibility with JUCE 7.
-    This is only tempoarary and will be removed in a future release.
- */
-#ifndef TRACKTION_JUCE7
- #define TRACKTION_JUCE7 0
-#endif
 
 //==============================================================================
 #ifndef TRACKTION_LOG_ENABLED
@@ -399,6 +392,7 @@ namespace tracktion { inline namespace engine
 
 //==============================================================================
 #include "utilities/tracktion_AppFunctions.h"
+#include "utilities/tracktion_AtomicWrapper.h"
 #include "utilities/tracktion_Identifiers.h"
 #include "utilities/tracktion_ValueTreeUtilities.h"
 #include "utilities/tracktion_CrashTracer.h"
@@ -491,7 +485,6 @@ namespace tracktion { inline namespace engine
 #include "plugins/effects/tracktion_Equaliser.h"
 
 #include "model/edit/tracktion_EditSnapshot.h"
-#include "model/edit/tracktion_EditFileOperations.h"
 #include "model/edit/tracktion_EditInsertPoint.h"
 #include "model/tracks/tracktion_TrackItem.h"
 #include "model/tracks/tracktion_Track.h"
@@ -502,6 +495,7 @@ namespace tracktion { inline namespace engine
 #include "model/edit/tracktion_PitchSetting.h"
 #include "model/edit/tracktion_PitchSequence.h"
 #include "model/edit/tracktion_Edit.h"
+#include "model/edit/tracktion_EditFileOperations.h"
 
 #include "playback/tracktion_TransportControl.h"
 #include "playback/tracktion_AbletonLink.h"
@@ -519,7 +513,6 @@ namespace tracktion { inline namespace engine
 #include "utilities/tracktion_Pitch.h"
 
 #include "audio_files/tracktion_AudioFileCache.h"
-#include "audio_files/tracktion_Thumbnail.h"
 #include "audio_files/tracktion_SmartThumbnail.h"
 #include "audio_files/tracktion_AudioProxyGenerator.h"
 #include "audio_files/tracktion_AudioFileManager.h"

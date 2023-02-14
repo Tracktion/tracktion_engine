@@ -23,7 +23,7 @@ AuxReturnPlugin::~AuxReturnPlugin()
 
 const char* AuxReturnPlugin::xmlTypeName = "auxreturn";
 
-juce::String AuxReturnPlugin::getName()
+juce::String AuxReturnPlugin::getName() const
 {
     auto nm = edit.getAuxBusName (busNumber);
 

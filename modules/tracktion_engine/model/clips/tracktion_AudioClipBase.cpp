@@ -109,12 +109,17 @@ public:
             proxyInfo = acb.createProxyRenderingInfo();
     }
 
+    ~ProxyGeneratorJob() override
+    {
+        prepareForJobDeletion();
+    }
+
 private:
     Engine& engine;
     AudioFile original;
     std::unique_ptr<AudioClipBase::ProxyRenderingInfo> proxyInfo;
 
-    bool render()
+    bool render() override
     {
         CRASH_TRACER
 
@@ -247,7 +252,7 @@ AudioClipBase::AudioClipBase (const juce::ValueTree& v, EditItemID id, Type t, C
     isReversed.referTo (state, IDs::isReversed, um);
     autoDetectBeats.referTo (state, IDs::autoDetectBeats, um);
 
-    level->pan = juce::jlimit (-1.0f, 1.0f, level->pan.get());
+    level->pan = juce::jlimit (-1.0f, 1.0f, static_cast<float> (level->pan.get()));
     checkFadeLengthsForOverrun();
 
     clipEffectsVisible.referTo (state, IDs::effectsVisible, nullptr);
@@ -644,7 +649,7 @@ void AudioClipBase::reverseLoopPoints()
     {
         // reverse offset
         auto sourceEnd = toPosition (getSourceLength() / ratio);
-        auto newOffset = sourceEnd - (toPosition (getPosition().getLength()) - getPosition().getOffset());
+        auto newOffset = sourceEnd - toPosition (getPosition().getLength()) - getPosition().getOffset();
         setOffset (newOffset);
     }
 
@@ -2119,7 +2124,7 @@ bool AudioClipBase::ProxyRenderingInfo::render (Engine& engine, const AudioFile&
     return true;
 }
 
-AudioFile AudioClipBase::getPlaybackFile()
+AudioFile AudioClipBase::getPlaybackFile() 
 {
     // this needs to return the same file right from the first call, if it's a rendered file then obviously it won't exist but we need to return it anyway
     const AudioFile af (getAudioFile());
@@ -2155,7 +2160,7 @@ HashCode AudioClipBase::getProxyHash()
 
     HashCode hash = getHash()
                      ^ static_cast<HashCode> (timeStretchMode.get())
-                     ^ elastiqueProOptions->toString().hashCode64()
+                     ^ elastiqueProOptions.get().toString().hashCode64()
                      ^ (7342847 * static_cast<HashCode> (pitchChange * 199.0))
                      ^ static_cast<HashCode> (clipPos.getLength().inSeconds() * 10005.0)
                      ^ static_cast<HashCode> (clipPos.getOffset().inSeconds() * 9997.0)

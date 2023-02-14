@@ -25,7 +25,7 @@ public:
 
     using Modifier::initialise;
     void initialise() override;
-    juce::String getName() override                     { return TRANS("MIDI Tracker Modifier"); }
+    juce::String getName() const override               { return TRANS("MIDI Tracker Modifier"); }
 
     //==============================================================================
     /** Returns the current value of the modifier. */

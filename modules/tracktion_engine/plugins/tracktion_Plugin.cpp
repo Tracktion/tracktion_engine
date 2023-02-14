@@ -15,12 +15,12 @@ PluginRenderContext::PluginRenderContext (juce::AudioBuffer<float>* buffer,
                                           const juce::AudioChannelSet& bufferChannels,
                                           int bufferStart, int bufferSize,
                                           MidiMessageArray* midiBuffer, double midiOffset,
-                                          TimePosition editStartTime, bool playing, bool scrubbing, bool rendering,
+                                          TimeRange editTimeRange, bool playing, bool scrubbing, bool rendering,
                                           bool shouldAllowBypassedProcessing) noexcept
     : destBuffer (buffer), destBufferChannels (bufferChannels),
       bufferStartSample (bufferStart), bufferNumSamples (bufferSize),
       bufferForMidiMessages (midiBuffer), midiBufferOffset (midiOffset),
-      editTime (editStartTime),
+      editTime (editTimeRange),
       isPlaying (playing), isScrubbing (scrubbing), isRendering (rendering),
       allowBypassedProcessing (shouldAllowBypassedProcessing)
 {}
@@ -423,7 +423,7 @@ void Plugin::setEnabled (bool b)
 {
     enabled = (b || ! canBeDisabled());
     
-    if (! enabled)
+    if (! enabled.get())
         cpuUsageMs = 0.0;
 }
 
@@ -670,13 +670,13 @@ void Plugin::applyToBufferWithAutomation (const PluginRenderContext& pc)
             auto& tc = edit.getTransport();
             updateParameterStreams (tc.isPlayContextActive() && ! pc.isRendering
                                         ? tc.getPosition()
-                                        : pc.editTime);
+                                        : pc.editTime.getStart());
             applyToBuffer (pc);
         }
         else
         {
             SCOPED_REALTIME_CHECK
-            updateParameterStreams (pc.editTime);
+            updateParameterStreams (pc.editTime.getStart());
             applyToBuffer (pc);
         }
     }

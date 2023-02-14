@@ -138,7 +138,7 @@ juce::String RackInstance::getTooltip()
 
 const char* RackInstance::xmlTypeName = "rack";
 
-juce::String RackInstance::getName()
+juce::String RackInstance::getName() const
 {
     return type != nullptr ? type->rackName
                            : TRANS("Rack type missing!");

@@ -21,7 +21,7 @@ public:
     static const char* getPluginName()                      { return NEEDS_TRANS("Phaser"); }
     static const char* xmlTypeName;
 
-    juce::String getName() override                         { return TRANS("Phaser"); }
+    juce::String getName() const override                   { return TRANS("Phaser"); }
     juce::String getPluginType() override                   { return xmlTypeName; }
     bool needsConstantBufferSize() override                 { return false; }
     void initialise (const PluginInitialisationInfo&) override;

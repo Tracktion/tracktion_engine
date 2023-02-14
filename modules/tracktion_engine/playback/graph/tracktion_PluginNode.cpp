@@ -94,7 +94,7 @@ void PluginNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationIn
     
     if (canProcessBypassed)
     {
-        replaceLatencyProcessorIfPossible (info.rootNodeToReplace);
+        replaceLatencyProcessorIfPossible (info.nodeGraphToReplace);
         
         if (! latencyProcessor)
         {
@@ -195,7 +195,9 @@ void PluginNode::process (ProcessContext& pc)
         
         // Process the plugin
         if (shouldProcessPlugin)
-            plugin->applyToBufferWithAutomation (getPluginRenderContext (blockTimeRange.getStart() + toDuration (subBlockTimeRange.getStart()), outputAudioBuffer));
+            plugin->applyToBufferWithAutomation (getPluginRenderContext ({ blockTimeRange.getStart() + toDuration (subBlockTimeRange.getStart()),
+                                                                           blockTimeRange.getStart() + toDuration (subBlockTimeRange.getEnd()) },
+                                                                         outputAudioBuffer));
 
         // Then copy the buffers to the outputs
         if (subBlockNum == 0)
@@ -245,7 +247,7 @@ void PluginNode::initialisePlugin (double sampleRateToUse, int blockSizeToUse)
     latencyNumSamples = juce::roundToInt (plugin->getLatencySeconds() * sampleRate);
 }
 
-PluginRenderContext PluginNode::getPluginRenderContext (TimePosition editTime, juce::AudioBuffer<float>& destBuffer)
+PluginRenderContext PluginNode::getPluginRenderContext (TimeRange editTime, juce::AudioBuffer<float>& destBuffer)
 {
     return { &destBuffer,
              juce::AudioChannelSet::canonicalChannelSet (destBuffer.getNumChannels()),
@@ -256,40 +258,33 @@ PluginRenderContext PluginNode::getPluginRenderContext (TimePosition editTime, j
              isRendering, canProcessBypassed };
 }
 
-void PluginNode::replaceLatencyProcessorIfPossible (Node* rootNodeToReplace)
+void PluginNode::replaceLatencyProcessorIfPossible (NodeGraph* nodeGraphToReplace)
 {
-    if (rootNodeToReplace == nullptr)
+    if (nodeGraphToReplace == nullptr)
         return;
     
-    auto props = getNodeProperties();
-    auto nodeIDToLookFor = props.nodeID;
+    const auto props = getNodeProperties();
+    const auto nodeIDToLookFor = props.nodeID;
     
     if (nodeIDToLookFor == 0)
         return;
 
-    auto visitor = [this, nodeIDToLookFor, props] (Node& node)
+    if (auto oldNode = findNodeWithID<PluginNode> (*nodeGraphToReplace, nodeIDToLookFor))
     {
-        if (auto other = dynamic_cast<PluginNode*> (&node))
+        if (! oldNode->latencyProcessor)
+            return;
+
+        if (! latencyProcessor)
         {
-            if (other->getNodeProperties().nodeID == nodeIDToLookFor)
-            {
-                if (! other->latencyProcessor)
-                    return;
-                
-                if (! latencyProcessor)
-                {
-                    if (other->latencyProcessor->hasConfiguration (latencyNumSamples, sampleRate, props.numberOfChannels))
-                        latencyProcessor = other->latencyProcessor;
+            if (oldNode->latencyProcessor->hasConfiguration (latencyNumSamples, sampleRate, props.numberOfChannels))
+                latencyProcessor = oldNode->latencyProcessor;
 
-                    return;
-                }
-
-                if (latencyProcessor->hasSameConfigurationAs (*other->latencyProcessor))
-                    latencyProcessor = other->latencyProcessor;
-            }
+            return;
         }
-    };
-    visitNodes (*rootNodeToReplace, visitor, true);
+
+        if (latencyProcessor->hasSameConfigurationAs (*oldNode->latencyProcessor))
+            latencyProcessor = oldNode->latencyProcessor;
+    }
 }
 
 }} // namespace tracktion { inline namespace engine

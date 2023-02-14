@@ -102,7 +102,21 @@ public:
     /** This will increase/decrease playback speed by changing the tempo, maintaining pitch where possible. */
     void setTempoAdjustment (double plusOrMinusProportion);
 
-    void postPosition (TimePosition);
+    /** Posts a transport position change.
+        Using the second parameter it's possible to delay position changes in order to quantise them to some musical sense.
+        Pending changes will be cancelled automatically if:
+        - The transport is stopped
+        - The playhead reaches the end of a loop position
+        - The playhead passes the jump position
+
+        @param positionToJumpTo The position to jump to
+        @param whenToJump       The position the playhead should be at when performing the jump
+    */
+    void postPosition (TimePosition positionToJumpTo, std::optional<TimePosition> whenToJump = {});
+
+    /** Returns a pending position change if there is one. */
+    std::optional<TimePosition> getPendingPositionChange() const;
+
     void play();
     void stop();
     
@@ -140,10 +154,6 @@ private:
     juce::OwnedArray<WaveOutputDeviceInstance> waveOutputs;
     juce::OwnedArray<MidiOutputDeviceInstance> midiOutputs;
 
-    tempo::Sequence lastTempoSequence { {{ BeatPosition(), 120.0, 0.0f }},
-                                        {{ BeatPosition(), 4, 4, false }},
-                                        tempo::LengthOfOneBeat::dependsOnTimeSignature };
-
     void releaseDeviceList();
     void rebuildDeviceList();
 
@@ -169,7 +179,7 @@ private:
     std::atomic<double> audiblePlaybackTime { 0.0 };
 
     void createNode();
-    void fillNextNodeBlock (float** allChannels, int numChannels, int numSamples);
+    void fillNextNodeBlock (float* const* allChannels, int numChannels, int numSamples);
 
     JUCE_DECLARE_WEAK_REFERENCEABLE (EditPlaybackContext)
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EditPlaybackContext)

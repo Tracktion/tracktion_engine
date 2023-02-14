@@ -242,127 +242,127 @@ public:
 
     //==============================================================================
     // transport
-    void play (float val, int param);
-    void stop (float val, int param);
-    void record (float val, int param);
-    void home (float val, int param);
-    void end (float val, int param);
-    void rewind (float val, int param);
-    void fastForward (float val, int param);
-    void markIn (float val, int param);
-    void markOut (float val, int param);
-    void automationReading (float val, int param);
-    void automationWriting (float val, int param);
-    void addMarker (float val, int param);
-    void prevMarker (float val, int param);
-    void nextMarker (float val, int param);
-    void nudgeLeft (float val, int param);
-    void nudgeRight (float val, int param);
-    void abort (float val, int param);
-    void abortRestart (float val, int param);
-    void jog (float val, int param);
-    void jumpToMarkIn (float val, int param);
-    void jumpToMarkOut (float val, int param);
-    void clearAllSolo (float val, int param);
+    virtual void play (float val, int param);
+    virtual void stop (float val, int param);
+    virtual void record (float val, int param);
+    virtual void home (float val, int param);
+    virtual void end (float val, int param);
+    virtual void rewind (float val, int param);
+    virtual void fastForward (float val, int param);
+    virtual void markIn (float val, int param);
+    virtual void markOut (float val, int param);
+    virtual void automationReading (float val, int param);
+    virtual void automationWriting (float val, int param);
+    virtual void addMarker (float val, int param);
+    virtual void prevMarker (float val, int param);
+    virtual void nextMarker (float val, int param);
+    virtual void nudgeLeft (float val, int param);
+    virtual void nudgeRight (float val, int param);
+    virtual void abort (float val, int param);
+    virtual void abortRestart (float val, int param);
+    virtual void jog (float val, int param);
+    virtual void jumpToMarkIn (float val, int param);
+    virtual void jumpToMarkOut (float val, int param);
+    virtual void clearAllSolo (float val, int param);
 
     // options
-    void toggleBeatsSecondsMode (float val, int param);
-    void toggleLoop (float val, int param);
-    void togglePunch (float val, int param);
-    void toggleClick (float val, int param);
-    void toggleSnap (float val, int param);
-    void toggleSlave (float val, int param);
-    void toggleEtoE (float val, int param);
-    void toggleScroll (float val, int param);
-    void toggleAllArm (float val, int param);
+    virtual void toggleBeatsSecondsMode (float val, int param);
+    virtual void toggleLoop (float val, int param);
+    virtual void togglePunch (float val, int param);
+    virtual void toggleClick (float val, int param);
+    virtual void toggleSnap (float val, int param);
+    virtual void toggleSlave (float val, int param);
+    virtual void toggleEtoE (float val, int param);
+    virtual void toggleScroll (float val, int param);
+    virtual void toggleAllArm (float val, int param);
 
     // plugins
-    void masterVolume (float val, int param);
-    void masterPan (float val, int param);
-    void quickParam (float val, int param);
-    void paramTrack (float val, int param);
+    virtual void masterVolume (float val, int param);
+    virtual void masterPan (float val, int param);
+    virtual void quickParam (float val, int param);
+    virtual void paramTrack (float val, int param);
 
     // track
-    void volTrack (float val, int param);
-    void panTrack (float val, int param);
-    void muteTrack (float val, int param);
-    void soloTrack (float val, int param);
-    void armTrack (float val, int param);
-    void selectTrack (float val, int param);
-    void auxTrack (float val, int param);
+    virtual void volTrack (float val, int param);
+    virtual void panTrack (float val, int param);
+    virtual void muteTrack (float val, int param);
+    virtual void soloTrack (float val, int param);
+    virtual void armTrack (float val, int param);
+    virtual void selectTrack (float val, int param);
+    virtual void auxTrack (float val, int param);
 
     // navigation
-    void zoomIn (float val, int param);
-    void zoomOut (float val, int param);
-    void scrollTracksUp (float val, int param);
-    void scrollTracksDown (float val, int param);
-    void scrollTracksLeft (float val, int param);
-    void scrollTracksRight (float val, int param);
-    void zoomTracksIn (float val, int param);
-    void zoomTracksOut (float val, int param);
-    void toggleSelectionMode (float val, int param);
-    void selectLeft (float val, int param);
-    void selectRight (float val, int param);
-    void selectUp (float val, int param);
-    void selectDown (float val, int param);
-    void selectClipInTrack (float val, int param);
-    void selectFilterInTrack (float val, int param);
+    virtual void zoomIn (float val, int param);
+    virtual void zoomOut (float val, int param);
+    virtual void scrollTracksUp (float val, int param);
+    virtual void scrollTracksDown (float val, int param);
+    virtual void scrollTracksLeft (float val, int param);
+    virtual void scrollTracksRight (float val, int param);
+    virtual void zoomTracksIn (float val, int param);
+    virtual void zoomTracksOut (float val, int param);
+    virtual void toggleSelectionMode (float val, int param);
+    virtual void selectLeft (float val, int param);
+    virtual void selectRight (float val, int param);
+    virtual void selectUp (float val, int param);
+    virtual void selectDown (float val, int param);
+    virtual void selectClipInTrack (float val, int param);
+    virtual void selectFilterInTrack (float val, int param);
 
     // bank
-    void faderBankLeft    (float val, int param);
-    void faderBankLeft1   (float val, int param);
-    void faderBankLeft4   (float val, int param);
-    void faderBankLeft8   (float val, int param);
-    void faderBankLeft16  (float val, int param);
-    void faderBankRight   (float val, int param);
-    void faderBankRight1  (float val, int param);
-    void faderBankRight4  (float val, int param);
-    void faderBankRight8  (float val, int param);
-    void faderBankRight16 (float val, int param);
+    virtual void faderBankLeft    (float val, int param);
+    virtual void faderBankLeft1   (float val, int param);
+    virtual void faderBankLeft4   (float val, int param);
+    virtual void faderBankLeft8   (float val, int param);
+    virtual void faderBankLeft16  (float val, int param);
+    virtual void faderBankRight   (float val, int param);
+    virtual void faderBankRight1  (float val, int param);
+    virtual void faderBankRight4  (float val, int param);
+    virtual void faderBankRight8  (float val, int param);
+    virtual void faderBankRight16 (float val, int param);
 
-    void paramBankLeft    (float val, int param);
-    void paramBankLeft1   (float val, int param);
-    void paramBankLeft4   (float val, int param);
-    void paramBankLeft8   (float val, int param);
-    void paramBankLeft16  (float val, int param);
-    void paramBankLeft24  (float val, int param);
-    void paramBankRight   (float val, int param);
-    void paramBankRight1  (float val, int param);
-    void paramBankRight4  (float val, int param);
-    void paramBankRight8  (float val, int param);
-    void paramBankRight16 (float val, int param);
-    void paramBankRight24 (float val, int param);
+    virtual void paramBankLeft    (float val, int param);
+    virtual void paramBankLeft1   (float val, int param);
+    virtual void paramBankLeft4   (float val, int param);
+    virtual void paramBankLeft8   (float val, int param);
+    virtual void paramBankLeft16  (float val, int param);
+    virtual void paramBankLeft24  (float val, int param);
+    virtual void paramBankRight   (float val, int param);
+    virtual void paramBankRight1  (float val, int param);
+    virtual void paramBankRight4  (float val, int param);
+    virtual void paramBankRight8  (float val, int param);
+    virtual void paramBankRight16 (float val, int param);
+    virtual void paramBankRight24 (float val, int param);
 
     // User functions
-    void userFunction1    (float val, int param);
-    void userFunction2    (float val, int param);
-    void userFunction3    (float val, int param);
-    void userFunction4    (float val, int param);
-    void userFunction5    (float val, int param);
-    void userFunction6    (float val, int param);
-    void userFunction7    (float val, int param);
-    void userFunction8    (float val, int param);
-    void userFunction9    (float val, int param);
-    void userFunction10   (float val, int param);
-    void userFunction11   (float val, int param);
-    void userFunction12   (float val, int param);
-    void userFunction13   (float val, int param);
-    void userFunction14   (float val, int param);
-    void userFunction15   (float val, int param);
-    void userFunction16   (float val, int param);
-    void userFunction17   (float val, int param);
-    void userFunction18   (float val, int param);
-    void userFunction19   (float val, int param);
-    void userFunction20   (float val, int param);
+    virtual void userFunction1    (float val, int param);
+    virtual void userFunction2    (float val, int param);
+    virtual void userFunction3    (float val, int param);
+    virtual void userFunction4    (float val, int param);
+    virtual void userFunction5    (float val, int param);
+    virtual void userFunction6    (float val, int param);
+    virtual void userFunction7    (float val, int param);
+    virtual void userFunction8    (float val, int param);
+    virtual void userFunction9    (float val, int param);
+    virtual void userFunction10   (float val, int param);
+    virtual void userFunction11   (float val, int param);
+    virtual void userFunction12   (float val, int param);
+    virtual void userFunction13   (float val, int param);
+    virtual void userFunction14   (float val, int param);
+    virtual void userFunction15   (float val, int param);
+    virtual void userFunction16   (float val, int param);
+    virtual void userFunction17   (float val, int param);
+    virtual void userFunction18   (float val, int param);
+    virtual void userFunction19   (float val, int param);
+    virtual void userFunction20   (float val, int param);
 
     void null (float, int) {} // null action for outgoing only actions
 
-    void loadFunctions();
+    virtual void loadFunctions();
 
-    juce::XmlElement* createXml();
-    void importSettings (const juce::File&);
-    void importSettings (const juce::String&);
-    void exportSettings (const juce::File&);
+    virtual juce::XmlElement* createXml();
+    virtual void importSettings (const juce::File&);
+    virtual void importSettings (const juce::String&);
+    virtual void exportSettings (const juce::File&);
 
     int getPacketsIn()  { return packetsIn; }
     int getPacketsOut() { return packetsOut; }
@@ -448,38 +448,37 @@ private:
     juce::SharedResourcePointer<CustomControlSurfaceManager> manager;
 
     //==============================================================================
-    void oscMessageReceived (const juce::OSCMessage&) override;
-    void oscBundleReceived (const juce::OSCBundle&) override;
+    virtual void oscMessageReceived (const juce::OSCMessage&) override;
+    virtual void oscBundleReceived (const juce::OSCBundle&) override;
 
     bool isTextAction (ActionID);
 
     //==============================================================================
-    void addFunction (juce::PopupMenu&, juce::SortedSet<int>& commandSet, const juce::String& group, const juce::String& name, ActionID id, ActionFunction);
-    void addTrackFunction (juce::PopupMenu&, const juce::String& group, const juce::String& name, ActionID id, ActionFunction);
-    void addPluginFunction (juce::PopupMenu&, const juce::String& group, const juce::String& name, ActionID id, ActionFunction);
-    void createContextMenu (juce::PopupMenu&);
-    void addAllCommandItem (juce::PopupMenu&);
+    virtual void addFunction (juce::PopupMenu&, juce::SortedSet<int>& commandSet, const juce::String& group, const juce::String& name, ActionID id, ActionFunction);
+    virtual void addTrackFunction (juce::PopupMenu&, const juce::String& group, const juce::String& name, ActionID id, ActionFunction);
+    virtual void addPluginFunction (juce::PopupMenu&, const juce::String& group, const juce::String& name, ActionID id, ActionFunction);
+    virtual void addAllCommandItem (juce::PopupMenu&);
 
-    void sendCommandToControllerForActionID (int actionID, bool);
-    void sendCommandToControllerForActionID (int actionID, float value);
-    void sendCommandToControllerForActionID (int actionID, juce::String);
+    virtual void sendCommandToControllerForActionID (int actionID, bool);
+    virtual void sendCommandToControllerForActionID (int actionID, float value);
+    virtual void sendCommandToControllerForActionID (int actionID, juce::String);
 
-    juce::String controllerIDToString (int id, int channelid) const;
-    juce::String noteIDToString (int note, int channelid) const;
-    juce::String getFunctionName (int id) const;
+    virtual juce::String controllerIDToString (int id, int channelid) const;
+    virtual juce::String noteIDToString (int note, int channelid) const;
+    virtual juce::String getFunctionName (int id) const;
 
-    void init();
-    bool loadFromXml (const juce::XmlElement&);
-    void clearCommandGroups();
+    virtual void init();
+    virtual bool loadFromXml (const juce::XmlElement&);
+    virtual void clearCommandGroups();
 
-    bool isPendingEventAssignable();
-    void updateOrCreateMappingForID (int id, juce::String addr, int channel, int noteNum, int controllerID);
-    void addMappingSetsForID (ActionID, juce::Array<MappingSet>& mappingSet);
+    virtual bool isPendingEventAssignable();
+    virtual void updateOrCreateMappingForID (int id, juce::String addr, int channel, int noteNum, int controllerID);
+    virtual void addMappingSetsForID (ActionID, juce::Array<MappingSet>& mappingSet);
 
-    void handleAsyncUpdate() override;
-    void recreateOSCSockets();
+    virtual void handleAsyncUpdate() override;
+    virtual void recreateOSCSockets();
 
-    bool shouldActOnValue (float v);
+    virtual bool shouldActOnValue (float v);
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CustomControlSurface)

@@ -717,12 +717,12 @@ BeatPosition MidiNote::getQuantisedEndBeat (const MidiClip* const c) const
 
 BeatDuration MidiNote::getQuantisedLengthBeats (const MidiClip& c) const
 {
-    return getQuantisedStartBeat (c) - getQuantisedEndBeat (c);
+    return getQuantisedEndBeat (c) - getQuantisedStartBeat (c);
 }
 
 BeatDuration MidiNote::getQuantisedLengthBeats (const MidiClip* const c) const
 {
-    return getQuantisedStartBeat (c) - getQuantisedEndBeat (c);
+    return getQuantisedEndBeat (c) - getQuantisedStartBeat (c);
 }
 
 //==============================================================================
@@ -998,7 +998,7 @@ void MidiControllerEvent::setMetadata (int m, juce::UndoManager* um)
     if (metadata != m)
     {
         state.setProperty (IDs::metadata, m, um);
-        m = metadata;
+        metadata = m;
     }
 }
 
@@ -1735,6 +1735,7 @@ bool MidiList::readSeparateTracksFromFile (const juce::File& f,
 
                         std::unique_ptr<MidiList> midiList (new MidiList());
                         midiList->setMidiChannel (midiChannel);
+                        midiList->setImportedFileName (f.getFileName());
                         midiList->importMidiSequence (channelSequence, nullptr, TimePosition(), nullptr);
 
                         if (! midiList->isEmpty())

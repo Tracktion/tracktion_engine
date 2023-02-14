@@ -330,15 +330,15 @@ public:
                 return res.getErrorMessage();
 
             auto rc = std::make_unique<RecordingContext> (edit.engine, recordedFile);
-            rc->sampleRate = params.sampleRate;
+            rc->sampleRate = edit.engine.getDeviceManager().getSampleRate();
 
             juce::StringPairArray metadata;
-            AudioFileUtils::addBWAVStartToMetadata (metadata, (SampleCount) tracktion::toSamples (params.punchRange.getStart(), params.sampleRate));
+            AudioFileUtils::addBWAVStartToMetadata (metadata, (SampleCount) tracktion::toSamples (params.punchRange.getStart(), rc->sampleRate));
             auto& wi = getWaveInput();
 
             rc->fileWriter.reset (new AudioFileWriter (AudioFile (edit.engine, recordedFile), format,
                                                        wi.isStereoPair() ? 2 : 1,
-                                                       params.sampleRate, wi.bitDepth, metadata, 0));
+                                                       rc->sampleRate, wi.bitDepth, metadata, 0));
 
             if (rc->fileWriter->isOpen())
             {
@@ -347,7 +347,7 @@ public:
                 muteTrackNow = false;
 
                 const auto adjustSeconds = wi.getAdjustmentSeconds();
-                rc->adjustSamples = (int) tracktion::toSamples (adjustSeconds, params.sampleRate);
+                rc->adjustSamples = (int) tracktion::toSamples (adjustSeconds, rc->sampleRate);
                 rc->adjustSamples += context.getLatencySamples();
 
                 if (edit.recordingPunchInOut)
@@ -374,7 +374,7 @@ public:
                 {
                     if ((rc->thumbnail = edit.engine.getRecordingThumbnailManager().getThumbnailFor (recordedFile)))
                     {
-                        rc->thumbnail->reset (wi.isStereoPair() ? 2 : 1, params.sampleRate);
+                        rc->thumbnail->reset (wi.isStereoPair() ? 2 : 1, rc->sampleRate);
                         rc->thumbnail->punchInTime = params.punchRange.getStart();
                     }
                 }
@@ -1088,7 +1088,7 @@ public:
                 && InputDeviceInstance::isLivePlayEnabled (t);
     }
 
-    void copyIncomingDataIntoBuffer (const float** allChannels, int numChannels, int numSamples)
+    void copyIncomingDataIntoBuffer (const float* const* allChannels, int numChannels, int numSamples)
     {
         if (numChannels == 0)
             return;
@@ -1112,7 +1112,7 @@ public:
         }
     }
 
-    void acceptInputBuffer (const float** allChannels, int numChannels, int numSamples,
+    void acceptInputBuffer (const float* const* allChannels, int numChannels, int numSamples,
                             double streamTime, LevelMeasurer* measurerToUpdate,
                             RetrospectiveRecordBuffer* retrospectiveBuffer, bool addToRetrospective)
     {
@@ -1570,7 +1570,7 @@ void WaveInputDevice::removeInstance (WaveInputDeviceInstance* i)
 }
 
 //==============================================================================
-void WaveInputDevice::consumeNextAudioBlock (const float** allChannels, int numChannels, int numSamples, double streamTime)
+void WaveInputDevice::consumeNextAudioBlock (const float* const* allChannels, int numChannels, int numSamples, double streamTime)
 {
     if (enabled)
     {
@@ -1822,7 +1822,7 @@ void WaveInputRecordingThread::prepareToStart()
     flushAndStop();
     sleep (2);
     jassert (! isThreadRunning());
-    startThread (5);
+    startThread (juce::Thread::Priority::normal);
 }
 
 void WaveInputRecordingThread::flushAndStop()

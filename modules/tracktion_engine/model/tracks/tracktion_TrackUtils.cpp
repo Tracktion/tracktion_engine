@@ -352,7 +352,10 @@ void moveAutomation (const juce::Array<TrackAutomationSection>& origSections, Ti
                 {
                     TrackAutomationSection::ActiveParameters ap;
                     ap.param = param;
-                    ap.curve = param->getCurve();
+                    ap.curve.setState (param->getCurve().state);
+                    ap.curve.setParentState (param->getCurve().parentState);
+                    ap.curve.setOwnerParameter (param->getCurve().getOwnerParameter());
+                    
                     section.activeParameters.add (ap);
                 }
             }

@@ -36,7 +36,7 @@ else()
     MESSAGE(STATUS "Not building with VST2")
 endif()
 
-juce_add_pip (../${CMAKE_PROJECT_NAME}.h)
+juce_add_pip (${CMAKE_PROJECT_NAME}.h)
 
 juce_generate_juce_header(${CMAKE_PROJECT_NAME})
 
@@ -45,6 +45,9 @@ target_compile_features(${CMAKE_PROJECT_NAME} PRIVATE cxx_std_17)
 set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
     C_VISIBILITY_PRESET hidden
     CXX_VISIBILITY_PRESET hidden)
+
+set(SourceFiles
+    ${CMAKE_PROJECT_NAME}.h)
 
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE ${SourceFiles})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX Source FILES ${SourceFiles})

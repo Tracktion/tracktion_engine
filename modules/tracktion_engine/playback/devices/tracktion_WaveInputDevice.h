@@ -63,7 +63,7 @@ public:
 
     //==============================================================================
     void masterTimeUpdate (double) override {}
-    void consumeNextAudioBlock (const float** allChannels, int numChannels, int numSamples, double streamTime);
+    void consumeNextAudioBlock (const float* const* allChannels, int numChannels, int numSamples, double streamTime);
 
     RetrospectiveRecordBuffer* getRetrospectiveRecordBuffer()   { return retrospectiveBuffer.get(); }
     void updateRetrospectiveBufferLength (double length) override;

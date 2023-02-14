@@ -21,7 +21,7 @@ public:
     static const char* getPluginName()                  { return NEEDS_TRANS("Reverb"); }
     static const char* xmlTypeName;
 
-    juce::String getName() override                     { return TRANS("Reverb"); }
+    juce::String getName() const override               { return TRANS("Reverb"); }
     juce::String getPluginType() override               { return xmlTypeName; }
     bool needsConstantBufferSize() override             { return false; }
 

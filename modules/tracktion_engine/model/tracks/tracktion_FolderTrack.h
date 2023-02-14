@@ -27,10 +27,10 @@ public:
     void initialise() override;
 
     void sanityCheckName() override;
-    juce::String getName() override;
+    juce::String getName() const override;
 
     // not an index - values start from 1
-    int getFolderTrackNumber() noexcept;
+    int getFolderTrackNumber() const noexcept;
 
     //==============================================================================
     bool isSubmixFolder() const;
@@ -86,6 +86,7 @@ private:
     juce::CachedValue<bool> muted, soloed, soloIsolated;
     bool dirtyClips = true;
 
+    std::mutex pluginMutex;
     juce::ReferenceCountedObjectPtr<VCAPlugin> vcaPlugin;
     juce::ReferenceCountedObjectPtr<VolumeAndPanPlugin> volumePlugin;
     AsyncCaller pluginUpdater;
