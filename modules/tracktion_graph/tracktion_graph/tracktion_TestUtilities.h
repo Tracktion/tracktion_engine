@@ -99,6 +99,20 @@ namespace test_utilities
                                                        [=] (auto, auto frame) { return std::sin ((float) (frame * phaseIncrement)); });
     }
 
+    static inline auto createSquareBuffer (int numChannels, int numFrames, double phaseIncrement)
+    {
+        return choc::buffer::createChannelArrayBuffer (numChannels, numFrames,
+                                                       [=] (auto, auto frame)
+                                                       {
+                                                           const auto sinValue = std::sin ((float) (frame * phaseIncrement));
+      
+                                                           if (sinValue > 0.0f) return 1.0f;
+                                                           if (sinValue < 0.0f) return -1.0f;
+      
+                                                           return 0.0f;
+                                                       });
+    }
+
     /** Logs a MidiMessageSequence. */
     static inline void logMidiMessageSequence (juce::UnitTest& ut, const juce::MidiMessageSequence& seq)
     {
@@ -231,6 +245,19 @@ namespace test_utilities
     {
         auto buffer = createSineBuffer (numChannels, (int) (sampleRate * durationInSeconds),
                                         getPhaseIncrement (frequency, sampleRate));
+
+        AudioFormatType format;
+        auto f = std::make_unique<juce::TemporaryFile> (format.getFileExtensions()[0]);
+        writeToFile (f->getFile(), buffer, sampleRate);
+        return f;
+    }
+
+    template<typename AudioFormatType>
+    std::unique_ptr<juce::TemporaryFile> getSquareFile (double sampleRate, double durationInSeconds,
+                                                        int numChannels = 1, float frequency = 220.0f)
+    {
+        auto buffer = createSquareBuffer (numChannels, (int) (sampleRate * durationInSeconds),
+                                          getPhaseIncrement (frequency, sampleRate));
 
         AudioFormatType format;
         auto f = std::make_unique<juce::TemporaryFile> (format.getFileExtensions()[0]);

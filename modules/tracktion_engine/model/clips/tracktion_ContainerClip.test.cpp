@@ -41,8 +41,8 @@ private:
         auto edit = createTestEdit (engine);
         auto audioTrack = getAudioTracks (*edit)[0];
         audioTrack->getVolumePlugin()->setVolumeDb (juce::Decibels::gainToDecibels (0.5f));
-        auto sinFile1 = getSinFile<juce::WavAudioFormat> (44100.0, 3.0, 1, 220.0f);
-        auto sinFile2 = getSinFile<juce::WavAudioFormat> (44100.0, 2.0, 1, 220.0f);
+        auto sinFile1 = getSquareFile<juce::WavAudioFormat> (44100.0, 3.0, 1, 220.0f);
+        auto sinFile2 = getSquareFile<juce::WavAudioFormat> (44100.0, 2.0, 1, 220.0f);
 
         beginTest ("Adding child clips");
         auto cc = dynamic_cast<ContainerClip*> (insertNewClip (*audioTrack, TrackItem::Type::container, { 0_tp, 5_tp }));
@@ -50,7 +50,6 @@ private:
         auto clip1 = insertWaveClip (*cc, {}, sinFile1->getFile(), {{ 0_tp, 3_tp }}, DeleteExistingClips::no);
         auto clip2 = insertWaveClip (*cc, {}, sinFile2->getFile(), {{ 2_tp, 4_tp }}, DeleteExistingClips::no);
 
-        // Use WaveNodeRealTime for one of the clips so we're testing both
         clip1->setUsesProxy (false);
         clip2->setUsesProxy (false);
 
@@ -230,7 +229,7 @@ private:
 
         beginTest ("Edit remapping");
         {
-            // Remove the fades as there's aren't remapped
+            // Remove the fades as they aren't remapped
             clip1->setAutoCrossfade (false);
             clip2->setAutoCrossfade (false);
 
@@ -247,6 +246,7 @@ private:
             expect (clip1->getSyncType() == Clip::syncBarsBeats);
             expect (clip2->getSyncType() == Clip::syncBarsBeats);
 
+            // Test with double tempo
             ts.getTempos()[0]->setBpm (120.0);
             expectEquals (ts.getTempos()[0]->getBpm(), 120.0);
 
@@ -262,24 +262,63 @@ private:
 
             expectEquals (cc->getLoopRange().getLength(), 2.5_td);
 
-            auto res = renderToAudioBuffer (*edit);
+            {
+                auto res = renderToAudioBuffer (*edit);
 
-            // First loop (clipped by offset)
-            expectPeak (*this, res, { 4.5_tp, 5_tp }, 0.0f);
-            expectPeak (*this, res, { 5_tp, 5.5_tp }, 0.5f);
-            expectPeak (*this, res, { 5.5_tp, 6_tp }, 0.821f); // I think there's some phase cancellation happening so the peak is not 1.0f
-            expectPeak (*this, res, { 6_tp, 6.5_tp }, 0.5f);
-            expectPeak (*this, res, { 6.5_tp, 7_tp }, 0.0f);
+                // First loop (clipped by offset)
+                expectPeak (*this, res, { 4.5_tp, 5_tp }, 0.0f);
+                expectPeak (*this, res, { 5_tp, 5.5_tp }, 0.5f);
+                expectPeak (*this, res, { 5.5_tp, 6_tp }, 1.0f);
+                expectPeak (*this, res, { 6_tp, 6.5_tp }, 0.5f);
+                expectPeak (*this, res, { 6.5_tp, 7_tp }, 0.0f);
 
-            // Second loop
-            expectPeak (*this, res, { 7_tp, 7.5_tp }, 0.5f);
-            expectPeak (*this, res, { 7.5_tp, 8_tp }, 0.5f);
-            expectPeak (*this, res, { 8_tp, 8.5_tp }, 0.762f); // I think there's some phase cancellation happening so the peak is not 1.0f
-            expectPeak (*this, res, { 8.5_tp, 9_tp }, 0.5f);
-            expectPeak (*this, res, { 9_tp, 9.5_tp }, 0.0f);
+                // Second loop
+                expectPeak (*this, res, { 7_tp, 7.5_tp }, 0.5f);
+                expectPeak (*this, res, { 7.5_tp, 8_tp }, 0.5f);
+                expectPeak (*this, res, { 8_tp, 8.5_tp }, 1.0f);
+                expectPeak (*this, res, { 8.5_tp, 9_tp }, 0.5f);
+                expectPeak (*this, res, { 9_tp, 9.5_tp }, 0.0f);
 
-            // Third loop
-            expectPeak (*this, res, { 9.5_tp, 10_tp }, 0.5f);
+                // Third loop
+                expectPeak (*this, res, { 9.5_tp, 10_tp }, 0.5f);
+            }
+
+            // Test with half original tempo
+            ts.getTempos()[0]->setBpm (30.0);
+            expectEquals (ts.getTempos()[0]->getBpm(), 30.0);
+
+            expectEquals (cc->getPosition().getStart(), 20_tp);
+            expectEquals (cc->getPosition().getEnd(), 40_tp);
+            expectEquals (cc->getPosition().offset, 2_td);
+
+            expectEquals (clip1->getPosition().getStart(), 0_tp);
+            expectEquals (clip1->getPosition().getEnd(), 6_tp);
+
+            expectEquals (clip2->getPosition().getStart(), 4_tp);
+            expectEquals (clip2->getPosition().getEnd(), 8_tp);
+
+            expectEquals (cc->getLoopRange().getLength(), 10_td);
+
+            {
+                auto res = renderToAudioBuffer (*edit);
+
+                // First loop (clipped by offset)
+                expectPeak (*this, res, { 18_tp, 20_tp }, 0.0f);
+                expectPeak (*this, res, { 20_tp, 22_tp }, 0.5f);
+                expectPeak (*this, res, { 22_tp, 24_tp }, 1.0f);
+                expectPeak (*this, res, { 24_tp, 26_tp }, 0.5f);
+                expectPeak (*this, res, { 26_tp, 28_tp }, 0.0f);
+
+                // Second loop
+                expectPeak (*this, res, { 28_tp, 30_tp }, 0.5f);
+                expectPeak (*this, res, { 30_tp, 32_tp }, 0.5f);
+                expectPeak (*this, res, { 32_tp, 34_tp }, 1.0f);
+                expectPeak (*this, res, { 34_tp, 36_tp }, 0.5f);
+                expectPeak (*this, res, { 36_tp, 38_tp }, 0.0f);
+
+                // Third loop
+                expectPeak (*this, res, { 38_tp, 40_tp }, 0.5f);
+            }
         }
 
         beginTest ("Container clip fade");
