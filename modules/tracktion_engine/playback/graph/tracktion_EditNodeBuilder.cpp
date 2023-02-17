@@ -721,7 +721,9 @@ std::unique_ptr<tracktion::graph::Node> createNodeForContainerClip (ContainerCli
     // Once the ContainerClipNode has been initialised it will update it's children with its own ProcessState
     auto node = makeNode<ContainerClipNode> (params.processState,
                                              clip.itemID,
-                                             clip.getPosition(), clip.getLoopRange(),
+                                             BeatRange (clip.getStartBeat(), clip.getEndBeat()),
+                                             clip.getOffsetInBeats(),
+                                             clip.getLoopRangeBeats(),
                                              createNodeForClips (clip.itemID, clips, trackMuteState, params));
 
     // Plugins

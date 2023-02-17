@@ -15,15 +15,20 @@ namespace tracktion { inline namespace engine
 //==============================================================================
 ContainerClipNode::ContainerClipNode (ProcessState& editProcessState,
                                       EditItemID clipID,
-                                      ClipPosition pos,
-                                      TimeRange loopTimeRange,
+                                      BeatRange position,
+                                      BeatDuration offset,
+                                      BeatRange clipLoopRange,
                                       std::unique_ptr<Node> inputNode)
     : TracktionEngineNode (editProcessState),
       containerClipID (clipID),
-      clipPosition (pos),
-      loopRange (loopTimeRange),
+      clipPosition (position),
+      loopRange (clipLoopRange),
+      clipOffset (offset),
       input (std::move (inputNode))
 {
+    if (getProcessState().tempoPosition)
+        tempoPosition = std::make_unique<tempo::Sequence::Position> (*getProcessState().tempoPosition);
+
     assert (input);
     setOptimisations ({ tracktion::graph::ClearBuffers::no,
                         tracktion::graph::AllocateAudioBuffer::yes });
@@ -55,9 +60,6 @@ std::vector<Node*> ContainerClipNode::getInternalNodes()
 
 void ContainerClipNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
-    editPositionInSamples = tracktion::toSamples ({ clipPosition.getStart(), clipPosition.getEnd() }, info.sampleRate);
-    loopRangeSamples = tracktion::toSamples (loopRange, info.sampleRate);
-
     if (info.nodeGraphToReplace != nullptr)
         if (auto oldNode = findNodeWithID<ContainerClipNode> (*info.nodeGraphToReplace, getNodeProperties().nodeID))
             playerContext = oldNode->playerContext;
@@ -65,6 +67,7 @@ void ContainerClipNode::prepareToPlay (const tracktion::graph::PlaybackInitialis
     if (! playerContext)
     {
         playerContext = std::make_shared<PlayerContext>();
+        playerContext->player.setNumThreads (0);
 
         // We need to create our own Tempo::Position as we'll apply an offset so it stays in sync with the Edit's tempo sequence
         // Make sure we do this before we overrwite the default ProcessState
@@ -90,8 +93,6 @@ void ContainerClipNode::prepareToPlay (const tracktion::graph::PlaybackInitialis
                             ten->setProcessState (*localProcessState);
                 }, true);
 
-                playerContext->player.setNumThreads (0);
-
     playerContext->player.setNode (std::move (input),
                                    info.sampleRate, info.blockSize);
 }
@@ -104,10 +105,11 @@ bool ContainerClipNode::isReadyToProcess()
 void ContainerClipNode::process (ProcessContext& pc)
 {
     const auto sectionEditTimeRange = getEditTimeRange();
+    const auto sectionEditBeatRange = getEditBeatRange();
     const auto sectionEditSampleRange = getTimelineSampleRange();
 
-    if (sectionEditTimeRange.getEnd() <= clipPosition.getStart()
-        || sectionEditTimeRange.getStart() >= clipPosition.getEnd())
+    if (sectionEditBeatRange.getEnd() <= clipPosition.getStart()
+        || sectionEditBeatRange.getStart() >= clipPosition.getEnd())
        return;
 
     // Set playHead loop range using loopRange
@@ -123,6 +125,15 @@ void ContainerClipNode::process (ProcessContext& pc)
     auto& editPlayHeadState = getPlayHeadState();
     auto& localPlayHead = playerContext->playHead;
 
+    // Calculate sample positions of clip as these will vary when the tempo changes
+    const auto editStartBeatOfLocalTimeline = clipPosition.getStart() - clipOffset;
+    const auto editStartTimeOfLocalTimeline = tempoPosition->set (editStartBeatOfLocalTimeline);
+
+    const TimeRange loopTimeRange (tempoPosition->set (loopRange.getStart()),
+                                   tempoPosition->set (loopRange.getEnd()));
+    const auto loopRangeSamples = toSamples (loopTimeRange, sampleRate);
+
+
     // Updated the PlayHead so the position/play setting below is in sync
     localPlayHead.setReferenceSampleRange (pc.referenceSampleRange);
 
@@ -130,7 +141,7 @@ void ContainerClipNode::process (ProcessContext& pc)
         localPlayHead.setLoopRange (true, loopRangeSamples);
 
     // Syncronise positions
-    const auto playheadOffset = toSamples (clipPosition.getStartOfSource(), sampleRate);
+    const auto playheadOffset = toSamples (editStartTimeOfLocalTimeline, sampleRate);
     playerContext->processState.setPlaybackSpeedRatio (getPlaybackSpeedRatio());
 
     int64_t newPosition = editPlayHead.getPosition() - playheadOffset + loopRangeSamples.getStart();
@@ -159,6 +170,10 @@ void ContainerClipNode::process (ProcessContext& pc)
 
     // Silence any samples before or after our edit time range
     {
+        const TimeRange clipTimeRange (tempoPosition->set (clipPosition.getStart()),
+                                       tempoPosition->set (clipPosition.getEnd()));
+        const auto editPositionInSamples = toSamples ({ clipTimeRange.getStart(), clipTimeRange.getEnd() }, sampleRate);
+
         const auto destBuffer = pc.buffers.audio;
         auto numSamplesToClearAtStart = std::min (editPositionInSamples.getStart() - sectionEditSampleRange.getStart(), (SampleCount) destBuffer.getNumFrames());
         auto numSamplesToClearAtEnd = std::min (sectionEditSampleRange.getEnd() - editPositionInSamples.getEnd(), (SampleCount) destBuffer.getNumFrames());

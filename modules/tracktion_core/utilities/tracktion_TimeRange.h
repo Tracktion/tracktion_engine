@@ -363,6 +363,16 @@ inline RangeType<PositionType> operator+ (const RangeType<PositionType>& r, type
 template<typename PositionType>
 inline RangeType<PositionType> operator- (const RangeType<PositionType>& r, typename RangeType<PositionType>::Duration d)    { return RangeType<PositionType> (r.getStart() - d, r.getEnd() - d); }
 
+template<typename RangeType,
+         std::enable_if_t<std::is_same_v<TimeRange, RangeType>
+                          || std::is_same_v<BeatRange, RangeType>,
+                          bool> = true>
+std::string toString (RangeType range)
+{
+    return std::to_string (toUnderlyingType (range.getStart())) + ", "
+            + std::to_string (toUnderlyingType (range.getEnd()));
+}
+
 }} // namespace tracktion
 
 

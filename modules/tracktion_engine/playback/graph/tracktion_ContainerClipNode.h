@@ -19,12 +19,11 @@ class ContainerClipNode final : public tracktion::graph::Node,
                                 public TracktionEngineNode
 {
 public:
-    using ContainedNodeCreator = std::function <std::unique_ptr<Node> (PlayHeadState&)>;
-
     ContainerClipNode (ProcessState& editProcessState,
                        EditItemID containerClipID,
-                       ClipPosition,
-                       TimeRange clipLoopRange,
+                       BeatRange clipPosition,
+                       BeatDuration clipOffset,
+                       BeatRange clipLoopRange,
                        std::unique_ptr<Node>);
 
     //==============================================================================
@@ -38,9 +37,10 @@ public:
 private:
     //==============================================================================
     const EditItemID containerClipID;
-    const ClipPosition clipPosition;
-    const TimeRange loopRange;
-    ContainedNodeCreator containedNodeCreator;
+    const BeatRange clipPosition, loopRange;
+    const BeatDuration clipOffset;
+    std::unique_ptr<tempo::Sequence::Position> tempoPosition;
+
     std::unique_ptr<tracktion::graph::Node> input;
     NodeProperties nodeProperties { input->getNodeProperties() };
 
@@ -53,8 +53,6 @@ private:
     };
 
     std::shared_ptr<PlayerContext> playerContext;
-    juce::Range<int64_t> editPositionInSamples;
-    juce::Range<int64_t> loopRangeSamples;
 };
 
 }} // namespace tracktion { inline namespace engine
