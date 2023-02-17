@@ -104,7 +104,6 @@ bool ContainerClipNode::isReadyToProcess()
 
 void ContainerClipNode::process (ProcessContext& pc)
 {
-    const auto sectionEditTimeRange = getEditTimeRange();
     const auto sectionEditBeatRange = getEditBeatRange();
     const auto sectionEditSampleRange = getTimelineSampleRange();
 
