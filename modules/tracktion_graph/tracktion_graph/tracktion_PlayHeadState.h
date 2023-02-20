@@ -85,7 +85,7 @@ inline void PlayHeadState::update (juce::Range<int64_t> referenceSampleRange)
             firstBlockOfLoop = false;
         else
             firstBlockOfLoop = startTimelinePos == timelineLoopRange.getStart();
-        
+
         lastBlockOfLoop = endTimelinePos == timelineLoopRange.getEnd();
     }
     else

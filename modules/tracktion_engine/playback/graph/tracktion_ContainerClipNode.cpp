@@ -136,8 +136,9 @@ void ContainerClipNode::process (ProcessContext& pc)
     // Updated the PlayHead so the position/play setting below is in sync
     localPlayHead.setReferenceSampleRange (pc.referenceSampleRange);
 
+    // We don't want to update the playhead position as we'll do that manually below to avoid triggering playhead jumps
     if (! loopRangeSamples.isEmpty() && localPlayHead.getLoopRange() != loopRangeSamples)
-        localPlayHead.setLoopRange (true, loopRangeSamples);
+        localPlayHead.setLoopRange (true, loopRangeSamples, false);
 
     // Syncronise positions
     const auto playheadOffset = toSamples (editStartTimeOfLocalTimeline, sampleRate);
