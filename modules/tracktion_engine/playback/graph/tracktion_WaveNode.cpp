@@ -596,7 +596,7 @@ public:
 
     void setPosition (SampleCount t) override
     {
-        if (std::abs (t - getReadPosition()) <= 2)
+        if (std::abs (t - getReadPosition()) <= 10)
             return;
 
         readPosition = (double) t;
@@ -1023,7 +1023,6 @@ public:
         // Apply offset first
         br = br + offset;
 
-        // First apply the looping
         return readLoopedBeatRange (br, destBuffer, editDuration, isContiguous, playbackSpeedRatio);
     }
 
