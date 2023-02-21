@@ -2880,7 +2880,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
         const AudioFile af (engine, file);
         auto length = af.getLength();
 
-        if (auto wc = dynamic_cast<WaveAudioClip*> (audioTrack->insertNewClip (TrackItem::Type::wave, { TimePosition(), TimePosition::fromSeconds (1.0) }, nullptr)))
+        if (auto wc = dynamic_cast<WaveAudioClip*> (audioTrack->insertNewClip (TrackItem::Type::wave, { 0_tp, 1_tp }, nullptr)))
         {
             wc->setUsesProxy (false);
             wc->getSourceFileReference().setToDirectFileReference (file, false);
@@ -2930,8 +2930,8 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
                 }
             }
 
-            const TimeRange timeRange (TimePosition(), TimeDuration::fromSeconds (length));
-            wc->setPosition ({ timeRange, TimeDuration() });
+            const TimeRange timeRange (0_tp, TimeDuration::fromSeconds (length));
+            wc->setPosition ({ timeRange, 0_td });
             edit->getTransport().setLoopRange (timeRange);
         }
     }

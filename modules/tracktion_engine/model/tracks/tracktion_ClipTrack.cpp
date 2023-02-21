@@ -12,7 +12,8 @@ namespace tracktion { inline namespace engine
 {
 
 struct ClipTrack::ClipList  : public ValueTreeObjectList<Clip>,
-                              private juce::AsyncUpdater
+                              private juce::AsyncUpdater,
+                              private TransportControl::Listener
 {
     ClipList (ClipTrack& ct, const juce::ValueTree& parentTree)
         : ValueTreeObjectList<Clip> (parentTree),
@@ -22,10 +23,14 @@ struct ClipTrack::ClipList  : public ValueTreeObjectList<Clip>,
 
         editLoadedCallback.reset (new Edit::LoadFinishedCallback<ClipList> (*this, ct.edit));
         clipTrack.trackItemsDirty = true;
+
+        clipTrack.edit.getTransport().addListener (this);
     }
 
     ~ClipList() override
     {
+        clipTrack.edit.getTransport().removeListener (this);
+
         for (auto c : objects)
             c->setTrack (nullptr);
 
@@ -73,7 +78,14 @@ struct ClipTrack::ClipList  : public ValueTreeObjectList<Clip>,
         c->decReferenceCount();
     }
 
-    void newObjectAdded (Clip* c) override      { objectAddedOrRemoved (c); }
+    void newObjectAdded (Clip* c) override
+    {
+        objectAddedOrRemoved (c);
+
+        if (c)
+            clipTrack.edit.engine.getEngineBehaviour().newClipAdded (*c, recordingIsStopping);
+    }
+
     void objectRemoved (Clip* c) override       { objectAddedOrRemoved (c); }
     void objectOrderChanged() override          { objectAddedOrRemoved (nullptr); }
 
@@ -159,6 +171,26 @@ struct ClipTrack::ClipList  : public ValueTreeObjectList<Clip>,
                 acb->updateAutoCrossfadesAsync (false);
 
         clipTrack.trackItemsDirty = true;
+    }
+
+private:
+    bool recordingIsStopping = false;
+
+    void playbackContextChanged() override {}
+    void autoSaveNow() override {}
+    void setAllLevelMetersActive (bool) override {}
+    void setVideoPosition (TimePosition, bool) override {}
+    void startVideo() override {}
+    void stopVideo() override {}
+
+    void recordingAboutToStop (InputDeviceInstance&) override
+    {
+        recordingIsStopping = true;
+    }
+
+    void recordingFinished (InputDeviceInstance&, const juce::ReferenceCountedArray<Clip>&) override
+    {
+        recordingIsStopping = false;
     }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ClipList)

@@ -706,6 +706,8 @@ Clip::Array EditPlaybackContext::stopRecording (InputDeviceInstance& in, TimeRan
     TRACKTION_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
 
+    transport.callRecordingAboutToStopListeners (in);
+
     const auto loopRange = transport.getLoopRange();
     in.stop();
 
