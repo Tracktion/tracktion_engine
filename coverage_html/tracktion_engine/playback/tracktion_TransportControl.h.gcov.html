@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">0</td>
-            <td class="headerCovTableEntry">8</td>
-            <td class="headerCovTableEntryLo">0.0 %</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntryLo">20.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-02-14 11:41:59</td>
+            <td class="headerValue">2023-02-21 16:49:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -369,7 +369,7 @@
 <a name="307"><span class="lineNum">     307 </span>            :     struct Listener</a>
 <a name="308"><span class="lineNum">     308 </span>            :     {</a>
 <a name="309"><span class="lineNum">     309 </span>            :         /** Destructor. */</a>
-<a name="310"><span class="lineNum">     310 </span>            :         virtual ~Listener() {}</a>
+<a name="310"><span class="lineNum">     310 </span><span class="lineCov">       1652 :         virtual ~Listener() {}</span></a>
 <a name="311"><span class="lineNum">     311 </span>            : </a>
 <a name="312"><span class="lineNum">     312 </span>            :         /** Called when an EditPlaybackContext is created or deleted. */</a>
 <a name="313"><span class="lineNum">     313 </span>            :         virtual void playbackContextChanged() = 0;</a>
@@ -389,102 +389,109 @@
 <a name="327"><span class="lineNum">     327 </span>            :         /** Should stop video playback. */</a>
 <a name="328"><span class="lineNum">     328 </span>            :         virtual void stopVideo() = 0;</a>
 <a name="329"><span class="lineNum">     329 </span>            : </a>
-<a name="330"><span class="lineNum">     330 </span>            :         /** Called when recording stops for a specific input instance.</a>
-<a name="331"><span class="lineNum">     331 </span>            :             @param InputDeviceInstance  The device instance that just stopped.</a>
-<a name="332"><span class="lineNum">     332 </span>            :             @param recordedClips        The clips resulting from the recording.</a>
-<a name="333"><span class="lineNum">     333 </span>            :         */</a>
-<a name="334"><span class="lineNum">     334 </span>            :         virtual void recordingFinished (InputDeviceInstance&amp;,</a>
-<a name="335"><span class="lineNum">     335 </span>            :                                         juce::ReferenceCountedArray&lt;Clip&gt; /*recordedClips*/)</a>
-<a name="336"><span class="lineNum">     336 </span>            :         {}</a>
-<a name="337"><span class="lineNum">     337 </span>            :     };</a>
-<a name="338"><span class="lineNum">     338 </span>            : </a>
-<a name="339"><span class="lineNum">     339 </span>            :     /** Adds a Listener. */</a>
-<a name="340"><span class="lineNum">     340 </span>            :     void addListener (Listener* l)          { listeners.add (l); }</a>
-<a name="341"><span class="lineNum">     341 </span>            : </a>
-<a name="342"><span class="lineNum">     342 </span>            :     /** Removes a Listener. */</a>
-<a name="343"><span class="lineNum">     343 </span>            :     void removeListener (Listener* l)       { listeners.remove (l); }</a>
-<a name="344"><span class="lineNum">     344 </span>            : </a>
-<a name="345"><span class="lineNum">     345 </span>            :     //==============================================================================</a>
-<a name="346"><span class="lineNum">     346 </span>            :     Engine&amp; engine;         /**&lt; The Engine this Edit belongs to. */</a>
-<a name="347"><span class="lineNum">     347 </span>            :     Edit&amp; edit;             /**&lt; The Edit this transport belongs to. @see Edit::getTransport. */</a>
-<a name="348"><span class="lineNum">     348 </span>            :     juce::ValueTree state;  /**&lt; The state of this transport. */</a>
+<a name="330"><span class="lineNum">     330 </span>            :         /** Called before recording stops for a specific input instance.</a>
+<a name="331"><span class="lineNum">     331 </span>            :             recordingFinished will be called shortly after with newly created clips.</a>
+<a name="332"><span class="lineNum">     332 </span>            :         */</a>
+<a name="333"><span class="lineNum">     333 </span>            :         virtual void recordingAboutToStop (InputDeviceInstance&amp;) {}</a>
+<a name="334"><span class="lineNum">     334 </span>            : </a>
+<a name="335"><span class="lineNum">     335 </span>            :         /** Called when recording stops for a specific input instance.</a>
+<a name="336"><span class="lineNum">     336 </span>            :             @param InputDeviceInstance  The device instance that just stopped.</a>
+<a name="337"><span class="lineNum">     337 </span>            :             @param recordedClips        The clips resulting from the recording.</a>
+<a name="338"><span class="lineNum">     338 </span>            :         */</a>
+<a name="339"><span class="lineNum">     339 </span>            :         virtual void recordingFinished (InputDeviceInstance&amp;,</a>
+<a name="340"><span class="lineNum">     340 </span>            :                                         const juce::ReferenceCountedArray&lt;Clip&gt;&amp; /*recordedClips*/)</a>
+<a name="341"><span class="lineNum">     341 </span>            :         {}</a>
+<a name="342"><span class="lineNum">     342 </span>            :     };</a>
+<a name="343"><span class="lineNum">     343 </span>            : </a>
+<a name="344"><span class="lineNum">     344 </span>            :     /** Adds a Listener. */</a>
+<a name="345"><span class="lineNum">     345 </span>            :     void addListener (Listener* l)          { listeners.add (l); }</a>
+<a name="346"><span class="lineNum">     346 </span>            : </a>
+<a name="347"><span class="lineNum">     347 </span>            :     /** Removes a Listener. */</a>
+<a name="348"><span class="lineNum">     348 </span><span class="lineCov">       1652 :     void removeListener (Listener* l)       { listeners.remove (l); }</span></a>
 <a name="349"><span class="lineNum">     349 </span>            : </a>
-<a name="350"><span class="lineNum">     350 </span>            :     /** @internal. */</a>
-<a name="351"><span class="lineNum">     351 </span>            :     juce::CachedValue&lt;TimePosition&gt; position;</a>
-<a name="352"><span class="lineNum">     352 </span>            :     juce::CachedValue&lt;TimePosition&gt; loopPoint1, loopPoint2;</a>
-<a name="353"><span class="lineNum">     353 </span>            :     juce::CachedValue&lt;TimeDuration&gt; scrubInterval;</a>
-<a name="354"><span class="lineNum">     354 </span>            :     /** @internal. */</a>
-<a name="355"><span class="lineNum">     355 </span>            :     juce::CachedValue&lt;bool&gt; snapToTimecode, looping;</a>
-<a name="356"><span class="lineNum">     356 </span>            : </a>
-<a name="357"><span class="lineNum">     357 </span>            :     //==============================================================================</a>
-<a name="358"><span class="lineNum">     358 </span>            :     /** @internal */</a>
-<a name="359"><span class="lineNum">     359 </span>            :     void callRecordingFinishedListeners (InputDeviceInstance&amp;, juce::ReferenceCountedArray&lt;Clip&gt; recordedClips);</a>
-<a name="360"><span class="lineNum">     360 </span>            : </a>
-<a name="361"><span class="lineNum">     361 </span>            : private:</a>
+<a name="350"><span class="lineNum">     350 </span>            :     //==============================================================================</a>
+<a name="351"><span class="lineNum">     351 </span>            :     Engine&amp; engine;         /**&lt; The Engine this Edit belongs to. */</a>
+<a name="352"><span class="lineNum">     352 </span>            :     Edit&amp; edit;             /**&lt; The Edit this transport belongs to. @see Edit::getTransport. */</a>
+<a name="353"><span class="lineNum">     353 </span>            :     juce::ValueTree state;  /**&lt; The state of this transport. */</a>
+<a name="354"><span class="lineNum">     354 </span>            : </a>
+<a name="355"><span class="lineNum">     355 </span>            :     /** @internal. */</a>
+<a name="356"><span class="lineNum">     356 </span>            :     juce::CachedValue&lt;TimePosition&gt; position;</a>
+<a name="357"><span class="lineNum">     357 </span>            :     juce::CachedValue&lt;TimePosition&gt; loopPoint1, loopPoint2;</a>
+<a name="358"><span class="lineNum">     358 </span>            :     juce::CachedValue&lt;TimeDuration&gt; scrubInterval;</a>
+<a name="359"><span class="lineNum">     359 </span>            :     /** @internal. */</a>
+<a name="360"><span class="lineNum">     360 </span>            :     juce::CachedValue&lt;bool&gt; snapToTimecode, looping;</a>
+<a name="361"><span class="lineNum">     361 </span>            : </a>
 <a name="362"><span class="lineNum">     362 </span>            :     //==============================================================================</a>
-<a name="363"><span class="lineNum">     363 </span>            :     struct TransportState;</a>
-<a name="364"><span class="lineNum">     364 </span>            :     std::unique_ptr&lt;TransportState&gt; transportState;</a>
-<a name="365"><span class="lineNum">     365 </span>            :     std::unique_ptr&lt;EditPlaybackContext&gt; playbackContext;</a>
-<a name="366"><span class="lineNum">     366 </span>            :     juce::ListenerList&lt;Listener&gt; listeners;</a>
+<a name="363"><span class="lineNum">     363 </span>            :     /** @internal */</a>
+<a name="364"><span class="lineNum">     364 </span>            :     void callRecordingAboutToStopListeners (InputDeviceInstance&amp;);</a>
+<a name="365"><span class="lineNum">     365 </span>            :     /** @internal */</a>
+<a name="366"><span class="lineNum">     366 </span>            :     void callRecordingFinishedListeners (InputDeviceInstance&amp;, juce::ReferenceCountedArray&lt;Clip&gt; recordedClips);</a>
 <a name="367"><span class="lineNum">     367 </span>            : </a>
-<a name="368"><span class="lineNum">     368 </span>            :     TimecodeSnapType currentSnapType;</a>
-<a name="369"><span class="lineNum">     369 </span>            :     bool isDelayedChangePending = false;</a>
-<a name="370"><span class="lineNum">     370 </span>            :     int loopUpdateCounter = 10;</a>
-<a name="371"><span class="lineNum">     371 </span>            :     bool isStopInProgress = false;</a>
-<a name="372"><span class="lineNum">     372 </span>            : </a>
-<a name="373"><span class="lineNum">     373 </span>            :     struct ScreenSaverDefeater;</a>
-<a name="374"><span class="lineNum">     374 </span>            :     std::unique_ptr&lt;ScreenSaverDefeater&gt; screenSaverDefeater;</a>
-<a name="375"><span class="lineNum">     375 </span>            : </a>
-<a name="376"><span class="lineNum">     376 </span>            :     struct PlayingFlag</a>
-<a name="377"><span class="lineNum">     377 </span>            :     {</a>
-<a name="378"><span class="lineNum">     378 </span>            :         PlayingFlag (Engine&amp;) noexcept;</a>
-<a name="379"><span class="lineNum">     379 </span>            :         ~PlayingFlag() noexcept;</a>
-<a name="380"><span class="lineNum">     380 </span>            : </a>
-<a name="381"><span class="lineNum">     381 </span>            :         Engine&amp; engine;</a>
-<a name="382"><span class="lineNum">     382 </span>            :     };</a>
-<a name="383"><span class="lineNum">     383 </span>            : </a>
-<a name="384"><span class="lineNum">     384 </span>            :     std::unique_ptr&lt;PlayingFlag&gt; playingFlag;</a>
-<a name="385"><span class="lineNum">     385 </span>            :     void clearPlayingFlags();</a>
-<a name="386"><span class="lineNum">     386 </span>            : </a>
-<a name="387"><span class="lineNum">     387 </span>            :     struct SectionPlayer;</a>
-<a name="388"><span class="lineNum">     388 </span>            :     std::unique_ptr&lt;SectionPlayer&gt; sectionPlayer;</a>
-<a name="389"><span class="lineNum">     389 </span>            :     </a>
-<a name="390"><span class="lineNum">     390 </span>            :     struct PlayHeadWrapper;</a>
-<a name="391"><span class="lineNum">     391 </span>            :     std::unique_ptr&lt;PlayHeadWrapper&gt; playHeadWrapper;</a>
-<a name="392"><span class="lineNum">     392 </span>            : </a>
-<a name="393"><span class="lineNum">     393 </span>            :     bool lastPlayStatus = false, lastRecordStatus = false;</a>
-<a name="394"><span class="lineNum">     394 </span>            :     void startedOrStopped();</a>
-<a name="395"><span class="lineNum">     395 </span>            :     void releaseAudioNodes();</a>
-<a name="396"><span class="lineNum">     396 </span>            : </a>
-<a name="397"><span class="lineNum">     397 </span>            :     void performPlay();</a>
-<a name="398"><span class="lineNum">     398 </span>            :     bool performRecord();</a>
-<a name="399"><span class="lineNum">     399 </span>            :     void performStop();</a>
-<a name="400"><span class="lineNum">     400 </span>            : </a>
-<a name="401"><span class="lineNum">     401 </span>            :     void performPositionChange();</a>
-<a name="402"><span class="lineNum">     402 </span>            :     void performRewindButtonChanged();</a>
-<a name="403"><span class="lineNum">     403 </span>            :     void performFastForwardButtonChanged();</a>
-<a name="404"><span class="lineNum">     404 </span>            :     void performNudgeLeft();</a>
-<a name="405"><span class="lineNum">     405 </span>            :     void performNudgeRight();</a>
-<a name="406"><span class="lineNum">     406 </span>            : </a>
-<a name="407"><span class="lineNum">     407 </span>            :     void sendMMC (const juce::MidiMessage&amp;);</a>
-<a name="408"><span class="lineNum">     408 </span>            :     void sendMMCCommand (juce::MidiMessage::MidiMachineControlCommand);</a>
-<a name="409"><span class="lineNum">     409 </span>            :     bool sendMMCStartPlay();</a>
-<a name="410"><span class="lineNum">     410 </span>            :     bool sendMMCStartRecord();</a>
-<a name="411"><span class="lineNum">     411 </span>            : </a>
-<a name="412"><span class="lineNum">     412 </span>            :     bool areAnyInputsRecording();</a>
+<a name="368"><span class="lineNum">     368 </span>            : private:</a>
+<a name="369"><span class="lineNum">     369 </span>            :     //==============================================================================</a>
+<a name="370"><span class="lineNum">     370 </span>            :     struct TransportState;</a>
+<a name="371"><span class="lineNum">     371 </span>            :     std::unique_ptr&lt;TransportState&gt; transportState;</a>
+<a name="372"><span class="lineNum">     372 </span>            :     std::unique_ptr&lt;EditPlaybackContext&gt; playbackContext;</a>
+<a name="373"><span class="lineNum">     373 </span>            :     juce::ListenerList&lt;Listener&gt; listeners;</a>
+<a name="374"><span class="lineNum">     374 </span>            : </a>
+<a name="375"><span class="lineNum">     375 </span>            :     TimecodeSnapType currentSnapType;</a>
+<a name="376"><span class="lineNum">     376 </span>            :     bool isDelayedChangePending = false;</a>
+<a name="377"><span class="lineNum">     377 </span>            :     int loopUpdateCounter = 10;</a>
+<a name="378"><span class="lineNum">     378 </span>            :     bool isStopInProgress = false;</a>
+<a name="379"><span class="lineNum">     379 </span>            : </a>
+<a name="380"><span class="lineNum">     380 </span>            :     struct ScreenSaverDefeater;</a>
+<a name="381"><span class="lineNum">     381 </span>            :     std::unique_ptr&lt;ScreenSaverDefeater&gt; screenSaverDefeater;</a>
+<a name="382"><span class="lineNum">     382 </span>            : </a>
+<a name="383"><span class="lineNum">     383 </span>            :     struct PlayingFlag</a>
+<a name="384"><span class="lineNum">     384 </span>            :     {</a>
+<a name="385"><span class="lineNum">     385 </span>            :         PlayingFlag (Engine&amp;) noexcept;</a>
+<a name="386"><span class="lineNum">     386 </span>            :         ~PlayingFlag() noexcept;</a>
+<a name="387"><span class="lineNum">     387 </span>            : </a>
+<a name="388"><span class="lineNum">     388 </span>            :         Engine&amp; engine;</a>
+<a name="389"><span class="lineNum">     389 </span>            :     };</a>
+<a name="390"><span class="lineNum">     390 </span>            : </a>
+<a name="391"><span class="lineNum">     391 </span>            :     std::unique_ptr&lt;PlayingFlag&gt; playingFlag;</a>
+<a name="392"><span class="lineNum">     392 </span>            :     void clearPlayingFlags();</a>
+<a name="393"><span class="lineNum">     393 </span>            : </a>
+<a name="394"><span class="lineNum">     394 </span>            :     struct SectionPlayer;</a>
+<a name="395"><span class="lineNum">     395 </span>            :     std::unique_ptr&lt;SectionPlayer&gt; sectionPlayer;</a>
+<a name="396"><span class="lineNum">     396 </span>            :     </a>
+<a name="397"><span class="lineNum">     397 </span>            :     struct PlayHeadWrapper;</a>
+<a name="398"><span class="lineNum">     398 </span>            :     std::unique_ptr&lt;PlayHeadWrapper&gt; playHeadWrapper;</a>
+<a name="399"><span class="lineNum">     399 </span>            : </a>
+<a name="400"><span class="lineNum">     400 </span>            :     bool lastPlayStatus = false, lastRecordStatus = false;</a>
+<a name="401"><span class="lineNum">     401 </span>            :     void startedOrStopped();</a>
+<a name="402"><span class="lineNum">     402 </span>            :     void releaseAudioNodes();</a>
+<a name="403"><span class="lineNum">     403 </span>            : </a>
+<a name="404"><span class="lineNum">     404 </span>            :     void performPlay();</a>
+<a name="405"><span class="lineNum">     405 </span>            :     bool performRecord();</a>
+<a name="406"><span class="lineNum">     406 </span>            :     void performStop();</a>
+<a name="407"><span class="lineNum">     407 </span>            : </a>
+<a name="408"><span class="lineNum">     408 </span>            :     void performPositionChange();</a>
+<a name="409"><span class="lineNum">     409 </span>            :     void performRewindButtonChanged();</a>
+<a name="410"><span class="lineNum">     410 </span>            :     void performFastForwardButtonChanged();</a>
+<a name="411"><span class="lineNum">     411 </span>            :     void performNudgeLeft();</a>
+<a name="412"><span class="lineNum">     412 </span>            :     void performNudgeRight();</a>
 <a name="413"><span class="lineNum">     413 </span>            : </a>
-<a name="414"><span class="lineNum">     414 </span>            :     struct FileFlushTimer;</a>
-<a name="415"><span class="lineNum">     415 </span>            :     std::unique_ptr&lt;FileFlushTimer&gt; fileFlushTimer;</a>
-<a name="416"><span class="lineNum">     416 </span>            : </a>
-<a name="417"><span class="lineNum">     417 </span>            :     struct ButtonRepeater;</a>
-<a name="418"><span class="lineNum">     418 </span>            :     std::unique_ptr&lt;ButtonRepeater&gt; rwRepeater, ffRepeater;</a>
-<a name="419"><span class="lineNum">     419 </span>            : </a>
-<a name="420"><span class="lineNum">     420 </span>            :     void timerCallback() override;</a>
-<a name="421"><span class="lineNum">     421 </span>            : </a>
-<a name="422"><span class="lineNum">     422 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TransportControl)</a>
-<a name="423"><span class="lineNum">     423 </span>            : };</a>
-<a name="424"><span class="lineNum">     424 </span>            : </a>
-<a name="425"><span class="lineNum">     425 </span>            : }} // namespace tracktion { inline namespace engine</a>
+<a name="414"><span class="lineNum">     414 </span>            :     void sendMMC (const juce::MidiMessage&amp;);</a>
+<a name="415"><span class="lineNum">     415 </span>            :     void sendMMCCommand (juce::MidiMessage::MidiMachineControlCommand);</a>
+<a name="416"><span class="lineNum">     416 </span>            :     bool sendMMCStartPlay();</a>
+<a name="417"><span class="lineNum">     417 </span>            :     bool sendMMCStartRecord();</a>
+<a name="418"><span class="lineNum">     418 </span>            : </a>
+<a name="419"><span class="lineNum">     419 </span>            :     bool areAnyInputsRecording();</a>
+<a name="420"><span class="lineNum">     420 </span>            : </a>
+<a name="421"><span class="lineNum">     421 </span>            :     struct FileFlushTimer;</a>
+<a name="422"><span class="lineNum">     422 </span>            :     std::unique_ptr&lt;FileFlushTimer&gt; fileFlushTimer;</a>
+<a name="423"><span class="lineNum">     423 </span>            : </a>
+<a name="424"><span class="lineNum">     424 </span>            :     struct ButtonRepeater;</a>
+<a name="425"><span class="lineNum">     425 </span>            :     std::unique_ptr&lt;ButtonRepeater&gt; rwRepeater, ffRepeater;</a>
+<a name="426"><span class="lineNum">     426 </span>            : </a>
+<a name="427"><span class="lineNum">     427 </span>            :     void timerCallback() override;</a>
+<a name="428"><span class="lineNum">     428 </span>            : </a>
+<a name="429"><span class="lineNum">     429 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TransportControl)</a>
+<a name="430"><span class="lineNum">     430 </span>            : };</a>
+<a name="431"><span class="lineNum">     431 </span>            : </a>
+<a name="432"><span class="lineNum">     432 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

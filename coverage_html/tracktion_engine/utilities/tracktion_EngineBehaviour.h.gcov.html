@@ -31,18 +31,18 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">16</td>
-            <td class="headerCovTableEntry">48</td>
-            <td class="headerCovTableEntryLo">33.3 %</td>
+            <td class="headerCovTableEntry">17</td>
+            <td class="headerCovTableEntry">49</td>
+            <td class="headerCovTableEntryLo">34.7 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-02-14 11:41:59</td>
+            <td class="headerValue">2023-02-21 16:49:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
-            <td class="headerCovTableEntry">15</td>
-            <td class="headerCovTableEntry">46</td>
-            <td class="headerCovTableEntryLo">32.6 %</td>
+            <td class="headerCovTableEntry">16</td>
+            <td class="headerCovTableEntry">47</td>
+            <td class="headerCovTableEntryLo">34.0 %</td>
           </tr>
           <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -240,7 +240,7 @@
 <a name="178"><span class="lineNum">     178 </span>            :     /** If this returns true, you must implement describeWaveDevices to determine the wave devices for a given device.</a>
 <a name="179"><span class="lineNum">     179 </span>            :         If it's false, a standard, stereo pair layout will be automatically generated.</a>
 <a name="180"><span class="lineNum">     180 </span>            :     */</a>
-<a name="181"><span class="lineNum">     181 </span><span class="lineCov">    4615362 :     virtual bool isDescriptionOfWaveDevicesSupported()                              { return false; }</span></a>
+<a name="181"><span class="lineNum">     181 </span><span class="lineCov">    4616741 :     virtual bool isDescriptionOfWaveDevicesSupported()                              { return false; }</span></a>
 <a name="182"><span class="lineNum">     182 </span>            : </a>
 <a name="183"><span class="lineNum">     183 </span>            :     /** If isDescriptionOfWaveDevicesSupported returns true, this should be implemented to describe the wave devices</a>
 <a name="184"><span class="lineNum">     184 </span>            :         for a given audio device.</a>
@@ -278,29 +278,32 @@
 <a name="216"><span class="lineNum">     216 </span>            :     /** Returns the defaults to be applied to new clips. */</a>
 <a name="217"><span class="lineNum">     217 </span><span class="lineCov">       3387 :     virtual ClipDefaults getClipDefaults()                                          { return {}; }</span></a>
 <a name="218"><span class="lineNum">     218 </span>            : </a>
-<a name="219"><span class="lineNum">     219 </span>            :     struct ControlSurfaces</a>
-<a name="220"><span class="lineNum">     220 </span>            :     {</a>
-<a name="221"><span class="lineNum">     221 </span>            :         bool mackieMCU = true;</a>
-<a name="222"><span class="lineNum">     222 </span>            :         bool mackieC4 = true;</a>
-<a name="223"><span class="lineNum">     223 </span>            :         bool iconProG2 = true;</a>
-<a name="224"><span class="lineNum">     224 </span>            :         bool tranzport = true;</a>
-<a name="225"><span class="lineNum">     225 </span>            :         bool alphaTrack = true;</a>
-<a name="226"><span class="lineNum">     226 </span>            :         bool remoteSL = true;</a>
-<a name="227"><span class="lineNum">     227 </span>            :         bool remoteSLCompact = true;</a>
-<a name="228"><span class="lineNum">     228 </span>            :         bool automap = true;</a>
-<a name="229"><span class="lineNum">     229 </span>            :     };</a>
-<a name="230"><span class="lineNum">     230 </span>            :     </a>
-<a name="231"><span class="lineNum">     231 </span>            :     /** Return the control surfaces you want enabled in the engine */</a>
-<a name="232"><span class="lineNum">     232 </span><span class="lineNoCov">          0 :     virtual ControlSurfaces getDesiredControlSurfaces()                             { return {}; }</span></a>
-<a name="233"><span class="lineNum">     233 </span>            : </a>
-<a name="234"><span class="lineNum">     234 </span>            :     /** Restore a custom control surface from custom XML */</a>
-<a name="235"><span class="lineNum">     235 </span><span class="lineNoCov">          0 :     virtual ControlSurface* getCustomControlSurfaceForXML (ExternalControllerManager&amp;, const juce::XmlElement&amp;)</span></a>
-<a name="236"><span class="lineNum">     236 </span>            :     {</a>
-<a name="237"><span class="lineNum">     237 </span><span class="lineNoCov">          0 :         return nullptr;</span></a>
-<a name="238"><span class="lineNum">     238 </span>            :     }</a>
-<a name="239"><span class="lineNum">     239 </span>            : };</a>
-<a name="240"><span class="lineNum">     240 </span>            : </a>
-<a name="241"><span class="lineNum">     241 </span>            : }} // namespace tracktion { inline namespace engine</a>
+<a name="219"><span class="lineNum">     219 </span>            :     /** Returns the defaults to be applied to new clips. */</a>
+<a name="220"><span class="lineNum">     220 </span><span class="lineCov">       8497 :     virtual void newClipAdded (Clip&amp;, [[ maybe_unused ]] bool fromRecording)        {}</span></a>
+<a name="221"><span class="lineNum">     221 </span>            : </a>
+<a name="222"><span class="lineNum">     222 </span>            :     struct ControlSurfaces</a>
+<a name="223"><span class="lineNum">     223 </span>            :     {</a>
+<a name="224"><span class="lineNum">     224 </span>            :         bool mackieMCU = true;</a>
+<a name="225"><span class="lineNum">     225 </span>            :         bool mackieC4 = true;</a>
+<a name="226"><span class="lineNum">     226 </span>            :         bool iconProG2 = true;</a>
+<a name="227"><span class="lineNum">     227 </span>            :         bool tranzport = true;</a>
+<a name="228"><span class="lineNum">     228 </span>            :         bool alphaTrack = true;</a>
+<a name="229"><span class="lineNum">     229 </span>            :         bool remoteSL = true;</a>
+<a name="230"><span class="lineNum">     230 </span>            :         bool remoteSLCompact = true;</a>
+<a name="231"><span class="lineNum">     231 </span>            :         bool automap = true;</a>
+<a name="232"><span class="lineNum">     232 </span>            :     };</a>
+<a name="233"><span class="lineNum">     233 </span>            :     </a>
+<a name="234"><span class="lineNum">     234 </span>            :     /** Return the control surfaces you want enabled in the engine */</a>
+<a name="235"><span class="lineNum">     235 </span><span class="lineNoCov">          0 :     virtual ControlSurfaces getDesiredControlSurfaces()                             { return {}; }</span></a>
+<a name="236"><span class="lineNum">     236 </span>            : </a>
+<a name="237"><span class="lineNum">     237 </span>            :     /** Restore a custom control surface from custom XML */</a>
+<a name="238"><span class="lineNum">     238 </span><span class="lineNoCov">          0 :     virtual ControlSurface* getCustomControlSurfaceForXML (ExternalControllerManager&amp;, const juce::XmlElement&amp;)</span></a>
+<a name="239"><span class="lineNum">     239 </span>            :     {</a>
+<a name="240"><span class="lineNum">     240 </span><span class="lineNoCov">          0 :         return nullptr;</span></a>
+<a name="241"><span class="lineNum">     241 </span>            :     }</a>
+<a name="242"><span class="lineNum">     242 </span>            : };</a>
+<a name="243"><span class="lineNum">     243 </span>            : </a>
+<a name="244"><span class="lineNum">     244 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

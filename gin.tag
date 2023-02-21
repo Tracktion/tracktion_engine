@@ -30549,6 +30549,13 @@
       <arglist>()</arglist>
     </member>
     <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>newClipAdded</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>a4661476f3cb69540127dbb180ad83193</anchor>
+      <arglist>(Clip &amp;, [[maybe_unused]] bool fromRecording)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
       <type>virtual ControlSurfaces</type>
       <name>getDesiredControlSurfaces</name>
       <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
@@ -39394,10 +39401,17 @@
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
+      <name>recordingAboutToStop</name>
+      <anchorfile>structtracktion_1_1engine_1_1TransportControl_1_1Listener.html</anchorfile>
+      <anchor>ab4a9df1a28f4557bf3ec40e8b4e6e0d1</anchor>
+      <arglist>(InputDeviceInstance &amp;)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>recordingFinished</name>
       <anchorfile>structtracktion_1_1engine_1_1TransportControl_1_1Listener.html</anchorfile>
-      <anchor>a5440d364caaa69af783f94355073e100</anchor>
-      <arglist>(InputDeviceInstance &amp;, juce::ReferenceCountedArray&lt; Clip &gt;)</arglist>
+      <anchor>abb3af1938d9fe4ae8c8d707d41b3e6cc</anchor>
+      <arglist>(InputDeviceInstance &amp;, const juce::ReferenceCountedArray&lt; Clip &gt; &amp;)</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -71141,6 +71155,13 @@
     </member>
     <member kind="function">
       <type>void</type>
+      <name>callRecordingAboutToStopListeners</name>
+      <anchorfile>classtracktion_1_1engine_1_1TransportControl.html</anchorfile>
+      <anchor>a50d2dcef7568a3534716cd7278632152</anchor>
+      <arglist>(InputDeviceInstance &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
       <name>callRecordingFinishedListeners</name>
       <anchorfile>classtracktion_1_1engine_1_1TransportControl.html</anchorfile>
       <anchor>a35b2aa50890bc119d3c637cfa603ebda</anchor>
@@ -83624,14 +83645,14 @@
     </member>
   </compound>
   <compound kind="group">
-    <name>tracktion_graph-3rd_party</name>
-    <title>3rd_party</title>
-    <filename>group__tracktion__graph-3rd__party.html</filename>
-  </compound>
-  <compound kind="group">
     <name>tracktion_engine-3rd_party</name>
     <title>3rd_party</title>
     <filename>group__tracktion__engine-3rd__party.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>tracktion_graph-3rd_party</name>
+    <title>3rd_party</title>
+    <filename>group__tracktion__graph-3rd__party.html</filename>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-audio_files</name>
@@ -83700,6 +83721,11 @@
     <subgroup>tracktion_engine-utilities</subgroup>
   </compound>
   <compound kind="group">
+    <name>tracktion_graph-tracktion_graph</name>
+    <title>tracktion_graph</title>
+    <filename>group__tracktion__graph-tracktion__graph.html</filename>
+  </compound>
+  <compound kind="group">
     <name>tracktion_graph</name>
     <title>tracktion_graph</title>
     <filename>group__tracktion__graph.html</filename>
@@ -83709,18 +83735,13 @@
     <subgroup>tracktion_graph-utilities</subgroup>
   </compound>
   <compound kind="group">
-    <name>tracktion_graph-tracktion_graph</name>
-    <title>tracktion_graph</title>
-    <filename>group__tracktion__graph-tracktion__graph.html</filename>
+    <name>tracktion_engine-utilities</name>
+    <title>utilities</title>
+    <filename>group__tracktion__engine-utilities.html</filename>
   </compound>
   <compound kind="group">
     <name>tracktion_graph-utilities</name>
     <title>utilities</title>
     <filename>group__tracktion__graph-utilities.html</filename>
-  </compound>
-  <compound kind="group">
-    <name>tracktion_engine-utilities</name>
-    <title>utilities</title>
-    <filename>group__tracktion__engine-utilities.html</filename>
   </compound>
 </tagfile>

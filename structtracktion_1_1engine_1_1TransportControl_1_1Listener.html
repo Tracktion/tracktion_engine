@@ -99,9 +99,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af61af4bbbc5b42b7c0b1ef925ecf817c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#af61af4bbbc5b42b7c0b1ef925ecf817c">stopVideo</a> ()=0</td></tr>
 <tr class="memdesc:af61af4bbbc5b42b7c0b1ef925ecf817c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should stop video playback.  <a href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#af61af4bbbc5b42b7c0b1ef925ecf817c">More...</a><br /></td></tr>
 <tr class="separator:af61af4bbbc5b42b7c0b1ef925ecf817c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5440d364caaa69af783f94355073e100"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#a5440d364caaa69af783f94355073e100">recordingFinished</a> (<a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html">InputDeviceInstance</a> &amp;, juce::ReferenceCountedArray&lt; <a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a> &gt;)</td></tr>
-<tr class="memdesc:a5440d364caaa69af783f94355073e100"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when recording stops for a specific input instance.  <a href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#a5440d364caaa69af783f94355073e100">More...</a><br /></td></tr>
-<tr class="separator:a5440d364caaa69af783f94355073e100"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4a9df1a28f4557bf3ec40e8b4e6e0d1"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#ab4a9df1a28f4557bf3ec40e8b4e6e0d1">recordingAboutToStop</a> (<a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html">InputDeviceInstance</a> &amp;)</td></tr>
+<tr class="memdesc:ab4a9df1a28f4557bf3ec40e8b4e6e0d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called before recording stops for a specific input instance.  <a href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#ab4a9df1a28f4557bf3ec40e8b4e6e0d1">More...</a><br /></td></tr>
+<tr class="separator:ab4a9df1a28f4557bf3ec40e8b4e6e0d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb3af1938d9fe4ae8c8d707d41b3e6cc"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#abb3af1938d9fe4ae8c8d707d41b3e6cc">recordingFinished</a> (<a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html">InputDeviceInstance</a> &amp;, const juce::ReferenceCountedArray&lt; <a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a> &gt; &amp;)</td></tr>
+<tr class="memdesc:abb3af1938d9fe4ae8c8d707d41b3e6cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when recording stops for a specific input instance.  <a href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html#abb3af1938d9fe4ae8c8d707d41b3e6cc">More...</a><br /></td></tr>
+<tr class="separator:abb3af1938d9fe4ae8c8d707d41b3e6cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="structtracktion_1_1engine_1_1TransportControl_1_1Listener.html" title="Listener interface to be notified of changes to the transport.">Listener</a> interface to be notified of changes to the transport. </p>
@@ -308,8 +311,37 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a5440d364caaa69af783f94355073e100"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5440d364caaa69af783f94355073e100">&#9670;&nbsp;</a></span>recordingFinished()</h2>
+<a id="ab4a9df1a28f4557bf3ec40e8b4e6e0d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab4a9df1a28f4557bf3ec40e8b4e6e0d1">&#9670;&nbsp;</a></span>recordingAboutToStop()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void tracktion::engine::TransportControl::Listener::recordingAboutToStop </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1InputDeviceInstance.html">InputDeviceInstance</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called before recording stops for a specific input instance. </p>
+<p>recordingFinished will be called shortly after with newly created clips. </p>
+
+</div>
+</div>
+<a id="abb3af1938d9fe4ae8c8d707d41b3e6cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb3af1938d9fe4ae8c8d707d41b3e6cc">&#9670;&nbsp;</a></span>recordingFinished()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -326,7 +358,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">juce::ReferenceCountedArray&lt; <a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a> &gt;&#160;</td>
+          <td class="paramtype">const juce::ReferenceCountedArray&lt; <a class="el" href="classtracktion_1_1engine_1_1Clip.html">Clip</a> &gt; &amp;&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>
@@ -359,7 +391,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 14 2023 11:24:31 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Tue Feb 21 2023 16:29:45 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
