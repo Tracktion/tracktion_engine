@@ -407,7 +407,7 @@ private:
         void stopVideo() override {}
 
         void recordingFinished (te::InputDeviceInstance&,
-                                juce::ReferenceCountedArray<te::Clip> /*recordedClips*/) override
+                                const juce::ReferenceCountedArray<te::Clip>& /*recordedClips*/) override
         {}
     };
 
