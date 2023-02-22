@@ -1067,8 +1067,8 @@ public:
 
             if (nullptr != edit.engine.getDeviceManager().relayBufferProcessor)
             {
-                bool isReady = (recordingContext != nullptr && recordingContext->adjustSamples <= numSamples);
-                edit.engine.getDeviceManager().relayBufferProcessor(inputBuffer, numSamples, isReady);
+                bool isNotReady = (recordingContext != nullptr && recordingContext->adjustSamples >= numSamples);
+                edit.engine.getDeviceManager().relayBufferProcessor(inputBuffer, numSamples, !isNotReady);
             }
 
             return;
@@ -1186,7 +1186,9 @@ public:
                         // BEATCONNECT MODIFICATION START (RELAY)
                         auto& wi = getWaveInput();
                         if (wi.getIsRelay())
+                        {
                             addBlockToRecord(inputBuffer, 0, numSamples);
+                        }
                         else
                         {
                         // BEATCONNECT MODIFICATION START (RELAY)
