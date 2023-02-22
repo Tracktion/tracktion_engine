@@ -1067,8 +1067,8 @@ public:
 
             if (nullptr != edit.engine.getDeviceManager().relayBufferProcessor)
             {
-                bool isNotReady = (recordingContext != nullptr && recordingContext->adjustSamples >= numSamples);
-                edit.engine.getDeviceManager().relayBufferProcessor(inputBuffer, numSamples, !isNotReady);
+                bool isReady = (recordingContext != nullptr && recordingContext->adjustSamples < numSamples);
+                edit.engine.getDeviceManager().relayBufferProcessor(inputBuffer, numSamples, isReady);
             }
 
             return;
