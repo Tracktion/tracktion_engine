@@ -65,6 +65,7 @@ void LoopInfo::setBpm (double newBpm, double currentBpm)
 {
     if (newBpm != currentBpm)
     {
+        jassert (getNumBeats() > 0);
         const double ratio = newBpm / currentBpm;
         setNumBeats (juce::jmax (1.0, getNumBeats() * ratio));
     }
@@ -84,7 +85,18 @@ void LoopInfo::setBpm (double newBpm, const AudioFileInfo& wi)
         return;
 
     const double currentBpm = getBpm (wi);
-    setBpm (newBpm, currentBpm);
+
+    // Set a dummy number of beats otherwise the ratio will be 0
+    if (currentBpm == 0)
+    {
+        const auto lengthMins = wi.getLengthInSeconds() / 60.0;
+        const auto numBeats = newBpm * lengthMins;
+        setNumBeats (numBeats);
+    }
+    else
+    {
+        setBpm (newBpm, currentBpm);
+    }
 }
 
 double LoopInfo::getBeatsPerSecond (const AudioFileInfo& wi) const

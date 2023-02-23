@@ -2894,6 +2894,8 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
                    #endif
                     wc->setLoopInfo (af.getInfo().loopInfo);
                     wc->setTimeStretchMode (TimeStretcher::defaultMode);
+
+                    engine.getEngineBehaviour().newClipAdded (*wc, false);
                 }
 
                 auto& targetTempo = editToMatch->tempoSequence.getTempoAt (TimePosition::fromSeconds (0.01));
