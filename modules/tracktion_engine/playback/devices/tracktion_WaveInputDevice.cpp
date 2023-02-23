@@ -1197,7 +1197,7 @@ public:
 
                         // BEATCONNECT MODIFICATION START (RELAY)
                         }
-                        // BEATCONNECT MODIFICATION START (RELAY)
+                        // BEATCONNECT MODIFICATION END (RELAY)
 
                         recordingContext->adjustSamples = 0;
                     }
