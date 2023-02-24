@@ -1061,16 +1061,15 @@ public:
         // BEATCONNECT MODIFICATION START (RELAY)
         if (wi.getIsRelay() && wi.isEnabled())
         {
-            // Reset the size to 0.
-            // realyBufferProcessor will set the correct size.
-            inputBuffer.setSize(inputBuffer.getNumChannels(), 0, false, true);
-
             // relayBufferProcessor is a shared resource.
             // This callback function will be set to nullptr when the Relay disconnects or the application is closed.
             std::unique_lock<std::mutex> lock(edit.engine.getDeviceManager().m_muRelayCallback);
 
             if (nullptr != edit.engine.getDeviceManager().relayBufferProcessor)
-                edit.engine.getDeviceManager().relayBufferProcessor(inputBuffer);
+            {
+                bool isReady = (recordingContext != nullptr && recordingContext->adjustSamples < numSamples);
+                edit.engine.getDeviceManager().relayBufferProcessor(inputBuffer, numSamples, isReady);
+            }
 
             return;
         }
@@ -1101,44 +1100,25 @@ public:
         CRASH_TRACER
         copyIncomingDataIntoBuffer (allChannels, numChannels, numSamples);
 
-        // BEATCONNECT MODIFICATION START (RELAY)
-        auto& wi = getWaveInput();
-        if (wi.getIsRelay())
+        auto inputGainDb = getWaveInput().inputGainDb;
+
+        if (inputGainDb > 0.01f || inputGainDb < -0.01f)
+            inputBuffer.applyGain(0, numSamples, dbToGain(inputGainDb));
+
+        if (measurerToUpdate != nullptr)
+            measurerToUpdate->processBuffer(inputBuffer, 0, numSamples);
+
+        if (retrospectiveBuffer != nullptr)
         {
-            // This could be the case where the read index catches up the the write.
-            // In this case, won't don't want to do anything.
-            if (inputBuffer.getNumSamples() == 0)
-                return;
-
-            numSamples = inputBuffer.getNumSamples();
-        }
-        else
-        {
-        // BEATCONNECT MODIFICATION END (RELAY)
-
-            auto inputGainDb = getWaveInput().inputGainDb;
-
-            if (inputGainDb > 0.01f || inputGainDb < -0.01f)
-                inputBuffer.applyGain(0, numSamples, dbToGain(inputGainDb));
-
-            if (measurerToUpdate != nullptr)
-                measurerToUpdate->processBuffer(inputBuffer, 0, numSamples);
-
-            if (retrospectiveBuffer != nullptr)
+            if (addToRetrospective)
             {
-                if (addToRetrospective)
-                {
-                    retrospectiveBuffer->updateSizeIfNeeded(inputBuffer.getNumChannels(),
-                        edit.engine.getDeviceManager().getSampleRate());
-                    retrospectiveBuffer->processBuffer(streamTime, inputBuffer, numSamples);
-                }
-
-                retrospectiveBuffer->syncToEdit(edit, context, streamTime, numSamples);
+                retrospectiveBuffer->updateSizeIfNeeded(inputBuffer.getNumChannels(),
+                    edit.engine.getDeviceManager().getSampleRate());
+                retrospectiveBuffer->processBuffer(streamTime, inputBuffer, numSamples);
             }
 
-        // BEATCONNECT MODIFICATION START (RELAY)
+            retrospectiveBuffer->syncToEdit(edit, context, streamTime, numSamples);
         }
-        // BEATCONNECT MODIFICATION END (RELAY)
 
         {
             const juce::ScopedLock sl(consumerLock);
@@ -1203,7 +1183,22 @@ public:
                     }
                     else
                     {
-                        addBlockToRecord (inputBuffer, adjustSamples, numSamples - adjustSamples);
+                        // BEATCONNECT MODIFICATION START (RELAY)
+                        auto& wi = getWaveInput();
+                        if (wi.getIsRelay())
+                        {
+                            addBlockToRecord(inputBuffer, 0, numSamples);
+                        }
+                        else
+                        {
+                        // BEATCONNECT MODIFICATION START (RELAY)
+
+                            addBlockToRecord(inputBuffer, adjustSamples, numSamples - adjustSamples);
+
+                        // BEATCONNECT MODIFICATION START (RELAY)
+                        }
+                        // BEATCONNECT MODIFICATION END (RELAY)
+
                         recordingContext->adjustSamples = 0;
                     }
                 }
