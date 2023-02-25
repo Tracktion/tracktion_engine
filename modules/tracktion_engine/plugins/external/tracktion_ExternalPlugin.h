@@ -37,6 +37,8 @@ public:
     void forceFullReinitialise();
 
     juce::String getLoadError();
+  
+    static bool requiresAsyncInstantiation (Engine&, const juce::PluginDescription&);
 
     static const char* xmlTypeName;
 
@@ -159,7 +161,7 @@ private:
     juce::Array<ExternalAutomatableParameter*> autoParamForParamNumbers;
 
     //==============================================================================
-    juce::String createPluginInstance (const juce::PluginDescription&);
+    void createPluginInstance (const juce::PluginDescription&);
     void deletePluginInstance();
 
     //==============================================================================
@@ -168,6 +170,7 @@ private:
 
     //==============================================================================
     void doFullInitialisation();
+    void completePluginInitialisation();
     void buildParameterList();
     void refreshParameterValues();
     void updateDebugName();
