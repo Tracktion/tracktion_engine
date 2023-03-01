@@ -37,8 +37,6 @@ public:
     void forceFullReinitialise();
 
     juce::String getLoadError();
-  
-    static bool requiresAsyncInstantiation (Engine&, const juce::PluginDescription&);
 
     static const char* xmlTypeName;
 
@@ -139,6 +137,7 @@ private:
     int latencySamples = 0;
     double latencySeconds = 0;
     bool isInstancePrepared = false;
+    std::atomic<bool> isCreatingInstance = false;
 
     double lastSampleRate = 0.0;
     int lastBlockSizeSamples = 0;
@@ -161,6 +160,7 @@ private:
     juce::Array<ExternalAutomatableParameter*> autoParamForParamNumbers;
 
     //==============================================================================
+    static bool requiresAsyncInstantiation (Engine&, const juce::PluginDescription&);
     void createPluginInstance (const juce::PluginDescription&);
     void deletePluginInstance();
 

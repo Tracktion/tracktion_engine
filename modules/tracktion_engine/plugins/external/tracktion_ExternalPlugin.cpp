@@ -517,6 +517,8 @@ namespace
 ExternalPlugin::ExternalPlugin (PluginCreationInfo info)  : Plugin (info)
 {
     CRASH_TRACER
+  
+    static_assert(std::atomic<bool>::is_always_lock_free);
 
     auto um = getUndoManager();
 
@@ -1318,6 +1320,9 @@ void ExternalPlugin::prepareIncomingMidiMessages (MidiMessageArray& incoming, in
 
 void ExternalPlugin::applyToBuffer (const PluginRenderContext& fc)
 {
+    if (isCreatingInstance.load())
+      return;
+      
     const bool processedBypass = fc.allowBypassedProcessing && ! isEnabled();
 
     if (pluginInstance != nullptr && (processedBypass || isEnabled()))
@@ -1731,24 +1736,29 @@ void ExternalPlugin::createPluginInstance (const juce::PluginDescription& descri
     jassert (! pluginInstance); // This should have already been deleted!
 
     auto& dm = engine.getDeviceManager();
-    
+  
+    isCreatingInstance = true;
+
     if (requiresAsyncInstantiation (engine, description))
     {
-        // While instantiation is pending, make sure the plugin is disabled
-        setEnabled (false);
+        // Acquire a weak reference to this Selectable : the plugin might be deleted before the lambda is called
+        auto safeThis = makeSafeRef(*this);
         engine.getPluginManager().pluginFormatManager
           .createPluginInstanceAsync (description, dm.getSampleRate(), dm.getBlockSize(),
-                                      [&] (auto _instance, const auto& _err) -> void {
-            loadError = _err;
-            pluginInstance = std::move (_instance);
-            completePluginInitialisation();
-
-            // We need to initialise the plugin again, manually.
-            PluginInitialisationInfo info { TimePosition(), dm.getSampleRate(), dm.getBlockSize() };            
-            baseClassInitialise (info);
-            initialise (info);
-            
-            setEnabled (true);
+                                      [safeThis] (auto instance, const auto& err) -> void {
+            if (safeThis)
+            {
+                safeThis->loadError = err;
+                safeThis->pluginInstance = std::move (instance);
+                safeThis->completePluginInitialisation();
+                
+                // We need to initialise the plugin again, manually.
+                auto& dev_manager = safeThis->engine.getDeviceManager();
+                PluginInitialisationInfo info { TimePosition(), dev_manager.getSampleRate(), dev_manager.getBlockSize() };
+                safeThis->baseClassInitialise (info);
+                safeThis->initialise (info);
+                safeThis->isCreatingInstance = false;
+            }
           });
     }
     else
@@ -1757,6 +1767,7 @@ void ExternalPlugin::createPluginInstance (const juce::PluginDescription& descri
         pluginInstance = engine.getPluginManager().createPluginInstance (description, dm.getSampleRate(), dm.getBlockSize(), error);
         loadError = error;
         completePluginInitialisation();
+        isCreatingInstance = false;
     }
 }
 
