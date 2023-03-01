@@ -50,11 +50,16 @@ struct ProcessState
     */
     std::optional<int64_t> getPositionOverride() const;
 
+    /** Sets the TempoSequence this state utilises. */
+    void setTempoSequence (const TempoSequence*);
+
     /** Returns the TempoSequence this state has been initialised with one. */
     const TempoSequence* getTempoSequence() const;
 
+    /** Returns the tempo::Sequence::Position this state uses. */
+    const tempo::Sequence::Position* getTempoSequencePosition() const;
+
     tracktion::graph::PlayHeadState& playHeadState;
-    std::unique_ptr<tempo::Sequence::Position> tempoPosition;
     double sampleRate = 44100.0, playbackSpeedRatio = 1.0;
     int numSamples = 0;
     juce::Range<int64_t> referenceSampleRange, timelineSampleRange;
@@ -63,6 +68,8 @@ struct ProcessState
 
 private:
     const TempoSequence* tempoSequence = nullptr;
+    std::unique_ptr<tempo::Sequence::Position> tempoPosition;
+
     std::optional<int64_t> pendingPositionOverride;
     bool positionHasBeenOverriden = false;
 };

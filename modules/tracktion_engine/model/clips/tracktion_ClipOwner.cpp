@@ -76,7 +76,6 @@ struct ClipOwner::ClipList : public ValueTreeObjectList<Clip>,
             else
                 clipOwner.clipAddedOrRemoved();
 
-
             if (! edit.isLoading() && ! edit.getUndoManager().isPerformingUndoRedo())
                 triggerAsyncUpdate();
         }

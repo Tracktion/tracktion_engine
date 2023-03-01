@@ -64,10 +64,6 @@ private:
         const auto description = test_utilities::getDescription (ts)
                                     + juce::String (isMultiThreaded ? ", MT" : ", ST");
 
-        tracktion::graph::PlayHead playHead;
-        tracktion::graph::PlayHeadState playHeadState { playHead };
-        ProcessState processState { playHeadState };
-
         {
             auto sinFile = tracktion::graph::test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, durationInSeconds.inSeconds(), 2, 220.0f);
 
@@ -81,6 +77,10 @@ private:
             plugins.add (track->getVolumePlugin());
             auto rack = RackType::createTypeToWrapPlugins (plugins, *edit);
             auto rackInstance = dynamic_cast<RackInstance*> (track->pluginList.insertPlugin (RackInstance::create (*rack), 0).get());
+
+            tracktion::graph::PlayHead playHead;
+            tracktion::graph::PlayHeadState playHeadState { playHead };
+            ProcessState processState { playHeadState, edit->tempoSequence };
 
             beginTest ("Basic Rack Creation: " + description);
             {
@@ -132,10 +132,6 @@ private:
         const auto description = test_utilities::getDescription (ts)
                                     + juce::String (isMultiThreaded ? ", MT" : ", ST");
 
-        tracktion::graph::PlayHead playHead;
-        tracktion::graph::PlayHeadState playHeadState { playHead };
-        ProcessState processState { playHeadState };
-
         {
             auto sinFile = tracktion::graph::test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, durationInSeconds.inSeconds(), 2, 220.0f);
 
@@ -157,6 +153,10 @@ private:
 
             beginTest ("Aux Send Mute Rendering: " + description);
             {
+                tracktion::graph::PlayHead playHead;
+                tracktion::graph::PlayHeadState playHeadState { playHead };
+                ProcessState processState { playHeadState, edit->tempoSequence };
+
                 auto node = createNode (*edit, processState, ts.sampleRate, ts.blockSize);
                 TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize,
                                                                                                      getPoolCreatorFunction (ThreadPoolStrategy::hybrid)),
@@ -189,10 +189,6 @@ private:
         const auto description = test_utilities::getDescription (ts)
                                     + juce::String (isMultiThreaded ? ", MT" : ", ST");
 
-        tracktion::graph::PlayHead playHead;
-        tracktion::graph::PlayHeadState playHeadState { playHead };
-        ProcessState processState { playHeadState };
-
         {
             auto sinFile = tracktion::graph::test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, durationInSeconds.inSeconds(), 2, 220.0f);
 
@@ -211,6 +207,10 @@ private:
 
             beginTest ("Track Destination Rendering: " + description);
             {
+                tracktion::graph::PlayHead playHead;
+                tracktion::graph::PlayHeadState playHeadState { playHead };
+                ProcessState processState { playHeadState, edit->tempoSequence };
+
                 auto node = createNode (*edit, processState, ts.sampleRate, ts.blockSize);
                 TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize,
                                                                                                      getPoolCreatorFunction (ThreadPoolStrategy::hybrid)),
@@ -506,7 +506,7 @@ private:
     //==============================================================================
     //==============================================================================
     static std::unique_ptr<tracktion::graph::Node> createNode (Edit& edit, ProcessState& processState,
-                                                              double sampleRate, int blockSize)
+                                                               double sampleRate, int blockSize)
     {
         CreateNodeParams params { processState };
         params.sampleRate = sampleRate;

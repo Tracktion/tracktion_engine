@@ -26,8 +26,8 @@ ContainerClipNode::ContainerClipNode (ProcessState& editProcessState,
       clipOffset (offset),
       input (std::move (inputNode))
 {
-    if (getProcessState().tempoPosition)
-        tempoPosition = std::make_unique<tempo::Sequence::Position> (*getProcessState().tempoPosition);
+    if (auto parentTempoPosition = getProcessState().getTempoSequencePosition())
+        tempoPosition = std::make_unique<tempo::Sequence::Position> (*parentTempoPosition);
 
     assert (input);
     setOptimisations ({ tracktion::graph::ClearBuffers::no,
@@ -70,9 +70,9 @@ void ContainerClipNode::prepareToPlay (const tracktion::graph::PlaybackInitialis
         playerContext->player.setNumThreads (0);
 
         // We need to create our own Tempo::Position as we'll apply an offset so it stays in sync with the Edit's tempo sequence
-        // Make sure we do this before we overrwite the default ProcessState
-        if (auto editTempoPosition = getProcessState().tempoPosition.get())
-            playerContext->processState.tempoPosition = std::make_unique<tempo::Sequence::Position> (*editTempoPosition);
+        // Make sure we do this before we overwrite the default ProcessState
+        if (auto tempoSequence = getProcessState().getTempoSequence())
+            playerContext->processState.setTempoSequence (tempoSequence);
     }
 
     if (! input)

@@ -18,8 +18,8 @@ ProcessState::ProcessState (tracktion::graph::PlayHeadState& phs)
 
 ProcessState::ProcessState (tracktion::graph::PlayHeadState& phs, const TempoSequence& seq)
     : playHeadState (phs),
-      tempoPosition (std::make_unique<tempo::Sequence::Position> (seq.getInternalSequence())),
-      tempoSequence (&seq)
+      tempoSequence (&seq),
+      tempoPosition (std::make_unique<tempo::Sequence::Position> (seq.getInternalSequence()))
 {
 }
 
@@ -86,9 +86,27 @@ std::optional<int64_t> ProcessState::getPositionOverride() const
     return {};
 }
 
+void ProcessState::setTempoSequence (const TempoSequence* ts)
+{
+    if (tempoSequence == ts)
+        return;
+
+    tempoSequence = ts;
+
+    if (tempoSequence)
+        tempoPosition = std::make_unique<tempo::Sequence::Position> (tempoSequence->getInternalSequence());
+    else
+        tempoPosition.reset();
+}
+
 const TempoSequence* ProcessState::getTempoSequence() const
 {
     return tempoSequence;
+}
+
+const tempo::Sequence::Position* ProcessState::getTempoSequencePosition() const
+{
+    return tempoPosition.get();
 }
 
 //==============================================================================
@@ -100,8 +118,8 @@ TracktionEngineNode::TracktionEngineNode (ProcessState& ps)
 
 tempo::Key TracktionEngineNode::getKey() const
 {
-    if (processState->tempoPosition)
-        return processState->tempoPosition->getKey();
+    if (auto tempoPosition = processState->getTempoSequencePosition())
+        return tempoPosition->getKey();
 
     return {};
 }
@@ -113,16 +131,16 @@ double TracktionEngineNode::getPlaybackSpeedRatio() const
 
 std::optional<TimePosition> TracktionEngineNode::getTimeOfNextChange() const
 {
-    if (processState->tempoPosition)
-        return processState->tempoPosition->getTimeOfNextChange();
+    if (auto tempoPosition = processState->getTempoSequencePosition())
+        return tempoPosition->getTimeOfNextChange();
 
     return {};
 }
 
 std::optional<BeatPosition> TracktionEngineNode::getBeatOfNextChange() const
 {
-    if (processState->tempoPosition)
-        return processState->tempoPosition->getBeatOfNextChange();
+    if (auto tempoPosition = processState->getTempoSequencePosition())
+        return tempoPosition->getBeatOfNextChange();
 
     return {};
 }

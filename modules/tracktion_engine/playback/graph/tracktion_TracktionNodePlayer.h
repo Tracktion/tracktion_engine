@@ -159,14 +159,14 @@ private:
         processState.update (sampleRate, pc.referenceSampleRange, ProcessState::UpdateContinuityFlags::no);
         const auto timeRange = processState.editTimeRange;
 
-        if (processState.tempoPosition)
+        if (auto tempoPosition = processState.getTempoSequencePosition())
         {
             double startProportion = 0.0;
             auto lastEventPosition = timeRange.getStart();
 
             for (;;)
             {
-                const auto nextTempoChangePosition = processState.tempoPosition->getTimeOfNextChange();
+                const auto nextTempoChangePosition = tempoPosition->getTimeOfNextChange();
 
                 if (nextTempoChangePosition == lastEventPosition)
                     break;
