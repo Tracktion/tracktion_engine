@@ -37,6 +37,8 @@
 //==============================================================================
 #include "tracktion_engine.h"
 
+#include "../tracktion_core/tracktion_TestConfig.h"
+
 //==============================================================================
 #if JUCE_MAC && TRACKTION_ENABLE_REX
 extern "C" char MacGetMacFSRefForREXDLL (FSRef* fsRef)
@@ -55,6 +57,7 @@ extern "C" char MacGetMacFSRefForREXDLL (FSRef* fsRef)
 
 //==============================================================================
 #include "selection/tracktion_Clipboard.cpp"
+#include "selection/tracktion_Selectable.test.cpp"
 #include "selection/tracktion_SelectionManager.cpp"
 
 #include "utilities/tracktion_AppFunctions.cpp"

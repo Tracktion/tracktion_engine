@@ -40,6 +40,8 @@ public:
     /** Destructor. */
     ~AudioClipBase() override;
 
+    using Ptr = juce::ReferenceCountedObjectPtr<AudioClipBase>;
+
     //==============================================================================
     /** Returns the maximum length for this clip.
         This can change depending on the clips properties e.g. if the clip is

@@ -17,6 +17,7 @@
 #define GRAPH_UNIT_TESTS_RACKNODE          1
 #define GRAPH_UNIT_TESTS_EDITNODE          1
 #define ENGINE_UNIT_TESTS_LOOPINGMIDINODE  1
+#define ENGINE_UNIT_TESTS_SELECTABLE       1
 
 // Defined in tracktion_graph
 #define GRAPH_UNIT_TESTS_PLAYHEAD          1

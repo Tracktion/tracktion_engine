@@ -82,7 +82,7 @@ struct ClipTrack::ClipList  : public ValueTreeObjectList<Clip>,
     {
         objectAddedOrRemoved (c);
 
-        if (c)
+        if (c && ! clipTrack.edit.getUndoManager().isPerformingUndoRedo())
             clipTrack.edit.engine.getEngineBehaviour().newClipAdded (*c, recordingIsStopping);
     }
 
@@ -701,7 +701,7 @@ Clip* ClipTrack::insertClipWithState (const juce::ValueTree& stateToUse, const j
     if (auto newClip = insertClipWithState (newState))
     {
         if (allowSpottingAdjustment)
-            newClip->setStart (std::max (TimePosition(), newClip->getPosition().getStart() - toDuration (newClip->getSpottingPoint())), false, false);
+            newClip->setStart (std::max (0_tp, newClip->getPosition().getStart() - toDuration (newClip->getSpottingPoint())), false, false);
 
         return newClip;
     }
@@ -854,7 +854,7 @@ void ClipTrack::deleteRegionOfClip (Clip::Ptr c, TimeRange range, SelectionManag
 
 Clip* ClipTrack::insertNewClip (TrackItem::Type type, const juce::String& name, TimeRange pos, SelectionManager* sm)
 {
-    return insertNewClip (type, name, { pos, TimeDuration() }, sm);
+    return insertNewClip (type, name, { pos, 0_td }, sm);
 }
 
 Clip* ClipTrack::insertNewClip (TrackItem::Type type, const juce::String& name, ClipPosition position, SelectionManager* sm)
