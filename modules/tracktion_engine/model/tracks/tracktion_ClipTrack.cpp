@@ -82,7 +82,7 @@ struct ClipTrack::ClipList  : public ValueTreeObjectList<Clip>,
     {
         objectAddedOrRemoved (c);
 
-        if (c)
+        if (c && ! clipTrack.edit.getUndoManager().isPerformingUndoRedo())
             clipTrack.edit.engine.getEngineBehaviour().newClipAdded (*c, recordingIsStopping);
     }
 
