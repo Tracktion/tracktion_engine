@@ -17,7 +17,9 @@ ProcessState::ProcessState (tracktion::graph::PlayHeadState& phs)
 }
 
 ProcessState::ProcessState (tracktion::graph::PlayHeadState& phs, const TempoSequence& seq)
-    : playHeadState (phs), tempoPosition (std::make_unique<tempo::Sequence::Position> (seq.getInternalSequence()))
+    : playHeadState (phs),
+      tempoPosition (std::make_unique<tempo::Sequence::Position> (seq.getInternalSequence())),
+      tempoSequence (&seq)
 {
 }
 
@@ -82,6 +84,11 @@ std::optional<int64_t> ProcessState::getPositionOverride() const
         return playHeadState.playHead.getPosition();
 
     return {};
+}
+
+const TempoSequence* ProcessState::getTempoSequence() const
+{
+    return tempoSequence;
 }
 
 //==============================================================================
