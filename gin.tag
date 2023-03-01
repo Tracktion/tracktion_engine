@@ -5748,8 +5748,16 @@
     <class kind="class">tracktion::engine::SelectableListener</class>
     <class kind="class">tracktion::engine::Selectable</class>
     <class kind="struct">tracktion::engine::SelectableList</class>
+    <class kind="class">tracktion::engine::SafeSelectable</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
+    <member kind="function">
+      <type>SafeSelectable&lt; SelectableType &gt;</type>
+      <name>makeSafeRef</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a9a916ab6aa43f5cd75071dc3910e537e</anchor>
+      <arglist>(SelectableType &amp;selectable)</arglist>
+    </member>
   </compound>
   <compound kind="file">
     <name>tracktion_SelectableClass.h</name>
@@ -8688,6 +8696,13 @@
       <enumvalue file="classtracktion_1_1engine_1_1AudioClipBase.html" anchor="ad8f885dd3dfab9f6928a33a74089d992a2327346e833efcd6b2e7b3f0a4df8ebb">previous</enumvalue>
       <enumvalue file="classtracktion_1_1engine_1_1AudioClipBase.html" anchor="ad8f885dd3dfab9f6928a33a74089d992ad0cab90d8d20d57e2f2b9be52f7dd25d">next</enumvalue>
       <enumvalue file="classtracktion_1_1engine_1_1AudioClipBase.html" anchor="ad8f885dd3dfab9f6928a33a74089d992a334c4a4c42fdb79d7ebc3e73b517e6f8">none</enumvalue>
+    </member>
+    <member kind="typedef">
+      <type>juce::ReferenceCountedObjectPtr&lt; AudioClipBase &gt;</type>
+      <name>Ptr</name>
+      <anchorfile>classtracktion_1_1engine_1_1AudioClipBase.html</anchorfile>
+      <anchor>a664bf5d6ca1e162c6f65ad657dc3e224</anchor>
+      <arglist></arglist>
     </member>
     <member kind="enumvalue">
       <name>gainFade</name>
@@ -60512,6 +60527,81 @@
     </member>
   </compound>
   <compound kind="class">
+    <name>tracktion::engine::SafeSelectable</name>
+    <filename>classtracktion_1_1engine_1_1SafeSelectable.html</filename>
+    <templarg></templarg>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a912fabb133e60d48b4b11d07bc8fff81</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>af77ae72ca047d0a9c5a9fc3252a7da45</anchor>
+      <arglist>(SelectableType &amp;selectable)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SafeSelectable</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9520e90edffa8ba60a5795fcedc2b0af</anchor>
+      <arglist>(const SafeSelectable &amp;other) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>SafeSelectable &amp;</type>
+      <name>operator=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a0111aff32e2362b734272111b997fbd0</anchor>
+      <arglist>(const SafeSelectable &amp;other)</arglist>
+    </member>
+    <member kind="function">
+      <type>SafeSelectable &amp;</type>
+      <name>operator=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a2d138f6f080c57e899bff2d88548173a</anchor>
+      <arglist>(SelectableType *newSelectable)</arglist>
+    </member>
+    <member kind="function">
+      <type>SelectableType *</type>
+      <name>get</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9ee8b1fc1cfd8bdf10af508ee26d62df</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>operator SelectableType *</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a00c166f3ad6d24436a4c08035ea08cf6</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>SelectableType *</type>
+      <name>operator-&gt;</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a67fe2cb007bbf621b5d16a4239ef71e9</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a9936d477dae88565822bee7f9e25f3f6</anchor>
+      <arglist>(SelectableType *selectable) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>classtracktion_1_1engine_1_1SafeSelectable.html</anchorfile>
+      <anchor>a5fd42bbe6d6b7b2eca6e43b40d287b7f</anchor>
+      <arglist>(SelectableType *selectable) const noexcept</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
     <name>tracktion::engine::SamplerPlugin</name>
     <filename>classtracktion_1_1engine_1_1SamplerPlugin.html</filename>
     <base>tracktion::engine::Plugin</base>
@@ -79019,6 +79109,7 @@
     <class kind="class">tracktion::SelectableListener</class>
     <class kind="class">tracktion::Selectable</class>
     <class kind="struct">tracktion::SelectableList</class>
+    <class kind="class">tracktion::SafeSelectable</class>
     <class kind="class">tracktion::SelectableClass</class>
     <class kind="class">tracktion::SelectableClassWithVolume</class>
     <class kind="class">tracktion::SelectableClassWithPan</class>
@@ -79428,6 +79519,7 @@
     <class kind="class">tracktion::engine::SelectableListener</class>
     <class kind="class">tracktion::engine::Selectable</class>
     <class kind="struct">tracktion::engine::SelectableList</class>
+    <class kind="class">tracktion::engine::SafeSelectable</class>
     <class kind="class">tracktion::engine::SelectableClass</class>
     <class kind="class">tracktion::engine::SelectableClassWithVolume</class>
     <class kind="class">tracktion::engine::SelectableClassWithPan</class>
@@ -81790,6 +81882,13 @@
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
       <anchor>a3cda81c803722385e76aa065bfe880ff</anchor>
       <arglist>(const juce::String &amp;keywords)</arglist>
+    </member>
+    <member kind="function">
+      <type>SafeSelectable&lt; SelectableType &gt;</type>
+      <name>makeSafeRef</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a9a916ab6aa43f5cd75071dc3910e537e</anchor>
+      <arglist>(SelectableType &amp;selectable)</arglist>
     </member>
     <member kind="function">
       <type>bool</type>

@@ -67,7 +67,8 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a>  </div>
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">tracktion_Selectable.h File Reference</div>  </div>
 </div><!--header-->
@@ -83,6 +84,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1SelectableList.html">tracktion::engine::SelectableList</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A list of Selectables, similar to a juce::Array but contains a cached list of the SelectableClasses for each entry.  <a href="structtracktion_1_1engine_1_1SelectableList.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1SafeSelectable.html">tracktion::engine::SafeSelectable&lt; SelectableType &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Holds a pointer to some type of <a class="el" href="classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel.">Selectable</a>, which automatically becomes null if the selectable is deleted.  <a href="classtracktion_1_1engine_1_1SafeSelectable.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
@@ -90,11 +94,18 @@ Namespaces</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespacetracktion_1_1engine"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html">tracktion::engine</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a9a916ab6aa43f5cd75071dc3910e537e"><td class="memTemplParams" colspan="2">template&lt;typename SelectableType &gt; </td></tr>
+<tr class="memitem:a9a916ab6aa43f5cd75071dc3910e537e"><td class="memTemplItemLeft" align="right" valign="top">SafeSelectable&lt; SelectableType &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a9a916ab6aa43f5cd75071dc3910e537e">tracktion::engine::makeSafeRef</a> (SelectableType &amp;selectable)</td></tr>
+<tr class="memdesc:a9a916ab6aa43f5cd75071dc3910e537e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="classtracktion_1_1engine_1_1SafeSelectable.html" title="Holds a pointer to some type of Selectable, which automatically becomes null if the selectable is del...">SafeSelectable</a> for a given selectable insatnce.  <a href="namespacetracktion_1_1engine.html#a9a916ab6aa43f5cd75071dc3910e537e">More...</a><br /></td></tr>
+<tr class="separator:a9a916ab6aa43f5cd75071dc3910e537e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 23 2023 20:41:22 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Wed Mar 1 2023 13:10:10 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

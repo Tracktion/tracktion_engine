@@ -113,6 +113,8 @@ Public Types</h2></td></tr>
  }</td></tr>
 <tr class="memdesc:ad8f885dd3dfab9f6928a33a74089d992"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines a prevous/next direction.  <a href="classtracktion_1_1engine_1_1AudioClipBase.html#ad8f885dd3dfab9f6928a33a74089d992">More...</a><br /></td></tr>
 <tr class="separator:ad8f885dd3dfab9f6928a33a74089d992"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a664bf5d6ca1e162c6f65ad657dc3e224"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html#a664bf5d6ca1e162c6f65ad657dc3e224">Ptr</a> = juce::ReferenceCountedObjectPtr&lt; <a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html">AudioClipBase</a> &gt;</td></tr>
+<tr class="separator:a664bf5d6ca1e162c6f65ad657dc3e224"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_types_classtracktion_1_1engine_1_1Clip"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classtracktion_1_1engine_1_1Clip')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classtracktion_1_1engine_1_1Clip.html">tracktion::engine::Clip</a></td></tr>
 <tr class="memitem:af0cfff3f282a7f6b1b92dc5ae61c97b7 inherit pub_types_classtracktion_1_1engine_1_1Clip"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#af0cfff3f282a7f6b1b92dc5ae61c97b7">SyncType</a> { <a class="el" href="classtracktion_1_1engine_1_1Clip.html#af0cfff3f282a7f6b1b92dc5ae61c97b7a4cddcc775a3a9d5b21492f9e9b80cfc5">syncBarsBeats</a> = 0
 , <a class="el" href="classtracktion_1_1engine_1_1Clip.html#af0cfff3f282a7f6b1b92dc5ae61c97b7a8b060ca5f53689e0dfd4eedf107a329b">syncAbsolute</a>
@@ -1032,7 +1034,22 @@ Protected Attributes</h2></td></tr>
 <p>If your source if dynamically generated override needsRender to return true. This will then trigger the rest of the render callbacks which should be used to generate the source and fill in any update messages etc.</p>
 <p>If your source is static override getAudioFile to return the source file. Note that this may be changed by the UI so it is a good idea to also overrride sourceMediaChanged and getSourceLength to update properties accordingly when the source <a class="el" href="classtracktion_1_1engine_1_1ProjectItemID.html" title="An ID representing one of the items in a Project.">ProjectItemID</a> is re-assigned.</p>
 <p>Either way you must override getHash which should return a hash of the current source e.g. an <a class="el" href="classtracktion_1_1engine_1_1AudioFile.html">AudioFile</a> hash or hash describing the current render set-up of an <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>. </p>
-</div><h2 class="groupheader">Member Enumeration Documentation</h2>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="a664bf5d6ca1e162c6f65ad657dc3e224"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a664bf5d6ca1e162c6f65ad657dc3e224">&#9670;&nbsp;</a></span>Ptr</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html#a664bf5d6ca1e162c6f65ad657dc3e224">tracktion::engine::AudioClipBase::Ptr</a> =  juce::ReferenceCountedObjectPtr&lt;<a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html">AudioClipBase</a>&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Enumeration Documentation</h2>
 <a id="a02bb26c86c226f50eae674e40ab39ddc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a02bb26c86c226f50eae674e40ab39ddc">&#9670;&nbsp;</a></span>FadeBehaviour</h2>
 
@@ -5856,7 +5873,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 23 2023 20:41:22 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Wed Mar 1 2023 13:10:10 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

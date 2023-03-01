@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-02-23 20:57:47</td>
+            <td class="headerValue">2023-03-01 13:28:00</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">12</td>
@@ -73,14 +73,14 @@
 <a name="11"><span class="lineNum">      11 </span>            : namespace tracktion { inline namespace engine</a>
 <a name="12"><span class="lineNum">      12 </span>            : {</a>
 <a name="13"><span class="lineNum">      13 </span>            : </a>
-<a name="14"><span class="lineNum">      14 </span><span class="lineCov">       8053 : struct PluginCreationInfo</span></a>
+<a name="14"><span class="lineNum">      14 </span><span class="lineCov">       8063 : struct PluginCreationInfo</span></a>
 <a name="15"><span class="lineNum">      15 </span>            : {</a>
-<a name="16"><span class="lineNum">      16 </span><span class="lineCov">       5824 :     PluginCreationInfo (const PluginCreationInfo&amp;) = default;</span></a>
+<a name="16"><span class="lineNum">      16 </span><span class="lineCov">       5831 :     PluginCreationInfo (const PluginCreationInfo&amp;) = default;</span></a>
 <a name="17"><span class="lineNum">      17 </span>            :     PluginCreationInfo (PluginCreationInfo&amp;&amp;) = default;</a>
 <a name="18"><span class="lineNum">      18 </span>            :     PluginCreationInfo&amp; operator= (PluginCreationInfo&amp;&amp;) = delete;</a>
 <a name="19"><span class="lineNum">      19 </span>            : </a>
 <a name="20"><span class="lineNum">      20 </span>            :     PluginCreationInfo (Edit&amp; ed, const juce::ValueTree&amp; s, bool isNew) noexcept</a>
-<a name="21"><span class="lineNum">      21 </span><span class="lineCov">       2229 :         : edit (ed), state (s), isNewPlugin (isNew) {}</span></a>
+<a name="21"><span class="lineNum">      21 </span><span class="lineCov">       2232 :         : edit (ed), state (s), isNewPlugin (isNew) {}</span></a>
 <a name="22"><span class="lineNum">      22 </span>            : </a>
 <a name="23"><span class="lineNum">      23 </span>            :     PluginCreationInfo() = delete;</a>
 <a name="24"><span class="lineNum">      24 </span>            :     PluginCreationInfo&amp; operator= (const PluginCreationInfo&amp;) = delete;</a>
@@ -211,7 +211,7 @@
 <a name="149"><span class="lineNum">     149 </span>            :     //==============================================================================</a>
 <a name="150"><span class="lineNum">     150 </span>            :     /** Enable/disable the plugin.  */</a>
 <a name="151"><span class="lineNum">     151 </span>            :     virtual void setEnabled (bool);</a>
-<a name="152"><span class="lineNum">     152 </span><span class="lineCov">   57181633 :     bool isEnabled() const noexcept                         { return enabled.get(); }</span></a>
+<a name="152"><span class="lineNum">     152 </span><span class="lineCov">   56990308 :     bool isEnabled() const noexcept                         { return enabled.get(); }</span></a>
 <a name="153"><span class="lineNum">     153 </span>            : </a>
 <a name="154"><span class="lineNum">     154 </span>            :     /** This is a bit different to being enabled as when frozen a plugin can't be interacted with. */</a>
 <a name="155"><span class="lineNum">     155 </span>            :     void setFrozen (bool shouldBeFrozen);</a>
@@ -249,7 +249,7 @@
 <a name="187"><span class="lineNum">     187 </span>            :     virtual void reset();</a>
 <a name="188"><span class="lineNum">     188 </span>            : </a>
 <a name="189"><span class="lineNum">     189 </span>            :     /** Track name or colour has changed. */</a>
-<a name="190"><span class="lineNum">     190 </span><span class="lineCov">       2609 :     virtual void trackPropertiesChanged()                    {}</span></a>
+<a name="190"><span class="lineNum">     190 </span><span class="lineCov">       2613 :     virtual void trackPropertiesChanged()                    {}</span></a>
 <a name="191"><span class="lineNum">     191 </span>            : </a>
 <a name="192"><span class="lineNum">     192 </span>            :     //==============================================================================</a>
 <a name="193"><span class="lineNum">     193 </span>            :     /** Process the next block of data.</a>
@@ -264,7 +264,7 @@
 <a name="202"><span class="lineNum">     202 </span>            :     virtual void applyToBuffer (const PluginRenderContext&amp;) = 0;</a>
 <a name="203"><span class="lineNum">     203 </span>            : </a>
 <a name="204"><span class="lineNum">     204 </span>            :     /** Called between successive rendering blocks. */</a>
-<a name="205"><span class="lineNum">     205 </span><span class="lineCov">   27382860 :     virtual void prepareForNextBlock (TimePosition /*editTime*/) {}</span></a>
+<a name="205"><span class="lineNum">     205 </span><span class="lineCov">   27383484 :     virtual void prepareForNextBlock (TimePosition /*editTime*/) {}</span></a>
 <a name="206"><span class="lineNum">     206 </span>            : </a>
 <a name="207"><span class="lineNum">     207 </span>            :     // wrapper on applyTobuffer, called by the node</a>
 <a name="208"><span class="lineNum">     208 </span>            :     void applyToBufferWithAutomation (const PluginRenderContext&amp;);</a>

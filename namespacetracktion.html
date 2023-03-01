@@ -866,6 +866,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1SelectableList.html">SelectableList</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A list of Selectables, similar to a juce::Array but contains a cached list of the SelectableClasses for each entry.  <a href="structtracktion_1_1engine_1_1SelectableList.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1SafeSelectable.html">SafeSelectable</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Holds a pointer to some type of <a class="el" href="classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel.">Selectable</a>, which automatically becomes null if the selectable is deleted.  <a href="classtracktion_1_1engine_1_1SafeSelectable.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1SelectableClass.html">SelectableClass</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a type of object that can be selected.  <a href="classtracktion_1_1engine_1_1SelectableClass.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -2041,6 +2044,10 @@ Functions</h2></td></tr>
 <tr class="memitem:a3cda81c803722385e76aa065bfe880ff"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1SearchOperation.html">SearchOperation</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a3cda81c803722385e76aa065bfe880ff">createSearchForKeywords</a> (const juce::String &amp;keywords)</td></tr>
 <tr class="memdesc:a3cda81c803722385e76aa065bfe880ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turns a keyword string into a search condition tree.  <a href="namespacetracktion_1_1engine.html#a3cda81c803722385e76aa065bfe880ff">More...</a><br /></td></tr>
 <tr class="separator:a3cda81c803722385e76aa065bfe880ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a916ab6aa43f5cd75071dc3910e537e"><td class="memTemplParams" colspan="2">template&lt;typename SelectableType &gt; </td></tr>
+<tr class="memitem:a9a916ab6aa43f5cd75071dc3910e537e"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1SafeSelectable.html">SafeSelectable</a>&lt; SelectableType &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a9a916ab6aa43f5cd75071dc3910e537e">makeSafeRef</a> (SelectableType &amp;selectable)</td></tr>
+<tr class="memdesc:a9a916ab6aa43f5cd75071dc3910e537e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="classtracktion_1_1engine_1_1SafeSelectable.html" title="Holds a pointer to some type of Selectable, which automatically becomes null if the selectable is del...">SafeSelectable</a> for a given selectable insatnce.  <a href="namespacetracktion_1_1engine.html#a9a916ab6aa43f5cd75071dc3910e537e">More...</a><br /></td></tr>
+<tr class="separator:a9a916ab6aa43f5cd75071dc3910e537e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0292b1e3fc9926303224136c8acba0fc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a0292b1e3fc9926303224136c8acba0fc">callBlocking</a> (std::function&lt; void()&gt; f)</td></tr>
 <tr class="separator:a0292b1e3fc9926303224136c8acba0fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9959a561e577cc680f7ccc85145f0a8c"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a9959a561e577cc680f7ccc85145f0a8c">dbToGain</a> (float db) noexcept</td></tr>
@@ -2346,7 +2353,7 @@ Variables</h2></td></tr>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Feb 23 2023 20:41:22 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Wed Mar 1 2023 13:10:10 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

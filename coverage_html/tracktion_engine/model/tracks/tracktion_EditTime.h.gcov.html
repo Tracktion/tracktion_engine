@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-02-23 20:57:47</td>
+            <td class="headerValue">2023-03-01 13:28:00</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">2</td>
@@ -201,8 +201,8 @@
 <a name="139"><span class="lineNum">     139 </span>            :     template&lt;&gt;</a>
 <a name="140"><span class="lineNum">     140 </span>            :     struct VariantConverter&lt;tracktion::core::TimePosition&gt;</a>
 <a name="141"><span class="lineNum">     141 </span>            :     {</a>
-<a name="142"><span class="lineNum">     142 </span><span class="lineCov">      23466 :         static tracktion::core::TimePosition fromVar (const var&amp; v)   { return tracktion::core::TimePosition::fromSeconds (static_cast&lt;double&gt; (v)); }</span></a>
-<a name="143"><span class="lineNum">     143 </span><span class="lineCov">         18 :         static var toVar (tracktion::core::TimePosition v)            { return v.inSeconds(); }</span></a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineCov">      23468 :         static tracktion::core::TimePosition fromVar (const var&amp; v)   { return tracktion::core::TimePosition::fromSeconds (static_cast&lt;double&gt; (v)); }</span></a>
+<a name="143"><span class="lineNum">     143 </span><span class="lineCov">         20 :         static var toVar (tracktion::core::TimePosition v)            { return v.inSeconds(); }</span></a>
 <a name="144"><span class="lineNum">     144 </span>            :     };</a>
 <a name="145"><span class="lineNum">     145 </span>            : </a>
 <a name="146"><span class="lineNum">     146 </span>            :     template&lt;&gt;</a>
@@ -215,7 +215,7 @@
 <a name="153"><span class="lineNum">     153 </span>            :     template&lt;&gt;</a>
 <a name="154"><span class="lineNum">     154 </span>            :     struct VariantConverter&lt;tracktion::core::BeatPosition&gt;</a>
 <a name="155"><span class="lineNum">     155 </span>            :     {</a>
-<a name="156"><span class="lineNum">     156 </span><span class="lineCov">        898 :         static tracktion::core::BeatPosition fromVar (const var&amp; v)   { return tracktion::core::BeatPosition::fromBeats (static_cast&lt;double&gt; (v)); }</span></a>
+<a name="156"><span class="lineNum">     156 </span><span class="lineCov">        902 :         static tracktion::core::BeatPosition fromVar (const var&amp; v)   { return tracktion::core::BeatPosition::fromBeats (static_cast&lt;double&gt; (v)); }</span></a>
 <a name="157"><span class="lineNum">     157 </span><span class="lineCov">         53 :         static var toVar (tracktion::core::BeatPosition v)            { return v.inBeats(); }</span></a>
 <a name="158"><span class="lineNum">     158 </span>            :     };</a>
 <a name="159"><span class="lineNum">     159 </span>            : </a>

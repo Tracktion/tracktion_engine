@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-02-23 20:57:47</td>
+            <td class="headerValue">2023-03-01 13:28:00</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -89,8 +89,8 @@
 <a name="27"><span class="lineNum">      27 </span>            :     /** Temporarily disables change events e.g. during a tempo change. */</a>
 <a name="28"><span class="lineNum">      28 </span>            :     struct Disabler</a>
 <a name="29"><span class="lineNum">      29 </span>            :     {</a>
-<a name="30"><span class="lineNum">      30 </span><span class="lineCov">         11 :         Disabler (ParameterChangeHandler&amp; p) : owner (p)    { p.enabled = false; }</span></a>
-<a name="31"><span class="lineNum">      31 </span><span class="lineCov">         11 :         ~Disabler()                                         { owner.enabled = true; }</span></a>
+<a name="30"><span class="lineNum">      30 </span><span class="lineCov">         12 :         Disabler (ParameterChangeHandler&amp; p) : owner (p)    { p.enabled = false; }</span></a>
+<a name="31"><span class="lineNum">      31 </span><span class="lineCov">         12 :         ~Disabler()                                         { owner.enabled = true; }</span></a>
 <a name="32"><span class="lineNum">      32 </span>            : </a>
 <a name="33"><span class="lineNum">      33 </span>            :         ParameterChangeHandler&amp; owner;</a>
 <a name="34"><span class="lineNum">      34 </span>            :         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Disabler)</a>
