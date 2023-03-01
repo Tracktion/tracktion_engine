@@ -138,7 +138,7 @@ void MidiInputDeviceNode::processSection (ProcessContext& pc, juce::Range<int64_
     if (timeNow > lastReadTime + maxExpectedMsPerBuffer)
     {
         //jassertfalse
-        //numMessages = 0;
+        numMessages = 0;
     }
 
     lastReadTime = timeNow;
