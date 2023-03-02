@@ -40,16 +40,6 @@ struct ProcessState
     */
     void setPlaybackSpeedRatio (double newRatio);
 
-    /** Adjust position without triggering a 'user interaction' change.
-        Use when the position change actually maintains continuity - e.g. a tempo change.
-    */
-    void overridePosition (int64_t);
-
-    /** If a position override has been placed for this block, this will return it.
-        This can be used to syncronise other playheads.
-    */
-    std::optional<int64_t> getPositionOverride() const;
-
     /** Sets the TempoSequence this state utilises. */
     void setTempoSequence (const TempoSequence*);
 
@@ -69,9 +59,6 @@ struct ProcessState
 private:
     const TempoSequence* tempoSequence = nullptr;
     std::unique_ptr<tempo::Sequence::Position> tempoPosition;
-
-    std::optional<int64_t> pendingPositionOverride;
-    bool positionHasBeenOverriden = false;
 };
 
 

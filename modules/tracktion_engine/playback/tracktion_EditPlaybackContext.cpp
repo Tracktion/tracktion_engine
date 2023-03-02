@@ -226,7 +226,7 @@ private:
 
          const auto lastPositionRemapped = internalSequence.toTime (tempoState.lastBeatPosition);
          const auto lastSampleRemapped = toSamples (lastPositionRemapped, getSampleRate());
-         processState.overridePosition (lastSampleRemapped);
+         playHead.overridePosition (lastSampleRemapped);
      }
 
      void updateReferenceSampleRange (int numSamples)
