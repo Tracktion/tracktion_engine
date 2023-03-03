@@ -27,7 +27,15 @@ ContainerClipNode::ContainerClipNode (ProcessState& editProcessState,
       input (std::move (inputNode))
 {
     if (auto parentTempoPosition = getProcessState().getTempoSequencePosition())
+    {
         tempoPosition = std::make_unique<tempo::Sequence::Position> (*parentTempoPosition);
+
+        // At the moment, this won't work correctly with complex tempo changes and the
+        // contained clips will use the tempo conversions of the main Edit. This needs
+        // to be added by using the ProcessState directly for tempo conversions with a
+        // specified offset
+        jassert (getProcessState().getTempoSequence()->getNumTempos() == 1);
+    }
 
     assert (input);
     setOptimisations ({ tracktion::graph::ClearBuffers::no,
