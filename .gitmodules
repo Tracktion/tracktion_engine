@@ -1,4 +1,4 @@
 [submodule "modules/juce"]
 	path = modules/juce
-url=https://github.com/WeAreROLI/JUCE.git
+url=https://github.com/BeatConnect/bc_dll_juce_fork.git
 	branch = develop
