@@ -31,13 +31,13 @@
             <td class="headerValue">coverage.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">39</td>
+            <td class="headerCovTableEntry">41</td>
             <td class="headerCovTableEntry">50</td>
-            <td class="headerCovTableEntryMed">78.0 %</td>
+            <td class="headerCovTableEntryMed">82.0 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-03-14 17:18:55</td>
+            <td class="headerValue">2023-03-14 19:35:40</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">5</td>
@@ -113,18 +113,18 @@
 <a name="51"><span class="lineNum">      51 </span><span class="lineNoCov">          0 :     return input-&gt;hasProcessed();</span></a>
 <a name="52"><span class="lineNum">      52 </span>            : }</a>
 <a name="53"><span class="lineNum">      53 </span>            : </a>
-<a name="54"><span class="lineNum">      54 </span><span class="lineCov">       3102 : void FadeInOutNode::process (ProcessContext&amp; pc)</span></a>
+<a name="54"><span class="lineNum">      54 </span><span class="lineCov">       3108 : void FadeInOutNode::process (ProcessContext&amp; pc)</span></a>
 <a name="55"><span class="lineNum">      55 </span>            : {</a>
 <a name="56"><span class="lineNum">      56 </span>            :     const auto editTimeRange = getEditTimeRange();</a>
 <a name="57"><span class="lineNum">      57 </span>            : </a>
 <a name="58"><span class="lineNum">      58 </span>            :     auto sourceBuffers = input-&gt;getProcessedOutput();</a>
-<a name="59"><span class="lineNum">      59 </span><span class="lineCov">       3102 :     auto destAudioBlock = pc.buffers.audio;</span></a>
-<a name="60"><span class="lineNum">      60 </span><span class="lineCov">       3102 :     auto&amp; destMidiBlock = pc.buffers.midi;</span></a>
+<a name="59"><span class="lineNum">      59 </span><span class="lineCov">       3108 :     auto destAudioBlock = pc.buffers.audio;</span></a>
+<a name="60"><span class="lineNum">      60 </span><span class="lineCov">       3108 :     auto&amp; destMidiBlock = pc.buffers.midi;</span></a>
 <a name="61"><span class="lineNum">      61 </span>            :     jassert (sourceBuffers.audio.getSize() == destAudioBlock.getSize());</a>
 <a name="62"><span class="lineNum">      62 </span>            : </a>
-<a name="63"><span class="lineNum">      63 </span><span class="lineCov">       3102 :     destMidiBlock.copyFrom (sourceBuffers.midi);</span></a>
+<a name="63"><span class="lineNum">      63 </span><span class="lineCov">       3108 :     destMidiBlock.copyFrom (sourceBuffers.midi);</span></a>
 <a name="64"><span class="lineNum">      64 </span>            : </a>
-<a name="65"><span class="lineNum">      65 </span><span class="lineCov">       3102 :     if (! renderingNeeded (editTimeRange))</span></a>
+<a name="65"><span class="lineNum">      65 </span><span class="lineCov">       3108 :     if (! renderingNeeded (editTimeRange))</span></a>
 <a name="66"><span class="lineNum">      66 </span>            :     {</a>
 <a name="67"><span class="lineNum">      67 </span>            :         // If we don't need to apply the fade, just pass through the buffer</a>
 <a name="68"><span class="lineNum">      68 </span><span class="lineNoCov">          0 :         setAudioOutput (input.get(), sourceBuffers.audio);</span></a>
@@ -132,14 +132,14 @@
 <a name="70"><span class="lineNum">      70 </span>            :     }</a>
 <a name="71"><span class="lineNum">      71 </span>            : </a>
 <a name="72"><span class="lineNum">      72 </span>            :     // Otherwise copy the source in to the dest ready for fading</a>
-<a name="73"><span class="lineNum">      73 </span><span class="lineCov">       3102 :     tracktion::graph::copyIfNotAliased (destAudioBlock, sourceBuffers.audio);</span></a>
+<a name="73"><span class="lineNum">      73 </span><span class="lineCov">       3108 :     tracktion::graph::copyIfNotAliased (destAudioBlock, sourceBuffers.audio);</span></a>
 <a name="74"><span class="lineNum">      74 </span>            : </a>
-<a name="75"><span class="lineNum">      75 </span><span class="lineCov">       3102 :     processSection (destAudioBlock, editTimeRange);</span></a>
+<a name="75"><span class="lineNum">      75 </span><span class="lineCov">       3108 :     processSection (destAudioBlock, editTimeRange);</span></a>
 <a name="76"><span class="lineNum">      76 </span>            : }</a>
 <a name="77"><span class="lineNum">      77 </span>            : </a>
-<a name="78"><span class="lineNum">      78 </span><span class="lineCov">       3102 : void FadeInOutNode::processSection (choc::buffer::ChannelArrayView&lt;float&gt; audio, TimeRange editTime)</span></a>
+<a name="78"><span class="lineNum">      78 </span><span class="lineCov">       3108 : void FadeInOutNode::processSection (choc::buffer::ChannelArrayView&lt;float&gt; audio, TimeRange editTime)</span></a>
 <a name="79"><span class="lineNum">      79 </span>            : {</a>
-<a name="80"><span class="lineNum">      80 </span><span class="lineCov">       3102 :     const auto numSamples = (int) audio.getNumFrames();</span></a>
+<a name="80"><span class="lineNum">      80 </span><span class="lineCov">       3108 :     const auto numSamples = (int) audio.getNumFrames();</span></a>
 <a name="81"><span class="lineNum">      81 </span>            : </a>
 <a name="82"><span class="lineNum">      82 </span><span class="lineCov">       1552 :     if (editTime.overlaps (fadeIn) &amp;&amp; fadeIn.getLength() &gt; 0s)</span></a>
 <a name="83"><span class="lineNum">      83 </span>            :     {</a>
@@ -220,17 +220,17 @@
 <a name="158"><span class="lineNum">     158 </span><span class="lineCov">       1552 :                                                    juce::jlimit (0.0f, 1.0f, (float) (1.0 - alpha2)));</span></a>
 <a name="159"><span class="lineNum">     159 </span>            :         }</a>
 <a name="160"><span class="lineNum">     160 </span>            :     }</a>
-<a name="161"><span class="lineNum">     161 </span><span class="lineCov">       3102 : }</span></a>
+<a name="161"><span class="lineNum">     161 </span><span class="lineCov">       3108 : }</span></a>
 <a name="162"><span class="lineNum">     162 </span>            : </a>
-<a name="163"><span class="lineNum">     163 </span><span class="lineCov">       3102 : bool FadeInOutNode::renderingNeeded (const TimeRange timelineRange)</span></a>
+<a name="163"><span class="lineNum">     163 </span><span class="lineCov">       3108 : bool FadeInOutNode::renderingNeeded (const TimeRange timelineRange)</span></a>
 <a name="164"><span class="lineNum">     164 </span>            : {</a>
-<a name="165"><span class="lineNum">     165 </span><span class="lineCov">       3102 :     if (! getPlayHead().isPlaying())</span></a>
+<a name="165"><span class="lineNum">     165 </span><span class="lineCov">       3108 :     if (! getPlayHead().isPlaying())</span></a>
 <a name="166"><span class="lineNum">     166 </span>            :         return false;</a>
 <a name="167"><span class="lineNum">     167 </span>            : </a>
 <a name="168"><span class="lineNum">     168 </span>            :     return fadeIn.intersects (timelineRange)</a>
 <a name="169"><span class="lineNum">     169 </span>            :         || fadeOut.intersects (timelineRange)</a>
-<a name="170"><span class="lineNum">     170 </span><span class="lineNoCov">          0 :         || (clearExtraSamples &amp;&amp; (timelineRange.getStart() &lt;= fadeIn.getStart()</span></a>
-<a name="171"><span class="lineNum">     171 </span><span class="lineNoCov">          0 :                                   || timelineRange.getEnd() &gt;= fadeOut.getEnd()));</span></a>
+<a name="170"><span class="lineNum">     170 </span><span class="lineCov">          6 :         || (clearExtraSamples &amp;&amp; (timelineRange.getStart() &lt;= fadeIn.getStart()</span></a>
+<a name="171"><span class="lineNum">     171 </span><span class="lineCov">          6 :                                   || timelineRange.getEnd() &gt;= fadeOut.getEnd()));</span></a>
 <a name="172"><span class="lineNum">     172 </span>            : }</a>
 <a name="173"><span class="lineNum">     173 </span>            : </a>
 <a name="174"><span class="lineNum">     174 </span><span class="lineNoCov">          0 : int FadeInOutNode::timeToSample (int numSamples, TimeRange editTime, TimePosition t)</span></a>
