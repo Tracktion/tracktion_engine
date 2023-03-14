@@ -17,7 +17,7 @@ namespace combining_node_utils
 {
     // how much extra time to give a track before it gets cut off - to allow for plugins
     // that ring on.
-    static constexpr double decayTimeAllowance = 5.0;
+    static constexpr TimeDuration decayTimeAllowance { 5_td };
     static constexpr int secondsPerGroup = 8;
 
     static inline constexpr int timeToGroupIndex (TimePosition t) noexcept
@@ -156,6 +156,7 @@ void CombiningNode::addInput (std::unique_ptr<Node> input, TimeRange time)
         if (inputs.getUnchecked (i)->time.getStart() >= time.getStart())
             break;
 
+    time = TimeRange (time.getStart(), time.getLength() + combining_node_utils::decayTimeAllowance);
     auto tan = inputs.insert (i, new TimedNode (std::move (input), time));
 
     jassert (time.getEnd() <= Edit::getMaximumEditEnd());
