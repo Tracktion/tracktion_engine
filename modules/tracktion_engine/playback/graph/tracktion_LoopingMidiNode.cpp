@@ -1238,14 +1238,14 @@ public:
 
         if (shouldCreateMessagesForTime)
         {
-            generator->createMessagesForTime (destBuffer, sectionEditBeatRange.getStart().inBeats(),
+            generator->createMessagesForTime (destBuffer, clipIntersection.getStart().inBeats(),
                                               *activeNoteList,
                                               channelNumbers, clipLevel, useMPEChannelMode, midiSourceID,
                                               controllerMessagesScratchBuffer);
             shouldCreateMessagesForTime = false;
 
             // Ensure generator is initialised
-            generator->setTime (sectionEditBeatRange.getStart().inBeats());
+            generator->setTime (clipIntersection.getStart().inBeats());
         }
 
         // Iterate notes in blocks
@@ -1274,7 +1274,7 @@ public:
                 blockBeatPosition = std::max (blockBeatPosition, 0.0);
 
                 // Note-offs that are on the end boundry need to be nudged back by 1 sample so they're not lost (which leads to stuck notes)
-                if (e.isNoteOff() && juce::isWithin (editBeatPosition, sectionEditBeatRange.getEnd().inBeats(), beatDurationOfOneSample))
+                if (e.isNoteOff() && juce::isWithin (editBeatPosition, clipIntersection.getEnd().inBeats(), beatDurationOfOneSample))
                     blockBeatPosition = blockBeatPosition - beatDurationOfOneSample;
 
                 e.multiplyVelocity (volScale);
