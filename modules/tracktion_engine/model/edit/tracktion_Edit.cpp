@@ -2905,6 +2905,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
                 {
                     auto firstTempo = edit->tempoSequence.getTempo (0);
                     firstTempo->setBpm (targetTempo.getBpm());
+                    engine.getEngineBehaviour().newClipAdded (*wc, false);
 
                     edit->setTimecodeFormat (editToMatch->getTimecodeFormat());
                     AudioFileInfo wi = wc->getWaveInfo();
@@ -2926,6 +2927,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
                 {
                     auto firstPitch = edit->pitchSequence.getPitch (0);
                     firstPitch->setPitch (targetPitch->getPitch());
+                    engine.getEngineBehaviour().newClipAdded (*wc, false);
 
                     edit->pitchSequence.copyFrom (editToMatch->pitchSequence);
                     wc->setAutoPitch (wc->getLoopInfo().getRootNote() != -1);
