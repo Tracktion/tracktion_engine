@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-03-14 13:40:42</td>
+            <td class="headerValue">2023-03-14 17:17:27</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">21</td>
@@ -123,11 +123,11 @@
 <a name="61"><span class="lineNum">      61 </span><span class="lineCov">          1 : }</span></a>
 <a name="62"><span class="lineNum">      62 </span>            : </a>
 <a name="63"><span class="lineNum">      63 </span>            : //==============================================================================</a>
-<a name="64"><span class="lineNum">      64 </span><span class="lineCov">       7998 : juce::Array&lt;Track*&gt; getAllTracks (const Edit&amp; edit)</span></a>
+<a name="64"><span class="lineNum">      64 </span><span class="lineCov">       7996 : juce::Array&lt;Track*&gt; getAllTracks (const Edit&amp; edit)</span></a>
 <a name="65"><span class="lineNum">      65 </span>            : {</a>
-<a name="66"><span class="lineNum">      66 </span><span class="lineCov">       7998 :     juce::Array&lt;Track*&gt; tracks;</span></a>
-<a name="67"><span class="lineNum">      67 </span><span class="lineCov">     548199 :     edit.visitAllTracks ([&amp;] (Track&amp; t) { tracks.add (&amp;t); return true; }, true);</span></a>
-<a name="68"><span class="lineNum">      68 </span><span class="lineCov">       7998 :     return tracks;</span></a>
+<a name="66"><span class="lineNum">      66 </span><span class="lineCov">       7996 :     juce::Array&lt;Track*&gt; tracks;</span></a>
+<a name="67"><span class="lineNum">      67 </span><span class="lineCov">     548187 :     edit.visitAllTracks ([&amp;] (Track&amp; t) { tracks.add (&amp;t); return true; }, true);</span></a>
+<a name="68"><span class="lineNum">      68 </span><span class="lineCov">       7996 :     return tracks;</span></a>
 <a name="69"><span class="lineNum">      69 </span>            : }</a>
 <a name="70"><span class="lineNum">      70 </span>            : </a>
 <a name="71"><span class="lineNum">      71 </span><span class="lineCov">        543 : juce::Array&lt;Track*&gt; getTopLevelTracks (const Edit&amp; edit)</span></a>
@@ -830,8 +830,8 @@
 <a name="768"><span class="lineNum">     768 </span><span class="lineNoCov">          0 :         list.addIfNotAlreadyThere (p);</span></a>
 <a name="769"><span class="lineNum">     769 </span>            : </a>
 <a name="770"><span class="lineNum">     770 </span><span class="lineCov">       5444 :     for (auto r : edit.getRackList().getTypes())</span></a>
-<a name="771"><span class="lineNum">     771 </span><span class="lineCov">       4693 :         for (auto p : r-&gt;getPlugins())</span></a>
-<a name="772"><span class="lineNum">     772 </span><span class="lineCov">       2159 :             list.add (p);</span></a>
+<a name="771"><span class="lineNum">     771 </span><span class="lineCov">       4861 :         for (auto p : r-&gt;getPlugins())</span></a>
+<a name="772"><span class="lineNum">     772 </span><span class="lineCov">       2327 :             list.add (p);</span></a>
 <a name="773"><span class="lineNum">     773 </span>            : </a>
 <a name="774"><span class="lineNum">     774 </span><span class="lineCov">       2910 :     if (includeMasterVolume)</span></a>
 <a name="775"><span class="lineNum">     775 </span><span class="lineCov">        377 :         list.add (edit.getMasterVolumePlugin().get());</span></a>
