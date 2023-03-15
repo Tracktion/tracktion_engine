@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-03-15 17:08:37</td>
+            <td class="headerValue">2023-03-15 18:40:38</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -140,7 +140,7 @@
 <a name="78"><span class="lineNum">      78 </span>            :     MidiMessageArray sendMidiBuffer, returnMidiBuffer;</a>
 <a name="79"><span class="lineNum">      79 </span>            :     juce::CriticalSection bufferLock;</a>
 <a name="80"><span class="lineNum">      80 </span>            : </a>
-<a name="81"><span class="lineNum">      81 </span>            :     double latencySeconds = 0.0;</a>
+<a name="81"><span class="lineNum">      81 </span>            :     std::atomic&lt;double&gt; latencySeconds { 0.0 };</a>
 <a name="82"><span class="lineNum">      82 </span>            :     DeviceType sendDeviceType = noDevice, returnDeviceType = noDevice;</a>
 <a name="83"><span class="lineNum">      83 </span>            : </a>
 <a name="84"><span class="lineNum">      84 </span>            :     void valueTreePropertyChanged (juce::ValueTree&amp;, const juce::Identifier&amp;) override;</a>

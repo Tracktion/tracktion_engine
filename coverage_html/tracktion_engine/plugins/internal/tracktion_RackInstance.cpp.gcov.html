@@ -32,17 +32,17 @@
             <td></td>
             <td class="headerItem">Lines:</td>
             <td class="headerCovTableEntry">53</td>
-            <td class="headerCovTableEntry">185</td>
-            <td class="headerCovTableEntryLo">28.6 %</td>
+            <td class="headerCovTableEntry">178</td>
+            <td class="headerCovTableEntryLo">29.8 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-03-15 17:08:37</td>
+            <td class="headerValue">2023-03-15 18:40:38</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">10</td>
-            <td class="headerCovTableEntry">37</td>
-            <td class="headerCovTableEntryLo">27.0 %</td>
+            <td class="headerCovTableEntry">36</td>
+            <td class="headerCovTableEntryLo">27.8 %</td>
           </tr>
           <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
         </table>
@@ -353,98 +353,87 @@
 <a name="291"><span class="lineNum">     291 </span>            : {</a>
 <a name="292"><span class="lineNum">     292 </span><span class="lineNoCov">          0 :     if (type != nullptr)</span></a>
 <a name="293"><span class="lineNum">     293 </span><span class="lineNoCov">          0 :         type-&gt;registerInstance (this, info);</span></a>
-<a name="294"><span class="lineNum">     294 </span>            : </a>
-<a name="295"><span class="lineNum">     295 </span><span class="lineNoCov">          0 :     initialiseWithoutStopping (info);</span></a>
-<a name="296"><span class="lineNum">     296 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="297"><span class="lineNum">     297 </span>            : </a>
-<a name="298"><span class="lineNum">     298 </span><span class="lineNoCov">          0 : void RackInstance::initialiseWithoutStopping (const PluginInitialisationInfo&amp;)</span></a>
-<a name="299"><span class="lineNum">     299 </span>            : {</a>
-<a name="300"><span class="lineNum">     300 </span>            :     const float wet = wetGain-&gt;getCurrentValue();</a>
-<a name="301"><span class="lineNum">     301 </span><span class="lineNoCov">          0 :     lastLeftIn   = dbToGain (leftInDb-&gt;getCurrentValue());</span></a>
-<a name="302"><span class="lineNum">     302 </span><span class="lineNoCov">          0 :     lastRightIn  = dbToGain (linkInputs ? leftInDb-&gt;getCurrentValue() : rightInDb-&gt;getCurrentValue());</span></a>
-<a name="303"><span class="lineNum">     303 </span><span class="lineNoCov">          0 :     lastLeftOut  = wet * dbToGain (leftOutDb-&gt;getCurrentValue());</span></a>
-<a name="304"><span class="lineNum">     304 </span><span class="lineNoCov">          0 :     lastRightOut = wet * dbToGain (linkOutputs ? leftOutDb-&gt;getCurrentValue() : rightOutDb-&gt;getCurrentValue());</span></a>
-<a name="305"><span class="lineNum">     305 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="306"><span class="lineNum">     306 </span>            : </a>
-<a name="307"><span class="lineNum">     307 </span><span class="lineNoCov">          0 : void RackInstance::deinitialise()</span></a>
-<a name="308"><span class="lineNum">     308 </span>            : {</a>
-<a name="309"><span class="lineNum">     309 </span><span class="lineNoCov">          0 :     if (type != nullptr)</span></a>
-<a name="310"><span class="lineNum">     310 </span><span class="lineNoCov">          0 :         type-&gt;deregisterInstance (this);</span></a>
-<a name="311"><span class="lineNum">     311 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="312"><span class="lineNum">     312 </span>            : </a>
-<a name="313"><span class="lineNum">     313 </span><span class="lineNoCov">          0 : void RackInstance::updateAutomatableParamPosition (TimePosition time)</span></a>
-<a name="314"><span class="lineNum">     314 </span>            : {</a>
-<a name="315"><span class="lineNum">     315 </span><span class="lineNoCov">          0 :     Plugin::updateAutomatableParamPosition (time);</span></a>
-<a name="316"><span class="lineNum">     316 </span>            : </a>
-<a name="317"><span class="lineNum">     317 </span><span class="lineNoCov">          0 :     if (type != nullptr)</span></a>
-<a name="318"><span class="lineNum">     318 </span><span class="lineNoCov">          0 :         type-&gt;updateAutomatableParamPositions (time);</span></a>
-<a name="319"><span class="lineNum">     319 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="320"><span class="lineNum">     320 </span>            : </a>
-<a name="321"><span class="lineNum">     321 </span><span class="lineNoCov">          0 : double RackInstance::getLatencySeconds()</span></a>
-<a name="322"><span class="lineNum">     322 </span>            : {</a>
-<a name="323"><span class="lineNum">     323 </span><span class="lineNoCov">          0 :     return 0.0;</span></a>
-<a name="324"><span class="lineNum">     324 </span>            : }</a>
-<a name="325"><span class="lineNum">     325 </span>            : </a>
-<a name="326"><span class="lineNum">     326 </span><span class="lineNoCov">          0 : void RackInstance::prepareForNextBlock (TimePosition)</span></a>
-<a name="327"><span class="lineNum">     327 </span>            : {</a>
-<a name="328"><span class="lineNum">     328 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="329"><span class="lineNum">     329 </span>            : </a>
-<a name="330"><span class="lineNum">     330 </span><span class="lineNoCov">          0 : void RackInstance::applyToBuffer (const PluginRenderContext&amp;)</span></a>
-<a name="331"><span class="lineNum">     331 </span>            : {</a>
-<a name="332"><span class="lineNum">     332 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="294"><span class="lineNum">     294 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="295"><span class="lineNum">     295 </span>            : </a>
+<a name="296"><span class="lineNum">     296 </span><span class="lineNoCov">          0 : void RackInstance::deinitialise()</span></a>
+<a name="297"><span class="lineNum">     297 </span>            : {</a>
+<a name="298"><span class="lineNum">     298 </span><span class="lineNoCov">          0 :     if (type != nullptr)</span></a>
+<a name="299"><span class="lineNum">     299 </span><span class="lineNoCov">          0 :         type-&gt;deregisterInstance (this);</span></a>
+<a name="300"><span class="lineNum">     300 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="301"><span class="lineNum">     301 </span>            : </a>
+<a name="302"><span class="lineNum">     302 </span><span class="lineNoCov">          0 : void RackInstance::updateAutomatableParamPosition (TimePosition time)</span></a>
+<a name="303"><span class="lineNum">     303 </span>            : {</a>
+<a name="304"><span class="lineNum">     304 </span><span class="lineNoCov">          0 :     Plugin::updateAutomatableParamPosition (time);</span></a>
+<a name="305"><span class="lineNum">     305 </span>            : </a>
+<a name="306"><span class="lineNum">     306 </span><span class="lineNoCov">          0 :     if (type != nullptr)</span></a>
+<a name="307"><span class="lineNum">     307 </span><span class="lineNoCov">          0 :         type-&gt;updateAutomatableParamPositions (time);</span></a>
+<a name="308"><span class="lineNum">     308 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="309"><span class="lineNum">     309 </span>            : </a>
+<a name="310"><span class="lineNum">     310 </span><span class="lineNoCov">          0 : double RackInstance::getLatencySeconds()</span></a>
+<a name="311"><span class="lineNum">     311 </span>            : {</a>
+<a name="312"><span class="lineNum">     312 </span><span class="lineNoCov">          0 :     return 0.0;</span></a>
+<a name="313"><span class="lineNum">     313 </span>            : }</a>
+<a name="314"><span class="lineNum">     314 </span>            : </a>
+<a name="315"><span class="lineNum">     315 </span><span class="lineNoCov">          0 : void RackInstance::prepareForNextBlock (TimePosition)</span></a>
+<a name="316"><span class="lineNum">     316 </span>            : {</a>
+<a name="317"><span class="lineNum">     317 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="318"><span class="lineNum">     318 </span>            : </a>
+<a name="319"><span class="lineNum">     319 </span><span class="lineNoCov">          0 : void RackInstance::applyToBuffer (const PluginRenderContext&amp;)</span></a>
+<a name="320"><span class="lineNum">     320 </span>            : {</a>
+<a name="321"><span class="lineNum">     321 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="322"><span class="lineNum">     322 </span>            : </a>
+<a name="323"><span class="lineNum">     323 </span><span class="lineNoCov">          0 : juce::String RackInstance::getSelectableDescription()</span></a>
+<a name="324"><span class="lineNum">     324 </span>            : {</a>
+<a name="325"><span class="lineNum">     325 </span><span class="lineNoCov">          0 :     return TRANS(&quot;Plugin Rack&quot;);</span></a>
+<a name="326"><span class="lineNum">     326 </span>            : }</a>
+<a name="327"><span class="lineNum">     327 </span>            : </a>
+<a name="328"><span class="lineNum">     328 </span><span class="lineNoCov">          0 : void RackInstance::setInputLevel (Channel c, float v)</span></a>
+<a name="329"><span class="lineNum">     329 </span>            : {</a>
+<a name="330"><span class="lineNum">     330 </span><span class="lineNoCov">          0 :     const auto&amp; param = c == left ? leftInDb : rightInDb;</span></a>
+<a name="331"><span class="lineNum">     331 </span>            : </a>
+<a name="332"><span class="lineNum">     332 </span><span class="lineNoCov">          0 :     param-&gt;setParameter (v, juce::sendNotification);</span></a>
 <a name="333"><span class="lineNum">     333 </span>            : </a>
-<a name="334"><span class="lineNum">     334 </span><span class="lineNoCov">          0 : juce::String RackInstance::getSelectableDescription()</span></a>
-<a name="335"><span class="lineNum">     335 </span>            : {</a>
-<a name="336"><span class="lineNum">     336 </span><span class="lineNoCov">          0 :     return TRANS(&quot;Plugin Rack&quot;);</span></a>
-<a name="337"><span class="lineNum">     337 </span>            : }</a>
-<a name="338"><span class="lineNum">     338 </span>            : </a>
-<a name="339"><span class="lineNum">     339 </span><span class="lineNoCov">          0 : void RackInstance::setInputLevel (Channel c, float v)</span></a>
-<a name="340"><span class="lineNum">     340 </span>            : {</a>
-<a name="341"><span class="lineNum">     341 </span><span class="lineNoCov">          0 :     const auto&amp; param = c == left ? leftInDb : rightInDb;</span></a>
-<a name="342"><span class="lineNum">     342 </span>            : </a>
-<a name="343"><span class="lineNum">     343 </span><span class="lineNoCov">          0 :     param-&gt;setParameter (v, juce::sendNotification);</span></a>
+<a name="334"><span class="lineNum">     334 </span><span class="lineNoCov">          0 :     if (linkInputs)</span></a>
+<a name="335"><span class="lineNum">     335 </span>            :     {</a>
+<a name="336"><span class="lineNum">     336 </span><span class="lineNoCov">          0 :         const auto&amp; linkedParam = c == left ? rightInDb : leftInDb;</span></a>
+<a name="337"><span class="lineNum">     337 </span><span class="lineNoCov">          0 :         linkedParam-&gt;setParameter (v, juce::sendNotification);</span></a>
+<a name="338"><span class="lineNum">     338 </span>            :     }</a>
+<a name="339"><span class="lineNum">     339 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="340"><span class="lineNum">     340 </span>            : </a>
+<a name="341"><span class="lineNum">     341 </span><span class="lineNoCov">          0 : void RackInstance::setOutputLevel (Channel c, float v)</span></a>
+<a name="342"><span class="lineNum">     342 </span>            : {</a>
+<a name="343"><span class="lineNum">     343 </span><span class="lineNoCov">          0 :     const auto&amp; param = c == left ? leftOutDb : rightOutDb;</span></a>
 <a name="344"><span class="lineNum">     344 </span>            : </a>
-<a name="345"><span class="lineNum">     345 </span><span class="lineNoCov">          0 :     if (linkInputs)</span></a>
-<a name="346"><span class="lineNum">     346 </span>            :     {</a>
-<a name="347"><span class="lineNum">     347 </span><span class="lineNoCov">          0 :         const auto&amp; linkedParam = c == left ? rightInDb : leftInDb;</span></a>
-<a name="348"><span class="lineNum">     348 </span><span class="lineNoCov">          0 :         linkedParam-&gt;setParameter (v, juce::sendNotification);</span></a>
-<a name="349"><span class="lineNum">     349 </span>            :     }</a>
-<a name="350"><span class="lineNum">     350 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="351"><span class="lineNum">     351 </span>            : </a>
-<a name="352"><span class="lineNum">     352 </span><span class="lineNoCov">          0 : void RackInstance::setOutputLevel (Channel c, float v)</span></a>
-<a name="353"><span class="lineNum">     353 </span>            : {</a>
-<a name="354"><span class="lineNum">     354 </span><span class="lineNoCov">          0 :     const auto&amp; param = c == left ? leftOutDb : rightOutDb;</span></a>
-<a name="355"><span class="lineNum">     355 </span>            : </a>
-<a name="356"><span class="lineNum">     356 </span><span class="lineNoCov">          0 :     param-&gt;setParameter (v, juce::sendNotification);</span></a>
+<a name="345"><span class="lineNum">     345 </span><span class="lineNoCov">          0 :     param-&gt;setParameter (v, juce::sendNotification);</span></a>
+<a name="346"><span class="lineNum">     346 </span>            : </a>
+<a name="347"><span class="lineNum">     347 </span><span class="lineNoCov">          0 :     if (linkOutputs)</span></a>
+<a name="348"><span class="lineNum">     348 </span>            :     {</a>
+<a name="349"><span class="lineNum">     349 </span><span class="lineNoCov">          0 :         const auto&amp; linkedParam = c == left ? rightOutDb : leftOutDb;</span></a>
+<a name="350"><span class="lineNum">     350 </span><span class="lineNoCov">          0 :         linkedParam-&gt;setParameter (v, juce::sendNotification);</span></a>
+<a name="351"><span class="lineNum">     351 </span>            :     }</a>
+<a name="352"><span class="lineNum">     352 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="353"><span class="lineNum">     353 </span>            : </a>
+<a name="354"><span class="lineNum">     354 </span><span class="lineNoCov">          0 : juce::String RackInstance::getInputName (Channel c)</span></a>
+<a name="355"><span class="lineNum">     355 </span>            : {</a>
+<a name="356"><span class="lineNum">     356 </span><span class="lineNoCov">          0 :     const auto&amp; input = c == left ? leftInputGoesTo : rightInputGoesTo;</span></a>
 <a name="357"><span class="lineNum">     357 </span>            : </a>
-<a name="358"><span class="lineNum">     358 </span><span class="lineNoCov">          0 :     if (linkOutputs)</span></a>
-<a name="359"><span class="lineNum">     359 </span>            :     {</a>
-<a name="360"><span class="lineNum">     360 </span><span class="lineNoCov">          0 :         const auto&amp; linkedParam = c == left ? rightOutDb : leftOutDb;</span></a>
-<a name="361"><span class="lineNum">     361 </span><span class="lineNoCov">          0 :         linkedParam-&gt;setParameter (v, juce::sendNotification);</span></a>
-<a name="362"><span class="lineNum">     362 </span>            :     }</a>
-<a name="363"><span class="lineNum">     363 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="364"><span class="lineNum">     364 </span>            : </a>
-<a name="365"><span class="lineNum">     365 </span><span class="lineNoCov">          0 : juce::String RackInstance::getInputName (Channel c)</span></a>
-<a name="366"><span class="lineNum">     366 </span>            : {</a>
-<a name="367"><span class="lineNum">     367 </span><span class="lineNoCov">          0 :     const auto&amp; input = c == left ? leftInputGoesTo : rightInputGoesTo;</span></a>
-<a name="368"><span class="lineNum">     368 </span>            : </a>
-<a name="369"><span class="lineNum">     369 </span><span class="lineNoCov">          0 :     if (type == nullptr || input &lt; 0 || type-&gt;getInputNames()[input].isEmpty())</span></a>
-<a name="370"><span class="lineNum">     370 </span>            :         return getNoPinName();</a>
-<a name="371"><span class="lineNum">     371 </span>            : </a>
-<a name="372"><span class="lineNum">     372 </span><span class="lineNoCov">          0 :     return juce::String (input) + &quot;. &quot; + type-&gt;getInputNames()[input];</span></a>
-<a name="373"><span class="lineNum">     373 </span>            : }</a>
-<a name="374"><span class="lineNum">     374 </span>            : </a>
-<a name="375"><span class="lineNum">     375 </span><span class="lineNoCov">          0 : juce::String RackInstance::getOutputName (Channel c)</span></a>
-<a name="376"><span class="lineNum">     376 </span>            : {</a>
-<a name="377"><span class="lineNum">     377 </span><span class="lineNoCov">          0 :     const auto&amp; ouput = c == left ? leftOutputComesFrom : rightOutputComesFrom;</span></a>
-<a name="378"><span class="lineNum">     378 </span>            : </a>
-<a name="379"><span class="lineNum">     379 </span><span class="lineNoCov">          0 :     if (type == nullptr || ouput &lt; 0 || type-&gt;getOutputNames()[ouput].isEmpty())</span></a>
-<a name="380"><span class="lineNum">     380 </span>            :         return getNoPinName();</a>
-<a name="381"><span class="lineNum">     381 </span>            : </a>
-<a name="382"><span class="lineNum">     382 </span><span class="lineNoCov">          0 :     return juce::String (ouput) + &quot;. &quot; + type-&gt;getOutputNames()[ouput];</span></a>
-<a name="383"><span class="lineNum">     383 </span>            : }</a>
-<a name="384"><span class="lineNum">     384 </span>            : </a>
-<a name="385"><span class="lineNum">     385 </span>            : }} // namespace tracktion { inline namespace engine</a>
+<a name="358"><span class="lineNum">     358 </span><span class="lineNoCov">          0 :     if (type == nullptr || input &lt; 0 || type-&gt;getInputNames()[input].isEmpty())</span></a>
+<a name="359"><span class="lineNum">     359 </span>            :         return getNoPinName();</a>
+<a name="360"><span class="lineNum">     360 </span>            : </a>
+<a name="361"><span class="lineNum">     361 </span><span class="lineNoCov">          0 :     return juce::String (input) + &quot;. &quot; + type-&gt;getInputNames()[input];</span></a>
+<a name="362"><span class="lineNum">     362 </span>            : }</a>
+<a name="363"><span class="lineNum">     363 </span>            : </a>
+<a name="364"><span class="lineNum">     364 </span><span class="lineNoCov">          0 : juce::String RackInstance::getOutputName (Channel c)</span></a>
+<a name="365"><span class="lineNum">     365 </span>            : {</a>
+<a name="366"><span class="lineNum">     366 </span><span class="lineNoCov">          0 :     const auto&amp; ouput = c == left ? leftOutputComesFrom : rightOutputComesFrom;</span></a>
+<a name="367"><span class="lineNum">     367 </span>            : </a>
+<a name="368"><span class="lineNum">     368 </span><span class="lineNoCov">          0 :     if (type == nullptr || ouput &lt; 0 || type-&gt;getOutputNames()[ouput].isEmpty())</span></a>
+<a name="369"><span class="lineNum">     369 </span>            :         return getNoPinName();</a>
+<a name="370"><span class="lineNum">     370 </span>            : </a>
+<a name="371"><span class="lineNum">     371 </span><span class="lineNoCov">          0 :     return juce::String (ouput) + &quot;. &quot; + type-&gt;getOutputNames()[ouput];</span></a>
+<a name="372"><span class="lineNum">     372 </span>            : }</a>
+<a name="373"><span class="lineNum">     373 </span>            : </a>
+<a name="374"><span class="lineNum">     374 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

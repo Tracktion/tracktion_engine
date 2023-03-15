@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-03-15 17:08:37</td>
+            <td class="headerValue">2023-03-15 18:40:38</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">8</td>
@@ -102,61 +102,63 @@
 <a name="40"><span class="lineNum">      40 </span>            : </a>
 <a name="41"><span class="lineNum">      41 </span><span class="lineCov">       2122 : void LevelMeterPlugin::initialiseWithoutStopping (const PluginInitialisationInfo&amp;)</span></a>
 <a name="42"><span class="lineNum">      42 </span>            : {</a>
-<a name="43"><span class="lineNum">      43 </span><span class="lineCov">       2122 :     if (auto t = getOwnerTrack())</span></a>
-<a name="44"><span class="lineNum">      44 </span>            :     {</a>
-<a name="45"><span class="lineNum">      45 </span><span class="lineCov">       2122 :         controllerTrack = t-&gt;getIndexInEditTrackList();</span></a>
-<a name="46"><span class="lineNum">      46 </span><span class="lineCov">       2122 :         startTimer (1000 / 50);</span></a>
-<a name="47"><span class="lineNum">      47 </span><span class="lineCov">       2122 :         return;</span></a>
-<a name="48"><span class="lineNum">      48 </span>            :     }</a>
-<a name="49"><span class="lineNum">      49 </span>            : </a>
-<a name="50"><span class="lineNum">      50 </span><span class="lineNoCov">          0 :     controllerTrack = -1;</span></a>
-<a name="51"><span class="lineNum">      51 </span><span class="lineNoCov">          0 :     stopTimer();</span></a>
-<a name="52"><span class="lineNum">      52 </span>            : }</a>
-<a name="53"><span class="lineNum">      53 </span>            : </a>
-<a name="54"><span class="lineNum">      54 </span><span class="lineCov">        280 : void LevelMeterPlugin::deinitialise()</span></a>
-<a name="55"><span class="lineNum">      55 </span>            : {</a>
-<a name="56"><span class="lineNum">      56 </span><span class="lineCov">        280 :     measurer.clear();</span></a>
-<a name="57"><span class="lineNum">      57 </span><span class="lineCov">        280 :     stopTimer();</span></a>
-<a name="58"><span class="lineNum">      58 </span><span class="lineCov">        280 : }</span></a>
-<a name="59"><span class="lineNum">      59 </span>            : </a>
-<a name="60"><span class="lineNum">      60 </span><span class="lineNoCov">          0 : void LevelMeterPlugin::applyToBuffer (const PluginRenderContext&amp; fc)</span></a>
-<a name="61"><span class="lineNum">      61 </span>            : {</a>
-<a name="62"><span class="lineNum">      62 </span>            :     SCOPED_REALTIME_CHECK</a>
-<a name="63"><span class="lineNum">      63 </span>            : </a>
-<a name="64"><span class="lineNum">      64 </span><span class="lineNoCov">          0 :     if (fc.destBuffer != nullptr)</span></a>
-<a name="65"><span class="lineNum">      65 </span><span class="lineNoCov">          0 :         measurer.processBuffer (*fc.destBuffer, fc.bufferStartSample, fc.bufferNumSamples);</span></a>
-<a name="66"><span class="lineNum">      66 </span>            : </a>
-<a name="67"><span class="lineNum">      67 </span><span class="lineNoCov">          0 :     if (fc.bufferForMidiMessages != nullptr)</span></a>
-<a name="68"><span class="lineNum">      68 </span>            :     {</a>
-<a name="69"><span class="lineNum">      69 </span><span class="lineNoCov">          0 :         measurer.setShowMidi (showMidiActivity);</span></a>
-<a name="70"><span class="lineNum">      70 </span><span class="lineNoCov">          0 :         measurer.processMidi (*fc.bufferForMidiMessages, nullptr);</span></a>
-<a name="71"><span class="lineNum">      71 </span>            :     }</a>
-<a name="72"><span class="lineNum">      72 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="73"><span class="lineNum">      73 </span>            : </a>
-<a name="74"><span class="lineNum">      74 </span><span class="lineCov">       4464 : void LevelMeterPlugin::timerCallback()</span></a>
-<a name="75"><span class="lineNum">      75 </span>            : {</a>
-<a name="76"><span class="lineNum">      76 </span><span class="lineCov">       4464 :     if (controllerTrack &gt;= 0)</span></a>
-<a name="77"><span class="lineNum">      77 </span>            :     {</a>
-<a name="78"><span class="lineNum">      78 </span><span class="lineCov">       4464 :         auto&amp; ecm = engine.getExternalControllerManager();</span></a>
-<a name="79"><span class="lineNum">      79 </span>            : </a>
-<a name="80"><span class="lineNum">      80 </span><span class="lineCov">       4464 :         if (ecm.isAttachedToEdit (edit))</span></a>
-<a name="81"><span class="lineNum">      81 </span>            :         {</a>
-<a name="82"><span class="lineNum">      82 </span>            :             auto l = measurer.getLevelCache();</a>
-<a name="83"><span class="lineNum">      83 </span><span class="lineNoCov">          0 :             ecm.channelLevelChanged (controllerTrack, dbToGain (l.first), dbToGain (l.second));</span></a>
-<a name="84"><span class="lineNum">      84 </span>            :         }</a>
-<a name="85"><span class="lineNum">      85 </span>            :     }</a>
-<a name="86"><span class="lineNum">      86 </span><span class="lineCov">       4464 : }</span></a>
-<a name="87"><span class="lineNum">      87 </span>            : </a>
-<a name="88"><span class="lineNum">      88 </span><span class="lineNoCov">          0 : void LevelMeterPlugin::restorePluginStateFromValueTree (const juce::ValueTree&amp; v)</span></a>
-<a name="89"><span class="lineNum">      89 </span>            : {</a>
-<a name="90"><span class="lineNum">      90 </span><span class="lineNoCov">          0 :     juce::CachedValue&lt;bool&gt;* cvsBool[] = { &amp;showMidiActivity, nullptr };</span></a>
-<a name="91"><span class="lineNum">      91 </span><span class="lineNoCov">          0 :     copyPropertiesToNullTerminatedCachedValues (v, cvsBool);</span></a>
-<a name="92"><span class="lineNum">      92 </span>            : </a>
-<a name="93"><span class="lineNum">      93 </span><span class="lineNoCov">          0 :     for (auto p : getAutomatableParameters())</span></a>
-<a name="94"><span class="lineNum">      94 </span><span class="lineNoCov">          0 :         p-&gt;updateFromAttachedValue();</span></a>
-<a name="95"><span class="lineNum">      95 </span><span class="lineNoCov">          0 : }</span></a>
-<a name="96"><span class="lineNum">      96 </span>            : </a>
-<a name="97"><span class="lineNum">      97 </span>            : }} // namespace tracktion { inline namespace engine</a>
+<a name="43"><span class="lineNum">      43 </span>            :     TRACKTION_ASSERT_MESSAGE_THREAD</a>
+<a name="44"><span class="lineNum">      44 </span>            :     </a>
+<a name="45"><span class="lineNum">      45 </span><span class="lineCov">       2122 :     if (auto t = getOwnerTrack())</span></a>
+<a name="46"><span class="lineNum">      46 </span>            :     {</a>
+<a name="47"><span class="lineNum">      47 </span><span class="lineCov">       2122 :         controllerTrack = t-&gt;getIndexInEditTrackList();</span></a>
+<a name="48"><span class="lineNum">      48 </span><span class="lineCov">       2122 :         startTimer (1000 / 50);</span></a>
+<a name="49"><span class="lineNum">      49 </span><span class="lineCov">       2122 :         return;</span></a>
+<a name="50"><span class="lineNum">      50 </span>            :     }</a>
+<a name="51"><span class="lineNum">      51 </span>            : </a>
+<a name="52"><span class="lineNum">      52 </span><span class="lineNoCov">          0 :     controllerTrack = -1;</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineNoCov">          0 :     stopTimer();</span></a>
+<a name="54"><span class="lineNum">      54 </span>            : }</a>
+<a name="55"><span class="lineNum">      55 </span>            : </a>
+<a name="56"><span class="lineNum">      56 </span><span class="lineCov">        280 : void LevelMeterPlugin::deinitialise()</span></a>
+<a name="57"><span class="lineNum">      57 </span>            : {</a>
+<a name="58"><span class="lineNum">      58 </span><span class="lineCov">        280 :     measurer.clear();</span></a>
+<a name="59"><span class="lineNum">      59 </span><span class="lineCov">        280 :     stopTimer();</span></a>
+<a name="60"><span class="lineNum">      60 </span><span class="lineCov">        280 : }</span></a>
+<a name="61"><span class="lineNum">      61 </span>            : </a>
+<a name="62"><span class="lineNum">      62 </span><span class="lineNoCov">          0 : void LevelMeterPlugin::applyToBuffer (const PluginRenderContext&amp; fc)</span></a>
+<a name="63"><span class="lineNum">      63 </span>            : {</a>
+<a name="64"><span class="lineNum">      64 </span>            :     SCOPED_REALTIME_CHECK</a>
+<a name="65"><span class="lineNum">      65 </span>            : </a>
+<a name="66"><span class="lineNum">      66 </span><span class="lineNoCov">          0 :     if (fc.destBuffer != nullptr)</span></a>
+<a name="67"><span class="lineNum">      67 </span><span class="lineNoCov">          0 :         measurer.processBuffer (*fc.destBuffer, fc.bufferStartSample, fc.bufferNumSamples);</span></a>
+<a name="68"><span class="lineNum">      68 </span>            : </a>
+<a name="69"><span class="lineNum">      69 </span><span class="lineNoCov">          0 :     if (fc.bufferForMidiMessages != nullptr)</span></a>
+<a name="70"><span class="lineNum">      70 </span>            :     {</a>
+<a name="71"><span class="lineNum">      71 </span><span class="lineNoCov">          0 :         measurer.setShowMidi (showMidiActivity);</span></a>
+<a name="72"><span class="lineNum">      72 </span><span class="lineNoCov">          0 :         measurer.processMidi (*fc.bufferForMidiMessages, nullptr);</span></a>
+<a name="73"><span class="lineNum">      73 </span>            :     }</a>
+<a name="74"><span class="lineNum">      74 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="75"><span class="lineNum">      75 </span>            : </a>
+<a name="76"><span class="lineNum">      76 </span><span class="lineCov">       4486 : void LevelMeterPlugin::timerCallback()</span></a>
+<a name="77"><span class="lineNum">      77 </span>            : {</a>
+<a name="78"><span class="lineNum">      78 </span><span class="lineCov">       4486 :     if (controllerTrack &gt;= 0)</span></a>
+<a name="79"><span class="lineNum">      79 </span>            :     {</a>
+<a name="80"><span class="lineNum">      80 </span><span class="lineCov">       4486 :         auto&amp; ecm = engine.getExternalControllerManager();</span></a>
+<a name="81"><span class="lineNum">      81 </span>            : </a>
+<a name="82"><span class="lineNum">      82 </span><span class="lineCov">       4486 :         if (ecm.isAttachedToEdit (edit))</span></a>
+<a name="83"><span class="lineNum">      83 </span>            :         {</a>
+<a name="84"><span class="lineNum">      84 </span>            :             auto l = measurer.getLevelCache();</a>
+<a name="85"><span class="lineNum">      85 </span><span class="lineNoCov">          0 :             ecm.channelLevelChanged (controllerTrack, dbToGain (l.first), dbToGain (l.second));</span></a>
+<a name="86"><span class="lineNum">      86 </span>            :         }</a>
+<a name="87"><span class="lineNum">      87 </span>            :     }</a>
+<a name="88"><span class="lineNum">      88 </span><span class="lineCov">       4486 : }</span></a>
+<a name="89"><span class="lineNum">      89 </span>            : </a>
+<a name="90"><span class="lineNum">      90 </span><span class="lineNoCov">          0 : void LevelMeterPlugin::restorePluginStateFromValueTree (const juce::ValueTree&amp; v)</span></a>
+<a name="91"><span class="lineNum">      91 </span>            : {</a>
+<a name="92"><span class="lineNum">      92 </span><span class="lineNoCov">          0 :     juce::CachedValue&lt;bool&gt;* cvsBool[] = { &amp;showMidiActivity, nullptr };</span></a>
+<a name="93"><span class="lineNum">      93 </span><span class="lineNoCov">          0 :     copyPropertiesToNullTerminatedCachedValues (v, cvsBool);</span></a>
+<a name="94"><span class="lineNum">      94 </span>            : </a>
+<a name="95"><span class="lineNum">      95 </span><span class="lineNoCov">          0 :     for (auto p : getAutomatableParameters())</span></a>
+<a name="96"><span class="lineNum">      96 </span><span class="lineNoCov">          0 :         p-&gt;updateFromAttachedValue();</span></a>
+<a name="97"><span class="lineNum">      97 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="98"><span class="lineNum">      98 </span>            : </a>
+<a name="99"><span class="lineNum">      99 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

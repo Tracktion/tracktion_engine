@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-03-15 17:08:37</td>
+            <td class="headerValue">2023-03-15 18:40:38</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -126,13 +126,15 @@
 <a name="64"><span class="lineNum">      64 </span>            :     //==============================================================================</a>
 <a name="65"><span class="lineNum">      65 </span>            :     juce::CachedValue&lt;float&gt; lastVolumeBeforeMute;</a>
 <a name="66"><span class="lineNum">      66 </span>            :     float lastGain = 1.0f;</a>
-<a name="67"><span class="lineNum">      67 </span>            :     Track* ownerTrack = nullptr;</a>
-<a name="68"><span class="lineNum">      68 </span>            : </a>
-<a name="69"><span class="lineNum">      69 </span>            :     //==============================================================================</a>
-<a name="70"><span class="lineNum">      70 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AuxSendPlugin)</a>
-<a name="71"><span class="lineNum">      71 </span>            : };</a>
-<a name="72"><span class="lineNum">      72 </span>            : </a>
-<a name="73"><span class="lineNum">      73 </span>            : }} // namespace tracktion { inline namespace engine</a>
+<a name="67"><span class="lineNum">      67 </span>            : </a>
+<a name="68"><span class="lineNum">      68 </span>            :     juce::CriticalSection ownerTrackLock;</a>
+<a name="69"><span class="lineNum">      69 </span>            :     Track* ownerTrack = nullptr;</a>
+<a name="70"><span class="lineNum">      70 </span>            : </a>
+<a name="71"><span class="lineNum">      71 </span>            :     //==============================================================================</a>
+<a name="72"><span class="lineNum">      72 </span>            :     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AuxSendPlugin)</a>
+<a name="73"><span class="lineNum">      73 </span>            : };</a>
+<a name="74"><span class="lineNum">      74 </span>            : </a>
+<a name="75"><span class="lineNum">      75 </span>            : }} // namespace tracktion { inline namespace engine</a>
 </pre>
       </td>
     </tr>

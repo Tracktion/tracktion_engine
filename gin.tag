@@ -57278,13 +57278,6 @@
     </member>
     <member kind="function">
       <type>void</type>
-      <name>initialiseWithoutStopping</name>
-      <anchorfile>classtracktion_1_1engine_1_1RackInstance.html</anchorfile>
-      <anchor>ad69c965eaa332303a9e8a8b6e33f3600</anchor>
-      <arglist>(const PluginInitialisationInfo &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
       <name>deinitialise</name>
       <anchorfile>classtracktion_1_1engine_1_1RackInstance.html</anchorfile>
       <anchor>ad8456d9f6f9629bb63bd2a478e6287e8</anchor>

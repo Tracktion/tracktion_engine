@@ -880,8 +880,9 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Gives the plugin a chance to set itself up before being played. </p>
+<p>This won't be called concurrently with the process thread.</p>
 <p>The sample rate and the average block size - although the blocks won't always be the same, and may be bigger.</p>
-<p>Don't call this directly or the initialise count will become out of sync. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="classtracktion_1_1engine_1_1Plugin.html#a5bb8cc62dac5d4b18dd36c24d2da7246">baseClassInitialise</a> </dd></dl>
+<p>Don't call this directly or the initialise count will become out of sync. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="classtracktion_1_1engine_1_1Plugin.html#a5bb8cc62dac5d4b18dd36c24d2da7246">baseClassInitialise</a> [[ message_thread ]] </dd></dl>
 
 <p>Implements <a class="el" href="classtracktion_1_1engine_1_1Plugin.html#af8a5b5e4a604c15476b9fabf48b1e507">tracktion::engine::Plugin</a>.</p>
 
@@ -912,7 +913,7 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Tells the plugin that the audio graph has changed but the plugin isn't being re-initialised - i.e. </p>
-<p>it's being re-used, maybe by being moved to a different track, etc. </p>
+<p>it's being re-used, maybe by being moved to a different track, etc. This can be called concurrently whilst the plugin is being processed so implementations of it must be thread safe. [[ message_thread ]] </p>
 
 <p>Reimplemented from <a class="el" href="classtracktion_1_1engine_1_1Plugin.html#a66a312b5427eea68590258148b3a5448">tracktion::engine::Plugin</a>.</p>
 
@@ -1094,7 +1095,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Mar 15 2023 16:52:21 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Wed Mar 15 2023 18:24:22 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

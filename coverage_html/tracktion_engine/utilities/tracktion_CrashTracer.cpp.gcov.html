@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-03-15 17:08:37</td>
+            <td class="headerValue">2023-03-15 18:40:38</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">3</td>
@@ -82,7 +82,7 @@
 <a name="20"><span class="lineNum">      20 </span>            : </a>
 <a name="21"><span class="lineNum">      21 </span>            :     inline void push (CrashStackTracer* c)</a>
 <a name="22"><span class="lineNum">      22 </span>            :     {</a>
-<a name="23"><span class="lineNum">      23 </span><span class="lineCov">     595547 :         entries.add (c);</span></a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineCov">     600152 :         entries.add (c);</span></a>
 <a name="24"><span class="lineNum">      24 </span>            :     }</a>
 <a name="25"><span class="lineNum">      25 </span>            : </a>
 <a name="26"><span class="lineNum">      26 </span>            :     inline void pop (CrashStackTracer* c)</a>
@@ -205,17 +205,17 @@
 <a name="143"><span class="lineNum">     143 </span>            : </a>
 <a name="144"><span class="lineNum">     144 </span>            : static CrashStackTracer::CrashTraceThreads crashStack;</a>
 <a name="145"><span class="lineNum">     145 </span>            : </a>
-<a name="146"><span class="lineNum">     146 </span><span class="lineCov">     595547 : CrashStackTracer::CrashStackTracer (const char* f, const char* fn, int l, const char* plugin)</span></a>
-<a name="147"><span class="lineNum">     147 </span><span class="lineCov">     595547 :     : file (f), function (fn), pluginName (plugin), line (l), threadID (juce::Thread::getCurrentThreadId())</span></a>
+<a name="146"><span class="lineNum">     146 </span><span class="lineCov">     600152 : CrashStackTracer::CrashStackTracer (const char* f, const char* fn, int l, const char* plugin)</span></a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineCov">     600152 :     : file (f), function (fn), pluginName (plugin), line (l), threadID (juce::Thread::getCurrentThreadId())</span></a>
 <a name="148"><span class="lineNum">     148 </span>            : {</a>
 <a name="149"><span class="lineNum">     149 </span><span class="lineCov">        273 :     crashStack.push (this);</span></a>
 <a name="150"><span class="lineNum">     150 </span>            : </a>
 <a name="151"><span class="lineNum">     151 </span>            :    #if ! TRACKTION_LOG_ENABLED</a>
 <a name="152"><span class="lineNum">     152 </span>            :     juce::ignoreUnused (file, function, pluginName, line);</a>
 <a name="153"><span class="lineNum">     153 </span>            :    #endif</a>
-<a name="154"><span class="lineNum">     154 </span><span class="lineCov">     595275 : }</span></a>
+<a name="154"><span class="lineNum">     154 </span><span class="lineCov">     599879 : }</span></a>
 <a name="155"><span class="lineNum">     155 </span>            : </a>
-<a name="156"><span class="lineNum">     156 </span><span class="lineCov">     595275 : CrashStackTracer::~CrashStackTracer()</span></a>
+<a name="156"><span class="lineNum">     156 </span><span class="lineCov">     599879 : CrashStackTracer::~CrashStackTracer()</span></a>
 <a name="157"><span class="lineNum">     157 </span>            : {</a>
 <a name="158"><span class="lineNum">     158 </span>            :     crashStack.pop (this);</a>
 <a name="159"><span class="lineNum">     159 </span><span class="lineCov">        273 : }</span></a>
