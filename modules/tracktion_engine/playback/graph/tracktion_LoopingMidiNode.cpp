@@ -1133,11 +1133,16 @@ public:
           groove (groove_ != nullptr ? *groove_ : GrooveTemplate()),
           grooveStrength (grooveStrength_)
     {
+        assert (sequences.size() > 0);
     }
 
     void initialise (std::shared_ptr<ActiveNoteList> noteListToUse,
                      bool clipPropertiesHaveChanged, size_t lastSequencesHash)
     {
+        if (isInitialised())
+            return;
+
+        assert (sequences.size() > 0);
         shouldCreateMessagesForTime = clipPropertiesHaveChanged || noteListToUse == nullptr;
         activeNoteList = noteListToUse ? std::move (noteListToUse)
                                        : std::make_shared<ActiveNoteList>();
@@ -1161,6 +1166,7 @@ public:
                                                                 offset.inBeats());
 
         controllerMessagesScratchBuffer.ensureStorageAllocated (32);
+        initialised = true;
     }
 
     const std::shared_ptr<ActiveNoteList>& getActiveNoteList() const
@@ -1328,6 +1334,11 @@ public:
         return sequencesHash;
     }
 
+    bool isInitialised() const
+    {
+        return initialised;
+    }
+
 private:
     std::shared_ptr<ActiveNoteList> activeNoteList;
     std::unique_ptr<MidiGenerator> generator;
@@ -1339,6 +1350,7 @@ private:
     QuantisationType quantisation;
     GrooveTemplate groove;
     float grooveStrength = 0.0f;
+    bool initialised = false;
 
     bool shouldCreateMessagesForTime = false, shouldSendNoteOffsForNotesNoLongerPlaying = false;
     juce::Array<juce::MidiMessage> controllerMessagesScratchBuffer;
@@ -1398,6 +1410,13 @@ tracktion::graph::NodeProperties LoopingMidiNode::getNodeProperties()
 
 void LoopingMidiNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
+    if (generatorAndNoteList->isInitialised())
+    {
+        // We shouldn't be getting initialised twice if the graph to replace is only preset on subsequent times
+        jassert (info.nodeGraphToReplace == nullptr);
+        return;
+    }
+
     std::shared_ptr<ActiveNoteList> activeNoteList;
     bool clipPropertiesHaveChanged = false;
     size_t lastSequencesHash = 0;
