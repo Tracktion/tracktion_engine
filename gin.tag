@@ -16578,8 +16578,8 @@
       <type></type>
       <name>ClickGenerator</name>
       <anchorfile>classtracktion_1_1engine_1_1ClickGenerator.html</anchorfile>
-      <anchor>a752db747f8149f51106d52724176edf0</anchor>
-      <arglist>(Edit &amp;, bool isMidi, TimePosition endTime)</arglist>
+      <anchor>a7639771c42471a7454716c563a4250c5</anchor>
+      <arglist>(Edit &amp;, bool isMidi)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
