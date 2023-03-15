@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-03-14 19:35:40</td>
+            <td class="headerValue">2023-03-15 12:19:05</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">20</td>
@@ -145,10 +145,10 @@
 <a name="83"><span class="lineNum">      83 </span><span class="lineCov">        544 :     virtual bool isMarkerTrack() const                          { return false; }</span></a>
 <a name="84"><span class="lineNum">      84 </span>            : </a>
 <a name="85"><span class="lineNum">      85 </span>            :     /** Returns true if this is a TempoTrack. */</a>
-<a name="86"><span class="lineNum">      86 </span><span class="lineCov">       1128 :     virtual bool isTempoTrack() const                           { return false; }</span></a>
+<a name="86"><span class="lineNum">      86 </span><span class="lineCov">       1232 :     virtual bool isTempoTrack() const                           { return false; }</span></a>
 <a name="87"><span class="lineNum">      87 </span>            : </a>
 <a name="88"><span class="lineNum">      88 </span>            :     /** Returns true if this is a ChordTrack. */</a>
-<a name="89"><span class="lineNum">      89 </span><span class="lineCov">       1085 :     virtual bool isChordTrack() const                           { return false; }</span></a>
+<a name="89"><span class="lineNum">      89 </span><span class="lineCov">       1079 :     virtual bool isChordTrack() const                           { return false; }</span></a>
 <a name="90"><span class="lineNum">      90 </span>            : </a>
 <a name="91"><span class="lineNum">      91 </span>            :     /** Returns true if this is an ArrangerTrack. */</a>
 <a name="92"><span class="lineNum">      92 </span><span class="lineCov">        538 :     virtual bool isArrangerTrack() const                        { return false; }</span></a>
@@ -286,10 +286,10 @@
 <a name="224"><span class="lineNum">     224 </span>            :     juce::ValueTree getParentTrackTree() const;</a>
 <a name="225"><span class="lineNum">     225 </span>            : </a>
 <a name="226"><span class="lineNum">     226 </span>            :     /** Returns the parent Track if this is a nested track. */</a>
-<a name="227"><span class="lineNum">     227 </span><span class="lineCov">   15058556 :     Track* getParentTrack() const                               { return dynamic_cast&lt;Track*&gt; (cachedParentTrack.get()); }</span></a>
+<a name="227"><span class="lineNum">     227 </span><span class="lineCov">   15057157 :     Track* getParentTrack() const                               { return dynamic_cast&lt;Track*&gt; (cachedParentTrack.get()); }</span></a>
 <a name="228"><span class="lineNum">     228 </span>            : </a>
 <a name="229"><span class="lineNum">     229 </span>            :     /** Returns the parent FolderTrack if this is nested in one. */</a>
-<a name="230"><span class="lineNum">     230 </span><span class="lineCov">   15050088 :     FolderTrack* getParentFolderTrack() const                   { return getParentTrack() != nullptr ? cachedParentFolderTrack : nullptr; }</span></a>
+<a name="230"><span class="lineNum">     230 </span><span class="lineCov">   15048844 :     FolderTrack* getParentFolderTrack() const                   { return getParentTrack() != nullptr ? cachedParentFolderTrack : nullptr; }</span></a>
 <a name="231"><span class="lineNum">     231 </span>            : </a>
 <a name="232"><span class="lineNum">     232 </span>            :     /** Tests whether this is a child of a given Track. */</a>
 <a name="233"><span class="lineNum">     233 </span>            :     bool isAChildOf (const Track&amp; possibleParent) const;</a>
