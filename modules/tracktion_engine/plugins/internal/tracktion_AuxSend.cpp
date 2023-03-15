@@ -36,6 +36,8 @@ AuxSendPlugin::~AuxSendPlugin()
 
 bool AuxSendPlugin::shouldProcess()
 {
+    const juce::ScopedLock sl (ownerTrackLock);
+
     if (ownerTrack != nullptr)
     {
         // If this track gets disabled when muted,
@@ -46,6 +48,7 @@ bool AuxSendPlugin::shouldProcess()
 
         return ! ownerTrack->isMuted (true);
     }
+
     return true;
 }
 
@@ -80,7 +83,11 @@ void AuxSendPlugin::initialise (const PluginInitialisationInfo& info)
 
 void AuxSendPlugin::initialiseWithoutStopping (const PluginInitialisationInfo&)
 {
-    ownerTrack = getOwnerTrack();
+    TRACKTION_ASSERT_MESSAGE_THREAD
+    auto newOwnerTrack = getOwnerTrack();
+
+    const juce::ScopedLock sl (ownerTrackLock);
+    ownerTrack = newOwnerTrack;
 }
 
 void AuxSendPlugin::deinitialise()

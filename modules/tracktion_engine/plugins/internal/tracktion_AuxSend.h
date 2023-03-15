@@ -64,6 +64,8 @@ private:
     //==============================================================================
     juce::CachedValue<float> lastVolumeBeforeMute;
     float lastGain = 1.0f;
+
+    juce::CriticalSection ownerTrackLock;
     Track* ownerTrack = nullptr;
 
     //==============================================================================

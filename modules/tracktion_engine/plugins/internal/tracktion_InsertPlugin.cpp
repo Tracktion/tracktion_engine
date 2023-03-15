@@ -115,6 +115,7 @@ void InsertPlugin::initialise (const PluginInitialisationInfo& info)
 
 void InsertPlugin::initialiseWithoutStopping (const PluginInitialisationInfo& info)
 {
+    TRACKTION_ASSERT_MESSAGE_THREAD
     // This latency number is from trial and error, may need more testing
     latencySeconds = manualAdjustMs / 1000.0 + (double)info.blockSizeSamples / info.sampleRate;
 }

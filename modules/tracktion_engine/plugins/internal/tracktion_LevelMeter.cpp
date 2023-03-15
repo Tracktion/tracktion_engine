@@ -40,6 +40,8 @@ void LevelMeterPlugin::initialise (const PluginInitialisationInfo& info)
 
 void LevelMeterPlugin::initialiseWithoutStopping (const PluginInitialisationInfo&)
 {
+    TRACKTION_ASSERT_MESSAGE_THREAD
+    
     if (auto t = getOwnerTrack())
     {
         controllerTrack = t->getIndexInEditTrackList();
