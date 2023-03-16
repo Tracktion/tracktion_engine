@@ -194,6 +194,9 @@ ClipOwner::~ClipOwner() {}
 
 void ClipOwner::initialiseClipOwner (Edit& edit, juce::ValueTree clipParentState)
 {
+    if (clipList)
+        return;
+
     if (! edit.getUndoManager().isPerformingUndoRedo())
         ClipList::sortClips (clipParentState, &edit.getUndoManager());
 
