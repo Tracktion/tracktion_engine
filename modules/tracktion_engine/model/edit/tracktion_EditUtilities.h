@@ -234,6 +234,19 @@ juce::Array<MacroParameterElement*> getAllMacroParameterElements (const Edit&);
 
 
 //==============================================================================
+// Inputs/recording
+//==============================================================================
+/** Returns the default set of recording parameters.
+    This behaviour may not be desirable in which case it might make more sense
+    to just construct your own RecordingParameters and pass them to
+    InputDeviceInstance::prepareToRecord.
+*/
+InputDeviceInstance::RecordingParameters getDefaultRecordingParameters (const EditPlaybackContext&,
+                                                                        TimePosition playStart,
+                                                                        TimePosition punchIn);
+
+
+//==============================================================================
 /** @internal */
 template<typename TrackType>
 inline juce::Array<TrackType*> getTracksOfType (const Edit& edit, bool recursive)

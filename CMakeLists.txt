@@ -12,7 +12,3 @@ project(
 )
 
 add_subdirectory(modules)
-
-if (TRACKTION_BUILD_EXAMPLES)
-    add_subdirectory(examples)
-endif()

@@ -65,7 +65,7 @@ public:
 
     //==============================================================================
     TimeDuration getSourceLength() const override       { return editSnapshot == nullptr ? 0_td : editSnapshot->getLength(); }
-    bool usesSourceFile() override                      { return false; }
+    bool usesSourceFile() const override                { return false; }
     void sourceMediaChanged() override;
     void changed() override;
 

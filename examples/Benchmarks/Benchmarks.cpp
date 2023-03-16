@@ -9,4 +9,4 @@
 */
 
 #include <JuceHeader.h>
-#include "../Benchmarks.h"
+#include "Benchmarks.h"

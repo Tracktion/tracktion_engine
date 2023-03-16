@@ -35,7 +35,7 @@ public:
     //==============================================================================
     static const char* xmlTypeName;
 
-    juce::String getName() override                     { return TRANS("VCA"); }
+    juce::String getName() const override               { return TRANS("VCA"); }
     juce::String getSelectableDescription() override    { return getName(); }
     juce::String getPluginType() override               { return xmlTypeName; }
     bool canBeAddedToClip() override                    { return false; }

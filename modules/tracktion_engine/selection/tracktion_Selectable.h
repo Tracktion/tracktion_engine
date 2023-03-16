@@ -237,4 +237,57 @@ private:
     mutable juce::Array<SelectableClass*> classes;
 };
 
+
+//==============================================================================
+/** Holds a pointer to some type of Selectable, which automatically becomes null if
+    the selectable is deleted.
+
+    The SelectableType template parameter must be Selectable, or some subclass of Selectable.
+
+    You may also want to use a juce::WeakReference<Selectable> object for the same purpose.
+    @see SelectablegetWeakRef()
+*/
+template<typename SelectableType>
+class SafeSelectable
+{
+public:
+    /** Creates a null SafeSelectable. */
+    SafeSelectable() = default;
+
+    /** Creates a SafeSelectable that points at the given selectable. */
+    SafeSelectable (SelectableType& selectable)                     : weakRef (&selectable) {}
+
+    /** Creates a copy of another SafeSelectable. */
+    SafeSelectable (const SafeSelectable& other) noexcept           : weakRef (other.weakRef) {}
+
+    /** Copies another pointer to this one. */
+    SafeSelectable& operator= (const SafeSelectable& other)         { weakRef = other.weakRef; return *this; }
+
+    /** Copies another pointer to this one. */
+    SafeSelectable& operator= (SelectableType* newSelectable)       { weakRef = newSelectable; return *this; }
+
+    /** Returns the selectable that this pointer refers to, or null if the selectable no longer exists. */
+    SelectableType* get() const noexcept                            { return dynamic_cast<SelectableType*> (weakRef.get()); }
+
+    /** Returns the selectable that this pointer refers to, or null if the selectable no longer exists. */
+    operator SelectableType*() const noexcept                       { return get(); }
+
+    /** Returns the selectable that this pointer refers to, or null if the selectable no longer exists. */
+    SelectableType* operator->() const noexcept                     { return get(); }
+
+    bool operator== (SelectableType* selectable) const noexcept     { return weakRef == selectable; }
+    bool operator!= (SelectableType* selectable) const noexcept     { return weakRef != selectable; }
+
+private:
+    juce::WeakReference<Selectable> weakRef;
+};
+
+/** Creates a SafeSelectable for a given selectable insatnce. */
+template<typename SelectableType>
+SafeSelectable<SelectableType> makeSafeRef (SelectableType& selectable)
+{
+    return SafeSelectable<SelectableType> (selectable);
+}
+
+
 }} // namespace tracktion { inline namespace engine

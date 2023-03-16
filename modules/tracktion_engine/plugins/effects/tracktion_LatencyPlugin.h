@@ -25,7 +25,7 @@ public:
     static const char* getPluginName()                      { return NEEDS_TRANS("Latency Tester"); }
     static const char* xmlTypeName;
 
-    juce::String getName() override                         { return getPluginName(); }
+    juce::String getName() const override                   { return getPluginName(); }
     juce::String getPluginType() override                   { return xmlTypeName; }
     juce::String getSelectableDescription() override        { return getName(); }
 

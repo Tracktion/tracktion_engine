@@ -10,10 +10,10 @@
 
 #pragma once
 
-#include "common/Utilities.h"
-#include "common/Components.h"
-#include "common/PlaybackDemoAudio.h"
-#include "common/IRData.h"
+#include "../common/Utilities.h"
+#include "../common/Components.h"
+#include "../common/PlaybackDemoAudio.h"
+#include "../common/IRData.h"
 
 // Include Slider Parameter binding classes and functions
 #include "DistortionEffectDemo.h"

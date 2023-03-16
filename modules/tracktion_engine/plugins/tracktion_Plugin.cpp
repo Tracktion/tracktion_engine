@@ -447,6 +447,7 @@ void Plugin::reset()
 //==============================================================================
 void Plugin::baseClassInitialise (const PluginInitialisationInfo& info)
 {
+    TRACKTION_ASSERT_MESSAGE_THREAD
     const bool sampleRateOrBlockSizeChanged = (sampleRate != info.sampleRate) || (blockSizeSamples != info.blockSizeSamples);
     bool isUpdatingWithoutStopping = false;
     sampleRate = info.sampleRate;
@@ -459,13 +460,18 @@ void Plugin::baseClassInitialise (const PluginInitialisationInfo& info)
     }
 
     {
-        auto& dm = engine.getDeviceManager();
-        const juce::ScopedLock sl (dm.deviceManager.getAudioCallbackLock());
-
         if (initialiseCount++ == 0 || sampleRateOrBlockSizeChanged)
         {
             CRASH_TRACER
+           #if JUCE_DEBUG
+            isInitialisingFlag = true;
+           #endif
+
             initialise (info);
+
+           #if JUCE_DEBUG
+            isInitialisingFlag = true;
+           #endif
         }
         else
         {
@@ -473,6 +479,10 @@ void Plugin::baseClassInitialise (const PluginInitialisationInfo& info)
             initialiseWithoutStopping (info);
             isUpdatingWithoutStopping = true;
         }
+
+       #if JUCE_DEBUG
+        isInitialisingFlag = false;
+       #endif
     }
 
     {
@@ -658,6 +668,9 @@ void Plugin::applyToBufferWithAutomation (const PluginRenderContext& pc)
 
     auto& arm = edit.getAutomationRecordManager();
     jassert (initialiseCount > 0);
+   #if JUCE_DEBUG
+    jassert (! isInitialisingFlag);
+   #endif
 
     updateLastPlaybackTime();
 

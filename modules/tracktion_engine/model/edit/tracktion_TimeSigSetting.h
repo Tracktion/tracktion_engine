@@ -39,7 +39,7 @@ public:
     Track* getTrack() const override;
 
     //==============================================================================
-    juce::String getName() override;
+    juce::String getName() const override;
     juce::String getSelectableDescription() override;
 
     //==============================================================================

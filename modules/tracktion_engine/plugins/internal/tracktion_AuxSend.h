@@ -34,7 +34,7 @@ public:
     static const char* getPluginName()              { return NEEDS_TRANS("Aux Send"); }
     static const char* xmlTypeName;
 
-    juce::String getName() override;
+    juce::String getName() const override;
     juce::String getShortName (int suggestedMaxLength) override;
     juce::String getPluginType() override           { return xmlTypeName; }
 
@@ -64,6 +64,8 @@ private:
     //==============================================================================
     juce::CachedValue<float> lastVolumeBeforeMute;
     float lastGain = 1.0f;
+
+    juce::CriticalSection ownerTrackLock;
     Track* ownerTrack = nullptr;
 
     //==============================================================================

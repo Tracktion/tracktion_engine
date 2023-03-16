@@ -17,7 +17,7 @@ namespace combining_node_utils
 {
     // how much extra time to give a track before it gets cut off - to allow for plugins
     // that ring on.
-    static constexpr double decayTimeAllowance = 5.0;
+    static constexpr BeatDuration decayTimeAllowance { 8_bd };
     static constexpr int secondsPerGroup = 8;
 
     static inline constexpr int timeToGroupIndex (TimePosition t) noexcept
@@ -164,6 +164,7 @@ void CombiningNode::addInput (std::unique_ptr<Node> input, BeatRange beatRange)
         if (inputs.getUnchecked (i)->time.getStart() >= beatRange.getStart())
             break;
 
+    beatRange = BeatRange (beatRange.getStart(), beatRange.getLength() + combining_node_utils::decayTimeAllowance);
     auto tan = inputs.insert (i, new TimedNode (std::move (input), beatRange));
 
     // add the node to any groups it's near to.

@@ -26,7 +26,6 @@ public:
         params.sampleRate = 44100.0;
         params.blockSize = 256;
         params.inputChannels = 16;
-        params.fixedBlockSize = true;
         runSynchronisationTest (params);
 
         params.sampleRate = 48000.0;

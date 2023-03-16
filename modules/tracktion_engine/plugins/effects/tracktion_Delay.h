@@ -61,7 +61,7 @@ public:
     static const char* getPluginName()                  { return NEEDS_TRANS("Delay"); }
     static const char* xmlTypeName;
 
-    juce::String getName() override                     { return TRANS("Delay"); }
+    juce::String getName() const override               { return TRANS("Delay"); }
     juce::String getPluginType() override               { return xmlTypeName; }
     juce::String getSelectableDescription() override    { return TRANS("Delay Plugin"); }
     bool needsConstantBufferSize() override             { return false; }

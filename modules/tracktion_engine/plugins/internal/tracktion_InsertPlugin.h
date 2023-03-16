@@ -28,7 +28,7 @@ public:
     static const char* getPluginName()          { return NEEDS_TRANS("Insert"); }
     static const char* xmlTypeName;
 
-    juce::String getName() override;
+    juce::String getName() const override;
     juce::String getPluginType() override;
     juce::String getShortName (int) override;
     double getLatencySeconds() override;
@@ -78,7 +78,7 @@ private:
     MidiMessageArray sendMidiBuffer, returnMidiBuffer;
     juce::CriticalSection bufferLock;
 
-    double latencySeconds = 0.0;
+    std::atomic<double> latencySeconds { 0.0 };
     DeviceType sendDeviceType = noDevice, returnDeviceType = noDevice;
 
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;

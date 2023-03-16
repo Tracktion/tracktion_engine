@@ -4,6 +4,20 @@
 
 
 ### Change
+Removed the fixed buffer size requirement in HostedAudioDeviceInterface for using the Engine inside a plugin.
+
+#### Possible Issues
+You may need to fix code which set the value of this member.
+
+#### Workaround
+None.
+
+#### Rationale
+With the audio playback rewite it's no longer required to have a fixed block size so we don't need to add a block of latency when using the Engine inside a plugin.
+
+---
+
+### Change
 Removed the TracktionThumbnail class.
 
 #### Possible Issues

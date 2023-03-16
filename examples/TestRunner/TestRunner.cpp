@@ -9,4 +9,4 @@
 */
 
 #include <JuceHeader.h>
-#include "../TestRunner.h"
+#include "TestRunner.h"

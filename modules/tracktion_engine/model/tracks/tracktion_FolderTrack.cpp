@@ -60,7 +60,7 @@ void FolderTrack::sanityCheckName()
     }
 }
 
-juce::String FolderTrack::getName()
+juce::String FolderTrack::getName() const
 {
     auto n = Track::getName();
 
@@ -71,7 +71,7 @@ juce::String FolderTrack::getName()
     return n;
 }
 
-int FolderTrack::getFolderTrackNumber() noexcept
+int FolderTrack::getFolderTrackNumber() const noexcept
 {
     int result = 1;
 

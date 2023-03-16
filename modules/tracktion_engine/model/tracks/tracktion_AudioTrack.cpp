@@ -195,7 +195,7 @@ void AudioTrack::sanityCheckName()
     if (midiInputDevice != nullptr) midiInputDevice->setAlias (devName);
 }
 
-juce::String AudioTrack::getName()
+juce::String AudioTrack::getName() const
 {
     auto n = ClipTrack::getName();
 
@@ -205,10 +205,22 @@ juce::String AudioTrack::getName()
     return n;
 }
 
-int AudioTrack::getAudioTrackNumber() noexcept
+int AudioTrack::getAudioTrackNumber() const noexcept
 {
-    return getAudioTracks (edit).indexOf (this) + 1;
-}
+    int result = 1;
+
+    edit.visitAllTracksRecursive ([&] (Track& t)
+    {
+        if (this == &t)
+            return false;
+
+        if (t.isAudioTrack())
+            ++result;
+
+        return true;
+    });
+
+    return result;}
 
 VolumeAndPanPlugin* AudioTrack::getVolumePlugin()     { return pluginList.getPluginsOfType<VolumeAndPanPlugin>().getLast(); }
 LevelMeterPlugin* AudioTrack::getLevelMeterPlugin()   { return pluginList.getPluginsOfType<LevelMeterPlugin>().getLast(); }

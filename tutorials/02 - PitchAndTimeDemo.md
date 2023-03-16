@@ -4,7 +4,7 @@ In this tutorial, we're going to build a quick retune and tempo-adjust app which
 
 
 ## PitchAndTimeComponent.h
-If you open the PitchAndTimeComponent.h file you'll see it's a JUCE PIP. You can use the Projucer to create a project to build the PIP or use the script in `/tests` to generate one automatically.
+Use the script in `/tests` to generate the `DemoRunner` example project then open the `PitchAndTimeComponent.h` file.
 
 #### PitchAndTimeComponent Class
 The PitchAndTimeComponent is defined similarly to the PlaybackDemo class.

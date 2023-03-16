@@ -49,7 +49,7 @@ public:
     //==============================================================================
     static const char* xmlTypeName;
 
-    juce::String getName() override                         { return TRANS("Volume & Pan Plugin"); }
+    juce::String getName() const override                   { return TRANS("Volume & Pan Plugin"); }
     juce::String getPluginType() override                   { return xmlTypeName; }
     juce::String getShortName (int) override                { return "VolPan"; }
     juce::String getSelectableDescription() override        { return getName(); }
@@ -75,6 +75,7 @@ public:
 private:
     float lastGainL = 0.0f, lastGainR = 0.0f, lastGainS = 0.0f, lastVolumeBeforeMute = 0.0f;
 
+    juce::CriticalSection vcaTrackLock;
     juce::ReferenceCountedObjectPtr<AudioTrack> vcaTrack;
     const bool isMasterVolume = false;
 

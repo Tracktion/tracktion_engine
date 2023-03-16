@@ -670,6 +670,11 @@ std::vector<std::unique_ptr<TransportControl::ScopedContextAllocator>> Transport
     return restartHandles;
 }
 
+void TransportControl::callRecordingAboutToStopListeners (InputDeviceInstance& in)
+{
+    listeners.call (&Listener::recordingAboutToStop, in);
+}
+
 void TransportControl::callRecordingFinishedListeners (InputDeviceInstance& in, Clip::Array recordedClips)
 {
     listeners.call (&Listener::recordingFinished, in, recordedClips);

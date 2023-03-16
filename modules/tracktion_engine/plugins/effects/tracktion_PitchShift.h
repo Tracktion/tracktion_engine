@@ -24,7 +24,7 @@ public:
     //==============================================================================
     static const char* xmlTypeName;
 
-    juce::String getName() override             { return TRANS("Pitch Shifter"); }
+    juce::String getName() const override       { return TRANS("Pitch Shifter"); }
     juce::String getPluginType() override       { return xmlTypeName; }
     juce::String getShortName (int) override    { return TRANS("Pitch"); }
     bool needsConstantBufferSize() override     { return false; }

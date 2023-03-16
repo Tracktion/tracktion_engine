@@ -11,8 +11,8 @@
 #pragma once
 
 #include "../common/Utilities.h"
-#include "DistortionEffectDemo.h"
 #include "../common/PlaybackDemoAudio.h"
+#include "DistortionEffectDemo.h"
 #include "BinaryData.h"
 
 using namespace tracktion_engine;

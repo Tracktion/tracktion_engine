@@ -27,7 +27,7 @@
 
 #pragma once
 
-#include "common/Utilities.h"
+#include "../common/Utilities.h"
 
 using namespace tracktion::literals;
 using namespace std::literals;

@@ -72,7 +72,7 @@ public:
     /** @internal */
     bool isMidi() const override                                { return false; }
     /** @internal */
-    bool usesSourceFile() override                              { return true; }
+    bool usesSourceFile() const override                        { return true; }
 
     /** @internal */
     TimeDuration getSourceLength() const override;

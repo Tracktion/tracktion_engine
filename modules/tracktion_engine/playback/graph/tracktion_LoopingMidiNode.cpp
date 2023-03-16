@@ -700,8 +700,9 @@ struct EventGenerator   : public MidiGenerator
                                 bool useMPEChannelMode, MidiMessageArray::MPESourceID midiSourceID,
                                 juce::Array<juce::MidiMessage>& controllerMessagesScratchBuffer) override
     {
-        thread_local MidiMessageArray scratchBuffer;
+        thread_local MidiMessageArray scratchBuffer, cleanedBufferToMerge;
         scratchBuffer.clear();
+        cleanedBufferToMerge.clear();
 
         MidiHelpers::createMessagesForTime (scratchBuffer,
                                             sequence, noteOffMap,
@@ -715,12 +716,28 @@ struct EventGenerator   : public MidiGenerator
         for (const auto& e : scratchBuffer)
         {
             if (e.isNoteOn())
-                activeNoteList.startNote (e.getChannel(), e.getNoteNumber());
+            {
+                if (! activeNoteList.isNoteActive (e.getChannel(), e.getNoteNumber()))
+                {
+                    cleanedBufferToMerge.add (e);
+                    activeNoteList.startNote (e.getChannel(), e.getNoteNumber());
+                }
+            }
             else if (e.isNoteOff())
-                activeNoteList.clearNote (e.getChannel(), e.getNoteNumber());
+            {
+                if (activeNoteList.isNoteActive (e.getChannel(), e.getNoteNumber()))
+                {
+                    activeNoteList.clearNote (e.getChannel(), e.getNoteNumber());
+                    cleanedBufferToMerge.add (e);
+                }
+            }
+            else
+            {
+                cleanedBufferToMerge.add (e);
+            }
         }
 
-        destBuffer.mergeFrom (scratchBuffer);
+        destBuffer.mergeFrom (cleanedBufferToMerge);
     }
 
     ActiveNoteList getNotesOnAtTime (SequenceBeatPosition time, juce::Range<int> channelNumbers, LiveClipLevel& clipLevel) override
@@ -854,7 +871,7 @@ public:
         // - Adding the offset timestamp to get Edit times
         // - Applying the quantisation
         // - Applying the groove
-        // - Sortign so events are in order
+        // - Sorting so events are in order
         // - Setting the sequence to be iterated
         // - Updating the offset used
 
@@ -1116,13 +1133,17 @@ public:
           groove (groove_ != nullptr ? *groove_ : GrooveTemplate()),
           grooveStrength (grooveStrength_)
     {
+        assert (sequences.size() > 0);
     }
 
     void initialise (std::shared_ptr<ActiveNoteList> noteListToUse,
-                     bool sendNoteOffs, size_t lastSequencesHash)
+                     bool clipPropertiesHaveChanged, size_t lastSequencesHash)
     {
-        shouldSendNoteOffs = sendNoteOffs;
-        shouldCreateMessagesForTime = shouldSendNoteOffs || noteListToUse == nullptr;
+        if (isInitialised())
+            return;
+
+        assert (sequences.size() > 0);
+        shouldCreateMessagesForTime = clipPropertiesHaveChanged || noteListToUse == nullptr;
         activeNoteList = noteListToUse ? std::move (noteListToUse)
                                        : std::make_shared<ActiveNoteList>();
 
@@ -1134,7 +1155,7 @@ public:
 
         sequencesHash = std::hash<std::vector<juce::MidiMessageSequence>>{} (sequences);
 
-        if (sequencesHash != lastSequencesHash)
+        if (sequencesHash != lastSequencesHash || clipPropertiesHaveChanged)
             shouldSendNoteOffsForNotesNoLongerPlaying = true;
 
         auto cachingGenerator = std::make_unique<CachingMidiEventGenerator> (std::move (sequences),
@@ -1145,6 +1166,7 @@ public:
                                                                 offset.inBeats());
 
         controllerMessagesScratchBuffer.ensureStorageAllocated (32);
+        initialised = true;
     }
 
     const std::shared_ptr<ActiveNoteList>& getActiveNoteList() const
@@ -1169,8 +1191,9 @@ public:
         const auto volScale = clipLevel.getGain();
         const auto isLastBlockOfClip = sectionEditBeatRange.containsInclusive (editRange.getEnd());
         const double beatDurationOfOneSample = sectionEditBeatRange.getLength().inBeats() / numSamples;
-        const auto timeDurationOfOneSample = sectionEditTimeRange.getLength() / numSamples;
-        assert (timeDurationOfOneSample >= 10us);
+        const auto timePositionOfLastSample = sectionEditTimeRange.getLength() > 0_td
+                                                ? (sectionEditTimeRange.getLength() - sectionEditTimeRange.getLength() / numSamples).inSeconds()
+                                                : 0.0;
 
         const auto clipIntersection = sectionEditBeatRange.getIntersectionWith (editRange);
 
@@ -1180,21 +1203,10 @@ public:
                 MidiHelpers::createNoteOffs (*activeNoteList,
                                              destBuffer,
                                              midiSourceID,
-                                             (sectionEditTimeRange.getLength() - timeDurationOfOneSample).inSeconds(),
+                                             timePositionOfLastSample,
                                              isPlaying);
 
             return;
-        }
-
-        if (shouldSendNoteOffs)
-        {
-            MidiHelpers::createNoteOffs (*activeNoteList,
-                                         destBuffer,
-                                         midiSourceID,
-                                         (sectionEditTimeRange.getLength() - timeDurationOfOneSample).inSeconds(),
-                                         isPlaying);
-            shouldSendNoteOffs = false;
-            shouldCreateMessagesForTime = true;
         }
 
         // This turns notes off that are no longer playing due to a change in the sequence
@@ -1220,17 +1232,26 @@ public:
         }
 
         if (! isContiguousWithPreviousBlock
-            || blockStartBeatRelativeToClip <= 0.00001_bd
-            || shouldCreateMessagesForTime)
+            || blockStartBeatRelativeToClip <= 0.00001_bd)
         {
-            generator->createMessagesForTime (destBuffer, sectionEditBeatRange.getStart().inBeats(),
+            MidiHelpers::createNoteOffs (*activeNoteList,
+                                         destBuffer,
+                                         midiSourceID,
+                                         timePositionOfLastSample,
+                                         isPlaying);
+            shouldCreateMessagesForTime = true;
+        }
+
+        if (shouldCreateMessagesForTime)
+        {
+            generator->createMessagesForTime (destBuffer, clipIntersection.getStart().inBeats(),
                                               *activeNoteList,
                                               channelNumbers, clipLevel, useMPEChannelMode, midiSourceID,
                                               controllerMessagesScratchBuffer);
             shouldCreateMessagesForTime = false;
 
             // Ensure generator is initialised
-            generator->setTime (sectionEditBeatRange.getStart().inBeats());
+            generator->setTime (clipIntersection.getStart().inBeats());
         }
 
         // Iterate notes in blocks
@@ -1259,7 +1280,7 @@ public:
                 blockBeatPosition = std::max (blockBeatPosition, 0.0);
 
                 // Note-offs that are on the end boundry need to be nudged back by 1 sample so they're not lost (which leads to stuck notes)
-                if (e.isNoteOff() && juce::isWithin (editBeatPosition, sectionEditBeatRange.getEnd().inBeats(), beatDurationOfOneSample))
+                if (e.isNoteOff() && juce::isWithin (editBeatPosition, clipIntersection.getEnd().inBeats(), beatDurationOfOneSample))
                     blockBeatPosition = blockBeatPosition - beatDurationOfOneSample;
 
                 e.multiplyVelocity (volScale);
@@ -1280,7 +1301,7 @@ public:
             MidiHelpers::createNoteOffs (*activeNoteList,
                                          destBuffer,
                                          midiSourceID,
-                                         (sectionEditTimeRange.getLength() - timeDurationOfOneSample).inSeconds(),
+                                         timePositionOfLastSample,
                                          isPlaying);
 
         if (isLastBlockOfClip)
@@ -1313,6 +1334,11 @@ public:
         return sequencesHash;
     }
 
+    bool isInitialised() const
+    {
+        return initialised;
+    }
+
 private:
     std::shared_ptr<ActiveNoteList> activeNoteList;
     std::unique_ptr<MidiGenerator> generator;
@@ -1324,8 +1350,9 @@ private:
     QuantisationType quantisation;
     GrooveTemplate groove;
     float grooveStrength = 0.0f;
+    bool initialised = false;
 
-    bool shouldCreateMessagesForTime = false, shouldSendNoteOffs = false, shouldSendNoteOffsForNotesNoLongerPlaying = false;
+    bool shouldCreateMessagesForTime = false, shouldSendNoteOffsForNotesNoLongerPlaying = false;
     juce::Array<juce::MidiMessage> controllerMessagesScratchBuffer;
 };
 
@@ -1383,19 +1410,26 @@ tracktion::graph::NodeProperties LoopingMidiNode::getNodeProperties()
 
 void LoopingMidiNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
+    if (generatorAndNoteList->isInitialised())
+    {
+        // We shouldn't be getting initialised twice if the graph to replace is only preset on subsequent times
+        jassert (info.nodeGraphToReplace == nullptr);
+        return;
+    }
+
     std::shared_ptr<ActiveNoteList> activeNoteList;
-    bool sendNoteOffEvents = false;
+    bool clipPropertiesHaveChanged = false;
     size_t lastSequencesHash = 0;
 
     if (auto oldNode = findNodeWithIDIfNonZero<LoopingMidiNode> (info.nodeGraphToReplace, getNodeProperties().nodeID))
     {
         midiSourceID = oldNode->midiSourceID;
         activeNoteList = oldNode->generatorAndNoteList->getActiveNoteList();
-        sendNoteOffEvents = ! generatorAndNoteList->hasSameContentAs (*oldNode->generatorAndNoteList);
+        clipPropertiesHaveChanged = ! generatorAndNoteList->hasSameContentAs (*oldNode->generatorAndNoteList);
         lastSequencesHash = oldNode->generatorAndNoteList->getSequencesHash();
     }
 
-    generatorAndNoteList->initialise (activeNoteList, sendNoteOffEvents, lastSequencesHash);
+    generatorAndNoteList->initialise (activeNoteList, clipPropertiesHaveChanged, lastSequencesHash);
 }
 
 bool LoopingMidiNode::isReadyToProcess()
@@ -1406,11 +1440,6 @@ bool LoopingMidiNode::isReadyToProcess()
 void LoopingMidiNode::process (ProcessContext& pc)
 {
     SCOPED_REALTIME_CHECK
-    const auto timelineRange = getTimelineSampleRange();
-
-    if (timelineRange.isEmpty())
-        return;
-
     if (shouldBeMutedDelegate && shouldBeMutedDelegate())
         return;
 

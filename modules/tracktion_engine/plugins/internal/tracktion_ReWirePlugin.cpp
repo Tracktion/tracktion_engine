@@ -1075,7 +1075,7 @@ void ReWirePlugin::handleAsyncUpdate()
     initialiseFully();
 }
 
-juce::String ReWirePlugin::getName()
+juce::String ReWirePlugin::getName() const
 {
     if (device != nullptr)
         return currentDeviceName;

@@ -63,7 +63,7 @@ public:
 
     //==============================================================================
     /** @internal */
-    juce::String getName() override;
+    juce::String getName() const override;
     /** @internal */
     juce::String getShortName (int /*suggestedLength*/) override;
     /** @internal */

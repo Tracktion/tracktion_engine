@@ -57,7 +57,7 @@ set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
     CXX_VISIBILITY_PRESET hidden)
 
 set(SourceFiles
-    ../${CMAKE_PROJECT_NAME}.h
+    ${CMAKE_PROJECT_NAME}.h
     ${CMAKE_PROJECT_NAME}.cpp)
 
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE ${SourceFiles})

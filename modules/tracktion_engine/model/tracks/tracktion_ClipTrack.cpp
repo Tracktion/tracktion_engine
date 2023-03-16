@@ -419,7 +419,7 @@ void ClipTrack::deleteRegionOfClip (Clip::Ptr c, TimeRange range, SelectionManag
 
 Clip* ClipTrack::insertNewClip (TrackItem::Type type, const juce::String& name, TimeRange pos, SelectionManager* sm)
 {
-    return insertNewClip (type, name, { pos, TimeDuration() }, sm);
+    return insertNewClip (type, name, { pos, 0_td }, sm);
 }
 
 Clip* ClipTrack::insertNewClip (TrackItem::Type type, const juce::String& name, ClipPosition position, SelectionManager* sm)

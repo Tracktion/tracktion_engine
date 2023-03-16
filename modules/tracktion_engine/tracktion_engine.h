@@ -510,7 +510,6 @@ namespace tracktion { inline namespace engine
 #include "audio_files/tracktion_AudioFile.h"
 #include "model/edit/tracktion_SourceFileReference.h"
 #include "model/clips/tracktion_Clip.h"
-#include "model/edit/tracktion_EditUtilities.h"
 
 #include "utilities/tracktion_EngineBehaviour.h"
 #include "utilities/tracktion_Pitch.h"
@@ -595,6 +594,8 @@ namespace tracktion { inline namespace engine
 #include "playback/devices/tracktion_MidiOutputDevice.h"
 #include "playback/devices/tracktion_WaveInputDevice.h"
 #include "playback/devices/tracktion_WaveOutputDevice.h"
+
+#include "model/edit/tracktion_EditUtilities.h"
 
 #if JUCE_ANDROID
  #include "playback/tracktion_ScopedSteadyLoad.h"

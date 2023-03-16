@@ -73,7 +73,7 @@ ClipPosition TimeSigSetting::getPosition() const
     return { { s, s + TimeDuration::fromSeconds (1.0) }, TimeDuration() };
 }
 
-juce::String TimeSigSetting::getName()
+juce::String TimeSigSetting::getName() const
 {
     return getStringTimeSig();
 }

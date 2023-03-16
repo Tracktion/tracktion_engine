@@ -587,9 +587,6 @@ void SmartThumbnail::releaseFile()
 
 void SmartThumbnail::createThumbnailReader()
 {
-    // this breaks thumbnails in 64-bit mode
-    // setReader (new CacheAudioFormatReader (file), file.getHash());
-
     if (enabled)
     {
         // This hashing takes in to account the type of the thumb to avoid clashes if
@@ -599,6 +596,9 @@ void SmartThumbnail::createThumbnailReader()
         const auto thumbTypeHashCode = std::hash<std::string>{} (typeid (thumbRef).name());
         const auto hashCode = static_cast<juce::int64> (hash ((size_t) file.getHash(), thumbTypeHashCode));
 
+        // this breaks thumbnails in 64-bit mode
+        //setReader (new CacheAudioFormatReader (file), hashCode);
+        
         setReader (AudioFileUtils::createReaderFor (engine, file.getFile()), hashCode);
         thumbnailIsInvalid = false;
     }

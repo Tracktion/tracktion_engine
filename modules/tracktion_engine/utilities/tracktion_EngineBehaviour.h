@@ -216,6 +216,9 @@ public:
     /** Returns the defaults to be applied to new clips. */
     virtual ClipDefaults getClipDefaults()                                          { return {}; }
 
+    /** Returns the defaults to be applied to new clips. */
+    virtual void newClipAdded (Clip&, [[ maybe_unused ]] bool fromRecording)        {}
+
     struct ControlSurfaces
     {
         bool mackieMCU = true;

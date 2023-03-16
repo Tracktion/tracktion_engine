@@ -55,7 +55,7 @@ public:
 
     //==============================================================================
     /** Returns the name of the Track. */
-    juce::String getName() override                             { return trackName; }
+    juce::String getName() const override                       { return trackName; }
 
     /** Sets the name of the Track. */
     void setName (const juce::String&);

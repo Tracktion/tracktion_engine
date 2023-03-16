@@ -138,7 +138,7 @@ juce::String RackInstance::getTooltip()
 
 const char* RackInstance::xmlTypeName = "rack";
 
-juce::String RackInstance::getName()
+juce::String RackInstance::getName() const
 {
     return type != nullptr ? type->rackName
                            : TRANS("Rack type missing!");
@@ -291,17 +291,6 @@ void RackInstance::initialise (const PluginInitialisationInfo& info)
 {
     if (type != nullptr)
         type->registerInstance (this, info);
-
-    initialiseWithoutStopping (info);
-}
-
-void RackInstance::initialiseWithoutStopping (const PluginInitialisationInfo&)
-{
-    const float wet = wetGain->getCurrentValue();
-    lastLeftIn   = dbToGain (leftInDb->getCurrentValue());
-    lastRightIn  = dbToGain (linkInputs ? leftInDb->getCurrentValue() : rightInDb->getCurrentValue());
-    lastLeftOut  = wet * dbToGain (leftOutDb->getCurrentValue());
-    lastRightOut = wet * dbToGain (linkOutputs ? leftOutDb->getCurrentValue() : rightOutDb->getCurrentValue());
 }
 
 void RackInstance::deinitialise()
