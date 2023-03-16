@@ -697,33 +697,45 @@ bool containsAnyMIDIClips (const ClipOwner& co)
 
 //==============================================================================
 //==============================================================================
-bool isAudioTrack (ClipOwner& co)                           { return dynamic_cast<AudioTrack*> (&co) != nullptr; }
-bool isAutomationTrack (ClipOwner& co)                      { return dynamic_cast<AutomationTrack*> (&co) != nullptr; }
-bool isFolderTrack (ClipOwner& co)                          { return dynamic_cast<FolderTrack*> (&co) != nullptr; }
-bool isMarkerTrack (ClipOwner& co)                          { return dynamic_cast<MarkerTrack*> (&co) != nullptr; }
-bool isTempoTrack (ClipOwner& co)                           { return dynamic_cast<TempoTrack*> (&co) != nullptr; }
-bool isChordTrack (ClipOwner& co)                           { return dynamic_cast<ChordTrack*> (&co) != nullptr; }
-bool isArrangerTrack (ClipOwner& co)                        { return dynamic_cast<ArrangerTrack*> (&co) != nullptr; }
-bool isMasterTrack (ClipOwner& co)                          { return dynamic_cast<MasterTrack*> (&co) != nullptr; }
+bool isMasterTrack (const Track& t)                             { return dynamic_cast<const MasterTrack*> (&t) != nullptr; }
+bool isTempoTrack (const Track& t)                              { return dynamic_cast<const TempoTrack*> (&t) != nullptr; }
+bool isAutomationTrack (const Track& t)                         { return dynamic_cast<const AutomationTrack*> (&t) != nullptr; }
+bool isAudioTrack (const Track& t)                              { return dynamic_cast<const AudioTrack*> (&t) != nullptr; }
+bool isFolderTrack (const Track& t)                             { return dynamic_cast<const FolderTrack*> (&t) != nullptr; }
+bool isMarkerTrack (const Track& t)                             { return dynamic_cast<const MarkerTrack*> (&t) != nullptr; }
+bool isChordTrack (const Track& t)                              { return dynamic_cast<const ChordTrack*> (&t) != nullptr; }
+bool isArrangerTrack (const Track& t)                           { return dynamic_cast<const ArrangerTrack*> (&t) != nullptr; }
+
+bool isAudioTrack (const ClipOwner& t)                          { return dynamic_cast<const AudioTrack*> (&t) != nullptr; }
+bool isFolderTrack (const ClipOwner& t)                         { return dynamic_cast<const FolderTrack*> (&t) != nullptr; }
+bool isMarkerTrack (const ClipOwner& t)                         { return dynamic_cast<const MarkerTrack*> (&t) != nullptr; }
+bool isChordTrack (const ClipOwner& t)                          { return dynamic_cast<const ChordTrack*> (&t) != nullptr; }
+bool isArrangerTrack (const ClipOwner& t)                       { return dynamic_cast<const ArrangerTrack*> (&t) != nullptr; }
 
 //==============================================================================
-bool canContainMarkers (ClipOwner& co)                      { return isMarkerTrack (co); }
-bool canContainMIDI (ClipOwner& co)                         { return isAudioTrack (co); }
-bool canContainAudio (ClipOwner& co)                        { return isAudioTrack (co); }
-bool canContainEditClips (ClipOwner& co)                    { return isAudioTrack (co); }
-bool canContainPlugins (ClipOwner& co)                      { return isAudioTrack (co) || isFolderTrack (co) || isMasterTrack (co); }
-bool isMovable (ClipOwner& co)                              { return isAudioTrack (co) || isFolderTrack (co); }
-bool acceptsInput (ClipOwner& co)                           { return isAudioTrack (co); }
-bool createsOutput (ClipOwner& co)                          { return isAudioTrack (co); }
-bool wantsAutomation (ClipOwner& co)                        { return ! (isMarkerTrack (co) || isChordTrack (co) || isArrangerTrack (co));  }
-
-bool isOnTop (ClipOwner& co)
+bool canContainMIDI (const ClipOwner& co)
 {
-    if (auto tack = dynamic_cast<Track*> (&co))
-        return isMarkerTrack (co) || isTempoTrack (co) || isChordTrack (co) || isArrangerTrack (co) || isMasterTrack (co)
-            || (isAutomationTrack (co) && tack->getParentTrack() != nullptr && tack->getParentTrack()->isMasterTrack());
+    if (auto track = dynamic_cast<const Track*> (&co))
+        return isAudioTrack (*track);
 
     return false;
+}
+
+bool canContainAudio (const ClipOwner& co)
+{
+    if (dynamic_cast<const ContainerClip*> (&co) != nullptr)
+        return true;
+
+    if (auto track = dynamic_cast<const Track*> (&co))
+        return isAudioTrack (*track);
+
+    return false;
+}
+
+bool isOnTop (const Track& track)
+{
+    return isMarkerTrack (track) || isTempoTrack (track) || isChordTrack (track) || isArrangerTrack (track) || isMasterTrack (track)
+        || (isAutomationTrack (track) && track.getParentTrack() != nullptr && track.getParentTrack()->isMasterTrack());
 }
 
 }} // namespace tracktion { inline namespace engine
