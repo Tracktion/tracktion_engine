@@ -643,6 +643,7 @@ namespace IDs
     DECLARE_ID (proxyAllowed)
     DECLARE_ID (resamplingQuality)
     DECLARE_ID (CLIPLIST)
+    DECLARE_ID (defaultValue)
 
     #undef DECLARE_ID
 }
