@@ -40,8 +40,10 @@ juce_add_pip (${CMAKE_PROJECT_NAME}.h)
 
 juce_generate_juce_header(${CMAKE_PROJECT_NAME})
 
-juce_add_binary_data (EDMDemoSong
-    SOURCES resources/edm_song.ogg)
+juce_add_binary_data (BinaryData SOURCES
+    resources/edm_song.ogg
+    resources/drum_loop.wav
+    resources/synth_loop.wav)
 
 target_compile_features(${CMAKE_PROJECT_NAME} PRIVATE cxx_std_17)
 
@@ -52,6 +54,7 @@ set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
 set(SourceFiles
     ${CMAKE_PROJECT_NAME}.h
     demos/AbletonLinkDemo.h
+    demos/ContainerClipDemo.h
     demos/DistortionEffectDemo.h
     demos/GlobalQuantiseDemo.h
     demos/IRPluginDemo.h
@@ -93,7 +96,7 @@ target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
     juce::juce_audio_processors
     juce::juce_audio_utils
     juce::juce_recommended_warning_flags
-    EDMDemoSong)
+    BinaryData)
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unknown-pragmas")

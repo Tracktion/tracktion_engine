@@ -18,7 +18,7 @@ class StepClip   : public Clip,
                    public juce::ChangeBroadcaster
 {
 public:
-    StepClip (const juce::ValueTree&, EditItemID, ClipTrack&);
+    StepClip (const juce::ValueTree&, EditItemID, ClipOwner&);
     ~StepClip() override;
 
     using Ptr = juce::ReferenceCountedObjectPtr<StepClip>;
@@ -237,7 +237,7 @@ public:
     void resizeClipForPatternInstances();
 
     //==============================================================================
-    bool canGoOnTrack (Track&) override;
+    bool canBeAddedTo (ClipOwner&) override;
     juce::String getSelectableDescription() override;
     juce::Colour getDefaultColour() const override;
 

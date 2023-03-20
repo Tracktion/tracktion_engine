@@ -101,7 +101,7 @@ public:
     juce::Range<int64_t> getLoopRange() const noexcept;
 
     /** Sets a playback range and whether to loop or not. */
-    void setLoopRange (bool loop, juce::Range<int64_t> loopRange);
+    void setLoopRange (bool loop, juce::Range<int64_t> loopRange, bool updatePosition = true);
 
     /** Puts the play head in to roll in to loop mode.
         If this position is before the loop start position, the play head won't
@@ -261,14 +261,16 @@ inline bool PlayHead::isRollingIntoLoop() const noexcept            { return rol
 
 inline juce::Range<int64_t> PlayHead::getLoopRange() const noexcept { return timelinePlayRange; }
 
-inline void PlayHead::setLoopRange (bool loop, juce::Range<int64_t> loopRange)
+inline void PlayHead::setLoopRange (bool loop, juce::Range<int64_t> loopRange, bool updatePosition)
 {
     if (looping != loop || (loop && loopRange != getLoopRange()))
     {
         auto lastPos = getPosition();
         looping = loop;
         timelinePlayRange = loopRange;
-        setPosition (lastPos);
+
+        if (updatePosition)
+            setPosition (lastPos);
     }
 }
 

@@ -17,6 +17,8 @@ using namespace std::literals;
 
 #include "../../modules/tracktion_graph/tracktion_graph.h"
 #include "../../modules/tracktion_core/utilities/tracktion_Benchmark.h"
+#include "../../modules/tracktion_core/tracktion_TestConfig.h"
+
 #include "tracktion_engine.h"
 
 #include "timestretch/tracktion_TempoDetect.h"
@@ -55,12 +57,15 @@ using namespace std::literals;
 #include "model/clips/tracktion_EditClip.cpp"
 #include "model/clips/tracktion_MarkerClip.cpp"
 #include "model/clips/tracktion_CollectionClip.cpp"
+#include "model/clips/tracktion_ContainerClip.cpp"
+#include "model/clips/tracktion_ContainerClip.test.cpp"
 #include "model/clips/tracktion_MidiClip.cpp"
 #include "model/clips/tracktion_MidiClip.test.cpp"
 #include "model/clips/tracktion_StepClipChannel.cpp"
 #include "model/clips/tracktion_StepClipPattern.cpp"
 #include "model/clips/tracktion_StepClip.cpp"
 #include "model/clips/tracktion_ClipEffects.cpp"
+#include "model/clips/tracktion_ClipOwner.cpp"
 #include "model/clips/tracktion_WarpTimeManager.cpp"
 
 #endif

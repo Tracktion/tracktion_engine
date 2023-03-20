@@ -584,7 +584,7 @@ public:
         : SingleInputAudioReader (std::move (input)), numChannels ((int) source->getNumChannels())
     {
         timeStretcher.initialise (source->getSampleRate(), chunkSize, numChannels,
-                                  TimeStretcher::defaultMode, {}, true);
+                                  TimeStretcher::defaultMode, {}, false);
         inputFifo.setSize (numChannels, timeStretcher.getMaxFramesNeeded());
         outputFifo.setSize (numChannels, timeStretcher.getMaxFramesNeeded());
     }
@@ -596,7 +596,7 @@ public:
 
     void setPosition (SampleCount t) override
     {
-        if (std::abs (t - getReadPosition()) <= 2)
+        if (std::abs (t - getReadPosition()) <= 10)
             return;
 
         readPosition = (double) t;
@@ -1023,7 +1023,6 @@ public:
         // Apply offset first
         br = br + offset;
 
-        // First apply the looping
         return readLoopedBeatRange (br, destBuffer, editDuration, isContiguous, playbackSpeedRatio);
     }
 
@@ -1986,7 +1985,6 @@ void WaveNodeRealTime::processSection (ProcessContext& pc)
         && (sectionEditBeats.getEnd() <= editPositionBeats.getStart()
             || sectionEditBeats.getStart() >= editPositionBeats.getEnd()))
       return;
-
 
     auto destBuffer = pc.buffers.audio;
     const auto numFrames = destBuffer.getNumFrames();

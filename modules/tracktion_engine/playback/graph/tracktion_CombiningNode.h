@@ -36,6 +36,15 @@ public:
     */
     void addInput (std::unique_ptr<Node>, TimeRange);
 
+    /** Adds an input node to be played at a given beat range.
+
+        The offset is relative to the combining node's zero-time, so the input node's
+        time of 0 is equal to its (start + offset) relative to the combiner node's start.
+
+        Any nodes passed-in will be deleted by this node when required.
+    */
+    void addInput (std::unique_ptr<Node>, BeatRange);
+
     /** Returns the number of inputs added. */
     int getNumInputs() const;
 
@@ -67,8 +76,8 @@ private:
 
     tracktion::graph::NodeProperties nodeProperties;
 
-    void prefetchGroup (juce::Range<int64_t>, TimeRange);
-    void queueNoteOffsForClipsNoLongerPresent (const CombiningNode& oldNode);
+    void prefetchGroup (juce::Range<int64_t>, TimeRange, BeatRange);
+    void queueNoteOffsForClipsNoLongerPresent (const CombiningNode&);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CombiningNode)
 };

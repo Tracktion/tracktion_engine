@@ -183,6 +183,9 @@ using namespace std::literals;
 #include "playback/graph/tracktion_CombiningNode.h"
 #include "playback/graph/tracktion_CombiningNode.cpp"
 
+#include "playback/graph/tracktion_ContainerClipNode.h"
+#include "playback/graph/tracktion_ContainerClipNode.cpp"
+
 #include "playback/graph/tracktion_FadeInOutNode.h"
 #include "playback/graph/tracktion_FadeInOutNode.cpp"
 

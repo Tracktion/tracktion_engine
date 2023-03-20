@@ -81,8 +81,8 @@ static std::unique_ptr<MidiList> createLoopRangeDefinesSubsequentRepetitionsSequ
 }
 
 //==============================================================================
-MidiClip::MidiClip (const juce::ValueTree& v, EditItemID id, ClipTrack& targetTrack)
-    : Clip (v, targetTrack, id, Type::midi)
+MidiClip::MidiClip (const juce::ValueTree& v, EditItemID id, ClipOwner& targetParent)
+    : Clip (v, targetParent, id, Type::midi)
 {
     auto um = getUndoManager();
 
@@ -652,9 +652,9 @@ void MidiClip::mergeInMidiSequence (juce::MidiMessageSequence& ms,
 }
 
 //==============================================================================
-bool MidiClip::canGoOnTrack (Track& t)
+bool MidiClip::canBeAddedTo (ClipOwner& co)
 {
-    return t.canContainMIDI();
+    return canContainMIDI (co);
 }
 
 AudioTrack* MidiClip::getAudioTrack() const
@@ -754,11 +754,11 @@ void MidiClip::valueTreePropertyChanged (juce::ValueTree& tree, const juce::Iden
     {
         if (id == IDs::mute)
         {
-            jassert (track != nullptr); // Should have been set by now..
+            jassert (parent != nullptr); // Should have been set by now..
 
-            if (track != nullptr)
-                if (auto parent = track->getParentFolderTrack())
-                    parent->setDirtyClips();
+            if (auto track = getTrack())
+                if (auto p = track->getParentFolderTrack())
+                    p->setDirtyClips();
 
             clearCachedLoopSequence();
         }

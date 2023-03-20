@@ -36,7 +36,8 @@ public:
         video,      /**< A video clip. N.B. not yet imlemented. */
         recording,  /**< A temporary recording clip. */
         chord,      /**< A chord clip. @see ChordClip. */
-        arranger    /**< An arranger clip. @see ArrangerClip. */
+        arranger,   /**< An arranger clip. @see ArrangerClip. */
+        container   /**< An container clip. @see ContainerClip. */
     };
 
     /** Creates a TrackItem with an ID and type.

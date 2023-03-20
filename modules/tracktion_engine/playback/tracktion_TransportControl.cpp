@@ -894,7 +894,7 @@ juce::Array<juce::File> TransportControl::getRetrospectiveRecordAsAudioFiles()
                     files.add (f);
                 }
 
-                c->removeFromParentTrack();
+                c->removeFromParent();
             }
             return files;
         }

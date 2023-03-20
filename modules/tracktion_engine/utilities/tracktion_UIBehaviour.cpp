@@ -128,8 +128,9 @@ void UIBehaviour::nudgeSelectedClips (TimecodeSnapType snapType, const juce::Str
             }
 
             for (int i = clips.size(); --i >= 0;)
-                if (auto targetTrack = allTracks [allTracks.indexOf (clips.getUnchecked (i)->getTrack()) + trackDelta])
-                    clips.getUnchecked(i)->moveToTrack (*targetTrack);
+                if (auto targetTrack = allTracks[allTracks.indexOf (clips.getUnchecked (i)->getTrack()) + trackDelta])
+                    if (auto ct = dynamic_cast<ClipTrack*> (targetTrack))
+                        clips.getUnchecked (i)->moveTo (*ct);
 
             if (sections.size())
                 moveAutomation (sections, {}, false);

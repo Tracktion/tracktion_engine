@@ -348,7 +348,8 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
              || v.hasType (IDs::MIDICLIP)
              || v.hasType (IDs::STEPCLIP)
              || v.hasType (IDs::EDITCLIP)
-             || v.hasType (IDs::CHORDCLIP))
+             || v.hasType (IDs::CHORDCLIP)
+             || v.hasType (IDs::CONTAINERCLIP))
             restart();
     }
 
@@ -898,7 +899,7 @@ void Edit::removeZeroLengthClips()
                 clipsToRemove.add (c);
 
     for (auto& c : clipsToRemove)
-        c->removeFromParentTrack();
+        c->removeFromParent();
 }
 
 void Edit::initialiseTracks()
@@ -2585,7 +2586,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingPreset (Engine& engine, juce:
     {
         auto& clips = t->getClips();
         for (int i = clips.size(); --i >= 0;)
-            clips[i]->removeFromParentTrack();
+            clips[i]->removeFromParent();
 
         jassert (t->getClips().size() == 0);
     }
@@ -2639,7 +2640,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingPreset (Engine& engine, juce:
         track = drumTrack;
 
         if (auto firstClip = midiTrack->getClips().getFirst())
-            firstClip->moveToTrack (*track);
+            firstClip->moveTo (*track);
     }
 
     if (track->pluginList.size() < 3)
@@ -2777,7 +2778,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
     {
         auto& clips = t->getClips();
         for (int i = clips.size(); --i >= 0;)
-            clips[i]->removeFromParentTrack();
+            clips[i]->removeFromParent();
 
         jassert (t->getClips().size() == 0);
     }

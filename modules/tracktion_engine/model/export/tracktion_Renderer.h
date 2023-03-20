@@ -158,6 +158,9 @@ public:
                               juce::Array<Clip*> clips = {},
                               bool useThread = true);
 
+    /** Renders an entire Edit to a file. */
+    static bool renderToFile (Edit&, const juce::File&, bool useThread = true);
+
     //==============================================================================
     /** @see measureStatistics()
     */
